@@ -61,9 +61,6 @@ fun <T> TypedDataFrame<T>.map(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit
 inline fun <reified T, D> TypedDataFrame<D>.groupBy(name: String = "key", noinline expression: TypedDataFrameRow<D>.() -> T?) =
         add(name, expression).groupBy(name)
 
-operator fun <T> TypedDataFrame<T>.get(range: IntRange) =
-    df.filter { rowNumber.map{range.contains(it-1)}.toBooleanArray() }.typed<T>()
-
 // size
 
 val DataFrame.size: DataFrameSize get() = DataFrameSize(ncol, nrow)

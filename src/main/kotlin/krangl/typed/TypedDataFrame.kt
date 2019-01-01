@@ -56,6 +56,8 @@ fun SortDirection.reversed() = when(this){
 
 class SortColumnDescriptor(val column: DataCol, val direction: SortDirection)
 
+internal fun <T> TypedDataFrame<T>.new(columns: Iterable<DataCol>) = dataFrameOf(columns).typed<T>()
+
 interface TypedDataFrame<out T> {
 
     val df: DataFrame
@@ -66,12 +68,21 @@ interface TypedDataFrame<out T> {
 
     operator fun get(rowIndex: Int): TypedDataFrameRow<T>
     operator fun get(columnName: String): DataCol = df[columnName]
+    operator fun get(indices: IntArray) = getRows(indices)
+    operator fun get(indices: List<Int>) = getRows(indices)
+    operator fun get(mask: BooleanArray) = getRows(mask)
+    operator fun get(range: IntRange) = getRows(range)
 
     operator fun plus(col: DataCol) = (df + col).typed<T>()
-    operator fun plus(col: Iterable<DataCol>) = dataFrameOf(df.cols + col).typed<T>()
+    operator fun plus(col: Iterable<DataCol>) = new(columns + col)
     operator fun plus(stub: AddRowNumberStub) = addRowNumber(stub.columnName)
 
-    fun select(columns: Iterable<DataCol>) = df.select(columns.map { it.name }).typed<T>()
+    fun getRows(indices: IntArray): TypedDataFrame<T>
+    fun getRows(mask: BooleanArray): TypedDataFrame<T>
+    fun getRows(indices: List<Int>) = getRows(indices.toIntArray())
+    fun getRows(range: IntRange) = getRows(range.toList())
+
+    fun select(columns: Iterable<DataCol>) = new(columns)
     fun select(vararg columns: DataCol) = select(columns.toList())
     fun select(vararg columns: String) = select(getColumns(columns))
     fun select(selector: ColumnSelector<T>) = select(getColumns(selector))
@@ -88,7 +99,7 @@ interface TypedDataFrame<out T> {
     fun sortedByDesc(vararg columns: String) = sortedByDesc(getColumns(columns))
     fun sortedByDesc(selector: ColumnSelector<T>) = sortedByDesc(getColumns(selector))
 
-    fun remove(cols: Iterable<DataCol>) = df.remove(cols.map { it.name }).typed<T>()
+    fun remove(cols: Iterable<DataCol>) = new(columns - cols)
     fun remove(vararg cols: DataCol) = remove(cols.toList())
     fun remove(vararg columns: String) = remove(getColumns(columns))
     fun remove(selector: ColumnSelector<T>) = remove(getColumns(selector))
@@ -103,7 +114,7 @@ interface TypedDataFrame<out T> {
 
     fun update(selector: ColumnSelector<T>) = UpdateClauseImpl(this, getColumns(selector)) as UpdateClause<T>
 
-    fun addRowNumber(columnName: String = "id") = dataFrameOf(columns + IntCol(columnName, IntArray(nrow){it})).typed<T>()
+    fun addRowNumber(columnName: String = "id") = new(columns + IntCol(columnName, IntArray(nrow){it}))
 
     fun filter(predicate: RowFilter<T>): TypedDataFrame<T>
     fun filterNotNull(columns: ColumnSelector<T>) = getColumns(columns).let { cols -> filter { cols.all { col -> this[col.name] != null } } }
@@ -123,10 +134,10 @@ interface TypedDataFrame<out T> {
     fun firstOrNull() = rows.firstOrNull()
     fun last() = rows.last() // TODO: optimize (don't iterate through the whole data frame)
     fun lastOrNull() = rows.lastOrNull()
-    fun take(numRows: Int = 5) = df.take(numRows).typed<T>()
-    fun skip(numRows: Int = 5) = takeLast(nrow - numRows)
-    fun takeLast(numRows: Int) = df.takeLast(numRows).typed<T>()
-    fun skipLast(numRows: Int = 5) = take(nrow - numRows)
+    fun take(numRows: Int = 5) = getRows(0 until numRows)
+    fun skip(numRows: Int = 5) = getRows(numRows until nrow)
+    fun takeLast(numRows: Int) = getRows(nrow - numRows until nrow )
+    fun skipLast(numRows: Int = 5) = getRows(0 until nrow - numRows)
     fun head(numRows: Int = 5) = take(numRows)
     fun tail(numRows: Int = 5) = takeLast(numRows)
 
@@ -169,14 +180,12 @@ internal class TypedDataFrameImpl<T>(override val df: DataFrame) : TypedDataFram
     override fun get(rowIndex: Int) = rowResolver[rowIndex]!!
 
     override fun filter(predicate: RowFilter<T>): TypedDataFrame<T> =
-            df.filter {
                 rowWise { getRow ->
                     BooleanArray(nrow) { index ->
                         val row = getRow(index)!!
                         predicate(row)
                     }
-                }
-            }.typed<T>()
+                }.let(::getRows).typed()
 
     /** Return an iterator over the rows in data in the receiver. */
     internal fun TypedDataFrame<*>.rowData(): Iterable<List<Any?>> = object : Iterable<List<Any?>> {
@@ -258,6 +267,30 @@ internal class TypedDataFrameImpl<T>(override val df: DataFrame) : TypedDataFram
             dataFrameOf(it).typed()
         }
     }
+
+    override fun getRows(indices: IntArray) = columns.map { col ->
+        when (col) {
+            is DoubleCol -> DoubleCol(col.name, indices.map { col.values[it] }.toTypedArray())
+            is IntCol -> IntCol(col.name, indices.map { col.values[it] }.toTypedArray())
+            is LongCol -> LongCol(col.name, indices.map { col.values[it] }.toTypedArray())
+            is StringCol -> StringCol(col.name, indices.map { col.values[it] }.toTypedArray())
+            is BooleanCol -> BooleanCol(col.name, indices.map { col.values[it] }.toTypedArray())
+            is AnyCol -> AnyCol(col.name, indices.map { col.values[it] }.toTypedArray())
+            else -> throw UnsupportedOperationException()
+        }
+    }.let { dataFrameOf(it).typed<T>() }
+
+    override fun getRows(mask: BooleanArray) = columns.map { col ->
+        when (col) {
+            is DoubleCol -> DoubleCol(col.name, col.values.filterIndexed { index, _ -> mask[index] }.toTypedArray())
+            is IntCol -> IntCol(col.name, col.values.filterIndexed { index, _ -> mask[index] }.toTypedArray())
+            is LongCol -> LongCol(col.name, col.values.filterIndexed { index, _ -> mask[index] }.toTypedArray())
+            is StringCol -> StringCol(col.name, col.values.filterIndexed { index, _ -> mask[index] }.toTypedArray())
+            is BooleanCol -> BooleanCol(col.name, col.values.filterIndexed { index, _ -> mask[index] }.toTypedArray())
+            is AnyCol -> AnyCol(col.name, col.values.filterIndexed { index, _ -> mask[index] }.toTypedArray())
+            else -> throw UnsupportedOperationException()
+        }
+    }.let { dataFrameOf(it).typed<T>() }
 }
 
 internal class RowResolver<T>(val dataFrame: DataFrame) {
