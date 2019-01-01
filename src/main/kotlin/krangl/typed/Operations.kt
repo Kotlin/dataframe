@@ -20,7 +20,7 @@ class TypedColumnsFromDataRowBuilder<T>(val dataFrame: TypedDataFrame<T>) {
 
 class ValuesList<T>(val list: List<T>)
 
-class GroupAggregateBuilder<T>(private val dataFrame: TypedDataFrame<T>) {
+class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
     internal val columns = mutableListOf<DataCol>()
 
     fun <T> List<T>.wrap() = ValuesList(this)
@@ -70,11 +70,12 @@ class GroupAggregateBuilder<T>(private val dataFrame: TypedDataFrame<T>) {
 
 operator fun DataFrame.plus(col: DataCol) = dataFrameOf(cols + col)
 operator fun DataFrame.plus(col: Iterable<DataCol>) = dataFrameOf(cols + col)
-operator fun <T> TypedDataFrame<T>.plus(col: DataCol) = (df + col).typed<T>()
-operator fun <T> TypedDataFrame<T>.plus(col: Iterable<DataCol>) = dataFrameOf(df.cols + col).typed<T>()
 
 inline fun <reified T, D> TypedDataFrame<D>.add(name: String, noinline expression: TypedDataFrameRow<D>.() -> T?) =
         (this + new(name, expression))
+
+inline fun <reified T, D> GroupedDataFrame<D>.add(name: String, noinline expression: TypedDataFrameRow<D>.() -> T?) =
+        modify { add(name, expression) }
 
 inline fun <reified T> DataFrame.addColumn(name: String, values: List<T?>) =
         this + newColumn(name, values)
@@ -82,18 +83,11 @@ inline fun <reified T> DataFrame.addColumn(name: String, values: List<T?>) =
 fun DataFrame.addColumn(name: String, col: DataCol) =
         this + col.rename(name)
 
-fun <T> TypedDataFrame<T>.add(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit): TypedDataFrame<T> {
-    val builder = TypedColumnsFromDataRowBuilder(this)
-    body(builder)
-    return dataFrameOf(columns + builder.columns).typed()
-}
-
-fun <T> TypedDataFrame<T>.addRowNumber(columnName: String = "id"): TypedDataFrame<T> {
-    val col = IntCol(columnName, IntArray(nrow){it})
-    return dataFrameOf(columns + col).typed()
-}
-
-operator fun <T> TypedDataFrame<T>.plus(stub: AddRowNumberStub) = addRowNumber(stub.columnName)
+fun <T> TypedDataFrame<T>.add(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) =
+    with(TypedColumnsFromDataRowBuilder(this)){
+        body(this)
+        dataFrameOf(this@add.columns + columns).typed<T>()
+    }
 
 fun rowNumber(columnName: String = "id") = AddRowNumberStub(columnName)
 
@@ -109,90 +103,34 @@ fun <T> TypedDataFrame<T>.map(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit
     return dataFrameOf(builder.columns)
 }
 
-// filter
 
-fun <T> TypedDataFrame<T>.filter(predicate: TypedDataFrameRow<T>.(TypedDataFrameRow<T>) -> Boolean) =
-        df.filter {
-            rowWise { getRow ->
-                BooleanArray(nrow) { index ->
-                    val row = getRow(index)!!
-                    predicate(row, row)
-                }
-            }
-        }.typed<T>()
+inline fun <T, reified R> GroupedDataFrame<T>.map(columnName: String = "map", noinline selector: TypedDataFrame<T>.() -> R) = aggregate { map(selector) into columnName}
 
-fun <T> TypedDataFrame<T>.filterNotNull(columns: ColumnSelector<T>) = getColumns(columns).let { cols ->
-    filter { row -> cols.all { col -> row[col.name] != null } }
-}
-
-fun <T> TypedDataFrame<T>.filterNotNullAny(columns: ColumnSelector<T>) = getColumns(columns).let { cols ->
-    filter { row -> cols.any { col -> row[col.name] != null } }
-}
-
-fun <T> TypedDataFrame<T>.filterNotNullAny() = filter { fields.any { it.second != null } }
-
-fun <T> TypedDataFrame<T>.filterNotNull() = filter { fields.all { it.second != null } }
-
-fun <T, D : Comparable<D>> TypedDataFrame<T>.maxBy(selector: RowSelector<T, D>) =
-        rows.maxBy(selector)
-
-fun <T, D : Comparable<D>> TypedDataFrame<T>.minBy(selector: RowSelector<T, D>) =
-        rows.minBy(selector)
 
 // group by
 
 inline fun <reified T, D> TypedDataFrame<D>.groupBy(name: String = "key", noinline expression: TypedDataFrameRow<D>.() -> T?) =
         add(name, expression).df.groupBy(name).typed<D>()
 
+inline fun <T, reified R: Comparable<R>> GroupedDataFrame<T>.median(columnName: String = "median", noinline selector: RowSelector<T,R>) = aggregate { median(selector) into columnName}
+inline fun <T, reified R: Number> GroupedDataFrame<T>.mean(columnName: String = "mean", noinline selector: RowSelector<T,R>) = aggregate { mean(selector) into columnName}
+inline fun <T, reified R: Comparable<R>> GroupedDataFrame<T>.min(columnName: String = "min", noinline selector: RowSelector<T,R>) = aggregate { min(selector) into columnName}
+inline fun <T, reified R: Comparable<R>> GroupedDataFrame<T>.max(columnName: String = "max", noinline selector: RowSelector<T,R>) = aggregate { max(selector) into columnName}
+
 // summarize
 
-fun <T> TypedDataFrame<T>.aggregate(body: GroupAggregateBuilder<T>.() -> Unit): TypedDataFrame<T> {
+fun <T> GroupedDataFrame<T>.aggregate(body: GroupAggregateBuilder<T>.() -> Unit): TypedDataFrame<T> {
     val builder = GroupAggregateBuilder(this)
     body(builder)
     return (this.groupedBy() + builder.columns).typed<T>()
 }
-
-// count
-
-fun <T> TypedDataFrame<T>.count(predicate: RowFilter<T>) = rows.count(predicate)
-
-fun <T> TypedDataFrame<T>.count() = df.count().typed<T>()
-
-// take
-
-fun <T> TypedDataFrame<T>.first() = rows.first()
-
-fun <T> TypedDataFrame<T>.firstOrNull() = rows.firstOrNull()
-
-// TODO: optimize (don't iterate through the whole data frame)
-fun <T> TypedDataFrame<T>.last() = rows.last()
-
-fun <T> TypedDataFrame<T>.lastOrNull() = rows.lastOrNull()
-
-fun <T> TypedDataFrame<T>.take(numRows: Int = 5) = df.take(numRows).typed<T>()
-
-fun <T> TypedDataFrame<T>.skip(numRows: Int = 5) = takeLast(nrow - numRows)
-
-fun <T> TypedDataFrame<T>.takeLast(numRows: Int) = df.takeLast(numRows).typed<T>()
-
-fun <T> TypedDataFrame<T>.skipLast(numRows: Int = 5) = take(nrow - numRows)
-
-fun <T> TypedDataFrame<T>.head(numRows: Int = 5) = take(numRows)
-
-fun <T> TypedDataFrame<T>.tail(numRows: Int = 5) = takeLast(numRows)
 
 operator fun <T> TypedDataFrame<T>.get(range: IntRange) =
     df.filter { rowNumber.map{range.contains(it-1)}.toBooleanArray() }.typed<T>()
 
 // size
 
-data class DataFrameSize(val ncol: Int, val nrow: Int){
-    override fun toString() = "$nrow x $ncol"
-}
-
-val TypedDataFrame<*>.size get() = DataFrameSize(ncol, nrow)
-
-val DataFrame.size: Int get() = nrow
+val DataFrame.size: DataFrameSize get() = DataFrameSize(ncol, nrow)
 
 // toList
 
@@ -201,3 +139,19 @@ inline fun <reified C> DataFrame.toList() = DataFrameToListTypedStub(this, C::cl
 
 fun DataFrame.toList(className: String) = DataFrameToListNamedStub(this, className)
 fun TypedDataFrame<*>.toList(className: String) = df.toList(className)
+
+fun <T> TypedDataFrameRow<T>.movingAverage(k: Int, selector: RowSelector<T, Double>): Double {
+    var sum = .0
+    var i = 0
+    var r = this ?: null
+    while (i < k && r != null) {
+        sum += selector(r)
+        r = r.prev
+        i++
+    }
+    return sum / i
+}
+
+// merge
+
+fun <T> Iterable<TypedDataFrame<T>>.bindRows() = map { it.df }.bindRows().typed<T>()
