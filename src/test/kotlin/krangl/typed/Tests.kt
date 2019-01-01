@@ -89,4 +89,11 @@ class TypedDataFrameTests {
         a["oldest origin"].values().toList() shouldBe listOf("London", "Dubai", "Milan")
         a["youngest origin"].values().toList() shouldBe listOf("London", "Tokyo", "Moscow")
     }
+
+    @Test
+    fun `sorting`() {
+        val data = typed.sortedBy{age}.sortedByDesc{name}.map { city }
+        val expected = typed.rows.sortedBy { it.age }.sortedByDescending { it.name }.map { it.city }
+        data shouldBe expected
+    }
 }
