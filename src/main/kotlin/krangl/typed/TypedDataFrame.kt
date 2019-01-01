@@ -9,9 +9,18 @@ interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
     fun columns(filter: (DataCol) -> Boolean) = ColumnGroup(super.columns.filter(filter))
 
     val allColumns get() = ColumnGroup(super.columns)
+
+    infix fun DataCol.and(other: DataCol) = ColumnGroup(listOf(this, other))
+}
+
+interface TypedDataFrameWithColumnsForSort<out T> : TypedDataFrameWithColumns<T> {
+
+    val DataCol.desc get() = ReversedColumn(this)
 }
 
 class TypedDataFrameWithColumnsImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameWithColumns<T>
+
+class TypedDataFrameWithColumnsForSortImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameWithColumnsForSort<T>
 
 data class DataFrameSize(val ncol: Int, val nrow: Int){
     override fun toString() = "$nrow x $ncol"
@@ -19,13 +28,33 @@ data class DataFrameSize(val ncol: Int, val nrow: Int){
 
 typealias ColumnSelector<T> = TypedDataFrameWithColumns<T>.() -> DataCol
 
-internal fun DataCol.extractColumns() = when (this) {
-    is ColumnGroup -> columns
+typealias SortColumnSelector<T> = TypedDataFrameWithColumnsForSort<T>.() -> DataCol
+
+internal fun DataCol.extractColumns(): List<DataCol> = when (this) {
+    is ColumnGroup -> columns.flatMap { it.extractColumns() }
     else -> listOf(this)
 }
 
+internal fun DataCol.extractSortColumns(): List<SortColumnDescriptor> = when (this) {
+    is ColumnGroup -> columns.flatMap { it.extractSortColumns() }
+    is ReversedColumn -> column.extractSortColumns().map { SortColumnDescriptor(it.column, it.direction.reversed()) }
+    else -> listOf(SortColumnDescriptor(this, SortDirection.Asc))
+}
+
 internal fun <T> TypedDataFrame<T>.getColumns(selector: ColumnSelector<T>) = selector(TypedDataFrameWithColumnsImpl(this)).extractColumns()
-internal fun <T> GroupedDataFrame<T>.getColumns(selector: ColumnSelector<T>) = selector(TypedDataFrameWithColumnsImpl((this as GroupedDataFrameImpl<T>).groups.first().df)).extractColumns()
+
+internal fun <T> TypedDataFrame<T>.getSortColumns(selector: SortColumnSelector<T>) = selector(TypedDataFrameWithColumnsForSortImpl(this)).extractSortColumns()
+
+internal fun <T> TypedDataFrame<T>.getColumns(columnNames: Array<out String>) = columnNames.map { this[it] }
+
+enum class SortDirection {Asc, Desc}
+
+fun SortDirection.reversed() = when(this){
+    SortDirection.Asc -> SortDirection.Desc
+    SortDirection.Desc -> SortDirection.Asc
+}
+
+class SortColumnDescriptor(val column: DataCol, val direction: SortDirection)
 
 interface TypedDataFrame<out T> {
 
@@ -48,12 +77,15 @@ interface TypedDataFrame<out T> {
     fun select(selector: ColumnSelector<T>) = select(getColumns(selector))
     fun selectIf(filter: DataCol.(DataCol) -> Boolean) = select(columns.filter{filter(it,it)})
 
-    fun sortedBy(columns: Iterable<DataCol>): TypedDataFrame<T>
+    fun sortedBy(columns: List<SortColumnDescriptor>): TypedDataFrame<T>
+    fun sortedBy(columns: Iterable<DataCol>) = sortedBy(columns.map { SortColumnDescriptor(it, SortDirection.Asc) })
     fun sortedBy(vararg columns: DataCol) = sortedBy(columns.toList())
-    fun sortedBy(selector: ColumnSelector<T>) = sortedBy(getColumns(selector))
+    fun sortedBy(vararg columns: String) = sortedBy(getColumns(columns))
+    fun sortedBy(selector: SortColumnSelector<T>) = sortedBy(getSortColumns(selector))
 
-    fun sortedByDesc(columns: Iterable<DataCol>): TypedDataFrame<T>
+    fun sortedByDesc(columns: Iterable<DataCol>) = sortedBy(columns.map { SortColumnDescriptor(it, SortDirection.Desc) })
     fun sortedByDesc(vararg columns: DataCol) = sortedByDesc(columns.toList())
+    fun sortedByDesc(vararg columns: String) = sortedByDesc(getColumns(columns))
     fun sortedByDesc(selector: ColumnSelector<T>) = sortedByDesc(getColumns(selector))
 
     fun remove(cols: Iterable<DataCol>) = df.remove(cols.map { it.name }).typed<T>()
@@ -201,12 +233,14 @@ internal class TypedDataFrameImpl<T>(override val df: DataFrame) : TypedDataFram
         }
     }
 
-    private fun sort(columns: Iterable<DataCol>, descending: Boolean): TypedDataFrame<T> {
+    override fun sortedBy(columns: List<SortColumnDescriptor>): TypedDataFrame<T> {
 
-        var compChain = columns.map { it.createComparator() }.reduce { a, b -> a.then(b) }
-
-        if(descending)
-            compChain = compChain.reversed()
+        val compChain = columns.map {
+            when (it.direction) {
+                SortDirection.Asc -> it.column.createComparator()
+                SortDirection.Desc -> it.column.createComparator().reversed()
+            }
+        }.reduce { a, b -> a.then(b) }
 
         val permutation = (0 until nrow).sortedWith(compChain).toIntArray()
 
@@ -224,10 +258,6 @@ internal class TypedDataFrameImpl<T>(override val df: DataFrame) : TypedDataFram
             dataFrameOf(it).typed()
         }
     }
-
-    override fun sortedBy(columns: Iterable<DataCol>) = sort(columns, false)
-
-    override fun sortedByDesc(columns: Iterable<DataCol>) = sort(columns, true)
 }
 
 internal class RowResolver<T>(val dataFrame: DataFrame) {
@@ -248,9 +278,11 @@ internal class RowResolver<T>(val dataFrame: DataFrame) {
             } ?: TypedDataFrameRowImpl(dataFrame.row(index), index, this).also { map[index] = it }
 }
 
-fun <T, D> TypedDataFrame<D>.rowWise(body: ((Int) -> TypedDataFrameRow<D>?) -> T): T {
-    val resolver = RowResolver<D>(this.df)
-    fun getRow(index: Int): TypedDataFrameRow<D>? {
+typealias RowAccessor<T> = (Int) -> TypedDataFrameRow<T>?
+
+fun <R, T> TypedDataFrame<T>.rowWise(body: (RowAccessor<T>) -> R): R {
+    val resolver = RowResolver<T>(this.df)
+    fun getRow(index: Int): TypedDataFrameRow<T>? {
         resolver.resetMapping()
         return resolver[index]
     }
