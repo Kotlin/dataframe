@@ -1,24 +1,7 @@
 package krangl.typed
 
 import krangl.*
-import krangl.typed.tracking.ColumnAccessTracker
 import java.util.*
-
-interface TypedDataFrameRow<out T> {
-    val prev: TypedDataFrameRow<T>?
-    val next: TypedDataFrameRow<T>?
-    val index: Int
-    fun getRow(index: Int): TypedDataFrameRow<T>?
-    operator fun get(name: String): Any?
-    fun <T> read(name: String) = get(name) as T?
-    val fields: List<Pair<String, Any?>>
-    fun int(name: String) = nint(name)!!
-    fun nint(name: String) = read<Int>(name)
-    fun string(name: String) = nstring(name)!!
-    fun nstring(name: String) = read<String>(name)
-    fun double(name: String) = ndouble(name)!!
-    fun ndouble(name: String) = read<Double>(name)
-}
 
 interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
     fun columns(vararg col: DataCol) = ColumnGroup(col.toList())
@@ -61,7 +44,7 @@ interface TypedDataFrame<out T> {
 
     fun select(columns: Iterable<DataCol>) = df.select(columns.map { it.name }).typed<T>()
     fun select(vararg columns: DataCol) = select(columns.toList())
-    fun select(vararg columns: String) = select(columns.map { this[it] })
+    fun select(vararg columns: String) = select(getColumns(columns))
     fun select(selector: ColumnSelector<T>) = select(getColumns(selector))
     fun selectIf(filter: DataCol.(DataCol) -> Boolean) = select(columns.filter{filter(it,it)})
 
@@ -75,15 +58,15 @@ interface TypedDataFrame<out T> {
 
     fun remove(cols: Iterable<DataCol>) = df.remove(cols.map { it.name }).typed<T>()
     fun remove(vararg cols: DataCol) = remove(cols.toList())
+    fun remove(vararg columns: String) = remove(getColumns(columns))
     fun remove(selector: ColumnSelector<T>) = remove(getColumns(selector))
 
     infix operator fun minus(selector: ColumnSelector<T>) = remove(selector)
     infix operator fun minus(columns: Iterable<DataCol>) = remove(columns)
 
     fun groupBy(cols: Iterable<DataCol>): GroupedDataFrame<T>
-    fun groupBy(cols: List<String>) = groupBy(cols.map { get(it) })
-    fun groupBy(vararg cols: String) = groupBy(cols.map { get(it) })
     fun groupBy(vararg cols: DataCol) = groupBy(cols.toList())
+    fun groupBy(vararg cols: String) = groupBy(getColumns(cols))
     fun groupBy(selector: ColumnSelector<T>) = groupBy(getColumns(selector))
 
     fun update(selector: ColumnSelector<T>) = UpdateClauseImpl(this, getColumns(selector)) as UpdateClause<T>
@@ -118,54 +101,6 @@ interface TypedDataFrame<out T> {
     fun <R> map(selector: RowSelector<T, R>) = rows.map(selector)
 
     val size get() = DataFrameSize(ncol, nrow)
-}
-
-typealias GroupKey = List<Any?>
-
-interface DataGroup<out T> {
-    val groupKey: GroupKey
-    val df: TypedDataFrame<T>
-}
-
-class DataGroupImpl<T>(override val groupKey: GroupKey,
-                       override val df: TypedDataFrame<T>) : DataGroup<T>{
-    override fun toString(): String {
-        return "DataGroup($groupKey)" // just needed for debugging
-    }
-}
-
-interface GroupedDataFrame<out T> {
-
-    val groups: List<DataGroup<T>>
-    val columnNames: List<String>
-
-    operator fun get(vararg values: Any?) = get(values.toList())
-    operator fun get(key: GroupKey) = groups.firstOrNull { it.groupKey.equals(key) }?.df
-
-    fun ungroup() = groups.map { it.df }.bindRows()
-    fun groupedBy() = groups.map { it.df.take(1).select(*columnNames.toTypedArray()) }.bindRows()
-    fun groups() = groups.map { it.df }
-
-    fun sortedBy(columns: Iterable<DataCol>) = modify { sortedBy(columns) }
-    fun sortedBy(selector: ColumnSelector<T>) = sortedBy(getColumns(selector))
-
-    fun sortedByDesc(selector: ColumnSelector<T>) = sortedByDesc(getColumns(selector))
-    fun sortedByDesc(columns: Iterable<DataCol>) = modify {sortedByDesc(columns)}
-
-    fun modify(transform: TypedDataFrame<T>.() -> TypedDataFrame<*>): GroupedDataFrame<T>
-
-    fun count(columnName: String = "n") = aggregate { count into columnName}
-    fun count(columnName: String = "n", filter: RowFilter<T>) = aggregate { count(filter) into columnName}
-}
-
-class GroupedDataFrameImpl<T>(val columns: List<String>, override val groups: List<DataGroup<T>>): GroupedDataFrame<T>{
-
-
-    override val columnNames: List<String>
-        get() = columns
-
-    override fun modify(transform: TypedDataFrame<T>.() -> TypedDataFrame<*>) =
-            GroupedDataFrameImpl(columns, groups.map { DataGroupImpl<T>(it.groupKey, transform(it.df).typed()) })
 }
 
 interface UpdateClause<out T>{
@@ -293,24 +228,6 @@ internal class TypedDataFrameImpl<T>(override val df: DataFrame) : TypedDataFram
     override fun sortedBy(columns: Iterable<DataCol>) = sort(columns, false)
 
     override fun sortedByDesc(columns: Iterable<DataCol>) = sort(columns, true)
-}
-
-internal class TypedDataFrameRowImpl<T>(var row: DataFrameRow, override var index: Int, val resolver: RowResolver<T>) : TypedDataFrameRow<T> {
-
-    override operator fun get(name: String): Any? {
-        ColumnAccessTracker.registerColumnAccess(name)
-        return row[name]
-    }
-
-    override val prev: TypedDataFrameRow<T>?
-        get() = resolver[index - 1]
-    override val next: TypedDataFrameRow<T>?
-        get() = resolver[index + 1]
-
-    override fun getRow(index: Int): TypedDataFrameRow<T>? = resolver[index]
-    override val fields: List<Pair<String, Any?>>
-        get() = row.entries.map { it.key to it.value }
-
 }
 
 internal class RowResolver<T>(val dataFrame: DataFrame) {

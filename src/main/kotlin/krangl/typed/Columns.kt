@@ -104,3 +104,13 @@ class ColumnGroup(val columns: List<DataCol>): DataCol(""){
         get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
 
 }
+
+class ReversedColumn(val column: DataCol): DataCol(""){
+    override val length: Int
+        get() = TODO("not implemented") //To change initializer of created properties use File | Settings | File Templates.
+
+    override fun values(): Array<*> {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+}
