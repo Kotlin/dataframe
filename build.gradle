@@ -98,9 +98,8 @@ dokka {
 }
 
 //http://stackoverflow.com/questions/34377367/why-is-gradle-install-replacing-my-version-with-unspecified
-group 'de.mpicbg.scicomp'
-version '0.11'
-//version '0.11-SNAPSHOT'
+group 'org.jetbrains.kotlin'
+version '0.0.1'
 
 artifacts {
     archives sourcesJar
@@ -128,10 +127,10 @@ if (hasProperty('bintray_user') && hasProperty('bintray_key')) {
         publish = true // If version should be auto published after an upload
 
         pkg {
-            repo = 'mpicbg-scicomp'
-            name = 'krangl'
-            vcsUrl = 'https://github.com/holgerbrandl/krangl'
-
+            repo = 'kotlin-datascience'
+            name = 'krangl-typed'
+            vcsUrl = 'https://github.com/nitinas/krangl-typed'
+            userOrg = 'kotlin'
             licenses = ['MIT']
             publicDownloadNumbers = true
 
@@ -139,7 +138,7 @@ if (hasProperty('bintray_user') && hasProperty('bintray_key')) {
             version {
                 name = project.version //Bintray logical version name
                 desc = '.'
-               // released = new Date()
+                released = new Date()
                 vcsTag = 'v' + project.version
             }
         }
