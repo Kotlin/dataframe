@@ -37,7 +37,7 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib"
     compile "org.jetbrains.kotlin:kotlin-reflect"
-    compile 'com.github.nikitinas:krangl:-SNAPSHOT'
+    compile 'com.github.holgerbrandl:krangl:-SNAPSHOT'
 //    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
 
@@ -99,7 +99,7 @@ dokka {
 
 //http://stackoverflow.com/questions/34377367/why-is-gradle-install-replacing-my-version-with-unspecified
 group 'org.jetbrains.kotlin'
-version '0.0.1'
+version '-SNAPSHOT'
 
 artifacts {
     archives sourcesJar
@@ -129,7 +129,7 @@ if (hasProperty('bintray_user') && hasProperty('bintray_key')) {
         pkg {
             repo = 'kotlin-datascience'
             name = 'krangl-typed'
-            vcsUrl = 'https://github.com/nitinas/krangl-typed'
+            vcsUrl = 'https://github.com/nikitinas/krangl-typed'
             userOrg = 'kotlin'
             licenses = ['MIT']
             publicDownloadNumbers = true
