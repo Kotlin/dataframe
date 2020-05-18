@@ -97,9 +97,8 @@ dokka {
     includes = ['docs/packages_info.md']
 }
 
-//http://stackoverflow.com/questions/34377367/why-is-gradle-install-replacing-my-version-with-unspecified
 group 'org.jetbrains.kotlin'
-version '-SNAPSHOT'
+version '0.0.2'
 
 artifacts {
     archives sourcesJar
