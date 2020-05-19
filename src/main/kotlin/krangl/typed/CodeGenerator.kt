@@ -96,8 +96,9 @@ object CodeGenerator : CodeGeneratorApi {
         val result = mutableMapOf<String, FieldInfo>()
         if (withBaseTypes)
             clazz.superclasses.forEach { result.putAll(getFields(it, withBaseTypes)) }
-        result.putAll(clazz.declaredMemberProperties.map {
-            val fieldName = generateValidFieldName(it.name)
+
+        result.putAll(clazz.declaredMemberProperties.mapIndexed { index, it ->
+            val fieldName = it.name
             val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName
             val columnType = it.findAnnotation<ColumnType>()?.type?.createType() ?: getColumnType(it.returnType)
             fieldName to FieldInfo(columnName, fieldName, it.returnType, columnType)
@@ -109,19 +110,38 @@ object CodeGenerator : CodeGeneratorApi {
 
     private val charsToQuote = """[ {}()<>'"/|.\\!?@:;%^&*#$-]""".toRegex()
 
-    private fun generateValidFieldName(name: String) =
-            name.takeIf { it.contains(charsToQuote) }
-                    ?.replace("<", "{")
-                    ?.replace(">", "}")
-                    ?.replace("::", " - ")
-                    ?.replace(": ", " - ")
-                    ?.replace(":", " - ")
-                    ?.replace(".", " ")
-                    ?.replace("/", "-")
-                    ?.let { "`$it`" }
-                    ?: name
+    private fun generateValidFieldName(name: String, index: Int, usedNames: Collection<String>): String {
+        var result = name
+        val needsQuote = name.contains(charsToQuote)
+        if (needsQuote) {
+            result = name.replace("<", "{")
+                    .replace(">", "}")
+                    .replace("::", " - ")
+                    .replace(": ", " - ")
+                    .replace(":", " - ")
+                    .replace(".", " ")
+                    .replace("/", "-")
+                    .let { "`$it`" }
+        }
+        if (result.isEmpty()) result = "_$index"
+        val baseName = result
+        result = if (needsQuote) "`$baseName`" else baseName
+        var attempt = 2
+        while (usedNames.contains(result)) {
+            result = if (needsQuote) "`$baseName ($attempt)`" else "${baseName}_$attempt"
+            attempt++
+        }
+        return result
+    }
 
-    private fun getScheme(columns: Iterable<DataCol>) = Scheme(columns.map { FieldInfo(it.name, generateValidFieldName(it.name), it.valueType, it.javaClass.kotlin.createType()) })
+    private fun getScheme(columns: Iterable<DataCol>): Scheme {
+        val generatedFieldNames = mutableSetOf<String>()
+        return Scheme(columns.mapIndexed { index, it ->
+            val fieldName = generateValidFieldName(it.name, index, generatedFieldNames)
+            generatedFieldNames.add(fieldName)
+            FieldInfo(it.name, fieldName, it.valueType, it.javaClass.kotlin.createType())
+        })
+    }
 
     private val DataFrame.scheme: Scheme
         get() = getScheme(cols)
