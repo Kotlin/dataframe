@@ -31,13 +31,13 @@ repositories {
     mavenCentral()
 //    mavenLocal()
     jcenter()
-    maven { url 'https://jitpack.io' }
+    maven { url 'https://kotlin.bintray.com/kotlin-datascience' }
 }
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib"
     compile "org.jetbrains.kotlin:kotlin-reflect"
-    compile 'com.github.holgerbrandl:krangl:-SNAPSHOT'
+    compile 'org.jetbrains.kotlin:krangl:0.12'
 //    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
 
