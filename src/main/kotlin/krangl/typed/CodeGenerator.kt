@@ -89,6 +89,7 @@ object CodeGenerator : CodeGeneratorApi {
                 Double::class -> DoubleCol::class
                 Boolean::class -> BooleanCol::class
                 String::class -> StringCol::class
+                Long::class -> LongCol::class
                 else -> AnyCol::class
             }.createType()
 
@@ -326,7 +327,7 @@ object CodeGenerator : CodeGeneratorApi {
         } else scheme.values.map { it to FieldGenerationMode.declare }
 
         val leafMarkers = markers.onlyLeafs()
-        val header = "@DataFrameType(isOpen = $isOpen)\ninterface $name"
+        val header = "@DataFrameType${if(isOpen) "" else "(isOpen = false)"}\ninterface $name"
         val baseInterfacesDeclaration = if (leafMarkers.isNotEmpty()) " : " + leafMarkers.map { it.kclass.qualifiedName!! }.joinToString() else ""
         val fieldsDeclaration = fields.filter { it.second != FieldGenerationMode.skip }.map {
             val field = it.first
