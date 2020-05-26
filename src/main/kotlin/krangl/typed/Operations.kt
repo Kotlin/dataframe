@@ -136,7 +136,7 @@ fun <T> TypedDataFrame<T>.head(numRows: Int = 5) = take(numRows)
 fun <T> TypedDataFrame<T>.tail(numRows: Int = 5) = takeLast(numRows)
 
 operator fun <T> TypedDataFrame<T>.get(range: IntRange) =
-    df.filter { rowNumber.map{range.contains(it)}.toBooleanArray() }.typed<T>()
+    df.filter { rowNumber.map{range.contains(it-1)}.toBooleanArray() }.typed<T>()
 
 // size
 
