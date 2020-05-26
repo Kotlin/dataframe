@@ -35,6 +35,7 @@ internal fun <T> TypedDataFrame<T>.getColumns(selector: ColumnSelector<T>) = sel
 interface TypedDataFrame<out T> {
     val df: DataFrame
     val nrow: Int get() = df.nrow
+    val ncol: Int get() = df.ncol
     val columns: List<DataCol> get() = df.cols
     val rows: Iterable<TypedDataFrameRow<T>>
 
