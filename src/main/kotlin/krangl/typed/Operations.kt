@@ -56,7 +56,7 @@ fun <T> TypedDataFrame<T>.add(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit
 }
 
 fun <T> TypedDataFrame<T>.addRowNumber(columnName: String = "id"): TypedDataFrame<T> {
-    val col = IntCol(columnName, IntArray(size){it})
+    val col = IntCol(columnName, IntArray(nrow){it})
     return dataFrameOf(columns + col).typed()
 }
 
@@ -140,7 +140,12 @@ operator fun <T> TypedDataFrame<T>.get(range: IntRange) =
 
 // size
 
-val TypedDataFrame<*>.size: Int get() = df.nrow
+data class DataFrameSize(val ncol: Int, val nrow: Int){
+    override fun toString() = "$nrow x $ncol"
+}
+
+val TypedDataFrame<*>.size get() = DataFrameSize(ncol, nrow)
+
 val DataFrame.size: Int get() = nrow
 
 // toList
