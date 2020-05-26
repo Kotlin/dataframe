@@ -94,7 +94,7 @@ internal class TypedDataFrameImpl<T>(override val df: DataFrame) : TypedDataFram
 internal class TypedDataFrameRowImpl<T>(var row: DataFrameRow, override var index: Int, val resolver: RowResolver<T>) : TypedDataFrameRow<T> {
 
     override operator fun get(name: String): Any? {
-        ColumnAccessTracker.lastAccessedColumn.set(name)
+        ColumnAccessTracker.registerColumnAccess(name)
         return row[name]
     }
 

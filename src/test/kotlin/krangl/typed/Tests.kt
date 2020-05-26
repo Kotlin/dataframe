@@ -2,7 +2,7 @@ package krangl.typed
 
 import io.kotlintest.shouldBe
 import krangl.*
-import krangl.typed.tracking.ColumnAccessTracker
+import krangl.typed.tracking.trackColumnAccess
 import org.junit.Test
 
 class TypedDataFrameTests {
@@ -41,7 +41,13 @@ class TypedDataFrameTests {
 
     @Test
     fun `access tracking`(){
-        val n = typed[2].age
-        ColumnAccessTracker.lastAccessedColumn.get() shouldBe typed.age.name
+        trackColumnAccess {
+            typed[2].age
+        } shouldBe listOf("age")
+    }
+
+    @Test
+    fun `indexing`(){
+        typed[1].age shouldBe 45
     }
 }
