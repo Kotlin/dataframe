@@ -4,6 +4,7 @@ import krangl.DataCol
 import krangl.DataFrame
 import krangl.DataFrameRow
 import krangl.dataFrameOf
+import krangl.typed.tracking.ColumnAccessTracker
 import java.util.*
 
 interface TypedDataFrameRow<out T> {
@@ -92,7 +93,10 @@ internal class TypedDataFrameImpl<T>(override val df: DataFrame) : TypedDataFram
 
 internal class TypedDataFrameRowImpl<T>(var row: DataFrameRow, override var index: Int, val resolver: RowResolver<T>) : TypedDataFrameRow<T> {
 
-    override operator fun get(name: String): Any? = row[name]
+    override operator fun get(name: String): Any? {
+        ColumnAccessTracker.lastAccessedColumn.set(name)
+        return row[name]
+    }
 
     override val prev: TypedDataFrameRow<T>?
         get() = resolver[index - 1]
