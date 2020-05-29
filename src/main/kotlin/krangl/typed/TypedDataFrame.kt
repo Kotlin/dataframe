@@ -60,6 +60,7 @@ interface TypedDataFrame<out T> {
     fun remove(vararg cols: DataCol) = remove(cols.toList())
     fun remove(selector: ColumnSelector<T>) = remove(getColumns(selector))
     infix operator fun minus(selector: ColumnSelector<T>) = remove(selector)
+    infix operator fun minus(columns: Iterable<DataCol>) = remove(columns)
 
     fun groupBy(cols: Iterable<DataCol>) = df.groupBy(*(cols.map { it.name }.toTypedArray())).typed<T>()
     fun groupBy(vararg cols: DataCol) = groupBy(cols.toList())
@@ -69,6 +70,21 @@ interface TypedDataFrame<out T> {
 
     fun groupedBy() = df.groupedBy().typed<T>()
     fun groups() = df.groups().map { it.typed<T>() }
+
+    fun update(selector: ColumnSelector<T>) = UpdateClauseImpl(this, getColumns(selector)) as UpdateClause<T>
+}
+
+interface UpdateClause<out T>{
+    val df: TypedDataFrame<T>
+    val cols: List<DataCol>
+}
+
+class UpdateClauseImpl<T>(override val df: TypedDataFrame<T>, override val cols: List<DataCol>): UpdateClause<T> {
+}
+
+inline infix fun <reified T, D> UpdateClause<D>.with(noinline expression: TypedDataFrameRow<D>.() -> T?): TypedDataFrame<D> {
+    val newCol = df.new(cols.first().name, expression)
+    return df - cols + newCol + cols.takeLast(cols.size - 1).map { newCol.rename(it.name) }
 }
 
 internal class TypedDataFrameImpl<T>(override val df: DataFrame) : TypedDataFrame<T> {

@@ -50,4 +50,17 @@ class TypedDataFrameTests {
     fun `indexing`(){
         typed[1].age shouldBe 45
     }
+
+    @Test
+    fun `update`(){
+        val updated = typed.update { age } with { age*2 }
+        updated.age.values.toList() shouldBe (df["age"] * 2).values().toList()
+    }
+
+    @Test
+    fun `groupBy`(){
+        typed.groupBy {age}.summarize {
+            //count As ""
+        }
+    }
 }
