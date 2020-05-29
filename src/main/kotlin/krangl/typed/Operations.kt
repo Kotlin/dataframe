@@ -129,7 +129,11 @@ fun <T> TypedDataFrame<T>.count() = df.count().typed<T>()
 
 fun <T> TypedDataFrame<T>.take(numRows: Int = 5) = df.take(numRows).typed<T>()
 
+fun <T> TypedDataFrame<T>.skip(numRows: Int = 5) = takeLast(nrow - numRows)
+
 fun <T> TypedDataFrame<T>.takeLast(numRows: Int) = df.takeLast(numRows).typed<T>()
+
+fun <T> TypedDataFrame<T>.skipLast(numRows: Int = 5) = take(nrow - numRows)
 
 fun <T> TypedDataFrame<T>.head(numRows: Int = 5) = take(numRows)
 
