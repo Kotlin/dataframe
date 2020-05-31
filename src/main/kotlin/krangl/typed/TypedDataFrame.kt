@@ -20,6 +20,8 @@ interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
     fun columns(vararg col: DataCol) = ColumnGroup(col.toList())
 
     fun columns(filter: (DataCol) -> Boolean) = ColumnGroup(super.columns.filter(filter))
+
+    val allColumns get() = ColumnGroup(super.columns)
 }
 
 class TypedDataFrameWithColumnsImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameWithColumns<T>
@@ -82,10 +84,12 @@ interface UpdateClause<out T>{
 class UpdateClauseImpl<T>(override val df: TypedDataFrame<T>, override val cols: List<DataCol>): UpdateClause<T> {
 }
 
-inline infix fun <reified T, D> UpdateClause<D>.with(noinline expression: TypedDataFrameRow<D>.() -> T?): TypedDataFrame<D> {
+inline infix fun <T, reified R> UpdateClause<T>.with(noinline expression: TypedDataFrameRow<T>.() -> R?): TypedDataFrame<T> {
     val newCol = df.new(cols.first().name, expression)
     return df - cols + newCol + cols.takeLast(cols.size - 1).map { newCol.rename(it.name) }
 }
+
+inline fun <T> UpdateClause<T>.withNull() = with {null as Any?}
 
 internal class TypedDataFrameImpl<T>(override val df: DataFrame) : TypedDataFrame<T> {
     private val rowResolver = RowResolver<T>(df)
