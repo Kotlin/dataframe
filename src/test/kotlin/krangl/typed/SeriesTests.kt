@@ -1,8 +1,6 @@
 package krangl.typed
 
 import io.kotlintest.shouldBe
-import krangl.IntCol
-import krangl.StringCol
 import krangl.dataFrameOf
 import org.junit.Test
 
@@ -45,12 +43,12 @@ class SeriesTests {
     fun `diff`() {
         val withDiff = typed
                 .groupBy { city }
-                .sortedBy { day }
+                .sortBy { day }
                 .add("diff") { prev?.let { temp - it.temp } ?: 0 }
                 .ungroup()
 
         val srcData = typed.map { (city to day) to temp }.toMap()
-        val expected = typed.sortedBy {day}.sortedByDesc {city}.map { srcData[city to (day-1)]?.let { temp - it} ?: 0 }
+        val expected = typed.sortBy {day}.sortByDesc {city}.map { srcData[city to (day-1)]?.let { temp - it} ?: 0 }
         withDiff["diff"].values.toList() shouldBe expected
     }
 

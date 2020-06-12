@@ -26,11 +26,11 @@ interface GroupedDataFrame<out T> {
     fun groupedBy() = groups.map { it.df.take(1).select(*columnNames.toTypedArray()) }.bindRows()
     fun groups() = groups.map { it.df }
 
-    fun sortedBy(columns: Iterable<NamedColumn>) = modify { sortedBy(columns) }
-    fun sortedBy(selector: ColumnSelector<T>) = sortedBy(getColumns(selector))
+    fun sortBy(columns: Iterable<NamedColumn>) = modify { sortBy(columns) }
+    fun sortBy(selector: ColumnSelector<T>) = sortBy(getColumns(selector))
 
-    fun sortedByDesc(selector: ColumnSelector<T>) = sortedByDesc(getColumns(selector))
-    fun sortedByDesc(columns: Iterable<NamedColumn>) = modify {sortedByDesc(columns)}
+    fun sortByDesc(selector: ColumnSelector<T>) = sortByDesc(getColumns(selector))
+    fun sortByDesc(columns: Iterable<NamedColumn>) = modify { sortByDesc(columns) }
 
     fun modify(transform: TypedDataFrame<T>.() -> TypedDataFrame<*>): GroupedDataFrame<T>
 

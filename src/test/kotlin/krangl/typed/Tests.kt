@@ -79,7 +79,7 @@ class TypedDataFrameTests {
             median {age} into "median age"
             min {age} into "min age"
             maxBy {age}.map { city } into "oldest origin"
-            map { sortedBy {age}.first().city } into "youngest origin"
+            map { sortBy {age}.first().city } into "youngest origin"
         }
         a.nrow shouldBe 3
         a["n"].values.toList() shouldBe listOf(1, 2, 3)
@@ -92,14 +92,14 @@ class TypedDataFrameTests {
 
     @Test
     fun `sorting`() {
-        val result = typed.sortedBy { name and age.desc }.map { city }
+        val result = typed.sortBy { name and age.desc }.map { city }
         val expected = typed.rows.sortedByDescending { it.age }.sortedBy { it.name }.map { it.city }
         result shouldBe expected
     }
 
     @Test
     fun `multiple columns sort`(){
-        val result = typed.sortedBy { age and name.desc and city }.map { city }
+        val result = typed.sortBy { age and name.desc and city }.map { city }
         val expected = typed.rows.sortedBy { it.city }.sortedByDescending { it.name }.sortedBy { it.age }.map { it.city }
         result shouldBe expected
     }
@@ -110,14 +110,14 @@ class TypedDataFrameTests {
         val age by column<Int>()
         val gorod = column<String>("city")
 
-        val result = df.sortedBy { name and age.desc }.map { this[gorod] }
+        val result = df.sortBy { name and age.desc }.map { this[gorod] }
         val expected = typed.rows.sortedByDescending { it.age }.sortedBy { it.name }.map { it.city }
         result shouldBe expected
     }
 
     @Test
     fun `sorting3`() {
-        val result = df.sortedBy { "name" and "age".desc }.map { string("city") }
+        val result = df.sortBy { "name" and "age".desc }.map { string("city") }
         val expected = typed.rows.sortedByDescending { it.age }.sortedBy { it.name }.map { it.city }
         result shouldBe expected
     }
