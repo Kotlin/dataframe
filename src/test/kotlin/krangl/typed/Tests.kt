@@ -6,6 +6,7 @@ import krangl.typed.tracking.trackColumnAccess
 import org.junit.Test
 
 class TypedDataFrameTests {
+
     val df = dataFrameOf("name", "age", "city")(
             "Alice", 15, "London",
             "Bob", 45, "Dubai",
@@ -15,7 +16,8 @@ class TypedDataFrameTests {
             "Bob", 30, "Tokyo"
     ).typed<Any>()
 
-    // Generated code
+
+// Generated code
 
     @DataFrameType
     interface Person {
@@ -27,11 +29,13 @@ class TypedDataFrameTests {
     val TypedDataFrameRow<Person>.name get() = this["name"] as String
     val TypedDataFrameRow<Person>.age get() = this["age"] as Int
     val TypedDataFrameRow<Person>.city get() = this["city"] as String
-    val TypedDataFrame<Person>.name get() = this["name"]
-    val TypedDataFrame<Person>.age get() = this["age"]
-    val TypedDataFrame<Person>.city get() = this["city"]
+    val TypedDataFrame<Person>.name get() = this["name"].cast<String>()
+    val TypedDataFrame<Person>.age get() = this["age"].cast<Int>()
+    val TypedDataFrame<Person>.city get() = this["city"].cast<String>()
 
     val typed: TypedDataFrame<Person> = df.typed()
+
+// End of generated code
 
     @Test
     fun `size`() {
@@ -60,14 +64,14 @@ class TypedDataFrameTests {
     @Test
     fun `update`(){
         val updated = typed.update { age } with { age*2 }
-        updated.age.values.toList() shouldBe (df.df["age"] * 2).values().toList()
+        updated.age.values.toList() shouldBe typed.map { age * 2 }
     }
 
     @Test
     fun `resetToNull`(){
         val updated = typed.update { allColumns }.withNull()
         updated.columns.forEach{
-            it.values.toList().forEach { it shouldBe null }
+            it.valuesList().forEach { it shouldBe null }
         }
     }
 
@@ -82,12 +86,12 @@ class TypedDataFrameTests {
             map { sortBy {age}.first().city } into "youngest origin"
         }
         a.nrow shouldBe 3
-        a["n"].values.toList() shouldBe listOf(1, 2, 3)
-        a["old count"].values.toList() shouldBe listOf(0, 2, 2)
-        a["median age"].values.toList() shouldBe listOf(15.0, 37.5, 30.0)
-        a["min age"].values.toList() shouldBe listOf(15, 30, 20)
-        a["oldest origin"].values.toList() shouldBe listOf("London", "Dubai", "Milan")
-        a["youngest origin"].values.toList() shouldBe listOf("London", "Tokyo", "Moscow")
+        a["n"].valuesList() shouldBe listOf(1, 2, 3)
+        a["old count"].valuesList() shouldBe listOf(0, 2, 2)
+        a["median age"].valuesList() shouldBe listOf(15.0, 37.5, 30.0)
+        a["min age"].valuesList() shouldBe listOf(15, 30, 20)
+        a["oldest origin"].valuesList() shouldBe listOf("London", "Dubai", "Milan")
+        a["youngest origin"].valuesList() shouldBe listOf("London", "Tokyo", "Moscow")
     }
 
     @Test

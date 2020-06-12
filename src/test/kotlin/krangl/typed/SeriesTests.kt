@@ -49,7 +49,7 @@ class SeriesTests {
 
         val srcData = typed.map { (city to day) to temp }.toMap()
         val expected = typed.sortBy {day}.sortByDesc {city}.map { srcData[city to (day-1)]?.let { temp - it} ?: 0 }
-        withDiff["diff"].values.toList() shouldBe expected
+        withDiff["diff"].valuesList() shouldBe expected
     }
 
 }

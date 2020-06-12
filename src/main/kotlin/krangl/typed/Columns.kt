@@ -23,7 +23,9 @@ typealias Column = TypedCol<*>
 interface TypedColData<T: Any> : TypedCol<T>, TypedValues<T> {
     val hasNulls: Boolean
     val length: Int
-    val values: Array<T>
+    val values: Array<T?>
+    val anyValues get() = values as Array<*>
+    operator fun get(index: Int): T?
     val type get() = valueClass.createType(nullable = hasNulls)
 }
 
@@ -47,8 +49,10 @@ class TypedDataCol<T: Any>(val col: SrcDataCol, override val valueClass: KClass<
 
     override val length get() = col.length
 
-    override val values: Array<T>
-        get() = col.values() as Array<T>
+    override val values: Array<T?>
+        get() = col.values() as Array<T?>
+
+    override fun get(index: Int) = col.values()[index] as T?
 }
 
 fun DataCol.toSrc() = when (this) {
@@ -97,7 +101,7 @@ val SrcDataCol.valueClass: KClass<*>
 
 val DataCol.valueClass get() = toSrc().valueClass
 
-fun <T: Any> TypedDataCol<*>.cast() = this as TypedDataCol<T>
+inline fun <T: Any> DataCol.cast() = this as TypedColData<T>
 
 fun SrcDataCol.rename(newName: String) =
         when (this) {

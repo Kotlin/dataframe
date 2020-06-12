@@ -23,9 +23,9 @@ enum class CodeGenerationMode {
     ShortNames
 }
 
-data class DataFrameToListNamedStub(val df: DataFrame, val className: String)
+data class DataFrameToListNamedStub(val df: TypedDataFrame<*>, val className: String)
 
-data class DataFrameToListTypedStub(val df: DataFrame, val interfaceClass: KClass<*>)
+data class DataFrameToListTypedStub(val df: TypedDataFrame<*>, val interfaceClass: KClass<*>)
 
 fun <T> TypedDataFrame<T>.getScheme(name: String? = null, columnSelector: ColumnSelector<T>? = null): String {
     val interfaceName = name ?: "DataRecord"
@@ -34,7 +34,6 @@ fun <T> TypedDataFrame<T>.getScheme(name: String? = null, columnSelector: Column
 }
 
 interface CodeGeneratorApi {
-    fun generate(df: DataFrame, property: KProperty<*>): List<String>
     fun generate(df: TypedDataFrame<*>, property: KProperty<*>): List<String>
     fun generate(stub: DataFrameToListNamedStub): List<String>
     fun generate(stub: DataFrameToListTypedStub): List<String>
@@ -144,8 +143,8 @@ object CodeGenerator : CodeGeneratorApi {
         })
     }
 
-    private val DataFrame.scheme: Scheme
-        get() = getScheme(cols.map { it.typed() })
+    private val TypedDataFrame<*>.scheme: Scheme
+        get() = getScheme(columns)
 
     // Rendering
 
@@ -221,7 +220,7 @@ object CodeGenerator : CodeGeneratorApi {
 
     private val processedProperties = mutableSetOf<KProperty<*>>()
 
-    override fun generate(df: DataFrame, property: KProperty<*>): List<String> {
+    override fun generate(df: TypedDataFrame<*>, property: KProperty<*>): List<String> {
 
         fun KClass<*>.implements(targetBaseMarkers: Iterable<KClass<*>>): Boolean {
             val superclasses = allSuperclasses + this
@@ -275,8 +274,6 @@ object CodeGenerator : CodeGeneratorApi {
                 TypedDataFrame::class -> dataFrameType.arguments[0].type?.classifier as? KClass<*>
                 else -> null
             }
-
-    override fun generate(df: TypedDataFrame<*>, property: KProperty<*>) = generate(df.df, property)
 
     private enum class FieldGenerationMode { declare, override, skip }
 
@@ -382,6 +379,6 @@ object CodeGenerator : CodeGeneratorApi {
     }
 
     override fun generate(stub: DataFrameToListNamedStub) =
-            generateToListConverter(stub.className, stub.df.cols.map { it.name }, stub.df.scheme, null)
+            generateToListConverter(stub.className, stub.df.columns.map { it.name }, stub.df.scheme, null)
 
 }
