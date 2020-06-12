@@ -67,11 +67,9 @@ val DataFrame.size: DataFrameSize get() = DataFrameSize(ncol, nrow)
 
 // toList
 
-inline fun <reified C> TypedDataFrame<*>.toList() = df.toList<C>()
-inline fun <reified C> DataFrame.toList() = DataFrameToListTypedStub(this, C::class)
+inline fun <reified C> TypedDataFrame<*>.toList() = DataFrameToListTypedStub(this, C::class)
 
-fun DataFrame.toList(className: String) = DataFrameToListNamedStub(this, className)
-fun TypedDataFrame<*>.toList(className: String) = df.toList(className)
+fun TypedDataFrame<*>.toList(className: String) = DataFrameToListNamedStub(this, className)
 
 fun <T> TypedDataFrameRow<T>.movingAverage(k: Int, selector: RowSelector<T, Double>): Double {
     var sum = .0
@@ -87,4 +85,54 @@ fun <T> TypedDataFrameRow<T>.movingAverage(k: Int, selector: RowSelector<T, Doub
 
 // merge
 
-fun <T> Iterable<TypedDataFrame<T>>.bindRows() = map { it.df }.bindRows().typed<T>()
+fun <T> Iterable<TypedDataFrame<T>>.bindRows() = bindRows<T>(toList())
+
+private fun bindColData(dataFrames: List<TypedDataFrame<*>>, colName: String): Array<*> {
+    val totalRows = dataFrames.map { it.nrow }.sum()
+
+    val arrayList = Array<Any?>(totalRows, { 0 })
+
+    var iter = 0
+
+    dataFrames.forEach {
+        if (it.columnNames().contains(colName)) {
+            it[colName].anyValues.forEach {
+                arrayList[iter++] = it
+            }
+        } else {
+            // column is missing in `it`
+            for (row in (0 until it.nrow)) {
+                arrayList[iter++] = null
+            }
+        }
+    }
+
+    return arrayList
+}
+
+fun <T> bindRows(dataFrames: List<TypedDataFrame<*>>): TypedDataFrame<*> { // add options about NA-fill over non-overlapping columns
+    val bindCols = mutableListOf<DataCol>()
+
+    val colNames = dataFrames
+            .map { it.columnNames() }
+            .foldRight(emptyList<String>()) { acc, right ->
+                acc + right.minus(acc)
+            }
+
+    for (colName in colNames) {
+        val colDataCombined: Array<*> = bindColData(dataFrames.toList(), colName)
+
+        val frames = dataFrames.mapNotNull { it.tryGetColumn(colName) }
+        when (frames.first().toSrc()) {
+            is DoubleCol -> DoubleCol(colName, colDataCombined.map { it as Double? })
+            is IntCol -> IntCol(colName, colDataCombined.map { it as Int? })
+            is LongCol -> LongCol(colName, colDataCombined.map { it as Long? })
+            is StringCol -> StringCol(colName, colDataCombined.map { it as String? })
+            is BooleanCol -> BooleanCol(colName, colDataCombined.map { it as Boolean? })
+            is AnyCol -> AnyCol(colName, colDataCombined.toList())
+            else -> throw UnsupportedOperationException()
+        }.apply { bindCols.add(typed()) }
+    }
+
+    return dataFrameOf(bindCols).typed<T>()
+}
