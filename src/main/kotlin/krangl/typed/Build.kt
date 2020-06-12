@@ -1,8 +1,8 @@
 package krangl.typed
 
 import krangl.ArrayUtils
-import krangl.DataCol
 import krangl.DataFrame
+import krangl.InplaceDataFrameBuilder
 import krangl.util.asDF
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.declaredMembers
@@ -13,7 +13,7 @@ class IterableDataFrameBuilder<T>(val source: Iterable<T>){
 
     fun add(column: DataCol) = columns.add(column)
 
-    inline fun <reified R> add(name: String, noinline expression: T.() -> R?) = add(newColumn(name, source.map{ expression(it)}))
+    inline fun <reified R> add(name: String, noinline expression: T.() -> R?) = add(newColumn(name, source.map { expression(it)}))
 
     inline infix fun <reified R> String.to(noinline expression: T.() -> R?) = add(this, expression)
 
@@ -46,4 +46,6 @@ inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame {
     return columns.asDF()
 }
 
-fun dataFrameOf(columns: Iterable<DataCol>) = krangl.dataFrameOf(*(columns.toList().toTypedArray()))
+fun dataFrameOf(columns: Iterable<DataCol>) = krangl.dataFrameOf(*(columns.map { it.toSrc() }.toTypedArray()))
+
+fun dataFrameOfSrc(columns: Iterable<SrcDataCol>) = dataFrameOf(columns.map { it.typed() })

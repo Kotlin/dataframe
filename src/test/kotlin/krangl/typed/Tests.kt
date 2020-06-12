@@ -13,7 +13,7 @@ class TypedDataFrameTests {
             "Mark", 30, "Paris",
             "Mark", 40, "Milan",
             "Bob", 30, "Tokyo"
-    )
+    ).typed<Any>()
 
     // Generated code
 
@@ -27,15 +27,15 @@ class TypedDataFrameTests {
     val TypedDataFrameRow<Person>.name get() = this["name"] as String
     val TypedDataFrameRow<Person>.age get() = this["age"] as Int
     val TypedDataFrameRow<Person>.city get() = this["city"] as String
-    val TypedDataFrame<Person>.name get() = this["name"] as StringCol
-    val TypedDataFrame<Person>.age get() = this["age"] as IntCol
-    val TypedDataFrame<Person>.city get() = this["city"] as StringCol
+    val TypedDataFrame<Person>.name get() = this["name"]
+    val TypedDataFrame<Person>.age get() = this["age"]
+    val TypedDataFrame<Person>.city get() = this["city"]
 
-    val typed = df.typed<Person>()
+    val typed: TypedDataFrame<Person> = df.typed()
 
     @Test
     fun `size`() {
-        typed.size shouldBe DataFrameSize(df.ncol, df.nrow)
+        df.size shouldBe DataFrameSize(df.ncol, df.nrow)
     }
 
     @Test
@@ -60,14 +60,14 @@ class TypedDataFrameTests {
     @Test
     fun `update`(){
         val updated = typed.update { age } with { age*2 }
-        updated.age.values.toList() shouldBe (df["age"] * 2).values().toList()
+        updated.age.values.toList() shouldBe (df.df["age"] * 2).values().toList()
     }
 
     @Test
     fun `resetToNull`(){
         val updated = typed.update { allColumns }.withNull()
         updated.columns.forEach{
-            it.values().toList().forEach { it shouldBe null }
+            it.values.toList().forEach { it shouldBe null }
         }
     }
 
@@ -82,12 +82,12 @@ class TypedDataFrameTests {
             map { sortedBy {age}.first().city } into "youngest origin"
         }
         a.nrow shouldBe 3
-        a["n"].values().toList() shouldBe listOf(1, 2, 3)
-        a["old count"].values().toList() shouldBe listOf(0, 2, 2)
-        a["median age"].values().toList() shouldBe listOf(15.0, 37.5, 30.0)
-        a["min age"].values().toList() shouldBe listOf(15, 30, 20)
-        a["oldest origin"].values().toList() shouldBe listOf("London", "Dubai", "Milan")
-        a["youngest origin"].values().toList() shouldBe listOf("London", "Tokyo", "Moscow")
+        a["n"].values.toList() shouldBe listOf(1, 2, 3)
+        a["old count"].values.toList() shouldBe listOf(0, 2, 2)
+        a["median age"].values.toList() shouldBe listOf(15.0, 37.5, 30.0)
+        a["min age"].values.toList() shouldBe listOf(15, 30, 20)
+        a["oldest origin"].values.toList() shouldBe listOf("London", "Dubai", "Milan")
+        a["youngest origin"].values.toList() shouldBe listOf("London", "Tokyo", "Moscow")
     }
 
     @Test
@@ -101,6 +101,24 @@ class TypedDataFrameTests {
     fun `multiple columns sort`(){
         val result = typed.sortedBy { age and name.desc and city }.map { city }
         val expected = typed.rows.sortedBy { it.city }.sortedByDescending { it.name }.sortedBy { it.age }.map { it.city }
+        result shouldBe expected
+    }
+
+    @Test
+    fun `sorting2`() {
+        val name by column<String>()
+        val age by column<Int>()
+        val gorod = column<String>("city")
+
+        val result = df.sortedBy { name and age.desc }.map { this[gorod] }
+        val expected = typed.rows.sortedByDescending { it.age }.sortedBy { it.name }.map { it.city }
+        result shouldBe expected
+    }
+
+    @Test
+    fun `sorting3`() {
+        val result = df.sortedBy { "name" and "age".desc }.map { string("city") }
+        val expected = typed.rows.sortedByDescending { it.age }.sortedBy { it.name }.map { it.city }
         result shouldBe expected
     }
 }

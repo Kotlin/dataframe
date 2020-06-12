@@ -35,9 +35,9 @@ class SeriesTests {
     val TypedDataFrameRow<Weather>.city get() = this["city"] as String
     val TypedDataFrameRow<Weather>.day get() = this["day"] as Int
     val TypedDataFrameRow<Weather>.temp get() = this["temp"] as Int
-    val TypedDataFrame<Weather>.city get() = this["city"] as StringCol
-    val TypedDataFrame<Weather>.day get() = this["day"] as IntCol
-    val TypedDataFrame<Weather>.temp get() = this["temp"] as IntCol
+    val TypedDataFrame<Weather>.city get() = this["city"]
+    val TypedDataFrame<Weather>.day get() = this["day"]
+    val TypedDataFrame<Weather>.temp get() = this["temp"]
 
     val typed = df.typed<Weather>()
 
@@ -51,7 +51,7 @@ class SeriesTests {
 
         val srcData = typed.map { (city to day) to temp }.toMap()
         val expected = typed.sortedBy {day}.sortedByDesc {city}.map { srcData[city to (day-1)]?.let { temp - it} ?: 0 }
-        withDiff["diff"].values().toList() shouldBe expected
+        withDiff["diff"].values.toList() shouldBe expected
     }
 
 }
