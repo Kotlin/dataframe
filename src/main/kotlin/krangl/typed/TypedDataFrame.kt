@@ -98,16 +98,16 @@ interface TypedDataFrame<out T> {
     fun select(selector: ColumnSelector<T>) = select(getColumns(selector))
     fun selectIf(filter: DataCol.(DataCol) -> Boolean) = select(columns.filter { filter(it, it) })
 
-    fun sortedBy(columns: List<SortColumnDescriptor>): TypedDataFrame<T>
-    fun sortedBy(columns: Iterable<NamedColumn>) = sortedBy(columns.map { SortColumnDescriptor(it.name, SortDirection.Asc) })
-    fun sortedBy(vararg columns: Column) = sortedBy(columns.toList())
-    fun sortedBy(vararg columns: String) = sortedBy(getColumns(columns))
-    fun sortedBy(selector: SortColumnSelector<T>) = sortedBy(getSortColumns(selector))
+    fun sortBy(columns: List<SortColumnDescriptor>): TypedDataFrame<T>
+    fun sortBy(columns: Iterable<NamedColumn>) = sortBy(columns.map { SortColumnDescriptor(it.name, SortDirection.Asc) })
+    fun sortBy(vararg columns: Column) = sortBy(columns.toList())
+    fun sortBy(vararg columns: String) = sortBy(getColumns(columns))
+    fun sortBy(selector: SortColumnSelector<T>) = sortBy(getSortColumns(selector))
 
-    fun sortedByDesc(columns: Iterable<NamedColumn>) = sortedBy(columns.map { SortColumnDescriptor(it.name, SortDirection.Desc) })
-    fun sortedByDesc(vararg columns: Column) = sortedByDesc(columns.toList())
-    fun sortedByDesc(vararg columns: String) = sortedByDesc(getColumns(columns))
-    fun sortedByDesc(selector: ColumnSelector<T>) = sortedByDesc(getColumns(selector))
+    fun sortByDesc(columns: Iterable<NamedColumn>) = sortBy(columns.map { SortColumnDescriptor(it.name, SortDirection.Desc) })
+    fun sortByDesc(vararg columns: Column) = sortByDesc(columns.toList())
+    fun sortByDesc(vararg columns: String) = sortByDesc(getColumns(columns))
+    fun sortByDesc(selector: ColumnSelector<T>) = sortByDesc(getColumns(selector))
 
     fun remove(cols: Iterable<NamedColumn>) = cols.map { it.name }.toSet().let { exclude -> new(columns.filter { !exclude.contains(it.name) }) }
     fun remove(vararg cols: Column) = remove(cols.toList())
@@ -253,7 +253,7 @@ internal class TypedDataFrameImpl<T>(override val df: DataFrame) : TypedDataFram
         }
     }
 
-    override fun sortedBy(columns: List<SortColumnDescriptor>): TypedDataFrame<T> {
+    override fun sortBy(columns: List<SortColumnDescriptor>): TypedDataFrame<T> {
 
         val compChain = columns.map {
             val column = this[it.column]
