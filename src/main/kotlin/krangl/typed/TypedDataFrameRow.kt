@@ -9,6 +9,7 @@ interface TypedDataFrameRow<out T> {
     val index: Int
     fun getRow(index: Int): TypedDataFrameRow<T>?
     operator fun get(name: String): Any?
+    operator fun <R: Any> get(column: TypedCol<R>) = get(column.name) as R?
     fun <T> read(name: String) = get(name) as T?
     val fields: List<Pair<String, Any?>>
     fun int(name: String) = nint(name)!!

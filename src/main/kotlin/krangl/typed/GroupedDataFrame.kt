@@ -1,7 +1,5 @@
 package krangl.typed
 
-import krangl.DataCol
-
 internal fun <T> GroupedDataFrame<T>.getColumns(selector: ColumnSelector<T>) = selector(TypedDataFrameWithColumnsImpl((this as GroupedDataFrameImpl<T>).groups.first().df)).extractColumns()typealias GroupKey = List<Any?>
 
 interface DataGroup<out T> {
@@ -28,11 +26,11 @@ interface GroupedDataFrame<out T> {
     fun groupedBy() = groups.map { it.df.take(1).select(*columnNames.toTypedArray()) }.bindRows()
     fun groups() = groups.map { it.df }
 
-    fun sortedBy(columns: Iterable<DataCol>) = modify { sortedBy(columns) }
+    fun sortedBy(columns: Iterable<NamedColumn>) = modify { sortedBy(columns) }
     fun sortedBy(selector: ColumnSelector<T>) = sortedBy(getColumns(selector))
 
     fun sortedByDesc(selector: ColumnSelector<T>) = sortedByDesc(getColumns(selector))
-    fun sortedByDesc(columns: Iterable<DataCol>) = modify {sortedByDesc(columns)}
+    fun sortedByDesc(columns: Iterable<NamedColumn>) = modify {sortedByDesc(columns)}
 
     fun modify(transform: TypedDataFrame<T>.() -> TypedDataFrame<*>): GroupedDataFrame<T>
 

@@ -29,7 +29,7 @@ data class DataFrameToListTypedStub(val df: DataFrame, val interfaceClass: KClas
 
 fun <T> TypedDataFrame<T>.getScheme(name: String? = null, columnSelector: ColumnSelector<T>? = null): String {
     val interfaceName = name ?: "DataRecord"
-    val cols = columnSelector?.let { getColumns(it) } ?: columns
+    val cols = columnSelector?.let { getColumns(it).map { this[it.name] } } ?: columns
     return CodeGenerator.generateInterfaceDeclaration(cols, interfaceName, withBaseInterfaces = false, isOpen = true)
 }
 
@@ -140,12 +140,12 @@ object CodeGenerator : CodeGeneratorApi {
         return Scheme(columns.mapIndexed { index, it ->
             val fieldName = generateValidFieldName(it.name, index, generatedFieldNames)
             generatedFieldNames.add(fieldName)
-            FieldInfo(it.name, fieldName, it.valueType, it.javaClass.kotlin.createType())
+            FieldInfo(it.name, fieldName, it.type, it.javaClass.kotlin.createType())
         })
     }
 
     private val DataFrame.scheme: Scheme
-        get() = getScheme(cols)
+        get() = getScheme(cols.map { it.typed() })
 
     // Rendering
 

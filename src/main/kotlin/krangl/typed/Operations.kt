@@ -20,8 +20,8 @@ class TypedColumnsFromDataRowBuilder<T>(val dataFrame: TypedDataFrame<T>) {
 
 // add Column
 
-operator fun DataFrame.plus(col: DataCol) = dataFrameOf(cols + col)
-operator fun DataFrame.plus(col: Iterable<DataCol>) = dataFrameOf(cols + col)
+operator fun TypedDataFrame<*>.plus(col: DataCol) = dataFrameOf(columns + col)
+operator fun TypedDataFrame<*>.plus(col: Iterable<DataCol>) = dataFrameOf(columns + col)
 
 inline fun <reified T, D> TypedDataFrame<D>.add(name: String, noinline expression: TypedDataFrameRow<D>.() -> T?) =
         (this + new(name, expression))
@@ -29,10 +29,10 @@ inline fun <reified T, D> TypedDataFrame<D>.add(name: String, noinline expressio
 inline fun <reified T, D> GroupedDataFrame<D>.add(name: String, noinline expression: TypedDataFrameRow<D>.() -> T?) =
         modify { add(name, expression) }
 
-inline fun <reified T> DataFrame.addColumn(name: String, values: List<T?>) =
+inline fun <reified T> TypedDataFrame<*>.addColumn(name: String, values: List<T?>) =
         this + newColumn(name, values)
 
-fun DataFrame.addColumn(name: String, col: DataCol) =
+fun TypedDataFrame<*>.addColumn(name: String, col: DataCol) =
         this + col.rename(name)
 
 fun <T> TypedDataFrame<T>.add(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) =
