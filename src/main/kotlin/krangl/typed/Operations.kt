@@ -49,7 +49,7 @@ operator fun <T> TypedDataFrame<T>.plus(body: TypedColumnsFromDataRowBuilder<T>.
 
 // map
 
-fun <T> TypedDataFrame<T>.map(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit): DataFrame {
+fun <T> TypedDataFrame<T>.map(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit): UntypedDataFrame {
     val builder = TypedColumnsFromDataRowBuilder(this)
     body(builder)
     return dataFrameOf(builder.columns)
@@ -96,7 +96,7 @@ private fun bindColData(dataFrames: List<TypedDataFrame<*>>, colName: String): A
 
     dataFrames.forEach {
         if (it.columnNames().contains(colName)) {
-            it[colName].anyValues.forEach {
+            it[colName].valuesList.forEach {
                 arrayList[iter++] = it
             }
         } else {
@@ -136,3 +136,7 @@ fun <T> bindRows(dataFrames: List<TypedDataFrame<*>>): TypedDataFrame<*> { // ad
 
     return dataFrameOf(bindCols).typed<T>()
 }
+
+fun <T:Comparable<T>> TypedColData<T?>.min() = valuesList.asSequence().filterNotNull().min()
+
+fun <T:Comparable<T>> TypedColData<T?>.max() = valuesList.asSequence().filterNotNull().max()

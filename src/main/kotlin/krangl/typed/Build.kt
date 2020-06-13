@@ -22,13 +22,13 @@ class IterableDataFrameBuilder<T>(val source: Iterable<T>){
     inline infix operator fun <reified R> String.invoke(noinline expression: T.() -> R?) = add(this, expression)
 }
 
-fun <T> Iterable<T>.toDataFrame(body: IterableDataFrameBuilder<T>.()->Unit): DataFrame {
+fun <T> Iterable<T>.toDataFrame(body: IterableDataFrameBuilder<T>.()->Unit): UntypedDataFrame {
     val builder = IterableDataFrameBuilder<T>(this)
     builder.body()
     return dataFrameOf(builder.columns)
 }
 
-inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame {
+inline fun <reified T> Iterable<T>.toDataFrame(): UntypedDataFrame {
 
     val declaredMembers = T::class.declaredMembers
 
@@ -41,11 +41,11 @@ inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame {
         it.name to this.map { el -> it.call(el) }
     }
 
-    val columns = results.map { ArrayUtils.handleListErasure(it.first, it.second) }
+    val columns = results.map { ArrayUtils.handleListErasure(it.first, it.second).typed() }
 
-    return columns.asDF()
+    return dataFrameOf(columns)
 }
 
-fun dataFrameOf(columns: Iterable<DataCol>) = krangl.dataFrameOf(*(columns.map { it.toSrc() }.toTypedArray()))
+fun dataFrameOf(columns: Iterable<DataCol>): UntypedDataFrame = TypedDataFrameImpl(columns.toList())
 
 fun dataFrameOfSrc(columns: Iterable<SrcDataCol>) = dataFrameOf(columns.map { it.typed() })
