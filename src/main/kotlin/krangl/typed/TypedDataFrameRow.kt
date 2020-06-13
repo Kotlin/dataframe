@@ -11,6 +11,7 @@ interface TypedDataFrameRow<out T> {
     operator fun get(name: String): Any?
     operator fun <R> get(column: TypedCol<R>) = get(column.name) as R
     operator fun <R> TypedCol<R>.invoke() = get(this)
+    operator fun <R> String.invoke() = get(this) as R
 
     fun <T> read(name: String) = get(name) as T
     val fields: List<Pair<String, Any?>>
@@ -31,10 +32,17 @@ interface TypedDataFrameRow<out T> {
     operator fun TypedCol<Long>.plus(a: Long) = get(this) + a
     operator fun TypedCol<Double>.plus(a: Double) = get(this) + a
     operator fun TypedCol<String>.plus(a: String) = get(this) + a
+    operator fun Int.plus(col: TypedCol<Int>) = this + get(col)
+    operator fun Long.plus(col: TypedCol<Long>) = this + get(col)
+    operator fun Double.plus(col: TypedCol<Double>) = this + get(col)
+    operator fun String.plus(col: TypedCol<String>) = this + get(col)
 
     operator fun TypedCol<Int>.minus(a: Int) = get(this) - a
     operator fun TypedCol<Long>.minus(a: Long) = get(this) - a
     operator fun TypedCol<Double>.minus(a: Double) = get(this) - a
+    operator fun Int.minus(col: TypedCol<Int>) = this - get(col)
+    operator fun Long.minus(col: TypedCol<Long>) = this - get(col)
+    operator fun Double.minus(col: TypedCol<Double>) = this - get(col)
 
     operator fun TypedCol<Int>.times(a: Int) = get(this) * a
     operator fun TypedCol<Long>.times(a: Long) = get(this) * a

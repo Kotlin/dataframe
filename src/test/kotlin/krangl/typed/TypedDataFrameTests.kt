@@ -128,8 +128,7 @@ class TypedDataFrameTests {
         df.update(age).with { age * 2 }.check()
         df.update { age }.with { age * 2 }.check()
 
-        df.update(ageStr).with { int(ageStr) * 2 }.check()
-        df.update {+ageStr}.with { int(ageStr) * 2 }.check()
+        df.update("age").with { int("age") * 2 }.check()
     }
 
     @Test
@@ -145,8 +144,10 @@ class TypedDataFrameTests {
         val expected = listOf(null, "London", "Dubai", "Tokyo", "Milan", null, "Moscow")
 
         typed.sortBy { name and age.desc }.map { city } shouldBe expected
+
         df.sortBy { name and age.desc }.map { city() } shouldBe expected
-        df.sortBy { nameStr and ageStr.desc }.map { nstring(cityStr) } shouldBe expected
+
+        df.sortBy { "name" and "age".desc }.map { nstring("city") } shouldBe expected
     }
 
     @Test
@@ -154,8 +155,11 @@ class TypedDataFrameTests {
         val expected = listOf("Bob", "Mark", "Bob")
 
         typed.filter { age > 20 && city != null }.map { name } shouldBe expected
+
         df.filter { age > 20 && city() != null }.map { name() } shouldBe expected
-        df.filter { int(ageStr) > 20 && get(cityStr) != null }.map { nstring(nameStr) } shouldBe expected
+
+        df.filter { int("age") > 20 && get("city") != null }.map { nstring("name") } shouldBe expected
+        df.filter { "age"<Int>() > 20 && "city"<Any?>() != null }.map { "name"<String?>() } shouldBe expected
     }
 
     @Test
@@ -166,7 +170,7 @@ class TypedDataFrameTests {
         typed.filterNotNull(typed.weight).check()
         df.filterNotNull { weight }.check()
         df.filterNotNull(weight).check()
-        df.filterNotNull(weightStr).check()
+        df.filterNotNull("weight").check()
     }
 
     @Test
@@ -175,27 +179,30 @@ class TypedDataFrameTests {
 
         typed.filterNotNull { weight and city}.nrow shouldBe expected
         typed.filterNotNull(typed.weight, typed.city).nrow shouldBe expected
+
         df.filterNotNull { weight and city}.nrow shouldBe expected
         df.filterNotNull(weight, city).nrow shouldBe expected
-        df.filterNotNull(weightStr, cityStr).nrow shouldBe expected
+        df.filterNotNull("weight", "city").nrow shouldBe expected
     }
 
     @Test
     fun `select one `() {
         val expected = listOf(typed.age)
+        fun TypedDataFrame<*>.check() = columns shouldBe expected
 
-        typed.select { age }.columns shouldBe expected
+        typed.select { age }.check()
 
-        df.select {age}.columns shouldBe expected
-        df.select(age).columns shouldBe expected
+        df.select {age}.check()
+        df.select(age).check()
 
-        df.select(ageStr).columns shouldBe expected
-        df.select {+ageStr}.columns shouldBe expected
+        df.select("age").check()
+        df.select {"age"()}.check()
     }
 
     @Test
     fun `select if`() {
         val expected = listOf(typed.name, typed.city)
+
         typed.selectIf { it.name.length == 4 }.columns shouldBe expected
         df.selectIf { it.name.length == 4 }.columns shouldBe expected
     }
@@ -209,8 +216,8 @@ class TypedDataFrameTests {
         df.select {age and city}.columns shouldBe expected
         df.select(age, city).columns shouldBe expected
 
-        df.select {ageStr and cityStr}.columns shouldBe expected
-        df.select(ageStr, cityStr).columns shouldBe expected
+        df.select {"age" and "city"}.columns shouldBe expected
+        df.select("age", "city").columns shouldBe expected
     }
 
     @Test
@@ -249,12 +256,12 @@ class TypedDataFrameTests {
 
         df.groupBy(nameStr).aggregate {
             count into "n"
-            count { int(ageStr) > 25 } into "old count"
-            median { int(ageStr) } into "median age"
-            min { int(ageStr) } into "min age"
-            all { get(weightStr) != null} into "all with weights"
-            maxBy { int(ageStr) }.map { get(cityStr) } into "oldest origin"
-            map { sortBy(ageStr).first()[cityStr] } into "youngest origin"
+            count { int("age") > 25 } into "old count"
+            median { int("age") } into "median age"
+            min { int("age") } into "min age"
+            all { get("weight") != null} into "all with weights"
+            maxBy { int("age") }.map { get("city") } into "oldest origin"
+            map { sortBy("age").first()["city"] } into "youngest origin"
         }.check()
     }
 
@@ -269,8 +276,9 @@ class TypedDataFrameTests {
         df.min(age) shouldBe expected
         df[age].min() shouldBe expected
 
-        df.min {int(ageStr)} shouldBe expected
-        df[ageStr].cast<Int>().min() shouldBe expected
+        df.min {int("age")} shouldBe expected
+        df.min {"age"<Int>()} shouldBe expected
+        df["age"].cast<Int>().min() shouldBe expected
     }
 
     @Test
@@ -284,7 +292,58 @@ class TypedDataFrameTests {
         df.max(weight) shouldBe expected
         df[weight].max() shouldBe expected
 
-        df.max {nint(weightStr)} shouldBe expected
-        df[weightStr].cast<Int?>().max() shouldBe expected
+        df.max {nint("weight")} shouldBe expected
+        df["weight"].cast<Int?>().max() shouldBe expected
+    }
+
+    @Test
+    fun `add one column`(){
+        val now = 2020
+        val yearStr = "year"
+        val expected = typed.map { now - age }
+
+        fun TypedDataFrame<*>.check() = this[yearStr].valuesList shouldBe expected
+
+        typed.add(yearStr) {now - age}.check()
+        df.add(yearStr) { now - age }.check()
+
+        df.add(yearStr) { now - int("age")}.check()
+        df.add(yearStr) { now - "age"<Int>()}.check()
+    }
+
+    @Test
+    fun `remove one column`(){
+
+        val expected = listOf(nameStr, cityStr, weightStr)
+        fun check(body: ()->TypedDataFrame<*>) = body().columnNames() shouldBe expected
+
+        check { typed - {age} }
+        check { typed.remove {age} }
+
+        check { df - {age} }
+        check { df - age }
+        check { df.remove(age) }
+
+        check { df - "age" }
+        check { df.remove("age") }
+    }
+
+    @Test
+    fun `remove two columns`(){
+
+        val expected = listOf(nameStr, cityStr)
+        fun check(body: ()->TypedDataFrame<*>) = body().columnNames() shouldBe expected
+
+        check { typed - {age and weight} }
+        check { typed - {age} - {weight} }
+        check { typed.remove {age and weight} }
+
+        check { df - {age and weight} }
+        check { df - {age} - {weight} }
+        check { df.remove(age, weight) }
+
+        check { df - {"age" and "weight"} }
+        check { df - "age" - "weight" }
+        check { df.remove("age", "weight") }
     }
 }

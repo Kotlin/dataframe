@@ -18,7 +18,7 @@ interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
 
     infix fun ColumnSet.and(other: String) = ColumnGroup(listOf(this, other.asColumnName()))
 
-    operator fun String.unaryPlus() = asColumnName()
+    operator fun String.invoke() = asColumnName()
 }
 
 interface TypedDataFrameWithColumnsForSort<out T> : TypedDataFrameWithColumns<T> {
@@ -123,12 +123,14 @@ interface TypedDataFrame<out T> {
     fun sortByDesc(selector: ColumnSelector<T>) = sortByDesc(getColumns(selector))
 
     fun remove(cols: Iterable<NamedColumn>) = cols.map { it.name }.toSet().let { exclude -> new(columns.filter { !exclude.contains(it.name) }) }
-    fun remove(vararg cols: Column) = remove(cols.toList())
+    fun remove(vararg cols: NamedColumn) = remove(cols.toList())
     fun remove(vararg columns: String) = remove(getColumns(columns))
     fun remove(selector: ColumnSelector<T>) = remove(getColumns(selector))
 
     infix operator fun minus(cols: ColumnSelector<T>) = remove(cols)
     infix operator fun minus(cols: Iterable<NamedColumn>) = remove(cols)
+    infix operator fun minus(column: NamedColumn) = remove(column)
+    infix operator fun minus(column: String) = remove(column)
 
     fun groupBy(cols: Iterable<NamedColumn>): GroupedDataFrame<T>
     fun groupBy(vararg cols: Column) = groupBy(cols.toList())
