@@ -55,11 +55,11 @@ class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
 
     fun add(column: DataCol) = columns.add(column)
 
-    fun <N:Comparable<N>> minBy(selector: RowSelector<T, N>) =
-            map { minBy(selector)!! }
+    fun <N:Comparable<N>> minBy(selector: RowSelector<T, N>) = map { minBy(selector)!! }
+    fun <N:Comparable<N>> minBy(column: TypedCol<N>) = map { minBy { column() }!! }
 
-    fun <N:Comparable<N>> maxBy(selector: RowSelector<T, N>) =
-            map { maxBy(selector)!! }
+    fun <N:Comparable<N>> maxBy(selector: RowSelector<T, N>) = map { maxBy(selector)!! }
+    fun <N:Comparable<N>> maxBy(column: TypedCol<N>) = map { maxBy { column() }!! }
 
     fun <R> ValuesList<TypedDataFrameRow<T>>.map(selector: RowSelector<T, R>) =
             list.map(selector).wrap()
@@ -72,12 +72,19 @@ class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
     fun count(filter: RowFilter<T>) = groups.map {it.count(filter)}.wrap()
 
     inline fun <reified R: Comparable<R>> median(noinline selector: RowSelector<T, R>) = groups.map { it.map(selector).median() }.wrap()
+    inline fun <reified R: Comparable<R>> median(column: TypedCol<R>) = groups.map { it.map { column() }.median() }.wrap()
 
     inline fun <reified R:Number> mean(noinline selector: RowSelector<T, R>) = groups.map { it.map(selector).mean() }.wrap()
+    inline fun <reified R:Number> mean(column: TypedCol<R>) = groups.map { it.map{ column() }.mean() }.wrap()
 
-    inline fun <reified R:Comparable<R>> min(noinline selector: RowSelector<T, R>) = groups.map { it.map(selector).min()!! }.wrap()
+    fun all(predicate: RowFilter<T>) = groups.map { it.all(predicate) }.wrap()
+    fun any(predicate: RowFilter<T>) = groups.map { it.any(predicate) }.wrap()
 
-    inline fun <reified R:Comparable<R>> max(noinline selector: RowSelector<T, R>) = groups.map { it.map(selector).max()!! }.wrap()
+    inline fun <reified R:Comparable<R>> min(noinline selector: RowSelector<T, R>) = groups.map { it.min(selector)!! }.wrap()
+    inline fun <reified R:Comparable<R>> min(column: TypedCol<R>) = groups.map { it.min(column)!! }.wrap()
+
+    inline fun <reified R:Comparable<R>> max(noinline selector: RowSelector<T, R>) = groups.map { it.max(selector)!! }.wrap()
+    inline fun <reified R:Comparable<R>> max(column: TypedCol<R>) = groups.map { it.max(column)!! }.wrap()
 
     inline infix fun <reified R> ValuesList<R>.into(columnName: String) = add(newColumn(columnName, list))
 

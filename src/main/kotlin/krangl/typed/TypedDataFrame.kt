@@ -14,9 +14,11 @@ interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
 
     infix fun String.and(other: ColumnSet) = ColumnGroup(listOf(asColumnName(), other))
 
+    infix fun String.and(other: String) = ColumnGroup(listOf(asColumnName(), other.asColumnName()))
+
     infix fun ColumnSet.and(other: String) = ColumnGroup(listOf(this, other.asColumnName()))
 
-    operator fun plus(columnName: String) = columnName.asColumnName()
+    operator fun String.unaryPlus() = asColumnName()
 }
 
 interface TypedDataFrameWithColumnsForSort<out T> : TypedDataFrameWithColumns<T> {
@@ -73,6 +75,8 @@ class SortColumnDescriptor(val column: String, val direction: SortDirection)
 
 internal fun <T> TypedDataFrame<T>.new(columns: Iterable<DataCol>) = dataFrameOf(columns).typed<T>()
 
+typealias UntypedDataFrame = TypedDataFrame<Nothing>
+
 interface TypedDataFrame<out T> {
 
     val nrow: Int
@@ -84,6 +88,7 @@ interface TypedDataFrame<out T> {
 
     operator fun get(rowIndex: Int): TypedDataFrameRow<T>
     operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found") // TODO
+    operator fun <R> get(column: TypedCol<R>) = get(column.name) as TypedColData<R>
     operator fun get(indices: IntArray) = getRows(indices)
     operator fun get(indices: List<Int>) = getRows(indices)
     operator fun get(mask: BooleanArray) = getRows(mask)
@@ -122,28 +127,43 @@ interface TypedDataFrame<out T> {
     fun remove(vararg columns: String) = remove(getColumns(columns))
     fun remove(selector: ColumnSelector<T>) = remove(getColumns(selector))
 
-    infix operator fun minus(selector: ColumnSelector<T>) = remove(selector)
-    infix operator fun minus(columns: Iterable<NamedColumn>) = remove(columns)
+    infix operator fun minus(cols: ColumnSelector<T>) = remove(cols)
+    infix operator fun minus(cols: Iterable<NamedColumn>) = remove(cols)
 
     fun groupBy(cols: Iterable<NamedColumn>): GroupedDataFrame<T>
     fun groupBy(vararg cols: Column) = groupBy(cols.toList())
     fun groupBy(vararg cols: String) = groupBy(getColumns(cols))
-    fun groupBy(selector: ColumnSelector<T>) = groupBy(getColumns(selector))
+    fun groupBy(cols: ColumnSelector<T>) = groupBy(getColumns(cols))
 
-    fun update(selector: ColumnSelector<T>) = UpdateClauseImpl(this, getColumns(selector)) as UpdateClause<T>
+    fun update(cols: Iterable<NamedColumn>) = UpdateClauseImpl(this, cols.toList()) as UpdateClause<T>
+    fun update(vararg cols: Column) = update(cols.toList())
+    fun update(vararg cols: String) = update(getColumns(cols))
+    fun update(cols: ColumnSelector<T>) = update(getColumns(cols))
 
     fun addRowNumber(columnName: String = "id") = new(columns + IntCol(columnName, IntArray(nrow) { it }).typed())
 
     fun filter(predicate: RowFilter<T>): TypedDataFrame<T>
-    fun filterNotNull(columns: ColumnSelector<T>) = getColumns(columns).let { cols -> filter { cols.all { col -> this[col.name] != null } } }
+
+    fun filterNotNull(cols: Iterable<NamedColumn>) = filter { cols.all { col -> this[col.name] != null } }
+    fun filterNotNull(vararg cols: Column) = filterNotNull(cols.toList())
+    fun filterNotNull(vararg cols: String) = filterNotNull(getColumns(cols))
+    fun filterNotNull(cols: ColumnSelector<T>) = filterNotNull(getColumns(cols))
+
     fun filterNotNullAny(columns: ColumnSelector<T>) = getColumns(columns).let { cols -> filter { cols.any { col -> this[col.name] != null } } }
     fun filterNotNullAny() = filter { fields.any { it.second != null } }
     fun filterNotNull() = filter { fields.all { it.second != null } }
 
-    fun <D : Comparable<D>> min(selector: RowSelector<T, D>): D? = rows.map(selector).min()
-    fun <D : Comparable<D>> max(selector: RowSelector<T, D>): D? = rows.map(selector).max()
+    fun <D : Comparable<D>> min(selector: RowSelector<T, D?>): D? = rows.asSequence().map(selector).filterNotNull().min()
+    fun <D : Comparable<D>> min(col: TypedCol<D?>): D? = get(col).valuesList.asSequence().filterNotNull().min()
+
+    fun <D : Comparable<D>> max(selector: RowSelector<T, D?>): D? = rows.asSequence().map(selector).filterNotNull().max()
+    fun <D : Comparable<D>> max(col: TypedCol<D?>): D? = get(col).valuesList.asSequence().filterNotNull().max()
+
     fun <D : Comparable<D>> maxBy(selector: RowSelector<T, D>) = rows.maxBy(selector)
     fun <D : Comparable<D>> minBy(selector: RowSelector<T, D>) = rows.minBy(selector)
+
+    fun all(predicate: RowFilter<T>): Boolean = rows.all(predicate)
+    fun any(predicate: RowFilter<T>): Boolean = rows.any(predicate)
 
     fun count(predicate: RowFilter<T>) = rows.count(predicate)
 
@@ -159,6 +179,7 @@ interface TypedDataFrame<out T> {
     fun tail(numRows: Int = 5) = takeLast(numRows)
 
     fun <R> map(selector: RowSelector<T, R>) = rows.map(selector)
+    fun forEach(selector: RowSelector<T, Unit>) = rows.forEach(selector)
 
     val size get() = DataFrameSize(ncol, nrow)
 }
@@ -224,7 +245,7 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
 
         override fun iterator() = object : Iterator<List<Any?>> {
 
-            val colIterators = columns.map { it.anyValues.iterator() }
+            val colIterators = columns.map { it.valuesList.iterator() }
 
             override fun hasNext(): Boolean = colIterators.firstOrNull()?.hasNext() ?: false
 
