@@ -14,7 +14,7 @@ interface TypedDataFrameRow<out T> {
     operator fun <R> String.invoke() = get(this) as R
 
     fun <T> read(name: String) = get(name) as T
-    val fields: List<Pair<String, Any?>>
+    val values: List<Pair<String, Any?>>
 
     fun int(name: String) = read<Int>(name)
     fun nint(name: String) = read<Int?>(name)
@@ -58,8 +58,8 @@ interface TypedDataFrameRow<out T> {
     operator fun TypedCol<Long>.div(a: Int) = get(this) / a
     operator fun TypedCol<Double>.div(a: Long) = get(this) / a
 
-    infix fun <R: Any> TypedCol<R>.eq(a: R?) = get(this) == a
-    infix fun <R: Any> TypedCol<R>.neq(a: R?) = get(this) != a
+    infix fun <R> TypedCol<R>.eq(a: R?) = get(this) == a
+    infix fun <R> TypedCol<R>.neq(a: R?) = get(this) != a
 }
 
 internal class TypedDataFrameRowImpl<T>(var row: DataFrameRow, override var index: Int, val resolver: RowResolver<T>) : TypedDataFrameRow<T> {
@@ -76,7 +76,7 @@ internal class TypedDataFrameRowImpl<T>(var row: DataFrameRow, override var inde
 
     override fun getRow(index: Int): TypedDataFrameRow<T>? = resolver[index]
 
-    override val fields: List<Pair<String, Any?>>
+    override val values: List<Pair<String, Any?>>
         get() = row.entries.map { it.key to it.value }
 
 }

@@ -49,3 +49,5 @@ inline fun <reified T> Iterable<T>.toDataFrame(): UntypedDataFrame {
 fun dataFrameOf(columns: Iterable<DataCol>): UntypedDataFrame = TypedDataFrameImpl(columns.toList())
 
 fun dataFrameOfSrc(columns: Iterable<SrcDataCol>) = dataFrameOf(columns.map { it.typed() })
+
+fun dataFrameOf(vararg header: NamedColumn) = InplaceDataFrameBuilder(header.map{it.name})
