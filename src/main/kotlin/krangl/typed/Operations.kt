@@ -96,7 +96,7 @@ private fun bindColData(dataFrames: List<TypedDataFrame<*>>, colName: String): A
 
     dataFrames.forEach {
         if (it.columnNames().contains(colName)) {
-            it[colName].valuesList.forEach {
+            it[colName].values.forEach {
                 arrayList[iter++] = it
             }
         } else {
@@ -110,7 +110,7 @@ private fun bindColData(dataFrames: List<TypedDataFrame<*>>, colName: String): A
     return arrayList
 }
 
-fun <T> bindRows(dataFrames: List<TypedDataFrame<*>>): TypedDataFrame<*> { // add options about NA-fill over non-overlapping columns
+fun <T> bindRows(dataFrames: List<TypedDataFrame<*>>): TypedDataFrame<T> { // add options about NA-fill over non-overlapping columns
     val bindCols = mutableListOf<DataCol>()
 
     val colNames = dataFrames
@@ -137,6 +137,11 @@ fun <T> bindRows(dataFrames: List<TypedDataFrame<*>>): TypedDataFrame<*> { // ad
     return dataFrameOf(bindCols).typed<T>()
 }
 
-fun <T:Comparable<T>> TypedColData<T?>.min() = valuesList.asSequence().filterNotNull().min()
+operator fun <T> TypedDataFrame<T>.plus(other: TypedDataFrame<T>) = bindRows<T>(listOf(this, other))
 
-fun <T:Comparable<T>> TypedColData<T?>.max() = valuesList.asSequence().filterNotNull().max()
+fun TypedDataFrame<*>.add(vararg other: TypedDataFrame<*>) = bindRows<Unit>(listOf(this) + other.toList())
+
+// Column operations
+
+fun <T:Comparable<T>> TypedColData<T?>.min() = values.asSequence().filterNotNull().min()
+fun <T:Comparable<T>> TypedColData<T?>.max() = values.asSequence().filterNotNull().max()

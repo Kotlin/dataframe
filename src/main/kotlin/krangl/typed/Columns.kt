@@ -3,11 +3,10 @@ package krangl.typed
 import krangl.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-import kotlin.reflect.KType
 import kotlin.reflect.full.createType
 
 interface TypedValues<out T>{
-    val valuesList: List<T>
+    val values: List<T>
 }
 
 interface ColumnSet
@@ -25,8 +24,8 @@ typealias Column = TypedCol<*>
 
 interface TypedColData<out T> : TypedCol<T>, TypedValues<T> {
     val hasNulls: Boolean
-    val length: Int
-    operator fun get(index: Int): T
+    val length get() = values.size
+    operator fun get(index: Int) = values[index]
     val type get() = valueClass.createType(nullable = hasNulls)
 }
 
@@ -40,7 +39,10 @@ fun String.asColumnName() = NamedColumnImpl(this)
 
 class TypedColDesc<T>(override val name: String, override val valueClass: KClass<*>) : TypedCol<T>{
     operator fun getValue(thisRef: Any?, property: KProperty<*>) = this
+
 }
+
+inline fun <reified T> TypedColDesc<T>.nullable() = TypedColDesc<T?>(name, valueClass)
 
 class TypedDataCol<T>(val col: SrcDataCol, override val valueClass: KClass<*>) : TypedColData<T> {
 
@@ -49,13 +51,9 @@ class TypedDataCol<T>(val col: SrcDataCol, override val valueClass: KClass<*>) :
 
     override val hasNulls = col.hasNulls
 
-    override val length get() = valuesList.size
+    override val values = col.values().map { it as T }
 
-    override val valuesList = col.values().map { it as T }
-
-    override fun get(index: Int) = valuesList[index]
-
-    override fun toString() = valuesList.joinToString()
+    override fun toString() = values.joinToString()
 }
 
 fun DataCol.toSrc() = when (this) {

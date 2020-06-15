@@ -152,17 +152,22 @@ interface TypedDataFrame<out T> {
     fun filterNotNull(cols: ColumnSelector<T>) = filterNotNull(getColumns(cols))
 
     fun filterNotNullAny(columns: ColumnSelector<T>) = getColumns(columns).let { cols -> filter { cols.any { col -> this[col.name] != null } } }
-    fun filterNotNullAny() = filter { fields.any { it.second != null } }
-    fun filterNotNull() = filter { fields.all { it.second != null } }
+    fun filterNotNullAny() = filter { values.any { it.second != null } }
+    fun filterNotNull() = filter { values.all { it.second != null } }
 
     fun <D : Comparable<D>> min(selector: RowSelector<T, D?>): D? = rows.asSequence().map(selector).filterNotNull().min()
-    fun <D : Comparable<D>> min(col: TypedCol<D?>): D? = get(col).valuesList.asSequence().filterNotNull().min()
+    fun <D : Comparable<D>> min(col: TypedCol<D?>): D? = get(col).values.asSequence().filterNotNull().min()
 
     fun <D : Comparable<D>> max(selector: RowSelector<T, D?>): D? = rows.asSequence().map(selector).filterNotNull().max()
-    fun <D : Comparable<D>> max(col: TypedCol<D?>): D? = get(col).valuesList.asSequence().filterNotNull().max()
+    fun <D : Comparable<D>> max(col: TypedCol<D?>): D? = get(col).values.asSequence().filterNotNull().max()
 
     fun <D : Comparable<D>> maxBy(selector: RowSelector<T, D>) = rows.maxBy(selector)
+    fun <D : Comparable<D>> maxBy(col: TypedCol<D>) = rows.maxBy{ col(it) }
+    fun <D : Comparable<D>> maxBy(col: String) = rows.maxBy{ it[col] as D }
+
     fun <D : Comparable<D>> minBy(selector: RowSelector<T, D>) = rows.minBy(selector)
+    fun <D : Comparable<D>> minBy(col: TypedCol<D>) = rows.minBy{ col(it) }
+    fun <D : Comparable<D>> minBy(col: String) = rows.minBy{ it[col] as D }
 
     fun all(predicate: RowFilter<T>): Boolean = rows.all(predicate)
     fun any(predicate: RowFilter<T>): Boolean = rows.any(predicate)
@@ -197,6 +202,12 @@ inline infix fun <T, reified R> UpdateClause<T>.with(noinline expression: TypedD
     val newCol = df.new(cols.first().name, expression)
     return df - cols + newCol + cols.takeLast(cols.size - 1).map { newCol.rename(it.name) }
 }
+
+inline fun <T, reified R> TypedDataFrame<T>.update(vararg cols: Column, noinline expression: TypedDataFrameRow<T>.() -> R?) =
+        update(*cols).with(expression)
+
+inline fun <T, reified R> TypedDataFrame<T>.update(vararg cols: String, noinline expression: TypedDataFrameRow<T>.() -> R?) =
+        update(*cols).with(expression)
 
 inline fun <T> UpdateClause<T>.withNull() = with { null as Any? }
 
@@ -247,7 +258,7 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
 
         override fun iterator() = object : Iterator<List<Any?>> {
 
-            val colIterators = columns.map { it.valuesList.iterator() }
+            val colIterators = columns.map { it.values.iterator() }
 
             override fun hasNext(): Boolean = colIterators.firstOrNull()?.hasNext() ?: false
 
@@ -360,4 +371,4 @@ fun <T> DataFrame.typed(): TypedDataFrame<T> = TypedDataFrameImpl(cols.map { it.
 fun <T> TypedDataFrame<*>.typed(): TypedDataFrame<T> = TypedDataFrameImpl(columns)
 
 fun <T> TypedDataFrameRow<T>.toDataFrame() =
-        dataFrameOf(fields.map { it.first })(fields.map { it.second })
+        dataFrameOf(values.map { it.first })(values.map { it.second })
