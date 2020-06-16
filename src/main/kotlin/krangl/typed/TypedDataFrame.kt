@@ -74,9 +74,9 @@ fun SortDirection.reversed() = when (this) {
 
 class SortColumnDescriptor(val column: String, val direction: SortDirection)
 
-internal fun <T> TypedDataFrame<T>.new(columns: Iterable<DataCol>) = dataFrameOf(columns).typed<T>()
+typealias UntypedDataFrame = TypedDataFrame<Unit>
 
-typealias UntypedDataFrame = TypedDataFrame<Nothing>
+internal fun <T> TypedDataFrame<T>.new(columns: Iterable<DataCol>) = dataFrameOf(columns).typed<T>()
 
 interface TypedDataFrame<out T> {
 
@@ -143,7 +143,7 @@ interface TypedDataFrame<out T> {
     fun update(vararg cols: String) = update(getColumns(cols))
     fun update(cols: ColumnSelector<T>) = update(getColumns(cols))
 
-    fun addRowNumber(columnName: String = "id") = new(columns + IntCol(columnName, IntArray(nrow) { it }).typed())
+    fun addRowNumber(columnName: String = "id") = new(columns + createColumn(columnName, (0 until nrow).toList()))
 
     fun filter(predicate: RowFilter<T>): TypedDataFrame<T>
 

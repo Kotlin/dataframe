@@ -1,7 +1,6 @@
 package krangl.typed
 
 import io.kotlintest.shouldBe
-import krangl.dataFrameOf
 import org.junit.Test
 
 class SeriesTests {
