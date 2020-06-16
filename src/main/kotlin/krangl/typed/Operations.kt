@@ -100,11 +100,11 @@ fun commonParents(vararg classes: KClass<*>) = commonParents(classes.toList())
 fun commonParents(classes: Iterable<KClass<*>>) =
         classes.distinct().let {
             when {
-                it.size == 1 -> listOf(it[0])
-                else -> it.fold(null as (Set<KClass<*>>?)) { set, clazz ->
+                it.size == 1 -> listOf(it[0]) // if there is only one class - return it
+                else -> it.fold(null as (Set<KClass<*>>?)) { set, clazz -> // collect a set of all superclasses from all original classes
                     set?.intersect(clazz.allSuperclasses + clazz) ?: (clazz.allSuperclasses + clazz).toSet()
                 }!!.let {
-                    it - it.flatMap { it.superclasses }
+                    it - it.flatMap { it.superclasses } // leave only 'leaf' classes, that are not super to some other class in a set
                 }.toList()
             }
         }
