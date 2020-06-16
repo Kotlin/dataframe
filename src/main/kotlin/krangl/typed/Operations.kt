@@ -1,8 +1,12 @@
 package krangl.typed
 
-import krangl.*
+import krangl.DataFrame
+import kotlin.reflect.KClass
+import kotlin.reflect.full.allSuperclasses
+import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.superclasses
 
-typealias RowSelector<T,R> = TypedDataFrameRow<T>.()->R
+typealias RowSelector<T, R> = TypedDataFrameRow<T>.() -> R
 
 typealias RowFilter<T> = RowSelector<T, Boolean>
 
@@ -36,10 +40,10 @@ fun TypedDataFrame<*>.addColumn(name: String, col: DataCol) =
         this + col.rename(name)
 
 fun <T> TypedDataFrame<T>.add(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) =
-    with(TypedColumnsFromDataRowBuilder(this)){
-        body(this)
-        dataFrameOf(this@add.columns + columns).typed<T>()
-    }
+        with(TypedColumnsFromDataRowBuilder(this)) {
+            body(this)
+            dataFrameOf(this@add.columns + columns).typed<T>()
+        }
 
 fun rowNumber(columnName: String = "id") = AddRowNumberStub(columnName)
 
@@ -85,63 +89,54 @@ fun <T> TypedDataFrameRow<T>.movingAverage(k: Int, selector: RowSelector<T, Doub
 
 // merge
 
-fun <T> Iterable<TypedDataFrame<T>>.bindRows() = bindRows<T>(toList())
+fun <T> Iterable<TypedDataFrame<T>>.merge() = merge<T>(toList())
 
-private fun bindColData(dataFrames: List<TypedDataFrame<*>>, colName: String): Array<*> {
-    val totalRows = dataFrames.map { it.nrow }.sum()
+fun commonParent(vararg classes: KClass<*>) = commonParents(classes.toList()).maxBy { it.allSuperclasses.size }
 
-    val arrayList = Array<Any?>(totalRows, { 0 })
+fun commonParents(vararg classes: KClass<*>) = commonParents(classes.toList())
 
-    var iter = 0
-
-    dataFrames.forEach {
-        if (it.columnNames().contains(colName)) {
-            it[colName].values.forEach {
-                arrayList[iter++] = it
-            }
-        } else {
-            // column is missing in `it`
-            for (row in (0 until it.nrow)) {
-                arrayList[iter++] = null
+fun commonParents(classes: Iterable<KClass<*>>) =
+        classes.distinct().let {
+            when {
+                it.size == 1 -> listOf(it[0])
+                else -> it.fold(null as (Set<KClass<*>>?)) { set, clazz ->
+                    set?.intersect(clazz.allSuperclasses + clazz) ?: (clazz.allSuperclasses + clazz).toSet()
+                }!!.let {
+                    it - it.flatMap { it.superclasses }
+                }.toList()
             }
         }
-    }
 
-    return arrayList
-}
+fun <T> merge(dataFrames: List<TypedDataFrame<*>>) = dataFrames
+        .fold(emptyList<String>()) { acc, df -> acc + (df.columnNames() - acc) } // collect column names preserving order
+        .map { name ->
+            val list = mutableListOf<Any?>()
+            var nullable = false
+            val classes = mutableSetOf<KClass<*>>()
 
-fun <T> bindRows(dataFrames: List<TypedDataFrame<*>>): TypedDataFrame<T> { // add options about NA-fill over non-overlapping columns
-    val bindCols = mutableListOf<DataCol>()
-
-    val colNames = dataFrames
-            .map { it.columnNames() }
-            .foldRight(emptyList<String>()) { acc, right ->
-                acc + right.minus(acc)
+            dataFrames.forEach {
+                val column = it.tryGetColumn(name)
+                if (column != null) {
+                    nullable = nullable || column.nullable
+                    classes.add(column.valueClass)
+                    list.addAll(column.values)
+                } else {
+                    if (it.nrow > 0) nullable = true
+                    for (row in (0 until it.nrow)) {
+                        list.add(null)
+                    }
+                }
             }
+            val newClass = commonParents(classes).firstOrNull() ?: Any::class
 
-    for (colName in colNames) {
-        val colDataCombined: Array<*> = bindColData(dataFrames.toList(), colName)
+            TypedDataCol(list, nullable, name, newClass)
+        }.let { dataFrameOf(it).typed<T>() }
 
-        val frames = dataFrames.mapNotNull { it.tryGetColumn(colName) }
-        when (frames.first().toSrc()) {
-            is DoubleCol -> DoubleCol(colName, colDataCombined.map { it as Double? })
-            is IntCol -> IntCol(colName, colDataCombined.map { it as Int? })
-            is LongCol -> LongCol(colName, colDataCombined.map { it as Long? })
-            is StringCol -> StringCol(colName, colDataCombined.map { it as String? })
-            is BooleanCol -> BooleanCol(colName, colDataCombined.map { it as Boolean? })
-            is AnyCol -> AnyCol(colName, colDataCombined.toList())
-            else -> throw UnsupportedOperationException()
-        }.apply { bindCols.add(typed()) }
-    }
+operator fun <T> TypedDataFrame<T>.plus(other: TypedDataFrame<T>) = merge<T>(listOf(this, other))
 
-    return dataFrameOf(bindCols).typed<T>()
-}
-
-operator fun <T> TypedDataFrame<T>.plus(other: TypedDataFrame<T>) = bindRows<T>(listOf(this, other))
-
-fun TypedDataFrame<*>.add(vararg other: TypedDataFrame<*>) = bindRows<Unit>(listOf(this) + other.toList())
+fun TypedDataFrame<*>.add(vararg other: TypedDataFrame<*>) = merge<Unit>(listOf(this) + other.toList())
 
 // Column operations
 
-fun <T:Comparable<T>> TypedColData<T?>.min() = values.asSequence().filterNotNull().min()
-fun <T:Comparable<T>> TypedColData<T?>.max() = values.asSequence().filterNotNull().max()
+fun <T : Comparable<T>> TypedColData<T?>.min() = values.asSequence().filterNotNull().min()
+fun <T : Comparable<T>> TypedColData<T?>.max() = values.asSequence().filterNotNull().max()

@@ -22,8 +22,8 @@ interface GroupedDataFrame<out T> {
     operator fun get(vararg values: Any?) = get(values.toList())
     operator fun get(key: GroupKey) = groups.firstOrNull { it.groupKey.equals(key) }?.df
 
-    fun ungroup() = groups.map { it.df }.bindRows()
-    fun groupedBy() = groups.map { it.df.take(1).select(*columnNames.toTypedArray()) }.bindRows()
+    fun ungroup() = groups.map { it.df }.merge()
+    fun groupedBy() = groups.map { it.df.take(1).select(*columnNames.toTypedArray()) }.merge()
     fun groups() = groups.map { it.df }
 
     fun sortBy(columns: Iterable<NamedColumn>) = modify { sortBy(columns) }
