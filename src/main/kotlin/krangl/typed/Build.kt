@@ -40,6 +40,10 @@ inline fun <reified T> Iterable<T>.toDataFrame() = T::class.declaredMembers
 
 fun dataFrameOf(columns: Iterable<DataCol>): UntypedDataFrame = TypedDataFrameImpl(columns.toList())
 
+fun dataFrameOf(vararg header: NamedColumn) = DataFrameBuilder(header.map { it.name })
+
+fun dataFrameOf(vararg header: String) = DataFrameBuilder(header.toList())
+
 fun SrcDataCol.typed() = when (this) {
     is IntCol -> createColumn(name, values.toList(), hasNulls)
     is LongCol -> createColumn(name, values.toList(), hasNulls)
@@ -50,9 +54,6 @@ fun SrcDataCol.typed() = when (this) {
     else -> createColumn(name, values().toList(), hasNulls)
 }
 
-fun dataFrameOf(vararg header: NamedColumn) = DataFrameBuilder(header.map { it.name })
-
-fun dataFrameOf(vararg header: String) = DataFrameBuilder(header.toList())
 
 class DataFrameBuilder(private val columnNames: List<String>) {
 
@@ -79,7 +80,7 @@ class DataFrameBuilder(private val columnNames: List<String>) {
     operator fun invoke(args: Sequence<Any?>) = invoke(*args.toList().toTypedArray())
 }
 
-fun guessValueType(values: List<Any?>): Pair<KClass<*>, Boolean> {
+internal fun guessValueType(values: List<Any?>): Pair<KClass<*>, Boolean> {
     var nullable = false
     val types = values.map {
         if(it == null) nullable = true
@@ -88,6 +89,6 @@ fun guessValueType(values: List<Any?>): Pair<KClass<*>, Boolean> {
     return commonParents(types).withMostSuperclasses()!! to nullable
 }
 
-fun guessColumnType(name: String, values: List<Any?>) = guessValueType(values).let { (valueClass, nullable) ->
+internal fun guessColumnType(name: String, values: List<Any?>) = guessValueType(values).let { (valueClass, nullable) ->
     TypedDataCol(values, nullable, name, valueClass)
 }

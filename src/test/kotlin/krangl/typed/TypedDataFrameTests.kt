@@ -75,16 +75,19 @@ class TypedDataFrameTests {
         val expected = 45
         val i = 1
 
-        typed[i].age shouldBe expected
-        typed.age[i] shouldBe expected
+        fun Int.check() = this shouldBe expected
 
-        df[i][age] shouldBe expected
-        df[age][i] shouldBe expected
+        typed[i].age.check()
+        typed.age[i].check()
 
-        df[i].int("age") shouldBe expected
-        df[i]["age"] as Int shouldBe expected
-        df["age"].cast<Int>()[i] shouldBe expected
-        df["age"][i] as Int shouldBe expected
+        df[i][age].check()
+        df[age][i].check()
+
+        df[i].int("age").check()
+        (df[i]["age"] as Int).check()
+
+        df["age"].cast<Int>()[i].check()
+        (df["age"][i] as Int).check()
     }
 
     @Test
@@ -92,16 +95,19 @@ class TypedDataFrameTests {
 
         val i = 3
 
-        typed[i].city shouldBe null
-        typed.city[i] shouldBe null
+        fun String?.check() = this shouldBe null
 
-        df[i][city] shouldBe null
-        df[city][i] shouldBe null
+        typed[i].city.check()
+        typed.city[i].check()
 
-        df[i].nstring("city") shouldBe null
-        df[i]["city"] as String? shouldBe null
-        df["city"].cast<String?>()[i] shouldBe null
-        df["city"][i] as String? shouldBe null
+        df[i][city].check()
+        df[city][i].check()
+
+        df[i].nstring("city").check()
+        (df[i]["city"] as String?).check()
+
+        df["city"].cast<String?>()[i].check()
+        (df["city"][i] as String?).check()
     }
 
     @Test
@@ -130,7 +136,9 @@ class TypedDataFrameTests {
 
     @Test
     fun `resetToNull`() {
+
         val updated = typed.update { allColumns }.withNull()
+
         updated.columns.forEach {
             it.values.forEach { it shouldBe null }
         }
@@ -138,7 +146,9 @@ class TypedDataFrameTests {
 
     @Test
     fun `sort`() {
+
         val expected = listOf(null, "London", "Dubai", "Tokyo", "Milan", null, "Moscow")
+
         fun TypedDataFrame<*>.check() = this[city].values shouldBe expected
 
         typed.sortByDesc(typed.age).sortBy(typed.name).check()
@@ -157,10 +167,11 @@ class TypedDataFrameTests {
         typed.filter { age > 20 && city != null }.check()
 
         df.filter { age() > 20 && city() != null }.check()
+        df.filter { this[age] > 20 && this[city] != null }.check()
         df.filter { age > 20 && city neq null }.check()
 
-        df.filter { int("age") > 20 && get("city") != null }.check()
-        df.filter { "age"<Int>() > 20 && "city"<Any?>() != null }.check()
+        df.filter { int("age") > 20 && nstring("city") != null }.check()
+        df.filter { "age"<Int>() > 20 && "city"<String?>() != null }.check()
     }
 
     @Test
@@ -171,7 +182,7 @@ class TypedDataFrameTests {
         typed.filterNotNull { weight }.check()
 
         df.filterNotNull(weight).check()
-        df.filterNotNull { weight }.check()
+        df.filterNotNull { weight}.check()
 
         df.filterNotNull("weight").check()
     }
@@ -202,15 +213,20 @@ class TypedDataFrameTests {
         df.select(age).check()
 
         df.select("age").check()
+
         df.select { "age"() }.check()
+        df.select { get("age") }.check()
+        df.select { this["age"] }.check()
     }
 
     @Test
     fun `select if`() {
         val expected = listOf(typed.name, typed.city)
 
-        typed.selectIf { it.name.length == 4 }.columns shouldBe expected
-        df.selectIf { it.name.length == 4 }.columns shouldBe expected
+        fun TypedDataFrame<*>.check() = columns shouldBe expected
+
+        typed.selectIf { it.name.length == 4 }.check()
+        df.selectIf { it.name.length == 4 }.check()
     }
 
     @Test
@@ -247,9 +263,9 @@ class TypedDataFrameTests {
             count { age > 25 } into "old count"
             median { age } into "median age"
             min { age } into "min age"
-            all { weight != null } into "all with weights"
+            checkAll { weight != null } into "all with weights"
             maxBy { age }.map { city } into "oldest origin"
-            map { sortBy { age }.first().city } into "youngest origin"
+            compute { sortBy { age }.first().city } into "youngest origin"
         }.check()
 
         df.groupBy { name }.aggregate {
@@ -257,9 +273,9 @@ class TypedDataFrameTests {
             count { age > 25 } into "old count"
             median(age) into "median age"
             min(age) into "min age"
-            all { weight() != null } into "all with weights"
+            checkAll { weight neq null } into "all with weights"
             maxBy(age).map { city() } into "oldest origin"
-            map { sortBy { age }.first()[city] } into "youngest origin"
+            compute { sortBy { age }.first()[city] } into "youngest origin"
         }.check()
 
         df.groupBy("name").aggregate {
@@ -267,9 +283,9 @@ class TypedDataFrameTests {
             count { int("age") > 25 } into "old count"
             median { int("age") } into "median age"
             min { int("age") } into "min age"
-            all { get("weight") != null } into "all with weights"
+            checkAll { get("weight") != null } into "all with weights"
             maxBy { int("age") }.map { get("city") } into "oldest origin"
-            map { sortBy("age").first()["city"] } into "youngest origin"
+            compute { sortBy("age").first()["city"] } into "youngest origin"
         }.check()
     }
 
@@ -277,31 +293,35 @@ class TypedDataFrameTests {
     fun `min`() {
         val expected = 15
 
-        typed.min { age } shouldBe expected
-        typed.age.min() shouldBe expected
+        fun Int?.check() = this shouldBe expected
 
-        df.min { age() } shouldBe expected
-        df.min(age) shouldBe expected
-        df[age].min() shouldBe expected
+        typed.min { age }.check()
+        typed.age.min().check()
 
-        df.min { int("age") } shouldBe expected
-        df.min { "age"<Int>() } shouldBe expected
-        df["age"].cast<Int>().min() shouldBe expected
+        df.min { age() }.check()
+        df.min(age).check()
+        df[age].min().check()
+
+        df.min { int("age") }.check()
+        df.min { "age"<Int>() }.check()
+        df["age"].cast<Int>().min().check()
     }
 
     @Test
     fun `nullable max`() {
         val expected = 90
 
-        typed.max { weight } shouldBe expected
-        typed.weight.max()
+        fun Int?.check() = this shouldBe expected
 
-        df.max { weight() } shouldBe expected
-        df.max(weight) shouldBe expected
-        df[weight].max() shouldBe expected
+        typed.max { weight }.check()
+        typed.weight.max().check()
 
-        df.max { nint("weight") } shouldBe expected
-        df["weight"].cast<Int?>().max() shouldBe expected
+        df.max { weight() }.check()
+        df.max(weight).check()
+        df[weight].max().check()
+
+        df.max { nint("weight") }.check()
+        df["weight"].cast<Int?>().max().check()
     }
 
     @Test
@@ -337,16 +357,16 @@ class TypedDataFrameTests {
     @Test
     fun `add one column`() {
         val now = 2020
-        val yearStr = "year"
         val expected = typed.map { now - age }
 
-        fun TypedDataFrame<*>.check() = this[yearStr].values shouldBe expected
+        fun TypedDataFrame<*>.check() = this["year"].values shouldBe expected
 
-        typed.add(yearStr) { now - age }.check()
-        df.add(yearStr) { now - age }.check()
+        typed.add("year") { now - age }.check()
 
-        df.add(yearStr) { now - int("age") }.check()
-        df.add(yearStr) { now - "age"<Int>() }.check()
+        df.add("year") { now - age }.check()
+
+        df.add("year") { now - int("age") }.check()
+        df.add("year") { now - "age"<Int>() }.check()
     }
 
     @Test
@@ -376,7 +396,8 @@ class TypedDataFrameTests {
         check { typed - { age } - { weight } }
         check { typed.remove { age and weight } }
 
-        check { df - { age and weight } }
+        check { df - { age + weight } }
+        check { df - age - weight }
         check { df - { age } - { weight } }
         check { df.remove(age, weight) }
 
@@ -404,7 +425,7 @@ class TypedDataFrameTests {
                 "Mark", 160
         ).typed<Unit>()
 
-        val res = typed.add(other)
+        val res = typed.union(other)
         res.nrow shouldBe typed.nrow + other.nrow
         res.take(typed.nrow).forEach { heightOrNull() == null }
         val q = res.takeLast(other.nrow)
@@ -413,11 +434,11 @@ class TypedDataFrameTests {
     }
 
     @Test
-    fun `merge dataframes with different type of the same column`(){
+    fun `union dataframes with different type of the same column`(){
         val df2 = dataFrameOf("age")(32.6, 56.3, null)
         df2["age"].type.classifier shouldBe Double::class
         df2["age"].nullable shouldBe true
-        val merged = df.add(df2)
+        val merged = df.union(df2)
         merged["age"].type.classifier shouldBe Number::class
         merged["age"].nullable shouldBe true
         val updated = merged.update("age"){"age"<Number?>()?.toDouble()}
@@ -476,5 +497,11 @@ class TypedDataFrameTests {
             }
         """.trimIndent()
         code[0] shouldBe expected
+    }
+
+    @Test
+    fun `render to html`(){
+        val src = df.toHTML()
+        println(src)
     }
 }

@@ -55,11 +55,11 @@ class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
 
     fun add(column: DataCol) = columns.add(column)
 
-    fun <N:Comparable<N>> minBy(selector: RowSelector<T, N>) = map { minBy(selector)!! }
-    fun <N:Comparable<N>> minBy(column: TypedCol<N>) = map { minBy { column() }!! }
+    fun <N:Comparable<N>> minBy(selector: RowSelector<T, N>) = compute { minBy(selector)!! }
+    fun <N:Comparable<N>> minBy(column: TypedCol<N>) = compute { minBy { column() }!! }
 
-    fun <N:Comparable<N>> maxBy(selector: RowSelector<T, N>) = map { maxBy(selector)!! }
-    fun <N:Comparable<N>> maxBy(column: TypedCol<N>) = map { maxBy { column() }!! }
+    fun <N:Comparable<N>> maxBy(selector: RowSelector<T, N>) = compute { maxBy(selector)!! }
+    fun <N:Comparable<N>> maxBy(column: TypedCol<N>) = compute { maxBy { column() }!! }
 
     fun <R> ValuesList<TypedDataFrameRow<T>>.map(selector: RowSelector<T, R>) =
             list.map(selector).wrap()
@@ -77,7 +77,9 @@ class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
     inline fun <reified R:Number> mean(noinline selector: RowSelector<T, R>) = groups.map { it.map(selector).mean() }.wrap()
     inline fun <reified R:Number> mean(column: TypedCol<R>) = groups.map { it.map{ column() }.mean() }.wrap()
 
-    fun all(predicate: RowFilter<T>) = groups.map { it.all(predicate) }.wrap()
+//    inline fun <reified R:Number> sum(column: TypedCol<R>) = groups.map { it.map{ column() }.sum() }.wrap()
+
+    fun checkAll(predicate: RowFilter<T>) = groups.map { it.all(predicate) }.wrap()
     fun any(predicate: RowFilter<T>) = groups.map { it.any(predicate) }.wrap()
 
     inline fun <reified R:Comparable<R>> min(noinline selector: RowSelector<T, R>) = groups.map { it.min(selector)!! }.wrap()
@@ -88,7 +90,7 @@ class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
 
     inline infix fun <reified R> ValuesList<R>.into(columnName: String) = add(newColumn(columnName, list))
 
-    fun <R> map(selector: TypedDataFrame<T>.() -> R) = groups.map(selector).wrap()
+    fun <R> compute(selector: TypedDataFrame<T>.() -> R) = groups.map(selector).wrap()
 
     inline fun <reified R> add(name: String, noinline expression: TypedDataFrame<T>.() -> R?) = add(newColumn(name, groups.map { expression(it) }))
 
@@ -99,7 +101,7 @@ class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
     infix operator fun String.invoke(column: DataCol) = add(column.rename(this))
 }
 
-inline fun <T, reified R> GroupedDataFrame<T>.map(columnName: String = "map", noinline selector: TypedDataFrame<T>.() -> R) = aggregate { map(selector) into columnName}
+inline fun <T, reified R> GroupedDataFrame<T>.compute(columnName: String = "map", noinline selector: TypedDataFrame<T>.() -> R) = aggregate { compute(selector) into columnName}
 
 fun <T> GroupedDataFrame<T>.aggregate(body: GroupAggregateBuilder<T>.() -> Unit): TypedDataFrame<T> {
     val builder = GroupAggregateBuilder(this)
