@@ -2,6 +2,7 @@ package krangl.typed
 
 import krangl.*
 import java.util.*
+import kotlin.reflect.full.isSubclassOf
 
 interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
     fun columns(vararg col: DataCol) = ColumnGroup(col.toList())
@@ -28,7 +29,7 @@ interface TypedDataFrameWithColumnsForSort<out T> : TypedDataFrameWithColumns<T>
     val String.desc get() = ReversedColumn(asColumnName())
 }
 
-open class TypedDataFrameWithColumnsImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameWithColumns<T>{
+open class TypedDataFrameWithColumnsImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameWithColumns<T> {
 
     override val allColumns get() = ColumnGroup(columns)
 
@@ -162,12 +163,12 @@ interface TypedDataFrame<out T> {
     fun <D : Comparable<D>> max(col: TypedCol<D?>): D? = get(col).values.asSequence().filterNotNull().max()
 
     fun <D : Comparable<D>> maxBy(selector: RowSelector<T, D>) = rows.maxBy(selector)
-    fun <D : Comparable<D>> maxBy(col: TypedCol<D>) = rows.maxBy{ col(it) }
-    fun <D : Comparable<D>> maxBy(col: String) = rows.maxBy{ it[col] as D }
+    fun <D : Comparable<D>> maxBy(col: TypedCol<D>) = rows.maxBy { col(it) }
+    fun <D : Comparable<D>> maxBy(col: String) = rows.maxBy { it[col] as D }
 
     fun <D : Comparable<D>> minBy(selector: RowSelector<T, D>) = rows.minBy(selector)
-    fun <D : Comparable<D>> minBy(col: TypedCol<D>) = rows.minBy{ col(it) }
-    fun <D : Comparable<D>> minBy(col: String) = rows.minBy{ it[col] as D }
+    fun <D : Comparable<D>> minBy(col: TypedCol<D>) = rows.minBy { col(it) }
+    fun <D : Comparable<D>> minBy(col: String) = rows.minBy { it[col] as D }
 
     fun all(predicate: RowFilter<T>): Boolean = rows.all(predicate)
     fun any(predicate: RowFilter<T>): Boolean = rows.any(predicate)
@@ -268,23 +269,13 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
 
     override fun groupBy(cols: Iterable<NamedColumn>): GroupedDataFrame<T> {
 
-        fun extractGroup(col: SrcDataCol, indices: IntArray): SrcDataCol = when (col) {
-            is DoubleCol -> DoubleCol(col.name, Array(indices.size) { col.values[indices[it]] })
-            is IntCol -> IntCol(col.name, Array(indices.size) { col.values[indices[it]] })
-            is LongCol -> LongCol(col.name, Array(indices.size) { col.values[indices[it]] })
-            is BooleanCol -> BooleanCol(col.name, Array(indices.size) { col.values[indices[it]] })
-            is StringCol -> StringCol(col.name, Array(indices.size) { col.values[indices[it]] })
-            is AnyCol -> AnyCol(col.name, Array(indices.size) { col.values[indices[it]] })
-            else -> throw UnsupportedOperationException()
-        }
-
         val groups = select(cols)
                 .rowData()
                 .mapIndexed { index, group -> group to index }
                 .groupBy { it.first }
                 .map {
                     val groupRowIndices = it.value.map { it.second }.toIntArray()
-                    val grpSubCols = columns.map { extractGroup(it.toSrc(), groupRowIndices).typed() }
+                    val grpSubCols = columns.map { it.getRows(groupRowIndices) }
                     DataGroupImpl<T>(it.key, dataFrameOf(grpSubCols).typed())
                 }
 
@@ -341,7 +332,7 @@ internal class RowResolver<T>(val dataFrame: TypedDataFrame<*>) {
 
     operator fun get(index: Int): TypedDataFrameRow<T>? =
             if (index < 0 || index >= dataFrame.nrow) null
-            else map[index] ?: pool.let {it.popSafe()}?.also {
+            else map[index] ?: pool.let { it.popSafe() }?.also {
                 it.row = readRow(index)
                 it.index = index
                 map[index] = it
