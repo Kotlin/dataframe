@@ -3,23 +3,16 @@ package krangl.typed
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrowAny
-import krangl.complete
 import krangl.dataFrameOf
 import krangl.typed.tracking.trackColumnAccess
 import org.junit.Test
+import kotlin.reflect.full.memberProperties
 
 class TypedDataFrameTests {
 
-// Column names
-
-    val nameStr = "name"
-    val ageStr = "age"
-    val cityStr = "city"
-    val weightStr = "weight"
-
 // Data set
 
-    val df = (krangl.dataFrameOf(nameStr, ageStr, cityStr, weightStr))(
+    val df = dataFrameOf("name", "age", "city", "weight")(
             "Alice", 15, "London", 54,
             "Bob", 45, "Dubai", 87,
             "Mark", 20, "Moscow", null,
@@ -39,23 +32,23 @@ class TypedDataFrameTests {
         val weight: Int?
     }
 
-    val TypedDataFrameRow<Person>.name get() = this[nameStr] as String
-    val TypedDataFrameRow<Person>.age get() = this[ageStr] as Int
-    val TypedDataFrameRow<Person>.city get() = this[cityStr] as String?
-    val TypedDataFrameRow<Person>.weight get() = this[weightStr] as Int?
-    val TypedDataFrame<Person>.name get() = this[nameStr].cast<String>()
-    val TypedDataFrame<Person>.age get() = this[ageStr].cast<Int>()
-    val TypedDataFrame<Person>.city get() = this[cityStr].cast<String?>()
-    val TypedDataFrame<Person>.weight get() = this[weightStr].cast<Int?>()
+    val TypedDataFrameRow<Person>.name get() = this["name"] as String
+    val TypedDataFrameRow<Person>.age get() = this["age"] as Int
+    val TypedDataFrameRow<Person>.city get() = this["city"] as String?
+    val TypedDataFrameRow<Person>.weight get() = this["weight"] as Int?
+    val TypedDataFrame<Person>.name get() = this["name"].cast<String>()
+    val TypedDataFrame<Person>.age get() = this["age"].cast<Int>()
+    val TypedDataFrame<Person>.city get() = this["city"].cast<String?>()
+    val TypedDataFrame<Person>.weight get() = this["weight"].cast<Int?>()
 
     val typed: TypedDataFrame<Person> = df.typed()
 
 // Manual Column Definitions
 
     val name by column<String>()
-    val age = column<Int>(ageStr) // way to create column descriptor with specific name
-    val city by column<String?>(cityStr)
-    val weight by column<Int?>(weightStr)
+    val age = column<Int>("age")
+    val city by column<String?>()
+    val weight by column<Int?>()
 
 // Tests
 
@@ -173,7 +166,7 @@ class TypedDataFrameTests {
 
     @Test
     fun `filterNotNull 1`() {
-        fun TypedDataFrame<*>.check() = forEach { get(weightStr) shouldNotBe null }
+        fun TypedDataFrame<*>.check() = forEach { get("weight") shouldNotBe null }
 
         typed.filterNotNull(typed.weight).check()
         typed.filterNotNull { weight }.check()
@@ -270,7 +263,7 @@ class TypedDataFrameTests {
             map { sortBy { age }.first()[city] } into "youngest origin"
         }.check()
 
-        df.groupBy(nameStr).aggregate {
+        df.groupBy("name").aggregate {
             count into "n"
             count { int("age") > 25 } into "old count"
             median { int("age") } into "median age"
@@ -360,7 +353,7 @@ class TypedDataFrameTests {
     @Test
     fun `remove one column`() {
 
-        val expected = listOf(nameStr, cityStr, weightStr)
+        val expected = listOf("name", "city", "weight")
         fun check(body: () -> TypedDataFrame<*>) = body().columnNames() shouldBe expected
 
         check { typed - { age } }
@@ -377,7 +370,7 @@ class TypedDataFrameTests {
     @Test
     fun `remove two columns`() {
 
-        val expected = listOf(nameStr, cityStr)
+        val expected = listOf("name", "city")
         fun check(body: () -> TypedDataFrame<*>) = body().columnNames() shouldBe expected
 
         check { typed - { age and weight } }
@@ -418,5 +411,58 @@ class TypedDataFrameTests {
         val q = res.takeLast(other.nrow)
         q.forEach { name() shouldBe other[index][name] }
         q.forEach { heightOrNull() shouldBe other[index][height] }
+    }
+
+    @Test
+    fun `generate marker interface`(){
+        val property = TypedDataFrameTests::class.memberProperties.first { it.name == "df" }
+        val code = CodeGenerator().generate(df, property)
+        val expectedDeclaration = """
+            @DataFrameType(isOpen = false)
+            interface DataFrameType###{
+                val name: String
+                val age: Int
+                val city: String?
+                val weight: Int?
+            }""".trimIndent()
+
+        val expectedConverter = "$" +  "it.typed<DataFrameType###>()"
+
+        code.size shouldBe 2
+        code[0].trimIndent() shouldBe expectedDeclaration
+        code[1] shouldBe expectedConverter
+    }
+
+    @Test
+    fun `generate extension properties`(){
+        val code = CodeGenerator().generate(Person::class)
+
+        val expected = """
+            val TypedDataFrame<krangl.typed.TypedDataFrameTests.Person>.age: krangl.typed.TypedColData<kotlin.Int> get() = (this["age"]) as krangl.typed.TypedColData<kotlin.Int>
+            val TypedDataFrameRow<krangl.typed.TypedDataFrameTests.Person>.age: Int get() = (this["age"]) as Int
+            val TypedDataFrame<krangl.typed.TypedDataFrameTests.Person>.city: krangl.typed.TypedColData<kotlin.String?> get() = (this["city"]) as krangl.typed.TypedColData<kotlin.String?>
+            val TypedDataFrameRow<krangl.typed.TypedDataFrameTests.Person>.city: String? get() = (this["city"]) as String?
+            val TypedDataFrame<krangl.typed.TypedDataFrameTests.Person>.name: krangl.typed.TypedColData<kotlin.String> get() = (this["name"]) as krangl.typed.TypedColData<kotlin.String>
+            val TypedDataFrameRow<krangl.typed.TypedDataFrameTests.Person>.name: String get() = (this["name"]) as String
+            val TypedDataFrame<krangl.typed.TypedDataFrameTests.Person>.weight: krangl.typed.TypedColData<kotlin.Int?> get() = (this["weight"]) as krangl.typed.TypedColData<kotlin.Int?>
+            val TypedDataFrameRow<krangl.typed.TypedDataFrameTests.Person>.weight: Int? get() = (this["weight"]) as Int?
+        """.trimIndent()
+        code.joinToString("\n") shouldBe expected
+    }
+
+    @Test
+    fun `generate derived interface`(){
+        val codeGen = CodeGenerator()
+        codeGen.generate(Person::class)
+        val property = TypedDataFrameTests::class.memberProperties.first { it.name == "df" }
+        val code = codeGen.generate(df.filterNotNull(), property)
+        val expected = """
+            @DataFrameType(isOpen = false)
+            interface DataFrameType### : krangl.typed.TypedDataFrameTests.Person{
+                override val city: String
+                override val weight: Int
+            }
+        """.trimIndent()
+        code[0] shouldBe expected
     }
 }
