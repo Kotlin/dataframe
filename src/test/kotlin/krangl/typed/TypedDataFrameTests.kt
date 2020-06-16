@@ -413,6 +413,19 @@ class TypedDataFrameTests {
     }
 
     @Test
+    fun `merge dataframes with different type of the same column`(){
+        val df2 = dataFrameOf("age")(32.6, 56.3, null)
+        df2["age"].type.classifier shouldBe Double::class
+        df2["age"].nullable shouldBe true
+        val merged = df.add(df2)
+        merged["age"].type.classifier shouldBe Number::class
+        merged["age"].nullable shouldBe true
+        val updated = merged.update("age"){"age"<Number?>()?.toDouble()}
+        updated["age"].type.classifier shouldBe Double::class
+        updated["age"].nullable shouldBe true
+    }
+
+    @Test
     fun `generate marker interface`(){
         val property = TypedDataFrameTests::class.memberProperties.first { it.name == "df" }
         val code = CodeGenerator().generate(df, property)
