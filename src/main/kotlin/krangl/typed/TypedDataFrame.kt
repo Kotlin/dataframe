@@ -291,22 +291,15 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
         return GroupedDataFrameImpl(cols.map { it.name }, groups)
     }
 
-    private fun TypedValues<*>.createComparator(naLast: Boolean = true): Comparator<Int> {
-        fun <T : Comparable<T>> nullWhere(): Comparator<T?> = if (naLast) nullsLast<T>() else nullsFirst<T>()
+    private fun DataCol.createComparator(naLast: Boolean = true): Comparator<Int> {
 
-        val typed = (this as TypedDataCol<*>).col
-        return when (typed) {
-            is DoubleCol -> Comparator { left, right -> nullWhere<Double>().compare(typed.values[left], typed.values[right]) }
-            is IntCol -> Comparator { left, right -> nullWhere<Int>().compare(typed.values[left], typed.values[right]) }
-            is LongCol -> Comparator { left, right -> nullWhere<Long>().compare(typed.values[left], typed.values[right]) }
-            is BooleanCol -> Comparator { left, right -> nullWhere<Boolean>().compare(typed.values[left], typed.values[right]) }
-            is StringCol -> Comparator { left, right -> nullWhere<String>().compare(typed.values[left], typed.values[right]) }
-            is AnyCol -> Comparator { left, right ->
-                @Suppress("UNCHECKED_CAST")
-                nullWhere<Comparable<Any>>().compare(typed.values[left] as Comparable<Any>, typed.values[right] as Comparable<Any>)
-            }
-            else -> throw UnsupportedOperationException()
-        }
+        if(!valueClass.isSubclassOf(Comparable::class))
+            throw UnsupportedOperationException()
+
+        return Comparator<Any?> { left, right ->
+            (left as Comparable<Any?>).compareTo(right)
+        }.let { if (naLast) nullsLast(it) else nullsFirst(it) }
+         .let { Comparator { left, right -> it.compare(values[left], values[right]) } }
     }
 
     override fun sortBy(columns: List<SortColumnDescriptor>): TypedDataFrame<T> {
