@@ -106,3 +106,4 @@ class ColumnDelegate<T>(private val valueClass: KClass<*>) {
 inline fun <reified T> column() = ColumnDelegate<T>(T::class)
 
 inline fun <reified T> column(name: String) = TypedColDesc<T>(name, T::class)
+

@@ -50,4 +50,44 @@ fun SrcDataCol.typed() = when (this) {
     else -> createColumn(name, values().toList(), hasNulls)
 }
 
-fun dataFrameOf(vararg header: NamedColumn) = InplaceDataFrameBuilder(header.map { it.name })
+fun dataFrameOf(vararg header: NamedColumn) = DataFrameBuilder(header.map { it.name })
+
+fun dataFrameOf(vararg header: String) = DataFrameBuilder(header.toList())
+
+class DataFrameBuilder(private val columnNames: List<String>) {
+
+    operator fun invoke(vararg values: Any?): UntypedDataFrame {
+
+        require(columnNames.size > 0 && values.size.rem(columnNames.size) == 0) {
+            "data dimension ${columnNames.size} is not compatible with length of data vector ${values.size}"
+        }
+
+        val columnValues = values
+                .mapIndexed { i, value -> i.rem(columnNames.size) to value }
+                .groupBy { it.first }.values.map {
+            it.map { it.second }
+        }
+
+        val columns = columnNames.zip(columnValues).map {
+            (columnName, values) -> guessColumnType(columnName, values)
+        }
+
+        return dataFrameOf(columns)
+    }
+
+    operator fun invoke(args: Iterable<Any?>) = invoke(*args.toList().toTypedArray())
+    operator fun invoke(args: Sequence<Any?>) = invoke(*args.toList().toTypedArray())
+}
+
+fun guessValueType(values: List<Any?>): Pair<KClass<*>, Boolean> {
+    var nullable = false
+    val types = values.map {
+        if(it == null) nullable = true
+        it?.javaClass
+    }.distinct().mapNotNull { it?.kotlin }
+    return commonParents(types).withMostSuperclasses()!! to nullable
+}
+
+fun guessColumnType(name: String, values: List<Any?>) = guessValueType(values).let { (valueClass, nullable) ->
+    TypedDataCol(values, nullable, name, valueClass)
+}

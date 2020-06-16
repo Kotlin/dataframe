@@ -3,7 +3,6 @@ package krangl.typed
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrowAny
-import krangl.dataFrameOf
 import krangl.typed.tracking.trackColumnAccess
 import org.junit.Test
 import kotlin.reflect.full.memberProperties
@@ -20,7 +19,7 @@ class TypedDataFrameTests {
             "Mark", 40, "Milan", null,
             "Bob", 30, "Tokyo", 68,
             "Alice", 20, null, 55
-    ).typed<Any>()
+    )
 
 // Generated Code
 

@@ -91,7 +91,9 @@ fun <T> TypedDataFrameRow<T>.movingAverage(k: Int, selector: RowSelector<T, Doub
 
 fun <T> Iterable<TypedDataFrame<T>>.merge() = merge<T>(toList())
 
-fun commonParent(vararg classes: KClass<*>) = commonParents(classes.toList()).maxBy { it.allSuperclasses.size }
+fun commonParent(vararg classes: KClass<*>) = commonParents(classes.toList()).withMostSuperclasses()
+
+fun Iterable<KClass<*>>.withMostSuperclasses() = maxBy {it.allSuperclasses.size}
 
 fun commonParents(vararg classes: KClass<*>) = commonParents(classes.toList())
 
