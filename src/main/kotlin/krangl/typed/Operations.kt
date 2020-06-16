@@ -136,7 +136,7 @@ fun <T> merge(dataFrames: List<TypedDataFrame<*>>) = dataFrames
 
 operator fun <T> TypedDataFrame<T>.plus(other: TypedDataFrame<T>) = merge<T>(listOf(this, other))
 
-fun TypedDataFrame<*>.add(vararg other: TypedDataFrame<*>) = merge<Unit>(listOf(this) + other.toList())
+fun TypedDataFrame<*>.union(vararg other: TypedDataFrame<*>) = merge<Unit>(listOf(this) + other.toList())
 
 // Column operations
 

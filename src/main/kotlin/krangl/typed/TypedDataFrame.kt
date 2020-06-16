@@ -13,6 +13,8 @@ interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
 
     infix fun ColumnSet.and(other: ColumnSet) = ColumnGroup(listOf(this, other))
 
+    operator fun ColumnSet.plus(other: ColumnSet) = this and other
+
     infix fun String.and(other: ColumnSet) = ColumnGroup(listOf(asColumnName(), other))
 
     infix fun String.and(other: String) = ColumnGroup(listOf(asColumnName(), other.asColumnName()))
