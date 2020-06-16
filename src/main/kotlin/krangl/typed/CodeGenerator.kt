@@ -1,10 +1,6 @@
 package krangl.typed
 
-import krangl.*
-import kotlin.reflect.KClass
-import kotlin.reflect.KMutableProperty
-import kotlin.reflect.KProperty
-import kotlin.reflect.KType
+import kotlin.reflect.*
 import kotlin.reflect.full.*
 
 // Public API
@@ -30,7 +26,7 @@ data class DataFrameToListTypedStub(val df: TypedDataFrame<*>, val interfaceClas
 fun <T> TypedDataFrame<T>.getScheme(name: String? = null, columnSelector: ColumnSelector<T>? = null): String {
     val interfaceName = name ?: "DataRecord"
     val cols = columnSelector?.let { getColumns(it).map { this[it.name] } } ?: columns
-    return CodeGenerator.generateInterfaceDeclaration(cols, interfaceName, withBaseInterfaces = false, isOpen = true)
+    return CodeGenerator().generateInterfaceDeclaration(cols, interfaceName, withBaseInterfaces = false, isOpen = true)
 }
 
 interface CodeGeneratorApi {
@@ -46,7 +42,11 @@ interface CodeGeneratorApi {
 
 // Implementation
 
-object CodeGenerator : CodeGeneratorApi {
+class CodeGenerator : CodeGeneratorApi {
+
+    companion object {
+        val Default: CodeGeneratorApi = CodeGenerator()
+    }
 
     // Data Frame Schema
     private data class FieldInfo(val columnName: String, val fieldName: String, val fieldType: KType, val columnType: KType) {
@@ -82,15 +82,7 @@ object CodeGenerator : CodeGeneratorApi {
 
     }
 
-    private fun getColumnType(valueType: KType) =
-            when (valueType.classifier) {
-                Int::class -> IntCol::class
-                Double::class -> DoubleCol::class
-                Boolean::class -> BooleanCol::class
-                String::class -> StringCol::class
-                Long::class -> LongCol::class
-                else -> AnyCol::class
-            }.createType()
+    private fun getColumnType(valueType: KType) = TypedColData::class.createType(listOf(KTypeProjection(KVariance.INVARIANT, valueType)))
 
     private fun getFields(clazz: KClass<*>, withBaseTypes: Boolean): Map<String, FieldInfo> {
         val result = mutableMapOf<String, FieldInfo>()
@@ -100,7 +92,8 @@ object CodeGenerator : CodeGeneratorApi {
         result.putAll(clazz.declaredMemberProperties.mapIndexed { index, it ->
             val fieldName = it.name
             val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName
-            val columnType = it.findAnnotation<ColumnType>()?.type?.createType() ?: getColumnType(it.returnType)
+            val columnValueType = it.findAnnotation<ColumnType>()?.type?.createType() ?: it.returnType
+            val columnType = getColumnType(columnValueType)
             fieldName to FieldInfo(columnName, fieldName, it.returnType, columnType)
         })
         return result
@@ -139,7 +132,7 @@ object CodeGenerator : CodeGeneratorApi {
         return Scheme(columns.mapIndexed { index, it ->
             val fieldName = generateValidFieldName(it.name, index, generatedFieldNames)
             generatedFieldNames.add(fieldName)
-            FieldInfo(it.name, fieldName, it.type, it.javaClass.kotlin.createType())
+            FieldInfo(it.name, fieldName, it.type, getColumnType(it.type))
         })
     }
 
@@ -236,7 +229,7 @@ object CodeGenerator : CodeGeneratorApi {
         // maybe property is already properly typed, let's do some checks
         val currentMarkerType = getMarkerType(property.returnType)
         if (currentMarkerType != null) {
-            // if property is mutable, we need to make sure that its marker type is open in order to force properties of more general types be assignable to it
+            // if property is mutable, we need to make sure that its marker type is open in order to let data frames with more columns be assignable to it
             if (!isMutable || currentMarkerType.findAnnotation<DataFrameType>()?.isOpen == true) {
                 val markerScheme = getScheme(currentMarkerType, withBaseTypes = true)
                 // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual data frame type
@@ -336,7 +329,7 @@ object CodeGenerator : CodeGeneratorApi {
             val columnNameAnnotation = if (field.columnName != field.fieldName) "\t@ColumnName(\"${renderColumnName(field.columnName)}\")\n" else ""
             val columnTypeAnnotation = if (field.columnType != getColumnType(field.fieldType)) "\t@ColumnType(${render(field.columnType)}::class)\n" else ""
             val valueType = render(field.fieldType)
-            "${columnNameAnnotation}${columnTypeAnnotation}\t${override}val ${field.fieldName}: $valueType"
+            "${columnNameAnnotation}${columnTypeAnnotation}    ${override}val ${field.fieldName}: $valueType"
         }.joinToString("\n")
         val body = if (fieldsDeclaration.isNotBlank()) "{\n$fieldsDeclaration\n}" else ""
         return header + baseInterfacesDeclaration + body
