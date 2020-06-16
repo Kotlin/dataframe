@@ -5,23 +5,25 @@ import java.util.*
 import kotlin.reflect.full.isSubclassOf
 
 interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
+
     fun columns(vararg col: DataCol) = ColumnGroup(col.toList())
 
-    fun columns(filter: (DataCol) -> Boolean): ColumnGroup
+    operator fun String.invoke() = asColumnName()
+}
+
+interface TypedDataFrameWithColumnsForSelect<out T> : TypedDataFrameWithColumns<T> {
 
     val allColumns: ColumnGroup
 
-    infix fun ColumnSet.and(other: ColumnSet) = ColumnGroup(listOf(this, other))
+    infix fun ColumnSet.and(other: ColumnSet) = ColumnGroup(this, other)
+
+    infix fun String.and(other: String) = asColumnName() and other.asColumnName()
+
+    infix fun String.and(other: ColumnSet) = asColumnName() and other
+
+    infix fun ColumnSet.and(other: String) = this and other.asColumnName()
 
     operator fun ColumnSet.plus(other: ColumnSet) = this and other
-
-    infix fun String.and(other: ColumnSet) = ColumnGroup(listOf(asColumnName(), other))
-
-    infix fun String.and(other: String) = ColumnGroup(listOf(asColumnName(), other.asColumnName()))
-
-    infix fun ColumnSet.and(other: String) = ColumnGroup(listOf(this, other.asColumnName()))
-
-    operator fun String.invoke() = asColumnName()
 }
 
 interface TypedDataFrameWithColumnsForSort<out T> : TypedDataFrameWithColumns<T> {
@@ -29,22 +31,27 @@ interface TypedDataFrameWithColumnsForSort<out T> : TypedDataFrameWithColumns<T>
     val NamedColumn.desc get() = ReversedColumn(this)
 
     val String.desc get() = ReversedColumn(asColumnName())
+
+    infix fun ColumnSet.then(other: ColumnSet) = ColumnGroup(this, other)
+    infix fun ColumnSet.then(other: String) = this then other.asColumnName()
+    infix fun String.then(other: ColumnSet) = asColumnName() then other
+    infix fun String.then(other: String) = asColumnName() then other.asColumnName()
 }
 
-open class TypedDataFrameWithColumnsImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameWithColumns<T> {
+class TypedDataFrameWithColumnsForSelectImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameWithColumnsForSelect<T> {
 
     override val allColumns get() = ColumnGroup(columns)
-
-    override fun columns(filter: (DataCol) -> Boolean) = ColumnGroup(columns.filter(filter))
 }
 
-class TypedDataFrameWithColumnsForSortImpl<T>(df: TypedDataFrame<T>) : TypedDataFrameWithColumnsImpl<T>(df), TypedDataFrameWithColumnsForSort<T>
+class TypedDataFrameWithColumnsForSortImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameWithColumnsForSort<T>{
+
+}
 
 data class DataFrameSize(val ncol: Int, val nrow: Int) {
     override fun toString() = "$nrow x $ncol"
 }
 
-typealias ColumnSelector<T> = TypedDataFrameWithColumns<T>.() -> ColumnSet
+typealias ColumnSelector<T> = TypedDataFrameWithColumnsForSelect<T>.() -> ColumnSet
 
 typealias SortColumnSelector<T> = TypedDataFrameWithColumnsForSort<T>.() -> ColumnSet
 
@@ -61,7 +68,7 @@ internal fun ColumnSet.extractSortColumns(): List<SortColumnDescriptor> = when (
     else -> throw Exception()
 }
 
-internal fun <T> TypedDataFrame<T>.getColumns(selector: ColumnSelector<T>) = selector(TypedDataFrameWithColumnsImpl(this)).extractColumns()
+internal fun <T> TypedDataFrame<T>.getColumns(selector: ColumnSelector<T>) = selector(TypedDataFrameWithColumnsForSelectImpl(this)).extractColumns()
 
 internal fun <T> TypedDataFrame<T>.getSortColumns(selector: SortColumnSelector<T>) = selector(TypedDataFrameWithColumnsForSortImpl(this)).extractSortColumns()
 
@@ -154,7 +161,11 @@ interface TypedDataFrame<out T> {
     fun filterNotNull(vararg cols: String) = filterNotNull(getColumns(cols))
     fun filterNotNull(cols: ColumnSelector<T>) = filterNotNull(getColumns(cols))
 
-    fun filterNotNullAny(columns: ColumnSelector<T>) = getColumns(columns).let { cols -> filter { cols.any { col -> this[col.name] != null } } }
+    fun filterNotNullAny(cols: Iterable<NamedColumn>) = filter { cols.any { col -> this[col.name] != null } }
+    fun filterNotNullAny(vararg cols: Column) = filterNotNullAny(cols.toList())
+    fun filterNotNullAny(vararg cols: String) = filterNotNullAny(getColumns(cols))
+    fun filterNotNullAny(cols: ColumnSelector<T>) = filterNotNullAny(getColumns(cols))
+
     fun filterNotNullAny() = filter { values.any { it.second != null } }
     fun filterNotNull() = filter { values.all { it.second != null } }
 
