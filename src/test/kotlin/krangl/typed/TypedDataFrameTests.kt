@@ -152,11 +152,11 @@ class TypedDataFrameTests {
         fun TypedDataFrame<*>.check() = this[city].values shouldBe expected
 
         typed.sortByDesc(typed.age).sortBy(typed.name).check()
-        typed.sortBy { name and age.desc }.check()
+        typed.sortBy { name then age.desc }.check()
 
-        df.sortBy { name and age.desc }.check()
+        df.sortBy { name then age.desc }.check()
 
-        df.sortBy { "name" and "age".desc }.check()
+        df.sortBy { "name" then "age".desc }.check()
     }
 
     @Test

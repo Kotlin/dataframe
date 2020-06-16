@@ -95,7 +95,9 @@ inline fun <reified T> newColumn(name: String, values: List<T>) = createColumn(n
 fun <T, D> TypedDataFrame<D>.createColumnValues(expression: TypedDataFrameRow<D>.() -> T) =
         rowWise { getRow -> (0 until nrow).map {expression(getRow(it)!!)} }
 
-class ColumnGroup(val columns: List<ColumnSet>) : ColumnSet
+class ColumnGroup(val columns: List<ColumnSet>) : ColumnSet{
+    constructor(vararg columns: ColumnSet): this(columns.toList())
+}
 
 class ReversedColumn(val column: NamedColumn) : ColumnSet
 

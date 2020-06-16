@@ -1,6 +1,6 @@
 package krangl.typed
 
-internal fun <T> GroupedDataFrame<T>.getColumns(selector: ColumnSelector<T>) = selector(TypedDataFrameWithColumnsImpl((this as GroupedDataFrameImpl<T>).groups.first().df)).extractColumns()typealias GroupKey = List<Any?>
+internal fun <T> GroupedDataFrame<T>.getColumns(selector: ColumnSelector<T>) = selector(TypedDataFrameWithColumnsForSelectImpl((this as GroupedDataFrameImpl<T>).groups.first().df)).extractColumns()typealias GroupKey = List<Any?>
 
 interface DataGroup<out T> {
     val groupKey: GroupKey
@@ -77,7 +77,8 @@ class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
     inline fun <reified R:Number> mean(noinline selector: RowSelector<T, R>) = groups.map { it.map(selector).mean() }.wrap()
     inline fun <reified R:Number> mean(column: TypedCol<R>) = groups.map { it.map{ column() }.mean() }.wrap()
 
-//    inline fun <reified R:Number> sum(column: TypedCol<R>) = groups.map { it.map{ column() }.sum() }.wrap()
+    inline fun <reified R:Number> sum(column: TypedCol<R>) = groups.map { sum(it[column].values) }.wrap()
+    inline fun <reified R:Number> sum(noinline selector: RowSelector<T, R>) = groups.map { sum(it.map(selector)) }.wrap()
 
     fun checkAll(predicate: RowFilter<T>) = groups.map { it.all(predicate) }.wrap()
     fun any(predicate: RowFilter<T>) = groups.map { it.any(predicate) }.wrap()

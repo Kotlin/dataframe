@@ -19,3 +19,10 @@ inline fun <reified T:Number> List<T>.mean(): Double = when(T::class){
     Long::class -> (this as Iterable<Long>).sum().toDouble() / size
     else -> throw IllegalArgumentException()
 }
+
+inline fun <reified T:Number> sum(list: List<T>): T = when(T::class){
+    Double::class -> (list as Iterable<Double>).sum() as T
+    Int::class -> (list as Iterable<Int>).map { it.toDouble() }.sum() as T
+    Long::class -> (list as Iterable<Long>).sum().toDouble() as T
+    else -> throw IllegalArgumentException()
+}
