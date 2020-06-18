@@ -135,6 +135,22 @@ class TypedDataFrameTests {
     }
 
     @Test
+    fun `null to zero`() {
+        fun TypedDataFrame<*>.check() {
+            this["weight"].values.any { it == null } shouldBe false
+        }
+
+        typed.nullToZero { it.weight }.check()
+        typed.nullToZero { weight }.check()
+        typed.nullToZero(typed.weight).check()
+
+        df.nullToZero { weight }.check()
+        df.nullToZero(weight).check()
+
+        df.nullToZero("weight").check()
+    }
+
+    @Test
     fun `resetToNull`() {
 
         val updated = typed.update { allColumns }.withNull()

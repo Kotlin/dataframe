@@ -156,6 +156,11 @@ interface TypedDataFrame<out T> {
 
     fun filter(predicate: RowFilter<T>): TypedDataFrame<T>
 
+    fun nullToZero(cols: Iterable<TypedCol<Number?>>) = cols.fold(this) { df, col -> df.nullColumnToZero(col) }
+    fun nullToZero(vararg cols: TypedCol<Number?>) = nullToZero(cols.toList())
+    fun nullToZero(vararg cols: String) = nullToZero(getColumns(cols).map { it as TypedCol<Number?> })
+    fun nullToZero(cols: ColumnSelector<T>) = nullToZero(getColumns(cols).map { it as TypedCol<Number?> })
+
     fun filterNotNull(cols: Iterable<NamedColumn>) = filter { cols.all { col -> this[col.name] != null } }
     fun filterNotNull(vararg cols: Column) = filterNotNull(cols.toList())
     fun filterNotNull(vararg cols: String) = filterNotNull(getColumns(cols))
