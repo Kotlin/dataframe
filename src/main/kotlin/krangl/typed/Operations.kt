@@ -6,7 +6,7 @@ import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.superclasses
 
-typealias RowSelector<T, R> = TypedDataFrameRow<T>.() -> R
+typealias RowSelector<T, R> = TypedDataFrameRow<T>.(TypedDataFrameRow<T>) -> R
 
 typealias RowFilter<T> = RowSelector<T, Boolean>
 
@@ -15,11 +15,11 @@ class TypedColumnsFromDataRowBuilder<T>(val dataFrame: TypedDataFrame<T>) {
 
     fun add(column: DataCol) = columns.add(column)
 
-    inline fun <reified R> add(name: String, noinline expression: TypedDataFrameRow<T>.() -> R?) = add(dataFrame.new(name, expression))
+    inline fun <reified R> add(name: String, noinline expression: RowSelector<T,R>) = add(dataFrame.new(name, expression))
 
-    inline infix fun <reified R> String.to(noinline expression: TypedDataFrameRow<T>.() -> R?) = add(this, expression)
+    inline infix fun <reified R> String.to(noinline expression: RowSelector<T,R>) = add(this, expression)
 
-    inline operator fun <reified R> String.invoke(noinline expression: TypedDataFrameRow<T>.() -> R?) = add(this, expression)
+    inline operator fun <reified R> String.invoke(noinline expression: RowSelector<T,R>) = add(this, expression)
 }
 
 // add Column
@@ -27,10 +27,10 @@ class TypedColumnsFromDataRowBuilder<T>(val dataFrame: TypedDataFrame<T>) {
 operator fun TypedDataFrame<*>.plus(col: DataCol) = dataFrameOf(columns + col)
 operator fun TypedDataFrame<*>.plus(col: Iterable<DataCol>) = dataFrameOf(columns + col)
 
-inline fun <reified T, D> TypedDataFrame<D>.add(name: String, noinline expression: TypedDataFrameRow<D>.() -> T?) =
+inline fun <reified R, T> TypedDataFrame<T>.add(name: String, noinline expression: RowSelector<T,R>) =
         (this + new(name, expression))
 
-inline fun <reified T, D> GroupedDataFrame<D>.add(name: String, noinline expression: TypedDataFrameRow<D>.() -> T?) =
+inline fun <reified R, T> GroupedDataFrame<T>.add(name: String, noinline expression: RowSelector<T,R>) =
         modify { add(name, expression) }
 
 inline fun <reified T> TypedDataFrame<*>.addColumn(name: String, values: List<T?>) =
@@ -62,7 +62,7 @@ fun <T> TypedDataFrame<T>.map(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit
 
 // group by
 
-inline fun <reified T, D> TypedDataFrame<D>.groupBy(name: String = "key", noinline expression: TypedDataFrameRow<D>.() -> T?) =
+inline fun <T, reified R> TypedDataFrame<T>.groupBy(name: String = "key", noinline expression: RowSelector<T,R?>) =
         add(name, expression).groupBy(name)
 
 // size
