@@ -23,10 +23,7 @@ interface TypedDataFrameRow<out T> {
     fun double(name: String) = read<Double>(name)
     fun ndouble(name: String) = read<Double?>(name)
 
-    operator fun TypedCol<Int>.compareTo(a: Int) = get(this).compareTo(a)
-    operator fun TypedCol<Long>.compareTo(a: Long) = get(this).compareTo(a)
-    operator fun TypedCol<Double>.compareTo(a: Double) = get(this).compareTo(a)
-    operator fun TypedCol<String>.compareTo(a: String) = get(this).compareTo(a)
+    operator fun <R: Comparable<R>> TypedCol<R>.compareTo(other: R) = get(this).compareTo(other)
 
     operator fun TypedCol<Int>.plus(a: Int) = get(this) + a
     operator fun TypedCol<Long>.plus(a: Long) = get(this) + a
