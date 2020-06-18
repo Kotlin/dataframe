@@ -75,16 +75,19 @@ inline fun <reified C> TypedDataFrame<*>.toList() = DataFrameToListTypedStub(thi
 
 fun TypedDataFrame<*>.toList(className: String) = DataFrameToListNamedStub(this, className)
 
-fun <T> TypedDataFrameRow<T>.movingAverage(k: Int, selector: RowSelector<T, Double>): Double {
-    var sum = .0
-    var i = 0
-    var r = this ?: null
-    while (i < k && r != null) {
-        sum += selector(r)
-        r = r.prev
-        i++
-    }
-    return sum / i
+inline fun <T, reified R:Number> TypedDataFrameRow<T>.diff(selector: RowSelector<T, R>) = when(R::class){
+    Double::class -> prev?.let { (selector(this) as Double) - (selector(it) as Double) }  ?: .0
+    Int::class -> prev?.let { (selector(this) as Int) - (selector(it) as Int) }  ?: 0
+    Long::class -> prev?.let { (selector(this) as Long) - (selector(it) as Long) }  ?: 0
+    else -> throw NotImplementedError()
+}
+
+fun <T> TypedDataFrameRow<T>.movingAverage(k: Int, selector: RowSelector<T, Number>) :Double {
+    var count = 0
+    return backwardIterable().take(k).sumByDouble {
+        count++
+        selector(it).toDouble()
+    } / count
 }
 
 // merge
