@@ -26,3 +26,11 @@ inline fun <reified T:Number> sum(list: List<T>): T = when(T::class){
     Long::class -> (list as Iterable<Long>).sum().toDouble() as T
     else -> throw IllegalArgumentException()
 }
+
+internal fun <T> TypedDataFrame<T>.nullColumnToZero(col: TypedCol<Number?>)=
+    when(col.valueClass) {
+        Double::class -> update(col) { col() as Double? ?: .0 }
+        Int::class -> update(col) { col() as Int? ?: 0 }
+        Long::class -> update(col) { col() as Long? ?: 0 }
+        else -> throw IllegalArgumentException()
+    }
