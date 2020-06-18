@@ -204,6 +204,8 @@ interface TypedDataFrame<out T> {
     fun skipLast(numRows: Int = 5) = getRows(0 until nrow - numRows)
     fun head(numRows: Int = 5) = take(numRows)
     fun tail(numRows: Int = 5) = takeLast(numRows)
+    fun reorder(permutation: List<Int>) = columns.map { it.reorder(permutation) }.let { dataFrameOf(it).typed<T>() }
+    fun shuffled() = reorder((0 until nrow).shuffled())
 
     fun <R> map(selector: RowSelector<T, R>) = rows.map { selector(it, it) }
     fun forEach(selector: RowSelector<T, Unit>) = rows.forEach { selector(it, it) }
@@ -324,11 +326,9 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
             }
         }.reduce { a, b -> a.then(b) }
 
-        val permutation = (0 until nrow).sortedWith(compChain).toIntArray()
+        val permutation = (0 until nrow).sortedWith(compChain)
 
-        return this.columns.map { it.reorder(permutation) }.let {
-            dataFrameOf(it).typed()
-        }
+        return reorder(permutation)
     }
 
     override fun getRows(indices: IntArray) = columns.map { col -> col.slice(indices) }.let { dataFrameOf(it).typed<T>() }

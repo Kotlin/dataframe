@@ -60,7 +60,7 @@ fun DataCol.toDataFrame() = dataFrameOf(listOf(this))
 
 inline fun <T> DataCol.cast() = this as TypedColData<T>
 
-fun <T> TypedColData<T>.reorder(permutation: IntArray): TypedColData<T> {
+fun <T> TypedColData<T>.reorder(permutation: List<Int>): TypedColData<T> {
     var nullable = false
     val newValues = (0 until length).map { values[permutation[it]].also { if (it == null) nullable = true } }
     return TypedDataCol(newValues, nullable, name, valueClass)
