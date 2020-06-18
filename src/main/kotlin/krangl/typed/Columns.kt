@@ -26,6 +26,8 @@ interface TypedColData<out T> : TypedCol<T>, TypedValues<T> {
     val length get() = values.size
     operator fun get(index: Int) = values[index]
     val type get() = valueClass.createType(nullable = nullable)
+
+    operator fun get(indices: IntArray) = slice(indices)
 }
 
 typealias DataCol = TypedColData<*>
@@ -43,7 +45,7 @@ class TypedColDesc<T>(override val name: String, override val valueClass: KClass
 
 inline fun <reified T> TypedColDesc<T>.nullable() = TypedColDesc<T?>(name, valueClass)
 
-class TypedDataCol<T>(override val values: List<T>, override val nullable: Boolean, override val name: String, override val valueClass: KClass<*>) : TypedColData<T> {
+data class TypedDataCol<T>(override val values: List<T>, override val nullable: Boolean, override val name: String, override val valueClass: KClass<*>) : TypedColData<T> {
 
     override fun toString() = values.joinToString()
 }
@@ -52,17 +54,19 @@ inline fun <reified T> createColumn(name: String, values: List<T>, hasNulls: Boo
 
 inline fun <reified T> createColumn(name: String, values: List<T>) = TypedDataCol(values, values.any { it == null }, name, T::class)
 
+inline fun <reified T> TypedCol<T>.withValues(values: List<T>, hasNulls: Boolean) = TypedDataCol(values, hasNulls, name, valueClass)
+
 fun DataCol.toDataFrame() = dataFrameOf(listOf(this))
 
 inline fun <T> DataCol.cast() = this as TypedColData<T>
 
-fun DataCol.reorder(permutation: IntArray): DataCol {
+fun <T> TypedColData<T>.reorder(permutation: IntArray): TypedColData<T> {
     var nullable = false
     val newValues = (0 until length).map { values[permutation[it]].also { if (it == null) nullable = true } }
     return TypedDataCol(newValues, nullable, name, valueClass)
 }
 
-fun DataCol.getRows(indices: IntArray): DataCol {
+fun <T> TypedColData<T>.slice(indices: IntArray): TypedColData<T> {
     var nullable = false
     val newValues = indices.map { values[it].also { if (it == null) nullable = true } }
     return TypedDataCol(newValues, nullable, name, valueClass)
@@ -82,7 +86,7 @@ class InplaceColumnBuilder(val name: String) {
 
 fun column(name: String) = InplaceColumnBuilder(name)
 
-inline fun <reified R, T> TypedDataFrame<T>.new(name: String, noinline expression: RowSelector<T, R>): TypedDataCol<R> {
+inline fun <T, reified R> TypedDataFrame<T>.new(name: String, noinline expression: RowSelector<T, R>): TypedDataCol<R> {
     var nullable = false
     rowWise { getRow -> (0 until nrow).map { getRow(it)!!.let { expression(it, it) }.also { if (it == null) nullable = true } } }
     return createColumn(name, createColumnValues(expression), nullable)

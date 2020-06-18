@@ -41,14 +41,30 @@ class SeriesTests {
     @Test
     fun `diff`() {
         val withDiff = typed
+                .sortBy { city then day }
                 .groupBy { city }
-                .sortBy { day }
-                .add("diff") { prev?.let { temp - it.temp } ?: 0 }
+                .add("diff") { diff { it.temp } }
                 .ungroup()
 
         val srcData = typed.map { (city to day) to temp }.toMap()
-        val expected = typed.sortBy {day}.sortByDesc {city}.map { srcData[city to (day-1)]?.let { temp - it} ?: 0 }
+        val expected = typed.sortBy {city then day}.map { row -> srcData[city to (day-1)]?.let { row.temp - it} ?: 0 }
         withDiff["diff"].values shouldBe expected
     }
 
+    @Test
+    fun `movingAverage`() {
+        val k = 3
+        val withMa = typed
+                .sortBy { city then day }
+                .groupBy { city }
+                .add("ma_temp") { movingAverage(k) { it.temp } }
+                .ungroup()
+
+        val srcData = typed.map { (city to day) to temp }.toMap()
+        val expected = typed
+                .sortBy { city then day }
+                .map { (0 until k).map { srcData[city to day - it] }.filterNotNull().let { it.sum().toDouble() / it.size } }
+
+        withMa["ma_temp"].values shouldBe expected
+    }
 }

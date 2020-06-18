@@ -4,6 +4,7 @@ import krangl.DataFrameRow
 import krangl.typed.tracking.ColumnAccessTracker
 
 interface TypedDataFrameRow<out T> {
+    val owner: TypedDataFrame<T>
     val prev: TypedDataFrameRow<T>?
     val next: TypedDataFrameRow<T>?
     val index: Int
@@ -14,7 +15,7 @@ interface TypedDataFrameRow<out T> {
     operator fun <R> String.invoke() = get(this) as R
 
     fun <T> read(name: String) = get(name) as T
-    val values: List<Pair<String, Any?>>
+    val values: List<Any?>
 
     fun int(name: String) = read<Int>(name)
     fun nint(name: String) = read<Int?>(name)
@@ -23,7 +24,10 @@ interface TypedDataFrameRow<out T> {
     fun double(name: String) = read<Double>(name)
     fun ndouble(name: String) = read<Double?>(name)
 
-    operator fun <R: Comparable<R>> TypedCol<R>.compareTo(other: R) = get(this).compareTo(other)
+    fun forwardIterable() = this.toIterable { it.next }
+    fun backwardIterable() = this.toIterable { it.prev }
+
+    operator fun <R : Comparable<R>> TypedCol<R>.compareTo(other: R) = get(this).compareTo(other)
 
     operator fun TypedCol<Int>.plus(a: Int) = get(this) + a
     operator fun TypedCol<Long>.plus(a: Long) = get(this) + a
@@ -59,11 +63,11 @@ interface TypedDataFrameRow<out T> {
     infix fun <R> TypedCol<R>.neq(a: R?) = get(this) != a
 }
 
-internal class TypedDataFrameRowImpl<T>(var row: DataFrameRow, override var index: Int, val resolver: RowResolver<T>) : TypedDataFrameRow<T> {
+internal class TypedDataFrameRowImpl<T>(override var index: Int, val resolver: RowResolver<T>) : TypedDataFrameRow<T> {
 
     override operator fun get(name: String): Any? {
         ColumnAccessTracker.registerColumnAccess(name)
-        return row[name]
+        return owner[name][index]
     }
 
     override val prev: TypedDataFrameRow<T>?
@@ -73,7 +77,37 @@ internal class TypedDataFrameRowImpl<T>(var row: DataFrameRow, override var inde
 
     override fun getRow(index: Int): TypedDataFrameRow<T>? = resolver[index]
 
-    override val values: List<Pair<String, Any?>>
-        get() = row.entries.map { it.key to it.value }
+    override val values: List<Any?>
+        get() = owner.columns.map { it[index] }
 
+    override val owner: TypedDataFrame<T>
+        get() = resolver.dataFrame
+
+}
+
+internal fun <T> T.toIterable(getNext: (T) -> T?) = Iterable<T> {
+
+    object : Iterator<T> {
+
+        var current: T? = null
+        var beforeStart = true
+        var next: T? = null
+
+        override fun hasNext(): Boolean {
+            if (beforeStart) return true
+            if (next == null) next = getNext(current!!)
+            return next != null
+        }
+
+        override fun next(): T {
+            if (beforeStart) {
+                current = this@toIterable
+                beforeStart = false
+                return current!!
+            }
+            current = next ?: getNext(current!!)
+            next = null
+            return current!!
+        }
+    }
 }
