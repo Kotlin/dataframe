@@ -1,7 +1,6 @@
 package krangl.typed
 
 import krangl.DataFrame
-import krangl.dataFrameOf
 import java.util.*
 import kotlin.reflect.full.isSubclassOf
 
@@ -88,9 +87,7 @@ typealias UntypedDataFrame = TypedDataFrame<Unit>
 
 internal fun <T> TypedDataFrame<T>.new(columns: Iterable<DataCol>) = dataFrameOf(columns).typed<T>()
 
-interface DF
-
-interface TypedDataFrame<out T> : DF {
+interface TypedDataFrame<out T> {
 
     val nrow: Int
     val ncol: Int get() = columns.size
@@ -101,6 +98,7 @@ interface TypedDataFrame<out T> : DF {
 
     operator fun get(rowIndex: Int): TypedDataFrameRow<T>
     operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found") // TODO
+    operator fun get(column: NamedColumn) = get(column.name)
     operator fun <R> get(column: TypedCol<R>) = get(column.name) as TypedColData<R>
     operator fun get(indices: IntArray) = getRows(indices)
     operator fun get(indices: List<Int>) = getRows(indices)
@@ -133,7 +131,7 @@ interface TypedDataFrame<out T> : DF {
     fun sortByDesc(columns: Iterable<NamedColumn>) = sortBy(columns.map { SortColumnDescriptor(it.name, SortDirection.Desc) })
     fun sortByDesc(vararg columns: Column) = sortByDesc(columns.toList())
     fun sortByDesc(vararg columns: String) = sortByDesc(getColumns(columns))
-    fun sortByDesc(selector: ColumnSelector<T>) = sortByDesc(getColumns(selector))
+    fun sortByDesc(selector: SortColumnSelector<T>) = sortBy(getSortColumns(selector).map { SortColumnDescriptor(it.column, SortDirection.Desc) })
 
     fun remove(cols: Iterable<NamedColumn>) = cols.map { it.name }.toSet().let { exclude -> new(columns.filter { !exclude.contains(it.name) }) }
     fun remove(vararg cols: NamedColumn) = remove(cols.toList())
@@ -174,8 +172,8 @@ interface TypedDataFrame<out T> : DF {
     fun filterNotNullAny(vararg cols: String) = filterNotNullAny(getColumns(cols))
     fun filterNotNullAny(cols: ColumnSelector<T>) = filterNotNullAny(getColumns(cols))
 
-    fun filterNotNullAny() = filter { values.any { it.second != null } }
-    fun filterNotNull() = filter { values.all { it.second != null } }
+    fun filterNotNullAny() = filter { values.any { it != null } }
+    fun filterNotNull() = filter { values.all { it != null } }
 
     fun <D : Comparable<D>> min(selector: RowSelector<T, D?>): D? = rows.asSequence().map { selector(it, it) }.filterNotNull().min()
     fun <D : Comparable<D>> min(col: TypedCol<D?>): D? = get(col).values.asSequence().filterNotNull().min()
@@ -220,17 +218,17 @@ interface UpdateClause<out T> {
 
 class UpdateClauseImpl<T>(override val df: TypedDataFrame<T>, override val cols: List<NamedColumn>) : UpdateClause<T>
 
-inline infix fun <T, reified R> UpdateClause<T>.with(noinline expression: RowSelector<T,R>): TypedDataFrame<T> {
+inline infix fun <T, reified R> UpdateClause<T>.with(noinline expression: RowSelector<T, R>): TypedDataFrame<T> {
     val newCol = df.new("", expression)
     val names = cols.map { it.name }
     val newColumns = df.columns.map { if (names.contains(it.name)) newCol.rename(it.name) else it }
     return dataFrameOf(newColumns).typed<T>()
 }
 
-inline fun <T, reified R> TypedDataFrame<T>.update(vararg cols: Column, noinline expression: RowSelector<T,R>) =
+inline fun <T, reified R> TypedDataFrame<T>.update(vararg cols: Column, noinline expression: RowSelector<T, R>) =
         update(*cols).with(expression)
 
-inline fun <T, reified R> TypedDataFrame<T>.update(vararg cols: String, noinline expression: RowSelector<T,R>) =
+inline fun <T, reified R> TypedDataFrame<T>.update(vararg cols: String, noinline expression: RowSelector<T, R>) =
         update(*cols).with(expression)
 
 inline fun <T> UpdateClause<T>.withNull() = with { null as Any? }
@@ -251,7 +249,7 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
             throw Exception("Duplicate column names: ${columnNames}") // TODO
     }
 
-    private val rowResolver = RowResolver<T>(this)
+    private val rowResolver = RowResolver(this)
 
     override val rows = object : Iterable<TypedDataFrameRow<T>> {
         override fun iterator() =
@@ -259,7 +257,7 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
                 object : Iterator<TypedDataFrameRow<T>> {
                     var curRow = 0
 
-                    val resolver = RowResolver<T>(this@TypedDataFrameImpl)
+                    val resolver = RowResolver(this@TypedDataFrameImpl)
 
                     override fun hasNext(): Boolean = curRow < nrow
 
@@ -277,32 +275,32 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
                 }
             }.let(::getRows).typed()
 
-    /** Return an iterator over the rows in data in the receiver. */
-    private fun TypedDataFrame<*>.rowData(): Iterable<List<Any?>> = object : Iterable<List<Any?>> {
-
-        override fun iterator() = object : Iterator<List<Any?>> {
-
-            val colIterators = columns.map { it.values.iterator() }
-
-            override fun hasNext(): Boolean = colIterators.firstOrNull()?.hasNext() ?: false
-
-            override fun next(): List<Any?> = colIterators.map { it.next() }
-        }
-    }
-
     override fun groupBy(cols: Iterable<NamedColumn>): GroupedDataFrame<T> {
 
-        val groups = select(cols)
-                .rowData()
-                .mapIndexed { index, group -> group to index }
+        val columns = cols.map { this[it] }
+
+        val groups = (0 until nrow)
+                .map { index -> columns.map { it[index] } to index }
                 .groupBy { it.first }
                 .map {
-                    val groupRowIndices = it.value.map { it.second }.toIntArray()
-                    val grpSubCols = columns.map { it.getRows(groupRowIndices) }
-                    DataGroupImpl<T>(it.key, dataFrameOf(grpSubCols).typed())
+                    val rowIndices = it.value.map { it.second }.toIntArray()
+                    val groupColumns = this.columns.map { it[rowIndices] }
+                    it.key to dataFrameOf(groupColumns).typed<T>()
                 }
 
-        return GroupedDataFrameImpl(cols.map { it.name }, groups)
+        val keyColumns = columns.mapIndexed { index, column ->
+            var nullable = false
+            val values = groups.map {
+                it.first[index].also { if (it == null) nullable = true }
+            }
+            TypedDataCol(values, nullable, column.name, column.valueClass)
+        }
+
+        val groupFrames = groups.map { it.second }
+        val groupsColumn = columnForGroupedData.withValues(groupFrames, false)
+
+        val df = dataFrameOf(keyColumns + groupsColumn).typed<T>()
+        return GroupedDataFrameImpl(df)
     }
 
     private fun DataCol.createComparator(naLast: Boolean = true): Comparator<Int> {
@@ -333,16 +331,22 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
         }
     }
 
-    override fun getRows(indices: IntArray) = columns.map { col -> col.getRows(indices) }.let { dataFrameOf(it).typed<T>() }
+    override fun getRows(indices: IntArray) = columns.map { col -> col.slice(indices) }.let { dataFrameOf(it).typed<T>() }
 
     override fun getRows(mask: BooleanArray) = columns.map { col -> col.getRows(mask) }.let { dataFrameOf(it).typed<T>() }
 
     override fun tryGetColumn(columnName: String) = columnsMap[columnName]
+
+    override fun equals(other: Any?): Boolean {
+        val df = other as? TypedDataFrame<*>
+        if (df == null) return false
+        return columns == df.columns
+    }
 }
 
 internal fun <T> LinkedList<T>.popSafe() = if (isEmpty()) null else pop()
 
-internal class RowResolver<T>(val dataFrame: TypedDataFrame<*>) {
+internal class RowResolver<T>(val dataFrame: TypedDataFrame<T>) {
     private val pool = LinkedList<TypedDataFrameRowImpl<T>>()
     private val map = mutableMapOf<Int, TypedDataFrameRowImpl<T>>()
 
@@ -351,21 +355,18 @@ internal class RowResolver<T>(val dataFrame: TypedDataFrame<*>) {
         map.clear()
     }
 
-    fun readRow(rowIndex: Int) = dataFrame.columns.map { it.name to it[rowIndex] }.toMap()
-
     operator fun get(index: Int): TypedDataFrameRow<T>? =
             if (index < 0 || index >= dataFrame.nrow) null
             else map[index] ?: pool.let { it.popSafe() }?.also {
-                it.row = readRow(index)
                 it.index = index
                 map[index] = it
-            } ?: TypedDataFrameRowImpl(readRow(index), index, this).also { map[index] = it }
+            } ?: TypedDataFrameRowImpl(index, this).also { map[index] = it }
 }
 
 typealias RowAccessor<T> = (Int) -> TypedDataFrameRow<T>?
 
 fun <R, T> TypedDataFrame<T>.rowWise(body: (RowAccessor<T>) -> R): R {
-    val resolver = RowResolver<T>(this)
+    val resolver = RowResolver(this)
     fun getRow(index: Int): TypedDataFrameRow<T>? {
         resolver.resetMapping()
         return resolver[index]
@@ -377,5 +378,7 @@ fun <T> DataFrame.typed(): TypedDataFrame<T> = TypedDataFrameImpl(cols.map { it.
 
 fun <T> TypedDataFrame<*>.typed(): TypedDataFrame<T> = TypedDataFrameImpl(columns)
 
-fun <T> TypedDataFrameRow<T>.toDataFrame() =
-        dataFrameOf(values.map { it.first })(values.map { it.second }).typed<T>()
+fun <T> TypedDataFrameRow<T>.toDataFrame() = owner.columns.map {
+    val value = it[index]
+    it.withValues(listOf(value), value == null)
+}.let { dataFrameOf(it).typed<T>() }

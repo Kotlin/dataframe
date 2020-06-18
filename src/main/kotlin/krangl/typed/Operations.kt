@@ -3,7 +3,6 @@ package krangl.typed
 import krangl.DataFrame
 import kotlin.reflect.KClass
 import kotlin.reflect.full.allSuperclasses
-import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.superclasses
 
 typealias RowSelector<T, R> = TypedDataFrameRow<T>.(TypedDataFrameRow<T>) -> R
@@ -92,7 +91,7 @@ fun <T> TypedDataFrameRow<T>.movingAverage(k: Int, selector: RowSelector<T, Numb
 
 // merge
 
-fun <T> Iterable<TypedDataFrame<T>>.merge() = merge<T>(toList())
+fun Iterable<TypedDataFrame<*>>.union() = merge(toList())
 
 fun commonParent(vararg classes: KClass<*>) = commonParents(classes.toList()).withMostSuperclasses()
 
@@ -113,34 +112,38 @@ fun commonParents(classes: Iterable<KClass<*>>) =
             }
         }
 
-fun <T> merge(dataFrames: List<TypedDataFrame<*>>) = dataFrames
-        .fold(emptyList<String>()) { acc, df -> acc + (df.columnNames() - acc) } // collect column names preserving order
-        .map { name ->
-            val list = mutableListOf<Any?>()
-            var nullable = false
-            val classes = mutableSetOf<KClass<*>>()
+fun merge(dataFrames: List<TypedDataFrame<*>>): UntypedDataFrame {
+    if (dataFrames.size == 1) return dataFrames[0].typed()
 
-            dataFrames.forEach {
-                val column = it.tryGetColumn(name)
-                if (column != null) {
-                    nullable = nullable || column.nullable
-                    classes.add(column.valueClass)
-                    list.addAll(column.values)
-                } else {
-                    if (it.nrow > 0) nullable = true
-                    for (row in (0 until it.nrow)) {
-                        list.add(null)
+    return dataFrames
+            .fold(emptyList<String>()) { acc, df -> acc + (df.columnNames() - acc) } // collect column names preserving order
+            .map { name ->
+                val list = mutableListOf<Any?>()
+                var nullable = false
+                val classes = mutableSetOf<KClass<*>>()
+
+                dataFrames.forEach {
+                    val column = it.tryGetColumn(name)
+                    if (column != null) {
+                        nullable = nullable || column.nullable
+                        classes.add(column.valueClass)
+                        list.addAll(column.values)
+                    } else {
+                        if (it.nrow > 0) nullable = true
+                        for (row in (0 until it.nrow)) {
+                            list.add(null)
+                        }
                     }
                 }
-            }
-            val newClass = commonParents(classes).firstOrNull() ?: Any::class
+                val newClass = commonParents(classes).firstOrNull() ?: Any::class
 
-            TypedDataCol(list, nullable, name, newClass)
-        }.let { dataFrameOf(it).typed<T>() }
+                TypedDataCol(list, nullable, name, newClass)
+            }.let { dataFrameOf(it) }
+}
 
-operator fun <T> TypedDataFrame<T>.plus(other: TypedDataFrame<T>) = merge<T>(listOf(this, other))
+operator fun <T> TypedDataFrame<T>.plus(other: TypedDataFrame<T>) = merge(listOf(this, other)).typed<T>()
 
-fun TypedDataFrame<*>.union(vararg other: TypedDataFrame<*>) = merge<Unit>(listOf(this) + other.toList())
+fun TypedDataFrame<*>.union(vararg other: TypedDataFrame<*>) = merge(listOf(this) + other.toList())
 
 // Column operations
 

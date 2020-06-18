@@ -10,7 +10,7 @@ fun TypedDataFrame<*>.toHTML(limit: Int = 20, truncate: Int = 50) : String {
     sb.append("</tr>")
     rows.take(limit).forEach {
         sb.append("<tr>")
-        it.values.map { it.second.toString() }.forEach {
+        it.values.map { it.toString() }.forEach {
             val truncated = if (truncate > 0 && it.length > truncate) {
                 if (truncate < 4) it.substring(0, truncate)
                 else it.substring(0, truncate - 3) + "..."

@@ -181,11 +181,38 @@ class TypedDataFrameTests {
     }
 
     @Test
+    fun `equals`() {
+        typed shouldBe typed.update { age }.with { age }
+    }
+
+    @Test
+    fun `get group by single key`() {
+        typed.groupBy { name }["Mark"] shouldBe typed.filter { name == "Mark" }
+    }
+
+    @Test
+    fun `get group by complex key`() {
+        typed.groupBy { city and name }["Tokyo", "Bob"] shouldBe typed.filter { name == "Bob" && city == "Tokyo" }
+    }
+
+    @Test
+    fun `get group by partial key`() {
+        typed.groupBy { city and name }["Tokyo"] shouldBe typed.filter { city == "Tokyo" }
+    }
+
+    @Test
+    fun `group and sort`() {
+        typed.groupBy { name }.sortBy { name.desc then age }.ungroup() shouldBe typed.sortBy { name.desc then age }
+    }
+
+    @Test
     fun `filter`() {
+
         val expected = listOf("Bob", "Mark", "Bob")
         fun TypedDataFrame<*>.check() = this[name].values shouldBe expected
 
         val limit = 20
+
         typed.filter { it.age > limit && it.city != null }.check()
         typed.filter { age > limit && it.city != null }.check()
 
@@ -199,6 +226,7 @@ class TypedDataFrameTests {
 
     @Test
     fun `filterNotNull 1`() {
+
         fun TypedDataFrame<*>.check() = forEach { get("weight") shouldNotBe null }
 
         typed.filterNotNull(typed.weight).check()
@@ -213,6 +241,7 @@ class TypedDataFrameTests {
 
     @Test
     fun `filterNotNull 2`() {
+
         val expected = typed.rows.count { it.city != null && it.weight != null }
         fun TypedDataFrame<*>.check() = nrow shouldBe expected
 
