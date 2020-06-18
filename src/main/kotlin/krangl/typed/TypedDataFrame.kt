@@ -1,6 +1,7 @@
 package krangl.typed
 
-import krangl.*
+import krangl.DataFrame
+import krangl.dataFrameOf
 import java.util.*
 import kotlin.reflect.full.isSubclassOf
 
@@ -43,7 +44,7 @@ class TypedDataFrameWithColumnsForSelectImpl<T>(df: TypedDataFrame<T>) : TypedDa
     override val allColumns get() = ColumnGroup(columns)
 }
 
-class TypedDataFrameWithColumnsForSortImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameWithColumnsForSort<T>{
+class TypedDataFrameWithColumnsForSortImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameWithColumnsForSort<T> {
 
 }
 
@@ -51,9 +52,9 @@ data class DataFrameSize(val ncol: Int, val nrow: Int) {
     override fun toString() = "$nrow x $ncol"
 }
 
-typealias ColumnSelector<T> = TypedDataFrameWithColumnsForSelect<T>.() -> ColumnSet
+typealias ColumnSelector<T> = TypedDataFrameWithColumnsForSelect<T>.(TypedDataFrameWithColumnsForSelect<T>) -> ColumnSet
 
-typealias SortColumnSelector<T> = TypedDataFrameWithColumnsForSort<T>.() -> ColumnSet
+typealias SortColumnSelector<T> = TypedDataFrameWithColumnsForSort<T>.(TypedDataFrameWithColumnsForSort<T>) -> ColumnSet
 
 internal fun ColumnSet.extractColumns(): List<NamedColumn> = when (this) {
     is ColumnGroup -> columns.flatMap { it.extractColumns() }
@@ -68,9 +69,9 @@ internal fun ColumnSet.extractSortColumns(): List<SortColumnDescriptor> = when (
     else -> throw Exception()
 }
 
-internal fun <T> TypedDataFrame<T>.getColumns(selector: ColumnSelector<T>) = selector(TypedDataFrameWithColumnsForSelectImpl(this)).extractColumns()
+internal fun <T> TypedDataFrame<T>.getColumns(selector: ColumnSelector<T>) = TypedDataFrameWithColumnsForSelectImpl(this).let { selector(it, it).extractColumns() }
 
-internal fun <T> TypedDataFrame<T>.getSortColumns(selector: SortColumnSelector<T>) = selector(TypedDataFrameWithColumnsForSortImpl(this)).extractSortColumns()
+internal fun <T> TypedDataFrame<T>.getSortColumns(selector: SortColumnSelector<T>) = TypedDataFrameWithColumnsForSortImpl(this).let { selector(it, it).extractSortColumns() }
 
 internal fun <T> TypedDataFrame<T>.getColumns(columnNames: Array<out String>) = columnNames.map { this[it] }
 
@@ -87,7 +88,9 @@ typealias UntypedDataFrame = TypedDataFrame<Unit>
 
 internal fun <T> TypedDataFrame<T>.new(columns: Iterable<DataCol>) = dataFrameOf(columns).typed<T>()
 
-interface TypedDataFrame<out T> {
+interface DF
+
+interface TypedDataFrame<out T> : DF {
 
     val nrow: Int
     val ncol: Int get() = columns.size
@@ -174,24 +177,24 @@ interface TypedDataFrame<out T> {
     fun filterNotNullAny() = filter { values.any { it.second != null } }
     fun filterNotNull() = filter { values.all { it.second != null } }
 
-    fun <D : Comparable<D>> min(selector: RowSelector<T, D?>): D? = rows.asSequence().map(selector).filterNotNull().min()
+    fun <D : Comparable<D>> min(selector: RowSelector<T, D?>): D? = rows.asSequence().map { selector(it, it) }.filterNotNull().min()
     fun <D : Comparable<D>> min(col: TypedCol<D?>): D? = get(col).values.asSequence().filterNotNull().min()
 
-    fun <D : Comparable<D>> max(selector: RowSelector<T, D?>): D? = rows.asSequence().map(selector).filterNotNull().max()
+    fun <D : Comparable<D>> max(selector: RowSelector<T, D?>): D? = rows.asSequence().map { selector(it, it) }.filterNotNull().max()
     fun <D : Comparable<D>> max(col: TypedCol<D?>): D? = get(col).values.asSequence().filterNotNull().max()
 
-    fun <D : Comparable<D>> maxBy(selector: RowSelector<T, D>) = rows.maxBy(selector)
+    fun <D : Comparable<D>> maxBy(selector: RowSelector<T, D>) = rows.maxBy { selector(it, it) }
     fun <D : Comparable<D>> maxBy(col: TypedCol<D>) = rows.maxBy { col(it) }
     fun <D : Comparable<D>> maxBy(col: String) = rows.maxBy { it[col] as D }
 
-    fun <D : Comparable<D>> minBy(selector: RowSelector<T, D>) = rows.minBy(selector)
+    fun <D : Comparable<D>> minBy(selector: RowSelector<T, D>) = rows.minBy { selector(it, it) }
     fun <D : Comparable<D>> minBy(col: TypedCol<D>) = rows.minBy { col(it) }
     fun <D : Comparable<D>> minBy(col: String) = rows.minBy { it[col] as D }
 
-    fun all(predicate: RowFilter<T>): Boolean = rows.all(predicate)
-    fun any(predicate: RowFilter<T>): Boolean = rows.any(predicate)
+    fun all(predicate: RowFilter<T>): Boolean = rows.all { predicate(it, it) }
+    fun any(predicate: RowFilter<T>): Boolean = rows.any { predicate(it, it) }
 
-    fun count(predicate: RowFilter<T>) = rows.count(predicate)
+    fun count(predicate: RowFilter<T>) = rows.count { predicate(it, it) }
 
     fun first() = rows.first()
     fun firstOrNull() = rows.firstOrNull()
@@ -204,8 +207,8 @@ interface TypedDataFrame<out T> {
     fun head(numRows: Int = 5) = take(numRows)
     fun tail(numRows: Int = 5) = takeLast(numRows)
 
-    fun <R> map(selector: RowSelector<T, R>) = rows.map(selector)
-    fun forEach(selector: RowSelector<T, Unit>) = rows.forEach(selector)
+    fun <R> map(selector: RowSelector<T, R>) = rows.map { selector(it, it) }
+    fun forEach(selector: RowSelector<T, Unit>) = rows.forEach { selector(it, it) }
 
     val size get() = DataFrameSize(ncol, nrow)
 }
@@ -217,15 +220,17 @@ interface UpdateClause<out T> {
 
 class UpdateClauseImpl<T>(override val df: TypedDataFrame<T>, override val cols: List<NamedColumn>) : UpdateClause<T>
 
-inline infix fun <T, reified R> UpdateClause<T>.with(noinline expression: TypedDataFrameRow<T>.() -> R?): TypedDataFrame<T> {
-    val newCol = df.new(cols.first().name, expression)
-    return df - cols + newCol + cols.takeLast(cols.size - 1).map { newCol.rename(it.name) }
+inline infix fun <T, reified R> UpdateClause<T>.with(noinline expression: RowSelector<T,R>): TypedDataFrame<T> {
+    val newCol = df.new("", expression)
+    val names = cols.map { it.name }
+    val newColumns = df.columns.map { if (names.contains(it.name)) newCol.rename(it.name) else it }
+    return dataFrameOf(newColumns).typed<T>()
 }
 
-inline fun <T, reified R> TypedDataFrame<T>.update(vararg cols: Column, noinline expression: TypedDataFrameRow<T>.() -> R?) =
+inline fun <T, reified R> TypedDataFrame<T>.update(vararg cols: Column, noinline expression: RowSelector<T,R>) =
         update(*cols).with(expression)
 
-inline fun <T, reified R> TypedDataFrame<T>.update(vararg cols: String, noinline expression: TypedDataFrameRow<T>.() -> R?) =
+inline fun <T, reified R> TypedDataFrame<T>.update(vararg cols: String, noinline expression: RowSelector<T,R>) =
         update(*cols).with(expression)
 
 inline fun <T> UpdateClause<T>.withNull() = with { null as Any? }
@@ -268,7 +273,7 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
             rowWise { getRow ->
                 BooleanArray(nrow) { index ->
                     val row = getRow(index)!!
-                    predicate(row)
+                    predicate(row, row)
                 }
             }.let(::getRows).typed()
 
@@ -302,13 +307,13 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
 
     private fun DataCol.createComparator(naLast: Boolean = true): Comparator<Int> {
 
-        if(!valueClass.isSubclassOf(Comparable::class))
+        if (!valueClass.isSubclassOf(Comparable::class))
             throw UnsupportedOperationException()
 
         return Comparator<Any?> { left, right ->
             (left as Comparable<Any?>).compareTo(right)
         }.let { if (naLast) nullsLast(it) else nullsFirst(it) }
-         .let { Comparator { left, right -> it.compare(values[left], values[right]) } }
+                .let { Comparator { left, right -> it.compare(values[left], values[right]) } }
     }
 
     override fun sortBy(columns: List<SortColumnDescriptor>): TypedDataFrame<T> {
@@ -373,4 +378,4 @@ fun <T> DataFrame.typed(): TypedDataFrame<T> = TypedDataFrameImpl(cols.map { it.
 fun <T> TypedDataFrame<*>.typed(): TypedDataFrame<T> = TypedDataFrameImpl(columns)
 
 fun <T> TypedDataFrameRow<T>.toDataFrame() =
-        dataFrameOf(values.map { it.first })(values.map { it.second })
+        dataFrameOf(values.map { it.first })(values.map { it.second }).typed<T>()

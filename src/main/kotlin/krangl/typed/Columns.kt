@@ -4,13 +4,13 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.createType
 
-interface TypedValues<out T>{
+interface TypedValues<out T> {
     val values: List<T>
 }
 
 interface ColumnSet
 
-interface NamedColumn: ColumnSet {
+interface NamedColumn : ColumnSet {
     val name: String
 }
 
@@ -32,11 +32,11 @@ typealias DataCol = TypedColData<*>
 
 typealias SrcDataCol = krangl.DataCol
 
-class NamedColumnImpl(override val name: String): NamedColumn
+class NamedColumnImpl(override val name: String) : NamedColumn
 
 fun String.asColumnName() = NamedColumnImpl(this)
 
-class TypedColDesc<T>(override val name: String, override val valueClass: KClass<*>) : TypedCol<T>{
+class TypedColDesc<T>(override val name: String, override val valueClass: KClass<*>) : TypedCol<T> {
     operator fun getValue(thisRef: Any?, property: KProperty<*>) = this
 
 }
@@ -48,11 +48,9 @@ class TypedDataCol<T>(override val values: List<T>, override val nullable: Boole
     override fun toString() = values.joinToString()
 }
 
-inline fun <reified T> createColumn(name: String, values: List<T>, hasNulls: Boolean)
-    = TypedDataCol(values, hasNulls, name, T::class)
+inline fun <reified T> createColumn(name: String, values: List<T>, hasNulls: Boolean) = TypedDataCol(values, hasNulls, name, T::class)
 
-inline fun <reified T> createColumn(name: String, values: List<T>)
-        = TypedDataCol(values, values.any {it == null}, name, T::class)
+inline fun <reified T> createColumn(name: String, values: List<T>) = TypedDataCol(values, values.any { it == null }, name, T::class)
 
 fun DataCol.toDataFrame() = dataFrameOf(listOf(this))
 
@@ -60,19 +58,19 @@ inline fun <T> DataCol.cast() = this as TypedColData<T>
 
 fun DataCol.reorder(permutation: IntArray): DataCol {
     var nullable = false
-    val newValues = (0 until length).map { values[permutation[it]].also { if(it == null) nullable = true } }
+    val newValues = (0 until length).map { values[permutation[it]].also { if (it == null) nullable = true } }
     return TypedDataCol(newValues, nullable, name, valueClass)
 }
 
 fun DataCol.getRows(indices: IntArray): DataCol {
     var nullable = false
-    val newValues = indices.map { values[it].also { if(it == null) nullable = true } }
+    val newValues = indices.map { values[it].also { if (it == null) nullable = true } }
     return TypedDataCol(newValues, nullable, name, valueClass)
 }
 
 fun DataCol.getRows(mask: BooleanArray): DataCol {
     var nullable = false
-    val newValues = values.filterIndexed {index, value -> mask[index].also { if(it && value == null) nullable = true }  }
+    val newValues = values.filterIndexed { index, value -> mask[index].also { if (it && value == null) nullable = true } }
     return TypedDataCol(newValues, nullable, name, valueClass)
 }
 
@@ -84,19 +82,19 @@ class InplaceColumnBuilder(val name: String) {
 
 fun column(name: String) = InplaceColumnBuilder(name)
 
-inline fun <reified R, T> TypedDataFrame<T>.new(name: String, noinline expression: TypedDataFrameRow<T>.() -> R): TypedDataCol<R> {
+inline fun <reified R, T> TypedDataFrame<T>.new(name: String, noinline expression: RowSelector<T, R>): TypedDataCol<R> {
     var nullable = false
-    rowWise { getRow -> (0 until nrow).map { expression(getRow(it)!!).also {if(it == null) nullable = true} } }
+    rowWise { getRow -> (0 until nrow).map { getRow(it)!!.let { expression(it, it) }.also { if (it == null) nullable = true } } }
     return createColumn(name, createColumnValues(expression), nullable)
 }
 
 inline fun <reified T> newColumn(name: String, values: List<T>) = createColumn(name, values)
 
-fun <T, D> TypedDataFrame<D>.createColumnValues(expression: TypedDataFrameRow<D>.() -> T) =
-        rowWise { getRow -> (0 until nrow).map {expression(getRow(it)!!)} }
+fun <R, T> TypedDataFrame<T>.createColumnValues(expression: RowSelector<T,R>) =
+        rowWise { getRow -> (0 until nrow).map { getRow(it)!!.let{expression(it,it) }} }
 
-class ColumnGroup(val columns: List<ColumnSet>) : ColumnSet{
-    constructor(vararg columns: ColumnSet): this(columns.toList())
+class ColumnGroup(val columns: List<ColumnSet>) : ColumnSet {
+    constructor(vararg columns: ColumnSet) : this(columns.toList())
 }
 
 class ReversedColumn(val column: NamedColumn) : ColumnSet
