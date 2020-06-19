@@ -371,7 +371,7 @@ class TypedDataFrameTests {
             min(Person::age) into "min age"
             checkAll { Person::weight neq null } into "all with weights"
             maxBy(Person::age).map { it[Person::city] } into "oldest origin"
-            compute { sortBy(Person::age).first()[Person::age] } into "youngest origin"
+            compute { sortBy(Person::age).first()[Person::city] } into "youngest origin"
         }.check()
 
         df.groupBy("name").aggregate {
