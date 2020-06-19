@@ -11,7 +11,7 @@ class IterableDataFrameBuilder<T>(val source: Iterable<T>) {
 
     fun add(column: DataCol) = columns.add(column)
 
-    inline fun <reified R> add(name: String, noinline expression: T.() -> R?) = add(newColumn(name, source.map { expression(it) }))
+    inline fun <reified R> add(name: String, noinline expression: T.() -> R?) = add(column(name, source.map { expression(it) }))
 
     inline infix fun <reified R> String.to(noinline expression: T.() -> R?) = add(this, expression)
 
@@ -44,14 +44,16 @@ fun dataFrameOf(vararg header: NamedColumn) = DataFrameBuilder(header.map { it.n
 
 fun dataFrameOf(vararg header: String) = DataFrameBuilder(header.toList())
 
+fun Iterable<DataCol>.asDataFrame() = dataFrameOf(this)
+
 fun SrcDataCol.typed() = when (this) {
-    is IntCol -> createColumn(name, values.toList(), hasNulls)
-    is LongCol -> createColumn(name, values.toList(), hasNulls)
-    is StringCol -> createColumn(name, values.toList(), hasNulls)
-    is BooleanCol -> createColumn(name, values.toList(), hasNulls)
-    is DoubleCol -> createColumn(name, values.toList(), hasNulls)
-    is AnyCol -> createColumn(name, values.toList(), hasNulls)
-    else -> createColumn(name, values().toList(), hasNulls)
+    is IntCol -> column(name, values.toList(), hasNulls)
+    is LongCol -> column(name, values.toList(), hasNulls)
+    is StringCol -> column(name, values.toList(), hasNulls)
+    is BooleanCol -> column(name, values.toList(), hasNulls)
+    is DoubleCol -> column(name, values.toList(), hasNulls)
+    is AnyCol -> column(name, values.toList(), hasNulls)
+    else -> column(name, values().toList(), hasNulls)
 }
 
 

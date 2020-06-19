@@ -32,12 +32,6 @@ inline fun <reified R, T> TypedDataFrame<T>.add(name: String, noinline expressio
 inline fun <reified R, T> GroupedDataFrame<T>.add(name: String, noinline expression: RowSelector<T,R>) =
         modify { add(name, expression) }
 
-inline fun <reified T> TypedDataFrame<*>.addColumn(name: String, values: List<T?>) =
-        this + newColumn(name, values)
-
-fun TypedDataFrame<*>.addColumn(name: String, col: DataCol) =
-        this + col.rename(name)
-
 fun <T> TypedDataFrame<T>.add(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) =
         with(TypedColumnsFromDataRowBuilder(this)) {
             body(this)
