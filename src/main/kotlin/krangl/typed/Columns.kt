@@ -89,12 +89,9 @@ fun column(name: String) = InplaceColumnBuilder(name)
 
 inline fun <T, reified R> TypedDataFrame<T>.new(name: String, noinline expression: RowSelector<T, R>): TypedDataCol<R> {
     var nullable = false
-    rowWise { getRow -> (0 until nrow).map { getRow(it)!!.let { expression(it, it) }.also { if (it == null) nullable = true } } }
-    return column(name, createColumnValues(expression), nullable)
+    val values = (0 until nrow).map { get(it).let { expression(it, it) }.also { if (it == null) nullable = true } }
+    return column(name, values, nullable)
 }
-
-fun <R, T> TypedDataFrame<T>.createColumnValues(expression: RowSelector<T,R>) =
-        rowWise { getRow -> (0 until nrow).map { getRow(it)!!.let{expression(it,it) }} }
 
 class ColumnGroup(val columns: List<ColumnSet>) : ColumnSet {
     constructor(vararg columns: ColumnSet) : this(columns.toList())
