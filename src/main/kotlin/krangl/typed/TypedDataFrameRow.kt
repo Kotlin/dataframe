@@ -72,7 +72,7 @@ interface TypedDataFrameRow<out T> {
 internal class TypedDataFrameRowImpl<T>(override var index: Int, override val owner: TypedDataFrame<T>) : TypedDataFrameRow<T> {
 
     override operator fun get(name: String): Any? {
-        //ColumnAccessTracker.registerColumnAccess(name)
+        ColumnAccessTracker.registerColumnAccess(name)
         return owner[name][index]
     }
 
