@@ -57,9 +57,9 @@ class CodeGenerator : CodeGeneratorApi {
 
     private class Scheme(val values: List<FieldInfo>) {
 
-        val byColumn: Map<String, FieldInfo> = values.map { it.columnName to it }.toMap()
+        val byColumn: Map<String, FieldInfo> = values.associateBy { it.columnName }
 
-        val byField: Map<String, FieldInfo> = values.map { it.fieldName to it }.toMap()
+        val byField: Map<String, FieldInfo> = values.associateBy { it.fieldName }
 
         fun contains(field: FieldInfo) = byField[field.fieldName]?.equals(field) ?: false
         fun isSuperTo(other: Scheme) =
