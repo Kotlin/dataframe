@@ -275,29 +275,23 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
             throw Exception("Duplicate column names: ${columnNames}") // TODO
     }
 
-    private val rowResolver = RowResolver(this)
-
     override val rows = object : Iterable<TypedDataFrameRow<T>> {
         override fun iterator() =
 
                 object : Iterator<TypedDataFrameRow<T>> {
                     var curRow = 0
 
-                    val resolver = RowResolver(this@TypedDataFrameImpl)
-
                     override fun hasNext(): Boolean = curRow < nrow
 
-                    override fun next() = resolver.let { resolver[curRow++]!! }
+                    override fun next() = get(curRow++)!!
                 }
     }
 
     override fun filter(predicate: RowFilter<T>): TypedDataFrame<T> =
-            rowWise { getRow ->
-                BooleanArray(nrow) { index ->
-                    val row = getRow(index)!!
-                    predicate(row, row)
-                }
-            }.let(::getRows).typed()
+            (0 until nrow).filter {
+                val row = get(it)
+                predicate(row, row)
+            }.let { get(it) }
 
     override fun groupBy(cols: Iterable<NamedColumn>): GroupedDataFrame<T> {
 
@@ -307,7 +301,7 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
                 .map { index -> columns.map { it[index] } to index }
                 .groupBy { it.first }
                 .map {
-                    val rowIndices = it.value.map { it.second }.toIntArray()
+                    val rowIndices = it.value.map { it.second }
                     val groupColumns = this.columns.map { it[rowIndices] }
                     it.key to dataFrameOf(groupColumns).typed<T>()
                 }
@@ -353,7 +347,7 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
         return reorder(permutation)
     }
 
-    override fun getRows(indices: IntArray) = columns.map { col -> col.slice(indices) }.let { dataFrameOf(it).typed<T>() }
+    override fun getRows(indices: Iterable<Int>) = columns.map { col -> col.slice(indices) }.let { dataFrameOf(it).typed<T>() }
 
     override fun getRows(mask: BooleanArray) = columns.map { col -> col.getRows(mask) }.let { dataFrameOf(it).typed<T>() }
 
@@ -364,36 +358,6 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
         if (df == null) return false
         return columns == df.columns
     }
-}
-
-internal fun <T> LinkedList<T>.popSafe() = if (isEmpty()) null else pop()
-
-internal class RowResolver<T>(val dataFrame: TypedDataFrame<T>) {
-    private val pool = LinkedList<TypedDataFrameRowImpl<T>>()
-    private val map = mutableMapOf<Int, TypedDataFrameRowImpl<T>>()
-
-    fun resetMapping() {
-        pool.addAll(map.values)
-        map.clear()
-    }
-
-    operator fun get(index: Int): TypedDataFrameRow<T>? =
-            if (index < 0 || index >= dataFrame.nrow) null
-            else map[index] ?: pool.let { it.popSafe() }?.also {
-                it.index = index
-                map[index] = it
-            } ?: TypedDataFrameRowImpl(index, this).also { map[index] = it }
-}
-
-typealias RowAccessor<T> = (Int) -> TypedDataFrameRow<T>?
-
-fun <R, T> TypedDataFrame<T>.rowWise(body: (RowAccessor<T>) -> R): R {
-    val resolver = RowResolver(this)
-    fun getRow(index: Int): TypedDataFrameRow<T>? {
-        resolver.resetMapping()
-        return resolver[index]
-    }
-    return body(::getRow)
 }
 
 fun <T> DataFrame.typed(): TypedDataFrame<T> = TypedDataFrameImpl(cols.map { it.typed() })
