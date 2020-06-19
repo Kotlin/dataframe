@@ -1,5 +1,7 @@
 package krangl.typed
 
+import kotlin.reflect.KProperty
+
 internal fun <T> GroupedDataFrame<T>.getColumns(selector: ColumnSelector<T>) =
         TypedDataFrameWithColumnsForSelectImpl(groups.first())
                 .let { selector(it, it).extractColumns() }
@@ -75,9 +77,11 @@ class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
 
     fun <N : Comparable<N>> minBy(selector: RowSelector<T, N>) = compute { minBy(selector)!! }
     fun <N : Comparable<N>> minBy(column: TypedCol<N>) = compute { minBy { column() }!! }
+    inline fun <reified N : Comparable<N>> minBy(property: KProperty<N>) = minBy(property.toColumn())
 
     fun <N : Comparable<N>> maxBy(selector: RowSelector<T, N>) = compute { maxBy(selector)!! }
     fun <N : Comparable<N>> maxBy(column: TypedCol<N>) = compute { maxBy { column() }!! }
+    inline fun <reified N : Comparable<N>> maxBy(property: KProperty<N>) = maxBy(property.toColumn())
 
     fun <R> ValuesList<TypedDataFrameRow<T>>.map(selector: RowSelector<T, R>) =
             list.map { selector(it, it) }.wrap()
@@ -90,10 +94,12 @@ class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
     fun count(filter: RowFilter<T>) = groups.map { it.count(filter) }.wrap()
 
     inline fun <reified R : Comparable<R>> median(noinline selector: RowSelector<T, R>) = groups.map { it.map(selector).median() }.wrap()
-    inline fun <reified R : Comparable<R>> median(column: TypedCol<R>) = groups.map { it.map { column() }.median() }.wrap()
+    inline fun <reified R : Comparable<R>> median(column: TypedCol<R>) = groups.map { it[column].values.median() }.wrap()
+    inline fun <reified R : Comparable<R>> median(property: KProperty<R>) = median(property.toColumn())
 
     inline fun <reified R : Number> mean(noinline selector: RowSelector<T, R>) = groups.map { it.map(selector).mean() }.wrap()
-    inline fun <reified R : Number> mean(column: TypedCol<R>) = groups.map { it.map { column() }.mean() }.wrap()
+    inline fun <reified R : Number> mean(column: TypedCol<R>) = groups.map { it[column].values.mean() }.wrap()
+    inline fun <reified R : Number> mean(property: KProperty<R>) = mean(property.toColumn())
 
     inline fun <reified R : Number> sum(column: TypedCol<R>) = groups.map { sum(it[column].values) }.wrap()
     inline fun <reified R : Number> sum(noinline selector: RowSelector<T, R>) = groups.map { sum(it.map(selector)) }.wrap()
@@ -103,15 +109,16 @@ class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
 
     inline fun <reified R : Comparable<R>> min(noinline selector: RowSelector<T, R>) = groups.map { it.min(selector)!! }.wrap()
     inline fun <reified R : Comparable<R>> min(column: TypedCol<R>) = groups.map { it.min(column)!! }.wrap()
+    inline fun <reified R : Comparable<R>> min(property: KProperty<R>) = min(property.toColumn())
 
     inline fun <reified R : Comparable<R>> max(noinline selector: RowSelector<T, R>) = groups.map { it.max(selector)!! }.wrap()
     inline fun <reified R : Comparable<R>> max(column: TypedCol<R>) = groups.map { it.max(column)!! }.wrap()
 
-    inline infix fun <reified R> ValuesList<R>.into(columnName: String) = add(newColumn(columnName, list))
+    inline infix fun <reified R> ValuesList<R>.into(columnName: String) = add(column(columnName, list))
 
     fun <R> compute(selector: TypedDataFrame<T>.() -> R) = groups.map(selector).wrap()
 
-    inline fun <reified R> add(name: String, noinline expression: TypedDataFrame<T>.() -> R?) = add(newColumn(name, groups.map { expression(it) }))
+    inline fun <reified R> add(name: String, noinline expression: TypedDataFrame<T>.() -> R?) = add(column(name, groups.map { expression(it) }))
 
     inline infix fun <reified R> String.to(noinline expression: TypedDataFrame<T>.() -> R?) = add(this, expression)
 

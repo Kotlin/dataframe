@@ -47,8 +47,8 @@ class TypedDataFrameTests {
 
     val name by column<String>()
     val age = column<Int>("age")
-    val city by column<String?>()
-    val weight by column<Int?>()
+    val city = Person::city.toColumn()
+    val weight by column<Int?>("weight")
 
 // Tests
 
@@ -84,6 +84,9 @@ class TypedDataFrameTests {
         df[i][age].check()
         df[age][i].check()
 
+        df[i][Person::age].check()
+        df[Person::age][i].check()
+
         df[i].int("age").check()
         (df[i]["age"] as Int).check()
 
@@ -103,6 +106,9 @@ class TypedDataFrameTests {
 
         df[i][city].check()
         df[city][i].check()
+
+        df[i][Person::city].check()
+        df[Person::city][i].check()
 
         df[i].nstring("city").check()
         (df[i]["city"] as String?).check()
@@ -133,6 +139,9 @@ class TypedDataFrameTests {
 
         df.update { age }.with { age * 2 }.check()
         df.update(age) { age * 2 }.check()
+        df.update(age) { it[age] * 2 }.check()
+
+        df.update(Person::age) { it[Person::age] * 2 }.check()
 
         df.update("age") { int("age") * 2 }.check()
         df.update("age") { "age"<Int>() * 2 }.check()
@@ -177,6 +186,8 @@ class TypedDataFrameTests {
 
         df.sortBy { name then age.desc }.check()
 
+        df.sortBy { Person::name then Person::age.desc }.check()
+
         df.sortBy { "name" then "age".desc }.check()
     }
 
@@ -216,6 +227,9 @@ class TypedDataFrameTests {
         typed.filter { it.age > limit && it.city != null }.check()
         typed.filter { age > limit && it.city != null }.check()
 
+        df.filter { it[Person::age] > limit && it[Person::city] != null }.check()
+        df.filter { Person::age > limit && (Person::city)() != null }.check()
+
         df.filter { age > limit && city() != null }.check()
         df.filter { it[age] > limit && this[city] != null }.check()
         df.filter { age > limit && city neq null }.check()
@@ -249,6 +263,8 @@ class TypedDataFrameTests {
         typed.filterNotNull { weight and city }.check()
         typed.filterNotNull { it.weight and it.city }.check()
 
+        df.filterNotNull(Person::weight, Person::city).check()
+
         df.filterNotNull(weight, city).check()
         df.filterNotNull { weight and city }.check()
 
@@ -263,6 +279,8 @@ class TypedDataFrameTests {
         typed.select { age }.check()
         typed.select { it.age }.check()
         typed.select(typed.age).check()
+
+        df.select(Person::age).check()
 
         df.select { age }.check()
         df.select(age).check()
@@ -292,6 +310,8 @@ class TypedDataFrameTests {
         typed.select { age and city }.check()
         typed.select { it.age and it.city }.check()
         typed.select(typed.age, typed.city).check()
+
+        typed.select(Person::age, Person::city).check()
 
         df.select { age and city }.check()
         df.select(age, city).check()
@@ -341,7 +361,17 @@ class TypedDataFrameTests {
             min(age) into "min age"
             checkAll { weight neq null } into "all with weights"
             maxBy(age).map { city() } into "oldest origin"
-            compute { sortBy { age }.first()[city] } into "youngest origin"
+            compute { sortBy(age).first()[city] } into "youngest origin"
+        }.check()
+
+        df.groupBy(Person::name).aggregate {
+            count into "n"
+            count { Person::age > 25 } into "old count"
+            median(Person::age) into "median age"
+            min(Person::age) into "min age"
+            checkAll { Person::weight neq null } into "all with weights"
+            maxBy(Person::age).map { it[Person::city] } into "oldest origin"
+            compute { sortBy(Person::age).first()[Person::age] } into "youngest origin"
         }.check()
 
         df.groupBy("name").aggregate {
