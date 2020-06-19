@@ -206,6 +206,9 @@ interface TypedDataFrame<out T> {
     fun tail(numRows: Int = 5) = takeLast(numRows)
     fun reorder(permutation: List<Int>) = columns.map { it.reorder(permutation) }.let { dataFrameOf(it).typed<T>() }
     fun shuffled() = reorder((0 until nrow).shuffled())
+    fun <K, V> associate(transform: RowSelector<T, Pair<K, V>>) = rows.associate { transform(it, it) }
+    fun <V> associateBy(transform: RowSelector<T, V>) = rows.associateBy { transform(it, it) }
+    fun <R> distinctBy(selector: RowSelector<T, R>) = rows.distinctBy { selector(it, it) }
 
     fun <R> map(selector: RowSelector<T, R>) = rows.map { selector(it, it) }
     fun forEach(selector: RowSelector<T, Unit>) = rows.forEach { selector(it, it) }
