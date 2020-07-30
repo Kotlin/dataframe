@@ -77,9 +77,9 @@ internal class TypedDataFrameRowImpl<T>(override var index: Int, override val ow
     }
 
     override val prev: TypedDataFrameRow<T>?
-        get() = if(index > 0) TypedDataFrameRowImpl(index-1, owner) else null
+        get() = if(index > 0) owner[index-1] else null
     override val next: TypedDataFrameRow<T>?
-        get() = if(index < owner.nrow-1) TypedDataFrameRowImpl(index+1, owner) else null
+        get() = if(index < owner.nrow-1) owner[index+1] else null
 
     override fun getRow(index: Int): TypedDataFrameRow<T>? = if(index >= 0 && index < owner.nrow) TypedDataFrameRowImpl(index, owner) else null
 
