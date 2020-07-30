@@ -79,7 +79,7 @@ fun DataCol.getRows(mask: BooleanArray): DataCol {
     return TypedDataCol(newValues, nullable, name, valueClass)
 }
 
-fun DataCol.rename(newName: String) = TypedDataCol(values, nullable, newName, valueClass)
+fun DataCol.rename(newName: String) = if(newName == name) this else TypedDataCol(values, nullable, newName, valueClass)
 
 class InplaceColumnBuilder(val name: String) {
     inline operator fun <reified T> invoke(vararg values: T) = column(name, values.toList())
