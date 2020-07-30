@@ -18,6 +18,7 @@ interface GroupedDataFrame<out T> {
 
     val keys: TypedDataFrame<T>
     val groups: List<TypedDataFrame<T>>
+    val size: Int
 
     operator fun get(vararg values: Any?) = get(values.toList())
     operator fun get(key: GroupKey): TypedDataFrame<T>
@@ -25,6 +26,8 @@ interface GroupedDataFrame<out T> {
     fun ungroup() = groups.union().typed<T>()
 
     fun sortBy(columns: List<SortColumnDescriptor>) = modify { sortBy(columns) }
+    fun sortBy(vararg columns: String) = sortBy(columns.map { SortColumnDescriptor(it, SortDirection.Desc) })
+    fun sortBy(vararg columns: NamedColumn) = sortBy(columns.map { SortColumnDescriptor(it.name, SortDirection.Desc) })
     fun sortBy(selector: SortColumnSelector<T>) = sortBy(getSortColumns(selector))
 
     fun sortByDesc(selector: SortColumnSelector<T>) = sortBy(getSortColumns(selector).map { SortColumnDescriptor(it.column, SortDirection.Desc) })
@@ -62,6 +65,8 @@ class GroupedDataFrameImpl<T>(val df: TypedDataFrame<T>) : GroupedDataFrame<T> {
         }
         return GroupedDataFrameImpl(newDf)
     }
+
+    override val size = df.nrow
 }
 
 class ValuesList<T>(val list: List<T>)
