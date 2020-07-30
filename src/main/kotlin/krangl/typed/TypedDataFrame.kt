@@ -169,6 +169,7 @@ interface TypedDataFrame<out T> {
     fun update(vararg cols: KProperty<*>) = update(getColumns(cols))
     fun update(cols: ColumnSelector<T>) = update(getColumns(cols))
 
+    fun addRow(vararg values: Any?): TypedDataFrame<T>
     fun addRowNumber(columnName: String = "id") = new(columns + column(columnName, (0 until nrow).toList()))
 
     fun filter(predicate: RowFilter<T>): TypedDataFrame<T>
@@ -226,7 +227,8 @@ interface TypedDataFrame<out T> {
     fun shuffled() = reorder((0 until nrow).shuffled())
     fun <K, V> associate(transform: RowSelector<T, Pair<K, V>>) = rows.associate { transform(it, it) }
     fun <V> associateBy(transform: RowSelector<T, V>) = rows.associateBy { transform(it, it) }
-    fun <R> distinctBy(selector: RowSelector<T, R>) = rows.distinctBy { selector(it, it) }
+    fun <R> distinctBy(selector: RowSelector<T, R>) = rows.distinctBy { selector(it, it) }.map { it.index }.let { getRows(it) }
+    fun distinct() = distinctBy { it.values }
 
     fun <R> map(selector: RowSelector<T, R>) = rows.map { selector(it, it) }
     fun forEach(selector: RowSelector<T, Unit>) = rows.forEach { selector(it, it) }
@@ -354,9 +356,18 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
     override fun tryGetColumn(columnName: String) = columnsMap[columnName]
 
     override fun equals(other: Any?): Boolean {
-        val df = other as? TypedDataFrame<*>
-        if (df == null) return false
+        val df = other as? TypedDataFrame<*> ?: return false
         return columns == df.columns
+    }
+
+    override fun toString() = renderToString()
+
+    override fun addRow(vararg values: Any?): TypedDataFrame<T> {
+        assert(values.size == ncol) { "Invalid number of arguments. Expected: $ncol, actual: ${values.size}" }
+        val df = values.mapIndexed { i,v->
+            TypedDataCol(listOf(v), v == null, columns[i].name, v?.javaClass?.kotlin ?: columns[i].valueClass)
+        }.asDataFrame()
+        return union(df).typed()
     }
 }
 
