@@ -170,8 +170,6 @@ interface TypedDataFrame<out T> {
     fun update(cols: ColumnSelector<T>) = update(getColumns(cols))
 
     fun addRow(vararg values: Any?): TypedDataFrame<T>
-    fun addRowNumber(columnName: String = "id") = new(columns + column(columnName, (0 until nrow).toList()))
-
     fun filter(predicate: RowFilter<T>): TypedDataFrame<T>
 
     fun nullToZero(cols: Iterable<NamedColumn>) = cols.fold(this) { df, col -> df.nullColumnToZero(df[col] as TypedCol<Number?>) }
@@ -263,12 +261,12 @@ inline fun <T> UpdateClause<T>.withNull() = with { null as Any? }
 
 internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : TypedDataFrame<T> {
 
-    override val nrow = columns.firstOrNull()?.length ?: 0
+    override val nrow = columns.firstOrNull()?.size ?: 0
 
     private val columnsMap by lazy { columns.associateBy { it.name } }
 
     init {
-        val invalidSizeColumns = columns.filter { it.length != nrow }
+        val invalidSizeColumns = columns.filter { it.size != nrow }
         if (invalidSizeColumns.size > 0)
             throw Exception("Invalid column sizes: ${invalidSizeColumns}") // TODO
 

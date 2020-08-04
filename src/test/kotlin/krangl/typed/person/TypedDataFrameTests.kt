@@ -474,7 +474,7 @@ class TypedDataFrameTests : BaseTest() {
     fun `merge similar dataframes`() {
 
         val res = typed + typed + typed
-        res.name.length shouldBe 3 * typed.nrow
+        res.name.size shouldBe 3 * typed.nrow
         res.forEach { this.values shouldBe typed[index % typed.nrow].values }
     }
 
@@ -499,7 +499,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun `row to frame`() {
-        typed[1].toDataFrame().name.length shouldBe 1
+        typed[1].toDataFrame().name.size shouldBe 1
     }
 
     @Test
@@ -530,5 +530,24 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `distinct by`() {
         typed.distinctBy { name }.nrow shouldBe 3
+    }
+
+    @Test
+    fun `rename`(){
+        val renamed = typed.rename("name" to "name2", "age" to "age2")
+        renamed["name2"].values shouldBe typed.name.values
+        renamed.tryGetColumn("age") shouldBe null
+    }
+
+    @Test
+    fun `nunique`(){
+        typed.name.nunique shouldBe 3
+    }
+
+    @Test
+    fun `encode names`(){
+        val encoding = typed.name.distinct().addRowNumber("name_id")
+        val res = typed.leftJoin(encoding)
+        res["name_id"].values shouldBe listOf(0,1,2,2,1,0,2)
     }
 }

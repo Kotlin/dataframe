@@ -139,6 +139,20 @@ operator fun <T> TypedDataFrame<T>.plus(other: TypedDataFrame<T>) = merge(listOf
 
 fun TypedDataFrame<*>.union(vararg other: TypedDataFrame<*>) = merge(listOf(this) + other.toList())
 
+fun TypedDataFrame<*>.rename(vararg mappings: Pair<String, String>): UntypedDataFrame {
+    val map = mappings.toMap()
+    return columns.map {
+        val newName = map[it.name] ?: it.name
+        it.rename(newName)
+    }.asDataFrame()
+}
+
+internal fun indexColumn(columnName: String, size: Int): DataCol = column(columnName, (0 until size).toList())
+
+fun <T> TypedDataFrame<T>.addRowNumber(column: TypedCol<Int>) = addRowNumber(column.name)
+fun <T> TypedDataFrame<T>.addRowNumber(columnName: String = "id"): TypedDataFrame<T> = dataFrameOf(columns + indexColumn(columnName, nrow)).typed<T>()
+fun DataCol.addRowNumber(columnName: String = "id") = dataFrameOf(listOf(indexColumn(columnName, size), this))
+
 // Column operations
 
 fun <T : Comparable<T>> TypedColData<T?>.min() = values.asSequence().filterNotNull().min()

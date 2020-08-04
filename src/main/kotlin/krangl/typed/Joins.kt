@@ -4,8 +4,6 @@ import sun.reflect.generics.reflectiveObjects.NotImplementedException
 
 interface TypedDataFrameWithColumnsForJoin<out A, out B> : TypedDataFrameWithColumnsForSelect<A> {
 
-    operator fun <R> NamedColumn.invoke(selector: RowSelector<B, R>): ColumnSet
-
     val right: TypedDataFrame<B>
 
     infix fun NamedColumn.match(other: NamedColumn) = ColumnMatch(this, other)
@@ -14,10 +12,6 @@ interface TypedDataFrameWithColumnsForJoin<out A, out B> : TypedDataFrameWithCol
 class ColumnMatch(val left: NamedColumn, val right: NamedColumn) : ColumnSet
 
 class TypedDataFrameWithColumnsForJoinImpl<A, B>(private val left: TypedDataFrame<A>, override val right: TypedDataFrame<B>) : TypedDataFrame<A> by left, TypedDataFrameWithColumnsForJoin<A, B> {
-
-    override fun <R> NamedColumn.invoke(selector: RowSelector<B, R>): ColumnSet {
-        throw NotImplementedException()
-    }
 
     override val allColumns: ColumnGroup
         get() = throw NotImplementedException()
@@ -36,27 +30,40 @@ internal fun ColumnSet.extractJoinColumns(): List<ColumnMatch> = when (this) {
 internal fun <A, B> TypedDataFrame<A>.getColumns(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B>) = TypedDataFrameWithColumnsForJoinImpl(this, other).let { selector(it, it).extractJoinColumns() }
 
 enum class JoinType {
-    LEFT, RIGHT, INNER, OUTER
+    LEFT, // all data from left data frame, nulls for mismatches in right data frame
+    RIGHT, // all data from right data frame, nulls for mismatches in left data frame
+    INNER, // only matched data from right and left data frame
+    OUTER, // all data from left and from right data frame, nulls for any mismatches
+    EXCLUDE // mismatched rows from left data frame
 }
 
 val JoinType.allowLeftNulls get() = this == JoinType.RIGHT || this == JoinType.OUTER
-val JoinType.allowRightNulls get() = this == JoinType.LEFT || this == JoinType.OUTER
+val JoinType.allowRightNulls get() = this == JoinType.LEFT || this == JoinType.OUTER || this == JoinType.EXCLUDE
 
-fun <A, B> TypedDataFrame<A>.innerJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B>) = join(other, JoinType.INNER, selector)
-fun <A, B> TypedDataFrame<A>.leftJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B>) = join(other, JoinType.LEFT, selector)
-fun <A, B> TypedDataFrame<A>.rightJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B>) = join(other, JoinType.RIGHT, selector)
-fun <A, B> TypedDataFrame<A>.outerJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B>) = join(other, JoinType.OUTER, selector)
+internal fun <A, B> defaultJoinColumns(left: TypedDataFrame<A>, right: TypedDataFrame<B>): JoinColumnSelector<A, B> =
+        { left.columnNames().intersect(right.columnNames()).map { it.toColumnName() }.let { ColumnGroup(it) } }
 
-fun <A, B> TypedDataFrame<A>.join(other: TypedDataFrame<B>, joinType: JoinType = JoinType.INNER, selector: JoinColumnSelector<A, B>): TypedDataFrame<A> {
+fun <A, B> TypedDataFrame<A>.innerJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.INNER, selector = selector)
+fun <A, B> TypedDataFrame<A>.leftJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.LEFT, selector = selector)
+fun <A, B> TypedDataFrame<A>.rightJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.RIGHT, selector = selector)
+fun <A, B> TypedDataFrame<A>.outerJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.OUTER, selector = selector)
+fun <A, B> TypedDataFrame<A>.filterJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.INNER, addNewColumns = false, selector = selector)
+fun <A, B> TypedDataFrame<A>.filterNotJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.EXCLUDE, addNewColumns = false, selector = selector)
+
+fun <A, B> TypedDataFrame<A>.join(other: TypedDataFrame<B>, joinType: JoinType = JoinType.INNER, addNewColumns: Boolean = true, selector: JoinColumnSelector<A, B>): TypedDataFrame<A> {
 
     val joinColumns = getColumns(other, selector)
 
     val leftColumns = joinColumns.map { this[it.left] }
     val rightColumns = joinColumns.map { other[it.right] }
 
-    val groupedRight = (0 until other.nrow)
+    val rightJoinKeyToIndex = (0 until other.nrow)
             .map { index -> rightColumns.map { it[index] } to index }
-            .groupBy({ it.first }) { it.second }
+
+    val groupedRight = when (joinType) {
+        JoinType.EXCLUDE -> rightJoinKeyToIndex.map { it.first to emptyList<Int>() }.toMap()
+        else -> rightJoinKeyToIndex.groupBy({ it.first }) { it.second }
+    }
 
     var outputRowsCount = 0
 
@@ -90,7 +97,7 @@ fun <A, B> TypedDataFrame<A>.join(other: TypedDataFrame<B>, joinType: JoinType =
     val rightJoinColumns = rightColumns.map { it.name to it }.toMap()
 
     // list of columns from right data frame that are not part of join key. Ensure that new column names doesn't clash with original columns
-    val newRightColumns = other.columns.filter { !rightJoinColumns.contains(it.name) }.map {
+    val newRightColumns = if (addNewColumns) other.columns.filter { !rightJoinColumns.contains(it.name) }.map {
         var name = it.name
         var k = 2
         while (usedColumnsNames.contains(name)) {
@@ -98,7 +105,7 @@ fun <A, B> TypedDataFrame<A>.join(other: TypedDataFrame<B>, joinType: JoinType =
         }
         usedColumnsNames.add(name)
         it.rename(name)
-    }
+    } else emptyList()
 
     val leftColumnsCount = ncol
     val newRightColumnsCount = newRightColumns.size
