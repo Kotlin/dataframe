@@ -38,21 +38,19 @@ class JoinTests : BaseTest() {
     @Test
     fun `inner join`() {
 
-        val res = typed.innerJoin(typed2) { it.name and it.city.match(right.origin) }
+        val res = typed.innerJoin(typed2) { name and it.city.match(right.origin) }
         res.ncol shouldBe 6
         res.nrow shouldBe 7
         res["age_2"].nullable shouldBe false
         res.count { name == "Mark" && city == "Moscow" } shouldBe 4
         res.select { city and name }.distinct().nrow shouldBe 3
         res[Person2::grade].nullable shouldBe false
-        println(res)
     }
 
     @Test
     fun `left join`() {
 
-        val res = typed.leftJoin(typed2) { it.name and it.city.match(right.origin) }
-        println(res)
+        val res = typed.leftJoin(typed2) { name and it.city.match(right.origin) }
 
         res.ncol shouldBe 6
         res.nrow shouldBe 10
@@ -65,8 +63,7 @@ class JoinTests : BaseTest() {
     @Test
     fun `right join`() {
 
-        val res = typed.rightJoin(typed2) { it.name and it.city.match(right.origin) }
-        println(res)
+        val res = typed.rightJoin(typed2) { name and it.city.match(right.origin) }
 
         res.ncol shouldBe 6
         res.nrow shouldBe 9
@@ -82,8 +79,7 @@ class JoinTests : BaseTest() {
     @Test
     fun `outer join`() {
 
-        val res = typed.outerJoin(typed2) { it.name and it.city.match(right.origin) }
-        println(res)
+        val res = typed.outerJoin(typed2) { name and it.city.match(right.origin) }
 
         res.ncol shouldBe 6
         res.nrow shouldBe 12
@@ -91,5 +87,29 @@ class JoinTests : BaseTest() {
         res.columns.filter { it != res.name }.all { it.nullable } shouldBe true
         res.select { city and name }.distinct().nrow shouldBe 7
         res.select { name and age and city and weight }.distinct() shouldBe typed.addRow("Bob", null, "Paris", null)
+    }
+
+    @Test
+    fun `filter join`() {
+
+        val res = typed.filterJoin(typed2) { city.match(right.origin) }
+        val expected = typed.innerJoin(typed2.select { origin }) { city.match(right.origin) }
+        res shouldBe expected
+    }
+
+    @Test
+    fun `filter not join`() {
+
+        val res = typed.filterNotJoin(typed2) { city.match(right.origin) }
+        res.nrow shouldBe 3
+        res.city.toSet() shouldBe typed.city.toSet() - typed2.origin.toSet()
+
+        val indexColumn by column<Int>("__index__")
+        val withIndex = typed.addRowNumber(indexColumn)
+        val joined = withIndex.filterJoin(typed2) { city.match(right.origin) }
+        val joinedIndices = joined[indexColumn].toSet()
+        val expected = withIndex.filter { !joinedIndices.contains(it[indexColumn]) }.remove(indexColumn)
+
+        res shouldBe expected
     }
 }

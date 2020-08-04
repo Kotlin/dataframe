@@ -7,6 +7,10 @@ import kotlin.reflect.full.findAnnotation
 
 interface TypedValues<out T> {
     val values: List<T>
+    val nunique: Int
+    val nullable: Boolean
+    val size get() = values.size
+    operator fun get(index: Int) = values[index]
 }
 
 interface ColumnSet
@@ -23,12 +27,13 @@ interface TypedCol<out T> : NamedColumn {
 typealias Column = TypedCol<*>
 
 interface TypedColData<out T> : TypedCol<T>, TypedValues<T> {
-    val nullable: Boolean
-    val length get() = values.size
-    operator fun get(index: Int) = values[index]
     val type get() = valueClass.createType(nullable = nullable)
 
     operator fun get(indices: Iterable<Int>) = slice(indices)
+
+    fun distinct(): TypedColData<T>
+
+    fun toSet(): Set<T>
 }
 
 typealias DataCol = TypedColData<*>
@@ -50,9 +55,41 @@ class TypedColDesc<T>(override val name: String, override val valueClass: KClass
 
 inline fun <reified T> TypedColDesc<T>.nullable() = TypedColDesc<T?>(name, valueClass)
 
-data class TypedDataCol<T>(override val values: List<T>, override val nullable: Boolean, override val name: String, override val valueClass: KClass<*>) : TypedColData<T> {
+class TypedDataCol<T>(override val values: List<T>, override val nullable: Boolean, override val name: String, override val valueClass: KClass<*>) : TypedColData<T> {
+
+    private var valuesSet: Set<T>? = null
+
+    override fun toSet() = valuesSet ?: values.toSet().also { valuesSet = it }
+
+    fun contains(value: T) = toSet().contains(value)
 
     override fun toString() = values.joinToString()
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as TypedDataCol<*>
+
+        if (values != other.values) return false
+        if (nullable != other.nullable) return false
+        if (name != other.name) return false
+        if (valueClass != other.valueClass) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = values.hashCode()
+        result = 31 * result + nullable.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + valueClass.hashCode()
+        return result
+    }
+
+    override val nunique = toSet().size
+
+    override fun distinct()= TypedDataCol(toSet().toList(), nullable, name, valueClass)
 }
 
 inline fun <reified T> TypedCol<T>.withValues(values: List<T>, hasNulls: Boolean) = TypedDataCol(values, hasNulls, name, valueClass)
@@ -63,7 +100,7 @@ inline fun <T> DataCol.cast() = this as TypedColData<T>
 
 fun <T> TypedColData<T>.reorder(permutation: List<Int>): TypedColData<T> {
     var nullable = false
-    val newValues = (0 until length).map { values[permutation[it]].also { if (it == null) nullable = true } }
+    val newValues = (0 until size).map { values[permutation[it]].also { if (it == null) nullable = true } }
     return TypedDataCol(newValues, nullable, name, valueClass)
 }
 
@@ -110,3 +147,5 @@ inline fun <reified T> column(name: String) = TypedColDesc<T>(name, T::class)
 inline fun <reified T> column(name: String, values: List<T>) = TypedDataCol(values, values.any { it == null }, name, T::class)
 
 inline fun <reified T> column(name: String, values: List<T>, hasNulls: Boolean) = TypedDataCol(values, hasNulls, name, T::class)
+
+fun <T> TypedValues<T>.contains(value: T) = (this as TypedDataCol<T>).contains(value)
