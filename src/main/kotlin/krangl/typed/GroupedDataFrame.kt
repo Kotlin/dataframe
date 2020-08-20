@@ -2,7 +2,7 @@ package krangl.typed
 
 import kotlin.reflect.KProperty
 
-internal fun <T> GroupedDataFrame<T>.getColumns(selector: ColumnSelector<T>) =
+internal fun <T> GroupedDataFrame<T>.getColumns(selector: ColumnsSelector<T>) =
         TypedDataFrameWithColumnsForSelectImpl(groups.first())
                 .let { selector(it, it).extractColumns() }
 
@@ -123,11 +123,11 @@ class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
 
     fun <R> compute(selector: TypedDataFrame<T>.() -> R) = groups.map(selector).wrap()
 
-    inline fun <reified R> add(name: String, noinline expression: TypedDataFrame<T>.() -> R?) = add(column(name, groups.map { expression(it) }))
+    inline fun <reified R> add(name: String, noinline expression: DataFrameSelector<T,R?>) = add(column(name, groups.map { expression(it, it) }))
 
-    inline infix fun <reified R> String.to(noinline expression: TypedDataFrame<T>.() -> R?) = add(this, expression)
+    inline infix fun <reified R> String.to(noinline expression: DataFrameSelector<T,R?>) = add(this, expression)
 
-    inline operator fun <reified R> String.invoke(noinline expression: TypedDataFrame<T>.() -> R?) = add(this, expression)
+    inline operator fun <reified R> String.invoke(noinline expression: DataFrameSelector<T,R?>) = add(this, expression)
 
     infix operator fun String.invoke(column: DataCol) = add(column.rename(this))
 }

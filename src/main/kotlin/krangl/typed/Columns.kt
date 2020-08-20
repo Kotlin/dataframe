@@ -7,7 +7,7 @@ import kotlin.reflect.full.findAnnotation
 
 interface TypedValues<out T> {
     val values: List<T>
-    val nunique: Int
+    val ndistinct: Int
     val nullable: Boolean
     val size get() = values.size
     operator fun get(index: Int) = values[index]
@@ -23,6 +23,13 @@ interface TypedCol<out T> : NamedColumn {
     val valueClass: KClass<*>
     operator fun invoke(row: TypedDataFrameRow<*>) = row[this]
 }
+
+interface TypedColumnPair<out A,out B>: TypedCol<A> {
+    val firstColumn: TypedCol<A>
+    val secondColumn: TypedCol<B>
+}
+
+class TypedColumnPairImpl<A,B>(override val firstColumn: TypedCol<A>, override val secondColumn: TypedCol<B>): TypedCol<A> by firstColumn, TypedColumnPair<A,B>
 
 typealias Column = TypedCol<*>
 
@@ -87,7 +94,7 @@ class TypedDataCol<T>(override val values: List<T>, override val nullable: Boole
         return result
     }
 
-    override val nunique = toSet().size
+    override val ndistinct = toSet().size
 
     override fun distinct()= TypedDataCol(toSet().toList(), nullable, name, valueClass)
 }
@@ -148,4 +155,23 @@ inline fun <reified T> column(name: String, values: List<T>) = TypedDataCol(valu
 
 inline fun <reified T> column(name: String, values: List<T>, hasNulls: Boolean) = TypedDataCol(values, hasNulls, name, T::class)
 
+fun column(name: String, values: List<Any?>, hasNulls: Boolean, clazz: KClass<*>) = TypedDataCol(values, hasNulls, name, clazz)
+
 fun <T> TypedValues<T>.contains(value: T) = (this as TypedDataCol<T>).contains(value)
+
+class ColumnNameGenerator(private val columnNames: List<String>){
+
+    private val usedNames = columnNames.toMutableSet()
+
+    fun createUniqueName(preferredName: String): String{
+        var name = preferredName
+        var k = 2
+        while (usedNames.contains(name)) {
+            name = "${preferredName}_${k++}"
+        }
+        usedNames.add(name)
+        return name
+    }
+}
+
+inline fun TypedDataFrame<*>.nameGenerator() = ColumnNameGenerator(columnNames())

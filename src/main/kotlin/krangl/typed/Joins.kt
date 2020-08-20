@@ -93,18 +93,12 @@ fun <A, B> TypedDataFrame<A>.join(other: TypedDataFrame<B>, joinType: JoinType =
         outputRowsCount += rightUnmatchedCount
     }
 
-    val usedColumnsNames = columnNames().toMutableSet()
+    val nameGenerator = nameGenerator()
     val rightJoinColumns = rightColumns.map { it.name to it }.toMap()
 
     // list of columns from right data frame that are not part of join key. Ensure that new column names doesn't clash with original columns
     val newRightColumns = if (addNewColumns) other.columns.filter { !rightJoinColumns.contains(it.name) }.map {
-        var name = it.name
-        var k = 2
-        while (usedColumnsNames.contains(name)) {
-            name = "${it.name}_${k++}"
-        }
-        usedColumnsNames.add(name)
-        it.rename(name)
+        it.rename(nameGenerator.createUniqueName(it.name))
     } else emptyList()
 
     val leftColumnsCount = ncol

@@ -533,21 +533,136 @@ class TypedDataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `rename`(){
+    fun `rename`() {
         val renamed = typed.rename("name" to "name2", "age" to "age2")
         renamed["name2"].values shouldBe typed.name.values
         renamed.tryGetColumn("age") shouldBe null
     }
 
     @Test
-    fun `nunique`(){
-        typed.name.nunique shouldBe 3
+    fun `nunique`() {
+        typed.name.ndistinct shouldBe 3
     }
 
     @Test
-    fun `encode names`(){
+    fun `encode names`() {
         val encoding = typed.name.distinct().addRowNumber("name_id")
         val res = typed.leftJoin(encoding)
-        res["name_id"].values shouldBe listOf(0,1,2,2,1,0,2)
+        res["name_id"].values shouldBe listOf(0, 1, 2, 2, 1, 0, 2)
+    }
+
+    @Test
+    fun `spread to bool`() {
+        val res = typed.spread { city }
+        res.ncol shouldBe typed.ncol + typed.city.ndistinct - 2
+
+        for (i in 0 until typed.nrow) {
+            val city = typed[i][city]
+            if (city != null) res[i][city] == true
+            for (j in typed.ncol until res.ncol) {
+                res.columns[j].cast<Boolean>().get(i) shouldBe (res.columns[j].name == city)
+            }
+        }
+    }
+
+    @Test
+    fun `spread to bool distinct rows`() {
+        val res = typed.spread { city }
+        res.ncol shouldBe typed.ncol + typed.city.ndistinct - 2
+
+        for (i in 0 until typed.nrow) {
+            val city = typed[i][city]
+            if (city != null) res[i][city] == true
+            for (j in typed.ncol until res.ncol) {
+                res.columns[j].cast<Boolean>().get(i) shouldBe (res.columns[j].name == city)
+            }
+        }
+    }
+
+    @Test
+    fun `spread to bool merged rows`() {
+        val selected = typed.select { name + city }
+        val res = selected.spread { city }
+
+        res.ncol shouldBe selected.city.ndistinct
+        res.nrow shouldBe selected.name.ndistinct
+        val trueValuesCount = res.columns.takeLast(res.ncol - 1).sumBy { it.cast<Boolean>().values.count { it } }
+        trueValuesCount shouldBe selected.filterNotNull { city }.distinct().nrow
+
+        val pairs = (1 until res.ncol).flatMap { i ->
+            val col = res.columns[i].cast<Boolean>()
+            res.filter { it[col] }.map { name to col.name }
+        }.toSet()
+
+        pairs shouldBe typed.filter { city != null }.map { name to city!! }.toSet()
+    }
+
+    @Test
+    fun `pivot bool`() {
+        val selected = typed.select { name + city }
+        val spread = selected.spread { city }
+        val res = spread.gather("city") { columns[1 until ncol] }
+        res.sortBy { name then city } shouldBe selected.filterNotNull { city }.distinct().sortBy { name then city }
+    }
+
+    @Test
+    fun mergeRows() {
+        val selected = typed.select { name + city }
+        val res = selected.mergeRows { city }
+        val cityList by column<List<String?>>("city")
+        val expected = selected.map { name to city }.groupBy({ it.first }) { it.second }.mapValues { it.value.toSet() }
+        val actual = res.map { name to it[cityList] }.toMap().mapValues { it.value.toSet() }
+        actual shouldBe expected
+    }
+
+    @Test
+    fun splitRows() {
+        val selected = typed.select { name + city }
+        val nested = selected.mergeRows { city }
+        val res = nested.splitRows { city }
+        res.sortBy { name } shouldBe selected.sortBy { name }
+    }
+
+    @Test
+    fun mergeCols() {
+        val merged = typed.mergeCols("info") { age and city and weight }
+        merged.ncol shouldBe 2
+        merged.nrow shouldBe typed.nrow
+        for (row in 0 until typed.nrow) {
+            val list = merged[row]["info"] as List<Any?>
+            list.size shouldBe 3
+            list[0] shouldBe typed.age[row]
+            list[1] shouldBe typed.city[row]
+            list[2] shouldBe typed.weight[row]
+        }
+    }
+
+    @Test
+    fun joinColsToString() {
+        val merged = typed.mergeColsToString("info") { age and city and weight }
+        merged.ncol shouldBe 2
+        merged.nrow shouldBe typed.nrow
+        for (row in 0 until typed.nrow) {
+            val joined = merged[row]["info"] as String
+            joined shouldBe typed.age[row].toString() + ", " + typed.city[row] + ", " + typed.weight[row]
+        }
+    }
+
+    @Test
+    fun splitCol() {
+        val merged = typed.mergeCols("info") { age and city and weight }
+        val res = merged.splitCol("age", "city", "weight") { "info"() }
+        res shouldBe typed
+    }
+
+    @Test
+    fun splitStringCol() {
+        val merged = typed.mergeColsToString("info") { age and city and weight }
+        val res = merged.splitCol("age", "city", "weight") { "info"() }
+        val expected = typed.update { age }.with { age.toString() }
+                .update { city }.with { city.toString() }
+                .update { weight }.with { weight.toString() }
+
+        res shouldBe expected
     }
 }
