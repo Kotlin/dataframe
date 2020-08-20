@@ -7,9 +7,9 @@ import kotlin.reflect.full.isSubclassOf
 
 interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
 
-    fun columns(vararg col: DataCol) = ColumnGroup(col.toList())
+    fun cols(vararg col: DataCol) = ColumnGroup(col.toList())
 
-    fun columns(vararg col: String) = ColumnGroup(col.map { it.toColumnName() })
+    fun cols(vararg col: String) = ColumnGroup(col.map { it.toColumnName() })
 
     operator fun List<DataCol>.get(range: IntRange) = ColumnGroup(subList(range.first, range.last + 1))
 
