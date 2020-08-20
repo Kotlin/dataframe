@@ -82,13 +82,15 @@ class DataFrameBuilder(private val columnNames: List<String>) {
     operator fun invoke(args: Sequence<Any?>) = invoke(*args.toList().toTypedArray())
 }
 
+internal fun Iterable<KClass<*>>.commonParent() = commonParents(this).withMostSuperclasses() ?: Any::class
+
 internal fun guessValueType(values: List<Any?>): Pair<KClass<*>, Boolean> {
     var nullable = false
     val types = values.map {
         if(it == null) nullable = true
         it?.javaClass
     }.distinct().mapNotNull { it?.kotlin }
-    return commonParents(types).withMostSuperclasses()!! to nullable
+    return types.commonParent() to nullable
 }
 
 internal fun guessColumnType(name: String, values: List<Any?>) = guessValueType(values).let { (valueClass, nullable) ->
