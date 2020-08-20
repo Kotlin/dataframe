@@ -11,6 +11,8 @@ interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
 
     fun cols(vararg col: String) = ColumnGroup(col.map { it.toColumnName() })
 
+    fun cols(predicate: (DataCol)->Boolean) = ColumnGroup(columns.filter(predicate))
+
     operator fun List<DataCol>.get(range: IntRange) = ColumnGroup(subList(range.first, range.last + 1))
 
     operator fun String.invoke() = toColumnName()
@@ -146,7 +148,6 @@ interface TypedDataFrame<out T> {
     fun select(vararg columns: String) = select(getColumns(columns))
     fun select(vararg columns: KProperty<*>) = select(getColumns(columns))
     fun select(selector: ColumnsSelector<T>) = select(getColumns(selector))
-    fun selectIf(filter: DataCol.(DataCol) -> Boolean) = select(columns.filter { filter(it, it) })
 
     fun sortBy(columns: List<SortColumnDescriptor>): TypedDataFrame<T>
     fun sortBy(columns: Iterable<NamedColumn>) = sortBy(columns.map { SortColumnDescriptor(it.name, SortDirection.Asc) })
