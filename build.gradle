@@ -98,7 +98,7 @@ dokka {
 }
 
 group 'org.jetbrains.kotlin'
-version '0.0.6-dev-12'
+version '0.0.6-dev-13'
 
 artifacts {
     archives sourcesJar
