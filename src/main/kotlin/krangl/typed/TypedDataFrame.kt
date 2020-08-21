@@ -53,7 +53,15 @@ interface TypedDataFrameWithColumnsForSort<out T> : TypedDataFrameWithColumns<T>
 
 interface TypedDataFrameForSpread<out T> : TypedDataFrame<T> {
 
-    infix fun <R> TypedCol<String?>.to(other: TypedCol<R>) = TypedColumnPairImpl<String?, R>(this, other)
+    infix fun TypedCol<String?>.into(other: DataCol) = TypedColumnPairImpl(this, other)
+
+    infix fun TypedCol<String?>.into(selector: RowSelector<T, Any?>) = TypedColumnPairImpl(this, new("temp", selector))
+
+    fun groupKey(vararg columns: NamedColumn) = ColumnGroup(columns.toList())
+
+    infix fun <A> TypedColumnPair<A>.with(key: ColumnSet) = TypedColumnPairImpl(firstColumn, secondColumn, key)
+
+    infix fun <A> TypedCol<A>.with(key: ColumnSet) = TypedColumnPairImpl(this, null, key)
 }
 
 open class TypedDataFrameWithColumnsForSelectImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameWithColumnsForSelect<T> {

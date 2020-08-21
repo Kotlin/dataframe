@@ -6,17 +6,25 @@ import kotlin.reflect.full.isSubclassOf
 fun <T> TypedDataFrame<T>.spread(columnSelector: TypedDataFrameForSpread<T>.(TypedDataFrameForSpread<T>) -> TypedCol<String?>): TypedDataFrame<T> {
     val receiver = TypedDataFrameForSpreadImpl(this)
     return when (val column = columnSelector(receiver, receiver)) {
-        is TypedColumnPair<String?, *> -> spreadToPair(column.firstColumn, column.secondColumn)
-        else -> spreadToBool(column)
+        is TypedColumnPair<String?> -> {
+            if (column.secondColumn != null)
+                spreadToPair(column.firstColumn, column.secondColumn!!, column.groupingColumns)
+            else spreadToBool(column.firstColumn, column.groupingColumns)
+        }
+        else -> spreadToBool(column, null)
     }
 }
 
-internal fun <T, R : Any> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, valueColumn: TypedCol<R?>): TypedDataFrame<T> {
+internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, valueColumn: DataCol, groupBy: ColumnSet?): TypedDataFrame<T> {
     val keyColumnData = this[keyColumn]
     val keys = keyColumnData.toSet()
     val nameGenerator = nameGenerator()
-    val groupingColumns = columns - keyColumn - valueColumn
-    val grouped = groupBy(groupingColumns)
+    val groupingColumns = groupBy?.extractColumns()?.map { this[it] } ?: columns - keyColumn - valueColumn
+    var dataFrame = this
+    if (!columns.contains(valueColumn)) {
+        dataFrame = this + valueColumn.rename(nameGenerator.createUniqueName(valueColumn.name))
+    }
+    val grouped = dataFrame.groupBy(groupingColumns)
     return grouped.aggregate {
         keys.forEach { key ->
             if (key != null) {
@@ -50,12 +58,14 @@ internal fun <T, R : Any> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<Str
     }
 }
 
-internal fun <T> TypedDataFrame<T>.spreadToBool(columnDef: TypedCol<String?>): TypedDataFrame<T> {
+internal fun <T> TypedDataFrame<T>.spreadToBool(columnDef: TypedCol<String?>, groupBy: ColumnSet?): TypedDataFrame<T> {
 
     val column = this[columnDef]
     val values = column.toSet()
     val nameGenerator = nameGenerator()
-    val grouped = groupBy(columns - column)
+    val groupingColumns = groupBy?.extractColumns()?.map { this[it] } ?: columns - column
+
+    val grouped = groupBy(groupingColumns)
     return grouped.aggregate {
         values.forEach { value ->
             if (value != null) {
@@ -68,11 +78,7 @@ internal fun <T> TypedDataFrame<T>.spreadToBool(columnDef: TypedCol<String?>): T
     }
 }
 
-fun <T> TypedDataFrame<T>.gather(keyColumn: String, selector: ColumnsSelector<T>) = pivotImpl(keyColumn, null, selector)
-
-fun <T> TypedDataFrame<T>.gather(keyColumn: String, valueColumn: String, selector: ColumnsSelector<T>) = pivotImpl(keyColumn, valueColumn, selector)
-
-internal fun <T> TypedDataFrame<T>.pivotImpl(keyColumn: String, valueColumn: String?, selector: ColumnsSelector<T>): TypedDataFrame<T> {
+fun <T> TypedDataFrame<T>.gather(namesTo: String, valuesTo: String? = null, filter: ((Any?) -> Boolean)? = null, selector: ColumnsSelector<T>): TypedDataFrame<T> {
 
     val pivotColumns = getColumns(selector).map { this[it] }
     val otherColumns = columns - pivotColumns
@@ -80,16 +86,20 @@ internal fun <T> TypedDataFrame<T>.pivotImpl(keyColumn: String, valueColumn: Str
     val keyColumnData = ArrayList<String>()
     val valueColumnData = ArrayList<Any?>()
     val classes = mutableSetOf<KClass<*>>()
+    val include = when (valuesTo) {
+        null -> filter ?: { it == true }
+        else -> filter ?: { true }
+    }
     var hasNullValues = false
     (0 until nrow).forEach { row ->
         pivotColumns.forEach { pivotCol ->
             val value = pivotCol[row]
-            if (valueColumn != null || value == true) {
+            if (include(value)) {
                 outputColumnsData.forEachIndexed { index, list ->
                     list.add(otherColumns[index][row])
                 }
                 keyColumnData.add(pivotCol.name)
-                if (valueColumn != null) {
+                if (valuesTo != null) {
                     valueColumnData.add(value)
                     if (value == null)
                         hasNullValues = true
@@ -102,9 +112,9 @@ internal fun <T> TypedDataFrame<T>.pivotImpl(keyColumn: String, valueColumn: Str
         val srcColumn = otherColumns[index]
         srcColumn.withValues(values, srcColumn.nullable)
     }.toMutableList()
-    resultColumns.add(column(keyColumn, keyColumnData, false, String::class))
-    if (valueColumn != null)
-        resultColumns.add(column(valueColumn, valueColumnData, hasNullValues, classes.commonParent()))
+    resultColumns.add(column(namesTo, keyColumnData, false, String::class))
+    if (valuesTo != null)
+        resultColumns.add(column(valuesTo, valueColumnData, hasNullValues, classes.commonParent()))
     return dataFrameOf(resultColumns).typed()
 }
 

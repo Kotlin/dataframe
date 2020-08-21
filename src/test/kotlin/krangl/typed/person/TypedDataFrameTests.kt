@@ -256,8 +256,8 @@ class TypedDataFrameTests : BaseTest() {
 
         fun TypedDataFrame<*>.check() = columns shouldBe expected
 
-        typed.selectIf { it.name.length == 4 }.check()
-        df.selectIf { it.name.length == 4 }.check()
+        typed.select { cols { it.name.length == 4 } }.check()
+        df.select { cols { it.name.length == 4 } }.check()
     }
 
     @Test
@@ -598,7 +598,15 @@ class TypedDataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `pivot bool`() {
+    fun `spread to bool with groupKey`() {
+        val res = typed.spread { city with name }
+        val expected = typed.select { name + city }.spread { city }
+
+        res shouldBe expected
+    }
+
+    @Test
+    fun `gather bool`() {
         val selected = typed.select { name + city }
         val spread = selected.spread { city }
         val res = spread.gather("city") { columns[1 until ncol] }

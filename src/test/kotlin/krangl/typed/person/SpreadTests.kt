@@ -40,16 +40,16 @@ class SpreadTests {
 // Tests
 
     @Test
-    fun `spread`() {
+    fun `spread to pair`() {
 
-        val res = typed.spread { key to value }
+        val res = typed.spread { key into value }
         res.ncol shouldBe 1 + typed.key.ndistinct
         res.nrow shouldBe typed.name.ndistinct
 
         val expected = typed.map { (name to key) to value }.toMap()
         val actual = res.columns.subList(1, res.ncol).flatMap {
-            val keyCol = it.name
-            res.map { (name to keyCol) to it[keyCol] }
+            val columnName = it.name
+            res.map { (name to columnName) to it[columnName] }
         }.toMap()
 
         actual shouldBe expected
@@ -62,20 +62,45 @@ class SpreadTests {
     }
 
     @Test
+    fun `spread to pair with group key and conversion`() {
+
+        val res = typed.spread { key into { value.toString() } with name }
+
+        res.ncol shouldBe 1 + typed.key.ndistinct
+        res.nrow shouldBe typed.name.ndistinct
+
+        val expected = typed.map { (name to key) to value.toString() }.toMap()
+        val actual = res.columns.subList(1, res.ncol).flatMap {
+            val columnName = it.name
+            res.map { (name to columnName) to it[columnName] }
+        }.toMap()
+
+        actual shouldBe expected
+    }
+
+    @Test
     fun `spread exception`() {
 
         val first = typed[0]
         val values = first.values.toTypedArray()
         values[2] = 20
         val modified = typed.addRow(*values)
-        shouldThrow<Exception> { modified.spread { key to value } }
+        shouldThrow<Exception> { modified.spread { key into value } }
     }
 
     @Test
-    fun `pivot`() {
+    fun gather() {
 
-        val res = typed.spread { key to value }
-        val pivoted = res.gather("key", "value") { columns[1 until ncol] }
-        pivoted shouldBe typed
+        val res = typed.spread { key into value }
+        val gathered = res.gather(namesTo = "key", valuesTo = "value") { columns[1 until ncol] }
+        gathered shouldBe typed
+    }
+
+    @Test
+    fun `gather with filter`() {
+
+        val res = typed.spread { key into value }
+        val gathered = res.gather(namesTo = "key", valuesTo = "value", filter = { it != null }) { columns[1 until ncol] }
+        gathered shouldBe typed.filterNotNull { value }
     }
 }
