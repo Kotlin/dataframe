@@ -24,12 +24,13 @@ interface TypedCol<out T> : NamedColumn {
     operator fun invoke(row: TypedDataFrameRow<*>) = row[this]
 }
 
-interface TypedColumnPair<out A,out B>: TypedCol<A> {
+interface TypedColumnPair<out A>: TypedCol<A> {
     val firstColumn: TypedCol<A>
-    val secondColumn: TypedCol<B>
+    val secondColumn: DataCol?
+    var groupingColumns: ColumnSet?
 }
 
-class TypedColumnPairImpl<A,B>(override val firstColumn: TypedCol<A>, override val secondColumn: TypedCol<B>): TypedCol<A> by firstColumn, TypedColumnPair<A,B>
+class TypedColumnPairImpl<A>(override val firstColumn: TypedCol<A>, override val secondColumn: DataCol?, override var groupingColumns: ColumnSet? = null): TypedCol<A> by firstColumn, TypedColumnPair<A>
 
 typealias Column = TypedCol<*>
 
