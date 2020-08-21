@@ -1,12 +1,13 @@
 package krangl.typed
 
+import org.junit.Ignore
 import org.junit.Test
 import kotlin.random.Random
 import kotlin.system.measureTimeMillis
 
 class PerformanceTests {
 
-    @Test
+    @Test @Ignore
     fun `compare filter`() {
         val nrow = 1000000
         val ncol = 50
