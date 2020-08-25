@@ -8,29 +8,26 @@ import kotlin.reflect.full.findAnnotation
 interface TypedValues<out T> {
     val values: List<T>
     val ndistinct: Int
+    val valueClass: KClass<*>
     val nullable: Boolean
     val size get() = values.size
     operator fun get(index: Int) = values[index]
 }
 
-interface ColumnSet
+interface ColumnSet<out C>
 
-interface NamedColumn : ColumnSet {
+interface TypedCol<out C> : ColumnSet<C> {
     val name: String
-}
-
-interface TypedCol<out T> : NamedColumn {
-    val valueClass: KClass<*>
     operator fun invoke(row: TypedDataFrameRow<*>) = row[this]
 }
 
 interface TypedColumnPair<out A>: TypedCol<A> {
     val firstColumn: TypedCol<A>
     val secondColumn: DataCol?
-    var groupingColumns: ColumnSet?
+    var groupingColumns: ColumnSet<*>?
 }
 
-class TypedColumnPairImpl<A>(override val firstColumn: TypedCol<A>, override val secondColumn: DataCol?, override var groupingColumns: ColumnSet? = null): TypedCol<A> by firstColumn, TypedColumnPair<A>
+class TypedColumnPairImpl<A>(override val firstColumn: TypedCol<A>, override val secondColumn: DataCol?, override var groupingColumns: ColumnSet<*>? = null): TypedCol<A> by firstColumn, TypedColumnPair<A>
 
 typealias Column = TypedCol<*>
 
@@ -48,20 +45,20 @@ typealias DataCol = TypedColData<*>
 
 typealias SrcDataCol = krangl.DataCol
 
-class NamedColumnImpl(override val name: String) : NamedColumn
+class NamedColumnImpl<C>(override val name: String) : TypedCol<C>
 
-fun String.toColumnName() = NamedColumnImpl(this)
-fun KProperty<*>.toColumnName() = NamedColumnImpl(name)
+fun String.toColumn() = NamedColumnImpl<Any?>(this)
+fun <C> KProperty<C>.toColumnName() = NamedColumnImpl<C>(name)
 
 internal fun KProperty<*>.getColumnName() = this.findAnnotation<ColumnName>()?.name ?: name
 
-inline fun <reified T> KProperty<T>.toColumn() = TypedColDesc<T>(name, T::class)
+fun <T> KProperty<T>.toColumn() = TypedColDesc<T>(name)
 
-class TypedColDesc<T>(override val name: String, override val valueClass: KClass<*>) : TypedCol<T> {
+class TypedColDesc<T>(override val name: String) : TypedCol<T> {
     operator fun getValue(thisRef: Any?, property: KProperty<*>) = this
 }
 
-inline fun <reified T> TypedColDesc<T>.nullable() = TypedColDesc<T?>(name, valueClass)
+inline fun <reified T> TypedColDesc<T>.nullable() = TypedColDesc<T?>(name)
 
 class TypedDataCol<T>(override val values: List<T>, override val nullable: Boolean, override val name: String, override val valueClass: KClass<*>) : TypedColData<T> {
 
@@ -100,7 +97,9 @@ class TypedDataCol<T>(override val values: List<T>, override val nullable: Boole
     override fun distinct()= TypedDataCol(toSet().toList(), nullable, name, valueClass)
 }
 
-inline fun <reified T> TypedCol<T>.withValues(values: List<T>, hasNulls: Boolean) = TypedDataCol(values, hasNulls, name, valueClass)
+inline fun <reified T> TypedCol<T>.withValues(values: List<T>, hasNulls: Boolean) = TypedDataCol(values, hasNulls, name, T::class)
+
+fun <T> TypedColData<T>.withValues(values: List<T>, hasNulls: Boolean) = TypedDataCol(values, hasNulls, name, valueClass)
 
 fun DataCol.toDataFrame() = dataFrameOf(listOf(this))
 
@@ -138,19 +137,21 @@ inline fun <T, reified R> TypedDataFrame<T>.new(name: String, noinline expressio
     return column(name, values, nullable)
 }
 
-class ColumnGroup(val columns: List<ColumnSet>) : ColumnSet {
-    constructor(vararg columns: ColumnSet) : this(columns.toList())
+class ColumnGroup<C>(val columns: List<ColumnSet<C>>) : ColumnSet<C> {
+    constructor(vararg columns: ColumnSet<C>) : this(columns.toList())
 }
 
-class ReversedColumn(val column: NamedColumn) : ColumnSet
+internal class ReversedColumn<C>(val column: TypedCol<C>) : ColumnSet<C>
 
-class ColumnDelegate<T>(private val valueClass: KClass<*>) {
-    operator fun getValue(thisRef: Any?, property: KProperty<*>) = TypedColDesc<T>(property.name, valueClass)
+internal class NullsLast<C>(val column: ColumnSet<C>) : ColumnSet<C>
+
+class ColumnDelegate<T> {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>) = TypedColDesc<T>(property.name)
 }
 
-inline fun <reified T> column() = ColumnDelegate<T>(T::class)
+fun <T> column() = ColumnDelegate<T>()
 
-inline fun <reified T> column(name: String) = TypedColDesc<T>(name, T::class)
+fun <T> column(name: String) = TypedColDesc<T>(name)
 
 inline fun <reified T> column(name: String, values: List<T>) = TypedDataCol(values, values.any { it == null }, name, T::class)
 

@@ -15,7 +15,7 @@ fun <T> TypedDataFrame<T>.spread(columnSelector: TypedDataFrameForSpread<T>.(Typ
     }
 }
 
-internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, valueColumn: DataCol, groupBy: ColumnSet?): TypedDataFrame<T> {
+internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, valueColumn: DataCol, groupBy: ColumnSet<*>?): TypedDataFrame<T> {
     val keyColumnData = this[keyColumn]
     val keys = keyColumnData.toSet()
     val nameGenerator = nameGenerator()
@@ -58,7 +58,7 @@ internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, va
     }
 }
 
-internal fun <T> TypedDataFrame<T>.spreadToBool(columnDef: TypedCol<String?>, groupBy: ColumnSet?): TypedDataFrame<T> {
+internal fun <T> TypedDataFrame<T>.spreadToBool(columnDef: TypedCol<String?>, groupBy: ColumnSet<*>?): TypedDataFrame<T> {
 
     val column = this[columnDef]
     val values = column.toSet()
@@ -78,7 +78,7 @@ internal fun <T> TypedDataFrame<T>.spreadToBool(columnDef: TypedCol<String?>, gr
     }
 }
 
-fun <T> TypedDataFrame<T>.gather(namesTo: String, valuesTo: String? = null, filter: ((Any?) -> Boolean)? = null, selector: ColumnsSelector<T>): TypedDataFrame<T> {
+fun <T> TypedDataFrame<T>.gather(namesTo: String, valuesTo: String? = null, filter: ((Any?) -> Boolean)? = null, selector: ColumnsSelector<T,*>): TypedDataFrame<T> {
 
     val pivotColumns = getColumns(selector).map { this[it] }
     val otherColumns = columns - pivotColumns
@@ -118,7 +118,7 @@ fun <T> TypedDataFrame<T>.gather(namesTo: String, valuesTo: String? = null, filt
     return dataFrameOf(resultColumns).typed()
 }
 
-fun <T> TypedDataFrame<T>.mergeRows(selector: ColumnsSelector<T>): TypedDataFrame<T> {
+fun <T> TypedDataFrame<T>.mergeRows(selector: ColumnsSelector<T,*>): TypedDataFrame<T> {
 
     val nestColumns = getColumns(selector).map { this[it] }
     val otherColumns = columns - nestColumns
@@ -132,7 +132,7 @@ fun <T> TypedDataFrame<T>.mergeRows(selector: ColumnsSelector<T>): TypedDataFram
     }
 }
 
-fun <T> TypedDataFrame<T>.splitRows(selector: ColumnSelector<T>): TypedDataFrame<T> {
+fun <T> TypedDataFrame<T>.splitRows(selector: ColumnSelector<T,List<*>>): TypedDataFrame<T> {
 
     val nestedColumn = getColumn(selector)
     if (!nestedColumn.valueClass.isSubclassOf(List::class)) {
@@ -164,11 +164,11 @@ fun <T> TypedDataFrame<T>.splitRows(selector: ColumnSelector<T>): TypedDataFrame
     return dataFrameOf(resultColumns).typed<T>()
 }
 
-fun <T> TypedDataFrame<T>.mergeCols(newColumn: String, selector: ColumnsSelector<T>) = mergeCols(newColumn, { list -> list }, selector)
+fun <T> TypedDataFrame<T>.mergeCols(newColumn: String, selector: ColumnsSelector<T,*>) = mergeCols(newColumn, { list -> list }, selector)
 
-fun <T> TypedDataFrame<T>.mergeColsToString(newColumnName: String, separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "", selector: ColumnsSelector<T>) = mergeCols(newColumnName, { list -> list.joinToString(separator = separator, prefix = prefix, postfix = postfix) }, selector)
+fun <T> TypedDataFrame<T>.mergeColsToString(newColumnName: String, separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "", selector: ColumnsSelector<T,*>) = mergeCols(newColumnName, { list -> list.joinToString(separator = separator, prefix = prefix, postfix = postfix) }, selector)
 
-internal inline fun <T, reified R> TypedDataFrame<T>.mergeCols(newColumn: String, crossinline transform: (List<Any?>) -> R, selector: ColumnsSelector<T>): TypedDataFrame<T> {
+internal inline fun <T, C, reified R> TypedDataFrame<T>.mergeCols(newColumn: String, crossinline transform: (List<C>) -> R, noinline selector: ColumnsSelector<T,C>): TypedDataFrame<T> {
     val nestColumns = getColumns(selector).map { this[it] }
     return add(newColumn) { row ->
         transform(nestColumns.map { it[row.index] })
@@ -189,7 +189,7 @@ internal class ColumnDataCollector(initCapacity: Int = 0) {
     fun toColumn(name: String) = column(name, values, hasNulls, classes.commonParent())
 }
 
-fun <T> TypedDataFrame<T>.splitCol(vararg names: String, selector: ColumnSelector<T>): TypedDataFrame<T> {
+fun <T> TypedDataFrame<T>.splitCol(vararg names: String, selector: ColumnSelector<T,*>): TypedDataFrame<T> {
     val column = getColumn(selector)
 
     val splitter: (Any?) -> List<Any?>?

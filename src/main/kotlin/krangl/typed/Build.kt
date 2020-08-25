@@ -40,7 +40,7 @@ inline fun <reified T> Iterable<T>.toDataFrame() = T::class.declaredMembers
 
 fun dataFrameOf(columns: Iterable<DataCol>): UntypedDataFrame = TypedDataFrameImpl(columns.toList())
 
-fun dataFrameOf(vararg header: NamedColumn) = DataFrameBuilder(header.map { it.name })
+fun dataFrameOf(vararg header: TypedCol<*>) = DataFrameBuilder(header.map { it.name })
 
 fun dataFrameOf(vararg header: String) = DataFrameBuilder(header.toList())
 

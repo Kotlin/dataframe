@@ -91,15 +91,15 @@ class TypedDataFrameTests : BaseTest() {
             this["age"].values shouldBe typed.map { age * 2 }
         }
 
-        typed.update { it.age }.with { it.age * 2 }.check()
-        typed.update { age }.with { age * 2 }.check()
-        typed.update(typed.age) { age * 2 }.check()
+        typed.update { age }.with { it * 2 }.check()
+        typed.update { age }.with { it * 2 }.check()
+        typed.update(typed.age) { it * 2 }.check()
 
-        df.update { age }.with { age * 2 }.check()
-        df.update(age) { age * 2 }.check()
-        df.update(age) { it[age] * 2 }.check()
+        df.update { age }.with { it * 2 }.check()
+        df.update(age) { it * 2 }.check()
+        df.update(age) { it * 2 }.check()
 
-        df.update(Person::age) { it[Person::age] * 2 }.check()
+        df.update(Person::age) { it * 2 }.check()
 
         df.update("age") { int("age") * 2 }.check()
         df.update("age") { "age"<Int>() * 2 }.check()
@@ -146,7 +146,33 @@ class TypedDataFrameTests : BaseTest() {
 
         df.sortBy { Person::name then Person::age.desc }.check()
 
-        df.sortBy { "name" then "age".desc }.check()
+        df.sortBy { "name".cast<String>() then "age".desc }.check()
+    }
+
+    @Test
+    fun `sort nulls first`() {
+
+        val expected = typed.city.values.sortedBy { it }
+
+        fun TypedDataFrame<*>.check() = this[city].values shouldBe expected
+
+        typed.sortBy { city }.check()
+        df.sortBy { city }.check()
+        df.sortBy { col(Person::city) }.check()
+        df.sortBy { col<String>("city") }.check()
+    }
+
+    @Test
+    fun `sort nulls last`() {
+
+        val expected = typed.city.values.filterNotNull().sortedBy { it } + listOf(null)
+
+        fun TypedDataFrame<*>.check() = this[city].values shouldBe expected
+
+        typed.sortBy { city.nullsLast }.check()
+        df.sortBy { city.nullsLast }.check()
+        df.sortBy { Person::city.nullsLast }.check()
+        df.sortBy { "city".nullsLast }.check()
     }
 
     @Test
@@ -609,8 +635,9 @@ class TypedDataFrameTests : BaseTest() {
     fun `gather bool`() {
         val selected = typed.select { name + city }
         val spread = selected.spread { city }
-        val res = spread.gather("city") { columns[1 until ncol] }
-        res.sortBy { name then city } shouldBe selected.filterNotNull { city }.distinct().sortBy { name then city }
+        val res = spread.gather("city") { cols[1 until ncol] }
+        val sorted = res.sortBy {name then city}
+        sorted shouldBe selected.filterNotNull { city }.distinct().sortBy { name then city }
     }
 
     @Test
@@ -627,7 +654,8 @@ class TypedDataFrameTests : BaseTest() {
     fun splitRows() {
         val selected = typed.select { name + city }
         val nested = selected.mergeRows { city }
-        val res = nested.splitRows { city }
+        val mergedCity by column<List<String?>>("city")
+        val res = nested.splitRows { mergedCity }
         res.sortBy { name } shouldBe selected.sortBy { name }
     }
 
