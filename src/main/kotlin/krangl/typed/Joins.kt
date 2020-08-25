@@ -6,23 +6,23 @@ interface TypedDataFrameWithColumnsForJoin<out A, out B> : TypedDataFrameWithCol
 
     val right: TypedDataFrame<B>
 
-    infix fun NamedColumn.match(other: NamedColumn) = ColumnMatch(this, other)
+    infix fun <C> TypedCol<C>.match(other: TypedCol<C>) = ColumnMatch(this, other)
 }
 
-class ColumnMatch(val left: NamedColumn, val right: NamedColumn) : ColumnSet
+class ColumnMatch<C>(val left: TypedCol<C>, val right: TypedCol<C>) : ColumnSet<C>
 
 class TypedDataFrameWithColumnsForJoinImpl<A, B>(private val left: TypedDataFrame<A>, override val right: TypedDataFrame<B>) : TypedDataFrame<A> by left, TypedDataFrameWithColumnsForJoin<A, B> {
 
-    override val allColumns: ColumnGroup
+    override val allColumns: ColumnGroup<*>
         get() = throw NotImplementedException()
 
 }
 
-typealias JoinColumnSelector<A, B> = TypedDataFrameWithColumnsForJoin<A, B>.(TypedDataFrameWithColumnsForJoin<A, B>) -> ColumnSet
+typealias JoinColumnSelector<A, B> = TypedDataFrameWithColumnsForJoin<A, B>.(TypedDataFrameWithColumnsForJoin<A, B>) -> ColumnSet<*>
 
-internal fun ColumnSet.extractJoinColumns(): List<ColumnMatch> = when (this) {
+internal fun <C> ColumnSet<C>.extractJoinColumns(): List<ColumnMatch<C>> = when (this) {
     is ColumnGroup -> columns.flatMap { it.extractJoinColumns() }
-    is NamedColumn -> listOf(ColumnMatch(this, this))
+    is TypedCol<C> -> listOf(ColumnMatch(this, this))
     is ColumnMatch -> listOf(this)
     else -> throw Exception()
 }
@@ -41,7 +41,7 @@ val JoinType.allowLeftNulls get() = this == JoinType.RIGHT || this == JoinType.O
 val JoinType.allowRightNulls get() = this == JoinType.LEFT || this == JoinType.OUTER || this == JoinType.EXCLUDE
 
 internal fun <A, B> defaultJoinColumns(left: TypedDataFrame<A>, right: TypedDataFrame<B>): JoinColumnSelector<A, B> =
-        { left.columnNames().intersect(right.columnNames()).map { it.toColumnName() }.let { ColumnGroup(it) } }
+        { left.columnNames().intersect(right.columnNames()).map { it.toColumn() }.let { ColumnGroup(it) } }
 
 fun <A, B> TypedDataFrame<A>.innerJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.INNER, selector = selector)
 fun <A, B> TypedDataFrame<A>.leftJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.LEFT, selector = selector)

@@ -2,6 +2,7 @@ package krangl.typed
 
 import krangl.DataFrame
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.superclasses
 
@@ -157,3 +158,11 @@ fun DataCol.addRowNumber(columnName: String = "id") = dataFrameOf(listOf(indexCo
 
 fun <T : Comparable<T>> TypedColData<T?>.min() = values.asSequence().filterNotNull().min()
 fun <T : Comparable<T>> TypedColData<T?>.max() = values.asSequence().filterNotNull().max()
+
+// Update
+
+fun <T,C> TypedDataFrame<T>.update(cols: Iterable<TypedCol<C>>) = UpdateClauseImpl(this, cols.toList())
+fun <T> TypedDataFrame<T>.update(vararg cols: String) = update(getColumns(cols))
+fun <T,C> TypedDataFrame<T>.update(vararg cols: KProperty<C>) = update(getColumns(cols))
+fun <T,C> TypedDataFrame<T>.update(vararg cols: TypedCol<C>) = update(cols.asIterable())
+fun <T,C> TypedDataFrame<T>.update(cols: ColumnsSelector<T,C>) = update(getColumns(cols))

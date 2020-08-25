@@ -2,11 +2,11 @@ package krangl.typed
 
 import kotlin.reflect.KProperty
 
-internal fun <T> GroupedDataFrame<T>.getColumns(selector: ColumnsSelector<T>) =
+internal fun <T> GroupedDataFrame<T>.getColumns(selector: ColumnsSelector<T,*>) =
         TypedDataFrameWithColumnsForSelectImpl(groups.first())
                 .let { selector(it, it).extractColumns() }
 
-internal fun <T> GroupedDataFrame<T>.getSortColumns(selector: SortColumnSelector<T>) =
+internal fun <T> GroupedDataFrame<T>.getSortColumns(selector: SortColumnSelector<T,Comparable<*>>) =
         TypedDataFrameWithColumnsForSortImpl(groups.first())
                 .let { selector(it, it).extractSortColumns() }
 
@@ -27,10 +27,10 @@ interface GroupedDataFrame<out T> {
 
     fun sortBy(columns: List<SortColumnDescriptor>) = modify { sortBy(columns) }
     fun sortBy(vararg columns: String) = sortBy(columns.map { SortColumnDescriptor(it, SortDirection.Desc) })
-    fun sortBy(vararg columns: NamedColumn) = sortBy(columns.map { SortColumnDescriptor(it.name, SortDirection.Desc) })
-    fun sortBy(selector: SortColumnSelector<T>) = sortBy(getSortColumns(selector))
+    fun sortBy(vararg columns: TypedCol<Comparable<*>>) = sortBy(columns.map { SortColumnDescriptor(it.name, SortDirection.Desc) })
+    fun sortBy(selector: SortColumnSelector<T, Comparable<*>>) = sortBy(getSortColumns(selector))
 
-    fun sortByDesc(selector: SortColumnSelector<T>) = sortBy(getSortColumns(selector).map { SortColumnDescriptor(it.column, SortDirection.Desc) })
+    fun sortByDesc(selector: SortColumnSelector<T, Comparable<*>>) = sortBy(getSortColumns(selector).map { SortColumnDescriptor(it.column, SortDirection.Desc) })
 
     fun modify(transform: TypedDataFrame<T>.() -> TypedDataFrame<*>): GroupedDataFrame<T>
 
@@ -41,7 +41,7 @@ interface GroupedDataFrame<out T> {
 class GroupedDataFrameImpl<T>(val df: TypedDataFrame<T>) : GroupedDataFrame<T> {
 
     override fun modify(transform: TypedDataFrame<T>.() -> TypedDataFrame<*>) =
-            GroupedDataFrameImpl(df.update(columnForGroupedData) { transform(it[columnForGroupedData].typed()) })
+            GroupedDataFrameImpl(df.update(columnForGroupedData) { transform(this[columnForGroupedData].typed()) })
 
     override val groups get() = df[columnForGroupedData].values as List<TypedDataFrame<T>>
 

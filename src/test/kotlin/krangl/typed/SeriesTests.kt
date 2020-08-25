@@ -32,9 +32,9 @@ class SeriesTests {
     val TypedDataFrameRow<Weather>.city get() = this["city"] as String
     val TypedDataFrameRow<Weather>.day get() = this["day"] as Int
     val TypedDataFrameRow<Weather>.temp get() = this["temp"] as Int
-    val TypedDataFrame<Weather>.city get() = this["city"]
-    val TypedDataFrame<Weather>.day get() = this["day"]
-    val TypedDataFrame<Weather>.temp get() = this["temp"]
+    val TypedDataFrame<Weather>.city get() = this["city"] as TypedCol<String>
+    val TypedDataFrame<Weather>.day get() = this["day"] as TypedCol<Int>
+    val TypedDataFrame<Weather>.temp get() = this["temp"] as TypedCol<Int>
 
     val typed = df.typed<Weather>()
 

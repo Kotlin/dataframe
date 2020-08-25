@@ -23,7 +23,7 @@ data class DataFrameToListNamedStub(val df: TypedDataFrame<*>, val className: St
 
 data class DataFrameToListTypedStub(val df: TypedDataFrame<*>, val interfaceClass: KClass<*>)
 
-fun <T> TypedDataFrame<T>.getScheme(name: String? = null, columnSelector: ColumnsSelector<T>? = null): String {
+fun <T> TypedDataFrame<T>.getScheme(name: String? = null, columnSelector: ColumnsSelector<T,*>? = null): String {
     val interfaceName = name ?: "DataRecord"
     val cols = columnSelector?.let { getColumns(it).map { this[it.name] } } ?: columns
     return CodeGenerator().generateInterfaceDeclaration(cols, interfaceName, withBaseInterfaces = false, isOpen = true)
