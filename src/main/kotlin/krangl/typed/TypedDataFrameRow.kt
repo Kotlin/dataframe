@@ -1,6 +1,5 @@
 package krangl.typed
 
-import krangl.DataFrameRow
 import krangl.typed.tracking.ColumnAccessTracker
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
@@ -12,10 +11,11 @@ interface TypedDataFrameRow<out T> {
     val index: Int
     fun getRow(index: Int): TypedDataFrameRow<T>?
     operator fun get(name: String): Any?
+    operator fun get(columnIndex: Int): Any?
     operator fun <R> get(column: TypedCol<R>) = get(column.name) as R
     operator fun <R> get(property: KProperty<R>) = get(property.name) as R
     operator fun <R> TypedCol<R>.invoke() = get(this)
-    operator fun <R> KProperty1<*,R>.invoke() = get(this)
+    operator fun <R> KProperty1<*, R>.invoke() = get(this)
     operator fun <R> String.invoke() = get(this) as R
 
     fun <T> read(name: String) = get(name) as T
@@ -64,9 +64,9 @@ interface TypedDataFrameRow<out T> {
     operator fun TypedCol<Double>.div(a: Long) = get(this) / a
 
     infix fun <R> TypedCol<R>.eq(a: R?) = get(this) == a
-    infix fun <R> KProperty1<*,R>.eq(a: R?) = get(this) == a
+    infix fun <R> KProperty1<*, R>.eq(a: R?) = get(this) == a
     infix fun <R> TypedCol<R>.neq(a: R?) = get(this) != a
-    infix fun <R> KProperty1<*,R>.neq(a: R?) = get(this) != a
+    infix fun <R> KProperty1<*, R>.neq(a: R?) = get(this) != a
 }
 
 internal class TypedDataFrameRowImpl<T>(override var index: Int, override val owner: TypedDataFrame<T>) : TypedDataFrameRow<T> {
@@ -77,14 +77,20 @@ internal class TypedDataFrameRowImpl<T>(override var index: Int, override val ow
     }
 
     override val prev: TypedDataFrameRow<T>?
-        get() = if(index > 0) owner[index-1] else null
+        get() = if (index > 0) owner[index - 1] else null
     override val next: TypedDataFrameRow<T>?
-        get() = if(index < owner.nrow-1) owner[index+1] else null
+        get() = if (index < owner.nrow - 1) owner[index + 1] else null
 
-    override fun getRow(index: Int): TypedDataFrameRow<T>? = if(index >= 0 && index < owner.nrow) TypedDataFrameRowImpl(index, owner) else null
+    override fun getRow(index: Int): TypedDataFrameRow<T>? = if (index >= 0 && index < owner.nrow) TypedDataFrameRowImpl(index, owner) else null
 
     override val values: List<Any?>
         get() = owner.columns.map { it[index] }
+
+    override fun get(columnIndex: Int): Any? {
+        val column = owner.columns[columnIndex]
+        ColumnAccessTracker.registerColumnAccess(column.name)
+        return column[index]
+    }
 }
 
 internal fun <T> T.toIterable(getNext: (T) -> T?) = Iterable<T> {

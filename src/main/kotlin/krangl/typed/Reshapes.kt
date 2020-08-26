@@ -8,21 +8,22 @@ fun <T> TypedDataFrame<T>.spread(columnSelector: TypedDataFrameForSpread<T>.(Typ
     return when (val column = columnSelector(receiver, receiver)) {
         is TypedColumnPair<String?> -> {
             if (column.secondColumn != null)
-                spreadToPair(column.firstColumn, column.secondColumn!!, column.groupingColumns)
+                spreadToPair(this[column.firstColumn], column.secondColumn!!, column.groupingColumns)
             else spreadToBool(column.firstColumn, column.groupingColumns)
         }
         else -> spreadToBool(column, null)
     }
 }
 
-internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, valueColumn: DataCol, groupBy: ColumnSet<*>?): TypedDataFrame<T> {
-    val keyColumnData = this[keyColumn]
-    val keys = keyColumnData.toSet()
+internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedColData<String?>, valueColumn: DataCol, groupBy: ColumnSet<*>?): TypedDataFrame<T> {
+    val keys = keyColumn.toSet()
     val nameGenerator = nameGenerator()
-    val groupingColumns = groupBy?.extractColumns()?.map { this[it] } ?: columns - keyColumn - valueColumn
+    val groupingColumns = groupBy?.let { extractColumns(it) } ?: columns - keyColumn - valueColumn
     var dataFrame = this
-    if (!columns.contains(valueColumn)) {
+    var valueColumnIndex = columns.indexOf(valueColumn)
+    if (valueColumnIndex == -1) {
         dataFrame = this + valueColumn.rename(nameGenerator.createUniqueName(valueColumn.name))
+        valueColumnIndex = dataFrame.ncol - 1
     }
     val grouped = dataFrame.groupBy(groupingColumns)
     return grouped.aggregate {
@@ -39,7 +40,7 @@ internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, va
                             null
                         }
                         1 -> {
-                            val value = valueRows[0][valueColumn]
+                            val value = valueRows[0][valueColumnIndex]
                             if (value == null) hasNulls = true
                             else classes.add(value.javaClass.kotlin)
                             value
@@ -47,7 +48,7 @@ internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, va
                         else -> {
                             val firstRow = group.first()
                             val groupKey = groupingColumns.map { "${it.name}: ${firstRow[it]}" }.joinToString()
-                            val values = valueRows.map { it[valueColumn] }.joinToString()
+                            val values = valueRows.map { it[valueColumnIndex] }.joinToString()
                             throw Exception("Different values ($values) for key '${key}' at entry [$groupKey]")
                         }
                     }
@@ -63,7 +64,7 @@ internal fun <T> TypedDataFrame<T>.spreadToBool(columnDef: TypedCol<String?>, gr
     val column = this[columnDef]
     val values = column.toSet()
     val nameGenerator = nameGenerator()
-    val groupingColumns = groupBy?.extractColumns()?.map { this[it] } ?: columns - column
+    val groupingColumns = groupBy?.let { extractColumns(it) } ?: columns - column
 
     val grouped = groupBy(groupingColumns)
     return grouped.aggregate {
@@ -78,32 +79,52 @@ internal fun <T> TypedDataFrame<T>.spreadToBool(columnDef: TypedCol<String?>, gr
     }
 }
 
-fun <T> TypedDataFrame<T>.gather(namesTo: String, valuesTo: String? = null, filter: ((Any?) -> Boolean)? = null, selector: ColumnsSelector<T,*>): TypedDataFrame<T> {
+class GatherClause<T, C, K, R>(val df: TypedDataFrame<T>, val selector: ColumnsSelector<T, C>, val filter: ((C) -> Boolean)? = null,
+                               val nameTransform: ((String) -> K), val valueTransform: ((C) -> R))
 
-    val pivotColumns = getColumns(selector).map { this[it] }
-    val otherColumns = columns - pivotColumns
+typealias Predicate<T> = (T) -> Boolean
+
+internal infix fun <T> (Predicate<T>).and(other: Predicate<T>): Predicate<T> = { this(it) && other(it) }
+
+fun <T, C> TypedDataFrame<T>.gather(selector: ColumnsSelector<T, C>) = GatherClause<T, C, String, C>(this, selector, null, { it }, { it })
+
+fun <T, C, K, R> GatherClause<T, C, K, R>.where(filter: Predicate<C>) = GatherClause(df, selector, this.filter?.let { it and filter }
+        ?: filter,
+        nameTransform, valueTransform)
+
+fun <T, C, K, R> GatherClause<T, C, *, R>.mapNames(transform: (String) -> K) = GatherClause<T, C, K, R>(df, selector, filter, transform, valueTransform)
+
+fun <T, C, K, R> GatherClause<T, C, K, *>.mapValues(transform: (C) -> R) = GatherClause<T, C, K, R>(df, selector, filter, nameTransform, transform)
+
+inline fun <T, C, reified K, R> GatherClause<T, C, K, R>.into(keyColumn: String) = gatherImpl(keyColumn, null, K::class)
+
+inline fun <T, C, reified K, R> GatherClause<T, C, K, R>.into(columnPair: Pair<String, String>) = gatherImpl(columnPair.first, columnPair.second, K::class)
+
+fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: String? = null, keyColumnType: KClass<*>): TypedDataFrame<T> {
+
+    val keyColumns = df.getColumns(selector).map { df[it] }
+    val otherColumns = df.columns - keyColumns
     val outputColumnsData = otherColumns.map { ArrayList<Any?>() }.toMutableList()
-    val keyColumnData = ArrayList<String>()
-    val valueColumnData = ArrayList<Any?>()
+    val keyColumnData = ArrayList<K>()
+    val valueColumnData = ArrayList<R>()
     val classes = mutableSetOf<KClass<*>>()
-    val include = when (valuesTo) {
-        null -> filter ?: { it == true }
-        else -> filter ?: { true }
-    }
+    val include = filter ?: { true }
     var hasNullValues = false
-    (0 until nrow).forEach { row ->
-        pivotColumns.forEach { pivotCol ->
-            val value = pivotCol[row]
+    val keys = keyColumns.map { nameTransform(it.name) }
+    (0 until df.nrow).forEach { row ->
+        keyColumns.forEachIndexed { colIndex, col ->
+            val value = col[row]
             if (include(value)) {
                 outputColumnsData.forEachIndexed { index, list ->
                     list.add(otherColumns[index][row])
                 }
-                keyColumnData.add(pivotCol.name)
+                keyColumnData.add(keys[colIndex])
                 if (valuesTo != null) {
-                    valueColumnData.add(value)
-                    if (value == null)
+                    val dstValue = valueTransform(value)
+                    valueColumnData.add(dstValue)
+                    if (dstValue == null)
                         hasNullValues = true
-                    else classes.add(value.javaClass.kotlin)
+                    else classes.add((dstValue as Any).javaClass.kotlin)
                 }
             }
         }
@@ -112,13 +133,13 @@ fun <T> TypedDataFrame<T>.gather(namesTo: String, valuesTo: String? = null, filt
         val srcColumn = otherColumns[index]
         srcColumn.withValues(values, srcColumn.nullable)
     }.toMutableList()
-    resultColumns.add(column(namesTo, keyColumnData, false, String::class))
+    resultColumns.add(column(namesTo, keyColumnData, keys.any { it == null }, keyColumnType))
     if (valuesTo != null)
         resultColumns.add(column(valuesTo, valueColumnData, hasNullValues, classes.commonParent()))
     return dataFrameOf(resultColumns).typed()
 }
 
-fun <T> TypedDataFrame<T>.mergeRows(selector: ColumnsSelector<T,*>): TypedDataFrame<T> {
+fun <T> TypedDataFrame<T>.mergeRows(selector: ColumnsSelector<T, *>): TypedDataFrame<T> {
 
     val nestColumns = getColumns(selector).map { this[it] }
     val otherColumns = columns - nestColumns
@@ -132,7 +153,7 @@ fun <T> TypedDataFrame<T>.mergeRows(selector: ColumnsSelector<T,*>): TypedDataFr
     }
 }
 
-fun <T> TypedDataFrame<T>.splitRows(selector: ColumnSelector<T,List<*>>): TypedDataFrame<T> {
+fun <T> TypedDataFrame<T>.splitRows(selector: ColumnSelector<T, List<*>>): TypedDataFrame<T> {
 
     val nestedColumn = getColumn(selector)
     if (!nestedColumn.valueClass.isSubclassOf(List::class)) {
@@ -164,11 +185,11 @@ fun <T> TypedDataFrame<T>.splitRows(selector: ColumnSelector<T,List<*>>): TypedD
     return dataFrameOf(resultColumns).typed<T>()
 }
 
-fun <T> TypedDataFrame<T>.mergeCols(newColumn: String, selector: ColumnsSelector<T,*>) = mergeCols(newColumn, { list -> list }, selector)
+fun <T> TypedDataFrame<T>.mergeCols(newColumn: String, selector: ColumnsSelector<T, *>) = mergeCols(newColumn, { list -> list }, selector)
 
-fun <T> TypedDataFrame<T>.mergeColsToString(newColumnName: String, separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "", selector: ColumnsSelector<T,*>) = mergeCols(newColumnName, { list -> list.joinToString(separator = separator, prefix = prefix, postfix = postfix) }, selector)
+fun <T> TypedDataFrame<T>.mergeColsToString(newColumnName: String, separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "", selector: ColumnsSelector<T, *>) = mergeCols(newColumnName, { list -> list.joinToString(separator = separator, prefix = prefix, postfix = postfix) }, selector)
 
-internal inline fun <T, C, reified R> TypedDataFrame<T>.mergeCols(newColumn: String, crossinline transform: (List<C>) -> R, noinline selector: ColumnsSelector<T,C>): TypedDataFrame<T> {
+internal inline fun <T, C, reified R> TypedDataFrame<T>.mergeCols(newColumn: String, crossinline transform: (List<C>) -> R, noinline selector: ColumnsSelector<T, C>): TypedDataFrame<T> {
     val nestColumns = getColumns(selector).map { this[it] }
     return add(newColumn) { row ->
         transform(nestColumns.map { it[row.index] })
@@ -189,7 +210,7 @@ internal class ColumnDataCollector(initCapacity: Int = 0) {
     fun toColumn(name: String) = column(name, values, hasNulls, classes.commonParent())
 }
 
-fun <T> TypedDataFrame<T>.splitCol(vararg names: String, selector: ColumnSelector<T,*>): TypedDataFrame<T> {
+fun <T> TypedDataFrame<T>.splitCol(vararg names: String, selector: ColumnSelector<T, *>): TypedDataFrame<T> {
     val column = getColumn(selector)
 
     val splitter: (Any?) -> List<Any?>?

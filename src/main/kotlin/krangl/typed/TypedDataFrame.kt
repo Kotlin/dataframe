@@ -67,6 +67,8 @@ interface TypedDataFrameForSpread<out T> : TypedDataFrame<T> {
 
     infix fun TypedCol<String?>.into(other: DataCol) = TypedColumnPairImpl(this, other)
 
+    infix fun TypedCol<String?>.into(other: TypedCol<*>) = TypedColumnPairImpl(this, get(other))
+
     infix fun TypedCol<String?>.into(selector: RowSelector<T, Any?>) = TypedColumnPairImpl(this, new("temp", selector))
 
     fun groupKey(vararg columns: Column) = ColumnGroup(columns.toList())
@@ -97,9 +99,10 @@ typealias ColumnSelector<T, C> = TypedDataFrameWithColumnsForSelect<T>.(TypedDat
 
 typealias SortColumnSelector<T, C> = TypedDataFrameWithColumnsForSort<T>.(TypedDataFrameWithColumnsForSort<T>) -> ColumnSet<C>
 
-internal fun <C> ColumnSet<C>.extractColumns(): List<TypedCol<C>> = when (this) {
-    is ColumnGroup<C> -> columns.flatMap { it.extractColumns() }
-    is TypedCol<C> -> listOf(this)
+internal fun <T, C> TypedDataFrame<T>.extractColumns(set: ColumnSet<C>): List<TypedColData<C>> = when (set) {
+    is ColumnGroup<C> -> set.columns.flatMap { extractColumns(it) }
+    is TypedColData<C> -> listOf(set)
+    is TypedCol<C> -> listOf(this[set])
     else -> throw Exception()
 }
 
@@ -107,11 +110,11 @@ internal fun <C> ColumnSet<C>.extractSortColumns(): List<SortColumnDescriptor> =
     is ColumnGroup -> columns.flatMap { it.extractSortColumns() }
     is ReversedColumn -> column.extractSortColumns().map { SortColumnDescriptor(it.column, it.direction.reversed(), it.nullsLast) }
     is TypedCol<C> -> listOf(SortColumnDescriptor(name, SortDirection.Asc))
-    is NullsLast<C> ->column.extractSortColumns().map { SortColumnDescriptor(it.column, it.direction, nullsLast = true) }
+    is NullsLast<C> -> column.extractSortColumns().map { SortColumnDescriptor(it.column, it.direction, nullsLast = true) }
     else -> throw Exception()
 }
 
-internal fun <T, C> TypedDataFrame<T>.getColumns(selector: ColumnsSelector<T, C>) = TypedDataFrameWithColumnsForSelectImpl(this).let { selector(it, it).extractColumns() }
+internal fun <T, C> TypedDataFrame<T>.getColumns(selector: ColumnsSelector<T, C>) = TypedDataFrameWithColumnsForSelectImpl(this).let { extractColumns(selector(it, it)) }
 
 internal fun <T, C> TypedDataFrame<T>.getColumn(selector: ColumnSelector<T, C>) = TypedDataFrameWithColumnsForSelectImpl(this).let { selector(it, it) }.let { this[it] }
 
@@ -259,7 +262,14 @@ interface TypedDataFrame<out T> {
     fun distinct() = distinctBy { it.values }
 
     fun <R> map(selector: RowSelector<T, R>) = rows.map { selector(it, it) }
-    fun forEach(selector: RowSelector<T, Unit>) = rows.forEach { selector(it, it) }
+
+    fun <C> forEach(selector: ColumnsSelector<T, C>, action: (TypedDataFrameRow<T>, TypedColData<C>) -> Unit) = getColumns(selector).let { cols ->
+        rows.forEach { row ->
+            cols.forEach { col ->
+                action(row, col)
+            }
+        }
+    }
 
     val size get() = DataFrameSize(ncol, nrow)
 }
