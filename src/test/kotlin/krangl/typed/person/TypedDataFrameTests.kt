@@ -126,6 +126,7 @@ class TypedDataFrameTests : BaseTest() {
 
         val updated = typed.update { allColumns }.withNull()
 
+       // updated.forEach {  }
         updated.columns.forEach {
             it.values.forEach { it shouldBe null }
         }
@@ -225,7 +226,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `filterNotNull 1`() {
 
-        fun TypedDataFrame<*>.check() = forEach { get("weight") shouldNotBe null }
+        fun TypedDataFrame<*>.check() = rows.forEach { get("weight") shouldNotBe null }
 
         typed.filterNotNull(typed.weight).check()
         typed.filterNotNull { weight }.check()
@@ -302,6 +303,18 @@ class TypedDataFrameTests : BaseTest() {
 
         df.select { "age" and "city" }.check()
         df.select("age", "city").check()
+    }
+
+    @Test
+    fun `select by type`() {
+        val selected = typed.select { colsOfType<String>() }
+        selected shouldBe typed.select { name and city }
+    }
+
+    @Test
+    fun `select by type not nullable`() {
+        val selected = typed.select { colsOfType<String> { !it.nullable } }
+        selected shouldBe typed.select { name }
     }
 
     @Test
@@ -501,7 +514,7 @@ class TypedDataFrameTests : BaseTest() {
 
         val res = typed + typed + typed
         res.name.size shouldBe 3 * typed.nrow
-        res.forEach { this.values shouldBe typed[index % typed.nrow].values }
+        res.rows.forEach { it.values shouldBe typed[it.index % typed.nrow].values }
     }
 
     @Test
@@ -517,10 +530,10 @@ class TypedDataFrameTests : BaseTest() {
 
         val res = typed.union(other)
         res.nrow shouldBe typed.nrow + other.nrow
-        res.take(typed.nrow).forEach { heightOrNull() == null }
+        res.take(typed.nrow).rows.forEach { it[heightOrNull] == null }
         val q = res.takeLast(other.nrow)
-        q.forEach { name() shouldBe other[index][name] }
-        q.forEach { heightOrNull() shouldBe other[index][height] }
+        q.rows.forEach { it[name] shouldBe other[it.index][name] }
+        q.rows.forEach { it[heightOrNull] shouldBe other[it.index][height] }
     }
 
     @Test
@@ -632,11 +645,31 @@ class TypedDataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `spread to matrix`() {
+
+        val others by column<List<String>>("other")
+        val other by column<String>()
+        val sum by column<Int>()
+
+        val names = typed.name.values.distinct()
+
+        val src = typed.select { name }
+                .add(others) { names }
+                .splitRows { others }
+                .add(sum) { name.length + other().length }
+
+        val matrix = src.spread { other into sum }
+        matrix.ncol shouldBe 1 + names.size
+
+        println(matrix)
+    }
+
+    @Test
     fun `gather bool`() {
         val selected = typed.select { name + city }
         val spread = selected.spread { city }
-        val res = spread.gather("city") { cols[1 until ncol] }
-        val sorted = res.sortBy {name then city}
+        val res = spread.gather { colsOfType<Boolean>() }.where { it }.into("city")
+        val sorted = res.sortBy { name then city }
         sorted shouldBe selected.filterNotNull { city }.distinct().sortBy { name then city }
     }
 

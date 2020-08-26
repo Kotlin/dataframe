@@ -4,6 +4,7 @@ import krangl.DataFrame
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.allSuperclasses
+import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.superclasses
 
 typealias RowSelector<T, R> = TypedDataFrameRow<T>.(TypedDataFrameRow<T>) -> R
@@ -15,11 +16,11 @@ class TypedColumnsFromDataRowBuilder<T>(val dataFrame: TypedDataFrame<T>) {
 
     fun add(column: DataCol) = columns.add(column)
 
-    inline fun <reified R> add(name: String, noinline expression: RowSelector<T,R>) = add(dataFrame.new(name, expression))
+    inline fun <reified R> add(name: String, noinline expression: RowSelector<T, R>) = add(dataFrame.new(name, expression))
 
-    inline infix fun <reified R> String.to(noinline expression: RowSelector<T,R>) = add(this, expression)
+    inline infix fun <reified R> String.to(noinline expression: RowSelector<T, R>) = add(this, expression)
 
-    inline operator fun <reified R> String.invoke(noinline expression: RowSelector<T,R>) = add(this, expression)
+    inline operator fun <reified R> String.invoke(noinline expression: RowSelector<T, R>) = add(this, expression)
 }
 
 // add Column
@@ -27,10 +28,13 @@ class TypedColumnsFromDataRowBuilder<T>(val dataFrame: TypedDataFrame<T>) {
 operator fun TypedDataFrame<*>.plus(col: DataCol) = dataFrameOf(columns + col)
 operator fun TypedDataFrame<*>.plus(col: Iterable<DataCol>) = dataFrameOf(columns + col)
 
-inline fun <reified R, T> TypedDataFrame<T>.add(name: String, noinline expression: RowSelector<T,R>) =
+inline fun <reified R, T> TypedDataFrame<T>.add(name: String, noinline expression: RowSelector<T, R>) =
         (this + new(name, expression))
 
-inline fun <reified R, T> GroupedDataFrame<T>.add(name: String, noinline expression: RowSelector<T,R>) =
+inline fun <reified R, T> TypedDataFrame<T>.add(column: TypedColDesc<R>, noinline expression: RowSelector<T, R>) =
+        (this + new(column.name, expression))
+
+inline fun <reified R, T> GroupedDataFrame<T>.add(name: String, noinline expression: RowSelector<T, R>) =
         modify { add(name, expression) }
 
 fun <T> TypedDataFrame<T>.add(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) =
@@ -56,7 +60,7 @@ fun <T> TypedDataFrame<T>.map(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit
 
 // group by
 
-inline fun <T, reified R> TypedDataFrame<T>.groupBy(name: String = "key", noinline expression: RowSelector<T,R?>) =
+inline fun <T, reified R> TypedDataFrame<T>.groupBy(name: String = "key", noinline expression: RowSelector<T, R?>) =
         add(name, expression).groupBy(name)
 
 // size
@@ -69,14 +73,14 @@ inline fun <reified C> TypedDataFrame<*>.toList() = DataFrameToListTypedStub(thi
 
 fun TypedDataFrame<*>.toList(className: String) = DataFrameToListNamedStub(this, className)
 
-inline fun <T, reified R:Number> TypedDataFrameRow<T>.diff(selector: RowSelector<T, R>) = when(R::class){
-    Double::class -> prev?.let { (selector(this) as Double) - (selector(it) as Double) }  ?: .0
-    Int::class -> prev?.let { (selector(this) as Int) - (selector(it) as Int) }  ?: 0
-    Long::class -> prev?.let { (selector(this) as Long) - (selector(it) as Long) }  ?: 0
+inline fun <T, reified R : Number> TypedDataFrameRow<T>.diff(selector: RowSelector<T, R>) = when (R::class) {
+    Double::class -> prev?.let { (selector(this) as Double) - (selector(it) as Double) } ?: .0
+    Int::class -> prev?.let { (selector(this) as Int) - (selector(it) as Int) } ?: 0
+    Long::class -> prev?.let { (selector(this) as Long) - (selector(it) as Long) } ?: 0
     else -> throw NotImplementedError()
 }
 
-fun <T> TypedDataFrameRow<T>.movingAverage(k: Int, selector: RowSelector<T, Number>) :Double {
+fun <T> TypedDataFrameRow<T>.movingAverage(k: Int, selector: RowSelector<T, Number>): Double {
     var count = 0
     return backwardIterable().take(k).sumByDouble {
         count++
@@ -90,7 +94,7 @@ fun Iterable<TypedDataFrame<*>>.union() = merge(toList())
 
 fun commonParent(vararg classes: KClass<*>) = commonParents(classes.toList()).withMostSuperclasses()
 
-fun Iterable<KClass<*>>.withMostSuperclasses() = maxBy {it.allSuperclasses.size}
+fun Iterable<KClass<*>>.withMostSuperclasses() = maxBy { it.allSuperclasses.size }
 
 fun commonParents(vararg classes: KClass<*>) = commonParents(classes.toList())
 
@@ -98,7 +102,8 @@ fun commonParents(classes: Iterable<KClass<*>>) =
         classes.distinct().let {
             when {
                 it.size == 1 -> listOf(it[0]) // if there is only one class - return it
-                else -> it.fold(null as (Set<KClass<*>>?)) { set, clazz -> // collect a set of all common superclasses from original classes
+                else -> it.fold(null as (Set<KClass<*>>?)) { set, clazz ->
+                    // collect a set of all common superclasses from original classes
                     val superclasses = clazz.allSuperclasses + clazz
                     set?.intersect(superclasses) ?: superclasses.toSet()
                 }!!.let {
@@ -161,8 +166,12 @@ fun <T : Comparable<T>> TypedColData<T?>.max() = values.asSequence().filterNotNu
 
 // Update
 
-fun <T,C> TypedDataFrame<T>.update(cols: Iterable<TypedCol<C>>) = UpdateClauseImpl(this, cols.toList())
+fun <T, C> TypedDataFrame<T>.update(cols: Iterable<TypedCol<C>>) = UpdateClauseImpl(this, cols.toList())
 fun <T> TypedDataFrame<T>.update(vararg cols: String) = update(getColumns(cols))
-fun <T,C> TypedDataFrame<T>.update(vararg cols: KProperty<C>) = update(getColumns(cols))
-fun <T,C> TypedDataFrame<T>.update(vararg cols: TypedCol<C>) = update(cols.asIterable())
-fun <T,C> TypedDataFrame<T>.update(cols: ColumnsSelector<T,C>) = update(getColumns(cols))
+fun <T, C> TypedDataFrame<T>.update(vararg cols: KProperty<C>) = update(getColumns(cols))
+fun <T, C> TypedDataFrame<T>.update(vararg cols: TypedCol<C>) = update(cols.asIterable())
+fun <T, C> TypedDataFrame<T>.update(cols: ColumnsSelector<T, C>) = update(getColumns(cols))
+
+fun <C> List<ColumnSet<C>>.toColumnSet() = ColumnGroup(this)
+
+inline fun <reified C> TypedDataFrameWithColumns<*>.colsOfType(filter: (TypedColData<C>) -> Boolean = { true }) = cols.filter { it.valueClass.isSubclassOf(C::class) && filter(it.cast()) }.map { it.cast<C>() }.toColumnSet()

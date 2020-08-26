@@ -4,7 +4,7 @@ import kotlin.reflect.KProperty
 
 internal fun <T> GroupedDataFrame<T>.getColumns(selector: ColumnsSelector<T,*>) =
         TypedDataFrameWithColumnsForSelectImpl(groups.first())
-                .let { selector(it, it).extractColumns() }
+                .let { it.extractColumns(selector(it, it)) }
 
 internal fun <T> GroupedDataFrame<T>.getSortColumns(selector: SortColumnSelector<T,Comparable<*>>) =
         TypedDataFrameWithColumnsForSortImpl(groups.first())

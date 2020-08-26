@@ -92,7 +92,7 @@ class SpreadTests {
     fun gather() {
 
         val res = typed.spread { key into value }
-        val gathered = res.gather(namesTo = "key", valuesTo = "value") { columns[1 until ncol] }
+        val gathered = res.gather { cols[1 until ncol] }.into("key" to "value")
         gathered shouldBe typed
     }
 
@@ -100,7 +100,7 @@ class SpreadTests {
     fun `gather with filter`() {
 
         val res = typed.spread { key into value }
-        val gathered = res.gather(namesTo = "key", valuesTo = "value", filter = { it != null }) { columns[1 until ncol] }
+        val gathered = res.gather { cols[1 until ncol] }.where { it != null }.into("key" to "value")
         gathered shouldBe typed.filterNotNull { value }
     }
 }
