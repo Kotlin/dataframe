@@ -99,16 +99,21 @@ fun Iterable<KClass<*>>.withMostSuperclasses() = maxBy { it.allSuperclasses.size
 fun commonParents(vararg classes: KClass<*>) = commonParents(classes.toList())
 
 fun commonParents(classes: Iterable<KClass<*>>) =
-        classes.distinct().let {
-            when {
-                it.size == 1 -> listOf(it[0]) // if there is only one class - return it
-                else -> it.fold(null as (Set<KClass<*>>?)) { set, clazz ->
-                    // collect a set of all common superclasses from original classes
-                    val superclasses = clazz.allSuperclasses + clazz
-                    set?.intersect(superclasses) ?: superclasses.toSet()
-                }!!.let {
-                    it - it.flatMap { it.superclasses } // leave only 'leaf' classes, that are not super to some other class in a set
-                }.toList()
+        when {
+            !classes.any() -> emptyList()
+            else -> {
+                classes.distinct().let {
+                    when {
+                        it.size == 1 -> listOf(it[0]) // if there is only one class - return it
+                        else -> it.fold(null as (Set<KClass<*>>?)) { set, clazz ->
+                            // collect a set of all common superclasses from original classes
+                            val superclasses = clazz.allSuperclasses + clazz
+                            set?.intersect(superclasses) ?: superclasses.toSet()
+                        }!!.let {
+                            it - it.flatMap { it.superclasses } // leave only 'leaf' classes, that are not super to some other class in a set
+                        }.toList()
+                    }
+                }
             }
         }
 
@@ -171,6 +176,31 @@ fun <T> TypedDataFrame<T>.update(vararg cols: String) = update(getColumns(cols))
 fun <T, C> TypedDataFrame<T>.update(vararg cols: KProperty<C>) = update(getColumns(cols))
 fun <T, C> TypedDataFrame<T>.update(vararg cols: TypedCol<C>) = update(cols.asIterable())
 fun <T, C> TypedDataFrame<T>.update(cols: ColumnsSelector<T, C>) = update(getColumns(cols))
+
+// Move
+
+fun <T> TypedDataFrame<T>.moveTo(newColumnIndex: Int, cols: ColumnsSelector<T, *>) = moveTo(newColumnIndex, getColumns(cols) as Iterable<Column>)
+fun <T> TypedDataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: String) = moveTo(newColumnIndex, getColumns(cols))
+fun <T> TypedDataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: KProperty<*>) = moveTo(newColumnIndex, getColumns(cols))
+fun <T> TypedDataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: Column) = moveTo(newColumnIndex, cols.asIterable())
+fun <T> TypedDataFrame<T>.moveTo(newColumnIndex: Int, cols: Iterable<Column>): TypedDataFrame<T> {
+    val columnsToMove = cols.map { this[it] }
+    val otherColumns = columns - columnsToMove
+    val newColumnList = otherColumns.subList(0, newColumnIndex) + columnsToMove + otherColumns.subList(newColumnIndex, otherColumns.size)
+    return dataFrameOf(newColumnList).typed()
+}
+
+fun <T> TypedDataFrame<T>.moveToLeft(cols: ColumnsSelector<T, *>) = moveToLeft(getColumns(cols))
+fun <T> TypedDataFrame<T>.moveToLeft(cols: Iterable<Column>) = moveTo(0, cols)
+fun <T> TypedDataFrame<T>.moveToLeft(vararg cols: String) = moveToLeft(getColumns(cols))
+fun <T> TypedDataFrame<T>.moveToLeft(vararg cols: Column) = moveToLeft(cols.asIterable())
+fun <T> TypedDataFrame<T>.moveToLeft(vararg cols: KProperty<*>) = moveToLeft(getColumns(cols))
+
+fun <T> TypedDataFrame<T>.moveToRight(cols: Iterable<Column>) = moveTo(ncol - cols.count(), cols)
+fun <T> TypedDataFrame<T>.moveToRight(cols: ColumnsSelector<T, *>) = moveToRight(getColumns(cols))
+fun <T> TypedDataFrame<T>.moveToRight(vararg cols: String) = moveToRight(getColumns(cols))
+fun <T> TypedDataFrame<T>.moveToRight(vararg cols: Column) = moveToRight(cols.asIterable())
+fun <T> TypedDataFrame<T>.moveToRight(vararg cols: KProperty<*>) = moveToRight(getColumns(cols))
 
 fun <C> List<ColumnSet<C>>.toColumnSet() = ColumnGroup(this)
 

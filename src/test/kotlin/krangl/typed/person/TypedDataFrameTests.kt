@@ -126,7 +126,7 @@ class TypedDataFrameTests : BaseTest() {
 
         val updated = typed.update { allColumns }.withNull()
 
-       // updated.forEach {  }
+        // updated.forEach {  }
         updated.columns.forEach {
             it.values.forEach { it shouldBe null }
         }
@@ -315,6 +315,35 @@ class TypedDataFrameTests : BaseTest() {
     fun `select by type not nullable`() {
         val selected = typed.select { colsOfType<String> { !it.nullable } }
         selected shouldBe typed.select { name }
+    }
+
+    @Test
+    fun `move one column`() {
+        val moved = typed.moveTo(1) { city }
+        val expected = typed.select { cols(name, city, age, weight) }
+        moved shouldBe expected
+    }
+
+
+    @Test
+    fun `move several columns`() {
+        val moved = typed.moveTo(2) { name and city }
+        val expected = typed.select { cols(age, weight, name, city) }
+        moved shouldBe expected
+    }
+
+    @Test
+    fun `move several columns to left`() {
+        val moved = typed.moveToLeft { weight and age }
+        val expected = typed.select { cols(weight, age, name, city) }
+        moved shouldBe expected
+    }
+
+    @Test
+    fun `move several columns to right`() {
+        val moved = typed.moveToRight { weight and name }
+        val expected = typed.select { cols(age, city, weight, name) }
+        moved shouldBe expected
     }
 
     @Test
@@ -605,6 +634,15 @@ class TypedDataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `spread to bool with conversion`() {
+        val res = typed.spread { city.map { it?.decapitalize() } }
+        val cities = typed.city.values.filterNotNull()
+        val gathered = res.gather { colsOfType<Boolean> { cities.contains(it.name.capitalize()) } }.where { it }.into("city")
+        val expected = typed.update { city }.with { it?.decapitalize() }.filterNotNull { city }.moveToRight { city }
+        gathered shouldBe expected
+    }
+
+    @Test
     fun `spread to bool distinct rows`() {
         val res = typed.spread { city }
         res.ncol shouldBe typed.ncol + typed.city.ndistinct - 2
@@ -638,7 +676,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun `spread to bool with groupKey`() {
-        val res = typed.spread { city with name }
+        val res = typed.spread { city groupedBy name }
         val expected = typed.select { name + city }.spread { city }
 
         res shouldBe expected

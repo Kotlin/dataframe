@@ -21,13 +21,20 @@ interface TypedCol<out C> : ColumnSet<C> {
     operator fun invoke(row: TypedDataFrameRow<*>) = row[this]
 }
 
-interface TypedColumnPair<out A>: TypedCol<A> {
+interface TypedColumnPair<out A> : TypedCol<A> {
     val firstColumn: TypedCol<A>
     val secondColumn: DataCol?
     var groupingColumns: ColumnSet<*>?
 }
 
-class TypedColumnPairImpl<A>(override val firstColumn: TypedCol<A>, override val secondColumn: DataCol?, override var groupingColumns: ColumnSet<*>? = null): TypedCol<A> by firstColumn, TypedColumnPair<A>
+interface ConvertedColumn<out C> : TypedColData<C> {
+    val srcColumn: DataCol
+    val data: TypedColData<C>
+}
+
+class ConvertedColumnImpl<C>(override val srcColumn: DataCol, override val data: TypedColData<C>) : ConvertedColumn<C>, TypedColData<C> by data
+
+class TypedColumnPairImpl<A>(override val firstColumn: TypedCol<A>, override val secondColumn: DataCol?, override var groupingColumns: ColumnSet<*>? = null) : TypedCol<A> by firstColumn, TypedColumnPair<A>
 
 typealias Column = TypedCol<*>
 
@@ -94,7 +101,7 @@ class TypedDataCol<T>(override val values: List<T>, override val nullable: Boole
 
     override val ndistinct = toSet().size
 
-    override fun distinct()= TypedDataCol(toSet().toList(), nullable, name, valueClass)
+    override fun distinct() = TypedDataCol(toSet().toList(), nullable, name, valueClass)
 }
 
 inline fun <reified T> TypedCol<T>.withValues(values: List<T>, hasNulls: Boolean) = TypedDataCol(values, hasNulls, name, T::class)
@@ -123,7 +130,9 @@ fun DataCol.getRows(mask: BooleanArray): DataCol {
     return TypedDataCol(newValues, nullable, name, valueClass)
 }
 
-fun DataCol.rename(newName: String) = if(newName == name) this else TypedDataCol(values, nullable, newName, valueClass)
+fun <C> TypedColData<C>.rename(newName: String) = if (newName == name) this else TypedDataCol(values, nullable, newName, valueClass)
+
+fun <C> TypedColData<C>.ensureUniqueName(nameGenerator: ColumnNameGenerator) = rename(nameGenerator.createUniqueName(name))
 
 class InplaceColumnBuilder(val name: String) {
     inline operator fun <reified T> invoke(vararg values: T) = column(name, values.toList())
@@ -161,11 +170,11 @@ fun column(name: String, values: List<Any?>, hasNulls: Boolean, clazz: KClass<*>
 
 fun <T> TypedValues<T>.contains(value: T) = (this as TypedDataCol<T>).contains(value)
 
-class ColumnNameGenerator(private val columnNames: List<String>){
+class ColumnNameGenerator(columnNames: List<String>) {
 
     private val usedNames = columnNames.toMutableSet()
 
-    fun createUniqueName(preferredName: String): String{
+    fun createUniqueName(preferredName: String): String {
         var name = preferredName
         var k = 2
         while (usedNames.contains(name)) {
@@ -177,3 +186,11 @@ class ColumnNameGenerator(private val columnNames: List<String>){
 }
 
 inline fun TypedDataFrame<*>.nameGenerator() = ColumnNameGenerator(columnNames())
+
+internal fun <T, R> TypedColData<T>.mapValues(transform: (T) -> R) = map(transform)
+
+fun <T, R> TypedColData<T>.map(transform: (T) -> R): TypedColData<R> {
+    val collector = ColumnDataCollector(size)
+    values.forEach { collector.add(transform(it)) }
+    return collector.toColumn(name).cast()
+}

@@ -8,23 +8,34 @@ fun <T> TypedDataFrame<T>.spread(columnSelector: TypedDataFrameForSpread<T>.(Typ
     return when (val column = columnSelector(receiver, receiver)) {
         is TypedColumnPair<String?> -> {
             if (column.secondColumn != null)
-                spreadToPair(this[column.firstColumn], column.secondColumn!!, column.groupingColumns)
+                spreadToPair(column.firstColumn, column.secondColumn!!, column.groupingColumns)
             else spreadToBool(column.firstColumn, column.groupingColumns)
         }
         else -> spreadToBool(column, null)
     }
 }
 
-internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedColData<String?>, valueColumn: DataCol, groupBy: ColumnSet<*>?): TypedDataFrame<T> {
-    val keys = keyColumn.toSet()
+internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, valueColumn: DataCol, groupBy: ColumnSet<*>?): TypedDataFrame<T> {
+
     val nameGenerator = nameGenerator()
-    val groupingColumns = groupBy?.let { extractColumns(it) } ?: columns - keyColumn - valueColumn
-    var dataFrame = this
-    var valueColumnIndex = columns.indexOf(valueColumn)
-    if (valueColumnIndex == -1) {
-        dataFrame = this + valueColumn.rename(nameGenerator.createUniqueName(valueColumn.name))
-        valueColumnIndex = dataFrame.ncol - 1
+
+    val (df1, keySrcColumn, keyColumnData) = extractConvertedColumn(this, keyColumn, nameGenerator)
+    val (dataFrame, valueSrcColumn, valueColumnData) = extractConvertedColumn(df1, valueColumn, nameGenerator)
+
+    val keys = keyColumnData.toSet()
+
+    val groupingColumns = when {
+        groupBy != null -> extractColumns(groupBy)
+        else -> {
+            val columnsToRemove = listOf(keySrcColumn, valueSrcColumn).filterNotNull()
+            columns - columnsToRemove
+        }
     }
+
+    val valueColumnIndex = dataFrame.getColumnIndex(valueColumnData.name)
+
+    assert(valueColumnIndex != -1)
+
     val grouped = dataFrame.groupBy(groupingColumns)
     return grouped.aggregate {
         keys.forEach { key ->
@@ -33,7 +44,7 @@ internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedColData<String?>
                 var hasNulls = false
                 val classes = mutableSetOf<KClass<*>>()
                 val values = groups.map { group ->
-                    val valueRows = group.filter { it[keyColumn] == columnName }.distinct()
+                    val valueRows = group.filter { it[keyColumnData] == columnName }.distinct()
                     when (valueRows.nrow) {
                         0 -> {
                             hasNulls = true
@@ -59,20 +70,44 @@ internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedColData<String?>
     }
 }
 
-internal fun <T> TypedDataFrame<T>.spreadToBool(columnDef: TypedCol<String?>, groupBy: ColumnSet<*>?): TypedDataFrame<T> {
+internal fun extractOriginalColumn(column: Column): Column = when (column) {
+    is ConvertedColumn<*> -> extractOriginalColumn(column.srcColumn)
+    else -> column
+}
 
-    val column = this[columnDef]
-    val values = column.toSet()
+internal fun <T, C> extractConvertedColumn(df: TypedDataFrame<T>, col: TypedCol<C>, nameGenerator: ColumnNameGenerator): Triple<TypedDataFrame<T>, Column?, TypedColData<C>> =
+        when {
+            col is ConvertedColumn<C> -> {
+                val srcColumn = extractOriginalColumn(col.srcColumn)
+                val columnData = col.data.ensureUniqueName(nameGenerator)
+                Triple(df + columnData, srcColumn, columnData)
+            }
+            col.name.isEmpty() -> {
+                val colData = col as TypedColData<C>
+                val renamed = colData.rename(nameGenerator.createUniqueName("columnData"))
+                Triple(df + renamed, null, renamed)
+            }
+            else -> Triple(df, col, df[col])
+        }
+
+internal fun <T> TypedDataFrame<T>.spreadToBool(col: TypedCol<String?>, groupBy: ColumnSet<*>?): TypedDataFrame<T> {
+
     val nameGenerator = nameGenerator()
-    val groupingColumns = groupBy?.let { extractColumns(it) } ?: columns - column
 
-    val grouped = groupBy(groupingColumns)
+    val (dataFrame, srcColumn, columnData) = extractConvertedColumn(this, col, nameGenerator)
+
+    val valueColumnIndex = dataFrame.columns.indexOf(columnData)
+    val values = columnData.toSet()
+
+    val groupingColumns = groupBy?.let { extractColumns(it) } ?: srcColumn?.let { columns - it } ?: columns
+
+    val grouped = dataFrame.groupBy(groupingColumns)
     return grouped.aggregate {
         values.forEach { value ->
             if (value != null) {
-                val columnName = nameGenerator.createUniqueName(value)
+                val columnName = nameGenerator.createUniqueName(value.toString())
                 add(columnName) {
-                    it.any { it[column] == value }
+                    it.any { it[valueColumnIndex] == value }
                 }
             }
         }
