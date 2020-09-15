@@ -69,13 +69,15 @@ interface TypedDataFrameForSpread<out T> : TypedDataFrame<T> {
 
     infix fun TypedCol<String?>.into(other: TypedCol<*>) = TypedColumnPairImpl(this, get(other))
 
-    infix fun TypedCol<String?>.into(selector: RowSelector<T, Any?>) = TypedColumnPairImpl(this, new("temp", selector))
+    infix fun TypedCol<String?>.into(selector: RowSelector<T, Any?>) = TypedColumnPairImpl(this, new("", selector))
+
+    fun <C, R> TypedCol<C>.map(transform: (C) -> R): TypedColData<R> = get(this).let { ConvertedColumnImpl(it, it.mapValues(transform)) }
 
     fun groupKey(vararg columns: Column) = ColumnGroup(columns.toList())
 
-    infix fun <A> TypedColumnPair<A>.with(key: ColumnSet<*>) = TypedColumnPairImpl(firstColumn, secondColumn, key)
+    infix fun <A> TypedColumnPair<A>.groupedBy(key: ColumnSet<*>) = TypedColumnPairImpl(firstColumn, secondColumn, key)
 
-    infix fun <A> TypedCol<A>.with(key: ColumnSet<*>) = TypedColumnPairImpl(this, null, key)
+    infix fun <A> TypedCol<A>.groupedBy(key: ColumnSet<*>) = TypedColumnPairImpl(this, null, key)
 }
 
 open class TypedDataFrameWithColumnsForSelectImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameWithColumnsForSelect<T> {
@@ -164,7 +166,9 @@ interface TypedDataFrame<out T> {
     fun getRows(mask: BooleanArray): TypedDataFrame<T>
     fun getRows(range: IntRange) = getRows(range.toList())
 
-    fun tryGetColumn(name: String): DataCol?
+    fun getColumnIndex(name: String): Int
+    fun getColumnIndex(col: DataCol) = getColumnIndex(col.name)
+    fun tryGetColumn(name: String) = getColumnIndex(name).let { if(it != -1) columns[it] else null }
 
     fun <C> select(columns: Iterable<TypedCol<C>>) = new(columns.map { this[it] })
     fun select(vararg columns: Column) = select(columns.toList())
@@ -252,8 +256,8 @@ interface TypedDataFrame<out T> {
     fun drop(numRows: Int) = getRows(numRows until nrow)
     fun takeLast(numRows: Int) = getRows(nrow - numRows until nrow)
     fun skipLast(numRows: Int) = getRows(0 until nrow - numRows)
-    fun head(numRows: Int) = take(numRows)
-    fun tail(numRows: Int) = takeLast(numRows)
+    fun head(numRows: Int = 5) = take(numRows)
+    fun tail(numRows: Int = 5) = takeLast(numRows)
     fun reorder(permutation: List<Int>) = columns.map { it.reorder(permutation) }.let { dataFrameOf(it).typed<T>() }
     fun shuffled() = reorder((0 until nrow).shuffled())
     fun <K, V> associate(transform: RowSelector<T, Pair<K, V>>) = rows.associate { transform(it, it) }
@@ -311,7 +315,7 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
 
     override val nrow = columns.firstOrNull()?.size ?: 0
 
-    private val columnsMap by lazy { columns.associateBy { it.name } }
+    private val columnsMap by lazy { columns.withIndex().associateBy({ it.value.name }, { it.index }) }
 
     init {
         val invalidSizeColumns = columns.filter { it.size != nrow }
@@ -399,7 +403,7 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
 
     override fun getRows(mask: BooleanArray) = columns.map { col -> col.getRows(mask) }.let { dataFrameOf(it).typed<T>() }
 
-    override fun tryGetColumn(columnName: String) = columnsMap[columnName]
+    override fun getColumnIndex(columnName: String) = columnsMap[columnName] ?: -1
 
     override fun equals(other: Any?): Boolean {
         val df = other as? TypedDataFrame<*> ?: return false

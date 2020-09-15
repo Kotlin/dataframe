@@ -4,6 +4,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
 import krangl.typed.*
 import org.junit.Test
+import java.io.Serializable
 
 class SpreadTests {
 
@@ -64,7 +65,7 @@ class SpreadTests {
     @Test
     fun `spread to pair with group key and conversion`() {
 
-        val res = typed.spread { key into { value.toString() } with name }
+        val res = typed.spread { key into { value.toString() } groupedBy name }
 
         res.ncol shouldBe 1 + typed.key.ndistinct
         res.nrow shouldBe typed.name.ndistinct
@@ -99,8 +100,42 @@ class SpreadTests {
     @Test
     fun `gather with filter`() {
 
-        val res = typed.spread { key into value }
-        val gathered = res.gather { cols[1 until ncol] }.where { it != null }.into("key" to "value")
+        val spread = typed.spread { key into value }
+        val gathered = spread.gather { cols[1 until ncol] }.where { it != null }.into("key" to "value")
         gathered shouldBe typed.filterNotNull { value }
+    }
+
+    @Test
+    fun `spread with key conversion`() {
+
+        val spread = typed.spread { key.map { "__$it" } into value }
+        val gathered = spread.gather { cols[1 until ncol] }.into("key" to "value")
+        gathered shouldBe typed.update { key }.with { "__$it" }
+    }
+
+    @Test
+    fun `spread with value conversion`() {
+
+        val converter: (Any?) -> Any? = { if (it is Int) it.toDouble() else it }
+        val spread = typed.spread { key into value.map(converter) }
+        val gathered = spread.gather { cols[1 until ncol] }.into("key" to "value")
+        val expected = typed.update { value }.with { converter(it) as? Serializable }
+        gathered shouldBe expected
+    }
+
+    @Test
+    fun `gather with value conversion`() {
+
+        val spread = typed.spread { key into value.map {if(it is Int) it.toDouble() else it} }
+        val gathered = spread.gather { cols[1 until ncol] }.mapValues { if(it is Double) it.toInt() else it }.into("key" to "value")
+        gathered shouldBe typed
+    }
+
+    @Test
+    fun `gather with name conversion`() {
+
+        val spread = typed.spread { key.map { "__$it" } into value }
+        val gathered = spread.gather { cols[1 until ncol] }.mapNames { it.substring(2) }.into("key" to "value")
+        gathered shouldBe typed
     }
 }
