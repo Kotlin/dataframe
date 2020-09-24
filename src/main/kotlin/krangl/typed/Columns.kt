@@ -50,8 +50,6 @@ interface TypedColData<out T> : TypedCol<T>, TypedValues<T> {
 
 typealias DataCol = TypedColData<*>
 
-typealias SrcDataCol = krangl.DataCol
-
 class NamedColumnImpl<C>(override val name: String) : TypedCol<C>
 
 fun String.toColumn() = NamedColumnImpl<Any?>(this)
@@ -170,7 +168,7 @@ fun column(name: String, values: List<Any?>, hasNulls: Boolean, clazz: KClass<*>
 
 fun <T> TypedValues<T>.contains(value: T) = (this as TypedDataCol<T>).contains(value)
 
-class ColumnNameGenerator(columnNames: List<String>) {
+class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
 
     private val usedNames = columnNames.toMutableSet()
 

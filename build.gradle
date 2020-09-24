@@ -37,7 +37,7 @@ repositories {
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib"
     compile "org.jetbrains.kotlin:kotlin-reflect"
-    compile 'org.jetbrains.kotlin:krangl:0.12'
+    //compile 'org.jetbrains.kotlin:krangl:0.12'
 //    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
 

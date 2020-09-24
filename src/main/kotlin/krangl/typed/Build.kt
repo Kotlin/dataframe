@@ -46,17 +46,6 @@ fun dataFrameOf(vararg header: String) = DataFrameBuilder(header.toList())
 
 fun Iterable<DataCol>.asDataFrame() = dataFrameOf(this)
 
-fun SrcDataCol.typed() = when (this) {
-    is IntCol -> column(name, values.toList(), hasNulls)
-    is LongCol -> column(name, values.toList(), hasNulls)
-    is StringCol -> column(name, values.toList(), hasNulls)
-    is BooleanCol -> column(name, values.toList(), hasNulls)
-    is DoubleCol -> column(name, values.toList(), hasNulls)
-    is AnyCol -> column(name, values.toList(), hasNulls)
-    else -> column(name, values().toList(), hasNulls)
-}
-
-
 class DataFrameBuilder(private val columnNames: List<String>) {
 
     operator fun invoke(vararg values: Any?): UntypedDataFrame {
