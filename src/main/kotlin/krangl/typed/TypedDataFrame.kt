@@ -1,6 +1,5 @@
 package krangl.typed
 
-import krangl.DataFrame
 import java.util.*
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubclassOf
@@ -420,8 +419,6 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
         return union(df).typed()
     }
 }
-
-fun <T> DataFrame.typed(): TypedDataFrame<T> = TypedDataFrameImpl(cols.map { it.typed() })
 
 fun <T> TypedDataFrame<*>.typed(): TypedDataFrame<T> = TypedDataFrameImpl(columns)
 

@@ -1,6 +1,5 @@
 package krangl.typed
 
-import krangl.DataFrame
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.allSuperclasses
@@ -65,7 +64,7 @@ inline fun <T, reified R> TypedDataFrame<T>.groupBy(name: String = "key", noinli
 
 // size
 
-val DataFrame.size: DataFrameSize get() = DataFrameSize(ncol, nrow)
+val TypedDataFrame<*>.size: DataFrameSize get() = DataFrameSize(ncol, nrow)
 
 // toList
 
@@ -205,3 +204,12 @@ fun <T> TypedDataFrame<T>.moveToRight(vararg cols: KProperty<*>) = moveToRight(g
 fun <C> List<ColumnSet<C>>.toColumnSet() = ColumnGroup(this)
 
 inline fun <reified C> TypedDataFrameWithColumns<*>.colsOfType(filter: (TypedColData<C>) -> Boolean = { true }) = cols.filter { it.valueClass.isSubclassOf(C::class) && filter(it.cast()) }.map { it.cast<C>() }.toColumnSet()
+
+fun <T> TypedDataFrame<T>.summary() =
+    columns.toDataFrame {
+        "column" { name }
+        "type" { valueClass.simpleName }
+        "distinct values" { ndistinct }
+        "nulls %" { values.count { it == null }.toDouble() * 100 / values.size.let { if (it == 0) 1 else it } }
+        "most frequent value" { values.groupBy { it }.maxBy { it.value.size }?.key }
+    }

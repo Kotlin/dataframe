@@ -7,7 +7,9 @@ class ReadTests {
 
     @Test
     fun readCensus(){
-        val df = read("../jupyter notebooks/Kotlin/Census/cleanedCensus.csv")
+        val df = readCSV("../jupyter notebooks/Kotlin/Census/cleanedCensus.csv")
         println(df)
+
+        println(df.summary())
     }
 }
