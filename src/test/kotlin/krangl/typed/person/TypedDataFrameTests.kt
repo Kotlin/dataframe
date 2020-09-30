@@ -621,7 +621,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun `spread to bool`() {
-        val res = typed.spread { city }
+        val res = typed.spread { city }.intoFlags()
         res.ncol shouldBe typed.ncol + typed.city.ndistinct - 2
 
         for (i in 0 until typed.nrow) {
@@ -635,7 +635,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun `spread to bool with conversion`() {
-        val res = typed.spread { city.map { it?.decapitalize() } }
+        val res = typed.spread { city.map { it?.decapitalize() } }.intoFlags()
         val cities = typed.city.values.filterNotNull()
         val gathered = res.gather { colsOfType<Boolean> { cities.contains(it.name.capitalize()) } }.where { it }.into("city")
         val expected = typed.update { city }.with { it?.decapitalize() }.filterNotNull { city }.moveToRight { city }
@@ -644,7 +644,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun `spread to bool distinct rows`() {
-        val res = typed.spread { city }
+        val res = typed.spread { city }.intoFlags()
         res.ncol shouldBe typed.ncol + typed.city.ndistinct - 2
 
         for (i in 0 until typed.nrow) {
@@ -659,7 +659,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `spread to bool merged rows`() {
         val selected = typed.select { name + city }
-        val res = selected.spread { city }
+        val res = selected.spread { city }.intoFlags()
 
         res.ncol shouldBe selected.city.ndistinct
         res.nrow shouldBe selected.name.ndistinct
@@ -672,14 +672,6 @@ class TypedDataFrameTests : BaseTest() {
         }.toSet()
 
         pairs shouldBe typed.filter { city != null }.map { name to city!! }.toSet()
-    }
-
-    @Test
-    fun `spread to bool with groupKey`() {
-        val res = typed.spread { city groupedBy name }
-        val expected = typed.select { name + city }.spread { city }
-
-        res shouldBe expected
     }
 
     @Test
@@ -696,7 +688,7 @@ class TypedDataFrameTests : BaseTest() {
                 .splitRows { others }
                 .add(sum) { name.length + other().length }
 
-        val matrix = src.spread { other into sum }
+        val matrix = src.spread { other }.into { sum }
         matrix.ncol shouldBe 1 + names.size
 
         println(matrix)
@@ -705,7 +697,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `gather bool`() {
         val selected = typed.select { name + city }
-        val spread = selected.spread { city }
+        val spread = selected.spread { city }.intoFlags()
         val res = spread.gather { colsOfType<Boolean>() }.where { it }.into("city")
         val sorted = res.sortBy { name then city }
         sorted shouldBe selected.filterNotNull { city }.distinct().sortBy { name then city }
