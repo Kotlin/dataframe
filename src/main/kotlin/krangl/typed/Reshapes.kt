@@ -3,17 +3,14 @@ package krangl.typed
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
-fun <T> TypedDataFrame<T>.spread(columnSelector: TypedDataFrameForSpread<T>.(TypedDataFrameForSpread<T>) -> TypedCol<String?>): TypedDataFrame<T> {
-    val receiver = TypedDataFrameForSpreadImpl(this)
-    return when (val column = columnSelector(receiver, receiver)) {
-        is TypedColumnPair<String?> -> {
-            if (column.secondColumn != null)
-                spreadToPair(column.firstColumn, column.secondColumn!!, column.groupingColumns)
-            else spreadToBool(column.firstColumn, column.groupingColumns)
-        }
-        else -> spreadToBool(column, null)
-    }
-}
+class SpreadClause<T, K>(val df: TypedDataFrame<T>, val keyColumn: TypedColData<K>)
+
+fun <T, C> TypedDataFrame<T>.spread(keySelector: SpreadColumnSelector<T, C>) =
+        SpreadClause(this, getColumn(keySelector))
+
+fun <T, C, V : String?> SpreadClause<T, V>.into(valueSelector: SpreadColumnSelector<T, C>) = df.spreadToPair(keyColumn, df.getColumn(valueSelector), null)
+
+fun <T, V : String?> SpreadClause<T, V>.intoFlags() = df.spreadToBool(keyColumn, null)
 
 internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, valueColumn: DataCol, groupBy: ColumnSet<*>?): TypedDataFrame<T> {
 
@@ -219,6 +216,18 @@ fun <T> TypedDataFrame<T>.splitRows(selector: ColumnSelector<T, List<*>>): Typed
     }
     return dataFrameOf(resultColumns).typed<T>()
 }
+
+class MergeColsClause<T, C, R>(val df: TypedDataFrame<T>, val columns: List<TypedColData<C>>, val transform: (List<C>) -> R)
+
+fun <T, C> TypedDataFrame<T>.mergeCols2(selector: ColumnsSelector<T, C>) = MergeColsClause<T, C, List<C>>(this, getColumns(selector), { it })
+
+inline fun <T, C, reified R> MergeColsClause<T, C, R>.into(columnName: String) = df.add(columnName)
+{ row ->
+    transform(columns.map { it[row.index] })
+} - columns
+
+fun <T, C> MergeColsClause<T, C, String>.joinToString(separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "") =
+        MergeColsClause<T, C, String>(df, columns) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix) }
 
 fun <T> TypedDataFrame<T>.mergeCols(newColumn: String, selector: ColumnsSelector<T, *>) = mergeCols(newColumn, { list -> list }, selector)
 

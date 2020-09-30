@@ -64,19 +64,7 @@ interface TypedDataFrameWithColumnsForSort<out T> : TypedDataFrameWithColumns<T>
 
 interface TypedDataFrameForSpread<out T> : TypedDataFrame<T> {
 
-    infix fun TypedCol<String?>.into(other: DataCol) = TypedColumnPairImpl(this, other)
-
-    infix fun TypedCol<String?>.into(other: TypedCol<*>) = TypedColumnPairImpl(this, get(other))
-
-    infix fun TypedCol<String?>.into(selector: RowSelector<T, Any?>) = TypedColumnPairImpl(this, new("", selector))
-
     fun <C, R> TypedCol<C>.map(transform: (C) -> R): TypedColData<R> = get(this).let { ConvertedColumnImpl(it, it.mapValues(transform)) }
-
-    fun groupKey(vararg columns: Column) = ColumnGroup(columns.toList())
-
-    infix fun <A> TypedColumnPair<A>.groupedBy(key: ColumnSet<*>) = TypedColumnPairImpl(firstColumn, secondColumn, key)
-
-    infix fun <A> TypedCol<A>.groupedBy(key: ColumnSet<*>) = TypedColumnPairImpl(this, null, key)
 }
 
 open class TypedDataFrameWithColumnsForSelectImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameWithColumnsForSelect<T> {
@@ -98,6 +86,8 @@ typealias ColumnsSelector<T, C> = TypedDataFrameWithColumnsForSelect<T>.(TypedDa
 
 typealias ColumnSelector<T, C> = TypedDataFrameWithColumnsForSelect<T>.(TypedDataFrameWithColumnsForSelect<T>) -> TypedCol<C>
 
+typealias SpreadColumnSelector<T, C> = TypedDataFrameForSpread<T>.(TypedDataFrameForSpread<T>) -> TypedCol<C>
+
 typealias SortColumnSelector<T, C> = TypedDataFrameWithColumnsForSort<T>.(TypedDataFrameWithColumnsForSort<T>) -> ColumnSet<C>
 
 internal fun <T, C> TypedDataFrame<T>.extractColumns(set: ColumnSet<C>): List<TypedColData<C>> = when (set) {
@@ -118,6 +108,14 @@ internal fun <C> ColumnSet<C>.extractSortColumns(): List<SortColumnDescriptor> =
 internal fun <T, C> TypedDataFrame<T>.getColumns(selector: ColumnsSelector<T, C>) = TypedDataFrameWithColumnsForSelectImpl(this).let { extractColumns(selector(it, it)) }
 
 internal fun <T, C> TypedDataFrame<T>.getColumn(selector: ColumnSelector<T, C>) = TypedDataFrameWithColumnsForSelectImpl(this).let { selector(it, it) }.let { this[it] }
+
+@JvmName("getColumnForSpread")
+internal fun <T, C> TypedDataFrame<T>.getColumn(selector: SpreadColumnSelector<T, C>) = TypedDataFrameForSpreadImpl(this).let { selector(it, it) }.let {
+    when(it){
+        is ConvertedColumn<C> -> it
+        else -> this[it]
+    }
+}
 
 internal fun <T, C> TypedDataFrame<T>.getSortColumns(selector: SortColumnSelector<T, C>) = TypedDataFrameWithColumnsForSortImpl(this).let { selector(it, it).extractSortColumns() }
 

@@ -43,7 +43,7 @@ class SpreadTests {
     @Test
     fun `spread to pair`() {
 
-        val res = typed.spread { key into value }
+        val res = typed.spread { key }.into { value }
         res.ncol shouldBe 1 + typed.key.ndistinct
         res.nrow shouldBe typed.name.ndistinct
 
@@ -65,7 +65,7 @@ class SpreadTests {
     @Test
     fun `spread to pair with group key and conversion`() {
 
-        val res = typed.spread { key into { value.toString() } groupedBy name }
+        val res = typed.spread { key }.into { value.map { it.toString() } }
 
         res.ncol shouldBe 1 + typed.key.ndistinct
         res.nrow shouldBe typed.name.ndistinct
@@ -86,13 +86,13 @@ class SpreadTests {
         val values = first.values.toTypedArray()
         values[2] = 20
         val modified = typed.addRow(*values)
-        shouldThrow<Exception> { modified.spread { key into value } }
+        shouldThrow<Exception> { modified.spread { key }.into { value } }
     }
 
     @Test
     fun gather() {
 
-        val res = typed.spread { key into value }
+        val res = typed.spread { key }.into { value }
         val gathered = res.gather { cols[1 until ncol] }.into("key" to "value")
         gathered shouldBe typed
     }
@@ -100,7 +100,7 @@ class SpreadTests {
     @Test
     fun `gather with filter`() {
 
-        val spread = typed.spread { key into value }
+        val spread = typed.spread { key }.into { value }
         val gathered = spread.gather { cols[1 until ncol] }.where { it != null }.into("key" to "value")
         gathered shouldBe typed.filterNotNull { value }
     }
@@ -108,7 +108,7 @@ class SpreadTests {
     @Test
     fun `spread with key conversion`() {
 
-        val spread = typed.spread { key.map { "__$it" } into value }
+        val spread = typed.spread { key.map { "__$it" } }.into { value }
         val gathered = spread.gather { cols[1 until ncol] }.into("key" to "value")
         gathered shouldBe typed.update { key }.with { "__$it" }
     }
@@ -117,7 +117,7 @@ class SpreadTests {
     fun `spread with value conversion`() {
 
         val converter: (Any?) -> Any? = { if (it is Int) it.toDouble() else it }
-        val spread = typed.spread { key into value.map(converter) }
+        val spread = typed.spread { key }.into { value.map(converter) }
         val gathered = spread.gather { cols[1 until ncol] }.into("key" to "value")
         val expected = typed.update { value }.with { converter(it) as? Serializable }
         gathered shouldBe expected
@@ -126,16 +126,44 @@ class SpreadTests {
     @Test
     fun `gather with value conversion`() {
 
-        val spread = typed.spread { key into value.map {if(it is Int) it.toDouble() else it} }
-        val gathered = spread.gather { cols[1 until ncol] }.mapValues { if(it is Double) it.toInt() else it }.into("key" to "value")
+        val spread = typed.spread { key }.into { value.map { if (it is Int) it.toDouble() else it } }
+        val gathered = spread.gather { cols[1 until ncol] }.mapValues { if (it is Double) it.toInt() else it }.into("key" to "value")
         gathered shouldBe typed
     }
 
     @Test
     fun `gather with name conversion`() {
 
-        val spread = typed.spread { key.map { "__$it" } into value }
+        val spread = typed.spread { key.map { "__$it" } }.into { value }
         val gathered = spread.gather { cols[1 until ncol] }.mapNames { it.substring(2) }.into("key" to "value")
         gathered shouldBe typed
     }
+/*
+    fun qq() {
+
+        typed.update { name }.with { it.capitalize() }
+
+        typed.update { name }.withNull()
+
+        typed.update { name with { it.capitalize() } }
+
+        typed.spread { key into value }
+
+        typed.spread { key.map { "__$it" } into { name + value.toString() } groupedBy(name) }
+
+        typed.spread { key }.intoFlags()
+
+        typed.spread { key }.into { value }
+
+        typed.gather(
+                columns = { name and value },
+                filter = { it != null },
+                mapNames = { it.substring(1) },
+                into = "key" to "value"
+        )
+
+        typed.gather { name and value }.where { it != null }.mapNames { it.substring(1) }.mapValues { it }.into("key" to "value")
+
+        typed.gather { cols[1..5] where { it != null } mapNames { it.substring(1) } mapValues { it } into "key" to "value" }
+    } */
 }
