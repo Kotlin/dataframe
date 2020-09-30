@@ -118,31 +118,33 @@ typealias Predicate<T> = (T) -> Boolean
 
 internal infix fun <T> (Predicate<T>).and(other: Predicate<T>): Predicate<T> = { this(it) && other(it) }
 
-fun <T, C> TypedDataFrame<T>.gather(selector: ColumnsSelector<T, C>) = GatherClause<T, C, String, C>(this, selector, null, { it }, { it })
+fun <T, C> TypedDataFrame<T>.gather(selector: ColumnsSelector<T, C>) = GatherClause(this, selector, null, { it }, { it })
 
 fun <T, C, K, R> GatherClause<T, C, K, R>.where(filter: Predicate<C>) = GatherClause(df, selector, this.filter?.let { it and filter }
         ?: filter,
         nameTransform, valueTransform)
 
-fun <T, C, K, R> GatherClause<T, C, *, R>.mapNames(transform: (String) -> K) = GatherClause<T, C, K, R>(df, selector, filter, transform, valueTransform)
+fun <T, C, K, R> GatherClause<T, C, *, R>.mapNames(transform: (String) -> K) = GatherClause(df, selector, filter, transform, valueTransform)
 
-fun <T, C, K, R> GatherClause<T, C, K, *>.mapValues(transform: (C) -> R) = GatherClause<T, C, K, R>(df, selector, filter, nameTransform, transform)
+fun <T, C, K, R> GatherClause<T, C, K, *>.map(transform: (C) -> R) = GatherClause(df, selector, filter, nameTransform, transform)
 
-inline fun <T, C, reified K, R> GatherClause<T, C, K, R>.into(keyColumn: String) = gatherImpl(keyColumn, null, K::class)
+fun <T, C : Any, K, R> GatherClause<T, C?, K, *>.mapNotNull(transform: (C) -> R) = GatherClause(df, selector, filter, nameTransform, { if (it != null) transform(it) else null })
 
-inline fun <T, C, reified K, R> GatherClause<T, C, K, R>.into(columnPair: Pair<String, String>) = gatherImpl(columnPair.first, columnPair.second, K::class)
+inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String) = gatherImpl(keyColumn, null, K::class, R::class)
 
-fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: String? = null, keyColumnType: KClass<*>): TypedDataFrame<T> {
+inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String, valueColumn: String) = gatherImpl(keyColumn, valueColumn, K::class, R::class)
+
+fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: String? = null, keyColumnType: KClass<*>, valueColumnType: KClass<*>): TypedDataFrame<T> {
 
     val keyColumns = df.getColumns(selector).map { df[it] }
     val otherColumns = df.columns - keyColumns
     val outputColumnsData = otherColumns.map { ArrayList<Any?>() }.toMutableList()
     val keyColumnData = ArrayList<K>()
     val valueColumnData = ArrayList<R>()
-    val classes = mutableSetOf<KClass<*>>()
     val include = filter ?: { true }
     var hasNullValues = false
     val keys = keyColumns.map { nameTransform(it.name) }
+    val classes = if(valueColumnType == Any::class) mutableSetOf<KClass<*>>() else null
     (0 until df.nrow).forEach { row ->
         keyColumns.forEachIndexed { colIndex, col ->
             val value = col[row]
@@ -156,7 +158,8 @@ fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: 
                     valueColumnData.add(dstValue)
                     if (dstValue == null)
                         hasNullValues = true
-                    else classes.add((dstValue as Any).javaClass.kotlin)
+                    else if(classes != null)
+                        classes.add((dstValue as Any).javaClass.kotlin)
                 }
             }
         }
@@ -167,7 +170,7 @@ fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: 
     }.toMutableList()
     resultColumns.add(column(namesTo, keyColumnData, keys.any { it == null }, keyColumnType))
     if (valuesTo != null)
-        resultColumns.add(column(valuesTo, valueColumnData, hasNullValues, classes.commonParent()))
+        resultColumns.add(column(valuesTo, valueColumnData, hasNullValues, classes?.commonParent() ?: valueColumnType))
     return dataFrameOf(resultColumns).typed()
 }
 
@@ -192,7 +195,7 @@ fun <T> TypedDataFrame<T>.splitRows(selector: ColumnSelector<T, List<*>>): Typed
         throw Exception("Column ${nestedColumn.name} must contain values of type `List`")
     }
     val nestedColumnIndex = columns.indexOf(nestedColumn)
-    val column = nestedColumn.cast<List<*>?>()
+    val column = nestedColumn.typed<List<*>?>()
     val outputRowsCount = (0 until nrow).sumBy { row ->
         column[row]?.size ?: 0
     }
@@ -219,17 +222,17 @@ fun <T> TypedDataFrame<T>.splitRows(selector: ColumnSelector<T, List<*>>): Typed
 
 class MergeColsClause<T, C, R>(val df: TypedDataFrame<T>, val columns: List<TypedColData<C>>, val transform: (List<C>) -> R)
 
-fun <T, C> TypedDataFrame<T>.mergeCols2(selector: ColumnsSelector<T, C>) = MergeColsClause<T, C, List<C>>(this, getColumns(selector), { it })
+fun <T, C> TypedDataFrame<T>.mergeCols(selector: ColumnsSelector<T, C>) = MergeColsClause<T, C, List<C>>(this, getColumns(selector), { it })
 
 inline fun <T, C, reified R> MergeColsClause<T, C, R>.into(columnName: String) = df.add(columnName)
 { row ->
     transform(columns.map { it[row.index] })
 } - columns
 
-fun <T, C> MergeColsClause<T, C, String>.joinToString(separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "") =
-        MergeColsClause<T, C, String>(df, columns) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix) }
+fun <T, C, R> MergeColsClause<T, C, R>.by(separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "") =
+        MergeColsClause(df, columns) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix) }
 
-fun <T> TypedDataFrame<T>.mergeCols(newColumn: String, selector: ColumnsSelector<T, *>) = mergeCols(newColumn, { list -> list }, selector)
+fun <T> TypedDataFrame<T>.mergeColsOLD(newColumn: String, selector: ColumnsSelector<T, *>) = mergeCols(newColumn, { list -> list }, selector)
 
 fun <T> TypedDataFrame<T>.mergeColsToString(newColumnName: String, separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "", selector: ColumnsSelector<T, *>) = mergeCols(newColumnName, { list -> list.joinToString(separator = separator, prefix = prefix, postfix = postfix) }, selector)
 
