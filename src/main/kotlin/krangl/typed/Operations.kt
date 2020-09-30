@@ -5,6 +5,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.superclasses
+import kotlin.reflect.typeOf
 
 typealias RowSelector<T, R> = TypedDataFrameRow<T>.(TypedDataFrameRow<T>) -> R
 
@@ -203,13 +204,22 @@ fun <T> TypedDataFrame<T>.moveToRight(vararg cols: KProperty<*>) = moveToRight(g
 
 fun <C> List<ColumnSet<C>>.toColumnSet() = ColumnGroup(this)
 
-inline fun <reified C> TypedDataFrameWithColumns<*>.colsOfType(filter: (TypedColData<C>) -> Boolean = { true }) = cols.filter { it.valueClass.isSubclassOf(C::class) && filter(it.cast()) }.map { it.cast<C>() }.toColumnSet()
+fun <C> TypedDataFrameWithColumns<*>.colsOfType(clazz: KClass<*>, nullable: Boolean, filter: (TypedColData<C>) -> Boolean = { true }) = cols.filter { it.valueClass.isSubclassOf(clazz) && (nullable || !it.nullable) && filter(it.typed()) }.map { it.typed<C>() }.toColumnSet()
+
+@OptIn(kotlin.ExperimentalStdlibApi::class)
+inline fun <reified C> TypedDataFrameWithColumns<*>.colsOfType(noinline filter: (TypedColData<C>) -> Boolean = { true }) = colsOfType(C::class, typeOf<C>().isMarkedNullable, filter)
 
 fun <T> TypedDataFrame<T>.summary() =
-    columns.toDataFrame {
-        "column" { name }
-        "type" { valueClass.simpleName }
-        "distinct values" { ndistinct }
-        "nulls %" { values.count { it == null }.toDouble() * 100 / values.size.let { if (it == 0) 1 else it } }
-        "most frequent value" { values.groupBy { it }.maxBy { it.value.size }?.key }
-    }
+        columns.toDataFrame {
+            "column" { name }
+            "type" { valueClass.simpleName }
+            "distinct values" { ndistinct }
+            "nulls %" { values.count { it == null }.toDouble() * 100 / values.size.let { if (it == 0) 1 else it } }
+            "most frequent value" { values.groupBy { it }.maxBy { it.value.size }?.key }
+        }
+
+data class CastClause<T>(val df: TypedDataFrame<T>, val columns: Set<Column>) {
+    inline fun <reified C> to() = df.columns.map { if (columns.contains(it)) it.cast<C>() else it }.asDataFrame()
+}
+
+fun <T> TypedDataFrame<T>.cast(selector: ColumnsSelector<T, *>) = CastClause(this, getColumns(selector).toSet())

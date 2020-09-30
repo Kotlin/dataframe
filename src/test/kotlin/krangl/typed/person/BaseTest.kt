@@ -30,10 +30,10 @@ open class BaseTest {
     val TypedDataFrameRow<Person>.age get() = this["age"] as Int
     val TypedDataFrameRow<Person>.city get() = this["city"] as String?
     val TypedDataFrameRow<Person>.weight get() = this["weight"] as Int?
-    val TypedDataFrame<Person>.name get() = this["name"].cast<String>()
-    val TypedDataFrame<Person>.age get() = this["age"].cast<Int>()
-    val TypedDataFrame<Person>.city get() = this["city"].cast<String?>()
-    val TypedDataFrame<Person>.weight get() = this["weight"].cast<Int?>()
+    val TypedDataFrame<Person>.name get() = this["name"].typed<String>()
+    val TypedDataFrame<Person>.age get() = this["age"].typed<Int>()
+    val TypedDataFrame<Person>.city get() = this["city"].typed<String?>()
+    val TypedDataFrame<Person>.weight get() = this["weight"].typed<Int?>()
 
     val typed: TypedDataFrame<Person> = df.typed()
 

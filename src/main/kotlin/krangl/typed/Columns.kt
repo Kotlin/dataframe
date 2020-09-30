@@ -81,10 +81,10 @@ class TypedDataCol<T>(override val values: List<T>, override val nullable: Boole
 
         other as TypedDataCol<*>
 
-        if (values != other.values) return false
         if (nullable != other.nullable) return false
         if (name != other.name) return false
         if (valueClass != other.valueClass) return false
+        if (values != other.values) return false
 
         return true
     }
@@ -108,7 +108,9 @@ fun <T> TypedColData<T>.withValues(values: List<T>, hasNulls: Boolean) = TypedDa
 
 fun DataCol.toDataFrame() = dataFrameOf(listOf(this))
 
-inline fun <T> DataCol.cast() = this as TypedColData<T>
+internal fun <T> DataCol.typed() = this as TypedColData<T>
+
+inline fun <reified T> DataCol.cast() = column(name, values, nullable, T::class)
 
 fun <T> TypedColData<T>.reorder(permutation: List<Int>): TypedColData<T> {
     var nullable = false
@@ -190,5 +192,5 @@ internal fun <T, R> TypedColData<T>.mapValues(transform: (T) -> R) = map(transfo
 fun <T, R> TypedColData<T>.map(transform: (T) -> R): TypedColData<R> {
     val collector = ColumnDataCollector(size)
     values.forEach { collector.add(transform(it)) }
-    return collector.toColumn(name).cast()
+    return collector.toColumn(name).typed()
 }

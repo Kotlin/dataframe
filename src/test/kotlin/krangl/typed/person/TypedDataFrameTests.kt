@@ -48,7 +48,7 @@ class TypedDataFrameTests : BaseTest() {
         df[i].int("age").check()
         (df[i]["age"] as Int).check()
 
-        df["age"].cast<Int>()[i].check()
+        df["age"].typed<Int>()[i].check()
         (df["age"][i] as Int).check()
     }
 
@@ -71,7 +71,7 @@ class TypedDataFrameTests : BaseTest() {
         df[i].nstring("city").check()
         (df[i]["city"] as String?).check()
 
-        df["city"].cast<String?>()[i].check()
+        df["city"].typed<String?>()[i].check()
         (df["city"][i] as String?).check()
     }
 
@@ -427,7 +427,7 @@ class TypedDataFrameTests : BaseTest() {
 
         df.min { int("age") }.check()
         df.min { "age"<Int>() }.check()
-        df["age"].cast<Int>().min().check()
+        df["age"].typed<Int>().min().check()
     }
 
     @Test
@@ -445,7 +445,7 @@ class TypedDataFrameTests : BaseTest() {
         df[weight].max().check()
 
         df.max { nint("weight") }.check()
-        df["weight"].cast<Int?>().max().check()
+        df["weight"].typed<Int?>().max().check()
     }
 
     @Test
@@ -628,7 +628,7 @@ class TypedDataFrameTests : BaseTest() {
             val city = typed[i][city]
             if (city != null) res[i][city] == true
             for (j in typed.ncol until res.ncol) {
-                res.columns[j].cast<Boolean>().get(i) shouldBe (res.columns[j].name == city)
+                res.columns[j].typed<Boolean>().get(i) shouldBe (res.columns[j].name == city)
             }
         }
     }
@@ -651,7 +651,7 @@ class TypedDataFrameTests : BaseTest() {
             val city = typed[i][city]
             if (city != null) res[i][city] == true
             for (j in typed.ncol until res.ncol) {
-                res.columns[j].cast<Boolean>().get(i) shouldBe (res.columns[j].name == city)
+                res.columns[j].typed<Boolean>().get(i) shouldBe (res.columns[j].name == city)
             }
         }
     }
@@ -663,11 +663,11 @@ class TypedDataFrameTests : BaseTest() {
 
         res.ncol shouldBe selected.city.ndistinct
         res.nrow shouldBe selected.name.ndistinct
-        val trueValuesCount = res.columns.takeLast(res.ncol - 1).sumBy { it.cast<Boolean>().values.count { it } }
+        val trueValuesCount = res.columns.takeLast(res.ncol - 1).sumBy { it.typed<Boolean>().values.count { it } }
         trueValuesCount shouldBe selected.filterNotNull { city }.distinct().nrow
 
         val pairs = (1 until res.ncol).flatMap { i ->
-            val col = res.columns[i].cast<Boolean>()
+            val col = res.columns[i].typed<Boolean>()
             res.filter { it[col] }.map { name to col.name }
         }.toSet()
 
@@ -724,7 +724,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun mergeCols() {
-        val merged = typed.mergeCols("info") { age and city and weight }
+        val merged = typed.mergeColsOLD("info") { age and city and weight }
         merged.ncol shouldBe 2
         merged.nrow shouldBe typed.nrow
         for (row in 0 until typed.nrow) {
@@ -749,7 +749,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun splitCol() {
-        val merged = typed.mergeCols("info") { age and city and weight }
+        val merged = typed.mergeColsOLD("info") { age and city and weight }
         val res = merged.splitCol("age", "city", "weight") { "info"() }
         res shouldBe typed
     }
