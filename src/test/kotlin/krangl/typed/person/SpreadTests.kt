@@ -126,8 +126,8 @@ class SpreadTests {
     @Test
     fun `gather with value conversion`() {
 
-        val spread = typed.spread { key }.into { value.map { if (it is Int) it.toDouble() else it } }
-        val gathered = spread.gather { cols[1 until ncol] }.map { if (it is Double) it.toInt() else it }.into("key", "value")
+        val spread = typed.spread { key }.into { value.map { (it as? Int)?.toDouble() ?: it } }
+        val gathered = spread.gather { cols[1 until ncol] }.map { (it as? Double)?.toInt() ?: it }.into("key", "value")
         gathered shouldBe typed
     }
 
