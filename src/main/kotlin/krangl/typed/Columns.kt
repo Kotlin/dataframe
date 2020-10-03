@@ -110,7 +110,7 @@ fun DataCol.toDataFrame() = dataFrameOf(listOf(this))
 
 internal fun <T> DataCol.typed() = this as TypedColData<T>
 
-inline fun <reified T> DataCol.cast() = column(name, values, nullable, T::class)
+inline fun <reified T> DataCol.cast() = column(name, values, nullable, T::class) as TypedColData<T>
 
 fun <T> TypedColData<T>.reorder(permutation: List<Int>): TypedColData<T> {
     var nullable = false

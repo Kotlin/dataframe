@@ -2,6 +2,7 @@ package krangl.typed.person
 
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
+import io.kotlintest.shouldThrow
 import io.kotlintest.shouldThrowAny
 import krangl.typed.*
 import krangl.typed.tracking.trackColumnAccess
@@ -79,7 +80,10 @@ class TypedDataFrameTests : BaseTest() {
     fun `incorrect column nullability`() {
 
         val col = column<Int>("weight") // non-nullable column definition is incorrect here, because actual dataframe has nulls in this column
-        shouldThrowAny { df[2][col] }
+
+        shouldThrow<NullPointerException> {
+            println(df[2][col])
+        }
     }
 
     @Test
@@ -307,7 +311,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun `select by type`() {
-        val selected = typed.select { colsOfType<String>() }
+        val selected = typed.select { colsOfType<String?>() }
         selected shouldBe typed.select { name and city }
     }
 
