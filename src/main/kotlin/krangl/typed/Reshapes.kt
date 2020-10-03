@@ -3,73 +3,78 @@ package krangl.typed
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
-class SpreadClause<T, K>(val df: TypedDataFrame<T>, val keyColumn: TypedColData<K>)
+class SpreadClause<T, K>(val df: TypedDataFrame<T>, val valueColumn: TypedColData<K>?)
 
-class GroupSpreadClause<T, K>(val df: GroupedDataFrame<T>, val keySelector: RowSelector<T, K>)
+class GroupSpreadClause<T, K>(val df: GroupedDataFrame<T>, val valueClass: KClass<*>, val valueSelector: Reducer<T, K>)
 
 fun <T, C> TypedDataFrame<T>.spread(keySelector: SpreadColumnSelector<T, C>) =
         SpreadClause(this, getColumn(keySelector))
 
-fun <T, C, V : String?> SpreadClause<T, V>.into(valueSelector: SpreadColumnSelector<T, C>) = df.spreadToPair(keyColumn, df.getColumn(valueSelector), null)
+fun <T> TypedDataFrame<T>.spreadExists(keySelector: SpreadColumnSelector<T, String?>) = SpreadClause<T, Unit>(this, null)
+        .into(keySelector)
 
-fun <T, V : String?> SpreadClause<T, V>.intoFlags() = df.spreadToBool(keyColumn, null)
-
-fun <T, C> GroupedDataFrame<T>.spread(keySelector: RowSelector<T, C>) = GroupSpreadClause(this, keySelector)
-
-fun <T, C, V : String?> GroupSpreadClause<T, V>.into(expression: RowSelector<T, C>) = df.spreadToPair(keySelector, expression)
-
-internal fun <T, R> GroupedDataFrame<T>.spreadToPair(keyExpression: RowSelector<T, String?>, valueExpression: RowSelector<T, R>): TypedDataFrame<T> {
-    val df = baseDataFrame
-    val nameGenerator = df.nameGenerator()
-    val keyColumnName = nameGenerator.createUniqueName("KEY_EXPRESSION")
-    val keyColumns = groups.map { it.add(keyColumnName, keyExpression).let { it to it.columns.last().typed<String?>() } }
-    val newColumns = keyColumns.fold(mutableSetOf<String?>()) { set, (_, keyColumn) -> set.addAll(keyColumn.toSet()).let { set } }
-
-    return aggregate {
-        newColumns.filterNotNull().forEach { key ->
-            val columnName = nameGenerator.createUniqueName(key)
-            var hasNulls = false
-            val classes = mutableSetOf<KClass<*>>()
-            val values = keyColumns.map { (group, keyColumn) ->
-                val valueRows = group.filter { it[keyColumn] == columnName }.distinct()
-                when (valueRows.nrow) {
-                    0 -> {
-                        hasNulls = true
-                        null
-                    }
-                    1 -> {
-                        val row = valueRows[0]
-                        val value = valueExpression(row, row)
-                        if (value == null) hasNulls = true
-                        else classes.add(value.javaClass.kotlin)
-                        value
-                    }
-                    else -> {
-                        val firstRow = group.first()
-                        val groupKey = keys.columns.map { "${it.name}: ${firstRow[it]}" }.joinToString()
-                        throw Exception("Several entries for '${key}' at group [$groupKey]")
-                    }
-                }
-            }
-            add(TypedDataCol(values, hasNulls, columnName, classes.commonParent()))
+fun <T, V> SpreadClause<T, V>.into(keySelector: SpreadColumnSelector<T, String?>) =
+        when (valueColumn) {
+            null -> df.spreadToBool(df.getColumn(keySelector))
+            else -> df.spreadToPair(df.getColumn(keySelector), valueColumn)
         }
+
+inline fun <T, reified C> GroupedDataFrame<T>.spreadSingle(crossinline valueSelector: RowSelector<T, C>) = GroupSpreadClause(this, C::class) {
+    when (it.nrow) {
+        0 -> null
+        1 -> {
+            val row = it[0]
+            valueSelector(row, row)
+        }
+        else -> throw Exception()
     }
 }
 
-internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, valueColumn: DataCol, groupBy: ColumnSet<*>?): TypedDataFrame<T> {
+fun <T> GroupedDataFrame<T>.spreadExists(keySelector: RowSelector<T, String?>) = GroupSpreadClause(this, Boolean::class) {
+    it.nrow > 0
+}.into(keySelector)
+
+fun <T, V> GroupSpreadClause<T, V>.into(keySelector: RowSelector<T, String?>) = df.aggregate {
+    val clause = this@into
+    doSpread(this, clause.df, keySelector, clause.valueClass) { df, _ -> clause.valueSelector(df) }
+}
+
+internal fun <T, R> doSpread(builder: GroupAggregateBuilder<T>, grouped: GroupedDataFrame<T>, keyExpression: RowSelector<T, String?>, valueClass: KClass<*>?, valueExpression: (TypedDataFrame<T>, String) -> R) {
+    val df = grouped.baseDataFrame
+    val nameGenerator = df.nameGenerator()
+    val keyColumnName = nameGenerator.createUniqueName("KEY_EXPRESSION")
+    val modifiedGroups = builder.groups.map { it.add(keyColumnName, keyExpression) }
+    val keyColumnIndex = builder.groups.firstOrNull()?.ncol ?: -1
+    val newColumns = modifiedGroups.fold(mutableSetOf<String?>()) { set, group -> set.addAll(group.columns[keyColumnIndex].typed<String?>().values).let { set } }
+    val expectedClass = when (valueClass) {
+        null -> null
+        Any::class -> null
+        else -> valueClass
+    }
+
+    newColumns.filterNotNull().forEach { key ->
+        val columnName = nameGenerator.createUniqueName(key)
+        var hasNulls = false
+        val classes = mutableSetOf<KClass<*>>()
+        val values = modifiedGroups.map { group ->
+            val valueRows = group.filter { it[keyColumnIndex] == columnName }.distinct()
+            val value = valueExpression(valueRows, key)
+            if (value == null) hasNulls = true
+            else if (expectedClass == null) classes.add(value.javaClass.kotlin)
+            value
+        }
+        builder.add(TypedDataCol(values, hasNulls, columnName, expectedClass ?: classes.commonParent()))
+    }
+}
+
+internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, valueColumn: DataCol): TypedDataFrame<T> {
 
     val nameGenerator = nameGenerator()
 
     val (df1, keySrcColumn, keyColumnData) = extractConvertedColumn(this, keyColumn, nameGenerator)
     val (dataFrame, valueSrcColumn, valueColumnData) = extractConvertedColumn(df1, valueColumn, nameGenerator)
-
-    val groupingColumns = when {
-        groupBy != null -> extractColumns(groupBy)
-        else -> {
-            val columnsToRemove = listOf(keySrcColumn, valueSrcColumn).filterNotNull()
-            columns - columnsToRemove
-        }
-    }
+    val columnsToRemove = listOf(keySrcColumn, valueSrcColumn).filterNotNull()
+    val groupingColumns = columns - columnsToRemove
 
     val keyColumnIndex = dataFrame.getColumnIndex(keyColumnData.name)
     assert(keyColumnIndex != -1)
@@ -77,9 +82,7 @@ internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, va
     val valueColumnIndex = dataFrame.getColumnIndex(valueColumnData.name)
     assert(valueColumnIndex != -1)
 
-    val grouped = dataFrame.groupBy(groupingColumns)
-
-    return grouped.spread { it[keyColumnIndex] as String? }.into { it[valueColumnIndex] }
+    return dataFrame.groupBy(groupingColumns).spreadSingle { it[valueColumnIndex] }.into { it[keyColumnIndex] as String? }
 }
 
 internal fun extractOriginalColumn(column: Column): Column = when (column) {
@@ -102,28 +105,17 @@ internal fun <T, C> extractConvertedColumn(df: TypedDataFrame<T>, col: TypedCol<
             else -> Triple(df, col, df[col])
         }
 
-internal fun <T> TypedDataFrame<T>.spreadToBool(col: TypedCol<String?>, groupBy: ColumnSet<*>?): TypedDataFrame<T> {
+internal fun <T> TypedDataFrame<T>.spreadToBool(col: TypedCol<String?>): TypedDataFrame<T> {
 
     val nameGenerator = nameGenerator()
 
     val (dataFrame, srcColumn, columnData) = extractConvertedColumn(this, col, nameGenerator)
 
-    val valueColumnIndex = dataFrame.columns.indexOf(columnData)
-    val values = columnData.toSet()
+    val keyColumnIndex = dataFrame.columns.indexOf(columnData)
 
-    val groupingColumns = groupBy?.let { extractColumns(it) } ?: srcColumn?.let { columns - it } ?: columns
+    val groupingColumns = srcColumn?.let { columns - it } ?: columns
 
-    val grouped = dataFrame.groupBy(groupingColumns)
-    return grouped.aggregate {
-        values.forEach { value ->
-            if (value != null) {
-                val columnName = nameGenerator.createUniqueName(value.toString())
-                add(columnName) {
-                    it.any { it[valueColumnIndex] == value }
-                }
-            }
-        }
-    }
+    return dataFrame.groupBy(groupingColumns).spreadExists { it[keyColumnIndex] as String? }
 }
 
 class GatherClause<T, C, K, R>(val df: TypedDataFrame<T>, val selector: ColumnsSelector<T, C>, val filter: ((C) -> Boolean)? = null,

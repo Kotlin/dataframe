@@ -1,12 +1,13 @@
 package krangl.typed
 
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
-internal fun <T> GroupedDataFrame<T>.getColumns(selector: ColumnsSelector<T,*>) =
+internal fun <T> GroupedDataFrame<T>.getColumns(selector: ColumnsSelector<T, *>) =
         TypedDataFrameWithColumnsForSelectImpl(groups.first())
                 .let { it.extractColumns(selector(it, it)) }
 
-internal fun <T> GroupedDataFrame<T>.getSortColumns(selector: SortColumnSelector<T,Comparable<*>>) =
+internal fun <T> GroupedDataFrame<T>.getSortColumns(selector: SortColumnSelector<T, Comparable<*>>) =
         TypedDataFrameWithColumnsForSortImpl(groups.first())
                 .let { selector(it, it).extractSortColumns() }
 
@@ -69,70 +70,78 @@ class GroupedDataFrameImpl<T>(val df: TypedDataFrame<T>) : GroupedDataFrame<T> {
     override val size = df.nrow
 }
 
-class ValuesList<T>(val list: List<T>)
+typealias Reducer<T, R> = (TypedDataFrame<T>) -> R
 
 class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
     internal val columns = mutableListOf<DataCol>()
-
-    fun <T> List<T>.wrap() = ValuesList(this)
 
     val groups get() = dataFrame.groups
 
     fun add(column: DataCol) = columns.add(column)
 
+    fun <R> reduce(func: Reducer<T, R>) = func
+
     fun <N : Comparable<N>> minBy(selector: RowSelector<T, N>) = compute { minBy(selector)!! }
     fun <N : Comparable<N>> minBy(column: TypedCol<N>) = compute { minBy { column() }!! }
     inline fun <reified N : Comparable<N>> minBy(property: KProperty<N>) = minBy(property.toColumn())
+
+    fun <C> single(valueSelector: RowSelector<T, C>) = reduce { it.single().let { valueSelector(it, it) } }
 
     fun <N : Comparable<N>> maxBy(selector: RowSelector<T, N>) = compute { maxBy(selector)!! }
     fun <N : Comparable<N>> maxBy(column: TypedCol<N>) = compute { maxBy { column() }!! }
     inline fun <reified N : Comparable<N>> maxBy(property: KProperty<N>) = maxBy(property.toColumn())
 
-    fun <R> ValuesList<TypedDataFrameRow<T>>.map(selector: RowSelector<T, R>) =
-            list.map { selector(it, it) }.wrap()
+    fun <R, V> Reducer<T, R>.map(transform: R.(R) -> V) = reduce { this(it).let { transform(it, it) } }
 
     fun <R> TypedDataFrame<T>.map(selector: RowSelector<T, R>) =
             rows.map { selector(it, it) }
 
-    val count by lazy { groups.map { it.nrow }.wrap() }
+    val count by lazy { reduce { it.nrow } }
+    val exists by lazy { reduce { it.nrow > 0 } }
 
-    fun count(filter: RowFilter<T>) = groups.map { it.count(filter) }.wrap()
+    fun count(filter: RowFilter<T>) = reduce { it.count(filter) }
 
-    inline fun <reified R : Comparable<R>> median(noinline selector: RowSelector<T, R>) = groups.map { it.map(selector).median() }.wrap()
-    inline fun <reified R : Comparable<R>> median(column: TypedCol<R>) = groups.map { it[column].values.median() }.wrap()
+    inline fun <reified R : Comparable<R>> median(noinline selector: RowSelector<T, R>) = reduce { it.map(selector).median() }
+    inline fun <reified R : Comparable<R>> median(column: TypedCol<R>) = reduce { it[column].values.median() }
     inline fun <reified R : Comparable<R>> median(property: KProperty<R>) = median(property.toColumn())
 
-    inline fun <reified R : Number> mean(noinline selector: RowSelector<T, R>) = groups.map { it.map(selector).mean() }.wrap()
-    inline fun <reified R : Number> mean(column: TypedCol<R>) = groups.map { it[column].values.mean() }.wrap()
+    inline fun <reified R : Number> mean(noinline selector: RowSelector<T, R>) = reduce { it.map(selector).mean() }
+    inline fun <reified R : Number> mean(column: TypedCol<R>) = reduce { it[column].values.mean() }
     inline fun <reified R : Number> mean(property: KProperty<R>) = mean(property.toColumn())
 
-    inline fun <reified R : Number> sum(column: TypedCol<R>) = groups.map { sum(it[column].values) }.wrap()
-    inline fun <reified R : Number> sum(noinline selector: RowSelector<T, R>) = groups.map { sum(it.map(selector)) }.wrap()
+    inline fun <reified R : Number> sum(column: TypedCol<R>) = reduce { sum(it[column].values) }
+    inline fun <reified R : Number> sum(noinline selector: RowSelector<T, R>) = reduce { sum(it.map(selector)) }
 
-    fun checkAll(predicate: RowFilter<T>) = groups.map { it.all(predicate) }.wrap()
-    fun any(predicate: RowFilter<T>) = groups.map { it.any(predicate) }.wrap()
+    fun checkAll(predicate: RowFilter<T>) = reduce { it.all(predicate) }
+    fun any(predicate: RowFilter<T>) = reduce { it.any(predicate) }
 
-    inline fun <reified R : Comparable<R>> min(noinline selector: RowSelector<T, R>) = groups.map { it.min(selector)!! }.wrap()
-    inline fun <reified R : Comparable<R>> min(column: TypedCol<R>) = groups.map { it.min(column)!! }.wrap()
+    inline fun <reified R : Comparable<R>> min(noinline selector: RowSelector<T, R>) = reduce { it.min(selector)!! }
+    inline fun <reified R : Comparable<R>> min(column: TypedCol<R>) = reduce { it.min(column)!! }
     inline fun <reified R : Comparable<R>> min(property: KProperty<R>) = min(property.toColumn())
 
-    inline fun <reified R : Comparable<R>> max(noinline selector: RowSelector<T, R>) = groups.map { it.max(selector)!! }.wrap()
-    inline fun <reified R : Comparable<R>> max(column: TypedCol<R>) = groups.map { it.max(column)!! }.wrap()
+    inline fun <reified R : Comparable<R>> max(noinline selector: RowSelector<T, R>) = reduce { it.max(selector)!! }
+    inline fun <reified R : Comparable<R>> max(column: TypedCol<R>) = reduce { it.max(column)!! }
 
-    inline infix fun <reified R> ValuesList<R>.into(columnName: String) = add(column(columnName, list))
+    inline infix fun <reified R> Reducer<T, R>.into(columnName: String) = add(column(columnName, groups.map(this)))
 
-    fun <R> compute(selector: TypedDataFrame<T>.() -> R) = groups.map(selector).wrap()
+    fun <R> spread2(reducer: Reducer<T, R>, keySelector: RowSelector<T, String?>, valueClass: KClass<*>) = doSpread(this, dataFrame, keySelector, valueClass) { df, _ ->
+        reducer(df)
+    }
 
-    inline fun <reified R> add(name: String, noinline expression: DataFrameSelector<T,R?>) = add(column(name, groups.map { expression(it, it) }))
+    inline infix fun <reified R> Reducer<T, R>.into(noinline keySelector: RowSelector<T, String?>) = spread2(this, keySelector, R::class)
 
-    inline infix fun <reified R> String.to(noinline expression: DataFrameSelector<T,R?>) = add(this, expression)
+    fun <R> compute(selector: DataFrameExpression<T, R>) = reduce { selector(it, it) }
 
-    inline operator fun <reified R> String.invoke(noinline expression: DataFrameSelector<T,R?>) = add(this, expression)
+    inline fun <reified R> add(name: String, noinline expression: DataFrameSelector<T, R?>) = add(column(name, groups.map { expression(it, it) }))
+
+    inline infix fun <reified R> String.to(noinline expression: DataFrameSelector<T, R?>) = add(this, expression)
+
+    inline operator fun <reified R> String.invoke(noinline expression: DataFrameSelector<T, R?>) = add(this, expression)
 
     infix operator fun String.invoke(column: DataCol) = add(column.rename(this))
 }
 
-inline fun <T, reified R> GroupedDataFrame<T>.compute(columnName: String = "map", noinline selector: TypedDataFrame<T>.() -> R) = aggregate { compute(selector) into columnName }
+inline fun <T, reified R> GroupedDataFrame<T>.compute(columnName: String = "map", noinline selector: DataFrameSelector<T, R>) = aggregate { compute(selector) into columnName }
 
 fun <T> GroupedDataFrame<T>.aggregate(body: GroupAggregateBuilder<T>.() -> Unit): TypedDataFrame<T> {
     val builder = GroupAggregateBuilder(this)
