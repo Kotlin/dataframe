@@ -173,12 +173,55 @@ fun <T : Comparable<T>> TypedColData<T?>.max() = values.asSequence().filterNotNu
 
 // Update
 
-fun <T, C> TypedDataFrame<T>.update(cols: Iterable<TypedCol<C>>) = UpdateClauseImpl(this, cols.toList())
+class UpdateClause<T, C>(val df: TypedDataFrame<T>, val filter: UpdateExpression<T, C, Boolean>?, val cols: List<TypedCol<C>>)
+
+fun <T, C> UpdateClause<T, C>.where(predicate: UpdateExpression<T, C, Boolean>) = UpdateClause(df, predicate, cols)
+
+typealias UpdateExpression<T, C, R> = TypedDataFrameRow<T>.(C) -> R
+
+inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: UpdateExpression<T, C, R>): TypedDataFrame<T> {
+    val newCols = cols.map { col ->
+        var nullable = false
+        val colData = df[col]
+        val values = (0 until df.nrow).map {
+            df[it].let { row ->
+                val currentValue = colData[row.index]
+                if (filter?.invoke(row, currentValue) == false)
+                    currentValue
+                else expression(row, currentValue)
+            }.also { if (it == null) nullable = true }
+        }
+        col.name to column(col.name, values, nullable)
+    }.toMap()
+    val newColumns = df.columns.map { newCols[it.name] ?: it }
+    return dataFrameOf(newColumns).typed<T>()
+}
+
+inline fun <reified C> headPlusArray(head: C, cols: Array<out C>) = (listOf(head) + cols.toList()).toTypedArray()
+
+inline fun <T, C, reified R> TypedDataFrame<T>.update(firstCol: TypedCol<C>, vararg cols: TypedCol<C>, noinline expression: UpdateExpression<T, C, R>) =
+        update(*headPlusArray(firstCol, cols)).with(expression)
+
+inline fun <T, C, reified R> TypedDataFrame<T>.update(firstCol: KProperty<C>, vararg cols: KProperty<C>, noinline expression: UpdateExpression<T, C, R>) =
+        update(*headPlusArray(firstCol, cols)).with(expression)
+
+inline fun <T, reified R> TypedDataFrame<T>.update(firstCol: String, vararg cols: String, noinline expression: UpdateExpression<T, Any?, R>) =
+        update(*headPlusArray(firstCol, cols)).with(expression)
+
+fun <T, C> UpdateClause<T, C>.withNull() = with { null as Any? }
+inline infix fun <T, C, reified R> UpdateClause<T, C>.with(value: R) = with { value }
+
+fun <T, C> TypedDataFrame<T>.update(cols: Iterable<TypedCol<C>>) = UpdateClause(this, null, cols.toList())
 fun <T> TypedDataFrame<T>.update(vararg cols: String) = update(getColumns(cols))
 fun <T, C> TypedDataFrame<T>.update(vararg cols: KProperty<C>) = update(getColumns(cols))
 fun <T, C> TypedDataFrame<T>.update(vararg cols: TypedCol<C>) = update(cols.asIterable())
 fun <T, C> TypedDataFrame<T>.update(cols: ColumnsSelector<T, C>) = update(getColumns(cols))
 
+fun <T, C> TypedDataFrame<T>.fillNulls(cols: ColumnsSelector<T, C>) = fillNulls(getColumns(cols))
+fun <T, C> TypedDataFrame<T>.fillNulls(cols: Iterable<TypedCol<C>>) = update(cols).where { it == null }
+fun <T> TypedDataFrame<T>.fillNulls(vararg cols: String) = fillNulls(getColumns(cols))
+fun <T, C> TypedDataFrame<T>.fillNulls(vararg cols: KProperty<C>) = fillNulls(getColumns(cols))
+fun <T, C> TypedDataFrame<T>.fillNulls(vararg cols: TypedCol<C>) = fillNulls(cols.asIterable())
 // Move
 
 fun <T> TypedDataFrame<T>.moveTo(newColumnIndex: Int, cols: ColumnsSelector<T, *>) = moveTo(newColumnIndex, getColumns(cols) as Iterable<Column>)

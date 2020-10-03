@@ -111,7 +111,7 @@ internal fun <T, C> TypedDataFrame<T>.getColumn(selector: ColumnSelector<T, C>) 
 
 @JvmName("getColumnForSpread")
 internal fun <T, C> TypedDataFrame<T>.getColumn(selector: SpreadColumnSelector<T, C>) = TypedDataFrameForSpreadImpl(this).let { selector(it, it) }.let {
-    when(it){
+    when (it) {
         is ConvertedColumn<C> -> it
         else -> this[it]
     }
@@ -165,7 +165,7 @@ interface TypedDataFrame<out T> {
 
     fun getColumnIndex(name: String): Int
     fun getColumnIndex(col: DataCol) = getColumnIndex(col.name)
-    fun tryGetColumn(name: String) = getColumnIndex(name).let { if(it != -1) columns[it] else null }
+    fun tryGetColumn(name: String) = getColumnIndex(name).let { if (it != -1) columns[it] else null }
 
     fun <C> select(columns: Iterable<TypedCol<C>>) = new(columns.map { this[it] })
     fun select(vararg columns: Column) = select(columns.toList())
@@ -276,38 +276,7 @@ interface TypedDataFrame<out T> {
     val size get() = DataFrameSize(ncol, nrow)
 }
 
-interface UpdateClause<out T, C> {
-    val df: TypedDataFrame<T>
-    val cols: List<TypedCol<C>>
-}
 
-class UpdateClauseImpl<T, C>(override val df: TypedDataFrame<T>, override val cols: List<TypedCol<C>>) : UpdateClause<T, C>
-
-typealias UpdateExpression<T, C, R> = TypedDataFrameRow<T>.(C) -> R
-
-inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: UpdateExpression<T, C, R>): TypedDataFrame<T> {
-    val newCols = cols.map { col ->
-        var nullable = false
-        val colData = df[col] as TypedColData<C>
-        val values = (0 until df.nrow).map { df[it].let { expression(it, colData[it.index]) }.also { if (it == null) nullable = true } }
-        col.name to column(col.name, values, nullable)
-    }.toMap()
-    val newColumns = df.columns.map { newCols[it.name] ?: it }
-    return dataFrameOf(newColumns).typed<T>()
-}
-
-inline fun <reified C> headPlusArray(head: C, cols: Array<out C>) = (listOf(head) + cols.toList()).toTypedArray()
-
-inline fun <T, C, reified R> TypedDataFrame<T>.update(firstCol: TypedCol<C>, vararg cols: TypedCol<C>, noinline expression: UpdateExpression<T, C, R>) =
-        update(*headPlusArray(firstCol, cols)).with(expression)
-
-inline fun <T, C, reified R> TypedDataFrame<T>.update(firstCol: KProperty<C>, vararg cols: KProperty<C>, noinline expression: UpdateExpression<T, C, R>) =
-        update(*headPlusArray(firstCol, cols)).with(expression)
-
-inline fun <T, reified R> TypedDataFrame<T>.update(firstCol: String, vararg cols: String, noinline expression: UpdateExpression<T, Any?, R>) =
-        update(*headPlusArray(firstCol, cols)).with(expression)
-
-inline fun <T, C> UpdateClause<T, C>.withNull() = with { null as Any? }
 
 internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : TypedDataFrame<T> {
 
