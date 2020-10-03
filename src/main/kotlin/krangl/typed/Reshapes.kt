@@ -7,8 +7,8 @@ class SpreadClause<T, K>(val df: TypedDataFrame<T>, val valueColumn: TypedColDat
 
 class GroupSpreadClause<T, K>(val df: GroupedDataFrame<T>, val valueClass: KClass<*>, val valueSelector: Reducer<T, K>)
 
-fun <T, C> TypedDataFrame<T>.spread(keySelector: SpreadColumnSelector<T, C>) =
-        SpreadClause(this, getColumn(keySelector))
+fun <T, C> TypedDataFrame<T>.spread(valueSelector: SpreadColumnSelector<T, C>) =
+        SpreadClause(this, getColumn(valueSelector))
 
 fun <T> TypedDataFrame<T>.spreadExists(keySelector: SpreadColumnSelector<T, String?>) = SpreadClause<T, Unit>(this, null)
         .into(keySelector)
@@ -32,6 +32,10 @@ inline fun <T, reified C> GroupedDataFrame<T>.spreadSingle(crossinline valueSele
 
 fun <T> GroupedDataFrame<T>.spreadExists(keySelector: RowSelector<T, String?>) = GroupSpreadClause(this, Boolean::class) {
     it.nrow > 0
+}.into(keySelector)
+
+fun <T> GroupedDataFrame<T>.countBy(keySelector: RowSelector<T, String?>) = GroupSpreadClause(this, Int::class) {
+    it.nrow
 }.into(keySelector)
 
 fun <T, V> GroupSpreadClause<T, V>.into(keySelector: RowSelector<T, String?>) = df.aggregate {
@@ -229,26 +233,19 @@ fun <T> TypedDataFrame<T>.splitRows(selector: ColumnSelector<T, List<*>>): Typed
 
 class MergeColsClause<T, C, R>(val df: TypedDataFrame<T>, val columns: List<TypedColData<C>>, val transform: (List<C>) -> R)
 
-fun <T, C> TypedDataFrame<T>.mergeCols(selector: ColumnsSelector<T, C>) = MergeColsClause<T, C, List<C>>(this, getColumns(selector), { it })
+fun <T, C> TypedDataFrame<T>.mergeCols(selector: ColumnsSelector<T, C>) = MergeColsClause(this, getColumns(selector), { it })
 
 inline fun <T, C, reified R> MergeColsClause<T, C, R>.into(columnName: String) = df.add(columnName)
 { row ->
     transform(columns.map { it[row.index] })
 } - columns
 
-fun <T, C, R> MergeColsClause<T, C, R>.by(separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "") =
-        MergeColsClause(df, columns) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix) }
+fun <T, C> MergeColsClause<T, C, *>.intoStr(columnName: String) = by().into(columnName)
 
-fun <T> TypedDataFrame<T>.mergeColsOLD(newColumn: String, selector: ColumnsSelector<T, *>) = mergeCols(newColumn, { list -> list }, selector)
+fun <T, C, R> MergeColsClause<T, C, R>.by(separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "", limit: Int = -1, truncated: CharSequence = "...", transform: ((C) -> CharSequence)? = null) =
+        MergeColsClause(df, columns) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix, limit = limit, truncated = truncated, transform = transform) }
 
-fun <T> TypedDataFrame<T>.mergeColsToString(newColumnName: String, separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "", selector: ColumnsSelector<T, *>) = mergeCols(newColumnName, { list -> list.joinToString(separator = separator, prefix = prefix, postfix = postfix) }, selector)
-
-internal inline fun <T, C, reified R> TypedDataFrame<T>.mergeCols(newColumn: String, crossinline transform: (List<C>) -> R, noinline selector: ColumnsSelector<T, C>): TypedDataFrame<T> {
-    val nestColumns = getColumns(selector).map { this[it] }
-    return add(newColumn) { row ->
-        transform(nestColumns.map { it[row.index] })
-    } - nestColumns
-}
+inline fun <T, C, R, reified V> MergeColsClause<T, C, R>.map(crossinline transform: (R) -> V) = MergeColsClause(df, columns) { transform(this@map.transform(it)) }
 
 internal class ColumnDataCollector(initCapacity: Int = 0) {
     private val classes = mutableSetOf<KClass<*>>()
