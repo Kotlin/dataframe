@@ -144,3 +144,5 @@ inline fun <T, reified R : Comparable<R>> GroupedDataFrame<T>.median(columnName:
 inline fun <T, reified R : Number> GroupedDataFrame<T>.mean(columnName: String = "mean", noinline selector: RowSelector<T, R>) = aggregate { mean(selector) into columnName }
 inline fun <T, reified R : Comparable<R>> GroupedDataFrame<T>.min(columnName: String = "min", noinline selector: RowSelector<T, R>) = aggregate { min(selector) into columnName }
 inline fun <T, reified R : Comparable<R>> GroupedDataFrame<T>.max(columnName: String = "max", noinline selector: RowSelector<T, R>) = aggregate { max(selector) into columnName }
+
+internal val <T> GroupedDataFrame<T>.baseDataFrame get() = (this as GroupedDataFrameImpl<T>).df

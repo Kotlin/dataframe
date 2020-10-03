@@ -5,6 +5,8 @@ import kotlin.reflect.full.isSubclassOf
 
 class SpreadClause<T, K>(val df: TypedDataFrame<T>, val keyColumn: TypedColData<K>)
 
+class GroupSpreadClause<T, K>(val df: GroupedDataFrame<T>, val keySelector: RowSelector<T, K>)
+
 fun <T, C> TypedDataFrame<T>.spread(keySelector: SpreadColumnSelector<T, C>) =
         SpreadClause(this, getColumn(keySelector))
 
@@ -12,14 +14,54 @@ fun <T, C, V : String?> SpreadClause<T, V>.into(valueSelector: SpreadColumnSelec
 
 fun <T, V : String?> SpreadClause<T, V>.intoFlags() = df.spreadToBool(keyColumn, null)
 
+fun <T, C> GroupedDataFrame<T>.spread(keySelector: RowSelector<T, C>) = GroupSpreadClause(this, keySelector)
+
+fun <T, C, V : String?> GroupSpreadClause<T, V>.into(expression: RowSelector<T, C>) = df.spreadToPair(keySelector, expression)
+
+internal fun <T, R> GroupedDataFrame<T>.spreadToPair(keyExpression: RowSelector<T, String?>, valueExpression: RowSelector<T, R>): TypedDataFrame<T> {
+    val df = baseDataFrame
+    val nameGenerator = df.nameGenerator()
+    val keyColumnName = nameGenerator.createUniqueName("KEY_EXPRESSION")
+    val keyColumns = groups.map { it.add(keyColumnName, keyExpression).let { it to it.columns.last().typed<String?>() } }
+    val newColumns = keyColumns.fold(mutableSetOf<String?>()) { set, (_, keyColumn) -> set.addAll(keyColumn.toSet()).let { set } }
+
+    return aggregate {
+        newColumns.filterNotNull().forEach { key ->
+            val columnName = nameGenerator.createUniqueName(key)
+            var hasNulls = false
+            val classes = mutableSetOf<KClass<*>>()
+            val values = keyColumns.map { (group, keyColumn) ->
+                val valueRows = group.filter { it[keyColumn] == columnName }.distinct()
+                when (valueRows.nrow) {
+                    0 -> {
+                        hasNulls = true
+                        null
+                    }
+                    1 -> {
+                        val row = valueRows[0]
+                        val value = valueExpression(row, row)
+                        if (value == null) hasNulls = true
+                        else classes.add(value.javaClass.kotlin)
+                        value
+                    }
+                    else -> {
+                        val firstRow = group.first()
+                        val groupKey = keys.columns.map { "${it.name}: ${firstRow[it]}" }.joinToString()
+                        throw Exception("Several entries for '${key}' at group [$groupKey]")
+                    }
+                }
+            }
+            add(TypedDataCol(values, hasNulls, columnName, classes.commonParent()))
+        }
+    }
+}
+
 internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, valueColumn: DataCol, groupBy: ColumnSet<*>?): TypedDataFrame<T> {
 
     val nameGenerator = nameGenerator()
 
     val (df1, keySrcColumn, keyColumnData) = extractConvertedColumn(this, keyColumn, nameGenerator)
     val (dataFrame, valueSrcColumn, valueColumnData) = extractConvertedColumn(df1, valueColumn, nameGenerator)
-
-    val keys = keyColumnData.toSet()
 
     val groupingColumns = when {
         groupBy != null -> extractColumns(groupBy)
@@ -29,42 +71,15 @@ internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, va
         }
     }
 
-    val valueColumnIndex = dataFrame.getColumnIndex(valueColumnData.name)
+    val keyColumnIndex = dataFrame.getColumnIndex(keyColumnData.name)
+    assert(keyColumnIndex != -1)
 
+    val valueColumnIndex = dataFrame.getColumnIndex(valueColumnData.name)
     assert(valueColumnIndex != -1)
 
     val grouped = dataFrame.groupBy(groupingColumns)
-    return grouped.aggregate {
-        keys.forEach { key ->
-            if (key != null) {
-                val columnName = nameGenerator.createUniqueName(key)
-                var hasNulls = false
-                val classes = mutableSetOf<KClass<*>>()
-                val values = groups.map { group ->
-                    val valueRows = group.filter { it[keyColumnData] == columnName }.distinct()
-                    when (valueRows.nrow) {
-                        0 -> {
-                            hasNulls = true
-                            null
-                        }
-                        1 -> {
-                            val value = valueRows[0][valueColumnIndex]
-                            if (value == null) hasNulls = true
-                            else classes.add(value.javaClass.kotlin)
-                            value
-                        }
-                        else -> {
-                            val firstRow = group.first()
-                            val groupKey = groupingColumns.map { "${it.name}: ${firstRow[it]}" }.joinToString()
-                            val values = valueRows.map { it[valueColumnIndex] }.joinToString()
-                            throw Exception("Different values ($values) for key '${key}' at entry [$groupKey]")
-                        }
-                    }
-                }
-                add(TypedDataCol(values, hasNulls, columnName, classes.commonParent()))
-            }
-        }
-    }
+
+    return grouped.spread { it[keyColumnIndex] as String? }.into { it[valueColumnIndex] }
 }
 
 internal fun extractOriginalColumn(column: Column): Column = when (column) {
@@ -144,7 +159,7 @@ fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: 
     val include = filter ?: { true }
     var hasNullValues = false
     val keys = keyColumns.map { nameTransform(it.name) }
-    val classes = if(valueColumnType == Any::class) mutableSetOf<KClass<*>>() else null
+    val classes = if (valueColumnType == Any::class) mutableSetOf<KClass<*>>() else null
     (0 until df.nrow).forEach { row ->
         keyColumns.forEachIndexed { colIndex, col ->
             val value = col[row]
@@ -158,7 +173,7 @@ fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: 
                     valueColumnData.add(dstValue)
                     if (dstValue == null)
                         hasNullValues = true
-                    else if(classes != null)
+                    else if (classes != null)
                         classes.add((dstValue as Any).javaClass.kotlin)
                 }
             }
