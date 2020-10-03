@@ -784,7 +784,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun mergeCols() {
-        val merged = typed.mergeColsOLD("info") { age and city and weight }
+        val merged = typed.mergeCols { age and city and weight }.into("info")
         merged.ncol shouldBe 2
         merged.nrow shouldBe typed.nrow
         for (row in 0 until typed.nrow) {
@@ -798,7 +798,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun joinColsToString() {
-        val merged = typed.mergeColsToString("info") { age and city and weight }
+        val merged = typed.mergeCols { age and city and weight }.intoStr("info")
         merged.ncol shouldBe 2
         merged.nrow shouldBe typed.nrow
         for (row in 0 until typed.nrow) {
@@ -809,19 +809,27 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun splitCol() {
-        val merged = typed.mergeColsOLD("info") { age and city and weight }
+        val merged = typed.mergeCols { age and city and weight }.intoStr("info")
         val res = merged.splitCol("age", "city", "weight") { "info"() }
         res shouldBe typed
     }
 
     @Test
     fun splitStringCol() {
-        val merged = typed.mergeColsToString("info") { age and city and weight }
+        val merged = typed.mergeCols { age and city and weight }.intoStr("info")
         val res = merged.splitCol("age", "city", "weight") { "info"() }
         val expected = typed.update { age }.with { age.toString() }
                 .update { city }.with { city.toString() }
                 .update { weight }.with { weight.toString() }
 
+        res shouldBe expected
+    }
+
+    @Test
+    fun `merge cols with conversion`() {
+        val spread = typed.groupBy { name }.countBy { city }
+        val res = spread.mergeCols { colsOfType<Int>() }.map { it.sum() }.into("cities")
+        val expected = typed.select { name and city }.filter { city != null }.groupBy { name }.count("cities")
         res shouldBe expected
     }
 }
