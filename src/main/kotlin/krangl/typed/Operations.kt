@@ -9,6 +9,8 @@ import kotlin.reflect.typeOf
 
 typealias RowSelector<T, R> = TypedDataFrameRow<T>.(TypedDataFrameRow<T>) -> R
 
+typealias DataFrameExpression<T, R> = TypedDataFrame<T>.(TypedDataFrame<T>) -> R
+
 typealias RowFilter<T> = RowSelector<T, Boolean>
 
 class TypedColumnsFromDataRowBuilder<T>(val dataFrame: TypedDataFrame<T>) {

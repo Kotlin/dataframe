@@ -261,6 +261,7 @@ interface TypedDataFrame<out T> {
     fun <V> associateBy(transform: RowSelector<T, V>) = rows.associateBy { transform(it, it) }
     fun <R> distinctBy(selector: RowSelector<T, R>) = rows.distinctBy { selector(it, it) }.map { it.index }.let { getRows(it) }
     fun distinct() = distinctBy { it.values }
+    fun single() = rows.single()
 
     fun <R> map(selector: RowSelector<T, R>) = rows.map { selector(it, it) }
 

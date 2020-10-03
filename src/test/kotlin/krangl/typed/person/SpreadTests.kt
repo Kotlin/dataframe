@@ -46,7 +46,7 @@ class SpreadTests {
     @Test
     fun `spread to pair`() {
 
-        val res = typed.spread { key }.into { value }
+        val res = typed.spread { value }.into { key }
         res.ncol shouldBe 1 + typed.key.ndistinct
         res.nrow shouldBe typed.name.ndistinct
 
@@ -69,7 +69,7 @@ class SpreadTests {
     @Test
     fun `spread to pair with group key and conversion`() {
 
-        val res = typed.spread { key }.into { value.map { it.toString() } }
+        val res = typed.spread { value.map { it.toString() }  }.into { key }
 
         res.ncol shouldBe 1 + typed.key.ndistinct
         res.nrow shouldBe typed.name.ndistinct
@@ -90,13 +90,13 @@ class SpreadTests {
         val values = first.values.toTypedArray()
         values[2] = 20
         val modified = typed.addRow(*values)
-        shouldThrow<Exception> { modified.spread { key }.into { value } }
+        shouldThrow<Exception> { modified.spread { value }.into { key } }
     }
 
     @Test
     fun gather() {
 
-        val res = typed.spread { key }.into { value }
+        val res = typed.spread { value }.into { key }
         val gathered = res.gather { cols[1 until ncol] }.into("key", "value")
         gathered shouldBe typed
     }
@@ -104,7 +104,7 @@ class SpreadTests {
     @Test
     fun `gather with filter`() {
 
-        val spread = typed.spread { key }.into { value }
+        val spread = typed.spread { value }.into { key }
         val gathered = spread.gather { cols[1 until ncol] }.where { it != null }.into("key", "value")
         gathered shouldBe typed.filterNotNull { value }
     }
@@ -112,7 +112,7 @@ class SpreadTests {
     @Test
     fun `spread with key conversion`() {
 
-        val spread = typed.spread { key.map(keyConverter) } .into { value }
+        val spread = typed.spread { value }.into { key.map(keyConverter) }
         val gathered = spread.gather { cols[1 until ncol] }.into("key", "value")
         gathered shouldBe typed.update { key }.with { "__$it" }
     }
@@ -120,7 +120,7 @@ class SpreadTests {
     @Test
     fun `spread with value conversion`() {
 
-        val spread = typed.spread { key }.into { value.map(valueConverter) }
+        val spread = typed.spread { value.map(valueConverter) }.into { key }
         val gathered = spread.gather { cols[1 until ncol] }.into("key", "value")
         val expected = typed.update { value }.with { valueConverter(it) as? Serializable }
         gathered shouldBe expected
@@ -128,7 +128,22 @@ class SpreadTests {
 
     @Test
     fun `grouped spread with key and value conversions`() {
-        val spread = typed.groupBy { name }.spread { keyConverter(key) }.into { valueConverter(value) }
+        val grouped = typed.groupBy { name }
+        val spread1 = grouped.spreadSingle { valueConverter(value) }.into { keyConverter(key) }
+        val spread2 = grouped.aggregate {
+            single { valueConverter(value) } into { keyConverter(key) }
+        }
+        spread2 shouldBe spread1
+        val gathered = spread1.gather { cols[1 until ncol] }.into("key", "value")
+        val expected = typed.update { key }.with { keyConverter(it) }.update { value }.with { valueConverter(it) as? Serializable }
+        gathered shouldBe expected
+    }
+
+    @Test
+    fun `grouped spread with key and value conversions 2`() {
+        val spread = typed.groupBy { name }.aggregate {
+            single { valueConverter(value) } into { keyConverter(key) }
+        }
         val gathered = spread.gather { cols[1 until ncol] }.into("key", "value")
         val expected = typed.update { key }.with { keyConverter(it) }.update { value }.with { valueConverter(it) as? Serializable }
         gathered shouldBe expected
@@ -137,7 +152,7 @@ class SpreadTests {
     @Test
     fun `gather with value conversion`() {
 
-        val spread = typed.spread { key }.into { value.map(valueConverter) }
+        val spread = typed.spread { value.map(valueConverter) }.into { key }
         val gathered = spread.gather { cols[1 until ncol] }.map { (it as? Double)?.toInt() ?: it }.into("key", "value")
         gathered shouldBe typed
     }
@@ -145,7 +160,7 @@ class SpreadTests {
     @Test
     fun `gather doubles with value conversion`() {
 
-        val spread = typed.spread { key }.into { value.map(valueConverter) }
+        val spread = typed.spread { value.map(valueConverter) }.into { key }
         val gathered = spread.remove("city").gather { colsOfType<Double?>() }.mapNotNull { it.toInt() }.into("key", "value")
         val expected = typed.filter { key != "city" }.cast { value }.to<Int>()
         gathered shouldBe expected
@@ -154,7 +169,7 @@ class SpreadTests {
     @Test
     fun `gather with name conversion`() {
 
-        val spread = typed.spread { key.map(keyConverter) }.into { value }
+        val spread = typed.spread { value }.into { key.map(keyConverter) }
         val gathered = spread.gather { cols[1 until ncol] }.mapNames { it.substring(2) }.into("key", "value")
         gathered shouldBe typed
     }

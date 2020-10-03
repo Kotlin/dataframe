@@ -3,7 +3,6 @@ package krangl.typed.person
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
-import io.kotlintest.shouldThrowAny
 import krangl.typed.*
 import krangl.typed.tracking.trackColumnAccess
 import org.junit.Test
@@ -355,6 +354,7 @@ class TypedDataFrameTests : BaseTest() {
 
         fun TypedDataFrame<*>.check() {
             nrow shouldBe 3
+            this["name"].values shouldBe listOf("Alice", "Bob", "Mark")
             this["n"].values shouldBe listOf(2, 2, 3)
             this["old count"].values shouldBe listOf(0, 2, 2)
             this["median age"].values shouldBe listOf(17.5, 37.5, 30.0)
@@ -362,6 +362,12 @@ class TypedDataFrameTests : BaseTest() {
             this["oldest origin"].values shouldBe listOf(null, "Dubai", "Milan")
             this["youngest origin"].values shouldBe listOf("London", "Tokyo", "Moscow")
             this["all with weights"].values shouldBe listOf(true, true, false)
+            this["from London"].values shouldBe listOf(1, 0, 0)
+            this["from Dubai"].values shouldBe listOf(0, 1, 0)
+            this["from Moscow"].values shouldBe listOf(0, 0, 2)
+            this["from Milan"].values shouldBe listOf(0, 0, 1)
+            this["from Tokyo"].values shouldBe listOf(0, 1, 0)
+            this["from null"].values shouldBe listOf(1, 0, 0)
         }
 
         typed.groupBy { name }.aggregate {
@@ -372,6 +378,7 @@ class TypedDataFrameTests : BaseTest() {
             checkAll { weight != null } into "all with weights"
             maxBy { age }.map { city } into "oldest origin"
             compute { sortBy { age }.first().city } into "youngest origin"
+            count into { "from $city" }
         }.check()
 
         typed.groupBy { it.name }.aggregate {
@@ -382,6 +389,7 @@ class TypedDataFrameTests : BaseTest() {
             checkAll { it.weight != null } into "all with weights"
             maxBy { it.age }.map { it.city } into "oldest origin"
             compute { sortBy { it.age }.first().city } into "youngest origin"
+            count into { "from ${it.city}" }
         }.check()
 
         df.groupBy(name).aggregate {
@@ -392,6 +400,7 @@ class TypedDataFrameTests : BaseTest() {
             checkAll { weight neq null } into "all with weights"
             maxBy(age).map { city() } into "oldest origin"
             compute { sortBy(age).first()[city] } into "youngest origin"
+            count into { "from ${city()}" }
         }.check()
 
         df.groupBy(Person::name).aggregate {
@@ -402,6 +411,7 @@ class TypedDataFrameTests : BaseTest() {
             checkAll { Person::weight neq null } into "all with weights"
             maxBy(Person::age).map { it[Person::city] } into "oldest origin"
             compute { sortBy(Person::age).first()[Person::city] } into "youngest origin"
+            count into { "from ${it[Person::city]}" }
         }.check()
 
         df.groupBy("name").aggregate {
@@ -412,6 +422,7 @@ class TypedDataFrameTests : BaseTest() {
             checkAll { get("weight") != null } into "all with weights"
             maxBy { int("age") }.map { get("city") } into "oldest origin"
             compute { sortBy("age").first()["city"] } into "youngest origin"
+            count into { "from " + get("city") }
         }.check()
     }
 
@@ -624,22 +635,34 @@ class TypedDataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `spread to bool`() {
-        val res = typed.spread { city }.intoFlags()
-        res.ncol shouldBe typed.ncol + typed.city.ndistinct - 2
+    fun `spread exists`() {
+        val spread = typed.spreadExists { city }
+
+        spread.ncol shouldBe typed.ncol + typed.city.ndistinct - 2
 
         for (i in 0 until typed.nrow) {
             val city = typed[i][city]
-            if (city != null) res[i][city] == true
-            for (j in typed.ncol until res.ncol) {
-                res.columns[j].typed<Boolean>().get(i) shouldBe (res.columns[j].name == city)
+            if (city != null) spread[i][city] == true
+            for (j in typed.ncol until spread.ncol) {
+                spread.columns[j].typed<Boolean>().get(i) shouldBe (spread.columns[j].name == city)
             }
         }
     }
 
     @Test
+    fun `spreadExists equality`() {
+        val res1 = typed.select { name and city }.spreadExists { city }
+        val res2 = typed.groupBy { name }.spreadExists { city }
+        val res3 = typed.groupBy { name }.aggregate {
+            exists into { city }
+        }
+        res2 shouldBe res1
+        res3 shouldBe res1
+    }
+
+    @Test
     fun `spread to bool with conversion`() {
-        val res = typed.spread { city.map { it?.decapitalize() } }.intoFlags()
+        val res = typed.spreadExists { city.map { it?.decapitalize() } }
         val cities = typed.city.values.filterNotNull()
         val gathered = res.gather { colsOfType<Boolean> { cities.contains(it.name.capitalize()) } }.where { it }.into("city")
         val expected = typed.update { city }.with { it?.decapitalize() }.filterNotNull { city }.moveToRight { city }
@@ -648,7 +671,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun `spread to bool distinct rows`() {
-        val res = typed.spread { city }.intoFlags()
+        val res = typed.spreadExists { city }
         res.ncol shouldBe typed.ncol + typed.city.ndistinct - 2
 
         for (i in 0 until typed.nrow) {
@@ -663,7 +686,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `spread to bool merged rows`() {
         val selected = typed.select { name + city }
-        val res = selected.spread { city }.intoFlags()
+        val res = selected.spreadExists { city }
 
         res.ncol shouldBe selected.city.ndistinct
         res.nrow shouldBe selected.name.ndistinct
@@ -692,7 +715,7 @@ class TypedDataFrameTests : BaseTest() {
                 .splitRows { others }
                 .add(sum) { name.length + other().length }
 
-        val matrix = src.spread { other }.into { sum }
+        val matrix = src.spread { sum }.into { other }
         matrix.ncol shouldBe 1 + names.size
 
         println(matrix)
@@ -701,7 +724,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `gather bool`() {
         val selected = typed.select { name + city }
-        val spread = selected.spread { city }.intoFlags()
+        val spread = selected.spreadExists { city }
         val res = spread.gather { colsOfType<Boolean>() }.where { it }.into("city")
         val sorted = res.sortBy { name then city }
         sorted shouldBe selected.filterNotNull { city }.distinct().sortBy { name then city }
