@@ -109,10 +109,43 @@ class TypedDataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `null to zero`() {
+    fun `conditional update`() {
+
         fun TypedDataFrame<*>.check() {
-            this["weight"].values.any { it == null } shouldBe false
+            columns[1].name shouldBe "age"
+            ncol shouldBe typed.ncol
+            this["age"].values shouldBe typed.map { if (age > 25) null else age }
         }
+
+        typed.update { age }.where { it > 25 }.withNull().check()
+        typed.update { age }.where { it > 25 }.withNull().check()
+        typed.update(typed.age).where { it > 25 }.withNull().check()
+
+        df.update { age }.where { it > 25 }.withNull().check()
+        df.update(age).where { it > 25 }.withNull().check()
+        df.update(age).where { it > 25 }.withNull().check()
+
+        df.update(Person::age).where { it > 25 }.withNull().check()
+
+        df.update("age").where { it as Int > 25 }.withNull().check()
+        df.update("age").where { it as Int > 25 }.withNull().check()
+    }
+
+    @Test
+    fun `null to zero`() {
+        val expected = typed.weight.values.map { it ?: 0 }
+        fun TypedDataFrame<*>.check() {
+            this["weight"].values shouldBe expected
+        }
+
+        typed.fillNulls { it.weight }.with(0).check()
+        typed.fillNulls { weight }.with(0).check()
+        typed.fillNulls(typed.weight).with(0).check()
+
+        df.fillNulls { weight }.with(0).check()
+        df.fillNulls(weight).with(0).check()
+
+        df.fillNulls("weight").with(0).check()
 
         typed.nullToZero { it.weight }.check()
         typed.nullToZero { weight }.check()
