@@ -3,6 +3,9 @@ package krangl.typed
 import java.util.*
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.jvmErasure
 
 interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
 
@@ -326,11 +329,11 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
                 }
 
         val keyColumns = columns.mapIndexed { index, column ->
-            var nullable = false
+            var hasNulls = false
             val values = groups.map {
-                it.first[index].also { if (it == null) nullable = true }
+                it.first[index].also { if (it == null) hasNulls = true }
             }
-            TypedDataCol(values, nullable, column.name, column.valueClass)
+            TypedDataCol(values, column.name, column.type.withNullability(hasNulls))
         }
 
         val groupFrames = groups.map { it.second }
@@ -342,7 +345,7 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
 
     private fun DataCol.createComparator(nullsLast: Boolean): Comparator<Int> {
 
-        if (!valueClass.isSubclassOf(Comparable::class))
+        if (!type.isSubtypeOf(getType<Comparable<*>?>()))
             throw UnsupportedOperationException()
 
         return Comparator<Any?> { left, right ->
@@ -382,9 +385,13 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
     override fun addRow(vararg values: Any?): TypedDataFrame<T> {
         assert(values.size == ncol) { "Invalid number of arguments. Expected: $ncol, actual: ${values.size}" }
         val df = values.mapIndexed { i, v ->
-            TypedDataCol(listOf(v), v == null, columns[i].name, v?.javaClass?.kotlin ?: columns[i].valueClass)
+            val col = columns[i]
+            if(v != null)
+                // Note: type arguments for a new value are not validated here because they are erased
+                assert(v.javaClass.kotlin.isSubclassOf(col.type.jvmErasure))
+            col.withValues(col.values + listOf(v), col.hasNulls || v == null)
         }.asDataFrame()
-        return union(df).typed()
+        return df.typed()
     }
 }
 

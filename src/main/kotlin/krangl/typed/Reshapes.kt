@@ -1,10 +1,13 @@
 package krangl.typed
 
 import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.jvmErasure
 
 class SpreadClause<T, K>(val df: TypedDataFrame<T>, val valueColumn: TypedColData<K>?)
 
-class GroupSpreadClause<T, K>(val df: GroupedDataFrame<T>, val valueClass: KClass<*>, val valueSelector: Reducer<T, K>)
+class GroupSpreadClause<T, K>(val df: GroupedDataFrame<T>, val valueType: KType, val valueSelector: Reducer<T, K>)
 
 fun <T, C> TypedDataFrame<T>.spread(valueSelector: SpreadColumnSelector<T, C>) =
         SpreadClause(this, getColumn(valueSelector))
@@ -18,7 +21,7 @@ fun <T, V> SpreadClause<T, V>.into(keySelector: SpreadColumnSelector<T, String?>
             else -> df.spreadToPair(df.getColumn(keySelector), valueColumn)
         }
 
-inline fun <T, reified C> GroupedDataFrame<T>.spreadSingle(crossinline valueSelector: RowSelector<T, C>) = GroupSpreadClause(this, C::class) {
+inline fun <T, reified C> GroupedDataFrame<T>.spreadSingle(crossinline valueSelector: RowSelector<T, C>) = GroupSpreadClause(this, getType<C>()) {
     when (it.nrow) {
         0 -> null
         1 -> {
@@ -29,30 +32,30 @@ inline fun <T, reified C> GroupedDataFrame<T>.spreadSingle(crossinline valueSele
     }
 }
 
-fun <T> GroupedDataFrame<T>.spreadExists(keySelector: RowSelector<T, String?>) = GroupSpreadClause(this, Boolean::class) {
+fun <T> GroupedDataFrame<T>.spreadExists(keySelector: RowSelector<T, String?>) = GroupSpreadClause(this, getType<Boolean>()) {
     it.nrow > 0
 }.into(keySelector)
 
-fun <T> GroupedDataFrame<T>.countBy(keySelector: RowSelector<T, String?>) = GroupSpreadClause(this, Int::class) {
+fun <T> GroupedDataFrame<T>.countBy(keySelector: RowSelector<T, String?>) = GroupSpreadClause(this, getType<Int>()) {
     it.nrow
 }.into(keySelector)
 
 fun <T, V> GroupSpreadClause<T, V>.into(keySelector: RowSelector<T, String?>) = df.aggregate {
     val clause = this@into
-    doSpread(this, clause.df, keySelector, clause.valueClass) { df, _ -> clause.valueSelector(df) }
+    doSpread(this, clause.df, keySelector, clause.valueType) { df, _ -> clause.valueSelector(df) }
 }
 
-internal fun <T, R> doSpread(builder: GroupAggregateBuilder<T>, grouped: GroupedDataFrame<T>, keyExpression: RowSelector<T, String?>, valueClass: KClass<*>?, valueExpression: (TypedDataFrame<T>, String) -> R) {
+internal fun <T, R> doSpread(builder: GroupAggregateBuilder<T>, grouped: GroupedDataFrame<T>, keyExpression: RowSelector<T, String?>, valueType: KType?, valueExpression: (TypedDataFrame<T>, String) -> R) {
     val df = grouped.baseDataFrame
     val nameGenerator = df.nameGenerator()
     val keyColumnName = nameGenerator.createUniqueName("KEY_EXPRESSION")
     val modifiedGroups = builder.groups.map { it.add(keyColumnName, keyExpression) }
     val keyColumnIndex = builder.groups.firstOrNull()?.ncol ?: -1
     val newColumns = modifiedGroups.fold(mutableSetOf<String?>()) { set, group -> set.addAll(group.columns[keyColumnIndex].typed<String?>().values).let { set } }
-    val expectedClass = when (valueClass) {
+    val expectedType = when (valueType?.jvmErasure) {
         null -> null
         Any::class -> null
-        else -> valueClass
+        else -> valueType
     }
 
     newColumns.filterNotNull().forEach { key ->
@@ -63,10 +66,10 @@ internal fun <T, R> doSpread(builder: GroupAggregateBuilder<T>, grouped: Grouped
             val valueRows = group.filter { it[keyColumnIndex] == columnName }.distinct()
             val value = valueExpression(valueRows, key)
             if (value == null) hasNulls = true
-            else if (expectedClass == null) classes.add(value.javaClass.kotlin)
+            else if (expectedType == null) classes.add(value.javaClass.kotlin)
             value
         }
-        builder.add(TypedDataCol(values, hasNulls, columnName, expectedClass ?: classes.commonParent()))
+        builder.add(TypedDataCol(values, columnName, expectedType?.withNullability(hasNulls) ?: classes.commonType(hasNulls)))
     }
 }
 
@@ -140,11 +143,11 @@ fun <T, C, K, R> GatherClause<T, C, K, *>.map(transform: (C) -> R) = GatherClaus
 
 fun <T, C : Any, K, R> GatherClause<T, C?, K, *>.mapNotNull(transform: (C) -> R) = GatherClause(df, selector, filter, nameTransform, { if (it != null) transform(it) else null })
 
-inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String) = gatherImpl(keyColumn, null, K::class, R::class)
+inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String) = gatherImpl(keyColumn, null, getType<K>(), getType<R>())
 
-inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String, valueColumn: String) = gatherImpl(keyColumn, valueColumn, K::class, R::class)
+inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String, valueColumn: String) = gatherImpl(keyColumn, valueColumn, getType<K>(), getType<R>())
 
-fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: String? = null, keyColumnType: KClass<*>, valueColumnType: KClass<*>): TypedDataFrame<T> {
+fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: String? = null, keyColumnType: KType, valueColumnType: KType): TypedDataFrame<T> {
 
     val keyColumns = df.getColumns(selector).map { df[it] }
     val otherColumns = df.columns - keyColumns
@@ -154,7 +157,7 @@ fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: 
     val include = filter ?: { true }
     var hasNullValues = false
     val keys = keyColumns.map { nameTransform(it.name) }
-    val classes = if (valueColumnType == Any::class) mutableSetOf<KClass<*>>() else null
+    val classes = if (valueColumnType.jvmErasure == Any::class) mutableSetOf<KClass<*>>() else null
     (0 until df.nrow).forEach { row ->
         keyColumns.forEachIndexed { colIndex, col ->
             val value = col[row]
@@ -176,11 +179,11 @@ fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: 
     }
     val resultColumns = outputColumnsData.mapIndexed { index, values ->
         val srcColumn = otherColumns[index]
-        srcColumn.withValues(values, srcColumn.nullable)
+        srcColumn.withValues(values, srcColumn.hasNulls)
     }.toMutableList()
-    resultColumns.add(column(namesTo, keyColumnData, keys.any { it == null }, keyColumnType))
+    resultColumns.add(column(namesTo, keyColumnData, keyColumnType.withNullability(keys.contains(null))))
     if (valuesTo != null)
-        resultColumns.add(column(valuesTo, valueColumnData, hasNullValues, classes?.commonParent() ?: valueColumnType))
+        resultColumns.add(column(valuesTo, valueColumnData, classes?.commonType(hasNullValues) ?: valueColumnType.withNullability(hasNullValues)))
     return dataFrameOf(resultColumns).typed()
 }
 
@@ -192,7 +195,7 @@ fun <T> TypedDataFrame<T>.mergeRows(selector: ColumnsSelector<T, *>): TypedDataF
     return groupBy(otherColumns).aggregate {
         nestColumns.forEach { col ->
             val values = groups.map { it[col].values }
-            val newColumn = column(col.name, values, false, List::class)
+            val newColumn = column(col.name, values, getType<List<*>>())
             add(newColumn)
         }
     }
@@ -225,7 +228,7 @@ internal class ColumnDataCollector(initCapacity: Int = 0) {
         values.add(value)
     }
 
-    fun toColumn(name: String) = column(name, values, hasNulls, classes.commonParent())
+    fun toColumn(name: String) = column(name, values, classes.commonParent().createStarProjectedType(hasNulls))
 }
 
 class SplitColClause<T, C, out R>(val df: TypedDataFrame<T>, val column: TypedColData<C>, val transform: (C) -> R)
@@ -301,8 +304,8 @@ fun <T, C> SplitColClause<T, C, List<*>?>.intoRows(): TypedDataFrame<T> {
         }
     }
     val resultColumns = df.columns.mapIndexed { index, col ->
-        val (nullable, clazz) = if (index == columnIndex) hasNulls to classes.commonParent() else col.nullable to col.valueClass
-        column(col.name, outputColumnsData[index].asList(), nullable, clazz)
+        val type = if (index == columnIndex) classes.commonType(hasNulls) else col.type
+        column(col.name, outputColumnsData[index].asList(), type)
     }
     return dataFrameOf(resultColumns).typed()
 }

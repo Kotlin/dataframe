@@ -41,10 +41,10 @@ class JoinTests : BaseTest() {
         val res = typed.innerJoin(typed2) { name and it.city.match(right.origin) }
         res.ncol shouldBe 6
         res.nrow shouldBe 7
-        res["age_2"].nullable shouldBe false
+        res["age_2"].hasNulls shouldBe false
         res.count { name == "Mark" && city == "Moscow" } shouldBe 4
         res.select { city and name }.distinct().nrow shouldBe 3
-        res[Person2::grade].nullable shouldBe false
+        res[Person2::grade].hasNulls shouldBe false
     }
 
     @Test
@@ -54,10 +54,10 @@ class JoinTests : BaseTest() {
 
         res.ncol shouldBe 6
         res.nrow shouldBe 10
-        res["age_2"].nullable shouldBe true
+        res["age_2"].hasNulls shouldBe true
         res.select { city and name }.distinct().nrow shouldBe 6
         res.count { it["grade"] == null } shouldBe 3
-        res.age.nullable shouldBe false
+        res.age.hasNulls shouldBe false
     }
 
     @Test
@@ -67,10 +67,10 @@ class JoinTests : BaseTest() {
 
         res.ncol shouldBe 6
         res.nrow shouldBe 9
-        res["age_2"].nullable shouldBe true
+        res["age_2"].hasNulls shouldBe true
         res.select { city and name }.distinct().nrow shouldBe 4
-        res[Person2::grade].nullable shouldBe false
-        res.age.nullable shouldBe true
+        res[Person2::grade].hasNulls shouldBe false
+        res.age.hasNulls shouldBe true
         val newEntries = res.filter { it["age"] == null }
         newEntries.nrow shouldBe 2
         newEntries.all { name == "Bob" && city == "Paris" && weight == null } shouldBe true
@@ -80,13 +80,15 @@ class JoinTests : BaseTest() {
     fun `outer join`() {
 
         val res = typed.outerJoin(typed2) { name and it.city.match(right.origin) }
-
+        println(res)
         res.ncol shouldBe 6
         res.nrow shouldBe 12
-        res.name.nullable shouldBe false
-        res.columns.filter { it != res.name }.all { it.nullable } shouldBe true
+        res.name.hasNulls shouldBe false
+        res.columns.filter { it != res.name }.all { it.hasNulls } shouldBe true
         res.select { city and name }.distinct().nrow shouldBe 7
-        res.select { name and age and city and weight }.distinct() shouldBe typed.addRow("Bob", null, "Paris", null)
+        val distinct = res.select { name and age and city and weight }.distinct()
+        val expected = typed.addRow("Bob", null, "Paris", null)
+        distinct shouldBe expected
     }
 
     @Test

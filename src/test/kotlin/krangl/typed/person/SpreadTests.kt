@@ -58,12 +58,9 @@ class SpreadTests {
         }.toMap()
 
         actual shouldBe expected
-        res["age"].valueClass shouldBe Int::class
-        res["age"].nullable shouldBe false
-        res["city"].valueClass shouldBe String::class
-        res["city"].nullable shouldBe false
-        res["weight"].valueClass shouldBe Int::class
-        res["weight"].nullable shouldBe true
+        res["age"].type shouldBe getType<Int>()
+        res["city"].type shouldBe getType<String>()
+        res["weight"].type shouldBe getType<Int?>()
     }
 
     @Test

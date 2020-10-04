@@ -349,7 +349,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun `select by type not nullable`() {
-        val selected = typed.select { colsOfType<String> { !it.nullable } }
+        val selected = typed.select { colsOfType<String> { !it.hasNulls } }
         selected shouldBe typed.select { name }
     }
 
@@ -359,7 +359,6 @@ class TypedDataFrameTests : BaseTest() {
         val expected = typed.select { cols(name, city, age, weight) }
         moved shouldBe expected
     }
-
 
     @Test
     fun `move several columns`() {
@@ -628,14 +627,11 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `union dataframes with different type of the same column`() {
         val df2 = dataFrameOf("age")(32.6, 56.3, null)
-        df2["age"].type.classifier shouldBe Double::class
-        df2["age"].nullable shouldBe true
+        df2["age"].type shouldBe getType<Double?>()
         val merged = df.union(df2)
-        merged["age"].type.classifier shouldBe Number::class
-        merged["age"].nullable shouldBe true
+        merged["age"].type shouldBe getType<Number?>()
         val updated = merged.update("age") { "age"<Number?>()?.toDouble() }
-        updated["age"].type.classifier shouldBe Double::class
-        updated["age"].nullable shouldBe true
+        updated["age"].type shouldBe getType<Double?>()
     }
 
     @Test
@@ -646,6 +642,22 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `distinct by`() {
         typed.distinctBy { name }.nrow shouldBe 3
+    }
+
+    @Test
+    fun `addRow`(){
+        val res = typed.addRow("Bob", null, "Paris", null)
+        res.nrow shouldBe typed.nrow + 1
+        res.name.type shouldBe getType<String>()
+        res.age.type shouldBe getType<Int?>()
+        res.city.type shouldBe getType<String?>()
+        res.weight.type shouldBe getType<Int?>()
+
+        val row = res.last()
+        row.name shouldBe "Bob"
+        row["age"] shouldBe null
+        row.city shouldBe "Paris"
+        row.weight shouldBe null
     }
 
     @Test
@@ -830,5 +842,11 @@ class TypedDataFrameTests : BaseTest() {
         val res = spread.mergeCols { colsOfType<Int>() }.map { it.sum() }.into("cities")
         val expected = typed.select { name and city }.filter { city != null }.groupBy { name }.count("cities")
         res shouldBe expected
+    }
+
+    @Test
+    fun `generic column type`() {
+        val d = typed.update { city }.with { it?.toCharArray()?.toList() ?: emptyList() }
+        println(d.city.type)
     }
 }

@@ -2,14 +2,17 @@ package krangl.typed
 
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.createType
+import kotlin.reflect.KType
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.starProjectedType
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 interface TypedValues<out T> {
     val values: List<T>
     val ndistinct: Int
-    val valueClass: KClass<*>
-    val nullable: Boolean
+    val type: KType
+    val hasNulls: Boolean get() = type.isMarkedNullable
     val size get() = values.size
     operator fun get(index: Int) = values[index]
 }
@@ -39,7 +42,6 @@ class TypedColumnPairImpl<A>(override val firstColumn: TypedCol<A>, override val
 typealias Column = TypedCol<*>
 
 interface TypedColData<out T> : TypedCol<T>, TypedValues<T> {
-    val type get() = valueClass.createType(nullable = nullable)
 
     operator fun get(indices: Iterable<Int>) = slice(indices)
 
@@ -65,7 +67,7 @@ class TypedColDesc<T>(override val name: String) : TypedCol<T> {
 
 inline fun <reified T> TypedColDesc<T>.nullable() = TypedColDesc<T?>(name)
 
-class TypedDataCol<T>(override val values: List<T>, override val nullable: Boolean, override val name: String, override val valueClass: KClass<*>) : TypedColData<T> {
+class TypedDataCol<T>(override val values: List<T>, override val name: String, override val type: KType) : TypedColData<T> {
 
     private var valuesSet: Set<T>? = null
 
@@ -81,9 +83,8 @@ class TypedDataCol<T>(override val values: List<T>, override val nullable: Boole
 
         other as TypedDataCol<*>
 
-        if (nullable != other.nullable) return false
         if (name != other.name) return false
-        if (valueClass != other.valueClass) return false
+        if (type != other.type) return false
         if (values != other.values) return false
 
         return true
@@ -91,46 +92,53 @@ class TypedDataCol<T>(override val values: List<T>, override val nullable: Boole
 
     override fun hashCode(): Int {
         var result = values.hashCode()
-        result = 31 * result + nullable.hashCode()
+        result = 31 * result + hasNulls.hashCode()
         result = 31 * result + name.hashCode()
-        result = 31 * result + valueClass.hashCode()
+        result = 31 * result + type.hashCode()
         return result
     }
 
     override val ndistinct = toSet().size
 
-    override fun distinct() = TypedDataCol(toSet().toList(), nullable, name, valueClass)
+    override fun distinct() = TypedDataCol(toSet().toList(), name, type)
 }
 
-inline fun <reified T> TypedCol<T>.withValues(values: List<T>, hasNulls: Boolean) = TypedDataCol(values, hasNulls, name, T::class)
+@OptIn(ExperimentalStdlibApi::class)
+inline fun <reified T> getType() = typeOf<T>()
 
-fun <T> TypedColData<T>.withValues(values: List<T>, hasNulls: Boolean) = TypedDataCol(values, hasNulls, name, valueClass)
+val KType.fullName: String get() = toString()
+
+fun KClass<*>.createStarProjectedType(nullable: Boolean) = this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
+
+inline fun <reified T> TypedCol<T>.withValues(values: List<T>, hasNulls: Boolean) = column(name, values, hasNulls)
+
+fun <T> TypedColData<T>.withValues(values: List<T>, hasNulls: Boolean) = TypedDataCol(values, name, type.withNullability(hasNulls))
 
 fun DataCol.toDataFrame() = dataFrameOf(listOf(this))
 
 internal fun <T> DataCol.typed() = this as TypedColData<T>
 
-inline fun <reified T> DataCol.cast() = column(name, values, nullable, T::class) as TypedColData<T>
+inline fun <reified T> DataCol.cast() = column<T>(name, values as List<T>, hasNulls) as TypedColData<T>
 
 fun <T> TypedColData<T>.reorder(permutation: List<Int>): TypedColData<T> {
     var nullable = false
     val newValues = (0 until size).map { values[permutation[it]].also { if (it == null) nullable = true } }
-    return TypedDataCol(newValues, nullable, name, valueClass)
+    return withValues(newValues, nullable)
 }
 
 fun <T> TypedColData<T>.slice(indices: Iterable<Int>): TypedColData<T> {
     var nullable = false
     val newValues = indices.map { values[it].also { if (it == null) nullable = true } }
-    return TypedDataCol(newValues, nullable, name, valueClass)
+    return withValues(newValues, nullable)
 }
 
 fun DataCol.getRows(mask: BooleanArray): DataCol {
     var nullable = false
     val newValues = values.filterIndexed { index, value -> mask[index].also { if (it && value == null) nullable = true } }
-    return TypedDataCol(newValues, nullable, name, valueClass)
+    return withValues(newValues, nullable)
 }
 
-fun <C> TypedColData<C>.rename(newName: String) = if (newName == name) this else TypedDataCol(values, nullable, newName, valueClass)
+fun <C> TypedColData<C>.rename(newName: String) = if (newName == name) this else TypedDataCol(values, newName, type)
 
 fun <C> TypedColData<C>.ensureUniqueName(nameGenerator: ColumnNameGenerator) = rename(nameGenerator.createUniqueName(name))
 
@@ -162,11 +170,11 @@ fun <T> column() = ColumnDelegate<T>()
 
 fun <T> column(name: String) = TypedColDesc<T>(name)
 
-inline fun <reified T> column(name: String, values: List<T>) = TypedDataCol(values, values.any { it == null }, name, T::class)
+inline fun <reified T> column(name: String, values: List<T>) = column(name, values, values.any { it == null })
 
-inline fun <reified T> column(name: String, values: List<T>, hasNulls: Boolean) = TypedDataCol(values, hasNulls, name, T::class)
+inline fun <reified T> column(name: String, values: List<T>, hasNulls: Boolean) = TypedDataCol(values, name, getType<T>().withNullability(hasNulls))
 
-fun column(name: String, values: List<Any?>, hasNulls: Boolean, clazz: KClass<*>) = TypedDataCol(values, hasNulls, name, clazz)
+fun column(name: String, values: List<Any?>, type: KType) = TypedDataCol(values, name, type)
 
 fun <T> TypedValues<T>.contains(value: T) = (this as TypedDataCol<T>).contains(value)
 

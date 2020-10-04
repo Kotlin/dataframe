@@ -1,7 +1,7 @@
 package krangl.typed
 
-import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 
 internal fun <T> GroupedDataFrame<T>.getColumns(selector: ColumnsSelector<T, *>) =
         TypedDataFrameWithColumnsForSelectImpl(groups.first())
@@ -124,11 +124,11 @@ class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
 
     inline infix fun <reified R> Reducer<T, R>.into(columnName: String) = add(column(columnName, groups.map(this)))
 
-    fun <R> spread2(reducer: Reducer<T, R>, keySelector: RowSelector<T, String?>, valueClass: KClass<*>) = doSpread(this, dataFrame, keySelector, valueClass) { df, _ ->
+    fun <R> spread(reducer: Reducer<T, R>, keySelector: RowSelector<T, String?>, type: KType) = doSpread(this, dataFrame, keySelector, type) { df, _ ->
         reducer(df)
     }
 
-    inline infix fun <reified R> Reducer<T, R>.into(noinline keySelector: RowSelector<T, String?>) = spread2(this, keySelector, R::class)
+    inline infix fun <reified R> Reducer<T, R>.into(noinline keySelector: RowSelector<T, String?>) = spread(this, keySelector, getType<R>())
 
     fun <R> compute(selector: DataFrameExpression<T, R>) = reduce { selector(it, it) }
 
