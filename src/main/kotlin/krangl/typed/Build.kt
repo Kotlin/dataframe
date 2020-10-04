@@ -35,13 +35,13 @@ inline fun <reified T> Iterable<T>.toDataFrame() = T::class.declaredMembers
             property.javaField?.isAccessible = true
             var nullable = false
             val values = this.map { el -> it.call(el).also { if (it == null) nullable = true } }
-            TypedDataCol(values, it.name, property.returnType.withNullability(nullable))
+            ColumnDataImpl(values, it.name, property.returnType.withNullability(nullable))
         }.let { dataFrameOf(it) }
 
 
 fun dataFrameOf(columns: Iterable<DataCol>): UntypedDataFrame = TypedDataFrameImpl(columns.toList())
 
-fun dataFrameOf(vararg header: TypedCol<*>) = DataFrameBuilder(header.map { it.name })
+fun dataFrameOf(vararg header: ColumnDef<*>) = DataFrameBuilder(header.map { it.name })
 
 fun dataFrameOf(vararg header: String) = DataFrameBuilder(header.toList())
 
@@ -86,5 +86,5 @@ internal fun guessValueType(values: List<Any?>): KType {
 }
 
 internal fun guessColumnType(name: String, values: List<Any?>) = guessValueType(values).let {
-    TypedDataCol(values, name, it)
+    ColumnDataImpl(values, name, it)
 }

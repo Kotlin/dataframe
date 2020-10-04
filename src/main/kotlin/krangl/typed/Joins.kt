@@ -7,10 +7,10 @@ interface TypedDataFrameWithColumnsForJoin<out A, out B> : TypedDataFrameWithCol
 
     val right: TypedDataFrame<B>
 
-    infix fun <C> TypedCol<C>.match(other: TypedCol<C>) = ColumnMatch(this, other)
+    infix fun <C> ColumnDef<C>.match(other: ColumnDef<C>) = ColumnMatch(this, other)
 }
 
-class ColumnMatch<C>(val left: TypedCol<C>, val right: TypedCol<C>) : ColumnSet<C>
+class ColumnMatch<C>(val left: ColumnDef<C>, val right: ColumnDef<C>) : ColumnSet<C>
 
 class TypedDataFrameWithColumnsForJoinImpl<A, B>(private val left: TypedDataFrame<A>, override val right: TypedDataFrame<B>) : TypedDataFrame<A> by left, TypedDataFrameWithColumnsForJoin<A, B> {
 
@@ -23,7 +23,7 @@ typealias JoinColumnSelector<A, B> = TypedDataFrameWithColumnsForJoin<A, B>.(Typ
 
 internal fun <C> ColumnSet<C>.extractJoinColumns(): List<ColumnMatch<C>> = when (this) {
     is ColumnGroup -> columns.flatMap { it.extractJoinColumns() }
-    is TypedCol<C> -> listOf(ColumnMatch(this, this))
+    is ColumnDef<C> -> listOf(ColumnMatch(this, this))
     is ColumnMatch -> listOf(this)
     else -> throw Exception()
 }

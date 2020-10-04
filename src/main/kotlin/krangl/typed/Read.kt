@@ -177,21 +177,21 @@ val parsersMap = allParsers.associateBy { it.type }
 
 inline fun <reified T : Any> getParser() = parsersMap[T::class] as? StringParser<T>
 
-inline fun <reified T : Any> TypedColData<String?>.parse(): TypedColData<T?> {
+inline fun <reified T : Any> ColumnData<String?>.parse(): ColumnData<T?> {
     val parser = getParser<T>() ?: throw Exception("Couldn't find parser for type ${T::class}")
     return parse(parser)
 }
 
-fun <T : Any> TypedColData<String?>.parse(parser: StringParser<T>): TypedColData<T?> {
+fun <T : Any> ColumnData<String?>.parse(parser: StringParser<T>): ColumnData<T?> {
     val parsedValues = values.map {
         it?.let {
             parser.parse(it) ?: throw Exception("Couldn't parse '${it}' to type ${parser.type}")
         }
     }
-    return column(name, parsedValues, parser.type.withNullability(hasNulls)) as TypedColData<T?>
+    return column(name, parsedValues, parser.type.withNullability(hasNulls)) as ColumnData<T?>
 }
 
-fun TypedColData<String?>.tryParseAny(): TypedColData<*> {
+fun ColumnData<String?>.tryParseAny(): ColumnData<*> {
     var parserId = 0
     val parsedValues = mutableListOf<Any?>()
 
