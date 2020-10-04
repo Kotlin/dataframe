@@ -1,10 +1,10 @@
-package krangl.typed.person
+package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
-import krangl.typed.*
-import krangl.typed.tracking.trackColumnAccess
+import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.tracking.trackColumnAccess
 import org.junit.Test
 import java.time.LocalDate
 

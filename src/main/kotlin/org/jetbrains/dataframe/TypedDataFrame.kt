@@ -1,4 +1,4 @@
-package krangl.typed
+package org.jetbrains.dataframe
 
 import java.util.*
 import kotlin.reflect.KProperty

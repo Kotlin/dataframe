@@ -1,4 +1,4 @@
-package krangl.typed
+package org.jetbrains.dataframe
 
 import org.junit.Ignore
 import org.junit.Test

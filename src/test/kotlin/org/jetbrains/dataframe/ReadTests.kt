@@ -1,4 +1,4 @@
-package krangl.typed
+package org.jetbrains.dataframe
 
 import org.apache.commons.csv.CSVFormat
 import org.junit.Ignore
