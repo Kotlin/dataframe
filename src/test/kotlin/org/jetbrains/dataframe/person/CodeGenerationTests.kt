@@ -1,7 +1,7 @@
-package krangl.typed.person
+package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
-import krangl.typed.CodeGenerator
+import org.jetbrains.dataframe.CodeGenerator
 import org.junit.Test
 import kotlin.reflect.full.memberProperties
 
@@ -35,13 +35,13 @@ class CodeGenerationTests : BaseTest(){
 
 
         val expected = """
-            val TypedDataFrame<$personClassName>.age: krangl.typed.ColumnData<kotlin.Int> get() = (this["age"]) as krangl.typed.ColumnData<kotlin.Int>
+            val TypedDataFrame<$personClassName>.age: org.jetbrains.dataframe.ColumnData<kotlin.Int> get() = (this["age"]) as org.jetbrains.dataframe.ColumnData<kotlin.Int>
             val TypedDataFrameRow<$personClassName>.age: Int get() = (this["age"]) as Int
-            val TypedDataFrame<$personClassName>.city: krangl.typed.ColumnData<kotlin.String?> get() = (this["city"]) as krangl.typed.ColumnData<kotlin.String?>
+            val TypedDataFrame<$personClassName>.city: org.jetbrains.dataframe.ColumnData<kotlin.String?> get() = (this["city"]) as org.jetbrains.dataframe.ColumnData<kotlin.String?>
             val TypedDataFrameRow<$personClassName>.city: String? get() = (this["city"]) as String?
-            val TypedDataFrame<$personClassName>.name: krangl.typed.ColumnData<kotlin.String> get() = (this["name"]) as krangl.typed.ColumnData<kotlin.String>
+            val TypedDataFrame<$personClassName>.name: org.jetbrains.dataframe.ColumnData<kotlin.String> get() = (this["name"]) as org.jetbrains.dataframe.ColumnData<kotlin.String>
             val TypedDataFrameRow<$personClassName>.name: String get() = (this["name"]) as String
-            val TypedDataFrame<$personClassName>.weight: krangl.typed.ColumnData<kotlin.Int?> get() = (this["weight"]) as krangl.typed.ColumnData<kotlin.Int?>
+            val TypedDataFrame<$personClassName>.weight: org.jetbrains.dataframe.ColumnData<kotlin.Int?> get() = (this["weight"]) as org.jetbrains.dataframe.ColumnData<kotlin.Int?>
             val TypedDataFrameRow<$personClassName>.weight: Int? get() = (this["weight"]) as Int?
         """.trimIndent()
         code.joinToString("\n") shouldBe expected

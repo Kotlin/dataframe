@@ -1,4 +1,4 @@
-package krangl.typed
+package org.jetbrains.dataframe
 
 internal fun String.truncate(limit: Int) = if (limit in 1 until length) {
     if (limit < 4) substring(0, limit)

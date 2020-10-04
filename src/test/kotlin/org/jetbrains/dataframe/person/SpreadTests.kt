@@ -1,8 +1,8 @@
-package krangl.typed.person
+package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrow
-import krangl.typed.*
+import org.jetbrains.dataframe.*
 import org.junit.Test
 import java.io.Serializable
 

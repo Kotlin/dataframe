@@ -1,4 +1,4 @@
-package krangl.typed
+package org.jetbrains.dataframe
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException
 import kotlin.reflect.full.withNullability

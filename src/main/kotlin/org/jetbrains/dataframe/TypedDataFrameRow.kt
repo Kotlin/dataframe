@@ -1,6 +1,6 @@
-package krangl.typed
+package org.jetbrains.dataframe
 
-import krangl.typed.tracking.ColumnAccessTracker
+import org.jetbrains.dataframe.tracking.ColumnAccessTracker
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 

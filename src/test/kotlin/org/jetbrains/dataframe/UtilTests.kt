@@ -1,4 +1,4 @@
-package krangl.typed
+package org.jetbrains.dataframe
 
 import io.kotlintest.shouldBe
 import org.junit.Test

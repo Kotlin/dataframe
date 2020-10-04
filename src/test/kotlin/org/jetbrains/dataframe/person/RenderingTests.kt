@@ -1,7 +1,7 @@
-package krangl.typed.person
+package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
-import krangl.typed.toHTML
+import org.jetbrains.dataframe.toHTML
 import org.junit.Test
 
 class RenderingTests: BaseTest() {
