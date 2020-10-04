@@ -1,6 +1,7 @@
 package krangl.typed
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException
+import kotlin.reflect.full.withNullability
 
 interface TypedDataFrameWithColumnsForJoin<out A, out B> : TypedDataFrameWithColumnsForSelect<A> {
 
@@ -153,7 +154,8 @@ fun <A, B> TypedDataFrame<A>.join(other: TypedDataFrame<B>, joinType: JoinType =
 
     val columns = outputData.mapIndexed { columnIndex, columnValues ->
         val srcColumn = if (columnIndex < leftColumnsCount) columns[columnIndex] else newRightColumns[columnIndex - leftColumnsCount]
-        TypedDataCol(columnValues.asList(), hasNulls[columnIndex], srcColumn.name, srcColumn.valueClass)
+        val hasNulls = hasNulls[columnIndex]
+        column(srcColumn.name, columnValues.asList(), srcColumn.type.withNullability(hasNulls))
     }
 
     return columns.asDataFrame().typed<A>()

@@ -1,5 +1,7 @@
 package krangl.typed
 
+import kotlin.reflect.jvm.jvmErasure
+
 inline fun <reified T : Comparable<T>> List<T>.median(): Double {
     val sorted = sorted()
     val index = size / 2
@@ -26,7 +28,7 @@ inline fun <reified T : Number> sum(list: List<T>): T = when (T::class) {
 }
 
 internal fun <T> TypedDataFrame<T>.nullColumnToZero(col: TypedCol<Number?>) =
-        when (this[col].valueClass) {
+        when (this[col].type.jvmErasure) {
             Double::class -> update(col) { col() as Double? ?: .0 }
             Int::class -> update(col) { col() as Int? ?: 0 }
             Long::class -> update(col) { col() as Long? ?: 0 }

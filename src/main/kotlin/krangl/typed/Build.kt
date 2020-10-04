@@ -1,9 +1,10 @@
 package krangl.typed
 
-import krangl.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 import kotlin.reflect.full.declaredMembers
+import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.javaField
 
 class IterableDataFrameBuilder<T>(val source: Iterable<T>) {
@@ -34,7 +35,7 @@ inline fun <reified T> Iterable<T>.toDataFrame() = T::class.declaredMembers
             property.javaField?.isAccessible = true
             var nullable = false
             val values = this.map { el -> it.call(el).also { if (it == null) nullable = true } }
-            TypedDataCol(values, nullable, it.name, property.returnType.classifier as KClass<*>)
+            TypedDataCol(values, it.name, property.returnType.withNullability(nullable))
         }.let { dataFrameOf(it) }
 
 
@@ -73,15 +74,17 @@ class DataFrameBuilder(private val columnNames: List<String>) {
 
 internal fun Iterable<KClass<*>>.commonParent() = commonParents(this).withMostSuperclasses() ?: Any::class
 
-internal fun guessValueType(values: List<Any?>): Pair<KClass<*>, Boolean> {
+internal fun Iterable<KClass<*>>.commonType(nullable: Boolean) = commonParent().createStarProjectedType(nullable)
+
+internal fun guessValueType(values: List<Any?>): KType {
     var nullable = false
     val types = values.map {
         if(it == null) nullable = true
         it?.javaClass
     }.distinct().mapNotNull { it?.kotlin }
-    return types.commonParent() to nullable
+    return types.commonType(nullable)
 }
 
-internal fun guessColumnType(name: String, values: List<Any?>) = guessValueType(values).let { (valueClass, nullable) ->
-    TypedDataCol(values, nullable, name, valueClass)
+internal fun guessColumnType(name: String, values: List<Any?>) = guessValueType(values).let {
+    TypedDataCol(values, name, it)
 }

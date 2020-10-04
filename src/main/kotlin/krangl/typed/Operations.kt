@@ -2,10 +2,12 @@ package krangl.typed
 
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 import kotlin.reflect.full.allSuperclasses
-import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.superclasses
-import kotlin.reflect.typeOf
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.jvmErasure
 
 typealias RowSelector<T, R> = TypedDataFrameRow<T>.(TypedDataFrameRow<T>) -> R
 
@@ -94,9 +96,12 @@ fun <T> TypedDataFrameRow<T>.movingAverage(k: Int, selector: RowSelector<T, Numb
 
 fun Iterable<TypedDataFrame<*>>.union() = merge(toList())
 
-fun commonParent(vararg classes: KClass<*>) = commonParents(classes.toList()).withMostSuperclasses()
 
-fun Iterable<KClass<*>>.withMostSuperclasses() = maxBy { it.allSuperclasses.size }
+fun commonParent(classes: Iterable<KClass<*>>) = commonParents(classes).withMostSuperclasses()
+
+fun commonParent(vararg classes: KClass<*>) = commonParent(classes.toList())
+
+fun Iterable<KClass<*>>.withMostSuperclasses() = maxByOrNull { it.allSuperclasses.size }
 
 fun commonParents(vararg classes: KClass<*>) = commonParents(classes.toList())
 
@@ -127,13 +132,13 @@ fun merge(dataFrames: List<TypedDataFrame<*>>): UntypedDataFrame {
             .map { name ->
                 val list = mutableListOf<Any?>()
                 var nullable = false
-                val classes = mutableSetOf<KClass<*>>()
+                val types = mutableSetOf<KType>()
 
                 dataFrames.forEach {
                     val column = it.tryGetColumn(name)
                     if (column != null) {
-                        nullable = nullable || column.nullable
-                        classes.add(column.valueClass)
+                        nullable = nullable || column.hasNulls
+                        types.add(column.type)
                         list.addAll(column.values)
                     } else {
                         if (it.nrow > 0) nullable = true
@@ -142,9 +147,14 @@ fun merge(dataFrames: List<TypedDataFrame<*>>): UntypedDataFrame {
                         }
                     }
                 }
-                val newClass = commonParents(classes).firstOrNull() ?: Any::class
 
-                TypedDataCol(list, nullable, name, newClass)
+                val baseType = when {
+                    types.size == 1 -> types.single()
+                    types.map { it.jvmErasure }.distinct().count() == 1 -> types.first().withNullability(nullable)
+                    // TODO: implement correct parent type computation with valid type projections
+                    else -> (commonParent(types.map { it.jvmErasure }) ?: Any::class).createStarProjectedType(nullable)
+                }
+                TypedDataCol(list, name, baseType)
             }.let { dataFrameOf(it) }
 }
 
@@ -187,14 +197,14 @@ inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: 
             df[it].let { row ->
                 val currentValue = colData[row.index]
                 if (filter?.invoke(row, currentValue) == false)
-                    currentValue
+                    currentValue as R
                 else expression(row, currentValue)
             }.also { if (it == null) nullable = true }
         }
-        col.name to column(col.name, values, nullable, R::class)
+        col.name to column(col.name, values, nullable)
     }.toMap()
     val newColumns = df.columns.map { newCols[it.name] ?: it }
-    return dataFrameOf(newColumns).typed<T>()
+    return dataFrameOf(newColumns).typed()
 }
 
 inline fun <reified C> headPlusArray(head: C, cols: Array<out C>) = (listOf(head) + cols.toList()).toTypedArray()
@@ -249,18 +259,17 @@ fun <T> TypedDataFrame<T>.moveToRight(vararg cols: KProperty<*>) = moveToRight(g
 
 fun <C> List<ColumnSet<C>>.toColumnSet() = ColumnGroup(this)
 
-fun <C> TypedDataFrameWithColumns<*>.colsOfType(clazz: KClass<*>, nullable: Boolean, filter: (TypedColData<C>) -> Boolean = { true }) = cols.filter { it.valueClass.isSubclassOf(clazz) && (nullable || !it.nullable) && filter(it.typed()) }.map { it.typed<C>() }.toColumnSet()
+fun <C> TypedDataFrameWithColumns<*>.colsOfType(type: KType, filter: (TypedColData<C>) -> Boolean = { true }) = cols.filter { it.type.isSubtypeOf(type) && (type.isMarkedNullable || !it.hasNulls) && filter(it.typed()) }.map { it.typed<C>() }.toColumnSet()
 
-@OptIn(kotlin.ExperimentalStdlibApi::class)
-inline fun <reified C> TypedDataFrameWithColumns<*>.colsOfType(noinline filter: (TypedColData<C>) -> Boolean = { true }) = colsOfType(C::class, typeOf<C>().isMarkedNullable, filter)
+inline fun <reified C> TypedDataFrameWithColumns<*>.colsOfType(noinline filter: (TypedColData<C>) -> Boolean = { true }) = colsOfType(getType<C>(), filter)
 
 fun <T> TypedDataFrame<T>.summary() =
         columns.toDataFrame {
             "column" { name }
-            "type" { valueClass.simpleName }
+            "type" { type.fullName }
             "distinct values" { ndistinct }
             "nulls %" { values.count { it == null }.toDouble() * 100 / values.size.let { if (it == 0) 1 else it } }
-            "most frequent value" { values.groupBy { it }.maxBy { it.value.size }?.key }
+            "most frequent value" { values.groupBy { it }.maxByOrNull { it.value.size }?.key }
         }
 
 data class CastClause<T>(val df: TypedDataFrame<T>, val columns: Set<Column>) {

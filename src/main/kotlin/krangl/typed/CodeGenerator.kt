@@ -2,6 +2,7 @@ package krangl.typed
 
 import kotlin.reflect.*
 import kotlin.reflect.full.*
+import kotlin.reflect.jvm.jvmErasure
 
 // Public API
 
@@ -145,7 +146,7 @@ class CodeGenerator : CodeGeneratorApi {
 
     private fun shortTypeName(type: KType) =
             if (type.arguments.isNotEmpty()) null
-            else (type.classifier as? KClass<*>)?.simpleName + if (type.isMarkedNullable) "?" else ""
+            else type.jvmErasure.simpleName + if (type.isMarkedNullable) "?" else ""
 
     private fun render(clazz: KClass<*>) = when (mode) {
         CodeGenerationMode.ShortNames -> clazz.simpleName
@@ -263,8 +264,8 @@ class CodeGenerator : CodeGeneratorApi {
     }
 
     private fun getMarkerType(dataFrameType: KType) =
-            when (dataFrameType.classifier as? KClass<*>) {
-                TypedDataFrame::class -> dataFrameType.arguments[0].type?.classifier as? KClass<*>
+            when (dataFrameType.jvmErasure) {
+                TypedDataFrame::class -> dataFrameType.arguments[0].type?.jvmErasure
                 else -> null
             }
 

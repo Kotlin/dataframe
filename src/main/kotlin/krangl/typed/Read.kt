@@ -5,7 +5,8 @@ import java.io.*
 import java.math.BigDecimal
 import java.net.URL
 import java.util.zip.GZIPInputStream
-import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.full.withNullability
 
 internal val defaultCsvFormat = CSVFormat.DEFAULT.withHeader().withIgnoreSurroundingSpaces()
 
@@ -160,9 +161,9 @@ internal fun String.toBooleanOrNull() =
             else -> null
         }
 
-class StringParser<T : Any>(val type: KClass<T>, val parse: (String) -> T?)
+class StringParser<T : Any>(val type: KType, val parse: (String) -> T?)
 
-inline fun <reified T : Any> stringParser(noinline body: (String) -> T?) = StringParser(T::class, body)
+inline fun <reified T : Any> stringParser(noinline body: (String) -> T?) = StringParser(getType<T>(), body)
 
 val allParsers = listOf(
         stringParser { it.toIntOrNull() },
@@ -187,7 +188,7 @@ fun <T : Any> TypedColData<String?>.parse(parser: StringParser<T>): TypedColData
             parser.parse(it) ?: throw Exception("Couldn't parse '${it}' to type ${parser.type}")
         }
     }
-    return column(name, parsedValues, nullable, parser.type) as TypedColData<T?>
+    return column(name, parsedValues, parser.type.withNullability(hasNulls)) as TypedColData<T?>
 }
 
 fun TypedColData<String?>.tryParseAny(): TypedColData<*> {
@@ -210,6 +211,6 @@ fun TypedColData<String?>.tryParseAny(): TypedColData<*> {
         }
     } while (parserId < allParsers.size && parsedValues.size != values.size)
     if (parserId == allParsers.size) return this
-    return column(name, parsedValues, nullable, allParsers[parserId].type)
+    return column(name, parsedValues, allParsers[parserId].type.withNullability(hasNulls))
 }
 
