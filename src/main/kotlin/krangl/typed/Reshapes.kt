@@ -5,7 +5,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
-class SpreadClause<T, K>(val df: TypedDataFrame<T>, val valueColumn: TypedColData<K>?)
+class SpreadClause<T, K>(val df: TypedDataFrame<T>, val valueColumn: ColumnData<K>?)
 
 class GroupSpreadClause<T, K>(val df: GroupedDataFrame<T>, val valueType: KType, val valueSelector: Reducer<T, K>)
 
@@ -69,11 +69,11 @@ internal fun <T, R> doSpread(builder: GroupAggregateBuilder<T>, grouped: Grouped
             else if (expectedType == null) classes.add(value.javaClass.kotlin)
             value
         }
-        builder.add(TypedDataCol(values, columnName, expectedType?.withNullability(hasNulls) ?: classes.commonType(hasNulls)))
+        builder.add(ColumnDataImpl(values, columnName, expectedType?.withNullability(hasNulls) ?: classes.commonType(hasNulls)))
     }
 }
 
-internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: TypedCol<String?>, valueColumn: DataCol): TypedDataFrame<T> {
+internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: ColumnDef<String?>, valueColumn: DataCol): TypedDataFrame<T> {
 
     val nameGenerator = nameGenerator()
 
@@ -96,7 +96,7 @@ internal fun extractOriginalColumn(column: Column): Column = when (column) {
     else -> column
 }
 
-internal fun <T, C> extractConvertedColumn(df: TypedDataFrame<T>, col: TypedCol<C>, nameGenerator: ColumnNameGenerator): Triple<TypedDataFrame<T>, Column?, TypedColData<C>> =
+internal fun <T, C> extractConvertedColumn(df: TypedDataFrame<T>, col: ColumnDef<C>, nameGenerator: ColumnNameGenerator): Triple<TypedDataFrame<T>, Column?, ColumnData<C>> =
         when {
             col is ConvertedColumn<C> -> {
                 val srcColumn = extractOriginalColumn(col.srcColumn)
@@ -104,14 +104,14 @@ internal fun <T, C> extractConvertedColumn(df: TypedDataFrame<T>, col: TypedCol<
                 Triple(df + columnData, srcColumn, columnData)
             }
             col.name.isEmpty() -> {
-                val colData = col as TypedColData<C>
+                val colData = col as ColumnData<C>
                 val renamed = colData.rename(nameGenerator.createUniqueName("columnData"))
                 Triple(df + renamed, null, renamed)
             }
             else -> Triple(df, col, df[col])
         }
 
-internal fun <T> TypedDataFrame<T>.spreadToBool(col: TypedCol<String?>): TypedDataFrame<T> {
+internal fun <T> TypedDataFrame<T>.spreadToBool(col: ColumnDef<String?>): TypedDataFrame<T> {
 
     val nameGenerator = nameGenerator()
 
@@ -201,7 +201,7 @@ fun <T> TypedDataFrame<T>.mergeRows(selector: ColumnsSelector<T, *>): TypedDataF
     }
 }
 
-class MergeColsClause<T, C, R>(val df: TypedDataFrame<T>, val columns: List<TypedColData<C>>, val transform: (List<C>) -> R)
+class MergeColsClause<T, C, R>(val df: TypedDataFrame<T>, val columns: List<ColumnData<C>>, val transform: (List<C>) -> R)
 
 fun <T, C> TypedDataFrame<T>.mergeCols(selector: ColumnsSelector<T, C>) = MergeColsClause(this, getColumns(selector), { it })
 
@@ -231,7 +231,7 @@ internal class ColumnDataCollector(initCapacity: Int = 0) {
     fun toColumn(name: String) = column(name, values, classes.commonParent().createStarProjectedType(hasNulls))
 }
 
-class SplitColClause<T, C, out R>(val df: TypedDataFrame<T>, val column: TypedColData<C>, val transform: (C) -> R)
+class SplitColClause<T, C, out R>(val df: TypedDataFrame<T>, val column: ColumnData<C>, val transform: (C) -> R)
 
 fun <T, C> SplitColClause<T, C, String?>.by(vararg delimiters: Char, ignoreCase: Boolean = false, limit: Int = 0) = SplitColClause(df, column) {
     transform(it)?.split(*delimiters, ignoreCase = ignoreCase, limit = limit)

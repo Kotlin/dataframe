@@ -27,7 +27,7 @@ inline fun <reified T : Number> sum(list: List<T>): T = when (T::class) {
     else -> throw IllegalArgumentException()
 }
 
-internal fun <T> TypedDataFrame<T>.nullColumnToZero(col: TypedCol<Number?>) =
+internal fun <T> TypedDataFrame<T>.nullColumnToZero(col: ColumnDef<Number?>) =
         when (this[col].type.jvmErasure) {
             Double::class -> update(col) { col() as Double? ?: .0 }
             Int::class -> update(col) { col() as Int? ?: 0 }

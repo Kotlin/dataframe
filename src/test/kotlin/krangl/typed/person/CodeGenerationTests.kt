@@ -35,13 +35,13 @@ class CodeGenerationTests : BaseTest(){
 
 
         val expected = """
-            val TypedDataFrame<$personClassName>.age: krangl.typed.TypedColData<kotlin.Int> get() = (this["age"]) as krangl.typed.TypedColData<kotlin.Int>
+            val TypedDataFrame<$personClassName>.age: krangl.typed.ColumnData<kotlin.Int> get() = (this["age"]) as krangl.typed.ColumnData<kotlin.Int>
             val TypedDataFrameRow<$personClassName>.age: Int get() = (this["age"]) as Int
-            val TypedDataFrame<$personClassName>.city: krangl.typed.TypedColData<kotlin.String?> get() = (this["city"]) as krangl.typed.TypedColData<kotlin.String?>
+            val TypedDataFrame<$personClassName>.city: krangl.typed.ColumnData<kotlin.String?> get() = (this["city"]) as krangl.typed.ColumnData<kotlin.String?>
             val TypedDataFrameRow<$personClassName>.city: String? get() = (this["city"]) as String?
-            val TypedDataFrame<$personClassName>.name: krangl.typed.TypedColData<kotlin.String> get() = (this["name"]) as krangl.typed.TypedColData<kotlin.String>
+            val TypedDataFrame<$personClassName>.name: krangl.typed.ColumnData<kotlin.String> get() = (this["name"]) as krangl.typed.ColumnData<kotlin.String>
             val TypedDataFrameRow<$personClassName>.name: String get() = (this["name"]) as String
-            val TypedDataFrame<$personClassName>.weight: krangl.typed.TypedColData<kotlin.Int?> get() = (this["weight"]) as krangl.typed.TypedColData<kotlin.Int?>
+            val TypedDataFrame<$personClassName>.weight: krangl.typed.ColumnData<kotlin.Int?> get() = (this["weight"]) as krangl.typed.ColumnData<kotlin.Int?>
             val TypedDataFrameRow<$personClassName>.weight: Int? get() = (this["weight"]) as Int?
         """.trimIndent()
         code.joinToString("\n") shouldBe expected

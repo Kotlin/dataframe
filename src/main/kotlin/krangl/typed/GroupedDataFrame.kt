@@ -28,7 +28,7 @@ interface GroupedDataFrame<out T> {
 
     fun sortBy(columns: List<SortColumnDescriptor>) = modify { sortBy(columns) }
     fun sortBy(vararg columns: String) = sortBy(columns.map { SortColumnDescriptor(it, SortDirection.Desc) })
-    fun sortBy(vararg columns: TypedCol<Comparable<*>>) = sortBy(columns.map { SortColumnDescriptor(it.name, SortDirection.Desc) })
+    fun sortBy(vararg columns: ColumnDef<Comparable<*>>) = sortBy(columns.map { SortColumnDescriptor(it.name, SortDirection.Desc) })
     fun sortBy(selector: SortColumnSelector<T, Comparable<*>>) = sortBy(getSortColumns(selector))
 
     fun sortByDesc(selector: SortColumnSelector<T, Comparable<*>>) = sortBy(getSortColumns(selector).map { SortColumnDescriptor(it.column, SortDirection.Desc) })
@@ -82,13 +82,13 @@ class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
     fun <R> reduce(func: Reducer<T, R>) = func
 
     fun <N : Comparable<N>> minBy(selector: RowSelector<T, N>) = compute { minBy(selector)!! }
-    fun <N : Comparable<N>> minBy(column: TypedCol<N>) = compute { minBy { column() }!! }
+    fun <N : Comparable<N>> minBy(column: ColumnDef<N>) = compute { minBy { column() }!! }
     inline fun <reified N : Comparable<N>> minBy(property: KProperty<N>) = minBy(property.toColumn())
 
     fun <C> single(valueSelector: RowSelector<T, C>) = reduce { it.single().let { valueSelector(it, it) } }
 
     fun <N : Comparable<N>> maxBy(selector: RowSelector<T, N>) = compute { maxBy(selector)!! }
-    fun <N : Comparable<N>> maxBy(column: TypedCol<N>) = compute { maxBy { column() }!! }
+    fun <N : Comparable<N>> maxBy(column: ColumnDef<N>) = compute { maxBy { column() }!! }
     inline fun <reified N : Comparable<N>> maxBy(property: KProperty<N>) = maxBy(property.toColumn())
 
     fun <R, V> Reducer<T, R>.map(transform: R.(R) -> V) = reduce { this(it).let { transform(it, it) } }
@@ -102,25 +102,25 @@ class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
     fun count(filter: RowFilter<T>) = reduce { it.count(filter) }
 
     inline fun <reified R : Comparable<R>> median(noinline selector: RowSelector<T, R>) = reduce { it.map(selector).median() }
-    inline fun <reified R : Comparable<R>> median(column: TypedCol<R>) = reduce { it[column].values.median() }
+    inline fun <reified R : Comparable<R>> median(column: ColumnDef<R>) = reduce { it[column].values.median() }
     inline fun <reified R : Comparable<R>> median(property: KProperty<R>) = median(property.toColumn())
 
     inline fun <reified R : Number> mean(noinline selector: RowSelector<T, R>) = reduce { it.map(selector).mean() }
-    inline fun <reified R : Number> mean(column: TypedCol<R>) = reduce { it[column].values.mean() }
+    inline fun <reified R : Number> mean(column: ColumnDef<R>) = reduce { it[column].values.mean() }
     inline fun <reified R : Number> mean(property: KProperty<R>) = mean(property.toColumn())
 
-    inline fun <reified R : Number> sum(column: TypedCol<R>) = reduce { sum(it[column].values) }
+    inline fun <reified R : Number> sum(column: ColumnDef<R>) = reduce { sum(it[column].values) }
     inline fun <reified R : Number> sum(noinline selector: RowSelector<T, R>) = reduce { sum(it.map(selector)) }
 
     fun checkAll(predicate: RowFilter<T>) = reduce { it.all(predicate) }
     fun any(predicate: RowFilter<T>) = reduce { it.any(predicate) }
 
     inline fun <reified R : Comparable<R>> min(noinline selector: RowSelector<T, R>) = reduce { it.min(selector)!! }
-    inline fun <reified R : Comparable<R>> min(column: TypedCol<R>) = reduce { it.min(column)!! }
+    inline fun <reified R : Comparable<R>> min(column: ColumnDef<R>) = reduce { it.min(column)!! }
     inline fun <reified R : Comparable<R>> min(property: KProperty<R>) = min(property.toColumn())
 
     inline fun <reified R : Comparable<R>> max(noinline selector: RowSelector<T, R>) = reduce { it.max(selector)!! }
-    inline fun <reified R : Comparable<R>> max(column: TypedCol<R>) = reduce { it.max(column)!! }
+    inline fun <reified R : Comparable<R>> max(column: ColumnDef<R>) = reduce { it.max(column)!! }
 
     inline infix fun <reified R> Reducer<T, R>.into(columnName: String) = add(column(columnName, groups.map(this)))
 

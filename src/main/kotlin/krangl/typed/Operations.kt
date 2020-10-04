@@ -35,7 +35,7 @@ operator fun TypedDataFrame<*>.plus(col: Iterable<DataCol>) = dataFrameOf(column
 inline fun <reified R, T> TypedDataFrame<T>.add(name: String, noinline expression: RowSelector<T, R>) =
         (this + new(name, expression))
 
-inline fun <reified R, T> TypedDataFrame<T>.add(column: TypedColDesc<R>, noinline expression: RowSelector<T, R>) =
+inline fun <reified R, T> TypedDataFrame<T>.add(column: ColumnDefinition<R>, noinline expression: RowSelector<T, R>) =
         (this + new(column.name, expression))
 
 inline fun <reified R, T> GroupedDataFrame<T>.add(name: String, noinline expression: RowSelector<T, R>) =
@@ -154,7 +154,7 @@ fun merge(dataFrames: List<TypedDataFrame<*>>): UntypedDataFrame {
                     // TODO: implement correct parent type computation with valid type projections
                     else -> (commonParent(types.map { it.jvmErasure }) ?: Any::class).createStarProjectedType(nullable)
                 }
-                TypedDataCol(list, name, baseType)
+                ColumnDataImpl(list, name, baseType)
             }.let { dataFrameOf(it) }
 }
 
@@ -172,18 +172,18 @@ fun TypedDataFrame<*>.rename(vararg mappings: Pair<String, String>): UntypedData
 
 internal fun indexColumn(columnName: String, size: Int): DataCol = column(columnName, (0 until size).toList())
 
-fun <T> TypedDataFrame<T>.addRowNumber(column: TypedCol<Int>) = addRowNumber(column.name)
+fun <T> TypedDataFrame<T>.addRowNumber(column: ColumnDef<Int>) = addRowNumber(column.name)
 fun <T> TypedDataFrame<T>.addRowNumber(columnName: String = "id"): TypedDataFrame<T> = dataFrameOf(columns + indexColumn(columnName, nrow)).typed<T>()
 fun DataCol.addRowNumber(columnName: String = "id") = dataFrameOf(listOf(indexColumn(columnName, size), this))
 
 // Column operations
 
-fun <T : Comparable<T>> TypedColData<T?>.min() = values.asSequence().filterNotNull().min()
-fun <T : Comparable<T>> TypedColData<T?>.max() = values.asSequence().filterNotNull().max()
+fun <T : Comparable<T>> ColumnData<T?>.min() = values.asSequence().filterNotNull().min()
+fun <T : Comparable<T>> ColumnData<T?>.max() = values.asSequence().filterNotNull().max()
 
 // Update
 
-class UpdateClause<T, C>(val df: TypedDataFrame<T>, val filter: UpdateExpression<T, C, Boolean>?, val cols: List<TypedCol<C>>)
+class UpdateClause<T, C>(val df: TypedDataFrame<T>, val filter: UpdateExpression<T, C, Boolean>?, val cols: List<ColumnDef<C>>)
 
 fun <T, C> UpdateClause<T, C>.where(predicate: UpdateExpression<T, C, Boolean>) = UpdateClause(df, predicate, cols)
 
@@ -209,7 +209,7 @@ inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: 
 
 inline fun <reified C> headPlusArray(head: C, cols: Array<out C>) = (listOf(head) + cols.toList()).toTypedArray()
 
-inline fun <T, C, reified R> TypedDataFrame<T>.update(firstCol: TypedCol<C>, vararg cols: TypedCol<C>, noinline expression: UpdateExpression<T, C, R>) =
+inline fun <T, C, reified R> TypedDataFrame<T>.update(firstCol: ColumnDef<C>, vararg cols: ColumnDef<C>, noinline expression: UpdateExpression<T, C, R>) =
         update(*headPlusArray(firstCol, cols)).with(expression)
 
 inline fun <T, C, reified R> TypedDataFrame<T>.update(firstCol: KProperty<C>, vararg cols: KProperty<C>, noinline expression: UpdateExpression<T, C, R>) =
@@ -221,17 +221,17 @@ inline fun <T, reified R> TypedDataFrame<T>.update(firstCol: String, vararg cols
 fun <T, C> UpdateClause<T, C>.withNull() = with { null as Any? }
 inline infix fun <T, C, reified R> UpdateClause<T, C>.with(value: R) = with { value }
 
-fun <T, C> TypedDataFrame<T>.update(cols: Iterable<TypedCol<C>>) = UpdateClause(this, null, cols.toList())
+fun <T, C> TypedDataFrame<T>.update(cols: Iterable<ColumnDef<C>>) = UpdateClause(this, null, cols.toList())
 fun <T> TypedDataFrame<T>.update(vararg cols: String) = update(getColumns(cols))
 fun <T, C> TypedDataFrame<T>.update(vararg cols: KProperty<C>) = update(getColumns(cols))
-fun <T, C> TypedDataFrame<T>.update(vararg cols: TypedCol<C>) = update(cols.asIterable())
+fun <T, C> TypedDataFrame<T>.update(vararg cols: ColumnDef<C>) = update(cols.asIterable())
 fun <T, C> TypedDataFrame<T>.update(cols: ColumnsSelector<T, C>) = update(getColumns(cols))
 
 fun <T, C> TypedDataFrame<T>.fillNulls(cols: ColumnsSelector<T, C>) = fillNulls(getColumns(cols))
-fun <T, C> TypedDataFrame<T>.fillNulls(cols: Iterable<TypedCol<C>>) = update(cols).where { it == null }
+fun <T, C> TypedDataFrame<T>.fillNulls(cols: Iterable<ColumnDef<C>>) = update(cols).where { it == null }
 fun <T> TypedDataFrame<T>.fillNulls(vararg cols: String) = fillNulls(getColumns(cols))
 fun <T, C> TypedDataFrame<T>.fillNulls(vararg cols: KProperty<C>) = fillNulls(getColumns(cols))
-fun <T, C> TypedDataFrame<T>.fillNulls(vararg cols: TypedCol<C>) = fillNulls(cols.asIterable())
+fun <T, C> TypedDataFrame<T>.fillNulls(vararg cols: ColumnDef<C>) = fillNulls(cols.asIterable())
 // Move
 
 fun <T> TypedDataFrame<T>.moveTo(newColumnIndex: Int, cols: ColumnsSelector<T, *>) = moveTo(newColumnIndex, getColumns(cols) as Iterable<Column>)
@@ -259,9 +259,9 @@ fun <T> TypedDataFrame<T>.moveToRight(vararg cols: KProperty<*>) = moveToRight(g
 
 fun <C> List<ColumnSet<C>>.toColumnSet() = ColumnGroup(this)
 
-fun <C> TypedDataFrameWithColumns<*>.colsOfType(type: KType, filter: (TypedColData<C>) -> Boolean = { true }) = cols.filter { it.type.isSubtypeOf(type) && (type.isMarkedNullable || !it.hasNulls) && filter(it.typed()) }.map { it.typed<C>() }.toColumnSet()
+fun <C> TypedDataFrameWithColumns<*>.colsOfType(type: KType, filter: (ColumnData<C>) -> Boolean = { true }) = cols.filter { it.type.isSubtypeOf(type) && (type.isMarkedNullable || !it.hasNulls) && filter(it.typed()) }.map { it.typed<C>() }.toColumnSet()
 
-inline fun <reified C> TypedDataFrameWithColumns<*>.colsOfType(noinline filter: (TypedColData<C>) -> Boolean = { true }) = colsOfType(getType<C>(), filter)
+inline fun <reified C> TypedDataFrameWithColumns<*>.colsOfType(noinline filter: (ColumnData<C>) -> Boolean = { true }) = colsOfType(getType<C>(), filter)
 
 fun <T> TypedDataFrame<T>.summary() =
         columns.toDataFrame {

@@ -83,7 +83,7 @@ class CodeGenerator : CodeGeneratorApi {
 
     }
 
-    private fun getColumnType(valueType: KType) = TypedColData::class.createType(listOf(KTypeProjection(KVariance.INVARIANT, valueType)))
+    private fun getColumnType(valueType: KType) = ColumnData::class.createType(listOf(KTypeProjection(KVariance.INVARIANT, valueType)))
 
     private fun getFields(clazz: KClass<*>, withBaseTypes: Boolean): Map<String, FieldInfo> {
         val result = mutableMapOf<String, FieldInfo>()
