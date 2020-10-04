@@ -809,19 +809,18 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun splitCol() {
-        val merged = typed.mergeCols { age and city and weight }.intoStr("info")
-        val res = merged.splitCol("age", "city", "weight") { "info"() }
+        val merged = typed.mergeCols { age and city and weight }.into("info")
+        val info by column<List<*>>()
+        val res = merged.split { info }.into("age", "city", "weight")
         res shouldBe typed
     }
 
     @Test
     fun splitStringCol() {
         val merged = typed.mergeCols { age and city and weight }.intoStr("info")
-        val res = merged.splitCol("age", "city", "weight") { "info"() }
-        val expected = typed.update { age }.with { age.toString() }
-                .update { city }.with { city.toString() }
-                .update { weight }.with { weight.toString() }
-
+        val info by column<String>()
+        val res = merged.split { info }.by(",").into("age", "city", "weight")
+        val expected = typed.update { age and city and weight }.with { it.toString() }
         res shouldBe expected
     }
 

@@ -191,7 +191,7 @@ inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: 
                 else expression(row, currentValue)
             }.also { if (it == null) nullable = true }
         }
-        col.name to column(col.name, values, nullable)
+        col.name to column(col.name, values, nullable, R::class)
     }.toMap()
     val newColumns = df.columns.map { newCols[it.name] ?: it }
     return dataFrameOf(newColumns).typed<T>()

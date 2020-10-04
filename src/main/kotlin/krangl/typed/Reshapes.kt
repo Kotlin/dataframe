@@ -1,7 +1,6 @@
 package krangl.typed
 
 import kotlin.reflect.KClass
-import kotlin.reflect.full.isSubclassOf
 
 class SpreadClause<T, K>(val df: TypedDataFrame<T>, val valueColumn: TypedColData<K>?)
 
@@ -199,38 +198,6 @@ fun <T> TypedDataFrame<T>.mergeRows(selector: ColumnsSelector<T, *>): TypedDataF
     }
 }
 
-fun <T> TypedDataFrame<T>.splitRows(selector: ColumnSelector<T, List<*>>): TypedDataFrame<T> {
-
-    val nestedColumn = getColumn(selector)
-    if (!nestedColumn.valueClass.isSubclassOf(List::class)) {
-        throw Exception("Column ${nestedColumn.name} must contain values of type `List`")
-    }
-    val nestedColumnIndex = columns.indexOf(nestedColumn)
-    val column = nestedColumn.typed<List<*>?>()
-    val outputRowsCount = (0 until nrow).sumBy { row ->
-        column[row]?.size ?: 0
-    }
-    val outputColumnsData = Array<Array<Any?>>(ncol) { arrayOfNulls(outputRowsCount) }
-    var dstRow = 0
-    val classes = mutableSetOf<KClass<*>>()
-    var hasNulls = false
-    for (srcRow in 0 until nrow) {
-        column[srcRow]?.forEach { value ->
-            if (value == null) hasNulls = true
-            else classes.add(value.javaClass.kotlin)
-            for (col in 0 until ncol) {
-                outputColumnsData[col][dstRow] = if (col == nestedColumnIndex) value else columns[col][srcRow]
-            }
-            dstRow++
-        }
-    }
-    val resultColumns = columns.mapIndexed { index, col ->
-        val (nullable, clazz) = if (index == nestedColumnIndex) hasNulls to classes.commonParent() else col.nullable to col.valueClass
-        column(col.name, outputColumnsData[index].asList(), nullable, clazz)
-    }
-    return dataFrameOf(resultColumns).typed<T>()
-}
-
 class MergeColsClause<T, C, R>(val df: TypedDataFrame<T>, val columns: List<TypedColData<C>>, val transform: (List<C>) -> R)
 
 fun <T, C> TypedDataFrame<T>.mergeCols(selector: ColumnsSelector<T, C>) = MergeColsClause(this, getColumns(selector), { it })
@@ -261,26 +228,81 @@ internal class ColumnDataCollector(initCapacity: Int = 0) {
     fun toColumn(name: String) = column(name, values, hasNulls, classes.commonParent())
 }
 
-fun <T> TypedDataFrame<T>.splitCol(vararg names: String, selector: ColumnSelector<T, *>): TypedDataFrame<T> {
-    val column = getColumn(selector)
+class SplitColClause<T, C, out R>(val df: TypedDataFrame<T>, val column: TypedColData<C>, val transform: (C) -> R)
 
-    val splitter: (Any?) -> List<Any?>?
-    splitter = when (column.valueClass) {
-        List::class -> { it: Any? -> it as? List<Any?> }
-        String::class -> { it: Any? -> (it as? String?)?.split(",")?.map { it.trim() } }
-        else -> throw Exception("Column type should be `List`")
+fun <T, C> SplitColClause<T, C, String?>.by(vararg delimiters: Char, ignoreCase: Boolean = false, limit: Int = 0) = SplitColClause(df, column) {
+    transform(it)?.split(*delimiters, ignoreCase = ignoreCase, limit = limit)
+}
+
+fun <T, C> SplitColClause<T, C, String?>.by(vararg delimiters: String, trim: Boolean = true, ignoreCase: Boolean = false, limit: Int = 0) = SplitColClause(df, column) {
+    transform(it)?.split(*delimiters, ignoreCase = ignoreCase, limit = limit)?.let {
+        if (trim) it.map { it.trim() }
+        else it
     }
+}
 
-    val columnsCount = names.size
-    val columnCollectors = Array(columnsCount) { ColumnDataCollector(nrow) }
-    for (i in 0 until nrow) {
-        val list = splitter(column[i])
+fun <T, C> SplitColClause<T, C, List<*>?>.into(vararg firstNames: String, nameGenerator: ((Int) -> String)? = null) = doSplitCols {
+    when {
+        it < firstNames.size -> firstNames[it]
+        nameGenerator != null -> nameGenerator(it - firstNames.size)
+        else -> throw Exception()
+    }
+}
+
+fun <T, C> SplitColClause<T, C, List<*>?>.doSplitCols(columnNameGenerator: (Int) -> String): TypedDataFrame<T> {
+
+    val nameGenerator = df.nameGenerator()
+    val nrow = df.nrow
+    val columnNames = mutableListOf<String>()
+    val columnCollectors = mutableListOf<ColumnDataCollector>()
+    for (row in 0 until nrow) {
+        val list = transform(column[row])
         val listSize = list?.size ?: 0
         for (j in 0 until listSize) {
+            if (columnCollectors.size <= j) {
+                val newName = nameGenerator.createUniqueName(columnNameGenerator(columnCollectors.size))
+                columnNames.add(newName)
+                val collector = ColumnDataCollector(nrow)
+                repeat(row) { collector.add(null) }
+                columnCollectors.add(collector)
+            }
             columnCollectors[j].add(list!![j])
         }
-        for (j in listSize until columnsCount)
+        for (j in listSize until columnCollectors.size)
             columnCollectors[j].add(null)
     }
-    return this - column + columnCollectors.mapIndexed { i, col -> col.toColumn(names[i]) }
+    return df - column + columnCollectors.mapIndexed { i, col -> col.toColumn(columnNames[i]) }
+}
+
+fun <T, C> TypedDataFrame<T>.split(selector: ColumnSelector<T, C>) = SplitColClause(this, getColumn(selector), { it })
+
+fun <T> TypedDataFrame<T>.splitRows(selector: ColumnSelector<T, List<*>?>) = split(selector).intoRows()
+
+fun <T, C> SplitColClause<T, C, List<*>?>.intoRows(): TypedDataFrame<T> {
+
+    val columnIndex = df.columns.indexOf(column)
+    val lists = column.map(transform)
+    val outputRowsCount = lists.values.sumBy { list ->
+        list?.size ?: 0
+    }
+    val ncol = df.ncol
+    val outputColumnsData = Array<Array<Any?>>(ncol) { arrayOfNulls(outputRowsCount) }
+    var dstRow = 0
+    val classes = mutableSetOf<KClass<*>>()
+    var hasNulls = false
+    for (srcRow in 0 until df.nrow) {
+        lists[srcRow]?.forEach { value ->
+            if (value == null) hasNulls = true
+            else classes.add(value.javaClass.kotlin)
+            for (col in 0 until ncol) {
+                outputColumnsData[col][dstRow] = if (col == columnIndex) value else df.columns[col][srcRow]
+            }
+            dstRow++
+        }
+    }
+    val resultColumns = df.columns.mapIndexed { index, col ->
+        val (nullable, clazz) = if (index == columnIndex) hasNulls to classes.commonParent() else col.nullable to col.valueClass
+        column(col.name, outputColumnsData[index].asList(), nullable, clazz)
+    }
+    return dataFrameOf(resultColumns).typed()
 }
