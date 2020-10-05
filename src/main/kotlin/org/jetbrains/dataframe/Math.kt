@@ -2,8 +2,9 @@ package org.jetbrains.dataframe
 
 import kotlin.reflect.jvm.jvmErasure
 
-inline fun <reified T : Comparable<T>> List<T>.median(): Double {
+inline fun <reified T : Comparable<T>> Iterable<T>.median(): Double {
     val sorted = sorted()
+    val size = sorted.size
     val index = size / 2
     return when (T::class) {
         Double::class -> if (size % 2 == 0) (sorted[index - 1] as Double + sorted[index] as Double) / 2.0 else sorted[index] as Double
@@ -13,14 +14,46 @@ inline fun <reified T : Comparable<T>> List<T>.median(): Double {
     }
 }
 
-inline fun <reified T : Number> List<T>.mean(): Double = when (T::class) {
-    Double::class -> (this as Iterable<Double>).sum() / size
-    Int::class -> (this as Iterable<Int>).map { it.toDouble() }.sum() / size
-    Long::class -> (this as Iterable<Long>).sum().toDouble() / size
-    else -> throw IllegalArgumentException()
+class Counter(var value: Int = 0){
+    operator fun inc(): Counter {
+        value++
+        return this
+    }
 }
 
-inline fun <reified T : Number> sum(list: List<T>): T = when (T::class) {
+fun <T> Iterable<T>.computeSize(counter: Counter) = map {
+    counter.inc()
+    it
+}
+
+internal fun Int.zeroToOne() = if(this == 0) 1 else this
+
+inline fun <reified T : Number> Iterable<T>.mean() = when (T::class) {
+        Double::class -> (this as Iterable<Double>).mean()
+        Int::class -> (this as Iterable<Int>).mean()
+        Long::class -> (this as Iterable<Long>).mean()
+        else -> throw IllegalArgumentException()
+}
+
+@JvmName("doubleMean")
+fun Iterable<Double>.mean(): Double {
+    val counter = Counter()
+    return computeSize(counter).sum() / counter.value.zeroToOne()
+}
+
+@JvmName("intMean")
+fun Iterable<Int>.mean(): Double {
+    val counter = Counter()
+    return computeSize(counter).map { it.toDouble() }.sum() / counter.value.zeroToOne()
+}
+
+@JvmName("longMean")
+fun Iterable<Long>.mean(): Double {
+    val counter = Counter()
+    return computeSize(counter).sum().toDouble() / counter.value.zeroToOne()
+}
+
+inline fun <reified T : Number> sum(list: Iterable<T>): T = when (T::class) {
     Double::class -> (list as Iterable<Double>).sum() as T
     Int::class -> (list as Iterable<Int>).map { it.toDouble() }.sum() as T
     Long::class -> (list as Iterable<Long>).sum().toDouble() as T

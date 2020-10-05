@@ -209,7 +209,7 @@ fun ColumnData<String?>.tryParseAny(): ColumnData<*> {
                 parsedValues.add(res)
             }
         }
-    } while (parserId < allParsers.size && parsedValues.size != values.size)
+    } while (parserId < allParsers.size && parsedValues.size != size)
     if (parserId == allParsers.size) return this
     return column(name, parsedValues, allParsers[parserId].type.withNullability(hasNulls))
 }
