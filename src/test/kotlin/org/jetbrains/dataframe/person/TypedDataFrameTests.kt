@@ -5,6 +5,7 @@ import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.tracking.trackColumnAccess
+import org.junit.Ignore
 import org.junit.Test
 import java.time.LocalDate
 
@@ -400,6 +401,7 @@ class TypedDataFrameTests : BaseTest() {
             this["from Milan"].values shouldBe listOf(0, 0, 1)
             this["from Tokyo"].values shouldBe listOf(0, 1, 0)
             this["from null"].values shouldBe listOf(1, 0, 0)
+            this["ages"].values shouldBe listOf(listOf(15, 20), listOf(45, 30), listOf(20, 40, 30))
         }
 
         typed.groupBy { name }.aggregate {
@@ -411,6 +413,7 @@ class TypedDataFrameTests : BaseTest() {
             maxBy { age }.map { city } into "oldest origin"
             compute { sortBy { age }.first().city } into "youngest origin"
             count into { "from $city" }
+            merge { age } into "ages"
         }.check()
 
         typed.groupBy { it.name }.aggregate {
@@ -422,6 +425,7 @@ class TypedDataFrameTests : BaseTest() {
             maxBy { it.age }.map { it.city } into "oldest origin"
             compute { sortBy { it.age }.first().city } into "youngest origin"
             count into { "from ${it.city}" }
+            merge { it.age } into "ages"
         }.check()
 
         df.groupBy(name).aggregate {
@@ -433,6 +437,7 @@ class TypedDataFrameTests : BaseTest() {
             maxBy(age).map { city() } into "oldest origin"
             compute { sortBy(age).first()[city] } into "youngest origin"
             count into { "from ${city()}" }
+            merge { age() } into "ages"
         }.check()
 
         df.groupBy(Person::name).aggregate {
@@ -444,6 +449,7 @@ class TypedDataFrameTests : BaseTest() {
             maxBy(Person::age).map { it[Person::city] } into "oldest origin"
             compute { sortBy(Person::age).first()[Person::city] } into "youngest origin"
             count into { "from ${it[Person::city]}" }
+            merge { it[Person::age] } into "ages"
         }.check()
 
         df.groupBy("name").aggregate {
@@ -455,6 +461,7 @@ class TypedDataFrameTests : BaseTest() {
             maxBy { int("age") }.map { get("city") } into "oldest origin"
             compute { sortBy("age").first()["city"] } into "youngest origin"
             count into { "from " + get("city") }
+            merge { int("age") } into "ages"
         }.check()
     }
 
@@ -645,7 +652,7 @@ class TypedDataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `addRow`(){
+    fun `addRow`() {
         val res = typed.addRow("Bob", null, "Paris", null)
         res.nrow shouldBe typed.nrow + 1
         res.name.type shouldBe getType<String>()
@@ -839,7 +846,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `merge cols with conversion`() {
         val spread = typed.groupBy { name }.countBy { city }
-        val res = spread.mergeCols { colsOfType<Int>() }.map { it.sum() }.into("cities")
+        val res = spread.mergeCols { colsOfType<Int>() }.by { it.sum() }.into("cities")
         val expected = typed.select { name and city }.filter { city != null }.groupBy { name }.count("cities")
         res shouldBe expected
     }
@@ -849,4 +856,39 @@ class TypedDataFrameTests : BaseTest() {
         val d = typed.update { city }.with { it?.toCharArray()?.toList() ?: emptyList() }
         println(d.city.type)
     }
+
+    @Test
+    fun `merge in groupBy`() {
+        val grouped = typed.groupBy { name }
+
+        fun TypedDataFrame<*>.check() {
+            this["ages"].values shouldBe listOf(listOf(15, 20), listOf(45, 30), listOf(20, 40, 30))
+            this["agesStr"].values shouldBe listOf("15, 20", "45, 30", "20, 40, 30")
+            this["ages delimited"].values shouldBe listOf("15-20", "45-30", "20-40-30")
+            this["min age"].values shouldBe listOf(15, 30, 20)
+        }
+
+        grouped.aggregate {
+            merge { age } into "ages"
+            merge { age }.asStrings() into "agesStr"
+            merge { age }.by("-") into "ages delimited"
+            merge { age }.by { it.minOrNull() } into "min age"
+        }.check()
+
+        listOf(
+                grouped.merge { age }.into("ages"),
+                grouped.merge { age }.asStrings().into("agesStr"),
+                grouped.merge { age }.by("-").into("ages delimited"),
+                grouped.merge { age }.by { it.minOrNull() }.into("min age")
+        ).joinOrNull()!!.check()
+    }
+
+    @Test
+    @Ignore
+    fun `empty group by`() {
+        val ungrouped = typed.filter { false }.groupBy { name }.ungroup()
+        ungrouped.nrow shouldBe 0
+        ungrouped.ncol shouldBe typed.ncol
+    }
+
 }

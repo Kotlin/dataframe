@@ -39,35 +39,35 @@ interface GroupedDataFrame<out T> {
     fun count(columnName: String = "n", filter: RowFilter<T>) = aggregate { count(filter) into columnName }
 }
 
-class GroupedDataFrameImpl<T>(val df: TypedDataFrame<T>) : GroupedDataFrame<T> {
+class GroupedDataFrameImpl<T>(val groupedDf: TypedDataFrame<T>) : GroupedDataFrame<T> {
 
     override fun modify(transform: TypedDataFrame<T>.() -> TypedDataFrame<*>) =
-            GroupedDataFrameImpl(df.update(columnForGroupedData) { transform(this[columnForGroupedData].typed()) })
+            GroupedDataFrameImpl(groupedDf.update(columnForGroupedData) { transform(this[columnForGroupedData].typed()) })
 
-    override val groups get() = df[columnForGroupedData].values as List<TypedDataFrame<T>>
+    override val groups get() = groupedDf[columnForGroupedData].values as List<TypedDataFrame<T>>
 
-    override val keys by lazy { df - columnForGroupedData }
+    override val keys by lazy { groupedDf - columnForGroupedData }
 
     override operator fun get(key: GroupKey): TypedDataFrame<T> {
 
-        require(key.size < df.ncol) { "Invalid size of the key" }
+        require(key.size < groupedDf.ncol) { "Invalid size of the key" }
 
         val keySize = key.size
-        val filtered = df.filter { values.subList(0, keySize) == key }
+        val filtered = groupedDf.filter { values.subList(0, keySize) == key }
         return filtered[columnForGroupedData].values.union().typed<T>()
     }
 
     override fun sortBy(columns: List<SortColumnDescriptor>): GroupedDataFrame<T> {
-        val keyColumns = columns.filter { df.tryGetColumn(it.column) != null }
+        val keyColumns = columns.filter { groupedDf.tryGetColumn(it.column) != null }
         val groupColumns = columns - keyColumns
 
-        val newDf = df.sortBy(keyColumns).update(columnForGroupedData) {
+        val newDf = groupedDf.sortBy(keyColumns).update(columnForGroupedData) {
             columnForGroupedData().sortBy(groupColumns)
         }
         return GroupedDataFrameImpl(newDf)
     }
 
-    override val size = df.nrow
+    override val size = groupedDf.nrow
 }
 
 typealias Reducer<T, R> = (TypedDataFrame<T>) -> R
@@ -128,6 +128,12 @@ class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
         reducer(df)
     }
 
+    fun <R> merge(selector: RowSelector<T, R>) = GroupMergeClause(dataFrame, selector, { it })
+
+    fun <C, R> doMerge(name: String, clause: GroupMergeClause<T, C, R>, type: KType) = doMergeRows(this, dataFrame, name, clause.selector, clause.transform, type)
+
+    inline infix fun <C, reified R> GroupMergeClause<T, C, R>.into(name: String) = doMerge(name, this, getType<R>())
+
     inline infix fun <reified R> Reducer<T, R>.into(noinline keySelector: RowSelector<T, String?>) = spread(this, keySelector, getType<R>())
 
     fun <R> compute(selector: DataFrameExpression<T, R>) = reduce { selector(it, it) }
@@ -154,4 +160,4 @@ inline fun <T, reified R : Number> GroupedDataFrame<T>.mean(columnName: String =
 inline fun <T, reified R : Comparable<R>> GroupedDataFrame<T>.min(columnName: String = "min", noinline selector: RowSelector<T, R>) = aggregate { min(selector) into columnName }
 inline fun <T, reified R : Comparable<R>> GroupedDataFrame<T>.max(columnName: String = "max", noinline selector: RowSelector<T, R>) = aggregate { max(selector) into columnName }
 
-internal val <T> GroupedDataFrame<T>.baseDataFrame get() = (this as GroupedDataFrameImpl<T>).df
+internal val <T> GroupedDataFrame<T>.baseDataFrame get() = (this as GroupedDataFrameImpl<T>).groupedDf

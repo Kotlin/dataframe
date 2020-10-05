@@ -69,7 +69,8 @@ internal fun <T, R> doSpread(builder: GroupAggregateBuilder<T>, grouped: Grouped
             else if (expectedType == null) classes.add(value.javaClass.kotlin)
             value
         }
-        builder.add(ColumnDataImpl(values, columnName, expectedType?.withNullability(hasNulls) ?: classes.commonType(hasNulls)))
+        builder.add(ColumnDataImpl(values, columnName, expectedType?.withNullability(hasNulls)
+                ?: classes.commonType(hasNulls)))
     }
 }
 
@@ -183,13 +184,14 @@ fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: 
     }.toMutableList()
     resultColumns.add(column(namesTo, keyColumnData, keyColumnType.withNullability(keys.contains(null))))
     if (valuesTo != null)
-        resultColumns.add(column(valuesTo, valueColumnData, classes?.commonType(hasNullValues) ?: valueColumnType.withNullability(hasNullValues)))
+        resultColumns.add(column(valuesTo, valueColumnData, classes?.commonType(hasNullValues)
+                ?: valueColumnType.withNullability(hasNullValues)))
     return dataFrameOf(resultColumns).typed()
 }
 
 fun <T> TypedDataFrame<T>.mergeRows(selector: ColumnsSelector<T, *>): TypedDataFrame<T> {
 
-    val nestColumns = getColumns(selector).map { this[it] }
+    val nestColumns = getColumns(selector)
     val otherColumns = columns - nestColumns
 
     return groupBy(otherColumns).aggregate {
@@ -201,21 +203,77 @@ fun <T> TypedDataFrame<T>.mergeRows(selector: ColumnsSelector<T, *>): TypedDataF
     }
 }
 
-class MergeColsClause<T, C, R>(val df: TypedDataFrame<T>, val columns: List<ColumnData<C>>, val transform: (List<C>) -> R)
+interface MergeType
+class MergeCols : MergeType
+class MergeRows : MergeType
 
-fun <T, C> TypedDataFrame<T>.mergeCols(selector: ColumnsSelector<T, C>) = MergeColsClause(this, getColumns(selector), { it })
+class MergeClause<T, C, R, M : MergeType>(val df: TypedDataFrame<T>, val columns: List<ColumnData<C>>, val transform: (Iterable<C>) -> R)
 
-inline fun <T, C, reified R> MergeColsClause<T, C, R>.into(columnName: String) = df.add(columnName)
+class GroupMergeClause<T, C, R>(val df: GroupedDataFrame<T>, val selector: RowSelector<T, C>, val transform: (Iterable<C>) -> R)
+
+fun <T, C> TypedDataFrame<T>.mergeCols(selector: ColumnsSelector<T, C>) = MergeClause<T, C, Iterable<C>, MergeCols>(this, getColumns(selector), { it })
+
+inline fun <T, C, reified R> MergeClause<T, C, R, MergeCols>.into(columnName: String) = df.add(columnName)
 { row ->
     transform(columns.map { it[row.index] })
 } - columns
 
-fun <T, C> MergeColsClause<T, C, *>.intoStr(columnName: String) = by().into(columnName)
+fun <T, C> MergeClause<T, C, *, MergeCols>.intoStr(columnName: String) = by().into(columnName)
 
-fun <T, C, R> MergeColsClause<T, C, R>.by(separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "", limit: Int = -1, truncated: CharSequence = "...", transform: ((C) -> CharSequence)? = null) =
-        MergeColsClause(df, columns) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix, limit = limit, truncated = truncated, transform = transform) }
+fun <T, C, R, M : MergeType> MergeClause<T, C, R, M>.asStrings() = by()
 
-inline fun <T, C, R, reified V> MergeColsClause<T, C, R>.map(crossinline transform: (R) -> V) = MergeColsClause(df, columns) { transform(this@map.transform(it)) }
+fun <T, C, R> GroupMergeClause<T, C, R>.asStrings() = by()
+
+fun <T, C, R> GroupMergeClause<T, C, R>.by(separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "", limit: Int = -1, truncated: CharSequence = "...") =
+        GroupMergeClause(df, selector) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix, limit = limit, truncated = truncated) }
+
+fun <T, C, R, M : MergeType> MergeClause<T, C, R, M>.by(separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "", limit: Int = -1, truncated: CharSequence = "...") =
+        MergeClause<T, C, String, M>(df, columns) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix, limit = limit, truncated = truncated) }
+
+inline fun <T, C, reified R> MergeClause<T, C, R, MergeRows>.inplace() = into(columns.map { it.name })
+
+inline fun <T, C, reified R> MergeClause<T, C, R, MergeRows>.into(vararg names: String) = into(names.toList())
+
+inline fun <T, C, reified R> MergeClause<T, C, R, MergeRows>.into(nameGenerator: (ColumnData<C>) -> String) = into(columns.map(nameGenerator))
+
+@JvmName("mergeRowsInto")
+inline fun <T, C, reified R> MergeClause<T, C, R, MergeRows>.into(names: List<String>): TypedDataFrame<T> {
+
+    val columnsToMerge = columns
+    assert(names.size == columnsToMerge.size)
+    val otherColumns = df.columns - columnsToMerge
+    val grouped = df.groupBy(otherColumns)
+    return grouped.aggregate {
+        doMergeRows(this, grouped, this@into, names)
+    }
+}
+
+fun <T, R> GroupedDataFrame<T>.merge(selector: RowSelector<T, R>) = GroupMergeClause(this, selector, { it })
+
+inline fun <T, C, reified R> GroupMergeClause<T, C, R>.into(name: String) = df.aggregate { this@into.into(name) }
+
+fun <T, C, R> doMergeRows(builder: GroupAggregateBuilder<T>, grouped: GroupedDataFrame<T>, name: String, expression: RowSelector<T, C>, transform: (Iterable<C>)->R, type: KType) {
+
+    val values = grouped.groups.map { transform(it.rows.map { expression(it, it) }) }
+    val newColumn = column(name, values, type)
+    builder.add(newColumn)
+}
+
+inline fun <T, C, reified R> doMergeRows(builder: GroupAggregateBuilder<T>, grouped: GroupedDataFrame<T>, clause: MergeClause<T, C, R, MergeRows>, names: List<String>) {
+
+    val columnsToMerge = clause.columns
+    assert(names.size == columnsToMerge.size)
+    val nameGenerator = grouped.nameGenerator()
+    columnsToMerge.forEachIndexed { i, col ->
+        val values = grouped.groups.map { clause.transform(it[col].values) }
+        val newColumn = column(nameGenerator.createUniqueName(names[i]), values, getType<R>())
+        builder.add(newColumn)
+    }
+}
+
+inline fun <T, C, R, reified V, M : MergeType> MergeClause<T, C, R, M>.by(crossinline transform: (R) -> V) = MergeClause<T, C, V, M>(df, columns) { transform(this@by.transform(it)) }
+
+inline fun <T, C, R, V> GroupMergeClause<T, C, R>.by(crossinline transform: (R) -> V) = GroupMergeClause<T, C, V>(df, selector) { transform(this@by.transform(it)) }
 
 internal class ColumnDataCollector(initCapacity: Int = 0) {
     private val classes = mutableSetOf<KClass<*>>()

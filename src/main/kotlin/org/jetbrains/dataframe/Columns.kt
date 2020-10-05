@@ -1,12 +1,10 @@
 package org.jetbrains.dataframe
 
-import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
-import kotlin.reflect.KType
+import kotlin.reflect.*
+import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
-import kotlin.reflect.typeOf
 
 interface ColumnSet<out C>
 
@@ -26,12 +24,12 @@ typealias Column = ColumnDef<*>
 
 interface ColumnData<out T> : ColumnDef<T> {
 
-    val values: List<T>
+    val values: Iterable<T>
     val ndistinct: Int
     val type: KType
     val hasNulls: Boolean get() = type.isMarkedNullable
-    val size get() = values.size
-    operator fun get(index: Int) = values[index]
+    val size: Int
+    operator fun get(index: Int): T
 
     operator fun get(indices: Iterable<Int>) = slice(indices)
 
@@ -91,6 +89,11 @@ class ColumnDataImpl<T>(override val values: List<T>, override val name: String,
     override val ndistinct = toSet().size
 
     override fun distinct() = ColumnDataImpl(toSet().toList(), name, type)
+
+    override fun get(index: Int) = values[index]
+
+    override val size: Int
+        get() = values.size
 }
 
 @OptIn(ExperimentalStdlibApi::class)
@@ -112,13 +115,13 @@ inline fun <reified T> DataCol.cast() = column(name, values as List<T>, hasNulls
 
 fun <T> ColumnData<T>.reorder(permutation: List<Int>): ColumnData<T> {
     var nullable = false
-    val newValues = (0 until size).map { values[permutation[it]].also { if (it == null) nullable = true } }
+    val newValues = (0 until size).map { get(permutation[it]).also { if (it == null) nullable = true } }
     return withValues(newValues, nullable)
 }
 
 fun <T> ColumnData<T>.slice(indices: Iterable<Int>): ColumnData<T> {
     var nullable = false
-    val newValues = indices.map { values[it].also { if (it == null) nullable = true } }
+    val newValues = indices.map { get(it).also { if (it == null) nullable = true } }
     return withValues(newValues, nullable)
 }
 
@@ -128,7 +131,11 @@ fun DataCol.getRows(mask: BooleanArray): DataCol {
     return withValues(newValues, nullable)
 }
 
-fun <C> ColumnData<C>.rename(newName: String) = if (newName == name) this else ColumnDataImpl(values, newName, type)
+fun <C> ColumnData<C>.rename(newName: String) = if (newName == name) this else
+    when (this) {
+        is ColumnDataImpl<C> -> ColumnDataImpl(values, newName, type)
+        else -> throw Exception()
+    }
 
 fun <C> ColumnData<C>.ensureUniqueName(nameGenerator: ColumnNameGenerator) = rename(nameGenerator.createUniqueName(name))
 
@@ -181,7 +188,9 @@ class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
     }
 }
 
-inline fun TypedDataFrame<*>.nameGenerator() = ColumnNameGenerator(columnNames())
+fun TypedDataFrame<*>.nameGenerator() = ColumnNameGenerator(columnNames())
+
+fun GroupedDataFrame<*>.nameGenerator() = ColumnNameGenerator(baseDataFrame.columnNames())
 
 internal fun <T, R> ColumnData<T>.mapValues(transform: (T) -> R) = map(transform)
 

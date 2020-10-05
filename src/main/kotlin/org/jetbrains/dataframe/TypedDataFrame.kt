@@ -351,7 +351,7 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
         return Comparator<Any?> { left, right ->
             (left as Comparable<Any?>).compareTo(right)
         }.let { if (nullsLast) nullsLast(it) else nullsFirst(it) }
-                .let { Comparator { left, right -> it.compare(values[left], values[right]) } }
+                .let { Comparator { left, right -> it.compare(get(left), get(right)) } }
     }
 
     override fun sortBy(columns: List<SortColumnDescriptor>): TypedDataFrame<T> {

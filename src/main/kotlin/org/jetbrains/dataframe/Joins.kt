@@ -44,6 +44,13 @@ val JoinType.allowRightNulls get() = this == JoinType.LEFT || this == JoinType.O
 internal fun <A, B> defaultJoinColumns(left: TypedDataFrame<A>, right: TypedDataFrame<B>): JoinColumnSelector<A, B> =
         { left.columnNames().intersect(right.columnNames()).map { it.toColumn() }.let { ColumnGroup(it) } }
 
+internal fun <T> defaultJoinColumns(dataFrames: Iterable<TypedDataFrame<T>>): JoinColumnSelector<T, T> =
+        {
+            dataFrames.map { it.columnNames() }.fold<List<String>, Set<String>?>(null) { set, names ->
+                set?.intersect(names) ?: names.toSet()
+            }.orEmpty().map { it.toColumn() }.let { ColumnGroup(it) }
+        }
+
 fun <A, B> TypedDataFrame<A>.innerJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.INNER, selector = selector)
 fun <A, B> TypedDataFrame<A>.leftJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.LEFT, selector = selector)
 fun <A, B> TypedDataFrame<A>.rightJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.RIGHT, selector = selector)
@@ -51,7 +58,10 @@ fun <A, B> TypedDataFrame<A>.outerJoin(other: TypedDataFrame<B>, selector: JoinC
 fun <A, B> TypedDataFrame<A>.filterJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.INNER, addNewColumns = false, selector = selector)
 fun <A, B> TypedDataFrame<A>.filterNotJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.EXCLUDE, addNewColumns = false, selector = selector)
 
-fun <A, B> TypedDataFrame<A>.join(other: TypedDataFrame<B>, joinType: JoinType = JoinType.INNER, addNewColumns: Boolean = true, selector: JoinColumnSelector<A, B>): TypedDataFrame<A> {
+fun <T> Iterable<TypedDataFrame<T>>.joinOrNull(joinType: JoinType = JoinType.INNER, selector: JoinColumnSelector<T, T> = defaultJoinColumns(this)) =
+        fold<TypedDataFrame<T>, TypedDataFrame<T>?>(null) { joined, new -> joined?.join(new, joinType, selector = selector) ?: new }
+
+fun <A, B> TypedDataFrame<A>.join(other: TypedDataFrame<B>, joinType: JoinType = JoinType.INNER, addNewColumns: Boolean = true, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)): TypedDataFrame<A> {
 
     val joinColumns = getColumns(other, selector)
 

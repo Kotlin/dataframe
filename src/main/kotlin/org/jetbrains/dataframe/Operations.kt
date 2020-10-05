@@ -178,8 +178,8 @@ fun DataCol.addRowNumber(columnName: String = "id") = dataFrameOf(listOf(indexCo
 
 // Column operations
 
-fun <T : Comparable<T>> ColumnData<T?>.min() = values.asSequence().filterNotNull().min()
-fun <T : Comparable<T>> ColumnData<T?>.max() = values.asSequence().filterNotNull().max()
+fun <T : Comparable<T>> ColumnData<T?>.min() = values.asSequence().filterNotNull().minOrNull()
+fun <T : Comparable<T>> ColumnData<T?>.max() = values.asSequence().filterNotNull().maxOrNull()
 
 // Update
 
@@ -268,7 +268,7 @@ fun <T> TypedDataFrame<T>.summary() =
             "column" { name }
             "type" { type.fullName }
             "distinct values" { ndistinct }
-            "nulls %" { values.count { it == null }.toDouble() * 100 / values.size.let { if (it == 0) 1 else it } }
+            "nulls %" { values.count { it == null }.toDouble() * 100 / size.let { if (it == 0) 1 else it } }
             "most frequent value" { values.groupBy { it }.maxByOrNull { it.value.size }?.key }
         }
 
