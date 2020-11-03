@@ -107,7 +107,7 @@ if (hasProperty('bintray.user') && hasProperty('bintray.apikey')) {
 
         user = getProperty("bintray.user")
         key = getProperty("bintray.apikey")
-
+        print("bintray.user=" + user)
         publications = ['maven'] //When uploading configuration files
 
         dryRun = false //Whether to run this as dry-run, without deploying
