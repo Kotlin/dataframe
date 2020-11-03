@@ -100,13 +100,13 @@ publishing {
         }
     }
 }
-if (hasProperty('bintray.user') && hasProperty('bintray.key')) {
+if (hasProperty('bintray.user') && hasProperty('bintray.apikey')) {
     bintray {
 
         // property must be set in ~/.gradle/gradle.properties
 
         user = getProperty("bintray.user")
-        key = getProperty("bintray.key")
+        key = getProperty("bintray.apikey")
 
         publications = ['maven'] //When uploading configuration files
 
