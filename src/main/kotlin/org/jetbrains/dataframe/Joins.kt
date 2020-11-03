@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException
+import java.lang.UnsupportedOperationException
 import kotlin.reflect.full.withNullability
 
 interface TypedDataFrameWithColumnsForJoin<out A, out B> : TypedDataFrameWithColumnsForSelect<A> {
@@ -15,7 +15,7 @@ class ColumnMatch<C>(val left: ColumnDef<C>, val right: ColumnDef<C>) : ColumnSe
 class TypedDataFrameWithColumnsForJoinImpl<A, B>(private val left: TypedDataFrame<A>, override val right: TypedDataFrame<B>) : TypedDataFrame<A> by left, TypedDataFrameWithColumnsForJoin<A, B> {
 
     override val allColumns: ColumnGroup<*>
-        get() = throw NotImplementedException()
+        get() = throw UnsupportedOperationException()
 
 }
 
