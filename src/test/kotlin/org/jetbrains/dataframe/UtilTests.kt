@@ -2,13 +2,7 @@ package org.jetbrains.dataframe
 
 import io.kotlintest.shouldBe
 import org.junit.Test
-import sun.reflect.generics.reflectiveObjects.NotImplementedException
 import java.io.Serializable
-import java.lang.IllegalArgumentException
-import java.lang.RuntimeException
-import kotlin.reflect.KClass
-import kotlin.reflect.full.allSuperclasses
-import kotlin.reflect.full.superclasses
 
 class UtilTests {
 
@@ -17,7 +11,7 @@ class UtilTests {
         commonParents(Int::class, Int::class) shouldBe listOf(Int::class)
         commonParents(Double::class, Int::class) shouldBe listOf(Number::class, Comparable::class)
         commonParents(Int::class, String::class) shouldBe listOf(Serializable::class, Comparable::class)
-        commonParents(IllegalArgumentException::class, NotImplementedException::class) shouldBe listOf(RuntimeException::class)
+        commonParents(IllegalArgumentException::class, UnsupportedOperationException::class) shouldBe listOf(RuntimeException::class)
     }
 
     @Test
