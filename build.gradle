@@ -86,7 +86,7 @@ dokka {
 }
 
 group 'org.jetbrains.kotlin'
-version '0.0.6-dev-18'
+version '0.0.6'
 
 artifacts {
     archives sourcesJar
@@ -100,13 +100,13 @@ publishing {
         }
     }
 }
-
-if (hasProperty('bintray_user') && hasProperty('bintray_key')) {
+if (hasProperty('bintray.user') && hasProperty('bintray.key')) {
     bintray {
 
         // property must be set in ~/.gradle/gradle.properties
-        user = bintray_user
-        key = bintray_key
+
+        user = getProperty("bintray.user")
+        key = getProperty("bintray.key")
 
         publications = ['maven'] //When uploading configuration files
 
@@ -123,7 +123,11 @@ if (hasProperty('bintray_user') && hasProperty('bintray_key')) {
 
             //Optional version descriptor
             version {
-                name = project.version //Bintray logical version name
+                if(hasProperty("build.counter")) {
+                    name = project.version + "-dev-" + getProperty("build.counter") //Bintray logical version name
+                } else {
+                    name = project.version + "-local"
+                }
                 desc = '.'
                 released = new Date()
                 vcsTag = 'v' + project.version
