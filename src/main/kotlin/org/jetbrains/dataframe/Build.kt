@@ -45,7 +45,7 @@ fun dataFrameOf(vararg header: ColumnDef<*>) = DataFrameBuilder(header.map { it.
 
 fun dataFrameOf(vararg header: String) = DataFrameBuilder(header.toList())
 
-fun Iterable<DataCol>.asDataFrame() = dataFrameOf(this)
+fun <T> Iterable<DataCol>.asDataFrame() = dataFrameOf(this).typed<T>()
 
 class DataFrameBuilder(private val columnNames: List<String>) {
 
