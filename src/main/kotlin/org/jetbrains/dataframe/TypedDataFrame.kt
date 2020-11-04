@@ -110,6 +110,8 @@ internal fun <C> ColumnSet<C>.extractSortColumns(): List<SortColumnDescriptor> =
 
 internal fun <T, C> TypedDataFrame<T>.getColumns(selector: ColumnsSelector<T, C>) = TypedDataFrameWithColumnsForSelectImpl(this).let { extractColumns(selector(it, it)) }
 
+internal fun <T, C> TypedDataFrame<T>.getGroupColumns(selector: ColumnsSelector<T, TypedDataFrameRow<C>>) = getColumns(selector).map {it as GroupedColumn<C> }
+
 internal fun <T, C> TypedDataFrame<T>.getColumn(selector: ColumnSelector<T, C>) = TypedDataFrameWithColumnsForSelectImpl(this).let { selector(it, it) }.let { this[it] }
 
 @JvmName("getColumnForSpread")
@@ -141,7 +143,11 @@ typealias UntypedDataFrame = TypedDataFrame<Unit>
 
 internal fun <T> TypedDataFrame<T>.new(columns: Iterable<DataCol>) = dataFrameOf(columns).typed<T>()
 
-interface TypedDataFrame<out T> {
+interface DataFrameBase<out T> {
+    operator fun get(columnName: String): ColumnData<*>
+}
+
+interface TypedDataFrame<out T> : DataFrameBase<T> {
 
     val nrow: Int
     val ncol: Int get() = columns.size
@@ -151,7 +157,7 @@ interface TypedDataFrame<out T> {
     fun columnNames() = columns.map { it.name }
 
     operator fun get(index: Int): TypedDataFrameRow<T> = TypedDataFrameRowImpl(index, this)
-    operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found") // TODO
+    override operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found") // TODO
     operator fun <R> get(column: ColumnDef<R>) = get(column.name) as ColumnData<R>
     operator fun <R> get(property: KProperty<R>) = get(property.name) as ColumnData<R>
     operator fun get(indices: Iterable<Int>) = getRows(indices)
@@ -169,6 +175,9 @@ interface TypedDataFrame<out T> {
     fun getColumnIndex(name: String): Int
     fun getColumnIndex(col: DataCol) = getColumnIndex(col.name)
     fun tryGetColumn(name: String) = getColumnIndex(name).let { if (it != -1) columns[it] else null }
+
+    fun tryGetColumnGroup(name: String) = tryGetColumn(name) as? GroupedColumn<*>
+    fun getColumnGroup(name: String) = tryGetColumnGroup(name)!!
 
     fun <C> select(columns: Iterable<ColumnDef<C>>) = new(columns.map { this[it] })
     fun select(vararg columns: Column) = select(columns.toList())
@@ -242,6 +251,8 @@ interface TypedDataFrame<out T> {
     fun <D : Comparable<D>> minBy(selector: RowSelector<T, D>) = rows.minBy { selector(it, it) }
     fun <D : Comparable<D>> minBy(col: ColumnDef<D>) = rows.minBy { col(it) }
     fun <D : Comparable<D>> minBy(col: String) = rows.minBy { it[col] as D }
+
+    fun insertCol(index: Int, col: ColumnData<*>) = (columns.subList(0, index) + listOf(col) + columns.subList(index, columns.size)).asDataFrame<T>()
 
     fun all(predicate: RowFilter<T>): Boolean = rows.all { predicate(it, it) }
     fun any(predicate: RowFilter<T>): Boolean = rows.any { predicate(it, it) }
@@ -384,14 +395,13 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
 
     override fun addRow(vararg values: Any?): TypedDataFrame<T> {
         assert(values.size == ncol) { "Invalid number of arguments. Expected: $ncol, actual: ${values.size}" }
-        val df = values.mapIndexed { i, v ->
+        return values.mapIndexed { i, v ->
             val col = columns[i]
             if(v != null)
                 // Note: type arguments for a new value are not validated here because they are erased
                 assert(v.javaClass.kotlin.isSubclassOf(col.type.jvmErasure))
             col.withValues(col.values + listOf(v), col.hasNulls || v == null)
-        }.asDataFrame()
-        return df.typed()
+        }.asDataFrame<T>()
     }
 }
 
