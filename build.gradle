@@ -123,8 +123,8 @@ if (hasProperty('bintray_user') && hasProperty('bintray_key')) {
 
         pkg {
             repo = 'kotlin-datascience'
-            name = 'krangl-typed'
-            vcsUrl = 'https://github.com/nikitinas/krangl-typed'
+            name = 'dataframe'
+            vcsUrl = 'https://github.com/nikitinas/dataframe'
             userOrg = 'kotlin'
             licenses = ['MIT']
             publicDownloadNumbers = true
