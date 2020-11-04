@@ -5,6 +5,7 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.jvmErasure
 
 interface ColumnSet<out C>
 
@@ -14,11 +15,17 @@ interface ColumnDef<out C> : ColumnSet<C> {
 }
 
 interface ConvertedColumn<out C> : ColumnData<C> {
-    val srcColumn: DataCol
+    val source: DataCol
     val data: ColumnData<C>
 }
 
-class ConvertedColumnImpl<C>(override val srcColumn: DataCol, override val data: ColumnData<C>) : ConvertedColumn<C>, ColumnData<C> by data
+interface RenamedColumn<out C> : ColumnData<C> {
+    val source: ColumnData<C>
+}
+
+class RenamedColumnImpl<C>(override val source: ColumnData<C>, override val name: String) : RenamedColumn<C>, ColumnData<C> by source
+
+class ConvertedColumnImpl<C>(override val source: DataCol, override val data: ColumnData<C>) : ConvertedColumn<C>, ColumnData<C> by data
 
 typealias Column = ColumnDef<*>
 
@@ -30,6 +37,8 @@ interface ColumnData<out T> : ColumnDef<T> {
     val hasNulls: Boolean get() = type.isMarkedNullable
     val size: Int
     operator fun get(index: Int): T
+
+    operator fun get(columnName: String): ColumnData<*>
 
     operator fun get(indices: Iterable<Int>) = slice(indices)
 
@@ -54,6 +63,37 @@ class ColumnDefinition<T>(override val name: String) : ColumnDef<T> {
 }
 
 inline fun <reified T> ColumnDefinition<T>.nullable() = ColumnDefinition<T?>(name)
+
+interface GroupedColumn<T> : ColumnData<TypedDataFrameRow<T>>, DataFrameBase<T> {
+    val df : TypedDataFrame<T>
+    val dataFrameType: KClass<*> get() = type.arguments[0].type?.jvmErasure ?: Any::class
+}
+
+class GroupedColumnImpl<T>(override val df: TypedDataFrame<T>, override val name: String, private val dfType: KType) : GroupedColumn<T> {
+
+    override val values: Iterable<TypedDataFrameRow<T>>
+        get() = df.rows
+
+    override val ndistinct: Int
+        get() = distinct.nrow
+
+    override val type by lazy { (TypedDataFrame::class).createType(listOf(KTypeProjection.invariant(dfType))) }
+
+    override fun distinct() = GroupedColumnImpl(distinct, name, dfType)
+
+    private val distinct by lazy { df.distinct() }
+
+    private val set by lazy { distinct.rows.toSet() }
+
+    override fun toSet() = set
+
+    override val size: Int
+        get() = df.nrow
+
+    override fun get(index: Int) = df[index]
+
+    override fun get(columnName: String) = df[columnName]
+}
 
 class ColumnDataImpl<T>(override val values: List<T>, override val name: String, override val type: KType) : ColumnData<T> {
 
@@ -80,7 +120,6 @@ class ColumnDataImpl<T>(override val values: List<T>, override val name: String,
 
     override fun hashCode(): Int {
         var result = values.hashCode()
-        result = 31 * result + hasNulls.hashCode()
         result = 31 * result + name.hashCode()
         result = 31 * result + type.hashCode()
         return result
@@ -91,6 +130,8 @@ class ColumnDataImpl<T>(override val values: List<T>, override val name: String,
     override fun distinct() = ColumnDataImpl(toSet().toList(), name, type)
 
     override fun get(index: Int) = values[index]
+
+    override fun get(columnName: String) = throw Exception()
 
     override val size: Int
         get() = values.size
@@ -131,11 +172,7 @@ fun DataCol.getRows(mask: BooleanArray): DataCol {
     return withValues(newValues, nullable)
 }
 
-fun <C> ColumnData<C>.rename(newName: String) = if (newName == name) this else
-    when (this) {
-        is ColumnDataImpl<C> -> ColumnDataImpl(values, newName, type)
-        else -> throw Exception()
-    }
+fun <C> ColumnData<C>.rename(newName: String) = if (newName == name) this else RenamedColumnImpl(this, newName)
 
 fun <C> ColumnData<C>.ensureUniqueName(nameGenerator: ColumnNameGenerator) = rename(nameGenerator.createUniqueName(name))
 
@@ -163,7 +200,11 @@ class ColumnDelegate<T> {
     operator fun getValue(thisRef: Any?, property: KProperty<*>) = ColumnDefinition<T>(property.name)
 }
 
+fun DataCol.asGrouped() = this as GroupedColumn<*>
+
 fun <T> column() = ColumnDelegate<T>()
+
+fun <T> columnGroup() = column<TypedDataFrameRow<T>>()
 
 fun <T> column(name: String) = ColumnDefinition<T>(name)
 
