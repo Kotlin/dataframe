@@ -110,12 +110,6 @@ publishing {
 }
 if (hasProperty('bintray_user') && hasProperty('bintray_key')) {
 
-    task testTask {
-        doLast {
-            print "Version: " + version
-        }
-    }
-
     bintray {
 
         // property must be set in ~/.gradle/gradle.properties
