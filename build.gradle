@@ -137,10 +137,10 @@ if (hasProperty('bintray_user') && hasProperty('bintray_key')) {
 
             //Optional version descriptor
             version {
-                name = version //Bintray logical version name
+                name = project.version //Bintray logical version name
                 desc = '.'
                 released = new Date()
-                vcsTag = 'v' + version
+                vcsTag = 'v' + project.version
             }
         }
     }
