@@ -8,6 +8,7 @@ import org.jetbrains.dataframe.tracking.trackColumnAccess
 import org.junit.Ignore
 import org.junit.Test
 import java.time.LocalDate
+import kotlin.reflect.jvm.jvmErasure
 
 class TypedDataFrameTests : BaseTest() {
 
@@ -882,6 +883,43 @@ class TypedDataFrameTests : BaseTest() {
                 grouped.merge { age }.by { it.minOrNull() }.into("min age")
         ).joinOrNull()!!.check()
     }
+
+    @Test
+    fun `column group by`() {
+
+        fun TypedDataFrame<Person>.check() {
+            ncol shouldBe 3
+            nrow shouldBe typed.nrow
+            columnNames() shouldBe listOf("name", "Int", "String")
+            val intGroup = this["Int"].asGrouped()
+            intGroup.df.columnNames() shouldBe listOf("age", "weight")
+
+            val res = listOf(this.name, this["Int"]["age"], this["String"]["city"], this["Int"]["weight"]).asDataFrame<Person>()
+            res shouldBe typed
+        }
+        typed.groupColsBy { if(it.name != "name") it.type.jvmErasure.simpleName else null }.into { it.name }.check()
+        typed.groupCols { cols { it != name } }.into { it.type.jvmErasure.simpleName!! }.check()
+        typed.groupCols { age and city and weight }.into { it.type.jvmErasure.simpleName!! }.check()
+    }
+
+    @Test
+    fun `column group`() {
+
+        val grouped = typed.groupCols { age and name and city }.into("info")
+        grouped.ncol shouldBe 2
+        grouped.columnNames() shouldBe listOf("info", "weight")
+        val res = listOf(grouped["info"]["name"], grouped["info"]["age"], grouped["info"]["city"], grouped.weight).asDataFrame<Person>()
+        res shouldBe typed
+    }
+
+    @Test
+    fun `column ungroup`() {
+
+        val info by columnGroup<Person>()
+        val res = typed.groupCols { age and city }.into("info").ungroupCol { info }
+        res shouldBe typed
+    }
+
 
     @Test
     @Ignore
