@@ -86,7 +86,15 @@ dokka {
 }
 
 group 'org.jetbrains.kotlin'
-version '0.0.6'
+
+if(hasProperty("build_counter")) {
+    version property('version') + "-dev-" + build_counter
+}
+else if(hasProperty("release")) {
+    version property('version')
+} else {
+    version property('version') + "-dev"
+}
 
 artifacts {
     archives sourcesJar
@@ -104,7 +112,7 @@ if (hasProperty('bintray_user') && hasProperty('bintray_key')) {
 
     task testTask {
         doLast {
-            print "This is test task"
+            print "Version: " + version
         }
     }
 
@@ -129,14 +137,10 @@ if (hasProperty('bintray_user') && hasProperty('bintray_key')) {
 
             //Optional version descriptor
             version {
-                if(hasProperty("build.counter")) {
-                    name = project.version + "-dev-" + getProperty("build.counter") //Bintray logical version name
-                } else {
-                    name = project.version + "-local"
-                }
+                name = version //Bintray logical version name
                 desc = '.'
                 released = new Date()
-                vcsTag = 'v' + project.version
+                vcsTag = 'v' + version
             }
         }
     }
