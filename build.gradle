@@ -100,14 +100,20 @@ publishing {
         }
     }
 }
-if (hasProperty('bintray.user') && hasProperty('bintray.apikey')) {
+if (hasProperty('bintray_user') && hasProperty('bintray_key')) {
+
+    task testTask {
+        doLast {
+            print "This is test task"
+        }
+    }
+
     bintray {
 
         // property must be set in ~/.gradle/gradle.properties
 
-        user = getProperty("bintray.user")
-        key = getProperty("bintray.apikey")
-        print("bintray.user=" + user)
+        user = bintray_user
+        key = bintray_key
         publications = ['maven'] //When uploading configuration files
 
         dryRun = false //Whether to run this as dry-run, without deploying
