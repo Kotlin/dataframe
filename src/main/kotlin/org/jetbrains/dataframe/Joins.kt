@@ -168,5 +168,5 @@ fun <A, B> TypedDataFrame<A>.join(other: TypedDataFrame<B>, joinType: JoinType =
         column(srcColumn.name, columnValues.asList(), srcColumn.type.withNullability(hasNulls))
     }
 
-    return columns.asDataFrame().typed<A>()
+    return columns.asDataFrame<A>()
 }

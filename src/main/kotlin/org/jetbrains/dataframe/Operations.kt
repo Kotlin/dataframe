@@ -162,12 +162,12 @@ operator fun <T> TypedDataFrame<T>.plus(other: TypedDataFrame<T>) = merge(listOf
 
 fun TypedDataFrame<*>.union(vararg other: TypedDataFrame<*>) = merge(listOf(this) + other.toList())
 
-fun TypedDataFrame<*>.rename(vararg mappings: Pair<String, String>): UntypedDataFrame {
+fun <T> TypedDataFrame<T>.rename(vararg mappings: Pair<String, String>): TypedDataFrame<T> {
     val map = mappings.toMap()
     return columns.map {
         val newName = map[it.name] ?: it.name
         it.rename(newName)
-    }.asDataFrame()
+    }.asDataFrame<T>()
 }
 
 internal fun indexColumn(columnName: String, size: Int): DataCol = column(columnName, (0 until size).toList())
@@ -273,7 +273,85 @@ fun <T> TypedDataFrame<T>.summary() =
         }
 
 data class CastClause<T>(val df: TypedDataFrame<T>, val columns: Set<Column>) {
-    inline fun <reified C> to() = df.columns.map { if (columns.contains(it)) it.cast<C>() else it }.asDataFrame()
+    inline fun <reified C> to() = df.columns.map { if (columns.contains(it)) it.cast<C>() else it }.asDataFrame<T>()
 }
 
 fun <T> TypedDataFrame<T>.cast(selector: ColumnsSelector<T, *>) = CastClause(this, getColumns(selector).toSet())
+
+// column grouping
+
+class GroupColsClause<T, C>(val df: TypedDataFrame<T>, val columns: List<ColumnData<C>>)
+
+fun <T, C> TypedDataFrame<T>.groupCols(selector: ColumnsSelector<T, C>) = GroupColsClause(this, getColumns(selector))
+
+class GroupColsBy<T>(val df: TypedDataFrame<T>, val grouping: Map<String, List<DataCol>>, val renameTransform: (DataCol) -> String)
+
+fun <T> GroupColsBy<T>.filter(predicate: (Map.Entry<String, List<DataCol>>) -> Boolean) = GroupColsBy(df, grouping.filter(predicate), renameTransform)
+
+inline fun <reified T> GroupColsBy<T>.into(selector: (DataCol) -> String) : TypedDataFrame<T> {
+    val columnGroups = grouping.flatMap { entry -> entry.value.map { it.name to entry.key} }.toMap()
+    val columnNames = grouping.flatMap { entry -> entry.value.map { it.name to selector(it)}}.toMap()
+    return doGroupBy(df, columnGroups, columnNames, getType<T>())
+}
+
+fun <T> TypedDataFrame<T>.groupColsBy(groupName: (DataCol) -> String?) = GroupColsBy(this, columns.groupBy(groupName).filterKeys { it != null }.mapKeys { it.key!! }, { it.name })
+
+fun <T, C> TypedDataFrame<T>.ungroupCol(selector: ColumnSelector<T, TypedDataFrameRow<C>>) = ungroupCols(selector)
+
+fun <T, C> TypedDataFrame<T>.ungroupCols(selector: ColumnsSelector<T, TypedDataFrameRow<C>>): TypedDataFrame<T> {
+
+    val groupedColumns = getGroupColumns(selector)
+    val columnIndices = groupedColumns.map { getColumnIndex(it) to it }.toMap()
+    val resultColumns = mutableListOf<DataCol>()
+    val otherColumns = this - groupedColumns
+    val nameGenerator = otherColumns.nameGenerator()
+    for (colIndex in 0 until ncol) {
+        val groupedColumn = columnIndices[colIndex]
+        if (groupedColumn != null) {
+            groupedColumn.df.columns.forEach {
+                resultColumns.add(it.ensureUniqueName(nameGenerator))
+            }
+        } else resultColumns.add(columns[colIndex])
+    }
+    return resultColumns.asDataFrame()
+}
+
+fun <T> TypedDataFrame<T>.groupColsByDelim(delimeter: CharSequence) {
+
+}
+
+fun <T> doGroupBy(df: TypedDataFrame<T>, columnGroups: Map<String, String>, columnNames: Map<String, String>, type: KType): TypedDataFrame<T> {
+
+    val columnGroups = df.columns.filter { columnGroups.contains(it.name) }.groupBy { columnGroups[it.name]!! }
+    val groupedColumnIndices = columnGroups.mapValues { it.value.map { df.getColumnIndex(it) } }
+    val insertIndices = groupedColumnIndices.mapValues { it.value.minOrNull()!! }.map { it.value to it.key }.toMap()
+    val excludedIndices = groupedColumnIndices.flatMap { it.value }.toSet()
+    val resultColumns = mutableListOf<DataCol>()
+    for (colIndex in 0 until df.ncol) {
+        val groupName = insertIndices[colIndex]
+        if (groupName != null) {
+            val data = columnGroups[groupName]!!.map { col -> columnNames[col.name]?.let { col.rename(it) } ?: col }.asDataFrame<T>()
+            val column = GroupedColumnImpl(data, groupName, type)
+            resultColumns.add(column)
+        } else if (!excludedIndices.contains(colIndex)) {
+            resultColumns.add(df.columns[colIndex])
+        }
+    }
+    return resultColumns.asDataFrame()
+}
+
+inline fun <reified T, C> GroupColsClause<T, C>.into(groupNameExpression: (ColumnData<C>) -> String): TypedDataFrame<T> {
+
+    val renameMapping = columns.map {
+        when(it){
+            is RenamedColumn<C> -> it.source to it.name
+            else -> it to null
+        }
+    }
+    val groupedColumns = renameMapping.map {it.first}
+    val columnNames = renameMapping.mapNotNull { if(it.second != null) it.first.name to it.second!! else null }.toMap()
+    val columnGroups = groupedColumns.map { it.name to groupNameExpression(it) }.toMap()
+    return doGroupBy(df, columnGroups, columnNames, getType<T>())
+}
+
+inline fun <reified T, C> GroupColsClause<T, C>.into(name: String) = into { name }

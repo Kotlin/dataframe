@@ -93,14 +93,14 @@ internal fun <T> TypedDataFrame<T>.spreadToPair(keyColumn: ColumnDef<String?>, v
 }
 
 internal fun extractOriginalColumn(column: Column): Column = when (column) {
-    is ConvertedColumn<*> -> extractOriginalColumn(column.srcColumn)
+    is ConvertedColumn<*> -> extractOriginalColumn(column.source)
     else -> column
 }
 
 internal fun <T, C> extractConvertedColumn(df: TypedDataFrame<T>, col: ColumnDef<C>, nameGenerator: ColumnNameGenerator): Triple<TypedDataFrame<T>, Column?, ColumnData<C>> =
         when {
             col is ConvertedColumn<C> -> {
-                val srcColumn = extractOriginalColumn(col.srcColumn)
+                val srcColumn = extractOriginalColumn(col.source)
                 val columnData = col.data.ensureUniqueName(nameGenerator)
                 Triple(df + columnData, srcColumn, columnData)
             }
