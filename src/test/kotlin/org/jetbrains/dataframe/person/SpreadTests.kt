@@ -170,32 +170,4 @@ class SpreadTests {
         val gathered = spread.gather { cols[1 until ncol] }.mapNames { it.substring(2) }.into("key", "value")
         gathered shouldBe typed
     }
-/*
-    fun qq() {
-
-        typed.update { name }.with { it.capitalize() }
-
-        typed.update { name }.withNull()
-
-        typed.update { name with { it.capitalize() } }
-
-        typed.spread { key into value }
-
-        typed.spread { key.map { "__$it" } into { name + value.toString() } groupedBy(name) }
-
-        typed.spread { key }.intoFlags()
-
-        typed.spread { key }.into { value }
-
-        typed.gather(
-                columns = { name and value },
-                filter = { it != null },
-                mapNames = { it.substring(1) },
-                into = "key" to "value"
-        )
-
-        typed.gather { name and value }.where { it != null }.mapNames { it.substring(1) }.mapValues { it }.into("key" to "value")
-
-        typed.gather { cols[1..5] where { it != null } mapNames { it.substring(1) } mapValues { it } into "key" to "value" }
-    } */
 }
