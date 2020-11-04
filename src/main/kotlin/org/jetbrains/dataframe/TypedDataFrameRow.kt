@@ -4,13 +4,17 @@ import org.jetbrains.dataframe.tracking.ColumnAccessTracker
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 
-interface TypedDataFrameRow<out T> {
+interface DataFrameRowBase<out T> {
+    operator fun get(name: String): Any?
+}
+
+interface TypedDataFrameRow<out T>: DataFrameRowBase<T> {
     val owner: TypedDataFrame<T>
     val prev: TypedDataFrameRow<T>?
     val next: TypedDataFrameRow<T>?
     val index: Int
     fun getRow(index: Int): TypedDataFrameRow<T>?
-    operator fun get(name: String): Any?
+    override operator fun get(name: String): Any?
     operator fun get(columnIndex: Int): Any?
     operator fun <R> get(column: ColumnDef<R>) = get(column.name) as R
     operator fun <R> get(property: KProperty<R>) = get(property.name) as R
