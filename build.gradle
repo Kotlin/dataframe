@@ -103,6 +103,8 @@ artifacts {
 publishing {
     publications {
         maven(MavenPublication) {
+            artifactId project.name
+
             from components.java
             artifact sourcesJar { classifier "sources" }
         }
@@ -123,7 +125,7 @@ if (hasProperty('bintray_user') && hasProperty('bintray_key')) {
 
         pkg {
             repo = 'kotlin-datascience'
-            name = 'dataframe'
+            name = project.name
             vcsUrl = 'https://github.com/nikitinas/dataframe'
             userOrg = 'kotlin'
             licenses = ['MIT']
