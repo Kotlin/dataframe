@@ -166,8 +166,8 @@ fun <T> TypedDataFrame<T>.rename(vararg mappings: Pair<String, String>): TypedDa
     val map = mappings.toMap()
     return columns.map {
         val newName = map[it.name] ?: it.name
-        it.rename(newName)
-    }.asDataFrame<T>()
+        it.doRename(newName)
+    }.asDataFrame()
 }
 
 internal fun indexColumn(columnName: String, size: Int): DataCol = column(columnName, (0 until size).toList())
@@ -280,7 +280,7 @@ fun <T> TypedDataFrame<T>.cast(selector: ColumnsSelector<T, *>) = CastClause(thi
 
 // column grouping
 
-class GroupColsClause<T, C>(val df: TypedDataFrame<T>, val columns: List<ColumnData<C>>)
+class GroupColsClause<T, C>(val df: TypedDataFrame<T>, val columns: List<ColumnDef<C>>)
 
 fun <T, C> TypedDataFrame<T>.groupCols(selector: ColumnsSelector<T, C>) = GroupColsClause(this, getColumns(selector))
 
@@ -344,13 +344,13 @@ inline fun <reified T, C> GroupColsClause<T, C>.into(groupNameExpression: (Colum
 
     val renameMapping = columns.map {
         when(it){
-            is RenamedColumn<C> -> it.source to it.name
+            is RenamedColumnDef<C> -> it.source to it.name
             else -> it to null
         }
     }
     val groupedColumns = renameMapping.map {it.first}
     val columnNames = renameMapping.mapNotNull { if(it.second != null) it.first.name to it.second!! else null }.toMap()
-    val columnGroups = groupedColumns.map { it.name to groupNameExpression(it) }.toMap()
+    val columnGroups = groupedColumns.map { it.name to groupNameExpression(df[it]) }.toMap()
     return doGroupBy(df, columnGroups, columnNames, getType<T>())
 }
 

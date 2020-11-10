@@ -33,6 +33,10 @@ interface TypedDataFrameWithColumnsForSelect<out T> : TypedDataFrameWithColumns<
 
     infix fun <C> ColumnSet<C>.and(other: ColumnSet<C>) = ColumnGroup(this, other)
 
+    operator fun <C> ColumnData<C>.invoke(newName: String) = rename(newName)
+
+    operator fun <C> ColumnDef<C>.invoke(newName: String) = rename(newName)
+
     infix fun String.and(other: String) = toColumn() and other.toColumn()
 
     infix fun <C> String.and(other: ColumnSet<C>) = toColumn() and other
@@ -92,10 +96,9 @@ typealias SpreadColumnSelector<T, C> = TypedDataFrameForSpread<T>.(TypedDataFram
 
 typealias SortColumnSelector<T, C> = TypedDataFrameWithColumnsForSort<T>.(TypedDataFrameWithColumnsForSort<T>) -> ColumnSet<C>
 
-internal fun <T, C> TypedDataFrame<T>.extractColumns(set: ColumnSet<C>): List<ColumnData<C>> = when (set) {
+internal fun <T, C> TypedDataFrame<T>.extractColumns(set: ColumnSet<C>): List<ColumnDef<C>> = when (set) {
     is ColumnGroup<C> -> set.columns.flatMap { extractColumns(it) }
-    is ColumnData<C> -> listOf(set)
-    is ColumnDef<C> -> listOf(this[set])
+    is ColumnDef<C> -> listOf(set)
     else -> throw Exception()
 }
 
@@ -109,7 +112,9 @@ internal fun <C> ColumnSet<C>.extractSortColumns(): List<SortColumnDescriptor> =
 
 internal fun <T, C> TypedDataFrame<T>.getColumns(selector: ColumnsSelector<T, C>) = TypedDataFrameWithColumnsForSelectImpl(this).let { extractColumns(selector(it, it)) }
 
-internal fun <T, C> TypedDataFrame<T>.getGroupColumns(selector: ColumnsSelector<T, TypedDataFrameRow<C>>) = getColumns(selector).map {it as GroupedColumn<C> }
+internal fun <T, C> TypedDataFrame<T>.getColumnsWithData(selector: ColumnsSelector<T, C>) = getColumns(selector).map {this[it]}
+
+internal fun <T, C> TypedDataFrame<T>.getGroupColumns(selector: ColumnsSelector<T, TypedDataFrameRow<C>>) = getColumnsWithData(selector).map {it as GroupedColumn<C> }
 
 internal fun <T, C> TypedDataFrame<T>.getColumn(selector: ColumnSelector<T, C>) = TypedDataFrameWithColumnsForSelectImpl(this).let { selector(it, it) }.let { this[it] }
 
@@ -157,7 +162,10 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
 
     operator fun get(index: Int): TypedDataFrameRow<T> = TypedDataFrameRowImpl(index, this)
     override operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found") // TODO
-    operator fun <R> get(column: ColumnDef<R>) = get(column.name) as ColumnData<R>
+    operator fun <R> get(column: ColumnDef<R>): ColumnData<R> = when(column) {
+        is RenamedColumnDef<R> -> this[column.source].doRename(column.name)
+        else -> get(column.name) as ColumnData<R>
+    }
     operator fun <R> get(property: KProperty<R>) = get(property.name) as ColumnData<R>
     operator fun get(indices: Iterable<Int>) = getRows(indices)
     operator fun get(mask: BooleanArray) = getRows(mask)
@@ -278,7 +286,7 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
 
     fun <R> map(selector: RowSelector<T, R>) = rows.map { selector(it, it) }
 
-    fun <C> forEach(selector: ColumnsSelector<T, C>, action: (TypedDataFrameRow<T>, ColumnData<C>) -> Unit) = getColumns(selector).let { cols ->
+    fun <C> forEach(selector: ColumnsSelector<T, C>, action: (TypedDataFrameRow<T>, ColumnData<C>) -> Unit) = getColumnsWithData(selector).let { cols ->
         rows.forEach { row ->
             cols.forEach { col ->
                 action(row, col)
@@ -293,11 +301,12 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
 
 internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : TypedDataFrame<T> {
 
-    override val nrow = columns.firstOrNull()?.size ?: 0
-
-    private val columnsMap by lazy { columns.withIndex().associateBy({ it.value.name }, { it.index }) }
+    override val nrow: Int
 
     init {
+
+        nrow = columns.firstOrNull()?.size ?: 0
+
         val invalidSizeColumns = columns.filter { it.size != nrow }
         if (invalidSizeColumns.size > 0)
             throw Exception("Invalid column sizes: ${invalidSizeColumns}") // TODO
@@ -306,6 +315,9 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
         if (columnNames.size > 0)
             throw Exception("Duplicate column names: ${columnNames}") // TODO
     }
+
+
+    private val columnsMap by lazy { columns.withIndex().associateBy({ it.value.name }, { it.index }) }
 
     override val rows = object : Iterable<TypedDataFrameRow<T>> {
         override fun iterator() =

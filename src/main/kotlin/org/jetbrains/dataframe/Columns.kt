@@ -19,9 +19,15 @@ interface ConvertedColumn<out C> : ColumnData<C> {
     val data: ColumnData<C>
 }
 
-interface RenamedColumn<out C> : ColumnData<C> {
-    val source: ColumnData<C>
+interface RenamedColumnDef<out C> : ColumnDef<C> {
+    val source: ColumnDef<C>
 }
+
+interface RenamedColumn<out C> : RenamedColumnDef<C>, ColumnData<C> {
+    override val source: ColumnData<C>
+}
+
+class RenamedColumnDefImpl<C>(override val source: ColumnDef<C>, override val name: String) : RenamedColumnDef<C>, ColumnDef<C> by source
 
 class RenamedColumnImpl<C>(override val source: ColumnData<C>, override val name: String) : RenamedColumn<C>, ColumnData<C> by source {
     override fun distinct() = source.distinct().rename(name)
@@ -55,8 +61,8 @@ typealias DataCol = ColumnData<*>
 
 class NamedColumnImpl<C>(override val name: String) : ColumnDef<C>
 
-fun String.toColumn() = NamedColumnImpl<Any?>(this)
-fun <C> KProperty<C>.toColumnName() = NamedColumnImpl<C>(name)
+fun String.toColumn(): ColumnDef<Any?> = NamedColumnImpl(this)
+fun <C> KProperty<C>.toColumnName(): ColumnDef<C> = NamedColumnImpl(name)
 
 internal fun KProperty<*>.getColumnName() = this.findAnnotation<ColumnName>()?.name ?: name
 
@@ -99,9 +105,10 @@ class GroupedColumnImpl<T>(override val df: TypedDataFrame<T>, override val name
     override fun get(columnName: String) = df[columnName]
 }
 
-class ColumnDataImpl<T>(override val values: List<T>, override val name: String, override val type: KType) : ColumnData<T> {
+class ColumnDataImpl<T>(override val values: List<T>, override val name: String, override val type: KType, set: Set<T>? = null) : ColumnData<T> {
 
-    private var valuesSet: Set<T>? = null
+    var valuesSet: Set<T>? = set
+        private set
 
     override fun toSet() = valuesSet ?: values.toSet().also { valuesSet = it }
 
@@ -131,7 +138,7 @@ class ColumnDataImpl<T>(override val values: List<T>, override val name: String,
 
     override val ndistinct = toSet().size
 
-    override fun distinct() = ColumnDataImpl(toSet().toList(), name, type)
+    override fun distinct() = ColumnDataImpl(toSet().toList(), name, type, valuesSet)
 
     override fun get(index: Int) = values[index]
 
@@ -156,6 +163,8 @@ fun DataCol.toDataFrame() = dataFrameOf(listOf(this))
 
 internal fun <T> DataCol.typed() = this as ColumnData<T>
 
+internal fun <T> DataCol.grouped() = this as GroupedColumn<T>
+
 inline fun <reified T> DataCol.cast() = column(name, values as List<T>, hasNulls)
 
 fun <T> ColumnData<T>.reorder(permutation: List<Int>): ColumnData<T> {
@@ -177,6 +186,15 @@ fun DataCol.getRows(mask: BooleanArray): DataCol {
 }
 
 fun <C> ColumnData<C>.rename(newName: String) = if (newName == name) this else RenamedColumnImpl(this, newName)
+
+fun <C> ColumnDef<C>.rename(newName: String) = if (newName == name) this else RenamedColumnDefImpl(this, newName)
+
+internal fun <T> Iterable<T>.asList() = when(this){
+    is List<T> -> this
+    else -> this.toList()
+}
+
+internal fun <C> ColumnData<C>.doRename(newName: String) = if(newName == name) this else ColumnDataImpl(values.asList(), newName, type)
 
 fun <C> ColumnData<C>.ensureUniqueName(nameGenerator: ColumnNameGenerator) = rename(nameGenerator.createUniqueName(name))
 

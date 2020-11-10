@@ -676,6 +676,14 @@ class TypedDataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `select with rename`() {
+        val expected = typed.select { name and age }.rename("name" to "name2", "age" to "age2")
+
+        typed.select { name.rename("name2") and age.rename("age2") } shouldBe expected
+        df.select { name("name2") and age("age2") } shouldBe expected
+    }
+
+    @Test
     fun `nunique`() {
         typed.name.ndistinct shouldBe 3
     }
