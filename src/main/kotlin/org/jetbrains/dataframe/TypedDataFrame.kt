@@ -143,8 +143,6 @@ fun SortDirection.reversed() = when (this) {
 
 class SortColumnDescriptor(val column: Column, val direction: SortDirection, val nullsLast: Boolean = false)
 
-typealias UntypedDataFrame = TypedDataFrame<Unit>
-
 internal fun <T> TypedDataFrame<T>.new(columns: Iterable<DataCol>) = dataFrameOf(columns).typed<T>()
 
 interface DataFrameBase<out T> {
