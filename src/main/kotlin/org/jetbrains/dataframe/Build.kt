@@ -21,7 +21,7 @@ class IterableDataFrameBuilder<T>(val source: Iterable<T>) {
     inline infix operator fun <reified R> String.invoke(noinline expression: T.() -> R?) = add(this, expression)
 }
 
-fun <T> Iterable<T>.toDataFrame(body: IterableDataFrameBuilder<T>.() -> Unit): UntypedDataFrame {
+fun <T> Iterable<T>.toDataFrame(body: IterableDataFrameBuilder<T>.() -> Unit): TypedDataFrame<Unit> {
     val builder = IterableDataFrameBuilder<T>(this)
     builder.body()
     return dataFrameOf(builder.columns)
@@ -39,7 +39,7 @@ inline fun <reified T> Iterable<T>.toDataFrame() = T::class.declaredMembers
         }.let { dataFrameOf(it) }
 
 
-fun dataFrameOf(columns: Iterable<DataCol>): UntypedDataFrame = TypedDataFrameImpl(columns.toList())
+fun dataFrameOf(columns: Iterable<DataCol>): TypedDataFrame<Unit> = TypedDataFrameImpl(columns.toList())
 
 fun dataFrameOf(vararg header: ColumnDef<*>) = DataFrameBuilder(header.map { it.name })
 
@@ -49,7 +49,7 @@ fun <T> Iterable<DataCol>.asDataFrame() = dataFrameOf(this).typed<T>()
 
 class DataFrameBuilder(private val columnNames: List<String>) {
 
-    operator fun invoke(vararg values: Any?): UntypedDataFrame {
+    operator fun invoke(vararg values: Any?): TypedDataFrame<Unit> {
 
         require(columnNames.size > 0 && values.size.rem(columnNames.size) == 0) {
             "data dimension ${columnNames.size} is not compatible with length of data vector ${values.size}"

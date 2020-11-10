@@ -55,7 +55,7 @@ operator fun <T> TypedDataFrame<T>.plus(body: TypedColumnsFromDataRowBuilder<T>.
 
 // map
 
-fun <T> TypedDataFrame<T>.map(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit): UntypedDataFrame {
+fun <T> TypedDataFrame<T>.map(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit): TypedDataFrame<Unit> {
     val builder = TypedColumnsFromDataRowBuilder(this)
     body(builder)
     return dataFrameOf(builder.columns)
@@ -124,7 +124,7 @@ fun commonParents(classes: Iterable<KClass<*>>) =
             }
         }
 
-fun merge(dataFrames: List<TypedDataFrame<*>>): UntypedDataFrame {
+fun merge(dataFrames: List<TypedDataFrame<*>>): TypedDataFrame<Unit> {
     if (dataFrames.size == 1) return dataFrames[0].typed()
 
     return dataFrames
