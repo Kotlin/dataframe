@@ -211,7 +211,7 @@ class MergeClause<T, C, R, M : MergeType>(val df: TypedDataFrame<T>, val columns
 
 class GroupMergeClause<T, C, R>(val df: GroupedDataFrame<T>, val selector: RowSelector<T, C>, val transform: (Iterable<C>) -> R)
 
-fun <T, C> TypedDataFrame<T>.mergeCols(selector: ColumnsSelector<T, C>) = MergeClause<T, C, Iterable<C>, MergeCols>(this, getColumns(selector), { it })
+fun <T, C> TypedDataFrame<T>.mergeCols(selector: ColumnsSelector<T, C>) = MergeClause<T, C, Iterable<C>, MergeCols>(this, getColumnsWithData(selector), { it })
 
 inline fun <T, C, reified R> MergeClause<T, C, R, MergeCols>.into(columnName: String) = df.add(columnName)
 { row ->
