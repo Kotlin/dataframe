@@ -27,7 +27,7 @@ data class DataFrameToListTypedStub(val df: TypedDataFrame<*>, val interfaceClas
 fun <T> TypedDataFrame<T>.getScheme(name: String? = null, columnSelector: ColumnsSelector<T,*>? = null): String {
     val interfaceName = name ?: "DataRecord"
     val cols = columnSelector?.let { getColumns(it).map { this[it.name] } } ?: columns
-    return CodeGenerator().generateInterfaceDeclaration(cols, interfaceName, withBaseInterfaces = false, isOpen = true)
+    return CodeGenerator().generateInterfaceDeclarations(cols, interfaceName, withBaseInterfaces = false, isOpen = true).joinToString("\n")
 }
 
 interface CodeGeneratorApi {
@@ -50,7 +50,7 @@ class CodeGenerator : CodeGeneratorApi {
     }
 
     // Data Frame Schema
-    private data class FieldInfo(val fieldName: String, val columnName: String, val type: KType, val childScheme: Scheme?) {
+    private data class FieldInfo(val fieldName: String, val columnName: String, private val type: KType, val childScheme: Scheme?) {
 
         val isGroup: Boolean get() = childScheme != null
 
@@ -60,7 +60,7 @@ class CodeGenerator : CodeGeneratorApi {
         val columnType: KType get() = if(isGroup) GroupedColumn::class.createType(listOf(KTypeProjection(KVariance.INVARIANT, type)))
             else ColumnData::class.createType(listOf(KTypeProjection(KVariance.INVARIANT, type)))
 
-        val fieldType: KType get() = if(isGroup) DataFrameRowBase::class.createType(listOf(KTypeProjection(KVariance.INVARIANT, type)))
+        val fieldType: KType get() = if(isGroup) TypedDataFrameRow::class.createType(listOf(KTypeProjection(KVariance.INVARIANT, type)))
             else type
     }
 
@@ -101,10 +101,17 @@ class CodeGenerator : CodeGeneratorApi {
         result.putAll(marker.declaredMemberProperties.mapIndexed { index, it ->
             val fieldName = it.name
             val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName
-            val valueType = it.returnType
+            var valueType = it.returnType
             val valueClass = valueType.jvmErasure
-            val markerType = if(valueClass.findAnnotation<DataFrameType>() != null) registeredMarkers[valueClass] else null
-            fieldName to FieldInfo(fieldName, columnName, valueType, markerType?.scheme)
+            var marker: GeneratedMarker? = null
+            if (valueClass == TypedDataFrameRow::class) {
+                val typeArgument = valueType.arguments[0].type!!
+                if (isMarkerType(typeArgument.jvmErasure)) {
+                    marker = getMarkerScheme(typeArgument.jvmErasure)
+                    valueType = typeArgument
+                }
+            }
+            fieldName to FieldInfo(fieldName, columnName, valueType, marker?.fullScheme)
         })
         return result
     }
@@ -142,11 +149,13 @@ class CodeGenerator : CodeGeneratorApi {
         return Scheme(columns.mapIndexed { index, it ->
             val fieldName = generateValidFieldName(it.name, index, generatedFieldNames)
             generatedFieldNames.add(fieldName)
-            val childScheme = when(it) {
-                is GroupedColumn<*> -> it.df.scheme
-                else -> null
+            var type = it.type
+            var childScheme : Scheme? = null
+            if(it is GroupedColumn<*>){
+                childScheme = it.df.scheme
+                type = it.dfType
             }
-            FieldInfo(fieldName, it.name, it.type, childScheme)
+            FieldInfo(fieldName, it.name, type, childScheme)
         })
     }
 
@@ -178,12 +187,14 @@ class CodeGenerator : CodeGeneratorApi {
 
     // Generated marker interfaces tracking
 
-    private data class GeneratedMarker(val scheme: Scheme, val kclass: KClass<*>, val isOpen: Boolean)
+    private data class GeneratedMarker(val fullScheme: Scheme, val ownScheme: Scheme, val kclass: KClass<*>, val isOpen: Boolean)
 
     private val registeredMarkers = mutableMapOf<KClass<*>,GeneratedMarker>()
 
+    private val registeredMarkerClassNames = mutableSetOf<String>()
+
     private fun Scheme.getAllBaseMarkers() = registeredMarkers.values
-            .filter { it.scheme.isSuperTo(this) }
+            .filter { it.fullScheme.isSuperTo(this) }
 
     private fun List<GeneratedMarker>.onlyLeafs(): List<GeneratedMarker> {
         val skip = flatMap { it.kclass.allSuperclasses }.toSet()
@@ -191,14 +202,14 @@ class CodeGenerator : CodeGeneratorApi {
     }
 
     private fun Scheme.getRequiredBaseMarkers() = registeredMarkers.values
-            .filter { it.isOpen && it.scheme.isSuperTo(this) }
+            .filter { it.isOpen && it.fullScheme.isSuperTo(this) }
 
     // Code Generation
 
     private fun generateExtensionProperties(scheme: Scheme, markerType: String): List<String> {
 
         fun generatePropertyCode(typeName: String, name: String, propertyType: String, getter: String): String {
-            return "val $typeName.$name: $propertyType get() = ($getter) as $propertyType"
+            return "val $typeName.$name: $propertyType get() = $getter as $propertyType"
         }
 
         val declarations = mutableListOf<String>()
@@ -215,27 +226,42 @@ class CodeGenerator : CodeGeneratorApi {
         return declarations
     }
 
+    private fun isMarkerType(marker: KClass<*>) = marker.hasAnnotation<DataFrameType>()
+
+    private fun getMarkerScheme(marker: KClass<*>) =
+        registeredMarkers.getOrPut(marker) {
+            val annotation = marker.findAnnotation<DataFrameType>() ?: throw Exception()
+            val fullSet = getScheme(marker, withBaseTypes = true)
+            val ownProperties = marker.declaredMemberProperties.map { it.name }.toSet()
+            val ownSet = Scheme(fullSet.values.filter { ownProperties.contains(it.fieldName) })
+            val simpleName = marker.simpleName!!
+            registeredMarkerClassNames.add(simpleName)
+            GeneratedMarker(fullSet, ownSet, marker, annotation.isOpen)
+        }
+
     override fun generate(marker: KClass<*>): List<String> {
-        val annotation = marker.findAnnotation<DataFrameType>() ?: return emptyList()
-        if(registeredMarkers.containsKey(marker)) return emptyList()
-        val ownSet = getScheme(marker, withBaseTypes = false)
-        val fullSet = getScheme(marker, withBaseTypes = true)
-        val typeName = marker.qualifiedName!!
-        val result = generateExtensionProperties(ownSet, typeName)
-        registeredMarkers[marker] = GeneratedMarker(fullSet, marker, annotation.isOpen)
-        return result
+        val generatedMarker = getMarkerScheme(marker)
+        val qualifiedName = marker.qualifiedName!!
+        return generateExtensionProperties(generatedMarker.ownScheme, qualifiedName)
     }
 
     private val processedProperties = mutableSetOf<KProperty<*>>()
 
+    private fun generateUniqueMarkerClassName(usedNames: Set<String> = setOf()): String {
+        var id = 1
+        val prefix = "DataFrameType"
+        while (registeredMarkerClassNames.contains("$prefix$id") || usedNames.contains("$prefix$id"))
+            id++
+        return "$prefix$id"
+    }
+
+    private fun KClass<*>.implements(targetBaseMarkers: Iterable<KClass<*>>): Boolean {
+        val superclasses = allSuperclasses + this
+        return targetBaseMarkers.all { superclasses.contains(it) }
+    }
+
     override fun generate(df: TypedDataFrame<*>, property: KProperty<*>): List<String> {
 
-        fun KClass<*>.implements(targetBaseMarkers: Iterable<KClass<*>>): Boolean {
-            val superclasses = allSuperclasses + this
-            return targetBaseMarkers.all { superclasses.contains(it) }
-        }
-
-        val markerType: String?
         var targetScheme = df.scheme
         val wasProcessedBefore = property in processedProperties
         processedProperties.add(property)
@@ -261,20 +287,27 @@ class CodeGenerator : CodeGeneratorApi {
 
         // property needs to be recreated. First, try to find existing marker for it
         val declarations = mutableListOf<String>()
-        val requiredBaseMarkers = targetScheme.getRequiredBaseMarkers().map { it.kclass }
-        val existingMarker = registeredMarkers.values.firstOrNull {
-            isMutable == it.isOpen && it.scheme.equals(targetScheme) && it.kclass.implements(requiredBaseMarkers)
-        }
-        if (existingMarker != null) {
-            markerType = existingMarker.kclass.qualifiedName
-        } else {
-            markerType = "DataFrameType###"
-            declarations.add(this.generateInterfaceDeclaration(targetScheme, markerType, withBaseInterfaces = true, isOpen = isMutable))
-        }
+        val markerType = findOrCreateMarker(targetScheme, isMutable, mutableSetOf(), declarations)
 
-        val converter = "\$it.typed<$markerType>()"
+        val converter = "\$it.retype<$markerType>()"
         declarations.add(converter)
         return declarations
+    }
+
+    private fun findOrCreateMarker(targetScheme: Scheme, isMutable: Boolean, usedNames: MutableSet<String>, declarations: MutableList<String>): String {
+        val markerType: String
+        val requiredBaseMarkers = targetScheme.getRequiredBaseMarkers().map { it.kclass }
+        val existingMarker = registeredMarkers.values.firstOrNull {
+            isMutable == it.isOpen && it.fullScheme.equals(targetScheme) && it.kclass.implements(requiredBaseMarkers)
+        }
+        if (existingMarker != null) {
+            markerType = existingMarker.kclass.qualifiedName!!
+        } else {
+            markerType = generateUniqueMarkerClassName(usedNames)
+            usedNames.add(markerType)
+            declarations.addAll(generateInterfaceDeclarations(targetScheme, markerType, usedNames, withBaseInterfaces = true, isOpen = isMutable))
+        }
+        return markerType
     }
 
     private fun getMarker(dataFrameType: KType) =
@@ -290,10 +323,10 @@ class CodeGenerator : CodeGeneratorApi {
             val fieldName = field.fieldName
             var generationMode = FieldGenerationMode.declare
             for (baseScheme in requiredBaseMarkers) {
-                val baseField = baseScheme.scheme.byField[fieldName]
+                val baseField = baseScheme.fullScheme.byField[fieldName]
                 if (baseField != null) {
-                    generationMode = if (baseField.type == field.type) FieldGenerationMode.skip
-                    else if (field.type.isSubtypeOf(baseField.type)) {
+                    generationMode = if (baseField.fieldType == field.fieldType || (baseField.isGroup && field.isGroup && baseField.childScheme!!.equals(field.childScheme!!))) FieldGenerationMode.skip
+                    else if (field.fieldType.isSubtypeOf(baseField.fieldType) || (baseField.isGroup && field.isGroup && baseField.childScheme!!.isSuperTo(field.childScheme!!))) {
                         generationMode = FieldGenerationMode.override
                         break
                     } else throw Exception()
@@ -303,7 +336,7 @@ class CodeGenerator : CodeGeneratorApi {
         }
     }
 
-    private fun generateInterfaceDeclaration(scheme: Scheme, name: String, withBaseInterfaces: Boolean, isOpen: Boolean): String {
+    private fun generateInterfaceDeclarations(scheme: Scheme, name: String, usedNames: MutableSet<String>, withBaseInterfaces: Boolean, isOpen: Boolean): List<String> {
 
         val markers = mutableListOf<GeneratedMarker>()
         val fields = if (withBaseInterfaces) {
@@ -319,9 +352,9 @@ class CodeGenerator : CodeGeneratorApi {
                 availableMarkers -= markers
 
                 while (remainedFields.size > 0) {
-                    val bestMarker = availableMarkers.map { marker -> marker to remainedFields.count { marker.scheme.contains(it) } }.maxBy { it.second }
+                    val bestMarker = availableMarkers.map { marker -> marker to remainedFields.count { marker.fullScheme.contains(it) } }.maxBy { it.second }
                     if (bestMarker != null && bestMarker.second > 0) {
-                        remainedFields.removeAll { bestMarker.first.scheme.byField[it.fieldName]?.type == it.type }
+                        remainedFields.removeAll { bestMarker.first.fullScheme.byField[it.fieldName]?.fieldType == it.fieldType }
                         markers += bestMarker.first
                         markersAdded = true
                         availableMarkers -= bestMarker.first
@@ -334,6 +367,8 @@ class CodeGenerator : CodeGeneratorApi {
         val leafMarkers = markers.onlyLeafs()
         val header = "@DataFrameType${if(isOpen) "" else "(isOpen = false)"}\ninterface $name"
         val baseInterfacesDeclaration = if (leafMarkers.isNotEmpty()) " : " + leafMarkers.map { it.kclass.qualifiedName!! }.joinToString() else ""
+        val resultDeclarations = mutableListOf<String>()
+
         val fieldsDeclaration = fields.filter { it.second != FieldGenerationMode.skip }.map {
             val field = it.first
             val override = when (it.second) {
@@ -342,14 +377,24 @@ class CodeGenerator : CodeGeneratorApi {
                 FieldGenerationMode.skip -> throw Exception()
             }
             val columnNameAnnotation = if (field.columnName != field.fieldName) "\t@ColumnName(\"${renderColumnName(field.columnName)}\")\n" else ""
-            val fieldType = render(field.type)
+
+            val fieldType = when {
+                field.isGroup -> {
+                    val markerType = findOrCreateMarker(field.childScheme!!, false, usedNames, resultDeclarations)
+                    val rowTypeName = render(TypedDataFrameRow::class)
+                    "$rowTypeName<$markerType>"
+                }
+                else -> render(field.fieldType)
+            }
+
             "${columnNameAnnotation}    ${override}val ${field.fieldName}: $fieldType"
         }.joinToString("\n")
         val body = if (fieldsDeclaration.isNotBlank()) "{\n$fieldsDeclaration\n}" else ""
-        return header + baseInterfacesDeclaration + body
+        resultDeclarations.add(header + baseInterfacesDeclaration + body)
+        return resultDeclarations
     }
 
-    internal fun generateInterfaceDeclaration(columns: Iterable<DataCol>, name: String, withBaseInterfaces: Boolean, isOpen: Boolean) = generateInterfaceDeclaration(getScheme(columns), name, withBaseInterfaces, isOpen)
+    internal fun generateInterfaceDeclarations(columns: Iterable<DataCol>, name: String, withBaseInterfaces: Boolean, isOpen: Boolean) = generateInterfaceDeclarations(getScheme(columns), name, mutableSetOf(), withBaseInterfaces, isOpen)
 
     // DataFrame -> List converters
 
@@ -359,13 +404,13 @@ class CodeGenerator : CodeGeneratorApi {
         val classDeclaration = "data class ${className}(" +
                 columnNames.map {
                     val field = scheme.byColumn[it]!!
-                    "${override}val ${field.fieldName}: ${render(field.type)}"
+                    "${override}val ${field.fieldName}: ${render(field.fieldType)}"
                 }.joinToString() + ") " + baseTypes
 
         val converter = "\$it.df.rows.map { $className(" +
                 columnNames.map {
                     val field = scheme.byColumn[it]!!
-                    "it[\"${field.columnName}\"] as ${render(field.type)}"
+                    "it[\"${field.columnName}\"] as ${render(field.fieldType)}"
                 }.joinToString() + ")}"
 
         return listOf(classDeclaration, converter)
