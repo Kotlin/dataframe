@@ -939,4 +939,11 @@ class TypedDataFrameTests : BaseTest() {
         ungrouped.ncol shouldBe typed.ncol
     }
 
+    @Test
+    fun `basic math`(){
+        typed.age.mean() shouldBe typed.age.values.mean()
+        typed.age.min() shouldBe typed.age.values.minOrNull()
+        typed.age.max() shouldBe typed.age.values.maxOrNull()
+        typed.age.sum() shouldBe typed.age.values.sum()
+    }
 }

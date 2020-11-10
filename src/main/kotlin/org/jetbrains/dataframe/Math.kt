@@ -1,5 +1,7 @@
 package org.jetbrains.dataframe
 
+import java.math.BigDecimal
+import kotlin.reflect.KClass
 import kotlin.reflect.jvm.jvmErasure
 
 inline fun <reified T : Comparable<T>> Iterable<T>.median(): Double {
@@ -28,12 +30,17 @@ fun <T> Iterable<T>.computeSize(counter: Counter) = map {
 
 internal fun Int.zeroToOne() = if(this == 0) 1 else this
 
-inline fun <reified T : Number> Iterable<T>.mean() = when (T::class) {
-        Double::class -> (this as Iterable<Double>).mean()
-        Int::class -> (this as Iterable<Int>).mean()
-        Long::class -> (this as Iterable<Long>).mean()
-        else -> throw IllegalArgumentException()
+inline fun <reified T : Number> Iterable<T>.mean() = mean(T::class)
+
+fun <T : Number> Iterable<T>.mean(clazz: KClass<T>) = when (clazz) {
+    Double::class -> (this as Iterable<Double>).mean()
+    Int::class -> (this as Iterable<Int>).mean()
+    Long::class -> (this as Iterable<Long>).mean()
+    BigDecimal::class -> (this as Iterable<BigDecimal>).mean()
+    else -> throw IllegalArgumentException()
 }
+
+fun <T: Number> ColumnData<T>.mean() = values.mean(type.jvmErasure as KClass<T>)
 
 @JvmName("doubleMean")
 fun Iterable<Double>.mean(): Double {
@@ -53,12 +60,31 @@ fun Iterable<Long>.mean(): Double {
     return computeSize(counter).sum().toDouble() / counter.value.zeroToOne()
 }
 
-inline fun <reified T : Number> sum(list: Iterable<T>): T = when (T::class) {
-    Double::class -> (list as Iterable<Double>).sum() as T
-    Int::class -> (list as Iterable<Int>).map { it.toDouble() }.sum() as T
-    Long::class -> (list as Iterable<Long>).sum().toDouble() as T
+@JvmName("bigDecimalMean")
+fun Iterable<BigDecimal>.mean(): Double {
+    val counter = Counter()
+    return computeSize(counter).sum().toDouble() / counter.value.zeroToOne()
+}
+
+fun <T: Number> Iterable<T>.sum(clazz: KClass<T>) = when (clazz) {
+    Double::class -> (this as Iterable<Double>).sum() as T
+    Int::class -> (this as Iterable<Int>).map { it.toDouble() }.sum() as T
+    Long::class -> (this as Iterable<Long>).sum() as T
+    BigDecimal::class -> (this as Iterable<BigDecimal>).sum() as T
     else -> throw IllegalArgumentException()
 }
+
+fun Iterable<BigDecimal>.sum(): BigDecimal {
+    var sum: BigDecimal = BigDecimal.ZERO
+    for (element in this) {
+        sum += element
+    }
+    return sum
+}
+
+inline fun <reified T : Number> sum(list: Iterable<T>): T = list.sum(T::class)
+
+fun <T: Number> ColumnData<T>.sum() = values.sum(type.jvmErasure as KClass<T>)
 
 internal fun <T> TypedDataFrame<T>.nullColumnToZero(col: ColumnDef<Number?>) =
         when (this[col].type.jvmErasure) {
