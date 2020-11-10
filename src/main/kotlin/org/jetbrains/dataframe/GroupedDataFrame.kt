@@ -27,8 +27,8 @@ interface GroupedDataFrame<out T> {
     fun ungroup() = groups.union().typed<T>()
 
     fun sortBy(columns: List<SortColumnDescriptor>) = modify { sortBy(columns) }
-    fun sortBy(vararg columns: String) = sortBy(columns.map { SortColumnDescriptor(it, SortDirection.Desc) })
-    fun sortBy(vararg columns: ColumnDef<Comparable<*>>) = sortBy(columns.map { SortColumnDescriptor(it.name, SortDirection.Desc) })
+    fun sortBy(vararg columns: String) = sortBy(columns.map { SortColumnDescriptor(it.toColumn(), SortDirection.Desc) })
+    fun sortBy(vararg columns: ColumnDef<Comparable<*>>) = sortBy(columns.map { SortColumnDescriptor(it, SortDirection.Desc) })
     fun sortBy(selector: SortColumnSelector<T, Comparable<*>>) = sortBy(getSortColumns(selector))
 
     fun sortByDesc(selector: SortColumnSelector<T, Comparable<*>>) = sortBy(getSortColumns(selector).map { SortColumnDescriptor(it.column, SortDirection.Desc) })

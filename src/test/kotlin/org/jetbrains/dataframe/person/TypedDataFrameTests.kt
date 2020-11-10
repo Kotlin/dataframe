@@ -338,9 +338,11 @@ class TypedDataFrameTests : BaseTest() {
 
         df.select { age and city }.check()
         df.select(age, city).check()
+        df[age, city].check()
 
         df.select { "age" and "city" }.check()
         df.select("age", "city").check()
+        df["age", "city"].check()
     }
 
     @Test
@@ -803,9 +805,9 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun splitRows() {
-        val selected = typed.select { name + city }
+        val selected = typed.select { name and city }
         val nested = selected.mergeRows { city }
-        val mergedCity by column<List<String?>>("city")
+        val mergedCity by columnList<String?>("city")
         val res = nested.splitRows { mergedCity }
         res.sortBy { name } shouldBe selected.sortBy { name }
     }
