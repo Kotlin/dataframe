@@ -23,7 +23,11 @@ interface RenamedColumn<out C> : ColumnData<C> {
     val source: ColumnData<C>
 }
 
-class RenamedColumnImpl<C>(override val source: ColumnData<C>, override val name: String) : RenamedColumn<C>, ColumnData<C> by source
+class RenamedColumnImpl<C>(override val source: ColumnData<C>, override val name: String) : RenamedColumn<C>, ColumnData<C> by source {
+    override fun distinct() = source.distinct().rename(name)
+
+    override fun get(indices: Iterable<Int>) = source.get(indices).rename(name)
+}
 
 class ConvertedColumnImpl<C>(override val source: DataCol, override val data: ColumnData<C>) : ConvertedColumn<C>, ColumnData<C> by data
 
@@ -66,10 +70,10 @@ inline fun <reified T> ColumnDefinition<T>.nullable() = ColumnDefinition<T?>(nam
 
 interface GroupedColumn<T> : ColumnData<TypedDataFrameRow<T>>, DataFrameBase<T> {
     val df : TypedDataFrame<T>
-    val dataFrameType: KClass<*> get() = type.arguments[0].type?.jvmErasure ?: Any::class
+    val dfType: KType
 }
 
-class GroupedColumnImpl<T>(override val df: TypedDataFrame<T>, override val name: String, private val dfType: KType) : GroupedColumn<T> {
+class GroupedColumnImpl<T>(override val df: TypedDataFrame<T>, override val name: String, override val dfType: KType) : GroupedColumn<T> {
 
     override val values: Iterable<TypedDataFrameRow<T>>
         get() = df.rows
@@ -77,7 +81,7 @@ class GroupedColumnImpl<T>(override val df: TypedDataFrame<T>, override val name
     override val ndistinct: Int
         get() = distinct.nrow
 
-    override val type by lazy { (TypedDataFrame::class).createType(listOf(KTypeProjection.invariant(dfType))) }
+    override val type by lazy { (TypedDataFrameRow::class).createType(listOf(KTypeProjection.invariant(dfType))) }
 
     override fun distinct() = GroupedColumnImpl(distinct, name, dfType)
 
@@ -201,6 +205,8 @@ class ColumnDelegate<T> {
 }
 
 fun DataCol.asGrouped() = this as GroupedColumn<*>
+
+fun DataCol.isGrouped() = this is GroupedColumn<*>
 
 fun <T> column() = ColumnDelegate<T>()
 

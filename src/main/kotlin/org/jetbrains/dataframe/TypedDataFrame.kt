@@ -1,10 +1,9 @@
 package org.jetbrains.dataframe
 
 import java.util.*
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.isSubclassOf
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.full.withNullability
+import kotlin.reflect.full.*
 import kotlin.reflect.jvm.jvmErasure
 
 interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
@@ -405,9 +404,31 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
     }
 }
 
-fun <T> TypedDataFrame<*>.typed(): TypedDataFrame<T> = TypedDataFrameImpl(columns)
+fun <T> TypedDataFrame<*>.typed(): TypedDataFrame<T> = this as TypedDataFrame<T>
 
 fun <T> TypedDataFrameRow<T>.toDataFrame() = owner.columns.map {
     val value = it[index]
     it.withValues(listOf(value), value == null)
 }.let { dataFrameOf(it).typed<T>() }
+
+fun <T> TypedDataFrame<*>.retype(klazz: KClass<*>): TypedDataFrame<T> {
+    val newColumns = columns.map {
+        if (it.isGrouped()) {
+            val groupedColumn = it as GroupedColumnImpl<*>
+            val columnName = it.name
+            val property = klazz.memberProperties.firstOrNull {
+                it.getColumnName() == columnName
+            }
+            if (property != null) {
+                val dfType = property.returnType
+                assert(dfType.classifier == TypedDataFrameRow::class)
+                val markerType = dfType.arguments[0].type!!
+                val newDf = groupedColumn.df.retype<Unit>(markerType.classifier as KClass<*>)
+                GroupedColumnImpl(newDf, groupedColumn.name, markerType)
+            } else it
+        } else it
+    }
+    return newColumns.asDataFrame()
+}
+
+inline fun <reified T> TypedDataFrame<*>.retype() = retype<T>(T::class)
