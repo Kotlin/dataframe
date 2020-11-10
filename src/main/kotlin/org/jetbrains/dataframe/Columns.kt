@@ -5,7 +5,6 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
-import kotlin.reflect.jvm.jvmErasure
 
 interface ColumnSet<out C>
 
@@ -74,9 +73,56 @@ class ColumnDefinition<T>(override val name: String) : ColumnDef<T> {
 
 inline fun <reified T> ColumnDefinition<T>.nullable() = ColumnDefinition<T?>(name)
 
-interface GroupedColumn<T> : ColumnData<TypedDataFrameRow<T>>, DataFrameBase<T> {
+interface GroupedColumnBase<T>: ColumnSet<TypedDataFrameRow<T>>, DataFrameBase<T>
+
+interface GroupedColumn<T> : ColumnData<TypedDataFrameRow<T>>, GroupedColumnBase<T> {
     val df : TypedDataFrame<T>
     val dfType: KType
+}
+
+internal fun <T> ColumnData<T>.checkEquals(other: Any?): Boolean {
+    if (this === other) return true
+
+    if(!(other is ColumnData<*>)) return false
+
+    if (name != other.name) return false
+    if (type != other.type) return false
+    if (values != other.values) return false
+
+    return true
+}
+
+internal fun <T> ColumnData<T>.getHashCode(): Int {
+    var result = values.hashCode()
+    result = 31 * result + name.hashCode()
+    result = 31 * result + type.hashCode()
+    return result
+}
+
+interface ColumnWithParent {
+    val parent: ColumnData<*>
+}
+
+class ColumnDataWithParent<T>(override val parent: ColumnData<*>, val source: ColumnData<T>) : ColumnWithParent, ColumnData<T> by source {
+
+    override fun equals(other: Any?) = checkEquals(other)
+
+    override fun hashCode() = getHashCode()
+}
+
+class GroupedColumnWithParent<T>(override val parent: ColumnData<*>, val source: GroupedColumn<T>) : ColumnWithParent, GroupedColumn<T> by source {
+    override fun get(columnName: String) = df[columnName].addParent(this)
+    override fun <R> get(column: ColumnDef<R>) = df[column].addParent(this)
+    override fun <R> get(column: ColumnDef<TypedDataFrameRow<R>>) = df[column].addParent(this) as GroupedColumn<R>
+
+    override fun equals(other: Any?) = checkEquals(other)
+
+    override fun hashCode() = getHashCode()
+}
+
+internal fun <T> ColumnData<T>.addParent(parent: ColumnData<*>): ColumnData<T> = when(this) {
+    is GroupedColumn<*> -> GroupedColumnWithParent(parent, this as GroupedColumn<Any>) as ColumnData<T>
+    else -> ColumnDataWithParent(parent, this)
 }
 
 class GroupedColumnImpl<T>(override val df: TypedDataFrame<T>, override val name: String, override val dfType: KType) : GroupedColumn<T> {
@@ -102,7 +148,9 @@ class GroupedColumnImpl<T>(override val df: TypedDataFrame<T>, override val name
 
     override fun get(index: Int) = df[index]
 
-    override fun get(columnName: String) = df[columnName]
+    override fun get(columnName: String) = df[columnName].addParent(this)
+    override fun <R> get(column: ColumnDef<R>) = df[column].addParent(this)
+    override fun <R> get(column: ColumnDef<TypedDataFrameRow<R>>) = df[column].addParent(this) as GroupedColumn<R>
 }
 
 class ColumnDataImpl<T>(override val values: List<T>, override val name: String, override val type: KType, set: Set<T>? = null) : ColumnData<T> {
@@ -116,26 +164,6 @@ class ColumnDataImpl<T>(override val values: List<T>, override val name: String,
 
     override fun toString() = values.joinToString()
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as ColumnDataImpl<*>
-
-        if (name != other.name) return false
-        if (type != other.type) return false
-        if (values != other.values) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = values.hashCode()
-        result = 31 * result + name.hashCode()
-        result = 31 * result + type.hashCode()
-        return result
-    }
-
     override val ndistinct = toSet().size
 
     override fun distinct() = ColumnDataImpl(toSet().toList(), name, type, valuesSet)
@@ -146,6 +174,10 @@ class ColumnDataImpl<T>(override val values: List<T>, override val name: String,
 
     override val size: Int
         get() = values.size
+
+    override fun equals(other: Any?) = checkEquals(other)
+
+    override fun hashCode() = getHashCode()
 }
 
 @OptIn(ExperimentalStdlibApi::class)
@@ -163,26 +195,40 @@ fun DataCol.toDataFrame() = dataFrameOf(listOf(this))
 
 internal fun <T> DataCol.typed() = this as ColumnData<T>
 
-internal fun <T> DataCol.grouped() = this as GroupedColumn<T>
+internal fun <T> DataCol.grouped() = this as GroupedColumnBase<T>
+
+internal fun <T> DataFrameBase<T>.asGroup() = this as GroupedColumn<T>
 
 inline fun <reified T> DataCol.cast() = column(name, values as List<T>, hasNulls)
 
-fun <T> ColumnData<T>.reorder(permutation: List<Int>): ColumnData<T> {
-    var nullable = false
-    val newValues = (0 until size).map { get(permutation[it]).also { if (it == null) nullable = true } }
-    return withValues(newValues, nullable)
+fun <T> ColumnData<T>.reorder(permutation: List<Int>): ColumnData<T> = when(this) {
+    is GroupedColumn<*> -> withDf(df.reorder(permutation)) as ColumnData<T>
+    else -> {
+        var nullable = false
+        val newValues = (0 until size).map { get(permutation[it]).also { if (it == null) nullable = true } }
+        withValues(newValues, nullable)
+    }
 }
 
-fun <T> ColumnData<T>.slice(indices: Iterable<Int>): ColumnData<T> {
-    var nullable = false
-    val newValues = indices.map { get(it).also { if (it == null) nullable = true } }
-    return withValues(newValues, nullable)
-}
+internal fun <T> GroupedColumn<*>.withDf(newDf: TypedDataFrame<T>) = GroupedColumnImpl(newDf, name, dfType)
 
-fun DataCol.getRows(mask: BooleanArray): DataCol {
-    var nullable = false
-    val newValues = values.filterIndexed { index, value -> mask[index].also { if (it && value == null) nullable = true } }
-    return withValues(newValues, nullable)
+fun <T> ColumnData<T>.slice(indices: Iterable<Int>): ColumnData<T> =
+    when(this) {
+        is GroupedColumn<*> -> withDf(df[indices]) as ColumnData<T>
+        else -> {
+            var nullable = false
+            val newValues = indices.map { get(it).also { if (it == null) nullable = true } }
+            withValues(newValues, nullable)
+        }
+    }
+
+fun <T> ColumnData<T>.getRows(mask: BooleanArray): ColumnData<T> = when(this) {
+    is GroupedColumn<*> -> withDf(df.getRows(mask)) as ColumnData<T>
+    else -> {
+        var nullable = false
+        val newValues = values.filterIndexed { index, value -> mask[index].also { if (it && value == null) nullable = true } }
+        withValues(newValues, nullable)
+    }
 }
 
 fun <C> ColumnData<C>.rename(newName: String) = if (newName == name) this else RenamedColumnImpl(this, newName)
@@ -229,6 +275,12 @@ fun DataCol.isGrouped() = this is GroupedColumn<*>
 fun <T> column() = ColumnDelegate<T>()
 
 fun <T> columnGroup() = column<TypedDataFrameRow<T>>()
+
+fun <T> columnList() = column<List<T>>()
+
+fun <T> columnGroup(name: String) = column<TypedDataFrameRow<T>>(name)
+
+fun <T> columnList(name: String) = column<List<T>>(name)
 
 fun <T> column(name: String) = ColumnDefinition<T>(name)
 

@@ -355,3 +355,7 @@ inline fun <reified T, C> GroupColsClause<T, C>.into(groupNameExpression: (Colum
 }
 
 inline fun <reified T, C> GroupColsClause<T, C>.into(name: String) = into { name }
+
+internal fun <T> TypedDataFrame<T>.excludeCols(cols: List<Column>) {
+
+}

@@ -2,8 +2,11 @@ package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.person.DataFrameTreeTests.Properties.age
 import org.jetbrains.dataframe.person.DataFrameTreeTests.Properties.city
+import org.jetbrains.dataframe.person.DataFrameTreeTests.Properties.name
 import org.jetbrains.dataframe.person.DataFrameTreeTests.Properties.nameAndCity
+import org.junit.Ignore
 import org.junit.Test
 
 class DataFrameTreeTests : BaseTest() {
@@ -21,7 +24,8 @@ class DataFrameTreeTests : BaseTest() {
         val weight: Int?
     }
 
-    val grouped = df.groupCols { name and city }.into("nameAndCity").retype<GroupedPerson>()
+    val df2 = df.groupCols { name and city }.into("nameAndCity")
+    val typed2 = df2.retype<GroupedPerson>()
 
     object Properties {
         val DataFrameRowBase<NameAndCity>.name get() = this["name"] as String
@@ -37,22 +41,74 @@ class DataFrameTreeTests : BaseTest() {
         val DataFrameBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"].grouped<NameAndCity>()
     }
 
+    val nameAndCity by columnGroup<NameAndCity>()
+
+    @Test
+    fun `group indexing`() {
+
+        df2[nameAndCity][city] shouldBe typed.city
+        typed2.nameAndCity.city shouldBe typed.city
+        df2["nameAndCity"]["city"] shouldBe typed.city
+    }
+
     @Test
     fun `group column type`() {
-        grouped.nameAndCity.type shouldBe getType<TypedDataFrameRow<NameAndCity>>()
-        grouped.nameAndCity.dfType shouldBe getType<NameAndCity>()
+        df2[nameAndCity].type shouldBe getType<TypedDataFrameRow<Unit>>()
+
+        typed2.nameAndCity.asGroup().type shouldBe getType<TypedDataFrameRow<NameAndCity>>()
+        typed2.nameAndCity.asGroup().dfType shouldBe getType<NameAndCity>()
     }
 
     @Test
     fun `update`() {
-        val updated = grouped.update { nameAndCity }.with { nameAndCity.city }
-        updated shouldBe typed.select { city.rename("nameAndCity") and age and weight }
+        val expected = typed.select { city.rename("nameAndCity") and age and weight }
+
+        df2.update { nameAndCity }.with { nameAndCity().city } shouldBe expected
+        typed2.update { nameAndCity }.with { nameAndCity.city } shouldBe expected
+    }
+
+    @Test
+    fun `slice`(){
+
+        typed2[0..2].nameAndCity.name shouldBe typed[0..2].name
+    }
+
+    @Test
+    fun `filter`() {
+
+        val expected = typed.filter { city == null }.select { weight }
+        typed2.filter { nameAndCity.city == null }.select { weight } shouldBe expected
+        df2.filter { it[nameAndCity][city] == null }.select { weight } shouldBe expected
     }
 
     @Test
     fun `select`() {
-        val selected = grouped.select { nameAndCity.city and age}
-        selected shouldBe typed.select { city and age }
+        val expected = typed.select { name and age }
+        typed2.select { nameAndCity.name and age} shouldBe expected
+        df2.select { it[nameAndCity][name] and age} shouldBe expected
+    }
+
+    @Test
+    fun `sort`() {
+        val expected = typed.sortBy { name then age }.moveTo(1) { city }
+        typed2.sortBy { nameAndCity.name then age }.ungroupCols { nameAndCity } shouldBe expected
+    }
+
+    @Test
+    fun `groupBy`() {
+
+        val expected = typed.groupBy { name }.max { age }
+        typed2.groupBy { nameAndCity.name }.max { age } shouldBe expected
+    }
+
+    @Test
+    @Ignore // TODO: fix
+    fun splitRows() {
+        val selected = typed2.select { nameAndCity }
+        val nested = selected.mergeRows { nameAndCity.city }
+        val mergedCity by columnList<String?>("city")
+        val res = nested.splitRows { nameAndCity[mergedCity] }
+        res.sortBy { nameAndCity.name } shouldBe selected.sortBy { nameAndCity.name }
     }
 
     @Test
