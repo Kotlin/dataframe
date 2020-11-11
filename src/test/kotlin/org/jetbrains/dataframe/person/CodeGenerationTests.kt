@@ -32,7 +32,7 @@ class CodeGenerationTests : BaseTest(){
     @Test
     fun `generate marker interface for nested data frame`() {
         val property = TypedDataFrameTests::class.memberProperties.first { it.name == "df" }
-        val grouped = df.groupCols { name and city }.into("nameAndCity")
+        val grouped = df.group { name and city }.into("nameAndCity")
         val code = CodeGenerator().generate(grouped, property)
         val declaration1 = """
             @DataFrameType(isOpen = false)

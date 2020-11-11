@@ -908,14 +908,14 @@ class TypedDataFrameTests : BaseTest() {
             res shouldBe typed
         }
         typed.groupColsBy { if(it.name != "name") it.type.jvmErasure.simpleName else null }.into { it.name }.check()
-        typed.groupCols { cols { it != name } }.into { it.type.jvmErasure.simpleName!! }.check()
-        typed.groupCols { age and city and weight }.into { it.type.jvmErasure.simpleName!! }.check()
+        typed.group { cols { it != name } }.into { it.type.jvmErasure.simpleName!! }.check()
+        typed.group { age and city and weight }.into { it.type.jvmErasure.simpleName!! }.check()
     }
 
     @Test
     fun `column group`() {
 
-        val grouped = typed.groupCols { age and name and city }.into("info")
+        val grouped = typed.group { age and name and city }.into("info")
         grouped.ncol shouldBe 2
         grouped.columnNames() shouldBe listOf("info", "weight")
         val res = listOf(grouped["info"]["name"], grouped["info"]["age"], grouped["info"]["city"], grouped.weight).asDataFrame<Person>()
@@ -926,7 +926,7 @@ class TypedDataFrameTests : BaseTest() {
     fun `column ungroup`() {
 
         val info by columnGroup<Person>()
-        val res = typed.groupCols { age and city }.into("info").ungroupCol { info }
+        val res = typed.group { age and city }.into("info").ungroupCol { info }
         res shouldBe typed
     }
 
