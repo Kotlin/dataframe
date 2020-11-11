@@ -68,7 +68,7 @@ fun Iterable<BigDecimal>.mean(): Double {
 
 fun <T: Number> Iterable<T>.sum(clazz: KClass<T>) = when (clazz) {
     Double::class -> (this as Iterable<Double>).sum() as T
-    Int::class -> (this as Iterable<Int>).map { it.toDouble() }.sum() as T
+    Int::class -> (this as Iterable<Int>).sum() as T
     Long::class -> (this as Iterable<Long>).sum() as T
     BigDecimal::class -> (this as Iterable<BigDecimal>).sum() as T
     else -> throw IllegalArgumentException()
