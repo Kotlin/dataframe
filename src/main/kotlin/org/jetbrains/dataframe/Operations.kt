@@ -282,7 +282,7 @@ fun <T> TypedDataFrame<T>.cast(selector: ColumnsSelector<T, *>) = CastClause(thi
 
 class GroupColsClause<T, C>(val df: TypedDataFrame<T>, val columns: List<ColumnDef<C>>)
 
-fun <T, C> TypedDataFrame<T>.groupCols(selector: ColumnsSelector<T, C>) = GroupColsClause(this, getColumns(selector))
+fun <T, C> TypedDataFrame<T>.group(selector: ColumnsSelector<T, C>) = GroupColsClause(this, getColumns(selector))
 
 class GroupColsBy<T>(val df: TypedDataFrame<T>, val grouping: Map<String, List<DataCol>>, val renameTransform: (DataCol) -> String)
 

@@ -24,7 +24,7 @@ class DataFrameTreeTests : BaseTest() {
         val weight: Int?
     }
 
-    val df2 = df.groupCols { name and city }.into("nameAndCity")
+    val df2 = df.group { name and city }.into("nameAndCity")
     val typed2 = df2.retype<GroupedPerson>()
 
     object Properties {

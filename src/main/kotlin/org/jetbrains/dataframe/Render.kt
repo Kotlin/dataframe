@@ -32,8 +32,8 @@ fun TypedDataFrame<*>.toHTML(limit: Int = 20, truncate: Int = 50): String {
 
 internal fun TypedDataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 20): String {
     val sb = StringBuilder()
-    sb.appendln("Data Frame: [$size]")
-    sb.appendln()
+    sb.appendLine("Data Frame: [$size]")
+    sb.appendLine()
 
     val outputRows = limit.coerceAtMost(nrow)
     val output = columns.map { it.values.take(limit).map { it.toString().truncate(truncate) } }
@@ -46,22 +46,22 @@ internal fun TypedDataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 2
     for (col in header.indices) {
         sb.append(header[col].padEnd(columnLengths[col]) + "|")
     }
-    sb.appendln()
+    sb.appendLine()
     sb.append("|")
     for (colLength in columnLengths) {
         for (i in 1..colLength) sb.append('-')
         sb.append("|")
     }
-    sb.appendln()
+    sb.appendLine()
 
     for(row in 0 until outputRows){
         sb.append("|")
         for(col in output.indices){
             sb.append(output[col][row].padEnd(columnLengths[col]) + "|")
         }
-        sb.appendln()
+        sb.appendLine()
     }
     if(nrow > limit)
-        sb.appendln("...")
+        sb.appendLine("...")
     return sb.toString()
 }
