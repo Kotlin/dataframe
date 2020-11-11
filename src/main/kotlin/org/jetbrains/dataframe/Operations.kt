@@ -316,10 +316,6 @@ fun <T, C> TypedDataFrame<T>.ungroupCols(selector: ColumnsSelector<T, TypedDataF
     return resultColumns.asDataFrame()
 }
 
-fun <T> TypedDataFrame<T>.groupColsByDelim(delimeter: CharSequence) {
-
-}
-
 fun <T> doGroupBy(df: TypedDataFrame<T>, columnGroups: Map<String, String>, columnNames: Map<String, String>, type: KType): TypedDataFrame<T> {
 
     val columnGroups = df.columns.filter { columnGroups.contains(it.name) }.groupBy { columnGroups[it.name]!! }
