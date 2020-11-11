@@ -47,6 +47,10 @@ class CodeGenerator : CodeGeneratorApi {
 
     companion object {
         val Default: CodeGeneratorApi = CodeGenerator()
+
+        private val GroupedColumnType: KClass<*> = GroupedColumnBase::class
+
+        private val GroupedFieldType: KClass<*> = TypedDataFrameRow::class
     }
 
     // Data Frame Schema
@@ -57,10 +61,10 @@ class CodeGenerator : CodeGeneratorApi {
         fun isSubFieldOf(other: FieldInfo) =
                 columnName == other.columnName && isGroup == other.isGroup && type.isSubtypeOf(other.type)
 
-        val columnType: KType get() = if(isGroup) GroupedColumn::class.createType(listOf(KTypeProjection(KVariance.INVARIANT, type)))
+        val columnType: KType get() = if(isGroup) GroupedColumnType.createType(listOf(KTypeProjection(KVariance.INVARIANT, type)))
             else ColumnData::class.createType(listOf(KTypeProjection(KVariance.INVARIANT, type)))
 
-        val fieldType: KType get() = if(isGroup) TypedDataFrameRow::class.createType(listOf(KTypeProjection(KVariance.INVARIANT, type)))
+        val fieldType: KType get() = if(isGroup) GroupedFieldType.createType(listOf(KTypeProjection(KVariance.INVARIANT, type)))
             else type
     }
 
@@ -104,7 +108,7 @@ class CodeGenerator : CodeGeneratorApi {
             var valueType = it.returnType
             val valueClass = valueType.jvmErasure
             var marker: GeneratedMarker? = null
-            if (valueClass == TypedDataFrameRow::class) {
+            if (valueClass == GroupedFieldType) {
                 val typeArgument = valueType.arguments[0].type!!
                 if (isMarkerType(typeArgument.jvmErasure)) {
                     marker = getMarkerScheme(typeArgument.jvmErasure)
@@ -381,7 +385,7 @@ class CodeGenerator : CodeGeneratorApi {
             val fieldType = when {
                 field.isGroup -> {
                     val markerType = findOrCreateMarker(field.childScheme!!, false, usedNames, resultDeclarations)
-                    val rowTypeName = render(TypedDataFrameRow::class)
+                    val rowTypeName = render(GroupedFieldType)
                     "$rowTypeName<$markerType>"
                 }
                 else -> render(field.fieldType)
