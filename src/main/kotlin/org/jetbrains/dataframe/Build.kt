@@ -16,8 +16,6 @@ class IterableDataFrameBuilder<T>(val source: Iterable<T>) {
 
     inline infix fun <reified R> String.to(noinline expression: T.() -> R?) = add(this, expression)
 
-    inline infix fun <reified R> String.`=`(noinline expression: T.() -> R?) = add(this, expression)
-
     inline infix operator fun <reified R> String.invoke(noinline expression: T.() -> R?) = add(this, expression)
 }
 
