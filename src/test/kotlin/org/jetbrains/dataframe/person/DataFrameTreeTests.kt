@@ -114,17 +114,20 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun extensionPropertiesTest() {
         val code = CodeGenerator().generate(GroupedPerson::class)
-        val dfName = DataFrameBase::class.simpleName
-        val dfRowName = DataFrameRowBase::class.simpleName
+        val dataFrameBase = DataFrameBase::class.simpleName
+        val dataFrameRowBase = DataFrameRowBase::class.simpleName
+        val dataFrameRow = TypedDataFrameRow::class.qualifiedName
         val className = GroupedPerson::class.qualifiedName
         val nameAndCity = NameAndCity::class.qualifiedName
+        val groupedColumn = GroupedColumnBase::class.qualifiedName
+        val columnData = ColumnData::class.qualifiedName
         val expected = """
-            val $dfName<$className>.age: org.jetbrains.dataframe.ColumnData<kotlin.Int> get() = this["age"] as org.jetbrains.dataframe.ColumnData<kotlin.Int>
-            val $dfRowName<$className>.age: Int get() = this["age"] as Int
-            val $dfName<$className>.nameAndCity: org.jetbrains.dataframe.GroupedColumn<$nameAndCity> get() = this["nameAndCity"] as org.jetbrains.dataframe.GroupedColumn<$nameAndCity>
-            val $dfRowName<$className>.nameAndCity: org.jetbrains.dataframe.TypedDataFrameRow<$nameAndCity> get() = this["nameAndCity"] as org.jetbrains.dataframe.TypedDataFrameRow<$nameAndCity>
-            val $dfName<$className>.weight: org.jetbrains.dataframe.ColumnData<kotlin.Int?> get() = this["weight"] as org.jetbrains.dataframe.ColumnData<kotlin.Int?>
-            val $dfRowName<$className>.weight: Int? get() = this["weight"] as Int?
+            val $dataFrameBase<$className>.age: $columnData<kotlin.Int> get() = this["age"] as $columnData<kotlin.Int>
+            val $dataFrameRowBase<$className>.age: Int get() = this["age"] as Int
+            val $dataFrameBase<$className>.nameAndCity: $groupedColumn<$nameAndCity> get() = this["nameAndCity"] as $groupedColumn<$nameAndCity>
+            val $dataFrameRowBase<$className>.nameAndCity: $dataFrameRow<$nameAndCity> get() = this["nameAndCity"] as $dataFrameRow<$nameAndCity>
+            val $dataFrameBase<$className>.weight: $columnData<kotlin.Int?> get() = this["weight"] as $columnData<kotlin.Int?>
+            val $dataFrameRowBase<$className>.weight: Int? get() = this["weight"] as Int?
         """.trimIndent()
         code.joinToString("\n") shouldBe expected
     }
