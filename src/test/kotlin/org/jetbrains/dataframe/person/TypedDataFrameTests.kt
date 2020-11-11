@@ -946,4 +946,9 @@ class TypedDataFrameTests : BaseTest() {
         typed.age.max() shouldBe typed.age.values.maxOrNull()
         typed.age.sum() shouldBe typed.age.values.sum()
     }
+
+    @Test
+    fun `row to string`(){
+        typed[0].toString() shouldBe "{ name:Alice, age:15, city:London, weight:54 }"
+    }
 }

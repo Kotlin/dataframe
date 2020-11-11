@@ -95,6 +95,10 @@ internal class TypedDataFrameRowImpl<T>(override var index: Int, override val ow
         ColumnAccessTracker.registerColumnAccess(column.name)
         return column[index]
     }
+
+    override fun toString(): String {
+        return "{ " + owner.columns.map { "${it.name}:${it[index]}" }.joinToString() + " }"
+    }
 }
 
 internal fun <T> T.toIterable(getNext: (T) -> T?) = Iterable<T> {
