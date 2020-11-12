@@ -146,15 +146,19 @@ class SortColumnDescriptor(val column: Column, val direction: SortDirection, val
 internal fun <T> TypedDataFrame<T>.new(columns: Iterable<DataCol>) = dataFrameOf(columns).typed<T>()
 
 interface DataFrameBase<out T> {
+
     operator fun get(columnName: String): ColumnData<*>
     operator fun <R> get(column: ColumnDef<R>): ColumnData<R>
     operator fun <R> get(column: ColumnDef<TypedDataFrameRow<R>>): GroupedColumn<R>
+    val ncol: Int
 }
 
 interface TypedDataFrame<out T> : DataFrameBase<T> {
 
+    companion object
+
     val nrow: Int
-    val ncol: Int get() = columns.size
+    override val ncol: Int get() = columns.size
     val columns: List<DataCol>
     val rows: Iterable<TypedDataFrameRow<T>>
 
@@ -176,14 +180,14 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
 
     fun getRows(indices: Iterable<Int>): TypedDataFrame<T>
     fun getRows(mask: BooleanArray): TypedDataFrame<T>
-    fun getRows(range: IntRange) = getRows(range.toList())
+    fun getRows(range: IntRange): TypedDataFrame<T>
 
     fun getColumnIndex(name: String): Int
     fun getColumnIndex(col: DataCol) = getColumnIndex(col.name)
 
     fun <R> tryGetColumn(column: ColumnDef<R>): ColumnData<R>? = when(column) {
         is RenamedColumnDef<R> -> tryGetColumn(column.source)?.doRename(column.name)
-        is ColumnWithParent -> (tryGetColumn(column.parent) as? GroupedColumn<*>)?.get(column.name) as? ColumnData<R>
+        is ColumnWithParent<*> -> (tryGetColumn(column.parent) as? GroupedColumn<*>)?.get(column.name) as? ColumnData<R>
         else -> tryGetColumn(column.name) as? ColumnData<R>
     }
     fun tryGetColumn(name: String) = getColumnIndex(name).let { if (it != -1) columns[it] else null }
@@ -318,9 +322,9 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
         if (invalidSizeColumns.size > 0)
             throw Exception("Invalid column sizes: ${invalidSizeColumns}") // TODO
 
-        val columnNames = columns.groupBy { it.name }.filter { it.value.size > 1 }
+        val columnNames = columns.groupBy { it.name }.filter { it.value.size > 1 }.map { it.key }
         if (columnNames.size > 0)
-            throw Exception("Duplicate column names: ${columnNames}") // TODO
+            throw Exception("Duplicate column names: ${columnNames}. All column names: ${columnNames()}")
     }
 
 
@@ -398,9 +402,11 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
         return reorder(permutation)
     }
 
-    override fun getRows(indices: Iterable<Int>) = columns.map { col -> col.slice(indices) }.let { dataFrameOf(it).typed<T>() }
+    override fun getRows(indices: Iterable<Int>) = columns.map { col -> col.getRows(indices) }.let { dataFrameOf(it).typed<T>() }
 
     override fun getRows(mask: BooleanArray) = columns.map { col -> col.getRows(mask) }.let { dataFrameOf(it).typed<T>() }
+
+    override fun getRows(range: IntRange) = columns.map { col -> col.getRows(range) }.let { dataFrameOf(it).typed<T>() }
 
     override fun getColumnIndex(columnName: String) = columnsMap[columnName] ?: -1
 
@@ -432,20 +438,22 @@ fun <T> TypedDataFrameRow<T>.toDataFrame() = owner.columns.map {
 
 fun <T> TypedDataFrame<*>.retype(klazz: KClass<*>): TypedDataFrame<T> {
     val newColumns = columns.map {
-        if (it.isGrouped()) {
-            val groupedColumn = it as GroupedColumnImpl<*>
-            val columnName = it.name
-            val property = klazz.memberProperties.firstOrNull {
-                it.getColumnName() == columnName
+        when(it) {
+            is GroupedColumn<*> -> {
+                val columnName = it.name
+                val property = klazz.memberProperties.firstOrNull {
+                    it.getColumnName() == columnName
+                }
+                if (property != null) {
+                    val dfType = property.returnType
+                    assert(dfType.arguments.size == 1)
+                    val markerType = dfType.arguments[0].type!!
+                    val newDf = it.df.retype<Unit>(markerType.classifier as KClass<*>)
+                    ColumnData.createGroup(it.name, newDf, markerType)
+                } else it
             }
-            if (property != null) {
-                val dfType = property.returnType
-                assert(dfType.classifier == TypedDataFrameRow::class)
-                val markerType = dfType.arguments[0].type!!
-                val newDf = groupedColumn.df.retype<Unit>(markerType.classifier as KClass<*>)
-                GroupedColumnImpl(newDf, groupedColumn.name, markerType)
-            } else it
-        } else it
+            else -> it
+        }
     }
     return newColumns.asDataFrame()
 }

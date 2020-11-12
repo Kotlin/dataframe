@@ -1,6 +1,7 @@
-package org.jetbrains.dataframe
+package org.jetbrains.dataframe.io
 
 import org.apache.commons.csv.CSVFormat
+import org.jetbrains.dataframe.*
 import java.io.*
 import java.math.BigDecimal
 import java.net.URL
@@ -106,7 +107,7 @@ fun readDelim(
         format: CSVFormat = CSVFormat.DEFAULT.withHeader(),
         colTypes: Map<String, ColType> = mapOf(),
         skip: Int = 0
-): TypedDataFrame<Unit> {
+): TypedDataFrame<*> {
 
     val formatWithNullString = if (format.isNullStringSet) {
         format
@@ -127,7 +128,7 @@ fun readDelim(
             ?: (1..records[0].count()).map { index -> "X${index}" }
 
     val generator = ColumnNameGenerator()
-    val uniqueNames = columnNames.map { generator.createUniqueName(it) }
+    val uniqueNames = columnNames.map { generator.addUnique(it) }
 
     val cols = uniqueNames.mapIndexed { colIndex, colName ->
         val defaultColType = colTypes[".default"]
@@ -145,7 +146,7 @@ fun readDelim(
         }
     }
 
-    return cols.asDataFrame()
+    return cols.asDataFrame<Unit>()
 }
 
 internal fun String.emptyAsNull(): String? = if (this.isEmpty()) null else this

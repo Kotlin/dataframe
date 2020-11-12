@@ -1,12 +1,7 @@
 package org.jetbrains.dataframe
 
-import kotlin.reflect.KClass
-import kotlin.reflect.KProperty
-import kotlin.reflect.KType
-import kotlin.reflect.full.allSuperclasses
-import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.full.superclasses
-import kotlin.reflect.full.withNullability
+import kotlin.reflect.*
+import kotlin.reflect.full.*
 import kotlin.reflect.jvm.jvmErasure
 
 typealias RowSelector<T, R> = TypedDataFrameRow<T>.(TypedDataFrameRow<T>) -> R
@@ -327,7 +322,7 @@ fun <T> doGroupBy(df: TypedDataFrame<T>, columnGroups: Map<String, String>, colu
         val groupName = insertIndices[colIndex]
         if (groupName != null) {
             val data = columnGroups[groupName]!!.map { col -> columnNames[col.name]?.let { col.rename(it) } ?: col }.asDataFrame<T>()
-            val column = GroupedColumnImpl(data, groupName, type)
+            val column = ColumnData.createGroup(groupName, data, type)
             resultColumns.add(column)
         } else if (!excludedIndices.contains(colIndex)) {
             resultColumns.add(df.columns[colIndex])
@@ -352,6 +347,18 @@ inline fun <reified T, C> GroupColsClause<T, C>.into(groupNameExpression: (Colum
 
 inline fun <reified T, C> GroupColsClause<T, C>.into(name: String) = into { name }
 
-internal fun <T> TypedDataFrame<T>.excludeCols(cols: List<Column>) {
-
+internal fun <T> TypedDataFrame<T>.splitByIndices(startIndices: List<Int>): List<TypedDataFrame<T>> {
+    return (startIndices + listOf(nrow)).zipWithNext { start, endExclusive ->
+        get(start until endExclusive)
+    }
 }
+
+internal fun <T> List<T>.splitByIndices(startIndices: List<Int>): List<List<T>> {
+    return (startIndices + listOf(size)).zipWithNext { start, endExclusive ->
+        subList(start, endExclusive)
+    }
+}
+
+internal fun KClass<*>.createType(typeArgument: KType) = createType(listOf(KTypeProjection.invariant(typeArgument)))
+
+internal inline fun <reified T> createType(typeArgument: KType) = T::class.createType(typeArgument)

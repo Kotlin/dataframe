@@ -70,7 +70,9 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `slice`(){
 
-        typed2[0..2].nameAndCity.name shouldBe typed[0..2].name
+        val expected = typed[0..2].name
+        val actual = typed2[0..2].nameAndCity.name
+        actual shouldBe expected
     }
 
     @Test

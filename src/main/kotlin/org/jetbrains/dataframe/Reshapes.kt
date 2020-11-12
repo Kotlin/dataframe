@@ -48,7 +48,7 @@ fun <T, V> GroupSpreadClause<T, V>.into(keySelector: RowSelector<T, String?>) = 
 internal fun <T, R> doSpread(builder: GroupAggregateBuilder<T>, grouped: GroupedDataFrame<T>, keyExpression: RowSelector<T, String?>, valueType: KType?, valueExpression: (TypedDataFrame<T>, String) -> R) {
     val df = grouped.baseDataFrame
     val nameGenerator = df.nameGenerator()
-    val keyColumnName = nameGenerator.createUniqueName("KEY_EXPRESSION")
+    val keyColumnName = nameGenerator.addUnique("KEY_EXPRESSION")
     val modifiedGroups = builder.groups.map { it.add(keyColumnName, keyExpression) }
     val keyColumnIndex = builder.groups.firstOrNull()?.ncol ?: -1
     val newColumns = modifiedGroups.fold(mutableSetOf<String?>()) { set, group -> set.addAll(group.columns[keyColumnIndex].typed<String?>().values).let { set } }
@@ -59,7 +59,7 @@ internal fun <T, R> doSpread(builder: GroupAggregateBuilder<T>, grouped: Grouped
     }
 
     newColumns.filterNotNull().forEach { key ->
-        val columnName = nameGenerator.createUniqueName(key)
+        val columnName = nameGenerator.addUnique(key)
         var hasNulls = false
         val classes = mutableSetOf<KClass<*>>()
         val values = modifiedGroups.map { group ->
@@ -106,7 +106,7 @@ internal fun <T, C> extractConvertedColumn(df: TypedDataFrame<T>, col: ColumnDef
             }
             col.name.isEmpty() -> {
                 val colData = col as ColumnData<C>
-                val renamed = colData.rename(nameGenerator.createUniqueName("columnData"))
+                val renamed = colData.rename(nameGenerator.addUnique("columnData"))
                 Triple(df + renamed, null, renamed)
             }
             else -> Triple(df, col, df[col])
@@ -266,7 +266,7 @@ inline fun <T, C, reified R> doMergeRows(builder: GroupAggregateBuilder<T>, grou
     val nameGenerator = grouped.nameGenerator()
     columnsToMerge.forEachIndexed { i, col ->
         val values = grouped.groups.map { clause.transform(it[col].values) }
-        val newColumn = column(nameGenerator.createUniqueName(names[i]), values, getType<R>())
+        val newColumn = column(nameGenerator.addUnique(names[i]), values, getType<R>())
         builder.add(newColumn)
     }
 }
@@ -278,15 +278,20 @@ inline fun <T, C, R, V> GroupMergeClause<T, C, R>.by(crossinline transform: (R) 
 internal class ColumnDataCollector(initCapacity: Int = 0) {
     private val classes = mutableSetOf<KClass<*>>()
     private var hasNulls = false
-    private val values = ArrayList<Any?>(initCapacity)
+    private val data = ArrayList<Any?>(initCapacity)
 
     fun add(value: Any?) {
         if (value == null) hasNulls = true
         else classes.add(value.javaClass.kotlin)
-        values.add(value)
+        data.add(value)
     }
 
-    fun toColumn(name: String) = column(name, values, classes.commonParent().createStarProjectedType(hasNulls))
+    val values: List<*>
+        get() = data
+
+    fun toColumn(name: String) = column(name, data, classes.commonParent().createStarProjectedType(hasNulls))
+
+    fun toColumn(name: String, clazz: KClass<*>) = column(name, data, clazz.createStarProjectedType(hasNulls))
 }
 
 class SplitColClause<T, C, out R>(val df: TypedDataFrame<T>, val column: ColumnData<C>, val transform: (C) -> R)
@@ -321,7 +326,7 @@ fun <T, C> SplitColClause<T, C, List<*>?>.doSplitCols(columnNameGenerator: (Int)
         val listSize = list?.size ?: 0
         for (j in 0 until listSize) {
             if (columnCollectors.size <= j) {
-                val newName = nameGenerator.createUniqueName(columnNameGenerator(columnCollectors.size))
+                val newName = nameGenerator.addUnique(columnNameGenerator(columnCollectors.size))
                 columnNames.add(newName)
                 val collector = ColumnDataCollector(nrow)
                 repeat(row) { collector.add(null) }
