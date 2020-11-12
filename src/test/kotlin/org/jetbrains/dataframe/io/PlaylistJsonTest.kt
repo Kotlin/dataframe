@@ -107,7 +107,6 @@ class PlaylistJsonTest {
 
         val path = "data/playlistItems.json"
         val df = TypedDataFrame.fromJson(path)
-        val typed = df.retype<DataRecord>()
-
+        df.retype<DataRecord>()
     }
 }
