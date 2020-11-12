@@ -951,4 +951,14 @@ class TypedDataFrameTests : BaseTest() {
     fun `row to string`(){
         typed[0].toString() shouldBe "{ name:Alice, age:15, city:London, weight:54 }"
     }
+
+    @Test
+    fun `range slice`(){
+        typed[3..5].name.values.toList() shouldBe typed.name.values.toList().subList(3, 6)
+    }
+
+    @Test
+    fun `range slice two times`(){
+        typed[3..5][1..2].name.values.toList() shouldBe typed.name.values.toList().subList(4, 6)
+    }
 }

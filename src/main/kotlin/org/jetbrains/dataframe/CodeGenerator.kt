@@ -24,10 +24,9 @@ data class DataFrameToListNamedStub(val df: TypedDataFrame<*>, val className: St
 
 data class DataFrameToListTypedStub(val df: TypedDataFrame<*>, val interfaceClass: KClass<*>)
 
-fun <T> TypedDataFrame<T>.getScheme(name: String? = null, columnSelector: ColumnsSelector<T,*>? = null): String {
+fun <T> TypedDataFrame<T>.schema(name: String? = null): String {
     val interfaceName = name ?: "DataRecord"
-    val cols = columnSelector?.let { getColumns(it).map { this[it.name] } } ?: columns
-    return CodeGenerator().generateInterfaceDeclarations(cols, interfaceName, withBaseInterfaces = false, isOpen = true).joinToString("\n")
+    return CodeGenerator().generateInterfaceDeclarations(columns, interfaceName, withBaseInterfaces = false, isOpen = true).joinToString("\n")
 }
 
 interface CodeGeneratorApi {
@@ -51,28 +50,35 @@ class CodeGenerator : CodeGeneratorApi {
         private val GroupedColumnType: KClass<*> = GroupedColumnBase::class
 
         private val GroupedFieldType: KClass<*> = TypedDataFrameRow::class
+
+        private val DataFrameFieldType: KClass<*> = TypedDataFrame::class
+
     }
 
     // Data Frame Schema
-    private data class FieldInfo(val fieldName: String, val columnName: String, private val type: KType, val childScheme: Scheme?) {
-
-        val isGroup: Boolean get() = childScheme != null
+    private data class FieldInfo(val fieldName: String, val columnName: String, private val type: KType, val columnKind: ColumnKind = ColumnKind.Default, val childScheme: Scheme? = null) {
 
         fun isSubFieldOf(other: FieldInfo) =
-                columnName == other.columnName && isGroup == other.isGroup && type.isSubtypeOf(other.type)
+                columnName == other.columnName && columnKind == other.columnKind && type.isSubtypeOf(other.type)
 
-        val columnType: KType get() = if(isGroup) GroupedColumnType.createType(listOf(KTypeProjection(KVariance.INVARIANT, type)))
-            else ColumnData::class.createType(listOf(KTypeProjection(KVariance.INVARIANT, type)))
+        val columnType: KType get() = when(columnKind) {
+            ColumnKind.Default -> ColumnData::class.createType(type)
+            ColumnKind.Group -> GroupedColumnType.createType(type)
+            ColumnKind.Table -> ColumnData::class.createType(DataFrameFieldType.createType(type))
+        }
 
-        val fieldType: KType get() = if(isGroup) GroupedFieldType.createType(listOf(KTypeProjection(KVariance.INVARIANT, type)))
-            else type
+        val fieldType: KType get() = when(columnKind) {
+            ColumnKind.Default -> type
+            ColumnKind.Group -> GroupedFieldType.createType(type)
+            ColumnKind.Table -> DataFrameFieldType.createType(type)
+        }
     }
 
     private class Scheme(val values: List<FieldInfo>) {
 
-        val byColumn: Map<String, FieldInfo> = values.associateBy { it.columnName }
+        val byColumn: Map<String, FieldInfo> by lazy { values.associateBy { it.columnName } }
 
-        val byField: Map<String, FieldInfo> = values.associateBy { it.fieldName }
+        val byField: Map<String, FieldInfo> by lazy { values.associateBy { it.fieldName } }
 
         fun contains(field: FieldInfo) = byField[field.fieldName]?.equals(field) ?: false
 
@@ -108,14 +114,20 @@ class CodeGenerator : CodeGeneratorApi {
             var valueType = it.returnType
             val valueClass = valueType.jvmErasure
             var marker: GeneratedMarker? = null
-            if (valueClass == GroupedFieldType) {
+            var columnKind = when(valueClass) {
+                GroupedFieldType -> ColumnKind.Group
+                DataFrameFieldType -> ColumnKind.Table
+                else -> ColumnKind.Default
+            }
+            if(columnKind != ColumnKind.Default) {
                 val typeArgument = valueType.arguments[0].type!!
                 if (isMarkerType(typeArgument.jvmErasure)) {
                     marker = getMarkerScheme(typeArgument.jvmErasure)
                     valueType = typeArgument
                 }
+                else columnKind = ColumnKind.Default
             }
-            fieldName to FieldInfo(fieldName, columnName, valueType, marker?.fullScheme)
+            fieldName to FieldInfo(fieldName, columnName, valueType, columnKind, marker?.fullScheme)
         })
         return result
     }
@@ -155,15 +167,24 @@ class CodeGenerator : CodeGeneratorApi {
             generatedFieldNames.add(fieldName)
             var type = it.type
             var childScheme : Scheme? = null
-            if(it is GroupedColumn<*>){
-                childScheme = it.df.scheme
-                type = it.dfType
+            var columnKind = ColumnKind.Default
+            when {
+                it is GroupedColumn<*> -> {
+                    childScheme = it.df.schema
+                    type = it.dfType
+                    columnKind = ColumnKind.Group
+                }
+                it is TableColumn<*> -> {
+                    childScheme = it.df.schema
+                    type = it.dfType
+                    columnKind = ColumnKind.Table
+                }
             }
-            FieldInfo(fieldName, it.name, type, childScheme)
+            FieldInfo(fieldName, it.name, type, columnKind, childScheme)
         })
     }
 
-    private val TypedDataFrame<*>.scheme: Scheme
+    private val TypedDataFrame<*>.schema: Scheme
         get() = getScheme(columns)
 
     // Rendering
@@ -266,7 +287,7 @@ class CodeGenerator : CodeGeneratorApi {
 
     override fun generate(df: TypedDataFrame<*>, property: KProperty<*>): List<String> {
 
-        var targetScheme = df.scheme
+        var targetScheme = df.schema
         val wasProcessedBefore = property in processedProperties
         processedProperties.add(property)
         val isMutable = property is KMutableProperty
@@ -329,8 +350,8 @@ class CodeGenerator : CodeGeneratorApi {
             for (baseScheme in requiredBaseMarkers) {
                 val baseField = baseScheme.fullScheme.byField[fieldName]
                 if (baseField != null) {
-                    generationMode = if (baseField.fieldType == field.fieldType || (baseField.isGroup && field.isGroup && baseField.childScheme!!.equals(field.childScheme!!))) FieldGenerationMode.skip
-                    else if (field.fieldType.isSubtypeOf(baseField.fieldType) || (baseField.isGroup && field.isGroup && baseField.childScheme!!.isSuperTo(field.childScheme!!))) {
+                    generationMode = if (baseField.fieldType == field.fieldType || (baseField.columnKind == field.columnKind && baseField.childScheme != null && baseField.childScheme.equals(field.childScheme!!))) FieldGenerationMode.skip
+                    else if (field.fieldType.isSubtypeOf(baseField.fieldType) || (baseField.columnKind == field.columnKind && baseField.childScheme != null && baseField.childScheme.isSuperTo(field.childScheme!!))) {
                         generationMode = FieldGenerationMode.override
                         break
                     } else throw Exception()
@@ -382,11 +403,14 @@ class CodeGenerator : CodeGeneratorApi {
             }
             val columnNameAnnotation = if (field.columnName != field.fieldName) "\t@ColumnName(\"${renderColumnName(field.columnName)}\")\n" else ""
 
-            val fieldType = when {
-                field.isGroup -> {
+            val fieldType = when(field.columnKind) {
+                ColumnKind.Group -> {
                     val markerType = findOrCreateMarker(field.childScheme!!, false, usedNames, resultDeclarations)
-                    val rowTypeName = render(GroupedFieldType)
-                    "$rowTypeName<$markerType>"
+                    "${render(GroupedFieldType)}<$markerType>"
+                }
+                ColumnKind.Table -> {
+                    val markerType = findOrCreateMarker(field.childScheme!!, false, usedNames, resultDeclarations)
+                    "${render(DataFrameFieldType)}<$markerType>"
                 }
                 else -> render(field.fieldType)
             }
@@ -422,7 +446,7 @@ class CodeGenerator : CodeGeneratorApi {
 
     override fun generate(stub: DataFrameToListTypedStub): List<String> {
         val df = stub.df
-        val dfScheme = df.scheme
+        val dfScheme = df.schema
         val interfaceScheme = getScheme(stub.interfaceClass, withBaseTypes = true)
         if (!interfaceScheme.isSuperTo(dfScheme))
             throw Exception()
@@ -435,6 +459,6 @@ class CodeGenerator : CodeGeneratorApi {
     }
 
     override fun generate(stub: DataFrameToListNamedStub) =
-            generateToListConverter(stub.className, stub.df.columns.map { it.name }, stub.df.scheme, null)
+            generateToListConverter(stub.className, stub.df.columns.map { it.name }, stub.df.schema, null)
 
 }

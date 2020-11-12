@@ -109,7 +109,7 @@ fun <A, B> TypedDataFrame<A>.join(other: TypedDataFrame<B>, joinType: JoinType =
 
     // list of columns from right data frame that are not part of join key. Ensure that new column names doesn't clash with original columns
     val newRightColumns = if (addNewColumns) other.columns.filter { !rightJoinColumns.contains(it.name) }.map {
-        it.rename(nameGenerator.createUniqueName(it.name))
+        it.rename(nameGenerator.addUnique(it.name))
     } else emptyList()
 
     val leftColumnsCount = ncol

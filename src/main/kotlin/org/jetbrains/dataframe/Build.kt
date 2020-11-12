@@ -33,7 +33,7 @@ inline fun <reified T> Iterable<T>.toDataFrame() = T::class.declaredMembers
             property.javaField?.isAccessible = true
             var nullable = false
             val values = this.map { el -> it.call(el).also { if (it == null) nullable = true } }
-            ColumnDataImpl(values, it.name, property.returnType.withNullability(nullable))
+            ColumnData.create(it.name, values, property.returnType.withNullability(nullable))
         }.let { dataFrameOf(it) }
 
 
@@ -41,7 +41,9 @@ fun dataFrameOf(columns: Iterable<DataCol>): TypedDataFrame<Unit> = TypedDataFra
 
 fun dataFrameOf(vararg header: ColumnDef<*>) = DataFrameBuilder(header.map { it.name })
 
-fun dataFrameOf(vararg header: String) = DataFrameBuilder(header.toList())
+fun dataFrameOf(vararg header: String) = dataFrameOf(header.toList())
+
+fun dataFrameOf(header: List<String>) = DataFrameBuilder(header)
 
 fun <T> Iterable<DataCol>.asDataFrame() = dataFrameOf(this).typed<T>()
 
