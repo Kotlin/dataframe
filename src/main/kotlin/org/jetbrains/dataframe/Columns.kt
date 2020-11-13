@@ -45,9 +45,9 @@ interface ColumnData<out T> : ColumnDef<T> {
 
         fun <T> create(name: String, values: List<T>, type: KType): ColumnData<T> = ColumnDataImpl(values, name, type)
 
-        fun <T> createGroup(name: String, df: TypedDataFrame<T>, type: KType): ColumnData<TypedDataFrameRow<T>> = GroupedColumnImpl(df, name, type)
+        fun <T> createGroup(name: String, df: TypedDataFrame<T>): ColumnData<TypedDataFrameRow<T>> = GroupedColumnImpl(df, name)
 
-        fun <T> createTable(name: String, df: TypedDataFrame<T>, type: KType, startIndices: List<Int>): ColumnData<TypedDataFrame<T>> = TableColumnImpl(name, df, type, startIndices)
+        fun <T> createTable(name: String, df: TypedDataFrame<T>, startIndices: List<Int>): ColumnData<TypedDataFrame<T>> = TableColumnImpl(name, df, startIndices)
     }
 
     val values: Iterable<T>
@@ -89,7 +89,6 @@ interface GroupedColumnBase<T>: SingleColumn<TypedDataFrameRow<T>>, DataFrameBas
 
 interface NestedColumn<T> {
     val df : TypedDataFrame<T>
-    val dfType: KType
 }
 
 interface GroupedColumn<T> : ColumnData<TypedDataFrameRow<T>>, NestedColumn<T>, GroupedColumnBase<T>
@@ -167,15 +166,15 @@ internal interface ColumnDataInternal<T> : ColumnData<T> {
     fun rename(newName: String): ColumnData<T>
 }
 
-internal class TableColumnImpl<T> private constructor(override val df: TypedDataFrame<T>, name: String, override val dfType: KType, values: List<TypedDataFrame<T>>)
-    : ColumnDataImpl<TypedDataFrame<T>>(values, name, dfType), TableColumn<T> {
+internal class TableColumnImpl<T> private constructor(override val df: TypedDataFrame<T>, name: String, values: List<TypedDataFrame<T>>)
+    : ColumnDataImpl<TypedDataFrame<T>>(values, name, createType<TypedDataFrame<*>>()), TableColumn<T> {
 
-    constructor(name: String, df: TypedDataFrame<T>, dfType: KType, startIndices: List<Int>) : this(df, name, createType<TypedDataFrame<*>>(dfType), df.splitByIndices(startIndices))
+    constructor(name: String, df: TypedDataFrame<T>, startIndices: List<Int>) : this(df, name, df.splitByIndices(startIndices))
 
-    override fun rename(newName: String) = TableColumnImpl(df, newName, dfType, values)
+    override fun rename(newName: String) = TableColumnImpl(df, newName, values)
 }
 
-internal class GroupedColumnImpl<T>(override val df: TypedDataFrame<T>, override val name: String, override val dfType: KType) : GroupedColumn<T>, ColumnDataInternal<TypedDataFrameRow<T>> {
+internal class GroupedColumnImpl<T>(override val df: TypedDataFrame<T>, override val name: String) : GroupedColumn<T>, ColumnDataInternal<TypedDataFrameRow<T>> {
 
     override val values: Iterable<TypedDataFrameRow<T>>
         get() = df.rows
@@ -186,9 +185,9 @@ internal class GroupedColumnImpl<T>(override val df: TypedDataFrame<T>, override
     override val ncol: Int
         get() = df.ncol
 
-    override val type by lazy { createType<TypedDataFrameRow<*>>(dfType) }
+    override val type by lazy { createType<TypedDataFrameRow<*>>() }
 
-    override fun distinct() = GroupedColumnImpl(distinct, name, dfType)
+    override fun distinct() = GroupedColumnImpl(distinct, name)
 
     private val distinct by lazy { df.distinct() }
 
@@ -206,7 +205,7 @@ internal class GroupedColumnImpl<T>(override val df: TypedDataFrame<T>, override
     override fun <R> get(column: ColumnDef<R>) = df[column].addParent(this)
     override fun <R> get(column: ColumnDef<TypedDataFrameRow<R>>) = df[column].addParent(this) as GroupedColumn<R>
 
-    override fun rename(newName: String) = GroupedColumnImpl(df, newName, dfType)
+    override fun rename(newName: String) = GroupedColumnImpl(df, newName)
 }
 
 internal open class ColumnDataImpl<T>(override val values: List<T>, override val name: String, override val type: KType, set: Set<T>? = null) : ColumnDataInternal<T> {
@@ -316,7 +315,7 @@ fun <T> ColumnData<T>.reorder(permutation: List<Int>): ColumnData<T> = when(this
     }
 }
 
-internal fun <T> GroupedColumn<*>.withDf(newDf: TypedDataFrame<T>) = ColumnData.createGroup(name, newDf, dfType)
+internal fun <T> GroupedColumn<*>.withDf(newDf: TypedDataFrame<T>) = ColumnData.createGroup(name, newDf)
 
 fun <T> ColumnData<T>.getRows(range: IntRange): ColumnData<T> =
         when(this) {
@@ -402,14 +401,6 @@ inline fun <reified T> column(name: String, values: List<T>): ColumnData<T> = co
 inline fun <reified T> column(name: String, values: List<T>, hasNulls: Boolean): ColumnData<T> = ColumnData.create(name, values, getType<T>().withNullability(hasNulls))
 
 fun <T> column(name: String, values: List<T>, type: KType): ColumnData<T> = ColumnDataImpl(values, name, type)
-
-inline fun <reified T> groupColumn(name: String, df: TypedDataFrame<T>) = groupColumn(name, df, getType<T>())
-
-fun <T> groupColumn(name: String, df: TypedDataFrame<T>, dfType: KType) = ColumnData.createGroup(name, df, dfType)
-
-inline fun <reified T> tableColumn(name: String, df: TypedDataFrame<T>, startIndices: List<Int>) = tableColumn(name, df, getType<T>(), startIndices)
-
-fun <T> tableColumn(name: String, df: TypedDataFrame<T>, dfType: KType, startIndices: List<Int>) = ColumnData.createTable(name, df, dfType, startIndices)
 
 class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
 

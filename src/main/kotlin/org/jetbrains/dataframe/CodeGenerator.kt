@@ -77,19 +77,24 @@ class CodeGenerator : CodeGeneratorApi {
     }
 
     // Data Frame Schema
-    private data class FieldInfo(val fieldName: String, val columnName: String, private val type: KType, val columnKind: ColumnKind = ColumnKind.Default, val childScheme: Scheme? = null) {
+    private data class FieldInfo(val fieldName: String, val columnName: String, private val type: KType?, val columnKind: ColumnKind = ColumnKind.Default, val childScheme: Scheme? = null) {
 
-        fun isSubFieldOf(other: FieldInfo) =
-                columnName == other.columnName && columnKind == other.columnKind && type.isSubtypeOf(other.type)
+        init {
+            when(columnKind) {
+                ColumnKind.Default -> assert(type != null && childScheme == null)
+                ColumnKind.Group -> assert(childScheme != null)
+                ColumnKind.Table -> assert(childScheme != null)
+            }
+        }
 
         val columnType: KType get() = when(columnKind) {
-            ColumnKind.Default -> ColumnData::class.createType(type)
+            ColumnKind.Default -> ColumnData::class.createType(type!!)
             ColumnKind.Group -> GroupedColumnType.createType(type)
             ColumnKind.Table -> ColumnData::class.createType(DataFrameFieldType.createType(type))
         }
 
         val fieldType: KType get() = when(columnKind) {
-            ColumnKind.Default -> type
+            ColumnKind.Default -> type!!
             ColumnKind.Group -> GroupedFieldType.createType(type)
             ColumnKind.Table -> DataFrameFieldType.createType(type)
         }
@@ -99,7 +104,7 @@ class CodeGenerator : CodeGeneratorApi {
             if(childScheme == null) {
                 if(other.childScheme != null) return CompareResult.None
                 if(type == other.type) return CompareResult.Equals
-                if(type.isSubtypeOf(other.type)) return CompareResult.IsDerived
+                if(type!!.isSubtypeOf(other.type!!)) return CompareResult.IsDerived
                 if(type.isSupertypeOf(other.type)) return CompareResult.IsSuper
                 return CompareResult.None
             }
@@ -205,18 +210,18 @@ class CodeGenerator : CodeGeneratorApi {
         return Scheme(columns.mapIndexed { index, it ->
             val fieldName = generateValidFieldName(it.name, index, generatedFieldNames)
             generatedFieldNames.add(fieldName)
-            var type = it.type
+            var type: KType? = it.type
             var childScheme : Scheme? = null
             var columnKind = ColumnKind.Default
             when {
                 it is GroupedColumn<*> -> {
                     childScheme = it.df.schema
-                    type = it.dfType
+                    type = null
                     columnKind = ColumnKind.Group
                 }
                 it is TableColumn<*> -> {
                     childScheme = it.df.schema
-                    type = it.dfType
+                    type = null
                     columnKind = ColumnKind.Table
                 }
             }
