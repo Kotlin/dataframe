@@ -25,7 +25,7 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     val df2 = df.group { name and city }.into("nameAndCity")
-    val typed2 = df2.retype<GroupedPerson>()
+    val typed2 = df2.typed<GroupedPerson>()
 
     object Properties {
         val DataFrameRowBase<NameAndCity>.name get() = this["name"] as String
@@ -49,14 +49,6 @@ class DataFrameTreeTests : BaseTest() {
         df2[nameAndCity][city] shouldBe typed.city
         typed2.nameAndCity.city shouldBe typed.city
         df2["nameAndCity"]["city"] shouldBe typed.city
-    }
-
-    @Test
-    fun `group column type`() {
-        df2[nameAndCity].type shouldBe getType<TypedDataFrameRow<Unit>>()
-
-        typed2.nameAndCity.asGroup().type shouldBe getType<TypedDataFrameRow<NameAndCity>>()
-        typed2.nameAndCity.asGroup().dfType shouldBe getType<NameAndCity>()
     }
 
     @Test

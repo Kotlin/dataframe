@@ -55,6 +55,27 @@ class CodeGenerator : CodeGeneratorApi {
 
     }
 
+    private enum class CompareResult {
+        Equals,
+        IsSuper,
+        IsDerived,
+        None;
+
+        fun isSuperOrEqual() = this == Equals || this == IsSuper
+
+        fun isDerivedOrEqual() = this == Equals || this == IsDerived
+
+        fun isEqual() = this == Equals
+
+        fun combine(other: CompareResult) =
+                when (this) {
+                    Equals -> other
+                    None -> this
+                    IsDerived -> if (other == Equals || other == IsDerived) this else None
+                    IsSuper -> if (other == Equals || other == IsSuper) this else None
+                }
+    }
+
     // Data Frame Schema
     private data class FieldInfo(val fieldName: String, val columnName: String, private val type: KType, val columnKind: ColumnKind = ColumnKind.Default, val childScheme: Scheme? = null) {
 
@@ -72,6 +93,19 @@ class CodeGenerator : CodeGeneratorApi {
             ColumnKind.Group -> GroupedFieldType.createType(type)
             ColumnKind.Table -> DataFrameFieldType.createType(type)
         }
+
+        fun compare(other: FieldInfo): CompareResult {
+            if(fieldName != other.fieldName || columnName != other.columnName || columnKind != other.columnKind) return CompareResult.None
+            if(childScheme == null) {
+                if(other.childScheme != null) return CompareResult.None
+                if(type == other.type) return CompareResult.Equals
+                if(type.isSubtypeOf(other.type)) return CompareResult.IsDerived
+                if(type.isSupertypeOf(other.type)) return CompareResult.IsSuper
+                return CompareResult.None
+            }
+            if(other.childScheme == null) return CompareResult.None
+            return childScheme.compare(other.childScheme)
+        }
     }
 
     private class Scheme(val values: List<FieldInfo>) {
@@ -82,19 +116,25 @@ class CodeGenerator : CodeGeneratorApi {
 
         fun contains(field: FieldInfo) = byField[field.fieldName]?.equals(field) ?: false
 
-        fun isSuperTo(other: Scheme) =
-                values.all {
-                    other.byColumn[it.columnName]?.isSubFieldOf(it) ?: false
-                }
-
-        override fun equals(other: Any?): Boolean {
-            if(this === other) return true
-            val scheme = other as? Scheme ?: return false
-            if (scheme.values.size != values.size) return false
-            return values.all {
-                val otherEntry = other.byColumn[it.columnName] ?: return false
-                otherEntry.equals(it)
+        fun compare(other: Scheme): CompareResult {
+            if(this === other) return CompareResult.Equals
+            var result = CompareResult.Equals
+            values.forEach {
+                val otherField = other.byColumn[it.columnName]
+                if(otherField == null)
+                    result = result.combine(CompareResult.IsDerived)
+                else
+                    result = result.combine(it.compare(otherField))
+                if(result == CompareResult.None) return result
             }
+            other.values.forEach {
+                val thisField = byColumn[it.columnName]
+                if(thisField == null) {
+                    result = result.combine(CompareResult.IsSuper)
+                    if (result == CompareResult.None) return result
+                }
+            }
+            return result
         }
 
         override fun hashCode(): Int {
@@ -219,7 +259,7 @@ class CodeGenerator : CodeGeneratorApi {
     private val registeredMarkerClassNames = mutableSetOf<String>()
 
     private fun Scheme.getAllBaseMarkers() = registeredMarkers.values
-            .filter { it.fullScheme.isSuperTo(this) }
+            .filter { it.fullScheme.compare(this).isSuperOrEqual() }
 
     private fun List<GeneratedMarker>.onlyLeafs(): List<GeneratedMarker> {
         val skip = flatMap { it.kclass.allSuperclasses }.toSet()
@@ -227,7 +267,7 @@ class CodeGenerator : CodeGeneratorApi {
     }
 
     private fun Scheme.getRequiredBaseMarkers() = registeredMarkers.values
-            .filter { it.isOpen && it.fullScheme.isSuperTo(this) }
+            .filter { it.isOpen && it.fullScheme.compare(this).isSuperOrEqual() }
 
     // Code Generation
 
@@ -299,7 +339,7 @@ class CodeGenerator : CodeGeneratorApi {
             if (!isMutable || currentMarkerType.findAnnotation<DataFrameType>()?.isOpen == true) {
                 val markerScheme = getScheme(currentMarkerType, withBaseTypes = true)
                 // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual data frame type
-                if (wasProcessedBefore || markerScheme == targetScheme) {
+                if (wasProcessedBefore || markerScheme.compare(targetScheme).isEqual()) {
                     // property scheme is valid for current data frame, but we should also check that all compatible open markers are implemented by it
                     val requiredBaseMarkers = markerScheme.getRequiredBaseMarkers().map { it.kclass }
                     if (currentMarkerType.implements(requiredBaseMarkers))
@@ -314,7 +354,7 @@ class CodeGenerator : CodeGeneratorApi {
         val declarations = mutableListOf<String>()
         val markerType = findOrCreateMarker(targetScheme, isMutable, mutableSetOf(), declarations)
 
-        val converter = "\$it.retype<$markerType>()"
+        val converter = "\$it.typed<$markerType>()"
         declarations.add(converter)
         return declarations
     }
@@ -323,7 +363,7 @@ class CodeGenerator : CodeGeneratorApi {
         val markerType: String
         val requiredBaseMarkers = targetScheme.getRequiredBaseMarkers().map { it.kclass }
         val existingMarker = registeredMarkers.values.firstOrNull {
-            isMutable == it.isOpen && it.fullScheme.equals(targetScheme) && it.kclass.implements(requiredBaseMarkers)
+            (!isMutable || it.isOpen) && it.fullScheme.compare(targetScheme).isEqual() && it.kclass.implements(requiredBaseMarkers)
         }
         if (existingMarker != null) {
             markerType = existingMarker.kclass.qualifiedName!!
@@ -350,8 +390,14 @@ class CodeGenerator : CodeGeneratorApi {
             for (baseScheme in requiredBaseMarkers) {
                 val baseField = baseScheme.fullScheme.byField[fieldName]
                 if (baseField != null) {
-                    generationMode = if (baseField.fieldType == field.fieldType || (baseField.columnKind == field.columnKind && baseField.childScheme != null && baseField.childScheme.equals(field.childScheme!!))) FieldGenerationMode.skip
-                    else if (field.fieldType.isSubtypeOf(baseField.fieldType) || (baseField.columnKind == field.columnKind && baseField.childScheme != null && baseField.childScheme.isSuperTo(field.childScheme!!))) {
+
+                    val childSchemeComparison = if(field.childScheme != null) {
+                        if(baseField.childScheme != null) field.childScheme.compare(baseField.childScheme) else CompareResult.Equals
+                    }
+                    else if(baseField.childScheme == null) CompareResult.None else CompareResult.Equals
+
+                    generationMode = if (baseField.fieldType == field.fieldType || (baseField.columnKind == field.columnKind && childSchemeComparison == CompareResult.Equals)) FieldGenerationMode.skip
+                    else if (field.fieldType.isSubtypeOf(baseField.fieldType) || (baseField.columnKind == field.columnKind && childSchemeComparison == CompareResult.IsDerived)) {
                         generationMode = FieldGenerationMode.override
                         break
                     } else throw Exception()
@@ -448,7 +494,7 @@ class CodeGenerator : CodeGeneratorApi {
         val df = stub.df
         val dfScheme = df.schema
         val interfaceScheme = getScheme(stub.interfaceClass, withBaseTypes = true)
-        if (!interfaceScheme.isSuperTo(dfScheme))
+        if (!interfaceScheme.compare(dfScheme).isSuperOrEqual())
             throw Exception()
         val interfaceName = stub.interfaceClass.simpleName!!
         val interfaceFullName = stub.interfaceClass.qualifiedName!!
