@@ -7,7 +7,9 @@ internal fun String.truncate(limit: Int) = if (limit in 1 until length) {
     this
 }
 
-fun TypedDataFrame<*>.toHTML(limit: Int = 20, truncate: Int = 50): String {
+data class Image(val url: String)
+
+fun TypedDataFrame<*>.toHTML(limit: Int = 20, truncate: Int = 40): String {
     val sb = StringBuilder()
     sb.append("<html><body>")
     sb.append("<table><tr>")
@@ -17,15 +19,26 @@ fun TypedDataFrame<*>.toHTML(limit: Int = 20, truncate: Int = 50): String {
     sb.append("</tr>")
     rows.take(limit).forEach {
         sb.append("<tr>")
-        it.values.map { it.toString() }.forEach {
-            val truncated = it.truncate(truncate)
-            sb.append("<td style=\"text-align:left\" title=\"$it\">$truncated</td>")
+        it.values.forEach {
+            val tooltip: String
+            val content: String
+            when(it) {
+                is Image -> {
+                    tooltip = it.url
+                    content = "<img src=\"${it.url}\"/>"
+                }
+                else -> {
+                    tooltip = it.toString()
+                    content = tooltip.truncate(truncate)
+                }
+            }
+            sb.append("<td style=\"text-align:left\" title=\"$tooltip\">$content</td>")
         }
         sb.append("</tr>")
     }
     sb.append("</table>")
-    if (limit < rows.count())
-        sb.append("<p>... only showing top $limit rows</p>")
+    if (limit < nrow)
+        sb.append("<p>... only showing top $limit of $nrow rows</p>")
     sb.append("</body></html>")
     return sb.toString()
 }
