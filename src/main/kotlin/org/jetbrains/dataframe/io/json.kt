@@ -91,7 +91,7 @@ internal fun fromList(records: List<*>): TypedDataFrame<*> {
                         val values = col.values.asList().splitByIndices(startIndices)
                         column(colName, values, List::class.createType(listOf(KTypeProjection.invariant(elementType))))
                     }
-                    else -> tableColumn(colName, parsed, startIndices)
+                    else -> ColumnData.createTable(colName, parsed, startIndices)
                 }
             }
             else -> {
@@ -107,7 +107,7 @@ internal fun fromList(records: List<*>): TypedDataFrame<*> {
                 val parsed = fromList(values)
                 when {
                     parsed.isSingleUnnamedColumn() -> parsed.columns[0].doRename(colName)
-                    else -> groupColumn(colName, parsed)
+                    else -> ColumnData.createGroup(colName, parsed)
                 }
             }
         }

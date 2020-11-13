@@ -286,7 +286,7 @@ fun <T> GroupColsBy<T>.filter(predicate: (Map.Entry<String, List<DataCol>>) -> B
 inline fun <reified T> GroupColsBy<T>.into(selector: (DataCol) -> String) : TypedDataFrame<T> {
     val columnGroups = grouping.flatMap { entry -> entry.value.map { it.name to entry.key} }.toMap()
     val columnNames = grouping.flatMap { entry -> entry.value.map { it.name to selector(it)}}.toMap()
-    return doGroupBy(df, columnGroups, columnNames, getType<T>())
+    return doGroupBy(df, columnGroups, columnNames)
 }
 
 fun <T> TypedDataFrame<T>.groupColsBy(groupName: (DataCol) -> String?) = GroupColsBy(this, columns.groupBy(groupName).filterKeys { it != null }.mapKeys { it.key!! }, { it.name })
@@ -311,7 +311,7 @@ fun <T, C> TypedDataFrame<T>.ungroupCols(selector: ColumnsSelector<T, TypedDataF
     return resultColumns.asDataFrame()
 }
 
-fun <T> doGroupBy(df: TypedDataFrame<T>, columnGroups: Map<String, String>, columnNames: Map<String, String>, type: KType): TypedDataFrame<T> {
+fun <T> doGroupBy(df: TypedDataFrame<T>, columnGroups: Map<String, String>, columnNames: Map<String, String>): TypedDataFrame<T> {
 
     val columnGroups = df.columns.filter { columnGroups.contains(it.name) }.groupBy { columnGroups[it.name]!! }
     val groupedColumnIndices = columnGroups.mapValues { it.value.map { df.getColumnIndex(it) } }
@@ -322,7 +322,7 @@ fun <T> doGroupBy(df: TypedDataFrame<T>, columnGroups: Map<String, String>, colu
         val groupName = insertIndices[colIndex]
         if (groupName != null) {
             val data = columnGroups[groupName]!!.map { col -> columnNames[col.name]?.let { col.rename(it) } ?: col }.asDataFrame<T>()
-            val column = ColumnData.createGroup(groupName, data, type)
+            val column = ColumnData.createGroup(groupName, data)
             resultColumns.add(column)
         } else if (!excludedIndices.contains(colIndex)) {
             resultColumns.add(df.columns[colIndex])
@@ -342,7 +342,7 @@ inline fun <reified T, C> GroupColsClause<T, C>.into(groupNameExpression: (Colum
     val groupedColumns = renameMapping.map {it.first}
     val columnNames = renameMapping.mapNotNull { if(it.second != null) it.first.name to it.second!! else null }.toMap()
     val columnGroups = groupedColumns.map { it.name to groupNameExpression(df[it]) }.toMap()
-    return doGroupBy(df, columnGroups, columnNames, getType<T>())
+    return doGroupBy(df, columnGroups, columnNames)
 }
 
 inline fun <reified T, C> GroupColsClause<T, C>.into(name: String) = into { name }
@@ -359,6 +359,7 @@ internal fun <T> List<T>.splitByIndices(startIndices: List<Int>): List<List<T>> 
     }
 }
 
-internal fun KClass<*>.createType(typeArgument: KType) = createType(listOf(KTypeProjection.invariant(typeArgument)))
+internal fun KClass<*>.createType(typeArgument: KType?) = if(typeArgument != null) createType(listOf(KTypeProjection.invariant(typeArgument)))
+    else createStarProjectedType(false)
 
-internal inline fun <reified T> createType(typeArgument: KType) = T::class.createType(typeArgument)
+internal inline fun <reified T> createType(typeArgument: KType? = null) = T::class.createType(typeArgument)
