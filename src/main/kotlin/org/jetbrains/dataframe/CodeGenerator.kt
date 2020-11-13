@@ -31,6 +31,7 @@ fun <T> TypedDataFrame<T>.schema(name: String? = null): String {
 
 interface CodeGeneratorApi {
     fun generate(df: TypedDataFrame<*>, property: KProperty<*>): List<String>
+    fun generate(df: TypedDataFrame<*>): List<String>
     fun generate(stub: DataFrameToListNamedStub): List<String>
     fun generate(stub: DataFrameToListTypedStub): List<String>
 
@@ -192,7 +193,6 @@ class CodeGenerator : CodeGeneratorApi {
                     .replace(":", " - ")
                     .replace(".", " ")
                     .replace("/", "-")
-                    .let { "`$it`" }
         }
         if (result.isEmpty()) result = "_$index"
         val baseName = result
@@ -330,6 +330,8 @@ class CodeGenerator : CodeGeneratorApi {
         return targetBaseMarkers.all { superclasses.contains(it) }
     }
 
+    override fun generate(df: TypedDataFrame<*>) = generate(df.schema, false)
+
     override fun generate(df: TypedDataFrame<*>, property: KProperty<*>): List<String> {
 
         var targetScheme = df.schema
@@ -356,9 +358,12 @@ class CodeGenerator : CodeGeneratorApi {
         }
 
         // property needs to be recreated. First, try to find existing marker for it
-        val declarations = mutableListOf<String>()
-        val markerType = findOrCreateMarker(targetScheme, isMutable, mutableSetOf(), declarations)
+        return generate(targetScheme, isMutable)
+    }
 
+    private fun generate(scheme: Scheme, isMutable: Boolean): MutableList<String> {
+        val declarations = mutableListOf<String>()
+        val markerType = findOrCreateMarker(scheme, isMutable, mutableSetOf(), declarations)
         val converter = "\$it.typed<$markerType>()"
         declarations.add(converter)
         return declarations
