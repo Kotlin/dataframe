@@ -1,7 +1,9 @@
-package org.jetbrains.dataframe.person
+package org.jetbrains.dataframe.codeGen
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.person.BaseTest
+import org.jetbrains.dataframe.person.TypedDataFrameTests
 import org.junit.Test
 import kotlin.reflect.full.memberProperties
 
@@ -22,7 +24,7 @@ class CodeGenerationTests : BaseTest(){
                 val weight: Int?
             }""".trimIndent()
 
-        val expectedConverter = "$" + "it.retype<DataFrameType1>()"
+        val expectedConverter = "$" + "it.typed<DataFrameType1>()"
 
         code.size shouldBe 2
         code[0].trimIndent() shouldBe expectedDeclaration
@@ -49,7 +51,7 @@ class CodeGenerationTests : BaseTest(){
                 val weight: Int?
             }""".trimIndent()
 
-        val expectedConverter = "$" + "it.retype<DataFrameType1>()"
+        val expectedConverter = "$" + "it.typed<DataFrameType1>()"
 
         code.size shouldBe 3
         code[0].trimIndent() shouldBe declaration1

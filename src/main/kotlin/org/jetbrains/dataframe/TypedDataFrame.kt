@@ -435,27 +435,3 @@ fun <T> TypedDataFrameRow<T>.toDataFrame() = owner.columns.map {
     val value = it[index]
     it.withValues(listOf(value), value == null)
 }.let { dataFrameOf(it).typed<T>() }
-
-fun <T> TypedDataFrame<*>.retype(klazz: KClass<*>): TypedDataFrame<T> {
-    val newColumns = columns.map {
-        when(it) {
-            is GroupedColumn<*> -> {
-                val columnName = it.name
-                val property = klazz.memberProperties.firstOrNull {
-                    it.getColumnName() == columnName
-                }
-                if (property != null) {
-                    val dfType = property.returnType
-                    assert(dfType.arguments.size == 1)
-                    val markerType = dfType.arguments[0].type!!
-                    val newDf = it.df.retype<Unit>(markerType.classifier as KClass<*>)
-                    ColumnData.createGroup(it.name, newDf, markerType)
-                } else it
-            }
-            else -> it
-        }
-    }
-    return newColumns.asDataFrame()
-}
-
-inline fun <reified T> TypedDataFrame<*>.retype() = retype<T>(T::class)
