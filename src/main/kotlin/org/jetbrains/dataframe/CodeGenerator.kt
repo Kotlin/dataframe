@@ -149,13 +149,15 @@ class CodeGenerator : CodeGeneratorApi {
 
     }
 
+    private fun String.quoteIfNeeded() = if(contains(charsToQuote)) "`$this`" else this
+
     private fun getFields(marker: KClass<*>, withBaseTypes: Boolean): Map<String, FieldInfo> {
         val result = mutableMapOf<String, FieldInfo>()
         if (withBaseTypes)
             marker.superclasses.forEach { result.putAll(getFields(it, withBaseTypes)) }
 
         result.putAll(marker.declaredMemberProperties.mapIndexed { index, it ->
-            val fieldName = it.name
+            val fieldName = it.name.quoteIfNeeded()
             val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName
             var valueType = it.returnType
             val valueClass = valueType.jvmErasure
@@ -302,7 +304,7 @@ class CodeGenerator : CodeGeneratorApi {
         registeredMarkers.getOrPut(marker) {
             val annotation = marker.findAnnotation<DataFrameType>() ?: throw Exception()
             val fullSet = getScheme(marker, withBaseTypes = true)
-            val ownProperties = marker.declaredMemberProperties.map { it.name }.toSet()
+            val ownProperties = marker.declaredMemberProperties.map { it.name.quoteIfNeeded() }.toSet()
             val ownSet = Scheme(fullSet.values.filter { ownProperties.contains(it.fieldName) })
             val simpleName = marker.simpleName!!
             registeredMarkerClassNames.add(simpleName)

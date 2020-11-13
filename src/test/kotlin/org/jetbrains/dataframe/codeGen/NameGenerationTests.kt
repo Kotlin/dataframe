@@ -2,15 +2,26 @@ package org.jetbrains.dataframe.codeGen
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.CodeGenerator
+import org.jetbrains.dataframe.ColumnName
+import org.jetbrains.dataframe.DataFrameType
 import org.jetbrains.dataframe.dataFrameOf
 import org.junit.Test
 
 class NameGenerationTests {
 
-    @Test
-    fun `column name with space`(){
+    val df = dataFrameOf("first column", "second column")(3, 5)
 
-        val df = dataFrameOf("first column", "second column")(3, 5)
+    @DataFrameType
+    interface DataRecord{
+        @ColumnName("first column")
+        val `first column`: Int
+        @ColumnName("second column")
+        val `second column`: Int
+    }
+
+    @Test
+    fun `interface generation`(){
+
         val codeGen = CodeGenerator()
         val code = codeGen.generate(df)
 
@@ -25,5 +36,16 @@ class NameGenerationTests {
         """.trimIndent()
 
         code[0] shouldBe expected
+    }
+
+    @Test
+    fun `properties generation`(){
+
+        val codeGen = CodeGenerator()
+        val code = codeGen.generate(DataRecord::class)
+        code.size shouldBe 4
+        code.forEach {
+            it.count { it == '`' } shouldBe 2
+        }
     }
 }
