@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe.io
 
+import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
 import org.junit.Test
 
@@ -198,10 +199,18 @@ class PlaylistJsonTest {
     val typed = df.typed<DataRecord>()
 
     @Test
-    fun readJson() {
+    fun `deep update`() {
 
-        val path = "data/playlistItems.json"
-        val df = TypedDataFrame.fromJson(path)
-        df.typed<DataRecord>()
+        val snippet = typed.items[0].snippet.asDataFrame()
+        val updated = snippet.update { thumbnails.default.url }.with {Image(it)}
+        updated.thumbnails.default.url.type shouldBe getType<Image>()
+    }
+
+    @Test
+    fun `deep update group`() {
+
+        val snippet = typed.items[0].snippet.asDataFrame()
+        val updated = snippet.update { thumbnails.default }.with { it.url }
+        updated.thumbnails["default"].type shouldBe getType<String>()
     }
 }

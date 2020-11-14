@@ -184,6 +184,14 @@ fun <T, C> UpdateClause<T, C>.where(predicate: UpdateExpression<T, C, Boolean>) 
 
 typealias UpdateExpression<T, C, R> = TypedDataFrameRow<T>.(C) -> R
 
+fun <T> TypedDataFrame<T>.addOrReplace(newColumns: List<DataCol>): TypedDataFrame<T> {
+    val map = mutableMapOf<String, DataCol>()
+    newColumns.map { it.name to it }.toMap(map)
+    val oldCols = columns.map { map.remove(it.name) ?: it }
+    val newCols = newColumns.filter { map.containsKey(it.name) }
+    return dataFrameOf(oldCols + newCols).typed()
+}
+
 inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: UpdateExpression<T, C, R>): TypedDataFrame<T> {
     val newCols = cols.map { col ->
         var nullable = false
@@ -196,10 +204,18 @@ inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: 
                 else expression(row, currentValue)
             }.also { if (it == null) nullable = true }
         }
-        col.name to column(col.name, values, nullable)
-    }.toMap()
-    val newColumns = df.columns.map { newCols[it.name] ?: it }
-    return dataFrameOf(newColumns).typed()
+        var oldCol: ColumnData<*> = colData
+        var newColumn: ColumnData<*> = column(col.name, values, nullable)
+
+        while(oldCol is ColumnWithParent<*>){
+            val parent = oldCol.parent
+            val newDf = parent.df.addOrReplace(listOf(newColumn))
+            newColumn = ColumnData.createGroup(parent.name, newDf)
+            oldCol = parent
+        }
+        newColumn
+    }
+    return df.addOrReplace(newCols)
 }
 
 inline fun <reified C> headPlusArray(head: C, cols: Array<out C>) = (listOf(head) + cols.toList()).toTypedArray()
