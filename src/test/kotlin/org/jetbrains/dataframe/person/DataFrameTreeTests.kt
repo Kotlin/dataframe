@@ -112,16 +112,17 @@ class DataFrameTreeTests : BaseTest() {
         val dataFrameRowBase = DataFrameRowBase::class.simpleName
         val dataFrameRow = TypedDataFrameRow::class.qualifiedName
         val className = GroupedPerson::class.qualifiedName
+        val shortName = GroupedPerson::class.simpleName!!
         val nameAndCity = NameAndCity::class.qualifiedName
         val groupedColumn = GroupedColumnBase::class.qualifiedName
         val columnData = ColumnData::class.qualifiedName
         val expected = """
-            val $dataFrameBase<$className>.age: $columnData<kotlin.Int> get() = this["age"] as $columnData<kotlin.Int>
-            val $dataFrameRowBase<$className>.age: Int get() = this["age"] as Int
-            val $dataFrameBase<$className>.nameAndCity: $groupedColumn<$nameAndCity> get() = this["nameAndCity"] as $groupedColumn<$nameAndCity>
-            val $dataFrameRowBase<$className>.nameAndCity: $dataFrameRow<$nameAndCity> get() = this["nameAndCity"] as $dataFrameRow<$nameAndCity>
-            val $dataFrameBase<$className>.weight: $columnData<kotlin.Int?> get() = this["weight"] as $columnData<kotlin.Int?>
-            val $dataFrameRowBase<$className>.weight: Int? get() = this["weight"] as Int?
+            val $dataFrameBase<$className>.age: $columnData<kotlin.Int> @JvmName("${shortName}_age") get() = this["age"] as $columnData<kotlin.Int>
+            val $dataFrameRowBase<$className>.age: Int @JvmName("${shortName}_age") get() = this["age"] as Int
+            val $dataFrameBase<$className>.nameAndCity: $groupedColumn<$nameAndCity> @JvmName("${shortName}_nameAndCity") get() = this["nameAndCity"] as $groupedColumn<$nameAndCity>
+            val $dataFrameRowBase<$className>.nameAndCity: $dataFrameRow<$nameAndCity> @JvmName("${shortName}_nameAndCity") get() = this["nameAndCity"] as $dataFrameRow<$nameAndCity>
+            val $dataFrameBase<$className>.weight: $columnData<kotlin.Int?> @JvmName("${shortName}_weight") get() = this["weight"] as $columnData<kotlin.Int?>
+            val $dataFrameRowBase<$className>.weight: Int? @JvmName("${shortName}_weight") get() = this["weight"] as Int?
         """.trimIndent()
         code.joinToString("\n") shouldBe expected
     }
