@@ -278,10 +278,14 @@ class CodeGenerator : CodeGeneratorApi {
 
     // Code Generation
 
+    private fun String.removeQuotes() = this.removeSurrounding("`")
+
     private fun generateExtensionProperties(scheme: Scheme, markerType: String): List<String> {
 
+        val shortMarkerName = markerType.substring(markerType.lastIndexOf('.')+1)
         fun generatePropertyCode(typeName: String, name: String, propertyType: String, getter: String): String {
-            return "val $typeName.$name: $propertyType get() = $getter as $propertyType"
+            val jvmName = "${shortMarkerName}_${name.removeQuotes()}"
+            return "val $typeName.$name: $propertyType @JvmName(\"$jvmName\") get() = $getter as $propertyType"
         }
 
         val declarations = mutableListOf<String>()
