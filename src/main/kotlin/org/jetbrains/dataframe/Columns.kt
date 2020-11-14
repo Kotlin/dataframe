@@ -85,7 +85,9 @@ class ColumnDefinition<T>(override val name: String) : ColumnDef<T> {
 
 inline fun <reified T> ColumnDefinition<T>.nullable() = ColumnDefinition<T?>(name)
 
-interface GroupedColumnBase<T>: SingleColumn<TypedDataFrameRow<T>>, DataFrameBase<T>
+interface GroupedColumnBase<T>: SingleColumn<TypedDataFrameRow<T>>, DataFrameBase<T> {
+    fun asDataFrame(): TypedDataFrame<T>
+}
 
 interface NestedColumn<T> {
     val df : TypedDataFrame<T>
@@ -137,17 +139,17 @@ internal fun <T> ColumnData<T>.getHashCode(): Int {
 }
 
 interface ColumnWithParent<C> : SingleColumn<C> {
-    val parent: ColumnData<*>
+    val parent: GroupedColumn<*>
 }
 
-class ColumnDataWithParent<T>(override val parent: ColumnData<*>, val source: ColumnData<T>) : ColumnWithParent<T>, ColumnData<T> by source {
+class ColumnDataWithParent<T>(override val parent: GroupedColumn<*>, val source: ColumnData<T>) : ColumnWithParent<T>, ColumnData<T> by source {
 
     override fun equals(other: Any?) = checkEquals(other)
 
     override fun hashCode() = getHashCode()
 }
 
-class GroupedColumnWithParent<T>(override val parent: ColumnData<*>, val source: GroupedColumn<T>) : ColumnWithParent<TypedDataFrameRow<T>>, GroupedColumn<T> by source {
+class GroupedColumnWithParent<T>(override val parent: GroupedColumn<*>, val source: GroupedColumn<T>) : ColumnWithParent<TypedDataFrameRow<T>>, GroupedColumn<T> by source {
     override fun get(columnName: String) = df[columnName].addParent(this)
     override fun <R> get(column: ColumnDef<R>) = df[column].addParent(this)
     override fun <R> get(column: ColumnDef<TypedDataFrameRow<R>>) = df[column].addParent(this) as GroupedColumn<R>
@@ -157,7 +159,7 @@ class GroupedColumnWithParent<T>(override val parent: ColumnData<*>, val source:
     override fun hashCode() = getHashCode()
 }
 
-internal fun <T> ColumnData<T>.addParent(parent: ColumnData<*>): ColumnData<T> = when(this) {
+internal fun <T> ColumnData<T>.addParent(parent: GroupedColumn<*>): ColumnData<T> = when(this) {
     is GroupedColumn<*> -> GroupedColumnWithParent(parent, this as GroupedColumn<Any>) as ColumnData<T>
     else -> ColumnDataWithParent(parent, this)
 }
@@ -206,6 +208,8 @@ internal class GroupedColumnImpl<T>(override val df: TypedDataFrame<T>, override
     override fun <R> get(column: ColumnDef<TypedDataFrameRow<R>>) = df[column].addParent(this) as GroupedColumn<R>
 
     override fun rename(newName: String) = GroupedColumnImpl(df, newName)
+
+    override fun asDataFrame() = df
 }
 
 internal open class ColumnDataImpl<T>(override val values: List<T>, override val name: String, override val type: KType, set: Set<T>? = null) : ColumnDataInternal<T> {
