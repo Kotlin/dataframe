@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe
 
+import java.lang.reflect.Type
 import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -13,6 +14,8 @@ interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
     fun cols(vararg col: String) = ColumnGroup(col.map { it.toColumn() })
 
     fun cols(predicate: (DataCol) -> Boolean) = ColumnGroup(columns.filter(predicate))
+
+    fun colsDfs(predicate: (DataColWithPath) -> Boolean) = ColumnGroup(columns.dfs().filter(predicate))
 
     val cols: List<DataCol> get() = columns
 
@@ -165,7 +168,7 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
     fun columnNames() = columns.map { it.name }
 
     operator fun get(index: Int): TypedDataFrameRow<T> = TypedDataFrameRowImpl(index, this)
-    override operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found") // TODO
+    override operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found: '$columnName'") // TODO
     override operator fun <R> get(column: ColumnDef<R>): ColumnData<R> = tryGetColumn(column)!!
     override operator fun <R> get(column: ColumnDef<TypedDataFrameRow<R>>): GroupedColumn<R> = get<TypedDataFrameRow<R>>(column) as GroupedColumn<R>
 
@@ -195,7 +198,7 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
     fun tryGetColumnGroup(name: String) = tryGetColumn(name) as? GroupedColumn<*>
     fun getColumnGroup(name: String) = tryGetColumnGroup(name)!!
 
-    fun <C> select(columns: Iterable<ColumnDef<C>>) = new(columns.map { this[it] })
+    fun <C> select(columns: Iterable<ColumnDef<C>>): TypedDataFrame<T>
     fun select(vararg columns: Column) = select(columns.toList())
     fun select(vararg columns: String) = select(getColumns(columns))
     fun select(vararg columns: KProperty<*>) = select(getColumns(columns))
@@ -216,7 +219,7 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
     fun sortByDesc(vararg columns: KProperty<Comparable<*>?>) = sortByDesc(getColumns(columns))
     fun sortByDesc(selector: SortColumnSelector<T, Comparable<*>?>) = sortBy(getSortColumns(selector).map { SortColumnDescriptor(it.column, SortDirection.Desc) })
 
-    fun remove(cols: Iterable<Column>) = cols.map { it.name }.toSet().let { exclude -> new(columns.filter { !exclude.contains(it.name) }) }
+    fun remove(cols: Iterable<Column>) = doRemove(cols).first
     fun remove(vararg cols: Column) = remove(cols.toList())
     fun remove(vararg columns: String) = remove(getColumns(columns))
     fun remove(vararg columns: KProperty<*>) = remove(getColumns(columns))
@@ -421,11 +424,19 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
         assert(values.size == ncol) { "Invalid number of arguments. Expected: $ncol, actual: ${values.size}" }
         return values.mapIndexed { i, v ->
             val col = columns[i]
-            if(v != null)
-                // Note: type arguments for a new value are not validated here because they are erased
+            if (v != null)
+            // Note: type arguments for a new value are not validated here because they are erased
                 assert(v.javaClass.kotlin.isSubclassOf(col.type.jvmErasure))
             col.withValues(col.values + listOf(v), col.hasNulls || v == null)
         }.asDataFrame<T>()
+    }
+
+    override fun <C> select(columns: Iterable<ColumnDef<C>>): TypedDataFrame<T> {
+        var cols = columns.map { this[it] as DataCol }
+        if (cols.size == 1) {
+            (cols[0] as? GroupedColumn<*>)?.let { cols = it.df.columns }
+        }
+        return new(cols)
     }
 }
 

@@ -37,13 +37,22 @@ inline fun <reified T> Iterable<T>.toDataFrame() = T::class.declaredMembers
         }.let { dataFrameOf(it) }
 
 
-fun dataFrameOf(columns: Iterable<DataCol>): TypedDataFrame<Unit> = TypedDataFrameImpl(columns.toList())
+fun dataFrameOf(columns: Iterable<DataCol>): TypedDataFrame<Unit> = TypedDataFrameImpl(columns.map { it.unbox() })
 
 fun dataFrameOf(vararg header: ColumnDef<*>) = DataFrameBuilder(header.map { it.name })
+
+fun <T> emptyDataFrame() = dataFrameOf(emptyList<DataCol>()).typed<T>()
 
 fun dataFrameOf(vararg header: String) = dataFrameOf(header.toList())
 
 fun dataFrameOf(header: List<String>) = DataFrameBuilder(header)
+
+internal fun DataCol.unbox(): DataCol = when (this) {
+    is RenamedColumn<*> -> source.unbox().doRename(name)
+    is ColumnDataWithParent<*> -> source.unbox()
+    is GroupedColumnWithParent<*> -> source.unbox()
+    else -> this
+}
 
 fun <T> Iterable<DataCol>.asDataFrame() = dataFrameOf(this).typed<T>()
 
@@ -58,11 +67,11 @@ class DataFrameBuilder(private val columnNames: List<String>) {
         val columnValues = values
                 .mapIndexed { i, value -> i.rem(columnNames.size) to value }
                 .groupBy { it.first }.values.map {
-            it.map { it.second }
-        }
+                    it.map { it.second }
+                }
 
-        val columns = columnNames.zip(columnValues).map {
-            (columnName, values) -> guessColumnType(columnName, values)
+        val columns = columnNames.zip(columnValues).map { (columnName, values) ->
+            guessColumnType(columnName, values)
         }
 
         return dataFrameOf(columns)
@@ -79,7 +88,7 @@ internal fun Iterable<KClass<*>>.commonType(nullable: Boolean) = commonParent().
 internal fun guessValueType(values: List<Any?>): KType {
     var nullable = false
     val types = values.map {
-        if(it == null) nullable = true
+        if (it == null) nullable = true
         it?.javaClass
     }.distinct().mapNotNull { it?.kotlin }
     return types.commonType(nullable)

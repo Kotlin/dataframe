@@ -901,21 +901,20 @@ class TypedDataFrameTests : BaseTest() {
             ncol shouldBe 3
             nrow shouldBe typed.nrow
             columnNames() shouldBe listOf("name", "Int", "String")
-            val intGroup = this["Int"].asGrouped()
-            intGroup.df.columnNames() shouldBe listOf("age", "weight")
+            val intGroup = this["Int"].asGroup()
+            intGroup.columnNames() shouldBe listOf("age", "weight")
 
             val res = listOf(this.name, this["Int"]["age"], this["String"]["city"], this["Int"]["weight"]).asDataFrame<Person>()
             res shouldBe typed
         }
-        typed.groupColsBy { if(it.name != "name") it.type.jvmErasure.simpleName else null }.into { it.name }.check()
-        typed.group { cols { it != name } }.into { it.type.jvmErasure.simpleName!! }.check()
-        typed.group { age and city and weight }.into { it.type.jvmErasure.simpleName!! }.check()
+        typed.move { cols { it != name } }.intoGroups { it.type.jvmErasure.simpleName!! }.check()
+        typed.move { age and city and weight }.intoGroups { it.type.jvmErasure.simpleName!! }.check()
     }
 
     @Test
     fun `column group`() {
 
-        val grouped = typed.group { age and name and city }.into("info")
+        val grouped = typed.move { age and name and city }.into("info")
         grouped.ncol shouldBe 2
         grouped.columnNames() shouldBe listOf("info", "weight")
         val res = listOf(grouped["info"]["name"], grouped["info"]["age"], grouped["info"]["city"], grouped.weight).asDataFrame<Person>()
@@ -926,7 +925,7 @@ class TypedDataFrameTests : BaseTest() {
     fun `column ungroup`() {
 
         val info by columnGroup<Person>()
-        val res = typed.group { age and city }.into("info").ungroupCol { info }
+        val res = typed.move { age and city }.into("info").ungroupCol { info }
         res shouldBe typed
     }
 
@@ -960,5 +959,14 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `range slice two times`(){
         typed[3..5][1..2].name.values.toList() shouldBe typed.name.values.toList().subList(4, 6)
+    }
+
+    @Test
+    fun `move to position`() {
+
+        typed.columns[1] shouldBe typed.age
+        val moved = typed.move { age }.to(2)
+        moved.columns[2] shouldBe typed.age
+        moved.ncol shouldBe typed.ncol
     }
 }

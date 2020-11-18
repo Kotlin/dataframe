@@ -118,7 +118,7 @@ internal fun <T> TypedDataFrame<T>.spreadToBool(col: ColumnDef<String?>): TypedD
 
     val (dataFrame, srcColumn, columnData) = extractConvertedColumn(this, col, nameGenerator)
 
-    val keyColumnIndex = dataFrame.columns.indexOf(columnData)
+    val keyColumnIndex = dataFrame.getColumnIndex(columnData)
 
     val groupingColumns = srcColumn?.let { columns - it } ?: columns
 
