@@ -2,10 +2,6 @@ package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.person.DataFrameTreeTests.Properties.age
-import org.jetbrains.dataframe.person.DataFrameTreeTests.Properties.city
-import org.jetbrains.dataframe.person.DataFrameTreeTests.Properties.name
-import org.jetbrains.dataframe.person.DataFrameTreeTests.Properties.nameAndCity
 import org.junit.Ignore
 import org.junit.Test
 
@@ -24,22 +20,20 @@ class DataFrameTreeTests : BaseTest() {
         val weight: Int?
     }
 
-    val df2 = df.group { name and city }.into("nameAndCity")
+    val df2 = df.move { name and city }.into("nameAndCity")
     val typed2 = df2.typed<GroupedPerson>()
 
-    object Properties {
-        val DataFrameRowBase<NameAndCity>.name get() = this["name"] as String
-        val DataFrameRowBase<NameAndCity>.city get() = this["city"] as String?
-        val DataFrameBase<NameAndCity>.name get() = this["name"].typed<String>()
-        val DataFrameBase<NameAndCity>.city get() = this["city"].typed<String?>()
+    val DataFrameRowBase<NameAndCity>.name get() = this["name"] as String
+    val DataFrameRowBase<NameAndCity>.city get() = this["city"] as String?
+    val DataFrameBase<NameAndCity>.name get() = this["name"].typed<String>()
+    val DataFrameBase<NameAndCity>.city get() = this["city"].typed<String?>()
 
-        val DataFrameRowBase<GroupedPerson>.age get() = this["age"] as Int
-        val DataFrameRowBase<GroupedPerson>.weight get() = this["weight"] as Int?
-        val DataFrameRowBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as TypedDataFrameRow<NameAndCity>
-        val DataFrameBase<GroupedPerson>.age get() = this["age"].typed<Int>()
-        val DataFrameBase<GroupedPerson>.weight get() = this["weight"].typed<Int?>()
-        val DataFrameBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"].grouped<NameAndCity>()
-    }
+    val DataFrameRowBase<GroupedPerson>.age get() = this["age"] as Int
+    val DataFrameRowBase<GroupedPerson>.weight get() = this["weight"] as Int?
+    val DataFrameRowBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as TypedDataFrameRow<NameAndCity>
+    val DataFrameBase<GroupedPerson>.age get() = this["age"].typed<Int>()
+    val DataFrameBase<GroupedPerson>.weight get() = this["weight"].typed<Int?>()
+    val DataFrameBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"].grouped<NameAndCity>()
 
     val nameAndCity by columnGroup<NameAndCity>()
 
@@ -60,7 +54,7 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
-    fun `slice`(){
+    fun `slice`() {
 
         val expected = typed[0..2].name
         val actual = typed2[0..2].nameAndCity.name
@@ -78,8 +72,8 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `select`() {
         val expected = typed.select { name and age }
-        typed2.select { nameAndCity.name and age} shouldBe expected
-        df2.select { it[nameAndCity][name] and age} shouldBe expected
+        typed2.select { nameAndCity.name and age } shouldBe expected
+        df2.select { it[nameAndCity][name] and age } shouldBe expected
     }
 
     @Test
@@ -92,7 +86,7 @@ class DataFrameTreeTests : BaseTest() {
     fun `groupBy`() {
 
         val expected = typed.groupBy { name }.max { age }
-        typed2.groupBy { nameAndCity.name }.max { age } shouldBe expected
+        typed2.groupBy { nameAndCity.name }.max { it.age } shouldBe expected
     }
 
     @Test

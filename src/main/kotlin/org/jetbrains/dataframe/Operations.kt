@@ -207,7 +207,7 @@ inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: 
         var oldCol: ColumnData<*> = colData
         var newColumn: ColumnData<*> = column(col.name, values, nullable)
 
-        while(oldCol is ColumnWithParent<*>){
+        while (oldCol is ColumnWithParent<*>) {
             val parent = oldCol.parent
             val newDf = parent.df.addOrReplace(listOf(newColumn))
             newColumn = ColumnData.createGroup(parent.name, newDf)
@@ -291,21 +291,16 @@ fun <T> TypedDataFrame<T>.cast(selector: ColumnsSelector<T, *>) = CastClause(thi
 
 // column grouping
 
-class GroupColsClause<T, C>(val df: TypedDataFrame<T>, val columns: List<ColumnDef<C>>)
+class GroupColsClause<T, C> internal constructor(internal val df: TypedDataFrame<T>, internal val removed: TreeNode<RemovedColumn>){
+    internal fun removedColumns() = removed.dfs().filter { it.data.wasRemoved && it.data.column != null }
 
-fun <T, C> TypedDataFrame<T>.group(selector: ColumnsSelector<T, C>) = GroupColsClause(this, getColumns(selector))
-
-class GroupColsBy<T>(val df: TypedDataFrame<T>, val grouping: Map<String, List<DataCol>>, val renameTransform: (DataCol) -> String)
-
-fun <T> GroupColsBy<T>.filter(predicate: (Map.Entry<String, List<DataCol>>) -> Boolean) = GroupColsBy(df, grouping.filter(predicate), renameTransform)
-
-inline fun <reified T> GroupColsBy<T>.into(selector: (DataCol) -> String) : TypedDataFrame<T> {
-    val columnGroups = grouping.flatMap { entry -> entry.value.map { it.name to entry.key} }.toMap()
-    val columnNames = grouping.flatMap { entry -> entry.value.map { it.name to selector(it)}}.toMap()
-    return doGroupBy(df, columnGroups, columnNames)
+    internal val TreeNode<RemovedColumn>.column get() = ColumnWithPath<C>(data.column as ColumnData<C>, pathFromRoot())
 }
 
-fun <T> TypedDataFrame<T>.groupColsBy(groupName: (DataCol) -> String?) = GroupColsBy(this, columns.groupBy(groupName).filterKeys { it != null }.mapKeys { it.key!! }, { it.name })
+fun <T, C> TypedDataFrame<T>.move(selector: ColumnsSelector<T, C>): GroupColsClause<T,C> {
+    val (df, removed) = doRemove(getColumns(selector))
+    return GroupColsClause(df, removed)
+}
 
 fun <T, C> TypedDataFrame<T>.ungroupCol(selector: ColumnSelector<T, TypedDataFrameRow<C>>) = ungroupCols(selector)
 
@@ -327,41 +322,257 @@ fun <T, C> TypedDataFrame<T>.ungroupCols(selector: ColumnsSelector<T, TypedDataF
     return resultColumns.asDataFrame()
 }
 
-fun <T> doGroupBy(df: TypedDataFrame<T>, columnGroups: Map<String, String>, columnNames: Map<String, String>): TypedDataFrame<T> {
+internal fun Iterable<DataCol>.dfs(): List<ColumnWithPath<*>> {
 
-    val columnGroups = df.columns.filter { columnGroups.contains(it.name) }.groupBy { columnGroups[it.name]!! }
-    val groupedColumnIndices = columnGroups.mapValues { it.value.map { df.getColumnIndex(it) } }
-    val insertIndices = groupedColumnIndices.mapValues { it.value.minOrNull()!! }.map { it.value to it.key }.toMap()
-    val excludedIndices = groupedColumnIndices.flatMap { it.value }.toSet()
-    val resultColumns = mutableListOf<DataCol>()
-    for (colIndex in 0 until df.ncol) {
-        val groupName = insertIndices[colIndex]
-        if (groupName != null) {
-            val data = columnGroups[groupName]!!.map { col -> columnNames[col.name]?.let { col.rename(it) } ?: col }.asDataFrame<T>()
-            val column = ColumnData.createGroup(groupName, data)
-            resultColumns.add(column)
-        } else if (!excludedIndices.contains(colIndex)) {
-            resultColumns.add(df.columns[colIndex])
+    val result = mutableListOf<ColumnWithPath<*>>()
+    fun dfs(cols: Iterable<DataCol>, path: List<String>) {
+        cols.forEach {
+            val p = path + it.name
+            result.add(ColumnWithPath(it, p))
+            if(it is GroupedColumn<*>)
+                dfs(it.df.columns, p)
         }
     }
-    return resultColumns.asDataFrame()
+    dfs(this, emptyList())
+    return result
 }
 
-inline fun <reified T, C> GroupColsClause<T, C>.into(groupNameExpression: (ColumnData<C>) -> String): TypedDataFrame<T> {
+internal class TreeNode<T>(val name: String, val depth: Int, var data: T, val parent: TreeNode<T>? = null) {
 
-    val renameMapping = columns.map {
-        when(it){
-            is RenamedColumnDef<C> -> it.source to it.name
-            else -> it to null
+    companion object {
+        fun <T> createRoot(data: T) = TreeNode<T>("", 0, data)
+    }
+
+    private val myChildren = mutableListOf<TreeNode<T>>()
+    private val childrenMap = mutableMapOf<String, TreeNode<T>>()
+
+    val children: List<TreeNode<T>>
+        get() = myChildren
+
+    fun getRoot(): TreeNode<T> = if(parent == null) this else parent.getRoot()
+
+    operator fun get(childName: String) = childrenMap[childName]
+
+    fun pathFromRoot(): List<String> {
+        val path = mutableListOf<String>()
+        var node: TreeNode<T>? = this
+        while(node != null && node.parent != null)
+        {
+            path.add(node.name)
+            node = node.parent
+        }
+        path.reverse()
+        return path
+    }
+
+    fun create(childName: String, childData: T): TreeNode<T> {
+        val node = TreeNode(childName, depth+1, childData, this)
+        myChildren.add(node)
+        childrenMap[childName] = node
+        return node
+    }
+
+    fun dfs(): List<TreeNode<T>> {
+
+        val result = mutableListOf<TreeNode<T>>()
+        fun doDfs(node: TreeNode<T>){
+            result.add(node)
+            node.children.forEach {
+                doDfs(it)
+            }
+        }
+        doDfs(this)
+        return result
+    }
+}
+internal data class RemovedColumn(val index: Int, var wasRemoved: Boolean, var column: DataCol?)
+
+internal data class ColumnToInsert(val path: List<String>, val removedColumn: TreeNode<RemovedColumn>)
+
+internal fun <T> TypedDataFrame<T>.doRemove(cols: Iterable<Column>): Pair<TypedDataFrame<T>, TreeNode<RemovedColumn>> {
+
+    val colPaths = cols.map {
+        if(it is ColumnWithPath<*>)
+            it.path
+        else {
+            var c = it
+            val list = mutableListOf<String>()
+            while (c is ColumnWithParent<*>) {
+                list.add(c.name)
+                c = c.parent
+            }
+            list.add(c.name)
+            list.reverse()
+            list
         }
     }
-    val groupedColumns = renameMapping.map {it.first}
-    val columnNames = renameMapping.mapNotNull { if(it.second != null) it.first.name to it.second!! else null }.toMap()
-    val columnGroups = groupedColumns.map { it.name to groupNameExpression(df[it]) }.toMap()
-    return doGroupBy(df, columnGroups, columnNames)
+
+    val removeRoot = TreeNode.createRoot(RemovedColumn(-1, false, null))
+
+    fun <C> remove(df: TypedDataFrame<C>, paths: List<List<String>>, removeNode: TreeNode<RemovedColumn>): TypedDataFrame<C>? {
+        val depth = removeNode.depth
+        val children = paths.groupBy { it[depth] }
+        val newCols = mutableListOf<DataCol>()
+        df.columns.forEachIndexed { index, column ->
+            val childPaths = children[column.name]
+            if (childPaths != null) {
+                val node = removeNode.create(column.name, RemovedColumn(index, true, null))
+                if (childPaths.all { it.size > depth + 1 }) {
+                    val groupCol = (column as GroupedColumn<C>)
+                    val newDf = remove(groupCol.df, childPaths, node)
+                    if(newDf != null) {
+                        val newCol = groupCol.withDf(newDf)
+                        newCols.add(newCol)
+                        node.data.wasRemoved = false
+                    }
+                }else {
+                    node.data.column = column
+                }
+            } else newCols.add(column)
+        }
+        if(newCols.isEmpty()) return null
+        return newCols.asDataFrame()
+    }
+    val newDf = remove(this, colPaths, removeRoot) ?: emptyDataFrame()
+    return newDf to removeRoot
 }
 
-inline fun <reified T, C> GroupColsClause<T, C>.into(name: String) = into { name }
+internal fun <T> insertColumns(df: TypedDataFrame<T>?, columns: List<ColumnToInsert>) =
+        insertColumns(df, columns, columns.firstOrNull()?.removedColumn?.getRoot(), 0)
+
+internal fun <T> insertColumns(df: TypedDataFrame<T>?, columns: List<ColumnToInsert>, treeNode: TreeNode<RemovedColumn>?, depth: Int): TypedDataFrame<T> {
+
+    val childDepth = depth + 1
+
+    val columnsMap = columns.groupBy { it.path[depth] }.toMutableMap() // map: columnName -> columnsToAdd
+
+    val newColumns = mutableListOf<DataCol>()
+
+    // insert new columns under existing
+    df?.columns?.forEach {
+        val subTree = columnsMap[it.name]
+        if (subTree != null) {
+            // assert that new columns go directly under current column so they have longer paths
+            val invalidPath = subTree.firstOrNull { it.path.size == childDepth }
+            assert(invalidPath == null) { "Can't move column to path: " + invalidPath!!.path.joinToString(".") + ". Column with this path already exists" }
+            val group = it as? GroupedColumn<*>
+            assert(group != null) { "Can not insert columns under a column '${it.name}', because it is not a column group" }
+            val newDf = insertColumns(group!!.df, subTree, treeNode?.get(it.name), childDepth)
+            val newCol = group.withDf(newDf)
+            newColumns.add(newCol)
+            columnsMap.remove(it.name)
+        } else newColumns.add(it)
+    }
+
+    // collect new columns to insert
+    val columnsToAdd = columns.mapNotNull {
+        val name = it.path[depth]
+        val subTree = columnsMap[name]
+        if (subTree != null) {
+            columnsMap.remove(name)
+
+            // look for columns in subtree that were originally located at the current insertion path
+            // find the minimal original index among them
+            // new column will be inserted at that position
+            val minIndex = subTree.minOf {
+                var col = it.removedColumn
+                while(col.depth > depth + 1) col = col.parent!!
+                if (col.parent === treeNode) {
+                    col.data.index
+                } else Int.MAX_VALUE
+            }
+
+            minIndex to (name to subTree)
+        } else null
+    }.sortedBy { it.first } // sort by insertion index
+
+    val removedSiblings = treeNode?.children
+    var k = 0 // index in 'removedSiblings' list
+    var insertionIndexOffset = 0
+
+    columnsToAdd.forEach { (insertionIndex, pair) ->
+        val (name, columns) = pair
+
+        // adjust insertion index by number of columns that were removed before current index
+        if (removedSiblings != null) {
+            while (k < removedSiblings.size && removedSiblings[k].data.index < insertionIndex) {
+                if (removedSiblings[k].data.wasRemoved) insertionIndexOffset--
+                k++
+            }
+        }
+
+        val nodeToInsert = columns.firstOrNull { it.path.size == childDepth } // try to find existing node to insert
+        val newCol = if (nodeToInsert != null) {
+            val column = nodeToInsert.removedColumn.data.column!!
+            if (columns.size > 1) {
+                assert(columns.count { it.path.size == childDepth } == 1) { "Can not insert more than one column into the path ${nodeToInsert.path}" }
+                val group = column as GroupedColumn<*>
+                val newDf = insertColumns(group.df, columns.filter { it.path.size > childDepth }, treeNode?.get(name), childDepth)
+                group.withDf(newDf)
+            } else column.rename(name)
+        } else {
+            val newDf = insertColumns<Unit>(null, columns, treeNode?.get(name), childDepth)
+            ColumnData.createGroup(name, newDf) // new node needs to be created
+        }
+        if (insertionIndex == Int.MAX_VALUE)
+            newColumns.add(newCol)
+        else {
+            newColumns.add(insertionIndex + insertionIndexOffset, newCol)
+            insertionIndexOffset++
+        }
+    }
+
+    return newColumns.asDataFrame()
+}
+
+internal fun Column.getPath(): List<String> =
+        when (this) {
+            is ColumnWithParent<*> -> parent.getPath() + name
+            else -> listOf(name)
+        }
+
+
+interface DataFrameForMove<T> : DataFrameBase<T> {
+
+    fun path(vararg columns: String): List<String> = listOf(*columns)
+
+    fun SingleColumn<*>.addPath(vararg columns: String): List<String> = (this as Column).getPath() + listOf(*columns)
+
+    operator fun SingleColumn<*>.plus(column: String) = addPath(column)
+}
+
+class MoveReceiver<T>(df: TypedDataFrame<T>) : DataFrameForMove<T>, DataFrameBase<T> by df
+
+fun <T, C> GroupColsClause<T, C>.intoGroup(groupPath: DataFrameForMove<T>.(DataFrameForMove<T>) -> List<String>): TypedDataFrame<T> {
+    val receiver = MoveReceiver(df)
+    val path = groupPath(receiver, receiver)
+    val columnsToInsert = removedColumns().map { ColumnToInsert(path + it.name, it) }
+    return insertColumns(df, columnsToInsert)
+}
+
+fun <T, C> GroupColsClause<T, C>.intoGroups(groupPath: DataFrameForMove<T>.(ColumnWithPath<C>) -> String): TypedDataFrame<T> {
+    val receiver = MoveReceiver(df)
+    val columnsToInsert = removedColumns().map { ColumnToInsert(listOf(groupPath(receiver, it.column), it.name), it) }
+    return insertColumns(df, columnsToInsert)
+}
+
+fun <T, C> GroupColsClause<T, C>.into(groupNameExpression: DataFrameForMove<T>.(ColumnWithPath<C>) -> List<String>): TypedDataFrame<T> {
+
+    val receiver = MoveReceiver(df)
+    val columnsToInsert = removedColumns().map { ColumnToInsert(groupNameExpression(receiver, it.column), it) }
+    return insertColumns(df, columnsToInsert)
+}
+
+fun <T, C> GroupColsClause<T, C>.into(name: String) = intoGroup { listOf(name) }
+
+fun <T, C> GroupColsClause<T, C>.to(columnIndex: Int): TypedDataFrame<T> {
+    val newColumnList = df.columns.subList(0, columnIndex) + removedColumns().map { it.data.column as ColumnData<C> } + df.columns.subList(columnIndex, df.ncol)
+    return newColumnList.asDataFrame()
+}
+
+fun <T, C> GroupColsClause<T, C>.toLeft() = to(0)
+
+fun <T, C> GroupColsClause<T, C>.toRight() = to(df.ncol)
 
 internal fun <T> TypedDataFrame<T>.splitByIndices(startIndices: List<Int>): List<TypedDataFrame<T>> {
     return (startIndices + listOf(nrow)).zipWithNext { start, endExclusive ->
@@ -375,7 +586,7 @@ internal fun <T> List<T>.splitByIndices(startIndices: List<Int>): List<List<T>> 
     }
 }
 
-internal fun KClass<*>.createType(typeArgument: KType?) = if(typeArgument != null) createType(listOf(KTypeProjection.invariant(typeArgument)))
-    else createStarProjectedType(false)
+internal fun KClass<*>.createType(typeArgument: KType?) = if (typeArgument != null) createType(listOf(KTypeProjection.invariant(typeArgument)))
+else createStarProjectedType(false)
 
 internal inline fun <reified T> createType(typeArgument: KType? = null) = T::class.createType(typeArgument)

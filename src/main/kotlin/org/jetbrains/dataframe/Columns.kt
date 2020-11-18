@@ -97,6 +97,10 @@ interface GroupedColumn<T> : ColumnData<TypedDataFrameRow<T>>, NestedColumn<T>, 
 
 interface TableColumn<T> : ColumnData<TypedDataFrame<T>>, NestedColumn<T>
 
+class ColumnWithPath<T> internal constructor(internal val source: ColumnData<T>, val path: List<String>): ColumnData<T> by source
+
+typealias DataColWithPath = ColumnWithPath<*>
+
 internal enum class ColumnKind {
     Default,
     Group,
@@ -384,9 +388,17 @@ class ColumnDelegate<T> {
     operator fun getValue(thisRef: Any?, property: KProperty<*>) = ColumnDefinition<T>(property.name)
 }
 
-fun DataCol.asGrouped() = this as GroupedColumn<*>
+fun DataCol.asGroup(): TypedDataFrame<*> = when(this){
+    is GroupedColumn<*> -> df
+    is ColumnWithPath<*> -> source.asGroup()
+    else -> throw Exception()
+}
 
-fun DataCol.isGrouped() = this is GroupedColumn<*>
+fun DataCol.isGrouped(): Boolean = when(this){
+    is GroupedColumn<*> -> true
+    is ColumnWithPath<*> -> source.isGrouped()
+    else -> false
+}
 
 fun <T> column() = ColumnDelegate<T>()
 

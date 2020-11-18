@@ -197,20 +197,52 @@ class PlaylistJsonTest {
     val path = "data/playlistItems.json"
     val df = TypedDataFrame.fromJson(path)
     val typed = df.typed<DataRecord>()
+    val item = typed.items[0]
 
     @Test
     fun `deep update`() {
 
-        val snippet = typed.items[0].snippet.asDataFrame()
-        val updated = snippet.update { thumbnails.default.url }.with {Image(it)}
-        updated.thumbnails.default.url.type shouldBe getType<Image>()
+        val updated = item.update { snippet.thumbnails.default.url }.with {Image(it)}
+        updated.snippet.thumbnails.default.url.type shouldBe getType<Image>()
     }
 
     @Test
     fun `deep update group`() {
 
-        val snippet = typed.items[0].snippet.asDataFrame()
-        val updated = snippet.update { thumbnails.default }.with { it.url }
-        updated.thumbnails["default"].type shouldBe getType<String>()
+        val updated = item.update { snippet.thumbnails.default }.with { it.url }
+        updated.snippet.thumbnails["default"].type shouldBe getType<String>()
+    }
+
+    @Test
+    fun `select group`(){
+
+        val selected = item.select { snippet.thumbnails.default }
+        selected.ncol shouldBe 3
+    }
+
+    @Test
+    fun `deep remove`() {
+
+        val item2 = item.remove { snippet.thumbnails.default and snippet.thumbnails.maxres and snippet.channelId and etag }
+        item2.ncol shouldBe item.ncol - 1
+        item2.snippet.ncol shouldBe item.snippet.ncol - 1
+        item2.snippet.thumbnails.ncol shouldBe item.snippet.thumbnails.ncol - 2
+    }
+
+    @Test
+    fun `remove all from group`() {
+
+        val item2 = item.remove { snippet.thumbnails.default and snippet.thumbnails.maxres and snippet.thumbnails.medium and snippet.thumbnails.high and snippet.thumbnails.standard }
+        item2.snippet.ncol shouldBe item.snippet.ncol - 1
+        item2.snippet.asDataFrame().tryGetColumnGroup("thumbnails") shouldBe null
+    }
+
+    @Test
+    fun `deep move with rename`() {
+
+        val moved = item.move { snippet.thumbnails.default }.into { snippet + "movedDefault" }
+        moved.snippet.thumbnails.asDataFrame().columnNames() shouldBe item.snippet.thumbnails.asDataFrame().remove { default }.columnNames()
+        moved.snippet.ncol shouldBe item.snippet.ncol + 1
+        (moved.snippet["movedDefault"] as GroupedColumn<*>).ncol shouldBe item.snippet.thumbnails.default.ncol
     }
 }
