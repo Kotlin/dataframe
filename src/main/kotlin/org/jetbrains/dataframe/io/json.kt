@@ -10,6 +10,11 @@ import java.net.URL
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
 
+fun readJson(fileOrUrl: String) = TypedDataFrame.fromJson(fileOrUrl)
+
+fun readJson(file: File) = TypedDataFrame.fromJson(file)
+
+fun parseJson(text: String) = TypedDataFrame.fromJsonStr(text)
 
 fun TypedDataFrame.Companion.fromJson(file: File) = fromJson(file.toURI().toURL())
 
