@@ -610,3 +610,5 @@ internal fun KClass<*>.createType(typeArgument: KType?) = if (typeArgument != nu
 else createStarProjectedType(false)
 
 internal inline fun <reified T> createType(typeArgument: KType? = null) = T::class.createType(typeArgument)
+
+fun <T> ColumnData<TypedDataFrame<T>>.union() = values.union()
