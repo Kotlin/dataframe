@@ -190,6 +190,13 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
 
     fun <R> tryGetColumn(column: ColumnDef<R>): ColumnData<R>? = when(column) {
         is RenamedColumnDef<R> -> tryGetColumn(column.source)?.rename(column.name)
+        is ColumnWithPath<R> -> {
+            var d = this as Any
+            column.path.forEach { it ->
+                d = (d as DataFrameBase<*>)[it]
+            }
+            d as ColumnData<R>
+        }
         is ColumnWithParent<*> -> (tryGetColumn(column.parent) as? GroupedColumn<*>)?.get(column.name) as? ColumnData<R>
         else -> tryGetColumn(column.name) as? ColumnData<R>
     }
