@@ -211,31 +211,33 @@ fun <T> TypedDataFrame<T>.addOrReplace(newColumns: List<DataCol>): TypedDataFram
     return dataFrameOf(oldCols + newCols).typed()
 }
 
-inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: UpdateExpression<T, C, R>): TypedDataFrame<T> {
-    val newCols = cols.map { col ->
-        var nullable = false
-        val colData = df[col]
-        val values = (0 until df.nrow).map {
-            df[it].let { row ->
-                val currentValue = colData[row.index]
-                if (filter?.invoke(row, currentValue) == false)
-                    currentValue as R
-                else expression(row, currentValue)
-            }.also { if (it == null) nullable = true }
-        }
-        var oldCol: ColumnData<*> = colData
-        var newColumn: ColumnData<*> = column(col.name, values, nullable)
+fun <T, C, R> doUpdate(clause: UpdateClause<T, C>, expression: UpdateExpression<T, C, R>, type: KType): TypedDataFrame<T> {
 
-        while (oldCol is ColumnWithParent<*>) {
-            val parent = oldCol.parent
-            val newDf = parent.df.addOrReplace(listOf(newColumn))
-            newColumn = ColumnData.createGroup(parent.name, newDf)
-            oldCol = parent
-        }
-        newColumn
+    val srcColumns = clause.cols.map { clause.df[it] }
+    val (newDf, removed) = clause.df.doRemove(srcColumns)
+
+    val toInsert = removed.dfs().mapNotNull {
+        val srcColumn = it.data.column as? ColumnData<C>
+        if(srcColumn != null){
+            var nullable = false
+            val values = (0 until clause.df.nrow).map {
+                clause.df[it].let { row ->
+                    val currentValue = srcColumn[row.index]
+                    if (clause.filter?.invoke(row, currentValue) == false)
+                        currentValue as R
+                    else expression(row, currentValue)
+                }.also { if (it == null) nullable = true }
+            }
+            val typeWithNullability = type.withNullability(nullable)
+            val newColumn: ColumnData<*> = column(srcColumn.name, values, typeWithNullability)
+            it.data.column = newColumn
+            ColumnToInsert(it.pathFromRoot(), it)
+        }else null
     }
-    return df.addOrReplace(newCols)
+    return insertColumns(newDf, toInsert)
 }
+
+inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: UpdateExpression<T, C, R>) = doUpdate(this, expression, getType<R>())
 
 inline fun <reified C> headPlusArray(head: C, cols: Array<out C>) = (listOf(head) + cols.toList()).toTypedArray()
 
