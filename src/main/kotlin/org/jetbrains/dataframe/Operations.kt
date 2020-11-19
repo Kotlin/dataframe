@@ -122,6 +122,8 @@ fun commonParents(classes: Iterable<KClass<*>>) =
 fun merge(dataFrames: List<TypedDataFrame<*>>): TypedDataFrame<Unit> {
     if (dataFrames.size == 1) return dataFrames[0].typed()
 
+    // TODO: get rid of fake column. Create data frame without columns, but with rows count
+    val fakeColumn = "__FAKE_COLUMN"
     return dataFrames
             .fold(emptyList<String>()) { acc, df -> acc + (df.columnNames() - acc) } // collect column names preserving order
             .map { name ->
@@ -129,33 +131,50 @@ fun merge(dataFrames: List<TypedDataFrame<*>>): TypedDataFrame<Unit> {
                 var nullable = false
                 val types = mutableSetOf<KType>()
 
-                dataFrames.forEach {
-                    val column = it.tryGetColumn(name)
-                    if (column != null) {
-                        nullable = nullable || column.hasNulls
-                        types.add(column.type)
-                        list.addAll(column.values)
-                    } else {
-                        if (it.nrow > 0) nullable = true
-                        for (row in (0 until it.nrow)) {
-                            list.add(null)
+                val firstColumn = dataFrames.mapNotNull { it.tryGetColumn(name) }.first()
+                if (firstColumn.isGrouped()) {
+                    val groupedDataFrames = dataFrames.map {
+                        val column = it.tryGetColumn(name)
+                        if (column != null)
+                            column.asGroup()
+                        else {
+                            val fakeColumnData = column(fakeColumn, arrayOfNulls<Any?>(it.nrow).asList(), true)
+                            dataFrameOf(listOf(fakeColumnData))
                         }
                     }
-                }
+                    val merged = merge(groupedDataFrames).let { if(it.tryGetColumn(fakeColumn) != null) it.remove(fakeColumn) else it }
+                    ColumnData.createGroup(name, merged)
+                } else {
 
-                val baseType = when {
-                    types.size == 1 -> types.single()
-                    types.map { it.jvmErasure }.distinct().count() == 1 -> types.first().withNullability(nullable)
-                    // TODO: implement correct parent type computation with valid type projections
-                    else -> (commonParent(types.map { it.jvmErasure }) ?: Any::class).createStarProjectedType(nullable)
+                    dataFrames.forEach {
+                        val column = it.tryGetColumn(name)
+                        if (column != null) {
+                            nullable = nullable || column.hasNulls
+                            types.add(column.type)
+                            list.addAll(column.values)
+                        } else {
+                            if (it.nrow > 0) nullable = true
+                            for (row in (0 until it.nrow)) {
+                                list.add(null)
+                            }
+                        }
+                    }
+
+                    val baseType = when {
+                        types.size == 1 -> types.single()
+                        types.map { it.jvmErasure }.distinct().count() == 1 -> types.first().withNullability(nullable)
+                        // TODO: implement correct parent type computation with valid type projections
+                        else -> (commonParent(types.map { it.jvmErasure })
+                                ?: Any::class).createStarProjectedType(nullable)
+                    }
+                    ColumnDataImpl(list, name, baseType)
                 }
-                ColumnDataImpl(list, name, baseType)
             }.let { dataFrameOf(it) }
 }
 
 operator fun <T> TypedDataFrame<T>.plus(other: TypedDataFrame<T>) = merge(listOf(this, other)).typed<T>()
 
-fun TypedDataFrame<*>.union(vararg other: TypedDataFrame<*>) = merge(listOf(this) + other.toList())
+fun <T> TypedDataFrame<T>.union(vararg other: TypedDataFrame<T>) = merge(listOf(this) + other.toList()).typed<T>()
 
 fun <T> TypedDataFrame<T>.rename(vararg mappings: Pair<String, String>): TypedDataFrame<T> {
     val map = mappings.toMap()
@@ -291,13 +310,13 @@ fun <T> TypedDataFrame<T>.cast(selector: ColumnsSelector<T, *>) = CastClause(thi
 
 // column grouping
 
-class GroupColsClause<T, C> internal constructor(internal val df: TypedDataFrame<T>, internal val removed: TreeNode<RemovedColumn>){
+class GroupColsClause<T, C> internal constructor(internal val df: TypedDataFrame<T>, internal val removed: TreeNode<RemovedColumn>) {
     internal fun removedColumns() = removed.dfs().filter { it.data.wasRemoved && it.data.column != null }
 
     internal val TreeNode<RemovedColumn>.column get() = ColumnWithPath<C>(data.column as ColumnData<C>, pathFromRoot())
 }
 
-fun <T, C> TypedDataFrame<T>.move(selector: ColumnsSelector<T, C>): GroupColsClause<T,C> {
+fun <T, C> TypedDataFrame<T>.move(selector: ColumnsSelector<T, C>): GroupColsClause<T, C> {
     val (df, removed) = doRemove(getColumns(selector))
     return GroupColsClause(df, removed)
 }
@@ -329,7 +348,7 @@ internal fun Iterable<DataCol>.dfs(): List<ColumnWithPath<*>> {
         cols.forEach {
             val p = path + it.name
             result.add(ColumnWithPath(it, p))
-            if(it is GroupedColumn<*>)
+            if (it is GroupedColumn<*>)
                 dfs(it.df.columns, p)
         }
     }
@@ -349,15 +368,14 @@ internal class TreeNode<T>(val name: String, val depth: Int, var data: T, val pa
     val children: List<TreeNode<T>>
         get() = myChildren
 
-    fun getRoot(): TreeNode<T> = if(parent == null) this else parent.getRoot()
+    fun getRoot(): TreeNode<T> = if (parent == null) this else parent.getRoot()
 
     operator fun get(childName: String) = childrenMap[childName]
 
     fun pathFromRoot(): List<String> {
         val path = mutableListOf<String>()
         var node: TreeNode<T>? = this
-        while(node != null && node.parent != null)
-        {
+        while (node != null && node.parent != null) {
             path.add(node.name)
             node = node.parent
         }
@@ -366,7 +384,7 @@ internal class TreeNode<T>(val name: String, val depth: Int, var data: T, val pa
     }
 
     fun create(childName: String, childData: T): TreeNode<T> {
-        val node = TreeNode(childName, depth+1, childData, this)
+        val node = TreeNode(childName, depth + 1, childData, this)
         myChildren.add(node)
         childrenMap[childName] = node
         return node
@@ -375,7 +393,7 @@ internal class TreeNode<T>(val name: String, val depth: Int, var data: T, val pa
     fun dfs(): List<TreeNode<T>> {
 
         val result = mutableListOf<TreeNode<T>>()
-        fun doDfs(node: TreeNode<T>){
+        fun doDfs(node: TreeNode<T>) {
             result.add(node)
             node.children.forEach {
                 doDfs(it)
@@ -385,6 +403,7 @@ internal class TreeNode<T>(val name: String, val depth: Int, var data: T, val pa
         return result
     }
 }
+
 internal data class RemovedColumn(val index: Int, var wasRemoved: Boolean, var column: DataCol?)
 
 internal data class ColumnToInsert(val path: List<String>, val removedColumn: TreeNode<RemovedColumn>)
@@ -392,7 +411,7 @@ internal data class ColumnToInsert(val path: List<String>, val removedColumn: Tr
 internal fun <T> TypedDataFrame<T>.doRemove(cols: Iterable<Column>): Pair<TypedDataFrame<T>, TreeNode<RemovedColumn>> {
 
     val colPaths = cols.map {
-        if(it is ColumnWithPath<*>)
+        if (it is ColumnWithPath<*>)
             it.path
         else {
             var c = it
@@ -420,19 +439,20 @@ internal fun <T> TypedDataFrame<T>.doRemove(cols: Iterable<Column>): Pair<TypedD
                 if (childPaths.all { it.size > depth + 1 }) {
                     val groupCol = (column as GroupedColumn<C>)
                     val newDf = remove(groupCol.df, childPaths, node)
-                    if(newDf != null) {
+                    if (newDf != null) {
                         val newCol = groupCol.withDf(newDf)
                         newCols.add(newCol)
                         node.data.wasRemoved = false
                     }
-                }else {
+                } else {
                     node.data.column = column
                 }
             } else newCols.add(column)
         }
-        if(newCols.isEmpty()) return null
+        if (newCols.isEmpty()) return null
         return newCols.asDataFrame()
     }
+
     val newDf = remove(this, colPaths, removeRoot) ?: emptyDataFrame()
     return newDf to removeRoot
 }
@@ -476,7 +496,7 @@ internal fun <T> insertColumns(df: TypedDataFrame<T>?, columns: List<ColumnToIns
             // new column will be inserted at that position
             val minIndex = subTree.minOf {
                 var col = it.removedColumn
-                while(col.depth > depth + 1) col = col.parent!!
+                while (col.depth > depth + 1) col = col.parent!!
                 if (col.parent === treeNode) {
                     col.data.index
                 } else Int.MAX_VALUE

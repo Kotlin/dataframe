@@ -57,6 +57,8 @@ interface ColumnData<out T> : ColumnDef<T> {
     val size: Int
     operator fun get(index: Int): T
 
+    fun valuesList() = values.asList()
+
     operator fun get(range: IntRange): List<T>
 
     operator fun get(columnName: String): ColumnData<*>
@@ -247,7 +249,7 @@ internal open class ColumnDataImpl<T>(override val values: List<T>, override val
     override fun rename(newName: String) = ColumnDataImpl(values, newName, type, valuesSet)
 }
 
-internal class ColumnDataPart<T>(val source: ColumnData<T>, val part: IntRange) : ColumnData<T>  {
+internal class ColumnDataPart<T>(val source: ColumnData<T>, val part: IntRange) : ColumnData<T>, ColumnDataInternal<T>  {
 
     override val values: Iterable<T> = Iterable {
         object : Iterator<T> {
@@ -289,6 +291,8 @@ internal class ColumnDataPart<T>(val source: ColumnData<T>, val part: IntRange) 
         get() = source.name
 
     override fun get(columnName: String) = source[columnName].getRows(part)
+
+    override fun rename(newName: String) = ColumnDataPart(source.rename(newName), part)
 }
 
 @OptIn(ExperimentalStdlibApi::class)

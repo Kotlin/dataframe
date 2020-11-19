@@ -189,7 +189,7 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
     fun getColumnIndex(col: DataCol) = getColumnIndex(col.name)
 
     fun <R> tryGetColumn(column: ColumnDef<R>): ColumnData<R>? = when(column) {
-        is RenamedColumnDef<R> -> tryGetColumn(column.source)?.doRename(column.name)
+        is RenamedColumnDef<R> -> tryGetColumn(column.source)?.rename(column.name)
         is ColumnWithParent<*> -> (tryGetColumn(column.parent) as? GroupedColumn<*>)?.get(column.name) as? ColumnData<R>
         else -> tryGetColumn(column.name) as? ColumnData<R>
     }

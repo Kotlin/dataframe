@@ -245,4 +245,21 @@ class PlaylistJsonTest {
         moved.snippet.ncol shouldBe item.snippet.ncol + 1
         (moved.snippet["movedDefault"] as GroupedColumn<*>).ncol shouldBe item.snippet.thumbnails.default.ncol
     }
+
+    @Test
+    fun `union`(){
+        val merged = item.union(item)
+        merged.nrow shouldBe item.nrow * 2
+        val group = merged.snippet.asDataFrame()
+        group.nrow shouldBe item.snippet.asDataFrame().nrow * 2
+        group.columnNames() shouldBe item.snippet.asDataFrame().columnNames()
+    }
+
+    @Test
+    fun `select with rename`(){
+        val selected = item.select { snippet.thumbnails.default.url.rename("default") and snippet.thumbnails.maxres.url.rename("maxres") }
+        selected.columnNames() shouldBe listOf("default", "maxres")
+        selected["default"].valuesList() shouldBe item.snippet.thumbnails.default.url.valuesList()
+        selected["maxres"].valuesList() shouldBe item.snippet.thumbnails.maxres.url.valuesList()
+    }
 }
