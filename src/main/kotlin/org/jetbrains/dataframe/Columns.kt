@@ -101,8 +101,6 @@ interface TableColumn<T> : ColumnData<TypedDataFrame<T>>, NestedColumn<T>
 
 class ColumnWithPath<T> internal constructor(internal val source: ColumnData<T>, val path: List<String>): ColumnData<T> by source
 
-typealias DataColWithPath = ColumnWithPath<*>
-
 internal enum class ColumnKind {
     Default,
     Group,
@@ -159,6 +157,8 @@ class GroupedColumnWithParent<T>(override val parent: GroupedColumn<*>, val sour
     override fun get(columnName: String) = df[columnName].addParent(this)
     override fun <R> get(column: ColumnDef<R>) = df[column].addParent(this)
     override fun <R> get(column: ColumnDef<TypedDataFrameRow<R>>) = df[column].addParent(this) as GroupedColumn<R>
+    override fun columns() = df.columns().map { it.addParent(this) }
+    override fun getColumn(columnIndex: Int) = df.getColumn(columnIndex).addParent(this)
 
     override fun equals(other: Any?) = checkEquals(other)
 
@@ -216,6 +216,10 @@ internal class GroupedColumnImpl<T>(override val df: TypedDataFrame<T>, override
     override fun rename(newName: String) = GroupedColumnImpl(df, newName)
 
     override fun asDataFrame() = df
+
+    override fun getColumn(columnIndex: Int) = df.getColumn(columnIndex).addParent(this)
+
+    override fun columns() = df.columns().map { it.addParent(this) }
 }
 
 internal open class ColumnDataImpl<T>(override val values: List<T>, override val name: String, override val type: KType, set: Set<T>? = null) : ColumnDataInternal<T> {
@@ -227,7 +231,7 @@ internal open class ColumnDataImpl<T>(override val values: List<T>, override val
 
     fun contains(value: T) = toSet().contains(value)
 
-    override fun toString() = values.joinToString()
+    override fun toString() = "$name: $type"
 
     override val ndistinct = toSet().size
 
@@ -395,6 +399,12 @@ class ColumnDelegate<T> {
 fun DataCol.asGroup(): TypedDataFrame<*> = when(this){
     is GroupedColumn<*> -> df
     is ColumnWithPath<*> -> source.asGroup()
+    else -> throw Exception()
+}
+
+internal fun <C> ColumnData<C>.asGroupedColumn(): GroupedColumn<C> = when(this){
+    is GroupedColumn<*> -> this as GroupedColumn<C>
+    is ColumnWithPath<C> -> source.asGroupedColumn()
     else -> throw Exception()
 }
 

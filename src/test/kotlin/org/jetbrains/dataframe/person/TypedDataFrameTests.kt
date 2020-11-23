@@ -162,9 +162,8 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `resetToNull`() {
 
-        val updated = typed.update { allColumns }.withNull()
+        val updated = typed.update { all() }.withNull()
 
-        // updated.forEach {  }
         updated.columns.forEach {
             it.values.forEach { it shouldBe null }
         }
@@ -925,7 +924,7 @@ class TypedDataFrameTests : BaseTest() {
     fun `column ungroup`() {
 
         val info by columnGroup<Person>()
-        val res = typed.move { age and city }.into("info").ungroupCol { info }
+        val res = typed.move { age and city }.into("info").ungroup { info }
         res shouldBe typed
     }
 

@@ -14,9 +14,6 @@ class ColumnMatch<C>(val left: ColumnDef<C>, val right: ColumnDef<C>) : ColumnSe
 
 class TypedDataFrameWithColumnsForJoinImpl<A, B>(private val left: TypedDataFrame<A>, override val right: TypedDataFrame<B>) : TypedDataFrame<A> by left, TypedDataFrameWithColumnsForJoin<A, B> {
 
-    override val allColumns: ColumnGroup<*>
-        get() = throw UnsupportedOperationException()
-
 }
 
 typealias JoinColumnSelector<A, B> = TypedDataFrameWithColumnsForJoin<A, B>.(TypedDataFrameWithColumnsForJoin<A, B>) -> ColumnSet<*>
