@@ -4,6 +4,7 @@ import java.lang.reflect.Type
 import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 import kotlin.reflect.full.*
 import kotlin.reflect.jvm.jvmErasure
 
@@ -13,11 +14,22 @@ interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
 
     fun cols(vararg col: String) = ColumnGroup(col.map { it.toColumn() })
 
-    fun cols(predicate: (DataCol) -> Boolean) = ColumnGroup(columns.filter(predicate))
+    fun DataFrameBase<*>.cols(predicate: (DataCol) -> Boolean) = ColumnGroup(this.columns().filter(predicate))
 
-    fun colsDfs(predicate: (DataColWithPath) -> Boolean) = ColumnGroup(columns.dfs().filter(predicate))
+    fun <C> DataFrameBase<*>.colsOfType(type: KType, filter: (ColumnData<C>) -> Boolean = { true }) = this.columns().filter { it.type.isSubtypeOf(type) && (type.isMarkedNullable || !it.hasNulls) && filter(it.typed()) }.map { it.typed<C>() }.toColumnSet()
 
-    val cols: List<DataCol> get() = columns
+    fun DataFrameBase<*>.colsDfs(predicate: (DataCol) -> Boolean = { true }) = ColumnGroup(this.columns().dfs().filter(predicate))
+
+    fun DataFrameBase<*>.all() = ColumnGroup(this.columns())
+
+    fun DataCol.parent(): GroupedColumn<*>? = when(this){
+        is ColumnWithParent<*> -> parent
+        else -> null
+    }
+
+    fun DataCol.depth(): Int = parent()?.depth()?.plus(1) ?: 0
+
+    val cols: List<DataCol> get() = columns()
 
     operator fun List<DataCol>.get(range: IntRange) = ColumnGroup(subList(range.first, range.last + 1))
 
@@ -31,8 +43,6 @@ interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
 }
 
 interface TypedDataFrameWithColumnsForSelect<out T> : TypedDataFrameWithColumns<T> {
-
-    val allColumns: ColumnGroup<*>
 
     infix fun <C> ColumnSet<C>.and(other: ColumnSet<C>) = ColumnGroup(this, other)
 
@@ -76,10 +86,7 @@ interface TypedDataFrameForSpread<out T> : TypedDataFrame<T> {
     fun <C, R> ColumnDef<C>.map(transform: (C) -> R): ColumnData<R> = get(this).let { ConvertedColumnImpl(it, it.mapValues(transform)) }
 }
 
-open class TypedDataFrameWithColumnsForSelectImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameWithColumnsForSelect<T> {
-
-    override val allColumns get() = ColumnGroup(columns)
-}
+open class TypedDataFrameWithColumnsForSelectImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameWithColumnsForSelect<T>
 
 class TypedDataFrameForSpreadImpl<T>(df: TypedDataFrame<T>) : TypedDataFrame<T> by df, TypedDataFrameForSpread<T>
 
@@ -150,9 +157,12 @@ internal fun <T> TypedDataFrame<T>.new(columns: Iterable<DataCol>) = dataFrameOf
 
 interface DataFrameBase<out T> {
 
-    operator fun get(columnName: String): ColumnData<*>
+    operator fun get(columnName: String): DataCol
     operator fun <R> get(column: ColumnDef<R>): ColumnData<R>
     operator fun <R> get(column: ColumnDef<TypedDataFrameRow<R>>): GroupedColumn<R>
+    operator fun get(index: Int): TypedDataFrameRow<T>
+    fun getColumn(columnIndex: Int): DataCol
+    fun columns(): List<DataCol>
     val ncol: Int
 }
 
@@ -167,7 +177,10 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
 
     fun columnNames() = columns.map { it.name }
 
-    operator fun get(index: Int): TypedDataFrameRow<T> = TypedDataFrameRowImpl(index, this)
+    override fun columns() = columns
+    override fun getColumn(columnIndex: Int) = columns[columnIndex]
+
+    override operator fun get(index: Int): TypedDataFrameRow<T> = TypedDataFrameRowImpl(index, this)
     override operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found: '$columnName'") // TODO
     override operator fun <R> get(column: ColumnDef<R>): ColumnData<R> = tryGetColumn(column)!!
     override operator fun <R> get(column: ColumnDef<TypedDataFrameRow<R>>): GroupedColumn<R> = get<TypedDataFrameRow<R>>(column) as GroupedColumn<R>
@@ -190,13 +203,6 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
 
     fun <R> tryGetColumn(column: ColumnDef<R>): ColumnData<R>? = when(column) {
         is RenamedColumnDef<R> -> tryGetColumn(column.source)?.rename(column.name)
-        is ColumnWithPath<R> -> {
-            var d = this as Any
-            column.path.forEach { it ->
-                d = (d as DataFrameBase<*>)[it]
-            }
-            d as ColumnData<R>
-        }
         is ColumnWithParent<*> -> (tryGetColumn(column.parent) as? GroupedColumn<*>)?.get(column.name) as? ColumnData<R>
         else -> tryGetColumn(column.name) as? ColumnData<R>
     }
