@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe
 
+import java.lang.UnsupportedOperationException
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -41,13 +42,14 @@ fun dataFrameOf(columns: Iterable<DataCol>): TypedDataFrame<Unit> = TypedDataFra
 
 fun dataFrameOf(vararg header: ColumnDef<*>) = DataFrameBuilder(header.map { it.name })
 
-fun <T> emptyDataFrame() = dataFrameOf(emptyList<DataCol>()).typed<T>()
+fun emptyDataFrame(nrow: Int) = TypedDataFrame.empty<Any?>(nrow)
 
 fun dataFrameOf(vararg header: String) = dataFrameOf(header.toList())
 
 fun dataFrameOf(header: List<String>) = DataFrameBuilder(header)
 
 internal fun DataCol.unbox(): DataCol = when (this) {
+    is ColumnWithPath<*> -> source.unbox()
     is RenamedColumn<*> -> source.unbox().doRename(name)
     is ColumnDataWithParent<*> -> source.unbox()
     is GroupedColumnWithParent<*> -> source.unbox()
@@ -55,6 +57,28 @@ internal fun DataCol.unbox(): DataCol = when (this) {
 }
 
 fun <T> Iterable<DataCol>.asDataFrame() = dataFrameOf(this).typed<T>()
+
+fun <T> List<Pair<List<String>, DataCol>>.toDataFrame(): TypedDataFrame<T>? {
+    if(size == 0) return null
+    val tree = TreeNode.createRoot(null as DataCol?)
+    forEach {
+        val (path, col) = it
+        val node = tree.getOrPut(path)
+        if(node.data != null)
+            throw UnsupportedOperationException("Duplicate column paths: $path")
+        node.data = col
+    }
+    fun dfs(node: TreeNode<DataCol?>){
+        if(node.children.isNotEmpty()){
+            if(node.data != null)
+                throw UnsupportedOperationException("Can not add data to grouped column: ${node.pathFromRoot()}")
+            node.children.forEach { dfs(it) }
+            node.data = DataCol.createGroup(node.name, node.children.map { it.data!! }.asDataFrame<Unit>())
+        }else assert(node.data != null)
+    }
+    dfs(tree)
+    return tree.data!!.asFrame().typed<T>()
+}
 
 class DataFrameBuilder(private val columnNames: List<String>) {
 

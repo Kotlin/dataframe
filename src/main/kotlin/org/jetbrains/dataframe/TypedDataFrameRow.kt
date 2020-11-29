@@ -87,8 +87,7 @@ internal class TypedDataFrameRowImpl<T>(override var index: Int, override val ow
 
     override fun getRow(index: Int): TypedDataFrameRow<T>? = if (index >= 0 && index < owner.nrow) TypedDataFrameRowImpl(index, owner) else null
 
-    override val values: List<Any?>
-        get() = owner.columns.map { it[index] }
+    override val values by lazy { owner.columns.map { it[index] } }
 
     override fun get(columnIndex: Int): Any? {
         val column = owner.columns[columnIndex]
@@ -99,6 +98,14 @@ internal class TypedDataFrameRowImpl<T>(override var index: Int, override val ow
     override fun toString(): String {
         return "{ " + owner.columns.map { "${it.name}:${it[index]}" }.joinToString() + " }"
     }
+
+    override fun equals(other: Any?): Boolean {
+        val o = other as? TypedDataFrameRow<T>
+        if(o == null) return false
+        return values.equals(o.values)
+    }
+
+    override fun hashCode() = values.hashCode()
 }
 
 internal fun <T> T.toIterable(getNext: (T) -> T?) = Iterable<T> {

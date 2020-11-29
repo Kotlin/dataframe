@@ -78,24 +78,24 @@ class CodeGenerator : CodeGeneratorApi {
     }
 
     // Data Frame Schema
-    private data class FieldInfo(val fieldName: String, val columnName: String, private val type: KType?, val columnKind: ColumnKind = ColumnKind.Default, val childScheme: Scheme? = null) {
+    private data class FieldInfo(val fieldName: String, val columnName: String, private val type: KType?, val columnKind: ColumnKind = ColumnKind.Data, val childScheme: Scheme? = null) {
 
         init {
             when(columnKind) {
-                ColumnKind.Default -> assert(type != null && childScheme == null)
+                ColumnKind.Data -> assert(type != null && childScheme == null)
                 ColumnKind.Group -> assert(childScheme != null)
                 ColumnKind.Table -> assert(childScheme != null)
             }
         }
 
         val columnType: KType get() = when(columnKind) {
-            ColumnKind.Default -> ColumnData::class.createType(type!!)
+            ColumnKind.Data -> ColumnData::class.createType(type!!)
             ColumnKind.Group -> GroupedColumnType.createType(type)
             ColumnKind.Table -> ColumnData::class.createType(DataFrameFieldType.createType(type))
         }
 
         val fieldType: KType get() = when(columnKind) {
-            ColumnKind.Default -> type!!
+            ColumnKind.Data -> type!!
             ColumnKind.Group -> GroupedFieldType.createType(type)
             ColumnKind.Table -> DataFrameFieldType.createType(type)
         }
@@ -165,15 +165,15 @@ class CodeGenerator : CodeGeneratorApi {
             var columnKind = when(valueClass) {
                 GroupedFieldType -> ColumnKind.Group
                 DataFrameFieldType -> ColumnKind.Table
-                else -> ColumnKind.Default
+                else -> ColumnKind.Data
             }
-            if(columnKind != ColumnKind.Default) {
+            if(columnKind != ColumnKind.Data) {
                 val typeArgument = valueType.arguments[0].type!!
                 if (isMarkerType(typeArgument.jvmErasure)) {
                     marker = getMarkerScheme(typeArgument.jvmErasure)
                     valueType = typeArgument
                 }
-                else columnKind = ColumnKind.Default
+                else columnKind = ColumnKind.Data
             }
             fieldName to FieldInfo(fieldName, columnName, valueType, columnKind, marker?.fullScheme)
         })
@@ -214,7 +214,7 @@ class CodeGenerator : CodeGeneratorApi {
             generatedFieldNames.add(fieldName)
             var type: KType? = it.type
             var childScheme : Scheme? = null
-            var columnKind = ColumnKind.Default
+            var columnKind = ColumnKind.Data
             when {
                 it is GroupedColumn<*> -> {
                     childScheme = it.df.schema

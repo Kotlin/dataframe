@@ -14,10 +14,10 @@ class MoveTests {
     fun batchGrouping(){
 
         grouped.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
-        grouped["a"].asGroup().columnNames() shouldBe listOf("b", "c")
-        grouped["a"]["c"].asGroup().columnNames() shouldBe listOf("d")
-        grouped["b"].asGroup().columnNames() shouldBe listOf("c", "d")
-        grouped["e"].asGroup().columnNames() shouldBe listOf("f")
+        grouped["a"].asFrame().columnNames() shouldBe listOf("b", "c")
+        grouped["a"]["c"].asFrame().columnNames() shouldBe listOf("d")
+        grouped["b"].asFrame().columnNames() shouldBe listOf("c", "d")
+        grouped["e"].asFrame().columnNames() shouldBe listOf("f")
     }
 
     @Test
@@ -32,7 +32,7 @@ class MoveTests {
 
         val ungrouped = grouped.remove("b").ungroup { it["a"] }
         ungrouped.columnNames() shouldBe listOf("q", "b", "c", "w", "e", "r")
-        ungrouped["c"].asGroup().columnNames() shouldBe listOf("d")
+        ungrouped["c"].asFrame().columnNames() shouldBe listOf("d")
     }
 
     @Test
