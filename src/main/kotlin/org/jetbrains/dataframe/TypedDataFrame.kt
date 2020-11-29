@@ -1,8 +1,6 @@
 package org.jetbrains.dataframe
 
-import java.lang.reflect.Type
 import java.util.*
-import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.*
@@ -13,6 +11,8 @@ interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
     fun cols(vararg col: DataCol) = ColumnGroup(col.toList())
 
     fun cols(vararg col: String) = ColumnGroup(col.map { it.toColumn() })
+
+    fun DataFrameBase<*>.group(name: String) = this.get(name) as GroupedColumn<*>
 
     fun DataFrameBase<*>.cols(predicate: (DataCol) -> Boolean) = ColumnGroup(this.columns().filter(predicate))
 
@@ -47,6 +47,14 @@ interface TypedDataFrameWithColumnsForSelect<out T> : TypedDataFrameWithColumns<
     infix fun <C> ColumnSet<C>.and(other: ColumnSet<C>) = ColumnGroup(this, other)
 
     operator fun <C> ColumnData<C>.invoke(newName: String) = rename(newName)
+
+    fun allExcept(vararg other: ColumnSet<*>) = allExcept(other.toList())
+
+    fun allExcept(other: List<ColumnSet<*>>) = AllExceptColumn(ColumnGroup(other)) as ColumnSet<Any?>
+
+    fun allExcept(selector: ColumnsSelector<T, *>) = allExcept(selector(this, this))
+
+    operator fun <C> ColumnSelector<T, C>.invoke() = this(this@TypedDataFrameWithColumnsForSelect, this@TypedDataFrameWithColumnsForSelect)
 
     operator fun <C> ColumnDef<C>.invoke(newName: String) = rename(newName)
 
@@ -106,8 +114,22 @@ typealias SpreadColumnSelector<T, C> = TypedDataFrameForSpread<T>.(TypedDataFram
 
 typealias SortColumnSelector<T, C> = TypedDataFrameWithColumnsForSort<T>.(TypedDataFrameWithColumnsForSort<T>) -> ColumnSet<C>
 
+internal fun <T> TypedDataFrame<T>.allColumnsExcept(columns: Iterable<Column>): List<Column> {
+    val fullTree = collectTree(null) { it }
+    columns.forEach {
+        val path = it.getPath()
+        var node = fullTree.getOrPut(path).asNullable()
+        while (node != null) {
+            node.data = null
+            node = node.parent
+        }
+    }
+    return fullTree.topDfs { it.data != null && it.children.all { it.data != null } }.map {it.data!!}
+}
+
 internal fun <T, C> TypedDataFrame<T>.extractColumns(set: ColumnSet<C>): List<ColumnDef<C>> = when (set) {
     is ColumnGroup<C> -> set.columns.flatMap { extractColumns(it) }
+    is AllExceptColumn -> allColumnsExcept(extractColumns(set.columns)) as List<ColumnDef<C>>
     is ColumnDef<C> -> listOf(set)
     else -> throw Exception()
 }
@@ -116,7 +138,7 @@ internal fun <C> ColumnSet<C>.extractSortColumns(): List<SortColumnDescriptor> =
     is ColumnGroup -> columns.flatMap { it.extractSortColumns() }
     is ReversedColumn -> column.extractSortColumns().map { SortColumnDescriptor(it.column, it.direction.reversed(), it.nullsLast) }
     is ColumnDef<C> -> listOf(SortColumnDescriptor(this, SortDirection.Asc))
-    is NullsLast<C> -> column.extractSortColumns().map { SortColumnDescriptor(it.column, it.direction, nullsLast = true) }
+    is NullsLast<C> -> columns.extractSortColumns().map { SortColumnDescriptor(it.column, it.direction, nullsLast = true) }
     else -> throw Exception()
 }
 
@@ -126,7 +148,7 @@ internal fun <T, C> TypedDataFrame<T>.getColumnsWithData(selector: ColumnsSelect
 
 internal fun <T, C> TypedDataFrame<T>.getGroupColumns(selector: ColumnsSelector<T, TypedDataFrameRow<C>>) = getColumnsWithData(selector).map {it as GroupedColumn<C> }
 
-internal fun <T, C> TypedDataFrame<T>.getColumn(selector: ColumnSelector<T, C>) = TypedDataFrameWithColumnsForSelectImpl(this).let { selector(it, it) }.let { this[it] }
+fun <T, C> TypedDataFrame<T>.getColumn(selector: ColumnSelector<T, C>) = TypedDataFrameWithColumnsForSelectImpl(this).let { selector(it, it) }.let { this[it] }
 
 @JvmName("getColumnForSpread")
 internal fun <T, C> TypedDataFrame<T>.getColumn(selector: SpreadColumnSelector<T, C>) = TypedDataFrameForSpreadImpl(this).let { selector(it, it) }.let {
@@ -158,17 +180,36 @@ internal fun <T> TypedDataFrame<T>.new(columns: Iterable<DataCol>) = dataFrameOf
 interface DataFrameBase<out T> {
 
     operator fun get(columnName: String): DataCol
+
+    fun getGroup(columnName: String) = get(columnName).asGrouped()
+    fun getGroup(columnPath: List<String>): GroupedColumn<*> = get(columnPath).asGrouped()
+
     operator fun <R> get(column: ColumnDef<R>): ColumnData<R>
     operator fun <R> get(column: ColumnDef<TypedDataFrameRow<R>>): GroupedColumn<R>
+    operator fun <R> get(column: ColumnDef<TypedDataFrame<R>>): TableColumn<R>
     operator fun get(index: Int): TypedDataFrameRow<T>
     fun getColumn(columnIndex: Int): DataCol
     fun columns(): List<DataCol>
     val ncol: Int
 }
 
+
+
+operator fun <T> DataFrameBase<T>.get(columnPath: List<String>): DataCol {
+
+    var res: DataCol? = null
+    columnPath.forEach {
+        if(res == null) res = this[it]
+        else res = res!!.asGrouped()[it]
+    }
+    return res!!
+}
+
 interface TypedDataFrame<out T> : DataFrameBase<T> {
 
-    companion object
+    companion object {
+        fun <T> empty(nrow: Int = 0): TypedDataFrame<T> = EmptyDataFrame(nrow)
+    }
 
     val nrow: Int
     override val ncol: Int get() = columns.size
@@ -184,6 +225,7 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
     override operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found: '$columnName'") // TODO
     override operator fun <R> get(column: ColumnDef<R>): ColumnData<R> = tryGetColumn(column)!!
     override operator fun <R> get(column: ColumnDef<TypedDataFrameRow<R>>): GroupedColumn<R> = get<TypedDataFrameRow<R>>(column) as GroupedColumn<R>
+    override operator fun <R> get(column: ColumnDef<TypedDataFrame<R>>): TableColumn<R> = get<TypedDataFrame<R>>(column) as TableColumn<R>
 
     operator fun <R> get(property: KProperty<R>) = get(property.name) as ColumnData<R>
     operator fun get(indices: Iterable<Int>) = getRows(indices)
@@ -219,13 +261,6 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
     operator fun get(col1: Column, col2: Column, vararg other: Column) = select(listOf(col1, col2) + other)
     operator fun get(col1: String, col2: String, vararg other: String) = select(getColumns(listOf(col1, col2) + other))
 
-    fun sortBy(columns: List<SortColumnDescriptor>): TypedDataFrame<T>
-    fun sortBy(columns: Iterable<ColumnDef<Comparable<*>?>>) = sortBy(columns.map { SortColumnDescriptor(it, SortDirection.Asc) })
-    fun sortBy(vararg columns: ColumnDef<Comparable<*>?>) = sortBy(columns.toList())
-    fun sortBy(vararg columns: String) = sortBy(getColumns(columns) as List<ColumnDef<Comparable<*>>>)
-    fun sortBy(vararg columns: KProperty<Comparable<*>?>) = sortBy(getColumns(columns))
-    fun sortBy(selector: SortColumnSelector<T, Comparable<*>?>) = sortBy(getSortColumns(selector))
-
     fun sortByDesc(columns: Iterable<ColumnDef<Comparable<*>?>>) = sortBy(columns.map { SortColumnDescriptor(it, SortDirection.Desc) })
     fun sortByDesc(vararg columns: ColumnDef<Comparable<*>?>) = sortByDesc(columns.toList())
     fun sortByDesc(vararg columns: String) = sortByDesc(getColumns(columns) as List<ColumnDef<Comparable<*>>>)
@@ -243,7 +278,7 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
     infix operator fun minus(column: Column) = remove(column)
     infix operator fun minus(column: String) = remove(column)
 
-    fun groupBy(cols: Iterable<Column>): GroupedDataFrame<T>
+    fun groupBy(cols: Iterable<Column>): GroupedDataFrame<T, T>
     fun groupBy(vararg cols: Column) = groupBy(cols.toList())
     fun groupBy(vararg cols: String) = groupBy(getColumns(cols))
     fun groupBy(vararg cols: KProperty<*>) = groupBy(getColumns(cols))
@@ -273,18 +308,21 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
     fun filterNotNull() = filter { values.all { it != null } }
 
     fun <D : Comparable<D>> min(selector: RowSelector<T, D?>): D? = rows.asSequence().map { selector(it, it) }.filterNotNull().min()
-    fun <D : Comparable<D>> min(col: ColumnDef<D?>): D? = get(col).values.asSequence().filterNotNull().min()
+    fun <D : Comparable<D>> min(col: ColumnDef<D?>): D? = get(col).min()
+    fun <D : Comparable<D>> min(col: KProperty<D?>): D? = get(col).min()
 
     fun <D : Comparable<D>> max(selector: RowSelector<T, D?>): D? = rows.asSequence().map { selector(it, it) }.filterNotNull().max()
-    fun <D : Comparable<D>> max(col: ColumnDef<D?>): D? = get(col).values.asSequence().filterNotNull().max()
+    fun <D : Comparable<D>> max(col: ColumnDef<D?>): D? = get(col).max()
+    fun <D : Comparable<D>> max(col: KProperty<D?>): D? = get(col).max()
 
-    fun <D : Comparable<D>> maxBy(selector: RowSelector<T, D>) = rows.maxBy { selector(it, it) }
-    fun <D : Comparable<D>> maxBy(col: ColumnDef<D>) = rows.maxBy { col(it) }
-    fun <D : Comparable<D>> maxBy(col: String) = rows.maxBy { it[col] as D }
+    fun <D : Comparable<D>> maxBy(selector: RowSelector<T, D>) = rows.maxByOrNull { selector(it, it) }!!
+    fun <D : Comparable<D>> maxBy(col: ColumnDef<D>) = rows.maxByOrNull { col(it) }!!
+    fun <D : Comparable<D>> maxBy(col: String) = rows.maxByOrNull { it[col] as D }!!
+    fun <D : Comparable<D>> maxBy(col: KProperty<D?>) = rows.maxByOrNull { it[col] as D }!!
 
-    fun <D : Comparable<D>> minBy(selector: RowSelector<T, D>) = rows.minBy { selector(it, it) }
-    fun <D : Comparable<D>> minBy(col: ColumnDef<D>) = rows.minBy { col(it) }
-    fun <D : Comparable<D>> minBy(col: String) = rows.minBy { it[col] as D }
+    fun <D : Comparable<D>> minBy(selector: RowSelector<T, D>) = rows.minByOrNull { selector(it, it) }!!
+    fun <D : Comparable<D>> minBy(col: ColumnDef<D>) = rows.minByOrNull { col(it) }
+    fun <D : Comparable<D>> minBy(col: String) = rows.minByOrNull { it[col] as D }
 
     fun insertCol(index: Int, col: ColumnData<*>) = (columns.subList(0, index) + listOf(col) + columns.subList(index, columns.size)).asDataFrame<T>()
 
@@ -303,17 +341,21 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
     fun skipLast(numRows: Int) = getRows(0 until nrow - numRows)
     fun head(numRows: Int = 5) = take(numRows)
     fun tail(numRows: Int = 5) = takeLast(numRows)
-    fun reorder(permutation: List<Int>) = columns.map { it.reorder(permutation) }.let { dataFrameOf(it).typed<T>() }
-    fun shuffled() = reorder((0 until nrow).shuffled())
+    fun shuffled() = getRows((0 until nrow).shuffled())
     fun <K, V> associate(transform: RowSelector<T, Pair<K, V>>) = rows.associate { transform(it, it) }
     fun <V> associateBy(transform: RowSelector<T, V>) = rows.associateBy { transform(it, it) }
     fun <R> distinctBy(selector: RowSelector<T, R>) = rows.distinctBy { selector(it, it) }.map { it.index }.let { getRows(it) }
     fun distinct() = distinctBy { it.values }
     fun single() = rows.single()
+    fun single(predicate: RowSelector<T, Boolean>) = rows.single { predicate(it, it) }
 
     fun <R> map(selector: RowSelector<T, R>) = rows.map { selector(it, it) }
 
-    fun <C> forEach(selector: ColumnsSelector<T, C>, action: (TypedDataFrameRow<T>, ColumnData<C>) -> Unit) = getColumnsWithData(selector).let { cols ->
+    fun forEachIndexed(action: (Int, TypedDataFrameRow<T>) -> Unit) = rows.forEachIndexed(action)
+
+    fun <R> mapIndexed(action: (Int, TypedDataFrameRow<T>) -> R) = rows.mapIndexed(action)
+
+    fun <C> forEachIn(selector: ColumnsSelector<T, C>, action: (TypedDataFrameRow<T>, ColumnData<C>) -> Unit) = getColumnsWithData(selector).let { cols ->
         rows.forEach { row ->
             cols.forEach { col ->
                 action(row, col)
@@ -324,9 +366,7 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
     val size get() = DataFrameSize(ncol, nrow)
 }
 
-
-
-internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : TypedDataFrame<T> {
+internal open class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : TypedDataFrame<T> {
 
     override val nrow: Int
 
@@ -364,65 +404,49 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
                 predicate(row, row)
             }.let { get(it) }
 
-    override fun groupBy(cols: Iterable<Column>): GroupedDataFrame<T> {
+    override fun groupBy(cols: Iterable<Column>): GroupedDataFrame<T, T> {
 
-        val columns = cols.map { this[it] }
+        val tree = collectTree(cols)
+
+        val nodes = tree.dfsTopNotNull().map { ColumnWithPath(it.data, it.pathFromRoot()) }.shortenPaths()
+
+        val columns = nodes.map { it.source }
 
         val groups = (0 until nrow)
                 .map { index -> columns.map { it[index] } to index }
-                .groupBy { it.first }
-                .map {
-                    val rowIndices = it.value.map { it.second }
-                    val groupColumns = this.columns.map { it[rowIndices] }
-                    it.key to dataFrameOf(groupColumns).typed<T>()
-                }
+                .groupBy({ it.first }) { it.second }.toList()
 
-        val keyColumns = columns.mapIndexed { index, column ->
-            var hasNulls = false
-            val values = groups.map {
-                it.first[index].also { if (it == null) hasNulls = true }
-            }
-            column(column.name, values, column.type.withNullability(hasNulls))
+        val keyIndices = groups.map { it.second[0] }
+
+        val keyColumnsToInsert = nodes.map {
+            val column = it.source[keyIndices]
+            val path = it.path
+            ColumnToInsert(path, null, column)
         }
 
-        val groupFrames = groups.map { it.second }
-        val groupsColumn = columnForGroupedData.withValues(groupFrames, false)
+        val keyColumnsDf = insertColumns(keyColumnsToInsert).typed<T>()
 
-        val df = dataFrameOf(keyColumns + groupsColumn).typed<T>()
-        return GroupedDataFrameImpl(df)
+        val permutation = groups.flatMap { it.second }
+        val sorted = getRows(permutation)
+
+        var lastIndex = 0
+        val startIndices = groups.map {
+            val start = lastIndex
+            lastIndex += it.second.size
+            start
+        }
+
+        val groupedColumn = DataCol.createTable(columnForGroupedData.name, sorted, startIndices)
+
+        val df = keyColumnsDf + groupedColumn
+        return GroupedDataFrameImpl(df, groupedColumn)
     }
 
-    private fun DataCol.createComparator(nullsLast: Boolean): Comparator<Int> {
+    override fun getRows(indices: Iterable<Int>) = columns.map { col -> col[indices] }.let { dataFrameOf(it).typed<T>() }
 
-        if (!type.isSubtypeOf(getType<Comparable<*>?>()))
-            throw UnsupportedOperationException()
+    override fun getRows(mask: BooleanArray) = columns.map { col -> col[mask] }.let { dataFrameOf(it).typed<T>() }
 
-        return Comparator<Any?> { left, right ->
-            (left as Comparable<Any?>).compareTo(right)
-        }.let { if (nullsLast) nullsLast(it) else nullsFirst(it) }
-                .let { Comparator { left, right -> it.compare(get(left), get(right)) } }
-    }
-
-    override fun sortBy(columns: List<SortColumnDescriptor>): TypedDataFrame<T> {
-
-        val compChain = columns.map {
-            val column = this[it.column]
-            when (it.direction) {
-                SortDirection.Asc -> column.createComparator(it.nullsLast)
-                SortDirection.Desc -> column.createComparator(it.nullsLast).reversed()
-            }
-        }.reduce { a, b -> a.then(b) }
-
-        val permutation = (0 until nrow).sortedWith(compChain)
-
-        return reorder(permutation)
-    }
-
-    override fun getRows(indices: Iterable<Int>) = columns.map { col -> col.getRows(indices) }.let { dataFrameOf(it).typed<T>() }
-
-    override fun getRows(mask: BooleanArray) = columns.map { col -> col.getRows(mask) }.let { dataFrameOf(it).typed<T>() }
-
-    override fun getRows(range: IntRange) = columns.map { col -> col.getRows(range) }.let { dataFrameOf(it).typed<T>() }
+    override fun getRows(range: IntRange) = columns.map { col -> col[range] }.let { dataFrameOf(it).typed<T>() }
 
     override fun getColumnIndex(columnName: String) = columnsMap[columnName] ?: -1
 
@@ -430,6 +454,8 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
         val df = other as? TypedDataFrame<*> ?: return false
         return columns == df.columns
     }
+
+    override fun hashCode() = columns.hashCode()
 
     override fun toString() = renderToString()
 
@@ -445,13 +471,11 @@ internal class TypedDataFrameImpl<T>(override val columns: List<DataCol>) : Type
     }
 
     override fun <C> select(columns: Iterable<ColumnDef<C>>): TypedDataFrame<T> {
-        var cols = columns.map { this[it] as DataCol }
-        if (cols.size == 1) {
-            (cols[0] as? GroupedColumn<*>)?.let { cols = it.df.columns }
-        }
-        return new(cols)
+        return new(columns.map { this[it] })
     }
 }
+
+internal class EmptyDataFrame<T>(override val nrow: Int) : TypedDataFrameImpl<T>(emptyList())
 
 fun <T> TypedDataFrame<*>.typed(): TypedDataFrame<T> = this as TypedDataFrame<T>
 
@@ -459,3 +483,45 @@ fun <T> TypedDataFrameRow<T>.toDataFrame() = owner.columns.map {
     val value = it[index]
     it.withValues(listOf(value), value == null)
 }.let { dataFrameOf(it).typed<T>() }
+
+internal fun DataCol.createComparator(nullsLast: Boolean): Comparator<Int> {
+
+    if (!type.isSubtypeOf(getType<Comparable<*>?>()))
+        throw UnsupportedOperationException()
+
+    return Comparator<Any?> { left, right ->
+        (left as Comparable<Any?>).compareTo(right)
+    }.let { if (nullsLast) nullsLast(it) else nullsFirst(it) }
+            .let { Comparator { left, right -> it.compare(get(left), get(right)) } }
+}
+
+fun <T> TypedDataFrame<T>.sortBy(columns: List<SortColumnDescriptor>): TypedDataFrame<T> {
+
+    val compChain = columns.map {
+        val column = this[it.column]
+        when (it.direction) {
+            SortDirection.Asc -> column.createComparator(it.nullsLast)
+            SortDirection.Desc -> column.createComparator(it.nullsLast).reversed()
+        }
+    }.reduce { a, b -> a.then(b) }
+
+    val permutation = (0 until nrow).sortedWith(compChain)
+
+    return getRows(permutation)
+}
+
+fun <T> TypedDataFrame<T>.sortBy(columns: Iterable<ColumnDef<Comparable<*>?>>) = sortBy(columns.map { SortColumnDescriptor(it, SortDirection.Asc) })
+fun <T> TypedDataFrame<T>.sortBy(vararg columns: ColumnDef<Comparable<*>?>) = sortBy(columns.toList())
+fun <T> TypedDataFrame<T>.sortBy(vararg columns: String) = sortBy(getColumns(columns) as List<ColumnDef<Comparable<*>>>)
+fun <T> TypedDataFrame<T>.sortBy(vararg columns: KProperty<Comparable<*>?>) = sortBy(getColumns(columns))
+fun <T> TypedDataFrame<T>.sortBy(selector: SortColumnSelector<T, Comparable<*>?>) = sortBy(getSortColumns(selector))
+
+fun <T> TypedDataFrame<T>.forEach(action: (TypedDataFrameRow<T>) -> Unit) = rows.forEach(action)
+
+inline fun <T, reified D : Comparable<D>> TypedDataFrame<T>.median(crossinline selector: RowSelector<T, D?>): Double = rows.asSequence().map { selector(it, it) }.filterNotNull().asIterable().median()
+inline fun <T, reified D : Comparable<D>> TypedDataFrame<T>.median(col: ColumnDef<D?>): Double = get(col).median()
+inline fun <T, reified D : Comparable<D>> TypedDataFrame<T>.median(col: KProperty<D?>): Double = get(col).median()
+
+inline fun <T, reified D : Number> TypedDataFrame<T>.mean(crossinline selector: RowSelector<T, D?>): Double = rows.asSequence().map { selector(it, it) }.filterNotNull().asIterable().mean()
+inline fun <T, reified D : Number> TypedDataFrame<T>.mean(col: ColumnDef<D>): Double = get(col).mean()
+inline fun <T, reified D : Number> TypedDataFrame<T>.mean(col: KProperty<D>): Double = get(col).mean()

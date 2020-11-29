@@ -86,17 +86,19 @@ class DataFrameTreeTests : BaseTest() {
     fun `groupBy`() {
 
         val expected = typed.groupBy { name }.max { age }
-        typed2.groupBy { nameAndCity.name }.max { it.age } shouldBe expected
+        typed2.groupBy { nameAndCity.name }.max { age } shouldBe expected
     }
 
     @Test
-    @Ignore // TODO: fix
     fun splitRows() {
         val selected = typed2.select { nameAndCity }
         val nested = selected.mergeRows { nameAndCity.city }
+        println(nested)
         val mergedCity by columnList<String?>("city")
         val res = nested.splitRows { nameAndCity[mergedCity] }
-        res.sortBy { nameAndCity.name } shouldBe selected.sortBy { nameAndCity.name }
+        val expected = selected.sortBy { nameAndCity.name }
+        val actual = res.sortBy { nameAndCity.name }
+        actual shouldBe expected
     }
 
     @Test

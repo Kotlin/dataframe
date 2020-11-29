@@ -220,7 +220,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun `get group by single key`() {
-        typed.groupBy { name }["Mark"] shouldBe typed.filter { name == "Mark" }
+        typed.groupBy { name }.get("Mark") shouldBe typed.filter { name == "Mark" }
     }
 
     @Test
@@ -407,63 +407,63 @@ class TypedDataFrameTests : BaseTest() {
         }
 
         typed.groupBy { name }.aggregate {
-            count into "n"
+            nrow into "n"
             count { age > 25 } into "old count"
             median { age } into "median age"
             min { age } into "min age"
-            checkAll { weight != null } into "all with weights"
-            maxBy { age }.map { city } into "oldest origin"
-            compute { sortBy { age }.first().city } into "youngest origin"
-            count into { "from $city" }
-            merge { age } into "ages"
+            all { weight != null } into "all with weights"
+            maxBy { age }.city into "oldest origin"
+            sortBy { age }.first().city into "youngest origin"
+            countBy { city } into { "from $it" }
+            age.toList() into "ages"
         }.check()
 
         typed.groupBy { it.name }.aggregate {
-            count into "n"
-            count { it.age > 25 } into "old count"
-            median { it.age } into "median age"
-            min { it.age } into "min age"
-            checkAll { it.weight != null } into "all with weights"
-            maxBy { it.age }.map { it.city } into "oldest origin"
-            compute { sortBy { it.age }.first().city } into "youngest origin"
-            count into { "from ${it.city}" }
-            merge { it.age } into "ages"
+            it.nrow into "n"
+            it.count { it.age > 25 } into "old count"
+            it.median { it.age } into "median age"
+            it.min { it.age } into "min age"
+            it.all { it.weight != null } into "all with weights"
+            it.maxBy { it.age }.city  into "oldest origin"
+            it.sortBy { it.age }.first().city into "youngest origin"
+            it.countBy { it.city } into { "from $it" }
+            it.age.toList() into "ages"
         }.check()
 
         df.groupBy(name).aggregate {
-            count into "n"
-            count { age(it) > 25 } into "old count"
+            nrow into "n"
+            count { age > 25 } into "old count"
             median(age) into "median age"
             min(age) into "min age"
-            checkAll { weight neq null } into "all with weights"
-            maxBy(age).map { city() } into "oldest origin"
-            compute { sortBy(age).first()[city] } into "youngest origin"
-            count into { "from ${city()}" }
-            merge { age() } into "ages"
+            all { weight neq null } into "all with weights"
+            maxBy(age)[city] into "oldest origin"
+            sortBy(age).first()[city] into "youngest origin"
+            countBy(city) into { "from $it" }
+            it[age].toList() into "ages"
         }.check()
 
         df.groupBy(Person::name).aggregate {
-            count into "n"
+            nrow into "n"
             count { Person::age > 25 } into "old count"
             median(Person::age) into "median age"
             min(Person::age) into "min age"
-            checkAll { Person::weight neq null } into "all with weights"
-            maxBy(Person::age).map { it[Person::city] } into "oldest origin"
-            compute { sortBy(Person::age).first()[Person::city] } into "youngest origin"
-            count into { "from ${it[Person::city]}" }
-            merge { it[Person::age] } into "ages"
+            all { Person::weight neq null } into "all with weights"
+            maxBy(Person::age)[Person::city] into "oldest origin"
+            sortBy(Person::age).first()[Person::city] into "youngest origin"
+            countBy(Person::city) into { "from $it" }
+            it[Person::age].toList() into "ages"
         }.check()
 
         df.groupBy("name").aggregate {
-            count into "n"
+            nrow into "n"
             count { int("age") > 25 } into "old count"
             median { int("age") } into "median age"
             min { int("age") } into "min age"
-            checkAll { get("weight") != null } into "all with weights"
-            maxBy { int("age") }.map { get("city") } into "oldest origin"
-            compute { sortBy("age").first()["city"] } into "youngest origin"
-            count into { "from " + get("city") }
-            merge { int("age") } into "ages"
+            all { get("weight") != null } into "all with weights"
+            maxBy { int("age") }.get("city") into "oldest origin"
+            sortBy("age").first()["city"] into "youngest origin"
+            countBy("city") into { "from $it" }
+            it["age"].toList() into "ages"
         }.check()
     }
 
@@ -698,25 +698,26 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun `spread exists`() {
-        val spread = typed.spreadExists { city }
-
+        val spread = typed.spread { city }.into { it }
         spread.ncol shouldBe typed.ncol + typed.city.ndistinct - 2
 
-        for (i in 0 until typed.nrow) {
-            val city = typed[i][city]
-            if (city != null) spread[i][city] == true
-            for (j in typed.ncol until spread.ncol) {
-                spread.columns[j].typed<Boolean>().get(i) shouldBe (spread.columns[j].name == city)
+        for (row in 0 until typed.nrow) {
+            val city = typed[row][city]
+            if(city != null) spread[row][city] shouldBe true
+            for (col in typed.ncol until spread.ncol) {
+                val spreadValue = spread.columns[col].typed<Boolean>()[row]
+                val colName = spread.columns[col].name
+                spreadValue shouldBe (colName == city)
             }
         }
     }
 
     @Test
-    fun `spreadExists equality`() {
-        val res1 = typed.select { name and city }.spreadExists { city }
-        val res2 = typed.groupBy { name }.spreadExists { city }
+    fun `spread equality`() {
+        val res1 = typed.select { name and city }.spread { city }.into { it }
+        val res2 = typed.groupBy { name }.spread { city }.into { it }
         val res3 = typed.groupBy { name }.aggregate {
-            exists into { city }
+            spread { city } into { it }
         }
         res2 shouldBe res1
         res3 shouldBe res1
@@ -724,7 +725,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun `spread to bool with conversion`() {
-        val res = typed.spreadExists { city.map { it?.decapitalize() } }
+        val res = typed.spread { city }.into { it?.decapitalize() }
         val cities = typed.city.values.filterNotNull()
         val gathered = res.gather { colsOfType<Boolean> { cities.contains(it.name.capitalize()) } }.where { it }.into("city")
         val expected = typed.update { city }.with { it?.decapitalize() }.filterNotNull { city }.moveToRight { city }
@@ -733,7 +734,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun `spread to bool distinct rows`() {
-        val res = typed.spreadExists { city }
+        val res = typed.spread { city }.into { it }
         res.ncol shouldBe typed.ncol + typed.city.ndistinct - 2
 
         for (i in 0 until typed.nrow) {
@@ -748,7 +749,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `spread to bool merged rows`() {
         val selected = typed.select { name + city }
-        val res = selected.spreadExists { city }
+        val res = selected.spread { city }.into { it }
 
         res.ncol shouldBe selected.city.ndistinct
         res.nrow shouldBe selected.name.ndistinct
@@ -777,7 +778,7 @@ class TypedDataFrameTests : BaseTest() {
                 .splitRows { others }
                 .add(sum) { name.length + other().length }
 
-        val matrix = src.spread { sum }.into { other }
+        val matrix = src.spread { other }.by { sum }.into { it }
         matrix.ncol shouldBe 1 + names.size
 
         println(matrix)
@@ -786,7 +787,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `gather bool`() {
         val selected = typed.select { name + city }
-        val spread = selected.spreadExists { city }
+        val spread = selected.spread { city }.into { it }
         val res = spread.gather { colsOfType<Boolean>() }.where { it }.into("city")
         val sorted = res.sortBy { name then city }
         sorted shouldBe selected.filterNotNull { city }.distinct().sortBy { name then city }
@@ -827,7 +828,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun joinColsToString() {
-        val merged = typed.mergeCols { age and city and weight }.intoStr("info")
+        val merged = typed.mergeCols { age and city and weight }.by(", ").into("info")
         merged.ncol shouldBe 2
         merged.nrow shouldBe typed.nrow
         for (row in 0 until typed.nrow) {
@@ -846,7 +847,7 @@ class TypedDataFrameTests : BaseTest() {
 
     @Test
     fun splitStringCol() {
-        val merged = typed.mergeCols { age and city and weight }.intoStr("info")
+        val merged = typed.mergeCols { age and city and weight }.by(", ").into("info")
         val info by column<String>()
         val res = merged.split { info }.by(",").into("age", "city", "weight")
         val expected = typed.update { age and city and weight }.with { it.toString() }
@@ -857,7 +858,7 @@ class TypedDataFrameTests : BaseTest() {
     fun `merge cols with conversion`() {
         val spread = typed.groupBy { name }.countBy { city }
         val res = spread.mergeCols { colsOfType<Int>() }.by { it.sum() }.into("cities")
-        val expected = typed.select { name and city }.filter { city != null }.groupBy { name }.count("cities")
+        val expected = typed.select { name and city }.filter { city != null }.groupBy { name }.countInto("cities")
         res shouldBe expected
     }
 
@@ -868,39 +869,13 @@ class TypedDataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `merge in groupBy`() {
-        val grouped = typed.groupBy { name }
-
-        fun TypedDataFrame<*>.check() {
-            this["ages"].values shouldBe listOf(listOf(15, 20), listOf(45, 30), listOf(20, 40, 30))
-            this["agesStr"].values shouldBe listOf("15, 20", "45, 30", "20, 40, 30")
-            this["ages delimited"].values shouldBe listOf("15-20", "45-30", "20-40-30")
-            this["min age"].values shouldBe listOf(15, 30, 20)
-        }
-
-        grouped.aggregate {
-            merge { age } into "ages"
-            merge { age }.asStrings() into "agesStr"
-            merge { age }.by("-") into "ages delimited"
-            merge { age }.by { it.minOrNull() } into "min age"
-        }.check()
-
-        listOf(
-                grouped.merge { age }.into("ages"),
-                grouped.merge { age }.asStrings().into("agesStr"),
-                grouped.merge { age }.by("-").into("ages delimited"),
-                grouped.merge { age }.by { it.minOrNull() }.into("min age")
-        ).joinOrNull()!!.check()
-    }
-
-    @Test
     fun `column group by`() {
 
         fun TypedDataFrame<Person>.check() {
             ncol shouldBe 3
             nrow shouldBe typed.nrow
             columnNames() shouldBe listOf("name", "Int", "String")
-            val intGroup = this["Int"].asGroup()
+            val intGroup = this["Int"].asFrame()
             intGroup.columnNames() shouldBe listOf("age", "weight")
 
             val res = listOf(this.name, this["Int"]["age"], this["String"]["city"], this["Int"]["weight"]).asDataFrame<Person>()
@@ -930,7 +905,6 @@ class TypedDataFrameTests : BaseTest() {
 
 
     @Test
-    @Ignore
     fun `empty group by`() {
         val ungrouped = typed.filter { false }.groupBy { name }.ungroup()
         ungrouped.nrow shouldBe 0

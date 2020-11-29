@@ -3,161 +3,147 @@ package org.jetbrains.dataframe
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
-internal fun <T> GroupedDataFrame<T>.getColumns(selector: ColumnsSelector<T, *>) =
-        TypedDataFrameWithColumnsForSelectImpl(groups.first())
-                .let { it.extractColumns(selector(it, it)) }
-
-internal fun <T> GroupedDataFrame<T>.getSortColumns(selector: SortColumnSelector<T, Comparable<*>>) =
-        TypedDataFrameWithColumnsForSortImpl(groups.first())
+internal fun <T, G> GroupedDataFrame<T, G>.getSortColumns(selector: SortColumnSelector<G, Comparable<*>>) =
+        TypedDataFrameWithColumnsForSortImpl(groups.values.first())
                 .let { selector(it, it).extractSortColumns() }
 
 typealias GroupKey = List<Any?>
 
 internal val columnForGroupedData by column<TypedDataFrame<*>>("DataFrame")
 
-interface GroupedDataFrame<out T> {
+interface GroupedDataFrame<out T, out G> {
 
-    val keys: TypedDataFrame<T>
-    val groups: List<TypedDataFrame<T>>
-    val size: Int
+    val groups : TableColumn<G>
+
+    val keys : TypedDataFrame<T>
+
+    fun asPlain(): TypedDataFrame<T>
+
+    fun ungroup() = groups.union().typed<G>()
 
     operator fun get(vararg values: Any?) = get(values.toList())
     operator fun get(key: GroupKey): TypedDataFrame<T>
 
-    fun ungroup() = groups.union().typed<T>()
+    fun <R> modify(transform: TypedDataFrame<G>.() -> TypedDataFrame<R>): GroupedDataFrame<T, R>
 
-    fun sortBy(columns: List<SortColumnDescriptor>) = modify { sortBy(columns) }
-    fun sortBy(vararg columns: String) = sortBy(columns.map { SortColumnDescriptor(it.toColumn(), SortDirection.Desc) })
-    fun sortBy(vararg columns: ColumnDef<Comparable<*>>) = sortBy(columns.map { SortColumnDescriptor(it, SortDirection.Desc) })
-    fun sortBy(selector: SortColumnSelector<T, Comparable<*>>) = sortBy(getSortColumns(selector))
-
-    fun sortByDesc(selector: SortColumnSelector<T, Comparable<*>>) = sortBy(getSortColumns(selector).map { SortColumnDescriptor(it.column, SortDirection.Desc) })
-
-    fun modify(transform: TypedDataFrame<T>.() -> TypedDataFrame<*>): GroupedDataFrame<T>
-
-    fun count(columnName: String = "n") = aggregate { count into columnName }
-    fun count(columnName: String = "n", filter: RowFilter<T>) = aggregate { count(filter) into columnName }
+    data class Entry<T, G>(val key: TypedDataFrameRow<T>, val group: TypedDataFrame<G>)
 }
 
-class GroupedDataFrameImpl<T>(val groupedDf: TypedDataFrame<T>) : GroupedDataFrame<T> {
+fun <T,G> GroupedDataFrame<T,G>.sortBy(vararg columns: String) = sortBy(columns.map { SortColumnDescriptor(it.toColumn(), org.jetbrains.dataframe.SortDirection.Desc) })
+fun <T,G> GroupedDataFrame<T,G>.sortBy(vararg columns: ColumnDef<Comparable<*>>) = sortBy(columns.map { SortColumnDescriptor(it, org.jetbrains.dataframe.SortDirection.Desc) })
 
-    override fun modify(transform: TypedDataFrame<T>.() -> TypedDataFrame<*>) =
-            GroupedDataFrameImpl(groupedDf.update(columnForGroupedData) { transform(this[columnForGroupedData].typed()) })
+fun <T,G> GroupedDataFrame<T,G>.sortBy(selector: SortColumnSelector<G, Comparable<*>>) = sortBy(getSortColumns(selector))
 
-    override val groups get() = groupedDf[columnForGroupedData].values as List<TypedDataFrame<T>>
+fun <T,G> GroupedDataFrame<T,G>.sortKeysBy(selector: SortColumnSelector<T, Comparable<*>>) = sortBy(asPlain().getSortColumns(selector))
 
-    override val keys by lazy { groupedDf - columnForGroupedData }
+internal fun <T,G> TypedDataFrame<T>.asGrouped(groupedColumnName: String): GroupedDataFrame<T,G> = GroupedDataFrameImpl(this, this[groupedColumnName] as TableColumn<G>)
+
+fun <T,G> GroupedDataFrame<T,G>.sortBy(columns: List<SortColumnDescriptor>): GroupedDataFrame<T,G> {
+
+    val keyColumns = columns.filter { keys.tryGetColumn(it.column) != null }
+    val groupColumns = columns.filter { keys.tryGetColumn(it.column) == null }
+    var result = asPlain()
+    if(!groupColumns.isEmpty())
+        result = result.update { groups }.with { it.sortBy(groupColumns) }
+    if(!keyColumns.isEmpty())
+        result = result.sortBy(keyColumns)
+    return result.asGrouped { groups }
+}
+
+fun <T,G> GroupedDataFrame<T,G>.forEach(body: (GroupedDataFrame.Entry<T, G>) -> Unit) = this@forEach.forEach { key, group -> body(GroupedDataFrame.Entry(key, group)) }
+
+fun <T,G> GroupedDataFrame<T,G>.forEach(body: (key: TypedDataFrameRow<T>, group: TypedDataFrame<G>) -> Unit) =
+    keys.forEachIndexed { index, row ->
+        val group = groups[index]
+        body(row, group)
+    }
+
+fun <T,G,R> GroupedDataFrame<T,G>.map(body: (key: TypedDataFrameRow<T>, group: TypedDataFrame<G>) -> R) =
+        keys.mapIndexed { index, row ->
+            val group = groups[index]
+            body(row, group)
+        }
+
+class GroupedDataFrameImpl<T, G>(val df: TypedDataFrame<T>, override val groups: TableColumn<G>): GroupedDataFrame<T, G> {
+    override val keys by lazy { df - groups }
 
     override operator fun get(key: GroupKey): TypedDataFrame<T> {
 
-        require(key.size < groupedDf.ncol) { "Invalid size of the key" }
+        require(key.size < df.ncol) { "Invalid size of the key" }
 
         val keySize = key.size
-        val filtered = groupedDf.filter { values.subList(0, keySize) == key }
-        return filtered[columnForGroupedData].values.union().typed<T>()
+        val filtered = df.filter { values.subList(0, keySize) == key }
+        return filtered[groups].values.union().typed<T>()
     }
 
-    override fun sortBy(columns: List<SortColumnDescriptor>): GroupedDataFrame<T> {
-        val keyColumns = columns.filter { groupedDf.tryGetColumn(it.column) != null }
-        val groupColumns = columns - keyColumns
+    override fun <R> modify(transform: TypedDataFrame<G>.() -> TypedDataFrame<R>) =
+            df.update(groups) { transform(it) }.asGrouped { groups.typed<R>() }
 
-        val newDf = groupedDf.sortBy(keyColumns).update(columnForGroupedData) {
-            columnForGroupedData().sortBy(groupColumns)
-        }
-        return GroupedDataFrameImpl(newDf)
+    override fun asPlain() = df
+}
+
+class GroupAggregateBuilder<T>(internal val df: TypedDataFrame<T>): TypedDataFrame<T> by df {
+
+    private data class NamedValue(val path: List<String>, val value: Any?, val type: KType, val defaultValue: Any?)
+
+    private val values = mutableListOf<NamedValue>()
+
+    internal fun toDataFrame() = values.map { it.path to DataCol.create(it.path.last(), listOf(it.value), it.type, it.defaultValue) }.toDataFrame<T>() ?: emptyDataFrame(1).typed()
+
+    fun <R> add(path: List<String>, value: R, type: KType, default: R? = null) {
+        values.add(NamedValue(path, value, type, default))
     }
 
-    override val size = groupedDf.nrow
+    fun <C> spread(selector: ColumnSelector<T, C>) = SpreadClause.inAggregator(this, selector)
+    fun <C> spread(column: ColumnDef<C>) = spread { column }
+    fun <C> spread(column: KProperty<C>) = spread(column.toColumn())
+    fun <C> spread(column: String) = spread(column.toColumn())
+
+    fun <C> countBy(selector: ColumnSelector<T, C>) = spread(selector).with { nrow }.useDefault(0)
+    fun <C> countBy(column: ColumnDef<C>) = countBy { column }
+    fun <C> countBy(column: KProperty<C>) = countBy(column.toColumn())
+    fun countBy(column: String) = countBy(column.toColumn())
+
+    inline infix fun <reified R> R.into(name: String)  = add(listOf(name), this, getType<R>())
 }
 
-typealias Reducer<T, R> = (TypedDataFrame<T>) -> R
+typealias Reducer<T, R> = TypedDataFrame<T>.(TypedDataFrame<T>) -> R
 
-class GroupAggregateBuilder<T>(private val dataFrame: GroupedDataFrame<T>) {
-    internal val columns = mutableListOf<DataCol>()
+typealias GroupAggregator<G> = GroupAggregateBuilder<G>.(GroupAggregateBuilder<G>) -> Unit
 
-    val groups get() = dataFrame.groups
+fun <T, G> GroupedDataFrame<T, G>.aggregate(body: GroupAggregator<G>) = doAggregate( asPlain(), { groups }, removeColumns = true, body)
 
-    fun add(column: DataCol) = columns.add(column)
+fun <T, G> TypedDataFrame<T>.aggregate(selector: ColumnSelector<T, TypedDataFrame<G>>, body: GroupAggregator<G>) = doAggregate(this, selector, removeColumns = false, body)
 
-    fun <R> reduce(func: Reducer<T, R>) = func
+internal fun <T, G> doAggregate(df: TypedDataFrame<T>, selector: ColumnSelector<T, TypedDataFrame<G>>, removeColumns: Boolean, body: GroupAggregator<G>): TypedDataFrame<T> {
 
-    fun <N : Comparable<N>> minBy(selector: RowSelector<T, N>) = compute { minBy(selector)!! }
-    fun <N : Comparable<N>> minBy(column: ColumnDef<N>) = compute { minBy { column() }!! }
-    inline fun <reified N : Comparable<N>> minBy(property: KProperty<N>) = minBy(property.toColumn())
+    val column = df.getColumn(selector)
 
-    fun <C> single(valueSelector: RowSelector<T, C>) = reduce { it.single().let { valueSelector(it, it) } }
+    val (df2, removedTree) = df.doRemove(listOf(column))
 
-    fun <N : Comparable<N>> maxBy(selector: RowSelector<T, N>) = compute { maxBy(selector)!! }
-    fun <N : Comparable<N>> maxBy(column: ColumnDef<N>) = compute { maxBy { column() }!! }
-    inline fun <reified N : Comparable<N>> maxBy(property: KProperty<N>) = maxBy(property.toColumn())
+    val groupedFrame = column.values.map {
+        val builder = GroupAggregateBuilder(it)
+        body(builder, builder)
+        builder.toDataFrame()
+    }.union()
 
-    fun <R, V> Reducer<T, R>.map(transform: R.(R) -> V) = reduce { this(it).let { transform(it, it) } }
+    val removedNode = removedTree.allRemovedColumns().single()
+    val insertPath = removedNode.pathFromRoot().dropLast(1)
 
-    fun <R> TypedDataFrame<T>.map(selector: RowSelector<T, R>) =
-            rows.map { selector(it, it) }
+    if(!removeColumns) removedNode.data.wasRemoved = false
 
-    val count by lazy { reduce { it.nrow } }
-    val exists by lazy { reduce { it.nrow > 0 } }
-
-    fun count(filter: RowFilter<T>) = reduce { it.count(filter) }
-
-    inline fun <reified R : Comparable<R>> median(noinline selector: RowSelector<T, R>) = reduce { it.map(selector).median() }
-    inline fun <reified R : Comparable<R>> median(column: ColumnDef<R>) = reduce { it[column].values.median() }
-    inline fun <reified R : Comparable<R>> median(property: KProperty<R>) = median(property.toColumn())
-
-    inline fun <reified R : Number> mean(noinline selector: RowSelector<T, R>) = reduce { it.map(selector).mean() }
-    inline fun <reified R : Number> mean(column: ColumnDef<R>) = reduce { it[column].values.mean() }
-    inline fun <reified R : Number> mean(property: KProperty<R>) = mean(property.toColumn())
-
-    inline fun <reified R : Number> sum(column: ColumnDef<R>) = reduce { sum(it[column].values) }
-    inline fun <reified R : Number> sum(noinline selector: RowSelector<T, R>) = reduce { sum(it.map(selector)) }
-
-    fun checkAll(predicate: RowFilter<T>) = reduce { it.all(predicate) }
-    fun any(predicate: RowFilter<T>) = reduce { it.any(predicate) }
-
-    inline fun <reified R : Comparable<R>> min(noinline selector: RowSelector<T, R>) = reduce { it.min(selector)!! }
-    inline fun <reified R : Comparable<R>> min(column: ColumnDef<R>) = reduce { it.min(column)!! }
-    inline fun <reified R : Comparable<R>> min(property: KProperty<R>) = min(property.toColumn())
-
-    inline fun <reified R : Comparable<R>> max(noinline selector: RowSelector<T, R>) = reduce { it.max(selector)!! }
-    inline fun <reified R : Comparable<R>> max(column: ColumnDef<R>) = reduce { it.max(column)!! }
-
-    inline infix fun <reified R> Reducer<T, R>.into(columnName: String) = add(column(columnName, groups.map(this)))
-
-    fun <R> spread(reducer: Reducer<T, R>, keySelector: RowSelector<T, String?>, type: KType) = doSpread(this, dataFrame, keySelector, type) { df, _ ->
-        reducer(df)
+    val columnsToInsert = groupedFrame.columns.map {
+        ColumnToInsert(insertPath + it.name, removedNode, it)
     }
-
-    fun <R> merge(selector: RowSelector<T, R>) = GroupMergeClause(dataFrame, selector, { it })
-
-    fun <C, R> doMerge(name: String, clause: GroupMergeClause<T, C, R>, type: KType) = doMergeRows(this, dataFrame, name, clause.selector, clause.transform, type)
-
-    inline infix fun <C, reified R> GroupMergeClause<T, C, R>.into(name: String) = doMerge(name, this, getType<R>())
-
-    inline infix fun <reified R> Reducer<T, R>.into(noinline keySelector: RowSelector<T, String?>) = spread(this, keySelector, getType<R>())
-
-    fun <R> compute(selector: DataFrameExpression<T, R>) = reduce { selector(it, it) }
-
-    inline fun <reified R> add(name: String, noinline expression: DataFrameSelector<T, R?>) = add(column(name, groups.map { expression(it, it) }))
-
-    inline infix fun <reified R> String.to(noinline expression: DataFrameSelector<T, R?>) = add(this, expression)
-
-    inline operator fun <reified R> String.invoke(noinline expression: DataFrameSelector<T, R?>) = add(this, expression)
-
-    infix operator fun String.invoke(column: DataCol) = add(column.rename(this))
+    val src = if(removeColumns) df2 else df
+    return src.doInsert(columnsToInsert)
 }
 
-inline fun <T, reified R> GroupedDataFrame<T>.compute(columnName: String = "map", noinline selector: DataFrameSelector<T, R>) = aggregate { compute(selector) into columnName }
+inline fun <T, G, reified R : Comparable<R>> GroupedDataFrame<T, G>.median(columnName: String = "median", noinline selector: RowSelector<G, R>) = aggregate { median(selector) into columnName }
+inline fun <T, G, reified R : Number> GroupedDataFrame<T, G>.mean(columnName: String = "mean", noinline selector: RowSelector<G, R>) = aggregate { mean(selector) into columnName }
+inline fun <T, G, reified R : Comparable<R>> GroupedDataFrame<T, G>.min(columnName: String = "min", noinline selector: RowSelector<G, R>) = aggregate { min(selector) into columnName }
+inline fun <T, G, reified R : Comparable<R>> GroupedDataFrame<T, G>.max(columnName: String = "max", noinline selector: RowSelector<G, R>) = aggregate { max(selector) into columnName }
 
-fun <T> GroupedDataFrame<T>.aggregate(body: GroupAggregateBuilder<T>.() -> Unit): TypedDataFrame<T> {
-    val builder = GroupAggregateBuilder(this)
-    body(builder)
-    return (keys + builder.columns).typed()
+fun <T, G> GroupedDataFrame<T, G>.countInto(columnName: String) = aggregate {
+    nrow into columnName
 }
-
-inline fun <T, reified R : Comparable<R>> GroupedDataFrame<T>.median(columnName: String = "median", noinline selector: RowSelector<T, R>) = aggregate { median(selector) into columnName }
-inline fun <T, reified R : Number> GroupedDataFrame<T>.mean(columnName: String = "mean", noinline selector: RowSelector<T, R>) = aggregate { mean(selector) into columnName }
-inline fun <T, reified R : Comparable<R>> GroupedDataFrame<T>.min(columnName: String = "min", noinline selector: RowSelector<T, R>) = aggregate { min(selector) into columnName }
-inline fun <T, reified R : Comparable<R>> GroupedDataFrame<T>.max(columnName: String = "max", noinline selector: RowSelector<T, R>) = aggregate { max(selector) into columnName }
-
-internal val <T> GroupedDataFrame<T>.baseDataFrame get() = (this as GroupedDataFrameImpl<T>).groupedDf

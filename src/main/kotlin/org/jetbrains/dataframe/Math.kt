@@ -30,7 +30,7 @@ fun <T> Iterable<T>.computeSize(counter: Counter) = map {
 
 internal fun Int.zeroToOne() = if(this == 0) 1 else this
 
-inline fun <reified T : Number> Iterable<T>.mean() = mean(T::class)
+inline fun <reified T : Number> Iterable<T>.mean(): Double = mean(T::class)
 
 fun <T : Number> Iterable<T>.mean(clazz: KClass<T>) = when (clazz) {
     Double::class -> (this as Iterable<Double>).mean()
@@ -40,7 +40,7 @@ fun <T : Number> Iterable<T>.mean(clazz: KClass<T>) = when (clazz) {
     else -> throw IllegalArgumentException()
 }
 
-fun <T: Number> ColumnData<T>.mean() = values.mean(type.jvmErasure as KClass<T>)
+fun <T: Number> ColumnData<T>.mean(): Double = values.mean(type.jvmErasure as KClass<T>)
 
 @JvmName("doubleMean")
 fun Iterable<Double>.mean(): Double {

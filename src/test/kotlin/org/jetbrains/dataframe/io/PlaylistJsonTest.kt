@@ -3,6 +3,8 @@ package org.jetbrains.dataframe.io
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
 import org.junit.Test
+import java.time.LocalDateTime
+import kotlin.math.exp
 
 class PlaylistJsonTest {
 
@@ -235,8 +237,8 @@ class PlaylistJsonTest {
     @Test
     fun `select group`(){
 
-        val selected = item.select { snippet.thumbnails.default }
-        selected.ncol shouldBe 3
+        item.select { snippet.thumbnails.default }.ncol shouldBe 1
+        item.select { snippet.thumbnails.default.all() }.ncol shouldBe 3
     }
 
     @Test
@@ -278,7 +280,21 @@ class PlaylistJsonTest {
     fun `select with rename`(){
         val selected = item.select { snippet.thumbnails.default.url.rename("default") and snippet.thumbnails.maxres.url.rename("maxres") }
         selected.columnNames() shouldBe listOf("default", "maxres")
-        selected["default"].valuesList() shouldBe item.snippet.thumbnails.default.url.valuesList()
-        selected["maxres"].valuesList() shouldBe item.snippet.thumbnails.maxres.url.valuesList()
+        selected["default"].toList() shouldBe item.snippet.thumbnails.default.url.toList()
+        selected["maxres"].toList() shouldBe item.snippet.thumbnails.maxres.url.toList()
+    }
+
+    @Test
+    fun `aggregate by column`(){
+
+        val res = typed.aggregate ({ items }) {
+            minBy { snippet.publishedAt }.snippet into "earliest"
+        }
+
+        res.ncol shouldBe typed.ncol + 1
+        res.getColumnIndex("earliest") shouldBe typed.getColumnIndex("items") + 1
+
+        val expected = typed.items.map { it.snippet.asDataFrame().minBy { publishedAt } }.toList()
+        res["earliest"].toList() shouldBe expected
     }
 }
