@@ -5,7 +5,6 @@ import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.tracking.trackColumnAccess
-import org.junit.Ignore
 import org.junit.Test
 import java.time.LocalDate
 import kotlin.reflect.jvm.jvmErasure
@@ -898,7 +897,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `column ungroup`() {
 
-        val info by columnGroup<Person>()
+        val info by columnGroup()
         val res = typed.move { age and city }.into("info").ungroup { info }
         res shouldBe typed
     }

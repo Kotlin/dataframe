@@ -1,8 +1,9 @@
 package org.jetbrains.dataframe
 
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
@@ -22,13 +23,17 @@ class SpreadClause<T, K, V, C: SpreadContext>(val context: C, val keyColumn: Col
     }
 }
 
+fun <T, C> TypedDataFrame<T>.spread(column: KProperty<C>) = spread { column.toColumnDef() }
+fun <T> TypedDataFrame<T>.spread(column: String) = spread { column.toColumnDef() }
+fun <T, C> TypedDataFrame<T>.spread(column: ColumnDef<C>) = spread { column }
 fun <T, C> TypedDataFrame<T>.spread(selector: ColumnSelector<T, C>) =
         SpreadClause.inDataFrame(this, selector)
 
 fun <T, G, C> GroupedDataFrame<T, G>.spread(selector: ColumnSelector<G, C>) =
         SpreadClause.inGroupedDataFrame(this, selector)
 
-internal fun <T, K, V, C:SpreadContext> SpreadClause<T, K, V, C>.addPath(keyTransform: (K)->String?) = SpreadClause(context, keyColumn, valueColumn, valueSelector, valueType, defaultValue) { keyTransform(it)?.let { listOf(it) } }
+@JvmName("addPathTKVC")
+internal fun <T, K, V, C:SpreadContext> SpreadClause<T, K, V, C>.addPath(keyTransform: (K)->ColumnPath?) = SpreadClause(context, keyColumn, valueColumn, valueSelector, valueType, defaultValue) { keyTransform(it) }
 
 inline fun <T, K, reified V, C:SpreadContext> SpreadClause<T, K, *, C>.with(noinline valueSelector: Reducer<T, V>) = SpreadClause(context, keyColumn, valueColumn, valueSelector, getType<V>(), null, columnPath)
 
@@ -39,6 +44,9 @@ fun <T, K, V, C:SpreadContext> SpreadClause<T, K, ColumnData<V>, C>.useDefault(d
 
 internal fun <T, K, V, C:SpreadContext> SpreadClause<T, K, V, *>.changeContext(newContext: C) = SpreadClause(newContext, keyColumn, valueColumn, valueSelector, valueType, defaultValue, columnPath)
 
+fun <T, K> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(column: String) = by { column.toColumnDef() }
+inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(column: KProperty<V>) = by { column.toColumnDef() }
+inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(column: ColumnDef<V>) = by { column }
 inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(noinline columnSelector: ColumnSelector<T, V>): SpreadClause<T, K, ColumnData<V>, SpreadContext.DataFrame<T>> = SpreadClause(context, keyColumn, columnSelector, { getColumn(columnSelector) }, getType<ColumnData<V>>(), null, columnPath)
 
 inline fun <T, K, V, reified R> SpreadClause<T, K, ColumnData<V>, SpreadContext.DataFrame<T>>.map(noinline transform: (V) -> R) = SpreadClause(context, keyColumn, valueColumn, { valueSelector(it, it).map(getType<R>(), transform) }, getType<ColumnData<R>>(), null, columnPath)
@@ -58,6 +66,27 @@ fun <T, G> GroupedDataFrame<T, G>.countBy(keySelector: ColumnSelector<G, String?
     countBy(keySelector).into { it }
 }
 
+inline infix fun <T, K, V, reified C:SpreadContext> SpreadClause<T, K, V, C>.into(noinline keyTransform: (K)->String?) = doSpreadInto(this, C::class) { keyTransform(it)?.let { listOf(it) } }
+
+inline infix fun <T, K, V, reified C:SpreadContext> SpreadClause<T, K, V, C>.into(groupPath: ColumnPath) = intoPaths { groupPath.toList() + it.toString() }
+
+inline infix fun <T, K, V, reified C:SpreadContext> SpreadClause<T, K, V, C>.into(groupName: String) = intoPaths { listOf(groupName, it.toString()) }
+
+inline infix fun <T, K, V, reified C:SpreadContext> SpreadClause<T, K, V, C>.into(column: GroupedColumnDef) = intoPaths { column.getPath() + it.toString() }
+
+inline infix fun <T, K, V, reified C:SpreadContext> SpreadClause<T, K, V, C>.intoPaths(noinline keyTransform: (K)->ColumnPath?) = doSpreadInto(this, C::class, keyTransform)
+
+fun <T, K, V, C:SpreadContext> doSpreadInto(clause: SpreadClause<T, K, V, C>, contextType: KClass<C>, keyTransform: (K)->ColumnPath?) : TypedDataFrame<T> {
+    val withPath = clause.addPath(keyTransform)
+    return when(contextType) {
+        SpreadContext.DataFrame::class -> (withPath as SpreadClause<T,K,V,SpreadContext.DataFrame<T>>).execute()
+        SpreadContext.GroupAggregator::class -> (withPath as SpreadClause<T,K,V,SpreadContext.GroupAggregator<T>>).execute()
+        SpreadContext.GroupedDataFrame::class -> (withPath as SpreadClause<T,K,V,SpreadContext.GroupedDataFrame<T, T>>).execute()
+        else -> throw UnsupportedOperationException()
+    }
+}
+
+/*
 infix fun <T, K, V> SpreadClause<T, K, V, SpreadContext.GroupAggregator<T>>.into(keyTransform: (K)->String?) = addPath(keyTransform).execute()
 
 @JvmName("intoTKVT")
@@ -65,6 +94,7 @@ fun <T, K, V> SpreadClause<T, K, V, SpreadContext.DataFrame<T>>.into(keyTransfor
 
 @JvmName("intoTKVTT")
 fun <T, G, K, V> SpreadClause<G, K, V, SpreadContext.GroupedDataFrame<T, G>>.into(keyTransform: (K)->String?) = addPath(keyTransform).execute()
+*/
 
 @JvmName("spreadForDataFrame")
 internal fun <T,K,V> SpreadClause<T,K,V,SpreadContext.DataFrame<T>>.execute(): TypedDataFrame<T> {
@@ -79,6 +109,7 @@ internal fun <T,K,V> SpreadClause<T,K,V,SpreadContext.DataFrame<T>>.execute(): T
     }
 }
 
+@JvmName("spreadForGroupedDataFrame")
 internal fun <T,K,V,G> SpreadClause<G,K,V,SpreadContext.GroupedDataFrame<T,G>>.execute(): TypedDataFrame<T> {
     val df = context.df
     return df.aggregate {
@@ -87,45 +118,41 @@ internal fun <T,K,V,G> SpreadClause<G,K,V,SpreadContext.GroupedDataFrame<T,G>>.e
     }
 }
 
-internal fun <T,K,V> SpreadClause<T,K,V, SpreadContext.GroupAggregator<T>>.execute() {
+internal fun <T,K,V> SpreadClause<T,K,V, SpreadContext.GroupAggregator<T>>.execute(): TypedDataFrame<T> {
     val df = context.builder.df
     val keyColumnData = df.getColumn(keyColumn)
-    val isColumnType = (valueType.classifier as? KClass<*>)?.isSubclassOf(ColumnData::class) ?: false
+    val isColumnType = valueType.isSubtypeOf(getType<DataCol>())
 
-    // TODO: extract to global type cache
-    val columnDataType = if(isColumnType) valueType.arguments[0].type else null
-    val columnNullableDataType = columnDataType?.withNullability(true)
-    val columnListType = columnDataType?.let { createType<List<*>>(it) }
-    val columnNullableListType = columnNullableDataType?.let { createType<List<*>>(it) }
+    val defaultType = valueType.let {
+        if (isColumnType) it.arguments[0].type else it
+    }.takeUnless { it?.classifier == Any::class }
 
     df.groupBy(keyColumnData).forEach { key, group ->
         val keyValue = keyColumnData[key.index]
         val path = columnPath(keyValue) ?: return@forEach
 
-        val value = valueSelector(group, group)
+        var value: Any? = valueSelector(group, group)
+        var type = defaultType
 
-        // is computed value is column, extract a single value or a list of values from it
-        var columnValue : Any? = value
-        var columnType = valueType
-        if(columnDataType != null) {
-            if(value == null) columnType = columnNullableDataType!!
-            else {
-                val col = value as? ColumnData<*>
-                if(col != null){
-                    if(col.size == 1) {
-                        columnValue = col[0]
-                        columnType = if(columnValue == null) columnNullableDataType!! else columnDataType
-                    }else {
-                        val list = col.toList()
-                        columnValue = list
-                        columnType = if(col.hasNulls) columnNullableListType!! else columnListType!!
-                    }
-                }
+        // if computed value is column, extract a single value or a list of values from it
+        if (isColumnType && value != null) {
+            val col = value as DataCol
+            if (col.size == 1) {
+                value = col[0]
+            } else {
+                val elementType = defaultType
+                        ?: (col.values.mapNotNull { it?.javaClass?.kotlin }.commonParent()).createStarProjectedType(col.hasNulls)
+                type = List::class.createType(elementType)
+                value = col.toList()
             }
         }
-        columnType = columnValue?.javaClass?.kotlin?.createStarProjectedType(false) ?: getType<Any?>()
-        context.builder.add(path, columnValue, columnType, defaultValue)
+
+        if (type == null) {
+            type = value?.javaClass?.kotlin?.createStarProjectedType(false) ?: getType<Unit?>()
+        }
+        context.builder.add(path, value, type, defaultValue)
     }
+    return df
 }
 
 class GatherClause<T, C, K, R>(val df: TypedDataFrame<T>, val selector: ColumnsSelector<T, C>, val filter: ((C) -> Boolean)? = null,

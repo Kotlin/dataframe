@@ -1,5 +1,7 @@
 package org.jetbrains.dataframe
 
+import kotlin.reflect.KType
+
 internal fun String.truncate(limit: Int) = if (limit in 1 until length) {
     if (limit < 4) substring(0, limit)
     else substring(0, limit - 3) + "..."
@@ -43,6 +45,12 @@ fun TypedDataFrame<*>.toHTML(limit: Int = 20, truncate: Int = 40): String {
     return sb.toString()
 }
 
+internal fun renderType(type: KType): String {
+    val result = type.toString()
+    return if(result.startsWith("kotlin.")) result.substring(7)
+    else result
+}
+
 internal fun TypedDataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 20): String {
     val sb = StringBuilder()
     sb.appendLine("Data Frame: [$size]")
@@ -50,10 +58,8 @@ internal fun TypedDataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 2
 
     val outputRows = limit.coerceAtMost(nrow)
     val output = columns.map { it.values.take(limit).map { it.toString().truncate(truncate) } }
-    val header = columnNames()
+    val header = columns.map { "${it.name}:${renderType(it.type)}"}
     val columnLengths = output.mapIndexed { col, values -> (values + header[col]).map { it.length }.max()!! + 1 }
-
-    val width = columnLengths.sum() + columnLengths.size + 1
 
     sb.append("|")
     for (col in header.indices) {

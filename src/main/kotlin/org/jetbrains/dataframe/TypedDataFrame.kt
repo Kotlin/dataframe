@@ -10,7 +10,7 @@ interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
 
     fun cols(vararg col: DataCol) = ColumnGroup(col.toList())
 
-    fun cols(vararg col: String) = ColumnGroup(col.map { it.toColumn() })
+    fun cols(vararg col: String) = ColumnGroup(col.map { it.toColumnDef() })
 
     fun DataFrameBase<*>.group(name: String) = this.get(name) as GroupedColumn<*>
 
@@ -33,11 +33,11 @@ interface TypedDataFrameWithColumns<out T> : TypedDataFrame<T> {
 
     operator fun List<DataCol>.get(range: IntRange) = ColumnGroup(subList(range.first, range.last + 1))
 
-    operator fun String.invoke() = toColumn()
+    operator fun String.invoke() = toColumnDef()
 
     fun <C> String.cast() = NamedColumnImpl<C>(this)
 
-    fun <C> col(property: KProperty<C>) = property.toColumn()
+    fun <C> col(property: KProperty<C>) = property.toColumnDef()
 
     fun <C> col(colName: String) = colName.cast<C>()
 }
@@ -58,15 +58,15 @@ interface TypedDataFrameWithColumnsForSelect<out T> : TypedDataFrameWithColumns<
 
     operator fun <C> ColumnDef<C>.invoke(newName: String) = rename(newName)
 
-    infix fun String.and(other: String) = toColumn() and other.toColumn()
+    infix fun String.and(other: String) = toColumnDef() and other.toColumnDef()
 
-    infix fun <C> String.and(other: ColumnSet<C>) = toColumn() and other
+    infix fun <C> String.and(other: ColumnSet<C>) = toColumnDef() and other
 
     infix fun <C> KProperty<*>.and(other: ColumnSet<C>) = toColumnName() and other
     infix fun <C> ColumnSet<C>.and(other: KProperty<C>) = this and other.toColumnName()
     infix fun KProperty<*>.and(other: KProperty<*>) = toColumnName() and other.toColumnName()
 
-    infix fun <C> ColumnSet<C>.and(other: String) = this and other.toColumn()
+    infix fun <C> ColumnSet<C>.and(other: String) = this and other.toColumnDef()
     operator fun <C> ColumnSet<C>.plus(other: ColumnSet<C>) = this and other
 }
 
@@ -81,12 +81,12 @@ interface TypedDataFrameWithColumnsForSort<out T> : TypedDataFrameWithColumns<T>
     val <C> KProperty<C?>.nullsLast: ColumnSet<C?> get() = NullsLast(toColumnName())
 
     infix fun <C> ColumnSet<C>.then(other: ColumnSet<C>) = ColumnGroup(this, other)
-    infix fun <C> ColumnSet<C>.then(other: String) = this then other.toColumn()
+    infix fun <C> ColumnSet<C>.then(other: String) = this then other.toColumnDef()
     infix fun <C> ColumnSet<C>.then(other: KProperty<*>) = this then other.toColumnName()
     infix fun <C> KProperty<C>.then(other: ColumnSet<C>) = toColumnName() then other
     infix fun KProperty<*>.then(other: KProperty<*>) = toColumnName() then other.toColumnName()
-    infix fun <C> String.then(other: ColumnSet<C>) = toColumn() then other
-    infix fun String.then(other: String) = toColumn() then other.toColumn()
+    infix fun <C> String.then(other: ColumnSet<C>) = toColumnDef() then other
+    infix fun String.then(other: String) = toColumnDef() then other.toColumnDef()
 }
 
 interface TypedDataFrameForSpread<out T> : TypedDataFrame<T> {
@@ -187,6 +187,11 @@ interface DataFrameBase<out T> {
     operator fun <R> get(column: ColumnDef<R>): ColumnData<R>
     operator fun <R> get(column: ColumnDef<TypedDataFrameRow<R>>): GroupedColumn<R>
     operator fun <R> get(column: ColumnDef<TypedDataFrame<R>>): TableColumn<R>
+
+    operator fun <R> get(column: KProperty<R>) = get(column.toColumnDef())
+    operator fun <R> get(column: KProperty<TypedDataFrameRow<R>>) = get(column.toColumnDef())
+    operator fun <R> get(column: KProperty<TypedDataFrame<R>>) = get(column.toColumnDef())
+
     operator fun get(index: Int): TypedDataFrameRow<T>
     fun getColumn(columnIndex: Int): DataCol
     fun columns(): List<DataCol>
@@ -227,7 +232,6 @@ interface TypedDataFrame<out T> : DataFrameBase<T> {
     override operator fun <R> get(column: ColumnDef<TypedDataFrameRow<R>>): GroupedColumn<R> = get<TypedDataFrameRow<R>>(column) as GroupedColumn<R>
     override operator fun <R> get(column: ColumnDef<TypedDataFrame<R>>): TableColumn<R> = get<TypedDataFrame<R>>(column) as TableColumn<R>
 
-    operator fun <R> get(property: KProperty<R>) = get(property.name) as ColumnData<R>
     operator fun get(indices: Iterable<Int>) = getRows(indices)
     operator fun get(mask: BooleanArray) = getRows(mask)
     operator fun get(range: IntRange) = getRows(range)

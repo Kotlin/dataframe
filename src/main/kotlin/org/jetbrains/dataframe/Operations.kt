@@ -128,55 +128,96 @@ fun commonParents(classes: Iterable<KClass<*>>) =
 fun merge(dataFrames: List<TypedDataFrame<*>>): TypedDataFrame<Unit> {
     if (dataFrames.size == 1) return dataFrames[0].typed()
 
-    return dataFrames
-            .fold(emptyList<String>()) { acc, df -> acc + (df.columnNames() - acc) } // collect column names preserving order
-            .map { name ->
-                val list = mutableListOf<Any?>()
-                var nullable = false
-                val types = mutableSetOf<KType>()
+    // collect column names preserving original order
+    val columnNames = dataFrames
+            .fold(emptyList<String>()) { acc, df -> acc + (df.columnNames() - acc) }
 
-                // TODO: check not only the first column
-                val firstColumn = dataFrames.firstNotNullResult { it.tryGetColumn(name) }!!
-                if (firstColumn.isGrouped()) {
-                    val groupedDataFrames = dataFrames.map {
-                        val column = it.tryGetColumn(name)
-                        if (column != null)
-                            column.asFrame()
-                        else
-                            emptyDataFrame(it.nrow)
-                    }
-                    val merged = merge(groupedDataFrames)
-                    ColumnData.createGroup(name, merged)
+    val columns = columnNames.map { name ->
+        val list = mutableListOf<Any?>()
+        var nullable = false
+        val types = mutableSetOf<KType>()
+
+        // TODO: check not only the first column
+        val firstColumn = dataFrames.firstNotNullResult { it.tryGetColumn(name) }!!
+        if (firstColumn.isGrouped()) {
+            val groupedDataFrames = dataFrames.map {
+                val column = it.tryGetColumn(name)
+                if (column != null)
+                    column.asFrame()
+                else
+                    emptyDataFrame(it.nrow)
+            }
+            val merged = merge(groupedDataFrames)
+            ColumnData.createGroup(name, merged)
+        } else {
+
+            val defaultValue = firstColumn.defaultValue()
+
+            dataFrames.forEach {
+                if (it.nrow == 0) return@forEach
+                val column = it.tryGetColumn(name)
+                if (column != null) {
+                    nullable = nullable || column.hasNulls
+                    if (!column.hasNulls || column.values.any { it != null })
+                        types.add(column.type)
+                    list.addAll(column.values)
                 } else {
+                    if (it.nrow > 0 && defaultValue == null) nullable = true
+                    for (row in (0 until it.nrow)) {
+                        list.add(defaultValue)
+                    }
+                }
+            }
 
-                    val defaultValue = firstColumn.defaultValue()
+            val baseType = baseType(types).withNullability(nullable)
 
-                    dataFrames.forEach {
-                        if(it.nrow == 0) return@forEach
-                        val column = it.tryGetColumn(name)
-                        if (column != null) {
-                            nullable = nullable || column.hasNulls
-                            if(!column.hasNulls || column.values.any { it != null })
-                                types.add(column.type)
-                            list.addAll(column.values)
-                        } else {
-                            if (it.nrow > 0 && defaultValue == null) nullable = true
-                            for (row in (0 until it.nrow)) {
-                                list.add(defaultValue)
-                            }
+            if(baseType.classifier == List::class && !types.all { it.classifier == List::class })
+                list.forEachIndexed { index, value ->
+                    if (value != null && value !is List<*>)
+                        list[index] = listOf(value)
+                }
+
+            // TODO: support TableColumns
+            ColumnData.create(name, list, baseType, defaultValue)
+        }
+    }
+    return dataFrameOf(columns)
+}
+
+internal fun baseType(types: Set<KType>): KType {
+    val nullable = types.any { it.isMarkedNullable }
+    return when (types.size) {
+        0 -> getType<Unit>()
+        1 -> types.single()
+        else -> {
+            val classes = types.map { it.jvmErasure }.distinct()
+            when {
+                classes.size == 1 -> {
+                    val typeProjections = classes[0].typeParameters.mapIndexed { index, parameter ->
+                        val arguments = types.map { it.arguments[index].type }.toSet()
+                        if (arguments.contains(null)) KTypeProjection.STAR
+                        else {
+                            val type = baseType(arguments as Set<KType>)
+                            KTypeProjection(parameter.variance, type)
                         }
                     }
-
-                    val baseType = when {
-                        types.size == 1 -> types.single().withNullability(nullable)
-                        types.map { it.jvmErasure }.distinct().count() == 1 -> types.first().withNullability(nullable)
-                        // TODO: implement correct parent type computation with valid type projections
-                        else -> (commonParent(types.map { it.jvmErasure })
-                                ?: Any::class).createStarProjectedType(nullable)
-                    }
-                    ColumnData.create(name, list, baseType, defaultValue)
+                    classes[0].createType(typeProjections, nullable)
                 }
-            }.let { dataFrameOf(it) }
+                classes.any { it == List::class } && classes.all { it == List::class || !it.isSubclassOf(Collection::class) } -> {
+                    val listTypes = types.map { if (it.classifier == List::class) it.arguments[0].type else it }.toMutableSet()
+                    if (listTypes.contains(null)) List::class.createStarProjectedType(nullable)
+                    else {
+                        val type = baseType(listTypes as Set<KType>)
+                        List::class.createType(listOf(KTypeProjection.invariant(type)), nullable)
+                    }
+                }
+                else -> {
+                    val commonClass = commonParent(classes) ?: Any::class
+                    commonClass.createStarProjectedType(nullable)
+                }
+            }
+        }
+    }
 }
 
 operator fun <T> TypedDataFrame<T>.plus(other: TypedDataFrame<T>) = merge(listOf(this, other)).typed<T>()
@@ -527,7 +568,7 @@ internal data class ColumnPosition(val index: Int, var wasRemoved: Boolean, var 
 // TODO: replace 'insertionPath' with TreeNode<ColumnToInsert> tree
 internal data class ColumnToInsert(val insertionPath: List<String>, val originalNode: TreeNode<ColumnPosition>?, val column: DataCol)
 
-internal fun Column.getPath(): List<String> {
+fun Column.getPath(): ColumnPath {
     val list = mutableListOf<String>()
     var c = this
     while (c is ColumnWithParent<*>) {

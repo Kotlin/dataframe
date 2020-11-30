@@ -114,13 +114,12 @@ class SpreadTests {
         val spread = modified.spread { key }.by { value }.into { it }
         spread.ncol shouldBe 1 + typed.key.ndistinct
 
-        spread["age"].type shouldBe getType<Serializable>()
+        spread["age"].type shouldBe getType<List<Int>>()
         spread["city"].type shouldBe getType<String>()
         spread["weight"].type shouldBe getType<Int?>()
 
         val expected = modified.filter { key == "age" }.remove { key }.groupBy { name }.aggregate {
-            if(nrow > 1) value.toList() as Serializable into "age"
-            else value[0] as Serializable into "age"
+            value.cast<Int>().toList() into "age"
         }
 
         val actual = spread.select("name", "age")

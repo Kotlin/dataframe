@@ -3,7 +3,7 @@ package org.jetbrains.dataframe
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
-internal fun <T, G> GroupedDataFrame<T, G>.getSortColumns(selector: SortColumnSelector<G, Comparable<*>>) =
+internal fun <T, G> GroupedDataFrame<T, G>.getSortColumns(selector: SortColumnSelector<G, Comparable<*>?>) =
         TypedDataFrameWithColumnsForSortImpl(groups.values.first())
                 .let { selector(it, it).extractSortColumns() }
 
@@ -29,12 +29,12 @@ interface GroupedDataFrame<out T, out G> {
     data class Entry<T, G>(val key: TypedDataFrameRow<T>, val group: TypedDataFrame<G>)
 }
 
-fun <T,G> GroupedDataFrame<T,G>.sortBy(vararg columns: String) = sortBy(columns.map { SortColumnDescriptor(it.toColumn(), org.jetbrains.dataframe.SortDirection.Desc) })
-fun <T,G> GroupedDataFrame<T,G>.sortBy(vararg columns: ColumnDef<Comparable<*>>) = sortBy(columns.map { SortColumnDescriptor(it, org.jetbrains.dataframe.SortDirection.Desc) })
+fun <T,G> GroupedDataFrame<T,G>.sortBy(vararg columns: String) = sortBy(columns.map { SortColumnDescriptor(it.toColumnDef(), SortDirection.Desc) })
+fun <T,G> GroupedDataFrame<T,G>.sortBy(vararg columns: ColumnDef<Comparable<*>?>) = sortBy(columns.map { SortColumnDescriptor(it, SortDirection.Desc) })
 
-fun <T,G> GroupedDataFrame<T,G>.sortBy(selector: SortColumnSelector<G, Comparable<*>>) = sortBy(getSortColumns(selector))
+fun <T,G> GroupedDataFrame<T,G>.sortBy(selector: SortColumnSelector<G, Comparable<*>?>) = sortBy(getSortColumns(selector))
 
-fun <T,G> GroupedDataFrame<T,G>.sortKeysBy(selector: SortColumnSelector<T, Comparable<*>>) = sortBy(asPlain().getSortColumns(selector))
+fun <T,G> GroupedDataFrame<T,G>.sortKeysBy(selector: SortColumnSelector<T, Comparable<*>?>) = sortBy(asPlain().getSortColumns(selector))
 
 internal fun <T,G> TypedDataFrame<T>.asGrouped(groupedColumnName: String): GroupedDataFrame<T,G> = GroupedDataFrameImpl(this, this[groupedColumnName] as TableColumn<G>)
 
@@ -96,13 +96,13 @@ class GroupAggregateBuilder<T>(internal val df: TypedDataFrame<T>): TypedDataFra
 
     fun <C> spread(selector: ColumnSelector<T, C>) = SpreadClause.inAggregator(this, selector)
     fun <C> spread(column: ColumnDef<C>) = spread { column }
-    fun <C> spread(column: KProperty<C>) = spread(column.toColumn())
-    fun <C> spread(column: String) = spread(column.toColumn())
+    fun <C> spread(column: KProperty<C>) = spread(column.toColumnDef())
+    fun <C> spread(column: String) = spread(column.toColumnDef())
 
     fun <C> countBy(selector: ColumnSelector<T, C>) = spread(selector).with { nrow }.useDefault(0)
     fun <C> countBy(column: ColumnDef<C>) = countBy { column }
-    fun <C> countBy(column: KProperty<C>) = countBy(column.toColumn())
-    fun countBy(column: String) = countBy(column.toColumn())
+    fun <C> countBy(column: KProperty<C>) = countBy(column.toColumnDef())
+    fun countBy(column: String) = countBy(column.toColumnDef())
 
     inline infix fun <reified R> R.into(name: String)  = add(listOf(name), this, getType<R>())
 }
