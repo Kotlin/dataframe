@@ -1,6 +1,5 @@
 package org.jetbrains.dataframe
 
-import java.lang.UnsupportedOperationException
 import kotlin.reflect.full.withNullability
 
 interface TypedDataFrameWithColumnsForJoin<out A, out B> : TypedDataFrameWithColumnsForSelect<A> {
@@ -39,13 +38,13 @@ val JoinType.allowLeftNulls get() = this == JoinType.RIGHT || this == JoinType.O
 val JoinType.allowRightNulls get() = this == JoinType.LEFT || this == JoinType.OUTER || this == JoinType.EXCLUDE
 
 internal fun <A, B> defaultJoinColumns(left: TypedDataFrame<A>, right: TypedDataFrame<B>): JoinColumnSelector<A, B> =
-        { left.columnNames().intersect(right.columnNames()).map { it.toColumn() }.let { ColumnGroup(it) } }
+        { left.columnNames().intersect(right.columnNames()).map { it.toColumnDef() }.let { ColumnGroup(it) } }
 
 internal fun <T> defaultJoinColumns(dataFrames: Iterable<TypedDataFrame<T>>): JoinColumnSelector<T, T> =
         {
             dataFrames.map { it.columnNames() }.fold<List<String>, Set<String>?>(null) { set, names ->
                 set?.intersect(names) ?: names.toSet()
-            }.orEmpty().map { it.toColumn() }.let { ColumnGroup(it) }
+            }.orEmpty().map { it.toColumnDef() }.let { ColumnGroup(it) }
         }
 
 fun <A, B> TypedDataFrame<A>.innerJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.INNER, selector = selector)

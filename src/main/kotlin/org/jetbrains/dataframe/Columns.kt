@@ -39,6 +39,8 @@ class ConvertedColumnImpl<C>(override val source: DataCol, override val data: Co
 
 typealias Column = ColumnDef<*>
 
+typealias GroupedColumnDef = ColumnDef<TypedDataFrameRow<*>>
+
 interface ColumnData<out T> : ColumnDef<T> {
 
     companion object {
@@ -87,12 +89,12 @@ typealias DataCol = ColumnData<*>
 
 class NamedColumnImpl<C>(override val name: String) : ColumnDef<C>
 
-fun String.toColumn(): ColumnDef<Any?> = NamedColumnImpl(this)
+fun String.toColumnDef(): ColumnDef<Any?> = NamedColumnImpl(this)
 fun <C> KProperty<C>.toColumnName(): ColumnDef<C> = NamedColumnImpl(name)
 
 internal fun KProperty<*>.getColumnName() = this.findAnnotation<ColumnName>()?.name ?: name
 
-fun <T> KProperty<T>.toColumn() = ColumnDefinition<T>(name)
+fun <T> KProperty<T>.toColumnDef() = ColumnDefinition<T>(name)
 
 class ColumnDefinition<T>(override val name: String) : ColumnDef<T> {
     operator fun getValue(thisRef: Any?, property: KProperty<*>) = this
@@ -412,7 +414,7 @@ internal fun <T> DataCol.grouped() = this as GroupedColumnBase<T>
 
 internal fun <T> DataFrameBase<T>.asGroup() = this as GroupedColumn<T>
 
-inline fun <reified T> DataCol.cast() = column(name, values as List<T>, hasNulls)
+inline fun <reified T> DataCol.cast(): ColumnData<T> = ColumnData.create(name, toList() as List<T>, getType<T>().withNullability(hasNulls))
 
 internal fun <T> GroupedColumn<*>.withDf(newDf: TypedDataFrame<T>) = ColumnData.createGroup(name, newDf)
 
@@ -487,7 +489,7 @@ fun DataCol.isGrouped(): Boolean = when(this){
 
 fun <T> column() = ColumnDelegate<T>()
 
-fun <T> columnGroup() = column<TypedDataFrameRow<T>>()
+fun columnGroup() = column<TypedDataFrameRow<*>>()
 
 fun <T> columnList() = column<List<T>>()
 

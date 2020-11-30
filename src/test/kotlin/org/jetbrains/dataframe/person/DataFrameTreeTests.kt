@@ -2,7 +2,6 @@ package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
-import org.junit.Ignore
 import org.junit.Test
 
 class DataFrameTreeTests : BaseTest() {
@@ -35,7 +34,7 @@ class DataFrameTreeTests : BaseTest() {
     val DataFrameBase<GroupedPerson>.weight get() = this["weight"].typed<Int?>()
     val DataFrameBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"].grouped<NameAndCity>()
 
-    val nameAndCity by columnGroup<NameAndCity>()
+    val nameAndCity by columnGroup()
 
     @Test
     fun `group indexing`() {
@@ -49,8 +48,10 @@ class DataFrameTreeTests : BaseTest() {
     fun `update`() {
         val expected = typed.select { city.rename("nameAndCity") and age and weight }
 
-        df2.update { nameAndCity }.with { nameAndCity().city } shouldBe expected
+        df2.update { nameAndCity }.with { it[city] } shouldBe expected
+        df2.update { nameAndCity }.with { this[nameAndCity][city] } shouldBe expected
         typed2.update { nameAndCity }.with { nameAndCity.city } shouldBe expected
+        typed2.update { nameAndCity }.with { it.city } shouldBe expected
     }
 
     @Test
@@ -93,12 +94,52 @@ class DataFrameTreeTests : BaseTest() {
     fun splitRows() {
         val selected = typed2.select { nameAndCity }
         val nested = selected.mergeRows { nameAndCity.city }
-        println(nested)
         val mergedCity by columnList<String?>("city")
         val res = nested.splitRows { nameAndCity[mergedCity] }
         val expected = selected.sortBy { nameAndCity.name }
         val actual = res.sortBy { nameAndCity.name }
         actual shouldBe expected
+    }
+
+    @Test
+    fun spread() {
+
+        val modified = df.addRow("Alice", 55, "Moscow", 100)
+        val df2 =  modified.move { name and city }.into("nameAndCity")
+        val typed2 = df2.typed<GroupedPerson>()
+
+        val expected = modified.typed<Person>().select { name and city and age }.groupBy { city }.sortBy { city.nullsLast }.map { key1, group ->
+            val ages = group.groupBy { name }
+            val cityName = key1.city ?: "null"
+            val isList = ages.groups.asIterable().any { it.nrow > 1 }
+            ages.map { key2, group ->
+                val value = if(isList) group.age.toList() else group.age.single()
+                (cityName to key2.name) to value
+            }.sortedBy { it.first.second }
+        }.flatten()
+
+        val cities by columnGroup()
+
+        fun <T> TypedDataFrame<T>.check() {
+            columnNames() shouldBe listOf("name", "cities")
+            this[name] shouldBe typed.name.distinct()
+            val group = this[cities]
+            group.ncol shouldBe typed.city.ndistinct
+            group.columns().forEach {
+                if(it.name == "Moscow") it.type shouldBe getType<List<Int>?>()
+                else it.type shouldBe getType<Int?>()
+            }
+
+            val actual = group.columns().sortedBy { it.name }.flatMap { col ->
+                rows.sortedBy { it[name] }.map { row -> (col.name to row[name]) to row[col] }.filter { it.second != null }
+            }
+            actual shouldBe expected
+        }
+
+        typed2.select { nameAndCity and age }.spread { nameAndCity.city }.by { age }.into("cities").check()
+        df2.select(nameAndCity, age).spread { it[nameAndCity][city] }.by(age).into(cities).check()
+        df2.select(GroupedPerson::nameAndCity, GroupedPerson::age).spread { it[GroupedPerson::nameAndCity][NameAndCity::city] }.by(GroupedPerson::age).into("cities").check()
+        df2.select("nameAndCity", "age").spread { it["nameAndCity"]["city"] }.by("age").into("cities").check()
     }
 
     @Test
