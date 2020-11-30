@@ -3,7 +3,7 @@ package org.jetbrains.dataframe.codeGen
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.person.BaseTest
-import org.jetbrains.dataframe.person.TypedDataFrameTests
+import org.jetbrains.dataframe.person.DataFrameTests
 import org.junit.Test
 import kotlin.reflect.full.memberProperties
 
@@ -15,7 +15,7 @@ class CodeGenerationTests : BaseTest(){
 
     @Test
     fun `generate marker interface`() {
-        val property = TypedDataFrameTests::class.memberProperties.first { it.name == "df" }
+        val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
         val code = CodeGenerator().generate(df, property)
         val expectedDeclaration = """
             @DataFrameType(isOpen = false)
@@ -35,9 +35,10 @@ class CodeGenerationTests : BaseTest(){
 
     @Test
     fun `generate marker interface for nested data frame`() {
-        val property = TypedDataFrameTests::class.memberProperties.first { it.name == "df" }
+        val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
         val grouped = df.move { name and city }.into("nameAndCity")
         val code = CodeGenerator().generate(grouped, property)
+        val rowType = DataFrameRow::class.simpleName
         val declaration1 = """
             @DataFrameType(isOpen = false)
             interface DataFrameType2{
@@ -48,7 +49,7 @@ class CodeGenerationTests : BaseTest(){
         val declaration2 = """
             @DataFrameType(isOpen = false)
             interface DataFrameType1{
-                val nameAndCity: TypedDataFrameRow<DataFrameType2>
+                val nameAndCity: $rowType<DataFrameType2>
                 val age: Int
                 val weight: Int?
             }""".trimIndent()
@@ -85,7 +86,7 @@ class CodeGenerationTests : BaseTest(){
     fun `generate derived interface`() {
         val codeGen = CodeGenerator()
         codeGen.generate(Person::class)
-        val property = TypedDataFrameTests::class.memberProperties.first { it.name == "df" }
+        val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
         val code = codeGen.generate(df.filterNotNull(), property)
         val expected = """
             @DataFrameType(isOpen = false)

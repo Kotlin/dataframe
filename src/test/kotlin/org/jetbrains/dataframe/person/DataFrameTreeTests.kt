@@ -14,7 +14,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @DataFrameType
     interface GroupedPerson {
-        val nameAndCity: TypedDataFrameRow<NameAndCity>
+        val nameAndCity: DataFrameRow<NameAndCity>
         val age: Int
         val weight: Int?
     }
@@ -29,7 +29,7 @@ class DataFrameTreeTests : BaseTest() {
 
     val DataFrameRowBase<GroupedPerson>.age get() = this["age"] as Int
     val DataFrameRowBase<GroupedPerson>.weight get() = this["weight"] as Int?
-    val DataFrameRowBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as TypedDataFrameRow<NameAndCity>
+    val DataFrameRowBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as DataFrameRow<NameAndCity>
     val DataFrameBase<GroupedPerson>.age get() = this["age"].typed<Int>()
     val DataFrameBase<GroupedPerson>.weight get() = this["weight"].typed<Int?>()
     val DataFrameBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"].grouped<NameAndCity>()
@@ -120,7 +120,7 @@ class DataFrameTreeTests : BaseTest() {
 
         val cities by columnGroup()
 
-        fun <T> TypedDataFrame<T>.check() {
+        fun <T> DataFrame<T>.check() {
             columnNames() shouldBe listOf("name", "cities")
             this[name] shouldBe typed.name.distinct()
             val group = this[cities]
@@ -147,7 +147,7 @@ class DataFrameTreeTests : BaseTest() {
         val code = CodeGenerator().generate(GroupedPerson::class)
         val dataFrameBase = DataFrameBase::class.simpleName
         val dataFrameRowBase = DataFrameRowBase::class.simpleName
-        val dataFrameRow = TypedDataFrameRow::class.qualifiedName
+        val dataFrameRow = DataFrameRow::class.qualifiedName
         val className = GroupedPerson::class.qualifiedName
         val shortName = GroupedPerson::class.simpleName!!
         val nameAndCity = NameAndCity::class.qualifiedName

@@ -11,7 +11,7 @@ internal fun String.truncate(limit: Int) = if (limit in 1 until length) {
 
 data class Image(val url: String)
 
-fun TypedDataFrame<*>.toHTML(limit: Int = 20, truncate: Int = 40): String {
+fun DataFrame<*>.toHTML(limit: Int = 20, truncate: Int = 40): String {
     val sb = StringBuilder()
     sb.append("<html><body>")
     sb.append("<table><tr>")
@@ -51,7 +51,7 @@ internal fun renderType(type: KType): String {
     else result
 }
 
-internal fun TypedDataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 20): String {
+internal fun DataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 20): String {
     val sb = StringBuilder()
     sb.appendLine("Data Frame: [$size]")
     sb.appendLine()

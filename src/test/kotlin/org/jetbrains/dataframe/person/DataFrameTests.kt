@@ -9,7 +9,7 @@ import org.junit.Test
 import java.time.LocalDate
 import kotlin.reflect.jvm.jvmErasure
 
-class TypedDataFrameTests : BaseTest() {
+class DataFrameTests : BaseTest() {
 
     @Test
     fun `size`() {
@@ -89,7 +89,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `update`() {
 
-        fun TypedDataFrame<*>.check() {
+        fun DataFrame<*>.check() {
             columns[1].name shouldBe "age"
             ncol shouldBe typed.ncol
             this["age"].values shouldBe typed.map { age * 2 }
@@ -112,7 +112,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `conditional update`() {
 
-        fun TypedDataFrame<*>.check() {
+        fun DataFrame<*>.check() {
             columns[1].name shouldBe "age"
             ncol shouldBe typed.ncol
             this["age"].values shouldBe typed.map { if (age > 25) null else age }
@@ -135,7 +135,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `null to zero`() {
         val expected = typed.weight.values.map { it ?: 0 }
-        fun TypedDataFrame<*>.check() {
+        fun DataFrame<*>.check() {
             this["weight"].values shouldBe expected
         }
 
@@ -173,7 +173,7 @@ class TypedDataFrameTests : BaseTest() {
 
         val expected = listOf(null, "London", "Dubai", "Tokyo", "Milan", "Moscow", "Moscow")
 
-        fun TypedDataFrame<*>.check() = this[city].values shouldBe expected
+        fun DataFrame<*>.check() = this[city].values shouldBe expected
 
         typed.sortByDesc(typed.age).sortBy(typed.name).check()
         typed.sortBy { name then age.desc }.check()
@@ -191,7 +191,7 @@ class TypedDataFrameTests : BaseTest() {
 
         val expected = typed.city.values.sortedBy { it }
 
-        fun TypedDataFrame<*>.check() = this[city].values shouldBe expected
+        fun DataFrame<*>.check() = this[city].values shouldBe expected
 
         typed.sortBy { city }.check()
         df.sortBy { city }.check()
@@ -204,7 +204,7 @@ class TypedDataFrameTests : BaseTest() {
 
         val expected = typed.city.values.filterNotNull().sortedBy { it } + listOf(null)
 
-        fun TypedDataFrame<*>.check() = this[city].values shouldBe expected
+        fun DataFrame<*>.check() = this[city].values shouldBe expected
 
         typed.sortBy { city.nullsLast }.check()
         df.sortBy { city.nullsLast }.check()
@@ -241,7 +241,7 @@ class TypedDataFrameTests : BaseTest() {
     fun `filter`() {
 
         val expected = listOf("Bob", "Bob", "Mark")
-        fun TypedDataFrame<*>.check() = this[name].values shouldBe expected
+        fun DataFrame<*>.check() = this[name].values shouldBe expected
 
         val limit = 20
 
@@ -262,7 +262,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `filterNotNull 1`() {
 
-        fun TypedDataFrame<*>.check() = rows.forEach { get("weight") shouldNotBe null }
+        fun DataFrame<*>.check() = rows.forEach { get("weight") shouldNotBe null }
 
         typed.filterNotNull(typed.weight).check()
         typed.filterNotNull { weight }.check()
@@ -278,7 +278,7 @@ class TypedDataFrameTests : BaseTest() {
     fun `filterNotNull 2`() {
 
         val expected = typed.rows.count { it.city != null && it.weight != null }
-        fun TypedDataFrame<*>.check() = nrow shouldBe expected
+        fun DataFrame<*>.check() = nrow shouldBe expected
 
         typed.filterNotNull(typed.weight, typed.city).check()
         typed.filterNotNull { weight and city }.check()
@@ -295,7 +295,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `select one `() {
         val expected = listOf(typed.age)
-        fun TypedDataFrame<*>.check() = columns shouldBe expected
+        fun DataFrame<*>.check() = columns shouldBe expected
 
         typed.select { age }.check()
         typed.select { it.age }.check()
@@ -317,7 +317,7 @@ class TypedDataFrameTests : BaseTest() {
     fun `select if`() {
         val expected = listOf(typed.name, typed.city)
 
-        fun TypedDataFrame<*>.check() = columns shouldBe expected
+        fun DataFrame<*>.check() = columns shouldBe expected
 
         typed.select { cols { it.name.length == 4 } }.check()
         df.select { cols { it.name.length == 4 } }.check()
@@ -326,7 +326,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `select two`() {
         val expected = listOf(typed.age, typed.city)
-        fun TypedDataFrame<*>.check() = columns shouldBe expected
+        fun DataFrame<*>.check() = columns shouldBe expected
 
         typed.select { age and city }.check()
         typed.select { it.age and it.city }.check()
@@ -386,7 +386,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `groupBy`() {
 
-        fun TypedDataFrame<*>.check() {
+        fun DataFrame<*>.check() {
             nrow shouldBe 3
             this["name"].values shouldBe listOf("Alice", "Bob", "Mark")
             this["n"].values shouldBe listOf(2, 2, 3)
@@ -507,7 +507,7 @@ class TypedDataFrameTests : BaseTest() {
     fun `nullable minBy`() {
         val expected = "Alice"
 
-        fun TypedDataFrameRow<*>?.check() = this!![name] shouldBe expected
+        fun DataFrameRow<*>?.check() = this!![name] shouldBe expected
 
         typed.filterNotNull { weight }.minBy { weight!! }.check()
         typed.filterNotNull { it.weight }.minBy { it.weight!! }.check()
@@ -522,7 +522,7 @@ class TypedDataFrameTests : BaseTest() {
     fun `maxBy`() {
         val expected = "Bob"
 
-        fun TypedDataFrameRow<*>?.check() = this!![name] shouldBe expected
+        fun DataFrameRow<*>?.check() = this!![name] shouldBe expected
 
         typed.maxBy { age }.check()
         typed.maxBy { it.age }.check()
@@ -540,7 +540,7 @@ class TypedDataFrameTests : BaseTest() {
         val now = 2020
         val expected = typed.map { now - age }
 
-        fun TypedDataFrame<*>.check() = this["year"].values shouldBe expected
+        fun DataFrame<*>.check() = this["year"].values shouldBe expected
 
         typed.add("year") { now - age }.check()
         typed.add("year") { now - it.age }.check()
@@ -555,7 +555,7 @@ class TypedDataFrameTests : BaseTest() {
     fun `remove one column`() {
 
         val expected = listOf("name", "city", "weight")
-        fun check(body: () -> TypedDataFrame<*>) = body().columnNames() shouldBe expected
+        fun check(body: () -> DataFrame<*>) = body().columnNames() shouldBe expected
 
         check { typed - { age } }
         check { typed - { it.age } }
@@ -574,7 +574,7 @@ class TypedDataFrameTests : BaseTest() {
     fun `remove two columns`() {
 
         val expected = listOf("name", "city")
-        fun check(body: () -> TypedDataFrame<*>) = body().columnNames() shouldBe expected
+        fun check(body: () -> DataFrame<*>) = body().columnNames() shouldBe expected
 
         check { typed - { age and weight } }
         check { typed - { it.age and it.weight } }
@@ -870,7 +870,7 @@ class TypedDataFrameTests : BaseTest() {
     @Test
     fun `column group by`() {
 
-        fun TypedDataFrame<Person>.check() {
+        fun DataFrame<Person>.check() {
             ncol shouldBe 3
             nrow shouldBe typed.nrow
             columnNames() shouldBe listOf("name", "Int", "String")

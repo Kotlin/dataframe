@@ -1,7 +1,6 @@
 package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldThrow
 import org.jetbrains.dataframe.*
 import org.junit.Test
 import java.io.Serializable
@@ -29,14 +28,14 @@ class SpreadTests {
         val value: Any?
     }
 
-    val TypedDataFrameRow<Person>.name get() = this["name"] as String
-    val TypedDataFrameRow<Person>.key get() = this["key"] as String
-    val TypedDataFrameRow<Person>.value get() = this["value"] as Any?
-    val TypedDataFrame<Person>.name get() = this["name"].typed<String>()
-    val TypedDataFrame<Person>.key get() = this["key"].typed<String>()
-    val TypedDataFrame<Person>.value get() = this["value"].typed<Any?>()
+    val DataFrameRow<Person>.name get() = this["name"] as String
+    val DataFrameRow<Person>.key get() = this["key"] as String
+    val DataFrameRow<Person>.value get() = this["value"] as Any?
+    val DataFrame<Person>.name get() = this["name"].typed<String>()
+    val DataFrame<Person>.key get() = this["key"].typed<String>()
+    val DataFrame<Person>.value get() = this["value"].typed<Any?>()
 
-    val typed: TypedDataFrame<Person> = df.typed()
+    val typed: DataFrame<Person> = df.typed()
 
 // Tests
 

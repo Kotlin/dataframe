@@ -8,12 +8,12 @@ interface DataFrameRowBase<out T> {
     operator fun get(name: String): Any?
 }
 
-interface TypedDataFrameRow<out T>: DataFrameRowBase<T> {
-    val owner: TypedDataFrame<T>
-    val prev: TypedDataFrameRow<T>?
-    val next: TypedDataFrameRow<T>?
+interface DataFrameRow<out T>: DataFrameRowBase<T> {
+    val owner: DataFrame<T>
+    val prev: DataFrameRow<T>?
+    val next: DataFrameRow<T>?
     val index: Int
-    fun getRow(index: Int): TypedDataFrameRow<T>?
+    fun getRow(index: Int): DataFrameRow<T>?
     override operator fun get(name: String): Any?
     operator fun get(columnIndex: Int): Any?
     operator fun <R> get(column: ColumnDef<R>) = get(column.name) as R
@@ -74,19 +74,19 @@ interface TypedDataFrameRow<out T>: DataFrameRowBase<T> {
     infix fun <R> KProperty1<*, R>.neq(a: R?) = get(this) != a
 }
 
-internal class TypedDataFrameRowImpl<T>(override var index: Int, override val owner: TypedDataFrame<T>) : TypedDataFrameRow<T> {
+internal class DataFrameRowImpl<T>(override var index: Int, override val owner: DataFrame<T>) : DataFrameRow<T> {
 
     override operator fun get(name: String): Any? {
         ColumnAccessTracker.registerColumnAccess(name)
         return owner[name][index]
     }
 
-    override val prev: TypedDataFrameRow<T>?
+    override val prev: DataFrameRow<T>?
         get() = if (index > 0) owner[index - 1] else null
-    override val next: TypedDataFrameRow<T>?
+    override val next: DataFrameRow<T>?
         get() = if (index < owner.nrow - 1) owner[index + 1] else null
 
-    override fun getRow(index: Int): TypedDataFrameRow<T>? = if (index >= 0 && index < owner.nrow) TypedDataFrameRowImpl(index, owner) else null
+    override fun getRow(index: Int): DataFrameRow<T>? = if (index >= 0 && index < owner.nrow) DataFrameRowImpl(index, owner) else null
 
     override val values by lazy { owner.columns.map { it[index] } }
 
@@ -101,7 +101,7 @@ internal class TypedDataFrameRowImpl<T>(override var index: Int, override val ow
     }
 
     override fun equals(other: Any?): Boolean {
-        val o = other as? TypedDataFrameRow<T>
+        val o = other as? DataFrameRow<T>
         if(o == null) return false
         return values.equals(o.values)
     }

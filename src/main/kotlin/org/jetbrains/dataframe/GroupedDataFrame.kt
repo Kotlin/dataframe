@@ -4,29 +4,29 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
 internal fun <T, G> GroupedDataFrame<T, G>.getSortColumns(selector: SortColumnSelector<G, Comparable<*>?>) =
-        TypedDataFrameWithColumnsForSortImpl(groups.values.first())
+        DataFrameWithColumnsForSortImpl(groups.values.first())
                 .let { selector(it, it).extractSortColumns() }
 
 typealias GroupKey = List<Any?>
 
-internal val columnForGroupedData by column<TypedDataFrame<*>>("DataFrame")
+internal val columnForGroupedData by column<DataFrame<*>>("DataFrame")
 
 interface GroupedDataFrame<out T, out G> {
 
     val groups : TableColumn<G>
 
-    val keys : TypedDataFrame<T>
+    val keys : DataFrame<T>
 
-    fun asPlain(): TypedDataFrame<T>
+    fun asPlain(): DataFrame<T>
 
     fun ungroup() = groups.union().typed<G>()
 
     operator fun get(vararg values: Any?) = get(values.toList())
-    operator fun get(key: GroupKey): TypedDataFrame<T>
+    operator fun get(key: GroupKey): DataFrame<T>
 
-    fun <R> modify(transform: TypedDataFrame<G>.() -> TypedDataFrame<R>): GroupedDataFrame<T, R>
+    fun <R> modify(transform: DataFrame<G>.() -> DataFrame<R>): GroupedDataFrame<T, R>
 
-    data class Entry<T, G>(val key: TypedDataFrameRow<T>, val group: TypedDataFrame<G>)
+    data class Entry<T, G>(val key: DataFrameRow<T>, val group: DataFrame<G>)
 }
 
 fun <T,G> GroupedDataFrame<T,G>.sortBy(vararg columns: String) = sortBy(columns.map { SortColumnDescriptor(it.toColumnDef(), SortDirection.Desc) })
@@ -36,7 +36,7 @@ fun <T,G> GroupedDataFrame<T,G>.sortBy(selector: SortColumnSelector<G, Comparabl
 
 fun <T,G> GroupedDataFrame<T,G>.sortKeysBy(selector: SortColumnSelector<T, Comparable<*>?>) = sortBy(asPlain().getSortColumns(selector))
 
-internal fun <T,G> TypedDataFrame<T>.asGrouped(groupedColumnName: String): GroupedDataFrame<T,G> = GroupedDataFrameImpl(this, this[groupedColumnName] as TableColumn<G>)
+internal fun <T,G> DataFrame<T>.asGrouped(groupedColumnName: String): GroupedDataFrame<T,G> = GroupedDataFrameImpl(this, this[groupedColumnName] as TableColumn<G>)
 
 fun <T,G> GroupedDataFrame<T,G>.sortBy(columns: List<SortColumnDescriptor>): GroupedDataFrame<T,G> {
 
@@ -52,22 +52,22 @@ fun <T,G> GroupedDataFrame<T,G>.sortBy(columns: List<SortColumnDescriptor>): Gro
 
 fun <T,G> GroupedDataFrame<T,G>.forEach(body: (GroupedDataFrame.Entry<T, G>) -> Unit) = this@forEach.forEach { key, group -> body(GroupedDataFrame.Entry(key, group)) }
 
-fun <T,G> GroupedDataFrame<T,G>.forEach(body: (key: TypedDataFrameRow<T>, group: TypedDataFrame<G>) -> Unit) =
+fun <T,G> GroupedDataFrame<T,G>.forEach(body: (key: DataFrameRow<T>, group: DataFrame<G>) -> Unit) =
     keys.forEachIndexed { index, row ->
         val group = groups[index]
         body(row, group)
     }
 
-fun <T,G,R> GroupedDataFrame<T,G>.map(body: (key: TypedDataFrameRow<T>, group: TypedDataFrame<G>) -> R) =
+fun <T,G,R> GroupedDataFrame<T,G>.map(body: (key: DataFrameRow<T>, group: DataFrame<G>) -> R) =
         keys.mapIndexed { index, row ->
             val group = groups[index]
             body(row, group)
         }
 
-class GroupedDataFrameImpl<T, G>(val df: TypedDataFrame<T>, override val groups: TableColumn<G>): GroupedDataFrame<T, G> {
+class GroupedDataFrameImpl<T, G>(val df: DataFrame<T>, override val groups: TableColumn<G>): GroupedDataFrame<T, G> {
     override val keys by lazy { df - groups }
 
-    override operator fun get(key: GroupKey): TypedDataFrame<T> {
+    override operator fun get(key: GroupKey): DataFrame<T> {
 
         require(key.size < df.ncol) { "Invalid size of the key" }
 
@@ -76,13 +76,13 @@ class GroupedDataFrameImpl<T, G>(val df: TypedDataFrame<T>, override val groups:
         return filtered[groups].values.union().typed<T>()
     }
 
-    override fun <R> modify(transform: TypedDataFrame<G>.() -> TypedDataFrame<R>) =
+    override fun <R> modify(transform: DataFrame<G>.() -> DataFrame<R>) =
             df.update(groups) { transform(it) }.asGrouped { groups.typed<R>() }
 
     override fun asPlain() = df
 }
 
-class GroupAggregateBuilder<T>(internal val df: TypedDataFrame<T>): TypedDataFrame<T> by df {
+class GroupAggregateBuilder<T>(internal val df: DataFrame<T>): DataFrame<T> by df {
 
     private data class NamedValue(val path: List<String>, val value: Any?, val type: KType, val defaultValue: Any?)
 
@@ -107,15 +107,15 @@ class GroupAggregateBuilder<T>(internal val df: TypedDataFrame<T>): TypedDataFra
     inline infix fun <reified R> R.into(name: String)  = add(listOf(name), this, getType<R>())
 }
 
-typealias Reducer<T, R> = TypedDataFrame<T>.(TypedDataFrame<T>) -> R
+typealias Reducer<T, R> = DataFrame<T>.(DataFrame<T>) -> R
 
 typealias GroupAggregator<G> = GroupAggregateBuilder<G>.(GroupAggregateBuilder<G>) -> Unit
 
 fun <T, G> GroupedDataFrame<T, G>.aggregate(body: GroupAggregator<G>) = doAggregate( asPlain(), { groups }, removeColumns = true, body)
 
-fun <T, G> TypedDataFrame<T>.aggregate(selector: ColumnSelector<T, TypedDataFrame<G>>, body: GroupAggregator<G>) = doAggregate(this, selector, removeColumns = false, body)
+fun <T, G> DataFrame<T>.aggregate(selector: ColumnSelector<T, DataFrame<G>>, body: GroupAggregator<G>) = doAggregate(this, selector, removeColumns = false, body)
 
-internal fun <T, G> doAggregate(df: TypedDataFrame<T>, selector: ColumnSelector<T, TypedDataFrame<G>>, removeColumns: Boolean, body: GroupAggregator<G>): TypedDataFrame<T> {
+internal fun <T, G> doAggregate(df: DataFrame<T>, selector: ColumnSelector<T, DataFrame<G>>, removeColumns: Boolean, body: GroupAggregator<G>): DataFrame<T> {
 
     val column = df.getColumn(selector)
 

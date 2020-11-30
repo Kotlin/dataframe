@@ -26,16 +26,16 @@ open class BaseTest {
         val weight: Int?
     }
 
-    val TypedDataFrameRow<Person>.name get() = this["name"] as String
-    val TypedDataFrameRow<Person>.age get() = this["age"] as Int
-    val TypedDataFrameRow<Person>.city get() = this["city"] as String?
-    val TypedDataFrameRow<Person>.weight get() = this["weight"] as Int?
-    val TypedDataFrame<Person>.name get() = this["name"].typed<String>()
-    val TypedDataFrame<Person>.age get() = this["age"].typed<Int>()
-    val TypedDataFrame<Person>.city get() = this["city"].typed<String?>()
-    val TypedDataFrame<Person>.weight get() = this["weight"].typed<Int?>()
+    val DataFrameRow<Person>.name get() = this["name"] as String
+    val DataFrameRow<Person>.age get() = this["age"] as Int
+    val DataFrameRow<Person>.city get() = this["city"] as String?
+    val DataFrameRow<Person>.weight get() = this["weight"] as Int?
+    val DataFrame<Person>.name get() = this["name"].typed<String>()
+    val DataFrame<Person>.age get() = this["age"].typed<Int>()
+    val DataFrame<Person>.city get() = this["city"].typed<String?>()
+    val DataFrame<Person>.weight get() = this["weight"].typed<Int?>()
 
-    val typed: TypedDataFrame<Person> = df.typed()
+    val typed: DataFrame<Person> = df.typed()
 
 // Manual Column Definitions
 
