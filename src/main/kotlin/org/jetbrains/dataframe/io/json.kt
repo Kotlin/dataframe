@@ -10,15 +10,15 @@ import java.net.URL
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
 
-fun readJson(fileOrUrl: String) = TypedDataFrame.fromJson(fileOrUrl)
+fun readJson(fileOrUrl: String) = DataFrame.fromJson(fileOrUrl)
 
-fun readJson(file: File) = TypedDataFrame.fromJson(file)
+fun readJson(file: File) = DataFrame.fromJson(file)
 
-fun parseJson(text: String) = TypedDataFrame.fromJsonStr(text)
+fun parseJson(text: String) = DataFrame.fromJsonStr(text)
 
-fun TypedDataFrame.Companion.fromJson(file: File) = fromJson(file.toURI().toURL())
+fun DataFrame.Companion.fromJson(file: File) = fromJson(file.toURI().toURL())
 
-fun TypedDataFrame.Companion.fromJson(fileOrUrl: String): TypedDataFrame<*> {
+fun DataFrame.Companion.fromJson(fileOrUrl: String): DataFrame<*> {
     val url = when {
         isURL(fileOrUrl) -> URL(fileOrUrl).toURI()
         else -> File(fileOrUrl).toURI()
@@ -27,10 +27,10 @@ fun TypedDataFrame.Companion.fromJson(fileOrUrl: String): TypedDataFrame<*> {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun TypedDataFrame.Companion.fromJson(url: URL): TypedDataFrame<*> =
+fun DataFrame.Companion.fromJson(url: URL): DataFrame<*> =
         fromJson(Parser().parse(url.openStream()))
 
-fun TypedDataFrame.Companion.fromJsonStr(text: String) = fromJson(Parser().parse(StringBuilder(text)))
+fun DataFrame.Companion.fromJsonStr(text: String) = fromJson(Parser().parse(StringBuilder(text)))
 
 private fun fromJson(parsed: Any?) = when (parsed) {
     is JsonArray<*> -> fromList(parsed.value)
@@ -41,9 +41,9 @@ private val arrayColumnName = "array"
 
 private val valueColumnName = "value"
 
-internal fun fromList(records: List<*>): TypedDataFrame<*> {
+internal fun fromList(records: List<*>): DataFrame<*> {
 
-    fun TypedDataFrame<*>.isSingleUnnamedColumn() = ncol == 1 && (columns[0].name == valueColumnName || columns[0].name == arrayColumnName)
+    fun DataFrame<*>.isSingleUnnamedColumn() = ncol == 1 && (columns[0].name == valueColumnName || columns[0].name == arrayColumnName)
 
     var hasPrimitive = false
     var hasArray = false

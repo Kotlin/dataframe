@@ -20,7 +20,7 @@ class IterableDataFrameBuilder<T>(val source: Iterable<T>) {
     inline infix operator fun <reified R> String.invoke(noinline expression: T.() -> R?) = add(this, expression)
 }
 
-fun <T> Iterable<T>.toDataFrame(body: IterableDataFrameBuilder<T>.() -> Unit): TypedDataFrame<Unit> {
+fun <T> Iterable<T>.toDataFrame(body: IterableDataFrameBuilder<T>.() -> Unit): DataFrame<Unit> {
     val builder = IterableDataFrameBuilder<T>(this)
     builder.body()
     return dataFrameOf(builder.columns)
@@ -38,11 +38,11 @@ inline fun <reified T> Iterable<T>.toDataFrame() = T::class.declaredMembers
         }.let { dataFrameOf(it) }
 
 
-fun dataFrameOf(columns: Iterable<DataCol>): TypedDataFrame<Unit> = TypedDataFrameImpl(columns.map { it.unbox() })
+fun dataFrameOf(columns: Iterable<DataCol>): DataFrame<Unit> = DataFrameImpl(columns.map { it.unbox() })
 
 fun dataFrameOf(vararg header: ColumnDef<*>) = DataFrameBuilder(header.map { it.name })
 
-fun emptyDataFrame(nrow: Int) = TypedDataFrame.empty<Any?>(nrow)
+fun emptyDataFrame(nrow: Int) = DataFrame.empty<Any?>(nrow)
 
 fun dataFrameOf(vararg header: String) = dataFrameOf(header.toList())
 
@@ -58,7 +58,7 @@ internal fun DataCol.unbox(): DataCol = when (this) {
 
 fun <T> Iterable<DataCol>.asDataFrame() = dataFrameOf(this).typed<T>()
 
-fun <T> List<Pair<List<String>, DataCol>>.toDataFrame(): TypedDataFrame<T>? {
+fun <T> List<Pair<List<String>, DataCol>>.toDataFrame(): DataFrame<T>? {
     if(size == 0) return null
     val tree = TreeNode.createRoot(null as DataCol?)
     forEach {
@@ -82,7 +82,7 @@ fun <T> List<Pair<List<String>, DataCol>>.toDataFrame(): TypedDataFrame<T>? {
 
 class DataFrameBuilder(private val columnNames: List<String>) {
 
-    operator fun invoke(vararg values: Any?): TypedDataFrame<Unit> {
+    operator fun invoke(vararg values: Any?): DataFrame<Unit> {
 
         require(columnNames.size > 0 && values.size.rem(columnNames.size) == 0) {
             "data dimension ${columnNames.size} is not compatible with length of data vector ${values.size}"

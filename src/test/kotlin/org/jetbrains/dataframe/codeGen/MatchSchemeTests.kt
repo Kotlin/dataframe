@@ -2,7 +2,6 @@ package org.jetbrains.dataframe.codeGen
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.io.fromJson
 import org.jetbrains.dataframe.io.fromJsonStr
 import org.junit.Test
 
@@ -18,21 +17,21 @@ class MatchSchemeTests {
     interface Item {
         val kind: String
         val id: String
-        val snippet: TypedDataFrameRow<Snippet>
+        val snippet: DataFrameRow<Snippet>
     }
 
     @DataFrameType(isOpen = false)
     interface PageInfo {
         val totalResults: Int
         val resultsPerPage: Int
-        val snippets: TypedDataFrame<Snippet>
+        val snippets: DataFrame<Snippet>
     }
 
     @DataFrameType
     interface DataRecord {
         val kind: String
-        val items: TypedDataFrame<Item>
-        val pageInfo: TypedDataFrameRow<PageInfo>
+        val items: DataFrame<Item>
+        val pageInfo: DataFrameRow<PageInfo>
     }
 
     val json = """
@@ -65,7 +64,7 @@ class MatchSchemeTests {
         }
     """.trimIndent()
 
-    val df = TypedDataFrame.fromJsonStr(json)
+    val df = DataFrame.fromJsonStr(json)
 
     val typed = df.typed<DataRecord>()
 

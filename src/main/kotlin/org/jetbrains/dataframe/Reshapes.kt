@@ -8,7 +8,7 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
 interface SpreadContext {
-    class DataFrame<T>(val df: TypedDataFrame<T>) : SpreadContext
+    class DataFrame<T>(val df: org.jetbrains.dataframe.DataFrame<T>) : SpreadContext
     class GroupedDataFrame<T,G>(val df: org.jetbrains.dataframe.GroupedDataFrame<T, G>) : SpreadContext
     class GroupAggregator<T>(val builder: GroupAggregateBuilder<T>): SpreadContext
 }
@@ -16,17 +16,17 @@ interface SpreadContext {
 class SpreadClause<T, K, V, C: SpreadContext>(val context: C, val keyColumn: ColumnSelector<T, K>, val valueColumn: ColumnSelector<T, *>?, val valueSelector: Reducer<T, V>, val valueType: KType, val defaultValue: Any? = null, val columnPath: (K)->List<String>?){
 
     companion object {
-        fun <T, K> inDataFrame(df: TypedDataFrame<T>, keyColumn: ColumnSelector<T, K>) = create(SpreadContext.DataFrame(df), keyColumn)
+        fun <T, K> inDataFrame(df: DataFrame<T>, keyColumn: ColumnSelector<T, K>) = create(SpreadContext.DataFrame(df), keyColumn)
         fun <T, G, K> inGroupedDataFrame(df: GroupedDataFrame<T, G>, keyColumn: ColumnSelector<G, K>) = create(SpreadContext.GroupedDataFrame(df), keyColumn)
         fun <T, K> inAggregator(builder: GroupAggregateBuilder<T>, keyColumn: ColumnSelector<T, K>) = create(SpreadContext.GroupAggregator(builder), keyColumn)
         fun <T, K, C:SpreadContext> create(context: C, keyColumn: ColumnSelector<T,K>) = SpreadClause(context, keyColumn, null, { true }, getType<Boolean>(), false) { listOf(it.toString()) }
     }
 }
 
-fun <T, C> TypedDataFrame<T>.spread(column: KProperty<C>) = spread { column.toColumnDef() }
-fun <T> TypedDataFrame<T>.spread(column: String) = spread { column.toColumnDef() }
-fun <T, C> TypedDataFrame<T>.spread(column: ColumnDef<C>) = spread { column }
-fun <T, C> TypedDataFrame<T>.spread(selector: ColumnSelector<T, C>) =
+fun <T, C> DataFrame<T>.spread(column: KProperty<C>) = spread { column.toColumnDef() }
+fun <T> DataFrame<T>.spread(column: String) = spread { column.toColumnDef() }
+fun <T, C> DataFrame<T>.spread(column: ColumnDef<C>) = spread { column }
+fun <T, C> DataFrame<T>.spread(selector: ColumnSelector<T, C>) =
         SpreadClause.inDataFrame(this, selector)
 
 fun <T, G, C> GroupedDataFrame<T, G>.spread(selector: ColumnSelector<G, C>) =
@@ -76,7 +76,7 @@ inline infix fun <T, K, V, reified C:SpreadContext> SpreadClause<T, K, V, C>.int
 
 inline infix fun <T, K, V, reified C:SpreadContext> SpreadClause<T, K, V, C>.intoPaths(noinline keyTransform: (K)->ColumnPath?) = doSpreadInto(this, C::class, keyTransform)
 
-fun <T, K, V, C:SpreadContext> doSpreadInto(clause: SpreadClause<T, K, V, C>, contextType: KClass<C>, keyTransform: (K)->ColumnPath?) : TypedDataFrame<T> {
+fun <T, K, V, C:SpreadContext> doSpreadInto(clause: SpreadClause<T, K, V, C>, contextType: KClass<C>, keyTransform: (K)->ColumnPath?) : DataFrame<T> {
     val withPath = clause.addPath(keyTransform)
     return when(contextType) {
         SpreadContext.DataFrame::class -> (withPath as SpreadClause<T,K,V,SpreadContext.DataFrame<T>>).execute()
@@ -86,18 +86,8 @@ fun <T, K, V, C:SpreadContext> doSpreadInto(clause: SpreadClause<T, K, V, C>, co
     }
 }
 
-/*
-infix fun <T, K, V> SpreadClause<T, K, V, SpreadContext.GroupAggregator<T>>.into(keyTransform: (K)->String?) = addPath(keyTransform).execute()
-
-@JvmName("intoTKVT")
-fun <T, K, V> SpreadClause<T, K, V, SpreadContext.DataFrame<T>>.into(keyTransform: (K)->String?) = addPath(keyTransform).execute()
-
-@JvmName("intoTKVTT")
-fun <T, G, K, V> SpreadClause<G, K, V, SpreadContext.GroupedDataFrame<T, G>>.into(keyTransform: (K)->String?) = addPath(keyTransform).execute()
-*/
-
 @JvmName("spreadForDataFrame")
-internal fun <T,K,V> SpreadClause<T,K,V,SpreadContext.DataFrame<T>>.execute(): TypedDataFrame<T> {
+internal fun <T,K,V> SpreadClause<T,K,V,SpreadContext.DataFrame<T>>.execute(): DataFrame<T> {
     val df = context.df
     val grouped = df.groupBy {
         val columnsToExclude = valueColumn?.let { keyColumn() and it()} ?: keyColumn()
@@ -110,7 +100,7 @@ internal fun <T,K,V> SpreadClause<T,K,V,SpreadContext.DataFrame<T>>.execute(): T
 }
 
 @JvmName("spreadForGroupedDataFrame")
-internal fun <T,K,V,G> SpreadClause<G,K,V,SpreadContext.GroupedDataFrame<T,G>>.execute(): TypedDataFrame<T> {
+internal fun <T,K,V,G> SpreadClause<G,K,V,SpreadContext.GroupedDataFrame<T,G>>.execute(): DataFrame<T> {
     val df = context.df
     return df.aggregate {
         val clause = changeContext(SpreadContext.GroupAggregator(this))
@@ -118,7 +108,7 @@ internal fun <T,K,V,G> SpreadClause<G,K,V,SpreadContext.GroupedDataFrame<T,G>>.e
     }
 }
 
-internal fun <T,K,V> SpreadClause<T,K,V, SpreadContext.GroupAggregator<T>>.execute(): TypedDataFrame<T> {
+internal fun <T,K,V> SpreadClause<T,K,V, SpreadContext.GroupAggregator<T>>.execute(): DataFrame<T> {
     val df = context.builder.df
     val keyColumnData = df.getColumn(keyColumn)
     val isColumnType = valueType.isSubtypeOf(getType<DataCol>())
@@ -155,14 +145,14 @@ internal fun <T,K,V> SpreadClause<T,K,V, SpreadContext.GroupAggregator<T>>.execu
     return df
 }
 
-class GatherClause<T, C, K, R>(val df: TypedDataFrame<T>, val selector: ColumnsSelector<T, C>, val filter: ((C) -> Boolean)? = null,
+class GatherClause<T, C, K, R>(val df: DataFrame<T>, val selector: ColumnsSelector<T, C>, val filter: ((C) -> Boolean)? = null,
                                val nameTransform: ((String) -> K), val valueTransform: ((C) -> R))
 
 typealias Predicate<T> = (T) -> Boolean
 
 internal infix fun <T> (Predicate<T>).and(other: Predicate<T>): Predicate<T> = { this(it) && other(it) }
 
-fun <T, C> TypedDataFrame<T>.gather(selector: ColumnsSelector<T, C>) = GatherClause(this, selector, null, { it }, { it })
+fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>) = GatherClause(this, selector, null, { it }, { it })
 
 fun <T, C, K, R> GatherClause<T, C, K, R>.where(filter: Predicate<C>) = GatherClause(df, selector, this.filter?.let { it and filter }
         ?: filter,
@@ -178,7 +168,7 @@ inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn:
 
 inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String, valueColumn: String) = gatherImpl(keyColumn, valueColumn, getType<K>(), getType<R>())
 
-fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: String? = null, keyColumnType: KType, valueColumnType: KType): TypedDataFrame<T> {
+fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: String? = null, keyColumnType: KType, valueColumnType: KType): DataFrame<T> {
 
     val keyColumns = df.getColumns(selector).map { df[it] }
     val otherColumns = df.columns - keyColumns
@@ -219,7 +209,7 @@ fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: 
     return dataFrameOf(resultColumns).typed()
 }
 
-fun <T> TypedDataFrame<T>.mergeRows(selector: ColumnsSelector<T, *>): TypedDataFrame<T> {
+fun <T> DataFrame<T>.mergeRows(selector: ColumnsSelector<T, *>): DataFrame<T> {
 
     return groupBy { allExcept(selector) }.modify {
         val updated = update(selector).with2 { row, column -> if(row.index == 0) column.toList() else emptyList() }
@@ -227,16 +217,16 @@ fun <T> TypedDataFrame<T>.mergeRows(selector: ColumnsSelector<T, *>): TypedDataF
     }.ungroup()
 }
 
-class MergeClause<T, C, R>(val df: TypedDataFrame<T>, val selector: ColumnsSelector<T, C>, val transform: (Iterable<C>) -> R)
+class MergeClause<T, C, R>(val df: DataFrame<T>, val selector: ColumnsSelector<T, C>, val transform: (Iterable<C>) -> R)
 
-fun <T, C> TypedDataFrame<T>.mergeCols(selector: ColumnsSelector<T, C>) = MergeClause(this, selector, { it })
+fun <T, C> DataFrame<T>.mergeCols(selector: ColumnsSelector<T, C>) = MergeClause(this, selector, { it })
 
 inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnName: String) = into(listOf(columnName))
 
-inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnPath: List<String>): TypedDataFrame<T> {
+inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnPath: List<String>): DataFrame<T> {
     val grouped = df.move(selector).into(columnPath)
     val res = grouped.update { getGroup(columnPath) }.with {
-        transform(it.values.map { it as C })
+        transform(it.values as List<C>)
     }
     return res
 }
@@ -246,7 +236,7 @@ fun <T, C, R> MergeClause<T, C, R>.asStrings() = by(", ")
 fun <T, C, R> MergeClause<T, C, R>.by(separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "", limit: Int = -1, truncated: CharSequence = "...") =
         MergeClause<T, C, String>(df, selector) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix, limit = limit, truncated = truncated) }
 
-fun <T, C> MergeClause<T, C, *>.mergeRows(names: List<String>): TypedDataFrame<T> {
+fun <T, C> MergeClause<T, C, *>.mergeRows(names: List<String>): DataFrame<T> {
 
     val columnsToMerge = df.getColumns(selector)
     assert(names.size == columnsToMerge.size)
@@ -316,7 +306,7 @@ internal inline fun <reified T> createDataCollector(initCapacity: Int = 0) = Typ
 
 internal fun <T> createDataCollector(type: KType, initCapacity: Int = 0) = TypedColumnDataCollector<T>(initCapacity, type)
 
-class SplitColClause<T, C, out R>(val df: TypedDataFrame<T>, val column: ColumnData<C>, val transform: (C) -> R)
+class SplitColClause<T, C, out R>(val df: DataFrame<T>, val column: ColumnData<C>, val transform: (C) -> R)
 
 fun <T, C> SplitColClause<T, C, String?>.by(vararg delimiters: Char, ignoreCase: Boolean = false, limit: Int = 0) = SplitColClause(df, column) {
     transform(it)?.split(*delimiters, ignoreCase = ignoreCase, limit = limit)
@@ -337,7 +327,7 @@ fun <T, C> SplitColClause<T, C, List<*>?>.into(vararg firstNames: String, nameGe
     }
 }
 
-fun <T, C> SplitColClause<T, C, List<*>?>.doSplitCols(columnNameGenerator: (Int) -> String): TypedDataFrame<T> {
+fun <T, C> SplitColClause<T, C, List<*>?>.doSplitCols(columnNameGenerator: (Int) -> String): DataFrame<T> {
 
     val nameGenerator = df.nameGenerator()
     val nrow = df.nrow
@@ -362,11 +352,11 @@ fun <T, C> SplitColClause<T, C, List<*>?>.doSplitCols(columnNameGenerator: (Int)
     return df - column + columnCollectors.mapIndexed { i, col -> col.toColumn(columnNames[i]) }
 }
 
-fun <T, C> TypedDataFrame<T>.split(selector: ColumnSelector<T, C>) = SplitColClause(this, getColumn(selector), { it })
+fun <T, C> DataFrame<T>.split(selector: ColumnSelector<T, C>) = SplitColClause(this, getColumn(selector), { it })
 
-fun <T> TypedDataFrame<T>.splitRows(selector: ColumnSelector<T, List<*>?>) = split(selector).intoRows()
+fun <T> DataFrame<T>.splitRows(selector: ColumnSelector<T, List<*>?>) = split(selector).intoRows()
 
-fun <T, C> SplitColClause<T, C, List<*>?>.intoRows(): TypedDataFrame<T> {
+fun <T, C> SplitColClause<T, C, List<*>?>.intoRows(): DataFrame<T> {
 
     val path = column.getPath()
     val transformedColumn = column.map(transform)
@@ -375,7 +365,7 @@ fun <T, C> SplitColClause<T, C, List<*>?>.intoRows(): TypedDataFrame<T> {
         it?.size ?: 0
     }
 
-    fun splitIntoRows(df: TypedDataFrame<*>, path: ColumnPath?, list: List<List<*>?>): TypedDataFrame<*> {
+    fun splitIntoRows(df: DataFrame<*>, path: ColumnPath?, list: List<List<*>?>): DataFrame<*> {
 
         val newColumns = df.columns.map { col ->
             if (col.isGrouped()) {
@@ -400,7 +390,7 @@ fun <T, C> SplitColClause<T, C, List<*>?>.intoRows(): TypedDataFrame<T> {
                             }
                         }
                     }
-                    if (col.isTable()) ColumnData.createTable(col.name, collector.values as List<TypedDataFrame<*>>, col.asTable<Any?>().df)
+                    if (col.isTable()) ColumnData.createTable(col.name, collector.values as List<DataFrame<*>>, col.asTable<Any?>().df)
                     else collector.toColumn(col.name)
                 }
             }

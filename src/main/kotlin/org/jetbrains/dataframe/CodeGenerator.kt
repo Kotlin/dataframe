@@ -20,18 +20,18 @@ enum class CodeGenerationMode {
     ShortNames
 }
 
-data class DataFrameToListNamedStub(val df: TypedDataFrame<*>, val className: String)
+data class DataFrameToListNamedStub(val df: DataFrame<*>, val className: String)
 
-data class DataFrameToListTypedStub(val df: TypedDataFrame<*>, val interfaceClass: KClass<*>)
+data class DataFrameToListTypedStub(val df: DataFrame<*>, val interfaceClass: KClass<*>)
 
-fun <T> TypedDataFrame<T>.schema(name: String? = null): String {
+fun <T> DataFrame<T>.schema(name: String? = null): String {
     val interfaceName = name ?: "DataRecord"
     return CodeGenerator().generateInterfaceDeclarations(columns, interfaceName, withBaseInterfaces = false, isOpen = true).joinToString("\n")
 }
 
 interface CodeGeneratorApi {
-    fun generate(df: TypedDataFrame<*>, property: KProperty<*>): List<String>
-    fun generate(df: TypedDataFrame<*>): List<String>
+    fun generate(df: DataFrame<*>, property: KProperty<*>): List<String>
+    fun generate(df: DataFrame<*>): List<String>
     fun generate(stub: DataFrameToListNamedStub): List<String>
     fun generate(stub: DataFrameToListTypedStub): List<String>
 
@@ -50,9 +50,9 @@ class CodeGenerator : CodeGeneratorApi {
 
         private val GroupedColumnType: KClass<*> = GroupedColumnBase::class
 
-        private val GroupedFieldType: KClass<*> = TypedDataFrameRow::class
+        private val GroupedFieldType: KClass<*> = DataFrameRow::class
 
-        private val DataFrameFieldType: KClass<*> = TypedDataFrame::class
+        private val DataFrameFieldType: KClass<*> = DataFrame::class
 
     }
 
@@ -231,7 +231,7 @@ class CodeGenerator : CodeGeneratorApi {
         })
     }
 
-    private val TypedDataFrame<*>.schema: Scheme
+    private val DataFrame<*>.schema: Scheme
         get() = getScheme(columns)
 
     // Rendering
@@ -336,9 +336,9 @@ class CodeGenerator : CodeGeneratorApi {
         return targetBaseMarkers.all { superclasses.contains(it) }
     }
 
-    override fun generate(df: TypedDataFrame<*>) = generate(df.schema, false)
+    override fun generate(df: DataFrame<*>) = generate(df.schema, false)
 
-    override fun generate(df: TypedDataFrame<*>, property: KProperty<*>): List<String> {
+    override fun generate(df: DataFrame<*>, property: KProperty<*>): List<String> {
 
         var targetScheme = df.schema
         val wasProcessedBefore = property in processedProperties
@@ -393,7 +393,7 @@ class CodeGenerator : CodeGeneratorApi {
 
     private fun getMarker(dataFrameType: KType) =
             when (dataFrameType.jvmErasure) {
-                TypedDataFrame::class -> dataFrameType.arguments[0].type?.jvmErasure
+                DataFrame::class -> dataFrameType.arguments[0].type?.jvmErasure
                 else -> null
             }
 

@@ -26,14 +26,14 @@ class JoinTests : BaseTest() {
     }
 
 
-    val TypedDataFrameRow<Person2>.name @JvmName("get-name") get() = this["name"] as String
-    val TypedDataFrameRow<Person2>.origin get() = this["origin"] as String?
-    val TypedDataFrameRow<Person2>.grade get() = this["grade"] as Int
-    val TypedDataFrame<Person2>.name @JvmName("get-name") get() = this["name"].typed<String>()
-    val TypedDataFrame<Person2>.origin get() = this["origin"].typed<String?>()
-    val TypedDataFrame<Person2>.grade get() = this["grade"].typed<Int>()
+    val DataFrameRow<Person2>.name @JvmName("get-name") get() = this["name"] as String
+    val DataFrameRow<Person2>.origin get() = this["origin"] as String?
+    val DataFrameRow<Person2>.grade get() = this["grade"] as Int
+    val DataFrame<Person2>.name @JvmName("get-name") get() = this["name"].typed<String>()
+    val DataFrame<Person2>.origin get() = this["origin"].typed<String?>()
+    val DataFrame<Person2>.grade get() = this["grade"].typed<Int>()
 
-    val typed2: TypedDataFrame<Person2> = df2.typed()
+    val typed2: DataFrame<Person2> = df2.typed()
 
     @Test
     fun `inner join`() {

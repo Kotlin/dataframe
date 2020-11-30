@@ -2,20 +2,20 @@ package org.jetbrains.dataframe
 
 import kotlin.reflect.full.withNullability
 
-interface TypedDataFrameWithColumnsForJoin<out A, out B> : TypedDataFrameWithColumnsForSelect<A> {
+interface DataFrameWithColumnsForJoin<out A, out B> : DataFrameWithColumnsForSelect<A> {
 
-    val right: TypedDataFrame<B>
+    val right: DataFrame<B>
 
     infix fun <C> ColumnDef<C>.match(other: ColumnDef<C>) = ColumnMatch(this, other)
 }
 
 class ColumnMatch<C>(val left: ColumnDef<C>, val right: ColumnDef<C>) : ColumnSet<C>
 
-class TypedDataFrameWithColumnsForJoinImpl<A, B>(private val left: TypedDataFrame<A>, override val right: TypedDataFrame<B>) : TypedDataFrame<A> by left, TypedDataFrameWithColumnsForJoin<A, B> {
+class DataFrameWithColumnsForJoinImpl<A, B>(private val left: DataFrame<A>, override val right: DataFrame<B>) : DataFrame<A> by left, DataFrameWithColumnsForJoin<A, B> {
 
 }
 
-typealias JoinColumnSelector<A, B> = TypedDataFrameWithColumnsForJoin<A, B>.(TypedDataFrameWithColumnsForJoin<A, B>) -> ColumnSet<*>
+typealias JoinColumnSelector<A, B> = DataFrameWithColumnsForJoin<A, B>.(DataFrameWithColumnsForJoin<A, B>) -> ColumnSet<*>
 
 internal fun <C> ColumnSet<C>.extractJoinColumns(): List<ColumnMatch<C>> = when (this) {
     is ColumnGroup -> columns.flatMap { it.extractJoinColumns() }
@@ -24,7 +24,7 @@ internal fun <C> ColumnSet<C>.extractJoinColumns(): List<ColumnMatch<C>> = when 
     else -> throw Exception()
 }
 
-internal fun <A, B> TypedDataFrame<A>.getColumns(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B>) = TypedDataFrameWithColumnsForJoinImpl(this, other).let { selector(it, it).extractJoinColumns() }
+internal fun <A, B> DataFrame<A>.getColumns(other: DataFrame<B>, selector: JoinColumnSelector<A, B>) = DataFrameWithColumnsForJoinImpl(this, other).let { selector(it, it).extractJoinColumns() }
 
 enum class JoinType {
     LEFT, // all data from left data frame, nulls for mismatches in right data frame
@@ -37,27 +37,27 @@ enum class JoinType {
 val JoinType.allowLeftNulls get() = this == JoinType.RIGHT || this == JoinType.OUTER
 val JoinType.allowRightNulls get() = this == JoinType.LEFT || this == JoinType.OUTER || this == JoinType.EXCLUDE
 
-internal fun <A, B> defaultJoinColumns(left: TypedDataFrame<A>, right: TypedDataFrame<B>): JoinColumnSelector<A, B> =
+internal fun <A, B> defaultJoinColumns(left: DataFrame<A>, right: DataFrame<B>): JoinColumnSelector<A, B> =
         { left.columnNames().intersect(right.columnNames()).map { it.toColumnDef() }.let { ColumnGroup(it) } }
 
-internal fun <T> defaultJoinColumns(dataFrames: Iterable<TypedDataFrame<T>>): JoinColumnSelector<T, T> =
+internal fun <T> defaultJoinColumns(dataFrames: Iterable<DataFrame<T>>): JoinColumnSelector<T, T> =
         {
             dataFrames.map { it.columnNames() }.fold<List<String>, Set<String>?>(null) { set, names ->
                 set?.intersect(names) ?: names.toSet()
             }.orEmpty().map { it.toColumnDef() }.let { ColumnGroup(it) }
         }
 
-fun <A, B> TypedDataFrame<A>.innerJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.INNER, selector = selector)
-fun <A, B> TypedDataFrame<A>.leftJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.LEFT, selector = selector)
-fun <A, B> TypedDataFrame<A>.rightJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.RIGHT, selector = selector)
-fun <A, B> TypedDataFrame<A>.outerJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.OUTER, selector = selector)
-fun <A, B> TypedDataFrame<A>.filterJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.INNER, addNewColumns = false, selector = selector)
-fun <A, B> TypedDataFrame<A>.filterNotJoin(other: TypedDataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.EXCLUDE, addNewColumns = false, selector = selector)
+fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.INNER, selector = selector)
+fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.LEFT, selector = selector)
+fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.RIGHT, selector = selector)
+fun <A, B> DataFrame<A>.outerJoin(other: DataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.OUTER, selector = selector)
+fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.INNER, addNewColumns = false, selector = selector)
+fun <A, B> DataFrame<A>.filterNotJoin(other: DataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.EXCLUDE, addNewColumns = false, selector = selector)
 
-fun <T> Iterable<TypedDataFrame<T>>.joinOrNull(joinType: JoinType = JoinType.INNER, selector: JoinColumnSelector<T, T> = defaultJoinColumns(this)) =
-        fold<TypedDataFrame<T>, TypedDataFrame<T>?>(null) { joined, new -> joined?.join(new, joinType, selector = selector) ?: new }
+fun <T> Iterable<DataFrame<T>>.joinOrNull(joinType: JoinType = JoinType.INNER, selector: JoinColumnSelector<T, T> = defaultJoinColumns(this)) =
+        fold<DataFrame<T>, DataFrame<T>?>(null) { joined, new -> joined?.join(new, joinType, selector = selector) ?: new }
 
-fun <A, B> TypedDataFrame<A>.join(other: TypedDataFrame<B>, joinType: JoinType = JoinType.INNER, addNewColumns: Boolean = true, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)): TypedDataFrame<A> {
+fun <A, B> DataFrame<A>.join(other: DataFrame<B>, joinType: JoinType = JoinType.INNER, addNewColumns: Boolean = true, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)): DataFrame<A> {
 
     val joinColumns = getColumns(other, selector)
 

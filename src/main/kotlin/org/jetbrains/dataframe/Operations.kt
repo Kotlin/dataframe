@@ -5,13 +5,13 @@ import kotlin.reflect.*
 import kotlin.reflect.full.*
 import kotlin.reflect.jvm.jvmErasure
 
-typealias RowSelector<T, R> = TypedDataFrameRow<T>.(TypedDataFrameRow<T>) -> R
+typealias RowSelector<T, R> = DataFrameRow<T>.(DataFrameRow<T>) -> R
 
-typealias DataFrameExpression<T, R> = TypedDataFrame<T>.(TypedDataFrame<T>) -> R
+typealias DataFrameExpression<T, R> = DataFrame<T>.(DataFrame<T>) -> R
 
 typealias RowFilter<T> = RowSelector<T, Boolean>
 
-class TypedColumnsFromDataRowBuilder<T>(val dataFrame: TypedDataFrame<T>) {
+class TypedColumnsFromDataRowBuilder<T>(val dataFrame: DataFrame<T>) {
     internal val columns = mutableListOf<DataCol>()
 
     fun add(column: DataCol) = columns.add(column)
@@ -25,24 +25,24 @@ class TypedColumnsFromDataRowBuilder<T>(val dataFrame: TypedDataFrame<T>) {
 
 // add Column
 
-operator fun TypedDataFrame<*>.plus(col: DataCol) = dataFrameOf(columns + col)
-operator fun TypedDataFrame<*>.plus(col: Iterable<DataCol>) = dataFrameOf(columns + col)
+operator fun DataFrame<*>.plus(col: DataCol) = dataFrameOf(columns + col)
+operator fun DataFrame<*>.plus(col: Iterable<DataCol>) = dataFrameOf(columns + col)
 
-inline fun <reified R, T> TypedDataFrame<T>.add(name: String, noinline expression: RowSelector<T, R>) =
+inline fun <reified R, T> DataFrame<T>.add(name: String, noinline expression: RowSelector<T, R>) =
         (this + new(name, expression))
 
 inline fun <reified R, T, G> GroupedDataFrame<T, G>.add(name: String, noinline expression: RowSelector<G, R>) =
         modify { add(name, expression) }
 
-fun <T, G> TypedDataFrame<T>.asGrouped(selector: ColumnSelector<T, TypedDataFrame<G>>): GroupedDataFrame<T, G> {
+fun <T, G> DataFrame<T>.asGrouped(selector: ColumnSelector<T, DataFrame<G>>): GroupedDataFrame<T, G> {
     val column = getColumn(selector).asTable<G>()
     return GroupedDataFrameImpl(this, column)
 }
 
-inline fun <reified R, T> TypedDataFrame<T>.add(column: ColumnDefinition<R>, noinline expression: RowSelector<T, R>) =
+inline fun <reified R, T> DataFrame<T>.add(column: ColumnDefinition<R>, noinline expression: RowSelector<T, R>) =
         (this + new(column.name, expression))
 
-fun <T> TypedDataFrame<T>.add(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) =
+fun <T> DataFrame<T>.add(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) =
         with(TypedColumnsFromDataRowBuilder(this)) {
             body(this)
             dataFrameOf(this@add.columns + columns).typed<T>()
@@ -52,11 +52,11 @@ fun rowNumber(columnName: String = "id") = AddRowNumberStub(columnName)
 
 data class AddRowNumberStub(val columnName: String)
 
-operator fun <T> TypedDataFrame<T>.plus(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) = add(body)
+operator fun <T> DataFrame<T>.plus(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) = add(body)
 
 // map
 
-fun <T> TypedDataFrame<T>.map(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit): TypedDataFrame<Unit> {
+fun <T> DataFrame<T>.map(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit): DataFrame<Unit> {
     val builder = TypedColumnsFromDataRowBuilder(this)
     body(builder)
     return dataFrameOf(builder.columns)
@@ -65,27 +65,27 @@ fun <T> TypedDataFrame<T>.map(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit
 
 // group by
 
-inline fun <T, reified R> TypedDataFrame<T>.groupBy(name: String = "key", noinline expression: RowSelector<T, R?>) =
+inline fun <T, reified R> DataFrame<T>.groupBy(name: String = "key", noinline expression: RowSelector<T, R?>) =
         add(name, expression).groupBy(name)
 
 // size
 
-val TypedDataFrame<*>.size: DataFrameSize get() = DataFrameSize(ncol, nrow)
+val DataFrame<*>.size: DataFrameSize get() = DataFrameSize(ncol, nrow)
 
 // toList
 
-inline fun <reified C> TypedDataFrame<*>.toList() = DataFrameToListTypedStub(this, C::class)
+inline fun <reified C> DataFrame<*>.toList() = DataFrameToListTypedStub(this, C::class)
 
-fun TypedDataFrame<*>.toList(className: String) = DataFrameToListNamedStub(this, className)
+fun DataFrame<*>.toList(className: String) = DataFrameToListNamedStub(this, className)
 
-inline fun <T, reified R : Number> TypedDataFrameRow<T>.diff(selector: RowSelector<T, R>) = when (R::class) {
+inline fun <T, reified R : Number> DataFrameRow<T>.diff(selector: RowSelector<T, R>) = when (R::class) {
     Double::class -> prev?.let { (selector(this) as Double) - (selector(it) as Double) } ?: .0
     Int::class -> prev?.let { (selector(this) as Int) - (selector(it) as Int) } ?: 0
     Long::class -> prev?.let { (selector(this) as Long) - (selector(it) as Long) } ?: 0
     else -> throw NotImplementedError()
 }
 
-fun <T> TypedDataFrameRow<T>.movingAverage(k: Int, selector: RowSelector<T, Number>): Double {
+fun <T> DataFrameRow<T>.movingAverage(k: Int, selector: RowSelector<T, Number>): Double {
     var count = 0
     return backwardIterable().take(k).sumByDouble {
         count++
@@ -95,7 +95,7 @@ fun <T> TypedDataFrameRow<T>.movingAverage(k: Int, selector: RowSelector<T, Numb
 
 // merge
 
-fun Iterable<TypedDataFrame<*>>.union() = merge(asList())
+fun Iterable<DataFrame<*>>.union() = merge(asList())
 
 
 fun commonParent(classes: Iterable<KClass<*>>) = commonParents(classes).withMostSuperclasses()
@@ -125,7 +125,7 @@ fun commonParents(classes: Iterable<KClass<*>>) =
             }
         }
 
-fun merge(dataFrames: List<TypedDataFrame<*>>): TypedDataFrame<Unit> {
+fun merge(dataFrames: List<DataFrame<*>>): DataFrame<Unit> {
     if (dataFrames.size == 1) return dataFrames[0].typed()
 
     // collect column names preserving original order
@@ -220,11 +220,11 @@ internal fun baseType(types: Set<KType>): KType {
     }
 }
 
-operator fun <T> TypedDataFrame<T>.plus(other: TypedDataFrame<T>) = merge(listOf(this, other)).typed<T>()
+operator fun <T> DataFrame<T>.plus(other: DataFrame<T>) = merge(listOf(this, other)).typed<T>()
 
-fun <T> TypedDataFrame<T>.union(vararg other: TypedDataFrame<T>) = merge(listOf(this) + other.toList()).typed<T>()
+fun <T> DataFrame<T>.union(vararg other: DataFrame<T>) = merge(listOf(this) + other.toList()).typed<T>()
 
-fun <T> TypedDataFrame<T>.rename(vararg mappings: Pair<String, String>): TypedDataFrame<T> {
+fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataFrame<T> {
     val map = mappings.toMap()
     return columns.map {
         val newName = map[it.name] ?: it.name
@@ -234,8 +234,8 @@ fun <T> TypedDataFrame<T>.rename(vararg mappings: Pair<String, String>): TypedDa
 
 internal fun indexColumn(columnName: String, size: Int): DataCol = column(columnName, (0 until size).toList())
 
-fun <T> TypedDataFrame<T>.addRowNumber(column: ColumnDef<Int>) = addRowNumber(column.name)
-fun <T> TypedDataFrame<T>.addRowNumber(columnName: String = "id"): TypedDataFrame<T> = dataFrameOf(columns + indexColumn(columnName, nrow)).typed<T>()
+fun <T> DataFrame<T>.addRowNumber(column: ColumnDef<Int>) = addRowNumber(column.name)
+fun <T> DataFrame<T>.addRowNumber(columnName: String = "id"): DataFrame<T> = dataFrameOf(columns + indexColumn(columnName, nrow)).typed<T>()
 fun DataCol.addRowNumber(columnName: String = "id") = dataFrameOf(listOf(indexColumn(columnName, size), this))
 
 // Column operations
@@ -246,15 +246,15 @@ inline fun <reified T : Comparable<T>> ColumnData<T?>.median() = values.asSequen
 
 // Update
 
-class UpdateClause<T, C>(val df: TypedDataFrame<T>, val filter: UpdateExpression<T, C, Boolean>?, val cols: List<ColumnDef<C>>)
+class UpdateClause<T, C>(val df: DataFrame<T>, val filter: UpdateExpression<T, C, Boolean>?, val cols: List<ColumnDef<C>>)
 
 fun <T, C> UpdateClause<T, C>.where(predicate: UpdateExpression<T, C, Boolean>) = UpdateClause(df, predicate, cols)
 
-typealias UpdateExpression<T, C, R> = TypedDataFrameRow<T>.(C) -> R
+typealias UpdateExpression<T, C, R> = DataFrameRow<T>.(C) -> R
 
-typealias UpdateByColumnExpression<T, C, R> = (TypedDataFrameRow<T>, ColumnData<C>) -> R
+typealias UpdateByColumnExpression<T, C, R> = (DataFrameRow<T>, ColumnData<C>) -> R
 
-fun <T> TypedDataFrame<T>.addOrReplace(newColumns: List<DataCol>): TypedDataFrame<T> {
+fun <T> DataFrame<T>.addOrReplace(newColumns: List<DataCol>): DataFrame<T> {
     val map = mutableMapOf<String, DataCol>()
     newColumns.map { it.name to it }.toMap(map)
     val oldCols = columns.map { map.remove(it.name) ?: it }
@@ -262,7 +262,7 @@ fun <T> TypedDataFrame<T>.addOrReplace(newColumns: List<DataCol>): TypedDataFram
     return dataFrameOf(oldCols + newCols).typed()
 }
 
-fun <T, C, R> doUpdate(clause: UpdateClause<T, C>, type: KType, expression: (TypedDataFrameRow<T>,ColumnData<C>) -> R): TypedDataFrame<T> {
+fun <T, C, R> doUpdate(clause: UpdateClause<T, C>, type: KType, expression: (DataFrameRow<T>, ColumnData<C>) -> R): DataFrame<T> {
 
     val srcColumns = clause.cols.map { clause.df[it] }
     val (newDf, removed) = clause.df.doRemove(srcColumns)
@@ -282,11 +282,11 @@ fun <T, C, R> doUpdate(clause: UpdateClause<T, C>, type: KType, expression: (Typ
             }
             val typeWithNullability = type.withNullability(nullable)
 
-            val newColumn: ColumnData<*> = if (type.classifier == TypedDataFrame::class) {
-                val firstFrame = values.firstOrNull { it != null } as? TypedDataFrame<T>
+            val newColumn: ColumnData<*> = if (type.classifier == DataFrame::class) {
+                val firstFrame = values.firstOrNull { it != null } as? DataFrame<T>
                 if (firstFrame != null) {
                     // TODO :compute most general scheme for all data frames
-                    ColumnData.createTable(srcColumn.name, values as List<TypedDataFrame<T>>, firstFrame)
+                    ColumnData.createTable(srcColumn.name, values as List<DataFrame<T>>, firstFrame)
                 } else column(srcColumn.name, values, typeWithNullability)
             } else column(srcColumn.name, values, typeWithNullability)
 
@@ -308,59 +308,59 @@ inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: 
 
 inline fun <reified C> headPlusArray(head: C, cols: Array<out C>) = (listOf(head) + cols.toList()).toTypedArray()
 
-inline fun <T, C, reified R> TypedDataFrame<T>.update(firstCol: ColumnDef<C>, vararg cols: ColumnDef<C>, noinline expression: UpdateExpression<T, C, R>) =
+inline fun <T, C, reified R> DataFrame<T>.update(firstCol: ColumnDef<C>, vararg cols: ColumnDef<C>, noinline expression: UpdateExpression<T, C, R>) =
         update(*headPlusArray(firstCol, cols)).with(expression)
 
-inline fun <T, C, reified R> TypedDataFrame<T>.update(firstCol: KProperty<C>, vararg cols: KProperty<C>, noinline expression: UpdateExpression<T, C, R>) =
+inline fun <T, C, reified R> DataFrame<T>.update(firstCol: KProperty<C>, vararg cols: KProperty<C>, noinline expression: UpdateExpression<T, C, R>) =
         update(*headPlusArray(firstCol, cols)).with(expression)
 
-inline fun <T, reified R> TypedDataFrame<T>.update(firstCol: String, vararg cols: String, noinline expression: UpdateExpression<T, Any?, R>) =
+inline fun <T, reified R> DataFrame<T>.update(firstCol: String, vararg cols: String, noinline expression: UpdateExpression<T, Any?, R>) =
         update(*headPlusArray(firstCol, cols)).with(expression)
 
 fun <T, C> UpdateClause<T, C>.withNull() = with { null as Any? }
 inline infix fun <T, C, reified R> UpdateClause<T, C>.with(value: R) = with { value }
 
-fun <T, C> TypedDataFrame<T>.update(cols: Iterable<ColumnDef<C>>) = UpdateClause(this, null, cols.toList())
-fun <T> TypedDataFrame<T>.update(vararg cols: String) = update(getColumns(cols))
-fun <T, C> TypedDataFrame<T>.update(vararg cols: KProperty<C>) = update(getColumns(cols))
-fun <T, C> TypedDataFrame<T>.update(vararg cols: ColumnDef<C>) = update(cols.asIterable())
-fun <T, C> TypedDataFrame<T>.update(cols: ColumnsSelector<T, C>) = update(getColumns(cols))
+fun <T, C> DataFrame<T>.update(cols: Iterable<ColumnDef<C>>) = UpdateClause(this, null, cols.toList())
+fun <T> DataFrame<T>.update(vararg cols: String) = update(getColumns(cols))
+fun <T, C> DataFrame<T>.update(vararg cols: KProperty<C>) = update(getColumns(cols))
+fun <T, C> DataFrame<T>.update(vararg cols: ColumnDef<C>) = update(cols.asIterable())
+fun <T, C> DataFrame<T>.update(cols: ColumnsSelector<T, C>) = update(getColumns(cols))
 
-fun <T, C> TypedDataFrame<T>.fillNulls(cols: ColumnsSelector<T, C>) = fillNulls(getColumns(cols))
-fun <T, C> TypedDataFrame<T>.fillNulls(cols: Iterable<ColumnDef<C>>) = update(cols).where { it == null }
-fun <T> TypedDataFrame<T>.fillNulls(vararg cols: String) = fillNulls(getColumns(cols))
-fun <T, C> TypedDataFrame<T>.fillNulls(vararg cols: KProperty<C>) = fillNulls(getColumns(cols))
-fun <T, C> TypedDataFrame<T>.fillNulls(vararg cols: ColumnDef<C>) = fillNulls(cols.asIterable())
+fun <T, C> DataFrame<T>.fillNulls(cols: ColumnsSelector<T, C>) = fillNulls(getColumns(cols))
+fun <T, C> DataFrame<T>.fillNulls(cols: Iterable<ColumnDef<C>>) = update(cols).where { it == null }
+fun <T> DataFrame<T>.fillNulls(vararg cols: String) = fillNulls(getColumns(cols))
+fun <T, C> DataFrame<T>.fillNulls(vararg cols: KProperty<C>) = fillNulls(getColumns(cols))
+fun <T, C> DataFrame<T>.fillNulls(vararg cols: ColumnDef<C>) = fillNulls(cols.asIterable())
 // Move
 
-fun <T> TypedDataFrame<T>.moveTo(newColumnIndex: Int, cols: ColumnsSelector<T, *>) = moveTo(newColumnIndex, getColumns(cols) as Iterable<Column>)
-fun <T> TypedDataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: String) = moveTo(newColumnIndex, getColumns(cols))
-fun <T> TypedDataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: KProperty<*>) = moveTo(newColumnIndex, getColumns(cols))
-fun <T> TypedDataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: Column) = moveTo(newColumnIndex, cols.asIterable())
-fun <T> TypedDataFrame<T>.moveTo(newColumnIndex: Int, cols: Iterable<Column>): TypedDataFrame<T> {
+fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, cols: ColumnsSelector<T, *>) = moveTo(newColumnIndex, getColumns(cols) as Iterable<Column>)
+fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: String) = moveTo(newColumnIndex, getColumns(cols))
+fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: KProperty<*>) = moveTo(newColumnIndex, getColumns(cols))
+fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: Column) = moveTo(newColumnIndex, cols.asIterable())
+fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, cols: Iterable<Column>): DataFrame<T> {
     val columnsToMove = cols.map { this[it] }
     val otherColumns = columns - columnsToMove
     val newColumnList = otherColumns.subList(0, newColumnIndex) + columnsToMove + otherColumns.subList(newColumnIndex, otherColumns.size)
     return dataFrameOf(newColumnList).typed()
 }
 
-fun <T> TypedDataFrame<T>.moveToLeft(cols: ColumnsSelector<T, *>) = moveToLeft(getColumns(cols))
-fun <T> TypedDataFrame<T>.moveToLeft(cols: Iterable<Column>) = moveTo(0, cols)
-fun <T> TypedDataFrame<T>.moveToLeft(vararg cols: String) = moveToLeft(getColumns(cols))
-fun <T> TypedDataFrame<T>.moveToLeft(vararg cols: Column) = moveToLeft(cols.asIterable())
-fun <T> TypedDataFrame<T>.moveToLeft(vararg cols: KProperty<*>) = moveToLeft(getColumns(cols))
+fun <T> DataFrame<T>.moveToLeft(cols: ColumnsSelector<T, *>) = moveToLeft(getColumns(cols))
+fun <T> DataFrame<T>.moveToLeft(cols: Iterable<Column>) = moveTo(0, cols)
+fun <T> DataFrame<T>.moveToLeft(vararg cols: String) = moveToLeft(getColumns(cols))
+fun <T> DataFrame<T>.moveToLeft(vararg cols: Column) = moveToLeft(cols.asIterable())
+fun <T> DataFrame<T>.moveToLeft(vararg cols: KProperty<*>) = moveToLeft(getColumns(cols))
 
-fun <T> TypedDataFrame<T>.moveToRight(cols: Iterable<Column>) = moveTo(ncol - cols.count(), cols)
-fun <T> TypedDataFrame<T>.moveToRight(cols: ColumnsSelector<T, *>) = moveToRight(getColumns(cols))
-fun <T> TypedDataFrame<T>.moveToRight(vararg cols: String) = moveToRight(getColumns(cols))
-fun <T> TypedDataFrame<T>.moveToRight(vararg cols: Column) = moveToRight(cols.asIterable())
-fun <T> TypedDataFrame<T>.moveToRight(vararg cols: KProperty<*>) = moveToRight(getColumns(cols))
+fun <T> DataFrame<T>.moveToRight(cols: Iterable<Column>) = moveTo(ncol - cols.count(), cols)
+fun <T> DataFrame<T>.moveToRight(cols: ColumnsSelector<T, *>) = moveToRight(getColumns(cols))
+fun <T> DataFrame<T>.moveToRight(vararg cols: String) = moveToRight(getColumns(cols))
+fun <T> DataFrame<T>.moveToRight(vararg cols: Column) = moveToRight(cols.asIterable())
+fun <T> DataFrame<T>.moveToRight(vararg cols: KProperty<*>) = moveToRight(getColumns(cols))
 
 fun <C> List<ColumnSet<C>>.toColumnSet() = ColumnGroup(this)
 
-inline fun <reified C> TypedDataFrameWithColumns<*>.colsOfType(noinline filter: (ColumnData<C>) -> Boolean = { true }) = colsOfType(getType<C>(), filter)
+inline fun <reified C> DataFrameWithColumns<*>.colsOfType(noinline filter: (ColumnData<C>) -> Boolean = { true }) = colsOfType(getType<C>(), filter)
 
-fun <T> TypedDataFrame<T>.summary() =
+fun <T> DataFrame<T>.summary() =
         columns.toDataFrame {
             "column" { name }
             "type" { type.fullName }
@@ -369,15 +369,15 @@ fun <T> TypedDataFrame<T>.summary() =
             "most frequent value" { values.groupBy { it }.maxByOrNull { it.value.size }?.key }
         }
 
-data class CastClause<T>(val df: TypedDataFrame<T>, val columns: Set<Column>) {
+data class CastClause<T>(val df: DataFrame<T>, val columns: Set<Column>) {
     inline fun <reified C> to() = df.columns.map { if (columns.contains(it)) it.cast<C>() else it }.asDataFrame<T>()
 }
 
-fun <T> TypedDataFrame<T>.cast(selector: ColumnsSelector<T, *>) = CastClause(this, getColumns(selector).toSet())
+fun <T> DataFrame<T>.cast(selector: ColumnsSelector<T, *>) = CastClause(this, getColumns(selector).toSet())
 
 // column grouping
 
-class MoveColsClause<T, C> internal constructor(internal val df: TypedDataFrame<T>, internal val removed: TreeNode<ColumnPosition>) {
+class MoveColsClause<T, C> internal constructor(internal val df: DataFrame<T>, internal val removed: TreeNode<ColumnPosition>) {
 
     internal fun removedColumns() = removed.allRemovedColumns()
 
@@ -390,9 +390,9 @@ internal fun TreeNode<ColumnPosition>.allRemovedColumns() = dfs { it.data.wasRem
 
 internal fun TreeNode<ColumnPosition>.allWithColumns() = dfs { it.data.column != null }
 
-fun <T> TypedDataFrame<T>.flatten() = flatten { all() }
+fun <T> DataFrame<T>.flatten() = flatten { all() }
 
-fun <T, C> TypedDataFrame<T>.flatten(selector: ColumnsSelector<T, C>): TypedDataFrame<T> {
+fun <T, C> DataFrame<T>.flatten(selector: ColumnsSelector<T, C>): DataFrame<T> {
 
     val columns = getColumnsWithData(selector)
     val groupedColumns = columns.mapNotNull { if (it.isGrouped()) it.asGrouped() else null }
@@ -410,13 +410,13 @@ fun <T, C> TypedDataFrame<T>.flatten(selector: ColumnsSelector<T, C>): TypedData
     return result
 }
 
-fun <T, C> TypedDataFrame<T>.move(selector: ColumnsSelector<T, C>): MoveColsClause<T, C> {
+fun <T, C> DataFrame<T>.move(selector: ColumnsSelector<T, C>): MoveColsClause<T, C> {
 
     val (df, removed) = doRemove(getColumns(selector))
     return MoveColsClause(df, removed)
 }
 
-fun <T, C> TypedDataFrame<T>.ungroup(selector: ColumnsSelector<T, C>): TypedDataFrame<T> {
+fun <T, C> DataFrame<T>.ungroup(selector: ColumnsSelector<T, C>): DataFrame<T> {
 
     val columns = getColumnsWithData(selector)
     val groupedColumns = columns.mapNotNull { if (it.isGrouped()) it.asGrouped() else null }
@@ -525,9 +525,9 @@ internal fun <T> TreeNode<T?>.getOrPut(path: List<String>): TreeNode<T?> {
     return node
 }
 
-internal fun TypedDataFrame<*>.collectTree() = collectTree(DataCol.empty()) { it }
+internal fun DataFrame<*>.collectTree() = collectTree(DataCol.empty()) { it }
 
-internal fun <D> TypedDataFrame<*>.collectTree(emptyData: D, createData: (DataCol) -> D): TreeNode<D> {
+internal fun <D> DataFrame<*>.collectTree(emptyData: D, createData: (DataCol) -> D): TreeNode<D> {
 
     val root = TreeNode.createRoot(emptyData)
 
@@ -584,7 +584,7 @@ internal fun <T> TreeNode<T?>.dfsNotNull() = dfs { it.data != null }.map { it as
 
 internal fun <T> TreeNode<T?>.dfsTopNotNull() = dfs(enterCondition = { it.data == null }, yieldCondition = { it.data != null }).map { it as TreeNode<T> }
 
-internal fun <T> TypedDataFrame<T>.collectTree(cols: Iterable<Column>): TreeNode<DataCol?> {
+internal fun <T> DataFrame<T>.collectTree(cols: Iterable<Column>): TreeNode<DataCol?> {
 
     val colPaths = cols.map { it.getPath() }
 
@@ -607,13 +607,13 @@ internal fun <T> TypedDataFrame<T>.collectTree(cols: Iterable<Column>): TreeNode
     return root
 }
 
-internal fun <T> TypedDataFrame<T>.doRemove(cols: Iterable<Column>): Pair<TypedDataFrame<T>, TreeNode<ColumnPosition>> {
+internal fun <T> DataFrame<T>.doRemove(cols: Iterable<Column>): Pair<DataFrame<T>, TreeNode<ColumnPosition>> {
 
     val colPaths = cols.map { it.getPath() }
 
     val root = TreeNode.createRoot(ColumnPosition(-1, false, null))
 
-    fun dfs(cols: Iterable<DataCol>, paths: List<List<String>>, node: TreeNode<ColumnPosition>): TypedDataFrame<*>? {
+    fun dfs(cols: Iterable<DataCol>, paths: List<List<String>>, node: TreeNode<ColumnPosition>): DataFrame<*>? {
         val depth = node.depth
         val children = paths.groupBy { it[depth] }
         val newCols = mutableListOf<DataCol>()
@@ -643,15 +643,15 @@ internal fun <T> TypedDataFrame<T>.doRemove(cols: Iterable<Column>): Pair<TypedD
     return newDf.typed<T>() to root
 }
 
-internal fun <T> TypedDataFrame<T>.doInsert(columns: List<ColumnToInsert>) = insertColumns(this, columns)
+internal fun <T> DataFrame<T>.doInsert(columns: List<ColumnToInsert>) = insertColumns(this, columns)
 
-internal fun <T> insertColumns(df: TypedDataFrame<T>?, columns: List<ColumnToInsert>) =
+internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>) =
         insertColumns(df, columns, columns.firstOrNull()?.originalNode?.getRoot(), 0)
 
 internal fun insertColumns(columns: List<ColumnToInsert>) =
         insertColumns<Unit>(null, columns, columns.firstOrNull()?.originalNode?.getRoot(), 0)
 
-internal fun <T> insertColumns(df: TypedDataFrame<T>?, columns: List<ColumnToInsert>, treeNode: TreeNode<ColumnPosition>?, depth: Int): TypedDataFrame<T> {
+internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>, treeNode: TreeNode<ColumnPosition>?, depth: Int): DataFrame<T> {
 
     val childDepth = depth + 1
 
@@ -748,16 +748,16 @@ interface DataFrameForMove<T> : DataFrameBase<T> {
     operator fun SingleColumn<*>.plus(column: String) = addPath(column)
 }
 
-class MoveReceiver<T>(df: TypedDataFrame<T>) : DataFrameForMove<T>, DataFrameBase<T> by df
+class MoveReceiver<T>(df: DataFrame<T>) : DataFrameForMove<T>, DataFrameBase<T> by df
 
-fun <T, C> MoveColsClause<T, C>.intoGroup(groupPath: DataFrameForMove<T>.(DataFrameForMove<T>) -> List<String>): TypedDataFrame<T> {
+fun <T, C> MoveColsClause<T, C>.intoGroup(groupPath: DataFrameForMove<T>.(DataFrameForMove<T>) -> List<String>): DataFrame<T> {
     val receiver = MoveReceiver(df)
     val path = groupPath(receiver, receiver)
     val columnsToInsert = removedColumns().map { ColumnToInsert(path + it.name, it, it.data.column!!) }
     return df.doInsert(columnsToInsert)
 }
 
-fun <T, C> MoveColsClause<T, C>.intoGroups(groupName: DataFrameForMove<T>.(ColumnWithPath<C>) -> String): TypedDataFrame<T> {
+fun <T, C> MoveColsClause<T, C>.intoGroups(groupName: DataFrameForMove<T>.(ColumnWithPath<C>) -> String): DataFrame<T> {
     val receiver = MoveReceiver(df)
     val columnsToInsert = removedColumns().map {
         val col = it.column
@@ -768,7 +768,7 @@ fun <T, C> MoveColsClause<T, C>.intoGroups(groupName: DataFrameForMove<T>.(Colum
 
 fun <T, C> MoveColsClause<T, C>.toTop(groupNameExpression: DataFrameForMove<T>.(ColumnWithPath<C>) -> String = { it.name }) = into { listOf(groupNameExpression(it)) }
 
-fun <T, C> MoveColsClause<T, C>.into(groupNameExpression: DataFrameForMove<T>.(ColumnWithPath<C>) -> List<String>): TypedDataFrame<T> {
+fun <T, C> MoveColsClause<T, C>.into(groupNameExpression: DataFrameForMove<T>.(ColumnWithPath<C>) -> List<String>): DataFrame<T> {
 
     val receiver = MoveReceiver(df)
     val columnsToInsert = removedColumns().map {
@@ -782,7 +782,7 @@ fun <T, C> MoveColsClause<T, C>.into(name: String) = intoGroup { listOf(name) }
 
 fun <T, C> MoveColsClause<T, C>.into(path: List<String>) = intoGroup { path }
 
-fun <T, C> MoveColsClause<T, C>.to(columnIndex: Int): TypedDataFrame<T> {
+fun <T, C> MoveColsClause<T, C>.to(columnIndex: Int): DataFrame<T> {
     val newColumnList = df.columns.subList(0, columnIndex) + removedColumns().map { it.data.column as ColumnData<C> } + df.columns.subList(columnIndex, df.ncol)
     return newColumnList.asDataFrame()
 }
@@ -791,7 +791,7 @@ fun <T, C> MoveColsClause<T, C>.toLeft() = to(0)
 
 fun <T, C> MoveColsClause<T, C>.toRight() = to(df.ncol)
 
-internal fun <T> TypedDataFrame<T>.splitByIndices(startIndices: List<Int>): List<TypedDataFrame<T>> {
+internal fun <T> DataFrame<T>.splitByIndices(startIndices: List<Int>): List<DataFrame<T>> {
     return (startIndices + listOf(nrow)).zipWithNext { start, endExclusive ->
         get(start until endExclusive)
     }

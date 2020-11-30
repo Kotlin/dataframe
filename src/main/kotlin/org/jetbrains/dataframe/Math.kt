@@ -86,7 +86,7 @@ inline fun <reified T : Number> sum(list: Iterable<T>): T = list.sum(T::class)
 
 fun <T: Number> ColumnData<T>.sum() = values.sum(type.jvmErasure as KClass<T>)
 
-internal fun <T> TypedDataFrame<T>.nullColumnToZero(col: ColumnDef<Number?>) =
+internal fun <T> DataFrame<T>.nullColumnToZero(col: ColumnDef<Number?>) =
         when (this[col].type.jvmErasure) {
             Double::class -> update(col) { col() as Double? ?: .0 }
             Int::class -> update(col) { col() as Int? ?: 0 }

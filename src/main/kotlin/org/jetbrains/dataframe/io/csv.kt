@@ -107,7 +107,7 @@ fun readDelim(
         format: CSVFormat = CSVFormat.DEFAULT.withHeader(),
         colTypes: Map<String, ColType> = mapOf(),
         skip: Int = 0
-): TypedDataFrame<*> {
+): DataFrame<*> {
 
     val formatWithNullString = if (format.isNullStringSet) {
         format
