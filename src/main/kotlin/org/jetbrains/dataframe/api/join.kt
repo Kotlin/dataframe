@@ -1,5 +1,6 @@
-package org.jetbrains.dataframe
+package org.jetbrains.dataframe.api
 
+import org.jetbrains.dataframe.*
 import kotlin.reflect.full.withNullability
 
 interface DataFrameWithColumnsForJoin<out A, out B> : DataFrameWithColumnsForSelect<A> {

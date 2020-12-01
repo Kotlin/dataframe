@@ -87,7 +87,7 @@ class CodeGenerationTests : BaseTest(){
         val codeGen = CodeGenerator()
         codeGen.generate(Person::class)
         val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
-        val code = codeGen.generate(df.filterNotNull(), property)
+        val code = codeGen.generate(df.filterNotNull { all() }, property)
         val expected = """
             @DataFrameType(isOpen = false)
             interface DataFrameType1 : $personClassName{

@@ -1,5 +1,7 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.impl.ColumnDataCollector
+import org.jetbrains.dataframe.impl.createDataCollector
 import kotlin.reflect.*
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.starProjectedType
@@ -21,6 +23,15 @@ interface ConvertedColumn<out C> : ColumnData<C> {
 
 interface RenamedColumnDef<out C> : ColumnDef<C> {
     val source: ColumnDef<C>
+}
+
+interface ColumnsBySelector<out C> : ColumnSet<C> {
+    val source: GroupedColumnDef
+    fun selectColumns(resolved: GroupedColumn<*>): List<ColumnData<C>>
+}
+
+class ColumnsBySelectorImpl<C>(override val source: GroupedColumnDef, val selector: (GroupedColumn<*>)->List<ColumnData<C>>) : ColumnsBySelector<C>{
+    override fun selectColumns(group: GroupedColumn<*>) = selector(group)
 }
 
 interface RenamedColumn<out C> : RenamedColumnDef<C>, ColumnData<C> {
@@ -65,6 +76,8 @@ interface ColumnData<out T> : ColumnDef<T> {
     fun kind(): ColumnKind
 
     operator fun get(index: Int): T
+
+    operator fun get(row: DataFrameRow<*>) = get(row.index)
 
     fun toList() = values.asList()
 
@@ -442,6 +455,11 @@ inline fun <T, reified R> DataFrame<T>.new(name: String, noinline expression: Ro
     val values = (0 until nrow).map { get(it).let { expression(it, it) }.also { if (it == null) nullable = true } }
     return column(name, values, nullable)
 }
+
+internal fun Array<out String>.toColumnSet(): ColumnSet<Any?> = map { it.toColumnDef() }.toColumnSet()
+fun <C> Iterable<ColumnSet<C>>.toColumnSet() = ColumnGroup(asList())
+internal fun <C> Array<out KProperty<C>>.toColumnSet() = map {it.toColumnDef()}.toColumnSet()
+internal fun <T> Array<out ColumnDef<T>>.toColumnSet() = toList().toColumnSet()
 
 class ColumnGroup<C>(val columns: List<ColumnSet<C>>) : ColumnSet<C> {
     constructor(vararg columns: ColumnSet<C>) : this(columns.toList())

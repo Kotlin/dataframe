@@ -2,6 +2,7 @@ package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.api.*
 import org.junit.Test
 
 class JoinTests : BaseTest() {
