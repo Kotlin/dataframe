@@ -1,5 +1,8 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.impl.DataFrameImpl
+import org.jetbrains.dataframe.impl.TreeNode
+import org.jetbrains.dataframe.impl.getOrPut
 import java.lang.UnsupportedOperationException
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty

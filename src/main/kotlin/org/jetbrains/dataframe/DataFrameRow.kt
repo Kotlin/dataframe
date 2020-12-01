@@ -1,6 +1,5 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.tracking.ColumnAccessTracker
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 
@@ -74,64 +73,5 @@ interface DataFrameRow<out T>: DataFrameRowBase<T> {
     infix fun <R> KProperty1<*, R>.neq(a: R?) = get(this) != a
 }
 
-internal class DataFrameRowImpl<T>(override var index: Int, override val owner: DataFrame<T>) : DataFrameRow<T> {
-
-    override operator fun get(name: String): Any? {
-        ColumnAccessTracker.registerColumnAccess(name)
-        return owner[name][index]
-    }
-
-    override val prev: DataFrameRow<T>?
-        get() = if (index > 0) owner[index - 1] else null
-    override val next: DataFrameRow<T>?
-        get() = if (index < owner.nrow - 1) owner[index + 1] else null
-
-    override fun getRow(index: Int): DataFrameRow<T>? = if (index >= 0 && index < owner.nrow) DataFrameRowImpl(index, owner) else null
-
-    override val values by lazy { owner.columns.map { it[index] } }
-
-    override fun get(columnIndex: Int): Any? {
-        val column = owner.columns[columnIndex]
-        ColumnAccessTracker.registerColumnAccess(column.name)
-        return column[index]
-    }
-
-    override fun toString(): String {
-        return "{ " + owner.columns.map { "${it.name}:${it[index]}" }.joinToString() + " }"
-    }
-
-    override fun equals(other: Any?): Boolean {
-        val o = other as? DataFrameRow<T>
-        if(o == null) return false
-        return values.equals(o.values)
-    }
-
-    override fun hashCode() = values.hashCode()
-}
-
-internal fun <T> T.toIterable(getNext: (T) -> T?) = Iterable<T> {
-
-    object : Iterator<T> {
-
-        var current: T? = null
-        var beforeStart = true
-        var next: T? = null
-
-        override fun hasNext(): Boolean {
-            if (beforeStart) return true
-            if (next == null) next = getNext(current!!)
-            return next != null
-        }
-
-        override fun next(): T {
-            if (beforeStart) {
-                current = this@toIterable
-                beforeStart = false
-                return current!!
-            }
-            current = next ?: getNext(current!!)
-            next = null
-            return current!!
-        }
-    }
-}
+typealias RowSelector<T, R> = DataFrameRow<T>.(DataFrameRow<T>) -> R
+typealias RowFilter<T> = RowSelector<T, Boolean>

@@ -4,7 +4,9 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.api.leftJoin
 import org.jetbrains.dataframe.tracking.trackColumnAccess
+import org.junit.Ignore
 import org.junit.Test
 import java.time.LocalDate
 import kotlin.reflect.jvm.jvmErasure
@@ -515,7 +517,7 @@ class DataFrameTests : BaseTest() {
         df.filterNotNull(weight).minBy { weight()!! }.check()
 
         df.filterNotNull("weight").minBy { "weight"<Int>() }.check()
-        df.filterNotNull("weight").minBy<Int>("weight").check()
+        df.filterNotNull("weight").minBy("weight").check()
     }
 
     @Test
@@ -532,7 +534,7 @@ class DataFrameTests : BaseTest() {
         df.maxBy(age).check()
 
         df.maxBy { "age"<Int>() }.check()
-        df.maxBy<Int>("age").check()
+        df.maxBy("age").check()
     }
 
     @Test
@@ -940,5 +942,15 @@ class DataFrameTests : BaseTest() {
         val moved = typed.move { age }.to(2)
         moved.columns[2] shouldBe typed.age
         moved.ncol shouldBe typed.ncol
+    }
+
+    @Test
+    @Ignore
+    fun `forEachIn`() {
+        val cities by columnGroup()
+        val spread = typed.spread { city }.by { age }.into(cities)
+        var sum = 0
+        spread.forEachIn( { cities.all() } ){ row, column -> column[row]?.let { sum += it as Int} }
+        sum shouldBe typed.age.sum()
     }
 }

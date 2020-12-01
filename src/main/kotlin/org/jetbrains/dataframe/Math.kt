@@ -2,6 +2,7 @@ package org.jetbrains.dataframe
 
 import java.math.BigDecimal
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.jvmErasure
 
 inline fun <reified T : Comparable<T>> Iterable<T>.median(): Double {
@@ -93,3 +94,10 @@ internal fun <T> DataFrame<T>.nullColumnToZero(col: ColumnDef<Number?>) =
             Long::class -> update(col) { col() as Long? ?: 0 }
             else -> throw IllegalArgumentException()
         }
+
+inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(col: ColumnDef<D?>): Double = get(col).median()
+inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(crossinline selector: RowSelector<T, D?>): Double = rows.asSequence().map { selector(it, it) }.filterNotNull().asIterable().median()
+inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(col: KProperty<D?>): Double = get(col).median()
+inline fun <T, reified D : Number> DataFrame<T>.mean(crossinline selector: RowSelector<T, D?>): Double = rows.asSequence().map { selector(it, it) }.filterNotNull().asIterable().mean()
+inline fun <T, reified D : Number> DataFrame<T>.mean(col: ColumnDef<D>): Double = get(col).mean()
+inline fun <T, reified D : Number> DataFrame<T>.mean(col: KProperty<D>): Double = get(col).mean()
