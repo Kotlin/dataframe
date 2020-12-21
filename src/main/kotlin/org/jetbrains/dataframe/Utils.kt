@@ -30,3 +30,5 @@ internal fun <T> T.toIterable(getNext: (T) -> T?) = Iterable<T> {
         }
     }
 }
+
+internal fun <T> List<T>.removeAt(index: Int) = subList(0, index) + subList(index + 1, size)

@@ -4,10 +4,9 @@ fun <T> DataFrame<T>.flatten() = flatten { all() }
 
 fun <T, C> DataFrame<T>.flatten(selector: ColumnsSelector<T, C>): DataFrame<T> {
 
-    val columns = getColumnsWithData(selector)
-    val groupedColumns = columns.mapNotNull { if (it.isGrouped()) it.asGrouped() else null }
-    val prefixes = groupedColumns.map { it.getPath() }.toSet()
-    val result = move { ColumnGroup(groupedColumns.map { it.colsDfs { !it.isGrouped() } }) }
+    val columns = getColumnsWithPaths(selector).filter { it.data.isGrouped() }
+    val prefixes = columns.map { it.path }.toSet()
+    val result = move { columns.map { it.data.asGrouped().colsDfs { !it.isGrouped() } }.toColumns() }
             .into {
                 var first = it.path.size - 1
                 while (first > 0 && !prefixes.contains(it.path.subList(0, first)))

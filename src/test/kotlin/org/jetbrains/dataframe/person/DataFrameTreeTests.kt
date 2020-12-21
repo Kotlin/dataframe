@@ -19,19 +19,19 @@ class DataFrameTreeTests : BaseTest() {
         val weight: Int?
     }
 
-    val df2 = df.move { name and city }.into("nameAndCity")
+    val df2 = df.move { name and city }.intoGroup("nameAndCity")
     val typed2 = df2.typed<GroupedPerson>()
 
-    val DataFrameRowBase<NameAndCity>.name get() = this["name"] as String
-    val DataFrameRowBase<NameAndCity>.city get() = this["city"] as String?
-    val DataFrameBase<NameAndCity>.name get() = this["name"].typed<String>()
-    val DataFrameBase<NameAndCity>.city get() = this["city"].typed<String?>()
+    val DataFrameRowBase<NameAndCity>.name @JvmName("get-name-row") get() = this["name"] as String
+    val DataFrameRowBase<NameAndCity>.city @JvmName("get-city-row") get() = this["city"] as String?
+    val DataFrameBase<NameAndCity>.name @JvmName("get-name") get() = this["name"].typed<String>()
+    val DataFrameBase<NameAndCity>.city @JvmName("get-city") get() = this["city"].typed<String?>()
 
-    val DataFrameRowBase<GroupedPerson>.age get() = this["age"] as Int
-    val DataFrameRowBase<GroupedPerson>.weight get() = this["weight"] as Int?
-    val DataFrameRowBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as DataFrameRow<NameAndCity>
-    val DataFrameBase<GroupedPerson>.age get() = this["age"].typed<Int>()
-    val DataFrameBase<GroupedPerson>.weight get() = this["weight"].typed<Int?>()
+    val DataFrameRowBase<GroupedPerson>.age @JvmName("get-age-row") get() = this["age"] as Int
+    val DataFrameRowBase<GroupedPerson>.weight @JvmName("get-weight-row") get() = this["weight"] as Int?
+    val DataFrameRowBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as DataFrameRowBase<NameAndCity>
+    val DataFrameBase<GroupedPerson>.age @JvmName("get-age") get() = this["age"].typed<Int>()
+    val DataFrameBase<GroupedPerson>.weight @JvmName("get-weight") get() = this["weight"].typed<Int?>()
     val DataFrameBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"].grouped<NameAndCity>()
 
     val nameAndCity by columnGroup()
@@ -84,10 +84,25 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
+    fun `move`(){
+
+        val actual = typed2.move { nameAndCity.name }.into("name")
+        actual.columnNames() shouldBe listOf("nameAndCity", "name", "age", "weight")
+        actual.getGroup("nameAndCity").asDataFrame().columnNames() shouldBe listOf("city")
+    }
+
+    @Test
     fun `groupBy`() {
 
         val expected = typed.groupBy { name }.max { age }
         typed2.groupBy { nameAndCity.name }.max { age } shouldBe expected
+    }
+
+    @Test
+    fun selectDfs(){
+
+        val cols = typed2.select { colsDfs { it.hasNulls }}
+        cols shouldBe typed2.select { nameAndCity.city and weight }
     }
 
     @Test
@@ -105,7 +120,7 @@ class DataFrameTreeTests : BaseTest() {
     fun spread() {
 
         val modified = df.addRow("Alice", 55, "Moscow", 100)
-        val df2 =  modified.move { name and city }.into("nameAndCity")
+        val df2 =  modified.move { name and city }.intoGroup("nameAndCity")
         val typed2 = df2.typed<GroupedPerson>()
 
         val expected = modified.typed<Person>().select { name and city and age }.groupBy { city }.sortBy { city.nullsLast }.map { key1, group ->

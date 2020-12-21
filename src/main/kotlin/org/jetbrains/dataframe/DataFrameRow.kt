@@ -73,5 +73,6 @@ interface DataFrameRow<out T>: DataFrameRowBase<T> {
     infix fun <R> KProperty1<*, R>.neq(a: R?) = get(this) != a
 }
 
-typealias RowSelector<T, R> = DataFrameRow<T>.(DataFrameRow<T>) -> R
+typealias Selector<T, R> = T.(T) -> R
+typealias RowSelector<T, R> = Selector<DataFrameRow<T>, R>
 typealias RowFilter<T> = RowSelector<T, Boolean>

@@ -20,7 +20,9 @@ inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn:
 inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String, valueColumn: String) = gatherImpl(keyColumn, valueColumn, getType<K>(), getType<R>())
 fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: String? = null, keyColumnType: KType, valueColumnType: KType): DataFrame<T> {
 
-    val keyColumns = df.getColumns(selector).map { df[it] }
+    val keyColumns = df.getColumns(selector)
+
+    // TODO: support hierarchical columns
     val otherColumns = df.columns - keyColumns
     val outputColumnsData = otherColumns.map { ArrayList<Any?>() }.toMutableList()
     val keyColumnData = ArrayList<K>()

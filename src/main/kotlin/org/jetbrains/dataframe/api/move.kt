@@ -3,83 +3,82 @@ package org.jetbrains.dataframe
 import org.jetbrains.dataframe.impl.TreeNode
 import kotlin.reflect.KProperty
 
-fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, cols: ColumnsSelector<T, *>) = moveTo(newColumnIndex, getColumns(cols) as Iterable<Column>)
-fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: String) = moveTo(newColumnIndex, getColumns(cols))
-fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: KProperty<*>) = moveTo(newColumnIndex, getColumns(cols))
-fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: Column) = moveTo(newColumnIndex, cols.asIterable())
-fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, cols: Iterable<Column>): DataFrame<T> {
-    val columnsToMove = cols.map { this[it] }
-    val otherColumns = columns - columnsToMove
-    val newColumnList = otherColumns.subList(0, newColumnIndex) + columnsToMove + otherColumns.subList(newColumnIndex, otherColumns.size)
-    return dataFrameOf(newColumnList).typed()
-}
+fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, selector: ColumnsSelector<T, *>) = move(selector).to(newColumnIndex)
+fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, cols: Iterable<Column>) = moveTo(newColumnIndex) { cols.toColumns() }
+fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: String) = moveTo(newColumnIndex) { cols.toColumns() }
+fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: KProperty<*>) = moveTo(newColumnIndex) { cols.toColumns() }
+fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: Column) = moveTo(newColumnIndex) { cols.toColumns() }
 
-fun <T> DataFrame<T>.moveToLeft(cols: ColumnsSelector<T, *>) = moveToLeft(getColumns(cols))
-fun <T> DataFrame<T>.moveToLeft(cols: Iterable<Column>) = moveTo(0, cols)
-fun <T> DataFrame<T>.moveToLeft(vararg cols: String) = moveToLeft(getColumns(cols))
-fun <T> DataFrame<T>.moveToLeft(vararg cols: Column) = moveToLeft(cols.asIterable())
-fun <T> DataFrame<T>.moveToLeft(vararg cols: KProperty<*>) = moveToLeft(getColumns(cols))
-fun <T> DataFrame<T>.moveToRight(cols: Iterable<Column>) = moveTo(ncol - cols.count(), cols)
-fun <T> DataFrame<T>.moveToRight(cols: ColumnsSelector<T, *>) = moveToRight(getColumns(cols))
-fun <T> DataFrame<T>.moveToRight(vararg cols: String) = moveToRight(getColumns(cols))
-fun <T> DataFrame<T>.moveToRight(vararg cols: Column) = moveToRight(cols.asIterable())
-fun <T> DataFrame<T>.moveToRight(vararg cols: KProperty<*>) = moveToRight(getColumns(cols))
+fun <T> DataFrame<T>.moveToLeft(selector: ColumnsSelector<T, *>) = move(selector).toLeft()
+fun <T> DataFrame<T>.moveToLeft(cols: Iterable<Column>) = moveToLeft { cols.toColumns() }
+fun <T> DataFrame<T>.moveToLeft(vararg cols: String) = moveToLeft { cols.toColumns() }
+fun <T> DataFrame<T>.moveToLeft(vararg cols: Column) = moveToLeft { cols.toColumns() }
+fun <T> DataFrame<T>.moveToLeft(vararg cols: KProperty<*>) = moveToLeft { cols.toColumns() }
+
+fun <T> DataFrame<T>.moveToRight(cols: ColumnsSelector<T, *>) = move(cols).toRight()
+fun <T> DataFrame<T>.moveToRight(cols: Iterable<Column>) = moveToRight { cols.toColumns() }
+fun <T> DataFrame<T>.moveToRight(vararg cols: String) = moveToRight { cols.toColumns() }
+fun <T> DataFrame<T>.moveToRight(vararg cols: Column) = moveToRight { cols.toColumns() }
+fun <T> DataFrame<T>.moveToRight(vararg cols: KProperty<*>) = moveToRight { cols.toColumns() }
+
 fun <T, C> DataFrame<T>.move(selector: ColumnsSelector<T, C>): MoveColsClause<T, C> {
 
-    val (df, removed) = doRemove(getColumns(selector))
+    val (df, removed) = doRemove(selector)
     return MoveColsClause(df, removed)
 }
 
 interface DataFrameForMove<T> : DataFrameBase<T> {
 
+    val df: DataFrame<T>
+
     fun path(vararg columns: String): List<String> = listOf(*columns)
 
-    fun SingleColumn<*>.addPath(vararg columns: String): List<String> = (this as Column).getPath() + listOf(*columns)
+    fun SingleColumn<*>.addPath(vararg columns: String): ColumnPath = this.resolveSingle (ColumnResolutionContext(df, UnresolvedColumnsPolicy.Create))!!.path + listOf(*columns)
 
     operator fun SingleColumn<*>.plus(column: String) = addPath(column)
 }
 
-class MoveReceiver<T>(df: DataFrame<T>) : DataFrameForMove<T>, DataFrameBase<T> by df
+class MoveReceiver<T>(override val df: DataFrame<T>) : DataFrameForMove<T>, DataFrameBase<T> by df
 
 fun <T, C> MoveColsClause<T, C>.intoGroup(groupPath: DataFrameForMove<T>.(DataFrameForMove<T>) -> List<String>): DataFrame<T> {
     val receiver = MoveReceiver(df)
     val path = groupPath(receiver, receiver)
-    val columnsToInsert = removedColumns().map { ColumnToInsert(path + it.name, it, it.data.column!!) }
+    val columnsToInsert = removed.map { ColumnToInsert(path + it.name, it, it.data.column!!) }
     return df.doInsert(columnsToInsert)
 }
 
 fun <T, C> MoveColsClause<T, C>.intoGroups(groupName: DataFrameForMove<T>.(ColumnWithPath<C>) -> String): DataFrame<T> {
     val receiver = MoveReceiver(df)
-    val columnsToInsert = removedColumns().map {
+    val columnsToInsert = removed.map {
         val col = it.column
-        ColumnToInsert(listOf(groupName(receiver, col), it.name), it, col)
+        ColumnToInsert(listOf(groupName(receiver, col), it.name), it, col.data)
     }
     return df.doInsert(columnsToInsert)
 }
 
 fun <T, C> MoveColsClause<T, C>.toTop(groupNameExpression: DataFrameForMove<T>.(ColumnWithPath<C>) -> String = { it.name }) = into { listOf(groupNameExpression(it)) }
-fun <T, C> MoveColsClause<T, C>.into(groupNameExpression: DataFrameForMove<T>.(ColumnWithPath<C>) -> List<String>): DataFrame<T> {
+fun <T, C> MoveColsClause<T, C>.into(groupNameExpression: DataFrameForMove<T>.(ColumnWithPath<C>) -> ColumnPath): DataFrame<T> {
 
     val receiver = MoveReceiver(df)
-    val columnsToInsert = removedColumns().map {
+    val columnsToInsert = removed.map {
         val col = it.column
-        ColumnToInsert(groupNameExpression(receiver, col), it, col)
+        ColumnToInsert(groupNameExpression(receiver, col), it, col.data)
     }
     return df.doInsert(columnsToInsert)
 }
 
-fun <T, C> MoveColsClause<T, C>.into(name: String) = intoGroup { listOf(name) }
+fun <T, C> MoveColsClause<T, C>.into(name: String) = into { listOf(name) }
+fun <T, C> MoveColsClause<T, C>.intoGroup(name: String) = intoGroup { listOf(name) }
+
 fun <T, C> MoveColsClause<T, C>.into(path: List<String>) = intoGroup { path }
 fun <T, C> MoveColsClause<T, C>.to(columnIndex: Int): DataFrame<T> {
-    val newColumnList = df.columns.subList(0, columnIndex) + removedColumns().map { it.data.column as ColumnData<C> } + df.columns.subList(columnIndex, df.ncol)
+    val newColumnList = df.columns.subList(0, columnIndex) + removed.map { it.data.column as ColumnData<C> } + df.columns.subList(columnIndex, df.ncol)
     return newColumnList.asDataFrame()
 }
 
 fun <T, C> MoveColsClause<T, C>.toLeft() = to(0)
 fun <T, C> MoveColsClause<T, C>.toRight() = to(df.ncol)
-class MoveColsClause<T, C> internal constructor(internal val df: DataFrame<T>, internal val removed: TreeNode<ColumnPosition>) {
-
-    internal fun removedColumns() = removed.allRemovedColumns()
+class MoveColsClause<T, C> internal constructor(internal val df: DataFrame<T>, internal val removed: List<TreeNode<ColumnPosition>>) {
 
     internal val TreeNode<ColumnPosition>.column get() = column<C>()
 }

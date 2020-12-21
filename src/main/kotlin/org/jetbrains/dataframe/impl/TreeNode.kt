@@ -1,5 +1,7 @@
 package org.jetbrains.dataframe.impl
 
+import org.jetbrains.dataframe.ColumnPath
+
 internal class TreeNode<T>(val name: String, val depth: Int, var data: T, val parent: TreeNode<T>? = null) {
 
     companion object {
@@ -79,10 +81,12 @@ internal tailrec fun <T> TreeNode<T>.getAncestor(depth: Int): TreeNode<T> {
     return parent.getAncestor(depth)
 }
 
-internal fun <T> TreeNode<T?>.getOrPut(path: List<String>): TreeNode<T?> {
+internal fun <T> TreeNode<T?>.getOrPut(path: ColumnPath) = getOrPut(path, null)
+
+internal fun <T> TreeNode<T>.getOrPut(path: ColumnPath, emptyData: T): TreeNode<T> {
     var node = this
     path.forEach {
-        node = node.getOrPut(it) { null }
+        node = node.getOrPut(it) { emptyData }
     }
     return node
 }

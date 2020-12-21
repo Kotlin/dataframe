@@ -16,14 +16,14 @@ fun <T, C, R> MergeClause<T, C, R>.asStrings() = by(", ")
 fun <T, C, R> MergeClause<T, C, R>.by(separator: CharSequence = ", ", prefix: CharSequence = "", postfix: CharSequence = "", limit: Int = -1, truncated: CharSequence = "...") =
         MergeClause<T, C, String>(df, selector) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix, limit = limit, truncated = truncated) }
 
-fun <T, C> MergeClause<T, C, *>.mergeRows(names: List<String>): DataFrame<T> {
+fun <T, C> MergeClause<T, C, *>.mergeRows(): DataFrame<T> {
 
-    val columnsToMerge = df.getColumns(selector)
-    assert(names.size == columnsToMerge.size)
-    val (_, removedTree) = df.doRemove(columnsToMerge)
-    val groupingColumns = df.getColumns { allExcept(selector) }
-    val grouped = df.groupBy(groupingColumns)
-    val columnsToInsert = removedTree.allWithColumns().map { node ->
+    val removeResult = df.doRemove(selector)
+    val removeRoot = removeResult.removeRoot ?: return df
+
+    val grouped = df.groupBy { allExcept(selector) }
+
+    val columnsToInsert = removeRoot.allWithColumns().map { node ->
         val column = node.data.column!!
         val newName = column.name
         val newColumn = when(column){

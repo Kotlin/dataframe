@@ -4,17 +4,17 @@ import org.jetbrains.dataframe.impl.GroupedDataFrameImpl
 import org.jetbrains.dataframe.impl.dfsTopNotNull
 import kotlin.reflect.KProperty
 
-fun <T> DataFrame<T>.groupBy(cols: ColumnsSelector<T, *>) = groupBy(getColumns(cols))
-fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>) = groupBy(getColumns(cols))
-fun <T> DataFrame<T>.groupBy(vararg cols: String) = groupBy(getColumns(cols))
-fun <T> DataFrame<T>.groupBy(vararg cols: Column) = groupBy(cols.toList())
-fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>): GroupedDataFrame<T, T> {
+fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>) = groupBy { cols.toColumns() }
+fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>) = groupBy { cols.toColumns() }
+fun <T> DataFrame<T>.groupBy(vararg cols: String) = groupBy { cols.toColumns() }
+fun <T> DataFrame<T>.groupBy(vararg cols: Column) = groupBy { cols.toColumns() }
+fun <T> DataFrame<T>.groupBy(cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T> {
 
    val tree = collectTree(cols)
 
-   val nodes = tree.dfsTopNotNull().map { ColumnWithPath(it.data, it.pathFromRoot()) }.shortenPaths()
+   val nodes = tree.dfsTopNotNull().map { it.data.addPath(it.pathFromRoot()) }.shortenPaths()
 
-   val columns = nodes.map { it.source }
+   val columns = nodes.map { it.data }
 
    val groups = (0 until nrow)
            .map { index -> columns.map { it[index] } to index }
@@ -23,7 +23,7 @@ fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>): GroupedDataFrame<T, T> {
    val keyIndices = groups.map { it.second[0] }
 
    val keyColumnsToInsert = nodes.map {
-       val column = it.source[keyIndices]
+       val column = it.data[keyIndices]
        val path = it.path
        ColumnToInsert(path, null, column)
    }

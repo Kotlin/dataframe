@@ -27,12 +27,12 @@ class JoinTests : BaseTest() {
     }
 
 
-    val DataFrameRow<Person2>.name @JvmName("get-name") get() = this["name"] as String
-    val DataFrameRow<Person2>.origin get() = this["origin"] as String?
-    val DataFrameRow<Person2>.grade get() = this["grade"] as Int
-    val DataFrame<Person2>.name @JvmName("get-name") get() = this["name"].typed<String>()
-    val DataFrame<Person2>.origin get() = this["origin"].typed<String?>()
-    val DataFrame<Person2>.grade get() = this["grade"].typed<Int>()
+    val DataFrameRowBase<Person2>.name @JvmName("get-name") get() = this["name"] as String
+    val DataFrameRowBase<Person2>.origin get() = this["origin"] as String?
+    val DataFrameRowBase<Person2>.grade get() = this["grade"] as Int
+    val DataFrameBase<Person2>.name @JvmName("get-name") get() = this["name"].typed<String>()
+    val DataFrameBase<Person2>.origin get() = this["origin"].typed<String?>()
+    val DataFrameBase<Person2>.grade get() = this["grade"].typed<Int>()
 
     val typed2: DataFrame<Person2> = df2.typed()
 
