@@ -52,9 +52,8 @@ fun dataFrameOf(vararg header: String) = dataFrameOf(header.toList())
 fun dataFrameOf(header: List<String>) = DataFrameBuilder(header)
 
 internal fun DataCol.unbox(): DataCol = when (this) {
-    is ColumnWithPath<*> -> source.unbox()
-    is RenamedColumn<*> -> source.unbox().doRename(name)
-    is ColumnDataWithParent<*> -> source.unbox()
+    is ColumnWithPath<*> -> data.unbox()
+    is ColumnDataWithParentImpl<*> -> source.unbox()
     is GroupedColumnWithParent<*> -> source.unbox()
     else -> this
 }
@@ -122,5 +121,5 @@ internal fun guessValueType(values: List<Any?>): KType {
 }
 
 internal fun guessColumnType(name: String, values: List<Any?>) = guessValueType(values).let {
-    ColumnDataImpl(values, name, it)
+    ValueColumnImpl(values, name, it)
 }

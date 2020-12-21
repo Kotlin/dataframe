@@ -5,12 +5,11 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 
-class DataFrameForSpreadImpl<T>(df: DataFrame<T>) : DataFrame<T> by df, DataFrameForSpread<T>typealias SpreadColumnSelector<T, C> = DataFrameForSpread<T>.(DataFrameForSpread<T>) -> ColumnDef<C>
+class DataFrameForSpreadImpl<T>(df: DataFrame<T>) : DataFrame<T> by df, DataFrameForSpread<T>
 
-interface DataFrameForSpread<out T> : DataFrame<T> {
+typealias SpreadColumnSelector<T, C> = DataFrameForSpread<T>.(DataFrameForSpread<T>) -> ColumnDef<C>
 
-    fun <C, R> ColumnDef<C>.map(transform: (C) -> R): ColumnData<R> = get(this).let { ConvertedColumnImpl(it, it.mapValues(transform)) }
-}
+interface DataFrameForSpread<out T> : DataFrame<T>
 
 interface SpreadContext {
     class DataFrame<T>(val df: org.jetbrains.dataframe.DataFrame<T>) : SpreadContext
@@ -69,7 +68,7 @@ inline infix fun <T, K, V, reified C: SpreadContext> SpreadClause<T, K, V, C>.in
 inline infix fun <T, K, V, reified C: SpreadContext> SpreadClause<T, K, V, C>.into(groupPath: ColumnPath) = intoPaths { groupPath.toList() + it.toString() }
 inline infix fun <T, K, V, reified C: SpreadContext> SpreadClause<T, K, V, C>.into(groupName: String) = intoPaths { listOf(groupName, it.toString()) }
 inline infix fun <T, K, V, reified C: SpreadContext> SpreadClause<T, K, V, C>.into(column: GroupedColumnDef) = intoPaths { column.getPath() + it.toString() }
-inline infix fun <T, K, V, reified C: SpreadContext> SpreadClause<T, K, V, C>.intoPaths(noinline keyTransform: (K)-> ColumnPath?) = doSpreadInto(this, C::class, keyTransform)
+inline infix fun <T, K, V, reified C: SpreadContext> SpreadClause<T, K, V, C>.intoPaths(noinline keyTransform: (K) -> ColumnPath?) = doSpreadInto(this, C::class, keyTransform)
 fun <T, K, V, C: SpreadContext> doSpreadInto(clause: SpreadClause<T, K, V, C>, contextType: KClass<C>, keyTransform: (K)-> ColumnPath?) : DataFrame<T> {
     val withPath = clause.addPath(keyTransform)
     return when(contextType) {
@@ -104,15 +103,14 @@ internal fun <T,K,V,G> SpreadClause<G, K, V, SpreadContext.GroupedDataFrame<T, G
 
 internal fun <T,K,V> SpreadClause<T, K, V, SpreadContext.GroupAggregator<T>>.execute(): DataFrame<T> {
     val df = context.builder.df
-    val keyColumnData = df.getColumn(keyColumn)
     val isColumnType = valueType.isSubtypeOf(getType<DataCol>())
 
     val defaultType = valueType.let {
         if (isColumnType) it.arguments[0].type else it
     }.takeUnless { it?.classifier == Any::class }
 
-    df.groupBy(keyColumnData).forEach { key, group ->
-        val keyValue = keyColumnData[key.index]
+    df.groupBy(keyColumn).forEach { key, group ->
+        val keyValue = key[0] as K
         val path = columnPath(keyValue) ?: return@forEach
 
         var value: Any? = valueSelector(group, group)

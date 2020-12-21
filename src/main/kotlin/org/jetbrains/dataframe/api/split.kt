@@ -2,8 +2,9 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.impl.ColumnDataCollector
 import org.jetbrains.dataframe.impl.TypedColumnDataCollector
+import org.jetbrains.dataframe.impl.createDataCollector
 
-class SplitColClause<T, C, out R>(val df: DataFrame<T>, val column: ColumnData<C>, val transform: (C) -> R)
+class SplitColClause<T, C, out R>(val df: DataFrame<T>, val column: ColumnWithPath<C>, val transform: (C) -> R)
 
 fun <T, C> SplitColClause<T, C, String?>.by(vararg delimiters: Char, ignoreCase: Boolean = false, limit: Int = 0) = SplitColClause(df, column) {
     transform(it)?.split(*delimiters, ignoreCase = ignoreCase, limit = limit)
@@ -16,6 +17,7 @@ fun <T, C> SplitColClause<T, C, String?>.by(vararg delimiters: String, trim: Boo
     }
 }
 
+// TODO: support hierarchical frames
 fun <T, C> SplitColClause<T, C, List<*>?>.into(vararg firstNames: String, nameGenerator: ((Int) -> String)? = null) = doSplitCols {
     when {
         it < firstNames.size -> firstNames[it]
@@ -24,6 +26,7 @@ fun <T, C> SplitColClause<T, C, List<*>?>.into(vararg firstNames: String, nameGe
     }
 }
 
+// TODO: support hierarchical column names
 fun <T, C> SplitColClause<T, C, List<*>?>.doSplitCols(columnNameGenerator: (Int) -> String): DataFrame<T> {
 
     val nameGenerator = df.nameGenerator()
@@ -31,13 +34,13 @@ fun <T, C> SplitColClause<T, C, List<*>?>.doSplitCols(columnNameGenerator: (Int)
     val columnNames = mutableListOf<String>()
     val columnCollectors = mutableListOf<ColumnDataCollector>()
     for (row in 0 until nrow) {
-        val list = transform(column[row])
+        val list = transform(column.data[row])
         val listSize = list?.size ?: 0
         for (j in 0 until listSize) {
             if (columnCollectors.size <= j) {
                 val newName = nameGenerator.addUnique(columnNameGenerator(columnCollectors.size))
                 columnNames.add(newName)
-                val collector = ColumnDataCollector(nrow)
+                val collector = createDataCollector(nrow)
                 repeat(row) { collector.add(null) }
                 columnCollectors.add(collector)
             }
@@ -49,12 +52,14 @@ fun <T, C> SplitColClause<T, C, List<*>?>.doSplitCols(columnNameGenerator: (Int)
     return df - column + columnCollectors.mapIndexed { i, col -> col.toColumn(columnNames[i]) }
 }
 
-fun <T, C> DataFrame<T>.split(selector: ColumnSelector<T, C>) = SplitColClause(this, getColumn(selector), { it })
+fun <T, C> DataFrame<T>.split(selector: ColumnSelector<T, C>) = SplitColClause(this, getColumnWithPath(selector), { it })
+
 fun <T> DataFrame<T>.splitRows(selector: ColumnSelector<T, List<*>?>) = split(selector).intoRows()
+
 fun <T, C> SplitColClause<T, C, List<*>?>.intoRows(): DataFrame<T> {
 
-    val path = column.getPath()
-    val transformedColumn = column.map(transform)
+    val path = column.path
+    val transformedColumn = column.data.map(transform)
     val list = transformedColumn.toList()
     val outputRowsCount = list.sumBy {
         it?.size ?: 0
@@ -70,7 +75,7 @@ fun <T, C> SplitColClause<T, C, List<*>?>.intoRows(): DataFrame<T> {
                 ColumnData.createGroup(col.name, newDf)
             } else {
                 if (path != null && path.size == 1 && path[0] == col.name) {
-                    val collector = ColumnDataCollector(outputRowsCount)
+                    val collector = createDataCollector(outputRowsCount)
                     for(row in 0 until col.size)
                         list[row]?.forEach { collector.add(it) }
                     collector.toColumn(col.name)
@@ -85,7 +90,7 @@ fun <T, C> SplitColClause<T, C, List<*>?>.intoRows(): DataFrame<T> {
                             }
                         }
                     }
-                    if (col.isTable()) ColumnData.createTable(col.name, collector.values as List<DataFrame<*>>, col.asTable<Any?>().df)
+                    if (col.isTable()) ColumnData.createTable(col.name, collector.values as List<DataFrame<*>>, col.asTable().df)
                     else collector.toColumn(col.name)
                 }
             }

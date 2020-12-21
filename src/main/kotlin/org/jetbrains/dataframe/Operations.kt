@@ -2,6 +2,7 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.impl.TreeNode
 import org.jetbrains.dataframe.impl.getAncestor
+import org.jetbrains.dataframe.impl.getOrPut
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
@@ -105,69 +106,87 @@ inline fun <reified T : Comparable<T>> ColumnData<T?>.median() = values.asSequen
 
 inline fun <reified C> headPlusArray(head: C, cols: Array<out C>) = (listOf(head) + cols.toList()).toTypedArray()
 
-inline fun <reified C> DataFrameWithColumns<*>.colsOfType(noinline filter: (ColumnData<C>) -> Boolean = { true }) = colsOfType(getType<C>(), filter)
+inline fun <reified C> ColumnsSelectorReceiver<*>.colsOfType(noinline filter: (ColumnData<C>) -> Boolean = { true }) = colsOfType(getType<C>(), filter)
 
 // column grouping
 
-internal fun <C> TreeNode<ColumnPosition>.column() = ColumnWithPath(data.column as ColumnData<C>, pathFromRoot())
+internal fun <C> TreeNode<ColumnPosition>.column() = ColumnWithPathImpl(data.column as ColumnData<C>, pathFromRoot())
 
 internal fun TreeNode<ColumnPosition>.allRemovedColumns() = dfs { it.data.wasRemoved && it.data.column != null }
 
 internal fun TreeNode<ColumnPosition>.allWithColumns() = dfs { it.data.column != null }
 
-internal fun Iterable<DataCol>.dfs(): List<DataCol> {
+internal fun Iterable<ColumnWithPath<*>>.dfs(): List<ColumnWithPath<*>> {
 
-    val result = mutableListOf<DataCol>()
-    fun dfs(cols: Iterable<DataCol>) {
+    val result = mutableListOf<ColumnWithPath<*>>()
+    fun dfs(cols: Iterable<ColumnWithPath<*>>) {
         cols.forEach {
             result.add(it)
-            if (it is GroupedColumn<*>)
-                dfs(it.columns())
+            val path = it.path
+            if (it.data.isGrouped())
+                dfs(it.data.asGrouped().columns().map { it.addPath(path + it.name) })
         }
     }
     dfs(this)
     return result
 }
 
-internal fun DataFrame<*>.collectTree() = collectTree(DataCol.empty()) { it }
+internal fun DataFrame<*>.collectTree() = columns.map { it.addPath() }.collectTree()
 
-internal fun <D> DataFrame<*>.collectTree(emptyData: D, createData: (DataCol) -> D): TreeNode<D> {
+internal fun List<ColumnWithPath<*>>.collectTree() = collectTree(DataCol.empty()) { it }
+
+internal fun <D> DataFrame<*>.collectTree(emptyData: D, createData: (DataCol) -> D) = columns.map { it.addPath() }.collectTree(emptyData, createData)
+
+internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (DataCol) -> D): TreeNode<D> {
 
     val root = TreeNode.createRoot(emptyData)
 
-    fun collectColumns(cols: Iterable<DataCol>, node: TreeNode<D>) {
-        cols.forEach {
-            val newNode = node.addChild(it.name, createData(it))
-            if (it is GroupedColumn<*>) {
-                collectColumns(it.columns(), newNode)
+    fun collectColumns(col: DataCol, parentNode: TreeNode<D>) {
+        val newNode = parentNode.getOrPut(col.name) { createData(col) }
+        if(col.isGrouped()){
+            col.asGrouped().columns().forEach {
+                collectColumns(it, newNode)
             }
         }
     }
-
-    collectColumns(columns, root)
+    forEach {
+        if(it.path.isEmpty()){
+            it.data.asGrouped().df.columns.forEach {
+                collectColumns(it, root)
+            }
+        }else {
+            val node = root.getOrPut(it.path.dropLast(1), emptyData)
+            collectColumns(it.data, node)
+        }
+    }
     return root
 }
 
-internal data class ColumnPosition(val index: Int, var wasRemoved: Boolean, var column: DataCol?)
+internal data class ColumnPosition(val originalIndex: Int, var wasRemoved: Boolean, var column: DataCol?)
 
 // TODO: replace 'insertionPath' with TreeNode<ColumnToInsert> tree
 internal data class ColumnToInsert(val insertionPath: List<String>, val originalNode: TreeNode<ColumnPosition>?, val column: DataCol)
 
+fun Column.getParent(): GroupedColumnDef? = when (this) {
+    is ColumnWithParent<*> -> parent
+    is ColumnDataWithParent<*> -> parent
+    else -> null
+}
+
 fun Column.getPath(): ColumnPath {
     val list = mutableListOf<String>()
-    var c = this
-    while (c is ColumnWithParent<*>) {
+    var c = this.asNullable()
+    while (c != null) {
         list.add(c.name)
-        c = c.parent
+        c = c.getParent()
     }
-    list.add(c.name)
     list.reverse()
     return list
 }
 
-internal fun <T> DataFrame<T>.collectTree(cols: Iterable<Column>): TreeNode<DataCol?> {
+internal fun <T> DataFrame<T>.collectTree(selector: ColumnsSelector<T, *>): TreeNode<DataCol?> {
 
-    val colPaths = cols.map { it.getPath() }
+    val colPaths = getColumnPaths(selector)
 
     val root = TreeNode.createRoot(null as DataCol?)
 
@@ -197,6 +216,8 @@ internal fun insertColumns(columns: List<ColumnToInsert>) =
         insertColumns<Unit>(null, columns, columns.firstOrNull()?.originalNode?.getRoot(), 0)
 
 internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>, treeNode: TreeNode<ColumnPosition>?, depth: Int): DataFrame<T> {
+
+    if (columns.isEmpty()) return df ?: DataFrame.empty()
 
     val childDepth = depth + 1
 
@@ -231,12 +252,12 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
             // find the minimal original index among them
             // new column will be inserted at that position
             val minIndex = subTree.minOf {
-                if(it.originalNode == null) Int.MAX_VALUE
+                if (it.originalNode == null) Int.MAX_VALUE
                 else {
                     var col = it.originalNode!!
-                    if(col.depth > depth) col = col.getAncestor(depth + 1)
+                    if (col.depth > depth) col = col.getAncestor(depth + 1)
                     if (col.parent === treeNode) {
-                        if(col.data.wasRemoved) col.data.index else col.data.index + 1
+                        if (col.data.wasRemoved) col.data.originalIndex else col.data.originalIndex + 1
                     } else Int.MAX_VALUE
                 }
             }
@@ -254,7 +275,7 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
 
         // adjust insertion index by number of columns that were removed before current index
         if (removedSiblings != null) {
-            while (k < removedSiblings.size && removedSiblings[k].data.index < insertionIndex) {
+            while (k < removedSiblings.size && removedSiblings[k].data.originalIndex < insertionIndex) {
                 if (removedSiblings[k].data.wasRemoved) insertionIndexOffset--
                 k++
             }
@@ -268,7 +289,7 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
                 val group = column as GroupedColumn<*>
                 val newDf = insertColumns(group.df, columns.filter { it.insertionPath.size > childDepth }, treeNode?.get(name), childDepth)
                 group.withDf(newDf)
-            } else column.rename(name)
+            } else column.doRename(name)
         } else {
             val newDf = insertColumns<Unit>(null, columns, treeNode?.get(name), childDepth)
             ColumnData.createGroup(name, newDf) // new node needs to be created
@@ -301,7 +322,7 @@ else createStarProjectedType(false)
 
 internal inline fun <reified T> createType(typeArgument: KType? = null) = T::class.createType(typeArgument)
 
-fun <T> TableColumn<T>.union() = if(size > 0) values.union() else df.getRows(emptyList())
+fun <T> TableColumn<T>.union() = if (size > 0) values.union() else df.getRows(emptyList())
 
 internal fun <T> T.asNullable() = this as T?
 
@@ -315,24 +336,25 @@ internal fun <C> List<ColumnWithPath<C>>.shortenPaths(): List<ColumnWithPath<C>>
     // try to use just column name as column path
     val map = groupBy { it.path.last(1) }.toMutableMap()
 
-    fun add(path: ColumnPath, column: ColumnWithPath<C>){
-        val list: MutableList<ColumnWithPath<C>> = (map.getOrPut(path) { mutableListOf() } as? MutableList<ColumnWithPath<C>>) ?: let {
-            val values = map.remove(path)!!
-            map.put(path, values.toMutableList()) as MutableList<ColumnWithPath<C>>
-        }
+    fun add(path: ColumnPath, column: ColumnWithPath<C>) {
+        val list: MutableList<ColumnWithPath<C>> = (map.getOrPut(path) { mutableListOf() } as? MutableList<ColumnWithPath<C>>)
+                ?: let {
+                    val values = map.remove(path)!!
+                    map.put(path, values.toMutableList()) as MutableList<ColumnWithPath<C>>
+                }
         list.add(column)
     }
 
     // resolve name collisions by using more parts of column path
     var conflicts = map.filter { it.value.size > 1 }
-    while(conflicts.size > 0) {
+    while (conflicts.size > 0) {
         conflicts.forEach {
             val key = it.key
             val keyLength = key.size
             map.remove(key)
             it.value.forEach {
                 val path = it.path
-                val newPath = if(path.size < keyLength) path.last(keyLength + 1) else path
+                val newPath = if (path.size < keyLength) path.last(keyLength + 1) else path
                 add(newPath, it)
             }
         }
@@ -341,5 +363,5 @@ internal fun <C> List<ColumnWithPath<C>>.shortenPaths(): List<ColumnWithPath<C>>
 
     val pathRemapping = map.map { it.value.single().path to it.key }.toMap()
 
-    return map { ColumnWithPath<C>(it.source, pathRemapping[it.path]!!) }
+    return map { it.data.addPath(pathRemapping[it.path]!!) }
 }

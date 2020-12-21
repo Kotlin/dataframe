@@ -3,21 +3,25 @@ package org.jetbrains.dataframe.api
 import org.jetbrains.dataframe.*
 import kotlin.reflect.full.withNullability
 
-interface DataFrameWithColumnsForJoin<out A, out B> : DataFrameWithColumnsForSelect<A> {
+interface JoinReceiver<out A, out B> : SelectReceiver<A> {
 
     val right: DataFrame<B>
 
     infix fun <C> ColumnDef<C>.match(other: ColumnDef<C>) = ColumnMatch(this, other)
 }
 
-class ColumnMatch<C>(val left: ColumnDef<C>, val right: ColumnDef<C>) : ColumnSet<C>
+class ColumnMatch<C>(val left: ColumnDef<C>, val right: ColumnDef<C>) : ColumnSet<C> {
 
-class DataFrameWithColumnsForJoinImpl<A, B>(private val left: DataFrame<A>, override val right: DataFrame<B>) : DataFrame<A> by left, DataFrameWithColumnsForJoin<A, B> {
-
+    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> {
+        throw UnsupportedOperationException()
+    }
 }
 
-typealias JoinColumnSelector<A, B> = DataFrameWithColumnsForJoin<A, B>.(DataFrameWithColumnsForJoin<A, B>) -> ColumnSet<*>
+class JoinReceiverImpl<A, B>(private val left: DataFrame<A>, override val right: DataFrame<B>) : DataFrame<A> by left, JoinReceiver<A, B>
 
+typealias JoinColumnSelector<A, B> = JoinReceiver<A, B>.(JoinReceiver<A, B>) -> ColumnSet<*>
+
+// TODO: support column hierarchy
 internal fun <C> ColumnSet<C>.extractJoinColumns(): List<ColumnMatch<C>> = when (this) {
     is ColumnGroup -> columns.flatMap { it.extractJoinColumns() }
     is ColumnDef<C> -> listOf(ColumnMatch(this, this))
@@ -25,7 +29,7 @@ internal fun <C> ColumnSet<C>.extractJoinColumns(): List<ColumnMatch<C>> = when 
     else -> throw Exception()
 }
 
-internal fun <A, B> DataFrame<A>.getColumns(other: DataFrame<B>, selector: JoinColumnSelector<A, B>) = DataFrameWithColumnsForJoinImpl(this, other).let { selector(it, it).extractJoinColumns() }
+internal fun <A, B> DataFrame<A>.getColumns(other: DataFrame<B>, selector: JoinColumnSelector<A, B>) = JoinReceiverImpl(this, other).let { selector(it, it).extractJoinColumns() }
 
 enum class JoinType {
     LEFT, // all data from left data frame, nulls for mismatches in right data frame
@@ -106,7 +110,7 @@ fun <A, B> DataFrame<A>.join(other: DataFrame<B>, joinType: JoinType = JoinType.
 
     // list of columns from right data frame that are not part of join key. Ensure that new column names doesn't clash with original columns
     val newRightColumns = if (addNewColumns) other.columns.filter { !rightJoinColumns.contains(it.name) }.map {
-        it.rename(nameGenerator.addUnique(it.name))
+        it.doRename(nameGenerator.addUnique(it.name))
     } else emptyList()
 
     val leftColumnsCount = ncol

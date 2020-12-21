@@ -177,7 +177,6 @@ class DataFrameTests : BaseTest() {
 
         fun DataFrame<*>.check() = this[city].values shouldBe expected
 
-        typed.sortByDesc(typed.age).sortBy(typed.name).check()
         typed.sortBy { name then age.desc }.check()
         typed.sortBy { it.name then it.age.desc }.check()
 
@@ -236,7 +235,9 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `group and sort`() {
-        typed.groupBy { name }.sortBy { name.desc then age }.ungroup() shouldBe typed.sortBy { name.desc then age }
+        val expected = typed.sortBy { name.desc then age }
+        val actual = typed.groupBy { name }.sortBy { name.desc then age }.ungroup()
+        actual shouldBe expected
     }
 
     @Test
@@ -889,7 +890,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `column group`() {
 
-        val grouped = typed.move { age and name and city }.into("info")
+        val grouped = typed.move { age and name and city }.intoGroup("info")
         grouped.ncol shouldBe 2
         grouped.columnNames() shouldBe listOf("info", "weight")
         val res = listOf(grouped["info"]["name"], grouped["info"]["age"], grouped["info"]["city"], grouped.weight).asDataFrame<Person>()
@@ -900,7 +901,7 @@ class DataFrameTests : BaseTest() {
     fun `column ungroup`() {
 
         val info by columnGroup()
-        val res = typed.move { age and city }.into("info").ungroup { info }
+        val res = typed.move { age and city }.intoGroup("info").ungroup { info }
         res shouldBe typed
     }
 

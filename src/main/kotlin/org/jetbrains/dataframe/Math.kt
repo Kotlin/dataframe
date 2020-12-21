@@ -87,14 +87,6 @@ inline fun <reified T : Number> sum(list: Iterable<T>): T = list.sum(T::class)
 
 fun <T: Number> ColumnData<T>.sum() = values.sum(type.jvmErasure as KClass<T>)
 
-internal fun <T> DataFrame<T>.nullColumnToZero(col: ColumnDef<Number?>) =
-        when (this[col].type.jvmErasure) {
-            Double::class -> update(col) { col() as Double? ?: .0 }
-            Int::class -> update(col) { col() as Int? ?: 0 }
-            Long::class -> update(col) { col() as Long? ?: 0 }
-            else -> throw IllegalArgumentException()
-        }
-
 inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(col: ColumnDef<D?>): Double = get(col).median()
 inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(crossinline selector: RowSelector<T, D?>): Double = rows.asSequence().map { selector(it, it) }.filterNotNull().asIterable().median()
 inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(col: KProperty<D?>): Double = get(col).median()

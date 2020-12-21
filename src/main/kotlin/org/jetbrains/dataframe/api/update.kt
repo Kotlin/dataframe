@@ -4,17 +4,18 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
-class UpdateClause<T, C>(val df: DataFrame<T>, val filter: UpdateExpression<T, C, Boolean>?, val cols: List<ColumnDef<C>>)
+class UpdateClause<T, C>(val df: DataFrame<T>, val filter: UpdateExpression<T, C, Boolean>?, val selector: ColumnsSelector<T, C>)
 
-fun <T, C> UpdateClause<T, C>.where(predicate: UpdateExpression<T, C, Boolean>) = UpdateClause(df, predicate, cols)typealias UpdateExpression<T, C, R> = DataFrameRow<T>.(C) -> R
+fun <T, C> UpdateClause<T, C>.where(predicate: UpdateExpression<T, C, Boolean>) = UpdateClause(df, predicate, selector)typealias UpdateExpression<T, C, R> = DataFrameRow<T>.(C) -> R
 typealias UpdateByColumnExpression<T, C, R> = (DataFrameRow<T>, ColumnData<C>) -> R
 
 fun <T, C, R> doUpdate(clause: UpdateClause<T, C>, type: KType, expression: (DataFrameRow<T>, ColumnData<C>) -> R): DataFrame<T> {
 
-    val srcColumns = clause.cols.map { clause.df[it] }
-    val (newDf, removed) = clause.df.doRemove(srcColumns)
+    val removeResult = clause.df.doRemove(clause.selector)
 
-    val toInsert = removed.dfs().mapNotNull {
+    val removeRoot = removeResult.removeRoot ?: return clause.df
+
+    val toInsert = removeRoot.dfs().mapNotNull {
         val srcColumn = it.data.column as? ColumnData<C>
         if (srcColumn != null) {
 
@@ -40,11 +41,12 @@ fun <T, C, R> doUpdate(clause: UpdateClause<T, C>, type: KType, expression: (Dat
             ColumnToInsert(it.pathFromRoot(), it, newColumn)
         } else null
     }
-    return newDf.doInsert(toInsert)
+    return removeResult.df.doInsert(toInsert)
 }
 
 // TODO: rename
 inline infix fun <T, C, reified R> UpdateClause<T, C>.with2(noinline expression: UpdateByColumnExpression<T, C, R>) = doUpdate(this, getType<R>(), expression)
+
 inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: UpdateExpression<T, C, R>) = doUpdate(this, getType<R>()) { row, column ->
     val currentValue = column[row.index]
     if (filter?.invoke(row, currentValue) == false)
@@ -61,10 +63,11 @@ inline fun <T, C, reified R> DataFrame<T>.update(firstCol: KProperty<C>, vararg 
 inline fun <T, reified R> DataFrame<T>.update(firstCol: String, vararg cols: String, noinline expression: UpdateExpression<T, Any?, R>) =
         update(*headPlusArray(firstCol, cols)).with(expression)
 
+fun <T, C> DataFrame<T>.update(selector: ColumnsSelector<T, C>) = UpdateClause(this, null, selector)
+fun <T, C> DataFrame<T>.update(cols: Iterable<ColumnDef<C>>) = update { cols.toColumns() }
+fun <T> DataFrame<T>.update(vararg cols: String) = update { cols.toColumns() }
+fun <T, C> DataFrame<T>.update(vararg cols: KProperty<C>) = update { cols.toColumns() }
+fun <T, C> DataFrame<T>.update(vararg cols: ColumnDef<C>) = update { cols.toColumns() }
+
 fun <T, C> UpdateClause<T, C>.withNull() = with { null as Any? }
 inline infix fun <T, C, reified R> UpdateClause<T, C>.with(value: R) = with { value }
-fun <T, C> DataFrame<T>.update(cols: Iterable<ColumnDef<C>>) = UpdateClause(this, null, cols.toList())
-fun <T> DataFrame<T>.update(vararg cols: String) = update(getColumns(cols))
-fun <T, C> DataFrame<T>.update(vararg cols: KProperty<C>) = update(getColumns(cols))
-fun <T, C> DataFrame<T>.update(vararg cols: ColumnDef<C>) = update(cols.asIterable())
-fun <T, C> DataFrame<T>.update(cols: ColumnsSelector<T, C>) = update(getColumns(cols))

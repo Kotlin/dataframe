@@ -7,18 +7,33 @@ infix operator fun <T> DataFrame<T>.minus(column: String) = remove(column)
 infix operator fun <T> DataFrame<T>.minus(column: Column) = remove(column)
 infix operator fun <T> DataFrame<T>.minus(cols: Iterable<Column>) = remove(cols)
 infix operator fun <T> DataFrame<T>.minus(cols: ColumnsSelector<T, *>) = remove(cols)
-fun <T> DataFrame<T>.remove(selector: ColumnsSelector<T, *>) = remove(getColumns(selector))
-fun <T> DataFrame<T>.remove(vararg columns: KProperty<*>) = remove(getColumns(columns))
-fun <T> DataFrame<T>.remove(vararg columns: String) = remove(getColumns(columns))
-fun <T> DataFrame<T>.remove(vararg cols: Column) = remove(cols.toList())
-fun <T> DataFrame<T>.remove(cols: Iterable<Column>) = doRemove(cols).first
-internal fun <T> DataFrame<T>.doRemove(cols: Iterable<Column>): Pair<DataFrame<T>, TreeNode<ColumnPosition>> {
 
-    val colPaths = cols.map { it.getPath() }
+fun <T> DataFrame<T>.remove(selector: ColumnsSelector<T, *>) = doRemove(selector).df
+fun <T> DataFrame<T>.remove(vararg cols: KProperty<*>) = remove { cols.toColumns() }
+fun <T> DataFrame<T>.remove(vararg cols: String) = remove { cols.toColumns() }
+fun <T> DataFrame<T>.remove(vararg cols: Column) = remove { cols.toColumns() }
+fun <T> DataFrame<T>.remove(cols: Iterable<Column>) = remove { cols.toColumns() }
+
+internal data class RemoveResult<T>(val df: DataFrame<T>, val removedColumns: List<TreeNode<ColumnPosition>>){
+
+    val removedNothing: Boolean = removedColumns.isEmpty()
+
+    val removeRoot: TreeNode<ColumnPosition>? = removedColumns.firstOrNull()?.getRoot()
+}
+
+internal fun <T> DataFrame<T>.doRemove(selector: ColumnsSelector<T, *>): RemoveResult<T> {
+
+    val colPaths = getColumnPaths(selector)
+    val originalOrder = colPaths.mapIndexed {index, path -> path to index}.toMap()
 
     val root = TreeNode.createRoot(ColumnPosition(-1, false, null))
 
-    fun dfs(cols: Iterable<DataCol>, paths: List<List<String>>, node: TreeNode<ColumnPosition>): DataFrame<*>? {
+    if(colPaths.isEmpty()) return RemoveResult(this, emptyList())
+
+    fun dfs(cols: Iterable<DataCol>, paths: List<ColumnPath>, node: TreeNode<ColumnPosition>): DataFrame<*>? {
+
+        if(paths.isEmpty()) return null
+
         val depth = node.depth
         val children = paths.groupBy { it[depth] }
         val newCols = mutableListOf<DataCol>()
@@ -45,5 +60,8 @@ internal fun <T> DataFrame<T>.doRemove(cols: Iterable<Column>): Pair<DataFrame<T
     }
 
     val newDf = dfs(columns, colPaths, root) ?: emptyDataFrame(nrow)
-    return newDf.typed<T>() to root
+
+    val removedColumns = root.allRemovedColumns().map {it.pathFromRoot() to it}.sortedBy { originalOrder[it.first] }.map { it.second }
+
+    return RemoveResult(newDf.typed(), removedColumns)
 }

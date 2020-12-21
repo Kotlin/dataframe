@@ -5,6 +5,7 @@ import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.impl.ColumnDataCollector
+import org.jetbrains.dataframe.impl.createDataCollector
 import java.io.File
 import java.lang.StringBuilder
 import java.net.URL
@@ -72,7 +73,7 @@ internal fun fromList(records: List<*>): DataFrame<*> {
     return nameGenerator.names.map { colName ->
         when {
             colName == valueColumn -> {
-                val collector = ColumnDataCollector(records.size)
+                val collector = createDataCollector(records.size)
                 records.forEach {
                     when (it) {
                         is JsonObject -> collector.add(null)

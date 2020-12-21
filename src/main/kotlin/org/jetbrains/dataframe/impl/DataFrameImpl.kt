@@ -58,4 +58,8 @@ internal open class DataFrameImpl<T>(override val columns: List<DataCol>) : Data
             col.withValues(col.values + listOf(v), col.hasNulls || v == null)
         }.asDataFrame<T>()
     }
+
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataFrameRow<T>>? {
+        return ColumnData.createGroup("", this).addPath(emptyList())
+    }
 }

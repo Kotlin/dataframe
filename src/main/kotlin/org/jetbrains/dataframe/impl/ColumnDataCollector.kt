@@ -42,5 +42,6 @@ internal class TypedColumnDataCollector<T>(initCapacity: Int = 0, val type: KTyp
     fun toColumn(name: String) = column(name, data, type.withNullability(hasNulls))
 }
 
-internal inline fun <reified T> createDataCollector(initCapacity: Int = 0) = TypedColumnDataCollector<T>(initCapacity, getType<T>())
+internal fun createDataCollector(initCapacity: Int = 0) = ColumnDataCollector(initCapacity)
+
 internal fun <T> createDataCollector(type: KType, initCapacity: Int = 0) = TypedColumnDataCollector<T>(initCapacity, type)

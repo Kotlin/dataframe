@@ -34,7 +34,7 @@ internal fun <T, G> doAggregate(df: DataFrame<T>, selector: ColumnSelector<T, Da
 
     val column = df.getColumn(selector)
 
-    val (df2, removedTree) = df.doRemove(listOf(column))
+    val (df2, removedNodes) = df.doRemove(selector)
 
     val groupedFrame = column.values.map {
         val builder = GroupAggregateBuilder(it)
@@ -42,7 +42,7 @@ internal fun <T, G> doAggregate(df: DataFrame<T>, selector: ColumnSelector<T, Da
         builder.toDataFrame()
     }.union()
 
-    val removedNode = removedTree.allRemovedColumns().single()
+    val removedNode = removedNodes.single()
     val insertPath = removedNode.pathFromRoot().dropLast(1)
 
     if(!removeColumns) removedNode.data.wasRemoved = false

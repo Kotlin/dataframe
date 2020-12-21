@@ -6,7 +6,7 @@ import org.jetbrains.dataframe.impl.getOrPut
 import org.jetbrains.dataframe.impl.topDfs
 import kotlin.reflect.KProperty
 
-open class DataFrameWithColumnsForSelectImpl<T>(df: DataFrame<T>) : DataFrame<T> by df, DataFrameWithColumnsForSelect<T>
+internal open class SelectReceiverImpl<T>(df: DataFrameBase<T>, allowMissingColumns: Boolean) : DataFrameReceiver<T>(df, allowMissingColumns), SelectReceiver<T>
 
 data class DataFrameSize(val ncol: Int, val nrow: Int) {
     override fun toString() = "$nrow x $ncol"
@@ -14,44 +14,43 @@ data class DataFrameSize(val ncol: Int, val nrow: Int) {
 
 typealias DataFrameSelector<T, R> = DataFrame<T>.(DataFrame<T>) -> R
 
-typealias ColumnsSelector<T, C> = DataFrameWithColumnsForSelect<T>.(DataFrameWithColumnsForSelect<T>) -> ColumnSet<C>
+typealias ColumnsSelector<T, C> = SelectReceiver<T>.(SelectReceiver<T>) -> ColumnSet<C>
 
-typealias ColumnSelector<T, C> = DataFrameWithColumnsForSelect<T>.(DataFrameWithColumnsForSelect<T>) -> ColumnDef<C>
+typealias ColumnSelector<T, C> = SelectReceiver<T>.(SelectReceiver<T>) -> ColumnDef<C>
 
-internal fun <T> DataFrame<T>.allColumnsExcept(columns: Iterable<Column>): List<Column> {
+fun <T, C> DataFrame<T>.createSelector(selector: ColumnsSelector<T, C>) = selector
+
+internal fun  List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
     val fullTree = collectTree(null) { it }
     columns.forEach {
-        val path = it.getPath()
-        var node = fullTree.getOrPut(path).asNullable()
+        var node = fullTree.getOrPut(it.path).asNullable()
         while (node != null) {
             node.data = null
             node = node.parent
         }
     }
-    return fullTree.topDfs { it.data != null && it.children.all { it.data != null } }.map {it.data!!}
+    return fullTree.topDfs { it.data != null && it.children.all { it.data != null } }.map { it.data!!.addPath(it.pathFromRoot()) }
 }
 
-internal fun <T, C> DataFrame<T>.extractColumns(set: ColumnSet<C>): List<ColumnDef<C>> = when (set) {
-    is ColumnGroup<C> -> set.columns.flatMap { extractColumns(it) }
-    is AllExceptColumn -> allColumnsExcept(extractColumns(set.columns)) as List<ColumnDef<C>>
-    is ColumnDef<C> -> listOf(set)
-    else -> throw Exception()
-}
+internal fun <T, C> DataFrame<T>.getColumns(skipMissingColumns: Boolean, selector: ColumnsSelector<T, C>): List<ColumnData<C>> = getColumnsWithPaths(if(skipMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail, selector).map { it.data }
 
-internal fun <T, C> DataFrame<T>.getColumns(selector: ColumnsSelector<T, C>) = DataFrameWithColumnsForSelectImpl(this).let { extractColumns(selector(it, it)) }
+internal fun <T, C> DataFrame<T>.getColumns(selector: ColumnsSelector<T, C>) = getColumns(false, selector)
 
-internal fun <T, C> DataFrame<T>.getColumnsWithData(selector: ColumnsSelector<T, C>) = getColumns(selector).map {this[it]}
+internal fun <T, C> DataFrame<T>.getColumnsWithPaths(unresolvedColumnsPolicy: UnresolvedColumnsPolicy, selector: ColumnsSelector<T, C>): List<ColumnWithPath<C>> = selector.toColumns().resolve(ColumnResolutionContext(this, unresolvedColumnsPolicy))
 
-internal fun <T, C> DataFrame<T>.getGroupColumns(selector: ColumnsSelector<T, DataFrameRow<C>>) = getColumnsWithData(selector).map {it as GroupedColumn<C> }
+internal fun <T, C> DataFrame<T>.getColumnsWithPaths(selector: ColumnsSelector<T, C>): List<ColumnWithPath<C>> = getColumnsWithPaths(UnresolvedColumnsPolicy.Fail, selector)
 
-fun <T, C> DataFrame<T>.getColumn(selector: ColumnSelector<T, C>) = DataFrameWithColumnsForSelectImpl(this).let { selector(it, it) }.let { this[it] }
+internal fun <T, C> DataFrame<T>.getColumnPaths(selector: ColumnsSelector<T, C>): List<ColumnPath> = selector.toColumns().resolve(ColumnResolutionContext(this, UnresolvedColumnsPolicy.Fail)).map { it.path }
+
+internal fun <T, C> DataFrame<T>.getGroupColumns(selector: ColumnsSelector<T, DataFrameRow<C>>) = getColumnsWithPaths(selector).map { it.data.asGrouped() }
+
+fun <T, C> DataFrame<T>.getColumn(selector: ColumnSelector<T, C>) = getColumns(selector).single()
+
+fun <T, C> DataFrame<T>.getColumnWithPath(selector: ColumnSelector<T, C>) = getColumnsWithPaths(selector).single()
 
 @JvmName("getColumnForSpread")
 internal fun <T, C> DataFrame<T>.getColumn(selector: SpreadColumnSelector<T, C>) = DataFrameForSpreadImpl(this).let { selector(it, it) }.let {
-    when (it) {
-        is ConvertedColumn<C> -> it
-        else -> this[it]
-    }
+    this[it]
 }
 
 internal fun <T>  DataFrame<T>.getColumns(columnNames: Array<out String>) = columnNames.map { this[it] }
@@ -61,7 +60,6 @@ internal fun <T, C> DataFrame<T>.getColumns(columnNames: Array<out KProperty<C>>
 internal fun <T>  DataFrame<T>.getColumns(columnNames: List<String>): List<DataCol> = columnNames.map { this[it] }
 
 internal fun <T>  DataFrame<T>.new(columns: Iterable<DataCol>) = dataFrameOf(columns).typed<T>()
-
 
 operator fun <T>  DataFrameBase<T>.get(columnPath: List<String>): DataCol {
 
@@ -90,7 +88,7 @@ interface DataFrame<out T> : DataFrameBase<T> {
     override fun getColumn(columnIndex: Int) = columns()[columnIndex]
 
     override operator fun get(index: Int): DataFrameRow<T> = DataFrameRowImpl(index, this)
-    override operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found: '$columnName'") // TODO
+    override operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found: '$columnName'")
     override operator fun <R> get(column: ColumnDef<R>): ColumnData<R> = tryGetColumn(column)!!
     override operator fun <R> get(column: ColumnDef<DataFrameRow<R>>): GroupedColumn<R> = get<DataFrameRow<R>>(column) as GroupedColumn<R>
     override operator fun <R> get(column: ColumnDef<DataFrame<R>>): TableColumn<R> = get<DataFrame<R>>(column) as TableColumn<R>
@@ -110,12 +108,9 @@ interface DataFrame<out T> : DataFrameBase<T> {
     fun getColumnIndex(name: String): Int
     fun getColumnIndex(col: DataCol) = getColumnIndex(col.name)
 
-    fun <R> tryGetColumn(column: ColumnDef<R>): ColumnData<R>? = when(column) {
-        is RenamedColumnDef<R> -> tryGetColumn(column.source)?.rename(column.name)
-        is ColumnWithParent<*> -> (tryGetColumn(column.parent) as? GroupedColumn<*>)?.get(column.name) as? ColumnData<R>
-        else -> tryGetColumn(column.name) as? ColumnData<R>
-    }
-    fun tryGetColumn(name: String) = getColumnIndex(name).let { if (it != -1) columns[it] else null }
+    fun <R> tryGetColumn(column: ColumnDef<R>): ColumnData<R>? = tryGetColumn(column.name) as? ColumnData<R>
+
+    override fun tryGetColumn(name: String): DataCol? = getColumnIndex(name).let { if (it != -1) columns[it] else null }
 
     fun tryGetColumnGroup(name: String) = tryGetColumn(name) as? GroupedColumn<*>
     fun getColumnGroup(name: String) = tryGetColumnGroup(name)!!
@@ -152,10 +147,10 @@ interface DataFrame<out T> : DataFrameBase<T> {
 
     fun <R> mapIndexed(action: (Int, DataFrameRow<T>) -> R) = rows.mapIndexed(action)
 
-    fun <C> forEachIn(selector: ColumnsSelector<T, C>, action: (DataFrameRow<T>, ColumnData<C>) -> Unit) = getColumnsWithData(selector).let { cols ->
+    fun <C> forEachIn(selector: ColumnsSelector<T, C>, action: (DataFrameRow<T>, ColumnData<C>) -> Unit) = getColumnsWithPaths(selector).let { cols ->
         rows.forEach { row ->
             cols.forEach { col ->
-                action(row, col)
+                action(row, col.data)
             }
         }
     }
@@ -164,6 +159,8 @@ interface DataFrame<out T> : DataFrameBase<T> {
 }
 
 fun <T> DataFrame<*>.typed(): DataFrame<T> = this as DataFrame<T>
+
+fun <T> DataFrameBase<*>.typed(): DataFrameBase<T> = this as DataFrameBase<T>
 
 fun <T> DataFrameRow<T>.toDataFrame() = owner.columns.map {
     val value = it[index]

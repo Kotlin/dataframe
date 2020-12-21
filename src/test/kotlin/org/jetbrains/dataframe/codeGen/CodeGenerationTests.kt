@@ -36,7 +36,7 @@ class CodeGenerationTests : BaseTest(){
     @Test
     fun `generate marker interface for nested data frame`() {
         val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
-        val grouped = df.move { name and city }.into("nameAndCity")
+        val grouped = df.move { name and city }.intoGroup("nameAndCity")
         val code = CodeGenerator().generate(grouped, property)
         val rowType = DataFrameRow::class.simpleName
         val declaration1 = """

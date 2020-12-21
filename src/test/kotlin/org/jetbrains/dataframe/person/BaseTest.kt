@@ -26,14 +26,14 @@ open class BaseTest {
         val weight: Int?
     }
 
-    val DataFrameRow<Person>.name get() = this["name"] as String
-    val DataFrameRow<Person>.age get() = this["age"] as Int
-    val DataFrameRow<Person>.city get() = this["city"] as String?
-    val DataFrameRow<Person>.weight get() = this["weight"] as Int?
-    val DataFrame<Person>.name get() = this["name"].typed<String>()
-    val DataFrame<Person>.age get() = this["age"].typed<Int>()
-    val DataFrame<Person>.city get() = this["city"].typed<String?>()
-    val DataFrame<Person>.weight get() = this["weight"].typed<Int?>()
+    val DataFrameRowBase<Person>.name get() = this["name"] as String
+    val DataFrameRowBase<Person>.age get() = this["age"] as Int
+    val DataFrameRowBase<Person>.city get() = this["city"] as String?
+    val DataFrameRowBase<Person>.weight get() = this["weight"] as Int?
+    val DataFrameBase<Person>.name get() = this["name"].typed<String>()
+    val DataFrameBase<Person>.age get() = this["age"].typed<Int>()
+    val DataFrameBase<Person>.city get() = this["city"].typed<String?>()
+    val DataFrameBase<Person>.weight get() = this["weight"].typed<Int?>()
 
     val typed: DataFrame<Person> = df.typed()
 
