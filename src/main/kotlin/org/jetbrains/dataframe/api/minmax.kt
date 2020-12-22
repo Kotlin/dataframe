@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.ColumnData
 import kotlin.reflect.KProperty
 
 fun <T, D : Comparable<D>> DataFrame<T>.max(col: KProperty<D?>): D? = get(col).max()

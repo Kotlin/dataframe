@@ -1,10 +1,11 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.ColumnData
 import org.jetbrains.dataframe.impl.GroupedDataFrameImpl
 import org.jetbrains.dataframe.impl.dfsTopNotNull
 import kotlin.reflect.KProperty
 
-fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>) = groupBy { cols.toColumns() }
+fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>) = groupBy { cols.toColumnSet() }
 fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>) = groupBy { cols.toColumns() }
 fun <T> DataFrame<T>.groupBy(vararg cols: String) = groupBy { cols.toColumns() }
 fun <T> DataFrame<T>.groupBy(vararg cols: Column) = groupBy { cols.toColumns() }
@@ -23,7 +24,7 @@ fun <T> DataFrame<T>.groupBy(cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T
    val keyIndices = groups.map { it.second[0] }
 
    val keyColumnsToInsert = nodes.map {
-       val column = it.data[keyIndices]
+       val column = it.data.slice(keyIndices)
        val path = it.path
        ColumnToInsert(path, null, column)
    }

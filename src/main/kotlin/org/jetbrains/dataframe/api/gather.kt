@@ -16,22 +16,23 @@ fun <T, C, K, R> GatherClause<T, C, K, R>.where(filter: Predicate<C>) = GatherCl
 fun <T, C, K, R> GatherClause<T, C, *, R>.mapNames(transform: (String) -> K) = GatherClause(df, selector, filter, transform, valueTransform)
 fun <T, C, K, R> GatherClause<T, C, K, *>.map(transform: (C) -> R) = GatherClause(df, selector, filter, nameTransform, transform)
 fun <T, C : Any, K, R> GatherClause<T, C?, K, *>.mapNotNull(transform: (C) -> R) = GatherClause(df, selector, filter, nameTransform, { if (it != null) transform(it) else null })
-inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String) = gatherImpl(keyColumn, null, getType<K>(), getType<R>())
-inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String, valueColumn: String) = gatherImpl(keyColumn, valueColumn, getType<K>(), getType<R>())
-fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: String? = null, keyColumnType: KType, valueColumnType: KType): DataFrame<T> {
+inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String) = doGather(this, keyColumn, null, getType<K>(), getType<R>())
+inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String, valueColumn: String) = doGather(this, keyColumn, valueColumn, getType<K>(), getType<R>())
 
-    val keyColumns = df.getColumns(selector)
+fun <T, C, K, R> doGather(clause: GatherClause<T, C, K, R>, namesTo: String, valuesTo: String? = null, keyColumnType: KType, valueColumnType: KType): DataFrame<T> {
+
+    val keyColumns = clause.df.getColumns(clause.selector)
 
     // TODO: support hierarchical columns
-    val otherColumns = df.columns - keyColumns
+    val otherColumns = clause.df.columns - keyColumns
     val outputColumnsData = otherColumns.map { ArrayList<Any?>() }.toMutableList()
     val keyColumnData = ArrayList<K>()
     val valueColumnData = ArrayList<R>()
-    val include = filter ?: { true }
+    val include = clause.filter ?: { true }
     var hasNullValues = false
-    val keys = keyColumns.map { nameTransform(it.name) }
+    val keys = keyColumns.map {clause.nameTransform(it.name) }
     val classes = if (valueColumnType.jvmErasure == Any::class) mutableSetOf<KClass<*>>() else null
-    (0 until df.nrow).forEach { row ->
+    (0 until clause.df.nrow).forEach { row ->
         keyColumns.forEachIndexed { colIndex, col ->
             val value = col[row]
             if (include(value)) {
@@ -40,7 +41,7 @@ fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(namesTo: String, valuesTo: 
                 }
                 keyColumnData.add(keys[colIndex])
                 if (valuesTo != null) {
-                    val dstValue = valueTransform(value)
+                    val dstValue = clause.valueTransform(value)
                     valueColumnData.add(dstValue)
                     if (dstValue == null)
                         hasNullValues = true

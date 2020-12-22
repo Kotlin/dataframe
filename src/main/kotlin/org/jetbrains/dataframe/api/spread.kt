@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.ColumnData
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType

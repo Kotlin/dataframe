@@ -4,7 +4,7 @@ import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.impl.ColumnDataCollector
+import org.jetbrains.dataframe.api.columns.ColumnData
 import org.jetbrains.dataframe.impl.createDataCollector
 import java.io.File
 import java.lang.StringBuilder

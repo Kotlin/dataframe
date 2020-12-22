@@ -1,5 +1,7 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.ColumnWithPath
 import org.jetbrains.dataframe.impl.ColumnDataCollector
 import org.jetbrains.dataframe.impl.TypedColumnDataCollector
 import org.jetbrains.dataframe.impl.createDataCollector

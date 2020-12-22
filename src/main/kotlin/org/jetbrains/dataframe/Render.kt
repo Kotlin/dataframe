@@ -53,7 +53,7 @@ internal fun renderType(type: KType): String {
 
 internal fun DataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 20): String {
     val sb = StringBuilder()
-    sb.appendLine("Data Frame: [$size]")
+    sb.appendLine("Data Frame: [${size()}]")
     sb.appendLine()
 
     val outputRows = limit.coerceAtMost(nrow)

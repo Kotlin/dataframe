@@ -1,5 +1,9 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.ColumnSet
+import org.jetbrains.dataframe.api.columns.ColumnWithPath
+import org.jetbrains.dataframe.api.columns.GroupedColumn
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
@@ -14,15 +18,15 @@ interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
 
     fun DataFrameBase<*>.cols(predicate: (DataCol) -> Boolean) = ColumnGroup(this.columns().filter(predicate))
 
-    fun <C> DataFrameBase<*>.colsOfType(type: KType, filter: (ColumnData<C>) -> Boolean = { true }) = this.columns().filter { it.type.isSubtypeOf(type) && (type.isMarkedNullable || !it.hasNulls) && filter(it.typed()) }.map { it.typed<C>() }.toColumns()
+    fun <C> DataFrameBase<*>.colsOfType(type: KType, filter: (ColumnData<C>) -> Boolean = { true }) = this.columns().filter { it.type.isSubtypeOf(type) && (type.isMarkedNullable || !it.hasNulls) && filter(it.typed()) }.map { it.typed<C>() }.toColumnSet()
 
     fun DataFrameBase<*>.all() = ColumnGroup(this.columns())
 
     fun <C> ColumnSet<C>.filter(predicate: Predicate<ColumnData<C>>) = createColumnSet { resolve(it).filter { predicate(it.data) } }
 
-    fun <C> ColumnSet<C>.colsDfs(predicate: (ColumnWithPath<*>) -> Boolean = { true }) = createColumnSet { resolve(it).filter { it.data.isGrouped() }.flatMap { it.children().dfs().filter(predicate) } }
+    fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean = { true }) = createColumnSet { resolve(it).filter { it.isGrouped() }.flatMap { it.children().dfs().filter(predicate) } }
 
-    fun <C> ColumnSet<C>.children(predicate: (DataCol) -> Boolean = {true} ) = createColumnSet { resolve(it).filter { it.data.isGrouped() }.flatMap { it.children().filter { predicate(it.data) } } }
+    fun <C> ColumnSet<C>.children(predicate: (DataCol) -> Boolean = {true} ) = createColumnSet { resolve(it).filter { it.isGrouped() }.flatMap { it.children().filter { predicate(it.data) } } }
 
     fun GroupedColumnDef.all() = createColumnSet { resolve(it).single().children() }
 

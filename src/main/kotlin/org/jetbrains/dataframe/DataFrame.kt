@@ -1,5 +1,7 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.*
+import org.jetbrains.dataframe.impl.DataFrameReceiver
 import org.jetbrains.dataframe.impl.DataFrameRowImpl
 import org.jetbrains.dataframe.impl.EmptyDataFrame
 import org.jetbrains.dataframe.impl.getOrPut
@@ -38,7 +40,7 @@ internal fun <T, C> DataFrame<T>.getColumns(selector: ColumnsSelector<T, C>) = g
 
 internal fun <T, C> DataFrame<T>.getColumnsWithPaths(unresolvedColumnsPolicy: UnresolvedColumnsPolicy, selector: ColumnsSelector<T, C>): List<ColumnWithPath<C>> = selector.toColumns().resolve(ColumnResolutionContext(this, unresolvedColumnsPolicy))
 
-internal fun <T, C> DataFrame<T>.getColumnsWithPaths(selector: ColumnsSelector<T, C>): List<ColumnWithPath<C>> = getColumnsWithPaths(UnresolvedColumnsPolicy.Fail, selector)
+fun <T, C> DataFrame<T>.getColumnsWithPaths(selector: ColumnsSelector<T, C>): List<ColumnWithPath<C>> = getColumnsWithPaths(UnresolvedColumnsPolicy.Fail, selector)
 
 internal fun <T, C> DataFrame<T>.getColumnPaths(selector: ColumnsSelector<T, C>): List<ColumnPath> = selector.toColumns().resolve(ColumnResolutionContext(this, UnresolvedColumnsPolicy.Fail)).map { it.path }
 
@@ -101,9 +103,9 @@ interface DataFrame<out T> : DataFrameBase<T> {
     operator fun plus(col: Iterable<DataCol>) = new(columns() + col)
     operator fun plus(stub: AddRowNumberStub) = addRowNumber(stub.columnName)
 
-    fun getRows(indices: Iterable<Int>) = columns().map { col -> col[indices] }.asDataFrame<T>()
-    fun getRows(mask: BooleanArray) = columns().map { col -> col[mask] }.asDataFrame<T>()
-    fun getRows(range: IntRange) = columns().map { col -> col[range] }.asDataFrame<T>()
+    fun getRows(indices: Iterable<Int>) = columns().map { col -> col.slice(indices) }.asDataFrame<T>()
+    fun getRows(mask: BooleanArray) = columns().map { col -> col.slice(mask) }.asDataFrame<T>()
+    fun getRows(range: IntRange) = columns().map { col -> col.slice(range) }.asDataFrame<T>()
 
     fun getColumnIndex(name: String): Int
     fun getColumnIndex(col: DataCol) = getColumnIndex(col.name)
@@ -155,7 +157,7 @@ interface DataFrame<out T> : DataFrameBase<T> {
         }
     }
 
-    val size get() = DataFrameSize(ncol, nrow)
+    fun size() = DataFrameSize(ncol, nrow)
 }
 
 fun <T> DataFrame<*>.typed(): DataFrame<T> = this as DataFrame<T>

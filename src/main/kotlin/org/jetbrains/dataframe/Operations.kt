@@ -1,6 +1,10 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.*
 import org.jetbrains.dataframe.impl.TreeNode
+import org.jetbrains.dataframe.impl.columns.ColumnDataWithParent
+import org.jetbrains.dataframe.impl.columns.ColumnWithParent
+import org.jetbrains.dataframe.impl.columns.ColumnWithPathImpl
 import org.jetbrains.dataframe.impl.getAncestor
 import org.jetbrains.dataframe.impl.getOrPut
 import kotlin.reflect.KClass
@@ -165,7 +169,7 @@ internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (
 internal data class ColumnPosition(val originalIndex: Int, var wasRemoved: Boolean, var column: DataCol?)
 
 // TODO: replace 'insertionPath' with TreeNode<ColumnToInsert> tree
-internal data class ColumnToInsert(val insertionPath: List<String>, val originalNode: TreeNode<ColumnPosition>?, val column: DataCol)
+internal data class ColumnToInsert(val insertionPath: ColumnPath, val originalNode: TreeNode<ColumnPosition>?, val column: DataCol)
 
 fun Column.getParent(): GroupedColumnDef? = when (this) {
     is ColumnWithParent<*> -> parent

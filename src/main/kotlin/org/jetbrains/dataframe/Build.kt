@@ -1,7 +1,11 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.ColumnWithPath
 import org.jetbrains.dataframe.impl.DataFrameImpl
 import org.jetbrains.dataframe.impl.TreeNode
+import org.jetbrains.dataframe.impl.columns.ColumnDataWithParentImpl
+import org.jetbrains.dataframe.impl.columns.GroupedColumnWithParent
 import org.jetbrains.dataframe.impl.getOrPut
 import java.lang.UnsupportedOperationException
 import kotlin.reflect.KClass
@@ -51,6 +55,7 @@ fun dataFrameOf(vararg header: String) = dataFrameOf(header.toList())
 
 fun dataFrameOf(header: List<String>) = DataFrameBuilder(header)
 
+// TODO: remove checks for ColumnWithParent types
 internal fun DataCol.unbox(): DataCol = when (this) {
     is ColumnWithPath<*> -> data.unbox()
     is ColumnDataWithParentImpl<*> -> source.unbox()
@@ -121,5 +126,5 @@ internal fun guessValueType(values: List<Any?>): KType {
 }
 
 internal fun guessColumnType(name: String, values: List<Any?>) = guessValueType(values).let {
-    ValueColumnImpl(values, name, it)
+    ColumnData.create(name, values, it)
 }

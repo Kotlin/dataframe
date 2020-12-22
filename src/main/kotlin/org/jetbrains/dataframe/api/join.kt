@@ -1,6 +1,8 @@
 package org.jetbrains.dataframe.api
 
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.api.columns.ColumnSet
+import org.jetbrains.dataframe.api.columns.ColumnWithPath
 import kotlin.reflect.full.withNullability
 
 interface JoinReceiver<out A, out B> : SelectReceiver<A> {

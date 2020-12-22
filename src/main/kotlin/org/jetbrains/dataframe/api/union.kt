@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe
 
 import com.beust.klaxon.internal.firstNotNullResult
+import org.jetbrains.dataframe.api.columns.ColumnData
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 

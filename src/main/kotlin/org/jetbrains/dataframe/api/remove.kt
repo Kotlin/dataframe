@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.GroupedColumn
 import org.jetbrains.dataframe.impl.TreeNode
 import kotlin.reflect.KProperty
 
@@ -12,7 +13,7 @@ fun <T> DataFrame<T>.remove(selector: ColumnsSelector<T, *>) = doRemove(selector
 fun <T> DataFrame<T>.remove(vararg cols: KProperty<*>) = remove { cols.toColumns() }
 fun <T> DataFrame<T>.remove(vararg cols: String) = remove { cols.toColumns() }
 fun <T> DataFrame<T>.remove(vararg cols: Column) = remove { cols.toColumns() }
-fun <T> DataFrame<T>.remove(cols: Iterable<Column>) = remove { cols.toColumns() }
+fun <T> DataFrame<T>.remove(cols: Iterable<Column>) = remove { cols.toColumnSet() }
 
 internal data class RemoveResult<T>(val df: DataFrame<T>, val removedColumns: List<TreeNode<ColumnPosition>>){
 

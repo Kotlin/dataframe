@@ -2,6 +2,7 @@ package org.jetbrains.dataframe.io
 
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.api.columns.ColumnData
 import java.io.*
 import java.math.BigDecimal
 import java.net.URL

@@ -1,5 +1,9 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.GroupedColumn
+import org.jetbrains.dataframe.api.columns.GroupedColumnBase
+import org.jetbrains.dataframe.api.columns.TableColumn
 import kotlin.reflect.*
 import kotlin.reflect.full.*
 import kotlin.reflect.jvm.jvmErasure

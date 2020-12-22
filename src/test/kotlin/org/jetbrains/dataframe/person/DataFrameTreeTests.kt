@@ -2,6 +2,8 @@ package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.GroupedColumnBase
 import org.junit.Test
 
 class DataFrameTreeTests : BaseTest() {
@@ -88,7 +90,7 @@ class DataFrameTreeTests : BaseTest() {
 
         val actual = typed2.move { nameAndCity.name }.into("name")
         actual.columnNames() shouldBe listOf("nameAndCity", "name", "age", "weight")
-        actual.getGroup("nameAndCity").asDataFrame().columnNames() shouldBe listOf("city")
+        actual.getGroup("nameAndCity").columnNames() shouldBe listOf("city")
     }
 
     @Test
@@ -101,7 +103,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun selectDfs(){
 
-        val cols = typed2.select { colsDfs { it.hasNulls }}
+        val cols = typed2.select { dfs { it.hasNulls } }
         cols shouldBe typed2.select { nameAndCity.city and weight }
     }
 
