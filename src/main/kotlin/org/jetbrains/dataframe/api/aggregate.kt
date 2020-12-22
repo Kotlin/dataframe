@@ -29,7 +29,7 @@ class GroupAggregateBuilder<T>(internal val df: DataFrame<T>): DataFrame<T> by d
     inline infix fun <reified R> R.into(name: String)  = add(listOf(name), this, getType<R>())
 }typealias GroupAggregator<G> = GroupAggregateBuilder<G>.(GroupAggregateBuilder<G>) -> Unit
 
-fun <T, G> GroupedDataFrame<T, G>.aggregate(body: GroupAggregator<G>) = doAggregate(asPlain(), { groups }, removeColumns = true, body)
+fun <T, G> GroupedDataFrame<T, G>.aggregate(body: GroupAggregator<G>) = doAggregate(plain(), { groups }, removeColumns = true, body)
 fun <T, G> DataFrame<T>.aggregate(selector: ColumnSelector<T, DataFrame<G>>, body: GroupAggregator<G>) = doAggregate(this, selector, removeColumns = false, body)
 internal fun <T, G> doAggregate(df: DataFrame<T>, selector: ColumnSelector<T, DataFrame<G>>, removeColumns: Boolean, body: GroupAggregator<G>): DataFrame<T> {
 

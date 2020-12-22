@@ -99,7 +99,7 @@ class SortColumnDescriptor<C>(val column: ColumnData<C>, val direction: SortDire
 
 internal fun <T, G> GroupedDataFrame<T, G>.doSortBy(selector: SortColumnsSelector<G, *>): GroupedDataFrame<T, G> {
 
-    return asPlain()
+    return plain()
             .update { groups }
             .with { it.doSortBy(selector, UnresolvedColumnsPolicy.Skip) }
             .doSortBy(selector as SortColumnsSelector<T, *>, UnresolvedColumnsPolicy.Skip)

@@ -293,7 +293,7 @@ fun <T, R> ColumnData<T>.map(transform: (T) -> R): ColumnData<R> {
 
 fun <T, R> ColumnData<T>.map(type: KType?, transform: (T) -> R): ColumnData<R> {
     if (type == null) return map(transform)
-    val collector = createDataCollector<R>(type, size)
+    val collector = createDataCollector<R>(size, type)
     values.forEach { collector.add(transform(it)) }
     return collector.toColumn(name) as ColumnData<R>
 }

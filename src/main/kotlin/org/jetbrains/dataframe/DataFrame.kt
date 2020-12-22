@@ -26,12 +26,14 @@ internal fun  List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnW
     val fullTree = collectTree(null) { it }
     columns.forEach {
         var node = fullTree.getOrPut(it.path).asNullable()
+        node?.dfs()?.forEach { it.data = null }
         while (node != null) {
             node.data = null
             node = node.parent
         }
     }
-    return fullTree.topDfs { it.data != null && it.children.all { it.data != null } }.map { it.data!!.addPath(it.pathFromRoot()) }
+    val dfs = fullTree.topDfs { it.data != null }
+    return dfs.map { it.data!!.addPath(it.pathFromRoot()) }
 }
 
 internal fun <T, C> DataFrame<T>.getColumns(skipMissingColumns: Boolean, selector: ColumnsSelector<T, C>): List<ColumnData<C>> = getColumnsWithPaths(if(skipMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail, selector).map { it.data }
@@ -62,16 +64,6 @@ internal fun <T, C> DataFrame<T>.getColumns(columnNames: Array<out KProperty<C>>
 internal fun <T>  DataFrame<T>.getColumns(columnNames: List<String>): List<DataCol> = columnNames.map { this[it] }
 
 internal fun <T>  DataFrame<T>.new(columns: Iterable<DataCol>) = dataFrameOf(columns).typed<T>()
-
-operator fun <T>  DataFrameBase<T>.get(columnPath: List<String>): DataCol {
-
-    var res: DataCol? = null
-    columnPath.forEach {
-        if(res == null) res = this[it]
-        else res = res!!.asGrouped()[it]
-    }
-    return res!!
-}
 
 interface DataFrame<out T> : DataFrameBase<T> {
 
@@ -122,8 +114,6 @@ interface DataFrame<out T> : DataFrameBase<T> {
 
     fun addRow(vararg values: Any?): DataFrame<T>
 
-    fun insertCol(index: Int, col: ColumnData<*>) = (columns().subList(0, index) + listOf(col) + columns().subList(index, ncol)).asDataFrame<T>()
-
     fun all(predicate: RowFilter<T>): Boolean = rows.all { predicate(it, it) }
     fun any(predicate: RowFilter<T>): Boolean = rows.any { predicate(it, it) }
 
@@ -149,14 +139,6 @@ interface DataFrame<out T> : DataFrameBase<T> {
 
     fun <R> mapIndexed(action: (Int, DataFrameRow<T>) -> R) = rows.mapIndexed(action)
 
-    fun <C> forEachIn(selector: ColumnsSelector<T, C>, action: (DataFrameRow<T>, ColumnData<C>) -> Unit) = getColumnsWithPaths(selector).let { cols ->
-        rows.forEach { row ->
-            cols.forEach { col ->
-                action(row, col.data)
-            }
-        }
-    }
-
     fun size() = DataFrameSize(ncol, nrow)
 }
 
@@ -168,4 +150,13 @@ fun <T> DataFrameRow<T>.toDataFrame() = owner.columns.map {
     val value = it[index]
     it.withValues(listOf(value), value == null)
 }.let { dataFrameOf(it).typed<T>() }
+
+fun <T, C> DataFrame<T>.forEachIn(selector: ColumnsSelector<T, C>, action: (DataFrameRow<T>, ColumnData<C>) -> Unit) = getColumnsWithPaths(selector).let { cols ->
+    rows.forEach { row ->
+        cols.forEach { col ->
+            action(row, col.data)
+        }
+    }
+}
+
 

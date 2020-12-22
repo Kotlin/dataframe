@@ -15,7 +15,7 @@ class RenderingTests: BaseTest() {
     @Test
     fun `render to string`(){
         val expected = """
-            Data Frame: [7 x 4]
+            Data Frame [7 x 4]
 
             |name:String |age:Int |city:String? |weight:Int? |
             |------------|--------|-------------|------------|

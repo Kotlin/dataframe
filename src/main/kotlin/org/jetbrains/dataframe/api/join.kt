@@ -1,4 +1,4 @@
-package org.jetbrains.dataframe.api
+package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.columns.ColumnSet

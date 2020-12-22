@@ -55,8 +55,8 @@ class SeriesTests {
     fun `movingAverage`() {
         val k = 3
         val withMa = typed
-                .sortBy { city then day }
                 .groupBy { city }
+                .sortBy { city then day }
                 .add("ma_temp") { movingAverage(k) { it.temp } }
                 .ungroup()
 
