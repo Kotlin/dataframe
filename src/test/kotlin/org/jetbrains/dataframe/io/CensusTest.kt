@@ -15,10 +15,6 @@ class CensusTest {
 
         df.columnNames().forEach { println(it) }
         val grouped = df.move { cols { it.name.contains(":") } }.into { it.name.split(":").reversed() }
-        println(grouped)
-    }
-
-    val f = sequence {
-        yield(df)
+        grouped.print()
     }
 }

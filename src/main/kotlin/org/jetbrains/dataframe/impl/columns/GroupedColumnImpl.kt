@@ -50,5 +50,5 @@ internal class GroupedColumnImpl<T>(override val df: DataFrame<T>, override val 
 
     override fun tryGetColumn(columnName: String) = df.tryGetColumn(columnName)
 
-    override fun toString() = "$name: { ${df.columns.map { it.toString() }.joinToString()} }"
+    override fun toString() = "$name: {${renderSchema(df)}}"
 }

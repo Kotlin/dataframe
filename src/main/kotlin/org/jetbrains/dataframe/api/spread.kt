@@ -85,7 +85,7 @@ internal fun <T,K,V> SpreadClause<T, K, V, SpreadContext.DataFrame<T>>.execute()
     val df = context.df
     val grouped = df.groupBy {
         val columnsToExclude = valueColumn?.let { keyColumn() and it()} ?: keyColumn()
-        allExcept(columnsToExclude)
+        except(columnsToExclude)
     }
     return grouped.aggregate {
         val clause = changeContext(SpreadContext.GroupAggregator(this))

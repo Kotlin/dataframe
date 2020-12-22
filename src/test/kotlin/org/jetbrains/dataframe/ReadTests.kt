@@ -10,16 +10,6 @@ import org.junit.Test
 class ReadTests {
 
     @Test
-    @Ignore
-    fun readCensus(){
-        val df = readCSV("../jupyter notebooks/Kotlin/Census/cleanedCensus.csv")
-
-        println(df.summary())
-    }
-
-
-
-    @Test
     fun parseJson1(){
         val json = """[
                 {"a":1, "b":"text"},

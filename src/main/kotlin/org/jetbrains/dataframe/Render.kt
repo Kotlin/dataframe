@@ -45,20 +45,41 @@ fun DataFrame<*>.toHTML(limit: Int = 20, truncate: Int = 40): String {
     return sb.toString()
 }
 
-internal fun renderType(type: KType): String {
-    val result = type.toString()
-    return if(result.startsWith("kotlin.")) result.substring(7)
-    else result
-}
+internal fun renderSchema(df: DataFrame<*>): String =
+        df.columns.map { "${it.name}:${renderType(it)}"}.joinToString()
 
-internal fun DataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 20): String {
+internal fun renderType(column: DataCol) =
+    when(column.kind()) {
+        ColumnKind.Data -> {
+            val type = column.type
+            val result = type.toString()
+            if (result.startsWith("kotlin.")) result.substring(7)
+            else result
+        }
+        ColumnKind.Table -> {
+            val table = column.asTable()
+            "[${renderSchema(table.df)}]"
+        }
+        ColumnKind.Group -> {
+            val group = column.asGrouped()
+            "{${renderSchema(group.df)}}"
+        }
+    }
+
+internal fun renderValue(value: Any?) =
+    when {
+        value is DataFrame<*> -> "${value.nrow} rows"
+        else -> value.toString()
+    }
+
+internal fun DataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 40): String {
     val sb = StringBuilder()
-    sb.appendLine("Data Frame: [${size()}]")
+    sb.appendLine("Data Frame [${size()}]")
     sb.appendLine()
 
     val outputRows = limit.coerceAtMost(nrow)
-    val output = columns.map { it.values.take(limit).map { it.toString().truncate(truncate) } }
-    val header = columns.map { "${it.name}:${renderType(it.type)}"}
+    val output = columns.map { it.values.take(limit).map { renderValue(it).truncate(truncate) } }
+    val header = columns.map { "${it.name}:${renderType(it)}"}
     val columnLengths = output.mapIndexed { col, values -> (values + header[col]).map { it.length }.max()!! + 1 }
 
     sb.append("|")

@@ -4,6 +4,7 @@ import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.columns.ColumnData
 import org.jetbrains.dataframe.api.columns.GroupedColumnBase
+import org.jetbrains.dataframe.io.print
 import org.junit.Test
 
 class DataFrameTreeTests : BaseTest() {
@@ -157,6 +158,75 @@ class DataFrameTreeTests : BaseTest() {
         df2.select(nameAndCity, age).spread { it[nameAndCity][city] }.by(age).into(cities).check()
         df2.select(GroupedPerson::nameAndCity, GroupedPerson::age).spread { it[GroupedPerson::nameAndCity][NameAndCity::city] }.by(GroupedPerson::age).into("cities").check()
         df2.select("nameAndCity", "age").spread { it["nameAndCity"]["city"] }.by("age").into("cities").check()
+    }
+
+    @Test
+    fun splitCols() {
+
+        val split = typed2.split { nameAndCity.name }.by { it.toCharArray().toList() }.inward().into { "char$it" }
+        split.columnNames() shouldBe typed2.columnNames()
+        split.nrow shouldBe typed2.nrow
+        split.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames()
+        val nameGroup = split.nameAndCity.name.asGrouped()
+        nameGroup.name shouldBe "name"
+        nameGroup.isGrouped() shouldBe true
+        nameGroup.ncol shouldBe typed2.nameAndCity.name.map { it.length }.max()
+        nameGroup.columnNames() shouldBe (0 until nameGroup.ncol).map { "char$it" }
+    }
+
+    @Test
+    fun `split into parts`() {
+
+        val split = typed2.split { nameAndCity.name }.by { it.toCharArray().toList() }.intoParts()
+        split.nameAndCity.columnNames() shouldBe (0 until split.nameAndCity.ncol-1).map { "part$it" } + "city"
+    }
+
+    @Test
+    fun `split into rows`() {
+
+        val split = typed2.split { nameAndCity.name }.by { it.toCharArray().toList() }.intoRows()
+        val merged = split.mergeRows { nameAndCity.name }
+        val joined = merged.update { nameAndCity.name }.cast<List<Char>>().with { it.joinToString("") }
+        joined shouldBe typed2
+    }
+
+    @Test
+    fun `all except`(){
+        val info by columnGroup()
+        val moved = typed.group { except(name) }.into(info)
+        val actual = moved.select { except(info) }
+        actual.print()
+        actual shouldBe typed.select { name }
+    }
+
+    @Test
+    fun `move and group`(){
+        val info by columnGroup()
+        val moved = typed.group { except(name) }.into(info)
+        val grouped = moved.groupBy { except(info) }.plain()
+        grouped.nrow shouldBe typed.name.ndistinct
+    }
+
+    @Test
+    fun `merge rows into table`() {
+
+        val info by columnGroup()
+        val moved = typed.group { except(name) }.into(info)
+        val merged = moved.mergeRows { info }
+        val grouped = typed.groupBy { name }.modify { remove { name } }
+        val expected = grouped.plain().rename(grouped.groups).into(info)
+        merged shouldBe expected
+    }
+
+    @Test
+    fun `update grouped column to table`(){
+        val info by columnGroup()
+        val grouped = typed.group { age and weight }.into(info)
+        val updated = grouped.update(info).with2 { row, column -> column.asGrouped().df}
+        val col = updated[info.name]
+        col.kind() shouldBe ColumnKind.Table
+        val table = col.asTable()
+        table.df.columnNames() shouldBe typed.select { age and weight }.columnNames()
     }
 
     @Test

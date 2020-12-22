@@ -4,9 +4,8 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.leftJoin
+import org.jetbrains.dataframe.io.print
 import org.jetbrains.dataframe.tracking.trackColumnAccess
-import org.junit.Ignore
 import org.junit.Test
 import java.time.LocalDate
 import kotlin.reflect.jvm.jvmErasure
@@ -408,6 +407,8 @@ class DataFrameTests : BaseTest() {
             this["ages"].values shouldBe listOf(listOf(15, 20), listOf(45, 30), listOf(20, 40, 30))
         }
 
+        typed.groupBy { name and age }.print()
+
         typed.groupBy { name }.aggregate {
             nrow into "n"
             count { age > 25 } into "old count"
@@ -426,7 +427,7 @@ class DataFrameTests : BaseTest() {
             it.median { it.age } into "median age"
             it.min { it.age } into "min age"
             it.all { it.weight != null } into "all with weights"
-            it.maxBy { it.age }.city  into "oldest origin"
+            it.maxBy { it.age }.city into "oldest origin"
             it.sortBy { it.age }.first().city into "youngest origin"
             it.countBy { it.city } into { "from $it" }
             it.age.toList() into "ages"
@@ -673,15 +674,22 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `rename`() {
-        val renamed = typed.rename("name" to "name2", "age" to "age2")
-        renamed["name2"].values shouldBe typed.name.values
-        renamed.tryGetColumn("age") shouldBe null
+
+        fun DataFrame<*>.check() {
+            this["name2"].values shouldBe typed.name.values
+            this["age2"].values shouldBe typed.age.values
+            this.columnNames() shouldBe listOf("name2", "age2", "city", "weight")
+            this.tryGetColumn("age") shouldBe null
+        }
+        typed.rename("name" to "name2", "age" to "age2").check()
+        typed.rename { name and age }.into("name2", "age2").check()
+        typed.rename { name and age }.into { it.name + "2" }.check()
     }
 
     @Test
     fun `select with rename`() {
-        val expected = typed.select { name and age }.rename("name" to "name2", "age" to "age2")
 
+        val expected = typed.select { name and age }.rename { all() }.into { it.name + 2 }
         typed.select { name.rename("name2") and age.rename("age2") } shouldBe expected
         df.select { name("name2") and age("age2") } shouldBe expected
     }
@@ -705,7 +713,7 @@ class DataFrameTests : BaseTest() {
 
         for (row in 0 until typed.nrow) {
             val city = typed[row][city]
-            if(city != null) spread[row][city] shouldBe true
+            if (city != null) spread[row][city] shouldBe true
             for (col in typed.ncol until spread.ncol) {
                 val spreadValue = spread.columns[col].typed<Boolean>()[row]
                 val colName = spread.columns[col].name
@@ -842,7 +850,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun splitCol() {
         val merged = typed.mergeCols { age and city and weight }.into("info")
-        val info by column<List<*>>()
+        val info by columnList<Any>()
         val res = merged.split { info }.into("age", "city", "weight")
         res shouldBe typed
     }
@@ -914,7 +922,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `basic math`(){
+    fun `basic math`() {
         typed.age.mean() shouldBe typed.age.values.mean()
         typed.age.min() shouldBe typed.age.values.minOrNull()
         typed.age.max() shouldBe typed.age.values.maxOrNull()
@@ -922,17 +930,17 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `row to string`(){
+    fun `row to string`() {
         typed[0].toString() shouldBe "{ name:Alice, age:15, city:London, weight:54 }"
     }
 
     @Test
-    fun `range slice`(){
+    fun `range slice`() {
         typed[3..5].name.values.toList() shouldBe typed.name.values.toList().subList(3, 6)
     }
 
     @Test
-    fun `range slice two times`(){
+    fun `range slice two times`() {
         typed[3..5][1..2].name.values.toList() shouldBe typed.name.values.toList().subList(4, 6)
     }
 
@@ -946,12 +954,12 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    @Ignore
     fun `forEachIn`() {
         val cities by columnGroup()
         val spread = typed.spread { city }.by { age }.into(cities)
         var sum = 0
-        spread.forEachIn( { cities.all() } ){ row, column -> column[row]?.let { sum += it as Int} }
+        spread.forEachIn({ cities.all() }) { row, column -> column[row]?.let { sum += it as Int } }
         sum shouldBe typed.age.sum()
     }
+
 }

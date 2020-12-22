@@ -11,7 +11,7 @@ interface GroupedDataFrame<out T, out G> {
 
     val keys : DataFrame<T>
 
-    fun asPlain(): DataFrame<T>
+    fun plain(): DataFrame<T>
 
     fun ungroup() = groups.union().typed<G>()
 

@@ -4,6 +4,7 @@ import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.columns.TableColumn
 
 internal class GroupedDataFrameImpl<T, G>(val df: DataFrame<T>, override val groups: TableColumn<G>): GroupedDataFrame<T, G> {
+
     override val keys by lazy { df - groups }
 
     override operator fun get(key: GroupKey): DataFrame<T> {
@@ -18,5 +19,7 @@ internal class GroupedDataFrameImpl<T, G>(val df: DataFrame<T>, override val gro
     override fun <R> modify(transform: DataFrame<G>.() -> DataFrame<R>) =
             df.update(groups) { transform(it) }.toGrouped { tableColumn<R>(groups.name) }
 
-    override fun asPlain() = df
+    override fun plain() = df
+
+    override fun toString() = df.toString()
 }

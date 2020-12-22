@@ -21,6 +21,16 @@ interface DataFrameBase<out T>: SingleColumn<DataFrameRow<T>> {
     operator fun <R> get(column: ColumnDef<DataFrameRow<R>>): GroupedColumn<R>
     operator fun <R> get(column: ColumnDef<DataFrame<R>>): TableColumn<R>
 
+    operator fun get(columnPath: List<String>): DataCol {
+
+        var res: DataCol? = null
+        columnPath.forEach {
+            if(res == null) res = this[it]
+            else res = res!!.asGrouped()[it]
+        }
+        return res!!
+    }
+
     operator fun get(index: Int): DataFrameRow<T>
     fun getColumn(columnIndex: Int): DataCol
     fun columns(): List<DataCol>

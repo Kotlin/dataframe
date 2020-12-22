@@ -1,47 +1,63 @@
 package org.jetbrains.dataframe.impl
 
-import org.jetbrains.dataframe.column
+import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.api.columns.ColumnData
 import org.jetbrains.dataframe.commonParent
-import org.jetbrains.dataframe.createStarProjectedType
-import org.jetbrains.dataframe.getType
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.withNullability
 
-internal class ColumnDataCollector(initCapacity: Int = 0) {
-    private val classes = mutableSetOf<KClass<*>>()
-    private var hasNulls = false
-    private val data = ArrayList<Any?>(initCapacity)
+interface DataCollector<T> {
 
-    fun add(value: Any?) {
-        if (value == null) hasNulls = true
-        else classes.add(value.javaClass.kotlin)
-        data.add(value)
-    }
-
-    val values: List<*>
-        get() = data
-
-    fun toColumn(name: String) = column(name, data, classes.commonParent().createStarProjectedType(hasNulls))
-
-    fun toColumn(name: String, clazz: KClass<*>) = column(name, data, clazz.createStarProjectedType(hasNulls))
+    fun add(value: T)
+    fun toColumn(name: String): ColumnData<T>
 }
 
-internal class TypedColumnDataCollector<T>(initCapacity: Int = 0, val type: KType) {
-    private var hasNulls = false
-    private val data = ArrayList<T?>(initCapacity)
+internal abstract class DataCollectorBase<T>(initCapacity: Int): DataCollector<T> {
 
-    fun add(value: T?) {
-        if (value == null) hasNulls = true
-        data.add(value)
-    }
+    protected var hasNulls = false
+        private set
+
+    private val data = ArrayList<T?>(initCapacity)
 
     val values: List<T?>
         get() = data
 
-    fun toColumn(name: String) = column(name, data, type.withNullability(hasNulls))
+    override fun add(value: T) {
+        if (value == null) hasNulls = true
+        data.add(value)
+    }
+
+    protected fun createColumn(name: String, type: KType): ColumnData<T> {
+        if ((type.classifier as KClass<*>).isSubclassOf(DataFrame::class)) {
+            return ColumnData.createTable(name, data as List<DataFrame<*>>) as ColumnData<T>
+        }
+        return column(name, data, type.withNullability(hasNulls)) as ColumnData<T>
+    }
 }
 
-internal fun createDataCollector(initCapacity: Int = 0) = ColumnDataCollector(initCapacity)
+internal open class ColumnDataCollector(initCapacity: Int = 0, val getType: (KClass<*>)->KType): DataCollectorBase<Any?>(initCapacity) {
 
-internal fun <T> createDataCollector(type: KType, initCapacity: Int = 0) = TypedColumnDataCollector<T>(initCapacity, type)
+    private val classes = mutableSetOf<KClass<*>>()
+
+    protected fun commonClass() = classes.commonParent()
+
+    override fun add(value: Any?) {
+        super.add(value)
+        if (value != null) classes.add(value.javaClass.kotlin)
+    }
+
+    override fun toColumn(name: String) = createColumn(name, getType(commonClass()).withNullability(hasNulls))
+}
+
+internal class TypedColumnDataCollector<T>(initCapacity: Int = 0, val type: KType): DataCollectorBase<T?>(initCapacity) {
+
+    override fun toColumn(name: String) = createColumn(name, type)
+}
+
+internal fun createDataCollector(initCapacity: Int = 0) = createDataCollector(initCapacity) { it.createStarProjectedType(false)}
+
+internal fun createDataCollector(initCapacity: Int = 0, getType: (KClass<*>) -> KType) = ColumnDataCollector(initCapacity, getType)
+
+internal fun <T> createDataCollector(initCapacity: Int = 0, type: KType) = TypedColumnDataCollector<T>(initCapacity, type)
