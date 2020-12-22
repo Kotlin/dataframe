@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.ColumnData
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -64,7 +65,7 @@ inline fun <T, reified R> DataFrame<T>.update(firstCol: String, vararg cols: Str
         update(*headPlusArray(firstCol, cols)).with(expression)
 
 fun <T, C> DataFrame<T>.update(selector: ColumnsSelector<T, C>) = UpdateClause(this, null, selector)
-fun <T, C> DataFrame<T>.update(cols: Iterable<ColumnDef<C>>) = update { cols.toColumns() }
+fun <T, C> DataFrame<T>.update(cols: Iterable<ColumnDef<C>>) = update { cols.toColumnSet() }
 fun <T> DataFrame<T>.update(vararg cols: String) = update { cols.toColumns() }
 fun <T, C> DataFrame<T>.update(vararg cols: KProperty<C>) = update { cols.toColumns() }
 fun <T, C> DataFrame<T>.update(vararg cols: ColumnDef<C>) = update { cols.toColumns() }

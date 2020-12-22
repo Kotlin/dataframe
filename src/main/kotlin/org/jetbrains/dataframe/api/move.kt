@@ -1,22 +1,26 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.ColumnWithPath
+import org.jetbrains.dataframe.api.columns.SingleColumn
+import org.jetbrains.dataframe.impl.DataFrameReceiver
 import org.jetbrains.dataframe.impl.TreeNode
 import kotlin.reflect.KProperty
 
 fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, selector: ColumnsSelector<T, *>) = move(selector).to(newColumnIndex)
-fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, cols: Iterable<Column>) = moveTo(newColumnIndex) { cols.toColumns() }
+fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, cols: Iterable<Column>) = moveTo(newColumnIndex) { cols.toColumnSet() }
 fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: String) = moveTo(newColumnIndex) { cols.toColumns() }
 fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: KProperty<*>) = moveTo(newColumnIndex) { cols.toColumns() }
 fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: Column) = moveTo(newColumnIndex) { cols.toColumns() }
 
 fun <T> DataFrame<T>.moveToLeft(selector: ColumnsSelector<T, *>) = move(selector).toLeft()
-fun <T> DataFrame<T>.moveToLeft(cols: Iterable<Column>) = moveToLeft { cols.toColumns() }
+fun <T> DataFrame<T>.moveToLeft(cols: Iterable<Column>) = moveToLeft { cols.toColumnSet() }
 fun <T> DataFrame<T>.moveToLeft(vararg cols: String) = moveToLeft { cols.toColumns() }
 fun <T> DataFrame<T>.moveToLeft(vararg cols: Column) = moveToLeft { cols.toColumns() }
 fun <T> DataFrame<T>.moveToLeft(vararg cols: KProperty<*>) = moveToLeft { cols.toColumns() }
 
 fun <T> DataFrame<T>.moveToRight(cols: ColumnsSelector<T, *>) = move(cols).toRight()
-fun <T> DataFrame<T>.moveToRight(cols: Iterable<Column>) = moveToRight { cols.toColumns() }
+fun <T> DataFrame<T>.moveToRight(cols: Iterable<Column>) = moveToRight { cols.toColumnSet() }
 fun <T> DataFrame<T>.moveToRight(vararg cols: String) = moveToRight { cols.toColumns() }
 fun <T> DataFrame<T>.moveToRight(vararg cols: Column) = moveToRight { cols.toColumns() }
 fun <T> DataFrame<T>.moveToRight(vararg cols: KProperty<*>) = moveToRight { cols.toColumns() }
@@ -29,16 +33,14 @@ fun <T, C> DataFrame<T>.move(selector: ColumnsSelector<T, C>): MoveColsClause<T,
 
 interface DataFrameForMove<T> : DataFrameBase<T> {
 
-    val df: DataFrame<T>
-
     fun path(vararg columns: String): List<String> = listOf(*columns)
 
-    fun SingleColumn<*>.addPath(vararg columns: String): ColumnPath = this.resolveSingle (ColumnResolutionContext(df, UnresolvedColumnsPolicy.Create))!!.path + listOf(*columns)
+    fun SingleColumn<*>.addPath(vararg columns: String): ColumnPath = this.resolveSingle (ColumnResolutionContext(this@DataFrameForMove, UnresolvedColumnsPolicy.Create))!!.path + listOf(*columns)
 
     operator fun SingleColumn<*>.plus(column: String) = addPath(column)
 }
 
-class MoveReceiver<T>(override val df: DataFrame<T>) : DataFrameForMove<T>, DataFrameBase<T> by df
+internal class MoveReceiver<T>(df: DataFrame<T>) : DataFrameReceiver<T>(df, false), DataFrameForMove<T>
 
 fun <T, C> MoveColsClause<T, C>.intoGroup(groupPath: DataFrameForMove<T>.(DataFrameForMove<T>) -> List<String>): DataFrame<T> {
     val receiver = MoveReceiver(df)

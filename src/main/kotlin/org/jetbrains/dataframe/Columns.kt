@@ -1,28 +1,24 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.*
+import org.jetbrains.dataframe.impl.columns.ColumnDataInternal
+import org.jetbrains.dataframe.impl.columns.ColumnWithPathImpl
+import org.jetbrains.dataframe.impl.columns.ConvertedColumnDef
+import org.jetbrains.dataframe.impl.columns.RenamedColumnDef
 import org.jetbrains.dataframe.impl.createDataCollector
-import kotlin.reflect.*
+import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 enum class UnresolvedColumnsPolicy { Fail, Skip, Create }
 
 class ColumnResolutionContext(val df: DataFrameBase<*>, val unresolvedColumnsPolicy: UnresolvedColumnsPolicy) {
 
     val allowMissingColumns = unresolvedColumnsPolicy == UnresolvedColumnsPolicy.Skip
-}
-
-interface ColumnSet<out C> {
-
-    fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>>
-}
-
-interface SingleColumn<out C> : ColumnSet<C> {
-
-    override fun resolve(context: ColumnResolutionContext) = resolveSingle(context)?.let { listOf(it) } ?: emptyList()
-
-    fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>?
 }
 
 internal fun <C> DataFrameBase<*>.getColumn(name: String, policy: UnresolvedColumnsPolicy) =
@@ -57,77 +53,13 @@ class ColumnsBySelector<C>(val resolver: (ColumnResolutionContext) -> List<Colum
     override fun resolve(context: ColumnResolutionContext) = resolver(context)
 }
 
-class RenamedColumnDefImpl<C>(val source: ColumnDef<C>, override val name: String) : ColumnDef<C> {
-
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
-
-        return source.resolveSingle(context)?.let { it.data.doRename(name).addPath(it.path) }
-    }
-}
-
 inline fun <C, reified R> ColumnDef<C>.map(noinline transform: (C) -> R): SingleColumn<R> = map(getType<R>(), transform)
 
 fun <C, R> ColumnDef<C>.map(targetType: KType?, transform: (C) -> R): SingleColumn<R> = ConvertedColumnDef(this, transform, targetType)
 
-class ConvertedColumnDef<C, R>(val source: ColumnDef<C>, val transform: (C) -> R, val type: KType?) : SingleColumn<R> {
-
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<R>? {
-        return source.resolveSingle(context)?.let { it.data.map(type, transform).addPath(it.path) }
-    }
-}
-
 typealias Column = ColumnDef<*>
 
 typealias GroupedColumnDef = ColumnDef<DataFrameRow<*>>
-
-interface ColumnData<out T> : ColumnDef<T> {
-
-    companion object {
-
-        fun <T> create(name: String, values: List<T>, type: KType, defaultValue: T? = null): ColumnData<T> = ValueColumnImpl(values, name, type, defaultValue)
-
-        fun <T> createGroup(name: String, df: DataFrame<T>): GroupedColumn<T> = GroupedColumnImpl(df, name)
-
-        fun <T> createTable(name: String, df: DataFrame<T>, startIndices: List<Int>): TableColumn<T> = TableColumnImpl(name, df, startIndices)
-
-        fun <T> createTable(name: String, groups: List<DataFrame<T>>, df: DataFrame<T>? = null): TableColumn<T> = TableColumnImpl(df
-                ?: groups.getBaseSchema(), name, groups)
-
-        fun empty() = create("", emptyList<Unit>(), getType<Unit>()) as DataCol
-    }
-
-    val values: Iterable<T>
-    val ndistinct: Int
-    val type: KType
-    val hasNulls: Boolean get() = type.isMarkedNullable
-    val size: Int
-
-    fun kind(): ColumnKind
-
-    operator fun get(index: Int): T
-
-    operator fun get(row: DataFrameRow<*>) = get(row.index)
-
-    fun toList() = values.asList()
-
-    fun asIterable() = values
-
-    fun defaultValue(): T?
-
-    operator fun get(range: IntRange): ColumnData<T>
-
-    operator fun get(columnName: String): ColumnData<*>
-
-    operator fun get(indices: Iterable<Int>): ColumnData<T>
-
-    operator fun get(mask: BooleanArray): ColumnData<T>
-
-    fun distinct(): ColumnData<T>
-
-    fun toSet(): Set<T>
-
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? = this.addPath()
-}
 
 typealias DataCol = ColumnData<*>
 
@@ -143,43 +75,13 @@ class ColumnDefinition<T>(override val name: String) : ColumnDef<T> {
 
 inline fun <reified T> ColumnDefinition<T>.nullable() = ColumnDefinition<T?>(name)
 
-interface GroupedColumnBase<T> : SingleColumn<DataFrameRow<T>>, DataFrameBase<T> {
-    fun asDataFrame(): DataFrame<T>
-}
-
 interface NestedColumn<out T> {
     val df: DataFrame<T>
 }
 
-interface ValueColumn<T> : ColumnData<T>
-
-interface GroupedColumn<T> : ColumnData<DataFrameRow<T>>, NestedColumn<T>, GroupedColumnBase<T> {
-    override fun asDataFrame() = df
-}
-
-interface TableColumn<out T> : ColumnData<DataFrame<T>>, NestedColumn<T>
-
 typealias ColumnPath = List<String>
 
 internal fun ColumnPath.depth() = size - 1
-
-interface ColumnWithPath<out T> : ColumnDef<T> {
-
-    val data: ColumnData<T>
-    val path: ColumnPath
-    override val name: String get() = data.name
-    val type: KType get() = data.type
-    val hasNulls: Boolean get() = data.hasNulls
-    fun isGrouped() = data.isGrouped()
-    fun asGrouped() = data.asGrouped().addPath(path)
-    fun depth() = path.depth()
-    fun children() = if (data.isGrouped()) data.asGrouped().columns().map { it.addPath(path + it.name) } else emptyList()
-}
-
-class ColumnWithPathImpl<T> internal constructor(override val data: ColumnData<T>, override val path: ColumnPath) : ColumnWithPath<T> {
-
-    override fun resolveSingle(context: ColumnResolutionContext) = this
-}
 
 internal fun <T> ColumnData<T>.addPath(path: ColumnPath): ColumnWithPath<T> = ColumnWithPathImpl(this, path)
 
@@ -226,287 +128,6 @@ internal fun <T> ColumnData<T>.getHashCode(): Int {
     return result
 }
 
-interface ColumnWithParent<C> : ColumnDef<C> {
-
-    val parent: GroupedColumnDef?
-
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
-
-        val parentDef = parent
-        val (targetDf, pathPrefix) = when(parentDef){
-            null -> context.df to emptyList()
-            else -> {
-                val parentCol = parentDef.resolveSingle(context) ?: return null
-                val group = parentCol.data.asGrouped()
-                group.df to parentCol.path
-            }
-        }
-
-        val data = targetDf.getColumn<C>(name, context.unresolvedColumnsPolicy)
-        return data?.addPath(pathPrefix + name)
-    }
-}
-
-interface ColumnDataWithParent<C> : ColumnWithParent<C>, ColumnData<C> {
-
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
-        return super<ColumnWithParent>.resolveSingle(context)
-    }
-}
-
-class ColumnDataWithParentImpl<T>(override val parent: GroupedColumn<*>, val source: ColumnData<T>) : ColumnDataWithParent<T>, ColumnData<T> by source {
-
-    override fun equals(other: Any?) = checkEquals(other)
-
-    override fun hashCode() = getHashCode()
-
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? {
-        return super<ColumnDataWithParent>.resolveSingle(context)
-    }
-
-    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<T>> {
-        return super<ColumnDataWithParent>.resolve(context)
-    }
-}
-
-class GroupedColumnWithParent<T>(override val parent: GroupedColumnDef?, val source: GroupedColumn<T>) : ColumnDataWithParent<DataFrameRow<T>>, GroupedColumn<T> by source {
-    override fun get(columnName: String) = df[columnName].addParent(this)
-    override fun <R> get(column: ColumnDef<R>) = df[column].addParent(this)
-    override fun <R> get(column: ColumnDef<DataFrameRow<R>>) = df[column].addParent(this) as GroupedColumn<R>
-    override fun columns() = df.columns().map { it.addParent(this) }
-    override fun getColumn(columnIndex: Int) = df.getColumn(columnIndex).addParent(this)
-
-    override fun equals(other: Any?) = checkEquals(other)
-
-    override fun hashCode() = getHashCode()
-
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataFrameRow<T>>? {
-        return super<ColumnDataWithParent>.resolveSingle(context)
-    }
-
-    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<DataFrameRow<T>>> {
-        return super<ColumnDataWithParent>.resolve(context)
-    }
-}
-
-class TableColumnWithParent<T>(override val parent: GroupedColumn<*>, val source: TableColumn<T>) : ColumnDataWithParent<DataFrame<T>>, TableColumn<T> by source {
-
-    override fun equals(other: Any?) = checkEquals(other)
-
-    override fun hashCode() = getHashCode()
-
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataFrame<T>>? {
-        return super<ColumnDataWithParent>.resolveSingle(context)
-    }
-
-    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<DataFrame<T>>> {
-        return super<ColumnDataWithParent>.resolve(context)
-    }
-}
-
-internal fun <T> ColumnData<T>.addParent(parent: GroupedColumn<*>) = (this as ColumnDataInternal<T>).addParent(parent)
-
-internal interface ColumnDataInternal<T> : ColumnData<T> {
-
-    fun rename(newName: String): ColumnData<T>
-    fun addParent(parent: GroupedColumn<*>): ColumnData<T>
-}
-
-internal class TableColumnImpl<T> constructor(override val df: DataFrame<T>, name: String, values: List<DataFrame<T>>)
-    : ValueColumnImpl<DataFrame<T>>(values, name, createType<DataFrame<*>>()), TableColumn<T> {
-
-    constructor(name: String, df: DataFrame<T>, startIndices: List<Int>) : this(df, name, df.splitByIndices(startIndices))
-
-    override fun rename(newName: String) = TableColumnImpl(df, newName, values)
-
-    override fun get(indices: Iterable<Int>): ColumnData<DataFrame<T>> {
-
-        return ColumnData.createTable(name, indices.map(this::get))
-    }
-
-    override fun get(mask: BooleanArray): ColumnData<DataFrame<T>> {
-
-        return ColumnData.createTable(name, values.filterIndexed { index, _ -> mask[index] })
-    }
-
-    override fun kind() = ColumnKind.Table
-
-    override fun addParent(parent: GroupedColumn<*>) = TableColumnWithParent(parent, this)
-}
-
-internal class GroupedColumnImpl<T>(override val df: DataFrame<T>, override val name: String) : GroupedColumn<T>, ColumnDataInternal<DataFrameRow<T>> {
-
-    override val values: Iterable<DataFrameRow<T>>
-        get() = df.rows
-
-    override val ndistinct: Int
-        get() = distinct.nrow
-
-    override val ncol: Int
-        get() = df.ncol
-
-    override val type by lazy { createType<DataFrameRow<*>>() }
-
-    override fun distinct() = GroupedColumnImpl(distinct, name)
-
-    private val distinct by lazy { df.distinct() }
-
-    private val set by lazy { distinct.rows.toSet() }
-
-    override fun toSet() = set
-
-    override val size: Int
-        get() = df.nrow
-
-    override fun get(index: Int) = df[index]
-
-    override fun get(range: IntRange) = GroupedColumnImpl(df[range], name)
-
-    override fun get(columnName: String) = df[columnName].addParent(this)
-    override fun <R> get(column: ColumnDef<R>) = df[column].addParent(this)
-    override fun <R> get(column: ColumnDef<DataFrameRow<R>>) = df[column].addParent(this) as GroupedColumn<R>
-    override fun <R> get(column: ColumnDef<DataFrame<R>>) = df[column].addParent(this) as TableColumn<R>
-
-    override fun rename(newName: String) = GroupedColumnImpl(df, newName)
-
-    override fun getColumn(columnIndex: Int) = df.getColumn(columnIndex).addParent(this)
-
-    override fun columns() = df.columns().map { it.addParent(this) }
-
-    override fun defaultValue() = null
-
-    override fun kind() = ColumnKind.Group
-
-    override fun get(indices: Iterable<Int>) = withDf(df[indices])
-
-    override fun get(mask: BooleanArray) = withDf(df.getRows(mask))
-
-    override fun addParent(parent: GroupedColumn<*>) = GroupedColumnWithParent(parent, this)
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        val g = other as? GroupedColumn<*> ?: return false
-        return name == g.name && df == other.df
-    }
-
-    override fun hashCode(): Int {
-        return name.hashCode() * 31 + df.hashCode()
-    }
-
-    override fun tryGetColumn(columnName: String) = df.tryGetColumn(columnName)
-}
-
-internal open class ValueColumnImpl<T>(override val values: List<T>, override val name: String, override val type: KType, val defaultValue: T? = null, set: Set<T>? = null) : ColumnDataInternal<T> {
-
-    var valuesSet: Set<T>? = set
-        private set
-
-    override fun toSet() = valuesSet ?: values.toSet().also { valuesSet = it }
-
-    fun contains(value: T) = toSet().contains(value)
-
-    override fun toString() = "$name: $type"
-
-    override val ndistinct = toSet().size
-
-    override fun distinct() = ValueColumnImpl(toSet().toList(), name, type, defaultValue, valuesSet)
-
-    override fun get(index: Int) = values[index]
-
-    override fun get(range: IntRange) = ColumnDataPart(this, range)
-
-    override fun get(columnName: String) = throw Exception()
-
-    override val size: Int
-        get() = values.size
-
-    override fun equals(other: Any?) = checkEquals(other)
-
-    override fun hashCode() = getHashCode()
-
-    override fun rename(newName: String) = ValueColumnImpl(values, newName, type, defaultValue, valuesSet)
-
-    override fun defaultValue() = defaultValue
-
-    override fun kind() = ColumnKind.Data
-
-    override fun get(indices: Iterable<Int>): ColumnData<T> {
-        var nullable = false
-        val newValues = indices.map { get(it).also { if (it == null) nullable = true } }
-        return withValues(newValues, nullable)
-    }
-
-    override fun get(mask: BooleanArray): ColumnData<T> {
-        var nullable = false
-        val newValues = values.filterIndexed { index, value -> mask[index].also { if (it && value == null) nullable = true } }
-        return withValues(newValues, nullable)
-    }
-
-    override fun addParent(parent: GroupedColumn<*>): ColumnData<T> = ColumnDataWithParentImpl(parent, this)
-}
-
-internal class ColumnDataPart<T>(val source: ColumnData<T>, val part: IntRange) : ColumnData<T>, ColumnDataInternal<T>, NestedColumn<T> {
-
-    override val values: Iterable<T> = Iterable {
-        object : Iterator<T> {
-            var curIndex = part.start
-
-            override fun hasNext(): Boolean = curIndex <= part.endInclusive
-
-            override fun next() = source[curIndex++]
-        }
-    }
-
-    override fun equals(other: Any?) = checkEquals(other)
-
-    override fun hashCode() = getHashCode()
-
-    override val hasNulls = values.any { it == null }
-
-    override val type: KType
-        get() = source.type.withNullability(hasNulls)
-
-    var valuesSet: Set<T>? = null
-        private set
-
-    override fun toSet() = valuesSet ?: values.toSet().also { valuesSet = it }
-
-    override val ndistinct = toSet().size
-
-    override fun distinct() = ValueColumnImpl(toSet().toList(), name, type, defaultValue(), valuesSet)
-
-    fun contains(value: T) = toSet().contains(value)
-
-    override val size = part.endInclusive - part.first + 1
-
-    override fun get(index: Int) = source[part.first + index]
-
-    override fun get(range: IntRange) = source[IntRange(range.first + part.first, range.endInclusive + part.first)]
-
-    override val name: String
-        get() = source.name
-
-    override fun get(columnName: String) = source[columnName][part]
-
-    override fun rename(newName: String) = ColumnDataPart(source.doRename(newName), part)
-
-    override fun defaultValue() = source.defaultValue()
-
-    override fun kind() = source.kind()
-
-    override val df: DataFrame<T>
-        get() = (source as? NestedColumn<T>)?.df ?: throw UnsupportedOperationException()
-
-    override fun get(indices: Iterable<Int>) = source[indices.map { part.first + it }]
-
-    override fun get(mask: BooleanArray): ColumnData<T> {
-        val newMask = BooleanArray(mask.size + part.first) { if (it < part.first) false else mask[part.first + it] }
-        return source[newMask]
-    }
-
-    override fun addParent(parent: GroupedColumn<*>) = ColumnDataWithParentImpl(parent, this)
-}
-
 @OptIn(ExperimentalStdlibApi::class)
 inline fun <reified T> getType() = typeOf<T>()
 
@@ -529,11 +150,13 @@ fun <T> ColumnData<T>.withValues(values: List<T>, hasNulls: Boolean) = when (thi
     else -> column(name, values, type.withNullability(hasNulls))
 }
 
-fun <T> ColumnData<T>.withValues(values: List<T>) = withValues(values, values.any { it == null })
-
 fun DataCol.toDataFrame() = dataFrameOf(listOf(this))
 
 internal fun <T> DataCol.typed() = this as ColumnData<T>
+
+internal fun <T> DataCol.asValues() = this as ValueColumn<T>
+
+internal fun <T> ValueColumn<*>.typed() = this as ValueColumn<T>
 
 internal fun <T> TableColumn<*>.typed() = this as TableColumn<T>
 
@@ -545,9 +168,9 @@ internal fun <T> DataFrameBase<T>.asGroup() = this as GroupedColumn<T>
 
 inline fun <reified T> DataCol.cast(): ColumnData<T> = ColumnData.create(name, toList() as List<T>, getType<T>().withNullability(hasNulls))
 
-internal fun <T> GroupedColumn<*>.withDf(newDf: DataFrame<T>) = ColumnData.createGroup(name, newDf)
+internal fun <T> GroupedColumn<*>.withDf(newDf: DataFrame<T>) = org.jetbrains.dataframe.api.columns.ColumnData.createGroup(name, newDf)
 
-fun <C> ColumnDef<C>.rename(newName: String) = if (newName == name) this else RenamedColumnDefImpl(this, newName)
+fun <C> ColumnDef<C>.rename(newName: String) = if (newName == name) this else RenamedColumnDef(this, newName)
 
 fun <C> ColumnData<C>.doRename(newName: String) = if (newName == name) this else (this as ColumnDataInternal<C>).rename(newName)
 
@@ -570,10 +193,10 @@ inline fun <T, reified R> DataFrame<T>.new(name: String, noinline expression: Ro
     return column(name, values, nullable)
 }
 
-internal fun Array<out String>.toColumns(): ColumnSet<Any?> = map { it.toColumnDef() }.toColumns()
-fun <C> Iterable<ColumnSet<C>>.toColumns() = ColumnGroup(asList())
-internal fun <C> Array<out KProperty<C>>.toColumns() = map { it.toColumnDef() }.toColumns()
-internal fun <T> Array<out ColumnDef<T>>.toColumns() = toList().toColumns()
+internal fun Array<out String>.toColumns(): ColumnSet<Any?> = map { it.toColumnDef() }.toColumnSet()
+fun <C> Iterable<ColumnSet<C>>.toColumnSet(): ColumnSet<C> = ColumnGroup(asList())
+internal fun <C> Array<out KProperty<C>>.toColumns() = map { it.toColumnDef() }.toColumnSet()
+internal fun <T> Array<out ColumnDef<T>>.toColumns() = toList().toColumnSet()
 internal fun <T, C> ColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns { SelectReceiverImpl(it.df.typed(), it.allowMissingColumns) }
 
 @JvmName("toColumnSetForSort")
@@ -628,7 +251,7 @@ inline fun <reified T> column(name: String, values: List<T>): ColumnData<T> = co
 
 inline fun <reified T> column(name: String, values: List<T>, hasNulls: Boolean): ColumnData<T> = ColumnData.create(name, values, getType<T>().withNullability(hasNulls))
 
-fun <T> column(name: String, values: List<T>, type: KType): ColumnData<T> = ValueColumnImpl(values, name, type)
+fun <T> column(name: String, values: List<T>, type: KType): ColumnData<T> = ColumnData.create(name, values, type)
 
 class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
 
@@ -680,3 +303,90 @@ fun <C> ColumnData<C>.single() = values.single()
 fun <T> TableColumn<T>.toDefinition() = tableColumn<T>(name)
 fun <T> GroupedColumn<T>.toDefinition() = columnGroup<T>(name)
 fun <T> ValueColumn<T>.toDefinition() = column<T>(name)
+
+internal abstract class MissingColumnData<T> : ColumnData<T> {
+
+    override val name: String
+        get() = throw UnsupportedOperationException()
+    override val values: Iterable<T>
+        get() = throw UnsupportedOperationException()
+    override val ndistinct: Int
+        get() = throw UnsupportedOperationException()
+    override val type: KType
+        get() = throw UnsupportedOperationException()
+    override val size: Int
+        get() = throw UnsupportedOperationException()
+
+    override fun get(index: Int) = throw UnsupportedOperationException()
+
+    override fun defaultValue() = throw UnsupportedOperationException()
+
+    override fun slice(range: IntRange) = throw UnsupportedOperationException()
+
+    override fun get(columnName: String) = throw UnsupportedOperationException()
+
+    override fun slice(indices: Iterable<Int>) = throw UnsupportedOperationException()
+
+    override fun slice(mask: BooleanArray) = throw UnsupportedOperationException()
+
+    override fun toSet() = throw UnsupportedOperationException()
+
+    override fun resolve(context: ColumnResolutionContext) = emptyList<ColumnWithPath<T>>()
+}
+
+internal class MissingValueColumn<T> : MissingColumnData<T>(), ValueColumn<T> {
+
+    override fun distinct() = throw UnsupportedOperationException()
+}
+
+internal class MissingGroupColumn<T> : MissingColumnData<DataFrameRow<T>>(), GroupedColumn<T> {
+
+    override fun <R> get(column: ColumnDef<R>) = MissingValueColumn<R>()
+
+    override fun <R> get(column: ColumnDef<DataFrameRow<R>>) = MissingGroupColumn<R>()
+
+    override fun <R> get(column: ColumnDef<DataFrame<R>>) = MissingTableColumn<R>()
+
+    override val df: DataFrame<T>
+        get() = throw UnsupportedOperationException()
+
+    override fun tryGetColumn(columnName: String): DataCol? {
+        return null
+    }
+
+    override fun getColumn(columnIndex: Int): DataCol {
+        return MissingValueColumn<Any?>()
+    }
+
+    override fun columns(): List<DataCol> {
+        return emptyList()
+    }
+
+    override val ncol: Int
+        get() = 0
+
+    override fun get(index: Int) = throw UnsupportedOperationException()
+
+    override fun get(columnName: String) = throw UnsupportedOperationException()
+
+    override val nrow: Int
+        get() = 0
+    override val columns: List<DataCol>
+        get() = emptyList()
+    override val rows: Iterable<DataFrameRow<T>>
+        get() = emptyList()
+
+    override fun getColumnIndex(name: String) = -1
+
+    override fun addRow(vararg values: Any?) = throw UnsupportedOperationException()
+
+    override fun kind() = super<GroupedColumn>.kind()
+}
+
+internal class MissingTableColumn<T>: MissingColumnData<DataFrame<T>>(), TableColumn<T> {
+    override val df: DataFrame<T>
+        get() = throw UnsupportedOperationException()
+
+
+    override fun kind() = super<TableColumn>.kind()
+}

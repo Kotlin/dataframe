@@ -16,7 +16,7 @@ fun <T> DataFrame<T>.filterNotNull(selector: ColumnsSelector<T, *>): DataFrame<T
 fun <T> DataFrame<T>.filterNotNull(vararg cols: KProperty<*>) = filterNotNull { cols.toColumns() }
 fun <T> DataFrame<T>.filterNotNull(vararg cols: String) = filterNotNull { cols.toColumns() }
 fun <T> DataFrame<T>.filterNotNull(vararg cols: Column) = filterNotNull { cols.toColumns() }
-fun <T> DataFrame<T>.filterNotNull(cols: Iterable<Column>) = filterNotNull { cols.toColumns() }
+fun <T> DataFrame<T>.filterNotNull(cols: Iterable<Column>) = filterNotNull { cols.toColumnSet() }
 
 fun <T> DataFrame<T>.filterNotNullAny(selector: ColumnsSelector<T, *>): DataFrame<T> {
     val cols = getColumns(selector)
@@ -26,6 +26,6 @@ fun <T> DataFrame<T>.filterNotNullAny(selector: ColumnsSelector<T, *>): DataFram
 fun <T> DataFrame<T>.filterNotNullAny(vararg cols: KProperty<*>) = filterNotNullAny { cols.toColumns() }
 fun <T> DataFrame<T>.filterNotNullAny(vararg cols: String) = filterNotNullAny { cols.toColumns() }
 fun <T> DataFrame<T>.filterNotNullAny(vararg cols: Column) = filterNotNullAny { cols.toColumns() }
-fun <T> DataFrame<T>.filterNotNullAny(cols: Iterable<Column>) = filterNotNullAny { cols.toColumns() }
+fun <T> DataFrame<T>.filterNotNullAny(cols: Iterable<Column>) = filterNotNullAny { cols.toColumnSet() }
 
 

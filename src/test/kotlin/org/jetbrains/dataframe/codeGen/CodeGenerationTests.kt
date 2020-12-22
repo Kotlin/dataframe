@@ -70,13 +70,13 @@ class CodeGenerationTests : BaseTest(){
         val dfRowName = (DataFrameRowBase::class).simpleName
 
         val expected = """
-            val $dfName<$personClassName>.age: org.jetbrains.dataframe.ColumnData<kotlin.Int> @JvmName("${personShortName}_age") get() = this["age"] as org.jetbrains.dataframe.ColumnData<kotlin.Int>
+            val $dfName<$personClassName>.age: org.jetbrains.dataframe.api.columns.ColumnData<kotlin.Int> @JvmName("${personShortName}_age") get() = this["age"] as org.jetbrains.dataframe.api.columns.ColumnData<kotlin.Int>
             val $dfRowName<$personClassName>.age: Int @JvmName("${personShortName}_age") get() = this["age"] as Int
-            val $dfName<$personClassName>.city: org.jetbrains.dataframe.ColumnData<kotlin.String?> @JvmName("${personShortName}_city") get() = this["city"] as org.jetbrains.dataframe.ColumnData<kotlin.String?>
+            val $dfName<$personClassName>.city: org.jetbrains.dataframe.api.columns.ColumnData<kotlin.String?> @JvmName("${personShortName}_city") get() = this["city"] as org.jetbrains.dataframe.api.columns.ColumnData<kotlin.String?>
             val $dfRowName<$personClassName>.city: String? @JvmName("${personShortName}_city") get() = this["city"] as String?
-            val $dfName<$personClassName>.name: org.jetbrains.dataframe.ColumnData<kotlin.String> @JvmName("${personShortName}_name") get() = this["name"] as org.jetbrains.dataframe.ColumnData<kotlin.String>
+            val $dfName<$personClassName>.name: org.jetbrains.dataframe.api.columns.ColumnData<kotlin.String> @JvmName("${personShortName}_name") get() = this["name"] as org.jetbrains.dataframe.api.columns.ColumnData<kotlin.String>
             val $dfRowName<$personClassName>.name: String @JvmName("${personShortName}_name") get() = this["name"] as String
-            val $dfName<$personClassName>.weight: org.jetbrains.dataframe.ColumnData<kotlin.Int?> @JvmName("${personShortName}_weight") get() = this["weight"] as org.jetbrains.dataframe.ColumnData<kotlin.Int?>
+            val $dfName<$personClassName>.weight: org.jetbrains.dataframe.api.columns.ColumnData<kotlin.Int?> @JvmName("${personShortName}_weight") get() = this["weight"] as org.jetbrains.dataframe.api.columns.ColumnData<kotlin.Int?>
             val $dfRowName<$personClassName>.weight: Int? @JvmName("${personShortName}_weight") get() = this["weight"] as Int?
         """.trimIndent()
         code.joinToString("\n") shouldBe expected

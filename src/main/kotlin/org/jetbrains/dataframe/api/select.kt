@@ -1,12 +1,14 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.ColumnSet
 import kotlin.reflect.KProperty
 
 fun <T> DataFrame<T>.select(selector: ColumnsSelector<T, *>): DataFrame<T> = new(getColumns(selector))
 fun <T> DataFrame<T>.select(vararg columns: KProperty<*>) = select { columns.toColumns() }
 fun <T> DataFrame<T>.select(vararg columns: String) = select { columns.toColumns() }
 fun <T> DataFrame<T>.select(vararg columns: Column) = select { columns.toColumns() }
-fun <T> DataFrame<T>.select(columns: Iterable<Column>) = select { columns.toColumns() }
+fun <T> DataFrame<T>.select(columns: Iterable<Column>) = select { columns.toColumnSet() }
 
 interface SelectReceiver<out T> : ColumnsSelectorReceiver<T> {
 
@@ -14,7 +16,7 @@ interface SelectReceiver<out T> : ColumnsSelectorReceiver<T> {
 
     operator fun <C> ColumnData<C>.invoke(newName: String) = rename(newName)
 
-    fun <C> ColumnSet<C>.allExcept(vararg other: ColumnSet<*>) = allExcept(other.toList().toColumns())
+    fun <C> ColumnSet<C>.allExcept(vararg other: ColumnSet<*>) = allExcept(other.toList().toColumnSet())
 
     fun <C> ColumnSet<C>.allExcept(other: ColumnSet<*>): ColumnSet<*> = createColumnSet { resolve(it).allColumnsExcept(other.resolve(it)) }
 

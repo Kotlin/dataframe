@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.TableColumn
 import org.jetbrains.dataframe.impl.GroupedDataFrameImpl
 
 typealias GroupKey = List<Any?>

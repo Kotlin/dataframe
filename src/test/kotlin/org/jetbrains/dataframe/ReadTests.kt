@@ -1,6 +1,8 @@
 package org.jetbrains.dataframe
 
 import io.kotlintest.shouldBe
+import org.jetbrains.dataframe.api.columns.GroupedColumnBase
+import org.jetbrains.dataframe.api.columns.TableColumn
 import org.jetbrains.dataframe.io.*
 import org.junit.Ignore
 import org.junit.Test

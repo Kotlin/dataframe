@@ -15,7 +15,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `size`() {
-        df.size shouldBe DataFrameSize(df.ncol, df.nrow)
+        df.size() shouldBe DataFrameSize(df.ncol, df.nrow)
     }
 
     @Test

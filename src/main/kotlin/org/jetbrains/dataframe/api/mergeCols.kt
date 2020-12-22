@@ -1,5 +1,9 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.GroupedColumn
+import org.jetbrains.dataframe.api.columns.TableColumn
+
 class MergeClause<T, C, R>(val df: DataFrame<T>, val selector: ColumnsSelector<T, C>, val transform: (Iterable<C>) -> R)
 
 fun <T, C> DataFrame<T>.mergeCols(selector: ColumnsSelector<T, C>) = MergeClause(this, selector, { it })
