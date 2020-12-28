@@ -28,9 +28,9 @@ class SpreadTests {
         val value: Any?
     }
 
-    val DataFrameRowBase<Person>.name get() = this["name"] as String
-    val DataFrameRowBase<Person>.key get() = this["key"] as String
-    val DataFrameRowBase<Person>.value get() = this["value"] as Any?
+    val DataRowBase<Person>.name get() = this["name"] as String
+    val DataRowBase<Person>.key get() = this["key"] as String
+    val DataRowBase<Person>.value get() = this["value"] as Any?
     val DataFrameBase<Person>.name get() = this["name"].typed<String>()
     val DataFrameBase<Person>.key get() = this["key"].typed<String>()
     val DataFrameBase<Person>.value get() = this["value"].typed<Any?>()

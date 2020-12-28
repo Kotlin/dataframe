@@ -38,7 +38,7 @@ class CodeGenerationTests : BaseTest(){
         val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
         val grouped = df.move { name and city }.intoGroup("nameAndCity")
         val code = CodeGenerator().generate(grouped, property)
-        val rowType = DataFrameRow::class.simpleName
+        val rowType = DataRow::class.simpleName
         val declaration1 = """
             @DataFrameType(isOpen = false)
             interface DataFrameType2{
@@ -67,7 +67,7 @@ class CodeGenerationTests : BaseTest(){
         val code = CodeGenerator().generate(Person::class)
 
         val dfName = (DataFrameBase::class).simpleName
-        val dfRowName = (DataFrameRowBase::class).simpleName
+        val dfRowName = (DataRowBase::class).simpleName
 
         val expected = """
             val $dfName<$personClassName>.age: org.jetbrains.dataframe.api.columns.ColumnData<kotlin.Int> @JvmName("${personShortName}_age") get() = this["age"] as org.jetbrains.dataframe.api.columns.ColumnData<kotlin.Int>

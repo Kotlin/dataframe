@@ -6,7 +6,6 @@ import org.jetbrains.dataframe.impl.columns.ColumnWithPathImpl
 import org.jetbrains.dataframe.impl.columns.ConvertedColumnDef
 import org.jetbrains.dataframe.impl.columns.RenamedColumnDef
 import org.jetbrains.dataframe.impl.createDataCollector
-import org.jetbrains.kotlinx.jupyter.api.Notebook
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -34,7 +33,7 @@ interface ColumnDef<out C> : SingleColumn<C> {
 
     val name: String
 
-    operator fun invoke(row: DataFrameRow<*>) = row[this]
+    operator fun invoke(row: DataRow<*>) = row[this]
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
         return context.df.getColumn<C>(name, context.unresolvedColumnsPolicy)?.addPath(listOf(name))
@@ -60,7 +59,7 @@ fun <C, R> ColumnDef<C>.map(targetType: KType?, transform: (C) -> R): SingleColu
 
 typealias Column = ColumnDef<*>
 
-typealias GroupedColumnDef = ColumnDef<DataFrameRow<*>>
+typealias GroupedColumnDef = ColumnDef<DataRow<*>>
 
 typealias DataCol = ColumnData<*>
 
@@ -223,7 +222,7 @@ fun DataCol.asFrame(): DataFrame<*> = when (this) {
 internal fun DataCol.asGrouped(): GroupedColumn<*> = this as GroupedColumn<*>
 
 @JvmName("asGroupedT")
-internal fun <T> ColumnData<DataFrameRow<T>>.asGrouped(): GroupedColumn<T> = this as GroupedColumn<T>
+internal fun <T> ColumnData<DataRow<T>>.asGrouped(): GroupedColumn<T> = this as GroupedColumn<T>
 
 internal fun DataCol.asTable(): TableColumn<*> = this as TableColumn<*>
 
@@ -236,11 +235,11 @@ fun DataCol.isGrouped(): Boolean = kind() == ColumnKind.Group
 
 fun <T> column() = ColumnDelegate<T>()
 
-fun columnGroup() = column<DataFrameRow<*>>()
+fun columnGroup() = column<DataRow<*>>()
 
 fun <T> columnList() = column<List<T>>()
 
-fun <T> columnGroup(name: String) = column<DataFrameRow<T>>(name)
+fun <T> columnGroup(name: String) = column<DataRow<T>>(name)
 
 fun <T> tableColumn(name: String) = column<DataFrame<T>>(name)
 
@@ -340,11 +339,11 @@ internal class MissingValueColumn<T> : MissingColumnData<T>(), ValueColumn<T> {
     override fun distinct() = throw UnsupportedOperationException()
 }
 
-internal class MissingGroupColumn<T> : MissingColumnData<DataFrameRow<T>>(), GroupedColumn<T> {
+internal class MissingGroupColumn<T> : MissingColumnData<DataRow<T>>(), GroupedColumn<T> {
 
     override fun <R> get(column: ColumnDef<R>) = MissingValueColumn<R>()
 
-    override fun <R> get(column: ColumnDef<DataFrameRow<R>>) = MissingGroupColumn<R>()
+    override fun <R> get(column: ColumnDef<DataRow<R>>) = MissingGroupColumn<R>()
 
     override fun <R> get(column: ColumnDef<DataFrame<R>>) = MissingTableColumn<R>()
 
@@ -374,7 +373,7 @@ internal class MissingGroupColumn<T> : MissingColumnData<DataFrameRow<T>>(), Gro
         get() = 0
     override val columns: List<DataCol>
         get() = emptyList()
-    override val rows: Iterable<DataFrameRow<T>>
+    override val rows: Iterable<DataRow<T>>
         get() = emptyList()
 
     override fun getColumnIndex(name: String) = -1

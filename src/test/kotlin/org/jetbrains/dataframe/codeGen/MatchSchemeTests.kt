@@ -17,7 +17,7 @@ class MatchSchemeTests {
     interface Item {
         val kind: String
         val id: String
-        val snippet: DataFrameRow<Snippet>
+        val snippet: DataRow<Snippet>
     }
 
     @DataFrameType(isOpen = false)
@@ -31,7 +31,7 @@ class MatchSchemeTests {
     interface DataRecord {
         val kind: String
         val items: DataFrame<Item>
-        val pageInfo: DataFrameRow<PageInfo>
+        val pageInfo: DataRow<PageInfo>
     }
 
     val json = """

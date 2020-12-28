@@ -4,16 +4,16 @@ import org.jetbrains.dataframe.api.columns.ColumnData
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 
-interface DataFrameRowBase<out T> {
+interface DataRowBase<out T> {
     operator fun get(name: String): Any?
 }
 
-interface DataFrameRow<out T>: DataFrameRowBase<T> {
+interface DataRow<out T>: DataRowBase<T> {
     val owner: DataFrame<T>
-    val prev: DataFrameRow<T>?
-    val next: DataFrameRow<T>?
+    val prev: DataRow<T>?
+    val next: DataRow<T>?
     val index: Int
-    fun getRow(index: Int): DataFrameRow<T>?
+    fun getRow(index: Int): DataRow<T>?
     override operator fun get(name: String): Any?
     operator fun get(columnIndex: Int): Any?
     operator fun <R> get(column: ColumnDef<R>) = get(column.name) as R
@@ -75,5 +75,5 @@ interface DataFrameRow<out T>: DataFrameRowBase<T> {
 }
 
 typealias Selector<T, R> = T.(T) -> R
-typealias RowSelector<T, R> = Selector<DataFrameRow<T>, R>
+typealias RowSelector<T, R> = Selector<DataRow<T>, R>
 typealias RowFilter<T> = RowSelector<T, Boolean>

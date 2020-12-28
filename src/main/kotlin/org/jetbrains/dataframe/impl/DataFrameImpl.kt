@@ -26,10 +26,10 @@ internal open class DataFrameImpl<T>(override val columns: List<DataCol>) : Data
 
     private val columnsMap by lazy { columns.withIndex().associateBy({ it.value.name }, { it.index }) }
 
-    override val rows = object : Iterable<DataFrameRow<T>> {
+    override val rows = object : Iterable<DataRow<T>> {
         override fun iterator() =
 
-                object : Iterator<DataFrameRow<T>> {
+                object : Iterator<DataRow<T>> {
                     var curRow = 0
 
                     override fun hasNext(): Boolean = curRow < nrow
@@ -61,7 +61,7 @@ internal open class DataFrameImpl<T>(override val columns: List<DataCol>) : Data
         }.asDataFrame<T>()
     }
 
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataFrameRow<T>>? {
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataRow<T>>? {
         return ColumnData.createGroup("", this).addPath(emptyList())
     }
 }

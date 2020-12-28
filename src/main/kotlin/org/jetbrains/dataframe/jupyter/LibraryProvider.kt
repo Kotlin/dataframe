@@ -72,7 +72,7 @@ internal class LibraryProvider: JupyterIntegration() {
         renderer<DataCol> { dataFrameOf(listOf(it)) }
         renderer<DataFrame<*>> { HTML(it.toHTML()) }
         renderer<GroupedDataFrame<*,*>> { it.plain() }
-        renderer<DataFrameRow<*>> { it.toDataFrame() }
+        renderer<DataRow<*>> { it.toDataFrame() }
 
         onLoaded { println("Hello!") }
     }

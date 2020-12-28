@@ -2,7 +2,6 @@ package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.*
 import org.junit.Test
 
 class JoinTests : BaseTest() {
@@ -27,9 +26,9 @@ class JoinTests : BaseTest() {
     }
 
 
-    val DataFrameRowBase<Person2>.name @JvmName("get-name") get() = this["name"] as String
-    val DataFrameRowBase<Person2>.origin get() = this["origin"] as String?
-    val DataFrameRowBase<Person2>.grade get() = this["grade"] as Int
+    val DataRowBase<Person2>.name @JvmName("get-name") get() = this["name"] as String
+    val DataRowBase<Person2>.origin get() = this["origin"] as String?
+    val DataRowBase<Person2>.grade get() = this["grade"] as Int
     val DataFrameBase<Person2>.name @JvmName("get-name") get() = this["name"].typed<String>()
     val DataFrameBase<Person2>.origin get() = this["origin"].typed<String?>()
     val DataFrameBase<Person2>.grade get() = this["grade"].typed<Int>()

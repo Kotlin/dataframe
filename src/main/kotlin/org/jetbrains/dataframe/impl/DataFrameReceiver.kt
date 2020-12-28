@@ -33,6 +33,6 @@ internal abstract class DataFrameReceiver<T>(source: DataFrameBase<T>, private v
     }
 
     override operator fun <R> get(column: ColumnDef<R>): ColumnData<R> = getColumnChecked(column.name) ?: MissingValueColumn()
-    override operator fun <R> get(column: ColumnDef<DataFrameRow<R>>): GroupedColumn<R> = (getColumnChecked(column.name) ?: MissingGroupColumn<R>()) as GroupedColumn<R>
+    override operator fun <R> get(column: ColumnDef<DataRow<R>>): GroupedColumn<R> = (getColumnChecked(column.name) ?: MissingGroupColumn<R>()) as GroupedColumn<R>
     override operator fun <R> get(column: ColumnDef<DataFrame<R>>): TableColumn<R> = (getColumnChecked(column.name) ?: MissingTableColumn<R>()) as TableColumn<R>
 }
