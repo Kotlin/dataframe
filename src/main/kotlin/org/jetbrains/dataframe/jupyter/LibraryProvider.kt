@@ -73,7 +73,5 @@ internal class LibraryProvider: JupyterIntegration() {
         renderer<DataFrame<*>> { HTML(it.toHTML()) }
         renderer<GroupedDataFrame<*,*>> { it.plain() }
         renderer<DataRow<*>> { it.toDataFrame() }
-
-        onLoaded { println("Hello!") }
     }
 }
