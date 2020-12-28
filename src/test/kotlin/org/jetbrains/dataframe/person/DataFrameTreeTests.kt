@@ -17,7 +17,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @DataFrameType
     interface GroupedPerson {
-        val nameAndCity: DataFrameRow<NameAndCity>
+        val nameAndCity: DataRow<NameAndCity>
         val age: Int
         val weight: Int?
     }
@@ -25,14 +25,14 @@ class DataFrameTreeTests : BaseTest() {
     val df2 = df.move { name and city }.intoGroup("nameAndCity")
     val typed2 = df2.typed<GroupedPerson>()
 
-    val DataFrameRowBase<NameAndCity>.name @JvmName("get-name-row") get() = this["name"] as String
-    val DataFrameRowBase<NameAndCity>.city @JvmName("get-city-row") get() = this["city"] as String?
+    val DataRowBase<NameAndCity>.name @JvmName("get-name-row") get() = this["name"] as String
+    val DataRowBase<NameAndCity>.city @JvmName("get-city-row") get() = this["city"] as String?
     val DataFrameBase<NameAndCity>.name @JvmName("get-name") get() = this["name"].typed<String>()
     val DataFrameBase<NameAndCity>.city @JvmName("get-city") get() = this["city"].typed<String?>()
 
-    val DataFrameRowBase<GroupedPerson>.age @JvmName("get-age-row") get() = this["age"] as Int
-    val DataFrameRowBase<GroupedPerson>.weight @JvmName("get-weight-row") get() = this["weight"] as Int?
-    val DataFrameRowBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as DataFrameRowBase<NameAndCity>
+    val DataRowBase<GroupedPerson>.age @JvmName("get-age-row") get() = this["age"] as Int
+    val DataRowBase<GroupedPerson>.weight @JvmName("get-weight-row") get() = this["weight"] as Int?
+    val DataRowBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as DataRowBase<NameAndCity>
     val DataFrameBase<GroupedPerson>.age @JvmName("get-age") get() = this["age"].typed<Int>()
     val DataFrameBase<GroupedPerson>.weight @JvmName("get-weight") get() = this["weight"].typed<Int?>()
     val DataFrameBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"].grouped<NameAndCity>()
@@ -233,8 +233,8 @@ class DataFrameTreeTests : BaseTest() {
     fun extensionPropertiesTest() {
         val code = CodeGenerator().generate(GroupedPerson::class)
         val dataFrameBase = DataFrameBase::class.simpleName
-        val dataFrameRowBase = DataFrameRowBase::class.simpleName
-        val dataFrameRow = DataFrameRow::class.qualifiedName
+        val dataFrameRowBase = DataRowBase::class.simpleName
+        val dataFrameRow = DataRow::class.qualifiedName
         val className = GroupedPerson::class.qualifiedName
         val shortName = GroupedPerson::class.simpleName!!
         val nameAndCity = NameAndCity::class.qualifiedName

@@ -54,7 +54,7 @@ class CodeGenerator : CodeGeneratorApi {
 
         private val GroupedColumnType: KClass<*> = GroupedColumnBase::class
 
-        private val GroupedFieldType: KClass<*> = DataFrameRow::class
+        private val GroupedFieldType: KClass<*> = DataRow::class
 
         private val DataFrameFieldType: KClass<*> = DataFrame::class
 
@@ -294,7 +294,7 @@ class CodeGenerator : CodeGeneratorApi {
 
         val declarations = mutableListOf<String>()
         val dfTypename = render(DataFrameBase::class) + "<$markerType>"
-        val rowTypename = render(DataFrameRowBase::class) + "<$markerType>"
+        val rowTypename = render(DataRowBase::class) + "<$markerType>"
         scheme.values.sortedBy { it.columnName }.forEach { field ->
             val getter = "this[\"${field.columnName}\"]"
             val name = field.fieldName

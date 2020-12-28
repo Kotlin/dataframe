@@ -2,18 +2,17 @@ package org.jetbrains.dataframe.impl.columns
 
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.columns.GroupedColumn
-import org.jetbrains.dataframe.api.columns.TableColumn
 import org.jetbrains.dataframe.createType
 
-internal class GroupedColumnImpl<T>(override val df: DataFrame<T>, override val name: String) : GroupedColumn<T>, ColumnDataInternal<DataFrameRow<T>>, DataFrame<T> by df {
+internal class GroupedColumnImpl<T>(override val df: DataFrame<T>, override val name: String) : GroupedColumn<T>, ColumnDataInternal<DataRow<T>>, DataFrame<T> by df {
 
-    override val values: Iterable<DataFrameRow<T>>
+    override val values: Iterable<DataRow<T>>
         get() = df.rows
 
     override val ndistinct: Int
         get() = distinct.nrow
 
-    override val type by lazy { createType<DataFrameRow<*>>() }
+    override val type by lazy { createType<DataRow<*>>() }
 
     private val distinct by lazy { df.distinct() }
 

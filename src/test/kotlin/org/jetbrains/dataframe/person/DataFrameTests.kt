@@ -511,7 +511,7 @@ class DataFrameTests : BaseTest() {
     fun `nullable minBy`() {
         val expected = "Alice"
 
-        fun DataFrameRow<*>?.check() = this!![name] shouldBe expected
+        fun DataRow<*>?.check() = this!![name] shouldBe expected
 
         typed.filterNotNull { weight }.minBy { weight!! }.check()
         typed.filterNotNull { it.weight }.minBy { it.weight!! }.check()
@@ -526,7 +526,7 @@ class DataFrameTests : BaseTest() {
     fun `maxBy`() {
         val expected = "Bob"
 
-        fun DataFrameRow<*>?.check() = this!![name] shouldBe expected
+        fun DataRow<*>?.check() = this!![name] shouldBe expected
 
         typed.maxBy { age }.check()
         typed.maxBy { it.age }.check()

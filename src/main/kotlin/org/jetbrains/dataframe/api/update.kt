@@ -5,7 +5,6 @@ import org.jetbrains.dataframe.impl.createDataCollector
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
 
 fun <T, C> DataFrame<T>.update(selector: ColumnsSelector<T, C>) = UpdateClause(this, null, selector, null)
 fun <T, C> DataFrame<T>.update(cols: Iterable<ColumnDef<C>>) = update { cols.toColumnSet() }
@@ -26,10 +25,10 @@ fun <T, C> UpdateClause<T, C>.suggestTypes(vararg suggestions: Pair<KClass<*>, K
     return UpdateClause(df, filter, selector) { map[it] ?: it.createStarProjectedType(false) }
 }
 
-typealias UpdateExpression<T, C, R> = DataFrameRow<T>.(C) -> R
-typealias UpdateByColumnExpression<T, C, R> = (DataFrameRow<T>, ColumnData<C>) -> R
+typealias UpdateExpression<T, C, R> = DataRow<T>.(C) -> R
+typealias UpdateByColumnExpression<T, C, R> = (DataRow<T>, ColumnData<C>) -> R
 
-fun <T, C, R> doUpdate(clause: UpdateClause<T, C>, type: KType, expression: (DataFrameRow<T>, ColumnData<C>) -> R): DataFrame<T> {
+fun <T, C, R> doUpdate(clause: UpdateClause<T, C>, type: KType, expression: (DataRow<T>, ColumnData<C>) -> R): DataFrame<T> {
 
     val removeResult = clause.df.doRemove(clause.selector)
 

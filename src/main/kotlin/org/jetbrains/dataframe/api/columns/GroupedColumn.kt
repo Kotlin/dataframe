@@ -2,9 +2,9 @@ package org.jetbrains.dataframe.api.columns
 
 import org.jetbrains.dataframe.*
 
-interface GroupedColumn<T> : ColumnData<DataFrameRow<T>>, NestedColumn<T>, GroupedColumnBase<T> {
+interface GroupedColumn<T> : ColumnData<DataRow<T>>, NestedColumn<T>, GroupedColumnBase<T> {
 
-    override fun get(index: Int): DataFrameRow<T> {
+    override fun get(index: Int): DataRow<T> {
         return super<GroupedColumnBase>.get(index)
     }
 

@@ -2,7 +2,7 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.api.columns.*
 import org.jetbrains.dataframe.impl.DataFrameReceiver
-import org.jetbrains.dataframe.impl.DataFrameRowImpl
+import org.jetbrains.dataframe.impl.DataRowImpl
 import org.jetbrains.dataframe.impl.EmptyDataFrame
 import org.jetbrains.dataframe.impl.getOrPut
 import org.jetbrains.dataframe.impl.topDfs
@@ -46,7 +46,7 @@ fun <T, C> DataFrame<T>.getColumnsWithPaths(selector: ColumnsSelector<T, C>): Li
 
 internal fun <T, C> DataFrame<T>.getColumnPaths(selector: ColumnsSelector<T, C>): List<ColumnPath> = selector.toColumns().resolve(ColumnResolutionContext(this, UnresolvedColumnsPolicy.Fail)).map { it.path }
 
-internal fun <T, C> DataFrame<T>.getGroupColumns(selector: ColumnsSelector<T, DataFrameRow<C>>) = getColumnsWithPaths(selector).map { it.data.asGrouped() }
+internal fun <T, C> DataFrame<T>.getGroupColumns(selector: ColumnsSelector<T, DataRow<C>>) = getColumnsWithPaths(selector).map { it.data.asGrouped() }
 
 fun <T, C> DataFrame<T>.getColumn(selector: ColumnSelector<T, C>) = getColumns(selector).single()
 
@@ -74,17 +74,17 @@ interface DataFrame<out T> : DataFrameBase<T> {
     val nrow: Int
     override val ncol: Int get() = columns.size
     val columns: List<DataCol>
-    val rows: Iterable<DataFrameRow<T>>
+    val rows: Iterable<DataRow<T>>
 
     fun columnNames() = columns().map { it.name }
 
     override fun columns() = columns
     override fun getColumn(columnIndex: Int) = columns()[columnIndex]
 
-    override operator fun get(index: Int): DataFrameRow<T> = DataFrameRowImpl(index, this)
+    override operator fun get(index: Int): DataRow<T> = DataRowImpl(index, this)
     override operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found: '$columnName'")
     override operator fun <R> get(column: ColumnDef<R>): ColumnData<R> = tryGetColumn(column)!!
-    override operator fun <R> get(column: ColumnDef<DataFrameRow<R>>): GroupedColumn<R> = get<DataFrameRow<R>>(column) as GroupedColumn<R>
+    override operator fun <R> get(column: ColumnDef<DataRow<R>>): GroupedColumn<R> = get<DataRow<R>>(column) as GroupedColumn<R>
     override operator fun <R> get(column: ColumnDef<DataFrame<R>>): TableColumn<R> = get<DataFrame<R>>(column) as TableColumn<R>
 
     operator fun get(indices: Iterable<Int>) = getRows(indices)
@@ -137,7 +137,7 @@ interface DataFrame<out T> : DataFrameBase<T> {
 
     fun <R> map(selector: RowSelector<T, R>) = rows.map { selector(it, it) }
 
-    fun <R> mapIndexed(action: (Int, DataFrameRow<T>) -> R) = rows.mapIndexed(action)
+    fun <R> mapIndexed(action: (Int, DataRow<T>) -> R) = rows.mapIndexed(action)
 
     fun size() = DataFrameSize(ncol, nrow)
 }
@@ -146,12 +146,12 @@ fun <T> DataFrame<*>.typed(): DataFrame<T> = this as DataFrame<T>
 
 fun <T> DataFrameBase<*>.typed(): DataFrameBase<T> = this as DataFrameBase<T>
 
-fun <T> DataFrameRow<T>.toDataFrame() = owner.columns.map {
+fun <T> DataRow<T>.toDataFrame() = owner.columns.map {
     val value = it[index]
     it.withValues(listOf(value), value == null)
 }.let { dataFrameOf(it).typed<T>() }
 
-fun <T, C> DataFrame<T>.forEachIn(selector: ColumnsSelector<T, C>, action: (DataFrameRow<T>, ColumnData<C>) -> Unit) = getColumnsWithPaths(selector).let { cols ->
+fun <T, C> DataFrame<T>.forEachIn(selector: ColumnsSelector<T, C>, action: (DataRow<T>, ColumnData<C>) -> Unit) = getColumnsWithPaths(selector).let { cols ->
     rows.forEach { row ->
         cols.forEach { col ->
             action(row, col.data)

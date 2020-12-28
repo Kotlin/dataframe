@@ -32,7 +32,7 @@ interface ColumnData<out T> : ColumnDef<T> {
 
     operator fun get(index: Int): T
 
-    operator fun get(row: DataFrameRow<*>) = get(row.index)
+    operator fun get(row: DataRow<*>) = get(row.index)
 
     fun toList() = values.asList()
 

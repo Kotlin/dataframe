@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe.api.columns
 
 import org.jetbrains.dataframe.DataFrame
-import org.jetbrains.dataframe.DataFrameRow
+import org.jetbrains.dataframe.DataRow
 
-interface GroupedColumnBase<T> : SingleColumn<DataFrameRow<T>>, DataFrame<T>
+interface GroupedColumnBase<T> : SingleColumn<DataRow<T>>, DataFrame<T>

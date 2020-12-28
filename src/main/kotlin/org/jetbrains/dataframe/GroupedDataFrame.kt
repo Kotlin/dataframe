@@ -20,12 +20,12 @@ interface GroupedDataFrame<out T, out G> {
 
     fun <R> modify(transform: DataFrame<G>.() -> DataFrame<R>): GroupedDataFrame<T, R>
 
-    data class Entry<T, G>(val key: DataFrameRow<T>, val group: DataFrame<G>)
+    data class Entry<T, G>(val key: DataRow<T>, val group: DataFrame<G>)
 }
 
 internal fun <T,G> DataFrame<T>.toGrouped(groupedColumnName: String): GroupedDataFrame<T,G> = GroupedDataFrameImpl(this, this[groupedColumnName] as TableColumn<G>)
 
-fun <T,G,R> GroupedDataFrame<T,G>.map(body: (key: DataFrameRow<T>, group: DataFrame<G>) -> R) =
+fun <T,G,R> GroupedDataFrame<T,G>.map(body: (key: DataRow<T>, group: DataFrame<G>) -> R) =
         keys.mapIndexed { index, row ->
             val group = groups[index]
             body(row, group)

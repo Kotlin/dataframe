@@ -26,10 +26,10 @@ open class BaseTest {
         val weight: Int?
     }
 
-    val DataFrameRowBase<Person>.name get() = this["name"] as String
-    val DataFrameRowBase<Person>.age get() = this["age"] as Int
-    val DataFrameRowBase<Person>.city get() = this["city"] as String?
-    val DataFrameRowBase<Person>.weight get() = this["weight"] as Int?
+    val DataRowBase<Person>.name get() = this["name"] as String
+    val DataRowBase<Person>.age get() = this["age"] as Int
+    val DataRowBase<Person>.city get() = this["city"] as String?
+    val DataRowBase<Person>.weight get() = this["weight"] as Int?
     val DataFrameBase<Person>.name get() = this["name"].asValues<String>()
     val DataFrameBase<Person>.age get() = this["age"].asValues<Int>()
     val DataFrameBase<Person>.city get() = this["city"].asValues<String?>()
