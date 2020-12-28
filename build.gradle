@@ -1,9 +1,8 @@
 buildscript {
-    ext.kotlin_version = '1.4.0'
-    ext.dokka_version = '0.9.17'
 
     repositories {
         maven { url 'https://dl.bintray.com/kotlin/dokka' }
+        maven { url 'https://kotlin.bintray.com/kotlin-datascience' }
         mavenCentral()
     }
 
@@ -16,7 +15,11 @@ buildscript {
 
 
 
-plugins { id "com.jfrog.bintray" version "1.8.1" }
+plugins {
+    id "com.jfrog.bintray" version "1.8.1"
+    id "org.jetbrains.kotlin.jvm" version "$kotlin_version"
+    id "org.jetbrains.kotlinx.jupyter.api.plugin" version "$jupyterApiVersion"
+}
 
 apply plugin: 'kotlin'
 apply plugin: 'org.jetbrains.dokka'
@@ -33,10 +36,17 @@ repositories {
     maven { url 'https://kotlin.bintray.com/kotlin-datascience' }
 }
 
+configurations {
+    testCompile.extendsFrom compileOnly
+}
+
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib"
     compile "org.jetbrains.kotlin:kotlin-reflect"
 
+    compileOnly("org.jetbrains.kotlinx.jupyter:kotlin-jupyter-api:$jupyterApiVersion") {
+        exclude group:"org.jetbrains.kotlin"
+    }
 
     compile "org.apache.commons:commons-csv:1.3"
     compile 'com.beust:klaxon:5.2'
@@ -45,11 +55,9 @@ dependencies {
     testCompile 'io.kotlintest:kotlintest-assertions:3.1.6'
     testCompile 'de.mpicbg.scicomp:kutils:0.11'
 
-
     // needed to work around https://youtrack.jetbrains.com/issue/KT-15064
     compileOnly "org.jetbrains.kotlin:kotlin-script-runtime:$kotlin_version"
 }
-
 
 // see https://github.com/Kotlin/dokka/issues/42
 task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
@@ -85,6 +93,10 @@ dokka {
     includes = ['docs/packages_info.md']
 }
 
+processJupyterApiResources {
+    libraryProducers = ["org.jetbrains.dataframe.jupyter.LibraryProvider"]
+}
+
 group 'org.jetbrains.kotlin'
 
 if(hasProperty("build_counter")) {
@@ -104,6 +116,7 @@ publishing {
     publications {
         maven(MavenPublication) {
             artifactId projectName
+            groupId group
 
             from components.java
             artifact sourcesJar { classifier "sources" }

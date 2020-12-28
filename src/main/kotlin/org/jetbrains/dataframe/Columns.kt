@@ -6,6 +6,7 @@ import org.jetbrains.dataframe.impl.columns.ColumnWithPathImpl
 import org.jetbrains.dataframe.impl.columns.ConvertedColumnDef
 import org.jetbrains.dataframe.impl.columns.RenamedColumnDef
 import org.jetbrains.dataframe.impl.createDataCollector
+import org.jetbrains.kotlinx.jupyter.api.Notebook
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType

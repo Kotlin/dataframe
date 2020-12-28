@@ -2,7 +2,6 @@ package org.jetbrains.dataframe.impl
 
 import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.DataFrameRow
-import org.jetbrains.dataframe.tracking.ColumnAccessTracker
 
 internal class DataFrameRowImpl<T>(override var index: Int, override val owner: DataFrame<T>) : DataFrameRow<T> {
 
