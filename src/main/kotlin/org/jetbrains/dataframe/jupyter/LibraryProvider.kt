@@ -1,6 +1,8 @@
 package org.jetbrains.dataframe.jupyter
 
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.io.isURL
+import org.jetbrains.dataframe.io.readCSV
 import org.jetbrains.kotlinx.jupyter.api.*
 import org.jetbrains.kotlinx.jupyter.api.TypeHandlerExecution
 import org.jetbrains.kotlinx.jupyter.api.libraries.*
@@ -49,8 +51,14 @@ internal abstract class JupyterIntegration : LibraryDefinitionProducer {
 
     private val converters = mutableListOf<GenerativeTypeHandler>()
 
+    private val imports = mutableListOf<String>()
+
     protected inline fun <reified T: Any> renderer(noinline renderer: (T) -> Any){
         renderers.add(DelegatedTypeHandler.create(renderer))
+    }
+
+    protected fun import(path: String){
+        imports.add(path)
     }
 
     protected fun onLoaded(callback: () -> Unit){
@@ -61,7 +69,8 @@ internal abstract class JupyterIntegration : LibraryDefinitionProducer {
         return listOf(LibraryDefinitionImpl(
                 init = initCallbacks,
                 renderers = renderers,
-                converters = converters
+                converters = converters,
+                imports = imports
         ))
     }
 }
@@ -73,5 +82,7 @@ internal class LibraryProvider: JupyterIntegration() {
         renderer<DataFrame<*>> { HTML(it.toHTML()) }
         renderer<GroupedDataFrame<*,*>> { it.plain() }
         renderer<DataRow<*>> { it.toDataFrame() }
+        import("org.jetbrains.dataframe.*")
+        import("org.jetbrains.dataframe.io.*")
     }
 }
