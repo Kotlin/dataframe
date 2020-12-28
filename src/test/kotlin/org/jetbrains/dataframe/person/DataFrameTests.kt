@@ -4,8 +4,8 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.impl.trackColumnAccess
 import org.jetbrains.dataframe.io.print
-import org.jetbrains.dataframe.tracking.trackColumnAccess
 import org.junit.Test
 import java.time.LocalDate
 import kotlin.reflect.jvm.jvmErasure
