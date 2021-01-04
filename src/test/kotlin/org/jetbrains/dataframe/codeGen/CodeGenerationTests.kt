@@ -56,10 +56,9 @@ class CodeGenerationTests : BaseTest(){
 
         val expectedConverter = "$" + "it.typed<DataFrameType1>()"
 
-        code.size shouldBe 3
-        code[0].trimIndent() shouldBe declaration1
-        code[1].trimIndent() shouldBe declaration2
-        code[2] shouldBe expectedConverter
+        code.size shouldBe 2
+        code[0].trimIndent() shouldBe declaration1 + "\n" + declaration2
+        code[1] shouldBe expectedConverter
     }
 
     @Test
@@ -79,7 +78,7 @@ class CodeGenerationTests : BaseTest(){
             val $dfName<$personClassName>.weight: org.jetbrains.dataframe.api.columns.ColumnData<kotlin.Int?> @JvmName("${personShortName}_weight") get() = this["weight"] as org.jetbrains.dataframe.api.columns.ColumnData<kotlin.Int?>
             val $dfRowName<$personClassName>.weight: Int? @JvmName("${personShortName}_weight") get() = this["weight"] as Int?
         """.trimIndent()
-        code.joinToString("\n") shouldBe expected
+        code shouldBe expected
     }
 
     @Test
