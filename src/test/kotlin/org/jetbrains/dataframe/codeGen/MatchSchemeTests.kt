@@ -2,7 +2,7 @@ package org.jetbrains.dataframe.codeGen
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.io.fromJsonStr
+import org.jetbrains.dataframe.io.readJsonStr
 import org.junit.Test
 
 class MatchSchemeTests {
@@ -64,7 +64,7 @@ class MatchSchemeTests {
         }
     """.trimIndent()
 
-    val df = DataFrame.fromJsonStr(json)
+    val df = DataFrame.readJsonStr(json)
 
     val typed = df.typed<DataRecord>()
 

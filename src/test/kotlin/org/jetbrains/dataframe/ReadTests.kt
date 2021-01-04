@@ -15,7 +15,7 @@ class ReadTests {
                 {"a":1, "b":"text"},
                 {"a":2, "b":5, "c":4.5}
             ]""".trimIndent()
-        val df = DataFrame.fromJsonStr(json)
+        val df = DataFrame.readJsonStr(json)
         df.ncol shouldBe 3
         df.nrow shouldBe 2
         df["a"].type shouldBe getType<Int>()
@@ -30,7 +30,7 @@ class ReadTests {
                 {"a":{"b":2}},
                 {"a":[6,7,8]}
             ]""".trimIndent()
-        val df = DataFrame.fromJsonStr(json)
+        val df = DataFrame.readJsonStr(json)
         println(df)
         df.ncol shouldBe 1
         df.nrow shouldBe 3
@@ -48,7 +48,7 @@ class ReadTests {
                 {},
                 {"a":[3.4, 5.6]}
             ]""".trimIndent()
-        val df = DataFrame.fromJsonStr(json)
+        val df = DataFrame.readJsonStr(json)
         df.ncol shouldBe 1
         df.nrow shouldBe 3
         df["a"].type shouldBe getType<List<Number>>()
@@ -61,7 +61,7 @@ class ReadTests {
                 {"a":[ {"b":2}, {"c":3} ]},
                 {"a":[ {"b":4}, {"d":5} ]}
             ]""".trimIndent()
-        val df = DataFrame.fromJsonStr(json)
+        val df = DataFrame.readJsonStr(json)
         df.ncol shouldBe 1
         df.nrow shouldBe 2
         println(df)
