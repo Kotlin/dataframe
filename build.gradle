@@ -59,6 +59,12 @@ dependencies {
     compileOnly "org.jetbrains.kotlin:kotlin-script-runtime:$kotlin_version"
 }
 
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
 // see https://github.com/Kotlin/dokka/issues/42
 task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
     outputFormat = 'javadoc'
