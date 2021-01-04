@@ -4,6 +4,7 @@ import org.jetbrains.dataframe.api.columns.ColumnData
 import org.jetbrains.dataframe.api.columns.GroupedColumn
 import org.jetbrains.dataframe.api.columns.GroupedColumnBase
 import org.jetbrains.dataframe.api.columns.TableColumn
+import org.jetbrains.kotlinx.jupyter.api.Code
 import kotlin.reflect.*
 import kotlin.reflect.full.*
 import kotlin.reflect.jvm.jvmErasure
@@ -39,7 +40,7 @@ interface CodeGeneratorApi {
     fun generate(stub: DataFrameToListNamedStub): List<String>
     fun generate(stub: DataFrameToListTypedStub): List<String>
 
-    fun generate(marker: KClass<*>): List<String>
+    fun generate(marker: KClass<*>): String
 
     var mode: CodeGenerationMode
 
@@ -284,7 +285,7 @@ class CodeGenerator : CodeGeneratorApi {
 
     private fun String.removeQuotes() = this.removeSurrounding("`")
 
-    private fun generateExtensionProperties(scheme: Scheme, markerType: String): List<String> {
+    private fun generateExtensionProperties(scheme: Scheme, markerType: String): List<Code> {
 
         val shortMarkerName = markerType.substring(markerType.lastIndexOf('.')+1)
         fun generatePropertyCode(typeName: String, name: String, propertyType: String, getter: String): String {
@@ -319,10 +320,10 @@ class CodeGenerator : CodeGeneratorApi {
             GeneratedMarker(fullSet, ownSet, marker, annotation.isOpen)
         }
 
-    override fun generate(marker: KClass<*>): List<String> {
+    override fun generate(marker: KClass<*>): Code {
         val generatedMarker = getMarkerScheme(marker)
         val qualifiedName = marker.qualifiedName!!
-        return generateExtensionProperties(generatedMarker.ownScheme, qualifiedName)
+        return generateExtensionProperties(generatedMarker.ownScheme, qualifiedName).joinToString("\n")
     }
 
     private val processedProperties = mutableSetOf<KProperty<*>>()
@@ -371,12 +372,11 @@ class CodeGenerator : CodeGeneratorApi {
         return generate(targetScheme, isMutable)
     }
 
-    private fun generate(scheme: Scheme, isMutable: Boolean): MutableList<String> {
+    private fun generate(scheme: Scheme, isMutable: Boolean): List<String> {
         val declarations = mutableListOf<String>()
         val markerType = findOrCreateMarker(scheme, isMutable, mutableSetOf(), declarations)
         val converter = "\$it.typed<$markerType>()"
-        declarations.add(converter)
-        return declarations
+        return if(declarations.isEmpty()) listOf(converter) else listOf(declarations.joinToString("\n"), converter)
     }
 
     private fun findOrCreateMarker(targetScheme: Scheme, isMutable: Boolean, usedNames: MutableSet<String>, declarations: MutableList<String>): String {

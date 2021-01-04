@@ -248,6 +248,6 @@ class DataFrameTreeTests : BaseTest() {
             val $dataFrameBase<$className>.weight: $columnData<kotlin.Int?> @JvmName("${shortName}_weight") get() = this["weight"] as $columnData<kotlin.Int?>
             val $dataFrameRowBase<$className>.weight: Int? @JvmName("${shortName}_weight") get() = this["weight"] as Int?
         """.trimIndent()
-        code.joinToString("\n") shouldBe expected
+        code shouldBe expected
     }
 }

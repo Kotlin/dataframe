@@ -194,7 +194,7 @@ class PlaylistJsonTest {
                 DataFrameType10::class,
                 DataRecord::class)
         val codeGen = CodeGenerator()
-        return types.flatMap { codeGen.generate(it) }
+        return types.map { codeGen.generate(it) }
     }
 
     val path = "data/playlistItems.json"
