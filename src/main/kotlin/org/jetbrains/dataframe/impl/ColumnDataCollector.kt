@@ -37,7 +37,7 @@ internal abstract class DataCollectorBase<T>(initCapacity: Int): DataCollector<T
     }
 }
 
-internal open class ColumnDataCollector(initCapacity: Int = 0, val getType: (KClass<*>)->KType): DataCollectorBase<Any?>(initCapacity) {
+internal open class ColumnDataCollector(initCapacity: Int = 0, val getType: (KClass<*>) -> KType): DataCollectorBase<Any?>(initCapacity) {
 
     private val classes = mutableSetOf<KClass<*>>()
 

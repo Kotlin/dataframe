@@ -12,29 +12,23 @@ import java.net.URL
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
 
-fun readJson(fileOrUrl: String) = DataFrame.fromJson(fileOrUrl)
+fun DataFrame.Companion.readJson(file: File) = readJson(file.toURI().toURL())
 
-fun readJson(file: File) = DataFrame.fromJson(file)
-
-fun parseJson(text: String) = DataFrame.fromJsonStr(text)
-
-fun DataFrame.Companion.fromJson(file: File) = fromJson(file.toURI().toURL())
-
-fun DataFrame.Companion.fromJson(fileOrUrl: String): DataFrame<*> {
+fun DataFrame.Companion.readJson(fileOrUrl: String): DataFrame<*> {
     val url = when {
         isURL(fileOrUrl) -> URL(fileOrUrl).toURI()
         else -> File(fileOrUrl).toURI()
     }
-    return fromJson(url.toURL())
+    return readJson(url.toURL())
 }
 
 @Suppress("UNCHECKED_CAST")
-fun DataFrame.Companion.fromJson(url: URL): DataFrame<*> =
-        fromJson(Parser().parse(url.openStream()))
+fun DataFrame.Companion.readJson(url: URL): DataFrame<*> =
+        readJson(Parser().parse(url.openStream()))
 
-fun DataFrame.Companion.fromJsonStr(text: String) = fromJson(Parser().parse(StringBuilder(text)))
+fun DataFrame.Companion.readJsonStr(text: String) = readJson(Parser().parse(StringBuilder(text)))
 
-private fun fromJson(parsed: Any?) = when (parsed) {
+private fun readJson(parsed: Any?) = when (parsed) {
     is JsonArray<*> -> fromList(parsed.value)
     else -> fromList(listOf(parsed))
 }

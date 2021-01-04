@@ -198,7 +198,7 @@ class PlaylistJsonTest {
     }
 
     val path = "data/playlistItems.json"
-    val df = DataFrame.fromJson(path)
+    val df = DataFrame.readJson(path)
     val typed = df.typed<DataRecord>()
     val item = typed.items[0]
 

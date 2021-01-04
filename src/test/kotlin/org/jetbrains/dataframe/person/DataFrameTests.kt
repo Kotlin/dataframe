@@ -955,11 +955,21 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `forEachIn`() {
+
         val cities by columnGroup()
         val spread = typed.spread { city }.by { age }.into(cities)
         var sum = 0
         spread.forEachIn({ cities.all() }) { row, column -> column[row]?.let { sum += it as Int } }
         sum shouldBe typed.age.sum()
+    }
+
+    @Test
+    fun `parse`() {
+
+        val toStr = typed.update { weight }.notNull { it.toString() }
+        val weightStr = column<String?>("weight")
+        val parsed = toStr.parse { weightStr }.to<Int>()
+        parsed shouldBe typed
     }
 
 }

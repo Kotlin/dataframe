@@ -3,6 +3,7 @@ package org.jetbrains.dataframe.io
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.*
 import java.io.*
 import java.math.BigDecimal
 import java.net.URL
@@ -18,7 +19,7 @@ internal fun isCompressed(fileOrUrl: String) = listOf("gz", "zip").contains(file
 
 internal fun isCompressed(file: File) = listOf("gz", "zip").contains(file.extension)
 
-fun readCSV(
+fun DataFrame.Companion.readCsv(
         fileOrUrl: String,
         format: CSVFormat = defaultCsvFormat,
         colTypes: Map<String, ColType> = mapOf()
@@ -28,7 +29,7 @@ fun readCSV(
         colTypes = colTypes,
         isCompressed = isCompressed(fileOrUrl))
 
-fun readCSV(
+fun DataFrame.Companion.readCsv(
         file: File,
         format: CSVFormat = defaultCsvFormat,
         colTypes: Map<String, ColType> = mapOf()
@@ -39,7 +40,7 @@ fun readCSV(
         isCompressed = isCompressed(file)
 )
 
-fun readTSV(
+fun DataFrame.Companion.readTsv(
         fileOrUrl: String,
         format: CSVFormat = defaultTdfFormat,
         colTypes: Map<String, ColType> = mapOf()
@@ -49,7 +50,7 @@ fun readTSV(
         colTypes = colTypes,
         isCompressed = isCompressed(fileOrUrl))
 
-fun readTSV(
+fun DataFrame.Companion.readTsv(
         file: File,
         format: CSVFormat = defaultTdfFormat,
         colTypes: Map<String, ColType> = mapOf()
@@ -66,7 +67,7 @@ private fun asStream(fileOrUrl: String) = (if (isURL(fileOrUrl)) {
     File(fileOrUrl).toURI()
 }).toURL().openStream()
 
-fun readDelim(
+fun DataFrame.Companion.readDelim(
         inStream: InputStream,
         format: CSVFormat = defaultCsvFormat,
         isCompressed: Boolean = false,
@@ -103,7 +104,7 @@ fun ColType.toType() = when(this){
 
 val MISSING_VALUE = "NA"
 
-fun readDelim(
+fun DataFrame.Companion.readDelim(
         reader: Reader,
         format: CSVFormat = CSVFormat.DEFAULT.withHeader(),
         colTypes: Map<String, ColType> = mapOf(),
@@ -141,7 +142,7 @@ fun readDelim(
             null -> column.tryParseAny()
             ColType.String -> column
             else -> {
-                val parser = parsersMap[colType.toType()]!!
+                val parser = Parsers[colType.toType()]!!
                 column.parse(parser)
             }
         }
@@ -151,68 +152,4 @@ fun readDelim(
 }
 
 internal fun String.emptyAsNull(): String? = if (this.isEmpty()) null else this
-
-internal fun String.toBooleanOrNull() =
-        when (toUpperCase()) {
-            "T" -> true
-            "TRUE" -> true
-            "YES" -> true
-            "F" -> false
-            "FALSE" -> false
-            "NO" -> false
-            else -> null
-        }
-
-class StringParser<T : Any>(val type: KType, val parse: (String) -> T?)
-
-inline fun <reified T : Any> stringParser(noinline body: (String) -> T?) = StringParser(getType<T>(), body)
-
-val allParsers = listOf(
-        stringParser { it.toIntOrNull() },
-        stringParser { it.toLongOrNull() },
-        stringParser { it.toDoubleOrNull() },
-        stringParser { it.toBooleanOrNull() },
-        stringParser { it.toBigDecimalOrNull() }
-)
-
-val parsersMap = allParsers.associateBy { it.type }
-
-inline fun <reified T : Any> getParser() = parsersMap[T::class] as? StringParser<T>
-
-inline fun <reified T : Any> ColumnData<String?>.parse(): ColumnData<T?> {
-    val parser = getParser<T>() ?: throw Exception("Couldn't find parser for type ${T::class}")
-    return parse(parser)
-}
-
-fun <T : Any> ColumnData<String?>.parse(parser: StringParser<T>): ColumnData<T?> {
-    val parsedValues = values.map {
-        it?.let {
-            parser.parse(it) ?: throw Exception("Couldn't parse '${it}' to type ${parser.type}")
-        }
-    }
-    return column(name, parsedValues, parser.type.withNullability(hasNulls)) as ColumnData<T?>
-}
-
-fun ColumnData<String?>.tryParseAny(): ColumnData<*> {
-    var parserId = 0
-    val parsedValues = mutableListOf<Any?>()
-
-    do {
-        val parser = allParsers[parserId]
-        parsedValues.clear()
-        for (str in values) {
-            if (str == null) parsedValues.add(null)
-            else {
-                val res = parser.parse(str)
-                if (res == null) {
-                    parserId++
-                    break
-                }
-                parsedValues.add(res)
-            }
-        }
-    } while (parserId < allParsers.size && parsedValues.size != size)
-    if (parserId == allParsers.size) return this
-    return column(name, parsedValues, allParsers[parserId].type.withNullability(hasNulls))
-}
 
