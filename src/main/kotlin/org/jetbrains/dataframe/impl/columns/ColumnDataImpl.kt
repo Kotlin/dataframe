@@ -20,7 +20,7 @@ internal abstract class ColumnDataImpl<T>(override val values: List<T>, override
 
     override fun get(index: Int) = values[index]
 
-    override fun get(columnName: String) = throw Exception()
+    override fun get(columnName: String) = throw UnsupportedOperationException()
 
     override val size: Int
         get() = values.size

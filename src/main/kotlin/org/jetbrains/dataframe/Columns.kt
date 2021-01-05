@@ -71,6 +71,8 @@ fun <T> KProperty<T>.toColumnDef() = ColumnDefinition<T>(name)
 
 class ColumnDefinition<T>(override val name: String) : ColumnDef<T> {
     operator fun getValue(thisRef: Any?, property: KProperty<*>) = this
+
+    fun <C> changeType() = this as ColumnDefinition<C>
 }
 
 inline fun <reified T> ColumnDefinition<T>.nullable() = ColumnDefinition<T?>(name)
@@ -187,7 +189,7 @@ class InplaceColumnBuilder(val name: String) {
 
 fun column(name: String) = InplaceColumnBuilder(name)
 
-inline fun <T, reified R> DataFrame<T>.new(name: String, noinline expression: RowSelector<T, R>): ColumnData<R> {
+inline fun <T, reified R> DataFrame<T>.newColumn(name: String, noinline expression: RowSelector<T, R>): ColumnData<R> {
     var nullable = false
     val values = (0 until nrow).map { get(it).let { expression(it, it) }.also { if (it == null) nullable = true } }
     return column(name, values, nullable)

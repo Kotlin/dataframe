@@ -36,4 +36,9 @@ internal class DataRowImpl<T>(override var index: Int, override val owner: DataF
     }
 
     override fun hashCode() = values.hashCode()
+
+    override fun tryGet(name: String): Any? {
+        ColumnAccessTracker.registerColumnAccess(name)
+        return owner.tryGetColumn(name)?.get(index)
+    }
 }
