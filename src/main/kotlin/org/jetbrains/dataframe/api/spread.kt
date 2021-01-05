@@ -6,6 +6,12 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 
+fun <T, C> DataFrame<T>.spread(column: KProperty<C>) = spread { column.toColumnDef() }
+fun <T> DataFrame<T>.spread(column: String) = spread { column.toColumnDef() }
+fun <T, C> DataFrame<T>.spread(column: ColumnDef<C>) = spread { column }
+fun <T, C> DataFrame<T>.spread(selector: ColumnSelector<T, C>) =
+        SpreadClause.inDataFrame(this, selector)
+
 class DataFrameForSpreadImpl<T>(df: DataFrame<T>) : DataFrame<T> by df, DataFrameForSpread<T>
 
 typealias SpreadColumnSelector<T, C> = DataFrameForSpread<T>.(DataFrameForSpread<T>) -> ColumnDef<C>
@@ -27,12 +33,6 @@ class SpreadClause<T, K, V, C: SpreadContext>(val context: C, val keyColumn: Col
         fun <T, K, C: SpreadContext> create(context: C, keyColumn: ColumnSelector<T, K>) = SpreadClause(context, keyColumn, null, { true }, getType<Boolean>(), false) { listOf(it.toString()) }
     }
 }
-
-fun <T, C> DataFrame<T>.spread(column: KProperty<C>) = spread { column.toColumnDef() }
-fun <T> DataFrame<T>.spread(column: String) = spread { column.toColumnDef() }
-fun <T, C> DataFrame<T>.spread(column: ColumnDef<C>) = spread { column }
-fun <T, C> DataFrame<T>.spread(selector: ColumnSelector<T, C>) =
-        SpreadClause.inDataFrame(this, selector)
 
 fun <T, G, C> GroupedDataFrame<T, G>.spread(selector: ColumnSelector<G, C>) =
         SpreadClause.inGroupedDataFrame(this, selector)

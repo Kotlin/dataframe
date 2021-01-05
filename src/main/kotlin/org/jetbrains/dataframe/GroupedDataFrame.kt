@@ -18,7 +18,7 @@ interface GroupedDataFrame<out T, out G> {
     operator fun get(vararg values: Any?) = get(values.toList())
     operator fun get(key: GroupKey): DataFrame<T>
 
-    fun <R> modify(transform: DataFrame<G>.() -> DataFrame<R>): GroupedDataFrame<T, R>
+    fun <R> updateGroups(transform: DataFrame<G>.() -> DataFrame<R>): GroupedDataFrame<T, R>
 
     data class Entry<T, G>(val key: DataRow<T>, val group: DataFrame<G>)
 }

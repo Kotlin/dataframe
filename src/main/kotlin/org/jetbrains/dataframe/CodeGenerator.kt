@@ -29,18 +29,14 @@ data class DataFrameToListNamedStub(val df: DataFrame<*>, val className: String)
 
 data class DataFrameToListTypedStub(val df: DataFrame<*>, val interfaceClass: KClass<*>)
 
-fun <T> DataFrame<T>.schema(name: String? = null): String {
-    val interfaceName = name ?: "DataRecord"
-    return CodeGenerator().generateInterfaceDeclarations(columns, interfaceName, withBaseInterfaces = false, isOpen = true).joinToString("\n")
-}
-
 interface CodeGeneratorApi {
-    fun generate(df: DataFrame<*>, property: KProperty<*>): List<String>
-    fun generate(df: DataFrame<*>): List<String>
-    fun generate(stub: DataFrameToListNamedStub): List<String>
-    fun generate(stub: DataFrameToListTypedStub): List<String>
 
-    fun generate(marker: KClass<*>): String
+    fun generate(df: DataFrame<*>, property: KProperty<*>): List<Code>
+    fun generate(df: DataFrame<*>): List<Code>
+    fun generate(stub: DataFrameToListNamedStub): List<Code>
+    fun generate(stub: DataFrameToListTypedStub): List<Code>
+
+    fun generate(marker: KClass<*>): Code
 
     var mode: CodeGenerationMode
 
@@ -285,7 +281,7 @@ class CodeGenerator : CodeGeneratorApi {
 
     private fun String.removeQuotes() = this.removeSurrounding("`")
 
-    private fun generateExtensionProperties(scheme: Scheme, markerType: String): List<Code> {
+    private fun generateExtensionProperties(scheme: Scheme, markerType: String): Code {
 
         val shortMarkerName = markerType.substring(markerType.lastIndexOf('.')+1)
         fun generatePropertyCode(typeName: String, name: String, propertyType: String, getter: String): String {
@@ -304,7 +300,7 @@ class CodeGenerator : CodeGeneratorApi {
             declarations.add(generatePropertyCode(dfTypename, name, columnType, getter))
             declarations.add(generatePropertyCode(rowTypename, name, fieldType, getter))
         }
-        return declarations
+        return declarations.joinToString("\n")
     }
 
     private fun isMarkerType(marker: KClass<*>) = marker.hasAnnotation<DataFrameType>()
@@ -323,14 +319,13 @@ class CodeGenerator : CodeGeneratorApi {
     override fun generate(marker: KClass<*>): Code {
         val generatedMarker = getMarkerScheme(marker)
         val qualifiedName = marker.qualifiedName!!
-        return generateExtensionProperties(generatedMarker.ownScheme, qualifiedName).joinToString("\n")
+        return generateExtensionProperties(generatedMarker.ownScheme, qualifiedName)
     }
 
     private val processedProperties = mutableSetOf<KProperty<*>>()
 
-    private fun generateUniqueMarkerClassName(usedNames: Set<String> = setOf()): String {
+    private fun generateUniqueMarkerClassName(prefix: String, usedNames: Set<String> = setOf()): String {
         var id = 1
-        val prefix = "DataFrameType"
         while (registeredMarkerClassNames.contains("$prefix$id") || usedNames.contains("$prefix$id"))
             id++
         return "$prefix$id"
@@ -341,7 +336,7 @@ class CodeGenerator : CodeGeneratorApi {
         return targetBaseMarkers.all { superclasses.contains(it) }
     }
 
-    override fun generate(df: DataFrame<*>) = generate(df.schema, false)
+    override fun generate(df: DataFrame<*>) = generate(df.schema, GenerationOptions(false, false))
 
     override fun generate(df: DataFrame<*>, property: KProperty<*>): List<String> {
 
@@ -369,30 +364,32 @@ class CodeGenerator : CodeGeneratorApi {
         }
 
         // property needs to be recreated. First, try to find existing marker for it
-        return generate(targetScheme, isMutable)
+        return generate(targetScheme, GenerationOptions(isMutable, false))
     }
 
-    private fun generate(scheme: Scheme, isMutable: Boolean): List<String> {
+    private fun generate(scheme: Scheme, options: GenerationOptions): List<Code> {
         val declarations = mutableListOf<String>()
-        val markerType = findOrCreateMarker(scheme, isMutable, mutableSetOf(), declarations)
+        val markerType = findOrCreateMarker(scheme, declarations, options)
         val converter = "\$it.typed<$markerType>()"
         return if(declarations.isEmpty()) listOf(converter) else listOf(declarations.joinToString("\n"), converter)
     }
 
-    private fun findOrCreateMarker(targetScheme: Scheme, isMutable: Boolean, usedNames: MutableSet<String>, declarations: MutableList<String>): String {
-        val markerType: String
+    data class GenerationOptions(val isMutable: Boolean, val generateExtensionProperties: Boolean, val markerNamePrefix: String = "DataFrameType", val usedNames: MutableSet<String> = mutableSetOf())
+
+    private fun findOrCreateMarker(targetScheme: Scheme, declarations: MutableList<Code>, options: GenerationOptions): String {
+        val markerName: String
         val requiredBaseMarkers = targetScheme.getRequiredBaseMarkers().map { it.kclass }
         val existingMarker = registeredMarkers.values.firstOrNull {
-            (!isMutable || it.isOpen) && it.fullScheme.compare(targetScheme).isEqual() && it.kclass.implements(requiredBaseMarkers)
+            (!options.isMutable || it.isOpen) && it.fullScheme.compare(targetScheme).isEqual() && it.kclass.implements(requiredBaseMarkers)
         }
         if (existingMarker != null) {
-            markerType = existingMarker.kclass.qualifiedName!!
+            markerName = existingMarker.kclass.qualifiedName!!
         } else {
-            markerType = generateUniqueMarkerClassName(usedNames)
-            usedNames.add(markerType)
-            declarations.addAll(generateInterfaceDeclarations(targetScheme, markerType, usedNames, withBaseInterfaces = true, isOpen = isMutable))
+            markerName = generateUniqueMarkerClassName(options.markerNamePrefix, options.usedNames)
+            options.usedNames.add(markerName)
+            declarations.addAll(generateInterfaceDeclarations(targetScheme, markerName, true, options))
         }
-        return markerType
+        return markerName
     }
 
     private fun getMarker(dataFrameType: KType) =
@@ -427,7 +424,7 @@ class CodeGenerator : CodeGeneratorApi {
         }
     }
 
-    private fun generateInterfaceDeclarations(scheme: Scheme, name: String, usedNames: MutableSet<String>, withBaseInterfaces: Boolean, isOpen: Boolean): List<String> {
+    private fun generateInterfaceDeclarations(scheme: Scheme, name: String, withBaseInterfaces: Boolean, options: GenerationOptions): List<String> {
 
         val markers = mutableListOf<GeneratedMarker>()
         val fields = if (withBaseInterfaces) {
@@ -456,9 +453,11 @@ class CodeGenerator : CodeGeneratorApi {
         } else scheme.values.map { it to FieldGenerationMode.declare }
 
         val leafMarkers = markers.onlyLeafs()
-        val header = "@DataFrameType${if(isOpen) "" else "(isOpen = false)"}\ninterface $name"
+        val header = "@DataFrameType${if(options.isMutable) "" else "(isOpen = false)"}\ninterface $name"
         val baseInterfacesDeclaration = if (leafMarkers.isNotEmpty()) " : " + leafMarkers.map { it.kclass.qualifiedName!! }.joinToString() else ""
         val resultDeclarations = mutableListOf<String>()
+
+        val newOptions = options.copy(isMutable = false)
 
         val fieldsDeclaration = fields.filter { it.second != FieldGenerationMode.skip }.map {
             val field = it.first
@@ -471,11 +470,11 @@ class CodeGenerator : CodeGeneratorApi {
 
             val fieldType = when(field.columnKind) {
                 ColumnKind.Group -> {
-                    val markerType = findOrCreateMarker(field.childScheme!!, false, usedNames, resultDeclarations)
+                    val markerType = findOrCreateMarker(field.childScheme!!, resultDeclarations, newOptions)
                     "${render(GroupedFieldType)}<$markerType>"
                 }
                 ColumnKind.Table -> {
-                    val markerType = findOrCreateMarker(field.childScheme!!, false, usedNames, resultDeclarations)
+                    val markerType = findOrCreateMarker(field.childScheme!!, resultDeclarations, newOptions)
                     "${render(DataFrameFieldType)}<$markerType>"
                 }
                 else -> render(field.fieldType)
@@ -485,10 +484,13 @@ class CodeGenerator : CodeGeneratorApi {
         }.joinToString("\n")
         val body = if (fieldsDeclaration.isNotBlank()) "{\n$fieldsDeclaration\n}" else ""
         resultDeclarations.add(header + baseInterfacesDeclaration + body)
+
+        if(options.generateExtensionProperties)
+            resultDeclarations.add(generateExtensionProperties(scheme, name))
         return resultDeclarations
     }
 
-    internal fun generateInterfaceDeclarations(columns: Iterable<DataCol>, name: String, withBaseInterfaces: Boolean, isOpen: Boolean) = generateInterfaceDeclarations(getScheme(columns), name, mutableSetOf(), withBaseInterfaces, isOpen)
+    internal fun generateInterfaceDeclarations(df: DataFrame<*>, name: String, generateExtensionProperties: Boolean) = generateInterfaceDeclarations(getScheme(df.columns), name, false, GenerationOptions(true, generateExtensionProperties, name))
 
     // DataFrame -> List converters
 

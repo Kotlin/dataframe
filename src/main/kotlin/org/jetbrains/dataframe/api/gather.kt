@@ -1,11 +1,10 @@
 package org.jetbrains.dataframe
 
-import kotlin.reflect.KClass
+import org.jetbrains.dataframe.api.columns.ColumnData
 import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
-class GatherClause<T, C, K, R>(val df: DataFrame<T>, val selector: ColumnsSelector<T, C>, val filter: ((C) -> Boolean)? = null,
+data class GatherClause<T, C, K, R>(val df: DataFrame<T>, val selector: ColumnsSelector<T, C>, val filter: ((C) -> Boolean)? = null,
                                val nameTransform: ((String) -> K), val valueTransform: ((C) -> R))
 
 fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>) = GatherClause(this, selector, null, { it }, { it })
@@ -16,48 +15,74 @@ fun <T, C, K, R> GatherClause<T, C, K, R>.where(filter: Predicate<C>) = GatherCl
 fun <T, C, K, R> GatherClause<T, C, *, R>.mapNames(transform: (String) -> K) = GatherClause(df, selector, filter, transform, valueTransform)
 fun <T, C, K, R> GatherClause<T, C, K, *>.map(transform: (C) -> R) = GatherClause(df, selector, filter, nameTransform, transform)
 fun <T, C : Any, K, R> GatherClause<T, C?, K, *>.mapNotNull(transform: (C) -> R) = GatherClause(df, selector, filter, nameTransform, { if (it != null) transform(it) else null })
+
+inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: ColumnDef<String>) = into(keyColumn.name)
 inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String) = doGather(this, keyColumn, null, getType<K>(), getType<R>())
 inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String, valueColumn: String) = doGather(this, keyColumn, valueColumn, getType<K>(), getType<R>())
 
 fun <T, C, K, R> doGather(clause: GatherClause<T, C, K, R>, namesTo: String, valuesTo: String? = null, keyColumnType: KType, valueColumnType: KType): DataFrame<T> {
 
-    val keyColumns = clause.df.getColumns(clause.selector)
+    val removed = clause.df.doRemove(clause.selector)
 
-    // TODO: support hierarchical columns
-    val otherColumns = clause.df.columns - keyColumns
-    val outputColumnsData = otherColumns.map { ArrayList<Any?>() }.toMutableList()
-    val keyColumnData = ArrayList<K>()
-    val valueColumnData = ArrayList<R>()
-    val include = clause.filter ?: { true }
-    var hasNullValues = false
-    val keys = keyColumns.map {clause.nameTransform(it.name) }
-    val classes = if (valueColumnType.jvmErasure == Any::class) mutableSetOf<KClass<*>>() else null
-    (0 until clause.df.nrow).forEach { row ->
-        keyColumns.forEachIndexed { colIndex, col ->
-            val value = col[row]
-            if (include(value)) {
-                outputColumnsData.forEachIndexed { index, list ->
-                    list.add(otherColumns[index][row])
-                }
-                keyColumnData.add(keys[colIndex])
-                if (valuesTo != null) {
-                    val dstValue = clause.valueTransform(value)
-                    valueColumnData.add(dstValue)
-                    if (dstValue == null)
-                        hasNullValues = true
-                    else if (classes != null)
-                        classes.add((dstValue as Any).javaClass.kotlin)
-                }
+    val columnsToGather = removed.removedColumns.map { it.data.column as ColumnData<C> }
+
+    val isGatherGroups = columnsToGather.any { it.isGrouped() }
+    if (isGatherGroups && columnsToGather.any { !it.isGrouped() })
+        throw UnsupportedOperationException("Cannot mix ColumnGroups with other types of columns in 'gather' operation")
+
+    val gatheredColumnKeys = columnsToGather.map { clause.nameTransform(it.name) }
+
+    val namesColumn = column<List<K>>(namesTo)
+    val valuesColumn = column<List<*>>(valuesTo ?: "newValues")
+
+    var df = removed.df
+
+    val filter = clause.filter
+
+    if(filter == null) {
+        df = df.add(namesColumn) {
+            gatheredColumnKeys
+        }.add(valuesColumn) { row ->
+            columnsToGather.map { col ->
+                clause.valueTransform(col[row])
             }
         }
+
+        df = df.splitRows { namesColumn and valuesColumn }
+    }else {
+        val nameAndValue = column<List<Pair<K, R>>>("nameAndValue")
+        df = df.add(nameAndValue) { row ->
+            columnsToGather.mapIndexedNotNull { colIndex, col ->
+                val value = col[row]
+                if(filter(value)) {
+                    gatheredColumnKeys[colIndex] to clause.valueTransform(value)
+                }else null
+            }
+        }
+
+        df = df.splitRows { nameAndValue }
+
+        val nameAndValuePairs = nameAndValue.changeType<Pair<K, C>>()
+
+        df = df.split { nameAndValuePairs }.by { listOf(it.first, it.second) }.into(namesColumn, valuesColumn)
     }
-    val resultColumns = outputColumnsData.mapIndexed { index, values ->
-        val srcColumn = otherColumns[index]
-        srcColumn.withValues(values, srcColumn.hasNulls)
-    }.toMutableList()
-    resultColumns.add(column(namesTo, keyColumnData, keyColumnType.withNullability(keys.contains(null))))
-    if (valuesTo != null)
-        resultColumns.add(column(valuesTo, valueColumnData, classes?.commonType(hasNullValues)
-                ?: valueColumnType.withNullability(hasNullValues)))
-    return dataFrameOf(resultColumns).typed()
+
+    df = df.cast(namesColumn.name).to(keyColumnType)
+
+    val valuesCol = df[valuesColumn.name]
+
+    if(valuesTo == null) {
+
+        // values column needs to be removed
+        if(valuesCol.isGrouped()){
+            df = df.ungroup(valuesColumn.name)
+        }else df = df.remove(valuesColumn.name)
+
+    }else {
+        if(!valuesCol.isTable() && valueColumnType.jvmErasure != Any::class){
+            df = df.cast(valuesColumn.name).to(valueColumnType)
+        }
+    }
+
+    return df
 }

@@ -18,9 +18,9 @@ interface SelectReceiver<out T> : ColumnsSelectorReceiver<T> {
 
     fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>) = except(other.toList().toColumnSet())
 
-    fun <C> ColumnSet<C>.except(other: ColumnSet<*>): ColumnSet<*> = createColumnSet { resolve(it).allColumnsExcept(other.resolve(it)) }
+    infix fun <C> ColumnSet<C>.except(other: ColumnSet<*>): ColumnSet<*> = createColumnSet { resolve(it).allColumnsExcept(other.resolve(it)) }
 
-    fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>) = except(selector.toColumns())
+    infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>) = except(selector.toColumns())
 
     operator fun <C> ColumnSelector<T, C>.invoke() = this(this@SelectReceiver, this@SelectReceiver)
 

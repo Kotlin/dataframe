@@ -213,7 +213,7 @@ class DataFrameTreeTests : BaseTest() {
         val info by columnGroup()
         val moved = typed.group { except(name) }.into(info)
         val merged = moved.mergeRows { info }
-        val grouped = typed.groupBy { name }.modify { remove { name } }
+        val grouped = typed.groupBy { name }.updateGroups { remove { name } }
         val expected = grouped.plain().rename(grouped.groups).into(info)
         merged shouldBe expected
     }

@@ -5,6 +5,8 @@ import org.jetbrains.dataframe.api.columns.ColumnData
 import org.jetbrains.dataframe.api.columns.GroupedColumn
 import org.jetbrains.dataframe.api.columns.TableColumn
 import org.jetbrains.dataframe.createType
+import java.lang.UnsupportedOperationException
+import kotlin.reflect.KType
 
 internal class TableColumnImpl<T> constructor(override val df: DataFrame<T>, name: String, values: List<DataFrame<T>>)
     : ColumnDataImpl<DataFrame<T>>(values, name, createType<DataFrame<*>>()), TableColumn<T> {
@@ -20,4 +22,6 @@ internal class TableColumnImpl<T> constructor(override val df: DataFrame<T>, nam
     override fun createWithValues(values: List<DataFrame<T>>, hasNulls: Boolean?): ColumnData<DataFrame<T>> {
         return ColumnData.createTable(name, values, values.getBaseSchema())
     }
+
+    override fun changeType(type: KType) = throw UnsupportedOperationException()
 }

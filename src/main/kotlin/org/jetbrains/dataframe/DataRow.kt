@@ -6,6 +6,7 @@ import kotlin.reflect.KProperty1
 
 interface DataRowBase<out T> {
     operator fun get(name: String): Any?
+    fun tryGet(name: String): Any?
 }
 
 interface DataRow<out T>: DataRowBase<T> {
@@ -15,6 +16,7 @@ interface DataRow<out T>: DataRowBase<T> {
     val index: Int
     fun getRow(index: Int): DataRow<T>?
     override operator fun get(name: String): Any?
+    override fun tryGet(name: String): Any?
     operator fun get(columnIndex: Int): Any?
     operator fun <R> get(column: ColumnDef<R>) = get(column.name) as R
     operator fun <R> get(column: ColumnData<R>) = column[index]

@@ -1,8 +1,11 @@
 package org.jetbrains.dataframe.impl.columns
 
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.api.columns.ColumnData
 import org.jetbrains.dataframe.api.columns.GroupedColumn
 import org.jetbrains.dataframe.createType
+import java.lang.UnsupportedOperationException
+import kotlin.reflect.KType
 
 internal class GroupedColumnImpl<T>(override val df: DataFrame<T>, override val name: String) : GroupedColumn<T>, ColumnDataInternal<DataRow<T>>, DataFrame<T> by df {
 
@@ -50,4 +53,6 @@ internal class GroupedColumnImpl<T>(override val df: DataFrame<T>, override val 
     override fun tryGetColumn(columnName: String) = df.tryGetColumn(columnName)
 
     override fun toString() = "$name: {${renderSchema(df)}}"
+
+    override fun changeType(type: KType) = throw UnsupportedOperationException()
 }

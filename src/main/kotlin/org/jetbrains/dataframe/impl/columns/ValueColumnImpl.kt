@@ -21,4 +21,6 @@ internal class ValueColumnImpl<T>(values: List<T>, name: String, type: KType, va
     }
 
     override fun defaultValue() = defaultValue
+
+    override fun changeType(type: KType) = ColumnData.create(name, values, type, defaultValue)
 }
