@@ -3,6 +3,7 @@ package org.jetbrains.dataframe
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.api.generateTypedCode
 import org.jetbrains.dataframe.io.readJsonStr
+import org.junit.Ignore
 import org.junit.Test
 
 class GatherTests {
@@ -125,5 +126,11 @@ class GatherTests {
         }.ungroup()
 
         gathered shouldBe expected
+    }
+
+    @Test
+    @Ignore
+    fun `generated code is fully typed`() {
+        generatedCode.contains("<*>") shouldBe false
     }
 }

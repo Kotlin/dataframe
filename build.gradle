@@ -100,7 +100,7 @@ dokka {
 }
 
 processJupyterApiResources {
-    libraryProducers = ["org.jetbrains.dataframe.jupyter.LibraryProvider"]
+    libraryProducers = ["org.jetbrains.dataframe.jupyter.Integration"]
 }
 
 group 'org.jetbrains.kotlin'

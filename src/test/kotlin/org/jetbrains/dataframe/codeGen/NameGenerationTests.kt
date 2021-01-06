@@ -42,7 +42,7 @@ class NameGenerationTests {
     fun `properties generation`(){
 
         val codeGen = CodeGenerator()
-        val code = codeGen.generate(DataRecord::class).split("\n")
+        val code = codeGen.generateExtensionProperties(DataRecord::class)!!.split("\n")
         code.size shouldBe 4
         code.forEach {
             it.count { it == '`' } shouldBe 2
