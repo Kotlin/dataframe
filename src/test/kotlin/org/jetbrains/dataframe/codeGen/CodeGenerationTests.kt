@@ -63,7 +63,7 @@ class CodeGenerationTests : BaseTest(){
 
     @Test
     fun `generate extension properties`() {
-        val code = CodeGenerator().generate(Person::class)
+        val code = CodeGenerator().generateExtensionProperties(Person::class)
 
         val dfName = (DataFrameBase::class).simpleName
         val dfRowName = (DataRowBase::class).simpleName
@@ -84,7 +84,7 @@ class CodeGenerationTests : BaseTest(){
     @Test
     fun `generate derived interface`() {
         val codeGen = CodeGenerator()
-        codeGen.generate(Person::class)
+        codeGen.generateExtensionProperties(Person::class)
         val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
         val code = codeGen.generate(df.filterNotNull { all() }, property)
         val expected = """

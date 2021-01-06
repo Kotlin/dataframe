@@ -231,7 +231,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun extensionPropertiesTest() {
-        val code = CodeGenerator().generate(GroupedPerson::class)
+        val code = CodeGenerator().generateExtensionProperties(GroupedPerson::class)
         val dataFrameBase = DataFrameBase::class.simpleName
         val dataFrameRowBase = DataRowBase::class.simpleName
         val dataFrameRow = DataRow::class.qualifiedName

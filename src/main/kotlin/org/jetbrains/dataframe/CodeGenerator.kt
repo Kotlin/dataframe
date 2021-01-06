@@ -36,7 +36,7 @@ interface CodeGeneratorApi {
     fun generate(stub: DataFrameToListNamedStub): List<Code>
     fun generate(stub: DataFrameToListTypedStub): List<Code>
 
-    fun generate(marker: KClass<*>): Code
+    fun generateExtensionProperties(marker: KClass<*>): Code?
 
     var mode: CodeGenerationMode
 
@@ -281,7 +281,7 @@ class CodeGenerator : CodeGeneratorApi {
 
     private fun String.removeQuotes() = this.removeSurrounding("`")
 
-    private fun generateExtensionProperties(scheme: Scheme, markerType: String): Code {
+    private fun generateExtensionProperties(scheme: Scheme, markerType: String): Code? {
 
         val shortMarkerName = markerType.substring(markerType.lastIndexOf('.')+1)
         fun generatePropertyCode(typeName: String, name: String, propertyType: String, getter: String): String {
@@ -300,6 +300,7 @@ class CodeGenerator : CodeGeneratorApi {
             declarations.add(generatePropertyCode(dfTypename, name, columnType, getter))
             declarations.add(generatePropertyCode(rowTypename, name, fieldType, getter))
         }
+        if(declarations.isEmpty()) return null
         return declarations.joinToString("\n")
     }
 
@@ -316,7 +317,7 @@ class CodeGenerator : CodeGeneratorApi {
             GeneratedMarker(fullSet, ownSet, marker, annotation.isOpen)
         }
 
-    override fun generate(marker: KClass<*>): Code {
+    override fun generateExtensionProperties(marker: KClass<*>): Code? {
         val generatedMarker = getMarkerScheme(marker)
         val qualifiedName = marker.qualifiedName!!
         return generateExtensionProperties(generatedMarker.ownScheme, qualifiedName)
@@ -486,7 +487,7 @@ class CodeGenerator : CodeGeneratorApi {
         resultDeclarations.add(header + baseInterfacesDeclaration + body)
 
         if(options.generateExtensionProperties)
-            resultDeclarations.add(generateExtensionProperties(scheme, name))
+            generateExtensionProperties(scheme, name)?.let(resultDeclarations::add)
         return resultDeclarations
     }
 
