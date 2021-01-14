@@ -13,13 +13,13 @@ inline fun <reified R, T, G> GroupedDataFrame<T, G>.add(name: String, noinline e
 inline fun <reified R, T> DataFrame<T>.add(column: ColumnDefinition<R>, noinline expression: RowSelector<T, R>) =
         (this + newColumn(column.name, expression))
 
-fun <T> DataFrame<T>.addMany(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) =
+fun <T> DataFrame<T>.add(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) =
         with(TypedColumnsFromDataRowBuilder(this)) {
             body(this)
-            dataFrameOf(this@addMany.columns + columns).typed<T>()
+            dataFrameOf(this@add.columns + columns).typed<T>()
         }
 
-operator fun <T> DataFrame<T>.plus(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) = addMany(body)
+operator fun <T> DataFrame<T>.plus(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) = add(body)
 
 class TypedColumnsFromDataRowBuilder<T>(val df: DataFrame<T>) {
     internal val columns = mutableListOf<DataCol>()
