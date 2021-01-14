@@ -19,7 +19,7 @@ internal fun isCompressed(fileOrUrl: String) = listOf("gz", "zip").contains(file
 
 internal fun isCompressed(file: File) = listOf("gz", "zip").contains(file.extension)
 
-fun DataFrame.Companion.readCsv(
+fun DataFrame.Companion.readCSV(
         fileOrUrl: String,
         format: CSVFormat = defaultCsvFormat,
         colTypes: Map<String, ColType> = mapOf()
@@ -29,7 +29,7 @@ fun DataFrame.Companion.readCsv(
         colTypes = colTypes,
         isCompressed = isCompressed(fileOrUrl))
 
-fun DataFrame.Companion.readCsv(
+fun DataFrame.Companion.readCSV(
         file: File,
         format: CSVFormat = defaultCsvFormat,
         colTypes: Map<String, ColType> = mapOf()
@@ -40,7 +40,7 @@ fun DataFrame.Companion.readCsv(
         isCompressed = isCompressed(file)
 )
 
-fun DataFrame.Companion.readTsv(
+fun DataFrame.Companion.readTSV(
         fileOrUrl: String,
         format: CSVFormat = defaultTdfFormat,
         colTypes: Map<String, ColType> = mapOf()
@@ -50,7 +50,7 @@ fun DataFrame.Companion.readTsv(
         colTypes = colTypes,
         isCompressed = isCompressed(fileOrUrl))
 
-fun DataFrame.Companion.readTsv(
+fun DataFrame.Companion.readTSV(
         file: File,
         format: CSVFormat = defaultTdfFormat,
         colTypes: Map<String, ColType> = mapOf()
