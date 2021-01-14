@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe.io
 
+import com.beust.klaxon.Parser
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.columns.ColumnData
@@ -19,46 +20,61 @@ internal fun isCompressed(fileOrUrl: String) = listOf("gz", "zip").contains(file
 
 internal fun isCompressed(file: File) = listOf("gz", "zip").contains(file.extension)
 
-fun DataFrame.Companion.readCSV(
-        fileOrUrl: String,
-        format: CSVFormat = defaultCsvFormat,
-        colTypes: Map<String, ColType> = mapOf()
-) = readDelim(
-        asStream(fileOrUrl),
-        format = format,
-        colTypes = colTypes,
-        isCompressed = isCompressed(fileOrUrl))
+internal fun isCompressed(url: URL) = isCompressed(url.path)
 
 fun DataFrame.Companion.readCSV(
-        file: File,
-        format: CSVFormat = defaultCsvFormat,
-        colTypes: Map<String, ColType> = mapOf()
+    fileOrUrl: String,
+    format: CSVFormat = defaultCsvFormat,
+    colTypes: Map<String, ColType> = mapOf()
 ) = readDelim(
-        inStream = FileInputStream(file),
-        format = format,
-        colTypes = colTypes,
-        isCompressed = isCompressed(file)
+    asStream(fileOrUrl),
+    format = format,
+    colTypes = colTypes,
+    isCompressed = isCompressed(fileOrUrl)
+)
+
+fun DataFrame.Companion.readCSV(
+    file: File,
+    format: CSVFormat = defaultCsvFormat,
+    colTypes: Map<String, ColType> = mapOf()
+) = readDelim(
+    inStream = FileInputStream(file),
+    format = format,
+    colTypes = colTypes,
+    isCompressed = isCompressed(file)
+)
+
+fun DataFrame.Companion.readCSV(
+    url: URL,
+    format: CSVFormat = defaultCsvFormat,
+    colTypes: Map<String, ColType> = mapOf()
+): DataFrame<*> = readDelim(
+    inStream = url.openStream(),
+    format = format,
+    colTypes = colTypes,
+    isCompressed = isCompressed(url)
 )
 
 fun DataFrame.Companion.readTSV(
-        fileOrUrl: String,
-        format: CSVFormat = defaultTdfFormat,
-        colTypes: Map<String, ColType> = mapOf()
+    fileOrUrl: String,
+    format: CSVFormat = defaultTdfFormat,
+    colTypes: Map<String, ColType> = mapOf()
 ) = readDelim(
-        inStream = asStream(fileOrUrl),
-        format = format,
-        colTypes = colTypes,
-        isCompressed = isCompressed(fileOrUrl))
+    inStream = asStream(fileOrUrl),
+    format = format,
+    colTypes = colTypes,
+    isCompressed = isCompressed(fileOrUrl)
+)
 
 fun DataFrame.Companion.readTSV(
-        file: File,
-        format: CSVFormat = defaultTdfFormat,
-        colTypes: Map<String, ColType> = mapOf()
+    file: File,
+    format: CSVFormat = defaultTdfFormat,
+    colTypes: Map<String, ColType> = mapOf()
 ) = readDelim(
-        FileInputStream(file),
-        format = format,
-        colTypes = colTypes,
-        isCompressed = isCompressed(file)
+    FileInputStream(file),
+    format = format,
+    colTypes = colTypes,
+    isCompressed = isCompressed(file)
 )
 
 private fun asStream(fileOrUrl: String) = (if (isURL(fileOrUrl)) {
@@ -68,18 +84,18 @@ private fun asStream(fileOrUrl: String) = (if (isURL(fileOrUrl)) {
 }).toURL().openStream()
 
 fun DataFrame.Companion.readDelim(
-        inStream: InputStream,
-        format: CSVFormat = defaultCsvFormat,
-        isCompressed: Boolean = false,
-        colTypes: Map<String, ColType> = mapOf()
+    inStream: InputStream,
+    format: CSVFormat = defaultCsvFormat,
+    isCompressed: Boolean = false,
+    colTypes: Map<String, ColType> = mapOf()
 ) =
-        if (isCompressed) {
-            InputStreamReader(GZIPInputStream(inStream))
-        } else {
-            BufferedReader(InputStreamReader(inStream, "UTF-8"))
-        }.run {
-            readDelim(this, format, colTypes = colTypes)
-        }
+    if (isCompressed) {
+        InputStreamReader(GZIPInputStream(inStream))
+    } else {
+        BufferedReader(InputStreamReader(inStream, "UTF-8"))
+    }.run {
+        readDelim(this, format, colTypes = colTypes)
+    }
 
 internal fun isURL(fileOrUrl: String): Boolean = listOf("http:", "https:", "ftp:").any { fileOrUrl.startsWith(it) }
 
@@ -93,7 +109,7 @@ enum class ColType {
     String,
 }
 
-fun ColType.toType() = when(this){
+fun ColType.toType() = when (this) {
     ColType.Int -> Int::class
     ColType.Long -> Long::class
     ColType.Double -> Double::class
@@ -105,10 +121,10 @@ fun ColType.toType() = when(this){
 val MISSING_VALUE = "NA"
 
 fun DataFrame.Companion.readDelim(
-        reader: Reader,
-        format: CSVFormat = CSVFormat.DEFAULT.withHeader(),
-        colTypes: Map<String, ColType> = mapOf(),
-        skip: Int = 0
+    reader: Reader,
+    format: CSVFormat = CSVFormat.DEFAULT.withHeader(),
+    colTypes: Map<String, ColType> = mapOf(),
+    skip: Int = 0
 ): DataFrame<*> {
 
     val formatWithNullString = if (format.isNullStringSet) {
@@ -127,7 +143,7 @@ fun DataFrame.Companion.readDelim(
     val records = csvParser.records
 
     val columnNames = csvParser.headerMap?.keys
-            ?: (1..records[0].count()).map { index -> "X${index}" }
+        ?: (1..records[0].count()).map { index -> "X${index}" }
 
     val generator = ColumnNameGenerator()
     val uniqueNames = columnNames.map { generator.addUnique(it) }
@@ -138,7 +154,7 @@ fun DataFrame.Companion.readDelim(
         var hasNulls = false
         val values = records.map { it[colIndex]?.emptyAsNull().also { if (it == null) hasNulls = true } }
         val column = column(colName, values, hasNulls)
-        when(colType) {
+        when (colType) {
             null -> column.tryParseAny()
             ColType.String -> column
             else -> {

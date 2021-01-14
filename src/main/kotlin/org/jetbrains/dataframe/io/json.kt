@@ -14,19 +14,19 @@ import kotlin.reflect.full.createType
 
 fun DataFrame.Companion.readJSON(file: File) = readJSON(file.toURI().toURL())
 
-fun DataFrame.Companion.readJSON(fileOrUrl: String): DataFrame<*> {
+fun DataFrame.Companion.readJSON(path: String): DataFrame<*> {
     val url = when {
-        isURL(fileOrUrl) -> URL(fileOrUrl).toURI()
-        else -> File(fileOrUrl).toURI()
+        isURL(path) -> URL(path).toURI()
+        else -> File(path).toURI()
     }
     return readJSON(url.toURL())
 }
 
 @Suppress("UNCHECKED_CAST")
 fun DataFrame.Companion.readJSON(url: URL): DataFrame<*> =
-        readJSON(Parser().parse(url.openStream()))
+        readJSON(Parser.default().parse(url.openStream()))
 
-fun DataFrame.Companion.readJsonStr(text: String) = readJSON(Parser().parse(StringBuilder(text)))
+fun DataFrame.Companion.readJsonStr(text: String) = readJSON(Parser.default().parse(StringBuilder(text)))
 
 private fun readJSON(parsed: Any?) = when (parsed) {
     is JsonArray<*> -> fromList(parsed.value)
