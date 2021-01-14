@@ -27,13 +27,11 @@ interface SelectReceiver<out T> : ColumnsSelectorReceiver<T> {
     operator fun <C> ColumnDef<C>.invoke(newName: String) = rename(newName)
 
     infix fun String.and(other: String) = toColumnDef() and other.toColumnDef()
-
     infix fun <C> String.and(other: ColumnSet<C>) = toColumnDef() and other
-
-    infix fun <C> KProperty<*>.and(other: ColumnSet<C>) = toColumnDef() and other
+    infix fun <C> KProperty<C>.and(other: ColumnSet<C>) = toColumnDef() and other
     infix fun <C> ColumnSet<C>.and(other: KProperty<C>) = this and other.toColumnDef()
-    infix fun KProperty<*>.and(other: KProperty<*>) = toColumnDef() and other.toColumnDef()
-
+    infix fun <C> KProperty<C>.and(other: KProperty<C>) = toColumnDef() and other.toColumnDef()
     infix fun <C> ColumnSet<C>.and(other: String) = this and other.toColumnDef()
+
     operator fun <C> ColumnSet<C>.plus(other: ColumnSet<C>) = this and other
 }
