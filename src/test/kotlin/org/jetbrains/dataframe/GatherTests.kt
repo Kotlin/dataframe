@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe
 
 import io.kotlintest.shouldBe
+import org.intellij.lang.annotations.Language
 import org.jetbrains.dataframe.api.generateTypedCode
 import org.jetbrains.dataframe.io.readJsonStr
 import org.junit.Ignore
@@ -10,6 +11,7 @@ class GatherTests {
 
     //region Data Source
 
+    @Language("json")
     val df = """
             [
                 {
