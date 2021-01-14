@@ -5,6 +5,7 @@ import org.jetbrains.dataframe.api.columns.GroupedColumn
 import org.jetbrains.dataframe.api.columns.GroupedColumnBase
 import org.jetbrains.dataframe.api.columns.TableColumn
 import org.jetbrains.kotlinx.jupyter.api.Code
+import org.jetbrains.kotlinx.jupyter.api.VariableName
 import kotlin.reflect.*
 import kotlin.reflect.full.*
 import kotlin.reflect.jvm.jvmErasure
@@ -29,12 +30,16 @@ data class DataFrameToListNamedStub(val df: DataFrame<*>, val className: String)
 
 data class DataFrameToListTypedStub(val df: DataFrame<*>, val interfaceClass: KClass<*>)
 
+data class GeneratedCode(val declarations: Code, val converter: (VariableName) -> Code) {
+
+    fun with(name: VariableName): Code = declarations + "\n" + converter(name)
+}
+
 interface CodeGeneratorApi {
 
-    fun generate(df: DataFrame<*>, property: KProperty<*>): List<Code>
-    fun generate(df: DataFrame<*>): List<Code>
-    fun generate(stub: DataFrameToListNamedStub): List<Code>
-    fun generate(stub: DataFrameToListTypedStub): List<Code>
+    fun generate(df: DataFrame<*>, property: KProperty<*>? = null): GeneratedCode?
+    fun generate(stub: DataFrameToListNamedStub): GeneratedCode
+    fun generate(stub: DataFrameToListTypedStub): GeneratedCode
 
     fun generateExtensionProperties(marker: KClass<*>): Code?
 
@@ -337,42 +342,42 @@ class CodeGenerator : CodeGeneratorApi {
         return targetBaseMarkers.all { superclasses.contains(it) }
     }
 
-    override fun generate(df: DataFrame<*>) = generate(df.schema, GenerationOptions(false, false))
-
-    override fun generate(df: DataFrame<*>, property: KProperty<*>): List<String> {
+    override fun generate(df: DataFrame<*>, property: KProperty<*>?): GeneratedCode? {
 
         var targetScheme = df.schema
-        val wasProcessedBefore = property in processedProperties
-        processedProperties.add(property)
-        val isMutable = property is KMutableProperty
+        var isMutable = false
 
-        // maybe property is already properly typed, let's do some checks
-        val currentMarkerType = getMarker(property.returnType)
-        if (currentMarkerType != null) {
-            // if property is mutable, we need to make sure that its marker type is open in order to let data frames with more columns be assignable to it
-            if (!isMutable || currentMarkerType.findAnnotation<DataFrameType>()?.isOpen == true) {
-                val markerScheme = getScheme(currentMarkerType, withBaseTypes = true)
-                // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual data frame type
-                if (wasProcessedBefore || markerScheme.compare(targetScheme).isEqual()) {
-                    // property scheme is valid for current data frame, but we should also check that all compatible open markers are implemented by it
-                    val requiredBaseMarkers = markerScheme.getRequiredBaseMarkers().map { it.kclass }
-                    if (currentMarkerType.implements(requiredBaseMarkers))
-                        return emptyList()
-                    // use current marker scheme as a target for generation of new marker interface, so that available properties won't change
-                    targetScheme = markerScheme
+        if(property != null) {
+            val wasProcessedBefore = property in processedProperties
+            processedProperties.add(property)
+            isMutable = property is KMutableProperty
+
+            // maybe property is already properly typed, let's do some checks
+            val currentMarkerType = getMarker(property.returnType)
+            if (currentMarkerType != null) {
+                // if property is mutable, we need to make sure that its marker type is open in order to let data frames with more columns be assignable to it
+                if (!isMutable || currentMarkerType.findAnnotation<DataFrameType>()?.isOpen == true) {
+                    val markerScheme = getScheme(currentMarkerType, withBaseTypes = true)
+                    // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual data frame type
+                    if (wasProcessedBefore || markerScheme.compare(targetScheme).isEqual()) {
+                        // property scheme is valid for current data frame, but we should also check that all compatible open markers are implemented by it
+                        val requiredBaseMarkers = markerScheme.getRequiredBaseMarkers().map { it.kclass }
+                        if (currentMarkerType.implements(requiredBaseMarkers))
+                            return null
+                        // use current marker scheme as a target for generation of new marker interface, so that available properties won't change
+                        targetScheme = markerScheme
+                    }
                 }
             }
         }
 
-        // property needs to be recreated. First, try to find existing marker for it
         return generate(targetScheme, GenerationOptions(isMutable, false))
     }
 
-    private fun generate(scheme: Scheme, options: GenerationOptions): List<Code> {
+    private fun generate(scheme: Scheme, options: GenerationOptions): GeneratedCode {
         val declarations = mutableListOf<String>()
         val markerType = findOrCreateMarker(scheme, declarations, options)
-        val converter = "\$it.typed<$markerType>()"
-        return if(declarations.isEmpty()) listOf(converter) else listOf(declarations.joinToString("\n"), converter)
+        return GeneratedCode(declarations.joinToString("\n")) { "$it.typed<$markerType>()" }
     }
 
     data class GenerationOptions(val isMutable: Boolean, val generateExtensionProperties: Boolean, val markerNamePrefix: String = "DataFrameType", val usedNames: MutableSet<String> = mutableSetOf())
@@ -495,7 +500,7 @@ class CodeGenerator : CodeGeneratorApi {
 
     // DataFrame -> List converters
 
-    private fun generateToListConverter(className: String, columnNames: List<String>, scheme: Scheme, interfaceName: String? = null): List<String> {
+    private fun generateToListConverter(className: String, columnNames: List<String>, scheme: Scheme, interfaceName: String? = null): GeneratedCode {
         val override = if (interfaceName != null) "override " else ""
         val baseTypes = if (interfaceName != null) " : $interfaceName" else ""
         val classDeclaration = "data class ${className}(" +
@@ -504,16 +509,16 @@ class CodeGenerator : CodeGeneratorApi {
                     "${override}val ${field.fieldName}: ${render(field.fieldType)}"
                 }.joinToString() + ") " + baseTypes
 
-        val converter = "\$it.df.rows.map { $className(" +
+        fun converter(argumentName: String) = "$argumentName.df.rows.map { $className(" +
                 columnNames.map {
                     val field = scheme.byColumn[it]!!
                     "it[\"${field.columnName}\"] as ${render(field.fieldType)}"
                 }.joinToString() + ")}"
 
-        return listOf(classDeclaration, converter)
+        return GeneratedCode(classDeclaration, ::converter)
     }
 
-    override fun generate(stub: DataFrameToListTypedStub): List<String> {
+    override fun generate(stub: DataFrameToListTypedStub): GeneratedCode {
         val df = stub.df
         val dfScheme = df.schema
         val interfaceScheme = getScheme(stub.interfaceClass, withBaseTypes = true)
