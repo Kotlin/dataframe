@@ -82,8 +82,8 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `sort`() {
-        val expected = typed.sortBy { name then age }.moveTo(1) { city }
-        typed2.sortBy { nameAndCity.name then age }.ungroup { nameAndCity } shouldBe expected
+        val expected = typed.sortBy { name and age }.moveTo(1) { city }
+        typed2.sortBy { nameAndCity.name and age }.ungroup { nameAndCity } shouldBe expected
     }
 
     @Test

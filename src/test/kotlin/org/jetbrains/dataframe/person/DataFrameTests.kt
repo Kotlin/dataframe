@@ -176,14 +176,14 @@ class DataFrameTests : BaseTest() {
 
         fun DataFrame<*>.check() = this[city].values shouldBe expected
 
-        typed.sortBy { name then age.desc }.check()
-        typed.sortBy { it.name then it.age.desc }.check()
+        typed.sortBy { name and age.desc }.check()
+        typed.sortBy { it.name and it.age.desc }.check()
 
-        df.sortBy { name then age.desc }.check()
+        df.sortBy { name and age.desc }.check()
 
-        df.sortBy { Person::name then Person::age.desc }.check()
+        df.sortBy { Person::name and Person::age.desc }.check()
 
-        df.sortBy { "name".cast<String>() then "age".desc }.check()
+        df.sortBy { "name".cast<String>() and "age".desc }.check()
     }
 
     @Test
@@ -234,8 +234,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `group and sort`() {
-        val expected = typed.sortBy { name.desc then age }
-        val actual = typed.groupBy { name }.sortBy { name.desc then age }.ungroup()
+        val expected = typed.sortBy { name.desc and age }
+        val actual = typed.groupBy { name }.sortBy { name.desc and age }.ungroup()
         actual shouldBe expected
     }
 
@@ -799,8 +799,8 @@ class DataFrameTests : BaseTest() {
         val selected = typed.select { name + city }
         val spread = selected.spread { city }.into { it }
         val res = spread.gather { colsOfType<Boolean>() }.where { it }.into("city")
-        val sorted = res.sortBy { name then city }
-        sorted shouldBe selected.filterNotNull { city }.distinct().sortBy { name then city }
+        val sorted = res.sortBy { name and city }
+        sorted shouldBe selected.filterNotNull { city }.distinct().sortBy { name and city }
     }
 
     @Test

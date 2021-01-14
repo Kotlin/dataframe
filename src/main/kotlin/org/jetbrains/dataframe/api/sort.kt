@@ -7,7 +7,7 @@ import org.jetbrains.dataframe.impl.DataFrameReceiver
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubtypeOf
 
-interface SortReceiver<out T> : ColumnsSelectorReceiver<T> {
+interface SortReceiver<out T> : SelectReceiver<T> {
 
     val <C> ColumnSet<C>.desc: ColumnSet<C> get() = addFlag(SortFlag.Reversed)
     val String.desc: ColumnSet<Comparable<*>?> get() = cast<Comparable<*>>().desc
@@ -16,14 +16,6 @@ interface SortReceiver<out T> : ColumnsSelectorReceiver<T> {
     val <C> ColumnSet<C?>.nullsLast: ColumnSet<C?> get() = addFlag(SortFlag.NullsLast)
     val String.nullsLast: ColumnSet<Comparable<*>?> get() = cast<Comparable<*>>().nullsLast
     val <C> KProperty<C?>.nullsLast: ColumnSet<C?> get() = toColumnDef().nullsLast
-
-    infix fun <C> ColumnSet<C>.then(other: ColumnSet<C>) = ColumnGroup(this, other)
-    infix fun <C> ColumnSet<C>.then(other: String) = this then other.toColumnDef()
-    infix fun <C> ColumnSet<C>.then(other: KProperty<*>) = this then other.toColumnDef()
-    infix fun <C> KProperty<C>.then(other: ColumnSet<C>) = toColumnDef() then other
-    infix fun KProperty<*>.then(other: KProperty<*>) = toColumnDef() then other.toColumnDef()
-    infix fun <C> String.then(other: ColumnSet<C>) = toColumnDef() then other
-    infix fun String.then(other: String) = toColumnDef() then other.toColumnDef()
 }
 
 typealias SortColumnsSelector<T, C> = Selector<SortReceiver<T>, ColumnSet<C>>
