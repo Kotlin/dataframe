@@ -1,8 +1,5 @@
-package org.jetbrains.dataframe.api
+package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.CodeGenerator
-import org.jetbrains.dataframe.DataFrame
-
-fun <T> DataFrame<T>.schema(markerName: String = "DataRecord"): String {
-    return CodeGenerator().generateInterfaceDeclarations(this, markerName, generateExtensionProperties = false).joinToString("\n")
+fun DataFrame<*>.schema(markerName: String? = null): String {
+    return CodeGenerator().generateInterfaceDeclarations(this, markerName ?: "DataRecord", generateExtensionProperties = false).joinToString("\n")
 }
