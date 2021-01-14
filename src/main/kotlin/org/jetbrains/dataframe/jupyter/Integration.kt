@@ -17,15 +17,33 @@ internal class Integration : JupyterIntegration({
     import("org.jetbrains.dataframe.*")
     import("org.jetbrains.dataframe.io.*")
 
-    onClassAnnotation<DataFrameType> { classes, host ->
-        
-        val declarations = classes.mapNotNull {
-            CodeGenerator.Default.generateExtensionProperties(it)
-        }
+    val codeGen = CodeGenerator()
 
-        if(declarations.isNotEmpty()){
-            val code = declarations.joinToString("\n")
-            host.scheduleExecution(code)
+    updateVariable<DataFrame<*>> { df, property ->
+        codeGen.generate(df, property)?.let {
+            val code = it.with(property.name)
+            execute(code).name
+        }
+    }
+
+    updateVariable<DataFrameToListNamedStub> { stub, prop ->
+        val code = codeGen.generate(stub).with(prop.name)
+        execute(code).name
+    }
+
+    updateVariable<DataFrameToListTypedStub> { stub, prop ->
+        val code = codeGen.generate(stub).with(prop.name)
+        execute(code).name
+    }
+
+    onClassAnnotation<DataFrameType> { classes ->
+        
+        val code = classes.mapNotNull {
+            codeGen.generateExtensionProperties(it)
+        }.joinToString("\n").trim()
+
+        if(code.isNotEmpty()) {
+            execute(code)
         }
     }
 })

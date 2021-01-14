@@ -73,10 +73,9 @@ class MatchSchemeTests {
 
         val codeGen = CodeGenerator()
         codeGen.generateExtensionProperties(DataRecord::class)
-        codeGen.generate(typed, :: typed) shouldBe emptyList()
-        val generated = codeGen.generate(df, :: df)
-        generated.size shouldBe 1
-        generated[0].split("\n").size shouldBe 1
+        codeGen.generate(typed, :: typed) shouldBe null
+        val generated = codeGen.generate(df, :: df)!!
+        generated.declarations.split("\n").size shouldBe 1
     }
 
     val modified = df.add("new"){4}
@@ -86,8 +85,7 @@ class MatchSchemeTests {
 
         val codeGen = CodeGenerator()
         codeGen.generateExtensionProperties(DataRecord::class)
-        val generated = codeGen.generate(modified, ::modified)
-        generated.size shouldBe 2
-        generated[0].contains(DataRecord::class.simpleName!!) shouldBe true
+        val generated = codeGen.generate(modified, ::modified)!!
+        generated.declarations.contains(DataRecord::class.simpleName!!) shouldBe true
     }
 }

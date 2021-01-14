@@ -35,7 +35,7 @@ class NameGenerationTests {
             }
         """.trimIndent()
 
-        code[0] shouldBe expected
+        code!!.declarations shouldBe expected
     }
 
     @Test

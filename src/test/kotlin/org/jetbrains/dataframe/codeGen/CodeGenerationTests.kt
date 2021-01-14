@@ -16,7 +16,7 @@ class CodeGenerationTests : BaseTest(){
     @Test
     fun `generate marker interface`() {
         val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
-        val code = CodeGenerator().generate(df, property)
+        val generated = CodeGenerator().generate(df, property)!!
         val expectedDeclaration = """
             @DataFrameType(isOpen = false)
             interface DataFrameType1{
@@ -26,18 +26,17 @@ class CodeGenerationTests : BaseTest(){
                 val weight: Int?
             }""".trimIndent()
 
-        val expectedConverter = "$" + "it.typed<DataFrameType1>()"
+        val expectedConverter = "it.typed<DataFrameType1>()"
 
-        code.size shouldBe 2
-        code[0].trimIndent() shouldBe expectedDeclaration
-        code[1] shouldBe expectedConverter
+        generated.declarations shouldBe expectedDeclaration
+        generated.converter("it") shouldBe expectedConverter
     }
 
     @Test
     fun `generate marker interface for nested data frame`() {
         val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
         val grouped = df.move { name and city }.intoGroup("nameAndCity")
-        val code = CodeGenerator().generate(grouped, property)
+        val generated = CodeGenerator().generate(grouped, property)!!
         val rowType = DataRow::class.simpleName
         val declaration1 = """
             @DataFrameType(isOpen = false)
@@ -54,11 +53,10 @@ class CodeGenerationTests : BaseTest(){
                 val weight: Int?
             }""".trimIndent()
 
-        val expectedConverter = "$" + "it.typed<DataFrameType1>()"
+        val expectedConverter = "it.typed<DataFrameType1>()"
 
-        code.size shouldBe 2
-        code[0].trimIndent() shouldBe declaration1 + "\n" + declaration2
-        code[1] shouldBe expectedConverter
+        generated.declarations shouldBe declaration1 + "\n" + declaration2
+        generated.converter("it") shouldBe expectedConverter
     }
 
     @Test
@@ -86,7 +84,7 @@ class CodeGenerationTests : BaseTest(){
         val codeGen = CodeGenerator()
         codeGen.generateExtensionProperties(Person::class)
         val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
-        val code = codeGen.generate(df.filterNotNull { all() }, property)
+        val generated = codeGen.generate(df.filterNotNull { all() }, property)!!
         val expected = """
             @DataFrameType(isOpen = false)
             interface DataFrameType1 : $personClassName{
@@ -94,6 +92,6 @@ class CodeGenerationTests : BaseTest(){
                 override val weight: Int
             }
         """.trimIndent()
-        code[0] shouldBe expected
+        generated.declarations shouldBe expected
     }
 }
