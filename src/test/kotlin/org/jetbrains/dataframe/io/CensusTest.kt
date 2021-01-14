@@ -7,7 +7,7 @@ import org.junit.Test
 class CensusTest {
 
     val path = "data/census.csv"
-    val df = DataFrame.readCsv(path)
+    val df = DataFrame.readCSV(path)
 
     @Test
     @Ignore
