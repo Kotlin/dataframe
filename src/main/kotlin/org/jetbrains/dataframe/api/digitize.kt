@@ -1,8 +1,6 @@
-package org.jetbrains.dataframe.api
+package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.Predicate
 import org.jetbrains.dataframe.api.columns.ColumnData
-import org.jetbrains.dataframe.map
 
 fun <T: Comparable<T>> ColumnData<T>.digitize(vararg bins: T, right: Boolean = false) = digitize(bins.toList(), right)
 
