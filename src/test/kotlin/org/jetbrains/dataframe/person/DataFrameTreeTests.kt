@@ -1,6 +1,9 @@
 package org.jetbrains.dataframe.person
 
+import io.kotlintest.fail
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNot
+import io.kotlintest.shouldNotBe
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.columns.ColumnData
 import org.jetbrains.dataframe.api.columns.GroupedColumnBase
@@ -158,6 +161,46 @@ class DataFrameTreeTests : BaseTest() {
         df2.select(nameAndCity, age).spread { it[nameAndCity][city] }.by(age).into(cities).check()
         df2.select(GroupedPerson::nameAndCity, GroupedPerson::age).spread { it[GroupedPerson::nameAndCity][NameAndCity::city] }.by(GroupedPerson::age).into("cities").check()
         df2.select("nameAndCity", "age").spread { it["nameAndCity"]["city"] }.by("age").into("cities").check()
+    }
+
+    @Test
+    fun `spread grouped column`(){
+        val grouped = typed.group { age and weight}.into("info")
+        val spread = grouped.spread { city }.by("info").execute()
+        spread.ncol shouldBe typed.city.ndistinct + 1
+
+        val expected = typed.rows.groupBy { it.name to (it.city ?: "null") }.mapValues { it.value.map { it.age to it.weight } }
+        val dataCols = spread.columns.drop(1)
+
+        dataCols.forEach { (it.isGrouped() || it.isTable()) shouldBe true }
+
+        val names = spread.name
+        dataCols.forEach { col ->
+            val city = col.name()
+            (0 until spread.nrow).forEach { row ->
+                val name = names[row]
+                val value = col[row]
+                val expValues = expected[name to city]
+                when{
+                    expValues == null -> when(value){
+                            null -> {}
+                            is DataRow<*> -> value.isEmpty() shouldBe true
+                            is DataFrame<*> -> value.isEmpty() shouldBe true
+                    }
+                    expValues.size == 1 -> {
+                        value shouldNotBe null
+                        val single = if(value is DataRow<*>) value else if(value is DataFrame<*>) value[0] else fail("invalid value type")
+                        single.size() shouldBe 2
+                        single.int("age") to single.nint("weight") shouldBe expValues[0]
+                    }
+                    else -> {
+                        val df = value as? DataFrame<*>
+                        df shouldNotBe null
+                        df!!.map { int("age") to nint("weight") }.sortedBy { it.first } shouldBe expValues.sortedBy { it.first }
+                    }
+                }
+            }
+        }
     }
 
     @Test

@@ -25,6 +25,12 @@ interface GroupedDataFrame<out T, out G> {
 
 internal fun <T,G> DataFrame<T>.toGrouped(groupedColumnName: String): GroupedDataFrame<T,G> = GroupedDataFrameImpl(this, this[groupedColumnName] as TableColumn<G>)
 
+internal fun <T> DataFrame<T>.toGrouped(): GroupedDataFrame<T,T> {
+
+    val groupCol = columns.single {it.isTable()}.asTable() as TableColumn<T>
+    return toGrouped {groupCol}
+}
+
 fun <T,G,R> GroupedDataFrame<T,G>.map(body: (key: DataRow<T>, group: DataFrame<G>) -> R) =
         keys.mapIndexed { index, row ->
             val group = groups[index]

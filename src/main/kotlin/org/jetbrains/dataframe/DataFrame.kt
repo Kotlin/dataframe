@@ -146,10 +146,7 @@ fun <T> DataFrame<*>.typed(): DataFrame<T> = this as DataFrame<T>
 
 fun <T> DataFrameBase<*>.typed(): DataFrameBase<T> = this as DataFrameBase<T>
 
-fun <T> DataRow<T>.toDataFrame() = owner.columns.map {
-    val value = it[index]
-    it.withValues(listOf(value), value == null)
-}.let { dataFrameOf(it).typed<T>() }
+fun <T> DataRow<T>.toDataFrame(): DataFrame<T> = owner[index..index]
 
 fun <T, C> DataFrame<T>.forEachIn(selector: ColumnsSelector<T, C>, action: (DataRow<T>, ColumnData<C>) -> Unit) = getColumnsWithPaths(selector).let { cols ->
     rows.forEach { row ->

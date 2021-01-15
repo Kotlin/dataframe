@@ -42,7 +42,7 @@ fun <T : Number> Iterable<T>.mean(clazz: KClass<T>) = when (clazz) {
     else -> throw IllegalArgumentException()
 }
 
-fun <T: Number> ColumnData<T>.mean(): Double = values.mean(type.jvmErasure as KClass<T>)
+fun <T: Number> ColumnData<T?>.mean(): Double = (if(hasNulls) values.filterNotNull() else (values as Iterable<T>)).mean(type.jvmErasure as KClass<T>)
 
 @JvmName("doubleMean")
 fun Iterable<Double>.mean(): Double {
@@ -94,3 +94,9 @@ inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(col: KProperty<D?>
 inline fun <T, reified D : Number> DataFrame<T>.mean(crossinline selector: RowSelector<T, D?>): Double = rows.asSequence().map { selector(it, it) }.filterNotNull().asIterable().mean()
 inline fun <T, reified D : Number> DataFrame<T>.mean(col: ColumnDef<D>): Double = get(col).mean()
 inline fun <T, reified D : Number> DataFrame<T>.mean(col: KProperty<D>): Double = get(col).mean()
+
+fun <T> DataFrame<T>.mean(): DataRow<T> {
+    return columns.map {
+        column(it.name(), listOf((it as ColumnData<Number>).mean()))
+    }.asDataFrame<T>()[0]
+}

@@ -5,6 +5,7 @@ import org.jetbrains.dataframe.api.columns.ColumnData
 import org.jetbrains.dataframe.api.columns.GroupedColumn
 import org.jetbrains.dataframe.api.columns.TableColumn
 import org.jetbrains.dataframe.createType
+import java.lang.Exception
 import java.lang.UnsupportedOperationException
 import kotlin.reflect.KType
 
@@ -12,6 +13,11 @@ internal class TableColumnImpl<T> constructor(override val df: DataFrame<T>, nam
     : ColumnDataImpl<DataFrame<T>>(values, name, createType<DataFrame<*>>()), TableColumn<T> {
 
     constructor(name: String, df: DataFrame<T>, startIndices: List<Int>) : this(df, name, df.splitByIndices(startIndices))
+
+    init {
+        if(values.any{it == null})
+            throw Exception()
+    }
 
     override fun rename(newName: String) = TableColumnImpl(df, newName, values)
 
