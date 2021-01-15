@@ -868,7 +868,7 @@ class DataFrameTests : BaseTest() {
     fun `merge cols with conversion`() {
         val spread = typed.groupBy { name }.countBy { city }
         val res = spread.mergeCols { colsOfType<Int>() }.by { it.sum() }.into("cities")
-        val expected = typed.select { name and city }.filter { city != null }.groupBy { name }.countInto("cities")
+        val expected = typed.select { name and city }.filter { city != null }.groupBy { name }.size("cities")
         res shouldBe expected
     }
 
