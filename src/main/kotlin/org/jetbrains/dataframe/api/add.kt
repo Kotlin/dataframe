@@ -25,7 +25,7 @@ fun <T> DataFrame<T>.add(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) =
 
 operator fun <T> DataFrame<T>.plus(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) = add(body)
 
-class TypedColumnsFromDataRowBuilder<T>(val df: DataFrame<T>) {
+class TypedColumnsFromDataRowBuilder<T>(val df: DataFrame<T>): DataFrameBase<T> by df {
     internal val columns = mutableListOf<DataCol>()
 
     fun add(column: DataCol) = columns.add(column)
@@ -38,7 +38,7 @@ class TypedColumnsFromDataRowBuilder<T>(val df: DataFrame<T>) {
 
     inline operator fun <reified R> String.invoke(noinline expression: RowSelector<T, R>) = add(this, expression)
 
-    inline operator fun String.invoke(column: DataCol) = add(column.doRename(this))
+    operator fun String.invoke(column: DataCol) = add(column.doRename(this))
 
     inline operator fun <reified R> ColumnDef<R>.invoke(column: ColumnData<R>) = name(column)
 
