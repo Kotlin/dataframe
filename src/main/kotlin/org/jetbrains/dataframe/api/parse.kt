@@ -68,7 +68,7 @@ internal fun <T : Any> ColumnData<String?>.parse(parser: StringParser<T>): Colum
             parser.parse(it) ?: throw Exception("Couldn't parse '${it}' to type ${parser.type}")
         }
     }
-    return column(name, parsedValues, parser.type.withNullability(hasNulls)) as ColumnData<T?>
+    return column(name(), parsedValues, parser.type.withNullability(hasNulls)) as ColumnData<T?>
 }
 
 internal fun ColumnData<String?>.tryParseAny(): ColumnData<*> {
@@ -91,5 +91,5 @@ internal fun ColumnData<String?>.tryParseAny(): ColumnData<*> {
         }
     } while (parserId < Parsers.size && parsedValues.size != size)
     if (parserId == Parsers.size) return this
-    return column(name, parsedValues, Parsers[parserId].type.withNullability(hasNulls))
+    return column(name(), parsedValues, Parsers[parserId].type.withNullability(hasNulls))
 }

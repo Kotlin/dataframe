@@ -144,12 +144,12 @@ class DataFrameTreeTests : BaseTest() {
             val group = this[cities]
             group.ncol shouldBe typed.city.ndistinct
             group.columns().forEach {
-                if(it.name == "Moscow") it.type shouldBe getType<List<Int>?>()
+                if(it.name() == "Moscow") it.type shouldBe getType<List<Int>?>()
                 else it.type shouldBe getType<Int?>()
             }
 
-            val actual = group.columns().sortedBy { it.name }.flatMap { col ->
-                rows.sortedBy { it[name] }.map { row -> (col.name to row[name]) to row[col] }.filter { it.second != null }
+            val actual = group.columns().sortedBy { it.name() }.flatMap { col ->
+                rows.sortedBy { it[name] }.map { row -> (col.name() to row[name]) to row[col] }.filter { it.second != null }
             }
             actual shouldBe expected
         }
@@ -168,7 +168,7 @@ class DataFrameTreeTests : BaseTest() {
         split.nrow shouldBe typed2.nrow
         split.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames()
         val nameGroup = split.nameAndCity.name.asGrouped()
-        nameGroup.name shouldBe "name"
+        nameGroup.name() shouldBe "name"
         nameGroup.isGrouped() shouldBe true
         nameGroup.ncol shouldBe typed2.nameAndCity.name.map { it.length }.max()
         nameGroup.columnNames() shouldBe (0 until nameGroup.ncol).map { "char$it" }
@@ -223,7 +223,7 @@ class DataFrameTreeTests : BaseTest() {
         val info by columnGroup()
         val grouped = typed.group { age and weight }.into(info)
         val updated = grouped.update(info).with2 { row, column -> column.asGrouped().df}
-        val col = updated[info.name]
+        val col = updated[info.name()]
         col.kind() shouldBe ColumnKind.Table
         val table = col.asTable()
         table.df.columnNames() shouldBe typed.select { age and weight }.columnNames()

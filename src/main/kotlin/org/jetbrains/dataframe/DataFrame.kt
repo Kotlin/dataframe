@@ -76,7 +76,7 @@ interface DataFrame<out T> : DataFrameBase<T> {
     val columns: List<DataCol>
     val rows: Iterable<DataRow<T>>
 
-    fun columnNames() = columns().map { it.name }
+    fun columnNames() = columns().map { it.name() }
 
     override fun columns() = columns
     override fun getColumn(columnIndex: Int) = columns()[columnIndex]
@@ -100,9 +100,9 @@ interface DataFrame<out T> : DataFrameBase<T> {
     fun getRows(range: IntRange) = columns().map { col -> col.slice(range) }.asDataFrame<T>()
 
     fun getColumnIndex(name: String): Int
-    fun getColumnIndex(col: DataCol) = getColumnIndex(col.name)
+    fun getColumnIndex(col: DataCol) = getColumnIndex(col.name())
 
-    fun <R> tryGetColumn(column: ColumnDef<R>): ColumnData<R>? = tryGetColumn(column.name) as? ColumnData<R>
+    fun <R> tryGetColumn(column: ColumnDef<R>): ColumnData<R>? = tryGetColumn(column.name()) as? ColumnData<R>
 
     override fun tryGetColumn(name: String): DataCol? = getColumnIndex(name).let { if (it != -1) columns[it] else null }
 

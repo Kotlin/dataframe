@@ -98,7 +98,7 @@ internal fun baseType(types: Set<KType>): KType {
 
 internal fun indexColumn(columnName: String, size: Int): DataCol = column(columnName, (0 until size).toList())
 
-fun <T> DataFrame<T>.addRowNumber(column: ColumnDef<Int>) = addRowNumber(column.name)
+fun <T> DataFrame<T>.addRowNumber(column: ColumnDef<Int>) = addRowNumber(column.name())
 fun <T> DataFrame<T>.addRowNumber(columnName: String = "id"): DataFrame<T> = dataFrameOf(columns + indexColumn(columnName, nrow)).typed<T>()
 fun DataCol.addRowNumber(columnName: String = "id") = dataFrameOf(listOf(indexColumn(columnName, size), this))
 
@@ -128,7 +128,7 @@ internal fun Iterable<ColumnWithPath<*>>.dfs(): List<ColumnWithPath<*>> {
             result.add(it)
             val path = it.path
             if (it.data.isGrouped())
-                dfs(it.data.asGrouped().columns().map { it.addPath(path + it.name) })
+                dfs(it.data.asGrouped().columns().map { it.addPath(path + it.name()) })
         }
     }
     dfs(this)
@@ -146,7 +146,7 @@ internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (
     val root = TreeNode.createRoot(emptyData)
 
     fun collectColumns(col: DataCol, parentNode: TreeNode<D>) {
-        val newNode = parentNode.getOrPut(col.name) { createData(col) }
+        val newNode = parentNode.getOrPut(col.name()) { createData(col) }
         if(col.isGrouped()){
             col.asGrouped().columns().forEach {
                 collectColumns(it, newNode)
@@ -181,7 +181,7 @@ fun Column.getPath(): ColumnPath {
     val list = mutableListOf<String>()
     var c = this.asNullable()
     while (c != null) {
-        list.add(c.name)
+        list.add(c.name())
         c = c.getParent()
     }
     list.reverse()
@@ -231,17 +231,17 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
 
     // insert new columns under existing
     df?.columns?.forEach {
-        val subTree = columnsMap[it.name]
+        val subTree = columnsMap[it.name()]
         if (subTree != null) {
             // assert that new columns go directly under current column so they have longer paths
             val invalidPath = subTree.firstOrNull { it.insertionPath.size == childDepth }
             assert(invalidPath == null) { "Can't move column to path: " + invalidPath!!.insertionPath.joinToString(".") + ". Column with this path already exists" }
             val group = it as? GroupedColumn<*>
-            assert(group != null) { "Can not insert columns under a column '${it.name}', because it is not a column group" }
-            val newDf = insertColumns(group!!.df, subTree, treeNode?.get(it.name), childDepth)
+            assert(group != null) { "Can not insert columns under a column '${it.name()}', because it is not a column group" }
+            val newDf = insertColumns(group!!.df, subTree, treeNode?.get(it.name()), childDepth)
             val newCol = group.withDf(newDf)
             newColumns.add(newCol)
-            columnsMap.remove(it.name)
+            columnsMap.remove(it.name())
         } else newColumns.add(it)
     }
 

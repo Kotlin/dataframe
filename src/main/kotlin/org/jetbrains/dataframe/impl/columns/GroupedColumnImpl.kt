@@ -7,7 +7,7 @@ import org.jetbrains.dataframe.createType
 import java.lang.UnsupportedOperationException
 import kotlin.reflect.KType
 
-internal class GroupedColumnImpl<T>(override val df: DataFrame<T>, override val name: String) : GroupedColumn<T>, ColumnDataInternal<DataRow<T>>, DataFrame<T> by df {
+internal class GroupedColumnImpl<T>(override val df: DataFrame<T>, val name: String) : GroupedColumn<T>, ColumnDataInternal<DataRow<T>>, DataFrame<T> by df {
 
     override val values: Iterable<DataRow<T>>
         get() = df.rows
@@ -43,7 +43,7 @@ internal class GroupedColumnImpl<T>(override val df: DataFrame<T>, override val 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         val g = other as? GroupedColumn<*> ?: return false
-        return name == g.name && df == other.df
+        return name == g.name() && df == other.df
     }
 
     override fun hashCode(): Int {
@@ -55,4 +55,6 @@ internal class GroupedColumnImpl<T>(override val df: DataFrame<T>, override val 
     override fun toString() = "$name: {${renderSchema(df)}}"
 
     override fun changeType(type: KType) = throw UnsupportedOperationException()
+
+    override fun name() = name
 }

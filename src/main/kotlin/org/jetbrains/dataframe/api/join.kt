@@ -108,11 +108,11 @@ fun <A, B> DataFrame<A>.join(other: DataFrame<B>, joinType: JoinType = JoinType.
     }
 
     val nameGenerator = nameGenerator()
-    val rightJoinColumns = rightColumns.map { it.name to it }.toMap()
+    val rightJoinColumns = rightColumns.map { it.name() to it }.toMap()
 
     // list of columns from right data frame that are not part of join key. Ensure that new column names doesn't clash with original columns
-    val newRightColumns = if (addNewColumns) other.columns.filter { !rightJoinColumns.contains(it.name) }.map {
-        it.doRename(nameGenerator.addUnique(it.name))
+    val newRightColumns = if (addNewColumns) other.columns.filter { !rightJoinColumns.contains(it.name()) }.map {
+        it.doRename(nameGenerator.addUnique(it.name()))
     } else emptyList()
 
     val leftColumnsCount = ncol
@@ -151,7 +151,7 @@ fun <A, B> DataFrame<A>.join(other: DataFrame<B>, joinType: JoinType = JoinType.
 
     if (joinType.allowLeftNulls) {
 
-        val leftToRightJoinColumns = columns.map { leftColumn -> joinColumns.firstOrNull { it.left.name == leftColumn.name }?.let { other[it.right] } }
+        val leftToRightJoinColumns = columns.map { leftColumn -> joinColumns.firstOrNull { it.left.name() == leftColumn.name() }?.let { other[it.right] } }
 
         for (rightRow in rightMatched.indices) {
             if (!rightMatched[rightRow]) {
@@ -168,7 +168,7 @@ fun <A, B> DataFrame<A>.join(other: DataFrame<B>, joinType: JoinType = JoinType.
     val columns = outputData.mapIndexed { columnIndex, columnValues ->
         val srcColumn = if (columnIndex < leftColumnsCount) columns[columnIndex] else newRightColumns[columnIndex - leftColumnsCount]
         val hasNulls = hasNulls[columnIndex]
-        column(srcColumn.name, columnValues.asList(), srcColumn.type.withNullability(hasNulls))
+        column(srcColumn.name(), columnValues.asList(), srcColumn.type.withNullability(hasNulls))
     }
 
     return columns.asDataFrame<A>()

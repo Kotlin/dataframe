@@ -92,7 +92,7 @@ class DataFrameTests : BaseTest() {
     fun `update`() {
 
         fun DataFrame<*>.check() {
-            columns[1].name shouldBe "age"
+            columns[1].name() shouldBe "age"
             ncol shouldBe typed.ncol
             this["age"].values shouldBe typed.map { age * 2 }
         }
@@ -115,7 +115,7 @@ class DataFrameTests : BaseTest() {
     fun `conditional update`() {
 
         fun DataFrame<*>.check() {
-            columns[1].name shouldBe "age"
+            columns[1].name() shouldBe "age"
             ncol shouldBe typed.ncol
             this["age"].values shouldBe typed.map { if (age > 25) null else age }
         }
@@ -322,8 +322,8 @@ class DataFrameTests : BaseTest() {
 
         fun DataFrame<*>.check() = columns shouldBe expected
 
-        typed.select { cols { it.name.length == 4 } }.check()
-        df.select { cols { it.name.length == 4 } }.check()
+        typed.select { cols { it.name().length == 4 } }.check()
+        df.select { cols { it.name().length == 4 } }.check()
     }
 
     @Test
@@ -731,7 +731,7 @@ class DataFrameTests : BaseTest() {
             if (city != null) spread[row][city] shouldBe true
             for (col in typed.ncol until spread.ncol) {
                 val spreadValue = spread.columns[col].typed<Boolean>()[row]
-                val colName = spread.columns[col].name
+                val colName = spread.columns[col].name()
                 spreadValue shouldBe (colName == city)
             }
         }
@@ -752,7 +752,7 @@ class DataFrameTests : BaseTest() {
     fun `spread to bool with conversion`() {
         val res = typed.spread { city }.into { it?.decapitalize() }
         val cities = typed.city.values.filterNotNull()
-        val gathered = res.gather { colsOfType<Boolean> { cities.contains(it.name.capitalize()) } }.where { it }.into("city")
+        val gathered = res.gather { colsOfType<Boolean> { cities.contains(it.name().capitalize()) } }.where { it }.into("city")
         val expected = typed.update { city }.with { it?.decapitalize() }.filterNotNull { city }.moveToRight { city }
         gathered shouldBe expected
     }
@@ -766,7 +766,7 @@ class DataFrameTests : BaseTest() {
             val city = typed[i][city]
             if (city != null) res[i][city] == true
             for (j in typed.ncol until res.ncol) {
-                res.columns[j].typed<Boolean>().get(i) shouldBe (res.columns[j].name == city)
+                res.columns[j].typed<Boolean>().get(i) shouldBe (res.columns[j].name() == city)
             }
         }
     }
@@ -783,7 +783,7 @@ class DataFrameTests : BaseTest() {
 
         val pairs = (1 until res.ncol).flatMap { i ->
             val col = res.columns[i].typed<Boolean>()
-            res.filter { it[col] }.map { name to col.name }
+            res.filter { it[col] }.map { name to col.name() }
         }.toSet()
 
         pairs shouldBe typed.filter { city != null }.map { name to city!! }.toSet()
@@ -974,7 +974,7 @@ class DataFrameTests : BaseTest() {
         val cities by columnGroup()
         val spread = typed.spread { city }.by { age }.into(cities)
         var sum = 0
-        spread.forEachIn({ cities.all() }) { row, column -> column[row]?.let { sum += it as Int } }
+        spread.forEachIn({ cities.children() }) { row, column -> column[row]?.let { sum += it as Int } }
         sum shouldBe typed.age.sum()
     }
 

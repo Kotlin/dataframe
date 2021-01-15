@@ -216,7 +216,7 @@ class CodeGenerator : CodeGeneratorApi {
     private fun getScheme(columns: Iterable<DataCol>): Scheme {
         val generatedFieldNames = mutableSetOf<String>()
         return Scheme(columns.mapIndexed { index, it ->
-            val fieldName = generateValidFieldName(it.name, index, generatedFieldNames)
+            val fieldName = generateValidFieldName(it.name(), index, generatedFieldNames)
             generatedFieldNames.add(fieldName)
             var type: KType? = it.type
             var childScheme : Scheme? = null
@@ -233,7 +233,7 @@ class CodeGenerator : CodeGeneratorApi {
                     columnKind = ColumnKind.Table
                 }
             }
-            FieldInfo(fieldName, it.name, type, columnKind, childScheme)
+            FieldInfo(fieldName, it.name(), type, columnKind, childScheme)
         })
     }
 
@@ -533,6 +533,6 @@ class CodeGenerator : CodeGeneratorApi {
     }
 
     override fun generate(stub: DataFrameToListNamedStub) =
-            generateToListConverter(stub.className, stub.df.columns.map { it.name }, stub.df.schema, null)
+            generateToListConverter(stub.className, stub.df.columns.map { it.name() }, stub.df.schema, null)
 
 }
