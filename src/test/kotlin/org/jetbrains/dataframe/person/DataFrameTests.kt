@@ -4,6 +4,7 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.api.digitize
 import org.jetbrains.dataframe.impl.trackColumnAccess
 import org.jetbrains.dataframe.io.print
 import org.junit.Test
@@ -970,6 +971,30 @@ class DataFrameTests : BaseTest() {
         val weightStr = column<String?>("weight")
         val parsed = toStr.parse { weightStr }.to<Int>()
         parsed shouldBe typed
+    }
+
+    @Test
+    fun digitize(){
+
+        val a = 20
+        val b = 40
+        val expected = typed.age.values.map {
+            when{
+                it < a -> 0
+                it < b -> 1
+                else -> 2
+            }
+        }
+        typed.age.digitize(a, b).toList() shouldBe expected
+
+        val expectedRight = typed.age.values.map {
+            when{
+                it <= a -> 0
+                it <= b -> 1
+                else -> 2
+            }
+        }
+        typed.age.digitize(a, b, right = true).toList() shouldBe expectedRight
     }
 
 }
