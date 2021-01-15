@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
-import org.jetbrains.dataframe.toHTML
+import org.jetbrains.dataframe.io.toHTML
 import org.junit.Test
 
 class RenderingTests: BaseTest() {
