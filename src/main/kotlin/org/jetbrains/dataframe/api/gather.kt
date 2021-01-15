@@ -16,7 +16,7 @@ fun <T, C, K, R> GatherClause<T, C, *, R>.mapNames(transform: (String) -> K) = G
 fun <T, C, K, R> GatherClause<T, C, K, *>.map(transform: (C) -> R) = GatherClause(df, selector, filter, nameTransform, transform)
 fun <T, C : Any, K, R> GatherClause<T, C?, K, *>.mapNotNull(transform: (C) -> R) = GatherClause(df, selector, filter, nameTransform, { if (it != null) transform(it) else null })
 
-inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: ColumnDef<String>) = into(keyColumn.name)
+inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: ColumnDef<String>) = into(keyColumn.name())
 inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String) = doGather(this, keyColumn, null, getType<K>(), getType<R>())
 inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String, valueColumn: String) = doGather(this, keyColumn, valueColumn, getType<K>(), getType<R>())
 
@@ -30,7 +30,7 @@ fun <T, C, K, R> doGather(clause: GatherClause<T, C, K, R>, namesTo: String, val
     if (isGatherGroups && columnsToGather.any { !it.isGrouped() })
         throw UnsupportedOperationException("Cannot mix ColumnGroups with other types of columns in 'gather' operation")
 
-    val gatheredColumnKeys = columnsToGather.map { clause.nameTransform(it.name) }
+    val gatheredColumnKeys = columnsToGather.map { clause.nameTransform(it.name()) }
 
     val namesColumn = column<List<K>>(namesTo)
     val valuesColumn = column<List<*>>(valuesTo ?: "newValues")
@@ -67,20 +67,20 @@ fun <T, C, K, R> doGather(clause: GatherClause<T, C, K, R>, namesTo: String, val
         df = df.split { nameAndValuePairs }.by { listOf(it.first, it.second) }.into(namesColumn, valuesColumn)
     }
 
-    df = df.cast(namesColumn.name).to(keyColumnType)
+    df = df.cast(namesColumn.name()).to(keyColumnType)
 
-    val valuesCol = df[valuesColumn.name]
+    val valuesCol = df[valuesColumn.name()]
 
     if(valuesTo == null) {
 
         // values column needs to be removed
         if(valuesCol.isGrouped()){
-            df = df.ungroup(valuesColumn.name)
-        }else df = df.remove(valuesColumn.name)
+            df = df.ungroup(valuesColumn.name())
+        }else df = df.remove(valuesColumn.name())
 
     }else {
         if(!valuesCol.isTable() && valueColumnType.jvmErasure != Any::class){
-            df = df.cast(valuesColumn.name).to(valueColumnType)
+            df = df.cast(valuesColumn.name()).to(valueColumnType)
         }
     }
 

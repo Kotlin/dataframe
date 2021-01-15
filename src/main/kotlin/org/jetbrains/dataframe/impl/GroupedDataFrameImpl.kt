@@ -17,7 +17,7 @@ internal class GroupedDataFrameImpl<T, G>(val df: DataFrame<T>, override val gro
     }
 
     override fun <R> updateGroups(transform: DataFrame<G>.() -> DataFrame<R>) =
-            df.update(groups) { transform(it) }.toGrouped { tableColumn<R>(groups.name) }
+            df.update(groups) { transform(it) }.toGrouped { tableColumn<R>(groups.name()) }
 
     override fun plain() = df
 

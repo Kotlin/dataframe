@@ -31,12 +31,12 @@ internal fun <C> DataFrameBase<*>.getColumn(name: String, policy: UnresolvedColu
 
 interface ColumnDef<out C> : SingleColumn<C> {
 
-    val name: String
+    fun name(): String
 
     operator fun invoke(row: DataRow<*>) = row[this]
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
-        return context.df.getColumn<C>(name, context.unresolvedColumnsPolicy)?.addPath(listOf(name))
+        return context.df.getColumn<C>(name(), context.unresolvedColumnsPolicy)?.addPath(listOf(name()))
     }
 }
 
@@ -69,13 +69,16 @@ internal fun KProperty<*>.getColumnName() = this.findAnnotation<ColumnName>()?.n
 
 fun <T> KProperty<T>.toColumnDef() = ColumnDefinition<T>(name)
 
-class ColumnDefinition<T>(override val name: String) : ColumnDef<T> {
+class ColumnDefinition<T>(val name: String) : ColumnDef<T> {
+
+    override fun name() = name
+
     operator fun getValue(thisRef: Any?, property: KProperty<*>) = this
 
     fun <C> changeType() = this as ColumnDefinition<C>
 }
 
-inline fun <reified T> ColumnDefinition<T>.nullable() = ColumnDefinition<T?>(name)
+inline fun <reified T> ColumnDefinition<T>.nullable() = ColumnDefinition<T?>(name())
 
 interface NestedColumn<out T> {
     val df: DataFrame<T>
@@ -87,7 +90,7 @@ internal fun ColumnPath.depth() = size - 1
 
 internal fun <T> ColumnData<T>.addPath(path: ColumnPath): ColumnWithPath<T> = ColumnWithPathImpl(this, path)
 
-internal fun <T> ColumnData<T>.addPath(): ColumnWithPath<T> = ColumnWithPathImpl(this, listOf(name))
+internal fun <T> ColumnData<T>.addPath(): ColumnWithPath<T> = ColumnWithPathImpl(this, listOf(name()))
 
 enum class ColumnKind {
     Data,
@@ -118,14 +121,14 @@ internal fun <T> ColumnData<T>.checkEquals(other: Any?): Boolean {
 
     if (!(other is ColumnData<*>)) return false
 
-    if (name != other.name) return false
+    if (name() != other.name()) return false
     if (type != other.type) return false
     return values.equalsByElement(other.values)
 }
 
 internal fun <T> ColumnData<T>.getHashCode(): Int {
     var result = values.rollingHash()
-    result = 31 * result + name.hashCode()
+    result = 31 * result + name().hashCode()
     result = 31 * result + type.hashCode()
     return result
 }
@@ -137,7 +140,7 @@ val KType.fullName: String get() = toString()
 
 fun KClass<*>.createStarProjectedType(nullable: Boolean) = this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
 
-inline fun <reified T> ColumnDef<T>.withValues(values: List<T>, hasNulls: Boolean) = column(name, values, hasNulls)
+inline fun <reified T> ColumnDef<T>.withValues(values: List<T>, hasNulls: Boolean) = column(name(), values, hasNulls)
 
 // TODO: implement correct base schema computation
 internal fun <T> Iterable<DataFrame<T>>.getBaseSchema(): DataFrame<T> {
@@ -147,9 +150,9 @@ internal fun <T> Iterable<DataFrame<T>>.getBaseSchema(): DataFrame<T> {
 fun <T> ColumnData<T>.withValues(values: List<T>, hasNulls: Boolean) = when (this) {
     is TableColumn<*> -> {
         val dfs = (values as List<DataFrame<*>>)
-        ColumnData.createTable(name, dfs, dfs.getBaseSchema()) as ColumnData<T>
+        ColumnData.createTable(name(), dfs, dfs.getBaseSchema()) as ColumnData<T>
     }
-    else -> column(name, values, type.withNullability(hasNulls))
+    else -> column(name(), values, type.withNullability(hasNulls))
 }
 
 fun DataCol.toDataFrame() = dataFrameOf(listOf(this))
@@ -168,20 +171,20 @@ internal fun <T> DataCol.grouped() = this as GroupedColumnBase<T>
 
 internal fun <T> DataFrameBase<T>.asGroup() = this as GroupedColumn<T>
 
-inline fun <reified T> DataCol.cast(): ColumnData<T> = ColumnData.create(name, toList() as List<T>, getType<T>().withNullability(hasNulls))
+inline fun <reified T> DataCol.cast(): ColumnData<T> = ColumnData.create(name(), toList() as List<T>, getType<T>().withNullability(hasNulls))
 
-internal fun <T> GroupedColumn<*>.withDf(newDf: DataFrame<T>) = org.jetbrains.dataframe.api.columns.ColumnData.createGroup(name, newDf)
+internal fun <T> GroupedColumn<*>.withDf(newDf: DataFrame<T>) = org.jetbrains.dataframe.api.columns.ColumnData.createGroup(name(), newDf)
 
-fun <C> ColumnDef<C>.rename(newName: String) = if (newName == name) this else RenamedColumnDef(this, newName)
+fun <C> ColumnDef<C>.rename(newName: String) = if (newName == name()) this else RenamedColumnDef(this, newName)
 
-fun <C> ColumnData<C>.doRename(newName: String) = if (newName == name) this else (this as ColumnDataInternal<C>).rename(newName)
+fun <C> ColumnData<C>.doRename(newName: String) = if (newName == name()) this else (this as ColumnDataInternal<C>).rename(newName)
 
 internal fun <T> Iterable<T>.asList() = when (this) {
     is List<T> -> this
     else -> this.toList()
 }
 
-fun <C> ColumnData<C>.ensureUniqueName(nameGenerator: ColumnNameGenerator) = doRename(nameGenerator.addUnique(name))
+fun <C> ColumnData<C>.ensureUniqueName(nameGenerator: ColumnNameGenerator) = doRename(nameGenerator.addUnique(name()))
 
 class InplaceColumnBuilder(val name: String) {
     inline operator fun <reified T> invoke(vararg values: T) = column(name, values.toList())
@@ -290,25 +293,25 @@ fun DataFrame<*>.nameGenerator() = ColumnNameGenerator(columnNames())
 fun <T, R> ColumnData<T>.map(transform: (T) -> R): ColumnData<R> {
     val collector = createDataCollector(size)
     values.forEach { collector.add(transform(it)) }
-    return collector.toColumn(name).typed()
+    return collector.toColumn(name()).typed()
 }
 
 fun <T, R> ColumnData<T>.map(type: KType?, transform: (T) -> R): ColumnData<R> {
     if (type == null) return map(transform)
     val collector = createDataCollector<R>(size, type)
     values.forEach { collector.add(transform(it)) }
-    return collector.toColumn(name) as ColumnData<R>
+    return collector.toColumn(name()) as ColumnData<R>
 }
 
 fun <C> ColumnData<C>.single() = values.single()
 
-fun <T> TableColumn<T>.toDefinition() = tableColumn<T>(name)
-fun <T> GroupedColumn<T>.toDefinition() = columnGroup<T>(name)
-fun <T> ValueColumn<T>.toDefinition() = column<T>(name)
+fun <T> TableColumn<T>.toDefinition() = tableColumn<T>(name())
+fun <T> GroupedColumn<T>.toDefinition() = columnGroup<T>(name())
+fun <T> ValueColumn<T>.toDefinition() = column<T>(name())
 
 internal abstract class MissingColumnData<T> : ColumnData<T> {
 
-    override val name: String
+    val name: String
         get() = throw UnsupportedOperationException()
     override val values: Iterable<T>
         get() = throw UnsupportedOperationException()
@@ -318,6 +321,8 @@ internal abstract class MissingColumnData<T> : ColumnData<T> {
         get() = throw UnsupportedOperationException()
     override val size: Int
         get() = throw UnsupportedOperationException()
+
+    override fun name() = name
 
     override fun get(index: Int) = throw UnsupportedOperationException()
 

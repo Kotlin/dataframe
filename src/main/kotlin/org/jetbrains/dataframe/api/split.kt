@@ -33,7 +33,7 @@ fun <T, C> SplitColClause<T, C, List<*>?>.intoParts() = into { "part$it" }
 
 fun <T, C> SplitColClause<T, C, List<*>?>.inward() = SplitColClause(df, column, true, transform)
 
-fun <T, C> SplitColClause<T, C, List<*>?>.into(firstName: ColumnDef<*>, vararg otherNames: ColumnDef<*>, nameGenerator: ((Int) -> String)? = null) = into(listOf(firstName.name) + otherNames.map{ it.name }, nameGenerator)
+fun <T, C> SplitColClause<T, C, List<*>?>.into(firstName: ColumnDef<*>, vararg otherNames: ColumnDef<*>, nameGenerator: ((Int) -> String)? = null) = into(listOf(firstName.name()) + otherNames.map{ it.name() }, nameGenerator)
 
 fun <T, C> SplitColClause<T, C, List<*>?>.into(firstNames: List<String>, nameGenerator: ((Int) -> String)? = null) = doSplitCols(this) {
     when {
@@ -112,18 +112,18 @@ fun <T> doSplitRows(df: DataFrame<T>, columns: List<ColumnWithPath<List<*>?>>): 
             if (col.isGrouped()) {
                 val group = col.asGrouped()
                 val newData = data.mapNotNull {
-                    if(it.key.isNotEmpty() && it.key[0] == col.name) it.key.drop(1) to it.value else null
+                    if(it.key.isNotEmpty() && it.key[0] == col.name()) it.key.drop(1) to it.value else null
                 }.toMap()
                 val newDf = splitIntoRows(group.df, newData)
-                ColumnData.createGroup(col.name, newDf)
+                ColumnData.createGroup(col.name(), newDf)
             } else {
-                val targetData = data[listOf(col.name)]
+                val targetData = data[listOf(col.name())]
                 if (targetData != null) {
                     assert(!col.isTable())
                     val collector = createDataCollector(outputRowsCount)
                     for(row in 0 until col.size)
                         targetData[row].forEach { collector.add(it) }
-                    collector.toColumn(col.name)
+                    collector.toColumn(col.name())
                 } else {
                     val collector = createDataCollector<Any?>(outputRowsCount, col.type)
                     for (row in 0 until col.size) {
@@ -135,8 +135,8 @@ fun <T> doSplitRows(df: DataFrame<T>, columns: List<ColumnWithPath<List<*>?>>): 
                             }
                         }
                     }
-                    if (col.isTable()) ColumnData.createTable(col.name, collector.values as List<DataFrame<*>>, col.asTable().df)
-                    else collector.toColumn(col.name)
+                    if (col.isTable()) ColumnData.createTable(col.name(), collector.values as List<DataFrame<*>>, col.asTable().df)
+                    else collector.toColumn(col.name())
                 }
             }
         }

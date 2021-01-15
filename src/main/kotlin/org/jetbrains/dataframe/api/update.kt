@@ -51,7 +51,7 @@ fun <T, C, R> doUpdate(clause: UpdateClause<T, C>, expression: (DataRow<T>, Colu
                 collector.add(newValue)
             }
 
-        val newColumn = collector.toColumn(srcColumn.name)
+        val newColumn = collector.toColumn(srcColumn.name())
 
         ColumnToInsert(it.pathFromRoot(), it, newColumn)
     }

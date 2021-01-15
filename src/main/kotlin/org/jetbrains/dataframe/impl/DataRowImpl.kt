@@ -21,12 +21,12 @@ internal class DataRowImpl<T>(override var index: Int, override val owner: DataF
 
     override fun get(columnIndex: Int): Any? {
         val column = owner.columns[columnIndex]
-        ColumnAccessTracker.registerColumnAccess(column.name)
+        ColumnAccessTracker.registerColumnAccess(column.name())
         return column[index]
     }
 
     override fun toString(): String {
-        return "{ " + owner.columns.map { "${it.name}:${it[index]}" }.joinToString() + " }"
+        return "{ " + owner.columns.map { "${it.name()}:${it[index]}" }.joinToString() + " }"
     }
 
     override fun equals(other: Any?): Boolean {

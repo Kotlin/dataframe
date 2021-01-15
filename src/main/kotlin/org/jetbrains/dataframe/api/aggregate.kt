@@ -49,7 +49,7 @@ internal fun <T, G> doAggregate(df: DataFrame<T>, selector: ColumnSelector<T, Da
     if(!removeColumns) removedNode.data.wasRemoved = false
 
     val columnsToInsert = groupedFrame.columns.map {
-        ColumnToInsert(insertPath + it.name, removedNode, it)
+        ColumnToInsert(insertPath + it.name(), removedNode, it)
     }
     val src = if(removeColumns) df2 else df
     return src.doInsert(columnsToInsert)

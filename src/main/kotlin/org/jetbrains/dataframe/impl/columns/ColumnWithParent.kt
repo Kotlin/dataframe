@@ -19,7 +19,7 @@ internal interface ColumnWithParent<C> : ColumnDef<C> {
             }
         }
 
-        val data = targetDf.getColumn<C>(name, context.unresolvedColumnsPolicy)
-        return data?.addPath(pathPrefix + name)
+        val data = targetDf.getColumn<C>(name(), context.unresolvedColumnsPolicy)
+        return data?.addPath(pathPrefix + name())
     }
 }

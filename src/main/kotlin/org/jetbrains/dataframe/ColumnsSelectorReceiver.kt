@@ -30,7 +30,7 @@ interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
 
     fun <C> ColumnSet<C>.children(predicate: (DataCol) -> Boolean = {true} ) = createColumnSet { resolve(it).filter { it.isGrouped() }.flatMap { it.children().filter { predicate(it.data) } } }
 
-    fun GroupedColumnDef.all() = createColumnSet { resolve(it).single().children() }
+    fun GroupedColumnDef.children() = createColumnSet { resolve(it).single().children() }
 
     val cols: List<DataCol> get() = columns()
 

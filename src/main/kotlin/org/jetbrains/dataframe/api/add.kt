@@ -15,7 +15,7 @@ inline fun <reified R, T, G> GroupedDataFrame<T, G>.add(name: String, noinline e
         updateGroups { add(name, expression) }
 
 inline fun <reified R, T> DataFrame<T>.add(column: ColumnDefinition<R>, noinline expression: RowSelector<T, R>) =
-        (this + newColumn(column.name, expression))
+        (this + newColumn(column.name(), expression))
 
 fun <T> DataFrame<T>.add(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) =
         with(TypedColumnsFromDataRowBuilder(this)) {
@@ -32,15 +32,15 @@ class TypedColumnsFromDataRowBuilder<T>(val df: DataFrame<T>): DataFrameBase<T> 
 
     inline fun <reified R> add(name: String, noinline expression: RowSelector<T, R>) = add(df.newColumn(name, expression))
 
-    inline fun <reified R> add(columnDef: ColumnDef<R>, noinline expression: RowSelector<T, R>) = add(df.newColumn(columnDef.name, expression))
+    inline fun <reified R> add(columnDef: ColumnDef<R>, noinline expression: RowSelector<T, R>) = add(df.newColumn(columnDef.name(), expression))
 
-    inline operator fun <reified R> ColumnDef<R>.invoke(noinline expression: RowSelector<T, R>) = add(df.newColumn(name, expression))
+    inline operator fun <reified R> ColumnDef<R>.invoke(noinline expression: RowSelector<T, R>) = add(df.newColumn(name(), expression))
 
     inline operator fun <reified R> String.invoke(noinline expression: RowSelector<T, R>) = add(this, expression)
 
     operator fun String.invoke(column: DataCol) = add(column.doRename(this))
 
-    inline operator fun <reified R> ColumnDef<R>.invoke(column: ColumnData<R>) = name(column)
+    inline operator fun <reified R> ColumnDef<R>.invoke(column: ColumnData<R>) = name()(column)
 
     infix fun DataCol.into(name: String) = add(doRename(name))
 }

@@ -8,11 +8,12 @@ interface ColumnWithPath<out T> : ColumnDef<T> {
 
     val data: ColumnData<T>
     val path: ColumnPath
-    override val name: String get() = data.name
+    val name: String get() = data.name()
     val type: KType get() = data.type
     val hasNulls: Boolean get() = data.hasNulls
     fun isGrouped() = data.isGrouped()
     fun asGrouped() = data.asGrouped().addPath(path)
     fun depth() = path.depth()
-    fun children() = if (isGrouped()) data.asGrouped().columns().map { it.addPath(path + it.name) } else emptyList()
+    fun children() = if (isGrouped()) data.asGrouped().columns().map { it.addPath(path + it.name()) } else emptyList()
+    override fun name() = name
 }

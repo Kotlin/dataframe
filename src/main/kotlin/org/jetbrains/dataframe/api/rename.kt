@@ -14,7 +14,7 @@ fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>) = rename { cols.toColu
 fun <T> DataFrame<T>.rename(vararg cols: String) = rename { cols.toColumns() }
 fun <T, C> DataFrame<T>.rename(cols: Iterable<ColumnDef<C>>) = rename { cols.toColumnSet() }
 
-fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnDef<*>) = into(*newColumns.map { it.name }.toTypedArray())
+fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnDef<*>) = into(*newColumns.map { it.name() }.toTypedArray())
 fun <T, C> RenameClause<T, C>.into(vararg newNames: String) = df.move(selector).intoIndexed { col, index ->
     col.path.drop(1) + newNames[index]
 }

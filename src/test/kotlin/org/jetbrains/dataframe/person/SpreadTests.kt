@@ -51,7 +51,7 @@ class SpreadTests {
 
         val expected = typed.map { (name to key) }.toSet()
         val actual = res.columns.subList(1, res.ncol).flatMap {
-            val columnName = it.name
+            val columnName = it.name()
             res.map {
                 val value = it[columnName] as Boolean
                 if(value)
@@ -76,7 +76,7 @@ class SpreadTests {
 
         val expected = typed.map { (name to key) to value }.toMap()
         val actual = res.columns.subList(1, res.ncol).flatMap {
-            val columnName = it.name
+            val columnName = it.name()
             res.map { (name to columnName) to it[columnName] }
         }.toMap()
 
@@ -96,7 +96,7 @@ class SpreadTests {
 
         val expected = typed.map { (name to key) to value.toString() }.toMap()
         val actual = res.columns.subList(1, res.ncol).flatMap {
-            val columnName = it.name
+            val columnName = it.name()
             res.map { (name to columnName) to it[columnName] }
         }.toMap()
 

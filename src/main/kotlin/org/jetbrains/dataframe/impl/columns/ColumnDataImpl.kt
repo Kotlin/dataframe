@@ -5,16 +5,18 @@ import org.jetbrains.dataframe.checkEquals
 import org.jetbrains.dataframe.getHashCode
 import kotlin.reflect.KType
 
-internal abstract class ColumnDataImpl<T>(override val values: List<T>, override val name: String, override val type: KType, set: Set<T>? = null) : ColumnData<T>, ColumnDataInternal<T> {
+internal abstract class ColumnDataImpl<T>(override val values: List<T>, val name: String, override val type: KType, set: Set<T>? = null) : ColumnData<T>, ColumnDataInternal<T> {
 
     var valuesSet: Set<T>? = set
         private set
+
+    override fun name() = name
 
     override fun toSet() = valuesSet ?: values.toSet().also { valuesSet = it }
 
     fun contains(value: T) = toSet().contains(value)
 
-    override fun toString() = "$name: $type"
+    override fun toString() = "${name()}: $type"
 
     override val ndistinct = toSet().size
 

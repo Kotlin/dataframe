@@ -32,7 +32,7 @@ fun <T, C> MergeClause<T, C, *>.mergeRows(): DataFrame<T> {
 
     val columnsToInsert = removeRoot.allWithColumns().map { node ->
         val column = node.data.column!!
-        val newName = column.name
+        val newName = column.name()
         val newColumn = when(column){
             is GroupedColumn<*> -> {
                 val data = grouped.groups.asIterable().map { it.get(column).df }

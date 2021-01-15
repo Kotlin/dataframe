@@ -45,10 +45,12 @@ fun <T, K, V, C: SpreadContext> SpreadClause<T, K, V, C>.useDefault(defaultValue
 @JvmName("useDefaultTKVC")
 fun <T, K, V, C: SpreadContext> SpreadClause<T, K, ColumnData<V>, C>.useDefault(defaultValue: V): SpreadClause<T, K, ColumnData<V>, C> = SpreadClause(context, keyColumn, valueColumn, valueSelector, valueType, defaultValue, columnPath)
 internal fun <T, K, V, C: SpreadContext> SpreadClause<T, K, V, *>.changeContext(newContext: C) = SpreadClause(newContext, keyColumn, valueColumn, valueSelector, valueType, defaultValue, columnPath)
+
 fun <T, K> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(column: String) = by { column.toColumnDef() }
 inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(column: KProperty<V>) = by { column.toColumnDef() }
 inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(column: ColumnDef<V>) = by { column }
 inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(noinline columnSelector: ColumnSelector<T, V>): SpreadClause<T, K, ColumnData<V>, SpreadContext.DataFrame<T>> = SpreadClause(context, keyColumn, columnSelector, { getColumn(columnSelector) }, getType<ColumnData<V>>(), null, columnPath)
+
 inline fun <T, K, V, reified R> SpreadClause<T, K, ColumnData<V>, SpreadContext.DataFrame<T>>.map(noinline transform: (V) -> R) = SpreadClause(context, keyColumn, valueColumn, { valueSelector(it, it).map(getType<R>(), transform) }, getType<ColumnData<R>>(), null, columnPath)
 inline fun <T, K, reified V, C: SpreadContext> SpreadClause<T, K, *, C>.withSingle(noinline valueSelector: RowSelector<T, V>) = with {
     when (it.nrow) {

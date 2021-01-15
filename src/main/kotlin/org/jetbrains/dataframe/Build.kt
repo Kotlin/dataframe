@@ -47,7 +47,7 @@ inline fun <reified T> Iterable<T>.toDataFrame() = T::class.declaredMembers
 
 fun dataFrameOf(columns: Iterable<DataCol>): DataFrame<Unit> = DataFrameImpl(columns.map { it.unbox() })
 
-fun dataFrameOf(vararg header: ColumnDef<*>) = DataFrameBuilder(header.map { it.name })
+fun dataFrameOf(vararg header: ColumnDef<*>) = DataFrameBuilder(header.map { it.name() })
 
 fun emptyDataFrame(nrow: Int) = DataFrame.empty<Any?>(nrow)
 

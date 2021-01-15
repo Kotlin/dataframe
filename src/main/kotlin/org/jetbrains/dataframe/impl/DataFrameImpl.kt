@@ -18,13 +18,13 @@ internal open class DataFrameImpl<T>(override val columns: List<DataCol>) : Data
         if (invalidSizeColumns.size > 0)
             throw Exception("Invalid column sizes: ${invalidSizeColumns}") // TODO
 
-        val columnNames = columns.groupBy { it.name }.filter { it.value.size > 1 }.map { it.key }
+        val columnNames = columns.groupBy { it.name() }.filter { it.value.size > 1 }.map { it.key }
         if (columnNames.size > 0)
             throw Exception("Duplicate column names: ${columnNames}. All column names: ${columnNames()}")
     }
 
 
-    private val columnsMap by lazy { columns.withIndex().associateBy({ it.value.name }, { it.index }) }
+    private val columnsMap by lazy { columns.withIndex().associateBy({ it.value.name() }, { it.index }) }
 
     override val rows = object : Iterable<DataRow<T>> {
         override fun iterator() =

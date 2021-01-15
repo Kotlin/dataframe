@@ -16,7 +16,7 @@ fun DataFrame<*>.toHTML(limit: Int = 20, truncate: Int = 40): String {
     sb.append("<html><body>")
     sb.append("<table><tr>")
     columns.forEach {
-        sb.append("<th style=\"text-align:left\">${it.name}</th>")
+        sb.append("<th style=\"text-align:left\">${it.name()}</th>")
     }
     sb.append("</tr>")
     rows.take(limit).forEach {
@@ -46,7 +46,7 @@ fun DataFrame<*>.toHTML(limit: Int = 20, truncate: Int = 40): String {
 }
 
 internal fun renderSchema(df: DataFrame<*>): String =
-        df.columns.map { "${it.name}:${renderType(it)}"}.joinToString()
+        df.columns.map { "${it.name()}:${renderType(it)}"}.joinToString()
 
 internal fun renderType(column: DataCol) =
     when(column.kind()) {
@@ -79,7 +79,7 @@ internal fun DataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 40): S
 
     val outputRows = limit.coerceAtMost(nrow)
     val output = columns.map { it.values.take(limit).map { renderValue(it).truncate(truncate) } }
-    val header = columns.map { "${it.name}:${renderType(it)}"}
+    val header = columns.map { "${it.name()}:${renderType(it)}"}
     val columnLengths = output.mapIndexed { col, values -> (values + header[col]).map { it.length }.max()!! + 1 }
 
     sb.append("|")

@@ -58,7 +58,7 @@ fun <T, C> MoveColsClause<T, C>.intoGroups(groupName: DataFrameForMove<T>.(Colum
     return df.doInsert(columnsToInsert)
 }
 
-fun <T, C> MoveColsClause<T, C>.toTop(groupNameExpression: DataFrameForMove<T>.(ColumnWithPath<C>) -> String = { it.name }) = into { listOf(groupNameExpression(it)) }
+fun <T, C> MoveColsClause<T, C>.toTop(groupNameExpression: DataFrameForMove<T>.(ColumnWithPath<C>) -> String = { it.name() }) = into { listOf(groupNameExpression(it)) }
 
 fun <T, C> MoveColsClause<T, C>.intoIndexed(newPathExpression: DataFrameForMove<T>.(ColumnWithPath<C>, Int) -> ColumnPath): DataFrame<T> {
     var counter = 0
@@ -79,7 +79,7 @@ fun <T, C> MoveColsClause<T, C>.into(newPathExpression: DataFrameForMove<T>.(Col
 
 fun <T, C> MoveColsClause<T, C>.into(name: String) = into { listOf(name) }
 fun <T, C> MoveColsClause<T, C>.intoGroup(name: String) = intoGroup { listOf(name) }
-fun <T, C> MoveColsClause<T, C>.intoGroup(groupDef: GroupedColumnDef) = intoGroup(groupDef.name)
+fun <T, C> MoveColsClause<T, C>.intoGroup(groupDef: GroupedColumnDef) = intoGroup(groupDef.name())
 
 fun <T, C> MoveColsClause<T, C>.into(path: List<String>) = intoGroup { path }
 fun <T, C> MoveColsClause<T, C>.to(columnIndex: Int): DataFrame<T> {
