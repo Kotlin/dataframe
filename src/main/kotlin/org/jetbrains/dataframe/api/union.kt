@@ -2,7 +2,9 @@ package org.jetbrains.dataframe
 
 import com.beust.klaxon.internal.firstNotNullResult
 import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.io.valueColumnName
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
 
 fun Iterable<DataFrame<*>>.union() = merge(asList())
@@ -50,19 +52,45 @@ internal fun merge(dataFrames: List<DataFrame<*>>): DataFrame<Unit> {
                 }
             }
 
-            val baseType = baseType(types).withNullability(nullable)
+            if(types.any { it.classifier == DataFrame::class }){
 
-            if(baseType.classifier == List::class && !types.all { it.classifier == List::class })
-                list.forEachIndexed { index, value ->
-                    if (value != null && value !is List<*>)
-                        list[index] = listOf(value)
+                // convert all values to dataframe and return table column
+                if(!types.all {it.classifier == DataFrame::class}){
+                    list.forEachIndexed { index, value ->
+                        list[index] = convertToDataFrame(value)
+                    }
+                }else if(nullable){
+                    list.forEachIndexed { index, value ->
+                        if(value == null)
+                            list[index] = DataFrame.empty<Any?>()
+                    }
+                    nullable = false
                 }
+                ColumnData.createTable(name, list as List<DataFrame<*>>)
+            }else {
+                val baseType = baseType(types).withNullability(nullable)
 
-            // TODO: support TableColumns
-            ColumnData.create(name, list, baseType, defaultValue)
+                if (baseType.classifier == List::class && !types.all { it.classifier == List::class })
+                    list.forEachIndexed { index, value ->
+                        if (value != null && value !is List<*>)
+                            list[index] = listOf(value)
+                    }
+
+                ColumnData.create(name, list, baseType, defaultValue)
+            }
         }
     }
     return dataFrameOf(columns)
+}
+
+internal fun convertToDataFrame(value: Any?): DataFrame<*> {
+    return when (value) {
+        null -> DataFrame.empty<Any?>()
+        is DataFrame<*> -> value
+        is DataRow<*> -> value.toDataFrame()
+        is List<*> -> value.mapNotNull { convertToDataFrame(it) }.union()
+        else -> dataFrameOf(valueColumnName)(value)
+    }
 }
 
 operator fun <T> DataFrame<T>.plus(other: DataFrame<T>) = merge(listOf(this, other)).typed<T>()

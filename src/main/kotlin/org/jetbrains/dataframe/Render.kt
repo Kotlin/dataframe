@@ -1,7 +1,5 @@
 package org.jetbrains.dataframe
 
-import kotlin.reflect.KType
-
 internal fun String.truncate(limit: Int) = if (limit in 1 until length) {
     if (limit < 4) substring(0, limit)
     else substring(0, limit - 3) + "..."
@@ -66,42 +64,4 @@ internal fun renderType(column: DataCol) =
         }
     }
 
-internal fun renderValue(value: Any?) =
-    when {
-        value is DataFrame<*> -> "${value.nrow} rows"
-        else -> value.toString()
-    }
 
-internal fun DataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 40): String {
-    val sb = StringBuilder()
-    sb.appendLine("Data Frame [${size()}]")
-    sb.appendLine()
-
-    val outputRows = limit.coerceAtMost(nrow)
-    val output = columns.map { it.values.take(limit).map { renderValue(it).truncate(truncate) } }
-    val header = columns.map { "${it.name()}:${renderType(it)}"}
-    val columnLengths = output.mapIndexed { col, values -> (values + header[col]).map { it.length }.max()!! + 1 }
-
-    sb.append("|")
-    for (col in header.indices) {
-        sb.append(header[col].padEnd(columnLengths[col]) + "|")
-    }
-    sb.appendLine()
-    sb.append("|")
-    for (colLength in columnLengths) {
-        for (i in 1..colLength) sb.append('-')
-        sb.append("|")
-    }
-    sb.appendLine()
-
-    for(row in 0 until outputRows){
-        sb.append("|")
-        for(col in output.indices){
-            sb.append(output[col][row].padEnd(columnLengths[col]) + "|")
-        }
-        sb.appendLine()
-    }
-    if(nrow > limit)
-        sb.appendLine("...")
-    return sb.toString()
-}

@@ -3,6 +3,7 @@ package org.jetbrains.dataframe.impl
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.columns.ColumnData
 import org.jetbrains.dataframe.api.columns.ColumnWithPath
+import org.jetbrains.dataframe.io.renderToString
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.jvm.jvmErasure
 

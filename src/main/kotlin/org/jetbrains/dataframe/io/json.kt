@@ -35,7 +35,7 @@ private fun readJSON(parsed: Any?) = when (parsed) {
 
 private val arrayColumnName = "array"
 
-private val valueColumnName = "value"
+internal val valueColumnName = "value"
 
 internal fun fromList(records: List<*>): DataFrame<*> {
 

@@ -2,6 +2,7 @@ package org.jetbrains.dataframe.impl
 
 import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.DataRow
+import org.jetbrains.dataframe.isEmpty
 
 internal class DataRowImpl<T>(override var index: Int, override val owner: DataFrame<T>) : DataRow<T> {
 
@@ -15,7 +16,8 @@ internal class DataRowImpl<T>(override var index: Int, override val owner: DataF
     override val next: DataRow<T>?
         get() = if (index < owner.nrow - 1) owner[index + 1] else null
 
-    override fun getRow(index: Int): DataRow<T>? = if (index >= 0 && index < owner.nrow) DataRowImpl(index, owner) else null
+    override fun getRow(index: Int): DataRow<T>? =
+        if (index >= 0 && index < owner.nrow) DataRowImpl(index, owner) else null
 
     override val values by lazy { owner.columns.map { it[index] } }
 
@@ -26,12 +28,14 @@ internal class DataRowImpl<T>(override var index: Int, override val owner: DataF
     }
 
     override fun toString(): String {
-        return "{ " + owner.columns.map { "${it.name()}:${it[index]}" }.joinToString() + " }"
+        if(isEmpty()) return "{ }"
+        return "{ " + owner.columns.filter { it[index] != null }.map { "${it.name()}:${it[index]}" }
+            .joinToString() + " }"
     }
 
     override fun equals(other: Any?): Boolean {
         val o = other as? DataRow<T>
-        if(o == null) return false
+        if (o == null) return false
         return values.equals(o.values)
     }
 

@@ -1,0 +1,56 @@
+package org.jetbrains.dataframe.io
+
+import org.jetbrains.dataframe.DataFrame
+import org.jetbrains.dataframe.DataRow
+import org.jetbrains.dataframe.GroupedDataFrame
+import org.jetbrains.dataframe.isEmpty
+import org.jetbrains.dataframe.renderType
+import org.jetbrains.dataframe.truncate
+
+fun <T> DataFrame<T>.print() = println(this)
+fun <T, G> GroupedDataFrame<T, G>.print() = println(this)
+
+internal fun DataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 40): String {
+    val sb = StringBuilder()
+    sb.appendLine("Data Frame [${size()}]")
+    sb.appendLine()
+
+    val outputRows = limit.coerceAtMost(nrow)
+    val output = columns.map { it.values.take(limit).map { renderValue(it).truncate(truncate) } }
+    val header = columns.map { "${it.name()}:${renderType(it)}"}
+    val columnLengths = output.mapIndexed { col, values -> (values + header[col]).map { it.length }.max()!! + 1 }
+
+    sb.append("|")
+    for (col in header.indices) {
+        sb.append(header[col].padEnd(columnLengths[col]) + "|")
+    }
+    sb.appendLine()
+    sb.append("|")
+    for (colLength in columnLengths) {
+        for (i in 1..colLength) sb.append('-')
+        sb.append("|")
+    }
+    sb.appendLine()
+
+    for(row in 0 until outputRows){
+        sb.append("|")
+        for(col in output.indices){
+            sb.append(output[col][row].padEnd(columnLengths[col]) + "|")
+        }
+        sb.appendLine()
+    }
+    if(nrow > limit)
+        sb.appendLine("...")
+    return sb.toString()
+}
+
+internal fun renderValue(value: Any?) =
+    when(value) {
+        is DataFrame<*> -> when{
+            value.isEmpty() -> ""
+            value.nrow == 1 -> value[0].toString()
+            else -> "${value.nrow} rows"
+        }
+        is DataRow<*> -> if(value.isEmpty()) "" else value.toString()
+        else -> value.toString()
+    }

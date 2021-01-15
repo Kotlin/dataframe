@@ -6,15 +6,17 @@ import kotlin.reflect.KType
 
 class GroupAggregateBuilder<T>(internal val df: DataFrame<T>): DataFrame<T> by df {
 
-    private data class NamedValue(val path: List<String>, val value: Any?, val type: KType, val defaultValue: Any?)
+    private data class NamedValue(val path: ColumnPath, val value: Any?, val type: KType, val defaultValue: Any?)
 
     private val values = mutableListOf<NamedValue>()
 
-    internal fun toDataFrame() = values.map { it.path to ColumnData.create(it.path.last(), listOf(it.value), it.type, it.defaultValue) }.toDataFrame<T>() ?: emptyDataFrame(1).typed()
+    internal fun toDataFrame() = values.map { it.path to ColumnData.createGuess(it.path.last(), listOf(it.value), it.type, it.defaultValue) }.toDataFrame<T>() ?: emptyDataFrame(1).typed()
 
-    fun <R> add(path: List<String>, value: R, type: KType, default: R? = null) {
+    fun <R> addValue(path: ColumnPath, value: R, type: KType, default: R? = null) {
         values.add(NamedValue(path, value, type, default))
     }
+
+    inline fun <reified R> addValue(columnName: String, value: R, default: R? = null) = addValue(listOf(columnName), value, getType<R>(), default)
 
     fun <C> spread(selector: ColumnSelector<T, C>) = SpreadClause.inAggregator(this, selector)
     fun <C> spread(column: ColumnDef<C>) = spread { column }
@@ -26,11 +28,12 @@ class GroupAggregateBuilder<T>(internal val df: DataFrame<T>): DataFrame<T> by d
     fun <C> countBy(column: KProperty<C>) = countBy(column.toColumnDef())
     fun countBy(column: String) = countBy(column.toColumnDef())
 
-    inline infix fun <reified R> R.into(name: String)  = add(listOf(name), this, getType<R>())
+    inline infix fun <reified R> R.into(name: String)  = addValue(listOf(name), this, getType<R>())
 }typealias GroupAggregator<G> = GroupAggregateBuilder<G>.(GroupAggregateBuilder<G>) -> Unit
 
 fun <T, G> GroupedDataFrame<T, G>.aggregate(body: GroupAggregator<G>) = doAggregate(plain(), { groups }, removeColumns = true, body)
 fun <T, G> DataFrame<T>.aggregate(selector: ColumnSelector<T, DataFrame<G>>, body: GroupAggregator<G>) = doAggregate(this, selector, removeColumns = false, body)
+
 internal fun <T, G> doAggregate(df: DataFrame<T>, selector: ColumnSelector<T, DataFrame<G>>, removeColumns: Boolean, body: GroupAggregator<G>): DataFrame<T> {
 
     val column = df.getColumn(selector)

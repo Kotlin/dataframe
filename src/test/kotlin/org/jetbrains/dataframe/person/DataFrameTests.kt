@@ -1010,4 +1010,51 @@ class DataFrameTests : BaseTest() {
         }
         typed.age.digitize(a, b, right = true).toList() shouldBe expectedRight
     }
+
+    @Test
+    fun `aggregate into grouped column`(){
+
+        val d = typed.groupBy { name }.aggregate {
+            val row = select {age and weight}.mean()
+            addValue("mean", row)
+        }
+        d.ncol shouldBe 2
+        d["mean"].isGrouped() shouldBe true
+        val mean = d.getGroup("mean")
+        mean.ncol shouldBe 2
+        mean.columnNames() shouldBe listOf("age", "weight")
+        mean.columns.forEach {
+            it.type shouldBe getType<Double>()
+        }
+    }
+
+    @Test
+    fun `aggregate into table column`(){
+
+        val d = typed.groupBy { name }.aggregate {
+            val row = select {age and weight}
+            addValue("info", row)
+        }
+        d.ncol shouldBe 2
+        d["info"].isTable() shouldBe true
+        val info = d.getTable("info")
+        info.forEach {
+            it.ncol shouldBe 2
+            it.columnNames() shouldBe listOf("age", "weight")
+            it.columns.forEach {
+                it.type.classifier shouldBe Int::class
+            }
+        }
+    }
+
+    @Test
+    fun `union table columns`(){
+
+        val grouped = typed.addRowNumber("id").groupBy { name }.plain()
+        val dfs = (0 until grouped.nrow).map {
+            grouped[it..it]
+        }
+        val dst = dfs.union().toGrouped().ungroup().sortBy("id").remove("id")
+        dst shouldBe typed
+    }
 }

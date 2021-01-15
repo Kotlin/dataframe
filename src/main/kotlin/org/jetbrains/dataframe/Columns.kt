@@ -143,8 +143,8 @@ fun KClass<*>.createStarProjectedType(nullable: Boolean) = this.starProjectedTyp
 inline fun <reified T> ColumnDef<T>.withValues(values: List<T>, hasNulls: Boolean) = column(name(), values, hasNulls)
 
 // TODO: implement correct base schema computation
-internal fun <T> Iterable<DataFrame<T>>.getBaseSchema(): DataFrame<T> {
-    return first()
+internal fun <T> Iterable<DataFrame<T>?>.getBaseSchema(): DataFrame<T> {
+    return first { it != null && it.ncol > 0 } ?: DataFrame.empty()
 }
 
 fun <T> ColumnData<T>.withValues(values: List<T>, hasNulls: Boolean) = when (this) {
@@ -168,8 +168,6 @@ internal fun <T> TableColumn<*>.typed() = this as TableColumn<T>
 internal fun <T> GroupedColumn<*>.typed() = this as GroupedColumn<T>
 
 internal fun <T> DataCol.grouped() = this as GroupedColumnBase<T>
-
-internal fun <T> DataFrameBase<T>.asGroup() = this as GroupedColumn<T>
 
 inline fun <reified T> DataCol.cast(): ColumnData<T> = ColumnData.create(name(), toList() as List<T>, getType<T>().withNullability(hasNulls))
 
