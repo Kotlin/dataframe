@@ -44,6 +44,13 @@ internal fun DataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 40): S
     return sb.toString()
 }
 
+internal fun DataRow<*>.renderToString(): String{
+    if(isEmpty()) return ""
+    return owner.columns.map {it.name() to it[index]}.filter{it.second != null}
+        .map { "${it.first}:${renderValue(it.second)}" }.joinToString(prefix = "{ ", postfix = " }")
+}
+
+
 internal fun renderValue(value: Any?) =
     when(value) {
         is DataFrame<*> -> when{
@@ -51,6 +58,8 @@ internal fun renderValue(value: Any?) =
             value.nrow == 1 -> value[0].toString()
             else -> "${value.nrow} rows"
         }
-        is DataRow<*> -> if(value.isEmpty()) "" else value.toString()
+        is Double -> value.format(6)
         else -> value.toString()
     }
+
+fun Double.format(digits: Int) = "%.${digits}f".format(this)

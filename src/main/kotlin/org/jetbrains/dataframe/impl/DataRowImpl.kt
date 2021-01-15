@@ -2,6 +2,7 @@ package org.jetbrains.dataframe.impl
 
 import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.DataRow
+import org.jetbrains.dataframe.io.renderToString
 import org.jetbrains.dataframe.isEmpty
 
 internal class DataRowImpl<T>(override var index: Int, override val owner: DataFrame<T>) : DataRow<T> {
@@ -27,11 +28,7 @@ internal class DataRowImpl<T>(override var index: Int, override val owner: DataF
         return column[index]
     }
 
-    override fun toString(): String {
-        if(isEmpty()) return "{ }"
-        return "{ " + owner.columns.filter { it[index] != null }.map { "${it.name()}:${it[index]}" }
-            .joinToString() + " }"
-    }
+    override fun toString() = renderToString()
 
     override fun equals(other: Any?): Boolean {
         val o = other as? DataRow<T>
