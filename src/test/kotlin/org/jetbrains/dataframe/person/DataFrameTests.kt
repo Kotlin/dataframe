@@ -4,7 +4,6 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.digitize
 import org.jetbrains.dataframe.impl.trackColumnAccess
 import org.jetbrains.dataframe.io.print
 import org.junit.Test
@@ -81,7 +80,8 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `incorrect column nullability`() {
 
-        val col = column<Int>("weight") // non-nullable column definition is incorrect here, because actual dataframe has nulls in this column
+        val col =
+            column<Int>("weight") // non-nullable column definition is incorrect here, because actual dataframe has nulls in this column
 
         shouldThrow<NullPointerException> {
             println(df[2][col])
@@ -554,6 +554,22 @@ class DataFrameTests : BaseTest() {
 
         df.add("year") { now - int("age") }.check()
         df.add("year") { now - "age"<Int>() }.check()
+    }
+
+    @Test
+    fun `add several columns`() {
+        val now = 2020
+        val expected = typed.map { now - age }
+
+        fun DataFrame<*>.check() = run {
+            this["year"].values shouldBe expected
+            this["year2"].values shouldBe expected
+        }
+
+        typed.add {
+            "year" { now - age }
+            "year2"(now - typed.age)
+        }.check()
     }
 
     @Test

@@ -1,8 +1,12 @@
 package org.jetbrains.dataframe
 
-operator fun DataFrame<*>.plus(col: DataCol) = dataFrameOf(columns + col)
+import org.jetbrains.dataframe.api.columns.ColumnData
 
-operator fun DataFrame<*>.plus(col: Iterable<DataCol>) = dataFrameOf(columns + col)
+operator fun <T> DataFrame<T>.plus(col: DataCol) = dataFrameOf(columns + col).typed<T>()
+
+operator fun <T> DataFrame<T>.plus(col: Iterable<DataCol>) = dataFrameOf(columns + col).typed<T>()
+
+fun <T> DataFrame<T>.add(name: String, data: DataCol) = dataFrameOf(columns + data.doRename(name)).typed<T>()
 
 inline fun <reified R, T> DataFrame<T>.add(name: String, noinline expression: RowSelector<T, R>) =
         (this + newColumn(name, expression))
@@ -30,7 +34,13 @@ class TypedColumnsFromDataRowBuilder<T>(val df: DataFrame<T>) {
 
     inline fun <reified R> add(columnDef: ColumnDef<R>, noinline expression: RowSelector<T, R>) = add(df.newColumn(columnDef.name, expression))
 
-    inline infix fun <reified R> String.to(noinline expression: RowSelector<T, R>) = add(this, expression)
+    inline operator fun <reified R> ColumnDef<R>.invoke(noinline expression: RowSelector<T, R>) = add(df.newColumn(name, expression))
 
     inline operator fun <reified R> String.invoke(noinline expression: RowSelector<T, R>) = add(this, expression)
+
+    inline operator fun String.invoke(column: DataCol) = add(column.doRename(this))
+
+    inline operator fun <reified R> ColumnDef<R>.invoke(column: ColumnData<R>) = name(column)
+
+    infix fun DataCol.into(name: String) = add(doRename(name))
 }
