@@ -81,6 +81,8 @@ interface DataFrame<out T> : DataFrameBase<T> {
     override fun columns() = columns
     override fun getColumn(columnIndex: Int) = columns()[columnIndex]
 
+    operator fun set(columnName: String, value: DataCol)
+
     override operator fun get(index: Int): DataRow<T> = DataRowImpl(index, this)
     override operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found: '$columnName'")
     override operator fun <R> get(column: ColumnDef<R>): ColumnData<R> = tryGetColumn(column)!!

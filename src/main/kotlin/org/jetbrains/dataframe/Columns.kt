@@ -386,6 +386,8 @@ internal class MissingGroupColumn<T> : MissingColumnData<DataRow<T>>(), GroupedC
     override fun addRow(vararg values: Any?) = throw UnsupportedOperationException()
 
     override fun kind() = super<GroupedColumn>.kind()
+
+    override fun set(columnName: String, value: DataCol) = throw UnsupportedOperationException()
 }
 
 internal class MissingTableColumn<T>: MissingColumnData<DataFrame<T>>(), TableColumn<T> {

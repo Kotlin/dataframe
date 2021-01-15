@@ -1063,4 +1063,13 @@ class DataFrameTests : BaseTest() {
         val dst = dfs.union().toGrouped().ungroup().sortBy("id").remove("id")
         dst shouldBe typed
     }
+
+    @Test
+    fun `set column`(){
+
+        val copy = typed.select { all() }
+        copy["new"] = copy.age
+        copy.ncol shouldBe typed.ncol + 1
+        copy["new"].toList() shouldBe typed.age.toList()
+    }
 }
