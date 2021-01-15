@@ -561,14 +561,12 @@ class DataFrameTests : BaseTest() {
         val now = 2020
         val expected = typed.map { now - age }
 
-        fun DataFrame<*>.check() = run {
-            this["year"].values shouldBe expected
-            this["year2"].values shouldBe expected
-        }
+        fun DataFrame<*>.check() = (1..3).forEach { this["year$it"].values shouldBe expected}
 
         typed.add {
-            "year" { now - age }
-            "year2"(now - typed.age)
+            "year1" { now - age }
+            "year2"(now - age)
+            now - age into "year3"
         }.check()
     }
 
