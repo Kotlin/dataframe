@@ -472,6 +472,12 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `groupBy invoked at column`() {
+
+        typed.weight.groupBy(typed.name).mean() shouldBe typed.groupBy {name}.mean("weight") { weight }
+    }
+
+    @Test
     fun `min`() {
         val expected = 15
 

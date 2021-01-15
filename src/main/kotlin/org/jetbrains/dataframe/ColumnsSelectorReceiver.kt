@@ -14,6 +14,8 @@ interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
 
     fun cols(vararg col: String) = ColumnGroup(col.map { it.toColumnDef() })
 
+    fun cols(range: IntRange) = ColumnGroup(columns().subList(range.start, range.endInclusive+1))
+
     fun DataFrameBase<*>.group(name: String) = this.get(name) as GroupedColumn<*>
 
     fun DataFrameBase<*>.cols(predicate: (DataCol) -> Boolean) = ColumnGroup(this.columns().filter(predicate))
