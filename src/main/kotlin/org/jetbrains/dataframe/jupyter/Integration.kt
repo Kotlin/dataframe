@@ -2,6 +2,7 @@ package org.jetbrains.dataframe.jupyter
 
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.columns.GroupedColumn
+import org.jetbrains.dataframe.io.toHTML
 import org.jetbrains.kotlinx.jupyter.api.*
 import org.jetbrains.kotlinx.jupyter.api.libraries.*
 
