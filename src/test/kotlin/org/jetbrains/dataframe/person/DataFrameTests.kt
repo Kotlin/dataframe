@@ -1010,5 +1010,4 @@ class DataFrameTests : BaseTest() {
         }
         typed.age.digitize(a, b, right = true).toList() shouldBe expectedRight
     }
-
 }
