@@ -8,7 +8,7 @@ import java.lang.IllegalArgumentException
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.jvm.jvmErasure
 
-internal open class DataFrameImpl<T>(override var columns: List<DataCol>) : DataFrame<T> {
+internal open class DataFrameImpl<T>(var columns: List<DataCol>) : DataFrame<T> {
 
     override val nrow: Int
 
@@ -28,7 +28,7 @@ internal open class DataFrameImpl<T>(override var columns: List<DataCol>) : Data
 
     private val columnsMap by lazy { columns.withIndex().associateBy({ it.value.name() }, { it.index }).toMutableMap() }
 
-    override val rows = object : Iterable<DataRow<T>> {
+    override fun rows() = object : Iterable<DataRow<T>> {
         override fun iterator() =
 
                 object : Iterator<DataRow<T>> {
@@ -45,7 +45,7 @@ internal open class DataFrameImpl<T>(override var columns: List<DataCol>) : Data
 
     override fun equals(other: Any?): Boolean {
         val df = other as? DataFrame<*> ?: return false
-        return columns == df.columns
+        return columns == df.columns()
     }
 
     override fun hashCode() = columns.hashCode()
@@ -55,7 +55,7 @@ internal open class DataFrameImpl<T>(override var columns: List<DataCol>) : Data
     override fun addRow(vararg values: Any?): DataFrame<T> {
         assert(values.size == ncol) { "Invalid number of arguments. Expected: $ncol, actual: ${values.size}" }
         return values.mapIndexed { i, v ->
-            val col = columns[i]
+            val col = columns()[i]
             if (v != null)
             // Note: type arguments for a new value are not validated here because they are erased
                 assert(v.javaClass.kotlin.isSubclassOf(col.type.jvmErasure))
@@ -78,4 +78,6 @@ internal open class DataFrameImpl<T>(override var columns: List<DataCol>) : Data
         columnsMap[columnName] = if(index == -1) ncol else index
         columns = newCols
     }
+
+    override fun columns() = columns
 }

@@ -10,7 +10,7 @@ import kotlin.reflect.KType
 internal class GroupedColumnImpl<T>(override val df: DataFrame<T>, val name: String) : GroupedColumn<T>, ColumnDataInternal<DataRow<T>>, DataFrame<T> by df {
 
     override val values: Iterable<DataRow<T>>
-        get() = df.rows
+        get() = df.rows()
 
     override val ndistinct: Int
         get() = distinct.nrow
@@ -19,7 +19,7 @@ internal class GroupedColumnImpl<T>(override val df: DataFrame<T>, val name: Str
 
     private val distinct by lazy { df.distinct() }
 
-    private val set by lazy { distinct.rows.toSet() }
+    private val set by lazy { distinct.rows().toSet() }
 
     override fun toSet() = set
 

@@ -92,7 +92,7 @@ class DataFrameTests : BaseTest() {
     fun `update`() {
 
         fun DataFrame<*>.check() {
-            columns[1].name() shouldBe "age"
+            column(1).name() shouldBe "age"
             ncol shouldBe typed.ncol
             this["age"].values shouldBe typed.map { age * 2 }
         }
@@ -115,7 +115,7 @@ class DataFrameTests : BaseTest() {
     fun `conditional update`() {
 
         fun DataFrame<*>.check() {
-            columns[1].name() shouldBe "age"
+            column(1).name() shouldBe "age"
             ncol shouldBe typed.ncol
             this["age"].values shouldBe typed.map { if (age > 25) null else age }
         }
@@ -165,7 +165,7 @@ class DataFrameTests : BaseTest() {
 
         val updated = typed.update { all() }.withNull()
 
-        updated.columns.forEach {
+        updated.columns().forEach {
             it.values.forEach { it shouldBe null }
         }
     }
@@ -265,7 +265,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `filterNotNull 1`() {
 
-        fun DataFrame<*>.check() = rows.forEach { get("weight") shouldNotBe null }
+        fun DataFrame<*>.check() = rows().forEach { get("weight") shouldNotBe null }
 
         typed.filterNotNull(typed.weight).check()
         typed.filterNotNull { weight }.check()
@@ -280,7 +280,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `filterNotNull 2`() {
 
-        val expected = typed.rows.count { it.city != null && it.weight != null }
+        val expected = typed.rows().count { it.city != null && it.weight != null }
         fun DataFrame<*>.check() = nrow shouldBe expected
 
         typed.filterNotNull(typed.weight, typed.city).check()
@@ -298,7 +298,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `select one `() {
         val expected = listOf(typed.age)
-        fun DataFrame<*>.check() = columns shouldBe expected
+        fun DataFrame<*>.check() = columns() shouldBe expected
 
         typed.select { age }.check()
         typed.select { it.age }.check()
@@ -320,7 +320,7 @@ class DataFrameTests : BaseTest() {
     fun `select if`() {
         val expected = listOf(typed.name, typed.city)
 
-        fun DataFrame<*>.check() = columns shouldBe expected
+        fun DataFrame<*>.check() = columns() shouldBe expected
 
         typed.select { cols { it.name().length == 4 } }.check()
         df.select { cols { it.name().length == 4 } }.check()
@@ -329,7 +329,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `select two`() {
         val expected = listOf(typed.age, typed.city)
-        fun DataFrame<*>.check() = columns shouldBe expected
+        fun DataFrame<*>.check() = columns() shouldBe expected
 
         typed.select { age and city }.check()
         typed.select { it.age and it.city }.check()
@@ -623,7 +623,7 @@ class DataFrameTests : BaseTest() {
 
         val res = typed + typed + typed
         res.name.size shouldBe 3 * typed.nrow
-        res.rows.forEach { it.values shouldBe typed[it.index % typed.nrow].values }
+        res.rows().forEach { it.values shouldBe typed[it.index % typed.nrow].values }
     }
 
     @Test
@@ -639,10 +639,10 @@ class DataFrameTests : BaseTest() {
 
         val res = typed.union(other)
         res.nrow shouldBe typed.nrow + other.nrow
-        res.take(typed.nrow).rows.forEach { it[heightOrNull] == null }
+        res.take(typed.nrow).rows().forEach { it[heightOrNull] == null }
         val q = res.takeLast(other.nrow)
-        q.rows.forEach { it[name] shouldBe other[it.index][name] }
-        q.rows.forEach { it[heightOrNull] shouldBe other[it.index][height] }
+        q.rows().forEach { it[name] shouldBe other[it.index][name] }
+        q.rows().forEach { it[heightOrNull] shouldBe other[it.index][height] }
     }
 
     @Test
@@ -736,8 +736,9 @@ class DataFrameTests : BaseTest() {
             val city = typed[row][city]
             if (city != null) spread[row][city] shouldBe true
             for (col in typed.ncol until spread.ncol) {
-                val spreadValue = spread.columns[col].typed<Boolean>()[row]
-                val colName = spread.columns[col].name()
+                val column = spread.column(col)
+                val spreadValue = column.typed<Boolean>()[row]
+                val colName = column.name()
                 spreadValue shouldBe (colName == city)
             }
         }
@@ -772,7 +773,7 @@ class DataFrameTests : BaseTest() {
             val city = typed[i][city]
             if (city != null) res[i][city] == true
             for (j in typed.ncol until res.ncol) {
-                res.columns[j].typed<Boolean>().get(i) shouldBe (res.columns[j].name() == city)
+                res.column(j).typed<Boolean>().get(i) shouldBe (res.column(j).name() == city)
             }
         }
     }
@@ -784,11 +785,11 @@ class DataFrameTests : BaseTest() {
 
         res.ncol shouldBe selected.city.ndistinct
         res.nrow shouldBe selected.name.ndistinct
-        val trueValuesCount = res.columns.takeLast(res.ncol - 1).sumBy { it.typed<Boolean>().values.count { it } }
+        val trueValuesCount = res.columns().drop(1).sumBy { it.typed<Boolean>().values.count { it } }
         trueValuesCount shouldBe selected.filterNotNull { city }.distinct().nrow
 
         val pairs = (1 until res.ncol).flatMap { i ->
-            val col = res.columns[i].typed<Boolean>()
+            val col = res.column(i).typed<Boolean>()
             res.filter { it[col] }.map { name to col.name() }
         }.toSet()
 
@@ -968,9 +969,9 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `move to position`() {
 
-        typed.columns[1] shouldBe typed.age
+        typed.column(1) shouldBe typed.age
         val moved = typed.move { age }.to(2)
-        moved.columns[2] shouldBe typed.age
+        moved.column(2) shouldBe typed.age
         moved.ncol shouldBe typed.ncol
     }
 
@@ -1029,7 +1030,7 @@ class DataFrameTests : BaseTest() {
         val mean = d.getGroup("mean")
         mean.ncol shouldBe 2
         mean.columnNames() shouldBe listOf("age", "weight")
-        mean.columns.forEach {
+        mean.columns().forEach {
             it.type shouldBe getType<Double>()
         }
     }
@@ -1047,7 +1048,7 @@ class DataFrameTests : BaseTest() {
         info.forEach {
             it.ncol shouldBe 2
             it.columnNames() shouldBe listOf("age", "weight")
-            it.columns.forEach {
+            it.columns().forEach {
                 it.type.classifier shouldBe Int::class
             }
         }

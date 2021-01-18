@@ -140,7 +140,8 @@ val KType.fullName: String get() = toString()
 
 fun KClass<*>.createStarProjectedType(nullable: Boolean) = this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
 
-inline fun <reified T> ColumnDef<T>.withValues(values: List<T>, hasNulls: Boolean) = column(name(), values, hasNulls)
+inline fun <reified T> ColumnDef<T>.withValues(values: List<T>, hasNulls: Boolean) =
+    column(name(), values, hasNulls)
 
 // TODO: implement correct base schema computation
 internal fun <T> Iterable<DataFrame<T>?>.getBaseSchema(): DataFrame<T> {
@@ -250,7 +251,8 @@ fun <T> columnList(name: String) = column<List<T>>(name)
 
 fun <T> column(name: String) = ColumnDefinition<T>(name)
 
-inline fun <reified T> column(name: String, values: List<T>): ColumnData<T> = column(name, values, values.any { it == null })
+inline fun <reified T> column(name: String, values: List<T>): ColumnData<T> =
+    column(name, values, values.any { it == null })
 
 inline fun <reified T> column(name: String, values: List<T>, hasNulls: Boolean): ColumnData<T> = ColumnData.create(name, values, getType<T>().withNullability(hasNulls))
 
@@ -359,12 +361,8 @@ internal class MissingGroupColumn<T> : MissingColumnData<DataRow<T>>(), GroupedC
         return null
     }
 
-    override fun getColumn(columnIndex: Int): DataCol {
+    override fun column(columnIndex: Int): DataCol {
         return MissingValueColumn<Any?>()
-    }
-
-    override fun columns(): List<DataCol> {
-        return emptyList()
     }
 
     override val ncol: Int
@@ -376,10 +374,10 @@ internal class MissingGroupColumn<T> : MissingColumnData<DataRow<T>>(), GroupedC
 
     override val nrow: Int
         get() = 0
-    override val columns: List<DataCol>
-        get() = emptyList()
-    override val rows: Iterable<DataRow<T>>
-        get() = emptyList()
+
+    override fun columns(): List<DataCol> = emptyList()
+
+    override fun rows(): Iterable<DataRow<T>> = emptyList()
 
     override fun getColumnIndex(name: String) = -1
 

@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe
 
 fun <T> DataFrame<T>.summary() =
-        columns.toDataFrame {
+    columns().toDataFrame {
             "column" { name() }
             "type" { type.fullName }
             "distinct values" { ndistinct }

@@ -36,7 +36,7 @@ fun <T, G> DataFrame<T>.aggregate(selector: ColumnSelector<T, DataFrame<G>>, bod
 
 internal fun <T, G> doAggregate(df: DataFrame<T>, selector: ColumnSelector<T, DataFrame<G>>, removeColumns: Boolean, body: GroupAggregator<G>): DataFrame<T> {
 
-    val column = df.getColumn(selector)
+    val column = df.column(selector)
 
     val (df2, removedNodes) = df.doRemove(selector)
 
@@ -51,7 +51,7 @@ internal fun <T, G> doAggregate(df: DataFrame<T>, selector: ColumnSelector<T, Da
 
     if(!removeColumns) removedNode.data.wasRemoved = false
 
-    val columnsToInsert = groupedFrame.columns.map {
+    val columnsToInsert = groupedFrame.columns().map {
         ColumnToInsert(insertPath + it.name(), removedNode, it)
     }
     val src = if(removeColumns) df2 else df

@@ -83,7 +83,7 @@ fun <T, C> MoveColsClause<T, C>.intoGroup(groupDef: GroupedColumnDef) = intoGrou
 
 fun <T, C> MoveColsClause<T, C>.into(path: List<String>) = intoGroup { path }
 fun <T, C> MoveColsClause<T, C>.to(columnIndex: Int): DataFrame<T> {
-    val newColumnList = df.columns.subList(0, columnIndex) + removed.map { it.data.column as ColumnData<C> } + df.columns.subList(columnIndex, df.ncol)
+    val newColumnList = df.columns().subList(0, columnIndex) + removed.map { it.data.column as ColumnData<C> } + df.columns().subList(columnIndex, df.ncol)
     return newColumnList.asDataFrame()
 }
 

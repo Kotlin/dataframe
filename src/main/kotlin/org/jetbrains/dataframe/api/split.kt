@@ -108,7 +108,7 @@ fun <T> doSplitRows(df: DataFrame<T>, columns: List<ColumnWithPath<List<*>?>>): 
 
     fun splitIntoRows(df: DataFrame<*>, data: Map<ColumnPath, List<List<*>>>): DataFrame<*> {
 
-        val newColumns = df.columns.map { col ->
+        val newColumns = df.columns().map { col ->
             if (col.isGrouped()) {
                 val group = col.asGrouped()
                 val newData = data.mapNotNull {

@@ -53,5 +53,5 @@ inline fun <reified T : Number> sum(list: Iterable<T>): T = list.sum(T::class)
 fun <T: Number> ColumnData<T>.sum() = values.sum(type.jvmErasure as KClass<T>)
 
 inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(col: ColumnDef<D?>): Double = get(col).median()
-inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(crossinline selector: RowSelector<T, D?>): Double = rows.asSequence().map { selector(it, it) }.filterNotNull().asIterable().median()
+inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(crossinline selector: RowSelector<T, D?>): Double = rows().asSequence().map { selector(it, it) }.filterNotNull().asIterable().median()
 inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(col: KProperty<D?>): Double = get(col).median()

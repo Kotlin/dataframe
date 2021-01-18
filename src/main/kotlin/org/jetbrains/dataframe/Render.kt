@@ -10,7 +10,7 @@ internal fun String.truncate(limit: Int) = if (limit in 1 until length) {
 data class Image(val url: String)
 
 internal fun renderSchema(df: DataFrame<*>): String =
-        df.columns.map { "${it.name()}:${renderType(it)}"}.joinToString()
+        df.columns().map { "${it.name()}:${renderType(it)}"}.joinToString()
 
 internal fun renderType(column: DataCol) =
     when(column.kind()) {

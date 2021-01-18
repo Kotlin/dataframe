@@ -3,7 +3,6 @@ package org.jetbrains.dataframe.impl
 import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.DataRow
 import org.jetbrains.dataframe.io.renderToString
-import org.jetbrains.dataframe.isEmpty
 
 internal class DataRowImpl<T>(override var index: Int, override val owner: DataFrame<T>) : DataRow<T> {
 
@@ -20,10 +19,10 @@ internal class DataRowImpl<T>(override var index: Int, override val owner: DataF
     override fun getRow(index: Int): DataRow<T>? =
         if (index >= 0 && index < owner.nrow) DataRowImpl(index, owner) else null
 
-    override val values by lazy { owner.columns.map { it[index] } }
+    override val values by lazy { owner.columns().map { it[index] } }
 
     override fun get(columnIndex: Int): Any? {
-        val column = owner.columns[columnIndex]
+        val column = owner.column(columnIndex)
         ColumnAccessTracker.registerColumnAccess(column.name())
         return column[index]
     }

@@ -13,7 +13,7 @@ internal class GroupedColumnWithParent<T>(override val parent: GroupedColumnDef?
     override fun <R> get(column: ColumnDef<R>) = df[column].addParent(this)
     override fun <R> get(column: ColumnDef<DataRow<R>>) = df[column].addParent(this) as GroupedColumn<R>
     override fun columns() = df.columns().map { it.addParent(this) }
-    override fun getColumn(columnIndex: Int) = df.getColumn(columnIndex).addParent(this)
+    override fun column(columnIndex: Int) = df.column(columnIndex).addParent(this)
 
     override fun equals(other: Any?) = checkEquals(other)
 

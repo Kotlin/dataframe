@@ -16,8 +16,8 @@ internal fun DataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 40): S
     sb.appendLine()
 
     val outputRows = limit.coerceAtMost(nrow)
-    val output = columns.map { it.values.take(limit).map { renderValue(it).truncate(truncate) } }
-    val header = columns.map { "${it.name()}:${renderType(it)}"}
+    val output = columns().map { it.values.take(limit).map { renderValue(it).truncate(truncate) } }
+    val header = columns().map { "${it.name()}:${renderType(it)}"}
     val columnLengths = output.mapIndexed { col, values -> (values + header[col]).map { it.length }.max()!! + 1 }
 
     sb.append("|")
@@ -46,7 +46,7 @@ internal fun DataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 40): S
 
 internal fun DataRow<*>.renderToString(): String{
     if(isEmpty()) return ""
-    return owner.columns.map {it.name() to it[index]}.filter{it.second != null}
+    return owner.columns().map {it.name() to it[index]}.filter{it.second != null}
         .map { "${it.first}:${renderValue(it.second)}" }.joinToString(prefix = "{ ", postfix = " }")
 }
 

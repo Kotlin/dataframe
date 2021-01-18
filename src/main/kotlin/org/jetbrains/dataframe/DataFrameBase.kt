@@ -32,7 +32,7 @@ interface DataFrameBase<out T>: SingleColumn<DataRow<T>> {
     }
 
     operator fun get(index: Int): DataRow<T>
-    fun getColumn(columnIndex: Int): DataCol
+    fun column(columnIndex: Int): DataCol
     fun columns(): List<DataCol>
     val ncol: Int
 }
