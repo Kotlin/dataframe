@@ -10,12 +10,12 @@ import kotlin.reflect.jvm.jvmErasure
 
 inline fun <reified T : Number> Iterable<T>.mean(): Double = mean(T::class)
 
-inline fun <T, reified D : Number> DataFrame<T>.mean(crossinline selector: RowSelector<T, D?>): Double = rows.asSequence().map { selector(it, it) }.filterNotNull().asIterable().mean()
+inline fun <T, reified D : Number> DataFrame<T>.mean(crossinline selector: RowSelector<T, D?>): Double = rows().asSequence().map { selector(it, it) }.filterNotNull().asIterable().mean()
 inline fun <T, reified D : Number> DataFrame<T>.mean(col: ColumnDef<D>): Double = get(col).mean()
 inline fun <T, reified D : Number> DataFrame<T>.mean(col: KProperty<D>): Double = get(col).mean()
 
 fun <T> DataFrame<T>.mean(): DataRow<T> {
-    return columns.map {
+    return columns().map {
         column(it.name(), listOf((it as ColumnData<Number>).mean()))
     }.asDataFrame<T>()[0]
 }
@@ -24,7 +24,7 @@ fun <T, G> GroupedDataFrame<T, G>.mean(): DataFrame<T> {
 
     val keyColumnNames = keys.columnNames().toSet()
     return aggregate {
-        columns.filter { (it.type.classifier!! as KClass<*>).isSubclassOf(Number::class) && !keyColumnNames.contains(it.name()) }
+        columns().filter { (it.type.classifier!! as KClass<*>).isSubclassOf(Number::class) && !keyColumnNames.contains(it.name()) }
             .forEach { col ->
                 (col as ColumnData<Number?>).mean() into col.name()
             }

@@ -27,7 +27,7 @@ internal fun <T,G> DataFrame<T>.toGrouped(groupedColumnName: String): GroupedDat
 
 internal fun <T> DataFrame<T>.toGrouped(): GroupedDataFrame<T,T> {
 
-    val groupCol = columns.single {it.isTable()}.asTable() as TableColumn<T>
+    val groupCol = columns().single {it.isTable()}.asTable() as TableColumn<T>
     return toGrouped {groupCol}
 }
 

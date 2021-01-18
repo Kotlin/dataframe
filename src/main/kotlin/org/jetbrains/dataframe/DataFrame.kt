@@ -48,7 +48,7 @@ internal fun <T, C> DataFrame<T>.getColumnPaths(selector: ColumnsSelector<T, C>)
 
 internal fun <T, C> DataFrame<T>.getGroupColumns(selector: ColumnsSelector<T, DataRow<C>>) = getColumnsWithPaths(selector).map { it.data.asGrouped() }
 
-fun <T, C> DataFrame<T>.getColumn(selector: ColumnSelector<T, C>) = getColumns(selector).single()
+fun <T, C> DataFrame<T>.column(selector: ColumnSelector<T, C>) = getColumns(selector).single()
 
 fun <T, C> DataFrame<T>.getColumnWithPath(selector: ColumnSelector<T, C>) = getColumnsWithPaths(selector).single()
 
@@ -72,14 +72,13 @@ interface DataFrame<out T> : DataFrameBase<T> {
     }
 
     val nrow: Int
-    override val ncol: Int get() = columns.size
-    val columns: List<DataCol>
-    val rows: Iterable<DataRow<T>>
+    override val ncol: Int get() = columns().size
 
+    fun rows() : Iterable<DataRow<T>>
     fun columnNames() = columns().map { it.name() }
 
-    override fun columns() = columns
-    override fun getColumn(columnIndex: Int) = columns()[columnIndex]
+    override fun columns(): List<DataCol>
+    override fun column(columnIndex: Int) = columns()[columnIndex]
 
     operator fun set(columnName: String, value: DataCol)
 
@@ -106,7 +105,7 @@ interface DataFrame<out T> : DataFrameBase<T> {
 
     fun <R> tryGetColumn(column: ColumnDef<R>): ColumnData<R>? = tryGetColumn(column.name()) as? ColumnData<R>
 
-    override fun tryGetColumn(name: String): DataCol? = getColumnIndex(name).let { if (it != -1) columns[it] else null }
+    override fun tryGetColumn(name: String): DataCol? = getColumnIndex(name).let { if (it != -1) column(it) else null }
 
     fun tryGetColumnGroup(name: String) = tryGetColumn(name) as? GroupedColumn<*>
     fun getColumnGroup(name: String) = tryGetColumnGroup(name)!!
@@ -116,13 +115,13 @@ interface DataFrame<out T> : DataFrameBase<T> {
 
     fun addRow(vararg values: Any?): DataFrame<T>
 
-    fun all(predicate: RowFilter<T>): Boolean = rows.all { predicate(it, it) }
-    fun any(predicate: RowFilter<T>): Boolean = rows.any { predicate(it, it) }
+    fun all(predicate: RowFilter<T>): Boolean = rows().all { predicate(it, it) }
+    fun any(predicate: RowFilter<T>): Boolean = rows().any { predicate(it, it) }
 
-    fun first() = rows.first()
-    fun firstOrNull() = rows.firstOrNull()
-    fun last() = rows.last() // TODO: optimize (don't iterate through the whole data frame)
-    fun lastOrNull() = rows.lastOrNull()
+    fun first() = rows().first()
+    fun firstOrNull() = rows().firstOrNull()
+    fun last() = rows().last() // TODO: optimize (don't iterate through the whole data frame)
+    fun lastOrNull() = rows().lastOrNull()
     fun take(numRows: Int) = getRows(0 until numRows)
     fun drop(numRows: Int) = getRows(numRows until nrow)
     fun takeLast(numRows: Int) = getRows(nrow - numRows until nrow)
@@ -130,16 +129,16 @@ interface DataFrame<out T> : DataFrameBase<T> {
     fun head(numRows: Int = 5) = take(numRows)
     fun tail(numRows: Int = 5) = takeLast(numRows)
     fun shuffled() = getRows((0 until nrow).shuffled())
-    fun <K, V> associate(transform: RowSelector<T, Pair<K, V>>) = rows.associate { transform(it, it) }
-    fun <V> associateBy(transform: RowSelector<T, V>) = rows.associateBy { transform(it, it) }
-    fun <R> distinctBy(selector: RowSelector<T, R>) = rows.distinctBy { selector(it, it) }.map { it.index }.let { getRows(it) }
+    fun <K, V> associate(transform: RowSelector<T, Pair<K, V>>) = rows().associate { transform(it, it) }
+    fun <V> associateBy(transform: RowSelector<T, V>) = rows().associateBy { transform(it, it) }
+    fun <R> distinctBy(selector: RowSelector<T, R>) = rows().distinctBy { selector(it, it) }.map { it.index }.let { getRows(it) }
     fun distinct() = distinctBy { it.values }
-    fun single() = rows.single()
-    fun single(predicate: RowSelector<T, Boolean>) = rows.single { predicate(it, it) }
+    fun single() = rows().single()
+    fun single(predicate: RowSelector<T, Boolean>) = rows().single { predicate(it, it) }
 
-    fun <R> map(selector: RowSelector<T, R>) = rows.map { selector(it, it) }
+    fun <R> map(selector: RowSelector<T, R>) = rows().map { selector(it, it) }
 
-    fun <R> mapIndexed(action: (Int, DataRow<T>) -> R) = rows.mapIndexed(action)
+    fun <R> mapIndexed(action: (Int, DataRow<T>) -> R) = rows().mapIndexed(action)
 
     fun size() = DataFrameSize(ncol, nrow)
 }
@@ -151,7 +150,7 @@ fun <T> DataFrameBase<*>.typed(): DataFrameBase<T> = this as DataFrameBase<T>
 fun <T> DataRow<T>.toDataFrame(): DataFrame<T> = owner[index..index]
 
 fun <T, C> DataFrame<T>.forEachIn(selector: ColumnsSelector<T, C>, action: (DataRow<T>, ColumnData<C>) -> Unit) = getColumnsWithPaths(selector).let { cols ->
-    rows.forEach { row ->
+    rows().forEach { row ->
         cols.forEach { col ->
             action(row, col.data)
         }

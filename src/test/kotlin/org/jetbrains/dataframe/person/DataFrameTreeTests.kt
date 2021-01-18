@@ -152,7 +152,7 @@ class DataFrameTreeTests : BaseTest() {
             }
 
             val actual = group.columns().sortedBy { it.name() }.flatMap { col ->
-                rows.sortedBy { it[name] }.map { row -> (col.name() to row[name]) to row[col] }.filter { it.second != null }
+                rows().sortedBy { it[name] }.map { row -> (col.name() to row[name]) to row[col] }.filter { it.second != null }
             }
             actual shouldBe expected
         }
@@ -169,8 +169,8 @@ class DataFrameTreeTests : BaseTest() {
         val spread = grouped.spread { city }.by("info").execute()
         spread.ncol shouldBe typed.city.ndistinct + 1
 
-        val expected = typed.rows.groupBy { it.name to (it.city ?: "null") }.mapValues { it.value.map { it.age to it.weight } }
-        val dataCols = spread.columns.drop(1)
+        val expected = typed.rows().groupBy { it.name to (it.city ?: "null") }.mapValues { it.value.map { it.age to it.weight } }
+        val dataCols = spread.columns().drop(1)
 
         dataCols.forEach { (it.isGrouped() || it.isTable()) shouldBe true }
 

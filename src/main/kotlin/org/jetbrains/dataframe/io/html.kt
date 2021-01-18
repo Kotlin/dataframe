@@ -8,11 +8,11 @@ fun DataFrame<*>.toHTML(limit: Int = 20, truncate: Int = 40): String {
     val sb = StringBuilder()
     sb.append("<html><body>")
     sb.append("<table><tr>")
-    columns.forEach {
+    columns().forEach {
         sb.append("<th style=\"text-align:left\">${it.name()}</th>")
     }
     sb.append("</tr>")
-    rows.take(limit).forEach {
+    rows().take(limit).forEach {
         sb.append("<tr>")
         it.values.forEach {
             val tooltip: String

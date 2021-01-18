@@ -4,7 +4,6 @@ import org.jetbrains.dataframe.api.columns.ColumnData
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSubtypeOf
 
 fun <T, C> DataFrame<T>.spread(column: KProperty<C>) = spread { column.toColumnDef() }
@@ -80,7 +79,7 @@ inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.b
         context,
         keyColumn,
         columnSelector,
-        { getColumn(columnSelector) },
+        { column(columnSelector) },
         getType<ColumnData<V>>(),
         null,
         columnPath

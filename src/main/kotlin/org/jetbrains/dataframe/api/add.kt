@@ -2,11 +2,11 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.api.columns.ColumnData
 
-operator fun <T> DataFrame<T>.plus(col: DataCol) = dataFrameOf(columns + col).typed<T>()
+operator fun <T> DataFrame<T>.plus(col: DataCol) = dataFrameOf(columns() + col).typed<T>()
 
-operator fun <T> DataFrame<T>.plus(col: Iterable<DataCol>) = dataFrameOf(columns + col).typed<T>()
+operator fun <T> DataFrame<T>.plus(col: Iterable<DataCol>) = dataFrameOf(columns() + col).typed<T>()
 
-fun <T> DataFrame<T>.add(name: String, data: DataCol) = dataFrameOf(columns + data.doRename(name)).typed<T>()
+fun <T> DataFrame<T>.add(name: String, data: DataCol) = dataFrameOf(columns() + data.doRename(name)).typed<T>()
 
 inline fun <reified R, T> DataFrame<T>.add(name: String, noinline expression: RowSelector<T, R>) =
         (this + newColumn(name, expression))
@@ -20,7 +20,7 @@ inline fun <reified R, T> DataFrame<T>.add(column: ColumnDefinition<R>, noinline
 fun <T> DataFrame<T>.add(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) =
         with(TypedColumnsFromDataRowBuilder(this)) {
             body(this)
-            dataFrameOf(this@add.columns + columns).typed<T>()
+            dataFrameOf(this@add.columns() + columns).typed<T>()
         }
 
 operator fun <T> DataFrame<T>.plus(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) = add(body)

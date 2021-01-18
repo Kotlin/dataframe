@@ -84,7 +84,7 @@ class JoinTests : BaseTest() {
         res.ncol shouldBe 6
         res.nrow shouldBe 12
         res.name.hasNulls shouldBe false
-        res.columns.filter { it != res.name }.all { it.hasNulls } shouldBe true
+        res.columns().filter { it != res.name }.all { it.hasNulls } shouldBe true
         res.select { city and name }.distinct().nrow shouldBe 7
         val distinct = res.select { name and age and city and weight }.distinct()
         val expected = typed.addRow("Bob", null, "Paris", null)

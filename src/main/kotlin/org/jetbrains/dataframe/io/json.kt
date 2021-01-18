@@ -39,7 +39,7 @@ internal val valueColumnName = "value"
 
 internal fun fromList(records: List<*>): DataFrame<*> {
 
-    fun DataFrame<*>.isSingleUnnamedColumn() = ncol == 1 && (columns[0].name() == valueColumnName || columns[0].name() == arrayColumnName)
+    fun DataFrame<*>.isSingleUnnamedColumn() = ncol == 1 && column(0).name().let { it  == valueColumnName || it == arrayColumnName }
 
     var hasPrimitive = false
     var hasArray = false
@@ -87,7 +87,7 @@ internal fun fromList(records: List<*>): DataFrame<*> {
                 val parsed = fromList(values)
                 when {
                     parsed.isSingleUnnamedColumn() -> {
-                        val col = parsed.columns[0]
+                        val col = parsed.column(0)
                         val elementType = col.type
                         val values = col.values.asList().splitByIndices(startIndices)
                         column(colName, values, List::class.createType(listOf(KTypeProjection.invariant(elementType))))
@@ -107,7 +107,7 @@ internal fun fromList(records: List<*>): DataFrame<*> {
 
                 val parsed = fromList(values)
                 when {
-                    parsed.isSingleUnnamedColumn() -> parsed.columns[0].doRename(colName)
+                    parsed.isSingleUnnamedColumn() -> parsed.column(0).doRename(colName)
                     else -> ColumnData.createGroup(colName, parsed)
                 }
             }

@@ -99,7 +99,7 @@ internal fun baseType(types: Set<KType>): KType {
 internal fun indexColumn(columnName: String, size: Int): DataCol = column(columnName, (0 until size).toList())
 
 fun <T> DataFrame<T>.addRowNumber(column: ColumnDef<Int>) = addRowNumber(column.name())
-fun <T> DataFrame<T>.addRowNumber(columnName: String = "id"): DataFrame<T> = dataFrameOf(columns + indexColumn(columnName, nrow)).typed<T>()
+fun <T> DataFrame<T>.addRowNumber(columnName: String = "id"): DataFrame<T> = dataFrameOf(columns() + indexColumn(columnName, nrow)).typed<T>()
 fun DataCol.addRowNumber(columnName: String = "id") = dataFrameOf(listOf(indexColumn(columnName, size), this))
 
 // Column operations
@@ -135,11 +135,11 @@ internal fun Iterable<ColumnWithPath<*>>.dfs(): List<ColumnWithPath<*>> {
     return result
 }
 
-internal fun DataFrame<*>.collectTree() = columns.map { it.addPath() }.collectTree()
+internal fun DataFrame<*>.collectTree() = columns().map { it.addPath() }.collectTree()
 
 internal fun List<ColumnWithPath<*>>.collectTree() = collectTree(DataCol.empty()) { it }
 
-internal fun <D> DataFrame<*>.collectTree(emptyData: D, createData: (DataCol) -> D) = columns.map { it.addPath() }.collectTree(emptyData, createData)
+internal fun <D> DataFrame<*>.collectTree(emptyData: D, createData: (DataCol) -> D) = columns().map { it.addPath() }.collectTree(emptyData, createData)
 
 internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (DataCol) -> D): TreeNode<D> {
 
@@ -155,7 +155,7 @@ internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (
     }
     forEach {
         if(it.path.isEmpty()){
-            it.data.asGrouped().df.columns.forEach {
+            it.data.asGrouped().df.columns().forEach {
                 collectColumns(it, root)
             }
         }else {
@@ -230,7 +230,7 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
     val newColumns = mutableListOf<DataCol>()
 
     // insert new columns under existing
-    df?.columns?.forEach {
+    df?.columns()?.forEach {
         val subTree = columnsMap[it.name()]
         if (subTree != null) {
             // assert that new columns go directly under current column so they have longer paths

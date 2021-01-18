@@ -238,7 +238,7 @@ class CodeGenerator : CodeGeneratorApi {
     }
 
     private val DataFrame<*>.schema: Scheme
-        get() = getScheme(columns)
+        get() = getScheme(columns())
 
     // Rendering
 
@@ -496,7 +496,7 @@ class CodeGenerator : CodeGeneratorApi {
         return resultDeclarations
     }
 
-    internal fun generateInterfaceDeclarations(df: DataFrame<*>, name: String, generateExtensionProperties: Boolean) = generateInterfaceDeclarations(getScheme(df.columns), name, false, GenerationOptions(true, generateExtensionProperties, name))
+    internal fun generateInterfaceDeclarations(df: DataFrame<*>, name: String, generateExtensionProperties: Boolean) = generateInterfaceDeclarations(getScheme(df.columns()), name, false, GenerationOptions(true, generateExtensionProperties, name))
 
     // DataFrame -> List converters
 
@@ -533,6 +533,6 @@ class CodeGenerator : CodeGeneratorApi {
     }
 
     override fun generate(stub: DataFrameToListNamedStub) =
-            generateToListConverter(stub.className, stub.df.columns.map { it.name() }, stub.df.schema, null)
+            generateToListConverter(stub.className, stub.df.columns().map { it.name() }, stub.df.schema, null)
 
 }
