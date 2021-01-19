@@ -124,7 +124,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun spread() {
 
-        val modified = df.addRow("Alice", 55, "Moscow", 100)
+        val modified = df.append("Alice", 55, "Moscow", 100)
         val df2 =  modified.move { name and city }.intoGroup("nameAndCity")
         val typed2 = df2.typed<GroupedPerson>()
 

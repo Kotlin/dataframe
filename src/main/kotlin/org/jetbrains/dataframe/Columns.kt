@@ -379,7 +379,7 @@ internal class MissingGroupColumn<T> : MissingColumnData<DataRow<T>>(), GroupedC
 
     override fun getColumnIndex(name: String) = -1
 
-    override fun addRow(vararg values: Any?) = throw UnsupportedOperationException()
+    override fun append(vararg values: Any?) = throw UnsupportedOperationException()
 
     override fun kind() = super<GroupedColumn>.kind()
 

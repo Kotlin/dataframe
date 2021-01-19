@@ -109,7 +109,7 @@ class SpreadTests {
         val first = typed[0]
         val values = first.values.toTypedArray()
         values[2] = 30
-        val modified = typed.addRow(*values)
+        val modified = typed.append(*values)
         val spread = modified.spread { key }.by { value }.into { it }
         spread.ncol() shouldBe 1 + typed.key.ndistinct
 
