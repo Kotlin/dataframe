@@ -679,7 +679,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `addRow`() {
-        val res = typed.addRow("Bob", null, "Paris", null)
+        val res = typed.append("Bob", null, "Paris", null)
         res.nrow() shouldBe typed.nrow() + 1
         res.name.type shouldBe getType<String>()
         res.age.type shouldBe getType<Int?>()
