@@ -3,7 +3,6 @@ package org.jetbrains.dataframe
 import org.jetbrains.dataframe.api.columns.ColumnData
 import org.jetbrains.dataframe.api.columns.ColumnWithPath
 import org.jetbrains.dataframe.impl.ColumnDataCollector
-import org.jetbrains.dataframe.impl.TypedColumnDataCollector
 import org.jetbrains.dataframe.impl.createDataCollector
 import kotlin.reflect.KProperty
 
@@ -49,7 +48,7 @@ fun <T, C> SplitColClause<T, C, List<*>?>.into(vararg firstNames: String, nameGe
 fun <T, C> doSplitCols(clause: SplitColClause<T, C, List<*>?>, columnNameGenerator: (Int) -> String): DataFrame<T> {
 
     val nameGenerator = clause.df.nameGenerator()
-    val nrow = clause.df.nrow
+    val nrow = clause.df.nrow()
     val columnCollectors = mutableListOf<ColumnDataCollector>()
     for (row in 0 until nrow) {
         val list = clause.transform(clause.column.data[row])
@@ -86,7 +85,7 @@ fun <T, C> SplitColClause<T, C, List<*>?>.intoRows() = doSplitRows(df, listOf(co
 
 fun <T> doSplitRows(df: DataFrame<T>, columns: List<ColumnWithPath<List<*>?>>): DataFrame<T> {
 
-    val rowExpandSizes = (0 until df.nrow).map { row ->
+    val rowExpandSizes = (0 until df.nrow()).map { row ->
         columns.maxOf { it.data[row]?.size ?: 0 }
     }
 

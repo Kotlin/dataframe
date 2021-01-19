@@ -9,7 +9,7 @@ internal class GroupedDataFrameImpl<T, G>(val df: DataFrame<T>, override val gro
 
     override operator fun get(key: GroupKey): DataFrame<T> {
 
-        require(key.size < df.ncol) { "Invalid size of the key" }
+        require(key.size < df.ncol()) { "Invalid size of the key" }
 
         val keySize = key.size
         val filtered = df.filter { values.subList(0, keySize) == key }

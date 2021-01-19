@@ -83,12 +83,12 @@ fun <T, C> MoveColsClause<T, C>.intoGroup(groupDef: GroupedColumnDef) = intoGrou
 
 fun <T, C> MoveColsClause<T, C>.into(path: List<String>) = intoGroup { path }
 fun <T, C> MoveColsClause<T, C>.to(columnIndex: Int): DataFrame<T> {
-    val newColumnList = df.columns().subList(0, columnIndex) + removed.map { it.data.column as ColumnData<C> } + df.columns().subList(columnIndex, df.ncol)
+    val newColumnList = df.columns().subList(0, columnIndex) + removed.map { it.data.column as ColumnData<C> } + df.columns().subList(columnIndex, df.ncol())
     return newColumnList.asDataFrame()
 }
 
 fun <T, C> MoveColsClause<T, C>.toLeft() = to(0)
-fun <T, C> MoveColsClause<T, C>.toRight() = to(df.ncol)
+fun <T, C> MoveColsClause<T, C>.toRight() = to(df.ncol())
 class MoveColsClause<T, C> internal constructor(internal val df: DataFrame<T>, internal val removed: List<TreeNode<ColumnPosition>>) {
 
     internal val TreeNode<ColumnPosition>.column get() = column<C>()

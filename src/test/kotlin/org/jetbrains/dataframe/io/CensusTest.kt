@@ -2,7 +2,6 @@ package org.jetbrains.dataframe.io
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
-import org.junit.Ignore
 import org.junit.Test
 
 class CensusTest {
@@ -18,6 +17,6 @@ class CensusTest {
         val grouped = df.move {
             cols { it.name().split(":").let { it.size > 1 && !singleNames.contains(it.last()) } }
         }.into { it.name.split(":").filter { it.isNotBlank() }.reversed() }
-        grouped.select { cols { it.isGrouped() } }.ncol shouldBe 93
+        grouped.select { cols { it.isGrouped() } }.ncol() shouldBe 93
     }
 }

@@ -145,7 +145,7 @@ inline fun <reified T> ColumnDef<T>.withValues(values: List<T>, hasNulls: Boolea
 
 // TODO: implement correct base schema computation
 internal fun <T> Iterable<DataFrame<T>?>.getBaseSchema(): DataFrame<T> {
-    return first { it != null && it.ncol > 0 } ?: DataFrame.empty()
+    return first { it != null && it.ncol() > 0 } ?: DataFrame.empty()
 }
 
 fun <T> ColumnData<T>.withValues(values: List<T>, hasNulls: Boolean) = when (this) {
@@ -193,7 +193,7 @@ fun column(name: String) = InplaceColumnBuilder(name)
 
 inline fun <T, reified R> DataFrame<T>.newColumn(name: String, noinline expression: RowSelector<T, R>): ColumnData<R> {
     var nullable = false
-    val values = (0 until nrow).map { get(it).let { expression(it, it) }.also { if (it == null) nullable = true } }
+    val values = (0 until nrow()).map { get(it).let { expression(it, it) }.also { if (it == null) nullable = true } }
     return column(name, values, nullable)
 }
 
@@ -365,15 +365,13 @@ internal class MissingGroupColumn<T> : MissingColumnData<DataRow<T>>(), GroupedC
         return MissingValueColumn<Any?>()
     }
 
-    override val ncol: Int
-        get() = 0
+    override fun ncol(): Int = 0
 
     override fun get(index: Int) = throw UnsupportedOperationException()
 
     override fun get(columnName: String) = throw UnsupportedOperationException()
 
-    override val nrow: Int
-        get() = 0
+    override fun nrow(): Int = 0
 
     override fun columns(): List<DataCol> = emptyList()
 

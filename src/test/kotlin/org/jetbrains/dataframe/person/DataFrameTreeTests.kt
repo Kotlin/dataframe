@@ -2,7 +2,6 @@ package org.jetbrains.dataframe.person
 
 import io.kotlintest.fail
 import io.kotlintest.shouldBe
-import io.kotlintest.shouldNot
 import io.kotlintest.shouldNotBe
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.columns.ColumnData
@@ -132,7 +131,7 @@ class DataFrameTreeTests : BaseTest() {
         val expected = modified.typed<Person>().select { name and city and age }.groupBy { city }.sortBy { city.nullsLast }.map { key1, group ->
             val ages = group.groupBy { name }
             val cityName = key1.city ?: "null"
-            val isList = ages.groups.asIterable().any { it.nrow > 1 }
+            val isList = ages.groups.asIterable().any { it.nrow() > 1 }
             ages.map { key2, group ->
                 val value = if(isList) group.age.toList() else group.age.single()
                 (cityName to key2.name) to value
@@ -145,7 +144,7 @@ class DataFrameTreeTests : BaseTest() {
             columnNames() shouldBe listOf("name", "cities")
             this[name] shouldBe typed.name.distinct()
             val group = this[cities]
-            group.ncol shouldBe typed.city.ndistinct
+            group.ncol() shouldBe typed.city.ndistinct
             group.columns().forEach {
                 if(it.name() == "Moscow") it.type shouldBe getType<List<Int>?>()
                 else it.type shouldBe getType<Int?>()
@@ -167,7 +166,7 @@ class DataFrameTreeTests : BaseTest() {
     fun `spread grouped column`(){
         val grouped = typed.group { age and weight}.into("info")
         val spread = grouped.spread { city }.by("info").execute()
-        spread.ncol shouldBe typed.city.ndistinct + 1
+        spread.ncol() shouldBe typed.city.ndistinct + 1
 
         val expected = typed.rows().groupBy { it.name to (it.city ?: "null") }.mapValues { it.value.map { it.age to it.weight } }
         val dataCols = spread.columns().drop(1)
@@ -177,7 +176,7 @@ class DataFrameTreeTests : BaseTest() {
         val names = spread.name
         dataCols.forEach { col ->
             val city = col.name()
-            (0 until spread.nrow).forEach { row ->
+            (0 until spread.nrow()).forEach { row ->
                 val name = names[row]
                 val value = col[row]
                 val expValues = expected[name to city]
@@ -208,20 +207,20 @@ class DataFrameTreeTests : BaseTest() {
 
         val split = typed2.split { nameAndCity.name }.by { it.toCharArray().toList() }.inward().into { "char$it" }
         split.columnNames() shouldBe typed2.columnNames()
-        split.nrow shouldBe typed2.nrow
+        split.nrow() shouldBe typed2.nrow()
         split.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames()
         val nameGroup = split.nameAndCity.name.asGrouped()
         nameGroup.name() shouldBe "name"
         nameGroup.isGrouped() shouldBe true
-        nameGroup.ncol shouldBe typed2.nameAndCity.name.map { it.length }.max()
-        nameGroup.columnNames() shouldBe (0 until nameGroup.ncol).map { "char$it" }
+        nameGroup.ncol() shouldBe typed2.nameAndCity.name.map { it.length }.max()
+        nameGroup.columnNames() shouldBe (0 until nameGroup.ncol()).map { "char$it" }
     }
 
     @Test
     fun `split into parts`() {
 
         val split = typed2.split { nameAndCity.name }.by { it.toCharArray().toList() }.intoParts()
-        split.nameAndCity.columnNames() shouldBe (0 until split.nameAndCity.ncol-1).map { "part$it" } + "city"
+        split.nameAndCity.columnNames() shouldBe (0 until split.nameAndCity.ncol() -1).map { "part$it" } + "city"
     }
 
     @Test
@@ -247,7 +246,7 @@ class DataFrameTreeTests : BaseTest() {
         val info by columnGroup()
         val moved = typed.group { except(name) }.into(info)
         val grouped = moved.groupBy { except(info) }.plain()
-        grouped.nrow shouldBe typed.name.ndistinct
+        grouped.nrow() shouldBe typed.name.ndistinct
     }
 
     @Test

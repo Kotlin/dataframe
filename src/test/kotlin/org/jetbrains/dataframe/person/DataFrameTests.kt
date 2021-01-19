@@ -14,13 +14,13 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `size`() {
-        df.size() shouldBe DataFrameSize(df.ncol, df.nrow)
+        df.size() shouldBe DataFrameSize(df.ncol(), df.nrow())
     }
 
     @Test
     fun `slicing`() {
         val sliced = typed[1..2]
-        sliced.nrow shouldBe 2
+        sliced.nrow() shouldBe 2
         sliced[0].name shouldBe typed[1].name
     }
 
@@ -93,7 +93,7 @@ class DataFrameTests : BaseTest() {
 
         fun DataFrame<*>.check() {
             column(1).name() shouldBe "age"
-            ncol shouldBe typed.ncol
+            ncol() shouldBe typed.ncol()
             this["age"].values shouldBe typed.map { age * 2 }
         }
 
@@ -116,7 +116,7 @@ class DataFrameTests : BaseTest() {
 
         fun DataFrame<*>.check() {
             column(1).name() shouldBe "age"
-            ncol shouldBe typed.ncol
+            ncol() shouldBe typed.ncol()
             this["age"].values shouldBe typed.map { if (age > 25) null else age }
         }
 
@@ -281,7 +281,7 @@ class DataFrameTests : BaseTest() {
     fun `filterNotNull 2`() {
 
         val expected = typed.rows().count { it.city != null && it.weight != null }
-        fun DataFrame<*>.check() = nrow shouldBe expected
+        fun DataFrame<*>.check() = nrow() shouldBe expected
 
         typed.filterNotNull(typed.weight, typed.city).check()
         typed.filterNotNull { weight and city }.check()
@@ -390,7 +390,7 @@ class DataFrameTests : BaseTest() {
     fun `groupBy`() {
 
         fun DataFrame<*>.check() {
-            nrow shouldBe 3
+            nrow() shouldBe 3
             this["name"].values shouldBe listOf("Alice", "Bob", "Mark")
             this["n"].values shouldBe listOf(2, 2, 3)
             this["old count"].values shouldBe listOf(0, 2, 2)
@@ -411,7 +411,7 @@ class DataFrameTests : BaseTest() {
         typed.groupBy { name and age }.print()
 
         typed.groupBy { name }.aggregate {
-            nrow into "n"
+            nrow() into "n"
             count { age > 25 } into "old count"
             median { age } into "median age"
             min { age } into "min age"
@@ -423,7 +423,7 @@ class DataFrameTests : BaseTest() {
         }.check()
 
         typed.groupBy { it.name }.aggregate {
-            it.nrow into "n"
+            it.nrow() into "n"
             it.count { it.age > 25 } into "old count"
             it.median { it.age } into "median age"
             it.min { it.age } into "min age"
@@ -435,7 +435,7 @@ class DataFrameTests : BaseTest() {
         }.check()
 
         df.groupBy(name).aggregate {
-            nrow into "n"
+            nrow() into "n"
             count { age > 25 } into "old count"
             median(age) into "median age"
             min(age) into "min age"
@@ -447,7 +447,7 @@ class DataFrameTests : BaseTest() {
         }.check()
 
         df.groupBy(Person::name).aggregate {
-            nrow into "n"
+            nrow() into "n"
             count { Person::age > 25 } into "old count"
             median(Person::age) into "median age"
             min(Person::age) into "min age"
@@ -459,7 +459,7 @@ class DataFrameTests : BaseTest() {
         }.check()
 
         df.groupBy("name").aggregate {
-            nrow into "n"
+            nrow() into "n"
             count { int("age") > 25 } into "old count"
             median { int("age") } into "median age"
             min { int("age") } into "min age"
@@ -622,8 +622,8 @@ class DataFrameTests : BaseTest() {
     fun `merge similar dataframes`() {
 
         val res = typed + typed + typed
-        res.name.size shouldBe 3 * typed.nrow
-        res.rows().forEach { it.values shouldBe typed[it.index % typed.nrow].values }
+        res.name.size shouldBe 3 * typed.nrow()
+        res.rows().forEach { it.values shouldBe typed[it.index % typed.nrow()].values }
     }
 
     @Test
@@ -638,9 +638,9 @@ class DataFrameTests : BaseTest() {
         ).typed<Unit>()
 
         val res = typed.union(other)
-        res.nrow shouldBe typed.nrow + other.nrow
-        res.take(typed.nrow).rows().forEach { it[heightOrNull] == null }
-        val q = res.takeLast(other.nrow)
+        res.nrow() shouldBe typed.nrow() + other.nrow()
+        res.take(typed.nrow()).rows().forEach { it[heightOrNull] == null }
+        val q = res.takeLast(other.nrow())
         q.rows().forEach { it[name] shouldBe other[it.index][name] }
         q.rows().forEach { it[heightOrNull] shouldBe other[it.index][height] }
     }
@@ -654,7 +654,7 @@ class DataFrameTests : BaseTest() {
     fun `compare comparable`() {
         val new = df.add("date") { LocalDate.now().minusDays(index.toLong()) }
         val date by column<LocalDate>()
-        new.filter { date >= LocalDate.now().minusDays(3) }.nrow shouldBe 4
+        new.filter { date >= LocalDate.now().minusDays(3) }.nrow() shouldBe 4
     }
 
     @Test
@@ -669,18 +669,18 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `distinct`() {
-        typed.select { name and city }.distinct().nrow shouldBe 6
+        typed.select { name and city }.distinct().nrow() shouldBe 6
     }
 
     @Test
     fun `distinct by`() {
-        typed.distinctBy { name }.nrow shouldBe 3
+        typed.distinctBy { name }.nrow() shouldBe 3
     }
 
     @Test
     fun `addRow`() {
         val res = typed.addRow("Bob", null, "Paris", null)
-        res.nrow shouldBe typed.nrow + 1
+        res.nrow() shouldBe typed.nrow() + 1
         res.name.type shouldBe getType<String>()
         res.age.type shouldBe getType<Int?>()
         res.city.type shouldBe getType<String?>()
@@ -730,12 +730,12 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `spread exists`() {
         val spread = typed.spread { city }.into { it }
-        spread.ncol shouldBe typed.ncol + typed.city.ndistinct - 2
+        spread.ncol() shouldBe typed.ncol() + typed.city.ndistinct - 2
 
-        for (row in 0 until typed.nrow) {
+        for (row in 0 until typed.nrow()) {
             val city = typed[row][city]
             if (city != null) spread[row][city] shouldBe true
-            for (col in typed.ncol until spread.ncol) {
+            for (col in typed.ncol() until spread.ncol()) {
                 val column = spread.column(col)
                 val spreadValue = column.typed<Boolean>()[row]
                 val colName = column.name()
@@ -767,12 +767,12 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `spread to bool distinct rows`() {
         val res = typed.spread { city }.into { it }
-        res.ncol shouldBe typed.ncol + typed.city.ndistinct - 2
+        res.ncol() shouldBe typed.ncol() + typed.city.ndistinct - 2
 
-        for (i in 0 until typed.nrow) {
+        for (i in 0 until typed.nrow()) {
             val city = typed[i][city]
             if (city != null) res[i][city] == true
-            for (j in typed.ncol until res.ncol) {
+            for (j in typed.ncol() until res.ncol()) {
                 res.column(j).typed<Boolean>().get(i) shouldBe (res.column(j).name() == city)
             }
         }
@@ -783,12 +783,12 @@ class DataFrameTests : BaseTest() {
         val selected = typed.select { name + city }
         val res = selected.spread { city }.into { it }
 
-        res.ncol shouldBe selected.city.ndistinct
-        res.nrow shouldBe selected.name.ndistinct
+        res.ncol() shouldBe selected.city.ndistinct
+        res.nrow() shouldBe selected.name.ndistinct
         val trueValuesCount = res.columns().drop(1).sumBy { it.typed<Boolean>().values.count { it } }
-        trueValuesCount shouldBe selected.filterNotNull { city }.distinct().nrow
+        trueValuesCount shouldBe selected.filterNotNull { city }.distinct().nrow()
 
-        val pairs = (1 until res.ncol).flatMap { i ->
+        val pairs = (1 until res.ncol()).flatMap { i ->
             val col = res.column(i).typed<Boolean>()
             res.filter { it[col] }.map { name to col.name() }
         }.toSet()
@@ -811,7 +811,7 @@ class DataFrameTests : BaseTest() {
                 .add(sum) { name.length + other().length }
 
         val matrix = src.spread { other }.by { sum }.into { it }
-        matrix.ncol shouldBe 1 + names.size
+        matrix.ncol() shouldBe 1 + names.size
 
         println(matrix)
     }
@@ -847,9 +847,9 @@ class DataFrameTests : BaseTest() {
     @Test
     fun mergeCols() {
         val merged = typed.mergeCols { age and city and weight }.into("info")
-        merged.ncol shouldBe 2
-        merged.nrow shouldBe typed.nrow
-        for (row in 0 until typed.nrow) {
+        merged.ncol() shouldBe 2
+        merged.nrow() shouldBe typed.nrow()
+        for (row in 0 until typed.nrow()) {
             val list = merged[row]["info"] as List<Any?>
             list.size shouldBe 3
             list[0] shouldBe typed.age[row]
@@ -861,9 +861,9 @@ class DataFrameTests : BaseTest() {
     @Test
     fun joinColsToString() {
         val merged = typed.mergeCols { age and city and weight }.by(", ").into("info")
-        merged.ncol shouldBe 2
-        merged.nrow shouldBe typed.nrow
-        for (row in 0 until typed.nrow) {
+        merged.ncol() shouldBe 2
+        merged.nrow() shouldBe typed.nrow()
+        for (row in 0 until typed.nrow()) {
             val joined = merged[row]["info"] as String
             joined shouldBe typed.age[row].toString() + ", " + typed.city[row] + ", " + typed.weight[row]
         }
@@ -904,8 +904,8 @@ class DataFrameTests : BaseTest() {
     fun `column group by`() {
 
         fun DataFrame<Person>.check() {
-            ncol shouldBe 3
-            nrow shouldBe typed.nrow
+            ncol() shouldBe 3
+            nrow() shouldBe typed.nrow()
             columnNames() shouldBe listOf("name", "Int", "String")
             val intGroup = this["Int"].asFrame()
             intGroup.columnNames() shouldBe listOf("age", "weight")
@@ -921,7 +921,7 @@ class DataFrameTests : BaseTest() {
     fun `column group`() {
 
         val grouped = typed.move { age and name and city }.intoGroup("info")
-        grouped.ncol shouldBe 2
+        grouped.ncol() shouldBe 2
         grouped.columnNames() shouldBe listOf("info", "weight")
         val res = listOf(grouped["info"]["name"], grouped["info"]["age"], grouped["info"]["city"], grouped.weight).asDataFrame<Person>()
         res shouldBe typed
@@ -939,8 +939,8 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `empty group by`() {
         val ungrouped = typed.filter { false }.groupBy { name }.ungroup()
-        ungrouped.nrow shouldBe 0
-        ungrouped.ncol shouldBe typed.ncol
+        ungrouped.nrow() shouldBe 0
+        ungrouped.ncol() shouldBe typed.ncol()
     }
 
     @Test
@@ -972,7 +972,7 @@ class DataFrameTests : BaseTest() {
         typed.column(1) shouldBe typed.age
         val moved = typed.move { age }.to(2)
         moved.column(2) shouldBe typed.age
-        moved.ncol shouldBe typed.ncol
+        moved.ncol() shouldBe typed.ncol()
     }
 
     @Test
@@ -1025,10 +1025,10 @@ class DataFrameTests : BaseTest() {
             val row = select {age and weight}.mean()
             addValue("mean", row)
         }
-        d.ncol shouldBe 2
+        d.ncol() shouldBe 2
         d["mean"].isGrouped() shouldBe true
         val mean = d.getGroup("mean")
-        mean.ncol shouldBe 2
+        mean.ncol() shouldBe 2
         mean.columnNames() shouldBe listOf("age", "weight")
         mean.columns().forEach {
             it.type shouldBe getType<Double>()
@@ -1042,11 +1042,11 @@ class DataFrameTests : BaseTest() {
             val row = select {age and weight}
             addValue("info", row)
         }
-        d.ncol shouldBe 2
+        d.ncol() shouldBe 2
         d["info"].isTable() shouldBe true
         val info = d.getTable("info")
         info.forEach {
-            it.ncol shouldBe 2
+            it.ncol() shouldBe 2
             it.columnNames() shouldBe listOf("age", "weight")
             it.columns().forEach {
                 it.type.classifier shouldBe Int::class
@@ -1058,7 +1058,7 @@ class DataFrameTests : BaseTest() {
     fun `union table columns`(){
 
         val grouped = typed.addRowNumber("id").groupBy { name }.plain()
-        val dfs = (0 until grouped.nrow).map {
+        val dfs = (0 until grouped.nrow()).map {
             grouped[it..it]
         }
         val dst = dfs.union().toGrouped().ungroup().sortBy("id").remove("id")
@@ -1070,7 +1070,7 @@ class DataFrameTests : BaseTest() {
 
         val copy = typed.select { all() }
         copy["new"] = copy.age
-        copy.ncol shouldBe typed.ncol + 1
+        copy.ncol() shouldBe typed.ncol() + 1
         copy["new"].toList() shouldBe typed.age.toList()
     }
 }

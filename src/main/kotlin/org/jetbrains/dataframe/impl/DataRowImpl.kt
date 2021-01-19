@@ -14,10 +14,10 @@ internal class DataRowImpl<T>(override var index: Int, override val owner: DataF
     override val prev: DataRow<T>?
         get() = if (index > 0) owner[index - 1] else null
     override val next: DataRow<T>?
-        get() = if (index < owner.nrow - 1) owner[index + 1] else null
+        get() = if (index < owner.nrow() - 1) owner[index + 1] else null
 
     override fun getRow(index: Int): DataRow<T>? =
-        if (index >= 0 && index < owner.nrow) DataRowImpl(index, owner) else null
+        if (index >= 0 && index < owner.nrow()) DataRowImpl(index, owner) else null
 
     override val values by lazy { owner.columns().map { it[index] } }
 

@@ -6,7 +6,7 @@ import org.jetbrains.dataframe.impl.dfsTopNotNull
 import kotlin.reflect.KProperty
 
 fun <T> ColumnData<T>.groupBy(vararg cols: DataCol) = groupBy(cols.toList())
-fun <T> ColumnData<T>.groupBy(cols: Iterable<DataCol>) = (cols + this).asDataFrame<Unit>().groupBy { cols(0 until ncol-1) }
+fun <T> ColumnData<T>.groupBy(cols: Iterable<DataCol>) = (cols + this).asDataFrame<Unit>().groupBy { cols(0 until ncol() -1) }
 
 fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>) = groupBy { cols.toColumnSet() }
 fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>) = groupBy { cols.toColumns() }
@@ -20,7 +20,7 @@ fun <T> DataFrame<T>.groupBy(cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T
 
    val columns = nodes.map { it.data }
 
-   val groups = (0 until nrow)
+   val groups = (0 until nrow())
            .map { index -> columns.map { it[index] } to index }
            .groupBy({ it.first }) { it.second }.toList()
 

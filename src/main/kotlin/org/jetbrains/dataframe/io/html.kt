@@ -32,8 +32,8 @@ fun DataFrame<*>.toHTML(limit: Int = 20, truncate: Int = 40): String {
         sb.append("</tr>")
     }
     sb.append("</table>")
-    if (limit < nrow)
-        sb.append("<p>... only showing top $limit of $nrow rows</p>")
+    if (limit < nrow())
+        sb.append("<p>... only showing top $limit of ${nrow()} rows</p>")
     sb.append("</body></html>")
     return sb.toString()
 }

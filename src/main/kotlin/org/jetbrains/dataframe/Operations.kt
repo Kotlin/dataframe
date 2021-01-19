@@ -31,7 +31,7 @@ fun <T> DataFrame<T>.map(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit): Da
 
 // size
 
-val DataFrame<*>.size: DataFrameSize get() = DataFrameSize(ncol, nrow)
+val DataFrame<*>.size: DataFrameSize get() = DataFrameSize(ncol(), nrow())
 
 fun commonParent(classes: Iterable<KClass<*>>) = commonParents(classes).withMostSuperclasses()
 
@@ -99,7 +99,9 @@ internal fun baseType(types: Set<KType>): KType {
 internal fun indexColumn(columnName: String, size: Int): DataCol = column(columnName, (0 until size).toList())
 
 fun <T> DataFrame<T>.addRowNumber(column: ColumnDef<Int>) = addRowNumber(column.name())
-fun <T> DataFrame<T>.addRowNumber(columnName: String = "id"): DataFrame<T> = dataFrameOf(columns() + indexColumn(columnName, nrow)).typed<T>()
+fun <T> DataFrame<T>.addRowNumber(columnName: String = "id"): DataFrame<T> = dataFrameOf(columns() + indexColumn(columnName,
+    nrow()
+)).typed<T>()
 fun DataCol.addRowNumber(columnName: String = "id") = dataFrameOf(listOf(indexColumn(columnName, size), this))
 
 // Column operations
@@ -310,7 +312,7 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
 }
 
 internal fun <T> DataFrame<T>.splitByIndices(startIndices: List<Int>): List<DataFrame<T>> {
-    return (startIndices + listOf(nrow)).zipWithNext { start, endExclusive ->
+    return (startIndices + listOf(nrow())).zipWithNext { start, endExclusive ->
         get(start until endExclusive)
     }
 }

@@ -39,7 +39,7 @@ fun <T, C, R> doUpdate(clause: UpdateClause<T, C>, expression: (DataRow<T>, Colu
 
     val toInsert = removeResult.removedColumns.map {
         val srcColumn = it.data.column as ColumnData<C>
-        val collector = if (clause.typeSuggestions != null) createDataCollector(clause.df.nrow, clause.typeSuggestions) else createDataCollector(clause.df.nrow, clause.targetType!!)
+        val collector = if (clause.typeSuggestions != null) createDataCollector(clause.df.nrow(), clause.typeSuggestions) else createDataCollector(clause.df.nrow(), clause.targetType!!)
         if(clause.filter == null)
             clause.df.forEach { row ->
                 collector.add(expression(row, srcColumn))

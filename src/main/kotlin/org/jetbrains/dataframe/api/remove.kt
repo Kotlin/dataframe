@@ -60,7 +60,7 @@ internal fun <T> DataFrame<T>.doRemove(selector: ColumnsSelector<T, *>): RemoveR
         return newCols.asDataFrame<Unit>()
     }
 
-    val newDf = dfs(columns(), colPaths, root) ?: emptyDataFrame(nrow)
+    val newDf = dfs(columns(), colPaths, root) ?: emptyDataFrame(nrow())
 
     val removedColumns = root.allRemovedColumns().map {it.pathFromRoot() to it}.sortedBy { originalOrder[it.first] }.map { it.second }
 
