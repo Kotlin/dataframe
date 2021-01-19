@@ -4,7 +4,6 @@ import com.beust.klaxon.internal.firstNotNullResult
 import org.jetbrains.dataframe.api.columns.ColumnData
 import org.jetbrains.dataframe.io.valueColumnName
 import kotlin.reflect.KType
-import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
 
 fun Iterable<DataFrame<*>>.union() = merge(asList())
@@ -28,7 +27,7 @@ internal fun merge(dataFrames: List<DataFrame<*>>): DataFrame<Unit> {
                 if (column != null)
                     column.asFrame()
                 else
-                    emptyDataFrame(it.nrow)
+                    emptyDataFrame(it.nrow())
             }
             val merged = merge(groupedDataFrames)
             ColumnData.createGroup(name, merged)
@@ -37,7 +36,7 @@ internal fun merge(dataFrames: List<DataFrame<*>>): DataFrame<Unit> {
             val defaultValue = firstColumn.defaultValue()
 
             dataFrames.forEach {
-                if (it.nrow == 0) return@forEach
+                if (it.nrow() == 0) return@forEach
                 val column = it.tryGetColumn(name)
                 if (column != null) {
                     nullable = nullable || column.hasNulls
@@ -45,8 +44,8 @@ internal fun merge(dataFrames: List<DataFrame<*>>): DataFrame<Unit> {
                         types.add(column.type)
                     list.addAll(column.values)
                 } else {
-                    if (it.nrow > 0 && defaultValue == null) nullable = true
-                    for (row in (0 until it.nrow)) {
+                    if (it.nrow() > 0 && defaultValue == null) nullable = true
+                    for (row in (0 until it.nrow())) {
                         list.add(defaultValue)
                     }
                 }

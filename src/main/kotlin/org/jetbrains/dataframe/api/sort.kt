@@ -52,7 +52,7 @@ internal fun <T, C> DataFrame<T>.doSortBy(selector: SortColumnsSelector<T, C>, u
         }
     }.reduce { a, b -> a.then(b) }
 
-    val permutation = (0 until nrow).sortedWith(compChain)
+    val permutation = (0 until nrow()).sortedWith(compChain)
 
     return this[permutation]
 }

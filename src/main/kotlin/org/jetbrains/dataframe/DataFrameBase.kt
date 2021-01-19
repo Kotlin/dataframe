@@ -34,7 +34,7 @@ interface DataFrameBase<out T>: SingleColumn<DataRow<T>> {
     operator fun get(index: Int): DataRow<T>
     fun column(columnIndex: Int): DataCol
     fun columns(): List<DataCol>
-    val ncol: Int
+    fun ncol(): Int
 }
 
 operator fun <T, R> DataFrameBase<T>.get(column: KProperty<DataFrame<R>>) = get(column.toColumnDef())

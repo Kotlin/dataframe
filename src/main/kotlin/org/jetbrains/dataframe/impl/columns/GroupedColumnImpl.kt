@@ -1,7 +1,6 @@
 package org.jetbrains.dataframe.impl.columns
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.ColumnData
 import org.jetbrains.dataframe.api.columns.GroupedColumn
 import org.jetbrains.dataframe.createType
 import java.lang.UnsupportedOperationException
@@ -13,7 +12,7 @@ internal class GroupedColumnImpl<T>(override val df: DataFrame<T>, val name: Str
         get() = df.rows()
 
     override val ndistinct: Int
-        get() = distinct.nrow
+        get() = distinct.nrow()
 
     override val type by lazy { createType<DataRow<*>>() }
 
@@ -24,7 +23,7 @@ internal class GroupedColumnImpl<T>(override val df: DataFrame<T>, val name: Str
     override fun toSet() = set
 
     override val size: Int
-        get() = df.nrow
+        get() = df.nrow()
 
     override fun get(index: Int) = df[index]
 

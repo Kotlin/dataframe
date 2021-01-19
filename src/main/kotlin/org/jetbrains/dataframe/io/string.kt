@@ -15,7 +15,7 @@ internal fun DataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 40): S
     sb.appendLine("Data Frame [${size()}]")
     sb.appendLine()
 
-    val outputRows = limit.coerceAtMost(nrow)
+    val outputRows = limit.coerceAtMost(nrow())
     val output = columns().map { it.values.take(limit).map { renderValue(it).truncate(truncate) } }
     val header = columns().map { "${it.name()}:${renderType(it)}"}
     val columnLengths = output.mapIndexed { col, values -> (values + header[col]).map { it.length }.max()!! + 1 }
@@ -39,7 +39,7 @@ internal fun DataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 40): S
         }
         sb.appendLine()
     }
-    if(nrow > limit)
+    if(nrow() > limit)
         sb.appendLine("...")
     return sb.toString()
 }
@@ -55,8 +55,8 @@ internal fun renderValue(value: Any?) =
     when(value) {
         is DataFrame<*> -> when{
             value.isEmpty() -> ""
-            value.nrow == 1 -> value[0].toString()
-            else -> "${value.nrow} rows"
+            value.nrow() == 1 -> value[0].toString()
+            else -> "${value.nrow()} rows"
         }
         is Double -> value.format(6)
         else -> value.toString()

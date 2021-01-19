@@ -26,7 +26,7 @@ interface DataRow<out T>: DataRowBase<T> {
     operator fun <R> String.invoke() = get(this) as R
 
     fun <T> read(name: String) = get(name) as T
-    fun size() = owner.ncol
+    fun size() = owner.ncol()
     val values: List<Any?>
 
     fun int(name: String) = read<Int>(name)

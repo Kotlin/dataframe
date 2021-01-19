@@ -98,7 +98,7 @@ inline fun <T, K, V, reified R> SpreadClause<T, K, ColumnData<V>, SpreadContext.
 
 inline fun <T, K, reified V, C : SpreadContext> SpreadClause<T, K, *, C>.withSingle(noinline valueSelector: RowSelector<T, V>) =
     with {
-        when (it.nrow) {
+        when (it.nrow()) {
             0 -> null
             1 -> {
                 val row = it[0]

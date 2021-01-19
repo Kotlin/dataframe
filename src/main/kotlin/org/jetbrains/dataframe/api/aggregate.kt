@@ -23,7 +23,7 @@ class GroupAggregateBuilder<T>(internal val df: DataFrame<T>): DataFrame<T> by d
     fun <C> spread(column: KProperty<C>) = spread(column.toColumnDef())
     fun <C> spread(column: String) = spread(column.toColumnDef())
 
-    fun <C> countBy(selector: ColumnSelector<T, C>) = spread(selector).with { nrow }.useDefault(0)
+    fun <C> countBy(selector: ColumnSelector<T, C>) = spread(selector).with { nrow() }.useDefault(0)
     fun <C> countBy(column: ColumnDef<C>) = countBy { column }
     fun <C> countBy(column: KProperty<C>) = countBy(column.toColumnDef())
     fun countBy(column: String) = countBy(column.toColumnDef())

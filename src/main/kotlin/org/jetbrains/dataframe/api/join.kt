@@ -70,7 +70,7 @@ fun <A, B> DataFrame<A>.join(other: DataFrame<B>, joinType: JoinType = JoinType.
     val leftColumns = joinColumns.map { this[it.left] }
     val rightColumns = joinColumns.map { other[it.right] }
 
-    val rightJoinKeyToIndex = (0 until other.nrow)
+    val rightJoinKeyToIndex = (0 until other.nrow())
             .map { index -> rightColumns.map { it[index] } to index }
 
     val groupedRight = when (joinType) {
@@ -81,7 +81,7 @@ fun <A, B> DataFrame<A>.join(other: DataFrame<B>, joinType: JoinType = JoinType.
     var outputRowsCount = 0
 
     // for every row index from left data frame stores a list of matched row indices from right data frame
-    val leftToRightMapping = (0 until nrow).map { leftIndex ->
+    val leftToRightMapping = (0 until nrow()).map { leftIndex ->
         val leftKey = leftColumns.map { it[leftIndex] }
         val rightIndices = groupedRight[leftKey]
         outputRowsCount += rightIndices?.let { it.size } ?: if (joinType.allowRightNulls) 1 else 0
@@ -89,10 +89,10 @@ fun <A, B> DataFrame<A>.join(other: DataFrame<B>, joinType: JoinType = JoinType.
     }
 
     // for every row index in right data frame stores a flag indicating whether this row was matched by some row in left data frame
-    val rightMatched = Array(other.nrow) { false }
+    val rightMatched = Array(other.nrow()) { false }
 
     // number of rows in right data frame that were not matched by any row in left data frame. Used for correct allocation of an output array
-    var rightUnmatchedCount = other.nrow
+    var rightUnmatchedCount = other.nrow()
 
     if (joinType.allowLeftNulls) {
         leftToRightMapping.forEach { rightIndices ->
@@ -114,7 +114,7 @@ fun <A, B> DataFrame<A>.join(other: DataFrame<B>, joinType: JoinType = JoinType.
         it.doRename(nameGenerator.addUnique(it.name()))
     } else emptyList()
 
-    val leftColumnsCount = ncol
+    val leftColumnsCount = ncol()
     val newRightColumnsCount = newRightColumns.size
     val outputColumnsCount = leftColumnsCount + newRightColumnsCount
 

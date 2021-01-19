@@ -10,13 +10,13 @@ import kotlin.reflect.jvm.jvmErasure
 
 internal open class DataFrameImpl<T>(var columns: List<DataCol>) : DataFrame<T> {
 
-    override val nrow: Int
+    private val nrow: Int = columns.firstOrNull()?.size ?: 0
+
+    override fun nrow() = nrow
 
     init {
 
-        nrow = columns.firstOrNull()?.size ?: 0
-
-        val invalidSizeColumns = columns.filter { it.size != nrow }
+        val invalidSizeColumns = columns.filter { it.size != nrow() }
         if (invalidSizeColumns.size > 0)
             throw IllegalArgumentException("Invalid column sizes: ${invalidSizeColumns}") // TODO
 
@@ -34,7 +34,7 @@ internal open class DataFrameImpl<T>(var columns: List<DataCol>) : DataFrame<T> 
                 object : Iterator<DataRow<T>> {
                     var curRow = 0
 
-                    override fun hasNext(): Boolean = curRow < nrow
+                    override fun hasNext(): Boolean = curRow < nrow()
 
                     override fun next() = get(curRow++)!!
                 }
@@ -53,7 +53,7 @@ internal open class DataFrameImpl<T>(var columns: List<DataCol>) : DataFrame<T> 
     override fun toString() = renderToString()
 
     override fun addRow(vararg values: Any?): DataFrame<T> {
-        assert(values.size == ncol) { "Invalid number of arguments. Expected: $ncol, actual: ${values.size}" }
+        assert(values.size == ncol()) { "Invalid number of arguments. Expected: ${ncol()}, actual: ${values.size}" }
         return values.mapIndexed { i, v ->
             val col = columns()[i]
             if (v != null)
@@ -69,13 +69,13 @@ internal open class DataFrameImpl<T>(var columns: List<DataCol>) : DataFrame<T> 
 
     override fun set(columnName: String, value: DataCol) {
 
-        if(value.size != nrow)
-            throw IllegalArgumentException("Invalid column size for column '$columnName'. Expected: $nrow, actual: ${value.size}")
+        if(value.size != nrow())
+            throw IllegalArgumentException("Invalid column size for column '$columnName'. Expected: ${nrow()}, actual: ${value.size}")
 
         val renamed = value.doRename(columnName)
         val index = getColumnIndex(columnName)
         val newCols = if(index == -1) columns + renamed else columns.mapIndexed { i, col -> if(i == index) renamed else col }
-        columnsMap[columnName] = if(index == -1) ncol else index
+        columnsMap[columnName] = if(index == -1) ncol() else index
         columns = newCols
     }
 

@@ -71,8 +71,8 @@ interface DataFrame<out T> : DataFrameBase<T> {
         fun <T> empty(nrow: Int = 0): DataFrame<T> = EmptyDataFrame(nrow)
     }
 
-    val nrow: Int
-    override val ncol: Int get() = columns().size
+    fun nrow(): Int
+    override fun ncol(): Int = columns().size
 
     fun rows() : Iterable<DataRow<T>>
     fun columnNames() = columns().map { it.name() }
@@ -123,12 +123,12 @@ interface DataFrame<out T> : DataFrameBase<T> {
     fun last() = rows().last() // TODO: optimize (don't iterate through the whole data frame)
     fun lastOrNull() = rows().lastOrNull()
     fun take(numRows: Int) = getRows(0 until numRows)
-    fun drop(numRows: Int) = getRows(numRows until nrow)
-    fun takeLast(numRows: Int) = getRows(nrow - numRows until nrow)
-    fun skipLast(numRows: Int) = getRows(0 until nrow - numRows)
+    fun drop(numRows: Int) = getRows(numRows until nrow())
+    fun takeLast(numRows: Int) = getRows(nrow() - numRows until nrow())
+    fun skipLast(numRows: Int) = getRows(0 until nrow() - numRows)
     fun head(numRows: Int = 5) = take(numRows)
     fun tail(numRows: Int = 5) = takeLast(numRows)
-    fun shuffled() = getRows((0 until nrow).shuffled())
+    fun shuffled() = getRows((0 until nrow()).shuffled())
     fun <K, V> associate(transform: RowSelector<T, Pair<K, V>>) = rows().associate { transform(it, it) }
     fun <V> associateBy(transform: RowSelector<T, V>) = rows().associateBy { transform(it, it) }
     fun <R> distinctBy(selector: RowSelector<T, R>) = rows().distinctBy { selector(it, it) }.map { it.index }.let { getRows(it) }
@@ -140,7 +140,7 @@ interface DataFrame<out T> : DataFrameBase<T> {
 
     fun <R> mapIndexed(action: (Int, DataRow<T>) -> R) = rows().mapIndexed(action)
 
-    fun size() = DataFrameSize(ncol, nrow)
+    fun size() = DataFrameSize(ncol(), nrow())
 }
 
 fun <T> DataFrame<*>.typed(): DataFrame<T> = this as DataFrame<T>

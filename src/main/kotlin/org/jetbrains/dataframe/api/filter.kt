@@ -3,7 +3,7 @@ package org.jetbrains.dataframe
 import kotlin.reflect.KProperty
 
 fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
-        (0 until nrow).filter {
+        (0 until nrow()).filter {
             val row = get(it)
             predicate(row, row)
         }.let { get(it) }

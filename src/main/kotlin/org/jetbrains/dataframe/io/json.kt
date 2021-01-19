@@ -39,7 +39,7 @@ internal val valueColumnName = "value"
 
 internal fun fromList(records: List<*>): DataFrame<*> {
 
-    fun DataFrame<*>.isSingleUnnamedColumn() = ncol == 1 && column(0).name().let { it  == valueColumnName || it == arrayColumnName }
+    fun DataFrame<*>.isSingleUnnamedColumn() = ncol() == 1 && column(0).name().let { it  == valueColumnName || it == arrayColumnName }
 
     var hasPrimitive = false
     var hasArray = false
