@@ -3,7 +3,7 @@ package org.jetbrains.dataframe.codeGen
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.CodeGenerator
 import org.jetbrains.dataframe.ColumnName
-import org.jetbrains.dataframe.DataFrameType
+import org.jetbrains.dataframe.DataSchema
 import org.jetbrains.dataframe.dataFrameOf
 import org.junit.Test
 
@@ -11,7 +11,7 @@ class NameGenerationTests {
 
     val df = dataFrameOf("first column", "second column")(3, 5)
 
-    @DataFrameType
+    @DataSchema
     interface DataRecord{
         @ColumnName("first column")
         val `first column`: Int

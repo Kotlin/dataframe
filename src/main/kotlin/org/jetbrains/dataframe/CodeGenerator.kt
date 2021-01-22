@@ -13,7 +13,7 @@ import kotlin.reflect.jvm.jvmErasure
 // Public API
 
 @Target(AnnotationTarget.CLASS)
-annotation class DataFrameType(val isOpen: Boolean = true)
+annotation class DataSchema(val isOpen: Boolean = true)
 
 @Target(AnnotationTarget.PROPERTY)
 annotation class ColumnType(val type: KClass<out AnyCol>)
@@ -309,11 +309,11 @@ class CodeGenerator : CodeGeneratorApi {
         return declarations.joinToString("\n")
     }
 
-    private fun isMarkerType(marker: KClass<*>) = marker.hasAnnotation<DataFrameType>()
+    private fun isMarkerType(marker: KClass<*>) = marker.hasAnnotation<DataSchema>()
 
     private fun getMarkerScheme(marker: KClass<*>) =
         registeredMarkers.getOrPut(marker) {
-            val annotation = marker.findAnnotation<DataFrameType>() ?: throw Exception()
+            val annotation = marker.findAnnotation<DataSchema>() ?: throw Exception()
             val fullSet = getScheme(marker, withBaseTypes = true)
             val ownProperties = marker.declaredMemberProperties.map { it.name.quoteIfNeeded() }.toSet()
             val ownSet = Scheme(fullSet.values.filter { ownProperties.contains(it.fieldName) })
@@ -356,7 +356,7 @@ class CodeGenerator : CodeGeneratorApi {
             val currentMarkerType = getMarker(property.returnType)
             if (currentMarkerType != null) {
                 // if property is mutable, we need to make sure that its marker type is open in order to let data frames with more columns be assignable to it
-                if (!isMutable || currentMarkerType.findAnnotation<DataFrameType>()?.isOpen == true) {
+                if (!isMutable || currentMarkerType.findAnnotation<DataSchema>()?.isOpen == true) {
                     val markerScheme = getScheme(currentMarkerType, withBaseTypes = true)
                     // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual data frame type
                     if (wasProcessedBefore || markerScheme.compare(targetScheme).isEqual()) {
