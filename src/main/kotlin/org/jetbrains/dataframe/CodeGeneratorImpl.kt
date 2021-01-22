@@ -35,7 +35,7 @@ data class GeneratedCode(val declarations: Code, val converter: (VariableName) -
     fun with(name: VariableName): Code = declarations + "\n" + converter(name)
 }
 
-interface CodeGeneratorApi {
+interface CodeGenerator {
 
     fun generate(df: AnyFrame, property: KProperty<*>? = null): GeneratedCode?
     fun generate(stub: DataFrameToListNamedStub): GeneratedCode
@@ -45,14 +45,16 @@ interface CodeGeneratorApi {
 
     var mode: CodeGenerationMode
 
+    companion object {
+        fun create(): CodeGenerator = CodeGeneratorImpl()
+    }
 }
 
 // Implementation
 
-class CodeGenerator : CodeGeneratorApi {
+class CodeGeneratorImpl : CodeGenerator {
 
     companion object {
-        val Default: CodeGeneratorApi = CodeGenerator()
 
         private val GroupedColumnType: KClass<*> = ColumnGroup::class
 
