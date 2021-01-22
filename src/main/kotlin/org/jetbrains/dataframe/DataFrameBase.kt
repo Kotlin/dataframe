@@ -10,6 +10,7 @@ interface DataFrameBase<out T>: SingleColumn<DataRow<T>> {
 
     operator fun get(columnName: String): DataCol
     fun tryGetColumn(columnName: String): DataCol?
+    fun <R> getColumn(columnName: String) = get(columnName) as ColumnData<R>
 
     fun getGroup(columnName: String) = get(columnName).asGrouped()
     fun getGroup(columnPath: ColumnPath): GroupedColumn<*> = get(columnPath).asGrouped()
@@ -21,7 +22,7 @@ interface DataFrameBase<out T>: SingleColumn<DataRow<T>> {
     operator fun <R> get(column: ColumnDef<DataRow<R>>): GroupedColumn<R>
     operator fun <R> get(column: ColumnDef<DataFrame<R>>): TableColumn<R>
 
-    operator fun get(columnPath: List<String>): DataCol {
+    operator fun get(columnPath: ColumnPath): DataCol {
 
         var res: DataCol? = null
         columnPath.forEach {
