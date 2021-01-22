@@ -1,8 +1,8 @@
 package org.jetbrains.dataframe
 
 import io.kotlintest.shouldBe
-import org.jetbrains.dataframe.api.columns.GroupedColumnBase
-import org.jetbrains.dataframe.api.columns.TableCol
+import org.jetbrains.dataframe.api.columns.ColumnGroup
+import org.jetbrains.dataframe.api.columns.TableColumn
 import org.jetbrains.dataframe.io.*
 import org.junit.Test
 
@@ -33,7 +33,7 @@ class ReadTests {
         println(df)
         df.ncol() shouldBe 1
         df.nrow() shouldBe 3
-        val group = df["a"] as GroupedColumnBase<*>
+        val group = df["a"] as ColumnGroup<*>
         group.ncol() shouldBe 3
         group["b"].type shouldBe getType<Int?>()
         group["value"].type shouldBe getType<String?>()
@@ -64,7 +64,7 @@ class ReadTests {
         df.ncol() shouldBe 1
         df.nrow() shouldBe 2
         println(df)
-        val group = df["a"] as TableCol<*>
+        val group = df["a"] as TableColumn<*>
 
     }
 }

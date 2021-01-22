@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.impl.createDataCollector
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -31,14 +31,14 @@ fun <T, C> UpdateClause<T, C>.suggestTypes(vararg suggestions: Pair<KClass<*>, K
 
 typealias UpdateExpression<T, C, R> = DataRow<T>.(C) -> R
 
-typealias UpdateByColumnExpression<T, C, R> = (DataRow<T>, DataCol<C>) -> R
+typealias UpdateByColumnExpression<T, C, R> = (DataRow<T>, DataColumn<C>) -> R
 
-fun <T, C, R> doUpdate(clause: UpdateClause<T, C>, expression: (DataRow<T>, DataCol<C>) -> R): DataFrame<T> {
+fun <T, C, R> doUpdate(clause: UpdateClause<T, C>, expression: (DataRow<T>, DataColumn<C>) -> R): DataFrame<T> {
 
     val removeResult = clause.df.doRemove(clause.selector)
 
     val toInsert = removeResult.removedColumns.map {
-        val srcColumn = it.data.column as DataCol<C>
+        val srcColumn = it.data.column as DataColumn<C>
         val collector = if (clause.typeSuggestions != null) createDataCollector(clause.df.nrow(), clause.typeSuggestions) else createDataCollector(clause.df.nrow(), clause.targetType!!)
         if(clause.filter == null)
             clause.df.forEach { row ->

@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 import java.math.BigDecimal
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -50,7 +50,7 @@ fun Iterable<BigDecimal>.sum(): BigDecimal {
 
 inline fun <reified T : Number> sum(list: Iterable<T>): T = list.sum(T::class)
 
-fun <T: Number> DataCol<T>.sum() = values.sum(type.jvmErasure as KClass<T>)
+fun <T: Number> DataColumn<T>.sum() = values.sum(type.jvmErasure as KClass<T>)
 
 inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(col: ColumnReference<D?>): Double = get(col).median()
 inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(crossinline selector: RowSelector<T, D?>): Double = rows().asSequence().map { selector(it, it) }.filterNotNull().asIterable().median()

@@ -1,33 +1,33 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataCol
-import org.jetbrains.dataframe.api.columns.GroupedCol
+import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.api.columns.MapColumn
 import org.jetbrains.dataframe.api.columns.SingleColumn
-import org.jetbrains.dataframe.api.columns.TableCol
+import org.jetbrains.dataframe.api.columns.TableColumn
 import kotlin.reflect.KProperty
 
 interface DataFrameBase<out T>: SingleColumn<DataRow<T>> {
 
     operator fun get(columnName: String): AnyCol
     fun tryGetColumn(columnName: String): AnyCol?
-    fun <R> getColumn(columnName: String) = get(columnName) as DataCol<R>
+    fun <R> getColumn(columnName: String) = get(columnName) as DataColumn<R>
 
-    fun getGroup(columnName: String) = get(columnName).asGrouped()
-    fun getGroup(columnPath: ColumnPath): GroupedCol<*> = get(columnPath).asGrouped()
+    fun getGroup(columnName: String) = get(columnName).asGroup()
+    fun getGroup(columnPath: ColumnPath): MapColumn<*> = get(columnPath).asGroup()
 
     fun getTable(columnName: String) = get(columnName).asTable()
-    fun getTable(columnPath: ColumnPath): TableCol<*> = get(columnPath).asTable()
+    fun getTable(columnPath: ColumnPath): TableColumn<*> = get(columnPath).asTable()
 
-    operator fun <R> get(column: ColumnReference<R>): DataCol<R>
-    operator fun <R> get(column: ColumnReference<DataRow<R>>): GroupedCol<R>
-    operator fun <R> get(column: ColumnReference<DataFrame<R>>): TableCol<R>
+    operator fun <R> get(column: ColumnReference<R>): DataColumn<R>
+    operator fun <R> get(column: ColumnReference<DataRow<R>>): MapColumn<R>
+    operator fun <R> get(column: ColumnReference<DataFrame<R>>): TableColumn<R>
 
     operator fun get(columnPath: ColumnPath): AnyCol {
 
         var res: AnyCol? = null
         columnPath.forEach {
             if(res == null) res = this[it]
-            else res = res!!.asGrouped()[it]
+            else res = res!!.asGroup()[it]
         }
         return res!!
     }

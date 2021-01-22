@@ -1,9 +1,9 @@
 package org.jetbrains.dataframe.impl
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.TableCol
+import org.jetbrains.dataframe.api.columns.TableColumn
 
-internal class GroupedDataFrameImpl<T, G>(val df: DataFrame<T>, override val groups: TableCol<G>): GroupedDataFrame<T, G> {
+internal class GroupedDataFrameImpl<T, G>(val df: DataFrame<T>, override val groups: TableColumn<G>): GroupedDataFrame<T, G> {
 
     override val keys by lazy { df - groups }
 

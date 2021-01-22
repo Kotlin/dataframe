@@ -2,7 +2,7 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.api.columns.*
 import org.jetbrains.dataframe.impl.TreeNode
-import org.jetbrains.dataframe.impl.columns.DataColWithParent
+import org.jetbrains.dataframe.impl.columns.DataColumnWithParent
 import org.jetbrains.dataframe.impl.columns.ColumnWithParent
 import org.jetbrains.dataframe.impl.columns.ColumnWithPathImpl
 import org.jetbrains.dataframe.impl.getAncestor
@@ -106,17 +106,17 @@ fun AnyCol.addRowNumber(columnName: String = "id") = dataFrameOf(listOf(indexCol
 
 // Column operations
 
-inline fun <reified T : Comparable<T>> DataCol<T?>.median() = values.asSequence().filterNotNull().asIterable().median()
+inline fun <reified T : Comparable<T>> DataColumn<T?>.median() = values.asSequence().filterNotNull().asIterable().median()
 
 // Update
 
 inline fun <reified C> headPlusArray(head: C, cols: Array<out C>) = (listOf(head) + cols.toList()).toTypedArray()
 
-inline fun <reified C> ColumnsSelectorReceiver<*>.colsOfType(noinline filter: (DataCol<C>) -> Boolean = { true }) = colsOfType(getType<C>(), filter)
+inline fun <reified C> ColumnsSelectorReceiver<*>.colsOfType(noinline filter: (DataColumn<C>) -> Boolean = { true }) = colsOfType(getType<C>(), filter)
 
 // column grouping
 
-internal fun <C> TreeNode<ColumnPosition>.column() = ColumnWithPathImpl(data.column as DataCol<C>, pathFromRoot())
+internal fun <C> TreeNode<ColumnPosition>.column() = ColumnWithPathImpl(data.column as DataColumn<C>, pathFromRoot())
 
 internal fun TreeNode<ColumnPosition>.allRemovedColumns() = dfs { it.data.wasRemoved && it.data.column != null }
 
@@ -129,8 +129,8 @@ internal fun Iterable<ColumnWithPath<*>>.dfs(): List<ColumnWithPath<*>> {
         cols.forEach {
             result.add(it)
             val path = it.path
-            if (it.data.isGrouped())
-                dfs(it.data.asGrouped().columns().map { it.addPath(path + it.name()) })
+            if (it.data.isGroup())
+                dfs(it.data.asGroup().columns().map { it.addPath(path + it.name()) })
         }
     }
     dfs(this)
@@ -139,7 +139,7 @@ internal fun Iterable<ColumnWithPath<*>>.dfs(): List<ColumnWithPath<*>> {
 
 internal fun DataFrame<*>.collectTree() = columns().map { it.addPath() }.collectTree()
 
-internal fun List<ColumnWithPath<*>>.collectTree() = collectTree(DataCol.empty()) { it }
+internal fun List<ColumnWithPath<*>>.collectTree() = collectTree(DataColumn.empty()) { it }
 
 internal fun <D> DataFrame<*>.collectTree(emptyData: D, createData: (AnyCol) -> D) = columns().map { it.addPath() }.collectTree(emptyData, createData)
 
@@ -149,15 +149,15 @@ internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (
 
     fun collectColumns(col: AnyCol, parentNode: TreeNode<D>) {
         val newNode = parentNode.getOrPut(col.name()) { createData(col) }
-        if(col.isGrouped()){
-            col.asGrouped().columns().forEach {
+        if(col.isGroup()){
+            col.asGroup().columns().forEach {
                 collectColumns(it, newNode)
             }
         }
     }
     forEach {
         if(it.path.isEmpty()){
-            it.data.asGrouped().df.columns().forEach {
+            it.data.asGroup().df.columns().forEach {
                 collectColumns(it, root)
             }
         }else {
@@ -173,9 +173,9 @@ internal data class ColumnPosition(val originalIndex: Int, var wasRemoved: Boole
 // TODO: replace 'insertionPath' with TreeNode<ColumnToInsert> tree
 internal data class ColumnToInsert(val insertionPath: ColumnPath, val originalNode: TreeNode<ColumnPosition>?, val column: AnyCol)
 
-fun Column.getParent(): GroupedColumnDef? = when (this) {
+fun Column.getParent(): MapColumnReference? = when (this) {
     is ColumnWithParent<*> -> parent
-    is DataColWithParent<*> -> parent
+    is DataColumnWithParent<*> -> parent
     else -> null
 }
 
@@ -238,7 +238,7 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
             // assert that new columns go directly under current column so they have longer paths
             val invalidPath = subTree.firstOrNull { it.insertionPath.size == childDepth }
             assert(invalidPath == null) { "Can't move column to path: " + invalidPath!!.insertionPath.joinToString(".") + ". Column with this path already exists" }
-            val group = it as? GroupedCol<*>
+            val group = it as? MapColumn<*>
             assert(group != null) { "Can not insert columns under a column '${it.name()}', because it is not a column group" }
             val newDf = insertColumns(group!!.df, subTree, treeNode?.get(it.name()), childDepth)
             val newCol = group.withDf(newDf)
@@ -292,13 +292,13 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
             val column = nodeToInsert.column
             if (columns.size > 1) {
                 assert(columns.count { it.insertionPath.size == childDepth } == 1) { "Can not insert more than one column into the path ${nodeToInsert.insertionPath}" }
-                val group = column as GroupedCol<*>
+                val group = column as MapColumn<*>
                 val newDf = insertColumns(group.df, columns.filter { it.insertionPath.size > childDepth }, treeNode?.get(name), childDepth)
                 group.withDf(newDf)
             } else column.rename(name)
         } else {
             val newDf = insertColumns<Unit>(null, columns, treeNode?.get(name), childDepth)
-            DataCol.createGroup(name, newDf) // new node needs to be created
+            DataColumn.createGroup(name, newDf) // new node needs to be created
         }
         if (insertionIndex == Int.MAX_VALUE)
             newColumns.add(newCol)
@@ -328,7 +328,7 @@ else createStarProjectedType(false)
 
 internal inline fun <reified T> createType(typeArgument: KType? = null) = T::class.createType(typeArgument)
 
-fun <T> TableCol<T>.union() = if (size > 0) values.union() else df.getRows(emptyList())
+fun <T> TableColumn<T>.union() = if (size > 0) values.union() else df.getRows(emptyList())
 
 internal fun <T> T.asNullable() = this as T?
 

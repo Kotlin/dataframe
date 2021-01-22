@@ -1,9 +1,9 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataCol
-import org.jetbrains.dataframe.api.columns.GroupedCol
-import org.jetbrains.dataframe.api.columns.GroupedColumnBase
-import org.jetbrains.dataframe.api.columns.TableCol
+import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.api.columns.MapColumn
+import org.jetbrains.dataframe.api.columns.ColumnGroup
+import org.jetbrains.dataframe.api.columns.TableColumn
 import org.jetbrains.kotlinx.jupyter.api.Code
 import org.jetbrains.kotlinx.jupyter.api.VariableName
 import kotlin.reflect.*
@@ -54,7 +54,7 @@ class CodeGenerator : CodeGeneratorApi {
     companion object {
         val Default: CodeGeneratorApi = CodeGenerator()
 
-        private val GroupedColumnType: KClass<*> = GroupedColumnBase::class
+        private val GroupedColumnType: KClass<*> = ColumnGroup::class
 
         private val GroupedFieldType: KClass<*> = DataRow::class
 
@@ -84,24 +84,24 @@ class CodeGenerator : CodeGeneratorApi {
     }
 
     // Data Frame Schema
-    private data class FieldInfo(val fieldName: String, val columnName: String, private val type: KType?, val columnKind: ColumnKind = ColumnKind.Data, val childScheme: Scheme? = null) {
+    private data class FieldInfo(val fieldName: String, val columnName: String, private val type: KType?, val columnKind: ColumnKind = ColumnKind.Value, val childScheme: Scheme? = null) {
 
         init {
             when(columnKind) {
-                ColumnKind.Data -> assert(type != null && childScheme == null)
+                ColumnKind.Value -> assert(type != null && childScheme == null)
                 ColumnKind.Group -> assert(childScheme != null)
                 ColumnKind.Table -> assert(childScheme != null)
             }
         }
 
         val columnType: KType get() = when(columnKind) {
-            ColumnKind.Data -> DataCol::class.createType(type!!)
+            ColumnKind.Value -> DataColumn::class.createType(type!!)
             ColumnKind.Group -> GroupedColumnType.createType(type)
-            ColumnKind.Table -> DataCol::class.createType(DataFrameFieldType.createType(type))
+            ColumnKind.Table -> DataColumn::class.createType(DataFrameFieldType.createType(type))
         }
 
         val fieldType: KType get() = when(columnKind) {
-            ColumnKind.Data -> type!!
+            ColumnKind.Value -> type!!
             ColumnKind.Group -> GroupedFieldType.createType(type)
             ColumnKind.Table -> DataFrameFieldType.createType(type)
         }
@@ -171,15 +171,15 @@ class CodeGenerator : CodeGeneratorApi {
             var columnKind = when(valueClass) {
                 GroupedFieldType -> ColumnKind.Group
                 DataFrameFieldType -> ColumnKind.Table
-                else -> ColumnKind.Data
+                else -> ColumnKind.Value
             }
-            if(columnKind != ColumnKind.Data) {
+            if(columnKind != ColumnKind.Value) {
                 val typeArgument = valueType.arguments[0].type!!
                 if (isMarkerType(typeArgument.jvmErasure)) {
                     marker = getMarkerScheme(typeArgument.jvmErasure)
                     valueType = typeArgument
                 }
-                else columnKind = ColumnKind.Data
+                else columnKind = ColumnKind.Value
             }
             fieldName to FieldInfo(fieldName, columnName, valueType, columnKind, marker?.fullScheme)
         })
@@ -220,14 +220,14 @@ class CodeGenerator : CodeGeneratorApi {
             generatedFieldNames.add(fieldName)
             var type: KType? = it.type
             var childScheme : Scheme? = null
-            var columnKind = ColumnKind.Data
+            var columnKind = ColumnKind.Value
             when {
-                it is GroupedCol<*> -> {
+                it is MapColumn<*> -> {
                     childScheme = it.df.schema
                     type = null
                     columnKind = ColumnKind.Group
                 }
-                it is TableCol<*> -> {
+                it is TableColumn<*> -> {
                     childScheme = it.df.schema
                     type = null
                     columnKind = ColumnKind.Table

@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe.impl
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.commonParent
 import java.lang.UnsupportedOperationException
 import kotlin.reflect.KClass
@@ -12,7 +12,7 @@ import kotlin.reflect.full.withNullability
 interface DataCollector<T> {
 
     fun add(value: T)
-    fun toColumn(name: String): DataCol<T>
+    fun toColumn(name: String): DataColumn<T>
 }
 
 internal abstract class DataCollectorBase<T>(initCapacity: Int): DataCollector<T> {
@@ -30,16 +30,16 @@ internal abstract class DataCollectorBase<T>(initCapacity: Int): DataCollector<T
         data.add(value)
     }
 
-    protected fun createColumn(name: String, type: KType): DataCol<T> {
+    protected fun createColumn(name: String, type: KType): DataColumn<T> {
         val classifier = type.classifier as KClass<*>
         if (classifier.isSubclassOf(DataFrame::class)) {
-            return DataCol.createTable(name, data as List<DataFrame<*>>) as DataCol<T>
+            return DataColumn.createTable(name, data as List<DataFrame<*>>) as DataColumn<T>
         }
         if(classifier.isSubclassOf(DataRow::class)) {
             val mergedDf = (data as List<DataRow<*>>).map { it.toDataFrame() }.union()
-            return DataCol.createGroup(name, mergedDf) as DataCol<T>
+            return DataColumn.createGroup(name, mergedDf) as DataColumn<T>
         }
-        return column(name, data, type.withNullability(hasNulls)) as DataCol<T>
+        return column(name, data, type.withNullability(hasNulls)) as DataColumn<T>
     }
 }
 
@@ -72,13 +72,13 @@ internal open class ColumnDataCollector(initCapacity: Int = 0, val getType: (KCl
                         else -> throw UnsupportedOperationException()
                     }
                 }
-                return DataCol.createTable(name, groups)
+                return DataColumn.createTable(name, groups)
             }else if(hasRows){
                 val frames = values.map {
                     (it as DataRow<*>?)?.toDataFrame() ?: emptyDataFrame(1)
                 }
                 val merged = frames.union()
-                return DataCol.createGroup(name, merged)
+                return DataColumn.createGroup(name, merged)
             }
         }
         return createColumn(name, getType(commonClass()).withNullability(hasNulls))

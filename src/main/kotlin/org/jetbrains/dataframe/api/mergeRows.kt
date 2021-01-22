@@ -1,8 +1,8 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataCol
-import org.jetbrains.dataframe.api.columns.GroupedCol
-import org.jetbrains.dataframe.api.columns.TableCol
+import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.api.columns.MapColumn
+import org.jetbrains.dataframe.api.columns.TableColumn
 import kotlin.reflect.KType
 
 inline fun <T, reified C> DataFrame<T>.mergeRows(noinline selector: ColumnsSelector<T, C>) = mergeRows(this, selector, getType<C>())
@@ -14,8 +14,8 @@ fun <T, C> mergeRows(df: DataFrame<T>, selector: ColumnsSelector<T, C>, type: KT
         val updated = update(selector).suggestTypes(List::class to listType).with2 { row, column ->
             if(row.index > 0) null
             else when(column.kind()) {
-                ColumnKind.Data -> column.toList()
-                ColumnKind.Group -> column.asGrouped().df
+                ColumnKind.Value -> column.toList()
+                ColumnKind.Group -> column.asGroup().df
                 ColumnKind.Table -> column.asTable().values.union()
             }
         }
@@ -34,17 +34,17 @@ fun <T, C> MergeClause<T, C, *>.mergeRows(): DataFrame<T> {
         val column = node.data.column!!
         val newName = column.name()
         val newColumn = when(column){
-            is GroupedCol<*> -> {
+            is MapColumn<*> -> {
                 val data = grouped.groups.asIterable().map { it.get(column).df }
-                DataCol.createTable(newName, data, column.df)
+                DataColumn.createTable(newName, data, column.df)
             }
-            is TableCol<*> -> {
+            is TableColumn<*> -> {
                 val data = grouped.groups.asIterable().map { it[column].toList().union() }
-                DataCol.createTable(newName, data, column.df)
+                DataColumn.createTable(newName, data, column.df)
             }
             else -> {
                 val data = grouped.groups.asIterable().map { it[column].toList() }
-                DataCol.create(newName, data, List::class.createType(column.type))
+                DataColumn.create(newName, data, List::class.createType(column.type))
             }
         }
         ColumnToInsert(node.pathFromRoot(), node, newColumn)

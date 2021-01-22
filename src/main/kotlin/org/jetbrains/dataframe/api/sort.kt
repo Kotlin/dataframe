@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.api.columns.ColumnSet
 import org.jetbrains.dataframe.api.columns.ColumnWithPath
 import org.jetbrains.dataframe.impl.DataFrameReceiver
@@ -70,12 +70,12 @@ internal fun AnyCol.createComparator(nullsLast: Boolean): java.util.Comparator<I
 
 internal class SortReceiverImpl<T>(df: DataFrameBase<T>, allowMissingColumns: Boolean) : DataFrameReceiver<T>(df, allowMissingColumns), SortReceiver<T>
 
-internal fun <T, C> DataFrame<T>.extractSortColumns(selector: SortColumnsSelector<T, C>, unresolvedColumnsPolicy: UnresolvedColumnsPolicy): List<SortDescriptorCol<*>> {
+internal fun <T, C> DataFrame<T>.extractSortColumns(selector: SortColumnsSelector<T, C>, unresolvedColumnsPolicy: UnresolvedColumnsPolicy): List<SortDescriptorColumn<*>> {
     return selector.toColumns().resolve(ColumnResolutionContext(this, unresolvedColumnsPolicy))
             .map {
                 when (val col = it.data) {
-                    is SortDescriptorCol<*> -> col
-                    else -> SortDescriptorCol(col)
+                    is SortDescriptorColumn<*> -> col
+                    else -> SortDescriptorColumn(col)
                 }
             }
 }
@@ -87,7 +87,7 @@ fun SortDirection.reversed() = when (this) {
     SortDirection.Desc -> SortDirection.Asc
 }
 
-class SortDescriptorCol<C>(val column: DataCol<C>, val direction: SortDirection = SortDirection.Asc, val nullsLast: Boolean = false) : DataCol<C> by column
+class SortDescriptorColumn<C>(val column: DataColumn<C>, val direction: SortDirection = SortDirection.Asc, val nullsLast: Boolean = false) : DataColumn<C> by column
 
 internal fun <T, G> GroupedDataFrame<T, G>.doSortBy(selector: SortColumnsSelector<G, *>): GroupedDataFrame<T, G> {
 
@@ -105,16 +105,16 @@ internal fun <C> ColumnSet<C>.addFlag(flag: SortFlag) = ColumnsWithSortFlag(this
 internal fun <C> ColumnWithPath<C>.addFlag(flag: SortFlag): ColumnWithPath<C> {
     val col = data
     return when (col) {
-        is SortDescriptorCol -> {
+        is SortDescriptorColumn -> {
             when (flag) {
-                SortFlag.Reversed -> SortDescriptorCol(col.column, col.direction.reversed(), col.nullsLast)
-                SortFlag.NullsLast -> SortDescriptorCol(col.column, col.direction, true)
+                SortFlag.Reversed -> SortDescriptorColumn(col.column, col.direction.reversed(), col.nullsLast)
+                SortFlag.NullsLast -> SortDescriptorColumn(col.column, col.direction, true)
             }
         }
         else -> {
             when (flag) {
-                SortFlag.Reversed -> SortDescriptorCol(col, SortDirection.Desc)
-                SortFlag.NullsLast -> SortDescriptorCol(col, SortDirection.Asc, true)
+                SortFlag.Reversed -> SortDescriptorColumn(col, SortDirection.Desc)
+                SortFlag.NullsLast -> SortDescriptorColumn(col, SortDirection.Asc, true)
             }
         }
     }.addPath(path)

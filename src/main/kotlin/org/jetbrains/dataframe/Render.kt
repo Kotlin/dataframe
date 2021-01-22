@@ -14,7 +14,7 @@ internal fun renderSchema(df: DataFrame<*>): String =
 
 internal fun renderType(column: AnyCol) =
     when(column.kind()) {
-        ColumnKind.Data -> {
+        ColumnKind.Value -> {
             val type = column.type
             val result = type.toString()
             if (result.startsWith("kotlin.")) result.substring(7)
@@ -25,7 +25,7 @@ internal fun renderType(column: AnyCol) =
             "[${renderSchema(table.df)}]"
         }
         ColumnKind.Group -> {
-            val group = column.asGrouped()
+            val group = column.asGroup()
             "{${renderSchema(group.df)}}"
         }
     }
