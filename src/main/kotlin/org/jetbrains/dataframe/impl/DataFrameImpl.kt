@@ -72,7 +72,7 @@ internal open class DataFrameImpl<T>(var columns: List<DataCol>) : DataFrame<T> 
         if(value.size != nrow())
             throw IllegalArgumentException("Invalid column size for column '$columnName'. Expected: ${nrow()}, actual: ${value.size}")
 
-        val renamed = value.doRename(columnName)
+        val renamed = value.rename(columnName)
         val index = getColumnIndex(columnName)
         val newCols = if(index == -1) columns + renamed else columns.mapIndexed { i, col -> if(i == index) renamed else col }
         columnsMap[columnName] = if(index == -1) ncol() else index

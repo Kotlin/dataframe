@@ -6,7 +6,7 @@ operator fun <T> DataFrame<T>.plus(col: DataCol) = dataFrameOf(columns() + col).
 
 operator fun <T> DataFrame<T>.plus(col: Iterable<DataCol>) = dataFrameOf(columns() + col).typed<T>()
 
-fun <T> DataFrame<T>.add(name: String, data: DataCol) = dataFrameOf(columns() + data.doRename(name)).typed<T>()
+fun <T> DataFrame<T>.add(name: String, data: DataCol) = dataFrameOf(columns() + data.rename(name)).typed<T>()
 
 inline fun <reified R, T> DataFrame<T>.add(name: String, noinline expression: RowSelector<T, R>) =
         (this + newColumn(name, expression))
@@ -38,9 +38,9 @@ class TypedColumnsFromDataRowBuilder<T>(val df: DataFrame<T>): DataFrameBase<T> 
 
     inline operator fun <reified R> String.invoke(noinline expression: RowSelector<T, R>) = add(this, expression)
 
-    operator fun String.invoke(column: DataCol) = add(column.doRename(this))
+    operator fun String.invoke(column: DataCol) = add(column.rename(this))
 
     inline operator fun <reified R> ColumnDef<R>.invoke(column: ColumnData<R>) = name()(column)
 
-    infix fun DataCol.into(name: String) = add(doRename(name))
+    infix fun DataCol.into(name: String) = add(rename(name))
 }

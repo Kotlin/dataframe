@@ -107,7 +107,7 @@ internal fun fromList(records: List<*>): DataFrame<*> {
 
                 val parsed = fromList(values)
                 when {
-                    parsed.isSingleUnnamedColumn() -> parsed.column(0).doRename(colName)
+                    parsed.isSingleUnnamedColumn() -> parsed.column(0).rename(colName)
                     else -> ColumnData.createGroup(colName, parsed)
                 }
             }
