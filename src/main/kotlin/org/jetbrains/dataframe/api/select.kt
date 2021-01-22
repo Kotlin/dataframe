@@ -2,6 +2,7 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.api.columns.ColumnData
 import org.jetbrains.dataframe.api.columns.ColumnSet
+import org.jetbrains.dataframe.impl.columns.RenamedColumnDef
 import kotlin.reflect.KProperty
 
 fun <T> DataFrame<T>.select(selector: ColumnsSelector<T, *>): DataFrame<T> = new(getColumns(selector))
@@ -14,8 +15,6 @@ interface SelectReceiver<out T> : ColumnsSelectorReceiver<T> {
 
     infix fun <C> ColumnSet<C>.and(other: ColumnSet<C>) = ColumnGroup(this, other)
 
-    operator fun <C> ColumnData<C>.invoke(newName: String) = rename(newName)
-
     fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>) = except(other.toList().toColumnSet())
 
     infix fun <C> ColumnSet<C>.except(other: ColumnSet<*>): ColumnSet<*> = createColumnSet { resolve(it).allColumnsExcept(other.resolve(it)) }
@@ -25,6 +24,7 @@ interface SelectReceiver<out T> : ColumnsSelectorReceiver<T> {
     operator fun <C> ColumnSelector<T, C>.invoke() = this(this@SelectReceiver, this@SelectReceiver)
 
     operator fun <C> ColumnDef<C>.invoke(newName: String) = rename(newName)
+    infix fun <C> ColumnData<C>.into(newName: String) = (this as ColumnDef<C>).rename(newName)
 
     infix fun String.and(other: String) = toColumnDef() and other.toColumnDef()
     infix fun <C> String.and(other: ColumnSet<C>) = toColumnDef() and other

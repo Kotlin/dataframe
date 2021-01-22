@@ -7,7 +7,7 @@ internal class RenamedColumnDef<C>(val source: ColumnDef<C>, val name: String) :
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
 
-        return source.resolveSingle(context)?.let { it.data.doRename(name).addPath(it.path) }
+        return source.resolveSingle(context)?.let { it.data.rename(name).addPath(it.path) }
     }
 
     override fun name() = name

@@ -111,7 +111,7 @@ fun <A, B> DataFrame<A>.join(other: DataFrame<B>, joinType: JoinType = JoinType.
 
     // list of columns from right data frame that are not part of join key. Ensure that new column names doesn't clash with original columns
     val newRightColumns = if (addNewColumns) other.columns().filter { !rightJoinColumns.contains(it.name()) }.map {
-        it.doRename(nameGenerator.addUnique(it.name()))
+        it.rename(nameGenerator.addUnique(it.name()))
     } else emptyList()
 
     val leftColumnsCount = ncol()
