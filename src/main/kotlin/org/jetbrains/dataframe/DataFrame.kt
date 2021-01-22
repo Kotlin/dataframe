@@ -143,7 +143,7 @@ interface DataFrame<out T> : DataFrameBase<T> {
     fun size() = DataFrameSize(ncol(), nrow())
 }
 
-fun <T> DataFrame<*>.typed(): DataFrame<T> = this as DataFrame<T>
+fun <T> AnyFrame.typed(): DataFrame<T> = this as DataFrame<T>
 
 fun <T> DataFrameBase<*>.typed(): DataFrameBase<T> = this as DataFrameBase<T>
 
@@ -157,4 +157,4 @@ fun <T, C> DataFrame<T>.forEachIn(selector: ColumnsSelector<T, C>, action: (Data
     }
 }
 
-
+typealias AnyFrame = DataFrame<*>

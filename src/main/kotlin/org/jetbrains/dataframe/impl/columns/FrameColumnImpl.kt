@@ -10,7 +10,7 @@ import java.lang.UnsupportedOperationException
 import kotlin.reflect.KType
 
 internal class FrameColumnImpl<T> constructor(override val df: DataFrame<T>, name: String, values: List<DataFrame<T>>)
-    : DataColumnImpl<DataFrame<T>>(values, name, createType<DataFrame<*>>()), FrameColumn<T> {
+    : DataColumnImpl<DataFrame<T>>(values, name, createType<AnyFrame>()), FrameColumn<T> {
 
     constructor(name: String, df: DataFrame<T>, startIndices: List<Int>) : this(df, name, df.splitByIndices(startIndices))
 

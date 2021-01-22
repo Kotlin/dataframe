@@ -14,7 +14,7 @@ import kotlin.reflect.full.createType
 
 fun DataFrame.Companion.readJSON(file: File) = readJSON(file.toURI().toURL())
 
-fun DataFrame.Companion.readJSON(path: String): DataFrame<*> {
+fun DataFrame.Companion.readJSON(path: String): AnyFrame {
     val url = when {
         isURL(path) -> URL(path).toURI()
         else -> File(path).toURI()
@@ -23,7 +23,7 @@ fun DataFrame.Companion.readJSON(path: String): DataFrame<*> {
 }
 
 @Suppress("UNCHECKED_CAST")
-fun DataFrame.Companion.readJSON(url: URL): DataFrame<*> =
+fun DataFrame.Companion.readJSON(url: URL): AnyFrame =
         readJSON(Parser.default().parse(url.openStream()))
 
 fun DataFrame.Companion.readJsonStr(text: String) = readJSON(Parser.default().parse(StringBuilder(text)))
@@ -37,9 +37,9 @@ private val arrayColumnName = "array"
 
 internal val valueColumnName = "value"
 
-internal fun fromList(records: List<*>): DataFrame<*> {
+internal fun fromList(records: List<*>): AnyFrame {
 
-    fun DataFrame<*>.isSingleUnnamedColumn() = ncol() == 1 && column(0).name().let { it  == valueColumnName || it == arrayColumnName }
+    fun AnyFrame.isSingleUnnamedColumn() = ncol() == 1 && column(0).name().let { it  == valueColumnName || it == arrayColumnName }
 
     var hasPrimitive = false
     var hasArray = false

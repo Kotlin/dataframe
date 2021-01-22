@@ -105,7 +105,7 @@ fun <T> doSplitRows(df: DataFrame<T>, columns: List<ColumnWithPath<List<*>?>>): 
 
     val outputRowsCount = rowExpandSizes.sum()
 
-    fun splitIntoRows(df: DataFrame<*>, data: Map<ColumnPath, List<List<*>>>): DataFrame<*> {
+    fun splitIntoRows(df: AnyFrame, data: Map<ColumnPath, List<List<*>>>): AnyFrame {
 
         val newColumns = df.columns().map { col ->
             if (col.isGroup()) {
@@ -134,7 +134,7 @@ fun <T> doSplitRows(df: DataFrame<T>, columns: List<ColumnWithPath<List<*>?>>): 
                             }
                         }
                     }
-                    if (col.isTable()) DataColumn.createTable(col.name(), collector.values as List<DataFrame<*>>, col.asTable().df)
+                    if (col.isTable()) DataColumn.createTable(col.name(), collector.values as List<AnyFrame>, col.asTable().df)
                     else collector.toColumn(col.name())
                 }
             }

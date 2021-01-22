@@ -146,7 +146,7 @@ internal fun <T> Iterable<DataFrame<T>?>.getBaseSchema(): DataFrame<T> {
 
 fun <T> DataColumn<T>.withValues(values: List<T>, hasNulls: Boolean) = when (this) {
     is FrameColumn<*> -> {
-        val dfs = (values as List<DataFrame<*>>)
+        val dfs = (values as List<AnyFrame>)
         DataColumn.createTable(name(), dfs, dfs.getBaseSchema()) as DataColumn<T>
     }
     else -> column(name(), values, type.withNullability(hasNulls))
@@ -209,7 +209,7 @@ class ColumnDelegate<T> {
     operator fun getValue(thisRef: Any?, property: KProperty<*>) = ColumnDefinition<T>(property.name)
 }
 
-fun AnyCol.asFrame(): DataFrame<*> = when (this) {
+fun AnyCol.asFrame(): AnyFrame = when (this) {
     is MapColumn<*> -> df
     is ColumnWithPath<*> -> data.asFrame()
     else -> throw Exception()
@@ -281,7 +281,7 @@ class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
     fun contains(name: String) = usedNames.contains(name)
 }
 
-fun DataFrame<*>.nameGenerator() = ColumnNameGenerator(columnNames())
+fun AnyFrame.nameGenerator() = ColumnNameGenerator(columnNames())
 
 fun <T, R> DataColumn<T>.map(transform: (T) -> R): DataColumn<R> {
     val collector = createDataCollector(size)
