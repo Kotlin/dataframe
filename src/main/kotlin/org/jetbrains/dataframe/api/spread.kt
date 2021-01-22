@@ -8,13 +8,13 @@ import kotlin.reflect.full.isSubtypeOf
 
 fun <T, C> DataFrame<T>.spread(column: KProperty<C>) = spread { column.toColumnDef() }
 fun <T> DataFrame<T>.spread(column: String) = spread { column.toColumnDef() }
-fun <T, C> DataFrame<T>.spread(column: ColumnDef<C>) = spread { column }
+fun <T, C> DataFrame<T>.spread(column: ColumnReference<C>) = spread { column }
 fun <T, C> DataFrame<T>.spread(selector: ColumnSelector<T, C>) =
     SpreadClause.inDataFrame(this, selector)
 
 class DataFrameForSpreadImpl<T>(df: DataFrame<T>) : DataFrame<T> by df, DataFrameForSpread<T>
 
-typealias SpreadColumnSelector<T, C> = DataFrameForSpread<T>.(DataFrameForSpread<T>) -> ColumnDef<C>
+typealias SpreadColumnSelector<T, C> = DataFrameForSpread<T>.(DataFrameForSpread<T>) -> ColumnReference<C>
 
 interface DataFrameForSpread<out T> : DataFrame<T>
 
@@ -73,7 +73,7 @@ fun <T, K> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(column: String) 
 inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(column: KProperty<V>) =
     by { column.toColumnDef() }
 
-inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(column: ColumnDef<V>) = by { column }
+inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(column: ColumnReference<V>) = by { column }
 inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(noinline columnSelector: ColumnSelector<T, V>): SpreadClause<T, K, DataCol<V>, SpreadContext.DataFrame<T>> =
     SpreadClause(
         context,

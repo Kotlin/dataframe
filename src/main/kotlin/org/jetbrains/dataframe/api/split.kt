@@ -8,7 +8,7 @@ import kotlin.reflect.KProperty
 
 fun <T, C> DataFrame<T>.split(selector: ColumnSelector<T, C>) = SplitColClause(this, getColumnWithPath(selector), false) { it }
 fun <T> DataFrame<T>.split(column: String) = split { column.toColumnDef() }
-fun <T, C> DataFrame<T>.split(column: ColumnDef<C>) = split { column }
+fun <T, C> DataFrame<T>.split(column: ColumnReference<C>) = split { column }
 fun <T, C> DataFrame<T>.split(column: KProperty<C>) = split { column.toColumnDef() }
 
 class SplitColClause<T, C, out R>(val df: DataFrame<T>, val column: ColumnWithPath<C>, val inward: Boolean, val transform: (C) -> R)
@@ -32,7 +32,7 @@ fun <T, C> SplitColClause<T, C, List<*>?>.intoParts() = into { "part$it" }
 
 fun <T, C> SplitColClause<T, C, List<*>?>.inward() = SplitColClause(df, column, true, transform)
 
-fun <T, C> SplitColClause<T, C, List<*>?>.into(firstName: ColumnDef<*>, vararg otherNames: ColumnDef<*>, nameGenerator: ((Int) -> String)? = null) = into(listOf(firstName.name()) + otherNames.map{ it.name() }, nameGenerator)
+fun <T, C> SplitColClause<T, C, List<*>?>.into(firstName: ColumnReference<*>, vararg otherNames: ColumnReference<*>, nameGenerator: ((Int) -> String)? = null) = into(listOf(firstName.name()) + otherNames.map{ it.name() }, nameGenerator)
 
 fun <T, C> SplitColClause<T, C, List<*>?>.into(firstNames: List<String>, nameGenerator: ((Int) -> String)? = null) = doSplitCols(this) {
     when {
