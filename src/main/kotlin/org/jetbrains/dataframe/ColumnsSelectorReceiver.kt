@@ -24,7 +24,7 @@ interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
 
     fun DataFrameBase<*>.all() = ColumnGroup(this.columns())
 
-    fun DataFrameBase<*>.colGroups(filter: (MapColumn<*>) -> Boolean = { true }): ColumnSet<DataRow<*>> = this.columns().filter { it.isGroup() && filter(it.asGroup()) }.map { it.asGroup() }.toColumnSet()
+    fun DataFrameBase<*>.colGroups(filter: (MapColumn<*>) -> Boolean = { true }): ColumnSet<AnyRow> = this.columns().filter { it.isGroup() && filter(it.asGroup()) }.map { it.asGroup() }.toColumnSet()
 
     fun <C> ColumnSet<C>.filter(predicate: Predicate<DataColumn<C>>) = createColumnSet { resolve(it).filter { predicate(it.data) } }
 

@@ -86,7 +86,7 @@ internal fun convertToDataFrame(value: Any?): AnyFrame {
     return when (value) {
         null -> DataFrame.empty<Any?>()
         is AnyFrame -> value
-        is DataRow<*> -> value.toDataFrame()
+        is AnyRow -> value.toDataFrame()
         is List<*> -> value.mapNotNull { convertToDataFrame(it) }.union()
         else -> dataFrameOf(valueColumnName)(value)
     }

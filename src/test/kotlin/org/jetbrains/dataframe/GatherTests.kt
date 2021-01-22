@@ -94,13 +94,13 @@ class GatherTests {
         val first: DataRow<Marker3>
     }
     val DataFrameBase<Marker>.first: ColumnGroup<*> @JvmName("Marker_first") get() = this["first"] as ColumnGroup<*>
-    val DataRowBase<Marker>.first: org.jetbrains.dataframe.DataRow<*> @JvmName("Marker_first") get() = this["first"] as org.jetbrains.dataframe.DataRow<*>
+    val DataRowBase<Marker>.first: org.jetbrains.dataframe.AnyRow @JvmName("Marker_first") get() = this["first"] as org.jetbrains.dataframe.AnyRow
     val DataFrameBase<Marker>.name: org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String> @JvmName("Marker_name") get() = this["name"] as org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String>
     val DataRowBase<Marker>.name: String @JvmName("Marker_name") get() = this["name"] as String
     val DataFrameBase<Marker>.normal: ColumnGroup<*> @JvmName("Marker_normal") get() = this["normal"] as ColumnGroup<*>
-    val DataRowBase<Marker>.normal: org.jetbrains.dataframe.DataRow<*> @JvmName("Marker_normal") get() = this["normal"] as org.jetbrains.dataframe.DataRow<*>
+    val DataRowBase<Marker>.normal: org.jetbrains.dataframe.AnyRow @JvmName("Marker_normal") get() = this["normal"] as org.jetbrains.dataframe.AnyRow
     val DataFrameBase<Marker>.reversed: ColumnGroup<*> @JvmName("Marker_reversed") get() = this["reversed"] as ColumnGroup<*>
-    val DataRowBase<Marker>.reversed: org.jetbrains.dataframe.DataRow<*> @JvmName("Marker_reversed") get() = this["reversed"] as org.jetbrains.dataframe.DataRow<*>
+    val DataRowBase<Marker>.reversed: org.jetbrains.dataframe.AnyRow @JvmName("Marker_reversed") get() = this["reversed"] as org.jetbrains.dataframe.AnyRow
 
     //endregion
 
