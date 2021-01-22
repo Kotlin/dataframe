@@ -4,7 +4,7 @@ import com.beust.klaxon.JsonArray
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.impl.createDataCollector
 import java.io.File
 import java.lang.StringBuilder
@@ -92,7 +92,7 @@ internal fun fromList(records: List<*>): DataFrame<*> {
                         val values = col.values.asList().splitByIndices(startIndices)
                         column(colName, values, List::class.createType(listOf(KTypeProjection.invariant(elementType))))
                     }
-                    else -> DataCol.createTable(colName, parsed, startIndices)
+                    else -> DataColumn.createTable(colName, parsed, startIndices)
                 }
             }
             else -> {
@@ -108,7 +108,7 @@ internal fun fromList(records: List<*>): DataFrame<*> {
                 val parsed = fromList(values)
                 when {
                     parsed.isSingleUnnamedColumn() -> parsed.column(0).rename(colName)
-                    else -> DataCol.createGroup(colName, parsed)
+                    else -> DataColumn.createGroup(colName, parsed)
                 }
             }
         }

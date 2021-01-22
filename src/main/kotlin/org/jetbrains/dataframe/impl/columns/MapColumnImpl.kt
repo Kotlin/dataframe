@@ -1,12 +1,12 @@
 package org.jetbrains.dataframe.impl.columns
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.GroupedCol
+import org.jetbrains.dataframe.api.columns.MapColumn
 import org.jetbrains.dataframe.createType
 import java.lang.UnsupportedOperationException
 import kotlin.reflect.KType
 
-internal class GroupedColImpl<T>(override val df: DataFrame<T>, val name: String) : GroupedCol<T>, DataColInternal<DataRow<T>>, DataFrame<T> by df {
+internal class MapColumnImpl<T>(override val df: DataFrame<T>, val name: String) : MapColumn<T>, DataColumnInternal<DataRow<T>>, DataFrame<T> by df {
 
     override val values: Iterable<DataRow<T>>
         get() = df.rows()
@@ -27,9 +27,9 @@ internal class GroupedColImpl<T>(override val df: DataFrame<T>, val name: String
 
     override fun get(index: Int) = df[index]
 
-    override fun slice(range: IntRange) = GroupedColImpl(df[range], name)
+    override fun slice(range: IntRange) = MapColumnImpl(df[range], name)
 
-    override fun rename(newName: String) = GroupedColImpl(df, newName)
+    override fun rename(newName: String) = MapColumnImpl(df, newName)
 
     override fun defaultValue() = null
 
@@ -37,11 +37,11 @@ internal class GroupedColImpl<T>(override val df: DataFrame<T>, val name: String
 
     override fun slice(mask: BooleanArray) = withDf(df.getRows(mask))
 
-    override fun addParent(parent: GroupedCol<*>) = GroupedWithParentCol(parent, this)
+    override fun addParent(parent: MapColumn<*>) = MapColumnWithParent(parent, this)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        val g = other as? GroupedCol<*> ?: return false
+        val g = other as? MapColumn<*> ?: return false
         return name == g.name() && df == other.df
     }
 

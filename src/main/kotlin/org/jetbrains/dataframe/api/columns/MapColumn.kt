@@ -2,14 +2,15 @@ package org.jetbrains.dataframe.api.columns
 
 import org.jetbrains.dataframe.*
 
-interface GroupedCol<T> : DataCol<DataRow<T>>, NestedColumn<T>, GroupedColumnBase<T> {
+interface MapColumn<T> : DataColumn<DataRow<T>>, NestedColumn<T>,
+    ColumnGroup<T> {
 
     override fun get(index: Int): DataRow<T> {
-        return super<GroupedColumnBase>.get(index)
+        return super<ColumnGroup>.get(index)
     }
 
     override fun get(columnName: String): AnyCol {
-        return super<GroupedColumnBase>.get(columnName)
+        return super<ColumnGroup>.get(columnName)
     }
 
     override fun kind() = ColumnKind.Group

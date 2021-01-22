@@ -2,6 +2,7 @@ package org.jetbrains.dataframe
 
 import io.kotlintest.shouldBe
 import org.intellij.lang.annotations.Language
+import org.jetbrains.dataframe.api.columns.ColumnGroup
 import org.jetbrains.dataframe.api.generateTypedCode
 import org.jetbrains.dataframe.io.readJsonStr
 import org.junit.Ignore
@@ -61,11 +62,11 @@ class GatherTests {
         val c2: String
         val c3: String?
     }
-    val DataFrameBase<Marker1>.c1: org.jetbrains.dataframe.api.columns.DataCol<kotlin.String> @JvmName("Marker1_c1") get() = this["c1"] as org.jetbrains.dataframe.api.columns.DataCol<kotlin.String>
+    val DataFrameBase<Marker1>.c1: org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String> @JvmName("Marker1_c1") get() = this["c1"] as org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String>
     val DataRowBase<Marker1>.c1: String @JvmName("Marker1_c1") get() = this["c1"] as String
-    val DataFrameBase<Marker1>.c2: org.jetbrains.dataframe.api.columns.DataCol<kotlin.String> @JvmName("Marker1_c2") get() = this["c2"] as org.jetbrains.dataframe.api.columns.DataCol<kotlin.String>
+    val DataFrameBase<Marker1>.c2: org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String> @JvmName("Marker1_c2") get() = this["c2"] as org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String>
     val DataRowBase<Marker1>.c2: String @JvmName("Marker1_c2") get() = this["c2"] as String
-    val DataFrameBase<Marker1>.c3: org.jetbrains.dataframe.api.columns.DataCol<kotlin.String?> @JvmName("Marker1_c3") get() = this["c3"] as org.jetbrains.dataframe.api.columns.DataCol<kotlin.String?>
+    val DataFrameBase<Marker1>.c3: org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String?> @JvmName("Marker1_c3") get() = this["c3"] as org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String?>
     val DataRowBase<Marker1>.c3: String? @JvmName("Marker1_c3") get() = this["c3"] as String?
     @DataFrameType(isOpen = false)
     interface Marker2{
@@ -73,17 +74,17 @@ class GatherTests {
         val c2: String
         val c3: String?
     }
-    val DataFrameBase<Marker2>.c1: org.jetbrains.dataframe.api.columns.DataCol<kotlin.String> @JvmName("Marker2_c1") get() = this["c1"] as org.jetbrains.dataframe.api.columns.DataCol<kotlin.String>
+    val DataFrameBase<Marker2>.c1: org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String> @JvmName("Marker2_c1") get() = this["c1"] as org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String>
     val DataRowBase<Marker2>.c1: String @JvmName("Marker2_c1") get() = this["c1"] as String
-    val DataFrameBase<Marker2>.c2: org.jetbrains.dataframe.api.columns.DataCol<kotlin.String> @JvmName("Marker2_c2") get() = this["c2"] as org.jetbrains.dataframe.api.columns.DataCol<kotlin.String>
+    val DataFrameBase<Marker2>.c2: org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String> @JvmName("Marker2_c2") get() = this["c2"] as org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String>
     val DataRowBase<Marker2>.c2: String @JvmName("Marker2_c2") get() = this["c2"] as String
-    val DataFrameBase<Marker2>.c3: org.jetbrains.dataframe.api.columns.DataCol<kotlin.String?> @JvmName("Marker2_c3") get() = this["c3"] as org.jetbrains.dataframe.api.columns.DataCol<kotlin.String?>
+    val DataFrameBase<Marker2>.c3: org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String?> @JvmName("Marker2_c3") get() = this["c3"] as org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String?>
     val DataRowBase<Marker2>.c3: String? @JvmName("Marker2_c3") get() = this["c3"] as String?
     @DataFrameType(isOpen = false)
     interface Marker3{
         val c1: String
     }
-    val DataFrameBase<Marker3>.c1: org.jetbrains.dataframe.api.columns.DataCol<kotlin.String> @JvmName("Marker3_c1") get() = this["c1"] as org.jetbrains.dataframe.api.columns.DataCol<kotlin.String>
+    val DataFrameBase<Marker3>.c1: org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String> @JvmName("Marker3_c1") get() = this["c1"] as org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String>
     val DataRowBase<Marker3>.c1: String @JvmName("Marker3_c1") get() = this["c1"] as String
     @DataFrameType
     interface Marker{
@@ -92,13 +93,13 @@ class GatherTests {
         val reversed: DataRow<Marker2>
         val first: DataRow<Marker3>
     }
-    val DataFrameBase<Marker>.first: org.jetbrains.dataframe.api.columns.GroupedColumnBase<*> @JvmName("Marker_first") get() = this["first"] as org.jetbrains.dataframe.api.columns.GroupedColumnBase<*>
+    val DataFrameBase<Marker>.first: ColumnGroup<*> @JvmName("Marker_first") get() = this["first"] as ColumnGroup<*>
     val DataRowBase<Marker>.first: org.jetbrains.dataframe.DataRow<*> @JvmName("Marker_first") get() = this["first"] as org.jetbrains.dataframe.DataRow<*>
-    val DataFrameBase<Marker>.name: org.jetbrains.dataframe.api.columns.DataCol<kotlin.String> @JvmName("Marker_name") get() = this["name"] as org.jetbrains.dataframe.api.columns.DataCol<kotlin.String>
+    val DataFrameBase<Marker>.name: org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String> @JvmName("Marker_name") get() = this["name"] as org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String>
     val DataRowBase<Marker>.name: String @JvmName("Marker_name") get() = this["name"] as String
-    val DataFrameBase<Marker>.normal: org.jetbrains.dataframe.api.columns.GroupedColumnBase<*> @JvmName("Marker_normal") get() = this["normal"] as org.jetbrains.dataframe.api.columns.GroupedColumnBase<*>
+    val DataFrameBase<Marker>.normal: ColumnGroup<*> @JvmName("Marker_normal") get() = this["normal"] as ColumnGroup<*>
     val DataRowBase<Marker>.normal: org.jetbrains.dataframe.DataRow<*> @JvmName("Marker_normal") get() = this["normal"] as org.jetbrains.dataframe.DataRow<*>
-    val DataFrameBase<Marker>.reversed: org.jetbrains.dataframe.api.columns.GroupedColumnBase<*> @JvmName("Marker_reversed") get() = this["reversed"] as org.jetbrains.dataframe.api.columns.GroupedColumnBase<*>
+    val DataFrameBase<Marker>.reversed: ColumnGroup<*> @JvmName("Marker_reversed") get() = this["reversed"] as ColumnGroup<*>
     val DataRowBase<Marker>.reversed: org.jetbrains.dataframe.DataRow<*> @JvmName("Marker_reversed") get() = this["reversed"] as org.jetbrains.dataframe.DataRow<*>
 
     //endregion
@@ -113,7 +114,7 @@ class GatherTests {
 
         val expected = typed.groupBy { name }.updateGroups {
 
-            val cols = columns().drop(1).map { it.asGrouped() } // drop 'name' column
+            val cols = columns().drop(1).map { it.asGroup() } // drop 'name' column
             val dataRows = cols.map { it[0] }
 
             val newDf = listOf(

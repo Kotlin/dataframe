@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 
 operator fun <T> DataFrame<T>.plus(col: AnyCol) = dataFrameOf(columns() + col).typed<T>()
 
@@ -40,7 +40,7 @@ class TypedColumnsFromDataRowBuilder<T>(val df: DataFrame<T>): DataFrameBase<T> 
 
     operator fun String.invoke(column: AnyCol) = add(column.rename(this))
 
-    inline operator fun <reified R> ColumnReference<R>.invoke(column: DataCol<R>) = name()(column)
+    inline operator fun <reified R> ColumnReference<R>.invoke(column: DataColumn<R>) = name()(column)
 
     infix fun AnyCol.into(name: String) = add(rename(name))
 }

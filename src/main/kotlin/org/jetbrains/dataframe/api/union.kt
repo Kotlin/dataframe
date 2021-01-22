@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe
 
 import com.beust.klaxon.internal.firstNotNullResult
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.io.valueColumnName
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -21,7 +21,7 @@ internal fun merge(dataFrames: List<DataFrame<*>>): DataFrame<Unit> {
 
         // TODO: check not only the first column
         val firstColumn = dataFrames.firstNotNullResult { it.tryGetColumn(name) }!!
-        if (firstColumn.isGrouped()) {
+        if (firstColumn.isGroup()) {
             val groupedDataFrames = dataFrames.map {
                 val column = it.tryGetColumn(name)
                 if (column != null)
@@ -30,7 +30,7 @@ internal fun merge(dataFrames: List<DataFrame<*>>): DataFrame<Unit> {
                     emptyDataFrame(it.nrow())
             }
             val merged = merge(groupedDataFrames)
-            DataCol.createGroup(name, merged)
+            DataColumn.createGroup(name, merged)
         } else {
 
             val defaultValue = firstColumn.defaultValue()
@@ -65,7 +65,7 @@ internal fun merge(dataFrames: List<DataFrame<*>>): DataFrame<Unit> {
                     }
                     nullable = false
                 }
-                DataCol.createTable(name, list as List<DataFrame<*>>)
+                DataColumn.createTable(name, list as List<DataFrame<*>>)
             }else {
                 val baseType = baseType(types).withNullability(nullable)
 
@@ -75,7 +75,7 @@ internal fun merge(dataFrames: List<DataFrame<*>>): DataFrame<Unit> {
                             list[index] = listOf(value)
                     }
 
-                DataCol.create(name, list, baseType, defaultValue)
+                DataColumn.create(name, list, baseType, defaultValue)
             }
         }
     }

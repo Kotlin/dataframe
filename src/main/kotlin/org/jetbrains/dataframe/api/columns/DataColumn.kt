@@ -1,35 +1,35 @@
 package org.jetbrains.dataframe.api.columns
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.impl.columns.GroupedColImpl
-import org.jetbrains.dataframe.impl.columns.TableColImpl
-import org.jetbrains.dataframe.impl.columns.ValueImplCol
+import org.jetbrains.dataframe.impl.columns.MapColumnImpl
+import org.jetbrains.dataframe.impl.columns.TableColumnImpl
+import org.jetbrains.dataframe.impl.columns.ValueImplColumn
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 
-interface DataCol<out T> : ColumnReference<T> {
+interface DataColumn<out T> : ColumnReference<T> {
 
     companion object {
 
-        fun <T> create(name: String, values: List<T>, type: KType, defaultValue: T? = null): ValueCol<T> = ValueImplCol(values, name, type, defaultValue)
+        fun <T> create(name: String, values: List<T>, type: KType, defaultValue: T? = null): ValueColumn<T> = ValueImplColumn(values, name, type, defaultValue)
 
-        fun <T> createGroup(name: String, df: DataFrame<T>): GroupedCol<T> = GroupedColImpl(df, name)
+        fun <T> createGroup(name: String, df: DataFrame<T>): MapColumn<T> = MapColumnImpl(df, name)
 
-        fun <T> createTable(name: String, df: DataFrame<T>, startIndices: List<Int>): TableCol<T> = TableColImpl(name, df, startIndices)
+        fun <T> createTable(name: String, df: DataFrame<T>, startIndices: List<Int>): TableColumn<T> = TableColumnImpl(name, df, startIndices)
 
-        fun <T> createTable(name: String, groups: List<DataFrame<T>>, df: DataFrame<T>? = null): TableCol<T> = TableColImpl(df
+        fun <T> createTable(name: String, groups: List<DataFrame<T>>, df: DataFrame<T>? = null): TableColumn<T> = TableColumnImpl(df
                 ?: groups.getBaseSchema(), name, groups)
 
-        fun <T> createGuess(name: String, values: List<T>, type:KType, defaultValue: T? = null): DataCol<T> {
+        fun <T> createGuess(name: String, values: List<T>, type:KType, defaultValue: T? = null): DataColumn<T> {
             val kClass = type.classifier!! as KClass<*>
             if(kClass.isSubclassOf(DataRow::class)){
                 val df = values.map { (it as DataRow<*>).toDataFrame() }.union()
-                return createGroup(name, df) as DataCol<T>
+                return createGroup(name, df) as DataColumn<T>
             }
             if(kClass.isSubclassOf(DataFrame::class)){
                 // TODO: support nulls in values
-                return createTable(name, values as List<DataFrame<T>>) as DataCol<T>
+                return createTable(name, values as List<DataFrame<T>>) as DataColumn<T>
             }
             return create(name, values, type, defaultValue)
         }
@@ -55,13 +55,13 @@ interface DataCol<out T> : ColumnReference<T> {
 
     fun defaultValue(): T?
 
-    fun slice(range: IntRange): DataCol<T>
+    fun slice(range: IntRange): DataColumn<T>
 
     operator fun get(columnName: String): AnyCol
 
-    fun slice(indices: Iterable<Int>): DataCol<T>
+    fun slice(indices: Iterable<Int>): DataColumn<T>
 
-    fun slice(mask: BooleanArray): DataCol<T>
+    fun slice(mask: BooleanArray): DataColumn<T>
 
     fun toSet(): Set<T>
 

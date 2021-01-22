@@ -5,7 +5,7 @@ import org.jetbrains.dataframe.api.columns.ColumnWithPath
 
 internal interface ColumnWithParent<C> : ColumnReference<C> {
 
-    val parent: GroupedColumnDef?
+    val parent: MapColumnReference?
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
 
@@ -14,7 +14,7 @@ internal interface ColumnWithParent<C> : ColumnReference<C> {
             null -> context.df to emptyList()
             else -> {
                 val parentCol = parentDef.resolveSingle(context) ?: return null
-                val group = parentCol.data.asGrouped()
+                val group = parentCol.data.asGroup()
                 group.df to parentCol.path
             }
         }

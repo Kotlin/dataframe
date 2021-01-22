@@ -4,8 +4,8 @@ import io.kotlintest.fail
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.DataCol
-import org.jetbrains.dataframe.api.columns.GroupedColumnBase
+import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.api.columns.ColumnGroup
 import org.jetbrains.dataframe.io.print
 import org.junit.Test
 
@@ -171,7 +171,7 @@ class DataFrameTreeTests : BaseTest() {
         val expected = typed.rows().groupBy { it.name to (it.city ?: "null") }.mapValues { it.value.map { it.age to it.weight } }
         val dataCols = spread.columns().drop(1)
 
-        dataCols.forEach { (it.isGrouped() || it.isTable()) shouldBe true }
+        dataCols.forEach { (it.isGroup() || it.isTable()) shouldBe true }
 
         val names = spread.name
         dataCols.forEach { col ->
@@ -209,9 +209,9 @@ class DataFrameTreeTests : BaseTest() {
         split.columnNames() shouldBe typed2.columnNames()
         split.nrow() shouldBe typed2.nrow()
         split.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames()
-        val nameGroup = split.nameAndCity.name.asGrouped()
+        val nameGroup = split.nameAndCity.name.asGroup()
         nameGroup.name() shouldBe "name"
-        nameGroup.isGrouped() shouldBe true
+        nameGroup.isGroup() shouldBe true
         nameGroup.ncol() shouldBe typed2.nameAndCity.name.map { it.length }.max()
         nameGroup.columnNames() shouldBe (0 until nameGroup.ncol()).map { "char$it" }
     }
@@ -264,7 +264,7 @@ class DataFrameTreeTests : BaseTest() {
     fun `update grouped column to table`(){
         val info by columnGroup()
         val grouped = typed.group { age and weight }.into(info)
-        val updated = grouped.update(info).with2 { row, column -> column.asGrouped().df}
+        val updated = grouped.update(info).with2 { row, column -> column.asGroup().df}
         val col = updated[info.name()]
         col.kind() shouldBe ColumnKind.Table
         val table = col.asTable()
@@ -280,8 +280,8 @@ class DataFrameTreeTests : BaseTest() {
         val className = GroupedPerson::class.qualifiedName
         val shortName = GroupedPerson::class.simpleName!!
         val nameAndCity = NameAndCity::class.qualifiedName
-        val groupedColumn = GroupedColumnBase::class.qualifiedName
-        val columnData = DataCol::class.qualifiedName
+        val groupedColumn = ColumnGroup::class.qualifiedName
+        val columnData = DataColumn::class.qualifiedName
         val expected = """
             val $dataFrameBase<$className>.age: $columnData<kotlin.Int> @JvmName("${shortName}_age") get() = this["age"] as $columnData<kotlin.Int>
             val $dataFrameRowBase<$className>.age: Int @JvmName("${shortName}_age") get() = this["age"] as Int

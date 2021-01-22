@@ -36,7 +36,7 @@ internal fun  List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnW
     return dfs.map { it.data!!.addPath(it.pathFromRoot()) }
 }
 
-internal fun <T, C> DataFrame<T>.getColumns(skipMissingColumns: Boolean, selector: ColumnsSelector<T, C>): List<DataCol<C>> = getColumnsWithPaths(if(skipMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail, selector).map { it.data }
+internal fun <T, C> DataFrame<T>.getColumns(skipMissingColumns: Boolean, selector: ColumnsSelector<T, C>): List<DataColumn<C>> = getColumnsWithPaths(if(skipMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail, selector).map { it.data }
 
 internal fun <T, C> DataFrame<T>.getColumns(selector: ColumnsSelector<T, C>) = getColumns(false, selector)
 
@@ -46,7 +46,7 @@ fun <T, C> DataFrame<T>.getColumnsWithPaths(selector: ColumnsSelector<T, C>): Li
 
 internal fun <T, C> DataFrame<T>.getColumnPaths(selector: ColumnsSelector<T, C>): List<ColumnPath> = selector.toColumns().resolve(ColumnResolutionContext(this, UnresolvedColumnsPolicy.Fail)).map { it.path }
 
-internal fun <T, C> DataFrame<T>.getGroupColumns(selector: ColumnsSelector<T, DataRow<C>>) = getColumnsWithPaths(selector).map { it.data.asGrouped() }
+internal fun <T, C> DataFrame<T>.getGroupColumns(selector: ColumnsSelector<T, DataRow<C>>) = getColumnsWithPaths(selector).map { it.data.asGroup() }
 
 fun <T, C> DataFrame<T>.column(selector: ColumnSelector<T, C>) = getColumns(selector).single()
 
@@ -84,9 +84,9 @@ interface DataFrame<out T> : DataFrameBase<T> {
 
     override operator fun get(index: Int): DataRow<T> = DataRowImpl(index, this)
     override operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found: '$columnName'")
-    override operator fun <R> get(column: ColumnReference<R>): DataCol<R> = tryGetColumn(column)!!
-    override operator fun <R> get(column: ColumnReference<DataRow<R>>): GroupedCol<R> = get<DataRow<R>>(column) as GroupedCol<R>
-    override operator fun <R> get(column: ColumnReference<DataFrame<R>>): TableCol<R> = get<DataFrame<R>>(column) as TableCol<R>
+    override operator fun <R> get(column: ColumnReference<R>): DataColumn<R> = tryGetColumn(column)!!
+    override operator fun <R> get(column: ColumnReference<DataRow<R>>): MapColumn<R> = get<DataRow<R>>(column) as MapColumn<R>
+    override operator fun <R> get(column: ColumnReference<DataFrame<R>>): TableColumn<R> = get<DataFrame<R>>(column) as TableColumn<R>
 
     operator fun get(indices: Iterable<Int>) = getRows(indices)
     operator fun get(mask: BooleanArray) = getRows(mask)
@@ -103,11 +103,11 @@ interface DataFrame<out T> : DataFrameBase<T> {
     fun getColumnIndex(name: String): Int
     fun getColumnIndex(col: AnyCol) = getColumnIndex(col.name())
 
-    fun <R> tryGetColumn(column: ColumnReference<R>): DataCol<R>? = tryGetColumn(column.name()) as? DataCol<R>
+    fun <R> tryGetColumn(column: ColumnReference<R>): DataColumn<R>? = tryGetColumn(column.name()) as? DataColumn<R>
 
     override fun tryGetColumn(name: String): AnyCol? = getColumnIndex(name).let { if (it != -1) column(it) else null }
 
-    fun tryGetColumnGroup(name: String) = tryGetColumn(name) as? GroupedCol<*>
+    fun tryGetColumnGroup(name: String) = tryGetColumn(name) as? MapColumn<*>
     fun getColumnGroup(name: String) = tryGetColumnGroup(name)!!
 
     operator fun get(col1: Column, col2: Column, vararg other: Column) = select(listOf(col1, col2) + other)
@@ -149,7 +149,7 @@ fun <T> DataFrameBase<*>.typed(): DataFrameBase<T> = this as DataFrameBase<T>
 
 fun <T> DataRow<T>.toDataFrame(): DataFrame<T> = owner[index..index]
 
-fun <T, C> DataFrame<T>.forEachIn(selector: ColumnsSelector<T, C>, action: (DataRow<T>, DataCol<C>) -> Unit) = getColumnsWithPaths(selector).let { cols ->
+fun <T, C> DataFrame<T>.forEachIn(selector: ColumnsSelector<T, C>, action: (DataRow<T>, DataColumn<C>) -> Unit) = getColumnsWithPaths(selector).let { cols ->
     rows().forEach { row ->
         cols.forEach { col ->
             action(row, col.data)

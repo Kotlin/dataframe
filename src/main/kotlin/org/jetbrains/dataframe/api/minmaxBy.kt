@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 import kotlin.reflect.KProperty
 
 fun <T, D : Comparable<D>> DataFrame<T>.maxBy(col: KProperty<D?>) = rows().maxByOrNull { it[col] as D }!!
@@ -11,5 +11,5 @@ fun <T> DataFrame<T>.minBy(col: String) = rows().minByOrNull { it[col] as Compar
 fun <T, D : Comparable<D>> DataFrame<T>.minBy(col: ColumnReference<D>) = rows().minByOrNull { col(it) }
 fun <T, D : Comparable<D>> DataFrame<T>.minBy(selector: RowSelector<T, D>) = rows().minByOrNull { selector(it, it) }!!
 
-fun <T, R : Comparable<R>> DataCol<T>.minBy(selector: (T) -> R) = values.asSequence().minByOrNull(selector)
-fun <T, R : Comparable<R>> DataCol<T>.maxBy(selector: (T) -> R) = values.asSequence().maxByOrNull(selector)
+fun <T, R : Comparable<R>> DataColumn<T>.minBy(selector: (T) -> R) = values.asSequence().minByOrNull(selector)
+fun <T, R : Comparable<R>> DataColumn<T>.maxBy(selector: (T) -> R) = values.asSequence().maxByOrNull(selector)

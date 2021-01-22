@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.GroupedCol
+import org.jetbrains.dataframe.api.columns.MapColumn
 import org.jetbrains.dataframe.impl.TreeNode
 import kotlin.reflect.KProperty
 
@@ -44,7 +44,7 @@ internal fun <T> DataFrame<T>.doRemove(selector: ColumnsSelector<T, *>): RemoveR
             if (childPaths != null) {
                 val node = node.addChild(column.name(), ColumnPosition(index, true, null))
                 if (childPaths.all { it.size > depth + 1 }) {
-                    val groupCol = (column as GroupedCol<*>)
+                    val groupCol = (column as MapColumn<*>)
                     val newDf = dfs(groupCol.df.columns(), childPaths, node)
                     if (newDf != null) {
                         val newCol = groupCol.withDf(newDf)

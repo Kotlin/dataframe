@@ -1026,7 +1026,7 @@ class DataFrameTests : BaseTest() {
             addValue("mean", row)
         }
         d.ncol() shouldBe 2
-        d["mean"].isGrouped() shouldBe true
+        d["mean"].isGroup() shouldBe true
         val mean = d.getGroup("mean")
         mean.ncol() shouldBe 2
         mean.columnNames() shouldBe listOf("age", "weight")
