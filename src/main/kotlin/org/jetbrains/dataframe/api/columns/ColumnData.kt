@@ -49,6 +49,8 @@ interface ColumnData<out T> : ColumnDef<T> {
 
     operator fun get(row: DataRow<*>) = get(row.index)
 
+    fun values() = values
+
     fun toList() = values.asList()
 
     fun defaultValue(): T?

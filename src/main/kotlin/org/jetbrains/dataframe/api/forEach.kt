@@ -10,6 +10,8 @@ fun <T,G> GroupedDataFrame<T, G>.forEach(body: (key: DataRow<T>, group: DataFram
     }
 
 fun <T> DataFrame<T>.forEach(action: (DataRow<T>) -> Unit) = rows().forEach(action)
-fun <T> DataFrame<T>.forEachIndexed(action: (Int, DataRow<T>) -> Unit) = rows().forEachIndexed(action)
+fun <T> ColumnData<T>.forEach(action: (T) -> Unit) = values().forEach(action)
 
-fun <T> ColumnData<T>.forEach(action: (T) -> Unit) = values.forEach(action)
+fun <T> DataFrame<T>.forEachIndexed(action: (Int, DataRow<T>) -> Unit) = rows().forEachIndexed(action)
+fun <T> ColumnData<T>.forEachIndexed(action: (Int, T) -> Unit) = values().forEachIndexed(action)
+
