@@ -71,7 +71,7 @@ class MatchSchemeTests {
     @Test
     fun `marker is reused`(){
 
-        val codeGen = CodeGenerator()
+        val codeGen = CodeGeneratorImpl()
         codeGen.generateExtensionProperties(DataRecord::class)
         codeGen.generate(typed, :: typed) shouldBe null
         val generated = codeGen.generate(df, :: df)!!
@@ -83,7 +83,7 @@ class MatchSchemeTests {
     @Test
     fun `marker is implemented`(){
 
-        val codeGen = CodeGenerator()
+        val codeGen = CodeGeneratorImpl()
         codeGen.generateExtensionProperties(DataRecord::class)
         val generated = codeGen.generate(modified, ::modified)!!
         generated.declarations.contains(DataRecord::class.simpleName!!) shouldBe true

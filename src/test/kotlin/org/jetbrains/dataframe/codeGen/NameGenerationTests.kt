@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe.codeGen
 
 import io.kotlintest.shouldBe
-import org.jetbrains.dataframe.CodeGenerator
+import org.jetbrains.dataframe.CodeGeneratorImpl
 import org.jetbrains.dataframe.ColumnName
 import org.jetbrains.dataframe.DataSchema
 import org.jetbrains.dataframe.dataFrameOf
@@ -22,7 +22,7 @@ class NameGenerationTests {
     @Test
     fun `interface generation`(){
 
-        val codeGen = CodeGenerator()
+        val codeGen = CodeGeneratorImpl()
         val code = codeGen.generate(df)
 
         val expected ="""
@@ -41,7 +41,7 @@ class NameGenerationTests {
     @Test
     fun `properties generation`(){
 
-        val codeGen = CodeGenerator()
+        val codeGen = CodeGeneratorImpl()
         val code = codeGen.generateExtensionProperties(DataRecord::class)!!.split("\n")
         code.size shouldBe 4
         code.forEach {

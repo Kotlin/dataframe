@@ -193,7 +193,7 @@ class PlaylistJsonTest {
                 DataFrameType9::class,
                 DataFrameType10::class,
                 DataRecord::class)
-        val codeGen = CodeGenerator()
+        val codeGen = CodeGeneratorImpl()
         return types.mapNotNull { codeGen.generateExtensionProperties(it) }
     }
 
