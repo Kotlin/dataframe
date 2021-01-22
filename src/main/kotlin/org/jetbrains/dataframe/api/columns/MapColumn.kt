@@ -13,5 +13,5 @@ interface MapColumn<T> : DataColumn<DataRow<T>>, NestedColumn<T>,
         return super<ColumnGroup>.get(columnName)
     }
 
-    override fun kind() = ColumnKind.Group
+    override fun kind() = ColumnKind.Map
 }

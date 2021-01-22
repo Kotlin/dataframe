@@ -2,7 +2,7 @@ package org.jetbrains.dataframe.api.columns
 
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.impl.columns.MapColumnImpl
-import org.jetbrains.dataframe.impl.columns.TableColumnImpl
+import org.jetbrains.dataframe.impl.columns.FrameColumnImpl
 import org.jetbrains.dataframe.impl.columns.ValueImplColumn
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -16,9 +16,9 @@ interface DataColumn<out T> : ColumnReference<T> {
 
         fun <T> createGroup(name: String, df: DataFrame<T>): MapColumn<T> = MapColumnImpl(df, name)
 
-        fun <T> createTable(name: String, df: DataFrame<T>, startIndices: List<Int>): TableColumn<T> = TableColumnImpl(name, df, startIndices)
+        fun <T> createTable(name: String, df: DataFrame<T>, startIndices: List<Int>): FrameColumn<T> = FrameColumnImpl(name, df, startIndices)
 
-        fun <T> createTable(name: String, groups: List<DataFrame<T>>, df: DataFrame<T>? = null): TableColumn<T> = TableColumnImpl(df
+        fun <T> createTable(name: String, groups: List<DataFrame<T>>, df: DataFrame<T>? = null): FrameColumn<T> = FrameColumnImpl(df
                 ?: groups.getBaseSchema(), name, groups)
 
         fun <T> createGuess(name: String, values: List<T>, type:KType, defaultValue: T? = null): DataColumn<T> {

@@ -86,7 +86,7 @@ interface DataFrame<out T> : DataFrameBase<T> {
     override operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found: '$columnName'")
     override operator fun <R> get(column: ColumnReference<R>): DataColumn<R> = tryGetColumn(column)!!
     override operator fun <R> get(column: ColumnReference<DataRow<R>>): MapColumn<R> = get<DataRow<R>>(column) as MapColumn<R>
-    override operator fun <R> get(column: ColumnReference<DataFrame<R>>): TableColumn<R> = get<DataFrame<R>>(column) as TableColumn<R>
+    override operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R> = get<DataFrame<R>>(column) as FrameColumn<R>
 
     operator fun get(indices: Iterable<Int>) = getRows(indices)
     operator fun get(mask: BooleanArray) = getRows(mask)

@@ -3,7 +3,7 @@ package org.jetbrains.dataframe
 import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.api.columns.MapColumn
 import org.jetbrains.dataframe.api.columns.ColumnGroup
-import org.jetbrains.dataframe.api.columns.TableColumn
+import org.jetbrains.dataframe.api.columns.FrameColumn
 import org.jetbrains.kotlinx.jupyter.api.Code
 import org.jetbrains.kotlinx.jupyter.api.VariableName
 import kotlin.reflect.*
@@ -89,21 +89,21 @@ class CodeGenerator : CodeGeneratorApi {
         init {
             when(columnKind) {
                 ColumnKind.Value -> assert(type != null && childScheme == null)
-                ColumnKind.Group -> assert(childScheme != null)
-                ColumnKind.Table -> assert(childScheme != null)
+                ColumnKind.Map -> assert(childScheme != null)
+                ColumnKind.Frame -> assert(childScheme != null)
             }
         }
 
         val columnType: KType get() = when(columnKind) {
             ColumnKind.Value -> DataColumn::class.createType(type!!)
-            ColumnKind.Group -> GroupedColumnType.createType(type)
-            ColumnKind.Table -> DataColumn::class.createType(DataFrameFieldType.createType(type))
+            ColumnKind.Map -> GroupedColumnType.createType(type)
+            ColumnKind.Frame -> DataColumn::class.createType(DataFrameFieldType.createType(type))
         }
 
         val fieldType: KType get() = when(columnKind) {
             ColumnKind.Value -> type!!
-            ColumnKind.Group -> GroupedFieldType.createType(type)
-            ColumnKind.Table -> DataFrameFieldType.createType(type)
+            ColumnKind.Map -> GroupedFieldType.createType(type)
+            ColumnKind.Frame -> DataFrameFieldType.createType(type)
         }
 
         fun compare(other: FieldInfo): CompareResult {
@@ -169,8 +169,8 @@ class CodeGenerator : CodeGeneratorApi {
             val valueClass = valueType.jvmErasure
             var marker: GeneratedMarker? = null
             var columnKind = when(valueClass) {
-                GroupedFieldType -> ColumnKind.Group
-                DataFrameFieldType -> ColumnKind.Table
+                GroupedFieldType -> ColumnKind.Map
+                DataFrameFieldType -> ColumnKind.Frame
                 else -> ColumnKind.Value
             }
             if(columnKind != ColumnKind.Value) {
@@ -225,12 +225,12 @@ class CodeGenerator : CodeGeneratorApi {
                 it is MapColumn<*> -> {
                     childScheme = it.df.schema
                     type = null
-                    columnKind = ColumnKind.Group
+                    columnKind = ColumnKind.Map
                 }
-                it is TableColumn<*> -> {
+                it is FrameColumn<*> -> {
                     childScheme = it.df.schema
                     type = null
-                    columnKind = ColumnKind.Table
+                    columnKind = ColumnKind.Frame
                 }
             }
             FieldInfo(fieldName, it.name(), type, columnKind, childScheme)
@@ -475,11 +475,11 @@ class CodeGenerator : CodeGeneratorApi {
             val columnNameAnnotation = if (field.columnName != field.fieldName) "\t@ColumnName(\"${renderColumnName(field.columnName)}\")\n" else ""
 
             val fieldType = when(field.columnKind) {
-                ColumnKind.Group -> {
+                ColumnKind.Map -> {
                     val markerType = findOrCreateMarker(field.childScheme!!, resultDeclarations, newOptions)
                     "${render(GroupedFieldType)}<$markerType>"
                 }
-                ColumnKind.Table -> {
+                ColumnKind.Frame -> {
                     val markerType = findOrCreateMarker(field.childScheme!!, resultDeclarations, newOptions)
                     "${render(DataFrameFieldType)}<$markerType>"
                 }
