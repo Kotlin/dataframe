@@ -21,7 +21,7 @@ class SpreadTests {
 
 // Generated Code
 
-    @DataFrameType
+    @DataSchema
     interface Person {
         val name: String
         val key: String

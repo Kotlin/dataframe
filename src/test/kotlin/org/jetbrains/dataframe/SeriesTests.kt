@@ -22,7 +22,7 @@ class SeriesTests {
 
     // Generated code
 
-    @DataFrameType
+    @DataSchema
     interface Weather {
         val city: String
         val day: Int

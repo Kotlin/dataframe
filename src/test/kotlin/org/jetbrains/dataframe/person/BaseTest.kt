@@ -18,7 +18,7 @@ open class BaseTest {
 
 // Generated Code
 
-    @DataFrameType
+    @DataSchema
     interface Person {
         val name: String
         val age: Int

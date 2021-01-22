@@ -11,13 +11,13 @@ import org.junit.Test
 
 class DataFrameTreeTests : BaseTest() {
 
-    @DataFrameType
+    @DataSchema
     interface NameAndCity {
         val name: String
         val city: String?
     }
 
-    @DataFrameType
+    @DataSchema
     interface GroupedPerson {
         val nameAndCity: DataRow<NameAndCity>
         val age: Int

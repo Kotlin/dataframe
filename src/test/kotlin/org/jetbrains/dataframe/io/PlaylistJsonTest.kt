@@ -9,42 +9,42 @@ import org.junit.Test
 
 class PlaylistJsonTest {
 
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface DataFrameType4 {
         val url: String
         val width: Int
         val height: Int
     }
 
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface DataFrameType5 {
         val url: String
         val width: Int
         val height: Int
     }
 
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface DataFrameType6 {
         val url: String
         val width: Int
         val height: Int
     }
 
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface DataFrameType7 {
         val url: String?
         val width: Int?
         val height: Int?
     }
 
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface DataFrameType8 {
         val url: String?
         val width: Int?
         val height: Int?
     }
 
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface DataFrameType3 {
         val default: DataRow<DataFrameType4>
         val medium: DataRow<DataFrameType5>
@@ -53,13 +53,13 @@ class PlaylistJsonTest {
         val maxres: DataRow<DataFrameType8>
     }
 
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface DataFrameType9 {
         val kind: String
         val videoId: String
     }
 
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface DataFrameType2 {
         val publishedAt: String
         val channelId: String
@@ -72,7 +72,7 @@ class PlaylistJsonTest {
         val resourceId: DataRow<DataFrameType9>
     }
 
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface DataFrameType1 {
         val kind: String
         val etag: String
@@ -80,13 +80,13 @@ class PlaylistJsonTest {
         val snippet: DataRow<DataFrameType2>
     }
 
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface DataFrameType10 {
         val totalResults: Int
         val resultsPerPage: Int
     }
 
-    @DataFrameType
+    @DataSchema
     interface DataRecord {
         val kind: String
         val etag: String

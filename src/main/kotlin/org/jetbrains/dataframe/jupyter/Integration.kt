@@ -37,7 +37,7 @@ internal class Integration : JupyterIntegration({
         execute(code).name
     }
 
-    onClassAnnotation<DataFrameType> { classes ->
+    onClassAnnotation<DataSchema> { classes ->
         
         val code = classes.mapNotNull {
             codeGen.generateExtensionProperties(it)
