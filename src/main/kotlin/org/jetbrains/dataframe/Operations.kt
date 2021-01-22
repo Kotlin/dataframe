@@ -31,7 +31,7 @@ fun <T> DataFrame<T>.map(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit): Da
 
 // size
 
-val DataFrame<*>.size: DataFrameSize get() = DataFrameSize(ncol(), nrow())
+val AnyFrame.size: DataFrameSize get() = DataFrameSize(ncol(), nrow())
 
 fun commonParent(classes: Iterable<KClass<*>>) = commonParents(classes).withMostSuperclasses()
 
@@ -137,11 +137,11 @@ internal fun Iterable<ColumnWithPath<*>>.dfs(): List<ColumnWithPath<*>> {
     return result
 }
 
-internal fun DataFrame<*>.collectTree() = columns().map { it.addPath() }.collectTree()
+internal fun AnyFrame.collectTree() = columns().map { it.addPath() }.collectTree()
 
 internal fun List<ColumnWithPath<*>>.collectTree() = collectTree(DataColumn.empty()) { it }
 
-internal fun <D> DataFrame<*>.collectTree(emptyData: D, createData: (AnyCol) -> D) = columns().map { it.addPath() }.collectTree(emptyData, createData)
+internal fun <D> AnyFrame.collectTree(emptyData: D, createData: (AnyCol) -> D) = columns().map { it.addPath() }.collectTree(emptyData, createData)
 
 internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (AnyCol) -> D): TreeNode<D> {
 

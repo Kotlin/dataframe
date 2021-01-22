@@ -1,16 +1,11 @@
 package org.jetbrains.dataframe.io
 
-import org.jetbrains.dataframe.DataFrame
-import org.jetbrains.dataframe.DataRow
-import org.jetbrains.dataframe.GroupedDataFrame
-import org.jetbrains.dataframe.isEmpty
-import org.jetbrains.dataframe.renderType
-import org.jetbrains.dataframe.truncate
+import org.jetbrains.dataframe.*
 
 fun <T> DataFrame<T>.print() = println(this)
 fun <T, G> GroupedDataFrame<T, G>.print() = println(this)
 
-internal fun DataFrame<*>.renderToString(limit: Int = 20, truncate: Int = 40): String {
+internal fun AnyFrame.renderToString(limit: Int = 20, truncate: Int = 40): String {
     val sb = StringBuilder()
     sb.appendLine("Data Frame [${size()}]")
     sb.appendLine()
@@ -53,7 +48,7 @@ internal fun DataRow<*>.renderToString(): String{
 
 internal fun renderValue(value: Any?) =
     when(value) {
-        is DataFrame<*> -> when{
+        is AnyFrame -> when{
             value.isEmpty() -> ""
             value.nrow() == 1 -> value[0].toString()
             else -> "${value.nrow()} rows"

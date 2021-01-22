@@ -184,16 +184,16 @@ class DataFrameTreeTests : BaseTest() {
                     expValues == null -> when(value){
                             null -> {}
                             is DataRow<*> -> value.isEmpty() shouldBe true
-                            is DataFrame<*> -> value.isEmpty() shouldBe true
+                            is AnyFrame -> value.isEmpty() shouldBe true
                     }
                     expValues.size == 1 -> {
                         value shouldNotBe null
-                        val single = if(value is DataRow<*>) value else if(value is DataFrame<*>) value[0] else fail("invalid value type")
+                        val single = if(value is DataRow<*>) value else if(value is AnyFrame) value[0] else fail("invalid value type")
                         single.size() shouldBe 2
                         single.int("age") to single.nint("weight") shouldBe expValues[0]
                     }
                     else -> {
-                        val df = value as? DataFrame<*>
+                        val df = value as? AnyFrame
                         df shouldNotBe null
                         df!!.map { int("age") to nint("weight") }.sortedBy { it.first } shouldBe expValues.sortedBy { it.first }
                     }

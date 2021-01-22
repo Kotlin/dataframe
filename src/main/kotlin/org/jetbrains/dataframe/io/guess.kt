@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe.io
 
-import org.jetbrains.dataframe.DataFrame
+import org.jetbrains.dataframe.*
 import java.io.File
 import java.net.URL
 
@@ -23,7 +23,7 @@ internal fun guessFormat(url: String): SupportedFormats? = when{
     else -> null
 }
 
-fun DataFrame.Companion.read(file: File): DataFrame<*> = when(guessFormat(file)) {
+fun DataFrame.Companion.read(file: File): AnyFrame = when(guessFormat(file)) {
     SupportedFormats.CSV -> readCSV(file)
     SupportedFormats.JSON -> readJSON(file)
     else -> try {
@@ -33,7 +33,7 @@ fun DataFrame.Companion.read(file: File): DataFrame<*> = when(guessFormat(file))
     }
 }
 
-fun DataFrame.Companion.read(url: URL): DataFrame<*> = when(guessFormat(url)) {
+fun DataFrame.Companion.read(url: URL): AnyFrame = when(guessFormat(url)) {
     SupportedFormats.CSV -> readCSV(url)
     SupportedFormats.JSON -> readJSON(url)
     else -> try {
@@ -43,7 +43,7 @@ fun DataFrame.Companion.read(url: URL): DataFrame<*> = when(guessFormat(url)) {
     }
 }
 
-fun DataFrame.Companion.read(path: String): DataFrame<*> = when(guessFormat(path)) {
+fun DataFrame.Companion.read(path: String): AnyFrame = when(guessFormat(path)) {
     SupportedFormats.CSV -> readCSV(path)
     SupportedFormats.JSON -> readJSON(path)
     else -> try {

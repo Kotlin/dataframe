@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.jupyter.api.libraries.*
 
 internal class Integration : JupyterIntegration({
 
-    render<DataFrame<*>> { HTML(it.toHTML()) }
+    render<AnyFrame> { HTML(it.toHTML()) }
     render<DataRow<*>> { it.toDataFrame() }
     render<MapColumn<*>> { it.df }
     render<AnyCol> { dataFrameOf(listOf(it)) }
@@ -20,7 +20,7 @@ internal class Integration : JupyterIntegration({
 
     val codeGen = CodeGenerator()
 
-    updateVariable<DataFrame<*>> { df, property ->
+    updateVariable<AnyFrame> { df, property ->
         codeGen.generate(df, property)?.let {
             val code = it.with(property.name)
             execute(code).name

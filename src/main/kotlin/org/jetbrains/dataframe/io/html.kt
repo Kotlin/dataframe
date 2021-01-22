@@ -1,10 +1,8 @@
 package org.jetbrains.dataframe.io
 
-import org.jetbrains.dataframe.DataFrame
-import org.jetbrains.dataframe.Image
-import org.jetbrains.dataframe.truncate
+import org.jetbrains.dataframe.*
 
-fun DataFrame<*>.toHTML(limit: Int = 20, truncate: Int = 40): String {
+fun AnyFrame.toHTML(limit: Int = 20, truncate: Int = 40): String {
     val sb = StringBuilder()
     sb.append("<html><body>")
     sb.append("<table><tr>")
