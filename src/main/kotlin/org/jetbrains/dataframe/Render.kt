@@ -20,11 +20,11 @@ internal fun renderType(column: AnyCol) =
             if (result.startsWith("kotlin.")) result.substring(7)
             else result
         }
-        ColumnKind.Table -> {
+        ColumnKind.Frame -> {
             val table = column.asTable()
             "[${renderSchema(table.df)}]"
         }
-        ColumnKind.Group -> {
+        ColumnKind.Map -> {
             val group = column.asGroup()
             "{${renderSchema(group.df)}}"
         }

@@ -3,7 +3,7 @@ package org.jetbrains.dataframe
 import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.api.columns.MapColumn
 import org.jetbrains.dataframe.api.columns.SingleColumn
-import org.jetbrains.dataframe.api.columns.TableColumn
+import org.jetbrains.dataframe.api.columns.FrameColumn
 import kotlin.reflect.KProperty
 
 interface DataFrameBase<out T>: SingleColumn<DataRow<T>> {
@@ -16,11 +16,11 @@ interface DataFrameBase<out T>: SingleColumn<DataRow<T>> {
     fun getGroup(columnPath: ColumnPath): MapColumn<*> = get(columnPath).asGroup()
 
     fun getTable(columnName: String) = get(columnName).asTable()
-    fun getTable(columnPath: ColumnPath): TableColumn<*> = get(columnPath).asTable()
+    fun getTable(columnPath: ColumnPath): FrameColumn<*> = get(columnPath).asTable()
 
     operator fun <R> get(column: ColumnReference<R>): DataColumn<R>
     operator fun <R> get(column: ColumnReference<DataRow<R>>): MapColumn<R>
-    operator fun <R> get(column: ColumnReference<DataFrame<R>>): TableColumn<R>
+    operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R>
 
     operator fun get(columnPath: ColumnPath): AnyCol {
 

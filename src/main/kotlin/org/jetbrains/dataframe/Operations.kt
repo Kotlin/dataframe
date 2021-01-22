@@ -328,7 +328,7 @@ else createStarProjectedType(false)
 
 internal inline fun <reified T> createType(typeArgument: KType? = null) = T::class.createType(typeArgument)
 
-fun <T> TableColumn<T>.union() = if (size > 0) values.union() else df.getRows(emptyList())
+fun <T> FrameColumn<T>.union() = if (size > 0) values.union() else df.getRows(emptyList())
 
 internal fun <T> T.asNullable() = this as T?
 

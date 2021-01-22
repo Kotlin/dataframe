@@ -3,11 +3,11 @@ package org.jetbrains.dataframe.impl.columns
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.columns.ColumnWithPath
 import org.jetbrains.dataframe.api.columns.MapColumn
-import org.jetbrains.dataframe.api.columns.TableColumn
+import org.jetbrains.dataframe.api.columns.FrameColumn
 
-internal class TableWithParentColumn<T>(parent: MapColumn<*>, source: TableColumn<T>) : DataColumnWithParentImpl<DataFrame<T>>(parent, source), TableColumn<T> by source {
+internal class FrameColumnWithParent<T>(parent: MapColumn<*>, source: FrameColumn<T>) : DataColumnWithParentImpl<DataFrame<T>>(parent, source), FrameColumn<T> by source {
 
-    override fun kind() = super<TableColumn>.kind()
+    override fun kind() = super<FrameColumn>.kind()
 
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<DataFrame<T>>> {
         return super<DataColumnWithParentImpl>.resolve(context)

@@ -2,7 +2,7 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.api.columns.MapColumn
-import org.jetbrains.dataframe.api.columns.TableColumn
+import org.jetbrains.dataframe.api.columns.FrameColumn
 import kotlin.reflect.KType
 
 inline fun <T, reified C> DataFrame<T>.mergeRows(noinline selector: ColumnsSelector<T, C>) = mergeRows(this, selector, getType<C>())
@@ -15,8 +15,8 @@ fun <T, C> mergeRows(df: DataFrame<T>, selector: ColumnsSelector<T, C>, type: KT
             if(row.index > 0) null
             else when(column.kind()) {
                 ColumnKind.Value -> column.toList()
-                ColumnKind.Group -> column.asGroup().df
-                ColumnKind.Table -> column.asTable().values.union()
+                ColumnKind.Map -> column.asGroup().df
+                ColumnKind.Frame -> column.asTable().values.union()
             }
         }
         updated[0..0]
@@ -38,7 +38,7 @@ fun <T, C> MergeClause<T, C, *>.mergeRows(): DataFrame<T> {
                 val data = grouped.groups.asIterable().map { it.get(column).df }
                 DataColumn.createTable(newName, data, column.df)
             }
-            is TableColumn<*> -> {
+            is FrameColumn<*> -> {
                 val data = grouped.groups.asIterable().map { it[column].toList().union() }
                 DataColumn.createTable(newName, data, column.df)
             }
