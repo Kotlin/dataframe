@@ -1,8 +1,8 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.DataCol
 import org.jetbrains.dataframe.api.columns.ColumnWithPath
-import org.jetbrains.dataframe.impl.columns.ColumnDataInternal
+import org.jetbrains.dataframe.impl.columns.DataColInternal
 import org.jetbrains.dataframe.impl.columns.RenamedColumnDef
 import kotlin.reflect.KProperty
 
@@ -28,4 +28,4 @@ fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> String) = d
 
 fun <C> ColumnDef<C>.rename(newName: String) = if (newName == name()) this else RenamedColumnDef(this, newName)
 
-fun <C> ColumnData<C>.rename(newName: String) = if (newName == name()) this else (this as ColumnDataInternal<C>).rename(newName)
+fun <C> DataCol<C>.rename(newName: String) = if (newName == name()) this else (this as DataColInternal<C>).rename(newName)

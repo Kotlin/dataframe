@@ -6,7 +6,7 @@ import kotlin.reflect.KType
 
 interface ColumnWithPath<out T> : ColumnDef<T> {
 
-    val data: ColumnData<T>
+    val data: DataCol<T>
     val path: ColumnPath
     val name: String get() = data.name()
     val type: KType get() = data.type

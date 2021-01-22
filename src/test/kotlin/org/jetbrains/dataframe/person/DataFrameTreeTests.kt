@@ -4,7 +4,7 @@ import io.kotlintest.fail
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.DataCol
 import org.jetbrains.dataframe.api.columns.GroupedColumnBase
 import org.jetbrains.dataframe.io.print
 import org.junit.Test
@@ -281,7 +281,7 @@ class DataFrameTreeTests : BaseTest() {
         val shortName = GroupedPerson::class.simpleName!!
         val nameAndCity = NameAndCity::class.qualifiedName
         val groupedColumn = GroupedColumnBase::class.qualifiedName
-        val columnData = ColumnData::class.qualifiedName
+        val columnData = DataCol::class.qualifiedName
         val expected = """
             val $dataFrameBase<$className>.age: $columnData<kotlin.Int> @JvmName("${shortName}_age") get() = this["age"] as $columnData<kotlin.Int>
             val $dataFrameRowBase<$className>.age: Int @JvmName("${shortName}_age") get() = this["age"] as Int

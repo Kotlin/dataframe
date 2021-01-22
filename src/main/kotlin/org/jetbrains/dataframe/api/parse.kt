@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.DataCol
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -57,21 +57,21 @@ internal object Parsers {
     inline fun <reified T : Any> get(): StringParser<T>? = get(getType<T>()) as? StringParser<T>
 }
 
-internal inline fun <reified T : Any> ColumnData<String?>.parse(): ColumnData<T?> {
+internal inline fun <reified T : Any> DataCol<String?>.parse(): DataCol<T?> {
     val parser = Parsers.get<T>() ?: throw Exception("Couldn't find parser for type ${T::class}")
     return parse(parser)
 }
 
-internal fun <T : Any> ColumnData<String?>.parse(parser: StringParser<T>): ColumnData<T?> {
+internal fun <T : Any> DataCol<String?>.parse(parser: StringParser<T>): DataCol<T?> {
     val parsedValues = values.map {
         it?.let {
             parser.parse(it) ?: throw Exception("Couldn't parse '${it}' to type ${parser.type}")
         }
     }
-    return column(name(), parsedValues, parser.type.withNullability(hasNulls)) as ColumnData<T?>
+    return column(name(), parsedValues, parser.type.withNullability(hasNulls)) as DataCol<T?>
 }
 
-internal fun ColumnData<String?>.tryParseAny(): ColumnData<*> {
+internal fun DataCol<String?>.tryParseAny(): DataCol<*> {
     var parserId = 0
     val parsedValues = mutableListOf<Any?>()
 

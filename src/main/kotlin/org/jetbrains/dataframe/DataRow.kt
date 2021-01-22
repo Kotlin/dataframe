@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.DataCol
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 
@@ -19,7 +19,7 @@ interface DataRow<out T>: DataRowBase<T> {
     override fun tryGet(name: String): Any?
     operator fun get(columnIndex: Int): Any?
     operator fun <R> get(column: ColumnDef<R>) = get(column.name()) as R
-    operator fun <R> get(column: ColumnData<R>) = column[index]
+    operator fun <R> get(column: DataCol<R>) = column[index]
     operator fun <R> get(property: KProperty<R>) = get(property.name) as R
     operator fun <R> ColumnDef<R>.invoke() = get(this)
     operator fun <R> KProperty1<*, R>.invoke() = get(this)

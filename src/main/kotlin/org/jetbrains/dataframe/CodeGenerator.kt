@@ -1,9 +1,9 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnData
-import org.jetbrains.dataframe.api.columns.GroupedColumn
+import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.GroupedCol
 import org.jetbrains.dataframe.api.columns.GroupedColumnBase
-import org.jetbrains.dataframe.api.columns.TableColumn
+import org.jetbrains.dataframe.api.columns.TableCol
 import org.jetbrains.kotlinx.jupyter.api.Code
 import org.jetbrains.kotlinx.jupyter.api.VariableName
 import kotlin.reflect.*
@@ -16,7 +16,7 @@ import kotlin.reflect.jvm.jvmErasure
 annotation class DataFrameType(val isOpen: Boolean = true)
 
 @Target(AnnotationTarget.PROPERTY)
-annotation class ColumnType(val type: KClass<out DataCol>)
+annotation class ColumnType(val type: KClass<out AnyCol>)
 
 @Target(AnnotationTarget.PROPERTY)
 annotation class ColumnName(val name: String)
@@ -95,9 +95,9 @@ class CodeGenerator : CodeGeneratorApi {
         }
 
         val columnType: KType get() = when(columnKind) {
-            ColumnKind.Data -> ColumnData::class.createType(type!!)
+            ColumnKind.Data -> DataCol::class.createType(type!!)
             ColumnKind.Group -> GroupedColumnType.createType(type)
-            ColumnKind.Table -> ColumnData::class.createType(DataFrameFieldType.createType(type))
+            ColumnKind.Table -> DataCol::class.createType(DataFrameFieldType.createType(type))
         }
 
         val fieldType: KType get() = when(columnKind) {
@@ -213,7 +213,7 @@ class CodeGenerator : CodeGeneratorApi {
         return result
     }
 
-    private fun getScheme(columns: Iterable<DataCol>): Scheme {
+    private fun getScheme(columns: Iterable<AnyCol>): Scheme {
         val generatedFieldNames = mutableSetOf<String>()
         return Scheme(columns.mapIndexed { index, it ->
             val fieldName = generateValidFieldName(it.name(), index, generatedFieldNames)
@@ -222,12 +222,12 @@ class CodeGenerator : CodeGeneratorApi {
             var childScheme : Scheme? = null
             var columnKind = ColumnKind.Data
             when {
-                it is GroupedColumn<*> -> {
+                it is GroupedCol<*> -> {
                     childScheme = it.df.schema
                     type = null
                     columnKind = ColumnKind.Group
                 }
-                it is TableColumn<*> -> {
+                it is TableCol<*> -> {
                     childScheme = it.df.schema
                     type = null
                     columnKind = ColumnKind.Table

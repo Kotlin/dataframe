@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.GroupedColumn
+import org.jetbrains.dataframe.api.columns.GroupedCol
 import org.jetbrains.dataframe.impl.TreeNode
 import kotlin.reflect.KProperty
 
@@ -31,20 +31,20 @@ internal fun <T> DataFrame<T>.doRemove(selector: ColumnsSelector<T, *>): RemoveR
 
     if(colPaths.isEmpty()) return RemoveResult(this, emptyList())
 
-    fun dfs(cols: Iterable<DataCol>, paths: List<ColumnPath>, node: TreeNode<ColumnPosition>): DataFrame<*>? {
+    fun dfs(cols: Iterable<AnyCol>, paths: List<ColumnPath>, node: TreeNode<ColumnPosition>): DataFrame<*>? {
 
         if(paths.isEmpty()) return null
 
         val depth = node.depth
         val children = paths.groupBy { it[depth] }
-        val newCols = mutableListOf<DataCol>()
+        val newCols = mutableListOf<AnyCol>()
 
         cols.forEachIndexed { index, column ->
             val childPaths = children[column.name()]
             if (childPaths != null) {
                 val node = node.addChild(column.name(), ColumnPosition(index, true, null))
                 if (childPaths.all { it.size > depth + 1 }) {
-                    val groupCol = (column as GroupedColumn<*>)
+                    val groupCol = (column as GroupedCol<*>)
                     val newDf = dfs(groupCol.df.columns(), childPaths, node)
                     if (newDf != null) {
                         val newCol = groupCol.withDf(newDf)

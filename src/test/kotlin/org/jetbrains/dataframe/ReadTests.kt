@@ -2,7 +2,7 @@ package org.jetbrains.dataframe
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.api.columns.GroupedColumnBase
-import org.jetbrains.dataframe.api.columns.TableColumn
+import org.jetbrains.dataframe.api.columns.TableCol
 import org.jetbrains.dataframe.io.*
 import org.junit.Test
 
@@ -64,7 +64,7 @@ class ReadTests {
         df.ncol() shouldBe 1
         df.nrow() shouldBe 2
         println(df)
-        val group = df["a"] as TableColumn<*>
+        val group = df["a"] as TableCol<*>
 
     }
 }

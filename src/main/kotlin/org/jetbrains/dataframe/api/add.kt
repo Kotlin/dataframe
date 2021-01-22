@@ -1,12 +1,12 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.DataCol
 
-operator fun <T> DataFrame<T>.plus(col: DataCol) = dataFrameOf(columns() + col).typed<T>()
+operator fun <T> DataFrame<T>.plus(col: AnyCol) = dataFrameOf(columns() + col).typed<T>()
 
-operator fun <T> DataFrame<T>.plus(col: Iterable<DataCol>) = dataFrameOf(columns() + col).typed<T>()
+operator fun <T> DataFrame<T>.plus(col: Iterable<AnyCol>) = dataFrameOf(columns() + col).typed<T>()
 
-fun <T> DataFrame<T>.add(name: String, data: DataCol) = dataFrameOf(columns() + data.rename(name)).typed<T>()
+fun <T> DataFrame<T>.add(name: String, data: AnyCol) = dataFrameOf(columns() + data.rename(name)).typed<T>()
 
 inline fun <reified R, T> DataFrame<T>.add(name: String, noinline expression: RowSelector<T, R>) =
         (this + newColumn(name, expression))
@@ -26,9 +26,9 @@ fun <T> DataFrame<T>.add(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) =
 operator fun <T> DataFrame<T>.plus(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) = add(body)
 
 class TypedColumnsFromDataRowBuilder<T>(val df: DataFrame<T>): DataFrameBase<T> by df {
-    internal val columns = mutableListOf<DataCol>()
+    internal val columns = mutableListOf<AnyCol>()
 
-    fun add(column: DataCol) = columns.add(column)
+    fun add(column: AnyCol) = columns.add(column)
 
     inline fun <reified R> add(name: String, noinline expression: RowSelector<T, R>) = add(df.newColumn(name, expression))
 
@@ -38,9 +38,9 @@ class TypedColumnsFromDataRowBuilder<T>(val df: DataFrame<T>): DataFrameBase<T> 
 
     inline operator fun <reified R> String.invoke(noinline expression: RowSelector<T, R>) = add(this, expression)
 
-    operator fun String.invoke(column: DataCol) = add(column.rename(this))
+    operator fun String.invoke(column: AnyCol) = add(column.rename(this))
 
-    inline operator fun <reified R> ColumnDef<R>.invoke(column: ColumnData<R>) = name()(column)
+    inline operator fun <reified R> ColumnDef<R>.invoke(column: DataCol<R>) = name()(column)
 
-    infix fun DataCol.into(name: String) = add(rename(name))
+    infix fun AnyCol.into(name: String) = add(rename(name))
 }
