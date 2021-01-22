@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.DataCol
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -63,7 +63,7 @@ fun <T, K, V, C : SpreadContext> SpreadClause<T, K, V, C>.useDefault(defaultValu
     SpreadClause(context, keyColumn, valueColumn, valueSelector, valueType, defaultValue, columnPath)
 
 @JvmName("useDefaultTKVC")
-fun <T, K, V, C : SpreadContext> SpreadClause<T, K, ColumnData<V>, C>.useDefault(defaultValue: V): SpreadClause<T, K, ColumnData<V>, C> =
+fun <T, K, V, C : SpreadContext> SpreadClause<T, K, DataCol<V>, C>.useDefault(defaultValue: V): SpreadClause<T, K, DataCol<V>, C> =
     SpreadClause(context, keyColumn, valueColumn, valueSelector, valueType, defaultValue, columnPath)
 
 internal fun <T, K, V, C : SpreadContext> SpreadClause<T, K, V, *>.changeContext(newContext: C) =
@@ -74,24 +74,24 @@ inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.b
     by { column.toColumnDef() }
 
 inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(column: ColumnDef<V>) = by { column }
-inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(noinline columnSelector: ColumnSelector<T, V>): SpreadClause<T, K, ColumnData<V>, SpreadContext.DataFrame<T>> =
+inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(noinline columnSelector: ColumnSelector<T, V>): SpreadClause<T, K, DataCol<V>, SpreadContext.DataFrame<T>> =
     SpreadClause(
         context,
         keyColumn,
         columnSelector,
         { column(columnSelector) },
-        getType<ColumnData<V>>(),
+        getType<DataCol<V>>(),
         null,
         columnPath
     )
 
-inline fun <T, K, V, reified R> SpreadClause<T, K, ColumnData<V>, SpreadContext.DataFrame<T>>.map(noinline transform: (V) -> R) =
+inline fun <T, K, V, reified R> SpreadClause<T, K, DataCol<V>, SpreadContext.DataFrame<T>>.map(noinline transform: (V) -> R) =
     SpreadClause(
         context,
         keyColumn,
         valueColumn,
         { valueSelector(it, it).map(getType<R>(), transform) },
-        getType<ColumnData<R>>(),
+        getType<DataCol<R>>(),
         null,
         columnPath
     )
@@ -165,7 +165,7 @@ internal fun <T, K, V, G> SpreadClause<G, K, V, SpreadContext.GroupedDataFrame<T
 
 internal fun <T, K, V> SpreadClause<T, K, V, SpreadContext.GroupAggregator<T>>.execute(): DataFrame<T> {
     val df = context.builder.df
-    val isColumnType = valueType.isSubtypeOf(getType<DataCol>())
+    val isColumnType = valueType.isSubtypeOf(getType<AnyCol>())
 
     val defaultType = valueType.let {
         if (isColumnType) it.arguments[0].type else it
@@ -180,7 +180,7 @@ internal fun <T, K, V> SpreadClause<T, K, V, SpreadContext.GroupAggregator<T>>.e
 
         // if computed value is column, extract a single value or a list of values from it
         if (isColumnType && value != null) {
-            val col = value as DataCol
+            val col = value as AnyCol
             if (col.size == 1) {
                 value = col[0]
             } else {

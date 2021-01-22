@@ -4,7 +4,7 @@ import org.jetbrains.dataframe.ColumnKind
 import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.NestedColumn
 
-interface TableColumn<out T> : ColumnData<DataFrame<T>>, NestedColumn<T> {
+interface TableCol<out T> : DataCol<DataFrame<T>>, NestedColumn<T> {
 
     override fun kind() = ColumnKind.Table
 }

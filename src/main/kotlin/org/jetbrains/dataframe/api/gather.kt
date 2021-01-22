@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.DataCol
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
 
@@ -24,7 +24,7 @@ fun <T, C, K, R> doGather(clause: GatherClause<T, C, K, R>, namesTo: String, val
 
     val removed = clause.df.doRemove(clause.selector)
 
-    val columnsToGather = removed.removedColumns.map { it.data.column as ColumnData<C> }
+    val columnsToGather = removed.removedColumns.map { it.data.column as DataCol<C> }
 
     val isGatherGroups = columnsToGather.any { it.isGrouped() }
     if (isGatherGroups && columnsToGather.any { !it.isGrouped() })

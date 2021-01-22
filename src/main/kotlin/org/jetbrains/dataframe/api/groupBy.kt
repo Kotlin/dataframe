@@ -1,12 +1,12 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.DataCol
 import org.jetbrains.dataframe.impl.GroupedDataFrameImpl
 import org.jetbrains.dataframe.impl.dfsTopNotNull
 import kotlin.reflect.KProperty
 
-fun <T> ColumnData<T>.groupBy(vararg cols: DataCol) = groupBy(cols.toList())
-fun <T> ColumnData<T>.groupBy(cols: Iterable<DataCol>) = (cols + this).asDataFrame<Unit>().groupBy { cols(0 until ncol() -1) }
+fun <T> DataCol<T>.groupBy(vararg cols: AnyCol) = groupBy(cols.toList())
+fun <T> DataCol<T>.groupBy(cols: Iterable<AnyCol>) = (cols + this).asDataFrame<Unit>().groupBy { cols(0 until ncol() -1) }
 
 fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>) = groupBy { cols.toColumnSet() }
 fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>) = groupBy { cols.toColumns() }
@@ -44,7 +44,7 @@ fun <T> DataFrame<T>.groupBy(cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T
        start
    }
 
-   val groupedColumn = ColumnData.createTable(columnForGroupedData.name(), sorted, startIndices)
+   val groupedColumn = DataCol.createTable(columnForGroupedData.name(), sorted, startIndices)
 
    val df = keyColumnsDf + groupedColumn
    return GroupedDataFrameImpl(df, groupedColumn)

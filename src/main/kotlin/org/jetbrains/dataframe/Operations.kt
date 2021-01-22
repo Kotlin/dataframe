@@ -2,7 +2,7 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.api.columns.*
 import org.jetbrains.dataframe.impl.TreeNode
-import org.jetbrains.dataframe.impl.columns.ColumnDataWithParent
+import org.jetbrains.dataframe.impl.columns.DataColWithParent
 import org.jetbrains.dataframe.impl.columns.ColumnWithParent
 import org.jetbrains.dataframe.impl.columns.ColumnWithPathImpl
 import org.jetbrains.dataframe.impl.getAncestor
@@ -96,27 +96,27 @@ internal fun baseType(types: Set<KType>): KType {
     }
 }
 
-internal fun indexColumn(columnName: String, size: Int): DataCol = column(columnName, (0 until size).toList())
+internal fun indexColumn(columnName: String, size: Int): AnyCol = column(columnName, (0 until size).toList())
 
 fun <T> DataFrame<T>.addRowNumber(column: ColumnDef<Int>) = addRowNumber(column.name())
 fun <T> DataFrame<T>.addRowNumber(columnName: String = "id"): DataFrame<T> = dataFrameOf(columns() + indexColumn(columnName,
     nrow()
 )).typed<T>()
-fun DataCol.addRowNumber(columnName: String = "id") = dataFrameOf(listOf(indexColumn(columnName, size), this))
+fun AnyCol.addRowNumber(columnName: String = "id") = dataFrameOf(listOf(indexColumn(columnName, size), this))
 
 // Column operations
 
-inline fun <reified T : Comparable<T>> ColumnData<T?>.median() = values.asSequence().filterNotNull().asIterable().median()
+inline fun <reified T : Comparable<T>> DataCol<T?>.median() = values.asSequence().filterNotNull().asIterable().median()
 
 // Update
 
 inline fun <reified C> headPlusArray(head: C, cols: Array<out C>) = (listOf(head) + cols.toList()).toTypedArray()
 
-inline fun <reified C> ColumnsSelectorReceiver<*>.colsOfType(noinline filter: (ColumnData<C>) -> Boolean = { true }) = colsOfType(getType<C>(), filter)
+inline fun <reified C> ColumnsSelectorReceiver<*>.colsOfType(noinline filter: (DataCol<C>) -> Boolean = { true }) = colsOfType(getType<C>(), filter)
 
 // column grouping
 
-internal fun <C> TreeNode<ColumnPosition>.column() = ColumnWithPathImpl(data.column as ColumnData<C>, pathFromRoot())
+internal fun <C> TreeNode<ColumnPosition>.column() = ColumnWithPathImpl(data.column as DataCol<C>, pathFromRoot())
 
 internal fun TreeNode<ColumnPosition>.allRemovedColumns() = dfs { it.data.wasRemoved && it.data.column != null }
 
@@ -141,13 +141,13 @@ internal fun DataFrame<*>.collectTree() = columns().map { it.addPath() }.collect
 
 internal fun List<ColumnWithPath<*>>.collectTree() = collectTree(DataCol.empty()) { it }
 
-internal fun <D> DataFrame<*>.collectTree(emptyData: D, createData: (DataCol) -> D) = columns().map { it.addPath() }.collectTree(emptyData, createData)
+internal fun <D> DataFrame<*>.collectTree(emptyData: D, createData: (AnyCol) -> D) = columns().map { it.addPath() }.collectTree(emptyData, createData)
 
-internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (DataCol) -> D): TreeNode<D> {
+internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (AnyCol) -> D): TreeNode<D> {
 
     val root = TreeNode.createRoot(emptyData)
 
-    fun collectColumns(col: DataCol, parentNode: TreeNode<D>) {
+    fun collectColumns(col: AnyCol, parentNode: TreeNode<D>) {
         val newNode = parentNode.getOrPut(col.name()) { createData(col) }
         if(col.isGrouped()){
             col.asGrouped().columns().forEach {
@@ -168,14 +168,14 @@ internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (
     return root
 }
 
-internal data class ColumnPosition(val originalIndex: Int, var wasRemoved: Boolean, var column: DataCol?)
+internal data class ColumnPosition(val originalIndex: Int, var wasRemoved: Boolean, var column: AnyCol?)
 
 // TODO: replace 'insertionPath' with TreeNode<ColumnToInsert> tree
-internal data class ColumnToInsert(val insertionPath: ColumnPath, val originalNode: TreeNode<ColumnPosition>?, val column: DataCol)
+internal data class ColumnToInsert(val insertionPath: ColumnPath, val originalNode: TreeNode<ColumnPosition>?, val column: AnyCol)
 
 fun Column.getParent(): GroupedColumnDef? = when (this) {
     is ColumnWithParent<*> -> parent
-    is ColumnDataWithParent<*> -> parent
+    is DataColWithParent<*> -> parent
     else -> null
 }
 
@@ -190,16 +190,16 @@ fun Column.getPath(): ColumnPath {
     return list
 }
 
-internal fun <T> DataFrame<T>.collectTree(selector: ColumnsSelector<T, *>): TreeNode<DataCol?> {
+internal fun <T> DataFrame<T>.collectTree(selector: ColumnsSelector<T, *>): TreeNode<AnyCol?> {
 
     val colPaths = getColumnPaths(selector)
 
-    val root = TreeNode.createRoot(null as DataCol?)
+    val root = TreeNode.createRoot(null as AnyCol?)
 
     colPaths.forEach {
 
-        var column: DataCol? = null
-        var node: TreeNode<DataCol?> = root
+        var column: AnyCol? = null
+        var node: TreeNode<AnyCol?> = root
         it.forEach {
             when (column) {
                 null -> column = this[it]
@@ -229,7 +229,7 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
 
     val columnsMap = columns.groupBy { it.insertionPath[depth] }.toMutableMap() // map: columnName -> columnsToAdd
 
-    val newColumns = mutableListOf<DataCol>()
+    val newColumns = mutableListOf<AnyCol>()
 
     // insert new columns under existing
     df?.columns()?.forEach {
@@ -238,7 +238,7 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
             // assert that new columns go directly under current column so they have longer paths
             val invalidPath = subTree.firstOrNull { it.insertionPath.size == childDepth }
             assert(invalidPath == null) { "Can't move column to path: " + invalidPath!!.insertionPath.joinToString(".") + ". Column with this path already exists" }
-            val group = it as? GroupedColumn<*>
+            val group = it as? GroupedCol<*>
             assert(group != null) { "Can not insert columns under a column '${it.name()}', because it is not a column group" }
             val newDf = insertColumns(group!!.df, subTree, treeNode?.get(it.name()), childDepth)
             val newCol = group.withDf(newDf)
@@ -292,13 +292,13 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
             val column = nodeToInsert.column
             if (columns.size > 1) {
                 assert(columns.count { it.insertionPath.size == childDepth } == 1) { "Can not insert more than one column into the path ${nodeToInsert.insertionPath}" }
-                val group = column as GroupedColumn<*>
+                val group = column as GroupedCol<*>
                 val newDf = insertColumns(group.df, columns.filter { it.insertionPath.size > childDepth }, treeNode?.get(name), childDepth)
                 group.withDf(newDf)
             } else column.rename(name)
         } else {
             val newDf = insertColumns<Unit>(null, columns, treeNode?.get(name), childDepth)
-            ColumnData.createGroup(name, newDf) // new node needs to be created
+            DataCol.createGroup(name, newDf) // new node needs to be created
         }
         if (insertionIndex == Int.MAX_VALUE)
             newColumns.add(newCol)
@@ -328,7 +328,7 @@ else createStarProjectedType(false)
 
 internal inline fun <reified T> createType(typeArgument: KType? = null) = T::class.createType(typeArgument)
 
-fun <T> TableColumn<T>.union() = if (size > 0) values.union() else df.getRows(emptyList())
+fun <T> TableCol<T>.union() = if (size > 0) values.union() else df.getRows(emptyList())
 
 internal fun <T> T.asNullable() = this as T?
 

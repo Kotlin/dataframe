@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe
 
 import com.beust.klaxon.internal.firstNotNullResult
-import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.DataCol
 import org.jetbrains.dataframe.io.valueColumnName
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -30,7 +30,7 @@ internal fun merge(dataFrames: List<DataFrame<*>>): DataFrame<Unit> {
                     emptyDataFrame(it.nrow())
             }
             val merged = merge(groupedDataFrames)
-            ColumnData.createGroup(name, merged)
+            DataCol.createGroup(name, merged)
         } else {
 
             val defaultValue = firstColumn.defaultValue()
@@ -65,7 +65,7 @@ internal fun merge(dataFrames: List<DataFrame<*>>): DataFrame<Unit> {
                     }
                     nullable = false
                 }
-                ColumnData.createTable(name, list as List<DataFrame<*>>)
+                DataCol.createTable(name, list as List<DataFrame<*>>)
             }else {
                 val baseType = baseType(types).withNullability(nullable)
 
@@ -75,7 +75,7 @@ internal fun merge(dataFrames: List<DataFrame<*>>): DataFrame<Unit> {
                             list[index] = listOf(value)
                     }
 
-                ColumnData.create(name, list, baseType, defaultValue)
+                DataCol.create(name, list, baseType, defaultValue)
             }
         }
     }

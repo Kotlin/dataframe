@@ -1,8 +1,7 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.DataCol
 import org.jetbrains.dataframe.api.columns.ColumnSet
-import org.jetbrains.dataframe.impl.columns.RenamedColumnDef
 import kotlin.reflect.KProperty
 
 fun <T> DataFrame<T>.select(selector: ColumnsSelector<T, *>): DataFrame<T> = new(getColumns(selector))
@@ -24,7 +23,7 @@ interface SelectReceiver<out T> : ColumnsSelectorReceiver<T> {
     operator fun <C> ColumnSelector<T, C>.invoke() = this(this@SelectReceiver, this@SelectReceiver)
 
     operator fun <C> ColumnDef<C>.invoke(newName: String) = rename(newName)
-    infix fun <C> ColumnData<C>.into(newName: String) = (this as ColumnDef<C>).rename(newName)
+    infix fun <C> DataCol<C>.into(newName: String) = (this as ColumnDef<C>).rename(newName)
 
     infix fun String.and(other: String) = toColumnDef() and other.toColumnDef()
     infix fun <C> String.and(other: ColumnSet<C>) = toColumnDef() and other

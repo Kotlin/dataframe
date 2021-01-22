@@ -1,30 +1,30 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnData
-import org.jetbrains.dataframe.api.columns.GroupedColumn
+import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.GroupedCol
 import org.jetbrains.dataframe.api.columns.SingleColumn
-import org.jetbrains.dataframe.api.columns.TableColumn
+import org.jetbrains.dataframe.api.columns.TableCol
 import kotlin.reflect.KProperty
 
 interface DataFrameBase<out T>: SingleColumn<DataRow<T>> {
 
-    operator fun get(columnName: String): DataCol
-    fun tryGetColumn(columnName: String): DataCol?
-    fun <R> getColumn(columnName: String) = get(columnName) as ColumnData<R>
+    operator fun get(columnName: String): AnyCol
+    fun tryGetColumn(columnName: String): AnyCol?
+    fun <R> getColumn(columnName: String) = get(columnName) as DataCol<R>
 
     fun getGroup(columnName: String) = get(columnName).asGrouped()
-    fun getGroup(columnPath: ColumnPath): GroupedColumn<*> = get(columnPath).asGrouped()
+    fun getGroup(columnPath: ColumnPath): GroupedCol<*> = get(columnPath).asGrouped()
 
     fun getTable(columnName: String) = get(columnName).asTable()
-    fun getTable(columnPath: ColumnPath): TableColumn<*> = get(columnPath).asTable()
+    fun getTable(columnPath: ColumnPath): TableCol<*> = get(columnPath).asTable()
 
-    operator fun <R> get(column: ColumnDef<R>): ColumnData<R>
-    operator fun <R> get(column: ColumnDef<DataRow<R>>): GroupedColumn<R>
-    operator fun <R> get(column: ColumnDef<DataFrame<R>>): TableColumn<R>
+    operator fun <R> get(column: ColumnDef<R>): DataCol<R>
+    operator fun <R> get(column: ColumnDef<DataRow<R>>): GroupedCol<R>
+    operator fun <R> get(column: ColumnDef<DataFrame<R>>): TableCol<R>
 
-    operator fun get(columnPath: ColumnPath): DataCol {
+    operator fun get(columnPath: ColumnPath): AnyCol {
 
-        var res: DataCol? = null
+        var res: AnyCol? = null
         columnPath.forEach {
             if(res == null) res = this[it]
             else res = res!!.asGrouped()[it]
@@ -33,8 +33,8 @@ interface DataFrameBase<out T>: SingleColumn<DataRow<T>> {
     }
 
     operator fun get(index: Int): DataRow<T>
-    fun column(columnIndex: Int): DataCol
-    fun columns(): List<DataCol>
+    fun column(columnIndex: Int): AnyCol
+    fun columns(): List<AnyCol>
     fun ncol(): Int
 }
 
