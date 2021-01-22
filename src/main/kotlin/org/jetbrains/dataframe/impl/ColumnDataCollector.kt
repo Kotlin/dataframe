@@ -33,7 +33,7 @@ internal abstract class DataCollectorBase<T>(initCapacity: Int): DataCollector<T
     protected fun createColumn(name: String, type: KType): DataColumn<T> {
         val classifier = type.classifier as KClass<*>
         if (classifier.isSubclassOf(DataFrame::class)) {
-            return DataColumn.createTable(name, data as List<DataFrame<*>>) as DataColumn<T>
+            return DataColumn.createTable(name, data as List<AnyFrame>) as DataColumn<T>
         }
         if(classifier.isSubclassOf(DataRow::class)) {
             val mergedDf = (data as List<DataRow<*>>).map { it.toDataFrame() }.union()
@@ -56,7 +56,7 @@ internal open class ColumnDataCollector(initCapacity: Int = 0, val getType: (KCl
         super.add(value)
         if (value != null) {
             if(!hasRows && value is DataRow<*>) hasRows = true
-            else if(!hasTables && value is DataFrame<*>) hasTables = true
+            else if(!hasTables && value is AnyFrame) hasTables = true
             else classes.add(value.javaClass.kotlin)
         }
     }
@@ -68,7 +68,7 @@ internal open class ColumnDataCollector(initCapacity: Int = 0, val getType: (KCl
                     when(it){
                         null -> emptyDataFrame(1)
                         is DataRow<*> -> it.toDataFrame()
-                        is DataFrame<*> -> it
+                        is AnyFrame -> it
                         else -> throw UnsupportedOperationException()
                     }
                 }

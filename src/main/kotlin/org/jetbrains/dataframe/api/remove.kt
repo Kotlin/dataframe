@@ -31,7 +31,7 @@ internal fun <T> DataFrame<T>.doRemove(selector: ColumnsSelector<T, *>): RemoveR
 
     if(colPaths.isEmpty()) return RemoveResult(this, emptyList())
 
-    fun dfs(cols: Iterable<AnyCol>, paths: List<ColumnPath>, node: TreeNode<ColumnPosition>): DataFrame<*>? {
+    fun dfs(cols: Iterable<AnyCol>, paths: List<ColumnPath>, node: TreeNode<ColumnPosition>): AnyFrame? {
 
         if(paths.isEmpty()) return null
 

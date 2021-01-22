@@ -6,8 +6,8 @@ import org.jetbrains.dataframe.io.valueColumnName
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
-fun Iterable<DataFrame<*>>.union() = merge(asList())
-internal fun merge(dataFrames: List<DataFrame<*>>): DataFrame<Unit> {
+fun Iterable<AnyFrame>.union() = merge(asList())
+internal fun merge(dataFrames: List<AnyFrame>): DataFrame<Unit> {
     if (dataFrames.size == 1) return dataFrames[0].typed()
 
     // collect column names preserving original order
@@ -65,7 +65,7 @@ internal fun merge(dataFrames: List<DataFrame<*>>): DataFrame<Unit> {
                     }
                     nullable = false
                 }
-                DataColumn.createTable(name, list as List<DataFrame<*>>)
+                DataColumn.createTable(name, list as List<AnyFrame>)
             }else {
                 val baseType = baseType(types).withNullability(nullable)
 
@@ -82,10 +82,10 @@ internal fun merge(dataFrames: List<DataFrame<*>>): DataFrame<Unit> {
     return dataFrameOf(columns)
 }
 
-internal fun convertToDataFrame(value: Any?): DataFrame<*> {
+internal fun convertToDataFrame(value: Any?): AnyFrame {
     return when (value) {
         null -> DataFrame.empty<Any?>()
-        is DataFrame<*> -> value
+        is AnyFrame -> value
         is DataRow<*> -> value.toDataFrame()
         is List<*> -> value.mapNotNull { convertToDataFrame(it) }.union()
         else -> dataFrameOf(valueColumnName)(value)

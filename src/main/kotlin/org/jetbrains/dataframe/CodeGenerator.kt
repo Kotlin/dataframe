@@ -26,9 +26,9 @@ enum class CodeGenerationMode {
     ShortNames
 }
 
-data class DataFrameToListNamedStub(val df: DataFrame<*>, val className: String)
+data class DataFrameToListNamedStub(val df: AnyFrame, val className: String)
 
-data class DataFrameToListTypedStub(val df: DataFrame<*>, val interfaceClass: KClass<*>)
+data class DataFrameToListTypedStub(val df: AnyFrame, val interfaceClass: KClass<*>)
 
 data class GeneratedCode(val declarations: Code, val converter: (VariableName) -> Code) {
 
@@ -37,7 +37,7 @@ data class GeneratedCode(val declarations: Code, val converter: (VariableName) -
 
 interface CodeGeneratorApi {
 
-    fun generate(df: DataFrame<*>, property: KProperty<*>? = null): GeneratedCode?
+    fun generate(df: AnyFrame, property: KProperty<*>? = null): GeneratedCode?
     fun generate(stub: DataFrameToListNamedStub): GeneratedCode
     fun generate(stub: DataFrameToListTypedStub): GeneratedCode
 
@@ -237,7 +237,7 @@ class CodeGenerator : CodeGeneratorApi {
         })
     }
 
-    private val DataFrame<*>.schema: Scheme
+    private val AnyFrame.schema: Scheme
         get() = getScheme(columns())
 
     // Rendering
@@ -342,7 +342,7 @@ class CodeGenerator : CodeGeneratorApi {
         return targetBaseMarkers.all { superclasses.contains(it) }
     }
 
-    override fun generate(df: DataFrame<*>, property: KProperty<*>?): GeneratedCode? {
+    override fun generate(df: AnyFrame, property: KProperty<*>?): GeneratedCode? {
 
         var targetScheme = df.schema
         var isMutable = false
@@ -496,7 +496,7 @@ class CodeGenerator : CodeGeneratorApi {
         return resultDeclarations
     }
 
-    internal fun generateInterfaceDeclarations(df: DataFrame<*>, name: String, generateExtensionProperties: Boolean) = generateInterfaceDeclarations(getScheme(df.columns()), name, false, GenerationOptions(true, generateExtensionProperties, name))
+    internal fun generateInterfaceDeclarations(df: AnyFrame, name: String, generateExtensionProperties: Boolean) = generateInterfaceDeclarations(getScheme(df.columns()), name, false, GenerationOptions(true, generateExtensionProperties, name))
 
     // DataFrame -> List converters
 

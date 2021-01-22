@@ -44,7 +44,7 @@ fun DataFrame.Companion.readCSV(
     url: URL,
     format: CSVFormat = defaultCsvFormat,
     colTypes: Map<String, ColType> = mapOf()
-): DataFrame<*> = readDelim(
+): AnyFrame = readDelim(
     inStream = url.openStream(),
     format = format,
     colTypes = colTypes,
@@ -121,7 +121,7 @@ fun DataFrame.Companion.readDelim(
     format: CSVFormat = CSVFormat.DEFAULT.withHeader(),
     colTypes: Map<String, ColType> = mapOf(),
     skip: Int = 0
-): DataFrame<*> {
+): AnyFrame {
 
     val formatWithNullString = if (format.isNullStringSet) {
         format

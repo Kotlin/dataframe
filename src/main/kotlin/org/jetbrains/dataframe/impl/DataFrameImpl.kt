@@ -44,7 +44,7 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T> {
     override fun getColumnIndex(columnName: String) = columnsMap[columnName] ?: -1
 
     override fun equals(other: Any?): Boolean {
-        val df = other as? DataFrame<*> ?: return false
+        val df = other as? AnyFrame ?: return false
         return columns == df.columns()
     }
 
