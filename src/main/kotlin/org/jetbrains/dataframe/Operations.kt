@@ -98,7 +98,7 @@ internal fun baseType(types: Set<KType>): KType {
 
 internal fun indexColumn(columnName: String, size: Int): AnyCol = column(columnName, (0 until size).toList())
 
-fun <T> DataFrame<T>.addRowNumber(column: ColumnDef<Int>) = addRowNumber(column.name())
+fun <T> DataFrame<T>.addRowNumber(column: ColumnReference<Int>) = addRowNumber(column.name())
 fun <T> DataFrame<T>.addRowNumber(columnName: String = "id"): DataFrame<T> = dataFrameOf(columns() + indexColumn(columnName,
     nrow()
 )).typed<T>()

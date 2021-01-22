@@ -18,9 +18,9 @@ interface DataFrameBase<out T>: SingleColumn<DataRow<T>> {
     fun getTable(columnName: String) = get(columnName).asTable()
     fun getTable(columnPath: ColumnPath): TableCol<*> = get(columnPath).asTable()
 
-    operator fun <R> get(column: ColumnDef<R>): DataCol<R>
-    operator fun <R> get(column: ColumnDef<DataRow<R>>): GroupedCol<R>
-    operator fun <R> get(column: ColumnDef<DataFrame<R>>): TableCol<R>
+    operator fun <R> get(column: ColumnReference<R>): DataCol<R>
+    operator fun <R> get(column: ColumnReference<DataRow<R>>): GroupedCol<R>
+    operator fun <R> get(column: ColumnReference<DataFrame<R>>): TableCol<R>
 
     operator fun get(columnPath: ColumnPath): AnyCol {
 

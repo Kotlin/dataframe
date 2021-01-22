@@ -32,15 +32,15 @@ class TypedColumnsFromDataRowBuilder<T>(val df: DataFrame<T>): DataFrameBase<T> 
 
     inline fun <reified R> add(name: String, noinline expression: RowSelector<T, R>) = add(df.newColumn(name, expression))
 
-    inline fun <reified R> add(columnDef: ColumnDef<R>, noinline expression: RowSelector<T, R>) = add(df.newColumn(columnDef.name(), expression))
+    inline fun <reified R> add(`colum nReference`: ColumnReference<R>, noinline expression: RowSelector<T, R>) = add(df.newColumn(`colum nReference`.name(), expression))
 
-    inline operator fun <reified R> ColumnDef<R>.invoke(noinline expression: RowSelector<T, R>) = add(df.newColumn(name(), expression))
+    inline operator fun <reified R> ColumnReference<R>.invoke(noinline expression: RowSelector<T, R>) = add(df.newColumn(name(), expression))
 
     inline operator fun <reified R> String.invoke(noinline expression: RowSelector<T, R>) = add(this, expression)
 
     operator fun String.invoke(column: AnyCol) = add(column.rename(this))
 
-    inline operator fun <reified R> ColumnDef<R>.invoke(column: DataCol<R>) = name()(column)
+    inline operator fun <reified R> ColumnReference<R>.invoke(column: DataCol<R>) = name()(column)
 
     infix fun AnyCol.into(name: String) = add(rename(name))
 }

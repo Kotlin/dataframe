@@ -27,7 +27,7 @@ internal fun <C> DataFrameBase<*>.getColumn(name: String, policy: UnresolvedColu
                     UnresolvedColumnsPolicy.Create -> DataCol.empty().typed<C>()
                 }
 
-interface ColumnDef<out C> : SingleColumn<C> {
+interface ColumnReference<out C> : SingleColumn<C> {
 
     fun name(): String
 
@@ -51,21 +51,21 @@ class ColumnsBySelector<C>(val resolver: (ColumnResolutionContext) -> List<Colum
     override fun resolve(context: ColumnResolutionContext) = resolver(context)
 }
 
-inline fun <C, reified R> ColumnDef<C>.map(noinline transform: (C) -> R): SingleColumn<R> = map(getType<R>(), transform)
+inline fun <C, reified R> ColumnReference<C>.map(noinline transform: (C) -> R): SingleColumn<R> = map(getType<R>(), transform)
 
-fun <C, R> ColumnDef<C>.map(targetType: KType?, transform: (C) -> R): SingleColumn<R> = ConvertedColumnDef(this, transform, targetType)
+fun <C, R> ColumnReference<C>.map(targetType: KType?, transform: (C) -> R): SingleColumn<R> = ConvertedColumnDef(this, transform, targetType)
 
-typealias Column = ColumnDef<*>
+typealias Column = ColumnReference<*>
 
-typealias GroupedColumnDef = ColumnDef<DataRow<*>>
+typealias GroupedColumnDef = ColumnReference<DataRow<*>>
 
-fun String.toColumnDef(): ColumnDef<Any?> = ColumnDefinition(this)
+fun String.toColumnDef(): ColumnReference<Any?> = ColumnDefinition(this)
 
 internal fun KProperty<*>.getColumnName() = this.findAnnotation<ColumnName>()?.name ?: name
 
 fun <T> KProperty<T>.toColumnDef() = ColumnDefinition<T>(name)
 
-class ColumnDefinition<T>(val name: String) : ColumnDef<T> {
+class ColumnDefinition<T>(val name: String) : ColumnReference<T> {
 
     override fun name() = name
 
@@ -136,7 +136,7 @@ val KType.fullName: String get() = toString()
 
 fun KClass<*>.createStarProjectedType(nullable: Boolean) = this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
 
-inline fun <reified T> ColumnDef<T>.withValues(values: List<T>, hasNulls: Boolean) =
+inline fun <reified T> ColumnReference<T>.withValues(values: List<T>, hasNulls: Boolean) =
     column(name(), values, hasNulls)
 
 // TODO: implement correct base schema computation
@@ -192,7 +192,7 @@ inline fun <T, reified R> DataFrame<T>.newColumn(name: String, noinline expressi
 internal fun Array<out String>.toColumns(): ColumnSet<Any?> = map { it.toColumnDef() }.toColumnSet()
 fun <C> Iterable<ColumnSet<C>>.toColumnSet(): ColumnSet<C> = ColumnGroup(asList())
 internal fun <C> Array<out KProperty<C>>.toColumns() = map { it.toColumnDef() }.toColumnSet()
-internal fun <T> Array<out ColumnDef<T>>.toColumns() = toList().toColumnSet()
+internal fun <T> Array<out ColumnReference<T>>.toColumns() = toList().toColumnSet()
 internal fun <T, C> ColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns { SelectReceiverImpl(it.df.typed(), it.allowMissingColumns) }
 
 @JvmName("toColumnSetForSort")
@@ -340,11 +340,11 @@ internal class MissingValueCol<T> : MissingDataCol<T>(), ValueCol<T> {
 
 internal class MissingGroupCol<T> : MissingDataCol<DataRow<T>>(), GroupedCol<T> {
 
-    override fun <R> get(column: ColumnDef<R>) = MissingValueCol<R>()
+    override fun <R> get(column: ColumnReference<R>) = MissingValueCol<R>()
 
-    override fun <R> get(column: ColumnDef<DataRow<R>>) = MissingGroupCol<R>()
+    override fun <R> get(column: ColumnReference<DataRow<R>>) = MissingGroupCol<R>()
 
-    override fun <R> get(column: ColumnDef<DataFrame<R>>) = MissingTableCol<R>()
+    override fun <R> get(column: ColumnReference<DataFrame<R>>) = MissingTableCol<R>()
 
     override val df: DataFrame<T>
         get() = throw UnsupportedOperationException()

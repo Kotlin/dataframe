@@ -16,7 +16,7 @@ fun <T, C, K, R> GatherClause<T, C, *, R>.mapNames(transform: (String) -> K) = G
 fun <T, C, K, R> GatherClause<T, C, K, *>.map(transform: (C) -> R) = GatherClause(df, selector, filter, nameTransform, transform)
 fun <T, C : Any, K, R> GatherClause<T, C?, K, *>.mapNotNull(transform: (C) -> R) = GatherClause(df, selector, filter, nameTransform, { if (it != null) transform(it) else null })
 
-inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: ColumnDef<String>) = into(keyColumn.name())
+inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: ColumnReference<String>) = into(keyColumn.name())
 inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String) = doGather(this, keyColumn, null, getType<K>(), getType<R>())
 inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String, valueColumn: String) = doGather(this, keyColumn, valueColumn, getType<K>(), getType<R>())
 

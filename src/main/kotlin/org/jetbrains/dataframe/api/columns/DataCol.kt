@@ -8,7 +8,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 
-interface DataCol<out T> : ColumnDef<T> {
+interface DataCol<out T> : ColumnReference<T> {
 
     companion object {
 
