@@ -2,11 +2,11 @@ package org.jetbrains.dataframe.impl
 
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.MissingMapColumn
-import org.jetbrains.dataframe.MissingTableColumn
+import org.jetbrains.dataframe.MissingFrameColumn
 import org.jetbrains.dataframe.MissingValueColumn
 import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.api.columns.MapColumn
-import org.jetbrains.dataframe.api.columns.TableColumn
+import org.jetbrains.dataframe.api.columns.FrameColumn
 import org.jetbrains.dataframe.impl.columns.MapColumnWithParent
 import java.lang.Exception
 
@@ -34,5 +34,5 @@ internal abstract class DataFrameReceiver<T>(source: DataFrameBase<T>, private v
 
     override operator fun <R> get(column: ColumnReference<R>): DataColumn<R> = getColumnChecked(column.name()) ?: MissingValueColumn()
     override operator fun <R> get(column: ColumnReference<DataRow<R>>): MapColumn<R> = (getColumnChecked(column.name()) ?: MissingMapColumn<R>()) as MapColumn<R>
-    override operator fun <R> get(column: ColumnReference<DataFrame<R>>): TableColumn<R> = (getColumnChecked(column.name()) ?: MissingTableColumn<R>()) as TableColumn<R>
+    override operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R> = (getColumnChecked(column.name()) ?: MissingFrameColumn<R>()) as FrameColumn<R>
 }

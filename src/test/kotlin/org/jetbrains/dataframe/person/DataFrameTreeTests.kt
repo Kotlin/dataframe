@@ -266,7 +266,7 @@ class DataFrameTreeTests : BaseTest() {
         val grouped = typed.group { age and weight }.into(info)
         val updated = grouped.update(info).with2 { row, column -> column.asGroup().df}
         val col = updated[info.name()]
-        col.kind() shouldBe ColumnKind.Table
+        col.kind() shouldBe ColumnKind.Frame
         val table = col.asTable()
         table.df.columnNames() shouldBe typed.select { age and weight }.columnNames()
     }

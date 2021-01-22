@@ -90,8 +90,8 @@ internal fun <T> DataColumn<T>.addPath(): ColumnWithPath<T> = ColumnWithPathImpl
 
 enum class ColumnKind {
     Value,
-    Group,
-    Table
+    Map,
+    Frame
 }
 
 internal fun <T> Iterable<T>.equalsByElement(other: Iterable<T>): Boolean {
@@ -145,7 +145,7 @@ internal fun <T> Iterable<DataFrame<T>?>.getBaseSchema(): DataFrame<T> {
 }
 
 fun <T> DataColumn<T>.withValues(values: List<T>, hasNulls: Boolean) = when (this) {
-    is TableColumn<*> -> {
+    is FrameColumn<*> -> {
         val dfs = (values as List<DataFrame<*>>)
         DataColumn.createTable(name(), dfs, dfs.getBaseSchema()) as DataColumn<T>
     }
@@ -160,7 +160,7 @@ internal fun <T> AnyCol.asValues() = this as ValueColumn<T>
 
 internal fun <T> ValueColumn<*>.typed() = this as ValueColumn<T>
 
-internal fun <T> TableColumn<*>.typed() = this as TableColumn<T>
+internal fun <T> FrameColumn<*>.typed() = this as FrameColumn<T>
 
 internal fun <T> MapColumn<*>.typed() = this as MapColumn<T>
 
@@ -215,19 +215,19 @@ fun AnyCol.asFrame(): DataFrame<*> = when (this) {
     else -> throw Exception()
 }
 
-fun AnyCol.isGroup(): Boolean = kind() == ColumnKind.Group
+fun AnyCol.isGroup(): Boolean = kind() == ColumnKind.Map
 
 internal fun AnyCol.asGroup(): MapColumn<*> = this as MapColumn<*>
 
 @JvmName("asGroupedT")
 internal fun <T> DataColumn<DataRow<T>>.asGroup(): MapColumn<T> = this as MapColumn<T>
 
-internal fun AnyCol.asTable(): TableColumn<*> = this as TableColumn<*>
+internal fun AnyCol.asTable(): FrameColumn<*> = this as FrameColumn<*>
 
 @JvmName("asTableT")
-internal fun <T> DataColumn<DataFrame<T>>.asTable(): TableColumn<T> = this as TableColumn<T>
+internal fun <T> DataColumn<DataFrame<T>>.asTable(): FrameColumn<T> = this as FrameColumn<T>
 
-internal fun AnyCol.isTable(): Boolean = kind() == ColumnKind.Table
+internal fun AnyCol.isTable(): Boolean = kind() == ColumnKind.Frame
 
 
 fun <T> column() = ColumnDelegate<T>()
@@ -298,7 +298,7 @@ fun <T, R> DataColumn<T>.map(type: KType?, transform: (T) -> R): DataColumn<R> {
 
 fun <C> DataColumn<C>.single() = values.single()
 
-fun <T> TableColumn<T>.toDefinition() = tableColumn<T>(name())
+fun <T> FrameColumn<T>.toDefinition() = tableColumn<T>(name())
 fun <T> MapColumn<T>.toDefinition() = columnGroup<T>(name())
 fun <T> ValueColumn<T>.toDefinition() = column<T>(name())
 
@@ -345,7 +345,7 @@ internal class MissingMapColumn<T> : MissingDataColumn<DataRow<T>>(), MapColumn<
 
     override fun <R> get(column: ColumnReference<DataRow<R>>) = MissingMapColumn<R>()
 
-    override fun <R> get(column: ColumnReference<DataFrame<R>>) = MissingTableColumn<R>()
+    override fun <R> get(column: ColumnReference<DataFrame<R>>) = MissingFrameColumn<R>()
 
     override val df: DataFrame<T>
         get() = throw UnsupportedOperationException()
@@ -379,7 +379,7 @@ internal class MissingMapColumn<T> : MissingDataColumn<DataRow<T>>(), MapColumn<
     override fun set(columnName: String, value: AnyCol) = throw UnsupportedOperationException()
 }
 
-internal class MissingTableColumn<T>: MissingDataColumn<DataFrame<T>>(), TableColumn<T> {
+internal class MissingFrameColumn<T>: MissingDataColumn<DataFrame<T>>(), FrameColumn<T> {
     override val df: DataFrame<T>
         get() = throw UnsupportedOperationException()
 
