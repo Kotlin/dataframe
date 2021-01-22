@@ -3,7 +3,7 @@ package org.jetbrains.dataframe.impl.columns
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.columns.ColumnWithPath
 
-internal interface ColumnWithParent<C> : ColumnDef<C> {
+internal interface ColumnWithParent<C> : ColumnReference<C> {
 
     val parent: GroupedColumnDef?
 

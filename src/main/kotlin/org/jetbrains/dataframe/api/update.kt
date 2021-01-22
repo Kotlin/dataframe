@@ -7,10 +7,10 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
 fun <T, C> DataFrame<T>.update(selector: ColumnsSelector<T, C>) = UpdateClause(this, null, selector, null, null)
-fun <T, C> DataFrame<T>.update(cols: Iterable<ColumnDef<C>>) = update { cols.toColumnSet() }
+fun <T, C> DataFrame<T>.update(cols: Iterable<ColumnReference<C>>) = update { cols.toColumnSet() }
 fun <T> DataFrame<T>.update(vararg cols: String) = update { cols.toColumns() }
 fun <T, C> DataFrame<T>.update(vararg cols: KProperty<C>) = update { cols.toColumns() }
-fun <T, C> DataFrame<T>.update(vararg cols: ColumnDef<C>) = update { cols.toColumns() }
+fun <T, C> DataFrame<T>.update(vararg cols: ColumnReference<C>) = update { cols.toColumns() }
 
 data class UpdateClause<T, C>(val df: DataFrame<T>, val filter: UpdateExpression<T, C, Boolean>?, val selector: ColumnsSelector<T, C>, val targetType: KType?, val typeSuggestions: ((KClass<*>) -> KType)?){
     fun <R> cast() = UpdateClause(df, filter as UpdateExpression<T, R, Boolean>?, selector as ColumnsSelector<T, R>, targetType, typeSuggestions)
@@ -75,7 +75,7 @@ inline fun <T, C, reified R> UpdateClause<T, C?>.notNull(noinline expression: Up
     else expression(row, currentValue)
 }
 
-inline fun <T, C, reified R> DataFrame<T>.update(firstCol: ColumnDef<C>, vararg cols: ColumnDef<C>, noinline expression: UpdateExpression<T, C, R>) =
+inline fun <T, C, reified R> DataFrame<T>.update(firstCol: ColumnReference<C>, vararg cols: ColumnReference<C>, noinline expression: UpdateExpression<T, C, R>) =
         update(*headPlusArray(firstCol, cols)).with(expression)
 
 inline fun <T, C, reified R> DataFrame<T>.update(firstCol: KProperty<C>, vararg cols: KProperty<C>, noinline expression: UpdateExpression<T, C, R>) =

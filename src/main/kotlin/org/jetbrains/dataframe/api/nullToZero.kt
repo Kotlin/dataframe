@@ -13,10 +13,10 @@ fun <T> DataFrame<T>.nullToZero(selector: ColumnsSelector<T, Number?>): DataFram
 }
 
 fun <T> DataFrame<T>.nullToZero(vararg cols: String) = nullToZero { cols.toColumns() as ColumnSet<Number?> }
-fun <T> DataFrame<T>.nullToZero(vararg cols: ColumnDef<Number?>) = nullToZero { cols.toColumns() }
-fun <T> DataFrame<T>.nullToZero(cols: Iterable<ColumnDef<Number?>>) = nullToZero { cols.toColumnSet() }
+fun <T> DataFrame<T>.nullToZero(vararg cols: ColumnReference<Number?>) = nullToZero { cols.toColumns() }
+fun <T> DataFrame<T>.nullToZero(cols: Iterable<ColumnReference<Number?>>) = nullToZero { cols.toColumnSet() }
 
-internal fun <T> DataFrame<T>.nullColumnToZero(type: KType, cols: Iterable<ColumnDef<Number?>>) =
+internal fun <T> DataFrame<T>.nullColumnToZero(type: KType, cols: Iterable<ColumnReference<Number?>>) =
         when (type.jvmErasure) {
             Double::class -> update(cols).with { it as Double? ?: .0 }
             Int::class -> update(cols).with { it as Int? ?: 0 }

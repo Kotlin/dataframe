@@ -18,7 +18,7 @@ typealias DataFrameSelector<T, R> = DataFrame<T>.(DataFrame<T>) -> R
 
 typealias ColumnsSelector<T, C> = SelectReceiver<T>.(SelectReceiver<T>) -> ColumnSet<C>
 
-typealias ColumnSelector<T, C> = SelectReceiver<T>.(SelectReceiver<T>) -> ColumnDef<C>
+typealias ColumnSelector<T, C> = SelectReceiver<T>.(SelectReceiver<T>) -> ColumnReference<C>
 
 fun <T, C> DataFrame<T>.createSelector(selector: ColumnsSelector<T, C>) = selector
 
@@ -59,7 +59,7 @@ internal fun <T, C> DataFrame<T>.getColumn(selector: SpreadColumnSelector<T, C>)
 
 internal fun <T>  DataFrame<T>.getColumns(columnNames: Array<out String>) = columnNames.map { this[it] }
 
-internal fun <T, C> DataFrame<T>.getColumns(columnNames: Array<out KProperty<C>>) = columnNames.map { this[it.name] as ColumnDef<C> }
+internal fun <T, C> DataFrame<T>.getColumns(columnNames: Array<out KProperty<C>>) = columnNames.map { this[it.name] as ColumnReference<C> }
 
 internal fun <T>  DataFrame<T>.getColumns(columnNames: List<String>): List<AnyCol> = columnNames.map { this[it] }
 
@@ -84,9 +84,9 @@ interface DataFrame<out T> : DataFrameBase<T> {
 
     override operator fun get(index: Int): DataRow<T> = DataRowImpl(index, this)
     override operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found: '$columnName'")
-    override operator fun <R> get(column: ColumnDef<R>): DataCol<R> = tryGetColumn(column)!!
-    override operator fun <R> get(column: ColumnDef<DataRow<R>>): GroupedCol<R> = get<DataRow<R>>(column) as GroupedCol<R>
-    override operator fun <R> get(column: ColumnDef<DataFrame<R>>): TableCol<R> = get<DataFrame<R>>(column) as TableCol<R>
+    override operator fun <R> get(column: ColumnReference<R>): DataCol<R> = tryGetColumn(column)!!
+    override operator fun <R> get(column: ColumnReference<DataRow<R>>): GroupedCol<R> = get<DataRow<R>>(column) as GroupedCol<R>
+    override operator fun <R> get(column: ColumnReference<DataFrame<R>>): TableCol<R> = get<DataFrame<R>>(column) as TableCol<R>
 
     operator fun get(indices: Iterable<Int>) = getRows(indices)
     operator fun get(mask: BooleanArray) = getRows(mask)
@@ -103,7 +103,7 @@ interface DataFrame<out T> : DataFrameBase<T> {
     fun getColumnIndex(name: String): Int
     fun getColumnIndex(col: AnyCol) = getColumnIndex(col.name())
 
-    fun <R> tryGetColumn(column: ColumnDef<R>): DataCol<R>? = tryGetColumn(column.name()) as? DataCol<R>
+    fun <R> tryGetColumn(column: ColumnReference<R>): DataCol<R>? = tryGetColumn(column.name()) as? DataCol<R>
 
     override fun tryGetColumn(name: String): AnyCol? = getColumnIndex(name).let { if (it != -1) column(it) else null }
 

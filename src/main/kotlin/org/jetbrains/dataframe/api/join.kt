@@ -8,10 +8,10 @@ interface JoinReceiver<out A, out B> : SelectReceiver<A> {
 
     val right: DataFrame<B>
 
-    infix fun <C> ColumnDef<C>.match(other: ColumnDef<C>) = ColumnMatch(this, other)
+    infix fun <C> ColumnReference<C>.match(other: ColumnReference<C>) = ColumnMatch(this, other)
 }
 
-class ColumnMatch<C>(val left: ColumnDef<C>, val right: ColumnDef<C>) : ColumnSet<C> {
+class ColumnMatch<C>(val left: ColumnReference<C>, val right: ColumnReference<C>) : ColumnSet<C> {
 
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> {
         throw UnsupportedOperationException()
@@ -25,7 +25,7 @@ typealias JoinColumnSelector<A, B> = JoinReceiver<A, B>.(JoinReceiver<A, B>) -> 
 // TODO: support column hierarchy
 internal fun <C> ColumnSet<C>.extractJoinColumns(): List<ColumnMatch<C>> = when (this) {
     is ColumnGroup -> columns.flatMap { it.extractJoinColumns() }
-    is ColumnDef<C> -> listOf(ColumnMatch(this, this))
+    is ColumnReference<C> -> listOf(ColumnMatch(this, this))
     is ColumnMatch -> listOf(this)
     else -> throw Exception()
 }

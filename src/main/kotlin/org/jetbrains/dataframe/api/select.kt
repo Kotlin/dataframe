@@ -22,8 +22,8 @@ interface SelectReceiver<out T> : ColumnsSelectorReceiver<T> {
 
     operator fun <C> ColumnSelector<T, C>.invoke() = this(this@SelectReceiver, this@SelectReceiver)
 
-    operator fun <C> ColumnDef<C>.invoke(newName: String) = rename(newName)
-    infix fun <C> DataCol<C>.into(newName: String) = (this as ColumnDef<C>).rename(newName)
+    operator fun <C> ColumnReference<C>.invoke(newName: String) = rename(newName)
+    infix fun <C> DataCol<C>.into(newName: String) = (this as ColumnReference<C>).rename(newName)
 
     infix fun String.and(other: String) = toColumnDef() and other.toColumnDef()
     infix fun <C> String.and(other: ColumnSet<C>) = toColumnDef() and other

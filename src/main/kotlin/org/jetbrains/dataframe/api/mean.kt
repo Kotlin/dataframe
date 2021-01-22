@@ -11,7 +11,7 @@ import kotlin.reflect.jvm.jvmErasure
 inline fun <reified T : Number> Iterable<T>.mean(): Double = mean(T::class)
 
 inline fun <T, reified D : Number> DataFrame<T>.mean(crossinline selector: RowSelector<T, D?>): Double = rows().asSequence().map { selector(it, it) }.filterNotNull().asIterable().mean()
-inline fun <T, reified D : Number> DataFrame<T>.mean(col: ColumnDef<D>): Double = get(col).mean()
+inline fun <T, reified D : Number> DataFrame<T>.mean(col: ColumnReference<D>): Double = get(col).mean()
 inline fun <T, reified D : Number> DataFrame<T>.mean(col: KProperty<D>): Double = get(col).mean()
 
 fun <T> DataFrame<T>.mean(): DataRow<T> {

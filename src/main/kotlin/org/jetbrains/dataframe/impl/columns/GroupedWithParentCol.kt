@@ -10,8 +10,8 @@ internal class GroupedWithParentCol<T>(override val parent: GroupedColumnDef?, v
     internal fun <T> DataCol<T>.addParent(parent: GroupedCol<*>) = (this as DataColInternal<T>).addParent(parent)
 
     override fun get(columnName: String) = df[columnName].addParent(this)
-    override fun <R> get(column: ColumnDef<R>) = df[column].addParent(this)
-    override fun <R> get(column: ColumnDef<DataRow<R>>) = df[column].addParent(this) as GroupedCol<R>
+    override fun <R> get(column: ColumnReference<R>) = df[column].addParent(this)
+    override fun <R> get(column: ColumnReference<DataRow<R>>) = df[column].addParent(this) as GroupedCol<R>
     override fun columns() = df.columns().map { it.addParent(this) }
     override fun column(columnIndex: Int) = df.column(columnIndex).addParent(this)
 

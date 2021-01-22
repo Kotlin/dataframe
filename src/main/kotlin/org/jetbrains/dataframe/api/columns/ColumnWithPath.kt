@@ -4,7 +4,7 @@ import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.asGrouped
 import kotlin.reflect.KType
 
-interface ColumnWithPath<out T> : ColumnDef<T> {
+interface ColumnWithPath<out T> : ColumnReference<T> {
 
     val data: DataCol<T>
     val path: ColumnPath
