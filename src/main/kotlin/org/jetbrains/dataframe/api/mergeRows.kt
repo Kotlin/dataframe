@@ -1,8 +1,8 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnData
-import org.jetbrains.dataframe.api.columns.GroupedColumn
-import org.jetbrains.dataframe.api.columns.TableColumn
+import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.GroupedCol
+import org.jetbrains.dataframe.api.columns.TableCol
 import kotlin.reflect.KType
 
 inline fun <T, reified C> DataFrame<T>.mergeRows(noinline selector: ColumnsSelector<T, C>) = mergeRows(this, selector, getType<C>())
@@ -34,17 +34,17 @@ fun <T, C> MergeClause<T, C, *>.mergeRows(): DataFrame<T> {
         val column = node.data.column!!
         val newName = column.name()
         val newColumn = when(column){
-            is GroupedColumn<*> -> {
+            is GroupedCol<*> -> {
                 val data = grouped.groups.asIterable().map { it.get(column).df }
-                ColumnData.createTable(newName, data, column.df)
+                DataCol.createTable(newName, data, column.df)
             }
-            is TableColumn<*> -> {
+            is TableCol<*> -> {
                 val data = grouped.groups.asIterable().map { it[column].toList().union() }
-                ColumnData.createTable(newName, data, column.df)
+                DataCol.createTable(newName, data, column.df)
             }
             else -> {
                 val data = grouped.groups.asIterable().map { it[column].toList() }
-                ColumnData.create(newName, data, List::class.createType(column.type))
+                DataCol.create(newName, data, List::class.createType(column.type))
             }
         }
         ColumnToInsert(node.pathFromRoot(), node, newColumn)

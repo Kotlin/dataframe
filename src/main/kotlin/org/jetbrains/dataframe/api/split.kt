@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.DataCol
 import org.jetbrains.dataframe.api.columns.ColumnWithPath
 import org.jetbrains.dataframe.impl.ColumnDataCollector
 import org.jetbrains.dataframe.impl.createDataCollector
@@ -114,7 +114,7 @@ fun <T> doSplitRows(df: DataFrame<T>, columns: List<ColumnWithPath<List<*>?>>): 
                     if(it.key.isNotEmpty() && it.key[0] == col.name()) it.key.drop(1) to it.value else null
                 }.toMap()
                 val newDf = splitIntoRows(group.df, newData)
-                ColumnData.createGroup(col.name(), newDf)
+                DataCol.createGroup(col.name(), newDf)
             } else {
                 val targetData = data[listOf(col.name())]
                 if (targetData != null) {
@@ -134,7 +134,7 @@ fun <T> doSplitRows(df: DataFrame<T>, columns: List<ColumnWithPath<List<*>?>>): 
                             }
                         }
                     }
-                    if (col.isTable()) ColumnData.createTable(col.name(), collector.values as List<DataFrame<*>>, col.asTable().df)
+                    if (col.isTable()) DataCol.createTable(col.name(), collector.values as List<DataFrame<*>>, col.asTable().df)
                     else collector.toColumn(col.name())
                 }
             }

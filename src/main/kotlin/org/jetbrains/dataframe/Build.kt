@@ -1,11 +1,11 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.DataCol
 import org.jetbrains.dataframe.api.columns.ColumnWithPath
 import org.jetbrains.dataframe.impl.DataFrameImpl
 import org.jetbrains.dataframe.impl.TreeNode
-import org.jetbrains.dataframe.impl.columns.ColumnDataWithParentImpl
-import org.jetbrains.dataframe.impl.columns.GroupedColumnWithParent
+import org.jetbrains.dataframe.impl.columns.DataColWithParentImpl
+import org.jetbrains.dataframe.impl.columns.GroupedWithParentCol
 import org.jetbrains.dataframe.impl.getOrPut
 import java.lang.UnsupportedOperationException
 import kotlin.reflect.KClass
@@ -16,9 +16,9 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.javaField
 
 class IterableDataFrameBuilder<T>(val source: Iterable<T>) {
-    internal val columns = mutableListOf<DataCol>()
+    internal val columns = mutableListOf<AnyCol>()
 
-    fun add(column: DataCol) = columns.add(column)
+    fun add(column: AnyCol) = columns.add(column)
 
     inline fun <reified R> add(name: String, noinline expression: T.() -> R?) = add(column(name, source.map { expression(it) }))
 
@@ -41,11 +41,11 @@ inline fun <reified T> Iterable<T>.toDataFrame() = T::class.declaredMembers
             property.javaField?.isAccessible = true
             var nullable = false
             val values = this.map { el -> it.call(el).also { if (it == null) nullable = true } }
-            ColumnData.create(it.name, values, property.returnType.withNullability(nullable))
+            DataCol.create(it.name, values, property.returnType.withNullability(nullable))
         }.let { dataFrameOf(it) }
 
 
-fun dataFrameOf(columns: Iterable<DataCol>): DataFrame<Unit> = DataFrameImpl(columns.map { it.unbox() })
+fun dataFrameOf(columns: Iterable<AnyCol>): DataFrame<Unit> = DataFrameImpl(columns.map { it.unbox() })
 
 fun dataFrameOf(vararg header: ColumnDef<*>) = DataFrameBuilder(header.map { it.name() })
 
@@ -56,18 +56,18 @@ fun dataFrameOf(vararg header: String) = dataFrameOf(header.toList())
 fun dataFrameOf(header: List<String>) = DataFrameBuilder(header)
 
 // TODO: remove checks for ColumnWithParent types
-internal fun DataCol.unbox(): DataCol = when (this) {
+internal fun AnyCol.unbox(): AnyCol = when (this) {
     is ColumnWithPath<*> -> data.unbox()
-    is ColumnDataWithParentImpl<*> -> source.unbox()
-    is GroupedColumnWithParent<*> -> source.unbox()
+    is DataColWithParentImpl<*> -> source.unbox()
+    is GroupedWithParentCol<*> -> source.unbox()
     else -> this
 }
 
-fun <T> Iterable<DataCol>.asDataFrame() = dataFrameOf(this).typed<T>()
+fun <T> Iterable<AnyCol>.asDataFrame() = dataFrameOf(this).typed<T>()
 
-fun <T> List<Pair<List<String>, DataCol>>.toDataFrame(): DataFrame<T>? {
+fun <T> List<Pair<List<String>, AnyCol>>.toDataFrame(): DataFrame<T>? {
     if(size == 0) return null
-    val tree = TreeNode.createRoot(null as DataCol?)
+    val tree = TreeNode.createRoot(null as AnyCol?)
     forEach {
         val (path, col) = it
         val node = tree.getOrPut(path)
@@ -75,7 +75,7 @@ fun <T> List<Pair<List<String>, DataCol>>.toDataFrame(): DataFrame<T>? {
             throw UnsupportedOperationException("Duplicate column paths: $path")
         node.data = col
     }
-    fun dfs(node: TreeNode<DataCol?>){
+    fun dfs(node: TreeNode<AnyCol?>){
         if(node.children.isNotEmpty()){
             if(node.data != null)
                 throw UnsupportedOperationException("Can not add data to grouped column: ${node.pathFromRoot()}")
@@ -126,5 +126,5 @@ internal fun guessValueType(values: List<Any?>): KType {
 }
 
 internal fun guessColumnType(name: String, values: List<Any?>) = guessValueType(values).let {
-    ColumnData.create(name, values, it)
+    DataCol.create(name, values, it)
 }

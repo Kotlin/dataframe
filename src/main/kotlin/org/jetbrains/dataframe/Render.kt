@@ -12,7 +12,7 @@ data class Image(val url: String)
 internal fun renderSchema(df: DataFrame<*>): String =
         df.columns().map { "${it.name()}:${renderType(it)}"}.joinToString()
 
-internal fun renderType(column: DataCol) =
+internal fun renderType(column: AnyCol) =
     when(column.kind()) {
         ColumnKind.Data -> {
             val type = column.type

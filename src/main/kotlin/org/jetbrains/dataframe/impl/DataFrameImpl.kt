@@ -1,14 +1,14 @@
 package org.jetbrains.dataframe.impl
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.ColumnData
+import org.jetbrains.dataframe.api.columns.DataCol
 import org.jetbrains.dataframe.api.columns.ColumnWithPath
 import org.jetbrains.dataframe.io.renderToString
 import java.lang.IllegalArgumentException
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.jvm.jvmErasure
 
-internal open class DataFrameImpl<T>(var columns: List<DataCol>) : DataFrame<T> {
+internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T> {
 
     private val nrow: Int = columns.firstOrNull()?.size ?: 0
 
@@ -64,10 +64,10 @@ internal open class DataFrameImpl<T>(var columns: List<DataCol>) : DataFrame<T> 
     }
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataRow<T>>? {
-        return ColumnData.createGroup("", this).addPath(emptyList())
+        return DataCol.createGroup("", this).addPath(emptyList())
     }
 
-    override fun set(columnName: String, value: DataCol) {
+    override fun set(columnName: String, value: AnyCol) {
 
         if(value.size != nrow())
             throw IllegalArgumentException("Invalid column size for column '$columnName'. Expected: ${nrow()}, actual: ${value.size}")

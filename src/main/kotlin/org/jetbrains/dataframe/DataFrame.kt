@@ -36,7 +36,7 @@ internal fun  List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnW
     return dfs.map { it.data!!.addPath(it.pathFromRoot()) }
 }
 
-internal fun <T, C> DataFrame<T>.getColumns(skipMissingColumns: Boolean, selector: ColumnsSelector<T, C>): List<ColumnData<C>> = getColumnsWithPaths(if(skipMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail, selector).map { it.data }
+internal fun <T, C> DataFrame<T>.getColumns(skipMissingColumns: Boolean, selector: ColumnsSelector<T, C>): List<DataCol<C>> = getColumnsWithPaths(if(skipMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail, selector).map { it.data }
 
 internal fun <T, C> DataFrame<T>.getColumns(selector: ColumnsSelector<T, C>) = getColumns(false, selector)
 
@@ -61,9 +61,9 @@ internal fun <T>  DataFrame<T>.getColumns(columnNames: Array<out String>) = colu
 
 internal fun <T, C> DataFrame<T>.getColumns(columnNames: Array<out KProperty<C>>) = columnNames.map { this[it.name] as ColumnDef<C> }
 
-internal fun <T>  DataFrame<T>.getColumns(columnNames: List<String>): List<DataCol> = columnNames.map { this[it] }
+internal fun <T>  DataFrame<T>.getColumns(columnNames: List<String>): List<AnyCol> = columnNames.map { this[it] }
 
-internal fun <T>  DataFrame<T>.new(columns: Iterable<DataCol>) = dataFrameOf(columns).typed<T>()
+internal fun <T>  DataFrame<T>.new(columns: Iterable<AnyCol>) = dataFrameOf(columns).typed<T>()
 
 interface DataFrame<out T> : DataFrameBase<T> {
 
@@ -77,23 +77,23 @@ interface DataFrame<out T> : DataFrameBase<T> {
     fun rows() : Iterable<DataRow<T>>
     fun columnNames() = columns().map { it.name() }
 
-    override fun columns(): List<DataCol>
+    override fun columns(): List<AnyCol>
     override fun column(columnIndex: Int) = columns()[columnIndex]
 
-    operator fun set(columnName: String, value: DataCol)
+    operator fun set(columnName: String, value: AnyCol)
 
     override operator fun get(index: Int): DataRow<T> = DataRowImpl(index, this)
     override operator fun get(columnName: String) = tryGetColumn(columnName) ?: throw Exception("Column not found: '$columnName'")
-    override operator fun <R> get(column: ColumnDef<R>): ColumnData<R> = tryGetColumn(column)!!
-    override operator fun <R> get(column: ColumnDef<DataRow<R>>): GroupedColumn<R> = get<DataRow<R>>(column) as GroupedColumn<R>
-    override operator fun <R> get(column: ColumnDef<DataFrame<R>>): TableColumn<R> = get<DataFrame<R>>(column) as TableColumn<R>
+    override operator fun <R> get(column: ColumnDef<R>): DataCol<R> = tryGetColumn(column)!!
+    override operator fun <R> get(column: ColumnDef<DataRow<R>>): GroupedCol<R> = get<DataRow<R>>(column) as GroupedCol<R>
+    override operator fun <R> get(column: ColumnDef<DataFrame<R>>): TableCol<R> = get<DataFrame<R>>(column) as TableCol<R>
 
     operator fun get(indices: Iterable<Int>) = getRows(indices)
     operator fun get(mask: BooleanArray) = getRows(mask)
     operator fun get(range: IntRange) = getRows(range)
 
-    operator fun plus(col: DataCol) = dataFrameOf(columns() + col).typed<T>()
-    operator fun plus(col: Iterable<DataCol>) = new(columns() + col)
+    operator fun plus(col: AnyCol) = dataFrameOf(columns() + col).typed<T>()
+    operator fun plus(col: Iterable<AnyCol>) = new(columns() + col)
     operator fun plus(stub: AddRowNumberStub) = addRowNumber(stub.columnName)
 
     fun getRows(indices: Iterable<Int>) = columns().map { col -> col.slice(indices) }.asDataFrame<T>()
@@ -101,13 +101,13 @@ interface DataFrame<out T> : DataFrameBase<T> {
     fun getRows(range: IntRange) = columns().map { col -> col.slice(range) }.asDataFrame<T>()
 
     fun getColumnIndex(name: String): Int
-    fun getColumnIndex(col: DataCol) = getColumnIndex(col.name())
+    fun getColumnIndex(col: AnyCol) = getColumnIndex(col.name())
 
-    fun <R> tryGetColumn(column: ColumnDef<R>): ColumnData<R>? = tryGetColumn(column.name()) as? ColumnData<R>
+    fun <R> tryGetColumn(column: ColumnDef<R>): DataCol<R>? = tryGetColumn(column.name()) as? DataCol<R>
 
-    override fun tryGetColumn(name: String): DataCol? = getColumnIndex(name).let { if (it != -1) column(it) else null }
+    override fun tryGetColumn(name: String): AnyCol? = getColumnIndex(name).let { if (it != -1) column(it) else null }
 
-    fun tryGetColumnGroup(name: String) = tryGetColumn(name) as? GroupedColumn<*>
+    fun tryGetColumnGroup(name: String) = tryGetColumn(name) as? GroupedCol<*>
     fun getColumnGroup(name: String) = tryGetColumnGroup(name)!!
 
     operator fun get(col1: Column, col2: Column, vararg other: Column) = select(listOf(col1, col2) + other)
@@ -149,7 +149,7 @@ fun <T> DataFrameBase<*>.typed(): DataFrameBase<T> = this as DataFrameBase<T>
 
 fun <T> DataRow<T>.toDataFrame(): DataFrame<T> = owner[index..index]
 
-fun <T, C> DataFrame<T>.forEachIn(selector: ColumnsSelector<T, C>, action: (DataRow<T>, ColumnData<C>) -> Unit) = getColumnsWithPaths(selector).let { cols ->
+fun <T, C> DataFrame<T>.forEachIn(selector: ColumnsSelector<T, C>, action: (DataRow<T>, DataCol<C>) -> Unit) = getColumnsWithPaths(selector).let { cols ->
     rows().forEach { row ->
         cols.forEach { col ->
             action(row, col.data)
