@@ -7,27 +7,27 @@ import org.junit.Test
 
 class MatchSchemeTests {
 
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface Snippet {
         val position: Int
         val info: String
     }
 
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface Item {
         val kind: String
         val id: String
         val snippet: DataRow<Snippet>
     }
 
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface PageInfo {
         val totalResults: Int
         val resultsPerPage: Int
         val snippets: DataFrame<Snippet>
     }
 
-    @DataFrameType
+    @DataSchema
     interface DataRecord {
         val kind: String
         val items: DataFrame<Item>

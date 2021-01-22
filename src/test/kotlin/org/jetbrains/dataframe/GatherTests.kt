@@ -56,7 +56,7 @@ class GatherTests {
 
     //region Generated code
 
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface Marker1{
         val c1: String
         val c2: String
@@ -68,7 +68,7 @@ class GatherTests {
     val DataRowBase<Marker1>.c2: String @JvmName("Marker1_c2") get() = this["c2"] as String
     val DataFrameBase<Marker1>.c3: org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String?> @JvmName("Marker1_c3") get() = this["c3"] as org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String?>
     val DataRowBase<Marker1>.c3: String? @JvmName("Marker1_c3") get() = this["c3"] as String?
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface Marker2{
         val c1: String
         val c2: String
@@ -80,13 +80,13 @@ class GatherTests {
     val DataRowBase<Marker2>.c2: String @JvmName("Marker2_c2") get() = this["c2"] as String
     val DataFrameBase<Marker2>.c3: org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String?> @JvmName("Marker2_c3") get() = this["c3"] as org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String?>
     val DataRowBase<Marker2>.c3: String? @JvmName("Marker2_c3") get() = this["c3"] as String?
-    @DataFrameType(isOpen = false)
+    @DataSchema(isOpen = false)
     interface Marker3{
         val c1: String
     }
     val DataFrameBase<Marker3>.c1: org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String> @JvmName("Marker3_c1") get() = this["c1"] as org.jetbrains.dataframe.api.columns.DataColumn<kotlin.String>
     val DataRowBase<Marker3>.c1: String @JvmName("Marker3_c1") get() = this["c1"] as String
-    @DataFrameType
+    @DataSchema
     interface Marker{
         val name: String
         val normal: DataRow<Marker1>

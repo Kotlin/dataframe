@@ -18,7 +18,7 @@ class JoinTests : BaseTest() {
 
 // Generated Code
 
-    @DataFrameType
+    @DataSchema
     interface Person2 {
         val name: String
         val origin: String?
