@@ -51,8 +51,6 @@ interface ColumnData<out T> : ColumnDef<T> {
 
     fun toList() = values.asList()
 
-    fun asIterable() = values
-
     fun defaultValue(): T?
 
     fun slice(range: IntRange): ColumnData<T>
