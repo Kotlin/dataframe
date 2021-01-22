@@ -18,7 +18,7 @@ internal class Integration : JupyterIntegration({
     import("org.jetbrains.dataframe.*")
     import("org.jetbrains.dataframe.io.*")
 
-    val codeGen = CodeGenerator()
+    val codeGen = CodeGenerator.create()
 
     updateVariable<AnyFrame> { df, property ->
         codeGen.generate(df, property)?.let {

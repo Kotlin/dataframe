@@ -17,7 +17,7 @@ class CodeGenerationTests : BaseTest(){
     @Test
     fun `generate marker interface`() {
         val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
-        val generated = CodeGenerator().generate(df, property)!!
+        val generated = CodeGeneratorImpl().generate(df, property)!!
         val expectedDeclaration = """
             @DataFrameType(isOpen = false)
             interface DataFrameType1{
@@ -37,7 +37,7 @@ class CodeGenerationTests : BaseTest(){
     fun `generate marker interface for nested data frame`() {
         val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
         val grouped = df.move { name and city }.intoGroup("nameAndCity")
-        val generated = CodeGenerator().generate(grouped, property)!!
+        val generated = CodeGeneratorImpl().generate(grouped, property)!!
         val rowType = DataRow::class.simpleName
         val declaration1 = """
             @DataFrameType(isOpen = false)
@@ -62,7 +62,7 @@ class CodeGenerationTests : BaseTest(){
 
     @Test
     fun `generate extension properties`() {
-        val code = CodeGenerator().generateExtensionProperties(Person::class)
+        val code = CodeGeneratorImpl().generateExtensionProperties(Person::class)
 
         val dfName = (DataFrameBase::class).simpleName
         val dfRowName = (DataRowBase::class).simpleName
@@ -82,7 +82,7 @@ class CodeGenerationTests : BaseTest(){
 
     @Test
     fun `generate derived interface`() {
-        val codeGen = CodeGenerator()
+        val codeGen = CodeGeneratorImpl()
         codeGen.generateExtensionProperties(Person::class)
         val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
         val generated = codeGen.generate(df.filterNotNull { all() }, property)!!
