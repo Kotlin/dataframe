@@ -14,7 +14,7 @@ internal class MapColumnImpl<T>(override val df: DataFrame<T>, val name: String)
     override val ndistinct: Int
         get() = distinct.nrow()
 
-    override val type by lazy { createType<DataRow<*>>() }
+    override val type by lazy { createType<AnyRow>() }
 
     private val distinct by lazy { df.distinct() }
 

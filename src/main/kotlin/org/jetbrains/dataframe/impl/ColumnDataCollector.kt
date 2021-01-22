@@ -36,7 +36,7 @@ internal abstract class DataCollectorBase<T>(initCapacity: Int): DataCollector<T
             return DataColumn.createTable(name, data as List<AnyFrame>) as DataColumn<T>
         }
         if(classifier.isSubclassOf(DataRow::class)) {
-            val mergedDf = (data as List<DataRow<*>>).map { it.toDataFrame() }.union()
+            val mergedDf = (data as List<AnyRow>).map { it.toDataFrame() }.union()
             return DataColumn.createGroup(name, mergedDf) as DataColumn<T>
         }
         return column(name, data, type.withNullability(hasNulls)) as DataColumn<T>
@@ -55,7 +55,7 @@ internal open class ColumnDataCollector(initCapacity: Int = 0, val getType: (KCl
     override fun add(value: Any?) {
         super.add(value)
         if (value != null) {
-            if(!hasRows && value is DataRow<*>) hasRows = true
+            if(!hasRows && value is AnyRow) hasRows = true
             else if(!hasTables && value is AnyFrame) hasTables = true
             else classes.add(value.javaClass.kotlin)
         }
@@ -67,7 +67,7 @@ internal open class ColumnDataCollector(initCapacity: Int = 0, val getType: (KCl
                 val groups = values.map {
                     when(it){
                         null -> emptyDataFrame(1)
-                        is DataRow<*> -> it.toDataFrame()
+                        is AnyRow -> it.toDataFrame()
                         is AnyFrame -> it
                         else -> throw UnsupportedOperationException()
                     }
@@ -75,7 +75,7 @@ internal open class ColumnDataCollector(initCapacity: Int = 0, val getType: (KCl
                 return DataColumn.createTable(name, groups)
             }else if(hasRows){
                 val frames = values.map {
-                    (it as DataRow<*>?)?.toDataFrame() ?: emptyDataFrame(1)
+                    (it as AnyRow?)?.toDataFrame() ?: emptyDataFrame(1)
                 }
                 val merged = frames.union()
                 return DataColumn.createGroup(name, merged)

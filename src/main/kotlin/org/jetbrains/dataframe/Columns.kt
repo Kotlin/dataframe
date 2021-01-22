@@ -31,7 +31,7 @@ interface ColumnReference<out C> : SingleColumn<C> {
 
     fun name(): String
 
-    operator fun invoke(row: DataRow<*>) = row[this]
+    operator fun invoke(row: AnyRow) = row[this]
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
         return context.df.getColumn<C>(name(), context.unresolvedColumnsPolicy)?.addPath(listOf(name()))
@@ -57,7 +57,7 @@ fun <C, R> ColumnReference<C>.map(targetType: KType?, transform: (C) -> R): Sing
 
 typealias Column = ColumnReference<*>
 
-typealias MapColumnReference = ColumnReference<DataRow<*>>
+typealias MapColumnReference = ColumnReference<AnyRow>
 
 fun String.toColumnDef(): ColumnReference<Any?> = ColumnDefinition(this)
 
@@ -232,7 +232,7 @@ internal fun AnyCol.isTable(): Boolean = kind() == ColumnKind.Frame
 
 fun <T> column() = ColumnDelegate<T>()
 
-fun columnGroup() = column<DataRow<*>>()
+fun columnGroup() = column<AnyRow>()
 
 fun <T> columnList() = column<List<T>>()
 
