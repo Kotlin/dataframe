@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.jupyter.api.libraries.*
 internal class Integration : JupyterIntegration({
 
     render<AnyFrame> { HTML(it.toHTML()) }
-    render<DataRow<*>> { it.toDataFrame() }
+    render<AnyRow> { it.toDataFrame() }
     render<MapColumn<*>> { it.df }
     render<AnyCol> { dataFrameOf(listOf(it)) }
     render<GroupedDataFrame<*, *>> { it.plain() }

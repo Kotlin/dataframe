@@ -39,7 +39,7 @@ internal fun AnyFrame.renderToString(limit: Int = 20, truncate: Int = 40): Strin
     return sb.toString()
 }
 
-internal fun DataRow<*>.renderToString(): String{
+internal fun AnyRow.renderToString(): String{
     if(isEmpty()) return ""
     return owner.columns().map {it.name() to it[index]}.filter{it.second != null}
         .map { "${it.first}:${renderValue(it.second)}" }.joinToString(prefix = "{ ", postfix = " }")

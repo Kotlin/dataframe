@@ -24,7 +24,7 @@ interface DataColumn<out T> : ColumnReference<T> {
         fun <T> createGuess(name: String, values: List<T>, type:KType, defaultValue: T? = null): DataColumn<T> {
             val kClass = type.classifier!! as KClass<*>
             if(kClass.isSubclassOf(DataRow::class)){
-                val df = values.map { (it as DataRow<*>).toDataFrame() }.union()
+                val df = values.map { (it as AnyRow).toDataFrame() }.union()
                 return createGroup(name, df) as DataColumn<T>
             }
             if(kClass.isSubclassOf(DataFrame::class)){
@@ -47,7 +47,7 @@ interface DataColumn<out T> : ColumnReference<T> {
 
     operator fun get(index: Int): T
 
-    operator fun get(row: DataRow<*>) = get(row.index)
+    operator fun get(row: AnyRow) = get(row.index)
 
     fun values() = values
 
