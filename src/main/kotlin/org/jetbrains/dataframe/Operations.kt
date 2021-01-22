@@ -295,7 +295,7 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
                 val group = column as GroupedColumn<*>
                 val newDf = insertColumns(group.df, columns.filter { it.insertionPath.size > childDepth }, treeNode?.get(name), childDepth)
                 group.withDf(newDf)
-            } else column.doRename(name)
+            } else column.rename(name)
         } else {
             val newDf = insertColumns<Unit>(null, columns, treeNode?.get(name), childDepth)
             ColumnData.createGroup(name, newDf) // new node needs to be created

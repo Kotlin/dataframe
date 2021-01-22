@@ -172,18 +172,14 @@ internal fun <T> DataCol.grouped() = this as GroupedColumnBase<T>
 
 inline fun <reified T> DataCol.cast(): ColumnData<T> = ColumnData.create(name(), toList() as List<T>, getType<T>().withNullability(hasNulls))
 
-internal fun <T> GroupedColumn<*>.withDf(newDf: DataFrame<T>) = org.jetbrains.dataframe.api.columns.ColumnData.createGroup(name(), newDf)
-
-fun <C> ColumnDef<C>.rename(newName: String) = if (newName == name()) this else RenamedColumnDef(this, newName)
-
-fun <C> ColumnData<C>.doRename(newName: String) = if (newName == name()) this else (this as ColumnDataInternal<C>).rename(newName)
+internal fun <T> GroupedColumn<*>.withDf(newDf: DataFrame<T>) = ColumnData.createGroup(name(), newDf)
 
 internal fun <T> Iterable<T>.asList() = when (this) {
     is List<T> -> this
     else -> this.toList()
 }
 
-fun <C> ColumnData<C>.ensureUniqueName(nameGenerator: ColumnNameGenerator) = doRename(nameGenerator.addUnique(name()))
+fun <C> ColumnData<C>.ensureUniqueName(nameGenerator: ColumnNameGenerator) = rename(nameGenerator.addUnique(name()))
 
 class InplaceColumnBuilder(val name: String) {
     inline operator fun <reified T> invoke(vararg values: T) = column(name, values.toList())
