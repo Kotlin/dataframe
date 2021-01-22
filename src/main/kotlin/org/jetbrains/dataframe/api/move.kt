@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.api.columns.ColumnWithPath
 import org.jetbrains.dataframe.api.columns.SingleColumn
 import org.jetbrains.dataframe.impl.DataFrameReceiver
@@ -79,11 +79,11 @@ fun <T, C> MoveColsClause<T, C>.into(newPathExpression: DataFrameForMove<T>.(Col
 
 fun <T, C> MoveColsClause<T, C>.into(name: String) = into { listOf(name) }
 fun <T, C> MoveColsClause<T, C>.intoGroup(name: String) = intoGroup { listOf(name) }
-fun <T, C> MoveColsClause<T, C>.intoGroup(groupDef: GroupedColumnDef) = intoGroup(groupDef.name())
+fun <T, C> MoveColsClause<T, C>.intoGroup(groupRef: MapColumnReference) = intoGroup(groupRef.name())
 
 fun <T, C> MoveColsClause<T, C>.into(path: List<String>) = intoGroup { path }
 fun <T, C> MoveColsClause<T, C>.to(columnIndex: Int): DataFrame<T> {
-    val newColumnList = df.columns().subList(0, columnIndex) + removed.map { it.data.column as DataCol<C> } + df.columns().subList(columnIndex, df.ncol())
+    val newColumnList = df.columns().subList(0, columnIndex) + removed.map { it.data.column as DataColumn<C> } + df.columns().subList(columnIndex, df.ncol())
     return newColumnList.asDataFrame()
 }
 

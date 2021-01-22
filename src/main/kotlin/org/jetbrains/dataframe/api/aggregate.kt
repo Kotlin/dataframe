@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
@@ -10,7 +10,7 @@ class GroupAggregateBuilder<T>(internal val df: DataFrame<T>): DataFrame<T> by d
 
     private val values = mutableListOf<NamedValue>()
 
-    internal fun toDataFrame() = values.map { it.path to DataCol.createGuess(it.path.last(), listOf(it.value), it.type, it.defaultValue) }.toDataFrame<T>() ?: emptyDataFrame(1).typed()
+    internal fun toDataFrame() = values.map { it.path to DataColumn.createGuess(it.path.last(), listOf(it.value), it.type, it.defaultValue) }.toDataFrame<T>() ?: emptyDataFrame(1).typed()
 
     fun <R> addValue(path: ColumnPath, value: R, type: KType, default: R? = null) {
         values.add(NamedValue(path, value, type, default))

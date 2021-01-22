@@ -2,7 +2,7 @@ package org.jetbrains.dataframe.codeGen
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.person.BaseTest
 import org.jetbrains.dataframe.person.DataFrameTests
 import org.junit.Test
@@ -66,7 +66,7 @@ class CodeGenerationTests : BaseTest(){
 
         val dfName = (DataFrameBase::class).simpleName
         val dfRowName = (DataRowBase::class).simpleName
-        val dataCol = (DataCol::class).qualifiedName!!
+        val dataCol = (DataColumn::class).qualifiedName!!
         val expected = """
             val $dfName<$personClassName>.age: $dataCol<kotlin.Int> @JvmName("${personShortName}_age") get() = this["age"] as $dataCol<kotlin.Int>
             val $dfRowName<$personClassName>.age: Int @JvmName("${personShortName}_age") get() = this["age"] as Int

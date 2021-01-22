@@ -1,11 +1,11 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.api.columns.ColumnWithPath
 import org.jetbrains.dataframe.impl.DataFrameImpl
 import org.jetbrains.dataframe.impl.TreeNode
-import org.jetbrains.dataframe.impl.columns.DataColWithParentImpl
-import org.jetbrains.dataframe.impl.columns.GroupedWithParentCol
+import org.jetbrains.dataframe.impl.columns.DataColumnWithParentImpl
+import org.jetbrains.dataframe.impl.columns.MapColumnWithParent
 import org.jetbrains.dataframe.impl.getOrPut
 import java.lang.UnsupportedOperationException
 import kotlin.reflect.KClass
@@ -41,7 +41,7 @@ inline fun <reified T> Iterable<T>.toDataFrame() = T::class.declaredMembers
             property.javaField?.isAccessible = true
             var nullable = false
             val values = this.map { el -> it.call(el).also { if (it == null) nullable = true } }
-            DataCol.create(it.name, values, property.returnType.withNullability(nullable))
+            DataColumn.create(it.name, values, property.returnType.withNullability(nullable))
         }.let { dataFrameOf(it) }
 
 
@@ -58,8 +58,8 @@ fun dataFrameOf(header: List<String>) = DataFrameBuilder(header)
 // TODO: remove checks for ColumnWithParent types
 internal fun AnyCol.unbox(): AnyCol = when (this) {
     is ColumnWithPath<*> -> data.unbox()
-    is DataColWithParentImpl<*> -> source.unbox()
-    is GroupedWithParentCol<*> -> source.unbox()
+    is DataColumnWithParentImpl<*> -> source.unbox()
+    is MapColumnWithParent<*> -> source.unbox()
     else -> this
 }
 
@@ -80,7 +80,7 @@ fun <T> List<Pair<List<String>, AnyCol>>.toDataFrame(): DataFrame<T>? {
             if(node.data != null)
                 throw UnsupportedOperationException("Can not add data to grouped column: ${node.pathFromRoot()}")
             node.children.forEach { dfs(it) }
-            node.data = DataCol.createGroup(node.name, node.children.map { it.data!! }.asDataFrame<Unit>())
+            node.data = DataColumn.createGroup(node.name, node.children.map { it.data!! }.asDataFrame<Unit>())
         }else assert(node.data != null)
     }
     dfs(tree)
@@ -126,5 +126,5 @@ internal fun guessValueType(values: List<Any?>): KType {
 }
 
 internal fun guessColumnType(name: String, values: List<Any?>) = guessValueType(values).let {
-    DataCol.create(name, values, it)
+    DataColumn.create(name, values, it)
 }

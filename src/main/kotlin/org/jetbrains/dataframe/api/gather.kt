@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
 
@@ -24,10 +24,10 @@ fun <T, C, K, R> doGather(clause: GatherClause<T, C, K, R>, namesTo: String, val
 
     val removed = clause.df.doRemove(clause.selector)
 
-    val columnsToGather = removed.removedColumns.map { it.data.column as DataCol<C> }
+    val columnsToGather = removed.removedColumns.map { it.data.column as DataColumn<C> }
 
-    val isGatherGroups = columnsToGather.any { it.isGrouped() }
-    if (isGatherGroups && columnsToGather.any { !it.isGrouped() })
+    val isGatherGroups = columnsToGather.any { it.isGroup() }
+    if (isGatherGroups && columnsToGather.any { !it.isGroup() })
         throw UnsupportedOperationException("Cannot mix ColumnGroups with other types of columns in 'gather' operation")
 
     val gatheredColumnKeys = columnsToGather.map { clause.nameTransform(it.name()) }
@@ -74,7 +74,7 @@ fun <T, C, K, R> doGather(clause: GatherClause<T, C, K, R>, namesTo: String, val
     if(valuesTo == null) {
 
         // values column needs to be removed
-        if(valuesCol.isGrouped()){
+        if(valuesCol.isGroup()){
             df = df.ungroup(valuesColumn.name())
         }else df = df.remove(valuesColumn.name())
 

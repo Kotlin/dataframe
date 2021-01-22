@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe.jupyter
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.GroupedCol
+import org.jetbrains.dataframe.api.columns.MapColumn
 import org.jetbrains.dataframe.io.toHTML
 import org.jetbrains.kotlinx.jupyter.api.*
 import org.jetbrains.kotlinx.jupyter.api.libraries.*
@@ -11,7 +11,7 @@ internal class Integration : JupyterIntegration({
 
     render<DataFrame<*>> { HTML(it.toHTML()) }
     render<DataRow<*>> { it.toDataFrame() }
-    render<GroupedCol<*>> { it.df }
+    render<MapColumn<*>> { it.df }
     render<AnyCol> { dataFrameOf(listOf(it)) }
     render<GroupedDataFrame<*, *>> { it.plain() }
 

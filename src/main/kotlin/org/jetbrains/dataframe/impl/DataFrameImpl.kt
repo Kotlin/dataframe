@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe.impl
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.api.columns.ColumnWithPath
 import org.jetbrains.dataframe.io.renderToString
 import java.lang.IllegalArgumentException
@@ -64,7 +64,7 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T> {
     }
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataRow<T>>? {
-        return DataCol.createGroup("", this).addPath(emptyList())
+        return DataColumn.createGroup("", this).addPath(emptyList())
     }
 
     override fun set(columnName: String, value: AnyCol) {

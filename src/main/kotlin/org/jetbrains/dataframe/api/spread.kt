@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -63,7 +63,7 @@ fun <T, K, V, C : SpreadContext> SpreadClause<T, K, V, C>.useDefault(defaultValu
     SpreadClause(context, keyColumn, valueColumn, valueSelector, valueType, defaultValue, columnPath)
 
 @JvmName("useDefaultTKVC")
-fun <T, K, V, C : SpreadContext> SpreadClause<T, K, DataCol<V>, C>.useDefault(defaultValue: V): SpreadClause<T, K, DataCol<V>, C> =
+fun <T, K, V, C : SpreadContext> SpreadClause<T, K, DataColumn<V>, C>.useDefault(defaultValue: V): SpreadClause<T, K, DataColumn<V>, C> =
     SpreadClause(context, keyColumn, valueColumn, valueSelector, valueType, defaultValue, columnPath)
 
 internal fun <T, K, V, C : SpreadContext> SpreadClause<T, K, V, *>.changeContext(newContext: C) =
@@ -74,24 +74,24 @@ inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.b
     by { column.toColumnDef() }
 
 inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(column: ColumnReference<V>) = by { column }
-inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(noinline columnSelector: ColumnSelector<T, V>): SpreadClause<T, K, DataCol<V>, SpreadContext.DataFrame<T>> =
+inline fun <T, K, reified V> SpreadClause<T, K, *, SpreadContext.DataFrame<T>>.by(noinline columnSelector: ColumnSelector<T, V>): SpreadClause<T, K, DataColumn<V>, SpreadContext.DataFrame<T>> =
     SpreadClause(
         context,
         keyColumn,
         columnSelector,
         { column(columnSelector) },
-        getType<DataCol<V>>(),
+        getType<DataColumn<V>>(),
         null,
         columnPath
     )
 
-inline fun <T, K, V, reified R> SpreadClause<T, K, DataCol<V>, SpreadContext.DataFrame<T>>.map(noinline transform: (V) -> R) =
+inline fun <T, K, V, reified R> SpreadClause<T, K, DataColumn<V>, SpreadContext.DataFrame<T>>.map(noinline transform: (V) -> R) =
     SpreadClause(
         context,
         keyColumn,
         valueColumn,
         { valueSelector(it, it).map(getType<R>(), transform) },
-        getType<DataCol<R>>(),
+        getType<DataColumn<R>>(),
         null,
         columnPath
     )
@@ -121,7 +121,7 @@ inline infix fun <T, K, V, reified C : SpreadContext> SpreadClause<T, K, V, C>.i
 inline infix fun <T, K, V, reified C : SpreadContext> SpreadClause<T, K, V, C>.into(groupName: String) =
     intoPaths { listOf(groupName, it.toString()) }
 
-inline infix fun <T, K, V, reified C : SpreadContext> SpreadClause<T, K, V, C>.into(column: GroupedColumnDef) =
+inline infix fun <T, K, V, reified C : SpreadContext> SpreadClause<T, K, V, C>.into(column: MapColumnReference) =
     intoPaths { column.getPath() + it.toString() }
 
 inline infix fun <T, K, V, reified C : SpreadContext> SpreadClause<T, K, V, C>.intoPaths(noinline keyTransform: (K) -> ColumnPath?) =
@@ -184,9 +184,9 @@ internal fun <T, K, V> SpreadClause<T, K, V, SpreadContext.GroupAggregator<T>>.e
             if (col.size == 1) {
                 value = col[0]
             } else {
-                if(col.isGrouped()){
+                if(col.isGroup()){
                     type = DataFrame::class.createStarProjectedType(false)
-                    value = col.asGrouped().df
+                    value = col.asGroup().df
                 }else {
                     val elementType = defaultType
                         ?: (col.values.mapNotNull { it?.javaClass?.kotlin }

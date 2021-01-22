@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataCol
+import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.api.columns.ColumnSet
 import kotlin.reflect.KProperty
 
@@ -23,7 +23,7 @@ interface SelectReceiver<out T> : ColumnsSelectorReceiver<T> {
     operator fun <C> ColumnSelector<T, C>.invoke() = this(this@SelectReceiver, this@SelectReceiver)
 
     operator fun <C> ColumnReference<C>.invoke(newName: String) = rename(newName)
-    infix fun <C> DataCol<C>.into(newName: String) = (this as ColumnReference<C>).rename(newName)
+    infix fun <C> DataColumn<C>.into(newName: String) = (this as ColumnReference<C>).rename(newName)
 
     infix fun String.and(other: String) = toColumnDef() and other.toColumnDef()
     infix fun <C> String.and(other: ColumnSet<C>) = toColumnDef() and other

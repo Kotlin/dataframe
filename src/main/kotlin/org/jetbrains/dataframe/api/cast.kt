@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.impl.columns.DataColInternal
+import org.jetbrains.dataframe.impl.columns.DataColumnInternal
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
@@ -13,5 +13,5 @@ data class CastClause<T>(val df: DataFrame<T>, val selector: ColumnsSelector<T, 
     inline fun <reified C> to() = df.update(selector).with { it as C? }
 }
 
-fun <T> CastClause<T>.to(type: KType) = df.replace(selector).with { (it as DataColInternal<T>).changeType(type) }
+fun <T> CastClause<T>.to(type: KType) = df.replace(selector).with { (it as DataColumnInternal<T>).changeType(type) }
 
