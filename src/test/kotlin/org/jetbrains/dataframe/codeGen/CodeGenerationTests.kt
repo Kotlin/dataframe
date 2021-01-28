@@ -19,7 +19,7 @@ class CodeGenerationTests : BaseTest(){
         val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
         val generated = CodeGeneratorImpl().generate(df, property)!!
         val expectedDeclaration = """
-            @DataFrameType(isOpen = false)
+            @DataSchema(isOpen = false)
             interface DataFrameType1{
                 val name: String
                 val age: Int
@@ -40,14 +40,14 @@ class CodeGenerationTests : BaseTest(){
         val generated = CodeGeneratorImpl().generate(grouped, property)!!
         val rowType = DataRow::class.simpleName
         val declaration1 = """
-            @DataFrameType(isOpen = false)
+            @DataSchema(isOpen = false)
             interface DataFrameType2{
                 val name: String
                 val city: String?
             }""".trimIndent()
 
         val declaration2 = """
-            @DataFrameType(isOpen = false)
+            @DataSchema(isOpen = false)
             interface DataFrameType1{
                 val nameAndCity: $rowType<DataFrameType2>
                 val age: Int
@@ -87,7 +87,7 @@ class CodeGenerationTests : BaseTest(){
         val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
         val generated = codeGen.generate(df.filterNotNull { all() }, property)!!
         val expected = """
-            @DataFrameType(isOpen = false)
+            @DataSchema(isOpen = false)
             interface DataFrameType1 : $personClassName{
                 override val city: String
                 override val weight: Int
