@@ -26,7 +26,7 @@ class NameGenerationTests {
         val code = codeGen.generate(df)
 
         val expected ="""
-            @DataFrameType(isOpen = false)
+            @DataSchema(isOpen = false)
             interface DataFrameType1{
             	@ColumnName("first column")
                 val `first column`: Int

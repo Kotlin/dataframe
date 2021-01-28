@@ -432,6 +432,8 @@ class CodeGeneratorImpl : CodeGenerator {
         }
     }
 
+    private val annotationName = DataSchema::class.simpleName
+
     private fun generateInterfaceDeclarations(scheme: Scheme, name: String, withBaseInterfaces: Boolean, options: GenerationOptions): List<String> {
 
         val markers = mutableListOf<GeneratedMarker>()
@@ -461,7 +463,7 @@ class CodeGeneratorImpl : CodeGenerator {
         } else scheme.values.map { it to FieldGenerationMode.declare }
 
         val leafMarkers = markers.onlyLeafs()
-        val header = "@DataFrameType${if(options.isMutable) "" else "(isOpen = false)"}\ninterface $name"
+        val header = "@$annotationName${if(options.isMutable) "" else "(isOpen = false)"}\ninterface $name"
         val baseInterfacesDeclaration = if (leafMarkers.isNotEmpty()) " : " + leafMarkers.map { it.kclass.qualifiedName!! }.joinToString() else ""
         val resultDeclarations = mutableListOf<String>()
 
