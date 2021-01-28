@@ -5,7 +5,9 @@ import org.jetbrains.dataframe.api.columns.MapColumn
 import org.jetbrains.dataframe.io.toHTML
 import org.jetbrains.kotlinx.jupyter.api.*
 import org.jetbrains.kotlinx.jupyter.api.libraries.*
+import kotlin.reflect.KClass
 
+internal val newDataSchemas = mutableListOf<KClass<*>>()
 
 internal class Integration : JupyterIntegration({
 
@@ -37,8 +39,7 @@ internal class Integration : JupyterIntegration({
         execute(code).name
     }
 
-    onClassAnnotation<DataSchema> { classes ->
-        
+    fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>){
         val code = classes.mapNotNull {
             codeGen.generateExtensionProperties(it)
         }.joinToString("\n").trim()
@@ -47,4 +48,18 @@ internal class Integration : JupyterIntegration({
             execute(code)
         }
     }
+
+    onClassAnnotation<DataSchema> { addDataSchemas(it) }
+
+    beforeCellExecution {
+        if(newDataSchemas.isNotEmpty())
+        {
+            addDataSchemas(newDataSchemas)
+            newDataSchemas.clear()
+        }
+    }
 })
+
+fun KotlinKernelHost.useDataSchemas(vararg schemaClasses: KClass<*>){
+    newDataSchemas.addAll(schemaClasses)
+}
