@@ -72,6 +72,9 @@ internal fun <T : Any> DataColumn<String?>.parse(parser: StringParser<T>): DataC
 }
 
 internal fun DataColumn<String?>.tryParseAny(): DataColumn<*> {
+
+    if(ndistinct == 1 && hasNulls) return this
+
     var parserId = 0
     val parsedValues = mutableListOf<Any?>()
 
