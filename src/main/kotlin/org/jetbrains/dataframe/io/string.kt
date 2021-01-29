@@ -2,7 +2,6 @@ package org.jetbrains.dataframe.io
 
 import org.jetbrains.dataframe.*
 
-fun <T> DataFrame<T>.print() = println(this)
 fun <T, G> GroupedDataFrame<T, G>.print() = println(this)
 
 internal fun AnyFrame.renderToString(limit: Int = 20, truncate: Int = 40): String {

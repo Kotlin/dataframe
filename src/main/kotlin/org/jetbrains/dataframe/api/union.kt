@@ -7,8 +7,8 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 fun Iterable<AnyFrame>.union() = merge(asList())
-internal fun merge(dataFrames: List<AnyFrame>): DataFrame<Unit> {
-    if (dataFrames.size == 1) return dataFrames[0].typed()
+internal fun merge(dataFrames: List<AnyFrame>): AnyFrame {
+    if (dataFrames.size == 1) return dataFrames[0]
 
     // collect column names preserving original order
     val columnNames = dataFrames

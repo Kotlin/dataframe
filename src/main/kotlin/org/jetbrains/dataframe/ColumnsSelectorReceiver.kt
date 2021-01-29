@@ -14,6 +14,10 @@ interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
 
     fun DataFrameBase<*>.cols() = this.all()
 
+    fun DataFrameBase<*>.first(numCols: Int) = cols().take(numCols)
+
+    fun DataFrameBase<*>.last(numCols: Int) = cols().takeLast(numCols)
+
     fun cols(firstCol: String, vararg otherCols: String) = Columns((listOf(firstCol) + otherCols).map { it.toColumnDef() })
 
     fun DataFrameBase<*>.cols(range: IntRange) = Columns(this.columns().subList(range.start, range.endInclusive+1))

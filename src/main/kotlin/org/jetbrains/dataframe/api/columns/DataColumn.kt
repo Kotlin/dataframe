@@ -67,3 +67,7 @@ interface DataColumn<out T> : ColumnReference<T> {
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? = this.addPath()
 }
+
+fun <C> DataColumn<C>.allNulls() = size == 0 || (hasNulls && ndistinct == 1)
+
+inline fun <reified T> DataColumn<*>.isType() = type == getType<T>()
