@@ -53,7 +53,7 @@ internal class Integration : JupyterIntegration(){
 
         onClassAnnotation<DataSchema> { addDataSchemas(it) }
 
-        beforeCellExecution {
+        afterCellExecution { snippet, result ->
             if (newDataSchemas.isNotEmpty()) {
                 addDataSchemas(newDataSchemas)
                 newDataSchemas.clear()
