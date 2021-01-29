@@ -39,7 +39,7 @@ class DataFrameTreeTests : BaseTest() {
     val DataFrameBase<GroupedPerson>.weight @JvmName("get-weight") get() = this["weight"].typed<Int?>()
     val DataFrameBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"].grouped<NameAndCity>()
 
-    val nameAndCity by columnGroup()
+    val nameAndCity by mapColumn()
 
     @Test
     fun `group indexing`() {
@@ -138,7 +138,7 @@ class DataFrameTreeTests : BaseTest() {
             }.sortedBy { it.first.second }
         }.flatten()
 
-        val cities by columnGroup()
+        val cities by mapColumn()
 
         fun <T> DataFrame<T>.check() {
             columnNames() shouldBe listOf("name", "cities")
@@ -234,7 +234,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `all except`(){
-        val info by columnGroup()
+        val info by mapColumn()
         val moved = typed.group { except(name) }.into(info)
         val actual = moved.select { except(info) }
         actual.print()
@@ -243,7 +243,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `move and group`(){
-        val info by columnGroup()
+        val info by mapColumn()
         val moved = typed.group { except(name) }.into(info)
         val grouped = moved.groupBy { except(info) }.plain()
         grouped.nrow() shouldBe typed.name.ndistinct
@@ -252,7 +252,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `merge rows into table`() {
 
-        val info by columnGroup()
+        val info by mapColumn()
         val moved = typed.group { except(name) }.into(info)
         val merged = moved.mergeRows { info }
         val grouped = typed.groupBy { name }.updateGroups { remove { name } }
@@ -262,7 +262,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `update grouped column to table`(){
-        val info by columnGroup()
+        val info by mapColumn()
         val grouped = typed.group { age and weight }.into(info)
         val updated = grouped.update(info).with2 { row, column -> column.asGroup().df}
         val col = updated[info.name()]
