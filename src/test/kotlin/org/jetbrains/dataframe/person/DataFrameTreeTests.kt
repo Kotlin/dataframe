@@ -37,7 +37,7 @@ class DataFrameTreeTests : BaseTest() {
     val DataRowBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as DataRowBase<NameAndCity>
     val DataFrameBase<GroupedPerson>.age @JvmName("get-age") get() = this["age"].typed<Int>()
     val DataFrameBase<GroupedPerson>.weight @JvmName("get-weight") get() = this["weight"].typed<Int?>()
-    val DataFrameBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"].grouped<NameAndCity>()
+    val DataFrameBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as ColumnGroup<NameAndCity>
 
     val nameAndCity by mapColumn()
 
@@ -101,6 +101,16 @@ class DataFrameTreeTests : BaseTest() {
 
         val expected = typed.groupBy { name }.max { age }
         typed2.groupBy { nameAndCity.name }.max { age } shouldBe expected
+    }
+
+    @Test
+    fun `distinct`(){
+
+        val duplicated = typed2 + typed2
+        duplicated.nrow() shouldBe typed2.nrow() * 2
+        val dist = duplicated.nameAndCity.distinct()
+        dist shouldBe typed2.nameAndCity.distinct()
+        dist.nrow() shouldBe typed2.nrow() - 1
     }
 
     @Test

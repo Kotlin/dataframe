@@ -193,7 +193,7 @@ inline fun <T, reified R> DataFrame<T>.newColumn(name: String, noinline expressi
 }
 
 internal fun Array<out String>.toColumns(): ColumnSet<Any?> = map { it.toColumnDef() }.toColumnSet()
-fun <C> Iterable<ColumnSet<C>>.toColumnSet(): ColumnSet<C> = ColumnGroup(asList())
+fun <C> Iterable<ColumnSet<C>>.toColumnSet(): ColumnSet<C> = Columns(asList())
 internal fun <C> Array<out KProperty<C>>.toColumns() = map { it.toColumnDef() }.toColumnSet()
 internal fun <T> Array<out ColumnReference<T>>.toColumns() = toList().toColumnSet()
 internal fun <T, C> ColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns { SelectReceiverImpl(it.df.typed(), it.allowMissingColumns) }
@@ -202,7 +202,7 @@ internal fun <T, C> ColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns 
 internal fun <T, C> SortColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns { SortReceiverImpl(it.df.typed(), it.allowMissingColumns) }
 
 
-class ColumnGroup<C>(val columns: List<ColumnSet<C>>) : ColumnSet<C> {
+class Columns<C>(val columns: List<ColumnSet<C>>) : ColumnSet<C> {
     constructor(vararg columns: ColumnSet<C>) : this(columns.toList())
 
     override fun resolve(context: ColumnResolutionContext) = columns.flatMap { it.resolve(context) }
@@ -394,6 +394,10 @@ internal class MissingFrameColumn<T>: MissingDataColumn<DataFrame<T>>(), FrameCo
 
 
     override fun kind() = super.kind()
+
+    override fun distinct(): FrameColumn<T> {
+        throw UnsupportedOperationException()
+    }
 }
 
 operator fun AnyCol.plus(other: AnyCol) = dataFrameOf(listOf(this, other))

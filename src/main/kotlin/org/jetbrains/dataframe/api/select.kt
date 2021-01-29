@@ -12,7 +12,7 @@ fun <T> DataFrame<T>.select(columns: Iterable<Column>) = select { columns.toColu
 
 interface SelectReceiver<out T> : ColumnsSelectorReceiver<T> {
 
-    infix fun <C> ColumnSet<C>.and(other: ColumnSet<C>) = ColumnGroup(this, other)
+    infix fun <C> ColumnSet<C>.and(other: ColumnSet<C>) = Columns(this, other)
 
     fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>) = except(other.toList().toColumnSet())
 

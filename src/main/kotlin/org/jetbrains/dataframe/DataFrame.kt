@@ -132,7 +132,6 @@ interface DataFrame<out T> : DataFrameBase<T> {
     fun <K, V> associate(transform: RowSelector<T, Pair<K, V>>) = rows().associate { transform(it, it) }
     fun <V> associateBy(transform: RowSelector<T, V>) = rows().associateBy { transform(it, it) }
     fun <R> distinctBy(selector: RowSelector<T, R>) = rows().distinctBy { selector(it, it) }.map { it.index }.let { getRows(it) }
-    fun distinct() = distinctBy { it.values }
     fun single() = rows().single()
     fun single(predicate: RowSelector<T, Boolean>) = rows().single { predicate(it, it) }
 

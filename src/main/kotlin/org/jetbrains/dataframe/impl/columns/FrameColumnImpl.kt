@@ -15,7 +15,7 @@ internal class FrameColumnImpl<T> constructor(override val df: DataFrame<T>, nam
     constructor(name: String, df: DataFrame<T>, startIndices: List<Int>) : this(df, name, df.splitByIndices(startIndices))
 
     init {
-        if(values.any{it == null})
+        if(values.any{ it == null }) // TODO: cleanup
             throw Exception()
     }
 
@@ -30,4 +30,8 @@ internal class FrameColumnImpl<T> constructor(override val df: DataFrame<T>, nam
     }
 
     override fun changeType(type: KType) = throw UnsupportedOperationException()
+
+    override fun distinct(): FrameColumn<T> {
+        return DataColumn.createTable(name, values.distinct())
+    }
 }
