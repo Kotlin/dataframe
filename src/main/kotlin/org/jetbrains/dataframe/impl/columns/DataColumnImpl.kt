@@ -2,6 +2,7 @@ package org.jetbrains.dataframe.impl.columns
 
 import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.checkEquals
+import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.getHashCode
 import kotlin.reflect.KType
 
@@ -16,7 +17,7 @@ internal abstract class DataColumnImpl<T>(override val values: List<T>, val name
 
     fun contains(value: T) = toSet().contains(value)
 
-    override fun toString() = "${name()}: $type"
+    override fun toString() = dataFrameOf(this).toString() // "${name()}: $type"
 
     override val ndistinct = toSet().size
 

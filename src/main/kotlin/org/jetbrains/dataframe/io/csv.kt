@@ -1,9 +1,11 @@
 package org.jetbrains.dataframe.io
 
+import com.beust.klaxon.Parser
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.*
 import java.io.*
+import java.lang.StringBuilder
 import java.math.BigDecimal
 import java.net.URL
 import java.util.zip.GZIPInputStream
@@ -17,6 +19,12 @@ internal fun isCompressed(fileOrUrl: String) = listOf("gz", "zip").contains(file
 internal fun isCompressed(file: File) = listOf("gz", "zip").contains(file.extension)
 
 internal fun isCompressed(url: URL) = isCompressed(url.path)
+
+fun DataFrame.Companion.readDelimStr(
+    text: String, format: CSVFormat = CSVFormat.DEFAULT.withHeader(),
+    colTypes: Map<String, ColType> = mapOf(),
+    skip: Int = 0
+) = readDelim(StringReader(text), format, colTypes, skip)
 
 fun DataFrame.Companion.readCSV(
     fileOrUrl: String,
@@ -165,3 +173,21 @@ fun DataFrame.Companion.readDelim(
 
 internal fun String.emptyAsNull(): String? = if (this.isEmpty()) null else this
 
+fun AnyFrame.writeCSV(file: File, format: CSVFormat = CSVFormat.DEFAULT.withHeader()) =
+    writeCSV(FileWriter(file), format)
+
+fun AnyFrame.writeCSV(path: String, format: CSVFormat = CSVFormat.DEFAULT.withHeader()) =
+    writeCSV(FileWriter(path), format)
+
+fun AnyFrame.writeCSV(writer: Appendable, format: CSVFormat = CSVFormat.DEFAULT.withHeader()) {
+
+    val printer = format.print(writer)
+    try {
+        printer.printRecord(columnNames())
+        forEach {
+            printer.printRecord(it.values)
+        }
+    } finally {
+        printer.close()
+    }
+}
