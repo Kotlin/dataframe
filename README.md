@@ -4,12 +4,14 @@
 
 Kotlin DataFrame is a framework for in-memory data manipulation
 * Supports hierarchical data layouts
-* Reads any CSV or JSON input
+* Reads CSV and JSON
 * Provides type safe DSL for data manipulation
 * Tracks column nullability 
 * Generates typed data accessors in Jupyter notebooks
 
 Inspired by [krangl](https://github.com/holgerbrandl/krangl) and [pandas](https://pandas.pydata.org/)
+
+See [API reference](docs/reference.md) for a list of  supported operations 
 
 ## Key concepts
 
