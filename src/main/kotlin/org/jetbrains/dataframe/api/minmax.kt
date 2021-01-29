@@ -10,8 +10,8 @@ fun <T, D : Comparable<D>> DataFrame<T>.min(col: KProperty<D?>): D? = get(col).m
 fun <T, D : Comparable<D>> DataFrame<T>.min(col: ColumnReference<D?>): D? = get(col).min()
 fun <T, D : Comparable<D>> DataFrame<T>.min(selector: RowSelector<T, D?>): D? = rows().asSequence().map { selector(it, it) }.filterNotNull().min()
 
-inline fun <T, G, reified R : Comparable<R>> GroupedDataFrame<T, G>.min(columnName: String = "min", noinline selector: RowSelector<G, R>) = aggregate { min(selector) into columnName }
-inline fun <T, G, reified R : Comparable<R>> GroupedDataFrame<T, G>.max(columnName: String = "max", noinline selector: RowSelector<G, R>) = aggregate { max(selector) into columnName }
+inline fun <T, G, reified R : Comparable<R>> GroupedDataFrame<T, G>.min(columnName: String = "min", noinline selector: RowSelector<G, R?>) = aggregate { min(selector) into columnName }
+inline fun <T, G, reified R : Comparable<R>> GroupedDataFrame<T, G>.max(columnName: String = "max", noinline selector: RowSelector<G, R?>) = aggregate { max(selector) into columnName }
 
 fun <T : Comparable<T>> DataColumn<T?>.min() = values.asSequence().filterNotNull().minOrNull()
 fun <T : Comparable<T>> DataColumn<T?>.max() = values.asSequence().filterNotNull().maxOrNull()
