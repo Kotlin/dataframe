@@ -232,17 +232,23 @@ internal fun AnyCol.isTable(): Boolean = kind() == ColumnKind.Frame
 
 fun <T> column() = ColumnDelegate<T>()
 
-fun columnGroup() = column<AnyRow>()
+fun mapColumn() = column<AnyRow>()
 
 fun <T> columnList() = column<List<T>>()
 
-fun <T> columnGroup(name: String) = column<DataRow<T>>(name)
+fun <T> mapColumn(name: String) = column<DataRow<T>>(name)
 
-fun <T> tableColumn(name: String) = column<DataFrame<T>>(name)
+fun <T> frameColumn(name: String) = column<DataFrame<T>>(name)
 
 fun <T> columnList(name: String) = column<List<T>>(name)
 
 fun <T> column(name: String) = ColumnDefinition<T>(name)
+
+class DataColumnDelegate<T>(val values: List<T>, val type: KType) {
+    operator fun getValue(thisRef: Any?, property: KProperty<*>) = column(property.name, values, type)
+}
+
+inline fun <reified T> column(vararg values: T) = DataColumnDelegate(values.toList(), getType<T>())
 
 inline fun <reified T> column(name: String, values: List<T>): DataColumn<T> =
     column(name, values, values.any { it == null })
@@ -298,8 +304,8 @@ fun <T, R> DataColumn<T>.map(type: KType?, transform: (T) -> R): DataColumn<R> {
 
 fun <C> DataColumn<C>.single() = values.single()
 
-fun <T> FrameColumn<T>.toDefinition() = tableColumn<T>(name())
-fun <T> MapColumn<T>.toDefinition() = columnGroup<T>(name())
+fun <T> FrameColumn<T>.toDefinition() = frameColumn<T>(name())
+fun <T> MapColumn<T>.toDefinition() = mapColumn<T>(name())
 fun <T> ValueColumn<T>.toDefinition() = column<T>(name())
 
 internal abstract class MissingDataColumn<T> : DataColumn<T> {
@@ -386,6 +392,8 @@ internal class MissingFrameColumn<T>: MissingDataColumn<DataFrame<T>>(), FrameCo
 
     override fun kind() = super.kind()
 }
+
+operator fun AnyCol.plus(other: AnyCol) = dataFrameOf(listOf(this, other))
 
 typealias DoubleCol = DataColumn<Double?>
 typealias IntCol = DataColumn<Int?>

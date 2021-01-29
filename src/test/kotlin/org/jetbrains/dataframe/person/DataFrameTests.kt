@@ -474,7 +474,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `groupBy invoked at column`() {
 
-        typed.weight.groupBy(typed.name).mean() shouldBe typed.groupBy {name}.mean("weight") { weight }
+        typed.weight.groupBy(typed.name).mean() shouldBe typed.groupBy { name }.mean("weight") { weight }
     }
 
     @Test
@@ -567,7 +567,7 @@ class DataFrameTests : BaseTest() {
         val now = 2020
         val expected = typed.map { now - age }
 
-        fun AnyFrame.check() = (1..3).forEach { this["year$it"].values shouldBe expected}
+        fun AnyFrame.check() = (1..3).forEach { this["year$it"].values shouldBe expected }
 
         typed.add {
             "year1" { now - age }
@@ -633,8 +633,8 @@ class DataFrameTests : BaseTest() {
         val heightOrNull = height.nullable()
 
         val other = dataFrameOf(name, height)(
-                "Bill", 135,
-                "Mark", 160
+            "Bill", 135,
+            "Mark", 160
         ).typed<Unit>()
 
         val res = typed.union(other)
@@ -759,7 +759,8 @@ class DataFrameTests : BaseTest() {
     fun `spread to bool with conversion`() {
         val res = typed.spread { city }.into { it?.decapitalize() }
         val cities = typed.city.values.filterNotNull()
-        val gathered = res.gather { colsOfType<Boolean> { cities.contains(it.name().capitalize()) } }.where { it }.into("city")
+        val gathered =
+            res.gather { colsOfType<Boolean> { cities.contains(it.name().capitalize()) } }.where { it }.into("city")
         val expected = typed.update { city }.with { it?.decapitalize() }.filterNotNull { city }.moveToRight { city }
         gathered shouldBe expected
     }
@@ -806,9 +807,9 @@ class DataFrameTests : BaseTest() {
         val names = typed.name.values.distinct()
 
         val src = typed.select { name }
-                .add(others) { names }
-                .splitRows { others }
-                .add(sum) { name.length + other().length }
+            .add(others) { names }
+            .splitRows { others }
+            .add(sum) { name.length + other().length }
 
         val matrix = src.spread { other }.by { sum }.into { it }
         matrix.ncol() shouldBe 1 + names.size
@@ -910,7 +911,12 @@ class DataFrameTests : BaseTest() {
             val intGroup = this["Int"].asFrame()
             intGroup.columnNames() shouldBe listOf("age", "weight")
 
-            val res = listOf(this.name, this["Int"]["age"], this["String"]["city"], this["Int"]["weight"]).asDataFrame<Person>()
+            val res = listOf(
+                this.name,
+                this["Int"]["age"],
+                this["String"]["city"],
+                this["Int"]["weight"]
+            ).asDataFrame<Person>()
             res shouldBe typed
         }
         typed.move { cols { it != name } }.intoGroups { it.type.jvmErasure.simpleName!! }.check()
@@ -923,14 +929,19 @@ class DataFrameTests : BaseTest() {
         val grouped = typed.move { age and name and city }.intoGroup("info")
         grouped.ncol() shouldBe 2
         grouped.columnNames() shouldBe listOf("info", "weight")
-        val res = listOf(grouped["info"]["name"], grouped["info"]["age"], grouped["info"]["city"], grouped.weight).asDataFrame<Person>()
+        val res = listOf(
+            grouped["info"]["name"],
+            grouped["info"]["age"],
+            grouped["info"]["city"],
+            grouped.weight
+        ).asDataFrame<Person>()
         res shouldBe typed
     }
 
     @Test
     fun `column ungroup`() {
 
-        val info by columnGroup()
+        val info by mapColumn()
         val res = typed.move { age and city }.intoGroup("info").ungroup { info }
         res shouldBe typed
     }
@@ -978,7 +989,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `forEachIn`() {
 
-        val cities by columnGroup()
+        val cities by mapColumn()
         val spread = typed.spread { city }.by { age }.into(cities)
         var sum = 0
         spread.forEachIn({ cities.children() }) { row, column -> column[row]?.let { sum += it as Int } }
@@ -995,12 +1006,12 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun digitize(){
+    fun digitize() {
 
         val a = 20
         val b = 40
         val expected = typed.age.values.map {
-            when{
+            when {
                 it < a -> 0
                 it < b -> 1
                 else -> 2
@@ -1009,7 +1020,7 @@ class DataFrameTests : BaseTest() {
         typed.age.digitize(a, b).toList() shouldBe expected
 
         val expectedRight = typed.age.values.map {
-            when{
+            when {
                 it <= a -> 0
                 it <= b -> 1
                 else -> 2
@@ -1019,10 +1030,10 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `aggregate into grouped column`(){
+    fun `aggregate into grouped column`() {
 
         val d = typed.groupBy { name }.aggregate {
-            val row = select {age and weight}.mean()
+            val row = select { age and weight }.mean()
             addValue("mean", row)
         }
         d.ncol() shouldBe 2
@@ -1036,10 +1047,10 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `aggregate into table column`(){
+    fun `aggregate into table column`() {
 
         val d = typed.groupBy { name }.aggregate {
-            val row = select {age and weight}
+            val row = select { age and weight }
             addValue("info", row)
         }
         d.ncol() shouldBe 2
@@ -1055,7 +1066,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `union table columns`(){
+    fun `union table columns`() {
 
         val grouped = typed.addRowNumber("id").groupBy { name }.plain()
         val dfs = (0 until grouped.nrow()).map {
@@ -1066,11 +1077,22 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `set column`(){
+    fun `set column`() {
 
         val copy = typed.select { all() }
         copy["new"] = copy.age
         copy.ncol() shouldBe typed.ncol() + 1
         copy["new"].toList() shouldBe typed.age.toList()
+    }
+
+    @Test
+    fun `columns sum`() {
+
+        val name by column("Alice", "Bob", "Mark")
+        val age by column(15, 20, 24)
+        val df = name + age
+        
+        df.columnNames() shouldBe listOf("name", "age")
+        df.nrow() shouldBe 3
     }
 }
