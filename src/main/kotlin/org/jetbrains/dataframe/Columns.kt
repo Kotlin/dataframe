@@ -49,7 +49,7 @@ fun <TD, T: DataFrameBase<TD>, C> Selector<T, ColumnSet<C>>.toColumns(createRece
 
 fun <C> createColumnSet(resolver: (ColumnResolutionContext) -> List<ColumnWithPath<C>>): ColumnSet<C> = ColumnsBySelector(resolver)
 
-class ColumnsBySelector<C>(val resolver: (ColumnResolutionContext) -> List<ColumnWithPath<C>>) : ColumnSet<C> {
+internal class ColumnsBySelector<C>(val resolver: (ColumnResolutionContext) -> List<ColumnWithPath<C>>) : ColumnSet<C> {
 
     override fun resolve(context: ColumnResolutionContext) = resolver(context)
 }
@@ -412,3 +412,10 @@ internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
         throw RuntimeException("Column '$name' has type '$type' that is not Comparable")
     return this
 }
+
+internal class TransformedColumnSet<C>(val src: ColumnSet<C>, val transform: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<C>>) : ColumnSet<C> {
+
+    override fun resolve(context: ColumnResolutionContext) = transform(src.resolve(context))
+}
+
+internal fun <C> ColumnSet<C>.transform(transform: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<C>>): ColumnSet<C> = TransformedColumnSet(this, transform)
