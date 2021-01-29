@@ -59,8 +59,7 @@ internal fun <T, C> DataFrame<T>.doSortBy(selector: SortColumnsSelector<T, C>, u
 
 internal fun AnyCol.createComparator(nullsLast: Boolean): java.util.Comparator<Int> {
 
-    if (!type.isSubtypeOf(getType<Comparable<*>?>()))
-        throw UnsupportedOperationException()
+    assertIsComparable()
 
     return Comparator<Any?> { left, right ->
         (left as Comparable<Any?>).compareTo(right)

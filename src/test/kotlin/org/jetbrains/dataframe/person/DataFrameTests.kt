@@ -494,6 +494,7 @@ class DataFrameTests : BaseTest() {
         df.min { int("age") }.check()
         df.min { "age"<Int>() }.check()
         df["age"].typed<Int>().min().check()
+        (df.min("age") as Int?).check()
     }
 
     @Test
@@ -512,6 +513,7 @@ class DataFrameTests : BaseTest() {
 
         df.max { nint("weight") }.check()
         df["weight"].typed<Int?>().max().check()
+        (df.max("weight") as Int?).check()
     }
 
     @Test
