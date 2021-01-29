@@ -8,6 +8,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
@@ -26,6 +27,8 @@ internal fun <C> DataFrameBase<*>.getColumn(name: String, policy: UnresolvedColu
                     UnresolvedColumnsPolicy.Skip -> null
                     UnresolvedColumnsPolicy.Create -> DataColumn.empty().typed<C>()
                 }
+
+internal val ColumnReference<*>.name get() = name()
 
 interface ColumnReference<out C> : SingleColumn<C> {
 
@@ -399,3 +402,9 @@ typealias DoubleCol = DataColumn<Double?>
 typealias IntCol = DataColumn<Int?>
 typealias StringCol = DataColumn<String?>
 typealias AnyCol = DataColumn<*>
+
+internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
+    if (!type.isSubtypeOf(getType<Comparable<*>?>()))
+        throw RuntimeException("Column '$name' has type '$type' that is not Comparable")
+    return this
+}
