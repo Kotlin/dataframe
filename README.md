@@ -39,7 +39,7 @@ For more complicated expressions this API may lead to code mess with plenty type
 ```kotlin
 df.filter { (it["surived"] as Boolean) && (it["home"] as String).endsWith("NY") && (it["age"] as Int?) in 10..20 }
 ```  
-And solution is...
+Fortunately, there is a solution:
 
 ### Column Accessors
 
@@ -53,23 +53,30 @@ Now columns can be accessed in a type-safe way:
 ```kotlin
 df.filter { it[survived] && it[home].endsWith("NY") && it[age] in 10..20 }
 ```
-or simplier, using 'invoke' operator of column accessors:
+or just using `invoke` operator at column accessors:
 ```kotlin
 df.filter { survived() && home().endsWith("NY") && age() in 10..20 }
 ```
+If `DataFrame` doesn't contain a column referenced by `ColumnAccessor`, runtime exception will be thrown. In some cases
+this may lead to loosing important results of some long computation.
+
+Fortunately, there is a solution:
 
 ### Extension properties
-Within Jupyter Kernel there is even more straightforward way to access data. 
-After every new REPL line execution all new global variables of type DataFrame are analyzed and extension properties 
+When DataFrame is used within Jupyter Notebooks with [Kotlin Kernel](https://github.com/Kotlin/kotlin-jupyter) there is even more type safe way to access data. 
+After every REPL line execution all new global variables of type `DataFrame` are analyzed and extension properties 
 for data access are generated:
 ```kotlin
 val df = DataFrame.read("titanic.csv")
 ```
-Now data can be accessed just by "." member accesor, with full completion support:
+Now data can be accessed by `.` member accessor
 ```kotlin
 df.filter { it.survived && it.home.endsWith("NY") && it.age in 10..20 }
 ```
-"it" can be ommited:    
+`it` can be ommited:    
 ```kotlin
 df.filter { survived && home.endsWith("NY") && age in 10..20 }
 ```
+Extension properties are generated for `DataSchema` that is extracted from `DataFrame` instance after REPL line execution.
+Then `DataFrame` variable is typed with its own `DataSchema`, so only valid extension properties corresponding 
+to actual columns in `DataFrame` will be suggested by completion.
