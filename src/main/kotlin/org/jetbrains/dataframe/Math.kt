@@ -2,9 +2,11 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.api.columns.DataColumn
 import java.math.BigDecimal
+import java.math.RoundingMode
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.jvm.jvmErasure
+
 
 inline fun <reified T : Comparable<T>> Iterable<T>.median(): Double {
     val sorted = sorted()
@@ -18,7 +20,7 @@ inline fun <reified T : Comparable<T>> Iterable<T>.median(): Double {
     }
 }
 
-class Counter(var value: Int = 0){
+class Counter(var value: Int = 0) {
     operator fun inc(): Counter {
         value++
         return this
@@ -30,9 +32,9 @@ fun <T> Iterable<T>.computeSize(counter: Counter) = map {
     it
 }
 
-internal fun Int.zeroToOne() = if(this == 0) 1 else this
+internal fun Int.zeroToOne() = if (this == 0) 1 else this
 
-fun <T: Number> Iterable<T>.sum(clazz: KClass<T>) = when (clazz) {
+fun <T : Number> Iterable<T>.sum(clazz: KClass<T>) = when (clazz) {
     Double::class -> (this as Iterable<Double>).sum() as T
     Int::class -> (this as Iterable<Int>).sum() as T
     Long::class -> (this as Iterable<Long>).sum() as T
@@ -50,8 +52,20 @@ fun Iterable<BigDecimal>.sum(): BigDecimal {
 
 inline fun <reified T : Number> sum(list: Iterable<T>): T = list.sum(T::class)
 
-fun <T: Number> DataColumn<T>.sum() = values.sum(type.jvmErasure as KClass<T>)
+fun <T : Number> DataColumn<T>.sum() = values.sum(type.jvmErasure as KClass<T>)
 
 inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(col: ColumnReference<D?>): Double = get(col).median()
-inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(crossinline selector: RowSelector<T, D?>): Double = rows().asSequence().map { selector(it, it) }.filterNotNull().asIterable().median()
+inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(crossinline selector: RowSelector<T, D?>): Double =
+    rows().asSequence().map {
+        selector(
+            it,
+            it
+        )
+    }.filterNotNull().asIterable().median()
+
 inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(col: KProperty<D?>): Double = get(col).median()
+
+fun Double.round(places: Int): Double {
+    require(places >= 0)
+    return toBigDecimal().setScale(places, RoundingMode.HALF_UP).toDouble()
+}
