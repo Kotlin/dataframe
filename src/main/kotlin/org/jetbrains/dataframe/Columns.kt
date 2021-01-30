@@ -419,3 +419,7 @@ internal class TransformedColumnSet<C>(val src: ColumnSet<C>, val transform: (Li
 }
 
 internal fun <C> ColumnSet<C>.transform(transform: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<C>>): ColumnSet<C> = TransformedColumnSet(this, transform)
+
+fun StringCol.len() = map { it?.length }
+fun StringCol.lower() = map { it?.toLowerCase() }
+fun StringCol.upper() = map { it?.toUpperCase() }
