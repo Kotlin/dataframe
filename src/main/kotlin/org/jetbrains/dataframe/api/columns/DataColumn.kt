@@ -16,7 +16,9 @@ interface DataColumn<out T> : ColumnReference<T> {
 
         fun <T> createGroup(name: String, df: DataFrame<T>): MapColumn<T> = MapColumnImpl(df, name)
 
-        fun <T> createTable(name: String, df: DataFrame<T>, startIndices: List<Int>): FrameColumn<T> = FrameColumnImpl(name, df, startIndices)
+        fun <T> createTable(name: String, df: DataFrame<T>, startIndices: Sequence<Int>): FrameColumn<T> = FrameColumnImpl(name, df, startIndices)
+
+        fun <T> createTable(name: String, df: DataFrame<T>, startIndices: Iterable<Int>) = createTable(name, df, startIndices.asSequence())
 
         fun <T> createTable(name: String, groups: List<DataFrame<T>>, df: DataFrame<T>? = null): FrameColumn<T> = FrameColumnImpl(df
                 ?: groups.getBaseSchema(), name, groups)

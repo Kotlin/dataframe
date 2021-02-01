@@ -38,7 +38,7 @@ fun <T> DataFrame<T>.groupBy(cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T
    val sorted = getRows(permutation)
 
    var lastIndex = 0
-   val startIndices = groups.map {
+   val startIndices = groups.asSequence().map {
        val start = lastIndex
        lastIndex += it.second.size
        start

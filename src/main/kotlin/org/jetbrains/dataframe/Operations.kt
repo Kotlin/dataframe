@@ -311,14 +311,14 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
     return newColumns.asDataFrame()
 }
 
-internal fun <T> DataFrame<T>.splitByIndices(startIndices: List<Int>): List<DataFrame<T>> {
-    return (startIndices + listOf(nrow())).zipWithNext { start, endExclusive ->
+internal fun <T> DataFrame<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<DataFrame<T>> {
+    return (startIndices + nrow()).zipWithNext { start, endExclusive ->
         get(start until endExclusive)
     }
 }
 
-internal fun <T> List<T>.splitByIndices(startIndices: List<Int>): List<List<T>> {
-    return (startIndices + listOf(size)).zipWithNext { start, endExclusive ->
+internal fun <T> List<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<List<T>> {
+    return (startIndices + size).zipWithNext { start, endExclusive ->
         subList(start, endExclusive)
     }
 }

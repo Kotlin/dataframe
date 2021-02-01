@@ -68,7 +68,7 @@ internal fun <T : Any> DataColumn<String?>.parse(parser: StringParser<T>): DataC
             parser.parse(it) ?: throw Exception("Couldn't parse '${it}' to type ${parser.type}")
         }
     }
-    return column(name(), parsedValues, parser.type.withNullability(hasNulls)) as DataColumn<T?>
+    return DataColumn.create(name(), parsedValues, parser.type.withNullability(hasNulls)) as DataColumn<T?>
 }
 
 internal fun DataColumn<String?>.tryParseAny(): DataColumn<*> {
@@ -94,5 +94,5 @@ internal fun DataColumn<String?>.tryParseAny(): DataColumn<*> {
         }
     } while (parserId < Parsers.size && parsedValues.size != size)
     if (parserId == Parsers.size) return this
-    return column(name(), parsedValues, Parsers[parserId].type.withNullability(hasNulls))
+    return DataColumn.create(name(), parsedValues, Parsers[parserId].type.withNullability(hasNulls))
 }
