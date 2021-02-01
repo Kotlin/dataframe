@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.api.columns.allNulls
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
@@ -73,7 +74,7 @@ internal fun <T : Any> DataColumn<String?>.parse(parser: StringParser<T>): DataC
 
 internal fun DataColumn<String?>.tryParseAny(): DataColumn<*> {
 
-    if(ndistinct == 1 && hasNulls) return this
+    if(allNulls()) return this
 
     var parserId = 0
     val parsedValues = mutableListOf<Any?>()
