@@ -64,7 +64,7 @@ internal fun fromList(records: List<*>): AnyFrame {
         nameGenerator.addUnique(arrayColumnName)
     }else arrayColumnName
 
-    return nameGenerator.names.map { colName ->
+    val columns: List<AnyCol> = nameGenerator.names.map { colName ->
         when {
             colName == valueColumn -> {
                 val collector = createDataCollector(records.size)
@@ -89,8 +89,8 @@ internal fun fromList(records: List<*>): AnyFrame {
                     parsed.isSingleUnnamedColumn() -> {
                         val col = parsed.column(0)
                         val elementType = col.type
-                        val values = col.values.asList().splitByIndices(startIndices)
-                        column(colName, values, List::class.createType(listOf(KTypeProjection.invariant(elementType))))
+                        val values = col.values.asList().splitByIndices(startIndices.asSequence()).toList()
+                        DataColumn.create(colName, values, List::class.createType(listOf(KTypeProjection.invariant(elementType))))
                     }
                     else -> DataColumn.createTable(colName, parsed, startIndices)
                 }
@@ -112,6 +112,7 @@ internal fun fromList(records: List<*>): AnyFrame {
                 }
             }
         }
-    }.asDataFrame<Unit>()
+    }
+    return columns.toDataFrame()
 }
 

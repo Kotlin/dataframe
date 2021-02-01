@@ -152,7 +152,7 @@ fun <T> DataColumn<T>.withValues(values: List<T>, hasNulls: Boolean) = when (thi
         val dfs = (values as List<AnyFrame>)
         DataColumn.createTable(name(), dfs, dfs.getBaseSchema()) as DataColumn<T>
     }
-    else -> column(name(), values, type.withNullability(hasNulls))
+    else -> DataColumn.create(name(), values, type.withNullability(hasNulls))
 }
 
 fun AnyCol.toDataFrame() = dataFrameOf(listOf(this))
@@ -248,7 +248,7 @@ fun <T> columnList(name: String) = column<List<T>>(name)
 fun <T> column(name: String) = ColumnDefinition<T>(name)
 
 class DataColumnDelegate<T>(val values: List<T>, val type: KType) {
-    operator fun getValue(thisRef: Any?, property: KProperty<*>) = column(property.name, values, type)
+    operator fun getValue(thisRef: Any?, property: KProperty<*>) = DataColumn.create(property.name, values, type)
 }
 
 inline fun <reified T> column(vararg values: T) = DataColumnDelegate(values.toList(), getType<T>())
@@ -257,8 +257,6 @@ inline fun <reified T> column(name: String, values: List<T>): DataColumn<T> =
     column(name, values, values.any { it == null })
 
 inline fun <reified T> column(name: String, values: List<T>, hasNulls: Boolean): DataColumn<T> = DataColumn.create(name, values, getType<T>().withNullability(hasNulls))
-
-fun <T> column(name: String, values: List<T>, type: KType): DataColumn<T> = DataColumn.create(name, values, type)
 
 class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
 
