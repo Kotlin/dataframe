@@ -80,5 +80,6 @@ interface DataRow<out T>: DataRowBase<T> {
 typealias Selector<T, R> = T.(T) -> R
 typealias RowSelector<T, R> = Selector<DataRow<T>, R>
 typealias RowFilter<T> = RowSelector<T, Boolean>
+typealias VectorizedRowFilter<T> = Selector<DataFrameBase<T>, BooleanArray>
 
 typealias AnyRow = DataRow<*>

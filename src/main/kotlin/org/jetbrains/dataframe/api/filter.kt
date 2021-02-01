@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.api.columns.DataColumn
 import kotlin.reflect.KProperty
 
 fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
@@ -28,4 +29,6 @@ fun <T> DataFrame<T>.filterNotNullAny(vararg cols: String) = filterNotNullAny { 
 fun <T> DataFrame<T>.filterNotNullAny(vararg cols: Column) = filterNotNullAny { cols.toColumns() }
 fun <T> DataFrame<T>.filterNotNullAny(cols: Iterable<Column>) = filterNotNullAny { cols.toColumnSet() }
 
+fun <T> DataColumn<T>.filter(predicate: Predicate<T>) = slice(isMatching(predicate))
 
+fun <T> DataFrame<T>.filterFast(predicate: VectorizedRowFilter<T>) = this.get(predicate(this))

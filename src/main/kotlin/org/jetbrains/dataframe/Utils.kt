@@ -47,3 +47,10 @@ internal fun <T: Any> convert(src:Int, targetType: KClass<T>): T = when(targetTy
     BigDecimal::class -> src.toBigDecimal() as T
     else -> throw NotImplementedError("Casting int to ${targetType} is not supported")
 }
+
+internal fun BooleanArray.toIndices(): List<Int> {
+    val res = ArrayList<Int>(size)
+    for(i in 0 until size)
+        if(this[i]) res.add(i)
+    return res
+}

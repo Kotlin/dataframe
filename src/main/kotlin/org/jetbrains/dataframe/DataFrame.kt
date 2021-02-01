@@ -97,7 +97,7 @@ interface DataFrame<out T> : DataFrameBase<T> {
     operator fun plus(stub: AddRowNumberStub) = addRowNumber(stub.columnName)
 
     fun getRows(indices: Iterable<Int>) = columns().map { col -> col.slice(indices) }.asDataFrame<T>()
-    fun getRows(mask: BooleanArray) = columns().map { col -> col.slice(mask) }.asDataFrame<T>()
+    fun getRows(mask: BooleanArray) = getRows(mask.toIndices())
     fun getRows(range: IntRange) = columns().map { col -> col.slice(range) }.asDataFrame<T>()
 
     fun getColumnIndex(name: String): Int

@@ -421,3 +421,20 @@ internal fun <C> ColumnSet<C>.transform(transform: (List<ColumnWithPath<C>>) -> 
 fun StringCol.len() = map { it?.length }
 fun StringCol.lower() = map { it?.toLowerCase() }
 fun StringCol.upper() = map { it?.toUpperCase() }
+
+infix fun <T> DataColumn<T>.eq(value: T): BooleanArray = isMatching { it == value }
+infix fun <T> DataColumn<T>.neq(value: T): BooleanArray = isMatching { it != value }
+
+infix fun DataColumn<Int>.gt(value: Int): BooleanArray = isMatching { it > value }
+infix fun DataColumn<Double>.gt(value: Double): BooleanArray = isMatching { it > value }
+infix fun DataColumn<Float>.gt(value: Float): BooleanArray = isMatching { it > value }
+infix fun DataColumn<String>.gt(value: String): BooleanArray = isMatching { it > value }
+
+infix fun DataColumn<Int>.lt(value: Int): BooleanArray = isMatching { it < value }
+infix fun DataColumn<Double>.lt(value: Double): BooleanArray = isMatching { it < value }
+infix fun DataColumn<Float>.lt(value: Float): BooleanArray = isMatching { it < value }
+infix fun DataColumn<String>.lt(value: String): BooleanArray = isMatching { it < value }
+
+infix fun <T> DataColumn<T>.isMatching(predicate: Predicate<T>): BooleanArray = BooleanArray(size) {
+    predicate(this[it])
+}

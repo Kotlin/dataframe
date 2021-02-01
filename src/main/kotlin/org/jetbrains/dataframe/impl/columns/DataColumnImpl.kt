@@ -19,7 +19,7 @@ internal abstract class DataColumnImpl<T>(override val values: List<T>, val name
 
     override fun toString() = dataFrameOf(this).toString() // "${name()}: $type"
 
-    override val ndistinct = toSet().size
+    override val ndistinct by lazy { toSet().size }
 
     override fun get(index: Int) = values[index]
 
@@ -34,14 +34,25 @@ internal abstract class DataColumnImpl<T>(override val values: List<T>, val name
 
     override fun slice(indices: Iterable<Int>): DataColumn<T> {
         var nullable = false
-        val newValues = indices.map { get(it).also { if (it == null) nullable = true } }
+        val newValues = indices.map {
+            val value = values[it]
+            if(value == null) nullable = true
+            value
+        }
         return createWithValues(newValues, nullable)
     }
 
     override fun slice(mask: BooleanArray): DataColumn<T> {
-        var nullable = false
-        val newValues = values.filterIndexed { index, value -> mask[index].also { if (it && value == null) nullable = true } }
-        return createWithValues(newValues, nullable)
+        val res = ArrayList<T?>(size)
+        var hasNulls = false
+        for(index in 0 until size) {
+            if(mask[index]) {
+                val value = this[index]
+                if(!hasNulls && value == null) hasNulls = true
+                res.add(value)
+            }
+        }
+        return createWithValues(res as List<T>, hasNulls)
     }
 
     override fun slice(range: IntRange) = createWithValues(values.subList(range.start, range.endInclusive + 1))
