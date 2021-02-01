@@ -3,7 +3,7 @@
 **Table of contents**
 <!--- TOC -->
 
-* Build
+* [Build](#build)
     * [from values](#from-values)
     * [from columns](#from-columns)
     * [from objects](#from-objects)
@@ -13,10 +13,10 @@
 * Analyze
     * `schema`
     * `summary`
-* Access Data
+* [Access data](#access-data)
     * by column
     * by row
-    * with iterator 
+    * as iterable
 * Modify rows
     * `filter` 
     * `sortBy` / `sortByDesc`
@@ -69,6 +69,7 @@
 
 ## Build
 
+Several ways to convert data into `DataFrame`
 ### from values
 ```kotlin
 val df = dataFrameOf("name", "age")(
@@ -121,7 +122,7 @@ Use `read` method to guess input format based on file extension and content
 ```kotlin
 DataFrame.read("input.csv")
 ```
-Input string can be a file paths or url
+Input string can be a file path or URL.
 
 ### Read CSV
 ```kotlin
@@ -130,4 +131,30 @@ DataFrame.readCSV("input.csv")
 ### Read JSON
 ```kotlin
 DataFrame.readJSON("https://covid.ourworldindata.org/data/owid-covid-data.json")
+```
+
+## Access Data
+### by column
+```kotlin
+df["name"][0]
+```
+### by row
+```kotlin
+df[0]["name"]
+```
+### as iterable
+`DataFrame` can be interpreted as an `Iterable` of `DataRow`. Although `DataFrame` doesn't implement `Iterable` interface, it defines most extension functions available for `Iterable`
+```kotlin
+df.forEach { println(it) }
+df.take(5)
+df.drop(2)
+df.chunked(10)
+```
+For compatibility with stdlib, `DataFrame` can be converted to `Iterable`
+```kotlin
+df.asIterable()
+```
+or to `Sequence`
+```kotlin
+df.asSequence()
 ```
