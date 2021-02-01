@@ -39,7 +39,7 @@ internal abstract class DataCollectorBase<T>(initCapacity: Int): DataCollector<T
             val mergedDf = (data as List<AnyRow>).map { it.toDataFrame() }.union()
             return DataColumn.createGroup(name, mergedDf) as DataColumn<T>
         }
-        return column(name, data, type.withNullability(hasNulls)) as DataColumn<T>
+        return DataColumn.create(name, data, type.withNullability(hasNulls)) as DataColumn<T>
     }
 }
 

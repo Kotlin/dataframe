@@ -67,6 +67,9 @@ internal fun AnyCol.unbox(): AnyCol = when (this) {
 
 fun <T> Iterable<AnyCol>.asDataFrame() = dataFrameOf(this).typed<T>()
 
+@JvmName("toDataFrameAnyCol")
+fun Iterable<AnyCol>.toDataFrame() = asDataFrame<Unit>()
+
 fun <T> List<Pair<List<String>, AnyCol>>.toDataFrame(): DataFrame<T>? {
     if(size == 0) return null
     val tree = TreeNode.createRoot(null as AnyCol?)
@@ -82,7 +85,7 @@ fun <T> List<Pair<List<String>, AnyCol>>.toDataFrame(): DataFrame<T>? {
             if(node.data != null)
                 throw UnsupportedOperationException("Can not add data to grouped column: ${node.pathFromRoot()}")
             node.children.forEach { dfs(it) }
-            node.data = DataColumn.createGroup(node.name, node.children.map { it.data!! }.asDataFrame<Unit>())
+            node.data = DataColumn.createGroup(node.name, node.children.map { it.data!! }.toDataFrame())
         }else assert(node.data != null)
     }
     dfs(tree)

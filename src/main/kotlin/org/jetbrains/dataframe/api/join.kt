@@ -2,6 +2,7 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.api.columns.ColumnSet
 import org.jetbrains.dataframe.api.columns.ColumnWithPath
+import org.jetbrains.dataframe.api.columns.DataColumn
 import kotlin.reflect.full.withNullability
 
 interface JoinReceiver<out A, out B> : SelectReceiver<A> {
@@ -167,7 +168,7 @@ fun <A, B> DataFrame<A>.join(other: DataFrame<B>, joinType: JoinType = JoinType.
     val columns = outputData.mapIndexed { columnIndex, columnValues ->
         val srcColumn = if (columnIndex < leftColumnsCount) column(columnIndex) else newRightColumns[columnIndex - leftColumnsCount]
         val hasNulls = hasNulls[columnIndex]
-        column(srcColumn.name(), columnValues.asList(), srcColumn.type.withNullability(hasNulls))
+        DataColumn.create(srcColumn.name(), columnValues.asList(), srcColumn.type.withNullability(hasNulls))
     }
 
     return columns.asDataFrame<A>()
