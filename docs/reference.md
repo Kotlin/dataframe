@@ -4,12 +4,12 @@
 <!--- TOC -->
 
 * Build
-    * [from values](#from_values)
-    * [from columns](#from_columns)
-    * [from objects](#from_objects)
+    * [from values](#from-values)
+    * [from columns](#from-columns)
+    * [from objects](#from-objects)
 * [Read](#read)
-    * [from CSV](#read_csv)
-    * [from JSON](#read_json)
+    * [from CSV](#read-csv)
+    * [from JSON](#read-json)
 * Analyze
     * `schema`
     * `summary`
