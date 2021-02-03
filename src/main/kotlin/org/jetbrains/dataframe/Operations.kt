@@ -112,8 +112,6 @@ inline fun <reified T : Comparable<T>> DataColumn<T?>.median() = values.asSequen
 
 inline fun <reified C> headPlusArray(head: C, cols: Array<out C>) = (listOf(head) + cols.toList()).toTypedArray()
 
-inline fun <reified C> ColumnsSelectorReceiver<*>.colsOfType(noinline filter: (DataColumn<C>) -> Boolean = { true }) = colsOfType(getType<C>(), filter)
-
 // column grouping
 
 internal fun <C> TreeNode<ColumnPosition>.column() = ColumnWithPathImpl(data.column as DataColumn<C>, pathFromRoot())

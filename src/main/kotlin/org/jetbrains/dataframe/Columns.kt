@@ -23,7 +23,8 @@ class ColumnResolutionContext(val df: DataFrameBase<*>, val unresolvedColumnsPol
 internal fun <C> DataFrameBase<*>.getColumn(name: String, policy: UnresolvedColumnsPolicy) =
         tryGetColumn(name)?.typed()
                 ?: when (policy) {
-                    UnresolvedColumnsPolicy.Fail -> throw Exception("Column not found: $this")
+                    UnresolvedColumnsPolicy.Fail ->
+                        throw Exception("Column not found: $this")
                     UnresolvedColumnsPolicy.Skip -> null
                     UnresolvedColumnsPolicy.Create -> DataColumn.empty().typed<C>()
                 }
@@ -34,10 +35,12 @@ interface ColumnReference<out C> : SingleColumn<C> {
 
     fun name(): String
 
+    fun columnPath(): ColumnPath = listOf(name)
+
     operator fun invoke(row: AnyRow) = row[this]
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
-        return context.df.getColumn<C>(name(), context.unresolvedColumnsPolicy)?.addPath(listOf(name()))
+        return context.df.getColumn<C>(name, context.unresolvedColumnsPolicy)?.addPath(listOf(name))
     }
 }
 
@@ -68,14 +71,37 @@ internal fun KProperty<*>.getColumnName() = this.findAnnotation<ColumnName>()?.n
 
 fun <T> KProperty<T>.toColumnDef() = ColumnDefinition<T>(name)
 
-class ColumnDefinition<T>(val name: String) : ColumnReference<T> {
+class ColumnDefinition<T> : ColumnReference<T> {
 
-    override fun name() = name
+    val path: ColumnPath
+
+    override fun name() = path.last()
+
+    override fun columnPath() = path
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>) = this
 
     fun <C> changeType() = this as ColumnDefinition<C>
+
+    constructor(path: ColumnPath){
+        this.path = path
+    }
+
+    constructor(vararg path: String): this(path.toList())
+
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? {
+        var df = context.df
+        var col : AnyCol? = null
+        for(colName in path){
+            col = df.getColumn<Any?>(colName, context.unresolvedColumnsPolicy) ?: return null
+            if(col.isGroup())
+                df = col.asGroup().df
+        }
+        return col?.typed<T>()?.addPath(path)
+    }
 }
+
+fun <T> ColumnDefinition<DataRow<*>>.subcolumn(childName: String) = ColumnDefinition<T>(path + childName)
 
 inline fun <reified T> ColumnDefinition<T>.nullable() = ColumnDefinition<T?>(name())
 
@@ -89,7 +115,9 @@ internal fun ColumnPath.depth() = size - 1
 
 internal fun <T> DataColumn<T>.addPath(path: ColumnPath): ColumnWithPath<T> = ColumnWithPathImpl(this, path)
 
-internal fun <T> DataColumn<T>.addPath(): ColumnWithPath<T> = ColumnWithPathImpl(this, listOf(name()))
+internal fun <T> DataColumn<T>.addParentPath(path: ColumnPath): ColumnWithPath<T> = addPath (path + name)
+
+internal fun <T> DataColumn<T>.addPath(): ColumnWithPath<T> = addPath(listOf(name))
 
 enum class ColumnKind {
     Value,
@@ -158,6 +186,8 @@ fun <T> DataColumn<T>.withValues(values: List<T>, hasNulls: Boolean) = when (thi
 fun AnyCol.toDataFrame() = dataFrameOf(listOf(this))
 
 internal fun <T> AnyCol.typed() = this as DataColumn<T>
+
+internal fun <T> ColumnWithPath<*>.typed() = this as ColumnWithPath<T>
 
 internal fun <T> AnyCol.asValues() = this as ValueColumn<T>
 
@@ -232,14 +262,13 @@ internal fun <T> DataColumn<DataFrame<T>>.asTable(): FrameColumn<T> = this as Fr
 
 internal fun AnyCol.isTable(): Boolean = kind() == ColumnKind.Frame
 
-
 fun <T> column() = ColumnDelegate<T>()
 
-fun mapColumn() = column<AnyRow>()
+fun columnGroup() = column<AnyRow>()
 
 fun <T> columnList() = column<List<T>>()
 
-fun <T> mapColumn(name: String) = column<DataRow<T>>(name)
+fun <T> columnGroup(name: String) = column<DataRow<T>>(name)
 
 fun <T> frameColumn(name: String) = column<DataFrame<T>>(name)
 
@@ -247,16 +276,33 @@ fun <T> columnList(name: String) = column<List<T>>(name)
 
 fun <T> column(name: String) = ColumnDefinition<T>(name)
 
-class DataColumnDelegate<T>(val values: List<T>, val type: KType) {
-    operator fun getValue(thisRef: Any?, property: KProperty<*>) = DataColumn.create(property.name, values, type)
+interface ColumnProvider<T>{
+    operator fun getValue(thisRef: Any?, property: KProperty<*>): DataColumn<T>
 }
 
-inline fun <reified T> column(vararg values: T) = DataColumnDelegate(values.toList(), getType<T>())
+class DataColumnDelegate<T>(val values: List<T>, val type: KType): ColumnProvider<T> {
+    override operator fun getValue(thisRef: Any?, property: KProperty<*>) = DataColumn.create(property.name, values, type)
+}
 
-inline fun <reified T> column(name: String, values: List<T>): DataColumn<T> =
-    column(name, values, values.any { it == null })
+class ColumnGroupDelegate(val columns: List<AnyCol>): ColumnProvider<AnyRow> {
+    override operator fun getValue(thisRef: Any?, property: KProperty<*>): DataColumn<DataRow<*>> = DataColumn.createGroup(property.name, columns.toDataFrame())
+}
+
+inline fun <reified T> column(vararg values: T): ColumnProvider<T> = when {
+    values.all { it is AnyCol } -> ColumnGroupDelegate(values.toList() as List<AnyCol>)  as ColumnProvider<T>
+    else -> DataColumnDelegate(values.toList(), getType<T>())
+}
+
+fun column(vararg values: AnyCol) = ColumnGroupDelegate(values.toList())
+
+inline fun <reified T> column(name: String, values: List<T>): DataColumn<T> = when {
+    values.size > 0 && values.all {it is AnyCol} -> DataColumn.createGroup(name, values.map {it as AnyCol}.toDataFrame()) as DataColumn<T>
+    else -> column(name, values, values.any { it == null })
+}
 
 inline fun <reified T> column(name: String, values: List<T>, hasNulls: Boolean): DataColumn<T> = DataColumn.create(name, values, getType<T>().withNullability(hasNulls))
+
+fun columnGroup(vararg columns: AnyCol) = ColumnGroupDelegate(columns.toList())
 
 class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
 
@@ -306,7 +352,7 @@ fun <T, R> DataColumn<T>.map(type: KType?, transform: (T) -> R): DataColumn<R> {
 fun <C> DataColumn<C>.single() = values.single()
 
 fun <T> FrameColumn<T>.toDefinition() = frameColumn<T>(name())
-fun <T> MapColumn<T>.toDefinition() = mapColumn<T>(name())
+fun <T> MapColumn<T>.toDefinition() = columnGroup<T>(name())
 fun <T> ValueColumn<T>.toDefinition() = column<T>(name())
 
 internal abstract class MissingDataColumn<T> : DataColumn<T> {
@@ -411,12 +457,12 @@ internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
     return this
 }
 
-internal class TransformedColumnSet<C>(val src: ColumnSet<C>, val transform: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<C>>) : ColumnSet<C> {
+internal class TransformedColumnSet<A,B>(val src: ColumnSet<A>, val transform: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>) : ColumnSet<B> {
 
     override fun resolve(context: ColumnResolutionContext) = transform(src.resolve(context))
 }
 
-internal fun <C> ColumnSet<C>.transform(transform: (List<ColumnWithPath<C>>) -> List<ColumnWithPath<C>>): ColumnSet<C> = TransformedColumnSet(this, transform)
+internal fun <A,B> ColumnSet<A>.transform(transform: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>): ColumnSet<B> = TransformedColumnSet(this, transform)
 
 fun StringCol.len() = map { it?.length }
 fun StringCol.lower() = map { it?.toLowerCase() }

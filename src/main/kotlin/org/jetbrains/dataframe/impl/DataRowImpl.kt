@@ -4,17 +4,14 @@ import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.DataRow
 import org.jetbrains.dataframe.io.renderToString
 
-internal class DataRowImpl<T>(override var index: Int, override val owner: DataFrame<T>) : DataRow<T> {
+internal class DataRowImpl<T>(private val index: Int, override val owner: DataFrame<T>) : DataRow<T> {
 
     override operator fun get(name: String): Any? {
         ColumnAccessTracker.registerColumnAccess(name)
         return owner[name][index]
     }
 
-    override val prev: DataRow<T>?
-        get() = if (index > 0) owner[index - 1] else null
-    override val next: DataRow<T>?
-        get() = if (index < owner.nrow() - 1) owner[index + 1] else null
+    override fun getIndex() = index
 
     override fun getRow(index: Int): DataRow<T>? =
         if (index >= 0 && index < owner.nrow()) DataRowImpl(index, owner) else null
@@ -41,4 +38,13 @@ internal class DataRowImpl<T>(override var index: Int, override val owner: DataF
         ColumnAccessTracker.registerColumnAccess(name)
         return owner.tryGetColumn(name)?.get(index)
     }
+
+    override fun getPrev(): DataRow<T>? {
+        return if (index > 0) owner[index - 1] else null
+    }
+
+    override fun getNext(): DataRow<T>? {
+        return if (index < owner.nrow() - 1) owner[index + 1] else null
+    }
 }
+

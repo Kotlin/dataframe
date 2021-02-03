@@ -6,7 +6,6 @@ import io.kotlintest.shouldNotBe
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.api.columns.ColumnGroup
-import org.jetbrains.dataframe.io.print
 import org.junit.Test
 
 class DataFrameTreeTests : BaseTest() {
@@ -39,7 +38,44 @@ class DataFrameTreeTests : BaseTest() {
     val DataFrameBase<GroupedPerson>.weight @JvmName("get-weight") get() = this["weight"].typed<Int?>()
     val DataFrameBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as ColumnGroup<NameAndCity>
 
-    val nameAndCity by mapColumn()
+    val nameAndCity by columnGroup()
+    val nameInGroup = nameAndCity.subcolumn<String>("name")
+
+    @Test
+    fun create(){
+        val nameAndCity by column(typed.name, typed.city)
+        val df3 = nameAndCity + typed.age + typed.weight
+        df3 shouldBe df2
+    }
+
+    @Test
+    fun `select dfs under group`(){
+        df2.select { nameAndCity.dfsOf<String>() } shouldBe typed2.select { nameAndCity.name }
+        df2.select { nameAndCity.dfsOf<String?>() } shouldBe typed2.select { nameAndCity.name and nameAndCity.city }
+    }
+
+    @Test
+    fun `selects`() {
+        df2.select { nameAndCity.cols() } shouldBe typed2.nameAndCity.select { all() }
+        df2.select { nameAndCity.cols { !it.hasNulls } } shouldBe typed2.select { nameAndCity.name }
+        df2.select { nameAndCity.cols(0..1) } shouldBe typed2.nameAndCity.select { all() }
+        df2.select { nameAndCity.col(1) } shouldBe typed2.select { nameAndCity.city }
+        df2.select { nameAndCity.col("city") } shouldBe typed2.select { nameAndCity.city }
+        df2.select { nameAndCity.cols("city", "name") } shouldBe typed2.select { nameAndCity.city and nameAndCity.name }
+        df2.select { nameAndCity.cols(name, city) } shouldBe typed2.select { nameAndCity.all() }
+
+        typed2.select { nameAndCity.cols() } shouldBe typed2.nameAndCity.select { all() }
+        typed2.select { nameAndCity.cols { !it.hasNulls } } shouldBe typed2.select { nameAndCity.name }
+        typed2.select { nameAndCity.cols(0..1) } shouldBe typed2.nameAndCity.select { all() }
+        typed2.select { nameAndCity.col(1) } shouldBe typed2.select { nameAndCity.city }
+        typed2.select { nameAndCity.col("city") } shouldBe typed2.select { nameAndCity.city }
+        typed2.select { nameAndCity.cols("city", "name") } shouldBe typed2.select { nameAndCity.city and nameAndCity.name }
+        typed2.select { nameAndCity.cols(name, city) } shouldBe typed2.select { nameAndCity.all() }
+
+        df2.select { col(1) } shouldBe typed2.select { age }
+        df2.select { nameInGroup } shouldBe typed2.nameAndCity.select { name }
+        df2[nameInGroup] shouldBe typed2.nameAndCity.name
+    }
 
     @Test
     fun `group indexing`() {
@@ -148,7 +184,7 @@ class DataFrameTreeTests : BaseTest() {
             }.sortedBy { it.first.second }
         }.flatten()
 
-        val cities by mapColumn()
+        val cities by columnGroup()
 
         fun <T> DataFrame<T>.check() {
             columnNames() shouldBe listOf("name", "cities")
@@ -244,7 +280,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `all except`(){
-        val info by mapColumn()
+        val info by columnGroup()
         val moved = typed.group { except(name) }.into(info)
         val actual = moved.select { except(info) }
         actual.print()
@@ -253,7 +289,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `move and group`(){
-        val info by mapColumn()
+        val info by columnGroup()
         val moved = typed.group { except(name) }.into(info)
         val grouped = moved.groupBy { except(info) }.plain()
         grouped.nrow() shouldBe typed.name.ndistinct
@@ -262,7 +298,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `merge rows into table`() {
 
-        val info by mapColumn()
+        val info by columnGroup()
         val moved = typed.group { except(name) }.into(info)
         val merged = moved.mergeRows { info }
         val grouped = typed.groupBy { name }.updateGroups { remove { name } }
@@ -272,7 +308,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `update grouped column to table`(){
-        val info by mapColumn()
+        val info by columnGroup()
         val grouped = typed.group { age and weight }.into(info)
         val updated = grouped.update(info).with2 { row, column -> column.asGroup().df}
         val col = updated[info.name()]

@@ -7,17 +7,19 @@ import kotlin.reflect.KProperty1
 interface DataRowBase<out T> {
     operator fun get(name: String): Any?
     fun tryGet(name: String): Any?
+    fun getIndex(): Int
+    fun getPrev(): DataRow<T>?
+    fun getNext(): DataRow<T>?
 }
 
 interface DataRow<out T>: DataRowBase<T> {
     val owner: DataFrame<T>
-    val prev: DataRow<T>?
-    val next: DataRow<T>?
-    val index: Int
+
     fun getRow(index: Int): DataRow<T>?
     override operator fun get(name: String): Any?
     override fun tryGet(name: String): Any?
     operator fun get(columnIndex: Int): Any?
+    fun <R> get(selector: Selector<DataRowBase<T>, R>) = selector(this, this)
     operator fun <R> get(column: ColumnReference<R>) = get(column.name()) as R
     operator fun <R> get(column: DataColumn<R>) = column[index]
     operator fun <R> get(property: KProperty<R>) = get(property.name) as R
@@ -77,8 +79,12 @@ interface DataRow<out T>: DataRowBase<T> {
     infix fun <R> KProperty1<*, R>.neq(a: R?) = get(this) != a
 }
 
+val <T> DataRow<T>.index @JvmName("getRowIndex") get() = getIndex()
+val <T> DataRow<T>.prev: DataRow<T>? get() = getPrev()
+val <T> DataRow<T>.next: DataRow<T>? get() = getNext()
+
 typealias Selector<T, R> = T.(T) -> R
-typealias RowSelector<T, R> = Selector<DataRow<T>, R>
+typealias RowSelector<T, R> = DataRow<T>.(DataRow<T>) -> R
 typealias RowFilter<T> = RowSelector<T, Boolean>
 typealias VectorizedRowFilter<T> = Selector<DataFrameBase<T>, BooleanArray>
 

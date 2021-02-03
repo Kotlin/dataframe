@@ -33,6 +33,7 @@ interface DataFrameBase<out T>: SingleColumn<DataRow<T>> {
     }
 
     operator fun get(index: Int): DataRow<T>
+    fun tryGetColumn(columnIndex: Int) = if(columnIndex in 0 until ncol()) column(columnIndex) else null
     fun column(columnIndex: Int): AnyCol
     fun columns(): List<AnyCol>
     fun ncol(): Int
