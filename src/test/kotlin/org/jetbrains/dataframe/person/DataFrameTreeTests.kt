@@ -63,6 +63,8 @@ class DataFrameTreeTests : BaseTest() {
         df2.select { nameAndCity.col("city") } shouldBe typed2.select { nameAndCity.city }
         df2.select { nameAndCity.cols("city", "name") } shouldBe typed2.select { nameAndCity.city and nameAndCity.name }
         df2.select { nameAndCity.cols(name, city) } shouldBe typed2.select { nameAndCity.all() }
+        df2.select { nameAndCity[name] } shouldBe typed2.nameAndCity.select { name }
+        df2.select { nameAndCity.cols().drop(1) } shouldBe typed2.nameAndCity.select { city }
 
         typed2.select { nameAndCity.cols() } shouldBe typed2.nameAndCity.select { all() }
         typed2.select { nameAndCity.cols { !it.hasNulls } } shouldBe typed2.select { nameAndCity.name }
@@ -71,9 +73,12 @@ class DataFrameTreeTests : BaseTest() {
         typed2.select { nameAndCity.col("city") } shouldBe typed2.select { nameAndCity.city }
         typed2.select { nameAndCity.cols("city", "name") } shouldBe typed2.select { nameAndCity.city and nameAndCity.name }
         typed2.select { nameAndCity.cols(name, city) } shouldBe typed2.select { nameAndCity.all() }
+        typed2.select { nameAndCity[name] } shouldBe typed2.nameAndCity.select { name }
+        typed2.select { nameAndCity.cols().drop(1) } shouldBe typed2.nameAndCity.select { city }
 
         df2.select { col(1) } shouldBe typed2.select { age }
         df2.select { nameInGroup } shouldBe typed2.nameAndCity.select { name }
+
         df2[nameInGroup] shouldBe typed2.nameAndCity.name
     }
 
