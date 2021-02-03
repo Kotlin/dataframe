@@ -206,7 +206,7 @@ class DataFrameTests : BaseTest() {
         typed.sortBy { city }.check()
         df.sortBy { city }.check()
         df.sortBy { col(Person::city) }.check()
-        df.sortBy { col<String>("city") }.check()
+        df.sortBy { col("city") }.check()
     }
 
     @Test
@@ -357,13 +357,13 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `select by type`() {
-        val selected = typed.select { colsOfType<String?>() }
+        val selected = typed.select { colsOf<String?>() }
         selected shouldBe typed.select { name and city }
     }
 
     @Test
     fun `select by type not nullable`() {
-        val selected = typed.select { colsOfType<String> { !it.hasNulls } }
+        val selected = typed.select { colsOf<String> { !it.hasNulls } }
         selected shouldBe typed.select { name }
     }
 
@@ -619,7 +619,7 @@ class DataFrameTests : BaseTest() {
         check { typed.remove { age and weight } }
         check { typed.remove { it.age and it.weight } }
 
-        check { df - { age + weight } }
+        check { df - { age and weight } }
         check { df - age - weight }
         check { df - { age } - { weight } }
         check { df.remove(age, weight) }
@@ -771,7 +771,7 @@ class DataFrameTests : BaseTest() {
         val res = typed.spread { city }.into { it?.decapitalize() }
         val cities = typed.city.values.filterNotNull()
         val gathered =
-            res.gather { colsOfType<Boolean> { cities.contains(it.name().capitalize()) } }.where { it }.into("city")
+            res.gather { colsOf<Boolean> { cities.contains(it.name().capitalize()) } }.where { it }.into("city")
         val expected = typed.update { city }.with { it?.decapitalize() }.filterNotNull { city }.moveToRight { city }
         gathered shouldBe expected
     }
@@ -792,7 +792,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `spread to bool merged rows`() {
-        val selected = typed.select { name + city }
+        val selected = typed.select { name and city }
         val res = selected.spread { city }.into { it }
 
         res.ncol() shouldBe selected.city.ndistinct
@@ -830,16 +830,16 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `gather bool`() {
-        val selected = typed.select { name + city }
+        val selected = typed.select { name and city }
         val spread = selected.spread { city }.into { it }
-        val res = spread.gather { colsOfType<Boolean>() }.where { it }.into("city")
+        val res = spread.gather { colsOf<Boolean>() }.where { it }.into("city")
         val sorted = res.sortBy { name and city }
         sorted shouldBe selected.filterNotNull { city }.distinct().sortBy { name and city }
     }
 
     @Test
     fun mergeRows() {
-        val selected = typed.select { name + city }
+        val selected = typed.select { name and city }
         val res = selected.mergeRows { city }
         val cityList by column<List<String?>>("city")
         val expected = selected.map { name to city }.groupBy({ it.first }) { it.second }.mapValues { it.value.toSet() }
@@ -901,7 +901,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `merge cols with conversion`() {
         val spread = typed.groupBy { name }.countBy { city }
-        val res = spread.mergeCols { colsOfType<Int>() }.by { it.sum() }.into("cities")
+        val res = spread.mergeCols { colsOf<Int>() }.by { it.sum() }.into("cities")
         val expected = typed.select { name and city }.filter { city != null }.groupBy { name }.countInto("cities")
         res shouldBe expected
     }
@@ -952,7 +952,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `column ungroup`() {
 
-        val info by mapColumn()
+        val info by columnGroup()
         val res = typed.move { age and city }.intoGroup("info").ungroup { info }
         res shouldBe typed
     }
@@ -1000,7 +1000,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `forEachIn`() {
 
-        val cities by mapColumn()
+        val cities by columnGroup()
         val spread = typed.spread { city }.by { age }.into(cities)
         var sum = 0
         spread.forEachIn({ cities.children() }) { row, column -> column[row]?.let { sum += it as Int } }

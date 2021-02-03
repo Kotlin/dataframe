@@ -12,7 +12,7 @@ internal class GroupedDataFrameImpl<T, G>(val df: DataFrame<T>, override val gro
         require(key.size < df.ncol()) { "Invalid size of the key" }
 
         val keySize = key.size
-        val filtered = df.filter { values.subList(0, keySize) == key }
+        val filtered = df.filter { it.values.subList(0, keySize) == key }
         return filtered[groups].values.union().typed<T>()
     }
 

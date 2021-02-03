@@ -7,6 +7,7 @@ import org.jetbrains.dataframe.impl.columns.ValueImplColumn
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.isSubtypeOf
 
 interface DataColumn<out T> : ColumnReference<T> {
 
@@ -49,7 +50,7 @@ interface DataColumn<out T> : ColumnReference<T> {
 
     operator fun get(index: Int): T
 
-    operator fun get(row: AnyRow) = get(row.index)
+    operator fun get(row: AnyRow) = get(row.getIndex())
 
     fun values() = values
 
@@ -71,5 +72,7 @@ interface DataColumn<out T> : ColumnReference<T> {
 }
 
 fun <C> DataColumn<C>.allNulls() = size == 0 || (hasNulls && ndistinct == 1)
+
+fun <T> DataColumn<T>.isSubtypeOf(type: KType) = this.type.isSubtypeOf(type) && (!this.type.isMarkedNullable || type.isMarkedNullable)
 
 inline fun <reified T> DataColumn<*>.isType() = type == getType<T>()

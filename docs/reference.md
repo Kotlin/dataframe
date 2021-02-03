@@ -17,9 +17,9 @@
     * by column
     * by row
     * as iterable
-* Modify rows
-    * `filter` 
-    * `sortBy` / `sortByDesc`
+* [Modify rows](#modify-rows)
+    * [`filter`](#filter)
+    * [`sortBy`](#sortBy)
     * `mergeRows`
     * `distinct`
     * `append`
@@ -64,6 +64,7 @@
     * `countBy`
 * Export
     * `writeCSV`
+* [Column selectors](#column-selectors)
 
 <!--- END -->
 
@@ -157,4 +158,105 @@ df.asIterable()
 or to `Sequence`
 ```kotlin
 df.asSequence()
+```
+## Modify rows
+`DataFrame` is immutable, so all modification operations return a new instance
+### filter
+Filter rows by row predicate
+
+String API:
+```kotlin
+df.filter { "age"<Int>() > 10 && "name"<String>().startsWith("A") }
+```
+Column accessors API:
+```kotlin
+val age by column<Int>()
+val name by column<String>()
+df.filter { age() > 10 && name().startsWith("A") }
+```
+Extension properties API:
+```kotlin
+df.filter { age > 10 && name.startsWith("A") }
+```
+More examples:
+```kotlin
+df.filter { index % 2 == 0} // keep even rows
+df.filter { age != prev?.age }
+```
+### sortBy
+Sorts `DataFrame` by one or several columns. 
+Several sort columns can be combined by `and` operator. 
+By default, columns are sorted in ascending order with null values going first. 
+To change column sort order to descending use `.desc` modifier.
+To get `null` values in the end of the order use `.nullsLast` modifier
+
+String API:
+```kotlin
+df.sortBy("age", "name")
+```
+Column accessors API:
+```kotlin
+val age by column<Int>()
+val name by column<String>()
+df.sortBy { age and name.desc }
+df.sortBy { name.nullsLast and age.desc }
+```
+Extension properties API:
+```kotlin
+df.sortBy { age }
+df.sortBy { age and name.desc }
+df.sortBy { name.nullsLast and age.desc }
+```
+To apply descending order to all columns use `sortByDesc` function
+```kotlin
+df.sortByDesc { name and age}
+```
+To sort by a continuous range of columns use `cols` function
+```kotlin
+df.sortBy { cols(0..2) }
+```
+## Column Selectors
+`DataFrame` provides a number of operations for selecting arbitrary set of columns from `DataFrame`.
+### Select single column
+```
+columnName // column by extension property
+it.columnName // column by extension property
+columnName() // column by accessor
+it["columnName"] // column by name
+"columnName"<Type>() // typed column by name
+col(index) // column by index
+column.rename("newName") // column with a new name
+```
+### Select multiple columns
+```
+columnSet1 and columnSet2 // union of column sets
+cols(index1, ..., indexN) // columns by indices
+cols(index1..index2) // columns by range of indices
+cols { condition } // columns by condition
+colsOf<Type>() // columns of specific type
+colsOf<Type> { condition } // columns of specfic type that match condition
+dfs { condition } // traverse column tree and yield top-level columns that match condition
+dfsOf<Type>() // traverse column tree and yield columns of specific type
+dfsOf<Type> { condition } // traverse column tree and yield columns of specific type that match condition
+all() // all columns
+```
+You can also use these methods to select subcolumns of `MapColumn`
+```kotlin
+val firstName by column("Alice", "Bob")
+val middleName by column("Jr", null)
+val lastName by column("Merton", "Marley")
+val age by column(15, 20)
+val fullName by column(firstName, middleName, lastName)
+val df = fullName + age
+df.select { fullName.cols { !hasNulls } } // firstName, lastName
+df.select { fullName.cols(0, 2) } // firstName, middleName, lastName
+df.select { dfsOf<String?> { hasNulls } } // middleName
+```  
+### Column set operations
+```
+columnSet.drop(n) // remove first 'n' columns from column set
+columnSet.take(n) // take first 'n' columns of column sest
+columnSet.filter { condition } // filter columns set by condition
+columnSet.except { otherColumnSet }
+columnSet.except ( otherColumnSet )
 ```

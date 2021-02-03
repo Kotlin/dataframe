@@ -31,6 +31,4 @@ interface SelectReceiver<out T> : ColumnsSelectorReceiver<T> {
     infix fun <C> ColumnSet<C>.and(other: KProperty<C>) = this and other.toColumnDef()
     infix fun <C> KProperty<C>.and(other: KProperty<C>) = toColumnDef() and other.toColumnDef()
     infix fun <C> ColumnSet<C>.and(other: String) = this and other.toColumnDef()
-
-    operator fun <C> ColumnSet<C>.plus(other: ColumnSet<C>) = this and other
 }
