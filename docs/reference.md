@@ -216,7 +216,12 @@ To sort by a continuous range of columns use `cols` function
 df.sortBy { cols(0..2) }
 ```
 ## Column Selectors
-`DataFrame` provides a number of operations for selecting arbitrary set of columns from `DataFrame`.
+`DataFrame` provides a column selection DSL for selecting arbitrary set of columns.
+Column selectors are used in many operations, such as [select](#select), [move](#move), [remove](#remove), [gather](#gather), [update](#update), [sortBy](#sortBy)
+Common syntax for using column selector is
+```
+df.operation { columnSelector }
+```
 ### Select single column
 ```
 columnName // column by extension property
@@ -227,7 +232,7 @@ it["columnName"] // column by name
 col(index) // column by index
 column.rename("newName") // column with a new name
 ```
-### Select multiple columns
+### Select several columns
 ```
 columnSet1 and columnSet2 // union of column sets
 cols(index1, ..., indexN) // columns by indices
@@ -240,19 +245,7 @@ dfsOf<Type>() // traverse column tree and yield columns of specific type
 dfsOf<Type> { condition } // traverse column tree and yield columns of specific type that match condition
 all() // all columns
 ```
-You can also use these methods to select subcolumns of `MapColumn`
-```kotlin
-val firstName by column("Alice", "Bob")
-val middleName by column("Jr", null)
-val lastName by column("Merton", "Marley")
-val age by column(15, 20)
-val fullName by column(firstName, middleName, lastName)
-val df = fullName + age
-df.select { fullName.cols { !hasNulls } } // firstName, lastName
-df.select { fullName.cols(0, 2) } // firstName, middleName, lastName
-df.select { dfsOf<String?> { hasNulls } } // middleName
-```  
-### Column set operations
+### Modify resulting column set
 ```
 columnSet.drop(n) // remove first 'n' columns from column set
 columnSet.take(n) // take first 'n' columns of column sest
@@ -260,3 +253,19 @@ columnSet.filter { condition } // filter columns set by condition
 columnSet.except { otherColumnSet }
 columnSet.except ( otherColumnSet )
 ```
+Column selectors can be used to select subcolumns of a particular `MapColumn`
+```kotlin
+val firstName by column("Alice", "Bob")
+val middleName by column("Jr", null)
+val lastName by column("Merton", "Marley")
+val age by column(15, 20)
+
+val fullName by column(firstName, middleName, lastName) // create MapColumn consisting of three columns
+val df = fullName + age
+
+df.select { fullName.cols { !it.hasNulls } } // firstName, lastName
+df.select { fullName.cols(0, 2) } // firstName, middleName, lastName
+df.select { fullName[firstName] }
+df.select { fullName.cols(middleName, lastName) }
+df.select { fullName.cols().drop(1) }
+```  

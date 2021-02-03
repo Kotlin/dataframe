@@ -51,6 +51,9 @@ interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
     fun DataFrameBase<*>.col(colName: String) = getColumn<Any?>(colName)
     fun ColumnSet<*>.col(colName: String) = transform { it.mapNotNull { it.getChild(colName) } }
 
+    operator fun ColumnSet<*>.get(colName: String) = col(colName)
+    operator fun <C> ColumnSet<*>.get(column: ColumnReference<C>) = cols(column)
+
     fun <C> ColumnSet<C>.drop(n: Int) = transform { it.drop(n) }
     fun <C> ColumnSet<C>.take(n: Int) = transform { it.take(n) }
     fun <C> ColumnSet<C>.dropLast(n: Int) = transform { it.dropLast(n) }
