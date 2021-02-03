@@ -20,26 +20,26 @@ interface SortReceiver<out T> : SelectReceiver<T> {
 
 typealias SortColumnsSelector<T, C> = Selector<SortReceiver<T>, ColumnSet<C>>
 
-fun <T> DataFrame<T>.sortBy(selector: SortColumnsSelector<T, Comparable<*>?>) = doSortBy(selector, UnresolvedColumnsPolicy.Fail)
+fun <T,C> DataFrame<T>.sortBy(selector: SortColumnsSelector<T, C>) = doSortBy(selector, UnresolvedColumnsPolicy.Fail)
 fun <T> DataFrame<T>.sortBy(cols: Iterable<ColumnReference<Comparable<*>?>>) = sortBy { cols.toColumnSet() }
 fun <T> DataFrame<T>.sortBy(vararg cols: ColumnReference<Comparable<*>?>) = sortBy { cols.toColumns() }
-fun <T> DataFrame<T>.sortBy(vararg cols: String) = sortBy { cols.toColumns() as ColumnSet<Comparable<*>?> }
+fun <T> DataFrame<T>.sortBy(vararg cols: String) = sortBy { cols.toColumns() }
 fun <T> DataFrame<T>.sortBy(vararg cols: KProperty<Comparable<*>?>) = sortBy { cols.toColumns() }
 
-fun <T> DataFrame<T>.sortByDesc(selector: SortColumnsSelector<T, Comparable<*>?>): DataFrame<T> {
+fun <T,C> DataFrame<T>.sortByDesc(selector: SortColumnsSelector<T, C>): DataFrame<T> {
     val set = selector.toColumns()
     return doSortBy({ set.desc })
 }
 
 fun <T> DataFrame<T>.sortByDesc(vararg columns: KProperty<Comparable<*>?>) = sortByDesc { columns.toColumns() }
-fun <T> DataFrame<T>.sortByDesc(vararg columns: String) = sortByDesc { columns.toColumns() as ColumnSet<Comparable<*>?> }
+fun <T> DataFrame<T>.sortByDesc(vararg columns: String) = sortByDesc { columns.toColumns() }
 fun <T> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<Comparable<*>?>) = sortByDesc { columns.toColumns() }
 fun <T> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comparable<*>?>>) = sortByDesc { columns.toColumnSet() }
 
-fun <T, G> GroupedDataFrame<T, G>.sortBy(vararg cols: String) = sortBy { cols.toColumns() as ColumnSet<Comparable<*>?> }
+fun <T, G> GroupedDataFrame<T, G>.sortBy(vararg cols: String) = sortBy { cols.toColumns() }
 fun <T, G> GroupedDataFrame<T, G>.sortBy(vararg cols: ColumnReference<Comparable<*>?>) = sortBy { cols.toColumns() }
 fun <T, G> GroupedDataFrame<T, G>.sortBy(vararg cols: KProperty<Comparable<*>?>) = sortBy { cols.toColumns() }
-fun <T, G> GroupedDataFrame<T, G>.sortBy(selector: SortColumnsSelector<G, Comparable<*>?>) = doSortBy(selector)
+fun <T, G, C> GroupedDataFrame<T, G>.sortBy(selector: SortColumnsSelector<G, C>) = doSortBy(selector)
 
 internal fun <T, C> DataFrame<T>.doSortBy(selector: SortColumnsSelector<T, C>, unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail): DataFrame<T> {
 

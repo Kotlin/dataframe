@@ -39,7 +39,7 @@ class SeriesTests {
     val typed = df.typed<Weather>()
 
     @Test
-    fun `diff`() {
+    fun `diff test`() {
         val withDiff = typed
                 .sortBy { city and day }
                 .groupBy { city }
@@ -57,7 +57,7 @@ class SeriesTests {
         val withMa = typed
                 .groupBy { city }
                 .sortBy { city and day }
-                .add("ma_temp") { movingAverage(k) { it.temp } }
+                .add("ma_temp") { it.movingAverage(k) { it.temp } }
                 .ungroup()
 
         val srcData = typed.map { (city to day) to temp }.toMap()

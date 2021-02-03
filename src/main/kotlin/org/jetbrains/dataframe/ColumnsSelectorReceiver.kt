@@ -4,39 +4,38 @@ import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.api.columns.ColumnSet
 import org.jetbrains.dataframe.api.columns.ColumnWithPath
 import org.jetbrains.dataframe.api.columns.MapColumn
+import org.jetbrains.dataframe.api.columns.isSubtypeOf
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-import kotlin.reflect.full.isSubtypeOf
 
 interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
-
-    fun cols(firstCol: AnyCol, vararg otherCols: AnyCol) = Columns(listOf(firstCol) + otherCols)
-
-    fun DataFrameBase<*>.cols() = this.all()
 
     fun DataFrameBase<*>.first(numCols: Int) = cols().take(numCols)
 
     fun DataFrameBase<*>.last(numCols: Int) = cols().takeLast(numCols)
 
-    fun cols(firstCol: String, vararg otherCols: String) = Columns((listOf(firstCol) + otherCols).map { it.toColumnDef() })
-
-    fun DataFrameBase<*>.cols(range: IntRange) = Columns(this.columns().subList(range.start, range.endInclusive+1))
-
     fun DataFrameBase<*>.group(name: String) = this.get(name) as MapColumn<*>
 
-    fun DataFrameBase<*>.cols(predicate: (AnyCol) -> Boolean) = Columns(this.columns().filter(predicate))
+    fun <C> ColumnSet<*>.cols(firstCol: ColumnReference<C>, vararg otherCols: ColumnReference<C>) = (listOf(firstCol) + otherCols).let { refs ->
+        transform { it.flatMap { col -> refs.mapNotNull { col.getChild(it) } } }
+    }
 
-    fun <C> DataFrameBase<*>.colsOfType(type: KType, filter: (DataColumn<C>) -> Boolean = { true }) = this.columns().filter { it.type.isSubtypeOf(type) && (type.isMarkedNullable || !it.hasNulls) && filter(it.typed()) }.map { it.typed<C>() }.toColumnSet()
+    fun ColumnSet<*>.cols(firstCol: String, vararg otherCols: String) = (listOf(firstCol) + otherCols).let { names ->
+        transform { it.flatMap { col -> names.mapNotNull { col.getChild(it) } } }
+    }
+
+    fun ColumnSet<*>.cols(range: IntRange) = transform { it.flatMap { it.children().subList(range.start, range.endInclusive+1) } }
+    fun ColumnSet<*>.cols(predicate: (AnyCol) -> Boolean = {true}) = colsInternal(predicate)
+
+    fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean = {true}) = dfsInternal(predicate)
 
     fun DataFrameBase<*>.all() = Columns(this.columns())
 
     fun DataFrameBase<*>.colGroups(filter: (MapColumn<*>) -> Boolean = { true }): ColumnSet<AnyRow> = this.columns().filter { it.isGroup() && filter(it.asGroup()) }.map { it.asGroup() }.toColumnSet()
 
-    fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean = { true }) = createColumnSet { resolve(it).filter { it.isGrouped() }.flatMap { it.children().dfs().filter(predicate) } }
+    fun <C> ColumnSet<C>.children(predicate: (AnyCol) -> Boolean = {true} ) = transform { it.flatMap { it.children().filter { predicate(it.data) } } }
 
-    fun <C> ColumnSet<C>.children(predicate: (AnyCol) -> Boolean = {true} ) = createColumnSet { resolve(it).filter { it.isGrouped() }.flatMap { it.children().filter { predicate(it.data) } } }
-
-    fun MapColumnReference.children() = createColumnSet { resolve(it).single().children() }
+    fun MapColumnReference.children() = transform { it.single().children() }
 
     operator fun List<AnyCol>.get(range: IntRange) = Columns(subList(range.first, range.last + 1))
 
@@ -46,7 +45,11 @@ interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
 
     fun <C> col(property: KProperty<C>) = property.toColumnDef()
 
-    fun <C> col(colName: String) = colName.cast<C>()
+    fun DataFrameBase<*>.col(index: Int) = column(index)
+    fun ColumnSet<*>.col(index: Int) = transform { it.mapNotNull { it.getChild(index) } }
+
+    fun DataFrameBase<*>.col(colName: String) = getColumn<Any?>(colName)
+    fun ColumnSet<*>.col(colName: String) = transform { it.mapNotNull { it.getChild(colName) } }
 
     fun <C> ColumnSet<C>.drop(n: Int) = transform { it.drop(n) }
     fun <C> ColumnSet<C>.take(n: Int) = transform { it.take(n) }
@@ -55,4 +58,15 @@ interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
     fun <C> ColumnSet<C>.takeWhile(predicate: Predicate<ColumnWithPath<C>>) = transform { it.takeWhile(predicate) }
     fun <C> ColumnSet<C>.takeLastWhile(predicate: Predicate<ColumnWithPath<C>>) = transform { it.takeLastWhile(predicate) }
     fun <C> ColumnSet<C>.filter(predicate: Predicate<ColumnWithPath<C>>) = transform { it.filter(predicate) }
+
+    fun <C> DataColumn<C>.rename(newName: String) = (this as ColumnReference<C>).rename(newName)
 }
+
+internal fun ColumnSet<*>.colsInternal(predicate: (AnyCol) -> Boolean) = transform { it.flatMap { it.children().filter { predicate(it.data) } } }
+internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) = transform { it.filter { it.isGroup() }.flatMap { it.children().dfs().filter(predicate) } }
+
+fun <C> ColumnSet<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }) = dfsInternal { it.data.isSubtypeOf(type) && predicate(it.typed()) }
+inline fun <reified C> ColumnSet<*>.dfsOf(noinline filter: (ColumnWithPath<C>) -> Boolean = { true }) = dfsOf(getType<C>(), filter)
+
+fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> = colsInternal { it.isSubtypeOf(type) && filter(it.typed()) } as ColumnSet<C>
+inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }) = colsOf(getType<C>(), filter)

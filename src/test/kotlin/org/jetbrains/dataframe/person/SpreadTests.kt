@@ -195,7 +195,7 @@ class SpreadTests {
     fun `gather doubles with value conversion`() {
 
         val spread = typed.spread { key }.by { value }.map(valueConverter).into { it }
-        val gathered = spread.remove("city").gather { colsOfType<Double?>() }.mapNotNull { it.toInt() }.into("key", "value")
+        val gathered = spread.remove("city").gather { colsOf<Double?>() }.mapNotNull { it.toInt() }.into("key", "value")
         val expected = typed.filter { key != "city" }.cast { value }.to<Int>()
         gathered shouldBe expected
     }
