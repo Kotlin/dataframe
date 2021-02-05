@@ -4,14 +4,16 @@ import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.columns.MapColumn
 import org.jetbrains.dataframe.io.toHTML
 import org.jetbrains.kotlinx.jupyter.api.*
+import org.jetbrains.kotlinx.jupyter.api.annotations.JupyterLibrary
 import org.jetbrains.kotlinx.jupyter.api.libraries.*
 import kotlin.reflect.KClass
 
 internal val newDataSchemas = mutableListOf<KClass<*>>()
 
+@JupyterLibrary
 internal class Integration : JupyterIntegration(){
 
-    override fun Builder.onLoaded(notebook: Notebook<*>?) {
+    override fun Builder.onLoaded(notebook: Notebook?) {
 
         render<AnyFrame> { HTML(it.toHTML()) }
         render<AnyRow> { it.toDataFrame() }
