@@ -32,11 +32,11 @@ dependencies {
 * `DataFrame` can be optionally typed by `DataSchema` to provide typed data access via extension properties  
 * `DataSchema` is an interface that describes a single row of `DataFrame`
 * `DataColumn` can be one of three types:
-    * `MapColumn`: every element of the column is `DataRow`
-    * `FrameColumn`: every element of the column is `DataFrame`
-    * `ValueColumn`: otherwise 
+    * `MapColumn`: every element is `DataRow`
+    * `FrameColumn`: every element is `DataFrame`
+    * `ValueColumn`: for other types of elements 
 
-## Typed data access
+## Data access
 
 DataFrame comes with three levels of API for data access
 
@@ -47,17 +47,20 @@ String column names are the easiest way to access data in DataFrame:
 val df = DataFrame.read("titanic.csv")
 df.filter { it["survived"] as Boolean }.groupBy("city").max("age")
 ```
-For more complicated expressions this API may lead to code mess with plenty type casts:
+or using `invoke` operator:
 ```kotlin
-df.filter { (it["surived"] as Boolean) && (it["home"] as String).endsWith("NY") && (it["age"] as Int?) in 10..20 }
+df.filter { "survived"<Boolean>() }.groupBy("city").max("age")
+```
+For more complicated expressions this API leads to a lot of type casts:
+```kotlin
+df.filter { "survived"<Boolean>() && "home"<String>().endsWith("NY") && "age"<Int?>() in 10..20 }
 ```  
 And solution is...
 
 ### Column Accessors
-
-For frequently accessed columns type casting can be reduced by `ColumnAccessors`:   
+For frequently accessed columns type casting can be reduced by `ColumnAccessors`:
 ```kotlin
-val survived by column<Boolean>()
+val survived by column<Boolean>() // accessor for Boolean column with name 'survived'
 val home by column<String>()
 val age by column<Int?>()
 ```
@@ -85,10 +88,12 @@ Now data can be accessed by `.` member accessor
 ```kotlin
 df.filter { it.survived && it.home.endsWith("NY") && it.age in 10..20 }
 ```
-And `it` can be ommited:    
+`it` can be omitted:    
 ```kotlin
 df.filter { survived && home.endsWith("NY") && age in 10..20 }
 ```
 Extension properties are generated for `DataSchema` that is extracted from `DataFrame` instance after REPL line execution.
 After that `DataFrame` variable is typed with its own `DataSchema`, so only valid extension properties corresponding 
 to actual columns in `DataFrame` will be allowed by compiler and suggested by completion.
+
+### Column nullability
