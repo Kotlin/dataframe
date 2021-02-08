@@ -14,14 +14,14 @@
     * `schema`
     * `summary`
 * [Access data](#access-data)
-    * by column
-    * by row
-    * as iterable
+    * [by column](#by-column)
+    * [by row](#by-row)
+    * [as Iterable](#as-iterable)
 * [Modify rows](#modify-rows)
     * [`filter`](#filter)
     * [`sortBy`](#sortBy)
+    * [`distinct`](#distinct)
     * `mergeRows`
-    * `distinct`
     * `append`
     * `groupBy`
     * `shuffled`
@@ -215,6 +215,11 @@ To sort by a continuous range of columns use `cols` function
 ```kotlin
 df.sortBy { cols(0..2) }
 ```
+### distinct
+Removes duplicate rows
+```kotlin
+df.distinct()
+```
 ## Column Selectors
 `DataFrame` provides a column selection DSL for selecting arbitrary set of columns.
 Column selectors are used in many operations, such as [select](#select), [move](#move), [remove](#remove), [gather](#gather), [update](#update), [sortBy](#sortBy)
@@ -268,4 +273,4 @@ df.select { fullName.cols(0, 2) } // firstName, middleName, lastName
 df.select { fullName[firstName] }
 df.select { fullName.cols(middleName, lastName) }
 df.select { fullName.cols().drop(1) }
-```  
+```
