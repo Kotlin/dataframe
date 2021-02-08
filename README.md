@@ -51,7 +51,7 @@ For more complicated expressions this API may lead to code mess with plenty type
 ```kotlin
 df.filter { (it["surived"] as Boolean) && (it["home"] as String).endsWith("NY") && (it["age"] as Int?) in 10..20 }
 ```  
-Fortunately, there is a solution:
+And solution is...
 
 ### Column Accessors
 
@@ -72,7 +72,7 @@ df.filter { survived() && home().endsWith("NY") && age() in 10..20 }
 If `DataFrame` doesn't contain a column referenced by `ColumnAccessor`, runtime exception will be thrown. In some cases
 this may lead to loosing important results of some long computation.
 
-Fortunately, there is a solution:
+And solution is...
 
 ### Extension properties
 When DataFrame is used within Jupyter Notebooks with [Kotlin Kernel](https://github.com/Kotlin/kotlin-jupyter) there is even more type safe way to access data. 
