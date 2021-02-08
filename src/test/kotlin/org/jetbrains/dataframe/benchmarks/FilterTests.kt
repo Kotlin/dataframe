@@ -8,12 +8,13 @@ import org.jetbrains.dataframe.filterFast
 import org.jetbrains.dataframe.io.read
 import org.jetbrains.dataframe.neq
 import org.jetbrains.dataframe.typed
+import org.junit.Ignore
 import org.junit.Test
 import kotlin.system.measureTimeMillis
 
 class FilterTests {
 
-    val path = "data/census-clean.csv"
+    val path = "data/census.csv"
     val df = DataFrame.read(path)
 
     interface DataRecord {
@@ -28,6 +29,7 @@ class FilterTests {
     val n = 100
 
     @Test
+    @Ignore
     fun slow() {
         measureTimeMillis {
             for (i in 0..n)
@@ -36,6 +38,7 @@ class FilterTests {
     }
 
     @Test
+    @Ignore
     fun fast() {
         measureTimeMillis {
             for (i in 0..n)
