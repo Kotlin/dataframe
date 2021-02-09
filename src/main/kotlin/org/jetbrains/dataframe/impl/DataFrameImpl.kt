@@ -53,7 +53,7 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T> {
     override fun toString() = renderToString()
 
     override fun append(vararg values: Any?): DataFrame<T> {
-        assert(values.size == ncol()) { "Invalid number of arguments. Expected: ${ncol()}, actual: ${values.size}" }
+        assert(values.size % ncol() != 0) { "Invalid number of arguments. Multiple of ${ncol()} is expected, but actual was: ${values.size}" }
         return values.mapIndexed { i, v ->
             val col = columns()[i]
             if (v != null)

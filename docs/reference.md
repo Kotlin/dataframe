@@ -21,12 +21,12 @@
     * [`filter`](#filter)
     * [`sortBy`](#sortBy)
     * [`distinct`](#distinct)
-    * `mergeRows`
-    * `append`
-    * `groupBy`
-    * `shuffled`
-    * `take` / `takeLast`
-    * `drop` / `dropLast`
+    * [`mergeRows`](#mergeRows)
+    * [`append`](#append)
+    * [`groupBy`](#groupBy)
+    * [`shuffled`](#shuffled)
+    * [`take`/`takeLast`](#take--takelast)
+    * [`drop`/`dropLast`](#drop--droplast)
 * Modify schema
     * `select`
     * `add`
@@ -220,6 +220,76 @@ Removes duplicate rows
 ```kotlin
 df.distinct()
 ```
+### mergeRows
+Merges values in selected columns into lists grouped by other columns
+
+Input:
+
+|name   | city    | age |
+|-------|---------|-----|
+| Alice | London  | 15  |
+| Bob   | Milan   | 20  |
+| Alice | Moscow  | 23  |
+| Alice | London  | 30  |
+| Bob   | Milan   | 11  |
+
+```kotlin
+df.mergeRows { age }
+```
+Output:
+
+|name   | city   | age 
+|-------|--------|-----
+| Alice | London | [15, 30]
+| Bob   | Milan  | [20, 11]
+| Alice | Moscow | [23]
+
+### append
+Adds one or several rows to `DataFrame`
+```kotlin
+df.append (
+    "Mike", 15,
+    "John", 17, 
+    "Bill", 30)
+```
+### groupBy
+Groups rows in `DataFrame` by one or several key columns. Returns `GroupedDataFrame` that supports various aggregation operations
+```kotlin
+df.groupBy { name and city }.aggregate {
+    nrow() into "num"
+    count { age > 18 } into "number of adults"
+    median { age } into "median age"
+}
+df.groupBy { name }.aggregate {
+    maxBy { age }.city into "city of oldest person"
+    countBy { city } into { "from $it" }
+}
+```
+If there is only one single 
+```kotlin
+df.groupBy { name }.max { age }
+df.groupBy { city }.count()
+df.groupBy { name }.countInto("count")
+```
+
+### shuffled
+Reorders rows randomly
+```kotlin
+df.shuffled()
+```
+### take / takeLast
+Returns `DataFrame` containing first/last `n` rows
+```kotlin
+df.take(10) // first 10 rows
+df.takeLast(20) // last 20 rows
+```
+### drop / dropLast
+Returns `DataFrame` containing all rows except first/last `n` rows
+```kotlin
+df.drop(10)
+df.dropLast(20)
+```
+
 ## Column Selectors
 `DataFrame` provides a column selection DSL for selecting arbitrary set of columns.
 Column selectors are used in many operations, such as [select](#select), [move](#move), [remove](#remove), [gather](#gather), [update](#update), [sortBy](#sortBy)
