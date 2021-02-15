@@ -374,10 +374,15 @@ df - { columns }
 ```
 See [Column Selectors](#column-selectors) for column selection syntax
 ### cast
-Changes the type of columns
+Changes the type of columns. Supports automatic type conversions between value types `Int`, `String`, `Double`, `Long`, `Short`, `Float`,`BigDecimal`
 ```kotlin
-df.cast { columns }.to<Type>()
+df.cast { age }.to<Double>()
 ```
+Helper functions without type arguments are available for value types
+```kotlin
+df.cast { age }.toFloat()
+df.cast { all() }.toStr()
+``` 
 
 ## Column Selectors
 `DataFrame` provides a column selection DSL for selecting arbitrary set of columns.

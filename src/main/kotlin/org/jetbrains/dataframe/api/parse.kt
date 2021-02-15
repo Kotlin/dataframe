@@ -8,19 +8,21 @@ import kotlin.reflect.full.withNullability
 
 data class ParseClause<T>(val df: DataFrame<T>, val selector: ColumnsSelector<T, String?>) {
 
-    fun <C: Any> getParser(type: KType) = Parsers[type] as? StringParser<C>
+    private fun <C: Any> getParser(type: KType) = Parsers[type] as? StringParser<C>
 
-    inline fun <reified C: Any> to(): DataFrame<T> {
-
-        val parser = getParser<C>(getType<C>()) ?: throw IllegalArgumentException("Parsing to type '${C::class}' is not supported")
-
-        return df.update(selector).notNull { parser.parse(it) }
+    fun to(type: KType): DataFrame<T> {
+        val parser = getParser<Any>(type) ?: throw IllegalArgumentException("Parsing to type '${type}' is not supported")
+        return df.update(selector).notNull().with(type) { parser.parse(it) }
     }
+
+    inline fun <reified C: Any> to() = to(getType<C>())
 }
 
 fun <T> DataFrame<T>.parse(selector: ColumnsSelector<T, String?>) = ParseClause(this, selector)
 
-class StringParser<T : Any>(val type: KType, val parse: (String) -> T?)
+internal class StringParser<T : Any>(val type: KType, val parse: (String) -> T?) {
+    fun toConverter(): TypeConverter = { parse(it as String) }
+}
 
 internal object Parsers {
 
@@ -37,7 +39,7 @@ internal object Parsers {
 
     inline fun <reified T : Any> stringParser(noinline body: (String) -> T?) = StringParser(getType<T>(), body)
 
-    private val allParsers = listOf(
+    val All = listOf(
             stringParser { it.toIntOrNull() },
             stringParser { it.toLongOrNull() },
             stringParser { it.toDoubleOrNull() },
@@ -45,11 +47,11 @@ internal object Parsers {
             stringParser { it.toBigDecimalOrNull() }
     )
 
-    private val parsersMap = allParsers.associateBy { it.type }
+    private val parsersMap = All.associateBy { it.type }
 
-    val size: Int = allParsers.size
+    val size: Int = All.size
 
-    operator fun get(index: Int): StringParser<*> = allParsers[index]
+    operator fun get(index: Int): StringParser<*> = All[index]
 
     operator fun get(type: KType): StringParser<*>? = parsersMap.get(type)
 
