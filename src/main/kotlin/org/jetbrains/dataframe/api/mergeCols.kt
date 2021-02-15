@@ -5,7 +5,7 @@ class MergeClause<T, C, R>(val df: DataFrame<T>, val selector: ColumnsSelector<T
 fun <T, C> DataFrame<T>.mergeCols(selector: ColumnsSelector<T, C>) = MergeClause(this, selector, { it })
 inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnName: String) = into(listOf(columnName))
 inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnPath: List<String>): DataFrame<T> {
-    val grouped = df.move(selector).into(columnPath)
+    val grouped = df.move(selector).under(columnPath)
     val res = grouped.update { getGroup(columnPath) }.with {
         transform(it.values as List<C>)
     }

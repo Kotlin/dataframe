@@ -887,16 +887,50 @@ class DataFrameTests : BaseTest() {
     fun splitCol() {
         val merged = typed.mergeCols { age and city and weight }.into("info")
         val info by columnList<Any>()
-        val res = merged.split { info }.into("age", "city", "weight")
+        val res = merged.split(info).into("age", "city", "weight")
         res shouldBe typed
     }
 
     @Test
     fun splitStringCol() {
-        val merged = typed.mergeCols { age and city and weight }.by(", ").into("info")
+        val merged = typed.mergeCols { age and city and weight }.by(" - ").into("info")
         val info by column<String>()
+        val res = merged.split { info }.by("-", trim = true).into("age", "city", "weight")
+        val expected = typed.update { age and city and weight }.with { it.toString() }
+        res shouldBe expected
+    }
+
+    @Test
+    fun splitStringCol2() {
+        val merged = typed.mergeCols { age and city and weight }.by(",").into("info")
+        val info by column<String>()
+        val res = merged.split(info).into("age", "city", "weight")
+        val expected = typed.update { age and city and weight }.with { it.toString() }
+        res shouldBe expected
+    }
+
+    @Test
+    fun splitStringCol3() {
+        val merged = typed.mergeCols { age and city and weight }.by(", ").into("info")
+        val info by column<String?>()
         val res = merged.split { info }.by(",").into("age", "city", "weight")
         val expected = typed.update { age and city and weight }.with { it.toString() }
+        res shouldBe expected
+    }
+
+    @Test
+    fun splitStringCols() {
+        val merged = typed.mergeCols { name and city }.by(", ").into("nameAndCity")
+            .mergeCols { age and weight}.into("info")
+        val nameAndCity by column<String>()
+        val info by columnList<Number?>()
+        val res = merged.split { nameAndCity and info }.intoMany { src, count ->
+            when (src.name) {
+                "nameAndCity" -> listOf("name", "city")
+                else -> listOf("age", "weight")
+            }
+        }
+        val expected = typed.update {city}.with {it.toString()}.move { city }.to(1)
         res shouldBe expected
     }
 
@@ -932,14 +966,14 @@ class DataFrameTests : BaseTest() {
             ).asDataFrame<Person>()
             res shouldBe typed
         }
-        typed.move { cols { it != name } }.intoGroups { it.type.jvmErasure.simpleName!! }.check()
-        typed.move { age and city and weight }.intoGroups { it.type.jvmErasure.simpleName!! }.check()
+        typed.group { cols { it != name } }.into { type.jvmErasure.simpleName!! }.check()
+        typed.group { age and city and weight }.into { type.jvmErasure.simpleName!! }.check()
     }
 
     @Test
     fun `column group`() {
 
-        val grouped = typed.move { age and name and city }.intoGroup("info")
+        val grouped = typed.move { age and name and city }.under("info")
         grouped.ncol() shouldBe 2
         grouped.columnNames() shouldBe listOf("info", "weight")
         val res = listOf(
@@ -955,7 +989,7 @@ class DataFrameTests : BaseTest() {
     fun `column ungroup`() {
 
         val info by columnGroup()
-        val res = typed.move { age and city }.intoGroup("info").ungroup { info }
+        val res = typed.move { age and city }.under("info").ungroup { info }
         res shouldBe typed
     }
 

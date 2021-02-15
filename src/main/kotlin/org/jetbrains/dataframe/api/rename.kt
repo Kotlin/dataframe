@@ -17,7 +17,8 @@ fun <T, C> DataFrame<T>.rename(cols: Iterable<ColumnReference<C>>) = rename { co
 
 data class RenameClause<T, C>(val df: DataFrame<T>, val selector: ColumnsSelector<T, C>)
 
-fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>) = into(*newColumns.map { it.name() }.toTypedArray())
+fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>) =
+    into(*newColumns.map { it.name() }.toTypedArray())
 fun <T, C> RenameClause<T, C>.into(vararg newNames: String) = df.move(selector).intoIndexed { col, index ->
     col.path.drop(1) + newNames[index]
 }
