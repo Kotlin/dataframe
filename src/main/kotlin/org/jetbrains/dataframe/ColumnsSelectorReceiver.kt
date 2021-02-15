@@ -29,7 +29,9 @@ interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
 
     fun <C> ColumnSet<C>.colsDfs(predicate: (ColumnWithPath<*>) -> Boolean = {true}) = dfsInternal(predicate)
 
-    fun DataFrameBase<*>.all() = Columns(this.columns())
+    fun DataFrameBase<*>.all() = Columns(children())
+
+    fun DataFrameBase<*>.allDfs() = colsDfs { !it.isGroup() }
 
     fun DataFrameBase<*>.colGroups(filter: (MapColumn<*>) -> Boolean = { true }): ColumnSet<AnyRow> = this.columns().filter { it.isGroup() && filter(it.asGroup()) }.map { it.asGroup() }.toColumnSet()
 
@@ -69,6 +71,11 @@ interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
     fun ColumnSet<*>.intCols(filter: (IntCol) -> Boolean = { true }) = colsOf(filter)
     fun ColumnSet<*>.doubleCols(filter: (DoubleCol) -> Boolean = { true }) = colsOf(filter)
     fun ColumnSet<*>.booleanCols(filter: (BooleanCol) -> Boolean = { true }) = colsOf(filter)
+
+    fun ColumnSet<*>.nameContains(text: CharSequence) = cols { it.name.contains(text) }
+    fun ColumnSet<*>.nameContains(regex: Regex) = cols { it.name.contains(regex) }
+    fun ColumnSet<*>.startsWith(prefix: CharSequence) = cols { it.name.startsWith(prefix)}
+    fun ColumnSet<*>.endsWith(suffix: CharSequence) = cols { it.name.endsWith(suffix)}
 }
 
 internal fun ColumnSet<*>.colsInternal(predicate: (AnyCol) -> Boolean) = transform { it.flatMap { it.children().filter { predicate(it.data) } } }

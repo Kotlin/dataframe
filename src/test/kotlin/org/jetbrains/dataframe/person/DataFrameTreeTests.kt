@@ -342,4 +342,19 @@ class DataFrameTreeTests : BaseTest() {
         res.ncol shouldBe 4
         res.columnNames() shouldBe listOf("nameAndCity-name", "nameAndCity-city", "age", "weight")
     }
+
+    @Test
+    fun `group cols`() {
+
+        val joined = typed2.move { allDfs() }.into { path(it.path.joinToString(".")) }
+        val grouped = joined.group { nameContains(".") }.into { it.name.substringBefore(".")}
+        val expected = typed2.rename { nameAndCity.all() }.into { it.path.joinToString(".")}
+        grouped shouldBe expected
+    }
+
+    @Test
+    fun rename() {
+        val res = typed2.rename { nameAndCity.all() }.into { it.name.capitalize()}
+        res.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames().map { it.capitalize() }
+    }
 }

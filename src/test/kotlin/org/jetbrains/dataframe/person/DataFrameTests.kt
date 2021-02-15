@@ -10,6 +10,7 @@ import org.jetbrains.dataframe.io.print
 import org.junit.Test
 import java.math.BigDecimal
 import java.time.LocalDate
+import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
 class DataFrameTests : BaseTest() {

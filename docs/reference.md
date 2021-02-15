@@ -362,9 +362,9 @@ df.split { address }.into { "address$it" }
 #### Split vertically
 Reverse oeration to [mergeRows](#mergeRows)
 ```
-df.split { columns } 
-    [.by(delimeters) | .by { splitter }]
-    .intoRows()
+df.split { columns }.intoRows()
+df.split { columns }.by(delimeters).intoRows()
+df.split { columns }.by { splitter }.intoRows()
 
 splitter = (T) -> List<Any>
 ```
@@ -372,9 +372,9 @@ Row values in other columns will be duplicated
 ### merge
 Merges several columns into a single column. Reverse operation to [split](#split)
 ```
-df.merge { columns }
-    [.by(delimeter) | .by { merger } ]
-    .into(columnName) | .into(columnPath)
+df.merge { columns }.into(columnPath)
+df.merge { columns }.by(delimeters, options).into(columnPath)
+df.merge { columns }.by { merger }.into(columnPath)
 
 merger = List<T> -> Any
 ```
@@ -391,6 +391,7 @@ Renames one or several columns without changing its location in `DataFrame`
 ```
 df.rename { columns }.into(name)
 df.rename { columns }.into { nameExpression }
+
 nameExpression = (DataColumn) -> String
 ```
 ### replace
@@ -463,6 +464,19 @@ df.move { colsDfs { it.name == "data" } }.toTop { it.parent.name }
 // a.b.c -> a.b.c
 df.move { colsDfs { it.path.length == 2 } }.into { it.path.reverse() }
 ```
+### group
+Group columns into column groups. It is a special case of [move](#move) operation
+```
+df.group { columns }.into(groupName)
+df.group { columns }.into { groupNameExpression }
+
+groupNameExpression = DataColumn.(DataColumn) -> String
+```
+Examples
+```kotlin
+df.group { firstName and lastName }.into("name")
+df.group { nameContains(":") }.into { name.substringBefore(":") }
+```
 ## Column Selectors
 `DataFrame` provides a column selection DSL for selecting arbitrary set of columns.
 Column selectors are used in many operations, such as [select](#select), [move](#move), [remove](#remove), [gather](#gather), [update](#update), [sortBy](#sortBy)
@@ -493,12 +507,16 @@ dfsOf<Type>() // traverse column tree and yield columns of specific type
 dfsOf<Type> { condition } // traverse column tree and yield columns of specific type that match condition
 all() // all columns
 ```
-### Select columns of value types
+### Special column selectors
 ```
 stringCols { condition }
 intCols { condition }
 booleanCols { condition }
 doubleCols { condition }
+
+nameContains(text)
+startsWith(prefix)
+endsWith(suffix)
 ```
 ### Modify resulting column set
 ```

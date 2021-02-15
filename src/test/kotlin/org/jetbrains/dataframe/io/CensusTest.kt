@@ -15,7 +15,6 @@ class CensusTest {
     @Test
     fun grouping() {
 
-        df.columnNames().forEach { println(it) }
         val singleNames = df.columnNames().filter { !it.contains(":") }.toSet()
         val grouped = df.move {
             cols { it.name().split(":").let { it.size > 1 && !singleNames.contains(it.last()) } }
