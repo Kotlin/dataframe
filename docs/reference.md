@@ -33,7 +33,6 @@
     * [`move`](#move)
     * [`remove`](#remove)
     * [`cast`](#cast)
-    * `parse`
     * `split`
     * `mergeCols`
     * `group`

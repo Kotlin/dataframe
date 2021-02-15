@@ -1014,7 +1014,7 @@ class DataFrameTests : BaseTest() {
 
         val toStr = typed.update { weight }.notNull { it.toString() }
         val weightStr = column<String?>("weight")
-        val parsed = toStr.parse { weightStr }.to<Int>()
+        val parsed = toStr.cast { weightStr }.toInt()
         parsed shouldBe typed
     }
 
