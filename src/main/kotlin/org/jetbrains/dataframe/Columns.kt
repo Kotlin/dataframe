@@ -453,6 +453,7 @@ internal class MissingFrameColumn<T>: MissingDataColumn<DataFrame<T>>(), FrameCo
 operator fun AnyCol.plus(other: AnyCol) = dataFrameOf(listOf(this, other))
 
 typealias DoubleCol = DataColumn<Double?>
+typealias BooleanCol = DataColumn<Boolean?>
 typealias IntCol = DataColumn<Int?>
 typealias StringCol = DataColumn<String?>
 typealias AnyCol = DataColumn<*>

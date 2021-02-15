@@ -165,7 +165,7 @@ class DataFrameTreeTests : BaseTest() {
         val selected = typed2.select { nameAndCity }
         val nested = selected.mergeRows { nameAndCity.city }
         val mergedCity by columnList<String?>("city")
-        val res = nested.splitRows { nameAndCity[mergedCity] }
+        val res = nested.split { nameAndCity[mergedCity] }.intoRows()
         val expected = selected.sortBy { nameAndCity.name }
         val actual = res.sortBy { nameAndCity.name }
         actual shouldBe expected
