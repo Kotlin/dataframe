@@ -4,9 +4,11 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.api.columns.valueClass
 import org.jetbrains.dataframe.impl.trackColumnAccess
 import org.jetbrains.dataframe.io.print
 import org.junit.Test
+import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.reflect.jvm.jvmErasure
 
@@ -1105,5 +1107,29 @@ class DataFrameTests : BaseTest() {
         
         df.columnNames() shouldBe listOf("name", "age")
         df.nrow() shouldBe 3
+    }
+
+    @Test
+    fun cast1(){
+
+        val res = typed.cast { age }.to<Double>()
+        res.age.valueClass shouldBe Double::class
+        res["age"].values.all { it is Double } shouldBe true
+    }
+
+    @Test
+    fun cast2(){
+
+        val res = typed.cast { weight }.to<BigDecimal>()
+        res.weight.valueClass shouldBe BigDecimal::class
+        res["weight"].values.all { it == null || it is BigDecimal } shouldBe true
+    }
+
+    @Test
+    fun cast3() {
+
+        val res = typed.cast { all() }.to<String>()
+        res.columns().forEach { it.valueClass shouldBe String::class }
+        res.columns().map { it.hasNulls } shouldBe typed.columns().map { it.hasNulls }
     }
 }

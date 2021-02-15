@@ -61,12 +61,27 @@ fun <T, C, R> doUpdate(clause: UpdateClause<T, C>, expression: (DataRow<T>, Data
 // TODO: rename
 inline infix fun <T, C, reified R> UpdateClause<T, C>.with2(noinline expression: UpdateByColumnExpression<T, C, R>) = doUpdate(copy(targetType = targetType ?: getType<R>()), expression)
 
+fun <T, C, R> UpdateClause<T, C>.with(targetType: KType?, expression: UpdateExpression<T, C, R>) = doUpdate(copy(filter = null, targetType = targetType)) { row, column ->
+    val currentValue = column[row.index]
+    if (filter?.invoke(row, currentValue) == false)
+        currentValue as R
+    else expression(row, currentValue)
+}
+
 inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: UpdateExpression<T, C, R>) = doUpdate(copy(filter = null, targetType = targetType ?: getType<R>())) { row, column ->
     val currentValue = column[row.index]
     if (filter?.invoke(row, currentValue) == false)
         currentValue as R
     else expression(row, currentValue)
 }
+
+internal infix fun <T,C> UpdateExpression<T, C, Boolean>?.and(other: UpdateExpression<T, C, Boolean>): UpdateExpression<T,C,Boolean> {
+    if(this == null) return other
+    val thisExp = this
+    return { thisExp(this, it) && other(this, it) }
+}
+
+fun <T, C> UpdateClause<T, C?>.notNull(): UpdateClause<T, C> = copy(filter = filter and { it != null } ) as UpdateClause<T, C>
 
 inline fun <T, C, reified R> UpdateClause<T, C?>.notNull(noinline expression: UpdateExpression<T, C, R>) = doUpdate(copy(filter = null, targetType =  targetType ?: getType<R>())) { row, column ->
     val currentValue = column[row.index]
