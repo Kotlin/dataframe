@@ -63,6 +63,12 @@ interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
     fun <C> ColumnSet<C>.filter(predicate: Predicate<ColumnWithPath<C>>) = transform { it.filter(predicate) }
 
     fun <C> DataColumn<C>.rename(newName: String) = (this as ColumnReference<C>).rename(newName)
+    infix fun <C> DataColumn<C>.named(newName: String) = rename(newName)
+
+    fun ColumnSet<*>.stringCols(filter: (StringCol) -> Boolean = { true }) = colsOf(filter)
+    fun ColumnSet<*>.intCols(filter: (IntCol) -> Boolean = { true }) = colsOf(filter)
+    fun ColumnSet<*>.doubleCols(filter: (DoubleCol) -> Boolean = { true }) = colsOf(filter)
+    fun ColumnSet<*>.booleanCols(filter: (BooleanCol) -> Boolean = { true }) = colsOf(filter)
 }
 
 internal fun ColumnSet<*>.colsInternal(predicate: (AnyCol) -> Boolean) = transform { it.flatMap { it.children().filter { predicate(it.data) } } }

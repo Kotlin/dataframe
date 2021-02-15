@@ -33,11 +33,11 @@
     * [`remove`](#remove)
     * [`cast`](#cast)
     * [`split`](#split)
-    * `mergeCols`
-    * `rename`
-    * `replace`
+    * [`merge`](#merge)
+    * [`rename`](#rename)
+    * [`replace`](#replace)
     * [`move`](#move)    
-    * `group`
+    * [`group`](#group)
     * `ungroup`
     * `flatten`    
     * `gather`
@@ -337,12 +337,16 @@ df.cast { all() }.toStr()
 ### split
 Splits cell value into several values and spreads them horizontally or vertically.
 
-Split cells horizontally:
+#### Split horizontally
+Reverse oeration to [merge](#merge)
 ```
 df.split { columns }
     [.by(delimeters) | .by { splitter }] // how to split cell value
     [.inward()] // nest resulting columns into original column
     .into(columnNames) | .into { columnNamesGenerator } // how to get new column names
+
+splitter = (T) -> List<Any>
+columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
 ```
 Examples:
 ```kotlin
@@ -355,16 +359,52 @@ df.split { info }.inward().into("age", "weight")
 // address -> address0, address1, address2, address3 ...
 df.split { address }.into { "address$it" }
 ```
-
-Split cells vertically:
+#### Split vertically
+Reverse oeration to [mergeRows](#mergeRows)
 ```
 df.split { columns } 
-    [.by(delimeters) / .by { splitter }]
+    [.by(delimeters) | .by { splitter }]
     .intoRows()
 
-df.splitRows { columns } // if columns already contain lists of values
+splitter = (T) -> List<Any>
 ```
+Row values in other columns will be duplicated
+### merge
+Merges several columns into a single column. Reverse operation to [split](#split)
+```
+df.merge { columns }
+    [.by(delimeter) | .by { merger } ]
+    .into(columnName) | .into(columnPath)
 
+merger = List<T> -> Any
+```
+When no `delimeter` or `merger` are defined, values will be merged into the `List`
+```kotlin
+df.merge { firstName and lastName }.by(" ").into("fullName")
+
+df.merge { cols { it.name.startsWith("value") } }.into("values")
+
+df.merge { protocol and host and port and path }.by { it[0] + "://" + it[1] + ":" + it[2] + "/" + it[3] }.into("address")
+```
+### rename
+Renames one or several columns without changing its location in `DataFrame`
+```
+df.rename { columns }.into(name)
+df.rename { columns }.into { nameExpression }
+nameExpression = (DataColumn) -> String
+```
+### replace
+Replaces one or several columns with new columns
+```
+df.replace { columns }.with { columnExpression }
+
+columnExpression = DataFrame.(DataColumn) -> DataColumn
+```
+Examples
+```kotlin
+df.replace { age }.with { 2021 - age named "year" }
+df.replace { stringCols() }.with { it.lower() }
+```
 ### move
 Moves one or several columns within `DataFrame`.
 ```kotlin
@@ -452,6 +492,13 @@ dfs { condition } // traverse column tree and yield top-level columns that match
 dfsOf<Type>() // traverse column tree and yield columns of specific type
 dfsOf<Type> { condition } // traverse column tree and yield columns of specific type that match condition
 all() // all columns
+```
+### Select columns of value types
+```
+stringCols { condition }
+intCols { condition }
+booleanCols { condition }
+doubleCols { condition }
 ```
 ### Modify resulting column set
 ```
