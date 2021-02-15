@@ -48,7 +48,7 @@ fun <T, C, K, R> doGather(clause: GatherClause<T, C, K, R>, namesTo: String, val
             }
         }
 
-        df = df.splitRows { namesColumn and valuesColumn }
+        df = df.split { namesColumn and valuesColumn }.intoRows()
     }else {
         val nameAndValue = column<List<Pair<K, R>>>("nameAndValue")
         df = df.add(nameAndValue) { row ->
@@ -60,7 +60,7 @@ fun <T, C, K, R> doGather(clause: GatherClause<T, C, K, R>, namesTo: String, val
             }
         }
 
-        df = df.splitRows { nameAndValue }
+        df = df.split { nameAndValue }.intoRows()
 
         val nameAndValuePairs = nameAndValue.changeType<Pair<K, C>>()
 

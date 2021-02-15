@@ -821,7 +821,7 @@ class DataFrameTests : BaseTest() {
 
         val src = typed.select { name }
             .add(others) { names }
-            .splitRows { others }
+            .split{ others }.intoRows()
             .add(sum) { name.length + other().length }
 
         val matrix = src.spread { other }.by { sum }.into { it }
@@ -854,13 +854,13 @@ class DataFrameTests : BaseTest() {
         val selected = typed.select { name and city }
         val nested = selected.mergeRows { city }
         val mergedCity by columnList<String?>("city")
-        val res = nested.splitRows { mergedCity }
+        val res = nested.split { mergedCity }.intoRows()
         res.sortBy { name } shouldBe selected.sortBy { name }
     }
 
     @Test
     fun mergeCols() {
-        val merged = typed.mergeCols { age and city and weight }.into("info")
+        val merged = typed.merge { age and city and weight }.into("info")
         merged.ncol() shouldBe 2
         merged.nrow() shouldBe typed.nrow()
         for (row in 0 until typed.nrow()) {
@@ -874,7 +874,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun joinColsToString() {
-        val merged = typed.mergeCols { age and city and weight }.by(", ").into("info")
+        val merged = typed.merge { age and city and weight }.by(", ").into("info")
         merged.ncol() shouldBe 2
         merged.nrow() shouldBe typed.nrow()
         for (row in 0 until typed.nrow()) {
@@ -885,7 +885,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun splitCol() {
-        val merged = typed.mergeCols { age and city and weight }.into("info")
+        val merged = typed.merge { age and city and weight }.into("info")
         val info by columnList<Any>()
         val res = merged.split(info).into("age", "city", "weight")
         res shouldBe typed
@@ -893,7 +893,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun splitStringCol() {
-        val merged = typed.mergeCols { age and city and weight }.by(" - ").into("info")
+        val merged = typed.merge { age and city and weight }.by(" - ").into("info")
         val info by column<String>()
         val res = merged.split { info }.by("-", trim = true).into("age", "city", "weight")
         val expected = typed.update { age and city and weight }.with { it.toString() }
@@ -902,7 +902,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun splitStringCol2() {
-        val merged = typed.mergeCols { age and city and weight }.by(",").into("info")
+        val merged = typed.merge { age and city and weight }.by(",").into("info")
         val info by column<String>()
         val res = merged.split(info).into("age", "city", "weight")
         val expected = typed.update { age and city and weight }.with { it.toString() }
@@ -911,7 +911,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun splitStringCol3() {
-        val merged = typed.mergeCols { age and city and weight }.by(", ").into("info")
+        val merged = typed.merge { age and city and weight }.by(", ").into("info")
         val info by column<String?>()
         val res = merged.split { info }.by(",").into("age", "city", "weight")
         val expected = typed.update { age and city and weight }.with { it.toString() }
@@ -920,8 +920,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun splitStringCols() {
-        val merged = typed.mergeCols { name and city }.by(", ").into("nameAndCity")
-            .mergeCols { age and weight}.into("info")
+        val merged = typed.merge { name and city }.by(", ").into("nameAndCity")
+            .merge { age and weight}.into("info")
         val nameAndCity by column<String>()
         val info by columnList<Number?>()
         val res = merged.split { nameAndCity and info }.intoMany { src, count ->
@@ -937,7 +937,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `merge cols with conversion`() {
         val spread = typed.groupBy { name }.countBy { city }
-        val res = spread.mergeCols { colsOf<Int>() }.by { it.sum() }.into("cities")
+        val res = spread.merge { colsOf<Int>() }.by { it.sum() }.into("cities")
         val expected = typed.select { name and city }.filter { city != null }.groupBy { name }.countInto("cities")
         res shouldBe expected
     }
@@ -1165,5 +1165,20 @@ class DataFrameTests : BaseTest() {
         val res = typed.cast { all() }.to<String>()
         res.columns().forEach { it.valueClass shouldBe String::class }
         res.columns().map { it.hasNulls } shouldBe typed.columns().map { it.hasNulls }
+    }
+
+    @Test
+    fun replace() {
+
+        val res = typed.replace { age }.with { 2021 - age named "year" }
+        val expected = typed.update { age }.with { 2021 - age }.rename { age }.into("year")
+        res shouldBe expected
+    }
+
+    @Test
+    fun `replace with rename`(){
+
+        val res = typed.replace { age }.with { it.rename("age2") }
+        res shouldBe typed.rename {age}.into("age2")
     }
 }
