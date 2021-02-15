@@ -24,6 +24,9 @@ typealias ColumnSelector<T, C> = SelectReceiver<T>.(SelectReceiver<T>) -> Column
 fun <T, C> DataFrame<T>.createSelector(selector: ColumnsSelector<T, C>) = selector
 
 internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
+    if(isEmpty()) return emptyList()
+    val df = this[0].df
+    require(all { it.df === df })
     val fullTree = collectTree(null) { it }
     columns.forEach {
         var node = fullTree.getOrPut(it.path).asNullable()
@@ -34,7 +37,7 @@ internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWi
         }
     }
     val dfs = fullTree.topDfs { it.data != null }
-    return dfs.map { it.data!!.addPath(it.pathFromRoot()) }
+    return dfs.map { it.data!!.addPath(it.pathFromRoot(), df) }
 }
 
 internal fun <T, C> DataFrame<T>.getColumns(
@@ -187,3 +190,6 @@ fun <T, C> DataFrame<T>.forEachIn(selector: ColumnsSelector<T, C>, action: (Data
     }
 
 typealias AnyFrame = DataFrame<*>
+
+internal val AnyFrame.ncol get() = ncol()
+internal val AnyFrame.nrow get() = nrow()

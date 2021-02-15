@@ -116,7 +116,7 @@ internal fun <C> ColumnWithPath<C>.addFlag(flag: SortFlag): ColumnWithPath<C> {
                 SortFlag.NullsLast -> SortDescriptorColumn(col, SortDirection.Asc, true)
             }
         }
-    }.addPath(path)
+    }.addPath(path, df)
 }
 
 internal class ColumnsWithSortFlag<C>(val column: ColumnSet<C>, val flag: SortFlag) : ColumnSet<C> {

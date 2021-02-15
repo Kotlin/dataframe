@@ -7,7 +7,7 @@ internal class RenamedColumnReference<C>(val source: ColumnReference<C>, val nam
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
 
-        return source.resolveSingle(context)?.let { it.data.rename(name).addPath(it.path) }
+        return source.resolveSingle(context)?.let { it.data.rename(name).addPath(it.path, context.df) }
     }
 
     override fun name() = name

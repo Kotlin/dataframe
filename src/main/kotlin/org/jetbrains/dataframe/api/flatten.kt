@@ -6,7 +6,7 @@ fun <T, C> DataFrame<T>.flatten(selector: ColumnsSelector<T, C>): DataFrame<T> {
 
     val columns = getColumnsWithPaths(selector).filter { it.isGroup() }
     val prefixes = columns.map { it.path }.toSet()
-    val result = move { columns.toColumnSet().dfs { !it.isGroup() } }
+    val result = move { columns.toColumnSet().colsDfs { !it.isGroup() } }
             .into {
                 var first = it.path.size - 1
                 while (first > 0 && !prefixes.contains(it.path.subList(0, first)))

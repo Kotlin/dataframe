@@ -10,7 +10,7 @@
 * [Read](#read)
     * [from CSV](#read-csv)
     * [from JSON](#read-json)
-* Analyze
+* Quick info
     * `schema`
     * `summary`
 * [Access data](#access-data)
@@ -27,12 +27,12 @@
     * [`shuffled`](#shuffled)
     * [`take`/`takeLast`](#take--takelast)
     * [`drop`/`dropLast`](#drop--droplast)
-* Modify schema
-    * `select`
-    * `add`
-    * `move`
-    * `remove`
-    * `cast`
+* [Modify schema](#modify-schema)
+    * [`select`](#select)
+    * [`add`](#add)
+    * [`move`](#move)
+    * [`remove`](#remove)
+    * [`cast`](#cast)
     * `parse`
     * `split`
     * `mergeCols`
@@ -65,6 +65,9 @@
 * Export
     * `writeCSV`
 * [Column selectors](#column-selectors)
+* [Row expressions](#row-expressions)
+* [Row properties](#row-properties)
+
 
 <!--- END -->
 
@@ -265,7 +268,7 @@ df.groupBy { name }.aggregate {
     countBy { city } into { "from $it" }
 }
 ```
-If there is only one single 
+For single aggregation there is simplier syntax:
 ```kotlin
 df.groupBy { name }.max { age }
 df.groupBy { city }.count()
@@ -288,6 +291,92 @@ Returns `DataFrame` containing all rows except first/last `n` rows
 ```kotlin
 df.drop(10)
 df.dropLast(20)
+```
+## Modify schema
+Note that `DataFrame` object is immutable, so all modification operations return a new instance of `DataFrame`
+### add
+Adds new column to `DataFrame`
+```kotlin
+add(columnName) { rowExpression }
+```
+See [row expressions](#row-expressions)
+```kotlin
+df.add("year of birth") { 2021 - age }
+df.add("diff") { temperature - (prev?.temperature ?: 0) }
+```
+Add several columns:
+```kotlin
+df.add {
+   "is adult" { age > 18 }
+   "name length" { name.length } 
+}
+```
+or with `+` operator
+```kotlin
+df + {
+   "is adult" { age > 18 }
+   "name length" { name.length } 
+}
+```
+### move
+Moves one or several columns within `DataFrame`.
+```kotlin
+df.move { columns }.into(columnPath)
+df.move { columns }.into { columnPathExpression }
+df.move { columns }.to(position)
+df.move { columns }.toLeft()
+df.move { columns }.intoGroup(groupName)
+```
+See [Column Selectors](#column-selectors) for column selection syntax.
+
+Columns in `DataFrame` can be ordered hierarchically and form a tree structure. Therefore column can be addressed by `ColumnPath` that represents a list of column names.
+
+`move` operation allows to change hierarchical order of columns in `DataFrame` by providing a new `ColumnPath` for every column
+
+```kotlin
+// name, age, weight -> age, name, weight
+df.move { age }.toLeft()
+
+// name, age, weight -> name, weight, age
+df.move { weight }.to(1)
+
+// name -> info.name
+df.move { name }.into("info", "name")
+
+// firstName -> fullName.firstName
+// lastName -> fullName.lastName
+df.move { firstName and lastName }.intoGroup("fullName")
+
+// firstName -> fullName.first
+// lastName -> fullName.last
+df.move { firstName and lastName }.into { path("fullName", it.name.dropLast(4)) }
+
+// a:b:c -> a.b.c
+df.move { all() }.into { it.name.split(":") }
+
+// totalCases -> total.cases
+// totalRecovered -> total.recovered
+df.move { cols { it.name.startsWith("total") } }.into { path("total", it.name.substring(5).decapitalize()) }
+
+// info.default.data -> default
+// some.field.data -> field
+df.move { colsDfs { it.name == "data" } }.toTop { it.parent.name }
+
+// a.b -> b.a
+// a.b.c -> a.b.c
+df.move { colsDfs { it.path.length == 2 } }.into { it.path.reverse() }
+```
+### remove
+Removes columns from `DataFrame`
+```kotlin
+df.remove { columns }
+df - { columns }
+```
+See [Column Selectors](#column-selectors) for column selection syntax
+### cast
+Changes the type of columns
+```kotlin
+df.cast { columns }.to<Type>()
 ```
 
 ## Column Selectors
@@ -344,3 +433,23 @@ df.select { fullName[firstName] }
 df.select { fullName.cols(middleName, lastName) }
 df.select { fullName.cols().drop(1) }
 ```
+## Row expressions
+Row expression provide a value for every row of `DataFrame` and is used in [add](#add), [filter](#filter), [forEach](#forEach), [update](#update) and other opertaions
+
+Row expression syntax is ```DataRow.(DataRow) -> T``` so row values can be accessed with or without ```it``` keyword
+```kotlin
+df.filter { it.name.startsWith("A") }
+df.filter { name.length == 5 }
+```
+Within row expression you can access [row-properties](#row-properties)
+```kotlin
+df.add("diff") { value - prev?.value }
+df.filter { index % 5 == 0 }
+```
+## Row properties
+`DataRow` object provides three properties:
+* `index` - sequential row number in `DataFrame`, starts from 0
+* `prev` - previous row (`null` for the first row)
+* `next` - next row (`null` for the last row)
+
+If some of these properties clash with generated extension properties, they still can be accessed as functions `index()`, `prev()`, `next()`

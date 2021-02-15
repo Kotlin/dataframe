@@ -16,7 +16,7 @@ fun <T> DataFrame<T>.groupBy(cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T
 
    val tree = collectTree(cols)
 
-   val nodes = tree.dfsTopNotNull().map { it.data.addPath(it.pathFromRoot()) }.shortenPaths()
+   val nodes = tree.dfsTopNotNull().map { it.toColumnWithPath(this) }.shortenPaths()
 
    val columns = nodes.map { it.data }
 
