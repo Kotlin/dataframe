@@ -4,8 +4,7 @@ import io.kotlintest.fail
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.ColumnGroup
+import org.jetbrains.dataframe.api.columns.*
 import org.junit.Test
 
 class DataFrameTreeTests : BaseTest() {
@@ -50,8 +49,8 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `select dfs under group`(){
-        df2.select { nameAndCity.dfsOf<String>() } shouldBe typed2.select { nameAndCity.name }
-        df2.select { nameAndCity.dfsOf<String?>() } shouldBe typed2.select { nameAndCity.name and nameAndCity.city }
+        df2.select { nameAndCity.colsDfsOf<String>() } shouldBe typed2.select { nameAndCity.name }
+        df2.select { nameAndCity.colsDfsOf<String?>() } shouldBe typed2.select { nameAndCity.name and nameAndCity.city }
     }
 
     @Test
@@ -157,7 +156,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun selectDfs(){
 
-        val cols = typed2.select { dfs { it.hasNulls } }
+        val cols = typed2.select { colsDfs { it.hasNulls } }
         cols shouldBe typed2.select { nameAndCity.city and weight }
     }
 
@@ -342,5 +341,12 @@ class DataFrameTreeTests : BaseTest() {
             val $dataFrameRowBase<$className>.weight: Int? @JvmName("${shortName}_weight") get() = this["weight"] as Int?
         """.trimIndent()
         code shouldBe expected
+    }
+
+    @Test
+    fun parentColumnTest() {
+        val res = typed2.move { colsDfs { it.depth > 0 } }.toTop { it.parent.name + "-" + it.name}
+        res.ncol shouldBe 4
+        res.columnNames() shouldBe listOf("nameAndCity-name", "nameAndCity-city", "age", "weight")
     }
 }

@@ -81,7 +81,7 @@ fun <T, C> doSplitCols(clause: SplitColClause<T, C, List<*>?>, columnNameGenerat
 
 fun <T> DataFrame<T>.splitRows(selector: ColumnsSelector<T, List<*>?>) = doSplitRows(this, getColumnsWithPaths(selector))
 
-fun <T, C> SplitColClause<T, C, List<*>?>.intoRows() = doSplitRows(df, listOf(column.data.map(transform).addPath(column.path)))
+fun <T, C> SplitColClause<T, C, List<*>?>.intoRows() = doSplitRows(df, listOf(column.data.map(transform).addPath(column.path, df)))
 
 fun <T> doSplitRows(df: DataFrame<T>, columns: List<ColumnWithPath<List<*>?>>): DataFrame<T> {
 

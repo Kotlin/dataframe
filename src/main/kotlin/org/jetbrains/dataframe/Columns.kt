@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.api.columns.*
+import org.jetbrains.dataframe.impl.TreeNode
 import org.jetbrains.dataframe.impl.columns.ColumnWithPathImpl
 import org.jetbrains.dataframe.impl.columns.ConvertedColumnDef
 import org.jetbrains.dataframe.impl.createDataCollector
@@ -40,7 +41,7 @@ interface ColumnReference<out C> : SingleColumn<C> {
     operator fun invoke(row: AnyRow) = row[this]
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
-        return context.df.getColumn<C>(name, context.unresolvedColumnsPolicy)?.addPath(listOf(name))
+        return context.df.getColumn<C>(name, context.unresolvedColumnsPolicy)?.addPath(listOf(name), context.df)
     }
 }
 
@@ -97,7 +98,7 @@ class ColumnDefinition<T> : ColumnReference<T> {
             if(col.isGroup())
                 df = col.asGroup().df
         }
-        return col?.typed<T>()?.addPath(path)
+        return col?.typed<T>()?.addPath(path, context.df)
     }
 }
 
@@ -113,11 +114,18 @@ typealias ColumnPath = List<String>
 
 internal fun ColumnPath.depth() = size - 1
 
-internal fun <T> DataColumn<T>.addPath(path: ColumnPath): ColumnWithPath<T> = ColumnWithPathImpl(this, path)
+internal fun <C> TreeNode<ColumnPosition>.toColumnWithPath(df: DataFrameBase<*>) = (data.column as DataColumn<C>).addPath(pathFromRoot(), df)
 
-internal fun <T> DataColumn<T>.addParentPath(path: ColumnPath): ColumnWithPath<T> = addPath (path + name)
+@JvmName("toColumnWithPathAnyCol")
+internal fun <C> TreeNode<DataColumn<C>>.toColumnWithPath(df: DataFrameBase<*>) = data.addPath(pathFromRoot(), df)
 
-internal fun <T> DataColumn<T>.addPath(): ColumnWithPath<T> = addPath(listOf(name))
+internal fun <T> DataColumn<T>.addPath(path: ColumnPath, df: DataFrameBase<*>): ColumnWithPath<T> = ColumnWithPathImpl(this, path, df)
+
+internal fun <T> ColumnWithPath<T>.changePath(path: ColumnPath): ColumnWithPath<T> = data.addPath(path, df)
+
+internal fun <T> DataColumn<T>.addParentPath(path: ColumnPath, df: DataFrameBase<*>) = addPath (path + name, df)
+
+internal fun <T> DataColumn<T>.addPath(df: DataFrameBase<*>): ColumnWithPath<T> = addPath(listOf(name), df)
 
 enum class ColumnKind {
     Value,

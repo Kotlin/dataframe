@@ -68,7 +68,7 @@ interface DataColumn<out T> : ColumnReference<T> {
 
     fun toSet(): Set<T>
 
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? = this.addPath()
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? = this.addPath(context.df)
 }
 
 fun <C> DataColumn<C>.allNulls() = size == 0 || (hasNulls && ndistinct == 1)

@@ -28,7 +28,7 @@ fun <T> DataFrame<T>.moveToRight(vararg cols: KProperty<*>) = moveToRight { cols
 fun <T, C> DataFrame<T>.move(selector: ColumnsSelector<T, C>): MoveColsClause<T, C> {
 
     val (df, removed) = doRemove(selector)
-    return MoveColsClause(df, removed)
+    return MoveColsClause(df, this, removed)
 }
 
 interface DataFrameForMove<T> : DataFrameBase<T> {
@@ -89,7 +89,7 @@ fun <T, C> MoveColsClause<T, C>.to(columnIndex: Int): DataFrame<T> {
 
 fun <T, C> MoveColsClause<T, C>.toLeft() = to(0)
 fun <T, C> MoveColsClause<T, C>.toRight() = to(df.ncol())
-class MoveColsClause<T, C> internal constructor(internal val df: DataFrame<T>, internal val removed: List<TreeNode<ColumnPosition>>) {
+class MoveColsClause<T, C> internal constructor(internal val df: DataFrame<T>, internal val originalDf: DataFrame<T>, internal val removed: List<TreeNode<ColumnPosition>>) {
 
-    internal val TreeNode<ColumnPosition>.column get() = column<C>()
+    internal val TreeNode<ColumnPosition>.column get() = toColumnWithPath<C>(originalDf)
 }

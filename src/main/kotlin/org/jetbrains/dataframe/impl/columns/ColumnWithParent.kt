@@ -20,6 +20,6 @@ internal interface ColumnWithParent<C> : ColumnReference<C> {
         }
 
         val data = targetDf.getColumn<C>(name(), context.unresolvedColumnsPolicy)
-        return data?.addPath(pathPrefix + name())
+        return data?.addPath(pathPrefix + name(), context.df)
     }
 }

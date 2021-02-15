@@ -114,32 +114,31 @@ inline fun <reified C> headPlusArray(head: C, cols: Array<out C>) = (listOf(head
 
 // column grouping
 
-internal fun <C> TreeNode<ColumnPosition>.column() = ColumnWithPathImpl(data.column as DataColumn<C>, pathFromRoot())
-
 internal fun TreeNode<ColumnPosition>.allRemovedColumns() = dfs { it.data.wasRemoved && it.data.column != null }
 
 internal fun TreeNode<ColumnPosition>.allWithColumns() = dfs { it.data.column != null }
 
-internal fun Iterable<ColumnWithPath<*>>.dfs(): List<ColumnWithPath<*>> {
+internal fun Iterable<ColumnWithPath<*>>.colsDfs(): List<ColumnWithPath<*>> {
 
     val result = mutableListOf<ColumnWithPath<*>>()
     fun dfs(cols: Iterable<ColumnWithPath<*>>) {
         cols.forEach {
             result.add(it)
             val path = it.path
+            val df = it.df
             if (it.data.isGroup())
-                dfs(it.data.asGroup().columns().map { it.addPath(path + it.name()) })
+                dfs(it.data.asGroup().columns().map { it.addPath(path + it.name(), df) })
         }
     }
     dfs(this)
     return result
 }
 
-internal fun AnyFrame.collectTree() = columns().map { it.addPath() }.collectTree()
+internal fun AnyFrame.collectTree() = columns().map { it.addPath(this) }.collectTree()
 
 internal fun List<ColumnWithPath<*>>.collectTree() = collectTree(DataColumn.empty()) { it }
 
-internal fun <D> AnyFrame.collectTree(emptyData: D, createData: (AnyCol) -> D) = columns().map { it.addPath() }.collectTree(emptyData, createData)
+internal fun <D> AnyFrame.collectTree(emptyData: D, createData: (AnyCol) -> D) = columns().map { it.addPath(this) }.collectTree(emptyData, createData)
 
 internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (AnyCol) -> D): TreeNode<D> {
 
@@ -367,5 +366,5 @@ internal fun <C> List<ColumnWithPath<C>>.shortenPaths(): List<ColumnWithPath<C>>
 
     val pathRemapping = map.map { it.value.single().path to it.key }.toMap()
 
-    return map { it.data.addPath(pathRemapping[it.path]!!) }
+    return map { it.changePath(pathRemapping[it.path]!!) }
 }
