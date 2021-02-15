@@ -22,7 +22,7 @@ class DataFrameTreeTests : BaseTest() {
         val weight: Int?
     }
 
-    val df2 = df.move { name and city }.intoGroup("nameAndCity")
+    val df2 = df.move { name and city }.under("nameAndCity")
     val typed2 = df2.typed<GroupedPerson>()
 
     val DataRowBase<NameAndCity>.name @JvmName("get-name-row") get() = this["name"] as String
@@ -175,7 +175,7 @@ class DataFrameTreeTests : BaseTest() {
     fun spread() {
 
         val modified = df.append("Alice", 55, "Moscow", 100)
-        val df2 =  modified.move { name and city }.intoGroup("nameAndCity")
+        val df2 =  modified.move { name and city }.under("nameAndCity")
         val typed2 = df2.typed<GroupedPerson>()
 
         val expected = modified.typed<Person>().select { name and city and age }.groupBy { city }.sortBy { city.nullsLast }.map { key1, group ->
@@ -264,13 +264,6 @@ class DataFrameTreeTests : BaseTest() {
         nameGroup.isGroup() shouldBe true
         nameGroup.ncol() shouldBe typed2.nameAndCity.name.map { it.length }.max()
         nameGroup.columnNames() shouldBe (0 until nameGroup.ncol()).map { "char$it" }
-    }
-
-    @Test
-    fun `split into parts`() {
-
-        val split = typed2.split { nameAndCity.name }.by { it.toCharArray().toList() }.intoParts()
-        split.nameAndCity.columnNames() shouldBe (0 until split.nameAndCity.ncol() -1).map { "part$it" } + "city"
     }
 
     @Test
