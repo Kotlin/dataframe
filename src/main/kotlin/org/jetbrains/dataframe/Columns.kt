@@ -207,8 +207,6 @@ internal fun <T> MapColumn<*>.typed() = this as MapColumn<T>
 
 internal fun <T> AnyCol.grouped() = this as org.jetbrains.dataframe.api.columns.ColumnGroup<T>
 
-inline fun <reified T> AnyCol.cast(): DataColumn<T> = DataColumn.create(name(), toList() as List<T>, getType<T>().withNullability(hasNulls))
-
 internal fun <T> MapColumn<*>.withDf(newDf: DataFrame<T>) = DataColumn.createGroup(name(), newDf)
 
 internal fun <T> Iterable<T>.asList() = when (this) {

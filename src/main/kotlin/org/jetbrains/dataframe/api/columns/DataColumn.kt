@@ -71,6 +71,8 @@ interface DataColumn<out T> : ColumnReference<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? = this.addPath(context.df)
 }
 
+val AnyCol.valueClass get() = type.classifier
+
 fun <C> DataColumn<C>.allNulls() = size == 0 || (hasNulls && ndistinct == 1)
 
 fun <T> DataColumn<T>.isSubtypeOf(type: KType) = this.type.isSubtypeOf(type) && (!this.type.isMarkedNullable || type.isMarkedNullable)
