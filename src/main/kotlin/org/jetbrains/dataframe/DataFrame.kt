@@ -127,7 +127,7 @@ interface DataFrame<out T> : DataFrameBase<T> {
     fun getColumnIndex(col: AnyCol) = getColumnIndex(col.name())
 
     fun <R> tryGetColumn(column: ColumnReference<R>): DataColumn<R>? =
-        tryGetColumn(column.columnPath()) as? DataColumn<R>
+        tryGetColumn(column.path()) as? DataColumn<R>
 
     override fun tryGetColumn(columnName: String): AnyCol? =
         getColumnIndex(columnName).let { if (it != -1) column(it) else null }

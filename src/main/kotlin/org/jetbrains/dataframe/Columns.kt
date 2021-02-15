@@ -36,7 +36,7 @@ interface ColumnReference<out C> : SingleColumn<C> {
 
     fun name(): String
 
-    fun columnPath(): ColumnPath = listOf(name)
+    fun path(): ColumnPath = listOf(name)
 
     operator fun invoke(row: AnyRow) = row[this]
 
@@ -78,7 +78,7 @@ class ColumnDefinition<T> : ColumnReference<T> {
 
     override fun name() = path.last()
 
-    override fun columnPath() = path
+    override fun path() = path
 
     operator fun getValue(thisRef: Any?, property: KProperty<*>) = this
 

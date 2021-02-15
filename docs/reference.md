@@ -30,16 +30,16 @@
 * [Modify schema](#modify-schema)
     * [`select`](#select)
     * [`add`](#add)
-    * [`move`](#move)
     * [`remove`](#remove)
     * [`cast`](#cast)
-    * `split`
+    * [`split`](#split)
     * `mergeCols`
-    * `group`
-    * `ungroup`
-    * `flatten`
     * `rename`
     * `replace`
+    * [`move`](#move)    
+    * `group`
+    * `ungroup`
+    * `flatten`    
     * `gather`
     * `spread`    
 * Update data
@@ -317,14 +317,65 @@ df + {
    "name length" { name.length } 
 }
 ```
+### remove
+Removes columns from `DataFrame`
+```kotlin
+df.remove { columns }
+df - { columns }
+```
+See [Column Selectors](#column-selectors) for column selection syntax
+### cast
+Changes the type of columns. Supports automatic type conversions between value types `Int`, `String`, `Double`, `Long`, `Short`, `Float`,`BigDecimal`
+```kotlin
+df.cast { age }.to<Double>()
+```
+Helper functions for value types are also available
+```kotlin
+df.cast { age }.toFloat()
+df.cast { all() }.toStr()
+``` 
+### split
+Splits cell value into several values and spreads them horizontally or vertically.
+
+Split cells horizontally:
+```
+df.split { columns }
+    [.by(delimeters) | .by { splitter }] // how to split cell value
+    [.inward()] // nest resulting columns into original column
+    .into(columnNames) | .into { columnNamesGenerator } // how to get new column names
+```
+Examples:
+```kotlin
+// artifactId -> groupId, artifactId, version 
+df.split { artifactId }.by(":").into("groupId", "artifactId", "version")
+
+// info -> info.age, info.weight
+df.split { info }.inward().into("age", "weight")
+
+// address -> address0, address1, address2, address3 ...
+df.split { address }.into { "address$it" }
+```
+
+Split cells vertically:
+```
+df.split { columns } 
+    [.by(delimeters) / .by { splitter }]
+    .intoRows()
+
+df.splitRows { columns } // if columns already contain lists of values
+```
+
 ### move
 Moves one or several columns within `DataFrame`.
 ```kotlin
-df.move { columns }.into(columnPath)
+df.move { column }.into(columnPath)
 df.move { columns }.into { columnPathExpression }
+df.move { columns }.under(parentPath)
+df.move { columns }.under { parentPathExpression }
+df.move { columns }.toTop { columnNameExpression }
 df.move { columns }.to(position)
 df.move { columns }.toLeft()
-df.move { columns }.intoGroup(groupName)
+df.move { columns }.toRight()
 ```
 See [Column Selectors](#column-selectors) for column selection syntax.
 
@@ -342,9 +393,12 @@ df.move { weight }.to(1)
 // name -> info.name
 df.move { name }.into("info", "name")
 
+// name -> info.name
+df.move { name }.into { info + "name" } // 'info' column should already exist
+
 // firstName -> fullName.firstName
 // lastName -> fullName.lastName
-df.move { firstName and lastName }.intoGroup("fullName")
+df.move { firstName and lastName }.under("fullName")
 
 // firstName -> fullName.first
 // lastName -> fullName.last
@@ -357,6 +411,10 @@ df.move { all() }.into { it.name.split(":") }
 // totalRecovered -> total.recovered
 df.move { cols { it.name.startsWith("total") } }.into { path("total", it.name.substring(5).decapitalize()) }
 
+// some.path.data1 -> new.column.path.data1
+// another.path.data2 -> new.column.path.data2
+df.move { colsDfs { it.parent.name == "path" } }.under { new.column.path } // new.column.path should aready exists
+
 // info.default.data -> default
 // some.field.data -> field
 df.move { colsDfs { it.name == "data" } }.toTop { it.parent.name }
@@ -365,24 +423,6 @@ df.move { colsDfs { it.name == "data" } }.toTop { it.parent.name }
 // a.b.c -> a.b.c
 df.move { colsDfs { it.path.length == 2 } }.into { it.path.reverse() }
 ```
-### remove
-Removes columns from `DataFrame`
-```kotlin
-df.remove { columns }
-df - { columns }
-```
-See [Column Selectors](#column-selectors) for column selection syntax
-### cast
-Changes the type of columns. Supports automatic type conversions between value types `Int`, `String`, `Double`, `Long`, `Short`, `Float`,`BigDecimal`
-```kotlin
-df.cast { age }.to<Double>()
-```
-Helper functions without type arguments are available for value types
-```kotlin
-df.cast { age }.toFloat()
-df.cast { all() }.toStr()
-``` 
-
 ## Column Selectors
 `DataFrame` provides a column selection DSL for selecting arbitrary set of columns.
 Column selectors are used in many operations, such as [select](#select), [move](#move), [remove](#remove), [gather](#gather), [update](#update), [sortBy](#sortBy)

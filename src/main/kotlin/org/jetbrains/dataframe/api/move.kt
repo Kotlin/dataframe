@@ -42,23 +42,17 @@ interface DataFrameForMove<T> : DataFrameBase<T> {
 
 internal class MoveReceiver<T>(df: DataFrame<T>) : DataFrameReceiver<T>(df, false), DataFrameForMove<T>
 
-fun <T, C> MoveColsClause<T, C>.intoGroup(groupPath: DataFrameForMove<T>.(DataFrameForMove<T>) -> List<String>): DataFrame<T> {
-    val receiver = MoveReceiver(df)
-    val path = groupPath(receiver, receiver)
-    val columnsToInsert = removed.map { ColumnToInsert(path + it.name, it, it.data.column!!) }
-    return df.doInsert(columnsToInsert)
-}
-
-fun <T, C> MoveColsClause<T, C>.intoGroups(groupName: DataFrameForMove<T>.(ColumnWithPath<C>) -> String): DataFrame<T> {
+fun <T, C> MoveColsClause<T, C>.under(parentPath: DataFrameForMove<T>.(ColumnWithPath<C>) -> List<String>): DataFrame<T> {
     val receiver = MoveReceiver(df)
     val columnsToInsert = removed.map {
         val col = it.column
-        ColumnToInsert(listOf(groupName(receiver, col), it.name), it, col.data)
+        ColumnToInsert(parentPath(receiver, col) + it.name, it, col.data)
     }
     return df.doInsert(columnsToInsert)
 }
 
-fun <T, C> MoveColsClause<T, C>.toTop(groupNameExpression: DataFrameForMove<T>.(ColumnWithPath<C>) -> String = { it.name() }) = into { listOf(groupNameExpression(it)) }
+fun <T, C> MoveColsClause<T, C>.toTop(groupNameExpression: DataFrameForMove<T>.(ColumnWithPath<C>) -> String = { it.name() }) =
+    into { listOf(groupNameExpression(it)) }
 
 fun <T, C> MoveColsClause<T, C>.intoIndexed(newPathExpression: DataFrameForMove<T>.(ColumnWithPath<C>, Int) -> ColumnPath): DataFrame<T> {
     var counter = 0
@@ -77,11 +71,13 @@ fun <T, C> MoveColsClause<T, C>.into(newPathExpression: DataFrameForMove<T>.(Col
     return df.doInsert(columnsToInsert)
 }
 
-fun <T, C> MoveColsClause<T, C>.into(name: String) = into { listOf(name) }
-fun <T, C> MoveColsClause<T, C>.intoGroup(name: String) = intoGroup { listOf(name) }
-fun <T, C> MoveColsClause<T, C>.intoGroup(groupRef: MapColumnReference) = intoGroup(groupRef.name())
+fun <T, C> MoveColsClause<T, C>.into(vararg path: String) = into(path.toList())
+fun <T, C> MoveColsClause<T, C>.into(path: ColumnPath) = into { path }
 
-fun <T, C> MoveColsClause<T, C>.into(path: List<String>) = intoGroup { path }
+fun <T, C> MoveColsClause<T, C>.under(vararg path: String) = under(path.toList())
+fun <T, C> MoveColsClause<T, C>.under(path: ColumnPath) = under { path }
+fun <T, C> MoveColsClause<T, C>.under(groupRef: MapColumnReference) = under(groupRef.path())
+
 fun <T, C> MoveColsClause<T, C>.to(columnIndex: Int): DataFrame<T> {
     val newColumnList = df.columns().subList(0, columnIndex) + removed.map { it.data.column as DataColumn<C> } + df.columns().subList(columnIndex, df.ncol())
     return newColumnList.asDataFrame()
