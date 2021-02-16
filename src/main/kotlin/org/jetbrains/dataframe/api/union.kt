@@ -7,6 +7,9 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 fun Iterable<AnyFrame>.union() = merge(asList())
+
+fun DataColumn<AnyFrame>.union() = values.union()
+
 internal fun merge(dataFrames: List<AnyFrame>): AnyFrame {
     if (dataFrames.size == 1) return dataFrames[0]
 
