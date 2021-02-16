@@ -1169,6 +1169,15 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun castToDate() {
+
+        val time by column("2020-01-06", "2020-01-07")
+        val df = dataFrameOf(time)
+        val casted = df.cast(time).toDate()
+        casted[time].type shouldBe getType<LocalDate>()
+    }
+
+    @Test
     fun replace() {
 
         val res = typed.replace { age }.with { 2021 - age named "year" }

@@ -39,7 +39,7 @@
     * [`move`](#move)    
     * [`group`](#group)
     * `ungroup`
-    * `flatten`    
+    * `flatten`
     * `gather`
     * `spread`    
 * Update data

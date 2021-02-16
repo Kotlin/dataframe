@@ -5,6 +5,7 @@ import org.jetbrains.dataframe.api.columns.allNulls
 import org.jetbrains.dataframe.impl.columns.DataColumnInternal
 import org.jetbrains.dataframe.impl.createDataCollector
 import java.math.BigDecimal
+import java.time.LocalDate
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -110,6 +111,7 @@ fun <T> CastClause<T>.toFloat() = to<Float>()
 fun <T> CastClause<T>.toStr() = to<String>()
 fun <T> CastClause<T>.toLong() = to<Long>()
 fun <T> CastClause<T>.toBigDecimal() = to<BigDecimal>()
+fun <T> CastClause<T>.toDate() = to<LocalDate>()
 
 internal class StringParser<T : Any>(val type: KType, val parse: (String) -> T?) {
     fun toConverter(): TypeConverter = { parse(it as String) }
@@ -135,7 +137,8 @@ internal object Parsers {
         stringParser { it.toLongOrNull() },
         stringParser { it.toDoubleOrNull() },
         stringParser { it.toBooleanOrNull() },
-        stringParser { it.toBigDecimalOrNull() }
+        stringParser { it.toBigDecimalOrNull() },
+        stringParser { try {LocalDate.parse(it)}catch(e:Throwable){ null}}
     )
 
     private val parsersMap = All.associateBy { it.type }
