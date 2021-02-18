@@ -59,7 +59,7 @@ fun <A, B> DataFrame<A>.leftJoin(other: DataFrame<B>, selector: JoinColumnSelect
 fun <A, B> DataFrame<A>.rightJoin(other: DataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.RIGHT, selector = selector)
 fun <A, B> DataFrame<A>.outerJoin(other: DataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.OUTER, selector = selector)
 fun <A, B> DataFrame<A>.filterJoin(other: DataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.INNER, addNewColumns = false, selector = selector)
-fun <A, B> DataFrame<A>.filterNotJoin(other: DataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.EXCLUDE, addNewColumns = false, selector = selector)
+fun <A, B> DataFrame<A>.excludeJoin(other: DataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.EXCLUDE, addNewColumns = false, selector = selector)
 
 fun <T> Iterable<DataFrame<T>>.joinOrNull(joinType: JoinType = JoinType.INNER, selector: JoinColumnSelector<T, T> = defaultJoinColumns(this)) =
         fold<DataFrame<T>, DataFrame<T>?>(null) { joined, new -> joined?.join(new, joinType, selector = selector) ?: new }
