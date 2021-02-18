@@ -102,7 +102,7 @@ class JoinTests : BaseTest() {
     @Test
     fun `filter not join`() {
 
-        val res = typed.filterNotJoin(typed2) { city.match(right.origin) }
+        val res = typed.excludeJoin(typed2) { city.match(right.origin) }
         res.nrow() shouldBe 3
         res.city.toSet() shouldBe typed.city.toSet() - typed2.origin.toSet()
 

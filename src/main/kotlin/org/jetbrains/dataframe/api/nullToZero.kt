@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.api.columns.ColumnSet
+import java.math.BigDecimal
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
 
@@ -18,8 +19,9 @@ fun <T> DataFrame<T>.nullToZero(cols: Iterable<ColumnReference<Number?>>) = null
 
 internal fun <T> DataFrame<T>.nullColumnToZero(type: KType, cols: Iterable<ColumnReference<Number?>>) =
         when (type.jvmErasure) {
-            Double::class -> update(cols).with { it as Double? ?: .0 }
-            Int::class -> update(cols).with { it as Int? ?: 0 }
-            Long::class -> update(cols).with { it as Long? ?: 0 }
+            Double::class -> fillNulls(cols).with { .0 }
+            Int::class -> fillNulls(cols).with { 0 }
+            Long::class -> fillNulls(cols).with { 0L }
+            BigDecimal::class -> fillNulls(cols).with { BigDecimal.ZERO }
             else -> throw IllegalArgumentException()
         }

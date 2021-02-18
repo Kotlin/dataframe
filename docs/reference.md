@@ -38,17 +38,18 @@
     * [`replace`](#replace)
     * [`move`](#move)    
     * [`group`](#group)
-    * `ungroup`
-    * `flatten`
-    * `gather`
-    * `spread`    
-* Update data
-    * `update`
-    * `fillNulls`
-    * `nullToZero`
-* Merge several data frames
-    * `union`
-    * `join`
+    * [`ungroup`](#ungroup)
+    * [`flatten`](#flatten)
+    * [`gather`](#gather)
+    * [`spread`](#spread)    
+* [Update data](#update-data)
+    * [`update`](#update)
+    * [`fillNulls`](#fillNulls)
+    * [`nullToZero`](#nullToZero)
+* [Merge dataframes](#merge-dataframes)
+    * [`add`](#add-columns)
+    * [`union`](#union)
+    * [`join`](#join)
 * Modify column
     * `distinct`
     * `digitize`
@@ -477,12 +478,278 @@ Examples
 df.group { firstName and lastName }.into("name")
 df.group { nameContains(":") }.into { name.substringBefore(":") }
 ```
+### ungroup
+Replaces `MapColumn` with its nested columns. Reverse operation to [group](#group)
+```kotlin
+// fullName.firstName -> firstName
+// fullName.lastName -> lastName
+df.ungroup { fullName }
+``` 
+### flatten
+Removes all column grouping under selected columns. Potential column name clashes are resolved by adding minimal required prefix from ancestor column names  
+```
+df.flatten()
+df.flatten { rootColumns }
+```
+Example
+```kotlin
+// a.b.c.d -> "d"
+// a.f -> "f"
+// a.c.d.e -> "d.e"
+// a.b.e -> "b.e"
+df.flatten { a }
+```
+### gather
+Converts several columns into two `key-value` columns, where `key` is a name of original column and `value` is column data
+This is reverse to [spread](#spread)
+```
+// minimal
+df.gather { columns }.into(keyColumnName)
+
+// maximal
+df.gather { columns }.where { valueFilter }.map { valueTransform }.mapNames { keyTransform }.into(keyColumnName, valueColumnName)
+```
+**Input**
+
+| city | Feb, 18 | Feb, 19 | Feb, 20 | Feb, 21 
+|--------|---------|---------|--------|---
+| London | 3 | 5 | 4 | null
+| Milan  | 7 | null | 3 | 5
+```kotlin
+df.gather { cols(1..4) }.where { it != null}.mapNames { it.substring(5) }.into("day", "temperature")
+```
+**Output**
+
+| city | day | temperature 
+|--------|---------|---------
+| London | 18 | 3
+| London | 19 | 5
+| London | 20 | 4
+| Milan | 18 | 7
+| Milan | 20 | 3
+| Milan | 21 | 5
+
+When `valueColumnName` is not defined, only 'key' column is added. In this case `valueFilter` will default to `{ it }` for `Boolean` columns and `{ it != null }` for other columns
+
+**Input**
+
+name | London | Paris | Milan
+-----|--------|-------|-------
+Alice| true | false | true
+Bob | false | true | true
+```kotlin
+df.gather { cols(1..4) }.into("visited")
+```
+**Output**
+
+name | visited
+-----|--------
+Alice | London
+Alice | Milan
+Bob | Paris
+Bob | Milan
+
+### spread
+Converts two key-value columns into several columns using values in `key` column as new column names and values in `value` column as new column values.
+This is reverse to [gather](#gather) 
+```
+df.spread { keyColumn }.by { valueColumn }.into { keyTransform }
+```
+**Input**
+
+| city | day | temperature 
+|--------|---------|---------
+| London | 18 | 3
+| London | 19 | 5
+| London | 20 | 4
+| Milan | 18 | 7
+| Milan | 20 | 3
+| Milan | 21 | 5
+
+```kotlin
+df.spread { day }.by { temperature }.into { " Feb, $it" }
+```
+**Output**
+
+| city | Feb, 18 | Feb, 19 | Feb, 20 | Feb, 21 
+|--------|---------|---------|--------|---
+| London | 3 | 5 | 4 | null
+| Milan  | 7 | null | 3 | 5
+# Update data
+Note that all update operations return a new instance of `DataFrame`
+## update
+Changes values in some cells
+```
+df.update { columns }.with { valueExpression }
+df.update { columns }.where { valueFilter }.with { valueExpression }
+df.update { columns }.where { valueFilter }.withNull()
+df.update { columns }.notNull { valueExpression }
+
+valueExpression = DataRow.(OldValue) -> NewValue
+```
+Examples
+```kotlin
+df.update { price }.with { it * 2 }
+df.update { age }.where { name == "Alice" }.with { 20 }
+df.update { price }.with { (it + (prev?.price ?: it) + (next?.price ?: it)) / 3 }
+df.update { cases }.with { it.toDouble() / population * 100 }
+```
+## fillNulls
+Replaces `null` values with expression. Equivalent to
+```
+update { columns }.where { it == null }
+```
+Example
+```kotlin
+df.fillNulls { intCols() }.with { -1 } 
+```
+## nullToZero
+Replace `null` values with `0`. Works for `Int`, `Double`, `Long` and `BigDecimal` columns.
+```kotlin
+df.nullToZero { columns }
+```
+# Merge dataframes
+## Add columns
+Adds columns from another dataframe. New columns must have the same length as original columns
+```
+df.add(otherDf)
+```
+## union
+Adds rows from another dataframe. Columns from both dataframes are unioned, values in missing columns are replaced with `null`
+```
+df.union(otherDf)
+df + otherDf
+```
+**Input**
+
+name | age
+---|---
+Alice | 15
+Bob | 20
+
+name | weight
+---|---
+Mark |60
+Bob |70
+
+```kotlin
+df1 + df2
+```
+**Output**
+
+name|age|weight
+---|---|---
+Alice | 15 | null
+Bob | 20 | null
+Mark | null | 60
+Bob | null |70
+
+## join
+SQL-like joins. Matches rows from two dataframes by key columns and creates cross-product of other columns
+```
+df.innerJoin(otherDf) { columnMatches }
+df.leftJoin(otherDf) { columnMatches }
+df.rightJoin(otherDf) { columnMatches }
+df.outerJoin(otherDf) { columnMatches }
+df.filterJoin(otherDf) { columnMatches }
+df.excludeJoin(otherDf) { columnMatches }
+
+df.join(otherDf) { columnMatches } // same as innerJoin
+```
+To match columns with different names use `match` operation and `right` property to reference second `DataFrame`:
+```kotlin
+val df1 = dataFrameOf("name", "origin")("Alice", "London", "Bob", "Milan")
+val df2 = dataFrameOf("city", "country")("London", "UK", "Milan", "Italy") 
+                    
+df1.join(df2) { origin.match(right.city) }
+df1.join(df2) { origin match right.city } // infix form
+```
+To match columns with equal names just reference column in first `DataFrame`
+```kotlin
+df1.join(df2) { city }
+df1.join(df2) { firstName and lastName }
+```
+If `columnMatches` expression is ommited, all columns with equal names are used for matching
+
+```
+df1
+```
+
+name | age
+---|---
+Alice | 15
+Bob | 20
+
+```
+df2
+```
+
+name | weight
+---|---
+Mark |60
+Bob |70
+
+```kotlin
+df1.join(df2)
+```
+
+name|age|weight
+---|---|---
+Bob | 20 | 70
+
+```kotlin
+df1.leftJoin(df2)
+```
+
+name|age|weight
+---|---|---
+Alice | 15 | null
+Bob | 20 | 70
+
+```kotlin
+df1.rightJoin(df2)
+```
+
+name|age|weight
+---|---|---
+Bob | 20 | 70
+Mark | null | 60
+
+```kotlin
+df1.outerJoin(df2)
+```
+
+name|age|weight
+---|---|---
+Alice | 15 | null
+Bob | 20 | 70
+Mark | null | 60
+
+```kotlin
+df1.filterJoin(df2)
+```
+
+name|age
+---|---
+Bob | 20 
+
+```kotlin
+df1.excludeJoin(df2)
+```
+
+name|age
+---|---
+Alice | 15 
+
 ## Column Selectors
 `DataFrame` provides a column selection DSL for selecting arbitrary set of columns.
-Column selectors are used in many operations, such as [select](#select), [move](#move), [remove](#remove), [gather](#gather), [update](#update), [sortBy](#sortBy)
-Common syntax for using column selector is
+Column selectors are used in many operations:
 ```
-df.operation { columnSelector }
+df.select { columns }
+df.remove { columns }
+df.update { columns }.with { expression }
+df.gather { columns }.into(keyName, valueName)
+df.move { columns }.under(groupName)
 ```
 ### Select single column
 ```
@@ -526,7 +793,7 @@ columnSet.filter { condition } // filter columns set by condition
 columnSet.except { otherColumnSet }
 columnSet.except ( otherColumnSet )
 ```
-Column selectors can be used to select subcolumns of a particular `MapColumn`
+Column selectors can be used to select subcolumns of a `MapColumn`
 ```kotlin
 val firstName by column("Alice", "Bob")
 val middleName by column("Jr", null)
