@@ -15,13 +15,13 @@ See [API reference](docs/reference.md) for a list of  supported operations
 
 ## Setup
 
-Gradle:
+### Gradle
 ```
 repositories {
     maven { url 'https://kotlin.bintray.com/kotlin-datascience' }
 }
 dependencies {
-    compile 'org.jetbrains.kotlin:dataframe:0.0.8-dev-89'
+    compile 'org.jetbrains.kotlin:dataframe:0.7.2'
 }
 ```
 
@@ -95,5 +95,3 @@ df.filter { survived && home.endsWith("NY") && age in 10..20 }
 Extension properties are generated for `DataSchema` that is extracted from `DataFrame` instance after REPL line execution.
 After that `DataFrame` variable is typed with its own `DataSchema`, so only valid extension properties corresponding 
 to actual columns in `DataFrame` will be allowed by compiler and suggested by completion.
-
-### Column nullability
