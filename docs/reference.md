@@ -17,6 +17,10 @@
     * [by column](#by-column)
     * [by row](#by-row)
     * [as Iterable](#as-iterable)
+* [Modify cells](#modify-cells)
+    * [`update`](#update)
+    * [`fillNulls`](#fillNulls)
+    * [`nullToZero`](#nullToZero)    
 * [Modify rows](#modify-rows)
     * [`filter`](#filter)
     * [`sortBy`](#sortBy)
@@ -27,7 +31,7 @@
     * [`shuffled`](#shuffled)
     * [`take`/`takeLast`](#take--takelast)
     * [`drop`/`dropLast`](#drop--droplast)
-* [Modify schema](#modify-schema)
+* [Modify columns](#modify-columns)
     * [`select`](#select)
     * [`add`](#add)
     * [`remove`](#remove)
@@ -42,23 +46,19 @@
     * [`flatten`](#flatten)
     * [`gather`](#gather)
     * [`spread`](#spread)    
-* [Update data](#update-data)
-    * [`update`](#update)
-    * [`fillNulls`](#fillNulls)
-    * [`nullToZero`](#nullToZero)
 * [Merge dataframes](#merge-dataframes)
     * [`add`](#add-columns)
     * [`union`](#union)
     * [`join`](#join)
-* Modify column
-    * `distinct`
-    * `digitize`
-    * arithmetic operations
-* Column statistics
-    * `sum`
-    * `min` / `max`
-    * `mean`
-    * `median`
+* [Single column operations](#single-column-operations)
+    * [`distinct`](#distinct)
+    * [`digitize`](#digitize)
+    * [`Arithmetic operations`](#arithmetic-operations)
+    * Statistics
+        * `sum`
+        * `min` / `max`
+        * `mean`
+        * `median`
 * Grouped data frame aggregation
     * `spread`
     * `countBy`
@@ -161,6 +161,39 @@ df.asIterable()
 or to `Sequence`
 ```kotlin
 df.asSequence()
+```
+# Modify cells
+Note that all update operations return a new instance of `DataFrame`
+## update
+Changes values in some cells
+```
+df.update { columns }.with { valueExpression }
+df.update { columns }.where { valueFilter }.with { valueExpression }
+df.update { columns }.where { valueFilter }.withNull()
+df.update { columns }.notNull { valueExpression }
+
+valueExpression = DataRow.(OldValue) -> NewValue
+```
+Examples
+```kotlin
+df.update { price }.with { it * 2 }
+df.update { age }.where { name == "Alice" }.with { 20 }
+df.update { price }.with { (it + (prev?.price ?: it) + (next?.price ?: it)) / 3 }
+df.update { cases }.with { it.toDouble() / population * 100 }
+```
+## fillNulls
+Replaces `null` values with expression. Equivalent to
+```
+update { columns }.where { it == null }
+```
+Example
+```kotlin
+df.fillNulls { intCols() }.with { -1 } 
+```
+## nullToZero
+Replace `null` values with `0`. Works for `Int`, `Double`, `Long` and `BigDecimal` columns.
+```kotlin
+df.nullToZero { columns }
 ```
 ## Modify rows
 `DataFrame` is immutable, so all modification operations return a new instance
@@ -292,7 +325,7 @@ Returns `DataFrame` containing all rows except first/last `n` rows
 df.drop(10)
 df.dropLast(20)
 ```
-## Modify schema
+## Modify columns
 Note that `DataFrame` object is immutable, so all modification operations return a new instance of `DataFrame`
 ### add
 Adds new column to `DataFrame`
@@ -575,39 +608,6 @@ df.spread { day }.by { temperature }.into { " Feb, $it" }
 |--------|---------|---------|--------|---
 | London | 3 | 5 | 4 | null
 | Milan  | 7 | null | 3 | 5
-# Update data
-Note that all update operations return a new instance of `DataFrame`
-## update
-Changes values in some cells
-```
-df.update { columns }.with { valueExpression }
-df.update { columns }.where { valueFilter }.with { valueExpression }
-df.update { columns }.where { valueFilter }.withNull()
-df.update { columns }.notNull { valueExpression }
-
-valueExpression = DataRow.(OldValue) -> NewValue
-```
-Examples
-```kotlin
-df.update { price }.with { it * 2 }
-df.update { age }.where { name == "Alice" }.with { 20 }
-df.update { price }.with { (it + (prev?.price ?: it) + (next?.price ?: it)) / 3 }
-df.update { cases }.with { it.toDouble() / population * 100 }
-```
-## fillNulls
-Replaces `null` values with expression. Equivalent to
-```
-update { columns }.where { it == null }
-```
-Example
-```kotlin
-df.fillNulls { intCols() }.with { -1 } 
-```
-## nullToZero
-Replace `null` values with `0`. Works for `Int`, `Double`, `Long` and `BigDecimal` columns.
-```kotlin
-df.nullToZero { columns }
-```
 # Merge dataframes
 ## Add columns
 Adds columns from another dataframe. New columns must have the same length as original columns
@@ -664,12 +664,12 @@ val df2 = dataFrameOf("city", "country")("London", "UK", "Milan", "Italy")
 df1.join(df2) { origin.match(right.city) }
 df1.join(df2) { origin match right.city } // infix form
 ```
-To match columns with equal names just reference column in first `DataFrame`
+To match columns with equal names just use column from the first `DataFrame`
 ```kotlin
 df1.join(df2) { city }
 df1.join(df2) { firstName and lastName }
 ```
-If `columnMatches` expression is ommited, all columns with equal names are used for matching
+If `columnMatches` is ommited, all columns with matching names are used
 
 ```
 df1
@@ -741,6 +741,28 @@ name|age
 ---|---
 Alice | 15 
 
+## Single column operations
+Operations for a single `DataColumn` object
+### distinct
+Return `DataColumn` with unique values
+```
+column.distinct()
+``` 
+### digitize
+Return `DataColumn` with indices of the bins to which each value in original `DataColumn` belongs
+```
+column.digitize(bins, right = false)
+column.digitize(bin0, bin1, bin2)
+column.digitize(bin0, bin1, bin2, right = true)
+```
+`right` is an optional parameter indicating whether to include right edge of the bin into interval instead of left edge. By default, `right = false`
+
+For value `x` an index `i` is returned when
+`bins[i-1] <= x < bins[i]` if `right = false`
+`bins[i-1] < x <= bins[i]` if `right = true`
+If `x` is below all bins, 0 is returned. If `x` is above all bins, `bins.length` is returned
+### Arithmetic operations
+For `Int`, `Double`, `Long` and `BigDecimal` columns `+`, `-`, `*`, `/` operations with scalar values are supported 
 ## Column Selectors
 `DataFrame` provides a column selection DSL for selecting arbitrary set of columns.
 Column selectors are used in many operations:
