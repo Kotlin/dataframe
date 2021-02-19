@@ -180,13 +180,13 @@ inline fun <reified T> ColumnReference<T>.withValues(values: List<T>, hasNulls: 
 
 // TODO: implement correct base schema computation
 internal fun <T> Iterable<DataFrame<T>?>.getBaseSchema(): DataFrame<T> {
-    return first { it != null && it.ncol() > 0 } ?: DataFrame.empty()
+    return first { it != null && it.ncol() > 0 } ?: DataFrame.empty().typed()
 }
 
 fun <T> DataColumn<T>.withValues(values: List<T>, hasNulls: Boolean) = when (this) {
     is FrameColumn<*> -> {
         val dfs = (values as List<AnyFrame>)
-        DataColumn.createTable(name(), dfs, dfs.getBaseSchema()) as DataColumn<T>
+        DataColumn.create(name(), dfs, dfs.getBaseSchema()) as DataColumn<T>
     }
     else -> DataColumn.create(name(), values, type.withNullability(hasNulls))
 }
@@ -207,7 +207,7 @@ internal fun <T> MapColumn<*>.typed() = this as MapColumn<T>
 
 internal fun <T> AnyCol.grouped() = this as org.jetbrains.dataframe.api.columns.ColumnGroup<T>
 
-internal fun <T> MapColumn<*>.withDf(newDf: DataFrame<T>) = DataColumn.createGroup(name(), newDf)
+internal fun <T> MapColumn<*>.withDf(newDf: DataFrame<T>) = DataColumn.create(name(), newDf)
 
 internal fun <T> Iterable<T>.asList() = when (this) {
     is List<T> -> this
@@ -282,7 +282,7 @@ fun <T> columnList(name: String) = column<List<T>>(name)
 
 fun <T> column(name: String) = ColumnDefinition<T>(name)
 
-interface ColumnProvider<T>{
+interface ColumnProvider<out T>{
     operator fun getValue(thisRef: Any?, property: KProperty<*>): DataColumn<T>
 }
 
@@ -290,25 +290,35 @@ class DataColumnDelegate<T>(val values: List<T>, val type: KType): ColumnProvide
     override operator fun getValue(thisRef: Any?, property: KProperty<*>) = DataColumn.create(property.name, values, type)
 }
 
-class ColumnGroupDelegate(val columns: List<AnyCol>): ColumnProvider<AnyRow> {
-    override operator fun getValue(thisRef: Any?, property: KProperty<*>): DataColumn<DataRow<*>> = DataColumn.createGroup(property.name, columns.toDataFrame())
+class MapColumnDelegate(val columns: List<AnyCol>): ColumnProvider<AnyRow> {
+    override operator fun getValue(thisRef: Any?, property: KProperty<*>): DataColumn<DataRow<*>> = DataColumn.create(property.name, columns.toDataFrame())
 }
 
-inline fun <reified T> column(vararg values: T): ColumnProvider<T> = when {
-    values.all { it is AnyCol } -> ColumnGroupDelegate(values.toList() as List<AnyCol>)  as ColumnProvider<T>
+class FrameColumnDelegate(val frames: List<AnyFrame>): ColumnProvider<AnyFrame> {
+    override fun getValue(thisRef: Any?, property: KProperty<*>): DataColumn<AnyFrame> = DataColumn.create(property.name, frames)
+}
+
+inline fun <reified T> column(values: Iterable<T>): ColumnProvider<T> = when {
+    values.all { it is AnyCol } -> MapColumnDelegate(values.toList() as List<AnyCol>)  as ColumnProvider<T>
     else -> DataColumnDelegate(values.toList(), getType<T>())
 }
 
-fun column(vararg values: AnyCol) = ColumnGroupDelegate(values.toList())
+inline fun <reified T> column(vararg values: T) = column(values.asIterable())
+
+fun column(vararg values: AnyCol) = MapColumnDelegate(values.toList())
+
+fun column(vararg frames: AnyFrame) = column(frames.asIterable())
+
+fun column(frames: Iterable<AnyFrame>) = FrameColumnDelegate(frames.toList())
 
 inline fun <reified T> column(name: String, values: List<T>): DataColumn<T> = when {
-    values.size > 0 && values.all {it is AnyCol} -> DataColumn.createGroup(name, values.map {it as AnyCol}.toDataFrame()) as DataColumn<T>
+    values.size > 0 && values.all {it is AnyCol} -> DataColumn.create(name, values.map {it as AnyCol}.toDataFrame()) as DataColumn<T>
     else -> column(name, values, values.any { it == null })
 }
 
 inline fun <reified T> column(name: String, values: List<T>, hasNulls: Boolean): DataColumn<T> = DataColumn.create(name, values, getType<T>().withNullability(hasNulls))
 
-fun columnGroup(vararg columns: AnyCol) = ColumnGroupDelegate(columns.toList())
+fun columnGroup(vararg columns: AnyCol) = MapColumnDelegate(columns.toList())
 
 class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
 
@@ -345,21 +355,21 @@ fun AnyFrame.nameGenerator() = ColumnNameGenerator(columnNames())
 fun <T, R> DataColumn<T>.map(transform: (T) -> R): DataColumn<R> {
     val collector = createDataCollector(size)
     values.forEach { collector.add(transform(it)) }
-    return collector.toColumn(name()).typed()
+    return collector.toColumn(name).typed()
 }
 
 fun <T, R> DataColumn<T>.map(type: KType?, transform: (T) -> R): DataColumn<R> {
     if (type == null) return map(transform)
     val collector = createDataCollector<R>(size, type)
     values.forEach { collector.add(transform(it)) }
-    return collector.toColumn(name()) as DataColumn<R>
+    return collector.toColumn(name) as DataColumn<R>
 }
 
 fun <C> DataColumn<C>.single() = values.single()
 
-fun <T> FrameColumn<T>.toDefinition() = frameColumn<T>(name())
-fun <T> MapColumn<T>.toDefinition() = columnGroup<T>(name())
-fun <T> ValueColumn<T>.toDefinition() = column<T>(name())
+fun <T> FrameColumn<T>.toDefinition() = frameColumn<T>(name)
+fun <T> MapColumn<T>.toDefinition() = columnGroup<T>(name)
+fun <T> ValueColumn<T>.toDefinition() = column<T>(name)
 
 internal abstract class MissingDataColumn<T> : DataColumn<T> {
 

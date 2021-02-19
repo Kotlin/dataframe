@@ -3,63 +3,71 @@
 **Table of contents**
 <!--- TOC -->
 
-* [Build](#build)
+* [Create `DataFrame`](#create-dataframe)
     * [from values](#from-values)
     * [from columns](#from-columns)
     * [from objects](#from-objects)
-* [Read](#read)
+* [Read `DataFrame`](#read-dataframe)
     * [from CSV](#read-csv)
     * [from JSON](#read-json)
 * Quick info
-    * `schema`
-    * `summary`
+    * [schema](#schema)
+    * [summary](#summary)
 * [Access data](#access-data)
     * [by column](#by-column)
     * [by row](#by-row)
     * [as Iterable](#as-iterable)
+* [Compute statistics](#compute-statistics)
+    * [count](#count)    
+    * [min/max](#min--max)
+    * [minBy/maxBy](#minBy--maxBy)
+    * [sum](#sum)
 * [Modify cells](#modify-cells)
-    * [`update`](#update)
-    * [`fillNulls`](#fillNulls)
-    * [`nullToZero`](#nullToZero)    
+    * [update](#update)
+    * [fillNulls](#fillNulls)
+    * [nullToZero](#nullToZero)    
 * [Modify rows](#modify-rows)
-    * [`filter`](#filter)
-    * [`sortBy`](#sortBy)
-    * [`distinct`](#distinct)
-    * [`mergeRows`](#mergeRows)
-    * [`append`](#append)
-    * [`groupBy`](#groupBy)
-    * [`shuffled`](#shuffled)
-    * [`take`/`takeLast`](#take--takelast)
-    * [`drop`/`dropLast`](#drop--droplast)
+    * [filter](#filter)
+    * [sortBy](#sortBy)
+    * [distinct](#distinct)
+    * [mergeRows](#mergeRows)
+    * [append](#append)
+    * [groupBy](#groupBy)
+    * [shuffled](#shuffled)
+    * [take/takeLast](#take--takelast)
+    * [drop/dropLast](#drop--droplast)
 * [Modify columns](#modify-columns)
-    * [`select`](#select)
-    * [`add`](#add)
-    * [`remove`](#remove)
-    * [`cast`](#cast)
-    * [`split`](#split)
-    * [`merge`](#merge)
-    * [`rename`](#rename)
-    * [`replace`](#replace)
-    * [`move`](#move)    
-    * [`group`](#group)
-    * [`ungroup`](#ungroup)
-    * [`flatten`](#flatten)
-    * [`gather`](#gather)
-    * [`spread`](#spread)    
+    * [select](#select)
+    * [add](#add)
+    * [remove](#remove)
+    * [cast](#cast)
+    * [split](#split)
+    * [merge](#merge)
+    * [rename](#rename)
+    * [replace](#replace)
+    * [move](#move)    
+    * [group](#group)
+    * [ungroup](#ungroup)
+    * [flatten](#flatten)
+    * [gather](#gather)
+    * [spread](#spread)
 * [Merge dataframes](#merge-dataframes)
-    * [`add`](#add-columns)
-    * [`union`](#union)
-    * [`join`](#join)
+    * [add](#add-columns)
+    * [union](#union)
+    * [join](#join)
 * [Single column operations](#single-column-operations)
-    * [`distinct`](#distinct)
-    * [`digitize`](#digitize)
-    * [`Arithmetic operations`](#arithmetic-operations)
-    * [`Column Statistics`](#column-statistics)
-* Grouped data frame aggregation
-    * `spread`
-    * `countBy`
+    * [distinct](#distinct)
+    * [digitize](#digitize)
+    * [Arithmetic operations](#arithmetic-operations)
+    * [Column Statistics](#column-statistics)
+* [Working with `GroupedDataFrame`](#working-with-groupeddataframe)
+    * [aggregate](#aggregate)
+    * [spread](#spread-inside-aggregate)
+    * [countBy](#countBy)
 * Export
     * `writeCSV`
+    * `writeClass`
+* [Column kinds](#column-kinds)
 * [Column selectors](#column-selectors)
 * [Row expressions](#row-expressions)
 * [Row properties](#row-properties)
@@ -67,7 +75,7 @@
 
 <!--- END -->
 
-## Build
+## Create `DataFrame`
 
 Several ways to convert data into `DataFrame`
 ### from values
@@ -120,7 +128,7 @@ name | year of birth
 Alice | 2006
 Bob | 2001
 
-## Read
+## Read `DataFrame`
 
 DataFrame supports CSV and JSON input formats.
 Use `read` method to guess input format based on file extension and content
@@ -163,6 +171,23 @@ or to `Sequence`
 ```kotlin
 df.asSequence()
 ```
+# Compute statistics
+## nrow
+Returns number of rows in `DataFrame`
+```kotlin
+df.nrow()
+```
+## ncol
+Returns number of columns in `DataFrame`
+```kotlin
+df.ncol()
+```
+## sum
+Computes sum of expressions evaluated for every `DataRow` of `DataFrame`
+```kotlin
+df.sum { rowExpression }
+```
+See [Row Expressions](#row-expressions) for details
 # Modify cells
 Note that all update operations return a new instance of `DataFrame`
 ## update
@@ -302,11 +327,17 @@ df.groupBy { name }.aggregate {
     countBy { city } into { "from $it" }
 }
 ```
-For single aggregation there is simplier syntax:
+See [Working with `GroupedDataFrame`](#working-with-groupeddataframe) for details
+For `String` or `ColumnAccessor` API, `aggregate` can be omitted:
 ```kotlin
-df.groupBy { name }.max { age }
-df.groupBy { city }.count()
-df.groupBy { name }.countInto("count")
+val name by column<String>()
+val city by column<String>()
+val alive by column<Boolean>()
+
+df.groupBy(name, city) {
+    nrow() into "total"
+    count { alive() } into "alive"
+}
 ```
 
 ### shuffled
@@ -780,6 +811,126 @@ column.maxBy { expression }
 column.min()
 column.maxBy { expression }
 ``` 
+### Working with `GroupedDataFrame`
+`GroupedDataFrame` is any `DataFrame` with one selected [`FrameColumn`](#framecolumn) that is interpreted as data groups
+So any `DataFrame` with `FrameColumn` can be converted to `GroupedDataFrame`:
+```kotlin
+val files by column("input1.csv", "input2.csv", "input3.csv") // create column of file names 
+val data by files.map { DataFrame.read(it) } // create FrameColumn of dataframes
+val df = DataFrame.of(files, data) // create DataFrame with two columns 'files' and 'data'
+val groupedDf = df.asGrouped { data } // interpret 'data' column as groups of GroupedDataFrame
+```
+
+[Union](#union) operation all groups of `GroupedDataFrame` into single `DataFrame`. All other columns of `GroupedDataFrame` are ignored.
+```kotlin
+groupedDf.union()
+```
+`union` operation at `FrameColumn` will produce the same result:
+```kotlin
+groupedDf[data].union()
+```
+### aggregate
+`GroupedDataFrame` can be aggregated into `DataFrame` with one or several [statistics](#compute-statistics) computed for every data group.
+```
+groupedDf.aggregate { 
+    stat1 into "column1"
+    stat2 into "column2"
+    ...
+}
+```
+Every data group is passed to the body of `aggregate` function as a receiver of type `DataFrame`
+```kotlin
+groupedDf.aggregate {
+    nrow() into "total"
+    count { age > 18 } into "adults"
+    median { age } into "median age"
+    min { age } into "min age"
+    maxBy { age }.name into "oldest"
+}
+```
+If only one simple statistics is used, `aggregate` can be omitted:
+```kotlin
+groupedDf.max { age } // max age for every group into column "age"
+groupedDf.mean { weight } // mean weight in every group into column "weight"
+groupedDf.count() // number of rows in every group into column "n"
+```
+`aggregate` can also be applied to any `DataFrame` with [FrameColumn](#framecolumn)
+```
+df.aggregate { groups }.with {
+    stat1 into "column1"
+    stat2 into "column2"
+    ...
+}
+```
+### spread inside aggregate
+[spread](#spread) operation can also be used within [aggregate](#aggregate)
+
+**Input**
+
+name|city
+---|---
+Alice|London
+Bob|Paris
+Alice|Paris
+Alice|London
+Bob|Milan
+
+```kotlin
+df.groupBy { name }.aggregate {
+    spread { city }.with { nrow() } into { "$it visits" }
+}
+```
+or
+```kotlin
+df.groupBy { name }.spread { city }.with { nrow() }.into { "$it visits" }
+```
+**Output**
+
+name|London visits|Paris visits|Milan visits
+---|---|---|---
+Alice|2|1|0
+Bob|0|1|1
+### countBy
+[Spreads](#spread) column values into new columns and computes number of rows
+Equivalent of `spread { column }.with { nrow () }`
+
+```kotlin
+df.groupBy { name }.aggregate {
+    countBy { city } into { it }
+}
+```
+or
+```kotlin
+df.groupBy { name }.countBy { city }
+```
+
+name|London|Paris|Milan
+---|---|---|---
+Alice|2|1|0
+Bob|0|1|1
+## Column kinds
+There are three kinds of `DataColumn`:
+* `MapColumn`: every element is `DataRow`
+* `FrameColumn`: every element is `DataFrame`
+* `ValueColumn`: all other types of elements
+
+### ValueColumn
+`ValueColumn` stores one dimensional array of elements
+
+### MapColumn
+Every element of `MapColumn` is `DataRow`, so it can be interpreted as a group of columns. 
+Most `DataFrame` operations, such as [select](#select), [filter](#filter), indexing etc. are also available for `MapColumn`.
+
+### FrameColumn
+Every element of `FrameColumn` is `DataFrame`, so it can be interpreted as groups of rows. 
+Any `DataFrame` with `FrameColumn` can be [converted](#working-with-groupeddataframe) to `GroupedDataFrame`:
+```kotlin
+df.asGrouped { groups }
+```
+`DataFrame`s stored in `FrameColumn` can be [unioned](#union) into single `DataFrame`:
+```kotlin
+val df = frameColumn.union()
+```
 ## Column Selectors
 `DataFrame` provides a column selection DSL for selecting arbitrary set of columns.
 Column selectors are used in many operations:
@@ -794,7 +945,8 @@ df.move { columns }.under(groupName)
 ```
 columnName // column by extension property
 it.columnName // column by extension property
-columnName() // column by accessor
+column // column by accessor
+it[column] // column by accessor
 it["columnName"] // column by name
 "columnName"<Type>() // typed column by name
 col(index) // column by index
@@ -815,11 +967,13 @@ all() // all columns
 ```
 ### Special column selectors
 ```
+// Select columns of specific type, with optional predicate
 stringCols { condition }
 intCols { condition }
 booleanCols { condition }
 doubleCols { condition }
 
+// Select columns by column name condition
 nameContains(text)
 startsWith(prefix)
 endsWith(suffix)
@@ -839,11 +993,12 @@ val middleName by column("Jr", null)
 val lastName by column("Merton", "Marley")
 val age by column(15, 20)
 
-val fullName by column(firstName, middleName, lastName) // create MapColumn consisting of three columns
+val fullName by column(firstName, middleName, lastName) // create column group of three columns
 val df = fullName + age
 
 df.select { fullName.cols { !it.hasNulls } } // firstName, lastName
-df.select { fullName.cols(0, 2) } // firstName, middleName, lastName
+df.select { fullName.cols(0, 2) } // firstName, lastName
+df.select { fullName.cols(0..1) } // firstName, middleName
 df.select { fullName[firstName] }
 df.select { fullName.cols(middleName, lastName) }
 df.select { fullName.cols().drop(1) }

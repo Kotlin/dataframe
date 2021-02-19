@@ -92,7 +92,7 @@ internal fun fromList(records: List<*>): AnyFrame {
                         val values = col.values.asList().splitByIndices(startIndices.asSequence()).toList()
                         DataColumn.create(colName, values, List::class.createType(listOf(KTypeProjection.invariant(elementType))))
                     }
-                    else -> DataColumn.createTable(colName, parsed, startIndices)
+                    else -> DataColumn.create(colName, parsed, startIndices)
                 }
             }
             else -> {
@@ -108,7 +108,7 @@ internal fun fromList(records: List<*>): AnyFrame {
                 val parsed = fromList(values)
                 when {
                     parsed.isSingleUnnamedColumn() -> parsed.column(0).rename(colName)
-                    else -> DataColumn.createGroup(colName, parsed)
+                    else -> DataColumn.create(colName, parsed)
                 }
             }
         }

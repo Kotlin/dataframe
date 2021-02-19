@@ -48,6 +48,26 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
+    fun createFrameColumn(){
+        val rowsColumn by column(typed[0..3], typed[4..5], typed[6..6])
+        val df = dataFrameOf(rowsColumn).toGrouped { rowsColumn }
+        val res = df.ungroup()
+        res shouldBe typed
+    }
+
+    @Test
+    fun createFrameColumn2(){
+        val id by column(typed.indices)
+        val groups by id.map { typed[it..it] }
+        val df = dataFrameOf(id, groups)
+        df.nrow shouldBe typed.nrow
+        df.forEach {
+            val rowId = it[id]
+            it[groups] shouldBe typed[rowId..rowId]
+        }
+    }
+
+    @Test
     fun `select dfs under group`(){
         df2.select { nameAndCity.colsDfsOf<String>() } shouldBe typed2.select { nameAndCity.name }
         df2.select { nameAndCity.colsDfsOf<String?>() } shouldBe typed2.select { nameAndCity.name and nameAndCity.city }

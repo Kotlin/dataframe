@@ -141,7 +141,7 @@ fun <T> doSplitRows(df: DataFrame<T>, columns: List<ColumnWithPath<List<*>?>>): 
                     if (it.key.isNotEmpty() && it.key[0] == col.name()) it.key.drop(1) to it.value else null
                 }.toMap()
                 val newDf = splitIntoRows(group.df, newData)
-                DataColumn.createGroup(col.name(), newDf)
+                DataColumn.create(col.name(), newDf)
             } else {
                 val targetData = data[listOf(col.name())]
                 if (targetData != null) {
@@ -161,7 +161,7 @@ fun <T> doSplitRows(df: DataFrame<T>, columns: List<ColumnWithPath<List<*>?>>): 
                             }
                         }
                     }
-                    if (col.isTable()) DataColumn.createTable(
+                    if (col.isTable()) DataColumn.create(
                         col.name(),
                         collector.values as List<AnyFrame>,
                         col.asTable().df
