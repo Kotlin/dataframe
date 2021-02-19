@@ -44,6 +44,9 @@ inline fun <reified T> Iterable<T>.toDataFrame() = T::class.declaredMembers
             DataColumn.create(it.name, values, property.returnType.withNullability(nullable))
         }.let { dataFrameOf(it) }
 
+fun DataFrame.Companion.of(columns: Iterable<AnyCol>) = dataFrameOf(columns)
+fun DataFrame.Companion.of(vararg header: String) = dataFrameOf(header.toList())
+fun DataFrame.Companion.of(vararg columns: AnyCol) = dataFrameOf(columns.asIterable())
 
 fun dataFrameOf(columns: Iterable<AnyCol>): AnyFrame = DataFrameImpl<Unit>(columns.map { it.unbox() })
 
@@ -51,11 +54,12 @@ fun dataFrameOf(vararg header: ColumnReference<*>) = DataFrameBuilder(header.map
 
 fun dataFrameOf(vararg columns: AnyCol): AnyFrame = dataFrameOf(columns.asIterable())
 
-fun emptyDataFrame(nrow: Int) = DataFrame.empty<Any?>(nrow)
-
 fun dataFrameOf(vararg header: String) = dataFrameOf(header.toList())
 
 fun dataFrameOf(header: List<String>) = DataFrameBuilder(header)
+
+fun emptyDataFrame(nrow: Int) = DataFrame.empty(nrow)
+
 
 // TODO: remove checks for ColumnWithParent types
 internal fun AnyCol.unbox(): AnyCol = when (this) {
@@ -85,7 +89,7 @@ fun <T> List<Pair<List<String>, AnyCol>>.toDataFrame(): DataFrame<T>? {
             if(node.data != null)
                 throw UnsupportedOperationException("Can not add data to grouped column: ${node.pathFromRoot()}")
             node.children.forEach { dfs(it) }
-            node.data = DataColumn.createGroup(node.name, node.children.map { it.data!! }.toDataFrame())
+            node.data = DataColumn.create(node.name, node.children.map { it.data!! }.toDataFrame())
         }else assert(node.data != null)
     }
     dfs(tree)

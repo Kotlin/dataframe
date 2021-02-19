@@ -33,11 +33,11 @@ internal abstract class DataCollectorBase<T>(initCapacity: Int): DataCollector<T
     protected fun createColumn(name: String, type: KType): DataColumn<T> {
         val classifier = type.classifier as KClass<*>
         if (classifier.isSubclassOf(DataFrame::class)) {
-            return DataColumn.createTable(name, data as List<AnyFrame>) as DataColumn<T>
+            return DataColumn.create(name, data as List<AnyFrame>) as DataColumn<T>
         }
         if(classifier.isSubclassOf(DataRow::class)) {
             val mergedDf = (data as List<AnyRow>).map { it.toDataFrame() }.union()
-            return DataColumn.createGroup(name, mergedDf) as DataColumn<T>
+            return DataColumn.create(name, mergedDf) as DataColumn<T>
         }
         return DataColumn.create(name, data, type.withNullability(hasNulls)) as DataColumn<T>
     }
@@ -72,13 +72,13 @@ internal open class ColumnDataCollector(initCapacity: Int = 0, val getType: (KCl
                         else -> throw UnsupportedOperationException()
                     }
                 }
-                return DataColumn.createTable(name, groups)
+                return DataColumn.create(name, groups)
             }else if(hasRows){
                 val frames = values.map {
                     (it as AnyRow?)?.toDataFrame() ?: emptyDataFrame(1)
                 }
                 val merged = frames.union()
-                return DataColumn.createGroup(name, merged)
+                return DataColumn.create(name, merged)
             }
         }
         return createColumn(name, getType(commonClass()).withNullability(hasNulls))

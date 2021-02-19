@@ -33,7 +33,7 @@ internal fun merge(dataFrames: List<AnyFrame>): AnyFrame {
                     emptyDataFrame(it.nrow())
             }
             val merged = merge(groupedDataFrames)
-            DataColumn.createGroup(name, merged)
+            DataColumn.create(name, merged)
         } else {
 
             val defaultValue = firstColumn.defaultValue()
@@ -64,11 +64,11 @@ internal fun merge(dataFrames: List<AnyFrame>): AnyFrame {
                 }else if(nullable){
                     list.forEachIndexed { index, value ->
                         if(value == null)
-                            list[index] = DataFrame.empty<Any?>()
+                            list[index] = DataFrame.empty()
                     }
                     nullable = false
                 }
-                DataColumn.createTable(name, list as List<AnyFrame>)
+                DataColumn.create(name, list as List<AnyFrame>)
             }else {
                 val baseType = baseType(types).withNullability(nullable)
 
@@ -87,7 +87,7 @@ internal fun merge(dataFrames: List<AnyFrame>): AnyFrame {
 
 internal fun convertToDataFrame(value: Any?): AnyFrame {
     return when (value) {
-        null -> DataFrame.empty<Any?>()
+        null -> DataFrame.empty()
         is AnyFrame -> value
         is AnyRow -> value.toDataFrame()
         is List<*> -> value.mapNotNull { convertToDataFrame(it) }.union()

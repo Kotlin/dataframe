@@ -86,10 +86,13 @@ internal fun <T> DataFrame<T>.new(columns: Iterable<AnyCol>) = dataFrameOf(colum
 interface DataFrame<out T> : DataFrameBase<T> {
 
     companion object {
-        fun <T> empty(nrow: Int = 0): DataFrame<T> = EmptyDataFrame(nrow)
+        fun empty(nrow: Int = 0): AnyFrame = EmptyDataFrame<Any?>(nrow)
     }
 
     fun nrow(): Int
+
+    fun indices(): IntRange = 0..nrow() - 1
+
     override fun ncol(): Int = columns().size
 
     fun rows(): Iterable<DataRow<T>>
@@ -193,3 +196,4 @@ typealias AnyFrame = DataFrame<*>
 
 internal val AnyFrame.ncol get() = ncol()
 internal val AnyFrame.nrow get() = nrow()
+internal val AnyFrame.indices get() = indices()

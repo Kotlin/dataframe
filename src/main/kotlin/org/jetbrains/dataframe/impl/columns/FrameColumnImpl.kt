@@ -26,12 +26,12 @@ internal class FrameColumnImpl<T> constructor(override val df: DataFrame<T>, nam
     override fun addParent(parent: MapColumn<*>) = FrameColumnWithParent(parent, this)
 
     override fun createWithValues(values: List<DataFrame<T>>, hasNulls: Boolean?): DataColumn<DataFrame<T>> {
-        return DataColumn.createTable(name, values, values.getBaseSchema())
+        return DataColumn.create(name, values, values.getBaseSchema())
     }
 
     override fun changeType(type: KType) = throw UnsupportedOperationException()
 
     override fun distinct(): FrameColumn<T> {
-        return DataColumn.createTable(name, values.distinct())
+        return DataColumn.create(name, values.distinct())
     }
 }

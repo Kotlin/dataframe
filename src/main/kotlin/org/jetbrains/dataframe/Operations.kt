@@ -4,7 +4,6 @@ import org.jetbrains.dataframe.api.columns.*
 import org.jetbrains.dataframe.impl.TreeNode
 import org.jetbrains.dataframe.impl.columns.DataColumnWithParent
 import org.jetbrains.dataframe.impl.columns.ColumnWithParent
-import org.jetbrains.dataframe.impl.columns.ColumnWithPathImpl
 import org.jetbrains.dataframe.impl.getAncestor
 import org.jetbrains.dataframe.impl.getOrPut
 import kotlin.reflect.KClass
@@ -216,7 +215,7 @@ internal fun insertColumns(columns: List<ColumnToInsert>) =
 
 internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>, treeNode: TreeNode<ColumnPosition>?, depth: Int): DataFrame<T> {
 
-    if (columns.isEmpty()) return df ?: DataFrame.empty()
+    if (columns.isEmpty()) return df ?: DataFrame.empty().typed()
 
     val childDepth = depth + 1
 
@@ -291,7 +290,7 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
             } else column.rename(name)
         } else {
             val newDf = insertColumns<Unit>(null, columns, treeNode?.get(name), childDepth)
-            DataColumn.createGroup(name, newDf) // new node needs to be created
+            DataColumn.create(name, newDf) // new node needs to be created
         }
         if (insertionIndex == Int.MAX_VALUE)
             newColumns.add(newCol)
