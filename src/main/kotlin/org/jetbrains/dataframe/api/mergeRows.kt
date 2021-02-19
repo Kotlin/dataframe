@@ -36,11 +36,11 @@ fun <T, C> MergeClause<T, C, *>.mergeRows(): DataFrame<T> {
         val newColumn = when(column){
             is MapColumn<*> -> {
                 val data = grouped.groups.asIterable().map { it.get(column).df }
-                DataColumn.createTable(newName, data, column.df)
+                DataColumn.create(newName, data, column.df)
             }
             is FrameColumn<*> -> {
                 val data = grouped.groups.asIterable().map { it[column].toList().union() }
-                DataColumn.createTable(newName, data, column.df)
+                DataColumn.create(newName, data, column.df)
             }
             else -> {
                 val data = grouped.groups.asIterable().map { it[column].toList() }

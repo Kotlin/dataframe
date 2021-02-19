@@ -44,7 +44,7 @@ fun <T> DataFrame<T>.groupBy(cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T
        start
    }
 
-   val groupedColumn = DataColumn.createTable(columnForGroupedData.name(), sorted, startIndices)
+   val groupedColumn = DataColumn.create(columnForGroupedData.name(), sorted, startIndices)
 
    val df = keyColumnsDf + groupedColumn
    return GroupedDataFrameImpl(df, groupedColumn)

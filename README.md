@@ -31,10 +31,6 @@ dependencies {
 * `DataRow` is a single row of `DataFrame` and provides a single value for every `DataColumn`
 * `DataFrame` can be optionally typed by `DataSchema` to provide typed data access via extension properties  
 * `DataSchema` is an interface that describes a single row of `DataFrame`
-* `DataColumn` can be one of three types:
-    * `MapColumn`: every element is `DataRow`
-    * `FrameColumn`: every element is `DataFrame`
-    * `ValueColumn`: for other types of elements 
 
 ## Data access
 

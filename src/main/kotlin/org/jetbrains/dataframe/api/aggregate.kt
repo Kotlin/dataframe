@@ -32,7 +32,12 @@ class GroupAggregateBuilder<T>(internal val df: DataFrame<T>): DataFrame<T> by d
 }typealias GroupAggregator<G> = GroupAggregateBuilder<G>.(GroupAggregateBuilder<G>) -> Unit
 
 fun <T, G> GroupedDataFrame<T, G>.aggregate(body: GroupAggregator<G>) = doAggregate(plain(), { groups }, removeColumns = true, body)
-fun <T, G> DataFrame<T>.aggregate(selector: ColumnSelector<T, DataFrame<G>>, body: GroupAggregator<G>) = doAggregate(this, selector, removeColumns = false, body)
+
+data class AggregateClause<T, G>(val df: DataFrame<T>, val selector: ColumnSelector<T, DataFrame<G>>){
+    fun with(body: GroupAggregator<G>) = doAggregate(df, selector, removeColumns = false, body)
+}
+
+fun <T, G> DataFrame<T>.aggregate(selector: ColumnSelector<T, DataFrame<G>>) = AggregateClause(this, selector)
 
 internal fun <T, G> doAggregate(df: DataFrame<T>, selector: ColumnSelector<T, DataFrame<G>>, removeColumns: Boolean, body: GroupAggregator<G>): DataFrame<T> {
 
