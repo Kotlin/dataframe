@@ -54,11 +54,7 @@
     * [`distinct`](#distinct)
     * [`digitize`](#digitize)
     * [`Arithmetic operations`](#arithmetic-operations)
-    * Statistics
-        * `sum`
-        * `min` / `max`
-        * `mean`
-        * `median`
+    * [`Column Statistics`](#column-statistics)
 * Grouped data frame aggregation
     * `spread`
     * `countBy`
@@ -83,20 +79,14 @@ val df = dataFrameOf("name", "age")(
 ```
 
 ### from columns
-`DataFrame` can be created from one o several `DataColumns`. Two columns with data
+`DataFrame` can be created from one or several `DataColumn`s
 ```kotlin
 val name by column("Alice", "Bob")
 val age by column(15, 20)
-```
-can be converted into `DataFrame` in several ways
-```kotlin
-val df = dataFrameOf(name, age)
-```
-```kotlin
-val df = listOf(name, age).toDataFrame()
-```
-```kotlin
-val df = name + age
+
+val df1 = dataFrameOf(name, age)
+val df2 = listOf(name, age).toDataFrame()
+val df3 = name + age
 ```
 
 ### from objects
@@ -107,17 +97,28 @@ Assume we have a list of `Person` objects:
 data class Person(val name: String, val age: Int)
 val persons = listOf(Person("Alice", 15), Person("Bob", 20))
 ```
-This list can be converted to `DataFrame` either by inspecting all public fields of `Person` class:
+This list can be converted to `DataFrame` with columns for every public property of `Person` class:
 ```kotlin
-val df = persons.toDataFrame()
+persons.toDataFrame()
 ```
-or by explicit expressions for every column:
+
+name | age
+---|---
+Alice | 15
+Bob | 20
+
+You can also specify custom expressions for every column:
 ```kotlin
 val df = persons.toDataFrame {
    "name" { name }
    "year of birth" { 2021 - age }
 }
 ```
+
+name | year of birth
+---|---
+Alice | 2006
+Bob | 2001
 
 ## Read
 
@@ -669,7 +670,7 @@ To match columns with equal names just use column from the first `DataFrame`
 df1.join(df2) { city }
 df1.join(df2) { firstName and lastName }
 ```
-If `columnMatches` is ommited, all columns with matching names are used
+If `columnMatches` is ommited, all columns with matching names from both dataframes will be used
 
 ```
 df1
@@ -762,7 +763,23 @@ For value `x` an index `i` is returned when
 `bins[i-1] < x <= bins[i]` if `right = true`
 If `x` is below all bins, 0 is returned. If `x` is above all bins, `bins.length` is returned
 ### Arithmetic operations
-For `Int`, `Double`, `Long` and `BigDecimal` columns `+`, `-`, `*`, `/` operations with scalar values are supported 
+For `Int`, `Double`, `Long` and `BigDecimal` columns `+`, `-`, `*`, `/` operations with scalar values are supported
+### Column statistics
+
+Statistics for `Number` columns:
+```kotlin
+column.sum()
+column.mean()
+column.median()
+```
+
+Statistics for `Comparable` columns:
+```kotlin
+column.max()
+column.maxBy { expression }
+column.min()
+column.maxBy { expression }
+``` 
 ## Column Selectors
 `DataFrame` provides a column selection DSL for selecting arbitrary set of columns.
 Column selectors are used in many operations:
