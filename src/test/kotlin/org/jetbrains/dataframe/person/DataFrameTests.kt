@@ -264,7 +264,6 @@ class DataFrameTests : BaseTest() {
         typed.filter { age > limit && it.weight != null }.check()
 
         df.filter { it[Person::age] > limit && it[Person::weight] != null }.check()
-        df.filter { Person::age > limit && (Person::weight)() != null }.check()
 
         df.filter { age > limit && weight() != null }.check()
         df.filter { it[age] > limit && this[weight] != null }.check()
@@ -460,7 +459,7 @@ class DataFrameTests : BaseTest() {
 
         df.groupBy(Person::name).aggregate {
             nrow() into "n"
-            count { Person::age > 25 } into "old count"
+            count { it[Person::age] > 25 } into "old count"
             median(Person::age) into "median age"
             min(Person::age) into "min age"
             all { Person::weight neq null } into "all with weights"

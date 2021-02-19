@@ -10,9 +10,9 @@
 * [Read `DataFrame`](#read-dataframe)
     * [from CSV](#read-csv)
     * [from JSON](#read-json)
-* Quick info
+* [`DataFrame` info](#dataframe-info)
     * [schema](#schema)
-    * [summary](#summary)
+    * [describe](#describe)
 * [Access data](#access-data)
     * [by column](#by-column)
     * [by row](#by-row)
@@ -51,7 +51,7 @@
     * [flatten](#flatten)
     * [gather](#gather)
     * [spread](#spread)
-* [Merge dataframes](#merge-dataframes)
+* [Merge `DataFrame`s](#merge-dataframes)
     * [add](#add-columns)
     * [union](#union)
     * [join](#join)
@@ -64,9 +64,9 @@
     * [aggregate](#aggregate)
     * [spread](#spread-inside-aggregate)
     * [countBy](#countBy)
-* Export
-    * `writeCSV`
-    * `writeClass`
+* [Export `DataFrame`](#export-dataframe)
+    * [writeCSV](#writecsv)
+    * [writeClass](#writeclass)
 * [Column kinds](#column-kinds)
 * [Column selectors](#column-selectors)
 * [Row expressions](#row-expressions)
@@ -171,6 +171,9 @@ or to `Sequence`
 ```kotlin
 df.asSequence()
 ```
+# `DataFrame` info
+## describe
+Generates descriptive statistics
 # Compute statistics
 ## nrow
 Returns number of rows in `DataFrame`
@@ -483,6 +486,7 @@ df.move { columns }.toTop { columnNameExpression }
 df.move { columns }.to(position)
 df.move { columns }.toLeft()
 df.move { columns }.toRight()
+df.move { columns }.after { column }
 ```
 See [Column Selectors](#column-selectors) for column selection syntax.
 
@@ -568,10 +572,8 @@ df.flatten { a }
 Converts several columns into two `key-value` columns, where `key` is a name of original column and `value` is column data
 This is reverse to [spread](#spread)
 ```
-// minimal
 df.gather { columns }.into(keyColumnName)
 
-// maximal
 df.gather { columns }.where { valueFilter }.map { valueTransform }.mapNames { keyTransform }.into(keyColumnName, valueColumnName)
 ```
 **Input**
@@ -862,37 +864,47 @@ df.aggregate { groups }.with {
     ...
 }
 ```
-### spread inside aggregate
-[spread](#spread) operation can also be used within [aggregate](#aggregate)
+### `spread` inside `aggregate`
+[spread](#spread) operation can also be used within [aggregate](#aggregate) with a slightly different syntax
 
 **Input**
 
-name|city
----|---
-Alice|London
-Bob|Paris
-Alice|Paris
-Alice|London
-Bob|Milan
+name|city|date
+---|---|---
+Alice|London|2020-10-01
+Bob|Paris|2020-10-02
+Alice|Paris|2020-10-03
+Alice|London|2020-10-04
+Bob|Milan|2020-10-05
 
 ```kotlin
 df.groupBy { name }.aggregate {
-    spread { city }.with { nrow() } into { "$it visits" }
+    spread { city }.with { max { date } } into { "$it last visit" }
 }
 ```
 or
 ```kotlin
-df.groupBy { name }.spread { city }.with { nrow() }.into { "$it visits" }
+df.groupBy { name }.spread { city }.with { max { date } }.into { "$it visits" }
 ```
 **Output**
 
-name|London visits|Paris visits|Milan visits
+name|London last visit|Paris last visit|Milan last visit
 ---|---|---|---
-Alice|2|1|0
-Bob|0|1|1
+Alice|2020-10-04|2020-10-03|null
+Bob|null|2020-10-02|2020-10-05
 ### countBy
 [Spreads](#spread) column values into new columns and computes number of rows
 Equivalent of `spread { column }.with { nrow () }`
+
+**Input**
+
+name|city|date
+---|---|---
+Alice|London|2020-10-01
+Bob|Paris|2020-10-02
+Alice|Paris|2020-10-03
+Alice|London|2020-10-04
+Bob|Milan|2020-10-05
 
 ```kotlin
 df.groupBy { name }.aggregate {
@@ -903,6 +915,8 @@ or
 ```kotlin
 df.groupBy { name }.countBy { city }
 ```
+
+**Output**
 
 name|London|Paris|Milan
 ---|---|---|---
@@ -918,11 +932,11 @@ There are three kinds of `DataColumn`:
 `ValueColumn` stores one dimensional array of elements
 
 ### MapColumn
-Every element of `MapColumn` is `DataRow`, so it can be interpreted as a group of columns. 
+Every element of `MapColumn` is `DataRow`, so `MapColumn` can be interpreted as a group of columns. 
 Most `DataFrame` operations, such as [select](#select), [filter](#filter), indexing etc. are also available for `MapColumn`.
 
 ### FrameColumn
-Every element of `FrameColumn` is `DataFrame`, so it can be interpreted as groups of rows. 
+Every element of `FrameColumn` is `DataFrame`, so `FrameColumn` can be interpreted as groups of rows. 
 Any `DataFrame` with `FrameColumn` can be [converted](#working-with-groupeddataframe) to `GroupedDataFrame`:
 ```kotlin
 df.asGrouped { groups }
@@ -930,6 +944,17 @@ df.asGrouped { groups }
 `DataFrame`s stored in `FrameColumn` can be [unioned](#union) into single `DataFrame`:
 ```kotlin
 val df = frameColumn.union()
+```
+## Export `DataFrame`
+### writeCSV
+Exports `DataFrame` to `CSV` file
+```kotlin
+df.writeCSV("output.csv")
+```
+### writeClass
+Exports `DataFrame` to `List` of auto-generated data classes. Only for `Jupyter` environment.
+```kotlin
+val list = df.writeClass("Person")
 ```
 ## Column Selectors
 `DataFrame` provides a column selection DSL for selecting arbitrary set of columns.

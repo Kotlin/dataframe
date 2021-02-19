@@ -6,6 +6,7 @@ import org.jetbrains.dataframe.api.columns.allNulls
 import org.jetbrains.dataframe.api.columns.isType
 import org.junit.Test
 import java.io.StringWriter
+import java.time.LocalDateTime
 
 class CensusTest {
 
@@ -29,10 +30,15 @@ class CensusTest {
 
         val fixed = df
             .cast { cols { it.allNulls() && !it.isType<String?>() } }
-            .to<String>()
+            .toStr()
 
         fixed.writeCSV(str)
         val res = DataFrame.readDelimStr(str.toString())
         res shouldBe fixed
+    }
+
+    @Test
+    fun describe() {
+        df.describe { all() }.print()
     }
 }

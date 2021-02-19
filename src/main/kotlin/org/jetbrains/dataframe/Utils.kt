@@ -2,6 +2,7 @@ package org.jetbrains.dataframe
 
 import java.math.BigDecimal
 import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 typealias Predicate<T> = (T) -> Boolean
 
@@ -36,8 +37,6 @@ internal fun <T> T.toIterable(getNext: (T) -> T?) = Iterable<T> {
 
 internal fun <T> List<T>.removeAt(index: Int) = subList(0, index) + subList(index + 1, size)
 
-internal inline fun <reified T> listOfNulls(count: Int) = arrayOfNulls<T>(count).asList()
-
 internal inline fun <reified T: Any> Int.cast() = convert(this, T::class)
 
 internal fun <T: Any> convert(src:Int, targetType: KClass<T>): T = when(targetType) {
@@ -54,3 +53,5 @@ internal fun BooleanArray.toIndices(): List<Int> {
         if(this[i]) res.add(i)
     return res
 }
+
+val KType.fullName: String get() = toString()

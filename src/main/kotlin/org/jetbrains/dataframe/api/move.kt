@@ -3,8 +3,7 @@ package org.jetbrains.dataframe
 import org.jetbrains.dataframe.api.columns.DataColumn
 import org.jetbrains.dataframe.api.columns.ColumnWithPath
 import org.jetbrains.dataframe.api.columns.SingleColumn
-import org.jetbrains.dataframe.impl.DataFrameReceiver
-import org.jetbrains.dataframe.impl.TreeNode
+import org.jetbrains.dataframe.impl.*
 import kotlin.reflect.KProperty
 
 fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, selector: ColumnsSelector<T, *>) = move(selector).to(newColumnIndex)
@@ -25,6 +24,10 @@ fun <T> DataFrame<T>.moveToRight(vararg cols: String) = moveToRight { cols.toCol
 fun <T> DataFrame<T>.moveToRight(vararg cols: Column) = moveToRight { cols.toColumns() }
 fun <T> DataFrame<T>.moveToRight(vararg cols: KProperty<*>) = moveToRight { cols.toColumns() }
 
+fun <T, C> DataFrame<T>.move(cols: Iterable<ColumnReference<C>>) = move { cols.toColumnSet() }
+fun <T, C> DataFrame<T>.move(vararg cols: ColumnReference<C>) = move { cols.toColumns() }
+fun <T> DataFrame<T>.move(vararg cols: String) = move { cols.toColumns() }
+fun <T, C> DataFrame<T>.move(vararg cols: KProperty<C>) = move { cols.toColumns() }
 fun <T, C> DataFrame<T>.move(selector: ColumnsSelector<T, C>): MoveColsClause<T, C> {
 
     val (df, removed) = doRemove(selector)
@@ -81,6 +84,30 @@ fun <T, C> MoveColsClause<T, C>.under(groupRef: MapColumnReference) = under(grou
 fun <T, C> MoveColsClause<T, C>.to(columnIndex: Int): DataFrame<T> {
     val newColumnList = df.columns().subList(0, columnIndex) + removed.map { it.data.column as DataColumn<C> } + df.columns().subList(columnIndex, df.ncol())
     return newColumnList.asDataFrame()
+}
+
+fun <T, C> MoveColsClause<T, C>.after(columnPath: ColumnPath) = after { columnPath.toColumnDef() }
+fun <T, C> MoveColsClause<T, C>.after(column: Column) = after { column }
+fun <T, C> MoveColsClause<T, C>.after(column: KProperty<*>) = after { column.toColumnDef() }
+fun <T, C> MoveColsClause<T, C>.after(column: String) = after { column.toColumnDef() }
+fun <T, C> MoveColsClause<T, C>.after(column: ColumnSelector<T, *>): DataFrame<T> {
+    val refCol = originalDf.getColumnWithPath(column)
+    val removeRoot = removed.first().getRoot()
+
+    val refNode = removeRoot.getOrPut(refCol.path) {
+        val parent = if(it.size > 1) originalDf[it.dropLast(1)].asFrame() else originalDf
+        val index = parent.getColumnIndex(it.last())
+        val col = parent.column(index)
+        ColumnPosition(index, false, col)
+    }
+
+    val parentPath = refCol.path.dropLast(1)
+
+    val toInsert = removed.map {
+        val path = parentPath + it.name
+        ColumnToInsert(path, refNode, it.column.data)
+    }
+    return df.doInsert(toInsert)
 }
 
 fun <T, C> MoveColsClause<T, C>.toLeft() = to(0)
