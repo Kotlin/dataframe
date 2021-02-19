@@ -24,7 +24,6 @@ interface DataRow<out T>: DataRowBase<T> {
     operator fun <R> get(column: DataColumn<R>) = column[index]
     operator fun <R> get(property: KProperty<R>) = get(property.name) as R
     operator fun <R> ColumnReference<R>.invoke() = get(this)
-    operator fun <R> KProperty1<*, R>.invoke() = get(this)
     operator fun <R> String.invoke() = get(this) as R
 
     fun <T> read(name: String) = get(name) as T
@@ -42,7 +41,6 @@ interface DataRow<out T>: DataRowBase<T> {
     fun backwardIterable() = this.toIterable { it.prev }
 
     operator fun <R : Comparable<R>> ColumnReference<R>.compareTo(other: R) = get(this).compareTo(other)
-    operator fun <R : Comparable<R>> KProperty1<*, R>.compareTo(other: R) = get(this).compareTo(other)
     operator fun ColumnReference<Int>.plus(a: Int) = get(this) + a
     operator fun ColumnReference<Long>.plus(a: Long) = get(this) + a
     operator fun ColumnReference<Double>.plus(a: Double) = get(this) + a

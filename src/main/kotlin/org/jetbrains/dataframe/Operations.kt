@@ -5,7 +5,7 @@ import org.jetbrains.dataframe.impl.TreeNode
 import org.jetbrains.dataframe.impl.columns.DataColumnWithParent
 import org.jetbrains.dataframe.impl.columns.ColumnWithParent
 import org.jetbrains.dataframe.impl.getAncestor
-import org.jetbrains.dataframe.impl.getOrPut
+import org.jetbrains.dataframe.impl.getOrPutEmpty
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
@@ -153,17 +153,17 @@ internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (
                 collectColumns(it, root)
             }
         }else {
-            val node = root.getOrPut(it.path.dropLast(1), emptyData)
+            val node = root.getOrPutEmpty(it.path.dropLast(1), emptyData)
             collectColumns(it.data, node)
         }
     }
     return root
 }
 
+//TODO: make immutable
 internal data class ColumnPosition(val originalIndex: Int, var wasRemoved: Boolean, var column: AnyCol?)
 
-// TODO: replace 'insertionPath' with TreeNode<ColumnToInsert> tree
-internal data class ColumnToInsert(val insertionPath: ColumnPath, val originalNode: TreeNode<ColumnPosition>?, val column: AnyCol)
+internal data class ColumnToInsert(val insertionPath: ColumnPath, val referenceNode: TreeNode<ColumnPosition>?, val column: AnyCol)
 
 fun Column.getParent(): MapColumnReference? = when (this) {
     is ColumnWithParent<*> -> parent
@@ -208,10 +208,10 @@ internal fun <T> DataFrame<T>.collectTree(selector: ColumnsSelector<T, *>): Tree
 internal fun <T> DataFrame<T>.doInsert(columns: List<ColumnToInsert>) = insertColumns(this, columns)
 
 internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>) =
-        insertColumns(df, columns, columns.firstOrNull()?.originalNode?.getRoot(), 0)
+        insertColumns(df, columns, columns.firstOrNull()?.referenceNode?.getRoot(), 0)
 
 internal fun insertColumns(columns: List<ColumnToInsert>) =
-        insertColumns<Unit>(null, columns, columns.firstOrNull()?.originalNode?.getRoot(), 0)
+        insertColumns<Unit>(null, columns, columns.firstOrNull()?.referenceNode?.getRoot(), 0)
 
 internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>, treeNode: TreeNode<ColumnPosition>?, depth: Int): DataFrame<T> {
 
@@ -250,9 +250,9 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
             // find the minimal original index among them
             // new column will be inserted at that position
             val minIndex = subTree.minOf {
-                if (it.originalNode == null) Int.MAX_VALUE
+                if (it.referenceNode == null) Int.MAX_VALUE
                 else {
-                    var col = it.originalNode!!
+                    var col = it.referenceNode
                     if (col.depth > depth) col = col.getAncestor(depth + 1)
                     if (col.parent === treeNode) {
                         if (col.data.wasRemoved) col.data.originalIndex else col.data.originalIndex + 1

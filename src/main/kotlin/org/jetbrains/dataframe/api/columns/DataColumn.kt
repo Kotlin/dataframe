@@ -9,6 +9,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.withNullability
 
 interface DataColumn<out T> : ColumnReference<T>, ColumnProvider<T> {
 
@@ -75,10 +76,11 @@ interface DataColumn<out T> : ColumnReference<T>, ColumnProvider<T> {
     override operator fun getValue(thisRef: Any?, property: KProperty<*>) = rename(property.name)
 }
 
-val AnyCol.valueClass get() = type.classifier
+val AnyCol.valueClass get() = type.classifier as KClass<*>
 
 fun <C> DataColumn<C>.allNulls() = size == 0 || (hasNulls && ndistinct == 1)
 
 fun <T> DataColumn<T>.isSubtypeOf(type: KType) = this.type.isSubtypeOf(type) && (!this.type.isMarkedNullable || type.isMarkedNullable)
 
-inline fun <reified T> DataColumn<*>.isType() = type == getType<T>()
+inline fun <reified T> AnyCol.isType() = type == getType<T>()
+fun AnyCol.isNumber() = type.withNullability(false).isSubtypeOf(getType<Number>())

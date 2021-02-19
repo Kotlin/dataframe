@@ -42,7 +42,7 @@ internal fun <T> DataFrame<T>.doRemove(selector: ColumnsSelector<T, *>): RemoveR
         cols.forEachIndexed { index, column ->
             val childPaths = children[column.name()]
             if (childPaths != null) {
-                val node = node.addChild(column.name(), ColumnPosition(index, true, null))
+                val node = node.addChild(column.name, ColumnPosition(index, true, null))
                 if (childPaths.all { it.size > depth + 1 }) {
                     val groupCol = (column as MapColumn<*>)
                     val newDf = dfs(groupCol.df.columns(), childPaths, node)

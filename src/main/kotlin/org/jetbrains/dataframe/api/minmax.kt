@@ -1,6 +1,9 @@
 package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.api.columns.valueClass
+import java.math.BigDecimal
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
 fun <T, D : Comparable<D>> DataFrame<T>.max(col: KProperty<D?>): D? = get(col).max()
@@ -29,6 +32,24 @@ internal fun <T> DataColumn<T?>.maxUnsafe(): T? {
     return casted.max() as T?
 }
 
-fun <T: Comparable<T>> DataColumn<T?>.min() = asSequence().filterNotNull().minOrNull()
+internal fun <T : Number> Iterable<T>.min(clazz: KClass<*>) = when (clazz) {
+    Double::class -> (this as Iterable<Double>).minOrNull()
+    Int::class -> (this as Iterable<Int>).minOrNull()
+    Long::class -> (this as Iterable<Long>).minOrNull()
+    BigDecimal::class -> (this as Iterable<BigDecimal>).minOrNull()
+    else -> throw IllegalArgumentException()
+}
 
+internal fun <T : Number> Iterable<T>.max(clazz: KClass<*>) = when (clazz) {
+    Double::class -> (this as Iterable<Double>).maxOrNull()
+    Int::class -> (this as Iterable<Int>).maxOrNull()
+    Long::class -> (this as Iterable<Long>).maxOrNull()
+    BigDecimal::class -> (this as Iterable<BigDecimal>).maxOrNull()
+    else -> throw IllegalArgumentException()
+}
+
+fun <T: Comparable<T>> DataColumn<T?>.min() = asSequence().filterNotNull().minOrNull()
 fun <T: Comparable<T>> DataColumn<T?>.max() = asSequence().filterNotNull().maxOrNull()
+
+internal fun DataColumn<Number?>.minNumber() = asIterable().filterNotNull().min(valueClass)
+internal fun DataColumn<Number?>.maxNumber() = asIterable().filterNotNull().max(valueClass)

@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.api.columns.DataColumn
+import kotlin.reflect.KProperty
 
 operator fun <T> DataFrame<T>.plus(col: AnyCol) = dataFrameOf(columns() + col).typed<T>()
 
@@ -10,6 +11,9 @@ fun <T> DataFrame<T>.add(name: String, data: AnyCol) = dataFrameOf(columns() + d
 
 inline fun <reified R, T> DataFrame<T>.add(name: String, noinline expression: RowSelector<T, R>) =
         (this + newColumn(name, expression))
+
+inline fun <reified R, T> DataFrame<T>.add(property: KProperty<R>, noinline expression: RowSelector<T, R>) =
+    (this + newColumn(property.name, expression))
 
 inline fun <reified R, T, G> GroupedDataFrame<T, G>.add(name: String, noinline expression: RowSelector<G, R>) =
         updateGroups { add(name, expression) }
