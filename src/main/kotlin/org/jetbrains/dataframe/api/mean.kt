@@ -64,3 +64,17 @@ fun Iterable<BigDecimal>.mean(): Double {
     val counter = Counter()
     return computeSize(counter).sum().toDouble() / counter.value.zeroToOne()
 }
+
+internal fun Int.zeroToOne() = if (this == 0) 1 else this
+
+internal class Counter(var value: Int = 0) {
+    operator fun inc(): Counter {
+        value++
+        return this
+    }
+}
+
+internal fun <T> Iterable<T>.computeSize(counter: Counter) = map {
+    counter.inc()
+    it
+}

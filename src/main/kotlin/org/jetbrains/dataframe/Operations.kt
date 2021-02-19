@@ -104,10 +104,6 @@ fun <T> DataFrame<T>.addRowNumber(columnName: String = "id"): DataFrame<T> = dat
 )).typed<T>()
 fun AnyCol.addRowNumber(columnName: String = "id") = dataFrameOf(listOf(indexColumn(columnName, size), this))
 
-// Column operations
-
-inline fun <reified T : Comparable<T>> DataColumn<T?>.median() = values.asSequence().filterNotNull().asIterable().median()
-
 // Update
 
 inline fun <reified C> headPlusArray(head: C, cols: Array<out C>) = (listOf(head) + cols.toList()).toTypedArray()
