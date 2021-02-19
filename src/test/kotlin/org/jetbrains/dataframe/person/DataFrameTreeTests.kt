@@ -377,4 +377,20 @@ class DataFrameTreeTests : BaseTest() {
         val res = typed2.rename { nameAndCity.all() }.into { it.name.capitalize()}
         res.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames().map { it.capitalize() }
     }
+
+    @Test
+    fun moveAfter(){
+        val moved = typed2.move { age }.after { nameAndCity.name }
+        moved.ncol() shouldBe 2
+        moved.nameAndCity.ncol() shouldBe 3
+        moved.nameAndCity.select { all() } shouldBe dataFrameOf(typed2.nameAndCity.name, typed2.age, typed2.nameAndCity.city)
+    }
+
+    @Test
+    fun moveAfter2() {
+        val moved = typed2.move { nameAndCity.name }.after { age }
+        moved.ncol() shouldBe 4
+        moved.nameAndCity.ncol() shouldBe 1
+        moved.remove { nameAndCity } shouldBe typed2.select { age and nameAndCity.name and weight }
+    }
 }

@@ -81,12 +81,14 @@ internal tailrec fun <T> TreeNode<T>.getAncestor(depth: Int): TreeNode<T> {
     return parent.getAncestor(depth)
 }
 
-internal fun <T> TreeNode<T?>.getOrPut(path: ColumnPath) = getOrPut(path, null)
+internal fun <T> TreeNode<T?>.getOrPut(path: ColumnPath) = getOrPutEmpty(path, null)
 
-internal fun <T> TreeNode<T>.getOrPut(path: ColumnPath, emptyData: T): TreeNode<T> {
+internal fun <T> TreeNode<T>.getOrPutEmpty(path: ColumnPath, emptyData: T): TreeNode<T> = getOrPut(path) { emptyData }
+
+internal fun <T> TreeNode<T>.getOrPut(path: ColumnPath, createData: (ColumnPath)->T): TreeNode<T> {
     var node = this
-    path.forEach {
-        node = node.getOrPut(it) { emptyData }
+    path.indices.forEach {
+        node = node.getOrPut(path[it]) { createData(path.take(it + 1)) }
     }
     return node
 }

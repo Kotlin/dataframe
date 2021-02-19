@@ -25,7 +25,7 @@ internal fun <C> DataFrameBase<*>.getColumn(name: String, policy: UnresolvedColu
         tryGetColumn(name)?.typed()
                 ?: when (policy) {
                     UnresolvedColumnsPolicy.Fail ->
-                        throw Exception("Column not found: $this")
+                        error("Column not found: $name")
                     UnresolvedColumnsPolicy.Skip -> null
                     UnresolvedColumnsPolicy.Create -> DataColumn.empty().typed<C>()
                 }
@@ -67,6 +67,8 @@ typealias Column = ColumnReference<*>
 typealias MapColumnReference = ColumnReference<AnyRow>
 
 fun String.toColumnDef(): ColumnReference<Any?> = ColumnDefinition(this)
+
+fun ColumnPath.toColumnDef(): ColumnReference<Any?> = ColumnDefinition(this)
 
 internal fun KProperty<*>.getColumnName() = this.findAnnotation<ColumnName>()?.name ?: name
 
@@ -170,8 +172,6 @@ internal fun <T> DataColumn<T>.getHashCode(): Int {
 
 @OptIn(ExperimentalStdlibApi::class)
 inline fun <reified T> getType() = typeOf<T>()
-
-val KType.fullName: String get() = toString()
 
 fun KClass<*>.createStarProjectedType(nullable: Boolean) = this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
 
@@ -465,6 +465,7 @@ operator fun AnyCol.plus(other: AnyCol) = dataFrameOf(listOf(this, other))
 typealias DoubleCol = DataColumn<Double?>
 typealias BooleanCol = DataColumn<Boolean?>
 typealias IntCol = DataColumn<Int?>
+typealias NumberCol = DataColumn<Number?>
 typealias StringCol = DataColumn<String?>
 typealias AnyCol = DataColumn<*>
 

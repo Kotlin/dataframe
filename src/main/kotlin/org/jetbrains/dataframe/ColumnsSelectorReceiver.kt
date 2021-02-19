@@ -67,6 +67,7 @@ interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
     fun <C> DataColumn<C>.rename(newName: String) = (this as ColumnReference<C>).rename(newName)
     infix fun <C> DataColumn<C>.named(newName: String) = rename(newName)
 
+    fun ColumnSet<*>.numberCols(filter: (NumberCol) -> Boolean = { true }) = colsOf(filter)
     fun ColumnSet<*>.stringCols(filter: (StringCol) -> Boolean = { true }) = colsOf(filter)
     fun ColumnSet<*>.intCols(filter: (IntCol) -> Boolean = { true }) = colsOf(filter)
     fun ColumnSet<*>.doubleCols(filter: (DoubleCol) -> Boolean = { true }) = colsOf(filter)

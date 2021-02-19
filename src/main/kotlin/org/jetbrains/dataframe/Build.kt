@@ -20,11 +20,13 @@ class IterableDataFrameBuilder<T>(val source: Iterable<T>) {
 
     fun add(column: AnyCol) = columns.add(column)
 
-    inline fun <reified R> add(name: String, noinline expression: T.() -> R?) = add(column(name, source.map { expression(it) }))
+    inline fun <reified R> add(name: String, noinline expression: T.(T) -> R?) = add(column(name, source.map { expression(it, it) }))
 
-    inline infix fun <reified R> String.to(noinline expression: T.() -> R?) = add(this, expression)
+    inline infix fun <reified R> String.to(noinline expression: T.(T) -> R?) = add(this, expression)
 
-    inline infix operator fun <reified R> String.invoke(noinline expression: T.() -> R?) = add(this, expression)
+    inline infix operator fun <reified R> String.invoke(noinline expression: T.(T) -> R?) = add(this, expression)
+
+    inline infix operator fun <reified R> KProperty<R>.invoke(noinline expression: T.(T) -> R) = add(name, expression)
 }
 
 fun <T> Iterable<T>.toDataFrame(body: IterableDataFrameBuilder<T>.() -> Unit): AnyFrame {
