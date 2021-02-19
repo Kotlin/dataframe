@@ -12,7 +12,7 @@ fun <T: Comparable<T>> DataColumn<T>.digitize(bins: List<Int>, kclass: KClass<T>
 fun <T: Comparable<T>> DataColumn<T>.digitize(bins: List<T>, right: Boolean = false): DataColumn<Int> {
 
     // TODO: use binary search
-    // TODO: support descending order
+    // TODO: support descending order of bins
     val predicate: (T, T) -> Boolean = if (right) { value, bin -> value <= bin } else { value, bin -> value < bin }
 
     return map { value ->
