@@ -24,7 +24,18 @@ dependencies {
     compile 'org.jetbrains.kotlin:dataframe:0.7.2'
 }
 ```
+### Jupyter Notebook
 
+Install [Kotlin kernel](https://github.com/Kotlin/kotlin-jupyter) for [Jupyter](#https://jupyter.org/)
+
+Import latest stable `dataframe` version into notebook: 
+```
+%use dataframe
+```
+or specific versoin:
+```
+%use dataframe(<version>)
+```
 ## Key entities
 * `DataColumn` is a named list of values
 * `DataFrame` consists of `DataColumns` with unique names and equal size
@@ -47,12 +58,6 @@ or using `invoke` operator:
 ```kotlin
 df.filter { "survived"<Boolean>() }.groupBy("city").max("age")
 ```
-For more complicated expressions this API leads to a lot of type casts:
-```kotlin
-df.filter { "survived"<Boolean>() && "home"<String>().endsWith("NY") && "age"<Int?>() in 10..20 }
-```  
-And solution is...
-
 ### Column Accessors
 For frequently accessed columns type casting can be reduced by `ColumnAccessors`:
 ```kotlin
@@ -68,15 +73,10 @@ or just using `invoke` operator at column accessors:
 ```kotlin
 df.filter { survived() && home().endsWith("NY") && age() in 10..20 }
 ```
-If `DataFrame` doesn't contain a column referenced by `ColumnAccessor`, runtime exception will be thrown. In some cases
-this may lead to loosing important results of some long computation.
-
-And solution is...
-
 ### Extension properties
 When DataFrame is used within Jupyter Notebooks with [Kotlin Kernel](https://github.com/Kotlin/kotlin-jupyter) there is even more type safe way to access data. 
-After every REPL line execution all new global variables of type `DataFrame` are analyzed and extension properties 
-for data access are generated:
+After every REPL line execution all new global variables of type `DataFrame` are analyzed and replaced with typed `DataFrame` wrapper with auto-generated extension properties 
+for data access:
 ```kotlin
 val df = DataFrame.read("titanic.csv")
 ```
@@ -91,3 +91,28 @@ df.filter { survived && home.endsWith("NY") && age in 10..20 }
 Extension properties are generated for `DataSchema` that is extracted from `DataFrame` instance after REPL line execution.
 After that `DataFrame` variable is typed with its own `DataSchema`, so only valid extension properties corresponding 
 to actual columns in `DataFrame` will be allowed by compiler and suggested by completion.
+### Nullability
+DataFrame distinguishes between nullable and non-nullable columns in compliance with [Kotlin null safety](https://kotlinlang.org/docs/null-safety.html).
+If `DataColumn` actually contains `null` values, it's `type` is marked nullable
+
+Example in Jupyter: 
+```kotlin
+val df = dataFrameOf("name", "age")(
+    "Alice", 20,
+    "Bob", null)
+```
+Typed wrapper for `df`  is generated: `age` is nullable
+```kotlin
+df.filter { age > 10 } // compilation error
+```
+```kotlin
+df.filter { age != null && age!! > 10 } // ok
+df.filter { age?.let { it > 10 } ?: false } // ok
+```
+```kotlin
+val cleaned = df.filter { age != null }
+```
+Typed wrapper for `cleaned` is generated: `age` is not nullable
+```kotlin
+cleaned.filter { age > 10 } // ok
+```
