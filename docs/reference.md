@@ -1042,9 +1042,10 @@ df.add("diff") { value - prev?.value }
 df.filter { index % 5 == 0 }
 ```
 ## Row properties
-`DataRow` object provides three properties:
+`DataRow` object provides the following properties:
 * `index` - sequential row number in `DataFrame`, starts from 0
 * `prev` - previous row (`null` for the first row)
 * `next` - next row (`null` for the last row)
 
 If some of these properties clash with generated extension properties, they still can be accessed as functions `index()`, `prev()`, `next()`
+## Column properties
