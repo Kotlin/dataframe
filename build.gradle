@@ -2,23 +2,24 @@ buildscript {
 
     repositories {
         maven { url 'https://dl.bintray.com/kotlin/dokka' }
-        maven { url 'https://kotlin.bintray.com/kotlin-datascience' }
         mavenCentral()
+
+        def repoFolder = new File(jupyterApiTCRepo)
+        if(repoFolder.exists()) {
+            maven { url repoFolder }
+        }
     }
 
     dependencies {
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka_version}"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-jupyter-api-gradle-plugin:$jupyterApiVersion"
     }
 }
-
-
-
 
 plugins {
     id "com.jfrog.bintray" version "1.8.1"
     id "org.jetbrains.kotlin.jvm" version "$kotlin_version"
-    id "org.jetbrains.kotlin.jupyter.api" version "$jupyterApiVersion"
 }
 
 apply plugin: 'kotlin'
@@ -26,6 +27,7 @@ apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'application'
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
+apply plugin: "org.jetbrains.kotlin.jupyter.api"
 
 // not neeeded but does not work without
 mainClassName = "foo.Bar" // not needed but does not work without
@@ -34,6 +36,11 @@ repositories {
     mavenCentral()
     jcenter()
     maven { url 'https://kotlin.bintray.com/kotlin-datascience' }
+
+    def repoFolder = new File(jupyterApiTCRepo)
+    if(repoFolder.exists()) {
+        maven { url repoFolder }
+    }
 }
 
 configurations {
@@ -97,14 +104,29 @@ dokka {
 
 group 'org.jetbrains.kotlin'
 
-if(hasProperty("build_counter")) {
-    version property('version') + "-dev-" + build_counter
+def detectVersion() {
+    def buildNumber = rootProject.findProperty("build.number")
+    if(buildNumber != null) {
+        if (hasProperty("build.number.detection")) {
+            return property('version') + "-dev-" + buildNumber
+        } else {
+            return buildNumber
+        }
+    }
+    else if(hasProperty("release")) {
+        return property('version')
+    } else {
+        return property('version') + "-dev"
+    }
 }
-else if(hasProperty("release")) {
-    version property('version')
-} else {
-    version property('version') + "-dev"
+
+task detectVersionForTC {
+    doLast {
+        println("##teamcity[buildNumber '$version']")
+    }
 }
+
+version detectVersion()
 
 artifacts {
     archives sourcesJar
