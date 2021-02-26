@@ -13,7 +13,7 @@ internal val newDataSchemas = mutableListOf<KClass<*>>()
 @JupyterLibrary
 internal class Integration : JupyterIntegration(){
 
-    override fun Builder.onLoaded(notebook: Notebook?) {
+    override fun Builder.onLoaded() {
 
         render<AnyFrame> { HTML(it.toHTML()) }
         render<AnyRow> { it.toDataFrame() }
