@@ -107,12 +107,14 @@ internal fun fromList(records: List<*>): AnyFrame {
 
                 val parsed = fromList(values)
                 when {
+                    parsed.isEmpty() -> DataColumn.create(colName, arrayOfNulls<Any?>(values.size).toList(), getType<Any?>())
                     parsed.isSingleUnnamedColumn() -> parsed.column(0).rename(colName)
                     else -> DataColumn.create(colName, parsed)
                 }
             }
         }
     }
+    if(columns.isEmpty()) return DataFrame.empty(records.size)
     return columns.toDataFrame()
 }
 
