@@ -198,7 +198,7 @@ Note that all update operations return a new instance of `DataFrame`
 Changes values in some cells
 ```
 df.update { columns }
-   [ .where { filter } | .at(rowIndices) | .at(rowRange) ] 
+   [.where { filter } | .at(rowIndices) | .at(rowRange) ] // filter cells to be updated 
     .with { valueExpression } | .withNull() | .notNull { valueExpression }
 
 filter = DataRow.(OldValue) -> Boolean
