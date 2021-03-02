@@ -41,15 +41,16 @@ fun <T, C> SplitClause<T, C>.inward() = SplitClause(df, columns, true, transform
 fun <T, C> SplitClause<T, C>.into(firstName: ColumnReference<*>, vararg otherNames: ColumnReference<*>) =
     into(listOf(firstName.name()) + otherNames.map { it.name() })
 
-fun <T, C> SplitClause<T, C>.into(nameGenerator: ColumnWithPath<C>.(Int) -> String = { "part$it" }) =
-    intoMany { col, n -> (0 until n).map { nameGenerator(col, it) } }
-
-fun <T, C> SplitClause<T, C>.intoMany(namesProvider: (ColumnWithPath<C>, Int) -> List<String>) =
+fun <T, C> SplitClause<T, C>.intoMany(namesProvider: (ColumnWithPath<C>, numberOfNewColumns: Int) -> List<String>) =
     doSplitCols(this, namesProvider)
 
-fun <T, C> SplitClause<T, C>.into(vararg names: String) = into(names.toList())
+fun <T, C> SplitClause<T, C>.into(vararg names: String, extraNamesGenerator: (ColumnWithPath<C>.(extraColumnIndex: Int) -> String)? = null) = into(names.toList(), extraNamesGenerator)
 
-fun <T, C> SplitClause<T, C>.into(names: List<String>) = intoMany { col, n -> names }
+fun <T, C> SplitClause<T, C>.into(names: List<String>, extraNamesGenerator: (ColumnWithPath<C>.(extraColumnIndex: Int) -> String)? = null) = intoMany { col, numberOfNewCols ->
+    if(extraNamesGenerator != null && names.size < numberOfNewCols)
+        names + (1 .. (numberOfNewCols-names.size)).map { extraNamesGenerator(col, it) }
+    else names
+}
 
 internal fun valueToList(value: Any?) = when (value) {
     null -> emptyList()
@@ -86,8 +87,9 @@ fun <T, C> doSplitCols(
                 columnCollectors[j].add(null)
         }
 
-        val names = columnNamesGenerator(column, columnCollectors.size)
-        require(names.size >= columnCollectors.size)
+        var names = columnNamesGenerator(column, columnCollectors.size)
+        if(names.size < columnCollectors.size)
+            names = names + (1..(columnCollectors.size - names.size)).map {"splitted$it" }
 
         columnCollectors.mapIndexed { i, col ->
 
