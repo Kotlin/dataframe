@@ -10,7 +10,6 @@ import org.jetbrains.dataframe.io.print
 import org.junit.Test
 import java.math.BigDecimal
 import java.time.LocalDate
-import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
 class DataFrameTests : BaseTest() {
@@ -907,6 +906,37 @@ class DataFrameTests : BaseTest() {
         val res = merged.split(info).into("age", "city", "weight")
         val expected = typed.update { age and city and weight }.with { it.toString() }
         res shouldBe expected
+    }
+
+    @Test
+    fun splitStringColGenerateNames() {
+        val merged = typed.merge { age and city and weight }.by(",").into("info")
+        val info by column<String>()
+        val res = merged.split(info).into("age") { "extra$it"}
+        res.columnNames() shouldBe listOf("name", "age", "extra1", "extra2")
+    }
+
+    @Test
+    fun splitStringColWithDefaultgenerator() {
+        val merged = typed.merge { age and city and weight }.by(",").into("info")
+        val info by column<String>()
+        val res = merged.split(info).into("age")
+        res.columnNames() shouldBe listOf("name", "age", "splitted1", "splitted2")
+    }
+
+    @Test
+    fun splitAgeIntoDigits() {
+
+        fun digits(num: Int) = sequence {
+            var k = num
+            while(k > 0) {
+                yield(k % 10)
+                k /= 10
+            }
+        }.toList()
+
+        val res = typed.split { age }.by { digits(it) }.into { "digit$it" }
+        res.print()
     }
 
     @Test
