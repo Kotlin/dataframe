@@ -283,7 +283,7 @@ class DataFrameTreeTests : BaseTest() {
         nameGroup.name() shouldBe "name"
         nameGroup.isGroup() shouldBe true
         nameGroup.ncol() shouldBe typed2.nameAndCity.name.map { it.length }.max()
-        nameGroup.columnNames() shouldBe (0 until nameGroup.ncol()).map { "char$it" }
+        nameGroup.columnNames() shouldBe (1 .. nameGroup.ncol()).map { "char$it" }
     }
 
     @Test
