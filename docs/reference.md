@@ -55,8 +55,9 @@
     * [add](#add-columns)
     * [union](#union)
     * [join](#join)
-* [Single column operations](#single-column-operations)
+* [Column operations](#column-operations)
     * [distinct](#distinct)
+    * [rename](#rename-1)
     * [digitize](#digitize)
     * [Arithmetic operations](#arithmetic-operations)
     * [Column Statistics](#column-statistics)
@@ -421,10 +422,8 @@ df.split { columns }
 splitter = (T) -> List<Any>
 columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
 ```
-`columnNamesGenerator` is used to generate names for additional columns when the list of explicitly specified `columnNames` was not long enough
-
-`columnIndex` in `columnNamesGenerator` starts with `1` for the first additional column name
-
+`columnNamesGenerator` is used to generate names for additional columns when the list of explicitly specified `columnNames` was not long enough.  
+`columnIndex` in `columnNamesGenerator` starts with `1` for the first additional column name.  
 Default `columnNamesGenerator` generates column names `splitted1`, `splitted2`...
 
 Examples:
@@ -494,14 +493,17 @@ nameExpression = (DataColumn) -> String
 ### replace
 Replaces one or several columns with new columns
 ```
+df.replace { columns }.with(newColumns)
 df.replace { columns }.with { columnExpression }
 
 columnExpression = DataFrame.(DataColumn) -> DataColumn
 ```
 Examples
 ```kotlin
-df.replace { age }.with { 2021 - age named "year" }
+df.replace { col1 and col2 }.with(newCol1, newCol2)
 df.replace { stringCols() }.with { it.lower() }
+df.replace { oldColumn }.with(newColumn.rename("newName"))
+df.replace { age }.with { 2021 - age named "year" } // another syntax for renaming columns within replace expression
 ```
 ### move
 Moves one or several columns within `DataFrame`.
@@ -803,8 +805,13 @@ name|age
 ---|---
 Alice | 15 
 
-## Single column operations
+## Column operations
 Operations for a single `DataColumn` object
+### rename
+Returns `DataColumn` with a new name
+```kotlin
+column.rename("newName")
+```
 ### distinct
 Return `DataColumn` with unique values
 ```

@@ -10,6 +10,7 @@ import org.jetbrains.dataframe.io.print
 import org.junit.Test
 import java.math.BigDecimal
 import java.time.LocalDate
+import kotlin.IllegalArgumentException
 import kotlin.reflect.jvm.jvmErasure
 
 class DataFrameTests : BaseTest() {
@@ -1209,8 +1210,8 @@ class DataFrameTests : BaseTest() {
     @Test
     fun replace() {
 
-        val res = typed.replace { age }.with { 2021 - age named "year" }
-        val expected = typed.update { age }.with { 2021 - age }.rename { age }.into("year")
+        val res = typed.replace { age }.with(2021 - typed.age)
+        val expected = typed.update { age }.with { 2021 - age }
         res shouldBe expected
     }
 
@@ -1218,6 +1219,26 @@ class DataFrameTests : BaseTest() {
     fun `replace with rename`(){
 
         val res = typed.replace { age }.with { it.rename("age2") }
-        res shouldBe typed.rename {age}.into("age2")
+        res shouldBe typed.rename { age }.into("age2")
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun `replace exception`(){
+        typed.replace { intCols() }.with(typed.name)
+    }
+
+    @Test
+    fun `replace two columns`(){
+        val res = typed.replace { age and weight }.with(typed.age * 2, typed.weight * 2)
+        val expected = typed.update { age and weight}.with { it?.times(2) }
+        res shouldBe expected
+    }
+
+    @Test
+    fun `replace with expression`() {
+
+        val res = typed.replace { age }.with { 2021 - age named "year" }
+        val expected = typed.update { age }.with { 2021 - age }.rename { age }.into("year")
+        res shouldBe expected
     }
 }

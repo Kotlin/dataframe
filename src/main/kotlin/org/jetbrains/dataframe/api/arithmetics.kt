@@ -12,6 +12,23 @@ operator fun DataColumn<Int>.times(value: Int) = map {it * value }
 operator fun DataColumn<Int>.div(value: Int) = map { it / value }
 operator fun Int.div(column: DataColumn<Int>) = column.map { this / it }
 
+@JvmName("plusInt?")
+operator fun DataColumn<Int?>.plus(value: Int) = map { it?.plus(value) }
+@JvmName("minusInt?")
+operator fun DataColumn<Int?>.minus(value: Int) = map { it?.minus(value) }
+@JvmName("plus?")
+operator fun Int.plus(column: DataColumn<Int?>) = column.map { it?.plus(this) }
+@JvmName("minus?")
+operator fun Int.minus(column: DataColumn<Int?>) = column.map { it?.let { this - it } }
+@JvmName("unaryMinusInt?")
+operator fun DataColumn<Int?>.unaryMinus() = map { it?.unaryMinus() }
+@JvmName("timesInt?")
+operator fun DataColumn<Int?>.times(value: Int) = map { it?.times(value) }
+@JvmName("divInt?")
+operator fun DataColumn<Int?>.div(value: Int) = map { it?.div(value) }
+@JvmName("div?")
+operator fun Int.div(column: DataColumn<Int?>) = column.map { it?.let { this / it }}
+
 @JvmName("plusInt")
 operator fun DataColumn<Int>.plus(value: Double) = map { it + value }
 @JvmName("minusInt")
