@@ -20,6 +20,10 @@ data class UpdateClause<T, C>(val df: DataFrame<T>, val filter: UpdateExpression
 
 fun <T, C> UpdateClause<T, C>.where(predicate: UpdateExpression<T, C, Boolean>) = copy(filter = predicate)
 
+fun <T, C> UpdateClause<T, C>.at(rowIndices: Collection<Int>) = where { index in rowIndices }
+fun <T, C> UpdateClause<T, C>.at(vararg rowIndices: Int) = at(rowIndices.toList())
+fun <T, C> UpdateClause<T, C>.at(rowRange: IntRange) = where { index in rowRange }
+
 fun <T, C> UpdateClause<T, C>.guessTypes() = copy(targetType = null) { it.createStarProjectedType(false) }
 
 fun <T, C> UpdateClause<T, C>.toType(type: KType) = copy(targetType = type)
