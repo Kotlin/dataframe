@@ -147,6 +147,22 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `update cells by index`() {
+
+        val res = typed.update { age }.at(2, 4).with(100)
+        val expected = typed.map { if (index == 2 || index == 4) 100 else age }
+        res.age.values shouldBe expected
+    }
+
+    @Test
+    fun `update cells by index range`() {
+
+        val res = typed.update { age }.at(2..4).with(100)
+        val expected = typed.map { if (index in 2..4) 100 else age }
+        res.age.values shouldBe expected
+    }
+
+    @Test
     fun `null to zero`() {
         val expected = typed.weight.values.map { it ?: 0 }
         fun AnyFrame.check() {

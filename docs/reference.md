@@ -197,18 +197,20 @@ Note that all update operations return a new instance of `DataFrame`
 ## update
 Changes values in some cells
 ```
-df.update { columns }.with { valueExpression }
-df.update { columns }.where { valueFilter }.with { valueExpression }
-df.update { columns }.where { valueFilter }.withNull()
-df.update { columns }.notNull { valueExpression }
+df.update { columns }
+   [ .where { filter } | .at(rowIndices) | .at(rowRange) ] 
+    .with { valueExpression } | .withNull() | .notNull { valueExpression }
 
+filter = DataRow.(OldValue) -> Boolean
 valueExpression = DataRow.(OldValue) -> NewValue
 ```
 Examples
 ```kotlin
 df.update { price }.with { it * 2 }
 df.update { age }.where { name == "Alice" }.with { 20 }
-df.update { price }.with { (it + (prev?.price ?: it) + (next?.price ?: it)) / 3 }
+df.update { column }.at(4,6,10).with { "value" } 
+df.update { column }.at(5..15).withNull() 
+df.update { price }.with { (it + (prev?.price ?: it) + (next?.price ?: it)) / 3 } // moving average
 df.update { cases }.with { it.toDouble() / population * 100 }
 ```
 ## fillNulls
