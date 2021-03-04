@@ -1,9 +1,9 @@
 package org.jetbrains.dataframe.impl.columns
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.MapColumn
-import org.jetbrains.dataframe.api.columns.FrameColumn
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.MapColumn
+import org.jetbrains.dataframe.columns.FrameColumn
 import org.jetbrains.dataframe.createType
 import java.lang.Exception
 import java.lang.UnsupportedOperationException

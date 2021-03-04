@@ -1,9 +1,17 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.*
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.ColumnWithPath
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.FrameColumn
+import org.jetbrains.dataframe.columns.MapColumn
 import org.jetbrains.dataframe.impl.TreeNode
 import org.jetbrains.dataframe.impl.columns.DataColumnWithParent
 import org.jetbrains.dataframe.impl.columns.ColumnWithParent
+import org.jetbrains.dataframe.impl.columns.addPath
+import org.jetbrains.dataframe.impl.columns.asGroup
+import org.jetbrains.dataframe.impl.columns.changePath
+import org.jetbrains.dataframe.impl.columns.withDf
 import org.jetbrains.dataframe.impl.getAncestor
 import org.jetbrains.dataframe.impl.getOrPutEmpty
 import kotlin.reflect.KClass

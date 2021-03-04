@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnSet
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.ColumnSet
 import java.math.BigDecimal
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure

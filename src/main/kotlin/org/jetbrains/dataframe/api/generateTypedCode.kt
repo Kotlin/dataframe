@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe.api
 
-import org.jetbrains.dataframe.CodeGeneratorImpl
 import org.jetbrains.dataframe.DataFrame
+import org.jetbrains.dataframe.impl.codeGen.CodeGeneratorImpl
 
 fun <T> DataFrame<T>.generateTypedCode(markerName: String = "DataRecord"): String {
     val codeGen = CodeGeneratorImpl()

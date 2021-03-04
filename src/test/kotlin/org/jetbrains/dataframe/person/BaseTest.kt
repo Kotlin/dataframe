@@ -1,6 +1,8 @@
 package org.jetbrains.dataframe.person
 
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.annotations.DataSchema
+import org.jetbrains.dataframe.impl.columns.asValues
 
 open class BaseTest {
 

@@ -1,14 +1,20 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.ColumnSet
-import org.jetbrains.dataframe.api.columns.ColumnWithPath
-import org.jetbrains.dataframe.api.columns.MapColumn
-import org.jetbrains.dataframe.api.columns.isSubtypeOf
+import org.jetbrains.dataframe.columns.ColumnDefinition
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.ColumnSet
+import org.jetbrains.dataframe.columns.ColumnWithPath
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.MapColumn
+import org.jetbrains.dataframe.columns.isSubtypeOf
+import org.jetbrains.dataframe.impl.columns.ColumnsList
+import org.jetbrains.dataframe.impl.columns.asGroup
+import org.jetbrains.dataframe.impl.columns.transform
+import org.jetbrains.dataframe.impl.columns.typed
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
-interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
+interface SelectReceiver<out T> : DataFrameBase<T> {
 
     fun DataFrameBase<*>.first(numCols: Int) = cols().take(numCols)
 
@@ -29,7 +35,7 @@ interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
 
     fun <C> ColumnSet<C>.colsDfs(predicate: (ColumnWithPath<*>) -> Boolean = {true}) = dfsInternal(predicate)
 
-    fun DataFrameBase<*>.all() = Columns(children())
+    fun DataFrameBase<*>.all(): ColumnSet<*> = ColumnsList(children())
 
     fun DataFrameBase<*>.allDfs() = colsDfs { !it.isGroup() }
 
@@ -39,7 +45,7 @@ interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
 
     fun MapColumnReference.children() = transform { it.single().children() }
 
-    operator fun List<AnyCol>.get(range: IntRange) = Columns(subList(range.first, range.last + 1))
+    operator fun <C> List<DataColumn<C>>.get(range: IntRange):ColumnSet<C> = ColumnsList(subList(range.first, range.last + 1))
 
     operator fun String.invoke() = toColumnDef()
 
@@ -77,13 +83,35 @@ interface ColumnsSelectorReceiver<out T> : DataFrameBase<T> {
     fun ColumnSet<*>.nameContains(regex: Regex) = cols { it.name.contains(regex) }
     fun ColumnSet<*>.startsWith(prefix: CharSequence) = cols { it.name.startsWith(prefix)}
     fun ColumnSet<*>.endsWith(suffix: CharSequence) = cols { it.name.endsWith(suffix)}
+
+    infix fun <C> ColumnSet<C>.and(other: ColumnSet<C>): ColumnSet<C> = ColumnsList(this, other)
+
+    fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>) = except(other.toList().toColumnSet())
+
+    infix fun <C> ColumnSet<C>.except(other: ColumnSet<*>): ColumnSet<*> =
+        createColumnSet { resolve(it).allColumnsExcept(other.resolve(it)) }
+
+    infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): ColumnSet<*> = except(selector.toColumns())
+
+    operator fun <C> ColumnSelector<T, C>.invoke() = this(this@SelectReceiver, this@SelectReceiver)
+
+    operator fun <C> ColumnReference<C>.invoke(newName: String) = rename(newName)
+    infix fun <C> DataColumn<C>.into(newName: String) = (this as ColumnReference<C>).rename(newName)
+
+    infix fun String.and(other: String) = toColumnDef() and other.toColumnDef()
+    infix fun <C> String.and(other: ColumnSet<C>) = toColumnDef() and other
+    infix fun <C> KProperty<C>.and(other: ColumnSet<C>) = toColumnDef() and other
+    infix fun <C> ColumnSet<C>.and(other: KProperty<C>) = this and other.toColumnDef()
+    infix fun <C> KProperty<C>.and(other: KProperty<C>) = toColumnDef() and other.toColumnDef()
+    infix fun <C> ColumnSet<C>.and(other: String) = this and other.toColumnDef()
 }
 
 internal fun ColumnSet<*>.colsInternal(predicate: (AnyCol) -> Boolean) = transform { it.flatMap { it.children().filter { predicate(it.data) } } }
 internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) = transform { it.filter { it.isGroup() }.flatMap { it.children().colsDfs().filter(predicate) } }
 
 fun <C> ColumnSet<*>.colsDfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }) = dfsInternal { it.data.isSubtypeOf(type) && predicate(it.typed()) }
-inline fun <reified C> ColumnSet<*>.colsDfsOf(noinline filter: (ColumnWithPath<C>) -> Boolean = { true }) = colsDfsOf(getType<C>(), filter)
+inline fun <reified C> ColumnSet<*>.colsDfsOf(noinline filter: (ColumnWithPath<C>) -> Boolean = { true }) = colsDfsOf(
+    getType<C>(), filter)
 
 fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> = colsInternal { it.isSubtypeOf(type) && filter(it.typed()) } as ColumnSet<C>
 inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }) = colsOf(getType<C>(), filter)

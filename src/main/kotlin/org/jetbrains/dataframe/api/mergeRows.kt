@@ -1,8 +1,10 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.MapColumn
-import org.jetbrains.dataframe.api.columns.FrameColumn
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.MapColumn
+import org.jetbrains.dataframe.columns.FrameColumn
+import org.jetbrains.dataframe.impl.columns.asGroup
+import org.jetbrains.dataframe.impl.columns.asTable
 import kotlin.reflect.KType
 
 inline fun <T, reified C> DataFrame<T>.mergeRows(noinline selector: ColumnsSelector<T, C>) = mergeRows(this, selector, getType<C>())

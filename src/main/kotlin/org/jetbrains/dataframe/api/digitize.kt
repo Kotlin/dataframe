@@ -1,13 +1,18 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.columns.DataColumn
 import kotlin.reflect.KClass
 
 fun DataColumn<Double>.digitize(vararg bins: Int, right: Boolean = false) = digitize(bins.toList(), Double::class, right)
 
 fun <T: Comparable<T>> DataColumn<T>.digitize(vararg bins: T, right: Boolean = false) = digitize(bins.toList(), right)
 
-fun <T: Comparable<T>> DataColumn<T>.digitize(bins: List<Int>, kclass: KClass<T>, right: Boolean = false): DataColumn<Int> = digitize(bins.toList().map{convert(it, kclass)}, right)
+fun <T: Comparable<T>> DataColumn<T>.digitize(bins: List<Int>, kclass: KClass<T>, right: Boolean = false): DataColumn<Int> = digitize(bins.toList().map{
+    org.jetbrains.dataframe.impl.convert(
+        it,
+        kclass
+    )
+}, right)
 
 fun <T: Comparable<T>> DataColumn<T>.digitize(bins: List<T>, right: Boolean = false): DataColumn<Int> {
 

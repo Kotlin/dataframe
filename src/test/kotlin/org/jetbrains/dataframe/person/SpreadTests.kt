@@ -2,6 +2,8 @@ package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.annotations.DataSchema
+import org.jetbrains.dataframe.impl.columns.typed
 import org.junit.Test
 import java.io.Serializable
 

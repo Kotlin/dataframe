@@ -1,7 +1,9 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.valueClass
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.valueClass
+import org.jetbrains.dataframe.impl.columns.assertIsComparable
 import java.math.BigDecimal
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty

@@ -1,8 +1,12 @@
 package org.jetbrains.dataframe.jupyter
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.MapColumn
+import org.jetbrains.dataframe.annotations.DataSchema
+import org.jetbrains.dataframe.columns.MapColumn
+import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.io.toHTML
+import org.jetbrains.dataframe.stubs.DataFrameToListNamedStub
+import org.jetbrains.dataframe.stubs.DataFrameToListTypedStub
 import org.jetbrains.kotlinx.jupyter.api.*
 import org.jetbrains.kotlinx.jupyter.api.annotations.JupyterLibrary
 import org.jetbrains.kotlinx.jupyter.api.libraries.*
@@ -22,6 +26,7 @@ internal class Integration : JupyterIntegration(){
         render<GroupedDataFrame<*, *>> { it.plain() }
 
         import("org.jetbrains.dataframe.*")
+        import("org.jetbrains.dataframe.annotations.*")
         import("org.jetbrains.dataframe.io.*")
 
         val codeGen = CodeGenerator.create()

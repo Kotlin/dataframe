@@ -1,6 +1,8 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.columns.ColumnDefinition
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.DataColumn
 import kotlin.reflect.KProperty
 
 operator fun <T> DataFrame<T>.plus(col: AnyCol) = dataFrameOf(columns() + col).typed<T>()

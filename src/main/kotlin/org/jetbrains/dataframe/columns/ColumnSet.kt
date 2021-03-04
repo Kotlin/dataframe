@@ -1,4 +1,4 @@
-package org.jetbrains.dataframe.api.columns
+package org.jetbrains.dataframe.columns
 
 import org.jetbrains.dataframe.ColumnResolutionContext
 

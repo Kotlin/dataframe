@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.columns.DataColumn
 import java.math.BigDecimal
 
 operator fun DataColumn<Int>.plus(value: Int) = map { it + value }
