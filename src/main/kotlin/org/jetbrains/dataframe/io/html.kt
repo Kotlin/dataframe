@@ -4,36 +4,36 @@ import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.images.Image
 import org.jetbrains.dataframe.impl.truncate
 
-fun AnyFrame.toHTML(limit: Int = 20, truncate: Int = 40): String {
-    val sb = StringBuilder()
-    sb.append("<html><body>")
-    sb.append("<table><tr>")
+fun AnyFrame.toHTML(limit: Int = 20, truncate: Int = 40, cellCustomization: CellCustomization? = null) = buildString {
+    append("<html><body>")
+    append("<table><tr>")
     columns().forEach {
-        sb.append("<th style=\"text-align:left\">${it.name()}</th>")
+        append("<th style=\"text-align:left\">${it.name()}</th>")
     }
-    sb.append("</tr>")
-    rows().take(limit).forEach {
-        sb.append("<tr>")
-        it.values.forEach {
+    append("</tr>")
+    rows().take(limit).forEach { row ->
+        append("<tr>")
+        columns().forEach { col ->
+            val cellVal = row[col]
             val tooltip: String
             val content: String
-            when(it) {
+            when(cellVal) {
                 is Image -> {
-                    tooltip = it.url
-                    content = "<img src=\"${it.url}\"/>"
+                    tooltip = cellVal.url
+                    content = "<img src=\"${cellVal.url}\"/>"
                 }
                 else -> {
-                    tooltip = renderValue(it)
+                    tooltip = renderValue(cellVal)
                     content = tooltip.truncate(truncate)
                 }
             }
-            sb.append("<td style=\"text-align:left\" title=\"$tooltip\">$content</td>")
+            val attributes = cellCustomization?.invoke(row, col)?.toAttributesString().orEmpty()
+            append("<td style=\"text-align:left;$attributes\" title=\"$tooltip\">$content</td>")
         }
-        sb.append("</tr>")
+        append("</tr>")
     }
-    sb.append("</table>")
+    append("</table>")
     if (limit < nrow())
-        sb.append("<p>... only showing top $limit of ${nrow()} rows</p>")
-    sb.append("</body></html>")
-    return sb.toString()
+        append("<p>... only showing top $limit of ${nrow()} rows</p>")
+    append("</body></html>")
 }
