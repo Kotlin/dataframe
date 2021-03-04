@@ -1,9 +1,9 @@
 package org.jetbrains.dataframe.impl.columns
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.ColumnWithPath
-import org.jetbrains.dataframe.api.columns.MapColumn
-import org.jetbrains.dataframe.api.columns.FrameColumn
+import org.jetbrains.dataframe.columns.ColumnWithPath
+import org.jetbrains.dataframe.columns.MapColumn
+import org.jetbrains.dataframe.columns.FrameColumn
 
 internal class FrameColumnWithParent<T>(parent: MapColumn<*>, source: FrameColumn<T>) : DataColumnWithParentImpl<DataFrame<T>>(parent, source), FrameColumn<T> by source {
 

@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.columns.DataColumn
 import kotlin.reflect.KProperty
 
 fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =

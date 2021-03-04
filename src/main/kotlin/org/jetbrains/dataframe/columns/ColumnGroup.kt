@@ -1,6 +1,5 @@
-package org.jetbrains.dataframe.api.columns
+package org.jetbrains.dataframe.columns
 
-import org.jetbrains.dataframe.ColumnReference
 import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.DataRow
 

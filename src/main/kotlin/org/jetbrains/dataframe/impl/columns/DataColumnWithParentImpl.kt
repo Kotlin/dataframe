@@ -1,11 +1,9 @@
 package org.jetbrains.dataframe.impl.columns
 
 import org.jetbrains.dataframe.ColumnResolutionContext
-import org.jetbrains.dataframe.api.columns.ColumnWithPath
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.MapColumn
-import org.jetbrains.dataframe.checkEquals
-import org.jetbrains.dataframe.getHashCode
+import org.jetbrains.dataframe.columns.ColumnWithPath
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.MapColumn
 
 internal abstract class DataColumnWithParentImpl<T>(override val parent: MapColumn<*>, val source: DataColumn<T>) : DataColumnWithParent<T>, DataColumn<T> by source {
 

@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.DataColumn
 import kotlin.reflect.KProperty
 
 inline fun <reified T : Comparable<T>> DataColumn<T?>.median() = values.asSequence().filterNotNull().asIterable().median()

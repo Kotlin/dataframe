@@ -1,8 +1,8 @@
 package org.jetbrains.dataframe.impl.columns
 
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.MapColumn
-import org.jetbrains.dataframe.api.columns.ValueColumn
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.MapColumn
+import org.jetbrains.dataframe.columns.ValueColumn
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 

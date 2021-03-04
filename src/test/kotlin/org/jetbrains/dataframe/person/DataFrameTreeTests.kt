@@ -4,7 +4,14 @@ import io.kotlintest.fail
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.*
+import org.jetbrains.dataframe.annotations.DataSchema
+import org.jetbrains.dataframe.columns.ColumnGroup
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.impl.codeGen.CodeGeneratorImpl
+import org.jetbrains.dataframe.impl.columns.asGroup
+import org.jetbrains.dataframe.impl.columns.asTable
+import org.jetbrains.dataframe.impl.columns.isTable
+import org.jetbrains.dataframe.impl.columns.typed
 import org.junit.Test
 
 class DataFrameTreeTests : BaseTest() {
@@ -358,7 +365,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun parentColumnTest() {
-        val res = typed2.move { colsDfs { it.depth > 0 } }.toTop { it.parent.name + "-" + it.name}
+        val res = typed2.move { colsDfs { it.depth > 0 } }.toTop { it.parent!!.name + "-" + it.name}
         res.ncol shouldBe 4
         res.columnNames() shouldBe listOf("nameAndCity-name", "nameAndCity-city", "age", "weight")
     }

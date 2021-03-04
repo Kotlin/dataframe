@@ -1,7 +1,9 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.FrameColumn
+import org.jetbrains.dataframe.columns.FrameColumn
 import org.jetbrains.dataframe.impl.GroupedDataFrameImpl
+import org.jetbrains.dataframe.impl.columns.asTable
+import org.jetbrains.dataframe.impl.columns.isTable
 
 typealias GroupKey = List<Any?>
 

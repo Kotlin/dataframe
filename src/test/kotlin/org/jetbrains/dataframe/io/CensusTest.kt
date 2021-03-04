@@ -2,11 +2,10 @@ package org.jetbrains.dataframe.io
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.allNulls
-import org.jetbrains.dataframe.api.columns.isType
+import org.jetbrains.dataframe.columns.allNulls
+import org.jetbrains.dataframe.columns.isType
 import org.junit.Test
 import java.io.StringWriter
-import java.time.LocalDateTime
 
 class CensusTest {
 

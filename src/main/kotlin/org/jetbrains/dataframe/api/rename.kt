@@ -1,7 +1,8 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.ColumnWithPath
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.ColumnWithPath
 import org.jetbrains.dataframe.impl.columns.DataColumnInternal
 import org.jetbrains.dataframe.impl.columns.RenamedColumnReference
 import kotlin.reflect.KProperty

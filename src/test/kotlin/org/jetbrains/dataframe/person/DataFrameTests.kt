@@ -4,7 +4,9 @@ import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.valueClass
+import org.jetbrains.dataframe.columns.valueClass
+import org.jetbrains.dataframe.impl.columns.isTable
+import org.jetbrains.dataframe.impl.columns.typed
 import org.jetbrains.dataframe.impl.trackColumnAccess
 import org.jetbrains.dataframe.io.print
 import org.junit.Test

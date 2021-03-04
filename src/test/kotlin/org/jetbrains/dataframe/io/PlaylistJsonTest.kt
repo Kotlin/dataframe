@@ -2,9 +2,11 @@ package org.jetbrains.dataframe.io
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.MapColumn
-import org.jetbrains.dataframe.api.columns.ColumnGroup
+import org.jetbrains.dataframe.annotations.DataSchema
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.MapColumn
+import org.jetbrains.dataframe.columns.ColumnGroup
+import org.jetbrains.dataframe.impl.codeGen.CodeGeneratorImpl
 import org.junit.Test
 
 class PlaylistJsonTest {

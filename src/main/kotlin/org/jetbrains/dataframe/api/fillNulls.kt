@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.columns.ColumnReference
 import kotlin.reflect.KProperty
 
 fun <T, C> DataFrame<T>.fillNulls(cols: ColumnsSelector<T, C>) = update(cols).where { it == null }

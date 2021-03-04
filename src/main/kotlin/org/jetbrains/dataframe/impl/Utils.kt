@@ -1,10 +1,8 @@
-package org.jetbrains.dataframe
+package org.jetbrains.dataframe.impl
 
+import org.jetbrains.dataframe.Predicate
 import java.math.BigDecimal
 import kotlin.reflect.KClass
-import kotlin.reflect.KType
-
-typealias Predicate<T> = (T) -> Boolean
 
 internal infix fun <T> (Predicate<T>).and(other: Predicate<T>): Predicate<T> = { this(it) && other(it) }
 
@@ -54,4 +52,26 @@ internal fun BooleanArray.toIndices(): List<Int> {
     return res
 }
 
-val KType.fullName: String get() = toString()
+
+internal fun <T> Iterable<T>.equalsByElement(other: Iterable<T>): Boolean {
+    val iterator1 = iterator()
+    val iterator2 = other.iterator()
+    while (iterator1.hasNext() && iterator2.hasNext()) {
+        if (iterator1.next() != iterator2.next()) return false
+    }
+    if (iterator1.hasNext() || iterator2.hasNext()) return false
+    return true
+}
+
+internal fun <T> Iterable<T>.rollingHash(): Int {
+    val i = iterator()
+    var hash = 0
+    while (i.hasNext())
+        hash = 31 * hash + (i.next()?.hashCode() ?: 5)
+    return hash
+}
+
+internal fun <T> Iterable<T>.asList() = when (this) {
+    is List<T> -> this
+    else -> this.toList()
+}

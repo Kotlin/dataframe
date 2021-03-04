@@ -1,10 +1,10 @@
 package org.jetbrains.dataframe.codeGen
 
 import io.kotlintest.shouldBe
-import org.jetbrains.dataframe.CodeGeneratorImpl
-import org.jetbrains.dataframe.ColumnName
-import org.jetbrains.dataframe.DataSchema
+import org.jetbrains.dataframe.annotations.ColumnName
+import org.jetbrains.dataframe.annotations.DataSchema
 import org.jetbrains.dataframe.dataFrameOf
+import org.jetbrains.dataframe.impl.codeGen.CodeGeneratorImpl
 import org.junit.Test
 
 class NameGenerationTests {

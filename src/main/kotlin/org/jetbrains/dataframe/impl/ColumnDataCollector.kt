@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe.impl
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.columns.DataColumn
 import org.jetbrains.dataframe.commonParent
 import java.lang.UnsupportedOperationException
 import kotlin.reflect.KClass

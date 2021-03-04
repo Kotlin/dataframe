@@ -1,8 +1,8 @@
 package org.jetbrains.dataframe
 
 import io.kotlintest.shouldBe
-import org.jetbrains.dataframe.api.columns.ColumnGroup
-import org.jetbrains.dataframe.api.columns.FrameColumn
+import org.jetbrains.dataframe.columns.ColumnGroup
+import org.jetbrains.dataframe.columns.FrameColumn
 import org.jetbrains.dataframe.io.*
 import org.junit.Test
 

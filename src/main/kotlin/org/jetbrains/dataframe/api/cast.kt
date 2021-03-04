@@ -1,16 +1,14 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.allNulls
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.allNulls
 import org.jetbrains.dataframe.impl.columns.DataColumnInternal
-import org.jetbrains.dataframe.impl.createDataCollector
 import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
-import kotlin.reflect.full.isSuperclassOf
 import kotlin.reflect.full.withNullability
 
 fun <T> DataFrame<T>.cast(selector: ColumnsSelector<T, *>) = CastClause(this, selector)
