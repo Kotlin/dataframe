@@ -4,7 +4,7 @@ import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.annotations.DataSchema
 import org.jetbrains.dataframe.columns.MapColumn
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
-import org.jetbrains.dataframe.io.toHTML
+import org.jetbrains.dataframe.io.FrameRender
 import org.jetbrains.dataframe.stubs.DataFrameToListNamedStub
 import org.jetbrains.dataframe.stubs.DataFrameToListTypedStub
 import org.jetbrains.kotlinx.jupyter.api.*
@@ -19,7 +19,7 @@ internal class Integration : JupyterIntegration(){
 
     override fun Builder.onLoaded() {
 
-        render<AnyFrame> { HTML(it.toHTML()) }
+        render<AnyFrame> { FrameRender(it) }
         render<AnyRow> { it.toDataFrame() }
         render<MapColumn<*>> { it.df }
         render<AnyCol> { dataFrameOf(listOf(it)) }
