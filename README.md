@@ -3,11 +3,12 @@
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
 
 Kotlin DataFrame is a library for in-memory data manipulation
+* Simple, readable and powerful DSL for data wrangling
 * Supports hierarchical data layouts
 * Reads CSV and JSON
-* Provides statically typed API for data manipulation
-* Tracks column nullability 
-* Generates extension properties for typed data access in Jupyter notebooks
+* Tracks column nullability
+* Provides statically typed API via code generation
+* Integrates with [Kotlin kernel for Jupyter](https://github.com/Kotlin/kotlin-jupyter)
 
 Inspired by [krangl](https://github.com/holgerbrandl/krangl) and [pandas](https://pandas.pydata.org/)
 
@@ -41,7 +42,7 @@ or specific versoin:
 * `DataFrame` consists of `DataColumns` with unique names and equal size
 * `DataRow` is a single row of `DataFrame` and provides a single value for every `DataColumn`
 * `DataFrame` can be optionally typed by `DataSchema` to provide typed data access via extension properties  
-* `DataSchema` is an interface that describes a single row of `DataFrame`
+* [`DataSchema`](docs/schemas.md) is an interface that describes a single row of `DataFrame`
 
 ## Data access
 
@@ -91,6 +92,8 @@ df.filter { survived && home.endsWith("NY") && age in 10..20 }
 Extension properties are generated for `DataSchema` that is extracted from `DataFrame` instance after REPL line execution.
 After that `DataFrame` variable is typed with its own `DataSchema`, so only valid extension properties corresponding 
 to actual columns in `DataFrame` will be allowed by compiler and suggested by completion.
+
+[Learn more about data schemas and code generation](docs/schemas.md)
 ### Nullability
 DataFrame distinguishes between nullable and non-nullable columns in compliance with [Kotlin null safety](https://kotlinlang.org/docs/null-safety.html).
 If `DataColumn` actually contains `null` values, it's `type` is marked nullable
