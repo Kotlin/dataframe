@@ -1,9 +1,11 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.ColumnWithPath
-import org.jetbrains.dataframe.api.columns.SingleColumn
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.ColumnWithPath
+import org.jetbrains.dataframe.columns.SingleColumn
 import org.jetbrains.dataframe.impl.*
+import org.jetbrains.dataframe.impl.columns.toColumnWithPath
 import kotlin.reflect.KProperty
 
 fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, selector: ColumnsSelector<T, *>) = move(selector).to(newColumnIndex)

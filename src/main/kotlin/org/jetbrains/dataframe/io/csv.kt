@@ -1,11 +1,10 @@
 package org.jetbrains.dataframe.io
 
-import com.beust.klaxon.Parser
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.api.*
+import org.jetbrains.dataframe.impl.ColumnNameGenerator
 import java.io.*
-import java.lang.StringBuilder
 import java.math.BigDecimal
 import java.net.URL
 import java.util.zip.GZIPInputStream

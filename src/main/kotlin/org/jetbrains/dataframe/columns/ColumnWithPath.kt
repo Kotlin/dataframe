@@ -1,7 +1,10 @@
-package org.jetbrains.dataframe.api.columns
+package org.jetbrains.dataframe.columns
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.asGroup
+import org.jetbrains.dataframe.impl.columns.asGroup
+import org.jetbrains.dataframe.impl.columns.addParentPath
+import org.jetbrains.dataframe.impl.columns.addPath
+import org.jetbrains.dataframe.impl.columns.depth
 import kotlin.reflect.KType
 
 interface ColumnWithPath<out T> : ColumnReference<T> {
@@ -24,14 +27,3 @@ interface ColumnWithPath<out T> : ColumnReference<T> {
 
     override fun resolveSingle(context: ColumnResolutionContext) = this
 }
-
-internal fun ColumnWithPath<*>.asGroup() = if(data.isGroup()) data.asGroup() else null
-
-val ColumnWithPath<*>?.df get() = this!!.df
-val ColumnWithPath<*>?.data get() = this!!.data
-val ColumnWithPath<*>?.path get() = this!!.path
-val ColumnWithPath<*>?.depth get() = this!!.depth
-val ColumnWithPath<*>?.name get() = this!!.name
-val ColumnWithPath<*>?.type get() = this!!.type
-val ColumnWithPath<*>?.hasNulls get() = this!!.hasNulls
-val ColumnWithPath<*>?.parent get() = this!!.parent

@@ -2,7 +2,8 @@ package org.jetbrains.dataframe.codeGen
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.impl.codeGen.CodeGeneratorImpl
 import org.jetbrains.dataframe.person.BaseTest
 import org.jetbrains.dataframe.person.DataFrameTests
 import org.junit.Test

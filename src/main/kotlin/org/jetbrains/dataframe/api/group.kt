@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnWithPath
+import org.jetbrains.dataframe.columns.ColumnWithPath
 import kotlin.reflect.KProperty
 
 data class GroupClause<T, C>(val df: DataFrame<T>, val selector: ColumnsSelector<T, C>)

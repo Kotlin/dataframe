@@ -1,13 +1,15 @@
 package org.jetbrains.dataframe.impl
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.MissingMapColumn
-import org.jetbrains.dataframe.MissingFrameColumn
-import org.jetbrains.dataframe.MissingValueColumn
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.MapColumn
-import org.jetbrains.dataframe.api.columns.FrameColumn
+import org.jetbrains.dataframe.impl.columns.missing.MissingMapColumn
+import org.jetbrains.dataframe.impl.columns.missing.MissingFrameColumn
+import org.jetbrains.dataframe.impl.columns.missing.MissingValueColumn
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.MapColumn
+import org.jetbrains.dataframe.columns.FrameColumn
 import org.jetbrains.dataframe.impl.columns.MapColumnWithParent
+import org.jetbrains.dataframe.impl.columns.asGroup
 import java.lang.Exception
 
 internal fun <T> prepareForReceiver(df: DataFrameBase<T>) = DataFrameImpl<T>(df.columns().map { if(it.isGroup()) MapColumnWithParent(null, it.asGroup()) else it })

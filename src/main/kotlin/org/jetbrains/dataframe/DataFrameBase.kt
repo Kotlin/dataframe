@@ -1,9 +1,12 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.MapColumn
-import org.jetbrains.dataframe.api.columns.SingleColumn
-import org.jetbrains.dataframe.api.columns.FrameColumn
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.MapColumn
+import org.jetbrains.dataframe.columns.SingleColumn
+import org.jetbrains.dataframe.columns.FrameColumn
+import org.jetbrains.dataframe.impl.columns.asGroup
+import org.jetbrains.dataframe.impl.columns.asTable
 import kotlin.reflect.KProperty
 
 interface DataFrameBase<out T>: SingleColumn<DataRow<T>> {

@@ -1,11 +1,11 @@
-package org.jetbrains.dataframe.api.columns
+package org.jetbrains.dataframe.columns
 
 import org.jetbrains.dataframe.*
 
 interface MapColumn<T> : DataColumn<DataRow<T>>, NestedColumn<T>,
     ColumnGroup<T> {
 
-    fun distinctColumn() = DataColumn.create(name(), (this as DataFrame<T>).distinct())
+    fun distinctColumn() = DataColumn.Companion.create(name(), (this as DataFrame<T>).distinct())
 
     override fun get(index: Int): DataRow<T> {
         return super<ColumnGroup>.get(index)

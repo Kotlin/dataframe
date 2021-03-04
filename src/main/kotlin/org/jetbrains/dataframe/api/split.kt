@@ -1,9 +1,16 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.ColumnWithPath
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.ColumnWithPath
 import org.jetbrains.dataframe.impl.ColumnDataCollector
+import org.jetbrains.dataframe.impl.columns.addPath
+import org.jetbrains.dataframe.impl.columns.asGroup
+import org.jetbrains.dataframe.impl.columns.asTable
+import org.jetbrains.dataframe.impl.columns.isTable
+import org.jetbrains.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.dataframe.impl.createDataCollector
+import org.jetbrains.dataframe.impl.nameGenerator
 import kotlin.reflect.KProperty
 
 fun <T, C> DataFrame<T>.split(selector: ColumnsSelector<T, C>): SplitClause<T, C> =

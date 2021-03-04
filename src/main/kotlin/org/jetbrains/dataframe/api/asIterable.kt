@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.columns.DataColumn
 
 fun <T> DataColumn<T>.asIterable() = values
 

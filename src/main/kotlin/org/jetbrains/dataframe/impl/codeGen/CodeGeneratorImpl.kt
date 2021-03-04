@@ -1,34 +1,25 @@
-package org.jetbrains.dataframe
+package org.jetbrains.dataframe.impl.codeGen
 
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.MapColumn
-import org.jetbrains.dataframe.api.columns.ColumnGroup
-import org.jetbrains.dataframe.api.columns.FrameColumn
+import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.annotations.ColumnName
+import org.jetbrains.dataframe.annotations.DataSchema
+import org.jetbrains.dataframe.columns.ColumnGroup
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.FrameColumn
+import org.jetbrains.dataframe.columns.MapColumn
+import org.jetbrains.dataframe.stubs.DataFrameToListNamedStub
+import org.jetbrains.dataframe.stubs.DataFrameToListTypedStub
 import org.jetbrains.kotlinx.jupyter.api.Code
 import org.jetbrains.kotlinx.jupyter.api.VariableName
 import kotlin.reflect.*
 import kotlin.reflect.full.*
 import kotlin.reflect.jvm.jvmErasure
 
-// Public API
-
-@Target(AnnotationTarget.CLASS)
-annotation class DataSchema(val isOpen: Boolean = true)
-
-@Target(AnnotationTarget.PROPERTY)
-annotation class ColumnType(val type: KClass<out AnyCol>)
-
-@Target(AnnotationTarget.PROPERTY)
-annotation class ColumnName(val name: String)
 
 enum class CodeGenerationMode {
     FullNames,
     ShortNames
 }
-
-data class DataFrameToListNamedStub(val df: AnyFrame, val className: String)
-
-data class DataFrameToListTypedStub(val df: AnyFrame, val interfaceClass: KClass<*>)
 
 data class GeneratedCode(val declarations: Code, val converter: (VariableName) -> Code) {
 
@@ -269,7 +260,7 @@ class CodeGeneratorImpl : CodeGenerator {
 
     private data class GeneratedMarker(val fullScheme: Scheme, val ownScheme: Scheme, val kclass: KClass<*>, val isOpen: Boolean)
 
-    private val registeredMarkers = mutableMapOf<KClass<*>,GeneratedMarker>()
+    private val registeredMarkers = mutableMapOf<KClass<*>, GeneratedMarker>()
 
     private val registeredMarkerClassNames = mutableSetOf<String>()
 

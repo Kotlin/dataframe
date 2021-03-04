@@ -1,11 +1,19 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.*
+import org.jetbrains.dataframe.columns.ColumnReference
 import org.jetbrains.dataframe.impl.DataFrameReceiver
 import org.jetbrains.dataframe.impl.DataRowImpl
 import org.jetbrains.dataframe.impl.EmptyDataFrame
 import org.jetbrains.dataframe.impl.getOrPut
 import org.jetbrains.dataframe.impl.topDfs
+import org.jetbrains.dataframe.columns.ColumnSet
+import org.jetbrains.dataframe.columns.ColumnWithPath
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.FrameColumn
+import org.jetbrains.dataframe.columns.MapColumn
+import org.jetbrains.dataframe.impl.columns.addPath
+import org.jetbrains.dataframe.impl.columns.asGroup
+import org.jetbrains.dataframe.impl.toIndices
 import kotlin.reflect.KProperty
 
 internal open class SelectReceiverImpl<T>(df: DataFrameBase<T>, allowMissingColumns: Boolean) :
@@ -14,6 +22,11 @@ internal open class SelectReceiverImpl<T>(df: DataFrameBase<T>, allowMissingColu
 data class DataFrameSize(val ncol: Int, val nrow: Int) {
     override fun toString() = "$nrow x $ncol"
 }
+
+typealias Predicate<T> = (T) -> Boolean
+
+typealias ColumnPath = List<String>
+
 
 typealias DataFrameSelector<T, R> = DataFrame<T>.(DataFrame<T>) -> R
 

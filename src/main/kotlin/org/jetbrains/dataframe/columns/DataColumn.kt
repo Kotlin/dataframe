@@ -1,9 +1,11 @@
-package org.jetbrains.dataframe.api.columns
+package org.jetbrains.dataframe.columns
 
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.impl.asList
 import org.jetbrains.dataframe.impl.columns.MapColumnImpl
 import org.jetbrains.dataframe.impl.columns.FrameColumnImpl
 import org.jetbrains.dataframe.impl.columns.ValueImplColumn
+import org.jetbrains.dataframe.impl.columns.addPath
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType

@@ -1,8 +1,9 @@
 package org.jetbrains.dataframe.impl
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.ColumnWithPath
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.ColumnWithPath
+import org.jetbrains.dataframe.impl.columns.addPath
 import org.jetbrains.dataframe.io.renderToString
 import java.lang.IllegalArgumentException
 import kotlin.reflect.full.isSubclassOf

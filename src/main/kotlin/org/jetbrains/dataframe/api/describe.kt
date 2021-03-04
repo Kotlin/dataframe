@@ -1,7 +1,8 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.isNumber
+import org.jetbrains.dataframe.annotations.DataSchema
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.isNumber
 import kotlin.reflect.KType
 
 fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *> = { numberCols() }) = describe(getColumns(columns))
@@ -40,7 +41,7 @@ internal fun describe(cols: List<AnyCol>): DataFrame<ColumnDescriptionSchema> {
         if (hasCategorical) {
             ColumnDescriptionSchema::unique { ndistinct }
             ColumnDescriptionSchema::top { values.groupBy { it }.maxByOrNull { it.value.size }?.key }
-            ColumnDescriptionSchema::type { type.fullName }
+            ColumnDescriptionSchema::type { type.toString() }
         }
         if (hasNumeric) {
             NumberColumnDescriptionSchema::mean { if(it.isNumber()) (it as DataColumn<Number?>).mean() else null }

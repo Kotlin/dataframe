@@ -1,11 +1,14 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
-import org.jetbrains.dataframe.api.columns.ColumnSet
-import org.jetbrains.dataframe.api.columns.ColumnWithPath
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.ColumnSet
+import org.jetbrains.dataframe.columns.ColumnWithPath
 import org.jetbrains.dataframe.impl.DataFrameReceiver
+import org.jetbrains.dataframe.impl.columns.addPath
+import org.jetbrains.dataframe.impl.columns.assertIsComparable
+import org.jetbrains.dataframe.impl.columns.typed
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.isSubtypeOf
 
 interface SortReceiver<out T> : SelectReceiver<T> {
 

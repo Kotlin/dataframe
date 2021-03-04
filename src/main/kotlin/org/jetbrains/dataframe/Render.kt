@@ -1,5 +1,8 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.impl.columns.asGroup
+import org.jetbrains.dataframe.impl.columns.asTable
+
 internal fun String.truncate(limit: Int) = if (limit in 1 until length) {
     if (limit < 4) substring(0, limit)
     else substring(0, limit - 3) + "..."

@@ -1,7 +1,8 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.MapColumn
+import org.jetbrains.dataframe.columns.MapColumn
 import org.jetbrains.dataframe.impl.TreeNode
+import org.jetbrains.dataframe.impl.columns.withDf
 import kotlin.reflect.KProperty
 
 infix operator fun <T> DataFrame<T>.minus(column: String) = remove(column)

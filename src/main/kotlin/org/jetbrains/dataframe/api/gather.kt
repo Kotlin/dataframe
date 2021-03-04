@@ -1,6 +1,9 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.impl.and
+import org.jetbrains.dataframe.impl.columns.isTable
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
 

@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.columns.DataColumn
 import java.math.BigDecimal
 import kotlin.reflect.KClass
 import kotlin.reflect.jvm.jvmErasure

@@ -2,12 +2,10 @@ package org.jetbrains.dataframe.io
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.DataFrame
-import org.jetbrains.dataframe.api.columns.allNulls
+import org.jetbrains.dataframe.columns.allNulls
 import org.jetbrains.dataframe.getType
 import org.jetbrains.dataframe.ncol
 import org.jetbrains.dataframe.nrow
-import org.jetbrains.dataframe.print
-import org.junit.Ignore
 import org.junit.Test
 
 class ReadTests {

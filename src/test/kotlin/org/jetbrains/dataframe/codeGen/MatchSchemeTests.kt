@@ -2,6 +2,8 @@ package org.jetbrains.dataframe.codeGen
 
 import io.kotlintest.shouldBe
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.annotations.DataSchema
+import org.jetbrains.dataframe.impl.codeGen.CodeGeneratorImpl
 import org.jetbrains.dataframe.io.readJsonStr
 import org.junit.Test
 

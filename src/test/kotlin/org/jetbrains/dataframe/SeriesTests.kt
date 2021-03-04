@@ -1,6 +1,8 @@
 package org.jetbrains.dataframe
 
 import io.kotlintest.shouldBe
+import org.jetbrains.dataframe.annotations.DataSchema
+import org.jetbrains.dataframe.columns.ColumnReference
 import org.junit.Test
 
 class SeriesTests {

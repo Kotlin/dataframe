@@ -1,8 +1,11 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.ColumnSet
-import org.jetbrains.dataframe.api.columns.ColumnWithPath
-import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.ColumnSet
+import org.jetbrains.dataframe.columns.ColumnWithPath
+import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.impl.columns.ColumnsList
+import org.jetbrains.dataframe.impl.nameGenerator
 import kotlin.reflect.full.withNullability
 
 interface JoinReceiver<out A, out B> : SelectReceiver<A> {
@@ -25,7 +28,7 @@ typealias JoinColumnSelector<A, B> = JoinReceiver<A, B>.(JoinReceiver<A, B>) -> 
 
 // TODO: support column hierarchy
 internal fun <C> ColumnSet<C>.extractJoinColumns(): List<ColumnMatch<C>> = when (this) {
-    is Columns -> columns.flatMap { it.extractJoinColumns() }
+    is ColumnsList -> columns.flatMap { it.extractJoinColumns() }
     is ColumnReference<C> -> listOf(ColumnMatch(this, this))
     is ColumnMatch -> listOf(this)
     else -> throw Exception()
@@ -45,13 +48,13 @@ val JoinType.allowLeftNulls get() = this == JoinType.RIGHT || this == JoinType.O
 val JoinType.allowRightNulls get() = this == JoinType.LEFT || this == JoinType.OUTER || this == JoinType.EXCLUDE
 
 internal fun <A, B> defaultJoinColumns(left: DataFrame<A>, right: DataFrame<B>): JoinColumnSelector<A, B> =
-        { left.columnNames().intersect(right.columnNames()).map { it.toColumnDef() }.let { Columns(it) } }
+        { left.columnNames().intersect(right.columnNames()).map { it.toColumnDef() }.let { ColumnsList(it) } }
 
 internal fun <T> defaultJoinColumns(dataFrames: Iterable<DataFrame<T>>): JoinColumnSelector<T, T> =
         {
             dataFrames.map { it.columnNames() }.fold<List<String>, Set<String>?>(null) { set, names ->
                 set?.intersect(names) ?: names.toSet()
-            }.orEmpty().map { it.toColumnDef() }.let { Columns(it) }
+            }.orEmpty().map { it.toColumnDef() }.let { ColumnsList(it) }
         }
 
 fun <A, B> DataFrame<A>.innerJoin(other: DataFrame<B>, selector: JoinColumnSelector<A, B> = defaultJoinColumns(this, other)) = join(other, JoinType.INNER, selector = selector)

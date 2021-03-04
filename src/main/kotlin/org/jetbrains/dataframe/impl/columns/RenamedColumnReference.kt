@@ -1,7 +1,8 @@
 package org.jetbrains.dataframe.impl.columns
 
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.columns.ColumnWithPath
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.ColumnWithPath
 
 internal class RenamedColumnReference<C>(val source: ColumnReference<C>, val name: String) : ColumnReference<C> {
 
