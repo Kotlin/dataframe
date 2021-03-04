@@ -136,12 +136,13 @@ internal class Integration : JupyterIntegration() {
     }
 }
 ```
-After library is loaded into Jupyter notebook, schema interfaces for all `DataFrame` variables that match `Person` schema will derive from `Person`, so `countAdults` will 
+After loading this library into Jupyter notebook, schema interfaces for all `DataFrame` variables that match `Person` schema will derive from `Person` 
 ```kotlin
 val df = dataFrameOf("name", "age")(
             "Alice", 15,
             "Bob", 20)
 ```
+Now `df` is assignable to `DataFrame<Person>` and `countAdults` is available: 
 ```kotlin
 df.countAdults()
 ```
