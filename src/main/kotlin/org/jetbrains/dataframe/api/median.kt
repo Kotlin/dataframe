@@ -28,3 +28,5 @@ inline fun <reified T : Comparable<T>> Iterable<T>.median(): Double {
         else -> throw IllegalArgumentException()
     }
 }
+
+inline fun <T, G, reified R : Comparable<R>> GroupedDataFrame<T, G>.median(columnName: String = "median", noinline selector: RowSelector<G, R>) = aggregate { median(selector) into columnName }

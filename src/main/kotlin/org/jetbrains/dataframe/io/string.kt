@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe.io
 
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.impl.*
 
 fun <T, G> GroupedDataFrame<T, G>.print() = println(this)
 

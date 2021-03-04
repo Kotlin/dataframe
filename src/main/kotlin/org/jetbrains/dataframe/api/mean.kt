@@ -15,6 +15,8 @@ inline fun <T, reified D : Number> DataFrame<T>.mean(crossinline selector: RowSe
 inline fun <T, reified D : Number> DataFrame<T>.mean(col: ColumnReference<D>): Double = get(col).mean()
 inline fun <T, reified D : Number> DataFrame<T>.mean(col: KProperty<D>): Double = get(col).mean()
 
+inline fun <T, G, reified R : Number> GroupedDataFrame<T, G>.mean(columnName: String = "mean", noinline selector: RowSelector<G, R?>) = aggregate { mean(selector) into columnName }
+
 fun <T> DataFrame<T>.mean(): DataRow<T> {
     return columns().map {
         column(it.name(), listOf((it as DataColumn<Number>).mean()))
@@ -79,3 +81,4 @@ internal fun <T> Iterable<T>.computeSize(counter: Counter) = map {
     counter.inc()
     it
 }
+
