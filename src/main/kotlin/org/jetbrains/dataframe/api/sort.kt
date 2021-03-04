@@ -7,6 +7,8 @@ import org.jetbrains.dataframe.columns.ColumnWithPath
 import org.jetbrains.dataframe.impl.DataFrameReceiver
 import org.jetbrains.dataframe.impl.columns.addPath
 import org.jetbrains.dataframe.impl.columns.assertIsComparable
+import org.jetbrains.dataframe.impl.columns.toColumnSet
+import org.jetbrains.dataframe.impl.columns.toColumns
 import org.jetbrains.dataframe.impl.columns.typed
 import kotlin.reflect.KProperty
 

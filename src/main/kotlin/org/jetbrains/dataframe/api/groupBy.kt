@@ -2,7 +2,9 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.columns.DataColumn
 import org.jetbrains.dataframe.impl.GroupedDataFrameImpl
+import org.jetbrains.dataframe.impl.columns.toColumnSet
 import org.jetbrains.dataframe.impl.columns.toColumnWithPath
+import org.jetbrains.dataframe.impl.columns.toColumns
 import org.jetbrains.dataframe.impl.dfsTopNotNull
 import kotlin.reflect.KProperty
 

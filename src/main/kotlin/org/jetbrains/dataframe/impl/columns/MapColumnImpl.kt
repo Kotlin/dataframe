@@ -3,6 +3,7 @@ package org.jetbrains.dataframe.impl.columns
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.columns.MapColumn
 import org.jetbrains.dataframe.createType
+import org.jetbrains.dataframe.impl.renderSchema
 import java.lang.UnsupportedOperationException
 import kotlin.reflect.KType
 

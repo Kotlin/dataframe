@@ -5,6 +5,8 @@ import org.jetbrains.dataframe.columns.DataColumn
 import org.jetbrains.dataframe.columns.ColumnWithPath
 import org.jetbrains.dataframe.impl.columns.DataColumnInternal
 import org.jetbrains.dataframe.impl.columns.RenamedColumnReference
+import org.jetbrains.dataframe.impl.columns.toColumnSet
+import org.jetbrains.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
 fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>) = rename { mappings.map { it.first.toColumnDef() }.toColumnSet() }

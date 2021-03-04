@@ -27,15 +27,6 @@ fun rowNumber(columnName: String = "id") = AddRowNumberStub(columnName)
 
 data class AddRowNumberStub(val columnName: String)
 
-// map
-
-fun <T> DataFrame<T>.map(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit): AnyFrame {
-    val builder = TypedColumnsFromDataRowBuilder(this)
-    body(builder)
-    return dataFrameOf(builder.columns)
-}
-
-
 // size
 
 val AnyFrame.size: DataFrameSize get() = DataFrameSize(ncol(), nrow())

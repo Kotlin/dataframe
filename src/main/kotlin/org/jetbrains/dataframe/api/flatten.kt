@@ -1,5 +1,7 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.impl.columns.toColumnSet
+
 fun <T> DataFrame<T>.flatten() = flatten { all() }
 
 fun <T, C> DataFrame<T>.flatten(selector: ColumnsSelector<T, C>): DataFrame<T> {

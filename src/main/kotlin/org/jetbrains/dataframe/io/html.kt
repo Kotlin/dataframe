@@ -1,6 +1,8 @@
 package org.jetbrains.dataframe.io
 
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.images.Image
+import org.jetbrains.dataframe.impl.truncate
 
 fun AnyFrame.toHTML(limit: Int = 20, truncate: Int = 40): String {
     val sb = StringBuilder()

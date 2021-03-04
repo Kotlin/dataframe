@@ -6,6 +6,7 @@ import org.jetbrains.dataframe.annotations.DataSchema
 import org.jetbrains.dataframe.columns.DataColumn
 import org.jetbrains.dataframe.columns.MapColumn
 import org.jetbrains.dataframe.columns.ColumnGroup
+import org.jetbrains.dataframe.images.Image
 import org.jetbrains.dataframe.impl.codeGen.CodeGeneratorImpl
 import org.junit.Test
 

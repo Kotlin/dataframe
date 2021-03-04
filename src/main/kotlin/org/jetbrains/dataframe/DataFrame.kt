@@ -13,6 +13,7 @@ import org.jetbrains.dataframe.columns.FrameColumn
 import org.jetbrains.dataframe.columns.MapColumn
 import org.jetbrains.dataframe.impl.columns.addPath
 import org.jetbrains.dataframe.impl.columns.asGroup
+import org.jetbrains.dataframe.impl.columns.toColumns
 import org.jetbrains.dataframe.impl.toIndices
 import kotlin.reflect.KProperty
 

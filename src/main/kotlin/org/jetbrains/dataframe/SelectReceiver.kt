@@ -9,6 +9,8 @@ import org.jetbrains.dataframe.columns.MapColumn
 import org.jetbrains.dataframe.columns.isSubtypeOf
 import org.jetbrains.dataframe.impl.columns.ColumnsList
 import org.jetbrains.dataframe.impl.columns.asGroup
+import org.jetbrains.dataframe.impl.columns.toColumnSet
+import org.jetbrains.dataframe.impl.columns.toColumns
 import org.jetbrains.dataframe.impl.columns.transform
 import org.jetbrains.dataframe.impl.columns.typed
 import kotlin.reflect.KProperty

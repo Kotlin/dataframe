@@ -1,5 +1,8 @@
-package org.jetbrains.dataframe
+package org.jetbrains.dataframe.impl
 
+import org.jetbrains.dataframe.AnyCol
+import org.jetbrains.dataframe.AnyFrame
+import org.jetbrains.dataframe.ColumnKind
 import org.jetbrains.dataframe.impl.columns.asGroup
 import org.jetbrains.dataframe.impl.columns.asTable
 
@@ -9,8 +12,6 @@ internal fun String.truncate(limit: Int) = if (limit in 1 until length) {
 } else {
     this
 }
-
-data class Image(val url: String)
 
 internal fun renderSchema(df: AnyFrame): String =
         df.columns().map { "${it.name()}:${renderType(it)}"}.joinToString()

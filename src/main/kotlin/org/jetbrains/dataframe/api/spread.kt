@@ -26,6 +26,8 @@ interface SpreadContext {
     class GroupAggregator<T>(val builder: GroupAggregateBuilder<T>) : SpreadContext
 }
 
+typealias Reducer<T, R> = DataFrame<T>.(DataFrame<T>) -> R
+
 class SpreadClause<T, K, V, C : SpreadContext>(
     val context: C,
     val keyColumn: ColumnSelector<T, K>,

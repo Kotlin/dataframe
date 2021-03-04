@@ -39,8 +39,4 @@ fun <T,G,R> GroupedDataFrame<T,G>.map(body: (key: DataRow<T>, group: DataFrame<G
             body(row, group)
         }
 
-typealias Reducer<T, R> = DataFrame<T>.(DataFrame<T>) -> R
-
-inline fun <T, G, reified R : Comparable<R>> GroupedDataFrame<T, G>.median(columnName: String = "median", noinline selector: RowSelector<G, R>) = aggregate { median(selector) into columnName }
-inline fun <T, G, reified R : Number> GroupedDataFrame<T, G>.mean(columnName: String = "mean", noinline selector: RowSelector<G, R?>) = aggregate { mean(selector) into columnName }
 

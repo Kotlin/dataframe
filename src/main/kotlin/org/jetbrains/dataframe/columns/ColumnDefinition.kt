@@ -4,7 +4,7 @@ import org.jetbrains.dataframe.AnyCol
 import org.jetbrains.dataframe.ColumnPath
 import org.jetbrains.dataframe.ColumnResolutionContext
 import org.jetbrains.dataframe.impl.columns.asGroup
-import org.jetbrains.dataframe.getColumn
+import org.jetbrains.dataframe.impl.columns.getColumn
 import org.jetbrains.dataframe.impl.columns.addPath
 import org.jetbrains.dataframe.isGroup
 import org.jetbrains.dataframe.impl.columns.typed
