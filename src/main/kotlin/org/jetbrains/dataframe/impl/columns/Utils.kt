@@ -5,10 +5,16 @@ import org.jetbrains.dataframe.ColumnKind
 import org.jetbrains.dataframe.ColumnPath
 import org.jetbrains.dataframe.ColumnPosition
 import org.jetbrains.dataframe.ColumnResolutionContext
+import org.jetbrains.dataframe.ColumnsSelector
 import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.DataFrameBase
 import org.jetbrains.dataframe.DataRow
+import org.jetbrains.dataframe.SelectReceiverImpl
+import org.jetbrains.dataframe.SortColumnsSelector
+import org.jetbrains.dataframe.SortReceiverImpl
+import org.jetbrains.dataframe.UnresolvedColumnsPolicy
 import org.jetbrains.dataframe.columns.ColumnGroup
+import org.jetbrains.dataframe.columns.ColumnReference
 import org.jetbrains.dataframe.columns.ColumnSet
 import org.jetbrains.dataframe.columns.ColumnWithPath
 import org.jetbrains.dataframe.columns.DataColumn
@@ -17,10 +23,15 @@ import org.jetbrains.dataframe.columns.MapColumn
 import org.jetbrains.dataframe.columns.ValueColumn
 import org.jetbrains.dataframe.getType
 import org.jetbrains.dataframe.impl.TreeNode
+import org.jetbrains.dataframe.impl.asList
 import org.jetbrains.dataframe.impl.equalsByElement
 import org.jetbrains.dataframe.impl.rollingHash
 import org.jetbrains.dataframe.isGroup
 import org.jetbrains.dataframe.name
+import org.jetbrains.dataframe.toColumnDef
+import org.jetbrains.dataframe.toColumns
+import org.jetbrains.dataframe.typed
+import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubtypeOf
 
 internal fun <T> DataColumn<T>.checkEquals(other: Any?): Boolean {
@@ -89,3 +100,31 @@ internal fun <A,B> ColumnSet<A>.transform(transform: (List<ColumnWithPath<A>>) -
 
     return TransformedColumnSet(this, transform)
 }
+
+internal fun Array<out String>.toColumns(): ColumnSet<Any?> = map { it.toColumnDef() }.toColumnSet()
+internal fun <C> Iterable<ColumnSet<C>>.toColumnSet(): ColumnSet<C> = ColumnsList(asList())
+internal fun <C> Array<out KProperty<C>>.toColumns() = map { it.toColumnDef() }.toColumnSet()
+internal fun <T> Array<out ColumnReference<T>>.toColumns() = toList().toColumnSet()
+internal fun <T, C> ColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
+    SelectReceiverImpl(
+        it.df.typed(),
+        it.allowMissingColumns
+    )
+}
+
+@JvmName("toColumnSetForSort")
+internal fun <T, C> SortColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
+    SortReceiverImpl(
+        it.df.typed(),
+        it.allowMissingColumns
+    )
+}
+
+internal fun <C> DataFrameBase<*>.getColumn(name: String, policy: UnresolvedColumnsPolicy) =
+        tryGetColumn(name)?.typed()
+                ?: when (policy) {
+                    UnresolvedColumnsPolicy.Fail ->
+                        error("Column not found: $name")
+                    UnresolvedColumnsPolicy.Skip -> null
+                    UnresolvedColumnsPolicy.Create -> DataColumn.empty().typed<C>()
+                }

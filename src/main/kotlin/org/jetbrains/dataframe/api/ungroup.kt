@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.impl.columns.toColumns
 import org.jetbrains.dataframe.impl.removeAt
 import kotlin.reflect.KProperty
 

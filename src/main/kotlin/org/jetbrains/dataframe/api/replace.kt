@@ -2,6 +2,8 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.columns.ColumnReference
 import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.impl.columns.toColumnSet
+import org.jetbrains.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
 fun <T, C> DataFrame<T>.replace(selector: ColumnsSelector<T, C>) = ReplaceCause(this, selector)

@@ -10,11 +10,7 @@ import org.jetbrains.dataframe.columns.FrameColumn
 import org.jetbrains.dataframe.columns.MapColumn
 import org.jetbrains.dataframe.columns.SingleColumn
 import org.jetbrains.dataframe.columns.ValueColumn
-import org.jetbrains.dataframe.impl.asList
-import org.jetbrains.dataframe.impl.columns.ColumnsList
 import org.jetbrains.dataframe.impl.columns.ConvertedColumnDef
-import org.jetbrains.dataframe.impl.columns.typed
-import org.jetbrains.dataframe.impl.createDataCollector
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -30,15 +26,6 @@ class ColumnResolutionContext(val df: DataFrameBase<*>, val unresolvedColumnsPol
     val allowMissingColumns = unresolvedColumnsPolicy == UnresolvedColumnsPolicy.Skip
 }
 
-internal fun <C> DataFrameBase<*>.getColumn(name: String, policy: UnresolvedColumnsPolicy) =
-        tryGetColumn(name)?.typed()
-                ?: when (policy) {
-                    UnresolvedColumnsPolicy.Fail ->
-                        error("Column not found: $name")
-                    UnresolvedColumnsPolicy.Skip -> null
-                    UnresolvedColumnsPolicy.Create -> DataColumn.empty().typed<C>()
-                }
-
 internal val ColumnReference<*>.name get() = name()
 
 fun <TD, T: DataFrameBase<TD>, C> Selector<T, ColumnSet<C>>.toColumns(createReceiver: (ColumnResolutionContext) -> T) = createColumnSet {
@@ -47,12 +34,10 @@ fun <TD, T: DataFrameBase<TD>, C> Selector<T, ColumnSet<C>>.toColumns(createRece
     columnSet.resolve(ColumnResolutionContext(receiver, it.unresolvedColumnsPolicy))
 }
 
-fun <C> createColumnSet(resolver: (ColumnResolutionContext) -> List<ColumnWithPath<C>>): ColumnSet<C> = ColumnsBySelector(resolver)
-
-internal class ColumnsBySelector<C>(val resolver: (ColumnResolutionContext) -> List<ColumnWithPath<C>>) : ColumnSet<C> {
-
-    override fun resolve(context: ColumnResolutionContext) = resolver(context)
-}
+fun <C> createColumnSet(resolver: (ColumnResolutionContext) -> List<ColumnWithPath<C>>): ColumnSet<C> =
+    object: ColumnSet<C> {
+        override fun resolve(context: ColumnResolutionContext) = resolver(context)
+    }
 
 inline fun <C, reified R> ColumnReference<C>.map(noinline transform: (C) -> R): SingleColumn<R> = map(getType<R>(), transform)
 
@@ -79,8 +64,6 @@ enum class ColumnKind {
     Map,
     Frame
 }
-
-
 
 @OptIn(ExperimentalStdlibApi::class)
 inline fun <reified T> getType() = typeOf<T>()
@@ -116,15 +99,6 @@ inline fun <T, reified R> DataFrame<T>.newColumn(name: String, noinline expressi
     val values = (0 until nrow()).map { get(it).let { expression(it, it) }.also { if (it == null) nullable = true } }
     return column(name, values, nullable)
 }
-
-internal fun Array<out String>.toColumns(): ColumnSet<Any?> = map { it.toColumnDef() }.toColumnSet()
-internal fun <C> Iterable<ColumnSet<C>>.toColumnSet(): ColumnSet<C> = ColumnsList(asList())
-internal fun <C> Array<out KProperty<C>>.toColumns() = map { it.toColumnDef() }.toColumnSet()
-internal fun <T> Array<out ColumnReference<T>>.toColumns() = toList().toColumnSet()
-internal fun <T, C> ColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns { SelectReceiverImpl(it.df.typed(), it.allowMissingColumns) }
-
-@JvmName("toColumnSetForSort")
-internal fun <T, C> SortColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns { SortReceiverImpl(it.df.typed(), it.allowMissingColumns) }
 
 
 class ColumnDelegate<T> {
@@ -190,19 +164,6 @@ inline fun <reified T> column(name: String, values: List<T>): DataColumn<T> = wh
 inline fun <reified T> column(name: String, values: List<T>, hasNulls: Boolean): DataColumn<T> = DataColumn.create(name, values, getType<T>().withNullability(hasNulls))
 
 fun columnGroup(vararg columns: AnyCol) = MapColumnDelegate(columns.toList())
-
-fun <T, R> DataColumn<T>.map(transform: (T) -> R): DataColumn<R> {
-    val collector = createDataCollector(size)
-    values.forEach { collector.add(transform(it)) }
-    return collector.toColumn(name).typed()
-}
-
-fun <T, R> DataColumn<T>.map(type: KType?, transform: (T) -> R): DataColumn<R> {
-    if (type == null) return map(transform)
-    val collector = createDataCollector<R>(size, type)
-    values.forEach { collector.add(transform(it)) }
-    return collector.toColumn(name) as DataColumn<R>
-}
 
 fun <C> DataColumn<C>.single() = values.single()
 

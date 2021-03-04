@@ -3,6 +3,7 @@ package org.jetbrains.dataframe
 import org.jetbrains.dataframe.columns.DataColumn
 import org.jetbrains.dataframe.columns.allNulls
 import org.jetbrains.dataframe.impl.columns.DataColumnInternal
+import org.jetbrains.dataframe.impl.columns.toColumns
 import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.reflect.KClass

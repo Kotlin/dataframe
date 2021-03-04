@@ -2,6 +2,8 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.columns.MapColumn
 import org.jetbrains.dataframe.impl.TreeNode
+import org.jetbrains.dataframe.impl.columns.toColumnSet
+import org.jetbrains.dataframe.impl.columns.toColumns
 import org.jetbrains.dataframe.impl.columns.withDf
 import kotlin.reflect.KProperty
 

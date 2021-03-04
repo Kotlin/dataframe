@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe
 
 import io.kotlintest.shouldBe
+import org.jetbrains.dataframe.impl.columns.toColumnSet
 import org.junit.Test
 
 class MoveTests {

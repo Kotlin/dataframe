@@ -3,8 +3,7 @@ package org.jetbrains.dataframe.columns
 import org.jetbrains.dataframe.AnyRow
 import org.jetbrains.dataframe.ColumnPath
 import org.jetbrains.dataframe.ColumnResolutionContext
-import org.jetbrains.dataframe.addPath
-import org.jetbrains.dataframe.getColumn
+import org.jetbrains.dataframe.impl.columns.getColumn
 import org.jetbrains.dataframe.impl.columns.addPath
 import org.jetbrains.dataframe.name
 
