@@ -1,6 +1,6 @@
 # Data schemas and code generation
 
-In Jupyter environment `DataFrame` provides typed data access by automatic inference of `DataSchema` of new `DataFrame` instances and generation of extension properties for data access
+In Jupyter environment `DataFrame` provides typed data access by automatic inference of `DataSchema` of new `DataFrame` instances and generation of schema-specific extension properties
 
 ## Overview
 After execution of cell
@@ -9,8 +9,8 @@ val df = dataFrameOf("name", "age")(
             "Alice", 15,
             "Bob", null)
 ``` 
-the following actions are performed:
-1. Variable `df` is analyzed and actual schema of `DataFrame` instance is extracted
+the following actions take place:
+1. Columns in `df` are analyzed to extract data schema
 2. `DataSchema` interface is generated:
 ```kotlin
 @DataSchema
@@ -19,7 +19,7 @@ interface DataFrameType {
     val age: Int?
 }
 ```
-3. Extension properties for data access through this `DataSchema` are generated:
+3. Data access properties for this `DataSchema` are generated:
 ```kotlin
 val DataFrameBase<DataFrameType>.name: DataColumn<String> get() = this["name"] as DataColumn<String>
 val DataRowBase<DataFrameType>.name: String get() = this["name"] as String
@@ -27,28 +27,30 @@ val DataFrameBase<DataFrameType>.age: DataColumn<Int?> get() = this["age"] as Da
 val DataRowBase<DataFrameType>.age: Int? get() = this["age"] as Int?
 ```
 Every column of `DataFrame` produces two extension properties:
-* Property for `DataFrame` returns `DataColumn`
-* Property for `DataRow` returns cell value
+* Property for `DataFrameBase<DataFrameType>` returns `DataColumn`
+* Property for `DataRowBase<DataFrameType>` returns value of the cell
 4. `df` variable is typed by schema interface:
 ```kotlin
-val temp = df as DataFrame<DataFrameType>
+val temp = df
 ```
 ```kotlin
-val df = temp
+val df = temp as DataFrame<DataFrameType>
 ```
-Note, that object instance remains the same
+> _Note, that object instance after typing remains the same_
 
-To log all these additional code executions, enable cell magic
+To log all these additional code executions, use cell magic
 ```
 %trackExecution -all
 ```
 
 ## Schema inheritance
-In order to reduce amount of generated code, previously generated `DataSchema` interfaces are reused and only new properties are introduced:
+In order to reduce amount of generated code, previously generated `DataSchema` interfaces are reused and only new properties are introduced
+
+Let's filter out all `null` values from `age` column and add one more column of type `Boolean`:
 ```kotlin
 val filtered = df.filter { age != null }.add("isAdult") { age!! > 18 }
 ```
-New `DataSchema` will be derived from `DataFrameType`:
+New schema interface for `filtered` variable will be derived from previously generated `DataFrameType`:
 ```kotlin
 @DataSchema
 interface DataFrameType2: DataFrameType {
@@ -56,14 +58,14 @@ interface DataFrameType2: DataFrameType {
     val isAdult: Boolean
 }
 ```
-Extension properties are generated only for new and overriden members: 
+Extension properties for data access are generated only for new and overriden members of `DataFrameType2` interface: 
 ```kotlin
 val DataFrameBase<DataFrameType2>.age: DataColumn<Int> get() = this["age"] as DataColumn<Int>
 val DataRowBase<DataFrameType2>.age: Int get() = this["age"] as Int
 val DataFrameBase<DataFrameType2>.isAdult: DataColumn<Boolean> get() = this["isAdult"] as DataColumn<Boolean>
 val DataRowBase<DataFrameType2>.isAdult: String get() = this["isAdult"] as Boolean
 ```
-Variable is typed by new interface:
+Then variable `filtered` is typed by new interface:
 ```kotlin
 val temp = filtered
 ```
@@ -72,7 +74,7 @@ val filtered = temp as DataFrame<DataFrameType2>
 ```
 
 ## Custom data schemas
-You can define a new data schema:
+Besides auto-generated schema interfaces, you can explicitly define your own data schema:
 ```kotlin
 @DataSchema
 interface Person {
@@ -80,13 +82,12 @@ interface Person {
     val age: Int 
 }
 ```
-After execution of this cell in Jupyter, extension properties for data access will be generated. 
-
-Now you can write functions for `DataFrame` that matches `Person` schema:
+After execution of this cell in Jupyter, extension properties for data access will be generated. Now we can use these properties to create functions for typed `DataFrame`:
 ```kotlin
 fun DataFrame<Person>.splitName() = split { name }.by(",").into("firstName", "lastName")
 fun DataFrame<Person>.adults() = filter { age > 18 }
 ```
+These functions will work for any `DataFrame` that matches `Person` schema:
 ```kotlin
 val df = dataFrameOf("name", "age", "weight")(
             "Merton, Alice", 15, 60.0,
@@ -99,7 +100,7 @@ interface DataFrameType : Person{
     val weight: Double
 }
 ```
-And now previously defined methods for `DataFrame<Person>` are available for `df`:
+Despite `df` has additional column `weight`, previously defined methods for `DataFrame<Person>` work for it:
 ```kotlin
 df.splitName()
 ```
@@ -114,8 +115,8 @@ w.adults()
 |------------|--------|--------------|
 |Marley, Bob |20      |73.5     |
 
-## Support external data schemas in Jupyter
-Sometimes it is convenient to extract reusable code from Jupyter notebook into Kotlin JVM library. If this code uses [Custom data schema](#custom-data-schemas), it should be also extracted. In order to support data schema from JVM library in Jupyter, register it in [library integration class](#https://github.com/Kotlin/kotlin-jupyter/blob/master/docs/libraries.md#integration-using-kotlin-api) by `useDataSchemas` method:
+## Use external data schemas in Jupyter
+Sometimes it is convenient to extract reusable code from Jupyter notebook into Kotlin JVM library. If this code uses [Custom data schemas](#custom-data-schemas), schema interfaces should also be extracted. In order to later support them in Jupyter, you should register them in library [integration class](#https://github.com/Kotlin/kotlin-jupyter/blob/master/docs/libraries.md#integration-using-kotlin-api) with `useDataSchemas` function:
 ```kotlin
 @DataSchema
 interface Person {
@@ -135,6 +136,14 @@ internal class Integration : JupyterIntegration() {
     }
 }
 ```
-After library is loaded into Jupyter notebook, schema interfaces for all `DataFrame` variables that match `Person` schema will derive from `Person` and `countAdults` will be available for them
+After library is loaded into Jupyter notebook, schema interfaces for all `DataFrame` variables that match `Person` schema will derive from `Person`, so `countAdults` will 
+```kotlin
+val df = dataFrameOf("name", "age")(
+            "Alice", 15,
+            "Bob", 20)
+```
+```kotlin
+df.countAdults()
+```
 
     
