@@ -18,7 +18,7 @@ inline fun <T, reified D : Number> DataFrame<T>.std(col: KProperty<D>): Double =
 
 fun <T> DataFrame<T>.std(): DataRow<T> {
     return columns().map {
-        org.jetbrains.dataframe.column(it.name(), listOf((it as DataColumn<Number>).std()))
+        column(it.name, listOf((it as DataColumn<Number>).std()))
     }.asDataFrame<T>()[0]
 }
 
@@ -28,7 +28,7 @@ fun <T, G> GroupedDataFrame<T, G>.std(): DataFrame<T> {
     return aggregate {
         columns().filter { (it.type.classifier!! as KClass<*>).isSubclassOf(Number::class) && !keyColumnNames.contains(it.name()) }
             .forEach { col ->
-                (col as DataColumn<Number?>).std() into col.name()
+                (col as DataColumn<Number?>).std() into col.name
             }
     }
 }

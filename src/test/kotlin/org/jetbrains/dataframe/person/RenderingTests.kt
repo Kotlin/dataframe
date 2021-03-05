@@ -9,7 +9,6 @@ import org.jetbrains.dataframe.io.linearBg
 import org.jetbrains.dataframe.io.with
 import org.jetbrains.dataframe.io.toHTML
 import org.jetbrains.dataframe.io.where
-import org.jetbrains.kotlinx.jupyter.api.toJson
 import org.junit.Test
 
 class RenderingTests: BaseTest() {
@@ -41,7 +40,7 @@ class RenderingTests: BaseTest() {
 
     @Test
     fun `conditional formatting`(){
-        typed.format { intCols().notNullable() }.where { index % 2 == 0 }.with {
+        typed.format { intCols().withoutNulls() }.where { index % 2 == 0 }.with {
             if(it > 10) background(white) and bold and italic
             else textColor(linear(it, 30.5 to red, 50 to green)) and underline
         }

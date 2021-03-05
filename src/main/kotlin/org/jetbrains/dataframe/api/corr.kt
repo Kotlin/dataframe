@@ -1,27 +1,27 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.columns.isNumber
+fun <T> DataFrame<T>.corr() = corr { numberCols().withoutNulls() }
 
-fun AnyFrame.corr(): AnyFrame {
-    val cols = columns().filter { !it.type.isMarkedNullable && it.isNumber() }
-    val n = cols.size
-    val n1 = n + 1
+fun <T, C: Number> DataFrame<T>.corr(selector: ColumnsSelector<T, C>): AnyFrame {
+    val cols = getColumns(selector)
+    val len = nrow()
 
-    val corrDfNames = mutableListOf("feature")
-    corrDfNames.addAll(cols.map { it.name() })
+    val index = column("column", cols.map { it.name })
 
-    val data = MutableList<Any>(n1 * n) { index ->
-        val xInd = index / n1
-        val yInd = index % n1
-        if (yInd == 0) return@MutableList corrDfNames[xInd + 1]
+    val values = cols.map { it.values.map { it.toDouble() } }
+    val stdMeans = values.map { it.stdMean() }
 
-        val x = get(cols[xInd]).values.toList().map { (it as Number).toDouble() }
-        val y = get(cols[yInd - 1]).values.toList().map { (it as Number).toDouble() }
-        val (dx, xm) = x.stdMean()
-        val (dy, ym) = y.stdMean()
-        val cov = x.mapIndexed { i, xi -> (xi - xm) * (y[i] - ym) }.sum()
-        cov / (dx * dy)
+    val newColumns = cols.mapIndexed { i1, c1 ->
+        val values = cols.mapIndexed { i2, c2 ->
+            val (d1, m1) = stdMeans[i1]
+            val (d2, m2) = stdMeans[i2]
+            val v1 = values[i1]
+            val v2 = values[i2]
+            val cov = (0 until len).map { (v1[it] - m1) * (v2[it] - m2) }.sum()
+            cov / (d1 * d2)
+        }
+        c1.withValues(values, false)
     }
 
-    return dataFrameOf(corrDfNames)(data)
+    return dataFrameOf(listOf(index) + newColumns)
 }
