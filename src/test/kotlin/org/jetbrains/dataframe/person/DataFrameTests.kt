@@ -1129,13 +1129,9 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun corr() {
-        val df1 = dataFrameOf("name", "age", "city", "weight")(
-            "Alice", 15, "London", 54,
-            "Bob", 45, null, 87,
-            "Mark", 20, "Moscow", 63,
-        )
-
-        val res = df1.corr()
+        val fixed = typed.fillNulls {weight}.with(60)
+        val res = fixed.corr()
+        res.print()
         res.ncol() shouldBe 3
         res.nrow() shouldBe 2
         res["age"][0] shouldBe 1.0

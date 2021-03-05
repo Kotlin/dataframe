@@ -90,7 +90,7 @@ interface SelectReceiver<out T> : DataFrameBase<T> {
 
     fun <C> ColumnSet<C>.except(vararg other: ColumnSet<*>) = except(other.toList().toColumnSet())
 
-    fun <C> ColumnSet<C?>.notNullable(): ColumnSet<C> = transform { it.filter { !it.hasNulls } } as ColumnSet<C>
+    fun <C> ColumnSet<C?>.withoutNulls(): ColumnSet<C> = transform { it.filter { !it.hasNulls } } as ColumnSet<C>
 
     infix fun <C> ColumnSet<C>.except(other: ColumnSet<*>): ColumnSet<*> =
         createColumnSet { resolve(it).allColumnsExcept(other.resolve(it)) }
