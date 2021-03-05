@@ -4,7 +4,7 @@ import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.images.Image
 import org.jetbrains.dataframe.impl.truncate
 
-fun AnyFrame.toHTML(limit: Int = 20, truncate: Int = 40, cellCustomization: CellCustomization? = null) = buildString {
+fun <T> DataFrame<T>.toHTML(limit: Int = 20, truncate: Int = 40, formatter: RowColFormatter<T>? = null) = buildString {
     append("<html><body>")
     append("<table><tr>")
     columns().forEach {
@@ -27,7 +27,7 @@ fun AnyFrame.toHTML(limit: Int = 20, truncate: Int = 40, cellCustomization: Cell
                     content = tooltip.truncate(truncate)
                 }
             }
-            val attributes = cellCustomization?.invoke(row, col)?.toAttributesString().orEmpty()
+            val attributes = formatter?.invoke(row, col)?.attributes().orEmpty()
             append("<td style=\"text-align:left;$attributes\" title=\"$tooltip\">$content</td>")
         }
         append("</tr>")
