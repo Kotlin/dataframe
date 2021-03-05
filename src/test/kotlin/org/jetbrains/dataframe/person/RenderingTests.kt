@@ -1,7 +1,15 @@
 package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
+import org.jetbrains.dataframe.index
+import org.jetbrains.dataframe.io.FormatReceiver.green
+import org.jetbrains.dataframe.io.FormatReceiver.red
+import org.jetbrains.dataframe.io.format
+import org.jetbrains.dataframe.io.linearBg
+import org.jetbrains.dataframe.io.with
 import org.jetbrains.dataframe.io.toHTML
+import org.jetbrains.dataframe.io.where
+import org.jetbrains.kotlinx.jupyter.api.toJson
 import org.junit.Test
 
 class RenderingTests: BaseTest() {
@@ -29,5 +37,15 @@ class RenderingTests: BaseTest() {
         """.trimIndent()
 
         typed.toString().trim() shouldBe expected
+    }
+
+    @Test
+    fun `conditional formatting`(){
+        typed.format { intCols().notNullable() }.where { index % 2 == 0 }.with {
+            if(it > 10) background(white) and bold and italic
+            else textColor(linear(it, 30.5 to red, 50 to green)) and underline
+        }
+
+        typed.format { age }.linearBg(20 to green, 80 to red).toJson()
     }
 }

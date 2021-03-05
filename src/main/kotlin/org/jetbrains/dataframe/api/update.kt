@@ -15,13 +15,13 @@ fun <T> DataFrame<T>.update(vararg cols: String) = update { cols.toColumns() }
 fun <T, C> DataFrame<T>.update(vararg cols: KProperty<C>) = update { cols.toColumns() }
 fun <T, C> DataFrame<T>.update(vararg cols: ColumnReference<C>) = update { cols.toColumns() }
 
-data class UpdateClause<T, C>(val df: DataFrame<T>, val filter: UpdateExpression<T, C, Boolean>?, val selector: ColumnsSelector<T, C>, val targetType: KType?, val typeSuggestions: ((KClass<*>) -> KType)?){
-    fun <R> cast() = UpdateClause(df, filter as UpdateExpression<T, R, Boolean>?, selector as ColumnsSelector<T, R>, targetType, typeSuggestions)
+data class UpdateClause<T, C>(val df: DataFrame<T>, val filter: RowCellFilter<T, C>?, val selector: ColumnsSelector<T, C>, val targetType: KType?, val typeSuggestions: ((KClass<*>) -> KType)?){
+    fun <R> cast() = UpdateClause(df, filter as RowCellFilter<T, R>?, selector as ColumnsSelector<T, R>, targetType, typeSuggestions)
 
     inline fun <reified R> toType() = UpdateClause(df, filter, selector, getType<R>(), typeSuggestions)
 }
 
-fun <T, C> UpdateClause<T, C>.where(predicate: UpdateExpression<T, C, Boolean>) = copy(filter = predicate)
+fun <T, C> UpdateClause<T, C>.where(predicate: RowCellFilter<T, C>) = copy(filter = predicate)
 
 fun <T, C> UpdateClause<T, C>.at(rowIndices: Collection<Int>) = where { index in rowIndices }
 fun <T, C> UpdateClause<T, C>.at(vararg rowIndices: Int) = at(rowIndices.toList())
@@ -35,10 +35,6 @@ fun <T, C> UpdateClause<T, C>.suggestTypes(vararg suggestions: Pair<KClass<*>, K
     val map = suggestions.toMap()
     return copy(targetType = null) { map[it] ?: it.createStarProjectedType(false) }
 }
-
-typealias UpdateExpression<T, C, R> = DataRow<T>.(C) -> R
-
-typealias UpdateByColumnExpression<T, C, R> = (DataRow<T>, DataColumn<C>) -> R
 
 fun <T, C, R> doUpdate(clause: UpdateClause<T, C>, expression: (DataRow<T>, DataColumn<C>) -> R): DataFrame<T> {
 
@@ -66,23 +62,23 @@ fun <T, C, R> doUpdate(clause: UpdateClause<T, C>, expression: (DataRow<T>, Data
 }
 
 // TODO: rename
-inline infix fun <T, C, reified R> UpdateClause<T, C>.with2(noinline expression: UpdateByColumnExpression<T, C, R>) = doUpdate(copy(targetType = targetType ?: getType<R>()), expression)
+inline infix fun <T, C, reified R> UpdateClause<T, C>.with2(noinline expression: RowColumnSelector<T, C, R>) = doUpdate(copy(targetType = targetType ?: getType<R>()), expression)
 
-fun <T, C, R> UpdateClause<T, C>.with(targetType: KType?, expression: UpdateExpression<T, C, R>) = doUpdate(copy(filter = null, targetType = targetType)) { row, column ->
+fun <T, C, R> UpdateClause<T, C>.with(targetType: KType?, expression: RowCellSelector<T, C, R>) = doUpdate(copy(filter = null, targetType = targetType)) { row, column ->
     val currentValue = column[row.index]
     if (filter?.invoke(row, currentValue) == false)
         currentValue as R
     else expression(row, currentValue)
 }
 
-inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: UpdateExpression<T, C, R>) = doUpdate(copy(filter = null, targetType = targetType ?: getType<R>())) { row, column ->
+inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: RowCellSelector<T, C, R>) = doUpdate(copy(filter = null, targetType = targetType ?: getType<R>())) { row, column ->
     val currentValue = column[row.index]
     if (filter?.invoke(row, currentValue) == false)
         currentValue as R
     else expression(row, currentValue)
 }
 
-internal infix fun <T,C> UpdateExpression<T, C, Boolean>?.and(other: UpdateExpression<T, C, Boolean>): UpdateExpression<T,C,Boolean> {
+internal infix fun <T,C> RowCellFilter<T, C>?.and(other: RowCellFilter<T, C>): RowCellFilter<T,C> {
     if(this == null) return other
     val thisExp = this
     return { thisExp(this, it) && other(this, it) }
@@ -90,20 +86,20 @@ internal infix fun <T,C> UpdateExpression<T, C, Boolean>?.and(other: UpdateExpre
 
 fun <T, C> UpdateClause<T, C?>.notNull(): UpdateClause<T, C> = copy(filter = filter and { it != null } ) as UpdateClause<T, C>
 
-inline fun <T, C, reified R> UpdateClause<T, C?>.notNull(noinline expression: UpdateExpression<T, C, R>) = doUpdate(copy(filter = null, targetType =  targetType ?: getType<R>())) { row, column ->
+inline fun <T, C, reified R> UpdateClause<T, C?>.notNull(noinline expression: RowCellSelector<T, C, R>) = doUpdate(copy(filter = null, targetType =  targetType ?: getType<R>())) { row, column ->
     val currentValue = column[row.index]
     if (currentValue == null)
         null
     else expression(row, currentValue)
 }
 
-inline fun <T, C, reified R> DataFrame<T>.update(firstCol: ColumnReference<C>, vararg cols: ColumnReference<C>, noinline expression: UpdateExpression<T, C, R>) =
+inline fun <T, C, reified R> DataFrame<T>.update(firstCol: ColumnReference<C>, vararg cols: ColumnReference<C>, noinline expression: RowCellSelector<T, C, R>) =
         update(*headPlusArray(firstCol, cols)).with(expression)
 
-inline fun <T, C, reified R> DataFrame<T>.update(firstCol: KProperty<C>, vararg cols: KProperty<C>, noinline expression: UpdateExpression<T, C, R>) =
+inline fun <T, C, reified R> DataFrame<T>.update(firstCol: KProperty<C>, vararg cols: KProperty<C>, noinline expression: RowCellSelector<T, C, R>) =
         update(*headPlusArray(firstCol, cols)).with(expression)
 
-inline fun <T, reified R> DataFrame<T>.update(firstCol: String, vararg cols: String, noinline expression: UpdateExpression<T, Any?, R>) =
+inline fun <T, reified R> DataFrame<T>.update(firstCol: String, vararg cols: String, noinline expression: RowCellSelector<T, Any?, R>) =
         update(*headPlusArray(firstCol, cols)).with(expression)
 
 fun <T, C> UpdateClause<T, C>.withNull() = with { null as Any? }

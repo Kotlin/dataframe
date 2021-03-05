@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.DataColumn
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.DataColumn
 import java.math.BigDecimal
 import kotlin.math.sqrt
 import kotlin.reflect.KClass
