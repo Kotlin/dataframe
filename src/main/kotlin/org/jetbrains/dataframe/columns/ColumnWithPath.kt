@@ -12,7 +12,7 @@ interface ColumnWithPath<out T> : ColumnReference<T> {
     val df: DataFrameBase<*>
     val data: DataColumn<T>
     val path: ColumnPath
-    val depth: Int get() = path.size - 1
+    val depth: Int get() = path.depth()
     val name: String get() = data.name
     val type: KType get() = data.type
     val hasNulls: Boolean get() = data.hasNulls

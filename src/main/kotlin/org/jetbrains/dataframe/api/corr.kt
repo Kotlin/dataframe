@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.api.columns.isNumber
+import org.jetbrains.dataframe.columns.isNumber
 
 fun AnyFrame.corr(): AnyFrame {
     val cols = columns().filter { !it.type.isMarkedNullable && it.isNumber() }
