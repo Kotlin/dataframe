@@ -24,10 +24,10 @@ inline fun <reified R, T> DataFrame<T>.add(column: ColumnDefinition<R>, noinline
         (this + newColumn(column.name(), expression))
 
 fun <T> DataFrame<T>.add(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) =
-        with(TypedColumnsFromDataRowBuilder(this)) {
-            body(this)
-            dataFrameOf(this@add.columns() + columns).typed<T>()
-        }
+    with(TypedColumnsFromDataRowBuilder(this)) {
+        body(this)
+        dataFrameOf(this@add.columns() + columns).typed<T>()
+    }
 
 operator fun <T> DataFrame<T>.plus(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit) = add(body)
 

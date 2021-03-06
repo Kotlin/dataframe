@@ -1,7 +1,12 @@
 package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
+import org.jetbrains.dataframe.index
 import org.jetbrains.dataframe.io.toHTML
+import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.FormattingDSL.gray
+import org.jetbrains.dataframe.FormattingDSL.green
+import org.jetbrains.dataframe.FormattingDSL.red
 import org.junit.Test
 
 class RenderingTests: BaseTest() {
@@ -29,5 +34,28 @@ class RenderingTests: BaseTest() {
         """.trimIndent()
 
         typed.toString().trim() shouldBe expected
+    }
+
+    @Test
+    fun `conditional formatting`(){
+        val formatter = typed.format { intCols().withoutNulls() }.with {
+            if(it > 10) background(white) and bold and italic
+            else textColor(linear(it, 30.5 to red, 50 to green)) and underline
+        }.formatter!!
+
+        for(row in 0 until typed.nrow())
+            formatter(typed[row], typed.age)!!.attributes().size shouldBe if(typed[row].age > 10) 3 else 2
+    }
+
+    @Test
+    fun `override format`() {
+        val formatter = typed.format { age }.linearBg(20 to green, 80 to red)
+            .format { age and weight }.where { index % 2 == 0 }.with { background(gray) }.formatter!!
+
+        for(row in 0 until typed.nrow() step 2)
+            formatter(typed[row], typed.age)!!.attributes() shouldBe listOf("background-color" to gray.encode())
+
+        for(row in 1 until typed.nrow() step 2)
+            formatter(typed[row], typed.age)!!.attributes() shouldBe listOf("background-color" to linearGradient(typed[row].age.toDouble(), 20.0, green, 80.0, red).encode())
     }
 }
