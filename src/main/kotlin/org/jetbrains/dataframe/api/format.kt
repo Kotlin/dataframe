@@ -39,7 +39,7 @@ internal class MergedAttributes(private val attributes: List<CellAttributes>) : 
     override fun attributes() = attributes.flatMap { it.attributes() }.toMap().toList()
 }
 
-object FormatReceiver {
+object FormattingDSL {
 
     fun rgb(r: Short, g: Short, b: Short) = RGBColor(r, g, b)
 
@@ -65,6 +65,8 @@ object FormatReceiver {
     val bold = attribute("font-weight", "bold")
 
     val underline = attribute("text-decoration", "underline")
+
+    fun linearBg(value: Number, from: Pair<Number, RGBColor>, to: Pair<Number, RGBColor>) = background(linear(value, from, to))
 
     fun linear(value: Number, from: Pair<Number, RGBColor>, to: Pair<Number, RGBColor>): RGBColor {
         val a = from.first.toDouble()
@@ -114,7 +116,7 @@ fun <T> DataFrame<T>.format() = ColorClause<T, Any?>(this)
 
 fun <T, C> ColorClause<T, C>.where(filter: RowCellFilter<T, C>) = copy(filter = filter)
 
-typealias CellFormatter<V> = FormatReceiver.(V) -> CellAttributes?
+typealias CellFormatter<V> = FormattingDSL.(V) -> CellAttributes?
 
 fun <T, C : Number?> ColorClause<T, C>.linearBg(from: Pair<Number, RGBColor>, to: Pair<Number, RGBColor>) = with {
     if (it != null)
@@ -131,7 +133,7 @@ fun <T, C> ColorClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T
         if (columns == null || columns.contains(col.name())) {
             val value = row[col] as C
             if (filter == null || filter(row, value)) {
-                oldAttributes and formatter(FormatReceiver, value)
+                oldAttributes and formatter(FormattingDSL, value)
             } else oldAttributes
         } else oldAttributes
     }
