@@ -68,6 +68,8 @@
 * [Export `DataFrame`](#export-dataframe)
     * [writeCSV](#writecsv)
     * [writeClass](#writeclass)
+* [`DataFrame` Presentation](#dataframe-presentation)
+    * [format](#format)
 * [Column kinds](#column-kinds)
 * [Column selectors](#column-selectors)
 * [Row expressions](#row-expressions)
@@ -959,6 +961,40 @@ name|London|Paris|Milan
 ---|---|---|---
 Alice|2|1|0
 Bob|0|1|1
+## `DataFrame` Presentation
+### format
+Applies conditional formatting to cells. Returns `FormattedFrame` that can be rendered in Jupyter notebook
+```
+df.format { columns }
+    [.where { rowFilter } ]
+    .with { formatter }
+
+formatter = FormattingDSL.(Value) -> CellFormat
+CellFormat = bold | italic | underline | background(color) | textColor(color) | format1 and format2 | linearBg(value, v1 to color1, v2 to color2)
+color = rgb(r,g,b) | linear(value, v1 to color1, v2 to color2) | white | gray | red | green | ...
+```
+If `columns` are not specified, formatting is applied to all numeric columns without `null` values
+```kotlin
+df.format().with { if(it >= 0) background(green) else background(red) }
+```
+Several formatters can be chained:
+```kotlin
+df.format { all() }.where { index % 0 == 2 }.with { background(lightGray) }
+  .format { age }.where { it > 20 }.with { bold and underline }
+  .format { score }.with { linearBg(it, 0 to red, 100 to green) }
+```
+
+## Export `DataFrame`
+### writeCSV
+Exports `DataFrame` to `CSV` file
+```kotlin
+df.writeCSV("output.csv")
+```
+### writeClass
+Exports `DataFrame` to `List` of auto-generated data classes. Only for `Jupyter` environment.
+```kotlin
+val list = df.writeClass("Person")
+```
 ## Column kinds
 There are three kinds of `DataColumn`:
 * `MapColumn`: every element is `DataRow`
@@ -981,17 +1017,6 @@ df.asGrouped { groups }
 `DataFrame`s stored in `FrameColumn` can be [unioned](#union) into single `DataFrame`:
 ```kotlin
 val df = frameColumn.union()
-```
-## Export `DataFrame`
-### writeCSV
-Exports `DataFrame` to `CSV` file
-```kotlin
-df.writeCSV("output.csv")
-```
-### writeClass
-Exports `DataFrame` to `List` of auto-generated data classes. Only for `Jupyter` environment.
-```kotlin
-val list = df.writeClass("Person")
 ```
 ## Column Selectors
 `DataFrame` provides a column selection DSL for selecting arbitrary set of columns.
