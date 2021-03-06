@@ -1,5 +1,7 @@
 package org.jetbrains.dataframe.person
 
+import io.kotlintest.matchers.ToleranceMatcher
+import io.kotlintest.should
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrow
@@ -1125,6 +1127,18 @@ class DataFrameTests : BaseTest() {
         typed.age.digitize(a, b, right = true).toList() shouldBe expectedRight
     }
 
+    @Test
+    fun corr() {
+        val fixed = typed.fillNulls {weight}.with(60)
+        val res = fixed.corr()
+        res.print()
+        res.ncol() shouldBe 3
+        res.nrow() shouldBe 2
+        res["age"][0] shouldBe 1.0
+        res["weight"][0] shouldBe res["age"][1]
+        res["weight"][0] as Double should ToleranceMatcher(0.9, 1.0)
+    }
+    
     @Test
     fun `aggregate into grouped column`() {
 

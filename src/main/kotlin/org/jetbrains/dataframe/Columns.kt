@@ -81,9 +81,9 @@ internal fun <T> Iterable<DataFrame<T>?>.getBaseSchema(): DataFrame<T> {
 fun <T> DataColumn<T>.withValues(values: List<T>, hasNulls: Boolean) = when (this) {
     is FrameColumn<*> -> {
         val dfs = (values as List<AnyFrame>)
-        DataColumn.create(name(), dfs, dfs.getBaseSchema()) as DataColumn<T>
+        DataColumn.create(name, dfs, dfs.getBaseSchema()) as DataColumn<T>
     }
-    else -> DataColumn.create(name(), values, type.withNullability(hasNulls))
+    else -> DataColumn.create(name, values, type.withNullability(hasNulls))
 }
 
 fun AnyCol.toDataFrame() = dataFrameOf(listOf(this))

@@ -87,5 +87,9 @@ typealias Selector<T, R> = T.(T) -> R
 typealias RowSelector<T, R> = DataRow<T>.(DataRow<T>) -> R
 typealias RowFilter<T> = RowSelector<T, Boolean>
 typealias VectorizedRowFilter<T> = Selector<DataFrameBase<T>, BooleanArray>
+typealias RowCellSelector<T, C, R> = DataRow<T>.(C) -> R
+typealias RowCellFilter<T, C> = RowCellSelector<T, C, Boolean>
+typealias RowColumnSelector<T, C, R> = (DataRow<T>, DataColumn<C>) -> R
+
 
 typealias AnyRow = DataRow<*>
