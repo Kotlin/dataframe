@@ -27,7 +27,7 @@ fun <T> DataFrame<T>.toHTML(limit: Int = 20, truncate: Int = 40, formatter: RowC
                     content = tooltip.truncate(truncate)
                 }
             }
-            val attributes = formatter?.invoke(row, col)?.attributes().orEmpty()
+            val attributes = formatter?.invoke(row, col)?.attributes()?.joinToString(";") { "${it.first}:${it.second}" }.orEmpty()
             append("<td style=\"text-align:left;$attributes\" title=\"$tooltip\">$content</td>")
         }
         append("</tr>")
