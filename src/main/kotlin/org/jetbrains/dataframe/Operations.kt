@@ -17,6 +17,7 @@ import org.jetbrains.dataframe.impl.getOrPutEmpty
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection
+import kotlin.reflect.KVisibility
 import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.createType
 import kotlin.reflect.full.isSubclassOf
@@ -40,23 +41,26 @@ fun Iterable<KClass<*>>.withMostSuperclasses() = maxByOrNull { it.allSuperclasse
 fun commonParents(vararg classes: KClass<*>) = commonParents(classes.toList())
 
 fun commonParents(classes: Iterable<KClass<*>>) =
-        when {
-            !classes.any() -> emptyList()
-            else -> {
-                classes.distinct().let {
-                    when {
-                        it.size == 1 -> listOf(it[0]) // if there is only one class - return it
-                        else -> it.fold(null as (Set<KClass<*>>?)) { set, clazz ->
-                            // collect a set of all common superclasses from original classes
-                            val superclasses = clazz.allSuperclasses + clazz
-                            set?.intersect(superclasses) ?: superclasses.toSet()
-                        }!!.let {
-                            it - it.flatMap { it.superclasses } // leave only 'leaf' classes, that are not super to some other class in a set
-                        }.toList()
+    when {
+        !classes.any() -> emptyList()
+        else -> {
+            classes.distinct().let {
+                when {
+                    it.size == 1 && it[0].visibility == KVisibility.PUBLIC -> { // if there is only one class - return it
+                        listOf(it[0])
                     }
+                    else -> it.fold(null as (Set<KClass<*>>?)) { set, clazz ->
+                        // collect a set of all common superclasses from original classes
+                        val superclasses =
+                            (clazz.allSuperclasses + clazz).filter { it.visibility == KVisibility.PUBLIC }
+                        set?.intersect(superclasses) ?: superclasses.toSet()
+                    }!!.let {
+                        it - it.flatMap { it.superclasses } // leave only 'leaf' classes, that are not super to some other class in a set
+                    }.toList()
                 }
             }
         }
+    }
 
 internal fun baseType(types: Set<KType>): KType {
     val nullable = types.any { it.isMarkedNullable }
@@ -78,7 +82,8 @@ internal fun baseType(types: Set<KType>): KType {
                     classes[0].createType(typeProjections, nullable)
                 }
                 classes.any { it == List::class } && classes.all { it == List::class || !it.isSubclassOf(Collection::class) } -> {
-                    val listTypes = types.map { if (it.classifier == List::class) it.arguments[0].type else it }.toMutableSet()
+                    val listTypes =
+                        types.map { if (it.classifier == List::class) it.arguments[0].type else it }.toMutableSet()
                     if (listTypes.contains(null)) List::class.createStarProjectedType(nullable)
                     else {
                         val type = baseType(listTypes as Set<KType>)
@@ -97,9 +102,13 @@ internal fun baseType(types: Set<KType>): KType {
 internal fun indexColumn(columnName: String, size: Int): AnyCol = column(columnName, (0 until size).toList())
 
 fun <T> DataFrame<T>.addRowNumber(column: ColumnReference<Int>) = addRowNumber(column.name())
-fun <T> DataFrame<T>.addRowNumber(columnName: String = "id"): DataFrame<T> = dataFrameOf(columns() + indexColumn(columnName,
-    nrow()
-)).typed<T>()
+fun <T> DataFrame<T>.addRowNumber(columnName: String = "id"): DataFrame<T> = dataFrameOf(
+    columns() + indexColumn(
+        columnName,
+        nrow()
+    )
+).typed<T>()
+
 fun AnyCol.addRowNumber(columnName: String = "id") = dataFrameOf(listOf(indexColumn(columnName, size), this))
 
 // Update
@@ -132,7 +141,8 @@ internal fun AnyFrame.collectTree() = columns().map { it.addPath(this) }.collect
 
 internal fun List<ColumnWithPath<*>>.collectTree() = collectTree(DataColumn.empty()) { it }
 
-internal fun <D> AnyFrame.collectTree(emptyData: D, createData: (AnyCol) -> D) = columns().map { it.addPath(this) }.collectTree(emptyData, createData)
+internal fun <D> AnyFrame.collectTree(emptyData: D, createData: (AnyCol) -> D) =
+    columns().map { it.addPath(this) }.collectTree(emptyData, createData)
 
 internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (AnyCol) -> D): TreeNode<D> {
 
@@ -140,18 +150,18 @@ internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (
 
     fun collectColumns(col: AnyCol, parentNode: TreeNode<D>) {
         val newNode = parentNode.getOrPut(col.name()) { createData(col) }
-        if(col.isGroup()){
+        if (col.isGroup()) {
             col.asGroup().columns().forEach {
                 collectColumns(it, newNode)
             }
         }
     }
     forEach {
-        if(it.path.isEmpty()){
+        if (it.path.isEmpty()) {
             it.data.asGroup().df.columns().forEach {
                 collectColumns(it, root)
             }
-        }else {
+        } else {
             val node = root.getOrPutEmpty(it.path.dropLast(1), emptyData)
             collectColumns(it.data, node)
         }
@@ -162,7 +172,11 @@ internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (
 //TODO: make immutable
 internal data class ColumnPosition(val originalIndex: Int, var wasRemoved: Boolean, var column: AnyCol?)
 
-internal data class ColumnToInsert(val insertionPath: ColumnPath, val referenceNode: TreeNode<ColumnPosition>?, val column: AnyCol)
+internal data class ColumnToInsert(
+    val insertionPath: ColumnPath,
+    val referenceNode: TreeNode<ColumnPosition>?,
+    val column: AnyCol
+)
 
 fun Column.getParent(): MapColumnReference? = when (this) {
     is ColumnWithParent<*> -> parent
@@ -207,12 +221,17 @@ internal fun <T> DataFrame<T>.collectTree(selector: ColumnsSelector<T, *>): Tree
 internal fun <T> DataFrame<T>.doInsert(columns: List<ColumnToInsert>) = insertColumns(this, columns)
 
 internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>) =
-        insertColumns(df, columns, columns.firstOrNull()?.referenceNode?.getRoot(), 0)
+    insertColumns(df, columns, columns.firstOrNull()?.referenceNode?.getRoot(), 0)
 
 internal fun insertColumns(columns: List<ColumnToInsert>) =
-        insertColumns<Unit>(null, columns, columns.firstOrNull()?.referenceNode?.getRoot(), 0)
+    insertColumns<Unit>(null, columns, columns.firstOrNull()?.referenceNode?.getRoot(), 0)
 
-internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>, treeNode: TreeNode<ColumnPosition>?, depth: Int): DataFrame<T> {
+internal fun <T> insertColumns(
+    df: DataFrame<T>?,
+    columns: List<ColumnToInsert>,
+    treeNode: TreeNode<ColumnPosition>?,
+    depth: Int
+): DataFrame<T> {
 
     if (columns.isEmpty()) return df ?: DataFrame.empty().typed()
 
@@ -278,13 +297,19 @@ internal fun <T> insertColumns(df: DataFrame<T>?, columns: List<ColumnToInsert>,
             }
         }
 
-        val nodeToInsert = columns.firstOrNull { it.insertionPath.size == childDepth } // try to find existing node to insert
+        val nodeToInsert =
+            columns.firstOrNull { it.insertionPath.size == childDepth } // try to find existing node to insert
         val newCol = if (nodeToInsert != null) {
             val column = nodeToInsert.column
             if (columns.size > 1) {
                 assert(columns.count { it.insertionPath.size == childDepth } == 1) { "Can not insert more than one column into the path ${nodeToInsert.insertionPath}" }
                 val group = column as MapColumn<*>
-                val newDf = insertColumns(group.df, columns.filter { it.insertionPath.size > childDepth }, treeNode?.get(name), childDepth)
+                val newDf = insertColumns(
+                    group.df,
+                    columns.filter { it.insertionPath.size > childDepth },
+                    treeNode?.get(name),
+                    childDepth
+                )
                 group.withDf(newDf)
             } else column.rename(name)
         } else {
@@ -314,8 +339,9 @@ internal fun <T> List<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<L
     }
 }
 
-internal fun KClass<*>.createType(typeArgument: KType?) = if (typeArgument != null) createType(listOf(KTypeProjection.invariant(typeArgument)))
-else createStarProjectedType(false)
+internal fun KClass<*>.createType(typeArgument: KType?) =
+    if (typeArgument != null) createType(listOf(KTypeProjection.invariant(typeArgument)))
+    else createStarProjectedType(false)
 
 internal inline fun <reified T> createType(typeArgument: KType? = null) = T::class.createType(typeArgument)
 
@@ -334,7 +360,8 @@ internal fun <C> List<ColumnWithPath<C>>.shortenPaths(): List<ColumnWithPath<C>>
     val map = groupBy { it.path.last(1) }.toMutableMap()
 
     fun add(path: ColumnPath, column: ColumnWithPath<C>) {
-        val list: MutableList<ColumnWithPath<C>> = (map.getOrPut(path) { mutableListOf() } as? MutableList<ColumnWithPath<C>>)
+        val list: MutableList<ColumnWithPath<C>> =
+            (map.getOrPut(path) { mutableListOf() } as? MutableList<ColumnWithPath<C>>)
                 ?: let {
                     val values = map.remove(path)!!
                     map.put(path, values.toMutableList()) as MutableList<ColumnWithPath<C>>
