@@ -12,7 +12,7 @@ fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
         }.let { get(it) }
 
 fun <T> DataFrame<T>.filterNotNull(selector: ColumnsSelector<T, *>): DataFrame<T> {
-    val cols = getColumns(selector)
+    val cols = this[selector]
     return filter { row -> cols.all { col -> col[row] != null } }
 }
 
@@ -22,7 +22,7 @@ fun <T> DataFrame<T>.filterNotNull(vararg cols: Column) = filterNotNull { cols.t
 fun <T> DataFrame<T>.filterNotNull(cols: Iterable<Column>) = filterNotNull { cols.toColumnSet() }
 
 fun <T> DataFrame<T>.filterNotNullAny(selector: ColumnsSelector<T, *>): DataFrame<T> {
-    val cols = getColumns(selector)
+    val cols = this[selector]
     return filter { row -> cols.any { col -> col[row] != null } }
 }
 

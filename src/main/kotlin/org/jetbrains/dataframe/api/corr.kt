@@ -3,7 +3,7 @@ package org.jetbrains.dataframe
 fun <T> DataFrame<T>.corr() = corr { numberCols().withoutNulls() }
 
 fun <T, C: Number> DataFrame<T>.corr(selector: ColumnsSelector<T, C>): AnyFrame {
-    val cols = getColumns(selector)
+    val cols = this[selector]
     val len = nrow()
 
     val index = column("column", cols.map { it.name })

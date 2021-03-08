@@ -5,7 +5,7 @@ import org.jetbrains.dataframe.columns.DataColumn
 import org.jetbrains.dataframe.columns.isNumber
 import kotlin.reflect.KType
 
-fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *> = { numberCols() }) = describe(getColumns(columns))
+fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *> = { numberCols() }) = describe(this[columns])
 fun <T> DataColumn<T>.describe() = describe(listOf(this))
 
 @DataSchema

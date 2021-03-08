@@ -19,7 +19,7 @@ fun <T, C> ReplaceCause<T, C>.with(vararg columns: AnyCol) = with(columns.toList
 fun <T, C> ReplaceCause<T, C>.with(newColumns: List<AnyCol>): DataFrame<T> {
     var index = 0
     return with {
-        require(index < newColumns.size) { "Insufficient number of new columns in 'replace': ${newColumns.size} instead of ${df.getColumns(selector).size}" }
+        require(index < newColumns.size) { "Insufficient number of new columns in 'replace': ${newColumns.size} instead of ${df[selector].size}" }
         newColumns[index++]
     }
 }
