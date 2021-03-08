@@ -2,7 +2,6 @@ package org.jetbrains.dataframe.io
 
 import org.apache.commons.csv.CSVFormat
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.api.*
 import org.jetbrains.dataframe.impl.ColumnNameGenerator
 import java.io.*
 import java.math.BigDecimal
@@ -22,63 +21,43 @@ internal fun isCompressed(url: URL) = isCompressed(url.path)
 fun DataFrame.Companion.readDelimStr(
     text: String, format: CSVFormat = CSVFormat.DEFAULT.withHeader(),
     colTypes: Map<String, ColType> = mapOf(),
-    skip: Int = 0
-) = readDelim(StringReader(text), format, colTypes, skip)
+    skipLines: Int = 0
+) = readDelim(StringReader(text), format, colTypes, skipLines)
 
 fun DataFrame.Companion.readCSV(
     fileOrUrl: String,
     format: CSVFormat = defaultCsvFormat,
-    colTypes: Map<String, ColType> = mapOf()
-) = readDelim(
-    asStream(fileOrUrl),
-    format = format,
-    colTypes = colTypes,
-    isCompressed = isCompressed(fileOrUrl)
-)
+    colTypes: Map<String, ColType> = mapOf(),
+    skipLines: Int = 0
+) = readDelim(asStream(fileOrUrl), format, isCompressed(fileOrUrl), colTypes, skipLines)
 
 fun DataFrame.Companion.readCSV(
     file: File,
     format: CSVFormat = defaultCsvFormat,
-    colTypes: Map<String, ColType> = mapOf()
-) = readDelim(
-    inStream = FileInputStream(file),
-    format = format,
-    colTypes = colTypes,
-    isCompressed = isCompressed(file)
-)
+    colTypes: Map<String, ColType> = mapOf(),
+    skipLines: Int = 0
+) = readDelim(FileInputStream(file), format, isCompressed(file), colTypes, skipLines)
 
 fun DataFrame.Companion.readCSV(
     url: URL,
     format: CSVFormat = defaultCsvFormat,
-    colTypes: Map<String, ColType> = mapOf()
-): AnyFrame = readDelim(
-    inStream = url.openStream(),
-    format = format,
-    colTypes = colTypes,
-    isCompressed = isCompressed(url)
-)
+    colTypes: Map<String, ColType> = mapOf(),
+    skipLines: Int = 0
+) = readDelim(url.openStream(), format, isCompressed(url), colTypes, skipLines)
 
 fun DataFrame.Companion.readTSV(
     fileOrUrl: String,
     format: CSVFormat = defaultTdfFormat,
-    colTypes: Map<String, ColType> = mapOf()
-) = readDelim(
-    inStream = asStream(fileOrUrl),
-    format = format,
-    colTypes = colTypes,
-    isCompressed = isCompressed(fileOrUrl)
-)
+    colTypes: Map<String, ColType> = mapOf(),
+    skipLines: Int = 0
+) = readDelim(asStream(fileOrUrl), format, isCompressed(fileOrUrl), colTypes, skipLines)
 
 fun DataFrame.Companion.readTSV(
     file: File,
     format: CSVFormat = defaultTdfFormat,
-    colTypes: Map<String, ColType> = mapOf()
-) = readDelim(
-    FileInputStream(file),
-    format = format,
-    colTypes = colTypes,
-    isCompressed = isCompressed(file)
-)
+    colTypes: Map<String, ColType> = mapOf(),
+    skipLines: Int = 0
+) = readDelim(FileInputStream(file), format, isCompressed(file), colTypes, skipLines)
 
 private fun asStream(fileOrUrl: String) = (if (isURL(fileOrUrl)) {
     URL(fileOrUrl).toURI()
@@ -90,18 +69,18 @@ fun DataFrame.Companion.readDelim(
     inStream: InputStream,
     format: CSVFormat = defaultCsvFormat,
     isCompressed: Boolean = false,
-    colTypes: Map<String, ColType> = mapOf()
+    colTypes: Map<String, ColType> = mapOf(),
+    skipLines: Int = 0
 ) =
     if (isCompressed) {
         InputStreamReader(GZIPInputStream(inStream))
     } else {
         BufferedReader(InputStreamReader(inStream, "UTF-8"))
     }.run {
-        readDelim(this, format, colTypes = colTypes)
+        readDelim(this, format, colTypes, skipLines)
     }
 
 internal fun isURL(fileOrUrl: String): Boolean = listOf("http:", "https:", "ftp:").any { fileOrUrl.startsWith(it) }
-
 
 enum class ColType {
     Int,
@@ -127,7 +106,7 @@ fun DataFrame.Companion.readDelim(
     reader: Reader,
     format: CSVFormat = CSVFormat.DEFAULT.withHeader(),
     colTypes: Map<String, ColType> = mapOf(),
-    skip: Int = 0
+    skipLines: Int = 0
 ): AnyFrame {
 
     val formatWithNullString = if (format.isNullStringSet) {
@@ -137,9 +116,9 @@ fun DataFrame.Companion.readDelim(
     }
 
     var reader = reader
-    if (skip > 0) {
+    if (skipLines > 0) {
         reader = BufferedReader(reader)
-        repeat(skip) { reader.readLine() }
+        repeat(skipLines) { reader.readLine() }
     }
 
     val csvParser = formatWithNullString.parse(reader)
