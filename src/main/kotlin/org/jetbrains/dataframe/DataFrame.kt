@@ -62,8 +62,6 @@ internal fun <T, C> DataFrame<T>.getColumns(
     selector
 ).map { it.data }
 
-internal fun <T, C> DataFrame<T>.getColumns(selector: ColumnsSelector<T, C>) = getColumns(false, selector)
-
 internal fun <T, C> DataFrame<T>.getColumnsWithPaths(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
     selector: ColumnsSelector<T, C>
@@ -78,7 +76,7 @@ internal fun <T, C> DataFrame<T>.getColumnPaths(selector: ColumnsSelector<T, C>)
 internal fun <T, C> DataFrame<T>.getGroupColumns(selector: ColumnsSelector<T, DataRow<C>>) =
     getColumnsWithPaths(selector).map { it.data.asGroup() }
 
-fun <T, C> DataFrame<T>.column(selector: ColumnSelector<T, C>) = getColumns(selector).single()
+fun <T, C> DataFrame<T>.column(selector: ColumnSelector<T, C>) = get(selector).single()
 
 fun <T, C> DataFrame<T>.getColumnWithPath(selector: ColumnSelector<T, C>) = getColumnsWithPaths(selector).single()
 
@@ -127,6 +125,8 @@ interface DataFrame<out T> : DataFrameBase<T> {
 
     override operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R> =
         get<DataFrame<R>>(column) as FrameColumn<R>
+
+    operator fun <C> get(selector: ColumnsSelector<T, C>): List<DataColumn<C>> = getColumns(false, selector)
 
     operator fun get(indices: Iterable<Int>) = getRows(indices)
     operator fun get(mask: BooleanArray) = getRows(mask)
