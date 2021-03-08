@@ -43,7 +43,16 @@ inline fun <reified T> Iterable<T>.toDataFrame() = T::class.declaredMembers
             val property = (it as KProperty)
             property.javaField?.isAccessible = true
             var nullable = false
-            val values = this.map { el -> it.call(el).also { if (it == null) nullable = true } }
+            val values = this.map { obj ->
+                if(obj == null) {
+                    nullable = true
+                    null
+                }else {
+                    val value = it.call(obj)
+                    if(value == null) nullable = true
+                    value
+                }
+            }
             DataColumn.create(it.name, values, property.returnType.withNullability(nullable))
         }.let { dataFrameOf(it) }
 
