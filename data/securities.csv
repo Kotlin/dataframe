@@ -1,0 +1,1602 @@
+
+columns,data,id
+id,412223567,0
+secid,AAL-RM,0
+shortname,AmAirlines,0
+regnumber,,0
+name,American Airlines Group Inc.,0
+isin,US02376R1023,0
+is_traded,1,0
+emitent_id,1375083,0
+emitent_title,American Airlines Group Inc.,0
+emitent_inn,0000004968,0
+emitent_okpo,,0
+gosreg,,0
+type,common_share,0
+group,stock_shares,0
+primary_boardid,FQBR,0
+marketprice_boardid,FQBR,0
+id,411886643,1
+secid,AAPL-RM,1
+shortname,Apple,1
+regnumber,,1
+name,Apple Inc.,1
+isin,US0378331005,1
+is_traded,1,1
+emitent_id,1281003,1
+emitent_title,Apple Inc,1
+emitent_inn,,1
+emitent_okpo,,1
+gosreg,,1
+type,common_share,1
+group,stock_shares,1
+primary_boardid,FQBR,1
+marketprice_boardid,FQBR,1
+id,412223569,2
+secid,ABBV-RM,2
+shortname,AbbVie,2
+regnumber,,2
+name,AbbVie Inc.,2
+isin,US00287Y1091,2
+is_traded,1,2
+emitent_id,1375081,2
+emitent_title,AbbVie Inc.,2
+emitent_inn,0000004967,2
+emitent_okpo,,2
+gosreg,,2
+type,common_share,2
+group,stock_shares,2
+primary_boardid,FQBR,2
+marketprice_boardid,FQBR,2
+id,12441,3
+secid,ABRD,3
+shortname,АбрауДюрсо,3
+regnumber,1-02-12500-A,3
+name,Абрау-Дюрсо ПАО ао,3
+isin,RU000A0JS5T7,3
+is_traded,1,3
+emitent_id,2556,3
+emitent_title,"Публичное акционерное общество ""Абрау – Дюрсо""",3
+emitent_inn,7727620673,3
+emitent_okpo,81521198,3
+gosreg,1-02-12500-A,3
+type,common_share,3
+group,stock_shares,3
+primary_boardid,TQBR,3
+marketprice_boardid,TQBR,3
+id,412408281,4
+secid,ABT-RM,4
+shortname,Abbott,4
+regnumber,,4
+name,Abbott Laboratories,4
+isin,US0028241000,4
+is_traded,1,4
+emitent_id,1375165,4
+emitent_title,Abbot Laboratories,4
+emitent_inn,0000005004,4
+emitent_okpo,,4
+gosreg,,4
+type,common_share,4
+group,stock_shares,4
+primary_boardid,FQBR,4
+marketprice_boardid,FQBR,4
+id,131568,5
+secid,ACKO,5
+shortname,АСКО ао,5
+regnumber,1-01-52065-Z,5
+name,АСКО-СТРАХОВАНИЕ ПАО ао,5
+isin,RU000A0JXS91,5
+is_traded,1,5
+emitent_id,1098705,5
+emitent_title,"Публичное акционерное общество ""АСКО-СТРАХОВАНИЕ""",5
+emitent_inn,7453297458,5
+emitent_okpo,31212003,5
+gosreg,1-01-52065-Z,5
+type,common_share,5
+group,stock_shares,5
+primary_boardid,TQBR,5
+marketprice_boardid,TQBR,5
+id,85909,6
+secid,acru,6
+shortname,"ОАО АК ""Рубин""",6
+regnumber,1-03-01692-A,6
+name,"Открытое акционерное общество ""Авиационная корпорация ""Рубин""",6
+isin,RU000A0JRM20,6
+is_traded,1,6
+emitent_id,486957,6
+emitent_title,"публичное акционерное общество ""Авиационная корпорация ""Рубин""",6
+emitent_inn,5001000034,6
+emitent_okpo,,6
+gosreg,1-03-01692-A,6
+type,common_share,6
+group,stock_shares,6
+primary_boardid,MXBD,6
+marketprice_boardid,,6
+id,412223571,7
+secid,ADBE-RM,7
+shortname,Adobe,7
+regnumber,,7
+name,Adobe Inc.,7
+isin,US00724F1012,7
+is_traded,1,7
+emitent_id,1375103,7
+emitent_title,Adobe Inc.,7
+emitent_inn,0000004978,7
+emitent_okpo,,7
+gosreg,,7
+type,common_share,7
+group,stock_shares,7
+primary_boardid,FQBR,7
+marketprice_boardid,FQBR,7
+id,412048983,8
+secid,AF4500BC1,8
+shortname,AFLT-3.21M170321CA4500,8
+regnumber,,8
+name,Марж. амер. Call 4500 с исп. 17 марта на фьюч. контр. AFLT-3.21,8
+isin,,8
+is_traded,1,8
+emitent_id,1300,8
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",8
+emitent_inn,7712040126,8
+emitent_okpo,29063984,8
+gosreg,,8
+type,option,8
+group,futures_options,8
+primary_boardid,ROPD,8
+marketprice_boardid,,8
+id,412801865,9
+secid,AF4500BD1,9
+shortname,AFLT-6.21M140421CA4500,9
+regnumber,,9
+name,Марж. амер. Call 4500 с исп. 14 апр. на фьюч. контр. AFLT-6.21,9
+isin,,9
+is_traded,1,9
+emitent_id,1300,9
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",9
+emitent_inn,7712040126,9
+emitent_okpo,29063984,9
+gosreg,,9
+type,option,9
+group,futures_options,9
+primary_boardid,ROPD,9
+marketprice_boardid,,9
+id,412884107,10
+secid,AF4500BE1,10
+shortname,AFLT-6.21M190521CA4500,10
+regnumber,,10
+name,Марж. амер. Call 4500 с исп. 19 мая на фьюч. контр. AFLT-6.21,10
+isin,,10
+is_traded,1,10
+emitent_id,1300,10
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",10
+emitent_inn,7712040126,10
+emitent_okpo,29063984,10
+gosreg,,10
+type,option,10
+group,futures_options,10
+primary_boardid,ROPD,10
+marketprice_boardid,,10
+id,412558171,11
+secid,AF4500BF1,11
+shortname,AFLT-6.21M160621CA4500,11
+regnumber,,11
+name,Марж. амер. Call 4500 с исп. 16 июня на фьюч. контр. AFLT-6.21,11
+isin,,11
+is_traded,1,11
+emitent_id,1300,11
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",11
+emitent_inn,7712040126,11
+emitent_okpo,29063984,11
+gosreg,,11
+type,option,11
+group,futures_options,11
+primary_boardid,ROPD,11
+marketprice_boardid,,11
+id,412048985,12
+secid,AF4500BO1,12
+shortname,AFLT-3.21M170321PA4500,12
+regnumber,,12
+name,Марж. амер. Put 4500 с исп. 17 марта на фьюч. контр. AFLT-3.21,12
+isin,,12
+is_traded,1,12
+emitent_id,1300,12
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",12
+emitent_inn,7712040126,12
+emitent_okpo,29063984,12
+gosreg,,12
+type,option,12
+group,futures_options,12
+primary_boardid,ROPD,12
+marketprice_boardid,,12
+id,412801867,13
+secid,AF4500BP1,13
+shortname,AFLT-6.21M140421PA4500,13
+regnumber,,13
+name,Марж. амер. Put 4500 с исп. 14 апр. на фьюч. контр. AFLT-6.21,13
+isin,,13
+is_traded,1,13
+emitent_id,1300,13
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",13
+emitent_inn,7712040126,13
+emitent_okpo,29063984,13
+gosreg,,13
+type,option,13
+group,futures_options,13
+primary_boardid,ROPD,13
+marketprice_boardid,,13
+id,412884109,14
+secid,AF4500BQ1,14
+shortname,AFLT-6.21M190521PA4500,14
+regnumber,,14
+name,Марж. амер. Put 4500 с исп. 19 мая на фьюч. контр. AFLT-6.21,14
+isin,,14
+is_traded,1,14
+emitent_id,1300,14
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",14
+emitent_inn,7712040126,14
+emitent_okpo,29063984,14
+gosreg,,14
+type,option,14
+group,futures_options,14
+primary_boardid,ROPD,14
+marketprice_boardid,,14
+id,412558173,15
+secid,AF4500BR1,15
+shortname,AFLT-6.21M160621PA4500,15
+regnumber,,15
+name,Марж. амер. Put 4500 с исп. 16 июня на фьюч. контр. AFLT-6.21,15
+isin,,15
+is_traded,1,15
+emitent_id,1300,15
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",15
+emitent_inn,7712040126,15
+emitent_okpo,29063984,15
+gosreg,,15
+type,option,15
+group,futures_options,15
+primary_boardid,ROPD,15
+marketprice_boardid,,15
+id,412040591,16
+secid,AF4750BC1,16
+shortname,AFLT-3.21M170321CA4750,16
+regnumber,,16
+name,Марж. амер. Call 4750 с исп. 17 марта на фьюч. контр. AFLT-3.21,16
+isin,,16
+is_traded,1,16
+emitent_id,1300,16
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",16
+emitent_inn,7712040126,16
+emitent_okpo,29063984,16
+gosreg,,16
+type,option,16
+group,futures_options,16
+primary_boardid,ROPD,16
+marketprice_boardid,,16
+id,412709355,17
+secid,AF4750BD1,17
+shortname,AFLT-6.21M140421CA4750,17
+regnumber,,17
+name,Марж. амер. Call 4750 с исп. 14 апр. на фьюч. контр. AFLT-6.21,17
+isin,,17
+is_traded,1,17
+emitent_id,1300,17
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",17
+emitent_inn,7712040126,17
+emitent_okpo,29063984,17
+gosreg,,17
+type,option,17
+group,futures_options,17
+primary_boardid,ROPD,17
+marketprice_boardid,,17
+id,412884111,18
+secid,AF4750BE1,18
+shortname,AFLT-6.21M190521CA4750,18
+regnumber,,18
+name,Марж. амер. Call 4750 с исп. 19 мая на фьюч. контр. AFLT-6.21,18
+isin,,18
+is_traded,1,18
+emitent_id,1300,18
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",18
+emitent_inn,7712040126,18
+emitent_okpo,29063984,18
+gosreg,,18
+type,option,18
+group,futures_options,18
+primary_boardid,ROPD,18
+marketprice_boardid,,18
+id,412476055,19
+secid,AF4750BF1,19
+shortname,AFLT-6.21M160621CA4750,19
+regnumber,,19
+name,Марж. амер. Call 4750 с исп. 16 июня на фьюч. контр. AFLT-6.21,19
+isin,,19
+is_traded,1,19
+emitent_id,1300,19
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",19
+emitent_inn,7712040126,19
+emitent_okpo,29063984,19
+gosreg,,19
+type,option,19
+group,futures_options,19
+primary_boardid,ROPD,19
+marketprice_boardid,,19
+id,412040593,20
+secid,AF4750BO1,20
+shortname,AFLT-3.21M170321PA4750,20
+regnumber,,20
+name,Марж. амер. Put 4750 с исп. 17 марта на фьюч. контр. AFLT-3.21,20
+isin,,20
+is_traded,1,20
+emitent_id,1300,20
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",20
+emitent_inn,7712040126,20
+emitent_okpo,29063984,20
+gosreg,,20
+type,option,20
+group,futures_options,20
+primary_boardid,ROPD,20
+marketprice_boardid,,20
+id,412709357,21
+secid,AF4750BP1,21
+shortname,AFLT-6.21M140421PA4750,21
+regnumber,,21
+name,Марж. амер. Put 4750 с исп. 14 апр. на фьюч. контр. AFLT-6.21,21
+isin,,21
+is_traded,1,21
+emitent_id,1300,21
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",21
+emitent_inn,7712040126,21
+emitent_okpo,29063984,21
+gosreg,,21
+type,option,21
+group,futures_options,21
+primary_boardid,ROPD,21
+marketprice_boardid,,21
+id,412884113,22
+secid,AF4750BQ1,22
+shortname,AFLT-6.21M190521PA4750,22
+regnumber,,22
+name,Марж. амер. Put 4750 с исп. 19 мая на фьюч. контр. AFLT-6.21,22
+isin,,22
+is_traded,1,22
+emitent_id,1300,22
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",22
+emitent_inn,7712040126,22
+emitent_okpo,29063984,22
+gosreg,,22
+type,option,22
+group,futures_options,22
+primary_boardid,ROPD,22
+marketprice_boardid,,22
+id,412476057,23
+secid,AF4750BR1,23
+shortname,AFLT-6.21M160621PA4750,23
+regnumber,,23
+name,Марж. амер. Put 4750 с исп. 16 июня на фьюч. контр. AFLT-6.21,23
+isin,,23
+is_traded,1,23
+emitent_id,1300,23
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",23
+emitent_inn,7712040126,23
+emitent_okpo,29063984,23
+gosreg,,23
+type,option,23
+group,futures_options,23
+primary_boardid,ROPD,23
+marketprice_boardid,,23
+id,412000095,24
+secid,AF5000BC1,24
+shortname,AFLT-3.21M170321CA5000,24
+regnumber,,24
+name,Марж. амер. Call 5000 с исп. 17 марта на фьюч. контр. AFLT-3.21,24
+isin,,24
+is_traded,1,24
+emitent_id,1300,24
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",24
+emitent_inn,7712040126,24
+emitent_okpo,29063984,24
+gosreg,,24
+type,option,24
+group,futures_options,24
+primary_boardid,ROPD,24
+marketprice_boardid,,24
+id,412689461,25
+secid,AF5000BD1,25
+shortname,AFLT-6.21M140421CA5000,25
+regnumber,,25
+name,Марж. амер. Call 5000 с исп. 14 апр. на фьюч. контр. AFLT-6.21,25
+isin,,25
+is_traded,1,25
+emitent_id,1300,25
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",25
+emitent_inn,7712040126,25
+emitent_okpo,29063984,25
+gosreg,,25
+type,option,25
+group,futures_options,25
+primary_boardid,ROPD,25
+marketprice_boardid,,25
+id,412884115,26
+secid,AF5000BE1,26
+shortname,AFLT-6.21M190521CA5000,26
+regnumber,,26
+name,Марж. амер. Call 5000 с исп. 19 мая на фьюч. контр. AFLT-6.21,26
+isin,,26
+is_traded,1,26
+emitent_id,1300,26
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",26
+emitent_inn,7712040126,26
+emitent_okpo,29063984,26
+gosreg,,26
+type,option,26
+group,futures_options,26
+primary_boardid,ROPD,26
+marketprice_boardid,,26
+id,412462825,27
+secid,AF5000BF1,27
+shortname,AFLT-6.21M160621CA5000,27
+regnumber,,27
+name,Марж. амер. Call 5000 с исп. 16 июня на фьюч. контр. AFLT-6.21,27
+isin,,27
+is_traded,1,27
+emitent_id,1300,27
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",27
+emitent_inn,7712040126,27
+emitent_okpo,29063984,27
+gosreg,,27
+type,option,27
+group,futures_options,27
+primary_boardid,ROPD,27
+marketprice_boardid,,27
+id,412000103,28
+secid,AF5000BO1,28
+shortname,AFLT-3.21M170321PA5000,28
+regnumber,,28
+name,Марж. амер. Put 5000 с исп. 17 марта на фьюч. контр. AFLT-3.21,28
+isin,,28
+is_traded,1,28
+emitent_id,1300,28
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",28
+emitent_inn,7712040126,28
+emitent_okpo,29063984,28
+gosreg,,28
+type,option,28
+group,futures_options,28
+primary_boardid,ROPD,28
+marketprice_boardid,,28
+id,412689463,29
+secid,AF5000BP1,29
+shortname,AFLT-6.21M140421PA5000,29
+regnumber,,29
+name,Марж. амер. Put 5000 с исп. 14 апр. на фьюч. контр. AFLT-6.21,29
+isin,,29
+is_traded,1,29
+emitent_id,1300,29
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",29
+emitent_inn,7712040126,29
+emitent_okpo,29063984,29
+gosreg,,29
+type,option,29
+group,futures_options,29
+primary_boardid,ROPD,29
+marketprice_boardid,,29
+id,412884117,30
+secid,AF5000BQ1,30
+shortname,AFLT-6.21M190521PA5000,30
+regnumber,,30
+name,Марж. амер. Put 5000 с исп. 19 мая на фьюч. контр. AFLT-6.21,30
+isin,,30
+is_traded,1,30
+emitent_id,1300,30
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",30
+emitent_inn,7712040126,30
+emitent_okpo,29063984,30
+gosreg,,30
+type,option,30
+group,futures_options,30
+primary_boardid,ROPD,30
+marketprice_boardid,,30
+id,412462827,31
+secid,AF5000BR1,31
+shortname,AFLT-6.21M160621PA5000,31
+regnumber,,31
+name,Марж. амер. Put 5000 с исп. 16 июня на фьюч. контр. AFLT-6.21,31
+isin,,31
+is_traded,1,31
+emitent_id,1300,31
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",31
+emitent_inn,7712040126,31
+emitent_okpo,29063984,31
+gosreg,,31
+type,option,31
+group,futures_options,31
+primary_boardid,ROPD,31
+marketprice_boardid,,31
+id,411976961,32
+secid,AF5250BC1,32
+shortname,AFLT-3.21M170321CA5250,32
+regnumber,,32
+name,Марж. амер. Call 5250 с исп. 17 марта на фьюч. контр. AFLT-3.21,32
+isin,,32
+is_traded,1,32
+emitent_id,1300,32
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",32
+emitent_inn,7712040126,32
+emitent_okpo,29063984,32
+gosreg,,32
+type,option,32
+group,futures_options,32
+primary_boardid,ROPD,32
+marketprice_boardid,,32
+id,412689465,33
+secid,AF5250BD1,33
+shortname,AFLT-6.21M140421CA5250,33
+regnumber,,33
+name,Марж. амер. Call 5250 с исп. 14 апр. на фьюч. контр. AFLT-6.21,33
+isin,,33
+is_traded,1,33
+emitent_id,1300,33
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",33
+emitent_inn,7712040126,33
+emitent_okpo,29063984,33
+gosreg,,33
+type,option,33
+group,futures_options,33
+primary_boardid,ROPD,33
+marketprice_boardid,,33
+id,412884119,34
+secid,AF5250BE1,34
+shortname,AFLT-6.21M190521CA5250,34
+regnumber,,34
+name,Марж. амер. Call 5250 с исп. 19 мая на фьюч. контр. AFLT-6.21,34
+isin,,34
+is_traded,1,34
+emitent_id,1300,34
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",34
+emitent_inn,7712040126,34
+emitent_okpo,29063984,34
+gosreg,,34
+type,option,34
+group,futures_options,34
+primary_boardid,ROPD,34
+marketprice_boardid,,34
+id,412462829,35
+secid,AF5250BF1,35
+shortname,AFLT-6.21M160621CA5250,35
+regnumber,,35
+name,Марж. амер. Call 5250 с исп. 16 июня на фьюч. контр. AFLT-6.21,35
+isin,,35
+is_traded,1,35
+emitent_id,1300,35
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",35
+emitent_inn,7712040126,35
+emitent_okpo,29063984,35
+gosreg,,35
+type,option,35
+group,futures_options,35
+primary_boardid,ROPD,35
+marketprice_boardid,,35
+id,411976969,36
+secid,AF5250BO1,36
+shortname,AFLT-3.21M170321PA5250,36
+regnumber,,36
+name,Марж. амер. Put 5250 с исп. 17 марта на фьюч. контр. AFLT-3.21,36
+isin,,36
+is_traded,1,36
+emitent_id,1300,36
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",36
+emitent_inn,7712040126,36
+emitent_okpo,29063984,36
+gosreg,,36
+type,option,36
+group,futures_options,36
+primary_boardid,ROPD,36
+marketprice_boardid,,36
+id,412689467,37
+secid,AF5250BP1,37
+shortname,AFLT-6.21M140421PA5250,37
+regnumber,,37
+name,Марж. амер. Put 5250 с исп. 14 апр. на фьюч. контр. AFLT-6.21,37
+isin,,37
+is_traded,1,37
+emitent_id,1300,37
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",37
+emitent_inn,7712040126,37
+emitent_okpo,29063984,37
+gosreg,,37
+type,option,37
+group,futures_options,37
+primary_boardid,ROPD,37
+marketprice_boardid,,37
+id,412884121,38
+secid,AF5250BQ1,38
+shortname,AFLT-6.21M190521PA5250,38
+regnumber,,38
+name,Марж. амер. Put 5250 с исп. 19 мая на фьюч. контр. AFLT-6.21,38
+isin,,38
+is_traded,1,38
+emitent_id,1300,38
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",38
+emitent_inn,7712040126,38
+emitent_okpo,29063984,38
+gosreg,,38
+type,option,38
+group,futures_options,38
+primary_boardid,ROPD,38
+marketprice_boardid,,38
+id,412462831,39
+secid,AF5250BR1,39
+shortname,AFLT-6.21M160621PA5250,39
+regnumber,,39
+name,Марж. амер. Put 5250 с исп. 16 июня на фьюч. контр. AFLT-6.21,39
+isin,,39
+is_traded,1,39
+emitent_id,1300,39
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",39
+emitent_inn,7712040126,39
+emitent_okpo,29063984,39
+gosreg,,39
+type,option,39
+group,futures_options,39
+primary_boardid,ROPD,39
+marketprice_boardid,,39
+id,411976977,40
+secid,AF5500BC1,40
+shortname,AFLT-3.21M170321CA5500,40
+regnumber,,40
+name,Марж. амер. Call 5500 с исп. 17 марта на фьюч. контр. AFLT-3.21,40
+isin,,40
+is_traded,1,40
+emitent_id,1300,40
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",40
+emitent_inn,7712040126,40
+emitent_okpo,29063984,40
+gosreg,,40
+type,option,40
+group,futures_options,40
+primary_boardid,ROPD,40
+marketprice_boardid,,40
+id,412689469,41
+secid,AF5500BD1,41
+shortname,AFLT-6.21M140421CA5500,41
+regnumber,,41
+name,Марж. амер. Call 5500 с исп. 14 апр. на фьюч. контр. AFLT-6.21,41
+isin,,41
+is_traded,1,41
+emitent_id,1300,41
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",41
+emitent_inn,7712040126,41
+emitent_okpo,29063984,41
+gosreg,,41
+type,option,41
+group,futures_options,41
+primary_boardid,ROPD,41
+marketprice_boardid,,41
+id,412884123,42
+secid,AF5500BE1,42
+shortname,AFLT-6.21M190521CA5500,42
+regnumber,,42
+name,Марж. амер. Call 5500 с исп. 19 мая на фьюч. контр. AFLT-6.21,42
+isin,,42
+is_traded,1,42
+emitent_id,1300,42
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",42
+emitent_inn,7712040126,42
+emitent_okpo,29063984,42
+gosreg,,42
+type,option,42
+group,futures_options,42
+primary_boardid,ROPD,42
+marketprice_boardid,,42
+id,412462833,43
+secid,AF5500BF1,43
+shortname,AFLT-6.21M160621CA5500,43
+regnumber,,43
+name,Марж. амер. Call 5500 с исп. 16 июня на фьюч. контр. AFLT-6.21,43
+isin,,43
+is_traded,1,43
+emitent_id,1300,43
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",43
+emitent_inn,7712040126,43
+emitent_okpo,29063984,43
+gosreg,,43
+type,option,43
+group,futures_options,43
+primary_boardid,ROPD,43
+marketprice_boardid,,43
+id,411976979,44
+secid,AF5500BO1,44
+shortname,AFLT-3.21M170321PA5500,44
+regnumber,,44
+name,Марж. амер. Put 5500 с исп. 17 марта на фьюч. контр. AFLT-3.21,44
+isin,,44
+is_traded,1,44
+emitent_id,1300,44
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",44
+emitent_inn,7712040126,44
+emitent_okpo,29063984,44
+gosreg,,44
+type,option,44
+group,futures_options,44
+primary_boardid,ROPD,44
+marketprice_boardid,,44
+id,412689471,45
+secid,AF5500BP1,45
+shortname,AFLT-6.21M140421PA5500,45
+regnumber,,45
+name,Марж. амер. Put 5500 с исп. 14 апр. на фьюч. контр. AFLT-6.21,45
+isin,,45
+is_traded,1,45
+emitent_id,1300,45
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",45
+emitent_inn,7712040126,45
+emitent_okpo,29063984,45
+gosreg,,45
+type,option,45
+group,futures_options,45
+primary_boardid,ROPD,45
+marketprice_boardid,,45
+id,412884125,46
+secid,AF5500BQ1,46
+shortname,AFLT-6.21M190521PA5500,46
+regnumber,,46
+name,Марж. амер. Put 5500 с исп. 19 мая на фьюч. контр. AFLT-6.21,46
+isin,,46
+is_traded,1,46
+emitent_id,1300,46
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",46
+emitent_inn,7712040126,46
+emitent_okpo,29063984,46
+gosreg,,46
+type,option,46
+group,futures_options,46
+primary_boardid,ROPD,46
+marketprice_boardid,,46
+id,412462835,47
+secid,AF5500BR1,47
+shortname,AFLT-6.21M160621PA5500,47
+regnumber,,47
+name,Марж. амер. Put 5500 с исп. 16 июня на фьюч. контр. AFLT-6.21,47
+isin,,47
+is_traded,1,47
+emitent_id,1300,47
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",47
+emitent_inn,7712040126,47
+emitent_okpo,29063984,47
+gosreg,,47
+type,option,47
+group,futures_options,47
+primary_boardid,ROPD,47
+marketprice_boardid,,47
+id,411893003,48
+secid,AF5750BC1,48
+shortname,AFLT-3.21M170321CA5750,48
+regnumber,,48
+name,Марж. амер. Call 5750 с исп. 17 марта на фьюч. контр. AFLT-3.21,48
+isin,,48
+is_traded,1,48
+emitent_id,1300,48
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",48
+emitent_inn,7712040126,48
+emitent_okpo,29063984,48
+gosreg,,48
+type,option,48
+group,futures_options,48
+primary_boardid,ROPD,48
+marketprice_boardid,,48
+id,412689473,49
+secid,AF5750BD1,49
+shortname,AFLT-6.21M140421CA5750,49
+regnumber,,49
+name,Марж. амер. Call 5750 с исп. 14 апр. на фьюч. контр. AFLT-6.21,49
+isin,,49
+is_traded,1,49
+emitent_id,1300,49
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",49
+emitent_inn,7712040126,49
+emitent_okpo,29063984,49
+gosreg,,49
+type,option,49
+group,futures_options,49
+primary_boardid,ROPD,49
+marketprice_boardid,,49
+id,412884127,50
+secid,AF5750BE1,50
+shortname,AFLT-6.21M190521CA5750,50
+regnumber,,50
+name,Марж. амер. Call 5750 с исп. 19 мая на фьюч. контр. AFLT-6.21,50
+isin,,50
+is_traded,1,50
+emitent_id,1300,50
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",50
+emitent_inn,7712040126,50
+emitent_okpo,29063984,50
+gosreg,,50
+type,option,50
+group,futures_options,50
+primary_boardid,ROPD,50
+marketprice_boardid,,50
+id,412462837,51
+secid,AF5750BF1,51
+shortname,AFLT-6.21M160621CA5750,51
+regnumber,,51
+name,Марж. амер. Call 5750 с исп. 16 июня на фьюч. контр. AFLT-6.21,51
+isin,,51
+is_traded,1,51
+emitent_id,1300,51
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",51
+emitent_inn,7712040126,51
+emitent_okpo,29063984,51
+gosreg,,51
+type,option,51
+group,futures_options,51
+primary_boardid,ROPD,51
+marketprice_boardid,,51
+id,411893005,52
+secid,AF5750BO1,52
+shortname,AFLT-3.21M170321PA5750,52
+regnumber,,52
+name,Марж. амер. Put 5750 с исп. 17 марта на фьюч. контр. AFLT-3.21,52
+isin,,52
+is_traded,1,52
+emitent_id,1300,52
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",52
+emitent_inn,7712040126,52
+emitent_okpo,29063984,52
+gosreg,,52
+type,option,52
+group,futures_options,52
+primary_boardid,ROPD,52
+marketprice_boardid,,52
+id,412689475,53
+secid,AF5750BP1,53
+shortname,AFLT-6.21M140421PA5750,53
+regnumber,,53
+name,Марж. амер. Put 5750 с исп. 14 апр. на фьюч. контр. AFLT-6.21,53
+isin,,53
+is_traded,1,53
+emitent_id,1300,53
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",53
+emitent_inn,7712040126,53
+emitent_okpo,29063984,53
+gosreg,,53
+type,option,53
+group,futures_options,53
+primary_boardid,ROPD,53
+marketprice_boardid,,53
+id,412884129,54
+secid,AF5750BQ1,54
+shortname,AFLT-6.21M190521PA5750,54
+regnumber,,54
+name,Марж. амер. Put 5750 с исп. 19 мая на фьюч. контр. AFLT-6.21,54
+isin,,54
+is_traded,1,54
+emitent_id,1300,54
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",54
+emitent_inn,7712040126,54
+emitent_okpo,29063984,54
+gosreg,,54
+type,option,54
+group,futures_options,54
+primary_boardid,ROPD,54
+marketprice_boardid,,54
+id,412462839,55
+secid,AF5750BR1,55
+shortname,AFLT-6.21M160621PA5750,55
+regnumber,,55
+name,Марж. амер. Put 5750 с исп. 16 июня на фьюч. контр. AFLT-6.21,55
+isin,,55
+is_traded,1,55
+emitent_id,1300,55
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",55
+emitent_inn,7712040126,55
+emitent_okpo,29063984,55
+gosreg,,55
+type,option,55
+group,futures_options,55
+primary_boardid,ROPD,55
+marketprice_boardid,,55
+id,411893007,56
+secid,AF6000BC1,56
+shortname,AFLT-3.21M170321CA6000,56
+regnumber,,56
+name,Марж. амер. Call 6000 с исп. 17 марта на фьюч. контр. AFLT-3.21,56
+isin,,56
+is_traded,1,56
+emitent_id,1300,56
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",56
+emitent_inn,7712040126,56
+emitent_okpo,29063984,56
+gosreg,,56
+type,option,56
+group,futures_options,56
+primary_boardid,ROPD,56
+marketprice_boardid,,56
+id,412689477,57
+secid,AF6000BD1,57
+shortname,AFLT-6.21M140421CA6000,57
+regnumber,,57
+name,Марж. амер. Call 6000 с исп. 14 апр. на фьюч. контр. AFLT-6.21,57
+isin,,57
+is_traded,1,57
+emitent_id,1300,57
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",57
+emitent_inn,7712040126,57
+emitent_okpo,29063984,57
+gosreg,,57
+type,option,57
+group,futures_options,57
+primary_boardid,ROPD,57
+marketprice_boardid,,57
+id,412884131,58
+secid,AF6000BE1,58
+shortname,AFLT-6.21M190521CA6000,58
+regnumber,,58
+name,Марж. амер. Call 6000 с исп. 19 мая на фьюч. контр. AFLT-6.21,58
+isin,,58
+is_traded,1,58
+emitent_id,1300,58
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",58
+emitent_inn,7712040126,58
+emitent_okpo,29063984,58
+gosreg,,58
+type,option,58
+group,futures_options,58
+primary_boardid,ROPD,58
+marketprice_boardid,,58
+id,412462841,59
+secid,AF6000BF1,59
+shortname,AFLT-6.21M160621CA6000,59
+regnumber,,59
+name,Марж. амер. Call 6000 с исп. 16 июня на фьюч. контр. AFLT-6.21,59
+isin,,59
+is_traded,1,59
+emitent_id,1300,59
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",59
+emitent_inn,7712040126,59
+emitent_okpo,29063984,59
+gosreg,,59
+type,option,59
+group,futures_options,59
+primary_boardid,ROPD,59
+marketprice_boardid,,59
+id,411893009,60
+secid,AF6000BO1,60
+shortname,AFLT-3.21M170321PA6000,60
+regnumber,,60
+name,Марж. амер. Put 6000 с исп. 17 марта на фьюч. контр. AFLT-3.21,60
+isin,,60
+is_traded,1,60
+emitent_id,1300,60
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",60
+emitent_inn,7712040126,60
+emitent_okpo,29063984,60
+gosreg,,60
+type,option,60
+group,futures_options,60
+primary_boardid,ROPD,60
+marketprice_boardid,,60
+id,412689479,61
+secid,AF6000BP1,61
+shortname,AFLT-6.21M140421PA6000,61
+regnumber,,61
+name,Марж. амер. Put 6000 с исп. 14 апр. на фьюч. контр. AFLT-6.21,61
+isin,,61
+is_traded,1,61
+emitent_id,1300,61
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",61
+emitent_inn,7712040126,61
+emitent_okpo,29063984,61
+gosreg,,61
+type,option,61
+group,futures_options,61
+primary_boardid,ROPD,61
+marketprice_boardid,,61
+id,412884133,62
+secid,AF6000BQ1,62
+shortname,AFLT-6.21M190521PA6000,62
+regnumber,,62
+name,Марж. амер. Put 6000 с исп. 19 мая на фьюч. контр. AFLT-6.21,62
+isin,,62
+is_traded,1,62
+emitent_id,1300,62
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",62
+emitent_inn,7712040126,62
+emitent_okpo,29063984,62
+gosreg,,62
+type,option,62
+group,futures_options,62
+primary_boardid,ROPD,62
+marketprice_boardid,,62
+id,412462843,63
+secid,AF6000BR1,63
+shortname,AFLT-6.21M160621PA6000,63
+regnumber,,63
+name,Марж. амер. Put 6000 с исп. 16 июня на фьюч. контр. AFLT-6.21,63
+isin,,63
+is_traded,1,63
+emitent_id,1300,63
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",63
+emitent_inn,7712040126,63
+emitent_okpo,29063984,63
+gosreg,,63
+type,option,63
+group,futures_options,63
+primary_boardid,ROPD,63
+marketprice_boardid,,63
+id,411893011,64
+secid,AF6250BC1,64
+shortname,AFLT-3.21M170321CA6250,64
+regnumber,,64
+name,Марж. амер. Call 6250 с исп. 17 марта на фьюч. контр. AFLT-3.21,64
+isin,,64
+is_traded,1,64
+emitent_id,1300,64
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",64
+emitent_inn,7712040126,64
+emitent_okpo,29063984,64
+gosreg,,64
+type,option,64
+group,futures_options,64
+primary_boardid,ROPD,64
+marketprice_boardid,,64
+id,412689481,65
+secid,AF6250BD1,65
+shortname,AFLT-6.21M140421CA6250,65
+regnumber,,65
+name,Марж. амер. Call 6250 с исп. 14 апр. на фьюч. контр. AFLT-6.21,65
+isin,,65
+is_traded,1,65
+emitent_id,1300,65
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",65
+emitent_inn,7712040126,65
+emitent_okpo,29063984,65
+gosreg,,65
+type,option,65
+group,futures_options,65
+primary_boardid,ROPD,65
+marketprice_boardid,,65
+id,412884135,66
+secid,AF6250BE1,66
+shortname,AFLT-6.21M190521CA6250,66
+regnumber,,66
+name,Марж. амер. Call 6250 с исп. 19 мая на фьюч. контр. AFLT-6.21,66
+isin,,66
+is_traded,1,66
+emitent_id,1300,66
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",66
+emitent_inn,7712040126,66
+emitent_okpo,29063984,66
+gosreg,,66
+type,option,66
+group,futures_options,66
+primary_boardid,ROPD,66
+marketprice_boardid,,66
+id,412462845,67
+secid,AF6250BF1,67
+shortname,AFLT-6.21M160621CA6250,67
+regnumber,,67
+name,Марж. амер. Call 6250 с исп. 16 июня на фьюч. контр. AFLT-6.21,67
+isin,,67
+is_traded,1,67
+emitent_id,1300,67
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",67
+emitent_inn,7712040126,67
+emitent_okpo,29063984,67
+gosreg,,67
+type,option,67
+group,futures_options,67
+primary_boardid,ROPD,67
+marketprice_boardid,,67
+id,411893013,68
+secid,AF6250BO1,68
+shortname,AFLT-3.21M170321PA6250,68
+regnumber,,68
+name,Марж. амер. Put 6250 с исп. 17 марта на фьюч. контр. AFLT-3.21,68
+isin,,68
+is_traded,1,68
+emitent_id,1300,68
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",68
+emitent_inn,7712040126,68
+emitent_okpo,29063984,68
+gosreg,,68
+type,option,68
+group,futures_options,68
+primary_boardid,ROPD,68
+marketprice_boardid,,68
+id,412689483,69
+secid,AF6250BP1,69
+shortname,AFLT-6.21M140421PA6250,69
+regnumber,,69
+name,Марж. амер. Put 6250 с исп. 14 апр. на фьюч. контр. AFLT-6.21,69
+isin,,69
+is_traded,1,69
+emitent_id,1300,69
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",69
+emitent_inn,7712040126,69
+emitent_okpo,29063984,69
+gosreg,,69
+type,option,69
+group,futures_options,69
+primary_boardid,ROPD,69
+marketprice_boardid,,69
+id,412884137,70
+secid,AF6250BQ1,70
+shortname,AFLT-6.21M190521PA6250,70
+regnumber,,70
+name,Марж. амер. Put 6250 с исп. 19 мая на фьюч. контр. AFLT-6.21,70
+isin,,70
+is_traded,1,70
+emitent_id,1300,70
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",70
+emitent_inn,7712040126,70
+emitent_okpo,29063984,70
+gosreg,,70
+type,option,70
+group,futures_options,70
+primary_boardid,ROPD,70
+marketprice_boardid,,70
+id,412462847,71
+secid,AF6250BR1,71
+shortname,AFLT-6.21M160621PA6250,71
+regnumber,,71
+name,Марж. амер. Put 6250 с исп. 16 июня на фьюч. контр. AFLT-6.21,71
+isin,,71
+is_traded,1,71
+emitent_id,1300,71
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",71
+emitent_inn,7712040126,71
+emitent_okpo,29063984,71
+gosreg,,71
+type,option,71
+group,futures_options,71
+primary_boardid,ROPD,71
+marketprice_boardid,,71
+id,411893015,72
+secid,AF6500BC1,72
+shortname,AFLT-3.21M170321CA6500,72
+regnumber,,72
+name,Марж. амер. Call 6500 с исп. 17 марта на фьюч. контр. AFLT-3.21,72
+isin,,72
+is_traded,1,72
+emitent_id,1300,72
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",72
+emitent_inn,7712040126,72
+emitent_okpo,29063984,72
+gosreg,,72
+type,option,72
+group,futures_options,72
+primary_boardid,ROPD,72
+marketprice_boardid,,72
+id,412689485,73
+secid,AF6500BD1,73
+shortname,AFLT-6.21M140421CA6500,73
+regnumber,,73
+name,Марж. амер. Call 6500 с исп. 14 апр. на фьюч. контр. AFLT-6.21,73
+isin,,73
+is_traded,1,73
+emitent_id,1300,73
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",73
+emitent_inn,7712040126,73
+emitent_okpo,29063984,73
+gosreg,,73
+type,option,73
+group,futures_options,73
+primary_boardid,ROPD,73
+marketprice_boardid,,73
+id,412884139,74
+secid,AF6500BE1,74
+shortname,AFLT-6.21M190521CA6500,74
+regnumber,,74
+name,Марж. амер. Call 6500 с исп. 19 мая на фьюч. контр. AFLT-6.21,74
+isin,,74
+is_traded,1,74
+emitent_id,1300,74
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",74
+emitent_inn,7712040126,74
+emitent_okpo,29063984,74
+gosreg,,74
+type,option,74
+group,futures_options,74
+primary_boardid,ROPD,74
+marketprice_boardid,,74
+id,412462849,75
+secid,AF6500BF1,75
+shortname,AFLT-6.21M160621CA6500,75
+regnumber,,75
+name,Марж. амер. Call 6500 с исп. 16 июня на фьюч. контр. AFLT-6.21,75
+isin,,75
+is_traded,1,75
+emitent_id,1300,75
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",75
+emitent_inn,7712040126,75
+emitent_okpo,29063984,75
+gosreg,,75
+type,option,75
+group,futures_options,75
+primary_boardid,ROPD,75
+marketprice_boardid,,75
+id,411893017,76
+secid,AF6500BO1,76
+shortname,AFLT-3.21M170321PA6500,76
+regnumber,,76
+name,Марж. амер. Put 6500 с исп. 17 марта на фьюч. контр. AFLT-3.21,76
+isin,,76
+is_traded,1,76
+emitent_id,1300,76
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",76
+emitent_inn,7712040126,76
+emitent_okpo,29063984,76
+gosreg,,76
+type,option,76
+group,futures_options,76
+primary_boardid,ROPD,76
+marketprice_boardid,,76
+id,412689487,77
+secid,AF6500BP1,77
+shortname,AFLT-6.21M140421PA6500,77
+regnumber,,77
+name,Марж. амер. Put 6500 с исп. 14 апр. на фьюч. контр. AFLT-6.21,77
+isin,,77
+is_traded,1,77
+emitent_id,1300,77
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",77
+emitent_inn,7712040126,77
+emitent_okpo,29063984,77
+gosreg,,77
+type,option,77
+group,futures_options,77
+primary_boardid,ROPD,77
+marketprice_boardid,,77
+id,412884141,78
+secid,AF6500BQ1,78
+shortname,AFLT-6.21M190521PA6500,78
+regnumber,,78
+name,Марж. амер. Put 6500 с исп. 19 мая на фьюч. контр. AFLT-6.21,78
+isin,,78
+is_traded,1,78
+emitent_id,1300,78
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",78
+emitent_inn,7712040126,78
+emitent_okpo,29063984,78
+gosreg,,78
+type,option,78
+group,futures_options,78
+primary_boardid,ROPD,78
+marketprice_boardid,,78
+id,412462851,79
+secid,AF6500BR1,79
+shortname,AFLT-6.21M160621PA6500,79
+regnumber,,79
+name,Марж. амер. Put 6500 с исп. 16 июня на фьюч. контр. AFLT-6.21,79
+isin,,79
+is_traded,1,79
+emitent_id,1300,79
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",79
+emitent_inn,7712040126,79
+emitent_okpo,29063984,79
+gosreg,,79
+type,option,79
+group,futures_options,79
+primary_boardid,ROPD,79
+marketprice_boardid,,79
+id,411893019,80
+secid,AF6750BC1,80
+shortname,AFLT-3.21M170321CA6750,80
+regnumber,,80
+name,Марж. амер. Call 6750 с исп. 17 марта на фьюч. контр. AFLT-3.21,80
+isin,,80
+is_traded,1,80
+emitent_id,1300,80
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",80
+emitent_inn,7712040126,80
+emitent_okpo,29063984,80
+gosreg,,80
+type,option,80
+group,futures_options,80
+primary_boardid,ROPD,80
+marketprice_boardid,,80
+id,412689489,81
+secid,AF6750BD1,81
+shortname,AFLT-6.21M140421CA6750,81
+regnumber,,81
+name,Марж. амер. Call 6750 с исп. 14 апр. на фьюч. контр. AFLT-6.21,81
+isin,,81
+is_traded,1,81
+emitent_id,1300,81
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",81
+emitent_inn,7712040126,81
+emitent_okpo,29063984,81
+gosreg,,81
+type,option,81
+group,futures_options,81
+primary_boardid,ROPD,81
+marketprice_boardid,,81
+id,412884143,82
+secid,AF6750BE1,82
+shortname,AFLT-6.21M190521CA6750,82
+regnumber,,82
+name,Марж. амер. Call 6750 с исп. 19 мая на фьюч. контр. AFLT-6.21,82
+isin,,82
+is_traded,1,82
+emitent_id,1300,82
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",82
+emitent_inn,7712040126,82
+emitent_okpo,29063984,82
+gosreg,,82
+type,option,82
+group,futures_options,82
+primary_boardid,ROPD,82
+marketprice_boardid,,82
+id,412462853,83
+secid,AF6750BF1,83
+shortname,AFLT-6.21M160621CA6750,83
+regnumber,,83
+name,Марж. амер. Call 6750 с исп. 16 июня на фьюч. контр. AFLT-6.21,83
+isin,,83
+is_traded,1,83
+emitent_id,1300,83
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",83
+emitent_inn,7712040126,83
+emitent_okpo,29063984,83
+gosreg,,83
+type,option,83
+group,futures_options,83
+primary_boardid,ROPD,83
+marketprice_boardid,,83
+id,411893021,84
+secid,AF6750BO1,84
+shortname,AFLT-3.21M170321PA6750,84
+regnumber,,84
+name,Марж. амер. Put 6750 с исп. 17 марта на фьюч. контр. AFLT-3.21,84
+isin,,84
+is_traded,1,84
+emitent_id,1300,84
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",84
+emitent_inn,7712040126,84
+emitent_okpo,29063984,84
+gosreg,,84
+type,option,84
+group,futures_options,84
+primary_boardid,ROPD,84
+marketprice_boardid,,84
+id,412689491,85
+secid,AF6750BP1,85
+shortname,AFLT-6.21M140421PA6750,85
+regnumber,,85
+name,Марж. амер. Put 6750 с исп. 14 апр. на фьюч. контр. AFLT-6.21,85
+isin,,85
+is_traded,1,85
+emitent_id,1300,85
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",85
+emitent_inn,7712040126,85
+emitent_okpo,29063984,85
+gosreg,,85
+type,option,85
+group,futures_options,85
+primary_boardid,ROPD,85
+marketprice_boardid,,85
+id,412884145,86
+secid,AF6750BQ1,86
+shortname,AFLT-6.21M190521PA6750,86
+regnumber,,86
+name,Марж. амер. Put 6750 с исп. 19 мая на фьюч. контр. AFLT-6.21,86
+isin,,86
+is_traded,1,86
+emitent_id,1300,86
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",86
+emitent_inn,7712040126,86
+emitent_okpo,29063984,86
+gosreg,,86
+type,option,86
+group,futures_options,86
+primary_boardid,ROPD,86
+marketprice_boardid,,86
+id,412462855,87
+secid,AF6750BR1,87
+shortname,AFLT-6.21M160621PA6750,87
+regnumber,,87
+name,Марж. амер. Put 6750 с исп. 16 июня на фьюч. контр. AFLT-6.21,87
+isin,,87
+is_traded,1,87
+emitent_id,1300,87
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",87
+emitent_inn,7712040126,87
+emitent_okpo,29063984,87
+gosreg,,87
+type,option,87
+group,futures_options,87
+primary_boardid,ROPD,87
+marketprice_boardid,,87
+id,411893023,88
+secid,AF7000BC1,88
+shortname,AFLT-3.21M170321CA7000,88
+regnumber,,88
+name,Марж. амер. Call 7000 с исп. 17 марта на фьюч. контр. AFLT-3.21,88
+isin,,88
+is_traded,1,88
+emitent_id,1300,88
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",88
+emitent_inn,7712040126,88
+emitent_okpo,29063984,88
+gosreg,,88
+type,option,88
+group,futures_options,88
+primary_boardid,ROPD,88
+marketprice_boardid,,88
+id,412689493,89
+secid,AF7000BD1,89
+shortname,AFLT-6.21M140421CA7000,89
+regnumber,,89
+name,Марж. амер. Call 7000 с исп. 14 апр. на фьюч. контр. AFLT-6.21,89
+isin,,89
+is_traded,1,89
+emitent_id,1300,89
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",89
+emitent_inn,7712040126,89
+emitent_okpo,29063984,89
+gosreg,,89
+type,option,89
+group,futures_options,89
+primary_boardid,ROPD,89
+marketprice_boardid,,89
+id,412884147,90
+secid,AF7000BE1,90
+shortname,AFLT-6.21M190521CA7000,90
+regnumber,,90
+name,Марж. амер. Call 7000 с исп. 19 мая на фьюч. контр. AFLT-6.21,90
+isin,,90
+is_traded,1,90
+emitent_id,1300,90
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",90
+emitent_inn,7712040126,90
+emitent_okpo,29063984,90
+gosreg,,90
+type,option,90
+group,futures_options,90
+primary_boardid,ROPD,90
+marketprice_boardid,,90
+id,412462857,91
+secid,AF7000BF1,91
+shortname,AFLT-6.21M160621CA7000,91
+regnumber,,91
+name,Марж. амер. Call 7000 с исп. 16 июня на фьюч. контр. AFLT-6.21,91
+isin,,91
+is_traded,1,91
+emitent_id,1300,91
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",91
+emitent_inn,7712040126,91
+emitent_okpo,29063984,91
+gosreg,,91
+type,option,91
+group,futures_options,91
+primary_boardid,ROPD,91
+marketprice_boardid,,91
+id,411893025,92
+secid,AF7000BO1,92
+shortname,AFLT-3.21M170321PA7000,92
+regnumber,,92
+name,Марж. амер. Put 7000 с исп. 17 марта на фьюч. контр. AFLT-3.21,92
+isin,,92
+is_traded,1,92
+emitent_id,1300,92
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",92
+emitent_inn,7712040126,92
+emitent_okpo,29063984,92
+gosreg,,92
+type,option,92
+group,futures_options,92
+primary_boardid,ROPD,92
+marketprice_boardid,,92
+id,412689495,93
+secid,AF7000BP1,93
+shortname,AFLT-6.21M140421PA7000,93
+regnumber,,93
+name,Марж. амер. Put 7000 с исп. 14 апр. на фьюч. контр. AFLT-6.21,93
+isin,,93
+is_traded,1,93
+emitent_id,1300,93
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",93
+emitent_inn,7712040126,93
+emitent_okpo,29063984,93
+gosreg,,93
+type,option,93
+group,futures_options,93
+primary_boardid,ROPD,93
+marketprice_boardid,,93
+id,412884149,94
+secid,AF7000BQ1,94
+shortname,AFLT-6.21M190521PA7000,94
+regnumber,,94
+name,Марж. амер. Put 7000 с исп. 19 мая на фьюч. контр. AFLT-6.21,94
+isin,,94
+is_traded,1,94
+emitent_id,1300,94
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",94
+emitent_inn,7712040126,94
+emitent_okpo,29063984,94
+gosreg,,94
+type,option,94
+group,futures_options,94
+primary_boardid,ROPD,94
+marketprice_boardid,,94
+id,412462859,95
+secid,AF7000BR1,95
+shortname,AFLT-6.21M160621PA7000,95
+regnumber,,95
+name,Марж. амер. Put 7000 с исп. 16 июня на фьюч. контр. AFLT-6.21,95
+isin,,95
+is_traded,1,95
+emitent_id,1300,95
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",95
+emitent_inn,7712040126,95
+emitent_okpo,29063984,95
+gosreg,,95
+type,option,95
+group,futures_options,95
+primary_boardid,ROPD,95
+marketprice_boardid,,95
+id,411893027,96
+secid,AF7250BC1,96
+shortname,AFLT-3.21M170321CA7250,96
+regnumber,,96
+name,Марж. амер. Call 7250 с исп. 17 марта на фьюч. контр. AFLT-3.21,96
+isin,,96
+is_traded,1,96
+emitent_id,1300,96
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",96
+emitent_inn,7712040126,96
+emitent_okpo,29063984,96
+gosreg,,96
+type,option,96
+group,futures_options,96
+primary_boardid,ROPD,96
+marketprice_boardid,,96
+id,412689497,97
+secid,AF7250BD1,97
+shortname,AFLT-6.21M140421CA7250,97
+regnumber,,97
+name,Марж. амер. Call 7250 с исп. 14 апр. на фьюч. контр. AFLT-6.21,97
+isin,,97
+is_traded,1,97
+emitent_id,1300,97
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",97
+emitent_inn,7712040126,97
+emitent_okpo,29063984,97
+gosreg,,97
+type,option,97
+group,futures_options,97
+primary_boardid,ROPD,97
+marketprice_boardid,,97
+id,412884151,98
+secid,AF7250BE1,98
+shortname,AFLT-6.21M190521CA7250,98
+regnumber,,98
+name,Марж. амер. Call 7250 с исп. 19 мая на фьюч. контр. AFLT-6.21,98
+isin,,98
+is_traded,1,98
+emitent_id,1300,98
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",98
+emitent_inn,7712040126,98
+emitent_okpo,29063984,98
+gosreg,,98
+type,option,98
+group,futures_options,98
+primary_boardid,ROPD,98
+marketprice_boardid,,98
+id,412462861,99
+secid,AF7250BF1,99
+shortname,AFLT-6.21M160621CA7250,99
+regnumber,,99
+name,Марж. амер. Call 7250 с исп. 16 июня на фьюч. контр. AFLT-6.21,99
+isin,,99
+is_traded,1,99
+emitent_id,1300,99
+emitent_title,"Публичное акционерное общество ""Аэрофлот – российские авиалинии""",99
+emitent_inn,7712040126,99
+emitent_okpo,29063984,99
+gosreg,,99
+type,option,99
+group,futures_options,99
+primary_boardid,ROPD,99
+marketprice_boardid,,99
