@@ -18,12 +18,10 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T> {
     init {
 
         val invalidSizeColumns = columns.filter { it.size != nrow() }
-        if (invalidSizeColumns.size > 0)
-            throw IllegalArgumentException("Invalid column sizes: ${invalidSizeColumns}") // TODO
+        require(invalidSizeColumns.isEmpty()) { "Unequal column sizes:\n${columns.joinToString("\n") { it.name + " (" + it.size + ")" }}" }
 
         val columnNames = columns.groupBy { it.name() }.filter { it.value.size > 1 }.map { it.key }
-        if (columnNames.size > 0)
-            throw IllegalArgumentException("Duplicate column names: ${columnNames}. All column names: ${columnNames()}")
+        require(columnNames.isEmpty()) { "Duplicate column names: ${columnNames}. All columns: ${columnNames()}" }
     }
 
 

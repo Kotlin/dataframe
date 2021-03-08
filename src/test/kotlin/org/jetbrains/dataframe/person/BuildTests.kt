@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe.person
 
 import io.kotlintest.shouldBe
+import org.jetbrains.dataframe.column
 import org.jetbrains.dataframe.getType
 import org.jetbrains.dataframe.toDataFrame
 import org.junit.Test
@@ -37,5 +38,10 @@ class BuildTests {
         val list = persons + listOf(null)
         val df = list.toDataFrame()
         df.nrow() shouldBe 3
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun `unequal column sizes`(){
+        persons.toDataFrame() + column("id", listOf(1,2,3))
     }
 }
