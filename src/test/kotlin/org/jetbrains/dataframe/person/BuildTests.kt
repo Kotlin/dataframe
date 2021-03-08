@@ -31,4 +31,11 @@ class BuildTests {
         df["name"].type shouldBe getType<String>()
         df["year of birth"].type shouldBe getType<Int>()
     }
+
+    @Test
+    fun test3(){
+        val list = persons + listOf(null)
+        val df = list.toDataFrame()
+        df.nrow() shouldBe 3
+    }
 }
