@@ -344,8 +344,8 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun extensionPropertiesTest() {
         val code = CodeGeneratorImpl().generateExtensionProperties(GroupedPerson::class)
-        val dataFrameBase = DataFrameBase::class.simpleName
-        val dataFrameRowBase = DataRowBase::class.simpleName
+        val dataFrameBase = DataFrameBase::class.qualifiedName
+        val dataFrameRowBase = DataRowBase::class.qualifiedName
         val dataFrameRow = DataRow::class.qualifiedName
         val className = GroupedPerson::class.qualifiedName
         val shortName = GroupedPerson::class.simpleName!!
@@ -354,11 +354,11 @@ class DataFrameTreeTests : BaseTest() {
         val columnData = DataColumn::class.qualifiedName
         val expected = """
             val $dataFrameBase<$className>.age: $columnData<kotlin.Int> @JvmName("${shortName}_age") get() = this["age"] as $columnData<kotlin.Int>
-            val $dataFrameRowBase<$className>.age: Int @JvmName("${shortName}_age") get() = this["age"] as Int
+            val $dataFrameRowBase<$className>.age: kotlin.Int @JvmName("${shortName}_age") get() = this["age"] as kotlin.Int
             val $dataFrameBase<$className>.nameAndCity: $groupedColumn<$nameAndCity> @JvmName("${shortName}_nameAndCity") get() = this["nameAndCity"] as $groupedColumn<$nameAndCity>
             val $dataFrameRowBase<$className>.nameAndCity: $dataFrameRow<$nameAndCity> @JvmName("${shortName}_nameAndCity") get() = this["nameAndCity"] as $dataFrameRow<$nameAndCity>
             val $dataFrameBase<$className>.weight: $columnData<kotlin.Int?> @JvmName("${shortName}_weight") get() = this["weight"] as $columnData<kotlin.Int?>
-            val $dataFrameRowBase<$className>.weight: Int? @JvmName("${shortName}_weight") get() = this["weight"] as Int?
+            val $dataFrameRowBase<$className>.weight: kotlin.Int? @JvmName("${shortName}_weight") get() = this["weight"] as kotlin.Int?
         """.trimIndent()
         code shouldBe expected
     }

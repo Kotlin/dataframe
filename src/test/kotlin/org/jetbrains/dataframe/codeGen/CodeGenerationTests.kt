@@ -22,10 +22,10 @@ class CodeGenerationTests : BaseTest(){
         val expectedDeclaration = """
             @DataSchema(isOpen = false)
             interface DataFrameType1{
-                val name: String
-                val age: Int
-                val city: String?
-                val weight: Int?
+                val name: kotlin.String
+                val age: kotlin.Int
+                val city: kotlin.String?
+                val weight: kotlin.Int?
             }""".trimIndent()
 
         val expectedConverter = "it.typed<DataFrameType1>()"
@@ -39,20 +39,20 @@ class CodeGenerationTests : BaseTest(){
         val property = DataFrameTests::class.memberProperties.first { it.name == "df" }
         val grouped = df.move { name and city }.under("nameAndCity")
         val generated = CodeGeneratorImpl().generate(grouped, property)!!
-        val rowType = DataRow::class.simpleName
+        val rowType = DataRow::class.qualifiedName
         val declaration1 = """
             @DataSchema(isOpen = false)
             interface DataFrameType2{
-                val name: String
-                val city: String?
+                val name: kotlin.String
+                val city: kotlin.String?
             }""".trimIndent()
 
         val declaration2 = """
             @DataSchema(isOpen = false)
             interface DataFrameType1{
                 val nameAndCity: $rowType<DataFrameType2>
-                val age: Int
-                val weight: Int?
+                val age: kotlin.Int
+                val weight: kotlin.Int?
             }""".trimIndent()
 
         val expectedConverter = "it.typed<DataFrameType1>()"
@@ -65,18 +65,18 @@ class CodeGenerationTests : BaseTest(){
     fun `generate extension properties`() {
         val code = CodeGeneratorImpl().generateExtensionProperties(Person::class)
 
-        val dfName = (DataFrameBase::class).simpleName
-        val dfRowName = (DataRowBase::class).simpleName
+        val dfName = (DataFrameBase::class).qualifiedName
+        val dfRowName = (DataRowBase::class).qualifiedName
         val dataCol = (DataColumn::class).qualifiedName!!
         val expected = """
             val $dfName<$personClassName>.age: $dataCol<kotlin.Int> @JvmName("${personShortName}_age") get() = this["age"] as $dataCol<kotlin.Int>
-            val $dfRowName<$personClassName>.age: Int @JvmName("${personShortName}_age") get() = this["age"] as Int
+            val $dfRowName<$personClassName>.age: kotlin.Int @JvmName("${personShortName}_age") get() = this["age"] as kotlin.Int
             val $dfName<$personClassName>.city: $dataCol<kotlin.String?> @JvmName("${personShortName}_city") get() = this["city"] as $dataCol<kotlin.String?>
-            val $dfRowName<$personClassName>.city: String? @JvmName("${personShortName}_city") get() = this["city"] as String?
+            val $dfRowName<$personClassName>.city: kotlin.String? @JvmName("${personShortName}_city") get() = this["city"] as kotlin.String?
             val $dfName<$personClassName>.name: $dataCol<kotlin.String> @JvmName("${personShortName}_name") get() = this["name"] as $dataCol<kotlin.String>
-            val $dfRowName<$personClassName>.name: String @JvmName("${personShortName}_name") get() = this["name"] as String
+            val $dfRowName<$personClassName>.name: kotlin.String @JvmName("${personShortName}_name") get() = this["name"] as kotlin.String
             val $dfName<$personClassName>.weight: $dataCol<kotlin.Int?> @JvmName("${personShortName}_weight") get() = this["weight"] as $dataCol<kotlin.Int?>
-            val $dfRowName<$personClassName>.weight: Int? @JvmName("${personShortName}_weight") get() = this["weight"] as Int?
+            val $dfRowName<$personClassName>.weight: kotlin.Int? @JvmName("${personShortName}_weight") get() = this["weight"] as kotlin.Int?
         """.trimIndent()
         code shouldBe expected
     }
@@ -90,8 +90,8 @@ class CodeGenerationTests : BaseTest(){
         val expected = """
             @DataSchema(isOpen = false)
             interface DataFrameType1 : $personClassName{
-                override val city: String
-                override val weight: Int
+                override val city: kotlin.String
+                override val weight: kotlin.Int
             }
         """.trimIndent()
         generated.declarations shouldBe expected
