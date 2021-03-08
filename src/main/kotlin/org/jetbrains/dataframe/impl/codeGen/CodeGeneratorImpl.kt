@@ -235,7 +235,7 @@ class CodeGeneratorImpl : CodeGenerator {
 
     // Rendering
 
-    override var mode = CodeGenerationMode.ShortNames
+    override var mode = CodeGenerationMode.FullNames
 
     private fun shortTypeName(type: KType) =
             if (type.arguments.isNotEmpty()) null

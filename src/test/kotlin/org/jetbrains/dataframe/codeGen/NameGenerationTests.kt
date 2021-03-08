@@ -29,9 +29,9 @@ class NameGenerationTests {
             @DataSchema(isOpen = false)
             interface DataFrameType1{
             	@ColumnName("first column")
-                val `first column`: Int
+                val `first column`: kotlin.Int
             	@ColumnName("second column")
-                val `second column`: Int
+                val `second column`: kotlin.Int
             }
         """.trimIndent()
 

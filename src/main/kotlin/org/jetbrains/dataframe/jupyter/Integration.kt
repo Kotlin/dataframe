@@ -19,6 +19,8 @@ internal class Integration : JupyterIntegration(){
 
     override fun Builder.onLoaded() {
 
+        val codeGen = CodeGenerator.create()
+
         render<AnyFrame> { HTML(it.toHTML()) }
         render<AnyRow> { it.toDataFrame() }
         render<MapColumn<*>> { it.df }
@@ -28,8 +30,6 @@ internal class Integration : JupyterIntegration(){
         import("org.jetbrains.dataframe.*")
         import("org.jetbrains.dataframe.annotations.*")
         import("org.jetbrains.dataframe.io.*")
-
-        val codeGen = CodeGenerator.create()
 
         updateVariable<AnyFrame> { df, property ->
             codeGen.generate(df, property)?.let {
