@@ -6,6 +6,7 @@ import org.jetbrains.dataframe.impl.ColumnNameGenerator
 import java.io.*
 import java.math.BigDecimal
 import java.net.URL
+import java.nio.charset.Charset
 import java.util.zip.GZIPInputStream
 
 internal val defaultCsvFormat = CSVFormat.DEFAULT.withHeader().withIgnoreSurroundingSpaces()
@@ -18,46 +19,61 @@ internal fun isCompressed(file: File) = listOf("gz", "zip").contains(file.extens
 
 internal fun isCompressed(url: URL) = isCompressed(url.path)
 
+internal val defaultEncoding = "UTF-8"
+
 fun DataFrame.Companion.readDelimStr(
     text: String, format: CSVFormat = CSVFormat.DEFAULT.withHeader(),
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0
 ) = readDelim(StringReader(text), format, colTypes, skipLines)
 
+fun DataFrame.Companion.read(
+    fileOrUrl: String,
+    delimeter: Char,
+    skipLines: Int = 0,
+    encoding: String = defaultEncoding,
+    colTypes: Map<String, ColType> = mapOf(),
+) = readCSV(fileOrUrl, defaultCsvFormat.withDelimiter(delimeter), colTypes, skipLines, encoding)
+
 fun DataFrame.Companion.readCSV(
     fileOrUrl: String,
     format: CSVFormat = defaultCsvFormat,
     colTypes: Map<String, ColType> = mapOf(),
-    skipLines: Int = 0
-) = readDelim(asStream(fileOrUrl), format, isCompressed(fileOrUrl), colTypes, skipLines)
+    skipLines: Int = 0,
+    encoding: String = defaultEncoding
+) = readDelim(asStream(fileOrUrl), format, isCompressed(fileOrUrl), colTypes, skipLines, encoding)
 
 fun DataFrame.Companion.readCSV(
     file: File,
     format: CSVFormat = defaultCsvFormat,
     colTypes: Map<String, ColType> = mapOf(),
-    skipLines: Int = 0
-) = readDelim(FileInputStream(file), format, isCompressed(file), colTypes, skipLines)
+    skipLines: Int = 0,
+    encoding: String = defaultEncoding
+) = readDelim(FileInputStream(file), format, isCompressed(file), colTypes, skipLines, encoding)
 
 fun DataFrame.Companion.readCSV(
     url: URL,
     format: CSVFormat = defaultCsvFormat,
     colTypes: Map<String, ColType> = mapOf(),
-    skipLines: Int = 0
-) = readDelim(url.openStream(), format, isCompressed(url), colTypes, skipLines)
+    skipLines: Int = 0,
+    encoding: String = defaultEncoding
+) = readDelim(url.openStream(), format, isCompressed(url), colTypes, skipLines, encoding)
 
 fun DataFrame.Companion.readTSV(
     fileOrUrl: String,
     format: CSVFormat = defaultTdfFormat,
     colTypes: Map<String, ColType> = mapOf(),
-    skipLines: Int = 0
-) = readDelim(asStream(fileOrUrl), format, isCompressed(fileOrUrl), colTypes, skipLines)
+    skipLines: Int = 0,
+    encoding: String = defaultEncoding
+) = readDelim(asStream(fileOrUrl), format, isCompressed(fileOrUrl), colTypes, skipLines, encoding)
 
 fun DataFrame.Companion.readTSV(
     file: File,
     format: CSVFormat = defaultTdfFormat,
     colTypes: Map<String, ColType> = mapOf(),
-    skipLines: Int = 0
-) = readDelim(FileInputStream(file), format, isCompressed(file), colTypes, skipLines)
+    skipLines: Int = 0,
+    encoding: String = defaultEncoding
+) = readDelim(FileInputStream(file), format, isCompressed(file), colTypes, skipLines, encoding)
 
 private fun asStream(fileOrUrl: String) = (if (isURL(fileOrUrl)) {
     URL(fileOrUrl).toURI()
@@ -70,12 +86,13 @@ fun DataFrame.Companion.readDelim(
     format: CSVFormat = defaultCsvFormat,
     isCompressed: Boolean = false,
     colTypes: Map<String, ColType> = mapOf(),
-    skipLines: Int = 0
+    skipLines: Int = 0,
+    encoding: String = defaultEncoding
 ) =
     if (isCompressed) {
         InputStreamReader(GZIPInputStream(inStream))
     } else {
-        BufferedReader(InputStreamReader(inStream, "UTF-8"))
+        BufferedReader(InputStreamReader(inStream, encoding))
     }.run {
         readDelim(this, format, colTypes, skipLines)
     }
