@@ -181,7 +181,7 @@ class CodeGeneratorImpl : CodeGenerator {
 
     private fun getScheme(marker: KClass<*>, withBaseTypes: Boolean) = Scheme(getFields(marker, withBaseTypes).values.toList())
 
-    private val charsToQuote = """[ {}()<>'"/|.\\!?@:;%^&*#$-]""".toRegex()
+    private val charsToQuote = """(^[0-9])|[ {}()<>'"/|.\\!?@:;%^&*#$-]""".toRegex()
 
     private fun generateValidFieldName(name: String, index: Int, usedNames: Collection<String>): String {
         var result = name
