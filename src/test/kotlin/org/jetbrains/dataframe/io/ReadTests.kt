@@ -1,11 +1,14 @@
 package org.jetbrains.dataframe.io
 
 import io.kotlintest.shouldBe
+import org.jetbrains.dataframe.AnyFrame
 import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.columns.allNulls
+import org.jetbrains.dataframe.emptyDataFrame
 import org.jetbrains.dataframe.getType
 import org.jetbrains.dataframe.ncol
 import org.jetbrains.dataframe.nrow
+import org.jetbrains.dataframe.print
 import org.junit.Test
 
 class ReadTests {
@@ -29,5 +32,19 @@ class ReadTests {
         df.all { it["a"] == null } shouldBe true
         df["a"].type shouldBe getType<Any?>()
         df["b"].hasNulls shouldBe false
+    }
+
+    @Test
+    fun readFrameColumnEmptySlice(){
+        val data = """
+            [ [], [ {"a": [{"q":2},{"q":3}] } ] ]
+        """.trimIndent()
+
+        val df = DataFrame.readJsonStr(data)
+        df.nrow() shouldBe 2
+        df.ncol() shouldBe 1
+        val empty = df[0][0] as AnyFrame
+        empty.nrow() shouldBe 0
+        empty.ncol() shouldBe 1
     }
 }
