@@ -75,7 +75,7 @@ inline fun <reified T> ColumnReference<T>.withValues(values: List<T>, hasNulls: 
 
 // TODO: implement correct base schema computation
 internal fun <T> Iterable<DataFrame<T>?>.getBaseSchema(): DataFrame<T> {
-    return first { it != null && it.ncol() > 0 } ?: DataFrame.empty().typed()
+    return firstOrNull { it != null && it.ncol() > 0 } ?: DataFrame.empty().typed()
 }
 
 fun <T> DataColumn<T>.withValues(values: List<T>, hasNulls: Boolean) = when (this) {
