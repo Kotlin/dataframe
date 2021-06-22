@@ -10,6 +10,8 @@ import org.jetbrains.dataframe.columns.ColumnGroup
 import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.dataframe.internal.codeGen.CodeWithConverter
+import org.jetbrains.dataframe.io.initHtml
+import org.jetbrains.dataframe.io.toHTML
 import org.jetbrains.dataframe.ncol
 import org.jetbrains.dataframe.stubs.DataFrameToListNamedStub
 import org.jetbrains.dataframe.stubs.DataFrameToListTypedStub
@@ -33,6 +35,7 @@ internal class Integration : JupyterIntegration() {
 
         onLoaded {
             declare("dataFrameConfig" to config)
+            display(initHtml().toJupyter())
         }
 
         with(JupyterHtmlRenderer(config.display, this)) {
