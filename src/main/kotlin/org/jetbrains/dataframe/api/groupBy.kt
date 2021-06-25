@@ -57,4 +57,4 @@ public fun <T> DataFrame<T>.groupBy(cols: ColumnsSelector<T, *>): GroupedDataFra
 public inline fun <T, reified R> DataFrame<T>.groupByNew(name: String = "key", noinline expression: RowSelector<T, R?>): GroupedDataFrame<T, T> =
     add(name, expression).groupBy(name)
 
-internal val columnForGroupedData by column<AnyFrame>("groups")
+internal val columnForGroupedData by column<AnyFrame>("group")
