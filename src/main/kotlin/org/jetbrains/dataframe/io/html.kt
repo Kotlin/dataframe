@@ -33,7 +33,7 @@ internal data class DataFrameReference(val dfId: Int, val size: DataFrameSize)
 
 internal data class ColumnDataForJs(val name: String, val nested: List<ColumnDataForJs>, val rightAlign: Boolean, val values: List<Any>)
 
-internal val formatter = DataFrameFormatter("formatNull", "formatCurlyBrackets", "formatNumbers", "formatDataframes", "formatComma", "formatColumnNames", "formatSquareBrackets")
+internal val formatter = DataFrameFormatter("formatted","formatNull", "formatCurlyBrackets", "formatNumbers", "formatDataframes", "formatComma", "formatColumnNames", "formatSquareBrackets")
 
 internal fun getResources(vararg resource: String) = resource.joinToString(separator = "\n") { getResourceText(it) }
 
@@ -184,7 +184,7 @@ internal fun String.escapeHTML(): String {
     }
 }
 
-internal class DataFrameFormatter(val nullClass: String, val curlyBracketsClass: String, val numberClass: String, val dataFrameClass: String, val commaClass: String, val colNameClass: String, val squareBracketsClass: String) {
+internal class DataFrameFormatter(val formattedClass: String, val nullClass: String, val curlyBracketsClass: String, val numberClass: String, val dataFrameClass: String, val commaClass: String, val colNameClass: String, val squareBracketsClass: String) {
 
     companion object {
         private fun String.withClass(css: String) = "<span class=\"$css\">$this</span>"
@@ -197,6 +197,8 @@ internal class DataFrameFormatter(val nullClass: String, val curlyBracketsClass:
 
         val isFull get() = length >= limit
 
+        var isFormatted: Boolean = false
+
         fun append(prefix: String, content: String, postfix: String) {
             if(isFull) return
             val truncate = length + content.length > limit
@@ -207,8 +209,10 @@ internal class DataFrameFormatter(val nullClass: String, val curlyBracketsClass:
         }
 
         fun appendCss(str: String, css: String? = null) {
-            if(css != null)
+            if(css != null) {
                 append("<span class=\"$css\">", str, "</span>")
+                isFormatted = true
+            }
             else append("", str, "")
         }
 
@@ -218,7 +222,8 @@ internal class DataFrameFormatter(val nullClass: String, val curlyBracketsClass:
     fun format(value: Any?, limit: Int): String {
         val builder = FormatBuilder(limit)
         builder.render(value)
-        return builder.toString()
+        val result = builder.toString()
+        return if(builder.isFormatted) "<span class=\"$formattedClass\">$result</span>" else result
     }
 
     private fun FormatBuilder.render(value: Any?) {
