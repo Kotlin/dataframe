@@ -106,8 +106,11 @@ public inline fun <T, reified R> DataFrameBase<T>.newColumn(
 ): DataColumn<R> {
     if (useActualType) return newColumnWithActualType(name, expression)
     val (nullable, values) = computeValues(this as DataFrame<T>, expression)
-    if (R::class == DataFrame::class) return DataColumn.frames(name, values as List<AnyFrame?>) as DataColumn<R>
-    return column(name, values, nullable)
+    return when(R::class){
+        DataFrame::class -> DataColumn.frames(name, values as List<AnyFrame?>) as DataColumn<R>
+        DataRow::class -> DataColumn.create(name, (values as List<AnyRow>).union()) as DataColumn<R>
+        else -> column(name, values, nullable)
+    }
 }
 
 @PublishedApi
