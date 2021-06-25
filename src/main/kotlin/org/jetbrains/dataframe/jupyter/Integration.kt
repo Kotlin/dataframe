@@ -9,7 +9,10 @@ import org.jetbrains.dataframe.columns.AnyCol
 import org.jetbrains.dataframe.columns.ColumnGroup
 import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
+import org.jetbrains.dataframe.impl.renderShort
+import org.jetbrains.dataframe.impl.renderType
 import org.jetbrains.dataframe.internal.codeGen.CodeWithConverter
+import org.jetbrains.dataframe.io.HtmlData
 import org.jetbrains.dataframe.io.initHtml
 import org.jetbrains.dataframe.io.toHTML
 import org.jetbrains.dataframe.ncol
@@ -39,12 +42,15 @@ internal class Integration : JupyterIntegration() {
         }
 
         with(JupyterHtmlRenderer(config.display, this)) {
+            render<HtmlData> { it.toJupyter() }
             render<AnyFrame>({ it })
             render<FormattedFrame<*>>({ it.df }, modifyConfig = { getDisplayConfiguration(it) })
             render<AnyRow>({ it.toDataFrame() }, { "DataRow [${it.ncol}]" })
             render<ColumnGroup<*>>({ it.df })
             render<AnyCol>({ dataFrameOf(listOf(it)) }, { "DataColumn [${it.nrow()}]" })
             render<GroupedDataFrame<*, *>>({ it.plain() })
+            render<PivotAggregations<*>> { it.frames().toDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
+            render<GroupedPivotAggregations<*>> { it.frames().toHTML(config.display) { "GroupedPivot: ${it.size}" } }
         }
 
         import("org.jetbrains.dataframe.*")
