@@ -97,19 +97,17 @@ public fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T, R
     return nullable to list
 }
 
-public inline fun <T, reified R> DataFrameBase<T>.newColumn(name: String = "", noinline expression: AddExpression<T, R>): DataColumn<R> = newColumn(name, false, expression)
+inline fun <T, reified R> DataFrameBase<T>.newColumn(name: String = "", noinline expression: AddExpression<T, R>): DataColumn<R> {
+    return newColumn(getType<R>(), name, expression)
+}
 
-public inline fun <T, reified R> DataFrameBase<T>.newColumn(
-    name: String = "",
-    useActualType: Boolean = false,
-    noinline expression: AddExpression<T, R>
-): DataColumn<R> {
-    if (useActualType) return newColumnWithActualType(name, expression)
+@PublishedApi
+internal fun <T, R> DataFrameBase<T>.newColumn(type: KType, name: String = "", expression: AddExpression<T, R>): DataColumn<R> {
     val (nullable, values) = computeValues(this as DataFrame<T>, expression)
-    return when(R::class){
+    return when(type.classifier){
         DataFrame::class -> DataColumn.frames(name, values as List<AnyFrame?>) as DataColumn<R>
         DataRow::class -> DataColumn.create(name, (values as List<AnyRow>).union()) as DataColumn<R>
-        else -> column(name, values, nullable)
+        else -> DataColumn.create(name, values, type.withNullability(nullable))
     }
 }
 
@@ -144,13 +142,13 @@ public fun columnGroup(parent: MapColumnReference): ColumnDelegate<AnyRow> = col
 
 public fun frameColumn(): ColumnDelegate<AnyFrame> = column()
 
-public fun <T> columnList(): ColumnDelegate<List<T>> = column()
+fun <T> columnMany() = column<Many<T>>()
 
 public fun <T> columnGroup(name: String): ColumnAccessor<DataRow<T>> = column(name)
 
 public fun <T> frameColumn(name: String): ColumnAccessor<DataFrame<T>> = column(name)
 
-public fun <T> columnList(name: String): ColumnAccessor<List<T>> = column(name)
+fun <T> columnMany(name: String) = column<Many<T>>(name)
 
 public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
 

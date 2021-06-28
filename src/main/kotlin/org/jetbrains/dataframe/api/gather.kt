@@ -99,7 +99,7 @@ public fun <T, C, K, R> doGather(
         val nameAndValuePairs = nameAndValue.changeType<Pair<K, C>>()
 
         df = df.split { nameAndValuePairs }
-            .by { listOf(it.first, it.second) }
+            .with { listOf(it.first, it.second) }
             .into(namesColumn, valuesColumn)
             .explode(valuesColumn)
     }
