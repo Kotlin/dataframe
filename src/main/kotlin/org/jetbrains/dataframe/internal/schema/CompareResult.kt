@@ -1,16 +1,16 @@
 package org.jetbrains.dataframe.internal.schema
 
-internal enum class CompareResult {
+public enum class CompareResult {
     Equals,
     IsSuper,
     IsDerived,
     None;
 
-    fun isSuperOrEqual() = this == Equals || this == IsSuper
+    public fun isSuperOrEqual(): Boolean = this == Equals || this == IsSuper
 
-    fun isEqual() = this == Equals
+    public fun isEqual(): Boolean = this == Equals
 
-    fun combine(other: CompareResult) =
+    public fun combine(other: CompareResult): CompareResult =
         when (this) {
             Equals -> other
             None -> None
@@ -18,8 +18,8 @@ internal enum class CompareResult {
             IsSuper -> if (other == Equals || other == IsSuper) this else None
         }
 
-    companion object {
-        fun compareNullability(thisIsNullable: Boolean, otherIsNullable: Boolean) = when {
+    public companion object {
+        public fun compareNullability(thisIsNullable: Boolean, otherIsNullable: Boolean): CompareResult = when {
             thisIsNullable == otherIsNullable -> Equals
             thisIsNullable -> IsSuper
             else -> IsDerived
