@@ -1,3 +1,4 @@
 rootProject.name = projectName
 
 includeBuild("generator")
+includeBuild("plugins/gradle/generate-data-schema")
