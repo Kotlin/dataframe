@@ -7,17 +7,17 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.isSupertypeOf
 
-internal abstract class ColumnSchema {
+public abstract class ColumnSchema {
 
-    abstract val kind: ColumnKind
+    public abstract val kind: ColumnKind
 
-    abstract val nullable: Boolean
+    public abstract val nullable: Boolean
 
-    class Value(val type: KType) : ColumnSchema() {
-        override val kind = ColumnKind.Value
-        override val nullable = type.isMarkedNullable
+    public class Value(public val type: KType) : ColumnSchema() {
+        override val kind: ColumnKind = ColumnKind.Value
+        override val nullable: Boolean = type.isMarkedNullable
 
-        fun compare(other: Value): CompareResult = when {
+        public fun compare(other: Value): CompareResult = when {
             type == other.type -> CompareResult.Equals
             type.isSubtypeOf(other.type) -> CompareResult.IsDerived
             type.isSupertypeOf(other.type) -> CompareResult.IsSuper
@@ -25,17 +25,17 @@ internal abstract class ColumnSchema {
         }
     }
 
-    class Map(val schema: DataFrameSchema) : ColumnSchema() {
-        override val kind = ColumnKind.Group
-        override val nullable = false
+    public class Map(public val schema: DataFrameSchema) : ColumnSchema() {
+        override val kind: ColumnKind = ColumnKind.Group
+        override val nullable: Boolean = false
 
-        fun compare(other: Map): CompareResult = schema.compare(other.schema)
+        public fun compare(other: Map): CompareResult = schema.compare(other.schema)
     }
 
-    class Frame(val schema: DataFrameSchema, override val nullable: Boolean) : ColumnSchema() {
-        override val kind = ColumnKind.Frame
+    public class Frame(public val schema: DataFrameSchema, override val nullable: Boolean) : ColumnSchema() {
+        public override val kind: ColumnKind = ColumnKind.Frame
 
-        fun compare(other: Frame): CompareResult =
+        public fun compare(other: Frame): CompareResult =
             schema.compare(other.schema).combine(CompareResult.compareNullability(nullable, other.nullable))
     }
 
@@ -51,7 +51,7 @@ internal abstract class ColumnSchema {
         }
     }
 
-    fun compare(other: ColumnSchema): CompareResult {
+    public fun compare(other: ColumnSchema): CompareResult {
         if (kind != other.kind) return CompareResult.None
         if (this === other) return CompareResult.Equals
         return when (this) {
