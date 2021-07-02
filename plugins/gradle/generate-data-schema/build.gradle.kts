@@ -19,4 +19,8 @@ gradlePlugin {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin-api")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin")
+
+    testImplementation("junit:junit:4.12")
 }
