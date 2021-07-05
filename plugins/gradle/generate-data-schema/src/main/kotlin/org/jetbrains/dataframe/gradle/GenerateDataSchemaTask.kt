@@ -55,11 +55,15 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             extensionProperties = true,
             isOpen = false
         )
-        dataSchema.writeText("""
-            // GENERATED. DO NOT EDIT MANUALLY
-            package ${packageName.get()}
-            
-            ${codeGenResult.code.declarations}
-        """.trimIndent())
+        dataSchema.writeText(
+            buildString {
+                appendLine("// GENERATED. DO NOT EDIT MANUALLY")
+                if (packageName.get().isNotEmpty()) {
+                    appendLine("package ${packageName.get()}")
+                }
+                appendLine("import org.jetbrains.dataframe.annotations.DataSchema")
+                appendLine(codeGenResult.code.declarations)
+            }
+        )
     }
 }
