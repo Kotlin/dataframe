@@ -36,12 +36,13 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @TaskAction
     fun generate() {
         val codeGenerator = CodeGenerator.create()
-        val dataSchema = dataSchema.orNull ?: return
+        val dataSchema = dataSchema.get()
         val df = try {
-            when (val data = data.orNull) {
+            when (val data = data.get()) {
                 is File -> DataFrame.read(data)
                 is URL -> DataFrame.read(data)
-                else -> throw NotImplementedError()
+                is String -> DataFrame.read(data)
+                else -> throw IllegalArgumentException("data for schema \"${interfaceName.get()}\" must be File, URL or String")
             }
         } catch (e: Exception) {
             println(e)

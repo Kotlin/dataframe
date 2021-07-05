@@ -95,6 +95,37 @@ internal class SchemaGeneratorPluginTes {
     }
 
     @Test
+    fun `plugin configure muplitple schemas from strings via extension`() {
+        val dataDir = File("../../../data")
+        val result = runGradleBuild(":generateAll") { buildDir ->
+            """
+            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                
+            plugins {
+               id("org.jetbrains.dataframe.schema-generator")
+            }
+
+            configure<SchemaGeneratorExtension> {
+                schema {
+                    src = buildDir
+                    data = "$dataDir/ghost.json"
+                    interfaceName = "Test"
+                    packageName = "org.test"
+                }
+                schema {
+                    src = buildDir
+                    data = "$dataDir/playlistItems.json"
+                    interfaceName = "Schema"
+                    packageName = "org.test"
+                }
+            }
+            """.trimIndent()
+        }
+        assert(result.task(":generateTest")?.outcome == TaskOutcome.SUCCESS)
+        assert(result.task(":generateSchema")?.outcome == TaskOutcome.SUCCESS)
+    }
+
+    @Test
     fun `compileKotlin depends on generateAll task`() {
         val dataDir = File("../../../data")
         val result = runGradleBuild(":compileKotlin") { buildDir ->
