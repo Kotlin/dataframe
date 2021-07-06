@@ -21,8 +21,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin-api")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin")
+    implementation("com.beust:klaxon:5.5")
 
     testImplementation("junit:junit:4.12")
     testImplementation("io.kotest:kotest-assertions-core:4.6.0")
-    testImplementation("com.beust:klaxon:5.5")
 }
