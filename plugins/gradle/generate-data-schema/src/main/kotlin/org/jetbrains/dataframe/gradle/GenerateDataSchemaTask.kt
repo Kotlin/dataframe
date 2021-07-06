@@ -10,8 +10,11 @@ import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.internal.schema.extractSchema
 import org.jetbrains.dataframe.io.read
 import java.io.File
+import java.io.IOException
 import java.net.URL
 import java.nio.file.Paths
+import com.beust.klaxon.KlaxonException
+import java.io.FileNotFoundException
 
 abstract class GenerateDataSchemaTask : DefaultTask() {
 
@@ -45,8 +48,11 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 else -> throw IllegalArgumentException("data for schema \"${interfaceName.get()}\" must be File, URL or String")
             }
         } catch (e: Exception) {
-            println(e)
-            throw e
+            when (e) {
+                is KlaxonException, is IndexOutOfBoundsException, is IOException -> throw InvalidDataException(e)
+                is FileNotFoundException, is IllegalArgumentException -> throw MissingDataException(e)
+                else -> throw e
+            }
         }
         val codeGenResult = codeGenerator.generate(
             schema = df.extractSchema(),
@@ -67,3 +73,6 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         )
     }
 }
+
+class MissingDataException(cause: Exception) : Exception(cause)
+class InvalidDataException(cause: Exception) : Exception(cause)
