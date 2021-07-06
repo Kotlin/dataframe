@@ -311,7 +311,7 @@ internal class SchemaGeneratorPluginTes {
     }
 
     @Test
-    fun `interfaceName is defaulted to data file name`() {
+    fun `interfaceName convention is data file name`() {
         val result = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, "data.csv")
             dataFile.writeText(TestData.csvSample)
@@ -342,6 +342,78 @@ internal class SchemaGeneratorPluginTes {
             """.trimIndent()
         }
         assert(result.task(":generateData")?.outcome == TaskOutcome.SUCCESS)
+    }
+
+    @Test
+    fun `packageName convention is default package`() {
+        var dir: File? = null
+        val result = runGradleBuild(":build") { buildDir ->
+            val dataFile = File(buildDir, "data.csv")
+            dir = buildDir
+            dataFile.writeText(TestData.csvSample)
+
+            """
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                    
+                plugins {
+                    kotlin("jvm") version "1.4.10"
+                    id("org.jetbrains.dataframe.schema-generator")
+                }
+                
+                repositories {
+                    mavenCentral() 
+                }
+                
+                dependencies {
+                    implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
+                }
+                
+                schemaGenerator {
+                    schema {
+                        data = "$dataFile"
+                        src = file("src/gen/kotlin")
+                        interfaceName = "Data"
+                    }
+                }
+            """.trimIndent()
+        }
+        assert(result.task(":generateData")?.outcome == TaskOutcome.SUCCESS)
+        assert(dir?.let { File(it, "src/gen/kotlin/Data.kt").exists() } ?: false)
+    }
+
+    @Test
+    fun `fallback all properties to conventions`() {
+        var dir: File? = null
+        val result = runGradleBuild(":build") { buildDir ->
+            val dataFile = File(buildDir, "data.csv")
+            dir = buildDir
+            dataFile.writeText(TestData.csvSample)
+
+            """
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                    
+                plugins {
+                    kotlin("jvm") version "1.4.10"
+                    id("org.jetbrains.dataframe.schema-generator")
+                }
+                
+                repositories {
+                    mavenCentral() 
+                }
+                
+                dependencies {
+                    implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
+                }
+                
+                schemaGenerator {
+                    schema {
+                        data = "$dataFile"
+                    }
+                }
+            """.trimIndent()
+        }
+        assert(result.task(":generateData")?.outcome == TaskOutcome.SUCCESS)
+        assert(dir?.let { File(it, "src/gen/kotlin/Data.kt").exists() } ?: false)
     }
 
     private fun runGradleBuild(task: String, build: (File) -> String): BuildResult {
