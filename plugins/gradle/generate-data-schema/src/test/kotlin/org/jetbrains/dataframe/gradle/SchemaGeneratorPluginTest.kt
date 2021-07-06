@@ -12,13 +12,18 @@ internal class SchemaGeneratorPluginTes {
 
     @Test
     fun `plugin configured via configure`() {
-        val result = runGradleBuild(":generateTest") { buildDir ->
+        val result = runGradleBuild(":generateTest") {
             """
             import java.net.URL
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-               id("org.jetbrains.dataframe.schema-generator")
+                kotlin("jvm") version "1.4.10"
+                id("org.jetbrains.dataframe.schema-generator")
+            }
+            
+            repositories {
+                mavenCentral() 
             }
 
             configure<SchemaGeneratorExtension> {
@@ -36,13 +41,18 @@ internal class SchemaGeneratorPluginTes {
 
     @Test
     fun `plugin configured via extension DSL`() {
-        val result = runGradleBuild(":generateTest") { buildDir ->
+        val result = runGradleBuild(":generateTest") {
             """
             import java.net.URL
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-               id("org.jetbrains.dataframe.schema-generator")
+                kotlin("jvm") version "1.4.10"
+                id("org.jetbrains.dataframe.schema-generator")
+            }
+            
+            repositories {
+                mavenCentral() 
             }
 
             schemaGenerator {
@@ -59,15 +69,20 @@ internal class SchemaGeneratorPluginTes {
     }
 
     @Test
-    fun `plugin configure muplitple schemas from URLs via extension`() {
-        val result = runGradleBuild(":generateAll") { buildDir ->
+    fun `plugin configure multiple schemas from URLs via extension`() {
+        val result = runGradleBuild(":generateAll") {
             """
             import java.net.URL
             
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-               id("org.jetbrains.dataframe.schema-generator")
+                kotlin("jvm") version "1.4.10"
+                id("org.jetbrains.dataframe.schema-generator")
+            }
+            
+            repositories {
+                mavenCentral() 
             }
 
             schemaGenerator {
@@ -91,14 +106,19 @@ internal class SchemaGeneratorPluginTes {
     }
 
     @Test
-    fun `plugin configure muplitple schemas from files via extension`() {
+    fun `plugin configure multiple schemas from files via extension`() {
         val dataDir = File("../../../data")
-        val result = runGradleBuild(":generateAll") { buildDir ->
+        val result = runGradleBuild(":generateAll") {
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-               id("org.jetbrains.dataframe.schema-generator")
+                kotlin("jvm") version "1.4.10"
+                id("org.jetbrains.dataframe.schema-generator")
+            }
+            
+            repositories {
+                mavenCentral() 
             }
 
             schemaGenerator {
@@ -122,14 +142,19 @@ internal class SchemaGeneratorPluginTes {
     }
 
     @Test
-    fun `plugin configure muplitple schemas from strings via extension`() {
+    fun `plugin configure multiple schemas from strings via extension`() {
         val dataDir = File("../../../data")
         val result = runGradleBuild(":generateAll") { buildDir ->
             """
-            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                
+            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
+               
             plugins {
-               id("org.jetbrains.dataframe.schema-generator")
+                kotlin("jvm") version "1.4.10"
+                id("org.jetbrains.dataframe.schema-generator")
+            }
+            
+            repositories {
+                mavenCentral() 
             }
 
             schemaGenerator {
@@ -161,7 +186,7 @@ internal class SchemaGeneratorPluginTes {
                 
             plugins {
                 kotlin("jvm") version "1.4.10"
-               id("org.jetbrains.dataframe.schema-generator")
+                id("org.jetbrains.dataframe.schema-generator")
             }
             
             repositories {
@@ -228,6 +253,54 @@ internal class SchemaGeneratorPluginTes {
                     schema {
                         data = "$dataFile"
                         src = File("$kotlin")
+                        interfaceName = "Schema"
+                        packageName = ""
+                    }
+                }
+            """.trimIndent()
+        }
+        assert(result.task(":build")?.outcome == TaskOutcome.SUCCESS)
+    }
+
+    @Test
+    fun `src is defaulted to main source set`() {
+        val result = runGradleBuild(":build") { buildDir ->
+            val dataFile = File(buildDir, "data.csv")
+            dataFile.writeText(TestData.csvSample)
+
+            val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
+            val main = File(kotlin, "Main.kt")
+            main.writeText("""
+                import org.jetbrains.dataframe.DataFrame
+                import org.jetbrains.dataframe.io.read
+                import org.jetbrains.dataframe.typed
+                import org.jetbrains.dataframe.filter
+                
+                fun main() {
+                    val df = DataFrame.read("$dataFile").typed<Schema>()
+                    val df1 = df.filter { age != null }
+                }
+            """.trimIndent())
+
+            """
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                    
+                plugins {
+                    kotlin("jvm") version "1.4.10"
+                    id("org.jetbrains.dataframe.schema-generator")
+                }
+                
+                repositories {
+                    mavenCentral() 
+                }
+                
+                dependencies {
+                    implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
+                }
+                
+                schemaGenerator {
+                    schema {
+                        data = "$dataFile"
                         interfaceName = "Schema"
                         packageName = ""
                     }
