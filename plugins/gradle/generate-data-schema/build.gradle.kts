@@ -23,4 +23,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin")
 
     testImplementation("junit:junit:4.12")
+    testImplementation("io.kotest:kotest-assertions-core:4.6.0")
+    testImplementation("com.beust:klaxon:5.5")
 }
