@@ -34,6 +34,29 @@ internal class SchemaGeneratorPluginTes {
     }
 
     @Test
+    fun `plugin configured via extension DSL`() {
+        val result = runGradleBuild(":generateTest") { buildDir ->
+            """
+            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                
+            plugins {
+               id("org.jetbrains.dataframe.schema-generator")
+            }
+
+            schemaGenerator {
+                schema {
+                    src = buildDir
+                    data = java.net.URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
+                    interfaceName = "Test"
+                    packageName = "org.test"
+                }
+            }
+            """.trimIndent()
+        }
+        assert(result.task(":generateTest")?.outcome == TaskOutcome.SUCCESS)
+    }
+
+    @Test
     fun `plugin configure muplitple schemas from URLs via extension`() {
         val result = runGradleBuild(":generateAll") { buildDir ->
             """
@@ -43,7 +66,7 @@ internal class SchemaGeneratorPluginTes {
                id("org.jetbrains.dataframe.schema-generator")
             }
 
-            configure<SchemaGeneratorExtension> {
+            schemaGenerator {
                 schema {
                     src = buildDir
                     data = java.net.URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
@@ -74,7 +97,7 @@ internal class SchemaGeneratorPluginTes {
                id("org.jetbrains.dataframe.schema-generator")
             }
 
-            configure<SchemaGeneratorExtension> {
+            schemaGenerator {
                 schema {
                     src = buildDir
                     data = File("$dataDir/ghost.json")
@@ -105,7 +128,7 @@ internal class SchemaGeneratorPluginTes {
                id("org.jetbrains.dataframe.schema-generator")
             }
 
-            configure<SchemaGeneratorExtension> {
+            schemaGenerator {
                 schema {
                     src = buildDir
                     data = "$dataDir/ghost.json"
@@ -141,7 +164,7 @@ internal class SchemaGeneratorPluginTes {
                 mavenCentral() 
             }
 
-            configure<SchemaGeneratorExtension> {
+            schemaGenerator {
                 schema {
                     src = buildDir
                     data = File("$dataDir/ghost.json")
@@ -201,7 +224,7 @@ internal class SchemaGeneratorPluginTes {
                     implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
                 }
                 
-                configure<SchemaGeneratorExtension> {
+                schemaGenerator {
                     schema {
                         data = "$dataFile"
                         src = File("$kotlin")
