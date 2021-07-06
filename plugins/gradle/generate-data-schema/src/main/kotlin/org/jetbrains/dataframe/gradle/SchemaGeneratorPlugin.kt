@@ -8,6 +8,7 @@ import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
+import java.net.URL
 
 class SchemaGeneratorPlugin : Plugin<Project> {
     override fun apply(target: Project) {
@@ -18,10 +19,11 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         target.afterEvaluate {
             val generationTasks = mutableListOf<GenerateDataSchemaTask>()
             extension.schemas.forEach {
-                val task = target.tasks.create("generate${it.interfaceName}", GenerateDataSchemaTask::class.java) {
+                val interfaceName = it.interfaceName ?: fileName(it.data)?.capitalize()
+                val task = target.tasks.create("generate${interfaceName}", GenerateDataSchemaTask::class.java) {
                     src.convention(defaultSrc)
                     data.set(it.data)
-                    interfaceName.set(it.interfaceName)
+                    this.interfaceName.set(interfaceName)
                     packageName.set(it.packageName)
                     src.set(it.src)
                 }
@@ -33,6 +35,15 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             tasks.withType<KotlinCompile> {
                 dependsOn(generateAll)
             }
+        }
+    }
+
+    private fun fileName(data: Any?): String? {
+        return when (data) {
+            is String -> extractFileName(data)
+            is URL -> extractFileName(data)
+            is File -> extractFileName(data)
+            else -> throw IllegalArgumentException("data for schema must be File, URL or String, but was ${data?.javaClass ?: ""}($data)")
         }
     }
 

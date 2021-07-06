@@ -310,6 +310,40 @@ internal class SchemaGeneratorPluginTes {
         assert(result.task(":build")?.outcome == TaskOutcome.SUCCESS)
     }
 
+    @Test
+    fun `interfaceName is defaulted to data file name`() {
+        val result = runGradleBuild(":build") { buildDir ->
+            val dataFile = File(buildDir, "data.csv")
+            dataFile.writeText(TestData.csvSample)
+
+            """
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                    
+                plugins {
+                    kotlin("jvm") version "1.4.10"
+                    id("org.jetbrains.dataframe.schema-generator")
+                }
+                
+                repositories {
+                    mavenCentral() 
+                }
+                
+                dependencies {
+                    implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
+                }
+                
+                schemaGenerator {
+                    schema {
+                        data = "$dataFile"
+                        src = file("src/gen/kotlin")
+                        packageName = ""
+                    }
+                }
+            """.trimIndent()
+        }
+        assert(result.task(":generateData")?.outcome == TaskOutcome.SUCCESS)
+    }
+
     private fun runGradleBuild(task: String, build: (File) -> String): BuildResult {
         val buildDir = Files.createTempDirectory("test").toFile()
         val buildFile = File(buildDir, "build.gradle.kts")
