@@ -11,7 +11,7 @@ import java.nio.file.Files
 internal class SchemaGeneratorPluginTes {
 
     @Test
-    fun `plugin configured via extension`() {
+    fun `plugin configured via configure`() {
         val result = runGradleBuild(":generateTest") { buildDir ->
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
