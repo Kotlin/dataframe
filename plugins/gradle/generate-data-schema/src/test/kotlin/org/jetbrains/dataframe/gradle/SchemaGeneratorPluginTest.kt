@@ -188,11 +188,7 @@ internal class SchemaGeneratorPluginTes {
     fun `generated code resolved`() {
         val result = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, "data.csv")
-            dataFile.writeText("""
-                name, age
-                Alice, 15
-                Bob,
-            """.trimIndent())
+            dataFile.writeText(TestData.csvSample)
 
             val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
