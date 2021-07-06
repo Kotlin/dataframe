@@ -14,6 +14,7 @@ internal class SchemaGeneratorPluginTes {
     fun `plugin configured via configure`() {
         val result = runGradleBuild(":generateTest") { buildDir ->
             """
+            import java.net.URL
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
@@ -23,7 +24,7 @@ internal class SchemaGeneratorPluginTes {
             configure<SchemaGeneratorExtension> {
                 schema {
                     src = buildDir
-                    data = java.net.URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
+                    data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
                     interfaceName = "Test"
                     packageName = "org.test"
                 }
@@ -37,6 +38,7 @@ internal class SchemaGeneratorPluginTes {
     fun `plugin configured via extension DSL`() {
         val result = runGradleBuild(":generateTest") { buildDir ->
             """
+            import java.net.URL
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
@@ -46,7 +48,7 @@ internal class SchemaGeneratorPluginTes {
             schemaGenerator {
                 schema {
                     src = buildDir
-                    data = java.net.URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
+                    data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
                     interfaceName = "Test"
                     packageName = "org.test"
                 }
@@ -60,6 +62,8 @@ internal class SchemaGeneratorPluginTes {
     fun `plugin configure muplitple schemas from URLs via extension`() {
         val result = runGradleBuild(":generateAll") { buildDir ->
             """
+            import java.net.URL
+            
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
@@ -69,13 +73,13 @@ internal class SchemaGeneratorPluginTes {
             schemaGenerator {
                 schema {
                     src = buildDir
-                    data = java.net.URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
+                    data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
                     interfaceName = "Test"
                     packageName = "org.test"
                 }
                 schema {
                     src = buildDir
-                    data = java.net.URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/ghost.json")
+                    data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/ghost.json")
                     interfaceName = "Schema"
                     packageName = "org.test"
                 }
