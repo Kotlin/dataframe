@@ -67,7 +67,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 if (packageName.get().isNotEmpty()) {
                     appendLine("package ${packageName.get()}")
                 }
-                appendLine("import org.jetbrains.dataframe.annotations.DataSchema")
+                appendLine("import org.jetbrains.dataframe.annotations.*")
                 appendLine(codeGenResult.code.declarations)
             }
         )
