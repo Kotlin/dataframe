@@ -33,7 +33,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @get:OutputFile
     val dataSchema = packageName.zip(interfaceName) { packageName, interfaceName ->
         val packagePath = packageName.replace('.', File.separatorChar)
-        Paths.get(src.get().absolutePath, packagePath, "$interfaceName.kt").toFile()
+        Paths.get(src.get().absolutePath, packagePath, "Generated$interfaceName.kt").toFile()
     }
 
     @TaskAction

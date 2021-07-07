@@ -378,7 +378,7 @@ internal class SchemaGeneratorPluginTes {
             """.trimIndent()
         }
         assert(result.task(":generateData")?.outcome == TaskOutcome.SUCCESS)
-        assert(dir?.let { File(it, "src/gen/kotlin/Data.kt").exists() } ?: false)
+        assert(dir?.let { File(it, "src/gen/kotlin/GeneratedData.kt").exists() } ?: false)
     }
 
     @Test
@@ -413,7 +413,7 @@ internal class SchemaGeneratorPluginTes {
             """.trimIndent()
         }
         assert(result.task(":generateData")?.outcome == TaskOutcome.SUCCESS)
-        assert(dir?.let { File(it, "src/gen/kotlin/Data.kt").exists() } ?: false)
+        assert(dir?.let { File(it, "src/gen/kotlin/GeneratedData.kt").exists() } ?: false)
     }
 
     private fun runGradleBuild(task: String, build: (File) -> String): BuildResult {
