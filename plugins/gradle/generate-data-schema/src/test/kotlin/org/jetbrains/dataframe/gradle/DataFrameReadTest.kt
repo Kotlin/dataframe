@@ -2,6 +2,7 @@ package org.jetbrains.dataframe.gradle
 
 import com.beust.klaxon.KlaxonException
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.shouldBe
 import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.io.read
 import org.junit.Test
@@ -85,6 +86,6 @@ class DataFrameReadTest {
         temp.writeText(TestData.csvSample)
 
         val df = DataFrame.read(temp)
-        assert(df.columnNames() == listOf("name", "age"))
+        df.columnNames() shouldBe listOf("name", "age")
     }
 }

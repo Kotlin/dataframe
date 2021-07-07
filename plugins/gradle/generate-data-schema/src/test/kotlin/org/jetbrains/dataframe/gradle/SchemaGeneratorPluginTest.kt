@@ -1,12 +1,12 @@
 package org.jetbrains.dataframe.gradle
 
+import io.kotest.matchers.shouldBe
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
 import java.io.File
 import java.nio.file.Files
-
 
 internal class SchemaGeneratorPluginTes {
 
@@ -36,7 +36,7 @@ internal class SchemaGeneratorPluginTes {
             }
             """.trimIndent()
         }
-        assert(result.task(":generateTest")?.outcome == TaskOutcome.SUCCESS)
+        result.task(":generateTest")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
@@ -65,7 +65,7 @@ internal class SchemaGeneratorPluginTes {
             }
             """.trimIndent()
         }
-        assert(result.task(":generateTest")?.outcome == TaskOutcome.SUCCESS)
+        result.task(":generateTest")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
@@ -101,8 +101,8 @@ internal class SchemaGeneratorPluginTes {
             }
             """.trimIndent()
         }
-        assert(result.task(":generateTest")?.outcome == TaskOutcome.SUCCESS)
-        assert(result.task(":generateSchema")?.outcome == TaskOutcome.SUCCESS)
+        result.task(":generateTest")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateSchema")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
@@ -137,8 +137,8 @@ internal class SchemaGeneratorPluginTes {
             }
             """.trimIndent()
         }
-        assert(result.task(":generateTest")?.outcome == TaskOutcome.SUCCESS)
-        assert(result.task(":generateSchema")?.outcome == TaskOutcome.SUCCESS)
+        result.task(":generateTest")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateSchema")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
@@ -173,8 +173,8 @@ internal class SchemaGeneratorPluginTes {
             }
             """.trimIndent()
         }
-        assert(result.task(":generateTest")?.outcome == TaskOutcome.SUCCESS)
-        assert(result.task(":generateSchema")?.outcome == TaskOutcome.SUCCESS)
+        result.task(":generateTest")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateSchema")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
@@ -209,8 +209,8 @@ internal class SchemaGeneratorPluginTes {
             }
             """.trimIndent()
         }
-        assert(result.task(":generateTest")?.outcome == TaskOutcome.SUCCESS)
-        assert(result.task(":generateSchema")?.outcome == TaskOutcome.SUCCESS)
+        result.task(":generateTest")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateSchema")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
@@ -259,7 +259,7 @@ internal class SchemaGeneratorPluginTes {
                 }
             """.trimIndent()
         }
-        assert(result.task(":build")?.outcome == TaskOutcome.SUCCESS)
+        result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
@@ -307,7 +307,7 @@ internal class SchemaGeneratorPluginTes {
                 }
             """.trimIndent()
         }
-        assert(result.task(":build")?.outcome == TaskOutcome.SUCCESS)
+        result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
@@ -341,7 +341,7 @@ internal class SchemaGeneratorPluginTes {
                 }
             """.trimIndent()
         }
-        assert(result.task(":generateData")?.outcome == TaskOutcome.SUCCESS)
+        result.task(":generateData")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
@@ -377,8 +377,8 @@ internal class SchemaGeneratorPluginTes {
                 }
             """.trimIndent()
         }
-        assert(result.task(":generateData")?.outcome == TaskOutcome.SUCCESS)
-        assert(dir?.let { File(it, "src/gen/kotlin/GeneratedData.kt").exists() } ?: false)
+        result.task(":generateData")?.outcome shouldBe TaskOutcome.SUCCESS
+        dir?.let { File(it, "src/gen/kotlin/GeneratedData.kt").exists() } shouldBe true
     }
 
     @Test
@@ -412,8 +412,8 @@ internal class SchemaGeneratorPluginTes {
                 }
             """.trimIndent()
         }
-        assert(result.task(":generateData")?.outcome == TaskOutcome.SUCCESS)
-        assert(dir?.let { File(it, "src/gen/kotlin/GeneratedData.kt").exists() } ?: false)
+        result.task(":generateData")?.outcome shouldBe TaskOutcome.SUCCESS
+        dir?.let { File(it, "src/gen/kotlin/GeneratedData.kt").exists() } shouldBe true
     }
 
     private fun runGradleBuild(task: String, build: (File) -> String): BuildResult {
