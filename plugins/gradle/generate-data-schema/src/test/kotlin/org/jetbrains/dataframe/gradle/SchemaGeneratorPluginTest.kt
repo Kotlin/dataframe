@@ -12,7 +12,7 @@ internal class SchemaGeneratorPluginTes {
 
     @Test
     fun `plugin configured via configure`() {
-        val result = runGradleBuild(":generateTest") {
+        val (_, result) = runGradleBuild(":generateTest") {
             """
             import java.net.URL
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -41,7 +41,7 @@ internal class SchemaGeneratorPluginTes {
 
     @Test
     fun `plugin configured via extension DSL`() {
-        val result = runGradleBuild(":generateTest") {
+        val (_, result) = runGradleBuild(":generateTest") {
             """
             import java.net.URL
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -70,7 +70,7 @@ internal class SchemaGeneratorPluginTes {
 
     @Test
     fun `plugin configure multiple schemas from URLs via extension`() {
-        val result = runGradleBuild(":generateAll") {
+        val (_, result) = runGradleBuild(":generateAll") {
             """
             import java.net.URL
             
@@ -108,7 +108,7 @@ internal class SchemaGeneratorPluginTes {
     @Test
     fun `plugin configure multiple schemas from files via extension`() {
         val dataDir = File("../../../data")
-        val result = runGradleBuild(":generateAll") {
+        val (_, result) = runGradleBuild(":generateAll") {
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
@@ -144,7 +144,7 @@ internal class SchemaGeneratorPluginTes {
     @Test
     fun `plugin configure multiple schemas from strings via extension`() {
         val dataDir = File("../../../data")
-        val result = runGradleBuild(":generateAll") { buildDir ->
+        val (_, result) = runGradleBuild(":generateAll") { buildDir ->
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -180,7 +180,7 @@ internal class SchemaGeneratorPluginTes {
     @Test
     fun `compileKotlin depends on generateAll task`() {
         val dataDir = File("../../../data")
-        val result = runGradleBuild(":compileKotlin") { buildDir ->
+        val (_, result) = runGradleBuild(":compileKotlin") { buildDir ->
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
@@ -215,7 +215,7 @@ internal class SchemaGeneratorPluginTes {
 
     @Test
     fun `generated code resolved`() {
-        val result = runGradleBuild(":build") { buildDir ->
+        val (_, result) = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, "data.csv")
             dataFile.writeText(TestData.csvSample)
 
@@ -264,7 +264,7 @@ internal class SchemaGeneratorPluginTes {
 
     @Test
     fun `src is defaulted to main source set`() {
-        val result = runGradleBuild(":build") { buildDir ->
+        val (_, result) = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, "data.csv")
             dataFile.writeText(TestData.csvSample)
 
@@ -312,7 +312,7 @@ internal class SchemaGeneratorPluginTes {
 
     @Test
     fun `interfaceName convention is data file name`() {
-        val result = runGradleBuild(":build") { buildDir ->
+        val (_, result) = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, "data.csv")
             dataFile.writeText(TestData.csvSample)
 
@@ -346,10 +346,8 @@ internal class SchemaGeneratorPluginTes {
 
     @Test
     fun `packageName convention is default package`() {
-        var dir: File? = null
-        val result = runGradleBuild(":build") { buildDir ->
+        val (dir, result) = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, "data.csv")
-            dir = buildDir
             dataFile.writeText(TestData.csvSample)
 
             """
@@ -378,15 +376,13 @@ internal class SchemaGeneratorPluginTes {
             """.trimIndent()
         }
         result.task(":generateData")?.outcome shouldBe TaskOutcome.SUCCESS
-        dir?.let { File(it, "src/gen/kotlin/GeneratedData.kt").exists() } shouldBe true
+        File(dir, "src/gen/kotlin/GeneratedData.kt").exists() shouldBe true
     }
 
     @Test
     fun `fallback all properties to conventions`() {
-        var dir: File? = null
-        val result = runGradleBuild(":build") { buildDir ->
+        val (dir, result) = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, "data.csv")
-            dir = buildDir
             dataFile.writeText(TestData.csvSample)
 
             """
@@ -413,14 +409,14 @@ internal class SchemaGeneratorPluginTes {
             """.trimIndent()
         }
         result.task(":generateData")?.outcome shouldBe TaskOutcome.SUCCESS
-        dir?.let { File(it, "src/gen/kotlin/GeneratedData.kt").exists() } shouldBe true
+        File(dir, "src/gen/kotlin/GeneratedData.kt").exists() shouldBe true
     }
 
-    private fun runGradleBuild(task: String, build: (File) -> String): BuildResult {
+    private fun runGradleBuild(task: String, build: (File) -> String): Build {
         val buildDir = Files.createTempDirectory("test").toFile()
         val buildFile = File(buildDir, "build.gradle.kts")
         buildFile.writeText(build(buildDir))
-        return gradleRunner(buildDir, task).build()
+        return Build(buildDir, gradleRunner(buildDir, task).build())
     }
 
     private fun gradleRunner(buildDir: File, task: String) = GradleRunner.create()
@@ -429,4 +425,6 @@ internal class SchemaGeneratorPluginTes {
         .withPluginClasspath()
         .withArguments(task)
         .withDebug(true)
+
+    data class Build(val buildDir: File, val buildResult: BuildResult)
 }
