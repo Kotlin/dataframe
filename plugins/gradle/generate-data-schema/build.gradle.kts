@@ -22,6 +22,15 @@ gradlePlugin {
     }
 }
 
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>() {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+tasks.withType<JavaCompile>().all {
+    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
+    targetCompatibility = JavaVersion.VERSION_1_8.toString()
+}
+
 dependencies {
     implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin-api")
