@@ -263,7 +263,7 @@ internal class SchemaGeneratorPluginTes {
     }
 
     @Test
-    fun `src is defaulted to main source set`() {
+    fun `src convention is main source set`() {
         val (_, result) = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, "data.csv")
             dataFile.writeText(TestData.csvSample)
@@ -308,6 +308,49 @@ internal class SchemaGeneratorPluginTes {
             """.trimIndent()
         }
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
+    fun `src convention is jvmMain source set for multiplatform project`() {
+        val (buildDir, result) = runGradleBuild(":generateAll") { buildDir ->
+            val dataFile = File(buildDir, "data.csv")
+            dataFile.writeText(TestData.csvSample)
+            """
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                    
+                plugins {
+                    kotlin("multiplatform") version "1.4.10"
+                    id("org.jetbrains.dataframe.schema-generator")
+                }
+                
+                repositories {
+                    mavenCentral() 
+                }
+                
+                kotlin {
+                    jvm()
+                    
+                    sourceSets {
+                        val jvmMain by getting {
+                            dependencies {
+                                implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
+                            }
+                        }
+                    }
+                }
+                
+                schemaGenerator {
+                    schema {
+                        data = "$dataFile"
+                        interfaceName = "Schema"
+                        packageName = ""
+                    }
+                }
+            """.trimIndent()
+
+        }
+        result.task(":generateAll")?.outcome shouldBe TaskOutcome.SUCCESS
+        File(buildDir, "src/jvmMain/gen/GeneratedSchema.kt").exists() shouldBe true
     }
 
     @Test

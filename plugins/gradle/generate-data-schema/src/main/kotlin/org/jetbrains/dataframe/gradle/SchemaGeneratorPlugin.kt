@@ -3,20 +3,21 @@ package org.jetbrains.dataframe.gradle
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
-import org.gradle.kotlin.dsl.getByType
+import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 import java.net.URL
 
 class SchemaGeneratorPlugin : Plugin<Project> {
+
     override fun apply(target: Project) {
         val extension = target.extensions.create<SchemaGeneratorExtension>("schemaGenerator")
-        val defaultSrc = target.file("src/gen/kotlin")
-        registerGeneratedSources(target, defaultSrc)
 
         target.afterEvaluate {
+            val defaultSrc = registerGeneratedSources(target)
             val generationTasks = mutableListOf<GenerateDataSchemaTask>()
             extension.schemas.forEach {
                 val interfaceName = it.interfaceName ?: fileName(it.data)?.capitalize()
@@ -47,9 +48,33 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         }
     }
 
-    private fun registerGeneratedSources(target: Project, directory: File) {
-        val kotlinExtension = target.extensions.getByType<KotlinJvmProjectExtension>()
-        val sourceSet = kotlinExtension.sourceSets.getByName("main")
-        sourceSet.kotlin.srcDir(directory)
+    private fun registerGeneratedSources(target: Project): File? {
+        return listOf(::defaultJvmSrc, ::defaultMultiplatformSrc)
+            .asSequence()
+            .map { config -> config(target) }
+            .filterNotNull()
+            .firstOrNull()
     }
+
+    private fun defaultMultiplatformSrc(project: Project): File? {
+        return project.extensions.findByType<KotlinMultiplatformExtension>()?.let {
+            it.sourceSets.findByName("jvmMain")?.let { jvmMain ->
+                val directory = project.file("src/jvmMain/gen")
+                jvmMain.kotlin.srcDir(directory)
+                directory
+            }
+        }
+    }
+
+    private fun defaultJvmSrc(project: Project): File? {
+        return project.extensions.findByType<KotlinJvmProjectExtension>()?.let {
+            it.sourceSets.findByName("main")?.let { main ->
+                val directory = project.file("src/main/gen")
+                main.kotlin.srcDir(directory)
+                directory
+            }
+        }
+    }
+
+
 }
