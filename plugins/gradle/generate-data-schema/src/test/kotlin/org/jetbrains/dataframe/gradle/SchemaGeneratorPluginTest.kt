@@ -453,51 +453,6 @@ internal class SchemaGeneratorPluginTes {
         result.task(":generateData")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
-    @Test
-    fun `dependency on dataframe added`() {
-        val (_, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
-            dataFile.writeText(TestData.csvSample)
-
-            val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
-            val main = File(kotlin, "Main.kt")
-            main.writeText("""
-                import org.jetbrains.dataframe.DataFrame
-                import org.jetbrains.dataframe.io.read
-                import org.jetbrains.dataframe.typed
-                import org.jetbrains.dataframe.filter
-                
-                fun main() {
-                    val df = DataFrame.read("$dataFile").typed<Schema>()
-                    val df1 = df.filter { age != null }
-                }
-            """.trimIndent())
-
-            """
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    kotlin("jvm") version "1.4.10"
-                    id("org.jetbrains.dataframe.schema-generator")
-                }
-                
-                repositories {
-                    mavenCentral() 
-                }
-                
-                schemaGenerator {
-                    schema {
-                        data = "$dataFile"
-                        interfaceName = "Schema"
-                        packageName = ""
-                        src = file("src/gen/kotlin")
-                    }
-                }
-            """.trimIndent()
-        }
-        result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
-    }
-
     private fun runGradleBuild(task: String, build: (File) -> String): Build {
         val buildDir = Files.createTempDirectory("test").toFile()
         val buildFile = File(buildDir, "build.gradle.kts")
