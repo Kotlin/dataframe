@@ -25,7 +25,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             val defaultSrc = registerGeneratedSources(target)
             val generationTasks = mutableListOf<GenerateDataSchemaTask>()
             extension.schemas.forEach {
-                val interfaceName = it.interfaceName ?: fileName(it.data)?.capitalize()
+                val interfaceName = it.name ?: fileName(it.data)?.capitalize()
                 val task = target.tasks.create("generate${interfaceName}", GenerateDataSchemaTask::class.java) {
                     src.convention(defaultSrc)
                     data.set(it.data)

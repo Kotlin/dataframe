@@ -30,7 +30,7 @@ internal class SchemaGeneratorPluginTes {
                 schema {
                     src = buildDir
                     data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
-                    interfaceName = "Test"
+                    name = "Test"
                     packageName = "org.test"
                 }
             }
@@ -59,7 +59,7 @@ internal class SchemaGeneratorPluginTes {
                 schema {
                     src = buildDir
                     data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
-                    interfaceName = "Test"
+                    name = "Test"
                     packageName = "org.test"
                 }
             }
@@ -89,13 +89,13 @@ internal class SchemaGeneratorPluginTes {
                 schema {
                     src = buildDir
                     data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
-                    interfaceName = "Test"
+                    name = "Test"
                     packageName = "org.test"
                 }
                 schema {
                     src = buildDir
                     data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/ghost.json")
-                    interfaceName = "Schema"
+                    name = "Schema"
                     packageName = "org.test"
                 }
             }
@@ -125,13 +125,13 @@ internal class SchemaGeneratorPluginTes {
                 schema {
                     src = buildDir
                     data = File("$dataDir/ghost.json")
-                    interfaceName = "Test"
+                    name = "Test"
                     packageName = "org.test"
                 }
                 schema {
                     src = buildDir
                     data = File("$dataDir/playlistItems.json")
-                    interfaceName = "Schema"
+                    name = "Schema"
                     packageName = "org.test"
                 }
             }
@@ -161,13 +161,13 @@ internal class SchemaGeneratorPluginTes {
                 schema {
                     src = buildDir
                     data = "$dataDir/ghost.json"
-                    interfaceName = "Test"
+                    name = "Test"
                     packageName = "org.test"
                 }
                 schema {
                     src = buildDir
                     data = "$dataDir/playlistItems.json"
-                    interfaceName = "Schema"
+                    name = "Schema"
                     packageName = "org.test"
                 }
             }
@@ -197,13 +197,13 @@ internal class SchemaGeneratorPluginTes {
                 schema {
                     src = buildDir
                     data = File("$dataDir/ghost.json")
-                    interfaceName = "Test"
+                    name = "Test"
                     packageName = "org.test"
                 }
                 schema {
                     src = buildDir
                     data = File("$dataDir/playlistItems.json")
-                    interfaceName = "Schema"
+                    name = "Schema"
                     packageName = "org.test"
                 }
             }
@@ -253,7 +253,7 @@ internal class SchemaGeneratorPluginTes {
                     schema {
                         data = "$dataFile"
                         src = File("$kotlin")
-                        interfaceName = "Schema"
+                        name = "Schema"
                         packageName = ""
                     }
                 }
@@ -301,7 +301,7 @@ internal class SchemaGeneratorPluginTes {
                 schemaGenerator {
                     schema {
                         data = "$dataFile"
-                        interfaceName = "Schema"
+                        name = "Schema"
                         packageName = ""
                     }
                 }
@@ -342,7 +342,7 @@ internal class SchemaGeneratorPluginTes {
                 schemaGenerator {
                     schema {
                         data = "$dataFile"
-                        interfaceName = "Schema"
+                        name = "Schema"
                         packageName = ""
                     }
                 }
@@ -353,7 +353,7 @@ internal class SchemaGeneratorPluginTes {
     }
 
     @Test
-    fun `interfaceName convention is data file name`() {
+    fun `name convention is data file name`() {
         val (_, result) = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, "data.csv")
             dataFile.writeText(TestData.csvSample)
@@ -412,7 +412,7 @@ internal class SchemaGeneratorPluginTes {
                     schema {
                         data = "$dataFile"
                         src = file("src/gen/kotlin")
-                        interfaceName = "Data"
+                        name = "Data"
                     }
                 }
             """.trimIndent()
