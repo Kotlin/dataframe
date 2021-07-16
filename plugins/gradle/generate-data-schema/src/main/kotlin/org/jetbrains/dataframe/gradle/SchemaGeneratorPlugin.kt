@@ -10,13 +10,18 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 import java.net.URL
+import java.util.concurrent.atomic.AtomicBoolean
 
 class SchemaGeneratorPlugin : Plugin<Project> {
+    private val kotlin = AtomicBoolean(false)
 
     override fun apply(target: Project) {
         val extension = target.extensions.create<SchemaGeneratorExtension>("schemaGenerator")
-
+        kotlin.set(KOTLIN_PLUGINS.any { target.plugins.hasPlugin(it) })
         target.afterEvaluate {
+            if (!kotlin.get()) {
+                target.logger.warn("Schema generator plugin applied, but no Kotlin plugin was found")
+            }
             val defaultSrc = registerGeneratedSources(target)
             val generationTasks = mutableListOf<GenerateDataSchemaTask>()
             extension.schemas.forEach {
@@ -76,5 +81,11 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         }
     }
 
-
+    private companion object {
+        private val KOTLIN_PLUGINS = listOf(
+            "org.jetbrains.kotlin.jvm",
+            "org.jetbrains.kotlin.android",
+            "org.jetbrains.kotlin.multiplatform"
+        )
+    }
 }
