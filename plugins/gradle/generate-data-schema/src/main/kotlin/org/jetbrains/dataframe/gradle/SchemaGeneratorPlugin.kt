@@ -31,6 +31,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                     data.set(it.data)
                     this.interfaceName.set(interfaceName)
                     packageName.set(it.packageName)
+                    generateExtensionProperties.set(extension.generateExtensionProperties)
                     src.set(it.src)
                 }
                 generationTasks.add(task)
