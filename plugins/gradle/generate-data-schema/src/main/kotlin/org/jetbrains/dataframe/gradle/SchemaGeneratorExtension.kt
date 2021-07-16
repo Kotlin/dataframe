@@ -3,6 +3,7 @@ package org.jetbrains.dataframe.gradle
 import java.io.File
 
 open class SchemaGeneratorExtension {
+    var generateExtensionProperties: Boolean = true
     val schemas: MutableList<Schema> = mutableListOf()
 
     fun schema(config: Schema.() -> Unit) {
