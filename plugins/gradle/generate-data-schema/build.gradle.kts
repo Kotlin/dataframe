@@ -22,14 +22,6 @@ gradlePlugin {
     }
 }
 
-tasks.withType<ProcessResources> {
-    filesMatching("**/plugin.properties") {
-        filter {
-            it.replace("%DATAFRAME_VERSION%", "0.7.3-dev-277-0.10.0.53")
-        }
-    }
-}
-
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>() {
     kotlinOptions.jvmTarget = "1.8"
 }
