@@ -15,6 +15,6 @@ open class SchemaGeneratorExtension {
 class Schema(
     var data: Any? = null,
     var src: File? = null,
-    var interfaceName: String? = null,
+    var name: String? = null,
     var packageName: String = ""
 )
