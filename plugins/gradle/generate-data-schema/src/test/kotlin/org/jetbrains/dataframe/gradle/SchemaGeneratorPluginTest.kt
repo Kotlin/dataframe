@@ -27,7 +27,6 @@ internal class SchemaGeneratorPluginTes {
 
             configure<SchemaGeneratorExtension> {
                 schema {
-                    src = buildDir
                     data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
                     name = "Test"
                     packageName = "org.test"
@@ -56,7 +55,6 @@ internal class SchemaGeneratorPluginTes {
 
             schemaGenerator {
                 schema {
-                    src = buildDir
                     data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
                     name = "Test"
                     packageName = "org.test"
@@ -86,13 +84,11 @@ internal class SchemaGeneratorPluginTes {
 
             schemaGenerator {
                 schema {
-                    src = buildDir
                     data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
                     name = "Test"
                     packageName = "org.test"
                 }
                 schema {
-                    src = buildDir
                     data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/ghost.json")
                     name = "Schema"
                     packageName = "org.test"
@@ -122,13 +118,11 @@ internal class SchemaGeneratorPluginTes {
 
             schemaGenerator {
                 schema {
-                    src = buildDir
                     data = File("$dataDir/ghost.json")
                     name = "Test"
                     packageName = "org.test"
                 }
                 schema {
-                    src = buildDir
                     data = File("$dataDir/playlistItems.json")
                     name = "Schema"
                     packageName = "org.test"
@@ -158,13 +152,11 @@ internal class SchemaGeneratorPluginTes {
 
             schemaGenerator {
                 schema {
-                    src = buildDir
                     data = "$dataDir/ghost.json"
                     name = "Test"
                     packageName = "org.test"
                 }
                 schema {
-                    src = buildDir
                     data = "$dataDir/playlistItems.json"
                     name = "Schema"
                     packageName = "org.test"
@@ -191,16 +183,18 @@ internal class SchemaGeneratorPluginTes {
             repositories {
                 mavenCentral() 
             }
+            
+            dependencies {
+                implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
+            }
 
             schemaGenerator {
                 schema {
-                    src = buildDir
                     data = File("$dataDir/ghost.json")
                     name = "Test"
                     packageName = "org.test"
                 }
                 schema {
-                    src = buildDir
                     data = File("$dataDir/playlistItems.json")
                     name = "Schema"
                     packageName = "org.test"
@@ -251,7 +245,6 @@ internal class SchemaGeneratorPluginTes {
                 schemaGenerator {
                     schema {
                         data = "$dataFile"
-                        src = File("$kotlin")
                         name = "Schema"
                         packageName = ""
                     }
@@ -259,96 +252,6 @@ internal class SchemaGeneratorPluginTes {
             """.trimIndent()
         }
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
-    }
-
-    @Test
-    fun `src convention is main source set`() {
-        val (_, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
-            dataFile.writeText(TestData.csvSample)
-
-            val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
-            val main = File(kotlin, "Main.kt")
-            main.writeText("""
-                import org.jetbrains.dataframe.DataFrame
-                import org.jetbrains.dataframe.io.read
-                import org.jetbrains.dataframe.typed
-                import org.jetbrains.dataframe.filter
-                
-                fun main() {
-                    val df = DataFrame.read("$dataFile").typed<Schema>()
-                    val df1 = df.filter { age != null }
-                }
-            """.trimIndent())
-
-            """
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    kotlin("jvm") version "1.4.10"
-                    id("org.jetbrains.dataframe.schema-generator")
-                }
-                
-                repositories {
-                    mavenCentral() 
-                }
-                
-                dependencies {
-                    implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
-                }
-                
-                schemaGenerator {
-                    schema {
-                        data = "$dataFile"
-                        name = "Schema"
-                        packageName = ""
-                    }
-                }
-            """.trimIndent()
-        }
-        result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
-    }
-
-    @Test
-    fun `src convention is jvmMain source set for multiplatform project`() {
-        val (_, result) = runGradleBuild(":generateAll") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
-            dataFile.writeText(TestData.csvSample)
-            """
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    kotlin("multiplatform") version "1.4.10"
-                    id("org.jetbrains.dataframe.schema-generator")
-                }
-                
-                repositories {
-                    mavenCentral() 
-                }
-                
-                kotlin {
-                    jvm()
-                    
-                    sourceSets {
-                        val jvmMain by getting {
-                            dependencies {
-                                implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
-                            }
-                        }
-                    }
-                }
-                
-                schemaGenerator {
-                    schema {
-                        data = "$dataFile"
-                        name = "Schema"
-                        packageName = ""
-                    }
-                }
-            """.trimIndent()
-
-        }
-        result.task(":generateAll")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test

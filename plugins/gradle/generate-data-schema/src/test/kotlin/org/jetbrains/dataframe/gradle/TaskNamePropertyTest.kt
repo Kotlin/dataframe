@@ -51,7 +51,6 @@ class TaskNamePropertyTest {
                 schemaGenerator {
                     schema {
                         data = "$dataFile"
-                        src = file("src/main/kotlin")
                         packageName = ""
                     }
                 }

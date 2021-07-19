@@ -6,6 +6,7 @@ open class SchemaGeneratorExtension {
     var generateExtensionProperties: Boolean = true
     val schemas: MutableList<Schema> = mutableListOf()
     var packageName: String? = null
+    var sourceSet: String? = null
 
     fun schema(config: Schema.() -> Unit) {
         val schema = Schema().apply(config)
@@ -17,5 +18,6 @@ class Schema(
     var data: Any? = null,
     var src: File? = null,
     var name: String? = null,
-    var packageName: String? = null
+    var packageName: String? = null,
+    var sourceSet: String? = null
 )

@@ -85,7 +85,6 @@ class TaskPackageNamePropertyTest {
             schema {
                 data = "123"
                 name = "`[org]`.321"
-                src = project.projectDir
             }
         }
         shouldThrow<ProjectConfigurationException> {
@@ -103,7 +102,6 @@ class TaskPackageNamePropertyTest {
             schema {
                 data = "123"
                 name = "321"
-                src = project.projectDir
             }
         }
         project.evaluate()
@@ -135,7 +133,6 @@ class TaskPackageNamePropertyTest {
                 schemaGenerator {
                     schema {
                         data = "$dataFile"
-                        src = file("src/main/kotlin")
                         name = "Data"
                     }
                 }
