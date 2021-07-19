@@ -3,7 +3,6 @@ package org.jetbrains.dataframe.gradle
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
-import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
@@ -33,7 +32,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                     ?.let { name -> extractPackageName(name) }
                     ?: schema.packageName
                     ?: extension.packageName
-                    ?: ""
+                    ?: inferPackageName()
 
                 val task = target.tasks.create("generate${interfaceName}", GenerateDataSchemaTask::class.java) {
                     src.convention(defaultSrc)
@@ -75,35 +74,58 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         return packageName
     }
 
-    private fun registerGeneratedSources(target: Project): File? {
-        return listOf(::defaultJvmSrc, ::defaultMultiplatformSrc)
-            .asSequence()
-            .map { config -> config(target) }
+    private fun Project.inferPackageName(): String? {
+        return KOTLIN_EXTENSIONS
+            .map {
+                extensions
+                    .findByType(it.extensionClass)
+                    ?.sourceSets
+                    ?.getByName(it.name)
+                    ?.let { sourceSet -> inferPackageName(sourceSet) }
+            }
             .filterNotNull()
             .firstOrNull()
     }
 
-    private fun defaultMultiplatformSrc(project: Project): File? {
-        return project.extensions.findByType<KotlinMultiplatformExtension>()?.let {
-            it.sourceSets.findByName("jvmMain")?.let { jvmMain ->
-                val directory = project.file("src/jvmMain/gen")
-                jvmMain.kotlin.srcDir(directory)
-                directory
+    private fun inferPackageName(sourceSet: KotlinSourceSet): String? {
+        val isKotlinRoot = { f: File -> f.absolutePath.contains("/src/${sourceSet.name}/kotlin") }
+        val root = sourceSet.kotlin.sourceDirectories.firstOrNull(isKotlinRoot)?.absoluteFile ?: return null
+        val node = root.findDeepestCommonSubdirectory()
+        val parentPath = root.absolutePath
+        return node.absolutePath
+            .removePrefix(parentPath)
+            .removePrefix(File.separator)
+            .replace(File.separatorChar, '.')
+            .let {
+                if (it.isEmpty()) "dataframe" else "$it.dataframe"
             }
-        }
     }
 
-    private fun defaultJvmSrc(project: Project): File? {
-        return project.extensions.findByType<KotlinJvmProjectExtension>()?.let {
-            it.sourceSets.findByName("main")?.let { main ->
-                val directory = project.file("src/main/gen")
-                main.kotlin.srcDir(directory)
-                directory
+    private fun registerGeneratedSources(target: Project): File? {
+        return KOTLIN_EXTENSIONS
+            .map { it.apply(target) }
+            .filterNotNull()
+            .firstOrNull()
+    }
+
+    private class SourceSetConfiguration<T: KotlinProjectExtension>(
+        val extensionClass: Class<T>, val name: String, val path: String
+    ) {
+        fun apply(project: Project): File? {
+            return project.extensions.findByType(extensionClass)?.let {
+                it.sourceSets.findByName(name)?.let { sourceSet ->
+                    project.file(path)
+                }
             }
         }
     }
 
     private companion object {
+        private val KOTLIN_EXTENSIONS = sequenceOf(
+            SourceSetConfiguration(KotlinJvmProjectExtension::class.java, "main", "src/main/kotlin"),
+            SourceSetConfiguration(KotlinMultiplatformExtension::class.java, "jvmMain", "src/jvmMain/kotlin"),
+        )
+
         private val KOTLIN_PLUGINS = listOf(
             "org.jetbrains.kotlin.jvm",
             "org.jetbrains.kotlin.android",
