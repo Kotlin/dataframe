@@ -23,7 +23,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             if (!kotlin.get()) {
                 target.logger.warn("Schema generator plugin applied, but no Kotlin plugin was found")
             }
-            val defaultSrc = registerGeneratedSources(target)
+            val defaultSrc by lazy { extension.sourceSet?.let { findKotlinRootForSourceSet(target, it) } }
             val generationTasks = mutableListOf<GenerateDataSchemaTask>()
             extension.schemas.forEach { schema ->
                 val interfaceName = schema.name?.substringAfterLast('.') ?: fileName(schema.data)?.capitalize()
@@ -34,13 +34,17 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                     ?: extension.packageName
                     ?: inferPackageName()
 
+                val src = schema.src
+                    ?: schema.sourceSet?.let { sourceSet -> findKotlinRootForSourceSet(target, sourceSet) }
+                    ?: defaultSrc
+                    ?: (findDefaultRoot(target) ?: error("Couldn't find default root. Please specify src for task $interfaceName"))
+
                 val task = target.tasks.create("generate${interfaceName}", GenerateDataSchemaTask::class.java) {
-                    src.convention(defaultSrc)
                     data.set(schema.data)
                     this.interfaceName.set(interfaceName)
                     this.packageName.set(packageName)
+                    this.src.set(src)
                     generateExtensionProperties.set(extension.generateExtensionProperties)
-                    src.set(schema.src)
                 }
                 generationTasks.add(task)
             }
@@ -80,7 +84,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 extensions
                     .findByType(it.extensionClass)
                     ?.sourceSets
-                    ?.getByName(it.name)
+                    ?.getByName(it.defaultSourceSet)
                     ?.let { sourceSet -> inferPackageName(sourceSet) }
             }
             .filterNotNull()
@@ -101,19 +105,29 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             }
     }
 
-    private fun registerGeneratedSources(target: Project): File? {
+    private fun findKotlinRootForSourceSet(target: Project, sourceSet: String): File {
         return KOTLIN_EXTENSIONS
-            .map { it.apply(target) }
+            .map { it.apply(target, sourceSet) }
             .filterNotNull()
             .firstOrNull()
+            ?: error("SourceSet $sourceSet not found in $target")
+    }
+
+    private fun findDefaultRoot(project: Project): File? {
+        for (sourceSetConfiguration in KOTLIN_EXTENSIONS) {
+            val extension = project.extensions.findByType(sourceSetConfiguration.extensionClass) ?: continue
+            extension.sourceSets.getByName(sourceSetConfiguration.defaultSourceSet)
+            return project.file(sourceSetConfiguration.path)
+        }
+        return null
     }
 
     private class SourceSetConfiguration<T: KotlinProjectExtension>(
-        val extensionClass: Class<T>, val name: String, val path: String
+        val extensionClass: Class<T>, val defaultSourceSet: String, val path: String
     ) {
-        fun apply(project: Project): File? {
+        fun apply(project: Project, sourceSet: String?): File? {
             return project.extensions.findByType(extensionClass)?.let {
-                it.sourceSets.findByName(name)?.let { sourceSet ->
+                it.sourceSets.findByName(sourceSet ?: defaultSourceSet)?.let { sourceSet ->
                     project.file(path)
                 }
             }
