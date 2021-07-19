@@ -1,6 +1,9 @@
 package org.jetbrains.dataframe.gradle
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import org.gradle.api.ProjectConfigurationException
 import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.BuildResult
@@ -430,6 +433,70 @@ internal class SchemaGeneratorPluginTes {
         }
         project.evaluate()
         (project.tasks.getByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
+    }
+
+    @Test
+    fun `task name is last part of FQ name`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            packageName = "org.example.test"
+            schema {
+                data = "123"
+                name = "org.example.my.321"
+                src = project.projectDir
+            }
+        }
+        project.evaluate()
+        (project.tasks.findByName("generate321") shouldNotBe null)
+    }
+
+    @Test
+    fun `task packageName convention is package part of FQ name`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            packageName = "org.example.test"
+            schema {
+                data = "123"
+                name = "org.example.my.321"
+                src = project.projectDir
+            }
+        }
+        project.evaluate()
+        (project.tasks.findByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
+    }
+
+    @Test
+    fun `name package part overrides packageName`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            schema {
+                data = "123"
+                packageName = "org.example.test"
+                name = "org.example.my.321"
+                src = project.projectDir
+            }
+        }
+        project.evaluate()
+        (project.tasks.findByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
+    }
+
+    @Test
+    fun `illegal characters in package part of name cause exception`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            schema {
+                data = "123"
+                name = "`[org]`.321"
+                src = project.projectDir
+            }
+        }
+        shouldThrow<ProjectConfigurationException> {
+            project.evaluate()
+        }
     }
 
     @Test
