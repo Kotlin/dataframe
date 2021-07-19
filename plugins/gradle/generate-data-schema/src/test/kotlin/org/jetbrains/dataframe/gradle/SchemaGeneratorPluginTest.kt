@@ -1,6 +1,8 @@
 package org.jetbrains.dataframe.gradle
 
 import io.kotest.matchers.shouldBe
+import org.gradle.api.internal.project.ProjectInternal
+import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
@@ -350,6 +352,84 @@ internal class SchemaGeneratorPluginTes {
 
         }
         result.task(":generateAll")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
+    fun `plugin doesn't break multiplatform build without JVM`() {
+        val (_, result) = runGradleBuild(":build") { buildDir ->
+            val dataFile = File(buildDir, "data.csv")
+            val kotlin = File(buildDir, "src/jsMain/kotlin").also { it.mkdirs() }
+            val main = File(kotlin, "Main.kt")
+            main.writeText("""
+                fun main() {
+                    console.log("Hello, Kotlin/JS!")
+                }
+            """.trimIndent())
+            dataFile.writeText(TestData.csvSample)
+            """
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                    
+                plugins {
+                    kotlin("multiplatform") version "1.4.10"
+                    id("org.jetbrains.dataframe.schema-generator")
+                }
+                
+                repositories {
+                    mavenCentral() 
+                }
+                
+                kotlin {
+                    sourceSets {
+                        js {
+                            browser()
+                        }
+                    }
+                }
+                
+                schemaGenerator {
+                    schema {
+                        data = "$dataFile"
+                        name = "Schema"
+                        packageName = ""
+                        src = file("$buildDir")
+                    }
+                }
+            """.trimIndent()
+        }
+        result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
+    fun `task inherit default packageName from extension`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            packageName = "org.example.test"
+            schema {
+                data = "123"
+                name = "321"
+                src = project.projectDir
+            }
+        }
+        project.evaluate()
+        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.test"
+    }
+
+    @Test
+    fun `task packageName overrides packageName from extension`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            packageName = "org.example.test"
+            schema {
+                data = "123"
+                packageName = "org.example.my"
+                name = "321"
+                src = project.projectDir
+            }
+        }
+        project.evaluate()
+        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
     }
 
     @Test

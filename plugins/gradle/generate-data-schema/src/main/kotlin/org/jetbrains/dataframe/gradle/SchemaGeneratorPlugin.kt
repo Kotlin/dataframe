@@ -7,6 +7,8 @@ import org.gradle.kotlin.dsl.findByType
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
+import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 import java.net.URL
@@ -24,15 +26,20 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             }
             val defaultSrc = registerGeneratedSources(target)
             val generationTasks = mutableListOf<GenerateDataSchemaTask>()
-            extension.schemas.forEach {
-                val interfaceName = it.name ?: fileName(it.data)?.capitalize()
+            extension.schemas.forEach { schema ->
+                val interfaceName = schema.name ?: fileName(schema.data)?.capitalize()
+
+                val packageName = schema.packageName
+                    ?: extension.packageName
+                    ?: ""
+
                 val task = target.tasks.create("generate${interfaceName}", GenerateDataSchemaTask::class.java) {
                     src.convention(defaultSrc)
-                    data.set(it.data)
+                    data.set(schema.data)
                     this.interfaceName.set(interfaceName)
-                    packageName.set(it.packageName)
+                    this.packageName.set(packageName)
                     generateExtensionProperties.set(extension.generateExtensionProperties)
-                    src.set(it.src)
+                    src.set(schema.src)
                 }
                 generationTasks.add(task)
             }
@@ -52,6 +59,12 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             is File -> extractFileName(data)
             else -> throw IllegalArgumentException("data for schema must be File, URL or String, but was ${data?.javaClass ?: ""}($data)")
         }
+    }
+
+    private fun extractPackageName(fqName: String): String? {
+        return fqName
+            .substringBeforeLast('.')
+            .takeIf { it != fqName && it.isPackageJvmIdentifier() }
     }
 
     private fun registerGeneratedSources(target: Project): File? {
