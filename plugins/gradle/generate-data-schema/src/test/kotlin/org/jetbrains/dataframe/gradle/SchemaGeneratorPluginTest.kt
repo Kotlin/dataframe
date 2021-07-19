@@ -9,6 +9,7 @@ import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
 import org.junit.Test
 import java.io.File
 import java.nio.file.Files
@@ -500,6 +501,23 @@ internal class SchemaGeneratorPluginTes {
     }
 
     @Test
+    fun `task infers packageName from directory structure`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.plugins.apply(KotlinPlatformJvmPlugin::class.java)
+        File(project.projectDir, "/src/main/kotlin/org/test/").also { it.mkdirs() }
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            schema {
+                data = "123"
+                name = "321"
+                src = project.projectDir
+            }
+        }
+        project.evaluate()
+        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.test.dataframe"
+    }
+
+    @Test
     fun `name convention is data file name`() {
         val (_, result) = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, "data.csv")
@@ -524,7 +542,7 @@ internal class SchemaGeneratorPluginTes {
                 schemaGenerator {
                     schema {
                         data = "$dataFile"
-                        src = file("src/gen/kotlin")
+                        src = file("src/main/kotlin")
                         packageName = ""
                     }
                 }
@@ -534,7 +552,7 @@ internal class SchemaGeneratorPluginTes {
     }
 
     @Test
-    fun `packageName convention is default package`() {
+    fun `packageName convention is 'dataframe'`() {
         val (dir, result) = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, "data.csv")
             dataFile.writeText(TestData.csvSample)
@@ -558,14 +576,14 @@ internal class SchemaGeneratorPluginTes {
                 schemaGenerator {
                     schema {
                         data = "$dataFile"
-                        src = file("src/gen/kotlin")
+                        src = file("src/main/kotlin")
                         name = "Data"
                     }
                 }
             """.trimIndent()
         }
         result.task(":generateData")?.outcome shouldBe TaskOutcome.SUCCESS
-        File(dir, "src/gen/kotlin/GeneratedData.kt").exists() shouldBe true
+        File(dir, "src/main/kotlin/dataframe/GeneratedData.kt").exists() shouldBe true
     }
 
     @Test
