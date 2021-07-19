@@ -3,16 +3,11 @@ package org.jetbrains.dataframe.gradle
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.gradle.api.ProjectConfigurationException
 import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.testfixtures.ProjectBuilder
-import org.gradle.testkit.runner.BuildResult
-import org.gradle.testkit.runner.GradleRunner
 import org.gradle.testkit.runner.TaskOutcome
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
 import org.junit.Test
 import java.io.File
-import java.nio.file.Files
 
 internal class SchemaGeneratorPluginTes {
 
@@ -404,39 +399,6 @@ internal class SchemaGeneratorPluginTes {
     }
 
     @Test
-    fun `task inherit default packageName from extension`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
-        project.plugins.apply(SchemaGeneratorPlugin::class.java)
-        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
-            packageName = "org.example.test"
-            schema {
-                data = "123"
-                name = "321"
-                src = project.projectDir
-            }
-        }
-        project.evaluate()
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.test"
-    }
-
-    @Test
-    fun `task packageName overrides packageName from extension`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
-        project.plugins.apply(SchemaGeneratorPlugin::class.java)
-        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
-            packageName = "org.example.test"
-            schema {
-                data = "123"
-                packageName = "org.example.my"
-                name = "321"
-                src = project.projectDir
-            }
-        }
-        project.evaluate()
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
-    }
-
-    @Test
     fun `task name is last part of FQ name`() {
         val project = ProjectBuilder.builder().build() as ProjectInternal
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
@@ -450,71 +412,6 @@ internal class SchemaGeneratorPluginTes {
         }
         project.evaluate()
         (project.tasks.findByName("generate321") shouldNotBe null)
-    }
-
-    @Test
-    fun `task packageName convention is package part of FQ name`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
-        project.plugins.apply(SchemaGeneratorPlugin::class.java)
-        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
-            packageName = "org.example.test"
-            schema {
-                data = "123"
-                name = "org.example.my.321"
-                src = project.projectDir
-            }
-        }
-        project.evaluate()
-        (project.tasks.findByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
-    }
-
-    @Test
-    fun `name package part overrides packageName`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
-        project.plugins.apply(SchemaGeneratorPlugin::class.java)
-        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
-            schema {
-                data = "123"
-                packageName = "org.example.test"
-                name = "org.example.my.321"
-                src = project.projectDir
-            }
-        }
-        project.evaluate()
-        (project.tasks.findByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
-    }
-
-    @Test
-    fun `illegal characters in package part of name cause exception`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
-        project.plugins.apply(SchemaGeneratorPlugin::class.java)
-        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
-            schema {
-                data = "123"
-                name = "`[org]`.321"
-                src = project.projectDir
-            }
-        }
-        shouldThrow<ProjectConfigurationException> {
-            project.evaluate()
-        }
-    }
-
-    @Test
-    fun `task infers packageName from directory structure`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
-        project.plugins.apply(SchemaGeneratorPlugin::class.java)
-        project.plugins.apply(KotlinPlatformJvmPlugin::class.java)
-        File(project.projectDir, "/src/main/kotlin/org/test/").also { it.mkdirs() }
-        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
-            schema {
-                data = "123"
-                name = "321"
-                src = project.projectDir
-            }
-        }
-        project.evaluate()
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.test.dataframe"
     }
 
     @Test
@@ -552,41 +449,6 @@ internal class SchemaGeneratorPluginTes {
     }
 
     @Test
-    fun `packageName convention is 'dataframe'`() {
-        val (dir, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
-            dataFile.writeText(TestData.csvSample)
-
-            """
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    kotlin("jvm") version "1.4.10"
-                    id("org.jetbrains.dataframe.schema-generator")
-                }
-                
-                repositories {
-                    mavenCentral() 
-                }
-                
-                dependencies {
-                    implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
-                }
-                
-                schemaGenerator {
-                    schema {
-                        data = "$dataFile"
-                        src = file("src/main/kotlin")
-                        name = "Data"
-                    }
-                }
-            """.trimIndent()
-        }
-        result.task(":generateData")?.outcome shouldBe TaskOutcome.SUCCESS
-        File(dir, "src/main/kotlin/dataframe/GeneratedData.kt").exists() shouldBe true
-    }
-
-    @Test
     fun `fallback all properties to conventions`() {
         val (_, result) = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, "data.csv")
@@ -617,20 +479,4 @@ internal class SchemaGeneratorPluginTes {
         }
         result.task(":generateData")?.outcome shouldBe TaskOutcome.SUCCESS
     }
-
-    private fun runGradleBuild(task: String, build: (File) -> String): Build {
-        val buildDir = Files.createTempDirectory("test").toFile()
-        val buildFile = File(buildDir, "build.gradle.kts")
-        buildFile.writeText(build(buildDir))
-        return Build(buildDir, gradleRunner(buildDir, task).build())
-    }
-
-    private fun gradleRunner(buildDir: File, task: String) = GradleRunner.create()
-        .withProjectDir(buildDir)
-        .withGradleVersion("7.0")
-        .withPluginClasspath()
-        .withArguments(task)
-        .withDebug(true)
-
-    data class Build(val buildDir: File, val buildResult: BuildResult)
 }
