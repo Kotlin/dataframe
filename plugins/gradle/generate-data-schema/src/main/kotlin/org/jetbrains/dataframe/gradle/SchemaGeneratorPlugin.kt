@@ -27,9 +27,11 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             val defaultSrc = registerGeneratedSources(target)
             val generationTasks = mutableListOf<GenerateDataSchemaTask>()
             extension.schemas.forEach { schema ->
-                val interfaceName = schema.name ?: fileName(schema.data)?.capitalize()
+                val interfaceName = schema.name?.substringAfterLast('.') ?: fileName(schema.data)?.capitalize()
 
-                val packageName = schema.packageName
+                val packageName = schema.name
+                    ?.let { name -> extractPackageName(name) }
+                    ?: schema.packageName
                     ?: extension.packageName
                     ?: ""
 
@@ -62,9 +64,15 @@ class SchemaGeneratorPlugin : Plugin<Project> {
     }
 
     private fun extractPackageName(fqName: String): String? {
-        return fqName
+        val packageName = fqName
             .substringBeforeLast('.')
-            .takeIf { it != fqName && it.isPackageJvmIdentifier() }
+            .takeIf { it != fqName }
+        if (packageName != null) {
+            check(packageName.isPackageJvmIdentifier()) {
+                "Package part '$packageName' of name='$fqName' is not a valid package identifier for Kotlin JVM"
+            }
+        }
+        return packageName
     }
 
     private fun registerGeneratedSources(target: Project): File? {
