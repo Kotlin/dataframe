@@ -9,12 +9,70 @@ import org.gradle.api.ProjectConfigurationException
 import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.TaskOutcome
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
 import org.junit.Test
 import java.io.File
 
 class TaskSourceSetPropertyTest {
     @Test
+    fun `extension sourceSet present in project`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.plugins.apply(KotlinPlatformJvmPlugin::class.java)
+        project.extensions.getByType(KotlinJvmProjectExtension::class.java).apply {
+            sourceSets.create("main1")
+        }
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            sourceSet = "main1"
+            schema {
+                data = "123"
+                name = "org.example.my.321"
+            }
+        }
+        shouldNotThrow<ProjectConfigurationException> {
+            project.evaluate()
+        }
+        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).dataSchema.get()
+            .shouldBe(project.file("src/main1/kotlin/org/example/my/Generated321.kt"))
+    }
+
+    @Test
     fun `extension sourceSet not present in project`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.plugins.apply(KotlinPlatformJvmPlugin::class.java)
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            sourceSet = "main1"
+            schema {
+                data = "123"
+                name = "org.example.my.321"
+            }
+        }
+        val exception = shouldThrow<ProjectConfigurationException> {
+            project.evaluate()
+        }
+        exception.causes.single().message shouldContain "KotlinSourceSet with name 'main1' not found"
+    }
+
+    @Test
+    fun `extension sourceSet not specified`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.plugins.apply(KotlinPlatformJvmPlugin::class.java)
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            schema {
+                data = "123"
+                name = "org.example.my.321"
+            }
+        }
+        project.evaluate()
+        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).dataSchema.get()
+            .shouldBe(project.file("src/main/kotlin/org/example/my/Generated321.kt"))
+    }
+
+    @Test
+    fun `extension sourceSet specified but no kotlin plugin found`() {
         val project = ProjectBuilder.builder().build() as ProjectInternal
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
@@ -47,6 +105,8 @@ class TaskSourceSetPropertyTest {
         shouldNotThrow<ProjectConfigurationException> {
             project.evaluate()
         }
+        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).dataSchema.get()
+            .shouldBe(project.file("src/main/kotlin/org/example/my/Generated321.kt"))
     }
 
     @Test
