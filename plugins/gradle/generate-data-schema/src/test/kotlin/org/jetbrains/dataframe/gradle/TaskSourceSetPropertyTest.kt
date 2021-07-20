@@ -72,6 +72,28 @@ class TaskSourceSetPropertyTest {
     }
 
     @Test
+    fun `most specific sourceSet is used in packageName inference`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.plugins.apply(KotlinPlatformJvmPlugin::class.java)
+        project.extensions.getByType(KotlinJvmProjectExtension::class.java).apply {
+            sourceSets.create("main1")
+        }
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            sourceSet = "main"
+            schema {
+                sourceSet = "main1"
+                data = "123"
+                name = "321"
+            }
+        }
+        project.file("src/main1/kotlin/org/example/test").also { it.mkdirs() }
+        project.evaluate()
+        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).dataSchema.get()
+            .shouldBe(project.file("src/main1/kotlin/org/example/test/dataframe/Generated321.kt"))
+    }
+
+    @Test
     fun `extension sourceSet specified but no kotlin plugin found`() {
         val project = ProjectBuilder.builder().build() as ProjectInternal
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
