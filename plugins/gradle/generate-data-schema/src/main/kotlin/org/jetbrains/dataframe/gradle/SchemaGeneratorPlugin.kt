@@ -17,7 +17,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         val extension = target.extensions.create<SchemaGeneratorExtension>("schemaGenerator")
         target.afterEvaluate {
-            val appliedPlugin =KOTLIN_EXTENSIONS
+            val appliedPlugin = KOTLIN_EXTENSIONS
                     .mapNotNull {
                         target.extensions.findByType(it.extensionClass)?.let { ext -> AppliedPlugin(ext, it) }
                     }
@@ -25,10 +25,6 @@ class SchemaGeneratorPlugin : Plugin<Project> {
 
             if (appliedPlugin == null) {
                 target.logger.warn("Schema generator plugin applied, but no Kotlin plugin was found")
-            }
-
-            fun AppliedPlugin.getExtensionRoot(): File? {
-                return extension.sourceSet?.let { getSourceSetRoot(it, target) }
             }
 
             val generationTasks = mutableListOf<GenerateDataSchemaTask>()
@@ -55,9 +51,8 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 val src: File = schema.src
                     ?: run {
                         appliedPlugin ?: propertyError("src")
-                        schema.sourceSet?.let { sourceSet -> appliedPlugin.getSourceSetRoot(sourceSet, target) }
-                            ?: appliedPlugin.getExtensionRoot()
-                            ?: appliedPlugin.getDefaultRoot(target)
+                        appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSet)
+                        project.file("src/$sourceSet/kotlin")
                     }
 
                 val task = target.tasks.create("generate${interfaceName}", GenerateDataSchemaTask::class.java) {
@@ -78,20 +73,10 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         }
     }
 
-    private fun AppliedPlugin.getSourceSetRoot(sourceSetName: String, target: Project): File {
-        kotlinExtension.sourceSets.getByName(sourceSetName)
-        return target.file("src/$sourceSetName/kotlin")
-    }
-
-    private fun AppliedPlugin.getDefaultRoot(project: Project): File {
-        kotlinExtension.sourceSets.getByName(sourceSetConfiguration.defaultSourceSet)
-        return project.file(sourceSetConfiguration.path)
-    }
-
     private class AppliedPlugin(val kotlinExtension: KotlinProjectExtension, val sourceSetConfiguration: SourceSetConfiguration<*>)
 
     private class SourceSetConfiguration<T: KotlinProjectExtension>(
-        val extensionClass: Class<T>, val defaultSourceSet: String, val path: String
+        val extensionClass: Class<T>, val defaultSourceSet: String
     )
 
     private fun fileName(data: Any?): String? {
@@ -131,8 +116,8 @@ class SchemaGeneratorPlugin : Plugin<Project> {
 
     private companion object {
         private val KOTLIN_EXTENSIONS = sequenceOf(
-            SourceSetConfiguration(KotlinJvmProjectExtension::class.java, "main", "src/main/kotlin"),
-            SourceSetConfiguration(KotlinMultiplatformExtension::class.java, "jvmMain", "src/jvmMain/kotlin"),
+            SourceSetConfiguration(KotlinJvmProjectExtension::class.java, "main"),
+            SourceSetConfiguration(KotlinMultiplatformExtension::class.java, "jvmMain"),
         )
     }
 }
