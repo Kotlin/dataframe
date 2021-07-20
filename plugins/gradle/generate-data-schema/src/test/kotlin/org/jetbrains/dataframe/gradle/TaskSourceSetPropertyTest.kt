@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe.gradle
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.shouldNotBe
@@ -13,7 +14,7 @@ import java.io.File
 
 class TaskSourceSetPropertyTest {
     @Test
-    fun `extension sourceSet don't exist`() {
+    fun `extension sourceSet not present in project`() {
         val project = ProjectBuilder.builder().build() as ProjectInternal
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
@@ -27,11 +28,29 @@ class TaskSourceSetPropertyTest {
         val exception = shouldThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        exception.causes.single().message shouldContain "SourceSet myMain not found in root project 'test'"
+        exception.causes.single().message shouldContain "No supported Kotlin plugin was found. Please apply one or specify src for task 321 explicitly"
     }
 
     @Test
-    fun `task evaluates most specific source set first`() {
+    fun `task with explicit src don't evaluates sourceSet`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            packageName = "org.example.test"
+            sourceSet = "myMain"
+            schema {
+                data = "123"
+                src = project.file("src/main/kotlin")
+                name = "org.example.my.321"
+            }
+        }
+        shouldNotThrow<ProjectConfigurationException> {
+            project.evaluate()
+        }
+    }
+
+    @Test
+    fun `task and extension sourceSet not present in project`() {
         val project = ProjectBuilder.builder().build() as ProjectInternal
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
@@ -46,7 +65,7 @@ class TaskSourceSetPropertyTest {
         val exception = shouldThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        exception.causes.single().message shouldContain "SourceSet myMain1 not found in root project 'test'"
+        exception.causes.single().message shouldContain "No supported Kotlin plugin was found. Please apply one or specify src for task 321 explicitly"
     }
 
     @Test
