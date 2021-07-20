@@ -34,18 +34,27 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             val generationTasks = mutableListOf<GenerateDataSchemaTask>()
             extension.schemas.forEach { schema ->
                 val interfaceName = schema.name?.substringAfterLast('.') ?: fileName(schema.data)?.capitalize()
+                fun propertyError(property: String): Nothing {
+                    error("No supported Kotlin plugin was found. Please apply one or specify $property for task $interfaceName explicitly")
+                }
+
+                val sourceSet by lazy {
+                    schema.sourceSet
+                        ?: extension.sourceSet
+                        ?: (appliedPlugin ?: propertyError("sourceSet")).sourceSetConfiguration.defaultSourceSet
+                }
 
                 val packageName = schema.name?.let { name -> extractPackageName(name) }
                     ?: schema.packageName
                     ?: extension.packageName
                     ?: run {
-                        (appliedPlugin ?: error("No supported Kotlin plugin was found. Please apply one or specify packageName for task $interfaceName explicitly"))
-                        inferPackageName(appliedPlugin.kotlinExtension.sourceSets.getByName(appliedPlugin.sourceSetConfiguration.defaultSourceSet))
+                        (appliedPlugin ?: propertyError("packageName"))
+                        inferPackageName(appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSet))
                     }
 
                 val src: File = schema.src
                     ?: run {
-                        appliedPlugin ?: error("No supported Kotlin plugin was found. Please apply one or specify src for task $interfaceName explicitly")
+                        appliedPlugin ?: propertyError("src")
                         schema.sourceSet?.let { sourceSet -> appliedPlugin.getSourceSetRoot(sourceSet, target) }
                             ?: appliedPlugin.getExtensionRoot()
                             ?: appliedPlugin.getDefaultRoot(target)
