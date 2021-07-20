@@ -33,8 +33,8 @@ class TaskSourceSetPropertyTest {
         shouldNotThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).dataSchema.get()
-            .shouldBe(project.file("src/main1/kotlin/org/example/my/Generated321.kt"))
+        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).src.get()
+            .shouldBe(project.file("src/main1/kotlin/"))
     }
 
     @Test
@@ -67,12 +67,12 @@ class TaskSourceSetPropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).dataSchema.get()
-            .shouldBe(project.file("src/main/kotlin/org/example/my/Generated321.kt"))
+        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).src.get()
+            .shouldBe(project.file("src/main/kotlin/"))
     }
 
     @Test
-    fun `most specific sourceSet is used in packageName inference`() {
+    fun `choose most specific sourceSet`() {
         val project = ProjectBuilder.builder().build() as ProjectInternal
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.plugins.apply(KotlinPlatformJvmPlugin::class.java)
@@ -87,10 +87,9 @@ class TaskSourceSetPropertyTest {
                 name = "321"
             }
         }
-        project.file("src/main1/kotlin/org/example/test").also { it.mkdirs() }
         project.evaluate()
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).dataSchema.get()
-            .shouldBe(project.file("src/main1/kotlin/org/example/test/dataframe/Generated321.kt"))
+        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).src.get()
+            .shouldBe(project.file("src/main1/kotlin/"))
     }
 
     @Test
