@@ -64,11 +64,21 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             extensionProperties = generateExtensionProperties.get(),
             isOpen = false
         )
+        val escapedPackageName = packageName.get().let {
+            // See RegexExpectationsTest
+            if (it.isNotEmpty()) {
+                it.split(NameChecker.PACKAGE_IDENTIFIER_DELIMITER)
+                    .joinToString(".") { part -> "`$part`" }
+            } else {
+                it
+            }
+        }
+
         dataSchema.writeText(
             buildString {
                 appendLine("// GENERATED. DO NOT EDIT MANUALLY")
-                if (packageName.get().isNotEmpty()) {
-                    appendLine("package ${packageName.get()}")
+                if (escapedPackageName.isNotEmpty()) {
+                    appendLine("package $escapedPackageName")
                 }
                 appendLine("import org.jetbrains.dataframe.annotations.*")
                 appendLine(codeGenResult.code.declarations)

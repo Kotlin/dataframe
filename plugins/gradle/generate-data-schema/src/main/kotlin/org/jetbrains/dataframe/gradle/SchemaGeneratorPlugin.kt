@@ -29,7 +29,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
 
             val generationTasks = mutableListOf<GenerateDataSchemaTask>()
             extension.schemas.forEach { schema ->
-                val interfaceName = schema.name?.substringAfterLast('.') ?: fileName(schema.data)?.capitalize()
+                val interfaceName = getInterfaceName(schema)
                 fun propertyError(property: String): Nothing {
                     error("No supported Kotlin plugin was found. Please apply one or specify $property for task $interfaceName explicitly")
                 }
@@ -73,6 +73,15 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         }
     }
 
+    private fun getInterfaceName(schema: Schema): String? {
+        val rawName = schema.name?.substringAfterLast('.')
+            ?: fileName(schema.data)?.capitalize()
+            ?.removeSurrounding("`")
+            ?: return null
+        NameChecker.checkValidIdentifier(rawName)
+        return rawName
+    }
+
     private class AppliedPlugin(val kotlinExtension: KotlinProjectExtension, val sourceSetConfiguration: SourceSetConfiguration<*>)
 
     private class SourceSetConfiguration<T: KotlinProjectExtension>(
@@ -93,9 +102,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             .substringBeforeLast('.')
             .takeIf { it != fqName }
         if (packageName != null) {
-            check(packageName.isPackageJvmIdentifier()) {
-                "Package part '$packageName' of name='$fqName' is not a valid package identifier for Kotlin JVM"
-            }
+            NameChecker.checkValidPackageName(packageName)
         }
         return packageName
     }
