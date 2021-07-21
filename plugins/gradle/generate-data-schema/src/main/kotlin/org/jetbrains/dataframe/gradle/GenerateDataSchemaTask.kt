@@ -77,6 +77,16 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         dataSchema.writeText(
             buildString {
                 appendLine("// GENERATED. DO NOT EDIT MANUALLY")
+                appendLine("""
+                    @file:Suppress(
+                        "RemoveRedundantBackticks", 
+                        "RemoveRedundantQualifierName", 
+                        "unused", "ObjectPropertyName", 
+                        "UNCHECKED_CAST", "PropertyName",
+                        "ClassName"
+                    )
+                """.trimIndent())
+
                 if (escapedPackageName.isNotEmpty()) {
                     appendLine("package $escapedPackageName")
                 }
