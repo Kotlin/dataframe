@@ -3,7 +3,11 @@ package org.jetbrains.dataframe.gradle
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import org.gradle.api.internal.project.ProjectInternal
+import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.TaskOutcome
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
 import org.junit.Test
 import java.io.File
 
@@ -329,5 +333,27 @@ internal class SchemaGeneratorPluginTes {
             """.trimIndent()
         }
         result.task(":generateData")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
+    fun `most specific sourceSet is used in the packageName inference`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.plugins.apply(KotlinPlatformJvmPlugin::class.java)
+        project.extensions.getByType(KotlinJvmProjectExtension::class.java).apply {
+            sourceSets.create("main1")
+        }
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            sourceSet = "main"
+            schema {
+                sourceSet = "main1"
+                data = "123"
+                name = "321"
+            }
+        }
+        project.file("src/main1/kotlin/org/example/test").also { it.mkdirs() }
+        project.evaluate()
+        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).dataSchema.get()
+            .shouldBe(project.file("src/main1/kotlin/org/example/test/dataframe/Generated321.kt"))
     }
 }
