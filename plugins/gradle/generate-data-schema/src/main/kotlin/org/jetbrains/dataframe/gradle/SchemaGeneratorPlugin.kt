@@ -121,7 +121,11 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             .removePrefix(File.separator)
             .replace(File.separatorChar, '.')
             .let {
-                if (it.isEmpty()) "dataframe" else "$it.dataframe"
+                when {
+                    it.isEmpty() -> "dataframe"
+                    it.endsWith(".dataframe") -> it
+                    else -> "$it.dataframe"
+                }
             }
     }
 
