@@ -8,6 +8,7 @@ plugins {
 repositories {
     mavenCentral()
     maven(url="https://jitpack.io")
+    google()
 }
 
 group = "org.jetbrains.kotlinx"
@@ -39,4 +40,6 @@ dependencies {
 
     testImplementation("junit:junit:4.12")
     testImplementation("io.kotest:kotest-assertions-core:4.6.0")
+    testImplementation("com.android.tools.build:gradle-api:4.1.1")
+    testImplementation("com.android.tools.build:gradle:4.1.1")
 }
