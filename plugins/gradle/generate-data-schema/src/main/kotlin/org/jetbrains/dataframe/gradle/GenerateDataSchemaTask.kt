@@ -76,7 +76,6 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
         dataSchema.writeText(
             buildString {
-                appendLine("// GENERATED. DO NOT EDIT MANUALLY")
                 appendLine("""
                     @file:Suppress(
                         "RemoveRedundantBackticks", 
@@ -89,8 +88,11 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
                 if (escapedPackageName.isNotEmpty()) {
                     appendLine("package $escapedPackageName")
+                    appendLine()
                 }
                 appendLine("import org.jetbrains.dataframe.annotations.*")
+                appendLine()
+                appendLine("// GENERATED. DO NOT EDIT MANUALLY")
                 appendLine(codeGenResult.code.declarations)
             }
         )
