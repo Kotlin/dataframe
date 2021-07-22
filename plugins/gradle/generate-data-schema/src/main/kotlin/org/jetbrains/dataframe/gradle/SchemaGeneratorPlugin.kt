@@ -4,9 +4,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.withType
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
@@ -18,10 +16,10 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         val extension = target.extensions.create<SchemaGeneratorExtension>("schemaGenerator")
         target.afterEvaluate {
             val appliedPlugin = KOTLIN_EXTENSIONS
-                    .mapNotNull {
-                        target.extensions.findByType(it.extensionClass)?.let { ext -> AppliedPlugin(ext, it) }
-                    }
-                    .firstOrNull()
+                .mapNotNull {
+                    target.extensions.findByType(it.extensionClass)?.let { ext -> AppliedPlugin(ext, it) }
+                }
+                .firstOrNull()
 
             if (appliedPlugin == null) {
                 target.logger.warn("Schema generator plugin applied, but no Kotlin plugin was found")
@@ -45,14 +43,18 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                     ?: extension.packageName
                     ?: run {
                         (appliedPlugin ?: propertyError("packageName"))
-                        inferPackageName(appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSet))
+                        inferPackageName(
+                            appliedPlugin.sourceSetConfiguration.isKotlinRoot,
+                            appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSet)
+                        )
                     }
 
                 val src: File = schema.src
                     ?: run {
                         appliedPlugin ?: propertyError("src")
                         appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSet)
-                        project.file("src/$sourceSet/kotlin")
+                        val path = appliedPlugin.sourceSetConfiguration.sourceSetPath(sourceSet)
+                        project.file(path)
                     }
 
                 val task = target.tasks.create("generate${interfaceName}", GenerateDataSchemaTask::class.java) {
@@ -84,8 +86,11 @@ class SchemaGeneratorPlugin : Plugin<Project> {
 
     private class AppliedPlugin(val kotlinExtension: KotlinProjectExtension, val sourceSetConfiguration: SourceSetConfiguration<*>)
 
-    private class SourceSetConfiguration<T: KotlinProjectExtension>(
-        val extensionClass: Class<T>, val defaultSourceSet: String
+    private class SourceSetConfiguration<T : KotlinProjectExtension>(
+        val extensionClass: Class<T>,
+        val defaultSourceSet: String,
+        val sourceSetPath: (String) -> String,
+        val isKotlinRoot: (File, String) -> Boolean
     )
 
     private fun fileName(data: Any?): String? {
@@ -107,9 +112,8 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         return packageName
     }
 
-    private fun inferPackageName(sourceSet: KotlinSourceSet): String? {
-        val isKotlinRoot = { f: File -> f.absolutePath.contains("/src/${sourceSet.name}/kotlin") }
-        val root = sourceSet.kotlin.sourceDirectories.firstOrNull(isKotlinRoot)?.absoluteFile ?: return null
+    private fun inferPackageName(isKotlinRoot: (File, String) -> Boolean, sourceSet: KotlinSourceSet): String? {
+        val root = sourceSet.kotlin.sourceDirectories.firstOrNull { isKotlinRoot(it, sourceSet.name) }?.absoluteFile ?: return null
         val node = root.findDeepestCommonSubdirectory()
         val parentPath = root.absolutePath
         return node.absolutePath
@@ -122,9 +126,18 @@ class SchemaGeneratorPlugin : Plugin<Project> {
     }
 
     private companion object {
+        private val isKotlinRoot: (File, String) -> Boolean = { f, name -> f.absolutePath.contains("/src/${name}/kotlin") }
+        private val sourceSetPath: (String) -> String = { "src/$it/kotlin" }
+
+        private val isAndroidKotlinRoot: (File, String) -> Boolean = { f, name -> f.absolutePath.contains("/src/${name}/kotlin") }
+        private val androidSourceSetPath: (String) -> String = { name -> "src/${name}/java" }
+
         private val KOTLIN_EXTENSIONS = sequenceOf(
-            SourceSetConfiguration(KotlinJvmProjectExtension::class.java, "main"),
-            SourceSetConfiguration(KotlinMultiplatformExtension::class.java, "jvmMain"),
+            SourceSetConfiguration(KotlinJvmProjectExtension::class.java, "main", sourceSetPath, isKotlinRoot),
+            SourceSetConfiguration(KotlinMultiplatformExtension::class.java, "jvmMain", sourceSetPath, isKotlinRoot),
+            SourceSetConfiguration(
+                KotlinAndroidProjectExtension::class.java, "main", androidSourceSetPath, isAndroidKotlinRoot
+            ),
         )
     }
 }
