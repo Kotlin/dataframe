@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
 import org.junit.Test
 import java.io.File
+import java.nio.file.Files
 
 internal class SchemaGeneratorPluginTes {
 
@@ -66,6 +67,37 @@ internal class SchemaGeneratorPluginTes {
             }
             """.trimIndent()
         }
+        result.task(":generateTest")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
+    fun `plugin configured via extension DSL with Groovy`() {
+        val buildDir = Files.createTempDirectory("test").toFile()
+        val buildFile = File(buildDir, "build.gradle")
+        buildFile.writeText(
+            """
+                import java.net.URL
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                    
+                plugins {
+                    id "org.jetbrains.kotlin.jvm" version "1.4.10"
+                    id "org.jetbrains.dataframe.schema-generator"
+                }
+                
+                repositories {
+                    mavenCentral() 
+                }
+    
+                schemaGenerator {
+                    schema {
+                        data = new URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
+                        name = "Test"
+                        packageName = "org.test"
+                    }
+                }
+            """.trimIndent()
+        )
+        val result = gradleRunner(buildDir, ":generateTest").build()
         result.task(":generateTest")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
