@@ -109,6 +109,22 @@ class TaskPackageNamePropertyTest {
     }
 
     @Test
+    fun `task won't add "dataframe" if inferred package ends with "dataframe"`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.plugins.apply(KotlinPlatformJvmPlugin::class.java)
+        File(project.projectDir, "/src/main/kotlin/org/dataframe/").also { it.mkdirs() }
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            schema {
+                data = "123"
+                name = "321"
+            }
+        }
+        project.evaluate()
+        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.dataframe"
+    }
+
+    @Test
     fun `packageName convention is 'dataframe'`() {
         val (dir, result) = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, "data.csv")
