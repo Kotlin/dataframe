@@ -5,6 +5,13 @@ plugins {
 buildscript {
     dependencies {
         classpath(kotlin("gradle-plugin", version = "1.5.21"))
+        classpath("com.vanniktech:gradle-maven-publish-plugin:0.17.0")
+    }
+
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
     }
 }
 
