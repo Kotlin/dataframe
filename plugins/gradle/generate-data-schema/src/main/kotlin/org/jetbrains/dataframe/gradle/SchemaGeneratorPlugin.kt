@@ -132,8 +132,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
     private companion object {
         private val isKotlinRoot: (File, String) -> Boolean = { f, name -> f.absolutePath.contains("/src/${name}/kotlin") }
         private val sourceSetPath: (String) -> String = { "src/$it/kotlin" }
-
-        private val isAndroidKotlinRoot: (File, String) -> Boolean = { f, name -> f.absolutePath.contains("/src/${name}/kotlin") }
+        private val isAndroidKotlinRoot: (File, String) -> Boolean = { f, name -> f.absolutePath.contains("/src/${name}/java") }
         private val androidSourceSetPath: (String) -> String = { name -> "src/${name}/java" }
 
         private val KOTLIN_EXTENSIONS = sequenceOf(

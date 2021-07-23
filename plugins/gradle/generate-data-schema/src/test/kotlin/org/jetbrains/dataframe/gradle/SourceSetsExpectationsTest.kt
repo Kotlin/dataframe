@@ -39,6 +39,7 @@ class SourceSetsExpectationsTest {
         project.extensions.getByType(KotlinAndroidProjectExtension::class.java).let {
             val main = it.sourceSets.getByName("main")
             assert(main.kotlin.sourceDirectories.any { it.absolutePath.endsWith("/src/main/java") })
+            assert(main.kotlin.sourceDirectories.any { it.absolutePath.endsWith("/src/main/kotlin") })
         }
     }
 }
