@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe.gradle
 
+import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -7,6 +8,7 @@ import org.gradle.api.ProjectConfigurationException
 import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.TaskOutcome
+import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformAndroidPlugin
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
 import org.junit.Test
 import java.io.File
@@ -98,6 +100,26 @@ class TaskPackageNamePropertyTest {
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.plugins.apply(KotlinPlatformJvmPlugin::class.java)
         File(project.projectDir, "/src/main/kotlin/org/test/").also { it.mkdirs() }
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            schema {
+                data = "123"
+                name = "321"
+            }
+        }
+        project.evaluate()
+        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.test.dataframe"
+    }
+
+    @Test
+    fun `task infers packageName from directory structure on android`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.plugins.apply("com.android.application")
+        project.plugins.apply(KotlinPlatformAndroidPlugin::class.java)
+        (project.extensions.getByName("android") as BaseAppModuleExtension).let {
+            it.compileSdk = 30
+        }
+        File(project.projectDir, "/src/main/java/org/test/").also { it.mkdirs() }
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             schema {
                 data = "123"
