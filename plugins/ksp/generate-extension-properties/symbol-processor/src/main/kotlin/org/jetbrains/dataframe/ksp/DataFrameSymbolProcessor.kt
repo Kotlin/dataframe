@@ -40,7 +40,7 @@ class DataFrameSymbolProcessor(private val codeGenerator: CodeGenerator) : Symbo
             val fqnType = declaration.qualifiedName?.asString()
                 ?: error("Missing qualifiedName for declaration ${declaration.simpleName}")
             val propertyName = property.simpleName.asString()
-            val columnName = propertyName
+            val columnName = getColumnName(property)
             appendLine(
                 """
                 val $fqnDataFrameBase<$interfaceType>.`$propertyName`: $fqnDataColumn<${fqnType}> get() = this["$columnName"] as $fqnDataColumn<${fqnType}>
@@ -48,6 +48,31 @@ class DataFrameSymbolProcessor(private val codeGenerator: CodeGenerator) : Symbo
                 """.trimIndent()
             )
         }
+    }
+
+    private fun getColumnName(property: KSPropertyDeclaration): String {
+        val columnNameAnnotation =  property.annotations.firstOrNull { annotation ->
+            val annotationType = annotation.annotationType
+            (annotationType.element as? KSClassifierReference)?.referencedName()
+                .let { it == null || it == "ColumnName" }
+                && annotationType.resolve().declaration.qualifiedName?.asString() == "org.jetbrains.dataframe.annotations.ColumnName"
+        }
+        return if (columnNameAnnotation != null) {
+            when (val arg = columnNameAnnotation.arguments.singleOrNull()) {
+                null -> argumentMismatchError(property, columnNameAnnotation.arguments)
+                else -> (arg.value as? String) ?: typeMismatchError(property, arg)
+            }
+        } else {
+            property.simpleName.asString()
+        }
+    }
+
+    private fun typeMismatchError(property: KSPropertyDeclaration, arg: KSValueArgument): Nothing {
+        error("Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, but got ${arg.value}")
+    }
+
+    private fun argumentMismatchError(property: KSPropertyDeclaration, args: List<KSValueArgument>): Nothing {
+        error("Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, but got $args")
     }
 
     private companion object {
