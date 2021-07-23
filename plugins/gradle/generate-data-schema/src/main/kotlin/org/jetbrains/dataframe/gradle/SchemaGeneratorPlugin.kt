@@ -2,6 +2,7 @@ package org.jetbrains.dataframe.gradle
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.Task
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.*
@@ -25,53 +26,53 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 target.logger.warn("Schema generator plugin applied, but no Kotlin plugin was found")
             }
 
-            val generationTasks = mutableListOf<GenerateDataSchemaTask>()
-            extension.schemas.forEach { schema ->
-                val interfaceName = getInterfaceName(schema)
-                fun propertyError(property: String): Nothing {
-                    error("No supported Kotlin plugin was found. Please apply one or specify $property for task $interfaceName explicitly")
-                }
-
-                val sourceSet by lazy {
-                    schema.sourceSet
-                        ?: extension.sourceSet
-                        ?: (appliedPlugin ?: propertyError("sourceSet")).sourceSetConfiguration.defaultSourceSet
-                }
-
-                val packageName = schema.name?.let { name -> extractPackageName(name) }
-                    ?: schema.packageName
-                    ?: extension.packageName
-                    ?: run {
-                        (appliedPlugin ?: propertyError("packageName"))
-                        inferPackageName(
-                            appliedPlugin.sourceSetConfiguration.isKotlinRoot,
-                            appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSet)
-                        )
-                    }
-
-                val src: File = schema.src
-                    ?: run {
-                        appliedPlugin ?: propertyError("src")
-                        appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSet)
-                        val path = appliedPlugin.sourceSetConfiguration.sourceSetPath(sourceSet)
-                        project.file(path)
-                    }
-
-                val task = target.tasks.create("generate${interfaceName}", GenerateDataSchemaTask::class.java) {
-                    data.set(schema.data)
-                    this.interfaceName.set(interfaceName)
-                    this.packageName.set(packageName)
-                    this.src.set(src)
-                    generateExtensionProperties.set(extension.generateExtensionProperties)
-                }
-                generationTasks.add(task)
-            }
+            val generationTasks = extension.schemas.map { createTask(target, extension, appliedPlugin, it) }
             val generateAll = target.tasks.create("generateAll") {
                 dependsOn(*generationTasks.toTypedArray())
             }
             tasks.withType<KotlinCompile> {
                 dependsOn(generateAll)
             }
+        }
+    }
+
+    private fun createTask(target: Project, extension: SchemaGeneratorExtension, appliedPlugin: AppliedPlugin?, schema: Schema): Task {
+        val interfaceName = getInterfaceName(schema)
+        fun propertyError(property: String): Nothing {
+            error("No supported Kotlin plugin was found. Please apply one or specify $property for task $interfaceName explicitly")
+        }
+
+        val sourceSet by lazy {
+            schema.sourceSet
+                ?: extension.sourceSet
+                ?: (appliedPlugin ?: propertyError("sourceSet")).sourceSetConfiguration.defaultSourceSet
+        }
+
+        val packageName = schema.name?.let { name -> extractPackageName(name) }
+            ?: schema.packageName
+            ?: extension.packageName
+            ?: run {
+                (appliedPlugin ?: propertyError("packageName"))
+                inferPackageName(
+                    appliedPlugin.sourceSetConfiguration.isKotlinRoot,
+                    appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSet)
+                )
+            }
+
+        val src: File = schema.src
+            ?: run {
+                appliedPlugin ?: propertyError("src")
+                appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSet)
+                val path = appliedPlugin.sourceSetConfiguration.sourceSetPath(sourceSet)
+                target.file(path)
+            }
+
+        return target.tasks.create("generate${interfaceName}", GenerateDataSchemaTask::class.java) {
+            data.set(schema.data)
+            this.interfaceName.set(interfaceName)
+            this.packageName.set(packageName)
+            this.src.set(src)
+            generateExtensionProperties.set(extension.generateExtensionProperties)
         }
     }
 
