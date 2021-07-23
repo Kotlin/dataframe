@@ -60,35 +60,34 @@ class TaskNamePropertyTest {
     }
 
     @Test
-    fun `name convention is data file name`() {
-        val (_, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
-            dataFile.writeText(TestData.csvSample)
-
-            """
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    kotlin("jvm") version "1.4.10"
-                    id("org.jetbrains.dataframe.schema-generator")
-                }
-                
-                repositories {
-                    mavenCentral() 
-                }
-                
-                dependencies {
-                    implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
-                }
-                
-                schemaGenerator {
-                    schema {
-                        data = "$dataFile"
-                        packageName = ""
-                    }
-                }
-            """.trimIndent()
+    fun `data name should not override invalid name`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            schema {
+                data = "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv"
+                name = "org.test.example.[321]"
+                src = project.projectDir
+            }
         }
-        result.task(":generateData")?.outcome shouldBe TaskOutcome.SUCCESS
+        val exception = shouldThrow<ProjectConfigurationException> {
+            project.evaluate()
+        }
+        exception.causes.single().message shouldContain "[321] contains illegal characters: [,]"
+    }
+
+    @Test
+    fun `name convention is data file name`() {
+        val project = ProjectBuilder.builder().build() as ProjectInternal
+        project.plugins.apply(SchemaGeneratorPlugin::class.java)
+        project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
+            schema {
+                data = "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv"
+                packageName = ""
+                src = project.projectDir
+            }
+        }
+        project.evaluate()
+        project.tasks.getByName("generateCity_population") shouldNotBe null
     }
 }
