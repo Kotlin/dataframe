@@ -14,6 +14,8 @@ import java.io.IOException
 import java.net.URL
 import java.nio.file.Paths
 import com.beust.klaxon.KlaxonException
+import org.jetbrains.dataframe.AnyFrame
+import org.jetbrains.dataframe.impl.codeGen.CodeGenResult
 import java.io.FileNotFoundException
 
 abstract class GenerateDataSchemaTask : DefaultTask() {
@@ -41,10 +43,34 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
     @TaskAction
     fun generate() {
+        val df = readDataFrame(data.get())
         val codeGenerator = CodeGenerator.create()
+        val codeGenResult = codeGenerator.generate(
+            schema = df.extractSchema(),
+            name = interfaceName.get(),
+            fields = true,
+            extensionProperties = generateExtensionProperties.get(),
+            isOpen = false
+        )
+        val escapedPackageName = escapePackageName(packageName.get())
+
         val dataSchema = dataSchema.get()
-        val df = try {
-            when (val data = data.get()) {
+        dataSchema.writeText(buildSourceFileContent(escapedPackageName, codeGenResult))
+    }
+
+    private fun escapePackageName(packageName: String): String {
+        // See RegexExpectationsTest
+        return if (packageName.isNotEmpty()) {
+            packageName.split(NameChecker.PACKAGE_IDENTIFIER_DELIMITER)
+                .joinToString(".") { part -> "`$part`" }
+        } else {
+            packageName
+        }
+    }
+
+    private fun readDataFrame(data: Any): AnyFrame {
+        return try {
+            when (data) {
                 is File -> DataFrame.read(data)
                 is URL -> DataFrame.read(data)
                 is String -> DataFrame.read(data)
@@ -57,45 +83,30 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 else -> throw e
             }
         }
-        val codeGenResult = codeGenerator.generate(
-            schema = df.extractSchema(),
-            name = interfaceName.get(),
-            fields = true,
-            extensionProperties = generateExtensionProperties.get(),
-            isOpen = false
-        )
-        val escapedPackageName = packageName.get().let {
-            // See RegexExpectationsTest
-            if (it.isNotEmpty()) {
-                it.split(NameChecker.PACKAGE_IDENTIFIER_DELIMITER)
-                    .joinToString(".") { part -> "`$part`" }
-            } else {
-                it
-            }
-        }
+    }
 
-        dataSchema.writeText(
-            buildString {
-                appendLine("""
-                    @file:Suppress(
-                        "RemoveRedundantBackticks", 
-                        "RemoveRedundantQualifierName", 
-                        "unused", "ObjectPropertyName", 
-                        "UNCHECKED_CAST", "PropertyName",
-                        "ClassName"
-                    )
-                """.trimIndent())
+    private fun buildSourceFileContent(escapedPackageName: String, codeGenResult: CodeGenResult): String {
+        return buildString {
+            appendLine("""
+                @file:Suppress(
+                    "RemoveRedundantBackticks", 
+                    "RemoveRedundantQualifierName", 
+                    "unused", "ObjectPropertyName", 
+                    "UNCHECKED_CAST", "PropertyName",
+                    "ClassName"
+                )
+                """.trimIndent()
+            )
 
-                if (escapedPackageName.isNotEmpty()) {
-                    appendLine("package $escapedPackageName")
-                    appendLine()
-                }
-                appendLine("import org.jetbrains.dataframe.annotations.*")
+            if (escapedPackageName.isNotEmpty()) {
+                appendLine("package $escapedPackageName")
                 appendLine()
-                appendLine("// GENERATED. DO NOT EDIT MANUALLY")
-                appendLine(codeGenResult.code.declarations)
             }
-        )
+            appendLine("import org.jetbrains.dataframe.annotations.*")
+            appendLine()
+            appendLine("// GENERATED. DO NOT EDIT MANUALLY")
+            appendLine(codeGenResult.code.declarations)
+        }
     }
 }
 
