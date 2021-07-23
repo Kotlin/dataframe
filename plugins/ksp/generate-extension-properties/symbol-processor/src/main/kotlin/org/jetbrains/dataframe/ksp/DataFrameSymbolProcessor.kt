@@ -28,6 +28,7 @@ class DataFrameSymbolProcessor(private val codeGenerator: CodeGenerator) : Symbo
         val generatedFile = codeGenerator.createNewFile(
             Dependencies(false, file), file.packageName.asString(), "$className${'$'}Extensions")
         generatedFile.writer().use {
+            it.appendLine("""@file:Suppress("UNCHECKED_CAST")""")
             it.appendLine("package ${file.packageName.asString()}")
             it.appendLine()
             it.writeProperties(klass.asType(emptyList()), properties)
