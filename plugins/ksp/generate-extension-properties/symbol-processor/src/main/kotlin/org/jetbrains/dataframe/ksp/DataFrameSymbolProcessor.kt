@@ -5,6 +5,7 @@ import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.processing.SymbolProcessor
 import com.google.devtools.ksp.symbol.*
+import com.google.devtools.ksp.validate
 import java.io.OutputStreamWriter
 
 class DataFrameSymbolProcessor(private val codeGenerator: CodeGenerator) : SymbolProcessor {
@@ -13,7 +14,7 @@ class DataFrameSymbolProcessor(private val codeGenerator: CodeGenerator) : Symbo
 
         symbols
             .filterIsInstance<KSClassDeclaration>()
-            .filter { it.classKind == ClassKind.INTERFACE }
+            .filter { it.classKind == ClassKind.INTERFACE && it.validate() }
             .forEach {
                 val file = it.containingFile ?: return@forEach
                 generate(file, it, it.declarations.filterIsInstance<KSPropertyDeclaration>().toList())
@@ -33,13 +34,25 @@ class DataFrameSymbolProcessor(private val codeGenerator: CodeGenerator) : Symbo
         }
     }
 
-    private fun OutputStreamWriter.writeProperties(interfaceTypeReference: KSType, properties: List<KSPropertyDeclaration>) {
-        properties.forEach {
-            appendLine("""
-                val org.jetbrains.dataframe.DataFrameBase<$interfaceTypeReference>.`${it.simpleName.asString()}`: org.jetbrains.dataframe.columns.DataColumn<${it.type}> get() = this["${it.simpleName.asString()}"] as org.jetbrains.dataframe.columns.DataColumn<${it.type}>
-                val org.jetbrains.dataframe.DataRowBase<$interfaceTypeReference>.`${it.simpleName.asString()}`: ${it.type} get() = this["${it.simpleName.asString()}"] as ${it.type}
-            """.trimIndent())
+    private fun OutputStreamWriter.writeProperties(interfaceType: KSType, properties: List<KSPropertyDeclaration>) {
+        properties.forEach { property ->
+            val declaration = property.type.resolve().declaration
+            val fqnType = declaration.qualifiedName?.asString()
+                ?: error("Missing qualifiedName for declaration ${declaration.simpleName}")
+            val propertyName = property.simpleName.asString()
+            val columnName = propertyName
+            appendLine(
+                """
+                val $fqnDataFrameBase<$interfaceType>.`$propertyName`: $fqnDataColumn<${fqnType}> get() = this["$columnName"] as $fqnDataColumn<${fqnType}>
+                val $fqnDataRowBase<$interfaceType>.`$propertyName`: $fqnType get() = this["$columnName"] as $fqnType
+                """.trimIndent()
+            )
         }
     }
 
+    private companion object {
+        private const val fqnDataFrameBase = "org.jetbrains.dataframe.DataFrameBase"
+        private const val fqnDataRowBase = "org.jetbrains.dataframe.DataRowBase"
+        private const val fqnDataColumn = "org.jetbrains.dataframe.columns.DataColumn"
+    }
 }
