@@ -58,7 +58,7 @@ internal class SchemaGeneratorPluginTes {
                 mavenCentral() 
             }
 
-            schemaGenerator {
+            dataframes {
                 schema {
                     data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
                     name = "Test"
@@ -88,7 +88,7 @@ internal class SchemaGeneratorPluginTes {
                     mavenCentral() 
                 }
     
-                schemaGenerator {
+                dataframes {
                     schema {
                         data = new URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
                         name = "Test"
@@ -118,7 +118,7 @@ internal class SchemaGeneratorPluginTes {
                 mavenCentral() 
             }
 
-            schemaGenerator {
+            dataframes {
                 schema {
                     data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
                     name = "Test"
@@ -152,7 +152,7 @@ internal class SchemaGeneratorPluginTes {
                 mavenCentral() 
             }
 
-            schemaGenerator {
+            dataframes {
                 schema {
                     data = File("$dataDir/ghost.json")
                     name = "Test"
@@ -186,7 +186,7 @@ internal class SchemaGeneratorPluginTes {
                 mavenCentral() 
             }
 
-            schemaGenerator {
+            dataframes {
                 schema {
                     data = "$dataDir/ghost.json"
                     name = "Test"
@@ -224,7 +224,7 @@ internal class SchemaGeneratorPluginTes {
                 implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
             }
 
-            schemaGenerator {
+            dataframes {
                 schema {
                     data = File("$dataDir/ghost.json")
                     name = "Test"
@@ -278,7 +278,7 @@ internal class SchemaGeneratorPluginTes {
                     implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
                 }
                 
-                schemaGenerator {
+                dataframes {
                     schema {
                         data = "$dataFile"
                         name = "Schema"
@@ -322,7 +322,7 @@ internal class SchemaGeneratorPluginTes {
                     }
                 }
                 
-                schemaGenerator {
+                dataframes {
                     schema {
                         data = "$dataFile"
                         name = "Schema"
@@ -357,7 +357,7 @@ internal class SchemaGeneratorPluginTes {
                     implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
                 }
                 
-                schemaGenerator {
+                dataframes {
                     schema {
                         data = "$dataFile"
                     }

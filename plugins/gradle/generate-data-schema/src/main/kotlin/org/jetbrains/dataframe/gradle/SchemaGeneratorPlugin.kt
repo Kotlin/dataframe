@@ -13,7 +13,7 @@ import java.net.URL
 class SchemaGeneratorPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
-        val extension = target.extensions.create<SchemaGeneratorExtension>("schemaGenerator")
+        val extension = target.extensions.create<SchemaGeneratorExtension>("dataframes")
         target.afterEvaluate {
             val appliedPlugin = KOTLIN_EXTENSIONS
                 .mapNotNull {

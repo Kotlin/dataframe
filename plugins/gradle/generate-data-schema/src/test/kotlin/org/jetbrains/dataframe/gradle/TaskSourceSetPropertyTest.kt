@@ -185,7 +185,7 @@ class TaskSourceSetPropertyTest {
                     implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
                 }
                 
-                schemaGenerator {
+                dataframes {
                     schema {
                         data = "$dataFile"
                         name = "Schema"
@@ -226,7 +226,7 @@ class TaskSourceSetPropertyTest {
                     }
                 }
                 
-                schemaGenerator {
+                dataframes {
                     schema {
                         data = "$dataFile"
                         name = "Schema"
