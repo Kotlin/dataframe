@@ -119,7 +119,7 @@ class TaskPackageNamePropertyTest {
         (project.extensions.getByName("android") as BaseAppModuleExtension).let {
             it.compileSdk = 30
         }
-        File(project.projectDir, "/src/main/java/org/test/").also { it.mkdirs() }
+        File(project.projectDir, "/src/main/kotlin/org/test/").also { it.mkdirs() }
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             schema {
                 data = "123"

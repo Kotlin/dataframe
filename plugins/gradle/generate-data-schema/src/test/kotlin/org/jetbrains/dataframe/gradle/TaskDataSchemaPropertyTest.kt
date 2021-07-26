@@ -58,7 +58,7 @@ class TaskDataSchemaPropertyTest {
             project.evaluate()
         }
         (project.tasks.getByName("generate321") as GenerateDataSchemaTask).dataSchema.get()
-            .shouldBe(project.file("src/main1/java/org/example/my/Generated321.kt"))
+            .shouldBe(project.file("src/main1/kotlin/org/example/my/Generated321.kt"))
     }
 
 }
