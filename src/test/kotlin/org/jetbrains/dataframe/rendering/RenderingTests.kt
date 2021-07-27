@@ -5,15 +5,10 @@ import io.kotest.matchers.string.shouldContain
 import org.jetbrains.dataframe.columnOf
 import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.getType
-import org.jetbrains.dataframe.io.DisplayConfiguration
-import org.jetbrains.dataframe.io.formatter
 import org.jetbrains.dataframe.io.renderToStringTable
 import org.jetbrains.dataframe.io.toHTML
-import org.jetbrains.dataframe.jupyter.DefaultCellRenderer
-import org.jetbrains.dataframe.manyOf
 import org.jetbrains.dataframe.parse
 import org.jetbrains.dataframe.toDataFrame
-import org.jsoup.Jsoup
 import org.junit.Test
 import java.net.URL
 
