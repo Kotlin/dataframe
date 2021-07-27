@@ -48,4 +48,4 @@ public fun <T> DataFrame<T>.parse(columns: ColumnsSelector<T, Any?>): DataFrame<
 public fun DataColumn<String?>.parse(): DataColumn<*> = tryParse().also { if (it.typeClass == String::class) error("Can't guess column type") }
 
 @JvmName("tryParseAnyFrame?")
-fun DataColumn<AnyFrame?>.parse(): DataColumn<AnyFrame?> = map { it?.parse() }
+public fun DataColumn<AnyFrame?>.parse(): DataColumn<AnyFrame?> = map { it?.parse() }

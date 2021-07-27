@@ -12,12 +12,11 @@ public fun <T> DataColumn<T>.groupBy(vararg cols: AnyCol): GroupedDataFrame<Unit
 public fun <T> DataColumn<T>.groupBy(cols: Iterable<AnyCol>): GroupedDataFrame<Unit, Unit> =
     (cols + this).asDataFrame<Unit>().groupBy { cols(0 until ncol() - 1) }
 
-public fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>) = groupBy { cols.toColumnSet() }
-public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>) = groupBy { cols.toColumns() }
-public fun <T> DataFrame<T>.groupBy(vararg cols: String) = groupBy { cols.toColumns() }
-public fun <T> DataFrame<T>.groupBy(vararg cols: Column) = groupBy { cols.toColumns() }
+public fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>): GroupedDataFrame<T, T> = groupBy { cols.toColumnSet() }
+public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupedDataFrame<T, T> = groupBy { cols.toColumns() }
+public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupedDataFrame<T, T> = groupBy { cols.toColumns() }
+public fun <T> DataFrame<T>.groupBy(vararg cols: Column): GroupedDataFrame<T, T> = groupBy { cols.toColumns() }
 public fun <T> DataFrame<T>.groupBy(cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T> {
-
     val nameGenerator = nameGenerator(GroupedDataFrame.columnForGroupedData.name())
     val keyColumns = get(cols).map {
         val currentName = it.name()

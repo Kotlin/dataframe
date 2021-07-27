@@ -4,6 +4,7 @@ import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.columns.values
 import org.jetbrains.dataframe.impl.renderType
 import org.jetbrains.dataframe.impl.truncate
+import org.jetbrains.dataframe.jupyter.RenderedContent
 
 public fun <T, G> GroupedDataFrame<T, G>.print(): Unit = println(this)
 
@@ -46,7 +47,7 @@ internal val valueToStringLimitDefault = 1000
 internal val valueToStringLimitForRowAsTable = 50
 
 internal fun AnyRow.getVisibleValues(): List<Pair<String, Any?>> {
-    fun Any?.skip(): Boolean = when(this){
+    fun Any?.skip(): Boolean = when (this) {
         null -> true
         is Many<*> -> this.isEmpty()
         is AnyRow -> values().all { it.skip() }
@@ -55,19 +56,19 @@ internal fun AnyRow.getVisibleValues(): List<Pair<String, Any?>> {
     return owner.columns().map { it.name() to it[index] }.filter { !it.second.skip() }
 }
 
-internal fun AnyRow.renderToString(): String{
+internal fun AnyRow.renderToString(): String {
     val values = getVisibleValues()
-    if(values.isEmpty()) return "{ }"
+    if (values.isEmpty()) return "{ }"
     return values
         .map { "${it.first}:${renderValueForStdout(it.second)}" }.joinToString(prefix = "{ ", postfix = " }")
 }
 
-fun AnyRow.renderToStringTable(forHtml: Boolean = false): String{
-    if(size() == 0) return ""
-    val pairs =  owner.columns().map {it.name() to renderValueForRowTable(it[index], forHtml)}
-    val width = pairs.map { it.first.length + it.second.second}.maxOrNull()!! + 4
+public fun AnyRow.renderToStringTable(forHtml: Boolean = false): String {
+    if (size() == 0) return ""
+    val pairs = owner.columns().map { it.name() to renderValueForRowTable(it[index], forHtml) }
+    val width = pairs.map { it.first.length + it.second.textLength }.maxOrNull()!! + 4
     return pairs.joinToString("\n") {
-        it.first + " ".repeat(width - it.first.length - it.second.second) + it.second.first
+        it.first + " ".repeat(width - it.first.length - it.second.textLength) + it.second.content
     }
 }
 
@@ -78,28 +79,24 @@ internal fun renderCollectionName(value: Collection<*>) = when (value) {
     else -> value.javaClass.simpleName
 }
 
-public fun renderValueForRowTable(value: Any?, forHtml: Boolean): Pair<String, Int> = when (value) {
+public fun renderValueForRowTable(value: Any?, forHtml: Boolean): RenderedContent = when (value) {
     is AnyFrame -> "DataFrame [${value.nrow()} x ${value.ncol()}]".let {
-        if (value.nrow() == 1) it + " " + value[0].toString() else it
-    } to "DataFrame".length
-    is AnyRow -> "DataRow $value" to "DataRow".length
-    is Collection<*> -> renderCollectionName(value).let { it + " " + value.toString() to it.length }
-    else -> if (forHtml) renderValueForHtml(value, valueToStringLimitForRowAsTable).let { it to it.length }
-    else renderValueForStdout(value, valueToStringLimitForRowAsTable).let { it to it.length }
+        val content = if (value.nrow() == 1) it + " " + value[0].toString() else it
+        RenderedContent(content, "DataFrame".length)
+    }
+    is AnyRow -> RenderedContent("DataRow $value", "DataRow".length)
+    is Collection<*> -> renderCollectionName(value).let { RenderedContent("$it $value", it.length) }
+    else -> if (forHtml) renderValueForHtml(value, valueToStringLimitForRowAsTable)
+    else renderValueForStdout(value, valueToStringLimitForRowAsTable).let { RenderedContent.text(it) }
 }
 
-internal fun renderValueForHtml(value: Any?, truncate: Int, nullClass: String? = null) = when{
-    value == null && nullClass != null -> "<div class=\"$nullClass\">null</div>"
-    else -> renderValue(value).truncate(truncate).escapeHTML()
-}
+internal fun renderValueForStdout(value: Any?, truncate: Int = valueToStringLimitDefault) = renderValueToString(value).truncate(truncate).escapeNewLines()
 
-internal fun renderValueForStdout(value: Any?, truncate: Int = valueToStringLimitDefault) = renderValue(value).truncate(truncate).escapeNewLines()
-
-internal fun renderValue(value: Any?) =
-    when(value) {
-        is AnyFrame -> "[${value.size}]".let { if(value.nrow() == 1) it + " " + value[0].toString() else it}
+internal fun renderValueToString(value: Any?) =
+    when (value) {
+        is AnyFrame -> "[${value.size}]".let { if (value.nrow() == 1) it + " " + value[0].toString() else it }
         is Double -> value.format(6)
-        is Many<*> -> if(value.isEmpty()) "[ ]" else value.toString()
+        is Many<*> -> if (value.isEmpty()) "[ ]" else value.toString()
         else -> value.toString()
     }
 

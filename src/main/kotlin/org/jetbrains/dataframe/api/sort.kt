@@ -11,7 +11,7 @@ public interface SortReceiver<out T> : SelectReceiver<T> {
     public val String.desc: Columns<Comparable<*>?> get() = cast<Comparable<*>>().desc
     public val <C> KProperty<C>.desc: Columns<C> get() = toColumnDef().desc
 
-    public fun <C> Columns<C?>.nullsLast(flag: Boolean) = if(flag) addFlag(SortFlag.NullsLast) else this
+    public fun <C> Columns<C?>.nullsLast(flag: Boolean): Columns<C?> = if (flag) addFlag(SortFlag.NullsLast) else this
 
     public val <C> Columns<C?>.nullsLast: Columns<C?> get() = addFlag(SortFlag.NullsLast)
     public val String.nullsLast: Columns<Comparable<*>?> get() = cast<Comparable<*>>().nullsLast
@@ -48,15 +48,19 @@ public fun <T, G> GroupedDataFrame<T, G>.sortBy(vararg cols: ColumnReference<Com
 public fun <T, G> GroupedDataFrame<T, G>.sortBy(vararg cols: KProperty<Comparable<*>?>): GroupedDataFrame<T, G> = sortBy { cols.toColumns() }
 public fun <T, G, C> GroupedDataFrame<T, G>.sortBy(selector: SortColumnsSelector<G, C>): GroupedDataFrame<T, G> = doSortBy(selector)
 
-fun <T, G> GroupedDataFrame<T, G>.sortByDesc(vararg cols: String) = sortByDesc { cols.toColumns() }
-fun <T, G> GroupedDataFrame<T, G>.sortByDesc(vararg cols: ColumnReference<Comparable<*>?>) = sortByDesc { cols.toColumns() }
-fun <T, G> GroupedDataFrame<T, G>.sortByDesc(vararg cols: KProperty<Comparable<*>?>) = sortByDesc { cols.toColumns() }
-fun <T, G, C> GroupedDataFrame<T, G>.sortByDesc(selector: SortColumnsSelector<G, C>): GroupedDataFrame<T, G> {
+public fun <T, G> GroupedDataFrame<T, G>.sortByDesc(vararg cols: String): GroupedDataFrame<T, G> = sortByDesc { cols.toColumns() }
+public fun <T, G> GroupedDataFrame<T, G>.sortByDesc(vararg cols: ColumnReference<Comparable<*>?>): GroupedDataFrame<T, G> = sortByDesc { cols.toColumns() }
+public fun <T, G> GroupedDataFrame<T, G>.sortByDesc(vararg cols: KProperty<Comparable<*>?>): GroupedDataFrame<T, G> = sortByDesc { cols.toColumns() }
+public fun <T, G, C> GroupedDataFrame<T, G>.sortByDesc(selector: SortColumnsSelector<G, C>): GroupedDataFrame<T, G> {
     val set = selector.toColumns()
     return doSortBy { set.desc }
 }
 
-private fun <T, G, C> GroupedDataFrame<T, G>.createColumnFromGroupExpression(receiver: SelectReceiver<T>, default: C? = null, selector: DataFrameSelector<G, C>): DataColumn<C?> {
+private fun <T, G, C> GroupedDataFrame<T, G>.createColumnFromGroupExpression(
+    receiver: SelectReceiver<T>,
+    default: C? = null,
+    selector: DataFrameSelector<G, C>
+): DataColumn<C?> {
     return receiver.exprWithActualType { row ->
         val group: DataFrame<G>? = row[groups]
         if (group == null) default
@@ -64,19 +68,27 @@ private fun <T, G, C> GroupedDataFrame<T, G>.createColumnFromGroupExpression(rec
     }
 }
 
-fun <T, G, C> GroupedDataFrame<T, G>.sortByGroup(nullsLast: Boolean = false, default: C? = null, selector: DataFrameSelector<G, C>): GroupedDataFrame<T, G> = plain().sortBy {
+public fun <T, G, C> GroupedDataFrame<T, G>.sortByGroup(
+    nullsLast: Boolean = false,
+    default: C? = null,
+    selector: DataFrameSelector<G, C>
+): GroupedDataFrame<T, G> = plain().sortBy {
     createColumnFromGroupExpression(this, default, selector).nullsLast(nullsLast)
 }.toGrouped(groups)
 
-fun <T, G, C> GroupedDataFrame<T, G>.sortByGroupDesc(nullsLast: Boolean = false, default: C? = null, selector: DataFrameSelector<G, C>): GroupedDataFrame<T, G> = plain().sortBy {
+public fun <T, G, C> GroupedDataFrame<T, G>.sortByGroupDesc(
+    nullsLast: Boolean = false,
+    default: C? = null,
+    selector: DataFrameSelector<G, C>
+): GroupedDataFrame<T, G> = plain().sortBy {
     createColumnFromGroupExpression(this, default, selector).desc.nullsLast(nullsLast)
 }.toGrouped(groups)
 
-fun <T, G> GroupedDataFrame<T, G>.sortByCountAsc() = sortByGroup(default = 0) { nrow() }
-fun <T, G> GroupedDataFrame<T, G>.sortByCount() = sortByGroupDesc(default = 0) { nrow() }
+public fun <T, G> GroupedDataFrame<T, G>.sortByCountAsc(): GroupedDataFrame<T, G> = sortByGroup(default = 0) { nrow() }
+public fun <T, G> GroupedDataFrame<T, G>.sortByCount(): GroupedDataFrame<T, G> = sortByGroupDesc(default = 0) { nrow() }
 
-fun <T, G> GroupedDataFrame<T, G>.sortByKeyDesc(nullsLast: Boolean = false) = plain().sortBy { keys.columns().toColumnSet().desc.nullsLast(nullsLast) }.toGrouped(groups)
-fun <T, G> GroupedDataFrame<T, G>.sortByKey(nullsLast: Boolean = false) = plain().sortBy { keys.columns().toColumnSet().nullsLast(nullsLast) }.toGrouped(groups)
+public fun <T, G> GroupedDataFrame<T, G>.sortByKeyDesc(nullsLast: Boolean = false): GroupedDataFrame<T, G> = plain().sortBy { keys.columns().toColumnSet().desc.nullsLast(nullsLast) }.toGrouped(groups)
+public fun <T, G> GroupedDataFrame<T, G>.sortByKey(nullsLast: Boolean = false): GroupedDataFrame<T, G> = plain().sortBy { keys.columns().toColumnSet().nullsLast(nullsLast) }.toGrouped(groups)
 
 internal fun <T, C> DataFrame<T>.doSortBy(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail,
