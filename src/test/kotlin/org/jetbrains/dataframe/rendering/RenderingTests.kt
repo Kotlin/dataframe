@@ -1,12 +1,19 @@
 package org.jetbrains.dataframe.rendering
 
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.jetbrains.dataframe.columnOf
 import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.getType
+import org.jetbrains.dataframe.io.DisplayConfiguration
+import org.jetbrains.dataframe.io.formatter
 import org.jetbrains.dataframe.io.renderToStringTable
+import org.jetbrains.dataframe.io.toHTML
+import org.jetbrains.dataframe.jupyter.DefaultCellRenderer
+import org.jetbrains.dataframe.manyOf
 import org.jetbrains.dataframe.parse
 import org.jetbrains.dataframe.toDataFrame
+import org.jsoup.Jsoup
 import org.junit.Test
 import java.net.URL
 
@@ -27,8 +34,16 @@ class RenderingTests {
     }
 
     @Test
-    fun `parse url`(){
+    fun `parse url`() {
         val df = dataFrameOf("url")("http://www.google.com").parse()
         df["url"].type() shouldBe getType<URL>()
+    }
+
+    @Test
+    fun htmlTagsAreEscaped() {
+        val df = dataFrameOf("name", "int")("<Air France> (12)", 1)
+        val html = df.toHTML().toString()
+        println(html)
+        html shouldContain "&#60;Air France&#62;"
     }
 }

@@ -9,12 +9,12 @@ import org.jetbrains.dataframe.io.isURL
 import org.jetbrains.dataframe.io.toDataFrame
 import java.math.BigDecimal
 import java.net.URL
+import java.time.*
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
-import java.time.*
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
 import java.util.*
@@ -35,11 +35,11 @@ public data class ConvertClause<T, C>(val df: DataFrame<T>, val selector: Column
 
 public fun <T> ConvertClause<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
 
-inline fun <T, C, reified R> ConvertClause<T, C>.with(noinline rowConverter: DataRow<T>.(C) -> R) =
+public inline fun <T, C, reified R> ConvertClause<T, C>.with(noinline rowConverter: DataRow<T>.(C) -> R): DataFrame<T> =
     with(getType<R>(), rowConverter)
 
 @PublishedApi
-internal fun <T, C, R> ConvertClause<T, C>.with(type: KType, rowConverter: DataRow<T>.(C) -> R) =
+internal fun <T, C, R> ConvertClause<T, C>.with(type: KType, rowConverter: DataRow<T>.(C) -> R): DataFrame<T> =
     to { col -> df.newColumn(type, col.name()) { rowConverter(it, it[col]) } }
 
 public fun <T, C> ConvertClause<T, C>.to(columnConverter: (DataColumn<C>) -> AnyCol): DataFrame<T> =

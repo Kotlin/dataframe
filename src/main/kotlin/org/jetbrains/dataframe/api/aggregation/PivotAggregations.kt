@@ -3,7 +3,6 @@ package org.jetbrains.dataframe
 import org.jetbrains.dataframe.aggregation.Aggregatable
 import org.jetbrains.dataframe.aggregation.AggregateColumnsSelector
 import org.jetbrains.dataframe.aggregation.PivotAggregateBody
-import org.jetbrains.dataframe.impl.aggregation.DataFramePivotImpl
 import org.jetbrains.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
@@ -69,7 +68,7 @@ public interface PivotAggregations<T> : Aggregatable<T> {
 }
 
 @PublishedApi
-internal fun <T> PivotAggregations<T>.asGrouped() = groupBy { none() }
+internal fun <T> PivotAggregations<T>.asGrouped(): GroupedPivotAggregations<T> = groupBy { none() }
 
 // region inlines
 

@@ -5,8 +5,12 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.intellij.lang.annotations.Language
 import org.jetbrains.dataframe.dataFrameOf
+import org.jetbrains.dataframe.io.DisplayConfiguration
+import org.jetbrains.dataframe.io.formatter
 import org.jetbrains.dataframe.io.toHTML
+import org.jetbrains.dataframe.manyOf
 import org.jetbrains.dataframe.test.containNTimes
+import org.jsoup.Jsoup
 import org.junit.Ignore
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
@@ -43,8 +47,9 @@ class RenderingTests : JupyterReplTestCase() {
         html2 shouldContain (160 * 2).toString()
     }
 
+    // TODO: restore
     @Test
-    @Ignore // TODO: restore
+    @Ignore
     fun `rendering options`() {
         @Language("kts")
         val html1 = execHtml(
@@ -64,18 +69,5 @@ class RenderingTests : JupyterReplTestCase() {
             """.trimIndent()
         )
         html2 should containNTimes("<tr>", 51)
-    }
-
-    @Test
-    fun htmlTagsAreEscaped() {
-        @Language("kts")
-        val res = execHtml(
-            """
-            dataFrameOf("name", "int")("<Air France> (12)", 1)
-        """.trimIndent())
-        val df = dataFrameOf("name", "int")("<Air France> (12)", 1)
-        val html = df.toHTML().toString()
-        println(html)
-        html shouldContain "&#60;Air France&#62;"
     }
 }

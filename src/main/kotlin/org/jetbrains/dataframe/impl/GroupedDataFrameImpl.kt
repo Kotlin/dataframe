@@ -43,7 +43,7 @@ internal class GroupedDataFrameImpl<T, G>(
 
     override fun pivot(columns: ColumnsSelector<G, *>): GroupedPivotAggregations<G> = GroupedPivotImpl(this, columns)
 
-    override fun into(name: String): DataFrame<G> = if(name == groups.name()) df.typed() else df.rename(groups).into(name).typed()
+    override fun into(name: String): DataFrame<G> = if (name == groups.name()) df.typed() else df.rename(groups).into(name).typed()
 
     override fun filter(predicate: GroupedRowFilter<T, G>): GroupedDataFrame<T, G> {
         val indices = (0 until df.nrow()).filter {

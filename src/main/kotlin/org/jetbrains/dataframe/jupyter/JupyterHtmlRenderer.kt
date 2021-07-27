@@ -4,7 +4,6 @@ import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.io.DisplayConfiguration
 import org.jetbrains.dataframe.io.getDefaultFooter
 import org.jetbrains.dataframe.io.toHTML
-import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 
 internal class JupyterHtmlRenderer(
@@ -18,5 +17,5 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     crossinline modifyConfig: T.(DisplayConfiguration) -> DisplayConfiguration = { it }
 ) = builder.renderWithHost<T> { host, value ->
     val contextRenderer = JupyterCellRenderer(this.notebook, host)
-    HTML(getDf(value).toHTML(value.modifyConfig(display), getFooter, contextRenderer))
+    getDf(value).toHTML(value.modifyConfig(display), includeInit = false, contextRenderer, getFooter).toJupyter()
 }

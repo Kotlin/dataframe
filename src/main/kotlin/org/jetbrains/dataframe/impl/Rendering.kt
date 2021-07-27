@@ -3,28 +3,23 @@ package org.jetbrains.dataframe.impl
 import org.jetbrains.dataframe.AnyFrame
 import org.jetbrains.dataframe.ColumnKind
 import org.jetbrains.dataframe.Many
-import org.jetbrains.dataframe.columns.size
-import org.jetbrains.dataframe.internal.schema.ColumnSchema
-import org.jetbrains.dataframe.internal.schema.DataFrameSchema
 import org.jetbrains.dataframe.columns.AnyCol
+import org.jetbrains.dataframe.columns.size
 import org.jetbrains.dataframe.columns.type
 import org.jetbrains.dataframe.impl.columns.asGroup
 import org.jetbrains.dataframe.impl.columns.asTable
-import org.jetbrains.dataframe.columns.type
-import org.jetbrains.dataframe.getType
+import org.jetbrains.dataframe.internal.schema.ColumnSchema
+import org.jetbrains.dataframe.internal.schema.DataFrameSchema
 import org.jetbrains.dataframe.io.escapeHTML
 import org.jetbrains.dataframe.size
 import java.net.URL
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import kotlin.reflect.KClass
-import org.jetbrains.dataframe.internal.schema.ColumnSchema
-import org.jetbrains.dataframe.internal.schema.DataFrameSchema
 import kotlin.reflect.KType
 
 internal fun String.truncate(limit: Int) = if (limit in 1 until length) {
-    if (limit < 4) substring(0, limit)
+    if (limit < 4) "..."
     else substring(0, limit - 3) + "..."
 } else {
     this
@@ -85,9 +80,8 @@ internal fun renderType(column: AnyCol) =
         }
     }
 
-internal fun AnyCol.renderShort() = when(kind()) {
+internal fun AnyCol.renderShort() = when (kind()) {
     ColumnKind.Value -> "ValueColumn<${renderType(type)}>: $size entries".escapeHTML()
     ColumnKind.Frame -> "FrameColumn: $size entries"
     ColumnKind.Group -> "ColumnGroup ${asGroup().df.size}}"
 }
-

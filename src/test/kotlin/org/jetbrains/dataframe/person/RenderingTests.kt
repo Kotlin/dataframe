@@ -9,9 +9,10 @@ import org.jetbrains.dataframe.FormattingDSL.red
 import org.jetbrains.dataframe.io.DisplayConfiguration
 import org.jetbrains.dataframe.io.formatter
 import org.jetbrains.dataframe.io.renderToString
+import org.jetbrains.dataframe.io.toHTML
+import org.jetbrains.dataframe.jupyter.DefaultCellRenderer
 import org.jsoup.Jsoup
 import org.junit.Ignore
-import org.jetbrains.dataframe.io.toHTML
 import org.junit.Test
 
 class RenderingTests : BaseTest() {
@@ -41,10 +42,10 @@ class RenderingTests : BaseTest() {
         typed.toString().trim() shouldBe expected
     }
 
-    //TODO: restore conditional formatting
+    // TODO: restore conditional formatting
     @Test
     @Ignore
-    fun `conditional formatting`(){
+    fun `conditional formatting`() {
         val formattedFrame = typed.format { intCols().withoutNulls() }.with {
             if (it > 10) background(white) and bold and italic
             else textColor(linear(it, 30.5 to red, 50 to green)) and underline
@@ -72,9 +73,9 @@ class RenderingTests : BaseTest() {
     @Test
     fun `empty row with nested empty row`() {
         val df = dataFrameOf("a", "b", "c")(null, null, null)
-        val grouped = df.group("a","b").into("d").group("c", "d").into("e")[0]
+        val grouped = df.group("a", "b").into("d").group("c", "d").into("e")[0]
 
-        val formatted = formatter.format(grouped, Int.MAX_VALUE)
+        val formatted = formatter.format(grouped, DefaultCellRenderer, DisplayConfiguration())
         Jsoup.parse(formatted).text() shouldBe "{ }"
 
         grouped.renderToString() shouldBe "{ }"

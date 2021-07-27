@@ -3,7 +3,6 @@ package org.jetbrains.dataframe.jupyter
 import io.kotest.matchers.shouldNotBe
 import org.jetbrains.dataframe.DataFrame
 import org.junit.Test
-import java.io.BufferedReader
 import java.io.InputStreamReader
 
 class ResourcesTest {

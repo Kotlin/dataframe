@@ -157,10 +157,10 @@ public class DataFrameBuilder(private val header: List<String>) {
         }.asDataFrame<Unit>()
     }
 
-    public operator fun invoke(vararg values: Any?): AnyFrame = invoke(values.asIterable())
+    public operator fun invoke(vararg values: Any?): AnyFrame = withValues(values.asIterable())
 
     @JvmName("invoke1")
-    public operator fun invoke(values: Iterable<Any?>): AnyFrame {
+    internal fun withValues(values: Iterable<Any?>): AnyFrame {
         val list = values.asList()
 
         val ncol = header.size

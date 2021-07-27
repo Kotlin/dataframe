@@ -4,8 +4,8 @@ import org.jetbrains.dataframe.aggregation.Aggregatable
 import org.jetbrains.dataframe.aggregation.AggregateColumnsSelector
 import org.jetbrains.dataframe.aggregation.GroupByAggregateBody
 import org.jetbrains.dataframe.columns.ColumnReference
-import org.jetbrains.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.dataframe.impl.aggregation.*
+import org.jetbrains.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.dataframe.impl.aggregation.modes.aggregateBy
@@ -32,8 +32,8 @@ public interface GroupByAggregations<out T> : Aggregatable<T> {
 
     public fun values(): DataFrame<T> = values(remainingColumnsSelector())
 
-    fun into(columnName: String = GroupedDataFrame.columnForGroupedData.name()): DataFrame<T>
-    fun into(columnRef: ColumnReference<AnyFrame?>): DataFrame<T> = into(columnRef.name())
+    public fun into(columnName: String = GroupedDataFrame.columnForGroupedData.name()): DataFrame<T>
+    public fun into(columnRef: ColumnReference<AnyFrame?>): DataFrame<T> = into(columnRef.name())
 
     // region min
 

@@ -1,22 +1,22 @@
 package org.jetbrains.dataframe.io
 
+import khttp.post
 import org.jetbrains.dataframe.AnyFrame
 import org.jetbrains.dataframe.AnyMany
 import org.jetbrains.dataframe.AnyRow
 import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.DataFrameSize
-import org.jetbrains.dataframe.Many
 import org.jetbrains.dataframe.RowColFormatter
 import org.jetbrains.dataframe.columns.AnyCol
 import org.jetbrains.dataframe.columns.ColumnGroup
-import org.jetbrains.dataframe.index
+import org.jetbrains.dataframe.impl.truncate
 import org.jetbrains.dataframe.isSubtypeOf
-import org.jetbrains.dataframe.owner
-import org.jetbrains.dataframe.isNumber
 import org.jetbrains.dataframe.jupyter.CellRenderer
-import org.jetbrains.dataframe.jupyter.ImageCellRenderer
+import org.jetbrains.dataframe.jupyter.DefaultCellRenderer
+import org.jetbrains.dataframe.jupyter.RenderedContent
 import org.jetbrains.dataframe.size
 import org.jetbrains.kotlinx.jupyter.api.HTML
+import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import java.io.InputStreamReader
 import java.net.URL
 import java.util.LinkedList
@@ -27,13 +27,26 @@ internal fun getDefaultFooter(df: DataFrame<*>): String {
     return "DataFrame [${df.size}]"
 }
 
-fun <T> DataFrame<T>.toHTML(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT, getFooter: (DataFrame<T>)->String = ::getDefaultFooter) = buildString {
-
 internal data class DataFrameReference(val dfId: Int, val size: DataFrameSize)
 
-internal data class ColumnDataForJs(val name: String, val nested: List<ColumnDataForJs>, val rightAlign: Boolean, val values: List<Any>)
+internal data class ColumnDataForJs(
+    val name: String,
+    val nested: List<ColumnDataForJs>,
+    val rightAlign: Boolean,
+    val values: List<Any>
+)
 
-internal val formatter = DataFrameFormatter("formatted","formatNull", "formatCurlyBrackets", "formatNumbers", "formatDataframes", "formatComma", "formatColumnNames", "formatSquareBrackets")
+internal val formatter = DataFrameFormatter(
+    "formatted",
+    "formatNull",
+    "formatCurlyBrackets",
+    "formatNumbers",
+    "formatDataframes",
+    "formatComma",
+    "formatComma",
+    "formatColumnNames",
+    "formatSquareBrackets"
+)
 
 internal fun getResources(vararg resource: String) = resource.joinToString(separator = "\n") { getResourceText(it) }
 
@@ -54,7 +67,7 @@ internal fun tableJs(columns: List<ColumnDataForJs>, id: Int): String {
             val children = col.nested.map { dfs(it) }
             val colIndex = index++
             val values = col.values.joinToString(",", prefix = "[", postfix = "]") {
-                when(it) {
+                when (it) {
                     is String -> "\"" + it.escapeForHtmlInJs() + "\""
                     is DataFrameReference -> {
                         val text = "<b>DataFrame ${it.size}</b>"
@@ -78,26 +91,32 @@ internal var tableId = 0
 // TODO: use configuration.cellFormatter to format cells (currently disabled)
 // TODO: display tooltips for column headers and data
 
-internal fun AnyFrame.toHtmlData(configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT, limit: Int): HtmlData {
-
+internal fun AnyFrame.toHtmlData(
+    configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
+    cellRenderer: CellRenderer
+): HtmlData {
     val scripts = mutableListOf<String>()
     val queue = LinkedList<Pair<AnyFrame, Int>>()
 
     fun AnyCol.toJs(): ColumnDataForJs {
-        val values = values().take(limit).map {
-            if(it is AnyFrame){
+        val values = values().take(configuration.rowsLimit).map {
+            if (it is AnyFrame) {
                 val id = tableId++
                 queue.add(it to id)
                 DataFrameReference(id, it.size)
-            }
-            else formatter.format(it, configuration.cellContentLimit)
+            } else formatter.format(it, cellRenderer, configuration)
         }
-        return ColumnDataForJs(name(), if (this is ColumnGroup<*>) columns().map { it.toJs() } else emptyList(), isSubtypeOf<Number?>(), values)
+        return ColumnDataForJs(
+            name(),
+            if (this is ColumnGroup<*>) columns().map { it.toJs() } else emptyList(),
+            isSubtypeOf<Number?>(),
+            values
+        )
     }
 
     val id = tableId++
     queue.add(this to id)
-    while(!queue.isEmpty()){
+    while (!queue.isEmpty()) {
         val (nextDf, nextId) = queue.pop()
         val preparedColumns = nextDf.columns().map { it.toJs() }
         val js = tableJs(preparedColumns, nextId)
@@ -108,10 +127,8 @@ internal fun AnyFrame.toHtmlData(configuration: DisplayConfiguration = DisplayCo
     return HtmlData("", body, script)
 }
 
-fun Html(body: String) = HtmlData("", body, "")
-
-data class HtmlData(val style: String, val body: String, val script: String){
-    override fun toString() = """
+public data class HtmlData(val style: String, val body: String, val script: String) {
+    override fun toString(): String = """
         <html>
         <head>
             <style type="text/css">
@@ -127,32 +144,34 @@ data class HtmlData(val style: String, val body: String, val script: String){
         </html>
     """.trimIndent()
 
-    fun toJupyter() = HTML(toString())
+    public fun toJupyter(): MimeTypedResult = HTML(toString())
 
-    operator fun plus(other: HtmlData) = HtmlData(style + "\n" + other.style, body + "\n" + other.body, script + "\n" + other.script)
+    public operator fun plus(other: HtmlData): HtmlData =
+        HtmlData(style + "\n" + other.style, body + "\n" + other.body, script + "\n" + other.script)
 }
 
-internal fun initHtml() : HtmlData = HtmlData(style = getResources("/table.css", "/formatting.css"), script = getResourceText("/init.js"), body="")
+internal fun initHtml(): HtmlData =
+    HtmlData(style = getResources("/table.css", "/formatting.css"), script = getResourceText("/init.js"), body = "")
 
-fun <T> DataFrame<T>.html() = toHTML(includeInit = true).toString()
+public fun <T> DataFrame<T>.html(): String = toHTML(includeInit = true).toString()
 
-fun <T> DataFrame<T>.toHTML(
+public fun <T> DataFrame<T>.toHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     includeInit: Boolean = false,
+    cellRenderer: CellRenderer = DefaultCellRenderer,
     getFooter: (DataFrame<T>) -> String = { "DataFrame [${it.size}]" }
 ): HtmlData {
-
     val limit = configuration.rowsLimit
 
     val footer = getFooter(this)
-    val bodyFooter = if (limit < nrow())
+    val bodyFooter = if (limit < nrow()) {
         "<p>... showing only top $limit of ${nrow()} rows</p><p>$footer</p>"
-    else "<p>$footer</p>"
+    } else "<p>$footer</p>"
 
-    val tableHtml = toHtmlData(configuration, limit)
+    val tableHtml = toHtmlData(configuration, cellRenderer)
     val html = tableHtml + HtmlData("", bodyFooter, "")
 
-    return if(includeInit) initHtml() + html else html
+    return if (includeInit) initHtml() + html else html
 }
 
 public data class DisplayConfiguration(
@@ -171,6 +190,11 @@ internal fun String.escapeForHtmlInJs() = replace("\"", "\\\"").escapeNewLines()
 
 internal fun String.escapeForHtmlInJsMultiline() = replace("\"", "\\\"").replace("\n", "<br>")
 
+internal fun renderValueForHtml(value: Any?, truncate: Int): RenderedContent {
+    val truncated = renderValueToString(value).truncate(truncate)
+    return RenderedContent(truncated.escapeHTML(), truncated.length)
+}
+
 internal fun String.escapeHTML(): String {
     val str = this
     return buildString {
@@ -186,92 +210,139 @@ internal fun String.escapeHTML(): String {
     }
 }
 
-internal class DataFrameFormatter(val formattedClass: String, val nullClass: String, val curlyBracketsClass: String, val numberClass: String, val dataFrameClass: String, val commaClass: String, val colNameClass: String, val squareBracketsClass: String) {
+internal class DataFrameFormatter(
+    val formattedClass: String,
+    val nullClass: String,
+    val curlyBracketsClass: String,
+    val numberClass: String,
+    val dataFrameClass: String,
+    val commaClass: String,
+    val ellipsisClass: String,
+    val colNameClass: String,
+    val squareBracketsClass: String
+) {
 
-    companion object {
-        private fun String.withClass(css: String) = "<span class=\"$css\">$this</span>"
-    }
-
-    private class FormatBuilder(val limit: Int) {
-
-        private var length: Int = 0
-        private val sb = StringBuilder()
-
-        val isFull get() = length >= limit
+    private class FormatBuilder {
 
         var isFormatted: Boolean = false
 
-        fun appendHtml(content: String) = sb.append(content)
+        fun wrap(prefix: String, content: RenderedContent, postfix: String) = content.copy(content = prefix + content + postfix)
 
-        fun append(prefix: String, content: String, postfix: String) {
-            if(isFull) return
-            val truncate = length + content.length > limit
-            val s = if(truncate) content.substring(0, limit - length) else content
-            length += s.length
-            val escaped = s.escapeHTML()
-            sb.append(prefix + escaped + postfix)
-            if(truncate || isFull) sb.append("...")
-        }
+        fun String.addCss(css: String? = null): RenderedContent = RenderedContent.text(this).addCss(css)
 
-        fun appendCss(str: String, css: String? = null) {
-            if(css != null) {
-                append("<span class=\"$css\">", str, "</span>")
+        fun RenderedContent.addCss(css: String? = null): RenderedContent {
+            return if (css != null) {
                 isFormatted = true
-            }
-            else append("", str, "")
+                copy(content = "<span class=\"$css\">" + content + "</span>")
+            } else this
+        }
+    }
+
+    fun format(value: Any?, renderer: CellRenderer, configuration: DisplayConfiguration): String {
+        val builder = FormatBuilder()
+        val result = builder.render(value, renderer, configuration)?.let { if(builder.isFormatted) with(builder) { it.addCss(formattedClass) } else it }
+        return result?.content ?: ""
+    }
+
+    private class Builder {
+        private val sb = StringBuilder()
+
+        var len: Int = 0
+            private set;
+
+        operator fun plusAssign(content: RenderedContent?) {
+            if(content == null) return
+            sb.append(content.content)
+            len += content.textLength
         }
 
-        override fun toString() = sb.toString()
+        fun result() = RenderedContent(sb.toString(), len)
     }
 
-    fun format(value: Any?, limit: Int): String {
-        val builder = FormatBuilder(limit)
-        builder.render(value)
-        val result = builder.toString()
-        return if(builder.isFormatted) "<span class=\"$formattedClass\">$result</span>" else result
-    }
+    private fun FormatBuilder.render(value: Any?, renderer: CellRenderer, configuration: DisplayConfiguration): RenderedContent? {
 
-    private fun FormatBuilder.render(value: Any?) {
-        if(isFull) return
-        when (value) {
-            null -> appendCss("null", nullClass)
+        val limit = configuration.cellContentLimit
+
+        fun renderList(values: List<*>, prefix: String, postfix: String): RenderedContent {
+            val sb = Builder()
+            sb += prefix.addCss(squareBracketsClass)
+            for(index in values.indices) {
+                if (index > 0) {
+                    sb += ", ".addCss(commaClass)
+                }
+                if(index < values.size - 1 && limit <= sb.len + "...".length + postfix.length){
+                    if(limit == sb.len + "..".length + postfix.length)
+                        sb += "..".addCss(ellipsisClass)
+                    else
+                        sb += "...".addCss(ellipsisClass)
+                    break
+                }
+                val valueLimit = when (index) {
+                    values.size - 1 -> limit - sb.len - postfix.length // last
+                    values.size - 2 -> { // prev before last
+                        val sizeOfLast = render(
+                            values.last(),
+                            renderer,
+                            configuration.copy(cellContentLimit = 4)
+                        )!!.textLength
+                        limit - sb.len - ", ".length - sizeOfLast - postfix.length
+                    }
+                    else -> limit - sb.len - ", ...".length - postfix.length
+                }
+                val rendered = render(values[index], renderer, configuration.copy(cellContentLimit = valueLimit))
+                if(rendered == null) {
+                    if(limit == sb.len + "..".length + postfix.length)
+                        sb += "..".addCss(ellipsisClass)
+                    else
+                        sb += "...".addCss(ellipsisClass)
+                    break
+                }
+                sb += rendered
+            }
+            sb += postfix.addCss(squareBracketsClass)
+            return sb.result()
+        }
+
+        val result = when (value) {
+            null -> "null".addCss(nullClass)
             is AnyRow -> {
                 val values = value.getVisibleValues()
-                if (values.isEmpty()) appendCss("{ }", nullClass)
-                else {
-                    appendCss("{ ", curlyBracketsClass)
-                    var first = true
-                    values.forEach {
-                        if(isFull) return
-                        if (first) first = false
-                        else appendCss(", ", commaClass)
-                        appendCss(it.first + ": ", colNameClass)
-                        render(it.second)
+                when {
+                    values.isEmpty() -> "{ }".addCss(nullClass)
+                    else -> when (limit) {
+                        4 -> "{..}".addCss(ellipsisClass)
+                        5 -> "{...}".addCss(ellipsisClass)
+                        6 -> "{ ...}".addCss(ellipsisClass)
+                        7 -> "{ ... }".addCss(ellipsisClass)
+                        else -> renderList(values, "{ ", " }")
                     }
-                    appendCss(" }", curlyBracketsClass)
                 }
             }
-            is AnyFrame -> appendCss("DataFrame [${value.size}]", dataFrameClass)
+            is AnyFrame -> renderer.content("DataFrame [${value.size}]", configuration).addCss(dataFrameClass)
             is AnyMany ->
                 when {
-                    value.isEmpty() -> appendCss("[ ]", nullClass)
-                    else -> {
-                        appendCss("[", squareBracketsClass)
-                        var first = true
-                        value.forEach {
-                            if(isFull) return
-                            if (first) first = false
-                            else appendCss(", ", commaClass)
-                            render(it)
-                        }
-                        appendCss("]", squareBracketsClass)
-                    }
+                    value.isEmpty() -> "[ ]".addCss(nullClass)
+                    else -> renderList(value, "[", "]")
                 }
-            is Number -> appendCss(value.toString(), numberClass)
-            is URL -> append("<a href='$value' target='_blank'>",value.toString(),"</a>")
-            is HtmlData -> appendHtml(value.body)
-            else -> appendCss(value.toString())
+            is Pair<*, *> -> {
+                val key = value.first.toString() + ": "
+                val sizeOfValue = render(value.second, renderer, configuration.copy(cellContentLimit = 4))!!.textLength
+                val keyLimit = limit - sizeOfValue
+                if(key.length > keyLimit) {
+                    if(limit > 3)
+                        key.take(limit - 3).addCss(colNameClass) + "...".addCss(ellipsisClass)
+                    else null
+                }
+                else {
+                    key.addCss(colNameClass) + render(value.second, renderer, configuration.copy(cellContentLimit = limit - key.length))!!
+                }
+            }
+            is Number -> renderer.content(value, configuration).addCss(numberClass)
+            is URL -> wrap("<a href='$value' target='_blank'>", renderer.content(value.toString(), configuration), "</a>")
+            is HtmlData -> RenderedContent.text(value.body)
+            else -> renderer.content(value, configuration)
         }
+        if(result != null && result.textLength > configuration.cellContentLimit) return null
+        return result
     }
-
 }

@@ -2,6 +2,7 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.columns.AnyCol
 import org.jetbrains.dataframe.io.DisplayConfiguration
+import org.jetbrains.dataframe.io.HtmlData
 import org.jetbrains.dataframe.io.toHTML
 
 public data class RGBColor(val r: Short, val g: Short, val b: Short)
@@ -95,7 +96,7 @@ public class FormattedFrame<T>(
     internal val df: DataFrame<T>,
     internal val formatter: RowColFormatter<T>? = null,
 ) {
-    public fun toHTML(configuration: DisplayConfiguration): String = df.toHTML(getDisplayConfiguration(configuration))
+    public fun toHTML(configuration: DisplayConfiguration): HtmlData = df.toHTML(getDisplayConfiguration(configuration))
 
     public fun getDisplayConfiguration(configuration: DisplayConfiguration): DisplayConfiguration {
         return configuration.copy(cellFormatter = formatter as RowColFormatter<*>?)
