@@ -174,7 +174,7 @@ class TaskSourceSetPropertyTest {
                     
                 plugins {
                     kotlin("jvm") version "1.4.10"
-                    id("org.jetbrains.dataframe.schema-generator")
+                    id("org.jetbrains.dataframe.schema-generator-base")
                 }
                 
                 repositories {
@@ -207,7 +207,7 @@ class TaskSourceSetPropertyTest {
                     
                 plugins {
                     kotlin("multiplatform") version "1.4.10"
-                    id("org.jetbrains.dataframe.schema-generator")
+                    id("org.jetbrains.dataframe.schema-generator-base")
                 }
                 
                 repositories {
