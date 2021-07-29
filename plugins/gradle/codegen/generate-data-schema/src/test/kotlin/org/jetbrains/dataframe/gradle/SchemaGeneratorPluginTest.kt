@@ -8,11 +8,19 @@ import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.TaskOutcome
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
+import org.junit.Before
 import org.junit.Test
 import java.io.File
 import java.nio.file.Files
 
 internal class SchemaGeneratorPluginTes {
+
+    lateinit var dataDir: File
+
+    @Before
+    fun before() {
+        dataDir = File("../../../../data")
+    }
 
     @Test
     fun `plugin configured via configure`() {
@@ -138,7 +146,6 @@ internal class SchemaGeneratorPluginTes {
 
     @Test
     fun `plugin configure multiple schemas from files via extension`() {
-        val dataDir = File("../../../data")
         val (_, result) = runGradleBuild(":generateAll") {
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -172,7 +179,6 @@ internal class SchemaGeneratorPluginTes {
 
     @Test
     fun `plugin configure multiple schemas from strings via extension`() {
-        val dataDir = File("../../../data")
         val (_, result) = runGradleBuild(":generateAll") { buildDir ->
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
@@ -206,7 +212,6 @@ internal class SchemaGeneratorPluginTes {
 
     @Test
     fun `compileKotlin depends on generateAll task`() {
-        val dataDir = File("../../../data")
         val (_, result) = runGradleBuild(":compileKotlin") { buildDir ->
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    

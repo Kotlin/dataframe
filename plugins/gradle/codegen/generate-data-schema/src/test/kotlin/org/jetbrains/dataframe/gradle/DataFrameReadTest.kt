@@ -76,8 +76,8 @@ class DataFrameReadTest {
 
     @Test
     fun `data accessible and readable`() {
-        val df = DataFrame.read(File("../../../data/ghost.json"))
-        val df1 = DataFrame.read(File("../../../data/playlistItems.json"))
+        val df = DataFrame.read(File("../../../../data/ghost.json"))
+        val df1 = DataFrame.read(File("../../../../data/playlistItems.json"))
     }
 
     @Test
