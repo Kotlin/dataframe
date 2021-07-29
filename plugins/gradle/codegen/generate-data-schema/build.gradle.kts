@@ -12,12 +12,11 @@ repositories {
 }
 
 group = "org.jetbrains.kotlinx"
-version = "0.1-dev"
 
 tasks.withType<ProcessResources> {
     filesMatching("**/plugin.properties") {
         filter {
-            it.replace("%PREPROCESSOR_VERSION%", "1.0-SNAPSHOT")
+            it.replace("%PREPROCESSOR_VERSION%", "$version")
         }
     }
 }

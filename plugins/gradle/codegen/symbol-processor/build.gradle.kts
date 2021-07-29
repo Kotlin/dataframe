@@ -4,7 +4,6 @@ plugins {
 }
 
 group = "org.jetbrains.dataframe"
-version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
