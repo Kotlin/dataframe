@@ -69,7 +69,6 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             this.interfaceName.set(interfaceName)
             this.packageName.set(packageName)
             this.src.set(src)
-            generateExtensionProperties.set(extension.generateExtensionProperties)
         }
     }
 
