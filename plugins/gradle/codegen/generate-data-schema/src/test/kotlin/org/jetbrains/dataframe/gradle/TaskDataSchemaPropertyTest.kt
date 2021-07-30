@@ -8,8 +8,6 @@ import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.testfixtures.ProjectBuilder
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformAndroidPlugin
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
 import org.junit.Test
 
 class TaskDataSchemaPropertyTest {
@@ -17,7 +15,7 @@ class TaskDataSchemaPropertyTest {
     fun `extension sourceSet present in project`() {
         val project = ProjectBuilder.builder().build() as ProjectInternal
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
-        project.plugins.apply(KotlinPlatformJvmPlugin::class.java)
+        project.plugins.apply("org.jetbrains.kotlin.jvm")
         project.extensions.getByType(KotlinJvmProjectExtension::class.java).apply {
             sourceSets.create("main1")
         }
@@ -40,7 +38,7 @@ class TaskDataSchemaPropertyTest {
         val project = ProjectBuilder.builder().build() as ProjectInternal
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.plugins.apply("com.android.application")
-        project.plugins.apply(KotlinPlatformAndroidPlugin::class.java)
+        project.plugins.apply("org.jetbrains.kotlin.android")
         (project.extensions.getByName("android") as BaseAppModuleExtension).let {
             it.compileSdk = 30
         }

@@ -1,13 +1,10 @@
 package org.jetbrains.dataframe.gradle
 
-import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.shouldNotBe
 import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.TaskOutcome
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
-import org.jetbrains.kotlin.gradle.plugin.KotlinPlatformJvmPlugin
 import org.junit.Before
 import org.junit.Test
 import java.io.File
@@ -328,7 +325,7 @@ internal class SchemaGeneratorPluginTes {
     fun `most specific sourceSet is used in the packageName inference`() {
         val project = ProjectBuilder.builder().build() as ProjectInternal
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
-        project.plugins.apply(KotlinPlatformJvmPlugin::class.java)
+        project.plugins.apply("org.jetbrains.kotlin.jvm")
         project.extensions.getByType(KotlinJvmProjectExtension::class.java).apply {
             sourceSets.create("main1")
         }
