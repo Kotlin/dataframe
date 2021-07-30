@@ -6,7 +6,6 @@ import java.io.File
 import java.net.URL
 
 open class SchemaGeneratorExtension {
-    var generateExtensionProperties: Boolean = true
     internal val schemas: MutableList<Schema> = mutableListOf()
     var packageName: String? = null
     var sourceSet: String? = null

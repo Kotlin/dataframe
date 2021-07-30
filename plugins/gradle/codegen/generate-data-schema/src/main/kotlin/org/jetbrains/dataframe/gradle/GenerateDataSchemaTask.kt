@@ -32,9 +32,6 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @get:Input
     abstract val packageName: Property<String>
 
-    @get:Input
-    abstract val generateExtensionProperties: Property<Boolean>
-
     @get:OutputFile
     val dataSchema = packageName.zip(interfaceName) { packageName, interfaceName ->
         val packagePath = packageName.replace('.', File.separatorChar)
@@ -49,7 +46,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             schema = df.extractSchema(),
             name = interfaceName.get(),
             fields = true,
-            extensionProperties = generateExtensionProperties.get(),
+            extensionProperties = false,
             isOpen = false
         )
         val escapedPackageName = escapePackageName(packageName.get())
