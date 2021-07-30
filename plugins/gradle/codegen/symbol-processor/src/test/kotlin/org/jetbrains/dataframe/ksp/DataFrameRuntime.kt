@@ -10,6 +10,8 @@ internal val annotations = SourceFile.kotlin("Annotations.kt", """
 """.trimIndent())
 
 internal val dataColumn = SourceFile.kotlin("DataColumn.kt", """
+    package org.jetbrains.dataframe.columns
+
     interface DataColumn<out T>
 """.trimIndent())
 
@@ -24,6 +26,8 @@ internal val dataFrame = SourceFile.kotlin("DataFrame.kt", """
 """.trimIndent())
 
 internal val dataRow = SourceFile.kotlin("DataRow.kt", """
+    package org.jetbrains.dataframe
+
     interface DataRowBase<out T> {
         operator fun get(name: String): Any?
     }
