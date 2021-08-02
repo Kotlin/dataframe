@@ -21,7 +21,7 @@ internal class SchemaGeneratorPluginTes {
 
     @Test
     fun `plugin configured via configure`() {
-        val (_, result) = runGradleBuild(":generateTest") {
+        val (_, result) = runGradleBuild(":generateDataFrameTest") {
             """
             import java.net.URL
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -44,12 +44,12 @@ internal class SchemaGeneratorPluginTes {
             }
             """.trimIndent()
         }
-        result.task(":generateTest")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
     fun `plugin configured via extension DSL`() {
-        val (_, result) = runGradleBuild(":generateTest") {
+        val (_, result) = runGradleBuild(":generateDataFrameTest") {
             """
             import java.net.URL
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -72,7 +72,7 @@ internal class SchemaGeneratorPluginTes {
             }
             """.trimIndent()
         }
-        result.task(":generateTest")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
@@ -102,13 +102,13 @@ internal class SchemaGeneratorPluginTes {
                 }
             """.trimIndent()
         )
-        val result = gradleRunner(buildDir, ":generateTest").build()
-        result.task(":generateTest")?.outcome shouldBe TaskOutcome.SUCCESS
+        val result = gradleRunner(buildDir, ":generateDataFrameTest").build()
+        result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
     fun `plugin configure multiple schemas from URLs via extension`() {
-        val (_, result) = runGradleBuild(":generateAll") {
+        val (_, result) = runGradleBuild(":generateDataFrames") {
             """
             import java.net.URL
             
@@ -137,13 +137,13 @@ internal class SchemaGeneratorPluginTes {
             }
             """.trimIndent()
         }
-        result.task(":generateTest")?.outcome shouldBe TaskOutcome.SUCCESS
-        result.task(":generateSchema")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateDataFrameSchema")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
     fun `plugin configure multiple schemas from files via extension`() {
-        val (_, result) = runGradleBuild(":generateAll") {
+        val (_, result) = runGradleBuild(":generateDataFrames") {
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
@@ -170,13 +170,13 @@ internal class SchemaGeneratorPluginTes {
             }
             """.trimIndent()
         }
-        result.task(":generateTest")?.outcome shouldBe TaskOutcome.SUCCESS
-        result.task(":generateSchema")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateDataFrameSchema")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
     fun `plugin configure multiple schemas from strings via extension`() {
-        val (_, result) = runGradleBuild(":generateAll") { buildDir ->
+        val (_, result) = runGradleBuild(":generateDataFrames") { buildDir ->
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -203,8 +203,8 @@ internal class SchemaGeneratorPluginTes {
             }
             """.trimIndent()
         }
-        result.task(":generateTest")?.outcome shouldBe TaskOutcome.SUCCESS
-        result.task(":generateSchema")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateDataFrameSchema")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
@@ -240,8 +240,8 @@ internal class SchemaGeneratorPluginTes {
             }
             """.trimIndent()
         }
-        result.task(":generateTest")?.outcome shouldBe TaskOutcome.SUCCESS
-        result.task(":generateSchema")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateDataFrameSchema")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
@@ -318,7 +318,7 @@ internal class SchemaGeneratorPluginTes {
                 }
             """.trimIndent()
         }
-        result.task(":generateData")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateDataFrameData")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
     @Test
@@ -339,7 +339,7 @@ internal class SchemaGeneratorPluginTes {
         }
         project.file("src/main1/kotlin/org/example/test").also { it.mkdirs() }
         project.evaluate()
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).dataSchema.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).dataSchema.get()
             .shouldBe(project.file("src/main1/kotlin/org/example/test/dataframe/Generated321.kt"))
     }
 }

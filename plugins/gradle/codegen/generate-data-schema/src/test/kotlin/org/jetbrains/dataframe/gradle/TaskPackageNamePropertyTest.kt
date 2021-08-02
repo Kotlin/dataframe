@@ -24,7 +24,7 @@ class TaskPackageNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.test"
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.test"
     }
 
     @Test
@@ -41,7 +41,7 @@ class TaskPackageNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
     }
 
     @Test
@@ -57,7 +57,7 @@ class TaskPackageNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.findByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
+        (project.tasks.findByName("generateDataFrame321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
     }
 
     @Test
@@ -73,7 +73,7 @@ class TaskPackageNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.findByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
+        (project.tasks.findByName("generateDataFrame321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.example.my"
     }
 
     @Test
@@ -104,7 +104,7 @@ class TaskPackageNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.test.dataframe"
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.test.dataframe"
     }
 
     @Test
@@ -124,7 +124,7 @@ class TaskPackageNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.test.dataframe"
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.test.dataframe"
     }
 
     @Test
@@ -140,7 +140,7 @@ class TaskPackageNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.dataframe"
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.dataframe"
     }
 
     @Test
@@ -173,7 +173,7 @@ class TaskPackageNamePropertyTest {
                 }
             """.trimIndent()
         }
-        result.task(":generateData")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateDataFrameData")?.outcome shouldBe TaskOutcome.SUCCESS
         File(dir, "src/main/kotlin/dataframe/GeneratedData.kt").exists() shouldBe true
     }
 }
