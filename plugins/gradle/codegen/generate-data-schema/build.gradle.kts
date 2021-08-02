@@ -11,8 +11,6 @@ repositories {
     google()
 }
 
-group = "org.jetbrains.kotlinx"
-
 tasks.withType<ProcessResources> {
     filesMatching("**/plugin.properties") {
         filter {

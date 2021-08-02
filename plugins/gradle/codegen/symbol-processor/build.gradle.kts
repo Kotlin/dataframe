@@ -1,9 +1,7 @@
 plugins {
     kotlin("jvm") version "1.5.21"
-    id("com.vanniktech.maven.publish")
+    id("com.vanniktech.maven.publish") version "0.17.0"
 }
-
-group = "org.jetbrains.dataframe"
 
 repositories {
     mavenCentral()

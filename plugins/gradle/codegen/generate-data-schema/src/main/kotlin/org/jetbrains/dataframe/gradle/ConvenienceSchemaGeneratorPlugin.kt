@@ -15,7 +15,7 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
         target.plugins.apply("com.google.devtools.ksp")
         target.plugins.apply(SchemaGeneratorPlugin::class.java)
         target.configurations.getByName("ksp").dependencies.add(
-            target.dependencies.create("org.jetbrains.dataframe:symbol-processor:$preprocessorVersion")
+            target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor:$preprocessorVersion")
         )
     }
 }
