@@ -24,7 +24,7 @@ class TaskNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.findByName("generate321") shouldNotBe null)
+        (project.tasks.findByName("generateDataFrame321") shouldNotBe null)
     }
 
     @Test
@@ -39,7 +39,7 @@ class TaskNamePropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.findByName("generate321") shouldNotBe null)
+        (project.tasks.findByName("generateDataFrame321") shouldNotBe null)
     }
 
     @Test
@@ -88,6 +88,6 @@ class TaskNamePropertyTest {
             }
         }
         project.evaluate()
-        project.tasks.getByName("generateCity_population") shouldNotBe null
+        project.tasks.getByName("generateDataFrameCity_population") shouldNotBe null
     }
 }

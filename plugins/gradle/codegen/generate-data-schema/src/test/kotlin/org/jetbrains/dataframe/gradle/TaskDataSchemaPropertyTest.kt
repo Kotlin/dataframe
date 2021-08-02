@@ -29,7 +29,7 @@ class TaskDataSchemaPropertyTest {
         shouldNotThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).dataSchema.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).dataSchema.get()
             .shouldBe(project.file("src/main1/kotlin/org/example/my/Generated321.kt"))
     }
 
@@ -55,7 +55,7 @@ class TaskDataSchemaPropertyTest {
         shouldNotThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).dataSchema.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).dataSchema.get()
             .shouldBe(project.file("src/main1/kotlin/org/example/my/Generated321.kt"))
     }
 

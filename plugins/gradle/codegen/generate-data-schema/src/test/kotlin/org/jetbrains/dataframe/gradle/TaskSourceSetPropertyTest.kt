@@ -31,7 +31,7 @@ class TaskSourceSetPropertyTest {
         shouldNotThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).src.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).src.get()
             .shouldBe(project.file("src/main1/kotlin/"))
     }
 
@@ -65,7 +65,7 @@ class TaskSourceSetPropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).src.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).src.get()
             .shouldBe(project.file("src/main/kotlin/"))
     }
 
@@ -86,7 +86,7 @@ class TaskSourceSetPropertyTest {
             }
         }
         project.evaluate()
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).src.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).src.get()
             .shouldBe(project.file("src/main1/kotlin/"))
     }
 
@@ -124,7 +124,7 @@ class TaskSourceSetPropertyTest {
         shouldNotThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        (project.tasks.getByName("generate321") as GenerateDataSchemaTask).dataSchema.get()
+        (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).dataSchema.get()
             .shouldBe(project.file("src/main/kotlin/org/example/my/Generated321.kt"))
     }
 
@@ -149,7 +149,7 @@ class TaskSourceSetPropertyTest {
 
     @Test
     fun `src convention is jvmMain source set for multiplatform project`() {
-        val (_, result) = runGradleBuild(":generateAll") { buildDir ->
+        val (_, result) = runGradleBuild(":generateDataFrames") { buildDir ->
             val dataFile = File(buildDir, "data.csv")
             dataFile.writeText(TestData.csvSample)
             """
@@ -186,6 +186,6 @@ class TaskSourceSetPropertyTest {
             """.trimIndent()
 
         }
-        result.task(":generateAll")?.outcome shouldBe TaskOutcome.SUCCESS
+        result.task(":generateDataFrames")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 }

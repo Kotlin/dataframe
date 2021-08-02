@@ -27,7 +27,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             }
 
             val generationTasks = extension.schemas.map { createTask(target, extension, appliedPlugin, it) }
-            val generateAll = target.tasks.create("generateAll") {
+            val generateAll = target.tasks.create("generateDataFrames") {
                 dependsOn(*generationTasks.toTypedArray())
             }
             tasks.withType<KotlinCompile> {
@@ -64,7 +64,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 inferPackageName(src)
             }
 
-        return target.tasks.create("generate${interfaceName}", GenerateDataSchemaTask::class.java) {
+        return target.tasks.create("generateDataFrame${interfaceName}", GenerateDataSchemaTask::class.java) {
             data.set(schema.data)
             this.interfaceName.set(interfaceName)
             this.packageName.set(packageName)
