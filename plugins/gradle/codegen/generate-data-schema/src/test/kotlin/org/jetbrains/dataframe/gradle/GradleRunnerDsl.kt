@@ -5,14 +5,14 @@ import org.gradle.testkit.runner.GradleRunner
 import java.io.File
 import java.nio.file.Files
 
-internal fun runGradleBuild(task: String, build: (File) -> String): Build {
+fun runGradleBuild(task: String, build: (File) -> String): Build {
     val buildDir = Files.createTempDirectory("test").toFile()
     val buildFile = File(buildDir, "build.gradle.kts")
     buildFile.writeText(build(buildDir))
     return Build(buildDir, gradleRunner(buildDir, task).build())
 }
 
-internal fun gradleRunner(buildDir: File, task: String) = GradleRunner.create()
+fun gradleRunner(buildDir: File, task: String) = GradleRunner.create()
     .withProjectDir(buildDir)
     .withGradleVersion("7.0")
     .withPluginClasspath()

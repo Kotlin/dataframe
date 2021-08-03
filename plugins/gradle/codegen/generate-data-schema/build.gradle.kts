@@ -54,3 +54,31 @@ dependencies {
     testImplementation("com.android.tools.build:gradle-api:4.1.1")
     testImplementation("com.android.tools.build:gradle:4.1.1")
 }
+
+sourceSets {
+    create("integrationTest") {
+        withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
+            kotlin.srcDir("src/integrationTest/kotlin")
+            resources.srcDir("src/integrationTest/resources")
+            compileClasspath += sourceSets["main"].output + sourceSets["test"].output + configurations["testRuntimeClasspath"]
+            runtimeClasspath += output + compileClasspath + sourceSets["test"].runtimeClasspath
+        }
+    }
+}
+
+
+val integrationTestConfiguration by configurations.creating {
+    extendsFrom(configurations.testImplementation.get())
+}
+
+val integrationTestTask = task<Test>("integrationTest") {
+    dependsOn(":symbol-processor:publishToMavenLocal")
+    description = "Runs integration tests."
+    group = "verification"
+
+    testClassesDirs = sourceSets["integrationTest"].output.classesDirs
+    classpath = sourceSets["integrationTest"].runtimeClasspath
+    shouldRunAfter("test")
+}
+
+tasks.check { dependsOn(integrationTestTask) }
