@@ -95,9 +95,12 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 val isAndroidKotlinRoot: (File) -> Boolean = { f -> f.absolutePath.contains("/src/${sourceSetName}/java") }
                 sourceDirectories.find { isAndroidKotlinRoot(it) }
             } else {
-                error("Directory src/$sourceSetName/kotlin was not found in $sourceSetName")
+                error("Directory 'src/$sourceSetName/kotlin' was not found in $sourceSetName. Please, specify 'src' explicitly")
             }
-            return androidSpecificRoot ?: error("Directory src/$sourceSetName/kotlin or src/$sourceSetName/java was not found in $sourceSetName")
+            return androidSpecificRoot
+                ?: error(
+                    "Directory 'src/$sourceSetName/kotlin' or 'src/$sourceSetName/java' was not found in $sourceSetName. Please, specify 'src' explicitly"
+                )
         }
     }
 
