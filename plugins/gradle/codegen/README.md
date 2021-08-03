@@ -1,6 +1,8 @@
 ## DataFrame Gradle integration and annotation processing
 
-DataFrame Gradle plugin can generate type-safe accessors for your data for interfaces annotated with `@DataSchema` - **data schemas**, and infer data schemas from your data.
+DataFrame Gradle plugin can
+1. Generate type-safe accessors for your data for interfaces annotated with `@DataSchema` - **data schemas**
+2. Infer data schemas from your data.
 
 ### Setup
 #### Groovy DSL 
@@ -85,24 +87,75 @@ dataframes {
 ```
 
 ## Examples
-
+In the best scenario, your schema could be defined as simple as this:
+```kotlin
+dataframes {
+    // output: src/main/kotlin/org/example/dataframe/GeneratedSecurities.kt
+    schema {
+        data = "https://raw.githubusercontent.com/Kotlin/dataframe/1765966904c5920154a4a480aa1fcff23324f477/data/securities.csv"
+    }
+}
+```
+In this case output path will depend on your directory structure. For project with package `org.example` path will be `src/main/kotlin/org/example/dataframe/GeneratedSecurities.kt
+`. Note than name of the Kotlin file is derived from the name of the data file with prefix `Generated` and package is derived from directory structure with child directory `dataframe`. Name of the **data schema** itself is `Securities`. You could specify it explicitly:
+```kotlin
+schema {
+    // output: src/main/kotlin/org/example/dataframe/GeneratedMyName.kt
+    data = "https://raw.githubusercontent.com/Kotlin/dataframe/1765966904c5920154a4a480aa1fcff23324f477/data/securities.csv"
+    name = "MyName"
+}
+```
+If you want to change default package:
 ```kotlin
 dataframes {
     packageName = "org.example"
-    // buildDir/src/main/kotlin/org/example/GeneratedMyName.kt
-    schema {
-        data = "https://raw.githubusercontent.com/Kotlin/dataframe/1765966904c5920154a4a480aa1fcff23324f477/data/securities.csv"
-        name = "MyName"
-    }
-    // buildDir/src/main/kotlin/org/example/test/GeneratedOtherName.kt
-    schema {
-        data = "https://raw.githubusercontent.com/Kotlin/dataframe/1765966904c5920154a4a480aa1fcff23324f477/data/securities.csv"
-        name = "org.example.test.OtherName"
-    }
-    // output: buildDir/src/main/kotlin/org/example/data/GeneratedData.kt
+    // Schemas...
+}
+```
+Then you can set packageName for specific schema exclusively:
+```kotlin
+dataframes {
+    // output: src/main/kotlin/org/example/data/GeneratedOtherName.kt
     schema {
         packageName = "org.example.data"
         data = file("path/to/data.csv")
+    }
+}
+```
+If you want non-default name and package, consider using fully-qualified name:
+```kotlin
+dataframes {
+    // output: src/main/kotlin/org/example/data/GeneratedOtherName.kt
+    schema {
+        name = org.example.data.OtherName
+        data = file("path/to/data.csv")
+    }
+}
+```
+By default, plugin will generate output in specified source set. Source set could be specified for all schemas or for specific schema:
+```kotlin
+dataframes {
+    packageName = "org.example"
+    sourceSet = "test"
+    // output: src/test/kotlin/org/example/Data.kt
+    schema {
+        data = file("path/to/data.csv")
+    }
+    // output: src/integrationTest/kotlin/org/example/Data.kt
+    schema {
+        sourceSet = "integrationTest"
+        data = file("path/to/data.csv")
+    }
+}
+```
+But if you need generated files in other directory, set `src`:
+```kotlin
+dataframes {
+    // output: schemas/org/example/test/GeneratedOtherName.kt
+    schema {
+        data = "https://raw.githubusercontent.com/Kotlin/dataframe/1765966904c5920154a4a480aa1fcff23324f477/data/securities.csv"
+        name = "org.example.test.OtherName"
+        src = file("schemas")
     }
 }
 ```
