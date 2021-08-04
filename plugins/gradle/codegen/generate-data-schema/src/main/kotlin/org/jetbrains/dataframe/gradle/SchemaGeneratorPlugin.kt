@@ -22,11 +22,21 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 }
                 .firstOrNull()
 
+            val kspPluginEvidence = target.plugins.findPlugin(KspPluginApplier::class.java)
+
             if (appliedPlugin == null) {
                 target.logger.warn("Schema generator plugin applied, but no Kotlin plugin was found")
             }
 
-            val generationTasks = extension.schemas.map { createTask(target, extension, appliedPlugin, it) }
+            val generationTasks = extension.schemas.map { schema ->
+                createTask(
+                    target,
+                    extension,
+                    appliedPlugin,
+                    schema,
+                    kspPluginEvidence
+                )
+            }
             val generateAll = target.tasks.create("generateDataFrames") {
                 dependsOn(*generationTasks.toTypedArray())
             }
@@ -36,7 +46,13 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         }
     }
 
-    private fun createTask(target: Project, extension: SchemaGeneratorExtension, appliedPlugin: AppliedPlugin?, schema: Schema): Task {
+    private fun createTask(
+        target: Project,
+        extension: SchemaGeneratorExtension,
+        appliedPlugin: AppliedPlugin?,
+        schema: Schema,
+        kspPluginEvidence: KspPluginApplier?
+    ): Task {
         val interfaceName = getInterfaceName(schema)
         fun propertyError(property: String): Nothing {
             error("No supported Kotlin plugin was found. Please apply one or specify $property for task $interfaceName explicitly")
@@ -52,6 +68,9 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             ?: run {
                 appliedPlugin ?: propertyError("src")
                 val sourceSet = appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSetName)
+                if (kspPluginEvidence != null) {
+                    sourceSet.kotlin.srcDir("build/generated/ksp/$sourceSetName/kotlin/")
+                }
                 val path = appliedPlugin.sourceSetConfiguration.getKotlinRoot(sourceSet.kotlin.sourceDirectories, sourceSetName)
                 target.file(path)
             }

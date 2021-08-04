@@ -5,23 +5,10 @@ DataFrame Gradle plugin can
 2. Infer data schemas from your data.
 
 ### Setup
-#### Groovy DSL 
-```groovy
-plugins {
-    id("org.jetbrains.dataframe.schema-generator") version "1.0-SNAPSHOT"
-}
-
-sourceSets {
-    main.kotlin.srcDir("build/generated/ksp/main/kotlin/")
-}
-```
-#### Kotlin DSL
 ```kotlin
 plugins {
     id("org.jetbrains.dataframe.schema-generator") version "1.0-SNAPSHOT"
 }
-
-kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
 ```
 
 ### Gradle integration
