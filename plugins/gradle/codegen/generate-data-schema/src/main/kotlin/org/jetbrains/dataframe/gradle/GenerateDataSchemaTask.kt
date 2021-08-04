@@ -14,6 +14,7 @@ import java.io.IOException
 import java.net.URL
 import java.nio.file.Paths
 import com.beust.klaxon.KlaxonException
+import org.gradle.api.provider.Provider
 import org.jetbrains.dataframe.AnyFrame
 import org.jetbrains.dataframe.impl.codeGen.CodeGenResult
 import java.io.FileNotFoundException
@@ -32,8 +33,9 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @get:Input
     abstract val packageName: Property<String>
 
+    @Suppress("LeakingThis")
     @get:OutputFile
-    val dataSchema = packageName.zip(interfaceName) { packageName, interfaceName ->
+    val dataSchema: Provider<File> = packageName.zip(interfaceName) { packageName, interfaceName ->
         val packagePath = packageName.replace('.', File.separatorChar)
         Paths.get(src.get().absolutePath, packagePath, "Generated$interfaceName.kt").toFile()
     }

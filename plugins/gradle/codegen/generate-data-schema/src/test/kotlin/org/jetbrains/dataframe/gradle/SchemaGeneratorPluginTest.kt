@@ -12,7 +12,7 @@ import java.nio.file.Files
 
 internal class SchemaGeneratorPluginTes {
 
-    lateinit var dataDir: File
+    private lateinit var dataDir: File
 
     @Before
     fun before() {

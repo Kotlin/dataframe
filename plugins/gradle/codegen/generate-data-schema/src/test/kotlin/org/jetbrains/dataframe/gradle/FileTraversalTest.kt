@@ -6,9 +6,10 @@ import org.junit.Test
 import java.io.File
 import java.nio.file.Files
 
-class FileTraversalTest {
+internal class FileTraversalTest {
 
-    lateinit var temp: File
+    private lateinit var temp: File
+
     @Before
     fun init() {
         temp = Files.createTempDirectory("temp").toFile()

@@ -4,8 +4,8 @@ import com.tschuchort.compiletesting.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 
+@Suppress("unused")
 internal class KotlinCompileTestingCompilationResult(
-    @Suppress("unused")
     val delegate: KotlinCompilation.Result,
     val successfulCompilation: Boolean,
     val kspGeneratedFiles: List<File>,

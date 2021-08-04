@@ -5,6 +5,7 @@ import org.gradle.api.Project
 import org.gradle.kotlin.dsl.repositories
 import java.util.*
 
+@Suppress("unused")
 class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         target.plugins.apply(KspPluginApplier::class.java)

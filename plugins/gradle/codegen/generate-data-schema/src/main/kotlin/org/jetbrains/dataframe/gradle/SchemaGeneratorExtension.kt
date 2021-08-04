@@ -1,3 +1,5 @@
+@file:Suppress("unused")
+
 package org.jetbrains.dataframe.gradle
 
 import groovy.lang.Closure
