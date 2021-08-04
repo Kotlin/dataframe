@@ -5,7 +5,7 @@ import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
 import java.io.File
 
-class SchemaGeneratorPluginTes {
+class SchemaGeneratorPluginIntegrationTest {
     @Test
     fun `generated code resolved`() {
         val (_, result) = runGradleBuild(":build") { buildDir ->

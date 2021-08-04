@@ -71,7 +71,10 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 if (kspPluginEvidence != null) {
                     sourceSet.kotlin.srcDir("build/generated/ksp/$sourceSetName/kotlin/")
                 }
-                val path = appliedPlugin.sourceSetConfiguration.getKotlinRoot(sourceSet.kotlin.sourceDirectories, sourceSetName)
+                val path = appliedPlugin.sourceSetConfiguration.getKotlinRoot(
+                    sourceSet.kotlin.sourceDirectories,
+                    sourceSetName
+                )
                 target.file(path)
             }
 
@@ -94,13 +97,16 @@ class SchemaGeneratorPlugin : Plugin<Project> {
     private fun getInterfaceName(schema: Schema): String? {
         val rawName = schema.name?.substringAfterLast('.')
             ?: fileName(schema.data)?.capitalize()
-            ?.removeSurrounding("`")
+                ?.removeSurrounding("`")
             ?: return null
         NameChecker.checkValidIdentifier(rawName)
         return rawName
     }
 
-    private class AppliedPlugin(val kotlinExtension: KotlinProjectExtension, val sourceSetConfiguration: SourceSetConfiguration<*>)
+    private class AppliedPlugin(
+        val kotlinExtension: KotlinProjectExtension,
+        val sourceSetConfiguration: SourceSetConfiguration<*>
+    )
 
     private class SourceSetConfiguration<T : KotlinProjectExtension>(
         val extensionClass: Class<T>,
@@ -111,7 +117,8 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             val genericRoot = sourceDirectories.find { isKotlinRoot(it) }
             if (genericRoot != null) return genericRoot
             val androidSpecificRoot = if (extensionClass == KotlinAndroidProjectExtension::class.java) {
-                val isAndroidKotlinRoot: (File) -> Boolean = { f -> f.absolutePath.contains("/src/${sourceSetName}/java") }
+                val isAndroidKotlinRoot: (File) -> Boolean =
+                    { f -> f.absolutePath.contains("/src/${sourceSetName}/java") }
                 sourceDirectories.find { isAndroidKotlinRoot(it) }
             } else {
                 error("Directory 'src/$sourceSetName/kotlin' was not found in $sourceSetName. Please, specify 'src' explicitly")

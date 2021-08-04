@@ -84,7 +84,8 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
     private fun buildSourceFileContent(escapedPackageName: String, codeGenResult: CodeGenResult): String {
         return buildString {
-            appendLine("""
+            appendLine(
+                """
                 @file:Suppress(
                     "RemoveRedundantBackticks", 
                     "RemoveRedundantQualifierName", 
