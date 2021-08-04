@@ -2,6 +2,8 @@ package org.jetbrains.dataframe.gradle
 
 import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.inspectors.forOne
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.gradle.api.ProjectConfigurationException
@@ -50,7 +52,8 @@ class TaskSourceSetPropertyTest {
         val exception = shouldThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        exception.causes.single().message shouldContain "KotlinSourceSet with name 'main1' not found"
+        exception.causes.shouldHaveSize(1)
+        exception.causes.forOne { it.message shouldContain "KotlinSourceSet with name 'main1' not found" }
     }
 
     @Test
@@ -105,7 +108,8 @@ class TaskSourceSetPropertyTest {
         val exception = shouldThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        exception.causes.single().message shouldContain "No supported Kotlin plugin was found. Please apply one or specify src for task 321 explicitly"
+        exception.causes.shouldHaveSize(1)
+        exception.causes.forOne { it.message shouldContain "No supported Kotlin plugin was found. Please apply one or specify src for task 321 explicitly" }
     }
 
     @Test
@@ -144,7 +148,10 @@ class TaskSourceSetPropertyTest {
         val exception = shouldThrow<ProjectConfigurationException> {
             project.evaluate()
         }
-        exception.causes.single().message shouldContain "No supported Kotlin plugin was found. Please apply one or specify src for task 321 explicitly"
+        exception.causes.shouldHaveSize(1)
+        exception.causes.forOne {
+            it.message shouldContain "No supported Kotlin plugin was found. Please apply one or specify src for task 321 explicitly"
+        }
     }
 
     @Test

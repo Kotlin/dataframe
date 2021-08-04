@@ -1,6 +1,9 @@
 package org.jetbrains.dataframe.gradle
 
+import io.kotest.assertions.asClue
+import io.kotest.inspectors.forAny
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldEndWith
 import org.gradle.api.internal.project.ProjectInternal
 import org.gradle.testfixtures.ProjectBuilder
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
@@ -13,9 +16,11 @@ class SourceSetsExpectationsTest {
     fun `there is main in default JVM project`() {
         val project = ProjectBuilder.builder().build()
         project.plugins.apply("org.jetbrains.kotlin.jvm")
-        project.extensions.getByType(KotlinJvmProjectExtension::class.java).let {
-            val main = it.sourceSets.getByName("main")
-            assert(main.kotlin.sourceDirectories.any { it.absolutePath.endsWith("/src/main/kotlin") })
+        project.extensions.getByType(KotlinJvmProjectExtension::class.java).let { extension ->
+            val main = extension.sourceSets.getByName("main")
+            main.kotlin.sourceDirectories.toList().forAny {
+                it.absolutePath.shouldEndWith("/src/main/kotlin")
+            }
         }
     }
 
@@ -33,10 +38,12 @@ class SourceSetsExpectationsTest {
         val project = ProjectBuilder.builder().build() as ProjectInternal
         project.plugins.apply("com.android.application")
         project.plugins.apply("org.jetbrains.kotlin.android")
-        project.extensions.getByType(KotlinAndroidProjectExtension::class.java).let {
-            val main = it.sourceSets.getByName("main")
-            assert(main.kotlin.sourceDirectories.any { it.absolutePath.endsWith("/src/main/java") })
-            assert(main.kotlin.sourceDirectories.any { it.absolutePath.endsWith("/src/main/kotlin") })
+        project.extensions.getByType(KotlinAndroidProjectExtension::class.java).let { extension ->
+            val main = extension.sourceSets.getByName("main")
+            main.kotlin.sourceDirectories.toList().asClue { files ->
+                files.forAny { it.absolutePath.shouldEndWith("/src/main/java") }
+                files.forAny { it.absolutePath.shouldEndWith("/src/main/kotlin") }
+            }
         }
     }
 }
