@@ -12,7 +12,7 @@ fun runGradleBuild(task: String, build: (File) -> String): Build {
     return Build(buildDir, gradleRunner(buildDir, task).build())
 }
 
-fun gradleRunner(buildDir: File, task: String) = GradleRunner.create()
+fun gradleRunner(buildDir: File, task: String): GradleRunner = GradleRunner.create()
     .withProjectDir(buildDir)
     .withGradleVersion("7.0")
     .withPluginClasspath()
