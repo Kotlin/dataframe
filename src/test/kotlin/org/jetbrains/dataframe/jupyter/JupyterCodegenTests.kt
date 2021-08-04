@@ -5,9 +5,10 @@ import io.kotest.matchers.types.shouldBeInstanceOf
 import org.intellij.lang.annotations.Language
 import org.jetbrains.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
+import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
 
-class JupyterCodegenTests : AbstractReplTest() {
+class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `codegen for enumerated frames`() {
         @Language("kts")
@@ -19,7 +20,7 @@ class JupyterCodegenTests : AbstractReplTest() {
         )
         res1 shouldBe Unit
 
-        val res2 = execWrapped("$WRAP(df.`1`)")
+        val res2 = execRaw("df.`1`")
         res2.shouldBeInstanceOf<ValueColumn<*>>()
     }
 

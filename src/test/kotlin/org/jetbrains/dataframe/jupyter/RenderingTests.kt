@@ -5,9 +5,10 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.intellij.lang.annotations.Language
 import org.jetbrains.dataframe.test.containNTimes
+import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
 
-class RenderingTests : AbstractReplTest() {
+class RenderingTests : JupyterReplTestCase() {
     @Test
     fun `dataframe is rendered to html`() {
         @Language("kts")
