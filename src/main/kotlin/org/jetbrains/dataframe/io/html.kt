@@ -26,13 +26,17 @@ internal fun getDefaultFooter(df: DataFrame<*>): String {
     return "DataFrame [${df.size}]"
 }
 
-internal data class DataFrameReference(val dfId: Int, val size: DataFrameSize)
+internal interface CellContent
+
+internal data class DataFrameReference(val dfId: Int, val size: DataFrameSize) : CellContent
+
+internal data class HtmlContent(val html: String, val style: String?) : CellContent
 
 internal data class ColumnDataForJs(
     val name: String,
     val nested: List<ColumnDataForJs>,
     val rightAlign: Boolean,
-    val values: List<Any>
+    val values: List<CellContent>
 )
 
 internal val formatter = DataFrameFormatter(
@@ -63,7 +67,12 @@ internal fun tableJs(columns: List<ColumnDataForJs>, id: Int): String {
             val colIndex = index++
             val values = col.values.joinToString(",", prefix = "[", postfix = "]") {
                 when (it) {
-                    is String -> "\"" + it.escapeForHtmlInJs() + "\""
+                    is HtmlContent -> {
+                        val html = "\"" + it.html.escapeForHtmlInJs() + "\""
+                        if (it.style == null) {
+                            html
+                        } else "{ style: \"${it.style}\", value: $html}"
+                    }
                     is DataFrameReference -> {
                         val text = "<b>DataFrame ${it.size}</b>"
                         "{ frameId: ${it.dfId}, value: \"$text\" }"
@@ -83,9 +92,7 @@ internal fun tableJs(columns: List<ColumnDataForJs>, id: Int): String {
 
 internal var tableId = 0
 
-// TODO: use configuration.cellFormatter to format cells (currently disabled)
-// TODO: display tooltips for column headers and data
-
+// TODO: display tooltips for column headers
 internal fun AnyFrame.toHtmlData(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     cellRenderer: CellRenderer
@@ -93,18 +100,23 @@ internal fun AnyFrame.toHtmlData(
     val scripts = mutableListOf<String>()
     val queue = LinkedList<Pair<AnyFrame, Int>>()
 
-    fun AnyCol.toJs(): ColumnDataForJs {
-        val values = values().take(configuration.rowsLimit).map {
-            if (it is AnyFrame) {
+    fun AnyFrame.columnToJs(col: AnyCol): ColumnDataForJs {
+        val values = rows().take(configuration.rowsLimit).map {
+            val value = it[col]
+            if (value is AnyFrame) {
                 val id = tableId++
-                queue.add(it to id)
-                DataFrameReference(id, it.size)
-            } else formatter.format(it, cellRenderer, configuration)
+                queue.add(value to id)
+                DataFrameReference(id, value.size)
+            } else {
+                val html = formatter.format(value, cellRenderer, configuration)
+                val style = configuration.cellFormatter?.invoke(it, col)?.attributes()?.ifEmpty { null }?.joinToString(";") { "${it.first}:${it.second}" }
+                HtmlContent(html, style)
+            }
         }
         return ColumnDataForJs(
-            name(),
-            if (this is ColumnGroup<*>) columns().map { it.toJs() } else emptyList(),
-            isSubtypeOf<Number?>(),
+            col.name(),
+            if (col is ColumnGroup<*>) col.columns().map { col.columnToJs(it) } else emptyList(),
+            col.isSubtypeOf<Number?>(),
             values
         )
     }
@@ -113,7 +125,7 @@ internal fun AnyFrame.toHtmlData(
     queue.add(this to id)
     while (!queue.isEmpty()) {
         val (nextDf, nextId) = queue.pop()
-        val preparedColumns = nextDf.columns().map { it.toJs() }
+        val preparedColumns = nextDf.columns().map { nextDf.columnToJs(it) }
         val js = tableJs(preparedColumns, nextId)
         scripts.add(js)
     }
@@ -236,7 +248,11 @@ internal class DataFrameFormatter(
         }
     }
 
-    fun format(value: Any?, renderer: CellRenderer, configuration: DisplayConfiguration): String {
+    fun format(
+        value: Any?,
+        renderer: CellRenderer,
+        configuration: DisplayConfiguration
+    ): String {
         val result = render(value, renderer, configuration)
         return when {
             result == null -> ""

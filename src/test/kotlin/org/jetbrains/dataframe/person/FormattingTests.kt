@@ -8,43 +8,12 @@ import org.jetbrains.dataframe.FormattingDSL.green
 import org.jetbrains.dataframe.FormattingDSL.red
 import org.jetbrains.dataframe.io.DisplayConfiguration
 import org.jetbrains.dataframe.io.formatter
-import org.jetbrains.dataframe.io.renderToString
 import org.jetbrains.dataframe.io.toHTML
-import org.jetbrains.dataframe.jupyter.DefaultCellRenderer
-import org.jsoup.Jsoup
-import org.junit.Ignore
 import org.junit.Test
 
-class RenderingTests : BaseTest() {
+class FormattingTests : BaseTest() {
 
     @Test
-    fun `render to html`() {
-        val src = df.toHTML()
-        println(src)
-    }
-
-    @Test
-    fun `render to string`() {
-        val expected = """
-            Data Frame [7 x 4]
-
-            |name:String |age:Int |city:String? |weight:Int? |
-            |------------|--------|-------------|------------|
-            |Alice       |15      |London       |54          |
-            |Bob         |45      |Dubai        |87          |
-            |Mark        |20      |Moscow       |null        |
-            |Mark        |40      |Milan        |null        |
-            |Bob         |30      |Tokyo        |68          |
-            |Alice       |20      |null         |55          |
-            |Mark        |30      |Moscow       |90          |
-        """.trimIndent()
-
-        typed.toString().trim() shouldBe expected
-    }
-
-    // TODO: restore conditional formatting
-    @Test
-    @Ignore
     fun `conditional formatting`() {
         val formattedFrame = typed.format { intCols().withoutNulls() }.with {
             if (it > 10) background(white) and bold and italic
@@ -68,16 +37,5 @@ class RenderingTests : BaseTest() {
 
         for (row in 1 until typed.nrow() step 2)
             formatter(typed[row], typed.age)!!.attributes() shouldBe listOf("background-color" to linearGradient(typed[row].age.toDouble(), 20.0, green, 80.0, red).encode())
-    }
-
-    @Test
-    fun `empty row with nested empty row`() {
-        val df = dataFrameOf("a", "b", "c")(null, null, null)
-        val grouped = df.group("a", "b").into("d").group("c", "d").into("e")[0]
-
-        val formatted = formatter.format(grouped, DefaultCellRenderer, DisplayConfiguration())
-        Jsoup.parse(formatted).text() shouldBe "{ }"
-
-        grouped.renderToString() shouldBe "{ }"
     }
 }

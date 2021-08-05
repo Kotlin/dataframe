@@ -51,19 +51,19 @@ public object FormattingDSL {
     public val darkGray: RGBColor = rgb(169, 169, 169)
     public val lightGray: RGBColor = rgb(211, 211, 211)
 
-    private fun attribute(name: String, value: String): CellAttributes = SingleAttribute(name, value)
+    public fun attr(name: String, value: String): CellAttributes = SingleAttribute(name, value)
 
-    public fun background(color: RGBColor): CellAttributes = attribute("background-color", color.encode())
+    public fun background(color: RGBColor): CellAttributes = attr("background-color", color.encode())
     public fun background(r: Short, g: Short, b: Short): CellAttributes = background(RGBColor(r, g, b))
 
-    public fun textColor(color: RGBColor): CellAttributes = attribute("color", color.encode())
+    public fun textColor(color: RGBColor): CellAttributes = attr("color", color.encode())
     public fun textColor(r: Short, g: Short, b: Short): CellAttributes = textColor(RGBColor(r, g, b))
 
-    public val italic: CellAttributes = attribute("font-style", "italic")
+    public val italic: CellAttributes = attr("font-style", "italic")
 
-    public val bold: CellAttributes = attribute("font-weight", "bold")
+    public val bold: CellAttributes = attr("font-weight", "bold")
 
-    public val underline: CellAttributes = attribute("text-decoration", "underline")
+    public val underline: CellAttributes = attr("text-decoration", "underline")
 
     public fun linearBg(value: Number, from: Pair<Number, RGBColor>, to: Pair<Number, RGBColor>): CellAttributes = background(linear(value, from, to))
 
