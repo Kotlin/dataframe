@@ -20,7 +20,6 @@ class RenderingTests {
         val col by columnOf(value)
         val df = col.toDataFrame()
         val rendered = df[0].renderToStringTable()
-        println(rendered)
         rendered.contains("Шива") shouldBe true
         rendered.contains("\n") shouldBe false
         rendered.contains("А") shouldBe true
