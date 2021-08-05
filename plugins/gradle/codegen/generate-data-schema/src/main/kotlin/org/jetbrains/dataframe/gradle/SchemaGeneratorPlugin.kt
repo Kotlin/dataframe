@@ -151,7 +151,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         return packageName
     }
 
-    private fun inferPackageName(root: File): String? {
+    private fun inferPackageName(root: File): String {
         val node = root.findDeepestCommonSubdirectory()
         val parentPath = root.absolutePath
         return node.absolutePath
