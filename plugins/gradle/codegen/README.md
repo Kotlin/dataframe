@@ -1,29 +1,28 @@
-## DataFrame Gradle integration and annotation processing
+# DataFrame Gradle integration and annotation processing
 
 DataFrame Gradle plugin can
 1. Generate type-safe accessors for your data for interfaces annotated with `@DataSchema` - **data schemas**
 2. Infer data schemas from your data.
 
-### Setup
-#### Groovy DSL 
-```groovy
+## Setup
+```
 plugins {
     id("org.jetbrains.dataframe.schema-generator") version "1.0-SNAPSHOT"
 }
-
+```
+Then make IDE aware of the generated code:
+#### Kotlin DSL
+```kotlin
+kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
+```
+#### Groovy DSL
+```groovy
 sourceSets {
     main.kotlin.srcDir("build/generated/ksp/main/kotlin/")
 }
 ```
-#### Kotlin DSL
-```kotlin
-plugins {
-    id("org.jetbrains.dataframe.schema-generator") version "1.0-SNAPSHOT"
-}
 
-kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
-```
-
+## Features
 ### Gradle integration
 For the following configuration, file `GeneratedRawCityPopulation` will be generated. See [reference](#reference) and [examples](#examples) for more details.
 ```kotlin
@@ -97,7 +96,7 @@ dataframes {
 }
 ```
 In this case output path will depend on your directory structure. For project with package `org.example` path will be `src/main/kotlin/org/example/dataframe/GeneratedSecurities.kt
-`. Note than name of the Kotlin file is derived from the name of the data file with prefix `Generated` and package is derived from directory structure with child directory `dataframe`. Name of the **data schema** itself is `Securities`. You could specify it explicitly:
+`. Note that name of the Kotlin file is derived from the name of the data file with the prefix `Generated` and the package is derived from the directory structure with child directory `dataframe`. The name of the **data schema** itself is `Securities`. You could specify it explicitly:
 ```kotlin
 schema {
     // output: src/main/kotlin/org/example/dataframe/GeneratedMyName.kt
