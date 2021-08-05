@@ -38,6 +38,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 )
             }
             val generateAll = target.tasks.create("generateDataFrames") {
+                group = GROUP
                 dependsOn(*generationTasks.toTypedArray())
             }
             tasks.withType<KotlinCompile> {
@@ -87,6 +88,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             }
 
         return target.tasks.create("generateDataFrame${interfaceName}", GenerateDataSchemaTask::class.java) {
+            group = GROUP
             data.set(schema.data)
             this.interfaceName.set(interfaceName)
             this.packageName.set(packageName)
@@ -171,5 +173,6 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             SourceSetConfiguration(KotlinMultiplatformExtension::class.java, "jvmMain"),
             SourceSetConfiguration(KotlinAndroidProjectExtension::class.java, "main"),
         )
+        private const val GROUP = "dataframe"
     }
 }
