@@ -186,8 +186,7 @@ internal fun String.escapeForHtmlInJs() = replace("\"", "\\\"").escapeNewLines()
 internal fun String.escapeForHtmlInJsMultiline() = replace("\"", "\\\"").replace("\n", "<br>")
 
 internal fun renderValueForHtml(value: Any?, truncate: Int): RenderedContent {
-    val truncated = renderValueToString(value).truncate(truncate)
-    return truncated.copy(truncatedContent = truncated.truncatedContent.escapeHTML())
+    return formatter.truncate(renderValueToString(value), truncate)
 }
 
 internal fun String.escapeHTML(): String {
@@ -219,18 +218,34 @@ internal class DataFrameFormatter(
 
     private fun String.ellipsis(fullText: String) = addCss(structuralClass).copy(fullContent = fullText)
 
+    private fun String.structural() = addCss(structuralClass)
+
     private fun RenderedContent.addCss(css: String? = null): RenderedContent {
         return if (css != null) {
             copy(truncatedContent = "<span class=\"$css\">" + truncatedContent + "</span>", isFormatted = true)
         } else this
     }
 
-    fun format(value: Any?, renderer: CellRenderer, configuration: DisplayConfiguration): String {
-        var result = render(value, renderer, configuration)
-        if (result != null && result.isTruncated) {
-            result = result.addCss(formattedClass)
+    internal fun truncate(str: String, limit: Int): RenderedContent {
+        return if (limit in 1 until str.length) {
+            val ellipsis = "...".ellipsis(str)
+            if (limit < 4) ellipsis
+            else RenderedContent.text(str.substring(0, Math.max(limit - 3, 1)).escapeHTML()) + ellipsis
+        } else {
+            RenderedContent.text(str.escapeHTML())
         }
-        return result?.truncatedContent ?: ""
+    }
+
+    fun format(value: Any?, renderer: CellRenderer, configuration: DisplayConfiguration): String {
+        val result = render(value, renderer, configuration)
+        return when {
+            result == null -> ""
+            result.isFormatted || result.isTruncated -> {
+                val tooltip = result.fullContent?.escapeHTML() ?: ""
+                return "<span class=\"$formattedClass\" title=\"$tooltip\">${result.truncatedContent}</span>"
+            }
+            else -> result.truncatedContent
+        }
     }
 
     private class Builder {
@@ -248,10 +263,11 @@ internal class DataFrameFormatter(
             if (content == null) return
             sb.append(content.truncatedContent)
             len += content.textLength
+            if (content.isTruncated) isTruncated = true
             if (content.isFormatted) isFormatted = true
         }
 
-        fun result() = RenderedContent(sb.toString(), len, null, isFormatted)
+        fun result() = RenderedContent(sb.toString(), len, if (isTruncated) "" else null, isFormatted)
     }
 
     private fun render(value: Any?, renderer: CellRenderer, configuration: DisplayConfiguration): RenderedContent? {
@@ -298,9 +314,7 @@ internal class DataFrameFormatter(
                 sb += rendered
             }
             sb += postfix.addCss(structuralClass)
-            return sb.result().let {
-                if (sb.isTruncated) it.copy(fullContent = values.toString()) else it
-            }
+            return sb.result()
         }
 
         val result = when (value) {
@@ -309,12 +323,16 @@ internal class DataFrameFormatter(
                 val values = value.getVisibleValues()
                 when {
                     values.isEmpty() -> "{ }".addCss(nullClass)
-                    else -> when (limit) {
-                        4 -> "{..}".ellipsis(value.toString())
-                        5 -> "{...}".ellipsis(value.toString())
-                        6 -> "{ ...}".ellipsis(value.toString())
-                        7 -> "{ ... }".ellipsis(value.toString())
-                        else -> renderList(values, "{ ", " }")
+                    else -> {
+                        when (limit) {
+                            4 -> "{..}".structural()
+                            5 -> "{...}".structural()
+                            6 -> "{ ...}".structural()
+                            7 -> "{ ... }".structural()
+                            else -> renderList(values, "{ ", " }")
+                        }.let {
+                            it.copy(fullContent = values.joinToString("\n") { it.first + ": " + it.second })
+                        }
                     }
                 }
             }
@@ -322,7 +340,9 @@ internal class DataFrameFormatter(
             is AnyMany ->
                 when {
                     value.isEmpty() -> "[ ]".addCss(nullClass)
-                    else -> renderList(value, "[", "]")
+                    else -> renderList(value, "[", "]").let {
+                        it.copy(fullContent = value.joinToString("\n") { it.toString() })
+                    }
                 }
             is Pair<*, *> -> {
                 val key = value.first.toString() + ": "
