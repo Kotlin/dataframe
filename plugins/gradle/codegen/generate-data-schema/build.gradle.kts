@@ -22,11 +22,11 @@ tasks.withType<ProcessResources> {
 gradlePlugin {
     plugins {
         create("schemaGeneratorPlugin") {
-            id = "org.jetbrains.dataframe.schema-generator"
+            id = "org.jetbrains.kotlin.plugin.dataframe"
             implementationClass = "org.jetbrains.dataframe.gradle.ConvenienceSchemaGeneratorPlugin"
         }
         create("baseSchemaGeneratorPlugin") {
-            id = "org.jetbrains.dataframe.schema-generator-base"
+            id = "org.jetbrains.kotlin.plugin.dataframe-base"
             implementationClass = "org.jetbrains.dataframe.gradle.SchemaGeneratorPlugin"
         }
     }

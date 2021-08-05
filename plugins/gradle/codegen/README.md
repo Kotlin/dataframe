@@ -7,7 +7,7 @@ DataFrame Gradle plugin can
 ## Setup
 ```
 plugins {
-    id("org.jetbrains.dataframe.schema-generator") version "1.0-SNAPSHOT"
+    id("org.jetbrains.kotlin.plugin.dataframe") version "1.0-SNAPSHOT"
 }
 ```
 Then make IDE aware of the generated code:
