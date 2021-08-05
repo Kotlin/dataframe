@@ -10,12 +10,27 @@ import org.jetbrains.kotlinx.jupyter.api.Notebook
 import org.jetbrains.kotlinx.jupyter.api.Renderable
 import org.jetbrains.kotlinx.jupyter.api.libraries.ExecutionHost
 
-public data class RenderedContent(val content: String, val textLength: Int) {
+public data class RenderedContent(
+    val truncatedContent: String,
+    val textLength: Int,
+    val fullContent: String?,
+    val isFormatted: Boolean
+) {
     public companion object {
-        public fun text(str: String): RenderedContent = RenderedContent(str, str.length)
+
+        public fun media(html: String): RenderedContent = RenderedContent(html, 0, null, false)
+
+        public fun textWithLength(str: String, len: Int): RenderedContent = RenderedContent(str, len, null, false)
+
+        public fun text(str: String): RenderedContent = RenderedContent(str, str.length, null, false)
+
+        public fun truncatedText(str: String, fullText: String): RenderedContent = RenderedContent(str, str.length, fullText, false)
     }
 
-    public operator fun plus(other: RenderedContent): RenderedContent = RenderedContent(content + other.content, textLength + other.textLength)
+    val isTruncated: Boolean
+        get() = fullContent != null
+
+    public operator fun plus(other: RenderedContent): RenderedContent = RenderedContent(truncatedContent + other.truncatedContent, textLength + other.textLength, fullContent?.plus(other.fullContent) ?: other.fullContent, isFormatted || other.isFormatted)
 }
 
 public interface CellRenderer {
@@ -51,14 +66,14 @@ public object DefaultCellRenderer : CellRenderer {
     }
 
     public override fun tooltip(value: Any?, configuration: DisplayConfiguration): String {
-        return renderValueForHtml(value, tooltipLimit).content
+        return renderValueForHtml(value, tooltipLimit).truncatedContent
     }
 }
 
 public object ImageCellRenderer : ChainedCellRenderer(DefaultCellRenderer) {
     public override fun maybeContent(value: Any?, configuration: DisplayConfiguration): RenderedContent? {
         if (value is Image) {
-            return RenderedContent("<img src=\"${value.url}\"/>", 0)
+            return RenderedContent.media("<img src=\"${value.url}\"/>")
         } else return null
     }
 
@@ -76,7 +91,7 @@ internal class JupyterCellRenderer(
         if (internallyRenderable(value)) return null
         val renderedVal = renderersProcessor.renderValue(host, value)
         val finalVal = if (renderedVal is Renderable) renderedVal.render(notebook) else renderedVal
-        if (finalVal is MimeTypedResult && "text/html" in finalVal) return RenderedContent(finalVal["text/html"] ?: "", 0)
+        if (finalVal is MimeTypedResult && "text/html" in finalVal) return RenderedContent.media(finalVal["text/html"] ?: "")
         return renderValueForHtml(finalVal, configuration.cellContentLimit)
     }
 

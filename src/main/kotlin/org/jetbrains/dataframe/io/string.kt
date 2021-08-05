@@ -14,7 +14,7 @@ internal fun AnyFrame.renderToString(limit: Int = 20, truncate: Int = 40): Strin
     sb.appendLine()
 
     val outputRows = limit.coerceAtMost(nrow())
-    val output = columns().map { it.values.take(limit).map { renderValueForStdout(it, truncate) } }
+    val output = columns().map { it.values.take(limit).map { renderValueForStdout(it, truncate).truncatedContent } }
     val header = columns().map { "${it.name()}:${renderType(it)}" }
     val columnLengths = output.mapIndexed { col, values -> (values + header[col]).map { it.length }.maxOrNull()!! + 1 }
 
@@ -60,7 +60,7 @@ internal fun AnyRow.renderToString(): String {
     val values = getVisibleValues()
     if (values.isEmpty()) return "{ }"
     return values
-        .map { "${it.first}:${renderValueForStdout(it.second)}" }.joinToString(prefix = "{ ", postfix = " }")
+        .map { "${it.first}:${renderValueForStdout(it.second).truncatedContent}" }.joinToString(prefix = "{ ", postfix = " }")
 }
 
 public fun AnyRow.renderToStringTable(forHtml: Boolean = false): String {
@@ -68,7 +68,7 @@ public fun AnyRow.renderToStringTable(forHtml: Boolean = false): String {
     val pairs = owner.columns().map { it.name() to renderValueForRowTable(it[index], forHtml) }
     val width = pairs.map { it.first.length + it.second.textLength }.maxOrNull()!! + 4
     return pairs.joinToString("\n") {
-        it.first + " ".repeat(width - it.first.length - it.second.textLength) + it.second.content
+        it.first + " ".repeat(width - it.first.length - it.second.textLength) + it.second.truncatedContent
     }
 }
 
@@ -82,15 +82,15 @@ internal fun renderCollectionName(value: Collection<*>) = when (value) {
 public fun renderValueForRowTable(value: Any?, forHtml: Boolean): RenderedContent = when (value) {
     is AnyFrame -> "DataFrame [${value.nrow()} x ${value.ncol()}]".let {
         val content = if (value.nrow() == 1) it + " " + value[0].toString() else it
-        RenderedContent(content, "DataFrame".length)
+        RenderedContent.textWithLength(content, "DataFrame".length)
     }
-    is AnyRow -> RenderedContent("DataRow $value", "DataRow".length)
-    is Collection<*> -> renderCollectionName(value).let { RenderedContent("$it $value", it.length) }
+    is AnyRow -> RenderedContent.textWithLength("DataRow $value", "DataRow".length)
+    is Collection<*> -> renderCollectionName(value).let { RenderedContent.textWithLength("$it $value", it.length) }
     else -> if (forHtml) renderValueForHtml(value, valueToStringLimitForRowAsTable)
-    else renderValueForStdout(value, valueToStringLimitForRowAsTable).let { RenderedContent.text(it) }
+    else renderValueForStdout(value, valueToStringLimitForRowAsTable)
 }
 
-internal fun renderValueForStdout(value: Any?, truncate: Int = valueToStringLimitDefault) = renderValueToString(value).truncate(truncate).escapeNewLines()
+internal fun renderValueForStdout(value: Any?, truncate: Int = valueToStringLimitDefault): RenderedContent = renderValueToString(value).truncate(truncate).let { it.copy(truncatedContent = it.truncatedContent.escapeNewLines()) }
 
 internal fun renderValueToString(value: Any?) =
     when (value) {

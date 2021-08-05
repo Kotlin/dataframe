@@ -1670,7 +1670,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `render nested data frames to string`() {
-        val rendered = typed.drop(1).groupBy { name }.groups.asIterable().joinToString("\n") { renderValueForStdout(it) }
+        val rendered = typed.drop(1).groupBy { name }.groups.asIterable().joinToString("\n") { renderValueForStdout(it).truncatedContent }
         rendered shouldBe """
             [2 x 4]
             [3 x 4]

@@ -14,12 +14,12 @@ class TruncateTests {
     private fun Any?.format(limit: Int): String = Jsoup.parse(formatter.format(this, DefaultCellRenderer, DisplayConfiguration(cellContentLimit = limit))).text()
 
     @Test
-    fun truncate() {
+    fun `truncate str`() {
         "123456789".format(5) shouldBe "12..."
     }
 
     @Test
-    fun `truncate all`() {
+    fun `truncate str to ellipsis`() {
         "123456789".format(3) shouldBe "..."
     }
 
@@ -74,7 +74,7 @@ class TruncateTests {
     }
 
     @Test
-    fun truncateMany10() {
+    fun truncateManyMany() {
         manyOf(1).format(3) shouldBe "[1]"
         manyOf(10).format(4) shouldBe "[10]"
         manyOf(1, 2).format(4) shouldBe "[..]"
@@ -88,30 +88,50 @@ class TruncateTests {
     private fun rowOf(vararg pairs: Pair<String, Any?>) = dataFrameOf(pairs.map { it.first }).withValues(pairs.map { it.second })[0]
 
     @Test
-    fun truncateRow() {
-        val row = rowOf("name" to "Alice", "age" to 10)
-
-        val truncates = listOf(
-            "{..}",
-            "{...}",
-            "{ ...}",
-            "{ ... }",
-            "{ n..., a... }",
-            "{ na..., a... }",
-            "{ nam..., a... }",
-            "{ name..., a... }",
-            "{ name:..., a... }",
-            "{ name: ..., a... }",
-            "{ name: A..., a... }",
-            "{ name: Alice, a... }",
-            "{ name: Alice, ag... }",
-            "{ name: Alice, age... }",
-            "{ name: Alice, age: 10 }"
+    fun `run truncate row`() {
+        testTruncates(
+            rowOf("name" to "Alice", "age" to 10),
+            listOf(
+                "{..}",
+                "{...}",
+                "{ ...}",
+                "{ ... }",
+                "{ n..., a... }",
+                "{ na..., a... }",
+                "{ nam..., a... }",
+                "{ name..., a... }",
+                "{ name:..., a... }",
+                "{ name: ..., a... }",
+                "{ name: A..., a... }",
+                "{ name: Alice, a... }",
+                "{ name: Alice, ag... }",
+                "{ name: Alice, age... }",
+                "{ name: Alice, age: 10 }"
+            )
         )
-        truncates.forEach {
-            row.format(it.length) shouldBe it
-        }
-        for (i in truncates[3].length until truncates[4].length)
-            row.format(i) shouldBe truncates[3]
+    }
+
+    private fun testTruncates(value: Any?, truncates: List<String>) {
+        val start = truncates[0].length
+        val end = truncates.last().length
+        val actual = (start..end).map { value.format(it) }
+        val expected = (start..end).map { len -> truncates.indexOfFirst { it.length > len }.let { if (it == -1) truncates.last() else truncates[it - 1] } }
+        actual shouldBe expected
+    }
+
+    @Test
+    fun `run truncate many`() {
+        val value = manyOf("Alice", "Bob", "Billy")
+        testTruncates(
+            value,
+            listOf(
+                "[..]",
+                "[...]",
+                "[A..., ...]",
+                "[Alice, ...]",
+                "[Alice, Bob, B...]",
+                "[Alice, Bob, Billy]",
+            )
+        )
     }
 }
