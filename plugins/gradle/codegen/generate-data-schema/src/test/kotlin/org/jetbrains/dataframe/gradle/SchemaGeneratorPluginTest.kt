@@ -28,7 +28,7 @@ internal class SchemaGeneratorPluginTes {
                 
             plugins {
                 kotlin("jvm") version "1.4.10"
-                id("org.jetbrains.dataframe.schema-generator-base")
+                id("org.jetbrains.kotlin.plugin.dataframe-base")
             }
             
             repositories {
@@ -56,7 +56,7 @@ internal class SchemaGeneratorPluginTes {
                 
             plugins {
                 kotlin("jvm") version "1.4.10"
-                id("org.jetbrains.dataframe.schema-generator-base")
+                id("org.jetbrains.kotlin.plugin.dataframe-base")
             }
             
             repositories {
@@ -86,7 +86,7 @@ internal class SchemaGeneratorPluginTes {
                     
                 plugins {
                     id "org.jetbrains.kotlin.jvm" version "1.4.10"
-                    id "org.jetbrains.dataframe.schema-generator-base"
+                    id "org.jetbrains.kotlin.plugin.dataframe-base"
                 }
                 
                 repositories {
@@ -116,7 +116,7 @@ internal class SchemaGeneratorPluginTes {
                 
             plugins {
                 kotlin("jvm") version "1.4.10"
-                id("org.jetbrains.dataframe.schema-generator-base")
+                id("org.jetbrains.kotlin.plugin.dataframe-base")
             }
             
             repositories {
@@ -149,7 +149,7 @@ internal class SchemaGeneratorPluginTes {
                 
             plugins {
                 kotlin("jvm") version "1.4.10"
-                id("org.jetbrains.dataframe.schema-generator-base")
+                id("org.jetbrains.kotlin.plugin.dataframe-base")
             }
             
             repositories {
@@ -182,7 +182,7 @@ internal class SchemaGeneratorPluginTes {
                
             plugins {
                 kotlin("jvm") version "1.4.10"
-                id("org.jetbrains.dataframe.schema-generator-base")
+                id("org.jetbrains.kotlin.plugin.dataframe-base")
             }
             
             repositories {
@@ -215,7 +215,7 @@ internal class SchemaGeneratorPluginTes {
                 
             plugins {
                 kotlin("jvm") version "1.4.10"
-                id("org.jetbrains.dataframe.schema-generator-base")
+                id("org.jetbrains.kotlin.plugin.dataframe-base")
             }
             
             repositories {
@@ -261,7 +261,7 @@ internal class SchemaGeneratorPluginTes {
                     
                 plugins {
                     kotlin("multiplatform") version "1.4.10"
-                    id("org.jetbrains.dataframe.schema-generator-base")
+                    id("org.jetbrains.kotlin.plugin.dataframe-base")
                 }
                 
                 repositories {
@@ -300,7 +300,7 @@ internal class SchemaGeneratorPluginTes {
                     
                 plugins {
                     kotlin("jvm") version "1.4.10"
-                    id("org.jetbrains.dataframe.schema-generator-base")
+                    id("org.jetbrains.kotlin.plugin.dataframe-base")
                 }
                 
                 repositories {

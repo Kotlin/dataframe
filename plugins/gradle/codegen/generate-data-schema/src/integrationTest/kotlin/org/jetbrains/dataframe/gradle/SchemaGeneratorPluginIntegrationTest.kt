@@ -31,7 +31,7 @@ class SchemaGeneratorPluginIntegrationTest {
                     
                 plugins {
                     kotlin("jvm") version "1.4.10"
-                    id("org.jetbrains.dataframe.schema-generator")
+                    id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
                 repositories {
@@ -83,7 +83,7 @@ class SchemaGeneratorPluginIntegrationTest {
                     
                 plugins {
                     kotlin("jvm") version "1.4.10"
-                    id("org.jetbrains.dataframe.schema-generator")
+                    id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
                 repositories {
