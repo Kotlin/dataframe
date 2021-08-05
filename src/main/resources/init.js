@@ -156,8 +156,10 @@ function renderTable(id) {
                 } else {
                     td.innerHTML = link
                 }
-            }else
-                td.innerHTML = value
+            }else if(value.style !== undefined) {
+                td.innerHTML = value.value
+                td.setAttribute("style", value.style)
+            }else td.innerHTML = value
         }
     }
 }

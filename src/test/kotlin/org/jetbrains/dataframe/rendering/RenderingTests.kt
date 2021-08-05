@@ -5,10 +5,17 @@ import io.kotest.matchers.string.shouldContain
 import org.jetbrains.dataframe.columnOf
 import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.getType
+import org.jetbrains.dataframe.group
+import org.jetbrains.dataframe.into
+import org.jetbrains.dataframe.io.DisplayConfiguration
+import org.jetbrains.dataframe.io.formatter
+import org.jetbrains.dataframe.io.renderToString
 import org.jetbrains.dataframe.io.renderToStringTable
 import org.jetbrains.dataframe.io.toHTML
+import org.jetbrains.dataframe.jupyter.DefaultCellRenderer
 import org.jetbrains.dataframe.parse
 import org.jetbrains.dataframe.toDataFrame
+import org.jsoup.Jsoup
 import org.junit.Test
 import java.net.URL
 
@@ -39,5 +46,16 @@ class RenderingTests {
         val html = df.toHTML().toString()
         println(html)
         html shouldContain "&#60;Air France&#62;"
+    }
+
+    @Test
+    fun `empty row with nested empty row`() {
+        val df = dataFrameOf("a", "b", "c")(null, null, null)
+        val grouped = df.group("a", "b").into("d").group("c", "d").into("e")[0]
+
+        val formatted = formatter.format(grouped, DefaultCellRenderer, DisplayConfiguration())
+        Jsoup.parse(formatted).text() shouldBe "{ }"
+
+        grouped.renderToString() shouldBe "{ }"
     }
 }
