@@ -11,6 +11,7 @@ import org.jetbrains.dataframe.impl.columns.asTable
 import org.jetbrains.dataframe.internal.schema.ColumnSchema
 import org.jetbrains.dataframe.internal.schema.DataFrameSchema
 import org.jetbrains.dataframe.io.escapeHTML
+import org.jetbrains.dataframe.jupyter.RenderedContent
 import org.jetbrains.dataframe.size
 import java.net.URL
 import java.time.LocalDate
@@ -18,11 +19,11 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import kotlin.reflect.KType
 
-internal fun String.truncate(limit: Int) = if (limit in 1 until length) {
-    if (limit < 4) "..."
-    else substring(0, limit - 3) + "..."
+internal fun String.truncate(limit: Int): RenderedContent = if (limit in 1 until length) {
+    if (limit < 4) RenderedContent.truncatedText("...", this)
+    else RenderedContent.truncatedText(substring(0, Math.max(limit - 3, 1)) + "...", this)
 } else {
-    this
+    RenderedContent.text(this)
 }
 
 internal fun renderSchema(df: AnyFrame): String =

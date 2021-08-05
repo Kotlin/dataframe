@@ -1,40 +1,19 @@
-table.dataframe .formatNull {
+table.dataframe .null {
     color: #b3b3cc;
 }
-table.dataframe .formatCurlyBrackets {
+table.dataframe .structural {
     color: #737373;
     font-weight: bold;
 }
-table.dataframe .formatSquareBrackets {
-    color: #737373;
+table.dataframe .numbers {
+    color: black;
+}
+table.dataframe .dataFrameCaption {
     font-weight: bold;
 }
-table.dataframe .formatComma {
-    color: #737373;
-    font-weight: bold;
-}
-table.dataframe .formatNumbers {
+table.dataframe td:hover > .formatted .structural {
     color: black;
 }
-table.dataframe .formatDataframes {
-    font-weight: bold;
-}
-table.dataframe .formatColumnNames {
-    color: #737373;
-    font-weight: bold;
-}
-table.dataframe td:hover > .formatted .formatCurlyBrackets {
-    color: black;
-}
-table.dataframe td:hover > .formatted .formatSquareBrackets {
-    color: black;
-}
-table.dataframe td:hover > .formatted .formatColumnNames {
-    color: black;
-}
-table.dataframe td:hover > .formatted .formatNull {
-    color: black;
-}
-table.dataframe td:hover > .formatted .formatComma {
+table.dataframe td:hover > .formatted .null {
     color: black;
 }

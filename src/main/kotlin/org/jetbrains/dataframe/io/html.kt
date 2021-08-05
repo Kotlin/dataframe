@@ -1,6 +1,5 @@
 package org.jetbrains.dataframe.io
 
-import khttp.post
 import org.jetbrains.dataframe.AnyFrame
 import org.jetbrains.dataframe.AnyMany
 import org.jetbrains.dataframe.AnyRow
@@ -38,14 +37,10 @@ internal data class ColumnDataForJs(
 
 internal val formatter = DataFrameFormatter(
     "formatted",
-    "formatNull",
-    "formatCurlyBrackets",
-    "formatNumbers",
-    "formatDataframes",
-    "formatComma",
-    "formatComma",
-    "formatColumnNames",
-    "formatSquareBrackets"
+    "null",
+    "structural",
+    "numbers",
+    "dataFrameCaption",
 )
 
 internal fun getResources(vararg resource: String) = resource.joinToString(separator = "\n") { getResourceText(it) }
@@ -192,7 +187,7 @@ internal fun String.escapeForHtmlInJsMultiline() = replace("\"", "\\\"").replace
 
 internal fun renderValueForHtml(value: Any?, truncate: Int): RenderedContent {
     val truncated = renderValueToString(value).truncate(truncate)
-    return RenderedContent(truncated.escapeHTML(), truncated.length)
+    return truncated.copy(truncatedContent = truncated.truncatedContent.escapeHTML())
 }
 
 internal fun String.escapeHTML(): String {
@@ -213,68 +208,73 @@ internal fun String.escapeHTML(): String {
 internal class DataFrameFormatter(
     val formattedClass: String,
     val nullClass: String,
-    val curlyBracketsClass: String,
+    val structuralClass: String,
     val numberClass: String,
-    val dataFrameClass: String,
-    val commaClass: String,
-    val ellipsisClass: String,
-    val colNameClass: String,
-    val squareBracketsClass: String
+    val dataFrameClass: String
 ) {
 
-    private class FormatBuilder {
+    private fun wrap(prefix: String, content: RenderedContent, postfix: String) = content.copy(truncatedContent = prefix + content + postfix)
 
-        var isFormatted: Boolean = false
+    private fun String.addCss(css: String? = null): RenderedContent = RenderedContent.text(this).addCss(css)
 
-        fun wrap(prefix: String, content: RenderedContent, postfix: String) = content.copy(content = prefix + content + postfix)
+    private fun String.ellipsis(fullText: String) = addCss(structuralClass).copy(fullContent = fullText)
 
-        fun String.addCss(css: String? = null): RenderedContent = RenderedContent.text(this).addCss(css)
-
-        fun RenderedContent.addCss(css: String? = null): RenderedContent {
-            return if (css != null) {
-                isFormatted = true
-                copy(content = "<span class=\"$css\">" + content + "</span>")
-            } else this
-        }
+    private fun RenderedContent.addCss(css: String? = null): RenderedContent {
+        return if (css != null) {
+            copy(truncatedContent = "<span class=\"$css\">" + truncatedContent + "</span>", isFormatted = true)
+        } else this
     }
 
     fun format(value: Any?, renderer: CellRenderer, configuration: DisplayConfiguration): String {
-        val builder = FormatBuilder()
-        val result = builder.render(value, renderer, configuration)?.let { if(builder.isFormatted) with(builder) { it.addCss(formattedClass) } else it }
-        return result?.content ?: ""
+        var result = render(value, renderer, configuration)
+        if (result != null && result.isTruncated) {
+            result = result.addCss(formattedClass)
+        }
+        return result?.truncatedContent ?: ""
     }
 
     private class Builder {
+
         private val sb = StringBuilder()
 
+        private var isFormatted: Boolean = false
+
         var len: Int = 0
-            private set;
+            private set
+
+        var isTruncated: Boolean = false
 
         operator fun plusAssign(content: RenderedContent?) {
-            if(content == null) return
-            sb.append(content.content)
+            if (content == null) return
+            sb.append(content.truncatedContent)
             len += content.textLength
+            if (content.isFormatted) isFormatted = true
         }
 
-        fun result() = RenderedContent(sb.toString(), len)
+        fun result() = RenderedContent(sb.toString(), len, null, isFormatted)
     }
 
-    private fun FormatBuilder.render(value: Any?, renderer: CellRenderer, configuration: DisplayConfiguration): RenderedContent? {
-
+    private fun render(value: Any?, renderer: CellRenderer, configuration: DisplayConfiguration): RenderedContent? {
         val limit = configuration.cellContentLimit
 
         fun renderList(values: List<*>, prefix: String, postfix: String): RenderedContent {
             val sb = Builder()
-            sb += prefix.addCss(squareBracketsClass)
-            for(index in values.indices) {
+            sb += prefix.addCss(structuralClass)
+            for (index in values.indices) {
                 if (index > 0) {
-                    sb += ", ".addCss(commaClass)
+                    sb += ", ".addCss(structuralClass)
                 }
-                if(index < values.size - 1 && limit <= sb.len + "...".length + postfix.length){
-                    if(limit == sb.len + "..".length + postfix.length)
-                        sb += "..".addCss(ellipsisClass)
-                    else
-                        sb += "...".addCss(ellipsisClass)
+                fun addEllipsis() {
+                    if (limit == sb.len + "..".length + postfix.length) {
+                        sb += "..".addCss(structuralClass)
+                    } else {
+                        sb += "...".addCss(structuralClass)
+                    }
+                    sb.isTruncated = true
+                }
+
+                if (index < values.size - 1 && limit <= sb.len + "...".length + postfix.length) {
+                    addEllipsis()
                     break
                 }
                 val valueLimit = when (index) {
@@ -289,18 +289,18 @@ internal class DataFrameFormatter(
                     }
                     else -> limit - sb.len - ", ...".length - postfix.length
                 }
+
                 val rendered = render(values[index], renderer, configuration.copy(cellContentLimit = valueLimit))
-                if(rendered == null) {
-                    if(limit == sb.len + "..".length + postfix.length)
-                        sb += "..".addCss(ellipsisClass)
-                    else
-                        sb += "...".addCss(ellipsisClass)
+                if (rendered == null || (rendered.textLength == 3 && rendered.isTruncated)) {
+                    addEllipsis()
                     break
                 }
                 sb += rendered
             }
-            sb += postfix.addCss(squareBracketsClass)
-            return sb.result()
+            sb += postfix.addCss(structuralClass)
+            return sb.result().let {
+                if (sb.isTruncated) it.copy(fullContent = values.toString()) else it
+            }
         }
 
         val result = when (value) {
@@ -310,10 +310,10 @@ internal class DataFrameFormatter(
                 when {
                     values.isEmpty() -> "{ }".addCss(nullClass)
                     else -> when (limit) {
-                        4 -> "{..}".addCss(ellipsisClass)
-                        5 -> "{...}".addCss(ellipsisClass)
-                        6 -> "{ ...}".addCss(ellipsisClass)
-                        7 -> "{ ... }".addCss(ellipsisClass)
+                        4 -> "{..}".ellipsis(value.toString())
+                        5 -> "{...}".ellipsis(value.toString())
+                        6 -> "{ ...}".ellipsis(value.toString())
+                        7 -> "{ ... }".ellipsis(value.toString())
                         else -> renderList(values, "{ ", " }")
                     }
                 }
@@ -326,15 +326,15 @@ internal class DataFrameFormatter(
                 }
             is Pair<*, *> -> {
                 val key = value.first.toString() + ": "
-                val sizeOfValue = render(value.second, renderer, configuration.copy(cellContentLimit = 4))!!.textLength
+                val shortValue = render(value.second, renderer, configuration.copy(cellContentLimit = 3))
+                val sizeOfValue = shortValue!!.textLength
                 val keyLimit = limit - sizeOfValue
-                if(key.length > keyLimit) {
-                    if(limit > 3)
-                        key.take(limit - 3).addCss(colNameClass) + "...".addCss(ellipsisClass)
-                    else null
-                }
-                else {
-                    key.addCss(colNameClass) + render(value.second, renderer, configuration.copy(cellContentLimit = limit - key.length))!!
+                if (key.length > keyLimit) {
+                    if (limit > 3) {
+                        (key + "...").truncate(limit).addCss(structuralClass)
+                    } else null
+                } else {
+                    key.addCss(structuralClass) + render(value.second, renderer, configuration.copy(cellContentLimit = limit - key.length))!!
                 }
             }
             is Number -> renderer.content(value, configuration).addCss(numberClass)
@@ -342,7 +342,7 @@ internal class DataFrameFormatter(
             is HtmlData -> RenderedContent.text(value.body)
             else -> renderer.content(value, configuration)
         }
-        if(result != null && result.textLength > configuration.cellContentLimit) return null
+        if (result != null && result.textLength > configuration.cellContentLimit) return null
         return result
     }
 }
