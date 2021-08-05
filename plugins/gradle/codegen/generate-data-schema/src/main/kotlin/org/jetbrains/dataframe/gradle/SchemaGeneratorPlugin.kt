@@ -22,21 +22,11 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 }
                 .firstOrNull()
 
-            val kspPluginEvidence = target.plugins.findPlugin(KspPluginApplier::class.java)
-
             if (appliedPlugin == null) {
                 target.logger.warn("Schema generator plugin applied, but no Kotlin plugin was found")
             }
 
-            val generationTasks = extension.schemas.map { schema ->
-                createTask(
-                    target,
-                    extension,
-                    appliedPlugin,
-                    schema,
-                    kspPluginEvidence
-                )
-            }
+            val generationTasks = extension.schemas.map { createTask(target, extension, appliedPlugin, it) }
             val generateAll = target.tasks.create("generateDataFrames") {
                 group = GROUP
                 dependsOn(*generationTasks.toTypedArray())
@@ -51,8 +41,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         target: Project,
         extension: SchemaGeneratorExtension,
         appliedPlugin: AppliedPlugin?,
-        schema: Schema,
-        kspPluginEvidence: KspPluginApplier?
+        schema: Schema
     ): Task {
         val interfaceName = getInterfaceName(schema)
         fun propertyError(property: String): Nothing {
@@ -69,9 +58,6 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             ?: run {
                 appliedPlugin ?: propertyError("src")
                 val sourceSet = appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSetName)
-                if (kspPluginEvidence != null) {
-                    sourceSet.kotlin.srcDir("build/generated/ksp/$sourceSetName/kotlin/")
-                }
                 val path = appliedPlugin.sourceSetConfiguration.getKotlinRoot(
                     sourceSet.kotlin.sourceDirectories,
                     sourceSetName
