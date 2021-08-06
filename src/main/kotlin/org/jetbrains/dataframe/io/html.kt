@@ -58,7 +58,7 @@ internal fun getResourceText(resource: String, vararg replacement: Pair<String, 
     return template
 }
 
-internal fun tableJs(columns: List<ColumnDataForJs>, id: Int): String {
+internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int): String {
     var index = 0
     val data = buildString {
         append("[")
@@ -86,7 +86,7 @@ internal fun tableJs(columns: List<ColumnDataForJs>, id: Int): String {
         columns.forEach { dfs(it) }
         append("]")
     }
-    val js = getResourceText("/addTable.js", "COLUMNS" to data, "ID" to id)
+    val js = getResourceText("/addTable.js", "COLUMNS" to data, "ID" to id, "ROOT" to rootId)
     return js
 }
 
@@ -121,16 +121,16 @@ internal fun AnyFrame.toHtmlData(
         )
     }
 
-    val id = tableId++
-    queue.add(this to id)
+    val rootId = tableId++
+    queue.add(this to rootId)
     while (!queue.isEmpty()) {
         val (nextDf, nextId) = queue.pop()
         val preparedColumns = nextDf.columns().map { nextDf.columnToJs(it) }
-        val js = tableJs(preparedColumns, nextId)
+        val js = tableJs(preparedColumns, nextId, rootId)
         scripts.add(js)
     }
-    val body = getResourceText("/table.html", "ID" to id)
-    val script = scripts.joinToString("\n") + "\n" + getResourceText("/renderTable.js", "ID" to id)
+    val body = getResourceText("/table.html", "ID" to rootId)
+    val script = scripts.joinToString("\n") + "\n" + getResourceText("/renderTable.js", "ID" to rootId)
     return HtmlData("", body, script)
 }
 
@@ -194,8 +194,6 @@ public data class DisplayConfiguration(
 internal fun String.escapeNewLines() = replace("\n", "\\n")
 
 internal fun String.escapeForHtmlInJs() = replace("\"", "\\\"").escapeNewLines()
-
-internal fun String.escapeForHtmlInJsMultiline() = replace("\"", "\\\"").replace("\n", "<br>")
 
 internal fun renderValueForHtml(value: Any?, truncate: Int): RenderedContent {
     return formatter.truncate(renderValueToString(value), truncate)
