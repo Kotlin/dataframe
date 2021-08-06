@@ -1,7 +1,3 @@
-const dataFrames = {};
-
-const expandedFrames = new Set();
-
 function addTable(df) {
     let cols = df.cols;
     for(let i=0;i<cols.length;i++){
@@ -13,7 +9,16 @@ function addTable(df) {
     for(let i=0;i<df.cols.length;i++){
         if(df.cols[i].values.length > df.nrow) df.nrow = df.cols[i].values.length
     }
-    dataFrames[df.id] = df
+    if(df.id === df.rootId)
+    {
+        df.expandedFrames = new Set()
+        df.childFrames = { }
+        const table = getTableElement(df.id)
+        table.df = df
+    }else {
+        const rootDf = getTableData(df.rootId)
+        rootDf.childFrames[df.id] = df
+    }
 }
 
 function computeRenderData(df) {
@@ -41,7 +46,7 @@ function computeRenderData(df) {
 
 function computeRenderDataRec(cols, colId, pos, depth, result, leftBorder, rightBorder) {
     if(result.length === depth){
-        var array = []
+        const array = [];
         if(pos > 0)
         {
             let j = 0
@@ -55,8 +60,8 @@ function computeRenderDataRec(cols, colId, pos, depth, result, leftBorder, right
         }
         result.push(array)
     }
-    var col = cols[colId]
-    var size = 0
+    const col = cols[colId];
+    let size = 0;
     if(col.expanded)
     {
         let childPos = pos
@@ -84,13 +89,29 @@ function computeRenderDataRec(cols, colId, pos, depth, result, leftBorder, right
     return size
 }
 
+function getTableElement(id) {
+    return document.getElementById("df_" + id)
+}
+
+function getTableData(id) {
+    return getTableElement(id).df
+}
+
 function renderTable(id) {
 
-    let df = dataFrames[id]
+    let table = getTableElement(id)
+
+    if(table === null) return
+
+    table.innerHTML = ""
+
+    let df = table.df
+    let rootDf = df.rootId === df.id ? df : getTableData(df.rootId)
 
     // header
-    let header = document.getElementById("df_header_" + id);
-    header.innerHTML = ""
+    let header = document.createElement("thead")
+    table.appendChild(header)
+
     let renderData = computeRenderData(df)
     for(let j=0;j<renderData.length;j++){
         let rowData = renderData[j]
@@ -122,9 +143,10 @@ function renderTable(id) {
         }
     }
 
-    // data
-    let body = document.getElementById("df_body_" + id);
-    body.innerHTML = ""
+    // body
+    let body = document.createElement("tbody")
+    table.appendChild(body)
+
     let columns = renderData.pop()
     for(let row = 0; row < df.nrow; row++) {
         let tr = document.createElement("tr");
@@ -143,18 +165,27 @@ function renderTable(id) {
             let value = col.values[row]
             if(value.frameId !== undefined) {
                 let frameId = value.frameId
-                let expanded = expandedFrames.has(frameId)
-                let aClass = expanded ? " class='dfexpanded'" : ""
-                let link = "<a" + aClass + " onClick='expandFrame(" + frameId + ", " + id + ");'>" + value.value + "</a>"
+                let expanded = rootDf.expandedFrames.has(frameId)
+                let link = document.createElement("a")
+                if(expanded) link.className = "dfexpanded"
+                link.onclick = function () {
+                    if(rootDf.expandedFrames.has(frameId))
+                        rootDf.expandedFrames.delete(frameId)
+                    else rootDf.expandedFrames.add(frameId)
+                    renderTable(id)
+                }
+                link.innerHTML = value.value
                 if(expanded) {
-                    td.innerHTML = link +
-                                   " <p/><table class=\"dataframe\">\n" +
-                                     "    <thead id=\"df_header_" + frameId + "\"/>\n" +
-                                     "    <tbody id=\"df_body_" +  + frameId + "\"/>\n" +
-                                    "</table>"
+                    td.appendChild(link)
+                    td.appendChild(document.createElement("p"))
+                    const childTable = document.createElement("table")
+                    childTable.className = "dataframe"
+                    childTable.id = "df_" + frameId
+                    childTable.df = rootDf.childFrames[frameId]
+                    td.appendChild(childTable)
                     renderTable(frameId)
                 } else {
-                    td.innerHTML = link
+                    td.appendChild(link)
                 }
             }else if(value.style !== undefined) {
                 td.innerHTML = value.value
@@ -164,15 +195,8 @@ function renderTable(id) {
     }
 }
 
-function expandFrame(dfId, rootDfId) {
-    if(expandedFrames.has(dfId))
-        expandedFrames.delete(dfId)
-    else expandedFrames.add(dfId)
-    renderTable(rootDfId)
-}
-
 function expandCol(dfId, colId) {
-    let df = dataFrames[dfId]
+    let df = getTableElement(dfId).df
     df.cols[colId].expanded = !df.cols[colId].expanded
     renderTable(dfId)
 }

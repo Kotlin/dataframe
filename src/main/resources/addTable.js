@@ -1,1 +1,1 @@
-addTable({ cols: COLUMNS, id: ID } )
+addTable({ cols: COLUMNS, id: ID, rootId: ROOT } )
