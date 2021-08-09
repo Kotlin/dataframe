@@ -13,6 +13,7 @@ internal val dataColumn = SourceFile.kotlin("DataColumn.kt", """
     package org.jetbrains.dataframe.columns
 
     interface DataColumn<out T>
+    interface ColumnGroup<out T>
 """.trimIndent())
 
 internal val dataFrame = SourceFile.kotlin("DataFrame.kt", """
@@ -23,6 +24,8 @@ internal val dataFrame = SourceFile.kotlin("DataFrame.kt", """
     interface DataFrameBase<out T> {
         operator fun get(columnName: String): DataColumn<*>
     }
+    interface DataRow<out T>
+    interface DataFrame<out T>
 """.trimIndent())
 
 internal val dataRow = SourceFile.kotlin("DataRow.kt", """
