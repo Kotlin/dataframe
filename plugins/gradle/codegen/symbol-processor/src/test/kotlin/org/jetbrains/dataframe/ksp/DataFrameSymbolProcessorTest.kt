@@ -269,6 +269,54 @@ class DataFrameSymbolProcessorTest {
         result.successfulCompilation shouldBe true
     }
 
+    @Test
+    fun `DataRow property`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                import org.jetbrains.dataframe.annotations.*
+                import org.jetbrains.dataframe.columns.*
+                import org.jetbrains.dataframe.*
+
+                interface Marker
+
+                @DataSchema(isOpen = false)
+                interface Hello {
+                    val a: DataRow<Marker>
+                }
+
+                val DataFrameBase<Hello>.col1: ColumnGroup<Marker> get() = a
+                val DataRowBase<Hello>.row1: DataRow<Marker> get() = a
+                
+            """.trimIndent()))
+            ))
+        result.successfulCompilation shouldBe true
+    }
+
+    @Test
+    fun `DataFrame property`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                import org.jetbrains.dataframe.annotations.*
+                import org.jetbrains.dataframe.columns.*
+                import org.jetbrains.dataframe.*
+
+                interface Marker
+
+                @DataSchema(isOpen = false)
+                interface Hello {
+                    val a: DataFrame<Marker>
+                }
+
+                val DataFrameBase<Hello>.col1: DataColumn<DataFrame<Marker>> get() = a
+                val DataRowBase<Hello>.row1: DataFrame<Marker> get() = a
+                
+            """.trimIndent()))
+            ))
+        result.successfulCompilation shouldBe true
+    }
+
 
     @Test
     fun `extension accessible from same package`() {

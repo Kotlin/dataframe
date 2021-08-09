@@ -48,7 +48,26 @@ class DataFrameSymbolProcessor(private val codeGenerator: CodeGenerator, private
         }
     }
 
-    private fun render(typeReference: KSTypeReference): String {
+    private fun render(typeReference: KSTypeReference): RenderedType {
+        val type = typeReference.resolve()
+        val fqName = type.declaration.qualifiedName?.asString() ?: error("")
+        val renderedArguments = if (type.innerArguments.isNotEmpty()) {
+            type.innerArguments.joinToString(", ") { render(it) }
+        } else {
+            null
+        }
+        return RenderedType(fqName, renderedArguments, type.isMarkedNullable)
+    }
+
+    private fun render(typeArgument: KSTypeArgument): String {
+        return when (val variance = typeArgument.variance) {
+            Variance.STAR -> variance.label
+            Variance.INVARIANT -> renderRecursively(typeArgument.type ?: error("typeArgument.type should only be null for Variance.STAR"))
+            Variance.COVARIANT, Variance.CONTRAVARIANT -> "${variance.label} ${renderRecursively(typeArgument.type ?: error("typeArgument.type should only be null for Variance.STAR"))}"
+        }
+    }
+
+    private fun renderRecursively(typeReference: KSTypeReference): String {
         val type = typeReference.resolve()
         val fqName = type.declaration.qualifiedName?.asString() ?: error("")
         return buildString {
@@ -62,14 +81,6 @@ class DataFrameSymbolProcessor(private val codeGenerator: CodeGenerator, private
             if (type.isMarkedNullable) {
                 append("?")
             }
-        }
-    }
-
-    private fun render(typeArgument: KSTypeArgument): String {
-        return when (val variance = typeArgument.variance) {
-            Variance.STAR -> variance.label
-            Variance.INVARIANT -> render(typeArgument.type ?: error("typeArgument.type should only be null for Variance.STAR"))
-            Variance.COVARIANT, Variance.CONTRAVARIANT -> "${variance.label} ${render(typeArgument.type ?: error("typeArgument.type should only be null for Variance.STAR"))}"
         }
     }
 
