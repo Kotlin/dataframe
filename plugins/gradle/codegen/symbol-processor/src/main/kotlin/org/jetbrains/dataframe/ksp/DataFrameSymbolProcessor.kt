@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe.ksp
 
+import com.google.devtools.ksp.innerArguments
 import com.google.devtools.ksp.processing.CodeGenerator
 import com.google.devtools.ksp.processing.Dependencies
 import com.google.devtools.ksp.processing.Resolver
@@ -40,9 +41,7 @@ class DataFrameSymbolProcessor(private val codeGenerator: CodeGenerator) : Symbo
 
     private fun OutputStreamWriter.writeProperties(interfaceType: KSType, properties: List<KSPropertyDeclaration>) {
         properties.forEach { property ->
-            val declaration = property.type.resolve().declaration
-            val fqnType = declaration.qualifiedName?.asString()
-                ?: error("Missing qualifiedName for declaration ${declaration.simpleName}")
+            val fqnType = render(property.type)
             val propertyName = property.simpleName.asString()
             val columnName = getColumnName(property)
             appendLine(
@@ -51,6 +50,31 @@ class DataFrameSymbolProcessor(private val codeGenerator: CodeGenerator) : Symbo
                 val $fqnDataRowBase<$interfaceType>.`$propertyName`: $fqnType get() = this["$columnName"] as $fqnType
                 """.trimIndent()
             )
+        }
+    }
+
+    private fun render(typeReference: KSTypeReference): String {
+        val type = typeReference.resolve()
+        val fqName = type.declaration.qualifiedName?.asString() ?: error("")
+        return buildString {
+            append(fqName)
+            if (type.innerArguments.isNotEmpty()) {
+                append("<")
+                val renderedArguments = type.innerArguments.joinToString(", ") { render(it) }
+                append(renderedArguments)
+                append(">")
+            }
+            if (type.isMarkedNullable) {
+                append("?")
+            }
+        }
+    }
+
+    private fun render(typeArgument: KSTypeArgument): String {
+        return when (val variance = typeArgument.variance) {
+            Variance.STAR -> variance.label
+            Variance.INVARIANT -> render(typeArgument.type ?: error("typeArgument.type should only be null for Variance.STAR"))
+            Variance.COVARIANT, Variance.CONTRAVARIANT -> "${variance.label} ${render(typeArgument.type ?: error("typeArgument.type should only be null for Variance.STAR"))}"
         }
     }
 
