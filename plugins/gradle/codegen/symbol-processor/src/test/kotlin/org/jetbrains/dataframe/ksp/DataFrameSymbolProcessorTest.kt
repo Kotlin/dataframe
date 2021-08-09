@@ -244,6 +244,33 @@ class DataFrameSymbolProcessorTest {
     }
 
     @Test
+    fun `jvm name`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                import org.jetbrains.dataframe.annotations.*
+                import org.jetbrains.dataframe.columns.*
+                import org.jetbrains.dataframe.*
+
+
+                @DataSchema(isOpen = false)
+                interface Hello {
+                    val a: Int
+                }
+
+                val DataFrameBase<Hello>.col1: DataColumn<Int> get() = a
+                val DataRowBase<Hello>.row1: Int get() = a
+                
+            """.trimIndent()))
+            ))
+        result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
+            ?.shouldContain("""DataFrameBase<Hello>.`a`: org.jetbrains.dataframe.columns.DataColumn<kotlin.Int> @JvmName("Hello_a")""")
+            ?.shouldContain("""DataRowBase<Hello>.`a`: kotlin.Int @JvmName("Hello_a")""")
+        result.successfulCompilation shouldBe true
+    }
+
+
+    @Test
     fun `extension accessible from same package`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
