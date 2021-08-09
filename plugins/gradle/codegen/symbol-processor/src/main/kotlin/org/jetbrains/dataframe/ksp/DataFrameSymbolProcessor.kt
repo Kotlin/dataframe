@@ -9,7 +9,7 @@ import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
 import java.io.OutputStreamWriter
 
-class DataFrameSymbolProcessor(private val codeGenerator: CodeGenerator) : SymbolProcessor {
+class DataFrameSymbolProcessor(private val codeGenerator: CodeGenerator, private val propertyRenderer: PropertyRenderer) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val symbols = resolver.getSymbolsWithAnnotation("org.jetbrains.dataframe.annotations.DataSchema")
 
@@ -41,15 +41,10 @@ class DataFrameSymbolProcessor(private val codeGenerator: CodeGenerator) : Symbo
 
     private fun OutputStreamWriter.writeProperties(interfaceType: KSType, properties: List<KSPropertyDeclaration>) {
         properties.forEach { property ->
-            val fqnType = render(property.type)
+            val propertyType = render(property.type)
             val propertyName = property.simpleName.asString()
             val columnName = getColumnName(property)
-            appendLine(
-                """
-                val $fqnDataFrameBase<$interfaceType>.`$propertyName`: $fqnDataColumn<${fqnType}> get() = this["$columnName"] as $fqnDataColumn<${fqnType}>
-                val $fqnDataRowBase<$interfaceType>.`$propertyName`: $fqnType get() = this["$columnName"] as $fqnType
-                """.trimIndent()
-            )
+            appendLine(propertyRenderer.render(interfaceType.toString(), columnName, propertyName, propertyType))
         }
     }
 
@@ -101,11 +96,5 @@ class DataFrameSymbolProcessor(private val codeGenerator: CodeGenerator) : Symbo
 
     private fun argumentMismatchError(property: KSPropertyDeclaration, args: List<KSValueArgument>): Nothing {
         error("Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, but got $args")
-    }
-
-    private companion object {
-        private const val fqnDataFrameBase = "org.jetbrains.dataframe.DataFrameBase"
-        private const val fqnDataRowBase = "org.jetbrains.dataframe.DataRowBase"
-        private const val fqnDataColumn = "org.jetbrains.dataframe.columns.DataColumn"
     }
 }
