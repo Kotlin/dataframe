@@ -4,6 +4,10 @@ import com.tschuchort.compiletesting.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 
+interface A {
+    val a: kotlin.coroutines.SuspendFunction1<Int, Int>
+}
+
 @Suppress("unused")
 internal class KotlinCompileTestingCompilationResult(
     val delegate: KotlinCompilation.Result,
@@ -34,7 +38,7 @@ internal object KspCompilationTestRunner {
         )
         kspCompilation.kspArgs.putAll(params.options)
         kspCompilation.symbolProcessorProviders = listOf(DataFrameSymbolProcessorProvider())
-        kspCompilation.compile()
+        kspCompilation.compile().also { println(it.messages) }
         // ignore KSP result for now because KSP stops compilation, which might create false
         // negatives when java code accesses kotlin code.
         // TODO:  fix once https://github.com/tschuchortdev/kotlin-compile-testing/issues/72 is
@@ -51,6 +55,7 @@ internal object KspCompilationTestRunner {
             kspCompilation.kspKotlinSourceDir.collectSourceFiles()
 
         val result = finalCompilation.compile()
+        println(result.messages)
         return KotlinCompileTestingCompilationResult(
             delegate = result,
             successfulCompilation = result.exitCode == KotlinCompilation.ExitCode.OK,
