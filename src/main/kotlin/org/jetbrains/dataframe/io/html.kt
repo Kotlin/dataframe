@@ -19,6 +19,7 @@ import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import java.io.InputStreamReader
 import java.net.URL
 import java.util.LinkedList
+import java.util.Random
 
 internal val tooltipLimit = 1000
 
@@ -90,7 +91,9 @@ internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int): Stri
     return js
 }
 
-internal var tableId = 0
+internal var tableInSessionId = 0
+internal val sessionId = (Random().nextInt() % 128) shl 24
+internal fun nextTableId() = sessionId + (tableInSessionId++)
 
 // TODO: display tooltips for column headers
 internal fun AnyFrame.toHtmlData(
@@ -104,7 +107,7 @@ internal fun AnyFrame.toHtmlData(
         val values = rows().take(configuration.rowsLimit).map {
             val value = it[col]
             if (value is AnyFrame) {
-                val id = tableId++
+                val id = nextTableId()
                 queue.add(value to id)
                 DataFrameReference(id, value.size)
             } else {
@@ -121,7 +124,7 @@ internal fun AnyFrame.toHtmlData(
         )
     }
 
-    val rootId = tableId++
+    val rootId = nextTableId()
     queue.add(this to rootId)
     while (!queue.isEmpty()) {
         val (nextDf, nextId) = queue.pop()
