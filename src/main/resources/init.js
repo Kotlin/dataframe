@@ -125,11 +125,17 @@ function renderTable(id) {
             let colId = cell.id
             let col = df.cols[colId];
             if(!cell.empty) {
-                let aClass = col.expanded ? " class='expanded'" : ""
                 if(col.children.length === 0){
                     th.innerHTML = col.name
                 }else {
-                    th.innerHTML = "<a" + aClass + " onClick='expandCol(" + id + ", " + colId + ");'>" + col.name + "</a>"
+                    let link = document.createElement("a")
+                    if(col.expanded) link.className = "expanded"
+                    link.onclick = function () {
+                        col.expanded = !col.expanded
+                        renderTable(id)
+                    }
+                    link.innerHTML = col.name
+                    th.appendChild(link)
                 }
             }
             let classes = (cell.leftBd ? " leftBorder" : "") + (cell.rightBd ? " rightBorder" : "")
@@ -193,10 +199,4 @@ function renderTable(id) {
             }else td.innerHTML = value
         }
     }
-}
-
-function expandCol(dfId, colId) {
-    let df = getTableElement(dfId).df
-    df.cols[colId].expanded = !df.cols[colId].expanded
-    renderTable(dfId)
 }
