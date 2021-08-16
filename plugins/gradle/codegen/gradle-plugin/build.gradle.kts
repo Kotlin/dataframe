@@ -46,8 +46,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin-api")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin")
     implementation("com.beust:klaxon:5.5")
-    implementation("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.21-1.0.0-beta05")
-    implementation("com.google.devtools.ksp:symbol-processing-api:1.5.21-1.0.0-beta05")
+    implementation(libs.ksp.gradle)
+    implementation(libs.ksp.api)
 
     testImplementation("junit:junit:4.12")
     testImplementation("io.kotest:kotest-assertions-core:4.6.0")
