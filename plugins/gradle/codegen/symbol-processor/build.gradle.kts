@@ -5,6 +5,8 @@ plugins {
 
 repositories {
     mavenCentral()
+    // TODO: Remove when kotlin-compile-testing update its KSP dependency to 1.5.21.1.0.0-beta07+
+    // since this version is published on the mavenCentral
     google()
 }
 
