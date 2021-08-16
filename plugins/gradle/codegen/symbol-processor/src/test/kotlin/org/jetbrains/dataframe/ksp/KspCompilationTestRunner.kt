@@ -38,7 +38,11 @@ internal object KspCompilationTestRunner {
         )
         kspCompilation.kspArgs.putAll(params.options)
         kspCompilation.symbolProcessorProviders = listOf(DataFrameSymbolProcessorProvider())
-        kspCompilation.compile().also { println(it.messages) }
+        kspCompilation.compile().also { println(it.messages);
+            if (it.exitCode==KotlinCompilation.ExitCode.COMPILATION_ERROR) {
+                return KotlinCompileTestingCompilationResult(it, false, emptyList(), emptyList(), combinedOutputStream.toString(Charsets.UTF_8))
+            }
+        }
         // ignore KSP result for now because KSP stops compilation, which might create false
         // negatives when java code accesses kotlin code.
         // TODO:  fix once https://github.com/tschuchortdev/kotlin-compile-testing/issues/72 is

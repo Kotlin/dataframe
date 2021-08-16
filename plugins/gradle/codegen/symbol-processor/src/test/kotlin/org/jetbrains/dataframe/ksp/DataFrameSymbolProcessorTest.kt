@@ -340,4 +340,24 @@ class DataFrameSymbolProcessorTest {
             ))
         result.successfulCompilation shouldBe true
     }
+
+    @Test
+    fun `interface with type parameters`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                package org.example
+
+                import org.jetbrains.dataframe.annotations.*
+                import org.jetbrains.dataframe.columns.*
+                import org.jetbrains.dataframe.*
+
+                @DataSchema(isOpen = false)
+                interface Hello <T> {
+                    val name: T
+                }
+            """.trimIndent()))
+            ))
+        result.successfulCompilation shouldBe false
+    }
 }

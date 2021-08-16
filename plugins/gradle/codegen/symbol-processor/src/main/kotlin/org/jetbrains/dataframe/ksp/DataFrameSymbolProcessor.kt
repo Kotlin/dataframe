@@ -1,21 +1,34 @@
 package org.jetbrains.dataframe.ksp
 
 import com.google.devtools.ksp.innerArguments
-import com.google.devtools.ksp.processing.CodeGenerator
-import com.google.devtools.ksp.processing.Dependencies
-import com.google.devtools.ksp.processing.Resolver
-import com.google.devtools.ksp.processing.SymbolProcessor
+import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
 import java.io.OutputStreamWriter
 
-class DataFrameSymbolProcessor(private val codeGenerator: CodeGenerator, private val propertyRenderer: PropertyRenderer) : SymbolProcessor {
+class DataFrameSymbolProcessor(
+    private val codeGenerator: CodeGenerator,
+    private val logger: KSPLogger,
+    private val propertyRenderer: PropertyRenderer
+) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        val symbols = resolver.getSymbolsWithAnnotation("org.jetbrains.dataframe.annotations.DataSchema")
+        val dataSchemaAnnotation = resolver.getKSNameFromString("org.jetbrains.dataframe.annotations.DataSchema")
+        val symbols = resolver.getSymbolsWithAnnotation(dataSchemaAnnotation.asString())
 
         symbols
             .filterIsInstance<KSClassDeclaration>()
-            .filter { it.classKind == ClassKind.INTERFACE && it.validate() }
+            .mapNotNull {
+                if (it.classKind == ClassKind.INTERFACE && it.validate()) {
+                    if (it.typeParameters.isNotEmpty()) {
+                        logger.error("@${dataSchemaAnnotation.getShortName()} interface should not have type parameters", it)
+                        null
+                    } else {
+                        it
+                    }
+                } else {
+                    null
+                }
+            }
             .forEach {
                 val file = it.containingFile ?: return@forEach
                 generate(file, it, it.declarations.filterIsInstance<KSPropertyDeclaration>().toList())
