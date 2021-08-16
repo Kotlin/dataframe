@@ -18,8 +18,6 @@ internal class KspPluginApplier : Plugin<Project> {
         val properties = Properties()
         properties.load(javaClass.getResourceAsStream("plugin.properties"))
         val preprocessorVersion = properties.getProperty("PREPROCESSOR_VERSION")
-        target.buildscript.repositories { google() }
-        target.repositories { google() }
         target.plugins.apply("com.google.devtools.ksp")
         target.configurations.getByName("ksp").dependencies.add(
             target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor:$preprocessorVersion")
