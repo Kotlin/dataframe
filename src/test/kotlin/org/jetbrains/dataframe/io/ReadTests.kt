@@ -4,6 +4,7 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.impl.columns.asTable
 import org.jetbrains.dataframe.internal.schema.ColumnSchema
+import org.junit.Ignore
 import org.junit.Test
 
 class ReadTests {
@@ -71,6 +72,7 @@ class ReadTests {
     }
 
     @Test
+    @Ignore
     fun `http error`() {
         val url = "https://api.binance.com/api/v3/klines?symbol=BTCUSDT"
         val df = dataFrame(url)

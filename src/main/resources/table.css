@@ -7,12 +7,6 @@ table.dataframe a {
     color: #296eaa;
     text-decoration: none;
 }
-table.dataframe a.expanded {
-    color: black;
-}
-table.dataframe a.dfexpanded {
-    color: #737373;
-}
 table.dataframe a:hover {
     color: #1a466c;
     text-decoration: underline;
@@ -58,4 +52,13 @@ table.dataframe .rightBorder {
 }
 table.dataframe .rightAlign {
     text-align: right;
+}
+table.dataframe .expanderSvg {
+    width: 8px;
+    height: 8px;
+    margin-right: 3px;
+}
+table.dataframe .expander {
+    display: flex;
+    align-items: center;
 }
