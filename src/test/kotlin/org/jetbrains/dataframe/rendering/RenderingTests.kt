@@ -2,6 +2,7 @@ package org.jetbrains.dataframe.rendering
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 import org.jetbrains.dataframe.columnOf
 import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.getType
@@ -44,8 +45,15 @@ class RenderingTests {
     fun htmlTagsAreEscaped() {
         val df = dataFrameOf("name", "int")("<Air France> (12)", 1)
         val html = df.toHTML().toString()
-        println(html)
         html shouldContain "&#60;Air France&#62;"
+    }
+
+    @Test
+    fun `long text is trimmed without escaping`() {
+        val df = dataFrameOf("text")("asdfkjasdlkjfhasljkddasdasdasdasdasdasdhf")
+        val html = df.toHTML(includeInit = false).toString()
+        html shouldNotContain "\\\\"
+        html shouldNotContain "&#34;"
     }
 
     @Test
