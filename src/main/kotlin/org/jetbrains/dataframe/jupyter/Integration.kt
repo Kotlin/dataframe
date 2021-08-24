@@ -10,7 +10,7 @@ import org.jetbrains.dataframe.annotations.DataSchema
 import org.jetbrains.dataframe.columns.AnyCol
 import org.jetbrains.dataframe.columns.ColumnGroup
 import org.jetbrains.dataframe.dataFrameOf
-import org.jetbrains.dataframe.images.Image
+import org.jetbrains.dataframe.dataTypes.IMG
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.dataframe.internal.codeGen.CodeWithConverter
 import org.jetbrains.dataframe.io.HtmlData
@@ -55,12 +55,14 @@ internal class Integration : JupyterIntegration() {
             render<PivotAggregations<*>> { it.frames().toDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
             render<GroupedPivotAggregations<*>> { it.frames().toHTML(config.display) { "GroupedPivot: ${it.size}" } }
 
-            render<Image> { HTML("<img src=\"${it.url}\"/>") }
+            render<IMG> { HTML("<img src=\"${it.url}\"/>") }
         }
 
         import("org.jetbrains.dataframe.*")
         import("org.jetbrains.dataframe.annotations.*")
         import("org.jetbrains.dataframe.io.*")
+        import("java.net.URL")
+        import("org.jetbrains.dataframe.dataTypes.IMG")
 
         fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, property: KProperty<*>): VariableName? {
             val code = codeWithConverter.with(property.name)

@@ -5,7 +5,7 @@ import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.annotations.DataSchema
 import org.jetbrains.dataframe.columns.ColumnGroup
 import org.jetbrains.dataframe.columns.DataColumn
-import org.jetbrains.dataframe.images.Image
+import org.jetbrains.dataframe.dataTypes.IMG
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.junit.Test
 
@@ -207,8 +207,8 @@ class PlaylistJsonTest {
 
     @Test
     fun `deep update`() {
-        val updated = item.update { snippet.thumbnails.default.url }.with { Image(it) }
-        updated.snippet.thumbnails.default.url.type() shouldBe getType<Image>()
+        val updated = item.update { snippet.thumbnails.default.url }.with { IMG(it) }
+        updated.snippet.thumbnails.default.url.type() shouldBe getType<IMG>()
     }
 
     @Test
@@ -219,19 +219,19 @@ class PlaylistJsonTest {
 
     @Test
     fun `deep batch update`() {
-        val updated = item.update { snippet.thumbnails.default.url and snippet.thumbnails.high.url }.with { Image(it) }
-        updated.snippet.thumbnails.default.url.type() shouldBe getType<Image>()
-        updated.snippet.thumbnails.high.url.type() shouldBe getType<Image>()
+        val updated = item.update { snippet.thumbnails.default.url and snippet.thumbnails.high.url }.with { IMG(it) }
+        updated.snippet.thumbnails.default.url.type() shouldBe getType<IMG>()
+        updated.snippet.thumbnails.high.url.type() shouldBe getType<IMG>()
     }
 
     @Test
     fun `deep batch update all`() {
-        val updated = item.update { dfs { it.name == "url" } }.with { (it as? String)?.let { Image(it) } }
-        updated.snippet.thumbnails.default.url.type() shouldBe getType<Image>()
-        updated.snippet.thumbnails.maxres.url.type() shouldBe getType<Image?>()
-        updated.snippet.thumbnails.standard.url.type() shouldBe getType<Image?>()
-        updated.snippet.thumbnails.medium.url.type() shouldBe getType<Image>()
-        updated.snippet.thumbnails.high.url.type() shouldBe getType<Image>()
+        val updated = item.update { dfs { it.name == "url" } }.with { (it as? String)?.let { IMG(it) } }
+        updated.snippet.thumbnails.default.url.type() shouldBe getType<IMG>()
+        updated.snippet.thumbnails.maxres.url.type() shouldBe getType<IMG?>()
+        updated.snippet.thumbnails.standard.url.type() shouldBe getType<IMG?>()
+        updated.snippet.thumbnails.medium.url.type() shouldBe getType<IMG>()
+        updated.snippet.thumbnails.high.url.type() shouldBe getType<IMG>()
     }
 
     @Test
