@@ -4,7 +4,8 @@ import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
 import org.jetbrains.dataframe.AnyFrame
 import org.jetbrains.dataframe.dataFrameOf
-import org.jetbrains.dataframe.groupBy
+import org.jetbrains.dataframe.group
+import org.jetbrains.dataframe.into
 import org.jetbrains.dataframe.io.html
 import org.jetbrains.dataframe.io.toHTML
 import org.jetbrains.dataframe.parse
@@ -27,7 +28,7 @@ class HtmlRenderingTests : BaseTest() {
     @Ignore
     @Test
     fun test() {
-        typed.groupBy { name }.plain().browse()
+        typed.group { name and age }.into("temp").browse()
     }
 
     @Test

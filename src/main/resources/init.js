@@ -97,6 +97,23 @@ function getTableData(id) {
     return getTableElement(id).df
 }
 
+function createExpander(isExpanded) {
+    const svgNs = "http://www.w3.org/2000/svg"
+    let svg = document.createElementNS(svgNs, "svg")
+    svg.classList.add("expanderSvg")
+    let path = document.createElementNS(svgNs, "path")
+    if(isExpanded){
+        svg.setAttribute("viewBox", "0 -2 8 8")
+        path.setAttribute("d", "M1 0 l-1 1 4 4 4 -4 -1 -1 -3 3Z")
+    } else {
+        svg.setAttribute("viewBox", "-2 0 8 8")
+        path.setAttribute("d", "M1 0 l-1 1 3 3 -3 3 1 1 4 -4Z")
+    }
+    path.setAttribute("fill", "currentColor")
+    svg.appendChild(path)
+    return svg
+}
+
 function renderTable(id) {
 
     let table = getTableElement(id)
@@ -129,12 +146,13 @@ function renderTable(id) {
                     th.innerHTML = col.name
                 }else {
                     let link = document.createElement("a")
-                    if(col.expanded) link.className = "expanded"
+                    link.className = "expander"
                     link.onclick = function () {
                         col.expanded = !col.expanded
                         renderTable(id)
                     }
-                    link.innerHTML = col.name
+                    link.appendChild(createExpander(col.expanded))
+                    link.innerHTML += col.name
                     th.appendChild(link)
                 }
             }
@@ -173,14 +191,15 @@ function renderTable(id) {
                 let frameId = value.frameId
                 let expanded = rootDf.expandedFrames.has(frameId)
                 let link = document.createElement("a")
-                if(expanded) link.className = "dfexpanded"
+                link.className = "expander"
                 link.onclick = function () {
                     if(rootDf.expandedFrames.has(frameId))
                         rootDf.expandedFrames.delete(frameId)
                     else rootDf.expandedFrames.add(frameId)
                     renderTable(id)
                 }
-                link.innerHTML = value.value
+                link.appendChild(createExpander(expanded))
+                link.innerHTML += value.value
                 if(expanded) {
                     td.appendChild(link)
                     td.appendChild(document.createElement("p"))
