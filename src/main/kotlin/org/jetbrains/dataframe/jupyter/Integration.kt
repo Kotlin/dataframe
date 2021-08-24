@@ -10,6 +10,7 @@ import org.jetbrains.dataframe.annotations.DataSchema
 import org.jetbrains.dataframe.columns.AnyCol
 import org.jetbrains.dataframe.columns.ColumnGroup
 import org.jetbrains.dataframe.dataFrameOf
+import org.jetbrains.dataframe.images.Image
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.dataframe.internal.codeGen.CodeWithConverter
 import org.jetbrains.dataframe.io.HtmlData
@@ -20,6 +21,7 @@ import org.jetbrains.dataframe.size
 import org.jetbrains.dataframe.stubs.DataFrameToListNamedStub
 import org.jetbrains.dataframe.stubs.DataFrameToListTypedStub
 import org.jetbrains.dataframe.toDataFrame
+import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.VariableName
 import org.jetbrains.kotlinx.jupyter.api.annotations.JupyterLibrary
@@ -52,6 +54,8 @@ internal class Integration : JupyterIntegration() {
             render<GroupedDataFrame<*, *>>({ it.plain() })
             render<PivotAggregations<*>> { it.frames().toDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
             render<GroupedPivotAggregations<*>> { it.frames().toHTML(config.display) { "GroupedPivot: ${it.size}" } }
+
+            render<Image> { HTML("<img src=\"${it.url}\"/>") }
         }
 
         import("org.jetbrains.dataframe.*")

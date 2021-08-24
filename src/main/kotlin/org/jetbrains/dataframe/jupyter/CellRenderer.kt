@@ -1,6 +1,5 @@
 package org.jetbrains.dataframe.jupyter
 
-import org.jetbrains.dataframe.images.Image
 import org.jetbrains.dataframe.io.DisplayConfiguration
 import org.jetbrains.dataframe.io.internallyRenderable
 import org.jetbrains.dataframe.io.renderValueForHtml
@@ -70,22 +69,10 @@ public object DefaultCellRenderer : CellRenderer {
     }
 }
 
-public object ImageCellRenderer : ChainedCellRenderer(DefaultCellRenderer) {
-    public override fun maybeContent(value: Any?, configuration: DisplayConfiguration): RenderedContent? {
-        if (value is Image) {
-            return RenderedContent.media("<img src=\"${value.url}\"/>")
-        } else return null
-    }
-
-    public override fun maybeTooltip(value: Any?, configuration: DisplayConfiguration): String? {
-        return (value as? Image)?.url
-    }
-}
-
 internal class JupyterCellRenderer(
     private val notebook: Notebook,
     private val host: ExecutionHost,
-) : ChainedCellRenderer(ImageCellRenderer) {
+) : ChainedCellRenderer(DefaultCellRenderer) {
     override fun maybeContent(value: Any?, configuration: DisplayConfiguration): RenderedContent? {
         val renderersProcessor = notebook.renderersProcessor
         if (internallyRenderable(value)) return null
