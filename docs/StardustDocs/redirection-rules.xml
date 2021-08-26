@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE rules SYSTEM "https://resources.jetbrains.com/stardust/redirection-rules.dtd">
+<rules>
+    <rule id="3b72033a">
+        <description>Created after removal of "About Dataframe" from Dataframe</description>
+        <accepts>about-dataframe.html</accepts>
+    </rule>
+    <rule id="4dc3d169">
+        <description>Created after removal of "Reference" from Dataframe</description>
+        <accepts>reference.html</accepts>
+    </rule>
+</rules>
