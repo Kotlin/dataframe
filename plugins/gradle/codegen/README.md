@@ -2,7 +2,7 @@
 
 DataFrame Gradle plugin can
 1. Generate type-safe accessors for your data for interfaces annotated with `@DataSchema` - **data schemas**
-2. Infer data schemas from your data.
+2. Infer data schemas from your CSV or JSON data.
 
 ## Setup
 ```
@@ -22,9 +22,35 @@ sourceSets {
 }
 ```
 
-## Features
-### Gradle integration
-For the following configuration, file `GeneratedRawCityPopulation` will be generated. See [reference](#reference) and [examples](#examples) for more details.
+## Usage
+
+### Annotation processing
+Declare data schemas in your code and use them to access data in DataFrame's
+A data schema is an interface with properties and no type parameters annotated with `@DataSchema`:
+```kotlin
+package org.example
+
+import org.jetbrains.dataframe.annotations.DataSchema
+
+@DataSchema
+interface Example {
+    val age: Int
+}
+```
+Then execute `build` task to generate type-safe accessors for schemas.
+For each property of the data schema two extension property are generated:
+```kotlin
+@file:Suppress("UNCHECKED_CAST")
+package org.example
+
+val DataFrameBase<Example>.`age`: DataColumn<Int> get() = this["age"] as DataColumn<Int>
+val DataRowBase<Example>.`age`: Int get() = this["age"] as Int
+```
+
+### Schema inference
+Specify schema's configurations in `dataframes`  and execute the `build` task.
+For the following configuration, file `GeneratedRawCityPopulation` will be generated.
+See [reference](#reference) and [examples](#examples) for more details.
 ```kotlin
 dataframes {
     schema {
@@ -49,24 +75,6 @@ interface RawCityPopulation{
     val Population: String
 }
 ```
-### Annotation processing
-Each of the data schemas is populated with extension properties.
-
-```kotlin
-@file:Suppress("UNCHECKED_CAST")
-package org.example
-
-val DataFrameBase<CityPopulation>.`City - Urban area`: DataColumn<String> get() = this["City / Urban area"] as DataColumn<String>
-val DataRowBase<CityPopulation>.`City - Urban area`: String get() = this["City / Urban area"] as String
-val DataFrameBase<CityPopulation>.`Country`: DataColumn<String> get() = this["Country"] as DataColumn<String>
-val DataRowBase<CityPopulation>.`Country`: String get() = this["Country"] as String
-val DataFrameBase<CityPopulation>.`Density`: DataColumn<Int> get() = this["Density"] as DataColumn<Int>
-val DataRowBase<CityPopulation>.`Density`: Int get() = this["Density"] as Int
-val DataFrameBase<CityPopulation>.`Land area`: DataColumn<Int> get() = this["Land area"] as DataColumn<Int>
-val DataRowBase<CityPopulation>.`Land area`: Int get() = this["Land area"] as Int
-val DataFrameBase<CityPopulation>.`Population`: DataColumn<Int> get() = this["Population"] as DataColumn<Int>
-val DataRowBase<CityPopulation>.`Population`: Int get() = this["Population"] as Int
-```
    
 ## Reference 
 ```kotlin
@@ -79,7 +87,7 @@ dataframes {
         packageName /* String */ = "…" // [optional; override default]
         src /* File */ = file("…") // [optional; default: file("src/$sourceSet/kotlin")]
         
-        data /* URL | File | String */ = "…" 
+        data /* URL | File | String */ = "…" // Data in JSON or CSV formats
         name = "org.jetbrains.data.Person" // [optional; default: from filename]
     }
 }
