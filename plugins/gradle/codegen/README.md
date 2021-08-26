@@ -9,8 +9,13 @@ DataFrame Gradle plugin can
 plugins {
     id("org.jetbrains.kotlin.plugin.dataframe") version "1.0-SNAPSHOT"
 }
+
+dependencies {
+    implementation("org.jetbrains.kotlinx:dataframe:$DATAFRAME_VERSION")
+}
 ```
 Then make IDE aware of the generated code:
+### Kotlin JVM
 #### Kotlin DSL
 ```kotlin
 kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
@@ -19,6 +24,29 @@ kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotl
 ```groovy
 sourceSets {
     main.kotlin.srcDir("build/generated/ksp/main/kotlin/")
+}
+```
+### Kotlin Multiplatform (JVM target only)
+#### Kotlin DSL
+```kotlin
+kotlin {
+    jvm()
+    sourceSets {
+        val jvmMain by getting {
+            kotlin.srcDir("build/generated/ksp/jvmMain/kotlin/")
+        }
+    }
+}
+```
+#### Groovy DSL
+```groovy
+kotlin {
+    jvm()
+    sourceSets {
+        jvmMain {
+            kotlin.srcDir("build/generated/ksp/jvmMain/kotlin/")
+        }
+    }
 }
 ```
 
