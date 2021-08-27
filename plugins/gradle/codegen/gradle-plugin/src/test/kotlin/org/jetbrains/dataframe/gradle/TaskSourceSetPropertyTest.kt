@@ -129,7 +129,7 @@ class TaskSourceSetPropertyTest {
             project.evaluate()
         }
         (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).dataSchema.get()
-            .shouldBe(project.file("src/main/kotlin/org/example/my/Generated321.kt"))
+            .shouldBe(project.file("src/main/kotlin/org/example/my/321.Generated.kt"))
     }
 
     @Test

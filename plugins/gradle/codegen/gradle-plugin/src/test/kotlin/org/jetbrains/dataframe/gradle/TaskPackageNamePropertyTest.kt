@@ -174,6 +174,6 @@ class TaskPackageNamePropertyTest {
             """.trimIndent()
         }
         result.task(":generateDataFrameData")?.outcome shouldBe TaskOutcome.SUCCESS
-        File(dir, "src/main/kotlin/dataframe/GeneratedData.kt").exists() shouldBe true
+        File(dir, "src/main/kotlin/dataframe/Data.Generated.kt").exists() shouldBe true
     }
 }

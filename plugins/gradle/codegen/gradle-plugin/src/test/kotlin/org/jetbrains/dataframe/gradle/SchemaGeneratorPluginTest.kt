@@ -340,6 +340,6 @@ internal class SchemaGeneratorPluginTes {
         project.file("src/main1/kotlin/org/example/test").also { it.mkdirs() }
         project.evaluate()
         (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).dataSchema.get()
-            .shouldBe(project.file("src/main1/kotlin/org/example/test/dataframe/Generated321.kt"))
+            .shouldBe(project.file("src/main1/kotlin/org/example/test/dataframe/321.Generated.kt"))
     }
 }
