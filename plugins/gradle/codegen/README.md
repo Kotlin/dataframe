@@ -14,7 +14,11 @@ dependencies {
     implementation("org.jetbrains.kotlinx:dataframe:$DATAFRAME_VERSION")
 }
 ```
-Then make IDE aware of the generated code:
+If you want to infer data schema from a big file (50MB+), Gradle will fail with OutOfMemory exception. Temporary workaround is to add the following line in `gradle.properties`
+```properties
+org.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
+```
+## Make IDE aware of the generated code:
 ### Kotlin JVM
 #### Kotlin DSL
 ```kotlin
