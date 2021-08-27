@@ -4,6 +4,7 @@ import io.kotest.matchers.shouldBe
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Test
 import java.io.File
+import java.nio.file.Files
 
 class SchemaGeneratorPluginIntegrationTest {
     @Test
@@ -59,13 +60,14 @@ class SchemaGeneratorPluginIntegrationTest {
 
     @Test
     fun `code with preprocessing errors won't compile`() {
-        val (_, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
-            dataFile.writeText(TestData.csvSample)
-
-            val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
-            val main = File(kotlin, "Main.kt")
-            main.writeText("""
+        val buildDir = Files.createTempDirectory("test").toFile()
+        val buildFile = File(buildDir, "build.gradle.kts")
+        val dataFile = File(buildDir, "data.csv")
+        dataFile.writeText(TestData.csvSample)
+        val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
+        val main = File(kotlin, "Main.kt")
+        main.writeText(
+            """
                 import org.jetbrains.dataframe.DataFrame
                 import org.jetbrains.dataframe.io.read
                 import org.jetbrains.dataframe.typed
@@ -80,9 +82,10 @@ class SchemaGeneratorPluginIntegrationTest {
                     val df = DataFrame.read("$dataFile").typed<MySchema>()
                     val df1 = df.filter { age != null }
                 }
-            """.trimIndent())
-
-            @Suppress("DuplicatedCode")
+            """.trimIndent()
+        )
+        buildFile.writeText(
+            (@Suppress("DuplicatedCode")
             """
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
@@ -101,9 +104,10 @@ class SchemaGeneratorPluginIntegrationTest {
                 }
                 
                 kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
-            """.trimIndent()
-        }
-        result.task(":build")?.outcome shouldBe TaskOutcome.FAILED
+            """.trimIndent())
+        )
+        val result = gradleRunner(buildDir, ":build").buildAndFail()
+        result.task(":kspKotlin")?.outcome shouldBe TaskOutcome.FAILED
     }
 
     @Test
@@ -152,6 +156,6 @@ class SchemaGeneratorPluginIntegrationTest {
                 kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
             """.trimIndent()
         }
-        result.task(":build")?.outcome shouldBe TaskOutcome.FAILED
+        result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 }
