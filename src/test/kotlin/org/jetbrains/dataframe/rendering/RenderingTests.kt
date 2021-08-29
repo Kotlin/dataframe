@@ -9,6 +9,7 @@ import org.jetbrains.dataframe.getType
 import org.jetbrains.dataframe.group
 import org.jetbrains.dataframe.into
 import org.jetbrains.dataframe.io.DisplayConfiguration
+import org.jetbrains.dataframe.io.escapeHTML
 import org.jetbrains.dataframe.io.formatter
 import org.jetbrains.dataframe.io.renderToString
 import org.jetbrains.dataframe.io.renderToStringTable
@@ -54,6 +55,14 @@ class RenderingTests {
         val html = df.toHTML(includeInit = false).toString()
         html shouldNotContain "\\\\"
         html shouldNotContain "&#34;"
+    }
+
+    @Test
+    fun `non ascii text`() {
+        val value = "Шёл Шива по шоссе, сокрушая сущее"
+        val df = dataFrameOf("text")(value)
+        val script = df.toHTML(includeInit = false).script
+        script shouldContain value.escapeHTML()
     }
 
     @Test
