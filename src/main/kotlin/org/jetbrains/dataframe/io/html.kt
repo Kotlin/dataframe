@@ -243,9 +243,12 @@ internal class DataFrameFormatter(
         return if (limit in 1 until str.length) {
             val ellipsis = "...".ellipsis(str)
             if (limit < 4) ellipsis
-            else RenderedContent.text(str.substring(0, Math.max(limit - 3, 1)).escapeHTML()) + ellipsis
+            else {
+                val len = Math.max(limit - 3, 1)
+                RenderedContent.textWithLength(str.substring(0, len).escapeHTML(), len) + ellipsis
+            }
         } else {
-            RenderedContent.text(str.escapeHTML())
+            RenderedContent.textWithLength(str.escapeHTML(), str.length)
         }
     }
 
