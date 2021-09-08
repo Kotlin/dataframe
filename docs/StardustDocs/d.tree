@@ -4,8 +4,8 @@
 
 <product-profile id="d"
                  name="Dataframe"
-                 start-page="About Dataframe.xml">
-
+                 status="eap"
+                 start-page="overview.md">
     <toc-element id="overview.md"/>
     <toc-element id="installation.md"/>
     <toc-element title="API reference">
