@@ -557,7 +557,7 @@ fun digits(num: Int) = sequence {
 df.split { number }.by { digits(it) }.inward().into { "digit$it" }
 ```
 #### Split vertically
-Reverse operation to [mergeRows](#mergeRows). See [explode](#explode) for details
+Reverse operation to [mergeRows](#mergerows). See [explode](#explode) for details
 ```
 df.split { columns }.intoRows()
 df.split { columns }.by(delimeters).intoRows()
@@ -910,11 +910,14 @@ Alice | 15
 
 ## Column operations
 Operations for a single `DataColumn` object
+
+<a name="ColumnRename"></a>
 ### rename
 Returns `DataColumn` with a new name
 ```kotlin
 column.rename("newName")
 ```
+<a name="ColumnDistinct"></a>
 ### distinct
 Return `DataColumn` with unique values
 ```
@@ -984,7 +987,7 @@ groupedDf.union()
 groupedDf[data].union()
 ```
 ### aggregate
-`GroupedDataFrame` can be aggregated into `DataFrame` with one or several [statistics](#compute-statistics) computed for every data group.
+`GroupedDataFrame` can be aggregated into `DataFrame` with one or several [statistics](#Compute-statistics) computed for every data group.
 ```
 groupedDf.aggregate { 
     stat1 into "column1"
@@ -1209,14 +1212,14 @@ df.select { fullName.cols(middleName, lastName) }
 df.select { fullName.cols().drop(1) }
 ```
 ## Row expressions
-Row expressions provide a value for every row of `DataFrame` and are used in [add](#add), [filter](#filter), [forEach](#forEach), [update](#update) and other operations
+Row expressions provide a value for every row of `DataFrame` and are used in [add](#add), [filter](#filter--drop), [forEach](#forEach), [update](#update) and other operations
 
 Row expression syntax is ```DataRow.(DataRow) -> T``` so row values can be accessed with or without ```it``` keyword
 ```kotlin
 df.filter { it.name.startsWith("A") }
 df.filter { name.length == 5 }
 ```
-Within row expression you can access [row-properties](#row-properties)
+Within row expression you can access [row-properties](#row-members)
 ```kotlin
 df.add("diff") { value - prev?.value }
 df.filter { index % 5 == 0 }
