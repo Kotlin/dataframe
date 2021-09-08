@@ -217,6 +217,7 @@ df.nullToZero { columns }
 ## Modify rows
 `DataFrame` is immutable, so all modification operations return a new instance
 ### filter / drop
+{id="filter"}
 Filter rows by row predicate
 `filter` keeps rows that satisfy predicate
 `drop` removes rows that satisfy predicate (reverse to 'filter')
@@ -911,14 +912,17 @@ Alice | 15
 ## Column operations
 Operations for a single `DataColumn` object
 
-<a name="ColumnRename"></a>
 ### rename
+{id = "ColumnRename"}
+
 Returns `DataColumn` with a new name
 ```kotlin
 column.rename("newName")
 ```
-<a name="ColumnDistinct"></a>
+
 ### distinct
+{id="ColumnDistinct"}
+
 Return `DataColumn` with unique values
 ```
 column.distinct()
@@ -987,7 +991,7 @@ groupedDf.union()
 groupedDf[data].union()
 ```
 ### aggregate
-`GroupedDataFrame` can be aggregated into `DataFrame` with one or several [statistics](#Compute-statistics) computed for every data group.
+`GroupedDataFrame` can be aggregated into `DataFrame` with one or several [statistics](#compute-statistics) computed for every data group.
 ```
 groupedDf.aggregate { 
     stat1 into "column1"
@@ -1212,7 +1216,7 @@ df.select { fullName.cols(middleName, lastName) }
 df.select { fullName.cols().drop(1) }
 ```
 ## Row expressions
-Row expressions provide a value for every row of `DataFrame` and are used in [add](#add), [filter](#filter--drop), [forEach](#forEach), [update](#update) and other operations
+Row expressions provide a value for every row of `DataFrame` and are used in [add](#add), [filter](#filter), forEach, [update](#update) and other operations
 
 Row expression syntax is ```DataRow.(DataRow) -> T``` so row values can be accessed with or without ```it``` keyword
 ```kotlin
