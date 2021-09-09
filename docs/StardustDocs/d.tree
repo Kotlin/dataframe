@@ -6,10 +6,10 @@
                  name="Dataframe"
                  status="eap"
                  start-page="overview.md">
-    <toc-element id="overview.md"/>
-    <toc-element id="installation.md"/>
-    <toc-element toc-title="API reference" show-structure-depth="3">
-        <toc-element id="reference.md"/>
-        <toc-element id="ColumnSelectors.md"/>
+    <toc-element id="overview.md"  show-structure-depth="3"/>
+    <toc-element id="installation.md"  show-structure-depth="3"/>
+    <toc-element toc-title="API reference">
+        <toc-element id="reference.md"  show-structure-depth="3"/>
+        <toc-element id="ColumnSelectors.md"  show-structure-depth="3"/>
     </toc-element>
 </product-profile>
