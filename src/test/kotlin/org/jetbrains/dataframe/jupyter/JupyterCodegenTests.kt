@@ -60,4 +60,23 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         )
         res2 shouldBe listOf(1)
     }
+
+    @Test
+    fun `codegen for backtick that is forbidden in kotlin identifiers`() {
+        val temp = Files.createTempFile("df", ".csv")
+        temp.writeText("Day`s\n1")
+        @Language("kts")
+        val res1 = exec(
+            """
+            val df = DataFrame.readCSV("$temp")
+            df
+            """.trimIndent()
+        )
+        res1.shouldBeInstanceOf<MimeTypedResult>()
+        println(res1.entries.joinToString())
+        val res2 = exec(
+            "listOf(df.`Day's`[0])"
+        )
+        res2 shouldBe listOf(1)
+    }
 }
