@@ -40,6 +40,7 @@ internal class SchemaProcessorImpl(
                 .replace("]", "}")
                 .replace("(", "{")
                 .replace(")", "}")
+                .replace("`", "'")
         }
         if (result.isEmpty()) result = "_$index"
         val baseName = result
