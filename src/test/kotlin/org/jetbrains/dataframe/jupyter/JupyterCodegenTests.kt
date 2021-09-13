@@ -7,6 +7,8 @@ import org.jetbrains.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
+import java.nio.file.Files
+import kotlin.io.path.writeText
 
 class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
@@ -39,5 +41,23 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """listOf(df.`{a}`[0], df.`{b}`[0], df.`{c}`[0])"""
         )
         res2 shouldBe listOf(1, 2, 3)
+    }
+
+    @Test
+    fun `codegen for '$' that is interpolator in kotlin string literals`() {
+        val temp = Files.createTempFile("df", ".csv")
+        temp.writeText("\$id\n1")
+        @Language("kts")
+        val res1 = exec(
+            """
+            val df = DataFrame.readCSV("$temp")
+            df
+            """.trimIndent()
+        )
+        res1.shouldBeInstanceOf<MimeTypedResult>()
+        val res2 = exec(
+            "listOf(df.`\$id`[0])"
+        )
+        res2 shouldBe listOf(1)
     }
 }

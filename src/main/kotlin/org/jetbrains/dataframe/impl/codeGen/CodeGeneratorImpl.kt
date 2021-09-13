@@ -49,7 +49,7 @@ internal class CodeGeneratorImpl : CodeGenerator {
             ColumnKind.Frame -> "${DataColumn::class.qualifiedName}<${DataFrame::class.qualifiedName}<$markerName>${renderNullability(columnSchema.nullable)}>"
         }
 
-    fun renderColumnName(name: String) = name
+    fun renderStringLiteral(name: String) = name
         .replace("\\", "\\\\")
         .replace("$", "\\\$")
         .replace("\"", "\\\"")
@@ -63,14 +63,14 @@ internal class CodeGeneratorImpl : CodeGenerator {
         val shortMarkerName = markerName.substring(markerName.lastIndexOf('.') + 1)
         fun generatePropertyCode(typeName: String, name: String, propertyType: String, getter: String): String {
             val jvmName = "${shortMarkerName}_${name.removeQuotes()}"
-            return "val $typeName.$name: $propertyType @JvmName(\"$jvmName\") get() = $getter as $propertyType"
+            return "val $typeName.$name: $propertyType @JvmName(\"${renderStringLiteral(jvmName)}\") get() = $getter as $propertyType"
         }
 
         val declarations = mutableListOf<String>()
         val dfTypename = "${DataFrameBase::class.qualifiedName}<$markerName>"
         val rowTypename = "${DataRowBase::class.qualifiedName}<$markerName>"
         marker.fields.sortedBy { it.fieldName }.forEach {
-            val getter = "this[\"${it.columnName}\"]"
+            val getter = "this[\"${renderStringLiteral(it.columnName)}\"]"
             val name = it.fieldName
             val fieldType = it.renderFieldType()
             val columnType = it.renderColumnType()
@@ -135,7 +135,7 @@ internal class CodeGeneratorImpl : CodeGenerator {
         val fieldsDeclaration = if (fields) marker.fields.map {
             val override = if (it.overrides) "override " else ""
             val columnNameAnnotation =
-                if (it.columnName != it.fieldName) "\t@ColumnName(\"${renderColumnName(it.columnName)}\")\n" else ""
+                if (it.columnName != it.fieldName) "\t@ColumnName(\"${renderStringLiteral(it.columnName)}\")\n" else ""
 
             val fieldType = it.renderFieldType()
             "$columnNameAnnotation    ${override}val ${it.fieldName}: $fieldType"
