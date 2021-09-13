@@ -79,4 +79,44 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         )
         res2 shouldBe listOf(1)
     }
+
+    @Test
+    fun `codegen for chars that is forbidden in JVM identifiers`() {
+        val forbiddenChar = ";"
+        val temp = Files.createTempFile("df", ".csv")
+        temp.writeText("Test$forbiddenChar\n1")
+        @Language("kts")
+        val res1 = exec(
+            """
+            val df = DataFrame.readCSV("$temp")
+            df
+            """.trimIndent()
+        )
+        res1.shouldBeInstanceOf<MimeTypedResult>()
+        println(res1.entries.joinToString())
+        val res2 = exec(
+            "listOf(df.`Test `[0])"
+        )
+        res2 shouldBe listOf(1)
+    }
+
+    @Test
+    fun `codegen for chars that is forbidden in JVM identifiers 1`() {
+        val forbiddenChar = "\\"
+        val temp = Files.createTempFile("df", ".csv")
+        temp.writeText("Test$forbiddenChar\n1")
+        @Language("kts")
+        val res1 = exec(
+            """
+            val df = DataFrame.readCSV("$temp")
+            df
+            """.trimIndent()
+        )
+        res1.shouldBeInstanceOf<MimeTypedResult>()
+        println(res1.entries.joinToString())
+        val res2 = exec(
+            "listOf(df.`Test `[0])"
+        )
+        res2 shouldBe listOf(1)
+    }
 }
