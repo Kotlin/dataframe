@@ -4,11 +4,8 @@ import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.annotations.DataSchema
 import org.jetbrains.dataframe.columns.ColumnGroup
 import org.jetbrains.dataframe.columns.DataColumn
-import org.jetbrains.dataframe.internal.codeGen.CodeWithConverter
-import org.jetbrains.dataframe.internal.codeGen.GeneratedField
-import org.jetbrains.dataframe.internal.codeGen.Marker
+import org.jetbrains.dataframe.internal.codeGen.*
 import org.jetbrains.dataframe.internal.codeGen.SchemaProcessor
-import org.jetbrains.dataframe.internal.schema.ColumnSchema
 import org.jetbrains.dataframe.internal.schema.DataFrameSchema
 import org.jetbrains.dataframe.keywords.HardKeywords
 import org.jetbrains.dataframe.keywords.ModifierKeywords
@@ -16,11 +13,11 @@ import org.jetbrains.kotlinx.jupyter.api.Code
 
 private fun renderNullability(nullable: Boolean) = if (nullable) "?" else ""
 
-internal fun GeneratedField.renderFieldType(): Code =
-    when (columnKind) {
-        ColumnKind.Value -> (columnSchema as ColumnSchema.Value).type.toString()
-        ColumnKind.Group -> "${DataRow::class.qualifiedName}<$markerName>"
-        ColumnKind.Frame -> "${DataFrame::class.qualifiedName}<$markerName>${renderNullability(columnSchema.nullable)}"
+internal fun BaseField.renderFieldType(): Code =
+    when (val columnInfo = columnInfo) {
+        is ValueColumn -> columnInfo.typeFqName
+        is org.jetbrains.dataframe.internal.codeGen.ColumnGroup -> "${DataRow::class.qualifiedName}<$markerName>"
+        is FrameColumn -> "${DataFrame::class.qualifiedName}<$markerName>${renderNullability(nullable)}"
     }
 
 internal fun getRequiredMarkers(schema: DataFrameSchema, markers: Iterable<Marker>) = markers
@@ -40,13 +37,13 @@ internal fun String.quoteIfNeeded() = if (needsQuoting()) "`$this`" else this
 
 internal fun List<Code>.join() = joinToString("\n")
 
-internal class CodeGeneratorImpl : CodeGenerator {
+internal open class ExtensionsCodeGeneratorImpl : ExtensionsCodeGenerator {
 
-    private fun GeneratedField.renderColumnType(): Code =
-        when (columnKind) {
-            ColumnKind.Value -> "${DataColumn::class.qualifiedName}<${(columnSchema as ColumnSchema.Value).type}>"
-            ColumnKind.Group -> "${ColumnGroup::class.qualifiedName}<$markerName>"
-            ColumnKind.Frame -> "${DataColumn::class.qualifiedName}<${DataFrame::class.qualifiedName}<$markerName>${renderNullability(columnSchema.nullable)}>"
+    private fun BaseField.renderColumnType(): Code =
+        when (val columnInfo = columnInfo) {
+            is ValueColumn -> "${DataColumn::class.qualifiedName}<${columnInfo.typeFqName}>"
+            is org.jetbrains.dataframe.internal.codeGen.ColumnGroup -> "${ColumnGroup::class.qualifiedName}<$markerName>"
+            is FrameColumn -> "${DataColumn::class.qualifiedName}<${DataFrame::class.qualifiedName}<$markerName>${renderNullability(nullable)}>"
         }
 
     fun renderStringLiteral(name: String) = name
@@ -58,7 +55,7 @@ internal class CodeGeneratorImpl : CodeGenerator {
 
     private fun generateExtensionProperties(markers: List<Marker>) = markers.map { generateExtensionProperties(it) }
 
-    private fun generateExtensionProperties(marker: Marker): Code {
+    protected fun generateExtensionProperties(marker: IsolatedMarker): Code {
         val markerName = marker.name
         val shortMarkerName = markerName.substring(markerName.lastIndexOf('.') + 1)
         fun generatePropertyCode(typeName: String, name: String, propertyType: String, getter: String): String {
@@ -80,6 +77,44 @@ internal class CodeGeneratorImpl : CodeGenerator {
         return declarations.joinToString("\n")
     }
 
+    override fun generate(marker: IsolatedMarker): CodeWithConverter {
+        val code = generateExtensionProperties(marker)
+        return CodeWithConverter(code) { "$it.typed<${marker.name}>()" }
+    }
+
+    private fun generateInterfaces(
+        schemas: List<Marker>,
+        fields: Boolean
+    ) = schemas.map { generateInterface(it, fields) }
+
+    protected fun generateInterface(
+        marker: Marker,
+        fields: Boolean
+    ): Code {
+        val annotationName = DataSchema::class.simpleName
+
+        val header =
+            "@$annotationName${if (marker.isOpen) "" else "(isOpen = false)"}\ninterface ${marker.name}"
+        val baseInterfacesDeclaration =
+            if (marker.baseMarkers.isNotEmpty()) " : " + marker.baseMarkers.map { it.value.name }
+                .joinToString() else ""
+        val resultDeclarations = mutableListOf<String>()
+
+        val fieldsDeclaration = if (fields) marker.fields.map {
+            val override = if (it.overrides) "override " else ""
+            val columnNameAnnotation =
+                if (it.columnName != it.fieldName) "\t@ColumnName(\"${renderStringLiteral(it.columnName)}\")\n" else ""
+
+            val fieldType = it.renderFieldType()
+            "$columnNameAnnotation    ${override}val ${it.fieldName}: $fieldType"
+        }.join() else ""
+        val body = if (fieldsDeclaration.isNotBlank()) "{\n$fieldsDeclaration\n}" else ""
+        resultDeclarations.add(header + baseInterfacesDeclaration + body)
+        return resultDeclarations.join()
+    }
+}
+
+internal class CodeGeneratorImpl : ExtensionsCodeGeneratorImpl(), CodeGenerator {
     override fun generate(marker: Marker, interfaceMode: InterfaceGenerationMode, extensionProperties: Boolean): CodeWithConverter {
         val generateInterface = interfaceMode != InterfaceGenerationMode.None
         val code = when {
@@ -112,36 +147,5 @@ internal class CodeGeneratorImpl : CodeGenerator {
         }
         val code = CodeWithConverter(declarations.join()) { "$it.typed<${marker.name}>()" }
         return CodeGenResult(code, context.generatedMarkers)
-    }
-
-    private fun generateInterfaces(
-        schemas: List<Marker>,
-        fields: Boolean
-    ) = schemas.map { generateInterface(it, fields) }
-
-    private fun generateInterface(
-        marker: Marker,
-        fields: Boolean
-    ): Code {
-        val annotationName = DataSchema::class.simpleName
-
-        val header =
-            "@$annotationName${if (marker.isOpen) "" else "(isOpen = false)"}\ninterface ${marker.name}"
-        val baseInterfacesDeclaration =
-            if (marker.baseMarkers.isNotEmpty()) " : " + marker.baseMarkers.map { it.value.name }
-                .joinToString() else ""
-        val resultDeclarations = mutableListOf<String>()
-
-        val fieldsDeclaration = if (fields) marker.fields.map {
-            val override = if (it.overrides) "override " else ""
-            val columnNameAnnotation =
-                if (it.columnName != it.fieldName) "\t@ColumnName(\"${renderStringLiteral(it.columnName)}\")\n" else ""
-
-            val fieldType = it.renderFieldType()
-            "$columnNameAnnotation    ${override}val ${it.fieldName}: $fieldType"
-        }.join() else ""
-        val body = if (fieldsDeclaration.isNotBlank()) "{\n$fieldsDeclaration\n}" else ""
-        resultDeclarations.add(header + baseInterfacesDeclaration + body)
-        return resultDeclarations.join()
     }
 }

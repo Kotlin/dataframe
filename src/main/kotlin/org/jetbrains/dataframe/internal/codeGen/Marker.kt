@@ -2,12 +2,17 @@ package org.jetbrains.dataframe.internal.codeGen
 
 import org.jetbrains.dataframe.internal.schema.DataFrameSchema
 
+public interface IsolatedMarker {
+    public val name: String
+    public val fields: List<BaseField>
+}
+
 public open class Marker(
-    public val name: String,
+    override val name: String,
     public val isOpen: Boolean,
-    public val fields: List<GeneratedField>,
+    override val fields: List<GeneratedField>,
     base: List<Marker>
-) {
+) : IsolatedMarker {
 
     public val shortName: String
         get() = name.substringAfterLast(".")
