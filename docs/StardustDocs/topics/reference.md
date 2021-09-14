@@ -3,31 +3,20 @@
 ## Create columns
 
 ### Unnamed column with values
-```kotlin
-val col = columnOf("Alice", "Bob")
-val col = listOf("Alice", "Bob").toColumn()
-```
+<!---samples.Base.CreateColumns.unnamedColumnWithValues-->
+<!---END-->
 ### Named column with values
-```kotlin
-val name by columnOf("Alice", "Bob")
-val col = listOf("Alice", "Bob").toColumn("name")
-```
+<!---samples.Base.CreateColumns.namedColumnWitValues-->
+<!---END-->
 To rename column use function `rename` or infix function `named`:
-```kotlin
-val unnamedCol = columnOf("Alice", "Bob")
-val col = unnamedCol.rename("name")
-val col = columnOf("Alice", "Bob") named "name"
-```
+<!---samples.Base.CreateColumns.namedAndRenameCol-->
+<!---END-->
 ### Named column without values
-```kotlin
-val name by column<String>()
-val col = column<String>("name")
-```
+<!---samples.Base.CreateColumns.namedColumnWithoutValues-->
+<!---END-->
 Named column without values is called `ColumnReference` and can be used in `DataFrame` operations for typed access to columns:
-```kotlin
-df.filter { it[name].startsWith("A") }
-df.sortBy { col }
-```
+<!---samples.Base.CreateColumns.colRefForTypedAccess-->
+<!---END-->
 `ColumnReference` can be converted to `DataColumn` by adding values:
 ```kotlin
 val col = name.withValues("Alice", "Bob")
