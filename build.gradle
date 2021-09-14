@@ -13,6 +13,7 @@ plugins {
     id "org.jetbrains.kotlin.jvm" version "$kotlin_version"
     id "org.jetbrains.dataframe.generator"
     id "ru.ileasile.kotlin.publisher" version "$libsPublisherVersion"
+    id("com.github.devcrocod.korro") version "0.0.2-dev"
     id("org.jmailen.kotlinter") version "$ktlint_version"
 }
 
@@ -148,8 +149,19 @@ kotlinter {
             'experimental:enum-entry-name-case',
             'experimental:argument-list-wrapping',
             'experimental:annotation',
-            'max-line-length'
+            'max-line-length',
+            'filename'
     ]
+}
+
+korro {
+    docs = fileTree(rootProject.rootDir) {
+        include("docs/StardustDocs/topics/reference.md")
+    }
+
+    samples = fileTree(rootProject.rootDir) {
+        include("src/test/kotlin/samples/*.kt")
+    }
 }
 
 configurations {
