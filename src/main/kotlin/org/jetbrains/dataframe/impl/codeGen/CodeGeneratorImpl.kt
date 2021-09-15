@@ -66,13 +66,13 @@ internal open class ExtensionsCodeGeneratorImpl : ExtensionsCodeGenerator {
         val declarations = mutableListOf<String>()
         val dfTypename = "${DataFrameBase::class.qualifiedName}<$markerName>"
         val rowTypename = "${DataRowBase::class.qualifiedName}<$markerName>"
-        marker.fields.sortedBy { it.fieldName }.forEach {
+        marker.fields.sortedBy { it.fieldName.quotedIfNeeded }.forEach {
             val getter = "this[\"${renderStringLiteral(it.columnName)}\"]"
             val name = it.fieldName
             val fieldType = it.renderFieldType()
             val columnType = it.renderColumnType()
-            declarations.add(generatePropertyCode(dfTypename, name, columnType, getter))
-            declarations.add(generatePropertyCode(rowTypename, name, fieldType, getter))
+            declarations.add(generatePropertyCode(dfTypename, name.quotedIfNeeded, columnType, getter))
+            declarations.add(generatePropertyCode(rowTypename, name.quotedIfNeeded, fieldType, getter))
         }
         return declarations.joinToString("\n")
     }
@@ -103,10 +103,10 @@ internal open class ExtensionsCodeGeneratorImpl : ExtensionsCodeGenerator {
         val fieldsDeclaration = if (fields) marker.fields.map {
             val override = if (it.overrides) "override " else ""
             val columnNameAnnotation =
-                if (it.columnName != it.fieldName) "\t@ColumnName(\"${renderStringLiteral(it.columnName)}\")\n" else ""
+                if (it.columnName != it.fieldName.quotedIfNeeded) "\t@ColumnName(\"${renderStringLiteral(it.columnName)}\")\n" else ""
 
             val fieldType = it.renderFieldType()
-            "$columnNameAnnotation    ${override}val ${it.fieldName}: $fieldType"
+            "$columnNameAnnotation    ${override}val ${it.fieldName.quotedIfNeeded}: $fieldType"
         }.join() else ""
         val body = if (fieldsDeclaration.isNotBlank()) "{\n$fieldsDeclaration\n}" else ""
         resultDeclarations.add(header + baseInterfacesDeclaration + body)

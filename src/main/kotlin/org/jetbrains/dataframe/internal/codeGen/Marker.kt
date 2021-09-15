@@ -32,13 +32,13 @@ public open class Marker(
         val fieldsMap = mutableMapOf<String, GeneratedField>()
         baseMarkers.values.forEach {
             it.allFields.forEach {
-                fieldsMap[it.fieldName] = it
+                fieldsMap[it.fieldName.quotedIfNeeded] = it
             }
         }
         fields.forEach {
-            fieldsMap[it.fieldName] = it
+            fieldsMap[it.fieldName.quotedIfNeeded] = it
         }
-        fieldsMap.values.sortedBy { it.fieldName }
+        fieldsMap.values.sortedBy { it.fieldName.quotedIfNeeded }
     }
 
     public val allFieldsByColumn: Map<String, GeneratedField> by lazy {
