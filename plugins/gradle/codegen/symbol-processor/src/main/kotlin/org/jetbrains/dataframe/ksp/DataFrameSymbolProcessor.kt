@@ -9,7 +9,6 @@ import java.io.OutputStreamWriter
 class DataFrameSymbolProcessor(
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger,
-    private val propertyRenderer: PropertyRenderer
 ) : SymbolProcessor {
     override fun process(resolver: Resolver): List<KSAnnotated> {
         val dataSchemaAnnotation = resolver.getKSNameFromString("org.jetbrains.dataframe.annotations.DataSchema")
@@ -53,12 +52,11 @@ class DataFrameSymbolProcessor(
     }
 
     private fun OutputStreamWriter.writeProperties(interfaceType: KSType, properties: List<KSPropertyDeclaration>) {
-        properties.forEach { property ->
-            val propertyType = render(property.type)
-            val propertyName = property.simpleName.asString()
-            val columnName = getColumnName(property)
-            appendLine(propertyRenderer.render(interfaceType.toString(), columnName, propertyName, propertyType))
-        }
+        val extensions = renderExtensions(
+            interfaceName = interfaceType.toString(),
+            properties.map { property -> Property(getColumnName(property), property.simpleName.asString(), render(property.type)) }
+        )
+        appendLine(extensions)
     }
 
     private fun render(typeReference: KSTypeReference): RenderedType {

@@ -66,8 +66,8 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.`a`: org.jetbrains.dataframe.columns.DataColumn<kotlin.Function0<kotlin.Unit?>>")
-            ?.shouldContain("DataRowBase<Hello>.`a`: kotlin.Function0<kotlin.Unit?>")
+            ?.shouldContain("DataFrameBase<Hello>.a: org.jetbrains.dataframe.columns.DataColumn<kotlin.Function0<kotlin.Unit?>>")
+            ?.shouldContain("DataRowBase<Hello>.a: kotlin.Function0<kotlin.Unit?>")
         result.successfulCompilation shouldBe true
     }
 
@@ -90,8 +90,8 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.`a`: org.jetbrains.dataframe.columns.DataColumn<kotlin.coroutines.SuspendFunction0<kotlin.Unit?>>")
-            ?.shouldContain("DataRowBase<Hello>.`a`: kotlin.coroutines.SuspendFunction0<kotlin.Unit?>")
+            ?.shouldContain("DataFrameBase<Hello>.a: org.jetbrains.dataframe.columns.DataColumn<kotlin.coroutines.SuspendFunction0<kotlin.Unit?>>")
+            ?.shouldContain("DataRowBase<Hello>.a: kotlin.coroutines.SuspendFunction0<kotlin.Unit?>")
         result.successfulCompilation shouldBe true
     }
 
@@ -114,8 +114,8 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.`a`: org.jetbrains.dataframe.columns.DataColumn<kotlin.Function0<kotlin.String>?>")
-            ?.shouldContain("DataRowBase<Hello>.`a`: kotlin.Function0<kotlin.String>?")
+            ?.shouldContain("DataFrameBase<Hello>.a: org.jetbrains.dataframe.columns.DataColumn<kotlin.Function0<kotlin.String>?>")
+            ?.shouldContain("DataRowBase<Hello>.a: kotlin.Function0<kotlin.String>?")
         result.successfulCompilation shouldBe true
     }
 
@@ -138,8 +138,8 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.`a`: org.jetbrains.dataframe.columns.DataColumn<kotlin.Function1<kotlin.Int, kotlin.String>?>")
-            ?.shouldContain("DataRowBase<Hello>.`a`: kotlin.Function1<kotlin.Int, kotlin.String>?")
+            ?.shouldContain("DataFrameBase<Hello>.a: org.jetbrains.dataframe.columns.DataColumn<kotlin.Function1<kotlin.Int, kotlin.String>?>")
+            ?.shouldContain("DataRowBase<Hello>.a: kotlin.Function1<kotlin.Int, kotlin.String>?")
         result.successfulCompilation shouldBe true
     }
 
@@ -163,8 +163,8 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.`b`: org.jetbrains.dataframe.columns.DataColumn<kotlin.Int>")
-            ?.shouldContain("DataRowBase<Hello>.`b`: kotlin.Int")
+            ?.shouldContain("DataFrameBase<Hello>.b: org.jetbrains.dataframe.columns.DataColumn<kotlin.Int>")
+            ?.shouldContain("DataRowBase<Hello>.b: kotlin.Int")
         result.successfulCompilation shouldBe true
     }
 
@@ -187,8 +187,8 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.`a`: org.jetbrains.dataframe.columns.DataColumn<kotlin.Function1<kotlin.String, kotlin.Unit>>")
-            ?.shouldContain("DataRowBase<Hello>.`a`: kotlin.Function1<kotlin.String, kotlin.Unit>")
+            ?.shouldContain("DataFrameBase<Hello>.a: org.jetbrains.dataframe.columns.DataColumn<kotlin.Function1<kotlin.String, kotlin.Unit>>")
+            ?.shouldContain("DataRowBase<Hello>.a: kotlin.Function1<kotlin.String, kotlin.Unit>")
         result.successfulCompilation shouldBe true
     }
 
@@ -215,8 +215,8 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.`a`: org.jetbrains.dataframe.columns.DataColumn<A>")
-            ?.shouldContain("DataRowBase<Hello>.`a`: A")
+            ?.shouldContain("DataFrameBase<Hello>.a: org.jetbrains.dataframe.columns.DataColumn<A>")
+            ?.shouldContain("DataRowBase<Hello>.a: A")
         result.successfulCompilation shouldBe true
     }
 
@@ -264,8 +264,8 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("""DataFrameBase<Hello>.`a`: org.jetbrains.dataframe.columns.DataColumn<kotlin.Int> @JvmName("Hello_a")""")
-            ?.shouldContain("""DataRowBase<Hello>.`a`: kotlin.Int @JvmName("Hello_a")""")
+            ?.shouldContain("""DataFrameBase<Hello>.a: org.jetbrains.dataframe.columns.DataColumn<kotlin.Int> @JvmName("Hello_a")""")
+            ?.shouldContain("""DataRowBase<Hello>.a: kotlin.Int @JvmName("Hello_a")""")
         result.successfulCompilation shouldBe true
     }
 

@@ -38,6 +38,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 repositories {
                     mavenLocal()
                     mavenCentral() 
+                    maven(url="https://jitpack.io")
                 }
                 
                 dependencies {
@@ -97,6 +98,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 repositories {
                     mavenLocal()
                     mavenCentral() 
+                    maven(url="https://jitpack.io")
                 }
                 
                 dependencies {
@@ -146,7 +148,8 @@ class SchemaGeneratorPluginIntegrationTest {
                 
                 repositories {
                     mavenLocal()
-                    mavenCentral() 
+                    mavenCentral()
+                    maven(url="https://jitpack.io")
                 }
                 
                 dependencies {
