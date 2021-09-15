@@ -49,7 +49,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             name = interfaceName.get(),
             fields = true,
             extensionProperties = false,
-            isOpen = false
+            isOpen = true
         )
         val escapedPackageName = escapePackageName(packageName.get())
 
