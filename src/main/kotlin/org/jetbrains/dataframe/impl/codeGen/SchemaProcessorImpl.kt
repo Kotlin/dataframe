@@ -3,6 +3,7 @@ package org.jetbrains.dataframe.impl.codeGen
 import org.jetbrains.dataframe.internal.codeGen.GeneratedField
 import org.jetbrains.dataframe.internal.codeGen.Marker
 import org.jetbrains.dataframe.internal.codeGen.SchemaProcessor
+import org.jetbrains.dataframe.internal.codeGen.ValidFieldName
 import org.jetbrains.dataframe.internal.schema.ColumnSchema
 import org.jetbrains.dataframe.internal.schema.DataFrameSchema
 
@@ -25,31 +26,13 @@ internal class SchemaProcessorImpl(
         return filter { !skip.contains(it.name) }
     }
 
-    private fun generateValidFieldName(columnName: String, index: Int, usedNames: Collection<String>): String {
-        var result = columnName
-        val needsQuote = columnName.needsQuoting()
-        if (needsQuote) {
-            result = columnName.replace("<", "{")
-                .replace(">", "}")
-                .replace("::", " - ")
-                .replace(": ", " - ")
-                .replace(":", " - ")
-                .replace(".", " ")
-                .replace("/", "-")
-                .replace("[", "{")
-                .replace("]", "}")
-                .replace("(", "{")
-                .replace(")", "}")
-                .replace("`", "'")
-                .replace(";", " ")
-                .replace("\\", " ")
-        }
-        if (result.isEmpty()) result = "_$index"
+    private fun generateValidFieldName(columnName: String, index: Int, usedNames: Collection<String>): ValidFieldName {
+        var result = ValidFieldName.of(columnName)
+        if (result.unquoted.isEmpty()) result = ValidFieldName.of("_$index")
         val baseName = result
-        result = if (needsQuote) "`$baseName`" else baseName
         var attempt = 2
-        while (usedNames.contains(result)) {
-            result = if (needsQuote) "`$baseName ($attempt)`" else "${baseName}_$attempt"
+        while (usedNames.contains(result.quotedIfNeeded)) {
+            result = if (result.needsQuote) baseName + ValidFieldName.of(" ($attempt)") else baseName + ValidFieldName.of("_$attempt")
             attempt++
         }
         return result
@@ -67,7 +50,7 @@ internal class SchemaProcessorImpl(
         schema: DataFrameSchema,
         requiredSuperMarkers: List<Marker> = emptyList()
     ): List<GeneratedField> {
-        val usedFieldNames = requiredSuperMarkers.flatMap { it.allFields.map { it.fieldName } }.toMutableSet()
+        val usedFieldNames = requiredSuperMarkers.flatMap { it.allFields.map { it.fieldName.quotedIfNeeded } }.toMutableSet()
 
         fun getMarker(column: ColumnSchema) = when (column) {
             is ColumnSchema.Value -> null
@@ -91,7 +74,7 @@ internal class SchemaProcessorImpl(
                 superFields.isNotEmpty() -> emptyList()
                 else -> {
                     val fieldName = generateValidFieldName(columnName, index, usedFieldNames)
-                    usedFieldNames.add(fieldName)
+                    usedFieldNames.add(fieldName.quotedIfNeeded)
                     listOf(GeneratedField(fieldName, columnName, false, columnSchema, getMarker(columnSchema)?.name))
                 }
             }

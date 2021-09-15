@@ -17,6 +17,10 @@ public data class CodeGenResult(val code: CodeWithConverter, val newMarkers: Lis
 
 public interface ExtensionsCodeGenerator {
     public fun generate(marker: IsolatedMarker): CodeWithConverter
+
+    public companion object {
+        public fun create(): ExtensionsCodeGenerator = ExtensionsCodeGeneratorImpl()
+    }
 }
 
 public interface CodeGenerator : ExtensionsCodeGenerator {
