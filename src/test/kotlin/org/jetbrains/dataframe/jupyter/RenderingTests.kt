@@ -5,8 +5,8 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.intellij.lang.annotations.Language
 import org.jetbrains.dataframe.test.containNTimes
-import org.junit.Ignore
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
+import org.junit.Ignore
 import org.junit.Test
 
 class RenderingTests : JupyterReplTestCase() {
