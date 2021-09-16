@@ -12,11 +12,11 @@ public enum class InterfaceGenerationMode {
     None
 }
 
-internal data class CodeGenResult(val code: CodeWithConverter, val newMarkers: List<Marker>)
+public data class CodeGenResult(val code: CodeWithConverter, val newMarkers: List<Marker>)
 
-internal interface CodeGenerator {
+public interface CodeGenerator {
 
-    fun generate(
+    public fun generate(
         schema: DataFrameSchema,
         name: String,
         fields: Boolean,
@@ -25,10 +25,10 @@ internal interface CodeGenerator {
         knownMarkers: Iterable<Marker> = emptyList()
     ): CodeGenResult
 
-    fun generate(marker: Marker, interfaceMode: InterfaceGenerationMode, extensionProperties: Boolean): CodeWithConverter
+    public fun generate(marker: Marker, interfaceMode: InterfaceGenerationMode, extensionProperties: Boolean): CodeWithConverter
 
-    companion object {
-        fun create(): CodeGenerator = CodeGeneratorImpl()
+    public companion object {
+        public fun create(): CodeGenerator = CodeGeneratorImpl()
     }
 }
 

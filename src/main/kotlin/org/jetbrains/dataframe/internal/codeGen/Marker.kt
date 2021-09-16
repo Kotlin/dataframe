@@ -2,19 +2,19 @@ package org.jetbrains.dataframe.internal.codeGen
 
 import org.jetbrains.dataframe.internal.schema.DataFrameSchema
 
-internal open class Marker(
-    val name: String,
-    val isOpen: Boolean,
-    val fields: List<GeneratedField>,
+public open class Marker(
+    public val name: String,
+    public val isOpen: Boolean,
+    public val fields: List<GeneratedField>,
     base: List<Marker>
 ) {
 
-    val shortName: String
+    public val shortName: String
         get() = name.substringAfterLast(".")
 
-    val baseMarkers = base.associateBy { it.name }
+    public val baseMarkers: Map<String, Marker> = base.associateBy { it.name }
 
-    val allBaseMarkers: Map<String, Marker> by lazy {
+    public val allBaseMarkers: Map<String, Marker> by lazy {
         val result = baseMarkers.toMutableMap()
         baseMarkers.forEach {
             result.putAll(it.value.allBaseMarkers)
@@ -22,7 +22,7 @@ internal open class Marker(
         result
     }
 
-    val allFields: List<GeneratedField> by lazy {
+    public val allFields: List<GeneratedField> by lazy {
 
         val fieldsMap = mutableMapOf<String, GeneratedField>()
         baseMarkers.values.forEach {
@@ -36,17 +36,17 @@ internal open class Marker(
         fieldsMap.values.sortedBy { it.fieldName }
     }
 
-    val allFieldsByColumn by lazy {
+    public val allFieldsByColumn: Map<String, GeneratedField> by lazy {
         allFields.associateBy { it.columnName }
     }
 
-    fun containsColumn(columnName: String) = allFieldsByColumn.containsKey(columnName)
+    public fun containsColumn(columnName: String): Boolean = allFieldsByColumn.containsKey(columnName)
 
-    val columnNames get() = allFields.map { it.columnName }
+    public val columnNames: List<String> get() = allFields.map { it.columnName }
 
-    val schema by lazy { DataFrameSchema(allFields.map { it.columnName to it.columnSchema }.toMap()) }
+    public val schema: DataFrameSchema by lazy { DataFrameSchema(allFields.map { it.columnName to it.columnSchema }.toMap()) }
 
-    fun implements(schema: Marker): Boolean = if (schema.name == name) true else baseMarkers[schema.name]?.let { it === schema } ?: false
+    public fun implements(schema: Marker): Boolean = if (schema.name == name) true else baseMarkers[schema.name]?.let { it === schema } ?: false
 
-    fun implementsAll(schemas: Iterable<Marker>): Boolean = schemas.all { implements(it) }
+    public fun implementsAll(schemas: Iterable<Marker>): Boolean = schemas.all { implements(it) }
 }
