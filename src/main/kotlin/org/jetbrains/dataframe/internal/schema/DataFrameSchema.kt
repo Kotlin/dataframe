@@ -6,11 +6,11 @@ import org.jetbrains.dataframe.baseType
 import org.jetbrains.dataframe.getType
 import kotlin.reflect.full.withNullability
 
-internal class DataFrameSchema(val columns: Map<String, ColumnSchema>) {
+public class DataFrameSchema(public val columns: Map<String, ColumnSchema>) {
 
-    val sortedColumns by lazy { columns.asIterable().sortedBy { it.key } }
+    public val sortedColumns: List<Map.Entry<String, ColumnSchema>> by lazy { columns.asIterable().sortedBy { it.key } }
 
-    fun compare(other: DataFrameSchema): CompareResult {
+    public fun compare(other: DataFrameSchema): CompareResult {
         if (this === other) return CompareResult.Equals
         var result = CompareResult.Equals
         columns.forEach {
@@ -37,7 +37,8 @@ internal class DataFrameSchema(val columns: Map<String, ColumnSchema>) {
     }
 }
 
-internal fun AnyFrame.extractSchema() = DataFrameSchema(columns().filter { it.name().isNotEmpty() }.map { it.name() to it.getColumnType() }.toMap())
+public fun AnyFrame.extractSchema(): DataFrameSchema =
+    DataFrameSchema(columns().filter { it.name().isNotEmpty() }.map { it.name() to it.getColumnType() }.toMap())
 
 internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
     val collectedTypes = mutableMapOf<String, MutableSet<ColumnSchema>>()
