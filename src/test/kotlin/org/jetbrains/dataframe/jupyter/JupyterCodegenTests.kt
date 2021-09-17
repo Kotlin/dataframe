@@ -38,7 +38,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         res1.shouldBeInstanceOf<MimeTypedResult>()
 
         val res2 = exec(
-            """listOf(df.`{a}`[0], df.`{b}`[0], df.`{c}`[0])"""
+            """listOf(df.`{a}`[0], df.`(b)`[0], df.`{c}`[0])"""
         )
         res2 shouldBe listOf(1, 2, 3)
     }
