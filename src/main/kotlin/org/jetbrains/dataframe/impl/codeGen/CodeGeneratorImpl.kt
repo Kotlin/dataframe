@@ -25,12 +25,21 @@ internal fun getRequiredMarkers(schema: DataFrameSchema, markers: Iterable<Marke
 
 internal val charsToQuote = """[ `(){}\[\].<>'"/|\\!?@:;%^&*#$-]""".toRegex()
 
+private val letterCategories = setOf(
+    CharCategory.UPPERCASE_LETTER,
+    CharCategory.TITLECASE_LETTER,
+    CharCategory.MODIFIER_LETTER,
+    CharCategory.LOWERCASE_LETTER,
+    CharCategory.DECIMAL_DIGIT_NUMBER
+)
+
 internal fun String.needsQuoting(): Boolean {
     return isBlank() ||
         first().isDigit() ||
         contains(charsToQuote) ||
         HardKeywords.VALUES.contains(this) ||
-        ModifierKeywords.VALUES.contains(this)
+        ModifierKeywords.VALUES.contains(this) ||
+        any { it.category !in letterCategories }
 }
 
 internal fun String.quoteIfNeeded() = if (needsQuoting()) "`$this`" else this
