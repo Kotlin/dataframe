@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe.impl.codeGen
 
 import org.jetbrains.dataframe.internal.codeGen.CodeWithConverter
+import org.jetbrains.dataframe.internal.codeGen.ExtensionsCodeGenerator
 import org.jetbrains.dataframe.internal.codeGen.Marker
 import org.jetbrains.dataframe.internal.codeGen.MarkersExtractor
 import org.jetbrains.dataframe.internal.schema.DataFrameSchema
@@ -14,7 +15,7 @@ public enum class InterfaceGenerationMode {
 
 public data class CodeGenResult(val code: CodeWithConverter, val newMarkers: List<Marker>)
 
-public interface CodeGenerator {
+public interface CodeGenerator : ExtensionsCodeGenerator {
 
     public fun generate(
         schema: DataFrameSchema,

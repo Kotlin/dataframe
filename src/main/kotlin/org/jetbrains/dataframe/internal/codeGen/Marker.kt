@@ -2,12 +2,17 @@ package org.jetbrains.dataframe.internal.codeGen
 
 import org.jetbrains.dataframe.internal.schema.DataFrameSchema
 
+public interface IsolatedMarker {
+    public val name: String
+    public val fields: List<BaseField>
+}
+
 public open class Marker(
-    public val name: String,
+    override val name: String,
     public val isOpen: Boolean,
-    public val fields: List<GeneratedField>,
+    override val fields: List<GeneratedField>,
     base: List<Marker>
-) {
+) : IsolatedMarker {
 
     public val shortName: String
         get() = name.substringAfterLast(".")
@@ -27,13 +32,13 @@ public open class Marker(
         val fieldsMap = mutableMapOf<String, GeneratedField>()
         baseMarkers.values.forEach {
             it.allFields.forEach {
-                fieldsMap[it.fieldName] = it
+                fieldsMap[it.fieldName.quotedIfNeeded] = it
             }
         }
         fields.forEach {
-            fieldsMap[it.fieldName] = it
+            fieldsMap[it.fieldName.quotedIfNeeded] = it
         }
-        fieldsMap.values.sortedBy { it.fieldName }
+        fieldsMap.values.sortedBy { it.fieldName.quotedIfNeeded }
     }
 
     public val allFieldsByColumn: Map<String, GeneratedField> by lazy {
