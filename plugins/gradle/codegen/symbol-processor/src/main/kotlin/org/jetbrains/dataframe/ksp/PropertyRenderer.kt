@@ -8,9 +8,9 @@ internal fun renderExtensions(interfaceName: String, properties: List<Property>)
         override val name: String = interfaceName
         override val fields: List<BaseField> = properties.map {
             val columnInfo = when (it.propertyType.fqName) {
-                fqnDataRow -> ColumnGroup
-                fqnDataFrame -> FrameColumn
-                else -> ValueColumn(it.propertyType.toString())
+                fqnDataRow -> ColumnInfo.ColumnGroupInfo
+                fqnDataFrame -> ColumnInfo.FrameColumnInfo
+                else -> ColumnInfo.ValueColumnInfo(it.propertyType.toString())
             }
 
             BaseFieldImpl(
