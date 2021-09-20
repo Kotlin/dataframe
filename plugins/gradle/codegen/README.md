@@ -5,6 +5,28 @@ DataFrame Gradle plugin can
 2. Infer data schemas from your CSV or JSON data.
 
 ## Setup
+
+### settings.gradle
+#### Kotlin DSL
+```
+pluginManagement {
+    repositories {
+        maven(url="https://jitpack.io")
+        gradlePluginPortal()
+    }
+}
+```
+#### Groovy DSL
+```
+pluginManagement {
+    repositories {
+        maven { url = "https://jitpack.io" } 
+        gradlePluginPortal()
+    }
+}
+```
+
+### build.gradle
 ```
 plugins {
     id("org.jetbrains.kotlin.plugin.dataframe") version "1.0-SNAPSHOT"
