@@ -4,10 +4,11 @@ import org.jetbrains.dataframe.ColumnKind
 import org.jetbrains.dataframe.impl.codeGen.needsQuoting
 import org.jetbrains.dataframe.internal.schema.ColumnSchema
 
-public sealed interface ColumnInfo
-public class ValueColumn(public val typeFqName: String) : ColumnInfo
-public object FrameColumn : ColumnInfo
-public object ColumnGroup : ColumnInfo
+public sealed interface ColumnInfo {
+    public class ValueColumnInfo(public val typeFqName: String) : ColumnInfo
+    public object FrameColumnInfo : ColumnInfo
+    public object ColumnGroupInfo : ColumnInfo
+}
 
 public class ValidFieldName private constructor(private val identifier: String, public val needsQuote: Boolean) {
     public val unquoted: String get() = identifier
@@ -59,8 +60,8 @@ public data class GeneratedField(
     val columnKind: ColumnKind get() = columnSchema.kind
     override val nullable: Boolean = columnSchema.nullable
     override val columnInfo: ColumnInfo = when (columnKind) {
-        ColumnKind.Value -> ValueColumn((columnSchema as ColumnSchema.Value).type.toString())
-        ColumnKind.Group -> ColumnGroup
-        ColumnKind.Frame -> FrameColumn
+        ColumnKind.Value -> ColumnInfo.ValueColumnInfo((columnSchema as ColumnSchema.Value).type.toString())
+        ColumnKind.Group -> ColumnInfo.ColumnGroupInfo
+        ColumnKind.Frame -> ColumnInfo.FrameColumnInfo
     }
 }

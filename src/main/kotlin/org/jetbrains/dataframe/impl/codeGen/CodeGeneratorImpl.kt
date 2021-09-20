@@ -15,9 +15,9 @@ private fun renderNullability(nullable: Boolean) = if (nullable) "?" else ""
 
 internal fun BaseField.renderFieldType(): Code =
     when (val columnInfo = columnInfo) {
-        is ValueColumn -> columnInfo.typeFqName
-        is org.jetbrains.dataframe.internal.codeGen.ColumnGroup -> "${DataRow::class.qualifiedName}<$markerName>"
-        is FrameColumn -> "${DataFrame::class.qualifiedName}<$markerName>${renderNullability(nullable)}"
+        is ColumnInfo.ValueColumnInfo -> columnInfo.typeFqName
+        is ColumnInfo.ColumnGroupInfo -> "${DataRow::class.qualifiedName}<$markerName>"
+        is ColumnInfo.FrameColumnInfo -> "${DataFrame::class.qualifiedName}<$markerName>${renderNullability(nullable)}"
     }
 
 internal fun getRequiredMarkers(schema: DataFrameSchema, markers: Iterable<Marker>) = markers
@@ -50,9 +50,9 @@ internal open class ExtensionsCodeGeneratorImpl : ExtensionsCodeGenerator {
 
     private fun BaseField.renderColumnType(): Code =
         when (val columnInfo = columnInfo) {
-            is ValueColumn -> "${DataColumn::class.qualifiedName}<${columnInfo.typeFqName}>"
-            is org.jetbrains.dataframe.internal.codeGen.ColumnGroup -> "${ColumnGroup::class.qualifiedName}<$markerName>"
-            is FrameColumn -> "${DataColumn::class.qualifiedName}<${DataFrame::class.qualifiedName}<$markerName>${renderNullability(nullable)}>"
+            is ColumnInfo.ValueColumnInfo -> "${DataColumn::class.qualifiedName}<${columnInfo.typeFqName}>"
+            is ColumnInfo.ColumnGroupInfo -> "${ColumnGroup::class.qualifiedName}<$markerName>"
+            is ColumnInfo.FrameColumnInfo -> "${DataColumn::class.qualifiedName}<${DataFrame::class.qualifiedName}<$markerName>${renderNullability(nullable)}>"
         }
 
     fun renderStringLiteral(name: String) = name
