@@ -7,6 +7,8 @@ import org.jetbrains.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
+import java.nio.file.Files
+import kotlin.io.path.writeText
 
 class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
@@ -36,8 +38,85 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         res1.shouldBeInstanceOf<MimeTypedResult>()
 
         val res2 = exec(
-            """listOf(df.`{a}`[0], df.`{b}`[0], df.`{c}`[0])"""
+            """listOf(df.`{a}`[0], df.`(b)`[0], df.`{c}`[0])"""
         )
         res2 shouldBe listOf(1, 2, 3)
+    }
+
+    @Test
+    fun `codegen for '$' that is interpolator in kotlin string literals`() {
+        val temp = Files.createTempFile("df", ".csv")
+        temp.writeText("\$id\n1")
+        @Language("kts")
+        val res1 = exec(
+            """
+            val df = DataFrame.readCSV("$temp")
+            df
+            """.trimIndent()
+        )
+        res1.shouldBeInstanceOf<MimeTypedResult>()
+        val res2 = exec(
+            "listOf(df.`\$id`[0])"
+        )
+        res2 shouldBe listOf(1)
+    }
+
+    @Test
+    fun `codegen for backtick that is forbidden in kotlin identifiers`() {
+        val temp = Files.createTempFile("df", ".csv")
+        temp.writeText("Day`s\n1")
+        @Language("kts")
+        val res1 = exec(
+            """
+            val df = DataFrame.readCSV("$temp")
+            df
+            """.trimIndent()
+        )
+        res1.shouldBeInstanceOf<MimeTypedResult>()
+        println(res1.entries.joinToString())
+        val res2 = exec(
+            "listOf(df.`Day's`[0])"
+        )
+        res2 shouldBe listOf(1)
+    }
+
+    @Test
+    fun `codegen for chars that is forbidden in JVM identifiers`() {
+        val forbiddenChar = ";"
+        val temp = Files.createTempFile("df", ".csv")
+        temp.writeText("Test$forbiddenChar\n1")
+        @Language("kts")
+        val res1 = exec(
+            """
+            val df = DataFrame.readCSV("$temp")
+            df
+            """.trimIndent()
+        )
+        res1.shouldBeInstanceOf<MimeTypedResult>()
+        println(res1.entries.joinToString())
+        val res2 = exec(
+            "listOf(df.`Test `[0])"
+        )
+        res2 shouldBe listOf(1)
+    }
+
+    @Test
+    fun `codegen for chars that is forbidden in JVM identifiers 1`() {
+        val forbiddenChar = "\\"
+        val temp = Files.createTempFile("df", ".csv")
+        temp.writeText("Test$forbiddenChar\n1")
+        @Language("kts")
+        val res1 = exec(
+            """
+            val df = DataFrame.readCSV("$temp")
+            df
+            """.trimIndent()
+        )
+        res1.shouldBeInstanceOf<MimeTypedResult>()
+        println(res1.entries.joinToString())
+        val res2 = exec(
+            "listOf(df.`Test `[0])"
+        )
+        res2 shouldBe listOf(1)
     }
 }

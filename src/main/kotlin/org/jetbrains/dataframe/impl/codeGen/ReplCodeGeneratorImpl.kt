@@ -153,7 +153,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         val baseTypes = if (interfaceName != null) " : $interfaceName" else ""
         val classDeclaration = "data class $className(" +
             fields.map {
-                "${override}val ${it.fieldName}: ${it.renderFieldType()}"
+                "${override}val ${it.fieldName.quotedIfNeeded}: ${it.renderFieldType()}"
             }.joinToString() + ") " + baseTypes
 
         fun converter(argumentName: String) = "$argumentName.df.rows().map { $className(" +

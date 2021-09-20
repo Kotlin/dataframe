@@ -4,7 +4,6 @@ import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.DataRow
 import org.jetbrains.dataframe.annotations.ColumnName
 import org.jetbrains.dataframe.annotations.DataSchema
-import org.jetbrains.dataframe.impl.codeGen.quoteIfNeeded
 import org.jetbrains.dataframe.internal.schema.ColumnSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMemberProperties
@@ -28,8 +27,8 @@ internal object MarkersExtractor {
 
     private fun getFields(markerClass: KClass<*>): List<GeneratedField> =
         markerClass.declaredMemberProperties.mapIndexed { index, it ->
-            val fieldName = it.name.quoteIfNeeded()
-            val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName
+            val fieldName = ValidFieldName.of(it.name)
+            val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName.unquoted
             val type = it.returnType
             var marker: Marker? = null
             val columnSchema = when (type.jvmErasure) {
