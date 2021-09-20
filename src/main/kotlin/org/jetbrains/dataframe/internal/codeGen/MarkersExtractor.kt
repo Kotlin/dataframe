@@ -28,7 +28,7 @@ internal object MarkersExtractor {
     private fun getFields(markerClass: KClass<*>): List<GeneratedField> =
         markerClass.declaredMemberProperties.mapIndexed { index, it ->
             val fieldName = ValidFieldName.of(it.name)
-            val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName.quotedIfNeeded
+            val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName.unquoted
             val type = it.returnType
             var marker: Marker? = null
             val columnSchema = when (type.jvmErasure) {
