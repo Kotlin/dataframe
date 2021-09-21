@@ -1,5 +1,5 @@
 plugins {
-    kotlin("jvm") version "1.5.21"
+    kotlin("jvm")
     id("com.vanniktech.maven.publish") version "0.17.0"
 }
 
@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:0.8.0-dev")
+//    implementation("org.jetbrains.kotlinx:dataframe:0.8.0-dev")
     implementation(libs.ksp.api)
     testImplementation(kotlin("test"))
     testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.4.3")
