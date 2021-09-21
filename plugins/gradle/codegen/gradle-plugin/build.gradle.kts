@@ -42,7 +42,7 @@ tasks.withType<JavaCompile>().all {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:0.8.0-dev")
+//    implementation("org.jetbrains.kotlinx:dataframe:0.8.0-dev")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin-api")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin")
     implementation("com.beust:klaxon:5.5")
