@@ -2,8 +2,8 @@ rootProject.name = "dataframe"
 enableFeaturePreview("VERSION_CATALOGS")
 
 includeBuild("generator")
-include("plugins:gradle:codegen:gradle-plugin")
-include("plugins:gradle:codegen:symbol-processor")
+include("plugins:gradle-plugin")
+include("plugins:symbol-processor")
 
 dependencyResolutionManagement {
     versionCatalogs {

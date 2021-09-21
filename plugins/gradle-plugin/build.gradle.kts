@@ -42,7 +42,7 @@ tasks.withType<JavaCompile>().all {
 }
 
 dependencies {
-//    implementation("org.jetbrains.kotlinx:dataframe:0.8.0-dev")
+    implementation(project(":"))
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin-api")
     implementation("org.jetbrains.kotlin:kotlin-gradle-plugin")
     implementation("com.beust:klaxon:5.5")
@@ -72,7 +72,7 @@ val integrationTestConfiguration by configurations.creating {
 }
 
 val integrationTestTask = task<Test>("integrationTest") {
-    dependsOn(":symbol-processor:publishToMavenLocal")
+    dependsOn(":plugins:symbol-processor:publishToMavenLocal")
     description = "Runs integration tests."
     group = "verification"
 
