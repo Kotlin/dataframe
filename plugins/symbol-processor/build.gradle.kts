@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-//    implementation("org.jetbrains.kotlinx:dataframe:0.8.0-dev")
+    implementation(project(":"))
     implementation(libs.ksp.api)
     testImplementation(kotlin("test"))
     testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.4.3")
