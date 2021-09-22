@@ -11,6 +11,8 @@ repositories {
     google()
 }
 
+version = "1.0.0-SNAPSHOT"
+
 tasks.withType<ProcessResources> {
     filesMatching("**/plugin.properties") {
         filter {
