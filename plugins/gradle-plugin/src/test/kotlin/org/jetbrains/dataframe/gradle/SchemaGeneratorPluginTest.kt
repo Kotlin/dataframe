@@ -16,7 +16,7 @@ internal class SchemaGeneratorPluginTes {
 
     @Before
     fun before() {
-        dataDir = File("../../../../data")
+        dataDir = File("../../data")
     }
 
     @Test
