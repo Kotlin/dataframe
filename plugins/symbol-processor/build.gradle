@@ -1,0 +1,43 @@
+plugins {
+    id("org.jetbrains.kotlin.jvm")
+    id("ru.ileasile.kotlin.publisher")
+}
+
+repositories {
+    mavenCentral()
+    maven { url="https://jitpack.io" }
+    maven { url "https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven" }
+}
+
+group = "org.jetbrains.kotlinx"
+
+dependencies {
+    implementation(project(":"))
+    implementation(libs.ksp.api)
+    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.4.3")
+    testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.4.3")
+    testImplementation("io.kotest:kotest-assertions-core:4.6.0")
+}
+
+kotlinPublications {
+    pom {
+        use(ru.ileasile.kotlin.PomUtilKt) {
+            githubRepo("Kotlin", "dataframe")
+            inceptionYear.set("2021")
+            licenses {
+                apache2()
+            }
+            developers {
+                developer("koperagen", "Nikita Klimenko", "nikita.klimenko@jetbrains.com")
+            }
+        }
+    }
+
+    publication {
+        publicationName = "maven"
+        artifactId = "symbol-processor"
+        description = "Annotation preprocessor for DataFrame"
+        packageName = artifactId
+    }
+}
