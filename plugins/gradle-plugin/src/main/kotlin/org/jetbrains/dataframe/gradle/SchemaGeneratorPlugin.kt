@@ -15,6 +15,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
 
     override fun apply(target: Project) {
         val extension = target.extensions.create<SchemaGeneratorExtension>("dataframes")
+        extension.project = target
         target.afterEvaluate {
             val appliedPlugin = KOTLIN_EXTENSIONS
                 .mapNotNull {
