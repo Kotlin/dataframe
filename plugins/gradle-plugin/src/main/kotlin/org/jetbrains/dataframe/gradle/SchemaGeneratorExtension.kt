@@ -3,11 +3,12 @@
 package org.jetbrains.dataframe.gradle
 
 import groovy.lang.Closure
-import org.gradle.util.ConfigureUtil
+import org.gradle.api.Project
 import java.io.File
 import java.net.URL
 
 open class SchemaGeneratorExtension {
+    lateinit var project: Project
     internal val schemas: MutableList<Schema> = mutableListOf()
     var packageName: String? = null
     var sourceSet: String? = null
@@ -19,7 +20,7 @@ open class SchemaGeneratorExtension {
 
     fun schema(config: Closure<*>) {
         val schema = Schema()
-        ConfigureUtil.configure(config, schema)
+        project.configure(schema, config)
         schemas.add(schema)
     }
 }
