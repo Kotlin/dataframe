@@ -29,7 +29,7 @@ internal open class DataRowImpl<T>(private val index: Int, val owner: DataFrame<
     override fun values() = values
 
     override fun get(columnIndex: Int): Any? {
-        val column = owner.column(columnIndex)
+        val column = owner.col(columnIndex)
         ColumnAccessTracker.registerColumnAccess(column.name())
         return column[index]
     }

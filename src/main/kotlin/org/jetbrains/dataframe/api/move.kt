@@ -122,7 +122,7 @@ public fun <T, C> MoveColsClause<T, C>.afterOrBefore(column: ColumnSelector<T, *
     val refNode = removeRoot.getOrPut(refPath) {
         val parent = originalDf.getFrame(it.dropLast(1))
         val index = parent.getColumnIndex(it.last())
-        val col = df.column(index)
+        val col = df.col(index)
         ColumnPosition(index, false, col)
     }
 

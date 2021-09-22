@@ -9,6 +9,12 @@
     <toc-element id="overview.md"  show-structure-depth="3"/>
     <toc-element id="installation.md"  show-structure-depth="3"/>
     <toc-element toc-title="API reference">
+        <toc-element id="create.md"  show-structure-depth="3"/>
+        <toc-element id="read.md"  show-structure-depth="3"/>
+        <toc-element id="access.md"  show-structure-depth="3"/>
+        <toc-element id="analyze.md"  show-structure-depth="3"/>
+        <toc-element id="modify.md"  show-structure-depth="3"/>
+        <toc-element id="write.md"  show-structure-depth="3"/>
         <toc-element id="reference.md"  show-structure-depth="3"/>
         <toc-element id="ColumnSelectors.md"  show-structure-depth="3"/>
     </toc-element>

@@ -4,6 +4,9 @@ import org.jetbrains.dataframe.columns.ColumnReference
 import org.jetbrains.dataframe.columns.ColumnWithPath
 import org.jetbrains.dataframe.columns.Columns
 import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.kind
+import org.jetbrains.dataframe.columns.name
+import org.jetbrains.dataframe.columns.type
 import org.jetbrains.dataframe.impl.DataFrameReceiver
 import org.jetbrains.dataframe.impl.columns.ColumnsList
 import org.jetbrains.dataframe.impl.columns.toColumnSet

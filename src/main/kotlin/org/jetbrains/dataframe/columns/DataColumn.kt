@@ -78,6 +78,7 @@ public typealias StringCol = DataColumn<String?>
 public typealias AnyCol = DataColumn<*>
 
 internal val AnyCol.type get() = type()
+internal val AnyCol.kind get() = kind()
 internal val AnyCol.hasNulls get() = hasNulls()
 internal val AnyCol.typeClass get() = type.classifier as KClass<*>
 

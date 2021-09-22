@@ -6,13 +6,12 @@ import org.jetbrains.dataframe.headPlusIterable
 import org.jetbrains.dataframe.impl.asList
 import org.jetbrains.dataframe.impl.columns.DataColumnInternal
 import kotlin.reflect.KProperty
-import kotlin.reflect.KType
 
 /**
  * Column with type, name/path and values
  * Base interface for all three kinds of columns: [ValueColumn], [ColumnGroup] and [FrameColumn]
  */
-public interface BaseColumn<out T> : ColumnReference<T> {
+public interface BaseColumn<out T> : TypedColumn<T> {
 
     public fun size(): Int
     public fun ndistinct(): Int
@@ -30,8 +29,6 @@ public interface BaseColumn<out T> : ColumnReference<T> {
     public fun values(): Iterable<T>
 
     public fun toList(): List<T> = values().asList()
-
-    public fun type(): KType
 
     public fun defaultValue(): T?
 

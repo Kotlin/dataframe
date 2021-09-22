@@ -16,9 +16,9 @@ internal abstract class DataFrameReceiverBase<T>(protected val source: DataFrame
 
 internal abstract class DataFrameReceiver<T>(source: DataFrame<T>, private val allowMissingColumns: Boolean) : DataFrameReceiverBase<T>(prepareForReceiver(source)) {
 
-    override fun column(columnIndex: Int): AnyCol {
+    override fun col(columnIndex: Int): AnyCol {
         if (allowMissingColumns && columnIndex < 0 || columnIndex >= ncol()) return MissingValueColumn<Any?>()
-        return super.column(columnIndex)
+        return super.col(columnIndex)
     }
 
     override operator fun get(columnName: String) = getColumnChecked(columnName) ?: MissingValueColumn<Any?>()

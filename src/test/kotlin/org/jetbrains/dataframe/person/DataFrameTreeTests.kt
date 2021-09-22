@@ -23,6 +23,9 @@ import org.jetbrains.dataframe.columnMany
 import org.jetbrains.dataframe.columnOf
 import org.jetbrains.dataframe.columns.ColumnGroup
 import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.depth
+import org.jetbrains.dataframe.columns.hasNulls
+import org.jetbrains.dataframe.columns.name
 import org.jetbrains.dataframe.columns.toAccessor
 import org.jetbrains.dataframe.dfsOf
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator

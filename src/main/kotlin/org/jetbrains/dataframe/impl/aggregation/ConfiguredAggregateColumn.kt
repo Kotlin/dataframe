@@ -4,6 +4,7 @@ import org.jetbrains.dataframe.ColumnPath
 import org.jetbrains.dataframe.ColumnResolutionContext
 import org.jetbrains.dataframe.columns.ColumnWithPath
 import org.jetbrains.dataframe.columns.Columns
+import org.jetbrains.dataframe.columns.name
 import org.jetbrains.dataframe.columns.shortPath
 
 internal class ConfiguredAggregateColumn<C> private constructor(

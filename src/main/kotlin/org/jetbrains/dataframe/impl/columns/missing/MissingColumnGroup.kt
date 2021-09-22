@@ -22,7 +22,7 @@ internal class MissingColumnGroup<T> : MissingDataColumn<DataRow<T>>(), DataColu
         return null
     }
 
-    override fun column(columnIndex: Int): AnyCol {
+    override fun col(columnIndex: Int): AnyCol {
         return MissingValueColumn<Any?>()
     }
 

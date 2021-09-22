@@ -6,8 +6,10 @@ import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.columns.name
 import org.jetbrains.dataframe.columns.size
 import org.jetbrains.dataframe.columns.toAccessor
+import org.jetbrains.dataframe.columns.type
 import org.jetbrains.dataframe.columns.typeClass
 import org.jetbrains.dataframe.impl.columns.asGroup
 import org.jetbrains.dataframe.impl.columns.isTable
@@ -56,7 +58,7 @@ class DataFrameTests : BaseTest() {
         d.nrow() shouldBe 2
         d.ncol() shouldBe 2
         d.columnNames() shouldBe listOf("", "")
-        d[""] shouldBe d.column(0)
+        d[""] shouldBe d.col(0)
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -199,7 +201,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `update`() {
         fun AnyFrame.check() {
-            column(1).name() shouldBe "age"
+            col(1).name() shouldBe "age"
             ncol() shouldBe typed.ncol()
             this["age"].toList() shouldBe typed.map { age * 2 }
         }
@@ -221,7 +223,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `conditional update`() {
         fun AnyFrame.check() {
-            column(1).name() shouldBe "age"
+            col(1).name() shouldBe "age"
             ncol() shouldBe typed.ncol()
             this["age"].toList() shouldBe typed.map { if (age > 25) null else age }
         }
@@ -910,7 +912,7 @@ class DataFrameTests : BaseTest() {
             val city = typed[row][city].toString()
             pivoted[row][city] shouldBe true
             for (col in typed.ncol() until pivoted.ncol()) {
-                val column = pivoted.column(col)
+                val column = pivoted.col(col)
                 val pivotedValue = column.typed<Boolean>()[row]
                 val colName = column.name()
                 pivotedValue shouldBe (colName == city)
@@ -947,7 +949,7 @@ class DataFrameTests : BaseTest() {
         for (i in 0 until typed.nrow()) {
             val city = typed[i][city]
             for (j in typed.ncol() until res.ncol()) {
-                res.column(j).typed<Boolean>().get(i) shouldBe (res.column(j).name() == city.toString())
+                res.col(j).typed<Boolean>().get(i) shouldBe (res.col(j).name() == city.toString())
             }
         }
     }
@@ -963,7 +965,7 @@ class DataFrameTests : BaseTest() {
         trueValuesCount shouldBe selected.distinct().nrow()
 
         val pairs = (1 until res.ncol()).flatMap { i ->
-            val col = res.column(i).typed<Boolean>()
+            val col = res.col(i).typed<Boolean>()
             res.filter { it[col] }.map { name to col.name() }
         }.toSet()
 
@@ -1223,9 +1225,9 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `move to position`() {
-        typed.column(1) shouldBe typed.age
+        typed.col(1) shouldBe typed.age
         val moved = typed.move { age }.to(2)
-        moved.column(2) shouldBe typed.age
+        moved.col(2) shouldBe typed.age
         moved.ncol() shouldBe typed.ncol()
     }
 
@@ -1873,5 +1875,11 @@ class DataFrameTests : BaseTest() {
         """.trimIndent()
 
         typed.toString().trim() shouldBe expected
+    }
+
+    @Test
+    fun `isNumber`() {
+        typed.age.isNumber() shouldBe true
+        typed.weight.isNumber() shouldBe true
     }
 }

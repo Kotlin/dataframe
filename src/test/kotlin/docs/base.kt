@@ -1,4 +1,4 @@
-package samples
+package docs
 
 import org.jetbrains.dataframe.*
 import org.junit.Test

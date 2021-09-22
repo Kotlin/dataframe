@@ -1,6 +1,8 @@
 package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.columns.AnyCol
+import org.jetbrains.dataframe.columns.depth
+import org.jetbrains.dataframe.columns.name
 import org.jetbrains.dataframe.io.DisplayConfiguration
 import org.jetbrains.dataframe.io.HtmlData
 import org.jetbrains.dataframe.io.toHTML
