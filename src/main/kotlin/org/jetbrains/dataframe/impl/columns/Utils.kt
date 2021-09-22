@@ -82,6 +82,12 @@ internal fun <A, B> Columns<A>.transform(transform: (List<ColumnWithPath<A>>) ->
     return TransformedColumns(this, transform)
 }
 
+internal fun <T> Columns<T>.single() = object : SingleColumn<T> {
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? {
+        return this@single.resolve(context).singleOrNull()
+    }
+}
+
 internal fun Array<out Columns<*>>.toColumns(): Columns<Any?> = ColumnsList(this.asList())
 internal fun Array<out String>.toColumns(): Columns<Any?> = map { it.toColumnDef() }.toColumnSet()
 internal fun <C> Array<out String>.toColumnsOf(): Columns<C> = toColumns() as Columns<C>

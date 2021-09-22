@@ -22,8 +22,8 @@ class AnimalsTests {
         val mean = df.mean().transpose()
         mean.ncol() shouldBe 2
         mean.nrow() shouldBe 2
-        mean.column(1).type() shouldBe getType<Double>()
-        mean.column(0).values() shouldBe listOf("age", "visits")
+        mean.col(1).type() shouldBe getType<Double>()
+        mean.col(0).values() shouldBe listOf("age", "visits")
     }
 
     @Test

@@ -5,6 +5,7 @@ import org.jetbrains.dataframe.DataFrameAggregations
 import org.jetbrains.dataframe.DataRow
 import org.jetbrains.dataframe.aggregation.Aggregatable
 import org.jetbrains.dataframe.aggregation.AggregateColumnsSelector
+import org.jetbrains.dataframe.columns.type
 import org.jetbrains.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.dataframe.impl.aggregation.getAggregateColumns

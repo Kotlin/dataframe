@@ -22,7 +22,7 @@ public typealias DataFrameSelector<T, R> = DataFrame<T>.(DataFrame<T>) -> R
 
 public typealias ColumnsSelector<T, C> = SelectReceiver<T>.(SelectReceiver<T>) -> Columns<C>
 
-public typealias ColumnSelector<T, C> = SelectReceiver<T>.(SelectReceiver<T>) -> ColumnReference<C>
+public typealias ColumnSelector<T, C> = SelectReceiver<T>.(SelectReceiver<T>) -> SingleColumn<C>
 
 public fun <T, C> DataFrame<T>.createSelector(selector: ColumnsSelector<T, C>): SelectReceiver<T>.(SelectReceiver<T>) -> Columns<C> = selector
 
@@ -72,6 +72,8 @@ public fun <T, C> DataFrame<T>.getColumnPaths(selector: ColumnsSelector<T, C>): 
 
 public fun <T, C> DataFrame<T>.column(selector: ColumnSelector<T, C>): DataColumn<C> = get(selector)
 
+public fun <T> DataFrame<T>.col(predicate: ColumnFilter<Any?>): AnyCol = column { single(predicate) }
+
 public fun <T, C> DataFrame<T>.getColumnWithPath(selector: ColumnSelector<T, C>): ColumnWithPath<C> = getColumnsWithPaths(selector).single()
 
 internal fun <T> DataFrame<T>.getColumns(columnNames: List<String>): List<AnyCol> = columnNames.map { this[it] }
@@ -101,7 +103,7 @@ public interface DataFrame<out T> : DataFrameAggregations<T> {
     override fun columns(): List<AnyCol>
     public fun <C> columns(selector: ColumnsSelector<T, C>): List<DataColumn<C>> = get(selector)
 
-    override fun column(columnIndex: Int): DataColumn<*> = columns()[columnIndex]
+    override fun col(columnIndex: Int): DataColumn<*> = columns()[columnIndex]
 
     public operator fun set(columnName: String, value: AnyCol)
 
@@ -140,7 +142,7 @@ public interface DataFrame<out T> : DataFrameAggregations<T> {
     public fun <R> tryGetColumn(column: ColumnReference<R>): DataColumn<R>? = column.resolveSingle(this, UnresolvedColumnsPolicy.Skip)?.data
 
     override fun tryGetColumn(columnName: String): AnyCol? =
-        getColumnIndex(columnName).let { if (it != -1) column(it) else null }
+        getColumnIndex(columnName).let { if (it != -1) col(it) else null }
 
     public fun tryGetColumn(path: ColumnPath): AnyCol? =
         if (path.size == 1) tryGetColumn(path[0])
@@ -166,7 +168,8 @@ public interface DataFrame<out T> : DataFrameAggregations<T> {
     public fun take(numRows: Int): DataFrame<T> = getRows(0 until numRows)
     public fun drop(numRows: Int): DataFrame<T> = getRows(numRows until nrow())
     public fun takeLast(numRows: Int): DataFrame<T> = getRows(nrow() - numRows until nrow())
-    public fun skipLast(numRows: Int): DataFrame<T> = getRows(0 until nrow() - numRows)
+    public fun skip(numRows: Int): DataFrame<T> = takeLast(nrow() - numRows)
+    public fun skipLast(numRows: Int): DataFrame<T> = take(nrow() - numRows)
     public fun head(numRows: Int = 5): DataFrame<T> = take(numRows)
     public fun tail(numRows: Int = 5): DataFrame<T> = takeLast(numRows)
     public fun shuffled(): DataFrame<T> = getRows((0 until nrow()).shuffled())

@@ -10,6 +10,8 @@ import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGeneratorImpl
 import org.jetbrains.dataframe.impl.codeGen.process
 import org.jetbrains.dataframe.person.BaseTest
+import org.jetbrains.dataframe.person.city
+import org.jetbrains.dataframe.person.weight
 import org.jetbrains.dataframe.select
 import org.junit.Test
 

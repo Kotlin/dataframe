@@ -7,6 +7,7 @@ import org.jetbrains.dataframe.columns.DataColumn
 import org.jetbrains.dataframe.impl.codeGen.*
 import org.jetbrains.dataframe.internal.schema.extractSchema
 import org.jetbrains.dataframe.person.BaseTest
+import org.jetbrains.dataframe.person.Person
 import org.junit.Test
 
 class CodeGenerationTests : BaseTest() {

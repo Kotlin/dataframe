@@ -2,6 +2,7 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.columns.AnyCol
 import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.columns.ColumnWithPath
 import org.jetbrains.dataframe.columns.DataColumn
 import org.jetbrains.dataframe.columns.shortPath
 import org.jetbrains.dataframe.impl.toIterable
@@ -102,6 +103,7 @@ public val <T> DataRow<T>.next: DataRow<T>? get() = next()
 public typealias Selector<T, R> = T.(T) -> R
 public typealias RowSelector<T, R> = DataRow<T>.(DataRow<T>) -> R
 public typealias RowFilter<T> = RowSelector<T, Boolean>
+public typealias ColumnFilter<T> = (ColumnWithPath<T>) -> Boolean
 public typealias VectorizedRowFilter<T> = Selector<DataFrameBase<T>, BooleanArray>
 public typealias RowCellSelector<T, C, R> = DataRow<T>.(C) -> R
 public typealias RowCellFilter<T, C> = RowCellSelector<T, C, Boolean>

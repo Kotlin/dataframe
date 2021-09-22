@@ -13,14 +13,12 @@ df.move { columns }.under(groupName)
 # Select single column
 <tabs>
 <tab title="Generated properties">
-
 ``` kotlin 
 columnName // column by extension property
 it.columnName // column by extension property
 col(index) // column by index
 column.rename("newName") // column with a new name
 ```
-
 </tab>
 <tab title="Column defenitions">
 

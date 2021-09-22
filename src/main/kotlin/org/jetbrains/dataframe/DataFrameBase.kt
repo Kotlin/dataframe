@@ -28,7 +28,7 @@ public interface DataFrameBase<out T> : SingleColumn<DataRow<T>> {
     public operator fun <C> get(columns: ColumnSelector<T, C>): DataColumn<C> = get(columns as ColumnsSelector<T, C>).single()
 
     public fun <R> getColumn(name: String): DataColumn<R> = get(name) as DataColumn<R>
-    public fun <R> getColumn(index: Int): DataColumn<R> = column(index) as DataColumn<R>
+    public fun <R> getColumn(index: Int): DataColumn<R> = col(index) as DataColumn<R>
 
     public fun hasColumn(columnName: String): Boolean = tryGetColumn(columnName) != null
 
@@ -43,8 +43,8 @@ public interface DataFrameBase<out T> : SingleColumn<DataRow<T>> {
 
     public operator fun get(index: Int): DataRow<T>
     public fun getOrNull(index: Int): DataRow<T>? = if (index < 0 || index >= nrow()) null else get(index)
-    public fun tryGetColumn(columnIndex: Int): AnyCol? = if (columnIndex in 0 until ncol()) column(columnIndex) else null
-    public fun column(columnIndex: Int): AnyCol
+    public fun tryGetColumn(columnIndex: Int): AnyCol? = if (columnIndex in 0 until ncol()) col(columnIndex) else null
+    public fun col(columnIndex: Int): AnyCol
     public fun columns(): List<AnyCol>
     public fun ncol(): Int
     public fun nrow(): Int

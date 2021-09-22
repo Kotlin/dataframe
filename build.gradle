@@ -156,11 +156,12 @@ kotlinter {
 
 korro {
     docs = fileTree(rootProject.rootDir) {
-        include("docs/StardustDocs/topics/reference.md")
+        include("docs/StardustDocs/topics/api/*.md")
     }
 
     samples = fileTree(rootProject.rootDir) {
-        include("src/test/kotlin/samples/*.kt")
+        include("src/test/kotlin/docs/*.kt")
+        include("src/test/kotlin/docs/api/*.kt")
     }
 }
 

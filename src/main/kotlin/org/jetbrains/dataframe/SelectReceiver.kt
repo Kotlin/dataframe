@@ -10,6 +10,14 @@ public interface SelectReceiver<out T> : DataFrameBase<T> {
 
     public fun DataFrameBase<*>.first(numCols: Int): Columns<Any?> = cols().take(numCols)
 
+    public fun <C> DataFrameBase<C>.first(condition: ColumnFilter<Any?>): SingleColumn<Any?> = all().first(condition)
+
+    public fun <C> DataFrameBase<C>.single(condition: ColumnFilter<Any?>): SingleColumn<Any?> = all().single(condition)
+
+    public fun <C> Columns<C>.first(condition: ColumnFilter<C>): SingleColumn<C> = transform { listOf(it.first(condition)) }.single()
+
+    public fun <C> Columns<C>.single(condition: ColumnFilter<C>): SingleColumn<C> = transform { listOf(it.single(condition)) }.single()
+
     public fun DataFrameBase<*>.last(numCols: Int): Columns<Any?> = cols().takeLast(numCols)
 
     public fun DataFrameBase<*>.group(name: String): ColumnGroup<*> = this.get(name) as ColumnGroup<*>
@@ -68,7 +76,6 @@ public interface SelectReceiver<out T> : DataFrameBase<T> {
 
     public fun <C> col(property: KProperty<C>): ColumnAccessor<C> = property.toColumnDef()
 
-    public fun DataFrameBase<*>.col(index: Int): DataColumn<*> = column(index)
     public fun Columns<*>.col(index: Int): Columns<Any?> = transform { it.mapNotNull { it.getChild(index) } }
 
     public fun DataFrameBase<*>.col(colName: String): DataColumn<*> = get(colName)
@@ -109,7 +116,7 @@ public interface SelectReceiver<out T> : DataFrameBase<T> {
 
     public infix fun <C> Columns<C>.except(selector: ColumnsSelector<T, *>): Columns<C> = except(selector.toColumns()) as Columns<C>
 
-    public operator fun <C> ColumnSelector<T, C>.invoke(): ColumnReference<C> = this(this@SelectReceiver, this@SelectReceiver)
+    // public operator fun <C> ColumnSelector<T, C>.invoke(): ColumnReference<C> = this(this@SelectReceiver, this@SelectReceiver)
     public operator fun <C> ColumnsSelector<T, C>.invoke(): Columns<C> = this(this@SelectReceiver, this@SelectReceiver)
 
     public operator fun <C> ColumnReference<C>.invoke(newName: String): ColumnReference<C> = renamedReference(newName)

@@ -5,6 +5,7 @@ import org.jetbrains.dataframe.aggregation.AggregateColumnsSelector
 import org.jetbrains.dataframe.aggregation.SelectAggregatableColumnsReceiver
 import org.jetbrains.dataframe.columns.Columns
 import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.type
 import org.jetbrains.dataframe.impl.aggregation.receivers.AggregateReceiverInternal
 import org.jetbrains.dataframe.impl.getListType
 import kotlin.reflect.KType

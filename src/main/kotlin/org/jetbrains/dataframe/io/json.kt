@@ -38,7 +38,7 @@ private val arrayColumnName = "array"
 internal val valueColumnName = "value"
 
 internal fun fromJsonList(records: List<*>): AnyFrame {
-    fun AnyFrame.isSingleUnnamedColumn() = ncol == 1 && column(0).name.let { it == valueColumnName || it == arrayColumnName }
+    fun AnyFrame.isSingleUnnamedColumn() = ncol == 1 && col(0).name.let { it == valueColumnName || it == arrayColumnName }
 
     var hasPrimitive = false
     var hasArray = false
@@ -86,7 +86,7 @@ internal fun fromJsonList(records: List<*>): AnyFrame {
                 val parsed = fromJsonList(values)
                 when {
                     parsed.isSingleUnnamedColumn() -> {
-                        val col = parsed.column(0)
+                        val col = parsed.col(0)
                         val elementType = col.type
                         val values = col.values.asList().splitByIndices(startIndices.asSequence()).toMany()
                         DataColumn.create(colName, values, Many::class.createType(listOf(KTypeProjection.invariant(elementType))))
@@ -107,7 +107,7 @@ internal fun fromJsonList(records: List<*>): AnyFrame {
                 val parsed = fromJsonList(values)
                 when {
                     parsed.ncol == 0 -> DataColumn.create(colName, arrayOfNulls<Any?>(values.size).toList(), getType<Any?>())
-                    parsed.isSingleUnnamedColumn() -> parsed.column(0).rename(colName)
+                    parsed.isSingleUnnamedColumn() -> parsed.col(0).rename(colName)
                     else -> DataColumn.create(colName, parsed)
                 }
             }

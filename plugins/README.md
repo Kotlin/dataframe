@@ -123,7 +123,7 @@ See [reference](#reference) and [examples](#examples) for more details.
 ```kotlin
 dataframes {
     schema {
-        data = "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv"
+        data = "https://datalore-docs.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv"
         name = "org.example.RawCityPopulation"
     }
 }
