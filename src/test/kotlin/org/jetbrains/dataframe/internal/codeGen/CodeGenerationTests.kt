@@ -129,7 +129,7 @@ class CodeGenerationTests : BaseTest() {
     fun `generate derived interface`() {
         val codeGen = CodeGenerator.create()
         val schema = df.dropNulls().extractSchema()
-        val code = codeGen.generate(schema, "ValidPerson", true, true, isOpen = true, listOf(MarkersExtractor.get<Person>())).code.declarations
+        val code = codeGen.generate(schema, "ValidPerson", true, true, isOpen = true, MarkerVisibility.IMPLICIT_PUBLIC, listOf(MarkersExtractor.get<Person>())).code.declarations
         val expected = """
             @DataSchema
             interface ValidPerson : $personClassName{

@@ -1,9 +1,7 @@
 package org.jetbrains.dataframe.impl.codeGen
 
-import org.jetbrains.dataframe.internal.codeGen.GeneratedField
-import org.jetbrains.dataframe.internal.codeGen.Marker
+import org.jetbrains.dataframe.internal.codeGen.*
 import org.jetbrains.dataframe.internal.codeGen.SchemaProcessor
-import org.jetbrains.dataframe.internal.codeGen.ValidFieldName
 import org.jetbrains.dataframe.internal.schema.ColumnSchema
 import org.jetbrains.dataframe.internal.schema.DataFrameSchema
 
@@ -48,14 +46,15 @@ internal class SchemaProcessorImpl(
 
     private fun generateFields(
         schema: DataFrameSchema,
+        visibility: MarkerVisibility,
         requiredSuperMarkers: List<Marker> = emptyList()
     ): List<GeneratedField> {
         val usedFieldNames = requiredSuperMarkers.flatMap { it.allFields.map { it.fieldName.quotedIfNeeded } }.toMutableSet()
 
         fun getMarker(column: ColumnSchema) = when (column) {
             is ColumnSchema.Value -> null
-            is ColumnSchema.Map -> process(column.schema, false)
-            is ColumnSchema.Frame -> process(column.schema, false)
+            is ColumnSchema.Map -> process(column.schema, false, visibility)
+            is ColumnSchema.Frame -> process(column.schema, false, visibility)
             else -> throw NotImplementedError()
         }
 
@@ -86,7 +85,8 @@ internal class SchemaProcessorImpl(
         scheme: DataFrameSchema,
         name: String,
         withBaseInterfaces: Boolean,
-        isOpen: Boolean
+        isOpen: Boolean,
+        visibility: MarkerVisibility
     ): Marker {
         val baseMarkers = mutableListOf<Marker>()
         val fields = if (withBaseInterfaces) {
@@ -112,16 +112,17 @@ internal class SchemaProcessorImpl(
                     } else break
                 }
             }
-            generateFields(scheme, baseMarkers)
-        } else generateFields(scheme)
-        return Marker(name, isOpen, fields, baseMarkers.onlyLeafs())
+            generateFields(scheme, visibility, baseMarkers)
+        } else generateFields(scheme, visibility)
+        return Marker(name, isOpen, fields, baseMarkers.onlyLeafs(), visibility)
     }
 
     private fun DataFrameSchema.getRequiredMarkers() = getRequiredMarkers(this, registeredMarkers)
 
     override fun process(
         schema: DataFrameSchema,
-        isOpen: Boolean
+        isOpen: Boolean,
+        visibility: MarkerVisibility
     ): Marker {
         val markerName: String
         val required = schema.getRequiredMarkers()
@@ -133,7 +134,7 @@ internal class SchemaProcessorImpl(
         } else {
             markerName = generateUniqueMarkerClassName(namePrefix)
             usedMarkerNames.add(markerName)
-            val marker = createMarkerSchema(schema, markerName, true, isOpen)
+            val marker = createMarkerSchema(schema, markerName, true, isOpen, visibility)
             registeredMarkers.add(marker)
             generatedMarkers.add(marker)
             return marker
