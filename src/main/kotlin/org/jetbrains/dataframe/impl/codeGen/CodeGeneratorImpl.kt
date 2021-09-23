@@ -143,10 +143,11 @@ internal class CodeGeneratorImpl : ExtensionsCodeGeneratorImpl(), CodeGenerator 
         fields: Boolean,
         extensionProperties: Boolean,
         isOpen: Boolean,
+        visibility: MarkerVisibility,
         knownMarkers: Iterable<Marker>
     ): CodeGenResult {
         val context = SchemaProcessor.create(name, knownMarkers)
-        val marker = context.process(schema, isOpen)
+        val marker = context.process(schema, isOpen, visibility)
         val declarations = mutableListOf<Code>()
         context.generatedMarkers.forEach {
             declarations.add(generateInterface(it, fields))

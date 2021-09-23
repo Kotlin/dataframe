@@ -1,8 +1,6 @@
 package org.jetbrains.dataframe.impl.codeGen
 
-import org.jetbrains.dataframe.internal.codeGen.CodeWithConverter
-import org.jetbrains.dataframe.internal.codeGen.ExtensionsCodeGenerator
-import org.jetbrains.dataframe.internal.codeGen.Marker
+import org.jetbrains.dataframe.internal.codeGen.*
 import org.jetbrains.dataframe.internal.codeGen.MarkersExtractor
 import org.jetbrains.dataframe.internal.schema.DataFrameSchema
 import kotlin.reflect.KClass
@@ -23,6 +21,7 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
         fields: Boolean,
         extensionProperties: Boolean,
         isOpen: Boolean,
+        visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
         knownMarkers: Iterable<Marker> = emptyList()
     ): CodeGenResult
 

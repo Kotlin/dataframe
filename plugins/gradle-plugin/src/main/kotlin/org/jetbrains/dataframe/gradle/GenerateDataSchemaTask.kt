@@ -17,6 +17,7 @@ import com.beust.klaxon.KlaxonException
 import org.gradle.api.provider.Provider
 import org.jetbrains.dataframe.AnyFrame
 import org.jetbrains.dataframe.impl.codeGen.CodeGenResult
+import org.jetbrains.dataframe.internal.codeGen.MarkerVisibility
 import java.io.FileNotFoundException
 
 abstract class GenerateDataSchemaTask : DefaultTask() {
@@ -49,7 +50,8 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             name = interfaceName.get(),
             fields = true,
             extensionProperties = false,
-            isOpen = true
+            isOpen = true,
+            visibility = MarkerVisibility.EXPLICIT_PUBLIC
         )
         val escapedPackageName = escapePackageName(packageName.get())
 

@@ -21,6 +21,7 @@ internal fun renderExtensions(interfaceName: String, properties: List<Property>)
                 columnInfo = columnInfo
             )
         }
+        override val visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC
     }).declarations
 }
 
