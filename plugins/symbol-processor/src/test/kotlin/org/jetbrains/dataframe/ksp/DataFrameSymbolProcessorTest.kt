@@ -1,9 +1,12 @@
 package org.jetbrains.dataframe.ksp
 
 import com.tschuchort.compiletesting.SourceFile
+import io.kotest.assertions.asClue
+import io.kotest.inspectors.forOne
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldStartWith
 import org.jetbrains.kotlin.codegen.state.ReceiverTypeAndTypeParameters
 import kotlin.test.Test
 
@@ -359,5 +362,79 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.successfulCompilation shouldBe false
+    }
+
+    @Test
+    fun `interface with internal visibility`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                package org.example
+
+                import org.jetbrains.dataframe.annotations.*
+                import org.jetbrains.dataframe.columns.*
+                import org.jetbrains.dataframe.*
+
+                @DataSchema
+                internal interface Hello {
+                    val name: Int
+                }
+            """.trimIndent()))
+            ))
+        result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
+            ?.shouldContain("""internal val org.jetbrains.dataframe.DataFrameBase<Hello>.name: org.jetbrains.dataframe.columns.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
+            ?.shouldContain("""internal val org.jetbrains.dataframe.DataRowBase<Hello>.name: kotlin.Int @JvmName("Hello_name")""")
+        result.successfulCompilation shouldBe true
+    }
+
+    @Test
+    fun `interface with public visibility`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                package org.example
+
+                import org.jetbrains.dataframe.annotations.*
+                import org.jetbrains.dataframe.columns.*
+                import org.jetbrains.dataframe.*
+
+                @DataSchema
+                public interface Hello {
+                    val name: Int
+                }
+            """.trimIndent()))
+            ))
+        result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
+            ?.shouldContain("""public val org.jetbrains.dataframe.DataFrameBase<Hello>.name: org.jetbrains.dataframe.columns.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
+            ?.shouldContain("""public val org.jetbrains.dataframe.DataRowBase<Hello>.name: kotlin.Int @JvmName("Hello_name")""")
+        result.successfulCompilation shouldBe true
+    }
+
+    @Test
+    fun `interface with implicit visibility`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                package org.example
+
+                import org.jetbrains.dataframe.annotations.*
+                import org.jetbrains.dataframe.columns.*
+                import org.jetbrains.dataframe.*
+
+                @DataSchema
+                interface Hello {
+                    val name: Int
+                }
+            """.trimIndent()))
+            ))
+        result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readLines()?.asClue { codeLines ->
+            codeLines.forOne {
+                it.shouldStartWith("""val org.jetbrains.dataframe.DataFrameBase<Hello>.name: org.jetbrains.dataframe.columns.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
+            }
+            codeLines.forOne {
+                it.shouldStartWith("""val org.jetbrains.dataframe.DataRowBase<Hello>.name: kotlin.Int @JvmName("Hello_name")""")
+            }
+        }
+        result.successfulCompilation shouldBe true
     }
 }

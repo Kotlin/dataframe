@@ -5,7 +5,7 @@ import com.tschuchort.compiletesting.SourceFile
 internal val annotations = SourceFile.kotlin("Annotations.kt", """
     package org.jetbrains.dataframe.annotations
 
-    annotation class DataSchema(val isOpen: Boolean)
+    annotation class DataSchema(val isOpen: Boolean = true)
     annotation class ColumnName(val name: String)
 """.trimIndent())
 

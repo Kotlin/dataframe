@@ -17,7 +17,7 @@ public open class Marker(
     public val isOpen: Boolean,
     override val fields: List<GeneratedField>,
     base: List<Marker>,
-    override val visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC
+    override val visibility: MarkerVisibility
 ) : IsolatedMarker {
 
     public val shortName: String
