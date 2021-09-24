@@ -22,7 +22,7 @@ internal object MarkersExtractor {
             val fields = getFields(markerClass)
             val isOpen = markerClass.findAnnotation<DataSchema>()?.isOpen ?: false
             val baseSchemas = markerClass.superclasses.filter { it != Any::class }.map { get(it) }
-            Marker(markerClass.qualifiedName!!, isOpen, fields, baseSchemas)
+            Marker(markerClass.qualifiedName!!, isOpen, fields, baseSchemas, MarkerVisibility.IMPLICIT_PUBLIC)
         }
 
     private fun getFields(markerClass: KClass<*>): List<GeneratedField> =
