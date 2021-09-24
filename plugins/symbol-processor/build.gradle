@@ -9,7 +9,8 @@ repositories {
     maven { url "https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven" }
 }
 
-group = "org.jetbrains.kotlinx"
+group = "org.jetbrains.kotlinx.dataframe"
+version = "1.0.0-SNAPSHOT"
 
 dependencies {
     implementation(project(":"))
@@ -35,6 +36,7 @@ kotlinPublications {
     }
 
     publication {
+        groupId = "org.jetbrains.kotlinx.dataframe"
         publicationName = "maven"
         artifactId = "symbol-processor"
         description = "Annotation preprocessor for DataFrame"

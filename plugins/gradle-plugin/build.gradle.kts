@@ -11,6 +11,7 @@ repositories {
     google()
 }
 
+group = "org.jetbrains.kotlinx.dataframe"
 version = "1.0.0-SNAPSHOT"
 
 tasks.withType<ProcessResources> {

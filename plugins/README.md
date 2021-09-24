@@ -29,7 +29,7 @@ pluginManagement {
 ### build.gradle
 ```
 plugins {
-    id("org.jetbrains.kotlin.plugin.dataframe") version "1.0-SNAPSHOT"
+    id("org.jetbrains.kotlin.plugin.dataframe") version "1.0.0-SNAPSHOT"
 }
 
 dependencies {
