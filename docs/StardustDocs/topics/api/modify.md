@@ -182,7 +182,7 @@ Adds new column to `DataFrame`
 ```kotlin
 add(columnName) { rowExpression }
 ```
-See [row expressions](#row-expressions)
+See [row expressions](rowExpressions.md)
 ```kotlin
 df.add("year of birth") { 2021 - age }
 df.add("diff") { temperature - (prev?.temperature ?: 0) }

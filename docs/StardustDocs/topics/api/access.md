@@ -140,7 +140,7 @@ Resulting `DataFrame` have the same column schema as original `DataFrame`.
 df.distinctBy { age and name }
 ```
 #### distinctByExpr
-Returns `DataFrame` containing only rows having distinct keys returned by given [row expression](rows.md#row-expressions).
+Returns `DataFrame` containing only rows having distinct keys returned by given [row expression](rowExpressions.md).
 Among rows of the original `DataFrame` with equal keys, only the first one will be present in the resulting `DataFrame`.
 The rows in the resulting `DataFrame` are in the same order as they were in the original `DataFrame`.
 Resulting `DataFrame` have the same column schema as original `DataFrame`.
