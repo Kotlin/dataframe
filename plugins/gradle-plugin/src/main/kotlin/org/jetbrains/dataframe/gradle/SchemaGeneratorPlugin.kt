@@ -46,7 +46,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
     ): Task {
         val interfaceName = getInterfaceName(schema)
         fun propertyError(property: String): Nothing {
-            error("No supported Kotlin plugin was found. Please apply one or specify $property for task $interfaceName explicitly")
+            error("No supported Kotlin plugin was found. Please apply one or specify property $property for schema $interfaceName explicitly")
         }
 
         val sourceSetName by lazy {
