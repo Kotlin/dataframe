@@ -1,7 +1,6 @@
 [//]: # (title: Analyze)
 
 ## Basic statistics
-
 ### nrow
 Returns number of rows in `DataFrame`
 ```kotlin
