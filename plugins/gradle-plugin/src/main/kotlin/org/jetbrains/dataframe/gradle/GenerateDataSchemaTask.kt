@@ -34,6 +34,9 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @get:Input
     abstract val packageName: Property<String>
 
+    @get:Input
+    abstract val schemaVisibility: Property<DataSchemaVisibility>
+
     @Suppress("LeakingThis")
     @get:OutputFile
     val dataSchema: Provider<File> = packageName.zip(interfaceName) { packageName, interfaceName ->
@@ -51,7 +54,11 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             fields = true,
             extensionProperties = false,
             isOpen = true,
-            visibility = MarkerVisibility.EXPLICIT_PUBLIC
+            visibility = when (schemaVisibility.get()) {
+                DataSchemaVisibility.INTERNAL -> MarkerVisibility.INTERNAL
+                DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
+                DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
+            }
         )
         val escapedPackageName = escapePackageName(packageName.get())
 
