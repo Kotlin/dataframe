@@ -1,79 +1,116 @@
 [//]: # (title: Access)
-
-## Access Data
-
+<!---IMPORT docs.api.Access-->
 This section describes various ways to get a piece of data out from `DataFrame`
-### Get single column
+## Basics
+### Get column
 #### by column name
-<!---docs.api.Access.getColumnByName_strings-->
+<tabs>
+<tab title="Properties">
+<!---FUN getColumnByName_properties-->
 ```kotlin
-df["age"]
-df["name"]["first"]
+df.age
+df.name.lastName
 ```
 <!---END-->
+</tab><tab title="Accessors">
+<!---FUN getColumnByName_accessors-->
+```kotlin
+val age by column<Int>()
+val name by columnGroup()
+val lastName by column<String>(name)
+df[age]
+df[lastName]
+```
+<!---END-->
+</tab><tab title="Strings">
+<!---FUN getColumnByName_strings-->
+```kotlin
+df["age"]
+df["name"]["firstName"]
+```
+<!---END-->
+</tab></tabs>
 #### by column index
-<!---docs.api.Access.getColumnByIndex-->
+<!---FUN getColumnByIndex-->
 ```kotlin
 df.col(2)
 df.col(0).asGroup().col(1)
 ```
 <!---END-->
 #### by column condition
-<!---docs.api.Access.getColumnByCondition-->
+<!---FUN getColumnByCondition-->
 ```kotlin
 df.col { it.isNumber() && it.hasNulls() }
 ```
 <!---END-->
-### Get single row
+### Get row
 #### by row index
-<!---docs.api.Access.getRowByIndex-->
+<!---FUN getRowByIndex-->
 ```kotlin
 df[2]
 ```
 <!---END-->
 #### by row condition
-<!---docs.api.Access.getRowByCondition_properties-->
+<!---FUN getRowByCondition_properties-->
 ```kotlin
 df.single { age > 42 }
 ```
 <!---END-->
 ### Get cell
-<!---docs.api.Access.getCell_strings-->
+<!---FUN getCell_strings-->
 ```kotlin
 df["age"][1]
 df[1]["age"]
 ```
 <!---END-->
 ### Get several columns
-<!---docs.api.Access.getColumnsByName_strings-->
+<!---FUN getColumnsByName_strings-->
 ```kotlin
 df["age", "weight"]
 ```
 <!---END-->
 ### Get several rows
 #### by row indices
-<!---docs.api.Access.getRowsByIndices-->
+<!---FUN getRowsByIndices-->
 ```kotlin
-df[0,3,4]
+df[0, 3, 4]
 df[1..2]
 df.take(3)
-df.skip(2)
+df.drop(2)
 df.takeLast(3)
-df.skipLast(3)
+df.dropLast(3)
 ```
 <!---END-->
 #### by condition
-<!---docs.api.Access.getRowsByCondition_properties-->
+<tabs>
+<tab title="Properties">
+<!---FUN getRowsByCondition_properties-->
 ```kotlin
-df.filter { age > 20 }
-```
-<!---docs.api.Access.getRowsByCondition_accessors-->
-```kotlin
-df.filter { age > 20 }
+df.filter { age > 18 && name.firstName.startsWith("A") }
 ```
 <!---END-->
+</tab><tab title="Properties">
+<!---FUN getRowsByCondition_accessors-->
+```kotlin
+val age by column<Int>()
+val name by columnGroup()
+val firstName by column<String>(name)
+
+df.filter { age() > 18 && firstName().startsWith("A") }
+// or
+df.filter { it[age] > 18 && it[firstName].startsWith("A") }
+```
+<!---END-->
+</tab><tab title="Strings">
+<!---FUN getRowsByCondition_strings-->
+```kotlin
+df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }.nrow shouldBe 1
+```
+<!---END-->
+</tab>
+</tabs>
 #### without nulls
-<!---docs.api.Access.dropNulls_properties-->
+<!---FUN dropNulls_properties-->
 ```kotlin
 df.dropNulls { weight }
 df.dropNulls { city and weight }
