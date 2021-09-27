@@ -17,7 +17,7 @@ public fun <T> DataFrame<T>.pivot(vararg columns: String): PivotAggregations<T> 
 public fun <T> DataFrame<T>.pivot(vararg columns: Column): PivotAggregations<T> = pivot { columns.toColumns() }
 
 public fun <T, P : GroupedPivotAggregations<T>> P.withGrouping(group: MapColumnReference): P = withGrouping(group.path()) as P
-public fun <T, P : GroupedPivotAggregations<T>> P.withGrouping(groupName: String): P = withGrouping(listOf(groupName)) as P
+public fun <T, P : GroupedPivotAggregations<T>> P.withGrouping(groupName: String): P = withGrouping(pathOf(groupName)) as P
 
 internal class AggregatedPivot<T>(private val df: DataFrame<T>, internal var aggregator: GroupByReceiverImpl<T>) :
     DataFrame<T> by df
@@ -69,7 +69,7 @@ public data class NamedValue private constructor(
     public companion object {
         public fun create(path: ColumnPath, value: Any?, type: KType?, defaultValue: Any?, guessType: Boolean = false): NamedValue = when (value) {
             is ValueWithDefault<*> -> create(path, value.value, type, value.default, guessType)
-            is ValueWithName -> create(path.replaceLast(value.name), value.value, type, defaultValue, guessType)
+            is ValueWithName -> create(path.replaceLast(value.name).toColumnPath(), value.value, type, defaultValue, guessType)
             else -> NamedValue(path, value, type, defaultValue, guessType)
         }
         public fun aggregator(builder: GroupByReceiver<*>): NamedValue = NamedValue(emptyPath(), builder, null, null, false)

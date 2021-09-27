@@ -38,7 +38,7 @@ internal class TreeNode<T>(
 
     override operator fun get(childName: String) = childrenMap[childName]
 
-    fun pathFromRoot(): List<String> {
+    fun pathFromRoot(): ColumnPath {
         val path = mutableListOf<String>()
         var node: TreeNode<T>? = this
         while (node != null && node.parent != null) {
@@ -46,7 +46,7 @@ internal class TreeNode<T>(
             node = node.parent
         }
         path.reverse()
-        return path
+        return ColumnPath(path)
     }
 
     fun addChild(childName: String, childData: T): TreeNode<T> {

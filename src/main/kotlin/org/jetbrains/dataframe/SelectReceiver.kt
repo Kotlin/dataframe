@@ -44,22 +44,22 @@ public interface SelectReceiver<out T> : DataFrameBase<T> {
 
     // excluding current
     public fun DataFrameBase<*>.allAfter(colPath: ColumnPath): Columns<Any?> = children().let { var take = false; it.filter { if (take) true else { take = colPath == it.path; false } } }
-    public fun DataFrameBase<*>.allAfter(colName: String): Columns<Any?> = allAfter(listOf(colName))
+    public fun DataFrameBase<*>.allAfter(colName: String): Columns<Any?> = allAfter(pathOf(colName))
     public fun DataFrameBase<*>.allAfter(column: Column): Columns<Any?> = allAfter(column.path())
 
     // including current
     public fun DataFrameBase<*>.allSince(colPath: ColumnPath): Columns<Any?> = children().let { var take = false; it.filter { if (take) true else { take = colPath == it.path; take } } }
-    public fun DataFrameBase<*>.allSince(colName: String): Columns<Any?> = allSince(listOf(colName))
+    public fun DataFrameBase<*>.allSince(colName: String): Columns<Any?> = allSince(pathOf(colName))
     public fun DataFrameBase<*>.allSince(column: Column): Columns<Any?> = allSince(column.path())
 
     // excluding current
     public fun DataFrameBase<*>.allBefore(colPath: ColumnPath): Columns<Any?> = children().let { var take = true; it.filter { if (!take) false else { take = colPath != it.path; take } } }
-    public fun DataFrameBase<*>.allBefore(colName: String): Columns<Any?> = allBefore(listOf(colName))
+    public fun DataFrameBase<*>.allBefore(colName: String): Columns<Any?> = allBefore(pathOf(colName))
     public fun DataFrameBase<*>.allBefore(column: Column): Columns<Any?> = allBefore(column.path())
 
     // including current
     public fun DataFrameBase<*>.allUntil(colPath: ColumnPath): Columns<Any?> = children().let { var take = true; it.filter { if (!take) false else { take = colPath != it.path; true } } }
-    public fun DataFrameBase<*>.allUntil(colName: String): Columns<Any?> = allUntil(listOf(colName))
+    public fun DataFrameBase<*>.allUntil(colName: String): Columns<Any?> = allUntil(pathOf(colName))
     public fun DataFrameBase<*>.allUntil(column: Column): Columns<Any?> = allUntil(column.path())
 
     public fun DataFrameBase<*>.colGroups(filter: (ColumnGroup<*>) -> Boolean = { true }): Columns<AnyRow> = this.columns().filter { it.isGroup() && filter(it.asGroup()) }.map { it.asGroup() }.toColumnSet()

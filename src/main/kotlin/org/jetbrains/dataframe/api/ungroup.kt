@@ -10,5 +10,5 @@ public fun <T> DataFrame<T>.ungroup(vararg columns: Column): DataFrame<T> = ungr
 
 public fun <T, C> DataFrame<T>.ungroup(selector: ColumnsSelector<T, C>): DataFrame<T> {
     return move { selector.toColumns().children() }
-        .into { it.path.removeAt(it.path.size - 2) }
+        .into { it.path.removeAt(it.path.size - 2).toColumnPath() }
 }

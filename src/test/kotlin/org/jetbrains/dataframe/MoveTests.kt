@@ -10,7 +10,7 @@ class MoveTests {
     val columnNames = listOf("q", "a.b", "b.c", "w", "a.c.d", "e.f", "b.d", "r")
     val columns = columnNames.map { column(it, emptyList<Int>()) }
     val df = columns.asDataFrame<Unit>()
-    val grouped = df.move { cols { it.name.contains(".") } }.into { it.name.split(".") }
+    val grouped = df.move { cols { it.name.contains(".") } }.into { it.name.split(".").toColumnPath() }
 
     @Test
     fun batchGrouping() {

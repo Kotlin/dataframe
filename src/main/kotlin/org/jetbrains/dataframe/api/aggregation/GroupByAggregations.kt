@@ -124,7 +124,7 @@ public inline fun <T, reified C> GroupByAggregations<T>.with(
     crossinline expression: RowSelector<T, C>
 ): DataFrame<T> {
     val type = getType<C>()
-    val path = listOf(name)
+    val path = pathOf(name)
     return aggregateInternal {
         yieldOneOrMany(path, df.map(expression), type)
     }

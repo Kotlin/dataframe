@@ -16,12 +16,12 @@ public interface ColumnReference<out C> : SingleColumn<C> {
 
     public fun rename(newName: String): ColumnReference<C>
 
-    public fun path(): ColumnPath = listOf(name)
+    public fun path(): ColumnPath = ColumnPath(name)
 
     public operator fun invoke(row: AnyRow): C = row[this]
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
-        return context.df.getColumn<C>(name, context.unresolvedColumnsPolicy)?.addPath(listOf(name), context.df)
+        return context.df.getColumn<C>(name, context.unresolvedColumnsPolicy)?.addPath(ColumnPath(name), context.df)
     }
 }
 
@@ -29,4 +29,4 @@ internal val ColumnReference<*>.name get() = name()
 
 internal fun <C> ColumnReference<C>.renamedReference(newName: String): ColumnReference<C> = RenamedColumnReference(this, newName)
 
-internal fun ColumnReference<*>.shortPath() = listOf(name)
+internal fun ColumnReference<*>.shortPath() = ColumnPath(name)

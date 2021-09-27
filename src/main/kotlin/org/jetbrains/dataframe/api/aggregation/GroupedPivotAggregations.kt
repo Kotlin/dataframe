@@ -10,6 +10,7 @@ import org.jetbrains.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.dataframe.impl.aggregation.modes.of
 import org.jetbrains.dataframe.impl.columns.toColumns
+import org.jetbrains.dataframe.impl.emptyPath
 import kotlin.reflect.KProperty
 
 public interface GroupedPivotAggregations<out T> : Aggregatable<T> {
@@ -114,7 +115,7 @@ public inline fun <T, reified V> GroupedPivotAggregations<T>.with(noinline selec
             if (value is ColumnReference<*>) it[value]
             else value
         }
-        yieldOneOrMany(emptyList(), values, type)
+        yieldOneOrMany(emptyPath(), values, type)
     }
 }
 

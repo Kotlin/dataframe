@@ -40,7 +40,7 @@ internal fun <T> ColumnWithPath<T>.changePath(path: ColumnPath): ColumnWithPath<
 
 internal fun <T> BaseColumn<T>.addParentPath(path: ColumnPath, df: DataFrameBase<*>) = addPath(path + name, df)
 
-internal fun <T> BaseColumn<T>.addPath(df: DataFrameBase<*>): ColumnWithPath<T> = addPath(listOf(name), df)
+internal fun <T> BaseColumn<T>.addPath(df: DataFrameBase<*>): ColumnWithPath<T> = addPath(pathOf(name), df)
 
 internal fun ColumnPath.depth() = size - 1
 

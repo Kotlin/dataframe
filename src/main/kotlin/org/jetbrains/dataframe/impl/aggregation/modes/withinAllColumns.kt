@@ -4,7 +4,6 @@ import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.dataframe.impl.emptyPath
-import org.jetbrains.dataframe.impl.pathOf
 
 @PublishedApi
 internal fun <T, C, R> Aggregator<*, R>.aggregateAll(

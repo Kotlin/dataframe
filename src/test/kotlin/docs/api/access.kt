@@ -1,11 +1,13 @@
 package docs.api
 
+import io.kotest.matchers.shouldBe
 import org.jetbrains.dataframe.DataFrameBase
 import org.jetbrains.dataframe.DataRow
 import org.jetbrains.dataframe.DataRowBase
 import org.jetbrains.dataframe.annotations.DataSchema
 import org.jetbrains.dataframe.col
 import org.jetbrains.dataframe.column
+import org.jetbrains.dataframe.columnGroup
 import org.jetbrains.dataframe.columnOf
 import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.dropNulls
@@ -15,6 +17,7 @@ import org.jetbrains.dataframe.impl.columns.asGroup
 import org.jetbrains.dataframe.into
 import org.jetbrains.dataframe.isNumber
 import org.jetbrains.dataframe.named
+import org.jetbrains.dataframe.nrow
 import org.jetbrains.dataframe.select
 import org.jetbrains.dataframe.sortBy
 import org.jetbrains.dataframe.typed
@@ -64,7 +67,7 @@ class Access {
     fun getColumnByName_strings() {
         // SampleStart
         df["age"]
-        df["name"]["first"]
+        df["name"]["firstName"]
         // SampleEnd
     }
 
@@ -135,8 +138,28 @@ class Access {
     @Test
     fun getRowsByCondition_properties() {
         // SampleStart
-        df.filter { age > 20 }
+        df.filter { age > 18 && name.firstName.startsWith("A") }
         // SampleEnd
+    }
+
+    @Test
+    fun getRowsByCondition_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val name by columnGroup()
+        val firstName by column<String>(name)
+
+        df.filter { age() > 18 && firstName().startsWith("A") }
+        // or
+        df.filter { it[age] > 18 && it[firstName].startsWith("A") }
+        // SampleEnd
+    }
+
+    @Test
+    fun getRowsByCondition_strings() {
+        // SampleStart
+
+        df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }.nrow shouldBe 1
     }
 
     @Test
