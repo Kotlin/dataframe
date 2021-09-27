@@ -129,9 +129,9 @@ class Access {
         df[0, 3, 4]
         df[1..2]
         df.take(3)
-        df.skip(2)
+        df.drop(2)
         df.takeLast(3)
-        df.skipLast(3)
+        df.dropLast(3)
         // SampleEnd
     }
 
@@ -158,8 +158,8 @@ class Access {
     @Test
     fun getRowsByCondition_strings() {
         // SampleStart
-
         df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }.nrow shouldBe 1
+        // SampleEnd
     }
 
     @Test
