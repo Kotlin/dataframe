@@ -29,7 +29,7 @@ df.sum { rowExpression }
 
 ## Aggregation
 
-`GroupedDataFrame` is any `DataFrame` with one selected [`FrameColumn`](#columns.md#framecolumn) that is interpreted as data groups
+`GroupedDataFrame` is any `DataFrame` with one selected [`FrameColumn`](columns.md#framecolumn) that is interpreted as data groups
 So any `DataFrame` with `FrameColumn` can be converted to `GroupedDataFrame`:
 ```kotlin
 val files by column("input1.csv", "input2.csv", "input3.csv") // create column of file names 
@@ -47,7 +47,7 @@ groupedDf.union()
 groupedDf[data].union()
 ```
 ### aggregate
-`GroupedDataFrame` can be aggregated into `DataFrame` with one or several [statistics](#Statistics) computed for every data group.
+`GroupedDataFrame` can be aggregated into `DataFrame` with one or several [statistics](#statistics) computed for every data group.
 ```
 groupedDf.aggregate { 
     stat1 into "column1"
@@ -71,7 +71,7 @@ groupedDf.max { age } // max age for every group into column "age"
 groupedDf.mean { weight } // mean weight in every group into column "weight"
 groupedDf.count() // number of rows in every group into column "n"
 ```
-`aggregate` can also be applied to any `DataFrame` with [FrameColumn](Columns.md#framecolumn)
+`aggregate` can also be applied to any `DataFrame` with [FrameColumn](columns.md#framecolumn)
 ```
 df.aggregate { groups }.with {
     stat1 into "column1"

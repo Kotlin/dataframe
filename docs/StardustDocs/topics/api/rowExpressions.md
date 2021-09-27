@@ -1,5 +1,5 @@
 ## Row expressions
-Row expressions provide a value for every row of `DataFrame` and are used in [add](#add), [filter](#filter), forEach, [update](#update) and other operations
+Row expressions provide a value for every row of `DataFrame` and are used in [add](modify.md#add), [filter](access.md#filter--drop), forEach, [update](access.md#update) and other operations
 
 Row expression syntax is ```DataRow.(DataRow) -> T``` so row values can be accessed with or without ```it``` keyword
 ```kotlin
