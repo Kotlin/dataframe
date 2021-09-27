@@ -8,115 +8,52 @@ This section describes various ways to get a piece of data out from `DataFrame`
 <tabs>
 <tab title="Properties">
 <!---FUN getColumnByName_properties-->
-```kotlin
-df.age
-df.name.lastName
-```
 <!---END-->
 </tab><tab title="Accessors">
 <!---FUN getColumnByName_accessors-->
-```kotlin
-val age by column<Int>()
-val name by columnGroup()
-val lastName by column<String>(name)
-df[age]
-df[lastName]
-```
 <!---END-->
 </tab><tab title="Strings">
 <!---FUN getColumnByName_strings-->
-```kotlin
-df["age"]
-df["name"]["firstName"]
-```
 <!---END-->
 </tab></tabs>
 #### by column index
 <!---FUN getColumnByIndex-->
-```kotlin
-df.col(2)
-df.col(0).asGroup().col(1)
-```
 <!---END-->
 #### by column condition
 <!---FUN getColumnByCondition-->
-```kotlin
-df.col { it.isNumber() && it.hasNulls() }
-```
 <!---END-->
 ### Get row
 #### by row index
 <!---FUN getRowByIndex-->
-```kotlin
-df[2]
-```
 <!---END-->
 #### by row condition
 <!---FUN getRowByCondition_properties-->
-```kotlin
-df.single { age > 42 }
-```
 <!---END-->
 ### Get cell
 <!---FUN getCell_strings-->
-```kotlin
-df["age"][1]
-df[1]["age"]
-```
 <!---END-->
 ### Get several columns
 <!---FUN getColumnsByName_strings-->
-```kotlin
-df["age", "weight"]
-```
 <!---END-->
 ### Get several rows
 #### by row indices
 <!---FUN getRowsByIndices-->
-```kotlin
-df[0, 3, 4]
-df[1..2]
-df.take(3)
-df.drop(2)
-df.takeLast(3)
-df.dropLast(3)
-```
 <!---END-->
 #### by condition
 <tabs>
 <tab title="Properties">
 <!---FUN getRowsByCondition_properties-->
-```kotlin
-df.filter { age > 18 && name.firstName.startsWith("A") }
-```
 <!---END-->
 </tab><tab title="Properties">
 <!---FUN getRowsByCondition_accessors-->
-```kotlin
-val age by column<Int>()
-val name by columnGroup()
-val firstName by column<String>(name)
-
-df.filter { age() > 18 && firstName().startsWith("A") }
-// or
-df.filter { it[age] > 18 && it[firstName].startsWith("A") }
-```
 <!---END-->
 </tab><tab title="Strings">
 <!---FUN getRowsByCondition_strings-->
-```kotlin
-df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }.nrow shouldBe 1
-```
 <!---END-->
 </tab>
 </tabs>
 #### without nulls
 <!---FUN dropNulls_properties-->
-```kotlin
-df.dropNulls { weight }
-df.dropNulls { city and weight }
-df.dropNulls(whereAllNull = true) { city and weight }
-```
 <!---END-->
 ### as iterable
 `DataFrame` can be interpreted as an `Iterable` of `DataRow`. Although `DataFrame` doesn't implement `Iterable` interface, it defines most extension functions available for `Iterable`
