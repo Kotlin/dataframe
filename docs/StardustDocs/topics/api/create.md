@@ -74,7 +74,7 @@ val df = dataFrameOf(names).fill(15, true)
 ```
 
 ### from columns
-`DataFrame` can be created from one or several [columns](#create-columns)
+`DataFrame` can be created from one or several [columns](#columns)
 
 ```kotlin
 val name by columnOf("Alice", "Bob")
