@@ -14,7 +14,13 @@
         <toc-element id="access.md"  show-structure-depth="3"/>
         <toc-element id="analyze.md"  show-structure-depth="3"/>
         <toc-element id="modify.md"  show-structure-depth="3"/>
+        <toc-element id="mix.md"  show-structure-depth="3"/>
         <toc-element id="write.md"  show-structure-depth="3"/>
         <toc-element id="columnSelectors.md"  show-structure-depth="3"/>
+        <toc-element id="rowExpressions.md"  show-structure-depth="3"/>
+    </toc-element>
+    <toc-element toc-title="Types">
+        <toc-element id="columns.md"  show-structure-depth="3"/>
+        <toc-element id="rows.md"  show-structure-depth="3"/>
     </toc-element>
 </product-profile>

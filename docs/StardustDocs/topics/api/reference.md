@@ -234,31 +234,4 @@ df.select { fullName[firstName] }
 df.select { fullName.cols(middleName, lastName) }
 df.select { fullName.cols().drop(1) }
 ```
-## Row expressions
-Row expressions provide a value for every row of `DataFrame` and are used in [add](#add), [filter](#filter), forEach, [update](#update) and other operations
-
-Row expression syntax is ```DataRow.(DataRow) -> T``` so row values can be accessed with or without ```it``` keyword
-```kotlin
-df.filter { it.name.startsWith("A") }
-df.filter { name.length == 5 }
-```
-Within row expression you can access [row-properties](#row-members)
-```kotlin
-df.add("diff") { value - prev?.value }
-df.filter { index % 5 == 0 }
-```
-## Row members
-`DataRow` properties:
-* `index` - sequential row number in `DataFrame`, starts from 0
-* `prev` - previous row (`null` for the first row)
-* `next` - next row (`null` for the last row)
-
-`DataRow` functions:
-* `getRow(Int)` - row from `DataFrame` by row index
-* `neighbours(Iterable<Int>)` - sequence of nearest rows by relative index: `neighbours(-1..1)` will return previous, current and next row
-* `get(column)` - cell value from column by current row index
-* `values()` - list of all cell values from current row
-* `df()` - `DataFrame` that current row belongs to
-
-If some of these properties clash with generated extension properties, they still can be accessed as functions `index()`, `prev()`, `next()`
 ## Column properties

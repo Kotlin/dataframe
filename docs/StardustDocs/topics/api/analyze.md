@@ -1,22 +1,30 @@
 [//]: # (title: Analyze)
 
-## nrow
+## Basic statistics
+
+### nrow
 Returns number of rows in `DataFrame`
 ```kotlin
 df.nrow()
 ```
-## ncol
+### ncol
 Returns number of columns in `DataFrame`
 ```kotlin
 df.ncol()
 ```
-## sum
+### sum
 Computes sum of expressions evaluated for every `DataRow` in `DataFrame`
 ```kotlin
 df.sum { rowExpression }
 ```
-### Working with `GroupedDataFrame`
-`GroupedDataFrame` is any `DataFrame` with one selected [`FrameColumn`](#framecolumn) that is interpreted as data groups
+
+## GroupBy
+
+## Pivot
+
+## Aggregation
+
+`GroupedDataFrame` is any `DataFrame` with one selected [`FrameColumn`](#Columns.md#framecolumn) that is interpreted as data groups
 So any `DataFrame` with `FrameColumn` can be converted to `GroupedDataFrame`:
 ```kotlin
 val files by column("input1.csv", "input2.csv", "input3.csv") // create column of file names 
@@ -25,7 +33,7 @@ val df = DataFrame.of(files, data) // create DataFrame with two columns 'files' 
 val groupedDf = df.asGrouped { data } // interpret 'data' column as groups of GroupedDataFrame
 ```
 
-[Union](#union) operation all groups of `GroupedDataFrame` into single `DataFrame`. All other columns of `GroupedDataFrame` are ignored.
+[Union](mix.md#union) operation all groups of `GroupedDataFrame` into single `DataFrame`. All other columns of `GroupedDataFrame` are ignored.
 ```kotlin
 groupedDf.union()
 ```
@@ -34,7 +42,7 @@ groupedDf.union()
 groupedDf[data].union()
 ```
 ### aggregate
-`GroupedDataFrame` can be aggregated into `DataFrame` with one or several [statistics](#compute-statistics) computed for every data group.
+`GroupedDataFrame` can be aggregated into `DataFrame` with one or several [statistics](#Statistics) computed for every data group.
 ```
 groupedDf.aggregate { 
     stat1 into "column1"
@@ -58,7 +66,7 @@ groupedDf.max { age } // max age for every group into column "age"
 groupedDf.mean { weight } // mean weight in every group into column "weight"
 groupedDf.count() // number of rows in every group into column "n"
 ```
-`aggregate` can also be applied to any `DataFrame` with [FrameColumn](#framecolumn)
+`aggregate` can also be applied to any `DataFrame` with [FrameColumn](Columns.md#framecolumn)
 ```
 df.aggregate { groups }.with {
     stat1 into "column1"
@@ -68,6 +76,10 @@ df.aggregate { groups }.with {
 ```
 ### `pivot` inside `aggregate`
 [pivot](#pivot) operation can also be used within [aggregate](#aggregate) with a slightly different syntax
+
+## Statistics
+
+## Working with `GroupedDataFrame`
 
 **Input**
 
