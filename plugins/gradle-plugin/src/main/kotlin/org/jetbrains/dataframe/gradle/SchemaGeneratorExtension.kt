@@ -12,6 +12,7 @@ open class SchemaGeneratorExtension {
     internal val schemas: MutableList<Schema> = mutableListOf()
     var packageName: String? = null
     var sourceSet: String? = null
+    var visibility: DataSchemaVisibility? = null
 
     fun schema(config: Schema.() -> Unit) {
         val schema = Schema().apply(config)
@@ -30,7 +31,8 @@ class Schema(
     var src: File? = null,
     var name: String? = null,
     var packageName: String? = null,
-    var sourceSet: String? = null
+    var sourceSet: String? = null,
+    var visibility: DataSchemaVisibility? = null
 ) {
     fun setData(file: File) {
         data = file

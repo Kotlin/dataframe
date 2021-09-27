@@ -97,8 +97,23 @@ For each property of the data schema two extension property are generated:
 @file:Suppress("UNCHECKED_CAST")
 package org.example
 
-val DataFrameBase<Example>.`age`: DataColumn<Int> get() = this["age"] as DataColumn<Int>
-val DataRowBase<Example>.`age`: Int get() = this["age"] as Int
+val DataFrameBase<Example>.age: DataColumn<Int> get() = this["age"] as DataColumn<Int>
+val DataRowBase<Example>.age: Int get() = this["age"] as Int
+```
+
+#### Visibility
+For schemas with `internal` or `public` modifiers preprocessor will generate `internal` or `public` extensions
+
+```kotlin
+@DataSchema
+internal interface Example {
+    val age: Int
+}
+```
+
+```kotlin
+internal val DataFrameBase<Example>.age: DataColumn<Int> get() = this["age"] as DataColumn<Int>
+internal val DataRowBase<Example>.age: Int get() = this["age"] as Int
 ```
 
 ### Schema inference
@@ -136,9 +151,14 @@ dataframes {
     sourceSet = "mySources" // [optional; default: "main"]
     packageName = "org.jetbrains.data" // [optional; default: common package under source set]
     
+    visibility = // [optional; default: if explicitApiMode enabled then EXPLICIT_PUBLIC, else IMPLICIT_PUBLIC]
+    // KOTLIN SCRIPT: DataSchemaVisibility.INTERNAL DataSchemaVisibility.IMPLICIT_PUBLIC, DataSchemaVisibility.EXPLICIT_PUBLIC
+    // GROOVY SCRIPT: 'internal', 'implicit_public', 'explicit_public'
+    
     schema {
         sourceSet /* String */ = "…" // [optional; override default]
         packageName /* String */ = "…" // [optional; override default]
+        visibility /* DataSchemaVisibility */ = "…" // [optional; override default]
         src /* File */ = file("…") // [optional; default: file("src/$sourceSet/kotlin")]
         
         data /* URL | File | String */ = "…" // Data in JSON or CSV formats
