@@ -1,37 +1,20 @@
 [//]: # (title: Create)
 
-## Create columns
-
-### Unnamed column with values
-<!---docs.Base.CreateColumns.unnamedColumnWithValues-->
-```kotlin
-val cols = columnOf("Alice", "Bob")
-val colsFromList = listOf("Alice", "Bob").toColumn()
-```
-<!---END-->
-### Named column with values
+## Columns
 <!---docs.Base.CreateColumns.namedColumnWitValues-->
 ```kotlin
 val name by columnOf("Alice", "Bob")
 val col = listOf("Alice", "Bob").toColumn("name")
 ```
 <!---END-->
-To rename column use function `rename` or infix function `named`:
-<!---docs.Base.CreateColumns.namedAndRenameCol-->
-```kotlin
-val unnamedCol = columnOf("Alice", "Bob")
-val colRename = unnamedCol.rename("name")
-val colNamed = columnOf("Alice", "Bob") named "name"
-```
-<!---END-->
-### Named column without values
+### Column accessors
 <!---docs.Base.CreateColumns.namedColumnWithoutValues-->
 ```kotlin
 val name by column<String>()
 val col = column<String>("name")
 ```
 <!---END-->
-Named column without values is called `ColumnReference` and can be used in `DataFrame` operations for typed access to columns:
+Named column without values is called `ColumnAccessor` and can be used in `DataFrame` operations for typed access to columns:
 <!---docs.Base.CreateColumns.colRefForTypedAccess-->
 ```kotlin
 df.filter { it[name].startsWith("A") }
@@ -48,7 +31,23 @@ val values = listOf("Alice", "Bob")
 val col = name.withValues(values)
 val col = values.toColumn(name)
 ```
-## Create `DataFrame`
+### Unnamed column with values
+<!---docs.Base.CreateColumns.unnamedColumnWithValues-->
+```kotlin
+val cols = columnOf("Alice", "Bob")
+val colsFromList = listOf("Alice", "Bob").toColumn()
+```
+<!---END-->
+To rename column use function `rename` or infix function `named`:
+<!---docs.Base.CreateColumns.namedAndRenameCol-->
+```kotlin
+val unnamedCol = columnOf("Alice", "Bob")
+val colRename = unnamedCol.rename("name")
+val colNamed = columnOf("Alice", "Bob") named "name"
+```
+<!---END-->
+
+## DataFrame
 
 Several ways to convert data into `DataFrame`
 ### from values

@@ -80,6 +80,17 @@ class Access {
     }
 
     @Test
+    fun getColumnByName_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val name by columnGroup()
+        val lastName by column<String>(name)
+        df[age]
+        df[lastName]
+        // SampleEnd
+    }
+
+    @Test
     fun getColumnByIndex() {
         // SampleStart
         df.col(2)
