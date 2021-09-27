@@ -5,6 +5,7 @@ import org.jetbrains.dataframe.NamedValue
 import org.jetbrains.dataframe.getType
 import org.jetbrains.dataframe.impl.aggregation.ValueWithDefault
 import org.jetbrains.dataframe.impl.aggregation.receivers.internal
+import org.jetbrains.dataframe.pathOf
 
 public interface AggregateReceiverWithDefault<out T> : DataFrame<T> {
 
@@ -16,5 +17,5 @@ public interface AggregateReceiverWithDefault<out T> : DataFrame<T> {
 
 public abstract class AggregateReceiver<out T> : AggregateReceiverWithDefault<T> {
 
-    public inline infix fun <reified R> R.into(name: String): NamedValue = internal().yield(listOf(name), this, getType<R>())
+    public inline infix fun <reified R> R.into(name: String): NamedValue = internal().yield(pathOf(name), this, getType<R>())
 }

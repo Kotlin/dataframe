@@ -188,7 +188,7 @@ public fun Column.getPath(): ColumnPath {
         c = c.getParent()
     }
     list.reverse()
-    return list
+    return list.toColumnPath()
 }
 
 internal fun <T> DataFrame<T>.collectTree(selector: ColumnsSelector<T, *>): TreeNode<AnyCol?> {
@@ -248,7 +248,7 @@ internal fun <T> List<T>.last(count: Int) = subList(size - count, size)
  */
 internal fun <C> List<ColumnWithPath<C>>.shortenPaths(): List<ColumnWithPath<C>> {
     // try to use just column name as column path
-    val map = groupBy { it.path.last(1) }.toMutableMap()
+    val map = groupBy { it.path.takeLast(1) }.toMutableMap()
 
     fun add(path: ColumnPath, column: ColumnWithPath<C>) {
         val list: MutableList<ColumnWithPath<C>> =
@@ -269,7 +269,7 @@ internal fun <C> List<ColumnWithPath<C>>.shortenPaths(): List<ColumnWithPath<C>>
             map.remove(key)
             it.value.forEach {
                 val path = it.path
-                val newPath = if (path.size < keyLength) path.last(keyLength + 1) else path
+                val newPath = if (path.size < keyLength) path.takeLast(keyLength + 1) else path
                 add(newPath, it)
             }
         }

@@ -17,7 +17,7 @@ public fun <T, C> DataFrame<T>.flatten(
     val nameGenerator = ColumnNameGenerator()
 
     fun getRootPrefix(path: ColumnPath) =
-        (1 until path.size).asSequence().map { path.subList(0, it) }.first { rootPrefixes.contains(it) }
+        (1 until path.size).asSequence().map { path.take(it) }.first { rootPrefixes.contains(it) }
 
     val result = move { rootColumns.toColumnSet().dfs { !it.isGroup() } }
         .into {

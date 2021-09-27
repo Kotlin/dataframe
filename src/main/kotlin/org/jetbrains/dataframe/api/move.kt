@@ -42,11 +42,11 @@ public fun <T, C> DataFrame<T>.move(selector: ColumnsSelector<T, C>): MoveColsCl
 
 public interface DataFrameForMove<T> : DataFrameBase<T> {
 
-    public fun path(vararg columns: String): List<String> = listOf(*columns)
+    public fun path(vararg columns: String): ColumnPath = pathOf(*columns)
 
     public fun SingleColumn<*>.addPath(columnPath: ColumnPath): ColumnPath
 
-    public operator fun SingleColumn<*>.plus(column: String): List<String> = addPath(listOf(column))
+    public operator fun SingleColumn<*>.plus(column: String): ColumnPath = addPath(pathOf(column))
 }
 
 internal class MoveReceiver<T>(df: DataFrame<T>) : DataFrameReceiver<T>(df, false), DataFrameForMove<T> {
@@ -56,7 +56,7 @@ internal class MoveReceiver<T>(df: DataFrame<T>) : DataFrameReceiver<T>(df, fals
     }
 }
 
-public fun <T, C> MoveColsClause<T, C>.under(parentPath: DataFrameForMove<T>.(ColumnWithPath<C>) -> List<String>): DataFrame<T> {
+public fun <T, C> MoveColsClause<T, C>.under(parentPath: DataFrameForMove<T>.(ColumnWithPath<C>) -> ColumnPath): DataFrame<T> {
     val receiver = MoveReceiver(df)
     val columnsToInsert = removed.map {
         val col = it.column
@@ -68,7 +68,7 @@ public fun <T, C> MoveColsClause<T, C>.under(parentPath: DataFrameForMove<T>.(Co
 public fun <T, C> MoveColsClause<T, C>.toTop(
     groupNameExpression: DataFrameForMove<T>.(ColumnWithPath<C>) -> String = { it.name() }
 ): DataFrame<T> =
-    into { listOf(groupNameExpression(it)) }
+    into { pathOf(groupNameExpression(it)) }
 
 public fun <T, C> MoveColsClause<T, C>.intoIndexed(
     newPathExpression: DataFrameForMove<T>.(ColumnWithPath<C>, Int) -> ColumnPath
@@ -88,10 +88,10 @@ public fun <T, C> MoveColsClause<T, C>.into(newPathExpression: DataFrameForMove<
     return df.insert(columnsToInsert)
 }
 
-public fun <T, C> MoveColsClause<T, C>.into(vararg path: String): DataFrame<T> = into(path.toList())
+public fun <T, C> MoveColsClause<T, C>.into(vararg path: String): DataFrame<T> = into(path.toColumnPath())
 public fun <T, C> MoveColsClause<T, C>.into(path: ColumnPath): DataFrame<T> = into { path }
 
-public fun <T, C> MoveColsClause<T, C>.under(vararg path: String): DataFrame<T> = under(path.toList())
+public fun <T, C> MoveColsClause<T, C>.under(vararg path: String): DataFrame<T> = under(path.toColumnPath())
 public fun <T, C> MoveColsClause<T, C>.under(path: ColumnPath): DataFrame<T> = under { path }
 public fun <T, C> MoveColsClause<T, C>.under(groupRef: MapColumnReference): DataFrame<T> = under(groupRef.path())
 

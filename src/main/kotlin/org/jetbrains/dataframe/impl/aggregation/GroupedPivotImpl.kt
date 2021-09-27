@@ -4,13 +4,14 @@ import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.aggregation.PivotAggregateBody
 import org.jetbrains.dataframe.impl.aggregation.receivers.AggregateBodyInternal
 import org.jetbrains.dataframe.impl.columns.toColumns
+import org.jetbrains.dataframe.impl.emptyPath
 
 internal data class GroupedPivotImpl<T>(
     internal val df: GroupedDataFrame<*, T>,
     internal val columns: ColumnsSelector<T, *>,
     internal val groupValues: Boolean = false,
     internal val default: Any? = null,
-    internal val groupPath: ColumnPath = emptyList()
+    internal val groupPath: ColumnPath = emptyPath()
 ) : GroupedPivotAggregations<T>, AggregatableInternal<T> {
     override fun <R> aggregate(body: PivotAggregateBody<T, R>): DataFrame<T> {
         return df.aggregate {

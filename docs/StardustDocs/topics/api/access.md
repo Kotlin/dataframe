@@ -67,6 +67,10 @@ df.skipLast(3)
 ```kotlin
 df.filter { age > 20 }
 ```
+<!---docs.api.Access.getRowsByCondition_accessors-->
+```kotlin
+df.filter { age > 20 }
+```
 <!---END-->
 #### without nulls
 <!---docs.api.Access.dropNulls_properties-->

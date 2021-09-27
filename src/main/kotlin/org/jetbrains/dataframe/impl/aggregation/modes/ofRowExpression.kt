@@ -5,7 +5,6 @@ import org.jetbrains.dataframe.columns.DataColumn
 import org.jetbrains.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.dataframe.impl.emptyPath
-import org.jetbrains.dataframe.impl.pathOf
 
 @PublishedApi
 internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(

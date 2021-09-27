@@ -33,10 +33,13 @@ public interface DataRow<out T> : DataRowBase<T> {
     public operator fun <R> get(columns: List<ColumnReference<R>>): List<R> = columns.map { get(it) }
     public operator fun <R> get(property: KProperty<R>): R = get(property.name) as R
     public operator fun <R> ColumnReference<R>.invoke(): R = get(this)
-    public operator fun <R> String.invoke(): R = this@DataRow[this] as R
+    public operator fun <R> String.invoke(): R = this@DataRow.get(this) as R
+    public operator fun <R> ColumnPath.invoke(): R = get(this) as R
+    public operator fun String.get(vararg path: String): ColumnPath = ColumnPath(listOf(this) + path)
 
-    public operator fun get(first: Column, vararg other: Column): DataRow<T> = owner.select(listOf(first) + other)[index]
-    public operator fun get(first: String, vararg other: String): DataRow<T> = owner.select(listOf(first) + other)[index]
+    public operator fun get(first: Column, vararg other: Column): DataRow<T> = owner.get(first, *other)[index]
+    public operator fun get(first: String, vararg other: String): DataRow<T> = owner.get(first, *other)[index]
+    public operator fun <R> get(path: ColumnPath): R = owner.get(path)[index] as R
 
     public fun neighbours(relativeIndices: Iterable<Int>): Sequence<DataRow<T>> = relativeIndices.asSequence().mapNotNull { getRow(index + it) }
 

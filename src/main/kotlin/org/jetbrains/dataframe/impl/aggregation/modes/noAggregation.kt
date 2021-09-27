@@ -5,6 +5,7 @@ import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.GroupByAggregations
 import org.jetbrains.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.dataframe.impl.aggregation.receivers.internal
+import org.jetbrains.dataframe.pathOf
 
 @PublishedApi
 internal fun <T, R> GroupByAggregations<T>.aggregateValue(
@@ -12,5 +13,5 @@ internal fun <T, R> GroupByAggregations<T>.aggregateValue(
     body: AggregateBody<T, R>
 ): DataFrame<T> = aggregateInternal {
     val value = body.internal()(this)
-    yield(listOf(resultName), value)
+    yield(pathOf(resultName), value)
 }

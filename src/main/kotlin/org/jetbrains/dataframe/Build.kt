@@ -126,7 +126,7 @@ public fun <T> Iterable<Pair<ColumnPath, AnyColumn>>.toDataFrame(): DataFrame<T>
                     columns.size - 1
                 }
                 val list = columnGroups[index]!!
-                list.add(path.subList(1, path.size) to col)
+                list.add(path.drop(1) to col)
             }
         }
     }
@@ -223,5 +223,5 @@ public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrame(): AnyFrame {
 }
 
 public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrame(): AnyFrame {
-    return map { listOf(it.first) to guessColumnType(it.first, it.second.asList()) }.toDataFrame<Unit>()
+    return map { ColumnPath(it.first) to guessColumnType(it.first, it.second.asList()) }.toDataFrame<Unit>()
 }

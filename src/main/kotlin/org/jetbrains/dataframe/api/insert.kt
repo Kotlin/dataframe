@@ -28,7 +28,7 @@ public fun <T> InsertClause<T>.after(selector: ColumnSelector<T, *>): DataFrame<
 public fun <T> InsertClause<T>.at(position: Int): DataFrame<T> = df.add(column).move(column).to(position)
 
 public fun <T> InsertClause<T>.after(path: ColumnPath): DataFrame<T> {
-    val colPath = path.removeAt(path.size - 1) + column.name()
+    val colPath = ColumnPath(path.removeAt(path.size - 1) + column.name())
     return df.insert(colPath, column).move(colPath).after(path)
 }
 

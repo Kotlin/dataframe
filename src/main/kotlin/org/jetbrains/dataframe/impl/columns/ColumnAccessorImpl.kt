@@ -7,6 +7,7 @@ import org.jetbrains.dataframe.columns.ColumnAccessor
 import org.jetbrains.dataframe.columns.ColumnReference
 import org.jetbrains.dataframe.columns.ColumnWithPath
 import org.jetbrains.dataframe.isGroup
+import org.jetbrains.dataframe.toColumnPath
 
 internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
 
@@ -14,7 +15,7 @@ internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
 
     override fun path() = path
 
-    constructor(vararg path: String) : this(path.toList())
+    constructor(vararg path: String) : this(path.toColumnPath())
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? {
         var df = context.df

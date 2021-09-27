@@ -79,10 +79,7 @@ public fun <T> Iterable<T>.asList(): List<T> = when (this) {
 internal fun <T> Iterable<T>.anyNull() = any { it == null }
 
 @PublishedApi
-internal fun emptyPath(): ColumnPath = emptyList()
-
-@PublishedApi
-internal fun pathOf(name: String): ColumnPath = listOf(name)
+internal fun emptyPath(): ColumnPath = ColumnPath(emptyList())
 
 @PublishedApi
 internal fun <T : Number> KClass<T>.zero(): T = when (this) {
