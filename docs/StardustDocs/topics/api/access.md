@@ -2,7 +2,7 @@
 
 ## Access Data
 
-This section describes various ways to get a piece of data from `DataFrame`
+This section describes various ways to get a piece of data out from `DataFrame`
 ### Get single column
 #### by column name
 <!---docs.api.Access.getColumnByName_strings-->

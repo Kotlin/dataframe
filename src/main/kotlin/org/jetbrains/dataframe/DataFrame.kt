@@ -190,9 +190,8 @@ public interface DataFrame<out T> : DataFrameAggregations<T> {
     public fun lastOrNull(predicate: RowFilter<T>): DataRow<T>? = backwardIterable().firstOrNull { predicate(it, it) }
     public fun take(numRows: Int): DataFrame<T> = getRows(0 until numRows)
     public fun drop(numRows: Int): DataFrame<T> = getRows(numRows until nrow())
-    public fun takeLast(numRows: Int): DataFrame<T> = getRows(nrow() - numRows until nrow())
-    public fun skip(numRows: Int): DataFrame<T> = takeLast(nrow() - numRows)
-    public fun skipLast(numRows: Int): DataFrame<T> = take(nrow() - numRows)
+    public fun takeLast(numRows: Int): DataFrame<T> = drop(nrow() - numRows)
+    public fun dropLast(numRows: Int): DataFrame<T> = take(nrow() - numRows)
     public fun head(numRows: Int = 5): DataFrame<T> = take(numRows)
     public fun tail(numRows: Int = 5): DataFrame<T> = takeLast(numRows)
     public fun shuffled(): DataFrame<T> = getRows((0 until nrow()).shuffled())
