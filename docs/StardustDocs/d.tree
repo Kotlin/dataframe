@@ -15,6 +15,6 @@
         <toc-element id="analyze.md"  show-structure-depth="3"/>
         <toc-element id="modify.md"  show-structure-depth="3"/>
         <toc-element id="write.md"  show-structure-depth="3"/>
-        <toc-element id="ColumnSelectors.md"  show-structure-depth="3"/>
+        <toc-element id="columnSelectors.md"  show-structure-depth="3"/>
     </toc-element>
 </product-profile>
