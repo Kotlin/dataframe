@@ -207,7 +207,7 @@ Removes columns from `DataFrame`
 df.remove { columns }
 df - { columns }
 ```
-See [Column Selectors](#column-selectors) for column selection syntax
+See [Column Selectors](columnSelectors.md) for column selection syntax
 ### convert
 Changes the type of columns. Supports automatic type conversions between value types `Int`, `String`, `Double`, `Long`, `Short`, `Float`,`BigDecimal`, 'LocalDateTime', 'LocalDate', 'LocalTime'
 ```kotlin
@@ -334,7 +334,7 @@ df.move { columns }.toLeft()
 df.move { columns }.toRight()
 df.move { columns }.after { column }
 ```
-See [Column Selectors](#column-selectors) for column selection syntax.
+See [Column Selectors](columnSelectors.md) for column selection syntax.
 
 Columns in `DataFrame` can be ordered hierarchically and form a tree structure. Therefore column can be addressed by `ColumnPath` that represents a list of column names.
 
