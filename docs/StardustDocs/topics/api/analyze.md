@@ -12,6 +12,11 @@ Returns number of columns in `DataFrame`
 ```kotlin
 df.ncol()
 ```
+### count
+Returns the number of rows matching the given predicate
+```kotlin
+df.count { rowExpression }
+```
 ### sum
 Computes sum of expressions evaluated for every `DataRow` in `DataFrame`
 ```kotlin
@@ -24,7 +29,7 @@ df.sum { rowExpression }
 
 ## Aggregation
 
-`GroupedDataFrame` is any `DataFrame` with one selected [`FrameColumn`](#Columns.md#framecolumn) that is interpreted as data groups
+`GroupedDataFrame` is any `DataFrame` with one selected [`FrameColumn`](#columns.md#framecolumn) that is interpreted as data groups
 So any `DataFrame` with `FrameColumn` can be converted to `GroupedDataFrame`:
 ```kotlin
 val files by column("input1.csv", "input2.csv", "input3.csv") // create column of file names 
