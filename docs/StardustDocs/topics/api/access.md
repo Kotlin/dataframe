@@ -5,6 +5,7 @@ This section describes various ways to get a piece of data out from `DataFrame`
 ## Basics
 ### Get column
 #### by column name
+
 <tabs>
 <tab title="Properties">
 <!---FUN getColumnByName_properties-->
@@ -16,9 +17,9 @@ df.name.lastName
 </tab><tab title="Accessors">
 <!---FUN getColumnByName_accessors-->
 ```kotlin
-val age by column<Int>()
+val age by column&lt;Int&gt;()
 val name by columnGroup()
-val lastName by column<String>(name)
+val lastName by column&lt;String&gt;(name)
 df[age]
 df[lastName]
 ```
@@ -93,9 +94,9 @@ df.filter { age > 18 && name.firstName.startsWith("A") }
 </tab><tab title="Properties">
 <!---FUN getRowsByCondition_accessors-->
 ```kotlin
-val age by column<Int>()
+val age by column&lt;Int&gt;()
 val name by columnGroup()
-val firstName by column<String>(name)
+val firstName by column&lt;String&gt;(name)
 
 df.filter { age() > 18 && firstName().startsWith("A") }
 // or
@@ -105,7 +106,7 @@ df.filter { it[age] > 18 && it[firstName].startsWith("A") }
 </tab><tab title="Strings">
 <!---FUN getRowsByCondition_strings-->
 ```kotlin
-df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }.nrow shouldBe 1
+df.filter { "age"&lt;Int&gt;() &gt; 18 && "name"["firstName"]&lt;String&gt;().startsWith("A") }.nrow shouldBe 1
 ```
 <!---END-->
 </tab>
