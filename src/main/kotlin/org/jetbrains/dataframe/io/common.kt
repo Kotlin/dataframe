@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe.io
 
+import com.github.kittinunf.fuel.httpGet
 import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.columns.guessColumnType
 import java.io.IOException
@@ -12,9 +13,9 @@ internal fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFr
         return body(stream)
     } catch (e: IOException) {
         if (e.message?.startsWith("Server returned HTTP response code") == true) {
-            val response = khttp.get(url.toString())
+            val (_, response, _) = url.toString().httpGet().responseString()
             try {
-                return DataFrame.readJsonStr(response.text)
+                return DataFrame.readJsonStr(response.data.decodeToString())
             } catch (e2: Exception) {
                 throw e
             }
