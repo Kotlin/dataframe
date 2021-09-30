@@ -7,18 +7,19 @@ This section describes various ways to get a piece of data out from `DataFrame`
 ### Get column
 Get single column by column name:
 
+#### End test
+
+<!---FUN getColumnByName-->
 <tabs>
 <tab title="Properties">
-<!---FUN getColumnByName_properties-->
 
 ```kotlin
 df.age
 df.name.lastName
 ```
+</tab>
 
-<!---END-->
-</tab><tab title="Accessors">
-<!---FUN getColumnByName_accessors-->
+<tab title="Accessors">
 
 ```kotlin
 val age by column<Int>()
@@ -28,19 +29,19 @@ val lastName by column<String>(name)
 df[age]
 df[lastName]
 ```
-
-<!---END-->
 </tab>
+
 <tab title="Strings">
-<!---FUN getColumnByName_strings-->
 
 ```kotlin
 df["age"]
 df["name"]["firstName"]
 ```
+</tab>
+</tabs>
 
 <!---END-->
-</tab></tabs>
+
 Get single column by index (starting from 0):
 <!---FUN getColumnByIndex-->
 
@@ -68,28 +69,56 @@ df[2]
 
 <!---END-->
 Get single row by [condition](rowExpressions.md):
-<!---FUN getRowByCondition_properties-->
+<!---FUN getRowByCondition-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
 df.single { age == 45 }
 ```
+</tab>
+
+<tab title="Accessors">
+
+```kotlin
+val age by column<Int>()
+
+df.single { age() == 45 }
+```
+</tab>
+
+<tab title="Strings">
+
+```kotlin
+df.single { "age"<Int>() == 45 }
+```
+</tab>
+</tabs>
 
 <!---END-->
 ### Get cell
-<!---FUN getCell_strings-->
+<!---FUN getCell-->
+<tabs>
+<tab title="Strings">
 
 ```kotlin
 df["age"][1]
 df[1]["age"]
 ```
+</tab>
+</tabs>
 
 <!---END-->
 ### Get several columns
-<!---FUN getColumnsByName_strings-->
+<!---FUN getColumnsByName-->
+<tabs>
+<tab title="Strings">
 
 ```kotlin
 df["age", "weight"]
 ```
+</tab>
+</tabs>
 
 <!---END-->
 ### Get several rows
@@ -107,17 +136,16 @@ df.dropLast(3)
 
 <!---END-->
 #### by condition
+<!---FUN getRowsByCondition-->
 <tabs>
 <tab title="Properties">
-<!---FUN getRowsByCondition_properties-->
 
 ```kotlin
 df.filter { age > 18 && name.firstName.startsWith("A") }
 ```
+</tab>
 
-<!---END-->
-</tab><tab title="Properties">
-<!---FUN getRowsByCondition_accessors-->
+<tab title="Accessors">
 
 ```kotlin
 val age by column<Int>()
@@ -128,18 +156,17 @@ df.filter { age() > 18 && firstName().startsWith("A") }
 // or
 df.filter { it[age] > 18 && it[firstName].startsWith("A") }
 ```
+</tab>
 
-<!---END-->
-</tab><tab title="Strings">
-<!---FUN getRowsByCondition_strings-->
+<tab title="Strings">
 
 ```kotlin
 df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }.nrow shouldBe 1
 ```
-
-<!---END-->
 </tab>
 </tabs>
+
+<!---END-->
 #### without nulls
 <!---FUN dropNulls_properties-->
 
