@@ -20,7 +20,7 @@ col(index) // column by index
 column.rename("newName") // column with a new name
 ```
 </tab>
-<tab title="Column defenitions">
+<tab title="Column definitions">
 
 ``` kotlin 
 column // column by accessor
@@ -46,7 +46,7 @@ column.rename("newName") // column with a new name
 
 ```kotlin
 columnSet1 and columnSet2 // union of column sets
-cols(index1, ..., indexN) // columns by indices
+cols(index1, index2, indexN) // columns by indices
 cols(index1..index2) // columns by range of indices
 cols { condition } // columns by condition
 colsOf<Type>() // columns of specific type
@@ -99,3 +99,9 @@ df.select { fullName[firstName] }
 df.select { fullName.cols(middleName, lastName) }
 df.select { fullName.cols().drop(1) }
 ```
+# Column conditions
+When one or several columns are selected based no condition, the following column properties are available:
+* name
+* path
+* type
+* hasNulls

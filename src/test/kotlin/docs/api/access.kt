@@ -85,6 +85,7 @@ class Access {
         val age by column<Int>()
         val name by columnGroup()
         val lastName by column<String>(name)
+
         df[age]
         df[lastName]
         // SampleEnd
@@ -115,7 +116,23 @@ class Access {
     @Test
     fun getRowByCondition_properties() {
         // SampleStart
-        df.single { age > 42 }
+        df.single { age == 45 }
+        // SampleEnd
+    }
+
+    @Test
+    fun getRowByCondition_accessors() {
+        // SampleStart
+        val age by column<Int>()
+
+        df.single { age() == 45 }
+        // SampleEnd
+    }
+
+    @Test
+    fun getRowByCondition_strings() {
+        // SampleStart
+        df.single { "age"<Int>() == 45 }
         // SampleEnd
     }
 

@@ -5,7 +5,7 @@
 This section describes various ways to get a piece of data out from `DataFrame`
 ## Basics
 ### Get column
-#### by column name
+Get single column by column name:
 
 <tabs>
 <tab title="Properties">
@@ -21,9 +21,10 @@ df.name.lastName
 <!---FUN getColumnByName_accessors-->
 
 ```kotlin
-val age by column&lt;Int&gt;()
+val age by column<Int>()
 val name by columnGroup()
-val lastName by column&lt;String&gt;(name)
+val lastName by column<String>(name)
+
 df[age]
 df[lastName]
 ```
@@ -40,7 +41,7 @@ df["name"]["firstName"]
 
 <!---END-->
 </tab></tabs>
-#### by column index
+Get single column by index (starting from 0):
 <!---FUN getColumnByIndex-->
 
 ```kotlin
@@ -49,7 +50,7 @@ df.col(0).asGroup().col(1)
 ```
 
 <!---END-->
-#### by column condition
+Get single column by [condition](columnSelectors.md#column-conditions):
 <!---FUN getColumnByCondition-->
 
 ```kotlin
@@ -58,7 +59,7 @@ df.col { it.isNumber() && it.hasNulls() }
 
 <!---END-->
 ### Get row
-#### by row index
+Get single row by index (starting from 0):
 <!---FUN getRowByIndex-->
 
 ```kotlin
@@ -66,11 +67,11 @@ df[2]
 ```
 
 <!---END-->
-#### by row condition
+Get single row by [condition](rowExpressions.md):
 <!---FUN getRowByCondition_properties-->
 
 ```kotlin
-df.single { age > 42 }
+df.single { age == 45 }
 ```
 
 <!---END-->
@@ -119,7 +120,7 @@ df.filter { age > 18 && name.firstName.startsWith("A") }
 <!---FUN getRowsByCondition_accessors-->
 
 ```kotlin
-val age by column&lt;Int&gt;()
+val age by column<Int>()
 val name by columnGroup()
 val firstName by column<String>(name)
 
