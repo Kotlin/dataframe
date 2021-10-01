@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
+import io.kotest.assertions.throwables.shouldNotThrow
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.flatten
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
@@ -85,5 +87,13 @@ class MoveTests {
         val selected = grouped.getColumnsWithPaths { it["a"] }
         val actual = grouped.getColumnsWithPaths { selected.map { it.dfs() }.toColumnSet() }
         actual.map { it.path.joinToString(".") } shouldBe listOf("a.b", "a.c.d")
+    }
+
+    @Test
+    fun `move after last`() {
+        val df = dataFrameOf("1", "2")(1, 2)
+        shouldNotThrowAny {
+            df.move("1").after("2") shouldBe dataFrameOf("2", "1")(2, 1)
+        }
     }
 }

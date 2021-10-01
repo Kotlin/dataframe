@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.person
 
+import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.doubles.ToleranceMatcher
 import io.kotest.matchers.should
@@ -1474,6 +1475,13 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun splitLists() {
+        val df = dataFrameOf("lists")(listOf(1, 2), listOf(3)).explode("lists")
+        // Current behaviour is probably not a bug, but could be confusing
+        df shouldBe dataFrameOf("lists")(1, 2, 3)
+    }
+
+    @Test
     fun splitUnequalLists() {
         val values by columnOf(1, 2, 3, 4)
         val list1 by columnOf(manyOf(1, 2, 3), manyOf(), manyOf(1, 2), null)
@@ -1774,6 +1782,16 @@ class DataFrameTests : BaseTest() {
     @Test
     fun sortByDescDesc() {
         typed.sortByDesc { name.desc and age } shouldBe typed.sortBy { name and age.desc }
+    }
+
+    @Test
+    fun `create values of wrong type for column by column reference`() {
+        val col2 by column<Int>()
+        val df = dataFrameOf("col1")(1)
+        val df1 = df.add(col2) { "dsf" } // How is this possible? :(
+        shouldNotThrow<ClassCastException> {
+            df1[col2].map { it * 2 }
+        }
     }
 
     @Test
