@@ -3,7 +3,7 @@
 Note that all update operations return a new instance of `DataFrame`
 ## update
 Changes values in some cells
-```
+```kotlin
 df.update { columns }
    [.where { filter } | .at(rowIndices) | .at(rowRange) ] // filter cells to be updated 
     .with { valueExpression } | .withNull() | .notNull { valueExpression }
@@ -22,7 +22,7 @@ df.update { cases }.with { it.toDouble() / population * 100 }
 ```
 ## fillNulls
 Replaces `null` values with expression. Equivalent to
-```
+```kotlin
 update { columns }.where { it == null }
 ```
 Example
@@ -182,7 +182,7 @@ Adds new column to `DataFrame`
 ```kotlin
 add(columnName) { rowExpression }
 ```
-See [row expressions](rowExpressions.md)
+See [row expressions](rows.md#row-expressions)
 ```kotlin
 df.add("year of birth") { 2021 - age }
 df.add("diff") { temperature - (prev?.temperature ?: 0) }
@@ -207,7 +207,7 @@ Removes columns from `DataFrame`
 df.remove { columns }
 df - { columns }
 ```
-See [Column Selectors](columnSelectors.md) for column selection syntax
+See [Column Selectors](columns.md#column-selectors) for column selection syntax
 ### convert
 Changes the type of columns. Supports automatic type conversions between value types `Int`, `String`, `Double`, `Long`, `Short`, `Float`,`BigDecimal`, 'LocalDateTime', 'LocalDate', 'LocalTime'
 ```kotlin
@@ -334,7 +334,7 @@ df.move { columns }.toLeft()
 df.move { columns }.toRight()
 df.move { columns }.after { column }
 ```
-See [Column Selectors](columnSelectors.md) for column selection syntax.
+See [Column Selectors](columns.md) for column selection syntax.
 
 Columns in `DataFrame` can be ordered hierarchically and form a tree structure. Therefore column can be addressed by `ColumnPath` that represents a list of column names.
 

@@ -1,6 +1,7 @@
 [//]: # (title: Create)
 
 ## Columns
+Create column with two `String` values and name 
 <!---docs.Base.CreateColumns.namedColumnWitValues-->
 ```kotlin
 val name by columnOf("Alice", "Bob")
@@ -8,13 +9,14 @@ val col = listOf("Alice", "Bob").toColumn("name")
 ```
 <!---END-->
 ### Column accessors
+`ColumnAccessor`s can be used for typed data access in `DataFrame`. They store name and type of the column, but doesn't have any values.
 <!---docs.Base.CreateColumns.namedColumnWithoutValues-->
 ```kotlin
 val name by column<String>()
 val col = column<String>("name")
 ```
 <!---END-->
-Named column without values is called `ColumnAccessor` and can be used in `DataFrame` operations for typed access to columns:
+`ColumnAccessor` can be used in many `DataFrame` operations, such as
 <!---docs.Base.CreateColumns.colRefForTypedAccess-->
 ```kotlin
 df.filter { it[name].startsWith("A") }
