@@ -5,13 +5,18 @@ import org.jetbrains.dataframe.DataFrameBase
 import org.jetbrains.dataframe.DataRow
 import org.jetbrains.dataframe.DataRowBase
 import org.jetbrains.dataframe.annotations.DataSchema
+import org.jetbrains.dataframe.asIterable
+import org.jetbrains.dataframe.asSequence
+import org.jetbrains.dataframe.chunked
 import org.jetbrains.dataframe.col
 import org.jetbrains.dataframe.column
 import org.jetbrains.dataframe.columnGroup
 import org.jetbrains.dataframe.columnOf
 import org.jetbrains.dataframe.dataFrameOf
+import org.jetbrains.dataframe.drop
 import org.jetbrains.dataframe.dropNulls
 import org.jetbrains.dataframe.filter
+import org.jetbrains.dataframe.forEach
 import org.jetbrains.dataframe.group
 import org.jetbrains.dataframe.impl.columns.asGroup
 import org.jetbrains.dataframe.into
@@ -52,13 +57,22 @@ interface Person {
     val weight: Int?
 }
 
-val org.jetbrains.dataframe.DataFrameBase<Person>.age: org.jetbrains.dataframe.columns.ValueColumn<kotlin.Int> @JvmName("Person_age") get() = this["age"] as org.jetbrains.dataframe.columns.ValueColumn<kotlin.Int>
+val org.jetbrains.dataframe.DataFrameBase<Person>.age: org.jetbrains.dataframe.columns.ValueColumn<kotlin.Int>
+    @JvmName(
+        "Person_age"
+    ) get() = this["age"] as org.jetbrains.dataframe.columns.ValueColumn<kotlin.Int>
 val org.jetbrains.dataframe.DataRowBase<Person>.age: kotlin.Int @JvmName("Person_age") get() = this["age"] as kotlin.Int
-val org.jetbrains.dataframe.DataFrameBase<Person>.city: org.jetbrains.dataframe.columns.DataColumn<kotlin.String?> @JvmName("Person_city") get() = this["city"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.String?>
+val org.jetbrains.dataframe.DataFrameBase<Person>.city: org.jetbrains.dataframe.columns.DataColumn<kotlin.String?>
+    @JvmName(
+        "Person_city"
+    ) get() = this["city"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.String?>
 val org.jetbrains.dataframe.DataRowBase<Person>.city: kotlin.String? @JvmName("Person_city") get() = this["city"] as kotlin.String?
 val org.jetbrains.dataframe.DataFrameBase<Person>.name: org.jetbrains.dataframe.columns.ColumnGroup<Name> @JvmName("Person_name") get() = this["name"] as org.jetbrains.dataframe.columns.ColumnGroup<Name>
 val org.jetbrains.dataframe.DataRowBase<Person>.name: org.jetbrains.dataframe.DataRow<Name> @JvmName("Person_name") get() = this["name"] as org.jetbrains.dataframe.DataRow<Name>
-val org.jetbrains.dataframe.DataFrameBase<Person>.weight: org.jetbrains.dataframe.columns.DataColumn<kotlin.Int?> @JvmName("Person_weight") get() = this["weight"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.Int?>
+val org.jetbrains.dataframe.DataFrameBase<Person>.weight: org.jetbrains.dataframe.columns.DataColumn<kotlin.Int?>
+    @JvmName(
+        "Person_weight"
+    ) get() = this["weight"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.Int?>
 val org.jetbrains.dataframe.DataRowBase<Person>.weight: kotlin.Int? @JvmName("Person_weight") get() = this["weight"] as kotlin.Int?
 
 class Access {
@@ -156,37 +170,49 @@ class Access {
         // SampleStart
         df[0, 3, 4]
         df[1..2]
-        df.take(3)
-        df.drop(2)
-        df.takeLast(3)
-        df.dropLast(3)
         // SampleEnd
     }
 
     @Test
-    fun getRowsByCondition_properties() {
+    fun takeDrop() {
+        // SampleStart
+        df.take(10) // first 10 rows
+        df.takeLast(10) // last 10 rows
+        df.drop(10) // all rows except first 10
+        df.dropLast(10) // all rows except last 10
+        // SampleEnd
+    }
+
+    @Test
+    fun filterDrop_properties() {
         // SampleStart
         df.filter { age > 18 && name.firstName.startsWith("A") }
+        df.drop { weight == null || city == null }
         // SampleEnd
     }
 
     @Test
-    fun getRowsByCondition_accessors() {
+    fun filterDrop_accessors() {
         // SampleStart
         val age by column<Int>()
         val name by columnGroup()
+        val weight by column<Int?>()
+        val city by column<String?>()
         val firstName by column<String>(name)
 
         df.filter { age() > 18 && firstName().startsWith("A") }
+        df.drop { weight() == null || city() == null }
         // or
         df.filter { it[age] > 18 && it[firstName].startsWith("A") }
+        df.drop { it[weight] == null || it[city] == null }
         // SampleEnd
     }
 
     @Test
-    fun getRowsByCondition_strings() {
+    fun filterDrop_strings() {
         // SampleStart
         df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }.nrow shouldBe 1
+        df.drop { it["weight"] == null || it["city"] == null }
         // SampleEnd
     }
 
@@ -282,6 +308,24 @@ class Access {
         // SampleStart
         df.filter { it[name].startsWith("A") }
         df.sortBy { col }
+        // SampleEnd
+    }
+
+    @Test
+    fun iterableApi() {
+        // SampleStart
+        df.forEach { println(it) }
+        df.take(5)
+        df.drop(2)
+        df.chunked(10)
+        // SampleEnd
+    }
+
+    @Test
+    fun asIterableOrSequence() {
+        // SampleStart
+        df.asIterable()
+        df.asSequence()
         // SampleEnd
     }
 }

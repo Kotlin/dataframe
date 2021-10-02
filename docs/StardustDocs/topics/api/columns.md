@@ -1,6 +1,18 @@
-[//]: # (title: Column Selectors)
+[//]: # (title: Columns)
 
-*DataFrame* provides a column selection DSL for selecting arbitrary set of columns.
+## Column types
+
+### FrameColumn
+
+## Column conditions
+When one or several columns are selected based no condition, the following column properties are available:
+* `name: String`
+* `path: ColumnPath`
+* `type: KType`
+* `hasNulls: Boolean`
+
+## Column selectors
+`DataFrame` provides a column selection DSL for selecting arbitrary set of columns.
 Column selectors are used in many operations:
 ```kotlin
 df.select { columns }
@@ -10,7 +22,7 @@ df.gather { columns }.into(keyName, valueName)
 df.move { columns }.under(groupName)
 ```
 
-# Select single column
+### Select single column
 <tabs>
 <tab title="Generated properties">
 ``` kotlin 
@@ -42,7 +54,7 @@ column.rename("newName") // column with a new name
 </tab>
 </tabs>
 
-# Select several columns
+### Select several columns
 
 ```kotlin
 columnSet1 and columnSet2 // union of column sets
@@ -74,7 +86,7 @@ nameContains(text)
 startsWith(prefix)
 endsWith(suffix)
 ```
-# Modify resulting column set
+### Modify resulting column set
 ```kotlin
 columnSet.drop(n) // remove first 'n' columns from column set
 columnSet.take(n) // take first 'n' columns of column sest
@@ -99,9 +111,3 @@ df.select { fullName[firstName] }
 df.select { fullName.cols(middleName, lastName) }
 df.select { fullName.cols().drop(1) }
 ```
-# Column conditions
-When one or several columns are selected based no condition, the following column properties are available:
-* name
-* path
-* type
-* hasNulls

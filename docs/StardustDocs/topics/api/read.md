@@ -1,8 +1,6 @@
 [//]: # (title: Read)
 
-## Read `DataFrame`
-
-DataFrame supports CSV and JSON input formats.
+`DataFrame` supports CSV and JSON input formats.
 Use `read` method to guess input format based on file extension and content
 ```kotlin
 DataFrame.read("input.csv")

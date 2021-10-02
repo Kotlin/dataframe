@@ -7,8 +7,6 @@ This section describes various ways to get a piece of data out from `DataFrame`
 ### Get column
 Get single column by column name:
 
-#### End test
-
 <!---FUN getColumnByName-->
 <tabs>
 <tab title="Properties">
@@ -17,8 +15,8 @@ Get single column by column name:
 df.age
 df.name.lastName
 ```
-</tab>
 
+</tab>
 <tab title="Accessors">
 
 ```kotlin
@@ -29,20 +27,20 @@ val lastName by column<String>(name)
 df[age]
 df[lastName]
 ```
-</tab>
 
+</tab>
 <tab title="Strings">
 
 ```kotlin
 df["age"]
 df["name"]["firstName"]
 ```
-</tab>
-</tabs>
 
+</tab></tabs>
 <!---END-->
 
 Get single column by index (starting from 0):
+
 <!---FUN getColumnByIndex-->
 
 ```kotlin
@@ -51,7 +49,8 @@ df.col(0).asGroup().col(1)
 ```
 
 <!---END-->
-Get single column by [condition](columnSelectors.md#column-conditions):
+Get single column by [condition](columns.md#column-conditions):
+
 <!---FUN getColumnByCondition-->
 
 ```kotlin
@@ -68,7 +67,8 @@ df[2]
 ```
 
 <!---END-->
-Get single row by [condition](rowExpressions.md):
+Get single row by [condition](rows.md#row-conditions):
+
 <!---FUN getRowByCondition-->
 <tabs>
 <tab title="Properties">
@@ -76,8 +76,8 @@ Get single row by [condition](rowExpressions.md):
 ```kotlin
 df.single { age == 45 }
 ```
-</tab>
 
+</tab>
 <tab title="Accessors">
 
 ```kotlin
@@ -85,18 +85,19 @@ val age by column<Int>()
 
 df.single { age() == 45 }
 ```
-</tab>
 
+</tab>
 <tab title="Strings">
 
 ```kotlin
 df.single { "age"<Int>() == 45 }
 ```
-</tab>
-</tabs>
 
+</tab></tabs>
 <!---END-->
+
 ### Get cell
+
 <!---FUN getCell-->
 <tabs>
 <tab title="Strings">
@@ -105,11 +106,11 @@ df.single { "age"<Int>() == 45 }
 df["age"][1]
 df[1]["age"]
 ```
-</tab>
-</tabs>
 
+</tab></tabs>
 <!---END-->
 ### Get several columns
+
 <!---FUN getColumnsByName-->
 <tabs>
 <tab title="Strings">
@@ -117,57 +118,31 @@ df[1]["age"]
 ```kotlin
 df["age", "weight"]
 ```
-</tab>
-</tabs>
 
+</tab></tabs>
 <!---END-->
 ### Get several rows
+
+The following operations return `DataFrame` with a subset of rows from original `DataFrame`.
+
+
 #### by row indices
+
+
 <!---FUN getRowsByIndices-->
 
 ```kotlin
 df[0, 3, 4]
 df[1..2]
-df.take(3)
-df.drop(2)
-df.takeLast(3)
-df.dropLast(3)
 ```
 
 <!---END-->
-#### by condition
-<!---FUN getRowsByCondition-->
-<tabs>
-<tab title="Properties">
+To select several top / bottom rows see [take / takeLast / drop / dropLast](#take--takelast--drop--droplast) operations
 
-```kotlin
-df.filter { age > 18 && name.firstName.startsWith("A") }
-```
-</tab>
+To select several rows based on [row condition](rows.md#row-conditions) see [filter / drop](#filter-drop) operations
 
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-val name by columnGroup()
-val firstName by column<String>(name)
-
-df.filter { age() > 18 && firstName().startsWith("A") }
-// or
-df.filter { it[age] > 18 && it[firstName].startsWith("A") }
-```
-</tab>
-
-<tab title="Strings">
-
-```kotlin
-df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }.nrow shouldBe 1
-```
-</tab>
-</tabs>
-
-<!---END-->
 #### without nulls
+
 <!---FUN dropNulls_properties-->
 
 ```kotlin
@@ -178,7 +153,8 @@ df.dropNulls(whereAllNull = true) { city and weight }
 
 <!---END-->
 ### as iterable
-`DataFrame` can be interpreted as an `Iterable` of `DataRow`. Although `DataFrame` doesn't implement `Iterable` interface, it defines most extension functions available for `Iterable`
+`DataFrame` can be interpreted as an `Iterable<DataRow>`. Although `DataFrame` doesn't implement `Iterable` interface, it defines most extension functions available for `Iterable`
+<!---FUN iterableApi-->
 
 ```kotlin
 df.forEach { println(it) }
@@ -187,39 +163,58 @@ df.drop(2)
 df.chunked(10)
 ```
 
-For compatibility with stdlib, `DataFrame` can be converted to `Iterable`
+<!---END-->
+
+For compatibility with stdlib, `DataFrame` can be converted to `Iterable` or to `Sequence`:
+<!---FUN asIterableOrSequence-->
+
 ```kotlin
 df.asIterable()
-```
-or to `Sequence`
-```kotlin
 df.asSequence()
 ```
-### filter / drop
-{id="filter"}
-Filter rows by row predicate
-`filter` keeps rows that satisfy predicate
-`drop` removes rows that satisfy predicate (reverse to 'filter')
 
-String API:
+<!---END-->
+### filter / drop
+Filter rows by [row condition](rows.md#row-conditions)
+`filter` keeps only rows that satisfy condition
+`drop` removes all rows that satisfy condition
+
+<!---FUN filterDrop-->
+<tabs>
+<tab title="Properties">
+
 ```kotlin
-df.filter { "age"<Int>() > 10 && "name"<String>().startsWith("A") }
+df.filter { age > 18 && name.firstName.startsWith("A") }
+df.drop { weight == null || city == null }
 ```
-Column accessors API:
+
+</tab>
+<tab title="Accessors">
+
 ```kotlin
 val age by column<Int>()
-val name by column<String>()
-df.filter { age() > 10 && name().startsWith("A") }
+val name by columnGroup()
+val weight by column<Int?>()
+val city by column<String?>()
+val firstName by column<String>(name)
+
+df.filter { age() > 18 && firstName().startsWith("A") }
+df.drop { weight() == null || city() == null }
+// or
+df.filter { it[age] > 18 && it[firstName].startsWith("A") }
+df.drop { it[weight] == null || it[city] == null }
 ```
-Extension properties API:
+
+</tab>
+<tab title="Strings">
+
 ```kotlin
-df.filter { age > 10 && name.startsWith("A") }
+df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }.nrow shouldBe 1
+df.drop { it["weight"] == null || it["city"] == null }
 ```
-More examples:
-```kotlin
-df.filter { index % 2 == 0} // keep even rows
-df.filter { age != prev?.age }
-```
+
+</tab></tabs>
+<!---END-->
 
 ### distinct
 Removes duplicate rows
@@ -239,25 +234,27 @@ Resulting `DataFrame` have the same column schema as original `DataFrame`.
 df.distinctBy { age and name }
 ```
 #### distinctByExpr
-Returns `DataFrame` containing only rows having distinct keys returned by given [row expression](rowExpressions.md).
+Returns `DataFrame` containing only rows having distinct keys returned by given [row expression](rows.md#row-expressions).
 Among rows of the original `DataFrame` with equal keys, only the first one will be present in the resulting `DataFrame`.
 The rows in the resulting `DataFrame` are in the same order as they were in the original `DataFrame`.
 Resulting `DataFrame` have the same column schema as original `DataFrame`.
 ```kotlin
 df.distinctByExpr { name.take(3).lowercase() }
 ```
-### take / takeLast
-Returns `DataFrame` containing first/last `n` rows
+### take / takeLast / drop / dropLast
+Returns `DataFrame` containing several top or bottom rows
+
+<!---FUN takeDrop-->
+
 ```kotlin
 df.take(10) // first 10 rows
-df.takeLast(20) // last 20 rows
+df.takeLast(10) // last 10 rows
+df.drop(10) // all rows except first 10
+df.dropLast(10) // all rows except last 10
 ```
-### drop / dropLast
-Returns `DataFrame` containing all rows except first/last `n` rows
-```kotlin
-df.drop(10)
-df.dropLast(20)
-```
+
+<!---END-->
+
 ### dropNulls / dropNa
 `dropNulls` removes rows with `null` values
 ```kotlin

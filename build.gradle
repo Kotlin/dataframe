@@ -13,7 +13,7 @@ plugins {
     id "org.jetbrains.kotlin.jvm" version "$kotlin_version"
     id "org.jetbrains.dataframe.generator"
     id "ru.ileasile.kotlin.publisher" version "$libsPublisherVersion"
-    id("io.github.devcrocod.korro") version "0.0.3-dev-23"
+    id("io.github.devcrocod.korro") version "0.1.1-dev-29"
     id("org.jmailen.kotlinter") version "$ktlint_version"
 }
 
@@ -162,6 +162,24 @@ korro {
     samples = fileTree(rootProject.rootDir) {
         include("src/test/kotlin/docs/*.kt")
         include("src/test/kotlin/docs/api/*.kt")
+    }
+
+    groupSamples {
+
+        beforeSample = "<tab title=\"NAME\">\n"
+        afterSample = "\n</tab>"
+
+        funSuffix("_properties") {
+            replaceText("NAME", "Properties")
+        }
+        funSuffix("_accessors") {
+            replaceText("NAME", "Accessors")
+        }
+        funSuffix("_strings") {
+            replaceText("NAME", "Strings")
+        }
+        beforeGroup = "<tabs>\n"
+        afterGroup = "</tabs>"
     }
 }
 

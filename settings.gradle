@@ -5,3 +5,5 @@ pluginManagement {
 }
 
 rootProject.name = projectName
+
+includeBuild("generator")

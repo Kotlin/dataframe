@@ -245,6 +245,10 @@ public infix fun <T> DataColumn<T>.isMatching(predicate: Predicate<T>): BooleanA
     predicate(this[it])
 }
 
+public infix fun <T> DataColumn<T>.isNotMatching(predicate: Predicate<T>): BooleanArray = BooleanArray(size) {
+    !predicate(this[it])
+}
+
 public fun <T> BaseColumn<T>.first(): T = get(0)
 public fun <T> BaseColumn<T>.firstOrNull(): T? = if (size > 0) first() else null
 public fun <T> BaseColumn<T>.first(predicate: (T) -> Boolean): T = values.first(predicate)
