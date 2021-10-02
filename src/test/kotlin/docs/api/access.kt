@@ -13,6 +13,7 @@ import org.jetbrains.dataframe.column
 import org.jetbrains.dataframe.columnGroup
 import org.jetbrains.dataframe.columnOf
 import org.jetbrains.dataframe.dataFrameOf
+import org.jetbrains.dataframe.distinct
 import org.jetbrains.dataframe.drop
 import org.jetbrains.dataframe.dropNulls
 import org.jetbrains.dataframe.filter
@@ -159,9 +160,44 @@ class Access {
     }
 
     @Test
+    fun getCell_properties() {
+        // SampleStart
+        df.age[1]
+        df[1].age
+        // SampleEnd
+    }
+
+    @Test
+    fun getCell_accessors() {
+        // SampleStart
+        val age by column<String>()
+
+        df[age][1]
+        df[1][age]
+        // SampleEnd
+    }
+
+    @Test
     fun getColumnsByName_strings() {
         // SampleStart
         df["age", "weight"]
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumnsByName_properties() {
+        // SampleStart
+        df.select { age and weight }
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumnsByName_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val weight by column<Int?>()
+        df[age, weight]
+        df.select { age and weight }
         // SampleEnd
     }
 
@@ -326,6 +362,18 @@ class Access {
         // SampleStart
         df.asIterable()
         df.asSequence()
+        // SampleEnd
+    }
+
+    @Test
+    fun distinct() {
+        // SampleStart
+        df.distinct()
+
+        // Select only 'age' and 'name' columns with distinct values
+        df.distinct { age and name }
+        // is equivalent to
+        df.select { age and name }.distinct()
         // SampleEnd
     }
 }

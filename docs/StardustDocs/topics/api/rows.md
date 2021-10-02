@@ -28,8 +28,9 @@ df.filter { index % 5 == 0 }
 Row expression signature is ```DataRow.(DataRow) -> T```, so row values can be accessed with or without ```it``` keyword
 
 ## Row conditions
-Row condition is a row expression that returns `Boolean`. Used in filtration operations.
-Row condition signature is ```DataRow.(DataRow) -> Boolean```
+Row condition is a [row expression](#row-expressions) that returns `Boolean`. Its signature is ```DataRow.(DataRow) -> Boolean```
+
+Row conditions are used in various filtration operations:
 
 ```kotlin
 df.filter { it.name.startsWith("A") }

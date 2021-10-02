@@ -1,7 +1,7 @@
 [//]: # (title: Create)
 
 ## Columns
-Create column with two `String` values and name 
+To create a single column with values and name use `columnOf` or `toColumn` functions: 
 <!---docs.Base.CreateColumns.namedColumnWitValues-->
 ```kotlin
 val name by columnOf("Alice", "Bob")

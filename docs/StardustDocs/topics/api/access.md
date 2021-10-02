@@ -100,6 +100,24 @@ df.single { "age"<Int>() == 45 }
 
 <!---FUN getCell-->
 <tabs>
+<tab title="Properties">
+
+```kotlin
+df.age[1]
+df[1].age
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val age by column<String>()
+
+df[age][1]
+df[1][age]
+```
+
+</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -113,6 +131,23 @@ df[1]["age"]
 
 <!---FUN getColumnsByName-->
 <tabs>
+<tab title="Properties">
+
+```kotlin
+df.select { age and weight }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val age by column<Int>()
+val weight by column<Int?>()
+df[age, weight]
+df.select { age and weight }
+```
+
+</tab>
 <tab title="Strings">
 
 ```kotlin
@@ -218,13 +253,20 @@ df.drop { it["weight"] == null || it["city"] == null }
 
 ### distinct
 Removes duplicate rows
+
+<!---FUN distinct-->
+
 ```kotlin
 df.distinct()
-```
-If columns are specified, `distinct` returns only selected columns (equivalent to `select { columns }.distint()`):
-```kotlin
+
+// Select only 'age' and 'name' columns with distinct values
 df.distinct { age and name }
+// is equivalent to
+df.select { age and name }.distinct()
 ```
+
+<!---END-->
+
 #### distinctBy
 Returns `DataFrame` containing only rows having distinct values in given columns.
 Among rows of the original `DataFrame` with equal keys, only the first one will be present in the resulting `DataFrame`.
