@@ -14,14 +14,19 @@ import org.jetbrains.dataframe.columnGroup
 import org.jetbrains.dataframe.columnOf
 import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.distinct
+import org.jetbrains.dataframe.distinctBy
+import org.jetbrains.dataframe.distinctByExpr
 import org.jetbrains.dataframe.drop
+import org.jetbrains.dataframe.dropNa
 import org.jetbrains.dataframe.dropNulls
 import org.jetbrains.dataframe.filter
 import org.jetbrains.dataframe.forEach
 import org.jetbrains.dataframe.group
+import org.jetbrains.dataframe.groupBy
 import org.jetbrains.dataframe.impl.columns.asGroup
 import org.jetbrains.dataframe.into
 import org.jetbrains.dataframe.isNumber
+import org.jetbrains.dataframe.mapToRows
 import org.jetbrains.dataframe.named
 import org.jetbrains.dataframe.nrow
 import org.jetbrains.dataframe.select
@@ -202,20 +207,15 @@ class Access {
     }
 
     @Test
-    fun getRowsByIndices() {
+    fun getSeveralRows() {
         // SampleStart
         df[0, 3, 4]
         df[1..2]
-        // SampleEnd
-    }
 
-    @Test
-    fun takeDrop() {
-        // SampleStart
-        df.take(10) // first 10 rows
-        df.takeLast(10) // last 10 rows
-        df.drop(10) // all rows except first 10
-        df.dropLast(10) // all rows except last 10
+        df.take(5) // first 5 rows
+        df.takeLast(5) // last 5 rows
+        df.drop(5) // all rows except first 5
+        df.dropLast(5) // all rows except last 5
         // SampleEnd
     }
 
@@ -253,11 +253,24 @@ class Access {
     }
 
     @Test
-    fun dropNulls_properties() {
+    fun dropNulls() {
         // SampleStart
-        df.dropNulls { weight }
-        df.dropNulls { city and weight }
-        df.dropNulls(whereAllNull = true) { city and weight }
+        df.dropNulls() // remove rows with null value in any column
+        df.dropNulls(whereAllNull = true) // remove rows with null values in all columns
+        df.dropNulls { city } // remove rows with null value in 'city' column
+        df.dropNulls { city and weight } // remove rows with null value in 'city' OR 'weight' columns
+        df.dropNulls(whereAllNull = true) { city and weight } // remove rows with null value in 'city' AND 'weight' columns
+        // SampleEnd
+    }
+
+    @Test
+    fun dropNa() {
+        // SampleStart
+        df.dropNa() // remove rows containing null or Double.NaN in any column
+        df.dropNa(whereAllNa = true) // remove rows with null or Double.NaN in all columns
+        df.dropNa { weight } // remove rows where 'weight' is null or Double.NaN
+        df.dropNa { age and weight } // remove rows where either 'age' or 'weight' is null or Double.NaN
+        df.dropNa(whereAllNa = true) { age and weight } // remove rows where both 'age' and 'weight' are null or Double.NaN
         // SampleEnd
     }
 
@@ -369,11 +382,60 @@ class Access {
     fun distinct() {
         // SampleStart
         df.distinct()
+        // SampleEnd
+    }
 
-        // Select only 'age' and 'name' columns with distinct values
-        df.distinct { age and name }
-        // is equivalent to
-        df.select { age and name }.distinct()
+    @Test
+    fun distinctColumns_properties() {
+        // SampleStart
+        df.distinct { age and name } shouldBe df.select { age and name }.distinct()
+        // SampleEnd
+    }
+
+    @Test
+    fun distinctColumns_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val name by columnGroup()
+        df.distinct { age and name } shouldBe df.select { age and name }.distinct()
+        // SampleEnd
+    }
+
+    @Test
+    fun distinctColumns_strings() {
+        // SampleStart
+        df.distinct("age", "name") shouldBe df.select("age", "name").distinct()
+        // SampleEnd
+    }
+
+    @Test
+    fun distinctBy_properties() {
+        // SampleStart
+        df.distinctBy { age and name } shouldBe df.groupBy { age and name }.mapToRows { group.first() }
+
+        df.distinctByExpr { name.firstName.take(3).lowercase() }
+        // SampleEnd
+    }
+
+    @Test
+    fun distinctBy_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val name by columnGroup()
+        val firstName by column<String>(name)
+
+        df.distinctBy { age and name } shouldBe df.groupBy { age and name }.mapToRows { group.first() }
+
+        df.distinctByExpr { firstName().take(3).lowercase() }
+        // SampleEnd
+    }
+
+    @Test
+    fun distinctBy_strings() {
+        // SampleStart
+        df.distinctBy("age", "name") shouldBe df.groupBy("age", "name").mapToRows { group.first() }
+
+        df.distinctByExpr { "name"["firstName"]<String>().take(3).lowercase() }
         // SampleEnd
     }
 }

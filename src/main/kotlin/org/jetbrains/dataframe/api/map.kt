@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.columns.DataColumn
+import org.jetbrains.dataframe.columns.FrameColumn
 import org.jetbrains.dataframe.columns.name
 import org.jetbrains.dataframe.columns.size
 import org.jetbrains.dataframe.columns.values
@@ -29,9 +30,17 @@ public fun <T, R> DataColumn<T>.map(type: KType?, transform: (T) -> R): DataColu
 
 public fun <T, G, R> GroupedDataFrame<T, G>.mapNotNullGroups(transform: DataFrame<G>.() -> DataFrame<R>?): GroupedDataFrame<T, R> = mapGroups { if (it == null) null else transform(it) }
 
-public fun <T, G, R> GroupedDataFrame<T, G>.map(body: (key: DataRow<T>, group: DataFrame<G>) -> R): List<R> =
-    keys.mapIndexedNotNull { index, row ->
-        val group = groups[index]
-        if (group == null) null
-        else body(row, group)
+public fun <T, G, R> GroupedDataFrame<T, G>.map(body: GroupWithKey<T, G>.(GroupWithKey<T, G>) -> R): List<R> = keys.mapIndexedNotNull { index, row ->
+    val group = groups[index]
+    if (group == null) null
+    else {
+        val g = GroupWithKey(row, group)
+        body(g, g)
     }
+}
+
+public fun <T, G> GroupedDataFrame<T, G>.mapToRows(body: GroupWithKey<T, G>.(GroupWithKey<T, G>) -> DataRow<G>?): DataFrame<G> =
+    map(body).union()
+
+public fun <T, G> GroupedDataFrame<T, G>.mapToFrames(body: GroupWithKey<T, G>.(GroupWithKey<T, G>) -> DataFrame<G>?): FrameColumn<G> =
+    map(body).toFrameColumn(groups.name)

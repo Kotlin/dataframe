@@ -9,21 +9,21 @@ val col = listOf("Alice", "Bob").toColumn("name")
 ```
 <!---END-->
 ### Column accessors
-`ColumnAccessor`s can be used for typed data access in `DataFrame`. They store name and type of the column, but doesn't have any values.
+`ColumnAccessors` can be used for typed data access in `DataFrame`. `ColumnAccessor` stores the name and type of the column, but doesn't contain column values.
 <!---docs.Base.CreateColumns.namedColumnWithoutValues-->
 ```kotlin
 val name by column<String>()
 val col = column<String>("name")
 ```
 <!---END-->
-`ColumnAccessor` can be used in many `DataFrame` operations, such as
+All `DataFrame` operations support typed data access via `ColumnAccessors`:
 <!---docs.Base.CreateColumns.colRefForTypedAccess-->
 ```kotlin
 df.filter { it[name].startsWith("A") }
 df.sortBy { col }
 ```
 <!---END-->
-`ColumnReference` can be converted to `DataColumn` by adding values:
+`ColumnAccessor` can be converted to `DataColumn` by adding values:
 ```kotlin
 val col = name.withValues("Alice", "Bob")
 ```

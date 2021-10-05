@@ -269,7 +269,7 @@ class DataFrameTreeTests : BaseTest() {
         val df2 = modified.move { name and city }.under("nameAndCity")
         val typed2 = df2.typed<GroupedPerson>()
 
-        val expected = modified.typed<Person>().groupBy { name and city }.map { key, group ->
+        val expected = modified.typed<Person>().groupBy { name and city }.map {
             val value = if (key.city == "Moscow") group.age.toMany()
             else group.age[0]
             (key.name to key.city.toString()) to value
