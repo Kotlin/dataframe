@@ -156,19 +156,21 @@ df["age", "weight"]
 
 </tab></tabs>
 <!---END-->
+
 ### Get several rows
 
 The following operations return `DataFrame` with a subset of rows from original `DataFrame`.
 
-
-#### by row indices
-
-
-<!---FUN getRowsByIndices-->
+<!---FUN getSeveralRows-->
 
 ```kotlin
 df[0, 3, 4]
 df[1..2]
+
+df.take(10) // first 10 rows
+df.takeLast(10) // last 10 rows
+df.drop(10) // all rows except first 10
+df.dropLast(10) // all rows except last 10
 ```
 
 <!---END-->
@@ -176,40 +178,7 @@ To select several top / bottom rows see [take / takeLast / drop / dropLast](#tak
 
 To select several rows based on [row condition](rows.md#row-conditions) see [filter / drop](#filter-drop) operations
 
-#### without nulls
-
-<!---FUN dropNulls_properties-->
-
-```kotlin
-df.dropNulls { weight }
-df.dropNulls { city and weight }
-df.dropNulls(whereAllNull = true) { city and weight }
-```
-
-<!---END-->
-### as iterable
-`DataFrame` can be interpreted as an `Iterable<DataRow>`. Although `DataFrame` doesn't implement `Iterable` interface, it defines most extension functions available for `Iterable`
-<!---FUN iterableApi-->
-
-```kotlin
-df.forEach { println(it) }
-df.take(5)
-df.drop(2)
-df.chunked(10)
-```
-
-<!---END-->
-
-For compatibility with stdlib, `DataFrame` can be converted to `Iterable` or to `Sequence`:
-<!---FUN asIterableOrSequence-->
-
-```kotlin
-df.asIterable()
-df.asSequence()
-```
-
-<!---END-->
-### filter / drop
+#### filter / drop
 Filter rows by [row condition](rows.md#row-conditions)
 `filter` keeps only rows that satisfy condition
 `drop` removes all rows that satisfy condition
@@ -251,64 +220,136 @@ df.drop { it["weight"] == null || it["city"] == null }
 </tab></tabs>
 <!---END-->
 
+#### dropNulls / dropNa
+`dropNulls` removes rows with `null` values
+
+<!---FUN dropNulls-->
+
+```kotlin
+df.dropNulls() // remove rows with null value in any column
+df.dropNulls(whereAllNull = true) // remove rows with null values in all columns
+df.dropNulls { city } // remove rows with null value in 'city' column
+df.dropNulls { city and weight } // remove rows with null value in 'city' OR 'weight' columns
+df.dropNulls(whereAllNull = true) { city and weight } // remove rows with null value in 'city' AND 'weight' columns
+```
+
+<!---END-->
+
+If you want to remove not only `null`, but also `Double.NaN` values, use `dropNa` 
+
+<!---FUN dropNa-->
+
+```kotlin
+df.dropNa() // remove rows containing null or Double.NaN in any column
+df.dropNa(whereAllNa = true) // remove rows with null or Double.NaN in all columns
+df.dropNa { weight } // remove rows where 'weight' is null or Double.NaN
+df.dropNa { age and weight } // remove rows where either 'age' or 'weight' is null or Double.NaN
+df.dropNa(whereAllNa = true) { age and weight } // remove rows where both 'age' and 'weight' are null or Double.NaN
+```
+
+<!---END-->
+
 ### distinct
-Removes duplicate rows
+
+Removes duplicate rows.
+The rows in the resulting `DataFrame` are in the same order as they were in the original `DataFrame`.
 
 <!---FUN distinct-->
 
 ```kotlin
 df.distinct()
-
-// Select only 'age' and 'name' columns with distinct values
-df.distinct { age and name }
-// is equivalent to
-df.select { age and name }.distinct()
 ```
 
 <!---END-->
 
-#### distinctBy
-Returns `DataFrame` containing only rows having distinct values in given columns.
-Among rows of the original `DataFrame` with equal keys, only the first one will be present in the resulting `DataFrame`.
-The rows in the resulting `DataFrame` are in the same order as they were in the original `DataFrame`.
-Resulting `DataFrame` have the same column schema as original `DataFrame`.
-```kotlin
-df.distinctBy { age and name }
-```
-#### distinctByExpr
-Returns `DataFrame` containing only rows having distinct keys returned by given [row expression](rows.md#row-expressions).
-Among rows of the original `DataFrame` with equal keys, only the first one will be present in the resulting `DataFrame`.
-The rows in the resulting `DataFrame` are in the same order as they were in the original `DataFrame`.
-Resulting `DataFrame` have the same column schema as original `DataFrame`.
-```kotlin
-df.distinctByExpr { name.take(3).lowercase() }
-```
-### take / takeLast / drop / dropLast
-Returns `DataFrame` containing several top or bottom rows
+If columns are specified, resulting `DataFrame` will have only given columns with distinct values.
 
-<!---FUN takeDrop-->
+<!---FUN distinctColumns-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
-df.take(10) // first 10 rows
-df.takeLast(10) // last 10 rows
-df.drop(10) // all rows except first 10
-df.dropLast(10) // all rows except last 10
+df.distinct { age and name } shouldBe df.select { age and name }.distinct()
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val age by column<Int>()
+val name by columnGroup()
+df.distinct { age and name } shouldBe df.select { age and name }.distinct()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.distinct("age", "name") shouldBe df.select("age", "name").distinct()
+```
+
+</tab></tabs>
+<!---END-->
+
+To keep only the first row for every group of rows, grouped by some condition, use `distinctBy` or `distinctByExpr`
+* `distinctBy` returns `DataFrame` with rows having distinct values in given columns.
+* `distinctByExpr` returns `DataFrame` with rows having distinct values returned by given [row expression](rows.md#row-expressions).
+
+<!---FUN distinctBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.distinctBy { age and name } shouldBe df.groupBy { age and name }.mapToRows { group.first() }
+
+df.distinctByExpr { name.firstName.take(3).lowercase() }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val age by column<Int>()
+val name by columnGroup()
+val firstName by column<String>(name)
+
+df.distinctBy { age and name } shouldBe df.groupBy { age and name }.mapToRows { group.first() }
+
+df.distinctByExpr { firstName().take(3).lowercase() }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.distinctBy("age", "name") shouldBe df.groupBy("age", "name").mapToRows { group.first() }
+
+df.distinctByExpr { "name"["firstName"]<String>().take(3).lowercase() }
+```
+
+</tab></tabs>
+<!---END-->
+
+### as iterable
+`DataFrame` can be interpreted as an `Iterable<DataRow>`. Although `DataFrame` doesn't implement `Iterable` interface, it defines most extension functions available for `Iterable`
+<!---FUN iterableApi-->
+
+```kotlin
+df.forEach { println(it) }
+df.take(5)
+df.drop(2)
+df.chunked(10)
 ```
 
 <!---END-->
 
-### dropNulls / dropNa
-`dropNulls` removes rows with `null` values
+For compatibility with stdlib, `DataFrame` can be converted to `Iterable` or to `Sequence`:
+<!---FUN asIterableOrSequence-->
+
 ```kotlin
-df.dropNulls() // remove rows containing null value in any column
-df.dropNulls(whereAllNull = true) // remove rows with null value in all columns
-df.dropNulls { col1 and col2 } // remove rows with null value in col1 or col2 columns
-df.dropNulls(whereAllNull = true) { col1 and col2 } // remove rows with null value in col1 and col2 columns
+df.asIterable()
+df.asSequence()
 ```
-`dropNa` removes rows with `null` or `Double.NaN` values
-```kotlin
-df.dropNa() // remove rows containing null or Double.NaN in any column
-df.dropNa(whereAllNa = true) // remove rows with null or Double.NaN in all columns
-df.dropNa { col1 and col2 } // remove rows with null or Double.NaN in col1 or col2 columns
-df.dropNa(whereAllNa = true) { col1 and col2 } // remove rows with null or Double.NaN in col1 and col2 columns
-```
+
+<!---END-->
+
