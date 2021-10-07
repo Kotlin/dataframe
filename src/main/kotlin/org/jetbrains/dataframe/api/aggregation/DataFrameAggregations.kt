@@ -31,6 +31,7 @@ public interface DataFrameAggregations<out T> : Aggregatable<T>, DataFrameBase<T
 
     public fun <C : Comparable<C>> minFor(columns: AggregateColumnsSelector<T, C?>): DataRow<T> = Aggregators.min.aggregateFor(this, columns)
     public fun minFor(vararg columns: String): DataRow<T> = minFor { columns.toComparableColumns() }
+    public fun <C : Comparable<C>> minFor(vararg columns: ColumnReference<C?>): DataRow<T> = minFor { columns.toColumns() }
 
     public fun <C : Comparable<C>> min(columns: ColumnsSelector<T, C?>): C = minOrNull(columns)!!
     public fun min(vararg columns: String): Comparable<Any> = minOrNull(*columns)!!
@@ -67,6 +68,8 @@ public interface DataFrameAggregations<out T> : Aggregatable<T>, DataFrameBase<T
     public fun max(): DataRow<T> = maxFor(comparableColumns())
 
     public fun <R : Comparable<R>> maxFor(columns: AggregateColumnsSelector<T, R?>): DataRow<T> = Aggregators.max.aggregateFor(this, columns)
+    public fun maxFor(vararg columns: String): DataRow<T> = maxFor { columns.toComparableColumns() }
+    public fun <C : Comparable<C>> maxFor(vararg columns: ColumnReference<C?>): DataRow<T> = maxFor { columns.toColumns() }
 
     public fun <R : Comparable<R>> max(columns: ColumnsSelector<T, R?>): R = maxOrNull(columns)!!
     public fun max(vararg columns: String): Comparable<Any?> = maxOrNull(*columns)!!
@@ -101,7 +104,7 @@ public interface DataFrameAggregations<out T> : Aggregatable<T>, DataFrameBase<T
 
     public fun sum(): DataRow<T> = sumFor(numberColumns())
 
-    public fun <R : Number> sumFor(columns: AggregateColumnsSelector<T, R>): DataRow<T> = Aggregators.sum.aggregateFor(this, columns)
+    public fun <R : Number> sumFor(columns: AggregateColumnsSelector<T, R?>): DataRow<T> = Aggregators.sum.aggregateFor(this, columns)
     public fun sumFor(vararg columns: String): DataRow<T> = sumFor { columns.toColumnsOf() }
 
     public fun sum(vararg columns: String): Number = sum { columns.toColumnsOf() }
@@ -128,6 +131,25 @@ public interface DataFrameAggregations<out T> : Aggregatable<T>, DataFrameBase<T
     public fun <C : Number> mean(vararg columns: KProperty<C?>, skipNa: Boolean = false): Double = mean(skipNa) { columns.toColumns() }
 
     // endregion
+
+    // region median
+
+    public fun median(): DataRow<T> = medianFor(comparableColumns())
+
+    public fun <C : Comparable<C>> medianFor(columns: AggregateColumnsSelector<T, C?>): DataRow<T> = Aggregators.median.aggregateFor(this, columns)
+    public fun medianFor(vararg columns: String): DataRow<T> = medianFor { columns.toComparableColumns() }
+
+    public fun <C : Comparable<C>> median(columns: ColumnsSelector<T, C?>): C = medianOrNull(columns)!!
+    public fun median(vararg columns: String, skipNa: Boolean = false): Any = median { columns.toComparableColumns() }
+    public fun <C : Comparable<C>> median(vararg columns: ColumnReference<C?>): C = median { columns.toColumns() }
+    public fun <C : Comparable<C>> median(vararg columns: KProperty<C?>): C = median { columns.toColumns() }
+
+    public fun <C : Comparable<C>> medianOrNull(columns: ColumnsSelector<T, C?>): C? = Aggregators.median.aggregateAll(this, columns)
+    public fun medianOrNull(vararg columns: String, skipNa: Boolean = false): Any? = medianOrNull { columns.toComparableColumns() }
+    public fun <C : Comparable<C>> medianOrNull(vararg columns: ColumnReference<C?>): C? = medianOrNull { columns.toColumns() }
+    public fun <C : Comparable<C>> medianOrNull(vararg columns: KProperty<C?>): C? = medianOrNull { columns.toColumns() }
+
+    // endregion
 }
 
 // region inlines
@@ -142,7 +164,14 @@ public inline fun <T, reified D : Number> DataFrame<T>.meanOf(
 public inline fun <T, reified R : Number> DataFrameAggregations<T>.sum(noinline columns: ColumnsSelector<T, R?>): R =
     Aggregators.sum.aggregateAll(this, columns) ?: R::class.zero()
 
-public inline fun <T, reified R : Number> DataFrameAggregations<T>.sumOf(crossinline selector: RowSelector<T, R>): R =
-    rows().sumOf(R::class) { selector(it, it) }
+public inline fun <T, reified R : Number> DataFrameAggregations<T>.sum(vararg columns: ColumnReference<R?>): R = sum { columns.toColumns() }
+
+public inline fun <T, reified R : Number?> DataFrameAggregations<T>.sumOf(crossinline selector: RowSelector<T, R>): R =
+    rows().sumOf(getType<R>()) { selector(it, it) }
+
+public inline fun <T, reified R : Comparable<R>> DataFrameAggregations<T>.medianOf(
+    crossinline selector: RowSelector<T, R?>
+): R? =
+    Aggregators.median.of(this, selector) as R?
 
 // endregion

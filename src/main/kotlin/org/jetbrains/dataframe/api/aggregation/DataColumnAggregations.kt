@@ -2,7 +2,6 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.columns.BaseColumn
 import org.jetbrains.dataframe.columns.DataColumn
-import org.jetbrains.dataframe.columns.typeClass
 import org.jetbrains.dataframe.columns.values
 import org.jetbrains.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.dataframe.impl.aggregation.modes.of
@@ -32,7 +31,11 @@ public fun <T, R : Comparable<R>> DataColumn<T>.maxBy(selector: (T) -> R): T? = 
 
 // region sum
 
-public fun <T : Number> DataColumn<T>.sum(): T = values.sum(typeClass)
+@JvmName("sumT")
+public fun <T : Number> DataColumn<T>.sum(): T = values.sum(type())
+
+@JvmName("sumT?")
+public fun <T : Number> DataColumn<T?>.sum(): T = values.sum(type())
 
 public inline fun <T, reified R : Number> DataColumn<T>.sumOf(crossinline expression: (T) -> R): R? =
     Aggregators.sum.cast<R>().of(this, expression)

@@ -3,11 +3,10 @@ package org.jetbrains.dataframe
 import org.jetbrains.dataframe.columns.*
 import java.math.BigDecimal
 import kotlin.math.sqrt
-import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.KType
 
-public inline fun <reified T : Number> Iterable<T>.std(): Double = std(T::class)
+public inline fun <reified T : Number> Iterable<T>.std(): Double = std(getType<T>())
 
 public inline fun <T, reified D : Number> DataFrame<T>.std(crossinline selector: RowSelector<T, D?>): Double = rows().asSequence().map { selector(it, it) }.filterNotNull().asIterable().std()
 public inline fun <T, reified D : Number> DataFrame<T>.std(col: ColumnReference<D>): Double = get(col).std()
@@ -21,7 +20,7 @@ public fun <T> DataFrame<T>.std(): DataRow<T> {
     }.asDataFrame<T>()[0]
 }
 
-public fun <T : Number> Iterable<T>.std(clazz: KClass<*>): Double = when (clazz) {
+public fun <T : Number> Iterable<T>.std(type: KType): Double = when (type.classifier) {
     Double::class -> (this as Iterable<Double>).std()
     Float::class -> (this as Iterable<Float>).std()
     Int::class, Short::class, Byte::class -> (this as Iterable<Int>).std()
@@ -30,7 +29,7 @@ public fun <T : Number> Iterable<T>.std(clazz: KClass<*>): Double = when (clazz)
     else -> throw IllegalArgumentException()
 }
 
-public fun <T : Number> DataColumn<T?>.std(): Double = (if (hasNulls) values.filterNotNull() else (values as Iterable<T>)).std(type.jvmErasure as KClass<T>)
+public fun <T : Number> DataColumn<T?>.std(): Double = (if (hasNulls) values.filterNotNull() else (values as Iterable<T>)).std(type)
 
 @JvmName("doubleStd")
 public fun Iterable<Double>.std(): Double = stdMean().first

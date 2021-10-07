@@ -3,8 +3,7 @@
 <!---IMPORT docs.api.Access-->
 
 This section describes various ways to get a piece of data out from `DataFrame`
-## Basics
-### Get column
+## Get column
 Get single column by column name:
 
 <!---FUN getColumnByName-->
@@ -22,7 +21,7 @@ df.name.lastName
 ```kotlin
 val age by column<Int>()
 val name by columnGroup()
-val lastName by column<String>(name)
+val lastName by name.column<String>()
 
 df[age]
 df[lastName]
@@ -58,7 +57,7 @@ df.col { it.isNumber() && it.hasNulls() }
 ```
 
 <!---END-->
-### Get row
+## Get row
 Get single row by index (starting from 0):
 <!---FUN getRowByIndex-->
 
@@ -96,6 +95,10 @@ df.single { "age"<Int>() == 45 }
 </tab></tabs>
 <!---END-->
 
+Get single row having min/max value
+
+<!---FUN getRowByMinMax-->
+
 ### Get cell
 
 <!---FUN getCell-->
@@ -127,7 +130,7 @@ df[1]["age"]
 
 </tab></tabs>
 <!---END-->
-### Get several columns
+## Get several columns
 
 <!---FUN getColumnsByName-->
 <tabs>
@@ -157,7 +160,7 @@ df["age", "weight"]
 </tab></tabs>
 <!---END-->
 
-### Get several rows
+## Get several rows
 
 The following operations return `DataFrame` with a subset of rows from original `DataFrame`.
 
@@ -167,10 +170,10 @@ The following operations return `DataFrame` with a subset of rows from original 
 df[0, 3, 4]
 df[1..2]
 
-df.take(10) // first 10 rows
-df.takeLast(10) // last 10 rows
-df.drop(10) // all rows except first 10
-df.dropLast(10) // all rows except last 10
+df.take(5) // first 5 rows
+df.takeLast(5) // last 5 rows
+df.drop(5) // all rows except first 5
+df.dropLast(5) // all rows except last 5
 ```
 
 <!---END-->
@@ -200,7 +203,7 @@ val age by column<Int>()
 val name by columnGroup()
 val weight by column<Int?>()
 val city by column<String?>()
-val firstName by column<String>(name)
+val firstName by name.column<String>()
 
 df.filter { age() > 18 && firstName().startsWith("A") }
 df.drop { weight() == null || city() == null }
@@ -220,7 +223,7 @@ df.drop { it["weight"] == null || it["city"] == null }
 </tab></tabs>
 <!---END-->
 
-#### dropNulls / dropNa
+### dropNulls / dropNa
 `dropNulls` removes rows with `null` values
 
 <!---FUN dropNulls-->
@@ -311,7 +314,7 @@ df.distinctByExpr { name.firstName.take(3).lowercase() }
 ```kotlin
 val age by column<Int>()
 val name by columnGroup()
-val firstName by column<String>(name)
+val firstName by name.column<String>()
 
 df.distinctBy { age and name } shouldBe df.groupBy { age and name }.mapToRows { group.first() }
 
@@ -330,7 +333,8 @@ df.distinctByExpr { "name"["firstName"]<String>().take(3).lowercase() }
 </tab></tabs>
 <!---END-->
 
-### as iterable
+## stdlib interop
+
 `DataFrame` can be interpreted as an `Iterable<DataRow>`. Although `DataFrame` doesn't implement `Iterable` interface, it defines most extension functions available for `Iterable`
 <!---FUN iterableApi-->
 
@@ -343,7 +347,9 @@ df.chunked(10)
 
 <!---END-->
 
-For compatibility with stdlib, `DataFrame` can be converted to `Iterable` or to `Sequence`:
+### asIterable / asSequence
+
+`DataFrame` can be converted to `Iterable` or to `Sequence`:
 <!---FUN asIterableOrSequence-->
 
 ```kotlin

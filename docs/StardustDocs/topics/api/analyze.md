@@ -1,26 +1,298 @@
 [//]: # (title: Analyze)
 
+<!---IMPORT docs.api.Analyze-->
+
 ## Basic statistics
-### nrow
-Returns number of rows in `DataFrame`
+
+<!---FUN basicInfo-->
+
 ```kotlin
-df.nrow()
+df.nrow() // number of rows
+df.ncol() // number of columns
+df.schema() // schema of columns
 ```
-### ncol
-Returns number of columns in `DataFrame`
+
+<!---END-->
+
+To count number of rows that satisfy to [condition](rows.md#row-conditions) use `count`:
+
+<!---FUN count-->
+
 ```kotlin
-df.ncol()
+df.count { age > 15 }
 ```
-### count
-Returns the number of rows matching the given predicate
+
+<!---END-->
+
+### Single column statistics
+
+Sum of values in number column
+
+<!---FUN columnSum-->
+<tabs>
+<tab title="Properties">
+
 ```kotlin
-df.count { rowExpression }
+
 ```
-### sum
-Computes sum of expressions evaluated for every `DataRow` in `DataFrame`
+
+</tab>
+<tab title="Accessors">
+
 ```kotlin
-df.sum { rowExpression }
+
 ```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+
+```
+
+</tab></tabs>
+<!---END-->
+
+Min/max value in comparable column
+
+<!---FUN columnMinMax-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.min { age }
+df.age.min()
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val age by column<Int>()
+
+df.min(age)
+df.min { age }
+df[age].min()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.min("age")
+df["age"].asComparable().min()
+df.getColumn<Int>("age").min()
+```
+
+</tab></tabs>
+<!---END-->
+
+Mean value in number column
+
+<!---FUN columnMean-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.mean { age }
+df.age.mean()
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val age by column<Int>()
+
+df.mean(age)
+df.mean { age }
+df[age].mean()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.mean("age")
+df["age"].asNumbers().mean()
+df.getColumn<Int>("age").mean()
+```
+
+</tab></tabs>
+<!---END-->
+
+Median value in comparable column
+
+<!---FUN columnMedian-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.median { age }
+df.age.median()
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val age by column<Int>()
+
+df.median(age)
+df.median { age }
+df[age].median()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.median("age")
+df["age"].asComparable().median()
+df.getColumn<Int>("age").median()
+```
+
+</tab></tabs>
+<!---END-->
+
+### Several columns statistics
+
+When several columns are specified, statistical operations compute single value across given columns  
+
+<!---FUN multipleColumnsStat-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.min { intCols() }
+df.max { name.firstName and name.lastName }
+df.sum { age and weight }
+df.mean { cols(1, 3).asNumbers() }
+df.median { name.cols().asComparable() }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val name by columnGroup()
+val firstName by name.column<String>()
+val lastName by name.column<String>()
+val age by column<Int>()
+val weight by column<Int?>()
+
+df.min { intCols() }
+
+df.max { firstName and lastName }
+// or
+df.max(firstName, lastName)
+
+df.sum { age and weight }
+// or
+df.sum(age, weight)
+
+df.mean { cols(1, 3).asNumbers() }
+df.median { name.cols().asComparable() }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.min { intCols() }
+
+df.max { "name"["firstName"].asComparable() and "name"["lastName"].asComparable() }
+
+df.sum("age", "weight")
+// or
+df.sum { "age"().asNumbers() and "weight"().asNumbers() }
+
+df.mean { cols(1, 3).asNumbers() }
+df.median { name.cols().asComparable() }
+```
+
+</tab></tabs>
+<!---END-->
+
+If you want to aggregate statistics separately for every column, use operations with `-for` suffix:
+
+<!---FUN columnsFor-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.minFor { intCols() }
+df.maxFor { name.firstName and name.lastName }
+df.sumFor { age and weight }
+df.meanFor { cols(1, 3).asNumbers() }
+df.medianFor { name.cols().asComparable() }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.minFor { intCols() }
+df.maxFor { "name"["firstName"].asComparable() and "name"["lastName"].asComparable() }
+
+df.sumFor("age", "weight")
+// or
+df.sumFor { "age"().asNumbers() and "weight"().asNumbers() }
+
+df.meanFor { cols(1, 3).asNumbers() }
+df.medianFor { name.cols().asComparable() }
+```
+
+</tab></tabs>
+<!---END-->
+
+### Row expression statistics
+
+If you want to compute statistics for some expression evaluated for every row, you should use operations with `-of` suffix:
+
+<!---FUN ofExpressions-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.minOf { 2021 - age }
+df.maxOf { name.firstName.length + name.lastName.length }
+df.sumOf { weight?.let { it - 50} }
+df.meanOf { Math.log(age.toDouble()) }
+df.medianOf { city?.length }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val name by columnGroup()
+val firstName by name.column<String>()
+val lastName by name.column<String>()
+val age by column<Int>()
+val weight by column<Int?>()
+val city by column<String?>()
+
+df.minOf { 2021 - age }
+df.maxOf { firstName().length + lastName().length }
+df.sumOf { weight()?.let { it - 50} }
+df.meanOf { Math.log(age().toDouble()) }
+df.medianOf { city()?.length }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.minOf { 2021 - "age"<Int>() }
+df.maxOf { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length }
+df.sumOf { "weight"<Int?>()?.let { it - 50} }
+df.meanOf { Math.log("age"<Int>().toDouble()) }
+df.medianOf { "city"<String?>()?.length }
+```
+
+</tab></tabs>
+<!---END-->
 
 ## GroupBy
 

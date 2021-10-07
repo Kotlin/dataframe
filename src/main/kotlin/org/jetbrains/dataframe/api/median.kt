@@ -1,31 +1,29 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.columns.ColumnReference
 import org.jetbrains.dataframe.columns.DataColumn
-import kotlin.reflect.KProperty
+import java.math.BigDecimal
+import kotlin.reflect.KType
 
-public inline fun <reified T : Comparable<T>> DataColumn<T?>.median(): Double = asSequence().filterNotNull().asIterable().median()
+public inline fun <reified T : Comparable<T>> DataColumn<T?>.median(): T? = asSequence().filterNotNull().asIterable().median(type())
 
-public inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(col: ColumnReference<D?>): Double = get(col).median()
-public inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(crossinline selector: RowSelector<T, D?>): Double =
-    rows().asSequence().map { selector(it, it) }.filterNotNull().asIterable().median()
-
-public inline fun <T, reified D : Comparable<D>> DataFrame<T>.median(col: KProperty<D?>): Double = get(col).median()
-
-public inline fun <reified T : Comparable<T>> Iterable<T>.median(): Double {
-    val sorted = sorted()
+public inline fun <reified T : Comparable<T>> Iterable<T?>.median(type: KType): T? {
+    val sorted = if (type.isMarkedNullable) filterNotNull().sorted() else (this as Iterable<T>).sorted()
     val size = sorted.size
+    if (size == 0) return null
     val index = size / 2
-    return when (T::class) {
-        Double::class -> if (size % 2 == 0) (sorted[index - 1] as Double + sorted[index] as Double) / 2.0 else sorted[index] as Double
-        Int::class -> if (size % 2 == 0) (sorted[index - 1] as Int + sorted[index] as Int) / 2.0 else (sorted[index] as Int).toDouble()
-        Long::class -> if (size % 2 == 0) (sorted[index - 1] as Long + sorted[index] as Long) / 2.0 else (sorted[index] as Long).toDouble()
-        else -> throw IllegalArgumentException()
+    if (index == 0 || size % 2 == 1) return sorted[index]
+    return when (type.classifier) {
+        Double::class -> ((sorted[index - 1] as Double + sorted[index] as Double) / 2.0) as T
+        Int::class -> ((sorted[index - 1] as Int + sorted[index] as Int) / 2) as T
+        Long::class -> ((sorted[index - 1] as Long + sorted[index] as Long) / 2L) as T
+        Byte::class -> ((sorted[index - 1] as Byte + sorted[index] as Byte) / 2).toByte() as T
+        BigDecimal::class -> ((sorted[index - 1] as BigDecimal + sorted[index] as BigDecimal) / BigDecimal(2)) as T
+        else -> sorted[index - 1]
     }
 }
 
 public inline fun <T, G, reified R : Comparable<R>> GroupedDataFrame<T, G>.median(
     columnName: String = "median",
-    noinline selector: RowSelector<G, R>
+    noinline selector: ColumnsSelector<G, R>
 ): DataFrame<G> =
     aggregate { median(selector) into columnName }

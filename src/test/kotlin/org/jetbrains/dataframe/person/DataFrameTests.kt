@@ -563,7 +563,7 @@ class DataFrameTests : BaseTest() {
             this["name"].toList() shouldBe listOf("Alice", "Bob", "Mark")
             this["n"].toList() shouldBe listOf(2, 2, 3)
             this["old count"].toList() shouldBe listOf(0, 2, 2)
-            this["median age"].toList() shouldBe listOf(17.5, 37.5, 30.0)
+            this["median age"].toList() shouldBe listOf(17, 37, 30)
             this["min age"].toList() shouldBe listOf(15, 30, 20)
             this["oldest origin"].toList() shouldBe listOf(null, "Dubai", "Milan")
             this["youngest origin"].toList() shouldBe listOf("London", "Tokyo", "Moscow")
