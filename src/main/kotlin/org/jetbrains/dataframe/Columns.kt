@@ -148,7 +148,9 @@ public fun <T> column(): ColumnDelegate<T> = ColumnDelegate()
 
 public fun columnGroup(): ColumnDelegate<AnyRow> = column()
 
-public fun columnGroup(parent: MapColumnReference): ColumnDelegate<AnyRow> = column(parent)
+public fun <T> MapColumnReference.column(): ColumnDelegate<T> = ColumnDelegate<T>(this)
+
+public fun columnGroup(parent: MapColumnReference): ColumnDelegate<AnyRow> = parent.column()
 
 public fun frameColumn(): ColumnDelegate<AnyFrame> = column()
 
@@ -161,8 +163,6 @@ public fun <T> frameColumn(name: String): ColumnAccessor<DataFrame<T>> = column(
 public fun <T> columnMany(name: String): ColumnAccessor<Many<T>> = column<Many<T>>(name)
 
 public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
-
-public fun <T> column(parent: MapColumnReference): ColumnDelegate<T> = ColumnDelegate(parent)
 
 public fun <T> column(parent: MapColumnReference, name: String): ColumnAccessor<T> =
     ColumnAccessorImpl(parent.path() + name)
@@ -268,7 +268,38 @@ public inline fun <reified T> AnyCol.hasElementsOfType(): Boolean = hasElementsO
 public inline fun <reified T> AnyCol.isSubtypeOf(): Boolean = isSubtypeOf(getType<T>())
 public inline fun <reified T> AnyCol.isType(): Boolean = type() == getType<T>()
 
+@JvmName("asNumberAny?")
+public fun DataColumn<Any?>.asNumbers(): ValueColumn<Number?> {
+    require(isNumber())
+    return this as ValueColumn<Number?>
+}
+
+@JvmName("asNumberAny")
+public fun DataColumn<Any>.asNumbers(): ValueColumn<Number> {
+    require(isNumber())
+    return this as ValueColumn<Number>
+}
+
+@JvmName("asNumbersAny")
+public fun Columns<Any>.asNumbers(): Columns<Number> = this as Columns<Number>
+
+@JvmName("asNumbersAny?")
+public fun Columns<Any?>.asNumbers(): Columns<Number?> = this as Columns<Number?>
+
+public fun <T> DataColumn<T>.asComparable(): DataColumn<Comparable<T>> {
+    require(isComparable())
+    return this as DataColumn<Comparable<T>>
+}
+
+public fun <T> Columns<T>.asComparable(): Columns<Comparable<T>> = this as Columns<Comparable<T>>
+
+public fun <T> DataColumn<T?>.asNotNullable(): DataColumn<T> {
+    require(!hasNulls())
+    return this as DataColumn<T>
+}
+
 public fun AnyCol.isNumber(): Boolean = hasElementsOfType<Number?>()
+
 public fun AnyCol.isMany(): Boolean = typeClass == Many::class
 public fun AnyCol.typeOfElement(): KType =
     if (isMany()) type.arguments[0].type ?: getType<Any?>()

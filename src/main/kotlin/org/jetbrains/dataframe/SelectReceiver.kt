@@ -71,7 +71,7 @@ public interface SelectReceiver<out T> : DataFrameBase<T> {
     public operator fun <C> List<DataColumn<C>>.get(range: IntRange): Columns<C> = ColumnsList(subList(range.first, range.last + 1))
 
     public operator fun String.invoke(): ColumnAccessor<Any?> = toColumnDef()
-
+    public operator fun String.get(column: String): ColumnAccessor<Any?> = pathOf(this, column).toColumnDef()
     public fun <C> String.cast(): ColumnAccessor<C> = ColumnAccessorImpl(this)
 
     public fun <C> col(property: KProperty<C>): ColumnAccessor<C> = property.toColumnDef()

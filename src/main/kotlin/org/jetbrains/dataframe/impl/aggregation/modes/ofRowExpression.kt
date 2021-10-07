@@ -10,7 +10,7 @@ import org.jetbrains.dataframe.impl.emptyPath
 internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
     values: Iterable<C>,
     noinline transform: (C) -> V
-): R? = aggregate(values.asSequence().map(transform).asIterable(), V::class)
+): R? = aggregate(values.asSequence().map(transform).asIterable(), getType<V>())
 
 @PublishedApi
 internal inline fun <T, reified C, R> Aggregator<*, R>.aggregateOf(

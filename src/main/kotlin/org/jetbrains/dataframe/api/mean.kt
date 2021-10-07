@@ -1,15 +1,15 @@
 package org.jetbrains.dataframe
 
 import java.math.BigDecimal
-import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 @JvmName("meanT?")
-public fun <T : Number> Sequence<T?>.mean(clazz: KClass<*>, skipNa: Boolean = true): Double = filterNotNull().mean(clazz, skipNa)
+public fun <T : Number> Sequence<T?>.mean(type: KType, skipNa: Boolean = true): Double = filterNotNull().mean(type, skipNa)
 
-public fun <T : Number> Iterable<T>.mean(clazz: KClass<*>, skipNaN: Boolean): Double = asSequence().mean(clazz, skipNaN)
+public fun <T : Number> Iterable<T>.mean(type: KType, skipNaN: Boolean): Double = asSequence().mean(type, skipNaN)
 
-public fun <T : Number> Sequence<T>.mean(clazz: KClass<*>, skipNaN: Boolean): Double {
-    return when (clazz) {
+public fun <T : Number> Sequence<T>.mean(type: KType, skipNaN: Boolean): Double {
+    return when (type.classifier) {
         Double::class -> (this as Sequence<Double>).mean(skipNaN)
         Float::class -> (this as Sequence<Float>).mean(skipNaN)
         Int::class -> (this as Sequence<Int>).map { it.toDouble() }.mean(false)

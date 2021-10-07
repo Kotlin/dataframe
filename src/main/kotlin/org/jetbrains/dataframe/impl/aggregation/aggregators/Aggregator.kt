@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.dataframe.columns.DataColumn
-import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 @PublishedApi
 internal interface Aggregator<C, R> {
@@ -14,7 +14,7 @@ internal interface Aggregator<C, R> {
 
     fun aggregate(columns: Iterable<DataColumn<C?>>): R?
 
-    fun aggregate(values: Iterable<C>, clazz: KClass<*>): R?
+    fun aggregate(values: Iterable<C>, type: KType): R?
 
     fun <T> cast() = this as Aggregator<T, T>
 

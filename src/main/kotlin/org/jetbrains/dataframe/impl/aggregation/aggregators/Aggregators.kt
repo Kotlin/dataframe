@@ -1,20 +1,21 @@
 package org.jetbrains.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.dataframe.mean
+import org.jetbrains.dataframe.median
 import org.jetbrains.dataframe.std
 import org.jetbrains.dataframe.sum
-import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 @PublishedApi
 internal object Aggregators {
 
-    private fun <C> preservesType(aggregate: Iterable<C>.() -> C?) =
-        TwoStepAggregator.Factory<C, C>({ values, _ -> aggregate(values) }, aggregate, true)
+    private fun <C> preservesType(aggregate: Iterable<C>.(KType) -> C?) =
+        TwoStepAggregator.Factory<C, C>(aggregate, aggregate, true)
 
-    private fun <C, R> changesType(aggregate1: Iterable<C>.(KClass<*>) -> R, aggregate2: Iterable<R>.() -> R) =
+    private fun <C, R> changesType(aggregate1: Iterable<C>.(KType) -> R, aggregate2: Iterable<R>.(KType) -> R) =
         TwoStepAggregator.Factory(aggregate1, aggregate2, false)
 
-    private fun extendsNumbers(aggregate: Iterable<Number>.(KClass<*>) -> Number?) =
+    private fun extendsNumbers(aggregate: Iterable<Number>.(KType) -> Number?) =
         NumbersAggregator.Factory(aggregate)
 
     private fun <P, C, R> withOption(getAggregator: (P) -> AggregatorProvider<C, R>) =
@@ -26,5 +27,6 @@ internal object Aggregators {
     val mean by withOption<Boolean, Number, Double> { skipNa ->
         changesType({ mean(it, skipNa) }) { mean(skipNa) }
     }
+    val median by preservesType<Comparable<Any?>> { median(it) }
     val sum by extendsNumbers { sum(it) }
 }
