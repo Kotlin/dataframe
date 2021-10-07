@@ -33,21 +33,28 @@ Sum of values in number column
 <tab title="Properties">
 
 ```kotlin
-
+df.sum { weight }
+df.weight.sum()
 ```
 
 </tab>
 <tab title="Accessors">
 
 ```kotlin
+val weight by column<Int?>()
 
+df.sum { weight }
+df.sum(weight)
+df[weight].sum()
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-
+df.sum("weight")
+df["weight"].asNumbers().sum()
+df.getColumn<Int?>("weight").sum()
 ```
 
 </tab></tabs>
@@ -257,7 +264,7 @@ If you want to compute statistics for some expression evaluated for every row, y
 ```kotlin
 df.minOf { 2021 - age }
 df.maxOf { name.firstName.length + name.lastName.length }
-df.sumOf { weight?.let { it - 50} }
+df.sumOf { weight?.let { it - 50 } }
 df.meanOf { Math.log(age.toDouble()) }
 df.medianOf { city?.length }
 ```
@@ -275,7 +282,7 @@ val city by column<String?>()
 
 df.minOf { 2021 - age }
 df.maxOf { firstName().length + lastName().length }
-df.sumOf { weight()?.let { it - 50} }
+df.sumOf { weight()?.let { it - 50 } }
 df.meanOf { Math.log(age().toDouble()) }
 df.medianOf { city()?.length }
 ```
@@ -286,7 +293,7 @@ df.medianOf { city()?.length }
 ```kotlin
 df.minOf { 2021 - "age"<Int>() }
 df.maxOf { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length }
-df.sumOf { "weight"<Int?>()?.let { it - 50} }
+df.sumOf { "weight"<Int?>()?.let { it - 50 } }
 df.meanOf { Math.log("age"<Int>().toDouble()) }
 df.medianOf { "city"<String?>()?.length }
 ```

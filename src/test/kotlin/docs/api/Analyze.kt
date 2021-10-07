@@ -35,24 +35,30 @@ class Analyze : TestBase() {
 
     @Test
     fun columnSum_properties() {
+        // SampleStart
         df.sum { weight }
         df.weight.sum()
+        // SampleEnd
     }
 
     @Test
     fun columnSum_accessors() {
+        // SampleStart
         val weight by column<Int?>()
 
         df.sum { weight }
         df.sum(weight)
         df[weight].sum()
+        // SampleEnd
     }
 
     @Test
     fun columnSum_strings() {
+        // SampleStart
         df.sum("weight")
         df["weight"].asNumbers().sum()
         df.getColumn<Int?>("weight").sum()
+        // SampleEnd
     }
 
     @Test
