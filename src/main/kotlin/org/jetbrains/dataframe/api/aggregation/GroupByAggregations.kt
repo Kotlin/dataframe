@@ -49,11 +49,8 @@ public interface GroupByAggregations<out T> : Aggregatable<T> {
     public fun <C : Comparable<C>> minOf(resultName: String = Aggregators.min.name, selector: RowSelector<T, C>): DataFrame<T> =
         aggregateValue(resultName) { minOfOrNull(selector) }
 
-    public fun <C : Comparable<C>> minBy(selector: ColumnSelector<T, C>): DataFrame<T> =
+    public fun <C : Comparable<C>> minBy(selector: RowSelector<T, C?>): DataFrame<T> =
         aggregateBy { minByOrNull(selector) }
-
-    public fun <C : Comparable<C>> minByExpr(selector: RowSelector<T, C>): DataFrame<T> =
-        aggregateBy { minByExprOrNull(selector) }
 
     // endregion
 
@@ -69,11 +66,8 @@ public interface GroupByAggregations<out T> : Aggregatable<T> {
     public fun <R : Comparable<R>> maxOf(resultName: String = Aggregators.max.name, selector: RowSelector<T, R>): DataFrame<T> =
         aggregateValue(resultName) { maxOfOrNull(selector) }
 
-    public fun <C : Comparable<C>> maxBy(resultName: String = Aggregators.min.name, selector: ColumnSelector<T, C>): DataFrame<T> =
+    public fun <C : Comparable<C>> maxBy(resultName: String = Aggregators.min.name, selector: RowSelector<T, C?>): DataFrame<T> =
         aggregateBy { maxByOrNull(selector) }
-
-    public fun <C : Comparable<C>> maxByExpr(selector: RowSelector<T, C>): DataFrame<T> =
-        aggregateBy { minByExprOrNull(selector) }
 
     // endregion
 

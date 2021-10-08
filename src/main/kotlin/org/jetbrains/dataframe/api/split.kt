@@ -12,9 +12,9 @@ import kotlin.reflect.KType
 public fun <T, C> DataFrame<T>.split(selector: ColumnsSelector<T, C?>): Split<T, C> =
     SplitClause(this, selector)
 
-public fun <T> DataFrame<T>.split(column: String): Split<T, Any> = split { column.toColumnDef() }
+public fun <T> DataFrame<T>.split(column: String): Split<T, Any> = split { column.toColumnAccessor() }
 public fun <T, C> DataFrame<T>.split(column: ColumnReference<C?>): Split<T, C> = split { column }
-public fun <T, C> DataFrame<T>.split(column: KProperty<C?>): Split<T, C> = split { column.toColumnDef() }
+public fun <T, C> DataFrame<T>.split(column: KProperty<C?>): Split<T, C> = split { column.toColumnAccessor() }
 
 public interface Split<out T, out C> {
 

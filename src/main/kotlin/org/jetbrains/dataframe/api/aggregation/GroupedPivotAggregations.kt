@@ -47,9 +47,7 @@ public interface GroupedPivotAggregations<out T> : Aggregatable<T> {
 
     public fun <R : Comparable<R>> minOf(rowExpression: RowSelector<T, R>): DataFrame<T> = aggregate { minOf(rowExpression) }
 
-    public fun <R : Comparable<R>> minBy(column: ColumnSelector<T, R>): DataFrame<T> = aggregate { minBy(column) }
-
-    public fun <R : Comparable<R>> minByExpr(rowExpression: RowSelector<T, R>): DataFrame<T> = aggregate { minByExpr(rowExpression) }
+    public fun <R : Comparable<R>> minBy(rowExpression: RowSelector<T, R>): DataFrame<T> = aggregate { minBy(rowExpression) }
 
     // endregion
 
@@ -64,9 +62,7 @@ public interface GroupedPivotAggregations<out T> : Aggregatable<T> {
 
     public fun <R : Comparable<R>> maxOf(rowExpression: RowSelector<T, R>): DataFrame<T> = aggregate { maxOf(rowExpression) }
 
-    public fun <R : Comparable<R>> maxBy(column: ColumnSelector<T, R>): DataFrame<T> = aggregate { maxBy(column) }
-
-    public fun <R : Comparable<R>> maxByExpr(rowExpression: RowSelector<T, R>): DataFrame<T> = aggregate { maxByExpr(rowExpression) }
+    public fun <R : Comparable<R>> maxBy(rowExpression: RowSelector<T, R>): DataFrame<T> = aggregate { maxBy(rowExpression) }
 
     // endregion
 

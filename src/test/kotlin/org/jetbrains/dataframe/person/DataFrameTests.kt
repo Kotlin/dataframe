@@ -695,11 +695,14 @@ class DataFrameTests : BaseTest() {
 
         typed.dropNulls { weight }.minBy { weight }.check()
         typed.dropNulls { it.weight }.minBy { it.weight }.check()
+        typed.minBy { weight }.check()
 
-        df.dropNulls(weight).minBy { weight }.check()
+        df.dropNulls(weight).minBy(weight).check()
+        df.minBy(weight).check()
 
         df.dropNulls("weight").minBy { int("weight") }.check()
         df.dropNulls("weight").minBy("weight").check()
+        df.minBy("weight").check()
     }
 
     @Test
@@ -712,7 +715,7 @@ class DataFrameTests : BaseTest() {
         typed.maxBy { it.age }.check()
         typed.maxBy(typed.age).check()
 
-        df.maxBy { age }.check()
+        df.maxBy { age() }.check()
         df.maxBy(age).check()
 
         df.maxBy { int("age") }.check()
@@ -1022,7 +1025,8 @@ class DataFrameTests : BaseTest() {
         merged[cityList].sumOf { it.size } shouldBe typed.city.dropNulls().size
         merged[cityList].type() shouldBe getType<Many<String>>()
 
-        val expected = typed.dropNulls { city }.groupBy { name }.aggregate { it.city.toSet() as Set<String> into "city" }
+        val expected =
+            typed.dropNulls { city }.groupBy { name }.aggregate { it.city.toSet() as Set<String> into "city" }
         val actual = merged.update { cityList }.with { it.toSet() }
 
         actual shouldBe expected
@@ -1672,7 +1676,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `render nested data frames to string`() {
-        val rendered = typed.drop(1).groupBy { name }.groups.asIterable().joinToString("\n") { renderValueForStdout(it).truncatedContent }
+        val rendered = typed.drop(1).groupBy { name }.groups.asIterable()
+            .joinToString("\n") { renderValueForStdout(it).truncatedContent }
         rendered shouldBe """
             [2 x 4]
             [3 x 4]
@@ -1746,7 +1751,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `groupBy with map`() {
-        typed.groupBy { name.map { it.lowercase() } }.plain().name.values() shouldBe typed.name.distinct().lowercase().values()
+        typed.groupBy { name.map { it.lowercase() } }.plain().name.values() shouldBe typed.name.distinct().lowercase()
+            .values()
     }
 
     @Test
@@ -1829,7 +1835,8 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `grouped sort by count`() {
         val sorted = typed.groupBy { name }.sortByCount()
-        sorted.plain().name.values() shouldBe typed.rows().groupBy { it.name }.toList().sortedByDescending { it.second.size }.map { it.first }
+        sorted.plain().name.values() shouldBe typed.rows().groupBy { it.name }.toList()
+            .sortedByDescending { it.second.size }.map { it.first }
     }
 
     @Test

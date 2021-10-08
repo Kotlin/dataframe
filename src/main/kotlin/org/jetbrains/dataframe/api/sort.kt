@@ -9,13 +9,13 @@ public interface SortReceiver<out T> : SelectReceiver<T> {
 
     public val <C> Columns<C>.desc: Columns<C> get() = addFlag(SortFlag.Reversed)
     public val String.desc: Columns<Comparable<*>?> get() = cast<Comparable<*>>().desc
-    public val <C> KProperty<C>.desc: Columns<C> get() = toColumnDef().desc
+    public val <C> KProperty<C>.desc: Columns<C> get() = toColumnAccessor().desc
 
     public fun <C> Columns<C?>.nullsLast(flag: Boolean): Columns<C?> = if (flag) addFlag(SortFlag.NullsLast) else this
 
     public val <C> Columns<C?>.nullsLast: Columns<C?> get() = addFlag(SortFlag.NullsLast)
     public val String.nullsLast: Columns<Comparable<*>?> get() = cast<Comparable<*>>().nullsLast
-    public val <C> KProperty<C?>.nullsLast: Columns<C?> get() = toColumnDef().nullsLast
+    public val <C> KProperty<C?>.nullsLast: Columns<C?> get() = toColumnAccessor().nullsLast
 }
 
 public typealias SortColumnsSelector<T, C> = Selector<SortReceiver<T>, Columns<C>>

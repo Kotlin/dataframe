@@ -89,22 +89,22 @@ internal fun <T> Columns<T>.single() = object : SingleColumn<T> {
 }
 
 internal fun Array<out Columns<*>>.toColumns(): Columns<Any?> = ColumnsList(this.asList())
-internal fun Array<out String>.toColumns(): Columns<Any?> = map { it.toColumnDef() }.toColumnSet()
+internal fun Array<out String>.toColumns(): Columns<Any?> = map { it.toColumnAccessor() }.toColumnSet()
 internal fun <C> Array<out String>.toColumnsOf(): Columns<C> = toColumns() as Columns<C>
 internal fun Array<out String>.toComparableColumns() = toColumnsOf<Comparable<Any?>>()
 internal fun String.toComparableColumn() = toColumnOf<Comparable<Any?>>()
 internal fun Array<out String>.toNumberColumns() = toColumnsOf<Number>()
-internal fun Array<out ColumnPath>.toColumns(): Columns<Any?> = map { it.toColumnDef() }.toColumnSet()
+internal fun Array<out ColumnPath>.toColumns(): Columns<Any?> = map { it.toColumnAccessor() }.toColumnSet()
 internal fun <C> Iterable<Columns<C>>.toColumnSet(): Columns<C> = ColumnsList(asList())
 
 @JvmName("toColumnSetC")
 internal fun <C> Iterable<ColumnReference<C>>.toColumnSet(): Columns<C> = ColumnsList(toList())
 
-internal fun <C> Array<out KProperty<C>>.toColumns() = map { it.toColumnDef() }.toColumnSet()
+internal fun <C> Array<out KProperty<C>>.toColumns() = map { it.toColumnAccessor() }.toColumnSet()
 
 @PublishedApi
 internal fun <T> Array<out ColumnReference<T>>.toColumns(): Columns<T> = asIterable().toColumnSet()
-internal fun Iterable<String>.toColumns() = map { it.toColumnDef() }.toColumnSet()
+internal fun Iterable<String>.toColumns() = map { it.toColumnAccessor() }.toColumnSet()
 
 internal fun <T, C> ColumnsSelector<T, C>.toColumns(): Columns<C> = toColumns {
     SelectReceiverImpl(

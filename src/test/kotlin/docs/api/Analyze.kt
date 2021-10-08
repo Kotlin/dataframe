@@ -34,114 +34,50 @@ class Analyze : TestBase() {
     }
 
     @Test
-    fun columnSum_properties() {
+    fun columnStats_properties() {
         // SampleStart
         df.sum { weight }
-        df.weight.sum()
-        // SampleEnd
-    }
-
-    @Test
-    fun columnSum_accessors() {
-        // SampleStart
-        val weight by column<Int?>()
-
-        df.sum { weight }
-        df.sum(weight)
-        df[weight].sum()
-        // SampleEnd
-    }
-
-    @Test
-    fun columnSum_strings() {
-        // SampleStart
-        df.sum("weight")
-        df["weight"].asNumbers().sum()
-        df.getColumn<Int?>("weight").sum()
-        // SampleEnd
-    }
-
-    @Test
-    fun columnMinMax_properties() {
-        // SampleStart
         df.min { age }
-        df.age.min()
-        // SampleEnd
-    }
-
-    @Test
-    fun columnMinMax_accessors() {
-        // SampleStart
-        val age by column<Int>()
-
-        df.min(age)
-        df.min { age }
-        df[age].min()
-        // SampleEnd
-    }
-
-    @Test
-    fun columnMinMax_strings() {
-        // SampleStart
-        df.min("age")
-        df["age"].asComparable().min()
-        df.getColumn<Int>("age").min()
-        // SampleEnd
-    }
-
-    @Test
-    fun columnMean_properties() {
-        // SampleStart
         df.mean { age }
-        df.age.mean()
-        // SampleEnd
-    }
-
-    @Test
-    fun columnMean_accessors() {
-        // SampleStart
-        val age by column<Int>()
-
-        df.mean(age)
-        df.mean { age }
-        df[age].mean()
-        // SampleEnd
-    }
-
-    @Test
-    fun columnMean_strings() {
-        // SampleStart
-        df.mean("age")
-        df["age"].asNumbers().mean()
-        df.getColumn<Int>("age").mean()
-        // SampleEnd
-    }
-
-    @Test
-    fun columnMedian_properties() {
-        // SampleStart
         df.median { age }
+
+        df.weight.sum()
+        df.age.max()
+        df.age.mean()
         df.age.median()
         // SampleEnd
     }
 
     @Test
-    fun columnMedian_accessors() {
+    fun columnStats_accessors() {
         // SampleStart
+        val weight by column<Int?>()
         val age by column<Int>()
 
-        df.median(age)
+        df.sum { weight }
+        df.min { age }
+        df.mean { age }
         df.median { age }
+
+        df.sum(weight)
+        df.min(age)
+        df.mean(age)
+        df.median(age)
+
+        df[weight].sum()
+        df[age].mean()
+        df[age].min()
         df[age].median()
         // SampleEnd
     }
 
     @Test
-    fun columnMedian_strings() {
+    fun columnStats_strings() {
         // SampleStart
+        df.sum("weight")
+        df.min("age")
+        df.mean("age")
         df.median("age")
-        df["age"].asComparable().median()
-        df.getColumn<Int>("age").median()
         // SampleEnd
     }
 
@@ -209,7 +145,7 @@ class Analyze : TestBase() {
     }
 
     @Test
-    fun columnsFor_acessors() {
+    fun columnsFor_aсcessors() {
         // SampleStart
         val name by columnGroup()
         val firstName by name.column<String>()
@@ -268,7 +204,7 @@ class Analyze : TestBase() {
         val weight by column<Int?>()
         val city by column<String?>()
 
-        df.minOf { 2021 - age }
+        df.minOf { 2021 - age() }
         df.maxOf { firstName().length + lastName().length }
         df.sumOf { weight()?.let { it - 50 } }
         df.meanOf { Math.log(age().toDouble()) }

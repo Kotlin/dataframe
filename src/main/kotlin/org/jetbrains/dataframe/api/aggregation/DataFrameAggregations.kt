@@ -47,19 +47,15 @@ public interface DataFrameAggregations<out T> : Aggregatable<T>, DataFrameBase<T
 
     public fun <C : Comparable<C>> minOfOrNull(selector: RowSelector<T, C>): C? = rows().minOfOrNull { selector(it, it) }
 
-    public fun <C : Comparable<C>> minBy(selector: ColumnSelector<T, C?>): DataRow<T> = minByOrNull(selector)!!
+    public fun <C : Comparable<C>> minBy(selector: RowSelector<T, C?>): DataRow<T> = minByOrNull(selector)!!
     public fun minBy(column: String): DataRow<T> = minByOrNull(column)!!
     public fun <C : Comparable<C>> minBy(column: ColumnReference<C?>): DataRow<T> = minByOrNull(column)!!
     public fun <C : Comparable<C>> minBy(column: KProperty<C?>): DataRow<T> = minByOrNull(column)!!
 
-    public fun <C : Comparable<C>> minByOrNull(selector: ColumnSelector<T, C?>): DataRow<T>? = getOrNull(get(selector).asSequence().indexOfMin())
-    public fun minByOrNull(column: String): DataRow<T>? = minByOrNull { column.toComparableColumn() }
-    public fun <C : Comparable<C>> minByOrNull(column: ColumnReference<C?>): DataRow<T>? = minByOrNull { column }
-    public fun <C : Comparable<C>> minByOrNull(column: KProperty<C?>): DataRow<T>? = minByOrNull { column.toColumnDef() }
-
-    public fun <C : Comparable<C>> minByExpr(selector: RowSelector<T, C?>): DataRow<T> = minByExprOrNull(selector)!!
-
-    public fun <C : Comparable<C>> minByExprOrNull(selector: RowSelector<T, C?>): DataRow<T>? = getOrNull(mapRows(selector).indexOfMin())
+    public fun <C : Comparable<C>> minByOrNull(selector: RowSelector<T, C?>): DataRow<T>? = getOrNull(mapRows(selector).indexOfMin())
+    public fun minByOrNull(column: String): DataRow<T>? = minByOrNull(column.toColumnOf<Comparable<Any?>?>())
+    public fun <C : Comparable<C>> minByOrNull(column: ColumnReference<C?>): DataRow<T>? = getOrNull(get(column).asSequence().indexOfMin())
+    public fun <C : Comparable<C>> minByOrNull(column: KProperty<C?>): DataRow<T>? = minByOrNull(column.toColumnAccessor())
 
     // endregion
 
@@ -85,18 +81,15 @@ public interface DataFrameAggregations<out T> : Aggregatable<T>, DataFrameBase<T
 
     public fun <R : Comparable<R>> maxOfOrNull(selector: RowSelector<T, R>): R? = rows().maxOfOrNull { selector(it, it) }
 
-    public fun <C : Comparable<C>> maxBy(selector: ColumnSelector<T, C?>): DataRow<T> = maxByOrNull(selector)!!
+    public fun <C : Comparable<C>> maxBy(selector: RowSelector<T, C?>): DataRow<T> = maxByOrNull(selector)!!
     public fun maxBy(column: String): DataRow<T> = maxByOrNull(column)!!
     public fun <C : Comparable<C>> maxBy(column: ColumnReference<C?>): DataRow<T> = maxByOrNull(column)!!
     public fun <C : Comparable<C>> maxBy(column: KProperty<C?>): DataRow<T> = maxByOrNull(column)!!
 
-    public fun <C : Comparable<C>> maxByOrNull(selector: ColumnSelector<T, C?>): DataRow<T>? = getOrNull(get(selector).asSequence().indexOfMax())
-    public fun maxByOrNull(column: String): DataRow<T>? = maxByOrNull { column.toComparableColumn() }
-    public fun <C : Comparable<C>> maxByOrNull(column: ColumnReference<C?>): DataRow<T>? = maxByOrNull { column }
-    public fun <C : Comparable<C>> maxByOrNull(column: KProperty<C?>): DataRow<T>? = maxByOrNull { column.toColumnDef() }
-
-    public fun <C : Comparable<C>> maxByExpr(selector: RowSelector<T, C>): DataRow<T> = maxByExprOrNull(selector)!!
-    public fun <C : Comparable<C>> maxByExprOrNull(selector: RowSelector<T, C>): DataRow<T>? = getOrNull(mapRows(selector).indexOfMax())
+    public fun <C : Comparable<C>> maxByOrNull(selector: RowSelector<T, C?>): DataRow<T>? = getOrNull(mapRows(selector).indexOfMax())
+    public fun maxByOrNull(column: String): DataRow<T>? = maxByOrNull(column.toColumnOf<Comparable<Any?>?>())
+    public fun <C : Comparable<C>> maxByOrNull(column: ColumnReference<C?>): DataRow<T>? = getOrNull(get(column).asSequence().indexOfMax())
+    public fun <C : Comparable<C>> maxByOrNull(column: KProperty<C?>): DataRow<T>? = maxByOrNull(column.toColumnAccessor())
 
     // endregion
 
