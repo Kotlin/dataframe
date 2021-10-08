@@ -35,9 +35,7 @@ public interface PivotAggregations<T> : Aggregatable<T> {
 
     public fun <R : Comparable<R>> minOf(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped().minOf(rowExpression)[0]
 
-    public fun <R : Comparable<R>> minBy(column: ColumnSelector<T, R>): DataRow<T> = asGrouped().minBy(column)[0]
-
-    public fun <R : Comparable<R>> minByExpr(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped().minByExpr(rowExpression)[0]
+    public fun <R : Comparable<R>> minBy(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped().minBy(rowExpression)[0]
 
     // endregion
 
@@ -51,9 +49,7 @@ public interface PivotAggregations<T> : Aggregatable<T> {
 
     public fun <R : Comparable<R>> maxOf(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped().maxOf(rowExpression)[0]
 
-    public fun <R : Comparable<R>> maxBy(column: ColumnSelector<T, R>): DataRow<T> = asGrouped().maxBy(column)[0]
-
-    public fun <R : Comparable<R>> maxByExpr(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped().maxByExpr(rowExpression)[0]
+    public fun <R : Comparable<R>> maxBy(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped().maxBy(rowExpression)[0]
 
     // endregion
 

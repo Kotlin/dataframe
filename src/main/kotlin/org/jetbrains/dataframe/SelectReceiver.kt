@@ -70,11 +70,11 @@ public interface SelectReceiver<out T> : DataFrameBase<T> {
 
     public operator fun <C> List<DataColumn<C>>.get(range: IntRange): Columns<C> = ColumnsList(subList(range.first, range.last + 1))
 
-    public operator fun String.invoke(): ColumnAccessor<Any?> = toColumnDef()
-    public operator fun String.get(column: String): ColumnAccessor<Any?> = pathOf(this, column).toColumnDef()
+    public operator fun String.invoke(): ColumnAccessor<Any?> = toColumnAccessor()
+    public operator fun String.get(column: String): ColumnAccessor<Any?> = pathOf(this, column).toColumnAccessor()
     public fun <C> String.cast(): ColumnAccessor<C> = ColumnAccessorImpl(this)
 
-    public fun <C> col(property: KProperty<C>): ColumnAccessor<C> = property.toColumnDef()
+    public fun <C> col(property: KProperty<C>): ColumnAccessor<C> = property.toColumnAccessor()
 
     public fun Columns<*>.col(index: Int): Columns<Any?> = transform { it.mapNotNull { it.getChild(index) } }
 
@@ -123,12 +123,12 @@ public interface SelectReceiver<out T> : DataFrameBase<T> {
     public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
     public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
 
-    public infix fun String.and(other: String): Columns<Any?> = toColumnDef() and other.toColumnDef()
-    public infix fun <C> String.and(other: Columns<C>): Columns<Any?> = toColumnDef() and other
-    public infix fun <C> KProperty<C>.and(other: Columns<C>): Columns<C> = toColumnDef() and other
-    public infix fun <C> Columns<C>.and(other: KProperty<C>): Columns<C> = this and other.toColumnDef()
-    public infix fun <C> KProperty<C>.and(other: KProperty<C>): Columns<C> = toColumnDef() and other.toColumnDef()
-    public infix fun <C> Columns<C>.and(other: String): Columns<Any?> = this and other.toColumnDef()
+    public infix fun String.and(other: String): Columns<Any?> = toColumnAccessor() and other.toColumnAccessor()
+    public infix fun <C> String.and(other: Columns<C>): Columns<Any?> = toColumnAccessor() and other
+    public infix fun <C> KProperty<C>.and(other: Columns<C>): Columns<C> = toColumnAccessor() and other
+    public infix fun <C> Columns<C>.and(other: KProperty<C>): Columns<C> = this and other.toColumnAccessor()
+    public infix fun <C> KProperty<C>.and(other: KProperty<C>): Columns<C> = toColumnAccessor() and other.toColumnAccessor()
+    public infix fun <C> Columns<C>.and(other: String): Columns<Any?> = this and other.toColumnAccessor()
 
     public operator fun <C> String.invoke(newColumnExpression: RowSelector<T, C>): DataColumn<C> = newColumnWithActualType(this, newColumnExpression)
 

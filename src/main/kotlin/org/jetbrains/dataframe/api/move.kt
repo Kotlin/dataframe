@@ -100,10 +100,10 @@ public fun <T, C> MoveColsClause<T, C>.to(columnIndex: Int): DataFrame<T> {
     return newColumnList.asDataFrame()
 }
 
-public fun <T, C> MoveColsClause<T, C>.after(columnPath: ColumnPath): DataFrame<T> = after { columnPath.toColumnDef() }
+public fun <T, C> MoveColsClause<T, C>.after(columnPath: ColumnPath): DataFrame<T> = after { columnPath.toColumnAccessor() }
 public fun <T, C> MoveColsClause<T, C>.after(column: Column): DataFrame<T> = after { column }
-public fun <T, C> MoveColsClause<T, C>.after(column: KProperty<*>): DataFrame<T> = after { column.toColumnDef() }
-public fun <T, C> MoveColsClause<T, C>.after(column: String): DataFrame<T> = after { column.toColumnDef() }
+public fun <T, C> MoveColsClause<T, C>.after(column: KProperty<*>): DataFrame<T> = after { column.toColumnAccessor() }
+public fun <T, C> MoveColsClause<T, C>.after(column: String): DataFrame<T> = after { column.toColumnAccessor() }
 public fun <T, C> MoveColsClause<T, C>.after(column: ColumnSelector<T, *>): DataFrame<T> = afterOrBefore(column, true)
 
 /*

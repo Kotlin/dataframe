@@ -41,6 +41,6 @@ open class BaseTest {
 
     val name by column<String>()
     val age = column<Int>() named "age"
-    val city = Person::city.toColumnDef()
+    val city = Person::city.toColumnAccessor()
     val weight by column<Int?>()
 }

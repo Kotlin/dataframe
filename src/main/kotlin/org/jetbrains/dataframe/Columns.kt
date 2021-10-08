@@ -47,19 +47,19 @@ public typealias Column = ColumnReference<*>
 
 public typealias MapColumnReference = ColumnReference<AnyRow>
 
-public fun String.toColumnDef(): ColumnAccessor<Any?> = ColumnAccessorImpl(this)
+public fun String.toColumnAccessor(): ColumnAccessor<Any?> = ColumnAccessorImpl(this)
 
 public fun <T> String.toColumnOf(): ColumnAccessor<T> = ColumnAccessorImpl(this)
 
 public fun <T> ColumnPath.toColumnOf(): ColumnAccessor<T> = ColumnAccessorImpl(this)
 
-public fun ColumnPath.toColumnDef(): ColumnAccessor<Any?> = ColumnAccessorImpl(this)
+public fun ColumnPath.toColumnAccessor(): ColumnAccessor<Any?> = ColumnAccessorImpl(this)
 
 public fun ColumnPath.toGroupColumnDef(): ColumnAccessor<AnyRow> = ColumnAccessorImpl(this)
 
 internal fun KProperty<*>.getColumnName() = this.findAnnotation<ColumnName>()?.name ?: name
 
-public fun <T> KProperty<T>.toColumnDef(): ColumnAccessor<T> = ColumnAccessorImpl<T>(name)
+public fun <T> KProperty<T>.toColumnAccessor(): ColumnAccessor<T> = ColumnAccessorImpl<T>(name)
 
 public fun <T> ColumnAccessor<DataRow<*>>.subcolumn(childName: String): ColumnAccessor<T> =
     ColumnAccessorImpl(path() + childName)

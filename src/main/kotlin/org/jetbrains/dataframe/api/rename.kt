@@ -6,7 +6,7 @@ import org.jetbrains.dataframe.impl.columns.toColumnSet
 import org.jetbrains.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
-public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataFrame<T> = rename { mappings.map { it.first.toColumnDef() }.toColumnSet() }
+public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataFrame<T> = rename { mappings.map { it.first.toColumnAccessor() }.toColumnSet() }
     .into(*mappings.map { it.second }.toTypedArray())
 
 public fun <T, C> DataFrame<T>.rename(selector: ColumnsSelector<T, C>): RenameClause<T, C> = RenameClause(this, selector)

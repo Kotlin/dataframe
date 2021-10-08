@@ -83,6 +83,9 @@ class Access : TestBase() {
     fun getRowByCondition_properties() {
         // SampleStart
         df.single { age == 45 }
+        df.first { weight != null }
+        df.minBy { age }
+        df.maxBy { name.firstName.length }
         // SampleEnd
     }
 
@@ -90,8 +93,14 @@ class Access : TestBase() {
     fun getRowByCondition_accessors() {
         // SampleStart
         val age by column<Int>()
+        val weight by column<Int?>()
+        val name by columnGroup()
+        val firstName by name.column<String>()
 
         df.single { age() == 45 }
+        df.first { weight() != null }
+        df.minBy(age)
+        df.maxBy { firstName().length }
         // SampleEnd
     }
 
@@ -99,6 +108,9 @@ class Access : TestBase() {
     fun getRowByCondition_strings() {
         // SampleStart
         df.single { "age"<Int>() == 45 }
+        df.first { it["weight"] != null }
+        df.minBy("weight")
+        df.maxBy { "name"["firstName"]<String>().length }
         // SampleEnd
     }
 
@@ -131,6 +143,7 @@ class Access : TestBase() {
     @Test
     fun getColumnsByName_strings() {
         // SampleStart
+        df.select { "age"() and "weight"() }
         df["age", "weight"]
         // SampleEnd
     }
@@ -139,6 +152,7 @@ class Access : TestBase() {
     fun getColumnsByName_properties() {
         // SampleStart
         df.select { age and weight }
+        df[df.age, df.weight]
         // SampleEnd
     }
 
@@ -147,8 +161,9 @@ class Access : TestBase() {
         // SampleStart
         val age by column<Int>()
         val weight by column<Int?>()
-        df[age, weight]
+
         df.select { age and weight }
+        df[age, weight]
         // SampleEnd
     }
 

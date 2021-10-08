@@ -37,7 +37,7 @@ public typealias JoinColumnSelector<A, B> = JoinReceiver<A, B>.(JoinReceiver<A, 
 
 internal fun <C> Columns<C>.extractJoinColumns(other: AnyFrame): List<ColumnMatch<C>> = when (this) {
     is ColumnsList -> columns.flatMap { it.extractJoinColumns(other) }
-    is ColumnReference<C> -> listOf(ColumnMatch(this, path().toColumnDef() as ColumnReference<C>))
+    is ColumnReference<C> -> listOf(ColumnMatch(this, path().toColumnAccessor() as ColumnReference<C>))
     is ColumnMatch -> listOf(this)
     else -> throw Exception()
 }
@@ -57,13 +57,13 @@ public val JoinType.allowLeftNulls: Boolean get() = this == JoinType.RIGHT || th
 public val JoinType.allowRightNulls: Boolean get() = this == JoinType.LEFT || this == JoinType.OUTER || this == JoinType.EXCLUDE
 
 internal fun <A, B> defaultJoinColumns(left: DataFrame<A>, right: DataFrame<B>): JoinColumnSelector<A, B> =
-    { left.columnNames().intersect(right.columnNames()).map { it.toColumnDef() }.let { ColumnsList(it) } }
+    { left.columnNames().intersect(right.columnNames()).map { it.toColumnAccessor() }.let { ColumnsList(it) } }
 
 internal fun <T> defaultJoinColumns(dataFrames: Iterable<DataFrame<T>>): JoinColumnSelector<T, T> =
     {
         dataFrames.map { it.columnNames() }.fold<List<String>, Set<String>?>(null) { set, names ->
             set?.intersect(names) ?: names.toSet()
-        }.orEmpty().map { it.toColumnDef() }.let { ColumnsList(it) }
+        }.orEmpty().map { it.toColumnAccessor() }.let { ColumnsList(it) }
     }
 
 public fun <A, B> DataFrame<A>.innerJoin(
