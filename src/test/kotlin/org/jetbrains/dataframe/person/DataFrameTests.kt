@@ -150,7 +150,7 @@ class DataFrameTests : BaseTest() {
         df[i][Person::age].check()
         df[Person::age][i].check()
 
-        df[i].int("age").check()
+        df[i].read<Int>("age").check()
         (df[i]["age"] as Int).check()
 
         df["age"].typed<Int>()[i].check()
@@ -172,7 +172,7 @@ class DataFrameTests : BaseTest() {
         df[i][Person::city].check()
         df[Person::city][i].check()
 
-        df[i].nstring("city").check()
+        df[i].read<String?>("city").check()
         (df[i]["city"] as String?).check()
 
         df["city"].typed<String?>()[i].check()
@@ -216,7 +216,7 @@ class DataFrameTests : BaseTest() {
 
         df.update(Person::age) { it * 2 }.check()
 
-        df.update("age") { int("age") * 2 }.check()
+        df.update("age") { "age".int() * 2 }.check()
         df.update("age") { "age"<Int>() * 2 }.check()
     }
 
@@ -374,7 +374,7 @@ class DataFrameTests : BaseTest() {
         df.filter { it[age] > limit && this[weight] != null }.check()
         df.filter { age > limit && weight neq null }.check()
 
-        df.filter { it.int("age") > limit && it.nint("weight") != null }.check()
+        df.filter { "age".int() > limit && "weight".intOrNull() != null }.check()
         df.filter { "age"<Int>() > limit && "weight"<Int?>() != null }.check()
     }
 
@@ -540,7 +540,7 @@ class DataFrameTests : BaseTest() {
         res["Name"].values() shouldBe typed.name.values().map { it.lowercase() }
         df.select { name.map { it.lowercase() } named "Name" } shouldBe res
         df.select { it[Person::name].map { it.lowercase() } named "Name" } shouldBe res
-        df.select { string("name").map { it.lowercase() } named "Name" } shouldBe res
+        df.select { "name".strings().map { it.lowercase() } named "Name" } shouldBe res
     }
 
     @Test
@@ -627,11 +627,11 @@ class DataFrameTests : BaseTest() {
 
         df.groupBy("name").aggregate {
             nrow() into "n"
-            count { int("age") > 25 } into "old count"
-            median { int("age") } into "median age"
-            min { int("age") } into "min age"
-            all { get("weight") != null } into "all with weights"
-            maxBy { int("age") }.get("city") into "oldest origin"
+            count { "age".int() > 25 } into "old count"
+            median { "age".ints() } into "median age"
+            min { "age".ints() } into "min age"
+            all { it["weight"] != null } into "all with weights"
+            maxBy { "age".int() }["city"] into "oldest origin"
             sortBy("age").first()["city"] into "youngest origin"
             pivot { it["city"].map { "from $it" } }.count()
             it["age"].toList() into "ages"
@@ -663,7 +663,7 @@ class DataFrameTests : BaseTest() {
         df.min(age).check()
         df[age].min().check()
 
-        df.min { int("age") }.check()
+        df.min { "age".ints() }.check()
         df.min("age").check()
         df["age"].typed<Int>().min().check()
     }
@@ -682,7 +682,7 @@ class DataFrameTests : BaseTest() {
         df.max(weight).check()
         df[weight].max().check()
 
-        df.max { nint("weight") }.check()
+        df.max { "weight".intOrNulls() }.check()
         df["weight"].typed<Int?>().max().check()
         (df.max("weight") as Int?).check()
     }
@@ -700,7 +700,7 @@ class DataFrameTests : BaseTest() {
         df.dropNulls(weight).minBy(weight).check()
         df.minBy(weight).check()
 
-        df.dropNulls("weight").minBy { int("weight") }.check()
+        df.dropNulls("weight").minBy { "weight".intOrNull() }.check()
         df.dropNulls("weight").minBy("weight").check()
         df.minBy("weight").check()
     }
@@ -718,7 +718,7 @@ class DataFrameTests : BaseTest() {
         df.maxBy { age() }.check()
         df.maxBy(age).check()
 
-        df.maxBy { int("age") }.check()
+        df.maxBy { "age".int() }.check()
         df.maxBy("age").check()
     }
 
@@ -734,7 +734,7 @@ class DataFrameTests : BaseTest() {
 
         df.add("year") { now - age }.check()
 
-        df.add("year") { now - int("age") }.check()
+        df.add("year") { now - "age".int() }.check()
         df.add("year") { now - "age"<Int>() }.check()
     }
 
@@ -1688,7 +1688,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `drop where any na`() {
         val updated = typed.update { weight }.with { if (name == "Alice") Double.NaN else it?.toDouble() }
-        val expected = updated.count { city != null && !(ndouble("weight")?.isNaN() ?: true) }
+        val expected = updated.count { city != null && !("weight".doubleOrNull()?.isNaN() ?: true) }
 
         fun AnyFrame.check() = nrow() shouldBe expected
 
@@ -1701,7 +1701,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `drop where all na`() {
         val updated = typed.update { weight }.with { if (name == "Alice") Double.NaN else it?.toDouble() }
-        val expected = updated.count { city != null || !(ndouble("weight")?.isNaN() ?: true) }
+        val expected = updated.count { city != null || !("weight".doubleOrNull()?.isNaN() ?: true) }
 
         fun AnyFrame.check() = nrow() shouldBe expected
 

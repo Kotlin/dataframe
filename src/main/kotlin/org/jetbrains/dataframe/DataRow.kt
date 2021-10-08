@@ -47,12 +47,17 @@ public interface DataRow<out T> : DataRowBase<T> {
     public fun size(): Int = owner.ncol()
     public fun values(): List<Any?>
 
-    public fun int(name: String): Int = read(name)
-    public fun nint(name: String): Int? = read(name)
-    public fun string(name: String): String = read(name)
-    public fun nstring(name: String): String? = read(name)
-    public fun double(name: String): Double = read(name)
-    public fun ndouble(name: String): Double? = read(name)
+    public fun String.int(): Int = read(this)
+    public fun String.intOrNull(): Int? = read(this)
+    public fun String.string(): String = read(this)
+    public fun String.stringOrNull(): String? = read(this)
+    public fun String.boolean(): Boolean = read(this)
+    public fun String.booleanOrNull(): Boolean? = read(this)
+    public fun String.double(): Double = read(this)
+    public fun String.doubleOrNull(): Double? = read(this)
+    public fun String.comparable(): Comparable<Any?> = read(this)
+    public fun String.comparableOrNull(): Comparable<Any?>? = read(this)
+    public fun String.numberOrNull(): Number? = read(this)
 
     public fun forwardIterable(): Iterable<DataRow<T>> = this.toIterable { it.next }
     public fun backwardIterable(): Iterable<DataRow<T>> = this.toIterable { it.prev }

@@ -9,6 +9,7 @@ public interface DataFrameBase<out T> : SingleColumn<DataRow<T>> {
 
     public operator fun get(columnName: String): AnyCol
     public fun tryGetColumn(columnName: String): AnyCol?
+    public fun tryGetColumn(path: ColumnPath): AnyCol?
 
     public fun getColumnGroup(columnName: String): ColumnGroup<*> = get(columnName).asGroup()
     public fun getColumnGroup(columnPath: ColumnPath): ColumnGroup<*> = get(columnPath).asGroup()
@@ -27,7 +28,11 @@ public interface DataFrameBase<out T> : SingleColumn<DataRow<T>> {
     public operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>>
     public operator fun <C> get(columns: ColumnSelector<T, C>): DataColumn<C> = get(columns as ColumnsSelector<T, C>).single()
 
+    public fun <R> getColumn(column: ColumnReference<R>): DataColumn<R> = get(column)
+    public fun <R> getColumn(column: ColumnReference<DataRow<R>>): ColumnGroup<R> = get(column)
+    public fun <R> getColumn(column: ColumnReference<DataFrame<R>>): FrameColumn<R> = get(column)
     public fun <R> getColumn(name: String): DataColumn<R> = get(name) as DataColumn<R>
+    public fun <R> getColumn(path: ColumnPath): DataColumn<R> = get(path) as DataColumn<R>
     public fun <R> getColumn(index: Int): DataColumn<R> = col(index) as DataColumn<R>
 
     public fun hasColumn(columnName: String): Boolean = tryGetColumn(columnName) != null

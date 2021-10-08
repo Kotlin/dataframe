@@ -5,7 +5,6 @@ import org.jetbrains.dataframe.aggregation.GroupByAggregateBody
 import org.jetbrains.dataframe.columns.FrameColumn
 import org.jetbrains.dataframe.columns.values
 import org.jetbrains.dataframe.impl.aggregation.AggregatableInternal
-import org.jetbrains.dataframe.impl.aggregation.GroupedPivotImpl
 import org.jetbrains.dataframe.impl.aggregation.receivers.AggregateBodyInternal
 import org.jetbrains.dataframe.impl.columns.toColumns
 import org.jetbrains.dataframe.impl.groupBy.GroupedDataRowImpl
@@ -37,11 +36,9 @@ internal class GroupedDataFrameImpl<T, G>(
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all().except(keyColumnsInGroups.toColumns()) }
 
-    override fun <R> aggregate(body: GroupByAggregateBody<G, R>) = aggregateGroupBy(asDataFrame(), { groups }, removeColumns = true, body).typed<G>()
+    private fun <R> aggregate(body: GroupByAggregateBody<G, R>) = aggregateGroupBy(asDataFrame(), { groups }, removeColumns = true, body).typed<G>()
 
     override fun <R> aggregateInternal(body: AggregateBodyInternal<G, R>) = aggregate(body as GroupByAggregateBody<G, R>)
-
-    override fun pivot(columns: ColumnsSelector<G, *>): GroupedPivotAggregations<G> = GroupedPivotImpl(this, columns)
 
     override fun filter(predicate: GroupedRowFilter<T, G>): GroupedDataFrame<T, G> {
         val indices = (0 until df.nrow()).filter {

@@ -71,7 +71,7 @@ public interface SelectReceiver<out T> : DataFrameBase<T> {
     public operator fun <C> List<DataColumn<C>>.get(range: IntRange): Columns<C> = ColumnsList(subList(range.first, range.last + 1))
 
     public operator fun String.invoke(): ColumnAccessor<Any?> = toColumnAccessor()
-    public operator fun String.get(column: String): ColumnAccessor<Any?> = pathOf(this, column).toColumnAccessor()
+    public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
     public fun <C> String.cast(): ColumnAccessor<C> = ColumnAccessorImpl(this)
 
     public fun <C> col(property: KProperty<C>): ColumnAccessor<C> = property.toColumnAccessor()
@@ -119,9 +119,15 @@ public interface SelectReceiver<out T> : DataFrameBase<T> {
     // public operator fun <C> ColumnSelector<T, C>.invoke(): ColumnReference<C> = this(this@SelectReceiver, this@SelectReceiver)
     public operator fun <C> ColumnsSelector<T, C>.invoke(): Columns<C> = this(this@SelectReceiver, this@SelectReceiver)
 
+    public operator fun <C> ColumnReference<C>.invoke(): DataColumn<C> = getColumn(this)
+
     public operator fun <C> ColumnReference<C>.invoke(newName: String): ColumnReference<C> = renamedReference(newName)
     public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
     public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
+
+    public fun ColumnReference<String?>.length(): ColumnReference<Int?> = map { it?.length }
+    public fun ColumnReference<String?>.lowercase(): ColumnReference<String?> = map { it?.lowercase() }
+    public fun ColumnReference<String?>.uppercase(): ColumnReference<String?> = map { it?.uppercase() }
 
     public infix fun String.and(other: String): Columns<Any?> = toColumnAccessor() and other.toColumnAccessor()
     public infix fun <C> String.and(other: Columns<C>): Columns<Any?> = toColumnAccessor() and other
@@ -129,6 +135,8 @@ public interface SelectReceiver<out T> : DataFrameBase<T> {
     public infix fun <C> Columns<C>.and(other: KProperty<C>): Columns<C> = this and other.toColumnAccessor()
     public infix fun <C> KProperty<C>.and(other: KProperty<C>): Columns<C> = toColumnAccessor() and other.toColumnAccessor()
     public infix fun <C> Columns<C>.and(other: String): Columns<Any?> = this and other.toColumnAccessor()
+
+    public operator fun ColumnPath.invoke(): ColumnAccessor<Any?> = toColumnAccessor()
 
     public operator fun <C> String.invoke(newColumnExpression: RowSelector<T, C>): DataColumn<C> = newColumnWithActualType(this, newColumnExpression)
 
@@ -142,17 +150,21 @@ public interface SelectReceiver<out T> : DataFrameBase<T> {
     public fun String.booleanOrNulls(): DataColumn<Boolean?> = getColumn(this)
     public fun String.doubles(): DataColumn<Double> = getColumn(this)
     public fun String.doubleOrNulls(): DataColumn<Double?> = getColumn(this)
+    public fun String.comparables(): DataColumn<Comparable<Any?>> = getColumn(this)
+    public fun String.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this)
+    public fun String.numberOrNulls(): DataColumn<Number?> = getColumn(this)
 
-    public fun DataFrameBase<*>.string(columnName: String): DataColumn<String> = getColumn(columnName)
-    public fun DataFrameBase<*>.int(columnName: String): DataColumn<Int> = getColumn(columnName)
-    public fun DataFrameBase<*>.bool(columnName: String): DataColumn<Boolean> = getColumn(columnName)
-    public fun DataFrameBase<*>.double(columnName: String): DataColumn<Double> = getColumn(columnName)
-    public fun DataFrameBase<*>.long(columnName: String): DataColumn<Long> = getColumn(columnName)
-    public fun DataFrameBase<*>.nint(columnName: String): DataColumn<Int?> = getColumn(columnName)
-    public fun DataFrameBase<*>.nstring(columnName: String): DataColumn<String?> = getColumn(columnName)
-    public fun DataFrameBase<*>.ndouble(columnName: String): DataColumn<Double?> = getColumn(columnName)
-    public fun DataFrameBase<*>.nbool(columnName: String): DataColumn<Boolean?> = getColumn(columnName)
-    public fun DataFrameBase<*>.nlong(columnName: String): DataColumn<Long?> = getColumn(columnName)
+    public fun ColumnPath.ints(): DataColumn<Int> = getColumn(this)
+    public fun ColumnPath.intOrNulls(): DataColumn<Int?> = getColumn(this)
+    public fun ColumnPath.strings(): DataColumn<String> = getColumn(this)
+    public fun ColumnPath.stringOrNulls(): DataColumn<String?> = getColumn(this)
+    public fun ColumnPath.booleans(): DataColumn<Boolean> = getColumn(this)
+    public fun ColumnPath.booleanOrNulls(): DataColumn<Boolean?> = getColumn(this)
+    public fun ColumnPath.doubles(): DataColumn<Double> = getColumn(this)
+    public fun ColumnPath.doubleOrNulls(): DataColumn<Double?> = getColumn(this)
+    public fun ColumnPath.comparables(): DataColumn<Comparable<Any?>> = getColumn(this)
+    public fun ColumnPath.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this)
+    public fun ColumnPath.numberOrNulls(): DataColumn<Number?> = getColumn(this)
 }
 
 public inline fun <T, reified R> SelectReceiver<T>.expr(
