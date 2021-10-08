@@ -1,5 +1,6 @@
 package docs.api
 
+import org.jetbrains.dataframe.aggregate
 import org.jetbrains.dataframe.asComparable
 import org.jetbrains.dataframe.asGrouped
 import org.jetbrains.dataframe.asNumbers
@@ -30,6 +31,7 @@ import org.jetbrains.dataframe.schema
 import org.jetbrains.dataframe.sum
 import org.jetbrains.dataframe.sumFor
 import org.jetbrains.dataframe.sumOf
+import org.jetbrains.dataframe.values
 import org.junit.Test
 
 class Analyze : TestBase() {
@@ -380,7 +382,7 @@ class Analyze : TestBase() {
     }
 
     @Test
-    fun groupByDirectAggregations() {
+    fun groupByDirectAggregations_properties() {
         // SampleStart
         df.groupBy { city }.max() // max for every comparable column
         df.groupBy { city }.mean() // mean for every numeric column
@@ -389,8 +391,45 @@ class Analyze : TestBase() {
         df.groupBy { city }.count() // number of rows into column "count"
         df.groupBy { city }.max { name.firstName.length() and name.lastName.length() } // maximum length of firstName or lastName into column "max"
         df.groupBy { city }.medianFor { age and weight } // median age into column "age", median weight into column "weight"
-        df.groupBy { city }.min { (age into "min age") and (weight into "min weight") } // min age into column "min age", min weight into column "min weight"
+        df.groupBy { city }.minFor { (age into "min age") and (weight into "min weight") } // min age into column "min age", min weight into column "min weight"
         df.groupBy { city }.meanOf("mean ratio") { weight?.div(age) } // mean of weight/age into column "mean ratio"
+        // SampleEnd
+    }
+
+    @Test
+    fun groupByDirectAggregations_accessors() {
+        // SampleStart
+        val city by column<String?>()
+        val age by column<Int>()
+        val weight by column<Int?>()
+        val name by columnGroup()
+        val firstName by name.column<String>()
+        val lastName by name.column<String>()
+
+        df.groupBy { city }.max() // max for every comparable column
+        df.groupBy { city }.mean() // mean for every numeric column
+        df.groupBy { city }.max { age } // max age into column "age"
+        df.groupBy { city }.sum("total weight") { weight } // sum of weights into column "total weight"
+        df.groupBy { city }.count() // number of rows into column "count"
+        df.groupBy { city }.max { firstName.length() and lastName.length() } // maximum length of firstName or lastName into column "max"
+        df.groupBy { city }.medianFor { age and weight } // median age into column "age", median weight into column "weight"
+        df.groupBy { city }.minFor { (age into "min age") and (weight into "min weight") } // min age into column "min age", min weight into column "min weight"
+        df.groupBy { city }.meanOf("mean ratio") { weight()?.div(age()) } // mean of weight/age into column "mean ratio"
+        // SampleEnd
+    }
+
+    @Test
+    fun groupByDirectAggregations_strings() {
+        // SampleStart
+        df.groupBy("city").max() // max for every comparable column
+        df.groupBy("city").mean() // mean for every numeric column
+        df.groupBy("city").max("age") // max age into column "age"
+        df.groupBy("city").sum("weight", name = "total weight") // sum of weights into column "total weight"
+        df.groupBy("city").count() // number of rows into column "count"
+        df.groupBy("city").max { "name"["firstName"].strings().length() and "name"["lastName"].strings().length() } // maximum length of firstName or lastName into column "max"
+        df.groupBy("city").medianFor("age", "weight") // median age into column "age", median weight into column "weight"
+        df.groupBy("city").minFor { ("age".ints() into "min age") and ("weight".intOrNulls() into "min weight") } // min age into column "min age", min weight into column "min weight"
+        df.groupBy("city").meanOf("mean ratio") { "weight".intOrNull()?.div("age".int()) } // mean of weight/age into column "mean ratio"
         // SampleEnd
     }
 

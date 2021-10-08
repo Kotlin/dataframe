@@ -54,8 +54,6 @@ internal open class ColumnGroupImpl<T>(override val df: DataFrame<T>, val name: 
 
     override fun hashCode() = hashCode
 
-    override fun tryGetColumn(columnName: String) = df.tryGetColumn(columnName)
-
     override fun toString() = "$name: {${renderSchema(df)}}"
 
     override fun changeType(type: KType) = throw UnsupportedOperationException()

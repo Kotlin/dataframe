@@ -12,7 +12,6 @@ import org.jetbrains.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.dataframe.impl.aggregation.modes.of
 import org.jetbrains.dataframe.impl.aggregation.numberColumns
 import org.jetbrains.dataframe.impl.aggregation.receivers.AggregateBodyInternal
-import org.jetbrains.dataframe.impl.aggregation.remainingColumns
 import org.jetbrains.dataframe.impl.columns.*
 import org.jetbrains.dataframe.impl.mapRows
 import org.jetbrains.dataframe.impl.zero
@@ -109,24 +108,6 @@ public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(crossinline select
 
 // endregion
 
-// region std
-
-public fun <T> DataFrame<T>.std(): DataRow<T> = stdFor(remainingColumns { it.isNumber() } as ColumnsSelector<T, Number>)
-
-public fun <T> DataFrame<T>.stdFor(columns: AggregateColumnsSelector<T, Number?>): DataRow<T> = Aggregators.std.aggregateFor(this, columns)
-public fun <T> DataFrame<T>.stdFor(vararg columns: String): DataRow<T> = stdFor { columns.toColumnsOf() }
-public fun <T, C : Number> DataFrame<T>.stdFor(vararg columns: ColumnReference<C?>): DataRow<T> = stdFor { columns.toColumns() }
-public fun <T, C : Number> DataFrame<T>.stdFor(vararg columns: KProperty<C?>): DataRow<T> = stdFor { columns.toColumns() }
-
-public fun <T> DataFrame<T>.std(columns: ColumnsSelector<T, Number?>): Double = aggregateAll(Aggregators.std, columns) ?: .0
-public fun <T> DataFrame<T>.std(vararg columns: ColumnReference<Number?>): Double = std { columns.toColumns() }
-public fun <T> DataFrame<T>.std(vararg columns: String): Double = std { columns.toColumnsOf() }
-public fun <T> DataFrame<T>.std(vararg columns: KProperty<Number?>): Double = std { columns.toColumns() }
-
-public fun <T> DataFrame<T>.stdOf(selector: RowSelector<T, Number?>): Double = Aggregators.std.aggregateOf(this, selector) ?: .0
-
-// endregion
-
 // region mean
 
 public fun <T> DataFrame<T>.mean(skipNa: Boolean = false): DataRow<T> = meanFor(skipNa, numberColumns())
@@ -168,5 +149,23 @@ public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(vararg columns: Colu
 public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(vararg columns: KProperty<C?>): C? = medianOrNull { columns.toColumns() }
 
 public inline fun <T, reified R : Comparable<R>> DataFrame<T>.medianOf(crossinline selector: RowSelector<T, R?>): R? = Aggregators.median.of(this, selector) as R?
+
+// endregion
+
+// region std
+
+public fun <T> DataFrame<T>.std(): DataRow<T> = stdFor(numberColumns())
+
+public fun <T> DataFrame<T>.stdFor(columns: AggregateColumnsSelector<T, Number?>): DataRow<T> = Aggregators.std.aggregateFor(this, columns)
+public fun <T> DataFrame<T>.stdFor(vararg columns: String): DataRow<T> = stdFor { columns.toColumnsOf() }
+public fun <T, C : Number> DataFrame<T>.stdFor(vararg columns: ColumnReference<C?>): DataRow<T> = stdFor { columns.toColumns() }
+public fun <T, C : Number> DataFrame<T>.stdFor(vararg columns: KProperty<C?>): DataRow<T> = stdFor { columns.toColumns() }
+
+public fun <T> DataFrame<T>.std(columns: ColumnsSelector<T, Number?>): Double = aggregateAll(Aggregators.std, columns) ?: .0
+public fun <T> DataFrame<T>.std(vararg columns: ColumnReference<Number?>): Double = std { columns.toColumns() }
+public fun <T> DataFrame<T>.std(vararg columns: String): Double = std { columns.toColumnsOf() }
+public fun <T> DataFrame<T>.std(vararg columns: KProperty<Number?>): Double = std { columns.toColumns() }
+
+public fun <T> DataFrame<T>.stdOf(selector: RowSelector<T, Number?>): Double = Aggregators.std.aggregateOf(this, selector) ?: .0
 
 // endregion

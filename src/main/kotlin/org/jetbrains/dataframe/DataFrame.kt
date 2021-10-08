@@ -15,7 +15,7 @@ public data class DataFrameSize(val ncol: Int, val nrow: Int) {
 
 public typealias Predicate<T> = (T) -> Boolean
 
-public data class ColumnPath(val path: List<String>) : List<String> by path {
+public data class ColumnPath(val path: List<String>) : List<String> by path, ColumnReference<Any?> {
 
     public constructor(name: String) : this(listOf(name))
 
@@ -34,6 +34,12 @@ public data class ColumnPath(val path: List<String>) : List<String> by path {
     public fun replaceLast(name: String): ColumnPath = ColumnPath(if (size < 2) listOf(name) else dropLast(1) + name)
 
     public fun takeLast(first: Int): ColumnPath = ColumnPath(path.takeLast(first))
+
+    override fun path(): ColumnPath = this
+
+    override fun name(): String = path.last()
+
+    override fun rename(newName: String): ColumnPath = ColumnPath(path.dropLast(1) + newName)
 }
 
 public fun pathOf(vararg columnNames: String): ColumnPath = ColumnPath(columnNames.asList())
@@ -168,7 +174,7 @@ public interface DataFrame<out T> : Aggregatable<T>, DataFrameBase<T> {
     override fun tryGetColumn(columnName: String): AnyCol? =
         getColumnIndex(columnName).let { if (it != -1) col(it) else null }
 
-    public fun tryGetColumn(path: ColumnPath): AnyCol? =
+    override fun tryGetColumn(path: ColumnPath): AnyCol? =
         if (path.size == 1) tryGetColumn(path[0])
         else path.dropLast(1).fold(this as AnyFrame?) { df, name -> df?.tryGetColumn(name) as? AnyFrame? }
             ?.tryGetColumn(path.last())

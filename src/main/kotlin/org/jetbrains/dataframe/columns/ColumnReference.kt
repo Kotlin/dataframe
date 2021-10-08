@@ -18,12 +18,12 @@ public interface ColumnReference<out C> : SingleColumn<C> {
 
     public fun path(): ColumnPath = ColumnPath(name)
 
-    public operator fun invoke(row: AnyRow): C = row[this]
-
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
-        return context.df.getColumn<C>(name, context.unresolvedColumnsPolicy)?.addPath(ColumnPath(name), context.df)
+        return context.df.getColumn<C>(path(), context.unresolvedColumnsPolicy)?.addPath(path(), context.df)
     }
 }
+
+public operator fun <C> ColumnReference<C>.invoke(row: AnyRow): C = row[this]
 
 internal val ColumnReference<*>.name get() = name()
 

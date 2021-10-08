@@ -122,3 +122,12 @@ internal fun <C> DataFrameBase<*>.getColumn(name: String, policy: UnresolvedColu
             UnresolvedColumnsPolicy.Skip -> null
             UnresolvedColumnsPolicy.Create -> DataColumn.empty().typed<C>()
         }
+
+internal fun <C> DataFrameBase<*>.getColumn(path: ColumnPath, policy: UnresolvedColumnsPolicy) =
+    tryGetColumn(path)?.typed()
+        ?: when (policy) {
+            UnresolvedColumnsPolicy.Fail ->
+                error("Column not found: $path")
+            UnresolvedColumnsPolicy.Skip -> null
+            UnresolvedColumnsPolicy.Create -> DataColumn.empty().typed<C>()
+        }

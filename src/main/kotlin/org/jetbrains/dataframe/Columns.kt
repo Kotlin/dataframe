@@ -215,9 +215,9 @@ public fun <T> ValueColumn<T>.toDefinition(): ColumnAccessor<T> = column<T>(name
 
 public operator fun AnyColumn.plus(other: AnyColumn): AnyFrame = dataFrameOf(listOf(this, other))
 
-public fun StringCol.length(): DataColumn<Int?> = map { it?.length }
-public fun StringCol.lowercase(): DataColumn<String?> = map { it?.lowercase() }
-public fun StringCol.uppercase(): DataColumn<String?> = map { it?.uppercase() }
+public fun DataColumn<String?>.length(): DataColumn<Int?> = map { it?.length }
+public fun DataColumn<String?>.lowercase(): DataColumn<String?> = map { it?.lowercase() }
+public fun DataColumn<String?>.uppercase(): DataColumn<String?> = map { it?.uppercase() }
 
 public infix fun <T, C : ColumnReference<T>> C.named(name: String): C = rename(name) as C
 

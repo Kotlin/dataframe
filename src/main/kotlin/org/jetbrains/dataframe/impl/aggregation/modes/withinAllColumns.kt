@@ -12,8 +12,8 @@ internal fun <T, C, R> Aggregator<*, R>.aggregateAll(
 ): C? = data.aggregateAll(cast(), columns)
 
 internal fun <T, R, C> Aggregator<*, R>.aggregateAll(
+    data: Grouped<T>,
     name: String?,
-    data: GroupByAggregations<T>,
     columns: ColumnsSelector<T, C>
 ): DataFrame<T> = data.aggregateAll(cast(), columns, name)
 
@@ -27,7 +27,7 @@ internal fun <T, C, R> DataFrame<T>.aggregateAll(
     columns: ColumnsSelector<T, C>
 ): R? = aggregator.aggregate(get(columns))
 
-internal fun <T, C, R> GroupByAggregations<T>.aggregateAll(
+internal fun <T, C, R> Grouped<T>.aggregateAll(
     aggregator: Aggregator<C, R>,
     columns: ColumnsSelector<T, C>,
     name: String?

@@ -24,7 +24,7 @@ public typealias GroupedRowFilter<T, G> = GroupedRowSelector<T, G, Boolean>
 
 public data class GroupWithKey<T, G>(val key: DataRow<T>, val group: DataFrame<G>)
 
-public interface GroupedDataFrame<out T, out G> : GroupByAggregations<G> {
+public interface GroupedDataFrame<out T, out G> : Grouped<G> {
 
     public val groups: FrameColumn<G>
 

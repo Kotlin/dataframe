@@ -19,6 +19,15 @@ internal inline fun <T, reified C, R> Aggregator<*, R>.aggregateOf(
 ): R? = (this as Aggregator<C, R>).aggregateOf(frame.rows()) { expression(it, it) } // TODO: inline
 
 @PublishedApi
+internal fun <T, C, R> Aggregator<*, R>.aggregateOfDelegated(
+    frame: Grouped<T>,
+    name: String?,
+    body: AggregateBody<T, C>
+): DataFrame<T> = frame.aggregateValue(name ?: this.name) {
+    body(this, this)
+}
+
+@PublishedApi
 internal inline fun <T, reified C, R> Aggregator<*, R>.of(
     data: DataFrame<T>,
     crossinline expression: RowSelector<T, C>
@@ -31,9 +40,9 @@ internal inline fun <C, reified V, R> Aggregator<V, R>.of(
 ): R? = aggregateOf(data.values()) { expression(it) } // TODO: inline
 
 @PublishedApi
-internal inline fun <T, reified C, reified R> Aggregator<*, R>.of(
+internal inline fun <T, reified C, reified R> Aggregator<*, R>.aggregateOf(
+    data: Grouped<T>,
     resultName: String? = null,
-    data: GroupByAggregations<T>,
     crossinline expression: RowSelector<T, C>
 ): DataFrame<T> = data.aggregateOf(resultName, expression, this as Aggregator<C, R>)
 
@@ -44,12 +53,12 @@ internal inline fun <T, reified C, reified R> Aggregator<*, R>.of(
 ): DataFrame<T> = data.aggregateOf(expression, this as Aggregator<C, R>)
 
 @PublishedApi
-internal inline fun <T, reified C, reified R> GroupByAggregations<T>.aggregateOf(
+internal inline fun <T, reified C, reified R> Grouped<T>.aggregateOf(
     resultName: String?,
     crossinline selector: RowSelector<T, C>,
     aggregator: Aggregator<C, R>
 ): DataFrame<T> {
-    val path = pathOf(resultName ?: "value")
+    val path = pathOf(resultName ?: aggregator.name)
     val type = getType<R>()
     return aggregateInternal {
         val value = aggregator.aggregateOf(df, selector)
