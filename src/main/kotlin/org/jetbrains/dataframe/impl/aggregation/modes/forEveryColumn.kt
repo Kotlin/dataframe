@@ -1,7 +1,6 @@
 package org.jetbrains.dataframe.impl.aggregation.modes
 
 import org.jetbrains.dataframe.DataFrame
-import org.jetbrains.dataframe.DataFrameAggregations
 import org.jetbrains.dataframe.DataRow
 import org.jetbrains.dataframe.aggregation.Aggregatable
 import org.jetbrains.dataframe.aggregation.AggregateColumnsSelector
@@ -31,6 +30,6 @@ internal fun <T, C, R> Aggregatable<T>.aggregateFor(
 }
 
 internal fun <T, C, R> Aggregator<*, R>.aggregateFor(
-    data: DataFrameAggregations<T>,
+    data: DataFrame<T>,
     columns: AggregateColumnsSelector<T, C?>
 ): DataRow<T> = aggregateFor(data as Aggregatable<T>, columns)[0]

@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe.impl.aggregation.aggregators
 
+import org.jetbrains.dataframe.impl.aggregation.aggregators.Aggregators.std
 import org.jetbrains.dataframe.mean
 import org.jetbrains.dataframe.median
 import org.jetbrains.dataframe.std
@@ -10,7 +11,7 @@ import kotlin.reflect.KType
 internal object Aggregators {
 
     private fun <C> preservesType(aggregate: Iterable<C>.(KType) -> C?) =
-        TwoStepAggregator.Factory<C, C>(aggregate, aggregate, true)
+        TwoStepAggregator.Factory(aggregate, aggregate, true)
 
     private fun <C, R> changesType(aggregate1: Iterable<C>.(KType) -> R, aggregate2: Iterable<R>.(KType) -> R) =
         TwoStepAggregator.Factory(aggregate1, aggregate2, false)
@@ -23,7 +24,7 @@ internal object Aggregators {
 
     val min by preservesType<Comparable<Any?>> { minOrNull() }
     val max by preservesType<Comparable<Any?>> { maxOrNull() }
-    val std by changesType<Number, Double>({ std(it) }) { std() }
+    val std by changesType<Number?, Double>({ std(it) }) { std() }
     val mean by withOption<Boolean, Number, Double> { skipNa ->
         changesType({ mean(it, skipNa) }) { mean(skipNa) }
     }

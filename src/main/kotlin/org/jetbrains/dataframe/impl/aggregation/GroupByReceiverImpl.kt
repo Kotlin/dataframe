@@ -10,6 +10,7 @@ import kotlin.reflect.KType
 internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>) :
     GroupByReceiver<T>(),
     AggregateReceiverInternal<T>,
+    AggregatableInternal<T> by df as AggregatableInternal<T>,
     DataFrame<T> by df {
 
     private val values = mutableListOf<NamedValue>()

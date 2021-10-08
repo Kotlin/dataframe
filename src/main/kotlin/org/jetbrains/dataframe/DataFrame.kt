@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.aggregation.Aggregatable
 import org.jetbrains.dataframe.columns.*
 import org.jetbrains.dataframe.impl.*
 import org.jetbrains.dataframe.impl.columns.addPath
@@ -103,7 +104,7 @@ internal fun <T> DataFrame<T>.getColumns(columnNames: List<String>): List<AnyCol
 
 internal fun <T> DataFrame<T>.new(columns: Iterable<AnyCol>) = dataFrameOf(columns).typed<T>()
 
-public interface DataFrame<out T> : DataFrameAggregations<T> {
+public interface DataFrame<out T> : Aggregatable<T>, DataFrameBase<T> {
 
     public companion object {
         public fun empty(nrow: Int = 0): AnyFrame = EmptyDataFrame<Any?>(nrow)
