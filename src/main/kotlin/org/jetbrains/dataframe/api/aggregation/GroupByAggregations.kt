@@ -14,10 +14,11 @@ import org.jetbrains.dataframe.impl.aggregation.modes.aggregateValue
 import org.jetbrains.dataframe.impl.aggregation.modes.of
 import org.jetbrains.dataframe.impl.columns.toColumns
 import org.jetbrains.dataframe.impl.columns.toComparableColumns
+import kotlin.reflect.KProperty
 
 public interface GroupByAggregations<out T> : Aggregatable<T> {
 
-    public fun aggregate(body: GroupByAggregateBody<T>): DataFrame<T>
+    public fun <R> aggregate(body: GroupByAggregateBody<T, R>): DataFrame<T>
 
     public fun pivot(columns: ColumnsSelector<T, *>): GroupedPivotAggregations<T>
     public fun pivot(vararg columns: Column): GroupedPivotAggregations<T> = pivot { columns.toColumns() }
@@ -31,9 +32,6 @@ public interface GroupByAggregations<out T> : Aggregatable<T> {
     public fun values(columns: AggregateColumnsSelector<T, *>): DataFrame<T> = aggregateInternal { columnValues(columns) { it.toList() } }
 
     public fun values(): DataFrame<T> = values(remainingColumnsSelector())
-
-    public fun into(columnName: String = GroupedDataFrame.columnForGroupedData.name()): DataFrame<T>
-    public fun into(columnRef: ColumnReference<AnyFrame?>): DataFrame<T> = into(columnRef.name())
 
     // region min
 
@@ -77,7 +75,7 @@ public interface GroupByAggregations<out T> : Aggregatable<T> {
 
     public fun <R : Number> sumFor(columns: AggregateColumnsSelector<T, R>): DataFrame<T> = Aggregators.sum.aggregateFor(this, columns)
 
-    public fun <R : Number> sum(resultName: String, columns: ColumnsSelector<T, R?>): DataFrame<T> =
+    public fun <R : Number> sum(resultName: String? = null, columns: ColumnsSelector<T, R?>): DataFrame<T> =
         Aggregators.sum.aggregateAll(resultName, this, columns)
 
     // endregion
@@ -90,6 +88,20 @@ public interface GroupByAggregations<out T> : Aggregatable<T> {
 
     public fun <R : Number> mean(resultName: String? = null, skipNa: Boolean = false, columns: ColumnsSelector<T, R?>): DataFrame<T> =
         Aggregators.mean(skipNa).aggregateAll(resultName, this, columns)
+
+    // endregion
+
+    // region median
+
+    public fun median(): DataFrame<T> = medianFor(comparableColumns())
+
+    public fun <C : Comparable<C>> medianFor(columns: AggregateColumnsSelector<T, C?>): DataFrame<T> = Aggregators.median.aggregateFor(this, columns)
+    public fun medianFor(vararg columns: String): DataFrame<T> = medianFor { columns.toComparableColumns() }
+
+    public fun <C : Comparable<C>> median(resultName: String? = null, columns: ColumnsSelector<T, C?>): DataFrame<T> = Aggregators.median.aggregateAll(resultName, this, columns)
+    public fun median(vararg columns: String, skipNa: Boolean = false): DataFrame<T> = median { columns.toComparableColumns() }
+    public fun <C : Comparable<C>> median(vararg columns: ColumnReference<C?>): DataFrame<T> = median { columns.toColumns() }
+    public fun <C : Comparable<C>> median(vararg columns: KProperty<C?>): DataFrame<T> = median { columns.toColumns() }
 
     // endregion
 
@@ -109,7 +121,7 @@ public interface GroupByAggregations<out T> : Aggregatable<T> {
 public inline fun <T, reified R : Number> GroupByAggregations<T>.meanOf(
     resultName: String = Aggregators.mean.name,
     skipNa: Boolean = false,
-    crossinline selector: RowSelector<T, R>
+    crossinline selector: RowSelector<T, R?>
 ): DataFrame<T> =
     Aggregators.mean(skipNa).of(resultName, this, selector)
 
@@ -126,7 +138,7 @@ public inline fun <T, reified C> GroupByAggregations<T>.with(
 
 public inline fun <T, reified R : Number> GroupByAggregations<T>.sumOf(
     resultName: String? = null,
-    crossinline selector: RowSelector<T, R>
+    crossinline selector: RowSelector<T, R?>
 ): DataFrame<T> = Aggregators.sum.of(resultName, this, selector)
 
 // endregion

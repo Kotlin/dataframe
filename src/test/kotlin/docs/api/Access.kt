@@ -86,6 +86,7 @@ class Access : TestBase() {
         df.first { weight != null }
         df.minBy { age }
         df.maxBy { name.firstName.length }
+        df.maxByOrNull { weight }
         // SampleEnd
     }
 
@@ -101,6 +102,7 @@ class Access : TestBase() {
         df.first { weight() != null }
         df.minBy(age)
         df.maxBy { firstName().length }
+        df.maxByOrNull { weight() }
         // SampleEnd
     }
 
@@ -111,6 +113,7 @@ class Access : TestBase() {
         df.first { it["weight"] != null }
         df.minBy("weight")
         df.maxBy { "name"["firstName"]<String>().length }
+        df.maxByOrNull("weight")
         // SampleEnd
     }
 

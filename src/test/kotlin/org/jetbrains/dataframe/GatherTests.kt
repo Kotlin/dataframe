@@ -139,7 +139,7 @@ class GatherTests {
             ).asDataFrame<Unit>()
 
             newDf
-        }.ungroup()
+        }.union()
 
         gathered shouldBe expected
     }

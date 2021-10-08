@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.columns.AnyCol
+import org.jetbrains.dataframe.columns.ColumnReference
 import org.jetbrains.dataframe.columns.DataColumn
 import java.math.BigDecimal
 
@@ -12,9 +13,17 @@ public operator fun DataColumn<Int>.unaryMinus(): DataColumn<Int> = map { -it }
 public operator fun DataColumn<Int>.times(value: Int): DataColumn<Int> = map { it * value }
 public operator fun DataColumn<Int>.div(value: Int): DataColumn<Int> = map { it / value }
 public operator fun Int.div(column: DataColumn<Int>): DataColumn<Int> = column.map { this / it }
-
-public operator fun String.plus(column: AnyCol): DataColumn<String> = column.map { this + it.toString() }
 public operator fun AnyCol.plus(str: String): DataColumn<String> = map { it.toString() + str }
+
+public operator fun ColumnReference<Int>.plus(value: Int): ColumnReference<Int> = map { it + value }
+public operator fun ColumnReference<Int>.minus(value: Int): ColumnReference<Int> = map { it - value }
+public operator fun Int.plus(column: ColumnReference<Int>): ColumnReference<Int> = column.map { this + it }
+public operator fun Int.minus(column: ColumnReference<Int>): ColumnReference<Int> = column.map { this - it }
+public operator fun ColumnReference<Int>.unaryMinus(): ColumnReference<Int> = map { -it }
+public operator fun ColumnReference<Int>.times(value: Int): ColumnReference<Int> = map { it * value }
+public operator fun ColumnReference<Int>.div(value: Int): ColumnReference<Int> = map { it / value }
+public operator fun Int.div(column: ColumnReference<Int>): ColumnReference<Int> = column.map { this / it }
+public operator fun ColumnReference<Any?>.plus(str: String): ColumnReference<String> = map { it.toString() + str }
 
 @JvmName("plusInt?")
 public operator fun DataColumn<Int?>.plus(value: Int): DataColumn<Int?> = map { it?.plus(value) }

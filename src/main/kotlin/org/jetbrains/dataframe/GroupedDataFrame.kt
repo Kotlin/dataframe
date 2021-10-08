@@ -30,9 +30,9 @@ public interface GroupedDataFrame<out T, out G> : GroupByAggregations<G> {
 
     public val keys: DataFrame<T>
 
-    public fun plain(): DataFrame<T>
+    public fun asDataFrame(groupedColumnName: String? = null): DataFrame<T>
 
-    public fun ungroup(): DataFrame<G> = groups.union().typed()
+    public fun union(): DataFrame<G> = groups.union().typed()
 
     public operator fun get(vararg values: Any?): DataFrame<T> = get(values.toList())
     public operator fun get(key: GroupKey): DataFrame<T>
@@ -46,13 +46,13 @@ public interface GroupedDataFrame<out T, out G> : GroupByAggregations<G> {
     public companion object
 }
 
-internal fun <T, G> DataFrame<T>.toGrouped(groupedColumnName: String): GroupedDataFrame<T, G> =
-    GroupedDataFrameImpl(this, this[groupedColumnName] as FrameColumn<G>) { none() }
+internal fun <T> DataFrame<T>.asGrouped(groupedColumnName: String): GroupedDataFrame<T, T> =
+    GroupedDataFrameImpl(this, this[groupedColumnName] as FrameColumn<T>) { none() }
 
-internal fun <T, G> DataFrame<T>.toGrouped(groupedColumn: ColumnReference<DataFrame<G>?>): GroupedDataFrame<T, G> =
+internal fun <T, G> DataFrame<T>.asGrouped(groupedColumn: ColumnReference<DataFrame<G>?>): GroupedDataFrame<T, G> =
     GroupedDataFrameImpl(this, frameColumn(groupedColumn.name()).typed()) { none() }
 
-internal fun <T> DataFrame<T>.toGrouped(): GroupedDataFrame<T, T> {
+internal fun <T> DataFrame<T>.asGrouped(): GroupedDataFrame<T, T> {
     val groupCol = columns().single { it.isTable() }.asTable() as FrameColumn<T>
-    return toGrouped { groupCol }
+    return asGrouped { groupCol }
 }

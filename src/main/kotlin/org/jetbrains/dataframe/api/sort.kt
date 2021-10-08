@@ -72,23 +72,25 @@ public fun <T, G, C> GroupedDataFrame<T, G>.sortByGroup(
     nullsLast: Boolean = false,
     default: C? = null,
     selector: DataFrameSelector<G, C>
-): GroupedDataFrame<T, G> = plain().sortBy {
+): GroupedDataFrame<T, G> = asDataFrame().sortBy {
     createColumnFromGroupExpression(this, default, selector).nullsLast(nullsLast)
-}.toGrouped(groups)
+}.asGrouped(groups)
 
 public fun <T, G, C> GroupedDataFrame<T, G>.sortByGroupDesc(
     nullsLast: Boolean = false,
     default: C? = null,
     selector: DataFrameSelector<G, C>
-): GroupedDataFrame<T, G> = plain().sortBy {
+): GroupedDataFrame<T, G> = asDataFrame().sortBy {
     createColumnFromGroupExpression(this, default, selector).desc.nullsLast(nullsLast)
-}.toGrouped(groups)
+}.asGrouped(groups)
 
 public fun <T, G> GroupedDataFrame<T, G>.sortByCountAsc(): GroupedDataFrame<T, G> = sortByGroup(default = 0) { nrow() }
 public fun <T, G> GroupedDataFrame<T, G>.sortByCount(): GroupedDataFrame<T, G> = sortByGroupDesc(default = 0) { nrow() }
 
-public fun <T, G> GroupedDataFrame<T, G>.sortByKeyDesc(nullsLast: Boolean = false): GroupedDataFrame<T, G> = plain().sortBy { keys.columns().toColumnSet().desc.nullsLast(nullsLast) }.toGrouped(groups)
-public fun <T, G> GroupedDataFrame<T, G>.sortByKey(nullsLast: Boolean = false): GroupedDataFrame<T, G> = plain().sortBy { keys.columns().toColumnSet().nullsLast(nullsLast) }.toGrouped(groups)
+public fun <T, G> GroupedDataFrame<T, G>.sortByKeyDesc(nullsLast: Boolean = false): GroupedDataFrame<T, G> = asDataFrame()
+    .sortBy { keys.columns().toColumnSet().desc.nullsLast(nullsLast) }.asGrouped(groups)
+public fun <T, G> GroupedDataFrame<T, G>.sortByKey(nullsLast: Boolean = false): GroupedDataFrame<T, G> = asDataFrame()
+    .sortBy { keys.columns().toColumnSet().nullsLast(nullsLast) }.asGrouped(groups)
 
 internal fun <T, C> DataFrame<T>.doSortBy(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail,
@@ -156,11 +158,11 @@ public class SortColumnDescriptor<C>(
 ) : DataColumn<C> by column
 
 internal fun <T, G> GroupedDataFrame<T, G>.doSortBy(selector: SortColumnsSelector<G, *>): GroupedDataFrame<T, G> {
-    return plain()
+    return asDataFrame()
         .update { groups }
         .with { it?.doSortBy(UnresolvedColumnsPolicy.Skip, selector) }
         .doSortBy(UnresolvedColumnsPolicy.Skip, selector as SortColumnsSelector<T, *>)
-        .toGrouped { it.frameColumn(groups.name()).typed() }
+        .asGrouped { it.frameColumn(groups.name()).typed() }
 }
 
 internal enum class SortFlag { Reversed, NullsLast }

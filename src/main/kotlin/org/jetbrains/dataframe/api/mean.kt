@@ -2,13 +2,14 @@ package org.jetbrains.dataframe
 
 import java.math.BigDecimal
 import kotlin.reflect.KType
-
-@JvmName("meanT?")
-public fun <T : Number> Sequence<T?>.mean(type: KType, skipNa: Boolean = true): Double = filterNotNull().mean(type, skipNa)
+import kotlin.reflect.full.withNullability
 
 public fun <T : Number> Iterable<T>.mean(type: KType, skipNaN: Boolean): Double = asSequence().mean(type, skipNaN)
 
 public fun <T : Number> Sequence<T>.mean(type: KType, skipNaN: Boolean): Double {
+    if (type.isMarkedNullable) {
+        return filterNotNull().mean(type.withNullability(false), skipNaN)
+    }
     return when (type.classifier) {
         Double::class -> (this as Sequence<Double>).mean(skipNaN)
         Float::class -> (this as Sequence<Float>).mean(skipNaN)

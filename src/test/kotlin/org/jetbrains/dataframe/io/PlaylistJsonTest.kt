@@ -283,7 +283,8 @@ class PlaylistJsonTest {
 
     @Test
     fun `aggregate by column`() {
-        val res = typed.aggregateColumn { items }.with {
+        val res = typed.asGrouped { items }.aggregate {
+            this into "items"
             minBy { snippet.publishedAt }.snippet into "earliest"
         }
 

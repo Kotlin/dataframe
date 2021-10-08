@@ -29,27 +29,25 @@ internal class GroupedDataFrameImpl<T, G>(
     }
 
     override fun <R> mapGroups(transform: Selector<DataFrame<G>?, DataFrame<R>?>) =
-        df.update(groups) { transform(it, it) }.toGrouped { frameColumn<R>(groups.name()) }
+        df.update(groups) { transform(it, it) }.asGrouped { frameColumn<R>(groups.name()) }
 
-    override fun plain() = df
+    override fun asDataFrame(groupedColumnName: String?) = if (groupedColumnName == null || groupedColumnName == groups.name()) df else df.rename(groups).into(groupedColumnName)
 
     override fun toString() = df.toString()
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all().except(keyColumnsInGroups.toColumns()) }
 
-    override fun aggregate(body: GroupByAggregateBody<G>) = aggregateGroupBy(plain(), { groups }, removeColumns = true, body).typed<G>()
+    override fun <R> aggregate(body: GroupByAggregateBody<G, R>) = aggregateGroupBy(asDataFrame(), { groups }, removeColumns = true, body).typed<G>()
 
-    override fun <R> aggregateInternal(body: AggregateBodyInternal<G, R>) = aggregate(body as GroupByAggregateBody<G>)
+    override fun <R> aggregateInternal(body: AggregateBodyInternal<G, R>) = aggregate(body as GroupByAggregateBody<G, R>)
 
     override fun pivot(columns: ColumnsSelector<G, *>): GroupedPivotAggregations<G> = GroupedPivotImpl(this, columns)
-
-    override fun into(name: String): DataFrame<G> = if (name == groups.name()) df.typed() else df.rename(groups).into(name).typed()
 
     override fun filter(predicate: GroupedRowFilter<T, G>): GroupedDataFrame<T, G> {
         val indices = (0 until df.nrow()).filter {
             val row = GroupedDataRowImpl(df.get(it), groups)
             predicate(row, row)
         }
-        return df[indices].toGrouped(groups)
+        return df[indices].asGrouped(groups)
     }
 }

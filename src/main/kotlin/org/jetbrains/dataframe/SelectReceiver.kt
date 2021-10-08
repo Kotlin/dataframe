@@ -134,6 +134,15 @@ public interface SelectReceiver<out T> : DataFrameBase<T> {
 
     public infix fun <C> String.by(newColumnExpression: RowSelector<T, C>): DataColumn<C> = newColumnWithActualType(this, newColumnExpression)
 
+    public fun String.ints(): DataColumn<Int> = getColumn(this)
+    public fun String.intOrNulls(): DataColumn<Int?> = getColumn(this)
+    public fun String.strings(): DataColumn<String> = getColumn(this)
+    public fun String.stringOrNulls(): DataColumn<String?> = getColumn(this)
+    public fun String.booleans(): DataColumn<Boolean> = getColumn(this)
+    public fun String.booleanOrNulls(): DataColumn<Boolean?> = getColumn(this)
+    public fun String.doubles(): DataColumn<Double> = getColumn(this)
+    public fun String.doubleOrNulls(): DataColumn<Double?> = getColumn(this)
+
     public fun DataFrameBase<*>.string(columnName: String): DataColumn<String> = getColumn(columnName)
     public fun DataFrameBase<*>.int(columnName: String): DataColumn<Int> = getColumn(columnName)
     public fun DataFrameBase<*>.bool(columnName: String): DataColumn<Boolean> = getColumn(columnName)

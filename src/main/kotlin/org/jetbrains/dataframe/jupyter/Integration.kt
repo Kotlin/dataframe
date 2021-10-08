@@ -51,7 +51,7 @@ internal class Integration : JupyterIntegration() {
             render<AnyRow>({ it.toDataFrame() }, { "DataRow [${it.ncol}]" })
             render<ColumnGroup<*>>({ it.df })
             render<AnyCol>({ dataFrameOf(listOf(it)) }, { "DataColumn [${it.nrow()}]" })
-            render<GroupedDataFrame<*, *>>({ it.plain() })
+            render<GroupedDataFrame<*, *>>({ it.asDataFrame() })
             render<PivotAggregations<*>> { it.frames().toDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
             render<GroupedPivotAggregations<*>> { it.frames().toHTML(config.display) { "GroupedPivot: ${it.size}" } }
 

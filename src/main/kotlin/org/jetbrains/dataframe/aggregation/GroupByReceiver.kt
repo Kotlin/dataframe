@@ -13,4 +13,4 @@ public abstract class GroupByReceiver<out T> : AggregateReceiver<T>() {
     public fun pivot(vararg columns: String): GroupedPivotAggregations<T> = pivot { columns.toColumns() }
 }
 
-public typealias GroupByAggregateBody<G> = GroupByReceiver<G>.(GroupByReceiver<G>) -> Unit
+public typealias GroupByAggregateBody<G, R> = GroupByReceiver<G>.(GroupByReceiver<G>) -> R
