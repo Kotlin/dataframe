@@ -21,6 +21,9 @@ import org.jetbrains.dataframe.groupBy
 import org.jetbrains.dataframe.impl.columns.asGroup
 import org.jetbrains.dataframe.isNumber
 import org.jetbrains.dataframe.mapToRows
+import org.jetbrains.dataframe.maxBy
+import org.jetbrains.dataframe.maxByOrNull
+import org.jetbrains.dataframe.minBy
 import org.jetbrains.dataframe.named
 import org.jetbrains.dataframe.nrow
 import org.jetbrains.dataframe.select

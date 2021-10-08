@@ -7,7 +7,7 @@ import org.jetbrains.dataframe.impl.emptyPath
 
 @PublishedApi
 internal fun <T, C, R> Aggregator<*, R>.aggregateAll(
-    data: DataFrameAggregations<T>,
+    data: DataFrame<T>,
     columns: ColumnsSelector<T, C>
 ): C? = data.aggregateAll(cast(), columns)
 
@@ -22,7 +22,7 @@ internal fun <T, R, C> Aggregator<*, R>.aggregateAll(
     columns: ColumnsSelector<T, C>
 ): DataFrame<T> = data.aggregateAll(cast(), columns)
 
-internal fun <T, C, R> DataFrameAggregations<T>.aggregateAll(
+internal fun <T, C, R> DataFrame<T>.aggregateAll(
     aggregator: Aggregator<C, R>,
     columns: ColumnsSelector<T, C>
 ): R? = aggregator.aggregate(get(columns))

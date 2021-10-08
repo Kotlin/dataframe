@@ -20,7 +20,7 @@ internal inline fun <T, reified C, R> Aggregator<*, R>.aggregateOf(
 
 @PublishedApi
 internal inline fun <T, reified C, R> Aggregator<*, R>.of(
-    data: DataFrameAggregations<T>,
+    data: DataFrame<T>,
     crossinline expression: RowSelector<T, C>
 ): R? = aggregateOf(data as DataFrame<T>, expression)
 
