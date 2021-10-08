@@ -21,7 +21,8 @@ public interface PivotAggregations<T> : Aggregatable<T> {
     public fun values(vararg columns: Column, separate: Boolean = false): DataRow<T> = values(separate) { columns.toColumns() }
     public fun values(vararg columns: String, separate: Boolean = false): DataRow<T> = values(separate) { columns.toColumns() }
     public fun values(vararg columns: KProperty<*>, separate: Boolean = false): DataRow<T> = values(separate) { columns.toColumns() }
-    public fun values(separate: Boolean = false, columns: AggregateColumnsSelector<T, *>): DataRow<T> = asGrouped().values(separate, columns)[0]
+    public fun values(separate: Boolean = false, columns: AggregateColumnsSelector<T, *>): DataRow<T> = asGrouped()
+        .values(separate, columns)[0]
 
     public fun values(separate: Boolean = false): DataRow<T> = asGrouped().values(separate)[0]
 
@@ -29,13 +30,17 @@ public interface PivotAggregations<T> : Aggregatable<T> {
 
     public fun min(separate: Boolean = false): DataRow<T> = asGrouped().min(separate)[0]
 
-    public fun <R : Comparable<R>> minFor(separate: Boolean = false, columns: AggregateColumnsSelector<T, R?>): DataRow<T> = asGrouped().minFor(separate, columns)[0]
+    public fun <R : Comparable<R>> minFor(separate: Boolean = false, columns: AggregateColumnsSelector<T, R?>): DataRow<T> = asGrouped()
+        .minFor(separate, columns)[0]
 
-    public fun <R : Comparable<R>> min(columns: ColumnsSelector<T, R?>): DataRow<T> = asGrouped().min(columns)[0]
+    public fun <R : Comparable<R>> min(columns: ColumnsSelector<T, R?>): DataRow<T> = asGrouped()
+        .min(columns)[0]
 
-    public fun <R : Comparable<R>> minOf(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped().minOf(rowExpression)[0]
+    public fun <R : Comparable<R>> minOf(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped()
+        .minOf(rowExpression)[0]
 
-    public fun <R : Comparable<R>> minBy(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped().minBy(rowExpression)[0]
+    public fun <R : Comparable<R>> minBy(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped()
+        .minBy(rowExpression)[0]
 
     // endregion
 
@@ -43,13 +48,17 @@ public interface PivotAggregations<T> : Aggregatable<T> {
 
     public fun max(separate: Boolean = false): DataRow<T> = asGrouped().max(separate)[0]
 
-    public fun <R : Comparable<R>> maxFor(separate: Boolean = false, columns: AggregateColumnsSelector<T, R?>): DataRow<T> = asGrouped().maxFor(separate, columns)[0]
+    public fun <R : Comparable<R>> maxFor(separate: Boolean = false, columns: AggregateColumnsSelector<T, R?>): DataRow<T> = asGrouped()
+        .maxFor(separate, columns)[0]
 
-    public fun <R : Comparable<R>> max(columns: ColumnsSelector<T, R?>): DataRow<T> = asGrouped().max(columns)[0]
+    public fun <R : Comparable<R>> max(columns: ColumnsSelector<T, R?>): DataRow<T> = asGrouped()
+        .max(columns)[0]
 
-    public fun <R : Comparable<R>> maxOf(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped().maxOf(rowExpression)[0]
+    public fun <R : Comparable<R>> maxOf(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped()
+        .maxOf(rowExpression)[0]
 
-    public fun <R : Comparable<R>> maxBy(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped().maxBy(rowExpression)[0]
+    public fun <R : Comparable<R>> maxBy(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped()
+        .maxBy(rowExpression)[0]
 
     // endregion
 
@@ -68,8 +77,10 @@ internal fun <T> PivotAggregations<T>.asGrouped(): GroupedPivotAggregations<T> =
 
 // region inlines
 
-public inline fun <T, reified V> PivotAggregations<T>.with(noinline selector: RowSelector<T, V>): DataRow<T> = asGrouped().with(selector)[0]
+public inline fun <T, reified V> PivotAggregations<T>.with(noinline selector: RowSelector<T, V>): DataRow<T> = asGrouped()
+    .with(selector)[0]
 
-public inline fun <T, reified R : Number> PivotAggregations<T>.sumOf(crossinline selector: RowSelector<T, R>): DataRow<T> = asGrouped().sumOf(selector)[0]
+public inline fun <T, reified R : Number> PivotAggregations<T>.sumOf(crossinline selector: RowSelector<T, R>): DataRow<T> = asGrouped()
+    .sumOf(selector)[0]
 
 // endregion

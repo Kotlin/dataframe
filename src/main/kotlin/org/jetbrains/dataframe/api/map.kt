@@ -1,10 +1,12 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.dataframe.columns.ColumnReference
 import org.jetbrains.dataframe.columns.DataColumn
 import org.jetbrains.dataframe.columns.FrameColumn
 import org.jetbrains.dataframe.columns.name
 import org.jetbrains.dataframe.columns.size
 import org.jetbrains.dataframe.columns.values
+import org.jetbrains.dataframe.impl.columns.TransformedColumnReference
 import org.jetbrains.dataframe.impl.columns.typed
 import org.jetbrains.dataframe.impl.createDataCollector
 import kotlin.reflect.KType
@@ -27,6 +29,12 @@ public fun <T, R> DataColumn<T>.map(type: KType?, transform: (T) -> R): DataColu
     values.forEach { collector.add(transform(it)) }
     return collector.toColumn(name) as DataColumn<R>
 }
+
+public inline fun <C, reified R> ColumnReference<C>.map(noinline transform: (C) -> R): ColumnReference<R> =
+    map(getType<R>(), transform)
+
+public fun <C, R> ColumnReference<C>.map(targetType: KType?, transform: (C) -> R): ColumnReference<R> =
+    TransformedColumnReference(this, transform, targetType)
 
 public fun <T, G, R> GroupedDataFrame<T, G>.mapNotNullGroups(transform: DataFrame<G>.() -> DataFrame<R>?): GroupedDataFrame<T, R> = mapGroups { if (it == null) null else transform(it) }
 

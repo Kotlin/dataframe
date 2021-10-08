@@ -5,18 +5,14 @@ import org.jetbrains.dataframe.columns.name
 import org.jetbrains.dataframe.columns.values
 import org.jetbrains.dataframe.impl.aggregation.GroupByReceiverImpl
 
-public data class AggregateClause<T, G>(val df: DataFrame<T>, val selector: ColumnSelector<T, DataFrame<G>>) {
-    public fun with(body: GroupByAggregateBody<G>): DataFrame<T> = aggregateGroupBy(df, selector, removeColumns = false, body)
-}
-
-public fun <T, G> DataFrame<T>.aggregateColumn(selector: ColumnSelector<T, DataFrame<G>>): AggregateClause<T, G> = AggregateClause(this, selector)
-
-internal fun <T, G> aggregateGroupBy(
+internal fun <T, G, R> aggregateGroupBy(
     df: DataFrame<T>,
     selector: ColumnSelector<T, DataFrame<G>?>,
     removeColumns: Boolean,
-    body: GroupByAggregateBody<G>
+    body: GroupByAggregateBody<G, R>
 ): DataFrame<T> {
+    val defaultAggregateName = "aggregated"
+
     val column = df.column(selector)
 
     val (df2, removedNodes) = df.doRemove(selector)
@@ -25,7 +21,8 @@ internal fun <T, G> aggregateGroupBy(
         if (it == null) null
         else {
             val builder = GroupByReceiverImpl(it)
-            body(builder, builder)
+            val result = body(builder, builder)
+            if (result != Unit && result !is NamedValue && result !is AggregatedPivot<*>) builder.yield(NamedValue.create(pathOf(defaultAggregateName), result, null, null, true))
             builder.compute()
         }
     }.union()

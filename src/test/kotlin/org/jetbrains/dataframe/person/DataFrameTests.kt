@@ -354,7 +354,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `group and sort`() {
         val expected = typed.sortBy { name.desc and age }
-        val actual = typed.groupBy { name }.sortBy { name.desc and age }.ungroup()
+        val actual = typed.groupBy { name }.sortBy { name.desc and age }.union()
         actual shouldBe expected
     }
 
@@ -1199,7 +1199,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `empty group by`() {
-        val ungrouped = typed.filter { false }.groupBy { name }.ungroup()
+        val ungrouped = typed.filter { false }.groupBy { name }.union()
         ungrouped.nrow() shouldBe 0
         ungrouped.ncol() shouldBe 0
     }
@@ -1332,11 +1332,11 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `union table columns`() {
-        val grouped = typed.addRowNumber("id").groupBy { name }.plain()
+        val grouped = typed.addRowNumber("id").groupBy { name }.asDataFrame()
         val dfs = (0 until grouped.nrow()).map {
             grouped[it..it]
         }
-        val dst = dfs.union().toGrouped().ungroup().sortBy("id").remove("id")
+        val dst = dfs.union().asGrouped().union().sortBy("id").remove("id")
         dst shouldBe typed
     }
 
@@ -1751,7 +1751,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `groupBy with map`() {
-        typed.groupBy { name.map { it.lowercase() } }.plain().name.values() shouldBe typed.name.distinct().lowercase()
+        typed.groupBy { name.map { it.lowercase() } }.asDataFrame().name.values() shouldBe typed.name.distinct().lowercase()
             .values()
     }
 
@@ -1835,27 +1835,27 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `grouped sort by count`() {
         val sorted = typed.groupBy { name }.sortByCount()
-        sorted.plain().name.values() shouldBe typed.rows().groupBy { it.name }.toList()
+        sorted.asDataFrame().name.values() shouldBe typed.rows().groupBy { it.name }.toList()
             .sortedByDescending { it.second.size }.map { it.first }
     }
 
     @Test
     fun `grouped sort by key`() {
         val sorted = typed.groupBy { name }.sortByKey()
-        sorted.plain().name.values() shouldBe typed.name.distinct().values().sorted()
+        sorted.asDataFrame().name.values() shouldBe typed.name.distinct().values().sorted()
     }
 
     @Test
     fun `infer ColumnGroup type in convert with`() {
         val g by frameColumn()
-        val grouped = typed.groupBy { name }.into(g).convert(g).with { it.first() }
-        grouped[g.name()].kind() shouldBe ColumnKind.Group
+        val grouped = typed.groupBy { name }.asDataFrame(g.name).convert(g).with { it.first() }
+        grouped[g.name].kind() shouldBe ColumnKind.Group
     }
 
     @Test
     fun `filter GroupedDataFrame by groups`() {
         val grouped = typed.groupBy { name }
-        val filtered = grouped.filter { group.nrow() > 2 }.ungroup()
+        val filtered = grouped.filter { group.nrow() > 2 }.union()
         filtered shouldBe typed.filter { name == "Mark" }
     }
 

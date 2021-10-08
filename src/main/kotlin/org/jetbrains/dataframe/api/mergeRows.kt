@@ -28,5 +28,5 @@ public fun <T, C> DataFrame<T>.mergeRows(dropNulls: Boolean = false, columns: Co
                 } else null
             }
         }[0..0]
-    }.ungroup()
+    }.union()
 }

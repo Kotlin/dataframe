@@ -46,7 +46,7 @@ class SeriesTests {
             .sortBy { city and day }
             .groupBy { city }
             .add("diff") { diff { it.temp } }
-            .ungroup()
+            .union()
 
         val srcData = typed.map { (city to day) to temp }.toMap()
         val expected = typed.sortBy { city and day }.map { row -> srcData[city to (day - 1)]?.let { row.temp - it } ?: 0 }
@@ -60,7 +60,7 @@ class SeriesTests {
             .groupBy { city }
             .sortBy { city and day }
             .add("ma_temp") { it.movingAverage(k) { it.temp } }
-            .ungroup()
+            .union()
 
         val srcData = typed.map { (city to day) to temp }.toMap()
         val expected = typed

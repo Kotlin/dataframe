@@ -2,6 +2,10 @@
 
 ## Column types
 
+### ValueColumn
+
+### ColumnGroup
+
 ### FrameColumn
 
 ## Column conditions

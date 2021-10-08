@@ -4,7 +4,6 @@ import org.jetbrains.dataframe.annotations.ColumnName
 import org.jetbrains.dataframe.columns.*
 import org.jetbrains.dataframe.impl.asList
 import org.jetbrains.dataframe.impl.columns.ColumnAccessorImpl
-import org.jetbrains.dataframe.impl.columns.ConvertedColumnDef
 import org.jetbrains.dataframe.impl.columns.typed
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -36,12 +35,6 @@ public fun <C> createColumnSet(resolver: (ColumnResolutionContext) -> List<Colum
     object : Columns<C> {
         override fun resolve(context: ColumnResolutionContext) = resolver(context)
     }
-
-public inline fun <C, reified R> ColumnReference<C>.map(noinline transform: (C) -> R): ColumnReference<R> =
-    map(getType<R>(), transform)
-
-public fun <C, R> ColumnReference<C>.map(targetType: KType?, transform: (C) -> R): ColumnReference<R> =
-    ConvertedColumnDef(this, transform, targetType)
 
 public typealias Column = ColumnReference<*>
 
@@ -222,7 +215,7 @@ public fun <T> ValueColumn<T>.toDefinition(): ColumnAccessor<T> = column<T>(name
 
 public operator fun AnyColumn.plus(other: AnyColumn): AnyFrame = dataFrameOf(listOf(this, other))
 
-public fun StringCol.len(): DataColumn<Int?> = map { it?.length }
+public fun StringCol.length(): DataColumn<Int?> = map { it?.length }
 public fun StringCol.lowercase(): DataColumn<String?> = map { it?.lowercase() }
 public fun StringCol.uppercase(): DataColumn<String?> = map { it?.uppercase() }
 

@@ -6,7 +6,11 @@ import org.jetbrains.dataframe.columns.ColumnWithPath
 import org.jetbrains.dataframe.map
 import kotlin.reflect.KType
 
-internal class ConvertedColumnDef<C, R>(val source: ColumnReference<C>, val transform: (C) -> R, val type: KType?) :
+internal class TransformedColumnReference<C, R>(
+    val source: ColumnReference<C>,
+    val transform: (C) -> R,
+    val type: KType?
+) :
     ColumnReference<R> {
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<R>? {
@@ -15,5 +19,5 @@ internal class ConvertedColumnDef<C, R>(val source: ColumnReference<C>, val tran
 
     override fun name() = source.name()
 
-    override fun rename(newName: String) = ConvertedColumnDef(source.rename(newName), transform, type)
+    override fun rename(newName: String) = TransformedColumnReference(source.rename(newName), transform, type)
 }

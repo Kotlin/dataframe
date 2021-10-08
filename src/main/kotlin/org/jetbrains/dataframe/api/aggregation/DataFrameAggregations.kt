@@ -20,7 +20,7 @@ import kotlin.reflect.KProperty
 
 public interface DataFrameAggregations<out T> : Aggregatable<T>, DataFrameBase<T> {
 
-    public fun aggregate(body: GroupByAggregateBody<T>): DataRow<T> = aggregateInternal(body as AggregateBodyInternal<T, Unit>)[0]
+    public fun <R> aggregate(body: GroupByAggregateBody<T, R>): DataRow<T> = aggregateInternal(body as AggregateBodyInternal<T, R>)[0]
 
     public fun count(predicate: RowFilter<T>? = null): Int =
         if (predicate == null) nrow() else rows().count { predicate(it, it) }
