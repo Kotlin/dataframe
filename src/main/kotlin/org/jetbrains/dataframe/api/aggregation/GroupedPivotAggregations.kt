@@ -237,6 +237,6 @@ public fun <T> GroupedPivotAggregations<T>.std(vararg columns: ColumnReference<N
 public fun <T> GroupedPivotAggregations<T>.std(vararg columns: String): DataFrame<T> = std { columns.toColumnsOf() }
 public fun <T> GroupedPivotAggregations<T>.std(vararg columns: KProperty<Number?>): DataFrame<T> = std { columns.toColumns() }
 
-public fun <T> GroupedPivotAggregations<T>.stdOf(name: String? = null, selector: RowSelector<T, Number?>): DataFrame<T> = Aggregators.std.aggregateOf(this, selector)
+public fun <T> GroupedPivotAggregations<T>.stdOf(selector: RowSelector<T, Number?>): DataFrame<T> = Aggregators.std.aggregateOf(this, selector)
 
 // endregion

@@ -12,9 +12,9 @@ import org.jetbrains.dataframe.impl.columns.toColumns
 import org.jetbrains.dataframe.impl.emptyPath
 import kotlin.reflect.KType
 
-public fun <T> DataFrame<T>.pivot(columns: ColumnsSelector<T, *>): PivotAggregations<T> = DataFramePivotImpl(this, columns)
-public fun <T> DataFrame<T>.pivot(vararg columns: String): PivotAggregations<T> = pivot { columns.toColumns() }
-public fun <T> DataFrame<T>.pivot(vararg columns: Column): PivotAggregations<T> = pivot { columns.toColumns() }
+public fun <T> DataFrame<T>.pivot(columns: ColumnsSelector<T, *>): PivotedDataFrame<T> = DataFramePivotImpl(this, columns)
+public fun <T> DataFrame<T>.pivot(vararg columns: String): PivotedDataFrame<T> = pivot { columns.toColumns() }
+public fun <T> DataFrame<T>.pivot(vararg columns: Column): PivotedDataFrame<T> = pivot { columns.toColumns() }
 
 public fun <T, P : GroupedPivotAggregations<T>> P.withGrouping(group: MapColumnReference): P = withGrouping(group.path()) as P
 public fun <T, P : GroupedPivotAggregations<T>> P.withGrouping(groupName: String): P = withGrouping(pathOf(groupName)) as P
