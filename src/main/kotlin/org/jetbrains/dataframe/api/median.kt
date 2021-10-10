@@ -1,10 +1,7 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.dataframe.columns.DataColumn
 import java.math.BigDecimal
 import kotlin.reflect.KType
-
-public inline fun <reified T : Comparable<T>> DataColumn<T?>.median(): T? = asSequence().filterNotNull().asIterable().median(type())
 
 public inline fun <reified T : Comparable<T>> Iterable<T?>.median(type: KType): T? {
     val sorted = if (type.isMarkedNullable) filterNotNull().sorted() else (this as Iterable<T>).sorted()
@@ -21,9 +18,3 @@ public inline fun <reified T : Comparable<T>> Iterable<T?>.median(type: KType): 
         else -> sorted[index - 1]
     }
 }
-
-public inline fun <T, G, reified R : Comparable<R>> GroupedDataFrame<T, G>.median(
-    columnName: String = "median",
-    noinline selector: ColumnsSelector<G, R>
-): DataFrame<G> =
-    aggregate { median(selector) into columnName }

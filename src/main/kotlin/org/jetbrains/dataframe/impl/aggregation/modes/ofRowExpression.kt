@@ -13,6 +13,12 @@ internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
 ): R? = aggregate(values.asSequence().map(transform).asIterable(), getType<V>())
 
 @PublishedApi
+internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
+    column: DataColumn<C>,
+    noinline transform: (C) -> V
+): R? = aggregateOf(column.values(), transform)
+
+@PublishedApi
 internal inline fun <T, reified C, R> Aggregator<*, R>.aggregateOf(
     frame: DataFrame<T>,
     crossinline expression: RowSelector<T, C>

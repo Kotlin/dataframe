@@ -397,7 +397,7 @@ class PivotTests {
 
     @Test
     fun `pivot plain`() {
-        val pivoted = typed.pivot { name }.frames()
+        val pivoted = typed.pivot { name }.asDataRow()
         pivoted.columnNames() shouldBe typed.name.distinct().toList()
         pivoted["Bob"] shouldBe typed.filter { name == "Bob" }
     }

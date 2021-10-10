@@ -7,11 +7,11 @@ import org.jetbrains.dataframe.GroupedDataFrame
 import org.jetbrains.dataframe.GroupedPivotAggregations
 import org.jetbrains.dataframe.PivotedDataFrame
 import org.jetbrains.dataframe.annotations.DataSchema
+import org.jetbrains.dataframe.asDataRow
 import org.jetbrains.dataframe.columns.AnyCol
 import org.jetbrains.dataframe.columns.ColumnGroup
 import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.dataTypes.IMG
-import org.jetbrains.dataframe.frames
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.dataframe.internal.codeGen.CodeWithConverter
 import org.jetbrains.dataframe.io.HtmlData
@@ -53,7 +53,7 @@ internal class Integration : JupyterIntegration() {
             render<ColumnGroup<*>>({ it.df })
             render<AnyCol>({ dataFrameOf(listOf(it)) }, { "DataColumn [${it.nrow()}]" })
             render<GroupedDataFrame<*, *>>({ it.asDataFrame() })
-            render<PivotedDataFrame<*>> { it.frames().toDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
+            render<PivotedDataFrame<*>> { it.asDataRow().toDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
             render<GroupedPivotAggregations<*>> { it.frames().toHTML(config.display) { "GroupedPivot: ${it.size}" } }
 
             render<IMG> { HTML("<img src=\"${it.url}\"/>") }

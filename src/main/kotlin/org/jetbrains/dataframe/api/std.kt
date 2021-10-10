@@ -22,8 +22,6 @@ public fun <T : Number> Iterable<T?>.std(type: KType): Double {
     }
 }
 
-public fun <T : Number> DataColumn<T?>.std(): Double = (if (hasNulls) values.filterNotNull() else (values as Iterable<T>)).std(type)
-
 @JvmName("doubleStd")
 public fun Iterable<Double>.std(): Double = stdMean().first
 
