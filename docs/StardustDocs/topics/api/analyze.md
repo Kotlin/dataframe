@@ -512,10 +512,8 @@ df.pivot { city }
 
 ### Aggregation
 
-
-
 ### `pivot` inside `aggregate`
-[pivot](#pivot) operation can also be used within [aggregate](#aggregate) with a slightly different syntax
+[pivot](#pivot) operation can also be used within `aggregate` with a slightly different syntax
 
 ## Working with `GroupedDataFrame`
 
