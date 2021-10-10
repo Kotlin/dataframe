@@ -35,6 +35,7 @@ public interface GroupedDataFrame<out T, out G> : Grouped<G> {
     public fun union(): DataFrame<G> = groups.union().typed()
 
     public operator fun get(vararg values: Any?): DataFrame<T> = get(values.toList())
+
     public operator fun get(key: GroupKey): DataFrame<T>
 
     public fun <R> mapGroups(transform: Selector<DataFrame<G>?, DataFrame<R>?>): GroupedDataFrame<T, R>
