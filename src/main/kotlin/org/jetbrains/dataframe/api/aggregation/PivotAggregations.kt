@@ -25,52 +25,61 @@ public interface PivotAggregations<T> : Aggregatable<T> {
         .values(separate, columns)[0]
 
     public fun values(separate: Boolean = false): DataRow<T> = asGrouped().values(separate)[0]
-
-    // region min
-
-    public fun min(separate: Boolean = false): DataRow<T> = asGrouped().min(separate)[0]
-
-    public fun <R : Comparable<R>> minFor(separate: Boolean = false, columns: AggregateColumnsSelector<T, R?>): DataRow<T> = asGrouped()
-        .minFor(separate, columns)[0]
-
-    public fun <R : Comparable<R>> min(columns: ColumnsSelector<T, R?>): DataRow<T> = asGrouped()
-        .min(columns)[0]
-
-    public fun <R : Comparable<R>> minOf(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped()
-        .minOf(rowExpression)[0]
-
-    public fun <R : Comparable<R>> minBy(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped()
-        .minBy(rowExpression)[0]
-
-    // endregion
-
-    // region max
-
-    public fun max(separate: Boolean = false): DataRow<T> = asGrouped().max(separate)[0]
-
-    public fun <R : Comparable<R>> maxFor(separate: Boolean = false, columns: AggregateColumnsSelector<T, R?>): DataRow<T> = asGrouped()
-        .maxFor(separate, columns)[0]
-
-    public fun <R : Comparable<R>> max(columns: ColumnsSelector<T, R?>): DataRow<T> = asGrouped()
-        .max(columns)[0]
-
-    public fun <R : Comparable<R>> maxOf(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped()
-        .maxOf(rowExpression)[0]
-
-    public fun <R : Comparable<R>> maxBy(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped()
-        .maxBy(rowExpression)[0]
-
-    // endregion
-
-    // region sum
-
-    public fun sum(separate: Boolean = false): DataRow<T> = asGrouped().sum(separate)[0]
-
-    public fun <R : Number> sumFor(separate: Boolean = false, columns: AggregateColumnsSelector<T, R>): DataRow<T> =
-        asGrouped().sumFor(separate, columns)[0]
-
-    // endregion
 }
+
+// region min
+
+public fun <T> PivotedDataFrame<T>.min(separate: Boolean = false): DataRow<T> = asGrouped().min(separate)[0]
+
+public fun <T, R : Comparable<R>> PivotedDataFrame<T>.minFor(
+    separate: Boolean = false,
+    columns: AggregateColumnsSelector<T, R?>
+): DataRow<T> = asGrouped()
+    .minFor(separate, columns)[0]
+
+public fun <T, R : Comparable<R>> PivotedDataFrame<T>.min(columns: ColumnsSelector<T, R?>): DataRow<T> = asGrouped()
+    .min(columns)[0]
+
+public fun <T, R : Comparable<R>> PivotedDataFrame<T>.minOf(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped()
+    .minOf(rowExpression)[0]
+
+public fun <T, R : Comparable<R>> PivotedDataFrame<T>.minBy(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped()
+    .minBy(rowExpression)[0]
+
+// endregion
+
+// region max
+
+public fun <T> PivotedDataFrame<T>.max(separate: Boolean = false): DataRow<T> = asGrouped().max(separate)[0]
+
+public fun <T, R : Comparable<R>> PivotedDataFrame<T>.maxFor(
+    separate: Boolean = false,
+    columns: AggregateColumnsSelector<T, R?>
+): DataRow<T> = asGrouped()
+    .maxFor(separate, columns)[0]
+
+public fun <T, R : Comparable<R>> PivotedDataFrame<T>.max(columns: ColumnsSelector<T, R?>): DataRow<T> = asGrouped()
+    .max(columns)[0]
+
+public fun <T, R : Comparable<R>> PivotedDataFrame<T>.maxOf(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped()
+    .maxOf(rowExpression)[0]
+
+public fun <T, R : Comparable<R>> PivotedDataFrame<T>.maxBy(rowExpression: RowSelector<T, R>): DataRow<T> = asGrouped()
+    .maxBy(rowExpression)[0]
+
+// endregion
+
+// region sum
+
+public fun <T> PivotedDataFrame<T>.sum(separate: Boolean = false): DataRow<T> = asGrouped().sum(separate)[0]
+
+public fun <T, R : Number> PivotedDataFrame<T>.sumFor(
+    separate: Boolean = false,
+    columns: AggregateColumnsSelector<T, R>
+): DataRow<T> =
+    asGrouped().sumFor(separate, columns)[0]
+
+// endregion
 
 @PublishedApi
 internal fun <T> PivotAggregations<T>.asGrouped(): GroupedPivotAggregations<T> = groupBy { none() }

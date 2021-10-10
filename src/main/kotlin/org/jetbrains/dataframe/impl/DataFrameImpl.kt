@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe.impl
 
 import org.jetbrains.dataframe.*
+import org.jetbrains.dataframe.aggregation.GroupByAggregateBody
 import org.jetbrains.dataframe.columns.*
 import org.jetbrains.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.dataframe.impl.aggregation.GroupByReceiverImpl
@@ -60,12 +61,7 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T>, 
 
     override fun columns() = columns
 
-    override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>): DataFrame<T> {
-        val receiver = GroupByReceiverImpl(this)
-        body(receiver, receiver)
-        val result = receiver.compute()?.df() ?: DataFrame.empty(1)
-        return result.typed()
-    }
+    override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) = aggregate(body as GroupByAggregateBody<T, R>).df()
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all() }
 
@@ -85,6 +81,13 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T>, 
                 }
             }
         }
+    }
+
+    override fun <R> aggregate(body: GroupByAggregateBody<T, R>): DataRow<T> {
+        val receiver = GroupByReceiverImpl(this)
+        body(receiver, receiver)
+        val row = receiver.compute() ?: DataFrame.empty(1)[0]
+        return row.typed()
     }
 }
 

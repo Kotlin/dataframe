@@ -13,16 +13,16 @@ import org.jetbrains.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.dataframe.impl.aggregation.modes.aggregateOfDelegated
 import org.jetbrains.dataframe.impl.aggregation.modes.aggregateValue
-import org.jetbrains.dataframe.impl.aggregation.receivers.AggregateBodyInternal
 import org.jetbrains.dataframe.impl.columns.toColumns
 import org.jetbrains.dataframe.impl.columns.toColumnsOf
 import org.jetbrains.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.dataframe.impl.columns.toNumberColumns
 import kotlin.reflect.KProperty
 
-public interface Grouped<out T> : Aggregatable<T>
+public interface Grouped<out T> : Aggregatable<T> {
 
-public fun <T, R> Grouped<T>.aggregate(body: GroupByAggregateBody<T, R>): DataFrame<T> = aggregateInternal(body as AggregateBodyInternal<T, R>)
+    public fun <R> aggregate(body: GroupByAggregateBody<T, R>): DataFrame<T>
+}
 
 public fun <T> Grouped<T>.count(resultName: String = "count", predicate: RowFilter<T>? = null): DataFrame<T> =
     aggregateValue(resultName) { count(predicate) default 0 }
@@ -123,21 +123,24 @@ public fun <T, C : Number> Grouped<T>.meanFor(
     skipNa: Boolean = false,
     columns: AggregateColumnsSelector<T, C?>
 ): DataFrame<T> = Aggregators.mean(skipNa).aggregateFor(this, columns)
-public fun <T> Grouped<T>.meanFor(vararg columns: String): DataFrame<T> = meanFor { columns.toNumberColumns() }
-public fun <T, C : Number> Grouped<T>.meanFor(vararg columns: ColumnReference<C?>): DataFrame<T> = meanFor { columns.toColumns() }
-public fun <T, C : Number> Grouped<T>.meanFor(vararg columns: KProperty<C?>): DataFrame<T> = meanFor { columns.toColumns() }
+public fun <T> Grouped<T>.meanFor(vararg columns: String, skipNa: Boolean = false): DataFrame<T> = meanFor(skipNa) { columns.toNumberColumns() }
+public fun <T, C : Number> Grouped<T>.meanFor(vararg columns: ColumnReference<C?>, skipNa: Boolean = false): DataFrame<T> = meanFor(skipNa) { columns.toColumns() }
+public fun <T, C : Number> Grouped<T>.meanFor(vararg columns: KProperty<C?>, skipNa: Boolean = false): DataFrame<T> = meanFor(skipNa) { columns.toColumns() }
 
 public fun <T, C : Number> Grouped<T>.mean(
     name: String? = null,
     skipNa: Boolean = false,
     columns: ColumnsSelector<T, C?>
 ): DataFrame<T> = Aggregators.mean(skipNa).aggregateAll(this, name, columns)
+
 public fun <T> Grouped<T>.mean(vararg columns: String, name: String? = null, skipNa: Boolean = false): DataFrame<T> = mean(name, skipNa) { columns.toNumberColumns() }
+
 public fun <T, C : Number> Grouped<T>.mean(
     vararg columns: ColumnReference<C?>,
     name: String? = null,
     skipNa: Boolean = false
 ): DataFrame<T> = mean(name, skipNa) { columns.toColumns() }
+
 public fun <T, C : Number> Grouped<T>.mean(
     vararg columns: KProperty<C?>,
     name: String? = null,

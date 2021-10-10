@@ -6,6 +6,7 @@ import org.jetbrains.dataframe.into
 import org.jetbrains.dataframe.io.read
 import org.jetbrains.dataframe.pivot
 import org.jetbrains.dataframe.rename
+import org.jetbrains.dataframe.values
 import org.junit.Test
 
 class Securities {

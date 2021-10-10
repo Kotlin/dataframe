@@ -47,7 +47,7 @@ internal inline fun <T, reified C, reified R> Aggregator<*, R>.aggregateOf(
 ): DataFrame<T> = data.aggregateOf(resultName, expression, this as Aggregator<C, R>)
 
 @PublishedApi
-internal inline fun <T, reified C, reified R> Aggregator<*, R>.of(
+internal inline fun <T, reified C, reified R> Aggregator<*, R>.aggregateOf(
     data: GroupedPivotAggregations<T>,
     crossinline expression: RowSelector<T, C>
 ): DataFrame<T> = data.aggregateOf(expression, this as Aggregator<C, R>)

@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.aggregation.Aggregatable
+import org.jetbrains.dataframe.aggregation.GroupByAggregateBody
 import org.jetbrains.dataframe.columns.*
 import org.jetbrains.dataframe.impl.*
 import org.jetbrains.dataframe.impl.columns.addPath
@@ -213,6 +214,8 @@ public interface DataFrame<out T> : Aggregatable<T>, DataFrameBase<T> {
     public fun <R> mapIndexedNotNull(action: (Int, DataRow<T>) -> R?): List<R> = rows().mapIndexedNotNull(action)
 
     public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
+
+    public fun <R> aggregate(body: GroupByAggregateBody<T, R>): DataRow<T>
 }
 
 public inline fun <T, R> DataFrame<T>.map(selector: RowSelector<T, R>): List<R> = rows().map { selector(it, it) }

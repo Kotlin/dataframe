@@ -36,7 +36,7 @@ internal class GroupedDataFrameImpl<T, G>(
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all().except(keyColumnsInGroups.toColumns()) }
 
-    private fun <R> aggregate(body: GroupByAggregateBody<G, R>) = aggregateGroupBy(asDataFrame(), { groups }, removeColumns = true, body).typed<G>()
+    override fun <R> aggregate(body: GroupByAggregateBody<G, R>) = aggregateGroupBy(asDataFrame(), { groups }, removeColumns = true, body).typed<G>()
 
     override fun <R> aggregateInternal(body: AggregateBodyInternal<G, R>) = aggregate(body as GroupByAggregateBody<G, R>)
 
