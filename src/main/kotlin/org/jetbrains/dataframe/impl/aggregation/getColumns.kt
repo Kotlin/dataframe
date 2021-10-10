@@ -10,7 +10,7 @@ internal inline fun <T> Aggregatable<T>.remainingColumns(crossinline predicate: 
 
 internal fun <T> Aggregatable<T>.comparableColumns() = remainingColumns { it.isComparable() } as ColumnsSelector<T, Comparable<Any?>>
 
-internal fun <T> Aggregatable<T>.numberColumns() = remainingColumns { it.isNumber() } as ColumnsSelector<T, Number>
+internal fun <T> Aggregatable<T>.numberColumns() = remainingColumns { it.isNumber() } as ColumnsSelector<T, Number?>
 
 internal fun NamedValue.toColumnWithPath() = path to guessColumnType(
     path.last(),

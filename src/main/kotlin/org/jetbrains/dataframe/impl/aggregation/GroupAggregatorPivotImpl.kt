@@ -15,7 +15,7 @@ internal data class GroupAggregatorPivotImpl<T>(
     internal val groupPath: ColumnPath = emptyPath()
 ) : GroupedPivotAggregations<T>, AggregatableInternal<T> {
 
-    override fun groupByValue(flag: Boolean) = if (flag == groupValues) this else copy(groupValues = flag)
+    override fun separateAggregatedValues(flag: Boolean) = if (flag == groupValues) this else copy(groupValues = flag)
 
     override fun default(value: Any?) = copy(default = value)
 

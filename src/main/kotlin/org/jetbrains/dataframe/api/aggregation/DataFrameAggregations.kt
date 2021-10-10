@@ -1,9 +1,7 @@
 package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.aggregation.AggregateColumnsSelector
-import org.jetbrains.dataframe.aggregation.GroupByAggregateBody
 import org.jetbrains.dataframe.columns.ColumnReference
-import org.jetbrains.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.dataframe.impl.aggregation.comparableColumns
 import org.jetbrains.dataframe.impl.aggregation.modes.aggregateAll
@@ -11,13 +9,10 @@ import org.jetbrains.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.dataframe.impl.aggregation.modes.of
 import org.jetbrains.dataframe.impl.aggregation.numberColumns
-import org.jetbrains.dataframe.impl.aggregation.receivers.AggregateBodyInternal
 import org.jetbrains.dataframe.impl.columns.*
 import org.jetbrains.dataframe.impl.mapRows
 import org.jetbrains.dataframe.impl.zero
 import kotlin.reflect.KProperty
-
-public fun <T, R> DataFrame<T>.aggregate(body: GroupByAggregateBody<T, R>): DataRow<T> = aggregateInternal(body as AggregateBodyInternal<T, R>)[0]
 
 public fun <T> DataFrame<T>.count(predicate: RowFilter<T>? = null): Int =
     if (predicate == null) nrow() else rows().count { predicate(it, it) }

@@ -19,7 +19,7 @@ internal data class GroupedPivotImpl<T>(
         }.typed()
     }
 
-    override fun groupByValue(flag: Boolean) = if (flag == groupValues) this else copy(groupValues = flag)
+    override fun separateAggregatedValues(flag: Boolean) = if (flag == groupValues) this else copy(groupValues = flag)
 
     override fun withGrouping(groupPath: ColumnPath) = copy(groupPath = groupPath)
 

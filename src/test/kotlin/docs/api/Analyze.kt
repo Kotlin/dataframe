@@ -1,6 +1,5 @@
 package docs.api
 
-import org.jetbrains.dataframe.aggregate
 import org.jetbrains.dataframe.asComparable
 import org.jetbrains.dataframe.asGrouped
 import org.jetbrains.dataframe.asNumbers
@@ -12,7 +11,6 @@ import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.div
 import org.jetbrains.dataframe.expr
 import org.jetbrains.dataframe.groupBy
-import org.jetbrains.dataframe.length
 import org.jetbrains.dataframe.max
 import org.jetbrains.dataframe.maxBy
 import org.jetbrains.dataframe.maxFor
