@@ -11,10 +11,7 @@ import org.jetbrains.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.dataframe.impl.columns.toNumberColumns
 import kotlin.reflect.KProperty
 
-@PublishedApi
-internal inline fun <T> PivotedDataFrame<T>.delegate(crossinline body: GroupedPivotAggregations<T>.() -> DataFrame<T>): DataRow<T> = body(groupBy { none() })[0]
-
-public fun <T> PivotedDataFrame<T>.frames(): DataRow<T> = aggregate { this }
+public fun <T> PivotedDataFrame<T>.asDataRow(): DataRow<T> = aggregate { this }
 
 public fun <T, R> PivotedDataFrame<T>.aggregate(body: PivotAggregateBody<T, R>): DataRow<T> = delegate { aggregate(body) }
 
@@ -214,3 +211,6 @@ public fun <T> PivotedDataFrame<T>.std(vararg columns: KProperty<Number?>): Data
 public fun <T> PivotedDataFrame<T>.stdOf(selector: RowSelector<T, Number?>): DataRow<T> = delegate { stdOf(selector) }
 
 // endregion
+
+@PublishedApi
+internal inline fun <T> PivotedDataFrame<T>.delegate(crossinline body: GroupedPivotAggregations<T>.() -> DataFrame<T>): DataRow<T> = body(groupBy { none() })[0]

@@ -20,7 +20,7 @@ import kotlin.reflect.full.withNullability
  * All column extension functions that clash with [DataFrame] API (such as filter, forEach, map etc.) are defined for this interface,
  * because [ColumnGroup] doesn't inherit from it
  */
-public interface DataColumn<out T> : DataColumnAggregations<T> {
+public interface DataColumn<out T> : BaseColumn<T> {
 
     public companion object {
 

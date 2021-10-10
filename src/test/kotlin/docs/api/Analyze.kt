@@ -289,6 +289,7 @@ class Analyze : TestBase() {
         val key by columnOf(1, 2) // create int column with name "key"
         val data by columnOf(df[0..3], df[4..6]) // create frame column with name "data"
         val df = dataFrameOf(key, data) // create dataframe with two columns
+
         df.asGrouped { data } // convert dataframe to GroupedDataFrame by interpreting 'data' column as groups
         // SampleEnd
     }
@@ -296,8 +297,7 @@ class Analyze : TestBase() {
     @Test
     fun groupedDataFrameToFrame() {
         // SampleStart
-        val grouped = df.groupBy { city } // create GroupedDataFrame
-        grouped.asDataFrame() // convert GroupedDataFrame to DataFrame with string column "city" and frame column "group"
+        df.groupBy { city }.asDataFrame()
         // SampleEnd
     }
 

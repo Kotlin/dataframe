@@ -477,7 +477,7 @@ df.asGrouped { data } // convert dataframe to GroupedDataFrame by interpreting '
 
 <!---END-->
 
-Any `GroupedDataFrame` can also be interpreted as `DataFrame`:
+Any `GroupedDataFrame` can also be interpreted as `DataFrame` with `FrameColumn`:
 
 <!---FUN groupedDataFrameToFrame-->
 
