@@ -592,7 +592,7 @@ df.groupBy("name").pivot("city")
 
 Combination of `pivot` and `groupBy` operations return `GroupedPivot` that can be used for further aggregation of data groups within matrix cells. 
 
-### Aggregations
+### Aggregation
 
 To aggregate data groups in `PivotedDataFrame` or `GroupedPivot` with one or several aggregation functions use `aggregate`:
 
@@ -822,7 +822,7 @@ df.groupBy { "name"["firstName"] }.aggregate {
 </tab></tabs>
 <!---END-->
 
-### Conversions
+### Conversion
 
 `PivotedDataFrame` can be converted to `DataRow` and `GroupedPivot` can be converted to `DataFrame` without any additional transformations. Generated columns will have type `FrameColumn` and will contain data groups (similar to `GroupedDataFrame`)
 
