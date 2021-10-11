@@ -207,42 +207,6 @@ internal class SchemaGeneratorPluginTes {
         result.task(":generateDataFrameSchema")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
-    @Test
-    fun `compileKotlin depends on generateAll task`() {
-        val (_, result) = runGradleBuild(":compileKotlin") { buildDir ->
-            """
-            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                
-            plugins {
-                kotlin("jvm") version "1.4.10"
-                id("org.jetbrains.kotlin.plugin.dataframe-base")
-            }
-            
-            repositories {
-                mavenCentral() 
-            }
-            
-            dependencies {
-                implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
-            }
-
-            dataframes {
-                schema {
-                    data = File("$dataDir/ghost.json")
-                    name = "Test"
-                    packageName = "org.test"
-                }
-                schema {
-                    data = File("$dataDir/playlistItems.json")
-                    name = "Schema"
-                    packageName = "org.test"
-                }
-            }
-            """.trimIndent()
-        }
-        result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
-        result.task(":generateDataFrameSchema")?.outcome shouldBe TaskOutcome.SUCCESS
-    }
 
     @Test
     fun `plugin doesn't break multiplatform build without JVM`() {
@@ -289,37 +253,7 @@ internal class SchemaGeneratorPluginTes {
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
-    @Test
-    fun `fallback all properties to conventions`() {
-        val (_, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
-            dataFile.writeText(TestData.csvSample)
 
-            """
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    kotlin("jvm") version "1.4.10"
-                    id("org.jetbrains.kotlin.plugin.dataframe-base")
-                }
-                
-                repositories {
-                    mavenCentral() 
-                }
-                
-                dependencies {
-                    implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
-                }
-                
-                dataframes {
-                    schema {
-                        data = "$dataFile"
-                    }
-                }
-            """.trimIndent()
-        }
-        result.task(":generateDataFrameData")?.outcome shouldBe TaskOutcome.SUCCESS
-    }
 
     @Test
     fun `most specific sourceSet is used in the packageName inference`() {
