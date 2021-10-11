@@ -10,7 +10,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 @JvmName("unionRows")
-public fun <T> Iterable<DataRow<T>?>.union(): DataFrame<T> = merge(map { it?.toDataFrame() ?: emptyDataFrame(1) }).typed()
+public fun <T> Iterable<DataRow<T>?>.union(): DataFrame<T> = merge(map { it?.asDataFrame() ?: emptyDataFrame(1) }).typed()
 
 public fun <T> Iterable<DataFrame<T>?>.union(): DataFrame<T> = merge(filterNotNull()).typed()
 
@@ -75,7 +75,7 @@ internal fun convertToDataFrame(value: Any?): AnyFrame {
     return when (value) {
         null -> DataFrame.empty()
         is AnyFrame -> value
-        is AnyRow -> value.toDataFrame()
+        is AnyRow -> value.asDataFrame()
         is List<*> -> value.mapNotNull { convertToDataFrame(it) }.union()
         else -> dataFrameOf(valueColumnName)(value)
     }

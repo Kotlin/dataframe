@@ -18,7 +18,7 @@ internal fun <T, R, C> Aggregator<*, R>.aggregateAll(
 ): DataFrame<T> = data.aggregateAll(cast(), columns, name)
 
 internal fun <T, R, C> Aggregator<*, R>.aggregateAll(
-    data: GroupedPivotAggregations<T>,
+    data: GroupedPivot<T>,
     columns: ColumnsSelector<T, C>
 ): DataFrame<T> = data.aggregateAll(cast(), columns)
 
@@ -40,7 +40,7 @@ internal fun <T, C, R> Grouped<T>.aggregateAll(
     }
 }
 
-internal fun <T, C, R> GroupedPivotAggregations<T>.aggregateAll(
+internal fun <T, C, R> GroupedPivot<T>.aggregateAll(
     aggregator: Aggregator<C, R>,
     columns: ColumnsSelector<T, C>
 ): DataFrame<T> = aggregateInternal {

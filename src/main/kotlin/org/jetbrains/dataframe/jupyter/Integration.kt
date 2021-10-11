@@ -4,9 +4,10 @@ import org.jetbrains.dataframe.AnyFrame
 import org.jetbrains.dataframe.AnyRow
 import org.jetbrains.dataframe.FormattedFrame
 import org.jetbrains.dataframe.GroupedDataFrame
-import org.jetbrains.dataframe.GroupedPivotAggregations
+import org.jetbrains.dataframe.GroupedPivot
 import org.jetbrains.dataframe.PivotedDataFrame
 import org.jetbrains.dataframe.annotations.DataSchema
+import org.jetbrains.dataframe.asDataFrame
 import org.jetbrains.dataframe.asDataRow
 import org.jetbrains.dataframe.columns.AnyCol
 import org.jetbrains.dataframe.columns.ColumnGroup
@@ -21,7 +22,6 @@ import org.jetbrains.dataframe.ncol
 import org.jetbrains.dataframe.size
 import org.jetbrains.dataframe.stubs.DataFrameToListNamedStub
 import org.jetbrains.dataframe.stubs.DataFrameToListTypedStub
-import org.jetbrains.dataframe.toDataFrame
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.VariableName
@@ -49,12 +49,12 @@ internal class Integration : JupyterIntegration() {
             render<HtmlData> { it.toJupyter() }
             render<AnyFrame>({ it })
             render<FormattedFrame<*>>({ it.df }, modifyConfig = { getDisplayConfiguration(it) })
-            render<AnyRow>({ it.toDataFrame() }, { "DataRow [${it.ncol}]" })
+            render<AnyRow>({ it.asDataFrame() }, { "DataRow [${it.ncol}]" })
             render<ColumnGroup<*>>({ it.df })
             render<AnyCol>({ dataFrameOf(listOf(it)) }, { "DataColumn [${it.nrow()}]" })
             render<GroupedDataFrame<*, *>>({ it.asDataFrame() })
-            render<PivotedDataFrame<*>> { it.asDataRow().toDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
-            render<GroupedPivotAggregations<*>> { it.frames().toHTML(config.display) { "GroupedPivot: ${it.size}" } }
+            render<PivotedDataFrame<*>> { it.asDataRow().asDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
+            render<GroupedPivot<*>> { it.asDataFrame().toHTML(config.display) { "GroupedPivot: ${it.size}" } }
 
             render<IMG> { HTML("<img src=\"${it.url}\"/>") }
         }

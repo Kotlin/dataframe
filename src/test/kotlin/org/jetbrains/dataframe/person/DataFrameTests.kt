@@ -821,7 +821,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `row to frame`() {
-        typed[1].toDataFrame().name.size() shouldBe 1
+        typed[1].asDataFrame().name.size() shouldBe 1
     }
 
     @Test
@@ -1887,5 +1887,13 @@ class DataFrameTests : BaseTest() {
     fun `isNumber`() {
         typed.age.isNumber() shouldBe true
         typed.weight.isNumber() shouldBe true
+    }
+
+    @Test
+    fun `pivot null to default`() {
+        val pivoted = typed.groupBy { name }.pivot { city }.default(0).min { weight }
+        pivoted.columns().forEach {
+            it.hasNulls() shouldBe false
+        }
     }
 }

@@ -12,10 +12,10 @@ internal data class GroupedPivotImpl<T>(
     internal val groupValues: Boolean = false,
     internal val default: Any? = null,
     internal val groupPath: ColumnPath = emptyPath()
-) : GroupedPivotAggregations<T>, AggregatableInternal<T> {
-    override fun <R> aggregate(body: PivotAggregateBody<T, R>): DataFrame<T> {
+) : GroupedPivot<T>, AggregatableInternal<T> {
+    override fun <R> aggregate(separate: Boolean, body: PivotAggregateBody<T, R>): DataFrame<T> {
         return df.aggregate {
-            aggregatePivot(this as GroupByReceiverImpl<T>, columns, groupValues, groupPath, default, body)
+            aggregatePivot(this as GroupByReceiverImpl<T>, columns, separate, groupPath, default, body)
         }.typed()
     }
 
@@ -27,5 +27,5 @@ internal data class GroupedPivotImpl<T>(
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all().except(columns.toColumns() and df.keys.columnNames().toColumns()) }
 
-    override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) = aggregate(body as PivotAggregateBody<T, R>)
+    override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) = aggregate(groupValues, body as PivotAggregateBody<T, R>)
 }

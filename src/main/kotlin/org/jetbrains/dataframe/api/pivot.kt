@@ -16,8 +16,8 @@ public fun <T> DataFrame<T>.pivot(columns: ColumnsSelector<T, *>): PivotedDataFr
 public fun <T> DataFrame<T>.pivot(vararg columns: String): PivotedDataFrame<T> = pivot { columns.toColumns() }
 public fun <T> DataFrame<T>.pivot(vararg columns: Column): PivotedDataFrame<T> = pivot { columns.toColumns() }
 
-public fun <T, P : GroupedPivotAggregations<T>> P.withGrouping(group: MapColumnReference): P = withGrouping(group.path()) as P
-public fun <T, P : GroupedPivotAggregations<T>> P.withGrouping(groupName: String): P = withGrouping(pathOf(groupName)) as P
+public fun <T, P : GroupedPivot<T>> P.withGrouping(group: MapColumnReference): P = withGrouping(group.path()) as P
+public fun <T, P : GroupedPivot<T>> P.withGrouping(groupName: String): P = withGrouping(pathOf(groupName)) as P
 
 internal class AggregatedPivot<T>(private val df: DataFrame<T>, internal var aggregator: GroupByReceiverImpl<T>) :
     DataFrame<T> by df
@@ -25,9 +25,9 @@ internal class AggregatedPivot<T>(private val df: DataFrame<T>, internal var agg
 internal fun <T, R> aggregatePivot(
     aggregator: AggregateReceiverInternal<T>,
     columns: ColumnsSelector<T, *>,
-    groupValues: Boolean,
+    separate: Boolean,
     groupPath: ColumnPath,
-    default: Any? = null,
+    globalDefault: Any? = null,
     body: PivotAggregateBody<T, R>
 ) {
     aggregator.df.groupBy(columns).forEach { key, group ->
@@ -38,14 +38,16 @@ internal fun <T, R> aggregatePivot(
         val result = body(builder, builder)
         val hasResult = result != null && result != Unit
 
+        fun NamedValue.apply(path: ColumnPath) = copy(path = path, value = this.value ?: default ?: globalDefault, default = default ?: globalDefault)
+
         val values = builder.values
         when {
-            values.size == 1 && values[0].path.isEmpty() -> aggregator.yield(values[0].copy(path = groupPath + path, default = values[0].default ?: default))
-            values.isEmpty() -> aggregator.yield(groupPath + path, if (hasResult) result else null, null, default, true)
+            values.size == 1 && values[0].path.isEmpty() -> aggregator.yield(values[0].apply(groupPath + path))
+            values.isEmpty() -> aggregator.yield(groupPath + path, if (hasResult) result else globalDefault, null, globalDefault, true)
             else -> {
                 values.forEach {
-                    val targetPath = groupPath + if (groupValues) it.path + path else path + it.path
-                    aggregator.yield(targetPath, it.value, it.type, it.default ?: default, it.guessType)
+                    val targetPath = groupPath + if (separate) it.path + path else path + it.path
+                    aggregator.yield(it.apply(targetPath))
                 }
             }
         }

@@ -34,10 +34,10 @@ public fun <T> Grouped<T>.values(): DataFrame<T> = values(remainingColumnsSelect
 
 // region pivot
 
-public fun <G> GroupedDataFrame<*, G>.pivot(columns: ColumnsSelector<G, *>): GroupedPivotAggregations<G> = GroupedPivotImpl(this, columns)
-public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: Column): GroupedPivotAggregations<G> = pivot { columns.toColumns() }
-public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: String): GroupedPivotAggregations<G> = pivot { columns.toColumns() }
-public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: KProperty<*>): GroupedPivotAggregations<G> = pivot { columns.toColumns() }
+public fun <G> GroupedDataFrame<*, G>.pivot(columns: ColumnsSelector<G, *>): GroupedPivot<G> = GroupedPivotImpl(this, columns)
+public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: Column): GroupedPivot<G> = pivot { columns.toColumns() }
+public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: String): GroupedPivot<G> = pivot { columns.toColumns() }
+public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: KProperty<*>): GroupedPivot<G> = pivot { columns.toColumns() }
 
 // endregion
 

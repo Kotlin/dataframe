@@ -13,7 +13,7 @@ import kotlin.reflect.KProperty
 
 public fun <T> PivotedDataFrame<T>.asDataRow(): DataRow<T> = aggregate { this }
 
-public fun <T, R> PivotedDataFrame<T>.aggregate(body: PivotAggregateBody<T, R>): DataRow<T> = delegate { aggregate(body) }
+public fun <T, R> PivotedDataFrame<T>.aggregate(separate: Boolean = false, body: PivotAggregateBody<T, R>): DataRow<T> = delegate { aggregate(separate, body) }
 
 public fun <T> PivotedDataFrame<T>.count(predicate: RowFilter<T>? = null): DataRow<T> = delegate { count(predicate) }
 
@@ -38,7 +38,7 @@ public fun <T, R : Comparable<R>> PivotedDataFrame<T>.minFor(
     separate: Boolean = false,
     columns: AggregateColumnsSelector<T, R?>
 ): DataRow<T> = delegate { minFor(separate, columns) }
-public fun <T, R : Comparable<R>> PivotedDataFrame<T>.minFor(vararg columns: String, separate: Boolean = false): DataRow<T> = minFor(separate) { columns.toComparableColumns() }
+public fun <T> PivotedDataFrame<T>.minFor(vararg columns: String, separate: Boolean = false): DataRow<T> = minFor(separate) { columns.toComparableColumns() }
 public fun <T, R : Comparable<R>> PivotedDataFrame<T>.minFor(
     vararg columns: ColumnReference<R?>,
     separate: Boolean = false
@@ -70,7 +70,7 @@ public fun <T, R : Comparable<R>> PivotedDataFrame<T>.maxFor(
     separate: Boolean = false,
     columns: AggregateColumnsSelector<T, R?>
 ): DataRow<T> = delegate { maxFor(separate, columns) }
-public fun <T, R : Comparable<R>> PivotedDataFrame<T>.maxFor(vararg columns: String, separate: Boolean = false): DataRow<T> = maxFor(separate) { columns.toComparableColumns() }
+public fun <T> PivotedDataFrame<T>.maxFor(vararg columns: String, separate: Boolean = false): DataRow<T> = maxFor(separate) { columns.toComparableColumns() }
 public fun <T, R : Comparable<R>> PivotedDataFrame<T>.maxFor(
     vararg columns: ColumnReference<R?>,
     separate: Boolean = false
@@ -81,7 +81,7 @@ public fun <T, R : Comparable<R>> PivotedDataFrame<T>.maxFor(
 ): DataRow<T> = maxFor(separate) { columns.toColumns() }
 
 public fun <T, R : Comparable<R>> PivotedDataFrame<T>.max(columns: ColumnsSelector<T, R?>): DataRow<T> = delegate { max(columns) }
-public fun <T, R : Comparable<R>> PivotedDataFrame<T>.max(vararg columns: String): DataRow<T> = max { columns.toComparableColumns() }
+public fun <T> PivotedDataFrame<T>.max(vararg columns: String): DataRow<T> = max { columns.toComparableColumns() }
 public fun <T, R : Comparable<R>> PivotedDataFrame<T>.max(vararg columns: ColumnReference<R?>): DataRow<T> = max { columns.toColumns() }
 public fun <T, R : Comparable<R>> PivotedDataFrame<T>.max(vararg columns: KProperty<R?>): DataRow<T> = max { columns.toColumns() }
 
@@ -213,4 +213,4 @@ public fun <T> PivotedDataFrame<T>.stdOf(selector: RowSelector<T, Number?>): Dat
 // endregion
 
 @PublishedApi
-internal inline fun <T> PivotedDataFrame<T>.delegate(crossinline body: GroupedPivotAggregations<T>.() -> DataFrame<T>): DataRow<T> = body(groupBy { none() })[0]
+internal inline fun <T> PivotedDataFrame<T>.delegate(crossinline body: GroupedPivot<T>.() -> DataFrame<T>): DataRow<T> = body(groupBy { none() })[0]

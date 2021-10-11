@@ -13,7 +13,7 @@ internal data class GroupAggregatorPivotImpl<T>(
     internal val groupValues: Boolean = false,
     internal val default: Any? = null,
     internal val groupPath: ColumnPath = emptyPath()
-) : GroupedPivotAggregations<T>, AggregatableInternal<T> {
+) : GroupedPivot<T>, AggregatableInternal<T> {
 
     override fun separateAggregatedValues(flag: Boolean) = if (flag == groupValues) this else copy(groupValues = flag)
 
@@ -21,15 +21,15 @@ internal data class GroupAggregatorPivotImpl<T>(
 
     override fun withGrouping(groupPath: ColumnPath) = copy(groupPath = groupPath)
 
-    override fun <R> aggregate(body: PivotAggregateBody<T, R>): DataFrame<T> {
+    override fun <R> aggregate(separate: Boolean, body: PivotAggregateBody<T, R>): DataFrame<T> {
         require(aggregator is GroupByReceiverImpl<T>)
 
         val childAggregator = aggregator.child()
-        aggregatePivot(childAggregator, columns, groupValues, groupPath, default, body)
+        aggregatePivot(childAggregator, columns, separate, groupPath, default, body)
         return AggregatedPivot(aggregator.df, childAggregator)
     }
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all().except(columns.toColumns()) }
 
-    override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) = aggregate(body as PivotAggregateBody<T, R>)
+    override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) = aggregate(groupValues, body as PivotAggregateBody<T, R>)
 }

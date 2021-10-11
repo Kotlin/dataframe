@@ -230,7 +230,7 @@ public fun <T> AnyRow.typed(): DataRow<T> = this as DataRow<T>
 
 public fun <T> DataFrameBase<*>.typed(): DataFrameBase<T> = this as DataFrameBase<T>
 
-public fun <T> DataRow<T>.toDataFrame(): DataFrame<T> = owner[index..index]
+public fun <T> DataRow<T>.asDataFrame(): DataFrame<T> = owner[index..index]
 
 public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
     var uniqueDf: DataFrame<T>? = null
@@ -246,7 +246,7 @@ public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
     return if (uniqueDf != null) {
         val permutation = map { it.index }
         uniqueDf[permutation]
-    } else map { it.toDataFrame() }.union()
+    } else map { it.asDataFrame() }.union()
 }
 
 public fun <T> DataFrame<T>.forwardIterable(): Iterable<DataRow<T>> = object : Iterable<DataRow<T>> {
