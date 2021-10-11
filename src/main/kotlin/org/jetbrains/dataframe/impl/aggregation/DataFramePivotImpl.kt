@@ -7,6 +7,6 @@ internal data class DataFramePivotImpl<T>(
     internal val columns: ColumnsSelector<T, *>
 ) : PivotedDataFrame<T> {
 
-    override fun groupBy(columns: ColumnsSelector<T, *>): GroupedPivotAggregations<T> =
+    override fun groupBy(columns: ColumnsSelector<T, *>): GroupedPivot<T> =
         GroupedPivotImpl(df.groupBy(columns), this.columns)
 }

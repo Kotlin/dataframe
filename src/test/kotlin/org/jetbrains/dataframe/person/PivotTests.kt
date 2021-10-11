@@ -27,7 +27,7 @@ class PivotTests {
     val defaultExpected = dataFrameOf("name", "age", "city", "weight")(
         "Alice", manyOf(15, 55), "London", 54,
         "Bob", manyOf(45), "-", 87,
-        "Mark", manyOf(20), "Moscow", null
+        "Mark", manyOf(20), "Moscow", "-"
     )
 
 // Generated Code
@@ -92,7 +92,7 @@ class PivotTests {
 
         res["age"].type() shouldBe getType<Many<Int>>()
         res["city"].type() shouldBe getType<String>()
-        res["weight"].type() shouldBe getType<Int?>()
+        res["weight"].type() shouldBe getType<Serializable>()
 
         res shouldBe defaultExpected
 

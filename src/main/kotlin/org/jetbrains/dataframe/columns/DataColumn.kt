@@ -150,7 +150,7 @@ internal fun guessColumnType(
 
     return when (type.classifier!! as KClass<*>) {
         DataRow::class -> {
-            val df = values.map { (it as AnyRow).toDataFrame() }.union()
+            val df = values.map { (it as AnyRow).asDataFrame() }.union()
             DataColumn.create(name, df) as AnyCol
         }
         DataFrame::class -> {
@@ -158,7 +158,7 @@ internal fun guessColumnType(
                 when (it) {
                     null -> null
                     is AnyFrame -> it
-                    is AnyRow -> it.toDataFrame()
+                    is AnyRow -> it.asDataFrame()
                     is List<*> -> (it as List<AnyRow>).toDataFrame()
                     else -> throw IllegalStateException()
                 }

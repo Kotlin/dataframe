@@ -2,7 +2,7 @@ package org.jetbrains.dataframe.impl.aggregation.modes
 
 import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.DataRow
-import org.jetbrains.dataframe.GroupedPivotAggregations
+import org.jetbrains.dataframe.GroupedPivot
 import org.jetbrains.dataframe.aggregation.Aggregatable
 import org.jetbrains.dataframe.aggregation.AggregateColumnsSelector
 import org.jetbrains.dataframe.columns.type
@@ -31,7 +31,7 @@ internal fun <T, C, R> Aggregatable<T>.aggregateFor(
 }
 
 internal fun <T, C, R> Aggregator<*, R>.aggregateFor(
-    data: GroupedPivotAggregations<T>,
+    data: GroupedPivot<T>,
     separate: Boolean,
     columns: AggregateColumnsSelector<T, C?>
 ): DataFrame<T> = data.separateAggregatedValues(separate).aggregateFor(columns, cast())

@@ -5,10 +5,12 @@ import org.jetbrains.dataframe.DataFrame
 import org.jetbrains.dataframe.NamedValue
 import org.jetbrains.dataframe.aggregation.PivotReceiver
 import org.jetbrains.dataframe.columns.AnyCol
+import org.jetbrains.dataframe.impl.aggregation.AggregatableInternal
+import org.jetbrains.dataframe.impl.aggregation.toInternal
 import org.jetbrains.dataframe.impl.emptyPath
 import kotlin.reflect.KType
 
-internal class PivotReceiverImpl<T>(override val df: DataFrame<T>) : PivotReceiver<T>(), AggregateReceiverInternal<T>, DataFrame<T> by df {
+internal class PivotReceiverImpl<T>(override val df: DataFrame<T>) : PivotReceiver<T>(), AggregateReceiverInternal<T>, DataFrame<T> by df, AggregatableInternal<T> by df.toInternal() {
 
     internal val values = mutableListOf<NamedValue>()
 

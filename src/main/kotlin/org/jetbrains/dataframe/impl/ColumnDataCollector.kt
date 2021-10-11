@@ -36,7 +36,7 @@ internal abstract class DataCollectorBase<T>(initCapacity: Int) : DataCollector<
             return DataColumn.create(name, data as List<AnyFrame>) as DataColumn<T>
         }
         if (classifier.isSubclassOf(DataRow::class)) {
-            val mergedDf = (data as List<AnyRow>).map { it.toDataFrame() }.union()
+            val mergedDf = (data as List<AnyRow>).map { it.asDataFrame() }.union()
             return DataColumn.create(name, mergedDf) as DataColumn<T>
         }
         return DataColumn.create(name, data, type.withNullability(hasNulls)) as DataColumn<T>
