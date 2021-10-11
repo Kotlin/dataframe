@@ -153,46 +153,4 @@ class TaskSourceSetPropertyTest {
             it.message shouldContain "No supported Kotlin plugin was found. Please apply one or specify src for task 321 explicitly"
         }
     }
-
-    @Test
-    fun `src convention is jvmMain source set for multiplatform project`() {
-        val (_, result) = runGradleBuild(":generateDataFrames") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
-            dataFile.writeText(TestData.csvSample)
-            """
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    kotlin("multiplatform") version "1.4.10"
-                    id("org.jetbrains.kotlin.plugin.dataframe-base")
-                }
-                
-                repositories {
-                    mavenCentral() 
-                }
-                
-                kotlin {
-                    jvm()
-                    
-                    sourceSets {
-                        val jvmMain by getting {
-                            dependencies {
-                                implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
-                            }
-                        }
-                    }
-                }
-                
-                dataframes {
-                    schema {
-                        data = "$dataFile"
-                        name = "Schema"
-                        packageName = ""
-                    }
-                }
-            """.trimIndent()
-
-        }
-        result.task(":generateDataFrames")?.outcome shouldBe TaskOutcome.SUCCESS
-    }
 }

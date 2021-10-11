@@ -142,38 +142,4 @@ class TaskPackageNamePropertyTest {
         project.evaluate()
         (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).packageName.get() shouldBe "org.dataframe"
     }
-
-    @Test
-    fun `packageName convention is 'dataframe'`() {
-        val (dir, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
-            dataFile.writeText(TestData.csvSample)
-
-            """
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    kotlin("jvm") version "1.4.10"
-                    id("org.jetbrains.kotlin.plugin.dataframe-base")
-                }
-                
-                repositories {
-                    mavenCentral() 
-                }
-                
-                dependencies {
-                    implementation("org.jetbrains.kotlinx:dataframe:0.7.3-dev-277-0.10.0.53")
-                }
-                
-                dataframes {
-                    schema {
-                        data = "$dataFile"
-                        name = "Data"
-                    }
-                }
-            """.trimIndent()
-        }
-        result.task(":generateDataFrameData")?.outcome shouldBe TaskOutcome.SUCCESS
-        File(dir, "src/main/kotlin/dataframe/Data.Generated.kt").exists() shouldBe true
-    }
 }

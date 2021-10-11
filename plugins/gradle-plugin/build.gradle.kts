@@ -22,6 +22,17 @@ tasks.withType<ProcessResources> {
     }
 }
 
+tasks.withType<ProcessResources> {
+    filesMatching("**/df.properties") {
+        filter {
+            it.replace(
+                "%DATAFRAME_JAR%",
+                project(":").configurations.getByName("instrumentedJars").artifacts.single().file.absolutePath
+            )
+        }
+    }
+}
+
 gradlePlugin {
     plugins {
         create("schemaGeneratorPlugin") {
