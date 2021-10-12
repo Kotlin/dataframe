@@ -153,3 +153,16 @@ kotlinter {
     ]
 }
 
+configurations {
+    instrumentedJars {
+        canBeConsumed = true
+        canBeResolved = false
+    }
+}
+
+artifacts {
+    instrumentedJars(jar.archiveFile) {
+        builtBy(jar)
+    }
+}
+
