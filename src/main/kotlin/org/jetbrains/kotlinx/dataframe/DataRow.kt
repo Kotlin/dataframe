@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
-import org.jetbrains.dataframe.NamedValue
+import org.jetbrains.kotlinx.dataframe.api.NamedValue
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.shortPath

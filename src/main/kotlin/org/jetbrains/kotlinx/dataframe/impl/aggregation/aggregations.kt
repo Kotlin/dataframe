@@ -1,17 +1,17 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation
 
 import org.jetbrains.kotlinx.dataframe.ColumnPath
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.SelectReceiverImpl
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateColumnsSelector
 import org.jetbrains.kotlinx.dataframe.aggregation.SelectAggregatableColumnsReceiver
 import org.jetbrains.kotlinx.dataframe.columns.Columns
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateReceiverInternal
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.toColumns
 import org.jetbrains.kotlinx.dataframe.toMany
+import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typed
 import kotlin.reflect.KType
 

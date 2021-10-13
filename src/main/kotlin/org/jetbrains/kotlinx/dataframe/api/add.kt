@@ -1,16 +1,17 @@
-package org.jetbrains.dataframe
+package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.dataframe.insert
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.RowSelector
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.index
@@ -34,7 +35,9 @@ public interface AddDataRow<out T> : DataRow<T> {
     public fun <C> AnyRow.added(): C
 }
 
-internal class AddDataRowImpl<T>(index: Int, owner: DataFrame<T>, private val container: List<*>) : DataRowImpl<T>(index, owner), AddDataRow<T> {
+internal class AddDataRowImpl<T>(index: Int, owner: DataFrame<T>, private val container: List<*>) :
+    DataRowImpl<T>(index, owner),
+    AddDataRow<T> {
 
     override fun <C> AnyRow.added() = container[index] as C
 }

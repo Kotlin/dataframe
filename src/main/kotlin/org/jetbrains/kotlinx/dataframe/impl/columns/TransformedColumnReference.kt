@@ -1,10 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
-import org.jetbrains.dataframe.map
 import org.jetbrains.kotlinx.dataframe.ColumnResolutionContext
+import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.map
 import kotlin.reflect.KType
 
 internal class TransformedColumnReference<C, R>(

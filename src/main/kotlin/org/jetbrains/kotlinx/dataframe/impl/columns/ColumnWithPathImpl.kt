@@ -2,9 +2,9 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.ColumnPath
 import org.jetbrains.kotlinx.dataframe.ColumnResolutionContext
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.DataColumn
 
 internal class ColumnWithPathImpl<T> internal constructor(
     override val data: DataColumn<T>,

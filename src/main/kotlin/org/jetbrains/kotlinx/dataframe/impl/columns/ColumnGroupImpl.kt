@@ -1,12 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
-import org.jetbrains.dataframe.*
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnResolutionContext
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.renderSchema
 import kotlin.reflect.KType

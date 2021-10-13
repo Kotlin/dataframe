@@ -1,26 +1,25 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnPath
 import org.jetbrains.kotlinx.dataframe.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.SelectReceiverImpl
 import org.jetbrains.kotlinx.dataframe.UnresolvedColumnsPolicy
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.Columns
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.name
-import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.impl.TreeNode
@@ -32,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.pathOf
 import org.jetbrains.kotlinx.dataframe.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.toColumnOf
 import org.jetbrains.kotlinx.dataframe.toColumns
+import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typed
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubtypeOf

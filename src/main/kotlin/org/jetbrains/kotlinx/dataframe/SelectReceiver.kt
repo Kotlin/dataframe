@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
-import org.jetbrains.dataframe.AddExpression
-import org.jetbrains.dataframe.map
+import org.jetbrains.kotlinx.dataframe.api.AddExpression
+import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference

@@ -1,14 +1,15 @@
-package org.jetbrains.dataframe
+package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.dataframe.ColumnToInsert
+import org.jetbrains.dataframe.insert
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowCellFilter
 import org.jetbrains.kotlinx.dataframe.RowCellSelector
 import org.jetbrains.kotlinx.dataframe.RowColumnSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.headPlusArray
@@ -16,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType

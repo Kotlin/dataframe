@@ -1,9 +1,9 @@
 package org.jetbrains.dataframe.io
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.*
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.allNulls
+import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.io.read

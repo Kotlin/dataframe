@@ -1,13 +1,12 @@
 package org.jetbrains.dataframe.withRealData
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.into
-import org.jetbrains.dataframe.pivot
-import org.jetbrains.dataframe.rename
-import org.jetbrains.dataframe.values
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.pivot
+import org.jetbrains.kotlinx.dataframe.api.rename
+import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.io.read
-import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
 
 class Securities {

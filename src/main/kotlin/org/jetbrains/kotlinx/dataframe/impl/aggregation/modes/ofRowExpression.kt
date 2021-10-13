@@ -1,9 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.modes
 
-import org.jetbrains.dataframe.*
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.AggregateBody
+import org.jetbrains.kotlinx.dataframe.api.Grouped
+import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
 import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator

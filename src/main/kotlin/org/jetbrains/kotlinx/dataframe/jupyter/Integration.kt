@@ -1,17 +1,17 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
-import org.jetbrains.dataframe.FormattedFrame
-import org.jetbrains.dataframe.GroupedPivot
-import org.jetbrains.dataframe.asDataFrame
-import org.jetbrains.dataframe.asDataRow
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.PivotedDataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
+import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
+import org.jetbrains.kotlinx.dataframe.api.asDataFrame
+import org.jetbrains.kotlinx.dataframe.api.asDataRow
 import org.jetbrains.kotlinx.dataframe.asDataFrame
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG

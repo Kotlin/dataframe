@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.aggregation
 
-import org.jetbrains.dataframe.GroupedPivot
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupAggregatorPivotImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 

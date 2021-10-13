@@ -1,11 +1,11 @@
 package org.jetbrains.kotlinx.dataframe
 
-import org.jetbrains.dataframe.AddDataRowImpl
-import org.jetbrains.dataframe.AddExpression
-import org.jetbrains.dataframe.all
-import org.jetbrains.dataframe.map
-import org.jetbrains.dataframe.union
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
+import org.jetbrains.kotlinx.dataframe.api.AddDataRowImpl
+import org.jetbrains.kotlinx.dataframe.api.AddExpression
+import org.jetbrains.kotlinx.dataframe.api.all
+import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.union
 import org.jetbrains.kotlinx.dataframe.columns.AnyColumn
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor

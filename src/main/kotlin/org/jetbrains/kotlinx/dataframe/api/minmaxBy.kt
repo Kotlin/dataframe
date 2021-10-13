@@ -1,4 +1,4 @@
-package org.jetbrains.dataframe
+package org.jetbrains.kotlinx.dataframe.api
 
 public fun <C : Comparable<C>> Sequence<C?>.indexOfMin(): Int {
     val iterator = iterator()

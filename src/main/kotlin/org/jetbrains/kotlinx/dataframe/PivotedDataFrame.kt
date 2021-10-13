@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
-import org.jetbrains.dataframe.GroupedPivot
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
+import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 
 public interface PivotedDataFrame<T> : Aggregatable<T> {

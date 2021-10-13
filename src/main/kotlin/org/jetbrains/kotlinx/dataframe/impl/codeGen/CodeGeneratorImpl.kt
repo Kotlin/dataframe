@@ -5,11 +5,11 @@ import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
 import org.jetbrains.dataframe.keywords.HardKeywords
 import org.jetbrains.dataframe.keywords.ModifierKeywords
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRowBase
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.internal.codeGen.BaseField
 import org.jetbrains.kotlinx.dataframe.internal.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.internal.codeGen.ColumnInfo

@@ -1,17 +1,17 @@
 package org.jetbrains.dataframe.internal.codeGen
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.filter
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.process
 import org.jetbrains.dataframe.person.BaseTest
 import org.jetbrains.dataframe.person.city
 import org.jetbrains.dataframe.person.weight
-import org.jetbrains.dataframe.select
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRowBase
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
 import org.junit.Test
 
