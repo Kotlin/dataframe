@@ -128,7 +128,7 @@ class TaskPackageNamePropertyTest {
     }
 
     @Test
-    fun `task won't add "dataframe" if inferred package ends with "dataframe"`() {
+    fun `task will not add _dataframe_ if inferred package ends with _dataframe_`() {
         val project = ProjectBuilder.builder().build() as ProjectInternal
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.plugins.apply("org.jetbrains.kotlin.jvm")
