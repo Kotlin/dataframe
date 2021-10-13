@@ -9,7 +9,11 @@ internal interface SchemaProcessor {
 
     val namePrefix: String
 
-    fun process(schema: DataFrameSchema, isOpen: Boolean): Marker
+    fun process(
+        schema: DataFrameSchema,
+        isOpen: Boolean,
+        visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC
+    ): Marker
 
     companion object {
         fun create(namePrefix: String, existingMarkers: Iterable<Marker> = emptyList()) = SchemaProcessorImpl(existingMarkers, namePrefix)

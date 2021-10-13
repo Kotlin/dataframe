@@ -254,7 +254,6 @@ internal class SchemaGeneratorPluginTes {
     }
 
 
-
     @Test
     fun `most specific sourceSet is used in the packageName inference`() {
         val project = ProjectBuilder.builder().build() as ProjectInternal

@@ -2,16 +2,22 @@ package org.jetbrains.dataframe.internal.codeGen
 
 import org.jetbrains.dataframe.internal.schema.DataFrameSchema
 
+public enum class MarkerVisibility {
+    INTERNAL, IMPLICIT_PUBLIC, EXPLICIT_PUBLIC
+}
+
 public interface IsolatedMarker {
     public val name: String
     public val fields: List<BaseField>
+    public val visibility: MarkerVisibility
 }
 
 public open class Marker(
     override val name: String,
     public val isOpen: Boolean,
     override val fields: List<GeneratedField>,
-    base: List<Marker>
+    base: List<Marker>,
+    override val visibility: MarkerVisibility
 ) : IsolatedMarker {
 
     public val shortName: String
