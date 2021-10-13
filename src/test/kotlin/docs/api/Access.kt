@@ -4,11 +4,6 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.dataframe.asIterable
 import org.jetbrains.dataframe.asSequence
 import org.jetbrains.dataframe.chunked
-import org.jetbrains.dataframe.col
-import org.jetbrains.dataframe.column
-import org.jetbrains.dataframe.columnGroup
-import org.jetbrains.dataframe.columnOf
-import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.distinct
 import org.jetbrains.dataframe.distinctBy
 import org.jetbrains.dataframe.distinctByExpr
@@ -18,16 +13,22 @@ import org.jetbrains.dataframe.dropNulls
 import org.jetbrains.dataframe.filter
 import org.jetbrains.dataframe.forEach
 import org.jetbrains.dataframe.groupBy
-import org.jetbrains.dataframe.impl.columns.asGroup
-import org.jetbrains.dataframe.isNumber
 import org.jetbrains.dataframe.mapToRows
 import org.jetbrains.dataframe.maxBy
 import org.jetbrains.dataframe.maxByOrNull
 import org.jetbrains.dataframe.minBy
-import org.jetbrains.dataframe.named
-import org.jetbrains.dataframe.nrow
 import org.jetbrains.dataframe.select
 import org.jetbrains.dataframe.sortBy
+import org.jetbrains.kotlinx.dataframe.col
+import org.jetbrains.kotlinx.dataframe.column
+import org.jetbrains.kotlinx.dataframe.columnGroup
+import org.jetbrains.kotlinx.dataframe.columnOf
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.filter
+import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
+import org.jetbrains.kotlinx.dataframe.isNumber
+import org.jetbrains.kotlinx.dataframe.named
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 
 class Access : TestBase() {

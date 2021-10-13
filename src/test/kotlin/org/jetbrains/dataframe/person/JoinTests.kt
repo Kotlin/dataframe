@@ -2,8 +2,15 @@ package org.jetbrains.dataframe.person
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.annotations.DataSchema
-import org.jetbrains.dataframe.impl.columns.typed
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataFrameBase
+import org.jetbrains.kotlinx.dataframe.DataRowBase
+import org.jetbrains.kotlinx.dataframe.addRowNumber
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.column
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.impl.columns.typed
+import org.jetbrains.kotlinx.dataframe.typed
 import org.junit.Test
 
 class JoinTests : BaseTest() {

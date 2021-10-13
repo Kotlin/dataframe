@@ -1,19 +1,11 @@
 package docs.api
 
 import org.jetbrains.dataframe.aggregate
-import org.jetbrains.dataframe.asComparable
 import org.jetbrains.dataframe.asDataFrame
 import org.jetbrains.dataframe.asDataRow
 import org.jetbrains.dataframe.asGrouped
-import org.jetbrains.dataframe.asNumbers
-import org.jetbrains.dataframe.column
-import org.jetbrains.dataframe.columnGroup
-import org.jetbrains.dataframe.columnOf
 import org.jetbrains.dataframe.count
-import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.div
-import org.jetbrains.dataframe.expr
-import org.jetbrains.dataframe.get
 import org.jetbrains.dataframe.groupBy
 import org.jetbrains.dataframe.max
 import org.jetbrains.dataframe.maxBy
@@ -39,6 +31,17 @@ import org.jetbrains.dataframe.sum
 import org.jetbrains.dataframe.sumFor
 import org.jetbrains.dataframe.sumOf
 import org.jetbrains.dataframe.values
+import org.jetbrains.kotlinx.dataframe.asComparable
+import org.jetbrains.kotlinx.dataframe.asDataFrame
+import org.jetbrains.kotlinx.dataframe.asGrouped
+import org.jetbrains.kotlinx.dataframe.asNumbers
+import org.jetbrains.kotlinx.dataframe.column
+import org.jetbrains.kotlinx.dataframe.columnGroup
+import org.jetbrains.kotlinx.dataframe.columnOf
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.expr
+import org.jetbrains.kotlinx.dataframe.get
+import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
 
 class Analyze : TestBase() {

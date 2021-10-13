@@ -1,9 +1,9 @@
 package org.jetbrains.dataframe.rendering
 
-import org.jetbrains.dataframe.dataFrameOf
-import org.jetbrains.dataframe.io.DisplayConfiguration
-import org.jetbrains.dataframe.io.formatter
-import org.jetbrains.dataframe.jupyter.DefaultCellRenderer
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
+import org.jetbrains.kotlinx.dataframe.io.formatter
+import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 

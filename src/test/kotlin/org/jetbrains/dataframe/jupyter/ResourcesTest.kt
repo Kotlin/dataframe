@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe.jupyter
 
 import io.kotest.matchers.shouldNotBe
-import org.jetbrains.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.junit.Test
 import java.io.InputStreamReader
 

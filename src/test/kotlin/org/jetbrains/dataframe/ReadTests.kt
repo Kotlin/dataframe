@@ -1,9 +1,12 @@
 package org.jetbrains.dataframe
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.columns.ColumnGroup
-import org.jetbrains.dataframe.columns.FrameColumn
-import org.jetbrains.dataframe.io.readJsonStr
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.Many
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.getType
+import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.junit.Test
 
 class ReadTests {

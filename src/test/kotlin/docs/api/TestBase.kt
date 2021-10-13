@@ -1,13 +1,17 @@
 package docs.api
 
-import org.jetbrains.dataframe.DataFrameBase
-import org.jetbrains.dataframe.DataRow
-import org.jetbrains.dataframe.DataRowBase
-import org.jetbrains.dataframe.annotations.DataSchema
-import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.group
 import org.jetbrains.dataframe.into
-import org.jetbrains.dataframe.typed
+import org.jetbrains.kotlinx.dataframe.DataFrameBase
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.DataRowBase
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.DataColumn
+import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.group
+import org.jetbrains.kotlinx.dataframe.typed
 
 public open class TestBase {
 
@@ -27,9 +31,9 @@ public open class TestBase {
         val lastName: String
     }
 
-    val DataFrameBase<Name>.firstName: org.jetbrains.dataframe.columns.DataColumn<kotlin.String> @JvmName("Person1_first") get() = this["firstName"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.String>
+    val DataFrameBase<Name>.firstName: DataColumn<String> @JvmName("Person1_first") get() = this["firstName"] as DataColumn<String>
     val DataRowBase<Name>.firstName: kotlin.String @JvmName("Person1_first") get() = this["firstName"] as kotlin.String
-    val DataFrameBase<Name>.lastName: org.jetbrains.dataframe.columns.DataColumn<kotlin.String> @JvmName("Person1_last") get() = this["lastName"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.String>
+    val DataFrameBase<Name>.lastName: DataColumn<String> @JvmName("Person1_last") get() = this["lastName"] as DataColumn<String>
     val DataRowBase<Name>.lastName: kotlin.String @JvmName("Person1_last") get() = this["lastName"] as kotlin.String
 
     @DataSchema
@@ -40,21 +44,21 @@ public open class TestBase {
         val weight: Int?
     }
 
-    val org.jetbrains.dataframe.DataFrameBase<Person>.age: org.jetbrains.dataframe.columns.ValueColumn<kotlin.Int>
+    val DataFrameBase<Person>.age: ValueColumn<Int>
         @JvmName(
             "Person_age"
-        ) get() = this["age"] as org.jetbrains.dataframe.columns.ValueColumn<kotlin.Int>
-    val org.jetbrains.dataframe.DataRowBase<Person>.age: kotlin.Int @JvmName("Person_age") get() = this["age"] as kotlin.Int
-    val org.jetbrains.dataframe.DataFrameBase<Person>.city: org.jetbrains.dataframe.columns.DataColumn<kotlin.String?>
+        ) get() = this["age"] as ValueColumn<Int>
+    val DataRowBase<Person>.age: kotlin.Int @JvmName("Person_age") get() = this["age"] as kotlin.Int
+    val DataFrameBase<Person>.city: DataColumn<String?>
         @JvmName(
             "Person_city"
-        ) get() = this["city"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.String?>
-    val org.jetbrains.dataframe.DataRowBase<Person>.city: kotlin.String? @JvmName("Person_city") get() = this["city"] as kotlin.String?
-    val org.jetbrains.dataframe.DataFrameBase<Person>.name: org.jetbrains.dataframe.columns.ColumnGroup<Name> @JvmName("Person_name") get() = this["name"] as org.jetbrains.dataframe.columns.ColumnGroup<Name>
-    val org.jetbrains.dataframe.DataRowBase<Person>.name: org.jetbrains.dataframe.DataRow<Name> @JvmName("Person_name") get() = this["name"] as org.jetbrains.dataframe.DataRow<Name>
-    val org.jetbrains.dataframe.DataFrameBase<Person>.weight: org.jetbrains.dataframe.columns.DataColumn<kotlin.Int?>
+        ) get() = this["city"] as DataColumn<String?>
+    val DataRowBase<Person>.city: kotlin.String? @JvmName("Person_city") get() = this["city"] as kotlin.String?
+    val DataFrameBase<Person>.name: ColumnGroup<Name> @JvmName("Person_name") get() = this["name"] as ColumnGroup<Name>
+    val DataRowBase<Person>.name: DataRow<Name> @JvmName("Person_name") get() = this["name"] as DataRow<Name>
+    val DataFrameBase<Person>.weight: DataColumn<Int?>
         @JvmName(
             "Person_weight"
-        ) get() = this["weight"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.Int?>
-    val org.jetbrains.dataframe.DataRowBase<Person>.weight: kotlin.Int? @JvmName("Person_weight") get() = this["weight"] as kotlin.Int?
+        ) get() = this["weight"] as DataColumn<Int?>
+    val DataRowBase<Person>.weight: kotlin.Int? @JvmName("Person_weight") get() = this["weight"] as kotlin.Int?
 }

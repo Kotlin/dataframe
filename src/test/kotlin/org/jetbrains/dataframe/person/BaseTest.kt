@@ -1,8 +1,14 @@
 package org.jetbrains.dataframe.person
 
-import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.annotations.DataSchema
-import org.jetbrains.dataframe.impl.columns.asValues
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataFrameBase
+import org.jetbrains.kotlinx.dataframe.DataRowBase
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.column
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.impl.columns.asValues
+import org.jetbrains.kotlinx.dataframe.toColumnAccessor
+import org.jetbrains.kotlinx.dataframe.typed
 
 @DataSchema
 interface Person {

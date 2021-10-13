@@ -1,5 +1,7 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.kotlinx.dataframe.asDataFrame
+import org.jetbrains.kotlinx.dataframe.column
 import org.junit.Ignore
 import org.junit.Test
 import kotlin.random.Random

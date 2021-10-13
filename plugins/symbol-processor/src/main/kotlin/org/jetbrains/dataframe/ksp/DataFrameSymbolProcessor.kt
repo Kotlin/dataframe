@@ -5,7 +5,7 @@ import com.google.devtools.ksp.innerArguments
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
-import org.jetbrains.dataframe.internal.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.internal.codeGen.MarkerVisibility
 import java.io.OutputStreamWriter
 
 class DataFrameSymbolProcessor(
@@ -114,7 +114,7 @@ class DataFrameSymbolProcessor(
             val annotationType = annotation.annotationType
             (annotationType.element as? KSClassifierReference)?.referencedName()
                 .let { it == null || it == "ColumnName" }
-                && annotationType.resolve().declaration.qualifiedName?.asString() == "org.jetbrains.dataframe.annotations.ColumnName"
+                && annotationType.resolve().declaration.qualifiedName?.asString() == "org.jetbrains.kotlinx.ColumnName"
         }
         return if (columnNameAnnotation != null) {
             when (val arg = columnNameAnnotation.arguments.singleOrNull()) {

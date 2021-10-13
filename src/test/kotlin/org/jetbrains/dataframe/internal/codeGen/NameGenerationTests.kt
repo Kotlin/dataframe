@@ -1,13 +1,14 @@
 package org.jetbrains.dataframe.internal.codeGen
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.annotations.ColumnName
-import org.jetbrains.dataframe.annotations.DataSchema
-import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.process
-import org.jetbrains.dataframe.internal.schema.extractSchema
+import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.internal.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.internal.schema.extractSchema
 import org.junit.Test
 
 class NameGenerationTests {

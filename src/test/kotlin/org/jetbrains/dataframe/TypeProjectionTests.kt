@@ -1,11 +1,14 @@
 package org.jetbrains.dataframe
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.columns.ColumnGroup
-import org.jetbrains.dataframe.columns.ColumnReference
-import org.jetbrains.dataframe.columns.SingleColumn
-import org.jetbrains.dataframe.impl.columns.ColumnGroupWithParent
-import org.jetbrains.dataframe.impl.createTypeUsing
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.DataRowBase
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.getType
+import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupWithParent
+import org.jetbrains.kotlinx.dataframe.impl.createTypeUsing
 import org.junit.Test
 
 class TypeProjectionTests {

@@ -1,8 +1,8 @@
 package org.jetbrains.dataframe.io
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.dataFrameOf
-import org.jetbrains.dataframe.getType
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.getType
 import org.junit.Test
 
 class TypeInferenceTest {

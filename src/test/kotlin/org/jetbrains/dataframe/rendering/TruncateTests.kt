@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe.rendering
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.manyOf
+import org.jetbrains.kotlinx.dataframe.manyOf
 import org.junit.Test
 
 class TruncateTests : RenderingTestsBase() {
