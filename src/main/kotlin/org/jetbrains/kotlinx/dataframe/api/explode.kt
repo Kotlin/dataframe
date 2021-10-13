@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Many
-import org.jetbrains.kotlinx.dataframe.asDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -110,7 +109,7 @@ public fun <T> DataFrame<T>.explode(dropEmpty: Boolean = true, selector: Columns
                 else collector.toColumn(col.name)
             }
         }
-        return newColumns.asDataFrame<Unit>()
+        return newColumns.toDataFrame<Unit>()
     }
 
     return splitIntoRows(this, columns.map { it.path }.toSet()).typed()

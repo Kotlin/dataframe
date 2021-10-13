@@ -93,7 +93,7 @@ public fun <T, G, C> GroupedDataFrame<T, G>.sortByGroup(
     nullsLast: Boolean = false,
     default: C? = null,
     selector: DataFrameSelector<G, C>
-): GroupedDataFrame<T, G> = asDataFrame().sortBy {
+): GroupedDataFrame<T, G> = toDataFrame().sortBy {
     createColumnFromGroupExpression(this, default, selector).nullsLast(nullsLast)
 }.asGrouped(groups)
 
@@ -101,16 +101,16 @@ public fun <T, G, C> GroupedDataFrame<T, G>.sortByGroupDesc(
     nullsLast: Boolean = false,
     default: C? = null,
     selector: DataFrameSelector<G, C>
-): GroupedDataFrame<T, G> = asDataFrame().sortBy {
+): GroupedDataFrame<T, G> = toDataFrame().sortBy {
     createColumnFromGroupExpression(this, default, selector).desc.nullsLast(nullsLast)
 }.asGrouped(groups)
 
 public fun <T, G> GroupedDataFrame<T, G>.sortByCountAsc(): GroupedDataFrame<T, G> = sortByGroup(default = 0) { nrow() }
 public fun <T, G> GroupedDataFrame<T, G>.sortByCount(): GroupedDataFrame<T, G> = sortByGroupDesc(default = 0) { nrow() }
 
-public fun <T, G> GroupedDataFrame<T, G>.sortByKeyDesc(nullsLast: Boolean = false): GroupedDataFrame<T, G> = asDataFrame()
+public fun <T, G> GroupedDataFrame<T, G>.sortByKeyDesc(nullsLast: Boolean = false): GroupedDataFrame<T, G> = toDataFrame()
     .sortBy { keys.columns().toColumnSet().desc.nullsLast(nullsLast) }.asGrouped(groups)
-public fun <T, G> GroupedDataFrame<T, G>.sortByKey(nullsLast: Boolean = false): GroupedDataFrame<T, G> = asDataFrame()
+public fun <T, G> GroupedDataFrame<T, G>.sortByKey(nullsLast: Boolean = false): GroupedDataFrame<T, G> = toDataFrame()
     .sortBy { keys.columns().toColumnSet().nullsLast(nullsLast) }.asGrouped(groups)
 
 internal fun <T, C> DataFrame<T>.doSortBy(
@@ -181,7 +181,7 @@ public class SortColumnDescriptor<C>(
 ) : DataColumn<C> by column
 
 internal fun <T, G> GroupedDataFrame<T, G>.doSortBy(selector: SortColumnsSelector<G, *>): GroupedDataFrame<T, G> {
-    return asDataFrame()
+    return toDataFrame()
         .update { groups }
         .with { it?.doSortBy(UnresolvedColumnsPolicy.Skip, selector) }
         .doSortBy(UnresolvedColumnsPolicy.Skip, selector as SortColumnsSelector<T, *>)

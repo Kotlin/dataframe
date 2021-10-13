@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.getOrPutEmpty
 import org.jetbrains.kotlinx.dataframe.impl.projectTo
+import org.jetbrains.kotlinx.dataframe.impl.toColumnPath
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeProjection

@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
-import org.jetbrains.kotlinx.dataframe.toColumnPath
+import org.jetbrains.kotlinx.dataframe.impl.toColumnPath
 import kotlin.reflect.KProperty
 
 public fun <T> DataFrame<T>.ungroup(vararg columns: KProperty<*>): DataFrame<T> = ungroup { columns.toColumns() }

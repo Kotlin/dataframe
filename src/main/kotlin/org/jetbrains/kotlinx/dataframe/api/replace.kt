@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
-import org.jetbrains.kotlinx.dataframe.asDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -78,7 +77,7 @@ public fun <T> DataColumn<T>.replaceAll(values: List<T>): DataColumn<T> = when (
                 }
             }
             col.replaceAll(newValues)
-        }.asDataFrame<Unit>().let { DataColumn.create(name, it) } as DataColumn<T>
+        }.toDataFrame<Unit>().let { DataColumn.create(name, it) } as DataColumn<T>
     }
     else -> {
         var nulls = false

@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.Many
+import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.name
@@ -18,7 +19,6 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.splitByIndices
-import org.jetbrains.kotlinx.dataframe.toDataFrame
 import org.jetbrains.kotlinx.dataframe.toMany
 import org.jetbrains.kotlinx.dataframe.type
 import java.io.File
@@ -129,7 +129,7 @@ internal fun fromJsonList(records: List<*>): AnyFrame {
         }
     }
     if (columns.isEmpty()) return DataFrame.empty(records.size)
-    return columns.toDataFrame()
+    return columns.toAnyFrame()
 }
 
 internal fun KlaxonJson.encodeRow(frame: DataFrameBase<*>, index: Int): JsonObject? {

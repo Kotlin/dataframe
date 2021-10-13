@@ -58,4 +58,5 @@ public interface DataFrameBase<out T> : SingleColumn<DataRow<T>> {
     public fun ncol(): Int
     public fun nrow(): Int
     public fun rows(): Iterable<DataRow<T>>
+    public fun rowsReversed(): Iterable<DataRow<T>>
 }

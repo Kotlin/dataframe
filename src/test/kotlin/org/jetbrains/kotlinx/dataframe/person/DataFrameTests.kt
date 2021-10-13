@@ -32,16 +32,19 @@ import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
 import org.jetbrains.kotlinx.dataframe.api.distinctByExpr
 import org.jetbrains.kotlinx.dataframe.api.div
+import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropNa
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.intoRows
+import org.jetbrains.kotlinx.dataframe.api.last
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.matches
@@ -69,6 +72,7 @@ import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByCount
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
@@ -77,8 +81,11 @@ import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.sumOf
+import org.jetbrains.kotlinx.dataframe.api.take
+import org.jetbrains.kotlinx.dataframe.api.takeLast
 import org.jetbrains.kotlinx.dataframe.api.times
 import org.jetbrains.kotlinx.dataframe.api.to
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDate
 import org.jetbrains.kotlinx.dataframe.api.toInt
 import org.jetbrains.kotlinx.dataframe.api.under
@@ -89,20 +96,19 @@ import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withGrouping
-import org.jetbrains.kotlinx.dataframe.asDataFrame
 import org.jetbrains.kotlinx.dataframe.asFrame
 import org.jetbrains.kotlinx.dataframe.asGrouped
 import org.jetbrains.kotlinx.dataframe.between
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnMany
+import org.jetbrains.kotlinx.dataframe.columnNames
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.toAccessor
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.first
-import org.jetbrains.kotlinx.dataframe.forEachIn
 import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.group
@@ -119,7 +125,6 @@ import org.jetbrains.kotlinx.dataframe.isNumber
 import org.jetbrains.kotlinx.dataframe.last
 import org.jetbrains.kotlinx.dataframe.lowercase
 import org.jetbrains.kotlinx.dataframe.manyOf
-import org.jetbrains.kotlinx.dataframe.map
 import org.jetbrains.kotlinx.dataframe.named
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -940,7 +945,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `row to frame`() {
-        typed[1].asDataFrame().name.size() shouldBe 1
+        typed[1].toDataFrame().name.size() shouldBe 1
     }
 
     @Test
@@ -1288,7 +1293,7 @@ class DataFrameTests : BaseTest() {
                 this["Int"]["age"],
                 this["String"]["city"],
                 this["Int"]["weight"]
-            ).asDataFrame<Person>()
+            ).toDataFrame<Person>()
             res shouldBe typed
         }
         typed.group { cols { it != name } }.into { type.jvmErasure.simpleName!! }.check()
@@ -1305,7 +1310,7 @@ class DataFrameTests : BaseTest() {
             grouped["info"]["age"],
             grouped["info"]["city"],
             grouped.weight
-        ).asDataFrame<Person>()
+        ).toDataFrame<Person>()
         res shouldBe typed
     }
 
@@ -1450,7 +1455,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `union table columns`() {
-        val grouped = typed.addRowNumber("id").groupBy { name }.asDataFrame()
+        val grouped = typed.addRowNumber("id").groupBy { name }.toDataFrame()
         val dfs = (0 until grouped.nrow()).map {
             grouped[it..it]
         }
@@ -1869,7 +1874,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `groupBy with map`() {
-        typed.groupBy { name.map { it.lowercase() } }.asDataFrame().name.values() shouldBe typed.name.distinct().lowercase()
+        typed.groupBy { name.map { it.lowercase() } }.toDataFrame().name.values() shouldBe typed.name.distinct().lowercase()
             .values()
     }
 
@@ -1953,20 +1958,20 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `grouped sort by count`() {
         val sorted = typed.groupBy { name }.sortByCount()
-        sorted.asDataFrame().name.values() shouldBe typed.rows().groupBy { it.name }.toList()
+        sorted.toDataFrame().name.values() shouldBe typed.rows().groupBy { it.name }.toList()
             .sortedByDescending { it.second.size }.map { it.first }
     }
 
     @Test
     fun `grouped sort by key`() {
         val sorted = typed.groupBy { name }.sortByKey()
-        sorted.asDataFrame().name.values() shouldBe typed.name.distinct().values().sorted()
+        sorted.toDataFrame().name.values() shouldBe typed.name.distinct().values().sorted()
     }
 
     @Test
     fun `infer ColumnGroup type in convert with`() {
         val g by frameColumn()
-        val grouped = typed.groupBy { name }.asDataFrame(g.name).convert(g).with { it.first() }
+        val grouped = typed.groupBy { name }.toDataFrame(g.name).convert(g).with { it.first() }
         grouped[g.name].kind() shouldBe ColumnKind.Group
     }
 

@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.union
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -11,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.FrameColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
+import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -155,7 +157,7 @@ internal fun guessColumnType(
 
     return when (type.classifier!! as KClass<*>) {
         DataRow::class -> {
-            val df = values.map { (it as AnyRow).asDataFrame() }.union()
+            val df = values.map { (it as AnyRow).toDataFrame() }.union()
             DataColumn.create(name, df) as AnyCol
         }
         DataFrame::class -> {
@@ -163,7 +165,7 @@ internal fun guessColumnType(
                 when (it) {
                     null -> null
                     is AnyFrame -> it
-                    is AnyRow -> it.asDataFrame()
+                    is AnyRow -> it.toDataFrame()
                     is List<*> -> (it as List<AnyRow>).toDataFrame()
                     else -> throw IllegalStateException()
                 }

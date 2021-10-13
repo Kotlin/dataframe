@@ -1,8 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.aggregate
-import org.jetbrains.kotlinx.dataframe.api.asDataFrame
-import org.jetbrains.kotlinx.dataframe.api.asDataRow
 import org.jetbrains.kotlinx.dataframe.api.asGrouped
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.div
@@ -31,6 +29,8 @@ import org.jetbrains.kotlinx.dataframe.api.stdFor
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.sumFor
 import org.jetbrains.kotlinx.dataframe.api.sumOf
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.toDataRow
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.asComparable
 import org.jetbrains.kotlinx.dataframe.asNumbers
@@ -306,7 +306,7 @@ class Analyze : TestBase() {
     @Test
     fun groupedDataFrameToFrame() {
         // SampleStart
-        df.groupBy { city }.asDataFrame()
+        df.groupBy { city }.toDataFrame()
         // SampleEnd
     }
 
@@ -522,8 +522,8 @@ class Analyze : TestBase() {
     @Test
     fun pivotAsDataRowOrFrame() {
         // SampleStart
-        df.pivot { city }.asDataRow()
-        df.pivot { city }.groupBy { name }.asDataFrame()
+        df.pivot { city }.toDataRow()
+        df.pivot { city }.groupBy { name }.toDataFrame()
         // SampleEnd
     }
 

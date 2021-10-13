@@ -50,4 +50,8 @@ internal class MissingColumnGroup<T> : MissingDataColumn<DataRow<T>>(), DataColu
     override fun <C> values(byRow: Boolean, columns: ColumnsSelector<T, C>) = throw UnsupportedOperationException()
 
     override fun <R> aggregate(body: GroupByAggregateBody<T, R>) = throw UnsupportedOperationException()
+
+    override fun rows(): Iterable<DataRow<T>> = throw UnsupportedOperationException()
+
+    override fun rowsReversed(): Iterable<DataRow<T>> = throw UnsupportedOperationException()
 }

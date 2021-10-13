@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.intoRows
 import org.jetbrains.kotlinx.dataframe.api.join
+import org.jetbrains.kotlinx.dataframe.api.last
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapNotNullGroups
 import org.jetbrains.kotlinx.dataframe.api.max
@@ -65,6 +66,7 @@ import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnMany
+import org.jetbrains.kotlinx.dataframe.columnNames
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.depth
@@ -83,7 +85,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.isTable
 import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.isGroup
-import org.jetbrains.kotlinx.dataframe.map
 import org.jetbrains.kotlinx.dataframe.plus
 import org.jetbrains.kotlinx.dataframe.subcolumn
 import org.jetbrains.kotlinx.dataframe.toDefinition
@@ -394,7 +395,7 @@ class DataFrameTreeTests : BaseTest() {
     fun `move and group`() {
         val info by columnGroup()
         val moved = typed.group { except(name) }.into(info)
-        val grouped = moved.groupBy { except(info) }.asDataFrame()
+        val grouped = moved.groupBy { except(info) }.toDataFrame()
         grouped.nrow() shouldBe typed.name.ndistinct()
     }
 
@@ -404,7 +405,7 @@ class DataFrameTreeTests : BaseTest() {
         val moved = typed.group { except(name) }.into(info)
         val merged = moved.mergeRows { info }
         val grouped = typed.groupBy { name }.mapNotNullGroups { remove { name } }
-        val expected = grouped.asDataFrame().rename(grouped.groups).into(info)
+        val expected = grouped.toDataFrame().rename(grouped.groups).into(info)
         merged shouldBe expected
     }
 
@@ -490,7 +491,7 @@ class DataFrameTreeTests : BaseTest() {
     fun splitFrameColumnsIntoRows() {
         val grouped = typed.groupBy { city }
         val groupCol = grouped.groups.name()
-        val plain = grouped.asDataFrame()
+        val plain = grouped.toDataFrame()
         val res =
             plain.split(grouped.groups).intoRows().remove { it[groupCol]["city"] }.ungroup(groupCol).sortBy { name and age }
         res shouldBe typed.sortBy { name and age }.moveToLeft { city }
@@ -500,7 +501,7 @@ class DataFrameTreeTests : BaseTest() {
     fun splitFrameColumnIntoColumns() {
         val grouped = typed.groupBy { city }
         val groupCol = grouped.groups.name()
-        val plain = grouped.asDataFrame()
+        val plain = grouped.toDataFrame()
         val res =
             plain.split(grouped.groups).intoRows().remove { it[groupCol]["city"] }.ungroup(groupCol).sortBy { name and age }
         res shouldBe typed.sortBy { name and age }.moveToLeft { city }
@@ -510,7 +511,7 @@ class DataFrameTreeTests : BaseTest() {
     fun explodeFrameColumnWithNulls() {
         val grouped = typed.groupBy { city }
         val groupCol = grouped.groups.toDefinition()
-        val plain = grouped.asDataFrame()
+        val plain = grouped.toDataFrame()
             .update { groupCol }.at(1).withNull()
             .update { groupCol }.at(2).with { emptyDataFrame(0) }
             .update { groupCol }.at(3).with { it.filter { false } }
@@ -551,13 +552,13 @@ class DataFrameTreeTests : BaseTest() {
         val right =
             typed.update { name }.with { it.reversed() }.groupBy { name }.mapGroups { it?.remove { name and city } }
         val groupCol = left.groups.toAccessor()
-        val joined = left.asDataFrame().join(right.asDataFrame()) { groupCol }
+        val joined = left.toDataFrame().join(right.toDataFrame()) { groupCol }
         joined.ncol() shouldBe 3
         val name_1 by column<String>()
         joined.columnNames() shouldBe listOf(typed.name.name(), groupCol.name(), name_1.name())
         joined[groupCol].kind() shouldBe ColumnKind.Frame
-        joined.select { cols(0, 1) } shouldBe left.asDataFrame()
-        joined.select { cols(2, 1) }.rename(name_1).into(typed.name) shouldBe right.asDataFrame()
+        joined.select { cols(0, 1) } shouldBe left.toDataFrame()
+        joined.select { cols(2, 1) }.rename(name_1).into(typed.name) shouldBe right.toDataFrame()
         joined.name shouldBe left.keys.name
         joined.forEach { name_1() shouldBe name.reversed() }
     }

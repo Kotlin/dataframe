@@ -26,7 +26,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnsOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
-import org.jetbrains.kotlinx.dataframe.map
 import kotlin.reflect.KProperty
 
 public interface GroupedPivot<out T> : Aggregatable<T> {
@@ -55,7 +54,7 @@ public inline fun <T, reified V> GroupedPivot<T>.with(noinline selector: RowSele
     }
 }
 
-public fun <T> GroupedPivot<T>.asDataFrame(): DataFrame<T> = aggregate { this }
+public fun <T> GroupedPivot<T>.toDataFrame(): DataFrame<T> = aggregate { this }
 
 // region values
 

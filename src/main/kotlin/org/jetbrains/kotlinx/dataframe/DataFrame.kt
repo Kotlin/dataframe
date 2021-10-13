@@ -2,56 +2,18 @@ package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.GroupByAggregateBody
-import org.jetbrains.kotlinx.dataframe.api.SelectReceiver
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.union
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.EmptyDataFrame
-import org.jetbrains.kotlinx.dataframe.impl.TreeNode
-import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.getOrPut
-import org.jetbrains.kotlinx.dataframe.impl.put
 import org.jetbrains.kotlinx.dataframe.impl.toIndices
-import org.jetbrains.kotlinx.dataframe.impl.topDfs
-
-public fun pathOf(vararg columnNames: String): ColumnPath = ColumnPath(columnNames.asList())
-
-internal fun List<String>.toColumnPath() = ColumnPath(this)
-
-internal fun Array<out String>.toColumnPath() = ColumnPath(this.asList())
-
-public fun <T, C> DataFrame<T>.createSelector(selector: ColumnsSelector<T, C>): SelectReceiver<T>.(SelectReceiver<T>) -> Columns<C> = selector
-
-internal fun <T> List<ColumnWithPath<T>>.top(): List<ColumnWithPath<T>> {
-    val root = TreeNode.createRoot<ColumnWithPath<T>?>(null)
-    forEach { root.put(it.path, it) }
-    return root.topDfs { it.data != null }.map { it.data!! }
-}
-
-internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
-    if (isEmpty()) return emptyList()
-    val df = this[0].df
-    require(all { it.df === df })
-    val fullTree = collectTree()
-    columns.forEach {
-        var node = fullTree.getOrPut(it.path).asNullable()
-        node?.dfs()?.forEach { it.data = null }
-        while (node != null) {
-            node.data = null
-            node = node.parent
-        }
-    }
-    val dfs = fullTree.topDfs { it.data != null }
-    return dfs.map { it.data!!.addPath(it.pathFromRoot(), df) }
-}
 
 internal fun <T, C> DataFrame<T>.getColumns(
     skipMissingColumns: Boolean,
@@ -82,8 +44,6 @@ public fun <T, C> DataFrame<T>.getColumnWithPath(selector: ColumnSelector<T, C>)
 
 internal fun <T> DataFrame<T>.getColumns(columnNames: List<String>): List<AnyCol> = columnNames.map { this[it] }
 
-internal fun <T> DataFrame<T>.new(columns: Iterable<AnyCol>) = dataFrameOf(columns).typed<T>()
-
 public interface DataFrame<out T> : Aggregatable<T>, DataFrameBase<T> {
 
     public companion object {
@@ -94,15 +54,11 @@ public interface DataFrame<out T> : Aggregatable<T>, DataFrameBase<T> {
 
     override fun ncol(): Int = columns().size
 
-    override fun rows(): Iterable<DataRow<T>> = forwardIterable()
-
     public fun <C> values(byRow: Boolean = false, columns: ColumnsSelector<T, C>): Sequence<C>
     public fun values(byRow: Boolean = false): Sequence<Any?> = values(byRow) { all() }
 
     public fun <C> valuesNotNull(byRow: Boolean = false, columns: ColumnsSelector<T, C?>): Sequence<C> = values(byRow, columns).filterNotNull()
     public fun valuesNotNull(byRow: Boolean = false): Sequence<Any> = valuesNotNull(byRow) { all() }
-
-    public fun columnNames(): List<String> = columns().map { it.name() }
 
     override fun columns(): List<AnyCol>
     public fun <C> columns(selector: ColumnsSelector<T, C>): List<DataColumn<C>> = get(selector)
@@ -132,13 +88,13 @@ public interface DataFrame<out T> : Aggregatable<T>, DataFrameBase<T> {
     public operator fun get(range: IntRange): DataFrame<T> = getRows(range)
     public operator fun get(firstIndex: Int, vararg otherIndices: Int): DataFrame<T> = get(headPlusIterable(firstIndex, otherIndices.asIterable()))
 
-    public operator fun plus(col: AnyCol): DataFrame<T> = dataFrameOf(columns() + col).typed<T>()
-    public operator fun plus(col: Iterable<AnyCol>): DataFrame<T> = new(columns() + col)
+    public operator fun plus(col: AnyCol): DataFrame<T> = (columns() + col).toDataFrame()
+    public operator fun plus(cols: Iterable<AnyCol>): DataFrame<T> = (columns() + cols).toDataFrame()
     public operator fun plus(stub: AddRowNumberStub): DataFrame<T> = addRowNumber(stub.columnName)
 
-    public fun getRows(indices: Iterable<Int>): DataFrame<T> = columns().map { col -> col.slice(indices) }.asDataFrame<T>()
+    public fun getRows(indices: Iterable<Int>): DataFrame<T> = columns().map { col -> col.slice(indices) }.toDataFrame()
     public fun getRows(mask: BooleanArray): DataFrame<T> = getRows(mask.toIndices())
-    public fun getRows(range: IntRange): DataFrame<T> = if (range == indices()) this else columns().map { col -> col.slice(range) }.asDataFrame<T>()
+    public fun getRows(range: IntRange): DataFrame<T> = if (range == indices()) this else columns().map { col -> col.slice(range) }.toDataFrame()
 
     public fun getColumnIndex(name: String): Int
     public fun getColumnIndex(col: AnyCol): Int = getColumnIndex(col.name())
@@ -161,40 +117,12 @@ public interface DataFrame<out T> : Aggregatable<T>, DataFrameBase<T> {
     public operator fun get(first: Column, vararg other: Column): DataFrame<T> = select(listOf(first) + other)
     public operator fun get(first: String, vararg other: String): DataFrame<T> = select(listOf(first) + other)
 
-    public fun all(predicate: RowFilter<T>): Boolean = rows().all { predicate(it, it) }
-    public fun any(predicate: RowFilter<T>): Boolean = rows().any { predicate(it, it) }
-
-    public fun first(): DataRow<T> = get(0)
-    public fun firstOrNull(): DataRow<T>? = if (nrow > 0) first() else null
-    public fun first(predicate: RowFilter<T>): DataRow<T> = rows().first { predicate(it, it) }
-    public fun firstOrNull(predicate: RowFilter<T>): DataRow<T>? = rows().firstOrNull { predicate(it, it) }
-    public fun last(): DataRow<T> = get(nrow - 1)
-    public fun lastOrNull(): DataRow<T>? = if (nrow > 0) last() else null
-    public fun last(predicate: RowFilter<T>): DataRow<T> = backwardIterable().first { predicate(it, it) }
-    public fun lastOrNull(predicate: RowFilter<T>): DataRow<T>? = backwardIterable().firstOrNull { predicate(it, it) }
-    public fun take(numRows: Int): DataFrame<T> = getRows(0 until numRows)
-    public fun drop(numRows: Int): DataFrame<T> = getRows(numRows until nrow())
-    public fun takeLast(numRows: Int): DataFrame<T> = drop(nrow() - numRows)
-    public fun dropLast(numRows: Int): DataFrame<T> = take(nrow() - numRows)
-    public fun head(numRows: Int = 5): DataFrame<T> = take(numRows)
-    public fun tail(numRows: Int = 5): DataFrame<T> = takeLast(numRows)
-    public fun shuffled(): DataFrame<T> = getRows((0 until nrow()).shuffled())
-    public fun <K, V> associate(transform: RowSelector<T, Pair<K, V>>): Map<K, V> = rows().associate { transform(it, it) }
-    public fun <V> associateBy(transform: RowSelector<T, V>): Map<V, DataRow<T>> = rows().associateBy { transform(it, it) }
-
-    public fun single(): DataRow<T> = rows().single()
-    public fun single(predicate: RowSelector<T, Boolean>): DataRow<T> = rows().single { predicate(it, it) }
-
-    public fun <R> mapIndexed(action: (Int, DataRow<T>) -> R): List<R> = rows().mapIndexed(action)
-
-    public fun <R> mapIndexedNotNull(action: (Int, DataRow<T>) -> R?): List<R> = rows().mapIndexedNotNull(action)
-
     public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
 
     public fun <R> aggregate(body: GroupByAggregateBody<T, R>): DataRow<T>
 }
 
-public inline fun <T, R> DataFrame<T>.map(selector: RowSelector<T, R>): List<R> = rows().map { selector(it, it) }
+public fun AnyFrame.columnNames(): List<String> = columns().map { it.name() }
 
 public fun AnyFrame.size(): DataFrameSize = DataFrameSize(ncol(), nrow())
 
@@ -206,63 +134,7 @@ public fun <T> AnyRow.typed(): DataRow<T> = this as DataRow<T>
 
 public fun <T> DataFrameBase<*>.typed(): DataFrameBase<T> = this as DataFrameBase<T>
 
-public fun <T> DataRow<T>.asDataFrame(): DataFrame<T> = owner[index..index]
-
-public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
-    var uniqueDf: DataFrame<T>? = null
-    for (row in this) {
-        if (uniqueDf == null) uniqueDf = row.df()
-        else {
-            if (uniqueDf !== row.df()) {
-                uniqueDf = null
-                break
-            }
-        }
-    }
-    return if (uniqueDf != null) {
-        val permutation = map { it.index }
-        uniqueDf[permutation]
-    } else map { it.asDataFrame() }.union()
-}
-
-public fun <T> DataFrame<T>.forwardIterable(): Iterable<DataRow<T>> = object : Iterable<DataRow<T>> {
-    override fun iterator() =
-
-        object : Iterator<DataRow<T>> {
-            var nextRow = 0
-
-            override fun hasNext(): Boolean = nextRow < nrow
-
-            override fun next(): DataRow<T> {
-                require(nextRow < nrow)
-                return get(nextRow++)
-            }
-        }
-}
-
-public fun <T> DataFrame<T>.backwardIterable(): Iterable<DataRow<T>> = object : Iterable<DataRow<T>> {
-    override fun iterator() =
-
-        object : Iterator<DataRow<T>> {
-            var nextRow = nrow - 1
-
-            override fun hasNext(): Boolean = nextRow >= 0
-
-            override fun next(): DataRow<T> {
-                require(nextRow >= 0)
-                return get(nextRow--)
-            }
-        }
-}
-
-public fun <T, C> DataFrame<T>.forEachIn(selector: ColumnsSelector<T, C>, action: (DataRow<T>, DataColumn<C>) -> Unit): Unit =
-    getColumnsWithPaths(selector).let { cols ->
-        rows().forEach { row ->
-            cols.forEach { col ->
-                action(row, col.data)
-            }
-        }
-    }
+public fun <T> DataRow<T>.toDataFrame(): DataFrame<T> = owner[index..index]
 
 internal val AnyFrame.ncol get() = ncol()
 internal val AnyFrame.nrow get() = nrow()
