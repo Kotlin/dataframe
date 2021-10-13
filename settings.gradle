@@ -1,9 +1,0 @@
-pluginManagement {
-    repositories {
-        gradlePluginPortal()
-    }
-}
-
-rootProject.name = projectName
-
-includeBuild("generator")
