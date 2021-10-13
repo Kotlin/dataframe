@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.BooleanCol
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
-import org.jetbrains.kotlinx.dataframe.ColumnPath
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
@@ -16,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.StringCol
 import org.jetbrains.kotlinx.dataframe.allColumnsExcept
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.Columns

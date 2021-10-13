@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
-import org.jetbrains.kotlinx.dataframe.ColumnPath
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.impl.columns.addParentPath
