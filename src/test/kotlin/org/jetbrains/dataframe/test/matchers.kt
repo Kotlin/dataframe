@@ -6,15 +6,18 @@ import io.kotest.matchers.neverNullMatcher
 
 fun containNTimes(substring: String, n: Int): Matcher<String?> = neverNullMatcher { value ->
     var start = 0
-    val positiveMessage = "String should contain `$substring` exactly $n times"
+    fun positiveMessage(actual: Int) = "String should contain `$substring` exactly $n times, but contains $actual times"
     val negativeMessage = "String should contain `$substring` more or less than $n times"
-    fun result(passed: Boolean) = MatcherResult(passed, positiveMessage, negativeMessage)
-    for (k in 0 until n) {
+    fun result(passed: Boolean, actual: Int) = MatcherResult(passed, positiveMessage(actual), negativeMessage)
+
+    if (substring.isEmpty()) return@neverNullMatcher result(false, 0)
+
+    for (k in 0..value.length + 1) {
         val i = value.indexOf(substring, start)
-        if (i == -1) return@neverNullMatcher result(false)
+        if (i == -1) return@neverNullMatcher result(k == n, k)
         start = i + substring.length
     }
 
-    val i = value.indexOf(substring, start)
-    result(i == -1)
+    // Impossible situation
+    result(false, value.length + 1)
 }
