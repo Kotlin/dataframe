@@ -5,7 +5,7 @@ import com.google.devtools.ksp.innerArguments
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import java.io.OutputStreamWriter
 
 class DataFrameSymbolProcessor(

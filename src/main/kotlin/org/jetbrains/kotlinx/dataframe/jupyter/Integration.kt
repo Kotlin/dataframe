@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.asDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.io.HtmlData
 import org.jetbrains.kotlinx.dataframe.io.initHtml
 import org.jetbrains.kotlinx.dataframe.io.toHTML

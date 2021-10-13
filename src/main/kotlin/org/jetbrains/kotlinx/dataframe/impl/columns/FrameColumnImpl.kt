@@ -7,9 +7,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.hasNulls
-import org.jetbrains.kotlinx.dataframe.internal.schema.DataFrameSchema
-import org.jetbrains.kotlinx.dataframe.internal.schema.extractSchema
-import org.jetbrains.kotlinx.dataframe.internal.schema.intersectSchemas
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.schema.extractSchema
+import org.jetbrains.kotlinx.dataframe.schema.intersectSchemas
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.splitByIndices
 import kotlin.reflect.KType

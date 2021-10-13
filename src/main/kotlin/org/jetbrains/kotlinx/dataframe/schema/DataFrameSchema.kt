@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.internal.schema
+package org.jetbrains.kotlinx.dataframe.schema
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnKind

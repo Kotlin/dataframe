@@ -1,8 +1,8 @@
-package org.jetbrains.kotlinx.dataframe.internal.codeGen
+package org.jetbrains.kotlinx.dataframe.codeGen
 
 import org.jetbrains.kotlinx.dataframe.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.needsQuoting
-import org.jetbrains.kotlinx.dataframe.internal.schema.ColumnSchema
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 
 public sealed interface ColumnInfo {
     public class ValueColumnInfo(public val typeFqName: String) : ColumnInfo

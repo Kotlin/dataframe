@@ -1,12 +1,12 @@
 package org.jetbrains.dataframe.impl.codeGen
 
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGeneratorImpl
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.CodeWithConverter
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.ExtensionsCodeGenerator
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.Marker
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.MarkerVisibility
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.MarkersExtractor
-import org.jetbrains.kotlinx.dataframe.internal.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.codeGen.ExtensionsCodeGenerator
+import org.jetbrains.kotlinx.dataframe.codeGen.Marker
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 
 public enum class InterfaceGenerationMode {

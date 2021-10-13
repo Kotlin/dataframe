@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.internal.schema
+package org.jetbrains.kotlinx.dataframe.schema
 
 public enum class CompareResult {
     Equals,

@@ -1,7 +1,7 @@
-package org.jetbrains.kotlinx.dataframe.internal.codeGen
+package org.jetbrains.kotlinx.dataframe.codeGen
 
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.SchemaProcessorImpl
-import org.jetbrains.kotlinx.dataframe.internal.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 internal interface SchemaProcessor {
 
