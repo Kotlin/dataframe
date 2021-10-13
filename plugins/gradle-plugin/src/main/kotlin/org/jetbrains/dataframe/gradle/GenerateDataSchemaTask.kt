@@ -111,7 +111,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 appendLine("package $escapedPackageName")
                 appendLine()
             }
-            appendLine("import org.jetbrains.dataframe.annotations.*")
+            appendLine("import org.jetbrains.kotlinx.dataframe.annotations.*")
             appendLine()
             appendLine("// GENERATED. DO NOT EDIT MANUALLY")
             appendLine(codeGenResult.code.declarations)
