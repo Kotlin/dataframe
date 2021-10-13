@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.aggregation
 
 import org.jetbrains.kotlinx.dataframe.ColumnPath
-import org.jetbrains.kotlinx.dataframe.SelectReceiver
+import org.jetbrains.kotlinx.dataframe.api.SelectReceiver
 import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.pathOf
 

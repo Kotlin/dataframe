@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.asDataRow
 import org.jetbrains.kotlinx.dataframe.api.asGrouped
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.div
+import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.maxBy
@@ -37,7 +38,6 @@ import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.expr
 import org.jetbrains.kotlinx.dataframe.get
 import org.junit.Test
 

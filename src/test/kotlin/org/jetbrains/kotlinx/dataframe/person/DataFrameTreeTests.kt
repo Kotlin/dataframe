@@ -25,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.api.append
 import org.jetbrains.kotlinx.dataframe.api.asGrouped
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.count
+import org.jetbrains.kotlinx.dataframe.api.dfsOf
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.duplicate
@@ -70,7 +71,6 @@ import org.jetbrains.kotlinx.dataframe.columns.depth
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.toAccessor
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.dfsOf
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.emptyMany
 import org.jetbrains.kotlinx.dataframe.frameColumn

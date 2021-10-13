@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.addRowNumber
 import org.jetbrains.kotlinx.dataframe.allNulls
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.append
@@ -89,12 +90,10 @@ import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withGrouping
-import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.asDataFrame
 import org.jetbrains.kotlinx.dataframe.asFrame
 import org.jetbrains.kotlinx.dataframe.asGrouped
 import org.jetbrains.kotlinx.dataframe.between
-import org.jetbrains.kotlinx.dataframe.colsOf
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnMany
@@ -103,7 +102,6 @@ import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.toAccessor
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.expr
 import org.jetbrains.kotlinx.dataframe.first
 import org.jetbrains.kotlinx.dataframe.forEachIn
 import org.jetbrains.kotlinx.dataframe.frameColumn

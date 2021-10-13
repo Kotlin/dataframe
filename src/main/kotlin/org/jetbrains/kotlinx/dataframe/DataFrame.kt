@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.GroupByAggregateBody
+import org.jetbrains.kotlinx.dataframe.api.SelectReceiver
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.union
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -10,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.EmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.TreeNode
@@ -20,9 +20,6 @@ import org.jetbrains.kotlinx.dataframe.impl.getOrPut
 import org.jetbrains.kotlinx.dataframe.impl.put
 import org.jetbrains.kotlinx.dataframe.impl.toIndices
 import org.jetbrains.kotlinx.dataframe.impl.topDfs
-
-internal open class SelectReceiverImpl<T>(source: DataFrame<T>, allowMissingColumns: Boolean) :
-    DataFrameReceiver<T>(source, allowMissingColumns), SelectReceiver<T>
 
 public data class DataFrameSize(val ncol: Int, val nrow: Int) {
     override fun toString(): String = "$nrow x $ncol"

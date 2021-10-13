@@ -7,10 +7,10 @@ import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asTable
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
-import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.io.escapeHTML
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
 import java.net.URL
