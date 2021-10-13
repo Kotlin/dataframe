@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyColumn
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnKind
 import org.jetbrains.kotlinx.dataframe.headPlusIterable
@@ -49,8 +50,6 @@ public interface BaseColumn<out T> : TypedColumn<T> {
 
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): BaseColumn<T> = (this as DataColumnInternal<*>).rename(property.name).forceResolve() as BaseColumn<T>
 }
-
-public typealias AnyColumn = BaseColumn<*>
 
 internal val <T> BaseColumn<T>.values get() = values()
 internal val AnyColumn.ndistinct get() = ndistinct()

@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.TreeNode
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnWithParent
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath

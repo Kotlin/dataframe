@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.EmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.TreeNode
@@ -22,23 +22,11 @@ import org.jetbrains.kotlinx.dataframe.impl.put
 import org.jetbrains.kotlinx.dataframe.impl.toIndices
 import org.jetbrains.kotlinx.dataframe.impl.topDfs
 
-public data class DataFrameSize(val ncol: Int, val nrow: Int) {
-    override fun toString(): String = "$nrow x $ncol"
-}
-
-public typealias Predicate<T> = (T) -> Boolean
-
 public fun pathOf(vararg columnNames: String): ColumnPath = ColumnPath(columnNames.asList())
 
 internal fun List<String>.toColumnPath() = ColumnPath(this)
 
 internal fun Array<out String>.toColumnPath() = ColumnPath(this.asList())
-
-public typealias DataFrameSelector<T, R> = DataFrame<T>.(DataFrame<T>) -> R
-
-public typealias ColumnsSelector<T, C> = SelectReceiver<T>.(SelectReceiver<T>) -> Columns<C>
-
-public typealias ColumnSelector<T, C> = SelectReceiver<T>.(SelectReceiver<T>) -> SingleColumn<C>
 
 public fun <T, C> DataFrame<T>.createSelector(selector: ColumnsSelector<T, C>): SelectReceiver<T>.(SelectReceiver<T>) -> Columns<C> = selector
 
@@ -275,8 +263,6 @@ public fun <T, C> DataFrame<T>.forEachIn(selector: ColumnsSelector<T, C>, action
             }
         }
     }
-
-public typealias AnyFrame = DataFrame<*>
 
 internal val AnyFrame.ncol get() = ncol()
 internal val AnyFrame.nrow get() = nrow()

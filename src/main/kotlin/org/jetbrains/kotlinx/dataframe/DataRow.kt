@@ -117,8 +117,6 @@ public typealias RowCellSelector<T, C, R> = DataRow<T>.(C) -> R
 public typealias RowCellFilter<T, C> = RowCellSelector<T, C, Boolean>
 public typealias RowColumnSelector<T, C, R> = (DataRow<T>, DataColumn<C>) -> R
 
-public typealias AnyRow = DataRow<*>
-
 internal fun AnyRow.namedValues(): Sequence<NamedValue> = owner.columns().asSequence().map {
     NamedValue.create(it.shortPath(), it[index], it.type(), it.defaultValue(), guessType = false)
 }
