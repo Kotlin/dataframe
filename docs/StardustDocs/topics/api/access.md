@@ -1,6 +1,6 @@
 [//]: # (title: Access)
 
-<!---IMPORT docs.api.Access-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
 This section describes various ways to get a piece of data out from `DataFrame`
 ## Get column

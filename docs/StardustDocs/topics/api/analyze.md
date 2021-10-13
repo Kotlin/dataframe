@@ -1,6 +1,6 @@
 [//]: # (title: Analyze)
 
-<!---IMPORT docs.api.Analyze-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
 ## Basic statistics
 

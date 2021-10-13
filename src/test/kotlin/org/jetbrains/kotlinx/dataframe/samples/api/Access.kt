@@ -1,4 +1,4 @@
-package docs.api
+package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.*

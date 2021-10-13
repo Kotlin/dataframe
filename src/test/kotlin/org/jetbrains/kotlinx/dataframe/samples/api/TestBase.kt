@@ -1,4 +1,4 @@
-package docs.api
+package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.dataframe.group
 import org.jetbrains.dataframe.into
