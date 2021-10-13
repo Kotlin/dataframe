@@ -1,12 +1,9 @@
 package org.jetbrains.dataframe.jupyter
 
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.intellij.lang.annotations.Language
-import org.jetbrains.dataframe.test.containNTimes
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
-import org.junit.Ignore
 import org.junit.Test
 
 class RenderingTests : JupyterReplTestCase() {
@@ -41,9 +38,7 @@ class RenderingTests : JupyterReplTestCase() {
         html2 shouldContain (160 * 2).toString()
     }
 
-    // TODO: restore
     @Test
-    @Ignore
     fun `rendering options`() {
         @Language("kts")
         val html1 = execHtml(
@@ -53,7 +48,7 @@ class RenderingTests : JupyterReplTestCase() {
             df
             """.trimIndent()
         )
-        html1 should containNTimes("<tr>", 21)
+        html1 shouldContain "showing only top 20 of 70 rows"
 
         @Language("kts")
         val html2 = execHtml(
@@ -62,6 +57,6 @@ class RenderingTests : JupyterReplTestCase() {
             df
             """.trimIndent()
         )
-        html2 should containNTimes("<tr>", 51)
+        html2 shouldContain "showing only top 50 of 70 rows"
     }
 }
