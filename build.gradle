@@ -20,7 +20,6 @@ apply plugin: "org.jetbrains.kotlin.jupyter.api"
 
 repositories {
     mavenCentral()
-    maven { url "https://jitpack.io" }
     maven { url "https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven" }
     maven { url jupyterApiTCRepo }
 }
@@ -35,7 +34,7 @@ dependencies {
 
     implementation "org.apache.commons:commons-csv:1.8"
     implementation "com.beust:klaxon:5.5"
-    implementation "com.github.jkcclemens:khttp:-SNAPSHOT"
+    implementation "com.github.kittinunf.fuel:fuel:2.3.1"
 
     testImplementation "junit:junit:4.12"
     testImplementation("io.kotest:kotest-assertions-core:4.6.0") {
