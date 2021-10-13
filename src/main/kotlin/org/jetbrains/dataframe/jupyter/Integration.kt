@@ -11,6 +11,8 @@ import org.jetbrains.dataframe.asDataFrame
 import org.jetbrains.dataframe.asDataRow
 import org.jetbrains.dataframe.columns.AnyCol
 import org.jetbrains.dataframe.columns.ColumnGroup
+import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.dataframe.createStarProjectedType
 import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.dataTypes.IMG
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
@@ -30,6 +32,7 @@ import org.jetbrains.kotlinx.jupyter.api.declare
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.full.isSubtypeOf
 
 internal val newDataSchemas = mutableListOf<KClass<*>>()
 
@@ -110,6 +113,16 @@ internal class Integration : JupyterIntegration() {
                 addDataSchemas(newDataSchemas)
                 newDataSchemas.clear()
             }
+        }
+
+        val internalTypes = listOf(
+            ColumnReference::class,
+        ).map { it.createStarProjectedType(true) }
+
+        markVariableInternal { property ->
+            // TODO: add more conditions to include all generated properties and other internal stuff
+            //  that should not be shown to user in Jupyter variables view
+            internalTypes.any { property.returnType.isSubtypeOf(it) }
         }
     }
 }
