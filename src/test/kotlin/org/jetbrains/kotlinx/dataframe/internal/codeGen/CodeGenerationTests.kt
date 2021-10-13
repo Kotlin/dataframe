@@ -16,9 +16,9 @@ import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
-import org.jetbrains.kotlinx.dataframe.schema.extractSchema
 import org.jetbrains.kotlinx.dataframe.person.BaseTest
 import org.jetbrains.kotlinx.dataframe.person.Person
+import org.jetbrains.kotlinx.dataframe.schema.extractSchema
 import org.junit.Test
 
 class CodeGenerationTests : BaseTest() {

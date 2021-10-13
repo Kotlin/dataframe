@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.SelectReceiverImpl
 import org.jetbrains.kotlinx.dataframe.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -25,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.impl.TreeNode
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.equalsByElement
+import org.jetbrains.kotlinx.dataframe.impl.receivers.SelectReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.rollingHash
 import org.jetbrains.kotlinx.dataframe.isGroup
 import org.jetbrains.kotlinx.dataframe.pathOf

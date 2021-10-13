@@ -18,9 +18,11 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingValueColumn
 import org.jetbrains.kotlinx.dataframe.isGroup
 import org.jetbrains.kotlinx.dataframe.pathOf
 
+// TODO: don't copy columns, just wrap original DataFrame
 internal fun <T> prepareForReceiver(df: DataFrame<T>) = DataFrameImpl<T>(df.columns().map { if (it.isGroup()) ColumnGroupWithParent(null, it.asGroup()) else it })
 
-internal abstract class DataFrameReceiverBase<T>(protected val source: DataFrame<T>) : DataFrame<T> by source
+// Needed just to pass converted constructor argument into 'implement by'
+internal open class DataFrameReceiverBase<T>(protected val source: DataFrame<T>) : DataFrame<T> by source
 
 internal abstract class DataFrameReceiver<T>(source: DataFrame<T>, private val allowMissingColumns: Boolean) : DataFrameReceiverBase<T>(
     prepareForReceiver(source)

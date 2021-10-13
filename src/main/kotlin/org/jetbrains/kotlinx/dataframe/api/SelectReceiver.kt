@@ -1,7 +1,19 @@
-package org.jetbrains.kotlinx.dataframe
+package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.api.AddExpression
-import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.BooleanCol
+import org.jetbrains.kotlinx.dataframe.ColumnFilter
+import org.jetbrains.kotlinx.dataframe.ColumnPath
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrameBase
+import org.jetbrains.kotlinx.dataframe.DoubleCol
+import org.jetbrains.kotlinx.dataframe.IntCol
+import org.jetbrains.kotlinx.dataframe.NumberCol
+import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.RowSelector
+import org.jetbrains.kotlinx.dataframe.StringCol
+import org.jetbrains.kotlinx.dataframe.allColumnsExcept
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -10,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
+import org.jetbrains.kotlinx.dataframe.createColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
@@ -18,6 +31,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.typed
+import org.jetbrains.kotlinx.dataframe.newColumnWithActualType
+import org.jetbrains.kotlinx.dataframe.toColumnAccessor
+import org.jetbrains.kotlinx.dataframe.top
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
