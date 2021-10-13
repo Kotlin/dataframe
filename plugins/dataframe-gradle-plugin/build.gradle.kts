@@ -11,7 +11,7 @@ repositories {
     google()
 }
 
-group = "org.jetbrains.kotlinx.dataframe"
+group = "org.jetbrains.kotlin"
 version = "1.0.0-SNAPSHOT"
 
 tasks.withType<ProcessResources> {
@@ -43,6 +43,25 @@ gradlePlugin {
             id = "org.jetbrains.kotlin.plugin.dataframe-base"
             implementationClass = "org.jetbrains.dataframe.gradle.SchemaGeneratorPlugin"
         }
+    }
+}
+
+pluginBundle {
+    // These settings are set for the whole plugin bundle
+    website = "https://github.com/Kotlin/dataframe"
+    vcsUrl = "https://github.com/Kotlin/dataframe"
+
+    (plugins) {
+        "schemaGeneratorPlugin" {
+            // id is captured from java-gradle-plugin configuration
+            displayName = "Kotlin Dataframe gradle plugin"
+            description = "Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
+            tags = listOf("dataframe", "kotlin")
+        }
+    }
+
+    mavenCoordinates {
+        groupId = project.group.toString()
     }
 }
 
