@@ -1,9 +1,11 @@
 package org.jetbrains.dataframe.ksp
 
+import com.google.devtools.ksp.getVisibility
 import com.google.devtools.ksp.innerArguments
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
+import org.jetbrains.dataframe.internal.codeGen.MarkerVisibility
 import java.io.OutputStreamWriter
 
 class DataFrameSymbolProcessor(
@@ -52,8 +54,20 @@ class DataFrameSymbolProcessor(
     }
 
     private fun OutputStreamWriter.writeProperties(interfaceType: KSType, properties: List<KSPropertyDeclaration>) {
+        val visibility = when (val visibility = interfaceType.declaration.getVisibility()) {
+            Visibility.PUBLIC -> if (interfaceType.declaration.modifiers.contains(Modifier.PUBLIC)) {
+                MarkerVisibility.EXPLICIT_PUBLIC
+            } else {
+                MarkerVisibility.IMPLICIT_PUBLIC
+            }
+            Visibility.INTERNAL -> MarkerVisibility.INTERNAL
+            Visibility.PRIVATE, Visibility.PROTECTED, Visibility.LOCAL, Visibility.JAVA_PACKAGE -> {
+                error("DataSchema declaration should have $EXPECTED_VISIBILITIES, but was $visibility")
+            }
+        }
         val extensions = renderExtensions(
             interfaceName = interfaceType.toString(),
+            visibility = visibility,
             properties.map { property -> Property(getColumnName(property), property.simpleName.asString(), render(property.type)) }
         )
         appendLine(extensions)
@@ -118,5 +132,9 @@ class DataFrameSymbolProcessor(
 
     private fun argumentMismatchError(property: KSPropertyDeclaration, args: List<KSValueArgument>): Nothing {
         error("Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, but got $args")
+    }
+
+    private companion object {
+        val EXPECTED_VISIBILITIES = listOf(Visibility.PUBLIC, Visibility.INTERNAL)
     }
 }

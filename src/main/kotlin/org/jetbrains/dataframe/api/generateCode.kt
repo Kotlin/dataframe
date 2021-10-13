@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
+import org.jetbrains.dataframe.internal.codeGen.MarkerVisibility
 import org.jetbrains.dataframe.internal.schema.extractSchema
 
 public inline fun <reified T> DataFrame<T>.generateCode(fields: Boolean = true, extensionProperties: Boolean = true): String {
@@ -13,7 +14,8 @@ public inline fun <reified T> DataFrame<T>.generateCode(fields: Boolean = true, 
 public fun <T> DataFrame<T>.generateCode(
     markerName: String,
     fields: Boolean = true,
-    extensionProperties: Boolean = true
+    extensionProperties: Boolean = true,
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC
 ): String {
     val codeGen = CodeGenerator.create()
     return codeGen.generate(
@@ -22,6 +24,7 @@ public fun <T> DataFrame<T>.generateCode(
         fields = fields,
         extensionProperties = extensionProperties,
         isOpen = true,
+        visibility
     ).code.declarations
 }
 

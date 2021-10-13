@@ -129,7 +129,7 @@ class CodeGenerationTests : BaseTest() {
     fun `generate derived interface`() {
         val codeGen = CodeGenerator.create()
         val schema = df.dropNulls().extractSchema()
-        val code = codeGen.generate(schema, "ValidPerson", true, true, isOpen = true, listOf(MarkersExtractor.get<Person>())).code.declarations
+        val code = codeGen.generate(schema, "ValidPerson", true, true, isOpen = true, MarkerVisibility.IMPLICIT_PUBLIC, listOf(MarkersExtractor.get<Person>())).code.declarations
         val expected = """
             @DataSchema
             interface ValidPerson : $personClassName{
@@ -167,6 +167,52 @@ class CodeGenerationTests : BaseTest() {
                 val name: kotlin.String
                 val weight: kotlin.Int?
             }
+        """.trimIndent()
+    }
+
+    @Test
+    fun `declaration with internal visibility`() {
+        val repl = CodeGenerator.create()
+        val code = repl.generate(typed.extractSchema(), "DataType", true, true, false, MarkerVisibility.INTERNAL).code.declarations
+        code shouldBe """
+            @DataSchema(isOpen = false)
+            internal interface DataType{
+                val age: kotlin.Int
+                val city: kotlin.String?
+                val name: kotlin.String
+                val weight: kotlin.Int?
+            }
+            internal val org.jetbrains.dataframe.DataFrameBase<DataType>.age: org.jetbrains.dataframe.columns.DataColumn<kotlin.Int> @JvmName("DataType_age") get() = this["age"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.Int>
+            internal val org.jetbrains.dataframe.DataRowBase<DataType>.age: kotlin.Int @JvmName("DataType_age") get() = this["age"] as kotlin.Int
+            internal val org.jetbrains.dataframe.DataFrameBase<DataType>.city: org.jetbrains.dataframe.columns.DataColumn<kotlin.String?> @JvmName("DataType_city") get() = this["city"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.String?>
+            internal val org.jetbrains.dataframe.DataRowBase<DataType>.city: kotlin.String? @JvmName("DataType_city") get() = this["city"] as kotlin.String?
+            internal val org.jetbrains.dataframe.DataFrameBase<DataType>.name: org.jetbrains.dataframe.columns.DataColumn<kotlin.String> @JvmName("DataType_name") get() = this["name"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.String>
+            internal val org.jetbrains.dataframe.DataRowBase<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
+            internal val org.jetbrains.dataframe.DataFrameBase<DataType>.weight: org.jetbrains.dataframe.columns.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.Int?>
+            internal val org.jetbrains.dataframe.DataRowBase<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
+        """.trimIndent()
+    }
+
+    @Test
+    fun `declaration with explicit public visibility`() {
+        val repl = CodeGenerator.create()
+        val code = repl.generate(typed.extractSchema(), "DataType", true, true, false, MarkerVisibility.EXPLICIT_PUBLIC).code.declarations
+        code shouldBe """
+            @DataSchema(isOpen = false)
+            public interface DataType{
+                public val age: kotlin.Int
+                public val city: kotlin.String?
+                public val name: kotlin.String
+                public val weight: kotlin.Int?
+            }
+            public val org.jetbrains.dataframe.DataFrameBase<DataType>.age: org.jetbrains.dataframe.columns.DataColumn<kotlin.Int> @JvmName("DataType_age") get() = this["age"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.Int>
+            public val org.jetbrains.dataframe.DataRowBase<DataType>.age: kotlin.Int @JvmName("DataType_age") get() = this["age"] as kotlin.Int
+            public val org.jetbrains.dataframe.DataFrameBase<DataType>.city: org.jetbrains.dataframe.columns.DataColumn<kotlin.String?> @JvmName("DataType_city") get() = this["city"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.String?>
+            public val org.jetbrains.dataframe.DataRowBase<DataType>.city: kotlin.String? @JvmName("DataType_city") get() = this["city"] as kotlin.String?
+            public val org.jetbrains.dataframe.DataFrameBase<DataType>.name: org.jetbrains.dataframe.columns.DataColumn<kotlin.String> @JvmName("DataType_name") get() = this["name"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.String>
+            public val org.jetbrains.dataframe.DataRowBase<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
+            public val org.jetbrains.dataframe.DataFrameBase<DataType>.weight: org.jetbrains.dataframe.columns.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as org.jetbrains.dataframe.columns.DataColumn<kotlin.Int?>
+            public val org.jetbrains.dataframe.DataRowBase<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
         """.trimIndent()
     }
 

@@ -46,7 +46,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
     ): Task {
         val interfaceName = getInterfaceName(schema)
         fun propertyError(property: String): Nothing {
-            error("No supported Kotlin plugin was found. Please apply one or specify $property for task $interfaceName explicitly")
+            error("No supported Kotlin plugin was found. Please apply one or specify property $property for schema $interfaceName explicitly")
         }
 
         val sourceSetName by lazy {
@@ -74,12 +74,28 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 inferPackageName(src)
             }
 
+        val visibility = schema.visibility
+            ?: extension.visibility
+            ?: run {
+                if (appliedPlugin != null) {
+                    when (appliedPlugin.kotlinExtension.explicitApi) {
+                        null -> DataSchemaVisibility.IMPLICIT_PUBLIC
+                        ExplicitApiMode.Strict -> DataSchemaVisibility.EXPLICIT_PUBLIC
+                        ExplicitApiMode.Warning -> DataSchemaVisibility.EXPLICIT_PUBLIC
+                        ExplicitApiMode.Disabled -> DataSchemaVisibility.IMPLICIT_PUBLIC
+                    }
+                } else {
+                    DataSchemaVisibility.IMPLICIT_PUBLIC
+                }
+            }
+
         return target.tasks.create("generateDataFrame${interfaceName}", GenerateDataSchemaTask::class.java) {
             group = GROUP
             data.set(schema.data)
             this.interfaceName.set(interfaceName)
             this.packageName.set(packageName)
             this.src.set(src)
+            this.schemaVisibility.set(visibility)
         }
     }
 

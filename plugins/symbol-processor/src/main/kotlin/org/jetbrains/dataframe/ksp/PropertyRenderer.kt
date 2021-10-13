@@ -2,7 +2,7 @@ package org.jetbrains.dataframe.ksp
 
 import org.jetbrains.dataframe.internal.codeGen.*
 
-internal fun renderExtensions(interfaceName: String, properties: List<Property>): String {
+internal fun renderExtensions(interfaceName: String, visibility: MarkerVisibility, properties: List<Property>): String {
     val generator = ExtensionsCodeGenerator.create()
     return generator.generate(object : IsolatedMarker {
         override val name: String = interfaceName
@@ -21,6 +21,7 @@ internal fun renderExtensions(interfaceName: String, properties: List<Property>)
                 columnInfo = columnInfo
             )
         }
+        override val visibility: MarkerVisibility = visibility
     }).declarations
 }
 

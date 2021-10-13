@@ -17,6 +17,7 @@ import com.beust.klaxon.KlaxonException
 import org.gradle.api.provider.Provider
 import org.jetbrains.dataframe.AnyFrame
 import org.jetbrains.dataframe.impl.codeGen.CodeGenResult
+import org.jetbrains.dataframe.internal.codeGen.MarkerVisibility
 import java.io.FileNotFoundException
 
 abstract class GenerateDataSchemaTask : DefaultTask() {
@@ -32,6 +33,9 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
     @get:Input
     abstract val packageName: Property<String>
+
+    @get:Input
+    abstract val schemaVisibility: Property<DataSchemaVisibility>
 
     @Suppress("LeakingThis")
     @get:OutputFile
@@ -49,7 +53,12 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             name = interfaceName.get(),
             fields = true,
             extensionProperties = false,
-            isOpen = true
+            isOpen = true,
+            visibility = when (schemaVisibility.get()) {
+                DataSchemaVisibility.INTERNAL -> MarkerVisibility.INTERNAL
+                DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
+                DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
+            }
         )
         val escapedPackageName = escapePackageName(packageName.get())
 

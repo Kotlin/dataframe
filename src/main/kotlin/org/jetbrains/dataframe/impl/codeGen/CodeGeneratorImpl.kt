@@ -66,10 +66,17 @@ internal open class ExtensionsCodeGeneratorImpl : ExtensionsCodeGenerator {
 
     protected fun generateExtensionProperties(marker: IsolatedMarker): Code {
         val markerName = marker.name
+        val visibility = renderTopLevelDeclarationVisibility(marker)
         val shortMarkerName = markerName.substring(markerName.lastIndexOf('.') + 1)
-        fun generatePropertyCode(typeName: String, name: String, propertyType: String, getter: String): String {
+        fun generatePropertyCode(
+            typeName: String,
+            name: String,
+            propertyType: String,
+            getter: String,
+            visibility: String
+        ): String {
             val jvmName = "${shortMarkerName}_${name.removeQuotes()}"
-            return "val $typeName.$name: $propertyType @JvmName(\"${renderStringLiteral(jvmName)}\") get() = $getter as $propertyType"
+            return "${visibility}val $typeName.$name: $propertyType @JvmName(\"${renderStringLiteral(jvmName)}\") get() = $getter as $propertyType"
         }
 
         val declarations = mutableListOf<String>()
@@ -80,8 +87,8 @@ internal open class ExtensionsCodeGeneratorImpl : ExtensionsCodeGenerator {
             val name = it.fieldName
             val fieldType = it.renderFieldType()
             val columnType = it.renderColumnType()
-            declarations.add(generatePropertyCode(dfTypename, name.quotedIfNeeded, columnType, getter))
-            declarations.add(generatePropertyCode(rowTypename, name.quotedIfNeeded, fieldType, getter))
+            declarations.add(generatePropertyCode(dfTypename, name.quotedIfNeeded, columnType, getter, visibility))
+            declarations.add(generatePropertyCode(rowTypename, name.quotedIfNeeded, fieldType, getter, visibility))
         }
         return declarations.joinToString("\n")
     }
@@ -102,8 +109,11 @@ internal open class ExtensionsCodeGeneratorImpl : ExtensionsCodeGenerator {
     ): Code {
         val annotationName = DataSchema::class.simpleName
 
+        val visibility = renderTopLevelDeclarationVisibility(marker)
+        val propertyVisibility = renderInternalDeclarationVisibility(marker)
+
         val header =
-            "@$annotationName${if (marker.isOpen) "" else "(isOpen = false)"}\ninterface ${marker.name}"
+            "@$annotationName${if (marker.isOpen) "" else "(isOpen = false)"}\n${visibility}interface ${marker.name}"
         val baseInterfacesDeclaration =
             if (marker.baseMarkers.isNotEmpty()) " : " + marker.baseMarkers.map { it.value.name }
                 .joinToString() else ""
@@ -115,11 +125,23 @@ internal open class ExtensionsCodeGeneratorImpl : ExtensionsCodeGenerator {
                 if (it.columnName != it.fieldName.quotedIfNeeded) "\t@ColumnName(\"${renderStringLiteral(it.columnName)}\")\n" else ""
 
             val fieldType = it.renderFieldType()
-            "$columnNameAnnotation    ${override}val ${it.fieldName.quotedIfNeeded}: $fieldType"
+            "$columnNameAnnotation    ${propertyVisibility}${override}val ${it.fieldName.quotedIfNeeded}: $fieldType"
         }.join() else ""
         val body = if (fieldsDeclaration.isNotBlank()) "{\n$fieldsDeclaration\n}" else ""
         resultDeclarations.add(header + baseInterfacesDeclaration + body)
         return resultDeclarations.join()
+    }
+
+    private fun renderTopLevelDeclarationVisibility(marker: IsolatedMarker) = when (marker.visibility) {
+        MarkerVisibility.INTERNAL -> "internal "
+        MarkerVisibility.IMPLICIT_PUBLIC -> ""
+        MarkerVisibility.EXPLICIT_PUBLIC -> "public "
+    }
+
+    private fun renderInternalDeclarationVisibility(marker: IsolatedMarker) = when (marker.visibility) {
+        MarkerVisibility.INTERNAL -> ""
+        MarkerVisibility.IMPLICIT_PUBLIC -> ""
+        MarkerVisibility.EXPLICIT_PUBLIC -> "public "
     }
 }
 
@@ -143,10 +165,11 @@ internal class CodeGeneratorImpl : ExtensionsCodeGeneratorImpl(), CodeGenerator 
         fields: Boolean,
         extensionProperties: Boolean,
         isOpen: Boolean,
+        visibility: MarkerVisibility,
         knownMarkers: Iterable<Marker>
     ): CodeGenResult {
         val context = SchemaProcessor.create(name, knownMarkers)
-        val marker = context.process(schema, isOpen)
+        val marker = context.process(schema, isOpen, visibility)
         val declarations = mutableListOf<Code>()
         context.generatedMarkers.forEach {
             declarations.add(generateInterface(it, fields))

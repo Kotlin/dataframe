@@ -78,7 +78,15 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         name: String,
         isOpen: Boolean
     ): CodeWithConverter {
-        val result = generator.generate(schema, name, false, true, isOpen, registeredMarkers.values)
+        val result = generator.generate(
+            schema,
+            name,
+            fields = false,
+            extensionProperties = true,
+            isOpen,
+            MarkerVisibility.IMPLICIT_PUBLIC,
+            registeredMarkers.values
+        )
 
         result.newMarkers.forEach {
             generatedMarkers[it.name] = it
@@ -104,7 +112,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
 
                 if (baseClassNames == tempBaseClassNames) {
                     val newBaseMarkers = baseClasses.map { resolve(it) }
-                    val newMarker = Marker(clazz.qualifiedName!!, temp.isOpen, temp.fields, newBaseMarkers)
+                    val newMarker = Marker(clazz.qualifiedName!!, temp.isOpen, temp.fields, newBaseMarkers, MarkerVisibility.IMPLICIT_PUBLIC)
                     registeredMarkers[markerClass] = newMarker
                     generatedMarkers.remove(temp.name)
                     return newMarker
@@ -140,7 +148,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             stub.className,
             emptyList()
         )
-        val marker = schemaGenerator.process(stub.df.extractSchema(), true)
+        val marker = schemaGenerator.process(stub.df.extractSchema(), true, MarkerVisibility.IMPLICIT_PUBLIC)
         return generateToListConverter(stub.className, marker.fields, null)
     }
 

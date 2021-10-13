@@ -389,4 +389,40 @@ class SchemaGeneratorPluginIntegrationTest {
         }
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
     }
+
+    @Test
+    fun `generated code compiles in explicit api mode`() {
+        val (_, result) = runGradleBuild(":build") { buildDir ->
+            val dataFile = File(buildDir, "data.csv")
+            dataFile.writeText(TestData.csvSample)
+
+            """
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                    
+                plugins {
+                    kotlin("jvm") version "1.4.10"
+                    id("org.jetbrains.kotlin.plugin.dataframe-base")
+                }
+                
+                repositories {
+                    mavenCentral() 
+                }
+                
+                dependencies {
+                    implementation(files("$dataframeJarPath"))
+                }
+                
+                kotlin {
+                    explicitApi()
+                }
+                
+                dataframes {
+                    schema {
+                        data = "$dataFile"
+                    }
+                }
+            """.trimIndent()
+        }
+        result.task(":generateDataFrameData")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
 }
