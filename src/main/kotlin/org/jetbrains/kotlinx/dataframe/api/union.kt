@@ -9,9 +9,9 @@ import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.asDataFrame
 import org.jetbrains.kotlinx.dataframe.asFrame
 import org.jetbrains.kotlinx.dataframe.baseType
-import org.jetbrains.kotlinx.dataframe.columns.DataColumn
-import org.jetbrains.kotlinx.dataframe.columns.guessColumnType
-import org.jetbrains.kotlinx.dataframe.columns.hasNulls
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.guessColumnType
+import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.dataFrameOf

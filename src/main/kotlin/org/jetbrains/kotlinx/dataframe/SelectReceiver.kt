@@ -2,20 +2,12 @@ package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.dataframe.AddExpression
 import org.jetbrains.dataframe.map
-import org.jetbrains.kotlinx.dataframe.columns.AnyCol
-import org.jetbrains.kotlinx.dataframe.columns.BooleanCol
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.Columns
-import org.jetbrains.kotlinx.dataframe.columns.DataColumn
-import org.jetbrains.kotlinx.dataframe.columns.DoubleCol
-import org.jetbrains.kotlinx.dataframe.columns.IntCol
-import org.jetbrains.kotlinx.dataframe.columns.NumberCol
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.StringCol
-import org.jetbrains.kotlinx.dataframe.columns.hasNulls
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl

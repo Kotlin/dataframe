@@ -1,8 +1,8 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.kotlinx.dataframe.columns.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import java.math.BigDecimal
 
 public operator fun DataColumn<Int>.plus(value: Int): DataColumn<Int> = map { it + value }

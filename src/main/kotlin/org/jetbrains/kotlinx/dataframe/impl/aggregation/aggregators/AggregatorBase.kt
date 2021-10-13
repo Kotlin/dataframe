@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.dataframe.asIterable
 import org.jetbrains.dataframe.asSequence
-import org.jetbrains.kotlinx.dataframe.columns.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import kotlin.reflect.KType
 
 internal abstract class AggregatorBase<C, R>(

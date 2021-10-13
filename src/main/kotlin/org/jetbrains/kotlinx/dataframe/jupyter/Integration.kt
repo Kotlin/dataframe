@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.PivotedDataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.asDataFrame
-import org.jetbrains.kotlinx.dataframe.columns.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
@@ -61,11 +61,11 @@ internal class Integration : JupyterIntegration() {
             render<IMG> { HTML("<img src=\"${it.url}\"/>") }
         }
 
-        import("org.jetbrains.dataframe.*")
-        import("org.jetbrains.dataframe.annotations.*")
-        import("org.jetbrains.dataframe.io.*")
+        import("org.jetbrains.kotlinx.dataframe.*")
+        import("org.jetbrains.kotlinx.dataframe.annotations.*")
+        import("org.jetbrains.kotlinx.dataframe.io.*")
         import("java.net.URL")
-        import("org.jetbrains.kotlinx.IMG")
+        import("org.jetbrains.kotlinx.dataframe.dataTypes.*")
 
         fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, property: KProperty<*>): VariableName? {
             val code = codeWithConverter.with(property.name)

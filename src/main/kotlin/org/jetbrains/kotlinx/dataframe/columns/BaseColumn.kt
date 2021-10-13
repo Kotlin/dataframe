@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnKind
 import org.jetbrains.kotlinx.dataframe.headPlusIterable

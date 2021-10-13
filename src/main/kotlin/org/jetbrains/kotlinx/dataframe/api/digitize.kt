@@ -1,6 +1,6 @@
 package org.jetbrains.dataframe
 
-import org.jetbrains.kotlinx.dataframe.columns.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import kotlin.reflect.KClass
 
 public fun DataColumn<Double>.digitize(vararg bins: Int, right: Boolean = false): DataColumn<Int> = digitize(bins.toList(), Double::class, right)

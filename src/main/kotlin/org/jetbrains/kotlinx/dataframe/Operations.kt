@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.dataframe.union
-import org.jetbrains.kotlinx.dataframe.columns.AnyCol
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.Columns
