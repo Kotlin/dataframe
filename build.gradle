@@ -161,8 +161,8 @@ korro {
     }
 
     samples = fileTree(rootProject.rootDir) {
-        include("src/test/kotlin/docs/*.kt")
-        include("src/test/kotlin/docs/api/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
+        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
     }
 
     groupSamples {

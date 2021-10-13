@@ -1,4 +1,4 @@
-package docs.api
+package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
