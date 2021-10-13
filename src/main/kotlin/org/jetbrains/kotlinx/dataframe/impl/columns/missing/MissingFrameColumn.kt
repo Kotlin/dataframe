@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl.columns.missing
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.FrameColumnInternal
-import org.jetbrains.kotlinx.dataframe.internal.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 internal class MissingFrameColumn<T> : MissingDataColumn<DataFrame<T>?>(), FrameColumnInternal<T> {
 

@@ -1,11 +1,11 @@
 package org.jetbrains.dataframe.ksp
 
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.BaseField
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.ColumnInfo
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.ExtensionsCodeGenerator
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.IsolatedMarker
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.MarkerVisibility
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.ValidFieldName
+import org.jetbrains.kotlinx.dataframe.codeGen.BaseField
+import org.jetbrains.kotlinx.dataframe.codeGen.ColumnInfo
+import org.jetbrains.kotlinx.dataframe.codeGen.ExtensionsCodeGenerator
+import org.jetbrains.kotlinx.dataframe.codeGen.IsolatedMarker
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 
 internal fun renderExtensions(interfaceName: String, visibility: MarkerVisibility, properties: List<Property>): String {
     val generator = ExtensionsCodeGenerator.create()

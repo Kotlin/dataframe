@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.internal.codeGen
+package org.jetbrains.kotlinx.dataframe.codeGen
 
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ExtensionsCodeGeneratorImpl
 

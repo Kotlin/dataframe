@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.internal.schema
+package org.jetbrains.kotlinx.dataframe.schema
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnKind
@@ -69,9 +69,9 @@ public abstract class ColumnSchema {
 }
 
 internal fun AnyCol.getColumnType(): ColumnSchema = when (this) {
-    is ValueColumn<*> -> org.jetbrains.kotlinx.dataframe.internal.schema.ColumnSchema.Value(type)
-    is ColumnGroup<*> -> org.jetbrains.kotlinx.dataframe.internal.schema.ColumnSchema.Map(df.extractSchema())
-    is FrameColumn<*> -> org.jetbrains.kotlinx.dataframe.internal.schema.ColumnSchema.Frame(
+    is ValueColumn<*> -> ColumnSchema.Value(type)
+    is ColumnGroup<*> -> ColumnSchema.Map(df.extractSchema())
+    is FrameColumn<*> -> ColumnSchema.Frame(
         internal().schema.value,
         hasNulls
     )

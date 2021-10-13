@@ -10,10 +10,13 @@ import org.jetbrains.kotlinx.dataframe.DataRowBase
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.under
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
+import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
-import org.jetbrains.kotlinx.dataframe.internal.schema.extractSchema
+import org.jetbrains.kotlinx.dataframe.schema.extractSchema
 import org.jetbrains.kotlinx.dataframe.person.BaseTest
 import org.jetbrains.kotlinx.dataframe.person.Person
 import org.junit.Test

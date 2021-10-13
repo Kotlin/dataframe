@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.allNulls
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.impl.columns.asTable
-import org.jetbrains.kotlinx.dataframe.internal.schema.ColumnSchema
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Ignore

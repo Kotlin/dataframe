@@ -1,6 +1,6 @@
-package org.jetbrains.kotlinx.dataframe.internal.codeGen
+package org.jetbrains.kotlinx.dataframe.codeGen
 
-import org.jetbrains.kotlinx.dataframe.internal.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 public enum class MarkerVisibility {
     INTERNAL, IMPLICIT_PUBLIC, EXPLICIT_PUBLIC

@@ -1,12 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.impl.codeGen
 
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.GeneratedField
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.Marker
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.MarkerVisibility
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.SchemaProcessor
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.ValidFieldName
-import org.jetbrains.kotlinx.dataframe.internal.schema.ColumnSchema
-import org.jetbrains.kotlinx.dataframe.internal.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
+import org.jetbrains.kotlinx.dataframe.codeGen.Marker
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
+import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 internal class SchemaProcessorImpl(
     existingMarkers: Iterable<Marker>,

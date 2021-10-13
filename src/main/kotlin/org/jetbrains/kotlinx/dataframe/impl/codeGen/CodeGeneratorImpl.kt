@@ -10,15 +10,15 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRowBase
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.BaseField
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.CodeWithConverter
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.ColumnInfo
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.ExtensionsCodeGenerator
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.IsolatedMarker
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.Marker
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.MarkerVisibility
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.SchemaProcessor
-import org.jetbrains.kotlinx.dataframe.internal.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.codeGen.BaseField
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.codeGen.ColumnInfo
+import org.jetbrains.kotlinx.dataframe.codeGen.ExtensionsCodeGenerator
+import org.jetbrains.kotlinx.dataframe.codeGen.IsolatedMarker
+import org.jetbrains.kotlinx.dataframe.codeGen.Marker
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.api.Code
 
 private fun renderNullability(nullable: Boolean) = if (nullable) "?" else ""

@@ -2,8 +2,8 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.MarkerVisibility
-import org.jetbrains.kotlinx.dataframe.internal.schema.extractSchema
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.schema.extractSchema
 
 public inline fun <reified T> DataFrame<T>.generateCode(fields: Boolean = true, extensionProperties: Boolean = true): String {
     val name = if (T::class.isAbstract) {
@@ -16,7 +16,7 @@ public fun <T> DataFrame<T>.generateCode(
     markerName: String,
     fields: Boolean = true,
     extensionProperties: Boolean = true,
-    visibility: MarkerVisibility = org.jetbrains.kotlinx.dataframe.internal.codeGen.MarkerVisibility.IMPLICIT_PUBLIC
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC
 ): String {
     val codeGen = CodeGenerator.create()
     return codeGen.generate(

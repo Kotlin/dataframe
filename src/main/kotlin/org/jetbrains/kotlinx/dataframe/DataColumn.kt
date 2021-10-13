@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.FrameColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
-import org.jetbrains.kotlinx.dataframe.internal.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType

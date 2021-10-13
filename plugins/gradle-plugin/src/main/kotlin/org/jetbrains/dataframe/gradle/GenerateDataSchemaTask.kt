@@ -7,7 +7,7 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
-import org.jetbrains.kotlinx.dataframe.internal.schema.extractSchema
+import org.jetbrains.kotlinx.dataframe.schema.extractSchema
 import org.jetbrains.kotlinx.dataframe.io.read
 import java.io.File
 import java.io.IOException
@@ -17,7 +17,7 @@ import com.beust.klaxon.KlaxonException
 import org.gradle.api.provider.Provider
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.dataframe.impl.codeGen.CodeGenResult
-import org.jetbrains.kotlinx.dataframe.internal.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import java.io.FileNotFoundException
 
 abstract class GenerateDataSchemaTask : DefaultTask() {
