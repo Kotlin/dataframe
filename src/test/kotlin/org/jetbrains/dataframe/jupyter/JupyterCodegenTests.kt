@@ -3,7 +3,7 @@ package org.jetbrains.dataframe.jupyter
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.intellij.lang.annotations.Language
-import org.jetbrains.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test

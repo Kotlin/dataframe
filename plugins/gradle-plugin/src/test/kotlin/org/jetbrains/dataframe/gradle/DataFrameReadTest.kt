@@ -3,8 +3,8 @@ package org.jetbrains.dataframe.gradle
 import com.beust.klaxon.KlaxonException
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.DataFrame
-import org.jetbrains.dataframe.io.read
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.io.read
 import org.junit.Test
 import java.io.File
 import java.io.FileNotFoundException

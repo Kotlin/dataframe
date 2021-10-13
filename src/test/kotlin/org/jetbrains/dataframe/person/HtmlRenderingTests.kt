@@ -2,13 +2,14 @@ package org.jetbrains.dataframe.person
 
 import io.kotest.matchers.shouldNotBe
 import io.kotest.matchers.string.shouldContain
-import org.jetbrains.dataframe.AnyFrame
-import org.jetbrains.dataframe.dataFrameOf
 import org.jetbrains.dataframe.group
 import org.jetbrains.dataframe.into
-import org.jetbrains.dataframe.io.html
-import org.jetbrains.dataframe.io.toHTML
 import org.jetbrains.dataframe.parse
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.group
+import org.jetbrains.kotlinx.dataframe.io.html
+import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.jupyter.findNthSubstring
 import org.junit.Ignore
 import org.junit.Test

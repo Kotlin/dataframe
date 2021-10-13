@@ -1,6 +1,11 @@
 package org.jetbrains.dataframe.ksp
 
-import org.jetbrains.dataframe.internal.codeGen.*
+import org.jetbrains.kotlinx.dataframe.internal.codeGen.BaseField
+import org.jetbrains.kotlinx.dataframe.internal.codeGen.ColumnInfo
+import org.jetbrains.kotlinx.dataframe.internal.codeGen.ExtensionsCodeGenerator
+import org.jetbrains.kotlinx.dataframe.internal.codeGen.IsolatedMarker
+import org.jetbrains.kotlinx.dataframe.internal.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.internal.codeGen.ValidFieldName
 
 internal fun renderExtensions(interfaceName: String, visibility: MarkerVisibility, properties: List<Property>): String {
     val generator = ExtensionsCodeGenerator.create()
@@ -27,8 +32,8 @@ internal fun renderExtensions(interfaceName: String, visibility: MarkerVisibilit
 
 internal class Property(val columnName: String, val fieldName: String, val propertyType: RenderedType)
 
-private const val fqnDataFrame = "org.jetbrains.dataframe.DataFrame"
-private const val fqnDataRow = "org.jetbrains.dataframe.DataRow"
+private const val fqnDataFrame = "org.jetbrains.kotlinx.DataFrame"
+private const val fqnDataRow = "org.jetbrains.kotlinx.DataRow"
 
 internal class RenderedType(val fqName: String, val marker: String?, val isNullable: Boolean) {
     override fun toString(): String {

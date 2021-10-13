@@ -1,6 +1,9 @@
 package org.jetbrains.dataframe
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.columnOf
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.getType
 import org.junit.Test
 
 class AnimalsTests {

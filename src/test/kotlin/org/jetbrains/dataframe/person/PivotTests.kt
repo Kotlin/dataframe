@@ -2,12 +2,36 @@ package org.jetbrains.dataframe.person
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.dataframe.*
-import org.jetbrains.dataframe.annotations.DataSchema
-import org.jetbrains.dataframe.columns.typeClass
-import org.jetbrains.dataframe.impl.columns.asGroup
-import org.jetbrains.dataframe.impl.columns.typed
+import org.jetbrains.kotlinx.dataframe.ColumnKind
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataFrameBase
+import org.jetbrains.kotlinx.dataframe.DataRowBase
+import org.jetbrains.kotlinx.dataframe.Many
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.column
+import org.jetbrains.kotlinx.dataframe.columnOf
+import org.jetbrains.kotlinx.dataframe.columns.typeClass
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.first
+import org.jetbrains.kotlinx.dataframe.get
+import org.jetbrains.kotlinx.dataframe.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.getType
+import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.typed
+import org.jetbrains.kotlinx.dataframe.isMany
+import org.jetbrains.kotlinx.dataframe.last
+import org.jetbrains.kotlinx.dataframe.manyOf
+import org.jetbrains.kotlinx.dataframe.map
+import org.jetbrains.kotlinx.dataframe.named
+import org.jetbrains.kotlinx.dataframe.newColumn
+import org.jetbrains.kotlinx.dataframe.toMany
+import org.jetbrains.kotlinx.dataframe.typed
+import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
 import java.io.Serializable
+import java.util.AbstractCollection
+import java.util.AbstractList
+import java.util.AbstractSet
 import kotlin.reflect.KClass
 
 class PivotTests {
@@ -312,12 +336,12 @@ class PivotTests {
         val name by columnOf("set", "list", "set", "list")
         val data by columnOf(setOf(1), listOf(1), setOf(2), listOf(2))
         val df = dataFrameOf(id, name, data)
-        df[data].type() shouldBe getType<java.util.AbstractCollection<Int>>()
+        df[data].type() shouldBe getType<AbstractCollection<Int>>()
         val pivoted = df.pivot { name }.groupBy { id }.values { data }
         pivoted.nrow() shouldBe 2
         pivoted.ncol() shouldBe 3
-        pivoted["set"].type() shouldBe getType<java.util.AbstractSet<Int>>()
-        pivoted["list"].type() shouldBe getType<java.util.AbstractList<Int>>()
+        pivoted["set"].type() shouldBe getType<AbstractSet<Int>>()
+        pivoted["list"].type() shouldBe getType<AbstractList<Int>>()
     }
 
     @Test
@@ -325,11 +349,11 @@ class PivotTests {
         val name by columnOf("set", "list")
         val data by columnOf(setOf(1), listOf(1))
         val df = dataFrameOf(name, data)
-        df[data].type() shouldBe getType<java.util.AbstractCollection<Int>>()
+        df[data].type() shouldBe getType<AbstractCollection<Int>>()
         val pivoted = df.pivot { name }.values { data }
         pivoted.ncol() shouldBe 2
-        pivoted.df()["set"].type() shouldBe getType<java.util.AbstractSet<Int>>()
-        pivoted.df()["list"].type() shouldBe getType<java.util.AbstractList<Int>>()
+        pivoted.df()["set"].type() shouldBe getType<AbstractSet<Int>>()
+        pivoted.df()["list"].type() shouldBe getType<AbstractList<Int>>()
     }
 
     @Test

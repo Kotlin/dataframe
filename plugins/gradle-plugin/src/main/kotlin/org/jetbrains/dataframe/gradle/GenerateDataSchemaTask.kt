@@ -5,19 +5,19 @@ import org.gradle.api.provider.Property
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import org.jetbrains.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
-import org.jetbrains.dataframe.internal.schema.extractSchema
-import org.jetbrains.dataframe.io.read
+import org.jetbrains.kotlinx.dataframe.internal.schema.extractSchema
+import org.jetbrains.kotlinx.dataframe.io.read
 import java.io.File
 import java.io.IOException
 import java.net.URL
 import java.nio.file.Paths
 import com.beust.klaxon.KlaxonException
 import org.gradle.api.provider.Provider
-import org.jetbrains.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.dataframe.impl.codeGen.CodeGenResult
-import org.jetbrains.dataframe.internal.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.internal.codeGen.MarkerVisibility
 import java.io.FileNotFoundException
 
 abstract class GenerateDataSchemaTask : DefaultTask() {

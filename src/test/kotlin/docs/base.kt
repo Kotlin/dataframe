@@ -1,6 +1,11 @@
 package docs
 
 import org.jetbrains.dataframe.*
+import org.jetbrains.kotlinx.dataframe.column
+import org.jetbrains.kotlinx.dataframe.columnOf
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.named
+import org.jetbrains.kotlinx.dataframe.toColumn
 import org.junit.Test
 
 class Base {

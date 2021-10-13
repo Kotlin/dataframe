@@ -2,8 +2,17 @@ package org.jetbrains.dataframe.io
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.dataframe.*
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.allNulls
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.getType
+import org.jetbrains.kotlinx.dataframe.io.read
+import org.jetbrains.kotlinx.dataframe.io.readCSV
+import org.jetbrains.kotlinx.dataframe.io.readDelimStr
+import org.jetbrains.kotlinx.dataframe.io.writeCSV
 import org.junit.Test
 import java.io.StringWriter
+import java.time.LocalDateTime
 
 private const val PATH_TO_DATA = "src/test/resources/testCSV.csv"
 
@@ -51,7 +60,7 @@ class CsvTests {
         df.columnNames()[6] shouldBe "duplicate_1_1"
         df["duplicate_1"].type() shouldBe getType<String?>()
         df["double"].type() shouldBe getType<Double?>()
-        df["time"].type() shouldBe getType<java.time.LocalDateTime>()
+        df["time"].type() shouldBe getType<LocalDateTime>()
 
         println(df)
     }

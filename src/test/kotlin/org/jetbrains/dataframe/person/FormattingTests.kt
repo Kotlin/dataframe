@@ -6,9 +6,8 @@ import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.FormattingDSL.gray
 import org.jetbrains.dataframe.FormattingDSL.green
 import org.jetbrains.dataframe.FormattingDSL.red
-import org.jetbrains.dataframe.io.DisplayConfiguration
-import org.jetbrains.dataframe.io.formatter
-import org.jetbrains.dataframe.io.toHTML
+import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.junit.Test
 
 class FormattingTests : BaseTest() {

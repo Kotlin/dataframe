@@ -140,10 +140,10 @@ class SchemaGeneratorPluginIntegrationTest {
             val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
             main.writeText("""
-                import org.jetbrains.dataframe.DataFrame
-                import org.jetbrains.dataframe.io.read
-                import org.jetbrains.dataframe.typed
-                import org.jetbrains.dataframe.filter
+                import org.jetbrains.kotlinx.DataFrame
+                import org.jetbrains.kotlinx.read
+                import org.jetbrains.kotlinx.typed
+                import org.jetbrains.kotlinx.filter
                 
                 fun main() {
                     val df = DataFrame.read("$dataFile").typed<Schema>()
@@ -245,10 +245,10 @@ class SchemaGeneratorPluginIntegrationTest {
             val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
             main.writeText("""
-                import org.jetbrains.dataframe.DataFrame
-                import org.jetbrains.dataframe.io.read
-                import org.jetbrains.dataframe.typed
-                import org.jetbrains.dataframe.filter
+                import org.jetbrains.kotlinx.DataFrame
+                import org.jetbrains.kotlinx.read
+                import org.jetbrains.kotlinx.typed
+                import org.jetbrains.kotlinx.filter
                 
                 fun main() {
                     val df = DataFrame.read("$dataFile").typed<Schema>()
@@ -298,10 +298,10 @@ class SchemaGeneratorPluginIntegrationTest {
         val main = File(kotlin, "Main.kt")
         main.writeText(
             """
-                import org.jetbrains.dataframe.DataFrame
-                import org.jetbrains.dataframe.io.read
-                import org.jetbrains.dataframe.typed
-                import org.jetbrains.dataframe.filter
+                import org.jetbrains.kotlinx.DataFrame
+                import org.jetbrains.kotlinx.read
+                import org.jetbrains.kotlinx.typed
+                import org.jetbrains.kotlinx.filter
                 
                 @org.jetbrains.dataframe.annotations.DataSchema
                 interface MySchema<T> {
@@ -351,10 +351,10 @@ class SchemaGeneratorPluginIntegrationTest {
             val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
             main.writeText("""
-                import org.jetbrains.dataframe.DataFrame
-                import org.jetbrains.dataframe.io.read
-                import org.jetbrains.dataframe.typed
-                import org.jetbrains.dataframe.filter
+                import org.jetbrains.kotlinx.DataFrame
+                import org.jetbrains.kotlinx.read
+                import org.jetbrains.kotlinx.typed
+                import org.jetbrains.kotlinx.filter
                 
                 @org.jetbrains.dataframe.annotations.DataSchema
                 interface MySchema {

@@ -1,8 +1,14 @@
 package org.jetbrains.dataframe
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.columns.name
-import org.jetbrains.dataframe.impl.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.asDataFrame
+import org.jetbrains.kotlinx.dataframe.asFrame
+import org.jetbrains.kotlinx.dataframe.column
+import org.jetbrains.kotlinx.dataframe.columns.name
+import org.jetbrains.kotlinx.dataframe.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.isGroup
+import org.jetbrains.kotlinx.dataframe.toColumnPath
 import org.junit.Test
 
 class MoveTests {

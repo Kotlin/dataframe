@@ -1,8 +1,13 @@
 package org.jetbrains.dataframe
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.annotations.DataSchema
-import org.jetbrains.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.DataFrameBase
+import org.jetbrains.kotlinx.dataframe.DataRowBase
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.map
+import org.jetbrains.kotlinx.dataframe.typed
 import org.junit.Test
 
 class SeriesTests {

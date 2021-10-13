@@ -1,6 +1,13 @@
 package org.jetbrains.dataframe
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.columnOf
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.first
+import org.jetbrains.kotlinx.dataframe.getType
+import org.jetbrains.kotlinx.dataframe.last
+import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 
 class PivotTests {

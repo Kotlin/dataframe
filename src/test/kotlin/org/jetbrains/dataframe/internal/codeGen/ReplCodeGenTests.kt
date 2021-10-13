@@ -1,18 +1,19 @@
 package org.jetbrains.dataframe.internal.codeGen
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.DataFrameBase
-import org.jetbrains.dataframe.DataRowBase
-import org.jetbrains.dataframe.annotations.DataSchema
-import org.jetbrains.dataframe.columns.DataColumn
 import org.jetbrains.dataframe.filter
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
-import org.jetbrains.dataframe.impl.codeGen.ReplCodeGeneratorImpl
 import org.jetbrains.dataframe.impl.codeGen.process
 import org.jetbrains.dataframe.person.BaseTest
 import org.jetbrains.dataframe.person.city
 import org.jetbrains.dataframe.person.weight
 import org.jetbrains.dataframe.select
+import org.jetbrains.kotlinx.dataframe.DataFrameBase
+import org.jetbrains.kotlinx.dataframe.DataRowBase
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.columns.DataColumn
+import org.jetbrains.kotlinx.dataframe.filter
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
 import org.junit.Test
 
 class ReplCodeGenTests : BaseTest() {

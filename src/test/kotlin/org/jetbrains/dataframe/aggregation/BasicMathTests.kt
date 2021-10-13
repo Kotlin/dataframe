@@ -1,9 +1,9 @@
 package org.jetbrains.dataframe.aggregation
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.columnOf
-import org.jetbrains.dataframe.getType
 import org.jetbrains.dataframe.mean
+import org.jetbrains.kotlinx.dataframe.columnOf
+import org.jetbrains.kotlinx.dataframe.getType
 import org.junit.Test
 
 class BasicMathTests {

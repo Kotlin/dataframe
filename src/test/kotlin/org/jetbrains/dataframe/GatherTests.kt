@@ -2,12 +2,21 @@ package org.jetbrains.dataframe
 
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
-import org.jetbrains.dataframe.annotations.DataSchema
-import org.jetbrains.dataframe.columns.ColumnGroup
-import org.jetbrains.dataframe.columns.DataColumn
-import org.jetbrains.dataframe.columns.name
-import org.jetbrains.dataframe.impl.columns.asGroup
-import org.jetbrains.dataframe.io.readJsonStr
+import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataFrameBase
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.DataRowBase
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.asDataFrame
+import org.jetbrains.kotlinx.dataframe.column
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.DataColumn
+import org.jetbrains.kotlinx.dataframe.columns.name
+import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
+import org.jetbrains.kotlinx.dataframe.io.readJsonStr
+import org.jetbrains.kotlinx.dataframe.typed
+import org.jetbrains.kotlinx.dataframe.withValues
 import org.junit.Test
 
 class GatherTests {
@@ -109,13 +118,13 @@ class GatherTests {
         val first: DataRow<Marker3>
     }
     val DataFrameBase<Marker>.first: ColumnGroup<*> @JvmName("Marker_first") get() = this["first"] as ColumnGroup<*>
-    val DataRowBase<Marker>.first: org.jetbrains.dataframe.AnyRow @JvmName("Marker_first") get() = this["first"] as org.jetbrains.dataframe.AnyRow
+    val DataRowBase<Marker>.first: AnyRow @JvmName("Marker_first") get() = this["first"] as AnyRow
     val DataFrameBase<Marker>.name: DataColumn<String> @JvmName("Marker_name") get() = this["name"] as DataColumn<String>
     val DataRowBase<Marker>.name: String @JvmName("Marker_name") get() = this["name"] as String
     val DataFrameBase<Marker>.normal: ColumnGroup<*> @JvmName("Marker_normal") get() = this["normal"] as ColumnGroup<*>
-    val DataRowBase<Marker>.normal: org.jetbrains.dataframe.AnyRow @JvmName("Marker_normal") get() = this["normal"] as org.jetbrains.dataframe.AnyRow
+    val DataRowBase<Marker>.normal: AnyRow @JvmName("Marker_normal") get() = this["normal"] as AnyRow
     val DataFrameBase<Marker>.reversed: ColumnGroup<*> @JvmName("Marker_reversed") get() = this["reversed"] as ColumnGroup<*>
-    val DataRowBase<Marker>.reversed: org.jetbrains.dataframe.AnyRow @JvmName("Marker_reversed") get() = this["reversed"] as org.jetbrains.dataframe.AnyRow
+    val DataRowBase<Marker>.reversed: AnyRow @JvmName("Marker_reversed") get() = this["reversed"] as AnyRow
 
     //endregion
 
