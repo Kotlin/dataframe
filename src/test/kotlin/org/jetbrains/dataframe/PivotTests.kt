@@ -1,6 +1,9 @@
 package org.jetbrains.dataframe
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.pivot
+import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.first

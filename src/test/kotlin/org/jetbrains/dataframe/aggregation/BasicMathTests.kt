@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe.aggregation
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.mean
+import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.getType
 import org.junit.Test

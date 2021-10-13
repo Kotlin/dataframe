@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
-import org.jetbrains.dataframe.mean
 import org.jetbrains.dataframe.median
-import org.jetbrains.dataframe.std
-import org.jetbrains.dataframe.sum
+import org.jetbrains.kotlinx.dataframe.api.mean
+import org.jetbrains.kotlinx.dataframe.api.std
+import org.jetbrains.kotlinx.dataframe.api.sum
 import kotlin.reflect.KType
 
 @PublishedApi

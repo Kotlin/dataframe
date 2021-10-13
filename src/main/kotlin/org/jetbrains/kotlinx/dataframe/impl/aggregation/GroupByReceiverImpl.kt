@@ -1,11 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation
 
-import org.jetbrains.dataframe.*
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnPath
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.aggregation.GroupByReceiver
-import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.api.AggregatedPivot
+import org.jetbrains.kotlinx.dataframe.api.NamedValue
 import org.jetbrains.kotlinx.dataframe.columns.shortPath
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateReceiverInternal
 import org.jetbrains.kotlinx.dataframe.toDataFrame

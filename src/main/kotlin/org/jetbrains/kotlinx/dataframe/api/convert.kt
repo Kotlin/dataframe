@@ -1,20 +1,18 @@
-package org.jetbrains.dataframe
+package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.columns.name
-import org.jetbrains.kotlinx.dataframe.type
-import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.getType
+import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
@@ -22,6 +20,8 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.io.isURL
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import org.jetbrains.kotlinx.dataframe.newColumn
+import org.jetbrains.kotlinx.dataframe.type
+import org.jetbrains.kotlinx.dataframe.typeClass
 import java.math.BigDecimal
 import java.net.URL
 import java.time.Instant

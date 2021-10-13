@@ -1,16 +1,18 @@
 package org.jetbrains.dataframe.internal.codeGen
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.impl.codeGen.*
 import org.jetbrains.dataframe.person.BaseTest
 import org.jetbrains.dataframe.person.Person
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.DataRowBase
+import org.jetbrains.kotlinx.dataframe.api.dropNulls
+import org.jetbrains.kotlinx.dataframe.api.move
+import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
 import org.jetbrains.kotlinx.dataframe.internal.codeGen.MarkerVisibility

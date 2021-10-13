@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.modes
 
-import org.jetbrains.dataframe.AggregateBody
-import org.jetbrains.dataframe.Grouped
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.AggregateBody
+import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.internal
 import org.jetbrains.kotlinx.dataframe.pathOf

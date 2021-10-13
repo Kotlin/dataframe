@@ -1,21 +1,21 @@
-package org.jetbrains.dataframe
+package org.jetbrains.kotlinx.dataframe.api
 
 import com.beust.klaxon.internal.firstNotNullResult
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.asDataFrame
 import org.jetbrains.kotlinx.dataframe.asFrame
 import org.jetbrains.kotlinx.dataframe.baseType
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.guessColumnType
-import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
+import org.jetbrains.kotlinx.dataframe.guessColumnType
+import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.io.valueColumnName
 import org.jetbrains.kotlinx.dataframe.isGroup
 import org.jetbrains.kotlinx.dataframe.typed

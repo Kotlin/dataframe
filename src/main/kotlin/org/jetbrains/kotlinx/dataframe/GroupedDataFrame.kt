@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
-import org.jetbrains.dataframe.Grouped
-import org.jetbrains.dataframe.asGrouped
+import org.jetbrains.kotlinx.dataframe.api.Grouped
+import org.jetbrains.kotlinx.dataframe.api.asGrouped
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupedDataFrameImpl

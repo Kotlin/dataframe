@@ -1,11 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnKind
 import org.jetbrains.kotlinx.dataframe.Many
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.columns.size
-import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asTable
 import org.jetbrains.kotlinx.dataframe.internal.schema.ColumnSchema
@@ -13,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.internal.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.io.escapeHTML
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.size
+import org.jetbrains.kotlinx.dataframe.type
 import java.net.URL
 import java.time.LocalDate
 import java.time.LocalDateTime

@@ -1,4 +1,4 @@
-package org.jetbrains.dataframe
+package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -7,10 +7,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.name
-import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.owner
+import org.jetbrains.kotlinx.dataframe.type
 
 public fun AnyFrame.schema(): String {
     val sb = StringBuilder()

@@ -1,8 +1,12 @@
 package org.jetbrains.dataframe.io
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.*
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.castTo
+import org.jetbrains.kotlinx.dataframe.api.convertTo
+import org.jetbrains.kotlinx.dataframe.api.parse
+import org.jetbrains.kotlinx.dataframe.api.parser
+import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.getType
 import org.junit.Test

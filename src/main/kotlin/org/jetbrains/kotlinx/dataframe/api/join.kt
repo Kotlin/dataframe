@@ -1,4 +1,4 @@
-package org.jetbrains.dataframe
+package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnResolutionContext
@@ -8,9 +8,7 @@ import org.jetbrains.kotlinx.dataframe.SelectReceiver
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.Columns
-import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.columns.name
-import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
@@ -18,9 +16,11 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.prepareForReceiver
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.isGroup
+import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.toDataFrame
+import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.withNullability
 
 public interface JoinReceiver<out A, out B> : SelectReceiver<A> {

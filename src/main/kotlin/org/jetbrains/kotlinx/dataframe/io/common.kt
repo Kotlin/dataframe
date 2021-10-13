@@ -4,8 +4,8 @@ import com.github.kittinunf.fuel.httpGet
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Many
-import org.jetbrains.kotlinx.dataframe.guessColumnType
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
+import org.jetbrains.kotlinx.dataframe.guessColumnType
 import org.jetbrains.kotlinx.dataframe.toDataFrame
 import java.io.IOException
 import java.io.InputStream

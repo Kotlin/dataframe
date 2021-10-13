@@ -1,12 +1,23 @@
 package org.jetbrains.dataframe.person
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.*
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRowBase
 import org.jetbrains.kotlinx.dataframe.addRowNumber
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.append
+import org.jetbrains.kotlinx.dataframe.api.count
+import org.jetbrains.kotlinx.dataframe.api.distinct
+import org.jetbrains.kotlinx.dataframe.api.excludeJoin
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.filterJoin
+import org.jetbrains.kotlinx.dataframe.api.innerJoin
+import org.jetbrains.kotlinx.dataframe.api.leftJoin
+import org.jetbrains.kotlinx.dataframe.api.outerJoin
+import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.rightJoin
+import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.typed

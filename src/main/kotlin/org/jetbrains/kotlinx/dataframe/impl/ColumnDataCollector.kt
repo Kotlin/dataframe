@@ -1,14 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
-import org.jetbrains.dataframe.*
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.union
 import org.jetbrains.kotlinx.dataframe.asDataFrame
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.guessColumnType
 import org.jetbrains.kotlinx.dataframe.createStarProjectedType
+import org.jetbrains.kotlinx.dataframe.guessColumnType
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf

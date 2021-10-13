@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
-import org.jetbrains.dataframe.*
+import org.jetbrains.kotlinx.dataframe.api.union
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath

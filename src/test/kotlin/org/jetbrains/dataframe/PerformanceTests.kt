@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe
 
+import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.asDataFrame
 import org.jetbrains.kotlinx.dataframe.column
 import org.junit.Ignore

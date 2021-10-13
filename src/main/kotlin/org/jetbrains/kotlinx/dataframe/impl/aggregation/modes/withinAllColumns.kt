@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.modes
 import org.jetbrains.dataframe.*
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.Grouped
+import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath

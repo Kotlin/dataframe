@@ -1,5 +1,7 @@
-package org.jetbrains.dataframe
+package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.dataframe.ColumnToInsert
+import org.jetbrains.dataframe.insert
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyMany
 import org.jetbrains.kotlinx.dataframe.ColumnSelector

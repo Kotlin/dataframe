@@ -1,15 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.modes
 
-import org.jetbrains.dataframe.GroupedPivot
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateColumnsSelector
-import org.jetbrains.kotlinx.dataframe.type
+import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.getAggregateColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.getPath
+import org.jetbrains.kotlinx.dataframe.type
 
 internal fun <T, C, R> Aggregator<*, R>.aggregateFor(
     data: Aggregatable<T>,

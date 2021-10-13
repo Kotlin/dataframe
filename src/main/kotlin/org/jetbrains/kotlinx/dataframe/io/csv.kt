@@ -5,6 +5,10 @@ import org.apache.commons.csv.CSVRecord
 import org.jetbrains.dataframe.*
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.Parsers
+import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.parse
+import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.asDataFrame
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator

@@ -1,11 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation
 
-import org.jetbrains.dataframe.*
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
-import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.guessColumnType
+import org.jetbrains.kotlinx.dataframe.api.NamedValue
 import org.jetbrains.kotlinx.dataframe.filter
+import org.jetbrains.kotlinx.dataframe.guessColumnType
 import org.jetbrains.kotlinx.dataframe.isComparable
 import org.jetbrains.kotlinx.dataframe.isNumber
 

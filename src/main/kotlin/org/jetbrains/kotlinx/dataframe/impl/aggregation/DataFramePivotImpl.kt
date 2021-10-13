@@ -4,6 +4,8 @@ import org.jetbrains.dataframe.*
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.PivotedDataFrame
+import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
+import org.jetbrains.kotlinx.dataframe.api.groupBy
 
 internal data class DataFramePivotImpl<T>(
     internal val df: DataFrame<T>,

@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.aggregation
 
-import org.jetbrains.dataframe.NamedValue
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.NamedValue
 import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.ValueWithDefault
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.internal
