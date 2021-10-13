@@ -9,12 +9,10 @@ import org.jetbrains.kotlinx.dataframe.PivotedDataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
-import org.jetbrains.kotlinx.dataframe.api.asDataFrame
-import org.jetbrains.kotlinx.dataframe.api.asDataRow
-import org.jetbrains.kotlinx.dataframe.asDataFrame
+import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.io.HtmlData
 import org.jetbrains.kotlinx.dataframe.io.initHtml
@@ -23,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListNamedStub
 import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListTypedStub
+import org.jetbrains.kotlinx.dataframe.toDataFrame
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.VariableName
@@ -51,12 +50,12 @@ internal class Integration : JupyterIntegration() {
             render<HtmlData> { it.toJupyter() }
             render<AnyFrame>({ it })
             render<FormattedFrame<*>>({ it.df }, modifyConfig = { getDisplayConfiguration(it) })
-            render<AnyRow>({ it.asDataFrame() }, { "DataRow [${it.ncol}]" })
+            render<AnyRow>({ it.toDataFrame() }, { "DataRow [${it.ncol}]" })
             render<ColumnGroup<*>>({ it.df })
-            render<AnyCol>({ dataFrameOf(listOf(it)) }, { "DataColumn [${it.nrow()}]" })
-            render<GroupedDataFrame<*, *>>({ it.asDataFrame() })
-            render<PivotedDataFrame<*>> { it.asDataRow().asDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
-            render<GroupedPivot<*>> { it.asDataFrame().toHTML(config.display) { "GroupedPivot: ${it.size}" } }
+            render<AnyCol>({ listOf(it).toAnyFrame() }, { "DataColumn [${it.nrow()}]" })
+            render<GroupedDataFrame<*, *>>({ it.toDataFrame() })
+            render<PivotedDataFrame<*>> { it.toDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
+            render<GroupedPivot<*>> { it.toDataFrame().toHTML(config.display) { "GroupedPivot: ${it.size}" } }
 
             render<IMG> { HTML("<img src=\"${it.url}\"/>") }
         }

@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.commonType
+import org.jetbrains.kotlinx.dataframe.impl.commonType
 import kotlin.reflect.KType
 
 internal class TwoStepAggregator<C, R>(

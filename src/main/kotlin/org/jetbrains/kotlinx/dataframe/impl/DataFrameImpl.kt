@@ -10,9 +10,11 @@ import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.aggregation.GroupByAggregateBody
+import org.jetbrains.kotlinx.dataframe.columnNames
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.size
+import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateBodyInternal
@@ -99,6 +101,36 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T>, 
         body(receiver, receiver)
         val row = receiver.compute() ?: DataFrame.empty(1)[0]
         return row.typed()
+    }
+
+    override fun rows(): Iterable<DataRow<T>> = object : Iterable<DataRow<T>> {
+        override fun iterator() =
+
+            object : Iterator<DataRow<T>> {
+                var nextRow = 0
+
+                override fun hasNext(): Boolean = nextRow < nrow
+
+                override fun next(): DataRow<T> {
+                    require(nextRow < nrow)
+                    return get(nextRow++)
+                }
+            }
+    }
+
+    override fun rowsReversed(): Iterable<DataRow<T>> = object : Iterable<DataRow<T>> {
+        override fun iterator() =
+
+            object : Iterator<DataRow<T>> {
+                var nextRow = nrow - 1
+
+                override fun hasNext(): Boolean = nextRow >= 0
+
+                override fun next(): DataRow<T> {
+                    require(nextRow >= 0)
+                    return get(nextRow--)
+                }
+            }
     }
 }
 

@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.junit.Ignore
 import org.junit.Test
 import kotlin.random.Random
@@ -15,7 +16,7 @@ class PerformanceTests {
         val rand = Random(100)
         val columns = (0 until ncol).map { column("col$it", (0 until nrow).map { rand.nextInt() }) }
 
-        val df = columns.asDataFrame<Unit>()
+        val df = columns.toDataFrame<Unit>()
 
         println("start computing")
         val n = 10

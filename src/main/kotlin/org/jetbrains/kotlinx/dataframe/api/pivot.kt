@@ -16,8 +16,8 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateRecei
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.PivotReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
+import org.jetbrains.kotlinx.dataframe.impl.toColumnPath
 import org.jetbrains.kotlinx.dataframe.pathOf
-import org.jetbrains.kotlinx.dataframe.toColumnPath
 import kotlin.reflect.KType
 
 public fun <T> DataFrame<T>.pivot(columns: ColumnsSelector<T, *>): PivotedDataFrame<T> = DataFramePivotImpl(this, columns)

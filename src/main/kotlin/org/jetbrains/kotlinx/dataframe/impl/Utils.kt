@@ -2,9 +2,12 @@ package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.commonParents
+import org.jetbrains.kotlinx.dataframe.createType
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KClass
+import kotlin.reflect.KType
 
 internal infix fun <T> (Predicate<T>).and(other: Predicate<T>): Predicate<T> = { this(it) && other(it) }
 
@@ -96,3 +99,6 @@ internal fun <T : Number> KClass<T>.zero(): T = when (this) {
 }
 
 internal fun <T> catchSilent(body: () -> T): T? = try { body() } catch (_: Throwable) { null }
+internal fun List<String>.toColumnPath() = ColumnPath(this)
+internal fun Array<out String>.toColumnPath() = ColumnPath(this.asList())
+internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType? = null) = commonParents(this).createType(nullable, upperBound)

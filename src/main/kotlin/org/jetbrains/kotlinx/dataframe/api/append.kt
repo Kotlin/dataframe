@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.asDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.EmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.ncol
@@ -13,7 +12,7 @@ public fun <T> DataFrame<T>.appendNulls(numberOfRows: Int = 1): DataFrame<T> {
     if (ncol() == 0) return EmptyDataFrame(nrow + numberOfRows)
     return columns().map { col ->
         col.replaceAll(col.values + arrayOfNulls(numberOfRows))
-    }.asDataFrame()
+    }.toDataFrame()
 }
 
 public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
@@ -23,5 +22,5 @@ public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
     return columns().mapIndexed { colIndex, col ->
         val newValues = (0 until newRows).map { values[colIndex + it * ncol] }
         col.replaceAll(col.values + newValues)
-    }.asDataFrame()
+    }.toDataFrame()
 }

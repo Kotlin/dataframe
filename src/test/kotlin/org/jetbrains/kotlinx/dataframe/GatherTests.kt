@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.mapNotNullGroups
 import org.jetbrains.kotlinx.dataframe.api.replaceAll
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
@@ -141,7 +142,7 @@ class GatherTests {
                 column("c1", dataRows.map { it.tryGet("c1") as? String }),
                 column("c2", dataRows.map { it.tryGet("c2") as? String }),
                 column("c3", dataRows.map { it.tryGet("c3") as? String })
-            ).asDataFrame<Unit>()
+            ).toDataFrame<Unit>()
 
             newDf
         }.union()

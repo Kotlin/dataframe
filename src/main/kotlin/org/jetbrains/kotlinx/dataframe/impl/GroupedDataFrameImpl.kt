@@ -55,13 +55,13 @@ internal class GroupedDataFrameImpl<T, G>(
     override fun <R> mapGroups(transform: Selector<DataFrame<G>?, DataFrame<R>?>) =
         df.update(groups) { transform(it, it) }.asGrouped { frameColumn<R>(groups.name()) }
 
-    override fun asDataFrame(groupedColumnName: String?) = if (groupedColumnName == null || groupedColumnName == groups.name()) df else df.rename(groups).into(groupedColumnName)
+    override fun toDataFrame(groupedColumnName: String?) = if (groupedColumnName == null || groupedColumnName == groups.name()) df else df.rename(groups).into(groupedColumnName)
 
     override fun toString() = df.toString()
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all().except(keyColumnsInGroups.toColumns()) }
 
-    override fun <R> aggregate(body: GroupByAggregateBody<G, R>) = aggregateGroupBy(asDataFrame(), { groups }, removeColumns = true, body).typed<G>()
+    override fun <R> aggregate(body: GroupByAggregateBody<G, R>) = aggregateGroupBy(toDataFrame(), { groups }, removeColumns = true, body).typed<G>()
 
     override fun <R> aggregateInternal(body: AggregateBodyInternal<G, R>) = aggregate(body as GroupByAggregateBody<G, R>)
 

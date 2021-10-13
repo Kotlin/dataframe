@@ -1,10 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.person
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.toDataFrameByProperties
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.getType
-import org.jetbrains.kotlinx.dataframe.toDataFrame
-import org.jetbrains.kotlinx.dataframe.toDataFrameByProperties
 import org.junit.Test
 
 class BuildTests {

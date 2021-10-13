@@ -32,7 +32,7 @@ public interface GroupedDataFrame<out T, out G> : Grouped<G> {
 
     public val keys: DataFrame<T>
 
-    public fun asDataFrame(groupedColumnName: String? = null): DataFrame<T>
+    public fun toDataFrame(groupedColumnName: String? = null): DataFrame<T>
 
     public fun union(): DataFrame<G> = groups.union().typed()
 

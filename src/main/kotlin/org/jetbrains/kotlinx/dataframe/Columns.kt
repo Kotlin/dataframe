@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.api.AddDataRowImpl
 import org.jetbrains.kotlinx.dataframe.api.AddExpression
 import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
 import org.jetbrains.kotlinx.dataframe.api.union
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
@@ -132,13 +133,6 @@ internal fun <T, R> DataFrameBase<T>.newColumnWithActualType(name: String, expre
     return guessColumnType(name, values) as DataColumn<R>
 }
 
-public class ColumnDelegate<T>(private val parent: MapColumnReference? = null) {
-    public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.name)
-
-    public infix fun named(name: String): ColumnAccessor<T> =
-        parent?.let { ColumnAccessorImpl(it.path() + name) } ?: ColumnAccessorImpl(name)
-}
-
 public fun AnyColumn.asFrame(): AnyFrame = when (this) {
     is ColumnGroup<*> -> df
     is ColumnWithPath<*> -> data.asFrame()
@@ -149,44 +143,9 @@ public fun AnyColumn.isGroup(): Boolean = kind() == ColumnKind.Group
 
 public fun AnyColumn.isFrameColumn(): Boolean = kind() == ColumnKind.Frame
 
-public fun <T> column(): ColumnDelegate<T> = ColumnDelegate()
-
-public fun columnGroup(): ColumnDelegate<AnyRow> = column()
-
-public fun <T> MapColumnReference.column(): ColumnDelegate<T> = ColumnDelegate<T>(this)
-
-public fun columnGroup(parent: MapColumnReference): ColumnDelegate<AnyRow> = parent.column()
-
-public fun frameColumn(): ColumnDelegate<AnyFrame> = column()
-
-public fun <T> columnMany(): ColumnDelegate<Many<T>> = column<Many<T>>()
-
-public fun <T> columnGroup(name: String): ColumnAccessor<DataRow<T>> = column(name)
-
-public fun <T> frameColumn(name: String): ColumnAccessor<DataFrame<T>> = column(name)
-
-public fun <T> columnMany(name: String): ColumnAccessor<Many<T>> = column<Many<T>>(name)
-
-public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
-
-public fun <T> column(parent: MapColumnReference, name: String): ColumnAccessor<T> =
-    ColumnAccessorImpl(parent.path() + name)
-
-public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> = createColumn(values.asIterable(), getType<T>(), true)
-
-public fun columnOf(vararg values: AnyColumn): DataColumn<AnyRow> = columnOf(values.asIterable())
-
-public fun <T> columnOf(vararg frames: DataFrame<T>?): FrameColumn<T> = columnOf(frames.asIterable())
-
-public fun columnOf(columns: Iterable<AnyColumn>): DataColumn<AnyRow> = DataColumn.create("", dataFrameOf(columns)) as DataColumn<AnyRow>
-
-public fun <T> columnOf(frames: Iterable<DataFrame<T>?>): FrameColumn<T> = DataColumn.create("", frames.toList())
-
-public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> = createColumn(values, getType<T>(), false)
-
 @PublishedApi
 internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessType: Boolean = false): DataColumn<T> = when {
-    values.all { it is AnyCol } -> DataColumn.create("", (values as Iterable<AnyCol>).toDataFrame()) as DataColumn<T>
+    values.all { it is AnyCol } -> DataColumn.create("", (values as Iterable<AnyCol>).toAnyFrame()) as DataColumn<T>
     values.all { it == null || it is AnyFrame } -> DataColumn.frames("", values.map { it as? AnyFrame }) as DataColumn<T>
     guessType -> guessColumnType("", values.asList(), suggestedType, suggestedTypeIsUpperBound = true).typed<T>()
     else -> DataColumn.create("", values.toList(), suggestedType)
@@ -211,7 +170,7 @@ public fun Iterable<AnyFrame?>.toColumn(name: String): FrameColumn<Any?> = DataC
 public inline fun <reified T> column(name: String, values: List<T>): DataColumn<T> = when {
     values.size > 0 && values.all { it is AnyCol } -> DataColumn.create(
         name,
-        values.map { it as AnyCol }.toDataFrame()
+        values.map { it as AnyCol }.toAnyFrame()
     ) as DataColumn<T>
     else -> column(name, values, values.any { it == null })
 }

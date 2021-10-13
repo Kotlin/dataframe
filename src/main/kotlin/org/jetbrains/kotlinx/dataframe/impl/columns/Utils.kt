@@ -9,6 +9,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.UnresolvedColumnsPolicy
+import org.jetbrains.kotlinx.dataframe.asNullable
+import org.jetbrains.kotlinx.dataframe.collectTree
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -24,8 +26,11 @@ import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.impl.TreeNode
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.equalsByElement
+import org.jetbrains.kotlinx.dataframe.impl.getOrPut
+import org.jetbrains.kotlinx.dataframe.impl.put
 import org.jetbrains.kotlinx.dataframe.impl.receivers.SelectReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.rollingHash
+import org.jetbrains.kotlinx.dataframe.impl.topDfs
 import org.jetbrains.kotlinx.dataframe.isGroup
 import org.jetbrains.kotlinx.dataframe.pathOf
 import org.jetbrains.kotlinx.dataframe.toColumnAccessor
@@ -158,3 +163,26 @@ internal fun <C> DataFrameBase<*>.getColumn(path: ColumnPath, policy: Unresolved
             UnresolvedColumnsPolicy.Skip -> null
             UnresolvedColumnsPolicy.Create -> DataColumn.empty().typed<C>()
         }
+
+internal fun <T> List<ColumnWithPath<T>>.top(): List<ColumnWithPath<T>> {
+    val root = TreeNode.createRoot<ColumnWithPath<T>?>(null)
+    forEach { root.put(it.path, it) }
+    return root.topDfs { it.data != null }.map { it.data!! }
+}
+
+internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
+    if (isEmpty()) return emptyList()
+    val df = this[0].df
+    require(all { it.df === df })
+    val fullTree = collectTree()
+    columns.forEach {
+        var node = fullTree.getOrPut(it.path).asNullable()
+        node?.dfs()?.forEach { it.data = null }
+        while (node != null) {
+            node.data = null
+            node = node.parent
+        }
+    }
+    val dfs = fullTree.topDfs { it.data != null }
+    return dfs.map { it.data!!.addPath(it.pathFromRoot(), df) }
+}

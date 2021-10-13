@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.MapColumnReference
 import org.jetbrains.kotlinx.dataframe.UnresolvedColumnsPolicy
-import org.jetbrains.kotlinx.dataframe.asDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -24,10 +23,10 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.getOrPut
+import org.jetbrains.kotlinx.dataframe.impl.toColumnPath
 import org.jetbrains.kotlinx.dataframe.pathOf
 import org.jetbrains.kotlinx.dataframe.resolveSingle
 import org.jetbrains.kotlinx.dataframe.toColumnAccessor
-import org.jetbrains.kotlinx.dataframe.toColumnPath
 import kotlin.reflect.KProperty
 
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, selector: ColumnsSelector<T, *>): DataFrame<T> = move(selector).to(newColumnIndex)
@@ -115,7 +114,7 @@ public fun <T, C> MoveColsClause<T, C>.under(groupRef: MapColumnReference): Data
 
 public fun <T, C> MoveColsClause<T, C>.to(columnIndex: Int): DataFrame<T> {
     val newColumnList = df.columns().subList(0, columnIndex) + removed.map { it.data.column as DataColumn<C> } + df.columns().subList(columnIndex, df.ncol())
-    return newColumnList.asDataFrame()
+    return newColumnList.toDataFrame()
 }
 
 public fun <T, C> MoveColsClause<T, C>.after(columnPath: ColumnPath): DataFrame<T> = after { columnPath.toColumnAccessor() }

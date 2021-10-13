@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.columnNames
 
 internal class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
 

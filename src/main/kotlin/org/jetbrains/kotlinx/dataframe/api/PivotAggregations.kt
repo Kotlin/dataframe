@@ -16,9 +16,12 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnsOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
+import org.jetbrains.kotlinx.dataframe.toDataFrame
 import kotlin.reflect.KProperty
 
-public fun <T> PivotedDataFrame<T>.asDataRow(): DataRow<T> = aggregate { this }
+public fun <T> PivotedDataFrame<T>.toDataRow(): DataRow<T> = aggregate { this }
+
+public fun <T> PivotedDataFrame<T>.toDataFrame(): DataFrame<T> = toDataRow().toDataFrame()
 
 public fun <T, R> PivotedDataFrame<T>.aggregate(separate: Boolean = false, body: PivotAggregateBody<T, R>): DataRow<T> = delegate { aggregate(separate, body) }
 

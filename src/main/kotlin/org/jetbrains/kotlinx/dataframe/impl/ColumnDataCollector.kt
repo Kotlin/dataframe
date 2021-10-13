@@ -6,9 +6,9 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.union
-import org.jetbrains.kotlinx.dataframe.asDataFrame
 import org.jetbrains.kotlinx.dataframe.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.guessColumnType
+import org.jetbrains.kotlinx.dataframe.toDataFrame
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
@@ -42,7 +42,7 @@ internal abstract class DataCollectorBase<T>(initCapacity: Int) : DataCollector<
             return DataColumn.create(name, data as List<AnyFrame>) as DataColumn<T>
         }
         if (classifier.isSubclassOf(DataRow::class)) {
-            val mergedDf = (data as List<AnyRow>).map { it.asDataFrame() }.union()
+            val mergedDf = (data as List<AnyRow>).map { it.toDataFrame() }.union()
             return DataColumn.create(name, mergedDf) as DataColumn<T>
         }
         return DataColumn.create(name, data, type.withNullability(hasNulls)) as DataColumn<T>

@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.isComparable
 import org.jetbrains.kotlinx.dataframe.isNumber
-import org.jetbrains.kotlinx.dataframe.toDataFrame
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typed
 import kotlin.reflect.KType

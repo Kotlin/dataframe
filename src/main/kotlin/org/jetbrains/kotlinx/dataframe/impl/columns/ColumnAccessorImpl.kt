@@ -6,8 +6,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.impl.toColumnPath
 import org.jetbrains.kotlinx.dataframe.isGroup
-import org.jetbrains.kotlinx.dataframe.toColumnPath
 
 internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
 

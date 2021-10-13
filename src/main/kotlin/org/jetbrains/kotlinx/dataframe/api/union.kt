@@ -2,28 +2,27 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import com.beust.klaxon.internal.firstNotNullResult
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
-import org.jetbrains.kotlinx.dataframe.asDataFrame
 import org.jetbrains.kotlinx.dataframe.asFrame
 import org.jetbrains.kotlinx.dataframe.baseType
+import org.jetbrains.kotlinx.dataframe.columnNames
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.guessColumnType
 import org.jetbrains.kotlinx.dataframe.hasNulls
-import org.jetbrains.kotlinx.dataframe.io.valueColumnName
 import org.jetbrains.kotlinx.dataframe.isGroup
+import org.jetbrains.kotlinx.dataframe.toDataFrame
 import org.jetbrains.kotlinx.dataframe.typed
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 @JvmName("unionRows")
-public fun <T> Iterable<DataRow<T>?>.union(): DataFrame<T> = merge(map { it?.asDataFrame() ?: emptyDataFrame(1) }).typed()
+public fun <T> Iterable<DataRow<T>?>.union(): DataFrame<T> = merge(map { it?.toDataFrame() ?: emptyDataFrame(1) }).typed()
 
 public fun <T> Iterable<DataFrame<T>?>.union(): DataFrame<T> = merge(filterNotNull()).typed()
 
@@ -82,16 +81,6 @@ internal fun merge(dataFrames: List<AnyFrame>): AnyFrame {
         }
     }
     return dataFrameOf(columns)
-}
-
-internal fun convertToDataFrame(value: Any?): AnyFrame {
-    return when (value) {
-        null -> DataFrame.empty()
-        is AnyFrame -> value
-        is AnyRow -> value.asDataFrame()
-        is List<*> -> value.mapNotNull { convertToDataFrame(it) }.union()
-        else -> dataFrameOf(valueColumnName)(value)
-    }
 }
 
 public operator fun <T> DataFrame<T>.plus(other: DataFrame<T>): DataFrame<T> = merge(listOf(this, other)).typed<T>()
