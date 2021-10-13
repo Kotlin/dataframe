@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
-import org.jetbrains.kotlinx.dataframe.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 
 internal interface ReadonlyTreeNode<out T> {
 

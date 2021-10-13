@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
-import org.jetbrains.kotlinx.dataframe.ColumnPath
 import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KClass
