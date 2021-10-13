@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.api.AddExpression
 import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.union
-import org.jetbrains.kotlinx.dataframe.columns.AnyColumn
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -52,10 +51,6 @@ public fun <C> createColumnSet(resolver: (ColumnResolutionContext) -> List<Colum
     object : Columns<C> {
         override fun resolve(context: ColumnResolutionContext) = resolver(context)
     }
-
-public typealias Column = ColumnReference<*>
-
-public typealias MapColumnReference = ColumnReference<AnyRow>
 
 public fun String.toColumnAccessor(): ColumnAccessor<Any?> = ColumnAccessorImpl(this)
 
