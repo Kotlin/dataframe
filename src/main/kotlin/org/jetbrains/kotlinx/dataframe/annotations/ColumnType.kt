@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.annotations
 
-import org.jetbrains.kotlinx.dataframe.columns.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import kotlin.reflect.KClass
 
 @Target(AnnotationTarget.PROPERTY)

@@ -1,12 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.internal.schema
 
 import org.jetbrains.kotlinx.dataframe.ColumnKind
-import org.jetbrains.kotlinx.dataframe.columns.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.columns.hasNulls
-import org.jetbrains.kotlinx.dataframe.columns.type
+import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.impl.columns.internal
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf

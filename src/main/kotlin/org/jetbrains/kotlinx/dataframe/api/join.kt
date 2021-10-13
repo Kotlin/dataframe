@@ -2,14 +2,15 @@ package org.jetbrains.dataframe
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnResolutionContext
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.SelectReceiver
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.Columns
-import org.jetbrains.kotlinx.dataframe.columns.kind
+import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.columns.name
-import org.jetbrains.kotlinx.dataframe.columns.type
+import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
@@ -261,8 +262,8 @@ public fun <A, B> DataFrame<A>.join(
             if (columnIndex < leftColumnsCount) leftColumns[columnIndex] else newRightColumns[columnIndex - leftColumnsCount]
         val hasNulls = hasNulls[columnIndex]
         val newColumn = when (srcColumn.kind) {
-            org.jetbrains.kotlinx.dataframe.ColumnKind.Value -> org.jetbrains.kotlinx.dataframe.columns.DataColumn.create(srcColumn.name, columnValues.asList(), srcColumn.type.withNullability(hasNulls))
-            org.jetbrains.kotlinx.dataframe.ColumnKind.Frame -> org.jetbrains.kotlinx.dataframe.columns.DataColumn.create(srcColumn.name, columnValues.asList() as List<AnyFrame?>)
+            org.jetbrains.kotlinx.dataframe.ColumnKind.Value -> DataColumn.create(srcColumn.name, columnValues.asList(), srcColumn.type.withNullability(hasNulls))
+            org.jetbrains.kotlinx.dataframe.ColumnKind.Frame -> DataColumn.create(srcColumn.name, columnValues.asList() as List<AnyFrame?>)
             org.jetbrains.kotlinx.dataframe.ColumnKind.Group -> error("Unexpected MapColumn at path ${srcColumn.path}")
         }
         srcColumn.path to newColumn

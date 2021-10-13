@@ -5,7 +5,7 @@ import org.jetbrains.dataframe.NamedValue
 import org.jetbrains.kotlinx.dataframe.ColumnPath
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateReceiver
-import org.jetbrains.kotlinx.dataframe.columns.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import kotlin.reflect.KType
 
 @PublishedApi

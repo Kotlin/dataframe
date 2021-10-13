@@ -7,8 +7,8 @@ import org.jetbrains.kotlinx.dataframe.RowCellFilter
 import org.jetbrains.kotlinx.dataframe.RowCellSelector
 import org.jetbrains.kotlinx.dataframe.RowColumnSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.DataColumn
-import org.jetbrains.kotlinx.dataframe.columns.type
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.headPlusArray

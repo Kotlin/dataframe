@@ -28,8 +28,8 @@ import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.toAccessor
-import org.jetbrains.kotlinx.dataframe.columns.type
-import org.jetbrains.kotlinx.dataframe.columns.typeClass
+import org.jetbrains.kotlinx.dataframe.type
+import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.expr
 import org.jetbrains.kotlinx.dataframe.first

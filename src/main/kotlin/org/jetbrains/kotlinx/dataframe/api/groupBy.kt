@@ -8,8 +8,8 @@ import org.jetbrains.kotlinx.dataframe.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.asDataFrame
 import org.jetbrains.kotlinx.dataframe.column
-import org.jetbrains.kotlinx.dataframe.columns.AnyCol
-import org.jetbrains.kotlinx.dataframe.columns.DataColumn
+import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupedDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
@@ -58,7 +58,7 @@ public fun <T> DataFrame<T>.groupBy(cols: ColumnsSelector<T, *>): GroupedDataFra
         start
     }
 
-    val groupedColumn = org.jetbrains.kotlinx.dataframe.columns.DataColumn.create(org.jetbrains.kotlinx.dataframe.GroupedDataFrame.columnForGroupedData.name(), sorted, startIndices, false)
+    val groupedColumn = DataColumn.create(org.jetbrains.kotlinx.dataframe.GroupedDataFrame.columnForGroupedData.name(), sorted, startIndices, false)
 
     val df = keyColumnsDf + groupedColumn
     return GroupedDataFrameImpl(df, groupedColumn, cols)

@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnPath
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.asDataFrame
@@ -13,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.size
-import org.jetbrains.kotlinx.dataframe.columns.type
+import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
@@ -57,7 +58,7 @@ public fun <T> DataFrame<T>.explode(dropEmpty: Boolean = true, selector: Columns
                     if (it.isNotEmpty() && it[0] == col.name) it.drop(1) else null
                 }.toSet()
                 val newDf = splitIntoRows(group.df, newData)
-                org.jetbrains.kotlinx.dataframe.columns.DataColumn.create(col.name, newDf)
+                DataColumn.create(col.name, newDf)
             } else if (isTargetColumn) { // values in current column will be splitted
                 when (col) {
                     is FrameColumn<*> -> {
@@ -73,7 +74,7 @@ public fun <T> DataFrame<T>.explode(dropEmpty: Boolean = true, selector: Columns
                             }
                         }.union()
 
-                        org.jetbrains.kotlinx.dataframe.columns.DataColumn.create(col.name, newDf)
+                        DataColumn.create(col.name, newDf)
                     }
                     is ValueColumn<*> -> {
                         val collector = createDataCollector(outputRowsCount)
@@ -100,7 +101,7 @@ public fun <T> DataFrame<T>.explode(dropEmpty: Boolean = true, selector: Columns
                         }
                     }
                 }
-                if (col.isTable()) org.jetbrains.kotlinx.dataframe.columns.DataColumn.create(
+                if (col.isTable()) DataColumn.create(
                     col.name,
                     collector.values as List<AnyFrame?>,
                     collector.hasNulls,
