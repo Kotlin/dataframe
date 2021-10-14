@@ -178,7 +178,7 @@ internal class SchemaGeneratorPluginTes {
     @Test
     fun `plugin doesn't break multiplatform build without JVM`() {
         val (_, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
+            val dataFile = File(buildDir, TestData.csvName)
             val kotlin = File(buildDir, "src/jsMain/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
             main.writeText("""
@@ -209,10 +209,10 @@ internal class SchemaGeneratorPluginTes {
                 
                 dataframes {
                     schema {
-                        data = "${dataFile.unixPath}"
+                        data = file("${TestData.csvName}")
                         name = "Schema"
                         packageName = ""
-                        src = file("${buildDir.unixPath}")
+                        src = buildDir
                     }
                 }
             """.trimIndent()
