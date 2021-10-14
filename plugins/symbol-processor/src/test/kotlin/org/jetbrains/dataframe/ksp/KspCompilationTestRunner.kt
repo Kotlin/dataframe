@@ -4,10 +4,6 @@ import com.tschuchort.compiletesting.*
 import java.io.ByteArrayOutputStream
 import java.io.File
 
-interface A {
-    val a: kotlin.coroutines.SuspendFunction1<Int, Int>
-}
-
 @Suppress("unused")
 internal class KotlinCompileTestingCompilationResult(
     val delegate: KotlinCompilation.Result,

@@ -127,8 +127,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             val genericRoot = sourceDirectories.find { isKotlinRoot(it.toPath()) }
             if (genericRoot != null) return genericRoot
             val androidSpecificRoot = if (extensionClass == KotlinAndroidProjectExtension::class.java) {
-                val isAndroidKotlinRoot: (Path) -> Boolean =
-                    { f -> f.endsWith(javaSet) }
+                val isAndroidKotlinRoot: (Path) -> Boolean = { f -> f.endsWith(javaSet) }
                 sourceDirectories.find { isAndroidKotlinRoot(it.toPath()) }
             } else {
                 error("Directory '$ktSet' was not found in $sourceSetName. Please, specify 'src' explicitly")
