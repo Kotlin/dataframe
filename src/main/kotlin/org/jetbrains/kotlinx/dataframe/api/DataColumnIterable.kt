@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.isMatching
 import kotlin.reflect.KType
 
 public fun <T> DataColumn<T>.asIterable(): Iterable<T> = values()
+public fun <T> DataColumn<T>.asSequence(): Sequence<T> = asIterable().asSequence()
 
 public fun <T> DataColumn<T>.all(predicate: Predicate<T>): Boolean = values.all(predicate)
 
