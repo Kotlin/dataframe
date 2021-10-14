@@ -46,12 +46,12 @@ class SchemaGeneratorPluginIntegrationTest {
 
             dataframes {
                 schema {
-                    data = File("$dataDir/ghost.json")
+                    data = File("${dataDir.unixPath}/ghost.json")
                     name = "Test"
                     packageName = "org.test"
                 }
                 schema {
-                    data = File("$dataDir/playlistItems.json")
+                    data = File("${dataDir.unixPath}/playlistItems.json")
                     name = "Schema"
                     packageName = "org.test"
                 }
@@ -86,7 +86,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 
                 dataframes {
                     schema {
-                        data = "$dataFile"
+                        data = "${dataFile.unixPath}"
                         name = "Data"
                     }
                 }
@@ -120,7 +120,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 
                 dataframes {
                     schema {
-                        data = "$dataFile"
+                        data = "${dataFile.unixPath}"
                     }
                 }
             """.trimIndent()
@@ -212,7 +212,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 
                 dataframes {
                     schema {
-                        data = "$dataFile"
+                        data = "${dataFile.unixPath}"
                         name = "Schema"
                         packageName = ""
                     }
@@ -418,7 +418,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 
                 dataframes {
                     schema {
-                        data = "$dataFile"
+                        data = "${dataFile.unixPath}"
                     }
                 }
             """.trimIndent()
