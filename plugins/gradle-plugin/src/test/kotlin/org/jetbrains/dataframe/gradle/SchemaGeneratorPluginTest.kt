@@ -142,39 +142,6 @@ internal class SchemaGeneratorPluginTes {
     }
 
     @Test
-    fun `plugin configure multiple schemas from files via extension`() {
-        val (_, result) = runGradleBuild(":generateDataFrames") {
-            """
-            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                
-            plugins {
-                kotlin("jvm") version "1.4.10"
-                id("org.jetbrains.kotlin.plugin.dataframe-base")
-            }
-            
-            repositories {
-                mavenCentral() 
-            }
-
-            dataframes {
-                schema {
-                    data = File("$dataDir/ghost.json")
-                    name = "Test"
-                    packageName = "org.test"
-                }
-                schema {
-                    data = File("$dataDir/playlistItems.json")
-                    name = "Schema"
-                    packageName = "org.test"
-                }
-            }
-            """.trimIndent()
-        }
-        result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
-        result.task(":generateDataFrameSchema")?.outcome shouldBe TaskOutcome.SUCCESS
-    }
-
-    @Test
     fun `plugin configure multiple schemas from strings via extension`() {
         val (_, result) = runGradleBuild(":generateDataFrames") { buildDir ->
             """
