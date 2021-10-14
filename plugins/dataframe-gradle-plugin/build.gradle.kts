@@ -12,7 +12,6 @@ repositories {
 }
 
 group = "org.jetbrains.kotlin"
-version = "1.0.0-SNAPSHOT"
 
 tasks.withType<ProcessResources> {
     filesMatching("**/plugin.properties") {
