@@ -3,12 +3,22 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.GroupedDataFrame
+import org.jetbrains.kotlinx.dataframe.GroupedDataRow
 import org.jetbrains.kotlinx.dataframe.api.getRows
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupedDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import org.jetbrains.kotlinx.dataframe.pathOf
 import org.jetbrains.kotlinx.dataframe.typed
+
+internal class GroupedDataRowImpl<T, G>(private val row: DataRow<T>, private val frameCol: FrameColumn<G>) : GroupedDataRow<T, G>, DataRow<T> by row {
+
+    override fun group() = groupOrNull()!!
+
+    override fun groupOrNull() = frameCol[row.index()]
+}
 
 internal fun <T> DataFrame<T>.groupByImpl(cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T> {
     val nameGenerator = nameGenerator(GroupedDataFrame.groupedColumnAccessor.name())
