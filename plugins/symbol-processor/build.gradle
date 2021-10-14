@@ -10,7 +10,6 @@ repositories {
 }
 
 group = "org.jetbrains.kotlinx.dataframe"
-version = "1.0.0-SNAPSHOT"
 
 dependencies {
     implementation(project(":"))
