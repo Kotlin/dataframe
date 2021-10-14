@@ -26,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.TreeNode
 import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
+import org.jetbrains.kotlinx.dataframe.impl.api.flattenImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
@@ -392,5 +393,18 @@ public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T>
 public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> String): DataFrame<T> = df.move(selector).into {
     it.path.dropLast(1) + transform(it)
 }
+
+// endregion
+
+// region flatten
+
+internal val defaultFlattenSeparator: CharSequence = "_"
+
+public fun <T> DataFrame<T>.flatten(separator: CharSequence = defaultFlattenSeparator): DataFrame<T> = flatten(separator) { all() }
+
+public fun <T, C> DataFrame<T>.flatten(
+    separator: CharSequence = defaultFlattenSeparator,
+    selector: ColumnsSelector<T, C>
+): DataFrame<T> = flattenImpl(separator, selector)
 
 // endregion
