@@ -1,34 +1,22 @@
-package org.jetbrains.kotlinx.dataframe.api
+package org.jetbrains.kotlinx.dataframe.impl.api
 
 import com.beust.klaxon.internal.firstNotNullResult
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.asFrame
 import org.jetbrains.kotlinx.dataframe.baseType
 import org.jetbrains.kotlinx.dataframe.columnNames
-import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.guessColumnType
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.isGroup
-import org.jetbrains.kotlinx.dataframe.toDataFrame
-import org.jetbrains.kotlinx.dataframe.typed
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
-@JvmName("unionRows")
-public fun <T> Iterable<DataRow<T>?>.union(): DataFrame<T> = merge(map { it?.toDataFrame() ?: emptyDataFrame(1) }).typed()
-
-public fun <T> Iterable<DataFrame<T>?>.union(): DataFrame<T> = merge(filterNotNull()).typed()
-
-public fun <T> DataColumn<DataFrame<T>>.union(): DataFrame<T> = values.union().typed()
-
-internal fun merge(dataFrames: List<AnyFrame>): AnyFrame {
+internal fun concatImpl(dataFrames: List<AnyFrame>): AnyFrame {
     if (dataFrames.size == 1) return dataFrames[0]
 
     // collect column names preserving original order
@@ -43,7 +31,7 @@ internal fun merge(dataFrames: List<AnyFrame>): AnyFrame {
             val frames = columns.mapIndexed { index, col ->
                 col?.asFrame() ?: emptyDataFrame(dataFrames[index].nrow())
             }
-            val merged = merge(frames)
+            val merged = concatImpl(frames)
             DataColumn.create(name, merged)
         } else {
             var nulls = false
@@ -82,6 +70,3 @@ internal fun merge(dataFrames: List<AnyFrame>): AnyFrame {
     }
     return dataFrameOf(columns)
 }
-
-public operator fun <T> DataFrame<T>.plus(other: DataFrame<T>): DataFrame<T> = merge(listOf(this, other)).typed<T>()
-public fun <T> DataFrame<T>.union(vararg other: DataFrame<T>): DataFrame<T> = merge(listOf(this) + other.toList()).typed<T>()
