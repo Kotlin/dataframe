@@ -267,7 +267,7 @@ public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
     return if (uniqueDf != null) {
         val permutation = map { it.index }
         uniqueDf[permutation]
-    } else map { it.toDataFrame() }.union()
+    } else map { it.toDataFrame() }.concat()
 }
 
 public fun Iterable<AnyColumn>.toAnyFrame(): AnyFrame = toDataFrame<Unit>()

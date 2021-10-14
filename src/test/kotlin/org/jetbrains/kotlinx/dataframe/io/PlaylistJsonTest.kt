@@ -8,13 +8,13 @@ import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.DataRowBase
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.union
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.asGroupedDataFrame
@@ -282,7 +282,7 @@ class PlaylistJsonTest {
 
     @Test
     fun `union`() {
-        val merged = item.union(item)
+        val merged = item.concat(item)
         merged.nrow() shouldBe item.nrow() * 2
         val group = merged.snippet
         group.nrow() shouldBe item.snippet.nrow() * 2

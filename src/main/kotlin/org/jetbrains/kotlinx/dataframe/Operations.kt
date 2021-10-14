@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.getColumnPaths
-import org.jetbrains.kotlinx.dataframe.api.union
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -249,7 +249,7 @@ internal fun KClass<*>.createTypeWithArgument(argument: KType? = null, nullable:
 internal inline fun <reified T> createTypeWithArgument(typeArgument: KType? = null) =
     T::class.createTypeWithArgument(typeArgument)
 
-public fun <T> FrameColumn<T>.union(): DataFrame<Any?> = if (size > 0) values.union() else emptyDataFrame(0)
+public fun <T> FrameColumn<T>.union(): DataFrame<Any?> = if (size > 0) values.concat() else emptyDataFrame(0)
 
 internal fun <T> T.asNullable() = this as T?
 

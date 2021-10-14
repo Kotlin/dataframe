@@ -11,11 +11,11 @@ import org.jetbrains.kotlinx.dataframe.aggregation.GroupByAggregateBody
 import org.jetbrains.kotlinx.dataframe.api.AggregatedPivot
 import org.jetbrains.kotlinx.dataframe.api.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.column
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.rename
-import org.jetbrains.kotlinx.dataframe.api.union
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -49,7 +49,7 @@ internal class GroupedDataFrameImpl<T, G>(
 
         val keySize = key.size
         val filtered = df.filter { it.values.subList(0, keySize) == key }
-        return filtered.frameColumn(groups.name()).values.union().typed<T>()
+        return filtered.frameColumn(groups.name()).values.concat().typed<T>()
     }
 
     override fun <R> mapGroups(transform: Selector<DataFrame<G>?, DataFrame<R>?>) =
@@ -98,7 +98,7 @@ internal fun <T, G, R> aggregateGroupBy(
             )
             builder.compute()
         }
-    }.union()
+    }.concat()
 
     val removedNode = removedNodes.single()
     val insertPath = removedNode.pathFromRoot().dropLast(1)

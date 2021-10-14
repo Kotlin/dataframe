@@ -16,80 +16,7 @@ import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.addRowNumber
 import org.jetbrains.kotlinx.dataframe.allNulls
 import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.all
-import org.jetbrains.kotlinx.dataframe.api.append
-import org.jetbrains.kotlinx.dataframe.api.asIterable
-import org.jetbrains.kotlinx.dataframe.api.at
-import org.jetbrains.kotlinx.dataframe.api.between
-import org.jetbrains.kotlinx.dataframe.api.by
-import org.jetbrains.kotlinx.dataframe.api.chunked
-import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.corr
-import org.jetbrains.kotlinx.dataframe.api.count
-import org.jetbrains.kotlinx.dataframe.api.digitize
-import org.jetbrains.kotlinx.dataframe.api.distinct
-import org.jetbrains.kotlinx.dataframe.api.distinctBy
-import org.jetbrains.kotlinx.dataframe.api.div
-import org.jetbrains.kotlinx.dataframe.api.drop
-import org.jetbrains.kotlinx.dataframe.api.dropNa
-import org.jetbrains.kotlinx.dataframe.api.dropNulls
-import org.jetbrains.kotlinx.dataframe.api.explode
-import org.jetbrains.kotlinx.dataframe.api.fillNulls
-import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.first
-import org.jetbrains.kotlinx.dataframe.api.forEach
-import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
-import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.intoRows
-import org.jetbrains.kotlinx.dataframe.api.last
-import org.jetbrains.kotlinx.dataframe.api.leftJoin
-import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.matches
-import org.jetbrains.kotlinx.dataframe.api.maxBy
-import org.jetbrains.kotlinx.dataframe.api.meanFor
-import org.jetbrains.kotlinx.dataframe.api.meanOf
-import org.jetbrains.kotlinx.dataframe.api.median
-import org.jetbrains.kotlinx.dataframe.api.merge
-import org.jetbrains.kotlinx.dataframe.api.mergeRows
-import org.jetbrains.kotlinx.dataframe.api.minBy
-import org.jetbrains.kotlinx.dataframe.api.minOf
-import org.jetbrains.kotlinx.dataframe.api.minus
-import org.jetbrains.kotlinx.dataframe.api.move
-import org.jetbrains.kotlinx.dataframe.api.moveTo
-import org.jetbrains.kotlinx.dataframe.api.moveToLeft
-import org.jetbrains.kotlinx.dataframe.api.moveToRight
-import org.jetbrains.kotlinx.dataframe.api.notNull
-import org.jetbrains.kotlinx.dataframe.api.nullToZero
-import org.jetbrains.kotlinx.dataframe.api.pivot
-import org.jetbrains.kotlinx.dataframe.api.plus
-import org.jetbrains.kotlinx.dataframe.api.remove
-import org.jetbrains.kotlinx.dataframe.api.rename
-import org.jetbrains.kotlinx.dataframe.api.replace
-import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.single
-import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.api.sortByCount
-import org.jetbrains.kotlinx.dataframe.api.sortByDesc
-import org.jetbrains.kotlinx.dataframe.api.sortByKey
-import org.jetbrains.kotlinx.dataframe.api.sortWith
-import org.jetbrains.kotlinx.dataframe.api.split
-import org.jetbrains.kotlinx.dataframe.api.take
-import org.jetbrains.kotlinx.dataframe.api.takeLast
-import org.jetbrains.kotlinx.dataframe.api.times
-import org.jetbrains.kotlinx.dataframe.api.to
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.toDate
-import org.jetbrains.kotlinx.dataframe.api.toInt
-import org.jetbrains.kotlinx.dataframe.api.under
-import org.jetbrains.kotlinx.dataframe.api.ungroup
-import org.jetbrains.kotlinx.dataframe.api.union
-import org.jetbrains.kotlinx.dataframe.api.update
-import org.jetbrains.kotlinx.dataframe.api.values
-import org.jetbrains.kotlinx.dataframe.api.where
-import org.jetbrains.kotlinx.dataframe.api.with
-import org.jetbrains.kotlinx.dataframe.api.withGrouping
 import org.jetbrains.kotlinx.dataframe.asFrame
 import org.jetbrains.kotlinx.dataframe.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.between
@@ -914,7 +841,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `merge similar dataframes`() {
-        val res = typed + typed + typed
+        val res = typed.concat(typed, typed)
         res.name.size() shouldBe 3 * typed.nrow()
         res.rows().forEach { it.values() shouldBe typed[it.index % typed.nrow()].values() }
     }
@@ -931,7 +858,7 @@ class DataFrameTests : BaseTest() {
             160
         ).typed<Unit>()
 
-        val res = typed.union(other)
+        val res = typed.concat(other)
         res.nrow() shouldBe typed.nrow() + other.nrow()
         res.take(typed.nrow()).rows().forEach { it[heightOrNull] == null }
         val q = res.takeLast(other.nrow())
@@ -955,7 +882,7 @@ class DataFrameTests : BaseTest() {
     fun `union dataframes with different type of the same column`() {
         val df2 = dataFrameOf("age")(32.6, 56.3, null)
         df2["age"].type() shouldBe getType<Double?>()
-        val merged = df.union(df2)
+        val merged = df.concat(df2)
         merged["age"].type() shouldBe getType<Number?>()
         val updated = merged.update("age") { "age"<Number?>()?.toDouble() }
         updated["age"].type() shouldBe getType<Double?>()
@@ -1455,7 +1382,7 @@ class DataFrameTests : BaseTest() {
         val dfs = (0 until grouped.nrow()).map {
             grouped[it..it]
         }
-        val dst = dfs.union().asGroupedDataFrame().union().sortBy("id").remove("id")
+        val dst = dfs.concat().asGroupedDataFrame().union().sortBy("id").remove("id")
         dst shouldBe typed
     }
 

@@ -31,7 +31,7 @@ public fun <T, G, R> GroupedDataFrame<T, G>.map(body: GroupWithKey<T, G>.(GroupW
 }
 
 public fun <T, G> GroupedDataFrame<T, G>.mapToRows(body: GroupWithKey<T, G>.(GroupWithKey<T, G>) -> DataRow<G>?): DataFrame<G> =
-    map(body).union()
+    map(body).concat()
 
 public fun <T, G> GroupedDataFrame<T, G>.mapToFrames(body: GroupWithKey<T, G>.(GroupWithKey<T, G>) -> DataFrame<G>?): FrameColumn<G> =
     map(body).toFrameColumn(groups.name)

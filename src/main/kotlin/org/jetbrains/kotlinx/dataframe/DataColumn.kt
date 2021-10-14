@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.union
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -157,7 +157,7 @@ internal fun guessColumnType(
 
     return when (type.classifier!! as KClass<*>) {
         DataRow::class -> {
-            val df = values.map { (it as AnyRow).toDataFrame() }.union()
+            val df = values.map { (it as AnyRow).toDataFrame() }.concat()
             DataColumn.create(name, df) as AnyCol
         }
         DataFrame::class -> {

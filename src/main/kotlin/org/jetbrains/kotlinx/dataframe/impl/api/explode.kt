@@ -8,9 +8,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.api.appendNulls
 import org.jetbrains.kotlinx.dataframe.api.asSequence
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
-import org.jetbrains.kotlinx.dataframe.api.union
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -68,7 +68,7 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, selector: C
                                 expectedSize > 0 -> DataFrame.empty(expectedSize)
                                 else -> null
                             }
-                        }.union()
+                        }.concat()
 
                         DataColumn.create(col.name, newDf)
                     }
