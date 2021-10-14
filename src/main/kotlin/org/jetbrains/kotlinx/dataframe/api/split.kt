@@ -1,7 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.dataframe.ColumnToInsert
-import org.jetbrains.dataframe.insert
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyMany
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
@@ -14,6 +12,9 @@ import org.jetbrains.kotlinx.dataframe.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.emptyMany
 import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.impl.ColumnDataCollector
+import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
+import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
@@ -128,7 +129,7 @@ public fun <T, C, R> doSplitCols(
     val nameGenerator = clause.df.nameGenerator()
     val nrow = clause.df.nrow()
 
-    val removeResult = clause.df.doRemove(clause.columns)
+    val removeResult = clause.df.removeImpl(clause.columns)
 
     val toInsert = removeResult.removedColumns.flatMap { node ->
 
@@ -164,7 +165,7 @@ public fun <T, C, R> doSplitCols(
         }
     }
 
-    return removeResult.df.insert(toInsert)
+    return removeResult.df.insertImpl(toInsert)
 }
 
 @JvmName("intoRowsTC")

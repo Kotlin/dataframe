@@ -75,10 +75,10 @@ public inline fun <T, R> DataFrame<T>.map(selector: RowSelector<T, R>): List<R> 
 public fun <T, R> DataFrame<T>.mapIndexedNotNull(action: (Int, DataRow<T>) -> R?): List<R> = rows().mapIndexedNotNull(action)
 public fun <T, R> DataFrame<T>.mapIndexed(action: (Int, DataRow<T>) -> R): List<R> = rows().mapIndexed(action)
 
-public fun <T> DataFrame<T>.mapColumns(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit): AnyFrame {
-    val builder = TypedColumnsFromDataRowBuilder(this)
-    body(builder)
-    return dataFrameOf(builder.columns)
+public fun <T> DataFrame<T>.mapColumns(body: AddDsl<T>.() -> Unit): AnyFrame {
+    val dsl = AddDsl(this)
+    body(dsl)
+    return dataFrameOf(dsl.columns)
 }
 
 // endregion

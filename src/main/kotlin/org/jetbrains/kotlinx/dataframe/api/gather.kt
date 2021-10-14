@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnMany
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.getType
+import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.isTable
 import org.jetbrains.kotlinx.dataframe.isGroup
 import org.jetbrains.kotlinx.dataframe.toMany
@@ -42,7 +43,7 @@ public fun <T, C, K, R> doGather(
     keyColumnType: KType,
     valueColumnType: KType
 ): DataFrame<T> {
-    val removed = clause.df.doRemove(clause.selector)
+    val removed = clause.df.removeImpl(clause.selector)
 
     val columnsToGather = removed.removedColumns.map { it.data.column as DataColumn<C> }
 
@@ -73,8 +74,8 @@ public fun <T, C, K, R> doGather(
         // optimization when no filter is applied
         val wrappedKeys = keys.toMany()
         df = df.add { // add columns for names and values
-            namesColumn by { wrappedKeys }
-            valuesColumn by { row ->
+            namesColumn from { wrappedKeys }
+            valuesColumn from { row ->
                 columnsToGather.map { col ->
                     val value = col[row]
                     if (valueTransform != null) {
