@@ -12,22 +12,24 @@ import java.util.*
 class SchemaGeneratorPluginIntegrationTest {
     private companion object {
         private const val TRANSITIVE_DF_DEPENDENCY = "KSP has dependency on latest dataframe, but it's not yet published"
+        private const val FIRST_NAME = "first.csv"
+        private const val SECOND_NAME = "second.csv"
     }
     private lateinit var dataframeJarPath: String
-    private lateinit var dataDir: File
 
     @Before
     fun before() {
         val properties = Properties().also {
             it.load(javaClass.getResourceAsStream("df.properties"))
         }
-        dataDir = File("../../data")
         dataframeJarPath = properties.getProperty("DATAFRAME_JAR")
     }
 
     @Test
     fun `compileKotlin depends on generateAll task`() {
         val (_, result) = runGradleBuild(":compileKotlin") { buildDir ->
+            File(buildDir, FIRST_NAME).also { it.writeText(TestData.csvSample) }
+            File(buildDir, SECOND_NAME).also { it.writeText(TestData.csvSample) }
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
@@ -46,12 +48,12 @@ class SchemaGeneratorPluginIntegrationTest {
 
             dataframes {
                 schema {
-                    data = File("${dataDir.unixPath}/ghost.json")
+                    data = file("$FIRST_NAME")
                     name = "Test"
                     packageName = "org.test"
                 }
                 schema {
-                    data = File("${dataDir.unixPath}/playlistItems.json")
+                    data = file("$SECOND_NAME")
                     name = "Schema"
                     packageName = "org.test"
                 }
@@ -65,7 +67,7 @@ class SchemaGeneratorPluginIntegrationTest {
     @Test
     fun `packageName convention is 'dataframe'`() {
         val (dir, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
+            val dataFile = File(buildDir, TestData.csvName)
             dataFile.writeText(TestData.csvSample)
 
             """
@@ -86,7 +88,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 
                 dataframes {
                     schema {
-                        data = "${dataFile.unixPath}"
+                        data = file("${TestData.csvName}")
                         name = "Data"
                     }
                 }
@@ -99,7 +101,7 @@ class SchemaGeneratorPluginIntegrationTest {
     @Test
     fun `fallback all properties to conventions`() {
         val (_, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
+            val dataFile = File(buildDir, TestData.csvName)
             dataFile.writeText(TestData.csvSample)
 
             """
@@ -120,7 +122,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 
                 dataframes {
                     schema {
-                        data = "${dataFile.unixPath}"
+                        data = file("${TestData.csvName}")
                     }
                 }
             """.trimIndent()
@@ -184,7 +186,7 @@ class SchemaGeneratorPluginIntegrationTest {
     @Test
     fun `generated schemas resolved in jvmMain source set for multiplatform project`() {
         val (_, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
+            val dataFile = File(buildDir, TestData.csvName)
             dataFile.writeText(TestData.csvSample)
             """
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
@@ -212,7 +214,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 
                 dataframes {
                     schema {
-                        data = "${dataFile.unixPath}"
+                        data = file("${TestData.csvName}")
                         name = "Schema"
                         packageName = ""
                     }
@@ -393,7 +395,7 @@ class SchemaGeneratorPluginIntegrationTest {
     @Test
     fun `generated code compiles in explicit api mode`() {
         val (_, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
+            val dataFile = File(buildDir, TestData.csvName)
             dataFile.writeText(TestData.csvSample)
 
             """
@@ -418,7 +420,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 
                 dataframes {
                     schema {
-                        data = "${dataFile.unixPath}"
+                        data = file("${TestData.csvName}")
                     }
                 }
             """.trimIndent()
