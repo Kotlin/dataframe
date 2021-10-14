@@ -1,20 +1,18 @@
-package org.jetbrains.kotlinx.dataframe.api
+package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.isGroup
 
-internal val defaultSeparator: CharSequence = "_"
-
-public fun <T> DataFrame<T>.flatten(separator: CharSequence = defaultSeparator): DataFrame<T> = flatten(separator) { all() }
-
-public fun <T, C> DataFrame<T>.flatten(
-    separator: CharSequence = defaultSeparator,
+internal fun <T, C> DataFrame<T>.flattenImpl(
+    separator: CharSequence,
     selector: ColumnsSelector<T, C>
 ): DataFrame<T> {
     val rootColumns = getColumnsWithPaths { selector.toColumns().filter { it.isGroup() }.top() }
