@@ -20,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.append
 import org.jetbrains.kotlinx.dataframe.api.at
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.dfsOf
 import org.jetbrains.kotlinx.dataframe.api.distinct
@@ -47,7 +48,6 @@ import org.jetbrains.kotlinx.dataframe.api.moveTo
 import org.jetbrains.kotlinx.dataframe.api.moveToLeft
 import org.jetbrains.kotlinx.dataframe.api.moveToRight
 import org.jetbrains.kotlinx.dataframe.api.pivot
-import org.jetbrains.kotlinx.dataframe.api.plus
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
@@ -258,7 +258,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `distinct`() {
-        val duplicated = typed2 + typed2
+        val duplicated = typed2.concat(typed2)
         duplicated.nrow() shouldBe typed2.nrow() * 2
         val dist = duplicated.nameAndCity.distinct()
         dist shouldBe typed2.nameAndCity.distinct()

@@ -89,16 +89,15 @@ public fun <A, B> DataFrame<A>.join(
 
 // endregion
 
-// region union
+// region concat
 
-@JvmName("unionRows")
-public fun <T> Iterable<DataRow<T>?>.union(): DataFrame<T> = concatImpl(map { it?.toDataFrame() ?: emptyDataFrame(1) }).typed()
+@JvmName("concatRows")
+public fun <T> Iterable<DataRow<T>?>.concat(): DataFrame<T> = concatImpl(map { it?.toDataFrame() ?: emptyDataFrame(1) }).typed()
 
-public fun <T> Iterable<DataFrame<T>?>.union(): DataFrame<T> = concatImpl(filterNotNull()).typed()
+public fun <T> Iterable<DataFrame<T>?>.concat(): DataFrame<T> = concatImpl(filterNotNull()).typed()
 
-public fun <T> DataColumn<DataFrame<T>>.union(): DataFrame<T> = values.union().typed()
+public fun <T> DataColumn<DataFrame<T>>.concat(): DataFrame<T> = values.concat().typed()
 
-public operator fun <T> DataFrame<T>.plus(other: DataFrame<T>): DataFrame<T> = concatImpl(listOf(this, other)).typed<T>()
-public fun <T> DataFrame<T>.union(vararg other: DataFrame<T>): DataFrame<T> = concatImpl(listOf(this) + other.toList()).typed<T>()
+public fun <T> DataFrame<T>.concat(vararg other: DataFrame<T>): DataFrame<T> = concatImpl(listOf(this) + other.toList()).typed<T>()
 
 // endregion

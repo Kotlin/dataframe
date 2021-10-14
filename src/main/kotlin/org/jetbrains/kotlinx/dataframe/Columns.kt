@@ -4,9 +4,9 @@ import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.api.AddDataRowImpl
 import org.jetbrains.kotlinx.dataframe.api.AddExpression
 import org.jetbrains.kotlinx.dataframe.api.all
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
-import org.jetbrains.kotlinx.dataframe.api.union
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -122,7 +122,7 @@ internal fun <T, R> DataFrameBase<T>.newColumn(type: KType, name: String = "", e
     val (nullable, values) = computeValues(this as DataFrame<T>, expression)
     return when (type.classifier) {
         DataFrame::class -> DataColumn.frames(name, values as List<AnyFrame?>) as DataColumn<R>
-        DataRow::class -> DataColumn.create(name, (values as List<AnyRow>).union()) as DataColumn<R>
+        DataRow::class -> DataColumn.create(name, (values as List<AnyRow>).concat()) as DataColumn<R>
         else -> DataColumn.create(name, values, type.withNullability(nullable))
     }
 }

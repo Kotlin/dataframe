@@ -22,7 +22,7 @@ public fun <T, C> DataFrame<T>.mergeRows(dropNulls: Boolean = false, columns: Co
             val value = when (column.kind()) {
                 org.jetbrains.kotlinx.dataframe.ColumnKind.Value -> column.toList().let { if (filterNulls) (it as List<Any?>).filterNotNull() else it }.toMany()
                 org.jetbrains.kotlinx.dataframe.ColumnKind.Group -> column.asGroup().df
-                org.jetbrains.kotlinx.dataframe.ColumnKind.Frame -> column.asTable().values.union()
+                org.jetbrains.kotlinx.dataframe.ColumnKind.Frame -> column.asTable().values.concat()
             }
             var first = true
             column.map {
