@@ -1,12 +1,16 @@
-package org.jetbrains.kotlinx.dataframe.api
+package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumn
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Many
+import org.jetbrains.kotlinx.dataframe.api.appendNulls
+import org.jetbrains.kotlinx.dataframe.api.asSequence
+import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
+import org.jetbrains.kotlinx.dataframe.api.union
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -17,20 +21,13 @@ import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asTable
 import org.jetbrains.kotlinx.dataframe.impl.columns.isTable
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
-import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typed
 
-public fun <T> DataFrame<T>.explode(): DataFrame<T> = explode { all() }
-
-public fun <T> DataFrame<T>.explode(vararg columns: Column): DataFrame<T> = explode { columns.toColumns() }
-public fun <T> DataFrame<T>.explode(vararg columns: String): DataFrame<T> = explode { columns.toColumns() }
-
-public fun <T> DataFrame<T>.explode(dropEmpty: Boolean = true, selector: ColumnsSelector<T, *>): DataFrame<T> {
+internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, selector: ColumnsSelector<T, *>): DataFrame<T> {
     val columns = getColumnsWithPaths(selector)
 
     val rowExpandSizes = indices.map { row ->
@@ -109,7 +106,7 @@ public fun <T> DataFrame<T>.explode(dropEmpty: Boolean = true, selector: Columns
                 else collector.toColumn(col.name)
             }
         }
-        return newColumns.toDataFrame<Unit>()
+        return newColumns.toAnyFrame()
     }
 
     return splitIntoRows(this, columns.map { it.path }.toSet()).typed()

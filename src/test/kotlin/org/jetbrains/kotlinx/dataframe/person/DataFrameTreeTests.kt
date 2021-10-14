@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.person
 import io.kotest.assertions.fail
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.jetbrains.dataframe.*
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
 import org.jetbrains.dataframe.impl.codeGen.generate
@@ -62,8 +61,8 @@ import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.with
-import org.jetbrains.kotlinx.dataframe.api.with2
 import org.jetbrains.kotlinx.dataframe.api.withNull
+import org.jetbrains.kotlinx.dataframe.api.withRowCol
 import org.jetbrains.kotlinx.dataframe.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
@@ -87,8 +86,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.isTable
 import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.isGroup
-import org.jetbrains.kotlinx.dataframe.math.max
-import org.jetbrains.kotlinx.dataframe.math.sumOf
 import org.jetbrains.kotlinx.dataframe.plus
 import org.jetbrains.kotlinx.dataframe.subcolumn
 import org.jetbrains.kotlinx.dataframe.toDefinition
@@ -417,7 +414,7 @@ class DataFrameTreeTests : BaseTest() {
     fun `update grouped column to table`() {
         val info by columnGroup()
         val grouped = typed.group { age and weight }.into(info)
-        val updated = grouped.update(info).with2 { row, column -> column.asGroup().df }
+        val updated = grouped.update(info).withRowCol { row, column -> column.asGroup().df }
         val col = updated[info.name()]
         col.kind() shouldBe ColumnKind.Frame
         val table = col.asTable()

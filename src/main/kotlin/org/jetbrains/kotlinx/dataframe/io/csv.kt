@@ -5,8 +5,6 @@ import org.apache.commons.csv.CSVRecord
 import org.jetbrains.dataframe.*
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.Parsers
-import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -14,6 +12,8 @@ import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnNames
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
+import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
+import org.jetbrains.kotlinx.dataframe.impl.api.parse
 import org.jetbrains.kotlinx.dataframe.values
 import java.io.*
 import java.math.BigDecimal
