@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.math.stdMean
 import org.jetbrains.kotlinx.dataframe.toColumn
 
 public fun <T> DataFrame<T>.corr(): AnyFrame = corr { numberCols().withoutNulls() }
