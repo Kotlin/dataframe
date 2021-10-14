@@ -1,8 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.aggregate
-import org.jetbrains.kotlinx.dataframe.api.asGrouped
-import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.div
 import org.jetbrains.kotlinx.dataframe.api.expr
@@ -34,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataRow
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.asComparable
+import org.jetbrains.kotlinx.dataframe.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.asNumbers
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
@@ -300,7 +299,7 @@ class Analyze : TestBase() {
         val data by columnOf(df[0..3], df[4..6]) // create frame column with name "data"
         val df = dataFrameOf(key, data) // create dataframe with two columns
 
-        df.asGrouped { data } // convert dataframe to GroupedDataFrame by interpreting 'data' column as groups
+        df.asGroupedDataFrame { data } // convert dataframe to GroupedDataFrame by interpreting 'data' column as groups
         // SampleEnd
     }
 

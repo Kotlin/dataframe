@@ -2,19 +2,38 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyColumn
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.Column
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.RowSelector
+import org.jetbrains.kotlinx.dataframe.Selector
+import org.jetbrains.kotlinx.dataframe.UnresolvedColumnsPolicy
+import org.jetbrains.kotlinx.dataframe.VectorizedRowFilter
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.Columns
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
+import org.jetbrains.kotlinx.dataframe.impl.api.SortFlag
+import org.jetbrains.kotlinx.dataframe.impl.api.addFlag
+import org.jetbrains.kotlinx.dataframe.impl.api.groupByImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.sortByImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.indices
+import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.toDataFrame
 import org.jetbrains.kotlinx.dataframe.typed
 import kotlin.reflect.KProperty
@@ -22,38 +41,189 @@ import kotlin.reflect.full.declaredMembers
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.javaField
 
-// region Iterable compatibility
+// region DataFrame Iterable API
 
 public fun <T> DataFrame<T>.asIterable(): Iterable<DataRow<T>> = rows()
 
-public fun <T, R> DataFrame<T>.mapIndexedNotNull(action: (Int, DataRow<T>) -> R?): List<R> = rows().mapIndexedNotNull(action)
-public fun <T, R> DataFrame<T>.mapIndexed(action: (Int, DataRow<T>) -> R): List<R> = rows().mapIndexed(action)
-public fun <T> DataFrame<T>.single(predicate: RowSelector<T, Boolean>): DataRow<T> = rows().single { predicate(it, it) }
-public fun <T> DataFrame<T>.single(): DataRow<T> = rows().single()
 public fun <T> DataFrame<T>.any(predicate: RowFilter<T>): Boolean = rows().any { predicate(it, it) }
 public fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all { predicate(it, it) }
+
 public fun <T, V> DataFrame<T>.associateBy(transform: RowSelector<T, V>): Map<V, DataRow<T>> = rows().associateBy { transform(it, it) }
 public fun <T, K, V> DataFrame<T>.associate(transform: RowSelector<T, Pair<K, V>>): Map<K, V> = rows().associate { transform(it, it) }
-public fun <T> DataFrame<T>.shuffled(): DataFrame<T> = getRows((0 until nrow()).shuffled())
+
 public fun <T> DataFrame<T>.tail(numRows: Int = 5): DataFrame<T> = takeLast(numRows)
 public fun <T> DataFrame<T>.head(numRows: Int = 5): DataFrame<T> = take(numRows)
-public fun <T> DataFrame<T>.dropLast(numRows: Int): DataFrame<T> = take(nrow() - numRows)
-public fun <T> DataFrame<T>.takeLast(numRows: Int): DataFrame<T> = drop(nrow() - numRows)
-public fun <T> DataFrame<T>.drop(numRows: Int): DataFrame<T> = getRows(numRows until nrow())
-public fun <T> DataFrame<T>.take(numRows: Int): DataFrame<T> = getRows(0 until numRows)
-public fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<T>? = rowsReversed().firstOrNull { predicate(it, it) }
-public fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> = rowsReversed().first { predicate(it, it) }
-public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) last() else null
-public fun <T> DataFrame<T>.last(): DataRow<T> = get(nrow - 1)
+
+public fun <T> DataFrame<T>.shuffled(): DataFrame<T> = getRows((0 until nrow()).shuffled())
+
+public fun <T> DataFrame<T>.chunked(size: Int): FrameColumn<T> {
+    val startIndices = (0 until nrow() step size)
+    return DataColumn.create("", this, startIndices, false)
+}
+
+// region isEmpty
+
+public fun AnyFrame.isEmpty(): Boolean = ncol == 0 || nrow == 0
+public fun AnyFrame.isNotEmpty(): Boolean = !isEmpty()
+
+// endregion
+
+// region map
+
+public inline fun <T, R> DataFrame<T>.map(selector: RowSelector<T, R>): List<R> = rows().map { selector(it, it) }
+public fun <T, R> DataFrame<T>.mapIndexedNotNull(action: (Int, DataRow<T>) -> R?): List<R> = rows().mapIndexedNotNull(action)
+public fun <T, R> DataFrame<T>.mapIndexed(action: (Int, DataRow<T>) -> R): List<R> = rows().mapIndexed(action)
+
+public fun <T> DataFrame<T>.mapColumns(body: TypedColumnsFromDataRowBuilder<T>.() -> Unit): AnyFrame {
+    val builder = TypedColumnsFromDataRowBuilder(this)
+    body(builder)
+    return dataFrameOf(builder.columns)
+}
+
+// endregion
+
+// region first/last/single
+
 public fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow<T>? = rows().firstOrNull { predicate(it, it) }
 public fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> = rows().first { predicate(it, it) }
 public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() else null
 public fun <T> DataFrame<T>.first(): DataRow<T> = get(0)
-public inline fun <T, R> DataFrame<T>.map(selector: RowSelector<T, R>): List<R> = rows().map { selector(it, it) }
+
+public fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<T>? = rowsReversed().firstOrNull { predicate(it, it) }
+public fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> = rowsReversed().first { predicate(it, it) }
+public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) last() else null
+public fun <T> DataFrame<T>.last(): DataRow<T> = get(nrow - 1)
+
+public fun <T> DataFrame<T>.single(predicate: RowSelector<T, Boolean>): DataRow<T> = rows().single { predicate(it, it) }
+public fun <T> DataFrame<T>.singleOrNull(predicate: RowSelector<T, Boolean>): DataRow<T>? = rows().singleOrNull { predicate(it, it) }
+public fun <T> DataFrame<T>.single(): DataRow<T> = rows().single()
+public fun <T> DataFrame<T>.singleOrNull(): DataRow<T>? = rows().singleOrNull()
 
 // endregion
 
-// region create DataFrame from Iterable
+// region filter
+
+public fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
+    indices.filter {
+        val row = get(it)
+        predicate(row, row)
+    }.let { get(it) }
+
+internal fun <T> DataFrame<T>.filterFast(predicate: VectorizedRowFilter<T>) = this[predicate(this)]
+
+// endregion
+
+// region take/drop
+
+public fun <T> DataFrame<T>.dropLast(numRows: Int): DataFrame<T> = take(nrow() - numRows)
+public fun <T> DataFrame<T>.takeLast(numRows: Int): DataFrame<T> = drop(nrow() - numRows)
+public fun <T> DataFrame<T>.drop(numRows: Int): DataFrame<T> = getRows(numRows until nrow())
+public fun <T> DataFrame<T>.take(numRows: Int): DataFrame<T> = getRows(0 until numRows)
+public fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter { !predicate(it, it) }
+
+// endregion
+
+// region distinct
+
+public fun <T> DataFrame<T>.distinct(): DataFrame<T> = distinctBy { all() }
+
+public fun <T, C> DataFrame<T>.distinct(columns: ColumnsSelector<T, C>): DataFrame<T> = select(columns).distinct()
+public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T> = distinct { columns.toColumns() }
+public fun <T> DataFrame<T>.distinct(vararg columns: String): DataFrame<T> = distinct { columns.toColumns() }
+public fun <T> DataFrame<T>.distinct(vararg columns: Column): DataFrame<T> = distinct { columns.toColumns() }
+@JvmName("distinctT")
+public fun <T> DataFrame<T>.distinct(columns: Iterable<String>): DataFrame<T> = distinct { columns.toColumns() }
+public fun <T> DataFrame<T>.distinct(columns: Iterable<Column>): DataFrame<T> = distinct { columns.toColumnSet() }
+
+public fun <T> DataFrame<T>.distinctBy(vararg columns: KProperty<*>): DataFrame<T> = distinctBy { columns.toColumns() }
+public fun <T> DataFrame<T>.distinctBy(vararg columns: String): DataFrame<T> = distinctBy { columns.toColumns() }
+public fun <T> DataFrame<T>.distinctBy(vararg columns: Column): DataFrame<T> = distinctBy { columns.toColumns() }
+@JvmName("distinctByT")
+public fun <T> DataFrame<T>.distinctBy(columns: Iterable<String>): DataFrame<T> = distinctBy { columns.toColumns() }
+public fun <T> DataFrame<T>.distinctBy(columns: Iterable<Column>): DataFrame<T> = distinctBy { columns.toColumnSet() }
+
+public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataFrame<T> {
+    val cols = get(columns)
+    val distinctIndices = indices.distinctBy { i -> cols.map { it[i] } }
+    return this[distinctIndices]
+}
+
+// endregion
+
+// region forEach
+
+public fun <T> DataFrame<T>.forEach(action: RowSelector<T, Unit>): Unit = rows().forEach { action(it, it) }
+
+public fun <T> DataFrame<T>.forEachIndexed(action: (Int, DataRow<T>) -> Unit): Unit = rows().forEachIndexed(action)
+
+public fun <T, C> DataFrame<T>.forEachIn(selector: ColumnsSelector<T, C>, action: (DataRow<T>, DataColumn<C>) -> Unit): Unit =
+    getColumnsWithPaths(selector).let { cols ->
+        rows().forEach { row ->
+            cols.forEach { col ->
+                action(row, col.data)
+            }
+        }
+    }
+
+// endregion
+
+// region groupBy
+
+public fun <T> DataFrame<T>.groupBy(cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T> = groupByImpl(cols)
+public fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>): GroupedDataFrame<T, T> = groupBy { cols.toColumnSet() }
+public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupedDataFrame<T, T> = groupBy { cols.toColumns() }
+public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupedDataFrame<T, T> = groupBy { cols.toColumns() }
+public fun <T> DataFrame<T>.groupBy(vararg cols: Column): GroupedDataFrame<T, T> = groupBy { cols.toColumns() }
+
+// endregion
+
+// region sort
+
+public interface SortReceiver<out T> : SelectReceiver<T> {
+
+    public val <C> Columns<C>.desc: Columns<C> get() = addFlag(SortFlag.Reversed)
+    public val String.desc: Columns<Comparable<*>?> get() = cast<Comparable<*>>().desc
+    public val <C> KProperty<C>.desc: Columns<C> get() = toColumnAccessor().desc
+
+    public fun <C> Columns<C?>.nullsLast(flag: Boolean): Columns<C?> = if (flag) addFlag(SortFlag.NullsLast) else this
+
+    public val <C> Columns<C?>.nullsLast: Columns<C?> get() = addFlag(SortFlag.NullsLast)
+    public val String.nullsLast: Columns<Comparable<*>?> get() = cast<Comparable<*>>().nullsLast
+    public val <C> KProperty<C?>.nullsLast: Columns<C?> get() = toColumnAccessor().nullsLast
+}
+
+public typealias SortColumnsSelector<T, C> = Selector<SortReceiver<T>, Columns<C>>
+
+public fun <T, C> DataFrame<T>.sortBy(selector: SortColumnsSelector<T, C>): DataFrame<T> = sortByImpl(
+    UnresolvedColumnsPolicy.Fail, selector
+)
+public fun <T> DataFrame<T>.sortBy(cols: Iterable<ColumnReference<Comparable<*>?>>): DataFrame<T> = sortBy { cols.toColumnSet() }
+public fun <T> DataFrame<T>.sortBy(vararg cols: ColumnReference<Comparable<*>?>): DataFrame<T> = sortBy { cols.toColumns() }
+public fun <T> DataFrame<T>.sortBy(vararg cols: String): DataFrame<T> = sortBy { cols.toColumns() }
+public fun <T> DataFrame<T>.sortBy(vararg cols: KProperty<Comparable<*>?>): DataFrame<T> = sortBy { cols.toColumns() }
+
+public fun <T> DataFrame<T>.sortWith(comparator: Comparator<DataRow<T>>): DataFrame<T> {
+    val permutation = rows().sortedWith(comparator).map { it.index }
+    return this[permutation]
+}
+
+public fun <T> DataFrame<T>.sortWith(comparator: (DataRow<T>, DataRow<T>) -> Int): DataFrame<T> = sortWith(Comparator(comparator))
+
+public fun <T, C> DataFrame<T>.sortByDesc(selector: SortColumnsSelector<T, C>): DataFrame<T> {
+    val set = selector.toColumns()
+    return sortByImpl { set.desc }
+}
+
+public fun <T, C> DataFrame<T>.sortByDesc(vararg columns: KProperty<Comparable<C>?>): DataFrame<T> = sortByDesc { columns.toColumns() }
+public fun <T> DataFrame<T>.sortByDesc(vararg columns: String): DataFrame<T> = sortByDesc { columns.toColumns() }
+public fun <T, C> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<Comparable<C>?>): DataFrame<T> = sortByDesc { columns.toColumns() }
+public fun <T, C> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comparable<C>?>>): DataFrame<T> = sortByDesc { columns.toColumnSet() }
+
+// endregion
+
+// endregion
+
+// region Iterable to DataFrame conversions
 
 public fun <T> Iterable<T>.toDataFrame(body: IterableDataFrameBuilder<T>.() -> Unit): AnyFrame {
     val builder = IterableDataFrameBuilder(this)
@@ -176,3 +346,5 @@ public class IterableDataFrameBuilder<T>(public val source: Iterable<T>) {
 
     public inline infix operator fun <reified R> KProperty<R>.invoke(noinline expression: T.(T) -> R): Boolean = add(name, expression)
 }
+
+// endregion

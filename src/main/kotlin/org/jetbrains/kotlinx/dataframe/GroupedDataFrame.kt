@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.api.Grouped
-import org.jetbrains.kotlinx.dataframe.api.asGrouped
+import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupedDataFrameImpl
@@ -46,16 +46,23 @@ public interface GroupedDataFrame<out T, out G> : Grouped<G> {
 
     public data class Entry<T, G>(val key: DataRow<T>, val group: DataFrame<G>?)
 
-    public companion object
+    public companion object {
+        internal val groupedColumnAccessor = column<AnyFrame>("group")
+    }
 }
 
-internal fun <T> DataFrame<T>.asGrouped(groupedColumnName: String): GroupedDataFrame<T, T> =
-    GroupedDataFrameImpl(this, this[groupedColumnName] as FrameColumn<T>) { none() }
+public fun <T> DataFrame<T>.asGroupedDataFrame(groupedColumnName: String): GroupedDataFrame<T, T> =
+    GroupedDataFrameImpl(this, frameColumn(groupedColumnName).typed()) { none() }
 
-internal fun <T, G> DataFrame<T>.asGrouped(groupedColumn: ColumnReference<DataFrame<G>?>): GroupedDataFrame<T, G> =
+public fun <T, G> DataFrame<T>.asGroupedDataFrame(groupedColumn: ColumnReference<DataFrame<G>?>): GroupedDataFrame<T, G> =
     GroupedDataFrameImpl(this, frameColumn(groupedColumn.name()).typed()) { none() }
 
-internal fun <T> DataFrame<T>.asGrouped(): GroupedDataFrame<T, T> {
+public fun <T> DataFrame<T>.asGroupedDataFrame(): GroupedDataFrame<T, T> {
     val groupCol = columns().single { it.isTable() }.asTable() as FrameColumn<T>
-    return asGrouped { groupCol }
+    return asGroupedDataFrame { groupCol }
+}
+
+public fun <T, G> DataFrame<T>.asGroupedDataFrame(selector: ColumnSelector<T, DataFrame<G>?>): GroupedDataFrame<T, G> {
+    val column = column(selector).asTable()
+    return GroupedDataFrameImpl(this, column) { none() }
 }

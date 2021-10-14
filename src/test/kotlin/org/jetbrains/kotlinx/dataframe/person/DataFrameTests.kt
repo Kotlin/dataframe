@@ -30,7 +30,6 @@ import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.digitize
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
-import org.jetbrains.kotlinx.dataframe.api.distinctByExpr
 import org.jetbrains.kotlinx.dataframe.api.div
 import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropNa
@@ -97,7 +96,7 @@ import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withGrouping
 import org.jetbrains.kotlinx.dataframe.asFrame
-import org.jetbrains.kotlinx.dataframe.asGrouped
+import org.jetbrains.kotlinx.dataframe.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.between
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
@@ -978,9 +977,9 @@ class DataFrameTests : BaseTest() {
     fun `distinct by`() {
         typed.distinctBy { name }.nrow() shouldBe 3
         typed.distinctBy { name and city }.nrow() shouldBe 6
-        typed.distinctByExpr { age / 10 }.nrow() shouldBe 4
+        typed.distinctBy { expr { age / 10 } }.nrow() shouldBe 4
         typed.distinctBy { age / 10 }.nrow() shouldBe 4
-        typed.distinctByExpr { city?.get(0) }.nrow() shouldBe 5
+        typed.distinctBy { expr { city?.get(0) } }.nrow() shouldBe 5
     }
 
     @Test
@@ -1460,7 +1459,7 @@ class DataFrameTests : BaseTest() {
         val dfs = (0 until grouped.nrow()).map {
             grouped[it..it]
         }
-        val dst = dfs.union().asGrouped().union().sortBy("id").remove("id")
+        val dst = dfs.union().asGroupedDataFrame().union().sortBy("id").remove("id")
         dst shouldBe typed
     }
 

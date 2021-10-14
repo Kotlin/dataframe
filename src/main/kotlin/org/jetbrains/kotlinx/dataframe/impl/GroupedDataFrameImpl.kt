@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.aggregation.GroupByAggregateBody
 import org.jetbrains.kotlinx.dataframe.api.AggregatedPivot
 import org.jetbrains.kotlinx.dataframe.api.NamedValue
-import org.jetbrains.kotlinx.dataframe.api.asGrouped
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.doRemove
 import org.jetbrains.kotlinx.dataframe.api.filter
@@ -20,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.union
 import org.jetbrains.kotlinx.dataframe.api.update
-import org.jetbrains.kotlinx.dataframe.asGrouped
+import org.jetbrains.kotlinx.dataframe.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -53,7 +52,7 @@ internal class GroupedDataFrameImpl<T, G>(
     }
 
     override fun <R> mapGroups(transform: Selector<DataFrame<G>?, DataFrame<R>?>) =
-        df.update(groups) { transform(it, it) }.asGrouped { frameColumn<R>(groups.name()) }
+        df.update(groups) { transform(it, it) }.asGroupedDataFrame { frameColumn<R>(groups.name()) }
 
     override fun toDataFrame(groupedColumnName: String?) = if (groupedColumnName == null || groupedColumnName == groups.name()) df else df.rename(groups).into(groupedColumnName)
 
@@ -70,7 +69,7 @@ internal class GroupedDataFrameImpl<T, G>(
             val row = GroupedDataRowImpl(df.get(it), groups)
             predicate(row, row)
         }
-        return df[indices].asGrouped(groups)
+        return df[indices].asGroupedDataFrame(groups)
     }
 }
 

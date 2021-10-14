@@ -5,10 +5,8 @@ import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.col
-import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
-import org.jetbrains.kotlinx.dataframe.api.distinctByExpr
 import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropLast
 import org.jetbrains.kotlinx.dataframe.api.dropNa
@@ -383,7 +381,7 @@ class Access : TestBase() {
         // SampleStart
         df.distinctBy { age and name } shouldBe df.groupBy { age and name }.mapToRows { group.first() }
 
-        df.distinctByExpr { name.firstName.take(3).lowercase() }
+        df.distinctBy { expr { name.firstName.take(3).lowercase() } }
         // SampleEnd
     }
 
@@ -396,7 +394,7 @@ class Access : TestBase() {
 
         df.distinctBy { age and name } shouldBe df.groupBy { age and name }.mapToRows { group.first() }
 
-        df.distinctByExpr { firstName().take(3).lowercase() }
+        df.distinctBy { expr { firstName().take(3).lowercase() } }
         // SampleEnd
     }
 
@@ -405,7 +403,7 @@ class Access : TestBase() {
         // SampleStart
         df.distinctBy("age", "name") shouldBe df.groupBy("age", "name").mapToRows { group.first() }
 
-        df.distinctByExpr { "name"["firstName"]<String>().take(3).lowercase() }
+        df.distinctBy { expr { "name"["firstName"]<String>().take(3).lowercase() } }
         // SampleEnd
     }
 }
