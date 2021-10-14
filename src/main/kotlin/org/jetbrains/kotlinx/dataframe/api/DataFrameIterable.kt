@@ -44,6 +44,7 @@ import kotlin.reflect.jvm.javaField
 // region DataFrame Iterable API
 
 public fun <T> DataFrame<T>.asIterable(): Iterable<DataRow<T>> = rows()
+public fun <T> DataFrame<T>.asSequence(): Sequence<DataRow<T>> = asIterable().asSequence()
 
 public fun <T> DataFrame<T>.any(predicate: RowFilter<T>): Boolean = rows().any { predicate(it, it) }
 public fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all { predicate(it, it) }
