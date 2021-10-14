@@ -1,43 +1,25 @@
-package org.jetbrains.kotlinx.dataframe.api
+package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyColumn
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.allRemovedColumns
+import org.jetbrains.kotlinx.dataframe.api.getColumnPaths
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.TreeNode
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.withDf
 import org.jetbrains.kotlinx.dataframe.typed
-import kotlin.reflect.KProperty
 
-public infix operator fun <T> DataFrame<T>.minus(column: String): DataFrame<T> = remove(column)
-public infix operator fun <T> DataFrame<T>.minus(column: Column): DataFrame<T> = remove(column)
-public infix operator fun <T> DataFrame<T>.minus(cols: Iterable<Column>): DataFrame<T> = remove(cols)
-public infix operator fun <T> DataFrame<T>.minus(cols: ColumnsSelector<T, *>): DataFrame<T> = remove(cols)
+internal data class RemoveResult<T>(val df: DataFrame<T>, val removedColumns: List<TreeNode<ColumnPosition>>)
 
-public fun <T> DataFrame<T>.remove(selector: ColumnsSelector<T, *>): DataFrame<T> = doRemove(selector).df
-public fun <T> DataFrame<T>.remove(vararg cols: KProperty<*>): DataFrame<T> = remove { cols.toColumns() }
-public fun <T> DataFrame<T>.remove(vararg cols: String): DataFrame<T> = remove { cols.toColumns() }
-public fun <T> DataFrame<T>.remove(vararg cols: Column): DataFrame<T> = remove { cols.toColumns() }
-public fun <T> DataFrame<T>.remove(cols: Iterable<Column>): DataFrame<T> = remove { cols.toColumnSet() }
-
-internal data class RemoveResult<T>(val df: DataFrame<T>, val removedColumns: List<TreeNode<ColumnPosition>>) {
-
-    val removedNothing: Boolean = removedColumns.isEmpty()
-
-    val removeRoot: TreeNode<ColumnPosition>? = removedColumns.firstOrNull()?.getRoot()
-}
-
-internal fun <T> DataFrame<T>.doRemove(selector: ColumnsSelector<T, *>): RemoveResult<T> {
+internal fun <T> DataFrame<T>.removeImpl(selector: ColumnsSelector<T, *>): RemoveResult<T> {
     val colPaths = getColumnPaths(selector)
     val originalOrder = colPaths.mapIndexed { index, path -> path to index }.toMap()
 

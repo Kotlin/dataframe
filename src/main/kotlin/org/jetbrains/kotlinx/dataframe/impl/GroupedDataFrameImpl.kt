@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
-import org.jetbrains.dataframe.*
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -12,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.aggregation.GroupByAggregateBody
 import org.jetbrains.kotlinx.dataframe.api.AggregatedPivot
 import org.jetbrains.kotlinx.dataframe.api.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.doRemove
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.minus
@@ -27,6 +25,9 @@ import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateBodyInternal
+import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
+import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.groupBy.GroupedDataRowImpl
 import org.jetbrains.kotlinx.dataframe.pathOf
@@ -83,7 +84,7 @@ internal fun <T, G, R> aggregateGroupBy(
 
     val column = df.column(selector)
 
-    val (df2, removedNodes) = df.doRemove(selector)
+    val (df2, removedNodes) = df.removeImpl(selector)
 
     val groupedFrame = column.values.map {
         if (it == null) null
@@ -108,5 +109,5 @@ internal fun <T, G, R> aggregateGroupBy(
         ColumnToInsert(insertPath + it.name, it, removedNode)
     }
     val src = if (removeColumns) df2 else df
-    return src.insert(columnsToInsert)
+    return src.insertImpl(columnsToInsert)
 }

@@ -1,7 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-import org.jetbrains.dataframe.ColumnToInsert
-import org.jetbrains.dataframe.insertColumns
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -32,7 +30,7 @@ internal fun <T> DataFrame<T>.groupByImpl(cols: ColumnsSelector<T, *>): GroupedD
         ColumnToInsert(path, column, null)
     }
 
-    val keyColumnsDf = insertColumns(keyColumnsToInsert).typed<T>()
+    val keyColumnsDf = org.jetbrains.kotlinx.dataframe.impl.api.insertImpl(keyColumnsToInsert).typed<T>()
 
     val permutation = groups.flatMap { it.second }
     val sorted = getRows(permutation)

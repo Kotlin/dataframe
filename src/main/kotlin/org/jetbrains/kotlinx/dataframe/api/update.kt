@@ -1,7 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.dataframe.ColumnToInsert
-import org.jetbrains.dataframe.insert
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -13,6 +11,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.headPlusArray
+import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
+import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
@@ -57,7 +58,7 @@ public fun <T, C> UpdateClause<T, C>.suggestTypes(vararg suggestions: Pair<KClas
 }
 
 public fun <T, C> doUpdate(clause: UpdateClause<T, C>, expression: (DataRow<T>, DataColumn<C>) -> Any?): DataFrame<T> {
-    val removeResult = clause.df.doRemove(clause.selector)
+    val removeResult = clause.df.removeImpl(clause.selector)
 
     val nrow = clause.df.nrow()
     val toInsert = removeResult.removedColumns.map {
@@ -84,7 +85,7 @@ public fun <T, C> doUpdate(clause: UpdateClause<T, C>, expression: (DataRow<T>, 
 
         ColumnToInsert(it.pathFromRoot(), newColumn, it)
     }
-    return removeResult.df.insert(toInsert)
+    return removeResult.df.insertImpl(toInsert)
 }
 
 // TODO: rename
@@ -150,4 +151,5 @@ public fun <T, C> UpdateClause<T, C>.withNull(): DataFrame<T> = doUpdate(copy(fi
         } else null
     } else null
 }
+
 public inline infix fun <T, C, reified R> UpdateClause<T, C>.with(value: R): DataFrame<T> = with { value }

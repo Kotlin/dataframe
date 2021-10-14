@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.mapNotNullGroups
-import org.jetbrains.kotlinx.dataframe.api.replaceAll
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.name
@@ -137,7 +136,7 @@ class GatherTests {
             val dataRows = cols.map { it[0] }
 
             val newDf = listOf(
-                name.replaceAll(MutableList(cols.size) { name[0] }),
+                name.withValues(List(cols.size) { name[0] }),
                 mode.withValues(cols.map { it.name }),
                 column("c1", dataRows.map { it.tryGet("c1") as? String }),
                 column("c2", dataRows.map { it.tryGet("c2") as? String }),
