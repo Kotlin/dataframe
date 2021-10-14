@@ -4,12 +4,12 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.aggregation.GroupByReceiver
-import org.jetbrains.kotlinx.dataframe.api.AggregatedPivot
 import org.jetbrains.kotlinx.dataframe.api.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.shortPath
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateReceiverInternal
+import org.jetbrains.kotlinx.dataframe.impl.api.AggregatedPivot
 import kotlin.reflect.KType
 
 internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>) :

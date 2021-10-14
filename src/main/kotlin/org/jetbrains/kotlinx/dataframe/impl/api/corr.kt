@@ -1,7 +1,7 @@
-package org.jetbrains.kotlinx.dataframe.api
+package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -9,10 +9,7 @@ import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.math.stdMean
 import org.jetbrains.kotlinx.dataframe.toColumn
 
-public fun <T> DataFrame<T>.corr(): AnyFrame = corr { numberCols().withoutNulls() }
-
-public fun <T, C : Number> DataFrame<T>.corr(selector: ColumnsSelector<T, C>): AnyFrame {
-    val cols = this[selector]
+internal fun <T, C : Number> DataFrame<T>.corrImpl(cols: List<DataColumn<C>>): AnyFrame {
     val len = nrow()
 
     val index = cols.map { it.name }.toColumn("column")

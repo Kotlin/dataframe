@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -16,10 +17,13 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
+import org.jetbrains.kotlinx.dataframe.impl.api.corrImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnsOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
+import org.jetbrains.kotlinx.dataframe.impl.indexOfMax
+import org.jetbrains.kotlinx.dataframe.impl.indexOfMin
 import org.jetbrains.kotlinx.dataframe.impl.mapRows
 import org.jetbrains.kotlinx.dataframe.impl.zero
 import org.jetbrains.kotlinx.dataframe.math.sumOf
@@ -68,7 +72,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(column: KProperty<C?>
 
 public fun <T> DataFrame<T>.max(): DataRow<T> = maxFor(comparableColumns())
 
-public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(columns: AggregateColumnsSelector<T, C?>): DataRow<T> = org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators.max.aggregateFor(this, columns)
+public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(columns: AggregateColumnsSelector<T, C?>): DataRow<T> = Aggregators.max.aggregateFor(this, columns)
 public fun <T> DataFrame<T>.maxFor(vararg columns: String): DataRow<T> = maxFor { columns.toComparableColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(vararg columns: ColumnReference<C?>): DataRow<T> = maxFor { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(vararg columns: KProperty<C?>): DataRow<T> = maxFor { columns.toColumns() }
@@ -177,5 +181,13 @@ public fun <T> DataFrame<T>.std(vararg columns: String): Double = std { columns.
 public fun <T> DataFrame<T>.std(vararg columns: KProperty<Number?>): Double = std { columns.toColumns() }
 
 public fun <T> DataFrame<T>.stdOf(selector: RowSelector<T, Number?>): Double = Aggregators.std.aggregateOf(this, selector) ?: .0
+
+// endregion
+
+// region corr
+
+public fun <T> DataFrame<T>.corr(): AnyFrame = corr { numberCols().withoutNulls() }
+
+public fun <T, C : Number> DataFrame<T>.corr(selector: ColumnsSelector<T, C>): AnyFrame = corrImpl(this[selector])
 
 // endregion
