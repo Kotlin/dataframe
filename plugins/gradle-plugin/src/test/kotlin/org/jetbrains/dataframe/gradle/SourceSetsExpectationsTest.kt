@@ -19,7 +19,7 @@ class SourceSetsExpectationsTest {
         project.extensions.getByType(KotlinJvmProjectExtension::class.java).let { extension ->
             val main = extension.sourceSets.getByName("main")
             main.kotlin.sourceDirectories.toList().forAny {
-                it.absolutePath.shouldEndWith("/src/main/kotlin")
+                it.shouldEndWith("src", "main", "kotlin")
             }
         }
     }
@@ -41,8 +41,8 @@ class SourceSetsExpectationsTest {
         project.extensions.getByType(KotlinAndroidProjectExtension::class.java).let { extension ->
             val main = extension.sourceSets.getByName("main")
             main.kotlin.sourceDirectories.toList().asClue { files ->
-                files.forAny { it.absolutePath.shouldEndWith("/src/main/java") }
-                files.forAny { it.absolutePath.shouldEndWith("/src/main/kotlin") }
+                files.forAny { it.shouldEndWith("src", "main", "java") }
+                files.forAny { it.shouldEndWith("src", "main", "kotlin") }
             }
         }
     }

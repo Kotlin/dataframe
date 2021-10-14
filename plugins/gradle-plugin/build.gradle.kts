@@ -27,7 +27,7 @@ tasks.withType<ProcessResources> {
         filter {
             it.replace(
                 "%DATAFRAME_JAR%",
-                project(":").configurations.getByName("instrumentedJars").artifacts.single().file.absolutePath
+                project(":").configurations.getByName("instrumentedJars").artifacts.single().file.absolutePath.replace(File.separatorChar, '/')
             )
         }
     }

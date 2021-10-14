@@ -12,11 +12,11 @@ import java.nio.file.Files
 
 internal class SchemaGeneratorPluginTes {
 
-    private lateinit var dataDir: File
+    private lateinit var dataDir: String
 
     @Before
     fun before() {
-        dataDir = File("../../data")
+        dataDir = File("../../data").absolutePath.replace(File.separatorChar, '/')
     }
 
     @Test
@@ -242,10 +242,10 @@ internal class SchemaGeneratorPluginTes {
                 
                 dataframes {
                     schema {
-                        data = "$dataFile"
+                        data = "${dataFile.unixPath}"
                         name = "Schema"
                         packageName = ""
-                        src = file("$buildDir")
+                        src = file("${buildDir.unixPath}")
                     }
                 }
             """.trimIndent()
