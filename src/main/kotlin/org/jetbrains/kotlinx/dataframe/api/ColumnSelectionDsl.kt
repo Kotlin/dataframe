@@ -37,7 +37,7 @@ import org.jetbrains.kotlinx.dataframe.toColumnAccessor
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
-public interface SelectReceiver<out T> : DataFrameBase<T> {
+public interface ColumnSelectionDsl<out T> : DataFrameBase<T> {
 
     public fun DataFrameBase<*>.first(numCols: Int): Columns<Any?> = cols().take(numCols)
 
@@ -148,7 +148,7 @@ public interface SelectReceiver<out T> : DataFrameBase<T> {
     public infix fun <C> Columns<C>.except(selector: ColumnsSelector<T, *>): Columns<C> = except(selector.toColumns()) as Columns<C>
 
     // public operator fun <C> ColumnSelector<T, C>.invoke(): ColumnReference<C> = this(this@SelectReceiver, this@SelectReceiver)
-    public operator fun <C> ColumnsSelector<T, C>.invoke(): Columns<C> = this(this@SelectReceiver, this@SelectReceiver)
+    public operator fun <C> ColumnsSelector<T, C>.invoke(): Columns<C> = this(this@ColumnSelectionDsl, this@ColumnSelectionDsl)
 
     public operator fun <C> ColumnReference<C>.invoke(): DataColumn<C> = getColumn(this)
 
@@ -198,13 +198,13 @@ public interface SelectReceiver<out T> : DataFrameBase<T> {
     public fun ColumnPath.numberOrNulls(): DataColumn<Number?> = getColumn(this)
 }
 
-public inline fun <T, reified R> SelectReceiver<T>.expr(
+public inline fun <T, reified R> ColumnSelectionDsl<T>.expr(
     name: String = "",
     useActualType: Boolean = false,
     noinline expression: AddExpression<T, R>
 ): DataColumn<R> = newColumn(name, useActualType, expression)
 
-internal fun <T, R> SelectReceiver<T>.exprWithActualType(name: String = "", expression: AddExpression<T, R>): DataColumn<R> = newColumnWithActualType(name, expression)
+internal fun <T, R> ColumnSelectionDsl<T>.exprWithActualType(name: String = "", expression: AddExpression<T, R>): DataColumn<R> = newColumnWithActualType(name, expression)
 
 internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> = { this@filter(it, it).filter(predicate) }
 // internal fun Columns<*>.filter(predicate: (AnyCol) -> Boolean) = transform { it.filter { predicate(it.data) } }

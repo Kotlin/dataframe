@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.impl.prepareForReceiver
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.isGroup
@@ -22,7 +21,7 @@ import org.jetbrains.kotlinx.dataframe.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.withNullability
 
-public interface JoinReceiver<out A, out B> : SelectReceiver<A> {
+public interface JoinReceiver<out A, out B> : ColumnSelectionDsl<A> {
 
     public val right: DataFrame<B>
 
