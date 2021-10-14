@@ -1,42 +1,28 @@
-package org.jetbrains.kotlinx.dataframe.api
+package org.jetbrains.kotlinx.dataframe.impl.api
 
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Many
-import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.api.GatherClause
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.explode
+import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.split
+import org.jetbrains.kotlinx.dataframe.api.to
+import org.jetbrains.kotlinx.dataframe.api.ungroup
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnMany
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.getType
-import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.isTable
 import org.jetbrains.kotlinx.dataframe.isGroup
 import org.jetbrains.kotlinx.dataframe.toMany
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
 
-public data class GatherClause<T, C, K, R>(
-    val df: DataFrame<T>,
-    val selector: ColumnsSelector<T, C>,
-    val filter: ((C) -> Boolean)? = null,
-    val dropNulls: Boolean = true,
-    val nameTransform: ((String) -> K),
-    val valueTransform: ((C) -> R)? = null
-)
-
-public fun <T, C> DataFrame<T>.gather(dropNulls: Boolean = true, selector: ColumnsSelector<T, C?>): GatherClause<T, C, String, C> = GatherClause<T, C, String, C>(this, selector as ColumnsSelector<T, C>, null, dropNulls, { it }, null)
-
-public fun <T, C, K, R> GatherClause<T, C, K, R>.where(filter: Predicate<C>): GatherClause<T, C, K, R> = copy(filter = filter)
-
-public fun <T, C, K, R> GatherClause<T, C, *, R>.mapNames(transform: (String) -> K): GatherClause<T, C, K, R> = GatherClause(df, selector, filter, dropNulls, transform, valueTransform)
-public fun <T, C, K, R> GatherClause<T, C, K, *>.map(transform: (C) -> R): GatherClause<T, C, K, R> = GatherClause(df, selector, filter, dropNulls, nameTransform, transform)
-
-public inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: ColumnReference<String>): DataFrame<T> = into(keyColumn.name())
-public inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String): DataFrame<T> = doGather(this, keyColumn, null, getType<K>(), getType<R>())
-public inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String, valueColumn: String): DataFrame<T> = doGather(this, keyColumn, valueColumn, getType<K>(), getType<R>())
-
-public fun <T, C, K, R> doGather(
+@PublishedApi
+internal fun <T, C, K, R> gatherImpl(
     clause: GatherClause<T, C, K, R>,
     namesTo: String,
     valuesTo: String? = null,

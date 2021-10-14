@@ -408,3 +408,15 @@ public fun <T, C> DataFrame<T>.flatten(
 ): DataFrame<T> = flattenImpl(separator, selector)
 
 // endregion
+
+// region select
+
+public fun <T> DataFrame<T>.select(selector: ColumnsSelector<T, *>): DataFrame<T> = get(selector).toDataFrame()
+public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> = select(columns.map { it.name })
+public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = select(columns.asIterable())
+public fun <T> DataFrame<T>.select(vararg columns: Column): DataFrame<T> = select { columns.toColumns() }
+@JvmName("selectT")
+public fun <T> DataFrame<T>.select(columns: Iterable<String>): DataFrame<T> = columns.map { get(it) }.toDataFrame()
+public fun <T> DataFrame<T>.select(columns: Iterable<Column>): DataFrame<T> = select { columns.toColumnSet() }
+
+// endregion

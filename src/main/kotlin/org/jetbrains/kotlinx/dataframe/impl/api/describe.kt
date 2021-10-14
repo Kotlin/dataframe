@@ -1,10 +1,18 @@
-package org.jetbrains.kotlinx.dataframe.api
+package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.ColumnDescriptionSchema
+import org.jetbrains.kotlinx.dataframe.api.GeneralColumnDescriptionSchema
+import org.jetbrains.kotlinx.dataframe.api.NumberColumnDescriptionSchema
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.after
+import org.jetbrains.kotlinx.dataframe.api.max
+import org.jetbrains.kotlinx.dataframe.api.mean
+import org.jetbrains.kotlinx.dataframe.api.min
+import org.jetbrains.kotlinx.dataframe.api.move
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.ndistinct
 import org.jetbrains.kotlinx.dataframe.columns.size
@@ -14,34 +22,8 @@ import org.jetbrains.kotlinx.dataframe.isComparable
 import org.jetbrains.kotlinx.dataframe.isNumber
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typed
-import kotlin.reflect.KType
 
-public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *> = { numberCols() }): DataFrame<ColumnDescriptionSchema> = describe(this[columns])
-public fun <T> DataColumn<T>.describe(): DataFrame<ColumnDescriptionSchema> = describe(listOf(this))
-
-@DataSchema
-public interface GeneralColumnDescriptionSchema {
-    public val column: String
-    public val count: Int
-    public val nulls: Int
-}
-
-@DataSchema
-public interface ColumnDescriptionSchema : GeneralColumnDescriptionSchema {
-    public val unique: Int
-    public val top: Any
-    public val freq: Int
-    public val type: KType
-}
-
-@DataSchema
-public interface NumberColumnDescriptionSchema : GeneralColumnDescriptionSchema {
-    public val mean: Double
-    public val min: Any
-    public val max: KType
-}
-
-internal fun describe(cols: List<AnyCol>): DataFrame<ColumnDescriptionSchema> {
+internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescriptionSchema> {
     val hasNumeric = cols.any { it.isNumber() }
     val hasCategorical = cols.any { !it.isNumber() }
     var df = cols.toDataFrame {

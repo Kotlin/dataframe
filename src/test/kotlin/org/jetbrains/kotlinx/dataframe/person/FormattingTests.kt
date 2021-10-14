@@ -6,12 +6,12 @@ import org.jetbrains.kotlinx.dataframe.api.FormattingDSL.gray
 import org.jetbrains.kotlinx.dataframe.api.FormattingDSL.green
 import org.jetbrains.kotlinx.dataframe.api.FormattingDSL.red
 import org.jetbrains.kotlinx.dataframe.api.and
-import org.jetbrains.kotlinx.dataframe.api.encode
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.linearBg
-import org.jetbrains.kotlinx.dataframe.api.linearGradient
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.impl.api.encode
+import org.jetbrains.kotlinx.dataframe.impl.api.linearGradient
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.junit.Test

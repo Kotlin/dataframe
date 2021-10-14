@@ -1,7 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.between
 import kotlin.reflect.KClass
+
+// region between
+
+public fun <T : Comparable<T>> DataColumn<T>.between(left: T, right: T, includeBoundaries: Boolean = true): DataColumn<Boolean> = map { it.between(left, right, includeBoundaries) }
+
+// endregion
+
+// region digitize
 
 public fun DataColumn<Double>.digitize(vararg bins: Int, right: Boolean = false): DataColumn<Int> = digitize(bins.toList(), Double::class, right)
 
@@ -23,3 +32,5 @@ public fun <T : Comparable<T>> DataColumn<T>.digitize(bins: List<T>, right: Bool
         else index
     }
 }
+
+// endregion

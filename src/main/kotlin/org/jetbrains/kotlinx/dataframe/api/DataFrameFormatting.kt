@@ -5,26 +5,16 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowCellFilter
-import org.jetbrains.kotlinx.dataframe.columns.depth
-import org.jetbrains.kotlinx.dataframe.columns.name
-import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.impl.api.MergedAttributes
+import org.jetbrains.kotlinx.dataframe.impl.api.SingleAttribute
+import org.jetbrains.kotlinx.dataframe.impl.api.encode
+import org.jetbrains.kotlinx.dataframe.impl.api.formatImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.linearGradient
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.HtmlData
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 
 public data class RGBColor(val r: Short, val g: Short, val b: Short)
-
-private fun encRgb(r: Short, g: Short, b: Short): String = "#${encHex(r)}${encHex(g)}${encHex(b)}"
-
-private fun encHex(v: Short): String = "${(v / 16).toString(16)}${(v % 16).toString(16)}"
-
-internal fun RGBColor.encode() = encRgb(r, g, b)
-
-private fun componentWise(color1: RGBColor, color2: RGBColor, f: (Short, Short) -> Short) = RGBColor(
-    f(color1.r, color2.r),
-    f(color1.g, color2.g),
-    f(color1.b, color2.b)
-)
 
 public interface CellAttributes {
 
@@ -35,14 +25,6 @@ public infix fun CellAttributes?.and(other: CellAttributes?): CellAttributes? = 
     other == null -> this
     this == null -> other
     else -> MergedAttributes(listOf(this, other))
-}
-
-internal class SingleAttribute(val key: String, val value: String) : CellAttributes {
-    override fun attributes() = listOf(key to value)
-}
-
-internal class MergedAttributes(private val attributes: List<CellAttributes>) : CellAttributes {
-    override fun attributes() = attributes.flatMap { it.attributes() }.toMap().toList()
 }
 
 public object FormattingDSL {
@@ -84,21 +66,6 @@ public object FormattingDSL {
     }
 }
 
-internal fun linearGradient(
-    x: Double,
-    minValue: Double,
-    minColor: RGBColor,
-    maxValue: Double,
-    maxColor: RGBColor
-): RGBColor {
-    if (x < minValue) return minColor
-    if (x > maxValue) return maxColor
-    val t = (x - minValue) / (maxValue - minValue)
-    return componentWise(minColor, maxColor) { cmin, cmax ->
-        (cmin + t * (cmax - cmin)).toInt().toShort()
-    }
-}
-
 public typealias RowColFormatter<T> = (DataRow<T>, AnyCol) -> CellAttributes?
 
 public class FormattedFrame<T>(
@@ -135,17 +102,4 @@ public fun <T, C : Number?> ColorClause<T, C>.linearBg(from: Pair<Number, RGBCol
     } else null
 }
 
-public fun <T, C> ColorClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T> {
-    val columns =
-        if (selector != null) df.getColumnsWithPaths(selector).mapNotNull { if (it.depth == 0) it.name else null }
-            .toSet() else null
-    return FormattedFrame(df) { row, col ->
-        val oldAttributes = oldFormatter?.invoke(row, col)
-        if (columns == null || columns.contains(col.name())) {
-            val value = row[col] as C
-            if (filter == null || filter(row, value)) {
-                oldAttributes and formatter(FormattingDSL, value)
-            } else oldAttributes
-        } else oldAttributes
-    }
-}
+public fun <T, C> ColorClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T> = formatImpl(formatter)
