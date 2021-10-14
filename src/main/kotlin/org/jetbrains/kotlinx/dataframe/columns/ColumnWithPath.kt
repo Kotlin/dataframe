@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.depth
 import org.jetbrains.kotlinx.dataframe.isGroup
+import org.jetbrains.kotlinx.dataframe.tryGetColumn
 
 public interface ColumnWithPath<out T> : DataColumn<T> {
 

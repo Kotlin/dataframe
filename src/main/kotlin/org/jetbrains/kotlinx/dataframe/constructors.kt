@@ -24,13 +24,13 @@ public fun columnGroup(parent: MapColumnReference): ColumnDelegate<AnyRow> = par
 
 public fun frameColumn(): ColumnDelegate<AnyFrame> = column()
 
-public fun <T> columnMany(): ColumnDelegate<Many<T>> = column<Many<T>>()
+public fun <T> columnMany(): ColumnDelegate<Many<T>> = column()
 
 public fun <T> columnGroup(name: String): ColumnAccessor<DataRow<T>> = column(name)
 
 public fun <T> frameColumn(name: String): ColumnAccessor<DataFrame<T>> = column(name)
 
-public fun <T> columnMany(name: String): ColumnAccessor<Many<T>> = column<Many<T>>(name)
+public fun <T> columnMany(name: String): ColumnAccessor<Many<T>> = column(name)
 
 public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
 

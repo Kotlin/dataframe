@@ -2,11 +2,11 @@ package org.jetbrains.kotlinx.dataframe
 
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
-import org.jetbrains.dataframe.gather
 import org.jetbrains.dataframe.generateCode
-import org.jetbrains.dataframe.into
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.mapNotNullGroups
 import org.jetbrains.kotlinx.dataframe.api.replaceAll
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame

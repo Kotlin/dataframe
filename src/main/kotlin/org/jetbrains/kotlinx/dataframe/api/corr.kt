@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
@@ -15,7 +14,7 @@ public fun <T, C : Number> DataFrame<T>.corr(selector: ColumnsSelector<T, C>): A
     val cols = this[selector]
     val len = nrow()
 
-    val index = column("column", cols.map { it.name })
+    val index = cols.map { it.name }.toColumn("column")
 
     val values = cols.map { it.values.map { it.toDouble() } }
     val stdMeans = values.map { it.stdMean() }

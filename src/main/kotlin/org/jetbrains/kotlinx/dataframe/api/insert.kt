@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.ReferenceData
 import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
+import org.jetbrains.kotlinx.dataframe.api.getColumnPath
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -16,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.name
-import org.jetbrains.kotlinx.dataframe.getColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ReadonlyTreeNode
 import org.jetbrains.kotlinx.dataframe.impl.columns.withDf
 import org.jetbrains.kotlinx.dataframe.impl.getAncestor

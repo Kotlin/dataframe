@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.flatten
+import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.remove
