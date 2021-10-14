@@ -1,4 +1,4 @@
-package org.jetbrains.dataframe
+package org.jetbrains.kotlinx.dataframe.math
 
 import java.math.BigDecimal
 import kotlin.reflect.KType

@@ -40,7 +40,6 @@ import org.jetbrains.kotlinx.dataframe.api.join
 import org.jetbrains.kotlinx.dataframe.api.last
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapNotNullGroups
-import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.mergeRows
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
@@ -55,7 +54,6 @@ import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.split
-import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.toTop
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.api.ungroup
@@ -87,6 +85,8 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.isTable
 import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.isGroup
+import org.jetbrains.kotlinx.dataframe.math.max
+import org.jetbrains.kotlinx.dataframe.math.sumOf
 import org.jetbrains.kotlinx.dataframe.plus
 import org.jetbrains.kotlinx.dataframe.subcolumn
 import org.jetbrains.kotlinx.dataframe.toDefinition

@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.associate
-import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columns
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.drop
@@ -29,7 +28,6 @@ import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.toDataRow
 import org.jetbrains.kotlinx.dataframe.api.toInt
 import org.jetbrains.kotlinx.dataframe.api.ungroup
@@ -47,10 +45,10 @@ import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.typed
-import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.isMany
 import org.jetbrains.kotlinx.dataframe.last
 import org.jetbrains.kotlinx.dataframe.manyOf
+import org.jetbrains.kotlinx.dataframe.math.sumOf
 import org.jetbrains.kotlinx.dataframe.named
 import org.jetbrains.kotlinx.dataframe.newColumn
 import org.jetbrains.kotlinx.dataframe.toMany

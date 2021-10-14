@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
+import org.jetbrains.kotlinx.dataframe.math.sum
 
 public fun <T> DataColumn<T>.count(predicate: Predicate<T>? = null): Int = if (predicate == null) size() else values().count(predicate)
 

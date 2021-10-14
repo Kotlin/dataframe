@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.mapRows
 import org.jetbrains.kotlinx.dataframe.impl.zero
+import org.jetbrains.kotlinx.dataframe.math.sumOf
 import org.jetbrains.kotlinx.dataframe.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.toColumnOf
 import kotlin.reflect.KProperty

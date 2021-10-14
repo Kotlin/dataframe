@@ -5,19 +5,16 @@ import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.div
 import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.maxBy
 import org.jetbrains.kotlinx.dataframe.api.maxByOrNull
 import org.jetbrains.kotlinx.dataframe.api.maxFor
 import org.jetbrains.kotlinx.dataframe.api.maxOf
 import org.jetbrains.kotlinx.dataframe.api.maxOrNull
-import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.meanFor
 import org.jetbrains.kotlinx.dataframe.api.meanOf
 import org.jetbrains.kotlinx.dataframe.api.median
 import org.jetbrains.kotlinx.dataframe.api.medianFor
 import org.jetbrains.kotlinx.dataframe.api.medianOf
-import org.jetbrains.kotlinx.dataframe.api.min
 import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.minFor
 import org.jetbrains.kotlinx.dataframe.api.minOf
@@ -25,9 +22,7 @@ import org.jetbrains.kotlinx.dataframe.api.minOrNull
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.stdFor
-import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.sumFor
-import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataRow
 import org.jetbrains.kotlinx.dataframe.api.values
@@ -39,6 +34,11 @@ import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.get
+import org.jetbrains.kotlinx.dataframe.math.max
+import org.jetbrains.kotlinx.dataframe.math.mean
+import org.jetbrains.kotlinx.dataframe.math.min
+import org.jetbrains.kotlinx.dataframe.math.sum
+import org.jetbrains.kotlinx.dataframe.math.sumOf
 import org.junit.Test
 
 class Analyze : TestBase() {
