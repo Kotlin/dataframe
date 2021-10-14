@@ -180,7 +180,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: Column): GroupedDataFrame<T, T>
 
 // region sort
 
-public interface SortReceiver<out T> : SelectReceiver<T> {
+public interface SortReceiver<out T> : ColumnSelectionDsl<T> {
 
     public val <C> Columns<C>.desc: Columns<C> get() = addFlag(SortFlag.Reversed)
     public val String.desc: Columns<Comparable<*>?> get() = cast<Comparable<*>>().desc

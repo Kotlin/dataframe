@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.UnresolvedColumnsPolicy
+import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
 import org.jetbrains.kotlinx.dataframe.asNullable
 import org.jetbrains.kotlinx.dataframe.collectTree
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
@@ -23,12 +24,12 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.getType
+import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.TreeNode
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.equalsByElement
 import org.jetbrains.kotlinx.dataframe.impl.getOrPut
 import org.jetbrains.kotlinx.dataframe.impl.put
-import org.jetbrains.kotlinx.dataframe.impl.receivers.SelectReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.rollingHash
 import org.jetbrains.kotlinx.dataframe.impl.topDfs
 import org.jetbrains.kotlinx.dataframe.isGroup
@@ -140,10 +141,7 @@ internal fun <T> Array<out ColumnReference<T>>.toColumns(): Columns<T> = asItera
 internal fun Iterable<String>.toColumns() = map { it.toColumnAccessor() }.toColumnSet()
 
 internal fun <T, C> ColumnsSelector<T, C>.toColumns(): Columns<C> = toColumns {
-    SelectReceiverImpl(
-        it.df.typed(),
-        it.allowMissingColumns
-    )
+    object : DataFrameReceiver<T>(it.df.typed(), it.allowMissingColumns), ColumnSelectionDsl<T> { }
 }
 
 internal fun <C> DataFrameBase<*>.getColumn(name: String, policy: UnresolvedColumnsPolicy) =

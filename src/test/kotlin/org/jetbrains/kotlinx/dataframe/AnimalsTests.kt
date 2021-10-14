@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.transpose
 import org.jetbrains.kotlinx.dataframe.api.update

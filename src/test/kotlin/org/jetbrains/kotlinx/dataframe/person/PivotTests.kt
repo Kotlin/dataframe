@@ -28,6 +28,7 @@ import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.sortBy
+import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.toDataRow
 import org.jetbrains.kotlinx.dataframe.api.toInt
 import org.jetbrains.kotlinx.dataframe.api.ungroup

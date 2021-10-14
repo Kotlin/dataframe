@@ -54,7 +54,7 @@ public fun <T, G, C> GroupedDataFrame<T, G>.sortByDesc(selector: SortColumnsSele
 }
 
 private fun <T, G, C> GroupedDataFrame<T, G>.createColumnFromGroupExpression(
-    receiver: SelectReceiver<T>,
+    receiver: ColumnSelectionDsl<T>,
     default: C? = null,
     selector: DataFrameSelector<G, C>
 ): DataColumn<C?> {

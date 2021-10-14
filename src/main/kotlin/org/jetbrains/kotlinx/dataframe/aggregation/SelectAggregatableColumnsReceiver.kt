@@ -1,11 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.aggregation
 
-import org.jetbrains.kotlinx.dataframe.api.SelectReceiver
+import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.pathOf
 
-public interface SelectAggregatableColumnsReceiver<out T> : SelectReceiver<T> {
+public interface SelectAggregatableColumnsReceiver<out T> : ColumnSelectionDsl<T> {
 
     public infix fun <C> Columns<C>.default(defaultValue: C): Columns<C> =
         org.jetbrains.kotlinx.dataframe.impl.aggregation.ConfiguredAggregateColumn.withDefault(this, defaultValue)
