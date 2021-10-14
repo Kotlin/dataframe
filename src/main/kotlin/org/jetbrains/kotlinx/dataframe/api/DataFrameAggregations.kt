@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateColumnsSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.getOrNull
 import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.comparableColumns

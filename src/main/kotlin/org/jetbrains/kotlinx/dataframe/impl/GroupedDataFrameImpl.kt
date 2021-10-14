@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.GroupByAggregateBody
 import org.jetbrains.kotlinx.dataframe.api.AggregatedPivot
 import org.jetbrains.kotlinx.dataframe.api.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.asGrouped
+import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.doRemove
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.into
@@ -20,7 +21,6 @@ import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.union
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.asGrouped
-import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.values

@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.asGrouped
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.Columns
+import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.assertIsComparable

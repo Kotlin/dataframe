@@ -1,9 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.commonParents
 import org.jetbrains.kotlinx.dataframe.createType
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.resolve
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KClass
@@ -102,3 +109,15 @@ internal fun <T> catchSilent(body: () -> T): T? = try { body() } catch (_: Throw
 internal fun List<String>.toColumnPath() = ColumnPath(this)
 internal fun Array<out String>.toColumnPath() = ColumnPath(this.asList())
 internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType? = null) = commonParents(this).createType(nullable, upperBound)
+internal fun <T, C> DataFrame<T>.getColumns(
+    skipMissingColumns: Boolean,
+    selector: ColumnsSelector<T, C>
+): List<DataColumn<C>> = getColumnsWithPaths(
+    if (skipMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail,
+    selector
+).map { it.data }
+
+internal fun <T, C> DataFrame<T>.getColumnsWithPaths(
+    unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
+    selector: ColumnsSelector<T, C>
+): List<ColumnWithPath<C>> = selector.toColumns().resolve(this, unresolvedColumnsPolicy)

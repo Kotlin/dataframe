@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples
 
+import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.column

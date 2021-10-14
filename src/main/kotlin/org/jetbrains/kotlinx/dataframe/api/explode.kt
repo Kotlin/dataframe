@@ -14,12 +14,12 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
-import org.jetbrains.kotlinx.dataframe.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asTable
 import org.jetbrains.kotlinx.dataframe.impl.columns.isTable
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
+import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type

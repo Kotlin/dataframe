@@ -32,6 +32,8 @@ import org.jetbrains.kotlinx.dataframe.api.duplicate
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.getColumnPath
+import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.intoRows
@@ -76,7 +78,7 @@ import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.emptyMany
 import org.jetbrains.kotlinx.dataframe.frameColumn
-import org.jetbrains.kotlinx.dataframe.getColumnPath
+import org.jetbrains.kotlinx.dataframe.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup

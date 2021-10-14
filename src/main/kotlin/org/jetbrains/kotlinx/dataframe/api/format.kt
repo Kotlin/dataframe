@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowCellFilter
 import org.jetbrains.kotlinx.dataframe.columns.depth
 import org.jetbrains.kotlinx.dataframe.columns.name
-import org.jetbrains.kotlinx.dataframe.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.HtmlData
 import org.jetbrains.kotlinx.dataframe.io.toHTML

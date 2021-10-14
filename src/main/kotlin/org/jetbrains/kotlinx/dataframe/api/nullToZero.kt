@@ -4,9 +4,9 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.Columns
-import org.jetbrains.kotlinx.dataframe.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
 import kotlin.reflect.KType

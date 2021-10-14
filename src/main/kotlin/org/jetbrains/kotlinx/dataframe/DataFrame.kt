@@ -2,47 +2,17 @@ package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.GroupByAggregateBody
+import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.EmptyDataFrame
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.toIndices
-
-internal fun <T, C> DataFrame<T>.getColumns(
-    skipMissingColumns: Boolean,
-    selector: ColumnsSelector<T, C>
-): List<DataColumn<C>> = getColumnsWithPaths(
-    if (skipMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail,
-    selector
-).map { it.data }
-
-internal fun <T, C> DataFrame<T>.getColumnsWithPaths(
-    unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
-    selector: ColumnsSelector<T, C>
-): List<ColumnWithPath<C>> = selector.toColumns().resolve(this, unresolvedColumnsPolicy)
-
-public fun <T, C> DataFrame<T>.getColumnsWithPaths(selector: ColumnsSelector<T, C>): List<ColumnWithPath<C>> =
-    getColumnsWithPaths(UnresolvedColumnsPolicy.Fail, selector)
-
-public fun <T, C> DataFrame<T>.getColumnPath(selector: ColumnSelector<T, C>): ColumnPath = getColumnPaths(selector).single()
-
-public fun <T, C> DataFrame<T>.getColumnPaths(selector: ColumnsSelector<T, C>): List<ColumnPath> =
-    selector.toColumns().resolve(this, UnresolvedColumnsPolicy.Fail).map { it.path }
-
-public fun <T, C> DataFrame<T>.column(selector: ColumnSelector<T, C>): DataColumn<C> = get(selector)
-
-public fun <T> DataFrame<T>.col(predicate: ColumnFilter<Any?>): AnyCol = column { single(predicate) }
-
-public fun <T, C> DataFrame<T>.getColumnWithPath(selector: ColumnSelector<T, C>): ColumnWithPath<C> = getColumnsWithPaths(selector).single()
-
-internal fun <T> DataFrame<T>.getColumns(columnNames: List<String>): List<AnyCol> = columnNames.map { this[it] }
+import org.jetbrains.kotlinx.dataframe.impl.getColumns
 
 public interface DataFrame<out T> : Aggregatable<T>, DataFrameBase<T> {
 
@@ -50,18 +20,17 @@ public interface DataFrame<out T> : Aggregatable<T>, DataFrameBase<T> {
         public fun empty(nrow: Int = 0): AnyFrame = EmptyDataFrame<Any?>(nrow)
     }
 
-    public fun indices(): IntRange = 0 until nrow
+    override fun columns(): List<AnyCol>
 
     override fun ncol(): Int = columns().size
+
+    public fun indices(): IntRange = 0 until nrow
 
     public fun <C> values(byRow: Boolean = false, columns: ColumnsSelector<T, C>): Sequence<C>
     public fun values(byRow: Boolean = false): Sequence<Any?> = values(byRow) { all() }
 
     public fun <C> valuesNotNull(byRow: Boolean = false, columns: ColumnsSelector<T, C?>): Sequence<C> = values(byRow, columns).filterNotNull()
     public fun valuesNotNull(byRow: Boolean = false): Sequence<Any> = valuesNotNull(byRow) { all() }
-
-    override fun columns(): List<AnyCol>
-    public fun <C> columns(selector: ColumnsSelector<T, C>): List<DataColumn<C>> = get(selector)
 
     override fun col(columnIndex: Int): DataColumn<*> = columns()[columnIndex]
 
@@ -81,23 +50,20 @@ public interface DataFrame<out T> : Aggregatable<T>, DataFrameBase<T> {
     override operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R> =
         get<DataFrame<R>>(column) as FrameColumn<R>
 
-    override operator fun <C> get(selector: ColumnsSelector<T, C>): List<DataColumn<C>> = getColumns(false, selector)
+    override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = getColumns(false, columns)
 
     public operator fun get(indices: Iterable<Int>): DataFrame<T> = getRows(indices)
     public operator fun get(mask: BooleanArray): DataFrame<T> = getRows(mask)
     public operator fun get(range: IntRange): DataFrame<T> = getRows(range)
     public operator fun get(firstIndex: Int, vararg otherIndices: Int): DataFrame<T> = get(headPlusIterable(firstIndex, otherIndices.asIterable()))
+    public operator fun get(first: Column, vararg other: Column): DataFrame<T> = select(listOf(first) + other)
+    public operator fun get(first: String, vararg other: String): DataFrame<T> = select(listOf(first) + other)
 
     public operator fun plus(col: AnyCol): DataFrame<T> = (columns() + col).toDataFrame()
     public operator fun plus(cols: Iterable<AnyCol>): DataFrame<T> = (columns() + cols).toDataFrame()
     public operator fun plus(stub: AddRowNumberStub): DataFrame<T> = addRowNumber(stub.columnName)
 
-    public fun getRows(indices: Iterable<Int>): DataFrame<T> = columns().map { col -> col.slice(indices) }.toDataFrame()
-    public fun getRows(mask: BooleanArray): DataFrame<T> = getRows(mask.toIndices())
-    public fun getRows(range: IntRange): DataFrame<T> = if (range == indices()) this else columns().map { col -> col.slice(range) }.toDataFrame()
-
     public fun getColumnIndex(name: String): Int
-    public fun getColumnIndex(col: AnyCol): Int = getColumnIndex(col.name())
 
     public fun <R> tryGetColumn(column: ColumnReference<R>): DataColumn<R>? = column.resolveSingle(
         this,
@@ -114,9 +80,6 @@ public interface DataFrame<out T> : Aggregatable<T>, DataFrameBase<T> {
 
     public fun tryGetColumnGroup(name: String): ColumnGroup<*>? = tryGetColumn(name) as? ColumnGroup<*>
 
-    public operator fun get(first: Column, vararg other: Column): DataFrame<T> = select(listOf(first) + other)
-    public operator fun get(first: String, vararg other: String): DataFrame<T> = select(listOf(first) + other)
-
     public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
 
     public fun <R> aggregate(body: GroupByAggregateBody<T, R>): DataRow<T>
@@ -125,8 +88,6 @@ public interface DataFrame<out T> : Aggregatable<T>, DataFrameBase<T> {
 public fun AnyFrame.columnNames(): List<String> = columns().map { it.name() }
 
 public fun AnyFrame.size(): DataFrameSize = DataFrameSize(ncol(), nrow())
-
-public fun AnyFrame.getFrame(path: ColumnPath): AnyFrame = if (path.isNotEmpty()) this[path].asFrame() else this
 
 public fun <T> AnyFrame.typed(): DataFrame<T> = this as DataFrame<T>
 

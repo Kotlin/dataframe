@@ -15,12 +15,6 @@ public interface DataFrameBase<out T> : SingleColumn<DataRow<T>> {
     public fun tryGetColumn(columnName: String): AnyCol?
     public fun tryGetColumn(path: ColumnPath): AnyCol?
 
-    public fun getColumnGroup(columnName: String): ColumnGroup<*> = get(columnName).asGroup()
-    public fun getColumnGroup(columnPath: ColumnPath): ColumnGroup<*> = get(columnPath).asGroup()
-
-    public fun frameColumn(columnName: String): FrameColumn<*> = get(columnName).asTable()
-    public fun frameColumn(columnPath: ColumnPath): FrameColumn<*> = get(columnPath).asTable()
-
     public operator fun <R> get(column: ColumnReference<R>): DataColumn<R>
     public operator fun <R> get(column: ColumnReference<DataRow<R>>): ColumnGroup<R>
     public operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R>
@@ -51,8 +45,6 @@ public interface DataFrameBase<out T> : SingleColumn<DataRow<T>> {
     }
 
     public operator fun get(index: Int): DataRow<T>
-    public fun getOrNull(index: Int): DataRow<T>? = if (index < 0 || index >= nrow()) null else get(index)
-    public fun tryGetColumn(columnIndex: Int): AnyCol? = if (columnIndex in 0 until ncol()) col(columnIndex) else null
     public fun col(columnIndex: Int): AnyCol
     public fun columns(): List<AnyCol>
     public fun ncol(): Int
@@ -60,3 +52,15 @@ public interface DataFrameBase<out T> : SingleColumn<DataRow<T>> {
     public fun rows(): Iterable<DataRow<T>>
     public fun rowsReversed(): Iterable<DataRow<T>>
 }
+
+public fun <T> DataFrameBase<T>.frameColumn(columnPath: ColumnPath): FrameColumn<*> = get(columnPath).asTable()
+
+public fun <T> DataFrameBase<T>.frameColumn(columnName: String): FrameColumn<*> = get(columnName).asTable()
+
+public fun <T> DataFrameBase<T>.tryGetColumn(columnIndex: Int): AnyCol? = if (columnIndex in 0 until ncol()) col(columnIndex) else null
+
+public fun <T> DataFrameBase<T>.getOrNull(index: Int): DataRow<T>? = if (index < 0 || index >= nrow()) null else get(index)
+
+public fun <T> DataFrameBase<T>.getColumnGroup(columnPath: ColumnPath): ColumnGroup<*> = get(columnPath).asGroup()
+
+public fun <T> DataFrameBase<T>.getColumnGroup(columnName: String): ColumnGroup<*> = get(columnName).asGroup()

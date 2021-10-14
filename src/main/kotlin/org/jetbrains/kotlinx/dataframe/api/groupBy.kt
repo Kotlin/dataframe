@@ -28,7 +28,7 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupedDataFrame
 public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupedDataFrame<T, T> = groupBy { cols.toColumns() }
 public fun <T> DataFrame<T>.groupBy(vararg cols: Column): GroupedDataFrame<T, T> = groupBy { cols.toColumns() }
 public fun <T> DataFrame<T>.groupBy(cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T> {
-    val nameGenerator = nameGenerator(org.jetbrains.kotlinx.dataframe.GroupedDataFrame.columnForGroupedData.name())
+    val nameGenerator = nameGenerator(GroupedDataFrame.columnForGroupedData.name())
     val keyColumns = get(cols).map {
         val currentName = it.name()
         val uniqueName = nameGenerator.addUnique(currentName)
@@ -59,7 +59,7 @@ public fun <T> DataFrame<T>.groupBy(cols: ColumnsSelector<T, *>): GroupedDataFra
         start
     }
 
-    val groupedColumn = DataColumn.create(org.jetbrains.kotlinx.dataframe.GroupedDataFrame.columnForGroupedData.name(), sorted, startIndices, false)
+    val groupedColumn = DataColumn.create(GroupedDataFrame.columnForGroupedData.name(), sorted, startIndices, false)
 
     val df = keyColumnsDf + groupedColumn
     return GroupedDataFrameImpl(df, groupedColumn, cols)
