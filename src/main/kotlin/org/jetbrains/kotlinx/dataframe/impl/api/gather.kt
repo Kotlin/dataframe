@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.isGroup
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.to
@@ -16,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnMany
 import org.jetbrains.kotlinx.dataframe.impl.columns.isTable
-import org.jetbrains.kotlinx.dataframe.isGroup
 import org.jetbrains.kotlinx.dataframe.toMany
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure

@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
-import org.jetbrains.kotlinx.dataframe.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 
 internal class ColumnWithPathImpl<T> internal constructor(

@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
-import org.jetbrains.kotlinx.dataframe.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import java.io.IOException
 import java.io.InputStream
 import java.net.URL

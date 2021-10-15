@@ -15,12 +15,7 @@ import org.jetbrains.kotlinx.dataframe.RowColumnSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.createStarProjectedType
-import org.jetbrains.kotlinx.dataframe.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.emptyMany
-import org.jetbrains.kotlinx.dataframe.getColumnGroup
-import org.jetbrains.kotlinx.dataframe.getType
-import org.jetbrains.kotlinx.dataframe.headPlusArray
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.defaultTimeZone
@@ -36,9 +31,12 @@ import org.jetbrains.kotlinx.dataframe.impl.api.with
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.typed
+import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
+import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
+import org.jetbrains.kotlinx.dataframe.impl.getType
+import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
-import org.jetbrains.kotlinx.dataframe.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.pathOf
 import org.jetbrains.kotlinx.dataframe.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.toMany

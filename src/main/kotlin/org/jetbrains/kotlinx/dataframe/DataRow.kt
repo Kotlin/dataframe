@@ -1,10 +1,8 @@
 package org.jetbrains.kotlinx.dataframe
 
-import org.jetbrains.kotlinx.dataframe.api.NamedValue
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.shortPath
+import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.impl.toIterable
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
@@ -99,28 +97,12 @@ public interface DataRow<out T> : DataRowBase<T> {
     public infix fun <R> KProperty1<*, R>.neq(a: R?): Boolean = get(this) != a
 }
 
-internal val AnyRow.values get() = values()
-internal val <T> DataRow<T>.owner: DataFrame<T> get() = df()
-
-public val AnyRow.index: Int
-    @JvmName("getRowIndex")
-    get() = index()
+public val AnyRow.values: List<Any?> get() = values()
+public val AnyRow.index: Int get() = index()
 public val <T> DataRow<T>.prev: DataRow<T>? get() = prev()
 public val <T> DataRow<T>.next: DataRow<T>? get() = next()
 
-public typealias Selector<T, R> = T.(T) -> R
-public typealias RowSelector<T, R> = DataRow<T>.(DataRow<T>) -> R
-public typealias RowFilter<T> = RowSelector<T, Boolean>
-public typealias ColumnFilter<T> = (ColumnWithPath<T>) -> Boolean
-public typealias VectorizedRowFilter<T> = Selector<DataFrameBase<T>, BooleanArray>
-public typealias RowCellSelector<T, C, R> = DataRow<T>.(C) -> R
-public typealias RowCellFilter<T, C> = RowCellSelector<T, C, Boolean>
-public typealias RowColumnSelector<T, C, R> = (DataRow<T>, DataColumn<C>) -> R
-
-internal fun AnyRow.namedValues(): Sequence<NamedValue> = owner.columns().asSequence().map {
-    NamedValue.create(it.shortPath(), it[index], it.type(), it.defaultValue(), guessType = false)
-}
-
+// TODO: remove
 public operator fun Any?.get(column: String): Any? = when (this) {
     is AnyRow -> get(column)
     is AnyCol -> get(column)

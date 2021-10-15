@@ -1,45 +1,38 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.ColumnPosition
-import org.jetbrains.kotlinx.dataframe.ColumnResolutionContext
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.UnresolvedColumnsPolicy
-import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
-import org.jetbrains.kotlinx.dataframe.asNullable
-import org.jetbrains.kotlinx.dataframe.collectTree
+import org.jetbrains.kotlinx.dataframe.DataRowBase
+import org.jetbrains.kotlinx.dataframe.api.isGroup
+import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.values
-import org.jetbrains.kotlinx.dataframe.getType
-import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
-import org.jetbrains.kotlinx.dataframe.impl.TreeNode
-import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.asNullable
+import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
+import org.jetbrains.kotlinx.dataframe.impl.columns.tree.TreeNode
+import org.jetbrains.kotlinx.dataframe.impl.columns.tree.collectTree
+import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
+import org.jetbrains.kotlinx.dataframe.impl.columns.tree.put
+import org.jetbrains.kotlinx.dataframe.impl.columns.tree.topDfs
 import org.jetbrains.kotlinx.dataframe.impl.equalsByElement
-import org.jetbrains.kotlinx.dataframe.impl.getOrPut
-import org.jetbrains.kotlinx.dataframe.impl.put
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.rollingHash
-import org.jetbrains.kotlinx.dataframe.impl.topDfs
-import org.jetbrains.kotlinx.dataframe.isGroup
 import org.jetbrains.kotlinx.dataframe.pathOf
-import org.jetbrains.kotlinx.dataframe.toColumnAccessor
-import org.jetbrains.kotlinx.dataframe.toColumnOf
-import org.jetbrains.kotlinx.dataframe.toColumns
 import org.jetbrains.kotlinx.dataframe.type
-import org.jetbrains.kotlinx.dataframe.typed
-import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 
 internal fun <T> BaseColumn<T>.checkEquals(other: Any?): Boolean {
@@ -94,7 +87,7 @@ internal fun AnyCol.asTable(): FrameColumnInternal<*> = this as FrameColumnInter
 
 @JvmName("asTableT")
 internal fun <T> DataColumn<DataFrame<T>?>.asTable(): FrameColumn<T> = this as FrameColumnInternal<T>
-internal fun AnyCol.isTable(): Boolean = kind() == org.jetbrains.kotlinx.dataframe.ColumnKind.Frame
+internal fun AnyCol.isTable(): Boolean = kind() == ColumnKind.Frame
 internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
     if (!type.isSubtypeOf(getType<Comparable<*>?>())) {
         throw RuntimeException("Column '$name' has type '$type' that is not Comparable")
@@ -119,29 +112,6 @@ internal fun <T> Columns<T>.single() = object : SingleColumn<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? {
         return this@single.resolve(context).singleOrNull()
     }
-}
-
-internal fun Array<out Columns<*>>.toColumns(): Columns<Any?> = ColumnsList(this.asList())
-internal fun Array<out String>.toColumns(): Columns<Any?> = map { it.toColumnAccessor() }.toColumnSet()
-internal fun <C> Array<out String>.toColumnsOf(): Columns<C> = toColumns() as Columns<C>
-internal fun Array<out String>.toComparableColumns() = toColumnsOf<Comparable<Any?>>()
-internal fun String.toComparableColumn() = toColumnOf<Comparable<Any?>>()
-internal fun Array<out String>.toNumberColumns() = toColumnsOf<Number>()
-internal fun Array<out ColumnPath>.toColumns(): Columns<Any?> = map { it.toColumnAccessor() }.toColumnSet()
-internal fun <C> Iterable<Columns<C>>.toColumnSet(): Columns<C> = ColumnsList(asList())
-
-@JvmName("toColumnSetC")
-internal fun <C> Iterable<ColumnReference<C>>.toColumnSet(): Columns<C> = ColumnsList(toList())
-
-@PublishedApi
-internal fun <C> Array<out KProperty<C>>.toColumns(): Columns<C> = map { it.toColumnAccessor() }.toColumnSet()
-
-@PublishedApi
-internal fun <T> Array<out ColumnReference<T>>.toColumns(): Columns<T> = asIterable().toColumnSet()
-internal fun Iterable<String>.toColumns() = map { it.toColumnAccessor() }.toColumnSet()
-
-internal fun <T, C> ColumnsSelector<T, C>.toColumns(): Columns<C> = toColumns {
-    object : DataFrameReceiver<T>(it.df.typed(), it.allowMissingColumns), ColumnSelectionDsl<T> { }
 }
 
 internal fun <C> DataFrameBase<*>.getColumn(name: String, policy: UnresolvedColumnsPolicy) =
@@ -184,3 +154,16 @@ internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWi
     val dfs = fullTree.topDfs { it.data != null }
     return dfs.map { it.data!!.addPath(it.pathFromRoot(), df) }
 }
+
+@PublishedApi
+internal fun KType.toColumnKind(): ColumnKind = when {
+    isSubtypeOf(getType<DataFrameBase<*>?>()) -> ColumnKind.Frame
+    isSubtypeOf(getType<DataRowBase<*>?>()) -> ColumnKind.Group
+    else -> ColumnKind.Value
+}
+
+internal fun <C> Columns<C>.resolve(df: DataFrame<*>, unresolvedColumnsPolicy: UnresolvedColumnsPolicy) =
+    resolve(ColumnResolutionContext(df, unresolvedColumnsPolicy))
+
+internal fun <C> SingleColumn<C>.resolveSingle(df: DataFrame<*>, unresolvedColumnsPolicy: UnresolvedColumnsPolicy) =
+    resolveSingle(ColumnResolutionContext(df, unresolvedColumnsPolicy))

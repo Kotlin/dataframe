@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
-import org.jetbrains.kotlinx.dataframe.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.needsQuoting
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 

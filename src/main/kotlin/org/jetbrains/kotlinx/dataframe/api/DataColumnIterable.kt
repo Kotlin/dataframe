@@ -2,14 +2,13 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
-import org.jetbrains.kotlinx.dataframe.isMatching
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.reflect.KType
 
 public fun <T> DataColumn<T>.asIterable(): Iterable<T> = values()
@@ -36,9 +35,23 @@ public fun <T, R> DataColumn<T>.map(transform: (T) -> R): DataColumn<R> {
     return collector.toColumn(name).typed()
 }
 
+public inline fun <T, reified R> DataColumn<T>.mapInline(crossinline transform: (T) -> R): DataColumn<R> {
+    val newValues = Array(size()) { transform(get(it)) }.asList()
+    return guessColumnType(name, newValues, suggestedType = getType<R>(), suggestedTypeIsUpperBound = false) as DataColumn<R>
+}
+
 public fun <T, R> DataColumn<T>.map(type: KType?, transform: (T) -> R): DataColumn<R> {
     if (type == null) return map(transform)
     val collector = createDataCollector<R>(size, type)
     values.forEach { collector.add(transform(it)) }
     return collector.toColumn(name) as DataColumn<R>
 }
+
+public fun <T> DataColumn<T>.first(): T = get(0)
+public fun <T> DataColumn<T>.firstOrNull(): T? = if (size > 0) first() else null
+public fun <T> DataColumn<T>.first(predicate: (T) -> Boolean): T = values.first(predicate)
+public fun <T> DataColumn<T>.firstOrNull(predicate: (T) -> Boolean): T? = values.firstOrNull(predicate)
+public fun <T> DataColumn<T>.last(): T = get(size - 1)
+public fun <T> DataColumn<T>.lastOrNull(): T? = if (size > 0) last() else null
+public fun <C> DataColumn<C>.allNulls(): Boolean = size == 0 || all { it == null }
+public fun <C> DataColumn<C>.single(): C = values.single()

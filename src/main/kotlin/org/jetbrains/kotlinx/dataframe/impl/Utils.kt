@@ -3,18 +3,23 @@ package org.jetbrains.kotlinx.dataframe.impl
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.commonParents
-import org.jetbrains.kotlinx.dataframe.createType
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
+import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.resolve
+import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.toMany
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.starProjectedType
+import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 internal infix fun <T> (Predicate<T>).and(other: Predicate<T>): Predicate<T> = { this(it) && other(it) }
 
@@ -169,3 +174,38 @@ internal fun <C : Comparable<C>> Sequence<C?>.indexOfMax(): Int {
     } while (iterator.hasNext())
     return maxIndex
 }
+
+@OptIn(ExperimentalStdlibApi::class)
+@PublishedApi
+internal inline fun <reified T> getType(): KType = typeOf<T>()
+internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType =
+    this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
+
+internal fun KType.isSubtypeWithNullabilityOf(type: KType) = this.isSubtypeOf(type) && (!this.isMarkedNullable || type.isMarkedNullable)
+public inline fun <reified C> headPlusArray(head: C, cols: Array<out C>): Array<C> =
+    (listOf(head) + cols.toList()).toTypedArray()
+
+public inline fun <reified C> headPlusIterable(head: C, cols: Iterable<C>): Iterable<C> =
+    (listOf(head) + cols.asIterable())
+
+internal fun <T> DataFrame<T>.splitByIndices(
+    startIndices: Sequence<Int>,
+    emptyToNull: Boolean
+): Sequence<DataFrame<T>?> {
+    return (startIndices + nrow).zipWithNext { start, endExclusive ->
+        if (emptyToNull && start == endExclusive) null
+        else get(start until endExclusive)
+    }
+}
+
+internal fun <T> List<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<Many<T>> {
+    return (startIndices + size).zipWithNext { start, endExclusive ->
+        subList(start, endExclusive).toMany()
+    }
+}
+
+internal fun <T> T.asNullable() = this as T?
+internal fun <T> List<T>.last(count: Int) = subList(size - count, size)
+public fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries: Boolean = true): Boolean =
+    if (includeBoundaries) this in left..right
+    else this > left && this < right

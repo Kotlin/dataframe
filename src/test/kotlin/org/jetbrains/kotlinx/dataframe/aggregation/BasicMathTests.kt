@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.aggregation
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.columnOf
-import org.jetbrains.kotlinx.dataframe.getType
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
 
 class BasicMathTests {

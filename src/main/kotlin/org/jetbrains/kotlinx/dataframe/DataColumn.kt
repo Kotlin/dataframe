@@ -1,9 +1,8 @@
 package org.jetbrains.kotlinx.dataframe
 
-import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
@@ -12,12 +11,12 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.FrameColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
-import org.jetbrains.kotlinx.dataframe.impl.commonType
+import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.withNullability
 
 /**
@@ -77,112 +76,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
     public operator fun iterator(): Iterator<T> = values().iterator()
 }
 
-public typealias DoubleCol = DataColumn<Double?>
-public typealias BooleanCol = DataColumn<Boolean?>
-public typealias IntCol = DataColumn<Int?>
-public typealias NumberCol = DataColumn<Number?>
-public typealias StringCol = DataColumn<String?>
-public typealias AnyCol = DataColumn<*>
-
 internal val AnyCol.type get() = type()
 internal val AnyCol.kind get() = kind()
 internal val AnyCol.hasNulls get() = hasNulls()
 internal val AnyCol.typeClass get() = type.classifier as KClass<*>
-
-internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null): KType {
-    val classes = mutableSetOf<KClass<*>>()
-    var hasNulls = false
-    var hasFrames = false
-    var hasRows = false
-    var hasMany = false
-    val classesInMany = mutableSetOf<KClass<*>>()
-    var nullsInMany = false
-    values.forEach {
-        when (it) {
-            null -> hasNulls = true
-            is AnyRow -> hasRows = true
-            is AnyFrame -> hasFrames = true
-            is Many<*> -> {
-                hasMany = true
-                it.forEach {
-                    if (it == null) nullsInMany = true
-                    else classesInMany.add(it.javaClass.kotlin)
-                }
-            }
-            else -> classes.add(it.javaClass.kotlin)
-        }
-    }
-    val allManyWithRows = classesInMany.isNotEmpty() && classesInMany.all { it.isSubclassOf(DataRow::class) } && !nullsInMany
-    return when {
-        classes.isNotEmpty() -> {
-            if (hasRows) classes.add(DataRow::class)
-            if (hasFrames) classes.add(DataFrame::class)
-            if (hasMany) {
-                if (classesInMany.isNotEmpty()) {
-                    val typeInLists = classesInMany.commonType(nullsInMany, upperBound)
-                    val typeOfOthers = classes.commonType(nullsInMany, upperBound)
-                    if (typeInLists == typeOfOthers) {
-                        return Many::class.createTypeWithArgument(typeInLists, false)
-                    }
-                }
-                classes.add(Many::class)
-            }
-            return classes.commonType(hasNulls, upperBound)
-        }
-        (hasFrames && (!hasMany || allManyWithRows)) || (!hasFrames && allManyWithRows) -> DataFrame::class.createStarProjectedType(hasNulls)
-        hasRows && !hasFrames && !hasMany -> DataRow::class.createStarProjectedType(false)
-        hasMany && !hasFrames && !hasRows -> Many::class.createTypeWithArgument(classesInMany.commonType(nullsInMany, upperBound))
-        else -> {
-            if (hasRows) classes.add(DataRow::class)
-            if (hasFrames) classes.add(DataFrame::class)
-            if (hasMany) classes.add(Many::class)
-            return classes.commonType(hasNulls, upperBound)
-        }
-    }
-}
-
-internal fun guessColumnType(name: String, values: List<Any?>) = guessColumnType(name, values, null)
-
-internal fun guessColumnType(
-    name: String,
-    values: List<Any?>,
-    suggestedType: KType? = null,
-    suggestedTypeIsUpperBound: Boolean = false,
-    defaultValue: Any? = null
-): AnyCol {
-    val type = when {
-        suggestedType == null || suggestedTypeIsUpperBound -> guessValueType(values.asSequence(), suggestedType)
-        else -> suggestedType
-    }
-
-    return when (type.classifier!! as KClass<*>) {
-        DataRow::class -> {
-            val df = values.map { (it as AnyRow).toDataFrame() }.concat()
-            DataColumn.create(name, df) as AnyCol
-        }
-        DataFrame::class -> {
-            val frames = values.map {
-                when (it) {
-                    null -> null
-                    is AnyFrame -> it
-                    is AnyRow -> it.toDataFrame()
-                    is List<*> -> (it as List<AnyRow>).toDataFrame()
-                    else -> throw IllegalStateException()
-                }
-            }
-            DataColumn.create(name, frames, type.isMarkedNullable)
-        }
-        Many::class -> {
-            val nullable = type.isMarkedNullable
-            val lists = values.map {
-                when (it) {
-                    null -> if (nullable) null else emptyMany()
-                    is Many<*> -> it
-                    else -> manyOf(it)
-                }
-            }
-            DataColumn.create(name, lists, type, defaultValue)
-        }
-        else -> DataColumn.create(name, values, type, defaultValue)
-    }
-}

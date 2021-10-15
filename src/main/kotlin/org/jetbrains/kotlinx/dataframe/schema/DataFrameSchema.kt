@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.schema
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.ColumnKind
-import org.jetbrains.kotlinx.dataframe.baseType
-import org.jetbrains.kotlinx.dataframe.getType
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.impl.baseType
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.reflect.full.withNullability
 
 public class DataFrameSchema(public val columns: Map<String, ColumnSchema>) {

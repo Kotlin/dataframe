@@ -7,14 +7,20 @@ import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.UnresolvedColumnsPolicy
+import org.jetbrains.kotlinx.dataframe.DataFrameBase
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.asFrame
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
+import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.asTable
+import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.impl.toIndices
-import org.jetbrains.kotlinx.dataframe.resolve
 
 public fun <T, C> DataFrame<T>.getColumnsWithPaths(selector: ColumnsSelector<T, C>): List<ColumnWithPath<C>> =
     getColumnsWithPaths(UnresolvedColumnsPolicy.Fail, selector)
@@ -32,3 +38,10 @@ public fun <T> DataFrame<T>.getColumnIndex(col: AnyCol): Int = getColumnIndex(co
 public fun <T> DataFrame<T>.getRows(range: IntRange): DataFrame<T> = if (range == indices()) this else columns().map { col -> col.slice(range) }.toDataFrame()
 public fun <T> DataFrame<T>.getRows(mask: BooleanArray): DataFrame<T> = getRows(mask.toIndices())
 public fun <T> DataFrame<T>.getRows(indices: Iterable<Int>): DataFrame<T> = columns().map { col -> col.slice(indices) }.toDataFrame()
+
+public fun <T> DataFrameBase<T>.frameColumn(columnPath: ColumnPath): FrameColumn<*> = get(columnPath).asTable()
+public fun <T> DataFrameBase<T>.frameColumn(columnName: String): FrameColumn<*> = get(columnName).asTable()
+public fun <T> DataFrameBase<T>.tryGetColumn(columnIndex: Int): AnyCol? = if (columnIndex in 0 until ncol()) col(columnIndex) else null
+public fun <T> DataFrameBase<T>.getOrNull(index: Int): DataRow<T>? = if (index < 0 || index >= nrow()) null else get(index)
+public fun <T> DataFrameBase<T>.getColumnGroup(columnPath: ColumnPath): ColumnGroup<*> = get(columnPath).asGroup()
+public fun <T> DataFrameBase<T>.getColumnGroup(columnName: String): ColumnGroup<*> = get(columnName).asGroup()

@@ -3,10 +3,9 @@ package org.jetbrains.kotlinx.dataframe.columns
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyColumn
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.ColumnKind
-import org.jetbrains.kotlinx.dataframe.headPlusIterable
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
+import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
 import kotlin.reflect.KProperty
 
 /**
@@ -51,6 +50,6 @@ public interface BaseColumn<out T> : TypedColumn<T> {
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): BaseColumn<T> = (this as DataColumnInternal<*>).rename(property.name).forceResolve() as BaseColumn<T>
 }
 
-internal val <T> BaseColumn<T>.values get() = values()
+internal val <T> BaseColumn<T>.values: Iterable<T> get() = values()
 internal val AnyColumn.ndistinct get() = ndistinct()
-internal val AnyColumn.size get() = size()
+internal val AnyColumn.size: Int get() = size()

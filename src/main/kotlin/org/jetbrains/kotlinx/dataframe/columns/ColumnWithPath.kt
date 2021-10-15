@@ -2,12 +2,12 @@ package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
+import org.jetbrains.kotlinx.dataframe.api.isGroup
+import org.jetbrains.kotlinx.dataframe.api.tryGetColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.addParentPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.depth
-import org.jetbrains.kotlinx.dataframe.isGroup
-import org.jetbrains.kotlinx.dataframe.tryGetColumn
 
 public interface ColumnWithPath<out T> : DataColumn<T> {
 

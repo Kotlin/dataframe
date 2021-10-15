@@ -2,8 +2,8 @@ package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.ColumnKind
 import org.jetbrains.kotlinx.dataframe.Many
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asTable
@@ -82,7 +82,7 @@ internal fun renderType(column: AnyCol) =
     }
 
 internal fun AnyCol.renderShort() = when (kind()) {
-    org.jetbrains.kotlinx.dataframe.ColumnKind.Value -> "ValueColumn<${renderType(type)}>: $size entries".escapeHTML()
-    org.jetbrains.kotlinx.dataframe.ColumnKind.Frame -> "FrameColumn: $size entries"
-    org.jetbrains.kotlinx.dataframe.ColumnKind.Group -> "ColumnGroup ${asGroup().df.size}}"
+    ColumnKind.Value -> "ValueColumn<${renderType(type)}>: $size entries".escapeHTML()
+    ColumnKind.Frame -> "FrameColumn: $size entries"
+    ColumnKind.Group -> "ColumnGroup ${asGroup().df.size}}"
 }

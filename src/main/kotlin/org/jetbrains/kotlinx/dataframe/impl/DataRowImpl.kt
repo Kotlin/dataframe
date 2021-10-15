@@ -1,8 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.NamedValue
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.shortPath
+import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 
 internal open class DataRowImpl<T>(private val index: Int, val owner: DataFrame<T>) : DataRow<T> {
@@ -56,4 +60,9 @@ internal open class DataRowImpl<T>(private val index: Int, val owner: DataFrame<
     override fun next(): DataRow<T>? {
         return if (index < owner.nrow() - 1) owner[index + 1] else null
     }
+}
+
+internal val <T> DataRow<T>.owner: DataFrame<T> get() = df()
+internal fun AnyRow.namedValues(): Sequence<NamedValue> = owner.columns().asSequence().map {
+    NamedValue.create(it.shortPath(), it[index], it.type(), it.defaultValue(), guessType = false)
 }

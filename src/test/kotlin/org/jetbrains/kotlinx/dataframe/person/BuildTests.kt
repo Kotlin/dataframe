@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrameByProperties
 import org.jetbrains.kotlinx.dataframe.column
-import org.jetbrains.kotlinx.dataframe.getType
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
 
 class BuildTests {

@@ -5,12 +5,8 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.RowSelector
-import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateColumnsSelector
-import org.jetbrains.kotlinx.dataframe.aggregation.PivotAggregateBody
-import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.getType
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.columnValues
@@ -26,16 +22,8 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnsOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.reflect.KProperty
-
-public interface GroupedPivot<out T> : Aggregatable<T> {
-
-    public fun <R> aggregate(separate: Boolean = false, body: PivotAggregateBody<T, R>): DataFrame<T>
-
-    public fun separateAggregatedValues(flag: Boolean = true): GroupedPivot<T>
-    public fun default(value: Any?): GroupedPivot<T>
-    public fun withGrouping(groupPath: ColumnPath): GroupedPivot<T>
-}
 
 public fun <T> GroupedPivot<T>.count(predicate: RowFilter<T>? = null): DataFrame<T> = aggregate { count(predicate) default 0 }
 

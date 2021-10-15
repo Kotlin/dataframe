@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.getType
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import java.math.BigDecimal
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability

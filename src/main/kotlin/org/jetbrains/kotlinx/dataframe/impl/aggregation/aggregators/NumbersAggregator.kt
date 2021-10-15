@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.commonNumberClass
+import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import kotlin.reflect.KType
 
 internal class NumbersAggregator<C : Number>(name: String, aggregate: (Iterable<C>, KType) -> C?) :

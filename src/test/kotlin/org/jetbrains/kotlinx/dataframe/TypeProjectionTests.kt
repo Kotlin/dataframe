@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupWithParent
 import org.jetbrains.kotlinx.dataframe.impl.createTypeUsing
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
 
 class TypeProjectionTests {

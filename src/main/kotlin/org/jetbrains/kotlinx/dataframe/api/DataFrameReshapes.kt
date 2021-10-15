@@ -4,26 +4,25 @@ import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.MapColumnReference
-import org.jetbrains.kotlinx.dataframe.PivotedDataFrame
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateReceiver
 import org.jetbrains.kotlinx.dataframe.aggregation.GroupByReceiver
 import org.jetbrains.kotlinx.dataframe.aggregation.PivotReceiver
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.getType
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.DataFramePivotImpl
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotedDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.ValueWithDefault
 import org.jetbrains.kotlinx.dataframe.impl.api.gatherImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.toColumnPath
 import org.jetbrains.kotlinx.dataframe.pathOf
 import kotlin.reflect.KType
 
 // region pivot
 
-public fun <T> DataFrame<T>.pivot(columns: ColumnsSelector<T, *>): PivotedDataFrame<T> = DataFramePivotImpl(this, columns)
+public fun <T> DataFrame<T>.pivot(columns: ColumnsSelector<T, *>): PivotedDataFrame<T> = PivotedDataFrameImpl(this, columns)
 public fun <T> DataFrame<T>.pivot(vararg columns: String): PivotedDataFrame<T> = pivot { columns.toColumns() }
 public fun <T> DataFrame<T>.pivot(vararg columns: Column): PivotedDataFrame<T> = pivot { columns.toColumns() }
 
