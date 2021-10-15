@@ -13,7 +13,9 @@ import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
+import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.io.HtmlData
 import org.jetbrains.kotlinx.dataframe.io.initHtml
 import org.jetbrains.kotlinx.dataframe.io.toHTML
