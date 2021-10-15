@@ -93,6 +93,11 @@ task detectVersionForTC {
 }
 
 version detectVersion()
+def v = version
+
+subprojects {
+    version = v
+}
 
 kotlinPublications {
     sonatypeSettings(

@@ -105,6 +105,7 @@ val integrationTestConfiguration by configurations.creating {
 
 val integrationTestTask = task<Test>("integrationTest") {
     dependsOn(":plugins:symbol-processor:publishToMavenLocal")
+    dependsOn(":publishApiPublicationToMavenLocal")
     description = "Runs integration tests."
     group = "verification"
 

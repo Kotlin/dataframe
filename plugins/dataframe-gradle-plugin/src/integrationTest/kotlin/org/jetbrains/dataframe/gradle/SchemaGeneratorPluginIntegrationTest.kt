@@ -35,11 +35,12 @@ class SchemaGeneratorPluginIntegrationTest {
                 
             plugins {
                 kotlin("jvm") version "1.4.10"
-                id("org.jetbrains.kotlin.plugin.dataframe-base")
+                id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
             repositories {
                 mavenCentral() 
+                mavenLocal()
             }
             
             dependencies {
@@ -75,11 +76,12 @@ class SchemaGeneratorPluginIntegrationTest {
                     
                 plugins {
                     kotlin("jvm") version "1.4.10"
-                    id("org.jetbrains.kotlin.plugin.dataframe-base")
+                    id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
                 repositories {
                     mavenCentral() 
+                    mavenLocal()
                 }
                 
                 dependencies {
@@ -109,11 +111,12 @@ class SchemaGeneratorPluginIntegrationTest {
                     
                 plugins {
                     kotlin("jvm") version "1.4.10"
-                    id("org.jetbrains.kotlin.plugin.dataframe-base")
+                    id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
                 repositories {
                     mavenCentral() 
+                    mavenLocal()
                 }
                 
                 dependencies {
@@ -193,11 +196,12 @@ class SchemaGeneratorPluginIntegrationTest {
                     
                 plugins {
                     kotlin("multiplatform") version "1.4.10"
-                    id("org.jetbrains.kotlin.plugin.dataframe-base")
+                    id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
                 repositories {
                     mavenCentral() 
+                    mavenLocal()
                 }
                 
                 kotlin {
@@ -403,11 +407,12 @@ class SchemaGeneratorPluginIntegrationTest {
                     
                 plugins {
                     kotlin("jvm") version "1.4.10"
-                    id("org.jetbrains.kotlin.plugin.dataframe-base")
+                    id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
                 repositories {
                     mavenCentral() 
+                    mavenLocal()
                 }
                 
                 dependencies {
@@ -426,5 +431,95 @@ class SchemaGeneratorPluginIntegrationTest {
             """.trimIndent()
         }
         result.task(":generateDataFrameData")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
+    fun `plugin doesn't break multiplatform build without JVM`() {
+        val (_, result) = runGradleBuild(":build") { buildDir ->
+            val dataFile = File(buildDir, TestData.csvName)
+            val kotlin = File(buildDir, "src/jsMain/kotlin").also { it.mkdirs() }
+            val main = File(kotlin, "Main.kt")
+            main.writeText("""
+                fun main() {
+                    console.log("Hello, Kotlin/JS!")
+                }
+            """.trimIndent())
+            dataFile.writeText(TestData.csvSample)
+            """
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                    
+                plugins {
+                    kotlin("multiplatform") version "1.4.10"
+                    id("org.jetbrains.kotlin.plugin.dataframe")
+                }
+                
+                repositories {
+                    mavenCentral()
+                    mavenLocal()
+                }
+                
+                kotlin {
+                    sourceSets {
+                        js {
+                            browser()
+                        }
+                    }
+                }
+                
+                dataframes {
+                    schema {
+                        data = file("${TestData.csvName}")
+                        name = "Schema"
+                        packageName = ""
+                        src = buildDir
+                    }
+                }
+            """.trimIndent()
+        }
+        result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
+    fun `plugin doesn't break multiplatform build with JVM`() {
+        val (_, result) = runGradleBuild(":build") { buildDir ->
+            val dataFile = File(buildDir, TestData.csvName)
+            val kotlin = File(buildDir, "src/jvmMain/kotlin").also { it.mkdirs() }
+            val main = File(kotlin, "Main.kt")
+            main.writeText("""
+                fun main() {
+                    println("Hello, Kotlin/JVM!")
+                }
+            """.trimIndent())
+            dataFile.writeText(TestData.csvSample)
+            """
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                    
+                plugins {
+                    kotlin("multiplatform") version "1.5.21"
+                    id("org.jetbrains.kotlin.plugin.dataframe")
+                }
+                
+                repositories {
+                    mavenCentral()
+                    mavenLocal()
+                }
+                
+                kotlin {
+                    sourceSets {
+                        jvm()
+                    }
+                }
+                
+                dataframes {
+                    schema {
+                        data = file("${TestData.csvName}")
+                        name = "Schema"
+                        packageName = ""
+                        src = buildDir
+                    }
+                }
+            """.trimIndent()
+        }
+        result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 }
