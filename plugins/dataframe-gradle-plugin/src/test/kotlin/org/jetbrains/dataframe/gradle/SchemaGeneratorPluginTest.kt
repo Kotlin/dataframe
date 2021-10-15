@@ -28,7 +28,7 @@ internal class SchemaGeneratorPluginTes {
                 
             plugins {
                 kotlin("jvm") version "1.4.10"
-                id("org.jetbrains.kotlin.plugin.dataframe-base")
+                id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
             repositories {
@@ -56,7 +56,7 @@ internal class SchemaGeneratorPluginTes {
                 
             plugins {
                 kotlin("jvm") version "1.4.10"
-                id("org.jetbrains.kotlin.plugin.dataframe-base")
+                id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
             repositories {
@@ -86,7 +86,7 @@ internal class SchemaGeneratorPluginTes {
                     
                 plugins {
                     id "org.jetbrains.kotlin.jvm" version "1.4.10"
-                    id "org.jetbrains.kotlin.plugin.dataframe-base"
+                    id "org.jetbrains.kotlin.plugin.dataframe"
                 }
                 
                 repositories {
@@ -116,7 +116,7 @@ internal class SchemaGeneratorPluginTes {
                 
             plugins {
                 kotlin("jvm") version "1.4.10"
-                id("org.jetbrains.kotlin.plugin.dataframe-base")
+                id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
             repositories {
@@ -149,7 +149,7 @@ internal class SchemaGeneratorPluginTes {
                
             plugins {
                 kotlin("jvm") version "1.4.10"
-                id("org.jetbrains.kotlin.plugin.dataframe-base")
+                id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
             repositories {
@@ -173,53 +173,6 @@ internal class SchemaGeneratorPluginTes {
         result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
         result.task(":generateDataFrameSchema")?.outcome shouldBe TaskOutcome.SUCCESS
     }
-
-
-    @Test
-    fun `plugin doesn't break multiplatform build without JVM`() {
-        val (_, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, TestData.csvName)
-            val kotlin = File(buildDir, "src/jsMain/kotlin").also { it.mkdirs() }
-            val main = File(kotlin, "Main.kt")
-            main.writeText("""
-                fun main() {
-                    console.log("Hello, Kotlin/JS!")
-                }
-            """.trimIndent())
-            dataFile.writeText(TestData.csvSample)
-            """
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    kotlin("multiplatform") version "1.4.10"
-                    id("org.jetbrains.kotlin.plugin.dataframe-base")
-                }
-                
-                repositories {
-                    mavenCentral() 
-                }
-                
-                kotlin {
-                    sourceSets {
-                        js {
-                            browser()
-                        }
-                    }
-                }
-                
-                dataframes {
-                    schema {
-                        data = file("${TestData.csvName}")
-                        name = "Schema"
-                        packageName = ""
-                        src = buildDir
-                    }
-                }
-            """.trimIndent()
-        }
-        result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
-    }
-
 
     @Test
     fun `most specific sourceSet is used in the packageName inference`() {
