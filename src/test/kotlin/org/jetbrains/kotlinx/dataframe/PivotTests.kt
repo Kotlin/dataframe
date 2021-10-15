@@ -2,9 +2,13 @@ package org.jetbrains.kotlinx.dataframe
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.columns
+import org.jetbrains.kotlinx.dataframe.api.first
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.last
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.values
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
 
 class PivotTests {

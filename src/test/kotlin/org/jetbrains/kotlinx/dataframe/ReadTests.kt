@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.junit.Test
 

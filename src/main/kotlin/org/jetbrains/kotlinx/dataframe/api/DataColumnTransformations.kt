@@ -1,7 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.between
+import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.StringCol
+import org.jetbrains.kotlinx.dataframe.columns.size
+import org.jetbrains.kotlinx.dataframe.impl.between
 import kotlin.reflect.KClass
 
 // region between
@@ -32,5 +35,17 @@ public fun <T : Comparable<T>> DataColumn<T>.digitize(bins: List<T>, right: Bool
         else index
     }
 }
+
+// endregion
+// TODO: change return type to BooleanColumn
+public infix fun <T> DataColumn<T>.isMatching(predicate: Predicate<T>): BooleanArray = BooleanArray(size) {
+    predicate(this[it])
+}
+
+// region StringColumn Api
+
+public fun StringCol.length(): DataColumn<Int?> = map { it?.length }
+public fun StringCol.lowercase(): StringCol = map { it?.lowercase() }
+public fun StringCol.uppercase(): StringCol = map { it?.uppercase() }
 
 // endregion

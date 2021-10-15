@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns.missing
 
-import org.jetbrains.kotlinx.dataframe.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
 import kotlin.reflect.KType

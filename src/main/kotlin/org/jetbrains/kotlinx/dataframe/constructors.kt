@@ -1,13 +1,22 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.kotlinx.dataframe.api.AddExpression
 import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
+import org.jetbrains.kotlinx.dataframe.impl.EmptyMany
+import org.jetbrains.kotlinx.dataframe.impl.ManyImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnWithParent
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.newColumnWithActualType
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.random.Random
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.withNullability
@@ -19,6 +28,8 @@ public fun <T> column(): ColumnDelegate<T> = ColumnDelegate()
 public fun columnGroup(): ColumnDelegate<AnyRow> = column()
 
 public fun <T> MapColumnReference.column(): ColumnDelegate<T> = ColumnDelegate<T>(this)
+
+public fun <T> MapColumnReference.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
 
 public fun columnGroup(parent: MapColumnReference): ColumnDelegate<AnyRow> = parent.column()
 
@@ -33,9 +44,6 @@ public fun <T> frameColumn(name: String): ColumnAccessor<DataFrame<T>> = column(
 public fun <T> columnMany(name: String): ColumnAccessor<Many<T>> = column(name)
 
 public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
-
-public fun <T> column(parent: MapColumnReference, name: String): ColumnAccessor<T> =
-    ColumnAccessorImpl(parent.path() + name)
 
 public class ColumnDelegate<T>(private val parent: MapColumnReference? = null) {
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.name)
@@ -60,11 +68,30 @@ public fun <T> columnOf(frames: Iterable<DataFrame<T>?>): FrameColumn<T> = DataC
 
 public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> = createColumn(values, getType<T>(), false)
 
+// TODO: replace with extension
+public inline fun <reified T> column(name: String, values: List<T>): DataColumn<T> = when {
+    values.size > 0 && values.all { it is AnyCol } -> DataColumn.create(
+        name,
+        values.map { it as AnyCol }.toAnyFrame()
+    ) as DataColumn<T>
+    else -> column(name, values, values.any { it == null })
+}
+
+// TODO: replace with extension
+public inline fun <reified T> column(name: String, values: List<T>, hasNulls: Boolean): DataColumn<T> =
+    DataColumn.create(name, values, getType<T>().withNullability(hasNulls))
+
 // endregion
 
 // region create DataFrame
 
 public fun dataFrameOf(columns: Iterable<AnyColumn>): AnyFrame {
+    fun AnyColumn.unbox(): AnyCol = when (this) {
+        is ColumnWithPath<*> -> data.unbox()
+        is ColumnWithParent<*> -> source.unbox()
+        else -> this as AnyCol
+    }
+
     val cols = columns.map { it.unbox() }
     if (cols.isEmpty()) return DataFrame.empty()
     return DataFrameImpl<Unit>(cols)
@@ -154,5 +181,33 @@ public fun emptyDataFrame(nrow: Int): AnyFrame = DataFrame.empty(nrow)
 // region create ColumnPath
 
 public fun pathOf(vararg columnNames: String): ColumnPath = ColumnPath(columnNames.asList())
+
+// endregion
+
+// region create DataColumn from DataFrame
+
+public inline fun <T, reified R> DataFrameBase<T>.newColumn(
+    name: String = "",
+    noinline expression: AddExpression<T, R>
+): DataColumn<R> = newColumn(name, false, expression)
+
+public inline fun <T, reified R> DataFrameBase<T>.newColumn(
+    name: String = "",
+    useActualType: Boolean,
+    noinline expression: AddExpression<T, R>
+): DataColumn<R> {
+    if (useActualType) return newColumnWithActualType(name, expression)
+    return newColumn(getType<R>(), name, expression)
+}
+
+// endregion
+
+// region create Many
+
+public fun <T> emptyMany(): Many<T> = EmptyMany
+
+public fun <T> manyOf(element: T): Many<T> = ManyImpl(listOf(element))
+
+public fun <T> manyOf(vararg values: T): Many<T> = ManyImpl(listOf(*values))
 
 // endregion

@@ -5,9 +5,9 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.api.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.guessColumnType
-import org.jetbrains.kotlinx.dataframe.isComparable
-import org.jetbrains.kotlinx.dataframe.isNumber
+import org.jetbrains.kotlinx.dataframe.api.isComparable
+import org.jetbrains.kotlinx.dataframe.api.isNumber
+import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 
 internal inline fun <T> Aggregatable<T>.remainingColumns(crossinline predicate: (AnyCol) -> Boolean): ColumnsSelector<T, Any?> =
     remainingColumnsSelector().filter { predicate(it.data) }

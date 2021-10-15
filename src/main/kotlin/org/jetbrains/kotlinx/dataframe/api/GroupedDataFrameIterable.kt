@@ -4,12 +4,10 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameSelector
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.GroupWithKey
-import org.jetbrains.kotlinx.dataframe.GroupedDataFrame
+import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.columns.name
 import org.jetbrains.kotlinx.dataframe.impl.api.sortByImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
@@ -21,7 +19,7 @@ import kotlin.reflect.KProperty
 
 public fun <T, G, R> GroupedDataFrame<T, G>.mapNotNullGroups(transform: DataFrame<G>.() -> DataFrame<R>?): GroupedDataFrame<T, R> = mapGroups { if (it == null) null else transform(it) }
 
-public fun <T, G, R> GroupedDataFrame<T, G>.map(body: GroupWithKey<T, G>.(GroupWithKey<T, G>) -> R): List<R> = keys.mapIndexedNotNull { index, row ->
+public fun <T, G, R> GroupedDataFrame<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): List<R> = keys.mapIndexedNotNull { index, row ->
     val group = groups[index]
     if (group == null) null
     else {
@@ -30,10 +28,10 @@ public fun <T, G, R> GroupedDataFrame<T, G>.map(body: GroupWithKey<T, G>.(GroupW
     }
 }
 
-public fun <T, G> GroupedDataFrame<T, G>.mapToRows(body: GroupWithKey<T, G>.(GroupWithKey<T, G>) -> DataRow<G>?): DataFrame<G> =
+public fun <T, G> GroupedDataFrame<T, G>.mapToRows(body: Selector<GroupWithKey<T, G>, DataRow<G>?>): DataFrame<G> =
     map(body).concat()
 
-public fun <T, G> GroupedDataFrame<T, G>.mapToFrames(body: GroupWithKey<T, G>.(GroupWithKey<T, G>) -> DataFrame<G>?): FrameColumn<G> =
+public fun <T, G> GroupedDataFrame<T, G>.mapToFrames(body: Selector<GroupWithKey<T, G>, DataFrame<G>?>): FrameColumn<G> =
     map(body).toFrameColumn(groups.name)
 
 // endregion

@@ -1,14 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.modes
 
-import org.jetbrains.dataframe.*
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameSelector
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.Grouped
-import org.jetbrains.kotlinx.dataframe.columnNames
+import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
-import org.jetbrains.kotlinx.dataframe.namedValues
+import org.jetbrains.kotlinx.dataframe.impl.namedValues
 import org.jetbrains.kotlinx.dataframe.typed
 
 internal fun <T> Grouped<T>.aggregateBy(

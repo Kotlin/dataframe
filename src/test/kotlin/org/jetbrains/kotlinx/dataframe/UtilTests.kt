@@ -1,6 +1,8 @@
 package org.jetbrains.kotlinx.dataframe
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.impl.commonParent
+import org.jetbrains.kotlinx.dataframe.impl.commonParents
 import org.junit.Test
 import java.io.Serializable
 

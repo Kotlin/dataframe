@@ -4,15 +4,14 @@ import com.beust.klaxon.internal.firstNotNullResult
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.Many
+import org.jetbrains.kotlinx.dataframe.api.isGroup
 import org.jetbrains.kotlinx.dataframe.asFrame
-import org.jetbrains.kotlinx.dataframe.baseType
-import org.jetbrains.kotlinx.dataframe.columnNames
-import org.jetbrains.kotlinx.dataframe.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
-import org.jetbrains.kotlinx.dataframe.guessColumnType
 import org.jetbrains.kotlinx.dataframe.hasNulls
-import org.jetbrains.kotlinx.dataframe.isGroup
+import org.jetbrains.kotlinx.dataframe.impl.baseType
+import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
