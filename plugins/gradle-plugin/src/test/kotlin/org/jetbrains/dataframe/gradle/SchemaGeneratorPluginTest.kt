@@ -12,11 +12,11 @@ import java.nio.file.Files
 
 internal class SchemaGeneratorPluginTes {
 
-    private lateinit var dataDir: File
+    private lateinit var dataDir: String
 
     @Before
     fun before() {
-        dataDir = File("../../data")
+        dataDir = File("../../data").absolutePath.replace(File.separatorChar, '/')
     }
 
     @Test
@@ -142,39 +142,6 @@ internal class SchemaGeneratorPluginTes {
     }
 
     @Test
-    fun `plugin configure multiple schemas from files via extension`() {
-        val (_, result) = runGradleBuild(":generateDataFrames") {
-            """
-            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                
-            plugins {
-                kotlin("jvm") version "1.4.10"
-                id("org.jetbrains.kotlin.plugin.dataframe-base")
-            }
-            
-            repositories {
-                mavenCentral() 
-            }
-
-            dataframes {
-                schema {
-                    data = File("$dataDir/ghost.json")
-                    name = "Test"
-                    packageName = "org.test"
-                }
-                schema {
-                    data = File("$dataDir/playlistItems.json")
-                    name = "Schema"
-                    packageName = "org.test"
-                }
-            }
-            """.trimIndent()
-        }
-        result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
-        result.task(":generateDataFrameSchema")?.outcome shouldBe TaskOutcome.SUCCESS
-    }
-
-    @Test
     fun `plugin configure multiple schemas from strings via extension`() {
         val (_, result) = runGradleBuild(":generateDataFrames") { buildDir ->
             """
@@ -211,7 +178,7 @@ internal class SchemaGeneratorPluginTes {
     @Test
     fun `plugin doesn't break multiplatform build without JVM`() {
         val (_, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
+            val dataFile = File(buildDir, TestData.csvName)
             val kotlin = File(buildDir, "src/jsMain/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
             main.writeText("""
@@ -242,10 +209,10 @@ internal class SchemaGeneratorPluginTes {
                 
                 dataframes {
                     schema {
-                        data = "$dataFile"
+                        data = file("${TestData.csvName}")
                         name = "Schema"
                         packageName = ""
-                        src = file("$buildDir")
+                        src = buildDir
                     }
                 }
             """.trimIndent()

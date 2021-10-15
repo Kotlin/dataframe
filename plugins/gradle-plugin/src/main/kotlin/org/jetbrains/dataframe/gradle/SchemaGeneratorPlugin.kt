@@ -10,6 +10,8 @@ import org.jetbrains.kotlin.gradle.dsl.*
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 import java.net.URL
+import java.nio.file.Path
+import java.nio.file.Paths
 
 class SchemaGeneratorPlugin : Plugin<Project> {
 
@@ -118,19 +120,21 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         val defaultSourceSet: String,
     ) {
         fun getKotlinRoot(sourceDirectories: FileCollection, sourceSetName: String): File {
-            val isKotlinRoot: (File) -> Boolean = { f -> f.absolutePath.contains("/src/${sourceSetName}/kotlin") }
-            val genericRoot = sourceDirectories.find { isKotlinRoot(it) }
+            fun sourceSet(lang: String) = Paths.get("src", sourceSetName, lang)
+            val ktSet = sourceSet("kotlin")
+            val javaSet = sourceSet("java")
+            val isKotlinRoot: (Path) -> Boolean = { f -> f.endsWith(ktSet) }
+            val genericRoot = sourceDirectories.find { isKotlinRoot(it.toPath()) }
             if (genericRoot != null) return genericRoot
             val androidSpecificRoot = if (extensionClass == KotlinAndroidProjectExtension::class.java) {
-                val isAndroidKotlinRoot: (File) -> Boolean =
-                    { f -> f.absolutePath.contains("/src/${sourceSetName}/java") }
-                sourceDirectories.find { isAndroidKotlinRoot(it) }
+                val isAndroidKotlinRoot: (Path) -> Boolean = { f -> f.endsWith(javaSet) }
+                sourceDirectories.find { isAndroidKotlinRoot(it.toPath()) }
             } else {
-                error("Directory 'src/$sourceSetName/kotlin' was not found in $sourceSetName. Please, specify 'src' explicitly")
+                error("Directory '$ktSet' was not found in $sourceSetName. Please, specify 'src' explicitly")
             }
             return androidSpecificRoot
                 ?: error(
-                    "Directory 'src/$sourceSetName/kotlin' or 'src/$sourceSetName/java' was not found in $sourceSetName. Please, specify 'src' explicitly"
+                    "Directory '$ktSet' or '$javaSet' was not found in $sourceSetName. Please, specify 'src' explicitly"
                 )
         }
     }
