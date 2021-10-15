@@ -6,4 +6,6 @@ object TestData {
             Alice, 15
             Bob,
         """.trimIndent()
+
+    val csvName = "data.csv"
 }
