@@ -62,6 +62,7 @@ internal class Integration : JupyterIntegration() {
             render<IMG> { HTML("<img src=\"${it.url}\"/>") }
         }
 
+        import("org.jetbrains.kotlinx.dataframe.api.*")
         import("org.jetbrains.kotlinx.dataframe.*")
         import("org.jetbrains.kotlinx.dataframe.annotations.*")
         import("org.jetbrains.kotlinx.dataframe.io.*")
