@@ -3,23 +3,29 @@ package org.jetbrains.dataframe.ksp
 import com.tschuchort.compiletesting.SourceFile
 import io.kotest.assertions.asClue
 import io.kotest.inspectors.forOne
-import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldStartWith
-import org.jetbrains.kotlin.codegen.state.ReceiverTypeAndTypeParameters
 import kotlin.test.Test
 
 class DataFrameSymbolProcessorTest {
+
+    companion object {
+        val imports = """
+            import org.jetbrains.kotlinx.dataframe.annotations.*
+            import org.jetbrains.kotlinx.dataframe.columns.*
+            import org.jetbrains.kotlinx.dataframe.* 
+        """.trimIndent()
+
+        const val dataFramePackage = DataFrameNames.DATAFRAME_PACKAGE
+    }
 
     @Test
     fun `all`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
             sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 class OuterClass
 
@@ -55,9 +61,7 @@ class DataFrameSymbolProcessorTest {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 @DataSchema(isOpen = false)
                 interface Hello {
@@ -69,7 +73,7 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.a: org.jetbrains.kotlinx.DataColumn<kotlin.Function0<kotlin.Unit?>>")
+            ?.shouldContain("DataFrameBase<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.Function0<kotlin.Unit?>>")
             ?.shouldContain("DataRowBase<Hello>.a: kotlin.Function0<kotlin.Unit?>")
         result.successfulCompilation shouldBe true
     }
@@ -79,9 +83,7 @@ class DataFrameSymbolProcessorTest {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 @DataSchema(isOpen = false)
                 interface Hello {
@@ -93,7 +95,7 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.a: org.jetbrains.kotlinx.DataColumn<kotlin.coroutines.SuspendFunction0<kotlin.Unit?>>")
+            ?.shouldContain("DataFrameBase<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.coroutines.SuspendFunction0<kotlin.Unit?>>")
             ?.shouldContain("DataRowBase<Hello>.a: kotlin.coroutines.SuspendFunction0<kotlin.Unit?>")
         result.successfulCompilation shouldBe true
     }
@@ -103,9 +105,7 @@ class DataFrameSymbolProcessorTest {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 @DataSchema(isOpen = false)
                 interface Hello {
@@ -117,7 +117,7 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.a: org.jetbrains.kotlinx.DataColumn<kotlin.Function0<kotlin.String>?>")
+            ?.shouldContain("DataFrameBase<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.Function0<kotlin.String>?>")
             ?.shouldContain("DataRowBase<Hello>.a: kotlin.Function0<kotlin.String>?")
         result.successfulCompilation shouldBe true
     }
@@ -127,9 +127,7 @@ class DataFrameSymbolProcessorTest {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 @DataSchema(isOpen = false)
                 interface Hello {
@@ -141,7 +139,7 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.a: org.jetbrains.kotlinx.DataColumn<kotlin.Function1<kotlin.Int, kotlin.String>?>")
+            ?.shouldContain("DataFrameBase<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.Function1<kotlin.Int, kotlin.String>?>")
             ?.shouldContain("DataRowBase<Hello>.a: kotlin.Function1<kotlin.Int, kotlin.String>?")
         result.successfulCompilation shouldBe true
     }
@@ -151,9 +149,7 @@ class DataFrameSymbolProcessorTest {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 @DataSchema(isOpen = false)
                 interface Hello {
@@ -166,7 +162,7 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.b: org.jetbrains.kotlinx.DataColumn<kotlin.Int>")
+            ?.shouldContain("DataFrameBase<Hello>.b: ${dataFramePackage}.DataColumn<kotlin.Int>")
             ?.shouldContain("DataRowBase<Hello>.b: kotlin.Int")
         result.successfulCompilation shouldBe true
     }
@@ -176,9 +172,7 @@ class DataFrameSymbolProcessorTest {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 @DataSchema(isOpen = false)
                 interface Hello {
@@ -190,7 +184,7 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.a: org.jetbrains.kotlinx.DataColumn<kotlin.Function1<kotlin.String, kotlin.Unit>>")
+            ?.shouldContain("DataFrameBase<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.Function1<kotlin.String, kotlin.Unit>>")
             ?.shouldContain("DataRowBase<Hello>.a: kotlin.Function1<kotlin.String, kotlin.Unit>")
         result.successfulCompilation shouldBe true
     }
@@ -200,9 +194,7 @@ class DataFrameSymbolProcessorTest {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 class OuterClass
                 typealias A = OuterClass
@@ -218,7 +210,7 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.a: org.jetbrains.kotlinx.DataColumn<A>")
+            ?.shouldContain("DataFrameBase<Hello>.a: ${dataFramePackage}.DataColumn<A>")
             ?.shouldContain("DataRowBase<Hello>.a: A")
         result.successfulCompilation shouldBe true
     }
@@ -228,9 +220,7 @@ class DataFrameSymbolProcessorTest {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 @DataSchema(isOpen = false)
                 interface Hello {
@@ -251,9 +241,7 @@ class DataFrameSymbolProcessorTest {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
 
                 @DataSchema(isOpen = false)
@@ -267,7 +255,7 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("""DataFrameBase<Hello>.a: org.jetbrains.kotlinx.DataColumn<kotlin.Int> @JvmName("Hello_a")""")
+            ?.shouldContain("""DataFrameBase<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_a")""")
             ?.shouldContain("""DataRowBase<Hello>.a: kotlin.Int @JvmName("Hello_a")""")
         result.successfulCompilation shouldBe true
     }
@@ -277,9 +265,7 @@ class DataFrameSymbolProcessorTest {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 interface Marker
 
@@ -293,7 +279,9 @@ class DataFrameSymbolProcessorTest {
                 
             """.trimIndent()))
             ))
-        result.successfulCompilation shouldBe true
+        result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText().asClue {
+            result.successfulCompilation shouldBe true
+        }
     }
 
     @Test
@@ -301,9 +289,7 @@ class DataFrameSymbolProcessorTest {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 interface Marker
 
@@ -328,9 +314,7 @@ class DataFrameSymbolProcessorTest {
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
                 package org.example
 
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 @DataSchema(isOpen = false)
                 interface Hello {
@@ -351,9 +335,7 @@ class DataFrameSymbolProcessorTest {
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
                 package org.example
 
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 @DataSchema(isOpen = false)
                 interface Hello <T> {
@@ -371,9 +353,7 @@ class DataFrameSymbolProcessorTest {
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
                 package org.example
 
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 @DataSchema
                 internal interface Hello {
@@ -382,8 +362,8 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("""internal val org.jetbrains.kotlinx.DataFrameBase<Hello>.name: org.jetbrains.kotlinx.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
-            ?.shouldContain("""internal val org.jetbrains.kotlinx.DataRowBase<Hello>.name: kotlin.Int @JvmName("Hello_name")""")
+            ?.shouldContain("""internal val ${dataFramePackage}.DataFrameBase<Hello>.name: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
+            ?.shouldContain("""internal val ${dataFramePackage}.DataRowBase<Hello>.name: kotlin.Int @JvmName("Hello_name")""")
         result.successfulCompilation shouldBe true
     }
 
@@ -394,9 +374,7 @@ class DataFrameSymbolProcessorTest {
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
                 package org.example
 
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 @DataSchema
                 public interface Hello {
@@ -405,8 +383,8 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("""public val org.jetbrains.kotlinx.DataFrameBase<Hello>.name: org.jetbrains.kotlinx.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
-            ?.shouldContain("""public val org.jetbrains.kotlinx.DataRowBase<Hello>.name: kotlin.Int @JvmName("Hello_name")""")
+            ?.shouldContain("""public val ${dataFramePackage}.DataFrameBase<Hello>.name: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
+            ?.shouldContain("""public val ${dataFramePackage}.DataRowBase<Hello>.name: kotlin.Int @JvmName("Hello_name")""")
         result.successfulCompilation shouldBe true
     }
 
@@ -417,9 +395,7 @@ class DataFrameSymbolProcessorTest {
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
                 package org.example
 
-                import org.jetbrains.dataframe.annotations.*
-                import org.jetbrains.dataframe.columns.*
-                import org.jetbrains.dataframe.*
+                $imports
 
                 @DataSchema
                 interface Hello {
@@ -429,10 +405,10 @@ class DataFrameSymbolProcessorTest {
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readLines()?.asClue { codeLines ->
             codeLines.forOne {
-                it.shouldStartWith("""val org.jetbrains.kotlinx.DataFrameBase<Hello>.name: org.jetbrains.kotlinx.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
+                it.shouldStartWith("""val ${dataFramePackage}.DataFrameBase<Hello>.name: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
             }
             codeLines.forOne {
-                it.shouldStartWith("""val org.jetbrains.kotlinx.DataRowBase<Hello>.name: kotlin.Int @JvmName("Hello_name")""")
+                it.shouldStartWith("""val ${dataFramePackage}.DataRowBase<Hello>.name: kotlin.Int @JvmName("Hello_name")""")
             }
         }
         result.successfulCompilation shouldBe true

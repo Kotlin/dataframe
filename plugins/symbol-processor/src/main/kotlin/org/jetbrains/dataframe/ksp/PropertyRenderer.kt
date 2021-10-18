@@ -13,8 +13,8 @@ internal fun renderExtensions(interfaceName: String, visibility: MarkerVisibilit
         override val name: String = interfaceName
         override val fields: List<BaseField> = properties.map {
             val columnInfo = when (it.propertyType.fqName) {
-                fqnDataRow -> ColumnInfo.ColumnGroupInfo
-                fqnDataFrame -> ColumnInfo.FrameColumnInfo
+                DataFrameNames.DATA_ROW -> ColumnInfo.ColumnGroupInfo
+                DataFrameNames.DATA_FRAME -> ColumnInfo.FrameColumnInfo
                 else -> ColumnInfo.ValueColumnInfo(it.propertyType.toString())
             }
 
@@ -31,9 +31,6 @@ internal fun renderExtensions(interfaceName: String, visibility: MarkerVisibilit
 }
 
 internal class Property(val columnName: String, val fieldName: String, val propertyType: RenderedType)
-
-private const val fqnDataFrame = "org.jetbrains.kotlinx.DataFrame"
-private const val fqnDataRow = "org.jetbrains.kotlinx.DataRow"
 
 internal class RenderedType(val fqName: String, val marker: String?, val isNullable: Boolean) {
     override fun toString(): String {
