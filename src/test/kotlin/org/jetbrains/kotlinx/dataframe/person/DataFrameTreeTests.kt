@@ -35,8 +35,9 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.intoRows
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
-import org.jetbrains.kotlinx.dataframe.api.isGroup
+import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.join
 import org.jetbrains.kotlinx.dataframe.api.last
 import org.jetbrains.kotlinx.dataframe.api.map
@@ -80,9 +81,8 @@ import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.emptyMany
 import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.hasNulls
-import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
-import org.jetbrains.kotlinx.dataframe.impl.columns.asTable
-import org.jetbrains.kotlinx.dataframe.impl.columns.isTable
+import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.index
@@ -327,7 +327,7 @@ class DataFrameTreeTests : BaseTest() {
             typed.rows().groupBy { it.name to (it.city ?: "null") }.mapValues { it.value.map { it.age to it.weight } }
         val dataCols = pivoted.columns().drop(1)
 
-        dataCols.forEach { (it.isGroup() || it.isTable()) shouldBe true }
+        dataCols.forEach { (it.isColumnGroup() || it.isFrameColumn()) shouldBe true }
 
         val names = pivoted.name
         dataCols.forEach { col ->
@@ -367,9 +367,8 @@ class DataFrameTreeTests : BaseTest() {
         split.columnNames() shouldBe typed2.columnNames()
         split.nrow() shouldBe typed2.nrow()
         split.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames()
-        val nameGroup = split.nameAndCity.name.asGroup()
+        val nameGroup = split.nameAndCity.name.asColumnGroup()
         nameGroup.name() shouldBe "name"
-        nameGroup.isGroup() shouldBe true
         nameGroup.ncol() shouldBe typed2.nameAndCity.name.map { it.length }.max()
         nameGroup.columnNames() shouldBe (1..nameGroup.ncol()).map { "char$it" }
     }
@@ -412,10 +411,10 @@ class DataFrameTreeTests : BaseTest() {
     fun `update grouped column to table`() {
         val info by columnGroup()
         val grouped = typed.group { age and weight }.into(info)
-        val updated = grouped.update(info).withRowCol { row, column -> column.asGroup().df }
+        val updated = grouped.update(info).withRowCol { row, column -> column.asColumnGroup().df }
         val col = updated[info.name()]
         col.kind() shouldBe ColumnKind.Frame
-        val table = col.asTable()
+        val table = col.asFrameColumnInternal()
         table.schema.value.columns.map { it.key }.sorted() shouldBe typed.select { age and weight }.columnNames()
             .sorted()
     }

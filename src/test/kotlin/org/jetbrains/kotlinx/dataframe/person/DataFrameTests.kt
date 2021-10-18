@@ -5,7 +5,6 @@ import io.kotest.matchers.doubles.ToleranceMatcher
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
-import org.jetbrains.dataframe.*
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -22,7 +21,7 @@ import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.guessType
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.isGroup
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.last
 import org.jetbrains.kotlinx.dataframe.api.lowercase
@@ -31,7 +30,6 @@ import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.nullable
 import org.jetbrains.kotlinx.dataframe.api.plus
 import org.jetbrains.kotlinx.dataframe.api.withValues
-import org.jetbrains.kotlinx.dataframe.asFrame
 import org.jetbrains.kotlinx.dataframe.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
@@ -44,8 +42,7 @@ import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.between
-import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
-import org.jetbrains.kotlinx.dataframe.impl.columns.isTable
+import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
@@ -1209,7 +1206,7 @@ class DataFrameTests : BaseTest() {
             ncol() shouldBe 3
             nrow() shouldBe typed.nrow()
             columnNames() shouldBe listOf("name", "Int", "String")
-            val intGroup = this["Int"].asFrame()
+            val intGroup = this["Int"].asColumnGroup()
             intGroup.columnNames() shouldBe listOf("age", "weight")
 
             val res = listOf(
@@ -1341,7 +1338,7 @@ class DataFrameTests : BaseTest() {
             row into "mean"
         }
         d.ncol() shouldBe 2
-        d["mean"].isGroup() shouldBe true
+        d["mean"].isColumnGroup() shouldBe true
         val mean = d.getColumnGroup("mean")
         mean.ncol() shouldBe 2
         mean.columnNames() shouldBe listOf("age", "weight")
@@ -1366,7 +1363,7 @@ class DataFrameTests : BaseTest() {
             row into "info"
         }
         d.ncol() shouldBe 2
-        d["info"].isTable() shouldBe true
+        d["info"].isFrameColumn() shouldBe true
         val info = d.frameColumn("info")
         info.forEach {
             it!!.ncol() shouldBe 2
@@ -1828,7 +1825,7 @@ class DataFrameTests : BaseTest() {
         pivoted.ncol shouldBe 1 + typed.city.ndistinct()
         pivoted.columns().drop(1).forEach {
             it.kind() shouldBe ColumnKind.Group
-            it.asGroup().columnNames() shouldBe listOf("age", "weight")
+            it.asColumnGroup().columnNames() shouldBe listOf("age", "weight")
         }
     }
 
@@ -1837,7 +1834,7 @@ class DataFrameTests : BaseTest() {
         val pivoted = typed.pivot { city }.groupBy { name }.mean()
         pivoted.columns().drop(1).forEach {
             it.kind() shouldBe ColumnKind.Group
-            val group = it.asGroup()
+            val group = it.asColumnGroup()
             group.columnNames() shouldBe listOf("age", "weight")
             group.columns().forEach {
                 it.type() shouldBe getType<Double?>()
@@ -1861,7 +1858,7 @@ class DataFrameTests : BaseTest() {
         val pivoted = typed.pivot { name }.groupBy { city }.max()
         pivoted.columns().drop(1).forEach {
             it.kind() shouldBe ColumnKind.Group
-            val group = it.asGroup()
+            val group = it.asColumnGroup()
             group.columnNames() shouldBe listOf("age", "weight")
         }
     }

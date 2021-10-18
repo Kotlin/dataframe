@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.DataRowBase
-import org.jetbrains.kotlinx.dataframe.api.isGroup
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -70,7 +70,7 @@ internal fun <T> BaseColumn<T>.addPath(df: DataFrameBase<*>): ColumnWithPath<T> 
 
 internal fun ColumnPath.depth() = size - 1
 
-internal fun ColumnWithPath<*>.asGroup() = if (data.isGroup()) data.asGroup() else null
+internal fun ColumnWithPath<*>.asColumnGroup() = if (data.isColumnGroup()) data.asColumnGroup() else null
 internal fun <T> AnyCol.typed() = this as DataColumn<T>
 internal fun <T> ColumnWithPath<*>.typed() = this as ColumnWithPath<T>
 internal fun <T> AnyCol.asValues() = this as ValueColumn<T>
@@ -79,15 +79,17 @@ internal fun <T> FrameColumn<*>.typed() = this as FrameColumn<T>
 internal fun <T> ColumnGroup<*>.typed() = this as ColumnGroup<T>
 internal fun <T> AnyCol.grouped() = this as ColumnGroup<T>
 internal fun <T> ColumnGroup<*>.withDf(newDf: DataFrame<T>) = DataColumn.create(name, newDf)
-internal fun AnyCol.asGroup(): ColumnGroup<*> = this as ColumnGroup<*>
+internal fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
 
 @JvmName("asGroupedT")
-internal fun <T> DataColumn<DataRow<T>>.asGroup(): ColumnGroup<T> = this as ColumnGroup<T>
-internal fun AnyCol.asTable(): FrameColumnInternal<*> = this as FrameColumnInternal<*>
+internal fun <T> DataColumn<DataRow<T>>.asColumnGroup(): ColumnGroup<T> = this as ColumnGroup<T>
+internal fun AnyCol.asFrameColumn(): FrameColumn<*> = this as FrameColumnInternal<*>
+
+internal fun AnyCol.asFrameColumnInternal(): FrameColumnInternal<*> = this as FrameColumnInternal<*>
 
 @JvmName("asTableT")
-internal fun <T> DataColumn<DataFrame<T>?>.asTable(): FrameColumn<T> = this as FrameColumnInternal<T>
-internal fun AnyCol.isTable(): Boolean = kind() == ColumnKind.Frame
+internal fun <T> DataColumn<DataFrame<T>?>.asFrameColumn(): FrameColumn<T> = this as FrameColumnInternal<T>
+
 internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
     if (!type.isSubtypeOf(getType<Comparable<*>?>())) {
         throw RuntimeException("Column '$name' has type '$type' that is not Comparable")

@@ -27,7 +27,7 @@ import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 
@@ -65,7 +65,7 @@ class Access : TestBase() {
     fun getColumnByIndex() {
         // SampleStart
         df.col(2)
-        df.col(0).asGroup().col(1)
+        df.col(0).asColumnGroup().col(1)
         // SampleEnd
     }
 

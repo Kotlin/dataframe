@@ -2,17 +2,16 @@ package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.api.AddExpression
 import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
+import org.jetbrains.kotlinx.dataframe.api.unbox
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.EmptyMany
 import org.jetbrains.kotlinx.dataframe.impl.ManyImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnWithParent
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumnWithActualType
@@ -27,11 +26,11 @@ public fun <T> column(): ColumnDelegate<T> = ColumnDelegate()
 
 public fun columnGroup(): ColumnDelegate<AnyRow> = column()
 
-public fun <T> MapColumnReference.column(): ColumnDelegate<T> = ColumnDelegate<T>(this)
+public fun <T> ColumnGroupReference.column(): ColumnDelegate<T> = ColumnDelegate<T>(this)
 
-public fun <T> MapColumnReference.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
+public fun <T> ColumnGroupReference.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
 
-public fun columnGroup(parent: MapColumnReference): ColumnDelegate<AnyRow> = parent.column()
+public fun columnGroup(parent: ColumnGroupReference): ColumnDelegate<AnyRow> = parent.column()
 
 public fun frameColumn(): ColumnDelegate<AnyFrame> = column()
 
@@ -45,7 +44,7 @@ public fun <T> columnMany(name: String): ColumnAccessor<Many<T>> = column(name)
 
 public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
 
-public class ColumnDelegate<T>(private val parent: MapColumnReference? = null) {
+public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null) {
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.name)
 
     public infix fun named(name: String): ColumnAccessor<T> =
@@ -86,12 +85,6 @@ public inline fun <reified T> column(name: String, values: List<T>, hasNulls: Bo
 // region create DataFrame
 
 public fun dataFrameOf(columns: Iterable<AnyColumn>): AnyFrame {
-    fun AnyColumn.unbox(): AnyCol = when (this) {
-        is ColumnWithPath<*> -> data.unbox()
-        is ColumnWithParent<*> -> source.unbox()
-        else -> this as AnyCol
-    }
-
     val cols = columns.map { it.unbox() }
     if (cols.isEmpty()) return DataFrame.empty()
     return DataFrameImpl<Unit>(cols)

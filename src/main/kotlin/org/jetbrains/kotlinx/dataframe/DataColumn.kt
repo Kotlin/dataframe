@@ -21,10 +21,10 @@ import kotlin.reflect.full.withNullability
 
 /**
  * Column with type, name/path and values
- * Base interface only for [ValueColumn] and [FrameColumn]
+ * Base interface for [ValueColumn] and [FrameColumn], but not for [ColumnGroup]
+ * All extension functions that clash with [DataFrame] API (such as filter, forEach, map etc.) should be defined for this interface
  *
- * All column extension functions that clash with [DataFrame] API (such as filter, forEach, map etc.) are defined for this interface,
- * because [ColumnGroup] doesn't inherit from it
+ * Although [ColumnGroup] doesn't implement this interface, but [ColumnGroupImpl] does, so you can cast any actual instance of [ColumnGroup] to [DataColumn]
  */
 public interface DataColumn<out T> : BaseColumn<T> {
 

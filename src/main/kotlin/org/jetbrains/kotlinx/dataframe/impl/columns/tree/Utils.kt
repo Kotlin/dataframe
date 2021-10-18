@@ -1,11 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns.tree
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.api.isGroup
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
-import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 
 internal tailrec fun <T> ReadonlyTreeNode<T>.getAncestor(depth: Int): ReadonlyTreeNode<T> {
@@ -60,8 +60,8 @@ internal fun Iterable<ColumnWithPath<*>>.dfs(): List<ColumnWithPath<*>> {
             result.add(it)
             val path = it.path
             val df = it.df
-            if (it.data.isGroup()) {
-                dfs(it.data.asGroup().columns().map { it.addPath(path + it.name(), df) })
+            if (it.data.isColumnGroup()) {
+                dfs(it.data.asColumnGroup().columns().map { it.addPath(path + it.name(), df) })
             }
         }
     }
@@ -75,15 +75,15 @@ internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (
 
     fun collectColumns(col: AnyCol, parentNode: TreeNode<D>) {
         val newNode = parentNode.getOrPut(col.name()) { createData(col) }
-        if (col.isGroup()) {
-            col.asGroup().columns().forEach {
+        if (col.isColumnGroup()) {
+            col.asColumnGroup().columns().forEach {
                 collectColumns(it, newNode)
             }
         }
     }
     forEach {
         if (it.path.isEmpty()) {
-            it.data.asGroup().df.columns().forEach {
+            it.data.asColumnGroup().df.columns().forEach {
                 collectColumns(it, root)
             }
         } else {
