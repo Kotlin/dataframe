@@ -12,8 +12,13 @@ class DataFrameSymbolProcessor(
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger,
 ) : SymbolProcessor {
+
+    private companion object {
+        val EXPECTED_VISIBILITIES = listOf(Visibility.PUBLIC, Visibility.INTERNAL)
+    }
+
     override fun process(resolver: Resolver): List<KSAnnotated> {
-        val dataSchemaAnnotation = resolver.getKSNameFromString("org.jetbrains.dataframe.annotations.DataSchema")
+        val dataSchemaAnnotation = resolver.getKSNameFromString(DataFrameNames.DATA_SCHEMA)
         val symbols = resolver.getSymbolsWithAnnotation(dataSchemaAnnotation.asString())
 
         symbols
@@ -113,8 +118,8 @@ class DataFrameSymbolProcessor(
         val columnNameAnnotation =  property.annotations.firstOrNull { annotation ->
             val annotationType = annotation.annotationType
             (annotationType.element as? KSClassifierReference)?.referencedName()
-                .let { it == null || it == "ColumnName" }
-                && annotationType.resolve().declaration.qualifiedName?.asString() == "org.jetbrains.kotlinx.ColumnName"
+                .let { it == null || it == DataFrameNames.SHORT_COLUMN_NAME }
+                && annotationType.resolve().declaration.qualifiedName?.asString() == DataFrameNames.COLUMN_NAME
         }
         return if (columnNameAnnotation != null) {
             when (val arg = columnNameAnnotation.arguments.singleOrNull()) {
@@ -132,9 +137,5 @@ class DataFrameSymbolProcessor(
 
     private fun argumentMismatchError(property: KSPropertyDeclaration, args: List<KSValueArgument>): Nothing {
         error("Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, but got $args")
-    }
-
-    private companion object {
-        val EXPECTED_VISIBILITIES = listOf(Visibility.PUBLIC, Visibility.INTERNAL)
     }
 }

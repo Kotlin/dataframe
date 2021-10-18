@@ -3,24 +3,24 @@ package org.jetbrains.dataframe.ksp
 import com.tschuchort.compiletesting.SourceFile
 
 internal val annotations = SourceFile.kotlin("Annotations.kt", """
-    package org.jetbrains.dataframe.annotations
+    package ${DataFrameNames.DATAFRAME_PACKAGE}.annotations
 
     annotation class DataSchema(val isOpen: Boolean = true)
     annotation class ColumnName(val name: String)
 """.trimIndent())
 
 internal val dataColumn = SourceFile.kotlin("DataColumn.kt", """
-    package org.jetbrains.dataframe.columns
+    package ${DataFrameNames.DATAFRAME_PACKAGE}.columns
 
-    interface DataColumn<out T>
     interface ColumnGroup<out T>
 """.trimIndent())
 
 internal val dataFrame = SourceFile.kotlin("DataFrame.kt", """
-    package org.jetbrains.dataframe
+    package ${DataFrameNames.DATAFRAME_PACKAGE}
 
-    import org.jetbrains.dataframe.columns.*
-        
+    import ${DataFrameNames.DATAFRAME_PACKAGE}.columns.*
+
+    interface DataColumn<out T>
     interface DataFrameBase<out T> {
         operator fun get(columnName: String): DataColumn<*>
     }
@@ -29,7 +29,7 @@ internal val dataFrame = SourceFile.kotlin("DataFrame.kt", """
 """.trimIndent())
 
 internal val dataRow = SourceFile.kotlin("DataRow.kt", """
-    package org.jetbrains.dataframe
+    package ${DataFrameNames.DATAFRAME_PACKAGE}
 
     interface DataRowBase<out T> {
         operator fun get(name: String): Any?
