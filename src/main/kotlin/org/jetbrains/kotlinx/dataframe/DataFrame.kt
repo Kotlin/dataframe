@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.EmptyDataFrame
-import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.impl.getColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
@@ -47,10 +47,11 @@ public interface DataFrameBase<out T> : SingleColumn<DataRow<T>> {
     public fun hasColumn(columnName: String): Boolean = tryGetColumn(columnName) != null
 
     public operator fun get(columnPath: ColumnPath): AnyCol {
+        require(columnPath.isNotEmpty()) { "ColumnPath is empty" }
         var res: AnyCol? = null
         columnPath.forEach {
             if (res == null) res = this[it]
-            else res = res!!.asGroup()[it]
+            else res = res!!.asColumnGroup()[it]
         }
         return res!!
     }

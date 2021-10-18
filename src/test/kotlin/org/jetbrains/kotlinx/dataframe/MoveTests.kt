@@ -4,13 +4,14 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.flatten
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.isGroup
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.ungroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.toColumnPath
 import org.junit.Test
@@ -25,10 +26,10 @@ class MoveTests {
     @Test
     fun batchGrouping() {
         grouped.columnNames() shouldBe listOf("q", "a", "b", "w", "e", "r")
-        grouped["a"].asFrame().columnNames() shouldBe listOf("b", "c")
-        grouped["a"]["c"].asFrame().columnNames() shouldBe listOf("d")
-        grouped["b"].asFrame().columnNames() shouldBe listOf("c", "d")
-        grouped["e"].asFrame().columnNames() shouldBe listOf("f")
+        grouped["a"].asColumnGroup().columnNames() shouldBe listOf("b", "c")
+        grouped["a"]["c"].asColumnGroup().columnNames() shouldBe listOf("d")
+        grouped["b"].asColumnGroup().columnNames() shouldBe listOf("c", "d")
+        grouped["e"].asColumnGroup().columnNames() shouldBe listOf("f")
     }
 
     @Test
@@ -44,7 +45,7 @@ class MoveTests {
 
     @Test
     fun batchUngrouping() {
-        val ungrouped = grouped.move { dfs { it.depth() > 0 && !it.isGroup() } }.into { path(it.path.joinToString(".")) }
+        val ungrouped = grouped.move { dfs { it.depth() > 0 && !it.isColumnGroup() } }.into { path(it.path.joinToString(".")) }
         ungrouped.columnNames() shouldBe listOf("q", "a.b", "a.c.d", "b.c", "b.d", "w", "e.f", "r")
     }
 
@@ -52,7 +53,7 @@ class MoveTests {
     fun `ungroup one`() {
         val ungrouped = grouped.remove("b").ungroup { it["a"] }
         ungrouped.columnNames() shouldBe listOf("q", "b", "c", "w", "e", "r")
-        ungrouped["c"].asFrame().columnNames() shouldBe listOf("d")
+        ungrouped["c"].asColumnGroup().columnNames() shouldBe listOf("d")
     }
 
     @Test
@@ -75,7 +76,7 @@ class MoveTests {
 
     @Test
     fun `selectDfs`() {
-        val selected = grouped.select { it["a"].dfs { !it.isGroup() } }
+        val selected = grouped.select { it["a"].dfs { !it.isColumnGroup() } }
         selected.columnNames() shouldBe listOf("b", "d")
     }
 

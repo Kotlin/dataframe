@@ -44,7 +44,7 @@ import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.get
-import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.manyOf
@@ -216,7 +216,7 @@ class PivotTests {
 
         val keys = typed.key.distinct().values()
         pivoted.columns().drop(1).forEach {
-            val group = it.asGroup()
+            val group = it.asColumnGroup()
             group.columnNames() shouldBe if (it.name() == "Bob") keys - "city" else keys
         }
 
@@ -386,7 +386,7 @@ class PivotTests {
     fun `pivot with grouping`() {
         val pivoted = typed.pivot { key }.groupBy { name }.withGrouping("keys").with { value }
         pivoted.columnNames() shouldBe listOf("name", "keys")
-        pivoted["keys"].asGroup().columnNames() shouldBe typed.key.distinct().values()
+        pivoted["keys"].asColumnGroup().columnNames() shouldBe typed.key.distinct().values()
     }
 
     @Test
@@ -403,7 +403,7 @@ class PivotTests {
         }
         pivoted.columns().drop(1).forEach {
             it.kind() shouldBe ColumnKind.Group
-            it.asGroup().columnNames() shouldBe listOf("value")
+            it.asColumnGroup().columnNames() shouldBe listOf("value")
         }
     }
 
@@ -416,7 +416,7 @@ class PivotTests {
         }
         pivoted.columns().drop(1).forEach {
             it.kind() shouldBe ColumnKind.Group
-            it.asGroup().columnNames() shouldBe listOf("first value", "last value")
+            it.asColumnGroup().columnNames() shouldBe listOf("first value", "last value")
         }
     }
 
@@ -426,9 +426,9 @@ class PivotTests {
         val pivoted = (typed + type).pivot { key }.groupBy { name }.values { value and (type default Any::class) into "data" }
         pivoted.print()
         pivoted.columns().drop(1).forEach {
-            val group = it.asGroup()
+            val group = it.asColumnGroup()
             group.columnNames() shouldBe listOf("data")
-            group["data"].asGroup().columnNames() shouldBe listOf("value", "type")
+            group["data"].asColumnGroup().columnNames() shouldBe listOf("value", "type")
             group["data"]["type"].hasNulls() shouldBe false
         }
         pivoted.print()
@@ -438,9 +438,9 @@ class PivotTests {
     fun `pivot one value without index`() {
         val pivoted = typed.pivot { name and key }.with { value }
         pivoted.columnNames() shouldBe typed.name.distinct().values()
-        pivoted.df()["Alice"].asGroup().columnNames() shouldBe typed.key.distinct().values()
-        pivoted.df()["Bob"].asGroup().columnNames() shouldBe listOf("age", "weight")
-        pivoted.df()["Mark"].asGroup().columnNames() shouldBe typed.key.distinct().values()
+        pivoted.df()["Alice"].asColumnGroup().columnNames() shouldBe typed.key.distinct().values()
+        pivoted.df()["Bob"].asColumnGroup().columnNames() shouldBe listOf("age", "weight")
+        pivoted.df()["Mark"].asColumnGroup().columnNames() shouldBe typed.key.distinct().values()
         pivoted.df()["Alice"]["age"].type() shouldBe getType<Many<Int>>()
         pivoted.df()["Mark"]["weight"].type() shouldBe getType<Any?>()
     }

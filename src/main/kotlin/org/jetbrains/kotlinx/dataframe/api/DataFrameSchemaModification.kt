@@ -4,13 +4,13 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.Column
+import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.MapColumnReference
 import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
@@ -283,7 +283,7 @@ public fun <T, C> MoveColsClause<T, C>.into(path: ColumnPath): DataFrame<T> = in
 
 public fun <T, C> MoveColsClause<T, C>.under(vararg path: String): DataFrame<T> = under(path.toColumnPath())
 public fun <T, C> MoveColsClause<T, C>.under(path: ColumnPath): DataFrame<T> = under { path }
-public fun <T, C> MoveColsClause<T, C>.under(groupRef: MapColumnReference): DataFrame<T> = under(groupRef.path())
+public fun <T, C> MoveColsClause<T, C>.under(groupRef: ColumnGroupReference): DataFrame<T> = under(groupRef.path())
 
 public fun <T, C> MoveColsClause<T, C>.to(columnIndex: Int): DataFrame<T> {
     val newColumnList = df.columns().subList(0, columnIndex) + removed.map { it.data.column as DataColumn<C> } + df.columns().subList(columnIndex, df.ncol())
@@ -310,14 +310,14 @@ public fun <T, C> MoveColsClause<T, C>.afterOrBefore(column: ColumnSelector<T, *
     val removeRoot = removed.first().getRoot()
 
     val refNode = removeRoot.getOrPut(refPath) {
-        val parent = originalDf.getFrame(it.dropLast(1))
+        val parentPath = it.dropLast(1)
+        val parent = if (parentPath.isEmpty()) originalDf else originalDf.getColumnGroup(parentPath)
         val index = parent.getColumnIndex(it.last())
         val col = df.col(index)
         ColumnPosition(index, false, col)
     }
 
     val parentPath = refPath.dropLast(1)
-
     val toInsert = removed.map {
         val path = parentPath + it.name
         ColumnToInsert(path, it.column.data, refNode)
@@ -349,7 +349,7 @@ public fun <T> DataFrame<T>.group(vararg cols: Column): GroupClause<T, Any?> = g
 public fun <T, C> DataFrame<T>.group(cols: ColumnsSelector<T, C>): GroupClause<T, C> = GroupClause(this, cols)
 
 public infix fun <T, C> GroupClause<T, C>.into(groupName: String): DataFrame<T> = into { groupName }
-public infix fun <T, C> GroupClause<T, C>.into(groupRef: MapColumnReference): DataFrame<T> = df.move(selector).under(groupRef)
+public infix fun <T, C> GroupClause<T, C>.into(groupRef: ColumnGroupReference): DataFrame<T> = df.move(selector).under(groupRef)
 public infix fun <T, C> GroupClause<T, C>.into(groupName: ColumnWithPath<C>.(ColumnWithPath<C>) -> String): DataFrame<T> = df.move(selector).under { path(groupName(it, it)) }
 
 // endregion

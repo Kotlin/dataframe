@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.codeGen.generateCode
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.junit.Test
 
@@ -133,7 +133,7 @@ class GatherTests {
         val gathered = typed.gather { except(name) }.into(mode)
 
         val expected = typed.groupBy { name }.mapNotNullGroups {
-            val cols = columns().drop(1).map { it.asGroup() } // drop 'name' column
+            val cols = columns().drop(1).map { it.asColumnGroup() } // drop 'name' column
             val dataRows = cols.map { it[0] }
 
             val newDf = listOf(

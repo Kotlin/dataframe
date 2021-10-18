@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.JoinType
 import org.jetbrains.kotlinx.dataframe.api.allowLeftNulls
 import org.jetbrains.kotlinx.dataframe.api.allowRightNulls
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
-import org.jetbrains.kotlinx.dataframe.api.isGroup
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -73,7 +73,7 @@ internal fun <A, B> DataFrame<A>.joinImpl(
     leftJoinColumns.indices.forEach { i ->
         val leftCol = leftJoinColumns[i]
         val rightCol = rightJoinColumns[i]
-        if (leftCol.isGroup() && rightCol.isGroup()) {
+        if (leftCol.isColumnGroup() && rightCol.isColumnGroup()) {
             val allLeftChildren = getColumnsWithPaths { leftCol.dfs() }
             val allRightChildren = other.getColumnsWithPaths { rightCol.dfs() }
             val matchedPaths = allLeftChildren.map { it.path }.intersect(allRightChildren.map { it.path })
@@ -138,7 +138,7 @@ internal fun <A, B> DataFrame<A>.joinImpl(
     val rightJoinColumnPaths = allRightJoinColumns.map { it.path to it.data }.toMap()
 
     val newRightColumns =
-        if (addNewColumns) other.getColumnsWithPaths { dfs { !it.isGroup() && !rightJoinColumnPaths.contains(it.path) } } else emptyList()
+        if (addNewColumns) other.getColumnsWithPaths { dfs { !it.isColumnGroup() && !rightJoinColumnPaths.contains(it.path) } } else emptyList()
 
     // for every column index from left data frame stores matching column from right data frame
     val leftToRightColumns = leftColumns.map { rightJoinColumnPaths[pathMapping[it.path()]] }

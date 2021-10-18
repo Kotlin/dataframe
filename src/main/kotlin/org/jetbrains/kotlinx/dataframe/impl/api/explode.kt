@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.appendNulls
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -18,9 +19,8 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
-import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
-import org.jetbrains.kotlinx.dataframe.impl.columns.asTable
-import org.jetbrains.kotlinx.dataframe.impl.columns.isTable
+import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -49,7 +49,7 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, selector: C
 
             val isTargetColumn = data.contains(listOf(col.name))
             if (col is ColumnGroup<*>) { // go to nested columns recursively
-                val group = col.asGroup()
+                val group = col.asColumnGroup()
                 val newData = data.mapNotNull {
                     if (it.isNotEmpty() && it[0] == col.name) it.drop(1) else null
                 }.toSet()
@@ -97,11 +97,11 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, selector: C
                         }
                     }
                 }
-                if (col.isTable()) DataColumn.create(
+                if (col.isFrameColumn()) DataColumn.create(
                     col.name,
                     collector.values as List<AnyFrame?>,
                     collector.hasNulls,
-                    col.asTable().schema // keep original schema
+                    col.asFrameColumnInternal().schema // keep original schema
                 )
                 else collector.toColumn(col.name)
             }

@@ -5,8 +5,8 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.size
-import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
-import org.jetbrains.kotlinx.dataframe.impl.columns.asTable
+import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumnInternal
 import org.jetbrains.kotlinx.dataframe.io.escapeHTML
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
@@ -72,11 +72,11 @@ internal fun renderType(column: AnyCol) =
     when (column.kind()) {
         ColumnKind.Value -> org.jetbrains.kotlinx.dataframe.impl.renderType(column.type)
         ColumnKind.Frame -> {
-            val table = column.asTable()
+            val table = column.asFrameColumnInternal()
             "[${renderSchema(table.schema.value)}]"
         }
         ColumnKind.Group -> {
-            val group = column.asGroup()
+            val group = column.asColumnGroup()
             "{${renderSchema(group.df)}}"
         }
     }
@@ -84,5 +84,5 @@ internal fun renderType(column: AnyCol) =
 internal fun AnyCol.renderShort() = when (kind()) {
     ColumnKind.Value -> "ValueColumn<${renderType(type)}>: $size entries".escapeHTML()
     ColumnKind.Frame -> "FrameColumn: $size entries"
-    ColumnKind.Group -> "ColumnGroup ${asGroup().df.size}}"
+    ColumnKind.Group -> "ColumnGroup ${asColumnGroup().df.size}}"
 }

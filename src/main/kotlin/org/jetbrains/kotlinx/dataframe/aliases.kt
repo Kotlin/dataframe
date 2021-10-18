@@ -45,7 +45,7 @@ public typealias RowCellFilter<T, C> = RowCellSelector<T, C, Boolean>
 
 public typealias Column = ColumnReference<*>
 
-public typealias MapColumnReference = ColumnReference<AnyRow>
+public typealias ColumnGroupReference = ColumnReference<AnyRow>
 
 public typealias DoubleCol = DataColumn<Double?>
 public typealias BooleanCol = DataColumn<Boolean?>

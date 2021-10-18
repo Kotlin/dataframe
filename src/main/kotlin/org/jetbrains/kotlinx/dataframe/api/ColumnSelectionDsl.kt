@@ -23,7 +23,7 @@ import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExcept
-import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumnWithActualType
 import org.jetbrains.kotlinx.dataframe.impl.columns.single
@@ -72,7 +72,7 @@ public interface ColumnSelectionDsl<out T> : DataFrameBase<T> {
 
     public fun none(): Columns<*> = ColumnsList<Any?>(emptyList())
 
-    public fun Columns<*>.dfs(): Columns<Any?> = dfs { !it.isGroup() }
+    public fun Columns<*>.dfs(): Columns<Any?> = dfs { !it.isColumnGroup() }
 
     // excluding current
     public fun DataFrameBase<*>.allAfter(colPath: ColumnPath): Columns<Any?> = children().let { var take = false; it.filter { if (take) true else { take = colPath == it.path; false } } }
@@ -94,11 +94,11 @@ public interface ColumnSelectionDsl<out T> : DataFrameBase<T> {
     public fun DataFrameBase<*>.allUntil(colName: String): Columns<Any?> = allUntil(pathOf(colName))
     public fun DataFrameBase<*>.allUntil(column: Column): Columns<Any?> = allUntil(column.path())
 
-    public fun DataFrameBase<*>.colGroups(filter: (ColumnGroup<*>) -> Boolean = { true }): Columns<AnyRow> = this.columns().filter { it.isGroup() && filter(it.asGroup()) }.map { it.asGroup() }.toColumnSet()
+    public fun DataFrameBase<*>.colGroups(filter: (ColumnGroup<*>) -> Boolean = { true }): Columns<AnyRow> = this.columns().filter { it.isColumnGroup() && filter(it.asColumnGroup()) }.map { it.asColumnGroup() }.toColumnSet()
 
     public fun <C> Columns<C>.children(predicate: (AnyCol) -> Boolean = { true }): Columns<Any?> = transform { it.flatMap { it.children().filter { predicate(it.data) } } }
 
-    public fun MapColumnReference.children(): Columns<Any?> = transform { it.single().children() }
+    public fun ColumnGroupReference.children(): Columns<Any?> = transform { it.single().children() }
 
     public operator fun <C> List<DataColumn<C>>.get(range: IntRange): Columns<C> = ColumnsList(subList(range.first, range.last + 1))
 
@@ -211,7 +211,7 @@ internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) 
 // internal fun Columns<*>.filter(predicate: (AnyCol) -> Boolean) = transform { it.filter { predicate(it.data) } }
 
 internal fun Columns<*>.colsInternal(predicate: (AnyCol) -> Boolean) = transform { it.flatMap { it.children().filter { predicate(it.data) } } }
-internal fun Columns<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) = transform { it.filter { it.isGroup() }.flatMap { it.children().dfs().filter(predicate) } }
+internal fun Columns<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean) = transform { it.filter { it.isColumnGroup() }.flatMap { it.children().dfs().filter(predicate) } }
 
 public fun <C> Columns<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): Columns<*> = dfsInternal { it.data.hasElementsOfType(type) && predicate(it.typed()) }
 public inline fun <reified C> Columns<*>.dfsOf(noinline filter: (ColumnWithPath<C>) -> Boolean = { true }): Columns<C> = dfsOf(

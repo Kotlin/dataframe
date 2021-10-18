@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.api.isGroup
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -22,8 +22,8 @@ internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
         var col: AnyCol? = null
         for (colName in path) {
             col = df.getColumn<Any?>(colName, context.unresolvedColumnsPolicy) ?: return null
-            if (col.isGroup()) {
-                df = col.asGroup().df
+            if (col.isColumnGroup()) {
+                df = col.asColumnGroup().df
             }
         }
         return col?.typed<T>()?.addPath(path, context.df)

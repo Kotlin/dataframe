@@ -4,12 +4,12 @@ import com.beust.klaxon.internal.firstNotNullResult
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.Many
-import org.jetbrains.kotlinx.dataframe.api.isGroup
-import org.jetbrains.kotlinx.dataframe.asFrame
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.baseType
+import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import kotlin.reflect.KType
@@ -26,9 +26,9 @@ internal fun concatImpl(dataFrames: List<AnyFrame>): AnyFrame {
 
         val columns = dataFrames.map { it.tryGetColumn(name) }
 
-        if (columns.all { it == null || it.isGroup() }) {
+        if (columns.all { it == null || it.isColumnGroup() }) {
             val frames = columns.mapIndexed { index, col ->
-                col?.asFrame() ?: emptyDataFrame(dataFrames[index].nrow())
+                col?.asColumnGroup() ?: emptyDataFrame(dataFrames[index].nrow())
             }
             val merged = concatImpl(frames)
             DataColumn.create(name, merged)

@@ -8,7 +8,8 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.isGroup
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.to
@@ -16,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnMany
-import org.jetbrains.kotlinx.dataframe.impl.columns.isTable
 import org.jetbrains.kotlinx.dataframe.toMany
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
@@ -33,8 +33,8 @@ internal fun <T, C, K, R> gatherImpl(
 
     val columnsToGather = removed.removedColumns.map { it.data.column as DataColumn<C> }
 
-    val isGatherGroups = columnsToGather.any { it.isGroup() }
-    if (isGatherGroups && columnsToGather.any { !it.isGroup() }) {
+    val isGatherGroups = columnsToGather.any { it.isColumnGroup() }
+    if (isGatherGroups && columnsToGather.any { !it.isColumnGroup() }) {
         throw UnsupportedOperationException("Cannot mix ColumnGroups with other types of columns in 'gather' operation")
     }
 
@@ -106,11 +106,11 @@ internal fun <T, C, K, R> gatherImpl(
 
     if (valuesTo == null) {
         // values column needs to be removed
-        if (valuesCol.isGroup()) {
+        if (valuesCol.isColumnGroup()) {
             df = df.ungroup(valuesColumn.name())
         } else df = df.remove(valuesColumn.name())
     } else {
-        if (!valuesCol.isTable() && valueColumnType.jvmErasure != Any::class) {
+        if (!valuesCol.isFrameColumn() && valueColumnType.jvmErasure != Any::class) {
             df = df.convert(valuesColumn.name()).to(valueColumnType)
         }
     }

@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.isComparable
+import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
@@ -11,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
@@ -19,9 +19,8 @@ import org.jetbrains.kotlinx.dataframe.impl.GroupedDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.ManyImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.asTable
+import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
-import org.jetbrains.kotlinx.dataframe.impl.columns.isTable
 import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.owner
@@ -71,12 +70,6 @@ public fun DataColumn<Any>.asNumbers(): ValueColumn<Number> {
 public fun <T> FrameColumn<T>.toDefinition(): ColumnAccessor<DataFrame<T>> = frameColumn<T>(name)
 public fun <T> ColumnGroup<T>.toDefinition(): ColumnAccessor<DataRow<T>> = columnGroup<T>(name)
 public fun <T> ValueColumn<T>.toDefinition(): ColumnAccessor<T> = column<T>(name)
-
-public fun AnyColumn.asFrame(): AnyFrame = when (this) {
-    is ColumnGroup<*> -> df
-    is ColumnWithPath<*> -> data.asFrame()
-    else -> error("Can not extract DataFrame from ${javaClass.kotlin}")
-}
 
 public fun <T> DataColumn<T>.asComparable(): DataColumn<Comparable<T>> {
     require(isComparable())
@@ -151,12 +144,12 @@ public fun <T, G> DataFrame<T>.asGroupedDataFrame(groupedColumn: ColumnReference
     GroupedDataFrameImpl(this, frameColumn(groupedColumn.name()).typed()) { none() }
 
 public fun <T> DataFrame<T>.asGroupedDataFrame(): GroupedDataFrame<T, T> {
-    val groupCol = columns().single { it.isTable() }.asTable() as FrameColumn<T>
+    val groupCol = columns().single { it.isFrameColumn() }.asFrameColumn().typed<T>()
     return asGroupedDataFrame { groupCol }
 }
 
 public fun <T, G> DataFrame<T>.asGroupedDataFrame(selector: ColumnSelector<T, DataFrame<G>?>): GroupedDataFrame<T, G> {
-    val column = column(selector).asTable()
+    val column = column(selector).asFrameColumn()
     return GroupedDataFrameImpl(this, column) { none() }
 }
 

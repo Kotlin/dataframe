@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.Column
+import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.MapColumnReference
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateReceiver
 import org.jetbrains.kotlinx.dataframe.aggregation.GroupByReceiver
@@ -26,7 +26,7 @@ public fun <T> DataFrame<T>.pivot(columns: ColumnsSelector<T, *>): PivotedDataFr
 public fun <T> DataFrame<T>.pivot(vararg columns: String): PivotedDataFrame<T> = pivot { columns.toColumns() }
 public fun <T> DataFrame<T>.pivot(vararg columns: Column): PivotedDataFrame<T> = pivot { columns.toColumns() }
 
-public fun <T, P : GroupedPivot<T>> P.withGrouping(group: MapColumnReference): P = withGrouping(group.path()) as P
+public fun <T, P : GroupedPivot<T>> P.withGrouping(group: ColumnGroupReference): P = withGrouping(group.path()) as P
 public fun <T, P : GroupedPivot<T>> P.withGrouping(groupName: String): P = withGrouping(pathOf(groupName)) as P
 
 public typealias AggregateBody<T, R> = AggregateReceiver<T>.(AggregateReceiver<T>) -> R

@@ -10,8 +10,8 @@ import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.values
-import org.jetbrains.kotlinx.dataframe.impl.columns.asGroup
-import org.jetbrains.kotlinx.dataframe.impl.columns.asTable
+import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.toMany
 
 internal fun <T, C> DataFrame<T>.mergeRowsImpl(dropNulls: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> {
@@ -21,8 +21,8 @@ internal fun <T, C> DataFrame<T>.mergeRowsImpl(dropNulls: Boolean = false, colum
             val filterNulls = dropNulls && column.hasNulls()
             val value = when (column.kind()) {
                 ColumnKind.Value -> column.toList().let { if (filterNulls) (it as List<Any?>).filterNotNull() else it }.toMany()
-                ColumnKind.Group -> column.asGroup().df
-                ColumnKind.Frame -> column.asTable().values.concat()
+                ColumnKind.Group -> column.asColumnGroup().df
+                ColumnKind.Frame -> column.asFrameColumn().values.concat()
             }
             var first = true
             column.map {
