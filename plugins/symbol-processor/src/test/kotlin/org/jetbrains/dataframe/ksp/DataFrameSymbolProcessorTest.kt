@@ -6,6 +6,7 @@ import io.kotest.inspectors.forOne
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldStartWith
+import org.junit.Before
 import kotlin.test.Test
 
 class DataFrameSymbolProcessorTest {
@@ -18,6 +19,11 @@ class DataFrameSymbolProcessorTest {
         """.trimIndent()
 
         const val dataFramePackage = DataFrameNames.DATAFRAME_PACKAGE
+    }
+
+    @Before
+    fun setup(){
+        KspCompilationTestRunner.compilationDir.deleteRecursively()
     }
 
     @Test
