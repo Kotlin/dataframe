@@ -11,6 +11,7 @@ internal object KotlinCompilationUtil {
     fun prepareCompilation(
         sources: List<SourceFile>,
         outputStream: OutputStream,
+        tempDir: File,
         classpaths: List<File> = emptyList()
     ): KotlinCompilation {
         val compilation = KotlinCompilation()

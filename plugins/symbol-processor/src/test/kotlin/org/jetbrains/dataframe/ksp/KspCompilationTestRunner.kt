@@ -3,6 +3,7 @@ package org.jetbrains.dataframe.ksp
 import com.tschuchort.compiletesting.*
 import java.io.ByteArrayOutputStream
 import java.io.File
+import java.nio.file.Paths
 
 @Suppress("unused")
 internal class KotlinCompileTestingCompilationResult(
@@ -21,6 +22,8 @@ internal data class TestCompilationParameters(
 
 internal object KspCompilationTestRunner {
 
+    val compilationDir: File = Paths.get("build/test-compile").toAbsolutePath().toFile()
+
     fun compile(params: TestCompilationParameters): KotlinCompileTestingCompilationResult {
         @Suppress("NAME_SHADOWING")
         // looks like this requires a kotlin source file
@@ -30,13 +33,21 @@ internal object KspCompilationTestRunner {
         val kspCompilation = KotlinCompilationUtil.prepareCompilation(
             sources = sources,
             outputStream = combinedOutputStream,
-            classpaths = params.classpath
+            classpaths = params.classpath,
+            tempDir = compilationDir
         )
         kspCompilation.kspArgs.putAll(params.options)
         kspCompilation.symbolProcessorProviders = listOf(DataFrameSymbolProcessorProvider())
-        kspCompilation.compile().also { println(it.messages);
-            if (it.exitCode==KotlinCompilation.ExitCode.COMPILATION_ERROR) {
-                return KotlinCompileTestingCompilationResult(it, false, emptyList(), emptyList(), combinedOutputStream.toString(Charsets.UTF_8))
+        kspCompilation.compile().also {
+            println(it.messages);
+            if (it.exitCode == KotlinCompilation.ExitCode.COMPILATION_ERROR) {
+                return KotlinCompileTestingCompilationResult(
+                    it,
+                    false,
+                    emptyList(),
+                    emptyList(),
+                    combinedOutputStream.toString(Charsets.UTF_8)
+                )
             }
         }
         // ignore KSP result for now because KSP stops compilation, which might create false
@@ -49,6 +60,7 @@ internal object KspCompilationTestRunner {
             sources = sources,
             outputStream = combinedOutputStream,
             classpaths = params.classpath,
+            tempDir = compilationDir
         )
         // build source files from generated code
         finalCompilation.sources += kspCompilation.kspJavaSourceDir.collectSourceFiles() +
