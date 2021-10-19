@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
+import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 public enum class MarkerVisibility {
@@ -55,7 +56,7 @@ public open class Marker(
 
     public val columnNames: List<String> get() = allFields.map { it.columnName }
 
-    public val schema: DataFrameSchema by lazy { DataFrameSchema(allFields.map { it.columnName to it.columnSchema }.toMap()) }
+    public val schema: DataFrameSchema by lazy { DataFrameSchemaImpl(allFields.map { it.columnName to it.columnSchema }.toMap()) }
 
     public fun implements(schema: Marker): Boolean = if (schema.name == name) true else baseMarkers[schema.name]?.let { it === schema } ?: false
 

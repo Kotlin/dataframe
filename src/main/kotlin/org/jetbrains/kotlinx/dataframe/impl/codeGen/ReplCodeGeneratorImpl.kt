@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
@@ -14,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import org.jetbrains.kotlinx.dataframe.schema.extractSchema
 import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListNamedStub
 import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListTypedStub
 import org.jetbrains.kotlinx.jupyter.api.Code
@@ -49,7 +49,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
     override fun process(row: AnyRow, property: KProperty<*>?) = process(row.df(), property)
 
     override fun process(df: AnyFrame, property: KProperty<*>?): CodeWithConverter {
-        var targetSchema = df.extractSchema()
+        var targetSchema = df.schema()
         var isMutable = false
 
         if (property != null) {
@@ -138,7 +138,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
 
     override fun process(stub: DataFrameToListTypedStub): CodeWithConverter {
         val df = stub.df
-        val sourceSchema = df.extractSchema()
+        val sourceSchema = df.schema()
         val marker = MarkersExtractor.get(stub.interfaceClass)
         val requestedSchema = marker.schema
         if (!requestedSchema.compare(sourceSchema).isSuperOrEqual()) {
@@ -156,7 +156,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             stub.className,
             emptyList()
         )
-        val marker = schemaGenerator.process(stub.df.extractSchema(), true, MarkerVisibility.IMPLICIT_PUBLIC)
+        val marker = schemaGenerator.process(stub.df.schema(), true, MarkerVisibility.IMPLICIT_PUBLIC)
         return generateToListConverter(stub.className, marker.fields, null)
     }
 

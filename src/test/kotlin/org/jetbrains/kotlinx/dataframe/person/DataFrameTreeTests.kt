@@ -82,7 +82,7 @@ import org.jetbrains.kotlinx.dataframe.emptyMany
 import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumnInternal
+import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.index
@@ -414,7 +414,7 @@ class DataFrameTreeTests : BaseTest() {
         val updated = grouped.update(info).withRowCol { row, column -> column.asColumnGroup().df }
         val col = updated[info.name()]
         col.kind() shouldBe ColumnKind.Frame
-        val table = col.asFrameColumnInternal()
+        val table = col.asFrameColumn()
         table.schema.value.columns.map { it.key }.sorted() shouldBe typed.select { age and weight }.columnNames()
             .sorted()
     }

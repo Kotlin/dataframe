@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumnInternal
+import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -46,7 +46,7 @@ class ReadTests {
         """.trimIndent()
         val df = DataFrame.readJsonStr(data)
         df.nrow() shouldBe 3
-        val a = df["a"].asFrameColumnInternal()
+        val a = df["a"].asFrameColumn()
         a[1]!!.nrow shouldBe 0
         a[0]!!.nrow shouldBe 1
         a[2]!!.nrow shouldBe 1

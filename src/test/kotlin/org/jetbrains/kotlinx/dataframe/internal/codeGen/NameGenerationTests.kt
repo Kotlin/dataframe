@@ -6,9 +6,9 @@ import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.process
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.schema.extractSchema
 import org.junit.Test
 
 class NameGenerationTests {
@@ -26,7 +26,7 @@ class NameGenerationTests {
     @Test
     fun `interface generation`() {
         val codeGen = CodeGenerator.create()
-        val code = codeGen.generate(df.extractSchema(), "DataType", true, false, isOpen = false, MarkerVisibility.IMPLICIT_PUBLIC, emptyList()).code
+        val code = codeGen.generate(df.schema(), "DataType", true, false, isOpen = false, MarkerVisibility.IMPLICIT_PUBLIC, emptyList()).code
 
         val expected = """
             @DataSchema(isOpen = false)

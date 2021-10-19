@@ -20,7 +20,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumnInternal
+import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -101,7 +101,7 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, selector: C
                     col.name,
                     collector.values as List<AnyFrame?>,
                     collector.hasNulls,
-                    col.asFrameColumnInternal().schema // keep original schema
+                    col.asFrameColumn().schema // keep original schema
                 )
                 else collector.toColumn(col.name)
             }
