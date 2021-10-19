@@ -1,7 +1,9 @@
 package org.jetbrains.dataframe.gradle
 
 import com.beust.klaxon.KlaxonException
+import io.kotest.assertions.asClue
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.read
@@ -43,8 +45,11 @@ class DataFrameReadTest {
 
     @Test
     fun `invalid url`() {
-        shouldThrow<IllegalArgumentException> {
+        val exception = shouldThrowAny {
             DataFrame.read("http:://example.com")
+        }
+        exception.asClue {
+            (exception is IllegalArgumentException || exception is IOException) shouldBe true
         }
     }
 
