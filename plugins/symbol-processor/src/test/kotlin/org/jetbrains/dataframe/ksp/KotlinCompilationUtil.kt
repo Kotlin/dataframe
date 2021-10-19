@@ -15,6 +15,7 @@ internal object KotlinCompilationUtil {
         classpaths: List<File> = emptyList()
     ): KotlinCompilation {
         val compilation = KotlinCompilation()
+        compilation.workingDir = tempDir
         val srcRoot = compilation.workingDir.resolve("ksp/srcInput")
         val javaSrcRoot = srcRoot.resolve("java")
         val kotlinSrcRoot = srcRoot.resolve("kotlin")
