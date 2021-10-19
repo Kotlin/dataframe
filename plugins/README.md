@@ -6,26 +6,6 @@ DataFrame Gradle plugin can
 
 ## Setup
 
-### settings.gradle
-#### Kotlin DSL
-```
-pluginManagement {
-    repositories {
-        maven(url="https://jitpack.io")
-        gradlePluginPortal()
-    }
-}
-```
-#### Groovy DSL
-```
-pluginManagement {
-    repositories {
-        maven { url = "https://jitpack.io" } 
-        gradlePluginPortal()
-    }
-}
-```
-
 ### build.gradle
 ```
 plugins {
