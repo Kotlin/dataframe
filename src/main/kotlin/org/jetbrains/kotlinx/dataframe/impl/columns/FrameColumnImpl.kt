@@ -3,15 +3,16 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
+import org.jetbrains.kotlinx.dataframe.impl.schema.intersectSchemas
 import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import org.jetbrains.kotlinx.dataframe.schema.extractSchema
-import org.jetbrains.kotlinx.dataframe.schema.intersectSchemas
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -29,7 +30,7 @@ internal open class FrameColumnImpl<T> constructor(
             .withNullability(hasNulls ?: values.any { it == null }),
         distinct
     ),
-    FrameColumnInternal<T> {
+    FrameColumn<T> {
 
     constructor(name: String, df: DataFrame<T>, startIndices: Sequence<Int>, emptyToNull: Boolean) : this(name, df.splitByIndices(startIndices, emptyToNull).toList(), hasNulls = if (emptyToNull) null else false)
 
@@ -47,8 +48,8 @@ internal open class FrameColumnImpl<T> constructor(
 
     override fun distinct() = FrameColumnImpl(name, distinct.value.toList(), hasNulls, schema, distinct)
 
-    override val schema = columnSchema ?: lazy {
-        values.mapNotNull { it?.takeIf { it.nrow > 0 }?.extractSchema() }.intersectSchemas()
+    override val schema: Lazy<DataFrameSchema> = columnSchema ?: lazy {
+        values.mapNotNull { it?.takeIf { it.nrow > 0 }?.schema() }.intersectSchemas()
     }
 
     override fun forceResolve() = ResolvingFrameColumn(name, values, hasNulls, schema, distinct)

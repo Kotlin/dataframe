@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.codeGen
 
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.schema.extractSchema
+import org.jetbrains.kotlinx.dataframe.api.schema
 
 public inline fun <reified T> DataFrame<T>.generateCode(fields: Boolean = true, extensionProperties: Boolean = true): String {
     val name = if (T::class.isAbstract) {
@@ -19,7 +19,7 @@ public fun <T> DataFrame<T>.generateCode(
 ): String {
     val codeGen = CodeGenerator.create()
     return codeGen.generate(
-        extractSchema(),
+        schema(),
         markerName,
         fields = fields,
         extensionProperties = extensionProperties,

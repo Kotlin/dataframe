@@ -61,7 +61,7 @@ internal class SchemaProcessorImpl(
             else -> throw NotImplementedError()
         }
 
-        return schema.sortedColumns.flatMapIndexed { index, column ->
+        return schema.columns.asIterable().sortedBy { it.key }.flatMapIndexed { index, column ->
             val (columnName, columnSchema) = column
 
             // find all fields that were already generated for this column name in base interfaces

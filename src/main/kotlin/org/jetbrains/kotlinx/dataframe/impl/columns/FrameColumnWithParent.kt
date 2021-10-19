@@ -3,11 +3,12 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 
 internal class FrameColumnWithParent<T>(
     override val parent: ColumnGroup<*>,
-    override val source: FrameColumnInternal<T>
-) : ColumnWithParent<DataFrame<T>?>, FrameColumnInternal<T> by source {
+    override val source: FrameColumn<T>
+) : ColumnWithParent<DataFrame<T>?>, FrameColumn<T> by source {
 
     override fun equals(other: Any?) = source.checkEquals(other)
 

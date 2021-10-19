@@ -83,12 +83,10 @@ internal fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
 
 @JvmName("asGroupedT")
 internal fun <T> DataColumn<DataRow<T>>.asColumnGroup(): ColumnGroup<T> = this as ColumnGroup<T>
-internal fun AnyCol.asFrameColumn(): FrameColumn<*> = this as FrameColumnInternal<*>
-
-internal fun AnyCol.asFrameColumnInternal(): FrameColumnInternal<*> = this as FrameColumnInternal<*>
+internal fun AnyCol.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
 
 @JvmName("asTableT")
-internal fun <T> DataColumn<DataFrame<T>?>.asFrameColumn(): FrameColumn<T> = this as FrameColumnInternal<T>
+internal fun <T> DataColumn<DataFrame<T>?>.asFrameColumn(): FrameColumn<T> = this as FrameColumn<T>
 
 internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
     if (!type.isSubtypeOf(getType<Comparable<*>?>())) {

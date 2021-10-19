@@ -1,13 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.schema
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.hasNulls
-import org.jetbrains.kotlinx.dataframe.impl.columns.internal
-import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.isSupertypeOf
@@ -66,14 +59,4 @@ public abstract class ColumnSchema {
             else -> throw NotImplementedError()
         }
     }
-}
-
-internal fun AnyCol.getColumnType(): ColumnSchema = when (this) {
-    is ValueColumn<*> -> ColumnSchema.Value(type)
-    is ColumnGroup<*> -> ColumnSchema.Map(df.extractSchema())
-    is FrameColumn<*> -> ColumnSchema.Frame(
-        internal().schema.value,
-        hasNulls
-    )
-    else -> throw RuntimeException()
 }

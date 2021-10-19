@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.DataRowBase
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.move
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
@@ -18,7 +19,6 @@ import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
 import org.jetbrains.kotlinx.dataframe.person.BaseTest
 import org.jetbrains.kotlinx.dataframe.person.Person
-import org.jetbrains.kotlinx.dataframe.schema.extractSchema
 import org.junit.Test
 
 class CodeGenerationTests : BaseTest() {
@@ -132,7 +132,7 @@ class CodeGenerationTests : BaseTest() {
     @Test
     fun `frame to markers`() {
         val f = SchemaProcessor.create("Temp")
-        val marker = f.process(df.extractSchema(), true)
+        val marker = f.process(df.schema(), true)
         marker.isOpen shouldBe true
         f.generatedMarkers shouldBe listOf(marker)
     }
@@ -140,7 +140,7 @@ class CodeGenerationTests : BaseTest() {
     @Test
     fun `generate derived interface`() {
         val codeGen = CodeGenerator.create()
-        val schema = df.dropNulls().extractSchema()
+        val schema = df.dropNulls().schema()
         val code = codeGen.generate(
             schema, "ValidPerson", true, true, isOpen = true, MarkerVisibility.IMPLICIT_PUBLIC,
             listOf(
@@ -165,7 +165,7 @@ class CodeGenerationTests : BaseTest() {
     @Test
     fun `empty interface with properties`() {
         val codeGen = CodeGenerator.create()
-        val code = codeGen.generate(df.extractSchema(), "Person", false, true, true).code.declarations
+        val code = codeGen.generate(df.schema(), "Person", false, true, true).code.declarations
         val expected = """
             @DataSchema
             interface Person
@@ -176,7 +176,7 @@ class CodeGenerationTests : BaseTest() {
     @Test
     fun `interface with fields`() {
         val repl = CodeGenerator.create()
-        val code = repl.generate(typed.extractSchema(), "DataType", true, false, false).code.declarations
+        val code = repl.generate(typed.schema(), "DataType", true, false, false).code.declarations
         code shouldBe """
             @DataSchema(isOpen = false)
             interface DataType{
@@ -191,7 +191,7 @@ class CodeGenerationTests : BaseTest() {
     @Test
     fun `declaration with internal visibility`() {
         val repl = CodeGenerator.create()
-        val code = repl.generate(typed.extractSchema(), "DataType", true, true, false, MarkerVisibility.INTERNAL).code.declarations
+        val code = repl.generate(typed.schema(), "DataType", true, true, false, MarkerVisibility.INTERNAL).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
         code shouldBe """
             @DataSchema(isOpen = false)
@@ -215,7 +215,7 @@ class CodeGenerationTests : BaseTest() {
     @Test
     fun `declaration with explicit public visibility`() {
         val repl = CodeGenerator.create()
-        val code = repl.generate(typed.extractSchema(), "DataType", true, true, false, MarkerVisibility.EXPLICIT_PUBLIC).code.declarations
+        val code = repl.generate(typed.schema(), "DataType", true, true, false, MarkerVisibility.EXPLICIT_PUBLIC).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
         code shouldBe """
             @DataSchema(isOpen = false)
@@ -240,7 +240,7 @@ class CodeGenerationTests : BaseTest() {
     fun `column starts with number`() {
         val df = dataFrameOf("1a", "-b", "?c")(1, 2, 3)
         val repl = CodeGenerator.create()
-        val declarations = repl.generate(df.extractSchema(), "DataType", false, true, false).code.declarations
+        val declarations = repl.generate(df.schema(), "DataType", false, true, false).code.declarations
         df.columnNames().forEach {
             val matches = "`$it`".toRegex().findAll(declarations).toList()
             matches.size shouldBe 2
