@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.samples
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.api.toValueColumn
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
@@ -16,7 +16,7 @@ class Base {
         fun unnamedColumnWithValues() {
             // SampleStart
             val cols = columnOf("Alice", "Bob")
-            val colsFromList = listOf("Alice", "Bob").toColumn()
+            val colsFromList = listOf("Alice", "Bob").toValueColumn()
             // SampleEnd
         }
 
@@ -24,7 +24,7 @@ class Base {
         fun namedColumnWitValues() {
             // SampleStart
             val name by columnOf("Alice", "Bob")
-            val col = listOf("Alice", "Bob").toColumn("name")
+            val col = listOf("Alice", "Bob").toValueColumn("name")
             // SampleEnd
         }
 

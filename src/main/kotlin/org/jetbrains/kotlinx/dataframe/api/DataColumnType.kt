@@ -30,8 +30,7 @@ public fun AnyCol.typeOfElement(): KType =
 public fun AnyCol.elementTypeIsNullable(): Boolean = typeOfElement().isMarkedNullable
 public fun AnyCol.isComparable(): Boolean = isSubtypeOf<Comparable<*>?>()
 
-// TODO: remove by checking that type of column is always inferred
-public fun AnyCol.guessType(): DataColumn<*> = DataColumn.create(name, toList())
+public fun AnyCol.inferType(): DataColumn<*> = DataColumn.createWithTypeInference(name, toList())
 
 public fun AnyColumn.unbox(): AnyCol = when (this) {
     is ColumnWithPath<*> -> data.unbox()

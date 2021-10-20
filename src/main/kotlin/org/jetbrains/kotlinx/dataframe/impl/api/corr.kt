@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.api.toValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.math.stdMean
@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.math.stdMean
 internal fun <T, C : Number> DataFrame<T>.corrImpl(cols: List<DataColumn<C>>): AnyFrame {
     val len = nrow()
 
-    val index = cols.map { it.name }.toColumn("column")
+    val index = cols.map { it.name }.toValueColumn("column")
 
     val values = cols.map { it.values.map { it.toDouble() } }
     val stdMeans = values.map { it.stdMean() }
@@ -26,7 +26,7 @@ internal fun <T, C : Number> DataFrame<T>.corrImpl(cols: List<DataColumn<C>>): A
             val cov = (0 until len).map { (v1[it] - m1) * (v2[it] - m2) }.sum()
             cov / (d1 * d2)
         }
-        values.toColumn(c1.name)
+        values.toValueColumn(c1.name)
     }
 
     return dataFrameOf(listOf(index) + newColumns)

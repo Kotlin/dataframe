@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.schema.intersectSchemas
-import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KType
@@ -32,8 +31,6 @@ internal open class FrameColumnImpl<T> constructor(
     ),
     FrameColumn<T> {
 
-    constructor(name: String, df: DataFrame<T>, startIndices: Sequence<Int>, emptyToNull: Boolean) : this(name, df.splitByIndices(startIndices, emptyToNull).toList(), hasNulls = if (emptyToNull) null else false)
-
     override fun rename(newName: String) = FrameColumnImpl(newName, values, hasNulls, schema, distinct)
 
     override fun defaultValue() = null
@@ -41,7 +38,7 @@ internal open class FrameColumnImpl<T> constructor(
     override fun addParent(parent: ColumnGroup<*>) = FrameColumnWithParent(parent, this)
 
     override fun createWithValues(values: List<DataFrame<T>?>, hasNulls: Boolean?): DataColumn<DataFrame<T>?> {
-        return DataColumn.create(name, values, hasNulls)
+        return DataColumn.createFrameColumn(name, values, hasNulls)
     }
 
     override fun changeType(type: KType) = throw UnsupportedOperationException()

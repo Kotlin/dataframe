@@ -61,7 +61,7 @@ internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> = when
             else require(it is AnyFrame) { "Can not add value '$it' to FrameColumn" }
         }
         val groups = (values as List<AnyFrame?>)
-        DataColumn.create(name, groups, nulls) as DataColumn<T>
+        DataColumn.createFrameColumn(name, groups, nulls) as DataColumn<T>
     }
     is ColumnGroup<*> -> {
         this.columns().mapIndexed { colIndex, col ->
@@ -74,7 +74,7 @@ internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> = when
                 }
             }
             col.updateWith(newValues)
-        }.toDataFrame<Unit>().let { DataColumn.create(name, it) } as DataColumn<T>
+        }.toDataFrame<Unit>().let { DataColumn.createColumnGroup(name, it) } as DataColumn<T>
     }
     else -> {
         var nulls = false
@@ -87,6 +87,6 @@ internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> = when
                 }
             }
         }
-        DataColumn.create(name, values, type.withNullability(nulls))
+        DataColumn.createValueColumn(name, values, type.withNullability(nulls))
     }
 }

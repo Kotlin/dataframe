@@ -203,8 +203,8 @@ internal fun <A, B> DataFrame<A>.joinImpl(
             if (columnIndex < leftColumnsCount) leftColumns[columnIndex] else newRightColumns[columnIndex - leftColumnsCount]
         val hasNulls = hasNulls[columnIndex]
         val newColumn = when (srcColumn.kind) {
-            ColumnKind.Value -> DataColumn.create(srcColumn.name, columnValues.asList(), srcColumn.type.withNullability(hasNulls))
-            ColumnKind.Frame -> DataColumn.create(srcColumn.name, columnValues.asList() as List<AnyFrame?>)
+            ColumnKind.Value -> DataColumn.createValueColumn(srcColumn.name, columnValues.asList(), srcColumn.type.withNullability(hasNulls))
+            ColumnKind.Frame -> DataColumn.createFrameColumn(srcColumn.name, columnValues.asList() as List<AnyFrame?>)
             ColumnKind.Group -> error("Unexpected MapColumn at path ${srcColumn.path}")
         }
         srcColumn.path to newColumn

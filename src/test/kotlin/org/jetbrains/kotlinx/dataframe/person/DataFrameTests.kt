@@ -20,7 +20,7 @@ import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.guessType
+import org.jetbrains.kotlinx.dataframe.api.inferType
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isNumber
@@ -35,6 +35,7 @@ import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.api.toMap
+import org.jetbrains.kotlinx.dataframe.api.toValueColumn
 import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.column
@@ -49,7 +50,6 @@ import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.between
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
@@ -79,10 +79,10 @@ class DataFrameTests : BaseTest() {
             typed.weight.named("asda")
         ) shouldBe df
 
-        val c1 = typed.name.toList().toColumn()
-        val c2 = typed.age.toList().toColumn()
-        val c3 = typed.city.toList().toColumn()
-        val c4 = typed.weight.toList().toColumn()
+        val c1 = typed.name.toList().toValueColumn()
+        val c2 = typed.age.toList().toValueColumn()
+        val c3 = typed.city.toList().toValueColumn()
+        val c4 = typed.weight.toList().toValueColumn()
 
         dataFrameOf("name", "age", "city", "weight")(c1, c2, c3, c4) shouldBe df
     }
@@ -137,7 +137,7 @@ class DataFrameTests : BaseTest() {
         col.type() shouldBe getType<Comparable<*>>()
         val filtered = col.filter { it is String }
         filtered.type() shouldBe getType<Comparable<*>>()
-        filtered.guessType().type() shouldBe getType<String>()
+        filtered.inferType().type() shouldBe getType<String>()
     }
 
     @Test

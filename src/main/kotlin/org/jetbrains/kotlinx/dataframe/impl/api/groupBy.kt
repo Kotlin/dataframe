@@ -52,7 +52,7 @@ internal fun <T> DataFrame<T>.groupByImpl(cols: ColumnsSelector<T, *>): GroupedD
         start
     }
 
-    val groupedColumn = DataColumn.create(GroupedDataFrame.groupedColumnAccessor.name(), sorted, startIndices, false)
+    val groupedColumn = DataColumn.createFrameColumn(GroupedDataFrame.groupedColumnAccessor.name(), sorted, startIndices.asIterable(), false)
 
     val df = keyColumnsDf + groupedColumn
     return GroupedDataFrameImpl(df, groupedColumn, cols)

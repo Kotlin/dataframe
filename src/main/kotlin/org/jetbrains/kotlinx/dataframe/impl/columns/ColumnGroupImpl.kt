@@ -36,7 +36,7 @@ internal open class ColumnGroupImpl<T>(override val df: DataFrame<T>, val name: 
 
     override fun get(index: Int) = df[index]
 
-    override fun get(firstIndex: Int, vararg otherIndices: Int): ColumnGroup<T> = DataColumn.create(name, df.get(firstIndex, *otherIndices))
+    override fun get(firstIndex: Int, vararg otherIndices: Int): ColumnGroup<T> = DataColumn.createColumnGroup(name, df.get(firstIndex, *otherIndices))
 
     override fun slice(range: IntRange) = ColumnGroupImpl(df[range], name)
 

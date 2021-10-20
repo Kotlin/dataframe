@@ -32,7 +32,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.top
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.dfs
-import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType

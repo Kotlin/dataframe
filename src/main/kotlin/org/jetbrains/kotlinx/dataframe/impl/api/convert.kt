@@ -45,7 +45,7 @@ internal fun AnyCol.convertToImpl(newType: KType): AnyCol {
                             conv(it) ?: error("Can't convert '$it' to '$newType'")
                         }
                     }
-                    org.jetbrains.kotlinx.dataframe.DataColumn.create(name, values, targetType)
+                    org.jetbrains.kotlinx.dataframe.DataColumn.createValueColumn(name, values, targetType)
                 }
                 else -> error("Can't find converter from $from to $newType")
             }
@@ -54,7 +54,7 @@ internal fun AnyCol.convertToImpl(newType: KType): AnyCol {
                     if (it == null) null
                     else converter(it) ?: error("Can't convert '$it' to '$newType'")
                 }
-                org.jetbrains.kotlinx.dataframe.DataColumn.create(name, values, targetType)
+                org.jetbrains.kotlinx.dataframe.DataColumn.createValueColumn(name, values, targetType)
             }
         }
     }

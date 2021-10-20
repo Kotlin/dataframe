@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.SortReceiver
 import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.typedFrames
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
@@ -20,14 +21,13 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.assertIsComparable
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 
 internal fun <T, G> GroupedDataFrame<T, G>.sortByImpl(selector: SortColumnsSelector<G, *>): GroupedDataFrame<T, G> {
     return toDataFrame()
         .update { groups }
         .with { it?.sortByImpl(UnresolvedColumnsPolicy.Skip, selector) }
         .sortByImpl(UnresolvedColumnsPolicy.Skip, selector as SortColumnsSelector<T, *>)
-        .asGroupedDataFrame { it.frameColumn(groups.name()).typed() }
+        .asGroupedDataFrame { it.frameColumn(groups.name()).typedFrames() }
 }
 
 internal fun <T, C> DataFrame<T>.sortByImpl(

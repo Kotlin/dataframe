@@ -30,7 +30,6 @@ import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.with
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.getType

@@ -31,7 +31,7 @@ internal fun concatImpl(dataFrames: List<AnyFrame>): AnyFrame {
                 col?.asColumnGroup() ?: emptyDataFrame(dataFrames[index].nrow())
             }
             val merged = concatImpl(frames)
-            DataColumn.create(name, merged)
+            DataColumn.createColumnGroup(name, merged)
         } else {
             var nulls = false
             val types = mutableSetOf<KType>()
