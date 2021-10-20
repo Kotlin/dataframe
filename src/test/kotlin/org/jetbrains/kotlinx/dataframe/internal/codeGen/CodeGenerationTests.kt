@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.DataRowBase
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.schema
@@ -28,7 +27,7 @@ class CodeGenerationTests : BaseTest() {
     val personShortName = Person::class.simpleName!!
 
     val dfName = (DataFrameBase::class).qualifiedName
-    val dfRowName = (DataRowBase::class).qualifiedName
+    val dfRowName = (DataRow::class).qualifiedName
     val dataCol = (DataColumn::class).qualifiedName!!
     val dataRow = (DataRow::class).qualifiedName!!
     val colGroup = (ColumnGroup::class).qualifiedName!!
@@ -155,9 +154,9 @@ class CodeGenerationTests : BaseTest() {
                 override val weight: kotlin.Int
             }
             val $packageName.DataFrameBase<ValidPerson>.city: $packageName.DataColumn<kotlin.String> @JvmName("ValidPerson_city") get() = this["city"] as $packageName.DataColumn<kotlin.String>
-            val $packageName.DataRowBase<ValidPerson>.city: kotlin.String @JvmName("ValidPerson_city") get() = this["city"] as kotlin.String
+            val $packageName.DataRow<ValidPerson>.city: kotlin.String @JvmName("ValidPerson_city") get() = this["city"] as kotlin.String
             val $packageName.DataFrameBase<ValidPerson>.weight: $packageName.DataColumn<kotlin.Int> @JvmName("ValidPerson_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int>
-            val $packageName.DataRowBase<ValidPerson>.weight: kotlin.Int @JvmName("ValidPerson_weight") get() = this["weight"] as kotlin.Int
+            val $packageName.DataRow<ValidPerson>.weight: kotlin.Int @JvmName("ValidPerson_weight") get() = this["weight"] as kotlin.Int
         """.trimIndent()
         code shouldBe expected
     }
@@ -202,13 +201,13 @@ class CodeGenerationTests : BaseTest() {
                 val weight: kotlin.Int?
             }
             internal val $packageName.DataFrameBase<DataType>.age: $packageName.DataColumn<kotlin.Int> @JvmName("DataType_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int>
-            internal val $packageName.DataRowBase<DataType>.age: kotlin.Int @JvmName("DataType_age") get() = this["age"] as kotlin.Int
+            internal val $packageName.DataRow<DataType>.age: kotlin.Int @JvmName("DataType_age") get() = this["age"] as kotlin.Int
             internal val $packageName.DataFrameBase<DataType>.city: $packageName.DataColumn<kotlin.String?> @JvmName("DataType_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
-            internal val $packageName.DataRowBase<DataType>.city: kotlin.String? @JvmName("DataType_city") get() = this["city"] as kotlin.String?
+            internal val $packageName.DataRow<DataType>.city: kotlin.String? @JvmName("DataType_city") get() = this["city"] as kotlin.String?
             internal val $packageName.DataFrameBase<DataType>.name: $packageName.DataColumn<kotlin.String> @JvmName("DataType_name") get() = this["name"] as $packageName.DataColumn<kotlin.String>
-            internal val $packageName.DataRowBase<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
+            internal val $packageName.DataRow<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
             internal val $packageName.DataFrameBase<DataType>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
-            internal val $packageName.DataRowBase<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
+            internal val $packageName.DataRow<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
         """.trimIndent()
     }
 
@@ -226,13 +225,13 @@ class CodeGenerationTests : BaseTest() {
                 public val weight: kotlin.Int?
             }
             public val $packageName.DataFrameBase<DataType>.age: $packageName.DataColumn<kotlin.Int> @JvmName("DataType_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int>
-            public val $packageName.DataRowBase<DataType>.age: kotlin.Int @JvmName("DataType_age") get() = this["age"] as kotlin.Int
+            public val $packageName.DataRow<DataType>.age: kotlin.Int @JvmName("DataType_age") get() = this["age"] as kotlin.Int
             public val $packageName.DataFrameBase<DataType>.city: $packageName.DataColumn<kotlin.String?> @JvmName("DataType_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
-            public val $packageName.DataRowBase<DataType>.city: kotlin.String? @JvmName("DataType_city") get() = this["city"] as kotlin.String?
+            public val $packageName.DataRow<DataType>.city: kotlin.String? @JvmName("DataType_city") get() = this["city"] as kotlin.String?
             public val $packageName.DataFrameBase<DataType>.name: $packageName.DataColumn<kotlin.String> @JvmName("DataType_name") get() = this["name"] as $packageName.DataColumn<kotlin.String>
-            public val $packageName.DataRowBase<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
+            public val $packageName.DataRow<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
             public val $packageName.DataFrameBase<DataType>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
-            public val $packageName.DataRowBase<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
+            public val $packageName.DataRow<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
         """.trimIndent()
     }
 

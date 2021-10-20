@@ -7,43 +7,43 @@ import org.jetbrains.kotlinx.dataframe.impl.toIterable
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 
-public interface DataRowBase<out T> {
-    public operator fun get(name: String): Any?
-    public fun tryGet(name: String): Any?
+public interface DataRow<out T> {
+
     public fun index(): Int
+
+    public fun df(): DataFrame<T>
     public fun prev(): DataRow<T>?
     public fun next(): DataRow<T>?
-}
-
-public interface DataRow<out T> : DataRowBase<T> {
-    public fun df(): DataFrame<T>
-
     public fun getRow(index: Int): DataRow<T>?
-    override operator fun get(name: String): Any?
+    public fun neighbours(relativeIndices: Iterable<Int>): Sequence<DataRow<T>> = relativeIndices.asSequence().mapNotNull { getRow(index + it) }
 
     public fun ncol(): Int = df().ncol()
     public fun columnNames(): List<String> = df().columnNames()
 
-    override fun tryGet(name: String): Any?
+    // region get cell value
+
     public operator fun get(columnIndex: Int): Any?
     public operator fun <R> get(selector: RowSelector<T, R>): R = selector(this, this)
     public operator fun <R> get(column: ColumnReference<R>): R
     public operator fun <R> get(columns: List<ColumnReference<R>>): List<R> = columns.map { get(it) }
     public operator fun <R> get(property: KProperty<R>): R = get(property.name) as R
-    public operator fun <R> ColumnReference<R>.invoke(): R = get(this)
-    public operator fun <R> String.invoke(): R = this@DataRow.get(this) as R
-    public operator fun <R> ColumnPath.invoke(): R = get(this) as R
-    public operator fun String.get(vararg path: String): ColumnPath = ColumnPath(listOf(this) + path)
-
     public operator fun get(first: Column, vararg other: Column): DataRow<T> = owner.get(first, *other)[index]
     public operator fun get(first: String, vararg other: String): DataRow<T> = owner.get(first, *other)[index]
     public operator fun <R> get(path: ColumnPath): R = owner.get(path)[index] as R
+    public operator fun get(name: String): Any?
+    public fun tryGet(name: String): Any?
 
-    public fun neighbours(relativeIndices: Iterable<Int>): Sequence<DataRow<T>> = relativeIndices.asSequence().mapNotNull { getRow(index + it) }
+    // endregion
 
     public fun <T> read(name: String): T = get(name) as T
     public fun size(): Int = owner.ncol()
     public fun values(): List<Any?>
+
+    public operator fun String.get(vararg path: String): ColumnPath = ColumnPath(listOf(this) + path)
+
+    public operator fun <R> ColumnReference<R>.invoke(): R = get(this)
+    public operator fun <R> String.invoke(): R = this@DataRow.get(this) as R
+    public operator fun <R> ColumnPath.invoke(): R = get(this) as R
 
     public fun String.int(): Int = read(this)
     public fun String.intOrNull(): Int? = read(this)

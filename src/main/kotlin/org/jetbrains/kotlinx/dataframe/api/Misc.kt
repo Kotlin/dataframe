@@ -22,7 +22,7 @@ public fun <T> AnyCol.castTo(): DataColumn<T> = this as DataColumn<T>
 
 // region transpose
 
-public fun <T> DataRow<T>.transpose(): DataFrame<*> = dataFrameOf(owner.columnNames().toValueColumn(), values.toColumnGuessType())
+public fun <T> DataRow<T>.transpose(): DataFrame<*> = dataFrameOf(owner.columnNames().toValueColumn(), values.toColumn(inferType = true))
 
 // endregion
 

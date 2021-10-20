@@ -160,8 +160,8 @@ internal fun <T> guessColumnType(
                     else -> manyOf(it)
                 }
             }
-            DataColumn.createValueColumn(name, lists, type, defaultValue).typed()
+            DataColumn.createValueColumn(name, lists, type, checkForNulls = false, defaultValue).typed()
         }
-        else -> DataColumn.createValueColumn(name, values, type, defaultValue)
+        else -> DataColumn.createValueColumn(name, values, type, checkForNulls = false, defaultValue)
     }
 }

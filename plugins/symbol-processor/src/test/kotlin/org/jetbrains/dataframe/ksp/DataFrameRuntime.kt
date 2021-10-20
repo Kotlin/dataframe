@@ -24,14 +24,13 @@ internal val dataFrame = SourceFile.kotlin("DataFrame.kt", """
     interface DataFrameBase<out T> {
         operator fun get(columnName: String): DataColumn<*>
     }
-    interface DataRow<out T>
     interface DataFrame<out T>
 """.trimIndent())
 
 internal val dataRow = SourceFile.kotlin("DataRow.kt", """
     package ${DataFrameNames.DATAFRAME_PACKAGE}
 
-    interface DataRowBase<out T> {
+    interface DataRow<out T> {
         operator fun get(name: String): Any?
     }
 """.trimIndent())

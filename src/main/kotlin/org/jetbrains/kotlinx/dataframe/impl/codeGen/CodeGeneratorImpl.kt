@@ -8,7 +8,7 @@ import org.jetbrains.dataframe.keywords.ModifierKeywords
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
-import org.jetbrains.kotlinx.dataframe.DataRowBase
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.codeGen.BaseField
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
@@ -91,7 +91,7 @@ internal open class ExtensionsCodeGeneratorImpl : ExtensionsCodeGenerator {
 
         val declarations = mutableListOf<String>()
         val dfTypename = "${DataFrameBase::class.qualifiedName}<$markerName>"
-        val rowTypename = "${DataRowBase::class.qualifiedName}<$markerName>"
+        val rowTypename = "${DataRow::class.qualifiedName}<$markerName>"
         marker.fields.sortedBy { it.fieldName.quotedIfNeeded }.forEach {
             val getter = "this[\"${renderStringLiteral(it.columnName)}\"]"
             val name = it.fieldName

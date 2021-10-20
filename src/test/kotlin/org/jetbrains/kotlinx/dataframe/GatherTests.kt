@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.mapNotNullGroups
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.api.withValues
@@ -74,19 +75,19 @@ class GatherTests {
     val DataFrameBase<Marker1>.c1: DataColumn<String>
         @JvmName("Marker1_c1")
         get() = this["c1"] as DataColumn<String>
-    val DataRowBase<Marker1>.c1: String
+    val DataRow<Marker1>.c1: String
         @JvmName("Marker1_c1")
         get() = this["c1"] as String
     val DataFrameBase<Marker1>.c2: DataColumn<String>
         @JvmName("Marker1_c2")
         get() = this["c2"] as DataColumn<String>
-    val DataRowBase<Marker1>.c2: String
+    val DataRow<Marker1>.c2: String
         @JvmName("Marker1_c2")
         get() = this["c2"] as String
     val DataFrameBase<Marker1>.c3: DataColumn<String?>
         @JvmName("Marker1_c3")
         get() = this["c3"] as DataColumn<String?>
-    val DataRowBase<Marker1>.c3: String?
+    val DataRow<Marker1>.c3: String?
         @JvmName("Marker1_c3")
         get() = this["c3"] as String?
 
@@ -97,17 +98,17 @@ class GatherTests {
         val c3: String?
     }
     val DataFrameBase<Marker2>.c1: DataColumn<String> @JvmName("Marker2_c1") get() = this["c1"] as DataColumn<String>
-    val DataRowBase<Marker2>.c1: String @JvmName("Marker2_c1") get() = this["c1"] as String
+    val DataRow<Marker2>.c1: String @JvmName("Marker2_c1") get() = this["c1"] as String
     val DataFrameBase<Marker2>.c2: DataColumn<String> @JvmName("Marker2_c2") get() = this["c2"] as DataColumn<String>
-    val DataRowBase<Marker2>.c2: String @JvmName("Marker2_c2") get() = this["c2"] as String
+    val DataRow<Marker2>.c2: String @JvmName("Marker2_c2") get() = this["c2"] as String
     val DataFrameBase<Marker2>.c3: DataColumn<String?> @JvmName("Marker2_c3") get() = this["c3"] as DataColumn<String?>
-    val DataRowBase<Marker2>.c3: String? @JvmName("Marker2_c3") get() = this["c3"] as String?
+    val DataRow<Marker2>.c3: String? @JvmName("Marker2_c3") get() = this["c3"] as String?
     @DataSchema(isOpen = false)
     interface Marker3 {
         val c1: String
     }
     val DataFrameBase<Marker3>.c1: DataColumn<String> @JvmName("Marker3_c1") get() = this["c1"] as DataColumn<String>
-    val DataRowBase<Marker3>.c1: String @JvmName("Marker3_c1") get() = this["c1"] as String
+    val DataRow<Marker3>.c1: String @JvmName("Marker3_c1") get() = this["c1"] as String
     @DataSchema
     interface Marker {
         val name: String
@@ -116,13 +117,13 @@ class GatherTests {
         val first: DataRow<Marker3>
     }
     val DataFrameBase<Marker>.first: ColumnGroup<*> @JvmName("Marker_first") get() = this["first"] as ColumnGroup<*>
-    val DataRowBase<Marker>.first: AnyRow @JvmName("Marker_first") get() = this["first"] as AnyRow
+    val DataRow<Marker>.first: AnyRow @JvmName("Marker_first") get() = this["first"] as AnyRow
     val DataFrameBase<Marker>.name: DataColumn<String> @JvmName("Marker_name") get() = this["name"] as DataColumn<String>
-    val DataRowBase<Marker>.name: String @JvmName("Marker_name") get() = this["name"] as String
+    val DataRow<Marker>.name: String @JvmName("Marker_name") get() = this["name"] as String
     val DataFrameBase<Marker>.normal: ColumnGroup<*> @JvmName("Marker_normal") get() = this["normal"] as ColumnGroup<*>
-    val DataRowBase<Marker>.normal: AnyRow @JvmName("Marker_normal") get() = this["normal"] as AnyRow
+    val DataRow<Marker>.normal: AnyRow @JvmName("Marker_normal") get() = this["normal"] as AnyRow
     val DataFrameBase<Marker>.reversed: ColumnGroup<*> @JvmName("Marker_reversed") get() = this["reversed"] as ColumnGroup<*>
-    val DataRowBase<Marker>.reversed: AnyRow @JvmName("Marker_reversed") get() = this["reversed"] as AnyRow
+    val DataRow<Marker>.reversed: AnyRow @JvmName("Marker_reversed") get() = this["reversed"] as AnyRow
 
     //endregion
 
@@ -140,8 +141,8 @@ class GatherTests {
             val newDf = listOf(
                 name.withValues(List(cols.size) { name[0] }),
                 mode.withValues(cols.map { it.name }),
-                column("c1", dataRows.map { it.tryGet("c1") as? String }),
-                column("c2", dataRows.map { it.tryGet("c2") as? String }),
+                dataRows.map { it.tryGet("c1") as? String }.toColumn("c1", inferType = true),
+                dataRows.map { it.tryGet("c2") as? String }.toColumn("c2", inferType = true),
                 column("c3", dataRows.map { it.tryGet("c3") as? String })
             ).toDataFrame<Unit>()
 

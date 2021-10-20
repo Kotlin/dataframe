@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.DataRowBase
 import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.owner
@@ -32,7 +31,7 @@ public fun <T> DataRow<T>.movingAverage(k: Int, selector: RowSelector<T, Number>
     } / count
 }
 
-public fun <T> DataRowBase<T>.duplicate(n: Int): DataFrame<T> = (this as DataRow<T>).owner.columns().mapIndexed { colIndex, col ->
+public fun <T> DataRow<T>.duplicate(n: Int): DataFrame<T> = this.owner.columns().mapIndexed { colIndex, col ->
     when (col) {
         is ColumnGroup<*> -> DataColumn.createColumnGroup(col.name, col[index].duplicate(n))
         else -> {
