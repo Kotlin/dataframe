@@ -3,15 +3,15 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.columns.shortPath
 
 internal class ConfiguredAggregateColumn<C> private constructor(
-    val columns: Columns<C>,
+    val columns: ColumnSet<C>,
     private val default: C? = null,
     private val newPath: ColumnPath? = null
-) : Columns<C> {
+) : ColumnSet<C> {
 
     private fun ColumnWithPath<C>.toDescriptor(keepName: Boolean) = when (val col = this) {
         is AggregateColumnDescriptor<C> -> {
@@ -32,12 +32,12 @@ internal class ConfiguredAggregateColumn<C> private constructor(
 
     companion object {
 
-        fun <C> withDefault(src: Columns<C>, default: C?): Columns<C> = when (src) {
+        fun <C> withDefault(src: ColumnSet<C>, default: C?): ColumnSet<C> = when (src) {
             is ConfiguredAggregateColumn<C> -> ConfiguredAggregateColumn(src.columns, default, src.newPath)
             else -> ConfiguredAggregateColumn(src, default, null)
         }
 
-        fun <C> withPath(src: Columns<C>, newPath: ColumnPath): Columns<C> = when (src) {
+        fun <C> withPath(src: ColumnSet<C>, newPath: ColumnPath): ColumnSet<C> = when (src) {
             is ConfiguredAggregateColumn<C> -> ConfiguredAggregateColumn(src.columns, src.default, newPath)
             else -> ConfiguredAggregateColumn(src, null, newPath)
         }

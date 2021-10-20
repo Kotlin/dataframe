@@ -5,8 +5,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.EmptyDataFrame
@@ -26,14 +26,14 @@ public interface JoinDsl<out A, out B> : ColumnSelectionDsl<A> {
     public infix fun <C> ColumnReference<C>.match(other: ColumnReference<C>): ColumnMatch<C> = ColumnMatch(this, other)
 }
 
-public class ColumnMatch<C>(public val left: ColumnReference<C>, public val right: ColumnReference<C>) : Columns<C> {
+public class ColumnMatch<C>(public val left: ColumnReference<C>, public val right: ColumnReference<C>) : ColumnSet<C> {
 
     override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> {
         throw UnsupportedOperationException()
     }
 }
 
-public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(JoinDsl<A, B>) -> Columns<*>
+public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(JoinDsl<A, B>) -> ColumnSet<*>
 
 public enum class JoinType {
     LEFT, // all data from left data frame, nulls for mismatches in right data frame

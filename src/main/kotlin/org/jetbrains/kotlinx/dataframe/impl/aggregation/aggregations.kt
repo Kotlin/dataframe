@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.SelectAggregatableColumnsRece
 import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
-import org.jetbrains.kotlinx.dataframe.columns.Columns
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateReceiverInternal
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
@@ -27,7 +27,7 @@ internal fun <T, V> AggregateReceiverInternal<T>.yieldOneOrMany(
 }
 
 @JvmName("toColumnSetForAggregate")
-internal fun <T, C> AggregateColumnsSelector<T, C>.toColumns(): Columns<C> = toColumns {
+internal fun <T, C> AggregateColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
     class SelectAggregatableColumnsReceiverImpl<T>(df: DataFrame<T>) :
         DataFrameReceiver<T>(df, true),
         SelectAggregatableColumnsReceiver<T>

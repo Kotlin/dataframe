@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.VectorizedRowFilter
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.Columns
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
@@ -178,18 +178,18 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: Column): GroupedDataFrame<T, T>
 
 public interface SortReceiver<out T> : ColumnSelectionDsl<T> {
 
-    public val <C> Columns<C>.desc: Columns<C> get() = addFlag(SortFlag.Reversed)
-    public val String.desc: Columns<Comparable<*>?> get() = cast<Comparable<*>>().desc
-    public val <C> KProperty<C>.desc: Columns<C> get() = toColumnAccessor().desc
+    public val <C> ColumnSet<C>.desc: ColumnSet<C> get() = addFlag(SortFlag.Reversed)
+    public val String.desc: ColumnSet<Comparable<*>?> get() = cast<Comparable<*>>().desc
+    public val <C> KProperty<C>.desc: ColumnSet<C> get() = toColumnAccessor().desc
 
-    public fun <C> Columns<C?>.nullsLast(flag: Boolean): Columns<C?> = if (flag) addFlag(SortFlag.NullsLast) else this
+    public fun <C> ColumnSet<C?>.nullsLast(flag: Boolean): ColumnSet<C?> = if (flag) addFlag(SortFlag.NullsLast) else this
 
-    public val <C> Columns<C?>.nullsLast: Columns<C?> get() = addFlag(SortFlag.NullsLast)
-    public val String.nullsLast: Columns<Comparable<*>?> get() = cast<Comparable<*>>().nullsLast
-    public val <C> KProperty<C?>.nullsLast: Columns<C?> get() = toColumnAccessor().nullsLast
+    public val <C> ColumnSet<C?>.nullsLast: ColumnSet<C?> get() = addFlag(SortFlag.NullsLast)
+    public val String.nullsLast: ColumnSet<Comparable<*>?> get() = cast<Comparable<*>>().nullsLast
+    public val <C> KProperty<C?>.nullsLast: ColumnSet<C?> get() = toColumnAccessor().nullsLast
 }
 
-public typealias SortColumnsSelector<T, C> = Selector<SortReceiver<T>, Columns<C>>
+public typealias SortColumnsSelector<T, C> = Selector<SortReceiver<T>, ColumnSet<C>>
 
 public fun <T, C> DataFrame<T>.sortBy(selector: SortColumnsSelector<T, C>): DataFrame<T> = sortByImpl(
     UnresolvedColumnsPolicy.Fail, selector

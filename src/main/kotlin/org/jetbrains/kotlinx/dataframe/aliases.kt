@@ -3,8 +3,8 @@ package org.jetbrains.kotlinx.dataframe
 import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 
 public interface Many<out T> : List<T>
@@ -21,7 +21,7 @@ public typealias RowSelector<T, R> = Selector<DataRow<T>, R>
 
 public typealias ColumnSelector<T, C> = Selector<ColumnSelectionDsl<T>, SingleColumn<C>>
 
-public typealias ColumnsSelector<T, C> = Selector<ColumnSelectionDsl<T>, Columns<C>>
+public typealias ColumnsSelector<T, C> = Selector<ColumnSelectionDsl<T>, ColumnSet<C>>
 
 public typealias RowCellSelector<T, C, R> = DataRow<T>.(C) -> R
 
