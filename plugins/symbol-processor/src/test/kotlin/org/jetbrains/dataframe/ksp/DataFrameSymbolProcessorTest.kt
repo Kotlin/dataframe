@@ -46,11 +46,11 @@ class DataFrameSymbolProcessorTest {
                     class InnerClass
                 }
 
-                val DataFrameBase<Hello>.col1: DataColumn<String> get() = name
-                val DataFrameBase<Hello>.col2: DataColumn<Hello.InnerClass> get() = `test name`
-                val DataFrameBase<Hello>.col3: DataColumn<Int?> get() = nullableProperty
-                val DataFrameBase<Hello>.col4: DataColumn<() -> Unit> get() = a
-                val DataFrameBase<Hello>.col5: DataColumn<List<List<*>>> get() = d
+                val ColumnsContainer<Hello>.col1: DataColumn<String> get() = name
+                val ColumnsContainer<Hello>.col2: DataColumn<Hello.InnerClass> get() = `test name`
+                val ColumnsContainer<Hello>.col3: DataColumn<Int?> get() = nullableProperty
+                val ColumnsContainer<Hello>.col4: DataColumn<() -> Unit> get() = a
+                val ColumnsContainer<Hello>.col5: DataColumn<List<List<*>>> get() = d
                 
                 val DataRow<Hello>.row1: String get() = name
                 val DataRow<Hello>.row2: Hello.InnerClass get() = `test name`
@@ -74,12 +74,12 @@ class DataFrameSymbolProcessorTest {
                     val a: () -> Unit?
                 }
 
-                val DataFrameBase<Hello>.test1: DataColumn<() -> Unit?> get() = a
+                val ColumnsContainer<Hello>.test1: DataColumn<() -> Unit?> get() = a
                 val DataRow<Hello>.test2: () -> Unit? get() = a
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.Function0<kotlin.Unit?>>")
+            ?.shouldContain("ColumnsContainer<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.Function0<kotlin.Unit?>>")
             ?.shouldContain("DataRow<Hello>.a: kotlin.Function0<kotlin.Unit?>")
         result.successfulCompilation shouldBe true
     }
@@ -96,12 +96,12 @@ class DataFrameSymbolProcessorTest {
                     val a: suspend () -> Unit?
                 }
 
-                val DataFrameBase<Hello>.test1: DataColumn<suspend () -> Unit?> get() = a
+                val ColumnsContainer<Hello>.test1: DataColumn<suspend () -> Unit?> get() = a
                 val DataRow<Hello>.test2: suspend () -> Unit? get() = a
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.coroutines.SuspendFunction0<kotlin.Unit?>>")
+            ?.shouldContain("ColumnsContainer<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.coroutines.SuspendFunction0<kotlin.Unit?>>")
             ?.shouldContain("DataRow<Hello>.a: kotlin.coroutines.SuspendFunction0<kotlin.Unit?>")
         result.successfulCompilation shouldBe true
     }
@@ -118,12 +118,12 @@ class DataFrameSymbolProcessorTest {
                     val a: (() -> String)?
                 }
 
-                val DataFrameBase<Hello>.test1: DataColumn<(() -> String)?> get() = a
+                val ColumnsContainer<Hello>.test1: DataColumn<(() -> String)?> get() = a
                 val DataRow<Hello>.test2: (() -> String)? get() = a
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.Function0<kotlin.String>?>")
+            ?.shouldContain("ColumnsContainer<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.Function0<kotlin.String>?>")
             ?.shouldContain("DataRow<Hello>.a: kotlin.Function0<kotlin.String>?")
         result.successfulCompilation shouldBe true
     }
@@ -140,12 +140,12 @@ class DataFrameSymbolProcessorTest {
                     val a: (Int.() -> String)?
                 }
 
-                val DataFrameBase<Hello>.test1: DataColumn<(Int.() -> String)?> get() = a
+                val ColumnsContainer<Hello>.test1: DataColumn<(Int.() -> String)?> get() = a
                 val DataRow<Hello>.test2: (Int.() -> String)? get() = a
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.Function1<kotlin.Int, kotlin.String>?>")
+            ?.shouldContain("ColumnsContainer<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.Function1<kotlin.Int, kotlin.String>?>")
             ?.shouldContain("DataRow<Hello>.a: kotlin.Function1<kotlin.Int, kotlin.String>?")
         result.successfulCompilation shouldBe true
     }
@@ -163,12 +163,12 @@ class DataFrameSymbolProcessorTest {
                     val b get() = a
                 }
 
-                val DataFrameBase<Hello>.test1: DataColumn<Int> get() = b
+                val ColumnsContainer<Hello>.test1: DataColumn<Int> get() = b
                 val DataRow<Hello>.test2: Int get() = b
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.b: ${dataFramePackage}.DataColumn<kotlin.Int>")
+            ?.shouldContain("ColumnsContainer<Hello>.b: ${dataFramePackage}.DataColumn<kotlin.Int>")
             ?.shouldContain("DataRow<Hello>.b: kotlin.Int")
         result.successfulCompilation shouldBe true
     }
@@ -185,12 +185,12 @@ class DataFrameSymbolProcessorTest {
                     val a: (a: String) -> Unit
                 }
 
-                val DataFrameBase<Hello>.test1: DataColumn<(a: String) -> Unit> get() = a
+                val ColumnsContainer<Hello>.test1: DataColumn<(a: String) -> Unit> get() = a
                 val DataRow<Hello>.test2: (a: String) -> Unit get() = a
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.Function1<kotlin.String, kotlin.Unit>>")
+            ?.shouldContain("ColumnsContainer<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.Function1<kotlin.String, kotlin.Unit>>")
             ?.shouldContain("DataRow<Hello>.a: kotlin.Function1<kotlin.String, kotlin.Unit>")
         result.successfulCompilation shouldBe true
     }
@@ -210,13 +210,13 @@ class DataFrameSymbolProcessorTest {
                     val a: A
                 }
 
-                val DataFrameBase<Hello>.col1: DataColumn<A> get() = a
+                val ColumnsContainer<Hello>.col1: DataColumn<A> get() = a
                 val DataRow<Hello>.row1: A get() = a
                 
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("DataFrameBase<Hello>.a: ${dataFramePackage}.DataColumn<A>")
+            ?.shouldContain("ColumnsContainer<Hello>.a: ${dataFramePackage}.DataColumn<A>")
             ?.shouldContain("DataRow<Hello>.a: A")
         result.successfulCompilation shouldBe true
     }
@@ -234,7 +234,7 @@ class DataFrameSymbolProcessorTest {
                     val `test name`: Int
                 }
 
-                val DataFrameBase<Hello>.test2: DataColumn<Int> get() = `test name`
+                val ColumnsContainer<Hello>.test2: DataColumn<Int> get() = `test name`
                 val DataRow<Hello>.test4: Int get() = `test name`
             """.trimIndent()))
             ))
@@ -255,13 +255,13 @@ class DataFrameSymbolProcessorTest {
                     val a: Int
                 }
 
-                val DataFrameBase<Hello>.col1: DataColumn<Int> get() = a
+                val ColumnsContainer<Hello>.col1: DataColumn<Int> get() = a
                 val DataRow<Hello>.row1: Int get() = a
                 
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("""DataFrameBase<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_a")""")
+            ?.shouldContain("""ColumnsContainer<Hello>.a: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_a")""")
             ?.shouldContain("""DataRow<Hello>.a: kotlin.Int @JvmName("Hello_a")""")
         result.successfulCompilation shouldBe true
     }
@@ -280,7 +280,7 @@ class DataFrameSymbolProcessorTest {
                     val a: DataRow<Marker>
                 }
 
-                val DataFrameBase<Hello>.col1: ColumnGroup<Marker> get() = a
+                val ColumnsContainer<Hello>.col1: ColumnGroup<Marker> get() = a
                 val DataRow<Hello>.row1: DataRow<Marker> get() = a
                 
             """.trimIndent()))
@@ -304,7 +304,7 @@ class DataFrameSymbolProcessorTest {
                     val a: DataFrame<Marker>
                 }
 
-                val DataFrameBase<Hello>.col1: DataColumn<DataFrame<Marker>> get() = a
+                val ColumnsContainer<Hello>.col1: DataColumn<DataFrame<Marker>> get() = a
                 val DataRow<Hello>.row1: DataFrame<Marker> get() = a
                 
             """.trimIndent()))
@@ -327,7 +327,7 @@ class DataFrameSymbolProcessorTest {
                     val name: String
                 }
 
-                val DataFrameBase<Hello>.test1: DataColumn<String> get() = name
+                val ColumnsContainer<Hello>.test1: DataColumn<String> get() = name
                 val DataRow<Hello>.test2: String get() = name
             """.trimIndent()))
             ))
@@ -368,7 +368,7 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("""internal val ${dataFramePackage}.DataFrameBase<Hello>.name: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
+            ?.shouldContain("""internal val ${dataFramePackage}.ColumnsContainer<Hello>.name: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
             ?.shouldContain("""internal val ${dataFramePackage}.DataRow<Hello>.name: kotlin.Int @JvmName("Hello_name")""")
         result.successfulCompilation shouldBe true
     }
@@ -389,7 +389,7 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("""public val ${dataFramePackage}.DataFrameBase<Hello>.name: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
+            ?.shouldContain("""public val ${dataFramePackage}.ColumnsContainer<Hello>.name: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
             ?.shouldContain("""public val ${dataFramePackage}.DataRow<Hello>.name: kotlin.Int @JvmName("Hello_name")""")
         result.successfulCompilation shouldBe true
     }
@@ -411,7 +411,7 @@ class DataFrameSymbolProcessorTest {
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readLines()?.asClue { codeLines ->
             codeLines.forOne {
-                it.shouldStartWith("""val ${dataFramePackage}.DataFrameBase<Hello>.name: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
+                it.shouldStartWith("""val ${dataFramePackage}.ColumnsContainer<Hello>.name: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
             }
             codeLines.forOne {
                 it.shouldStartWith("""val ${dataFramePackage}.DataRow<Hello>.name: kotlin.Int @JvmName("Hello_name")""")

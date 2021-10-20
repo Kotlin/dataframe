@@ -3,8 +3,8 @@ package org.jetbrains.kotlinx.dataframe.internal.codeGen
 import io.kotest.matchers.shouldBe
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.process
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.filter
@@ -44,7 +44,7 @@ class ReplCodeGenTests : BaseTest() {
         val repl = ReplCodeGenerator.create()
         val code = repl.process(df).declarations
 
-        val dfName = (DataFrameBase::class).qualifiedName
+        val dfName = (ColumnsContainer::class).qualifiedName
         val dfRowName = (DataRow::class).qualifiedName
         val dataCol = (DataColumn::class).qualifiedName!!
         val marker = ReplCodeGeneratorImpl.markerInterfacePrefix
@@ -122,7 +122,7 @@ class ReplCodeGenTests : BaseTest() {
         repl.process(typed.select { city and weight })
         repl.process<Test1._DataFrameType1>() shouldBe "" // processed wrong marker (doesn't implement Test2.DataFrameType)
 
-        val dfName = (DataFrameBase::class).qualifiedName
+        val dfName = (ColumnsContainer::class).qualifiedName
         val dfRowName = (DataRow::class).qualifiedName
         val dataCol = (DataColumn::class).qualifiedName!!
         val marker = Test2._DataFrameType2::class.simpleName!!

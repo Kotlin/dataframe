@@ -179,12 +179,12 @@ public fun pathOf(vararg columnNames: String): ColumnPath = ColumnPath(columnNam
 
 // region create DataColumn from DataFrame
 
-public inline fun <T, reified R> DataFrameBase<T>.newColumn(
+public inline fun <T, reified R> ColumnsContainer<T>.newColumn(
     name: String = "",
     noinline expression: AddExpression<T, R>
 ): DataColumn<R> = newColumn(name, false, expression)
 
-public inline fun <T, reified R> DataFrameBase<T>.newColumn(
+public inline fun <T, reified R> ColumnsContainer<T>.newColumn(
     name: String = "",
     useActualType: Boolean,
     noinline expression: AddExpression<T, R>

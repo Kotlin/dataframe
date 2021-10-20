@@ -23,7 +23,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.indexOfMax
 import org.jetbrains.kotlinx.dataframe.impl.indexOfMin
-import org.jetbrains.kotlinx.dataframe.impl.mapRows
 import org.jetbrains.kotlinx.dataframe.impl.zero
 import org.jetbrains.kotlinx.dataframe.math.sumOf
 import kotlin.reflect.KProperty
@@ -58,7 +57,7 @@ public fun <T> DataFrame<T>.minBy(column: String): DataRow<T> = minByOrNull(colu
 public fun <T, C : Comparable<C>> DataFrame<T>.minBy(column: ColumnReference<C?>): DataRow<T> = minByOrNull(column)!!
 public fun <T, C : Comparable<C>> DataFrame<T>.minBy(column: KProperty<C?>): DataRow<T> = minByOrNull(column)!!
 
-public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(selector: RowSelector<T, C?>): DataRow<T>? = getOrNull(mapRows(selector).indexOfMin())
+public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(selector: RowSelector<T, C?>): DataRow<T>? = getOrNull(rows().asSequence().map { selector(it, it) }.indexOfMin())
 public fun <T> DataFrame<T>.minByOrNull(column: String): DataRow<T>? = minByOrNull(column.toColumnOf<Comparable<Any?>?>())
 public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(column: ColumnReference<C?>): DataRow<T>? = getOrNull(get(column).asSequence().indexOfMin())
 public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(column: KProperty<C?>): DataRow<T>? = minByOrNull(column.toColumnAccessor())
@@ -92,7 +91,7 @@ public fun <T> DataFrame<T>.maxBy(column: String): DataRow<T> = maxByOrNull(colu
 public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(column: ColumnReference<C?>): DataRow<T> = maxByOrNull(column)!!
 public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(column: KProperty<C?>): DataRow<T> = maxByOrNull(column)!!
 
-public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(selector: RowSelector<T, C?>): DataRow<T>? = getOrNull(mapRows(selector).indexOfMax())
+public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(selector: RowSelector<T, C?>): DataRow<T>? = getOrNull(rows().asSequence().map { selector(it, it) }.indexOfMax())
 public fun <T> DataFrame<T>.maxByOrNull(column: String): DataRow<T>? = maxByOrNull(column.toColumnOf<Comparable<Any?>?>())
 public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(column: ColumnReference<C?>): DataRow<T>? = getOrNull(get(column).asSequence().indexOfMax())
 public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(column: KProperty<C?>): DataRow<T>? = maxByOrNull(column.toColumnAccessor())

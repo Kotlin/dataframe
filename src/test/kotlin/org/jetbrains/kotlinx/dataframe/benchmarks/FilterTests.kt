@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.benchmarks
 
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.filterFast
@@ -22,7 +22,7 @@ class FilterTests {
         val Referer: String?
     }
 
-    val DataFrameBase<DataRecord>.Referer: DataColumn<String?> @JvmName("DataRecord_Referer") get() = this["Referer"] as DataColumn<String?>
+    val ColumnsContainer<DataRecord>.Referer: DataColumn<String?> @JvmName("DataRecord_Referer") get() = this["Referer"] as DataColumn<String?>
     val DataRow<DataRecord>.Referer: String? @JvmName("DataRecord_Referer") get() = this["Referer"] as String?
 
     val typed = df.typed<DataRecord>()

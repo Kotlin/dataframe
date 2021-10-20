@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -53,20 +53,20 @@ internal fun AnyCol.getHashCode(): Int {
     return result
 }
 
-internal fun <C> TreeNode<ColumnPosition>.toColumnWithPath(df: DataFrameBase<*>) =
+internal fun <C> TreeNode<ColumnPosition>.toColumnWithPath(df: ColumnsContainer<*>) =
     (data.column as DataColumn<C>).addPath(pathFromRoot(), df)
 
 @JvmName("toColumnWithPathAnyCol")
-internal fun <C> TreeNode<DataColumn<C>>.toColumnWithPath(df: DataFrameBase<*>) = data.addPath(pathFromRoot(), df)
+internal fun <C> TreeNode<DataColumn<C>>.toColumnWithPath(df: ColumnsContainer<*>) = data.addPath(pathFromRoot(), df)
 
-internal fun <T> BaseColumn<T>.addPath(path: ColumnPath, df: DataFrameBase<*>): ColumnWithPath<T> =
+internal fun <T> BaseColumn<T>.addPath(path: ColumnPath, df: ColumnsContainer<*>): ColumnWithPath<T> =
     ColumnWithPathImpl(this as DataColumn<T>, path, df)
 
 internal fun <T> ColumnWithPath<T>.changePath(path: ColumnPath): ColumnWithPath<T> = data.addPath(path, df)
 
-internal fun <T> BaseColumn<T>.addParentPath(path: ColumnPath, df: DataFrameBase<*>) = addPath(path + name, df)
+internal fun <T> BaseColumn<T>.addParentPath(path: ColumnPath, df: ColumnsContainer<*>) = addPath(path + name, df)
 
-internal fun <T> BaseColumn<T>.addPath(df: DataFrameBase<*>): ColumnWithPath<T> = addPath(pathOf(name), df)
+internal fun <T> BaseColumn<T>.addPath(df: ColumnsContainer<*>): ColumnWithPath<T> = addPath(pathOf(name), df)
 
 internal fun ColumnPath.depth() = size - 1
 
@@ -111,7 +111,7 @@ internal fun <T> Columns<T>.single() = object : SingleColumn<T> {
     }
 }
 
-internal fun <C> DataFrameBase<*>.getColumn(name: String, policy: UnresolvedColumnsPolicy) =
+internal fun <C> ColumnsContainer<*>.getColumn(name: String, policy: UnresolvedColumnsPolicy) =
     tryGetColumn(name)?.typed()
         ?: when (policy) {
             UnresolvedColumnsPolicy.Fail ->
@@ -120,7 +120,7 @@ internal fun <C> DataFrameBase<*>.getColumn(name: String, policy: UnresolvedColu
             UnresolvedColumnsPolicy.Create -> DataColumn.empty().typed<C>()
         }
 
-internal fun <C> DataFrameBase<*>.getColumn(path: ColumnPath, policy: UnresolvedColumnsPolicy) =
+internal fun <C> ColumnsContainer<*>.getColumn(path: ColumnPath, policy: UnresolvedColumnsPolicy) =
     tryGetColumn(path)?.typed()
         ?: when (policy) {
             UnresolvedColumnsPolicy.Fail ->
@@ -154,7 +154,7 @@ internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWi
 
 @PublishedApi
 internal fun KType.toColumnKind(): ColumnKind = when {
-    isSubtypeOf(getType<DataFrameBase<*>?>()) -> ColumnKind.Frame
+    isSubtypeOf(getType<ColumnsContainer<*>?>()) -> ColumnKind.Frame
     isSubtypeOf(getType<DataRow<*>?>()) -> ColumnKind.Group
     else -> ColumnKind.Value
 }

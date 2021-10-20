@@ -3,9 +3,9 @@ package org.jetbrains.kotlinx.dataframe.io
 import com.beust.klaxon.*
 import org.jetbrains.kotlinx.dataframe.AnyColumn
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
@@ -132,7 +132,7 @@ internal fun fromJsonList(records: List<*>): AnyFrame {
     return columns.toAnyFrame()
 }
 
-internal fun KlaxonJson.encodeRow(frame: DataFrameBase<*>, index: Int): JsonObject? {
+internal fun KlaxonJson.encodeRow(frame: ColumnsContainer<*>, index: Int): JsonObject? {
     val values = frame.columns().mapNotNull { col ->
         when (col) {
             is ColumnGroup<*> -> encodeRow(col, index)

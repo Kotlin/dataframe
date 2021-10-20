@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.person
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -91,9 +91,9 @@ class PivotTests {
     val DataRow<Person>.name get() = this["name"] as String
     val DataRow<Person>.key get() = this["key"] as String
     val DataRow<Person>.value get() = this["value"] as Any?
-    val DataFrameBase<Person>.name get() = this["name"].typed<String>()
-    val DataFrameBase<Person>.key get() = this["key"].typed<String>()
-    val DataFrameBase<Person>.value get() = this["value"].typed<Any?>()
+    val ColumnsContainer<Person>.name get() = this["name"].typed<String>()
+    val ColumnsContainer<Person>.key get() = this["key"].typed<String>()
+    val ColumnsContainer<Person>.value get() = this["value"].typed<Any?>()
 
     val typed: DataFrame<Person> = df.typed()
 

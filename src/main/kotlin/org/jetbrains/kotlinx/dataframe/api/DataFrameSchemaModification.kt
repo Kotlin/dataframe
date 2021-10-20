@@ -6,10 +6,10 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.column
@@ -85,7 +85,7 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
 
 public operator fun <T> DataFrame<T>.plus(body: AddDsl<T>.() -> Unit): DataFrame<T> = add(body)
 
-public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : DataFrameBase<T> by df {
+public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsContainer<T> by df {
 
     internal val columns = mutableListOf<AnyCol>()
 
@@ -184,7 +184,7 @@ public fun <T, C> ReplaceCause<T, C>.with(newColumns: List<AnyCol>): DataFrame<T
     }
 }
 
-public fun <T, C> ReplaceCause<T, C>.with(transform: DataFrameBase<T>.(DataColumn<C>) -> AnyCol): DataFrame<T> {
+public fun <T, C> ReplaceCause<T, C>.with(transform: ColumnsContainer<T>.(DataColumn<C>) -> AnyCol): DataFrame<T> {
     val removeResult = df.removeImpl(selector)
     val toInsert = removeResult.removedColumns.map {
         val newCol = transform(df, it.data.column as DataColumn<C>)
@@ -222,13 +222,16 @@ public fun <T> DataFrame<T>.moveToRight(vararg cols: String): DataFrame<T> = mov
 public fun <T> DataFrame<T>.moveToRight(vararg cols: Column): DataFrame<T> = moveToRight { cols.toColumns() }
 public fun <T> DataFrame<T>.moveToRight(vararg cols: KProperty<*>): DataFrame<T> = moveToRight { cols.toColumns() }
 
-public interface MoveDsl<T> : DataFrameBase<T> {
+public interface MoveDsl<T> : ColumnsContainer<T> {
 
     public fun path(vararg columns: String): ColumnPath = pathOf(*columns)
 
     public fun SingleColumn<*>.addPath(columnPath: ColumnPath): ColumnPath
 
     public operator fun SingleColumn<*>.plus(column: String): ColumnPath = addPath(pathOf(column))
+    public fun nrow(): Int
+    public fun rows(): Iterable<DataRow<T>>
+    public fun rowsReversed(): Iterable<DataRow<T>>
 }
 
 public fun <T, C> MoveClause<T, C>.under(parentPath: MoveDsl<T>.(ColumnWithPath<C>) -> ColumnPath): DataFrame<T> {

@@ -5,9 +5,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.aggregation.GroupByAggregateBody
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.typed
@@ -131,6 +129,3 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T>, 
             }
     }
 }
-
-@PublishedApi
-internal fun <T, R> DataFrameBase<T>.mapRows(selector: RowSelector<T, R>): Sequence<R> = rows().asSequence().map { selector(it, it) }

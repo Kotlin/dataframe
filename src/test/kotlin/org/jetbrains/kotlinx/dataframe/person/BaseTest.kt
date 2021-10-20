@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.person
 
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
@@ -22,10 +22,10 @@ val DataRow<Person>.name get() = this["name"] as String
 val DataRow<Person>.age get() = this["age"] as Int
 val DataRow<Person>.city get() = this["city"] as String?
 val DataRow<Person>.weight get() = this["weight"] as Int?
-val DataFrameBase<Person>.name get() = this["name"].asValues<String>()
-val DataFrameBase<Person>.age get() = this.get("age").asValues<Int>()
-val DataFrameBase<Person>.city get() = this["city"].asValues<String?>()
-val DataFrameBase<Person>.weight get() = this["weight"].asValues<Int?>()
+val ColumnsContainer<Person>.name get() = this["name"].asValues<String>()
+val ColumnsContainer<Person>.age get() = this.get("age").asValues<Int>()
+val ColumnsContainer<Person>.city get() = this["city"].asValues<String?>()
+val ColumnsContainer<Person>.weight get() = this["weight"].asValues<Int?>()
 
 open class BaseTest {
 

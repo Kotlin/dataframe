@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.tryGetColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.addParentPath
@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.depth
 
 public interface ColumnWithPath<out T> : DataColumn<T> {
 
-    public val df: DataFrameBase<*>
+    public val df: ColumnsContainer<*>
     public val data: DataColumn<T>
     public val path: ColumnPath
     public val parent: ColumnWithPath<*>?
