@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.DataRowBase
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.typed
@@ -156,7 +155,7 @@ internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWi
 @PublishedApi
 internal fun KType.toColumnKind(): ColumnKind = when {
     isSubtypeOf(getType<DataFrameBase<*>?>()) -> ColumnKind.Frame
-    isSubtypeOf(getType<DataRowBase<*>?>()) -> ColumnKind.Group
+    isSubtypeOf(getType<DataRow<*>?>()) -> ColumnKind.Group
     else -> ColumnKind.Value
 }
 

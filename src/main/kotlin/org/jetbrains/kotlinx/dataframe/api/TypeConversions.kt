@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
-import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -28,12 +27,10 @@ import org.jetbrains.kotlinx.dataframe.impl.ManyImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.withNullability
 
 // region String
 
@@ -121,21 +118,21 @@ public fun <T> Columns<T>.asComparable(): Columns<Comparable<T>> = this as Colum
 
 // region Iterable
 
-public fun Iterable<AnyFrame?>.toColumn(): FrameColumn<Any?> = columnOf(this)
-
-public fun Iterable<AnyFrame?>.toColumn(name: String): FrameColumn<Any?> = DataColumn.createFrameColumn(name, toList())
-
-public fun <T> Iterable<DataFrame<T>?>.toFrameColumn(name: String): FrameColumn<T> =
+public fun <T> Iterable<DataFrame<T>?>.toFrameColumn(name: String = ""): FrameColumn<T> =
     DataColumn.createFrameColumn(name, asList())
 
-public inline fun <reified T> Iterable<T>.toValueColumn(name: String = ""): ValueColumn<T> =
-    asList().let { DataColumn.createValueColumn(name, it, getType<T>().withNullability(it.any { it == null })) }
+public inline fun <reified T> Iterable<T>.toValueColumn(name: String = ""): ValueColumn<T> = DataColumn.createValueColumn(name, asList())
 
-public fun Iterable<Any?>.toColumnGuessType(name: String = ""): AnyCol =
-    guessColumnType(name, asList())
+public inline fun <reified T> Iterable<T>.toColumn(
+    name: String = "",
+    checkForNulls: Boolean = false,
+    inferType: Boolean = false
+): DataColumn<T> =
+    if (inferType) DataColumn.createWithTypeInference(name, asList())
+    else DataColumn.create(name, asList(), checkForNulls)
 
-public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): ValueColumn<T> =
-    toValueColumn(ref.name())
+public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): DataColumn<T> =
+    DataColumn.create(ref.name(), asList())
 
 public fun <T> Iterable<T>.toMany(): Many<T> = when (this) {
     is Many<T> -> this

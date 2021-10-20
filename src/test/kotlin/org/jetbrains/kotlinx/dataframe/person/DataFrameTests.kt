@@ -54,6 +54,7 @@ import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderValueForStdout
+import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.manyOf
 import org.jetbrains.kotlinx.dataframe.math.mean
 import org.jetbrains.kotlinx.dataframe.ncol
@@ -1501,6 +1502,7 @@ class DataFrameTests : BaseTest() {
             val dataStr = column("dataStr", it.map { it.toString() })
             dataFrameOf(data, dataStr)
         }.toColumn()
+        frames.kind shouldBe ColumnKind.Frame
 
         val df = dataFrameOf(values, list1, frames)
         val res = df.explode { list1 and frames }.ungroup(frames)
@@ -1940,5 +1942,12 @@ class DataFrameTests : BaseTest() {
         pivoted.columns().forEach {
             it.hasNulls() shouldBe false
         }
+    }
+
+    @Test
+    fun `iterable to column`() {
+        val ref by column<String>()
+        val col = listOf("a", null).toColumn(ref)
+        col.hasNulls() shouldBe true
     }
 }

@@ -43,7 +43,7 @@ class TypeProjectionTests {
 
     @Test
     fun `column group projections`() {
-        ColumnGroup::class.createTypeUsing<ColumnReference<DataRowBase<Int>>>() shouldBe getType<ColumnGroup<Int>>()
+        ColumnGroup::class.createTypeUsing<ColumnReference<DataRow<Int>>>() shouldBe getType<ColumnGroup<Int>>()
         SingleColumn::class.createTypeUsing<ColumnGroupWithParent<Int>>() shouldBe getType<SingleColumn<DataRow<Int>>>()
     }
 }

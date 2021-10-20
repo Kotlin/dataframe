@@ -37,7 +37,13 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
     public companion object {
 
-        public fun <T> createValueColumn(name: String, values: List<T>, type: KType, defaultValue: T? = null): ValueColumn<T> = ValueColumnImpl(values, name, type, defaultValue)
+        public fun <T> createValueColumn(
+            name: String,
+            values: List<T>,
+            type: KType,
+            checkForNulls: Boolean = false,
+            defaultValue: T? = null
+        ): ValueColumn<T> = ValueColumnImpl(values, name, type.let { if (checkForNulls) it.withNullability(values.anyNull()) else it }, defaultValue)
 
         public fun <T> createColumnGroup(name: String, df: DataFrame<T>): ColumnGroup<T> = ColumnGroupImpl(df, name)
 
@@ -56,16 +62,22 @@ public interface DataColumn<out T> : BaseColumn<T> {
             schema: Lazy<DataFrameSchema>? = null
         ): FrameColumn<T> = FrameColumnImpl(name, groups, hasNulls, schema)
 
+        public inline fun <reified T> createValueColumn(name: String, values: List<T>, checkForNulls: Boolean = false): ValueColumn<T> {
+            val type = if (checkForNulls) getType<T>().withNullability(values.anyNull()) else getType<T>()
+            return createValueColumn(name, values, type)
+        }
+
         public fun <T> createWithTypeInference(name: String, values: List<T>): DataColumn<T> = guessColumnType(name, values)
 
-        public inline fun <reified T> create(name: String, values: List<T>, checkActualNulls: Boolean = false): DataColumn<T> {
-            val type = if (checkActualNulls) getType<T>().withNullability(values.anyNull()) else getType<T>()
+        public fun <T> create(name: String, values: List<T>, type: KType, checkForNulls: Boolean = false): DataColumn<T> {
             return when (type.toColumnKind()) {
-                ColumnKind.Value -> createValueColumn(name, values, type)
+                ColumnKind.Value -> createValueColumn(name, values, type, checkForNulls)
                 ColumnKind.Group -> createColumnGroup(name, (values as List<AnyRow?>).concat()).asDataColumn().typed()
-                ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame?>, hasNulls = type.isMarkedNullable).asDataColumn().typed()
+                ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame?>, hasNulls = if (checkForNulls) null else type.isMarkedNullable).asDataColumn().typed()
             }
         }
+
+        public inline fun <reified T> create(name: String, values: List<T>, checkForNulls: Boolean = false): DataColumn<T> = create(name, values, getType<T>(), checkForNulls)
 
         public fun empty(): AnyCol = createValueColumn("", emptyList<Unit>(), getType<Unit>())
     }

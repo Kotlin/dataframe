@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.DataRowBase
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
@@ -108,14 +107,14 @@ class DataFrameTreeTests : BaseTest() {
     val df2 = df.move { name and city }.under("nameAndCity")
     val typed2 = df2.typed<GroupedPerson>()
 
-    val DataRowBase<NameAndCity>.name @JvmName("get-name-row") get() = this["name"] as String
-    val DataRowBase<NameAndCity>.city @JvmName("get-city-row") get() = this["city"] as String?
+    val DataRow<NameAndCity>.name @JvmName("get-name-row") get() = this["name"] as String
+    val DataRow<NameAndCity>.city @JvmName("get-city-row") get() = this["city"] as String?
     val DataFrameBase<NameAndCity>.name @JvmName("get-name") get() = this["name"].typed<String>()
     val DataFrameBase<NameAndCity>.city @JvmName("get-city") get() = this["city"].typed<String?>()
 
-    val DataRowBase<GroupedPerson>.age @JvmName("get-age-row") get() = this["age"] as Int
-    val DataRowBase<GroupedPerson>.weight @JvmName("get-weight-row") get() = this["weight"] as Int?
-    val DataRowBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as DataRowBase<NameAndCity>
+    val DataRow<GroupedPerson>.age @JvmName("get-age-row") get() = this["age"] as Int
+    val DataRow<GroupedPerson>.weight @JvmName("get-weight-row") get() = this["weight"] as Int?
+    val DataRow<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as DataRow<NameAndCity>
     val DataFrameBase<GroupedPerson>.age @JvmName("get-age") get() = this["age"].typed<Int>()
     val DataFrameBase<GroupedPerson>.weight @JvmName("get-weight") get() = this["weight"].typed<Int?>()
     val DataFrameBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as ColumnGroup<NameAndCity>
@@ -425,7 +424,7 @@ class DataFrameTreeTests : BaseTest() {
             extensionProperties = true
         ).declarations
         val dataFrameBase = DataFrameBase::class.qualifiedName
-        val dataFrameRowBase = DataRowBase::class.qualifiedName
+        val dataFrameRowBase = DataRow::class.qualifiedName
         val dataFrameRow = DataRow::class.qualifiedName
         val className = GroupedPerson::class.qualifiedName
         val shortName = GroupedPerson::class.simpleName!!

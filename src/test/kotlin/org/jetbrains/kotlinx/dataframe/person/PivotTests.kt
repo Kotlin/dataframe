@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.person
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataFrameBase
-import org.jetbrains.kotlinx.dataframe.DataRowBase
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
@@ -88,9 +88,9 @@ class PivotTests {
         val value: Any?
     }
 
-    val DataRowBase<Person>.name get() = this["name"] as String
-    val DataRowBase<Person>.key get() = this["key"] as String
-    val DataRowBase<Person>.value get() = this["value"] as Any?
+    val DataRow<Person>.name get() = this["name"] as String
+    val DataRow<Person>.key get() = this["key"] as String
+    val DataRow<Person>.value get() = this["value"] as Any?
     val DataFrameBase<Person>.name get() = this["name"].typed<String>()
     val DataFrameBase<Person>.key get() = this["key"].typed<String>()
     val DataFrameBase<Person>.value get() = this["value"].typed<Any?>()
