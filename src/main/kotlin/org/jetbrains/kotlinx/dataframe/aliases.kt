@@ -35,7 +35,7 @@ public typealias RowFilter<T> = RowSelector<T, Boolean>
 
 public typealias ColumnFilter<T> = (ColumnWithPath<T>) -> Boolean
 
-public typealias VectorizedRowFilter<T> = Selector<DataFrameBase<T>, BooleanArray>
+public typealias VectorizedRowFilter<T> = Selector<ColumnsContainer<T>, BooleanArray>
 
 public typealias RowCellFilter<T, C> = RowCellSelector<T, C, Boolean>
 

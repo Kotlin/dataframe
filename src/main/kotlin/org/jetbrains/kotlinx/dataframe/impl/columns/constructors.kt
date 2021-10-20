@@ -3,10 +3,10 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.Selector
@@ -38,7 +38,7 @@ import kotlin.reflect.full.withNullability
 // region create DataColumn
 
 @PublishedApi
-internal fun <T, R> DataFrameBase<T>.newColumn(type: KType, name: String = "", expression: AddExpression<T, R>): DataColumn<R> {
+internal fun <T, R> ColumnsContainer<T>.newColumn(type: KType, name: String = "", expression: AddExpression<T, R>): DataColumn<R> {
     val (nullable, values) = computeValues(this as DataFrame<T>, expression)
     return when (type.classifier) {
         DataFrame::class -> DataColumn.createFrameColumn(name, values as List<AnyFrame?>) as DataColumn<R>
@@ -48,7 +48,7 @@ internal fun <T, R> DataFrameBase<T>.newColumn(type: KType, name: String = "", e
 }
 
 @PublishedApi
-internal fun <T, R> DataFrameBase<T>.newColumnWithActualType(name: String, expression: AddExpression<T, R>): DataColumn<R> {
+internal fun <T, R> ColumnsContainer<T>.newColumnWithActualType(name: String, expression: AddExpression<T, R>): DataColumn<R> {
     val (_, values) = computeValues(this as DataFrame<T>, expression)
     return guessColumnType(name, values)
 }

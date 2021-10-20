@@ -3,9 +3,9 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.BooleanCol
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DoubleCol
 import org.jetbrains.kotlinx.dataframe.IntCol
 import org.jetbrains.kotlinx.dataframe.NumberCol
@@ -36,21 +36,21 @@ import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
-public interface ColumnSelectionDsl<out T> : DataFrameBase<T> {
+public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
-    public fun DataFrameBase<*>.first(numCols: Int): Columns<Any?> = cols().take(numCols)
+    public fun ColumnsContainer<*>.first(numCols: Int): Columns<Any?> = cols().take(numCols)
 
-    public fun <C> DataFrameBase<C>.first(condition: ColumnFilter<Any?>): SingleColumn<Any?> = all().first(condition)
+    public fun <C> ColumnsContainer<C>.first(condition: ColumnFilter<Any?>): SingleColumn<Any?> = all().first(condition)
 
-    public fun <C> DataFrameBase<C>.single(condition: ColumnFilter<Any?>): SingleColumn<Any?> = all().single(condition)
+    public fun <C> ColumnsContainer<C>.single(condition: ColumnFilter<Any?>): SingleColumn<Any?> = all().single(condition)
 
     public fun <C> Columns<C>.first(condition: ColumnFilter<C>): SingleColumn<C> = transform { listOf(it.first(condition)) }.single()
 
     public fun <C> Columns<C>.single(condition: ColumnFilter<C>): SingleColumn<C> = transform { listOf(it.single(condition)) }.single()
 
-    public fun DataFrameBase<*>.last(numCols: Int): Columns<Any?> = cols().takeLast(numCols)
+    public fun ColumnsContainer<*>.last(numCols: Int): Columns<Any?> = cols().takeLast(numCols)
 
-    public fun DataFrameBase<*>.group(name: String): ColumnGroup<*> = this.get(name) as ColumnGroup<*>
+    public fun ColumnsContainer<*>.group(name: String): ColumnGroup<*> = this.get(name) as ColumnGroup<*>
 
     public fun <C> Columns<*>.cols(firstCol: ColumnReference<C>, vararg otherCols: ColumnReference<C>): Columns<C> = (listOf(firstCol) + otherCols).let { refs ->
         transform { it.flatMap { col -> refs.mapNotNull { col.getChild(it) } } }
@@ -66,33 +66,33 @@ public interface ColumnSelectionDsl<out T> : DataFrameBase<T> {
 
     public fun <C> Columns<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): Columns<Any?> = dfsInternal(predicate)
 
-    public fun DataFrameBase<*>.all(): Columns<*> = ColumnsList(children())
+    public fun ColumnsContainer<*>.all(): Columns<*> = ColumnsList(children())
 
     public fun none(): Columns<*> = ColumnsList<Any?>(emptyList())
 
     public fun Columns<*>.dfs(): Columns<Any?> = dfs { !it.isColumnGroup() }
 
     // excluding current
-    public fun DataFrameBase<*>.allAfter(colPath: ColumnPath): Columns<Any?> = children().let { var take = false; it.filter { if (take) true else { take = colPath == it.path; false } } }
-    public fun DataFrameBase<*>.allAfter(colName: String): Columns<Any?> = allAfter(pathOf(colName))
-    public fun DataFrameBase<*>.allAfter(column: Column): Columns<Any?> = allAfter(column.path())
+    public fun ColumnsContainer<*>.allAfter(colPath: ColumnPath): Columns<Any?> = children().let { var take = false; it.filter { if (take) true else { take = colPath == it.path; false } } }
+    public fun ColumnsContainer<*>.allAfter(colName: String): Columns<Any?> = allAfter(pathOf(colName))
+    public fun ColumnsContainer<*>.allAfter(column: Column): Columns<Any?> = allAfter(column.path())
 
     // including current
-    public fun DataFrameBase<*>.allSince(colPath: ColumnPath): Columns<Any?> = children().let { var take = false; it.filter { if (take) true else { take = colPath == it.path; take } } }
-    public fun DataFrameBase<*>.allSince(colName: String): Columns<Any?> = allSince(pathOf(colName))
-    public fun DataFrameBase<*>.allSince(column: Column): Columns<Any?> = allSince(column.path())
+    public fun ColumnsContainer<*>.allSince(colPath: ColumnPath): Columns<Any?> = children().let { var take = false; it.filter { if (take) true else { take = colPath == it.path; take } } }
+    public fun ColumnsContainer<*>.allSince(colName: String): Columns<Any?> = allSince(pathOf(colName))
+    public fun ColumnsContainer<*>.allSince(column: Column): Columns<Any?> = allSince(column.path())
 
     // excluding current
-    public fun DataFrameBase<*>.allBefore(colPath: ColumnPath): Columns<Any?> = children().let { var take = true; it.filter { if (!take) false else { take = colPath != it.path; take } } }
-    public fun DataFrameBase<*>.allBefore(colName: String): Columns<Any?> = allBefore(pathOf(colName))
-    public fun DataFrameBase<*>.allBefore(column: Column): Columns<Any?> = allBefore(column.path())
+    public fun ColumnsContainer<*>.allBefore(colPath: ColumnPath): Columns<Any?> = children().let { var take = true; it.filter { if (!take) false else { take = colPath != it.path; take } } }
+    public fun ColumnsContainer<*>.allBefore(colName: String): Columns<Any?> = allBefore(pathOf(colName))
+    public fun ColumnsContainer<*>.allBefore(column: Column): Columns<Any?> = allBefore(column.path())
 
     // including current
-    public fun DataFrameBase<*>.allUntil(colPath: ColumnPath): Columns<Any?> = children().let { var take = true; it.filter { if (!take) false else { take = colPath != it.path; true } } }
-    public fun DataFrameBase<*>.allUntil(colName: String): Columns<Any?> = allUntil(pathOf(colName))
-    public fun DataFrameBase<*>.allUntil(column: Column): Columns<Any?> = allUntil(column.path())
+    public fun ColumnsContainer<*>.allUntil(colPath: ColumnPath): Columns<Any?> = children().let { var take = true; it.filter { if (!take) false else { take = colPath != it.path; true } } }
+    public fun ColumnsContainer<*>.allUntil(colName: String): Columns<Any?> = allUntil(pathOf(colName))
+    public fun ColumnsContainer<*>.allUntil(column: Column): Columns<Any?> = allUntil(column.path())
 
-    public fun DataFrameBase<*>.colGroups(filter: (ColumnGroup<*>) -> Boolean = { true }): Columns<AnyRow> = this.columns().filter { it.isColumnGroup() && filter(it.asColumnGroup()) }.map { it.asColumnGroup() }.toColumnSet()
+    public fun ColumnsContainer<*>.colGroups(filter: (ColumnGroup<*>) -> Boolean = { true }): Columns<AnyRow> = this.columns().filter { it.isColumnGroup() && filter(it.asColumnGroup()) }.map { it.asColumnGroup() }.toColumnSet()
 
     public fun <C> Columns<C>.children(predicate: (AnyCol) -> Boolean = { true }): Columns<Any?> = transform { it.flatMap { it.children().filter { predicate(it.data) } } }
 
@@ -108,7 +108,7 @@ public interface ColumnSelectionDsl<out T> : DataFrameBase<T> {
 
     public fun Columns<*>.col(index: Int): Columns<Any?> = transform { it.mapNotNull { it.getChild(index) } }
 
-    public fun DataFrameBase<*>.col(colName: String): DataColumn<*> = get(colName)
+    public fun ColumnsContainer<*>.col(colName: String): DataColumn<*> = get(colName)
     public fun Columns<*>.col(colName: String): Columns<Any?> = transform { it.mapNotNull { it.getChild(colName) } }
 
     public operator fun Columns<*>.get(colName: String): Columns<Any?> = col(colName)
@@ -195,6 +195,9 @@ public interface ColumnSelectionDsl<out T> : DataFrameBase<T> {
     public fun ColumnPath.comparables(): DataColumn<Comparable<Any?>> = getColumn(this)
     public fun ColumnPath.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this)
     public fun ColumnPath.numberOrNulls(): DataColumn<Number?> = getColumn(this)
+    public fun nrow(): Int
+    public fun rows(): Iterable<DataRow<T>>
+    public fun rowsReversed(): Iterable<DataRow<T>>
 }
 
 public inline fun <T, reified R> ColumnSelectionDsl<T>.expr(

@@ -3,10 +3,10 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -35,10 +35,10 @@ public fun <T> DataFrame<T>.getColumnIndex(col: AnyCol): Int = getColumnIndex(co
 public fun <T> DataFrame<T>.getRows(range: IntRange): DataFrame<T> = if (range == indices()) this else columns().map { col -> col.slice(range) }.toDataFrame()
 public fun <T> DataFrame<T>.getRows(mask: BooleanArray): DataFrame<T> = getRows(mask.toIndices())
 public fun <T> DataFrame<T>.getRows(indices: Iterable<Int>): DataFrame<T> = columns().map { col -> col.slice(indices) }.toDataFrame()
+public fun <T> DataFrame<T>.getOrNull(index: Int): DataRow<T>? = if (index < 0 || index >= nrow()) null else get(index)
 
-public fun <T> DataFrameBase<T>.frameColumn(columnPath: ColumnPath): FrameColumn<*> = get(columnPath).asFrameColumn()
-public fun <T> DataFrameBase<T>.frameColumn(columnName: String): FrameColumn<*> = get(columnName).asFrameColumn()
-public fun <T> DataFrameBase<T>.tryGetColumn(columnIndex: Int): AnyCol? = if (columnIndex in 0 until ncol()) col(columnIndex) else null
-public fun <T> DataFrameBase<T>.getOrNull(index: Int): DataRow<T>? = if (index < 0 || index >= nrow()) null else get(index)
-public fun <T> DataFrameBase<T>.getColumnGroup(columnPath: ColumnPath): ColumnGroup<*> = get(columnPath).asColumnGroup()
-public fun <T> DataFrameBase<T>.getColumnGroup(columnName: String): ColumnGroup<*> = get(columnName).asColumnGroup()
+public fun <T> ColumnsContainer<T>.frameColumn(columnPath: ColumnPath): FrameColumn<*> = get(columnPath).asFrameColumn()
+public fun <T> ColumnsContainer<T>.frameColumn(columnName: String): FrameColumn<*> = get(columnName).asFrameColumn()
+public fun <T> ColumnsContainer<T>.tryGetColumn(columnIndex: Int): AnyCol? = if (columnIndex in 0 until ncol()) col(columnIndex) else null
+public fun <T> ColumnsContainer<T>.getColumnGroup(columnPath: ColumnPath): ColumnGroup<*> = get(columnPath).asColumnGroup()
+public fun <T> ColumnsContainer<T>.getColumnGroup(columnName: String): ColumnGroup<*> = get(columnName).asColumnGroup()

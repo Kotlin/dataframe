@@ -9,63 +9,15 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.EmptyDataFrame
-import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.impl.getColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
-import kotlin.reflect.KProperty
 
-public interface DataFrameBase<out T> : SingleColumn<DataRow<T>> {
-
-    public operator fun get(columnName: String): AnyCol
-    public fun tryGetColumn(columnName: String): AnyCol?
-    public fun tryGetColumn(path: ColumnPath): AnyCol?
-
-    public operator fun <R> get(column: ColumnReference<R>): DataColumn<R>
-    public operator fun <R> get(column: ColumnReference<DataRow<R>>): ColumnGroup<R>
-    public operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R>
-
-    public operator fun <R> get(column: KProperty<R>): DataColumn<R> = get(column.name) as DataColumn<R>
-    public operator fun <R> get(column: KProperty<DataRow<R>>): ColumnGroup<R> = get(column.name) as ColumnGroup<R>
-    public operator fun <R> get(column: KProperty<DataFrame<R>>): FrameColumn<R> = get(column.name) as FrameColumn<R>
-
-    public operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>>
-    public operator fun <C> get(columns: ColumnSelector<T, C>): DataColumn<C> = get(columns as ColumnsSelector<T, C>).single()
-
-    public fun <R> getColumn(column: ColumnReference<R>): DataColumn<R> = get(column)
-    public fun <R> getColumn(column: ColumnReference<DataRow<R>>): ColumnGroup<R> = get(column)
-    public fun <R> getColumn(column: ColumnReference<DataFrame<R>>): FrameColumn<R> = get(column)
-    public fun <R> getColumn(name: String): DataColumn<R> = get(name) as DataColumn<R>
-    public fun <R> getColumn(path: ColumnPath): DataColumn<R> = get(path) as DataColumn<R>
-    public fun <R> getColumn(index: Int): DataColumn<R> = col(index) as DataColumn<R>
-
-    public fun hasColumn(columnName: String): Boolean = tryGetColumn(columnName) != null
-
-    public operator fun get(columnPath: ColumnPath): AnyCol {
-        require(columnPath.isNotEmpty()) { "ColumnPath is empty" }
-        var res: AnyCol? = null
-        columnPath.forEach {
-            if (res == null) res = this[it]
-            else res = res!!.asColumnGroup()[it]
-        }
-        return res!!
-    }
-
-    public operator fun get(index: Int): DataRow<T>
-    public fun col(columnIndex: Int): AnyCol
-    public fun columns(): List<AnyCol>
-    public fun ncol(): Int
-    public fun nrow(): Int
-    public fun rows(): Iterable<DataRow<T>>
-    public fun rowsReversed(): Iterable<DataRow<T>>
-}
-
-public interface DataFrame<out T> : Aggregatable<T>, DataFrameBase<T> {
+public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     public companion object {
         public fun empty(nrow: Int = 0): AnyFrame = EmptyDataFrame<Any?>(nrow)
@@ -135,6 +87,10 @@ public interface DataFrame<out T> : Aggregatable<T>, DataFrameBase<T> {
     public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
 
     public fun <R> aggregate(body: GroupByAggregateBody<T, R>): DataRow<T>
+
+    public fun nrow(): Int
+    public fun rows(): Iterable<DataRow<T>>
+    public fun rowsReversed(): Iterable<DataRow<T>>
 }
 
 internal val AnyFrame.ncol get() = ncol()

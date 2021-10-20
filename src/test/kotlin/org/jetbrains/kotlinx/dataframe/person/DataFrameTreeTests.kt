@@ -8,9 +8,9 @@ import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
 import org.jetbrains.dataframe.impl.codeGen.generate
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -109,15 +109,15 @@ class DataFrameTreeTests : BaseTest() {
 
     val DataRow<NameAndCity>.name @JvmName("get-name-row") get() = this["name"] as String
     val DataRow<NameAndCity>.city @JvmName("get-city-row") get() = this["city"] as String?
-    val DataFrameBase<NameAndCity>.name @JvmName("get-name") get() = this["name"].typed<String>()
-    val DataFrameBase<NameAndCity>.city @JvmName("get-city") get() = this["city"].typed<String?>()
+    val ColumnsContainer<NameAndCity>.name @JvmName("get-name") get() = this["name"].typed<String>()
+    val ColumnsContainer<NameAndCity>.city @JvmName("get-city") get() = this["city"].typed<String?>()
 
     val DataRow<GroupedPerson>.age @JvmName("get-age-row") get() = this["age"] as Int
     val DataRow<GroupedPerson>.weight @JvmName("get-weight-row") get() = this["weight"] as Int?
     val DataRow<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as DataRow<NameAndCity>
-    val DataFrameBase<GroupedPerson>.age @JvmName("get-age") get() = this["age"].typed<Int>()
-    val DataFrameBase<GroupedPerson>.weight @JvmName("get-weight") get() = this["weight"].typed<Int?>()
-    val DataFrameBase<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as ColumnGroup<NameAndCity>
+    val ColumnsContainer<GroupedPerson>.age @JvmName("get-age") get() = this["age"].typed<Int>()
+    val ColumnsContainer<GroupedPerson>.weight @JvmName("get-weight") get() = this["weight"].typed<Int?>()
+    val ColumnsContainer<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as ColumnGroup<NameAndCity>
 
     val nameAndCity by columnGroup()
     val nameInGroup = nameAndCity.column<String>("name")
@@ -423,7 +423,7 @@ class DataFrameTreeTests : BaseTest() {
             interfaceMode = InterfaceGenerationMode.None,
             extensionProperties = true
         ).declarations
-        val dataFrameBase = DataFrameBase::class.qualifiedName
+        val columnsContainer = ColumnsContainer::class.qualifiedName
         val dataFrameRowBase = DataRow::class.qualifiedName
         val dataFrameRow = DataRow::class.qualifiedName
         val className = GroupedPerson::class.qualifiedName
@@ -432,11 +432,11 @@ class DataFrameTreeTests : BaseTest() {
         val groupedColumn = ColumnGroup::class.qualifiedName
         val columnData = DataColumn::class.qualifiedName
         val expected = """
-            val $dataFrameBase<$className>.age: $columnData<kotlin.Int> @JvmName("${shortName}_age") get() = this["age"] as $columnData<kotlin.Int>
+            val $columnsContainer<$className>.age: $columnData<kotlin.Int> @JvmName("${shortName}_age") get() = this["age"] as $columnData<kotlin.Int>
             val $dataFrameRowBase<$className>.age: kotlin.Int @JvmName("${shortName}_age") get() = this["age"] as kotlin.Int
-            val $dataFrameBase<$className>.nameAndCity: $groupedColumn<$nameAndCity> @JvmName("${shortName}_nameAndCity") get() = this["nameAndCity"] as $groupedColumn<$nameAndCity>
+            val $columnsContainer<$className>.nameAndCity: $groupedColumn<$nameAndCity> @JvmName("${shortName}_nameAndCity") get() = this["nameAndCity"] as $groupedColumn<$nameAndCity>
             val $dataFrameRowBase<$className>.nameAndCity: $dataFrameRow<$nameAndCity> @JvmName("${shortName}_nameAndCity") get() = this["nameAndCity"] as $dataFrameRow<$nameAndCity>
-            val $dataFrameBase<$className>.weight: $columnData<kotlin.Int?> @JvmName("${shortName}_weight") get() = this["weight"] as $columnData<kotlin.Int?>
+            val $columnsContainer<$className>.weight: $columnData<kotlin.Int?> @JvmName("${shortName}_weight") get() = this["weight"] as $columnData<kotlin.Int?>
             val $dataFrameRowBase<$className>.weight: kotlin.Int? @JvmName("${shortName}_weight") get() = this["weight"] as kotlin.Int?
         """.trimIndent()
         code shouldBe expected
