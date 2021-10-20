@@ -228,7 +228,7 @@ public interface DataFrameParserOptions {
 
 public fun DataColumn<String?>.tryParse(): DataColumn<*> = tryParseImpl()
 
-public fun <T> DataFrame<T>.parse(): DataFrame<T> = parse { this@parse.dfs() }
+public fun <T> DataFrame<T>.parse(): DataFrame<T> = parse { dfs() }
 
 public fun <T> DataFrame<T>.parse(columns: ColumnsSelector<T, Any?>): DataFrame<T> = convert(columns).to {
     when {

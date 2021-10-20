@@ -4,11 +4,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import kotlin.reflect.KProperty
 
-public interface ColumnsContainer<out T> : SingleColumn<DataRow<T>> {
+public interface ColumnsContainer<out T> {
 
     public operator fun get(columnName: String): AnyCol
     public fun tryGetColumn(columnName: String): AnyCol?
