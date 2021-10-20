@@ -13,8 +13,8 @@ import org.jetbrains.kotlinx.dataframe.api.typedFrames
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
@@ -60,7 +60,7 @@ internal fun AnyCol.createComparator(nullsLast: Boolean): java.util.Comparator<I
 }
 
 @JvmName("toColumnSetForSort")
-internal fun <T, C> SortColumnsSelector<T, C>.toColumns(): Columns<C> = toColumns {
+internal fun <T, C> SortColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
     class SortReceiverImpl<T>(df: DataFrame<T>, allowMissingColumns: Boolean) :
         DataFrameReceiver<T>(df, allowMissingColumns),
         SortReceiver<T>
@@ -86,7 +86,7 @@ internal fun <T, C> DataFrame<T>.getSortColumns(
 
 internal enum class SortFlag { Reversed, NullsLast }
 
-internal fun <C> Columns<C>.addFlag(flag: SortFlag) = ColumnsWithSortFlag(this, flag)
+internal fun <C> ColumnSet<C>.addFlag(flag: SortFlag) = ColumnsWithSortFlag(this, flag)
 
 internal fun <C> ColumnWithPath<C>.addFlag(flag: SortFlag): ColumnWithPath<C> {
     val col = data
@@ -106,7 +106,7 @@ internal fun <C> ColumnWithPath<C>.addFlag(flag: SortFlag): ColumnWithPath<C> {
     }.addPath(path, df)
 }
 
-internal class ColumnsWithSortFlag<C>(val column: Columns<C>, val flag: SortFlag) : Columns<C> {
+internal class ColumnsWithSortFlag<C>(val column: ColumnSet<C>, val flag: SortFlag) : ColumnSet<C> {
     override fun resolve(context: ColumnResolutionContext) = column.resolve(context).map { it.addFlag(flag) }
 }
 

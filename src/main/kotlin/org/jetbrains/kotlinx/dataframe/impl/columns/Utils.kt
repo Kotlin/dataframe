@@ -12,8 +12,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
@@ -91,18 +91,18 @@ internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
     return this
 }
 
-internal fun <A, B> SingleColumn<A>.transformSingle(converter: (ColumnWithPath<A>) -> List<ColumnWithPath<B>>): Columns<B> =
-    object : Columns<B> {
+internal fun <A, B> SingleColumn<A>.transformSingle(converter: (ColumnWithPath<A>) -> List<ColumnWithPath<B>>): ColumnSet<B> =
+    object : ColumnSet<B> {
         override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<B>> =
             this@transformSingle.resolveSingle(context)?.let { converter(it) } ?: emptyList()
     }
 
-internal fun <A, B> Columns<A>.transform(converter: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>): Columns<B> =
-    object : Columns<B> {
+internal fun <A, B> ColumnSet<A>.transform(converter: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>): ColumnSet<B> =
+    object : ColumnSet<B> {
         override fun resolve(context: ColumnResolutionContext) = converter(this@transform.resolve(context))
     }
 
-internal fun <T> Columns<T>.single() = object : SingleColumn<T> {
+internal fun <T> ColumnSet<T>.single() = object : SingleColumn<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? {
         return this@single.resolve(context).singleOrNull()
     }
@@ -156,7 +156,7 @@ internal fun KType.toColumnKind(): ColumnKind = when {
     else -> ColumnKind.Value
 }
 
-internal fun <C> Columns<C>.resolve(df: DataFrame<*>, unresolvedColumnsPolicy: UnresolvedColumnsPolicy) =
+internal fun <C> ColumnSet<C>.resolve(df: DataFrame<*>, unresolvedColumnsPolicy: UnresolvedColumnsPolicy) =
     resolve(ColumnResolutionContext(df, unresolvedColumnsPolicy))
 
 internal fun <C> SingleColumn<C>.resolveSingle(df: DataFrame<*>, unresolvedColumnsPolicy: UnresolvedColumnsPolicy) =

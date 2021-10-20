@@ -16,8 +16,8 @@ import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
@@ -38,7 +38,7 @@ internal fun <T> defaultJoinColumns(dataFrames: Iterable<DataFrame<T>>): JoinCol
         }.orEmpty().map { it.toColumnAccessor() }.let { ColumnsList(it) }
     }
 
-internal fun <C> Columns<C>.extractJoinColumns(): List<ColumnMatch<C>> = when (this) {
+internal fun <C> ColumnSet<C>.extractJoinColumns(): List<ColumnMatch<C>> = when (this) {
     is ColumnsList -> columns.flatMap { it.extractJoinColumns() }
     is ColumnReference<C> -> listOf(ColumnMatch(this, path().toColumnAccessor() as ColumnReference<C>))
     is ColumnMatch -> listOf(this)

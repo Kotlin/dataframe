@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
  * A set of columns. Used in column selectors API
  * @param C common type of columns
  */
-public interface Columns<out C> {
+public interface ColumnSet<out C> {
 
     public fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>>
 }
