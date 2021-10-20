@@ -7,16 +7,18 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 
 /**
  * Column with type, name/path and values
  * Base interface for all three kinds of columns: [ValueColumn], [ColumnGroup] and [FrameColumn]
  */
-public interface BaseColumn<out T> : TypedColumn<T> {
+public interface BaseColumn<out T> : ColumnReference<T> {
 
     public fun size(): Int
     public fun ndistinct(): Int
     public fun kind(): ColumnKind
+    public fun type(): KType
 
     public operator fun get(index: Int): T
     public operator fun get(firstIndex: Int, vararg otherIndices: Int): BaseColumn<T> = slice(
