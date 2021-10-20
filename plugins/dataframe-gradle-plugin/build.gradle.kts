@@ -38,10 +38,6 @@ gradlePlugin {
             id = "org.jetbrains.kotlin.plugin.dataframe"
             implementationClass = "org.jetbrains.dataframe.gradle.ConvenienceSchemaGeneratorPlugin"
         }
-        create("baseSchemaGeneratorPlugin") {
-            id = "org.jetbrains.kotlin.plugin.dataframe-base"
-            implementationClass = "org.jetbrains.dataframe.gradle.SchemaGeneratorPlugin"
-        }
     }
 }
 
