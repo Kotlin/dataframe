@@ -38,8 +38,6 @@ import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import org.jetbrains.kotlinx.dataframe.pathOf
-import org.jetbrains.kotlinx.dataframe.toColumnAccessor
-import org.jetbrains.kotlinx.dataframe.toMany
 import org.jetbrains.kotlinx.dataframe.typeClass
 import java.math.BigDecimal
 import java.time.LocalDate

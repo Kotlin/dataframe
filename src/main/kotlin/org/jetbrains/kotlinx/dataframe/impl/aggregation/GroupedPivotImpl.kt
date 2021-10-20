@@ -5,12 +5,12 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.aggregation.PivotAggregateBody
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
+import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateBodyInternal
 import org.jetbrains.kotlinx.dataframe.impl.api.aggregatePivot
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
-import org.jetbrains.kotlinx.dataframe.typed
 
 internal data class GroupedPivotImpl<T>(
     internal val df: GroupedDataFrame<*, T>,

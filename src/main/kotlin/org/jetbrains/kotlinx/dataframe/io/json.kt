@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrameBase
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
+import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -19,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
 import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.toMany
 import org.jetbrains.kotlinx.dataframe.type
 import java.io.File
 import java.io.FileWriter

@@ -26,8 +26,6 @@ import org.jetbrains.kotlinx.dataframe.impl.indexOfMin
 import org.jetbrains.kotlinx.dataframe.impl.mapRows
 import org.jetbrains.kotlinx.dataframe.impl.zero
 import org.jetbrains.kotlinx.dataframe.math.sumOf
-import org.jetbrains.kotlinx.dataframe.toColumnAccessor
-import org.jetbrains.kotlinx.dataframe.toColumnOf
 import kotlin.reflect.KProperty
 
 public fun <T> DataFrame<T>.count(predicate: RowFilter<T>? = null): Int =

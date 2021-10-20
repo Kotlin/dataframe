@@ -5,13 +5,13 @@ import org.jetbrains.kotlinx.dataframe.AnyColumn
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ReadonlyTreeNode
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ReferenceData
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getAncestor
 import org.jetbrains.kotlinx.dataframe.impl.columns.withDf
-import org.jetbrains.kotlinx.dataframe.typed
 
 internal data class ColumnToInsert(
     val insertionPath: ColumnPath,

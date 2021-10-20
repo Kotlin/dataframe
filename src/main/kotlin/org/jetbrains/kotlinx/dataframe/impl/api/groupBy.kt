@@ -7,11 +7,11 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataRow
 import org.jetbrains.kotlinx.dataframe.api.getRows
+import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupedDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import org.jetbrains.kotlinx.dataframe.pathOf
-import org.jetbrains.kotlinx.dataframe.typed
 
 internal class GroupedDataRowImpl<T, G>(private val row: DataRow<T>, private val frameCol: FrameColumn<G>) : GroupedDataRow<T, G>, DataRow<T> by row {
 

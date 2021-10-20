@@ -19,10 +19,10 @@ import org.jetbrains.kotlinx.dataframe.api.outerJoin
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.typed
-import org.jetbrains.kotlinx.dataframe.typed
 import org.junit.Test
 
 class JoinTests : BaseTest() {

@@ -6,6 +6,7 @@ import io.kotest.matchers.string.shouldNotContain
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.parse
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.getType
@@ -16,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.io.renderToStringTable
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer
-import org.jetbrains.kotlinx.dataframe.toDataFrame
 import org.jsoup.Jsoup
 import org.junit.Test
 import java.net.URL

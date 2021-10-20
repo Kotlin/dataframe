@@ -16,12 +16,12 @@ import org.jetbrains.kotlinx.dataframe.api.min
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.columns.ndistinct
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.type
-import org.jetbrains.kotlinx.dataframe.typed
 
 internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescriptionSchema> {
     val hasNumeric = cols.any { it.isNumber() }

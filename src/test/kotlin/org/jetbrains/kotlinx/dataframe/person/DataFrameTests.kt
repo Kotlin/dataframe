@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.addRowNumber
 import org.jetbrains.kotlinx.dataframe.api.allNulls
+import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
@@ -29,8 +30,13 @@ import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.nullable
 import org.jetbrains.kotlinx.dataframe.api.plus
+import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.api.toColumnOf
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.toMany
+import org.jetbrains.kotlinx.dataframe.api.toMap
+import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.api.withValues
-import org.jetbrains.kotlinx.dataframe.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnMany
@@ -53,14 +59,8 @@ import org.jetbrains.kotlinx.dataframe.math.mean
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
-import org.jetbrains.kotlinx.dataframe.toColumn
-import org.jetbrains.kotlinx.dataframe.toColumnOf
-import org.jetbrains.kotlinx.dataframe.toDataFrame
-import org.jetbrains.kotlinx.dataframe.toMany
-import org.jetbrains.kotlinx.dataframe.toMap
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
-import org.jetbrains.kotlinx.dataframe.typed
 import org.junit.Test
 import java.math.BigDecimal
 import java.time.LocalDate

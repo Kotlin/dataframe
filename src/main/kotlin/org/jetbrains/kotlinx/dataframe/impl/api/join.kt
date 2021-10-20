@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.allowRightNulls
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -24,7 +25,6 @@ import org.jetbrains.kotlinx.dataframe.impl.prepareForReceiver
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.nrow
-import org.jetbrains.kotlinx.dataframe.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.withNullability
 

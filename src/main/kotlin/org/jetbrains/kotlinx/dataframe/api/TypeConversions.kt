@@ -1,12 +1,17 @@
-package org.jetbrains.kotlinx.dataframe
+package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.frameColumn
-import org.jetbrains.kotlinx.dataframe.api.isComparable
-import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
-import org.jetbrains.kotlinx.dataframe.api.isNumber
-import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyColumn
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.ColumnSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.Many
+import org.jetbrains.kotlinx.dataframe.column
+import org.jetbrains.kotlinx.dataframe.columnGroup
+import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -15,6 +20,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupedDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.ManyImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
@@ -24,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.owner
+import org.jetbrains.kotlinx.dataframe.index
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.withNullability
 
@@ -167,6 +175,7 @@ public fun <T> DataRow<T>.toDataFrame(): DataFrame<T> = owner[index..index]
 
 // region Array
 
-public inline fun <reified T> Array<T>.toValueColumn(name: String): ValueColumn<T> = DataColumn.create(name, this.asList(), getType<T>())
+public inline fun <reified T> Array<T>.toValueColumn(name: String): ValueColumn<T> =
+    DataColumn.create(name, this.asList(), getType<T>())
 
 // endregion

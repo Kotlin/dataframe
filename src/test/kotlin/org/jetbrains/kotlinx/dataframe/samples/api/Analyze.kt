@@ -1,6 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.aggregate
+import org.jetbrains.kotlinx.dataframe.api.asComparable
+import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
+import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.div
 import org.jetbrains.kotlinx.dataframe.api.expr
@@ -31,9 +34,6 @@ import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataRow
 import org.jetbrains.kotlinx.dataframe.api.values
-import org.jetbrains.kotlinx.dataframe.asComparable
-import org.jetbrains.kotlinx.dataframe.asGroupedDataFrame
-import org.jetbrains.kotlinx.dataframe.asNumbers
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf

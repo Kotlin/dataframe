@@ -5,9 +5,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrameSelector
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
+import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.namedValues
-import org.jetbrains.kotlinx.dataframe.typed
 
 internal fun <T> Grouped<T>.aggregateBy(
     body: DataFrameSelector<T, DataRow<T>?>

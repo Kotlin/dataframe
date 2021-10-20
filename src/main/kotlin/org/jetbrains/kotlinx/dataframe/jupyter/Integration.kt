@@ -23,7 +23,6 @@ import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListNamedStub
 import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListTypedStub
-import org.jetbrains.kotlinx.dataframe.toDataFrame
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.VariableName

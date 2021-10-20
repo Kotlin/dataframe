@@ -36,8 +36,6 @@ import org.jetbrains.kotlinx.dataframe.impl.toColumnPath
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.newColumn
 import org.jetbrains.kotlinx.dataframe.pathOf
-import org.jetbrains.kotlinx.dataframe.toColumnAccessor
-import org.jetbrains.kotlinx.dataframe.typed
 import kotlin.reflect.KProperty
 
 // region add
