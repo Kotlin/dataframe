@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.Columns
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
@@ -28,7 +29,6 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
-import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
@@ -93,6 +93,20 @@ public fun <T> BaseColumn<T>.toMany(): Many<T> = values().toMany()
 
 // endregion
 
+// region ColumnGroup
+
+public fun <T> ColumnGroup<T>.asDataColumn(): DataColumn<DataRow<T>> = this as DataColumn<DataRow<T>>
+
+public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
+
+// endregion
+
+// region FrameColumn
+
+public fun <T> FrameColumn<T>.asDataColumn(): DataColumn<DataFrame<T>?> = this
+
+// endregion
+
 // region Columns
 
 @JvmName("asNumbersAny")
@@ -109,19 +123,19 @@ public fun <T> Columns<T>.asComparable(): Columns<Comparable<T>> = this as Colum
 
 public fun Iterable<AnyFrame?>.toColumn(): FrameColumn<Any?> = columnOf(this)
 
-public fun Iterable<AnyFrame?>.toColumn(name: String): FrameColumn<Any?> = DataColumn.create(name, toList())
+public fun Iterable<AnyFrame?>.toColumn(name: String): FrameColumn<Any?> = DataColumn.createFrameColumn(name, toList())
 
 public fun <T> Iterable<DataFrame<T>?>.toFrameColumn(name: String): FrameColumn<T> =
-    DataColumn.create(name, asList())
+    DataColumn.createFrameColumn(name, asList())
 
-public inline fun <reified T> Iterable<T>.toColumn(name: String = ""): ValueColumn<T> =
-    asList().let { DataColumn.create(name, it, getType<T>().withNullability(it.any { it == null })) }
+public inline fun <reified T> Iterable<T>.toValueColumn(name: String = ""): ValueColumn<T> =
+    asList().let { DataColumn.createValueColumn(name, it, getType<T>().withNullability(it.any { it == null })) }
 
 public fun Iterable<Any?>.toColumnGuessType(name: String = ""): AnyCol =
     guessColumnType(name, asList())
 
 public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): ValueColumn<T> =
-    toColumn(ref.name())
+    toValueColumn(ref.name())
 
 public fun <T> Iterable<T>.toMany(): Many<T> = when (this) {
     is Many<T> -> this
@@ -139,20 +153,18 @@ public fun <T> Sequence<T>.toMany(): Many<T> = toList().toMany()
 
 // region DataFrame
 
-public fun <T> AnyFrame.typed(): DataFrame<T> = this as DataFrame<T>
-
 public fun AnyFrame.toMap(): Map<String, List<Any?>> = columns().associateBy({ it.name }, { it.toList() })
 
 // region as GroupedDataFrame
 
 public fun <T> DataFrame<T>.asGroupedDataFrame(groupedColumnName: String): GroupedDataFrame<T, T> =
-    GroupedDataFrameImpl(this, frameColumn(groupedColumnName).typed()) { none() }
+    GroupedDataFrameImpl(this, frameColumn(groupedColumnName).typedFrames()) { none() }
 
 public fun <T, G> DataFrame<T>.asGroupedDataFrame(groupedColumn: ColumnReference<DataFrame<G>?>): GroupedDataFrame<T, G> =
-    GroupedDataFrameImpl(this, frameColumn(groupedColumn.name()).typed()) { none() }
+    GroupedDataFrameImpl(this, frameColumn(groupedColumn.name()).typedFrames()) { none() }
 
 public fun <T> DataFrame<T>.asGroupedDataFrame(): GroupedDataFrame<T, T> {
-    val groupCol = columns().single { it.isFrameColumn() }.asFrameColumn().typed<T>()
+    val groupCol = columns().single { it.isFrameColumn() }.asFrameColumn().typedFrames<T>()
     return asGroupedDataFrame { groupCol }
 }
 
@@ -167,8 +179,6 @@ public fun <T, G> DataFrame<T>.asGroupedDataFrame(selector: ColumnSelector<T, Da
 
 // region DataRow
 
-public fun <T> AnyRow.typed(): DataRow<T> = this as DataRow<T>
-
 public fun <T> DataRow<T>.toDataFrame(): DataFrame<T> = owner[index..index]
 
 // endregion
@@ -176,6 +186,24 @@ public fun <T> DataRow<T>.toDataFrame(): DataFrame<T> = owner[index..index]
 // region Array
 
 public inline fun <reified T> Array<T>.toValueColumn(name: String): ValueColumn<T> =
-    DataColumn.create(name, this.asList(), getType<T>())
+    DataColumn.createValueColumn(name, this.asList(), getType<T>())
+
+// endregion
+
+// region typed
+
+public fun <T> AnyFrame.typed(): DataFrame<T> = this as DataFrame<T>
+
+public fun <T> AnyRow.typed(): DataRow<T> = this as DataRow<T>
+
+public fun <T> AnyCol.typed(): DataColumn<T> = this as DataColumn<T>
+
+public fun <T> ValueColumn<*>.typed(): ValueColumn<T> = this as ValueColumn<T>
+
+public fun <T> FrameColumn<*>.typedFrames(): FrameColumn<T> = this as FrameColumn<T>
+
+public fun <T> ColumnGroup<*>.typed(): ColumnGroup<T> = this as ColumnGroup<T>
+
+public fun <T> ColumnWithPath<*>.typed(): ColumnWithPath<T> = this as ColumnWithPath<T>
 
 // endregion

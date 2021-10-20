@@ -17,6 +17,6 @@ public fun <C, R> ColumnReference<C>.map(targetType: KType?, transform: (C) -> R
 public val ColumnReference<*>.name: String get() = name()
 public inline fun <reified T> ColumnReference<T>.withValues(vararg values: T): ValueColumn<T> = withValues(values.asIterable())
 public inline fun <reified T> ColumnReference<T>.withValues(values: Iterable<T>): ValueColumn<T> =
-    DataColumn.create(name(), values.asList(), getType<T>())
+    DataColumn.createValueColumn(name(), values.asList(), getType<T>())
 
 public infix fun <T, C : ColumnReference<T>> C.named(name: String): C = rename(name) as C

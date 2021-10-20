@@ -57,7 +57,7 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T>, 
     override fun toString() = renderToString()
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataRow<T>>? {
-        return DataColumn.create("", this).addPath(emptyPath(), this)
+        return DataColumn.createColumnGroup("", this).addPath(emptyPath(), this)
     }
 
     override fun set(columnName: String, value: AnyCol) {

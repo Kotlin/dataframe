@@ -55,7 +55,7 @@ public fun <T> DataFrame<T>.shuffled(): DataFrame<T> = getRows((0 until nrow()).
 
 public fun <T> DataFrame<T>.chunked(size: Int): FrameColumn<T> {
     val startIndices = (0 until nrow() step size)
-    return DataColumn.create("", this, startIndices, false)
+    return DataColumn.createFrameColumn("", this, startIndices, false)
 }
 
 // region isEmpty
@@ -245,7 +245,7 @@ public inline fun <reified T> Iterable<T>.toDataFrameByProperties(): AnyFrame = 
                 value
             }
         }
-        DataColumn.create(it.name, values, property.returnType.withNullability(nullable))
+        DataColumn.createValueColumn(it.name, values, property.returnType.withNullability(nullable))
     }.let { dataFrameOf(it) }
 
 @JvmName("toDataFrameT")
@@ -312,7 +312,7 @@ public fun <T> Iterable<Pair<ColumnPath, AnyColumn>>.toDataFrame(): DataFrame<T>
         val group = columnGroups[index]
         if (group != null) {
             val nestedDf = group.toDataFrame<Unit>()
-            val col = DataColumn.create(columnNames[index], nestedDf)
+            val col = DataColumn.createColumnGroup(columnNames[index], nestedDf)
             assert(columns[index] == null)
             columns[index] = col
         } else assert(columns[index] != null)
@@ -349,12 +349,12 @@ public class IterableDataFrameBuilder<T>(public val source: Iterable<T>) {
 // region Create DataFrame from Map
 
 public fun Map<String, Iterable<Any?>>.toDataFrame(): AnyFrame {
-    return map { DataColumn.create(it.key, it.value.asList()) }.toAnyFrame()
+    return map { DataColumn.createWithTypeInference(it.key, it.value.asList()) }.toAnyFrame()
 }
 
 @JvmName("toDataFrameColumnPathAny?")
 public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame {
-    return map { it.key to DataColumn.create(it.key.last(), it.value.asList()) }.toDataFrame<Unit>()
+    return map { it.key to DataColumn.createWithTypeInference(it.key.last(), it.value.asList()) }.toDataFrame<Unit>()
 }
 
 // endregion

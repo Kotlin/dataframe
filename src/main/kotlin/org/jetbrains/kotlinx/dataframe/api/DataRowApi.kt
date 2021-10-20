@@ -34,12 +34,12 @@ public fun <T> DataRow<T>.movingAverage(k: Int, selector: RowSelector<T, Number>
 
 public fun <T> DataRowBase<T>.duplicate(n: Int): DataFrame<T> = (this as DataRow<T>).owner.columns().mapIndexed { colIndex, col ->
     when (col) {
-        is ColumnGroup<*> -> DataColumn.create(col.name, col[index].duplicate(n))
+        is ColumnGroup<*> -> DataColumn.createColumnGroup(col.name, col[index].duplicate(n))
         else -> {
             val value = col[index]
             if (value is AnyFrame) {
-                DataColumn.create(col.name, MutableList(n) { value })
-            } else DataColumn.create(col.name, MutableList(n) { value }, col.type.withNullability(value == null))
+                DataColumn.createFrameColumn(col.name, MutableList(n) { value })
+            } else DataColumn.createValueColumn(col.name, MutableList(n) { value }, col.type.withNullability(value == null))
         }
     }
 }.toDataFrame()

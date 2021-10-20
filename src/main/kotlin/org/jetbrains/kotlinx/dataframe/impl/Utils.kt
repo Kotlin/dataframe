@@ -91,7 +91,8 @@ public fun <T> Iterable<T>.asList(): List<T> = when (this) {
     else -> this.toList()
 }
 
-internal fun <T> Iterable<T>.anyNull() = any { it == null }
+@PublishedApi
+internal fun <T> Iterable<T>.anyNull(): Boolean = any { it == null }
 
 @PublishedApi
 internal fun emptyPath(): ColumnPath = ColumnPath(emptyList())

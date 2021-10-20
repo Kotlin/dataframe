@@ -117,7 +117,7 @@ internal fun <T> insertImpl(
         } else {
             val newDf =
                 insertImpl<Unit>(null, columns, treeNode?.get(name), childDepth)
-            DataColumn.create(name, newDf) // new node needs to be created
+            DataColumn.createColumnGroup(name, newDf) // new node needs to be created
         }
         if (insertionIndex == Int.MAX_VALUE) {
             newColumns.add(newCol)

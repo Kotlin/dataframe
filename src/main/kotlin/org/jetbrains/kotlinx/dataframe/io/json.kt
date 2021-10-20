@@ -104,9 +104,9 @@ internal fun fromJsonList(records: List<*>): AnyFrame {
                         val col = parsed.col(0)
                         val elementType = col.type
                         val values = col.values.asList().splitByIndices(startIndices.asSequence()).toMany()
-                        DataColumn.create(colName, values, Many::class.createType(listOf(KTypeProjection.invariant(elementType))))
+                        DataColumn.createValueColumn(colName, values, Many::class.createType(listOf(KTypeProjection.invariant(elementType))))
                     }
-                    else -> DataColumn.create(colName, parsed, startIndices, false)
+                    else -> DataColumn.createFrameColumn(colName, parsed, startIndices, false)
                 }
             }
             else -> {
@@ -121,9 +121,9 @@ internal fun fromJsonList(records: List<*>): AnyFrame {
 
                 val parsed = fromJsonList(values)
                 when {
-                    parsed.ncol == 0 -> DataColumn.create(colName, arrayOfNulls<Any?>(values.size).toList(), getType<Any?>())
+                    parsed.ncol == 0 -> DataColumn.createValueColumn(colName, arrayOfNulls<Any?>(values.size).toList(), getType<Any?>())
                     parsed.isSingleUnnamedColumn() -> parsed.col(0).rename(colName)
-                    else -> DataColumn.create(colName, parsed)
+                    else -> DataColumn.createColumnGroup(colName, parsed)
                 }
             }
         }

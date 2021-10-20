@@ -26,7 +26,7 @@ internal open class ValueColumnImpl<T>(
 
     override fun createWithValues(values: List<T>, hasNulls: Boolean?): DataColumn<T> {
         val nulls = hasNulls ?: values.any { it == null }
-        return DataColumn.create(name, values, type.withNullability(nulls))
+        return DataColumn.createValueColumn(name, values, type.withNullability(nulls))
     }
 
     override fun defaultValue() = defaultValue

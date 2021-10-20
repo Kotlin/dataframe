@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.api.AddDataRowImpl
 import org.jetbrains.kotlinx.dataframe.api.AddExpression
 import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
+import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
 import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
@@ -40,16 +41,16 @@ import kotlin.reflect.full.withNullability
 internal fun <T, R> DataFrameBase<T>.newColumn(type: KType, name: String = "", expression: AddExpression<T, R>): DataColumn<R> {
     val (nullable, values) = computeValues(this as DataFrame<T>, expression)
     return when (type.classifier) {
-        DataFrame::class -> DataColumn.frames(name, values as List<AnyFrame?>) as DataColumn<R>
-        DataRow::class -> DataColumn.create(name, (values as List<AnyRow>).concat()) as DataColumn<R>
-        else -> DataColumn.create(name, values, type.withNullability(nullable))
+        DataFrame::class -> DataColumn.createFrameColumn(name, values as List<AnyFrame?>) as DataColumn<R>
+        DataRow::class -> DataColumn.createColumnGroup(name, (values as List<AnyRow>).concat()) as DataColumn<R>
+        else -> DataColumn.createValueColumn(name, values, type.withNullability(nullable))
     }
 }
 
 @PublishedApi
 internal fun <T, R> DataFrameBase<T>.newColumnWithActualType(name: String, expression: AddExpression<T, R>): DataColumn<R> {
     val (_, values) = computeValues(this as DataFrame<T>, expression)
-    return guessColumnType(name, values) as DataColumn<R>
+    return guessColumnType(name, values)
 }
 
 internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T, R>): Pair<Boolean, List<R>> {
@@ -66,13 +67,13 @@ internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T,
 
 @PublishedApi
 internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessType: Boolean = false): DataColumn<T> = when {
-    values.all { it is AnyCol } -> DataColumn.create("", (values as Iterable<AnyCol>).toAnyFrame()) as DataColumn<T>
-    values.all { it == null || it is AnyFrame } -> DataColumn.frames(
+    values.all { it is AnyCol } -> DataColumn.createColumnGroup("", (values as Iterable<AnyCol>).toAnyFrame()) as DataColumn<T>
+    values.all { it == null || it is AnyFrame } -> DataColumn.createFrameColumn(
         "",
         values.map { it as? AnyFrame }
     ) as DataColumn<T>
     guessType -> guessColumnType("", values.asList(), suggestedType, suggestedTypeIsUpperBound = true).typed<T>()
-    else -> DataColumn.create("", values.toList(), suggestedType)
+    else -> DataColumn.createValueColumn("", values.toList(), suggestedType)
 }
 
 // endregion
@@ -117,16 +118,17 @@ internal fun <T, C> ColumnsSelector<T, C>.toColumns(): Columns<C> = toColumns {
 }
 
 // endregion
-internal fun guessColumnType(name: String, values: List<Any?>) = guessColumnType(name, values, null)
+
+internal fun <T> guessColumnType(name: String, values: List<T>) = guessColumnType(name, values, null)
 
 @PublishedApi
-internal fun guessColumnType(
+internal fun <T> guessColumnType(
     name: String,
-    values: List<Any?>,
+    values: List<T>,
     suggestedType: KType? = null,
     suggestedTypeIsUpperBound: Boolean = false,
-    defaultValue: Any? = null
-): AnyCol {
+    defaultValue: T? = null
+): DataColumn<T> {
     val type = when {
         suggestedType == null || suggestedTypeIsUpperBound -> guessValueType(values.asSequence(), suggestedType)
         else -> suggestedType
@@ -135,7 +137,7 @@ internal fun guessColumnType(
     return when (type.classifier!! as KClass<*>) {
         DataRow::class -> {
             val df = values.map { (it as AnyRow).toDataFrame() }.concat()
-            DataColumn.create(name, df) as AnyCol
+            DataColumn.createColumnGroup(name, df).asDataColumn().typed()
         }
         DataFrame::class -> {
             val frames = values.map {
@@ -147,7 +149,7 @@ internal fun guessColumnType(
                     else -> throw IllegalStateException()
                 }
             }
-            DataColumn.create(name, frames, type.isMarkedNullable)
+            DataColumn.createFrameColumn(name, frames, type.isMarkedNullable).asDataColumn().typed()
         }
         Many::class -> {
             val nullable = type.isMarkedNullable
@@ -158,8 +160,8 @@ internal fun guessColumnType(
                     else -> manyOf(it)
                 }
             }
-            DataColumn.create(name, lists, type, defaultValue)
+            DataColumn.createValueColumn(name, lists, type, defaultValue).typed()
         }
-        else -> DataColumn.create(name, values, type, defaultValue)
+        else -> DataColumn.createValueColumn(name, values, type, defaultValue)
     }
 }

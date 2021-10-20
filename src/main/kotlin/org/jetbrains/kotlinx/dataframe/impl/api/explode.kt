@@ -54,7 +54,7 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, selector: C
                     if (it.isNotEmpty() && it[0] == col.name) it.drop(1) else null
                 }.toSet()
                 val newDf = splitIntoRows(group.df, newData)
-                DataColumn.create(col.name, newDf)
+                DataColumn.createColumnGroup(col.name, newDf)
             } else if (isTargetColumn) { // values in current column will be splitted
                 when (col) {
                     is FrameColumn<*> -> {
@@ -70,7 +70,7 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, selector: C
                             }
                         }.concat()
 
-                        DataColumn.create(col.name, newDf)
+                        DataColumn.createColumnGroup(col.name, newDf)
                     }
                     is ValueColumn<*> -> {
                         val collector = createDataCollector(outputRowsCount)
@@ -97,7 +97,7 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, selector: C
                         }
                     }
                 }
-                if (col.isFrameColumn()) DataColumn.create(
+                if (col.isFrameColumn()) DataColumn.createFrameColumn(
                     col.name,
                     collector.values as List<AnyFrame?>,
                     collector.hasNulls,

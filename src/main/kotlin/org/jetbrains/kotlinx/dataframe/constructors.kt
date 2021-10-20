@@ -61,15 +61,15 @@ public fun columnOf(vararg values: AnyColumn): DataColumn<AnyRow> = columnOf(val
 
 public fun <T> columnOf(vararg frames: DataFrame<T>?): FrameColumn<T> = columnOf(frames.asIterable())
 
-public fun columnOf(columns: Iterable<AnyColumn>): DataColumn<AnyRow> = DataColumn.create("", dataFrameOf(columns)) as DataColumn<AnyRow>
+public fun columnOf(columns: Iterable<AnyColumn>): DataColumn<AnyRow> = DataColumn.createColumnGroup("", dataFrameOf(columns)) as DataColumn<AnyRow>
 
-public fun <T> columnOf(frames: Iterable<DataFrame<T>?>): FrameColumn<T> = DataColumn.create("", frames.toList())
+public fun <T> columnOf(frames: Iterable<DataFrame<T>?>): FrameColumn<T> = DataColumn.createFrameColumn("", frames.toList())
 
 public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> = createColumn(values, getType<T>(), false)
 
 // TODO: replace with extension
 public inline fun <reified T> column(name: String, values: List<T>): DataColumn<T> = when {
-    values.size > 0 && values.all { it is AnyCol } -> DataColumn.create(
+    values.size > 0 && values.all { it is AnyCol } -> DataColumn.createColumnGroup(
         name,
         values.map { it as AnyCol }.toAnyFrame()
     ) as DataColumn<T>
@@ -78,7 +78,7 @@ public inline fun <reified T> column(name: String, values: List<T>): DataColumn<
 
 // TODO: replace with extension
 public inline fun <reified T> column(name: String, values: List<T>, hasNulls: Boolean): DataColumn<T> =
-    DataColumn.create(name, values, getType<T>().withNullability(hasNulls))
+    DataColumn.createValueColumn(name, values, getType<T>().withNullability(hasNulls))
 
 // endregion
 
@@ -102,7 +102,7 @@ public fun <T> dataFrameOf(first: T, second: T, vararg other: T): DataFrameBuild
 
 public fun <T> dataFrameOf(header: Iterable<T>): DataFrameBuilder = dataFrameOf(header.map { it.toString() })
 
-public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): AnyFrame = header.map { value -> fill(value).asList().let { DataColumn.createWithNullCheck(value.toString(), it) } }.toAnyFrame()
+public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): AnyFrame = header.map { value -> fill(value).asList().let { DataColumn.create(value.toString(), it) } }.toAnyFrame()
 
 public fun dataFrameOf(header: CharProgression): DataFrameBuilder = dataFrameOf(header.map { it.toString() })
 
@@ -138,7 +138,7 @@ public class DataFrameBuilder(private val header: List<String>) {
             val colValues = (0 until nrow).map { row ->
                 list[row * ncol + col]
             }
-            DataColumn.create(header[col], colValues)
+            DataColumn.createWithTypeInference(header[col], colValues)
         }.toAnyFrame()
     }
 
@@ -146,17 +146,17 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public fun withColumns(columnBuilder: (String) -> AnyCol): AnyFrame = header.map(columnBuilder).toAnyFrame()
 
-    public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): AnyFrame = withColumns { name -> valuesBuilder(name).let { DataColumn.createWithNullCheck(name, it.asList()) } }
+    public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): AnyFrame = withColumns { name -> valuesBuilder(name).let { DataColumn.create(name, it.asList()) } }
 
-    public inline fun <reified C> fill(nrow: Int, value: C): AnyFrame = withColumns { name -> DataColumn.create(name, List(nrow) { value }, getType<C>().withNullability(value == null)) }
+    public inline fun <reified C> fill(nrow: Int, value: C): AnyFrame = withColumns { name -> DataColumn.createValueColumn(name, List(nrow) { value }, getType<C>().withNullability(value == null)) }
 
     public inline fun <reified C> nulls(nrow: Int): AnyFrame = fill<C?>(nrow, null)
 
-    public inline fun <reified C> fillIndexed(nrow: Int, crossinline init: (Int, String) -> C): AnyFrame = withColumns { name -> DataColumn.createWithNullCheck(name, List(nrow) { init(it, name) }) }
+    public inline fun <reified C> fillIndexed(nrow: Int, crossinline init: (Int, String) -> C): AnyFrame = withColumns { name -> DataColumn.create(name, List(nrow) { init(it, name) }) }
 
-    public inline fun <reified C> fill(nrow: Int, crossinline init: (Int) -> C): AnyFrame = withColumns { name -> DataColumn.createWithNullCheck(name, List(nrow, init)) }
+    public inline fun <reified C> fill(nrow: Int, crossinline init: (Int) -> C): AnyFrame = withColumns { name -> DataColumn.create(name, List(nrow, init)) }
 
-    private inline fun <reified C> fillNotNull(nrow: Int, crossinline init: (Int) -> C) = withColumns { name -> DataColumn.create(name, List(nrow, init), getType<C>()) }
+    private inline fun <reified C> fillNotNull(nrow: Int, crossinline init: (Int) -> C) = withColumns { name -> DataColumn.createValueColumn(name, List(nrow, init), getType<C>()) }
 
     public fun randomInt(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextInt() }
 
