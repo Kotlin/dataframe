@@ -33,6 +33,8 @@ import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.toDataRow
 import org.jetbrains.kotlinx.dataframe.api.toInt
+import org.jetbrains.kotlinx.dataframe.api.toMany
+import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.values
@@ -49,9 +51,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.typed
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.manyOf
 import org.jetbrains.kotlinx.dataframe.newColumn
-import org.jetbrains.kotlinx.dataframe.toMany
 import org.jetbrains.kotlinx.dataframe.typeClass
-import org.jetbrains.kotlinx.dataframe.typed
 import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
 import java.io.Serializable

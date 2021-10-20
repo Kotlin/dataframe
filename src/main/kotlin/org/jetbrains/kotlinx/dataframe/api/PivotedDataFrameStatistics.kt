@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnsOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
-import org.jetbrains.kotlinx.dataframe.toDataFrame
 import kotlin.reflect.KProperty
 
 public fun <T> PivotedDataFrame<T>.toDataRow(): DataRow<T> = aggregate { this }

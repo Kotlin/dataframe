@@ -32,9 +32,6 @@ import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
-import org.jetbrains.kotlinx.dataframe.toColumnAccessor
-import org.jetbrains.kotlinx.dataframe.toDataFrame
-import org.jetbrains.kotlinx.dataframe.typed
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.declaredMembers
 import kotlin.reflect.full.withNullability

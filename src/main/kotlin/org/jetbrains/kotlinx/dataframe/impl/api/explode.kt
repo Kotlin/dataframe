@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
+import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -25,7 +26,6 @@ import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
-import org.jetbrains.kotlinx.dataframe.typed
 
 internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, selector: ColumnsSelector<T, *>): DataFrame<T> {
     val columns = getColumnsWithPaths(selector)

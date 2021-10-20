@@ -16,8 +16,6 @@ import org.jetbrains.kotlinx.dataframe.impl.api.joinImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWith
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
-import org.jetbrains.kotlinx.dataframe.toDataFrame
-import org.jetbrains.kotlinx.dataframe.typed
 
 // region join
 

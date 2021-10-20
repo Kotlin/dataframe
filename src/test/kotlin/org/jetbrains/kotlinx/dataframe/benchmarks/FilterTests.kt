@@ -7,8 +7,8 @@ import org.jetbrains.kotlinx.dataframe.DataRowBase
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.filterFast
 import org.jetbrains.kotlinx.dataframe.api.neq
+import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.io.read
-import org.jetbrains.kotlinx.dataframe.typed
 import org.junit.Ignore
 import org.junit.Test
 import kotlin.system.measureTimeMillis
