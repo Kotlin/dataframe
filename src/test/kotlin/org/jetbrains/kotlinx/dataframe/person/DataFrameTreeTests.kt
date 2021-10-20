@@ -161,7 +161,7 @@ class DataFrameTreeTests : BaseTest() {
         df2.select { nameAndCity.cols { !it.hasNulls() } } shouldBe typed2.select { nameAndCity.name }
         df2.select { nameAndCity.cols(0..1) } shouldBe typed2.nameAndCity.select { all() }
         df2.select { nameAndCity.col(1) } shouldBe typed2.select { nameAndCity.city }
-        df2.select { nameAndCity.col("city") } shouldBe typed2.select { nameAndCity.city }
+        df2.select { nameAndCity["city"] } shouldBe typed2.select { nameAndCity.city }
         df2.select { nameAndCity.cols("city", "name") } shouldBe typed2.select { nameAndCity.city and nameAndCity.name }
         df2.select { nameAndCity.cols(name, city) } shouldBe typed2.select { nameAndCity.all() }
         df2.select { nameAndCity[name] } shouldBe typed2.nameAndCity.select { name }
@@ -171,7 +171,7 @@ class DataFrameTreeTests : BaseTest() {
         typed2.select { nameAndCity.cols { !it.hasNulls() } } shouldBe typed2.select { nameAndCity.name }
         typed2.select { nameAndCity.cols(0..1) } shouldBe typed2.nameAndCity.select { all() }
         typed2.select { nameAndCity.col(1) } shouldBe typed2.select { nameAndCity.city }
-        typed2.select { nameAndCity.col("city") } shouldBe typed2.select { nameAndCity.city }
+        typed2.select { nameAndCity["city"] } shouldBe typed2.select { nameAndCity.city }
         typed2.select {
             nameAndCity.cols(
                 "city",
@@ -191,7 +191,6 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun getColumnPath() {
         typed2.getColumnPath { nameAndCity["city"] }.size shouldBe 2
-        typed2.getColumnPath { nameAndCity.col("city") }.size shouldBe 2
         typed2.getColumnPath { nameAndCity.col(1) }.size shouldBe 2
     }
 

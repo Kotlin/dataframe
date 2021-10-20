@@ -362,7 +362,7 @@ class DataFrameTests : BaseTest() {
         typed.sortBy { city }.check()
         df.sortBy { city }.check()
         df.sortBy { col(Person::city) }.check()
-        df.sortBy { col("city") }.check()
+        df.sortBy { get("city") }.check()
     }
 
     @Test

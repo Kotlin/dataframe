@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
@@ -70,7 +69,7 @@ internal fun <T> BaseColumn<T>.addPath(df: ColumnsContainer<*>): ColumnWithPath<
 
 internal fun ColumnPath.depth() = size - 1
 
-internal fun ColumnWithPath<*>.asColumnGroup() = if (data.isColumnGroup()) data.asColumnGroup() else null
+internal fun ColumnWithPath<*>.asColumnGroup() = data.asColumnGroup()
 
 internal fun <T> AnyCol.asValues() = this as ValueColumn<T>
 
@@ -92,18 +91,16 @@ internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
     return this
 }
 
-internal fun <A, B> Columns<A>.transform(transform: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>): Columns<B> {
-    class TransformedColumns<A, B>(
-        val src: Columns<A>,
-        val transform: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>
-    ) :
-        Columns<B> {
-
-        override fun resolve(context: ColumnResolutionContext) = transform(src.resolve(context))
+internal fun <A, B> SingleColumn<A>.transformSingle(converter: (ColumnWithPath<A>) -> List<ColumnWithPath<B>>): Columns<B> =
+    object : Columns<B> {
+        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<B>> =
+            this@transformSingle.resolveSingle(context)?.let { converter(it) } ?: emptyList()
     }
 
-    return TransformedColumns(this, transform)
-}
+internal fun <A, B> Columns<A>.transform(converter: (List<ColumnWithPath<A>>) -> List<ColumnWithPath<B>>): Columns<B> =
+    object : Columns<B> {
+        override fun resolve(context: ColumnResolutionContext) = converter(this@transform.resolve(context))
+    }
 
 internal fun <T> Columns<T>.single() = object : SingleColumn<T> {
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? {

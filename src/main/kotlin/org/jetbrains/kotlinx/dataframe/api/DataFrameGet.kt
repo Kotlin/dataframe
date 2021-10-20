@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
@@ -28,7 +27,7 @@ public fun <T, C> DataFrame<T>.getColumnPaths(selector: ColumnsSelector<T, C>): 
     selector.toColumns().resolve(this, UnresolvedColumnsPolicy.Fail).map { it.path }
 
 public fun <T, C> DataFrame<T>.column(selector: ColumnSelector<T, C>): DataColumn<C> = get(selector)
-public fun <T> DataFrame<T>.col(predicate: ColumnFilter<Any?>): AnyCol = column { single(predicate) }
+public fun <T> DataFrame<T>.col(predicate: (AnyCol) -> Boolean): AnyCol = columns().single(predicate)
 public fun <T, C> DataFrame<T>.getColumnWithPath(selector: ColumnSelector<T, C>): ColumnWithPath<C> = getColumnsWithPaths(selector).single()
 public fun <T, C> DataFrame<T>.columns(selector: ColumnsSelector<T, C>): List<DataColumn<C>> = get(selector)
 public fun <T> DataFrame<T>.getColumnIndex(col: AnyCol): Int = getColumnIndex(col.name())
