@@ -2,21 +2,21 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.aggregation.AggregateColumnsSelector
-import org.jetbrains.kotlinx.dataframe.aggregation.SelectAggregatableColumnsReceiver
+import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl
+import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateReceiverInternal
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KType
 
 @PublishedApi
-internal fun <T, V> AggregateReceiverInternal<T>.yieldOneOrMany(
+internal fun <T, V> AggregateInternalDsl<T>.yieldOneOrMany(
     path: ColumnPath,
     values: List<V>,
     type: KType,
@@ -27,16 +27,16 @@ internal fun <T, V> AggregateReceiverInternal<T>.yieldOneOrMany(
 }
 
 @JvmName("toColumnSetForAggregate")
-internal fun <T, C> AggregateColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
+internal fun <T, C> ColumnsForAggregateSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
     class SelectAggregatableColumnsReceiverImpl<T>(df: DataFrame<T>) :
         DataFrameReceiver<T>(df, true),
-        SelectAggregatableColumnsReceiver<T>
+        ColumnsForAggregateSelectionDsl<T>
 
     SelectAggregatableColumnsReceiverImpl(it.df.typed())
 }
 
-internal fun <T, C, R> AggregateReceiverInternal<T>.columnValues(
-    columns: AggregateColumnsSelector<T, C>,
+internal fun <T, C, R> AggregateInternalDsl<T>.columnValues(
+    columns: ColumnsForAggregateSelector<T, C>,
     aggregator: (DataColumn<C>) -> List<R>
 ) {
     val cols = df.getAggregateColumns(columns)

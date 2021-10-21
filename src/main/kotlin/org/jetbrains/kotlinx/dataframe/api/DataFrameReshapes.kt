@@ -5,20 +5,12 @@ import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.aggregation.AggregateReceiver
-import org.jetbrains.kotlinx.dataframe.aggregation.GroupByReceiver
-import org.jetbrains.kotlinx.dataframe.aggregation.PivotReceiver
-import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotedDataFrameImpl
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.ValueWithDefault
 import org.jetbrains.kotlinx.dataframe.impl.api.gatherImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getType
-import org.jetbrains.kotlinx.dataframe.impl.toColumnPath
 import org.jetbrains.kotlinx.dataframe.pathOf
-import kotlin.reflect.KType
 
 // region pivot
 
@@ -28,32 +20,6 @@ public fun <T> DataFrame<T>.pivot(vararg columns: Column): PivotedDataFrame<T> =
 
 public fun <T, P : GroupedPivot<T>> P.withGrouping(group: ColumnGroupReference): P = withGrouping(group.path()) as P
 public fun <T, P : GroupedPivot<T>> P.withGrouping(groupName: String): P = withGrouping(pathOf(groupName)) as P
-
-public typealias AggregateBody<T, R> = AggregateReceiver<T>.(AggregateReceiver<T>) -> R
-
-public typealias PivotAggregateBody<T, R> = PivotReceiver<T>.(PivotReceiver<T>) -> R
-
-public data class ValueWithName(val value: Any?, val name: String)
-
-@Suppress("DataClassPrivateConstructor")
-public data class NamedValue private constructor(
-    val path: ColumnPath,
-    val value: Any?,
-    val type: KType?,
-    var default: Any?,
-    val guessType: Boolean = false
-) {
-    public companion object {
-        public fun create(path: ColumnPath, value: Any?, type: KType?, defaultValue: Any?, guessType: Boolean = false): NamedValue = when (value) {
-            is ValueWithDefault<*> -> create(path, value.value, type, value.default, guessType)
-            is ValueWithName -> create(path.replaceLast(value.name).toColumnPath(), value.value, type, defaultValue, guessType)
-            else -> NamedValue(path, value, type, defaultValue, guessType)
-        }
-        public fun aggregator(builder: GroupByReceiver<*>): NamedValue = NamedValue(emptyPath(), builder, null, null, false)
-    }
-
-    val name: String get() = path.last()
-}
 
 // endregion
 

@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.aggregation.GroupByAggregateBody
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.columns.size
@@ -62,7 +62,7 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T>, 
 
     override fun columns() = columns
 
-    override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) = aggregate(body as GroupByAggregateBody<T, R>).df()
+    override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) = aggregate(body as AggregateGroupedBody<T, R>).df()
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all() }
 
@@ -84,7 +84,7 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T>, 
         }
     }
 
-    override fun <R> aggregate(body: GroupByAggregateBody<T, R>): DataRow<T> {
+    override fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T> {
         val receiver = GroupByReceiverImpl(this)
         body(receiver, receiver)
         val row = receiver.compute() ?: DataFrame.empty(1)[0]

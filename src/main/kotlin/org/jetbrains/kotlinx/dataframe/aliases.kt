@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
-import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -19,9 +19,9 @@ public typealias DataFrameSelector<T, R> = Selector<DataFrame<T>, R>
 
 public typealias RowSelector<T, R> = Selector<DataRow<T>, R>
 
-public typealias ColumnSelector<T, C> = Selector<ColumnSelectionDsl<T>, SingleColumn<C>>
+public typealias ColumnSelector<T, C> = Selector<ColumnsSelectionDsl<T>, SingleColumn<C>>
 
-public typealias ColumnsSelector<T, C> = Selector<ColumnSelectionDsl<T>, ColumnSet<C>>
+public typealias ColumnsSelector<T, C> = Selector<ColumnsSelectionDsl<T>, ColumnSet<C>>
 
 public typealias RowCellSelector<T, C, R> = DataRow<T>.(C) -> R
 

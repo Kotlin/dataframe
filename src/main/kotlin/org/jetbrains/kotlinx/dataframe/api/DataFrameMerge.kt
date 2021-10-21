@@ -19,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.nrow
 
 // region join
 
-public interface JoinDsl<out A, out B> : ColumnSelectionDsl<A> {
+public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
 
     public val right: DataFrame<B>
 

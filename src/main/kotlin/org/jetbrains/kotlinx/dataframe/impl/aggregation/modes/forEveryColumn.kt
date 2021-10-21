@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.modes
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
-import org.jetbrains.kotlinx.dataframe.aggregation.AggregateColumnsSelector
+import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
@@ -13,11 +13,11 @@ import org.jetbrains.kotlinx.dataframe.type
 
 internal fun <T, C, R> Aggregator<*, R>.aggregateFor(
     data: Aggregatable<T>,
-    columns: AggregateColumnsSelector<T, C?>
+    columns: ColumnsForAggregateSelector<T, C?>
 ): DataFrame<T> = data.aggregateFor(columns, cast())
 
 internal fun <T, C, R> Aggregatable<T>.aggregateFor(
-    columns: AggregateColumnsSelector<T, C>,
+    columns: ColumnsForAggregateSelector<T, C>,
     aggregator: Aggregator<C, R>
 ) = aggregateInternal {
     val cols = df.getAggregateColumns(columns)
@@ -33,10 +33,10 @@ internal fun <T, C, R> Aggregatable<T>.aggregateFor(
 internal fun <T, C, R> Aggregator<*, R>.aggregateFor(
     data: GroupedPivot<T>,
     separate: Boolean,
-    columns: AggregateColumnsSelector<T, C?>
+    columns: ColumnsForAggregateSelector<T, C?>
 ): DataFrame<T> = data.separateAggregatedValues(separate).aggregateFor(columns, cast())
 
 internal fun <T, C, R> Aggregator<*, R>.aggregateFor(
     data: DataFrame<T>,
-    columns: AggregateColumnsSelector<T, C?>
+    columns: ColumnsForAggregateSelector<T, C?>
 ): DataRow<T> = aggregateFor(data as Aggregatable<T>, columns)[0]

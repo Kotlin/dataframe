@@ -6,10 +6,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
-import org.jetbrains.kotlinx.dataframe.aggregation.AggregateColumnsSelector
-import org.jetbrains.kotlinx.dataframe.aggregation.GroupByAggregateBody
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
+import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupedPivotImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.columnValues
@@ -30,7 +29,7 @@ import kotlin.reflect.KProperty
 
 public interface Grouped<out T> : Aggregatable<T> {
 
-    public fun <R> aggregate(body: GroupByAggregateBody<T, R>): DataFrame<T>
+    public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataFrame<T>
 }
 
 public fun <T> Grouped<T>.count(resultName: String = "count", predicate: RowFilter<T>? = null): DataFrame<T> =
@@ -38,23 +37,14 @@ public fun <T> Grouped<T>.count(resultName: String = "count", predicate: RowFilt
 
 public fun <T> Grouped<T>.values(vararg columns: Column): DataFrame<T> = values { columns.toColumns() }
 public fun <T> Grouped<T>.values(vararg columns: String): DataFrame<T> = values { columns.toColumns() }
-public fun <T> Grouped<T>.values(columns: AggregateColumnsSelector<T, *>): DataFrame<T> = aggregateInternal { columnValues(columns) { it.toList() } }
+public fun <T> Grouped<T>.values(columns: ColumnsForAggregateSelector<T, *>): DataFrame<T> = aggregateInternal { columnValues(columns) { it.toList() } }
 public fun <T> Grouped<T>.values(): DataFrame<T> = values(remainingColumnsSelector())
-
-// region pivot
-
-public fun <G> GroupedDataFrame<*, G>.pivot(columns: ColumnsSelector<G, *>): GroupedPivot<G> = GroupedPivotImpl(this, columns)
-public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: Column): GroupedPivot<G> = pivot { columns.toColumns() }
-public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: String): GroupedPivot<G> = pivot { columns.toColumns() }
-public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: KProperty<*>): GroupedPivot<G> = pivot { columns.toColumns() }
-
-// endregion
 
 // region min
 
 public fun <T> Grouped<T>.min(): DataFrame<T> = minFor(comparableColumns())
 
-public fun <T, C : Comparable<C>> Grouped<T>.minFor(columns: AggregateColumnsSelector<T, C?>): DataFrame<T> = Aggregators.min.aggregateFor(this, columns)
+public fun <T, C : Comparable<C>> Grouped<T>.minFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> = Aggregators.min.aggregateFor(this, columns)
 public fun <T> Grouped<T>.minFor(vararg columns: String): DataFrame<T> = minFor { columns.toComparableColumns() }
 public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: ColumnReference<C?>): DataFrame<T> = minFor { columns.toColumns() }
 public fun <T, C : Comparable<C>> Grouped<T>.minFor(vararg columns: KProperty<C?>): DataFrame<T> = minFor { columns.toColumns() }
@@ -80,7 +70,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.minBy(selector: RowSelector<T, C?>)
 
 public fun <T> Grouped<T>.max(): DataFrame<T> = maxFor(comparableColumns())
 
-public fun <T, C : Comparable<C>> Grouped<T>.maxFor(columns: AggregateColumnsSelector<T, C?>): DataFrame<T> = Aggregators.max.aggregateFor(this, columns)
+public fun <T, C : Comparable<C>> Grouped<T>.maxFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> = Aggregators.max.aggregateFor(this, columns)
 public fun <T> Grouped<T>.maxFor(vararg columns: String): DataFrame<T> = maxFor { columns.toComparableColumns() }
 public fun <T, C : Comparable<C>> Grouped<T>.maxFor(vararg columns: ColumnReference<C?>): DataFrame<T> = maxFor { columns.toColumns() }
 public fun <T, C : Comparable<C>> Grouped<T>.maxFor(vararg columns: KProperty<C?>): DataFrame<T> = maxFor { columns.toColumns() }
@@ -106,7 +96,7 @@ public fun <T, C : Comparable<C>> Grouped<T>.maxBy(selector: RowSelector<T, C?>)
 
 public fun <T> Grouped<T>.sum(): DataFrame<T> = sumFor(numberColumns())
 
-public fun <T, C : Number> Grouped<T>.sumFor(columns: AggregateColumnsSelector<T, C?>): DataFrame<T> = Aggregators.sum.aggregateFor(this, columns)
+public fun <T, C : Number> Grouped<T>.sumFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> = Aggregators.sum.aggregateFor(this, columns)
 public fun <T> Grouped<T>.sumFor(vararg columns: String): DataFrame<T> = sumFor { columns.toNumberColumns() }
 public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: ColumnReference<C?>): DataFrame<T> = sumFor { columns.toColumns() }
 public fun <T, C : Number> Grouped<T>.sumFor(vararg columns: KProperty<C?>): DataFrame<T> = sumFor { columns.toColumns() }
@@ -130,7 +120,7 @@ public fun <T> Grouped<T>.mean(skipNa: Boolean = false): DataFrame<T> = meanFor(
 
 public fun <T, C : Number> Grouped<T>.meanFor(
     skipNa: Boolean = false,
-    columns: AggregateColumnsSelector<T, C?>
+    columns: ColumnsForAggregateSelector<T, C?>
 ): DataFrame<T> = Aggregators.mean(skipNa).aggregateFor(this, columns)
 public fun <T> Grouped<T>.meanFor(vararg columns: String, skipNa: Boolean = false): DataFrame<T> = meanFor(skipNa) { columns.toNumberColumns() }
 public fun <T, C : Number> Grouped<T>.meanFor(vararg columns: ColumnReference<C?>, skipNa: Boolean = false): DataFrame<T> = meanFor(skipNa) { columns.toColumns() }
@@ -169,7 +159,7 @@ public inline fun <T, reified R : Number> Grouped<T>.meanOf(
 
 public fun <T> Grouped<T>.median(): DataFrame<T> = medianFor(comparableColumns())
 
-public fun <T, C : Comparable<C>> Grouped<T>.medianFor(columns: AggregateColumnsSelector<T, C?>): DataFrame<T> = Aggregators.median.aggregateFor(this, columns)
+public fun <T, C : Comparable<C>> Grouped<T>.medianFor(columns: ColumnsForAggregateSelector<T, C?>): DataFrame<T> = Aggregators.median.aggregateFor(this, columns)
 public fun <T> Grouped<T>.medianFor(vararg columns: String): DataFrame<T> = medianFor { columns.toComparableColumns() }
 public fun <T, C : Comparable<C>> Grouped<T>.medianFor(vararg columns: ColumnReference<C?>): DataFrame<T> = medianFor { columns.toColumns() }
 public fun <T, C : Comparable<C>> Grouped<T>.medianFor(vararg columns: KProperty<C?>): DataFrame<T> = medianFor { columns.toColumns() }
@@ -193,7 +183,7 @@ public inline fun <T, reified R : Comparable<R>> Grouped<T>.medianOf(
 
 public fun <T> Grouped<T>.std(): DataFrame<T> = stdFor(numberColumns())
 
-public fun <T> Grouped<T>.stdFor(columns: AggregateColumnsSelector<T, Number?>): DataFrame<T> = Aggregators.std.aggregateFor(this, columns)
+public fun <T> Grouped<T>.stdFor(columns: ColumnsForAggregateSelector<T, Number?>): DataFrame<T> = Aggregators.std.aggregateFor(this, columns)
 public fun <T> Grouped<T>.stdFor(vararg columns: String): DataFrame<T> = stdFor { columns.toColumnsOf() }
 public fun <T, C : Number> Grouped<T>.stdFor(vararg columns: ColumnReference<C?>): DataFrame<T> = stdFor { columns.toColumns() }
 public fun <T, C : Number> Grouped<T>.stdFor(vararg columns: KProperty<C?>): DataFrame<T> = stdFor { columns.toColumns() }

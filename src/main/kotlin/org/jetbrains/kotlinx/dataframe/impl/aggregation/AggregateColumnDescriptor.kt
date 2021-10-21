@@ -1,12 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.aggregation.AggregateColumnsSelector
+import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.shortPath
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateReceiverInternal
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
 
 internal class AggregateColumnDescriptor<C>(
@@ -15,10 +15,10 @@ internal class AggregateColumnDescriptor<C>(
     val newPath: ColumnPath? = null
 ) : ColumnWithPath<C> by column
 
-internal fun <T, C> DataFrame<T>.getAggregateColumn(selector: AggregateColumnsSelector<T, C>) =
+internal fun <T, C> DataFrame<T>.getAggregateColumn(selector: ColumnsForAggregateSelector<T, C>) =
     getAggregateColumns(selector).single()
 
-internal fun <T, C> DataFrame<T>.getAggregateColumns(selector: AggregateColumnsSelector<T, C>): List<AggregateColumnDescriptor<C>> {
+internal fun <T, C> DataFrame<T>.getAggregateColumns(selector: ColumnsForAggregateSelector<T, C>): List<AggregateColumnDescriptor<C>> {
     val columns = selector.toColumns().resolve(this, UnresolvedColumnsPolicy.Create)
     return columns.map {
         when (val col = it) {
@@ -28,5 +28,5 @@ internal fun <T, C> DataFrame<T>.getAggregateColumns(selector: AggregateColumnsS
     }
 }
 
-internal fun <T, C> AggregateReceiverInternal<T>.getPath(col: AggregateColumnDescriptor<C>, isSingle: Boolean) =
+internal fun <T, C> AggregateInternalDsl<T>.getPath(col: AggregateColumnDescriptor<C>, isSingle: Boolean) =
     col.newPath ?: if (isSingle) pathForSingleColumn(col.data) else col.data.shortPath()
