@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import kotlin.reflect.KType
 
-internal class PivotReceiverImpl<T>(override val df: DataFrame<T>) : AggregateDsl<T>(), AggregateInternalDsl<T>, DataFrame<T> by df, AggregatableInternal<T> by df.internal() {
+internal class AggregatePivotDslImpl<T>(override val df: DataFrame<T>) : AggregateDsl<T>(), AggregateInternalDsl<T>, DataFrame<T> by df, AggregatableInternal<T> by df.internal() {
 
     internal val values = mutableListOf<NamedValue>()
 

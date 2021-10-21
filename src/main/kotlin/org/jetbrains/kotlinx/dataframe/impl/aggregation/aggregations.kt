@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.api.toMany
@@ -28,11 +27,7 @@ internal fun <T, V> AggregateInternalDsl<T>.yieldOneOrMany(
 
 @JvmName("toColumnSetForAggregate")
 internal fun <T, C> ColumnsForAggregateSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
-    class SelectAggregatableColumnsReceiverImpl<T>(df: DataFrame<T>) :
-        DataFrameReceiver<T>(df, true),
-        ColumnsForAggregateSelectionDsl<T>
-
-    SelectAggregatableColumnsReceiverImpl(it.df.typed())
+    object : DataFrameReceiver<T>(it.df.typed(), true), ColumnsForAggregateSelectionDsl<T> {}
 }
 
 internal fun <T, C, R> AggregateInternalDsl<T>.columnValues(

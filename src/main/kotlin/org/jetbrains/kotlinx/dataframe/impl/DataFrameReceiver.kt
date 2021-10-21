@@ -32,7 +32,7 @@ internal open class DataFrameReceiverBase<T>(protected val source: DataFrame<T>)
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataRow<T>>? = DataColumn.createColumnGroup("", source).addPath(emptyPath(), source)
 }
 
-internal abstract class DataFrameReceiver<T>(source: DataFrame<T>, private val allowMissingColumns: Boolean) : DataFrameReceiverBase<T>(
+internal open class DataFrameReceiver<T>(source: DataFrame<T>, private val allowMissingColumns: Boolean) : DataFrameReceiverBase<T>(
     prepareForReceiver(source)
 ) {
 

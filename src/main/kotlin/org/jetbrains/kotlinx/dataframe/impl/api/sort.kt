@@ -61,14 +61,7 @@ internal fun AnyCol.createComparator(nullsLast: Boolean): java.util.Comparator<I
 
 @JvmName("toColumnSetForSort")
 internal fun <T, C> SortColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
-    class SortReceiverImpl<T>(df: DataFrame<T>, allowMissingColumns: Boolean) :
-        DataFrameReceiver<T>(df, allowMissingColumns),
-        SortReceiver<T>
-
-    SortReceiverImpl(
-        it.df.typed(),
-        it.allowMissingColumns
-    )
+    object : DataFrameReceiver<T>(it.df.typed(), it.allowMissingColumns), SortReceiver<T> {}
 }
 
 internal fun <T, C> DataFrame<T>.getSortColumns(

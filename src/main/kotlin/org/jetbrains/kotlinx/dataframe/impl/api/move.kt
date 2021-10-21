@@ -1,19 +1,17 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.MoveClause
-import org.jetbrains.kotlinx.dataframe.api.MoveDsl
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
+import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
-import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
@@ -41,14 +39,17 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
     return removeResult.df.insertImpl(toInsert)
 }
 
-internal fun <T, C> MoveClause<T, C>.moveInto(
-    newPathExpression: MoveDsl<T>.(ColumnWithPath<C>) -> ColumnPath
+internal fun <T, C> MoveClause<T, C>.moveImpl(
+    newPathExpression: ColumnsContainer<T>.(ColumnWithPath<C>) -> ColumnPath,
+    under: Boolean = false
 ): DataFrame<T> {
-    val receiver = MoveDslImpl(df)
+    val receiver = DataFrameReceiver(df, false)
     val removeResult = df.removeImpl(selector)
     val columnsToInsert = removeResult.removedColumns.map {
         val col = it.toColumnWithPath<C>(df)
-        ColumnToInsert(newPathExpression(receiver, col), col.data, it)
+        var path = newPathExpression(receiver, col)
+        if (under) path += col.name()
+        ColumnToInsert(path, col.data, it)
     }
     return removeResult.df.insertImpl(columnsToInsert)
 }
@@ -59,11 +60,4 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int): DataFrame<T> {
     val targetIndex = if (columnIndex > remainingColumns.size) remainingColumns.size else columnIndex
     val newColumnList = remainingColumns.subList(0, targetIndex) + removed.removedColumns.map { it.data.column as DataColumn<C> } + if (targetIndex < remainingColumns.size) remainingColumns.subList(targetIndex, remainingColumns.size) else emptyList()
     return newColumnList.toDataFrame()
-}
-
-internal class MoveDslImpl<T>(df: DataFrame<T>) : DataFrameReceiver<T>(df, false), MoveDsl<T> {
-
-    override fun SingleColumn<*>.addPath(columnPath: ColumnPath): ColumnPath {
-        return this.resolveSingle(this@MoveDslImpl, UnresolvedColumnsPolicy.Create)!!.path + columnPath
-    }
 }
