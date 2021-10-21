@@ -219,5 +219,18 @@ public fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries: B
     if (includeBoundaries) this in left..right
     else this > left && this < right
 
+private const val DELIMITERS = "[_\\s]"
+internal val DELIMITERS_REGEX = DELIMITERS.toRegex()
+internal val DELIMITED_STRING_REGEX: Regex = ".+$DELIMITERS.+".toRegex()
+
+internal fun String.toCamelCaseByDelimiters(delimiters: Regex): String {
+    return split(delimiters).joinToCamelCaseString()
+}
+
+internal fun List<String>.joinToCamelCaseString(): String {
+    return joinToString(separator = "") { it.replaceFirstChar { it.uppercaseChar() } }
+        .replaceFirstChar { it.lowercaseChar() }
+}
+
 @PublishedApi
 internal val <T> KProperty<T>.columnName: String get() = findAnnotation<ColumnName>()?.name ?: name
