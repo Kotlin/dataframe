@@ -133,6 +133,12 @@ kotlinPublications {
         description.set("Data processing in Kotlin")
         packageName.set(artifactId)
     }
+
+    localRepositories {
+        it.maven {
+            url = project.file(new File(buildDir, "maven")).toURI()
+        }
+    }
 }
 
 compileKotlin {
