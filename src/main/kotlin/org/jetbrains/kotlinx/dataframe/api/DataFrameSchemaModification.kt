@@ -17,16 +17,14 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
-import org.jetbrains.kotlinx.dataframe.impl.api.MoveDslImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.afterOrBefore
 import org.jetbrains.kotlinx.dataframe.impl.api.flattenImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
-import org.jetbrains.kotlinx.dataframe.impl.api.moveInto
+import org.jetbrains.kotlinx.dataframe.impl.api.moveImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.moveTo
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
@@ -222,30 +220,15 @@ public fun <T> DataFrame<T>.moveToRight(vararg cols: String): DataFrame<T> = mov
 public fun <T> DataFrame<T>.moveToRight(vararg cols: Column): DataFrame<T> = moveToRight { cols.toColumns() }
 public fun <T> DataFrame<T>.moveToRight(vararg cols: KProperty<*>): DataFrame<T> = moveToRight { cols.toColumns() }
 
-public interface MoveDsl<T> : ColumnsContainer<T> {
-
-    public fun path(vararg columns: String): ColumnPath = pathOf(*columns)
-
-    public fun SingleColumn<*>.addPath(columnPath: ColumnPath): ColumnPath
-
-    public operator fun SingleColumn<*>.plus(column: String): ColumnPath = addPath(pathOf(column))
-    public fun nrow(): Int
-    public fun rows(): Iterable<DataRow<T>>
-    public fun rowsReversed(): Iterable<DataRow<T>>
-}
-
-public fun <T, C> MoveClause<T, C>.under(parentPath: MoveDsl<T>.(ColumnWithPath<C>) -> ColumnPath): DataFrame<T> {
-    val receiver = MoveDslImpl(df)
-    return into { parentPath(receiver, it) + it.name }
-}
+public fun <T, C> MoveClause<T, C>.under(parentPath: ColumnsContainer<T>.(ColumnWithPath<C>) -> ColumnPath): DataFrame<T> = moveImpl(parentPath, under = true)
 
 public fun <T, C> MoveClause<T, C>.toTop(
-    groupNameExpression: MoveDsl<T>.(ColumnWithPath<C>) -> String = { it.name() }
+    groupNameExpression: ColumnsContainer<T>.(ColumnWithPath<C>) -> String = { it.name() }
 ): DataFrame<T> =
     into { pathOf(groupNameExpression(it)) }
 
 public fun <T, C> MoveClause<T, C>.intoIndexed(
-    newPathExpression: MoveDsl<T>.(ColumnWithPath<C>, Int) -> ColumnPath
+    newPathExpression: ColumnsContainer<T>.(ColumnWithPath<C>, Int) -> ColumnPath
 ): DataFrame<T> {
     var counter = 0
     return into { col ->
@@ -253,7 +236,7 @@ public fun <T, C> MoveClause<T, C>.intoIndexed(
     }
 }
 
-public fun <T, C> MoveClause<T, C>.into(newPathExpression: MoveDsl<T>.(ColumnWithPath<C>) -> ColumnPath): DataFrame<T> = moveInto(newPathExpression)
+public fun <T, C> MoveClause<T, C>.into(newPathExpression: ColumnsContainer<T>.(ColumnWithPath<C>) -> ColumnPath): DataFrame<T> = moveImpl(newPathExpression, under = false)
 
 public fun <T, C> MoveClause<T, C>.into(vararg path: String): DataFrame<T> = into(path.toColumnPath())
 public fun <T, C> MoveClause<T, C>.into(path: ColumnPath): DataFrame<T> = into { path }
@@ -298,7 +281,7 @@ public fun <T, C> DataFrame<T>.group(cols: ColumnsSelector<T, C>): GroupClause<T
 
 public infix fun <T, C> GroupClause<T, C>.into(groupName: String): DataFrame<T> = into { groupName }
 public infix fun <T, C> GroupClause<T, C>.into(groupRef: ColumnGroupReference): DataFrame<T> = df.move(selector).under(groupRef)
-public infix fun <T, C> GroupClause<T, C>.into(groupName: ColumnWithPath<C>.(ColumnWithPath<C>) -> String): DataFrame<T> = df.move(selector).under { path(groupName(it, it)) }
+public infix fun <T, C> GroupClause<T, C>.into(groupName: ColumnWithPath<C>.(ColumnWithPath<C>) -> String): DataFrame<T> = df.move(selector).under { pathOf(groupName(it, it)) }
 
 // endregion
 

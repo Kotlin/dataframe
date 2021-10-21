@@ -87,6 +87,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.pathOf
 import org.junit.Test
 
 class DataFrameTreeTests : BaseTest() {
@@ -450,7 +451,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `group cols`() {
-        val joined = typed2.move { dfs() }.into { path(it.path.joinToString(".")) }
+        val joined = typed2.move { dfs() }.into { pathOf(it.path.joinToString(".")) }
         val grouped = joined.group { nameContains(".") }.into { it.name.substringBefore(".") }
         val expected = typed2.rename { nameAndCity.all() }.into { it.path.joinToString(".") }
         grouped shouldBe expected

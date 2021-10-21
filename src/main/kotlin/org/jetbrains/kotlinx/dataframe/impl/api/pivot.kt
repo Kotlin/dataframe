@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.PivotReceiverImpl
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregatePivotDslImpl
 
 internal class AggregatedPivot<T>(private val df: DataFrame<T>, internal var aggregator: GroupByReceiverImpl<T>) :
     DataFrame<T> by df
@@ -27,7 +27,7 @@ internal fun <T, R> aggregatePivot(
 
         val keyValue = key.values()
         val path = keyValue.map { it.toString() }
-        val builder = PivotReceiverImpl(group!!)
+        val builder = AggregatePivotDslImpl(group!!)
         val result = body(builder, builder)
         val hasResult = result != null && result != Unit
 

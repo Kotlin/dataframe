@@ -272,7 +272,7 @@ class PlaylistJsonTest {
 
     @Test
     fun `deep move with rename`() {
-        val moved = item.move { snippet.thumbnails.default }.into { snippet + "movedDefault" }
+        val moved = item.move { snippet.thumbnails.default }.into { snippet.path() + "movedDefault" }
         moved.snippet.thumbnails.columnNames() shouldBe item.snippet.thumbnails.remove { default }.columnNames()
         moved.snippet.ncol() shouldBe item.snippet.ncol() + 1
         (moved.snippet["movedDefault"] as ColumnGroup<*>).ncol() shouldBe item.snippet.thumbnails.default.ncol()
