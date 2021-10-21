@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
+import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -21,6 +22,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.impl.*
+import org.jetbrains.kotlinx.dataframe.impl.DELIMITED_STRING_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
 import org.jetbrains.kotlinx.dataframe.impl.api.afterOrBefore
@@ -320,6 +323,22 @@ public fun <T, C> DataFrame<T>.rename(cols: Iterable<ColumnReference<C>>): Renam
 
 public data class RenameClause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>)
 
+public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> {
+    return rename {
+        dfs().filter { it.isColumnGroup() && it.name() matches DELIMITED_STRING_REGEX }
+    }
+        .toCamelCase()
+        .rename {
+            dfs().filter { !it.isColumnGroup() && it.name() matches DELIMITED_STRING_REGEX }
+        }
+        .toCamelCase()
+        .update {
+            dfsOf<AnyFrame>()
+        }.with {
+            it.renameToCamelCase()
+        }
+}
+
 public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>): DataFrame<T> =
     into(*newColumns.map { it.name() }.toTypedArray())
 public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> = df.move(columns).intoIndexed { col, index ->
@@ -329,6 +348,9 @@ public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T>
 public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> String): DataFrame<T> = df.move(columns).into {
     it.path.dropLast(1) + transform(it)
 }
+
+public fun <T, C> RenameClause<T, C>.toCamelCase(): DataFrame<T> =
+    into { it.name().toCamelCaseByDelimiters(DELIMITERS_REGEX) }
 
 // endregion
 
