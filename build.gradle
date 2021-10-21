@@ -126,10 +126,10 @@ kotlinPublications {
     }
 
     publication {
-        publicationName = "api"
-        artifactId = projectName
-        description = "Data processing in Kotlin"
-        packageName = artifactId
+        publicationName.set("api")
+        artifactId.set(projectName)
+        description.set("Data processing in Kotlin")
+        packageName.set(artifactId)
     }
 }
 
