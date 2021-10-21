@@ -2,14 +2,15 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.aggregation.AggregateReceiver
-import org.jetbrains.kotlinx.dataframe.api.AggregateBody
-import org.jetbrains.kotlinx.dataframe.api.NamedValue
+import org.jetbrains.kotlinx.dataframe.Selector
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateBody
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl
+import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import kotlin.reflect.KType
 
 @PublishedApi
-internal interface AggregateReceiverInternal<out T> {
+internal interface AggregateInternalDsl<out T> {
 
     val df: DataFrame<T>
 
@@ -24,8 +25,10 @@ internal interface AggregateReceiverInternal<out T> {
 }
 
 @PublishedApi
-internal fun <T> AggregateReceiver<T>.internal(): AggregateReceiverInternal<T> = this as AggregateReceiverInternal<T>
+internal fun <T> AggregateDsl<T>.internal(): AggregateInternalDsl<T> = this as AggregateInternalDsl<T>
+
+internal fun <T, R> AggregateBodyInternal<T, R>.public() = this as AggregateBody<T, R>
 
 internal fun <T, R> AggregateBody<T, R>.internal() = this as AggregateBodyInternal<T, R>
 
-internal typealias AggregateBodyInternal<T, R> = AggregateReceiverInternal<T>.(AggregateReceiverInternal<T>) -> R
+internal typealias AggregateBodyInternal<T, R> = Selector<AggregateInternalDsl<T>, R>

@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.RowSelector
-import org.jetbrains.kotlinx.dataframe.aggregation.AggregateColumnsSelector
+import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
@@ -51,7 +51,7 @@ public fun <T> GroupedPivot<T>.values(separate: Boolean = false): DataFrame<T> =
 public fun <T> GroupedPivot<T>.values(vararg columns: Column, separate: Boolean = false): DataFrame<T> = values(separate) { columns.toColumns() }
 public fun <T> GroupedPivot<T>.values(vararg columns: String, separate: Boolean = false): DataFrame<T> = values(separate) { columns.toColumns() }
 public fun <T> GroupedPivot<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataFrame<T> = values(separate) { columns.toColumns() }
-public fun <T> GroupedPivot<T>.values(separate: Boolean = false, columns: AggregateColumnsSelector<T, *>): DataFrame<T> =
+public fun <T> GroupedPivot<T>.values(separate: Boolean = false, columns: ColumnsForAggregateSelector<T, *>): DataFrame<T> =
     separateAggregatedValues(separate).aggregateInternal { columnValues(columns) { it.toList() } }
 
 // endregion
@@ -62,7 +62,7 @@ public fun <T> GroupedPivot<T>.min(separate: Boolean = false): DataFrame<T> = mi
 
 public fun <T, R : Comparable<R>> GroupedPivot<T>.minFor(
     separate: Boolean = false,
-    columns: AggregateColumnsSelector<T, R?>
+    columns: ColumnsForAggregateSelector<T, R?>
 ): DataFrame<T> =
     Aggregators.min.aggregateFor(this, separate, columns)
 public fun <T> GroupedPivot<T>.minFor(vararg columns: String, separate: Boolean = false): DataFrame<T> = minFor(separate) { columns.toComparableColumns() }
@@ -95,7 +95,7 @@ public fun <T> GroupedPivot<T>.max(separate: Boolean = false): DataFrame<T> = ma
 
 public fun <T, R : Comparable<R>> GroupedPivot<T>.maxFor(
     separate: Boolean = false,
-    columns: AggregateColumnsSelector<T, R?>
+    columns: ColumnsForAggregateSelector<T, R?>
 ): DataFrame<T> =
     Aggregators.max.aggregateFor(this, separate, columns)
 public fun <T> GroupedPivot<T>.maxFor(vararg columns: String, separate: Boolean = false): DataFrame<T> = maxFor(separate) { columns.toComparableColumns() }
@@ -128,7 +128,7 @@ public fun <T> GroupedPivot<T>.sum(separate: Boolean = false): DataFrame<T> = su
 
 public fun <T, R : Number> GroupedPivot<T>.sumFor(
     separate: Boolean = false,
-    columns: AggregateColumnsSelector<T, R?>
+    columns: ColumnsForAggregateSelector<T, R?>
 ): DataFrame<T> =
     Aggregators.sum.aggregateFor(this, separate, columns)
 public fun <T> GroupedPivot<T>.sumFor(vararg columns: String, separate: Boolean = false): DataFrame<T> = sumFor(separate) { columns.toNumberColumns() }
@@ -156,7 +156,7 @@ public fun <T> GroupedPivot<T>.mean(skipNa: Boolean = false, separate: Boolean =
 public fun <T, C : Number> GroupedPivot<T>.meanFor(
     skipNa: Boolean = false,
     separate: Boolean = false,
-    columns: AggregateColumnsSelector<T, C?>
+    columns: ColumnsForAggregateSelector<T, C?>
 ): DataFrame<T> = Aggregators.mean(skipNa).aggregateFor(this, separate, columns)
 public fun <T> GroupedPivot<T>.meanFor(
     vararg columns: String,
@@ -191,7 +191,7 @@ public fun <T> GroupedPivot<T>.median(separate: Boolean = false): DataFrame<T> =
 
 public fun <T, C : Comparable<C>> GroupedPivot<T>.medianFor(
     separate: Boolean = false,
-    columns: AggregateColumnsSelector<T, C?>
+    columns: ColumnsForAggregateSelector<T, C?>
 ): DataFrame<T> = Aggregators.median.aggregateFor(this, separate, columns)
 public fun <T> GroupedPivot<T>.medianFor(vararg columns: String, separate: Boolean = false): DataFrame<T> = medianFor(separate) { columns.toComparableColumns() }
 public fun <T, C : Comparable<C>> GroupedPivot<T>.medianFor(
@@ -222,7 +222,7 @@ public fun <T> GroupedPivot<T>.std(separate: Boolean = false): DataFrame<T> = st
 
 public fun <T, R : Number> GroupedPivot<T>.stdFor(
     separate: Boolean = false,
-    columns: AggregateColumnsSelector<T, R?>
+    columns: ColumnsForAggregateSelector<T, R?>
 ): DataFrame<T> =
     Aggregators.std.aggregateFor(this, separate, columns)
 public fun <T> GroupedPivot<T>.stdFor(vararg columns: String, separate: Boolean = false): DataFrame<T> = stdFor(separate) { columns.toColumnsOf() }

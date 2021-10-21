@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.aggregation.GroupByAggregateBody
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnGroup
 
@@ -49,7 +49,7 @@ internal class MissingColumnGroup<T> : MissingDataColumn<DataRow<T>>(), DataColu
 
     override fun <C> values(byRow: Boolean, columns: ColumnsSelector<T, C>) = throw UnsupportedOperationException()
 
-    override fun <R> aggregate(body: GroupByAggregateBody<T, R>) = throw UnsupportedOperationException()
+    override fun <R> aggregate(body: AggregateGroupedBody<T, R>) = throw UnsupportedOperationException()
 
     override fun rows(): Iterable<DataRow<T>> = throw UnsupportedOperationException()
 

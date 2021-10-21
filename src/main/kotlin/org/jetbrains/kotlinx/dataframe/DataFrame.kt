@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
-import org.jetbrains.kotlinx.dataframe.aggregation.GroupByAggregateBody
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -86,7 +86,7 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
 
-    public fun <R> aggregate(body: GroupByAggregateBody<T, R>): DataRow<T>
+    public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T>
 
     public fun nrow(): Int
     public fun rows(): Iterable<DataRow<T>>

@@ -2,25 +2,26 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.NamedValue
-import org.jetbrains.kotlinx.dataframe.api.PivotAggregateBody
+import org.jetbrains.kotlinx.dataframe.Selector
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl
+import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateReceiverInternal
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.PivotReceiverImpl
 
 internal class AggregatedPivot<T>(private val df: DataFrame<T>, internal var aggregator: GroupByReceiverImpl<T>) :
     DataFrame<T> by df
 
 internal fun <T, R> aggregatePivot(
-    aggregator: AggregateReceiverInternal<T>,
+    aggregator: AggregateInternalDsl<T>,
     columns: ColumnsSelector<T, *>,
     separate: Boolean,
     groupPath: ColumnPath,
     globalDefault: Any? = null,
-    body: PivotAggregateBody<T, R>
+    body: Selector<AggregateDsl<T>, R>
 ) {
     aggregator.df.groupBy(columns).forEach { key, group ->
 

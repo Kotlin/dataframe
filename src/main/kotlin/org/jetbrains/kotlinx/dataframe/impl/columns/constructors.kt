@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.api.AddDataRowImpl
 import org.jetbrains.kotlinx.dataframe.api.AddExpression
-import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
@@ -114,7 +114,7 @@ internal fun <T> Array<out ColumnReference<T>>.toColumns(): ColumnSet<T> = asIte
 internal fun Iterable<String>.toColumns() = map { it.toColumnAccessor() }.toColumnSet()
 
 internal fun <T, C> ColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
-    object : DataFrameReceiver<T>(it.df.typed(), it.allowMissingColumns), ColumnSelectionDsl<T> { }
+    object : DataFrameReceiver<T>(it.df.typed(), it.allowMissingColumns), ColumnsSelectionDsl<T> { }
 }
 
 // endregion

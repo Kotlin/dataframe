@@ -3,18 +3,18 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.aggregation.GroupByReceiver
-import org.jetbrains.kotlinx.dataframe.api.NamedValue
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl
+import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.shortPath
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateReceiverInternal
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
 import org.jetbrains.kotlinx.dataframe.impl.api.AggregatedPivot
 import kotlin.reflect.KType
 
 internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>) :
-    GroupByReceiver<T>(),
-    AggregateReceiverInternal<T>,
+    AggregateGroupedDsl<T>(),
+    AggregateInternalDsl<T>,
     AggregatableInternal<T> by df as AggregatableInternal<T>,
     DataFrame<T> by df {
 
@@ -55,7 +55,7 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>) :
                 }
                 value.value.aggregator.values.clear()
             }
-            is AggregateReceiverInternal<*> -> yield(value.copy(value = value.value.df))
+            is AggregateInternalDsl<*> -> yield(value.copy(value = value.value.df))
             else -> values.add(value)
         }
         return value

@@ -6,8 +6,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.RowSelector
-import org.jetbrains.kotlinx.dataframe.aggregation.AggregateColumnsSelector
-import org.jetbrains.kotlinx.dataframe.aggregation.PivotAggregateBody
+import org.jetbrains.kotlinx.dataframe.Selector
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl
+import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.comparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
@@ -21,7 +22,7 @@ public fun <T> PivotedDataFrame<T>.toDataRow(): DataRow<T> = aggregate { this }
 
 public fun <T> PivotedDataFrame<T>.toDataFrame(): DataFrame<T> = toDataRow().toDataFrame()
 
-public fun <T, R> PivotedDataFrame<T>.aggregate(separate: Boolean = false, body: PivotAggregateBody<T, R>): DataRow<T> = delegate { aggregate(separate, body) }
+public fun <T, R> PivotedDataFrame<T>.aggregate(separate: Boolean = false, body: Selector<AggregateDsl<T>, R>): DataRow<T> = delegate { aggregate(separate, body) }
 
 public fun <T> PivotedDataFrame<T>.count(predicate: RowFilter<T>? = null): DataRow<T> = delegate { count(predicate) }
 
@@ -29,7 +30,7 @@ public inline fun <T, reified V> PivotedDataFrame<T>.with(noinline selector: Row
 
 // region values
 
-public fun <T> PivotedDataFrame<T>.values(separate: Boolean = false, columns: AggregateColumnsSelector<T, *>): DataRow<T> = delegate { values(separate, columns) }
+public fun <T> PivotedDataFrame<T>.values(separate: Boolean = false, columns: ColumnsForAggregateSelector<T, *>): DataRow<T> = delegate { values(separate, columns) }
 public fun <T> PivotedDataFrame<T>.values(vararg columns: Column, separate: Boolean = false): DataRow<T> = values(separate) { columns.toColumns() }
 public fun <T> PivotedDataFrame<T>.values(vararg columns: String, separate: Boolean = false): DataRow<T> = values(separate) { columns.toColumns() }
 public fun <T> PivotedDataFrame<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataRow<T> = values(separate) { columns.toColumns() }
@@ -44,7 +45,7 @@ public fun <T> PivotedDataFrame<T>.min(separate: Boolean = false): DataRow<T> = 
 
 public fun <T, R : Comparable<R>> PivotedDataFrame<T>.minFor(
     separate: Boolean = false,
-    columns: AggregateColumnsSelector<T, R?>
+    columns: ColumnsForAggregateSelector<T, R?>
 ): DataRow<T> = delegate { minFor(separate, columns) }
 public fun <T> PivotedDataFrame<T>.minFor(vararg columns: String, separate: Boolean = false): DataRow<T> = minFor(separate) { columns.toComparableColumns() }
 public fun <T, R : Comparable<R>> PivotedDataFrame<T>.minFor(
@@ -76,7 +77,7 @@ public fun <T> PivotedDataFrame<T>.max(separate: Boolean = false): DataRow<T> = 
 
 public fun <T, R : Comparable<R>> PivotedDataFrame<T>.maxFor(
     separate: Boolean = false,
-    columns: AggregateColumnsSelector<T, R?>
+    columns: ColumnsForAggregateSelector<T, R?>
 ): DataRow<T> = delegate { maxFor(separate, columns) }
 public fun <T> PivotedDataFrame<T>.maxFor(vararg columns: String, separate: Boolean = false): DataRow<T> = maxFor(separate) { columns.toComparableColumns() }
 public fun <T, R : Comparable<R>> PivotedDataFrame<T>.maxFor(
@@ -108,7 +109,7 @@ public fun <T> PivotedDataFrame<T>.sum(separate: Boolean = false): DataRow<T> = 
 
 public fun <T, R : Number> PivotedDataFrame<T>.sumFor(
     separate: Boolean = false,
-    columns: AggregateColumnsSelector<T, R?>
+    columns: ColumnsForAggregateSelector<T, R?>
 ): DataRow<T> =
     delegate { sumFor(separate, columns) }
 public fun <T> PivotedDataFrame<T>.sumFor(vararg columns: String, separate: Boolean = false): DataRow<T> = sumFor(separate) { columns.toNumberColumns() }
@@ -136,7 +137,7 @@ public fun <T> PivotedDataFrame<T>.mean(skipNa: Boolean = false, separate: Boole
 public fun <T, C : Number> PivotedDataFrame<T>.meanFor(
     skipNa: Boolean = false,
     separate: Boolean = false,
-    columns: AggregateColumnsSelector<T, C?>
+    columns: ColumnsForAggregateSelector<T, C?>
 ): DataRow<T> = delegate { meanFor(skipNa, separate, columns) }
 public fun <T> PivotedDataFrame<T>.meanFor(
     vararg columns: String,
@@ -171,7 +172,7 @@ public fun <T> PivotedDataFrame<T>.median(separate: Boolean = false): DataRow<T>
 
 public fun <T, C : Comparable<C>> PivotedDataFrame<T>.medianFor(
     separate: Boolean = false,
-    columns: AggregateColumnsSelector<T, C?>
+    columns: ColumnsForAggregateSelector<T, C?>
 ): DataRow<T> = delegate { medianFor(separate, columns) }
 public fun <T> PivotedDataFrame<T>.medianFor(vararg columns: String, separate: Boolean = false): DataRow<T> = medianFor(separate) { columns.toComparableColumns() }
 public fun <T, C : Comparable<C>> PivotedDataFrame<T>.medianFor(
@@ -202,7 +203,7 @@ public fun <T> PivotedDataFrame<T>.std(separate: Boolean = false): DataRow<T> = 
 
 public fun <T, R : Number> PivotedDataFrame<T>.stdFor(
     separate: Boolean = false,
-    columns: AggregateColumnsSelector<T, R?>
+    columns: ColumnsForAggregateSelector<T, R?>
 ): DataRow<T> = delegate { stdFor(separate, columns) }
 public fun <T> PivotedDataFrame<T>.stdFor(vararg columns: String, separate: Boolean = false): DataRow<T> = stdFor(separate) { columns.toColumnsOf() }
 public fun <T, C : Number> PivotedDataFrame<T>.stdFor(

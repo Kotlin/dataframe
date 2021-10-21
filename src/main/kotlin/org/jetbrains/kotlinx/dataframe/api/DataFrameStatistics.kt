@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.RowSelector
-import org.jetbrains.kotlinx.dataframe.aggregation.AggregateColumnsSelector
+import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.comparableColumns
@@ -34,7 +34,7 @@ public fun <T> DataFrame<T>.count(predicate: RowFilter<T>? = null): Int =
 
 public fun <T> DataFrame<T>.min(): DataRow<T> = minFor(comparableColumns())
 
-public fun <T, C : Comparable<C>> DataFrame<T>.minFor(columns: AggregateColumnsSelector<T, C?>): DataRow<T> = Aggregators.min.aggregateFor(this, columns)
+public fun <T, C : Comparable<C>> DataFrame<T>.minFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> = Aggregators.min.aggregateFor(this, columns)
 public fun <T> DataFrame<T>.minFor(vararg columns: String): DataRow<T> = minFor { columns.toComparableColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.minFor(vararg columns: ColumnReference<C?>): DataRow<T> = minFor { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.minFor(vararg columns: KProperty<C?>): DataRow<T> = minFor { columns.toColumns() }
@@ -68,7 +68,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(column: KProperty<C?>
 
 public fun <T> DataFrame<T>.max(): DataRow<T> = maxFor(comparableColumns())
 
-public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(columns: AggregateColumnsSelector<T, C?>): DataRow<T> = Aggregators.max.aggregateFor(this, columns)
+public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> = Aggregators.max.aggregateFor(this, columns)
 public fun <T> DataFrame<T>.maxFor(vararg columns: String): DataRow<T> = maxFor { columns.toComparableColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(vararg columns: ColumnReference<C?>): DataRow<T> = maxFor { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(vararg columns: KProperty<C?>): DataRow<T> = maxFor { columns.toColumns() }
@@ -102,7 +102,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(column: KProperty<C?>
 
 public fun <T> DataFrame<T>.sum(): DataRow<T> = sumFor(numberColumns())
 
-public fun <T, C : Number> DataFrame<T>.sumFor(columns: AggregateColumnsSelector<T, C?>): DataRow<T> = Aggregators.sum.aggregateFor(this, columns)
+public fun <T, C : Number> DataFrame<T>.sumFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> = Aggregators.sum.aggregateFor(this, columns)
 public fun <T> DataFrame<T>.sumFor(vararg columns: String): DataRow<T> = sumFor { columns.toColumnsOf() }
 public fun <T, C : Number> DataFrame<T>.sumFor(vararg columns: ColumnReference<C?>): DataRow<T> = sumFor { columns.toColumns() }
 public fun <T, C : Number> DataFrame<T>.sumFor(vararg columns: KProperty<C?>): DataRow<T> = sumFor { columns.toColumns() }
@@ -122,7 +122,7 @@ public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(crossinline select
 
 public fun <T> DataFrame<T>.mean(skipNa: Boolean = false): DataRow<T> = meanFor(skipNa, numberColumns())
 
-public fun <T, C : Number> DataFrame<T>.meanFor(skipNa: Boolean = false, columns: AggregateColumnsSelector<T, C?>): DataRow<T> = Aggregators.mean(skipNa).aggregateFor(this, columns)
+public fun <T, C : Number> DataFrame<T>.meanFor(skipNa: Boolean = false, columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> = Aggregators.mean(skipNa).aggregateFor(this, columns)
 public fun <T> DataFrame<T>.meanFor(vararg columns: String): DataRow<T> = meanFor { columns.toNumberColumns() }
 public fun <T, C : Number> DataFrame<T>.meanFor(vararg columns: ColumnReference<C?>): DataRow<T> = meanFor { columns.toColumns() }
 public fun <T, C : Number> DataFrame<T>.meanFor(vararg columns: KProperty<C?>): DataRow<T> = meanFor { columns.toColumns() }
@@ -143,7 +143,7 @@ public inline fun <T, reified D : Number> DataFrame<T>.meanOf(
 
 public fun <T> DataFrame<T>.median(): DataRow<T> = medianFor(comparableColumns())
 
-public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(columns: AggregateColumnsSelector<T, C?>): DataRow<T> = Aggregators.median.aggregateFor(this, columns)
+public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(columns: ColumnsForAggregateSelector<T, C?>): DataRow<T> = Aggregators.median.aggregateFor(this, columns)
 public fun <T> DataFrame<T>.medianFor(vararg columns: String): DataRow<T> = medianFor { columns.toComparableColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(vararg columns: ColumnReference<C?>): DataRow<T> = medianFor { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(vararg columns: KProperty<C?>): DataRow<T> = medianFor { columns.toColumns() }
@@ -166,7 +166,7 @@ public inline fun <T, reified R : Comparable<R>> DataFrame<T>.medianOf(crossinli
 
 public fun <T> DataFrame<T>.std(): DataRow<T> = stdFor(numberColumns())
 
-public fun <T> DataFrame<T>.stdFor(columns: AggregateColumnsSelector<T, Number?>): DataRow<T> = Aggregators.std.aggregateFor(this, columns)
+public fun <T> DataFrame<T>.stdFor(columns: ColumnsForAggregateSelector<T, Number?>): DataRow<T> = Aggregators.std.aggregateFor(this, columns)
 public fun <T> DataFrame<T>.stdFor(vararg columns: String): DataRow<T> = stdFor { columns.toColumnsOf() }
 public fun <T, C : Number> DataFrame<T>.stdFor(vararg columns: ColumnReference<C?>): DataRow<T> = stdFor { columns.toColumns() }
 public fun <T, C : Number> DataFrame<T>.stdFor(vararg columns: KProperty<C?>): DataRow<T> = stdFor { columns.toColumns() }

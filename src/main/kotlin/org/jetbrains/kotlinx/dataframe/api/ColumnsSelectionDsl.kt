@@ -36,7 +36,7 @@ import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
-public interface ColumnSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<DataRow<T>> {
+public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<DataRow<T>> {
 
     public fun ColumnSet<*>.first(numCols: Int): ColumnSet<Any?> = take(numCols)
 
@@ -198,7 +198,7 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<D
 
     // public operator fun <C> ColumnSelector<T, C>.invoke(): ColumnReference<C> = this(this@SelectReceiver, this@SelectReceiver)
     public operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnSet<C> =
-        this(this@ColumnSelectionDsl, this@ColumnSelectionDsl)
+        this(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
 
     public operator fun <C> ColumnReference<C>.invoke(): DataColumn<C> = getColumn(this)
 
@@ -255,13 +255,13 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<D
     public fun rowsReversed(): Iterable<DataRow<T>>
 }
 
-public inline fun <T, reified R> ColumnSelectionDsl<T>.expr(
+public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
     name: String = "",
     useActualType: Boolean = false,
     noinline expression: AddExpression<T, R>
 ): DataColumn<R> = newColumn(name, useActualType, expression)
 
-internal fun <T, R> ColumnSelectionDsl<T>.exprWithActualType(
+internal fun <T, R> ColumnsSelectionDsl<T>.exprWithActualType(
     name: String = "",
     expression: AddExpression<T, R>
 ): DataColumn<R> = newColumnWithActualType(name, expression)

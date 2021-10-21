@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
-import org.jetbrains.kotlinx.dataframe.api.NamedValue
+import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.isComparable
 import org.jetbrains.kotlinx.dataframe.api.isNumber

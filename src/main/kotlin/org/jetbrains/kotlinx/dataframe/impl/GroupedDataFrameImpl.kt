@@ -4,11 +4,11 @@ import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Selector
-import org.jetbrains.kotlinx.dataframe.aggregation.GroupByAggregateBody
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
+import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.GroupKey
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.GroupedRowFilter
-import org.jetbrains.kotlinx.dataframe.api.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.concat
@@ -62,9 +62,9 @@ internal class GroupedDataFrameImpl<T, G>(
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all().except(keyColumnsInGroups.toColumns()) }
 
-    override fun <R> aggregate(body: GroupByAggregateBody<G, R>) = aggregateGroupBy(toDataFrame(), { groups }, removeColumns = true, body).typed<G>()
+    override fun <R> aggregate(body: AggregateGroupedBody<G, R>) = aggregateGroupBy(toDataFrame(), { groups }, removeColumns = true, body).typed<G>()
 
-    override fun <R> aggregateInternal(body: AggregateBodyInternal<G, R>) = aggregate(body as GroupByAggregateBody<G, R>)
+    override fun <R> aggregateInternal(body: AggregateBodyInternal<G, R>) = aggregate(body as AggregateGroupedBody<G, R>)
 
     override fun filter(predicate: GroupedRowFilter<T, G>): GroupedDataFrame<T, G> {
         val indices = (0 until df.nrow()).filter {
@@ -79,7 +79,7 @@ internal fun <T, G, R> aggregateGroupBy(
     df: DataFrame<T>,
     selector: ColumnSelector<T, DataFrame<G>?>,
     removeColumns: Boolean,
-    body: GroupByAggregateBody<G, R>
+    body: AggregateGroupedBody<G, R>
 ): DataFrame<T> {
     val defaultAggregateName = "aggregated"
 
