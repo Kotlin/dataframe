@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -59,4 +60,6 @@ public open class TestBase {
             "Person_weight"
         ) get() = this["weight"] as DataColumn<Int?>
     val DataRow<Person>.weight: kotlin.Int? @JvmName("Person_weight") get() = this["weight"] as kotlin.Int?
+
+    infix fun <T, U : T> T.willBe(expected: U?) = shouldBe(expected)
 }

@@ -127,12 +127,11 @@ internal fun <T> guessColumnType(
     values: List<T>,
     suggestedType: KType? = null,
     suggestedTypeIsUpperBound: Boolean = false,
-    defaultValue: T? = null
+    defaultValue: T? = null,
+    nullable: Boolean? = null,
 ): DataColumn<T> {
-    val type = when {
-        suggestedType == null || suggestedTypeIsUpperBound -> guessValueType(values.asSequence(), suggestedType)
-        else -> suggestedType
-    }
+    val detectType = suggestedType == null || suggestedTypeIsUpperBound
+    val type = if (detectType) guessValueType(values.asSequence(), suggestedType) else suggestedType!!
 
     return when (type.classifier!! as KClass<*>) {
         DataRow::class -> {
@@ -162,6 +161,10 @@ internal fun <T> guessColumnType(
             }
             DataColumn.createValueColumn(name, lists, type, checkForNulls = false, defaultValue).typed()
         }
-        else -> DataColumn.createValueColumn(name, values, type, checkForNulls = false, defaultValue)
+        else -> {
+            if (nullable == null) {
+                DataColumn.createValueColumn(name, values, type, checkForNulls = !detectType, defaultValue)
+            } else DataColumn.createValueColumn(name, values, type.withNullability(nullable), checkForNulls = false, defaultValue)
+        }
     }
 }

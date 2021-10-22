@@ -67,7 +67,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
             return createValueColumn(name, values, type)
         }
 
-        public fun <T> createWithTypeInference(name: String, values: List<T>): DataColumn<T> = guessColumnType(name, values)
+        public fun <T> createWithTypeInference(name: String, values: List<T>, nullable: Boolean? = null): DataColumn<T> = guessColumnType(name, values, nullable = nullable)
 
         public fun <T> create(name: String, values: List<T>, type: KType, checkForNulls: Boolean = false): DataColumn<T> {
             return when (type.toColumnKind()) {
@@ -101,7 +101,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
     public operator fun iterator(): Iterator<T> = values().iterator()
 }
 
-internal val AnyCol.type get() = type()
-internal val AnyCol.kind get() = kind()
-internal val AnyCol.hasNulls get() = hasNulls()
-internal val AnyCol.typeClass get() = type.classifier as KClass<*>
+public val AnyCol.type: KType get() = type()
+public val AnyCol.kind: ColumnKind get() = kind()
+public val AnyCol.hasNulls: Boolean get() = hasNulls()
+public val AnyCol.typeClass: KClass<*> get() = type.classifier as KClass<*>

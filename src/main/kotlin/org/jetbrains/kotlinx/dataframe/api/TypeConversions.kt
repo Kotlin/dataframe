@@ -125,11 +125,14 @@ public inline fun <reified T> Iterable<T>.toValueColumn(name: String = ""): Valu
 
 public inline fun <reified T> Iterable<T>.toColumn(
     name: String = "",
-    checkForNulls: Boolean = false,
+    inferNulls: Boolean? = null,
     inferType: Boolean = false
 ): DataColumn<T> =
-    if (inferType) DataColumn.createWithTypeInference(name, asList())
-    else DataColumn.create(name, asList(), checkForNulls)
+    if (inferType) DataColumn.createWithTypeInference(name, asList(), nullable = inferNulls?.let { if (it) null else getType<T>().isMarkedNullable })
+    else DataColumn.create(name, asList(), getType<T>(), checkForNulls = inferNulls == true)
+
+public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataColumn<T> =
+    DataColumn.create(name, asList() as List<T>, getType<T>())
 
 public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): DataColumn<T> =
     DataColumn.create(ref.name(), asList())

@@ -487,7 +487,7 @@ val key by columnOf(1, 2) // create int column with name "key"
 val data by columnOf(df[0..3], df[4..6]) // create frame column with name "data"
 val df = dataFrameOf(key, data) // create dataframe with two columns
 
-df.asGrouped { data } // convert dataframe to GroupedDataFrame by interpreting 'data' column as groups
+df.asGroupedDataFrame { data } // convert dataframe to GroupedDataFrame by interpreting 'data' column as groups
 ```
 
 <!---END-->
@@ -497,7 +497,7 @@ And any `GroupedDataFrame` can be reinterpreted as `DataFrame` with `FrameColumn
 <!---FUN groupedDataFrameToFrame-->
 
 ```kotlin
-df.groupBy { city }.asDataFrame()
+df.groupBy { city }.toDataFrame()
 ```
 
 <!---END-->
@@ -829,8 +829,8 @@ df.groupBy { "name"["firstName"] }.aggregate {
 <!---FUN pivotAsDataRowOrFrame-->
 
 ```kotlin
-df.pivot { city }.asDataRow()
-df.pivot { city }.groupBy { name }.asDataFrame()
+df.pivot { city }.toDataRow()
+df.pivot { city }.groupBy { name }.toDataFrame()
 ```
 
 <!---END-->
