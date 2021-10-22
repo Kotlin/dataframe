@@ -7,8 +7,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.MoveClause
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
-import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
@@ -59,5 +59,5 @@ internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int): DataFrame<T> {
     val remainingColumns = removed.df.columns()
     val targetIndex = if (columnIndex > remainingColumns.size) remainingColumns.size else columnIndex
     val newColumnList = remainingColumns.subList(0, targetIndex) + removed.removedColumns.map { it.data.column as DataColumn<C> } + if (targetIndex < remainingColumns.size) remainingColumns.subList(targetIndex, remainingColumns.size) else emptyList()
-    return newColumnList.toDataFrame()
+    return newColumnList.toDataFrame().typed()
 }

@@ -126,7 +126,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun create() {
         val nameAndCity by columnOf(typed.name, typed.city)
-        val df3 = nameAndCity + typed.age + typed.weight
+        val df3 = dataFrameOf(nameAndCity, typed.age, typed.weight)
         df3 shouldBe df2
     }
 

@@ -4,7 +4,7 @@ import com.github.kittinunf.fuel.httpGet
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Many
-import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import java.io.IOException
@@ -35,7 +35,7 @@ public fun <T> Many<Many<T>>.toDataFrame(containsColumns: Boolean = false): AnyF
             val name = it[0].toString()
             val values = it.drop(1)
             guessColumnType(name, values)
-        }.toAnyFrame()
+        }.toDataFrame()
     }
     size == 0 -> emptyDataFrame(0)
     else -> {
@@ -47,6 +47,6 @@ public fun <T> Many<Many<T>>.toDataFrame(containsColumns: Boolean = false): AnyF
                 else row[colIndex]
             }
             guessColumnType(name, values)
-        }.toAnyFrame()
+        }.toDataFrame()
     }
 }

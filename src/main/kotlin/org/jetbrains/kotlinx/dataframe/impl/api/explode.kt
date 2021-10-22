@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -106,7 +106,7 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, selector: C
                 else collector.toColumn(col.name)
             }
         }
-        return newColumns.toAnyFrame()
+        return newColumns.toDataFrame()
     }
 
     return splitIntoRows(this, columns.map { it.path }.toSet()).typed()

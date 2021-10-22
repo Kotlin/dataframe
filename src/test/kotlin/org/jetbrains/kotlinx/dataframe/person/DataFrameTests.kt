@@ -30,7 +30,6 @@ import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.nullable
 import org.jetbrains.kotlinx.dataframe.api.pivot
-import org.jetbrains.kotlinx.dataframe.api.plus
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -1216,7 +1215,7 @@ class DataFrameTests : BaseTest() {
                 this["Int"]["age"],
                 this["String"]["city"],
                 this["Int"]["weight"]
-            ).toDataFrame<Person>()
+            ).toDataFrame().typed<Person>()
             res shouldBe typed
         }
         typed.group { cols { it != name } }.into { type.jvmErasure.simpleName!! }.check()
@@ -1233,7 +1232,7 @@ class DataFrameTests : BaseTest() {
             grouped["info"]["age"],
             grouped["info"]["city"],
             grouped.weight
-        ).toDataFrame<Person>()
+        ).toDataFrame().typed<Person>()
         res shouldBe typed
     }
 
@@ -1398,7 +1397,7 @@ class DataFrameTests : BaseTest() {
     fun `columns sum`() {
         val name by columnOf("Alice", "Bob", "Mark")
         val age by columnOf(15, 20, 24)
-        val df = name + age
+        val df = dataFrameOf(name, age)
 
         df.columnNames() shouldBe listOf("name", "age")
         df.nrow() shouldBe 3

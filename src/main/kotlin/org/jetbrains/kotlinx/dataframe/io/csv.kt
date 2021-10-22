@@ -294,7 +294,7 @@ public fun DataFrame.Companion.readDelim(
                 }
             }
         }
-        return cols.toDataFrame<Unit>()
+        return cols.toDataFrame()
     }
 }
 

@@ -28,14 +28,13 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
-import kotlin.reflect.full.declaredMembers
-import kotlin.reflect.full.withNullability
-import kotlin.reflect.jvm.javaField
 
 // region DataFrame Iterable API
 
@@ -45,8 +44,11 @@ public fun <T> DataFrame<T>.asSequence(): Sequence<DataRow<T>> = asIterable().as
 public fun <T> DataFrame<T>.any(predicate: RowFilter<T>): Boolean = rows().any { predicate(it, it) }
 public fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all { predicate(it, it) }
 
-public fun <T, V> DataFrame<T>.associateBy(transform: RowSelector<T, V>): Map<V, DataRow<T>> = rows().associateBy { transform(it, it) }
-public fun <T, K, V> DataFrame<T>.associate(transform: RowSelector<T, Pair<K, V>>): Map<K, V> = rows().associate { transform(it, it) }
+public fun <T, V> DataFrame<T>.associateBy(transform: RowSelector<T, V>): Map<V, DataRow<T>> =
+    rows().associateBy { transform(it, it) }
+
+public fun <T, K, V> DataFrame<T>.associate(transform: RowSelector<T, Pair<K, V>>): Map<K, V> =
+    rows().associate { transform(it, it) }
 
 public fun <T> DataFrame<T>.tail(numRows: Int = 5): DataFrame<T> = takeLast(numRows)
 public fun <T> DataFrame<T>.head(numRows: Int = 5): DataFrame<T> = take(numRows)
@@ -68,7 +70,9 @@ public fun AnyFrame.isNotEmpty(): Boolean = !isEmpty()
 // region map
 
 public inline fun <T, R> DataFrame<T>.map(selector: RowSelector<T, R>): List<R> = rows().map { selector(it, it) }
-public fun <T, R> DataFrame<T>.mapIndexedNotNull(action: (Int, DataRow<T>) -> R?): List<R> = rows().mapIndexedNotNull(action)
+public fun <T, R> DataFrame<T>.mapIndexedNotNull(action: (Int, DataRow<T>) -> R?): List<R> =
+    rows().mapIndexedNotNull(action)
+
 public fun <T, R> DataFrame<T>.mapIndexed(action: (Int, DataRow<T>) -> R): List<R> = rows().mapIndexed(action)
 
 public fun <T> DataFrame<T>.mapColumns(body: AddDsl<T>.() -> Unit): AnyFrame {
@@ -86,13 +90,17 @@ public fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> = rows().
 public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() else null
 public fun <T> DataFrame<T>.first(): DataRow<T> = get(0)
 
-public fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<T>? = rowsReversed().firstOrNull { predicate(it, it) }
+public fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<T>? =
+    rowsReversed().firstOrNull { predicate(it, it) }
+
 public fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> = rowsReversed().first { predicate(it, it) }
 public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) last() else null
 public fun <T> DataFrame<T>.last(): DataRow<T> = get(nrow - 1)
 
 public fun <T> DataFrame<T>.single(predicate: RowSelector<T, Boolean>): DataRow<T> = rows().single { predicate(it, it) }
-public fun <T> DataFrame<T>.singleOrNull(predicate: RowSelector<T, Boolean>): DataRow<T>? = rows().singleOrNull { predicate(it, it) }
+public fun <T> DataFrame<T>.singleOrNull(predicate: RowSelector<T, Boolean>): DataRow<T>? =
+    rows().singleOrNull { predicate(it, it) }
+
 public fun <T> DataFrame<T>.single(): DataRow<T> = rows().single()
 public fun <T> DataFrame<T>.singleOrNull(): DataRow<T>? = rows().singleOrNull()
 
@@ -128,6 +136,7 @@ public fun <T, C> DataFrame<T>.distinct(columns: ColumnsSelector<T, C>): DataFra
 public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T> = distinct { columns.toColumns() }
 public fun <T> DataFrame<T>.distinct(vararg columns: String): DataFrame<T> = distinct { columns.toColumns() }
 public fun <T> DataFrame<T>.distinct(vararg columns: Column): DataFrame<T> = distinct { columns.toColumns() }
+
 @JvmName("distinctT")
 public fun <T> DataFrame<T>.distinct(columns: Iterable<String>): DataFrame<T> = distinct { columns.toColumns() }
 public fun <T> DataFrame<T>.distinct(columns: Iterable<Column>): DataFrame<T> = distinct { columns.toColumnSet() }
@@ -135,6 +144,7 @@ public fun <T> DataFrame<T>.distinct(columns: Iterable<Column>): DataFrame<T> = 
 public fun <T> DataFrame<T>.distinctBy(vararg columns: KProperty<*>): DataFrame<T> = distinctBy { columns.toColumns() }
 public fun <T> DataFrame<T>.distinctBy(vararg columns: String): DataFrame<T> = distinctBy { columns.toColumns() }
 public fun <T> DataFrame<T>.distinctBy(vararg columns: Column): DataFrame<T> = distinctBy { columns.toColumns() }
+
 @JvmName("distinctByT")
 public fun <T> DataFrame<T>.distinctBy(columns: Iterable<String>): DataFrame<T> = distinctBy { columns.toColumns() }
 public fun <T> DataFrame<T>.distinctBy(columns: Iterable<Column>): DataFrame<T> = distinctBy { columns.toColumnSet() }
@@ -153,7 +163,10 @@ public fun <T> DataFrame<T>.forEach(action: RowSelector<T, Unit>): Unit = rows()
 
 public fun <T> DataFrame<T>.forEachIndexed(action: (Int, DataRow<T>) -> Unit): Unit = rows().forEachIndexed(action)
 
-public fun <T, C> DataFrame<T>.forEachIn(selector: ColumnsSelector<T, C>, action: (DataRow<T>, DataColumn<C>) -> Unit): Unit =
+public fun <T, C> DataFrame<T>.forEachIn(
+    selector: ColumnsSelector<T, C>,
+    action: (DataRow<T>, DataColumn<C>) -> Unit
+): Unit =
     getColumnsWithPaths(selector).let { cols ->
         rows().forEach { row ->
             cols.forEach { col ->
@@ -182,7 +195,8 @@ public interface SortReceiver<out T> : ColumnsSelectionDsl<T> {
     public val String.desc: ColumnSet<Comparable<*>?> get() = cast<Comparable<*>>().desc
     public val <C> KProperty<C>.desc: ColumnSet<C> get() = toColumnAccessor().desc
 
-    public fun <C> ColumnSet<C?>.nullsLast(flag: Boolean): ColumnSet<C?> = if (flag) addFlag(SortFlag.NullsLast) else this
+    public fun <C> ColumnSet<C?>.nullsLast(flag: Boolean): ColumnSet<C?> =
+        if (flag) addFlag(SortFlag.NullsLast) else this
 
     public val <C> ColumnSet<C?>.nullsLast: ColumnSet<C?> get() = addFlag(SortFlag.NullsLast)
     public val String.nullsLast: ColumnSet<Comparable<*>?> get() = cast<Comparable<*>>().nullsLast
@@ -194,8 +208,13 @@ public typealias SortColumnsSelector<T, C> = Selector<SortReceiver<T>, ColumnSet
 public fun <T, C> DataFrame<T>.sortBy(selector: SortColumnsSelector<T, C>): DataFrame<T> = sortByImpl(
     UnresolvedColumnsPolicy.Fail, selector
 )
-public fun <T> DataFrame<T>.sortBy(cols: Iterable<ColumnReference<Comparable<*>?>>): DataFrame<T> = sortBy { cols.toColumnSet() }
-public fun <T> DataFrame<T>.sortBy(vararg cols: ColumnReference<Comparable<*>?>): DataFrame<T> = sortBy { cols.toColumns() }
+
+public fun <T> DataFrame<T>.sortBy(cols: Iterable<ColumnReference<Comparable<*>?>>): DataFrame<T> =
+    sortBy { cols.toColumnSet() }
+
+public fun <T> DataFrame<T>.sortBy(vararg cols: ColumnReference<Comparable<*>?>): DataFrame<T> =
+    sortBy { cols.toColumns() }
+
 public fun <T> DataFrame<T>.sortBy(vararg cols: String): DataFrame<T> = sortBy { cols.toColumns() }
 public fun <T> DataFrame<T>.sortBy(vararg cols: KProperty<Comparable<*>?>): DataFrame<T> = sortBy { cols.toColumns() }
 
@@ -204,17 +223,23 @@ public fun <T> DataFrame<T>.sortWith(comparator: Comparator<DataRow<T>>): DataFr
     return this[permutation]
 }
 
-public fun <T> DataFrame<T>.sortWith(comparator: (DataRow<T>, DataRow<T>) -> Int): DataFrame<T> = sortWith(Comparator(comparator))
+public fun <T> DataFrame<T>.sortWith(comparator: (DataRow<T>, DataRow<T>) -> Int): DataFrame<T> =
+    sortWith(Comparator(comparator))
 
 public fun <T, C> DataFrame<T>.sortByDesc(selector: SortColumnsSelector<T, C>): DataFrame<T> {
     val set = selector.toColumns()
     return sortByImpl { set.desc }
 }
 
-public fun <T, C> DataFrame<T>.sortByDesc(vararg columns: KProperty<Comparable<C>?>): DataFrame<T> = sortByDesc { columns.toColumns() }
+public fun <T, C> DataFrame<T>.sortByDesc(vararg columns: KProperty<Comparable<C>?>): DataFrame<T> =
+    sortByDesc { columns.toColumns() }
+
 public fun <T> DataFrame<T>.sortByDesc(vararg columns: String): DataFrame<T> = sortByDesc { columns.toColumns() }
-public fun <T, C> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<Comparable<C>?>): DataFrame<T> = sortByDesc { columns.toColumns() }
-public fun <T, C> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comparable<C>?>>): DataFrame<T> = sortByDesc { columns.toColumnSet() }
+public fun <T, C> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<Comparable<C>?>): DataFrame<T> =
+    sortByDesc { columns.toColumns() }
+
+public fun <T, C> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comparable<C>?>>): DataFrame<T> =
+    sortByDesc { columns.toColumnSet() }
 
 // endregion
 
@@ -266,10 +291,8 @@ public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
     } else map { it.toDataFrame() }.concat()
 }
 
-public fun Iterable<AnyColumn>.toAnyFrame(): AnyFrame = toDataFrame<Unit>()
-
 @JvmName("toDataFrameAnyColumn")
-public fun <T> Iterable<AnyColumn>.toDataFrame(): DataFrame<T> = dataFrameOf(this).typed()
+public fun Iterable<AnyColumn>.toDataFrame(): AnyFrame = dataFrameOf(this)
 
 @JvmName("toDataFramePairColumnPathAnyCol")
 public fun <T> Iterable<Pair<ColumnPath, AnyColumn>>.toDataFrame(): DataFrame<T> {
@@ -282,7 +305,8 @@ public fun <T> Iterable<Pair<ColumnPath, AnyColumn>>.toDataFrame(): DataFrame<T>
 
     forEach { (path, col) ->
         when (path.size) {
-            0 -> {}
+            0 -> {
+            }
             1 -> {
                 val name = path[0]
                 val uniqueName = nameGenerator.addUnique(name)
@@ -317,7 +341,7 @@ public fun <T> Iterable<Pair<ColumnPath, AnyColumn>>.toDataFrame(): DataFrame<T>
             columns[index] = col
         } else assert(columns[index] != null)
     }
-    return columns.map { it!! }.toDataFrame()
+    return columns.map { it!! }.toDataFrame().typed()
 }
 
 @JvmName("toDataFrameColumnPathAny?")
@@ -349,7 +373,7 @@ public class IterableDataFrameBuilder<T>(public val source: Iterable<T>) {
 // region Create DataFrame from Map
 
 public fun Map<String, Iterable<Any?>>.toDataFrame(): AnyFrame {
-    return map { DataColumn.createWithTypeInference(it.key, it.value.asList()) }.toAnyFrame()
+    return map { DataColumn.createWithTypeInference(it.key, it.value.asList()) }.toDataFrame()
 }
 
 @JvmName("toDataFrameColumnPathAny?")

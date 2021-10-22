@@ -52,7 +52,7 @@ internal fun <T> DataFrame<T>.removeImpl(selector: ColumnsSelector<T, *>): Remov
             } else newCols.add(column)
         }
         if (newCols.isEmpty()) return null
-        return newCols.toDataFrame<Unit>()
+        return newCols.toDataFrame()
     }
 
     val newDf = dfs(columns(), colPaths, root) ?: emptyDataFrame(nrow())

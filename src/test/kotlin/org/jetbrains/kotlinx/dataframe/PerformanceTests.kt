@@ -16,7 +16,7 @@ class PerformanceTests {
         val rand = Random(100)
         val columns = (0 until ncol).map { column("col$it", (0 until nrow).map { rand.nextInt() }) }
 
-        val df = columns.toDataFrame<Unit>()
+        val df = columns.toDataFrame()
 
         println("start computing")
         val n = 10

@@ -113,7 +113,7 @@ public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
     return columns().mapIndexed { colIndex, col ->
         val newValues = (0 until newRows).map { values[colIndex + it * ncol] }
         col.updateWith(col.values + newValues)
-    }.toDataFrame()
+    }.toDataFrame().typed()
 }
 
 public fun <T> DataFrame<T>.appendNulls(numberOfRows: Int = 1): DataFrame<T> {
@@ -122,7 +122,7 @@ public fun <T> DataFrame<T>.appendNulls(numberOfRows: Int = 1): DataFrame<T> {
     if (ncol() == 0) return EmptyDataFrame(nrow + numberOfRows)
     return columns().map { col ->
         col.updateWith(col.values + arrayOfNulls(numberOfRows))
-    }.toDataFrame()
+    }.toDataFrame().typed()
 }
 
 // endregion
