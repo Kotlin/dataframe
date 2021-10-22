@@ -1,59 +1,125 @@
 [//]: # (title: Create)
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
 ## Columns
-To create a single column with values and name use `columnOf` or `toColumn` functions: 
-<!---docs.Base.CreateColumns.namedColumnWitValues-->
+Create [ValueColumn](columns.md#valuecolumn) with values and name: 
+
+<!---FUN createValueColumn-->
+
 ```kotlin
 val name by columnOf("Alice", "Bob")
-val col = listOf("Alice", "Bob").toColumn("name")
+// or
+listOf("Alice", "Bob").toColumn("name")
 ```
+
 <!---END-->
-### Column accessors
-`ColumnAccessors` can be used for typed data access in `DataFrame`. `ColumnAccessor` stores the name and type of the column, but doesn't contain column values.
-<!---docs.Base.CreateColumns.namedColumnWithoutValues-->
+
+By default, column type is determined in compile time using [reified type parameters](https://kotlinlang.org/docs/inline-functions.html#reified-type-parameters)
+If you want column type to be computed dynamically based on actual values, set `inferType` flag. To check values only for nullability set 'inferNulls' flag:
+
+<!---FUN createValueColumnInferred-->
+
+```kotlin
+val values = listOf("Alice", null, 1, 2.5).subList(2, 4)
+
+values.toColumn("data").type willBe typeOf<Any?>()
+values.toColumn("data", inferType = true).type willBe typeOf<Number>()
+values.toColumn("data", inferNulls = true).type willBe typeOf<Any>()
+values.toColumn("data", inferType = true, inferNulls = false).type willBe typeOf<Number?>()
+values.toColumnOf<Number?>("data").type willBe typeOf<Number?>()
+```
+
+<!---END-->
+
+You can assign column name explicitly, if you don't want to infer it from variable name:
+
+<!---FUN createColumnRenamed-->
+
+```kotlin
+val column = columnOf("Alice", "Bob") named "name"
+```
+
+<!---END-->
+
+Create [ColumnGroup](columns.md#columngroup) with several [columns](columns.md):
+
+<!---FUN createColumnGroup-->
+
+```kotlin
+val firstName by columnOf("Alice", "Bob")
+val lastName by columnOf("Cooper", "Marley")
+
+val name by columnOf(firstName, lastName)
+// or
+listOf(firstName, lastName).toColumn("name")
+```
+
+<!---END-->
+
+Create [FrameColumn](columns.md#framecolumn) with several DataFrames:
+
+<!---FUN createFrameColumn-->
+
+```kotlin
+val df1 = dataFrameOf("name", "age")("Alice", 20, "Bob", 25)
+val df2 = dataFrameOf("name", "age")("Mark", 30)
+
+val groups by columnOf(df1, df2)
+// or
+listOf(df1, df2).toColumn("groups")
+```
+
+<!---END-->
+
+### Column Accessors
+
+Create [column accessors](columns.md#column-accessors) and store it in the variable with the same name as column name:
+
+<!---FUN createColumnAccessor-->
+
 ```kotlin
 val name by column<String>()
-val col = column<String>("name")
 ```
+
 <!---END-->
-All `DataFrame` operations support typed data access via `ColumnAccessors`:
-<!---docs.Base.CreateColumns.colRefForTypedAccess-->
+
+To explicitly specify column name pass it as an argument:
+
+<!---FUN createColumnAccessorRenamed-->
+
 ```kotlin
-df.filter { it[name].startsWith("A") }
-df.sortBy { col }
+val accessor = column<String>("complex column name")
 ```
+
 <!---END-->
-`ColumnAccessor` can be converted to `DataColumn` by adding values:
+
+You can also create column accessors to access [ColumnGroup](columns.md#columngroup) or [FrameColumn](columns.md#framecolumn)
+
+<!---FUN createGroupOrFrameColumnAccessor-->
+
 ```kotlin
-val col = name.withValues("Alice", "Bob")
+val columns by columnGroup()
+val frames by frameColumn()
 ```
-or for `Iterable` of values:
-```kotlin
-val values = listOf("Alice", "Bob")
-val col = name.withValues(values)
-val col = values.toColumn(name)
-```
-### Unnamed column with values
-<!---docs.Base.CreateColumns.unnamedColumnWithValues-->
-```kotlin
-val cols = columnOf("Alice", "Bob")
-val colsFromList = listOf("Alice", "Bob").toColumn()
-```
+
 <!---END-->
-To rename column use function `rename` or infix function `named`:
-<!---docs.Base.CreateColumns.namedAndRenameCol-->
+
+And you can create deep column accessors for columns within [ColumnGroup](columns.md#columngroup)
+
+<!---FUN createDeepColumnAccessor-->
+
 ```kotlin
-val unnamedCol = columnOf("Alice", "Bob")
-val colRename = unnamedCol.rename("name")
-val colNamed = columnOf("Alice", "Bob") named "name"
+val name by columnGroup()
+val firstName by name.column<String>()
 ```
+
 <!---END-->
 
 ## DataFrame
 
-Several ways to convert data into `DataFrame`
-### from values
-2 columns and 3 rows:
+There are several ways to convert a piece of data into `DataFrame`.
+
+DataFrame with 2 columns and 3 rows:
 ```kotlin
 val df = dataFrameOf("name", "age")(
    "Alice", 15,
@@ -61,15 +127,15 @@ val df = dataFrameOf("name", "age")(
    "Mark", 100
 )
 ```
-Columns from 'a' to 'z', values from 1 to 10 for each column:
+DataFrame with columns from 'a' to 'z' and values from 1 to 10 for each column:
 ```kotlin
 val df = dataFrameOf('a'..'z') { 1..10 }
 ```
-Columns from 1 to 5 filled with 7 random double values each:
+DataFrame with columns from 1 to 5 filled with 7 random double values:
 ```kotlin
 val df = dataFrameOf(1..5).randomDouble(7)
 ```
-Column names from list, fill each column with 15 'true' values:
+DataFrame with 3 columns, fill each column with 15 'true' values:
 ```kotlin
 val names = listOf("first", "second", "third")
 val df = dataFrameOf(names).fill(15, true)

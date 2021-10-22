@@ -44,7 +44,7 @@ Get single column by index (starting from 0):
 
 ```kotlin
 df.col(2)
-df.col(0).asGroup().col(1)
+df.col(0).asColumnGroup().col(1)
 ```
 
 <!---END-->
@@ -325,7 +325,7 @@ To keep only the first row for every group of rows, grouped by some condition, u
 ```kotlin
 df.distinctBy { age and name } shouldBe df.groupBy { age and name }.mapToRows { group.first() }
 
-df.distinctByExpr { name.firstName.take(3).lowercase() }
+df.distinctBy { expr { name.firstName.take(3).lowercase() } }
 ```
 
 </tab>
@@ -338,7 +338,7 @@ val firstName by name.column<String>()
 
 df.distinctBy { age and name } shouldBe df.groupBy { age and name }.mapToRows { group.first() }
 
-df.distinctByExpr { firstName().take(3).lowercase() }
+df.distinctBy { expr { firstName().take(3).lowercase() } }
 ```
 
 </tab>
@@ -347,7 +347,7 @@ df.distinctByExpr { firstName().take(3).lowercase() }
 ```kotlin
 df.distinctBy("age", "name") shouldBe df.groupBy("age", "name").mapToRows { group.first() }
 
-df.distinctByExpr { "name"["firstName"]<String>().take(3).lowercase() }
+df.distinctBy { expr { "name"["firstName"]<String>().take(3).lowercase() } }
 ```
 
 </tab></tabs>
