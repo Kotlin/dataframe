@@ -1476,9 +1476,13 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun splitLists() {
-        val df = dataFrameOf("lists")(listOf(1, 2), listOf(3)).explode("lists")
-        // Current behaviour is probably not a bug, but could be confusing
-        df shouldBe dataFrameOf("lists")(1, 2, 3)
+        val df = dataFrameOf("lists")(listOf(1, 2), listOf(3))
+
+        // List<T> is not exploded
+        df.explode("lists") shouldBe df
+
+        // Many<T> is exploded
+        df.convert { colsOf<List<*>>() }.with { it.toMany() }.explode("lists") shouldBe dataFrameOf("lists")(1, 2, 3)
     }
 
     @Test
