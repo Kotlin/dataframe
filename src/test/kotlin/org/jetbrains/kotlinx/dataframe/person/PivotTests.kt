@@ -199,7 +199,7 @@ class PivotTests {
 
     @Test
     fun `pivot two values group by value`() {
-        val type by column<KClass<*>>()
+        val type by column<KClass<*>?>()
         val pivoted = typed.add(type) { value?.javaClass?.kotlin }
             .pivot { key }.groupBy { name }.values(separate = true) { value and type }
         pivoted.print()

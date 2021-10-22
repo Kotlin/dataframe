@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.columns
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import kotlin.reflect.KProperty
 
-public interface ColumnAccessor<out T> : ColumnReference<T> {
+public interface ColumnAccessor<T> : ColumnReference<T> {
 
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = this
 

@@ -1785,16 +1785,6 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `create values of wrong type for column by column reference`() {
-        val col2 by column<Int>()
-        val df = dataFrameOf("col1")(1)
-        val df1 = df.add(col2) { "dsf" } // How is this possible? :(
-        shouldNotThrow<ClassCastException> {
-            df1[col2].map { it * 2 }
-        }
-    }
-
-    @Test
     fun `get column by columnRef with data`() {
         val col by columnOf(1, 2, 3)
         val df = col.toDataFrame()

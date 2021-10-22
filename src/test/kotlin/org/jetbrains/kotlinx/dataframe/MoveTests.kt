@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe
 
-import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.flatten
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.into
