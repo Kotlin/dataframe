@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.SortFlag
 import org.jetbrains.kotlinx.dataframe.impl.api.addFlag
+import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.groupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.sortByImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.toColumns
@@ -28,11 +29,11 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.pathOf
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -247,31 +248,12 @@ public fun <T, C> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comp
 
 // region Create DataFrame from Iterable
 
-public fun <T> Iterable<T>.toDataFrame(body: IterableDataFrameBuilder<T>.() -> Unit): AnyFrame {
-    val builder = IterableDataFrameBuilder(this)
-    builder.body()
-    return dataFrameOf(builder.columns)
-}
+public inline fun <reified T> Iterable<T>.createDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): AnyFrame = createDataFrameImpl(T::class, body)
 
-public inline fun <reified T> Iterable<T>.toDataFrameByProperties(): AnyFrame = T::class.declaredMembers
-    .filter { it.parameters.toList().size == 1 }
-    .filter { it is KProperty }
-    .map {
-        val property = (it as KProperty)
-        property.javaField?.isAccessible = true
-        var nullable = false
-        val values = this.map { obj ->
-            if (obj == null) {
-                nullable = true
-                null
-            } else {
-                val value = it.call(obj)
-                if (value == null) nullable = true
-                value
-            }
-        }
-        DataColumn.createValueColumn(it.name, values, property.returnType.withNullability(nullable))
-    }.let { dataFrameOf(it) }
+public inline fun <reified T> Iterable<T>.createDataFrame(vararg props: KProperty<*>, depth: Int = 1): AnyFrame =
+    createDataFrame {
+        properties(roots = props, depth = depth)
+    }
 
 @JvmName("toDataFrameT")
 public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
@@ -353,19 +335,45 @@ public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrame(): AnyFrame {
     return map { ColumnPath(it.first) to guessColumnType(it.first, it.second.asList()) }.toDataFrame<Unit>()
 }
 
-public class IterableDataFrameBuilder<T>(public val source: Iterable<T>) {
-    internal val columns = mutableListOf<AnyColumn>()
+public interface TraversePropertiesDsl {
 
-    public fun add(column: AnyColumn): Boolean = columns.add(column)
+    public fun exclude(vararg properties: KProperty<*>)
 
-    public inline fun <reified R> add(name: String, noinline expression: T.(T) -> R?): Boolean =
-        add(column(name, source.map { expression(it, it) }))
+    /**
+     * Skip instances of given [classes] from transformation into ColumnGroups and FrameColumns and store them in ValueColumn
+     */
+    public fun preserve(vararg classes: KClass<*>)
+}
 
-    public inline infix fun <reified R> String.to(noinline expression: T.(T) -> R?): Boolean = add(this, expression)
+public inline fun <reified T> TraversePropertiesDsl.preserve(): Unit = preserve(T::class)
 
-    public inline infix operator fun <reified R> String.invoke(noinline expression: T.(T) -> R?): Boolean = add(this, expression)
+public abstract class CreateDataFrameDsl<T>(public val source: Iterable<T>) {
 
-    public inline infix operator fun <reified R> KProperty<R>.invoke(noinline expression: T.(T) -> R): Boolean = add(name, expression)
+    public abstract fun add(column: AnyColumn, path: ColumnPath? = null)
+
+    public infix fun AnyColumn.into(name: String): Unit = add(this, pathOf(name))
+
+    public infix fun AnyColumn.into(path: ColumnPath): Unit = add(this, path)
+
+    public abstract fun properties(
+        vararg roots: KProperty<*>,
+        depth: Int = 1,
+        body: (TraversePropertiesDsl.() -> Unit)? = null
+    )
+
+    public inline fun <reified R> expr(noinline expression: (T) -> R): DataColumn<R> =
+        source.map { expression(it) }.toColumn()
+
+    public inline fun <reified R> add(name: String, noinline expression: (T) -> R?): Unit =
+        add(column(name, source.map { expression(it) }))
+
+    public inline infix fun <reified R> String.from(noinline expression: (T) -> R?): Unit =
+        add(this, expression)
+
+    public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
+        add(name, expression)
+
+    public abstract operator fun String.invoke(builder: CreateDataFrameDsl<T>.() -> Unit)
 }
 
 // endregion
