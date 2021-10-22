@@ -75,7 +75,7 @@ internal fun <T, C, K, R> gatherImpl(
         }.explode(namesColumn, valuesColumn) // expand collected names and values
             .explode(valuesColumn) // expand values in Many
     } else {
-        val nameAndValue = column<Many<Pair<K, R>>>("nameAndValue")
+        val nameAndValue = column<Many<Pair<K, Any?>>>("nameAndValue")
         df = df.add(nameAndValue) { row ->
             columnsToGather.mapIndexedNotNull { colIndex, col ->
                 val value = col[row]

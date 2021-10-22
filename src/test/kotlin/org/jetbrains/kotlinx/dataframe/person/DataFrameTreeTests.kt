@@ -532,7 +532,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `join by map column`() {
         val nameAndAge by columnGroup()
-        val cityFirst by nameAndAge.column<String>()
+        val cityFirst by nameAndAge.column<Char?>()
         val grouped = typed.group { name and age }.into(nameAndAge).add(cityFirst) { city?.get(0) }
         grouped[nameAndAge].ncol() shouldBe 3
 
