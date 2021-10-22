@@ -35,10 +35,10 @@ kotlinPublications {
     }
 
     publication {
-        groupId = "org.jetbrains.kotlinx.dataframe"
-        publicationName = "maven"
-        artifactId = "symbol-processor"
-        description = "Annotation preprocessor for DataFrame"
-        packageName = artifactId
+        groupId.set("org.jetbrains.kotlinx.dataframe")
+        publicationName.set("maven")
+        artifactId.set("symbol-processor")
+        description.set("Annotation preprocessor for DataFrame")
+        packageName.set(artifactId)
     }
 }
