@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.values
 
 // region copy
 
-public fun <T> DataFrame<T>.copy(): DataFrame<T> = columns().toDataFrame<T>()
+public fun <T> DataFrame<T>.copy(): DataFrame<T> = columns().toDataFrame().typed()
 
 // endregion
 

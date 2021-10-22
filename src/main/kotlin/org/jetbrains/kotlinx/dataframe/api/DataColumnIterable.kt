@@ -23,10 +23,10 @@ public fun <T> DataColumn<T>.forEach(action: (T) -> Unit): Unit = values.forEach
 
 public fun <T> DataColumn<T>.forEachIndexed(action: (Int, T) -> Unit): Unit = values.forEachIndexed(action)
 
-public fun <T> DataColumn<T>.groupBy(cols: Iterable<AnyCol>): GroupedDataFrame<Unit, Unit> =
-    (cols + this).toDataFrame<Unit>().groupBy { cols(0 until ncol() - 1) }
+public fun <T> DataColumn<T>.groupBy(cols: Iterable<AnyCol>): GroupedDataFrame<*, *> =
+    (cols + this).toDataFrame().groupBy { cols(0 until ncol() - 1) }
 
-public fun <T> DataColumn<T>.groupBy(vararg cols: AnyCol): GroupedDataFrame<Unit, Unit> = groupBy(cols.toList())
+public fun <T> DataColumn<T>.groupBy(vararg cols: AnyCol): GroupedDataFrame<*, *> = groupBy(cols.toList())
 
 public fun <T, R> DataColumn<T>.map(transform: (T) -> R): DataColumn<R> {
     val collector = createDataCollector(size)

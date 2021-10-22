@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -20,7 +21,7 @@ import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
 public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     public companion object {
-        public fun empty(nrow: Int = 0): AnyFrame = EmptyDataFrame<Any?>(nrow)
+        public fun empty(nrow: Int = 0): AnyFrame = EmptyDataFrame<Unit>(nrow)
     }
 
     override fun columns(): List<AnyCol>
@@ -64,8 +65,8 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     public operator fun get(first: Column, vararg other: Column): DataFrame<T> = select(listOf(first) + other)
     public operator fun get(first: String, vararg other: String): DataFrame<T> = select(listOf(first) + other)
 
-    public operator fun plus(col: AnyCol): DataFrame<T> = (columns() + col).toDataFrame()
-    public operator fun plus(cols: Iterable<AnyCol>): DataFrame<T> = (columns() + cols).toDataFrame()
+    public operator fun plus(col: AnyCol): DataFrame<T> = (columns() + col).toDataFrame().typed()
+    public operator fun plus(cols: Iterable<AnyCol>): DataFrame<T> = (columns() + cols).toDataFrame().typed()
 
     public fun getColumnIndex(name: String): Int
 

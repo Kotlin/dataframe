@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.api.AddExpression
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
 import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -67,7 +66,7 @@ internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T,
 
 @PublishedApi
 internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessType: Boolean = false): DataColumn<T> = when {
-    values.all { it is AnyCol } -> DataColumn.createColumnGroup("", (values as Iterable<AnyCol>).toAnyFrame()) as DataColumn<T>
+    values.all { it is AnyCol } -> DataColumn.createColumnGroup("", (values as Iterable<AnyCol>).toDataFrame()) as DataColumn<T>
     values.all { it == null || it is AnyFrame } -> DataColumn.createFrameColumn(
         "",
         values.map { it as? AnyFrame }

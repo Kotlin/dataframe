@@ -144,7 +144,7 @@ class GatherTests {
                 dataRows.map { it.tryGet("c1") as? String }.toColumn("c1", inferType = true),
                 dataRows.map { it.tryGet("c2") as? String }.toColumn("c2", inferType = true),
                 column("c3", dataRows.map { it.tryGet("c3") as? String })
-            ).toDataFrame<Unit>()
+            ).toDataFrame()
 
             newDf
         }.union()

@@ -127,5 +127,5 @@ internal fun <T> insertImpl(
         }
     }
 
-    return newColumns.toDataFrame()
+    return newColumns.toDataFrame().typed()
 }

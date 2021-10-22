@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.api.AddExpression
-import org.jetbrains.kotlinx.dataframe.api.toAnyFrame
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.unbox
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -71,7 +71,7 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> = creat
 public inline fun <reified T> column(name: String, values: List<T>): DataColumn<T> = when {
     values.size > 0 && values.all { it is AnyCol } -> DataColumn.createColumnGroup(
         name,
-        values.map { it as AnyCol }.toAnyFrame()
+        values.map { it as AnyCol }.toDataFrame()
     ) as DataColumn<T>
     else -> column(name, values, values.any { it == null })
 }
@@ -102,7 +102,7 @@ public fun <T> dataFrameOf(first: T, second: T, vararg other: T): DataFrameBuild
 
 public fun <T> dataFrameOf(header: Iterable<T>): DataFrameBuilder = dataFrameOf(header.map { it.toString() })
 
-public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): AnyFrame = header.map { value -> fill(value).asList().let { DataColumn.create(value.toString(), it) } }.toAnyFrame()
+public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): AnyFrame = header.map { value -> fill(value).asList().let { DataColumn.create(value.toString(), it) } }.toDataFrame()
 
 public fun dataFrameOf(header: CharProgression): DataFrameBuilder = dataFrameOf(header.map { it.toString() })
 
@@ -117,7 +117,7 @@ public class DataFrameBuilder(private val header: List<String>) {
         require(cols.size == header.size) { "Number of columns differs from number of column names" }
         return cols.mapIndexed { i, col ->
             col.rename(header[i])
-        }.toAnyFrame()
+        }.toDataFrame()
     }
 
     public operator fun invoke(vararg values: Any?): AnyFrame = withValues(values.asIterable())
@@ -139,12 +139,12 @@ public class DataFrameBuilder(private val header: List<String>) {
                 list[row * ncol + col]
             }
             DataColumn.createWithTypeInference(header[col], colValues)
-        }.toAnyFrame()
+        }.toDataFrame()
     }
 
     public operator fun invoke(args: Sequence<Any?>): AnyFrame = invoke(*args.toList().toTypedArray())
 
-    public fun withColumns(columnBuilder: (String) -> AnyCol): AnyFrame = header.map(columnBuilder).toAnyFrame()
+    public fun withColumns(columnBuilder: (String) -> AnyCol): AnyFrame = header.map(columnBuilder).toDataFrame()
 
     public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): AnyFrame = withColumns { name -> valuesBuilder(name).let { DataColumn.create(name, it.asList()) } }
 

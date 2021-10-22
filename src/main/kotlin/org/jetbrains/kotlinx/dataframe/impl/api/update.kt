@@ -74,7 +74,7 @@ internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> = when
                 }
             }
             col.updateWith(newValues)
-        }.toDataFrame<Unit>().let { DataColumn.createColumnGroup(name, it) } as DataColumn<T>
+        }.toDataFrame().let { DataColumn.createColumnGroup(name, it) } as DataColumn<T>
     }
     else -> {
         var nulls = false
