@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.IsolatedMarker
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.api.Code
 
@@ -26,7 +27,7 @@ private fun renderNullability(nullable: Boolean) = if (nullable) "?" else ""
 internal fun BaseField.renderFieldType(): Code =
     when (val columnInfo = columnInfo) {
         is ColumnInfo.ValueColumnInfo -> columnInfo.typeFqName
-        is ColumnInfo.ColumnGroupInfo -> "${org.jetbrains.kotlinx.dataframe.DataRow::class.qualifiedName}<$markerName>"
+        is ColumnInfo.ColumnGroupInfo -> "${DataRow::class.qualifiedName}<$markerName>"
         is ColumnInfo.FrameColumnInfo -> "${DataFrame::class.qualifiedName}<$markerName>${renderNullability(nullable)}"
     }
 
@@ -58,14 +59,71 @@ internal fun String.quoteIfNeeded() = if (needsQuoting()) "`$this`" else this
 
 internal fun List<Code>.join() = joinToString("\n")
 
-internal open class ExtensionsCodeGeneratorImpl : ExtensionsCodeGenerator {
+internal interface TypeRenderingStrategy {
+    fun renderRowTypename(markerName: String): String
+    fun renderDfTypename(markerName: String): String
+    fun BaseField.renderColumnType(): Code
+    fun BaseField.renderFieldType(): Code
+}
 
-    private fun BaseField.renderColumnType(): Code =
+internal object FqNames : TypeRenderingStrategy {
+    override fun renderRowTypename(markerName: String) = "${DataRow::class.qualifiedName}<$markerName>"
+
+    override fun renderDfTypename(markerName: String) = "${ColumnsContainer::class.qualifiedName}<$markerName>"
+
+    override fun BaseField.renderColumnType(): Code =
         when (val columnInfo = columnInfo) {
             is ColumnInfo.ValueColumnInfo -> "${DataColumn::class.qualifiedName}<${columnInfo.typeFqName}>"
-            is ColumnInfo.ColumnGroupInfo -> "${org.jetbrains.kotlinx.dataframe.columns.ColumnGroup::class.qualifiedName}<$markerName>"
+            is ColumnInfo.ColumnGroupInfo -> "${ColumnGroup::class.qualifiedName}<$markerName>"
             is ColumnInfo.FrameColumnInfo -> "${DataColumn::class.qualifiedName}<${DataFrame::class.qualifiedName}<$markerName>${renderNullability(nullable)}>"
         }
+
+    override fun BaseField.renderFieldType(): Code =
+        when (val columnInfo = columnInfo) {
+            is ColumnInfo.ValueColumnInfo -> columnInfo.typeFqName
+            is ColumnInfo.ColumnGroupInfo -> "${DataRow::class.qualifiedName}<$markerName>"
+            is ColumnInfo.FrameColumnInfo -> "${DataFrame::class.qualifiedName}<$markerName>${renderNullability(nullable)}"
+        }
+}
+
+internal object ShortNames : TypeRenderingStrategy {
+    override fun renderRowTypename(markerName: String): String {
+        return "${DataRow::class.simpleName}<${markerName.shorten()}>"
+    }
+
+    override fun renderDfTypename(markerName: String): String {
+        return "${ColumnsContainer::class.simpleName}<${markerName.shorten()}>"
+    }
+
+    override fun BaseField.renderColumnType(): Code =
+        when (val columnInfo = columnInfo) {
+            is ColumnInfo.ValueColumnInfo -> "${DataColumn::class.simpleName}<${columnInfo.typeFqName.shorten()}>"
+            is ColumnInfo.ColumnGroupInfo -> "${ColumnGroup::class.simpleName}<$markerName>"
+            is ColumnInfo.FrameColumnInfo -> "${DataColumn::class.simpleName}<${DataFrame::class.simpleName}<$markerName>${renderNullability(nullable)}>"
+        }
+
+    override fun BaseField.renderFieldType(): Code =
+        when (val columnInfo = columnInfo) {
+            is ColumnInfo.ValueColumnInfo -> columnInfo.typeFqName.shorten()
+            is ColumnInfo.ColumnGroupInfo -> "${DataRow::class.simpleName}<$markerName>"
+            is ColumnInfo.FrameColumnInfo -> "${DataFrame::class.simpleName}<$markerName>${renderNullability(nullable)}"
+        }
+
+    private fun String.shorten() = removeRedundantQualifier(this)
+
+    private fun removeRedundantQualifier(markerName: String): String {
+        val parts = markerName.split('.')
+        return if (parts.size == 2 && parts[0] == "kotlin") {
+            parts[1]
+        } else {
+            markerName
+        }
+    }
+}
+
+internal open class ExtensionsCodeGeneratorImpl(
+    val typeRendering: TypeRenderingStrategy
+) : ExtensionsCodeGenerator, TypeRenderingStrategy by typeRendering {
 
     fun renderStringLiteral(name: String) = name
         .replace("\\", "\\\\")
@@ -92,8 +150,8 @@ internal open class ExtensionsCodeGeneratorImpl : ExtensionsCodeGenerator {
         }
 
         val declarations = mutableListOf<String>()
-        val dfTypename = "${ColumnsContainer::class.qualifiedName}<$markerName>"
-        val rowTypename = "${DataRow::class.qualifiedName}<$markerName>"
+        val dfTypename = renderDfTypename(markerName)
+        val rowTypename = renderRowTypename(markerName)
         marker.fields.sortedBy { it.fieldName.quotedIfNeeded }.forEach {
             val getter = "this[\"${renderStringLiteral(it.columnName)}\"]"
             val name = it.fieldName
@@ -157,7 +215,7 @@ internal open class ExtensionsCodeGeneratorImpl : ExtensionsCodeGenerator {
     }
 }
 
-internal class CodeGeneratorImpl : ExtensionsCodeGeneratorImpl(), CodeGenerator {
+internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames) : ExtensionsCodeGeneratorImpl(typeRendering), CodeGenerator {
     override fun generate(marker: Marker, interfaceMode: InterfaceGenerationMode, extensionProperties: Boolean): CodeWithConverter {
         val generateInterface = interfaceMode != InterfaceGenerationMode.None
         val code = when {
