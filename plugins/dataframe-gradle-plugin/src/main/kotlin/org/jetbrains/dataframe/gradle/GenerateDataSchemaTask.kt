@@ -142,6 +142,11 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 appendLine()
             }
             appendLine("import org.jetbrains.kotlinx.dataframe.annotations.*")
+            appendLine("import org.jetbrains.kotlinx.dataframe.ColumnsContainer")
+            appendLine("import org.jetbrains.kotlinx.dataframe.DataColumn")
+            appendLine("import org.jetbrains.kotlinx.dataframe.DataFrame")
+            appendLine("import org.jetbrains.kotlinx.dataframe.DataRow")
+            appendLine("import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup")
             appendLine()
             appendLine("// GENERATED. DO NOT EDIT MANUALLY")
             appendLine(codeGenResult.code.declarations)
