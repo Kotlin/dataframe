@@ -62,6 +62,12 @@ class DataFrameSymbolProcessor(
                 if (packageName.isNotEmpty()) {
                     it.appendLine("package $packageName")
                 }
+                it.appendLine("import org.jetbrains.kotlinx.dataframe.annotations.*")
+                it.appendLine("import org.jetbrains.kotlinx.dataframe.ColumnsContainer")
+                it.appendLine("import org.jetbrains.kotlinx.dataframe.DataColumn")
+                it.appendLine("import org.jetbrains.kotlinx.dataframe.DataFrame")
+                it.appendLine("import org.jetbrains.kotlinx.dataframe.DataRow")
+                it.appendLine("import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup")
                 it.appendLine()
                 val name = klass.qualifiedName ?: error("@DataSchema declaration at ${klass.location} must have name")
                 it.writeProperties(klass.asType(emptyList()), name.asString(), properties)
