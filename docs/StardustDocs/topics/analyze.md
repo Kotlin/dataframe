@@ -512,7 +512,7 @@ df.groupBy { city }.union()
 
 <!---END-->
 
-This operation [unions](mix.md#union) all groups of `GroupedDataFrame` into single `DataFrame`. It will result in original `DataFrame`, but with reordered rows according to grouping keys.
+This operation [unions](combine.md#union) all groups of `GroupedDataFrame` into single `DataFrame`. It will result in original `DataFrame`, but with reordered rows according to grouping keys.
 
 ## Pivot
 

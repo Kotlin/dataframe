@@ -1,17 +1,27 @@
 [//]: # (title: Modify)
 
 Note that all update operations return a new instance of `DataFrame`
+
+Three main operations for changing values in DataFrame:
+* update - to update cell values preserving column names and types
+* convert - to convert column values to a new type
+* replace - to replace one column with another preserving column position
+
+## Modify cells
+
 ## update
-Changes values in some cells
+Changes values in some cells preserving original DataFrame schema and column types
+
+DSL:
 ```kotlin
-df.update { columns }
+update { columns }
    [.where { filter } | .at(rowIndices) | .at(rowRange) ] // filter cells to be updated 
     .with { valueExpression } | .withNull() | .notNull { valueExpression }
 
 filter = DataRow.(OldValue) -> Boolean
 valueExpression = DataRow.(OldValue) -> NewValue
 ```
-Examples
+Examples:
 ```kotlin
 df.update { price }.with { it * 2 }
 df.update { age }.where { name == "Alice" }.with { 20 }
@@ -182,7 +192,7 @@ Adds new column to `DataFrame`
 ```kotlin
 add(columnName) { rowExpression }
 ```
-See [row expressions](rows.md#row-expressions)
+See [row expressions](api/rows.md#row-expressions)
 ```kotlin
 df.add("year of birth") { 2021 - age }
 df.add("diff") { temperature - (prev?.temperature ?: 0) }
@@ -207,7 +217,7 @@ Removes columns from `DataFrame`
 df.remove { columns }
 df - { columns }
 ```
-See [Column Selectors](columns.md#column-selectors) for column selection syntax
+See [Column Selectors](api/columns.md#column-selectors) for column selection syntax
 ### convert
 Changes the type of columns. Supports automatic type conversions between value types `Int`, `String`, `Double`, `Long`, `Short`, `Float`,`BigDecimal`, 'LocalDateTime', 'LocalDate', 'LocalTime'
 ```kotlin
@@ -334,7 +344,7 @@ df.move { columns }.toLeft()
 df.move { columns }.toRight()
 df.move { columns }.after { column }
 ```
-See [Column Selectors](columns.md) for column selection syntax.
+See [Column Selectors](api/columns.md) for column selection syntax.
 
 Columns in `DataFrame` can be ordered hierarchically and form a tree structure. Therefore column can be addressed by `ColumnPath` that represents a list of column names.
 

@@ -1,4 +1,4 @@
-[//]: # (title: Mix)
+[//]: # (title: Combine several DataFrames)
 
 # Merge dataframes
 ## Add columns

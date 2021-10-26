@@ -1,49 +1,5 @@
-[//]: # (title: Columns)
+[//]: # (title: ColumnsSelector)
 
-## Column types
-
-### ValueColumn
-
-### ColumnGroup
-
-### FrameColumn
-
-## Column conditions
-When one or several columns are selected based no condition, the following column properties are available:
-* `name: String`
-* `path: ColumnPath`
-* `type: KType`
-* `hasNulls: Boolean`
-
-## Column accessors
-
-`ColumnAccessors` can be used for typed data access in `DataFrame`. `ColumnAccessor` stores the name and type of the column, but doesn't contain column values.
-
-<!---docs.Base.CreateColumns.namedColumnWithoutValues-->
-```kotlin
-val name by column<String>()
-val col = column<String>("name")
-```
-<!---END-->
-All `DataFrame` operations support typed data access via `ColumnAccessors`:
-<!---docs.Base.CreateColumns.colRefForTypedAccess-->
-```kotlin
-df.filter { it[name].startsWith("A") }
-df.sortBy { col }
-```
-<!---END-->
-`ColumnAccessor` can be converted to `DataColumn` by adding values:
-```kotlin
-val col = name.withValues("Alice", "Bob")
-```
-or for `Iterable` of values:
-```kotlin
-val values = listOf("Alice", "Bob")
-val col = name.withValues(values)
-val col = values.toColumn(name)
-```
-
-## Column selectors
 `DataFrame` provides a column selection DSL for selecting arbitrary set of columns.
 Column selectors are used in many operations:
 ```kotlin
@@ -54,7 +10,7 @@ df.gather { columns }.into(keyName, valueName)
 df.move { columns }.under(groupName)
 ```
 
-### Select single column
+## Select single column
 <tabs>
 <tab title="Generated properties">
 ``` kotlin 
@@ -86,7 +42,7 @@ column.rename("newName") // column with a new name
 </tab>
 </tabs>
 
-### Select several columns
+## Select several columns
 
 ```kotlin
 columnSet1 and columnSet2 // union of column sets
@@ -105,7 +61,7 @@ allBefore(column) // all columns that are located to the left from target column
 allUntil(column) // all columns that are located to the left from target column, including target column
 ```
 
-# Special column selectors
+## Special column selectors
 ```kotlin
 // Select columns of specific type, with optional predicate
 stringCols { condition }
@@ -118,7 +74,7 @@ nameContains(text)
 startsWith(prefix)
 endsWith(suffix)
 ```
-### Modify resulting column set
+## Modify resulting column set
 ```kotlin
 columnSet.drop(n) // remove first 'n' columns from column set
 columnSet.take(n) // take first 'n' columns of column sest
