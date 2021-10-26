@@ -1,3 +1,3 @@
-[//]: # (title: Interop with Standard Library)
+[//]: # (title: Interop with Stdlib)
 
 Start writing here.

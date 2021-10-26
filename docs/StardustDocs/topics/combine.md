@@ -1,4 +1,4 @@
-[//]: # (title: Combine several DataFrames)
+[//]: # (title: Multiple DataFrames)
 
 # Merge dataframes
 ## Add columns
