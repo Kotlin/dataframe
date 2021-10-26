@@ -1,3 +1,3 @@
-[//]: # (title: schema.md)
+[//]: # (title: schema)
 
 Start writing here.

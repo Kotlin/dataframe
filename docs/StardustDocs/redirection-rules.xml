@@ -9,4 +9,8 @@
         <description>Created after removal of "Reference" from Dataframe</description>
         <accepts>reference.html</accepts>
     </rule>
+    <rule id="5dd2e2ea">
+        <description>Created after removal of "Modify DataFrame schema" from Dataframe</description>
+        <accepts>modifyschema.html</accepts>
+    </rule>
 </rules>

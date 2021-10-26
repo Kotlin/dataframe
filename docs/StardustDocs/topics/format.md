@@ -1,3 +1,3 @@
-[//]: # (title: format.md)
+[//]: # (title: format)
 
 Start writing here.
