@@ -14,7 +14,7 @@ df.schema() // schema of columns
 
 <!---END-->
 
-To count number of rows that satisfy to [condition](rows.md#row-conditions) use `count`:
+To count number of rows that satisfy to [condition](DataRow.md#row-conditions) use `count`:
 
 <!---FUN count-->
 
@@ -271,7 +271,7 @@ df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<St
 </tab></tabs>
 <!---END-->
 
-`groupBy` returns `GroupedDataFrame` which is `DataFrame` with one chosen [`FrameColumn`](columns.md#framecolumn) containing data groups.
+`groupBy` returns `GroupedDataFrame` which is `DataFrame` with one chosen [`FrameColumn`](DataColumn.md#framecolumn) containing data groups.
 
 ### Aggregations
 
@@ -437,8 +437,8 @@ df.groupBy("city").meanOf("mean ratio") {
 <!---END-->
 
 To get all column values for every group without aggregation use `values` function: 
-* for [ValueColumn](columns.md#valuecolumn) of type `T` it will gather group values into lists of type `Many<T>`
-* for [ColumnGroup](columns.md#columngroup) it will gather group values into `DataFrame` and convert [ColumnGroup](columns.md#columngroup) into [FrameColumn](columns.md#framecolumn)
+* for [ValueColumn](DataColumn.md#valuecolumn) of type `T` it will gather group values into lists of type `Many<T>`
+* for [ColumnGroup](DataColumn.md#columngroup) it will gather group values into `DataFrame` and convert [ColumnGroup](DataColumn.md#columngroup) into [FrameColumn](DataColumn.md#framecolumn)
 
 <!---FUN groupByWithoutAggregation-->
 <tabs>

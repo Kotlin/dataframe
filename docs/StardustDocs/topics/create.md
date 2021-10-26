@@ -2,7 +2,7 @@
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
 ## Columns
-Create [ValueColumn](columns.md#valuecolumn) with values and name: 
+Create [ValueColumn](DataColumn.md#valuecolumn) with values and name: 
 
 <!---FUN createValueColumn-->
 
@@ -41,7 +41,7 @@ val column = columnOf("Alice", "Bob") named "name"
 
 <!---END-->
 
-Create [ColumnGroup](columns.md#columngroup) with several [columns](columns.md):
+Create [ColumnGroup](DataColumn.md#columngroup) with several [columns](DataColumn.md):
 
 <!---FUN createColumnGroup-->
 
@@ -56,7 +56,7 @@ listOf(firstName, lastName).toColumn("name")
 
 <!---END-->
 
-Create [FrameColumn](columns.md#framecolumn) with several DataFrames:
+Create [FrameColumn](DataColumn.md#framecolumn) with several DataFrames:
 
 <!---FUN createFrameColumn-->
 
@@ -73,7 +73,7 @@ listOf(df1, df2).toColumn("groups")
 
 ### Column Accessors
 
-Create [column accessors](columns.md#column-accessors) and store it in the variable with the same name as column name:
+Create [column accessors](DataColumn.md#column-accessors) and store it in the variable with the same name as column name:
 
 <!---FUN createColumnAccessor-->
 
@@ -93,7 +93,7 @@ val accessor = column<String>("complex column name")
 
 <!---END-->
 
-You can also create column accessors to access [ColumnGroup](columns.md#columngroup) or [FrameColumn](columns.md#framecolumn)
+You can also create column accessors to access [ColumnGroup](DataColumn.md#columngroup) or [FrameColumn](DataColumn.md#framecolumn)
 
 <!---FUN createGroupOrFrameColumnAccessor-->
 
@@ -104,7 +104,7 @@ val frames by frameColumn()
 
 <!---END-->
 
-And you can create deep column accessors for columns within [ColumnGroup](columns.md#columngroup)
+And you can create deep column accessors for columns within [ColumnGroup](DataColumn.md#columngroup)
 
 <!---FUN createDeepColumnAccessor-->
 
@@ -204,9 +204,9 @@ val df = persons.createDataFrame()
 
 <!---END-->
 
-It reads object properties using reflection and creates [ValueColumns](columns.md#valuecolumn) for every property. Scope of properties is currently limited by the observed at compile time type of elements 
+It reads object properties using reflection and creates [ValueColumns](DataColumn.md#valuecolumn) for every property. Scope of properties is currently limited by the observed at compile time type of elements 
 
-To object graph traversal and convert nested objects into [ColumnGroups](columns.md#columngroup) and [FrameColumns](columns.md#framecolumn) you should specify `depth` parameter
+To object graph traversal and convert nested objects into [ColumnGroups](DataColumn.md#columngroup) and [FrameColumns](DataColumn.md#framecolumn) you should specify `depth` parameter
 
 <!---FUN createDataFrameFromDeepObject-->
 
