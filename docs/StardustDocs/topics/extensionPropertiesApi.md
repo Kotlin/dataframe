@@ -1,3 +1,3 @@
-[//]: # (title: extensionPropertiesApi.md)
+[//]: # (title: Extension properties API)
 
 Start writing here.

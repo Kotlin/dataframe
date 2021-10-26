@@ -1,3 +1,3 @@
-[//]: # (title: stringApi.md)
+[//]: # (title: String API)
 
 Start writing here.

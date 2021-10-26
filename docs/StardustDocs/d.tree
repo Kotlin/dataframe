@@ -68,29 +68,40 @@
             <toc-element id="aggregatePivot.md" toc-title="pivot"/>
         </toc-element>
         <toc-element id="modify.md"  show-structure-depth="3" toc-title="Modify data">
-            <toc-element id="filtering.md" toc-title="Filter">
-                <toc-element id="filter.md"/>
+            <toc-element id="filterRows.md">
+                <toc-element id="filter.md">
+                    <toc-element id="filterBy.md"/>
+                </toc-element>
                 <toc-element id="drop.md">
                     <toc-element id="dropNulls.md"/>
                     <toc-element id="dropNa.md"/>
                 </toc-element>
                 <toc-element id="take.md"/>
-                <toc-element id="distinct.md"/>
+                <toc-element id="distinct.md">
+                    <toc-element id="distinctBy.md"/>
+                </toc-element>
             </toc-element>
-            <toc-element id="sort.md" toc-title="Sort"/>
+            <toc-element id="sortRows.md">
+                <toc-element id="sortBy.md"/>
+                <toc-element id="sortByDesc.md"/>
+                <toc-element id="sortWith.md"/>
+                <toc-element id="shuffled.md"/>
+            </toc-element>
             <toc-element id="modifyCells.md">
-                <toc-element id="update.md"/>
+                <toc-element id="update.md">
+                    <toc-element id="fillNulls.md"/>
+                    <toc-element id="nullToZero.md"/>
+                </toc-element>
                 <toc-element id="convert.md"/>
                 <toc-element id="parse.md"/>
-                <toc-element id="fillNulls.md"/>
-                <toc-element id="nullToZero.md"/>
             </toc-element>
             <toc-element toc-title="Split/merge cells" id="splitMerge.md">
                 <toc-element id="split.md"/>
                 <toc-element id="merge.md"/>
                 <toc-element id="explode.md"/>
+                <toc-element id="mergeRows.md"/>
             </toc-element>
-            <toc-element id="append.md" toc-title="Append"/>
+            <toc-element id="append.md"/>
         </toc-element>
         <toc-element id="modifySchema.md">
             <toc-element id="select.md"/>

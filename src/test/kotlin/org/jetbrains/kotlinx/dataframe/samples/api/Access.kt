@@ -188,34 +188,55 @@ class Access : TestBase() {
     }
 
     @Test
-    fun filterDrop_properties() {
+    fun filter_properties() {
         // SampleStart
         df.filter { age > 18 && name.firstName.startsWith("A") }
+        // SampleEnd
+    }
+
+    @Test
+    fun filter_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val name by columnGroup()
+        val firstName by name.column<String>()
+
+        df.filter { age() > 18 && firstName().startsWith("A") }
+        // or
+        df.filter { it[age] > 18 && it[firstName].startsWith("A") }
+        // SampleEnd
+    }
+
+    @Test
+    fun filter_strings() {
+        // SampleStart
+        df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }.nrow shouldBe 1
+        // SampleEnd
+    }
+
+    @Test
+    fun drop_properties() {
+        // SampleStart
         df.drop { weight == null || city == null }
         // SampleEnd
     }
 
     @Test
-    fun filterDrop_accessors() {
+    fun drop_accessors() {
         // SampleStart
-        val age by column<Int>()
         val name by columnGroup()
         val weight by column<Int?>()
         val city by column<String?>()
-        val firstName by name.column<String>()
 
-        df.filter { age() > 18 && firstName().startsWith("A") }
         df.drop { weight() == null || city() == null }
         // or
-        df.filter { it[age] > 18 && it[firstName].startsWith("A") }
         df.drop { it[weight] == null || it[city] == null }
         // SampleEnd
     }
 
     @Test
-    fun filterDrop_strings() {
+    fun drop_strings() {
         // SampleStart
-        df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }.nrow shouldBe 1
         df.drop { it["weight"] == null || it["city"] == null }
         // SampleEnd
     }
