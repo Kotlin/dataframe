@@ -27,7 +27,7 @@
         </toc-element>
     </toc-element>
     <toc-element id="types.md">
-        <toc-element id="columns.md"/>
+        <toc-element id="DataColumn.md"/>
         <toc-element id="DataRow.md"/>
         <toc-element id="DataFrame.md"/>
     </toc-element>

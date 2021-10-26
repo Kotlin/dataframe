@@ -192,7 +192,7 @@ Adds new column to `DataFrame`
 ```kotlin
 add(columnName) { rowExpression }
 ```
-See [row expressions](api/rows.md#row-expressions)
+See [row expressions](DataRow.md#row-expressions)
 ```kotlin
 df.add("year of birth") { 2021 - age }
 df.add("diff") { temperature - (prev?.temperature ?: 0) }
@@ -217,7 +217,7 @@ Removes columns from `DataFrame`
 df.remove { columns }
 df - { columns }
 ```
-See [Column Selectors](api/columns.md#column-selectors) for column selection syntax
+See [Column Selectors](ColumnSelectors.md) for column selection syntax
 ### convert
 Changes the type of columns. Supports automatic type conversions between value types `Int`, `String`, `Double`, `Long`, `Short`, `Float`,`BigDecimal`, 'LocalDateTime', 'LocalDate', 'LocalTime'
 ```kotlin
@@ -344,7 +344,7 @@ df.move { columns }.toLeft()
 df.move { columns }.toRight()
 df.move { columns }.after { column }
 ```
-See [Column Selectors](api/columns.md) for column selection syntax.
+See [Column Selectors](ColumnSelectors.md) for column selection syntax.
 
 Columns in `DataFrame` can be ordered hierarchically and form a tree structure. Therefore column can be addressed by `ColumnPath` that represents a list of column names.
 

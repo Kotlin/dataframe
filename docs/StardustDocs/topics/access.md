@@ -48,7 +48,7 @@ df.col(0).asColumnGroup().col(1)
 ```
 
 <!---END-->
-Get single column by [condition](columns.md#column-conditions):
+Get single column by [condition](DataColumn.md#column-conditions):
 
 <!---FUN getColumnByCondition-->
 
@@ -70,7 +70,7 @@ df[2]
 
 <!---END-->
 
-Get single row by [condition](rows.md#row-conditions):
+Get single row by [condition](DataRow.md#row-conditions):
 
 <!---FUN getRowByCondition-->
 <tabs>
@@ -199,10 +199,10 @@ df.dropLast(5) // all rows except last 5
 <!---END-->
 To select several top / bottom rows see [take / takeLast / drop / dropLast](#take--takelast--drop--droplast) operations
 
-To select several rows based on [row condition](rows.md#row-conditions) see [filter / drop](#filter-drop) operations
+To select several rows based on [row condition](DataRow.md#row-conditions) see [filter / drop](#filter-drop) operations
 
 #### filter / drop
-Filter rows by [row condition](rows.md#row-conditions)
+Filter rows by [row condition](DataRow.md#row-conditions)
 `filter` keeps only rows that satisfy condition
 `drop` removes all rows that satisfy condition
 
@@ -316,7 +316,7 @@ df.distinct("age", "name") shouldBe df.select("age", "name").distinct()
 
 To keep only the first row for every group of rows, grouped by some condition, use `distinctBy` or `distinctByExpr`
 * `distinctBy` returns `DataFrame` with rows having distinct values in given columns.
-* `distinctByExpr` returns `DataFrame` with rows having distinct values returned by given [row expression](rows.md#row-expressions).
+* `distinctByExpr` returns `DataFrame` with rows having distinct values returned by given [row expression](DataRow.md#row-expressions).
 
 <!---FUN distinctBy-->
 <tabs>
