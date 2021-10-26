@@ -1,3 +1,3 @@
-[//]: # (title: GroupBy)
+[//]: # (title: groupBy)
 
 Start writing here.
