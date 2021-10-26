@@ -43,7 +43,7 @@
         </toc-element>
         <toc-element id="access.md" toc-title="Access"  show-structure-depth="3">
             <toc-element id="indexing.md"/>
-            <toc-element id="iterating.md" toc-title="Iterate"/>
+            <toc-element id="iterate.md"/>
             <toc-element id="getRow.md">
                 <toc-element id="single.md"/>
                 <toc-element id="first.md"/>
@@ -52,7 +52,7 @@
             <toc-element id="getColumn.md"/>
             <toc-element id="slice.md"/>
         </toc-element>
-        <toc-element id="generalInfo.md" toc-title="Info">
+        <toc-element id="info.md" toc-title="Info">
             <toc-element id="schema.md"/>
             <toc-element id="describe.md"/>
         </toc-element>
@@ -77,11 +77,13 @@
                 <toc-element id="take.md"/>
                 <toc-element id="distinct.md"/>
             </toc-element>
-            <toc-element id="sorting.md" toc-title="Sort"/>
+            <toc-element id="sort.md" toc-title="Sort"/>
             <toc-element id="modifyCells.md">
                 <toc-element id="update.md"/>
                 <toc-element id="convert.md"/>
                 <toc-element id="parse.md"/>
+                <toc-element id="fillNulls.md"/>
+                <toc-element id="nullToZero.md"/>
             </toc-element>
             <toc-element toc-title="Split/merge cells" id="splitMerge.md">
                 <toc-element id="split.md"/>
@@ -98,6 +100,7 @@
             <toc-element id="insert.md"/>
             <toc-element id="replace.md"/>
             <toc-element id="rename.md"/>
+            <toc-element id="groupBy.md"/>
             <toc-element id="pivot.md"/>
             <toc-element id="gather.md"/>
             <toc-element id="modifyHierarchy.md">
@@ -106,7 +109,7 @@
                 <toc-element id="flatten.md"/>
             </toc-element>
         </toc-element>
-        <toc-element id="combine.md"  show-structure-depth="3">
+        <toc-element id="multipleDataFrames.md" show-structure-depth="3">
             <toc-element id="join.md"/>
             <toc-element id="concat.md"/>
             <toc-element id="union.md"/>
