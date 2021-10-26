@@ -1,3 +1,3 @@
-[//]: # (title: columnAccessorsApi.md)
+[//]: # (title: Column accessors API)
 
 Start writing here.
