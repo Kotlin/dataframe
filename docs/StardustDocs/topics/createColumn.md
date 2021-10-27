@@ -1,9 +1,11 @@
 [//]: # (title: Create DataColumn)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
-Create [ValueColumn](DataColumn.md#valuecolumn) with values and name:
+Create [ValueColumn](DataColumn.md#valuecolumn) with `columnOf`:
+* column name is defined by variable name
+* column type is detected in compile time using [reified type parameters](https://kotlinlang.org/docs/inline-functions.html#reified-type-parameters)
 
-<!---FUN createValueColumn-->
+<!---FUN createValueByColumnOf-->
 
 ```kotlin
 val name by columnOf("Alice", "Bob")
@@ -13,8 +15,21 @@ listOf("Alice", "Bob").toColumn("name")
 
 <!---END-->
 
-By default, column type is determined in compile time using [reified type parameters](https://kotlinlang.org/docs/inline-functions.html#reified-type-parameters)
-If you want column type to be computed dynamically based on actual values, set `inferType` flag. To check values only for nullability set 'inferNulls' flag:
+You can assign column name explicitly using `named` infix function:
+
+<!---FUN createColumnRenamed-->
+
+```kotlin
+val column = columnOf("Alice", "Bob") named "name"
+```
+
+<!---END-->
+
+Convert `Iterable` of values into column:
+
+<!---FUN createValueByToColumn-->
+
+To compute column type at runtime by scanning through actual values, set `inferType` flag. To inspect values only for nullability set `inferNulls` flag:
 
 <!---FUN createValueColumnInferred-->
 
@@ -26,16 +41,6 @@ values.toColumn("data", inferType = true).type willBe typeOf<Number>()
 values.toColumn("data", inferNulls = true).type willBe typeOf<Any>()
 values.toColumn("data", inferType = true, inferNulls = false).type willBe typeOf<Number?>()
 values.toColumnOf<Number?>("data").type willBe typeOf<Number?>()
-```
-
-<!---END-->
-
-You can assign column name explicitly, if you don't want to infer it from variable name:
-
-<!---FUN createColumnRenamed-->
-
-```kotlin
-val column = columnOf("Alice", "Bob") named "name"
 ```
 
 <!---END-->

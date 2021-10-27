@@ -1,7 +1,5 @@
 [//]: # (title: Create DataFrame)
 
-There are several ways to convert a piece of data into `DataFrame`.
-
 DataFrame with 2 columns and 3 rows:
 
 <!---FUN createDataFrameOf-->
@@ -36,7 +34,7 @@ val df = dataFrameOf(1..5).randomDouble(7)
 
 <!---END-->
 
-DataFrame with 3 columns, fill each column with 15 'true' values:
+DataFrame with 3 columns, fill each column with 15 `true` values:
 
 <!---FUN createDataFrameFillConstant-->
 
@@ -47,7 +45,7 @@ val df = dataFrameOf(names).fill(15, true)
 
 <!---END-->
 
-DataFrame from [columns](DataColumn.md)
+DataFrame from [DataColumns](DataColumn.md)
 
 <!---FUN createDataFrameFromColumns-->
 
@@ -74,7 +72,7 @@ val df = map.toDataFrame()
 
 ### from objects
 
-To create `DataFrame` from list of any objects use `createDataFrame`:
+To create `DataFrame` from list of any objects use `createDataFrame` extension available for any `Iterable`:
 
 <!---FUN createDataFrameFromObject-->
 
@@ -89,7 +87,7 @@ val df = persons.createDataFrame()
 
 It reads object properties using reflection and creates [ValueColumns](DataColumn.md#valuecolumn) for every property. Scope of properties is currently limited by the observed at compile time type of elements
 
-To object graph traversal and convert nested objects into [ColumnGroups](DataColumn.md#columngroup) and [FrameColumns](DataColumn.md#framecolumn) you should specify `depth` parameter
+specify `depth` parameter to perform object graph traversal and convert nested objects into [ColumnGroups](DataColumn.md#columngroup) and [FrameColumns](DataColumn.md#framecolumn): 
 
 <!---FUN createDataFrameFromDeepObject-->
 
@@ -108,8 +106,7 @@ val df = students.createDataFrame(depth = 2)
 
 <!---END-->
 
-If you want to have more detailed control over object graph transformation you can use configuration DSL.
-It will allow you to exclude particular properties or classes from object graph traversal, compute additional columns and configure column grouping.
+For detailed control over object graph transformation use configuration DSL. It allows you to exclude particular properties or classes from object graph traversal, compute additional columns and configure column grouping.
 
 <!---FUN createDataFrameFromDeepObjectWithExclude-->
 

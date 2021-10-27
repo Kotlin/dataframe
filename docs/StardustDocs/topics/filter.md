@@ -10,7 +10,6 @@ Keeps only rows that satisfy [row condition](DataRow.md#row-conditions)
 
 ```kotlin
 df.filter { age > 18 && name.firstName.startsWith("A") }
-df.drop { weight == null || city == null }
 ```
 
 </tab>
@@ -19,15 +18,11 @@ df.drop { weight == null || city == null }
 ```kotlin
 val age by column<Int>()
 val name by columnGroup()
-val weight by column<Int?>()
-val city by column<String?>()
 val firstName by name.column<String>()
 
 df.filter { age() > 18 && firstName().startsWith("A") }
-df.drop { weight() == null || city() == null }
 // or
 df.filter { it[age] > 18 && it[firstName].startsWith("A") }
-df.drop { it[weight] == null || it[city] == null }
 ```
 
 </tab>
@@ -35,7 +30,6 @@ df.drop { it[weight] == null || it[city] == null }
 
 ```kotlin
 df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }.nrow shouldBe 1
-df.drop { it["weight"] == null || it["city"] == null }
 ```
 
 </tab></tabs>
