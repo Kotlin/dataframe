@@ -47,7 +47,7 @@ val df = dataFrameOf(names).fill(15, true)
 
 <!---END-->
 
-DataFrame from [columns](#columns)
+DataFrame from [columns](DataColumn.md)
 
 <!---FUN createDataFrameFromColumns-->
 

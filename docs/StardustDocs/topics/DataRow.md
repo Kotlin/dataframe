@@ -16,7 +16,7 @@
 If some of these properties clash with generated extension properties, they still can be accessed as functions `index()`, `prev()`, `next()`
 
 ## Row expressions
-Row expressions provide a value for every row of `DataFrame` and are used in [add](modify.md#add), [filter](access.md#filter-drop), forEach, [update](modify.md#update) and other operations
+Row expressions provide a value for every row of `DataFrame` and are used in [add](add.md), [filter](filter.md), [forEach](iterate.md), [update](update.md) and other operations
 ```kotlin
 df.add("fullName") { firstName + " " + lastName }
 ```
