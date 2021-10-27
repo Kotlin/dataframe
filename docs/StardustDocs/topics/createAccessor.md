@@ -1,6 +1,6 @@
 [//]: # (title: Create ColumnAccessor)
 
-Create [column accessors](DataColumn.md#column-accessors) and store it in the variable with the same name as column name:
+Create [column accessors](DataColumn.md#column-accessors):
 
 <!---FUN createColumnAccessor-->
 
@@ -10,7 +10,7 @@ val name by column<String>()
 
 <!---END-->
 
-To explicitly specify column name pass it as an argument:
+Column name is defined by the variable name. To explicitly specify column name you should pass it as an argument:
 
 <!---FUN createColumnAccessorRenamed-->
 
@@ -31,7 +31,7 @@ val frames by frameColumn()
 
 <!---END-->
 
-And you can create deep column accessors for columns within [ColumnGroup](DataColumn.md#columngroup)
+To create deep column accessor that references nested columns inside [ColumnGroups](DataColumn.md#columngroup) apply `column()` extension at parent accessor:
 
 <!---FUN createDeepColumnAccessor-->
 

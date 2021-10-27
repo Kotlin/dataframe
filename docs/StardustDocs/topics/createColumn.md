@@ -9,8 +9,6 @@ Create [ValueColumn](DataColumn.md#valuecolumn) with `columnOf`:
 
 ```kotlin
 val name by columnOf("Alice", "Bob")
-// or
-listOf("Alice", "Bob").toColumn("name")
 ```
 
 <!---END-->
@@ -28,6 +26,12 @@ val column = columnOf("Alice", "Bob") named "name"
 Convert `Iterable` of values into column:
 
 <!---FUN createValueByToColumn-->
+
+```kotlin
+listOf("Alice", "Bob").toColumn("name")
+```
+
+<!---END-->
 
 To compute column type at runtime by scanning through actual values, set `inferType` flag. To inspect values only for nullability set `inferNulls` flag:
 

@@ -12,7 +12,7 @@ df[2]
 
 <!---END-->
 
-Get single row by [condition](DataRow.md#row-conditions):
+To get single row by [row condition](DataRow.md#row-conditions) use [single](single.md), [first](first.md), [minBy](minmax.md), [maxBy](minmax.md) and other operations:
 
 <!---FUN getRowByCondition-->
 <tabs>
