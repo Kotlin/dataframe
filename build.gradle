@@ -168,7 +168,7 @@ kotlinter {
 
 korro {
     docs = fileTree(rootProject.rootDir) {
-        include("docs/StardustDocs/topics/api/*.md")
+        include("docs/StardustDocs/topics/*.md")
     }
 
     samples = fileTree(rootProject.rootDir) {

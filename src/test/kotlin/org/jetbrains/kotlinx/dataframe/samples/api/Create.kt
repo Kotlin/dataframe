@@ -23,10 +23,15 @@ import kotlin.reflect.typeOf
 class Create : TestBase() {
 
     @Test
-    fun createValueColumn() {
+    fun createValueByColumnOf() {
         // SampleStart
         val name by columnOf("Alice", "Bob")
-        // or
+        // SampleEnd
+    }
+
+    @Test
+    fun createValueByToColumn() {
+        // SampleStart
         listOf("Alice", "Bob").toColumn("name")
         // SampleEnd
     }
