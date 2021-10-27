@@ -1,27 +1,90 @@
 [//]: # (title: pivot)
 
-Converts two key-value columns into several columns using values in `key` column as new column names and values in `value` column as new column values.
-This is reverse to [gather](gather.md)
-```
-df.pivot { keyColumns }.withIndex { indexColumns }.into { rowExpression }
-```
-**Input**
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-| city | day | temperature
-|--------|---------|---------
-| London | 18 | 3
-| London | 19 | 5
-| London | 20 | 4
-| Milan | 18 | 7
-| Milan | 20 | 3
-| Milan | 21 | 5
+Splits the rows of `DataFrame` and groups them horizontally into new columns based on values from one or several columns of original `DataFrame`.
+
+Pass a column to `pivot` function to use its values as grouping keys and names for new columns. To create multi-level column hierarchy, pass several columns to `pivot`:
+
+<!---FUN pivot-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
-df.pivot { day.map { "Feb, $it" } }.withIndex { city }.into { temperature }
+df.pivot { city }
+df.pivot { city and name.firstName }
 ```
-**Output**
 
-| city | Feb, 18 | Feb, 19 | Feb, 20 | Feb, 21
-|--------|---------|---------|--------|---
-| London | 3 | 5 | 4 | null
-| Milan  | 7 | null | 3 | 5
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val city by column<String?>()
+val name by columnGroup()
+val firstName by name.column<String>()
+
+df.pivot { city }
+df.pivot { city and firstName }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.pivot("city")
+df.pivot { "city"() and "name"["firstName"] }
+```
+
+</tab></tabs>
+<!---END-->
+
+`pivot` returns `PivotedDataFrame` which is an intermediate object that can be configured for further transformation and aggregation of data
+
+To create matrix table that is expanded both horizontally and vertically, apply `groupBy` function at `PivotedDataFrame` passing the columns to be used for vertical grouping. Reversed order of `pivot` and `groupBy` operations will produce the same result.
+
+<!---FUN pivotGroupBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.pivot { city }.groupBy { name }
+// same as
+df.groupBy { name }.pivot { city }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val city by column<String?>()
+val name by columnGroup()
+
+df.pivot { city }.groupBy { name }
+// same as
+df.groupBy { name }.pivot { city }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.pivot("city").groupBy("name")
+// same as
+df.groupBy("name").pivot("city")
+```
+
+</tab></tabs>
+<!---END-->
+
+Combination of `pivot` and `groupBy` operations returns `GroupedPivot` that can be used for further aggregation of data groups within matrix cells. 
+
+`PivotedDataFrame` can be converted to `DataRow` and `GroupedPivot` can be converted to `DataFrame` without any additional transformations. Generated columns will have type `FrameColumn` and will contain data groups (similar to `GroupedDataFrame`)
+
+<!---FUN pivotAsDataRowOrFrame-->
+
+```kotlin
+df.pivot { city }.toDataRow()
+df.pivot { city }.groupBy { name }.toDataFrame()
+```
+
+<!---END-->

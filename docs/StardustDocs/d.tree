@@ -15,7 +15,7 @@
         </toc-element>
         <toc-element id="hierarchical.md">
             <toc-element toc-title="JSON" id="json.md"/>
-            <toc-element toc-title="Object tree" id="objectTree.md"/>
+            <toc-element toc-title="Object tree" id="iterableToDataFrame.md"/>
         </toc-element>
         <toc-element id="schemas.md"/>
     </toc-element>
@@ -34,7 +34,9 @@
     <toc-element id="operations.md">
         <toc-element id="create.md"  show-structure-depth="3">
             <toc-element id="createColumn.md" toc-title="DataColumn"/>
-            <toc-element id="createDataFrame.md" toc-title="DataFrame"/>
+            <toc-element id="createDataFrame.md" toc-title="DataFrame">
+                <toc-element id="iterableToDataFrame.md" toc-title="from objects"/>
+            </toc-element>
             <toc-element id="createAccessor.md" toc-title="ColumnAccessor"/>
         </toc-element>
         <toc-element id="io.md">
@@ -57,6 +59,7 @@
             <toc-element id="describe.md"/>
         </toc-element>
         <toc-element id="statistics.md">
+            <toc-element id="count.md"/>
             <toc-element id="minmax.md"/>
             <toc-element id="sum.md"/>
             <toc-element id="median.md"/>
@@ -114,7 +117,9 @@
             <toc-element id="insert.md"/>
             <toc-element id="replace.md"/>
             <toc-element id="rename.md"/>
-            <toc-element id="groupBy.md"/>
+            <toc-element id="groupBy.md">
+                <toc-element id="groupByUnion.md"/>
+            </toc-element>
             <toc-element id="pivot.md"/>
             <toc-element id="gather.md"/>
             <toc-element id="modifyHierarchy.md">

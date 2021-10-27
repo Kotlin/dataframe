@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.count
+import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.div
 import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.groupBy
@@ -46,9 +47,11 @@ class Analyze : TestBase() {
     @Test
     fun basicInfo() {
         // SampleStart
-        df.nrow() // number of rows
-        df.ncol() // number of columns
-        df.schema() // schema of columns
+        df.nrow()
+        df.ncol()
+        df.columnNames()
+        df.schema()
+        df.describe()
         // SampleEnd
     }
 
