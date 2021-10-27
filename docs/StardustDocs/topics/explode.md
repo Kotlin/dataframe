@@ -1,6 +1,6 @@
 [//]: # (title: explode)
 
-Splits list-like values and spreads them vertically. Reverse to [mergeRows](#mergerows)
+Splits list-like values and spreads them vertically. Reverse to [mergeRows](mergeRows.md)
 The following types of values will be splitted:
 * List
 * DataFrame

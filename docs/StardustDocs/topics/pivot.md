@@ -1,7 +1,7 @@
 [//]: # (title: pivot)
 
 Converts two key-value columns into several columns using values in `key` column as new column names and values in `value` column as new column values.
-This is reverse to [gather](#gather)
+This is reverse to [gather](gather.md)
 ```
 df.pivot { keyColumns }.withIndex { indexColumns }.into { rowExpression }
 ```

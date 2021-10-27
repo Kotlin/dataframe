@@ -1,6 +1,6 @@
 [//]: # (title: merge)
 
-Merges several columns into a single column. Reverse operation to [split](#split)
+Merges several columns into a single column. Reverse operation to [split](split.md)
 ```
 df.merge { columns }.into(columnPath)
 df.merge { columns }.by(delimeters, options).into(columnPath)

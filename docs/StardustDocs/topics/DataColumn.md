@@ -8,11 +8,15 @@
 
 ### FrameColumn
 
+[How to create columns](createColumn.md)
+
 ## Column properties
 * `name: String`
 * `path: ColumnPath`
 * `type: KType`
 * `hasNulls: Boolean`
+
+## Column conditions
 
 ## Column accessors
 

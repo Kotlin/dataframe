@@ -1,6 +1,6 @@
 [//]: # (title: group)
 
-Group columns into column groups. It is a special case of [move](#move) operation
+Group columns into column groups. It is a special case of [move](move.md) operation
 ```
 df.group { columns }.into(groupName)
 df.group { columns }.into { groupNameExpression }

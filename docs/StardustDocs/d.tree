@@ -73,10 +73,13 @@
                     <toc-element id="filterBy.md"/>
                 </toc-element>
                 <toc-element id="drop.md">
+                    <toc-element id="dropLast.md"/>
                     <toc-element id="dropNulls.md"/>
                     <toc-element id="dropNa.md"/>
                 </toc-element>
-                <toc-element id="take.md"/>
+                <toc-element id="take.md">
+                    <toc-element id="takeLast.md"/>
+                </toc-element>
                 <toc-element id="distinct.md">
                     <toc-element id="distinctBy.md"/>
                 </toc-element>

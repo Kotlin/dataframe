@@ -1,3 +1,3 @@
 [//]: # (title: sortByDesc)
 
-Similar to [sortBy](#sortby), but uses reversed sort direction
+Similar to [sortBy](sortBy.md), but uses reversed sort direction

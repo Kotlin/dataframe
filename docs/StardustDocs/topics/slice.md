@@ -18,6 +18,6 @@ df.dropLast(5) // all rows except last 5
 
 <!---END-->
 
-To select several top / bottom rows see [take / takeLast / drop / dropLast](#take--takelast--drop--droplast) operations
+To select several top / bottom rows see [take](take.md) / [takeLast](takeLast.md) / [drop](drop.md) / [dropLast](dropLast.md) operations
 
-To select several rows based on [row condition](DataRow.md#row-conditions) see [filter / drop](#filter-drop) operations
+To select several rows based on [row condition](DataRow.md#row-conditions) see [filter](filter.md) / [drop](drop.md) operations

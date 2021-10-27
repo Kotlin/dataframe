@@ -7,7 +7,7 @@ Default split behavior:
 * for `List` values: split into list elements
 
 ## Split horizontally
-Reverse operation to [merge](#merge)
+Reverse operation to [merge](merge.md)
 ```
 df.split { columns }
     [.by(delimeters) | .by { splitter }] // how to split cell value
@@ -51,7 +51,7 @@ fun digits(num: Int) = sequence {
 df.split { number }.by { digits(it) }.inward().into { "digit$it" }
 ```
 ## Split vertically
-Reverse operation to [mergeRows](#mergerows). See [explode](#explode) for details
+Reverse operation to [mergeRows](mergeRows.md). See [explode](explode.md) for details
 ```
 df.split { columns }.intoRows()
 df.split { columns }.by(delimeters).intoRows()
@@ -59,4 +59,4 @@ df.split { columns }.by { splitter }.intoRows()
 
 splitter = (T) -> List<Any>
 ```
-When neither `delimeters` or `splitter` are specified, `split().intoRows()` is equivalent of [explode](#explode)
+When neither `delimeters` or `splitter` are specified, `split().intoRows()` is equivalent of [explode](explode.md)
