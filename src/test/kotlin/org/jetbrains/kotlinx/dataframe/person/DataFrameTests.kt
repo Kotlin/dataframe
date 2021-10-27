@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.person
 
-import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.doubles.ToleranceMatcher
 import io.kotest.matchers.should
