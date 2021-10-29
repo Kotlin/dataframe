@@ -47,6 +47,7 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.toAccessor
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.frameColumn
+import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.between
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
@@ -290,14 +291,14 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `update cells by index`() {
-        val res = typed.update { age }.at(2, 4).with(100)
+        val res = typed.update { age }.at(2, 4).withConst(100)
         val expected = typed.map { if (index == 2 || index == 4) 100 else age }
         res.age.toList() shouldBe expected
     }
 
     @Test
     fun `update cells by index range`() {
-        val res = typed.update { age }.at(2..4).with(100)
+        val res = typed.update { age }.at(2..4).withConst(100)
         val expected = typed.map { if (index in 2..4) 100 else age }
         res.age.toList() shouldBe expected
     }
@@ -309,14 +310,14 @@ class DataFrameTests : BaseTest() {
             this["weight"].toList() shouldBe expected
         }
 
-        typed.fillNulls { it.weight }.with(0).check()
-        typed.fillNulls { weight }.with(0).check()
-        typed.fillNulls(typed.weight).with(0).check()
+        typed.fillNulls { it.weight }.withConst(0).check()
+        typed.fillNulls { weight }.withConst(0).check()
+        typed.fillNulls(typed.weight).withConst(0).check()
 
-        df.fillNulls { weight }.with(0).check()
-        df.fillNulls(weight).with(0).check()
+        df.fillNulls { weight }.withConst(0).check()
+        df.fillNulls(weight).withConst(0).check()
 
-        df.fillNulls("weight").with(0).check()
+        df.fillNulls("weight").withConst(0).check()
 
         typed.nullToZero { it.weight }.check()
         typed.nullToZero { weight }.check()
@@ -883,7 +884,7 @@ class DataFrameTests : BaseTest() {
         df2["age"].type() shouldBe getType<Double?>()
         val merged = df.concat(df2)
         merged["age"].type() shouldBe getType<Number?>()
-        val updated = merged.update("age") { "age"<Number?>()?.toDouble() }
+        val updated = merged.convert("age") { "age"<Number?>()?.toDouble() }
         updated["age"].type() shouldBe getType<Double?>()
     }
 
@@ -1055,7 +1056,7 @@ class DataFrameTests : BaseTest() {
         merged[cityList].type() shouldBe getType<Many<String?>>()
 
         val expected = typed.groupBy { name }.aggregate { it.city.toSet() into "city" }
-        val actual = merged.update { cityList }.with { it.toSet() }
+        val actual = merged.convert(cityList).with { it.toSet() }
 
         actual shouldBe expected
 
@@ -1073,7 +1074,7 @@ class DataFrameTests : BaseTest() {
 
         val expected =
             typed.dropNulls { city }.groupBy { name }.aggregate { it.city.toSet() as Set<String> into "city" }
-        val actual = merged.update { cityList }.with { it.toSet() }
+        val actual = merged.convert { cityList }.with { it.toSet() }
 
         actual shouldBe expected
     }
@@ -1125,7 +1126,7 @@ class DataFrameTests : BaseTest() {
         val merged = typed.merge { age and city and weight }.by(" - ").into("info")
         val info by column<String>()
         val res = merged.split { info }.by("-").into("age", "city", "weight")
-        val expected = typed.update { age and city and weight }.with { it.toString() }
+        val expected = typed.convert { age and city and weight }.with { it.toString() }
         res shouldBe expected
     }
 
@@ -1134,7 +1135,7 @@ class DataFrameTests : BaseTest() {
         val merged = typed.merge { age and city and weight }.by(",").into("info")
         val info by column<String>()
         val res = merged.split(info).into("age", "city", "weight")
-        val expected = typed.update { age and city and weight }.with { it.toString() }
+        val expected = typed.convert { age and city and weight }.with { it.toString() }
         res shouldBe expected
     }
 
@@ -1172,7 +1173,7 @@ class DataFrameTests : BaseTest() {
         val merged = typed.merge { age and city and weight }.by(", ").into("info")
         val info by column<String?>()
         val res = merged.split(info).by(",").into("age", "city", "weight")
-        val expected = typed.update { age and city and weight }.with { it.toString() }
+        val expected = typed.convert { age and city and weight }.with { it.toString() }
         res shouldBe expected
     }
 
@@ -1197,7 +1198,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `generic column type`() {
-        val d = typed.update { city }.with { it?.toCharArray()?.toList() ?: emptyList() }
+        val d = typed.convert { city }.with { it?.toCharArray()?.toList() ?: emptyList() }
         println(d.city.type())
     }
 
@@ -1292,7 +1293,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `parse`() {
-        val toStr = typed.update { weight }.notNull { it.toString() }
+        val toStr = typed.convert { weight }.notNull { it.toString() }
         val weightStr = "weight".toColumnOf<String?>()
         val parsed = toStr.convert { weightStr }.toInt()
         parsed shouldBe typed
@@ -1323,7 +1324,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun corr() {
-        val fixed = typed.fillNulls { weight }.with(60)
+        val fixed = typed.fillNulls { weight }.withConst(60)
         val res = fixed.corr()
         res.ncol() shouldBe 3
         res.nrow() shouldBe 2
@@ -1460,7 +1461,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `replace with expression`() {
         val res = typed.replace { age }.with { 2021 - age named "year" }
-        val expected = typed.update { age }.with { 2021 - age }.rename { age }.into("year")
+        val expected = typed.convert { age }.with { 2021 - age }.rename { age }.into("year")
         res shouldBe expected
     }
 
@@ -1532,7 +1533,24 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `update nullable column with not null`() {
         val df = dataFrameOf("name", "value")("Alice", 1, null, 2)
-        df.update("name").at(0).with("ALICE")
+        df.update("name").at(0).withConst("ALICE")
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun `update with wrong type`() {
+        typed.update("age").with { "string" }
+    }
+
+    @Test
+    fun `update with null`(){
+        val updated = typed.update { age }.at(2).withNull()
+        updated.age[2] shouldBe null
+        updated.age.hasNulls shouldBe true
+    }
+
+    @Test
+    fun `update nulls`(){
+        typed.update { weight }.where { it == null }.with { 15 }.weight.hasNulls shouldBe false
     }
 
     @Test
@@ -1744,7 +1762,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `drop where any na`() {
-        val updated = typed.update { weight }.with { if (name == "Alice") Double.NaN else it?.toDouble() }
+        val updated = typed.convert { weight }.with { if (name == "Alice") Double.NaN else it?.toDouble() }
         val expected = updated.count { city != null && !("weight".doubleOrNull()?.isNaN() ?: true) }
 
         fun AnyFrame.check() = nrow() shouldBe expected
@@ -1757,7 +1775,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `drop where all na`() {
-        val updated = typed.update { weight }.with { if (name == "Alice") Double.NaN else it?.toDouble() }
+        val updated = typed.convert { weight }.with { if (name == "Alice") Double.NaN else it?.toDouble() }
         val expected = updated.count { city != null || !("weight".doubleOrNull()?.isNaN() ?: true) }
 
         fun AnyFrame.check() = nrow() shouldBe expected
@@ -1879,7 +1897,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `find the longest string`() {
         val longestCityName = "Taumatawhakatangihangakoauauotamateaturipukakapikimaungahoronukupokaiwhenuakitanatahu"
-        val updated = typed.update { city }.where { it == "Dubai" }.with(longestCityName)
+        val updated = typed.update { city }.where { it == "Dubai" }.withConst(longestCityName)
         updated.valuesNotNull { stringCols() }.maxByOrNull { it.length } shouldBe longestCityName
     }
 

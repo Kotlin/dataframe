@@ -69,6 +69,8 @@ public fun <T> DataFrame<T>.dropNa(whereAllNa: Boolean = false): DataFrame<T> = 
 
 //region nullToZero
 
+public fun <T> DataFrame<T>.nullToZero(): DataFrame<T> = nullToZero { dfsOf() }
+
 public fun <T> DataFrame<T>.nullToZero(selector: ColumnsSelector<T, Number?>): DataFrame<T> {
     val cols = getColumnsWithPaths(selector).groupBy { it.type }
 
@@ -83,10 +85,10 @@ public fun <T> DataFrame<T>.nullToZero(cols: Iterable<ColumnReference<Number?>>)
 
 internal fun <T> DataFrame<T>.nullColumnToZero(type: KType, cols: Iterable<ColumnReference<Number?>>) =
     when (type.jvmErasure) {
-        Double::class -> fillNulls(cols).with { .0 }
-        Int::class -> fillNulls(cols).with { 0 }
-        Long::class -> fillNulls(cols).with { 0L }
-        BigDecimal::class -> fillNulls(cols).with { BigDecimal.ZERO }
+        Double::class -> fillNulls(cols).cast<Double>().withConst(.0)
+        Int::class -> fillNulls(cols).cast<Int>().withConst(0)
+        Long::class -> fillNulls(cols).cast<Long>().withConst(0L)
+        BigDecimal::class -> fillNulls(cols).cast<BigDecimal>().withConst(BigDecimal.ZERO)
         else -> throw IllegalArgumentException()
     }
 

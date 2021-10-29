@@ -12,6 +12,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.jvmErasure
 
 public interface DataCollector<T> {
 
@@ -53,7 +54,16 @@ internal open class ColumnDataCollector(initCapacity: Int = 0, val getType: (KCl
     override fun toColumn(name: String) = guessColumnType(name, values)
 }
 
-internal class TypedColumnDataCollector<T>(initCapacity: Int = 0, val type: KType) : DataCollectorBase<T?>(initCapacity) {
+internal class TypedColumnDataCollector<T>(initCapacity: Int = 0, val type: KType, val checkTypes: Boolean = true) : DataCollectorBase<T?>(initCapacity) {
+
+    internal val kclass = type.jvmErasure
+
+    override fun add(value: T?) {
+        if(checkTypes && value != null && !value.javaClass.kotlin.isSubclassOf(kclass)){
+            throw IllegalArgumentException("Can not add value of class ${value.javaClass.kotlin.qualifiedName} to column of type $type. Value = $value")
+        }
+        super.add(value)
+    }
 
     override fun toColumn(name: String) = createColumn(name, type)
 }
