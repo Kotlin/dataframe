@@ -20,7 +20,7 @@ internal open class DataRowImpl<T>(private val index: Int, val owner: DataFrame<
 
     override operator fun <R> get(column: ColumnReference<R>): R {
         ColumnAccessTracker.registerColumnAccess(column.name())
-        return owner[column][index]
+        return column.getValue(this)
     }
 
     override fun index() = index

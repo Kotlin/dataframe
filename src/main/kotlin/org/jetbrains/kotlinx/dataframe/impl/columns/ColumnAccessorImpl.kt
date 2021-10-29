@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
@@ -33,4 +34,6 @@ internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
     override fun rename(newName: String) = ColumnAccessorImpl<T>(path.dropLast(1) + newName)
 
     override fun <C> get(column: ColumnReference<C>) = ColumnAccessorImpl<C>(path + column.path())
+
+    override fun getValue(row: AnyRow) = row.get(path) as T
 }

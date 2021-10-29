@@ -1,6 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.columns.resolveFor
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import kotlin.reflect.KType
 
@@ -65,4 +67,6 @@ internal abstract class DataColumnImpl<T>(
     override fun slice(range: IntRange) = createWithValues(values.subList(range.start, range.endInclusive + 1))
 
     protected abstract fun createWithValues(values: List<T>, hasNulls: Boolean? = null): DataColumn<T>
+
+    override fun getValue(row: AnyRow): T = resolveFor(row.df())[row.index()]
 }

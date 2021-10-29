@@ -1,5 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
+import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.impl.owner
+
 public data class ColumnPath(val path: List<String>) : List<String> by path, ColumnReference<Any?> {
 
     public constructor(name: String) : this(listOf(name))
@@ -25,4 +28,6 @@ public data class ColumnPath(val path: List<String>) : List<String> by path, Col
     override fun name(): String = path.last()
 
     override fun rename(newName: String): ColumnPath = ColumnPath(path.dropLast(1) + newName)
+
+    override fun getValue(row: AnyRow): Any? = row.owner[this][row.index()]
 }

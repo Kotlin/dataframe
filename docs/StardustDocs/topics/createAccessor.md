@@ -1,4 +1,5 @@
 [//]: # (title: Create ColumnAccessor)
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
 Create [column accessors](DataColumn.md#column-accessors):
 
@@ -20,7 +21,7 @@ val accessor = column<String>("complex column name")
 
 <!---END-->
 
-You can also create column accessors to access [ColumnGroup](DataColumn.md#columngroup) or [FrameColumn](DataColumn.md#framecolumn)
+You can create column accessors to access [ColumnGroup](DataColumn.md#columngroup) or [FrameColumn](DataColumn.md#framecolumn)
 
 <!---FUN createGroupOrFrameColumnAccessor-->
 
@@ -38,6 +39,18 @@ To create deep column accessor that references nested columns inside [ColumnGrou
 ```kotlin
 val name by columnGroup()
 val firstName by name.column<String>()
+```
+
+<!---END-->
+
+You can create transformed column accessor that will evaluate custom expression on every data access
+
+<!---FUN columnAccessorMap-->
+
+```kotlin
+val age by column<Int>()
+val year by age.map { 2021 - it }
+df.filter { year > 2000 }
 ```
 
 <!---END-->

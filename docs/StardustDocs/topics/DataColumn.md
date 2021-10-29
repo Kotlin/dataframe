@@ -1,47 +1,65 @@
 [//]: # (title: DataColumn)
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
-## Column types
+`DataColumn` represents a column of values. It can store primitive types, objects or other [`DataFrames`](DataFrame.md).
 
-### ValueColumn
+See [how to create columns](createColumn.md)
 
-### ColumnGroup
+### Column properties
+* `name: String` - unique name of the column
+* `type: KType` - type of elements in the column
+* `size: Int` - length of the column
+* `values: Iterable<T>` - column data
+* `hasNulls: Boolean` - flag indicating whether column contains `null` values
 
-### FrameColumn
+### Column kinds
+Every `DataColumn` can be one of three kinds: 
 
-[How to create columns](createColumn.md)
+#### ValueColumn
 
-## Column properties
-* `name: String`
-* `path: ColumnPath`
-* `type: KType`
-* `hasNulls: Boolean`
+`ValueColumn` represents a sequence of values. It can store values of primitive (integers, strings, decimals etc.) or object types. Currently, it uses [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) as underlying data storage.
+
+#### ColumnGroup
+
+`ColumnGroup` is a container for nested columns and is used to create column hierarchy. 
+
+#### FrameColumn
+
+`FrameColumn` is a special case of [`ValueColumn`](#valuecolumn) that stores other [`DataFrames`](DataFrame.md) as elements. `DataFrames` in `FrameColumn` may have different schemas.
+
+`FrameColumn` may appear after [reading](read.md) from JSON or other hierarchical data structures, or after grouping operations such as [groupBy](groupBy.md) or [pivot](pivot.md).  
 
 ## Column conditions
 
 ## Column accessors
 
-`ColumnAccessors` can be used for typed data access in `DataFrame`. `ColumnAccessor` stores the name and type of the column, but doesn't contain column values.
+`ColumnAccessors` are used for [typed data access](columnAccessorsApi.md) in `DataFrame`:
 
-<!---docs.Base.CreateColumns.namedColumnWithoutValues-->
+<!---FUN columnAccessorsUsage-->
+
 ```kotlin
-val name by column<String>()
-val col = column<String>("name")
+val age by column<Int>()
+
+df[age][3] + 5
+df[1][age] * 2
+df.sortBy(age)
+df.add("year of birth") { 2021 - age }
+df.filter { age > 30 }
 ```
+
 <!---END-->
-All `DataFrame` operations support typed data access via `ColumnAccessors`:
-<!---docs.Base.CreateColumns.colRefForTypedAccess-->
+
+See [all ways to create column accessor](createAccessor.md)
+
+`ColumnAccessor` stores column [`name`](#column-properties) or path to the column (for deep columns), has type argument of column [`type`](#column-properties), but doesn't contain any data.
+It can be converted to `DataColumn` by adding values:
+
+<!---FUN columnAccessorToColumn-->
+
 ```kotlin
-df.filter { it[name].startsWith("A") }
-df.sortBy { col }
+val age by column<Int>()
+val ageCol = age.withValues(15, 20)
 ```
+
 <!---END-->
-`ColumnAccessor` can be converted to `DataColumn` by adding values:
-```kotlin
-val col = name.withValues("Alice", "Bob")
-```
-or for `Iterable` of values:
-```kotlin
-val values = listOf("Alice", "Bob")
-val col = name.withValues(values)
-val col = values.toColumn(name)
-```
+

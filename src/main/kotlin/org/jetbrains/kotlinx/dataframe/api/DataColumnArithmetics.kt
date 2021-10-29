@@ -104,11 +104,5 @@ public operator fun BigDecimal.div(column: DataColumn<BigDecimal>): DataColumn<B
 
 public infix fun <T> DataColumn<T>.eq(value: T): DataColumn<Boolean> = isMatching { it == value }
 public infix fun <T> DataColumn<T>.neq(value: T): DataColumn<Boolean> = isMatching { it != value }
-public infix fun DataColumn<Int>.gt(value: Int): DataColumn<Boolean> = isMatching { it > value }
-public infix fun DataColumn<Double>.gt(value: Double): DataColumn<Boolean> = isMatching { it > value }
-public infix fun DataColumn<Float>.gt(value: Float): DataColumn<Boolean> = isMatching { it > value }
-public infix fun DataColumn<String>.gt(value: String): DataColumn<Boolean> = isMatching { it > value }
-public infix fun DataColumn<Int>.lt(value: Int): DataColumn<Boolean> = isMatching { it < value }
-public infix fun DataColumn<Double>.lt(value: Double): DataColumn<Boolean> = isMatching { it < value }
-public infix fun DataColumn<Float>.lt(value: Float): DataColumn<Boolean> = isMatching { it < value }
-public infix fun DataColumn<String>.lt(value: String): DataColumn<Boolean> = isMatching { it < value }
+public infix fun <T : Comparable<T>> DataColumn<T>.gt(value: T): DataColumn<Boolean> = isMatching { it > value }
+public infix fun <T : Comparable<T>> DataColumn<T>.lt(value: T): DataColumn<Boolean> = isMatching { it < value }

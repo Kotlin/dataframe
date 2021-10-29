@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
+import org.jetbrains.kotlinx.dataframe.columns.resolveFor
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.renderSchema
 import kotlin.reflect.KType
@@ -75,6 +76,8 @@ internal open class ColumnGroupImpl<T>(override val df: DataFrame<T>, val name: 
     override fun iterator() = df.iterator()
 
     override fun forceResolve() = ResolvingColumnGroup(df, name)
+
+    override fun getValue(row: AnyRow) = resolveFor(row.df())[row.index()]
 }
 
 internal class ResolvingColumnGroup<T>(df: DataFrame<T>, name: String) : ColumnGroupImpl<T>(df, name) {

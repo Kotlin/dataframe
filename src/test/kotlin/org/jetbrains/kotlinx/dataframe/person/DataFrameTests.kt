@@ -1024,7 +1024,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `pivot to matrix`() {
-        val others by column<Many<String>>("other")
+        val others = column<Many<String>>("other")
         val other by column<String>()
         val sum by column<Int>()
 
@@ -1051,7 +1051,7 @@ class DataFrameTests : BaseTest() {
     fun `merge rows keep nulls`() {
         val merged = typed.select { name and city }.mergeRows(dropNulls = false) { city }
 
-        val cityList by column<Many<String?>>().named("city")
+        val cityList = column<Many<String?>>().named("city")
         merged[cityList].sumOf { it.size } shouldBe typed.city.size
         merged[cityList].type() shouldBe getType<Many<String?>>()
 
@@ -1068,7 +1068,7 @@ class DataFrameTests : BaseTest() {
     fun `merge rows drop nulls`() {
         val merged = typed.select { name and city }.mergeRows(dropNulls = true) { city }
 
-        val cityList by column<Many<String>>().named("city")
+        val cityList = column<Many<String>>().named("city")
         merged[cityList].sumOf { it.size } shouldBe typed.city.dropNulls().size
         merged[cityList].type() shouldBe getType<Many<String>>()
 
@@ -1083,7 +1083,7 @@ class DataFrameTests : BaseTest() {
     fun splitRows() {
         val selected = typed.select { name and city }
         val nested = selected.mergeRows(dropNulls = false) { city }
-        val mergedCity by columnMany<String?>("city")
+        val mergedCity = columnMany<String?>("city")
         val res = nested.split { mergedCity }.intoRows()
         res.sortBy { name } shouldBe selected.sortBy { name }
     }
@@ -1986,5 +1986,19 @@ class DataFrameTests : BaseTest() {
         val ref by column<String>()
         val col = listOf("a", null).toColumn(ref)
         col.hasNulls() shouldBe true
+    }
+
+    @Test
+    fun `columnAccessor map linear`() {
+        // SampleStart
+        val age by column<Int>()
+        var counter = 0
+        val year by age.map {
+            counter++
+            2021 - it
+        }
+        df.filter { year > 2000 }.nrow() shouldBe 3
+        counter shouldBe df.nrow()
+        // SampleEnd
     }
 }

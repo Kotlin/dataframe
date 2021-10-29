@@ -117,6 +117,7 @@ public fun <T> DataFrame<T>.filter(predicate: RowFilter<T>): DataFrame<T> =
     }.let { get(it) }
 
 public fun <T> DataFrame<T>.filterBy(selector: ColumnSelector<T, Boolean>): DataFrame<T> = getRows(getColumn(selector).toList().toIndices())
+public fun <T> DataFrame<T>.filterBy(column: ColumnReference<Boolean>): DataFrame<T> = filterBy { column }
 
 // endregion
 

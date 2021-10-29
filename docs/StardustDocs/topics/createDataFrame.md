@@ -1,4 +1,5 @@
 [//]: # (title: Create DataFrame)
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
 DataFrame with 2 columns and 3 rows:
 
