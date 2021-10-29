@@ -2,11 +2,7 @@
 
 ## What is DataFrame
 
-`DataFrame` is a data structure that can store data of different types in columns. Every column in `DataFrame` is represented by `DataColumn` and has `name` and `type`. Columns can store primitive types (integers, strings, decimals etc.), objects or other `DataFrame`s. This allows `DataFrame` to represent hierarchical data structures, such as JSON objects.  
-
-Three types of `DataColumn`:
-
-`DataFrame` provides DSL for data transformations.
+`DataFrame` is a data structure that stores data in columns. Columns can store values, other columns or DataFrames, therefore `DataFrame` can represent any hierarchical data structure.   
 
 ## Basic Syntax
 

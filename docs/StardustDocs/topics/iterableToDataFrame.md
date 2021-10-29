@@ -1,4 +1,5 @@
 [//]: # (title: Convert objects to DataFrame)
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
 To create `DataFrame` from `Iterable` of any objects use `createDataFrame` extension:
 
@@ -43,7 +44,7 @@ val df = students.createDataFrame {
     // add value column
     "year of birth" from { 2021 - it.age }
 
-    // scan properties
+    // scan all properties
     properties(depth = 2) {
         exclude(Score::subject) // `subject` property will be skipped from object graph traversal
         preserve<Name>() // `Name` objects will be stored as-is without transformation into DataFrame
