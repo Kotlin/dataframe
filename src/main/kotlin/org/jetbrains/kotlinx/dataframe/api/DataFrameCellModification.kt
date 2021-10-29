@@ -110,9 +110,9 @@ public fun <T> DataFrame<T>.update(
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).withExpression(expression)
 
-public fun <T, C> UpdateClause<T, C>.withNull(): DataFrame<T> = asNullable().withConst(null)
+public fun <T, C> UpdateClause<T, C>.withNull(): DataFrame<T> = asNullable().withValue(null)
 
-public infix fun <T, C> UpdateClause<T, C>.withConst(value: C): DataFrame<T> = withExpression { value }
+public infix fun <T, C> UpdateClause<T, C>.withValue(value: C): DataFrame<T> = withExpression { value }
 
 // endregion
 
