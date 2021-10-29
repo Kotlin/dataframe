@@ -15,7 +15,6 @@
         </toc-element>
         <toc-element id="hierarchical.md">
             <toc-element toc-title="JSON" id="json.md"/>
-            <toc-element toc-title="Object tree" id="iterableToDataFrame.md"/>
         </toc-element>
         <toc-element id="schemas.md"/>
     </toc-element>
@@ -35,7 +34,7 @@
         <toc-element id="create.md"  show-structure-depth="3">
             <toc-element id="createColumn.md" toc-title="DataColumn"/>
             <toc-element id="createDataFrame.md" toc-title="DataFrame">
-                <toc-element id="iterableToDataFrame.md" toc-title="from objects"/>
+                <toc-element id="iterableToDataFrame.md" toc-title="Object Tree"/>
             </toc-element>
             <toc-element id="createAccessor.md" toc-title="ColumnAccessor"/>
         </toc-element>

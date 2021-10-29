@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-To compute one or several [statistics](#basic-statistics) per every group of `GroupedDataFrame` use `aggregate` function. Its body will be executed for every data group and has a receiver of type `DataFrame` that represents current data group being aggregated.
+To compute one or several [statistics](statistics.md) per every group of `GroupedDataFrame` use `aggregate` function. Its body will be executed for every data group and has a receiver of type `DataFrame` that represents current data group being aggregated.
 To add new column to the resulting `DataFrame`, pass the name of new column to infix function `into`:
 
 <!---FUN groupByAggregations-->
