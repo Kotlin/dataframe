@@ -100,8 +100,6 @@ subprojects {
 }
 
 kotlinPublications {
-    defaultGroup.set("org.jetbrains.kotlinx")
-
     sonatypeSettings(
             project.findProperty("kds.sonatype.user"),
             project.findProperty("kds.sonatype.password"),
@@ -135,7 +133,7 @@ kotlinPublications {
     }
 
     localRepositories {
-        it.maven {
+        maven {
             url = project.file(new File(buildDir, "maven")).toURI()
         }
     }
