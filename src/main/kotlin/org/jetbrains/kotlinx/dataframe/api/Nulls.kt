@@ -85,10 +85,10 @@ public fun <T> DataFrame<T>.nullToZero(cols: Iterable<ColumnReference<Number?>>)
 
 internal fun <T> DataFrame<T>.nullToZeroImpl(type: KType, cols: Iterable<ColumnReference<Number?>>) =
     when (type.jvmErasure) {
-        Double::class -> fillNulls(cols).cast<Double>().withConst(.0)
-        Int::class -> fillNulls(cols).cast<Int>().withConst(0)
-        Long::class -> fillNulls(cols).cast<Long>().withConst(0L)
-        BigDecimal::class -> fillNulls(cols).cast<BigDecimal>().withConst(BigDecimal.ZERO)
+        Double::class -> fillNulls(cols).cast<Double>().withValue(.0)
+        Int::class -> fillNulls(cols).cast<Int>().withValue(0)
+        Long::class -> fillNulls(cols).cast<Long>().withValue(0L)
+        BigDecimal::class -> fillNulls(cols).cast<BigDecimal>().withValue(BigDecimal.ZERO)
         else -> throw IllegalArgumentException()
     }
 

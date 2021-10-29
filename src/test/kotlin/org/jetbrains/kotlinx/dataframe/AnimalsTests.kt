@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.transpose
 import org.jetbrains.kotlinx.dataframe.api.update
-import org.jetbrains.kotlinx.dataframe.api.withConst
+import org.jetbrains.kotlinx.dataframe.api.withValue
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
@@ -35,7 +35,7 @@ class AnimalsTests {
 
     @Test
     fun `mean of empty`() {
-        val cleared = df.update { age }.withConst(Double.NaN).update { visits }.withNull()
+        val cleared = df.update { age }.withValue(Double.NaN).update { visits }.withNull()
         val mean = cleared.mean()
         mean.print()
         mean[age] shouldBe Double.NaN
