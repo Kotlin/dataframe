@@ -1,12 +1,18 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.createDataFrame
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.plus
 import org.jetbrains.kotlinx.dataframe.api.preserve
+import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
@@ -33,6 +39,36 @@ class Create : TestBase() {
     fun createValueByToColumn() {
         // SampleStart
         listOf("Alice", "Bob").toColumn("name")
+        // SampleEnd
+    }
+
+    @Test
+    fun columnAccessorsUsage() {
+        // SampleStart
+        val age by column<Int>()
+
+        df[age][3] + 5
+        df[1][age] * 2
+        df.sortBy(age)
+        df.add("year of birth") { 2021 - age }
+        df.filter { age > 30 }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnAccessorToColumn() {
+        // SampleStart
+        val age by column<Int>()
+        val ageCol = age.withValues(15, 20)
+        // SampleEnd
+    }
+
+    @Test
+    fun columnAccessorMap() {
+        // SampleStart
+        val age by column<Int>()
+        val year by age.map { 2021 - it }
+        df.filter { year > 2000 }
         // SampleEnd
     }
 

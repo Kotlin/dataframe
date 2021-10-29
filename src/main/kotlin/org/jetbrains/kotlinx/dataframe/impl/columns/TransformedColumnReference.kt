@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
@@ -20,4 +21,6 @@ internal class TransformedColumnReference<C, R>(
     override fun name() = source.name()
 
     override fun rename(newName: String) = TransformedColumnReference(source.rename(newName), transform, type)
+
+    override fun getValue(row: AnyRow) = transform(source.getValue(row))
 }

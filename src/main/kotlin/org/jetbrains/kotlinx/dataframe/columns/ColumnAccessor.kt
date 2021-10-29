@@ -5,7 +5,7 @@ import kotlin.reflect.KProperty
 
 public interface ColumnAccessor<T> : ColumnReference<T> {
 
-    public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = this
+    public override operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = rename(property.name)
 
     public operator fun <C> get(column: ColumnReference<C>): ColumnAccessor<C>
 

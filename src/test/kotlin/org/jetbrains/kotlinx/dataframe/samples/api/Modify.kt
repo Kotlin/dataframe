@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.api.dfsOf
 import org.jetbrains.kotlinx.dataframe.api.movingAverage
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
@@ -24,7 +23,7 @@ class Modify : TestBase() {
         df.update { dfsOf<String>() }.with { it.uppercase() }
         df.update { city }.where { name.firstName == "Alice" }.withValue("Paris")
         df.update { weight }.at(1..4).notNull { it / 2 }
-        df.update { name.lastName and age }.at(1,3,4).withNull()
+        df.update { name.lastName and age }.at(1, 3, 4).withNull()
         df.update { age }.with { movingAverage(2) { age }.toInt() }
         // SampleEnd
     }
@@ -36,7 +35,7 @@ class Modify : TestBase() {
         df.convert { dfsOf<String>() }.with { it.toCharArray().toList() }.print()
         df.update { city }.where { name.firstName == "Alice" }.withValue("Paris")
         df.update { weight }.at(1..4).notNull { it / 2 }
-        df.update { name.lastName and age }.at(1,3,4).withNull()
+        df.update { name.lastName and age }.at(1, 3, 4).withNull()
         df.update { age }.with { movingAverage(2) { age }.toInt() }
         // SampleEnd
     }

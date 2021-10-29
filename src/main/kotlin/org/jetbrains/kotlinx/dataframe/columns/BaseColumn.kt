@@ -49,7 +49,7 @@ public interface BaseColumn<out T> : ColumnReference<T> {
 
     public fun toSet(): Set<T>
 
-    public operator fun getValue(thisRef: Any?, property: KProperty<*>): BaseColumn<T> = (this as DataColumnInternal<*>).rename(property.name).forceResolve() as BaseColumn<T>
+    public override operator fun getValue(thisRef: Any?, property: KProperty<*>): BaseColumn<T> = (this as DataColumnInternal<*>).rename(property.name).forceResolve() as BaseColumn<T>
 }
 
 internal val <T> BaseColumn<T>.values: Iterable<T> get() = values()

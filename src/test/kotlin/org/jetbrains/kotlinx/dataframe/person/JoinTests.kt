@@ -119,7 +119,7 @@ class JoinTests : BaseTest() {
         res.nrow() shouldBe 3
         res.city.toSet() shouldBe typed.city.toSet() - typed2.origin.toSet()
 
-        val indexColumn by column<Int>("__index__")
+        val indexColumn = column<Int>("__index__")
         val withIndex = typed.addRowNumber(indexColumn)
         val joined = withIndex.filterJoin(typed2) { city.match(right.origin) }
         val joinedIndices = joined[indexColumn].toSet()

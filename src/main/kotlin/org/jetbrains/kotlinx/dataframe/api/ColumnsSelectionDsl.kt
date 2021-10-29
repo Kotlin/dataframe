@@ -250,6 +250,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
     public fun ColumnPath.comparables(): DataColumn<Comparable<Any?>> = getColumn(this)
     public fun ColumnPath.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this)
     public fun ColumnPath.numberOrNulls(): DataColumn<Number?> = getColumn(this)
+
+    public infix fun <C : Comparable<C>> ColumnReference<C>.gt(value: C): ColumnReference<Boolean> = map { it > value }
+    public infix fun <C : Comparable<C>> ColumnReference<C>.lt(value: C): ColumnReference<Boolean> = map { it < value }
+    public infix fun <C> ColumnReference<C>.eq(value: C): ColumnReference<Boolean> = map { it == value }
+    public infix fun <C> ColumnReference<C>.neq(value: C): ColumnReference<Boolean> = map { it != value }
+
     public fun nrow(): Int
     public fun rows(): Iterable<DataRow<T>>
     public fun rowsReversed(): Iterable<DataRow<T>>

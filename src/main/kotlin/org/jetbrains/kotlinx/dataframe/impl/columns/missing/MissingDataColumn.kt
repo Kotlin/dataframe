@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns.missing
 
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -44,4 +45,6 @@ internal abstract class MissingDataColumn<T> : DataColumnInternal<T> {
     override fun addParent(parent: ColumnGroup<*>) = throw UnsupportedOperationException()
 
     override fun forceResolve() = throw UnsupportedOperationException()
+
+    override fun getValue(row: AnyRow): T = throw UnsupportedOperationException()
 }

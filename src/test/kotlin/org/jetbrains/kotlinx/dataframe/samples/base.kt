@@ -38,14 +38,6 @@ class Base {
         }
 
         @Test
-        fun namedColumnWithoutValues() {
-            // SampleStart
-            val name by column<String>()
-            val col = column<String>("name")
-            // SampleEnd
-        }
-
-        @Test
         fun colRefForTypedAccess() {
             val df = dataFrameOf("name")("Alice", "Bob")
             val name by column<String>()
