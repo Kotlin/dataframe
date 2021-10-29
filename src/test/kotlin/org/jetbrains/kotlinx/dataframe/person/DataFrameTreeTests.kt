@@ -68,7 +68,6 @@ import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.with
-import org.jetbrains.kotlinx.dataframe.api.withConst
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.withRowCol
 import org.jetbrains.kotlinx.dataframe.column

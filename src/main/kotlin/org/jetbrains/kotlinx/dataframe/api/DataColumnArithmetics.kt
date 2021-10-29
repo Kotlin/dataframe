@@ -102,13 +102,13 @@ public operator fun DataColumn<BigDecimal>.times(value: BigDecimal): DataColumn<
 public operator fun DataColumn<BigDecimal>.div(value: BigDecimal): DataColumn<BigDecimal> = map { it / value }
 public operator fun BigDecimal.div(column: DataColumn<BigDecimal>): DataColumn<BigDecimal> = column.map { this / it }
 
-public infix fun <T> DataColumn<T>.eq(value: T): BooleanArray = isMatching { it == value }
-public infix fun <T> DataColumn<T>.neq(value: T): BooleanArray = isMatching { it != value }
-public infix fun DataColumn<Int>.gt(value: Int): BooleanArray = isMatching { it > value }
-public infix fun DataColumn<Double>.gt(value: Double): BooleanArray = isMatching { it > value }
-public infix fun DataColumn<Float>.gt(value: Float): BooleanArray = isMatching { it > value }
-public infix fun DataColumn<String>.gt(value: String): BooleanArray = isMatching { it > value }
-public infix fun DataColumn<Int>.lt(value: Int): BooleanArray = isMatching { it < value }
-public infix fun DataColumn<Double>.lt(value: Double): BooleanArray = isMatching { it < value }
-public infix fun DataColumn<Float>.lt(value: Float): BooleanArray = isMatching { it < value }
-public infix fun DataColumn<String>.lt(value: String): BooleanArray = isMatching { it < value }
+public infix fun <T> DataColumn<T>.eq(value: T): DataColumn<Boolean> = isMatching { it == value }
+public infix fun <T> DataColumn<T>.neq(value: T): DataColumn<Boolean> = isMatching { it != value }
+public infix fun DataColumn<Int>.gt(value: Int): DataColumn<Boolean> = isMatching { it > value }
+public infix fun DataColumn<Double>.gt(value: Double): DataColumn<Boolean> = isMatching { it > value }
+public infix fun DataColumn<Float>.gt(value: Float): DataColumn<Boolean> = isMatching { it > value }
+public infix fun DataColumn<String>.gt(value: String): DataColumn<Boolean> = isMatching { it > value }
+public infix fun DataColumn<Int>.lt(value: Int): DataColumn<Boolean> = isMatching { it < value }
+public infix fun DataColumn<Double>.lt(value: Double): DataColumn<Boolean> = isMatching { it < value }
+public infix fun DataColumn<Float>.lt(value: Float): DataColumn<Boolean> = isMatching { it < value }
+public infix fun DataColumn<String>.lt(value: String): DataColumn<Boolean> = isMatching { it < value }

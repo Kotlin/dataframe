@@ -68,6 +68,13 @@ internal fun BooleanArray.toIndices(): List<Int> {
     return res
 }
 
+internal fun List<Boolean>.toIndices(): List<Int> {
+    val res = ArrayList<Int>(size)
+    for (i in 0 until size)
+        if (this[i]) res.add(i)
+    return res
+}
+
 internal fun <T> Iterable<T>.equalsByElement(other: Iterable<T>): Boolean {
     val iterator1 = iterator()
     val iterator2 = other.iterator()

@@ -22,7 +22,7 @@ public interface ColumnsContainer<out T> {
     public operator fun <R> get(column: KProperty<DataFrame<R>>): FrameColumn<R> = get(column.name) as FrameColumn<R>
 
     public operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>>
-    public operator fun <C> get(columns: ColumnSelector<T, C>): DataColumn<C> = get(columns as ColumnsSelector<T, C>).single()
+    public operator fun <C> get(column: ColumnSelector<T, C>): DataColumn<C> = get(column as ColumnsSelector<T, C>).single()
 
     public fun <R> getColumn(column: ColumnReference<R>): DataColumn<R> = get(column)
     public fun <R> getColumn(column: ColumnReference<DataRow<R>>): ColumnGroup<R> = get(column)

@@ -75,7 +75,7 @@ public fun <T> DataFrame<T>.nullToZero(selector: ColumnsSelector<T, Number?>): D
     val cols = getColumnsWithPaths(selector).groupBy { it.type }
 
     return cols.asIterable().fold(this) { df, group ->
-        df.nullColumnToZero(group.key, group.value)
+        df.nullToZeroImpl(group.key, group.value)
     }
 }
 
@@ -83,7 +83,7 @@ public fun <T> DataFrame<T>.nullToZero(vararg cols: String): DataFrame<T> = null
 public fun <T> DataFrame<T>.nullToZero(vararg cols: ColumnReference<Number?>): DataFrame<T> = nullToZero { cols.toColumns() }
 public fun <T> DataFrame<T>.nullToZero(cols: Iterable<ColumnReference<Number?>>): DataFrame<T> = nullToZero { cols.toColumnSet() }
 
-internal fun <T> DataFrame<T>.nullColumnToZero(type: KType, cols: Iterable<ColumnReference<Number?>>) =
+internal fun <T> DataFrame<T>.nullToZeroImpl(type: KType, cols: Iterable<ColumnReference<Number?>>) =
     when (type.jvmErasure) {
         Double::class -> fillNulls(cols).cast<Double>().withConst(.0)
         Int::class -> fillNulls(cols).cast<Int>().withConst(0)

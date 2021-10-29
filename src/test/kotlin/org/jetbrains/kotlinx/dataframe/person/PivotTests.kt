@@ -40,7 +40,6 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
-import org.jetbrains.kotlinx.dataframe.api.withConst
 import org.jetbrains.kotlinx.dataframe.api.withGrouping
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnOf

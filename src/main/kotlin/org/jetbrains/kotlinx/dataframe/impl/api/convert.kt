@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowCellSelector
 import org.jetbrains.kotlinx.dataframe.RowColumnSelector
 import org.jetbrains.kotlinx.dataframe.api.ConvertClause

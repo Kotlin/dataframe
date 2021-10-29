@@ -16,9 +16,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.emptyMany
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
-import org.jetbrains.kotlinx.dataframe.impl.api.convertToTypeImpl
-import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowCellImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.convertToTypeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.defaultTimeZone
 import org.jetbrains.kotlinx.dataframe.impl.api.explodeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.mergeRowsImpl
@@ -58,7 +58,7 @@ public data class UpdateClause<T, C>(
     val filter: RowCellFilter<T, C>?,
     val selector: ColumnsSelector<T, C>
 ) {
-    public fun <R: C> cast(): UpdateClause<T, R> = UpdateClause(df, filter as RowCellFilter<T, R>?, selector as ColumnsSelector<T, R>)
+    public fun <R : C> cast(): UpdateClause<T, R> = UpdateClause(df, filter as RowCellFilter<T, R>?, selector as ColumnsSelector<T, R>)
 }
 
 public fun <T, C> UpdateClause<T, C>.where(predicate: RowCellFilter<T, C>): UpdateClause<T, C> = copy(filter = filter and predicate)
@@ -145,7 +145,7 @@ public inline fun <T, reified R> DataFrame<T>.convert(
     convert(*headPlusArray(firstCol, cols)).with(expression)
 
 public inline fun <T, C, reified R> ConvertClause<T, C?>.notNull(crossinline expression: RowCellSelector<T, C, R>): DataFrame<T> = with {
-    if(it == null) null
+    if (it == null) null
     else expression(this, it)
 }
 
@@ -253,7 +253,12 @@ public fun <T, C> DataFrame<T>.split(column: KProperty<C?>): Split<T, C> = split
 
 public interface Split<out T, out C>
 
-public fun <T, C> Split<T, C>.by(vararg delimiters: String, trim: Boolean = true, ignoreCase: Boolean = false, limit: Int = 0): SplitWithTransform<T, C, String> = with {
+public fun <T, C> Split<T, C>.by(
+    vararg delimiters: String,
+    trim: Boolean = true,
+    ignoreCase: Boolean = false,
+    limit: Int = 0
+): SplitWithTransform<T, C, String> = with {
     it.toString().split(*delimiters, ignoreCase = ignoreCase, limit = limit).let {
         if (trim) it.map { it.trim() }
         else it
