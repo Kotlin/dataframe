@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.GroupedRowFilter
 import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.concat
+import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.into
@@ -54,7 +55,7 @@ internal class GroupedDataFrameImpl<T, G>(
     }
 
     override fun <R> mapGroups(transform: Selector<DataFrame<G>?, DataFrame<R>?>) =
-        df.update(groups) { transform(it, it) }.asGroupedDataFrame { frameColumn<R>(groups.name()) }
+        df.convert(groups) { transform(it, it) }.asGroupedDataFrame { frameColumn<R>(groups.name()) }
 
     override fun toDataFrame(groupedColumnName: String?) = if (groupedColumnName == null || groupedColumnName == groups.name()) df else df.rename(groups).into(groupedColumnName)
 

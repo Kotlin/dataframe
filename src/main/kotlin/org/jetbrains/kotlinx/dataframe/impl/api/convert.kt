@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.RowCellSelector
+import org.jetbrains.kotlinx.dataframe.RowColumnSelector
 import org.jetbrains.kotlinx.dataframe.api.ConvertClause
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.to
@@ -25,10 +27,14 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
 
 @PublishedApi
-internal fun <T, C, R> ConvertClause<T, C>.with(type: KType, rowConverter: DataRow<T>.(C) -> R): DataFrame<T> =
-    to { col -> df.newColumn(type, col.name()) { rowConverter(it, it[col]) } }
+internal fun <T, C, R> ConvertClause<T, C>.convertRowCellImpl(type: KType, rowConverter: RowCellSelector<T, C, R>): DataFrame<T> =
+    to { col -> df.newColumn(type, col.name) { rowConverter(it, it[col]) } }
 
-internal fun AnyCol.convertToImpl(newType: KType): AnyCol {
+@PublishedApi
+internal fun <T, C, R> ConvertClause<T, C>.convertRowColumnImpl(type: KType, rowConverter: RowColumnSelector<T, C, R>): DataFrame<T> =
+    to { col -> df.newColumn(type, col.name) { rowConverter(it, col) } }
+
+internal fun AnyCol.convertToTypeImpl(newType: KType): AnyCol {
     val from = type
     val targetType = newType.withNullability(hasNulls)
     return when {

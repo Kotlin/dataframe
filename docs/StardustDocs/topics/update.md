@@ -1,6 +1,8 @@
 [//]: # (title: update)
 
-Changes values in some cells preserving original column types
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
+
+Changes the values in some cells preserving original column types
 
 Syntax:
 ```kotlin
@@ -8,7 +10,9 @@ update { columns }
    [.where { filter } | .at(rowIndices) ] 
     .with { valueExpression } | .withNull()
 ```
+
 where
+
 ```kotlin
 filter = DataRow.(OldValue) -> Boolean
 valueExpression = DataRow.(OldValue) -> NewValue

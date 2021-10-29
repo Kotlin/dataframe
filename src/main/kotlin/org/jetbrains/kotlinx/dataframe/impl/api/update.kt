@@ -5,12 +5,17 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.RowCellFilter
 import org.jetbrains.kotlinx.dataframe.api.UpdateClause
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.type
@@ -19,35 +24,24 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
 @PublishedApi
-internal fun <T, C> updateImpl(clause: UpdateClause<T, C>, expression: (DataRow<T>, DataColumn<C>) -> Any?): DataFrame<T> {
-    val removeResult = clause.df.removeImpl(clause.selector)
+internal fun <T, C> UpdateClause<T, C>.updateImpl(expression: (DataRow<T>, DataColumn<C>, C) -> C): DataFrame<T> = df.replace(selector).with { it.updateImpl(df, filter, expression)}
 
-    val nrow = clause.df.nrow()
-    val toInsert = removeResult.removedColumns.map {
-        val srcColumn = it.data.column as DataColumn<C>
-        val collector = when {
-            clause.toNull -> createDataCollector(nrow, srcColumn.type)
-            clause.typeSuggestions != null -> createDataCollector(nrow, clause.typeSuggestions)
-            clause.targetType != null -> createDataCollector(nrow, clause.targetType)
-            else -> createDataCollector(nrow, srcColumn.type())
+internal fun <T, C> DataColumn<C>.updateImpl(df: DataFrame<T>, filter: RowCellFilter<T, C>?, expression: (DataRow<T>, DataColumn<C>, C) -> C): DataColumn<C> {
+    val collector = createDataCollector<C>(size, type)
+    val src = this
+    if (filter == null) {
+        df.forEach { row ->
+            collector.add(expression(row, src, src[row.index]))
         }
-        if (clause.filter == null) {
-            clause.df.forEach { row ->
-                collector.add(expression(row, srcColumn))
-            }
-        } else {
-            clause.df.forEach { row ->
-                val currentValue = srcColumn[row.index]
-                val newValue = if (clause.filter.invoke(row, currentValue)) expression(row, srcColumn) else currentValue
-                collector.add(newValue)
-            }
+    } else {
+        df.forEach { row ->
+            val currentValue = row[src]
+            val newValue =
+                if (filter.invoke(row, currentValue)) expression(row, src, currentValue) else currentValue
+            collector.add(newValue)
         }
-
-        val newColumn = collector.toColumn(srcColumn.name())
-
-        ColumnToInsert(it.pathFromRoot(), newColumn, it)
     }
-    return removeResult.df.insertImpl(toInsert)
+    return collector.toColumn(src.name).typed()
 }
 
 /**
@@ -83,7 +77,7 @@ internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> = when
             when (it) {
                 null -> nulls = true
                 else -> {
-                    require(it.javaClass.kotlin.isSubclassOf(kclass)) { "Can not append value '$it' to column '$name' of type $type" }
+                    require(it.javaClass.kotlin.isSubclassOf(kclass)) { "Can not add value '$it' to column '$name' of type $type" }
                 }
             }
         }

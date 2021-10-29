@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.RowCellFilter
 import org.jetbrains.kotlinx.dataframe.RowCellSelector
@@ -17,7 +16,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.emptyMany
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
-import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.convertToTypeImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.convertRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.defaultTimeZone
 import org.jetbrains.kotlinx.dataframe.impl.api.explodeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.mergeRowsImpl
@@ -27,10 +28,8 @@ import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDate
 import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
-import org.jetbrains.kotlinx.dataframe.impl.api.with
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
@@ -43,13 +42,12 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
-import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
 // region update
 
-public fun <T, C> DataFrame<T>.update(selector: ColumnsSelector<T, C>): UpdateClause<T, C> = UpdateClause(this, null, selector, null, false, null)
+public fun <T, C> DataFrame<T>.update(selector: ColumnsSelector<T, C>): UpdateClause<T, C> = UpdateClause(this, null, selector)
 public fun <T, C> DataFrame<T>.update(cols: Iterable<ColumnReference<C>>): UpdateClause<T, C> = update { cols.toColumnSet() }
 public fun <T> DataFrame<T>.update(vararg cols: String): UpdateClause<T, Any?> = update { cols.toColumns() }
 public fun <T, C> DataFrame<T>.update(vararg cols: KProperty<C>): UpdateClause<T, C> = update { cols.toColumns() }
@@ -58,47 +56,25 @@ public fun <T, C> DataFrame<T>.update(vararg cols: ColumnReference<C>): UpdateCl
 public data class UpdateClause<T, C>(
     val df: DataFrame<T>,
     val filter: RowCellFilter<T, C>?,
-    val selector: ColumnsSelector<T, C>,
-    val targetType: KType?,
-    val toNull: Boolean = false,
-    val typeSuggestions: ((KClass<*>) -> KType)?
+    val selector: ColumnsSelector<T, C>
 ) {
-    public fun <R> cast(): UpdateClause<T, R> = UpdateClause(df, filter as RowCellFilter<T, R>?, selector as ColumnsSelector<T, R>, targetType, toNull, typeSuggestions)
-
-    public inline fun <reified R> toType(): UpdateClause<T, C> = UpdateClause(df, filter, selector, getType<R>(), toNull, typeSuggestions)
+    public fun <R: C> cast(): UpdateClause<T, R> = UpdateClause(df, filter as RowCellFilter<T, R>?, selector as ColumnsSelector<T, R>)
 }
 
-public fun <T, C> UpdateClause<T, C>.where(predicate: RowCellFilter<T, C>): UpdateClause<T, C> = copy(filter = predicate)
+public fun <T, C> UpdateClause<T, C>.where(predicate: RowCellFilter<T, C>): UpdateClause<T, C> = copy(filter = filter and predicate)
 
 public fun <T, C> UpdateClause<T, C>.at(rowIndices: Collection<Int>): UpdateClause<T, C> = where { index in rowIndices }
-public fun <T, C> UpdateClause<T, C>.at(vararg rowIndices: Int): UpdateClause<T, C> = at(rowIndices.toList())
+public fun <T, C> UpdateClause<T, C>.at(vararg rowIndices: Int): UpdateClause<T, C> = at(rowIndices.toSet())
 public fun <T, C> UpdateClause<T, C>.at(rowRange: IntRange): UpdateClause<T, C> = where { index in rowRange }
 
-public fun <T, C> UpdateClause<T, C>.guessTypes(): UpdateClause<T, C> = copy(targetType = null) { it.createStarProjectedType(false) }
+public infix fun <T, C> UpdateClause<T, C>.withRowCol(expression: RowColumnSelector<T, C, C>): DataFrame<T> = updateImpl { row, column, _ -> expression(row, column) }
 
-public fun <T, C> UpdateClause<T, C>.toType(type: KType): UpdateClause<T, C> = copy(targetType = type)
+public infix fun <T, C> UpdateClause<T, C>.with(expression: RowCellSelector<T, C, C>): DataFrame<T> = withExpression(expression)
 
-public fun <T, C> UpdateClause<T, C>.suggestTypes(vararg suggestions: Pair<KClass<*>, KType>): UpdateClause<T, C> {
-    val map = suggestions.toMap()
-    return copy(targetType = null) { map[it] ?: it.createStarProjectedType(false) }
-}
+public fun <T, C> UpdateClause<T, C>.asNullable(): UpdateClause<T, C?> = this as UpdateClause<T, C?>
 
-public inline infix fun <T, C, reified R> UpdateClause<T, C>.withRowCol(noinline expression: RowColumnSelector<T, C, R>): DataFrame<T> = updateImpl(copy(targetType = targetType ?: getType<R>()), expression)
-
-public fun <T, C, R> UpdateClause<T, C>.with(targetType: KType?, expression: RowCellSelector<T, C, R>): DataFrame<T> = updateImpl(copy(filter = null, targetType = targetType)) { row, column ->
-    val currentValue = column[row.index]
-    if (filter?.invoke(row, currentValue) == false) {
-        currentValue as R
-    } else expression(row, currentValue)
-}
-
-public inline infix fun <T, C, reified R> UpdateClause<T, C>.with(noinline expression: RowCellSelector<T, C, R>): DataFrame<T> = copy(targetType = targetType ?: getType<R>()).withExpression(expression)
-
-public fun <T, C, R> UpdateClause<T, C>.withExpression(expression: RowCellSelector<T, C, R>): DataFrame<T> = updateImpl(copy(filter = null)) { row, column ->
-    val currentValue = column[row.index]
-    if (filter?.invoke(row, currentValue) == false) {
-        currentValue
-    } else expression(row, currentValue)
+public fun <T, C> UpdateClause<T, C>.withExpression(expression: RowCellSelector<T, C, C>): DataFrame<T> = updateImpl { row, _, value ->
+    expression(row, value)
 }
 
 internal infix fun <T, C> RowCellFilter<T, C>?.and(other: RowCellFilter<T, C>): RowCellFilter<T, C> {
@@ -109,44 +85,34 @@ internal infix fun <T, C> RowCellFilter<T, C>?.and(other: RowCellFilter<T, C>): 
 
 public fun <T, C> UpdateClause<T, C?>.notNull(): UpdateClause<T, C> = copy(filter = filter and { it != null }) as UpdateClause<T, C>
 
-public inline fun <T, C, reified R> UpdateClause<T, C?>.notNull(noinline expression: RowCellSelector<T, C, R>): DataFrame<T> = updateImpl(copy(filter = null, targetType = targetType ?: getType<R>())) { row, column ->
-    val currentValue = column[row.index]
-    if (currentValue == null) {
-        null
-    } else expression(row, currentValue)
+public fun <T, C> UpdateClause<T, C?>.notNull(expression: RowCellSelector<T, C, C>): DataFrame<T> = notNull().updateImpl { row, column, value ->
+    expression(row, value)
 }
 
-public inline fun <T, C, reified R> DataFrame<T>.update(
+public fun <T, C> DataFrame<T>.update(
     firstCol: ColumnReference<C>,
     vararg cols: ColumnReference<C>,
-    noinline expression: RowCellSelector<T, C, R>
+    expression: RowCellSelector<T, C, C>
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
 
-public inline fun <T, C, reified R> DataFrame<T>.update(
+public fun <T, C> DataFrame<T>.update(
     firstCol: KProperty<C>,
     vararg cols: KProperty<C>,
-    noinline expression: RowCellSelector<T, C, R>
+    expression: RowCellSelector<T, C, C>
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
 
-public inline fun <T, reified R> DataFrame<T>.update(
+public fun <T> DataFrame<T>.update(
     firstCol: String,
     vararg cols: String,
-    noinline expression: RowCellSelector<T, Any?, R>
+    expression: RowCellSelector<T, Any?, Any?>
 ): DataFrame<T> =
-    update(*headPlusArray(firstCol, cols)).with(expression)
+    update(*headPlusArray(firstCol, cols)).withExpression(expression)
 
-public fun <T, C> UpdateClause<T, C>.withNull(): DataFrame<T> = updateImpl(copy(filter = null, targetType = null, typeSuggestions = null, toNull = true)) { row, column ->
-    if (filter != null) {
-        val currentValue = column[row.index]
-        if (!filter.invoke(row, currentValue)) {
-            currentValue
-        } else null
-    } else null
-}
+public fun <T, C> UpdateClause<T, C>.withNull(): DataFrame<T> = asNullable().withConst(null)
 
-public inline infix fun <T, C, reified R> UpdateClause<T, C>.with(value: R): DataFrame<T> = with { value }
+public infix fun <T, C> UpdateClause<T, C>.withConst(value: C): DataFrame<T> = withExpression { value }
 
 // endregion
 
@@ -157,14 +123,45 @@ public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): ConvertCla
 public fun <T> DataFrame<T>.convert(vararg columns: String): ConvertClause<T, Any?> = convert { columns.toColumns() }
 public fun <T, C> DataFrame<T>.convert(vararg columns: ColumnReference<C>): ConvertClause<T, C> = convert { columns.toColumns() }
 
+public inline fun <T, C, reified R> DataFrame<T>.convert(
+    firstCol: ColumnReference<C>,
+    vararg cols: ColumnReference<C>,
+    noinline expression: RowCellSelector<T, C, R>
+): DataFrame<T> =
+    convert(*headPlusArray(firstCol, cols)).with(expression)
+
+public inline fun <T, C, reified R> DataFrame<T>.convert(
+    firstCol: KProperty<C>,
+    vararg cols: KProperty<C>,
+    noinline expression: RowCellSelector<T, C, R>
+): DataFrame<T> =
+    convert(*headPlusArray(firstCol, cols)).with(expression)
+
+public inline fun <T, reified R> DataFrame<T>.convert(
+    firstCol: String,
+    vararg cols: String,
+    noinline expression: RowCellSelector<T, Any?, R>
+): DataFrame<T> =
+    convert(*headPlusArray(firstCol, cols)).with(expression)
+
+public inline fun <T, C, reified R> ConvertClause<T, C?>.notNull(crossinline expression: RowCellSelector<T, C, R>): DataFrame<T> = with {
+    if(it == null) null
+    else expression(this, it)
+}
+
 public data class ConvertClause<T, C>(val df: DataFrame<T>, val selector: ColumnsSelector<T, C>) {
+    public fun <R> cast(): ConvertClause<T, R> = ConvertClause(df, selector as ColumnsSelector<T, R>)
+
     public inline fun <reified D> to(): DataFrame<T> = to(getType<D>())
 }
 
 public fun <T> ConvertClause<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
 
-public inline fun <T, C, reified R> ConvertClause<T, C>.with(noinline rowConverter: DataRow<T>.(C) -> R): DataFrame<T> =
-    with(getType<R>(), rowConverter)
+public inline fun <T, C, reified R> ConvertClause<T, C>.with(noinline rowConverter: RowCellSelector<T, C, R>): DataFrame<T> =
+    convertRowCellImpl(getType<R>(), rowConverter)
+
+public inline fun <T, C, reified R> ConvertClause<T, C>.withRowCol(noinline expression: RowColumnSelector<T, C, R>): DataFrame<T> =
+    convertRowColumnImpl(getType<R>(), expression)
 
 public fun <T, C> ConvertClause<T, C>.to(columnConverter: (DataColumn<C>) -> AnyCol): DataFrame<T> =
     df.replace(selector).with { columnConverter(it) }
@@ -178,7 +175,7 @@ public fun AnyCol.convertToInt(): DataColumn<Int> = convertTo()
 public fun AnyCol.convertToString(): DataColumn<String> = convertTo()
 public fun AnyCol.convertToDouble(): DataColumn<Double> = convertTo()
 
-public fun AnyCol.convertTo(newType: KType): AnyCol = convertToImpl(newType)
+public fun AnyCol.convertTo(newType: KType): AnyCol = convertToTypeImpl(newType)
 
 public fun <T> ConvertClause<T, *>.toInt(): DataFrame<T> = to<Int>()
 public fun <T> ConvertClause<T, *>.toDouble(): DataFrame<T> = to<Double>()
@@ -254,13 +251,12 @@ public fun <T> DataFrame<T>.split(column: String): Split<T, Any> = split { colum
 public fun <T, C> DataFrame<T>.split(column: ColumnReference<C?>): Split<T, C> = split { column }
 public fun <T, C> DataFrame<T>.split(column: KProperty<C?>): Split<T, C> = split { column.toColumnAccessor() }
 
-public interface Split<out T, out C> {
+public interface Split<out T, out C>
 
-    public fun by(vararg delimiters: String, trim: Boolean = true, ignoreCase: Boolean = false, limit: Int = 0): SplitWithTransform<T, C, String> = with {
-        it.toString().split(*delimiters, ignoreCase = ignoreCase, limit = limit).let {
-            if (trim) it.map { it.trim() }
-            else it
-        }
+public fun <T, C> Split<T, C>.by(vararg delimiters: String, trim: Boolean = true, ignoreCase: Boolean = false, limit: Int = 0): SplitWithTransform<T, C, String> = with {
+    it.toString().split(*delimiters, ignoreCase = ignoreCase, limit = limit).let {
+        if (trim) it.map { it.trim() }
+        else it
     }
 }
 
@@ -304,7 +300,7 @@ public data class SplitClauseWithTransform<T, C, R>(
 
     override fun intoRows(dropEmpty: Boolean): DataFrame<T> = df.explode(dropEmpty, columns)
 
-    override fun inplace(): DataFrame<T> = df.convert(columns).with(Many::class.createTypeWithArgument(targetType)) { if (it == null) emptyMany() else transform(it).toMany() }
+    override fun inplace(): DataFrame<T> = df.convert(columns).convertRowCellImpl(Many::class.createTypeWithArgument(targetType)) { if (it == null) emptyMany() else transform(it).toMany() }
 
     override fun inward(names: Iterable<String>, extraNamesGenerator: ColumnNamesGenerator<C>?): DataFrame<T> = copy(inward = true).into(names.toList(), extraNamesGenerator)
 }
@@ -383,7 +379,7 @@ public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnName: String
 
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnPath: ColumnPath): DataFrame<T> {
     val grouped = df.move(selector).under(columnPath)
-    val res = grouped.update { getColumnGroup(columnPath) }.with {
+    val res = grouped.convert { getColumnGroup(columnPath) }.with {
         transform(it.values().toMany() as Iterable<C>)
     }
     return res

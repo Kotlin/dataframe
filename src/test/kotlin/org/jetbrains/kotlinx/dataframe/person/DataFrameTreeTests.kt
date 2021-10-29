@@ -20,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.api.append
 import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.concat
+import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.dfsOf
 import org.jetbrains.kotlinx.dataframe.api.distinct
@@ -51,7 +52,6 @@ import org.jetbrains.kotlinx.dataframe.api.moveToLeft
 import org.jetbrains.kotlinx.dataframe.api.moveToRight
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.pivot
-import org.jetbrains.kotlinx.dataframe.api.plus
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
@@ -68,6 +68,7 @@ import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.api.withConst
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.withRowCol
 import org.jetbrains.kotlinx.dataframe.column
@@ -203,13 +204,13 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
-    fun `update`() {
+    fun `convert column group`() {
         val expected = typed.select { city.rename("nameAndCity") and age and weight }
 
-        df2.update { nameAndCity }.with { it[city] } shouldBe expected
-        df2.update { nameAndCity }.with { this[nameAndCity][city] } shouldBe expected
-        typed2.update { nameAndCity }.with { nameAndCity.city } shouldBe expected
-        typed2.update { nameAndCity }.with { it.city } shouldBe expected
+        df2.convert { nameAndCity }.with { it[city] } shouldBe expected
+        df2.convert { nameAndCity }.with { this[nameAndCity][city] } shouldBe expected
+        typed2.convert { nameAndCity }.with { nameAndCity.city } shouldBe expected
+        typed2.convert { nameAndCity }.with { it.city } shouldBe expected
     }
 
     @Test
@@ -375,7 +376,7 @@ class DataFrameTreeTests : BaseTest() {
     fun `split into rows`() {
         val split = typed2.split { nameAndCity.name }.with { it.toCharArray().toList() }.intoRows()
         val merged = split.mergeRows { nameAndCity.name }
-        val joined = merged.update { nameAndCity.name }.cast<List<Char>>().with { it.joinToString("") }
+        val joined = merged.convert { nameAndCity.name }.cast<List<Char>>().with { it.joinToString("") }
         joined shouldBe typed2
     }
 
@@ -409,7 +410,7 @@ class DataFrameTreeTests : BaseTest() {
     fun `update grouped column to table`() {
         val info by columnGroup()
         val grouped = typed.group { age and weight }.into(info)
-        val updated = grouped.update(info).withRowCol { row, column -> column.asColumnGroup().df }
+        val updated = grouped.convert(info).withRowCol { row, column -> column.asColumnGroup().df }
         val col = updated[info.name()]
         col.kind() shouldBe ColumnKind.Frame
         val table = col.asFrameColumn()
@@ -509,7 +510,7 @@ class DataFrameTreeTests : BaseTest() {
         val groupCol = grouped.groups.toDefinition()
         val plain = grouped.toDataFrame()
             .update { groupCol }.at(1).withNull()
-            .update { groupCol }.at(2).with { emptyDataFrame(0) }
+            .update { groupCol }.at(2).with { emptyDataFrame(0).typed() }
             .update { groupCol }.at(3).with { it.filter { false } }
         val res = plain.explode(dropEmpty = false) { groupCol }
         val expected = plain[groupCol].sumOf { Math.max(it?.nrow() ?: 0, 1) }
@@ -556,7 +557,7 @@ class DataFrameTreeTests : BaseTest() {
         joined.select { cols(0, 1) } shouldBe left.toDataFrame()
         joined.select { cols(2, 1) }.rename(name_1).into(typed.name) shouldBe right.toDataFrame()
         joined.name shouldBe left.keys.name
-        joined.forEach { name_1() shouldBe name.reversed() }
+        joined.forEach { it[name_1] shouldBe name.reversed() }
     }
 
     @Test
