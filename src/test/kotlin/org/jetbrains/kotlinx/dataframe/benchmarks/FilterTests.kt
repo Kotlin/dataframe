@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.filterFast
+import org.jetbrains.kotlinx.dataframe.api.filterBy
 import org.jetbrains.kotlinx.dataframe.api.neq
 import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.io.read
@@ -43,7 +43,7 @@ class FilterTests {
     fun fast() {
         measureTimeMillis {
             for (i in 0..n)
-                typed.filterFast { Referer neq null }
+                typed.filterBy { Referer neq null }
         }.let { println(it) }
     }
 }

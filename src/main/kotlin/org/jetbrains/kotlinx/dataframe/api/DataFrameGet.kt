@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -18,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.impl.toIndices
+import org.jetbrains.kotlinx.dataframe.indices
 
 public fun <T, C> DataFrame<T>.getColumnsWithPaths(selector: ColumnsSelector<T, C>): List<ColumnWithPath<C>> =
     getColumnsWithPaths(UnresolvedColumnsPolicy.Fail, selector)
@@ -41,3 +43,14 @@ public fun <T> ColumnsContainer<T>.frameColumn(columnName: String): FrameColumn<
 public fun <T> ColumnsContainer<T>.tryGetColumn(columnIndex: Int): AnyCol? = if (columnIndex in 0 until ncol()) col(columnIndex) else null
 public fun <T> ColumnsContainer<T>.getColumnGroup(columnPath: ColumnPath): ColumnGroup<*> = get(columnPath).asColumnGroup()
 public fun <T> ColumnsContainer<T>.getColumnGroup(columnName: String): ColumnGroup<*> = get(columnName).asColumnGroup()
+
+public fun <T, C> ColumnsContainer<T>.getColumn(selector: ColumnSelector<T, C>): DataColumn<C> = get(selector)
+
+// region indices
+
+public fun <T> DataFrame<T>.indices(filter: RowFilter<T>): List<Int> = indices.filter {
+    val row = get(it)
+    filter(row, row)
+}
+
+// endregion

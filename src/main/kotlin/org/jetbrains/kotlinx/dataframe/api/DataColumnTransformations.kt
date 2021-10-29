@@ -37,10 +37,8 @@ public fun <T : Comparable<T>> DataColumn<T>.digitize(bins: List<T>, right: Bool
 }
 
 // endregion
-// TODO: change return type to BooleanColumn
-public infix fun <T> DataColumn<T>.isMatching(predicate: Predicate<T>): BooleanArray = BooleanArray(size) {
-    predicate(this[it])
-}
+
+public infix fun <T> DataColumn<T>.isMatching(predicate: Predicate<T>): DataColumn<Boolean> = mapInline(predicate)
 
 // region StringColumn Api
 

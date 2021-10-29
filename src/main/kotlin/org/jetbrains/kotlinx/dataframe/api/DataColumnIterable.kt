@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.impl.getType
+import org.jetbrains.kotlinx.dataframe.indices
 import kotlin.reflect.KType
 
 public fun <T> DataColumn<T>.asIterable(): Iterable<T> = values()
@@ -17,7 +18,9 @@ public fun <T> DataColumn<T>.all(predicate: Predicate<T>): Boolean = values.all(
 
 public fun <T> DataColumn<T>.drop(predicate: Predicate<T>): DataColumn<T> = filter { !predicate(it) }
 
-public fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> = slice(isMatching(predicate))
+public fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> = indices.filter {
+    predicate(get(it))
+}.let { slice(it) }
 
 public fun <T> DataColumn<T>.forEach(action: (T) -> Unit): Unit = values.forEach(action)
 

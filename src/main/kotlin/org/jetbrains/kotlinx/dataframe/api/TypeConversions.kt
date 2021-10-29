@@ -169,7 +169,7 @@ public fun <T> DataFrame<T>.asGroupedDataFrame(): GroupedDataFrame<T, T> {
 }
 
 public fun <T, G> DataFrame<T>.asGroupedDataFrame(selector: ColumnSelector<T, DataFrame<G>?>): GroupedDataFrame<T, G> {
-    val column = column(selector).asFrameColumn()
+    val column = getColumn(selector).asFrameColumn()
     return GroupedDataFrameImpl(this, column) { none() }
 }
 

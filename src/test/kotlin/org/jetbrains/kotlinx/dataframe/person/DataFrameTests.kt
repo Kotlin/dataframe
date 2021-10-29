@@ -1542,14 +1542,22 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `update with null`(){
+    fun `update with null`() {
         val updated = typed.update { age }.at(2).withNull()
         updated.age[2] shouldBe null
         updated.age.hasNulls shouldBe true
     }
 
     @Test
-    fun `update nulls`(){
+    fun `update with two conditions`() {
+        fun DataFrame<Person>.check() = indices { age == 100 } shouldBe listOf(1, 3)
+
+        typed.update { age }.at(1..3).where { it > 20 }.with { 100 }.check()
+        typed.update { age }.where { it > 20 }.at(1..3).with { 100 }.check()
+    }
+
+    @Test
+    fun `update nulls`() {
         typed.update { weight }.where { it == null }.with { 15 }.weight.hasNulls shouldBe false
     }
 

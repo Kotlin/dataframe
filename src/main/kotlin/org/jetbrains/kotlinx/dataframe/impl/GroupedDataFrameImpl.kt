@@ -10,17 +10,16 @@ import org.jetbrains.kotlinx.dataframe.api.GroupKey
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.GroupedRowFilter
 import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
-import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
+import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.typed
-import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.frameColumn
@@ -84,7 +83,7 @@ internal fun <T, G, R> aggregateGroupBy(
 ): DataFrame<T> {
     val defaultAggregateName = "aggregated"
 
-    val column = df.column(selector)
+    val column = df.getColumn(selector)
 
     val (df2, removedNodes) = df.removeImpl(selector)
 

@@ -20,7 +20,7 @@ class Modify : TestBase() {
         df.update { weight }.at(1, 3, 4).notNull().with { it / 2 }
         df.update { age }.at(1, 3, 5).withNull()
         df.update { name.lastName and age }.at(5..7).withNull()
-        df.update { age }.with { movingAverage (2) { age }.toInt() }
+        df.update { age }.with { movingAverage(2) { age }.toInt() }
         // SampleEnd
     }
 }

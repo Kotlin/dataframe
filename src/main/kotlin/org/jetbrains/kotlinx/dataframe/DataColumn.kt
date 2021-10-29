@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.anyNull
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.FrameColumnImpl
@@ -105,3 +106,5 @@ public val AnyCol.type: KType get() = type()
 public val AnyCol.kind: ColumnKind get() = kind()
 public val AnyCol.hasNulls: Boolean get() = hasNulls()
 public val AnyCol.typeClass: KClass<*> get() = type.classifier as KClass<*>
+public fun AnyCol.indices(): IntRange = 0 until size
+public val AnyCol.indices: IntRange get() = indices()
