@@ -1,16 +1,27 @@
 [//]: # (title: replace)
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
 Replaces one or several columns with new columns
-```
-df.replace { columns }.with(newColumns)
-df.replace { columns }.with { columnExpression }
 
+```kotlin
+df.replace { columnsSelector }.with(newColumns)
+df.replace { columnsSelector }.with { columnExpression }
+```
+
+```
 columnExpression = DataFrame.(DataColumn) -> DataColumn
 ```
-Examples
+
+See [column selectors](ColumnSelectors.md)
+
+<!---FUN replace-->
+
 ```kotlin
-df.replace { col1 and col2 }.with(newCol1, newCol2)
-df.replace { stringCols() }.with { it.lower() }
-df.replace { oldColumn }.with(newColumn.rename("newName"))
-df.replace { age }.with { 2021 - age named "year" } // another syntax for renaming columns within replace expression
+df.replace { name }.with { name.firstName }
+df.replace { stringCols() }.with { it.lowercase() }
+df.replace { age }.with { 2021 - age named "year" }
 ```
+
+<!---END-->
+
+`replace { cols }.with { expr } ` is equivalent to [`convert { cols }.to { expr }`](convert.md)

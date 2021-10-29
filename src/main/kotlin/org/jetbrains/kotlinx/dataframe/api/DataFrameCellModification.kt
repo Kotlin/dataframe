@@ -163,17 +163,17 @@ public inline fun <T, C, reified R> ConvertClause<T, C>.with(noinline rowConvert
 public inline fun <T, C, reified R> ConvertClause<T, C>.withRowCol(noinline expression: RowColumnSelector<T, C, R>): DataFrame<T> =
     convertRowColumnImpl(getType<R>(), expression)
 
-public fun <T, C> ConvertClause<T, C>.to(columnConverter: (DataColumn<C>) -> AnyCol): DataFrame<T> =
-    df.replace(selector).with { columnConverter(it) }
+public fun <T, C> ConvertClause<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyCol): DataFrame<T> =
+    df.replace(selector).with { columnConverter(df, it) }
 
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(getType<C>()) as DataColumn<C>
 
-public fun AnyCol.convertToDateTime(): DataColumn<LocalDateTime> = convertTo()
-public fun AnyCol.convertToDate(): DataColumn<LocalDate> = convertTo()
-public fun AnyCol.convertToTime(): DataColumn<LocalTime> = convertTo()
-public fun AnyCol.convertToInt(): DataColumn<Int> = convertTo()
-public fun AnyCol.convertToString(): DataColumn<String> = convertTo()
-public fun AnyCol.convertToDouble(): DataColumn<Double> = convertTo()
+public fun AnyCol.toDateTime(): DataColumn<LocalDateTime> = convertTo()
+public fun AnyCol.toDate(): DataColumn<LocalDate> = convertTo()
+public fun AnyCol.toTime(): DataColumn<LocalTime> = convertTo()
+public fun AnyCol.toInt(): DataColumn<Int> = convertTo()
+public fun AnyCol.toStr(): DataColumn<String> = convertTo()
+public fun AnyCol.toDouble(): DataColumn<Double> = convertTo()
 
 public fun AnyCol.convertTo(newType: KType): AnyCol = convertToTypeImpl(newType)
 

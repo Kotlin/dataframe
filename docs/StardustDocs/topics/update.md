@@ -4,26 +4,30 @@
 
 Changes the values in some cells preserving original column types
 
-Syntax:
 ```kotlin
-update { columns }
-   [.where { filter } | .at(rowIndices) ] 
-    .with { valueExpression } | .withNull()
+update { columnSelector }
+    [.where { rowCondition } ]
+    [.at(rowIndices) ] 
+     .with { rowExpression } | .withNull() | .withConst(value) | withRowCol { rowColExpression }
 ```
 
-where
-
-```kotlin
-filter = DataRow.(OldValue) -> Boolean
-valueExpression = DataRow.(OldValue) -> NewValue
+```
+rowCondition = DataRow.(OldValue) -> Boolean
+rowExpression = DataRow.(OldValue) -> NewValue
+rowColExpression = DataRow.(DataColumn) -> NewValue
 ```
 
-Examples:
+See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-expressions)
+
+<!---FUN update-->
+
 ```kotlin
-df.update { price }.with { it * 2 }
-df.update { age }.where { name == "Alice" }.with { 20 }
-df.update { column }.at(4,6,10).with { "value" } 
-df.update { column }.at(5..15).withNull() 
-df.update { price }.with { (it + (prev?.price ?: it) + (next?.price ?: it)) / 3 } // moving average
-df.update { cases }.with { it.toDouble() / population * 100 }
+df.update { age }.with { it * 2 }
+df.update { dfsOf<String>() }.with { it.uppercase() }
+df.update { city }.where { name.firstName == "Alice" }.withValue("Paris")
+df.update { weight }.at(1..4).notNull { it / 2 }
+df.update { name.lastName and age }.at(1, 3, 4).withNull()
+df.update { age }.with { movingAverage(2) { age }.toInt() }
 ```
+
+<!---END-->
