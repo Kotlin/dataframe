@@ -2,22 +2,28 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Changes the values in some cells preserving original column types
+Changes values in columns preserving column types.
+
+#### Syntax
 
 ```kotlin
 update { columnSelector }
     [.where { rowCondition } ]
     [.at(rowIndices) ] 
-     .with { rowExpression } | .withNull() | .withConst(value) | withRowCol { rowColExpression }
+     .with { rowExpression } | .withNull() | .withConst(value) | .withRowCol { rowColExpression }
 ```
 
-```
+where 
+
+```kotlin
 rowCondition = DataRow.(OldValue) -> Boolean
 rowExpression = DataRow.(OldValue) -> NewValue
 rowColExpression = DataRow.(DataColumn) -> NewValue
 ```
 
 See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-expressions)
+
+#### Examples
 
 <!---FUN update-->
 

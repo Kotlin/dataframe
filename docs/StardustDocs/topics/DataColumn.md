@@ -5,7 +5,7 @@
 
 See [how to create columns](createColumn.md)
 
-### Column properties
+### Properties
 * `name: String` - unique name of the column
 * `type: KType` - type of elements in the column
 * `size: Int` - length of the column
@@ -13,19 +13,23 @@ See [how to create columns](createColumn.md)
 * `hasNulls: Boolean` - flag indicating whether column contains `null` values
 
 ### Column kinds
-Every `DataColumn` can be one of three kinds: 
+`DataColumn` instances can be one of three subtypes: `ValueColumn`, `ColumnGroup` or `FrameColumn`
 
 #### ValueColumn
 
-`ValueColumn` represents a sequence of values. It can store values of primitive (integers, strings, decimals etc.) or object types. Currently, it uses [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) as underlying data storage.
+Represents a sequence of values. 
+
+It can store values of primitive (integers, strings, decimals etc.) or object types. Currently, it uses [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) as underlying data storage.
 
 #### ColumnGroup
 
-`ColumnGroup` is a container for nested columns and is used to create column hierarchy. 
+Container for nested columns and is used to create column hierarchy. 
 
 #### FrameColumn
 
-`FrameColumn` is a special case of [`ValueColumn`](#valuecolumn) that stores other [`DataFrames`](DataFrame.md) as elements. `DataFrames` in `FrameColumn` may have different schemas.
+Special case of [`ValueColumn`](#valuecolumn) that stores other [`DataFrames`](DataFrame.md) as elements. 
+
+`DataFrames` stored in `FrameColumn` may have different schemas. 
 
 `FrameColumn` may appear after [reading](read.md) from JSON or other hierarchical data structures, or after grouping operations such as [groupBy](groupBy.md) or [pivot](pivot.md).  
 
@@ -49,10 +53,10 @@ df.filter { age > 30 }
 
 <!---END-->
 
-See [all ways to create column accessor](createAccessor.md)
+See [how to create column accessor](createAccessor.md)
 
-`ColumnAccessor` stores column [`name`](#column-properties) or path to the column (for deep columns), has type argument of column [`type`](#column-properties), but doesn't contain any data.
-It can be converted to `DataColumn` by adding values:
+`ColumnAccessor` stores column [`name`](#column-properties) (for top-level columns) or column path (for nested columns), has type argument that corresponds to column [`type`](#column-properties), but doesn't contain any data.
+To convert `ColumnAccessor` into `DataColumn` just add values:
 
 <!---FUN columnAccessorToColumn-->
 

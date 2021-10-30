@@ -1,8 +1,8 @@
-[//]: # (title: General info)
+[//]: # (title: Basic info)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Use the following operations to get basic information about `DataFrame`:
+Basic information about `DataFrame`:
 * `nrow()` - number of rows
 * `ncol()` - number of columns
 * `columnNames()` - list of column names

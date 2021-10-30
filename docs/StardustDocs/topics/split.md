@@ -8,7 +8,8 @@ Default split behavior:
 
 ## Split horizontally
 Reverse operation to [merge](merge.md)
-```
+
+```kotlin
 df.split { columns }
     [.by(delimeters) | .by { splitter }] // how to split cell value
     [.inward()] // nest resulting columns into original column
@@ -17,6 +18,7 @@ df.split { columns }
 splitter = (T) -> List<Any>
 columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
 ```
+
 `columnNamesGenerator` is used to generate names for additional columns when the list of explicitly specified `columnNames` was not long enough.  
 `columnIndex` in `columnNamesGenerator` starts with `1` for the first additional column name.  
 Default `columnNamesGenerator` generates column names `splitted1`, `splitted2`...

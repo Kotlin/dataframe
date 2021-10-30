@@ -1,3 +1,3 @@
-[//]: # (title: count.md)
+[//]: # (title: count)
 
 Start writing here.

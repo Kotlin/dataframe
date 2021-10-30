@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-Get single row by index (starting from 0):
+You can get a single [`DataRow`](DataRow.md) by [index](indexing.md):
 
 <!---FUN getRowByIndex-->
 
@@ -12,7 +12,7 @@ df[2]
 
 <!---END-->
 
-To get single row by [row condition](DataRow.md#row-conditions) use [single](single.md), [first](first.md), [minBy](minmax.md), [maxBy](minmax.md) and other operations:
+Or you can get single row by [row condition](DataRow.md#row-conditions). Use [single](single.md), [first](first.md), [minBy](minmax.md), [maxBy](minmax.md) and other operations:
 
 <!---FUN getRowByCondition-->
 <tabs>

@@ -1,4 +1,4 @@
-[//]: # (title: Slice)
+[//]: # (title: Slicing)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
