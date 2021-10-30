@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.movingAverage
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.replace
+import org.jetbrains.kotlinx.dataframe.api.shuffled
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.api.update
@@ -47,7 +48,6 @@ class Modify : TestBase() {
         df.convert { age }.to<Double>()
         df.convert { numberCols() }.to<String>()
         df.convert { name.firstName and name.lastName }.to { it.length() }
-        // with helper
         df.convert { weight }.toFloat()
         // SampleEnd
     }
@@ -58,6 +58,13 @@ class Modify : TestBase() {
         df.replace { name }.with { name.firstName }
         df.replace { stringCols() }.with { it.lowercase() }
         df.replace { age }.with { 2021 - age named "year" }
+        // SampleEnd
+    }
+    
+    @Test
+    fun shuffled() {
+        // SampleStart
+        df.shuffled()
         // SampleEnd
     }
 }

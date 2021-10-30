@@ -1,20 +1,24 @@
 [//]: # (title: convert)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Changes data and type of the columns.
+Changes values and types of the columns.
+
+#### Syntax
 
 ```kotlin
 convert { columnsSelector }
     .with { rowExpression } | .withConst(value) | .withRowCol { rowColExpression } | to<Type>() | to { colExpression }
 ```
 
-```
+where 
+
+```kotlin
 rowExpression = DataRow.(OldValue) -> NewValue
 rowColExpression = DataRow.(DataColumn) -> NewValue
 colExpression = DataFrame.(DataColumn) -> NewValue
 ```
 
-See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-expressions)
+#### Examples
 
 <!---FUN convert-->
 
@@ -25,7 +29,11 @@ df.convert { dfsOf<String>() }.with { it.toCharArray().toList() }
 
 <!---END-->
 
-Supports automatic type conversions between the following types:
+See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-expressions)
+
+### Type conversions
+
+`convert` supports automatic type conversions between the following types:
 * `Int`
 * `String`
 * `Double`
@@ -43,7 +51,6 @@ Supports automatic type conversions between the following types:
 df.convert { age }.to<Double>()
 df.convert { numberCols() }.to<String>()
 df.convert { name.firstName and name.lastName }.to { it.length() }
-// with helper
 df.convert { weight }.toFloat()
 ```
 

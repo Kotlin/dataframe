@@ -1,9 +1,7 @@
 [//]: # (title: Create ColumnAccessor)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
-### by column
-
-Creates [column accessor](DataColumn.md#column-accessors). Column [`type`](DataColumn.md#column-properties) should be passed as type argument, column [`name`](DataColumn.md#column-properties) is taken from the variable name.
+[Column accessors](DataColumn.md#column-accessors) are created by [property delegate](https://kotlinlang.org/docs/delegated-properties.html) `column`. Column [`type`](DataColumn.md#column-properties) should be passed as type argument, column [`name`](DataColumn.md#column-properties) will be taken from the variable name.
 
 <!---FUN createColumnAccessor-->
 
@@ -23,7 +21,7 @@ val accessor = column<String>("complex column name")
 
 <!---END-->
 
-You can create also column accessors to access [ColumnGroup](DataColumn.md#columngroup) or [FrameColumn](DataColumn.md#framecolumn)
+You can also create column accessors for [ColumnGroups](DataColumn.md#columngroup) and [FrameColumns](DataColumn.md#framecolumn)
 
 <!---FUN createGroupOrFrameColumnAccessor-->
 
@@ -86,7 +84,7 @@ df[fullName]
 </tab></tabs>
 <!---END-->
 
-When expression depends only on one other column, use `map`:
+When expression depends only on one column, use `map`:
 
 <!---FUN columnAccessorMap-->
 

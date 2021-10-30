@@ -1,6 +1,13 @@
-[//]: # (title: shuffled.md)
+[//]: # (title: shuffled)
 
-Reorders rows randomly
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
+
+Reorders rows randomly.
+
+<!---FUN shuffled-->
+
 ```kotlin
 df.shuffled()
 ```
+
+<!---END-->

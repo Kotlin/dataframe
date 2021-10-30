@@ -51,7 +51,7 @@
                 <toc-element id="last.md"/>
             </toc-element>
             <toc-element id="getColumn.md"/>
-            <toc-element id="slice.md"/>
+            <toc-element id="slicing.md"/>
         </toc-element>
         <toc-element id="info.md" toc-title="Info">
             <toc-element id="schema.md"/>
