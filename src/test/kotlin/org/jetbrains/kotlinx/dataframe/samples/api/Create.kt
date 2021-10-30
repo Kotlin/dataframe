@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.api.createDataFrame
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.named
-import org.jetbrains.kotlinx.dataframe.api.plus
 import org.jetbrains.kotlinx.dataframe.api.preserve
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.toColumn
@@ -31,7 +30,8 @@ class Create : TestBase() {
     @Test
     fun createValueByColumnOf() {
         // SampleStart
-        val name by columnOf("Alice", "Bob")
+        // Create ValueColumn with name 'student' and two elements of type String
+        val student by columnOf("Alice", "Bob")
         // SampleEnd
     }
 
@@ -68,7 +68,40 @@ class Create : TestBase() {
         // SampleStart
         val age by column<Int>()
         val year by age.map { 2021 - it }
+
         df.filter { year > 2000 }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnAccessorComputed_properties() {
+        // SampleStart
+        val fullName by df.column { name.firstName + " " + name.lastName }
+
+        df[fullName]
+        // SampleEnd
+    }
+
+    @Test
+    fun columnAccessorComputed_accessors() {
+        // SampleStart
+        val name by columnGroup()
+        val firstName by name.column<String>()
+        val lastName by name.column<String>()
+
+        val fullName by column { firstName() + " " + lastName() }
+
+        df[fullName]
+        // SampleEnd
+    }
+
+    @Test
+    fun columnAccessorComputed_strings() {
+        // SampleStart
+
+        val fullName by column { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
+
+        df[fullName]
         // SampleEnd
     }
 
@@ -89,7 +122,7 @@ class Create : TestBase() {
     @Test
     fun createColumnRenamed() {
         // SampleStart
-        val column = columnOf("Alice", "Bob") named "name"
+        val column = columnOf("Alice", "Bob") named "student"
         // SampleEnd
     }
 
@@ -99,9 +132,8 @@ class Create : TestBase() {
         val firstName by columnOf("Alice", "Bob")
         val lastName by columnOf("Cooper", "Marley")
 
-        val name by columnOf(firstName, lastName)
-        // or
-        listOf(firstName, lastName).toColumn("name")
+        // Create ColumnGroup with two nested columns
+        val fullName by columnOf(firstName, lastName)
         // SampleEnd
     }
 
@@ -111,10 +143,8 @@ class Create : TestBase() {
         val df1 = dataFrameOf("name", "age")("Alice", 20, "Bob", 25)
         val df2 = dataFrameOf("name", "temp")("Mark", 36.6)
 
-        val groups by columnOf(df1, df2)
-        // or
-        listOf(df1, df2).toColumn("groups")
-
+        // Create FrameColumn with two elements of type DataFrame
+        val frames by columnOf(df1, df2)
         // SampleEnd
     }
 
@@ -151,6 +181,7 @@ class Create : TestBase() {
     @Test
     fun createDataFrameOf() {
         // SampleStart
+        // DataFrame with 2 columns and 3 rows
         val df = dataFrameOf("name", "age")(
             "Alice", 15,
             "Bob", 20,
@@ -162,6 +193,7 @@ class Create : TestBase() {
     @Test
     fun createDataFrameWithFill() {
         // SampleStart
+        // DataFrame with columns from 'a' to 'z' and values from 1 to 10 for each column
         val df = dataFrameOf('a'..'z') { 1..10 }
         // SampleEnd
     }
@@ -170,6 +202,8 @@ class Create : TestBase() {
     fun createDataFrameFillConstant() {
         // SampleStart
         val names = listOf("first", "second", "third")
+
+        // DataFrame with 3 columns, fill each column with 15 `true` values
         val df = dataFrameOf(names).fill(15, true)
         // SampleEnd
     }
@@ -177,18 +211,21 @@ class Create : TestBase() {
     @Test
     fun createDataFrameWithRandom() {
         // SampleStart
-        val df = dataFrameOf(1..5).randomDouble(7)
+        // DataFrame with 5 columns filled with 7 random double values:
+        val names = (1..5).map { "column$it" }
+        val df = dataFrameOf(names).randomDouble(7)
         // SampleEnd
     }
 
     @Test
     fun createDataFrameFromColumns() {
         // SampleStart
+
         val name by columnOf("Alice", "Bob")
         val age by columnOf(15, 20)
 
-        val df1 = dataFrameOf(name, age)
-        val df2 = listOf(name, age).toDataFrame()
+        // DataFrame with 2 columns
+        val df = dataFrameOf(name, age)
         // SampleEnd
     }
 
@@ -196,7 +233,20 @@ class Create : TestBase() {
     fun createDataFrameFromMap() {
         // SampleStart
         val map = mapOf("name" to listOf("Alice", "Bob"), "age" to listOf(15, 20))
-        val df = map.toDataFrame()
+
+        // DataFrame with 2 columns
+        map.toDataFrame()
+        // SampleEnd
+    }
+
+    @Test
+    fun createDataFrameFromIterable() {
+        // SampleStart
+        val name by columnOf("Alice", "Bob")
+        val age by columnOf(15, 20)
+
+        // DataFrame with 2 columns
+        listOf(name, age).toDataFrame()
         // SampleEnd
     }
 
