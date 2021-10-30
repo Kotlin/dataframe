@@ -1,29 +1,62 @@
 [//]: # (title: Create DataColumn)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
-Create [ValueColumn](DataColumn.md#valuecolumn) with `columnOf`:
-* column name is defined by variable name
-* column type is detected in compile time using [reified type parameters](https://kotlinlang.org/docs/inline-functions.html#reified-type-parameters)
+This section describes ways to create [`DataColumn`](DataColumn.md).
+
+### by columnOf
+
+Returns new column with given elements. Column [`type`](DataColumn.md#column-properties) is deduced from compile-time type of elements, column [`name`](DataColumn.md#column-properties) is taken from the name of the variable.
 
 <!---FUN createValueByColumnOf-->
 
 ```kotlin
-val name by columnOf("Alice", "Bob")
+// Create ValueColumn with name 'student' and two elements of type String
+val student by columnOf("Alice", "Bob")
 ```
 
 <!---END-->
 
-You can assign column name explicitly using `named` infix function:
+To assign column name explicitly, use `named` infix function and replace `by` with `=`.
 
 <!---FUN createColumnRenamed-->
 
 ```kotlin
-val column = columnOf("Alice", "Bob") named "name"
+val column = columnOf("Alice", "Bob") named "student"
 ```
 
 <!---END-->
 
-Convert `Iterable` of values into column:
+When column elements are [`DataColumns`](DataColumn.md) it returns [`ColumnGroup`](DataColumn.md#columngroup).
+
+<!---FUN createColumnGroup-->
+
+```kotlin
+val firstName by columnOf("Alice", "Bob")
+val lastName by columnOf("Cooper", "Marley")
+
+// Create ColumnGroup with two nested columns
+val fullName by columnOf(firstName, lastName)
+```
+
+<!---END-->
+
+When column elements are [`DataFrames`](DataColumn.md) it returns [`FrameColumn`](DataColumn.md#framecolumn):
+
+<!---FUN createFrameColumn-->
+
+```kotlin
+val df1 = dataFrameOf("name", "age")("Alice", 20, "Bob", 25)
+val df2 = dataFrameOf("name", "temp")("Mark", 36.6)
+
+// Create FrameColumn with two elements of type DataFrame
+val frames by columnOf(df1, df2)
+```
+
+<!---END-->
+
+### toColumn
+
+Converts `Iterable` of values into column.
 
 <!---FUN createValueByToColumn-->
 
@@ -49,34 +82,6 @@ values.toColumnOf<Number?>("data").type willBe typeOf<Number?>()
 
 <!---END-->
 
-Create [ColumnGroup](DataColumn.md#columngroup) with several [columns](DataColumn.md):
 
-<!---FUN createColumnGroup-->
-
-```kotlin
-val firstName by columnOf("Alice", "Bob")
-val lastName by columnOf("Cooper", "Marley")
-
-val name by columnOf(firstName, lastName)
-// or
-listOf(firstName, lastName).toColumn("name")
-```
-
-<!---END-->
-
-Create [FrameColumn](DataColumn.md#framecolumn) with several DataFrames:
-
-<!---FUN createFrameColumn-->
-
-```kotlin
-val df1 = dataFrameOf("name", "age")("Alice", 20, "Bob", 25)
-val df2 = dataFrameOf("name", "temp")("Mark", 36.6)
-
-val groups by columnOf(df1, df2)
-// or
-listOf(df1, df2).toColumn("groups")
-```
-
-<!---END-->
 
 

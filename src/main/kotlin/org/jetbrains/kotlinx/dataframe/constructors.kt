@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.impl.ManyImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumnWithActualType
 import org.jetbrains.kotlinx.dataframe.impl.getType
@@ -23,6 +24,10 @@ import kotlin.reflect.full.withNullability
 // region create ColumnAccessor
 
 public fun <T> column(): ColumnDelegate<T> = ColumnDelegate()
+
+public inline fun <reified T> column(name: String = "", noinline expression: RowSelector<Any?, T>): ColumnReference<T> = createComputedColumnReference(name, getType<T>(), expression)
+
+public inline fun <T, reified C> DataFrame<T>.column(name: String = "", noinline expression: RowSelector<T, C>): ColumnReference<C> = createComputedColumnReference(name, getType<C>(), expression as RowSelector<Any?, C>)
 
 public fun columnGroup(): ColumnDelegate<AnyRow> = column()
 

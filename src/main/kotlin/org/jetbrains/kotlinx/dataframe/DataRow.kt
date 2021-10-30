@@ -68,7 +68,6 @@ public interface DataRow<out T> {
     public operator fun Int.plus(col: ColumnReference<Int>): Int = this + get(col)
     public operator fun Long.plus(col: ColumnReference<Long>): Long = this + get(col)
     public operator fun Double.plus(col: ColumnReference<Double>): Double = this + get(col)
-    public operator fun String.plus(col: ColumnReference<String>): String = this + get(col)
 
     public operator fun ColumnReference<Int>.minus(a: Int): Int = get(this) - a
     public operator fun ColumnReference<Long>.minus(a: Long): Long = get(this) - a

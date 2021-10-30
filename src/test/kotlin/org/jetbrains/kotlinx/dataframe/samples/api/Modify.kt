@@ -51,7 +51,7 @@ class Modify : TestBase() {
         df.convert { weight }.toFloat()
         // SampleEnd
     }
-    
+
     @Test
     fun replace() {
         // SampleStart

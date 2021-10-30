@@ -37,8 +37,9 @@ import kotlin.reflect.full.withNullability
 // region create DataColumn
 
 @PublishedApi
-internal fun <T, R> ColumnsContainer<T>.newColumn(type: KType, name: String = "", expression: AddExpression<T, R>): DataColumn<R> {
+internal fun <T, R> ColumnsContainer<T>.newColumn(type: KType?, name: String = "", expression: AddExpression<T, R>): DataColumn<R> {
     val (nullable, values) = computeValues(this as DataFrame<T>, expression)
+    if (type == null) return guessColumnType(name, values)
     return when (type.classifier) {
         DataFrame::class -> DataColumn.createFrameColumn(name, values as List<AnyFrame?>) as DataColumn<R>
         DataRow::class -> DataColumn.createColumnGroup(name, (values as List<AnyRow>).concat()) as DataColumn<R>
