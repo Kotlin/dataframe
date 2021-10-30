@@ -48,7 +48,7 @@ internal fun linearGradient(
 
 internal fun <T, C> ColorClause<T, C>.formatImpl(formatter: CellFormatter<C>): FormattedFrame<T> {
     val columns =
-        if (selector != null) df.getColumnsWithPaths(selector).mapNotNull { if (it.depth == 0) it.name else null }
+        if (columns != null) df.getColumnsWithPaths(columns).mapNotNull { if (it.depth == 0) it.name else null }
             .toSet() else null
     return FormattedFrame(df) { row, col ->
         val oldAttributes = oldFormatter?.invoke(row, col)

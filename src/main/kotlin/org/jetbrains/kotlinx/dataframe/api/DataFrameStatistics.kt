@@ -4,8 +4,8 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.RowFilter
-import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
@@ -49,15 +49,15 @@ public fun <T> DataFrame<T>.minOrNull(vararg columns: String): Comparable<Any?>?
 public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(vararg columns: ColumnReference<C?>): C? = minOrNull { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(vararg columns: KProperty<C?>): C? = minOrNull { columns.toColumns() }
 
-public fun <T, C : Comparable<C>> DataFrame<T>.minOf(selector: RowSelector<T, C>): C = minOfOrNull(selector)!!
-public fun <T, C : Comparable<C>> DataFrame<T>.minOfOrNull(selector: RowSelector<T, C>): C? = rows().minOfOrNull { selector(it, it) }
+public fun <T, C : Comparable<C>> DataFrame<T>.minOf(expression: RowExpression<T, C>): C = minOfOrNull(expression)!!
+public fun <T, C : Comparable<C>> DataFrame<T>.minOfOrNull(expression: RowExpression<T, C>): C? = rows().minOfOrNull { expression(it, it) }
 
-public fun <T, C : Comparable<C>> DataFrame<T>.minBy(selector: RowSelector<T, C?>): DataRow<T> = minByOrNull(selector)!!
+public fun <T, C : Comparable<C>> DataFrame<T>.minBy(expression: RowExpression<T, C?>): DataRow<T> = minByOrNull(expression)!!
 public fun <T> DataFrame<T>.minBy(column: String): DataRow<T> = minByOrNull(column)!!
 public fun <T, C : Comparable<C>> DataFrame<T>.minBy(column: ColumnReference<C?>): DataRow<T> = minByOrNull(column)!!
 public fun <T, C : Comparable<C>> DataFrame<T>.minBy(column: KProperty<C?>): DataRow<T> = minByOrNull(column)!!
 
-public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(selector: RowSelector<T, C?>): DataRow<T>? = getOrNull(rows().asSequence().map { selector(it, it) }.indexOfMin())
+public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(expression: RowExpression<T, C?>): DataRow<T>? = getOrNull(rows().asSequence().map { expression(it, it) }.indexOfMin())
 public fun <T> DataFrame<T>.minByOrNull(column: String): DataRow<T>? = minByOrNull(column.toColumnOf<Comparable<Any?>?>())
 public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(column: ColumnReference<C?>): DataRow<T>? = getOrNull(get(column).asSequence().indexOfMin())
 public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(column: KProperty<C?>): DataRow<T>? = minByOrNull(column.toColumnAccessor())
@@ -83,15 +83,15 @@ public fun <T> DataFrame<T>.maxOrNull(vararg columns: String): Comparable<Any?>?
 public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(vararg columns: ColumnReference<C?>): C? = maxOrNull { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(vararg columns: KProperty<C?>): C? = maxOrNull { columns.toColumns() }
 
-public fun <T, C : Comparable<C>> DataFrame<T>.maxOf(selector: RowSelector<T, C>): C = maxOfOrNull(selector)!!
-public fun <T, C : Comparable<C>> DataFrame<T>.maxOfOrNull(selector: RowSelector<T, C>): C? = rows().maxOfOrNull { selector(it, it) }
+public fun <T, C : Comparable<C>> DataFrame<T>.maxOf(expression: RowExpression<T, C>): C = maxOfOrNull(expression)!!
+public fun <T, C : Comparable<C>> DataFrame<T>.maxOfOrNull(expression: RowExpression<T, C>): C? = rows().maxOfOrNull { expression(it, it) }
 
-public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(selector: RowSelector<T, C?>): DataRow<T> = maxByOrNull(selector)!!
+public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(expression: RowExpression<T, C?>): DataRow<T> = maxByOrNull(expression)!!
 public fun <T> DataFrame<T>.maxBy(column: String): DataRow<T> = maxByOrNull(column)!!
 public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(column: ColumnReference<C?>): DataRow<T> = maxByOrNull(column)!!
 public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(column: KProperty<C?>): DataRow<T> = maxByOrNull(column)!!
 
-public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(selector: RowSelector<T, C?>): DataRow<T>? = getOrNull(rows().asSequence().map { selector(it, it) }.indexOfMax())
+public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(expression: RowExpression<T, C?>): DataRow<T>? = getOrNull(rows().asSequence().map { expression(it, it) }.indexOfMax())
 public fun <T> DataFrame<T>.maxByOrNull(column: String): DataRow<T>? = maxByOrNull(column.toColumnOf<Comparable<Any?>?>())
 public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(column: ColumnReference<C?>): DataRow<T>? = getOrNull(get(column).asSequence().indexOfMax())
 public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(column: KProperty<C?>): DataRow<T>? = maxByOrNull(column.toColumnAccessor())
@@ -112,9 +112,9 @@ public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: Colum
 public fun <T> DataFrame<T>.sum(vararg columns: String): Number = sum { columns.toColumnsOf() }
 public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: KProperty<C?>): C = sum { columns.toColumns() }
 
-public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(crossinline selector: RowSelector<T, C>): C = rows().sumOf(
+public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(crossinline expression: RowExpression<T, C>): C = rows().sumOf(
     getType<C>()
-) { selector(it, it) }
+) { expression(it, it) }
 
 // endregion
 
@@ -134,8 +134,8 @@ public fun <T, C : Number> DataFrame<T>.mean(vararg columns: KProperty<C?>, skip
 
 public inline fun <T, reified D : Number> DataFrame<T>.meanOf(
     skipNa: Boolean = false,
-    noinline selector: RowSelector<T, D?>
-): Double = Aggregators.mean(skipNa).of(this, selector) ?: Double.NaN
+    noinline expression: RowExpression<T, D?>
+): Double = Aggregators.mean(skipNa).of(this, expression) ?: Double.NaN
 
 // endregion
 
@@ -158,7 +158,7 @@ public fun <T> DataFrame<T>.medianOrNull(vararg columns: String): Any? = medianO
 public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(vararg columns: ColumnReference<C?>): C? = medianOrNull { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(vararg columns: KProperty<C?>): C? = medianOrNull { columns.toColumns() }
 
-public inline fun <T, reified R : Comparable<R>> DataFrame<T>.medianOf(crossinline selector: RowSelector<T, R?>): R? = Aggregators.median.of(this, selector) as R?
+public inline fun <T, reified R : Comparable<R>> DataFrame<T>.medianOf(crossinline expression: RowExpression<T, R?>): R? = Aggregators.median.of(this, expression) as R?
 
 // endregion
 
@@ -176,7 +176,7 @@ public fun <T> DataFrame<T>.std(vararg columns: ColumnReference<Number?>): Doubl
 public fun <T> DataFrame<T>.std(vararg columns: String): Double = std { columns.toColumnsOf() }
 public fun <T> DataFrame<T>.std(vararg columns: KProperty<Number?>): Double = std { columns.toColumns() }
 
-public fun <T> DataFrame<T>.stdOf(selector: RowSelector<T, Number?>): Double = Aggregators.std.aggregateOf(this, selector) ?: .0
+public fun <T> DataFrame<T>.stdOf(expression: RowExpression<T, Number?>): Double = Aggregators.std.aggregateOf(this, expression) ?: .0
 
 // endregion
 
@@ -184,6 +184,6 @@ public fun <T> DataFrame<T>.stdOf(selector: RowSelector<T, Number?>): Double = A
 
 public fun <T> DataFrame<T>.corr(): AnyFrame = corr { numberCols().withoutNulls() }
 
-public fun <T, C : Number> DataFrame<T>.corr(selector: ColumnsSelector<T, C>): AnyFrame = corrImpl(this[selector])
+public fun <T, C : Number> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): AnyFrame = corrImpl(this[columns])
 
 // endregion

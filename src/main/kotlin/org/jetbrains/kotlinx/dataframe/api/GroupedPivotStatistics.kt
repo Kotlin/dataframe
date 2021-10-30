@@ -3,8 +3,8 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.RowFilter
-import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
@@ -30,11 +30,11 @@ public fun <T> GroupedPivot<T>.count(predicate: RowFilter<T>? = null): DataFrame
 public fun <T> GroupedPivot<T>.matches(): DataFrame<T> = matches(yes = true, no = false)
 public fun <T, R> GroupedPivot<T>.matches(yes: R, no: R): DataFrame<T> = aggregate { yes default no }
 
-public inline fun <T, reified V> GroupedPivot<T>.with(noinline selector: RowSelector<T, V>): DataFrame<T> {
+public inline fun <T, reified V> GroupedPivot<T>.with(noinline expression: RowExpression<T, V>): DataFrame<T> {
     val type = getType<V>()
     return aggregateInternal {
         val values = df.map {
-            val value = selector(it, it)
+            val value = expression(it, it)
             if (value is ColumnReference<*>) it[value]
             else value
         }
@@ -80,9 +80,9 @@ public fun <T> GroupedPivot<T>.min(vararg columns: String): DataFrame<T> = min {
 public fun <T, R : Comparable<R>> GroupedPivot<T>.min(vararg columns: ColumnReference<R?>): DataFrame<T> = min { columns.toColumns() }
 public fun <T, R : Comparable<R>> GroupedPivot<T>.min(vararg columns: KProperty<R?>): DataFrame<T> = min { columns.toColumns() }
 
-public fun <T, R : Comparable<R>> GroupedPivot<T>.minOf(rowExpression: RowSelector<T, R>): DataFrame<T> = aggregate { minOf(rowExpression) }
+public fun <T, R : Comparable<R>> GroupedPivot<T>.minOf(rowExpression: RowExpression<T, R>): DataFrame<T> = aggregate { minOf(rowExpression) }
 
-public fun <T, R : Comparable<R>> GroupedPivot<T>.minBy(rowExpression: RowSelector<T, R>): DataFrame<T> = aggregate { minBy(rowExpression) }
+public fun <T, R : Comparable<R>> GroupedPivot<T>.minBy(rowExpression: RowExpression<T, R>): DataFrame<T> = aggregate { minBy(rowExpression) }
 public fun <T> GroupedPivot<T>.minBy(column: String): DataFrame<T> = aggregate { minBy(column) }
 public fun <T, C : Comparable<C>> GroupedPivot<T>.minBy(column: ColumnReference<C?>): DataFrame<T> = aggregate { minBy(column) }
 public fun <T, C : Comparable<C>> GroupedPivot<T>.minBy(column: KProperty<C?>): DataFrame<T> = aggregate { minBy(column) }
@@ -113,9 +113,9 @@ public fun <T> GroupedPivot<T>.max(vararg columns: String): DataFrame<T> = max {
 public fun <T, R : Comparable<R>> GroupedPivot<T>.max(vararg columns: ColumnReference<R?>): DataFrame<T> = max { columns.toColumns() }
 public fun <T, R : Comparable<R>> GroupedPivot<T>.max(vararg columns: KProperty<R?>): DataFrame<T> = max { columns.toColumns() }
 
-public fun <T, R : Comparable<R>> GroupedPivot<T>.maxOf(rowExpression: RowSelector<T, R>): DataFrame<T> = aggregate { maxOf(rowExpression) }
+public fun <T, R : Comparable<R>> GroupedPivot<T>.maxOf(rowExpression: RowExpression<T, R>): DataFrame<T> = aggregate { maxOf(rowExpression) }
 
-public fun <T, R : Comparable<R>> GroupedPivot<T>.maxBy(rowExpression: RowSelector<T, R>): DataFrame<T> = aggregate { maxBy(rowExpression) }
+public fun <T, R : Comparable<R>> GroupedPivot<T>.maxBy(rowExpression: RowExpression<T, R>): DataFrame<T> = aggregate { maxBy(rowExpression) }
 public fun <T> GroupedPivot<T>.maxBy(column: String): DataFrame<T> = aggregate { maxBy(column) }
 public fun <T, C : Comparable<C>> GroupedPivot<T>.maxBy(column: ColumnReference<C?>): DataFrame<T> = aggregate { maxBy(column) }
 public fun <T, C : Comparable<C>> GroupedPivot<T>.maxBy(column: KProperty<C?>): DataFrame<T> = aggregate { maxBy(column) }
@@ -144,8 +144,8 @@ public fun <T> GroupedPivot<T>.sum(vararg columns: String): DataFrame<T> = sum {
 public fun <T, C : Number> GroupedPivot<T>.sum(vararg columns: ColumnReference<C?>): DataFrame<T> = sum { columns.toColumns() }
 public fun <T, C : Number> GroupedPivot<T>.sum(vararg columns: KProperty<C?>): DataFrame<T> = sum { columns.toColumns() }
 
-public inline fun <T, reified R : Number> GroupedPivot<T>.sumOf(crossinline selector: RowSelector<T, R>): DataFrame<T> =
-    Aggregators.sum.aggregateOf(this, selector)
+public inline fun <T, reified R : Number> GroupedPivot<T>.sumOf(crossinline expression: RowExpression<T, R>): DataFrame<T> =
+    Aggregators.sum.aggregateOf(this, expression)
 
 // endregion
 
@@ -179,9 +179,9 @@ public fun <T, R : Number> GroupedPivot<T>.mean(skipNa: Boolean = true, columns:
 
 public inline fun <T, reified R : Number> GroupedPivot<T>.meanOf(
     skipNa: Boolean = false,
-    crossinline selector: RowSelector<T, R?>
+    crossinline expression: RowExpression<T, R?>
 ): DataFrame<T> =
-    Aggregators.mean(skipNa).aggregateOf(this, selector)
+    Aggregators.mean(skipNa).aggregateOf(this, expression)
 
 // endregion
 
@@ -211,8 +211,8 @@ public fun <T, C : Comparable<C>> GroupedPivot<T>.median(
 public fun <T, C : Comparable<C>> GroupedPivot<T>.median(vararg columns: KProperty<C?>): DataFrame<T> = median { columns.toColumns() }
 
 public inline fun <T, reified R : Comparable<R>> GroupedPivot<T>.medianOf(
-    crossinline selector: RowSelector<T, R?>
-): DataFrame<T> = Aggregators.median.aggregateOf(this, selector)
+    crossinline expression: RowExpression<T, R?>
+): DataFrame<T> = Aggregators.median.aggregateOf(this, expression)
 
 // endregion
 
@@ -237,6 +237,6 @@ public fun <T> GroupedPivot<T>.std(vararg columns: ColumnReference<Number?>): Da
 public fun <T> GroupedPivot<T>.std(vararg columns: String): DataFrame<T> = std { columns.toColumnsOf() }
 public fun <T> GroupedPivot<T>.std(vararg columns: KProperty<Number?>): DataFrame<T> = std { columns.toColumns() }
 
-public fun <T> GroupedPivot<T>.stdOf(selector: RowSelector<T, Number?>): DataFrame<T> = Aggregators.std.aggregateOf(this, selector)
+public fun <T> GroupedPivot<T>.stdOf(expression: RowExpression<T, Number?>): DataFrame<T> = Aggregators.std.aggregateOf(this, expression)
 
 // endregion

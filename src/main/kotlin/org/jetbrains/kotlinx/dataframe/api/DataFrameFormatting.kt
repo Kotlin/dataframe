@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.RowCellFilter
+import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.impl.api.MergedAttributes
 import org.jetbrains.kotlinx.dataframe.impl.api.SingleAttribute
 import org.jetbrains.kotlinx.dataframe.impl.api.encode
@@ -81,18 +81,18 @@ public class FormattedFrame<T>(
 
 public data class ColorClause<T, C>(
     val df: DataFrame<T>,
-    val selector: ColumnsSelector<T, C>? = null,
+    val columns: ColumnsSelector<T, C>? = null,
     val oldFormatter: RowColFormatter<T>? = null,
-    val filter: RowCellFilter<T, C> = { true },
+    val filter: RowValueFilter<T, C> = { true },
 )
 
-public fun <T, C> FormattedFrame<T>.format(selector: ColumnsSelector<T, C>): ColorClause<T, C> = ColorClause(df, selector, formatter)
-public fun <T, C> DataFrame<T>.format(selector: ColumnsSelector<T, C>): ColorClause<T, C> = ColorClause(this, selector)
+public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): ColorClause<T, C> = ColorClause(df, columns, formatter)
+public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): ColorClause<T, C> = ColorClause(this, columns)
 
 public fun <T> FormattedFrame<T>.format(): ColorClause<T, Any?> = ColorClause(df, null, formatter)
 public fun <T> DataFrame<T>.format(): ColorClause<T, Any?> = ColorClause(this)
 
-public fun <T, C> ColorClause<T, C>.where(filter: RowCellFilter<T, C>): ColorClause<T, C> = copy(filter = filter)
+public fun <T, C> ColorClause<T, C>.where(filter: RowValueFilter<T, C>): ColorClause<T, C> = copy(filter = filter)
 
 public typealias CellFormatter<V> = FormattingDSL.(V) -> CellAttributes?
 

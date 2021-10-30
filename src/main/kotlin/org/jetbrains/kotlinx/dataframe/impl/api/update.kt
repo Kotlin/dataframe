@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.RowCellFilter
+import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.api.UpdateClause
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -24,11 +24,11 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
 @PublishedApi
-internal fun <T, C> UpdateClause<T, C>.updateImpl(expression: (DataRow<T>, DataColumn<C>, C) -> C): DataFrame<T> = df.replace(selector).with { it.updateImpl(df, filter, expression) }
+internal fun <T, C> UpdateClause<T, C>.updateImpl(expression: (DataRow<T>, DataColumn<C>, C) -> C): DataFrame<T> = df.replace(columns).with { it.updateImpl(df, filter, expression) }
 
 internal fun <T, C> DataColumn<C>.updateImpl(
     df: DataFrame<T>,
-    filter: RowCellFilter<T, C>?,
+    filter: RowValueFilter<T, C>?,
     expression: (DataRow<T>, DataColumn<C>, C) -> C
 ): DataColumn<C> {
     val collector = createDataCollector<C>(size, type)

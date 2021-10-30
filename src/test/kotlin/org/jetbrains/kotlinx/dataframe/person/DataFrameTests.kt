@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
-import org.jetbrains.kotlinx.dataframe.RowSelector
+import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.addRowNumber
 import org.jetbrains.kotlinx.dataframe.api.allNulls
@@ -1751,9 +1751,9 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `get row value by selector`() {
-        val selector: RowSelector<Person, Int> = { it.age * 2 }
-        val added = typed.add("new") { it[selector] }
+    fun `get row value by expression`() {
+        val expression: RowExpression<Person, Int> = { it.age * 2 }
+        val added = typed.add("new") { it[expression] }
         added shouldBe typed.add("new") { age * 2 }
     }
 

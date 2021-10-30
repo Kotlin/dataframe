@@ -22,19 +22,19 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.assertIsComparable
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 
-internal fun <T, G> GroupedDataFrame<T, G>.sortByImpl(selector: SortColumnsSelector<G, *>): GroupedDataFrame<T, G> {
+internal fun <T, G> GroupedDataFrame<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>): GroupedDataFrame<T, G> {
     return toDataFrame()
         .update { groups }
-        .with { it?.sortByImpl(UnresolvedColumnsPolicy.Skip, selector) }
-        .sortByImpl(UnresolvedColumnsPolicy.Skip, selector as SortColumnsSelector<T, *>)
+        .with { it?.sortByImpl(UnresolvedColumnsPolicy.Skip, columns) }
+        .sortByImpl(UnresolvedColumnsPolicy.Skip, columns as SortColumnsSelector<T, *>)
         .asGroupedDataFrame { it.frameColumn(groups.name()).typedFrames() }
 }
 
 internal fun <T, C> DataFrame<T>.sortByImpl(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail,
-    selector: SortColumnsSelector<T, C>
+    columns: SortColumnsSelector<T, C>
 ): DataFrame<T> {
-    val columns = getSortColumns(selector, unresolvedColumnsPolicy)
+    val columns = getSortColumns(columns, unresolvedColumnsPolicy)
 
     val compChain = columns.map {
         when (it.direction) {
@@ -65,10 +65,10 @@ internal fun <T, C> SortColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColu
 }
 
 internal fun <T, C> DataFrame<T>.getSortColumns(
-    selector: SortColumnsSelector<T, C>,
+    columns: SortColumnsSelector<T, C>,
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy
 ): List<SortColumnDescriptor<*>> {
-    return selector.toColumns().resolve(this, unresolvedColumnsPolicy)
+    return columns.toColumns().resolve(this, unresolvedColumnsPolicy)
         .map {
             when (val col = it.data) {
                 is SortColumnDescriptor<*> -> col

@@ -8,9 +8,9 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Many
-import org.jetbrains.kotlinx.dataframe.RowCellFilter
-import org.jetbrains.kotlinx.dataframe.RowCellSelector
-import org.jetbrains.kotlinx.dataframe.RowColumnSelector
+import org.jetbrains.kotlinx.dataframe.RowColumnExpression
+import org.jetbrains.kotlinx.dataframe.RowValueExpression
+import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -47,37 +47,37 @@ import kotlin.reflect.KType
 
 // region update
 
-public fun <T, C> DataFrame<T>.update(selector: ColumnsSelector<T, C>): UpdateClause<T, C> = UpdateClause(this, null, selector)
-public fun <T, C> DataFrame<T>.update(cols: Iterable<ColumnReference<C>>): UpdateClause<T, C> = update { cols.toColumnSet() }
-public fun <T> DataFrame<T>.update(vararg cols: String): UpdateClause<T, Any?> = update { cols.toColumns() }
-public fun <T, C> DataFrame<T>.update(vararg cols: KProperty<C>): UpdateClause<T, C> = update { cols.toColumns() }
-public fun <T, C> DataFrame<T>.update(vararg cols: ColumnReference<C>): UpdateClause<T, C> = update { cols.toColumns() }
+public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): UpdateClause<T, C> = UpdateClause(this, null, columns)
+public fun <T, C> DataFrame<T>.update(columns: Iterable<ColumnReference<C>>): UpdateClause<T, C> = update { columns.toColumnSet() }
+public fun <T> DataFrame<T>.update(vararg columns: String): UpdateClause<T, Any?> = update { columns.toColumns() }
+public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): UpdateClause<T, C> = update { columns.toColumns() }
+public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): UpdateClause<T, C> = update { columns.toColumns() }
 
 public data class UpdateClause<T, C>(
     val df: DataFrame<T>,
-    val filter: RowCellFilter<T, C>?,
-    val selector: ColumnsSelector<T, C>
+    val filter: RowValueFilter<T, C>?,
+    val columns: ColumnsSelector<T, C>
 ) {
-    public fun <R : C> cast(): UpdateClause<T, R> = UpdateClause(df, filter as RowCellFilter<T, R>?, selector as ColumnsSelector<T, R>)
+    public fun <R : C> cast(): UpdateClause<T, R> = UpdateClause(df, filter as RowValueFilter<T, R>?, columns as ColumnsSelector<T, R>)
 }
 
-public fun <T, C> UpdateClause<T, C>.where(predicate: RowCellFilter<T, C>): UpdateClause<T, C> = copy(filter = filter and predicate)
+public fun <T, C> UpdateClause<T, C>.where(predicate: RowValueFilter<T, C>): UpdateClause<T, C> = copy(filter = filter and predicate)
 
 public fun <T, C> UpdateClause<T, C>.at(rowIndices: Collection<Int>): UpdateClause<T, C> = where { index in rowIndices }
 public fun <T, C> UpdateClause<T, C>.at(vararg rowIndices: Int): UpdateClause<T, C> = at(rowIndices.toSet())
 public fun <T, C> UpdateClause<T, C>.at(rowRange: IntRange): UpdateClause<T, C> = where { index in rowRange }
 
-public infix fun <T, C> UpdateClause<T, C>.withRowCol(expression: RowColumnSelector<T, C, C>): DataFrame<T> = updateImpl { row, column, _ -> expression(row, column) }
+public infix fun <T, C> UpdateClause<T, C>.withRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> = updateImpl { row, column, _ -> expression(row, column) }
 
-public infix fun <T, C> UpdateClause<T, C>.with(expression: RowCellSelector<T, C, C>): DataFrame<T> = withExpression(expression)
+public infix fun <T, C> UpdateClause<T, C>.with(expression: RowValueExpression<T, C, C>): DataFrame<T> = withExpression(expression)
 
 public fun <T, C> UpdateClause<T, C>.asNullable(): UpdateClause<T, C?> = this as UpdateClause<T, C?>
 
-public fun <T, C> UpdateClause<T, C>.withExpression(expression: RowCellSelector<T, C, C>): DataFrame<T> = updateImpl { row, _, value ->
+public fun <T, C> UpdateClause<T, C>.withExpression(expression: RowValueExpression<T, C, C>): DataFrame<T> = updateImpl { row, _, value ->
     expression(row, value)
 }
 
-internal infix fun <T, C> RowCellFilter<T, C>?.and(other: RowCellFilter<T, C>): RowCellFilter<T, C> {
+internal infix fun <T, C> RowValueFilter<T, C>?.and(other: RowValueFilter<T, C>): RowValueFilter<T, C> {
     if (this == null) return other
     val thisExp = this
     return { thisExp(this, it) && other(this, it) }
@@ -85,28 +85,28 @@ internal infix fun <T, C> RowCellFilter<T, C>?.and(other: RowCellFilter<T, C>): 
 
 public fun <T, C> UpdateClause<T, C?>.notNull(): UpdateClause<T, C> = copy(filter = filter and { it != null }) as UpdateClause<T, C>
 
-public fun <T, C> UpdateClause<T, C?>.notNull(expression: RowCellSelector<T, C, C>): DataFrame<T> = notNull().updateImpl { row, column, value ->
+public fun <T, C> UpdateClause<T, C?>.notNull(expression: RowValueExpression<T, C, C>): DataFrame<T> = notNull().updateImpl { row, column, value ->
     expression(row, value)
 }
 
 public fun <T, C> DataFrame<T>.update(
     firstCol: ColumnReference<C>,
     vararg cols: ColumnReference<C>,
-    expression: RowCellSelector<T, C, C>
+    expression: RowValueExpression<T, C, C>
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
 
 public fun <T, C> DataFrame<T>.update(
     firstCol: KProperty<C>,
     vararg cols: KProperty<C>,
-    expression: RowCellSelector<T, C, C>
+    expression: RowValueExpression<T, C, C>
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
 
 public fun <T> DataFrame<T>.update(
     firstCol: String,
     vararg cols: String,
-    expression: RowCellSelector<T, Any?, Any?>
+    expression: RowValueExpression<T, Any?, Any?>
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).withExpression(expression)
 
@@ -118,7 +118,7 @@ public infix fun <T, C> UpdateClause<T, C>.withValue(value: C): DataFrame<T> = w
 
 // region convert
 
-public fun <T, C> DataFrame<T>.convert(selector: ColumnsSelector<T, C>): ConvertClause<T, C> = ConvertClause(this, selector)
+public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): ConvertClause<T, C> = ConvertClause(this, columns)
 public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): ConvertClause<T, C> = convert { columns.toColumns() }
 public fun <T> DataFrame<T>.convert(vararg columns: String): ConvertClause<T, Any?> = convert { columns.toColumns() }
 public fun <T, C> DataFrame<T>.convert(vararg columns: ColumnReference<C>): ConvertClause<T, C> = convert { columns.toColumns() }
@@ -126,45 +126,45 @@ public fun <T, C> DataFrame<T>.convert(vararg columns: ColumnReference<C>): Conv
 public inline fun <T, C, reified R> DataFrame<T>.convert(
     firstCol: ColumnReference<C>,
     vararg cols: ColumnReference<C>,
-    noinline expression: RowCellSelector<T, C, R>
+    noinline expression: RowValueExpression<T, C, R>
 ): DataFrame<T> =
     convert(*headPlusArray(firstCol, cols)).with(expression)
 
 public inline fun <T, C, reified R> DataFrame<T>.convert(
     firstCol: KProperty<C>,
     vararg cols: KProperty<C>,
-    noinline expression: RowCellSelector<T, C, R>
+    noinline expression: RowValueExpression<T, C, R>
 ): DataFrame<T> =
     convert(*headPlusArray(firstCol, cols)).with(expression)
 
 public inline fun <T, reified R> DataFrame<T>.convert(
     firstCol: String,
     vararg cols: String,
-    noinline expression: RowCellSelector<T, Any?, R>
+    noinline expression: RowValueExpression<T, Any?, R>
 ): DataFrame<T> =
     convert(*headPlusArray(firstCol, cols)).with(expression)
 
-public inline fun <T, C, reified R> ConvertClause<T, C?>.notNull(crossinline expression: RowCellSelector<T, C, R>): DataFrame<T> = with {
+public inline fun <T, C, reified R> ConvertClause<T, C?>.notNull(crossinline expression: RowValueExpression<T, C, R>): DataFrame<T> = with {
     if (it == null) null
     else expression(this, it)
 }
 
-public data class ConvertClause<T, C>(val df: DataFrame<T>, val selector: ColumnsSelector<T, C>) {
-    public fun <R> cast(): ConvertClause<T, R> = ConvertClause(df, selector as ColumnsSelector<T, R>)
+public data class ConvertClause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>) {
+    public fun <R> cast(): ConvertClause<T, R> = ConvertClause(df, columns as ColumnsSelector<T, R>)
 
     public inline fun <reified D> to(): DataFrame<T> = to(getType<D>())
 }
 
 public fun <T> ConvertClause<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
 
-public inline fun <T, C, reified R> ConvertClause<T, C>.with(noinline rowConverter: RowCellSelector<T, C, R>): DataFrame<T> =
+public inline fun <T, C, reified R> ConvertClause<T, C>.with(noinline rowConverter: RowValueExpression<T, C, R>): DataFrame<T> =
     convertRowCellImpl(getType<R>(), rowConverter)
 
-public inline fun <T, C, reified R> ConvertClause<T, C>.withRowCol(noinline expression: RowColumnSelector<T, C, R>): DataFrame<T> =
+public inline fun <T, C, reified R> ConvertClause<T, C>.withRowCol(noinline expression: RowColumnExpression<T, C, R>): DataFrame<T> =
     convertRowColumnImpl(getType<R>(), expression)
 
 public fun <T, C> ConvertClause<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyCol): DataFrame<T> =
-    df.replace(selector).with { columnConverter(df, it) }
+    df.replace(columns).with { columnConverter(df, it) }
 
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(getType<C>()) as DataColumn<C>
 
@@ -244,8 +244,8 @@ public fun DataColumn<AnyFrame?>.parse(): DataColumn<AnyFrame?> = map { it?.pars
 
 // region split
 
-public fun <T, C> DataFrame<T>.split(selector: ColumnsSelector<T, C?>): Split<T, C> =
-    SplitClause(this, selector)
+public fun <T, C> DataFrame<T>.split(columns: ColumnsSelector<T, C?>): Split<T, C> =
+    SplitClause(this, columns)
 
 public fun <T> DataFrame<T>.split(column: String): Split<T, Any> = split { column.toColumnAccessor() }
 public fun <T, C> DataFrame<T>.split(column: ColumnReference<C?>): Split<T, C> = split { column }

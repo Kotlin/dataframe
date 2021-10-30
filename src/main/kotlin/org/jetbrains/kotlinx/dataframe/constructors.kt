@@ -25,9 +25,9 @@ import kotlin.reflect.full.withNullability
 
 public fun <T> column(): ColumnDelegate<T> = ColumnDelegate()
 
-public inline fun <reified T> column(name: String = "", noinline expression: RowSelector<Any?, T>): ColumnReference<T> = createComputedColumnReference(name, getType<T>(), expression)
+public inline fun <reified T> column(name: String = "", noinline expression: RowExpression<Any?, T>): ColumnReference<T> = createComputedColumnReference(name, getType<T>(), expression)
 
-public inline fun <T, reified C> DataFrame<T>.column(name: String = "", noinline expression: RowSelector<T, C>): ColumnReference<C> = createComputedColumnReference(name, getType<C>(), expression as RowSelector<Any?, C>)
+public inline fun <T, reified C> DataFrame<T>.column(name: String = "", noinline expression: RowExpression<T, C>): ColumnReference<C> = createComputedColumnReference(name, getType<C>(), expression as RowExpression<Any?, C>)
 
 public fun columnGroup(): ColumnDelegate<AnyRow> = column()
 
