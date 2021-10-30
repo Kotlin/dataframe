@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.RowSelector
+import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -10,7 +10,7 @@ import kotlin.reflect.KType
 internal class ComputedColumnReference<R>(
     val name: String,
     val type: KType?,
-    val compute: RowSelector<Any?, R>
+    val compute: RowExpression<Any?, R>
 ) :
     ColumnReference<R> {
 
@@ -26,4 +26,4 @@ internal class ComputedColumnReference<R>(
 }
 
 @PublishedApi
-internal fun <R> createComputedColumnReference(name: String, type: KType?, compute: RowSelector<Any?, R>): ColumnReference<R> = ComputedColumnReference(name, type, compute)
+internal fun <R> createComputedColumnReference(name: String, type: KType?, compute: RowExpression<Any?, R>): ColumnReference<R> = ComputedColumnReference(name, type, compute)

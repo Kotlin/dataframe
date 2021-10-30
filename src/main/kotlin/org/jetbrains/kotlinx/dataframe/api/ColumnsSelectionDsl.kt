@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.DoubleCol
 import org.jetbrains.kotlinx.dataframe.IntCol
 import org.jetbrains.kotlinx.dataframe.NumberCol
 import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.RowSelector
+import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.StringCol
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -221,10 +221,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
 
     public operator fun ColumnPath.invoke(): ColumnAccessor<Any?> = toColumnAccessor()
 
-    public operator fun <C> String.invoke(newColumnExpression: RowSelector<T, C>): DataColumn<C> =
+    public operator fun <C> String.invoke(newColumnExpression: RowExpression<T, C>): DataColumn<C> =
         newColumnWithActualType(this, newColumnExpression)
 
-    public infix fun <C> String.by(newColumnExpression: RowSelector<T, C>): DataColumn<C> =
+    public infix fun <C> String.by(newColumnExpression: RowExpression<T, C>): DataColumn<C> =
         newColumnWithActualType(this, newColumnExpression)
 
     public fun String.ints(): DataColumn<Int> = getColumn(this)

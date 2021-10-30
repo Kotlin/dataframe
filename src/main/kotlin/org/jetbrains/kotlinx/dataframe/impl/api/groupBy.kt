@@ -20,9 +20,9 @@ internal class GroupedDataRowImpl<T, G>(private val row: DataRow<T>, private val
     override fun groupOrNull() = frameCol[row.index()]
 }
 
-internal fun <T> DataFrame<T>.groupByImpl(cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T> {
+internal fun <T> DataFrame<T>.groupByImpl(columns: ColumnsSelector<T, *>): GroupedDataFrame<T, T> {
     val nameGenerator = nameGenerator(GroupedDataFrame.groupedColumnAccessor.name())
-    val keyColumns = get(cols).map {
+    val keyColumns = get(columns).map {
         val currentName = it.name()
         val uniqueName = nameGenerator.addUnique(currentName)
         if (uniqueName != currentName) it.rename(uniqueName)
@@ -55,5 +55,5 @@ internal fun <T> DataFrame<T>.groupByImpl(cols: ColumnsSelector<T, *>): GroupedD
     val groupedColumn = DataColumn.createFrameColumn(GroupedDataFrame.groupedColumnAccessor.name(), sorted, startIndices.asIterable(), false)
 
     val df = keyColumnsDf + groupedColumn
-    return GroupedDataFrameImpl(df, groupedColumn, cols)
+    return GroupedDataFrameImpl(df, groupedColumn, columns)
 }

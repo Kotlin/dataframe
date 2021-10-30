@@ -19,8 +19,8 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.withDf
 
 internal data class RemoveResult<T>(val df: DataFrame<T>, val removedColumns: List<TreeNode<ColumnPosition>>)
 
-internal fun <T> DataFrame<T>.removeImpl(selector: ColumnsSelector<T, *>): RemoveResult<T> {
-    val colPaths = getColumnPaths(selector)
+internal fun <T> DataFrame<T>.removeImpl(columns: ColumnsSelector<T, *>): RemoveResult<T> {
+    val colPaths = getColumnPaths(columns)
     val originalOrder = colPaths.mapIndexed { index, path -> path to index }.toMap()
 
     val root = TreeNode.createRoot(ColumnPosition(-1, false, null))

@@ -2,8 +2,8 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.RowCellSelector
-import org.jetbrains.kotlinx.dataframe.RowColumnSelector
+import org.jetbrains.kotlinx.dataframe.RowColumnExpression
+import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.api.ConvertClause
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.to
@@ -26,11 +26,11 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
 
 @PublishedApi
-internal fun <T, C, R> ConvertClause<T, C>.convertRowCellImpl(type: KType, rowConverter: RowCellSelector<T, C, R>): DataFrame<T> =
+internal fun <T, C, R> ConvertClause<T, C>.convertRowCellImpl(type: KType, rowConverter: RowValueExpression<T, C, R>): DataFrame<T> =
     to { col -> df.newColumn(type, col.name) { rowConverter(it, it[col]) } }
 
 @PublishedApi
-internal fun <T, C, R> ConvertClause<T, C>.convertRowColumnImpl(type: KType, rowConverter: RowColumnSelector<T, C, R>): DataFrame<T> =
+internal fun <T, C, R> ConvertClause<T, C>.convertRowColumnImpl(type: KType, rowConverter: RowColumnExpression<T, C, R>): DataFrame<T> =
     to { col -> df.newColumn(type, col.name) { rowConverter(it, col) } }
 
 internal fun AnyCol.convertToTypeImpl(newType: KType): AnyCol {

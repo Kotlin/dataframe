@@ -23,7 +23,7 @@ public interface DataRow<out T> {
     // region get cell value
 
     public operator fun get(columnIndex: Int): Any?
-    public operator fun <R> get(selector: RowSelector<T, R>): R = selector(this, this)
+    public operator fun <R> get(expression: RowExpression<T, R>): R = expression(this, this)
     public operator fun <R> get(column: ColumnReference<R>): R
     public operator fun <R> get(columns: List<ColumnReference<R>>): List<R> = columns.map { get(it) }
     public operator fun <R> get(property: KProperty<R>): R = get(property.name) as R

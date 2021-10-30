@@ -15,27 +15,27 @@ public typealias Selector<T, R> = T.(T) -> R
 
 // region selectors
 
-public typealias DataFrameSelector<T, R> = Selector<DataFrame<T>, R>
+public typealias DataFrameExpression<T, R> = Selector<DataFrame<T>, R>
 
-public typealias RowSelector<T, R> = Selector<DataRow<T>, R>
+public typealias RowExpression<T, R> = Selector<DataRow<T>, R>
+
+public typealias RowValueExpression<T, C, R> = DataRow<T>.(C) -> R
+
+public typealias RowColumnExpression<T, C, R> = (DataRow<T>, DataColumn<C>) -> R
 
 public typealias ColumnSelector<T, C> = Selector<ColumnsSelectionDsl<T>, SingleColumn<C>>
 
 public typealias ColumnsSelector<T, C> = Selector<ColumnsSelectionDsl<T>, ColumnSet<C>>
 
-public typealias RowCellSelector<T, C, R> = DataRow<T>.(C) -> R
-
-public typealias RowColumnSelector<T, C, R> = (DataRow<T>, DataColumn<C>) -> R
-
 // endregion
 
 // region filters
 
-public typealias RowFilter<T> = RowSelector<T, Boolean>
+public typealias RowFilter<T> = RowExpression<T, Boolean>
 
 public typealias ColumnFilter<T> = (ColumnWithPath<T>) -> Boolean
 
-public typealias RowCellFilter<T, C> = RowCellSelector<T, C, Boolean>
+public typealias RowValueFilter<T, C> = RowValueExpression<T, C, Boolean>
 
 // endregion
 

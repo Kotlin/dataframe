@@ -29,7 +29,7 @@ internal fun <T, C, K, R> gatherImpl(
     keyColumnType: KType,
     valueColumnType: KType
 ): DataFrame<T> {
-    val removed = clause.df.removeImpl(clause.selector)
+    val removed = clause.df.removeImpl(clause.columns)
 
     val columnsToGather = removed.removedColumns.map { it.data.column as DataColumn<C> }
 

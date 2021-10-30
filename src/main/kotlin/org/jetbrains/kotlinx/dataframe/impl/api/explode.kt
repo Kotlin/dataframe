@@ -27,8 +27,8 @@ import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 
-internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, selector: ColumnsSelector<T, *>): DataFrame<T> {
-    val columns = getColumnsWithPaths(selector)
+internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> {
+    val columns = getColumnsWithPaths(columns)
 
     val rowExpandSizes = indices.map { row ->
         columns.maxOf {

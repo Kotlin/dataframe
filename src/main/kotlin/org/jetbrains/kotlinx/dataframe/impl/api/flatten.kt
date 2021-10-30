@@ -13,9 +13,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 
 internal fun <T, C> DataFrame<T>.flattenImpl(
     separator: CharSequence,
-    selector: ColumnsSelector<T, C>
+    columns: ColumnsSelector<T, C>
 ): DataFrame<T> {
-    val rootColumns = getColumnsWithPaths { selector.toColumns().filter { it.isColumnGroup() }.top() }
+    val rootColumns = getColumnsWithPaths { columns.toColumns().filter { it.isColumnGroup() }.top() }
     val rootPrefixes = rootColumns.map { it.path }.toSet()
     val nameGenerator = ColumnNameGenerator()
 

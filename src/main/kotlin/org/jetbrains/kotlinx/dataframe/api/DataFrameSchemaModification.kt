@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.RowSelector
+import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -62,10 +62,10 @@ public typealias AddExpression<T, C> = AddDataRow<T>.(AddDataRow<T>) -> C
 public inline fun <reified R, T> DataFrame<T>.add(name: String, noinline expression: AddExpression<T, R>): DataFrame<T> =
     (this + newColumn(name, expression))
 
-public inline fun <reified R, T> DataFrame<T>.add(property: KProperty<R>, noinline expression: RowSelector<T, R>): DataFrame<T> =
+public inline fun <reified R, T> DataFrame<T>.add(property: KProperty<R>, noinline expression: RowExpression<T, R>): DataFrame<T> =
     (this + newColumn(property.name, expression))
 
-public inline fun <reified R, T, G> GroupedDataFrame<T, G>.add(name: String, noinline expression: RowSelector<G, R>): GroupedDataFrame<T, G> =
+public inline fun <reified R, T, G> GroupedDataFrame<T, G>.add(name: String, noinline expression: RowExpression<G, R>): GroupedDataFrame<T, G> =
     mapNotNullGroups { add(name, expression) }
 
 public inline fun <reified R, T> DataFrame<T>.add(column: ColumnAccessor<R>, noinline expression: AddExpression<T, R>): DataFrame<T> {
@@ -89,18 +89,18 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
 
     public fun add(column: AnyCol): Boolean = columns.add(column)
 
-    public inline fun <reified R> add(name: String, noinline expression: RowSelector<T, R>): Boolean = add(df.newColumn(name, expression))
+    public inline fun <reified R> add(name: String, noinline expression: RowExpression<T, R>): Boolean = add(df.newColumn(name, expression))
 
-    public inline fun <reified R> add(column: ColumnReference<R>, noinline expression: RowSelector<T, R>): Boolean = add(df.newColumn(column.name(), expression))
+    public inline fun <reified R> add(column: ColumnReference<R>, noinline expression: RowExpression<T, R>): Boolean = add(df.newColumn(column.name(), expression))
 
-    public inline infix fun <reified R> ColumnReference<R>.from(noinline expression: RowSelector<T, R>): Boolean = add(df.newColumn(name(), expression))
+    public inline infix fun <reified R> ColumnReference<R>.from(noinline expression: RowExpression<T, R>): Boolean = add(df.newColumn(name(), expression))
 
-    public inline operator fun <reified R> ColumnReference<R>.invoke(noinline expression: RowSelector<T, R>): Boolean =
+    public inline operator fun <reified R> ColumnReference<R>.invoke(noinline expression: RowExpression<T, R>): Boolean =
         from(expression)
 
-    public inline infix fun <reified R> String.from(noinline expression: RowSelector<T, R>): Boolean = add(this, expression)
+    public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean = add(this, expression)
 
-    public inline operator fun <reified R> String.invoke(noinline expression: RowSelector<T, R>): Boolean = from(expression)
+    public inline operator fun <reified R> String.invoke(noinline expression: RowExpression<T, R>): Boolean = from(expression)
 
     public operator fun String.invoke(column: AnyCol): Boolean = add(column.rename(this))
 
@@ -118,11 +118,11 @@ public infix operator fun <T> DataFrame<T>.minus(column: Column): DataFrame<T> =
 public infix operator fun <T> DataFrame<T>.minus(cols: Iterable<Column>): DataFrame<T> = remove(cols)
 public infix operator fun <T> DataFrame<T>.minus(cols: ColumnsSelector<T, *>): DataFrame<T> = remove(cols)
 
-public fun <T> DataFrame<T>.remove(selector: ColumnsSelector<T, *>): DataFrame<T> = removeImpl(selector).df
-public fun <T> DataFrame<T>.remove(vararg cols: KProperty<*>): DataFrame<T> = remove { cols.toColumns() }
-public fun <T> DataFrame<T>.remove(vararg cols: String): DataFrame<T> = remove { cols.toColumns() }
-public fun <T> DataFrame<T>.remove(vararg cols: Column): DataFrame<T> = remove { cols.toColumns() }
-public fun <T> DataFrame<T>.remove(cols: Iterable<Column>): DataFrame<T> = remove { cols.toColumnSet() }
+public fun <T> DataFrame<T>.remove(columns: ColumnsSelector<T, *>): DataFrame<T> = removeImpl(columns).df
+public fun <T> DataFrame<T>.remove(vararg columns: KProperty<*>): DataFrame<T> = remove { columns.toColumns() }
+public fun <T> DataFrame<T>.remove(vararg columns: String): DataFrame<T> = remove { columns.toColumns() }
+public fun <T> DataFrame<T>.remove(vararg columns: Column): DataFrame<T> = remove { columns.toColumns() }
+public fun <T> DataFrame<T>.remove(columns: Iterable<Column>): DataFrame<T> = remove { columns.toColumnSet() }
 
 // endregion
 
@@ -133,9 +133,9 @@ public fun <T> DataFrame<T>.insert(path: ColumnPath, column: AnyCol): DataFrame<
 
 public fun <T> DataFrame<T>.insert(column: AnyCol): InsertClause<T> = InsertClause(this, column)
 
-public inline fun <T, reified R> DataFrame<T>.insert(noinline expression: RowSelector<T, R>): InsertClause<T> = insert("", expression)
+public inline fun <T, reified R> DataFrame<T>.insert(noinline expression: RowExpression<T, R>): InsertClause<T> = insert("", expression)
 
-public inline fun <T, reified R> DataFrame<T>.insert(name: String, noinline expression: RowSelector<T, R>): InsertClause<T> = insert(newColumn(name, expression))
+public inline fun <T, reified R> DataFrame<T>.insert(name: String, noinline expression: RowExpression<T, R>): InsertClause<T> = insert(newColumn(name, expression))
 
 public data class InsertClause<T>(val df: DataFrame<T>, val column: AnyCol)
 
@@ -143,10 +143,10 @@ public fun <T> InsertClause<T>.into(path: ColumnPath): DataFrame<T> = df.insert(
 public fun <T> InsertClause<T>.into(reference: ColumnAccessor<*>): DataFrame<T> = into(reference.path())
 
 public fun <T> InsertClause<T>.under(path: ColumnPath): DataFrame<T> = df.insert(path + column.name, column)
-public fun <T> InsertClause<T>.under(selector: ColumnSelector<T, *>): DataFrame<T> = under(df.getColumnPath(selector))
+public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T> = under(df.getColumnPath(column))
 
 public fun <T> InsertClause<T>.after(name: String): DataFrame<T> = df.add(column).move(column).after(name)
-public fun <T> InsertClause<T>.after(selector: ColumnSelector<T, *>): DataFrame<T> = after(df.getColumnPath(selector))
+public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T> = after(df.getColumnPath(column))
 
 public fun <T> InsertClause<T>.at(position: Int): DataFrame<T> = df.add(column).move(column).to(position)
 
@@ -159,31 +159,31 @@ public fun <T> InsertClause<T>.after(path: ColumnPath): DataFrame<T> {
 
 // region replace
 
-public fun <T, C> DataFrame<T>.replace(selector: ColumnsSelector<T, C>): ReplaceCause<T, C> = ReplaceCause(this, selector)
+public fun <T, C> DataFrame<T>.replace(columns: ColumnsSelector<T, C>): ReplaceCause<T, C> = ReplaceCause(this, columns)
 public fun <T, C> DataFrame<T>.replace(vararg cols: ColumnReference<C>): ReplaceCause<T, C> = replace { cols.toColumns() }
 public fun <T, C> DataFrame<T>.replace(vararg cols: KProperty<C>): ReplaceCause<T, C> = replace { cols.toColumns() }
 public fun <T> DataFrame<T>.replace(vararg cols: String): ReplaceCause<T, Any?> = replace { cols.toColumns() }
 public fun <T, C> DataFrame<T>.replace(cols: Iterable<ColumnReference<C>>): ReplaceCause<T, C> = replace { cols.toColumnSet() }
 
-public fun <T> DataFrame<T>.replaceAll(vararg valuePairs: Pair<Any?, Any?>, selector: ColumnsSelector<T, *> = { dfs() }): DataFrame<T> {
+public fun <T> DataFrame<T>.replaceAll(vararg valuePairs: Pair<Any?, Any?>, columns: ColumnsSelector<T, *> = { dfs() }): DataFrame<T> {
     val map = valuePairs.toMap()
-    return update(selector).withExpression { map[it] ?: it }
+    return update(columns).withExpression { map[it] ?: it }
 }
 
-public data class ReplaceCause<T, C>(val df: DataFrame<T>, val selector: ColumnsSelector<T, C>)
+public data class ReplaceCause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>)
 
 public fun <T, C> ReplaceCause<T, C>.with(vararg columns: AnyCol): DataFrame<T> = with(columns.toList())
 
 public fun <T, C> ReplaceCause<T, C>.with(newColumns: List<AnyCol>): DataFrame<T> {
     var index = 0
     return with {
-        require(index < newColumns.size) { "Insufficient number of new columns in 'replace': ${newColumns.size} instead of ${df[selector].size}" }
+        require(index < newColumns.size) { "Insufficient number of new columns in 'replace': ${newColumns.size} instead of ${df[columns].size}" }
         newColumns[index++]
     }
 }
 
 public fun <T, C> ReplaceCause<T, C>.with(transform: ColumnsContainer<T>.(DataColumn<C>) -> AnyCol): DataFrame<T> {
-    val removeResult = df.removeImpl(selector)
+    val removeResult = df.removeImpl(columns)
     val toInsert = removeResult.removedColumns.map {
         val newCol = transform(df, it.data.column as DataColumn<C>)
         ColumnToInsert(it.pathFromRoot().dropLast(1) + newCol.name, newCol, it)
@@ -200,15 +200,15 @@ public fun <T, C> DataFrame<T>.move(vararg cols: ColumnReference<C>): MoveClause
 public fun <T> DataFrame<T>.move(vararg cols: String): MoveClause<T, Any?> = move { cols.toColumns() }
 public fun <T> DataFrame<T>.move(vararg cols: ColumnPath): MoveClause<T, Any?> = move { cols.toColumns() }
 public fun <T, C> DataFrame<T>.move(vararg cols: KProperty<C>): MoveClause<T, C> = move { cols.toColumns() }
-public fun <T, C> DataFrame<T>.move(selector: ColumnsSelector<T, C>): MoveClause<T, C> = MoveClause(this, selector)
+public fun <T, C> DataFrame<T>.move(columns: ColumnsSelector<T, C>): MoveClause<T, C> = MoveClause(this, columns)
 
-public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, selector: ColumnsSelector<T, *>): DataFrame<T> = move(selector).to(newColumnIndex)
+public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).to(newColumnIndex)
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, cols: Iterable<Column>): DataFrame<T> = moveTo(newColumnIndex) { cols.toColumnSet() }
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: String): DataFrame<T> = moveTo(newColumnIndex) { cols.toColumns() }
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: KProperty<*>): DataFrame<T> = moveTo(newColumnIndex) { cols.toColumns() }
 public fun <T> DataFrame<T>.moveTo(newColumnIndex: Int, vararg cols: Column): DataFrame<T> = moveTo(newColumnIndex) { cols.toColumns() }
 
-public fun <T> DataFrame<T>.moveToLeft(selector: ColumnsSelector<T, *>): DataFrame<T> = move(selector).toLeft()
+public fun <T> DataFrame<T>.moveToLeft(columns: ColumnsSelector<T, *>): DataFrame<T> = move(columns).toLeft()
 public fun <T> DataFrame<T>.moveToLeft(cols: Iterable<Column>): DataFrame<T> = moveToLeft { cols.toColumnSet() }
 public fun <T> DataFrame<T>.moveToLeft(vararg cols: String): DataFrame<T> = moveToLeft { cols.toColumns() }
 public fun <T> DataFrame<T>.moveToLeft(vararg cols: Column): DataFrame<T> = moveToLeft { cols.toColumns() }
@@ -265,23 +265,23 @@ fun <T, C> MoveColsClause<T, C>.before(column: ColumnSelector<T, *>) = afterOrBe
 public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
 public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol())
 
-public class MoveClause<T, C>(internal val df: DataFrame<T>, internal val selector: ColumnsSelector<T, C>)
+public class MoveClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>)
 
 // endregion
 
 // region group
 
-public data class GroupClause<T, C>(val df: DataFrame<T>, val selector: ColumnsSelector<T, C>)
+public data class GroupClause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>)
 
-public fun <T> DataFrame<T>.group(cols: Iterable<Column>): GroupClause<T, Any?> = group { cols.toColumnSet() }
-public fun <T> DataFrame<T>.group(vararg cols: KProperty<*>): GroupClause<T, Any?> = group { cols.toColumns() }
-public fun <T> DataFrame<T>.group(vararg cols: String): GroupClause<T, Any?> = group { cols.toColumns() }
-public fun <T> DataFrame<T>.group(vararg cols: Column): GroupClause<T, Any?> = group { cols.toColumns() }
-public fun <T, C> DataFrame<T>.group(cols: ColumnsSelector<T, C>): GroupClause<T, C> = GroupClause(this, cols)
+public fun <T> DataFrame<T>.group(columns: Iterable<Column>): GroupClause<T, Any?> = group { columns.toColumnSet() }
+public fun <T> DataFrame<T>.group(vararg columns: KProperty<*>): GroupClause<T, Any?> = group { columns.toColumns() }
+public fun <T> DataFrame<T>.group(vararg columns: String): GroupClause<T, Any?> = group { columns.toColumns() }
+public fun <T> DataFrame<T>.group(vararg columns: Column): GroupClause<T, Any?> = group { columns.toColumns() }
+public fun <T, C> DataFrame<T>.group(columns: ColumnsSelector<T, C>): GroupClause<T, C> = GroupClause(this, columns)
 
 public infix fun <T, C> GroupClause<T, C>.into(groupName: String): DataFrame<T> = into { groupName }
-public infix fun <T, C> GroupClause<T, C>.into(groupRef: ColumnGroupReference): DataFrame<T> = df.move(selector).under(groupRef)
-public infix fun <T, C> GroupClause<T, C>.into(groupName: ColumnWithPath<C>.(ColumnWithPath<C>) -> String): DataFrame<T> = df.move(selector).under { pathOf(groupName(it, it)) }
+public infix fun <T, C> GroupClause<T, C>.into(groupRef: ColumnGroupReference): DataFrame<T> = df.move(columns).under(groupRef)
+public infix fun <T, C> GroupClause<T, C>.into(groupName: ColumnWithPath<C>.(ColumnWithPath<C>) -> String): DataFrame<T> = df.move(columns).under { pathOf(groupName(it, it)) }
 
 // endregion
 
@@ -291,8 +291,8 @@ public fun <T> DataFrame<T>.ungroup(vararg columns: KProperty<*>): DataFrame<T> 
 public fun <T> DataFrame<T>.ungroup(vararg columns: String): DataFrame<T> = ungroup { columns.toColumns() }
 public fun <T> DataFrame<T>.ungroup(vararg columns: Column): DataFrame<T> = ungroup { columns.toColumns() }
 
-public fun <T, C> DataFrame<T>.ungroup(selector: ColumnsSelector<T, C>): DataFrame<T> {
-    return move { selector.toColumns().children() }
+public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFrame<T> {
+    return move { columns.toColumns().children() }
         .into { it.path.removeAt(it.path.size - 2).toColumnPath() }
 }
 
@@ -303,21 +303,21 @@ public fun <T, C> DataFrame<T>.ungroup(selector: ColumnsSelector<T, C>): DataFra
 public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataFrame<T> = rename { mappings.map { it.first.toColumnAccessor() }.toColumnSet() }
     .into(*mappings.map { it.second }.toTypedArray())
 
-public fun <T, C> DataFrame<T>.rename(selector: ColumnsSelector<T, C>): RenameClause<T, C> = RenameClause(this, selector)
+public fun <T, C> DataFrame<T>.rename(columns: ColumnsSelector<T, C>): RenameClause<T, C> = RenameClause(this, columns)
 public fun <T, C> DataFrame<T>.rename(vararg cols: ColumnReference<C>): RenameClause<T, C> = rename { cols.toColumns() }
 public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T, C> = rename { cols.toColumns() }
 public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> = rename { cols.toColumns() }
 public fun <T, C> DataFrame<T>.rename(cols: Iterable<ColumnReference<C>>): RenameClause<T, C> = rename { cols.toColumnSet() }
 
-public data class RenameClause<T, C>(val df: DataFrame<T>, val selector: ColumnsSelector<T, C>)
+public data class RenameClause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>)
 
 public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>): DataFrame<T> =
     into(*newColumns.map { it.name() }.toTypedArray())
-public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> = df.move(selector).intoIndexed { col, index ->
+public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> = df.move(columns).intoIndexed { col, index ->
     col.path.drop(1) + newNames[index]
 }
 
-public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> String): DataFrame<T> = df.move(selector).into {
+public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> String): DataFrame<T> = df.move(columns).into {
     it.path.dropLast(1) + transform(it)
 }
 
@@ -331,14 +331,14 @@ public fun <T> DataFrame<T>.flatten(separator: CharSequence = defaultFlattenSepa
 
 public fun <T, C> DataFrame<T>.flatten(
     separator: CharSequence = defaultFlattenSeparator,
-    selector: ColumnsSelector<T, C>
-): DataFrame<T> = flattenImpl(separator, selector)
+    columns: ColumnsSelector<T, C>
+): DataFrame<T> = flattenImpl(separator, columns)
 
 // endregion
 
 // region select
 
-public fun <T> DataFrame<T>.select(selector: ColumnsSelector<T, *>): DataFrame<T> = get(selector).toDataFrame().typed()
+public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> = get(columns).toDataFrame().typed()
 public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> = select(columns.map { it.name })
 public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = select(columns.asIterable())
 public fun <T> DataFrame<T>.select(vararg columns: Column): DataFrame<T> = select { columns.toColumns() }

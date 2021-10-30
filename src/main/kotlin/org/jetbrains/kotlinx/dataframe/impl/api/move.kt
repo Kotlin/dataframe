@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
 
 // TODO: support 'before' mode
 internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>, isAfter: Boolean): DataFrame<T> {
-    val removeResult = df.removeImpl(selector)
+    val removeResult = df.removeImpl(columns)
 
     val targetPath = df.getColumnWithPath(column).path
     val removeRoot = removeResult.removedColumns.first().getRoot()
@@ -44,7 +44,7 @@ internal fun <T, C> MoveClause<T, C>.moveImpl(
     under: Boolean = false
 ): DataFrame<T> {
     val receiver = DataFrameReceiver(df, false)
-    val removeResult = df.removeImpl(selector)
+    val removeResult = df.removeImpl(columns)
     val columnsToInsert = removeResult.removedColumns.map {
         val col = it.toColumnWithPath<C>(df)
         var path = newPathExpression(receiver, col)
@@ -55,7 +55,7 @@ internal fun <T, C> MoveClause<T, C>.moveImpl(
 }
 
 internal fun <T, C> MoveClause<T, C>.moveTo(columnIndex: Int): DataFrame<T> {
-    val removed = df.removeImpl(selector)
+    val removed = df.removeImpl(columns)
     val remainingColumns = removed.df.columns()
     val targetIndex = if (columnIndex > remainingColumns.size) remainingColumns.size else columnIndex
     val newColumnList = remainingColumns.subList(0, targetIndex) + removed.removedColumns.map { it.data.column as DataColumn<C> } + if (targetIndex < remainingColumns.size) remainingColumns.subList(targetIndex, remainingColumns.size) else emptyList()

@@ -3,8 +3,8 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.RowFilter
-import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
@@ -58,11 +58,11 @@ public fun <T> Grouped<T>.min(vararg columns: String, name: String? = null): Dat
 public fun <T, C : Comparable<C>> Grouped<T>.min(vararg columns: ColumnReference<C?>, name: String? = null): DataFrame<T> = min(name) { columns.toColumns() }
 public fun <T, C : Comparable<C>> Grouped<T>.min(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> = min(name) { columns.toColumns() }
 
-public fun <T, C : Comparable<C>> Grouped<T>.minOf(name: String? = null, selector: RowSelector<T, C>): DataFrame<T> =
-    Aggregators.min.aggregateOfDelegated(this, name) { minOfOrNull(selector) }
+public fun <T, C : Comparable<C>> Grouped<T>.minOf(name: String? = null, expression: RowExpression<T, C>): DataFrame<T> =
+    Aggregators.min.aggregateOfDelegated(this, name) { minOfOrNull(expression) }
 
-public fun <T, C : Comparable<C>> Grouped<T>.minBy(selector: RowSelector<T, C?>): DataFrame<T> =
-    aggregateBy { minByOrNull(selector) }
+public fun <T, C : Comparable<C>> Grouped<T>.minBy(expression: RowExpression<T, C?>): DataFrame<T> =
+    aggregateBy { minByOrNull(expression) }
 
 // endregion
 
@@ -84,11 +84,11 @@ public fun <T> Grouped<T>.max(vararg columns: String, name: String? = null): Dat
 public fun <T, C : Comparable<C>> Grouped<T>.max(vararg columns: ColumnReference<C?>, name: String? = null): DataFrame<T> = max(name) { columns.toColumns() }
 public fun <T, C : Comparable<C>> Grouped<T>.max(vararg columns: KProperty<C?>, name: String? = null): DataFrame<T> = max(name) { columns.toColumns() }
 
-public fun <T, C : Comparable<C>> Grouped<T>.maxOf(name: String? = null, selector: RowSelector<T, C>): DataFrame<T> =
-    Aggregators.max.aggregateOfDelegated(this, name) { maxOfOrNull(selector) }
+public fun <T, C : Comparable<C>> Grouped<T>.maxOf(name: String? = null, expression: RowExpression<T, C>): DataFrame<T> =
+    Aggregators.max.aggregateOfDelegated(this, name) { maxOfOrNull(expression) }
 
-public fun <T, C : Comparable<C>> Grouped<T>.maxBy(selector: RowSelector<T, C?>): DataFrame<T> =
-    aggregateBy { maxByOrNull(selector) }
+public fun <T, C : Comparable<C>> Grouped<T>.maxBy(expression: RowExpression<T, C?>): DataFrame<T> =
+    aggregateBy { maxByOrNull(expression) }
 
 // endregion
 
@@ -109,8 +109,8 @@ public fun <T, C : Number> Grouped<T>.sum(vararg columns: KProperty<C?>, name: S
 
 public inline fun <T, reified R : Number> Grouped<T>.sumOf(
     resultName: String? = null,
-    crossinline selector: RowSelector<T, R?>
-): DataFrame<T> = Aggregators.sum.aggregateOf(this, resultName, selector)
+    crossinline expression: RowExpression<T, R?>
+): DataFrame<T> = Aggregators.sum.aggregateOf(this, resultName, expression)
 
 // endregion
 
@@ -149,9 +149,9 @@ public fun <T, C : Number> Grouped<T>.mean(
 public inline fun <T, reified R : Number> Grouped<T>.meanOf(
     name: String? = null,
     skipNa: Boolean = false,
-    crossinline selector: RowSelector<T, R?>
+    crossinline expression: RowExpression<T, R?>
 ): DataFrame<T> =
-    Aggregators.mean(skipNa).aggregateOf(this, name, selector)
+    Aggregators.mean(skipNa).aggregateOf(this, name, expression)
 
 // endregion
 
@@ -174,8 +174,8 @@ public fun <T, C : Comparable<C>> Grouped<T>.median(vararg columns: KProperty<C?
 
 public inline fun <T, reified R : Comparable<R>> Grouped<T>.medianOf(
     name: String? = null,
-    crossinline selector: RowSelector<T, R?>
-): DataFrame<T> = Aggregators.median.aggregateOf(this, name, selector)
+    crossinline expression: RowExpression<T, R?>
+): DataFrame<T> = Aggregators.median.aggregateOf(this, name, expression)
 
 // endregion
 
@@ -193,6 +193,6 @@ public fun <T> Grouped<T>.std(vararg columns: ColumnReference<Number?>, name: St
 public fun <T> Grouped<T>.std(vararg columns: String, name: String? = null): DataFrame<T> = std(name) { columns.toColumnsOf() }
 public fun <T> Grouped<T>.std(vararg columns: KProperty<Number?>, name: String? = null): DataFrame<T> = std(name) { columns.toColumns() }
 
-public fun <T> Grouped<T>.stdOf(name: String? = null, selector: RowSelector<T, Number?>): DataFrame<T> = Aggregators.std.aggregateOf(this, name, selector)
+public fun <T> Grouped<T>.stdOf(name: String? = null, expression: RowExpression<T, Number?>): DataFrame<T> = Aggregators.std.aggregateOf(this, name, expression)
 
 // endregion

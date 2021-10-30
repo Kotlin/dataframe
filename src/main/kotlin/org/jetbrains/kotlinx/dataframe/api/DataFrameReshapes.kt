@@ -27,7 +27,7 @@ public fun <T, P : GroupedPivot<T>> P.withGrouping(groupName: String): P = withG
 
 public data class GatherClause<T, C, K, R>(
     val df: DataFrame<T>,
-    val selector: ColumnsSelector<T, C>,
+    val columns: ColumnsSelector<T, C>,
     val filter: ((C) -> Boolean)? = null,
     val dropNulls: Boolean = true,
     val nameTransform: ((String) -> K),
@@ -38,8 +38,8 @@ public fun <T, C> DataFrame<T>.gather(dropNulls: Boolean = true, selector: Colum
 
 public fun <T, C, K, R> GatherClause<T, C, K, R>.where(filter: Predicate<C>): GatherClause<T, C, K, R> = copy(filter = filter)
 
-public fun <T, C, K, R> GatherClause<T, C, *, R>.mapNames(transform: (String) -> K): GatherClause<T, C, K, R> = GatherClause(df, selector, filter, dropNulls, transform, valueTransform)
-public fun <T, C, K, R> GatherClause<T, C, K, *>.map(transform: (C) -> R): GatherClause<T, C, K, R> = GatherClause(df, selector, filter, dropNulls, nameTransform, transform)
+public fun <T, C, K, R> GatherClause<T, C, *, R>.mapNames(transform: (String) -> K): GatherClause<T, C, K, R> = GatherClause(df, columns, filter, dropNulls, transform, valueTransform)
+public fun <T, C, K, R> GatherClause<T, C, K, *>.map(transform: (C) -> R): GatherClause<T, C, K, R> = GatherClause(df, columns, filter, dropNulls, nameTransform, transform)
 
 public inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: ColumnReference<String>): DataFrame<T> = into(keyColumn.name())
 public inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(keyColumn: String): DataFrame<T> = gatherImpl(this, keyColumn, null, getType<K>(), getType<R>())

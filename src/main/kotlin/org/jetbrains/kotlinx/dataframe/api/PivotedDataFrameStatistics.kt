@@ -4,8 +4,8 @@ import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.RowFilter
-import org.jetbrains.kotlinx.dataframe.RowSelector
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
@@ -26,7 +26,7 @@ public fun <T, R> PivotedDataFrame<T>.aggregate(separate: Boolean = false, body:
 
 public fun <T> PivotedDataFrame<T>.count(predicate: RowFilter<T>? = null): DataRow<T> = delegate { count(predicate) }
 
-public inline fun <T, reified V> PivotedDataFrame<T>.with(noinline selector: RowSelector<T, V>): DataRow<T> = delegate { with(selector) }
+public inline fun <T, reified V> PivotedDataFrame<T>.with(noinline expression: RowExpression<T, V>): DataRow<T> = delegate { with(expression) }
 
 // region values
 
@@ -62,9 +62,9 @@ public fun <T, R : Comparable<R>> PivotedDataFrame<T>.min(vararg columns: String
 public fun <T, R : Comparable<R>> PivotedDataFrame<T>.min(vararg columns: ColumnReference<R?>): DataRow<T> = min { columns.toColumns() }
 public fun <T, R : Comparable<R>> PivotedDataFrame<T>.min(vararg columns: KProperty<R?>): DataRow<T> = min { columns.toColumns() }
 
-public fun <T, R : Comparable<R>> PivotedDataFrame<T>.minOf(rowExpression: RowSelector<T, R>): DataRow<T> = delegate { minOf(rowExpression) }
+public fun <T, R : Comparable<R>> PivotedDataFrame<T>.minOf(rowExpression: RowExpression<T, R>): DataRow<T> = delegate { minOf(rowExpression) }
 
-public fun <T, R : Comparable<R>> PivotedDataFrame<T>.minBy(rowExpression: RowSelector<T, R>): DataRow<T> = delegate { minBy(rowExpression) }
+public fun <T, R : Comparable<R>> PivotedDataFrame<T>.minBy(rowExpression: RowExpression<T, R>): DataRow<T> = delegate { minBy(rowExpression) }
 public fun <T> PivotedDataFrame<T>.minBy(column: String): DataRow<T> = aggregate { minBy(column) }
 public fun <T, C : Comparable<C>> PivotedDataFrame<T>.minBy(column: ColumnReference<C?>): DataRow<T> = aggregate { minBy(column) }
 public fun <T, C : Comparable<C>> PivotedDataFrame<T>.minBy(column: KProperty<C?>): DataRow<T> = aggregate { minBy(column) }
@@ -94,9 +94,9 @@ public fun <T> PivotedDataFrame<T>.max(vararg columns: String): DataRow<T> = max
 public fun <T, R : Comparable<R>> PivotedDataFrame<T>.max(vararg columns: ColumnReference<R?>): DataRow<T> = max { columns.toColumns() }
 public fun <T, R : Comparable<R>> PivotedDataFrame<T>.max(vararg columns: KProperty<R?>): DataRow<T> = max { columns.toColumns() }
 
-public fun <T, R : Comparable<R>> PivotedDataFrame<T>.maxOf(rowExpression: RowSelector<T, R>): DataRow<T> = delegate { maxOf(rowExpression) }
+public fun <T, R : Comparable<R>> PivotedDataFrame<T>.maxOf(rowExpression: RowExpression<T, R>): DataRow<T> = delegate { maxOf(rowExpression) }
 
-public fun <T, R : Comparable<R>> PivotedDataFrame<T>.maxBy(rowExpression: RowSelector<T, R>): DataRow<T> = delegate { maxBy(rowExpression) }
+public fun <T, R : Comparable<R>> PivotedDataFrame<T>.maxBy(rowExpression: RowExpression<T, R>): DataRow<T> = delegate { maxBy(rowExpression) }
 public fun <T> PivotedDataFrame<T>.maxBy(column: String): DataRow<T> = aggregate { maxBy(column) }
 public fun <T, C : Comparable<C>> PivotedDataFrame<T>.maxBy(column: ColumnReference<C?>): DataRow<T> = aggregate { maxBy(column) }
 public fun <T, C : Comparable<C>> PivotedDataFrame<T>.maxBy(column: KProperty<C?>): DataRow<T> = aggregate { maxBy(column) }
@@ -125,8 +125,8 @@ public fun <T> PivotedDataFrame<T>.sum(vararg columns: String): DataRow<T> = sum
 public fun <T, C : Number> PivotedDataFrame<T>.sum(vararg columns: ColumnReference<C?>): DataRow<T> = sum { columns.toColumns() }
 public fun <T, C : Number> PivotedDataFrame<T>.sum(vararg columns: KProperty<C?>): DataRow<T> = sum { columns.toColumns() }
 
-public inline fun <T, reified R : Number> PivotedDataFrame<T>.sumOf(crossinline selector: RowSelector<T, R>): DataRow<T> =
-    delegate { sumOf(selector) }
+public inline fun <T, reified R : Number> PivotedDataFrame<T>.sumOf(crossinline expression: RowExpression<T, R>): DataRow<T> =
+    delegate { sumOf(expression) }
 
 // endregion
 
@@ -160,9 +160,9 @@ public fun <T, R : Number> PivotedDataFrame<T>.mean(skipNa: Boolean = true, colu
 
 public inline fun <T, reified R : Number> PivotedDataFrame<T>.meanOf(
     skipNa: Boolean = false,
-    crossinline selector: RowSelector<T, R?>
+    crossinline expression: RowExpression<T, R?>
 ): DataRow<T> =
-    delegate { meanOf(skipNa, selector) }
+    delegate { meanOf(skipNa, expression) }
 
 // endregion
 
@@ -192,8 +192,8 @@ public fun <T, C : Comparable<C>> PivotedDataFrame<T>.median(
 public fun <T, C : Comparable<C>> PivotedDataFrame<T>.median(vararg columns: KProperty<C?>): DataRow<T> = median { columns.toColumns() }
 
 public inline fun <T, reified R : Comparable<R>> PivotedDataFrame<T>.medianOf(
-    crossinline selector: RowSelector<T, R?>
-): DataRow<T> = delegate { medianOf(selector) }
+    crossinline expression: RowExpression<T, R?>
+): DataRow<T> = delegate { medianOf(expression) }
 
 // endregion
 
@@ -217,7 +217,7 @@ public fun <T> PivotedDataFrame<T>.std(vararg columns: ColumnReference<Number?>)
 public fun <T> PivotedDataFrame<T>.std(vararg columns: String): DataRow<T> = std { columns.toColumnsOf() }
 public fun <T> PivotedDataFrame<T>.std(vararg columns: KProperty<Number?>): DataRow<T> = std { columns.toColumns() }
 
-public fun <T> PivotedDataFrame<T>.stdOf(selector: RowSelector<T, Number?>): DataRow<T> = delegate { stdOf(selector) }
+public fun <T> PivotedDataFrame<T>.stdOf(expression: RowExpression<T, Number?>): DataRow<T> = delegate { stdOf(expression) }
 
 // endregion
 

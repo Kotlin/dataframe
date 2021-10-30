@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataFrameSelector
+import org.jetbrains.kotlinx.dataframe.DataFrameExpression
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -52,29 +52,29 @@ public fun <T, G, C> GroupedDataFrame<T, G>.sortByDesc(selector: SortColumnsSele
 private fun <T, G, C> GroupedDataFrame<T, G>.createColumnFromGroupExpression(
     receiver: ColumnsSelectionDsl<T>,
     default: C? = null,
-    selector: DataFrameSelector<G, C>
+    expression: DataFrameExpression<G, C>
 ): DataColumn<C?> {
     return receiver.exprWithActualType { row ->
         val group: DataFrame<G>? = row[groups]
         if (group == null) default
-        else selector(group, group)
+        else expression(group, group)
     }
 }
 
 public fun <T, G, C> GroupedDataFrame<T, G>.sortByGroup(
     nullsLast: Boolean = false,
     default: C? = null,
-    selector: DataFrameSelector<G, C>
+    expression: DataFrameExpression<G, C>
 ): GroupedDataFrame<T, G> = toDataFrame().sortBy {
-    createColumnFromGroupExpression(this, default, selector).nullsLast(nullsLast)
+    createColumnFromGroupExpression(this, default, expression).nullsLast(nullsLast)
 }.asGroupedDataFrame(groups)
 
 public fun <T, G, C> GroupedDataFrame<T, G>.sortByGroupDesc(
     nullsLast: Boolean = false,
     default: C? = null,
-    selector: DataFrameSelector<G, C>
+    expression: DataFrameExpression<G, C>
 ): GroupedDataFrame<T, G> = toDataFrame().sortBy {
-    createColumnFromGroupExpression(this, default, selector).desc.nullsLast(nullsLast)
+    createColumnFromGroupExpression(this, default, expression).desc.nullsLast(nullsLast)
 }.asGroupedDataFrame(groups)
 
 public fun <T, G> GroupedDataFrame<T, G>.sortByCountAsc(): GroupedDataFrame<T, G> = sortByGroup(default = 0) { nrow() }
