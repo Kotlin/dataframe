@@ -55,7 +55,7 @@ df.filter { age > 30 }
 
 See [how to create column accessor](createAccessor.md)
 
-`ColumnAccessor` stores column [`name`](#properties) (for top-level columns) or column path (for nested columns), has type argument that corresponds to column [`type`](#column-properties), but doesn't contain any data.
+`ColumnAccessor` stores column [`name`](#properties) (for top-level columns) or column path (for nested columns), has type argument that corresponds to column [`type`](#properties), but doesn't contain any data.
 To convert `ColumnAccessor` into `DataColumn` just add values:
 
 <!---FUN columnAccessorToColumn-->
