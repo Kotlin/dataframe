@@ -303,7 +303,7 @@ public data class SplitClauseWithTransform<T, C, R>(
     val transform: (C) -> Iterable<R>
 ) : SplitWithTransform<T, C, R> {
 
-    override fun intoRows(dropEmpty: Boolean): DataFrame<T> = df.explode(dropEmpty, columns)
+    override fun intoRows(dropEmpty: Boolean): DataFrame<T> = inplace().explode(dropEmpty, columns)
 
     override fun inplace(): DataFrame<T> = df.convert(columns).convertRowCellImpl(Many::class.createTypeWithArgument(targetType)) { if (it == null) emptyMany() else transform(it).toMany() }
 
