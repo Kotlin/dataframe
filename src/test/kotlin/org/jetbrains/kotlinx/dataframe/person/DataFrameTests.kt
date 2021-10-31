@@ -1949,6 +1949,12 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `split into rows with transform`(){
+        val splitted = typed.split { city }.with { it.toCharArray().toList() }.intoRows()
+        splitted.nrow shouldBe typed.city.sumOf { it?.length ?: 0}
+    }
+
+    @Test
     fun `render to string`() {
         val expected = """
             Data Frame [7 x 4]
