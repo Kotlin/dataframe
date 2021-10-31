@@ -5,7 +5,7 @@ This section describes ways to create [`DataColumn`](DataColumn.md).
 
 ### by columnOf
 
-Returns new column with given elements. Column [`type`](DataColumn.md#properties) is deduced from compile-time type of elements, column [`name`](DataColumn.md#column-properties) is taken from the name of the variable.
+Returns new column with given elements. Column [`type`](DataColumn.md#properties) is deduced from compile-time type of elements, column [`name`](DataColumn.md#properties) is taken from the name of the variable.
 
 <!---FUN createValueByColumnOf-->
 
