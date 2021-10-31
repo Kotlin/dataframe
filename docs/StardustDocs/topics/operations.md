@@ -35,7 +35,7 @@
 * [take](take.md)
 * [takeLast](takeLast.md)
 * [distinct](distinct.md)
-* [distinctBy](distinctBy.md)
+* [distinctBy](distinct.md#distinctby)
 * [sortBy](sortBy.md)
 * [sortByDesc](sortByDesc.md)
 * [sortWith](sortWith.md)

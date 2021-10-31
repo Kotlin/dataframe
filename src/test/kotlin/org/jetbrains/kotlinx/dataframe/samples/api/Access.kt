@@ -377,7 +377,9 @@ class Access : TestBase() {
     @Test
     fun distinctColumns_properties() {
         // SampleStart
-        df.distinct { age and name } shouldBe df.select { age and name }.distinct()
+        df.distinct { age and name }
+        // same as
+        df.select { age and name }.distinct()
         // SampleEnd
     }
 
@@ -386,23 +388,27 @@ class Access : TestBase() {
         // SampleStart
         val age by column<Int>()
         val name by columnGroup()
-        df.distinct { age and name } shouldBe df.select { age and name }.distinct()
+        df.distinct { age and name }
+        // same as
+        df.select { age and name }.distinct()
         // SampleEnd
     }
 
     @Test
     fun distinctColumns_strings() {
         // SampleStart
-        df.distinct("age", "name") shouldBe df.select("age", "name").distinct()
+        df.distinct("age", "name")
+        // same as
+        df.select("age", "name").distinct()
         // SampleEnd
     }
 
     @Test
     fun distinctBy_properties() {
         // SampleStart
-        df.distinctBy { age and name } shouldBe df.groupBy { age and name }.mapToRows { group.first() }
-
-        df.distinctBy { expr { name.firstName.take(3).lowercase() } }
+        df.distinctBy { age and name }
+        // same as
+        df.groupBy { age and name }.mapToRows { group.first() }
         // SampleEnd
     }
 
@@ -413,18 +419,18 @@ class Access : TestBase() {
         val name by columnGroup()
         val firstName by name.column<String>()
 
-        df.distinctBy { age and name } shouldBe df.groupBy { age and name }.mapToRows { group.first() }
-
-        df.distinctBy { expr { firstName().take(3).lowercase() } }
+        df.distinctBy { age and name }
+        // same as
+        df.groupBy { age and name }.mapToRows { group.first() }
         // SampleEnd
     }
 
     @Test
     fun distinctBy_strings() {
         // SampleStart
-        df.distinctBy("age", "name") shouldBe df.groupBy("age", "name").mapToRows { group.first() }
-
-        df.distinctBy { expr { "name"["firstName"]<String>().take(3).lowercase() } }
+        df.distinctBy("age", "name")
+        // same as
+        df.groupBy("age", "name").mapToRows { group.first() }
         // SampleEnd
     }
 }
