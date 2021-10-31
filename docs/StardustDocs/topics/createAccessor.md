@@ -1,7 +1,7 @@
 [//]: # (title: Create ColumnAccessor)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
-[Column accessors](DataColumn.md#column-accessors) are created by [property delegate](https://kotlinlang.org/docs/delegated-properties.html) `column`. Column [`type`](DataColumn.md#column-properties) should be passed as type argument, column [`name`](DataColumn.md#column-properties) will be taken from the variable name.
+[Column accessors](DataColumn.md#column-accessors) are created by [property delegate](https://kotlinlang.org/docs/delegated-properties.html) `column`. Column [`type`](DataColumn.md#properties) should be passed as type argument, column [`name`](DataColumn.md#column-properties) will be taken from the variable name.
 
 <!---FUN createColumnAccessor-->
 
