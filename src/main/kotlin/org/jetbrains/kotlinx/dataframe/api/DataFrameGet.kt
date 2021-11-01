@@ -28,7 +28,7 @@ public fun <T, C> DataFrame<T>.getColumnPath(selector: ColumnSelector<T, C>): Co
 public fun <T, C> DataFrame<T>.getColumnPaths(selector: ColumnsSelector<T, C>): List<ColumnPath> =
     selector.toColumns().resolve(this, UnresolvedColumnsPolicy.Fail).map { it.path }
 
-public fun <T> DataFrame<T>.col(predicate: (AnyCol) -> Boolean): AnyCol = columns().single(predicate)
+public fun <T> DataFrame<T>.singleColumn(predicate: (AnyCol) -> Boolean): AnyCol = columns().single(predicate)
 public fun <T, C> DataFrame<T>.getColumnWithPath(selector: ColumnSelector<T, C>): ColumnWithPath<C> = getColumnsWithPaths(selector).single()
 public fun <T, C> DataFrame<T>.columns(selector: ColumnsSelector<T, C>): List<DataColumn<C>> = get(selector)
 public fun <T> DataFrame<T>.getColumnIndex(col: AnyCol): Int = getColumnIndex(col.name())
@@ -39,7 +39,7 @@ public fun <T> DataFrame<T>.getOrNull(index: Int): DataRow<T>? = if (index < 0 |
 
 public fun <T> ColumnsContainer<T>.frameColumn(columnPath: ColumnPath): FrameColumn<*> = get(columnPath).asFrameColumn()
 public fun <T> ColumnsContainer<T>.frameColumn(columnName: String): FrameColumn<*> = get(columnName).asFrameColumn()
-public fun <T> ColumnsContainer<T>.tryGetColumn(columnIndex: Int): AnyCol? = if (columnIndex in 0 until ncol()) col(columnIndex) else null
+public fun <T> ColumnsContainer<T>.tryGetColumn(columnIndex: Int): AnyCol? = if (columnIndex in 0 until ncol()) getColumn(columnIndex) else null
 public fun <T> ColumnsContainer<T>.getColumnGroup(columnPath: ColumnPath): ColumnGroup<*> = get(columnPath).asColumnGroup()
 public fun <T> ColumnsContainer<T>.getColumnGroup(columnName: String): ColumnGroup<*> = get(columnName).asColumnGroup()
 

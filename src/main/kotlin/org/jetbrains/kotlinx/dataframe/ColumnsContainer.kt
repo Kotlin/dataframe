@@ -27,9 +27,10 @@ public interface ColumnsContainer<out T> {
     public fun <R> getColumn(column: ColumnReference<R>): DataColumn<R> = get(column)
     public fun <R> getColumn(column: ColumnReference<DataRow<R>>): ColumnGroup<R> = get(column)
     public fun <R> getColumn(column: ColumnReference<DataFrame<R>>): FrameColumn<R> = get(column)
-    public fun <R> getColumn(name: String): DataColumn<R> = get(name) as DataColumn<R>
-    public fun <R> getColumn(path: ColumnPath): DataColumn<R> = get(path) as DataColumn<R>
-    public fun <R> getColumn(index: Int): DataColumn<R> = col(index) as DataColumn<R>
+    public fun getColumn(name: String): AnyCol = get(name)
+    public fun getColumn(path: ColumnPath): AnyCol = get(path)
+    public fun getColumn(index: Int): AnyCol
+    public fun getColumnGroup(index: Int): ColumnGroup<*> = getColumn(index).asColumnGroup()
 
     public fun hasColumn(columnName: String): Boolean = tryGetColumn(columnName) != null
 
@@ -44,7 +45,6 @@ public interface ColumnsContainer<out T> {
     }
 
     public operator fun get(index: Int): DataRow<T>
-    public fun col(columnIndex: Int): AnyCol
     public fun columns(): List<AnyCol>
     public fun ncol(): Int
 }

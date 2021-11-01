@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import com.beust.klaxon.*
-import org.jetbrains.kotlinx.dataframe.AnyColumn
+import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -53,7 +53,7 @@ private val arrayColumnName = "array"
 internal val valueColumnName = "value"
 
 internal fun fromJsonList(records: List<*>): AnyFrame {
-    fun AnyFrame.isSingleUnnamedColumn() = ncol == 1 && col(0).name.let { it == org.jetbrains.kotlinx.dataframe.io.valueColumnName || it == org.jetbrains.kotlinx.dataframe.io.arrayColumnName }
+    fun AnyFrame.isSingleUnnamedColumn() = ncol == 1 && getColumn(0).name.let { it == org.jetbrains.kotlinx.dataframe.io.valueColumnName || it == org.jetbrains.kotlinx.dataframe.io.arrayColumnName }
 
     var hasPrimitive = false
     var hasArray = false
@@ -78,7 +78,7 @@ internal fun fromJsonList(records: List<*>): AnyFrame {
         nameGenerator.addUnique(arrayColumnName)
     } else arrayColumnName
 
-    val columns: List<AnyColumn> = nameGenerator.names.map { colName ->
+    val columns: List<AnyBaseColumn> = nameGenerator.names.map { colName ->
         when {
             colName == valueColumn -> {
                 val collector = createDataCollector(records.size)
@@ -101,7 +101,7 @@ internal fun fromJsonList(records: List<*>): AnyFrame {
                 val parsed = fromJsonList(values)
                 when {
                     parsed.isSingleUnnamedColumn() -> {
-                        val col = parsed.col(0)
+                        val col = parsed.getColumn(0)
                         val elementType = col.type
                         val values = col.values.asList().splitByIndices(startIndices.asSequence()).toMany()
                         DataColumn.createValueColumn(colName, values, Many::class.createType(listOf(KTypeProjection.invariant(elementType))))
@@ -122,7 +122,7 @@ internal fun fromJsonList(records: List<*>): AnyFrame {
                 val parsed = fromJsonList(values)
                 when {
                     parsed.ncol == 0 -> DataColumn.createValueColumn(colName, arrayOfNulls<Any?>(values.size).toList(), getType<Any?>())
-                    parsed.isSingleUnnamedColumn() -> parsed.col(0).rename(colName)
+                    parsed.isSingleUnnamedColumn() -> parsed.getColumn(0).rename(colName)
                     else -> DataColumn.createColumnGroup(colName, parsed)
                 }
             }

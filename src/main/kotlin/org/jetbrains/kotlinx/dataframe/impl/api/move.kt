@@ -27,7 +27,7 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
         val parentPath = it.dropLast(1)
         val parent = if (parentPath.isEmpty()) df else df.getColumnGroup(parentPath)
         val index = parent.getColumnIndex(it.last())
-        val col = df.col(index)
+        val col = df.getColumn(index)
         ColumnPosition(index, false, col)
     }
 

@@ -4,7 +4,6 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.chunked
-import org.jetbrains.kotlinx.dataframe.api.col
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
 import org.jetbrains.kotlinx.dataframe.api.drop
@@ -20,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.single
+import org.jetbrains.kotlinx.dataframe.api.singleColumn
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.takeLast
@@ -27,7 +27,6 @@ import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 
@@ -64,15 +63,15 @@ class Access : TestBase() {
     @Test
     fun getColumnByIndex() {
         // SampleStart
-        df.col(2)
-        df.col(0).asColumnGroup().col(1)
+        df.getColumn(2)
+        df.getColumnGroup(0).getColumn(1)
         // SampleEnd
     }
 
     @Test
     fun getColumnByCondition() {
         // SampleStart
-        df.col { it.isNumber() && it.hasNulls() }
+        df.singleColumn { it.isNumber() && it.hasNulls() }
         // SampleEnd
     }
 

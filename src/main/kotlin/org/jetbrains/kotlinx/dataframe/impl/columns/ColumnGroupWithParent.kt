@@ -24,7 +24,7 @@ internal class ColumnGroupWithParent<T>(override val parent: ColumnGroupReferenc
     override fun <R> get(column: ColumnReference<R>) = df[column].addParent(this)
     override fun <R> get(column: ColumnReference<DataRow<R>>) = df[column].addParent(this) as ColumnGroup<R>
     override fun columns() = df.columns().map { it.addParent(this) }
-    override fun col(columnIndex: Int) = df.col(columnIndex).addParent(this)
+    override fun getColumn(columnIndex: Int) = df.getColumn(columnIndex).addParent(this)
 
     override fun equals(other: Any?) = source.checkEquals(other)
 

@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumn
+import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.Many
@@ -31,9 +31,9 @@ internal class CreateDataFrameDslImpl<T>(
     private val prefix: ColumnPath = emptyPath()
 ) : CreateDataFrameDsl<T>(source) {
 
-    internal val columns = mutableListOf<Pair<ColumnPath, AnyColumn>>()
+    internal val columns = mutableListOf<Pair<ColumnPath, AnyBaseColumn>>()
 
-    override fun add(column: AnyColumn, path: ColumnPath?) {
+    override fun add(column: AnyBaseColumn, path: ColumnPath?) {
         val col = if (path != null) column.rename(path.last()) else column
         val targetPath = if (path != null) prefix + path else prefix + column.name()
         columns.add(targetPath to col)

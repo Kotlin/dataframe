@@ -105,7 +105,7 @@ class DataFrameTests : BaseTest() {
         d.nrow() shouldBe 2
         d.ncol() shouldBe 2
         d.columnNames() shouldBe listOf("", "")
-        d[""] shouldBe d.col(0)
+        d[""] shouldBe d.getColumn(0)
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -248,7 +248,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `update`() {
         fun AnyFrame.check() {
-            col(1).name() shouldBe "age"
+            getColumn(1).name() shouldBe "age"
             ncol() shouldBe typed.ncol()
             this["age"].toList() shouldBe typed.map { age * 2 }
         }
@@ -270,7 +270,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `conditional update`() {
         fun AnyFrame.check() {
-            col(1).name() shouldBe "age"
+            getColumn(1).name() shouldBe "age"
             ncol() shouldBe typed.ncol()
             this["age"].toList() shouldBe typed.map { if (age > 25) null else age }
         }
@@ -962,7 +962,7 @@ class DataFrameTests : BaseTest() {
             val city = typed[row][city].toString()
             pivoted[row][city] shouldBe true
             for (col in typed.ncol() until pivoted.ncol()) {
-                val column = pivoted.col(col)
+                val column = pivoted.getColumn(col)
                 val pivotedValue = column.typed<Boolean>()[row]
                 val colName = column.name()
                 pivotedValue shouldBe (colName == city)
@@ -999,7 +999,8 @@ class DataFrameTests : BaseTest() {
         for (i in 0 until typed.nrow()) {
             val city = typed[i][city]
             for (j in typed.ncol() until res.ncol()) {
-                res.col(j).typed<Boolean>().get(i) shouldBe (res.col(j).name() == city.toString())
+                val col = res.getColumn(j)
+                col.typed<Boolean>().get(i) shouldBe (col.name() == city.toString())
             }
         }
     }
@@ -1015,7 +1016,7 @@ class DataFrameTests : BaseTest() {
         trueValuesCount shouldBe selected.distinct().nrow()
 
         val pairs = (1 until res.ncol()).flatMap { i ->
-            val col = res.col(i).typed<Boolean>()
+            val col = res.getColumn(i).typed<Boolean>()
             res.filter { it[col] }.map { name to col.name() }
         }.toSet()
 
@@ -1292,9 +1293,9 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `move to position`() {
-        typed.col(1) shouldBe typed.age
+        typed.getColumn(1) shouldBe typed.age
         val moved = typed.move { age }.to(2)
-        moved.col(2) shouldBe typed.age
+        moved.getColumn(2) shouldBe typed.age
         moved.ncol() shouldBe typed.ncol()
     }
 
@@ -1743,7 +1744,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `get typed column by name`() {
-        val col = df.getColumn<String>("name")
+        val col = df.getColumn("name").typed<String>()
         col[0].substring(0, 3) shouldBe "Ali"
     }
 
