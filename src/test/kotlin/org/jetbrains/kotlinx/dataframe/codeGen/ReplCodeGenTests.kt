@@ -53,6 +53,7 @@ class ReplCodeGenTests : BaseTest() {
         val expected = """
             @DataSchema(isOpen = false)
             interface $marker
+            
             val $dfName<$marker>.age: $dataCol<kotlin.Int> @JvmName("${marker}_age") get() = this["age"] as $dataCol<kotlin.Int>
             val $dfRowName<$marker>.age: kotlin.Int @JvmName("${marker}_age") get() = this["age"] as kotlin.Int
             val $dfName<$marker>.city: $dataCol<kotlin.String?> @JvmName("${marker}_city") get() = this["city"] as $dataCol<kotlin.String?>
@@ -73,6 +74,7 @@ class ReplCodeGenTests : BaseTest() {
         val expected3 = """
             @DataSchema(isOpen = false)
             interface $marker3 : $markerFull
+            
             val $dfName<$marker3>.city: $dataCol<kotlin.String> @JvmName("${marker3}_city") get() = this["city"] as $dataCol<kotlin.String>
             val $dfRowName<$marker3>.city: kotlin.String @JvmName("${marker3}_city") get() = this["city"] as kotlin.String
         """.trimIndent()
@@ -88,6 +90,7 @@ class ReplCodeGenTests : BaseTest() {
         val expected5 = """
             @DataSchema(isOpen = false)
             interface $marker5 : $markerFull
+            
             val $dfName<$marker5>.weight: $dataCol<kotlin.Int> @JvmName("${marker5}_weight") get() = this["weight"] as $dataCol<kotlin.Int>
             val $dfRowName<$marker5>.weight: kotlin.Int @JvmName("${marker5}_weight") get() = this["weight"] as kotlin.Int
         """.trimIndent()
@@ -108,6 +111,7 @@ class ReplCodeGenTests : BaseTest() {
         val expected = """
             @DataSchema(isOpen = false)
             interface ${Test2._DataFrameType2::class.simpleName!!} : ${Test2._DataFrameType::class.qualifiedName}, ${Test2._DataFrameType1::class.qualifiedName}
+            
         """.trimIndent()
 
         val code = repl.process(typed).declarations.trimIndent()
@@ -129,6 +133,7 @@ class ReplCodeGenTests : BaseTest() {
         val expected = """
             @DataSchema(isOpen = false)
             interface $marker : ${Test2._DataFrameType::class.qualifiedName}
+            
             val $dfName<$marker>.city: $dataCol<kotlin.String?> @JvmName("${marker}_city") get() = this["city"] as $dataCol<kotlin.String?>
             val $dfRowName<$marker>.city: kotlin.String? @JvmName("${marker}_city") get() = this["city"] as kotlin.String?
             val $dfName<$marker>.weight: $dataCol<kotlin.Int?> @JvmName("${marker}_weight") get() = this["weight"] as $dataCol<kotlin.Int?>
