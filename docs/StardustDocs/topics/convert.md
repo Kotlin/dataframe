@@ -8,15 +8,13 @@ Changes values and types of the columns.
 ```kotlin
 convert { columnsSelector }
     .with { rowExpression } | .withConst(value) | .withRowCol { rowColExpression } | to<Type>() | to { colExpression }
-```
 
-where 
-
-```kotlin
 rowExpression = DataRow.(OldValue) -> NewValue
 rowColExpression = DataRow.(DataColumn) -> NewValue
 colExpression = DataFrame.(DataColumn) -> NewValue
 ```
+
+See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-expressions)
 
 #### Examples
 
@@ -28,8 +26,6 @@ df.convert { dfsOf<String>() }.with { it.toCharArray().toList() }
 ```
 
 <!---END-->
-
-See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-expressions)
 
 ### Type conversions
 

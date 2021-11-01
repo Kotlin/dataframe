@@ -3,12 +3,14 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dfsOf
+import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.length
 import org.jetbrains.kotlinx.dataframe.api.lowercase
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.movingAverage
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
+import org.jetbrains.kotlinx.dataframe.api.nullToZero
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.shuffled
 import org.jetbrains.kotlinx.dataframe.api.to
@@ -65,6 +67,22 @@ class Modify : TestBase() {
     fun shuffled() {
         // SampleStart
         df.shuffled()
+        // SampleEnd
+    }
+    
+    @Test
+    fun fillNulls() {
+        // SampleStart
+        df.fillNulls { intCols() }.with { -1 }
+        // same as
+        df.update { intCols() }.where { it == null }.with { -1 }
+        // SampleEnd
+    }
+
+    @Test
+    fun nullToZero() {
+        // SampleStart
+        df.nullToZero { weight }
         // SampleEnd
     }
 }

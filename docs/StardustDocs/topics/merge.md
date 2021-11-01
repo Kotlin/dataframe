@@ -1,13 +1,15 @@
 [//]: # (title: merge)
 
 Merges several columns into a single column. Reverse operation to [split](split.md)
-```
+
+```kotlin
 df.merge { columns }.into(columnPath)
 df.merge { columns }.by(delimeters, options).into(columnPath)
 df.merge { columns }.by { merger }.into(columnPath)
 
-merger = List<T> -> Any
+merger = (DataRow).List<T> -> Any
 ```
+
 When no `delimeter` or `merger` are defined, values will be merged into the `List`
 ```kotlin
 df.merge { firstName and lastName }.by(" ").into("fullName")

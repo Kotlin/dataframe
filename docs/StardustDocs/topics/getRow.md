@@ -60,7 +60,7 @@ df.maxByOrNull("weight")
 
 Returns the single [row](DataRow.md) that matches the given [condition](DataRow.md#row-conditions), or throws exception if there is no or more than one matching row.
 
-## singleOrNull
+### singleOrNull
 
 Returns the single [row](DataRow.md) that matches the given [condition](DataRow.md#row-conditions), or `null` if there is no or more than one matching row.
 
@@ -92,6 +92,6 @@ Returns the first [row](DataRow.md) that has the largest value in the given colu
 
 Returns the first [row](DataRow.md) that has the smallest value in the given column, or throws exception if `DataFrame` is empty.
 
-## minByOrNull
+### minByOrNull
 
 Returns the first [row](DataRow.md) that has the smallest value in the given column, or `null` if `DataFrame` is empty.

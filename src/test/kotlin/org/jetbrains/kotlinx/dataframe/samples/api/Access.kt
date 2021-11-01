@@ -187,6 +187,34 @@ class Access : TestBase() {
     }
 
     @Test
+    fun take() {
+        // SampleStart
+        df.take(5)
+        // SampleEnd
+    }
+
+    @Test
+    fun takeLast() {
+        // SampleStart
+        df.takeLast(5)
+        // SampleEnd
+    }
+
+    @Test
+    fun drop() {
+        // SampleStart
+        df.drop(5)
+        // SampleEnd
+    }
+
+    @Test
+    fun dropLast() {
+        // SampleStart
+        df.dropLast(5)
+        // SampleEnd
+    }
+
+    @Test
     fun filter_properties() {
         // SampleStart
         df.filter { age > 18 && name.firstName.startsWith("A") }
@@ -209,7 +237,30 @@ class Access : TestBase() {
     @Test
     fun filter_strings() {
         // SampleStart
-        df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }.nrow shouldBe 1
+        df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
+        // SampleEnd
+    }
+    
+    @Test
+    fun filterBy_properties() {
+        // SampleStart
+        df.filterBy { isHappy }
+        // SampleEnd
+    }
+
+    @Test
+    fun filterBy_accessors() {
+        // SampleStart
+        val isHappy by column<Boolean>()
+        df.filterBy { isHappy }
+        // SampleEnd
+    }
+
+    @Test
+    fun filterBy_strings() {
+        // SampleStart
+        df.rows().drop()
+        df.filterBy("isHappy")
         // SampleEnd
     }
 

@@ -41,8 +41,8 @@ Get single column by index (starting from 0):
 <!---FUN getColumnByIndex-->
 
 ```kotlin
-df.col(2)
-df.col(0).asColumnGroup().col(1)
+df.getColumn(2)
+df.getColumnGroup(0).getColumn(1)
 ```
 
 <!---END-->
@@ -52,7 +52,7 @@ Get single column by [condition](DataColumn.md#column-conditions):
 <!---FUN getColumnByCondition-->
 
 ```kotlin
-df.col { it.isNumber() && it.hasNulls() }
+df.singleColumn { it.isNumber() && it.hasNulls() }
 ```
 
 <!---END-->

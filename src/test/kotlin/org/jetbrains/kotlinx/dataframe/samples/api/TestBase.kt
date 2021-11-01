@@ -14,14 +14,14 @@ import org.jetbrains.kotlinx.dataframe.dataFrameOf
 
 public open class TestBase {
 
-    val df = dataFrameOf("firstName", "lastName", "age", "city", "weight")(
-        "Alice", "Cooper", 15, "London", 54,
-        "Bob", "Dylan", 45, "Dubai", 87,
-        "Mark", "Antony", 20, "Moscow", null,
-        "Mark", "Avrely", 40, "Milan", null,
-        "Bob", "Marley", 30, "Tokyo", 68,
-        "Alice", "Lindt", 20, null, 55,
-        "Mark", "Petrov", 30, "Moscow", 90
+    val df = dataFrameOf("firstName", "lastName", "age", "city", "weight", "isHappy")(
+        "Alice", "Cooper", 15, "London", 54, true,
+        "Bob", "Dylan", 45, "Dubai", 87, true,
+        "Mark", "Antony", 20, "Moscow", null, false,
+        "Mark", "Avrely", 40, "Milan", null, true,
+        "Bob", "Marley", 30, "Tokyo", 68, true,
+        "Alice", "Lindt", 20, null, 55, false,
+        "Mark", "Petrov", 30, "Moscow", 90, true
     ).group("firstName", "lastName").into("name").typed<Person>()
 
     @DataSchema
@@ -41,6 +41,7 @@ public open class TestBase {
         val city: String?
         val name: DataRow<Name>
         val weight: Int?
+        val isHappy: Boolean
     }
 
     val ColumnsContainer<Person>.age: ValueColumn<Int>
@@ -60,6 +61,12 @@ public open class TestBase {
             "Person_weight"
         ) get() = this["weight"] as DataColumn<Int?>
     val DataRow<Person>.weight: kotlin.Int? @JvmName("Person_weight") get() = this["weight"] as kotlin.Int?
+
+    val ColumnsContainer<Person>.isHappy: DataColumn<Boolean>
+        @JvmName(
+            "Person_isHappy"
+        ) get() = this["isHappy"] as DataColumn<Boolean>
+    val DataRow<Person>.isHappy: kotlin.Boolean @JvmName("Person_isHappy") get() = this["isHappy"] as Boolean
 
     infix fun <T, U : T> T.willBe(expected: U?) = shouldBe(expected)
 }

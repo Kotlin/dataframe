@@ -23,7 +23,7 @@ It can store values of primitive (integers, strings, decimals etc.) or object ty
 
 #### ColumnGroup
 
-Container for nested columns and is used to create column hierarchy. 
+Container for nested columns. Is used to create column hierarchy. 
 
 #### FrameColumn
 

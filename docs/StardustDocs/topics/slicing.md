@@ -1,4 +1,4 @@
-[//]: # (title: Slicing)
+[//]: # (title: Slice rows)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
@@ -18,6 +18,26 @@ df.dropLast(5) // all rows except last 5
 
 <!---END-->
 
-To select several top / bottom rows see [take](take.md) / [drop](drop.md) operations
+## take
 
-To select several rows based on [row condition](DataRow.md#row-conditions) see [filter](filter.md) / [drop](drop.md) operations
+Returns `DataFrame` containing first `n` rows
+
+<!---FUN take-->
+
+### takeLast
+
+Returns `DataFrame` containing last `n` rows
+
+<!---FUN takeLast-->
+
+## drop
+
+Returns `DataFrame` containing all rows except first `n` rows
+
+<!---FUN drop-->
+
+## dropLast
+
+Returns `DataFrame` containing all rows except last `n` rows
+
+<!---FUN dropLast-->

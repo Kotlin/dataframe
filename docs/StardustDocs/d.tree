@@ -26,15 +26,15 @@
         </toc-element>
     </toc-element>
     <toc-element id="types.md">
+        <toc-element id="DataFrame.md"/>
         <toc-element id="DataColumn.md"/>
         <toc-element id="DataRow.md"/>
-        <toc-element id="DataFrame.md"/>
     </toc-element>
     <toc-element id="operations.md">
         <toc-element id="create.md"  show-structure-depth="3">
             <toc-element id="createColumn.md" toc-title="DataColumn"/>
             <toc-element id="createDataFrame.md" toc-title="DataFrame">
-                <toc-element id="iterableToDataFrame.md" toc-title="Object Tree"/>
+                <toc-element id="iterableToDataFrame.md" toc-title="from objects"/>
             </toc-element>
             <toc-element id="createAccessor.md" toc-title="ColumnAccessor"/>
         </toc-element>
@@ -51,7 +51,6 @@
             <toc-element id="iterate.md"/>
             <toc-element id="getRow.md"/>
             <toc-element id="getColumn.md"/>
-            <toc-element id="slicing.md"/>
         </toc-element>
         <toc-element id="statistics.md">
             <toc-element id="count.md"/>
@@ -62,10 +61,10 @@
             <toc-element id="std.md"/>
         </toc-element>
         <toc-element id="modify.md"  show-structure-depth="3" toc-title="Modify data">
+            <toc-element id="slicing.md"/>
             <toc-element id="filterRows.md">
                 <toc-element id="filter.md"/>
                 <toc-element id="drop.md"/>
-                <toc-element id="take.md"/>
                 <toc-element id="distinct.md"/>
             </toc-element>
             <toc-element id="sortRows.md">
@@ -73,9 +72,13 @@
                 <toc-element id="shuffled.md"/>
             </toc-element>
             <toc-element id="modifyCells.md">
-                <toc-element id="update.md"/>
-                <toc-element id="convert.md"/>
-                <toc-element id="parse.md"/>
+                <toc-element id="update.md">
+                    <toc-element id="fillNulls.md"/>
+                    <toc-element id="nullToZero.md"/>
+                </toc-element>
+                <toc-element id="convert.md">
+                    <toc-element id="parse.md"/>
+                </toc-element>
             </toc-element>
             <toc-element toc-title="Split/merge cells" id="splitMerge.md">
                 <toc-element id="split.md"/>
