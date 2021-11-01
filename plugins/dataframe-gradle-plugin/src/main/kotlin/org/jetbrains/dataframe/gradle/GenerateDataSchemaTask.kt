@@ -131,7 +131,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                     "RemoveRedundantQualifierName", 
                     "unused", "ObjectPropertyName", 
                     "UNCHECKED_CAST", "PropertyName",
-                    "ClassName"
+                    "ClassName", "UnusedImport"
                 )
                 """.trimIndent()
             )
