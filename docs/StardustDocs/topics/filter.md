@@ -29,7 +29,7 @@ df.filter { it[age] > 18 && it[firstName].startsWith("A") }
 <tab title="Strings">
 
 ```kotlin
-df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }.nrow shouldBe 1
+df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
 ```
 
 </tab></tabs>
@@ -40,3 +40,28 @@ df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
 Returns `DataFrame` with rows that have value `true` in given column of type `Boolean`.
 
 <!---FUN filterBy-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.filterBy { isHappy }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val isHappy by column<Boolean>()
+df.filterBy { isHappy }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.rows().drop()
+df.filterBy("isHappy")
+```
+
+</tab></tabs>
+<!---END-->
