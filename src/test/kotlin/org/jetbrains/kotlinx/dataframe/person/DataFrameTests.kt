@@ -1122,6 +1122,14 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun mergeColsCustom2() {
+        val merged = typed.merge { name and city and age }.with { "$name from $city aged $age" }.into("info")
+        merged.ncol() shouldBe 2
+        merged.nrow() shouldBe typed.nrow()
+        merged[0]["info"] shouldBe "Alice from London aged 15"
+    }
+
+    @Test
     fun splitCol() {
         val merged = typed.merge { age and city and weight }.into("info")
         val info by columnMany<Any>()
