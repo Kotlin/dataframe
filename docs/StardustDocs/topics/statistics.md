@@ -119,7 +119,7 @@ df.max { "name"["firstName"].asComparable() and "name"["lastName"].asComparable(
 
 df.sum("age", "weight")
 // or
-df.sum { "age"().asNumbers() and "weight"().asNumbers() }
+df.sum { "age"<Int>() and "weight"<Int?>() }
 
 df.mean { cols(1, 3).asNumbers() }
 df.median { name.cols().asComparable() }
@@ -151,7 +151,7 @@ df.maxFor { "name"["firstName"].asComparable() and "name"["lastName"].asComparab
 
 df.sumFor("age", "weight")
 // or
-df.sumFor { "age"().asNumbers() and "weight"().asNumbers() }
+df.sumFor { "age"<Int>() and "weight"<Int?>() }
 
 df.meanFor { cols(1, 3).asNumbers() }
 df.medianFor { name.cols().asComparable() }

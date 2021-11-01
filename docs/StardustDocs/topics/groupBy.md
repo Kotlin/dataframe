@@ -44,7 +44,7 @@ df.groupBy { expr { firstName().length + lastName().length } named "nameLength" 
 
 ```kotlin
 df.groupBy("name")
-df.groupBy { "city"() and "name"["lastName"] }
+df.groupBy { "city" and "name"["lastName"] }
 df.groupBy { "age".ints() / 10 named "ageDecade" }
 df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named "nameLength" }
 ```

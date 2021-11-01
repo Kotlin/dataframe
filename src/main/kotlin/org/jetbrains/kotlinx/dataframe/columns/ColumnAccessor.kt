@@ -11,7 +11,7 @@ public interface ColumnAccessor<T> : ColumnReference<T> {
 
     override fun rename(newName: String): ColumnAccessor<T>
 
-    public fun <C> changeType(): ColumnAccessor<C> = this as ColumnAccessor<C>
+    public fun <C> typed(): ColumnAccessor<C> = this as ColumnAccessor<C>
 }
 
 public fun <T> ColumnReference<T>.toAccessor(): ColumnAccessor<T> = when (this) {

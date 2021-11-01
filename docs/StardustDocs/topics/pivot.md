@@ -32,7 +32,7 @@ df.pivot { city and firstName }
 
 ```kotlin
 df.pivot("city")
-df.pivot { "city"() and "name"["firstName"] }
+df.pivot { "city" and "name"["firstName"] }
 ```
 
 </tab></tabs>

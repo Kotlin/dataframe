@@ -197,7 +197,7 @@ df.groupBy(city).values { weight into "weights" }
 ```kotlin
 df.groupBy("city").values()
 df.groupBy("city").values("name", "age")
-df.groupBy("city").values { "weight"() into "weights" }
+df.groupBy("city").values { "weight" into "weights" }
 ```
 
 </tab></tabs>

@@ -155,7 +155,7 @@ class Analyze : TestBase() {
 
         df.sum("age", "weight")
         // or
-        df.sum { "age"().asNumbers() and "weight"().asNumbers() }
+        df.sum { "age"<Int>() and "weight"<Int?>() }
 
         df.mean { cols(1, 3).asNumbers() }
         df.median { name.cols().asComparable() }
@@ -205,7 +205,7 @@ class Analyze : TestBase() {
 
         df.sumFor("age", "weight")
         // or
-        df.sumFor { "age"().asNumbers() and "weight"().asNumbers() }
+        df.sumFor { "age"<Int>() and "weight"<Int?>() }
 
         df.meanFor { cols(1, 3).asNumbers() }
         df.medianFor { name.cols().asComparable() }
@@ -289,7 +289,7 @@ class Analyze : TestBase() {
     fun groupBy_strings() {
         // SampleStart
         df.groupBy("name")
-        df.groupBy { "city"() and "name"["lastName"] }
+        df.groupBy { "city" and "name"["lastName"] }
         df.groupBy { "age".ints() / 10 named "ageDecade" }
         df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named "nameLength" }
         // SampleEnd
@@ -483,7 +483,7 @@ class Analyze : TestBase() {
         // SampleStart
         df.groupBy("city").values()
         df.groupBy("city").values("name", "age")
-        df.groupBy("city").values { "weight"() into "weights" }
+        df.groupBy("city").values { "weight" into "weights" }
         // SampleEnd
     }
 
@@ -518,7 +518,7 @@ class Analyze : TestBase() {
     fun pivot_strings() {
         // SampleStart
         df.pivot("city")
-        df.pivot { "city"() and "name"["firstName"] }
+        df.pivot { "city" and "name"["firstName"] }
         // SampleEnd
     }
 

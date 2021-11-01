@@ -45,6 +45,10 @@ df.move { name.firstName and name.lastName }.into { pathOf("fullName", it.name.d
 dataFrameOf("a.b.c", "a.d.e")(1, 2)
     .move { all() }.into { it.name.split(".").toPath() }
 
+// name.firstName -> firstName
+// name.lastName -> lastName
+df.move { name.cols() }.toTop()
+
 // group1.default.name -> defaultData
 // group2.field.name -> fieldData
 df.move { dfs { it.name == "data" } }.toTop { it.parent!!.name + "Data" }

@@ -2,18 +2,17 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-The following operations return `DataFrame` with a subset of rows from original `DataFrame`.
+Returns `DataFrame` with rows at given indices:
 
-<!---FUN getSeveralRows-->
+<!---FUN getSeveralRowByIndices-->
+
+Returns `DataFrame` with rows inside given index ranges:
+
+<!---FUN getSeveralRowsByRanges-->
 
 ```kotlin
-df[0, 3, 4]
 df[1..2]
-
-df.take(5) // first 5 rows
-df.takeLast(5) // last 5 rows
-df.drop(5) // all rows except first 5
-df.dropLast(5) // all rows except last 5
+df[0..2, 4..5]
 ```
 
 <!---END-->

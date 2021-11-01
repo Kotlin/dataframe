@@ -1,7 +1,7 @@
 [//]: # (title: convert)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Changes values and types of the columns.
+Returns `DataFrame` with changed values in some columns. Column types can be changed.
 
 #### Syntax
 
