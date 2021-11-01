@@ -12,10 +12,10 @@ import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.toPath
 import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.toColumnPath
 import org.junit.Test
 
 class MoveTests {
@@ -23,7 +23,7 @@ class MoveTests {
     val columnNames = listOf("q", "a.b", "b.c", "w", "a.c.d", "e.f", "b.d", "r")
     val columns = columnNames.map { column(it, emptyList<Int>()) }
     val df = columns.toDataFrame()
-    val grouped = df.move { cols { it.name.contains(".") } }.into { it.name.split(".").toColumnPath() }
+    val grouped = df.move { cols { it.name.contains(".") } }.into { it.name.split(".").toPath() }
 
     @Test
     fun batchGrouping() {

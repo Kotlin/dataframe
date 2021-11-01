@@ -119,8 +119,7 @@ internal fun <T : Number> KClass<T>.zero(): T = when (this) {
 }
 
 internal fun <T> catchSilent(body: () -> T): T? = try { body() } catch (_: Throwable) { null }
-internal fun List<String>.toColumnPath() = ColumnPath(this)
-internal fun Array<out String>.toColumnPath() = ColumnPath(this.asList())
+
 internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType? = null) = commonParents(this).createType(nullable, upperBound)
 internal fun <T, C> DataFrame<T>.getColumns(
     skipMissingColumns: Boolean,

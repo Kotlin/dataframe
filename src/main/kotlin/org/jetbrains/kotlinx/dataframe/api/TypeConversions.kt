@@ -143,6 +143,8 @@ public fun <T> Iterable<T>.toMany(): Many<T> = when (this) {
     else -> ManyImpl(toList())
 }
 
+public fun Iterable<String>.toPath(): ColumnPath = ColumnPath(asList())
+
 // endregion
 
 // region Sequence
@@ -187,6 +189,8 @@ public fun <T> DataRow<T>.toDataFrame(): DataFrame<T> = owner[index..index]
 
 public inline fun <reified T> Array<T>.toValueColumn(name: String): ValueColumn<T> =
     DataColumn.createValueColumn(name, this.asList(), getType<T>())
+
+public fun Array<out String>.toPath(): ColumnPath = ColumnPath(this.asList())
 
 // endregion
 

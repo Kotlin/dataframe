@@ -30,7 +30,6 @@ import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
-import org.jetbrains.kotlinx.dataframe.impl.toColumnPath
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.newColumn
 import org.jetbrains.kotlinx.dataframe.pathOf
@@ -238,10 +237,10 @@ public fun <T, C> MoveClause<T, C>.intoIndexed(
 
 public fun <T, C> MoveClause<T, C>.into(newPathExpression: ColumnsContainer<T>.(ColumnWithPath<C>) -> ColumnPath): DataFrame<T> = moveImpl(newPathExpression, under = false)
 
-public fun <T, C> MoveClause<T, C>.into(vararg path: String): DataFrame<T> = into(path.toColumnPath())
+public fun <T, C> MoveClause<T, C>.into(vararg path: String): DataFrame<T> = into(path.toPath())
 public fun <T, C> MoveClause<T, C>.into(path: ColumnPath): DataFrame<T> = into { path }
 
-public fun <T, C> MoveClause<T, C>.under(vararg path: String): DataFrame<T> = under(path.toColumnPath())
+public fun <T, C> MoveClause<T, C>.under(vararg path: String): DataFrame<T> = under(path.toPath())
 public fun <T, C> MoveClause<T, C>.under(path: ColumnPath): DataFrame<T> = under { path }
 public fun <T, C> MoveClause<T, C>.under(groupRef: ColumnGroupReference): DataFrame<T> = under(groupRef.path())
 
@@ -293,7 +292,7 @@ public fun <T> DataFrame<T>.ungroup(vararg columns: Column): DataFrame<T> = ungr
 
 public fun <T, C> DataFrame<T>.ungroup(columns: ColumnsSelector<T, C>): DataFrame<T> {
     return move { columns.toColumns().children() }
-        .into { it.path.removeAt(it.path.size - 2).toColumnPath() }
+        .into { it.path.removeAt(it.path.size - 2).toPath() }
 }
 
 // endregion

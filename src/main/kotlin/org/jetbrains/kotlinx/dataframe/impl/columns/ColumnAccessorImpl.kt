@@ -3,13 +3,13 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.toPath
 import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.impl.toColumnPath
 
 internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
 
@@ -17,7 +17,7 @@ internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
 
     override fun path() = path
 
-    constructor(vararg path: String) : this(path.toColumnPath())
+    constructor(vararg path: String) : this(path.toPath())
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? {
         var df = context.df

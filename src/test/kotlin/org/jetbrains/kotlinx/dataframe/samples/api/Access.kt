@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
-import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.chunked
@@ -27,7 +26,6 @@ import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 
 class Access : TestBase() {
@@ -240,7 +238,7 @@ class Access : TestBase() {
         df.filter { "age"<Int>() > 18 && "name"["firstName"]<String>().startsWith("A") }
         // SampleEnd
     }
-    
+
     @Test
     fun filterBy_properties() {
         // SampleStart

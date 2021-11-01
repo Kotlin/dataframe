@@ -1,3 +1,3 @@
-[//]: # (title: Modify DataFrame schema)
+[//]: # (title: Modify schema)
 
 Start writing here.

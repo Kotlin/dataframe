@@ -1,8 +1,6 @@
-[//]: # (title: update)
+[//]: # (title: nullToZero)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
-
-## nullToZero
 
 Replace `null` values with `0`. 
 
