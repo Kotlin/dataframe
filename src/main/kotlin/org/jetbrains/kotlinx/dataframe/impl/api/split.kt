@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyMany
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.SplitClauseWithTransform
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -12,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 
 internal fun valueToList(value: Any?, splitStrings: Boolean = true): List<Any?> = when (value) {
     null -> emptyList()
-    is AnyMany -> value
+    is List<*> -> value
     is AnyFrame -> value.rows().toList()
     else -> if (splitStrings) value.toString().split(",").map { it.trim() } else listOf(value)
 }

@@ -1,62 +1,27 @@
 [//]: # (title: explode)
 
-Splits list-like values and spreads them vertically. 
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Reverse to [mergeRows](mergeRows.md)
+Splits list-like values in one or several columns and spreads them vertically. Values in other columns are duplicated.  
+
+This is reverse operation to [mergeRows](mergeRows.md)
 
 The following types of columns can be exploded:
 * `List`
 * `DataFrame`
-* `String` (splits by ',')
 
-Scalar values will not be transformed. Empty lists will result in `null`
-  Row values in other columns will be duplicated
+Note: exploded [`FrameColumn`](DataColumn.md#framecolumn) converts into [`ColumnGroup`](DataColumn.md#columngroup)
 
-Input:
+Rows with empty lists will be skipped. If you want to keep such rows with `null` value in exploded columns, set `dropEmpty` flag to `false`.
 
-| A | B
-|---|---
-| 1 | [1, 2, 3]
-| 2 | null
-| 3 | [4, 5]
-| 4 | []
+<!---FUN explode-->
+
 ```kotlin
-df.explode { B }
+val df2 = df.convert { age }.with { (1..it step 4).toList() }
+
+df2.explode { age }
 ```
-Output:
 
-| A | B
-|---|---
-| 1 | 1
-| 1 | 2
-| 1 | 3
-| 2 | null
-| 3 | 4
-| 3 | 5
-| 4 | null
+<!---END-->
 
-Note: exploded `FrameColumn` turns into `ColumnGroup`
-
-When several columns are exploded, lists in different columns are aligned:
-
-Input:
-
-| A | B | C
-|---|---|---
-| 1 | [1, 2] | [1, 2]
-| 2 | [] | [3, 4]
-| 3 | [3, 4, 5] | [5, 6]
-```kotlin
-df.explode { B and C }
-```
-Output:
-
-| A | B | C
-|---|---|---
-| 1 | 1 | 1
-| 1 | 2 | 2
-| 2 | null | 3
-| 2 | null | 4
-| 3 | 3 | 5
-| 3 | 4 | 6
-| 3 | 5 | null
+When several columns are exploded in one operation, lists in different columns will be aligned.
