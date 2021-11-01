@@ -48,6 +48,7 @@ class CodeGenerationTests : BaseTest() {
         val expectedDeclaration = """
             @DataSchema(isOpen = false)
             interface $typeName
+            
         """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
         val expectedConverter = "it.cast<$typeName>()"
@@ -72,6 +73,7 @@ class CodeGenerationTests : BaseTest() {
         val expectedDeclaration = """
             @DataSchema(isOpen = false)
             interface $typeName
+            
         """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
         val expectedConverter = "it.cast<$typeName>()"
@@ -90,15 +92,18 @@ class CodeGenerationTests : BaseTest() {
         val declaration1 = """
             @DataSchema(isOpen = false)
             interface $type1
+            
             val $dfName<$type1>.city: $dataCol<kotlin.String?> @JvmName("${type1}_city") get() = this["city"] as $dataCol<kotlin.String?>
             val $dfRowName<$type1>.city: kotlin.String? @JvmName("${type1}_city") get() = this["city"] as kotlin.String?
             val $dfName<$type1>.name: $dataCol<kotlin.String> @JvmName("${type1}_name") get() = this["name"] as $dataCol<kotlin.String>
             val $dfRowName<$type1>.name: kotlin.String @JvmName("${type1}_name") get() = this["name"] as kotlin.String
+            
         """.trimIndent()
 
         val declaration2 = """
             @DataSchema(isOpen = false)
             interface $type2
+            
             val $dfName<$type2>.age: $dataCol<kotlin.Int> @JvmName("${type2}_age") get() = this["age"] as $dataCol<kotlin.Int>
             val $dfRowName<$type2>.age: kotlin.Int @JvmName("${type2}_age") get() = this["age"] as kotlin.Int
             val $dfName<$type2>.nameAndCity: $colGroup<$type1> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $colGroup<$type1>
@@ -150,6 +155,7 @@ class CodeGenerationTests : BaseTest() {
                 override val city: kotlin.String
                 override val weight: kotlin.Int
             }
+            
             val $packageName.ColumnsContainer<ValidPerson>.city: $packageName.DataColumn<kotlin.String> @JvmName("ValidPerson_city") get() = this["city"] as $packageName.DataColumn<kotlin.String>
             val $packageName.DataRow<ValidPerson>.city: kotlin.String @JvmName("ValidPerson_city") get() = this["city"] as kotlin.String
             val $packageName.ColumnsContainer<ValidPerson>.weight: $packageName.DataColumn<kotlin.Int> @JvmName("ValidPerson_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int>
@@ -165,6 +171,7 @@ class CodeGenerationTests : BaseTest() {
         val expected = """
             @DataSchema
             interface Person
+            
         """.trimIndent() + "\n" + expectedProperties("Person", "Person")
         code shouldBe expected
     }
@@ -197,6 +204,7 @@ class CodeGenerationTests : BaseTest() {
                 val name: kotlin.String
                 val weight: kotlin.Int?
             }
+            
             internal val $packageName.ColumnsContainer<DataType>.age: $packageName.DataColumn<kotlin.Int> @JvmName("DataType_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int>
             internal val $packageName.DataRow<DataType>.age: kotlin.Int @JvmName("DataType_age") get() = this["age"] as kotlin.Int
             internal val $packageName.ColumnsContainer<DataType>.city: $packageName.DataColumn<kotlin.String?> @JvmName("DataType_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
@@ -221,6 +229,7 @@ class CodeGenerationTests : BaseTest() {
                 public val name: kotlin.String
                 public val weight: kotlin.Int?
             }
+            
             public val $packageName.ColumnsContainer<DataType>.age: $packageName.DataColumn<kotlin.Int> @JvmName("DataType_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int>
             public val $packageName.DataRow<DataType>.age: kotlin.Int @JvmName("DataType_age") get() = this["age"] as kotlin.Int
             public val $packageName.ColumnsContainer<DataType>.city: $packageName.DataColumn<kotlin.String?> @JvmName("DataType_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>

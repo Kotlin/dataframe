@@ -247,7 +247,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
                 declarations.add(generateExtensionProperties(it))
             }
         }
-        val code = createCodeWithConverter(declarations.join(), marker.name)
+        val code = createCodeWithConverter(declarations.joinToString("\n\n"), marker.name)
         return CodeGenResult(code, context.generatedMarkers)
     }
 }
