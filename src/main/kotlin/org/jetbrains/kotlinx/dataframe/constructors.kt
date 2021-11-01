@@ -62,11 +62,11 @@ public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null)
 
 public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> = createColumn(values.asIterable(), getType<T>(), true)
 
-public fun columnOf(vararg values: AnyColumn): DataColumn<AnyRow> = columnOf(values.asIterable())
+public fun columnOf(vararg values: AnyBaseColumn): DataColumn<AnyRow> = columnOf(values.asIterable())
 
 public fun <T> columnOf(vararg frames: DataFrame<T>?): FrameColumn<T> = columnOf(frames.asIterable())
 
-public fun columnOf(columns: Iterable<AnyColumn>): DataColumn<AnyRow> = DataColumn.createColumnGroup("", dataFrameOf(columns)) as DataColumn<AnyRow>
+public fun columnOf(columns: Iterable<AnyBaseColumn>): DataColumn<AnyRow> = DataColumn.createColumnGroup("", dataFrameOf(columns)) as DataColumn<AnyRow>
 
 public fun <T> columnOf(frames: Iterable<DataFrame<T>?>): FrameColumn<T> = DataColumn.createFrameColumn("", frames.toList())
 
@@ -89,7 +89,7 @@ public inline fun <reified T> column(name: String, values: List<T>, hasNulls: Bo
 
 // region create DataFrame
 
-public fun dataFrameOf(columns: Iterable<AnyColumn>): AnyFrame {
+public fun dataFrameOf(columns: Iterable<AnyBaseColumn>): AnyFrame {
     val cols = columns.map { it.unbox() }
     if (cols.isEmpty()) return DataFrame.empty()
     return DataFrameImpl<Unit>(cols)
@@ -97,7 +97,7 @@ public fun dataFrameOf(columns: Iterable<AnyColumn>): AnyFrame {
 
 public fun dataFrameOf(vararg header: ColumnReference<*>): DataFrameBuilder = DataFrameBuilder(header.map { it.name() })
 
-public fun dataFrameOf(vararg columns: AnyColumn): AnyFrame = dataFrameOf(columns.asIterable())
+public fun dataFrameOf(vararg columns: AnyBaseColumn): AnyFrame = dataFrameOf(columns.asIterable())
 
 public fun dataFrameOf(vararg header: String): DataFrameBuilder = dataFrameOf(header.toList())
 

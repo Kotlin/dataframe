@@ -25,6 +25,8 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExcept
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
+import org.jetbrains.kotlinx.dataframe.impl.columns.getChildrenAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumnWithActualType
 import org.jetbrains.kotlinx.dataframe.impl.columns.single
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
@@ -46,7 +48,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
     public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C>): SingleColumn<C> =
         transform { listOf(it.single(condition)) }.single()
 
-    public fun ColumnSet<*>.last(numCols: Int): ColumnSet<Any?> = takeLast(numCols)
+    public fun <C> ColumnSet<C>.last(numCols: Int): ColumnSet<C> = takeLast(numCols)
+
+    public fun SingleColumn<AnyRow>.col(index: Int): SingleColumn<Any?> = getChildrenAt(index).single()
+
+    public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = getAt(index)
 
     public fun ColumnsContainer<*>.group(name: String): ColumnGroup<*> = this.get(name) as ColumnGroup<*>
 
@@ -153,8 +159,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
 
     public fun <C> col(property: KProperty<C>): ColumnAccessor<C> = property.toColumnAccessor()
 
-    public fun ColumnSet<*>.col(index: Int): ColumnSet<Any?> = transform { it.mapNotNull { it.getChild(index) } }
-
     public operator fun ColumnSet<*>.get(colName: String): ColumnSet<Any?> = transform { it.mapNotNull { it.getChild(colName) } }
     public operator fun <C> ColumnSet<*>.get(column: ColumnReference<C>): ColumnSet<C> = cols(column)
 
@@ -227,29 +231,29 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
     public infix fun <C> String.by(newColumnExpression: RowExpression<T, C>): DataColumn<C> =
         newColumnWithActualType(this, newColumnExpression)
 
-    public fun String.ints(): DataColumn<Int> = getColumn(this)
-    public fun String.intOrNulls(): DataColumn<Int?> = getColumn(this)
-    public fun String.strings(): DataColumn<String> = getColumn(this)
-    public fun String.stringOrNulls(): DataColumn<String?> = getColumn(this)
-    public fun String.booleans(): DataColumn<Boolean> = getColumn(this)
-    public fun String.booleanOrNulls(): DataColumn<Boolean?> = getColumn(this)
-    public fun String.doubles(): DataColumn<Double> = getColumn(this)
-    public fun String.doubleOrNulls(): DataColumn<Double?> = getColumn(this)
-    public fun String.comparables(): DataColumn<Comparable<Any?>> = getColumn(this)
-    public fun String.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this)
-    public fun String.numberOrNulls(): DataColumn<Number?> = getColumn(this)
+    public fun String.ints(): DataColumn<Int> = getColumn(this).typed()
+    public fun String.intOrNulls(): DataColumn<Int?> = getColumn(this).typed()
+    public fun String.strings(): DataColumn<String> = getColumn(this).typed()
+    public fun String.stringOrNulls(): DataColumn<String?> = getColumn(this).typed()
+    public fun String.booleans(): DataColumn<Boolean> = getColumn(this).typed()
+    public fun String.booleanOrNulls(): DataColumn<Boolean?> = getColumn(this).typed()
+    public fun String.doubles(): DataColumn<Double> = getColumn(this).typed()
+    public fun String.doubleOrNulls(): DataColumn<Double?> = getColumn(this).typed()
+    public fun String.comparables(): DataColumn<Comparable<Any?>> = getColumn(this).typed()
+    public fun String.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this).typed()
+    public fun String.numberOrNulls(): DataColumn<Number?> = getColumn(this).typed()
 
-    public fun ColumnPath.ints(): DataColumn<Int> = getColumn(this)
-    public fun ColumnPath.intOrNulls(): DataColumn<Int?> = getColumn(this)
-    public fun ColumnPath.strings(): DataColumn<String> = getColumn(this)
-    public fun ColumnPath.stringOrNulls(): DataColumn<String?> = getColumn(this)
-    public fun ColumnPath.booleans(): DataColumn<Boolean> = getColumn(this)
-    public fun ColumnPath.booleanOrNulls(): DataColumn<Boolean?> = getColumn(this)
-    public fun ColumnPath.doubles(): DataColumn<Double> = getColumn(this)
-    public fun ColumnPath.doubleOrNulls(): DataColumn<Double?> = getColumn(this)
-    public fun ColumnPath.comparables(): DataColumn<Comparable<Any?>> = getColumn(this)
-    public fun ColumnPath.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this)
-    public fun ColumnPath.numberOrNulls(): DataColumn<Number?> = getColumn(this)
+    public fun ColumnPath.ints(): DataColumn<Int> = getColumn(this).typed()
+    public fun ColumnPath.intOrNulls(): DataColumn<Int?> = getColumn(this).typed()
+    public fun ColumnPath.strings(): DataColumn<String> = getColumn(this).typed()
+    public fun ColumnPath.stringOrNulls(): DataColumn<String?> = getColumn(this).typed()
+    public fun ColumnPath.booleans(): DataColumn<Boolean> = getColumn(this).typed()
+    public fun ColumnPath.booleanOrNulls(): DataColumn<Boolean?> = getColumn(this).typed()
+    public fun ColumnPath.doubles(): DataColumn<Double> = getColumn(this).typed()
+    public fun ColumnPath.doubleOrNulls(): DataColumn<Double?> = getColumn(this).typed()
+    public fun ColumnPath.comparables(): DataColumn<Comparable<Any?>> = getColumn(this).typed()
+    public fun ColumnPath.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this).typed()
+    public fun ColumnPath.numberOrNulls(): DataColumn<Number?> = getColumn(this).typed()
 
     public infix fun <C : Comparable<C>> ColumnReference<C>.gt(value: C): ColumnReference<Boolean> = map { it > value }
     public infix fun <C : Comparable<C>> ColumnReference<C>.lt(value: C): ColumnReference<Boolean> = map { it < value }

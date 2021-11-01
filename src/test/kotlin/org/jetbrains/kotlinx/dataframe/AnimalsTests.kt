@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.transpose
@@ -29,8 +30,8 @@ class AnimalsTests {
         val mean = df.mean().transpose()
         mean.ncol() shouldBe 2
         mean.nrow() shouldBe 2
-        mean.col(1).type() shouldBe getType<Double>()
-        mean.col(0).values() shouldBe listOf("age", "visits")
+        mean.getColumn(1).type() shouldBe getType<Double>()
+        mean.getColumn(0).values() shouldBe listOf("age", "visits")
     }
 
     @Test

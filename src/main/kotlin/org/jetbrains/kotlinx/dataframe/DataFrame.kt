@@ -38,7 +38,7 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     public fun <C> valuesNotNull(byRow: Boolean = false, columns: ColumnsSelector<T, C?>): Sequence<C> = values(byRow, columns).filterNotNull()
     public fun valuesNotNull(byRow: Boolean = false): Sequence<Any> = valuesNotNull(byRow) { all() }
 
-    override fun col(columnIndex: Int): DataColumn<*> = columns()[columnIndex]
+    override fun getColumn(columnIndex: Int): DataColumn<*> = columns()[columnIndex]
 
     public operator fun set(columnName: String, value: AnyCol)
 
@@ -76,7 +76,7 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     )?.data
 
     override fun tryGetColumn(columnName: String): AnyCol? =
-        getColumnIndex(columnName).let { if (it != -1) col(it) else null }
+        getColumnIndex(columnName).let { if (it != -1) getColumn(it) else null }
 
     override fun tryGetColumn(path: ColumnPath): AnyCol? =
         if (path.size == 1) tryGetColumn(path[0])

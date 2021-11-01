@@ -36,9 +36,9 @@ internal open class DataFrameReceiver<T>(source: DataFrame<T>, private val allow
     prepareForReceiver(source)
 ) {
 
-    override fun col(columnIndex: Int): AnyCol {
+    override fun getColumn(columnIndex: Int): AnyCol {
         if (allowMissingColumns && columnIndex < 0 || columnIndex >= ncol()) return MissingValueColumn<Any?>()
-        return super.col(columnIndex)
+        return super.getColumn(columnIndex)
     }
 
     override operator fun get(columnName: String) = getColumnChecked(pathOf(columnName)) ?: MissingValueColumn<Any?>()

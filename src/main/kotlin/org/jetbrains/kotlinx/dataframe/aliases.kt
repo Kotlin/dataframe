@@ -60,7 +60,7 @@ public typealias AnyFrame = DataFrame<*>
 
 public typealias AnyRow = DataRow<*>
 
-public typealias AnyColumn = BaseColumn<*>
+public typealias AnyBaseColumn = BaseColumn<*>
 
 public typealias AnyMany = Many<*>
 

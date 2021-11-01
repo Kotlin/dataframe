@@ -108,6 +108,14 @@ internal fun <T> ColumnSet<T>.single() = object : SingleColumn<T> {
     }
 }
 
+internal fun <T> ColumnSet<T>.getAt(index: Int) = object : SingleColumn<T> {
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? {
+        return this@getAt.resolve(context).getOrNull(index)
+    }
+}
+
+internal fun <T> ColumnSet<T>.getChildrenAt(index: Int): ColumnSet<Any?> = transform { it.mapNotNull { it.getChild(index) } }
+
 internal fun <C> ColumnsContainer<*>.getColumn(name: String, policy: UnresolvedColumnsPolicy) =
     tryGetColumn(name)?.typed()
         ?: when (policy) {

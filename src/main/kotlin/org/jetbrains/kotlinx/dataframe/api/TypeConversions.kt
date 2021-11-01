@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyColumn
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
@@ -58,7 +58,7 @@ public fun <T> KProperty<T>.toColumnAccessor(): ColumnAccessor<T> = ColumnAccess
 
 // region DataColumn
 
-public fun AnyColumn.toDataFrame(): AnyFrame = dataFrameOf(listOf(this))
+public fun AnyBaseColumn.toDataFrame(): AnyFrame = dataFrameOf(listOf(this))
 
 @JvmName("asNumberAny?")
 public fun DataColumn<Any?>.asNumbers(): ValueColumn<Number?> {

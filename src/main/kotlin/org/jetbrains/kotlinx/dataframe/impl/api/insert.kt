@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyColumn
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -41,7 +41,7 @@ internal fun <T> insertImpl(
 
     val columnsMap = columns.groupBy { it.insertionPath[depth] }.toMutableMap() // map: columnName -> columnsToAdd
 
-    val newColumns = mutableListOf<AnyColumn>()
+    val newColumns = mutableListOf<AnyBaseColumn>()
 
     // insert new columns under existing
     df?.columns()?.forEach {

@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyColumn
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -32,7 +32,7 @@ public fun AnyCol.isComparable(): Boolean = isSubtypeOf<Comparable<*>?>()
 
 public fun AnyCol.inferType(): DataColumn<*> = DataColumn.createWithTypeInference(name, toList())
 
-public fun AnyColumn.unbox(): AnyCol = when (this) {
+public fun AnyBaseColumn.unbox(): AnyCol = when (this) {
     is ColumnWithPath<*> -> data.unbox()
     is ColumnWithParent<*> -> source.unbox()
     else -> this as AnyCol
