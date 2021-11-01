@@ -54,7 +54,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
 
     public operator fun <C> ColumnSet<C>.get(index: Int): SingleColumn<C> = getAt(index)
 
-    public fun ColumnsContainer<*>.group(name: String): ColumnGroup<*> = this.get(name) as ColumnGroup<*>
+    public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
 
     public fun <C> ColumnSet<*>.cols(firstCol: ColumnReference<C>, vararg otherCols: ColumnReference<C>): ColumnSet<C> =
         (listOf(firstCol) + otherCols).let { refs ->
