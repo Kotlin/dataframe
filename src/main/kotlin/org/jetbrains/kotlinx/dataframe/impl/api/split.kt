@@ -31,7 +31,7 @@ internal fun <T, C, R> splitImpl(
         val column = node.toColumnWithPath<C>(clause.df)
         val columnCollectors = mutableListOf<ColumnDataCollector>()
         for (row in 0 until nrow) {
-            val value = clause.transform(column.data[row])
+            val value = clause.transform(clause.df[row], column.data[row])
             val list = valueToList(value)
             for (j in list.indices) {
                 if (columnCollectors.size <= j) {

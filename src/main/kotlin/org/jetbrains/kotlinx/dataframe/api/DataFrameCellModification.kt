@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.emptyMany
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
@@ -306,9 +307,14 @@ public data class SplitClauseWithTransform<T, C, R>(
     val transform: DataRow<T>.(C) -> Iterable<R>
 ) : SplitWithTransform<T, C, R> {
 
-    override fun intoRows(dropEmpty: Boolean): DataFrame<T> = inplace().explode(dropEmpty, columns)
+    private fun ConvertClause<T, C?>.splitInplace() = convertRowCellImpl(Many::class.createTypeWithArgument(targetType)) { if (it == null) emptyMany() else transform(it).toMany() }
 
-    override fun inplace(): DataFrame<T> = df.convert(columns).convertRowCellImpl(Many::class.createTypeWithArgument(targetType)) { if (it == null) emptyMany() else transform(it).toMany() }
+    override fun intoRows(dropEmpty: Boolean): DataFrame<T> {
+        val paths = df.getColumnPaths(columns).toColumnSet()
+        return df.convert { paths as ColumnSet<C?> }.splitInplace().explode(dropEmpty) { paths }
+    }
+
+    override fun inplace(): DataFrame<T> = df.convert(columns).splitInplace()
 
     override fun inward(names: Iterable<String>, extraNamesGenerator: ColumnNamesGenerator<C>?): DataFrame<T> = copy(inward = true).into(names.toList(), extraNamesGenerator)
 }
