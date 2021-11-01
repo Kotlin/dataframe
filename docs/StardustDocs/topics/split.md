@@ -4,9 +4,10 @@
 
 Splits every value in the given columns into several values. Splitted values can be spread horizontally or vertically or remain inside the original column as `List`
 
-Default split behavior:
-* for `String` values: split by `,` and trim (leading and trailing whitespace removed)
-* for `List` values: split into list elements
+The following types of columns can be splitted by default:
+* `String`: split by `,` and trim
+* `List`: split into elements
+* `DataFrame`: split into rows
 
 ## Split horizontally
 Reverse operation to [merge](merge.md)

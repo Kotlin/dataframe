@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.api.appendNulls
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.concat
@@ -34,7 +33,7 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: Co
         columns.maxOf {
             val n = when (val value = it.data[row]) {
                 is AnyFrame -> value.nrow()
-                is Many<*> -> value.size
+                is List<*> -> value.size
                 else -> 1
             }
             if (!dropEmpty && n == 0) 1

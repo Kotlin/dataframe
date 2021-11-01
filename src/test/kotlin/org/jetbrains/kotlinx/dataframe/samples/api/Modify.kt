@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dfsOf
+import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.length
@@ -270,6 +271,15 @@ class Modify : TestBase() {
         df.split { "name"["firstName"]<String>() }.with { it.chars().toList() }.intoRows()
 
         df.split { group("name") }.with { it.values() }.intoRows()
+        // SampleEnd
+    }
+
+    @Test
+    fun explode() {
+        // SampleStart
+        val df2 = df.convert { age }.with { (1..it step 4).toList() }
+
+        df2.explode { age }
         // SampleEnd
     }
 }

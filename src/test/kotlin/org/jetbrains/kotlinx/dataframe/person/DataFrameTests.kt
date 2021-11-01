@@ -1492,14 +1492,10 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun splitLists() {
+    fun explodeLists() {
         val df = dataFrameOf("lists")(listOf(1, 2), listOf(3))
 
-        // List<T> is not exploded
-        df.explode("lists") shouldBe df
-
-        // Many<T> is exploded
-        df.convert { colsOf<List<*>>() }.with { it.toMany() }.explode("lists") shouldBe dataFrameOf("lists")(1, 2, 3)
+        df.explode("lists") shouldBe dataFrameOf("lists")(1, 2, 3)
     }
 
     @Test
