@@ -6,11 +6,11 @@ Splits list-like values in one or several columns and spreads them vertically. V
 
 This is reverse operation to [mergeRows](mergeRows.md)
 
-The following types of columns can be exploded:
-* `List`
-* `DataFrame`
+Exploded columns will change their types:
+* `List<T>` to `T`
+* `DataFrame` to `DataRow`
 
-Note: exploded [`FrameColumn`](DataColumn.md#framecolumn) converts into [`ColumnGroup`](DataColumn.md#columngroup)
+Note that exploded [`FrameColumn`](DataColumn.md#framecolumn) will convert into [`ColumnGroup`](DataColumn.md#columngroup)
 
 Rows with empty lists will be skipped. If you want to keep such rows with `null` value in exploded columns, set `dropEmpty` flag to `false`.
 
