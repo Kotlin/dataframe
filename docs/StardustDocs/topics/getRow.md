@@ -12,7 +12,7 @@ df[2]
 
 <!---END-->
 
-Or you can get single row by [row condition](DataRow.md#row-conditions). Use [single](single.md), [first](first.md), [minBy](minmax.md), [maxBy](minmax.md) and other operations:
+Or you can get single row by [row condition](DataRow.md#row-conditions):
 
 <!---FUN getRowByCondition-->
 <tabs>
@@ -55,3 +55,43 @@ df.maxByOrNull("weight")
 
 </tab></tabs>
 <!---END-->
+
+## single
+
+Returns the single [row](DataRow.md) that matches the given [condition](DataRow.md#row-conditions), or throws exception if there is no or more than one matching row.
+
+## singleOrNull
+
+Returns the single [row](DataRow.md) that matches the given [condition](DataRow.md#row-conditions), or `null` if there is no or more than one matching row.
+
+## first
+
+Returns the first [row](DataRow.md) that matches the given [condition](DataRow.md#row-conditions), or throws exception if there is no matching rows.
+
+### firstOrNull
+
+Returns the first [row](DataRow.md) that matches the given [condition](DataRow.md#row-conditions), or `null` if there is no matching rows.
+
+## last
+
+Returns the last [row](DataRow.md) that matches the given [condition](DataRow.md#row-conditions), or throws exception if there is no matching rows.
+
+### lastOrNull
+
+Returns the last [row](DataRow.md) that matches the given [condition](DataRow.md#row-conditions), or `null` if there is no matching rows.
+
+## maxBy
+
+Returns the first [row](DataRow.md) that has the largest value in the given column, or throws exception if `DataFrame` is empty.
+
+### maxByOrNull
+
+Returns the first [row](DataRow.md) that has the largest value in the given column, or `null` if `DataFrame` is empty.
+
+## minBy
+
+Returns the first [row](DataRow.md) that has the smallest value in the given column, or throws exception if `DataFrame` is empty.
+
+## minByOrNull
+
+Returns the first [row](DataRow.md) that has the smallest value in the given column, or `null` if `DataFrame` is empty.

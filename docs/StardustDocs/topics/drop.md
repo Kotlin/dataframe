@@ -34,3 +34,37 @@ df.drop { it["weight"] == null || it["city"] == null }
 
 </tab></tabs>
 <!---END-->
+
+## dropLast
+
+## dropNulls
+
+Remove rows with `null` values
+
+<!---FUN dropNulls-->
+
+```kotlin
+df.dropNulls() // remove rows with null value in any column
+df.dropNulls(whereAllNull = true) // remove rows with null values in all columns
+df.dropNulls { city } // remove rows with null value in 'city' column
+df.dropNulls { city and weight } // remove rows with null value in 'city' OR 'weight' columns
+df.dropNulls(whereAllNull = true) { city and weight } // remove rows with null value in 'city' AND 'weight' columns
+```
+
+<!---END-->
+
+## dropNa
+
+Remove rows with `null` or `Double.NaN` values
+
+<!---FUN dropNa-->
+
+```kotlin
+df.dropNa() // remove rows containing null or Double.NaN in any column
+df.dropNa(whereAllNa = true) // remove rows with null or Double.NaN in all columns
+df.dropNa { weight } // remove rows where 'weight' is null or Double.NaN
+df.dropNa { age and weight } // remove rows where either 'age' or 'weight' is null or Double.NaN
+df.dropNa(whereAllNa = true) { age and weight } // remove rows where both 'age' and 'weight' are null or Double.NaN
+```
+
+<!---END-->

@@ -37,3 +37,21 @@ df.update { age }.with { movingAverage(2) { age }.toInt() }
 ```
 
 <!---END-->
+
+## fillNulls
+
+Replaces `null` values with expression. Equivalent to
+```kotlin
+update { columns }.where { it == null }
+```
+Example
+```kotlin
+df.fillNulls { intCols() }.with { -1 } 
+```
+
+## nullToZero
+
+Replace `null` values with `0`. Works for `Int`, `Double`, `Long` and `BigDecimal` columns.
+```kotlin
+df.nullToZero { columns }
+```
