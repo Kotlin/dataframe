@@ -4,10 +4,13 @@ import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dfsOf
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
+import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.length
 import org.jetbrains.kotlinx.dataframe.api.lowercase
 import org.jetbrains.kotlinx.dataframe.api.minus
+import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.movingAverage
+import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.nullToZero
@@ -15,11 +18,17 @@ import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.shuffled
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toFloat
+import org.jetbrains.kotlinx.dataframe.api.toLeft
+import org.jetbrains.kotlinx.dataframe.api.toPath
+import org.jetbrains.kotlinx.dataframe.api.toTop
+import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.withValue
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.pathOf
 import org.junit.Test
 
 class Modify : TestBase() {
@@ -69,7 +78,7 @@ class Modify : TestBase() {
         df.shuffled()
         // SampleEnd
     }
-    
+
     @Test
     fun fillNulls() {
         // SampleStart
@@ -84,5 +93,34 @@ class Modify : TestBase() {
         // SampleStart
         df.nullToZero { weight }
         // SampleEnd
+    }
+
+    @Test
+    fun move() {
+        // SampleStart
+        df.move { age }.toLeft()
+
+        df.move { weight }.to(1)
+
+        // name -> info.name
+        df.move { name }.into("info", "name")
+
+        // name -> info.name
+        df.move { age }.into { pathOf("info", it.name) }
+
+        // firstName -> fullName.firstName
+        // lastName -> fullName.lastName
+        df.move { age and weight }.under("info")
+
+        // name.firstName -> fullName.first
+        // name.lastName -> fullName.last
+        df.move { name.firstName and name.lastName }.into { pathOf("fullName", it.name.dropLast(4)) }
+
+        dataFrameOf("a.b.c", "a.d.e")(1, 2)
+            .move { all() }.into { it.name.split(".").toPath() }
+
+        // group1.default.name -> defaultData
+        // group2.field.name -> fieldData
+        df.move { dfs { it.name == "data" } }.toTop { it.parent!!.name + "Data" }
     }
 }
