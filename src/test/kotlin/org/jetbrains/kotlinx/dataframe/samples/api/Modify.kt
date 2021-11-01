@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dfsOf
@@ -16,6 +17,9 @@ import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.nullToZero
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.shuffled
+import org.jetbrains.kotlinx.dataframe.api.sortBy
+import org.jetbrains.kotlinx.dataframe.api.sortByDesc
+import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.api.toLeft
@@ -27,6 +31,8 @@ import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.withValue
+import org.jetbrains.kotlinx.dataframe.column
+import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.pathOf
 import org.junit.Test
@@ -122,5 +128,72 @@ class Modify : TestBase() {
         // group1.default.name -> defaultData
         // group2.field.name -> fieldData
         df.move { dfs { it.name == "data" } }.toTop { it.parent!!.name + "Data" }
+    }
+    
+    @Test
+    fun sortBy_properties() {
+        // SampleStart
+        df.sortBy { age }
+        df.sortBy { age and name.firstName.desc }
+        df.sortBy { weight.nullsLast }
+        // SampleEnd
+    }
+
+    @Test
+    fun sortBy_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val weight by column<Int?>()
+        val name by columnGroup()
+        val firstName by name.column<String>()
+
+        df.sortBy { age }
+        df.sortBy { age and firstName }
+        df.sortBy { weight.nullsLast }
+        // SampleEnd
+    }
+
+    @Test
+    fun sortBy_strings() {
+        // SampleStart
+        df.sortBy("age")
+        df.sortBy { "age" and "name"["firstName"].desc }
+        df.sortBy { "weight".nullsLast }
+        // SampleEnd
+    }
+    
+    @Test
+    fun sortByDesc_properties() {
+        // SampleStart
+        df.sortByDesc { age and weight }
+        // SampleEnd
+    }
+
+    @Test
+    fun sortByDesc_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val weight by column<Int?>()
+
+        df.sortByDesc { age and weight }
+        // SampleEnd
+    }
+
+    @Test
+    fun sortByDesc_strings() {
+        // SampleStart
+        df.sortByDesc("age", "weight")
+        // SampleEnd
+    }
+
+    @Test
+    fun sortWith() {
+        // SampleStart
+        df.sortWith { row1, row2 -> when {
+            row1.age < row2.age -> -1
+            row1.age > row2.age -> 1
+            else -> row1.name.firstName.compareTo(row2.name.firstName)
+        }
+        // SampleEnd
     }
 }
