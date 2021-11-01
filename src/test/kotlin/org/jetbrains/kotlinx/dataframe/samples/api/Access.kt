@@ -257,7 +257,6 @@ class Access : TestBase() {
     @Test
     fun filterBy_strings() {
         // SampleStart
-        df.rows().drop()
         df.filterBy("isHappy")
         // SampleEnd
     }
