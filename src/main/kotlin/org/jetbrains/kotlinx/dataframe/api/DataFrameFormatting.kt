@@ -96,10 +96,11 @@ public fun <T, C> ColorClause<T, C>.where(filter: RowValueFilter<T, C>): ColorCl
 
 public typealias CellFormatter<V> = FormattingDSL.(V) -> CellAttributes?
 
-public fun <T, C : Number?> ColorClause<T, C>.linearBg(from: Pair<Number, RGBColor>, to: Pair<Number, RGBColor>): FormattedFrame<T> = with {
-    if (it != null) {
-        background(linear(it, from, to))
-    } else null
-}
+public fun <T, C : Number?> ColorClause<T, C>.linearBg(from: Pair<Number, RGBColor>, to: Pair<Number, RGBColor>): FormattedFrame<T> =
+    with {
+        if (it != null) {
+            background(linear(it, from, to))
+        } else null
+    }
 
 public fun <T, C> ColorClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T> = formatImpl(formatter)

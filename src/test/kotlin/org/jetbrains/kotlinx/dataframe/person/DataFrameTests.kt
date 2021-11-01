@@ -1114,6 +1114,14 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun mergeColsCustom() {
+        val merged = typed.merge { name and city and age }.with { it[0].toString() + " from " + it[1] + " aged " + it[2] }.into("info")
+        merged.ncol() shouldBe 2
+        merged.nrow() shouldBe typed.nrow()
+        merged[0]["info"] shouldBe "Alice from London aged 15"
+    }
+
+    @Test
     fun splitCol() {
         val merged = typed.merge { age and city and weight }.into("info")
         val info by columnMany<Any>()
@@ -1191,7 +1199,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `merge cols with conversion`() {
         val pivoted = typed.groupBy { name }.pivot { city }.count()
-        val res = pivoted.merge { intCols() }.by { it.filterNotNull().sum() }.into("cities")
+        val res = pivoted.merge { intCols() }.with { it.filterNotNull().sum() }.into("cities")
         val expected = typed.select { name and city }.groupBy { name }.count("cities")
         res shouldBe expected
     }
@@ -1949,9 +1957,9 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `split into rows with transform`(){
+    fun `split into rows with transform`() {
         val splitted = typed.split { city }.with { it.toCharArray().toList() }.intoRows()
-        splitted.nrow shouldBe typed.city.sumOf { it?.length ?: 0}
+        splitted.nrow shouldBe typed.city.sumOf { it?.length ?: 0 }
     }
 
     @Test

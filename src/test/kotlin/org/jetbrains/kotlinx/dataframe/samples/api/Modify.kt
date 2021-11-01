@@ -60,7 +60,7 @@ class Modify : TestBase() {
         df.replace { age }.with { 2021 - age named "year" }
         // SampleEnd
     }
-    
+
     @Test
     fun shuffled() {
         // SampleStart

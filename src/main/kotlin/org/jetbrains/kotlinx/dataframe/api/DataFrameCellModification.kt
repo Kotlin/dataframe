@@ -144,10 +144,11 @@ public inline fun <T, reified R> DataFrame<T>.convert(
 ): DataFrame<T> =
     convert(*headPlusArray(firstCol, cols)).with(expression)
 
-public inline fun <T, C, reified R> ConvertClause<T, C?>.notNull(crossinline expression: RowValueExpression<T, C, R>): DataFrame<T> = with {
-    if (it == null) null
-    else expression(this, it)
-}
+public inline fun <T, C, reified R> ConvertClause<T, C?>.notNull(crossinline expression: RowValueExpression<T, C, R>): DataFrame<T> =
+    with {
+        if (it == null) null
+        else expression(this, it)
+    }
 
 public data class ConvertClause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>) {
     public fun <R> cast(): ConvertClause<T, R> = ConvertClause(df, columns as ColumnsSelector<T, R>)
@@ -283,9 +284,10 @@ public class SplitClause<T, C>(
     public val columns: ColumnsSelector<T, C?>
 ) : Split<T, C>
 
-public inline fun <T, C, reified R> Split<T, C>.with(noinline splitter: (C) -> Iterable<R>): SplitWithTransform<T, C, R> = with(
-    getType<R>(), splitter
-)
+public inline fun <T, C, reified R> Split<T, C>.with(noinline splitter: (C) -> Iterable<R>): SplitWithTransform<T, C, R> =
+    with(
+        getType<R>(), splitter
+    )
 
 @PublishedApi
 internal fun <T, C, R> Split<T, C>.with(type: KType, splitter: (C) -> Iterable<R>): SplitWithTransform<T, C, R> {
@@ -341,7 +343,8 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.into(
 }
 
 @JvmName("intoRowsTC")
-public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> = with { it }.intoRows(dropEmpty)
+public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> = with { it }
+    .intoRows(dropEmpty)
 
 @JvmName("intoRowsFrame")
 public fun <T> Split<T, AnyFrame>.intoRows(dropEmpty: Boolean = true): DataFrame<T> = with { it.rows() }.intoRows(dropEmpty)
@@ -375,17 +378,17 @@ public fun <T> Split<T, String>.into(
 public class MergeClause<T, C, R>(
     public val df: DataFrame<T>,
     public val selector: ColumnsSelector<T, C>,
-    public val transform: (Iterable<C>) -> R
+    public val transform: (List<C>) -> R
 )
 
-public fun <T, C> DataFrame<T>.merge(selector: ColumnsSelector<T, C>): MergeClause<T, C, Iterable<C>> = MergeClause(this, selector, { it })
+public fun <T, C> DataFrame<T>.merge(selector: ColumnsSelector<T, C>): MergeClause<T, C, List<C>> = MergeClause(this, selector, { it })
 
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
 
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnPath: ColumnPath): DataFrame<T> {
     val grouped = df.move(selector).under(columnPath)
     val res = grouped.convert { getColumnGroup(columnPath) }.with {
-        transform(it.values().toMany() as Iterable<C>)
+        transform(it.values() as List<C>)
     }
     return res
 }
@@ -400,7 +403,7 @@ public fun <T, C, R> MergeClause<T, C, R>.by(
 ): MergeClause<T, C, String> =
     MergeClause(df, selector) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix, limit = limit, truncated = truncated) }
 
-public inline fun <T, C, R, reified V> MergeClause<T, C, R>.by(crossinline transform: (R) -> V): MergeClause<T, C, V> = MergeClause(df, selector) { transform(this@by.transform(it)) }
+public inline fun <T, C, R, reified V> MergeClause<T, C, R>.with(crossinline transform: (R) -> V): MergeClause<T, C, V> = MergeClause(df, selector) { transform(this@with.transform(it)) }
 
 // endregion
 
