@@ -1,24 +1,21 @@
 [//]: # (title: mergeRows)
 
-Merges values in selected columns into lists grouped by other columns
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Input:
+Returns `DataFrame` where values in given columns are merged into lists or dataframes grouped by other columns.
 
-|name   | city    | age |
-|-------|---------|-----|
-| Alice | London  | 15  |
-| Bob   | Milan   | 20  |
-| Alice | Moscow  | 23  |
-| Alice | London  | 30  |
-| Bob   | Milan   | 11  |
+This is reverse operation to [explode](explode.md)
+
+Merged columns will change their types:
+* `T` to `Many<T>`
+* `DataRow` to `DataFrame`
+
+Note that merged [`ColumnGroup`](DataColumn.md#columngroup) will convert into [`FrameColumn`](DataColumn.md#framecolumn)
+
+<!---FUN mergeRows-->
 
 ```kotlin
-df.mergeRows { age }
+df.mergeRows { name and age and weight and isHappy }
 ```
-Output:
 
-|name   | city   | age
-|-------|--------|-----
-| Alice | London | [15, 30]
-| Bob   | Milan  | [20, 11]
-| Alice | Moscow | [23]
+<!---END-->

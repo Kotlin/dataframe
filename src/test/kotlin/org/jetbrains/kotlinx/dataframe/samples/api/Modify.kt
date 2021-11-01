@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.length
 import org.jetbrains.kotlinx.dataframe.api.lowercase
+import org.jetbrains.kotlinx.dataframe.api.mergeRows
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.movingAverage
@@ -280,6 +281,13 @@ class Modify : TestBase() {
         val df2 = df.convert { age }.with { (1..it step 4).toList() }
 
         df2.explode { age }
+        // SampleEnd
+    }
+
+    @Test
+    fun mergeRows() {
+        // SampleStart
+        df.mergeRows { name and age and weight and isHappy }
         // SampleEnd
     }
 }
