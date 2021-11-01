@@ -94,7 +94,6 @@ public interface DataRow<out T> {
     public infix fun <R> KProperty1<*, R>.eq(a: R?): Boolean = get(this) == a
     public infix fun <R> ColumnReference<R>.neq(a: R?): Boolean = get(this) != a
     public infix fun <R> KProperty1<*, R>.neq(a: R?): Boolean = get(this) != a
-    abstract fun compareTo(name: DataRow<T>): Int
 
     public companion object {
         public val empty: AnyRow = DataFrame.empty(1)[0]

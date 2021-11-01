@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.nullToZero
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.shuffled
 import org.jetbrains.kotlinx.dataframe.api.sortBy
@@ -125,9 +126,14 @@ class Modify : TestBase() {
         dataFrameOf("a.b.c", "a.d.e")(1, 2)
             .move { all() }.into { it.name.split(".").toPath() }
 
+        // name.firstName -> firstName
+        // name.lastName -> lastName
+        df.move { name.cols() }.toTop()
+
         // group1.default.name -> defaultData
         // group2.field.name -> fieldData
         df.move { dfs { it.name == "data" } }.toTop { it.parent!!.name + "Data" }
+        // SampleEnd
     }
     
     @Test
@@ -189,10 +195,12 @@ class Modify : TestBase() {
     @Test
     fun sortWith() {
         // SampleStart
-        df.sortWith { row1, row2 -> when {
-            row1.age < row2.age -> -1
-            row1.age > row2.age -> 1
-            else -> row1.name.firstName.compareTo(row2.name.firstName)
+        df.sortWith { row1, row2 ->
+            when {
+                row1.age < row2.age -> -1
+                row1.age > row2.age -> 1
+                else -> row1.name.firstName.compareTo(row2.name.firstName)
+            }
         }
         // SampleEnd
     }
