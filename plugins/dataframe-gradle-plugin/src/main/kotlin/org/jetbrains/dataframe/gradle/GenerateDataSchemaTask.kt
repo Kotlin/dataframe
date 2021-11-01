@@ -127,9 +127,9 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             appendLine(
                 """
                 @file:Suppress(
-                    "RemoveRedundantBackticks", 
-                    "RemoveRedundantQualifierName", 
-                    "unused", "ObjectPropertyName", 
+                    "RemoveRedundantBackticks",
+                    "RemoveRedundantQualifierName",
+                    "unused", "ObjectPropertyName",
                     "UNCHECKED_CAST", "PropertyName",
                     "ClassName", "UnusedImport"
                 )
@@ -140,12 +140,13 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 appendLine("package $escapedPackageName")
                 appendLine()
             }
-            appendLine("import org.jetbrains.kotlinx.dataframe.annotations.*")
             appendLine("import org.jetbrains.kotlinx.dataframe.ColumnsContainer")
             appendLine("import org.jetbrains.kotlinx.dataframe.DataColumn")
             appendLine("import org.jetbrains.kotlinx.dataframe.DataFrame")
             appendLine("import org.jetbrains.kotlinx.dataframe.DataRow")
             appendLine("import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup")
+            appendLine("import org.jetbrains.kotlinx.dataframe.annotations.ColumnName")
+            appendLine("import org.jetbrains.kotlinx.dataframe.annotations.DataSchema")
             appendLine()
             appendLine("// GENERATED. DO NOT EDIT MANUALLY")
             appendLine(codeGenResult.code.declarations)
