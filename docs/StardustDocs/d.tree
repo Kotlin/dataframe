@@ -49,11 +49,7 @@
         <toc-element id="access.md" toc-title="Access"  show-structure-depth="3">
             <toc-element id="indexing.md"/>
             <toc-element id="iterate.md"/>
-            <toc-element id="getRow.md">
-                <toc-element id="single.md"/>
-                <toc-element id="first.md"/>
-                <toc-element id="last.md"/>
-            </toc-element>
+            <toc-element id="getRow.md"/>
             <toc-element id="getColumn.md"/>
             <toc-element id="slicing.md"/>
         </toc-element>
@@ -67,30 +63,17 @@
         </toc-element>
         <toc-element id="modify.md"  show-structure-depth="3" toc-title="Modify data">
             <toc-element id="filterRows.md">
-                <toc-element id="filter.md">
-                    <toc-element id="filterBy.md"/>
-                </toc-element>
-                <toc-element id="drop.md">
-                    <toc-element id="dropLast.md"/>
-                    <toc-element id="dropNulls.md"/>
-                    <toc-element id="dropNa.md"/>
-                </toc-element>
-                <toc-element id="take.md">
-                    <toc-element id="takeLast.md"/>
-                </toc-element>
+                <toc-element id="filter.md"/>
+                <toc-element id="drop.md"/>
+                <toc-element id="take.md"/>
                 <toc-element id="distinct.md"/>
             </toc-element>
             <toc-element id="sortRows.md">
                 <toc-element id="sortBy.md"/>
-                <toc-element id="sortByDesc.md"/>
-                <toc-element id="sortWith.md"/>
                 <toc-element id="shuffled.md"/>
             </toc-element>
             <toc-element id="modifyCells.md">
-                <toc-element id="update.md">
-                    <toc-element id="fillNulls.md"/>
-                    <toc-element id="nullToZero.md"/>
-                </toc-element>
+                <toc-element id="update.md"/>
                 <toc-element id="convert.md"/>
                 <toc-element id="parse.md"/>
             </toc-element>
