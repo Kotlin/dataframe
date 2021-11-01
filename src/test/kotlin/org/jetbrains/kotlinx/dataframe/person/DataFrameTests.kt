@@ -497,7 +497,7 @@ class DataFrameTests : BaseTest() {
 
         df.select("age").check()
 
-        df.select { "age"() }.check()
+        df.select { it["age"] }.check()
         df.select { get("age") }.check()
         df.select { this["age"] }.check()
     }

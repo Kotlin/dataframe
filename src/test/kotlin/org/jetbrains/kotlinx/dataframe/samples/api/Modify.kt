@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.at
+import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dfsOf
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
@@ -15,12 +15,12 @@ import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.nullToZero
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.shuffled
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortWith
+import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.api.toLeft
@@ -37,6 +37,7 @@ import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.pathOf
 import org.junit.Test
+import kotlin.streams.toList
 
 class Modify : TestBase() {
 
@@ -135,7 +136,7 @@ class Modify : TestBase() {
         df.move { dfs { it.name == "data" } }.toTop { it.parent!!.name + "Data" }
         // SampleEnd
     }
-    
+
     @Test
     fun sortBy_properties() {
         // SampleStart
@@ -167,7 +168,7 @@ class Modify : TestBase() {
         df.sortBy { "weight".nullsLast }
         // SampleEnd
     }
-    
+
     @Test
     fun sortByDesc_properties() {
         // SampleStart
@@ -202,6 +203,73 @@ class Modify : TestBase() {
                 else -> row1.name.firstName.compareTo(row2.name.firstName)
             }
         }
+        // SampleEnd
+    }
+
+    @Test
+    fun split_properties() {
+        // SampleStart
+        df.split { name.firstName }.with { it.chars().toList() }.inplace()
+
+        df.split { name }.with { it.values() }.into("nameParts")
+
+        df.split { name.lastName }.by(" ").inward { "word$it" }
+        // SampleEnd
+    }
+
+    @Test
+    fun split_accessors() {
+        // SampleStart
+        val name by columnGroup()
+        val firstName by name.column<String>()
+        val lastName by name.column<String>()
+
+        df.split { firstName }.with { it.chars().toList() }.inplace()
+
+        df.split { name }.with { it.values() }.into("nameParts")
+
+        df.split { lastName }.by(" ").inward { "word$it" }
+        // SampleEnd
+    }
+
+    @Test
+    fun split_strings() {
+        // SampleStart
+        df.split { "name"["firstName"]<String>() }.with { it.chars().toList() }.inplace()
+
+        df.split { name }.with { it.values() }.into("nameParts")
+
+        df.split { "name"["lastName"] }.by(" ").inward { "word$it" }
+        // SampleEnd
+    }
+    
+    @Test
+    fun splitIntoRows_properties() {
+        // SampleStart
+        df.split { name.firstName }.with { it.chars().toList() }.intoRows()
+
+        df.split { name }.with { it.values() }.intoRows()
+        // SampleEnd
+    }
+
+    @Test
+    fun splitIntoRows_accessors() {
+        // SampleStart
+        val name by columnGroup()
+        val firstName by name.column<String>()
+
+        df.split { firstName }.with { it.chars().toList() }.intoRows()
+
+        df.split { name }.with { it.values() }.intoRows()
+        // SampleEnd
+    }
+
+    @Test
+    fun splitIntoRows_strings() {
+        // SampleStart
+        df.split { "name"["firstName"]<String>() }.with { it.chars().toList() }.intoRows()
+
+        df.split { group("name") }.with { it.values() }.intoRows()
         // SampleEnd
     }
 }

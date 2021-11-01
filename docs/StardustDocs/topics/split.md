@@ -1,6 +1,8 @@
 [//]: # (title: split)
 
-Splits cell value into several values and spreads them horizontally or vertically.
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
+
+Splits every value in the given columns into several values. Splitted values can be spread horizontally or vertically or remain inside the original column as `List`
 
 Default split behavior:
 * for `String` values: split by `,` and trim (leading and trailing whitespace removed)
@@ -15,7 +17,7 @@ df.split { columns }
     [.inward()] // nest resulting columns into original column
     .into(columnNames) [ { columnNamesGenerator } ]
 
-splitter = (T) -> List<Any>
+splitter = DataRow.(T) -> Iterable<Any>
 columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
 ```
 
@@ -24,41 +26,91 @@ columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
 Default `columnNamesGenerator` generates column names `splitted1`, `splitted2`...
 
 Examples:
+
+<!---FUN split-->
+<tabs>
+<tab title="Properties">
+
 ```kotlin
-// artifactId -> groupId, artifactId, version 
-df.split { artifactId }.by(":").into("groupId", "artifactId", "version")
+df.split { name.firstName }.with { it.chars().toList() }.inplace()
 
-// info: List<String> -> info.age, info.weight
-df.split { info }.inward().into("age", "weight")
+df.split { name }.with { it.values() }.into("nameParts")
 
-// address -> address1, address2, address3, address4 ...
-df.split { address }.into { "address$it" } // splits by ','
-
-// text -> firstWord, secondWord, extraWord1, extraWord2 ...
-df.split { text }.by(" ").into("firstWord", "secondWord") { "extraWord$it" }
+df.split { name.lastName }.by(" ").inward { "word$it" }
 ```
 
-Split `Int` column into digits using `splitter`:
-```kotlin
-fun digits(num: Int) = sequence {
-        var k = num
-        if(k == 0) yield(0)
-        while(k > 0) {
-            yield(k % 10)
-            k /= 10
-        }
-    }.toList()
+</tab>
+<tab title="Accessors">
 
-// number -> number.digit1, number.digit2, number.digit3...
-df.split { number }.by { digits(it) }.inward().into { "digit$it" }
+```kotlin
+val name by columnGroup()
+val firstName by name.column<String>()
+val lastName by name.column<String>()
+
+df.split { firstName }.with { it.chars().toList() }.inplace()
+
+df.split { name }.with { it.values() }.into("nameParts")
+
+df.split { lastName }.by(" ").inward { "word$it" }
 ```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.split { "name"["firstName"]<String>() }.with { it.chars().toList() }.inplace()
+
+df.split { name }.with { it.values() }.into("nameParts")
+
+df.split { "name"["lastName"] }.by(" ").inward { "word$it" }
+```
+
+</tab></tabs>
+<!---END-->
+
 ## Split vertically
-Reverse operation to [mergeRows](mergeRows.md). See [explode](explode.md) for details
-```
-df.split { columns }.intoRows()
-df.split { columns }.by(delimeters).intoRows()
-df.split { columns }.by { splitter }.intoRows()
+Returns `DataFrame` with duplicated rows for every splitted value. 
 
-splitter = (T) -> List<Any>
+<!---FUN splitIntoRows-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.split { name.firstName }.with { it.chars().toList() }.intoRows()
+
+df.split { name }.with { it.values() }.intoRows()
 ```
-When neither `delimeters` or `splitter` are specified, `split().intoRows()` is equivalent of [explode](explode.md)
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val name by columnGroup()
+val firstName by name.column<String>()
+
+df.split { firstName }.with { it.chars().toList() }.intoRows()
+
+df.split { name }.with { it.values() }.intoRows()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.split { "name"["firstName"]<String>() }.with { it.chars().toList() }.intoRows()
+
+df.split { group("name") }.with { it.values() }.intoRows()
+```
+
+</tab></tabs>
+<!---END-->
+
+This operation is reverse to [mergeRows](mergeRows.md).
+
+`split { column }...intoRows()` 
+
+is equivalent to 
+
+`split { column }...inplace().explode { column }`
+
+See [explode](explode.md) for details

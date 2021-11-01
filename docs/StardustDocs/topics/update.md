@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Changes values in columns preserving column types.
+Returns `DataFrame` with changed values in some cells. Column types can not be changed.
 
 ```kotlin
 update { columnSelector }

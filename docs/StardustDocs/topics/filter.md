@@ -59,7 +59,6 @@ df.filterBy { isHappy }
 <tab title="Strings">
 
 ```kotlin
-df.rows().drop()
 df.filterBy("isHappy")
 ```
 

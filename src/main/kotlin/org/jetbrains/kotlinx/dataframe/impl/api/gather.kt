@@ -92,7 +92,7 @@ internal fun <T, C, K, R> gatherImpl(
 
         df = df.explode { nameAndValue }
 
-        val nameAndValuePairs = nameAndValue.changeType<Pair<K, C>>()
+        val nameAndValuePairs = nameAndValue.typed<Pair<K, C>>()
 
         df = df.split { nameAndValuePairs }
             .with { listOf(it.first, it.second) }

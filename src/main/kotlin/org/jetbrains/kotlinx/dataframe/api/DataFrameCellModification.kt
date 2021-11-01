@@ -285,13 +285,13 @@ public class SplitClause<T, C>(
     public val columns: ColumnsSelector<T, C?>
 ) : Split<T, C>
 
-public inline fun <T, C, reified R> Split<T, C>.with(noinline splitter: (C) -> Iterable<R>): SplitWithTransform<T, C, R> =
+public inline fun <T, C, reified R> Split<T, C>.with(noinline splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> =
     with(
         getType<R>(), splitter
     )
 
 @PublishedApi
-internal fun <T, C, R> Split<T, C>.with(type: KType, splitter: (C) -> Iterable<R>): SplitWithTransform<T, C, R> {
+internal fun <T, C, R> Split<T, C>.with(type: KType, splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> {
     require(this is SplitClause<T, C>)
     return SplitClauseWithTransform(df, columns, false, type) {
         if (it == null) emptyMany() else splitter(it).toMany()
@@ -303,7 +303,7 @@ public data class SplitClauseWithTransform<T, C, R>(
     val columns: ColumnsSelector<T, C?>,
     val inward: Boolean,
     val targetType: KType,
-    val transform: (C) -> Iterable<R>
+    val transform: DataRow<T>.(C) -> Iterable<R>
 ) : SplitWithTransform<T, C, R> {
 
     override fun intoRows(dropEmpty: Boolean): DataFrame<T> = inplace().explode(dropEmpty, columns)

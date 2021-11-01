@@ -83,10 +83,12 @@ Returns `DataFrame` sorted with comparator.
 <!---FUN sortWith-->
 
 ```kotlin
-df.sortWith { row1, row2 -> when {
-    row1.age < row2.age -> -1
-    row1.age > row2.age -> 1
-    else -> row1.name.firstName.compareTo(row2.name.firstName)
+df.sortWith { row1, row2 ->
+    when {
+        row1.age < row2.age -> -1
+        row1.age > row2.age -> 1
+        else -> row1.name.firstName.compareTo(row2.name.firstName)
+    }
 }
 ```
 

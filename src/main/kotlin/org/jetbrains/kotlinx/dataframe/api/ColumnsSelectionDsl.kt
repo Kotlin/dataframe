@@ -153,7 +153,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
     public operator fun <C> List<DataColumn<C>>.get(range: IntRange): ColumnSet<C> =
         ColumnsList(subList(range.first, range.last + 1))
 
-    public operator fun String.invoke(): ColumnAccessor<Any?> = toColumnAccessor()
+    public operator fun <C> String.invoke(): ColumnAccessor<C> = toColumnOf()
     public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
     public fun <C> String.cast(): ColumnAccessor<C> = ColumnAccessorImpl(this)
 
@@ -208,6 +208,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
 
     public operator fun <C> ColumnReference<C>.invoke(newName: String): ColumnReference<C> = renamedReference(newName)
     public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
+    public infix fun String.into(newName: String): ColumnReference<Any?> = toColumnAccessor().into(newName)
+
     public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
 
     public fun ColumnReference<String?>.length(): ColumnReference<Int?> = map { it?.length }
@@ -223,7 +225,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
 
     public infix fun <C> ColumnSet<C>.and(other: String): ColumnSet<Any?> = this and other.toColumnAccessor()
 
-    public operator fun ColumnPath.invoke(): ColumnAccessor<Any?> = toColumnAccessor()
+    public operator fun <C> ColumnPath.invoke(): ColumnAccessor<C> = toColumnAccessor().typed()
 
     public operator fun <C> String.invoke(newColumnExpression: RowExpression<T, C>): DataColumn<C> =
         newColumnWithActualType(this, newColumnExpression)

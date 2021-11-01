@@ -21,6 +21,7 @@ val age by column<Int>()
 val weight by column<Int?>()
 
 df.select { age and weight }
+df.select(age, weight)
 df[age, weight]
 ```
 
@@ -28,7 +29,8 @@ df[age, weight]
 <tab title="Strings">
 
 ```kotlin
-df.select { "age"() and "weight"() }
+df.select { "age" and "weight" }
+df.select("age", "weight")
 df["age", "weight"]
 ```
 

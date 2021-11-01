@@ -147,7 +147,8 @@ class Access : TestBase() {
     @Test
     fun getColumnsByName_strings() {
         // SampleStart
-        df.select { "age"() and "weight"() }
+        df.select { "age" and "weight" }
+        df.select("age", "weight")
         df["age", "weight"]
         // SampleEnd
     }
@@ -167,20 +168,23 @@ class Access : TestBase() {
         val weight by column<Int?>()
 
         df.select { age and weight }
+        df.select(age, weight)
         df[age, weight]
         // SampleEnd
     }
 
     @Test
-    fun getSeveralRows() {
+    fun getSeveralRowsByIndices() {
         // SampleStart
         df[0, 3, 4]
-        df[1..2]
+        // SampleEnd
+    }
 
-        df.take(5) // first 5 rows
-        df.takeLast(5) // last 5 rows
-        df.drop(5) // all rows except first 5
-        df.dropLast(5) // all rows except last 5
+    @Test
+    fun getSeveralRowsByRanges() {
+        // SampleStart
+        df[1..2]
+        df[0..2, 4..5]
         // SampleEnd
     }
 
@@ -262,14 +266,14 @@ class Access : TestBase() {
     }
 
     @Test
-    fun drop_properties() {
+    fun dropWhere_properties() {
         // SampleStart
         df.drop { weight == null || city == null }
         // SampleEnd
     }
 
     @Test
-    fun drop_accessors() {
+    fun dropWhere_accessors() {
         // SampleStart
         val name by columnGroup()
         val weight by column<Int?>()
@@ -282,7 +286,7 @@ class Access : TestBase() {
     }
 
     @Test
-    fun drop_strings() {
+    fun dropWhere_strings() {
         // SampleStart
         df.drop { it["weight"] == null || it["city"] == null }
         // SampleEnd
