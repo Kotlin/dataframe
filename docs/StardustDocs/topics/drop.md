@@ -35,8 +35,6 @@ df.drop { it["weight"] == null || it["city"] == null }
 </tab></tabs>
 <!---END-->
 
-## dropLast
-
 ## dropNulls
 
 Remove rows with `null` values

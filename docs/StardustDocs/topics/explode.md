@@ -1,11 +1,15 @@
 [//]: # (title: explode)
 
-Splits list-like values and spreads them vertically. Reverse to [mergeRows](mergeRows.md)
-The following types of values will be splitted:
-* List
-* DataFrame
-* String (splits by ',')
-  Scalar values will not be transformed. Empty lists will result in `null`
+Splits list-like values and spreads them vertically. 
+
+Reverse to [mergeRows](mergeRows.md)
+
+The following types of columns can be exploded:
+* `List`
+* `DataFrame`
+* `String` (splits by ',')
+
+Scalar values will not be transformed. Empty lists will result in `null`
   Row values in other columns will be duplicated
 
 Input:

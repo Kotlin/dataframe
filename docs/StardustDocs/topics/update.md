@@ -4,18 +4,12 @@
 
 Changes values in columns preserving column types.
 
-#### Syntax
-
 ```kotlin
 update { columnSelector }
     [.where { rowCondition } ]
     [.at(rowIndices) ] 
      .with { rowExpression } | .withNull() | .withConst(value) | .withRowCol { rowColExpression }
-```
 
-where 
-
-```kotlin
 rowCondition = DataRow.(OldValue) -> Boolean
 rowExpression = DataRow.(OldValue) -> NewValue
 rowColExpression = DataRow.(DataColumn) -> NewValue
@@ -23,7 +17,7 @@ rowColExpression = DataRow.(DataColumn) -> NewValue
 
 See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-expressions)
 
-#### Examples
+Examples:
 
 <!---FUN update-->
 
@@ -37,21 +31,3 @@ df.update { age }.with { movingAverage(2) { age }.toInt() }
 ```
 
 <!---END-->
-
-## fillNulls
-
-Replaces `null` values with expression. Equivalent to
-```kotlin
-update { columns }.where { it == null }
-```
-Example
-```kotlin
-df.fillNulls { intCols() }.with { -1 } 
-```
-
-## nullToZero
-
-Replace `null` values with `0`. Works for `Int`, `Double`, `Long` and `BigDecimal` columns.
-```kotlin
-df.nullToZero { columns }
-```

@@ -1,3 +1,3 @@
-[//]: # (title: splitMerge.md)
+[//]: # (title: splitMerge)
 
 Start writing here.
