@@ -242,7 +242,7 @@ class Modify : TestBase() {
         df.split { "name"["lastName"] }.by(" ").inward { "word$it" }
         // SampleEnd
     }
-    
+
     @Test
     fun splitIntoRows_properties() {
         // SampleStart
