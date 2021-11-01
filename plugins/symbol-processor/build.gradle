@@ -1,6 +1,6 @@
 plugins {
     id("org.jetbrains.kotlin.jvm")
-    id("ru.ileasile.kotlin.publisher")
+    id("org.jetbrains.kotlin.libs.publisher")
 }
 
 repositories {
@@ -22,7 +22,7 @@ dependencies {
 
 kotlinPublications {
     pom {
-        use(ru.ileasile.kotlin.PomUtilKt) {
+        use(org.jetbrains.kotlinx.publisher.PomUtilKt) {
             githubRepo("Kotlin", "dataframe")
             inceptionYear.set("2021")
             licenses {
