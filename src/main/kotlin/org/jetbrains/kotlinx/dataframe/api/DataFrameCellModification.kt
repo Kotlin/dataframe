@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
@@ -378,7 +379,7 @@ public fun <T> Split<T, String>.into(
 public class MergeClause<T, C, R>(
     public val df: DataFrame<T>,
     public val selector: ColumnsSelector<T, C>,
-    public val transform: (List<C>) -> R
+    public val transform: DataRow<T>.(List<C>) -> R
 )
 
 public fun <T, C> DataFrame<T>.merge(selector: ColumnsSelector<T, C>): MergeClause<T, C, List<C>> = MergeClause(this, selector, { it })
@@ -388,7 +389,8 @@ public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnName: String
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnPath: ColumnPath): DataFrame<T> {
     val grouped = df.move(selector).under(columnPath)
     val res = grouped.convert { getColumnGroup(columnPath) }.with {
-        transform(it.values() as List<C>)
+        val srcRow = df[index]
+        transform(srcRow, it.values() as List<C>)
     }
     return res
 }
@@ -403,7 +405,7 @@ public fun <T, C, R> MergeClause<T, C, R>.by(
 ): MergeClause<T, C, String> =
     MergeClause(df, selector) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix, limit = limit, truncated = truncated) }
 
-public inline fun <T, C, R, reified V> MergeClause<T, C, R>.with(crossinline transform: (R) -> V): MergeClause<T, C, V> = MergeClause(df, selector) { transform(this@with.transform(it)) }
+public inline fun <T, C, R, reified V> MergeClause<T, C, R>.with(crossinline transform: DataRow<T>.(R) -> V): MergeClause<T, C, V> = MergeClause(df, selector) { transform(this@with.transform(this, it)) }
 
 // endregion
 
