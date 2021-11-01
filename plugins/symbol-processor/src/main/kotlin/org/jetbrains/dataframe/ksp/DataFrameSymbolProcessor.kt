@@ -58,7 +58,7 @@ class DataFrameSymbolProcessor(
         )
         try {
             generatedFile.writer().use {
-                it.appendLine("""@file:Suppress("UNCHECKED_CAST")""")
+                it.appendLine("""@file:Suppress("UNCHECKED_CAST", "USELESS_CAST")""")
                 if (packageName.isNotEmpty()) {
                     it.appendLine("package $packageName")
                 }
