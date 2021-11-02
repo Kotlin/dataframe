@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -15,7 +16,9 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import java.math.BigDecimal
 import java.math.BigInteger
 import kotlin.reflect.KClass
+import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
@@ -216,3 +219,5 @@ internal fun <T> List<T>.last(count: Int) = subList(size - count, size)
 public fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries: Boolean = true): Boolean =
     if (includeBoundaries) this in left..right
     else this > left && this < right
+
+internal val <T> KProperty<T>.columnName: String get() = findAnnotation<ColumnName>()?.name ?: name

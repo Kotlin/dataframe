@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
@@ -9,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.impl.api.describeImpl
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.impl.schema.extractSchema
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KType
 
@@ -44,6 +46,8 @@ public interface NumberColumnDescriptionSchema : GeneralColumnDescriptionSchema 
 // schema
 
 public fun AnyFrame.schema(): DataFrameSchema = extractSchema()
+
+public fun AnyCol.schema(): ColumnSchema = extractSchema()
 
 public fun AnyRow.schema(): DataFrameSchema = owner.schema()
 

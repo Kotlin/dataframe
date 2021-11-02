@@ -52,6 +52,8 @@ public open class Marker(
         allFields.associateBy { it.columnName }
     }
 
+    public fun getField(columnName: String): GeneratedField? = allFieldsByColumn[columnName]
+
     public fun containsColumn(columnName: String): Boolean = allFieldsByColumn.containsKey(columnName)
 
     public val columnNames: List<String> get() = allFields.map { it.columnName }

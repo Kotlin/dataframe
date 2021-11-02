@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.addRowNumber
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
@@ -36,7 +37,6 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.api.toValueColumn
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
@@ -2019,5 +2019,49 @@ class DataFrameTests : BaseTest() {
         df.filter { year > 2000 }.nrow() shouldBe 3
         counter shouldBe df.nrow()
         // SampleEnd
+    }
+
+    @Test
+    fun `typed`() {
+        data class Target(
+            val name: String,
+            val age: Int,
+            val city: String?,
+            val weight: Int?
+        )
+
+        df.typed<Target>() shouldBe df
+        df.convert { age }.toStr().typed<Target>() shouldBe df
+        df.add("col") { 1 }.typed<Target>() shouldBe df
+
+        val added = df.add("col") { 1 }
+        added.typed<Target>(extraColumns = ExtraColumnsBehavior.Keep) shouldBe added
+
+        shouldThrow<IllegalArgumentException> {
+            df.remove { city }.typed<Target>()
+        }
+
+        shouldThrow<IllegalArgumentException> {
+            df.update { name }.at(2).withNull().typed<Target>()
+        }
+
+        shouldThrow<IllegalArgumentException> {
+            df.convert { age }.toStr().typed<Target>(allowConversion = false)
+        }
+
+        shouldThrow<IllegalArgumentException> {
+            df.add("col") { 1 }.typed<Target>(extraColumns = ExtraColumnsBehavior.Fail) shouldBe df
+        }
+    }
+
+    @Test
+    fun `typed groups`() {
+        data class Student(val name: String, val age: Int, val weight: Int?)
+
+        data class Target(val city: String?, val students: DataFrame<Student>)
+
+        val typed = df.groupBy { city }.toDataFrame("students").typed<Target>()
+
+        typed[Target::students].cast<DataFrame<Student>>()[0][Student::name][0] shouldBe "Alice"
     }
 }

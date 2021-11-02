@@ -16,7 +16,7 @@ import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.withNullability
 
 internal fun AnyFrame.extractSchema(): DataFrameSchema =
-    DataFrameSchemaImpl(columns().filter { it.name().isNotEmpty() }.map { it.name() to it.getColumnType() }.toMap())
+    DataFrameSchemaImpl(columns().filter { it.name().isNotEmpty() }.map { it.name() to it.extractSchema() }.toMap())
 
 internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
     val collectedTypes = mutableMapOf<String, MutableSet<ColumnSchema>>()
@@ -53,8 +53,8 @@ internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
                     .intersectSchemas(),
                 it.value.any { it.nullable }
             )
-            kind == ColumnKind.Group -> ColumnSchema.Map(
-                it.value.map { (it as ColumnSchema.Map).schema }
+            kind == ColumnKind.Group -> ColumnSchema.Group(
+                it.value.map { (it as ColumnSchema.Group).schema }
                     .intersectSchemas()
             )
             else -> throw RuntimeException()
@@ -63,9 +63,9 @@ internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
     return DataFrameSchemaImpl(result)
 }
 
-internal fun AnyCol.getColumnType(): ColumnSchema = when (this) {
+internal fun AnyCol.extractSchema(): ColumnSchema = when (this) {
     is ValueColumn<*> -> ColumnSchema.Value(type)
-    is ColumnGroup<*> -> ColumnSchema.Map(df.schema())
+    is ColumnGroup<*> -> ColumnSchema.Group(df.schema())
     is FrameColumn<*> -> ColumnSchema.Frame(
         schema.value,
         hasNulls

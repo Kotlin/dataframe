@@ -22,7 +22,7 @@ internal object MarkersExtractor {
             val fields = getFields(markerClass)
             val isOpen = markerClass.findAnnotation<DataSchema>()?.isOpen ?: false
             val baseSchemas = markerClass.superclasses.filter { it != Any::class }.map { get(it) }
-            Marker(markerClass.qualifiedName!!, isOpen, fields, baseSchemas, MarkerVisibility.IMPLICIT_PUBLIC)
+            Marker(markerClass.qualifiedName ?: markerClass.simpleName!!, isOpen, fields, baseSchemas, MarkerVisibility.IMPLICIT_PUBLIC)
         }
 
     private fun getFields(markerClass: KClass<*>): List<GeneratedField> =
@@ -35,7 +35,7 @@ internal object MarkersExtractor {
                 DataRow::class -> {
                     val typeArgument = type.arguments[0].type!!
                     marker = get(typeArgument.jvmErasure)
-                    ColumnSchema.Map(marker.schema)
+                    ColumnSchema.Group(marker.schema)
                 }
                 DataFrame::class -> {
                     val typeArgument = type.arguments[0].type!!

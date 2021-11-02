@@ -35,7 +35,7 @@ internal fun getRequiredMarkers(schema: DataFrameSchema, markers: Iterable<Marke
 
 internal val charsToQuote = """[ `(){}\[\].<>'"/|\\!?@:;%^&*#$-]""".toRegex()
 
-internal fun createCodeWithConverter(code: String, markerName: String) = CodeWithConverter(code) { "$it.cast<${markerName}>()" }
+internal fun createCodeWithConverter(code: String, markerName: String) = CodeWithConverter(code) { "$it.cast<$markerName>()" }
 
 private val letterCategories = setOf(
     CharCategory.UPPERCASE_LETTER,
