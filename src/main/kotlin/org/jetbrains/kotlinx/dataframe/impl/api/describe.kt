@@ -16,7 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.min
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.ndistinct
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -48,5 +48,5 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescriptionSchema
         data.values.count { it == top }
     }.move(ColumnDescriptionSchema::freq).after(ColumnDescriptionSchema::top)
 
-    return df.typed()
+    return df.cast()
 }

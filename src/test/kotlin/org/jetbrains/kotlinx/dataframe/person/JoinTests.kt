@@ -19,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.api.outerJoin
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.junit.Test
@@ -48,11 +48,11 @@ class JoinTests : BaseTest() {
     val DataRow<Person2>.name @JvmName("get-name") get() = this["name"] as String
     val DataRow<Person2>.origin get() = this["origin"] as String?
     val DataRow<Person2>.grade get() = this["grade"] as Int
-    val ColumnsContainer<Person2>.name @JvmName("get-name") get() = this["name"].typed<String>()
-    val ColumnsContainer<Person2>.origin get() = this["origin"].typed<String?>()
-    val ColumnsContainer<Person2>.grade get() = this["grade"].typed<Int>()
+    val ColumnsContainer<Person2>.name @JvmName("get-name") get() = this["name"].cast<String>()
+    val ColumnsContainer<Person2>.origin get() = this["origin"].cast<String?>()
+    val ColumnsContainer<Person2>.grade get() = this["grade"].cast<Int>()
 
-    val typed2: DataFrame<Person2> = df2.typed()
+    val typed2: DataFrame<Person2> = df2.cast()
 
     @Test
     fun `inner join`() {

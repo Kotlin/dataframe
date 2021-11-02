@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.mapNotNullGroups
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.codeGen.generateCode
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -127,7 +127,7 @@ class GatherTests {
 
     //endregion
 
-    val typed = df.typed<Marker>()
+    val typed = df.cast<Marker>()
 
     @Test
     fun gather() {

@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.movingAverage
 import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.junit.Test
 
@@ -45,7 +45,7 @@ class SeriesTests {
     val ColumnsContainer<Weather>.day get() = this["day"] as ColumnReference<Int>
     val ColumnsContainer<Weather>.temp get() = this["temp"] as ColumnReference<Int>
 
-    val typed = df.typed<Weather>()
+    val typed = df.cast<Weather>()
 
     @Test
     fun `diff test`() {

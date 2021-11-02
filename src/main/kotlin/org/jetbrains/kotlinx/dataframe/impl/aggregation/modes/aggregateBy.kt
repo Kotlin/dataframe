@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrameExpression
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.namedValues
 
@@ -19,5 +19,5 @@ internal fun <T> Grouped<T>.aggregateBy(
         row?.namedValues()?.forEach {
             if (!keyColumns.contains(it.name)) yield(it)
         }
-    }.typed()
+    }.cast()
 }

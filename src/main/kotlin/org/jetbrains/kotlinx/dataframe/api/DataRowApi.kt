@@ -41,4 +41,4 @@ public fun <T> DataRow<T>.duplicate(n: Int): DataFrame<T> = this.owner.columns()
             } else DataColumn.createValueColumn(col.name, MutableList(n) { value }, col.type.withNullability(value == null))
         }
     }
-}.toDataFrame().typed()
+}.toDataFrame().cast()

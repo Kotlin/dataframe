@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
@@ -88,7 +88,7 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T>, 
         val receiver = GroupByReceiverImpl(this)
         body(receiver, receiver)
         val row = receiver.compute() ?: DataFrame.empty(1)[0]
-        return row.typed()
+        return row.cast()
     }
 
     override fun rows(): Iterable<DataRow<T>> = object : Iterable<DataRow<T>> {

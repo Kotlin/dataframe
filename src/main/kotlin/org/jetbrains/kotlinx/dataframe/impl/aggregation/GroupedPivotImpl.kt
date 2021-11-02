@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateBody
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateBodyInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.public
@@ -23,7 +23,7 @@ internal data class GroupedPivotImpl<T>(
     override fun <R> aggregate(separate: Boolean, body: AggregateBody<T, R>): DataFrame<T> {
         return df.aggregate {
             aggregatePivot(this as GroupByReceiverImpl<T>, columns, separate, groupPath, default, body)
-        }.typed()
+        }.cast()
     }
 
     override fun separateAggregatedValues(flag: Boolean) = if (flag == groupValues) this else copy(groupValues = flag)

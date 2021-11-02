@@ -35,6 +35,8 @@ internal fun getRequiredMarkers(schema: DataFrameSchema, markers: Iterable<Marke
 
 internal val charsToQuote = """[ `(){}\[\].<>'"/|\\!?@:;%^&*#$-]""".toRegex()
 
+internal fun createCodeWithConverter(code: String, markerName: String) = CodeWithConverter(code) { "$it.cast<${markerName}>()" }
+
 private val letterCategories = setOf(
     CharCategory.UPPERCASE_LETTER,
     CharCategory.TITLECASE_LETTER,
@@ -105,7 +107,7 @@ internal open class ExtensionsCodeGeneratorImpl : ExtensionsCodeGenerator {
 
     override fun generate(marker: IsolatedMarker): CodeWithConverter {
         val code = generateExtensionProperties(marker)
-        return CodeWithConverter(code) { "$it.typed<${marker.name}>()" }
+        return createCodeWithConverter(code, marker.name)
     }
 
     private fun generateInterfaces(
@@ -166,7 +168,7 @@ internal class CodeGeneratorImpl : ExtensionsCodeGeneratorImpl(), CodeGenerator 
             extensionProperties -> generateExtensionProperties(marker)
             else -> ""
         }
-        return CodeWithConverter(code) { "$it.typed<${marker.name}>()" }
+        return createCodeWithConverter(code, marker.name)
     }
 
     override fun generate(
@@ -187,7 +189,7 @@ internal class CodeGeneratorImpl : ExtensionsCodeGeneratorImpl(), CodeGenerator 
                 declarations.add(generateExtensionProperties(it))
             }
         }
-        val code = CodeWithConverter(declarations.join()) { "$it.typed<${marker.name}>()" }
+        val code = createCodeWithConverter(declarations.join(), marker.name)
         return CodeGenResult(code, context.generatedMarkers)
     }
 }

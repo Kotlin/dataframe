@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.schema
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -73,8 +73,8 @@ public interface DataColumn<out T> : BaseColumn<T> {
         public fun <T> create(name: String, values: List<T>, type: KType, checkForNulls: Boolean = false): DataColumn<T> {
             return when (type.toColumnKind()) {
                 ColumnKind.Value -> createValueColumn(name, values, type, checkForNulls)
-                ColumnKind.Group -> createColumnGroup(name, (values as List<AnyRow?>).concat()).asDataColumn().typed()
-                ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame?>, hasNulls = if (checkForNulls) null else type.isMarkedNullable).asDataColumn().typed()
+                ColumnKind.Group -> createColumnGroup(name, (values as List<AnyRow?>).concat()).asDataColumn().cast()
+                ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame?>, hasNulls = if (checkForNulls) null else type.isMarkedNullable).asDataColumn().cast()
             }
         }
 

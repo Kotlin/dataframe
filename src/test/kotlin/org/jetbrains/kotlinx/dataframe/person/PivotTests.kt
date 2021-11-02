@@ -34,7 +34,7 @@ import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.toDataRow
 import org.jetbrains.kotlinx.dataframe.api.toInt
 import org.jetbrains.kotlinx.dataframe.api.toMany
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.values
@@ -91,11 +91,11 @@ class PivotTests {
     val DataRow<Person>.name get() = this["name"] as String
     val DataRow<Person>.key get() = this["key"] as String
     val DataRow<Person>.value get() = this["value"] as Any?
-    val ColumnsContainer<Person>.name get() = this["name"].typed<String>()
-    val ColumnsContainer<Person>.key get() = this["key"].typed<String>()
-    val ColumnsContainer<Person>.value get() = this["value"].typed<Any?>()
+    val ColumnsContainer<Person>.name get() = this["name"].cast<String>()
+    val ColumnsContainer<Person>.key get() = this["key"].cast<String>()
+    val ColumnsContainer<Person>.value get() = this["value"].cast<Any?>()
 
-    val typed: DataFrame<Person> = df.typed()
+    val typed: DataFrame<Person> = df.cast()
 
     val name by column<String>()
     val key by column<String>()

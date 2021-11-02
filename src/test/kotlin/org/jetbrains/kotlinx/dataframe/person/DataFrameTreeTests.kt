@@ -62,7 +62,7 @@ import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.toDefinition
 import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.api.toTop
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.update
@@ -106,18 +106,18 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     val df2 = df.move { name and city }.under("nameAndCity")
-    val typed2 = df2.typed<GroupedPerson>()
+    val typed2 = df2.cast<GroupedPerson>()
 
     val DataRow<NameAndCity>.name @JvmName("get-name-row") get() = this["name"] as String
     val DataRow<NameAndCity>.city @JvmName("get-city-row") get() = this["city"] as String?
-    val ColumnsContainer<NameAndCity>.name @JvmName("get-name") get() = this["name"].typed<String>()
-    val ColumnsContainer<NameAndCity>.city @JvmName("get-city") get() = this["city"].typed<String?>()
+    val ColumnsContainer<NameAndCity>.name @JvmName("get-name") get() = this["name"].cast<String>()
+    val ColumnsContainer<NameAndCity>.city @JvmName("get-city") get() = this["city"].cast<String?>()
 
     val DataRow<GroupedPerson>.age @JvmName("get-age-row") get() = this["age"] as Int
     val DataRow<GroupedPerson>.weight @JvmName("get-weight-row") get() = this["weight"] as Int?
     val DataRow<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as DataRow<NameAndCity>
-    val ColumnsContainer<GroupedPerson>.age @JvmName("get-age") get() = this["age"].typed<Int>()
-    val ColumnsContainer<GroupedPerson>.weight @JvmName("get-weight") get() = this["weight"].typed<Int?>()
+    val ColumnsContainer<GroupedPerson>.age @JvmName("get-age") get() = this["age"].cast<Int>()
+    val ColumnsContainer<GroupedPerson>.weight @JvmName("get-weight") get() = this["weight"].cast<Int?>()
     val ColumnsContainer<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as ColumnGroup<NameAndCity>
 
     val nameAndCity by columnGroup()
@@ -282,9 +282,9 @@ class DataFrameTreeTests : BaseTest() {
     fun pivot() {
         val modified = df.append("Alice", 55, "Moscow", 100)
         val df2 = modified.move { name and city }.under("nameAndCity")
-        val typed2 = df2.typed<GroupedPerson>()
+        val typed2 = df2.cast<GroupedPerson>()
 
-        val expected = modified.typed<Person>().groupBy { name and city }.map {
+        val expected = modified.cast<Person>().groupBy { name and city }.map {
             val value = if (key.city == "Moscow") group.age.toMany()
             else group.age[0]
             (key.name to key.city.toString()) to value
@@ -509,7 +509,7 @@ class DataFrameTreeTests : BaseTest() {
         val groupCol = grouped.groups.toDefinition()
         val plain = grouped.toDataFrame()
             .update { groupCol }.at(1).withNull()
-            .update { groupCol }.at(2).with { emptyDataFrame(0).typed() }
+            .update { groupCol }.at(2).with { emptyDataFrame(0).cast() }
             .update { groupCol }.at(3).with { it.filter { false } }
         val res = plain.explode(dropEmpty = false) { groupCol }
         val expected = plain[groupCol].sumOf { Math.max(it?.nrow() ?: 0, 1) }

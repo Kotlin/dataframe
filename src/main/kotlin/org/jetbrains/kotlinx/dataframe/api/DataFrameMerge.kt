@@ -94,13 +94,13 @@ public fun <A, B> DataFrame<A>.join(
 // region concat
 
 @JvmName("concatRows")
-public fun <T> Iterable<DataRow<T>?>.concat(): DataFrame<T> = concatImpl(map { it?.toDataFrame() ?: emptyDataFrame(1) }).typed()
+public fun <T> Iterable<DataRow<T>?>.concat(): DataFrame<T> = concatImpl(map { it?.toDataFrame() ?: emptyDataFrame(1) }).cast()
 
-public fun <T> Iterable<DataFrame<T>?>.concat(): DataFrame<T> = concatImpl(filterNotNull()).typed()
+public fun <T> Iterable<DataFrame<T>?>.concat(): DataFrame<T> = concatImpl(filterNotNull()).cast()
 
-public fun <T> DataColumn<DataFrame<T>>.concat(): DataFrame<T> = values.concat().typed()
+public fun <T> DataColumn<DataFrame<T>>.concat(): DataFrame<T> = values.concat().cast()
 
-public fun <T> DataFrame<T>.concat(vararg other: DataFrame<T>): DataFrame<T> = concatImpl(listOf(this) + other.toList()).typed<T>()
+public fun <T> DataFrame<T>.concat(vararg other: DataFrame<T>): DataFrame<T> = concatImpl(listOf(this) + other.toList()).cast<T>()
 
 // endregion
 
@@ -113,7 +113,7 @@ public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
     return columns().mapIndexed { colIndex, col ->
         val newValues = (0 until newRows).map { values[colIndex + it * ncol] }
         col.updateWith(col.values + newValues)
-    }.toDataFrame().typed()
+    }.toDataFrame().cast()
 }
 
 public fun <T> DataFrame<T>.appendNulls(numberOfRows: Int = 1): DataFrame<T> {
@@ -122,7 +122,7 @@ public fun <T> DataFrame<T>.appendNulls(numberOfRows: Int = 1): DataFrame<T> {
     if (ncol() == 0) return EmptyDataFrame(nrow + numberOfRows)
     return columns().map { col ->
         col.updateWith(col.values + arrayOfNulls(numberOfRows))
-    }.toDataFrame().typed()
+    }.toDataFrame().cast()
 }
 
 // endregion

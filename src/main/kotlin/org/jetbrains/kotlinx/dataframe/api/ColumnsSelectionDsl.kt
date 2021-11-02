@@ -233,29 +233,29 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
     public infix fun <C> String.by(newColumnExpression: RowExpression<T, C>): DataColumn<C> =
         newColumnWithActualType(this, newColumnExpression)
 
-    public fun String.ints(): DataColumn<Int> = getColumn(this).typed()
-    public fun String.intOrNulls(): DataColumn<Int?> = getColumn(this).typed()
-    public fun String.strings(): DataColumn<String> = getColumn(this).typed()
-    public fun String.stringOrNulls(): DataColumn<String?> = getColumn(this).typed()
-    public fun String.booleans(): DataColumn<Boolean> = getColumn(this).typed()
-    public fun String.booleanOrNulls(): DataColumn<Boolean?> = getColumn(this).typed()
-    public fun String.doubles(): DataColumn<Double> = getColumn(this).typed()
-    public fun String.doubleOrNulls(): DataColumn<Double?> = getColumn(this).typed()
-    public fun String.comparables(): DataColumn<Comparable<Any?>> = getColumn(this).typed()
-    public fun String.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this).typed()
-    public fun String.numberOrNulls(): DataColumn<Number?> = getColumn(this).typed()
+    public fun String.ints(): DataColumn<Int> = getColumn(this).cast()
+    public fun String.intOrNulls(): DataColumn<Int?> = getColumn(this).cast()
+    public fun String.strings(): DataColumn<String> = getColumn(this).cast()
+    public fun String.stringOrNulls(): DataColumn<String?> = getColumn(this).cast()
+    public fun String.booleans(): DataColumn<Boolean> = getColumn(this).cast()
+    public fun String.booleanOrNulls(): DataColumn<Boolean?> = getColumn(this).cast()
+    public fun String.doubles(): DataColumn<Double> = getColumn(this).cast()
+    public fun String.doubleOrNulls(): DataColumn<Double?> = getColumn(this).cast()
+    public fun String.comparables(): DataColumn<Comparable<Any?>> = getColumn(this).cast()
+    public fun String.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this).cast()
+    public fun String.numberOrNulls(): DataColumn<Number?> = getColumn(this).cast()
 
-    public fun ColumnPath.ints(): DataColumn<Int> = getColumn(this).typed()
-    public fun ColumnPath.intOrNulls(): DataColumn<Int?> = getColumn(this).typed()
-    public fun ColumnPath.strings(): DataColumn<String> = getColumn(this).typed()
-    public fun ColumnPath.stringOrNulls(): DataColumn<String?> = getColumn(this).typed()
-    public fun ColumnPath.booleans(): DataColumn<Boolean> = getColumn(this).typed()
-    public fun ColumnPath.booleanOrNulls(): DataColumn<Boolean?> = getColumn(this).typed()
-    public fun ColumnPath.doubles(): DataColumn<Double> = getColumn(this).typed()
-    public fun ColumnPath.doubleOrNulls(): DataColumn<Double?> = getColumn(this).typed()
-    public fun ColumnPath.comparables(): DataColumn<Comparable<Any?>> = getColumn(this).typed()
-    public fun ColumnPath.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this).typed()
-    public fun ColumnPath.numberOrNulls(): DataColumn<Number?> = getColumn(this).typed()
+    public fun ColumnPath.ints(): DataColumn<Int> = getColumn(this).cast()
+    public fun ColumnPath.intOrNulls(): DataColumn<Int?> = getColumn(this).cast()
+    public fun ColumnPath.strings(): DataColumn<String> = getColumn(this).cast()
+    public fun ColumnPath.stringOrNulls(): DataColumn<String?> = getColumn(this).cast()
+    public fun ColumnPath.booleans(): DataColumn<Boolean> = getColumn(this).cast()
+    public fun ColumnPath.booleanOrNulls(): DataColumn<Boolean?> = getColumn(this).cast()
+    public fun ColumnPath.doubles(): DataColumn<Double> = getColumn(this).cast()
+    public fun ColumnPath.doubleOrNulls(): DataColumn<Double?> = getColumn(this).cast()
+    public fun ColumnPath.comparables(): DataColumn<Comparable<Any?>> = getColumn(this).cast()
+    public fun ColumnPath.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this).cast()
+    public fun ColumnPath.numberOrNulls(): DataColumn<Number?> = getColumn(this).cast()
 
     public infix fun <C : Comparable<C>> ColumnReference<C>.gt(value: C): ColumnReference<Boolean> = map { it > value }
     public infix fun <C : Comparable<C>> ColumnReference<C>.lt(value: C): ColumnReference<Boolean> = map { it < value }
@@ -289,7 +289,7 @@ internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean)
     transform { it.filter { it.isColumnGroup() }.flatMap { it.children().dfs().filter(predicate) } }
 
 public fun <C> ColumnSet<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
-    dfsInternal { it.data.hasElementsOfType(type) && predicate(it.typed()) }
+    dfsInternal { it.data.hasElementsOfType(type) && predicate(it.cast()) }
 
 public inline fun <reified C> ColumnSet<*>.dfsOf(noinline filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
     dfsOf(
@@ -300,7 +300,7 @@ public inline fun <reified C> ColumnSet<*>.dfsOf(noinline filter: (ColumnWithPat
 public fun ColumnSet<*>.colsOf(type: KType): ColumnSet<Any?> = colsOf(type) { true }
 
 public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSet<C> =
-    colsInternal { it.hasElementsOfType(type) && filter(it.typed()) } as ColumnSet<C>
+    colsInternal { it.hasElementsOfType(type) && filter(it.cast()) } as ColumnSet<C>
 
 public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
     colsOf(

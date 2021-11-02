@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ReadonlyTreeNode
@@ -35,7 +35,7 @@ internal fun <T> insertImpl(
     treeNode: ReadonlyTreeNode<ReferenceData>?,
     depth: Int
 ): DataFrame<T> {
-    if (columns.isEmpty()) return df ?: DataFrame.empty().typed()
+    if (columns.isEmpty()) return df ?: DataFrame.empty().cast()
 
     val childDepth = depth + 1
 
@@ -127,5 +127,5 @@ internal fun <T> insertImpl(
         }
     }
 
-    return newColumns.toDataFrame().typed()
+    return newColumns.toDataFrame().cast()
 }

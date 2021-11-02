@@ -34,7 +34,7 @@ public fun <T> DataColumn<T>.groupBy(vararg cols: AnyCol): GroupedDataFrame<*, *
 public fun <T, R> DataColumn<T>.map(transform: (T) -> R): DataColumn<R> {
     val collector = createDataCollector(size)
     values.forEach { collector.add(transform(it)) }
-    return collector.toColumn(name).typed()
+    return collector.toColumn(name).cast()
 }
 
 public inline fun <T, reified R> DataColumn<T>.mapInline(crossinline transform: (T) -> R): DataColumn<R> {

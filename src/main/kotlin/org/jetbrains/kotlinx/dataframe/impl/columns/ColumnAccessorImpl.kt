@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.toPath
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -28,7 +28,7 @@ internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
                 df = col.asColumnGroup().df
             }
         }
-        return col?.typed<T>()?.addPath(path, context.df)
+        return col?.cast<T>()?.addPath(path, context.df)
     }
 
     override fun rename(newName: String) = ColumnAccessorImpl<T>(path.dropLast(1) + newName)

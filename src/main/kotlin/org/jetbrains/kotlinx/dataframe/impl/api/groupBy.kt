@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataRow
 import org.jetbrains.kotlinx.dataframe.api.getRows
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupedDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
@@ -40,7 +40,7 @@ internal fun <T> DataFrame<T>.groupByImpl(columns: ColumnsSelector<T, *>): Group
         ColumnToInsert(path, column, null)
     }
 
-    val keyColumnsDf = org.jetbrains.kotlinx.dataframe.impl.api.insertImpl(keyColumnsToInsert).typed<T>()
+    val keyColumnsDf = org.jetbrains.kotlinx.dataframe.impl.api.insertImpl(keyColumnsToInsert).cast<T>()
 
     val permutation = groups.flatMap { it.second }
     val sorted = getRows(permutation)

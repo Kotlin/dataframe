@@ -6,8 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.filterBy
-import org.jetbrains.kotlinx.dataframe.api.neq
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.io.read
 import org.junit.Ignore
 import org.junit.Test
@@ -25,7 +24,7 @@ class FilterTests {
     val ColumnsContainer<DataRecord>.Referer: DataColumn<String?> @JvmName("DataRecord_Referer") get() = this["Referer"] as DataColumn<String?>
     val DataRow<DataRecord>.Referer: String? @JvmName("DataRecord_Referer") get() = this["Referer"] as String?
 
-    val typed = df.typed<DataRecord>()
+    val typed = df.cast<DataRecord>()
 
     val n = 100
 
