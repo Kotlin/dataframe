@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
@@ -41,7 +42,7 @@ internal fun AnyCol.convertToTypeImpl(newType: KType): AnyCol {
         from.isSubtypeOf(newType) -> (this as DataColumnInternal<*>).changeType(targetType)
         else -> when (val converter = getConverter(from, newType)) {
             null -> when (from.classifier) {
-                kotlin.Any::class, kotlin.Number::class, java.io.Serializable::class -> {
+                Any::class, Number::class, java.io.Serializable::class -> {
                     val values = values.map {
                         if (it == null) null else {
                             val clazz = it.javaClass.kotlin
@@ -50,7 +51,7 @@ internal fun AnyCol.convertToTypeImpl(newType: KType): AnyCol {
                             conv(it) ?: error("Can't convert '$it' to '$newType'")
                         }
                     }
-                    org.jetbrains.kotlinx.dataframe.DataColumn.createValueColumn(name, values, targetType)
+                    DataColumn.createValueColumn(name, values, targetType)
                 }
                 else -> error("Can't find converter from $from to $newType")
             }
@@ -59,7 +60,7 @@ internal fun AnyCol.convertToTypeImpl(newType: KType): AnyCol {
                     if (it == null) null
                     else converter(it) ?: error("Can't convert '$it' to '$newType'")
                 }
-                org.jetbrains.kotlinx.dataframe.DataColumn.createValueColumn(name, values, targetType)
+                DataColumn.createValueColumn(name, values, targetType)
             }
         }
     }

@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.addRowNumber
 import org.jetbrains.kotlinx.dataframe.api.allNulls
@@ -2056,9 +2057,11 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `typed groups`() {
+        @DataSchema
         data class Student(val name: String, val age: Int, val weight: Int?)
 
-        data class Target(val city: String?, val students: DataFrame<Student>)
+        @DataSchema
+        data class Target(val city: String?, val students: List<Student>)
 
         val typed = df.groupBy { city }.toDataFrame("students").typed<Target>()
 
