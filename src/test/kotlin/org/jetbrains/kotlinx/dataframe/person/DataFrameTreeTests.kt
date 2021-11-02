@@ -19,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.append
 import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.at
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.count
@@ -62,7 +63,6 @@ import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.toDefinition
 import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.api.toTop
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.update

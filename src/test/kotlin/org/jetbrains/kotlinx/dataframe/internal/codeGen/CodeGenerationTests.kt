@@ -53,7 +53,7 @@ class CodeGenerationTests : BaseTest() {
             interface $typeName
         """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
-        val expectedConverter = "it.typed<$typeName>()"
+        val expectedConverter = "it.cast<$typeName>()"
 
         generated.declarations shouldBe expectedDeclaration
         generated.converter("it") shouldBe expectedConverter
@@ -77,7 +77,7 @@ class CodeGenerationTests : BaseTest() {
             interface $typeName
         """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
 
-        val expectedConverter = "it.typed<$typeName>()"
+        val expectedConverter = "it.cast<$typeName>()"
 
         generated.declarations shouldBe expectedDeclaration
         generated.converter("it") shouldBe expectedConverter
@@ -110,7 +110,7 @@ class CodeGenerationTests : BaseTest() {
             val $dfRowName<$type2>.weight: kotlin.Int? @JvmName("${type2}_weight") get() = this["weight"] as kotlin.Int?
         """.trimIndent()
 
-        val expectedConverter = "it.typed<$type2>()"
+        val expectedConverter = "it.cast<$type2>()"
 
         generated.declarations shouldBe declaration1 + "\n" + declaration2
         generated.converter("it") shouldBe expectedConverter

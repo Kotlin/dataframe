@@ -40,7 +40,7 @@ internal fun renderType(column: ColumnSchema) =
         is ColumnSchema.Frame -> {
             "[${renderSchema(column.schema)}]"
         }
-        is ColumnSchema.Map -> {
+        is ColumnSchema.Group -> {
             "{${renderSchema(column.schema)}}"
         }
         else -> throw NotImplementedError()

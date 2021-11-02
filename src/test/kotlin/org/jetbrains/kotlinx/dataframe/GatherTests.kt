@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
@@ -10,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.api.mapNotNullGroups
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.codeGen.generateCode
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup

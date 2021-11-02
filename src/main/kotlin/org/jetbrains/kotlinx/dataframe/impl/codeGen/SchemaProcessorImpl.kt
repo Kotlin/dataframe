@@ -56,7 +56,7 @@ internal class SchemaProcessorImpl(
 
         fun getMarker(column: ColumnSchema) = when (column) {
             is ColumnSchema.Value -> null
-            is ColumnSchema.Map -> process(column.schema, false, visibility)
+            is ColumnSchema.Group -> process(column.schema, false, visibility)
             is ColumnSchema.Frame -> process(column.schema, false, visibility)
             else -> throw NotImplementedError()
         }
@@ -65,7 +65,7 @@ internal class SchemaProcessorImpl(
             val (columnName, columnSchema) = column
 
             // find all fields that were already generated for this column name in base interfaces
-            val superFields = requiredSuperMarkers.mapNotNull { it.allFieldsByColumn[columnName] }
+            val superFields = requiredSuperMarkers.mapNotNull { it.getField(columnName) }
 
             val fieldsToOverride = superFields.filter { it.columnSchema != columnSchema }
 

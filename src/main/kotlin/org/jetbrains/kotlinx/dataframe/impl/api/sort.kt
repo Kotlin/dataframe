@@ -7,9 +7,9 @@ import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.SortColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.SortReceiver
 import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
-import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext

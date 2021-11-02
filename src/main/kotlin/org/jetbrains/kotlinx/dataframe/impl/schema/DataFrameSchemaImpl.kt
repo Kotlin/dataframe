@@ -42,7 +42,7 @@ internal class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchem
                 sb.append(indentSequence.repeat(indent))
                 sb.append(name + ":")
                 when (columnSchema) {
-                    is ColumnSchema.Map -> {
+                    is ColumnSchema.Group -> {
                         sb.appendLine()
                         print(indent + 1, columnSchema.schema)
                     }
