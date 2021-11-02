@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.findAnnotation
+import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.superclasses
 import kotlin.reflect.jvm.jvmErasure
 
@@ -31,15 +32,16 @@ internal object MarkersExtractor {
             val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName.unquoted
             val type = it.returnType
             var marker: Marker? = null
-            val columnSchema = when (type.jvmErasure) {
-                DataRow::class -> {
-                    val typeArgument = type.arguments[0].type!!
-                    marker = get(typeArgument.jvmErasure)
+            val clazz = type.jvmErasure
+            val columnSchema = when {
+                clazz == DataRow::class || clazz.hasAnnotation<DataSchema>() -> {
+                    val nestedType = if (clazz == DataRow::class) type.arguments[0].type!! else type
+                    marker = get(nestedType.jvmErasure)
                     ColumnSchema.Group(marker.schema)
                 }
-                DataFrame::class -> {
-                    val typeArgument = type.arguments[0].type!!
-                    marker = get(typeArgument.jvmErasure)
+                clazz == DataFrame::class || (clazz == List::class && type.arguments[0].type?.jvmErasure?.hasAnnotation<DataSchema>() == true) -> {
+                    val frameType = type.arguments[0].type!!
+                    marker = get(frameType.jvmErasure)
                     ColumnSchema.Frame(marker.schema, type.isMarkedNullable)
                 }
                 else -> ColumnSchema.Value(type)
