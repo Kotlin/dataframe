@@ -2,20 +2,24 @@
 
 Converts several columns into two `key-value` columns, where `key` is a name of original column and `value` is column data
 This is reverse to [pivot](pivot.md)
-```
+
+```kotlin
 df.gather { columns }.into(keyColumnName)
 
 df.gather { columns }.where { valueFilter }.map { valueTransform }.mapNames { keyTransform }.into(keyColumnName, valueColumnName)
 ```
+
 **Input**
 
 | city | Feb, 18 | Feb, 19 | Feb, 20 | Feb, 21
 |--------|---------|---------|--------|---
 | London | 3 | 5 | 4 | null
 | Milan  | 7 | null | 3 | 5
+
 ```kotlin
 df.gather { cols(1..4) }.where { it != null}.mapNames { it.substring(5) }.into("day", "temperature")
 ```
+
 **Output**
 
 | city | day | temperature
@@ -35,9 +39,11 @@ name | London | Paris | Milan
 -----|--------|-------|-------
 Alice| true | false | true
 Bob | false | true | true
+
 ```kotlin
 df.gather { cols(1..4) }.into("visited")
 ```
+
 **Output**
 
 name | visited
