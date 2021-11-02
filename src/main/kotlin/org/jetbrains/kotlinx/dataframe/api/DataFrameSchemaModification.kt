@@ -43,7 +43,7 @@ public fun <T> DataFrame<T>.add(other: AnyFrame): DataFrame<T> = add(other.colum
 
 public fun <T> DataFrame<T>.add(column: AnyCol): DataFrame<T> = this + column
 
-public fun <T> DataFrame<T>.add(name: String, data: AnyCol): DataFrame<T> = dataFrameOf(columns() + data.rename(name)).typed<T>()
+public fun <T> DataFrame<T>.add(name: String, data: AnyCol): DataFrame<T> = dataFrameOf(columns() + data.rename(name)).cast<T>()
 
 public interface AddDataRow<out T> : DataRow<T> {
     public fun <C> AnyRow.added(): C
@@ -77,7 +77,7 @@ public inline fun <reified R, T> DataFrame<T>.add(column: ColumnAccessor<R>, noi
 public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     val dsl = AddDsl(this)
     body(dsl)
-    return dataFrameOf(this@add.columns() + dsl.columns).typed()
+    return dataFrameOf(this@add.columns() + dsl.columns).cast()
 }
 
 public operator fun <T> DataFrame<T>.plus(body: AddDsl<T>.() -> Unit): DataFrame<T> = add(body)
@@ -337,12 +337,12 @@ public fun <T, C> DataFrame<T>.flatten(
 
 // region select
 
-public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> = get(columns).toDataFrame().typed()
+public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> = get(columns).toDataFrame().cast()
 public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> = select(columns.map { it.name })
 public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = select(columns.asIterable())
 public fun <T> DataFrame<T>.select(vararg columns: Column): DataFrame<T> = select { columns.toColumns() }
 @JvmName("selectT")
-public fun <T> DataFrame<T>.select(columns: Iterable<String>): DataFrame<T> = columns.map { get(it) }.toDataFrame().typed()
+public fun <T> DataFrame<T>.select(columns: Iterable<String>): DataFrame<T> = columns.map { get(it) }.toDataFrame().cast()
 public fun <T> DataFrame<T>.select(columns: Iterable<Column>): DataFrame<T> = select { columns.toColumnSet() }
 
 // endregion
@@ -352,7 +352,7 @@ public fun <T> DataFrame<T>.select(columns: Iterable<Column>): DataFrame<T> = se
 public fun <T> DataFrame<T>.addRowNumber(column: ColumnReference<Int>): DataFrame<T> = addRowNumber(column.name())
 
 public fun <T> DataFrame<T>.addRowNumber(columnName: String = "id"): DataFrame<T> =
-    dataFrameOf(columns() + indexColumn(columnName, nrow())).typed()
+    dataFrameOf(columns() + indexColumn(columnName, nrow())).cast()
 
 public fun AnyCol.addRowNumber(columnName: String = "id"): AnyFrame =
     dataFrameOf(listOf(indexColumn(columnName, size), this))

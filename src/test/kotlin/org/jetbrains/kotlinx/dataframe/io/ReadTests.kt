@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.allNulls
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
@@ -78,7 +78,7 @@ class ReadTests {
             [[3452345234345, 7795.34000000], [12314123532, 7795.34000000]]
         """.trimIndent()
         val df = DataFrame.readJsonStr(data)
-        println(df.getColumn("array").typed<List<Number>>()[0][1].javaClass)
+        println(df.getColumn("array").cast<List<Number>>()[0][1].javaClass)
     }
 
     @Test

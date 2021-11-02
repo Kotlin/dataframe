@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
@@ -22,7 +22,7 @@ public open class TestBase {
         "Bob", "Marley", 30, "Tokyo", 68, true,
         "Alice", "Lindt", 20, null, 55, false,
         "Mark", "Petrov", 30, "Moscow", 90, true
-    ).group("firstName", "lastName").into("name").typed<Person>()
+    ).group("firstName", "lastName").into("name").cast<Person>()
 
     @DataSchema
     interface Name {

@@ -17,7 +17,7 @@ import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
@@ -217,7 +217,7 @@ class PlaylistJsonTest {
 
     val path = "data/playlistItems.json"
     val df = DataFrame.read(path)
-    val typed = df.typed<DataRecord>()
+    val typed = df.cast<DataRecord>()
     val item = typed.items[0]
 
     @Test

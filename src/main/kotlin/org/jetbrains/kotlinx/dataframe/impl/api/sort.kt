@@ -8,8 +8,8 @@ import org.jetbrains.kotlinx.dataframe.api.SortColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.SortReceiver
 import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
-import org.jetbrains.kotlinx.dataframe.api.typed
-import org.jetbrains.kotlinx.dataframe.api.typedFrames
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
@@ -27,7 +27,7 @@ internal fun <T, G> GroupedDataFrame<T, G>.sortByImpl(columns: SortColumnsSelect
         .update { groups }
         .with { it?.sortByImpl(UnresolvedColumnsPolicy.Skip, columns) }
         .sortByImpl(UnresolvedColumnsPolicy.Skip, columns as SortColumnsSelector<T, *>)
-        .asGroupedDataFrame { it.frameColumn(groups.name()).typedFrames() }
+        .asGroupedDataFrame { it.frameColumn(groups.name()).castFrameColumn() }
 }
 
 internal fun <T, C> DataFrame<T>.sortByImpl(
@@ -61,7 +61,7 @@ internal fun AnyCol.createComparator(nullsLast: Boolean): java.util.Comparator<I
 
 @JvmName("toColumnSetForSort")
 internal fun <T, C> SortColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
-    object : DataFrameReceiver<T>(it.df.typed(), it.allowMissingColumns), SortReceiver<T> {}
+    object : DataFrameReceiver<T>(it.df.cast(), it.allowMissingColumns), SortReceiver<T> {}
 }
 
 internal fun <T, C> DataFrame<T>.getSortColumns(

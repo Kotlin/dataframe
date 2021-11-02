@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.codeGen.generateCode
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.junit.Test
@@ -72,7 +72,7 @@ class MatchSchemeTests {
 
     val df = DataFrame.readJsonStr(json)
 
-    val typed = df.typed<DataRecord>()
+    val typed = df.cast<DataRecord>()
 
     @Test
     fun `marker is reused`() {

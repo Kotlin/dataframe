@@ -36,7 +36,7 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.api.toValueColumn
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
@@ -200,7 +200,7 @@ class DataFrameTests : BaseTest() {
         df[i].read<Int>("age").check()
         (df[i]["age"] as Int).check()
 
-        df["age"].typed<Int>()[i].check()
+        df["age"].cast<Int>()[i].check()
         (df["age"][i] as Int).check()
     }
 
@@ -222,7 +222,7 @@ class DataFrameTests : BaseTest() {
         df[i].read<String?>("city").check()
         (df[i]["city"] as String?).check()
 
-        df["city"].typed<String?>()[i].check()
+        df["city"].cast<String?>()[i].check()
         (df["city"][i] as String?).check()
     }
 
@@ -712,7 +712,7 @@ class DataFrameTests : BaseTest() {
 
         df.min { "age".ints() }.check()
         df.min("age").check()
-        df["age"].typed<Int>().min().check()
+        df["age"].cast<Int>().min().check()
     }
 
     @Test
@@ -730,7 +730,7 @@ class DataFrameTests : BaseTest() {
         df[weight].max().check()
 
         df.max { "weight".intOrNulls() }.check()
-        df["weight"].typed<Int?>().max().check()
+        df["weight"].cast<Int?>().max().check()
         (df.max("weight") as Int?).check()
     }
 
@@ -856,7 +856,7 @@ class DataFrameTests : BaseTest() {
             135,
             "Mark",
             160
-        ).typed<Unit>()
+        ).cast<Unit>()
 
         val res = typed.concat(other)
         res.nrow() shouldBe typed.nrow() + other.nrow()
@@ -963,7 +963,7 @@ class DataFrameTests : BaseTest() {
             pivoted[row][city] shouldBe true
             for (col in typed.ncol() until pivoted.ncol()) {
                 val column = pivoted.getColumn(col)
-                val pivotedValue = column.typed<Boolean>()[row]
+                val pivotedValue = column.cast<Boolean>()[row]
                 val colName = column.name()
                 pivotedValue shouldBe (colName == city)
             }
@@ -1000,7 +1000,7 @@ class DataFrameTests : BaseTest() {
             val city = typed[i][city]
             for (j in typed.ncol() until res.ncol()) {
                 val col = res.getColumn(j)
-                col.typed<Boolean>().get(i) shouldBe (col.name() == city.toString())
+                col.cast<Boolean>().get(i) shouldBe (col.name() == city.toString())
             }
         }
     }
@@ -1012,11 +1012,11 @@ class DataFrameTests : BaseTest() {
 
         res.ncol() shouldBe selected.city.ndistinct() + 1
         res.nrow() shouldBe selected.name.ndistinct()
-        val trueValuesCount = res.columns().drop(1).sumOf { it.typed<Boolean>().toList().count { it } }
+        val trueValuesCount = res.columns().drop(1).sumOf { it.cast<Boolean>().toList().count { it } }
         trueValuesCount shouldBe selected.distinct().nrow()
 
         val pairs = (1 until res.ncol()).flatMap { i ->
-            val col = res.getColumn(i).typed<Boolean>()
+            val col = res.getColumn(i).cast<Boolean>()
             res.filter { it[col] }.map { name to col.name() }
         }.toSet()
 
@@ -1233,7 +1233,7 @@ class DataFrameTests : BaseTest() {
                 this["Int"]["age"],
                 this["String"]["city"],
                 this["Int"]["weight"]
-            ).toDataFrame().typed<Person>()
+            ).toDataFrame().cast<Person>()
             res shouldBe typed
         }
         typed.group { cols { it != name } }.into { type.jvmErasure.simpleName!! }.check()
@@ -1250,7 +1250,7 @@ class DataFrameTests : BaseTest() {
             grouped["info"]["age"],
             grouped["info"]["city"],
             grouped.weight
-        ).toDataFrame().typed<Person>()
+        ).toDataFrame().cast<Person>()
         res shouldBe typed
     }
 
@@ -1740,7 +1740,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `get typed column by name`() {
-        val col = df.getColumn("name").typed<String>()
+        val col = df.getColumn("name").cast<String>()
         col[0].substring(0, 3) shouldBe "Ali"
     }
 

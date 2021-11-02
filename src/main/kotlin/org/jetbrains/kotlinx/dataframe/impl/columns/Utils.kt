@@ -6,7 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -117,21 +117,21 @@ internal fun <T> ColumnSet<T>.getAt(index: Int) = object : SingleColumn<T> {
 internal fun <T> ColumnSet<T>.getChildrenAt(index: Int): ColumnSet<Any?> = transform { it.mapNotNull { it.getChild(index) } }
 
 internal fun <C> ColumnsContainer<*>.getColumn(name: String, policy: UnresolvedColumnsPolicy) =
-    tryGetColumn(name)?.typed()
+    tryGetColumn(name)?.cast()
         ?: when (policy) {
             UnresolvedColumnsPolicy.Fail ->
                 error("Column not found: $name")
             UnresolvedColumnsPolicy.Skip -> null
-            UnresolvedColumnsPolicy.Create -> DataColumn.empty().typed<C>()
+            UnresolvedColumnsPolicy.Create -> DataColumn.empty().cast<C>()
         }
 
 internal fun <C> ColumnsContainer<*>.getColumn(path: ColumnPath, policy: UnresolvedColumnsPolicy) =
-    tryGetColumn(path)?.typed()
+    tryGetColumn(path)?.cast()
         ?: when (policy) {
             UnresolvedColumnsPolicy.Fail ->
                 error("Column not found: $path")
             UnresolvedColumnsPolicy.Skip -> null
-            UnresolvedColumnsPolicy.Create -> DataColumn.empty().typed<C>()
+            UnresolvedColumnsPolicy.Create -> DataColumn.empty().cast<C>()
         }
 
 internal fun <T> List<ColumnWithPath<T>>.top(): List<ColumnWithPath<T>> {

@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -45,7 +45,7 @@ internal fun <T, C> DataColumn<C>.updateImpl(
             collector.add(newValue)
         }
     }
-    return collector.toColumn(src.name).typed()
+    return collector.toColumn(src.name).cast()
 }
 
 /**

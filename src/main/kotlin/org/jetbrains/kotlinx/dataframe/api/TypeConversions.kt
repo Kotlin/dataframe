@@ -160,13 +160,13 @@ public fun AnyFrame.toMap(): Map<String, List<Any?>> = columns().associateBy({ i
 // region as GroupedDataFrame
 
 public fun <T> DataFrame<T>.asGroupedDataFrame(groupedColumnName: String): GroupedDataFrame<T, T> =
-    GroupedDataFrameImpl(this, frameColumn(groupedColumnName).typedFrames()) { none() }
+    GroupedDataFrameImpl(this, frameColumn(groupedColumnName).castFrameColumn()) { none() }
 
 public fun <T, G> DataFrame<T>.asGroupedDataFrame(groupedColumn: ColumnReference<DataFrame<G>?>): GroupedDataFrame<T, G> =
-    GroupedDataFrameImpl(this, frameColumn(groupedColumn.name()).typedFrames()) { none() }
+    GroupedDataFrameImpl(this, frameColumn(groupedColumn.name()).castFrameColumn()) { none() }
 
 public fun <T> DataFrame<T>.asGroupedDataFrame(): GroupedDataFrame<T, T> {
-    val groupCol = columns().single { it.isFrameColumn() }.asFrameColumn().typedFrames<T>()
+    val groupCol = columns().single { it.isFrameColumn() }.asFrameColumn().castFrameColumn<T>()
     return asGroupedDataFrame { groupCol }
 }
 
@@ -196,18 +196,18 @@ public fun Array<out String>.toPath(): ColumnPath = ColumnPath(this.asList())
 
 // region typed
 
-public fun <T> AnyFrame.typed(): DataFrame<T> = this as DataFrame<T>
+public fun <T> AnyFrame.cast(): DataFrame<T> = this as DataFrame<T>
 
-public fun <T> AnyRow.typed(): DataRow<T> = this as DataRow<T>
+public fun <T> AnyRow.cast(): DataRow<T> = this as DataRow<T>
 
-public fun <T> AnyCol.typed(): DataColumn<T> = this as DataColumn<T>
+public fun <T> AnyCol.cast(): DataColumn<T> = this as DataColumn<T>
 
-public fun <T> ValueColumn<*>.typed(): ValueColumn<T> = this as ValueColumn<T>
+public fun <T> ValueColumn<*>.cast(): ValueColumn<T> = this as ValueColumn<T>
 
-public fun <T> FrameColumn<*>.typedFrames(): FrameColumn<T> = this as FrameColumn<T>
+public fun <T> FrameColumn<*>.castFrameColumn(): FrameColumn<T> = this as FrameColumn<T>
 
-public fun <T> ColumnGroup<*>.typed(): ColumnGroup<T> = this as ColumnGroup<T>
+public fun <T> ColumnGroup<*>.cast(): ColumnGroup<T> = this as ColumnGroup<T>
 
-public fun <T> ColumnWithPath<*>.typed(): ColumnWithPath<T> = this as ColumnWithPath<T>
+public fun <T> ColumnWithPath<*>.cast(): ColumnWithPath<T> = this as ColumnWithPath<T>
 
 // endregion

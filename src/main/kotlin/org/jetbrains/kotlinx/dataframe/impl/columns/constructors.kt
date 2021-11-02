@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
@@ -72,7 +72,7 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
         "",
         values.map { it as? AnyFrame }
     ) as DataColumn<T>
-    guessType -> guessColumnType("", values.asList(), suggestedType, suggestedTypeIsUpperBound = true).typed<T>()
+    guessType -> guessColumnType("", values.asList(), suggestedType, suggestedTypeIsUpperBound = true).cast<T>()
     else -> DataColumn.createValueColumn("", values.toList(), suggestedType)
 }
 
@@ -114,7 +114,7 @@ internal fun <T> Array<out ColumnReference<T>>.toColumns(): ColumnSet<T> = asIte
 internal fun Iterable<String>.toColumns() = map { it.toColumnAccessor() }.toColumnSet()
 
 internal fun <T, C> ColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
-    object : DataFrameReceiver<T>(it.df.typed(), it.allowMissingColumns), ColumnsSelectionDsl<T> { }
+    object : DataFrameReceiver<T>(it.df.cast(), it.allowMissingColumns), ColumnsSelectionDsl<T> { }
 }
 
 // endregion
@@ -136,7 +136,7 @@ internal fun <T> guessColumnType(
     return when (type.classifier!! as KClass<*>) {
         DataRow::class -> {
             val df = values.map { (it as AnyRow).toDataFrame() }.concat()
-            DataColumn.createColumnGroup(name, df).asDataColumn().typed()
+            DataColumn.createColumnGroup(name, df).asDataColumn().cast()
         }
         DataFrame::class -> {
             val frames = values.map {
@@ -148,7 +148,7 @@ internal fun <T> guessColumnType(
                     else -> throw IllegalStateException()
                 }
             }
-            DataColumn.createFrameColumn(name, frames, type.isMarkedNullable).asDataColumn().typed()
+            DataColumn.createFrameColumn(name, frames, type.isMarkedNullable).asDataColumn().cast()
         }
         Many::class -> {
             val nullable = type.isMarkedNullable
@@ -159,7 +159,7 @@ internal fun <T> guessColumnType(
                     else -> manyOf(it)
                 }
             }
-            DataColumn.createValueColumn(name, lists, type, checkForNulls = false, defaultValue).typed()
+            DataColumn.createValueColumn(name, lists, type, checkForNulls = false, defaultValue).cast()
         }
         else -> {
             if (nullable == null) {

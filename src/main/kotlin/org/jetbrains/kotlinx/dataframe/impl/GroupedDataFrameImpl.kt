@@ -19,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.rename
-import org.jetbrains.kotlinx.dataframe.api.typed
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.frameColumn
@@ -50,7 +50,7 @@ internal class GroupedDataFrameImpl<T, G>(
 
         val keySize = key.size
         val filtered = df.filter { it.values.subList(0, keySize) == key }
-        return filtered.frameColumn(groups.name()).values.concat().typed<T>()
+        return filtered.frameColumn(groups.name()).values.concat().cast<T>()
     }
 
     override fun <R> mapGroups(transform: Selector<DataFrame<G>?, DataFrame<R>?>) =
@@ -62,7 +62,7 @@ internal class GroupedDataFrameImpl<T, G>(
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all().except(keyColumnsInGroups.toColumns()) }
 
-    override fun <R> aggregate(body: AggregateGroupedBody<G, R>) = aggregateGroupBy(toDataFrame(), { groups }, removeColumns = true, body).typed<G>()
+    override fun <R> aggregate(body: AggregateGroupedBody<G, R>) = aggregateGroupBy(toDataFrame(), { groups }, removeColumns = true, body).cast<G>()
 
     override fun <R> aggregateInternal(body: AggregateBodyInternal<G, R>) = aggregate(body as AggregateGroupedBody<G, R>)
 

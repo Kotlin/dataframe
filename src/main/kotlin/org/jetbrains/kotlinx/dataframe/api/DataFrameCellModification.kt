@@ -195,21 +195,21 @@ public fun <T, C> ConvertClause<T, Many<Many<C>>>.toDataFrames(containsColumns: 
     to { it.toDataFrames(containsColumns) }
 
 public fun AnyCol.toLocalDate(zone: ZoneId = defaultTimeZone): DataColumn<LocalDate> = when (typeClass) {
-    Long::class -> typed<Long>().map { it.toLocalDate(zone) }
-    Int::class -> typed<Int>().map { it.toLong().toLocalDate(zone) }
-    else -> convertTo(getType<LocalDate>()).typed()
+    Long::class -> cast<Long>().map { it.toLocalDate(zone) }
+    Int::class -> cast<Int>().map { it.toLong().toLocalDate(zone) }
+    else -> convertTo(getType<LocalDate>()).cast()
 }
 
 public fun AnyCol.toLocalDateTime(zone: ZoneId = defaultTimeZone): DataColumn<LocalDateTime> = when (typeClass) {
-    Long::class -> typed<Long>().map { it.toLocalDateTime(zone) }
-    Int::class -> typed<Int>().map { it.toLong().toLocalDateTime(zone) }
-    else -> convertTo(getType<LocalDateTime>()).typed()
+    Long::class -> cast<Long>().map { it.toLocalDateTime(zone) }
+    Int::class -> cast<Int>().map { it.toLong().toLocalDateTime(zone) }
+    else -> convertTo(getType<LocalDateTime>()).cast()
 }
 
 public fun AnyCol.toLocalTime(zone: ZoneId = defaultTimeZone): DataColumn<LocalTime> = when (typeClass) {
-    Long::class -> typed<Long>().map { it.toLocalDateTime(zone).toLocalTime() }
-    Int::class -> typed<Int>().map { it.toLong().toLocalDateTime(zone).toLocalTime() }
-    else -> convertTo(getType<LocalTime>()).typed()
+    Long::class -> cast<Long>().map { it.toLocalDateTime(zone).toLocalTime() }
+    Int::class -> cast<Int>().map { it.toLong().toLocalDateTime(zone).toLocalTime() }
+    else -> convertTo(getType<LocalTime>()).cast()
 }
 
 public fun <T> DataColumn<Many<Many<T>>>.toDataFrames(containsColumns: Boolean = false): DataColumn<AnyFrame> =

@@ -327,7 +327,7 @@ public fun <T> Iterable<Pair<ColumnPath, AnyBaseColumn>>.toDataFrame(): DataFram
             columns[index] = col
         } else assert(columns[index] != null)
     }
-    return columns.map { it!! }.toDataFrame().typed()
+    return columns.map { it!! }.toDataFrame().cast()
 }
 
 @JvmName("toDataFrameColumnPathAny?")
