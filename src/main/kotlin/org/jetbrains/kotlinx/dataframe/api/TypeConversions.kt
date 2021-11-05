@@ -100,6 +100,8 @@ public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
 
 public fun <T> FrameColumn<T>.asDataColumn(): DataColumn<DataFrame<T>?> = this
 
+public fun <T> FrameColumn<T>.toValueColumn(): ValueColumn<DataFrame<T>?> = DataColumn.createValueColumn(name, toList(), type())
+
 // endregion
 
 // region Columns
@@ -154,6 +156,8 @@ public fun <T> Sequence<T>.toMany(): Many<T> = toList().toMany()
 // region DataFrame
 
 public fun AnyFrame.toMap(): Map<String, List<Any?>> = columns().associateBy({ it.name }, { it.toList() })
+
+public fun <T> DataFrame<T>.toColumnGroup(name: String): ColumnGroup<T> = DataColumn.createColumnGroup(name, this)
 
 // region as GroupedDataFrame
 
