@@ -256,7 +256,7 @@ class Create : TestBase() {
         data class Person(val name: String, val age: Int)
         val persons = listOf(Person("Alice", 15), Person("Bob", 20))
 
-        val df = persons.createDataFrame()
+        val df = persons.toDataFrame()
         // SampleEnd
         df.ncol() shouldBe 2
         df.nrow() shouldBe 2
@@ -293,7 +293,7 @@ class Create : TestBase() {
             Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5)))
         )
 
-        val df = students.createDataFrame(depth = 2)
+        val df = students.toDataFrame(depth = 2)
         // SampleEnd
         df.ncol() shouldBe 3
         df.nrow() shouldBe 2

@@ -43,9 +43,8 @@ class RenderingTests : JupyterReplTestCase() {
         @Language("kts")
         val html1 = execHtml(
             """
-            import org.jetbrains.kotlinx.dataframe.api.createDataFrame
             data class Person(val age: Int, val name: String)
-            val df = (1..70).map { Person(it, "A".repeat(it)) }.createDataFrame()
+            val df = (1..70).map { Person(it, "A".repeat(it)) }.toDataFrame()
             df
             """.trimIndent()
         )

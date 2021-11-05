@@ -2054,7 +2054,7 @@ class DataFrameTests : BaseTest() {
             df.add("col") { 1 }.typed<Target>(extraColumns = ExtraColumnsBehavior.Fail) shouldBe df
         }
         val list = df.typed<Target>().toList()
-        val listDf = list.createDataFrame()
+        val listDf = list.toDataFrame()
         listDf shouldBe df.sortColumnsBy { it.name }
         listDf.toList() shouldBe list
     }
@@ -2071,14 +2071,14 @@ class DataFrameTests : BaseTest() {
 
         val list = typed.toList()
 
-        val listDf = list.createDataFrame(depth = 2)
+        val listDf = list.toDataFrame(depth = 2)
 
         listDf shouldBe typed.sortColumnsBy(dfs = true) { it.name }
         listDf.toList() shouldBe list
     }
 
     @Test
-    fun typedColumnGroup(){
+    fun typedColumnGroup() {
         @DataSchema
         data class Info(val age: Int, val weight: Int?)
 
@@ -2089,7 +2089,7 @@ class DataFrameTests : BaseTest() {
 
         val list = typed.toList()
 
-        val listDf = list.createDataFrame(depth = 2)
+        val listDf = list.toDataFrame(depth = 2)
 
         listDf shouldBe typed.sortColumnsBy(dfs = true) { it.name }
         listDf.toList() shouldBe list

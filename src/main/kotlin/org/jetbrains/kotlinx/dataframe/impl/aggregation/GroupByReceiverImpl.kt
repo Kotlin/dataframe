@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.shortPath
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
@@ -39,7 +39,7 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>) :
         }
         val columns = allValues.map { it.toColumnWithPath() }
         return if (columns.isEmpty()) null
-        else columns.toDataFrame<T>()[0]
+        else columns.toDataFrameFromPairs<T>()[0]
     }
 
     override fun pathForSingleColumn(column: AnyCol) = column.shortPath()

@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.api.CreateDataFrameDsl
 import org.jetbrains.kotlinx.dataframe.api.TraversePropertiesDsl
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
 import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
@@ -77,7 +77,7 @@ internal class CreateDataFrameDslImpl<T>(
 internal fun <T> Iterable<T>.createDataFrameImpl(clazz: KClass<*>, body: CreateDataFrameDslImpl<T>.() -> Unit): DataFrame<T> {
     val builder = CreateDataFrameDslImpl(this, clazz)
     builder.body()
-    return builder.columns.toDataFrame()
+    return builder.columns.toDataFrameFromPairs()
 }
 
 @PublishedApi

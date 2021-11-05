@@ -254,10 +254,9 @@ public fun <T, C> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comp
 
 public inline fun <reified T> Iterable<T>.createDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> = createDataFrameImpl(T::class, body)
 
-public inline fun <reified T> Iterable<T>.createDataFrame(vararg props: KProperty<*>, depth: Int = 1): DataFrame<T> =
-    createDataFrame {
-        properties(roots = props, depth = depth)
-    }
+public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>, depth: Int = 1): DataFrame<T> = createDataFrame {
+    properties(roots = props, depth = depth)
+}
 
 @JvmName("toDataFrameT")
 public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
@@ -281,7 +280,7 @@ public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
 public fun Iterable<AnyBaseColumn>.toDataFrame(): AnyFrame = dataFrameOf(this)
 
 @JvmName("toDataFramePairColumnPathAnyCol")
-public fun <T> Iterable<Pair<ColumnPath, AnyBaseColumn>>.toDataFrame(): DataFrame<T> {
+public fun <T> Iterable<Pair<ColumnPath, AnyBaseColumn>>.toDataFrameFromPairs(): DataFrame<T> {
     val nameGenerator = ColumnNameGenerator()
     val columnNames = mutableListOf<String>()
     val columnGroups = mutableListOf<MutableList<Pair<ColumnPath, AnyBaseColumn>>?>()
@@ -321,7 +320,7 @@ public fun <T> Iterable<Pair<ColumnPath, AnyBaseColumn>>.toDataFrame(): DataFram
     columns.indices.forEach { index ->
         val group = columnGroups[index]
         if (group != null) {
-            val nestedDf = group.toDataFrame<Unit>()
+            val nestedDf = group.toDataFrameFromPairs<Unit>()
             val col = DataColumn.createColumnGroup(columnNames[index], nestedDf)
             assert(columns[index] == null)
             columns[index] = col
@@ -331,12 +330,12 @@ public fun <T> Iterable<Pair<ColumnPath, AnyBaseColumn>>.toDataFrame(): DataFram
 }
 
 @JvmName("toDataFrameColumnPathAny?")
-public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrame(): AnyFrame {
-    return map { it.first to guessColumnType(it.first.last(), it.second.asList()) }.toDataFrame<Unit>()
+public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame {
+    return map { it.first to guessColumnType(it.first.last(), it.second.asList()) }.toDataFrameFromPairs<Unit>()
 }
 
-public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrame(): AnyFrame {
-    return map { ColumnPath(it.first) to guessColumnType(it.first, it.second.asList()) }.toDataFrame<Unit>()
+public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame {
+    return map { ColumnPath(it.first) to guessColumnType(it.first, it.second.asList()) }.toDataFrameFromPairs<Unit>()
 }
 
 public interface TraversePropertiesDsl {
@@ -390,7 +389,7 @@ public fun Map<String, Iterable<Any?>>.toDataFrame(): AnyFrame {
 
 @JvmName("toDataFrameColumnPathAny?")
 public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame {
-    return map { it.key to DataColumn.createWithTypeInference(it.key.last(), it.value.asList()) }.toDataFrame<Unit>()
+    return map { it.key to DataColumn.createWithTypeInference(it.key.last(), it.value.asList()) }.toDataFrameFromPairs<Unit>()
 }
 
 // endregion
