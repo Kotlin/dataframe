@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.api.CreateDataFrameDsl
 import org.jetbrains.kotlinx.dataframe.api.TraversePropertiesDsl
@@ -73,10 +74,10 @@ internal class CreateDataFrameDslImpl<T>(
 }
 
 @PublishedApi
-internal fun <T> Iterable<T>.createDataFrameImpl(clazz: KClass<*>, body: CreateDataFrameDslImpl<T>.() -> Unit): AnyFrame {
+internal fun <T> Iterable<T>.createDataFrameImpl(clazz: KClass<*>, body: CreateDataFrameDslImpl<T>.() -> Unit): DataFrame<T> {
     val builder = CreateDataFrameDslImpl(this, clazz)
     builder.body()
-    return builder.columns.toDataFrame<Unit>()
+    return builder.columns.toDataFrame()
 }
 
 @PublishedApi

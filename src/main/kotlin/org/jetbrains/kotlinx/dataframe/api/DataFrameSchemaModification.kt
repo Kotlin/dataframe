@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -27,10 +28,13 @@ import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.moveImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.moveTo
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.newColumn
 import org.jetbrains.kotlinx.dataframe.pathOf
 import kotlin.reflect.KProperty
@@ -358,5 +362,21 @@ public fun AnyCol.addRowNumber(columnName: String = "id"): AnyFrame =
     dataFrameOf(listOf(indexColumn(columnName, size), this))
 
 internal fun indexColumn(columnName: String, size: Int): AnyCol = column(columnName, (0 until size).toList())
+
+// endregion
+
+// region sortColumnsBy
+
+public fun <T, C : Comparable<C>> DataFrame<T>.sortColumnsBy(dfs: Boolean = false, selector: (AnyCol) -> C): DataFrame<T> {
+    var cols = columns()
+    if (dfs) cols = cols.map {
+        when (it.kind) {
+            ColumnKind.Value -> it
+            ColumnKind.Frame -> it.asFrameColumn().map { it?.sortColumnsBy(true, selector) }
+            ColumnKind.Group -> it.asColumnGroup().df.sortColumnsBy(true, selector).toColumnGroup(it.name())
+        } as AnyCol
+    }
+    return cols.sortedBy { it.name() }.toDataFrame().cast()
+}
 
 // endregion

@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.impl.api.toListImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.typedImpl
 import org.jetbrains.kotlinx.dataframe.impl.getType
 
@@ -41,3 +42,5 @@ public inline fun <reified T> AnyFrame.typed(
 ): DataFrame<T> = typedImpl(getType<T>(), allowConversion, extraColumns)
 
 // endregion
+
+public inline fun <reified T> DataFrame<T>.toList(): List<T> = toListImpl(getType<T>())

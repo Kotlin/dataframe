@@ -252,9 +252,9 @@ public fun <T, C> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comp
 
 // region Create DataFrame from Iterable
 
-public inline fun <reified T> Iterable<T>.createDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): AnyFrame = createDataFrameImpl(T::class, body)
+public inline fun <reified T> Iterable<T>.createDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> = createDataFrameImpl(T::class, body)
 
-public inline fun <reified T> Iterable<T>.createDataFrame(vararg props: KProperty<*>, depth: Int = 1): AnyFrame =
+public inline fun <reified T> Iterable<T>.createDataFrame(vararg props: KProperty<*>, depth: Int = 1): DataFrame<T> =
     createDataFrame {
         properties(roots = props, depth = depth)
     }
