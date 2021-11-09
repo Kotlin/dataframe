@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -24,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.convertToTypeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.defaultTimeZone
 import org.jetbrains.kotlinx.dataframe.impl.api.explodeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.mergeRowsImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.splitDefault
 import org.jetbrains.kotlinx.dataframe.impl.api.splitImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDate
@@ -221,13 +221,10 @@ public fun <T> DataColumn<Many<Many<T>>>.toDataFrames(containsColumns: Boolean =
 
 public val DataFrame.Companion.parser: DataFrameParserOptions get() = Parsers
 
-public fun <T> DataFrame<T>.parse(columns: ColumnsSelector<T, Any?>): DataFrame<T> = convert(columns).to {
-    when {
-        it.isFrameColumn() -> it.cast<AnyFrame?>().parse()
-        it.typeClass == String::class -> it.cast<String?>().tryParse()
-        else -> it
-    }
-}
+public fun <T> DataFrame<T>.parse(columns: ColumnsSelector<T, Any?>): DataFrame<T> = parseImpl(columns)
+public fun <T> DataFrame<T>.parse(vararg columns: String): DataFrame<T> = parse { columns.toColumns() }
+public fun <T, C> DataFrame<T>.parse(vararg columns: ColumnReference<C>): DataFrame<T> = parse { columns.toColumns() }
+public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>): DataFrame<T> = parse { columns.toColumns() }
 
 public interface DataFrameParserOptions {
 
@@ -249,10 +246,9 @@ public fun DataColumn<AnyFrame?>.parse(): DataColumn<AnyFrame?> = map { it?.pars
 
 public fun <T, C> DataFrame<T>.split(columns: ColumnsSelector<T, C?>): Split<T, C> =
     SplitClause(this, columns)
-
-public fun <T> DataFrame<T>.split(column: String): Split<T, Any> = split { column.toColumnAccessor() }
-public fun <T, C> DataFrame<T>.split(column: ColumnReference<C?>): Split<T, C> = split { column }
-public fun <T, C> DataFrame<T>.split(column: KProperty<C?>): Split<T, C> = split { column.toColumnAccessor() }
+public fun <T> DataFrame<T>.split(vararg columns: String): Split<T, Any> = split { columns.toColumns() }
+public fun <T, C> DataFrame<T>.split(vararg columns: ColumnReference<C?>): Split<T, C> = split { columns.toColumns() }
+public fun <T, C> DataFrame<T>.split(vararg columns: KProperty<C?>): Split<T, C> = split { columns.toColumns() }
 
 public interface Split<out T, out C>
 
@@ -382,18 +378,21 @@ public fun <T> Split<T, String>.into(
 
 // region merge
 
+public fun <T, C> DataFrame<T>.merge(selector: ColumnsSelector<T, C>): MergeClause<T, C, List<C>> = MergeClause(this, selector, { it })
+public fun <T> DataFrame<T>.merge(vararg columns: String): MergeClause<T, Any?, List<Any?>> = merge { columns.toColumns() }
+public fun <T, C> DataFrame<T>.merge(vararg columns: ColumnReference<C>): MergeClause<T, C, List<C>> = merge { columns.toColumns() }
+public fun <T, C> DataFrame<T>.merge(vararg columns: KProperty<C>): MergeClause<T, C, List<C>> = merge { columns.toColumns() }
+
 public class MergeClause<T, C, R>(
     public val df: DataFrame<T>,
     public val selector: ColumnsSelector<T, C>,
     public val transform: DataRow<T>.(List<C>) -> R
 )
 
-public fun <T, C> DataFrame<T>.merge(selector: ColumnsSelector<T, C>): MergeClause<T, C, List<C>> = MergeClause(this, selector, { it })
-
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
 
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnPath: ColumnPath): DataFrame<T> {
-    val grouped = df.move(selector).under(columnPath)
+    val grouped = df.move(selector).under { columnPath }
     val res = grouped.convert { getColumnGroup(columnPath) }.with {
         val srcRow = df[index]
         transform(srcRow, it.values() as List<C>)
@@ -417,18 +416,18 @@ public inline fun <T, C, R, reified V> MergeClause<T, C, R>.with(crossinline tra
 
 // region explode
 
-public fun <T> DataFrame<T>.explode(dropEmpty: Boolean = true): DataFrame<T> = explode(dropEmpty) { all() }
-public fun <T> DataFrame<T>.explode(vararg columns: Column, dropEmpty: Boolean = true): DataFrame<T> = explode(dropEmpty) { columns.toColumns() }
+public fun <T> DataFrame<T>.explode(dropEmpty: Boolean = true, selector: ColumnsSelector<T, *> = { all() }): DataFrame<T> = explodeImpl(dropEmpty, selector)
 public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> = explode(dropEmpty) { columns.toColumns() }
-public fun <T> DataFrame<T>.explode(dropEmpty: Boolean = true, selector: ColumnsSelector<T, *>): DataFrame<T> = explodeImpl(dropEmpty, selector)
+public fun <T, C> DataFrame<T>.explode(vararg columns: ColumnReference<C>, dropEmpty: Boolean = true): DataFrame<T> = explode(dropEmpty) { columns.toColumns() }
+public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> = explode(dropEmpty) { columns.toColumns() }
 
 // endregion
 
 // region mergeRows
 
-public fun <T> DataFrame<T>.mergeRows(vararg columns: String, dropNulls: Boolean = false): DataFrame<T> = mergeRows(dropNulls) { columns.toColumns() }
-public fun <T> DataFrame<T>.mergeRows(vararg columns: Column, dropNulls: Boolean = false): DataFrame<T> = mergeRows(dropNulls) { columns.toColumns() }
-public fun <T, C> DataFrame<T>.mergeRows(vararg columns: KProperty<C>, dropNulls: Boolean = false): DataFrame<T> = mergeRows(dropNulls) { columns.toColumns() }
 public fun <T, C> DataFrame<T>.mergeRows(dropNulls: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> = mergeRowsImpl(dropNulls, columns)
+public fun <T> DataFrame<T>.mergeRows(vararg columns: String, dropNulls: Boolean = false): DataFrame<T> = mergeRows(dropNulls) { columns.toColumns() }
+public fun <T, C> DataFrame<T>.mergeRows(vararg columns: ColumnReference<C>, dropNulls: Boolean = false): DataFrame<T> = mergeRows(dropNulls) { columns.toColumns() }
+public fun <T, C> DataFrame<T>.mergeRows(vararg columns: KProperty<C>, dropNulls: Boolean = false): DataFrame<T> = mergeRows(dropNulls) { columns.toColumns() }
 
 // endregion

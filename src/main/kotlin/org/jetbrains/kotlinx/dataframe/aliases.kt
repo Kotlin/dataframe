@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
+import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -44,6 +45,7 @@ public typealias RowValueFilter<T, C> = RowValueExpression<T, C, Boolean>
 public typealias Column = ColumnReference<*>
 
 public typealias ColumnGroupReference = ColumnReference<AnyRow>
+public typealias ColumnGroupAccessor = ColumnAccessor<AnyRow>
 
 public typealias DoubleCol = DataColumn<Double?>
 public typealias BooleanCol = DataColumn<Boolean?>

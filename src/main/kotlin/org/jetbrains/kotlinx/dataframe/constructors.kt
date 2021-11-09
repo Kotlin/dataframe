@@ -42,12 +42,15 @@ public fun frameColumn(): ColumnDelegate<AnyFrame> = column()
 public fun <T> columnMany(): ColumnDelegate<Many<T>> = column()
 
 public fun <T> columnGroup(name: String): ColumnAccessor<DataRow<T>> = column(name)
+public fun <T> columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> = column(path)
 
 public fun <T> frameColumn(name: String): ColumnAccessor<DataFrame<T>> = column(name)
+public fun <T> frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> = column(path)
 
 public fun <T> columnMany(name: String): ColumnAccessor<Many<T>> = column(name)
 
 public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
+public fun <T> column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(path)
 
 public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null) {
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.name)

@@ -225,7 +225,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
 
     public infix fun <C> ColumnSet<C>.and(other: String): ColumnSet<Any?> = this and other.toColumnAccessor()
 
-    public operator fun <C> ColumnPath.invoke(): ColumnAccessor<C> = toColumnAccessor().typed()
+    public operator fun <C> ColumnPath.invoke(): ColumnAccessor<C> = toColumnAccessor().cast()
 
     public operator fun <C> String.invoke(newColumnExpression: RowExpression<T, C>): DataColumn<C> =
         newColumnWithActualType(this, newColumnExpression)

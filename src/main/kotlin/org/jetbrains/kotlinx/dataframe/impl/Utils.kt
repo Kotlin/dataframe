@@ -220,4 +220,5 @@ public fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries: B
     if (includeBoundaries) this in left..right
     else this > left && this < right
 
+@PublishedApi
 internal val <T> KProperty<T>.columnName: String get() = findAnnotation<ColumnName>()?.name ?: name

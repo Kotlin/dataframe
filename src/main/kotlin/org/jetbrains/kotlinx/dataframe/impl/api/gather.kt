@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.api.GatherClause
 import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.into
@@ -92,7 +93,7 @@ internal fun <T, C, K, R> gatherImpl(
 
         df = df.explode { nameAndValue }
 
-        val nameAndValuePairs = nameAndValue.typed<Pair<K, C>>()
+        val nameAndValuePairs = nameAndValue.cast<Pair<K, C>>()
 
         df = df.split { nameAndValuePairs }
             .with { listOf(it.first, it.second) }

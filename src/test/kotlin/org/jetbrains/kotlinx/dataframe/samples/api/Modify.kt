@@ -113,9 +113,6 @@ class Modify : TestBase() {
         df.move { weight }.to(1)
 
         // name -> info.name
-        df.move { name }.into("info", "name")
-
-        // name -> info.name
         df.move { age }.into { pathOf("info", it.name) }
 
         // firstName -> fullName.firstName

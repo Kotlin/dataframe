@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.column
-import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -44,7 +43,16 @@ public fun <T> ColumnPath.toColumnOf(): ColumnAccessor<T> = ColumnAccessorImpl(t
 
 public fun ColumnPath.toColumnAccessor(): ColumnAccessor<Any?> = ColumnAccessorImpl(this)
 
-public fun ColumnPath.toGroupColumnDef(): ColumnAccessor<AnyRow> = ColumnAccessorImpl(this)
+public fun ColumnPath.toColumnGroupAccessor(): ColumnAccessor<AnyRow> = ColumnAccessorImpl(this)
+
+// endregion
+
+// region ColumnReference
+
+public fun <T> ColumnReference<T>.toColumnAccessor(): ColumnAccessor<T> = when (this) {
+    is ColumnAccessor<T> -> this
+    else -> ColumnAccessorImpl(path())
+}
 
 // endregion
 
@@ -69,10 +77,6 @@ public fun DataColumn<Any>.asNumbers(): ValueColumn<Number> {
     require(isNumber())
     return this as ValueColumn<Number>
 }
-
-public fun <T> FrameColumn<T>.toDefinition(): ColumnAccessor<DataFrame<T>> = frameColumn<T>(name)
-public fun <T> ColumnGroup<T>.toDefinition(): ColumnAccessor<DataRow<T>> = columnGroup<T>(name)
-public fun <T> ValueColumn<T>.toDefinition(): ColumnAccessor<T> = column<T>(name)
 
 public fun <T> DataColumn<T>.asComparable(): DataColumn<Comparable<T>> {
     require(isComparable())
@@ -104,7 +108,7 @@ public fun <T> FrameColumn<T>.toValueColumn(): ValueColumn<DataFrame<T>?> = Data
 
 // endregion
 
-// region Columns
+// region ColumnSet
 
 @JvmName("asNumbersAny")
 public fun ColumnSet<Any>.asNumbers(): ColumnSet<Number> = this as ColumnSet<Number>

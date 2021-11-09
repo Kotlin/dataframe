@@ -5,14 +5,28 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.api.MergedAttributes
 import org.jetbrains.kotlinx.dataframe.impl.api.SingleAttribute
 import org.jetbrains.kotlinx.dataframe.impl.api.encode
 import org.jetbrains.kotlinx.dataframe.impl.api.formatImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.linearGradient
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.HtmlData
 import org.jetbrains.kotlinx.dataframe.io.toHTML
+import kotlin.reflect.KProperty
+
+public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): FormatClause<T, C> = FormatClause(this, columns)
+public fun <T> DataFrame<T>.format(vararg columns: String): FormatClause<T, Any?> = format { columns.toColumns() }
+public fun <T, C> DataFrame<T>.format(vararg columns: ColumnReference<C>): FormatClause<T, C> = format { columns.toColumns() }
+public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClause<T, C> = format { columns.toColumns() }
+
+public fun <T, C> FormatClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T> = formatImpl(formatter)
+public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): FormatClause<T, C> = copy(filter = filter)
+
+public fun <T> DataFrame<T>.format(): FormatClause<T, Any?> = FormatClause(this)
+public fun <T> FormattedFrame<T>.format(): FormatClause<T, Any?> = FormatClause(df, null, formatter)
 
 public data class RGBColor(val r: Short, val g: Short, val b: Short)
 
@@ -79,28 +93,20 @@ public class FormattedFrame<T>(
     }
 }
 
-public data class ColorClause<T, C>(
+public data class FormatClause<T, C>(
     val df: DataFrame<T>,
     val columns: ColumnsSelector<T, C>? = null,
     val oldFormatter: RowColFormatter<T>? = null,
     val filter: RowValueFilter<T, C> = { true },
 )
 
-public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): ColorClause<T, C> = ColorClause(df, columns, formatter)
-public fun <T, C> DataFrame<T>.format(columns: ColumnsSelector<T, C>): ColorClause<T, C> = ColorClause(this, columns)
-
-public fun <T> FormattedFrame<T>.format(): ColorClause<T, Any?> = ColorClause(df, null, formatter)
-public fun <T> DataFrame<T>.format(): ColorClause<T, Any?> = ColorClause(this)
-
-public fun <T, C> ColorClause<T, C>.where(filter: RowValueFilter<T, C>): ColorClause<T, C> = copy(filter = filter)
+public fun <T, C> FormattedFrame<T>.format(columns: ColumnsSelector<T, C>): FormatClause<T, C> = FormatClause(df, columns, formatter)
 
 public typealias CellFormatter<V> = FormattingDSL.(V) -> CellAttributes?
 
-public fun <T, C : Number?> ColorClause<T, C>.linearBg(from: Pair<Number, RGBColor>, to: Pair<Number, RGBColor>): FormattedFrame<T> =
+public fun <T, C : Number?> FormatClause<T, C>.linearBg(from: Pair<Number, RGBColor>, to: Pair<Number, RGBColor>): FormattedFrame<T> =
     with {
         if (it != null) {
             background(linear(it, from, to))
         } else null
     }
-
-public fun <T, C> ColorClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T> = formatImpl(formatter)
