@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.castTo
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.parser
@@ -21,7 +21,7 @@ class ParserTests {
         DataFrame.parser.addDateTimeFormat("dd.MM.uuuu HH:mm:ss")
         val parsed = col.parse()
         parsed.type() shouldBe getType<LocalDateTime>()
-        parsed.castTo<LocalDateTime>()[0].year shouldBe 2021
+        parsed.cast<LocalDateTime>()[0].year shouldBe 2021
     }
 
     @Test(expected = IllegalStateException::class)

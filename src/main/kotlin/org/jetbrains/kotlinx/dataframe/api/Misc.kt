@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -11,12 +10,6 @@ import org.jetbrains.kotlinx.dataframe.values
 // region copy
 
 public fun <T> DataFrame<T>.copy(): DataFrame<T> = columns().toDataFrame().cast()
-
-// endregion
-
-// region castTo
-
-public fun <T> AnyCol.castTo(): DataColumn<T> = this as DataColumn<T>
 
 // endregion
 
