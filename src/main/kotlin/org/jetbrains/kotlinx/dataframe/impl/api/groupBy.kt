@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataRow
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupedDataFrameImpl
@@ -20,15 +21,16 @@ internal class GroupedDataRowImpl<T, G>(private val row: DataRow<T>, private val
     override fun groupOrNull() = frameCol[row.index()]
 }
 
-internal fun <T> DataFrame<T>.groupByImpl(columns: ColumnsSelector<T, *>): GroupedDataFrame<T, T> {
+internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSelector<T, *>): GroupedDataFrame<T, T> {
     val nameGenerator = nameGenerator(GroupedDataFrame.groupedColumnAccessor.name())
-    val keyColumns = get(columns).map {
+    var keyColumns = getColumnsWithPaths(columns)
+    if (!moveToTop) keyColumns = keyColumns.map {
         val currentName = it.name()
         val uniqueName = nameGenerator.addUnique(currentName)
         if (uniqueName != currentName) it.rename(uniqueName)
         else it
     }
-    val groups = (0 until nrow())
+    val groups = indices()
         .map { index -> keyColumns.map { it[index] } to index }
         .groupBy({ it.first }) { it.second }.toList()
 
@@ -36,11 +38,11 @@ internal fun <T> DataFrame<T>.groupByImpl(columns: ColumnsSelector<T, *>): Group
 
     val keyColumnsToInsert = keyColumns.map {
         val column = it.slice(keyIndices)
-        val path = pathOf(it.name())
+        val path = if (moveToTop) pathOf(it.name()) else it.path()
         ColumnToInsert(path, column, null)
     }
 
-    val keyColumnsDf = org.jetbrains.kotlinx.dataframe.impl.api.insertImpl(keyColumnsToInsert).cast<T>()
+    val keyColumnsDf = dataFrameOf(keyColumnsToInsert).cast<T>()
 
     val permutation = groups.flatMap { it.second }
     val sorted = getRows(permutation)

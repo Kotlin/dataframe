@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.SortColumnsSelector
-import org.jetbrains.kotlinx.dataframe.api.SortReceiver
+import org.jetbrains.kotlinx.dataframe.api.SortDsl
 import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
@@ -61,7 +61,7 @@ internal fun AnyCol.createComparator(nullsLast: Boolean): java.util.Comparator<I
 
 @JvmName("toColumnSetForSort")
 internal fun <T, C> SortColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
-    object : DataFrameReceiver<T>(it.df.cast(), it.allowMissingColumns), SortReceiver<T> {}
+    object : DataFrameReceiver<T>(it.df.cast(), it.allowMissingColumns), SortDsl<T> {}
 }
 
 internal fun <T, C> DataFrame<T>.getSortColumns(

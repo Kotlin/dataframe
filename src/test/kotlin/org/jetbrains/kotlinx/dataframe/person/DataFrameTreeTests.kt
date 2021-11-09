@@ -53,7 +53,6 @@ import org.jetbrains.kotlinx.dataframe.api.moveToLeft
 import org.jetbrains.kotlinx.dataframe.api.moveToRight
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.pivot
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.select
@@ -290,7 +289,6 @@ class DataFrameTreeTests : BaseTest() {
         }.plus("Bob" to "Moscow" to emptyMany<Int>()).toMap()
 
         fun <T> DataFrame<T>.check() {
-            print()
             ncol() shouldBe 1 + typed2.nameAndCity.city.ndistinct()
             this[name] shouldBe typed.name.distinct()
             val data = columns().drop(1)

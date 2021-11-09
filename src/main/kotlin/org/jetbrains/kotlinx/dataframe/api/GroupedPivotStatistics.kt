@@ -52,7 +52,7 @@ public fun <T> GroupedPivot<T>.values(vararg columns: Column, separate: Boolean 
 public fun <T> GroupedPivot<T>.values(vararg columns: String, separate: Boolean = false): DataFrame<T> = values(separate) { columns.toColumns() }
 public fun <T> GroupedPivot<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataFrame<T> = values(separate) { columns.toColumns() }
 public fun <T> GroupedPivot<T>.values(separate: Boolean = false, columns: ColumnsForAggregateSelector<T, *>): DataFrame<T> =
-    separateAggregatedValues(separate).aggregateInternal { columnValues(columns) { it.toList() } }
+    separateStatistics(separate).aggregateInternal { columnValues(columns) { it.toList() } }
 
 // endregion
 

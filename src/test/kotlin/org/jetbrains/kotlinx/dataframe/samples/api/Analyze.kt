@@ -26,7 +26,10 @@ import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.minFor
 import org.jetbrains.kotlinx.dataframe.api.minOf
 import org.jetbrains.kotlinx.dataframe.api.minOrNull
+import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.pivot
+import org.jetbrains.kotlinx.dataframe.api.pivotCount
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.stdFor
 import org.jetbrains.kotlinx.dataframe.api.sum
@@ -39,7 +42,6 @@ import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.get
 import org.junit.Test
 
 class Analyze : TestBase() {
@@ -499,6 +501,7 @@ class Analyze : TestBase() {
         // SampleStart
         df.pivot { city }
         df.pivot { city and name.firstName }
+        df.pivot { city then name.lastName }
         // SampleEnd
     }
 
@@ -519,6 +522,79 @@ class Analyze : TestBase() {
         // SampleStart
         df.pivot("city")
         df.pivot { "city" and "name"["firstName"] }
+        // SampleEnd
+    }
+
+    @Test
+    fun pivotInward_properties() {
+        // SampleStart
+        df.pivot(inward = true) { city }
+        // SampleEnd
+    }
+
+    @Test
+    fun pivotInward_accessors() {
+        // SampleStart
+        val city by column<String?>()
+
+        df.pivot(inward = true) { city }
+        // SampleEnd
+    }
+
+    @Test
+    fun pivotInward_strings() {
+        // SampleStart
+        df.pivot("city", inward = true)
+        // SampleEnd
+    }
+
+    @Test
+    fun pivotAnd_properties() {
+        // SampleStart
+        df.pivotCount(inward = true) { name.firstName }.print() // ["city"]["Moscow"].print()
+        // SampleEnd
+    }
+
+    @Test
+    fun pivotAnd_accessors() {
+        // SampleStart
+        val city by column<String?>()
+        val name by columnGroup()
+        val firstName by name.column<String>()
+
+        df.pivot { city and firstName }
+        // SampleEnd
+    }
+
+    @Test
+    fun pivotAnd_strings() {
+        // SampleStart
+        df.pivot { "city" and "name"["firstName"] }
+        // SampleEnd
+    }
+
+    @Test
+    fun pivotThen_properties() {
+        // SampleStart
+        df.pivot { city then name.firstName }
+        // SampleEnd
+    }
+
+    @Test
+    fun pivotThen_accessors() {
+        // SampleStart
+        val city by column<String?>()
+        val name by columnGroup()
+        val firstName by name.column<String>()
+
+        df.pivot { city then firstName }
+        // SampleEnd
+    }
+
+    @Test
+    fun pivotThen_strings() {
+        // SampleStart
+        df.pivot { "city" then "name"["firstName"] }
         // SampleEnd
     }
 
@@ -599,7 +675,7 @@ class Analyze : TestBase() {
         df.pivot("city").groupBy { "name"["firstName"] }.aggregate {
             meanFor("age", "weight") into "means"
             stdFor("age", "weight") into "stds"
-            maxByOrNull("weight")?.get("name")?.get("lastName") into "biggest"
+            maxByOrNull("weight")?.getColumnGroup("name")?.get("lastName") into "biggest"
         }
         // SampleEnd
     }

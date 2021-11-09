@@ -164,7 +164,10 @@ internal fun KType.toColumnKind(): ColumnKind = when {
     else -> ColumnKind.Value
 }
 
-internal fun <C> ColumnSet<C>.resolve(df: DataFrame<*>, unresolvedColumnsPolicy: UnresolvedColumnsPolicy) =
+internal fun <C> ColumnSet<C>.resolve(
+    df: DataFrame<*>,
+    unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail
+) =
     resolve(ColumnResolutionContext(df, unresolvedColumnsPolicy))
 
 internal fun <C> SingleColumn<C>.resolveSingle(df: DataFrame<*>, unresolvedColumnsPolicy: UnresolvedColumnsPolicy) =

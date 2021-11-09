@@ -184,17 +184,17 @@ public fun <T, C> DataFrame<T>.forEachIn(
 
 // region groupBy
 
-public fun <T> DataFrame<T>.groupBy(cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T> = groupByImpl(cols)
+public fun <T> DataFrame<T>.groupBy(moveToTop: Boolean = true, cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T> = groupByImpl(moveToTop, cols)
 public fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>): GroupedDataFrame<T, T> = groupBy { cols.toColumnSet() }
 public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupedDataFrame<T, T> = groupBy { cols.toColumns() }
 public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupedDataFrame<T, T> = groupBy { cols.toColumns() }
-public fun <T> DataFrame<T>.groupBy(vararg cols: Column): GroupedDataFrame<T, T> = groupBy { cols.toColumns() }
+public fun <T> DataFrame<T>.groupBy(vararg cols: Column, moveToTop: Boolean = true): GroupedDataFrame<T, T> = groupBy(moveToTop) { cols.toColumns() }
 
 // endregion
 
 // region sort
 
-public interface SortReceiver<out T> : ColumnsSelectionDsl<T> {
+public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
 
     public val <C> ColumnSet<C>.desc: ColumnSet<C> get() = addFlag(SortFlag.Reversed)
     public val String.desc: ColumnSet<Comparable<*>?> get() = cast<Comparable<*>>().desc
@@ -208,7 +208,7 @@ public interface SortReceiver<out T> : ColumnsSelectionDsl<T> {
     public val <C> KProperty<C?>.nullsLast: ColumnSet<C?> get() = toColumnAccessor().nullsLast
 }
 
-public typealias SortColumnsSelector<T, C> = Selector<SortReceiver<T>, ColumnSet<C>>
+public typealias SortColumnsSelector<T, C> = Selector<SortDsl<T>, ColumnSet<C>>
 
 public fun <T, C> DataFrame<T>.sortBy(columns: SortColumnsSelector<T, C>): DataFrame<T> = sortByImpl(
     UnresolvedColumnsPolicy.Fail, columns

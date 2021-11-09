@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dfsOf
+import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.into
@@ -17,6 +18,8 @@ import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.nullToZero
+import org.jetbrains.kotlinx.dataframe.api.pivotCount
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.shuffle
 import org.jetbrains.kotlinx.dataframe.api.sortBy
@@ -285,6 +288,14 @@ class Modify : TestBase() {
     fun mergeRows() {
         // SampleStart
         df.mergeRows { name and age and weight and isHappy }
+        // SampleEnd
+    }
+
+    @Test
+    fun gather() {
+        val pivoted = df.dropNulls { city }.pivotCount { city }
+        // SampleStart
+        pivoted.print()
         // SampleEnd
     }
 }
