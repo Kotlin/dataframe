@@ -4,10 +4,10 @@
 
 Reorders rows randomly.
 
-<!---FUN shuffled-->
+<!---FUN shuffle-->
 
 ```kotlin
-df.shuffled()
+df.shuffle()
 ```
 
 <!---END-->

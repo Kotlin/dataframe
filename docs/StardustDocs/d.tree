@@ -69,7 +69,7 @@
             </toc-element>
             <toc-element id="sortRows.md">
                 <toc-element id="sortBy.md"/>
-                <toc-element id="shuffled.md"/>
+                <toc-element id="shuffle.md"/>
             </toc-element>
             <toc-element id="modifyCells.md">
                 <toc-element id="update.md">

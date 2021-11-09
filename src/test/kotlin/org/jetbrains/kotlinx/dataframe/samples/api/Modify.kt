@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.nullToZero
 import org.jetbrains.kotlinx.dataframe.api.replace
-import org.jetbrains.kotlinx.dataframe.api.shuffled
+import org.jetbrains.kotlinx.dataframe.api.shuffle
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortWith
@@ -83,9 +83,9 @@ class Modify : TestBase() {
     }
 
     @Test
-    fun shuffled() {
+    fun shuffle() {
         // SampleStart
-        df.shuffled()
+        df.shuffle()
         // SampleEnd
     }
 
