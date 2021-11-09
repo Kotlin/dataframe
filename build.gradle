@@ -141,7 +141,7 @@ kotlinPublications {
 
 compileKotlin {
     kotlinOptions {
-        freeCompilerArgs = ["-Xinline-classes"]
+        freeCompilerArgs = ["-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn"]
     }
 }
 

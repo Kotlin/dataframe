@@ -1,15 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.MoveClause
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
@@ -40,14 +40,14 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
 }
 
 internal fun <T, C> MoveClause<T, C>.moveImpl(
-    newPathExpression: ColumnsContainer<T>.(ColumnWithPath<C>) -> ColumnPath,
-    under: Boolean = false
+    under: Boolean = false,
+    newPathExpression: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> Column
 ): DataFrame<T> {
-    val receiver = DataFrameReceiver(df, false)
+    val receiver = object : DataFrameReceiver<T>(df, false), ColumnsSelectionDsl<T> {}
     val removeResult = df.removeImpl(columns)
     val columnsToInsert = removeResult.removedColumns.map {
         val col = it.toColumnWithPath<C>(df)
-        var path = newPathExpression(receiver, col)
+        var path = newPathExpression(receiver, col).path()
         if (under) path += col.name()
         ColumnToInsert(path, col.data, it)
     }

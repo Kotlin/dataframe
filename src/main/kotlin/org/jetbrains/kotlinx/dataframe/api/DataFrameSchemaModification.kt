@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.Column
-import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
+import org.jetbrains.kotlinx.dataframe.ColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
@@ -38,6 +38,7 @@ import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.newColumn
 import org.jetbrains.kotlinx.dataframe.pathOf
+import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
 // region add
@@ -216,13 +217,15 @@ public fun <T> DataFrame<T>.moveToRight(vararg columns: String): DataFrame<T> = 
 public fun <T> DataFrame<T>.moveToRight(vararg columns: Column): DataFrame<T> = moveToRight { columns.toColumns() }
 public fun <T> DataFrame<T>.moveToRight(vararg columns: KProperty<*>): DataFrame<T> = moveToRight { columns.toColumns() }
 
-public fun <T, C> MoveClause<T, C>.toTop(
-    groupNameExpression: ColumnsContainer<T>.(ColumnWithPath<C>) -> String = { it.name() }
-): DataFrame<T> =
-    into { pathOf(groupNameExpression(it)) }
+public fun <T, C> MoveClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> Column): DataFrame<T> = moveImpl(
+    under = false,
+    column
+)
+
+public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(column).let { path -> into { path } }
 
 public fun <T, C> MoveClause<T, C>.intoIndexed(
-    newPathExpression: ColumnsContainer<T>.(ColumnWithPath<C>, Int) -> ColumnPath
+    newPathExpression: ColumnsSelectionDsl<T>.(ColumnWithPath<C>, Int) -> Column
 ): DataFrame<T> {
     var counter = 0
     return into { col ->
@@ -230,19 +233,24 @@ public fun <T, C> MoveClause<T, C>.intoIndexed(
     }
 }
 
-public fun <T, C> MoveClause<T, C>.into(newPathExpression: ColumnsContainer<T>.(ColumnWithPath<C>) -> ColumnPath): DataFrame<T> = moveImpl(newPathExpression, under = false)
-public fun <T, C> MoveClause<T, C>.into(column: String): DataFrame<T> = pathOf(column).let { path -> into { path } }
-
 public fun <T, C> MoveClause<T, C>.under(column: String): DataFrame<T> = pathOf(column).let { path -> under { path } }
-public fun <T, C> MoveClause<T, C>.under(column: ColumnGroupReference): DataFrame<T> = column.path().let { path -> under { path } }
-public fun <T, C> MoveClause<T, C>.under(column: ColumnsContainer<T>.(ColumnWithPath<C>) -> ColumnPath): DataFrame<T> = moveImpl(column, under = true)
+public fun <T, C> MoveClause<T, C>.under(column: ColumnGroupAccessor): DataFrame<T> = column.path().let { path -> under { path } }
+public fun <T, C> MoveClause<T, C>.under(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> Column): DataFrame<T> = moveImpl(
+    under = true,
+    column
+)
 
 public fun <T, C> MoveClause<T, C>.to(columnIndex: Int): DataFrame<T> = moveTo(columnIndex)
 
+public fun <T, C> MoveClause<T, C>.toTop(
+    newColumnName: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> String = { it.name() }
+): DataFrame<T> =
+    into { newColumnName(it).toColumnAccessor() }
+
+public fun <T, C> MoveClause<T, C>.after(column: ColumnSelector<T, *>): DataFrame<T> = afterOrBefore(column, true)
+public fun <T, C> MoveClause<T, C>.after(column: String): DataFrame<T> = after { column.toColumnAccessor() }
 public fun <T, C> MoveClause<T, C>.after(column: Column): DataFrame<T> = after { column }
 public fun <T, C> MoveClause<T, C>.after(column: KProperty<*>): DataFrame<T> = after { column.toColumnAccessor() }
-public fun <T, C> MoveClause<T, C>.after(column: String): DataFrame<T> = after { column.toColumnAccessor() }
-public fun <T, C> MoveClause<T, C>.after(column: ColumnSelector<T, *>): DataFrame<T> = afterOrBefore(column, true)
 
 // TODO: implement 'before'
 /*
@@ -269,9 +277,15 @@ public fun <T> DataFrame<T>.group(vararg columns: String): GroupClause<T, Any?> 
 public fun <T> DataFrame<T>.group(vararg columns: Column): GroupClause<T, Any?> = group { columns.toColumns() }
 public fun <T> DataFrame<T>.group(vararg columns: KProperty<*>): GroupClause<T, Any?> = group { columns.toColumns() }
 
-public infix fun <T, C> GroupClause<T, C>.into(column: ColumnsContainer<T>.(ColumnWithPath<C>) -> String): DataFrame<T> = df.move(columns).under { pathOf(column(it)) }
+@JvmName("intoString")
+@OverloadResolutionByLambdaReturnType
+@OptIn(ExperimentalTypeInference::class)
+public infix fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> String): DataFrame<T> = df.move(columns).under { column(it).toColumnAccessor() }
+
+@JvmName("intoColumn")
+public infix fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> Column): DataFrame<T> = df.move(columns).under(column)
 public infix fun <T, C> GroupClause<T, C>.into(column: String): DataFrame<T> = into(columnGroup().named(column))
-public infix fun <T, C> GroupClause<T, C>.into(column: ColumnGroupReference): DataFrame<T> = df.move(columns).under(column)
+public infix fun <T, C> GroupClause<T, C>.into(column: ColumnGroupAccessor): DataFrame<T> = df.move(columns).under(column)
 public infix fun <T, C> GroupClause<T, C>.into(column: KProperty<*>): DataFrame<T> = into(column.name)
 
 // endregion
