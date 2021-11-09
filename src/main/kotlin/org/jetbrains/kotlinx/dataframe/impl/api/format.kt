@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.api.CellAttributes
 import org.jetbrains.kotlinx.dataframe.api.CellFormatter
-import org.jetbrains.kotlinx.dataframe.api.ColorClause
+import org.jetbrains.kotlinx.dataframe.api.FormatClause
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.FormattingDSL
 import org.jetbrains.kotlinx.dataframe.api.RGBColor
@@ -46,7 +46,7 @@ internal fun linearGradient(
     }
 }
 
-internal fun <T, C> ColorClause<T, C>.formatImpl(formatter: CellFormatter<C>): FormattedFrame<T> {
+internal fun <T, C> FormatClause<T, C>.formatImpl(formatter: CellFormatter<C>): FormattedFrame<T> {
     val columns =
         if (columns != null) df.getColumnsWithPaths(columns).mapNotNull { if (it.depth == 0) it.name else null }
             .toSet() else null

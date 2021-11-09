@@ -19,32 +19,12 @@ import org.jetbrains.kotlinx.dataframe.nrow
 
 // region join
 
-public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
-
-    public val right: DataFrame<B>
-
-    public infix fun <C> ColumnReference<C>.match(other: ColumnReference<C>): ColumnMatch<C> = ColumnMatch(this, other)
-}
-
-public class ColumnMatch<C>(public val left: ColumnReference<C>, public val right: ColumnReference<C>) : ColumnSet<C> {
-
-    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> {
-        throw UnsupportedOperationException()
-    }
-}
-
-public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(JoinDsl<A, B>) -> ColumnSet<*>
-
-public enum class JoinType {
-    LEFT, // all data from left data frame, nulls for mismatches in right data frame
-    RIGHT, // all data from right data frame, nulls for mismatches in left data frame
-    INNER, // only matched data from right and left data frame
-    OUTER, // all data from left and from right data frame, nulls for any mismatches
-    EXCLUDE // mismatched rows from left data frame
-}
-
-public val JoinType.allowLeftNulls: Boolean get() = this == JoinType.RIGHT || this == JoinType.OUTER
-public val JoinType.allowRightNulls: Boolean get() = this == JoinType.LEFT || this == JoinType.OUTER || this == JoinType.EXCLUDE
+public fun <A, B> DataFrame<A>.join(
+    other: DataFrame<B>,
+    joinType: JoinType = JoinType.INNER,
+    addNewColumns: Boolean = true,
+    selector: JoinColumnsSelector<A, B> = defaultJoinColumns(this, other)
+): DataFrame<A> = joinImpl(other, joinType, addNewColumns, selector)
 
 public fun <A, B> DataFrame<A>.innerJoin(
     other: DataFrame<B>,
@@ -82,12 +62,32 @@ public fun <T> Iterable<DataFrame<T>>.joinOrNull(
 ): DataFrame<T>? =
     fold<DataFrame<T>, DataFrame<T>?>(null) { joined, new -> joined?.join(new, joinType, selector = selector) ?: new }
 
-public fun <A, B> DataFrame<A>.join(
-    other: DataFrame<B>,
-    joinType: JoinType = JoinType.INNER,
-    addNewColumns: Boolean = true,
-    selector: JoinColumnsSelector<A, B> = defaultJoinColumns(this, other)
-): DataFrame<A> = joinImpl(other, joinType, addNewColumns, selector)
+public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
+
+    public val right: DataFrame<B>
+
+    public infix fun <C> ColumnReference<C>.match(other: ColumnReference<C>): ColumnMatch<C> = ColumnMatch(this, other)
+}
+
+public class ColumnMatch<C>(public val left: ColumnReference<C>, public val right: ColumnReference<C>) : ColumnSet<C> {
+
+    override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<C>> {
+        throw UnsupportedOperationException()
+    }
+}
+
+public typealias JoinColumnsSelector<A, B> = JoinDsl<A, B>.(JoinDsl<A, B>) -> ColumnSet<*>
+
+public enum class JoinType {
+    LEFT, // all data from left data frame, nulls for mismatches in right data frame
+    RIGHT, // all data from right data frame, nulls for mismatches in left data frame
+    INNER, // only matched data from right and left data frame
+    OUTER, // all data from left and from right data frame, nulls for any mismatches
+    EXCLUDE // mismatched rows from left data frame
+}
+
+public val JoinType.allowLeftNulls: Boolean get() = this == JoinType.RIGHT || this == JoinType.OUTER
+public val JoinType.allowRightNulls: Boolean get() = this == JoinType.LEFT || this == JoinType.OUTER || this == JoinType.EXCLUDE
 
 // endregion
 

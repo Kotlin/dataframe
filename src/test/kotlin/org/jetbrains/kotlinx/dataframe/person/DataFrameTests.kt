@@ -33,6 +33,7 @@ import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.nullable
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toMany
@@ -45,7 +46,6 @@ import org.jetbrains.kotlinx.dataframe.columnMany
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.size
-import org.jetbrains.kotlinx.dataframe.columns.toAccessor
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.hasNulls
@@ -447,7 +447,7 @@ class DataFrameTests : BaseTest() {
 
         fun AnyFrame.check() = nrow() shouldBe expected
 
-        filtered.dropNulls(typed.weight.toAccessor(), typed.city.toAccessor(), whereAllNull = true).check()
+        filtered.dropNulls(typed.weight.toColumnAccessor(), typed.city.toColumnAccessor(), whereAllNull = true).check()
         filtered.dropNulls(whereAllNull = true) { weight and city }.check()
         filtered.dropNulls(whereAllNull = true) { it.weight and it.city }.check()
 
@@ -466,7 +466,7 @@ class DataFrameTests : BaseTest() {
 
         fun AnyFrame.check() = nrow() shouldBe expected
 
-        filtered.dropNulls(typed.weight.toAccessor(), typed.city.toAccessor()).check()
+        filtered.dropNulls(typed.weight.toColumnAccessor(), typed.city.toColumnAccessor()).check()
         filtered.dropNulls { weight and city }.check()
         filtered.dropNulls { it.weight and it.city }.check()
 
@@ -1237,8 +1237,8 @@ class DataFrameTests : BaseTest() {
             ).toDataFrame().cast<Person>()
             res shouldBe typed
         }
-        typed.group { cols { it != name } }.into { type.jvmErasure.simpleName!! }.check()
-        typed.group { age and city and weight }.into { type.jvmErasure.simpleName!! }.check()
+        typed.group { cols { it != name } }.into { it.type.jvmErasure.simpleName!! }.check()
+        typed.group { age and city and weight }.into { it.type.jvmErasure.simpleName!! }.check()
     }
 
     @Test

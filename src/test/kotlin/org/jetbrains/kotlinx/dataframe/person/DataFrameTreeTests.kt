@@ -60,7 +60,7 @@ import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sumOf
-import org.jetbrains.kotlinx.dataframe.api.toDefinition
+import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.api.toTop
 import org.jetbrains.kotlinx.dataframe.api.under
@@ -77,7 +77,6 @@ import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.depth
-import org.jetbrains.kotlinx.dataframe.columns.toAccessor
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.emptyMany
@@ -506,11 +505,11 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun explodeFrameColumnWithNulls() {
         val grouped = typed.groupBy { city }
-        val groupCol = grouped.groups.toDefinition()
+        val groupCol = grouped.groups.toColumnAccessor()
         val plain = grouped.toDataFrame()
             .update { groupCol }.at(1).withNull()
             .update { groupCol }.at(2).with { emptyDataFrame(0).cast() }
-            .update { groupCol }.at(3).with { it.filter { false } }
+            .update { groupCol }.at(3).with { it?.filter { false } }
         val res = plain.explode(dropEmpty = false) { groupCol }
         val expected = plain[groupCol].sumOf { Math.max(it?.nrow() ?: 0, 1) }
         res.nrow() shouldBe expected
@@ -547,7 +546,7 @@ class DataFrameTreeTests : BaseTest() {
         val left = typed.groupBy { name }.mapGroups { it?.remove { name and city } }
         val right =
             typed.update { name }.with { it.reversed() }.groupBy { name }.mapGroups { it?.remove { name and city } }
-        val groupCol = left.groups.toAccessor()
+        val groupCol = left.groups.toColumnAccessor()
         val joined = left.toDataFrame().join(right.toDataFrame()) { groupCol }
         joined.ncol() shouldBe 3
         val name_1 by column<String>()

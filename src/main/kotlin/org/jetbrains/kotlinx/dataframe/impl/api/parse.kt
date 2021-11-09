@@ -1,8 +1,17 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.DataFrameParserOptions
 import org.jetbrains.kotlinx.dataframe.api.allNulls
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.parse
+import org.jetbrains.kotlinx.dataframe.api.to
+import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.hasNulls
@@ -10,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.io.isURL
+import org.jetbrains.kotlinx.dataframe.typeClass
 import java.net.URL
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -145,4 +155,12 @@ internal fun <T : Any> DataColumn<String?>.parse(parser: StringParser<T>): DataC
         }
     }
     return DataColumn.createValueColumn(name(), parsedValues, parser.type.withNullability(hasNulls)) as DataColumn<T?>
+}
+
+internal fun <T> DataFrame<T>.parseImpl(columns: ColumnsSelector<T, Any?>) = convert(columns).to {
+    when {
+        it.isFrameColumn() -> it.cast<AnyFrame?>().parse()
+        it.typeClass == String::class -> it.cast<String?>().tryParse()
+        else -> it
+    }
 }
