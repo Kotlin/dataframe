@@ -55,7 +55,7 @@ public fun <T, K, V> DataFrame<T>.associate(transform: RowExpression<T, Pair<K, 
 public fun <T> DataFrame<T>.tail(numRows: Int = 5): DataFrame<T> = takeLast(numRows)
 public fun <T> DataFrame<T>.head(numRows: Int = 5): DataFrame<T> = take(numRows)
 
-public fun <T> DataFrame<T>.shuffled(): DataFrame<T> = getRows((0 until nrow()).shuffled())
+public fun <T> DataFrame<T>.shuffle(): DataFrame<T> = getRows((0 until nrow()).shuffled())
 
 public fun <T> DataFrame<T>.chunked(size: Int): FrameColumn<T> {
     val startIndices = (0 until nrow() step size)

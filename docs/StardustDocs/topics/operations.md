@@ -40,7 +40,7 @@
 * [sortBy](sortBy.md)
 * [sortByDesc](sortBy.md#sortbydesc)
 * [sortWith](sortBy.md#sortwith)
-* [shuffled](shuffled.md)
+* [shuffled](shuffle.md)
 * [update](update.md)
 * [convert](convert.md)
 * [parse](parse.md)
