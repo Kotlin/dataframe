@@ -2076,7 +2076,7 @@ class DataFrameTests : BaseTest() {
         list shouldBe grouped.typed<Target>().toList()
 
         val listDf = list.toDataFrame(depth = 2)
-        listDf shouldBe grouped.update { frameColumn("students") }.with{ it?.remove("city") }.sortColumnsBy(dfs = true) { it.name }
+        listDf shouldBe grouped.update { frameColumn("students") }.with { it?.remove("city") }.sortColumnsBy(dfs = true) { it.name }
         listDf.toList() shouldBe list
     }
 
