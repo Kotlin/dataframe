@@ -10,4 +10,3 @@ public fun <T> PivotedDataFrame<T>.groupBy(columns: ColumnsSelector<T, *>): Grou
 public fun <T> PivotedDataFrame<T>.groupBy(vararg columns: Column): GroupedPivot<T> = groupBy { columns.toColumns() }
 public fun <T> PivotedDataFrame<T>.groupBy(vararg columns: String): GroupedPivot<T> = groupBy { columns.toColumns() }
 public fun <T> PivotedDataFrame<T>.groupBy(vararg columns: KProperty<*>): GroupedPivot<T> = groupBy { columns.toColumns() }
-
