@@ -221,6 +221,14 @@ public fun <T> DataColumn<Many<Many<T>>>.toDataFrames(containsColumns: Boolean =
 
 public val DataFrame.Companion.parser: DataFrameParserOptions get() = Parsers
 
+public fun <T> DataFrame<T>.parse(columns: ColumnsSelector<T, Any?>): DataFrame<T> = convert(columns).to {
+    when {
+        it.isFrameColumn() -> it.cast<AnyFrame?>().parse()
+        it.typeClass == String::class -> it.cast<String?>().tryParse()
+        else -> it
+    }
+}
+
 public interface DataFrameParserOptions {
 
     public fun addDateTimeFormat(format: String)
@@ -229,14 +237,6 @@ public interface DataFrameParserOptions {
 public fun DataColumn<String?>.tryParse(): DataColumn<*> = tryParseImpl()
 
 public fun <T> DataFrame<T>.parse(): DataFrame<T> = parse { dfs() }
-
-public fun <T> DataFrame<T>.parse(columns: ColumnsSelector<T, Any?>): DataFrame<T> = convert(columns).to {
-    when {
-        it.isFrameColumn() -> it.castTo<AnyFrame?>().parse()
-        it.typeClass == String::class -> it.castTo<String?>().tryParse()
-        else -> it
-    }
-}
 
 public fun DataColumn<String?>.parse(): DataColumn<*> = tryParse().also { if (it.typeClass == String::class) error("Can't guess column type") }
 
