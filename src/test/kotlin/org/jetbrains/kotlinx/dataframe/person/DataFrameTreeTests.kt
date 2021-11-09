@@ -457,6 +457,13 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
+    fun `group into column`() {
+        val grouped = typed2.group { age }.into { nameAndCity }
+        grouped.nameAndCity.ncol() shouldBe 3
+        grouped.ncol() shouldBe 2
+    }
+
+    @Test
     fun rename() {
         val res = typed2.rename { nameAndCity.all() }.into { it.name.capitalize() }
         res.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames().map { it.capitalize() }

@@ -24,33 +24,31 @@ import kotlin.reflect.full.withNullability
 // region create ColumnAccessor
 
 public fun <T> column(): ColumnDelegate<T> = ColumnDelegate()
+public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
+public fun <T> column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(path)
+public fun <T> ColumnGroupReference.column(): ColumnDelegate<T> = ColumnDelegate<T>(this)
+public fun <T> ColumnGroupReference.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
+public fun <T> ColumnGroupReference.column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(this.path() + path)
 
 public inline fun <reified T> column(name: String = "", noinline expression: RowExpression<Any?, T>): ColumnReference<T> = createComputedColumnReference(name, getType<T>(), expression)
-
 public inline fun <T, reified C> DataFrame<T>.column(name: String = "", noinline expression: RowExpression<T, C>): ColumnReference<C> = createComputedColumnReference(name, getType<C>(), expression as RowExpression<Any?, C>)
 
 public fun columnGroup(): ColumnDelegate<AnyRow> = column()
-
-public fun <T> ColumnGroupReference.column(): ColumnDelegate<T> = ColumnDelegate<T>(this)
-
-public fun <T> ColumnGroupReference.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
-
-public fun columnGroup(parent: ColumnGroupReference): ColumnDelegate<AnyRow> = parent.column()
+public fun columnGroup(name: String): ColumnAccessor<AnyRow> = column(name)
+public fun columnGroup(path: ColumnPath): ColumnAccessor<AnyRow> = column(path)
+public fun ColumnGroupReference.columnGroup(): ColumnDelegate<AnyRow> = ColumnDelegate(this)
+public fun ColumnGroupReference.columnGroup(name: String): ColumnAccessor<AnyRow> = ColumnAccessorImpl(path() + name)
+public fun ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccessor<AnyRow> = ColumnAccessorImpl(this.path() + path)
 
 public fun frameColumn(): ColumnDelegate<AnyFrame> = column()
+public fun frameColumn(name: String): ColumnAccessor<AnyFrame> = column(name)
+public fun frameColumn(path: ColumnPath): ColumnAccessor<AnyFrame> = column(path)
+public fun ColumnGroupReference.frameColumn(): ColumnDelegate<AnyFrame> = ColumnDelegate(this)
+public fun ColumnGroupReference.frameColumn(name: String): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(path() + name)
+public fun ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(this.path() + path)
 
 public fun <T> columnMany(): ColumnDelegate<Many<T>> = column()
-
-public fun <T> columnGroup(name: String): ColumnAccessor<DataRow<T>> = column(name)
-public fun <T> columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> = column(path)
-
-public fun <T> frameColumn(name: String): ColumnAccessor<DataFrame<T>> = column(name)
-public fun <T> frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> = column(path)
-
 public fun <T> columnMany(name: String): ColumnAccessor<Many<T>> = column(name)
-
-public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
-public fun <T> column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(path)
 
 public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null) {
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.name)
