@@ -1,7 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -16,7 +17,7 @@ import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.jvm.jvmErasure
 
 @PublishedApi
-internal fun <T> DataFrame<T>.toListImpl(type: KType): List<T> {
+internal fun AnyFrame.toListImpl(type: KType): List<Any> {
     val clazz = type.jvmErasure
     require(clazz.isData) { "Class `$clazz` is not a data class. `toList` is supported only for data classes." }
 
@@ -40,12 +41,12 @@ internal fun <T> DataFrame<T>.toListImpl(type: KType): List<T> {
         val convertedColumn = if (column.type != it.type) {
             when (column.kind) {
                 ColumnKind.Frame -> {
-                    if (it.type.jvmErasure == List::class) {
+                    val col: AnyCol = if (it.type.jvmErasure == List::class) {
                         val elementType = it.type.arguments[0].type
-                        if (elementType != null) {
-                            column.asFrameColumn().map { it?.toListImpl(elementType) }
-                        } else error("FrameColumn can not be converted to type `List<*>`")
+                        require(elementType != null) { "FrameColumn can not be converted to type `List<*>`" }
+                        column.asFrameColumn().map { it?.toListImpl(elementType) }
                     } else error("FrameColumn can not be converted to type `${it.type}`")
+                    col
                 }
                 ColumnKind.Group -> {
                     DataColumn.createValueColumn(column.name(), column.asColumnGroup().df.toListImpl(it.type))
@@ -62,6 +63,6 @@ internal fun <T> DataFrame<T>.toListImpl(type: KType): List<T> {
         val parameters = convertedColumns.map {
             row[it]
         }.toTypedArray()
-        constructor.call(*parameters) as T
+        constructor.call(*parameters)
     }
 }

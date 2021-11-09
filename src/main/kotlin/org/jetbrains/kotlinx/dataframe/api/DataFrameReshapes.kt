@@ -11,12 +11,14 @@ import org.jetbrains.kotlinx.dataframe.impl.api.gatherImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.pathOf
+import kotlin.reflect.KProperty
 
 // region pivot
 
 public fun <T> DataFrame<T>.pivot(columns: ColumnsSelector<T, *>): PivotedDataFrame<T> = PivotedDataFrameImpl(this, columns)
 public fun <T> DataFrame<T>.pivot(vararg columns: String): PivotedDataFrame<T> = pivot { columns.toColumns() }
 public fun <T> DataFrame<T>.pivot(vararg columns: Column): PivotedDataFrame<T> = pivot { columns.toColumns() }
+public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>): PivotedDataFrame<T> = pivot { columns.toColumns() }
 
 public fun <T, P : GroupedPivot<T>> P.withGrouping(group: ColumnGroupReference): P = withGrouping(group.path()) as P
 public fun <T, P : GroupedPivot<T>> P.withGrouping(groupName: String): P = withGrouping(pathOf(groupName)) as P
