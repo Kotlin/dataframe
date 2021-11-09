@@ -34,7 +34,7 @@ internal fun <T, C, R> Aggregator<*, R>.aggregateFor(
     data: GroupedPivot<T>,
     separate: Boolean,
     columns: ColumnsForAggregateSelector<T, C?>
-): DataFrame<T> = data.separateAggregatedValues(separate).aggregateFor(columns, cast())
+): DataFrame<T> = data.separateStatistics(separate).aggregateFor(columns, cast())
 
 internal fun <T, C, R> Aggregator<*, R>.aggregateFor(
     data: DataFrame<T>,

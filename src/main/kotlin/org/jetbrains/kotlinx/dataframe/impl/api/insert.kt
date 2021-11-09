@@ -26,7 +26,7 @@ internal fun <T> DataFrame<T>.insertImpl(columns: List<ColumnToInsert>) =
 internal fun <T> insertImpl(df: DataFrame<T>?, columns: List<ColumnToInsert>) =
     insertImpl(df, columns, columns.firstOrNull()?.referenceNode?.getRoot(), 0)
 
-internal fun insertImpl(columns: List<ColumnToInsert>) =
+internal fun dataFrameOf(columns: List<ColumnToInsert>) =
     insertImpl<Unit>(null, columns, columns.firstOrNull()?.referenceNode?.getRoot(), 0)
 
 internal fun <T> insertImpl(

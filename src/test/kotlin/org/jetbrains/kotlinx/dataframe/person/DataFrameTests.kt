@@ -1302,10 +1302,9 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `forEachIn`() {
-        val cities by columnGroup()
-        val pivoted = typed.pivot { city }.groupBy { name and weight }.withGrouping(cities).with { age }
+        val pivoted = typed.pivot(inward = true) { city }.groupBy { name and weight }.with { age }
         var sum = 0
-        pivoted.forEachIn({ cities.children() }) { row, column -> column[row]?.let { sum += it as Int } }
+        pivoted.forEachIn({ getColumnGroup("city").all() }) { row, column -> column[row]?.let { sum += it as Int } }
         sum shouldBe typed.age.sum()
     }
 

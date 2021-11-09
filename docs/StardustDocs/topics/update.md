@@ -5,14 +5,14 @@
 Returns `DataFrame` with changed values in some cells. Column types can not be changed.
 
 ```kotlin
-update { columnSelector }
+update { columns }
     [.where { rowCondition } ]
     [.at(rowIndices) ] 
-     .with { rowExpression } | .withNull() | .withConst(value) | .withRowCol { rowColExpression }
+     .with { rowExpression } || .withNull() || .withConst(value) || .withRowCol { rowColExpression }
 
-rowCondition = DataRow.(OldValue) -> Boolean
-rowExpression = DataRow.(OldValue) -> NewValue
-rowColExpression = DataRow.(DataColumn) -> NewValue
+rowCondition: DataRow.(OldValue) -> Boolean
+rowExpression: DataRow.(OldValue) -> NewValue
+rowColExpression: DataRow.(DataColumn) -> NewValue
 ```
 
 See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-expressions)

@@ -1,13 +1,24 @@
 [//]: # (title: gather)
 
-Converts several columns into two `key-value` columns, where `key` is a name of original column and `value` is column data
-This is reverse to [pivot](pivot.md)
+Converts several columns into two columns `key` and `value`, where `key` column contains names of original columns and `value` column contains data from original columns
+
+This operation is reverse to [pivot](pivot.md)
 
 ```kotlin
-df.gather { columns }.into(keyColumnName)
+gather { columns }
+    [.where { valueFilter }]
+    [.mapKeys { keyTransform }]
+    [.mapValues { valueTransform }]
+    .into(keyColumnName) || .into(keyColumnName, valueColumnName)
 
-df.gather { columns }.where { valueFilter }.map { valueTransform }.mapNames { keyTransform }.into(keyColumnName, valueColumnName)
+valueFilter: (Value) -> Boolean
+keyTransform: (ColumnName) -> K
+valueTransform: (Value) -> R 
 ```
+
+When `valueColumnName` is not defined, only `key` column is created. This can be used to collect column names based on `valueFilter`. If `valueFilter` is also not defined, it will default to `{ it }` for `Boolean` columns and `{ it != null }` for other columns.
+
+<!---FUN gather-->
 
 **Input**
 
@@ -31,7 +42,6 @@ df.gather { cols(1..4) }.where { it != null}.mapNames { it.substring(5) }.into("
 | Milan | 20 | 3
 | Milan | 21 | 5
 
-When `valueColumnName` is not defined, only 'key' column is added. In this case `valueFilter` will default to `{ it }` for `Boolean` columns and `{ it != null }` for other columns
 
 **Input**
 

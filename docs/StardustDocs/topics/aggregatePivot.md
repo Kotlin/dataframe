@@ -45,7 +45,7 @@ df.pivot("city").aggregate { minBy("age")["name"] }
 df.pivot("city").groupBy { "name"["firstName"] }.aggregate {
     meanFor("age", "weight") into "means"
     stdFor("age", "weight") into "stds"
-    maxByOrNull("weight")?.get("name")?.get("lastName") into "biggest"
+    maxByOrNull("weight")?.getColumnGroup("name")?.get("lastName") into "biggest"
 }
 ```
 

@@ -31,6 +31,7 @@ public interface DataRow<out T> {
     public operator fun get(first: String, vararg other: String): DataRow<T> = owner.get(first, *other)[index]
     public operator fun get(path: ColumnPath): Any? = owner.get(path)[index]
     public operator fun get(name: String): Any?
+    public fun getColumnGroup(columnName: String): AnyRow = get(columnName) as AnyRow
     public fun tryGet(name: String): Any?
 
     // endregion

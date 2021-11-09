@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumn
+import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -85,7 +86,7 @@ internal fun <T, G, R> aggregateGroupBy(
 
     val column = df.getColumn(selector)
 
-    val (df2, removedNodes) = df.removeImpl(selector)
+    val removed = df.removeImpl(selector)
 
     val groupedFrame = column.values.map {
         if (it == null) null
@@ -101,14 +102,14 @@ internal fun <T, G, R> aggregateGroupBy(
         }
     }.concat()
 
-    val removedNode = removedNodes.single()
+    val removedNode = removed.removedColumns.single()
     val insertPath = removedNode.pathFromRoot().dropLast(1)
 
     if (!removeColumns) removedNode.data.wasRemoved = false
 
-    val columnsToInsert = groupedFrame.columns().map {
-        ColumnToInsert(insertPath + it.name, it, removedNode)
+    val columnsToInsert = groupedFrame.getColumnsWithPaths { dfs() }.map {
+        ColumnToInsert(insertPath + it.path, it, removedNode)
     }
-    val src = if (removeColumns) df2 else df
+    val src = if (removeColumns) removed.df else df
     return src.insertImpl(columnsToInsert)
 }

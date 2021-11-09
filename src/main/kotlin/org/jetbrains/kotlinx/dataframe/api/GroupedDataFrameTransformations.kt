@@ -10,18 +10,19 @@ import kotlin.reflect.KProperty
 
 // region pivot GroupedDataFrame
 
-public fun <G> GroupedDataFrame<*, G>.pivot(columns: ColumnsSelector<G, *>): GroupedPivot<G> = GroupedPivotImpl(this, columns)
-public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: Column): GroupedPivot<G> = pivot { columns.toColumns() }
-public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: String): GroupedPivot<G> = pivot { columns.toColumns() }
-public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: KProperty<*>): GroupedPivot<G> = pivot { columns.toColumns() }
+public fun <G> GroupedDataFrame<*, G>.pivot(inward: Boolean? = null, columns: ColumnsSelector<G, *>): GroupedPivot<G> = GroupedPivotImpl(this, columns, inward)
+public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: Column, inward: Boolean? = null): GroupedPivot<G> = pivot(inward) { columns.toColumns() }
+public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: String, inward: Boolean? = null): GroupedPivot<G> = pivot(inward) { columns.toColumns() }
+public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean? = null): GroupedPivot<G> = pivot(inward) { columns.toColumns() }
 
 // endregion
 
 // region pivot inside GroupedDataFrame aggregate
 
-public fun <T> AggregateGroupedDsl<T>.pivot(columns: ColumnsSelector<T, *>): GroupedPivot<T> =
-    GroupedPivotInsideAggregateImpl(this, columns)
-public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: String): GroupedPivot<T> = pivot { columns.toColumns() }
-public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: Column): GroupedPivot<T> = pivot { columns.toColumns() }
+public fun <T> AggregateGroupedDsl<T>.pivot(inward: Boolean? = null, columns: ColumnsSelector<T, *>): GroupedPivot<T> =
+    GroupedPivotInsideAggregateImpl(this, columns, inward)
+public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: String, inward: Boolean? = null): GroupedPivot<T> = pivot(inward) { columns.toColumns() }
+public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: Column, inward: Boolean? = null): GroupedPivot<T> = pivot(inward) { columns.toColumns() }
+public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: KProperty<*>, inward: Boolean? = null): GroupedPivot<T> = pivot(inward) { columns.toColumns() }
 
 // endregion
