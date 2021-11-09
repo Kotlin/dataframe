@@ -2053,7 +2053,10 @@ class DataFrameTests : BaseTest() {
         shouldThrow<IllegalArgumentException> {
             df.add("col") { 1 }.typed<Target>(extraColumns = ExtraColumnsBehavior.Fail) shouldBe df
         }
-        val list = df.typed<Target>().toList()
+
+        val list = df.toListOf<Target>()
+        list shouldBe df.typed<Target>().toList()
+
         val listDf = list.toDataFrame()
         listDf shouldBe df.sortColumnsBy { it.name }
         listDf.toList() shouldBe list
@@ -2067,13 +2070,13 @@ class DataFrameTests : BaseTest() {
         @DataSchema
         data class Target(val city: String?, val students: List<Student>)
 
-        val typed = df.groupBy { city }.toDataFrame("students").typed<Target>()
+        val grouped = df.groupBy { city }.toDataFrame("students")
 
-        val list = typed.toList()
+        val list = grouped.toListOf<Target>()
+        list shouldBe grouped.typed<Target>().toList()
 
         val listDf = list.toDataFrame(depth = 2)
-
-        listDf shouldBe typed.sortColumnsBy(dfs = true) { it.name }
+        listDf shouldBe grouped.update { frameColumn("students") }.with{ it?.remove("city") }.sortColumnsBy(dfs = true) { it.name }
         listDf.toList() shouldBe list
     }
 
@@ -2085,13 +2088,13 @@ class DataFrameTests : BaseTest() {
         @DataSchema
         data class Target(val name: String, val city: String?, val info: Info)
 
-        val typed = df.group { age and weight }.into("info").typed<Target>()
+        val grouped = df.group { age and weight }.into("info")
 
-        val list = typed.toList()
+        val list = grouped.toListOf<Target>()
+        list shouldBe grouped.typed<Target>().toList()
 
         val listDf = list.toDataFrame(depth = 2)
-
-        listDf shouldBe typed.sortColumnsBy(dfs = true) { it.name }
+        listDf shouldBe grouped.sortColumnsBy(dfs = true) { it.name }
         listDf.toList() shouldBe list
     }
 }

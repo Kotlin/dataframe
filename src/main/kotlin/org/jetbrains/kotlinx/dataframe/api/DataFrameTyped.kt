@@ -43,4 +43,6 @@ public inline fun <reified T> AnyFrame.typed(
 
 // endregion
 
-public inline fun <reified T> DataFrame<T>.toList(): List<T> = toListImpl(getType<T>())
+public inline fun <reified T> DataFrame<T>.toList(): List<T> = toListImpl(getType<T>()) as List<T>
+
+public inline fun <reified T> AnyFrame.toListOf(): List<T> = toListImpl(getType<T>()) as List<T>

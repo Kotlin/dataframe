@@ -41,14 +41,14 @@ internal fun <T> AnyFrame.typedImpl(type: KType, allowConversion: Boolean, extra
                         when (targetColumn.kind) {
                             ColumnKind.Value -> {
                                 val targetType = targetColumn.type
-                                if (it.hasNulls() && !targetType.isMarkedNullable) {
-                                    throw IllegalArgumentException("Column `${it.name}` has nulls and can not be converted to non-nullable type `$targetType`")
+                                require(!it.hasNulls() || targetType.isMarkedNullable) {
+                                    "Column `${it.name}` has nulls and can not be converted to non-nullable type `$targetType`"
                                 }
                                 it.convertTo(targetType)
                             }
                             ColumnKind.Group -> {
-                                if (it.kind != ColumnKind.Group) {
-                                    throw IllegalArgumentException("Column `${it.name}` is ${it.kind}Column and can not be converted to `ColumnGroup`")
+                                require(it.kind == ColumnKind.Group) {
+                                    "Column `${it.name}` is ${it.kind}Column and can not be converted to `ColumnGroup`"
                                 }
                                 val columnGroup = it.asColumnGroup()
                                 DataColumn.createColumnGroup(
@@ -57,8 +57,8 @@ internal fun <T> AnyFrame.typedImpl(type: KType, allowConversion: Boolean, extra
                                 )
                             }
                             ColumnKind.Frame -> {
-                                if (it.kind != ColumnKind.Frame) {
-                                    throw IllegalArgumentException("Column `${it.name}` is ${it.kind}Column and can not be converted to `FrameColumn`")
+                                require(it.kind == ColumnKind.Frame) {
+                                    "Column `${it.name}` is ${it.kind}Column and can not be converted to `FrameColumn`"
                                 }
                                 val frameColumn = it.asFrameColumn()
                                 val frameSchema = (targetColumn as ColumnSchema.Frame).schema
