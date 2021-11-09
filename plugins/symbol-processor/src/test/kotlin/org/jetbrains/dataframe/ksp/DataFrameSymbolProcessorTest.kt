@@ -353,6 +353,55 @@ class DataFrameSymbolProcessorTest {
     }
 
     @Test
+    fun `nested interface`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                package org.example
+
+                $imports
+                class A {
+                    @DataSchema(isOpen = false)
+                    interface Hello {
+                        val name: String
+                    }
+                }
+               
+            """.trimIndent()))
+            ))
+        result.successfulCompilation shouldBe true
+    }
+
+    @Test
+    fun `redeclaration in different scopes`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                package org.example
+
+                $imports
+                class A {
+                    @DataSchema(isOpen = false)
+                    interface Hello {
+                        val name: String
+                    }
+                }
+
+               class B {
+                    @DataSchema(isOpen = false)
+                    interface Hello {
+                        val name: String
+                    }
+                }
+
+               
+            """.trimIndent()))
+            ))
+        println(result.kspGeneratedFiles)
+        result.successfulCompilation shouldBe true
+    }
+
+    @Test
     fun `interface with internal visibility`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
@@ -368,8 +417,8 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("""internal val ${dataFramePackage}.ColumnsContainer<Hello>.name: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
-            ?.shouldContain("""internal val ${dataFramePackage}.DataRow<Hello>.name: kotlin.Int @JvmName("Hello_name")""")
+            ?.shouldContain("""internal val ${dataFramePackage}.ColumnsContainer<org.example.Hello>.name: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
+            ?.shouldContain("""internal val ${dataFramePackage}.DataRow<org.example.Hello>.name: kotlin.Int @JvmName("Hello_name")""")
         result.successfulCompilation shouldBe true
     }
 
@@ -389,8 +438,8 @@ class DataFrameSymbolProcessorTest {
             """.trimIndent()))
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readText()
-            ?.shouldContain("""public val ${dataFramePackage}.ColumnsContainer<Hello>.name: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
-            ?.shouldContain("""public val ${dataFramePackage}.DataRow<Hello>.name: kotlin.Int @JvmName("Hello_name")""")
+            ?.shouldContain("""public val ${dataFramePackage}.ColumnsContainer<org.example.Hello>.name: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
+            ?.shouldContain("""public val ${dataFramePackage}.DataRow<org.example.Hello>.name: kotlin.Int @JvmName("Hello_name")""")
         result.successfulCompilation shouldBe true
     }
 
@@ -411,10 +460,10 @@ class DataFrameSymbolProcessorTest {
             ))
         result.kspGeneratedFiles.find { it.name == "Hello${'$'}Extensions.kt" }?.readLines()?.asClue { codeLines ->
             codeLines.forOne {
-                it.shouldStartWith("""val ${dataFramePackage}.ColumnsContainer<Hello>.name: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
+                it.shouldStartWith("""val ${dataFramePackage}.ColumnsContainer<org.example.Hello>.name: ${dataFramePackage}.DataColumn<kotlin.Int> @JvmName("Hello_name")""")
             }
             codeLines.forOne {
-                it.shouldStartWith("""val ${dataFramePackage}.DataRow<Hello>.name: kotlin.Int @JvmName("Hello_name")""")
+                it.shouldStartWith("""val ${dataFramePackage}.DataRow<org.example.Hello>.name: kotlin.Int @JvmName("Hello_name")""")
             }
         }
         result.successfulCompilation shouldBe true

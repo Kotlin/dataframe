@@ -6,6 +6,7 @@ import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
+import java.io.IOException
 import java.io.OutputStreamWriter
 
 class DataFrameSymbolProcessor(
@@ -45,20 +46,32 @@ class DataFrameSymbolProcessor(
 
     private fun generate(file: KSFile, klass: KSClassDeclaration, properties: List<KSPropertyDeclaration>) {
         val className: String = klass.simpleName.asString()
+        val packageName = file.packageName.asString()
+        val fileName = if (klass.parentDeclaration == null) {
+            "$className${'$'}Extensions"
+        } else {
+            val name = klass.qualifiedName?.asString() ?: error("@DataSchema declaration at ${klass.location} must have name")
+            "${name}${'$'}Extensions"
+        }
         val generatedFile = codeGenerator.createNewFile(
-            Dependencies(false, file), file.packageName.asString(), "$className${'$'}Extensions")
-        generatedFile.writer().use {
-            it.appendLine("""@file:Suppress("UNCHECKED_CAST")""")
-            val packageName = file.packageName.asString()
-            if (packageName.isNotEmpty()) {
-                it.appendLine("package $packageName")
+            Dependencies(false, file), packageName, fileName
+        )
+        try {
+            generatedFile.writer().use {
+                it.appendLine("""@file:Suppress("UNCHECKED_CAST")""")
+                if (packageName.isNotEmpty()) {
+                    it.appendLine("package $packageName")
+                }
+                it.appendLine()
+                val name = klass.qualifiedName ?: error("@DataSchema declaration at ${klass.location} must have name")
+                it.writeProperties(klass.asType(emptyList()), name.asString(), properties)
             }
-            it.appendLine()
-            it.writeProperties(klass.asType(emptyList()), properties)
+        } catch (e: IOException) {
+            throw IOException("Error writing ${fileName} generated from declaration at ${file.location}", e)
         }
     }
 
-    private fun OutputStreamWriter.writeProperties(interfaceType: KSType, properties: List<KSPropertyDeclaration>) {
+    private fun OutputStreamWriter.writeProperties(interfaceType: KSType, interfaceName: String, properties: List<KSPropertyDeclaration>) {
         val visibility = when (val visibility = interfaceType.declaration.getVisibility()) {
             Visibility.PUBLIC -> if (interfaceType.declaration.modifiers.contains(Modifier.PUBLIC)) {
                 MarkerVisibility.EXPLICIT_PUBLIC
@@ -71,7 +84,7 @@ class DataFrameSymbolProcessor(
             }
         }
         val extensions = renderExtensions(
-            interfaceName = interfaceType.toString(),
+            interfaceName = interfaceName,
             visibility = visibility,
             properties.map { property -> Property(getColumnName(property), property.simpleName.asString(), render(property.type)) }
         )
