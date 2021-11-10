@@ -24,7 +24,7 @@ import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
-internal infix fun <T> (Predicate<T>).and(other: Predicate<T>): Predicate<T> = { this(it) && other(it) }
+internal infix fun <T> (Predicate<T>?).and(other: Predicate<T>): Predicate<T> = if (this == null) other else { it: T -> this(it) && other(it) }
 
 internal fun <T> T.toIterable(getNext: (T) -> T?) = Iterable<T> {
     object : Iterator<T> {

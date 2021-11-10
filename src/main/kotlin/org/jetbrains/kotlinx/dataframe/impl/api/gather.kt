@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.split
@@ -92,6 +93,8 @@ internal fun <T, C, K, R> gatherImpl(
         }
 
         df = df.explode { nameAndValue }
+
+        if (df.isEmpty()) return df
 
         val nameAndValuePairs = nameAndValue.cast<Pair<K, C>>()
 
