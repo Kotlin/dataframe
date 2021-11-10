@@ -97,7 +97,7 @@ public fun <T> BaseColumn<T>.toMany(): Many<T> = values().toMany()
 
 public fun <T> ColumnGroup<T>.asDataColumn(): DataColumn<DataRow<T>> = this as DataColumn<DataRow<T>>
 
-public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
+public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = df
 
 // endregion
 

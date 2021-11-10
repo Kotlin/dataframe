@@ -20,7 +20,7 @@ public fun <T> DataColumn<T>.drop(predicate: Predicate<T>): DataColumn<T> = filt
 
 public fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> = indices.filter {
     predicate(get(it))
-}.let { slice(it) }
+}.let { get(it) }
 
 public fun <T> DataColumn<T>.forEach(action: (T) -> Unit): Unit = values.forEach(action)
 

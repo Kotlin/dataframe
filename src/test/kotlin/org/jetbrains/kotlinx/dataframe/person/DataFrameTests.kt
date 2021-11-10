@@ -1639,7 +1639,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `select several column values`() {
-        typed.name[2, 5, 6] shouldBe typed.name.slice(listOf(2, 5, 6))
+        typed.name[2, 5, 6] shouldBe typed.name[listOf(2, 5, 6)]
     }
 
     @Test

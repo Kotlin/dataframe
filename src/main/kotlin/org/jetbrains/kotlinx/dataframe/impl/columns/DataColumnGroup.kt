@@ -13,7 +13,7 @@ internal interface DataColumnGroup<out T> : ColumnGroup<T>, DataColumn<DataRow<T
 
     override fun rename(newName: String): DataColumnGroup<T>
 
-    override fun slice(indices: Iterable<Int>): DataColumnGroup<T>
+    override fun get(indices: Iterable<Int>): DataColumnGroup<T>
 
     override fun distinct(): DataColumnGroup<T>
 

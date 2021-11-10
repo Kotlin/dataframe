@@ -37,7 +37,7 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
     val keyIndices = groups.map { it.second[0] }
 
     val keyColumnsToInsert = keyColumns.map {
-        val column = it.slice(keyIndices)
+        val column = it[keyIndices]
         val path = if (moveToTop) pathOf(it.name()) else it.path()
         ColumnToInsert(path, column, null)
     }

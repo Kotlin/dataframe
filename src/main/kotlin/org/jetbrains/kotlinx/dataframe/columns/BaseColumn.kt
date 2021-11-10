@@ -21,7 +21,7 @@ public interface BaseColumn<out T> : ColumnReference<T> {
     public fun type(): KType
 
     public operator fun get(index: Int): T
-    public operator fun get(firstIndex: Int, vararg otherIndices: Int): BaseColumn<T> = slice(
+    public operator fun get(firstIndex: Int, vararg otherIndices: Int): BaseColumn<T> = get(
         headPlusIterable(
             firstIndex,
             otherIndices.asIterable()
@@ -39,7 +39,7 @@ public interface BaseColumn<out T> : ColumnReference<T> {
 
     public operator fun get(range: IntRange): BaseColumn<T>
 
-    public fun slice(indices: Iterable<Int>): BaseColumn<T>
+    public operator fun get(indices: Iterable<Int>): BaseColumn<T>
 
     override fun rename(newName: String): BaseColumn<T>
 
