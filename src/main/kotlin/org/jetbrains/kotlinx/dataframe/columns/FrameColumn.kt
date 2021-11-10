@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
-public interface FrameColumn<out T> : DataColumn<DataFrame<T>?> {
+public interface FrameColumn<out T> : DataColumn<DataFrame<T>> {
 
     public val schema: Lazy<DataFrameSchema>
 

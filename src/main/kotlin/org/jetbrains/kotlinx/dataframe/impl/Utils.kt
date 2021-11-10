@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -201,9 +202,9 @@ public inline fun <reified C> headPlusIterable(head: C, cols: Iterable<C>): Iter
 internal fun <T> DataFrame<T>.splitByIndices(
     startIndices: Sequence<Int>,
     emptyToNull: Boolean
-): Sequence<DataFrame<T>?> {
+): Sequence<DataFrame<T>> {
     return (startIndices + nrow).zipWithNext { start, endExclusive ->
-        if (emptyToNull && start == endExclusive) null
+        if (emptyToNull && start == endExclusive) DataFrame.empty().cast()
         else get(start until endExclusive)
     }
 }

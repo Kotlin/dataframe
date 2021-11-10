@@ -65,11 +65,11 @@ public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> = create
 
 public fun columnOf(vararg values: AnyBaseColumn): DataColumn<AnyRow> = columnOf(values.asIterable())
 
-public fun <T> columnOf(vararg frames: DataFrame<T>?): FrameColumn<T> = columnOf(frames.asIterable())
+public fun <T> columnOf(vararg frames: DataFrame<T>): FrameColumn<T> = columnOf(frames.asIterable())
 
 public fun columnOf(columns: Iterable<AnyBaseColumn>): DataColumn<AnyRow> = DataColumn.createColumnGroup("", dataFrameOf(columns)) as DataColumn<AnyRow>
 
-public fun <T> columnOf(frames: Iterable<DataFrame<T>?>): FrameColumn<T> = DataColumn.createFrameColumn("", frames.toList())
+public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> = DataColumn.createFrameColumn("", frames.toList())
 
 public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> = createColumn(values, getType<T>(), false)
 

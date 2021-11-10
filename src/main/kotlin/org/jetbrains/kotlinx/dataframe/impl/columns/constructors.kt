@@ -41,7 +41,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumn(type: KType?, name: String = "
     val (nullable, values) = computeValues(this as DataFrame<T>, expression)
     if (type == null) return guessColumnType(name, values)
     return when (type.classifier) {
-        DataFrame::class -> DataColumn.createFrameColumn(name, values as List<AnyFrame?>) as DataColumn<R>
+        DataFrame::class -> DataColumn.createFrameColumn(name, values as List<AnyFrame>) as DataColumn<R>
         DataRow::class -> DataColumn.createColumnGroup(name, (values as List<AnyRow>).concat()) as DataColumn<R>
         else -> DataColumn.createValueColumn(name, values, type.withNullability(nullable))
     }
@@ -70,7 +70,7 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
     values.all { it is AnyCol } -> DataColumn.createColumnGroup("", (values as Iterable<AnyCol>).toDataFrame()) as DataColumn<T>
     values.all { it == null || it is AnyFrame } -> DataColumn.createFrameColumn(
         "",
-        values.map { it as? AnyFrame }
+        values.map { it as? AnyFrame ?: DataFrame.empty() }
     ) as DataColumn<T>
     guessType -> guessColumnType("", values.asList(), suggestedType, suggestedTypeIsUpperBound = true).cast<T>()
     else -> DataColumn.createValueColumn("", values.toList(), suggestedType)
@@ -141,7 +141,7 @@ internal fun <T> guessColumnType(
         DataFrame::class -> {
             val frames = values.map {
                 when (it) {
-                    null -> null
+                    null -> DataFrame.empty()
                     is AnyFrame -> it
                     is AnyRow -> it.toDataFrame()
                     is List<*> -> (it as List<AnyRow>).toDataFrame()

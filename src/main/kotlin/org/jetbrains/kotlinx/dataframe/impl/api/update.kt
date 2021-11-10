@@ -58,7 +58,7 @@ internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> = when
             if (it == null) nulls = true
             else require(it is AnyFrame) { "Can not add value '$it' to FrameColumn" }
         }
-        val groups = (values as List<AnyFrame?>)
+        val groups = (values as List<AnyFrame>)
         DataColumn.createFrameColumn(name, groups, nulls) as DataColumn<T>
     }
     is ColumnGroup<*> -> {

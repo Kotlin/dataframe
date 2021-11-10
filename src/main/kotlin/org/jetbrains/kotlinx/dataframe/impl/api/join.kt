@@ -204,7 +204,7 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         val hasNulls = hasNulls[columnIndex]
         val newColumn = when (srcColumn.kind) {
             ColumnKind.Value -> DataColumn.createValueColumn(srcColumn.name, columnValues.asList(), srcColumn.type.withNullability(hasNulls))
-            ColumnKind.Frame -> DataColumn.createFrameColumn(srcColumn.name, columnValues.asList() as List<AnyFrame?>)
+            ColumnKind.Frame -> DataColumn.createFrameColumn(srcColumn.name, columnValues.asList() as List<AnyFrame>)
             ColumnKind.Group -> error("Unexpected MapColumn at path ${srcColumn.path}")
         }
         srcColumn.path to newColumn

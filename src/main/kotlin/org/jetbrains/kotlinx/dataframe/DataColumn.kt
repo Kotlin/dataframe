@@ -58,7 +58,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
         public fun <T> createFrameColumn(
             name: String,
-            groups: List<DataFrame<T>?>,
+            groups: List<DataFrame<T>>,
             hasNulls: Boolean? = null,
             schema: Lazy<DataFrameSchema>? = null
         ): FrameColumn<T> = FrameColumnImpl(name, groups, hasNulls, schema)
@@ -74,7 +74,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
             return when (type.toColumnKind()) {
                 ColumnKind.Value -> createValueColumn(name, values, type, checkForNulls)
                 ColumnKind.Group -> createColumnGroup(name, (values as List<AnyRow?>).concat()).asDataColumn().cast()
-                ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame?>, hasNulls = if (checkForNulls) null else type.isMarkedNullable).asDataColumn().cast()
+                ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame>, hasNulls = if (checkForNulls) null else type.isMarkedNullable).asDataColumn().cast()
             }
         }
 
