@@ -16,9 +16,7 @@ import org.jetbrains.kotlinx.dataframe.pathOf
 
 internal class GroupedDataRowImpl<T, G>(private val row: DataRow<T>, private val frameCol: FrameColumn<G>) : GroupedDataRow<T, G>, DataRow<T> by row {
 
-    override fun group() = groupOrNull()!!
-
-    override fun groupOrNull() = frameCol[row.index()]
+    override fun group() = frameCol[row.index()]
 }
 
 internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSelector<T, *>): GroupedDataFrame<T, T> {

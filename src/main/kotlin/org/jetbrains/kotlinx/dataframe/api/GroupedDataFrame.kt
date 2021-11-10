@@ -16,8 +16,6 @@ public typealias GroupedRowFilter<T, G> = GroupedRowSelector<T, G, Boolean>
 public interface GroupedDataRow<out T, out G> : DataRow<T> {
 
     public fun group(): DataFrame<G>
-
-    public fun groupOrNull(): DataFrame<G>?
 }
 
 public val <T, G> GroupedDataRow<T, G>.group: DataFrame<G> get() = group()
