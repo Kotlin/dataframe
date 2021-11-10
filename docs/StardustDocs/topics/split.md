@@ -14,9 +14,8 @@ Reverse operation to [merge](merge.md)
 
 ```kotlin
 df.split { columns }
-    [.by(delimeters) | .by { splitter }] // how to split cell value
-    [.inward()] // nest resulting columns into original column
-    .into(columnNames) [ { columnNamesGenerator } ]
+    [.by(delimeters) | .with(regex) | .with { splitter }] // how to split
+    .into(columnNames) [ { columnNamesGenerator } ] | .inward(columnNames) [ { columnNamesGenerator } ] // where to store
 
 splitter = DataRow.(T) -> Iterable<Any>
 columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
@@ -69,8 +68,18 @@ df.split { "name"["lastName"] }.by(" ").inward { "word$it" }
 </tab></tabs>
 <!---END-->
 
+`String` columns can be splitted with [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
+
+<!---FUN splitRegex-->
+
+```kotlin
+merged.split { name }.with("""(.*) \((.*)\)""".toRegex()).inward("firstName", "lastName")
+```
+
+<!---END-->
+
 ## Split vertically
-Returns `DataFrame` with duplicated rows for every splitted value. 
+Returns `DataFrame` with duplicated rows for every splitted value. Use `.intoRows()` terminal operation to spread splitted values vertically.
 
 <!---FUN splitIntoRows-->
 <tabs>

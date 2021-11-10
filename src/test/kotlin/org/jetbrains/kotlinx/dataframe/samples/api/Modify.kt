@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.length
 import org.jetbrains.kotlinx.dataframe.api.lowercase
+import org.jetbrains.kotlinx.dataframe.api.merge
 import org.jetbrains.kotlinx.dataframe.api.mergeRows
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
@@ -242,6 +243,15 @@ class Modify : TestBase() {
         df.split { name }.with { it.values() }.into("nameParts")
 
         df.split { "name"["lastName"] }.by(" ").inward { "word$it" }
+        // SampleEnd
+    }
+
+    @Test
+    fun splitRegex() {
+        val merged = df.merge { name.lastName and name.firstName }.with { it[0] + " (" + it[1] + ")" }.into("name")
+        val name by column<String>()
+        // SampleStart
+        merged.split { name }.with("""(.*) \((.*)\)""".toRegex()).inward("firstName", "lastName")
         // SampleEnd
     }
 
