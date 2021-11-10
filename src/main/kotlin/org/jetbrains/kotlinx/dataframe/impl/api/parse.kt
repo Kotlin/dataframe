@@ -21,6 +21,8 @@ import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.io.isURL
 import org.jetbrains.kotlinx.dataframe.typeClass
 import java.net.URL
+import java.text.NumberFormat
+import java.text.ParseException
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -31,8 +33,16 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
-internal class StringParser<T : Any>(val type: KType, val parse: (String) -> T?) {
-    fun toConverter(): TypeConverter = { parse(it as String) }
+internal open class StringParser<T : Any>(val type: KType, val parse: ((String) -> T?)?) {
+    open fun toConverter(): TypeConverter = {
+        parse?.invoke(it as String)
+    }
+}
+
+internal class StringParserWithFormat<T : Any>(type: KType, val parseWithLocale: (String, NumberFormat) -> T?) : StringParser<T>(type, null) {
+    override fun toConverter(): TypeConverter = {
+        parseWithLocale(it as String, it as NumberFormat)
+    }
 }
 
 internal object Parsers : DataFrameParserOptions {
@@ -86,28 +96,34 @@ internal object Parsers : DataFrameParserOptions {
             null
         }
 
-    private fun String.parseDouble() =
+    private fun String.parseDouble(format: NumberFormat) =
         when (uppercase(Locale.getDefault())) {
             "NAN" -> Double.NaN
             "INF" -> Double.POSITIVE_INFINITY
             "-INF" -> Double.NEGATIVE_INFINITY
             "INFINITY" -> Double.POSITIVE_INFINITY
             "-INFINITY" -> Double.NEGATIVE_INFINITY
-            else -> toDoubleOrNull()
+            else -> try {
+                format.parse(this).toDouble()
+            } catch (e: ParseException) {
+                null
+            }
         }
 
     inline fun <reified T : Any> stringParser(noinline body: (String) -> T?) = StringParser(getType<T>(), body)
 
+    inline fun <reified T : Any> stringParserWithFormat(noinline body: (String, NumberFormat) -> T?) = StringParserWithFormat(getType<T>(), body)
+
     val All = listOf(
         stringParser { it.toIntOrNull() },
         stringParser { it.toLongOrNull() },
-        stringParser { it.parseDouble() },
         stringParser { it.toBooleanOrNull() },
         stringParser { it.toBigDecimalOrNull() },
         stringParser { it.toLocalDateOrNull() },
         stringParser { it.toLocalTimeOrNull() },
         stringParser { it.toLocalDateTimeOrNull() },
-        stringParser { it.toUrlOrNull() }
+        stringParser { it.toUrlOrNull() },
+        stringParserWithFormat { s, numberFormat -> s.parseDouble(numberFormat) }
     )
 
     private val parsersMap = All.associateBy { it.type }
@@ -123,9 +139,9 @@ internal object Parsers : DataFrameParserOptions {
     inline fun <reified T : Any> get(): StringParser<T>? = get(getType<T>()) as? StringParser<T>
 }
 
-internal fun DataColumn<String?>.tryParseImpl(): DataColumn<*> {
+internal fun DataColumn<String?>.tryParseImpl(locale: Locale): DataColumn<*> {
     if (allNulls()) return this
-
+    val format = NumberFormat.getInstance(locale)
     var parserId = 0
     val parsedValues = mutableListOf<Any?>()
 
@@ -135,7 +151,12 @@ internal fun DataColumn<String?>.tryParseImpl(): DataColumn<*> {
         for (str in values) {
             if (str == null) parsedValues.add(null)
             else {
-                val res = parser.parse(str)
+                val res = if (parser is StringParserWithFormat) {
+                    parser.parseWithLocale.invoke(str, format)
+                } else {
+                    parser.parse?.invoke(str)
+                }
+
                 if (res == null) {
                     parserId++
                     break
@@ -151,7 +172,7 @@ internal fun DataColumn<String?>.tryParseImpl(): DataColumn<*> {
 internal fun <T : Any> DataColumn<String?>.parse(parser: StringParser<T>): DataColumn<T?> {
     val parsedValues = values.map {
         it?.let {
-            parser.parse(it) ?: throw Exception("Couldn't parse '$it' to type ${parser.type}")
+            parser.parse?.invoke(it) ?: throw Exception("Couldn't parse '$it' to type ${parser.type}")
         }
     }
     return DataColumn.createValueColumn(name(), parsedValues, parser.type.withNullability(hasNulls)) as DataColumn<T?>
