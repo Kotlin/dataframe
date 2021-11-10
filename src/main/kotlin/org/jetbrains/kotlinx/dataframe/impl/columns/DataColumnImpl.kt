@@ -41,7 +41,7 @@ internal abstract class DataColumnImpl<T>(
 
     override fun hashCode() = hashCode
 
-    override fun slice(indices: Iterable<Int>): DataColumn<T> {
+    override fun get(indices: Iterable<Int>): DataColumn<T> {
         var nullable = false
         val newValues = indices.map {
             val value = values[it]

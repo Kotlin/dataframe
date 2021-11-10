@@ -87,7 +87,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
     override fun distinct(): DataColumn<T>
 
-    override fun slice(indices: Iterable<Int>): DataColumn<T>
+    override fun get(indices: Iterable<Int>): DataColumn<T>
 
     override fun rename(newName: String): DataColumn<T>
 

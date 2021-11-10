@@ -42,7 +42,7 @@ internal open class ColumnGroupImpl<T>(override val df: DataFrame<T>, val name: 
 
     override fun defaultValue() = null
 
-    override fun slice(indices: Iterable<Int>) = ColumnGroupImpl(df[indices], name)
+    override fun get(indices: Iterable<Int>) = ColumnGroupImpl(df[indices], name)
 
     override fun addParent(parent: ColumnGroup<*>): DataColumn<DataRow<T>> = ColumnGroupWithParent(parent, this)
 

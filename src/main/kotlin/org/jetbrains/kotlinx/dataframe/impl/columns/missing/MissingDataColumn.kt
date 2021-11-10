@@ -28,7 +28,7 @@ internal abstract class MissingDataColumn<T> : DataColumnInternal<T> {
 
     override fun get(columnName: String) = throw UnsupportedOperationException()
 
-    override fun slice(indices: Iterable<Int>) = throw UnsupportedOperationException()
+    override fun get(indices: Iterable<Int>) = throw UnsupportedOperationException()
 
     override fun toSet() = throw UnsupportedOperationException()
 

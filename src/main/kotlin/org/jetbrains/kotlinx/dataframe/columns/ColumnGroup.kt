@@ -11,7 +11,7 @@ public interface ColumnGroup<out T> : BaseColumn<DataRow<T>>, DataFrame<T> {
 
     override fun get(index: Int): DataRow<T>
 
-    override fun slice(indices: Iterable<Int>): ColumnGroup<T>
+    override fun get(indices: Iterable<Int>): ColumnGroup<T>
 
     override fun get(columnName: String): AnyCol
 

@@ -32,7 +32,7 @@ public fun <T, C> DataFrame<T>.getColumnWithPath(selector: ColumnSelector<T, C>)
 public fun <T, C> DataFrame<T>.columns(selector: ColumnsSelector<T, C>): List<DataColumn<C>> = get(selector)
 public fun <T> DataFrame<T>.getColumnIndex(col: AnyCol): Int = getColumnIndex(col.name())
 public fun <T> DataFrame<T>.getRows(range: IntRange): DataFrame<T> = if (range == indices()) this else columns().map { col -> col[range] }.toDataFrame().cast()
-public fun <T> DataFrame<T>.getRows(indices: Iterable<Int>): DataFrame<T> = columns().map { col -> col.slice(indices) }.toDataFrame().cast()
+public fun <T> DataFrame<T>.getRows(indices: Iterable<Int>): DataFrame<T> = columns().map { col -> col[indices] }.toDataFrame().cast()
 public fun <T> DataFrame<T>.getOrNull(index: Int): DataRow<T>? = if (index < 0 || index >= nrow()) null else get(index)
 
 public fun <T> ColumnsContainer<T>.frameColumn(columnPath: ColumnPath): FrameColumn<*> = get(columnPath).asFrameColumn()
