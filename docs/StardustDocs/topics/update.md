@@ -8,7 +8,7 @@ Returns `DataFrame` with changed values in some cells. Column types can not be c
 update { columns }
     [.where { rowCondition } ]
     [.at(rowIndices) ] 
-     .with { rowExpression } || .withNull() || .withConst(value) || .withRowCol { rowColExpression }
+     .with { rowExpression } | .withNull() | .withConst(value) | .withRowCol { rowColExpression }
 
 rowCondition: DataRow.(OldValue) -> Boolean
 rowExpression: DataRow.(OldValue) -> NewValue

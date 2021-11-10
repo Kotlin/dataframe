@@ -2087,7 +2087,7 @@ class DataFrameTests : BaseTest() {
         @DataSchema
         data class Target(val name: String, val city: String?, val info: Info)
 
-        val grouped = df.group { age and weight }.into("info")
+        val grouped = typed.group { age and weight }.into("info")
 
         val list = grouped.toListOf<Target>()
         list shouldBe grouped.typed<Target>().toList()
@@ -2095,5 +2095,19 @@ class DataFrameTests : BaseTest() {
         val listDf = list.toDataFrame(depth = 2)
         listDf shouldBe grouped.sortColumnsBy(dfs = true) { it.name }
         listDf.toList() shouldBe list
+    }
+
+    @Test
+    fun splitWithRegex() {
+        val data by column<String>()
+        val merged = typed.merge { name and city }.by("|").into(data)
+        merged.split { data }.with("""(.*)\|(.*)""".toRegex()).into("name", "city") shouldBe
+            typed.update { city }.with { it ?: "null" }.move { city }.to(1)
+    }
+
+    @Test
+    fun splitIntoThisAndNewColumn() {
+        val splitted = typed.split { name }.with { listOf(it.dropLast(1), it.last()) }.into("name", "lastChar")
+        splitted.columnNames().sorted() shouldBe (typed.columnNames() + "lastChar").sorted()
     }
 }

@@ -26,7 +26,9 @@ val age by column<Int>()
 val weight by column<Int?>()
 val name by columnGroup()
 val firstName by name.column<String>()
+val tags by column<List<Int>>()
 
+df.sortBy { tags.map { it.size } }
 df.sortBy { age }
 df.sortBy { age and firstName }
 df.sortBy { weight.nullsLast }

@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
+import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -282,10 +283,11 @@ public class SplitClause<T, C>(
     public val columns: ColumnsSelector<T, C?>
 ) : Split<T, C>
 
-public inline fun <T, C, reified R> Split<T, C>.with(noinline splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> =
-    with(
-        getType<R>(), splitter
-    )
+public inline fun <T, C, reified R> Split<T, C>.with(noinline splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> = with(getType<R>(), splitter)
+
+public fun <T> Split<T, String?>.with(regex: Regex): SplitWithTransform<T, String?, String?> = with {
+    it?.let { regex.matchEntire(it)?.groups?.drop(1)?.map { it?.value } } ?: emptyList<String>()
+}
 
 @PublishedApi
 internal fun <T, C, R> Split<T, C>.with(type: KType, splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> {
@@ -390,6 +392,7 @@ public class MergeClause<T, C, R>(
 )
 
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
+public inline fun <T, C, reified R> MergeClause<T, C, R>.into(column: ColumnAccessor<R>): DataFrame<T> = into(column.path())
 
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnPath: ColumnPath): DataFrame<T> {
     val grouped = df.move(selector).under { columnPath }

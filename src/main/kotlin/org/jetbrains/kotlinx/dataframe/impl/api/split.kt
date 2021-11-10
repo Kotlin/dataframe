@@ -20,10 +20,10 @@ internal fun <T, C, R> splitImpl(
     clause: SplitClauseWithTransform<T, C, R>,
     columnNamesGenerator: ColumnWithPath<C>.(Int) -> List<String>
 ): DataFrame<T> {
-    val nameGenerator = clause.df.nameGenerator()
     val nrow = clause.df.nrow()
 
     val removeResult = clause.df.removeImpl(clause.columns)
+    val nameGenerator = removeResult.df.nameGenerator()
 
     val toInsert = removeResult.removedColumns.flatMap { node ->
 
