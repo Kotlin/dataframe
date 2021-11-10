@@ -11,8 +11,6 @@ public interface ColumnGroup<out T> : BaseColumn<DataRow<T>>, DataFrame<T> {
 
     override fun get(index: Int): DataRow<T>
 
-    override fun slice(range: IntRange): ColumnGroup<T>
-
     override fun slice(indices: Iterable<Int>): ColumnGroup<T>
 
     override fun slice(mask: BooleanArray): ColumnGroup<T>
@@ -24,6 +22,8 @@ public interface ColumnGroup<out T> : BaseColumn<DataRow<T>>, DataFrame<T> {
     override fun distinct(): ColumnGroup<T>
 
     override fun get(firstIndex: Int, vararg otherIndices: Int): ColumnGroup<T>
+
+    override fun get(range: IntRange): ColumnGroup<T>
 
     override fun rename(newName: String): ColumnGroup<T>
 

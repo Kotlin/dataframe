@@ -64,7 +64,7 @@ internal abstract class DataColumnImpl<T>(
         return createWithValues(res as List<T>, hasNulls)
     }
 
-    override fun slice(range: IntRange) = createWithValues(values.subList(range.start, range.endInclusive + 1))
+    override operator fun get(range: IntRange) = createWithValues(values.subList(range.start, range.endInclusive + 1))
 
     protected abstract fun createWithValues(values: List<T>, hasNulls: Boolean? = null): DataColumn<T>
 

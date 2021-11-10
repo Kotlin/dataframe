@@ -39,8 +39,6 @@ internal open class ColumnGroupImpl<T>(override val df: DataFrame<T>, val name: 
 
     override fun get(firstIndex: Int, vararg otherIndices: Int): ColumnGroup<T> = DataColumn.createColumnGroup(name, df.get(firstIndex, *otherIndices))
 
-    override fun slice(range: IntRange) = ColumnGroupImpl(df[range], name)
-
     override fun rename(newName: String) = ColumnGroupImpl(df, newName)
 
     override fun defaultValue() = null
@@ -78,6 +76,8 @@ internal open class ColumnGroupImpl<T>(override val df: DataFrame<T>, val name: 
     override fun forceResolve() = ResolvingColumnGroup(df, name)
 
     override fun getValue(row: AnyRow) = resolveFor(row.df())[row.index()]
+
+    override fun get(range: IntRange): ColumnGroupImpl<T> = ColumnGroupImpl(df[range], name)
 }
 
 internal class ResolvingColumnGroup<T>(df: DataFrame<T>, name: String) : ColumnGroupImpl<T>(df, name) {
