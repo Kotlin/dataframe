@@ -45,6 +45,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
+import java.util.*
+import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
@@ -232,11 +234,19 @@ public interface DataFrameParserOptions {
     public fun addDateTimeFormat(format: String)
 }
 
-public fun DataColumn<String?>.tryParse(): DataColumn<*> = tryParseImpl()
+public fun DataColumn<String?>.tryParse(locale: Locale = Locale.getDefault()): DataColumn<*> = tryParseImpl(locale)
 
-public fun <T> DataFrame<T>.parse(): DataFrame<T> = parse { dfs() }
+public fun <T> DataFrame<T>.parse(locale: Locale = Locale.getDefault()): DataFrame<T> = parse({ dfs() }, locale)
 
-public fun DataColumn<String?>.parse(): DataColumn<*> = tryParse().also { if (it.typeClass == String::class) error("Can't guess column type") }
+public fun <T> DataFrame<T>.parse(columns: ColumnsSelector<T, Any?>, locale: Locale): DataFrame<T> = convert(columns).to {
+    when {
+        it.isFrameColumn() -> it.castTo<AnyFrame?>().parse()
+        it.typeClass == String::class -> it.castTo<String?>().tryParse(locale)
+        else -> it
+    }
+}
+
+public fun DataColumn<String?>.parse(locale: Locale = Locale.getDefault()): DataColumn<*> = tryParse(locale).also { if (it.typeClass == String::class) error("Can't guess column type") }
 
 @JvmName("tryParseAnyFrame?")
 public fun DataColumn<AnyFrame?>.parse(): DataColumn<AnyFrame?> = map { it?.parse() }

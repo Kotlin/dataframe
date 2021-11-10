@@ -27,7 +27,9 @@ import java.nio.charset.Charset
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.util.*
 import java.util.zip.GZIPInputStream
+import kotlin.collections.ArrayList
 import kotlin.reflect.KClass
 
 public enum class CSVType(public val format: CSVFormat) {
@@ -36,6 +38,8 @@ public enum class CSVType(public val format: CSVFormat) {
 }
 
 private val defaultCharset = Charsets.UTF_8
+
+private val defaultLocale = Locale.getDefault()
 
 private val setOfNullStrings = setOf("NA", "N/A", "null")
 
@@ -82,7 +86,8 @@ public fun DataFrame.Companion.readCSV(
     skipLines: Int = 0,
     readLines: Int? = null,
     duplicate: Boolean = true,
-    charset: Charset = Charsets.UTF_8
+    charset: Charset = Charsets.UTF_8,
+    locale: Locale = Locale.getDefault()
 ): DataFrame<*> =
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
@@ -90,7 +95,8 @@ public fun DataFrame.Companion.readCSV(
             headers, nullStrings, isCompressed(fileOrUrl),
             CSVType.DEFAULT, colTypes,
             skipLines, readLines,
-            duplicate, charset
+            duplicate, charset,
+            locale
         )
     }
 
@@ -103,14 +109,16 @@ public fun DataFrame.Companion.readCSV(
     skipLines: Int = 0,
     readLines: Int? = null,
     duplicate: Boolean = true,
-    charset: Charset = Charsets.UTF_8
+    charset: Charset = Charsets.UTF_8,
+    locale: Locale = Locale.getDefault()
 ): DataFrame<*> =
     readDelim(
         FileInputStream(file), delimiter,
         headers, nullStrings, isCompressed(file),
         CSVType.DEFAULT, colTypes,
         skipLines, readLines,
-        duplicate, charset
+        duplicate, charset,
+        locale
     )
 
 public fun DataFrame.Companion.readCSV(
@@ -122,14 +130,16 @@ public fun DataFrame.Companion.readCSV(
     skipLines: Int = 0,
     readLines: Int? = null,
     duplicate: Boolean = true,
-    charset: Charset = Charsets.UTF_8
+    charset: Charset = Charsets.UTF_8,
+    locale: Locale = Locale.getDefault()
 ): DataFrame<*> =
     readDelim(
         url.openStream(), delimiter,
         headers, nullStrings, isCompressed(url),
         CSVType.DEFAULT, colTypes,
         skipLines, readLines,
-        duplicate, charset
+        duplicate, charset,
+        locale
     )
 
 public fun DataFrame.Companion.readTSV(
@@ -141,7 +151,8 @@ public fun DataFrame.Companion.readTSV(
     skipLines: Int = 0,
     readLines: Int? = null,
     duplicate: Boolean = true,
-    charset: Charset = Charsets.UTF_8
+    charset: Charset = Charsets.UTF_8,
+    locale: Locale = Locale.getDefault()
 ): DataFrame<*> =
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
@@ -149,7 +160,8 @@ public fun DataFrame.Companion.readTSV(
             headers, nullStrings, isCompressed(fileOrUrl),
             CSVType.TDF, colTypes,
             skipLines, readLines,
-            duplicate, charset
+            duplicate, charset,
+            locale
         )
     }
 
@@ -209,14 +221,15 @@ public fun DataFrame.Companion.readDelim(
     skipLines: Int = 0,
     readLines: Int? = null,
     duplicate: Boolean = true,
-    charset: Charset = defaultCharset
+    charset: Charset = defaultCharset,
+    locale: Locale = defaultLocale
 ): AnyFrame =
     if (isCompressed) {
         InputStreamReader(GZIPInputStream(inStream), charset)
     } else {
         BufferedReader(InputStreamReader(inStream, charset))
     }.run {
-        readDelim(this, getFormat(csvType, delimiter, headers, duplicate), nullStrings, colTypes, skipLines, readLines)
+        readDelim(this, getFormat(csvType, delimiter, headers, duplicate), nullStrings, colTypes, skipLines, readLines, locale)
     }
 
 internal fun isURL(fileOrUrl: String): Boolean = listOf("http:", "https:", "ftp:").any { fileOrUrl.startsWith(it) }
@@ -251,7 +264,8 @@ public fun DataFrame.Companion.readDelim(
     nullStrings: Set<String> = setOfNullStrings,
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
-    readLines: Int? = null
+    readLines: Int? = null,
+    locale: Locale = Locale.getDefault()
 ): AnyFrame {
     var reader = reader
     if (skipLines > 0) {
@@ -286,7 +300,7 @@ public fun DataFrame.Companion.readDelim(
             val values = records.map { it[colIndex]?.emptyAsNull(nullStrings).also { if (it == null) hasNulls = true } }
             val column = column(colName, values, hasNulls)
             when (colType) {
-                null -> column.tryParse()
+                null -> column.tryParse(locale)
                 ColType.String -> column
                 else -> {
                     val parser = Parsers[colType.toType()]!!
