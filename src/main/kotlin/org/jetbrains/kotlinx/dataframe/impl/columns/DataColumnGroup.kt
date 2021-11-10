@@ -15,8 +15,6 @@ internal interface DataColumnGroup<out T> : ColumnGroup<T>, DataColumn<DataRow<T
 
     override fun slice(indices: Iterable<Int>): DataColumnGroup<T>
 
-    override fun slice(mask: BooleanArray): DataColumnGroup<T>
-
     override fun distinct(): DataColumnGroup<T>
 
     override fun get(range: IntRange): DataColumnGroup<T>

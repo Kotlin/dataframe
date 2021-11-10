@@ -51,19 +51,6 @@ internal abstract class DataColumnImpl<T>(
         return createWithValues(newValues, nullable)
     }
 
-    override fun slice(mask: BooleanArray): DataColumn<T> {
-        val res = ArrayList<T?>(values.size)
-        var hasNulls = false
-        for (index in 0 until values.size) {
-            if (mask[index]) {
-                val value = this[index]
-                if (!hasNulls && value == null) hasNulls = true
-                res.add(value)
-            }
-        }
-        return createWithValues(res as List<T>, hasNulls)
-    }
-
     override operator fun get(range: IntRange) = createWithValues(values.subList(range.start, range.endInclusive + 1))
 
     protected abstract fun createWithValues(values: List<T>, hasNulls: Boolean? = null): DataColumn<T>

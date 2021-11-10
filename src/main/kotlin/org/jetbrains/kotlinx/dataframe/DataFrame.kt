@@ -59,7 +59,6 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = getColumns(false, columns)
 
     public operator fun get(indices: Iterable<Int>): DataFrame<T> = getRows(indices)
-    public operator fun get(mask: BooleanArray): DataFrame<T> = getRows(mask)
     public operator fun get(range: IntRange): DataFrame<T> = getRows(range)
     public operator fun get(vararg ranges: IntRange): DataFrame<T> = getRows(ranges.asSequence().flatMap { it.asSequence() }.asIterable())
     public operator fun get(columnRange: ClosedRange<String>): DataFrame<T> = select { columnRange.start..columnRange.endInclusive }
