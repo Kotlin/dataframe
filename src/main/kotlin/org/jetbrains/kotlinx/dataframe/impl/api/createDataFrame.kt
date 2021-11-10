@@ -143,7 +143,7 @@ internal fun convertToDataFrame(
                                 convertToDataFrame(it, elementClass, emptyList(), excludes, preserves, depth - 1)
                             }
                         }
-                        DataColumn.createFrameColumn(it.name, frames, nullable)
+                        DataColumn.createFrameColumn(it.name, frames)
                     }
                 }
             }

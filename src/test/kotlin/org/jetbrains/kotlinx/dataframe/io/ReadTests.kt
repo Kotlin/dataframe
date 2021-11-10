@@ -69,7 +69,7 @@ class ReadTests {
         df.ncol() shouldBe 1
         val empty = df[0][0] as AnyFrame
         empty.nrow() shouldBe 0
-        empty.ncol() shouldBe 1
+        empty.ncol() shouldBe 0
     }
 
     @Test

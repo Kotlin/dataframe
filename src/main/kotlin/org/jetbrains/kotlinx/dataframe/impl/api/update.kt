@@ -53,13 +53,11 @@ internal fun <T, C> DataColumn<C>.updateImpl(
  */
 internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> = when (this) {
     is FrameColumn<*> -> {
-        var nulls = false
         values.forEach {
-            if (it == null) nulls = true
-            else require(it is AnyFrame) { "Can not add value '$it' to FrameColumn" }
+            require(it is AnyFrame) { "Can not add value '$it' to FrameColumn" }
         }
         val groups = (values as List<AnyFrame>)
-        DataColumn.createFrameColumn(name, groups, nulls) as DataColumn<T>
+        DataColumn.createFrameColumn(name, groups) as DataColumn<T>
     }
     is ColumnGroup<*> -> {
         this.columns().mapIndexed { colIndex, col ->

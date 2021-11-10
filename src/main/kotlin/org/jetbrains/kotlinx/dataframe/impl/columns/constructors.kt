@@ -148,7 +148,7 @@ internal fun <T> guessColumnType(
                     else -> throw IllegalStateException()
                 }
             }
-            DataColumn.createFrameColumn(name, frames, type.isMarkedNullable).asDataColumn().cast()
+            DataColumn.createFrameColumn(name, frames).asDataColumn().cast()
         }
         Many::class -> {
             val nullable = type.isMarkedNullable

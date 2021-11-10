@@ -51,17 +51,15 @@ public interface DataColumn<out T> : BaseColumn<T> {
         public fun <T> createFrameColumn(
             name: String,
             df: DataFrame<T>,
-            startIndices: Iterable<Int>,
-            emptyToNull: Boolean
+            startIndices: Iterable<Int>
         ): FrameColumn<T> =
-            FrameColumnImpl(name, df.splitByIndices(startIndices.asSequence(), emptyToNull).toList(), emptyToNull, lazy { df.schema() })
+            FrameColumnImpl(name, df.splitByIndices(startIndices.asSequence()).toList(), lazy { df.schema() })
 
         public fun <T> createFrameColumn(
             name: String,
             groups: List<DataFrame<T>>,
-            hasNulls: Boolean? = null,
             schema: Lazy<DataFrameSchema>? = null
-        ): FrameColumn<T> = FrameColumnImpl(name, groups, hasNulls, schema)
+        ): FrameColumn<T> = FrameColumnImpl(name, groups, schema)
 
         public inline fun <reified T> createValueColumn(name: String, values: List<T>, checkForNulls: Boolean = false): ValueColumn<T> {
             val type = if (checkForNulls) getType<T>().withNullability(values.anyNull()) else getType<T>()
@@ -74,7 +72,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
             return when (type.toColumnKind()) {
                 ColumnKind.Value -> createValueColumn(name, values, type, checkForNulls)
                 ColumnKind.Group -> createColumnGroup(name, (values as List<AnyRow?>).concat()).asDataColumn().cast()
-                ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame>, hasNulls = if (checkForNulls) null else type.isMarkedNullable).asDataColumn().cast()
+                ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame>).asDataColumn().cast()
             }
         }
 

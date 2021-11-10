@@ -99,7 +99,6 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: Co
                 if (col.isFrameColumn()) DataColumn.createFrameColumn(
                     col.name,
                     collector.values as List<AnyFrame>,
-                    collector.hasNulls,
                     col.asFrameColumn().schema // keep original schema
                 )
                 else collector.toColumn(col.name)

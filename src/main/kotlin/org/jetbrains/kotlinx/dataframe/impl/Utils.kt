@@ -200,11 +200,10 @@ public inline fun <reified C> headPlusIterable(head: C, cols: Iterable<C>): Iter
     (listOf(head) + cols.asIterable())
 
 internal fun <T> DataFrame<T>.splitByIndices(
-    startIndices: Sequence<Int>,
-    emptyToNull: Boolean
+    startIndices: Sequence<Int>
 ): Sequence<DataFrame<T>> {
     return (startIndices + nrow).zipWithNext { start, endExclusive ->
-        if (emptyToNull && start == endExclusive) DataFrame.empty().cast()
+        if (start == endExclusive) DataFrame.empty().cast()
         else get(start until endExclusive)
     }
 }

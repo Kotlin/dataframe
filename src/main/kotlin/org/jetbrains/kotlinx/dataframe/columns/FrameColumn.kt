@@ -11,4 +11,6 @@ public interface FrameColumn<out T> : DataColumn<DataFrame<T>> {
     override fun distinct(): FrameColumn<T>
 
     override fun kind(): ColumnKind = ColumnKind.Frame
+
+    override fun get(indices: Iterable<Int>): FrameColumn<T>
 }

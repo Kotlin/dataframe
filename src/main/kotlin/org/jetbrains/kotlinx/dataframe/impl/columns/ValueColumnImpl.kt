@@ -29,7 +29,15 @@ internal open class ValueColumnImpl<T>(
         return DataColumn.createValueColumn(name, values, type.withNullability(nulls))
     }
 
-    override fun get(indices: Iterable<Int>): ValueColumn<T> = super<DataColumnImpl>.get(indices) as ValueColumn<T>
+    override fun get(indices: Iterable<Int>): ValueColumn<T> {
+        var nullable = false
+        val newValues = indices.map {
+            val value = values[it]
+            if (value == null) nullable = true
+            value
+        }
+        return createWithValues(newValues, nullable)
+    }
 
     override operator fun get(range: IntRange): ValueColumn<T> = super<DataColumnImpl>.get(range) as ValueColumn<T>
 
