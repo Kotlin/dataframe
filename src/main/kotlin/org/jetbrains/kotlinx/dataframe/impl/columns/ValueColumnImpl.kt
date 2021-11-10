@@ -24,10 +24,14 @@ internal open class ValueColumnImpl<T>(
 
     override fun addParent(parent: ColumnGroup<*>): DataColumn<T> = ValueColumnWithParent(parent, this)
 
-    override fun createWithValues(values: List<T>, hasNulls: Boolean?): DataColumn<T> {
+    override fun createWithValues(values: List<T>, hasNulls: Boolean?): ValueColumn<T> {
         val nulls = hasNulls ?: values.any { it == null }
         return DataColumn.createValueColumn(name, values, type.withNullability(nulls))
     }
+
+    override fun get(indices: Iterable<Int>): ValueColumn<T> = super<DataColumnImpl>.get(indices) as ValueColumn<T>
+
+    override operator fun get(range: IntRange): ValueColumn<T> = super<DataColumnImpl>.get(range) as ValueColumn<T>
 
     override fun defaultValue() = defaultValue
 
