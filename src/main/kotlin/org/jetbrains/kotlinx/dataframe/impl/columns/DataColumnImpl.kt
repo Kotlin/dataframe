@@ -41,16 +41,6 @@ internal abstract class DataColumnImpl<T>(
 
     override fun hashCode() = hashCode
 
-    override fun get(indices: Iterable<Int>): DataColumn<T> {
-        var nullable = false
-        val newValues = indices.map {
-            val value = values[it]
-            if (value == null) nullable = true
-            value
-        }
-        return createWithValues(newValues, nullable)
-    }
-
     override operator fun get(range: IntRange) = createWithValues(values.subList(range.start, range.endInclusive + 1))
 
     protected abstract fun createWithValues(values: List<T>, hasNulls: Boolean? = null): DataColumn<T>

@@ -106,7 +106,7 @@ internal fun fromJsonList(records: List<*>): AnyFrame {
                         val values = col.values.asList().splitByIndices(startIndices.asSequence()).toMany()
                         DataColumn.createValueColumn(colName, values, Many::class.createType(listOf(KTypeProjection.invariant(elementType))))
                     }
-                    else -> DataColumn.createFrameColumn(colName, parsed, startIndices, false)
+                    else -> DataColumn.createFrameColumn(colName, parsed, startIndices)
                 }
             }
             else -> {

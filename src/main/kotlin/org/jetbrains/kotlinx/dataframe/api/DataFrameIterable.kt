@@ -59,7 +59,7 @@ public fun <T> DataFrame<T>.shuffle(): DataFrame<T> = getRows((0 until nrow()).s
 
 public fun <T> DataFrame<T>.chunked(size: Int): FrameColumn<T> {
     val startIndices = (0 until nrow() step size)
-    return DataColumn.createFrameColumn("", this, startIndices, false)
+    return DataColumn.createFrameColumn("", this, startIndices)
 }
 
 // region isEmpty

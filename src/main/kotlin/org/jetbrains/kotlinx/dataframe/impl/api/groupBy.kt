@@ -54,7 +54,7 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
         start
     }
 
-    val groupedColumn = DataColumn.createFrameColumn(GroupedDataFrame.groupedColumnAccessor.name(), sorted, startIndices.asIterable(), false)
+    val groupedColumn = DataColumn.createFrameColumn(GroupedDataFrame.groupedColumnAccessor.name(), sorted, startIndices.asIterable())
 
     val df = keyColumnsDf + groupedColumn
     return GroupedDataFrameImpl(df, groupedColumn, columns)
