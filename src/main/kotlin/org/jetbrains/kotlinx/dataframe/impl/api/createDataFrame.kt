@@ -137,9 +137,11 @@ internal fun convertToDataFrame(
                         DataColumn.createValueColumn(it.name, manyValues, manyType)
                     } else {
                         val frames = values.map {
-                            if (it is Iterable<*>) {
+                            if (it == null) DataFrame.empty()
+                            else {
+                                require(it is Iterable<*>)
                                 convertToDataFrame(it, elementClass, emptyList(), excludes, preserves, depth - 1)
-                            } else null
+                            }
                         }
                         DataColumn.createFrameColumn(it.name, frames, nullable)
                     }

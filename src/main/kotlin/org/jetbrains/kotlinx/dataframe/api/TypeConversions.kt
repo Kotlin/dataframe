@@ -123,7 +123,7 @@ public fun <T> ColumnSet<T>.asComparable(): ColumnSet<Comparable<T>> = this as C
 
 // region Iterable
 
-public fun <T> Iterable<DataFrame<T>?>.toFrameColumn(name: String = ""): FrameColumn<T> =
+public fun <T> Iterable<DataFrame<T>>.toFrameColumn(name: String = ""): FrameColumn<T> =
     DataColumn.createFrameColumn(name, asList())
 
 public inline fun <reified T> Iterable<T>.toValueColumn(name: String = ""): ValueColumn<T> = DataColumn.createValueColumn(name, asList())
@@ -169,7 +169,7 @@ public fun <T> DataFrame<T>.toColumnGroup(name: String): ColumnGroup<T> = DataCo
 public fun <T> DataFrame<T>.asGroupedDataFrame(groupedColumnName: String): GroupedDataFrame<T, T> =
     GroupedDataFrameImpl(this, frameColumn(groupedColumnName).castFrameColumn()) { none() }
 
-public fun <T, G> DataFrame<T>.asGroupedDataFrame(groupedColumn: ColumnReference<DataFrame<G>?>): GroupedDataFrame<T, G> =
+public fun <T, G> DataFrame<T>.asGroupedDataFrame(groupedColumn: ColumnReference<DataFrame<G>>): GroupedDataFrame<T, G> =
     GroupedDataFrameImpl(this, frameColumn(groupedColumn.name()).castFrameColumn()) { none() }
 
 public fun <T> DataFrame<T>.asGroupedDataFrame(): GroupedDataFrame<T, T> {

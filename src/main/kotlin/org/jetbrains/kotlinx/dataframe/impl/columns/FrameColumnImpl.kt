@@ -17,12 +17,12 @@ import kotlin.reflect.full.withNullability
 
 internal open class FrameColumnImpl<T> constructor(
     name: String,
-    values: List<DataFrame<T>?>,
+    values: List<DataFrame<T>>,
     hasNulls: Boolean?,
     columnSchema: Lazy<DataFrameSchema>? = null,
-    distinct: Lazy<Set<DataFrame<T>?>>? = null
+    distinct: Lazy<Set<DataFrame<T>>>? = null
 ) :
-    DataColumnImpl<DataFrame<T>?>(
+    DataColumnImpl<DataFrame<T>>(
         values,
         name,
         createTypeWithArgument<AnyFrame>()
@@ -37,7 +37,7 @@ internal open class FrameColumnImpl<T> constructor(
 
     override fun addParent(parent: ColumnGroup<*>) = FrameColumnWithParent(parent, this)
 
-    override fun createWithValues(values: List<DataFrame<T>?>, hasNulls: Boolean?): DataColumn<DataFrame<T>?> {
+    override fun createWithValues(values: List<DataFrame<T>>, hasNulls: Boolean?): DataColumn<DataFrame<T>> {
         return DataColumn.createFrameColumn(name, values, hasNulls)
     }
 
@@ -46,7 +46,7 @@ internal open class FrameColumnImpl<T> constructor(
     override fun distinct() = FrameColumnImpl(name, distinct.value.toList(), hasNulls, schema, distinct)
 
     override val schema: Lazy<DataFrameSchema> = columnSchema ?: lazy {
-        values.mapNotNull { it?.takeIf { it.nrow > 0 }?.schema() }.intersectSchemas()
+        values.mapNotNull { it.takeIf { it.nrow > 0 }?.schema() }.intersectSchemas()
     }
 
     override fun forceResolve() = ResolvingFrameColumn(name, values, hasNulls, schema, distinct)
@@ -54,10 +54,10 @@ internal open class FrameColumnImpl<T> constructor(
 
 internal class ResolvingFrameColumn<T>(
     name: String,
-    values: List<DataFrame<T>?>,
+    values: List<DataFrame<T>>,
     hasNulls: Boolean,
     columnSchema: Lazy<DataFrameSchema>,
-    distinct: Lazy<Set<DataFrame<T>?>>
+    distinct: Lazy<Set<DataFrame<T>>>
 ) :
     FrameColumnImpl<T>(name, values, hasNulls, columnSchema, distinct) {
 
