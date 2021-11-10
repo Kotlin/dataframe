@@ -26,8 +26,6 @@ internal abstract class MissingDataColumn<T> : DataColumnInternal<T> {
 
     override fun defaultValue() = throw UnsupportedOperationException()
 
-    override fun slice(range: IntRange) = throw UnsupportedOperationException()
-
     override fun get(columnName: String) = throw UnsupportedOperationException()
 
     override fun slice(indices: Iterable<Int>) = throw UnsupportedOperationException()
@@ -47,4 +45,6 @@ internal abstract class MissingDataColumn<T> : DataColumnInternal<T> {
     override fun forceResolve() = throw UnsupportedOperationException()
 
     override fun getValue(row: AnyRow): T = throw UnsupportedOperationException()
+
+    override fun get(range: IntRange) = throw UnsupportedOperationException()
 }

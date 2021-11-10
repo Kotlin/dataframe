@@ -87,8 +87,6 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
     override fun distinct(): DataColumn<T>
 
-    override fun slice(range: IntRange): DataColumn<T>
-
     override fun slice(indices: Iterable<Int>): DataColumn<T>
 
     override fun slice(mask: BooleanArray): DataColumn<T>
@@ -100,6 +98,8 @@ public interface DataColumn<out T> : BaseColumn<T> {
     override operator fun getValue(thisRef: Any?, property: KProperty<*>): DataColumn<T> = super.getValue(thisRef, property) as DataColumn<T>
 
     public operator fun iterator(): Iterator<T> = values().iterator()
+
+    public override operator fun get(range: IntRange): DataColumn<T>
 }
 
 public val AnyCol.type: KType get() = type()

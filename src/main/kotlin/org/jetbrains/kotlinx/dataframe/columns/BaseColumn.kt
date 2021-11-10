@@ -37,7 +37,7 @@ public interface BaseColumn<out T> : ColumnReference<T> {
 
     public fun distinct(): BaseColumn<T>
 
-    public fun slice(range: IntRange): BaseColumn<T>
+    public operator fun get(range: IntRange): BaseColumn<T>
 
     public fun slice(indices: Iterable<Int>): BaseColumn<T>
 
