@@ -20,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
+import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExcept
@@ -71,6 +72,35 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
 
     public fun ColumnSet<*>.cols(range: IntRange): ColumnSet<Any?> =
         transform { it.flatMap { it.children().subList(range.start, range.endInclusive + 1) } }
+
+    public fun <C, R> ColumnGroup<C>.colsRange(selector: ColumnsSelector<C, R>): ColumnSet<R> {
+        val receiver = object : DataFrameReceiver<C>(this, false), ColumnsSelectionDsl<C> { }
+        return selector(receiver, receiver)
+    }
+
+    public fun ColumnSet<*>.colsRange(start: String, endInclusive: String): ColumnSet<Any?> {
+        val set = this
+        return set.transform {
+            it.flatMap {
+                val children = it.children()
+                val startIndex = children.indexOfFirst { it.name == start }
+                require(startIndex >= 0) { "Column `$start` not found" }
+                val endIndex = children.indexOfLast { it.name == endInclusive }
+                require(endIndex >= 0) { "Column `$endInclusive` not found" }
+                require(endIndex >= startIndex) { "End column `$endInclusive` is before start column `$start`" }
+                children.subList(startIndex, endIndex + 1)
+            }
+        }
+    }
+
+    public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> = colsRange(this, endInclusive)
+
+    public operator fun Column.rangeTo(endInclusive: Column): ColumnSet<*> {
+        val parent = path().parent()
+        require(parent != null)
+        require(endInclusive.path().parent() == parent) { "Start and end columns have different parent column paths" }
+        return parent.colsRange(name, endInclusive.name)
+    }
 
     public fun ColumnSet<*>.cols(predicate: (AnyCol) -> Boolean = { true }): ColumnSet<Any?> = colsInternal(predicate)
 

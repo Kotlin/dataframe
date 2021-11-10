@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.person
 
 import io.kotest.assertions.fail
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
@@ -171,12 +172,7 @@ class DataFrameTreeTests : BaseTest() {
         typed2.select { nameAndCity.cols(0..1) } shouldBe typed2.nameAndCity.select { all() }
         typed2.select { nameAndCity.col(1) } shouldBe typed2.select { nameAndCity.city }
         typed2.select { nameAndCity["city"] } shouldBe typed2.select { nameAndCity.city }
-        typed2.select {
-            nameAndCity.cols(
-                "city",
-                "name"
-            )
-        } shouldBe typed2.select { nameAndCity.city and nameAndCity.name }
+        typed2.select { nameAndCity.cols("city", "name") } shouldBe typed2.select { nameAndCity.city and nameAndCity.name }
         typed2.select { nameAndCity.cols(name, city) } shouldBe typed2.select { nameAndCity.all() }
         typed2.select { nameAndCity[name] } shouldBe typed2.nameAndCity.select { name }
         typed2.select { nameAndCity.cols().drop(1) } shouldBe typed2.nameAndCity.select { city }
@@ -637,5 +633,27 @@ class DataFrameTreeTests : BaseTest() {
     fun `select group`() {
         val groupCol = typed2[nameAndCity]
         typed2.select { groupCol and age }.columnNames() shouldBe listOf("nameAndCity", "age")
+    }
+
+    @Test
+    fun `select columns range`() {
+        val added = typed2.move { age }.after { nameAndCity.name }
+        val expected = typed2.select { nameAndCity.name and age and nameAndCity.city }
+
+        added.select { nameAndCity.name..nameAndCity.city } shouldBe expected
+
+        shouldThrow<IllegalArgumentException> {
+            added.select { nameAndCity.name..weight }
+        }
+
+        shouldThrow<IllegalArgumentException> {
+            added.select { weight..nameAndCity.name }
+        }
+
+        shouldThrow<IllegalArgumentException> {
+            added.select { nameAndCity.city..nameAndCity.name }
+        }
+
+        added.select { nameAndCity.colsRange { name..city } } shouldBe expected
     }
 }

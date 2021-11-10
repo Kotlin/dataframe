@@ -11,6 +11,7 @@ import kotlin.reflect.KProperty
 public interface ColumnsContainer<out T> {
 
     public operator fun get(columnName: String): AnyCol
+
     public fun tryGetColumn(columnName: String): AnyCol?
     public fun tryGetColumn(path: ColumnPath): AnyCol?
 

@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotedDataFrameImpl
+import org.jetbrains.kotlinx.dataframe.impl.and
 import org.jetbrains.kotlinx.dataframe.impl.api.PivotChainColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.gatherImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -60,12 +61,13 @@ public fun <T> DataFrame<T>.pivotCount(vararg columns: KProperty<*>, inward: Boo
 
 // region gather
 
-public fun <T, C> DataFrame<T>.gather(dropNulls: Boolean = true, selector: ColumnsSelector<T, C?>): GatherClause<T, C, String, C> = GatherClause(this, selector as ColumnsSelector<T, C>, null, dropNulls, { it }, null)
+public fun <T, C> DataFrame<T>.gather(dropNulls: Boolean = true, selector: ColumnsSelector<T, C>): GatherClause<T, C, String, C> = GatherClause(this, selector, null, dropNulls, { it }, null)
 public fun <T> DataFrame<T>.gather(vararg columns: String, dropNulls: Boolean = true): GatherClause<T, Any?, String, Any?> = gather(dropNulls) { columns.toColumns() }
 public fun <T, C> DataFrame<T>.gather(vararg columns: ColumnReference<C>, dropNulls: Boolean = true): GatherClause<T, C, String, C> = gather(dropNulls) { columns.toColumns() }
 public fun <T, C> DataFrame<T>.gather(vararg columns: KProperty<C>, dropNulls: Boolean = true): GatherClause<T, C, String, C> = gather(dropNulls) { columns.toColumns() }
 
-public fun <T, C, K, R> GatherClause<T, C, K, R>.where(filter: Predicate<C>): GatherClause<T, C, K, R> = copy(filter = filter)
+public fun <T, C, K, R> GatherClause<T, C, K, R>.where(filter: Predicate<C>): GatherClause<T, C, K, R> = copy(filter = this.filter and filter)
+public fun <T, C, K, R> GatherClause<T, C?, K, R>.notNull(): GatherClause<T, C, K, R> = where { it != null } as GatherClause<T, C, K, R>
 public fun <T, C, K, R> GatherClause<T, C, *, R>.mapKeys(transform: (String) -> K): GatherClause<T, C, K, R> = GatherClause(df, columns, filter, dropNulls, transform, valueTransform)
 public fun <T, C, K, R> GatherClause<T, C, K, *>.mapValues(transform: (C) -> R): GatherClause<T, C, K, R> = GatherClause(df, columns, filter, dropNulls, nameTransform, transform)
 
@@ -76,7 +78,9 @@ public data class GatherClause<T, C, K, R>(
     val dropNulls: Boolean = true,
     val nameTransform: ((String) -> K),
     val valueTransform: ((C) -> R)? = null
-)
+) {
+    public fun <P> cast(): GatherClause<T, P, K, R> = this as GatherClause<T, P, K, R>
+}
 
 public inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(
     keyColumn: String,

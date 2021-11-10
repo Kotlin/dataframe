@@ -1050,6 +1050,14 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `gather nothing`() {
+        val gat = typed.gather(dropNulls = false) { city and name }
+
+        gat.where { false }
+            .into("key", "value").print()
+    }
+
+    @Test
     fun `merge rows keep nulls`() {
         val merged = typed.select { name and city }.mergeRows(dropNulls = false) { city }
 

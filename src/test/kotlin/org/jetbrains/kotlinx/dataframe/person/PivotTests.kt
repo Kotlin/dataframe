@@ -32,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.api.mapValues
 import org.jetbrains.kotlinx.dataframe.api.matches
 import org.jetbrains.kotlinx.dataframe.api.mergeRows
 import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
@@ -360,7 +361,7 @@ class PivotTests {
     @Test
     fun `gather doubles with value conversion`() {
         val pivoted = typed.pivot { key }.groupBy { name }.with { valueConverter(value) }
-        val gathered = pivoted.remove("city").gather { doubleCols() }.mapValues { it.toInt() }.into("key", "value")
+        val gathered = pivoted.remove("city").gather { doubleCols() }.notNull().mapValues { it.toInt() }.into("key", "value")
         val expected = typed.filter { key != "city" && value != null }.convert { value }.to<Int>().sortBy { name and key }
         gathered shouldBe expected
     }
