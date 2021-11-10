@@ -13,8 +13,6 @@ public interface ColumnGroup<out T> : BaseColumn<DataRow<T>>, DataFrame<T> {
 
     override fun slice(indices: Iterable<Int>): ColumnGroup<T>
 
-    override fun slice(mask: BooleanArray): ColumnGroup<T>
-
     override fun get(columnName: String): AnyCol
 
     override fun kind(): ColumnKind = ColumnKind.Group

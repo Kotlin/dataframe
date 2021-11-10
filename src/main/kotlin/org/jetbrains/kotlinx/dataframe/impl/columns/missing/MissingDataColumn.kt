@@ -30,8 +30,6 @@ internal abstract class MissingDataColumn<T> : DataColumnInternal<T> {
 
     override fun slice(indices: Iterable<Int>) = throw UnsupportedOperationException()
 
-    override fun slice(mask: BooleanArray) = throw UnsupportedOperationException()
-
     override fun toSet() = throw UnsupportedOperationException()
 
     override fun resolve(context: ColumnResolutionContext) = emptyList<ColumnWithPath<T>>()

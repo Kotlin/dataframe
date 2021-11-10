@@ -41,8 +41,6 @@ public interface BaseColumn<out T> : ColumnReference<T> {
 
     public fun slice(indices: Iterable<Int>): BaseColumn<T>
 
-    public fun slice(mask: BooleanArray): BaseColumn<T>
-
     override fun rename(newName: String): BaseColumn<T>
 
     public operator fun get(columnName: String): AnyCol
