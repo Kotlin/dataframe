@@ -106,18 +106,6 @@ class DataFrameTreeTests : BaseTest() {
     val df2 = df.move { name and city }.under("nameAndCity")
     val typed2 = df2.cast<GroupedPerson>()
 
-    val DataRow<NameAndCity>.name @JvmName("get-name-row") get() = this["name"] as String
-    val DataRow<NameAndCity>.city @JvmName("get-city-row") get() = this["city"] as String?
-    val ColumnsContainer<NameAndCity>.name @JvmName("get-name") get() = this["name"].cast<String>()
-    val ColumnsContainer<NameAndCity>.city @JvmName("get-city") get() = this["city"].cast<String?>()
-
-    val DataRow<GroupedPerson>.age @JvmName("get-age-row") get() = this["age"] as Int
-    val DataRow<GroupedPerson>.weight @JvmName("get-weight-row") get() = this["weight"] as Int?
-    val DataRow<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as DataRow<NameAndCity>
-    val ColumnsContainer<GroupedPerson>.age @JvmName("get-age") get() = this["age"].cast<Int>()
-    val ColumnsContainer<GroupedPerson>.weight @JvmName("get-weight") get() = this["weight"].cast<Int?>()
-    val ColumnsContainer<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as ColumnGroup<NameAndCity>
-
     val nameAndCity by columnGroup()
     val nameInGroup = nameAndCity.column<String>("name")
 

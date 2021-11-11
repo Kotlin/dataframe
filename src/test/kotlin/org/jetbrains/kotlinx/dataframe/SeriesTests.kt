@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.movingAverage
 import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.junit.Test
 
 class SeriesTests {
@@ -37,13 +36,6 @@ class SeriesTests {
         val day: Int
         val temp: Int
     }
-
-    val DataRow<Weather>.city get() = this["city"] as String
-    val DataRow<Weather>.day get() = this["day"] as Int
-    val DataRow<Weather>.temp get() = this["temp"] as Int
-    val ColumnsContainer<Weather>.city get() = this["city"] as ColumnReference<String>
-    val ColumnsContainer<Weather>.day get() = this["day"] as ColumnReference<Int>
-    val ColumnsContainer<Weather>.temp get() = this["temp"] as ColumnReference<Int>
 
     val typed = df.cast<Weather>()
 

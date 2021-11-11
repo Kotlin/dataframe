@@ -2,8 +2,6 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -111,91 +109,6 @@ class PlaylistJsonTest {
         val items: DataFrame<DataFrameType1>
         val pageInfo: DataRow<DataFrameType10>
     }
-
-    val ColumnsContainer<DataFrameType1>.etag: DataColumn<String> @JvmName("DataFrameType1_etag") get() = this["etag"] as DataColumn<String>
-    val DataRow<DataFrameType1>.etag: String @JvmName("DataFrameType1_etag") get() = this["etag"] as String
-    val ColumnsContainer<DataFrameType1>.id: DataColumn<String> @JvmName("DataFrameType1_id") get() = this["id"] as DataColumn<String>
-    val DataRow<DataFrameType1>.id: String @JvmName("DataFrameType1_id") get() = this["id"] as String
-    val ColumnsContainer<DataFrameType1>.kind: DataColumn<String> @JvmName("DataFrameType1_kind") get() = this["kind"] as DataColumn<String>
-    val DataRow<DataFrameType1>.kind: String @JvmName("DataFrameType1_kind") get() = this["kind"] as String
-    val ColumnsContainer<DataFrameType1>.snippet: ColumnGroup<DataFrameType2> @JvmName("DataFrameType1_snippet") get() = this["snippet"] as ColumnGroup<DataFrameType2>
-    val DataRow<DataFrameType1>.snippet: DataRow<DataFrameType2> @JvmName("DataFrameType1_snippet") get() = this["snippet"] as DataRow<DataFrameType2>
-    val ColumnsContainer<DataFrameType2>.channelId: DataColumn<String> @JvmName("DataFrameType2_channelId") get() = this["channelId"] as DataColumn<String>
-    val DataRow<DataFrameType2>.channelId: String @JvmName("DataFrameType2_channelId") get() = this["channelId"] as String
-    val ColumnsContainer<DataFrameType2>.channelTitle: DataColumn<String> @JvmName("DataFrameType2_channelTitle") get() = this["channelTitle"] as DataColumn<String>
-    val DataRow<DataFrameType2>.channelTitle: String @JvmName("DataFrameType2_channelTitle") get() = this["channelTitle"] as String
-    val ColumnsContainer<DataFrameType2>.description: DataColumn<String> @JvmName("DataFrameType2_description") get() = this["description"] as DataColumn<String>
-    val DataRow<DataFrameType2>.description: String @JvmName("DataFrameType2_description") get() = this["description"] as String
-    val ColumnsContainer<DataFrameType2>.playlistId: DataColumn<String> @JvmName("DataFrameType2_playlistId") get() = this["playlistId"] as DataColumn<String>
-    val DataRow<DataFrameType2>.playlistId: String @JvmName("DataFrameType2_playlistId") get() = this["playlistId"] as String
-    val ColumnsContainer<DataFrameType2>.position: DataColumn<Int> @JvmName("DataFrameType2_position") get() = this["position"] as DataColumn<Int>
-    val DataRow<DataFrameType2>.position: Int @JvmName("DataFrameType2_position") get() = this["position"] as Int
-    val ColumnsContainer<DataFrameType2>.publishedAt: DataColumn<String> @JvmName("DataFrameType2_publishedAt") get() = this["publishedAt"] as DataColumn<String>
-    val DataRow<DataFrameType2>.publishedAt: String @JvmName("DataFrameType2_publishedAt") get() = this["publishedAt"] as String
-    val ColumnsContainer<DataFrameType2>.resourceId: ColumnGroup<DataFrameType9> @JvmName("DataFrameType2_resourceId") get() = this["resourceId"] as ColumnGroup<DataFrameType9>
-    val DataRow<DataFrameType2>.resourceId: DataRow<DataFrameType9> @JvmName("DataFrameType2_resourceId") get() = this["resourceId"] as DataRow<DataFrameType9>
-    val ColumnsContainer<DataFrameType2>.thumbnails: ColumnGroup<DataFrameType3> @JvmName("DataFrameType2_thumbnails") get() = this["thumbnails"] as ColumnGroup<DataFrameType3>
-    val DataRow<DataFrameType2>.thumbnails: DataRow<DataFrameType3> @JvmName("DataFrameType2_thumbnails") get() = this["thumbnails"] as DataRow<DataFrameType3>
-    val ColumnsContainer<DataFrameType2>.title: DataColumn<String> @JvmName("DataFrameType2_title") get() = this["title"] as DataColumn<String>
-    val DataRow<DataFrameType2>.title: String @JvmName("DataFrameType2_title") get() = this["title"] as String
-    val ColumnsContainer<DataFrameType3>.default: ColumnGroup<DataFrameType4> @JvmName("DataFrameType3_default") get() = this["default"] as ColumnGroup<DataFrameType4>
-    val DataRow<DataFrameType3>.default: DataRow<DataFrameType4> @JvmName("DataFrameType3_default") get() = this["default"] as DataRow<DataFrameType4>
-    val ColumnsContainer<DataFrameType3>.high: ColumnGroup<DataFrameType6> @JvmName("DataFrameType3_high") get() = this["high"] as ColumnGroup<DataFrameType6>
-    val DataRow<DataFrameType3>.high: DataRow<DataFrameType6> @JvmName("DataFrameType3_high") get() = this["high"] as DataRow<DataFrameType6>
-    val ColumnsContainer<DataFrameType3>.maxres: ColumnGroup<DataFrameType8> @JvmName("DataFrameType3_maxres") get() = this["maxres"] as ColumnGroup<DataFrameType8>
-    val DataRow<DataFrameType3>.maxres: DataRow<DataFrameType8> @JvmName("DataFrameType3_maxres") get() = this["maxres"] as DataRow<DataFrameType8>
-    val ColumnsContainer<DataFrameType3>.medium: ColumnGroup<DataFrameType5> @JvmName("DataFrameType3_medium") get() = this["medium"] as ColumnGroup<DataFrameType5>
-    val DataRow<DataFrameType3>.medium: DataRow<DataFrameType5> @JvmName("DataFrameType3_medium") get() = this["medium"] as DataRow<DataFrameType5>
-    val ColumnsContainer<DataFrameType3>.standard: ColumnGroup<DataFrameType7> @JvmName("DataFrameType3_standard") get() = this["standard"] as ColumnGroup<DataFrameType7>
-    val DataRow<DataFrameType3>.standard: DataRow<DataFrameType7> @JvmName("DataFrameType3_standard") get() = this["standard"] as DataRow<DataFrameType7>
-    val ColumnsContainer<DataFrameType4>.height: DataColumn<Int> @JvmName("DataFrameType4_height") get() = this["height"] as DataColumn<Int>
-    val DataRow<DataFrameType4>.height: Int @JvmName("DataFrameType4_height") get() = this["height"] as Int
-    val ColumnsContainer<DataFrameType4>.url: DataColumn<String> @JvmName("DataFrameType4_url") get() = this["url"] as DataColumn<String>
-    val DataRow<DataFrameType4>.url: String @JvmName("DataFrameType4_url") get() = this["url"] as String
-    val ColumnsContainer<DataFrameType4>.width: DataColumn<Int> @JvmName("DataFrameType4_width") get() = this["width"] as DataColumn<Int>
-    val DataRow<DataFrameType4>.width: Int @JvmName("DataFrameType4_width") get() = this["width"] as Int
-    val ColumnsContainer<DataFrameType5>.height: DataColumn<Int> @JvmName("DataFrameType5_height") get() = this["height"] as DataColumn<Int>
-    val DataRow<DataFrameType5>.height: Int @JvmName("DataFrameType5_height") get() = this["height"] as Int
-    val ColumnsContainer<DataFrameType5>.url: DataColumn<String> @JvmName("DataFrameType5_url") get() = this["url"] as DataColumn<String>
-    val DataRow<DataFrameType5>.url: String @JvmName("DataFrameType5_url") get() = this["url"] as String
-    val ColumnsContainer<DataFrameType5>.width: DataColumn<Int> @JvmName("DataFrameType5_width") get() = this["width"] as DataColumn<Int>
-    val DataRow<DataFrameType5>.width: Int @JvmName("DataFrameType5_width") get() = this["width"] as Int
-    val ColumnsContainer<DataFrameType6>.height: DataColumn<Int> @JvmName("DataFrameType6_height") get() = this["height"] as DataColumn<Int>
-    val DataRow<DataFrameType6>.height: Int @JvmName("DataFrameType6_height") get() = this["height"] as Int
-    val ColumnsContainer<DataFrameType6>.url: DataColumn<String> @JvmName("DataFrameType6_url") get() = this["url"] as DataColumn<String>
-    val DataRow<DataFrameType6>.url: String @JvmName("DataFrameType6_url") get() = this["url"] as String
-    val ColumnsContainer<DataFrameType6>.width: DataColumn<Int> @JvmName("DataFrameType6_width") get() = this["width"] as DataColumn<Int>
-    val DataRow<DataFrameType6>.width: Int @JvmName("DataFrameType6_width") get() = this["width"] as Int
-    val ColumnsContainer<DataFrameType7>.height: DataColumn<Int?> @JvmName("DataFrameType7_height") get() = this["height"] as DataColumn<Int?>
-    val DataRow<DataFrameType7>.height: Int? @JvmName("DataFrameType7_height") get() = this["height"] as Int?
-    val ColumnsContainer<DataFrameType7>.url: DataColumn<String?> @JvmName("DataFrameType7_url") get() = this["url"] as DataColumn<String?>
-    val DataRow<DataFrameType7>.url: String? @JvmName("DataFrameType7_url") get() = this["url"] as String?
-    val ColumnsContainer<DataFrameType7>.width: DataColumn<Int?> @JvmName("DataFrameType7_width") get() = this["width"] as DataColumn<Int?>
-    val DataRow<DataFrameType7>.width: Int? @JvmName("DataFrameType7_width") get() = this["width"] as Int?
-    val ColumnsContainer<DataFrameType8>.height: DataColumn<Int?> @JvmName("DataFrameType8_height") get() = this["height"] as DataColumn<Int?>
-    val DataRow<DataFrameType8>.height: Int? @JvmName("DataFrameType8_height") get() = this["height"] as Int?
-    val ColumnsContainer<DataFrameType8>.url: DataColumn<String?> @JvmName("DataFrameType8_url") get() = this["url"] as DataColumn<String?>
-    val DataRow<DataFrameType8>.url: String? @JvmName("DataFrameType8_url") get() = this["url"] as String?
-    val ColumnsContainer<DataFrameType8>.width: DataColumn<Int?> @JvmName("DataFrameType8_width") get() = this["width"] as DataColumn<Int?>
-    val DataRow<DataFrameType8>.width: Int? @JvmName("DataFrameType8_width") get() = this["width"] as Int?
-    val ColumnsContainer<DataFrameType9>.kind: DataColumn<String> @JvmName("DataFrameType9_kind") get() = this["kind"] as DataColumn<String>
-    val DataRow<DataFrameType9>.kind: String @JvmName("DataFrameType9_kind") get() = this["kind"] as String
-    val ColumnsContainer<DataFrameType9>.videoId: DataColumn<String> @JvmName("DataFrameType9_videoId") get() = this["videoId"] as DataColumn<String>
-    val DataRow<DataFrameType9>.videoId: String @JvmName("DataFrameType9_videoId") get() = this["videoId"] as String
-    val ColumnsContainer<DataFrameType10>.resultsPerPage: DataColumn<Int> @JvmName("DataFrameType10_resultsPerPage") get() = this["resultsPerPage"] as DataColumn<Int>
-    val DataRow<DataFrameType10>.resultsPerPage: Int @JvmName("DataFrameType10_resultsPerPage") get() = this["resultsPerPage"] as Int
-    val ColumnsContainer<DataFrameType10>.totalResults: DataColumn<Int> @JvmName("DataFrameType10_totalResults") get() = this["totalResults"] as DataColumn<Int>
-    val DataRow<DataFrameType10>.totalResults: Int @JvmName("DataFrameType10_totalResults") get() = this["totalResults"] as Int
-    val ColumnsContainer<DataRecord>.etag: DataColumn<String> @JvmName("DataRecord_etag") get() = this["etag"] as DataColumn<String>
-    val DataRow<DataRecord>.etag: String @JvmName("DataRecord_etag") get() = this["etag"] as String
-    val ColumnsContainer<DataRecord>.items: DataColumn<DataFrame<DataFrameType1>> @JvmName("DataRecord_items") get() = this["items"] as DataColumn<DataFrame<DataFrameType1>>
-    val DataRow<DataRecord>.items: DataFrame<DataFrameType1> @JvmName("DataRecord_items") get() = this["items"] as DataFrame<DataFrameType1>
-    val ColumnsContainer<DataRecord>.kind: DataColumn<String> @JvmName("DataRecord_kind") get() = this["kind"] as DataColumn<String>
-    val DataRow<DataRecord>.kind: String @JvmName("DataRecord_kind") get() = this["kind"] as String
-    val ColumnsContainer<DataRecord>.nextPageToken: DataColumn<String> @JvmName("DataRecord_nextPageToken") get() = this["nextPageToken"] as DataColumn<String>
-    val DataRow<DataRecord>.nextPageToken: String @JvmName("DataRecord_nextPageToken") get() = this["nextPageToken"] as String
-    val ColumnsContainer<DataRecord>.pageInfo: ColumnGroup<DataFrameType10> @JvmName("DataRecord_pageInfo") get() = this["pageInfo"] as ColumnGroup<DataFrameType10>
-    val DataRow<DataRecord>.pageInfo: DataRow<DataFrameType10> @JvmName("DataRecord_pageInfo") get() = this["pageInfo"] as DataRow<DataFrameType10>
 
     fun generateExtensionProperties(): List<String> {
         val types = listOf(
