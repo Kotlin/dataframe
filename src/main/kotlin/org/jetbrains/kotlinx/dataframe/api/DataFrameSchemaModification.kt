@@ -66,9 +66,10 @@ public inline fun <reified R, T> DataFrame<T>.add(name: String, noinline express
 public inline fun <reified R, T> DataFrame<T>.add(property: KProperty<R>, noinline expression: RowExpression<T, R>): DataFrame<T> =
     (this + newColumn(property.name, expression))
 
-public inline fun <reified R, T> DataFrame<T>.add(column: ColumnAccessor<R>, noinline expression: AddExpression<T, R>): DataFrame<T> {
-    val col = newColumn(column.name(), expression)
-    val path = column.path()
+public inline fun <reified R, T> DataFrame<T>.add(column: ColumnAccessor<R>, noinline expression: AddExpression<T, R>): DataFrame<T> = add(column.path(), expression)
+
+public inline fun <reified R, T> DataFrame<T>.add(path: ColumnPath, noinline expression: AddExpression<T, R>): DataFrame<T> {
+    val col = newColumn(path.name(), expression)
     if (path.size == 1) return this + col
     return insert(path, col)
 }
@@ -134,16 +135,14 @@ public fun <T> DataFrame<T>.insert(path: ColumnPath, column: AnyCol): DataFrame<
 
 public fun <T> DataFrame<T>.insert(column: AnyCol): InsertClause<T> = InsertClause(this, column)
 
-public inline fun <T, reified R> DataFrame<T>.insert(noinline expression: RowExpression<T, R>): InsertClause<T> = insert("", expression)
-
 public inline fun <T, reified R> DataFrame<T>.insert(name: String, noinline expression: RowExpression<T, R>): InsertClause<T> = insert(newColumn(name, expression))
 
+public inline fun <T, reified R> DataFrame<T>.insert(
+    column: ColumnAccessor<R>,
+    noinline expression: RowExpression<T, R>
+): InsertClause<T> = insert(name, expression)
+
 public data class InsertClause<T>(val df: DataFrame<T>, val column: AnyCol)
-
-public fun <T> InsertClause<T>.into(columnPath: ColumnPath): DataFrame<T> = df.insert(columnPath, column.rename(columnPath.last()))
-public fun <T> InsertClause<T>.into(column: ColumnAccessor<*>): DataFrame<T> = into(column.path())
-
-public fun <T> InsertClause<T>.named(name: String): InsertClause<T> = copy(column = column.named(name))
 
 public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T> = under(df.getColumnPath(column))
 public fun <T> InsertClause<T>.under(columnPath: ColumnPath): DataFrame<T> = df.insert(columnPath + column.name, column)
