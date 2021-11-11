@@ -46,7 +46,6 @@ import kotlin.reflect.KProperty
 
 public fun <T> DataFrame<T>.add(cols: Iterable<AnyCol>): DataFrame<T> = this + cols
 public fun <T> DataFrame<T>.add(other: AnyFrame): DataFrame<T> = add(other.columns())
-public fun <T> DataFrame<T>.add(column: AnyCol): DataFrame<T> = this + column
 
 public interface AddDataRow<out T> : DataRow<T> {
     public fun <C> AnyRow.added(): C
