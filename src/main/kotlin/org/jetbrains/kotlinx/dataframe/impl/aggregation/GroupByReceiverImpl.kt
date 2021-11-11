@@ -3,13 +3,17 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
+import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.shortPath
+import org.jetbrains.kotlinx.dataframe.impl.EmptyMany
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
 import org.jetbrains.kotlinx.dataframe.impl.api.AggregatedPivot
+import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import kotlin.reflect.KType
 
 internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>) :
@@ -29,12 +33,18 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>) :
     internal fun compute(): AnyRow? {
         val allValues = mutableListOf<NamedValue>()
         values.forEach {
-            if (it.value is GroupByReceiverImpl<*>) {
-                it.value.values.forEach {
+            when (it.value) {
+                is GroupByReceiverImpl<*> -> {
+                    it.value.values.forEach {
+                        allValues.add(it)
+                    }
+                }
+                is AnyCol -> {
+                    allValues.add(NamedValue.create(it.path, it.value.toMany(), Many::class.createTypeWithArgument(it.value.type()), EmptyMany))
+                }
+                else -> {
                     allValues.add(it)
                 }
-            } else {
-                allValues.add(it)
             }
         }
         val columns = allValues.map { it.toColumnWithPath() }

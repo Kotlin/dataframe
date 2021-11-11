@@ -1125,7 +1125,9 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun mergeColsCustom() {
-        val merged = typed.merge { name and city and age }.with { it[0].toString() + " from " + it[1] + " aged " + it[2] }.into("info")
+        val merged =
+            typed.merge { name and city and age }.with { it[0].toString() + " from " + it[1] + " aged " + it[2] }
+                .into("info")
         merged.ncol() shouldBe 2
         merged.nrow() shouldBe typed.nrow()
         merged[0]["info"] shouldBe "Alice from London aged 15"
@@ -1855,7 +1857,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `groupBy with map`() {
-        typed.groupBy { name.map { it.lowercase() } }.toDataFrame().name.values() shouldBe typed.name.distinct().lowercase()
+        typed.groupBy { name.map { it.lowercase() } }.toDataFrame().name.values() shouldBe typed.name.distinct()
+            .lowercase()
             .values()
     }
 
@@ -2083,7 +2086,8 @@ class DataFrameTests : BaseTest() {
         list shouldBe grouped.typed<Target>().toList()
 
         val listDf = list.toDataFrame(depth = 2)
-        listDf shouldBe grouped.update { frameColumn("students") }.with { it?.remove("city") }.sortColumnsBy(dfs = true) { it.name }
+        listDf shouldBe grouped.update { frameColumn("students") }.with { it?.remove("city") }
+            .sortColumnsBy(dfs = true) { it.name }
         listDf.toList() shouldBe list
     }
 
@@ -2117,5 +2121,10 @@ class DataFrameTests : BaseTest() {
     fun splitIntoThisAndNewColumn() {
         val splitted = typed.split { name }.with { listOf(it.dropLast(1), it.last()) }.into("name", "lastChar")
         splitted.columnNames().sorted() shouldBe (typed.columnNames() + "lastChar").sorted()
+    }
+
+    @Test
+    fun groupByAggregateSingleColumn() {
+        typed.groupBy { name }.aggregate { city into "city" } shouldBe typed.groupBy { name }.values { city }
     }
 }
