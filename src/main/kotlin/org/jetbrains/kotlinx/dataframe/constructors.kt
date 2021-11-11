@@ -102,17 +102,15 @@ public fun dataFrameOf(vararg columns: AnyBaseColumn): AnyFrame = dataFrameOf(co
 
 public fun dataFrameOf(vararg header: String): DataFrameBuilder = dataFrameOf(header.toList())
 
-public inline fun <T, reified C> dataFrameOf(first: T, second: T, vararg other: T, fill: (T) -> Iterable<C>): AnyFrame = dataFrameOf(listOf(first, second) + other, fill)
+public inline fun <reified C> dataFrameOf(vararg header: String, fill: (String) -> Iterable<C>): AnyFrame = dataFrameOf(header.asIterable(), fill)
 
-public fun <T> dataFrameOf(first: T, second: T, vararg other: T): DataFrameBuilder = dataFrameOf((listOf(first, second) + other).map { it.toString() })
+public fun dataFrameOf(header: Iterable<String>): DataFrameBuilder = DataFrameBuilder(header.asList())
 
-public fun <T> dataFrameOf(header: Iterable<T>): DataFrameBuilder = dataFrameOf(header.map { it.toString() })
+public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): AnyFrame = dataFrameOf(header).withValues(values)
 
 public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): AnyFrame = header.map { value -> fill(value).asList().let { DataColumn.create(value.toString(), it) } }.toDataFrame()
 
 public fun dataFrameOf(header: CharProgression): DataFrameBuilder = dataFrameOf(header.map { it.toString() })
-
-public fun dataFrameOf(header: List<String>): DataFrameBuilder = DataFrameBuilder(header)
 
 public class DataFrameBuilder(private val header: List<String>) {
 
