@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dfsOf
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explode
+import org.jetbrains.kotlinx.dataframe.api.fillNA
 import org.jetbrains.kotlinx.dataframe.api.fillNaNs
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.gather
@@ -154,6 +155,13 @@ class Modify : TestBase() {
     fun fillNaNs() {
         // SampleStart
         df.fillNaNs { doubleCols() }.withZero()
+        // SampleEnd
+    }
+
+    @Test
+    fun fillNA() {
+        // SampleStart
+        df.fillNA { weight }.withValue(-1)
         // SampleEnd
     }
 

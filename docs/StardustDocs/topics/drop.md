@@ -51,9 +51,9 @@ df.dropNulls(whereAllNull = true) { city and weight } // remove rows with null v
 
 <!---END-->
 
-## dropNa
+## dropNA
 
-Remove rows with `null` or `Double.NaN` values
+Remove rows with `null`, `Double.NaN` or `Float.NaN` values
 
 <!---FUN dropNa-->
 
