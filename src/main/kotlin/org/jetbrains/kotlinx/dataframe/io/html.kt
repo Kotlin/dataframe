@@ -107,9 +107,9 @@ internal fun AnyFrame.toHtmlData(
         val values = rows().take(configuration.rowsLimit).map {
             val value = it[col]
             if (value is AnyFrame) {
-                if(value.ncol() == 0) {
+                if (value.ncol() == 0) {
                     HtmlContent("", null)
-                }else {
+                } else {
                     val id = nextTableId()
                     queue.add(value to id)
                     DataFrameReference(id, value.size)
