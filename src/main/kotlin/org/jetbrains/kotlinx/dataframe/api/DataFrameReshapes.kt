@@ -47,15 +47,15 @@ public fun <T> DataFrame<T>.pivot(vararg columns: String, inward: Boolean? = fal
 public fun <T> DataFrame<T>.pivot(vararg columns: Column, inward: Boolean? = false): PivotedDataFrame<T> = pivot(inward) { columns.toColumns() }
 public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>, inward: Boolean? = false): PivotedDataFrame<T> = pivot(inward) { columns.toColumns() }
 
-public fun <T> DataFrame<T>.pivotMatches(inward: Boolean? = null, columns: ColumnsSelector<T, *>): DataFrame<T> = pivot(inward, columns).groupByOther().matches()
-public fun <T> DataFrame<T>.pivotMatches(vararg columns: String, inward: Boolean? = null): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
-public fun <T> DataFrame<T>.pivotMatches(vararg columns: Column, inward: Boolean? = null): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
-public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: Boolean? = null): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> = pivot(inward, columns).groupByOther().matches()
+public fun <T> DataFrame<T>.pivotMatches(vararg columns: String, inward: Boolean = true): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivotMatches(vararg columns: Column, inward: Boolean = true): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
 
-public fun <T> DataFrame<T>.pivotCount(inward: Boolean? = null, columns: ColumnsSelector<T, *>): DataFrame<T> = pivot(inward, columns).groupByOther().count()
-public fun <T> DataFrame<T>.pivotCount(vararg columns: String, inward: Boolean? = null): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
-public fun <T> DataFrame<T>.pivotCount(vararg columns: Column, inward: Boolean? = null): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
-public fun <T> DataFrame<T>.pivotCount(vararg columns: KProperty<*>, inward: Boolean? = null): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivotCount(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> = pivot(inward, columns).groupByOther().count()
+public fun <T> DataFrame<T>.pivotCount(vararg columns: String, inward: Boolean = true): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivotCount(vararg columns: Column, inward: Boolean = true): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivotCount(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
 
 // endregion
 

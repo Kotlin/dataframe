@@ -979,7 +979,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `pivot to bool with conversion`() {
+    fun `pivot matches with conversion`() {
         val filtered = typed.dropNulls { city }
         val res = filtered.pivot { city.lowercase() }.groupBy { name and age }.matches()
         val cities = filtered.city.toList().map { it!!.lowercase() }
@@ -990,7 +990,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `pivot to bool distinct rows`() {
+    fun `pivot matches distinct rows`() {
         val res = typed.pivot { city }.groupBy { name and age }.matches()
         res.ncol() shouldBe 2 + typed.city.ndistinct()
         for (i in 0 until typed.nrow()) {
@@ -1003,7 +1003,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `pivot to bool merged rows`() {
+    fun `pivot matches merged rows`() {
         val selected = typed.select { name and city }
         val res = typed.pivot { city }.groupBy { name }.matches()
 
