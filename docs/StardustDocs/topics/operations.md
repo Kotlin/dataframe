@@ -53,6 +53,7 @@
 * [append](append.md)
 * [select](select.md)
 * [add](add.md)
+* [map](map.md)
 * [remove](remove.md)
 * [move](move.md)
 * [insert](insert.md)

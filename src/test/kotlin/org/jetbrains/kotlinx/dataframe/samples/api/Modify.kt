@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
@@ -13,10 +14,12 @@ import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.gt
 import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.length
 import org.jetbrains.kotlinx.dataframe.api.lowercase
+import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
 import org.jetbrains.kotlinx.dataframe.api.mapValues
 import org.jetbrains.kotlinx.dataframe.api.merge
@@ -427,6 +430,123 @@ class Modify : TestBase() {
     fun concatGroupedDataFrame() {
         // SampleStart
         df.groupBy { name }.concat()
+        // SampleEnd
+    }
+
+    @Test
+    fun add_properties() {
+        // SampleStart
+        df.add("year of birth") { 2021 - age }
+        // SampleEnd
+    }
+
+    @Test
+    fun add_accessors() {
+        // SampleStart
+        val age by column<Int>()
+
+        df.add("year of birth") { 2021 - age }
+        // SampleEnd
+    }
+
+    @Test
+    fun add_strings() {
+        // SampleStart
+        df.add("year of birth") { 2021 - "age"<Int>() }
+        // SampleEnd
+    }
+
+    @Test
+    fun addMany_properties() {
+        // SampleStart
+        df.add {
+            "year of birth" from 2021 - age
+            age gt 18 into "is adult"
+            name.lastName.length() into "last name length"
+            "full name" from { name.firstName + " " + name.lastName }
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun addMany_accessors() {
+        // SampleStart
+        val yob = column<Int>("year of birth")
+        val lastNameLength = column<Int>("last name length")
+        val age by column<Int>()
+        val isAdult = column<Boolean>("is adult")
+        val fullName = column<String>("full name")
+        val name by columnGroup()
+        val firstName by name.column<String>()
+        val lastName by name.column<String>()
+
+        df.add {
+            yob from 2021 - age
+            age gt 18 into isAdult
+            lastName.length() into lastNameLength
+            fullName from { firstName() + " " + lastName() }
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun addMany_strings() {
+        // SampleStart
+        df.add {
+            "year of birth" from 2021 - "age"<Int>()
+            "age"<Int>() gt 18 into "is adult"
+            "name"["lastName"]<String>().length() into "last name length"
+            "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun map_properties() {
+        // SampleStart
+        df.map {
+            "year of birth" from 2021 - age
+            age gt 18 into "is adult"
+            name.lastName.length() into "last name length"
+            "full name" from { name.firstName + " " + name.lastName }
+            +city
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun map_accessors() {
+        // SampleStart
+        val yob = column<Int>("year of birth")
+        val lastNameLength = column<Int>("last name length")
+        val age by column<Int>()
+        val isAdult = column<Boolean>("is adult")
+        val fullName = column<String>("full name")
+        val name by columnGroup()
+        val firstName by name.column<String>()
+        val lastName by name.column<String>()
+        val city by column<String?>()
+
+        df.map {
+            yob from 2021 - age
+            age gt 18 into isAdult
+            lastName.length() into lastNameLength
+            fullName from { firstName() + " " + lastName() }
+            +city
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun map_strings() {
+        // SampleStart
+        df.map {
+            "year of birth" from 2021 - "age"<Int>()
+            "age"<Int>() gt 18 into "is adult"
+            "name"["lastName"]<String>().length() into "last name length"
+            "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
+            +"city"
+        }
         // SampleEnd
     }
 }

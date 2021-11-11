@@ -1,66 +1,30 @@
-[//]: # (title: add)
+[//]: # (title: map)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Adds new column to `DataFrame`
+Creates `DataFrame` with columns based on original `DataFrame`.
 
 ```kotlin
-add(columnName) { rowExpression }
-
-rowExpression: DataRow.(DataRow) -> Value
-```
-
-See [row expressions](DataRow.md#row-expressions)
-
-<!---FUN add-->
-<tabs>
-<tab title="Properties">
-
-```kotlin
-df.add("year of birth") { 2021 - age }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val age by column<Int>()
-
-df.add("year of birth") { 2021 - age }
-```
-
-</tab>
-<tab title="Strings">
-
-```kotlin
-df.add("year of birth") { 2021 - "age"<Int>() }
-```
-
-</tab></tabs>
-<!---END-->
-
-## Add several columns
-
-```kotlin
-add { 
+map { 
     columnMapping
     columnMapping
     ...
 }
 
-columnMapping = column into columnName | columnName from column | columnName from { rowExpression }
+columnMapping = column into columnName | columnName from column | columnName from { rowExpression } | +column  
 ```
 
-<!---FUN addMany-->
+<!---FUN map-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.add {
+df.map {
     "year of birth" from 2021 - age
     age gt 18 into "is adult"
     name.lastName.length() into "last name length"
     "full name" from { name.firstName + " " + name.lastName }
+    +city
 }
 ```
 
@@ -76,12 +40,14 @@ val fullName = column<String>("full name")
 val name by columnGroup()
 val firstName by name.column<String>()
 val lastName by name.column<String>()
+val city by column<String?>()
 
-df.add {
+df.map {
     yob from 2021 - age
     age gt 18 into isAdult
     lastName.length() into lastNameLength
     fullName from { firstName() + " " + lastName() }
+    +city
 }
 ```
 
@@ -89,11 +55,12 @@ df.add {
 <tab title="Strings">
 
 ```kotlin
-df.add {
+df.map {
     "year of birth" from 2021 - "age"<Int>()
     "age"<Int>() gt 18 into "is adult"
     "name"["lastName"]<String>().length() into "last name length"
     "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
+    +"city"
 }
 ```
 

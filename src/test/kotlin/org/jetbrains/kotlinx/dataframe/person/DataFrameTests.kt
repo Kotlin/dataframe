@@ -794,8 +794,8 @@ class DataFrameTests : BaseTest() {
         fun AnyFrame.check() = (1..3).forEach { this["year$it"].toList() shouldBe expected }
 
         typed.add {
-            "year1" { now - age }
-            "year2"(now - age)
+            "year1" from { now - age }
+            "year2" from now - age
             now - age into "year3"
         }.check()
     }

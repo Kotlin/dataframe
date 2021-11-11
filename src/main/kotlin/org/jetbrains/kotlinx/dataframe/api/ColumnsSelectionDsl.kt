@@ -39,7 +39,22 @@ import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
-public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<DataRow<T>> {
+public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
+
+    public operator fun <C> ColumnReference<C>.invoke(): DataColumn<C> = getColumn(this)
+
+    public operator fun <C> ColumnReference<C>.invoke(newName: String): ColumnReference<C> = renamedReference(newName)
+
+    public operator fun <C> ColumnPath.invoke(): ColumnAccessor<C> = toColumnAccessor().cast()
+
+    public operator fun <C> String.invoke(): ColumnAccessor<C> = toColumnOf()
+
+    public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
+
+    public fun <C> String.cast(): ColumnAccessor<C> = ColumnAccessorImpl(this)
+}
+
+public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColumn<DataRow<T>> {
 
     public fun ColumnSet<*>.first(numCols: Int): ColumnSet<Any?> = take(numCols)
 
@@ -183,10 +198,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
     public operator fun <C> List<DataColumn<C>>.get(range: IntRange): ColumnSet<C> =
         ColumnsList(subList(range.first, range.last + 1))
 
-    public operator fun <C> String.invoke(): ColumnAccessor<C> = toColumnOf()
-    public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
-    public fun <C> String.cast(): ColumnAccessor<C> = ColumnAccessorImpl(this)
-
     public fun <C> col(property: KProperty<C>): ColumnAccessor<C> = property.toColumnAccessor()
 
     public operator fun ColumnSet<*>.get(colName: String): ColumnSet<Any?> = transform { it.mapNotNull { it.getChild(colName) } }
@@ -230,21 +241,13 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
     public infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): ColumnSet<C> =
         except(selector.toColumns()) as ColumnSet<C>
 
-    // public operator fun <C> ColumnSelector<T, C>.invoke(): ColumnReference<C> = this(this@SelectReceiver, this@SelectReceiver)
     public operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnSet<C> =
         this(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
 
-    public operator fun <C> ColumnReference<C>.invoke(): DataColumn<C> = getColumn(this)
-
-    public operator fun <C> ColumnReference<C>.invoke(newName: String): ColumnReference<C> = renamedReference(newName)
     public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
     public infix fun String.into(newName: String): ColumnReference<Any?> = toColumnAccessor().into(newName)
 
     public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
-
-    public fun ColumnReference<String?>.length(): ColumnReference<Int?> = map { it?.length }
-    public fun ColumnReference<String?>.lowercase(): ColumnReference<String?> = map { it?.lowercase() }
-    public fun ColumnReference<String?>.uppercase(): ColumnReference<String?> = map { it?.uppercase() }
 
     public infix fun String.and(other: String): ColumnSet<Any?> = toColumnAccessor() and other.toColumnAccessor()
     public infix fun <C> String.and(other: ColumnSet<C>): ColumnSet<Any?> = toColumnAccessor() and other
@@ -254,8 +257,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
         toColumnAccessor() and other.toColumnAccessor()
 
     public infix fun <C> ColumnSet<C>.and(other: String): ColumnSet<Any?> = this and other.toColumnAccessor()
-
-    public operator fun <C> ColumnPath.invoke(): ColumnAccessor<C> = toColumnAccessor().cast()
 
     public operator fun <C> String.invoke(newColumnExpression: RowExpression<T, C>): DataColumn<C> =
         newColumnWithActualType(this, newColumnExpression)
@@ -286,11 +287,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnsContainer<T>, SingleColumn<
     public fun ColumnPath.comparables(): DataColumn<Comparable<Any?>> = getColumn(this).cast()
     public fun ColumnPath.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this).cast()
     public fun ColumnPath.numberOrNulls(): DataColumn<Number?> = getColumn(this).cast()
-
-    public infix fun <C : Comparable<C>> ColumnReference<C>.gt(value: C): ColumnReference<Boolean> = map { it > value }
-    public infix fun <C : Comparable<C>> ColumnReference<C>.lt(value: C): ColumnReference<Boolean> = map { it < value }
-    public infix fun <C> ColumnReference<C>.eq(value: C): ColumnReference<Boolean> = map { it == value }
-    public infix fun <C> ColumnReference<C>.neq(value: C): ColumnReference<Boolean> = map { it != value }
 
     public fun nrow(): Int
     public fun rows(): Iterable<DataRow<T>>

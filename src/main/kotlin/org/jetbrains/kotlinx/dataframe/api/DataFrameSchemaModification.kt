@@ -31,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.moveTo
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
@@ -85,32 +86,30 @@ public inline fun <reified R, T, G> GroupedDataFrame<T, G>.add(name: String, noi
 
 public operator fun <T> DataFrame<T>.plus(body: AddDsl<T>.() -> Unit): DataFrame<T> = add(body)
 
-public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsContainer<T> by df {
+public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsContainer<T> by df, ColumnSelectionDsl<T> {
 
     internal val columns = mutableListOf<AnyCol>()
 
-    public fun add(column: AnyCol): Boolean = columns.add(column)
+    public fun add(column: Column): Boolean = columns.add(column.resolveSingle(df)!!.data)
 
-    public inline fun <reified R> add(name: String, noinline expression: RowExpression<T, R>): Boolean = add(df.newColumn(name, expression))
+    public operator fun Column.unaryPlus(): Boolean = add(this)
 
-    public inline fun <reified R> add(column: ColumnReference<R>, noinline expression: RowExpression<T, R>): Boolean = add(df.newColumn(column.name(), expression))
+    public operator fun String.unaryPlus(): Boolean = add(get(this))
 
-    public inline infix fun <reified R> ColumnReference<R>.from(noinline expression: RowExpression<T, R>): Boolean = add(df.newColumn(name(), expression))
+    @PublishedApi
+    internal inline fun <reified R> add(name: String, noinline expression: RowExpression<T, R>): Boolean = add(df.newColumn(name, expression))
 
-    public inline operator fun <reified R> ColumnReference<R>.invoke(noinline expression: RowExpression<T, R>): Boolean =
-        from(expression)
+    public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean = name().from(expression)
+
+    public inline infix fun <reified R> ColumnAccessor<R>.from(column: ColumnReference<R>): Boolean = name().from(column)
 
     public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean = add(this, expression)
 
-    public inline infix fun <reified R> String.from(column: DataColumn<R>): Boolean = add(column.rename(this))
+    public infix fun String.from(column: Column): Boolean = add(column.rename(this))
 
-    public inline operator fun <reified R> String.invoke(noinline expression: RowExpression<T, R>): Boolean = from(expression)
+    public infix fun Column.into(name: String): Boolean = add(rename(name))
 
-    public operator fun String.invoke(column: AnyCol): Boolean = add(column.rename(this))
-
-    public inline operator fun <reified R> ColumnReference<R>.invoke(column: DataColumn<R>): Boolean = name()(column)
-
-    public infix fun AnyCol.into(name: String): Boolean = add(rename(name))
+    public infix fun <C> ColumnReference<C>.into(column: ColumnAccessor<C>): Boolean = into(column.name())
 }
 
 // endregion
