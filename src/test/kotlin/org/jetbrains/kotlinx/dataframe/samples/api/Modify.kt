@@ -14,7 +14,9 @@ import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.fillNA
 import org.jetbrains.kotlinx.dataframe.api.fillNaNs
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
+import org.jetbrains.kotlinx.dataframe.api.flatten
 import org.jetbrains.kotlinx.dataframe.api.gather
+import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.gt
 import org.jetbrains.kotlinx.dataframe.api.insert
@@ -36,6 +38,7 @@ import org.jetbrains.kotlinx.dataframe.api.nullToZero
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.pivotCount
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.shuffle
@@ -49,6 +52,7 @@ import org.jetbrains.kotlinx.dataframe.api.toLeft
 import org.jetbrains.kotlinx.dataframe.api.toPath
 import org.jetbrains.kotlinx.dataframe.api.toTop
 import org.jetbrains.kotlinx.dataframe.api.under
+import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
@@ -588,6 +592,40 @@ class Modify : TestBase() {
             "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
             +"city"
         }
+        // SampleEnd
+    }
+    
+    @Test
+    fun group() {
+        // SampleStart
+        df.group { age and city }.into("info")
+
+        df.group { all() }.into { it.type().toString() }.print()
+        // SampleEnd
+    }
+
+    @Test
+    fun ungroup() {
+        // SampleStart
+        // name.firstName -> firstName
+        // name.lastName -> lastName
+        df.ungroup { name }
+        // SampleEnd
+    }
+    
+    @Test
+    fun flatten() {
+        // SampleStart
+        // name.firstName -> firstName
+        // name.lastName -> lastName
+        df.flatten { name }
+        // SampleEnd
+    }
+
+    @Test
+    fun flattenAll() {
+        // SampleStart
+        df.flatten()
         // SampleEnd
     }
 }
