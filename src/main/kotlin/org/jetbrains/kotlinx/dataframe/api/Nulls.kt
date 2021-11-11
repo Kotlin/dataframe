@@ -7,14 +7,9 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.type
-import java.math.BigDecimal
 import kotlin.reflect.KProperty
-import kotlin.reflect.KType
-import kotlin.reflect.jvm.jvmErasure
 
 // region fillNulls
 
@@ -69,27 +64,12 @@ public fun <T> DataFrame<T>.dropNa(whereAllNa: Boolean = false): DataFrame<T> = 
 
 //region nullToZero
 
-public fun <T> DataFrame<T>.nullToZero(): DataFrame<T> = nullToZero { dfsOf() }
+public fun <T> DataFrame<T>.nullToZero(): DataFrame<T> = nullToZero { dfs() }
 
-public fun <T> DataFrame<T>.nullToZero(selector: ColumnsSelector<T, Number?>): DataFrame<T> {
-    val cols = getColumnsWithPaths(selector).groupBy { it.type }
+public fun <T> DataFrame<T>.nullToZero(selector: ColumnsSelector<T, *>): DataFrame<T> = fillNulls(selector).withZero()
 
-    return cols.asIterable().fold(this) { df, group ->
-        df.nullToZeroImpl(group.key, group.value)
-    }
-}
-
-public fun <T> DataFrame<T>.nullToZero(vararg cols: String): DataFrame<T> = nullToZero { cols.toColumns() as ColumnSet<Number?> }
+public fun <T> DataFrame<T>.nullToZero(vararg cols: String): DataFrame<T> = nullToZero { cols.toColumns() }
 public fun <T> DataFrame<T>.nullToZero(vararg cols: ColumnReference<Number?>): DataFrame<T> = nullToZero { cols.toColumns() }
 public fun <T> DataFrame<T>.nullToZero(cols: Iterable<ColumnReference<Number?>>): DataFrame<T> = nullToZero { cols.toColumnSet() }
-
-internal fun <T> DataFrame<T>.nullToZeroImpl(type: KType, cols: Iterable<ColumnReference<Number?>>) =
-    when (type.jvmErasure) {
-        Double::class -> fillNulls(cols).cast<Double>().withValue(.0)
-        Int::class -> fillNulls(cols).cast<Int>().withValue(0)
-        Long::class -> fillNulls(cols).cast<Long>().withValue(0L)
-        BigDecimal::class -> fillNulls(cols).cast<BigDecimal>().withValue(BigDecimal.ZERO)
-        else -> throw IllegalArgumentException()
-    }
 
 // endregion

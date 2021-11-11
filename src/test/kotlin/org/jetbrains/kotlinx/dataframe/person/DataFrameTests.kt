@@ -48,6 +48,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.frameColumn
+import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.between
@@ -2137,5 +2138,22 @@ class DataFrameTests : BaseTest() {
             .mergeRows(dropNulls = true) { weight }
 
         merged["weight"].type() shouldBe getType<Many<Int>>()
+    }
+
+    @Test
+    fun updateWithZero() {
+        val updated = typed
+            .convert { weight }.toDouble()
+            .update { all() }.where { name == "Mark" }.withZero()
+        updated.age.type shouldBe getType<Int>()
+        updated["weight"].type shouldBe getType<Double>()
+        val filtered = updated.filter { name == "Mark" }
+        filtered.nrow() shouldBe 3
+        filtered.age.forEach {
+            it shouldBe 0
+        }
+        filtered["weight"].forEach {
+            it shouldBe .0
+        }
     }
 }

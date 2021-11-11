@@ -31,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDate
 import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.updateToZero
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
@@ -116,6 +117,8 @@ public fun <T> DataFrame<T>.update(
     update(*headPlusArray(firstCol, cols)).withExpression(expression)
 
 public fun <T, C> UpdateClause<T, C>.withNull(): DataFrame<T> = asNullable().withValue(null)
+
+public fun <T, C> UpdateClause<T, C>.withZero(): DataFrame<T> = updateToZero()
 
 public infix fun <T, C> UpdateClause<T, C>.withValue(value: C): DataFrame<T> = withExpression { value }
 
