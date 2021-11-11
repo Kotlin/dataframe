@@ -13,7 +13,7 @@ internal class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
         var name = preferredName
         var k = 1
         while (usedNames.contains(name)) {
-            name = "${preferredName}_${k++}"
+            name = "${preferredName}${k++}"
         }
         usedNames.add(name)
         colNames.add(name)

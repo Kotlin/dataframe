@@ -56,9 +56,9 @@ class CsvTests {
 
         df.ncol() shouldBe 11
         df.nrow() shouldBe 5
-        df.columnNames()[5] shouldBe "duplicate_1"
-        df.columnNames()[6] shouldBe "duplicate_1_1"
-        df["duplicate_1"].type() shouldBe getType<String?>()
+        df.columnNames()[5] shouldBe "duplicate1"
+        df.columnNames()[6] shouldBe "duplicate11"
+        df["duplicate1"].type() shouldBe getType<String?>()
         df["double"].type() shouldBe getType<Double?>()
         df["time"].type() shouldBe getType<LocalDateTime>()
 
@@ -97,7 +97,7 @@ class CsvTests {
     @Test
     fun `read first rows`() {
         val expected =
-            listOf("", "user_id", "name", "duplicate", "username", "duplicate_1", "duplicate_1_1", "double", "number", "time", "empty")
+            listOf("", "user_id", "name", "duplicate", "username", "duplicate1", "duplicate_1_1", "double", "number", "time", "empty")
         val dfHeader = DataFrame.readCSV(PATH_TO_DATA_1, readLines = 0)
         dfHeader.nrow() shouldBe 0
         dfHeader.columnNames() shouldBe expected

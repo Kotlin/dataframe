@@ -552,13 +552,13 @@ class DataFrameTreeTests : BaseTest() {
         val groupCol = left.groups.toColumnAccessor()
         val joined = left.toDataFrame().join(right.toDataFrame()) { groupCol }
         joined.ncol() shouldBe 3
-        val name_1 by column<String>()
-        joined.columnNames() shouldBe listOf(typed.name.name(), groupCol.name(), name_1.name())
+        val name1 by column<String>()
+        joined.columnNames() shouldBe listOf(typed.name.name(), groupCol.name(), name1.name())
         joined[groupCol].kind() shouldBe ColumnKind.Frame
         joined.select { cols(0, 1) } shouldBe left.toDataFrame()
-        joined.select { cols(2, 1) }.rename(name_1).into(typed.name) shouldBe right.toDataFrame()
+        joined.select { cols(2, 1) }.rename(name1).into(typed.name) shouldBe right.toDataFrame()
         joined.name shouldBe left.keys.name
-        joined.forEach { it[name_1] shouldBe name.reversed() }
+        joined.forEach { it[name1] shouldBe name.reversed() }
     }
 
     @Test
