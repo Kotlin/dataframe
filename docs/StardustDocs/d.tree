@@ -74,7 +74,7 @@
             <toc-element id="modifyCells.md">
                 <toc-element id="update.md">
                     <toc-element id="fillNulls.md"/>
-                    <toc-element id="nullToZero.md"/>
+                    <toc-element id="fillNaNs.md"/>
                 </toc-element>
                 <toc-element id="convert.md">
                     <toc-element id="parse.md"/>

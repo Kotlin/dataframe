@@ -311,7 +311,6 @@ class DataFrameTests : BaseTest() {
             this["weight"].toList() shouldBe expected
         }
 
-        typed.fillNulls { it.weight }.withValue(0).check()
         typed.fillNulls { weight }.withValue(0).check()
         typed.fillNulls(typed.weight).withValue(0).check()
 
@@ -320,14 +319,12 @@ class DataFrameTests : BaseTest() {
 
         df.fillNulls("weight").withValue(0).check()
 
-        typed.nullToZero { it.weight }.check()
-        typed.nullToZero { weight }.check()
-        typed.nullToZero(typed.weight).check()
+        typed.fillNulls { weight }.withZero().check()
+        typed.fillNulls { weight }.withZero().check()
+        typed.fillNulls(typed.weight).withZero().check()
 
-        df.nullToZero { weight }.check()
-        df.nullToZero(weight).check()
-
-        df.nullToZero("weight").check()
+        df.fillNulls { weight }.withZero().check()
+        df.fillNulls { weight }.withZero().check()
     }
 
     @Test

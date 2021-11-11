@@ -21,6 +21,16 @@ public fun <T, C> DataFrame<T>.fillNulls(cols: Iterable<ColumnReference<C>>): Up
 
 // endregion
 
+// region fillNaNs
+
+public fun <T, C> DataFrame<T>.fillNaNs(cols: ColumnsSelector<T, C>): UpdateClause<T, C> = update(cols).where { it == Double.NaN || it == Float.NaN }
+public fun <T> DataFrame<T>.fillNaNs(vararg cols: String): UpdateClause<T, Any?> = fillNulls { cols.toColumns() }
+public fun <T, C> DataFrame<T>.fillNaNs(vararg cols: KProperty<C>): UpdateClause<T, C> = fillNulls { cols.toColumns() }
+public fun <T, C> DataFrame<T>.fillNaNs(vararg cols: ColumnReference<C>): UpdateClause<T, C> = fillNulls { cols.toColumns() }
+public fun <T, C> DataFrame<T>.fillNaNs(cols: Iterable<ColumnReference<C>>): UpdateClause<T, C> = fillNulls { cols.toColumnSet() }
+
+// endregion
+
 // region dropNulls
 
 public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, selector: ColumnsSelector<T, *>): DataFrame<T> {
@@ -59,17 +69,5 @@ public fun <T> DataFrame<T>.dropNa(vararg cols: Column, whereAllNa: Boolean = fa
 public fun <T> DataFrame<T>.dropNa(cols: Iterable<Column>, whereAllNa: Boolean = false): DataFrame<T> = dropNa(whereAllNa) { cols.toColumnSet() }
 
 public fun <T> DataFrame<T>.dropNa(whereAllNa: Boolean = false): DataFrame<T> = dropNa(whereAllNa) { all() }
-
-// endregion
-
-//region nullToZero
-
-public fun <T> DataFrame<T>.nullToZero(): DataFrame<T> = nullToZero { dfs() }
-
-public fun <T> DataFrame<T>.nullToZero(selector: ColumnsSelector<T, *>): DataFrame<T> = fillNulls(selector).withZero()
-
-public fun <T> DataFrame<T>.nullToZero(vararg cols: String): DataFrame<T> = nullToZero { cols.toColumns() }
-public fun <T> DataFrame<T>.nullToZero(vararg cols: ColumnReference<Number?>): DataFrame<T> = nullToZero { cols.toColumns() }
-public fun <T> DataFrame<T>.nullToZero(cols: Iterable<ColumnReference<Number?>>): DataFrame<T> = nullToZero { cols.toColumnSet() }
 
 // endregion
