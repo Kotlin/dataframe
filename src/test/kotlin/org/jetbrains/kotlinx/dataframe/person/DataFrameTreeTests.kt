@@ -52,7 +52,6 @@ import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.moveTo
 import org.jetbrains.kotlinx.dataframe.api.moveToLeft
 import org.jetbrains.kotlinx.dataframe.api.moveToRight
-import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
@@ -437,7 +436,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun parentColumnTest() {
-        val res = typed2.move { dfs { it.depth > 0 } }.toTop { it.parent!!.name + "-" + it.name }
+        val res = typed2.move { dfs { it.depth > 0 } }.toTop { it.parent!!.name() + "-" + it.name() }
         res.ncol() shouldBe 4
         res.columnNames() shouldBe listOf("nameAndCity-name", "nameAndCity-city", "age", "weight")
     }
@@ -445,7 +444,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `group cols`() {
         val joined = typed2.move { dfs() }.into { pathOf(it.path.joinToString(".")) }
-        val grouped = joined.group { nameContains(".") }.into { it.name.substringBefore(".") }
+        val grouped = joined.group { nameContains(".") }.into { it.name().substringBefore(".") }
         val expected = typed2.rename { nameAndCity.all() }.into { it.path.joinToString(".") }
         grouped shouldBe expected
     }
@@ -459,7 +458,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun rename() {
-        val res = typed2.rename { nameAndCity.all() }.into { it.name.capitalize() }
+        val res = typed2.rename { nameAndCity.all() }.into { it.name().capitalize() }
         res.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames().map { it.capitalize() }
     }
 
