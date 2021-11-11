@@ -32,5 +32,5 @@ internal fun <T, C> DataFrame<T>.mergeRowsImpl(dropNulls: Boolean = false, colum
                 } else null
             }
         }[0..0]
-    }.union()
+    }.concat()
 }

@@ -402,7 +402,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `group and sort`() {
         val expected = typed.sortBy { name.desc and age }
-        val actual = typed.groupBy { name }.sortBy { name.desc and age }.union()
+        val actual = typed.groupBy { name }.sortBy { name.desc and age }.concat()
         actual shouldBe expected
     }
 
@@ -1274,7 +1274,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `empty group by`() {
-        val ungrouped = typed.filter { false }.groupBy { name }.union()
+        val ungrouped = typed.filter { false }.groupBy { name }.concat()
         ungrouped.nrow() shouldBe 0
         ungrouped.ncol() shouldBe 0
     }
@@ -1409,7 +1409,7 @@ class DataFrameTests : BaseTest() {
         val dfs = (0 until grouped.nrow()).map {
             grouped[it..it]
         }
-        val dst = dfs.concat().asGroupedDataFrame().union().sortBy("id").remove("id")
+        val dst = dfs.concat().asGroupedDataFrame().concat().sortBy("id").remove("id")
         dst shouldBe typed
     }
 
@@ -1962,7 +1962,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `filter GroupedDataFrame by groups`() {
         val grouped = typed.groupBy { name }
-        val filtered = grouped.filter { group.nrow() > 2 }.union()
+        val filtered = grouped.filter { group.nrow() > 2 }.concat()
         filtered shouldBe typed.filter { name == "Mark" }
     }
 

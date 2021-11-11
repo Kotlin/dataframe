@@ -1,7 +1,7 @@
 [//]: # (title: convert)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` with changed values in some columns. Column types can be changed.
+Returns `DataFrame` with changed values in some columns. Allows to change column types.
 
 ```kotlin
 convert { columnsSelector }
