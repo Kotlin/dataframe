@@ -68,7 +68,7 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     public operator fun get(first: Column, vararg other: Column): DataFrame<T> = select(listOf(first) + other)
     public operator fun get(first: String, vararg other: String): DataFrame<T> = select(listOf(first) + other)
 
-    public operator fun plus(col: AnyCol): DataFrame<T> = (columns() + col).toDataFrame().cast()
+    public operator fun plus(col: AnyCol): DataFrame<T> = add(col)
     public operator fun plus(cols: Iterable<AnyCol>): DataFrame<T> = (columns() + cols).toDataFrame().cast()
 
     public fun getColumnIndex(name: String): Int

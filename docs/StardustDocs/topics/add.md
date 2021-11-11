@@ -2,7 +2,9 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Adds new column to `DataFrame`
+Returns `DataFrame` which contains all columns from original `DataFrame` followed by newly added columns. Original `DataFrame` is not modified.
+
+Create new column and add it to `DataFrame`:
 
 ```kotlin
 add(columnName) { rowExpression }
@@ -39,7 +41,7 @@ df.add("year of birth") { 2021 - "age"<Int>() }
 </tab></tabs>
 <!---END-->
 
-## Add several columns
+Create and add several columns to `DataFrame`:
 
 ```kotlin
 add { 
@@ -98,4 +100,27 @@ df.add {
 ```
 
 </tab></tabs>
+<!---END-->
+
+Add existing column to `DataFrame`:
+
+<!---FUN addExisting-->
+
+```kotlin
+val score by columnOf(4,3,5,2,1,3,5)
+
+df.add(score)
+df + score
+```
+
+<!---END-->
+
+Add all columns from another `DataFrame`:
+
+<!---FUN addDataFrame-->
+
+```kotlin
+df.add(otherDf)
+```
+
 <!---END-->

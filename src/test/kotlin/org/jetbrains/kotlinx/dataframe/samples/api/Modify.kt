@@ -35,6 +35,7 @@ import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.pivotCount
 import org.jetbrains.kotlinx.dataframe.api.replace
+import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.shuffle
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
@@ -453,6 +454,24 @@ class Modify : TestBase() {
     fun add_strings() {
         // SampleStart
         df.add("year of birth") { 2021 - "age"<Int>() }
+        // SampleEnd
+    }
+    
+    @Test
+    fun addExisting() {
+        // SampleStart
+        val score by columnOf(4,3,5,2,1,3,5)
+
+        df.add(score)
+        df + score
+        // SampleEnd
+    }
+
+    @Test
+    fun addDataFrame() {
+        val otherDf = df.select { name named "name2"}
+        // SampleStart
+        df.add(otherDf)
         // SampleEnd
     }
 
