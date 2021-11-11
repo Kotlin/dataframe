@@ -96,9 +96,7 @@
             <toc-element id="insert.md"/>
             <toc-element id="replace.md"/>
             <toc-element id="rename.md"/>
-            <toc-element id="groupBy.md">
-                <toc-element id="groupByUnion.md"/>
-            </toc-element>
+            <toc-element id="groupBy.md"/>
             <toc-element id="pivot.md"/>
             <toc-element id="gather.md"/>
             <toc-element id="modifyHierarchy.md">

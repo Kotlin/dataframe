@@ -492,13 +492,6 @@ class Analyze : TestBase() {
     }
 
     @Test
-    fun groupByUnion() {
-        // SampleStart
-        df.groupBy { city }.concat()
-        // SampleEnd
-    }
-
-    @Test
     fun pivot_properties() {
         // SampleStart
         df.pivot { city }

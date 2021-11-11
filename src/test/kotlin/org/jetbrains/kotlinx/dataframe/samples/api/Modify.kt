@@ -434,6 +434,14 @@ class Modify : TestBase() {
     }
 
     @Test
+    fun concatRows() {
+        // SampleStart
+        val rows = listOf(df[2], df[4], df[5])
+        rows.concat()
+        // SampleEnd
+    }
+
+    @Test
     fun concatFrameColumn() {
         // SampleStart
         val frameColumn by columnOf(df[0..1], df[4..5])
