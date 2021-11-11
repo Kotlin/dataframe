@@ -2161,4 +2161,13 @@ class DataFrameTests : BaseTest() {
         }
         mapped.columnNames() shouldBe listOf("name", "year", "CITY")
     }
+
+    @Test
+    fun `groupByGroup name clash`() {
+        val groupName = GroupedDataFrame.groupedColumnAccessor.name()
+        typed.add(groupName) { name }
+            .groupBy(groupName)
+            .toDataFrame()
+            .ncol() shouldBe 2
+    }
 }
