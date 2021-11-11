@@ -19,12 +19,24 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.type
+import java.math.BigDecimal
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
 @PublishedApi
 internal fun <T, C> UpdateClause<T, C>.updateImpl(expression: (DataRow<T>, DataColumn<C>, C) -> C): DataFrame<T> = df.replace(columns).with { it.updateImpl(df, filter, expression) }
+
+internal fun <T, C> UpdateClause<T, C>.updateToZero() = df.replace(columns).with {
+    when (it.type().jvmErasure) {
+        Double::class -> it.cast<Double?>().updateImpl(df, filter as RowValueFilter<T, Double?>) { _, _, _ -> .0 }
+        Float::class -> it.cast<Float?>().updateImpl(df, filter as RowValueFilter<T, Float?>) { _, _, _ -> 0f }
+        Int::class -> it.cast<Int?>().updateImpl(df, filter as RowValueFilter<T, Int?>) { _, _, _ -> 0 }
+        Long::class -> it.cast<Long?>().updateImpl(df, filter as RowValueFilter<T, Long?>) { _, _, _ -> 0 }
+        BigDecimal::class -> it.cast<BigDecimal?>().updateImpl(df, filter as RowValueFilter<T, BigDecimal?>) { _, _, _ -> BigDecimal.ZERO }
+        else -> it
+    }
+}
 
 internal fun <T, C> DataColumn<C>.updateImpl(
     df: DataFrame<T>,
