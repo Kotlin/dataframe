@@ -7,7 +7,7 @@
 <!---FUN groupByUnion-->
 
 ```kotlin
-df.groupBy { city }.union()
+df.groupBy { city }.concat()
 ```
 
 <!---END-->

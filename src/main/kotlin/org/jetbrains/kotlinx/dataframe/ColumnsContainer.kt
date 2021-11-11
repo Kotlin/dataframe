@@ -33,6 +33,7 @@ public interface ColumnsContainer<out T> {
     public fun getColumn(path: ColumnPath): AnyCol = get(path)
     public fun getColumn(index: Int): AnyCol
     public fun getColumnGroup(index: Int): ColumnGroup<*> = getColumn(index).asColumnGroup()
+    public fun getColumnGroup(name: String): ColumnGroup<*> = getColumn(name).asColumnGroup()
 
     public fun hasColumn(columnName: String): Boolean = tryGetColumn(columnName) != null
 
