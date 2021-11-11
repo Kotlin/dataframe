@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.AnyMany
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
@@ -106,11 +107,15 @@ internal fun AnyFrame.toHtmlData(
         val values = rows().take(configuration.rowsLimit).map {
             val value = it[col]
             if (value is AnyFrame) {
-                val id = nextTableId()
-                queue.add(value to id)
-                DataFrameReference(id, value.size)
+                if(value.ncol() == 0) {
+                    HtmlContent("", null)
+                }else {
+                    val id = nextTableId()
+                    queue.add(value to id)
+                    DataFrameReference(id, value.size)
+                }
             } else {
-                val html = org.jetbrains.kotlinx.dataframe.io.formatter.format(value, cellRenderer, configuration)
+                val html = formatter.format(value, cellRenderer, configuration)
                 val style = configuration.cellFormatter?.invoke(it, col)?.attributes()?.ifEmpty { null }?.joinToString(";") { "${it.first}:${it.second}" }
                 HtmlContent(html, style)
             }
