@@ -81,6 +81,8 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     return dataFrameOf(this@add.columns() + dsl.columns).cast()
 }
 
+public fun <T> DataFrame<T>.add(vararg columns: AnyCol): DataFrame<T> = dataFrameOf(columns() + columns).cast()
+
 public inline fun <reified R, T, G> GroupedDataFrame<T, G>.add(name: String, noinline expression: RowExpression<G, R>): GroupedDataFrame<T, G> =
     mapNotNullGroups { add(name, expression) }
 
