@@ -15,10 +15,8 @@ df.concat(otherDf)
 <!---END-->
 
 You can also concatenate a list of DataFrames. `.concat()` is available for:
+
 * `Iterable<DataFrame>`
-* `Iterable<DataRow>`
-* `GroupedDataFrame`
-* [`FrameColumn`](DataColumn.md#framecolumn):
 
 <!---FUN concatIterable-->
 
@@ -28,19 +26,34 @@ listOf(df[0..1], df[4..5]).concat()
 
 <!---END-->
 
-<!---FUN concatFrameColumn-->
+* `Iterable<DataRow>`
+
+<!---FUN concatRows-->
 
 ```kotlin
-val frameColumn by columnOf(df[0..1], df[4..5])
-frameColumn.concat()
+val rows = listOf(df[2], df[4], df[5])
+rows.concat()
 ```
 
 <!---END-->
+
+* `GroupedDataFrame`
 
 <!---FUN concatGroupedDataFrame-->
 
 ```kotlin
 df.groupBy { name }.concat()
+```
+
+<!---END-->
+
+* [`FrameColumn`](DataColumn.md#framecolumn):
+
+<!---FUN concatFrameColumn-->
+
+```kotlin
+val frameColumn by columnOf(df[0..1], df[4..5])
+frameColumn.concat()
 ```
 
 <!---END-->

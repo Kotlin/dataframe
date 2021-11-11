@@ -1,6 +1,7 @@
 [//]: # (title: groupBy)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
 Splits the rows of `DataFrame` into groups using one or several columns as grouping keys.
 See [column selectors](ColumnSelectors.md)
@@ -78,6 +79,14 @@ df.groupBy { city }.toDataFrame()
 
 <!---END-->
 
-Use [union](groupByUnion.md) to convert `GroupedDataFrame` into original `DataFrame` preserving new order of rows produced by grouping 
+Use [`concat`](concat.md) to union all data groups of `GroupedDataFrame` into original `DataFrame` preserving new order of rows produced by grouping:
+
+<!---FUN concatGroupedDataFrame-->
+
+```kotlin
+df.groupBy { name }.concat()
+```
+
+<!---END-->
 
 To compute one or several aggregation statistics over `GroupedDataFrame` see [GroupBy aggregation](aggregateGroupBy.md)
