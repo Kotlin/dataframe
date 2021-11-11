@@ -67,7 +67,7 @@
                 <toc-element id="drop.md"/>
                 <toc-element id="distinct.md"/>
             </toc-element>
-            <toc-element id="sortRows.md">
+            <toc-element id="reorderRows.md">
                 <toc-element id="sortBy.md"/>
                 <toc-element id="shuffle.md"/>
             </toc-element>
