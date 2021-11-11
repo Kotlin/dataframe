@@ -21,7 +21,8 @@ import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
 public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     public companion object {
-        public fun empty(nrow: Int = 0): AnyFrame = EmptyDataFrame<Unit>(nrow)
+        public val Empty: AnyFrame = EmptyDataFrame<Unit>(0)
+        public fun empty(nrow: Int = 0): AnyFrame = if (nrow == 0) Empty else EmptyDataFrame<Unit>(nrow)
     }
 
     override fun columns(): List<AnyCol>

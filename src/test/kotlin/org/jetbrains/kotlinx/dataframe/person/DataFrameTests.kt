@@ -2125,6 +2125,17 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun groupByAggregateSingleColumn() {
-        typed.groupBy { name }.aggregate { city into "city" } shouldBe typed.groupBy { name }.values { city }
+        val agg = typed.groupBy { name }.aggregate { city into "city" }
+        agg shouldBe typed.groupBy { name }.values { city }
+        agg["city"].type shouldBe getType<Many<String?>>()
+    }
+
+    @Test
+    fun mergeRowsWithNulls() {
+        val merged = typed.update { weight }.where { name == "Mark" }.withNull()
+            .select { name and weight }
+            .mergeRows(dropNulls = true) { weight }
+
+        merged["weight"].type() shouldBe getType<Many<Int>>()
     }
 }

@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.append
+import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -655,5 +656,13 @@ class DataFrameTreeTests : BaseTest() {
         }
 
         added.select { nameAndCity.colsRange { name..city } } shouldBe expected
+    }
+
+    @Test
+    fun groupByAggregateSingleColumn() {
+        val agg = typed2.groupBy { age }.aggregate { nameAndCity into "nameAndCity" }
+        agg["nameAndCity"].kind() shouldBe ColumnKind.Frame
+        typed2.groupBy { age }.aggregate { nameAndCity.asDataFrame() into "nameAndCity" } shouldBe agg
+        typed2.groupBy { age }.values { nameAndCity } shouldBe agg
     }
 }
