@@ -170,5 +170,8 @@ internal fun <C> ColumnSet<C>.resolve(
 ) =
     resolve(ColumnResolutionContext(df, unresolvedColumnsPolicy))
 
-internal fun <C> SingleColumn<C>.resolveSingle(df: DataFrame<*>, unresolvedColumnsPolicy: UnresolvedColumnsPolicy) =
+internal fun <C> SingleColumn<C>.resolveSingle(
+    df: DataFrame<*>,
+    unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail
+) =
     resolveSingle(ColumnResolutionContext(df, unresolvedColumnsPolicy))

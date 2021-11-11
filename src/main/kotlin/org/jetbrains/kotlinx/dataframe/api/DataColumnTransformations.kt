@@ -42,7 +42,7 @@ public infix fun <T> DataColumn<T>.isMatching(predicate: Predicate<T>): DataColu
 
 // region StringColumn Api
 
-public fun StringCol.length(): DataColumn<Int?> = map { it?.length }
+public fun StringCol.length(): DataColumn<Int> = map { it?.length ?: 0 }
 public fun StringCol.lowercase(): StringCol = map { it?.lowercase() }
 public fun StringCol.uppercase(): StringCol = map { it?.uppercase() }
 

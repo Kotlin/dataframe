@@ -91,6 +91,7 @@
         <toc-element id="modifySchema.md">
             <toc-element id="select.md"/>
             <toc-element id="add.md"/>
+            <toc-element id="map.md"/>
             <toc-element id="remove.md"/>
             <toc-element id="move.md"/>
             <toc-element id="insert.md"/>

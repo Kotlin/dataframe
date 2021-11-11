@@ -257,8 +257,8 @@ class PivotTests {
             .groupBy { name and key }.with { value }
 
         val expected = typed.dropNulls { value }.add {
-            "Int" { value as? Int }
-            "String" { value as? String }
+            "Int" from { value as? Int }
+            "String" from { value as? String }
         }.remove("value").mergeRows("Int", dropNulls = true)
 
         pivoted shouldBe expected
