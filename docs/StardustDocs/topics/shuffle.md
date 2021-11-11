@@ -1,4 +1,4 @@
-[//]: # (title: shuffled)
+[//]: # (title: shuffle)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
