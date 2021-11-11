@@ -19,7 +19,8 @@ import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.createDataFrame
 import org.jetbrains.kotlinx.dataframe.api.first
-import org.jetbrains.kotlinx.dataframe.api.frameColumn
+import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.inferType
@@ -1411,7 +1412,7 @@ class DataFrameTests : BaseTest() {
         }
         d.ncol() shouldBe 2
         d["info"].isFrameColumn() shouldBe true
-        val info = d.frameColumn("info")
+        val info = d.getFrameColumn("info")
         info.forEach {
             it.ncol() shouldBe 2
             it.columnNames() shouldBe listOf("age", "weight")
@@ -2096,7 +2097,7 @@ class DataFrameTests : BaseTest() {
         list shouldBe grouped.typed<Target>().toList()
 
         val listDf = list.createDataFrame(depth = 2)
-        listDf shouldBe grouped.update { frameColumn("students") }.with { it?.remove("city") }
+        listDf shouldBe grouped.update { getFrameColumn("students") }.with { it?.remove("city") }
             .sortColumnsBy(dfs = true) { it.name }
         listDf.toList() shouldBe list
     }
