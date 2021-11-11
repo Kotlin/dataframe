@@ -26,7 +26,6 @@ import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.minFor
 import org.jetbrains.kotlinx.dataframe.api.minOf
 import org.jetbrains.kotlinx.dataframe.api.minOrNull
-import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.pivotCount
 import org.jetbrains.kotlinx.dataframe.api.print

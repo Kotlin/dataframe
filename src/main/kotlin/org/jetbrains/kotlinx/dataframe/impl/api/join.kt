@@ -49,17 +49,19 @@ internal fun <A, B> DataFrame<A>.getColumns(other: DataFrame<B>, selector: JoinC
     val receiver = object : DataFrameReceiver<A>(this, false), JoinDsl<A, B> {
         override val right: DataFrame<B> = prepareForReceiver(other)
     }
-    val columns = selector(receiver, receiver)
+    val columns = selector(receiver, this)
     return columns.extractJoinColumns()
 }
 
 internal fun <A, B> DataFrame<A>.joinImpl(
     other: DataFrame<B>,
-    joinType: JoinType = JoinType.INNER,
+    joinType: JoinType = JoinType.Inner,
     addNewColumns: Boolean = true,
-    selector: JoinColumnsSelector<A, B>
+    selector: JoinColumnsSelector<A, B>?
 ): DataFrame<A> {
-    val joinColumns = getColumns(other, selector)
+    val joinByAllMatchingcolumns = selector == null
+
+    val joinColumns = getColumns(other, selector ?: defaultJoinColumns(this, other))
 
     val leftJoinColumns = getColumnsWithPaths { joinColumns.map { it.left }.toColumnSet() }
     val rightJoinColumns = other.getColumnsWithPaths { joinColumns.map { it.right }.toColumnSet() }
@@ -74,15 +76,29 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         val leftCol = leftJoinColumns[i]
         val rightCol = rightJoinColumns[i]
         if (leftCol.isColumnGroup() && rightCol.isColumnGroup()) {
-            val allLeftChildren = getColumnsWithPaths { leftCol.dfs() }
-            val allRightChildren = other.getColumnsWithPaths { rightCol.dfs() }
-            val matchedPaths = allLeftChildren.map { it.path }.intersect(allRightChildren.map { it.path })
-            val matchedLeftColumns = allLeftChildren.filter { matchedPaths.contains(it.path) }
-            val matchedRightColumns = allRightChildren.filter { matchedPaths.contains(it.path) }
-            require(matchedLeftColumns.size == matchedRightColumns.size)
+            val leftColumns = getColumnsWithPaths { leftCol.dfs() }
+            val rightColumns = other.getColumnsWithPaths { rightCol.dfs() }
 
-            allLeftJoinColumns.addAll(matchedLeftColumns)
-            allRightJoinColumns.addAll(matchedRightColumns)
+            val leftPrefixLength = leftCol.path.size
+            val rightPrefixLength = rightCol.path.size
+            val leftMap = leftColumns.associateBy { it.path.drop(leftPrefixLength) }.toMutableMap()
+
+            rightColumns.forEach { right ->
+                val relativePath = right.path.drop(rightPrefixLength)
+                val left = leftMap[relativePath]
+                if (left == null) {
+                    require(selector == null) {
+                        "Unable to perform join by column groups `${leftCol.name}` to `${rightCol.name}, because `$relativePath` was not found under `${leftCol.name}` in left DataFrame"
+                    }
+                } else {
+                    allLeftJoinColumns.add(left)
+                    allRightJoinColumns.add(right)
+                    leftMap.remove(relativePath)
+                }
+            }
+            require(leftMap.isEmpty() || selector == null) {
+                "Unable to perform join by column groups `${leftCol.name}` to `${rightCol.name}, because `${leftMap.values.first()}` was not found under `${rightCol.name}` in right DataFrame"
+            }
         } else {
             allLeftJoinColumns.add(leftCol)
             allRightJoinColumns.add(rightCol)
@@ -100,7 +116,7 @@ internal fun <A, B> DataFrame<A>.joinImpl(
 
     // group row indices by key from right data frame
     val groupedRight = when (joinType) {
-        JoinType.EXCLUDE -> rightJoinKeyToIndex.map { it.first to emptyList<Int>() }.toMap()
+        JoinType.Exclude -> rightJoinKeyToIndex.map { it.first to emptyList<Int>() }.toMap()
         else -> rightJoinKeyToIndex.groupBy({ it.first }) { it.second }
     }
 
