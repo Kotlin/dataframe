@@ -152,14 +152,29 @@ internal fun <T> guessColumnType(
         }
         Many::class -> {
             val nullable = type.isMarkedNullable
+            var isManyOfRows: Boolean? = null
             val lists = values.map {
                 when (it) {
                     null -> if (nullable) null else emptyMany()
-                    is Many<*> -> it
-                    else -> manyOf(it)
+                    is Many<*> -> {
+                        if (isManyOfRows != false && it.isNotEmpty()) isManyOfRows = it.all { it is AnyRow }
+                        it
+                    }
+                    else -> {
+                        if (isManyOfRows != false) isManyOfRows = it is AnyRow
+                        manyOf(it)
+                    }
                 }
             }
-            DataColumn.createValueColumn(name, lists, type, checkForNulls = false, defaultValue).cast()
+            if (isManyOfRows == true) {
+                val frames = lists.map {
+                    if (it == null) DataFrame.empty()
+                    else (it as Many<AnyRow>).concat()
+                }
+                DataColumn.createFrameColumn(name, frames).cast()
+            } else {
+                DataColumn.createValueColumn(name, lists, type, checkForNulls = false, defaultValue).cast()
+            }
         }
         else -> {
             if (nullable == null) {
