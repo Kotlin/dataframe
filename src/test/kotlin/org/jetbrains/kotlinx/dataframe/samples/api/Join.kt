@@ -20,6 +20,14 @@ class Join : TestBase() {
         // SampleEnd
     }
 
+    @Test
+    fun joinDefault() {
+        val other = df.add("year") { 2021 - age }.select { name and city and "year" }
+        // SampleStart
+        df.join(other)
+        // SampleEnd
+    }
+
     class Right
     val DataFrame<Right>.fullName: ColumnGroup<Name> get() = getColumnGroup("fullName").cast()
 

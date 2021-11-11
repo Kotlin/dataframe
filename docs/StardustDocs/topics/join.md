@@ -1,6 +1,6 @@
 [//]: # (title: join)
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Join-->
 
 Joins two DataFrames by join columns.
 
@@ -17,11 +17,53 @@ interface JoinDsl: LeftDataFrame {
 }
 ```
 
-`joinColumns` is a [column selector](ColumnSelectors.md) that defines column mapping for join. 
+`joinColumns` is a [column selector](ColumnSelectors.md) that defines column mapping for join:
+
+<!---FUN joinWithMatch-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.join(other) { name match right.fullName }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val name by columnGroup()
+val fullName by columnGroup()
+
+df.join(other) { name match fullName }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.join(other) { "name" match "fullName" }
+```
+
+</tab></tabs>
+<!---END-->
 
 If mapped columns have the same name, just select join columns from the left `DataFrame`: 
 
-<!---FUN joinWithMatch-->
+<!---FUN join-->
 
-If `joinColumns` is not specified, columns with the same name from both DataFrames will be used as key columns. 
+```kotlin
+df.join(other) { name and city }
+```
+
+<!---END-->
+
+If `joinColumns` is not specified, columns with the same name from both DataFrames will be used as key columns:
+
+<!---FUN joinDefault-->
+
+```kotlin
+df.join(other)
+```
+
+<!---END-->
 
