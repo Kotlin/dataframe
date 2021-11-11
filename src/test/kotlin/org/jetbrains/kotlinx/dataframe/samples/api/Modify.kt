@@ -5,12 +5,14 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.by
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dfsOf
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.gather
+import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.length
@@ -395,6 +397,36 @@ class Modify : TestBase() {
         // SampleStart
         val score by columnOf(4, 5, 3, 5, 4, 5, 3)
         df.insert(score).at(2)
+        // SampleEnd
+    }
+
+    @Test
+    fun concat() {
+        val otherDf = df
+        // SampleStart
+        df.concat(otherDf)
+        // SampleEnd
+    }
+
+    @Test
+    fun concatIterable() {
+        // SampleStart
+        listOf(df[0..1], df[4..5]).concat()
+        // SampleEnd
+    }
+
+    @Test
+    fun concatFrameColumn() {
+        // SampleStart
+        val frameColumn by columnOf(df[0..1], df[4..5])
+        frameColumn.concat()
+        // SampleEnd
+    }
+
+    @Test
+    fun concatGroupedDataFrame() {
+        // SampleStart
+        df.groupBy { name }.concat()
         // SampleEnd
     }
 }

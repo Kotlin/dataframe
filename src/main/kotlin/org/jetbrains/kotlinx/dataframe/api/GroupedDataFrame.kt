@@ -30,7 +30,7 @@ public interface GroupedDataFrame<out T, out G> : Grouped<G> {
 
     public fun toDataFrame(groupedColumnName: String? = null): DataFrame<T>
 
-    public fun union(): DataFrame<G> = groups.union().cast()
+    public fun concat(): DataFrame<G> = groups.concat().cast()
 
     public operator fun get(vararg values: Any?): DataFrame<T> = get(values.toList())
 

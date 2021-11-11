@@ -147,7 +147,7 @@ class GatherTests {
             ).toDataFrame()
 
             newDf
-        }.union()
+        }.concat()
 
         gathered shouldBe expected
     }

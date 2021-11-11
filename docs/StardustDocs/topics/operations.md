@@ -68,7 +68,6 @@
 **[Multiple DataFrames](multipleDataFrames.md)**
 * [join](join.md)
 * [concat](concat.md)
-* [union](union.md)
 
 **[Rendering](rendering.md)**
 * [format](format.md)

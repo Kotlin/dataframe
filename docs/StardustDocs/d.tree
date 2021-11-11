@@ -114,7 +114,6 @@
         <toc-element id="multipleDataFrames.md" show-structure-depth="3">
             <toc-element id="join.md"/>
             <toc-element id="concat.md"/>
-            <toc-element id="union.md"/>
         </toc-element>
         <toc-element id="columnOperations.md">
             <toc-element id="columnArithmetics.md" toc-title="Arithmetics"/>

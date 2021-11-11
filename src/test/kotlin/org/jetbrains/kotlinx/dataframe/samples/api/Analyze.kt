@@ -492,7 +492,7 @@ class Analyze : TestBase() {
     @Test
     fun groupByUnion() {
         // SampleStart
-        df.groupBy { city }.union()
+        df.groupBy { city }.concat()
         // SampleEnd
     }
 

@@ -134,7 +134,7 @@ class DataFrameTreeTests : BaseTest() {
     fun createFrameColumn() {
         val rowsColumn by columnOf(typed[0..3], typed[4..5], typed[6..6])
         val df = dataFrameOf(rowsColumn).asGroupedDataFrame { rowsColumn }
-        val res = df.union()
+        val res = df.concat()
         res shouldBe typed
     }
 
