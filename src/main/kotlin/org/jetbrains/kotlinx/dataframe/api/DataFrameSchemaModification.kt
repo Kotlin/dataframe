@@ -102,6 +102,8 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
 
     public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean = add(this, expression)
 
+    public inline infix fun <reified R> String.from(column: DataColumn<R>): Boolean = add(column.rename(this))
+
     public inline operator fun <reified R> String.invoke(noinline expression: RowExpression<T, R>): Boolean = from(expression)
 
     public operator fun String.invoke(column: AnyCol): Boolean = add(column.rename(this))

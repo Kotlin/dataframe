@@ -19,7 +19,6 @@ import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
-import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.inferType
@@ -252,7 +251,7 @@ class DataFrameTests : BaseTest() {
         fun AnyFrame.check() {
             getColumn(1).name() shouldBe "age"
             ncol() shouldBe typed.ncol()
-            this["age"].toList() shouldBe typed.map { age * 2 }
+            this["age"].toList() shouldBe typed.asIterable().map { it.age * 2 }
         }
 
         typed.update { age }.with { it * 2 }.check()
@@ -274,7 +273,7 @@ class DataFrameTests : BaseTest() {
         fun AnyFrame.check() {
             getColumn(1).name() shouldBe "age"
             ncol() shouldBe typed.ncol()
-            this["age"].toList() shouldBe typed.map { if (age > 25) null else age }
+            this["age"].toList() shouldBe typed.asIterable().map { if (it.age > 25) null else it.age }
         }
 
         typed.update { age }.where { it > 25 }.withNull().check()
@@ -294,14 +293,14 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `update cells by index`() {
         val res = typed.update { age }.at(2, 4).withValue(100)
-        val expected = typed.map { if (index == 2 || index == 4) 100 else age }
+        val expected = typed.asIterable().map { if (it.index == 2 || it.index == 4) 100 else it.age }
         res.age.toList() shouldBe expected
     }
 
     @Test
     fun `update cells by index range`() {
         val res = typed.update { age }.at(2..4).withValue(100)
-        val expected = typed.map { if (index in 2..4) 100 else age }
+        val expected = typed.asIterable().map { if (it.index in 2..4) 100 else it.age }
         res.age.toList() shouldBe expected
     }
 
@@ -774,7 +773,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `add one column`() {
         val now = 2020
-        val expected = typed.map { now - age }
+        val expected = typed.asIterable().map { now - it.age }
 
         fun AnyFrame.check() = this["year"].toList() shouldBe expected
 
@@ -790,7 +789,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `add several columns`() {
         val now = 2020
-        val expected = typed.map { now - age }
+        val expected = typed.asIterable().map { now - it.age }
 
         fun AnyFrame.check() = (1..3).forEach { this["year$it"].toList() shouldBe expected }
 
@@ -1019,10 +1018,10 @@ class DataFrameTests : BaseTest() {
 
         val pairs = (1 until res.ncol()).flatMap { i ->
             val col = res.getColumn(i).cast<Boolean>()
-            res.filter { it[col] }.map { name to col.name() }
+            res.filter { it[col] }.asIterable().map { it.name to col.name() }
         }.toSet()
 
-        pairs shouldBe typed.map { name to city.toString() }.toSet()
+        pairs shouldBe typed.asIterable().map { it.name to it.city.toString() }.toSet()
     }
 
     @Test
@@ -2155,5 +2154,15 @@ class DataFrameTests : BaseTest() {
         filtered["weight"].forEach {
             it shouldBe .0
         }
+    }
+
+    @Test
+    fun map() {
+        val mapped = typed.map {
+            name into "name"
+            "year" from 2021 - age
+            "CITY" from { city?.uppercase() }
+        }
+        mapped.columnNames() shouldBe listOf("name", "year", "CITY")
     }
 }

@@ -20,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.append
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
+import org.jetbrains.kotlinx.dataframe.api.asIterable
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
@@ -296,7 +297,7 @@ class DataFrameTreeTests : BaseTest() {
 
             val actual = data.flatMap { col ->
                 val city = col.name()
-                map { row -> (row[name] to city) to col[row.index] }.filter { it.second != null }
+                asIterable().map { (it[name] to city) to col[it.index] }.filter { it.second != null }
             }.toMap()
             actual shouldBe expected
         }
@@ -345,7 +346,7 @@ class DataFrameTreeTests : BaseTest() {
                     else -> {
                         val df = value as? AnyFrame
                         df shouldNotBe null
-                        df!!.map { "age".int() to "weight".intOrNull() }
+                        df!!.asIterable().map { it["age"] as Int to it["weight"] as Int? }
                             .sortedBy { it.first } shouldBe expValues.sortedBy { it.first }
                     }
                 }
