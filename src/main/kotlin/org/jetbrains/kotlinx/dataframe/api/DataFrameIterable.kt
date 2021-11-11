@@ -71,13 +71,12 @@ public fun AnyFrame.isNotEmpty(): Boolean = !isEmpty()
 
 // region map
 
-public inline fun <T, R> DataFrame<T>.map(expression: RowExpression<T, R>): List<R> = rows().map { expression(it, it) }
 public fun <T, R> DataFrame<T>.mapIndexedNotNull(action: (Int, DataRow<T>) -> R?): List<R> =
     rows().mapIndexedNotNull(action)
 
 public fun <T, R> DataFrame<T>.mapIndexed(action: (Int, DataRow<T>) -> R): List<R> = rows().mapIndexed(action)
 
-public fun <T> DataFrame<T>.mapColumns(body: AddDsl<T>.() -> Unit): AnyFrame {
+public fun <T> DataFrame<T>.map(body: AddDsl<T>.() -> Unit): AnyFrame {
     val dsl = AddDsl(this)
     body(dsl)
     return dataFrameOf(dsl.columns)
