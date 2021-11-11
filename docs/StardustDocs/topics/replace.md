@@ -7,7 +7,7 @@ Replaces one or several columns with new columns.
 replace { columns }
     .with(newColumns) | .with { columnExpression }
 
-columnExpression = DataFrame.(DataColumn) -> DataColumn
+columnExpression: DataFrame.(DataColumn) -> DataColumn
 ```
 
 See [column selectors](ColumnSelectors.md)

@@ -3,6 +3,8 @@
 Adds new column to `DataFrame`
 ```kotlin
 add(columnName) { rowExpression }
+
+rowExpression: DataRow.(DataRow) -> Value
 ```
 See [row expressions](DataRow.md#row-expressions)
 ```kotlin

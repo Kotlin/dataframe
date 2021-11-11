@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.at
@@ -10,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.gather
+import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.length
 import org.jetbrains.kotlinx.dataframe.api.lowercase
@@ -46,6 +48,7 @@ import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.withValue
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
+import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.pathOf
 import org.junit.Test
@@ -359,6 +362,38 @@ class Modify : TestBase() {
         val pivoted = df.dropNulls { city }.pivotCount { city }
         // SampleStart
         pivoted.gather { "London".."Tokyo" }.cast<Int>().mapKeys { it.lowercase() }.mapValues { 1.0 / it }.into("city", "density")
+        // SampleEnd
+    }
+
+    @Test
+    fun insert_properties() {
+        // SampleStart
+        df.insert("year of birth") { 2021 - age }.after { age }
+        // SampleEnd
+    }
+
+    @Test
+    fun insert_accessors() {
+        // SampleStart
+        val year = column<Int>("year of birth")
+        val age by column<Int>()
+
+        df.insert(year) { 2021 - age }.after { age }
+        // SampleEnd
+    }
+
+    @Test
+    fun insert_strings() {
+        // SampleStart
+        df.insert("year of birth") { 2021 - "age"<Int>() }.after("age")
+        // SampleEnd
+    }
+
+    @Test
+    fun insertColumn() {
+        // SampleStart
+        val score by columnOf(4, 5, 3, 5, 4, 5, 3)
+        df.insert(score).at(2)
         // SampleEnd
     }
 }
