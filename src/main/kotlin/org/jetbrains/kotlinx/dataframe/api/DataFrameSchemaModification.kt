@@ -94,7 +94,7 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
 
     public operator fun Column.unaryPlus(): Boolean = add(this)
 
-    public operator fun String.unaryPlus(): Boolean = add(get(this))
+    public operator fun String.unaryPlus(): Boolean = add(df[this])
 
     @PublishedApi
     internal inline fun <reified R> add(name: String, noinline expression: RowExpression<T, R>): Boolean = add(df.newColumn(name, expression))
