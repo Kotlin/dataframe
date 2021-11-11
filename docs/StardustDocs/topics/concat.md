@@ -18,7 +18,7 @@ You can also concatenate a list of DataFrames. `.concat()` is available for:
 * `Iterable<DataFrame>`
 * `Iterable<DataRow>`
 * `GroupedDataFrame`
-* [`FrameColumn`](DataColumn.md#FrameColumn):
+* [`FrameColumn`](DataColumn.md#framecolumn):
 
 <!---FUN concatIterable-->
 
