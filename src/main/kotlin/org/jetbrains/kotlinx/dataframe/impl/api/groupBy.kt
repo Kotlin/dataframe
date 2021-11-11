@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.impl.GroupedDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import org.jetbrains.kotlinx.dataframe.pathOf
@@ -52,7 +53,8 @@ internal fun <T> DataFrame<T>.groupByImpl(moveToTop: Boolean, columns: ColumnsSe
         start
     }
 
-    val groupedColumn = DataColumn.createFrameColumn(GroupedDataFrame.groupedColumnAccessor.name(), sorted, startIndices.asIterable())
+    val groupedColumnName = keyColumnsDf.nameGenerator().addUnique(GroupedDataFrame.groupedColumnAccessor.name())
+    val groupedColumn = DataColumn.createFrameColumn(groupedColumnName, sorted, startIndices.asIterable())
 
     val df = keyColumnsDf + groupedColumn
     return GroupedDataFrameImpl(df, groupedColumn, columns)
