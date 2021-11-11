@@ -24,6 +24,31 @@ val df = dataFrameOf("name", "age")(
 
 <!---END-->
 
+<!---FUN createDataFrameFromColumns-->
+
+```kotlin
+val name by columnOf("Alice", "Bob")
+val age by columnOf(15, 20)
+
+// DataFrame with 2 columns
+val df = dataFrameOf(name, age)
+```
+
+<!---END-->
+
+<!---FUN createDataFrameFromNamesAndValues-->
+
+```kotlin
+val names = listOf("name", "age")
+val values = listOf(
+    "Alice", 15,
+    "Bob", 20
+)
+val df = dataFrameOf(names, values)
+```
+
+<!---END-->
+
 <!---FUN createDataFrameWithFill-->
 
 ```kotlin
@@ -50,18 +75,6 @@ val names = listOf("first", "second", "third")
 
 // DataFrame with 3 columns, fill each column with 15 `true` values
 val df = dataFrameOf(names).fill(15, true)
-```
-
-<!---END-->
-
-<!---FUN createDataFrameFromColumns-->
-
-```kotlin
-val name by columnOf("Alice", "Bob")
-val age by columnOf(15, 20)
-
-// DataFrame with 2 columns
-val df = dataFrameOf(name, age)
 ```
 
 <!---END-->

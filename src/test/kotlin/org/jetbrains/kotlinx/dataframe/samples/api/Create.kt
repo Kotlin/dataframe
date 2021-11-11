@@ -251,6 +251,22 @@ class Create : TestBase() {
     }
 
     @Test
+    fun createDataFrameFromNamesAndValues() {
+        // SampleStart
+        val names = listOf("name", "age")
+        val values = listOf(
+            "Alice", 15,
+            "Bob", 20
+        )
+        val df = dataFrameOf(names, values)
+        // SampleEnd
+        df.columnNames() shouldBe listOf("name", "age")
+        df.nrow() shouldBe 2
+        df["name"].type() shouldBe getType<String>()
+        df["age"].type() shouldBe getType<Int>()
+    }
+
+    @Test
     fun createDataFrameFromObject() {
         // SampleStart
         data class Person(val name: String, val age: Int)

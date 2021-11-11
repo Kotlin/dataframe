@@ -1711,7 +1711,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `create with vararg doubles and fill equal`() {
-        val df = dataFrameOf(1.0, 2.5).fill(5, true)
+        val df = dataFrameOf(1.0.toString(), 2.5.toString()).fill(5, true)
         df.nrow() shouldBe 5
         df.ncol() shouldBe 2
         df.columns().forEach { col -> col.forEach { it shouldBe true } }
