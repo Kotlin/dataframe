@@ -52,7 +52,6 @@ import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.moveTo
 import org.jetbrains.kotlinx.dataframe.api.moveToLeft
 import org.jetbrains.kotlinx.dataframe.api.moveToRight
-import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.remove
@@ -436,7 +435,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `group cols`() {
-        val joined = typed2.move { dfs() }.into { pathOf(it.path.joinToString(".")) }
+        val joined = typed2.move { dfsLeafs() }.into { pathOf(it.path.joinToString(".")) }
         val grouped = joined.group { nameContains(".") }.into { it.name().substringBefore(".") }
         val expected = typed2.rename { nameAndCity.all() }.into { it.path.joinToString(".") }
         grouped shouldBe expected

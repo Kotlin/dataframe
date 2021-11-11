@@ -14,7 +14,7 @@ public inline fun <C, reified R> ColumnReference<C>.map(noinline transform: (C) 
 public fun <C, R> ColumnReference<C>.map(targetType: KType?, transform: (C) -> R): ColumnReference<R> =
     createComputedColumnReference(this.name, targetType) { transform(this@map()) }
 
-public val ColumnReference<*>.name: String get() = name()
+internal val ColumnReference<*>.name: String get() = name()
 public inline fun <reified T> ColumnReference<T>.withValues(vararg values: T): ValueColumn<T> = withValues(values.asIterable())
 public inline fun <reified T> ColumnReference<T>.withValues(values: Iterable<T>): ValueColumn<T> =
     DataColumn.createValueColumn(name(), values.asList(), getType<T>())

@@ -115,7 +115,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun ColumnSet<*>.cols(predicate: (AnyCol) -> Boolean = { true }): ColumnSet<Any?> = colsInternal(predicate)
 
-    public fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<Any?> = dfsInternal(predicate)
+    public fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<Any?> = dfsInternal(predicate)
 
     public fun SingleColumn<*>.all(): ColumnSet<*> = transformSingle { it.children() }
 
@@ -123,7 +123,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun none(): ColumnSet<*> = ColumnsList<Any?>(emptyList())
 
-    public fun ColumnSet<*>.dfs(): ColumnSet<Any?> = dfs { !it.isColumnGroup() }
+    public fun ColumnSet<*>.dfsLeafs(): ColumnSet<Any?> = dfs { !it.isColumnGroup() }
 
     public fun String.dfs(): ColumnSet<*> = toColumnAccessor().dfs()
 

@@ -168,7 +168,10 @@ public fun <T, C> DataFrame<T>.replace(vararg columns: ColumnReference<C>): Repl
 public fun <T, C> DataFrame<T>.replace(vararg columns: KProperty<C>): ReplaceCause<T, C> = replace { columns.toColumns() }
 public fun <T, C> DataFrame<T>.replace(columns: Iterable<ColumnReference<C>>): ReplaceCause<T, C> = replace { columns.toColumnSet() }
 
-public fun <T> DataFrame<T>.replaceAll(vararg valuePairs: Pair<Any?, Any?>, columns: ColumnsSelector<T, *> = { dfs() }): DataFrame<T> {
+public fun <T> DataFrame<T>.replaceAll(
+    vararg valuePairs: Pair<Any?, Any?>,
+    columns: ColumnsSelector<T, *> = { dfsLeafs() }
+): DataFrame<T> {
     val map = valuePairs.toMap()
     return update(columns).withExpression { map[it] ?: it }
 }
