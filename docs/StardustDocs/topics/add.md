@@ -4,15 +4,13 @@
 
 Returns `DataFrame` which contains all columns from original `DataFrame` followed by newly added columns. Original `DataFrame` is not modified.
 
-Create new column and add it to `DataFrame`:
+**Create new column and add it to `DataFrame`:**
 
 ```kotlin
 add(columnName) { rowExpression }
 
 rowExpression: DataRow.(DataRow) -> Value
 ```
-
-See [row expressions](DataRow.md#row-expressions)
 
 <!---FUN add-->
 <tabs>
@@ -41,7 +39,9 @@ df.add("year of birth") { 2021 - "age"<Int>() }
 </tab></tabs>
 <!---END-->
 
-Create and add several columns to `DataFrame`:
+See [row expressions](DataRow.md#row-expressions)
+
+**Create and add several columns to `DataFrame`:**
 
 ```kotlin
 add { 
@@ -102,7 +102,7 @@ df.add {
 </tab></tabs>
 <!---END-->
 
-Add existing column to `DataFrame`:
+**Add existing column to `DataFrame`:**
 
 <!---FUN addExisting-->
 
@@ -115,7 +115,7 @@ df + score
 
 <!---END-->
 
-Add all columns from another `DataFrame`:
+**Add all columns from another `DataFrame`:**
 
 <!---FUN addDataFrame-->
 
