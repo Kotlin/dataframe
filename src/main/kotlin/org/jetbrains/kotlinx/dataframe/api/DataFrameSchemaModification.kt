@@ -140,7 +140,7 @@ public inline fun <T, reified R> DataFrame<T>.insert(name: String, noinline expr
 public inline fun <T, reified R> DataFrame<T>.insert(
     column: ColumnAccessor<R>,
     noinline expression: RowExpression<T, R>
-): InsertClause<T> = insert(name, expression)
+): InsertClause<T> = insert(column.name(), expression)
 
 public data class InsertClause<T>(val df: DataFrame<T>, val column: AnyCol)
 
