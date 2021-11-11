@@ -107,7 +107,7 @@ Add existing column to `DataFrame`:
 <!---FUN addExisting-->
 
 ```kotlin
-val score by columnOf(4,3,5,2,1,3,5)
+val score by columnOf(4, 3, 5, 2, 1, 3, 5)
 
 df.add(score)
 df + score

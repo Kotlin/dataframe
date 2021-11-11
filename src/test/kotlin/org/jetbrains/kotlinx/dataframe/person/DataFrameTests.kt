@@ -47,7 +47,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.frameColumn
-import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.between
@@ -1795,10 +1794,10 @@ class DataFrameTests : BaseTest() {
 
         fun AnyFrame.check() = nrow() shouldBe expected
 
-        updated.dropNa { city and weight }.check()
-        updated.dropNa(city, weight).check()
-        updated.dropNa("city", "weight").check()
-        updated.dropNa(Person::city, Person::weight).check()
+        updated.dropNA { city and weight }.check()
+        updated.dropNA(city, weight).check()
+        updated.dropNA("city", "weight").check()
+        updated.dropNA(Person::city, Person::weight).check()
     }
 
     @Test
@@ -1808,10 +1807,10 @@ class DataFrameTests : BaseTest() {
 
         fun AnyFrame.check() = nrow() shouldBe expected
 
-        updated.dropNa(whereAllNa = true) { city and weight }.check()
-        updated.dropNa(city, weight, whereAllNa = true).check()
-        updated.dropNa("city", "weight", whereAllNa = true).check()
-        updated.dropNa(Person::city, Person::weight, whereAllNa = true).check()
+        updated.dropNA(whereAllNA = true) { city and weight }.check()
+        updated.dropNA(city, weight, whereAllNA = true).check()
+        updated.dropNA("city", "weight", whereAllNA = true).check()
+        updated.dropNA(Person::city, Person::weight, whereAllNA = true).check()
     }
 
     @Test

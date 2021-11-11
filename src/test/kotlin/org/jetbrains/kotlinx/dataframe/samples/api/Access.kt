@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
 import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropLast
-import org.jetbrains.kotlinx.dataframe.api.dropNa
+import org.jetbrains.kotlinx.dataframe.api.dropNA
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
@@ -304,13 +304,13 @@ class Access : TestBase() {
     }
 
     @Test
-    fun dropNa() {
+    fun dropNA() {
         // SampleStart
-        df.dropNa() // remove rows containing null or Double.NaN in any column
-        df.dropNa(whereAllNa = true) // remove rows with null or Double.NaN in all columns
-        df.dropNa { weight } // remove rows where 'weight' is null or Double.NaN
-        df.dropNa { age and weight } // remove rows where either 'age' or 'weight' is null or Double.NaN
-        df.dropNa(whereAllNa = true) { age and weight } // remove rows where both 'age' and 'weight' are null or Double.NaN
+        df.dropNA() // remove rows containing null or Double.NaN in any column
+        df.dropNA(whereAllNA = true) // remove rows with null or Double.NaN in all columns
+        df.dropNA { weight } // remove rows where 'weight' is null or Double.NaN
+        df.dropNA { age and weight } // remove rows where either 'age' or 'weight' is null or Double.NaN
+        df.dropNA(whereAllNA = true) { age and weight } // remove rows where both 'age' and 'weight' are null or Double.NaN
         // SampleEnd
     }
 
