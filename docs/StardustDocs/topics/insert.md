@@ -49,7 +49,7 @@ Insert previously created column:
 <!---FUN insertColumn-->
 
 ```kotlin
-val score by columnOf(4,5,3,5,4,5,3)
+val score by columnOf(4, 5, 3, 5, 4, 5, 3)
 df.insert(score).at(2)
 ```
 
