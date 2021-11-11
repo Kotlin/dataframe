@@ -9,7 +9,9 @@ import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.div
 import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.groupByOther
 import org.jetbrains.kotlinx.dataframe.api.length
+import org.jetbrains.kotlinx.dataframe.api.matches
 import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.maxBy
 import org.jetbrains.kotlinx.dataframe.api.maxByOrNull
@@ -29,7 +31,7 @@ import org.jetbrains.kotlinx.dataframe.api.minOf
 import org.jetbrains.kotlinx.dataframe.api.minOrNull
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.pivotCount
-import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.pivotMatches
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.stdFor
 import org.jetbrains.kotlinx.dataframe.api.sum
@@ -526,6 +528,34 @@ class Analyze : TestBase() {
     }
 
     @Test
+    fun pivot2_properties() {
+        // SampleStart
+        df.pivot { city and name.firstName }
+        df.pivot { city then name.firstName }
+        // SampleEnd
+    }
+
+    @Test
+    fun pivot2_accessors() {
+        // SampleStart
+        val city by column<String?>()
+        val name by columnGroup()
+        val firstName by name.column<String>()
+
+        df.pivot { city and firstName }
+        df.pivot { city then firstName }
+        // SampleEnd
+    }
+
+    @Test
+    fun pivot2_strings() {
+        // SampleStart
+        df.pivot { "city" and "name"["firstName"] }
+        df.pivot { "city" then "name"["firstName"] }
+        // SampleEnd
+    }
+
+    @Test
     fun pivotInward_properties() {
         // SampleStart
         df.pivot(inward = true) { city }
@@ -545,56 +575,6 @@ class Analyze : TestBase() {
     fun pivotInward_strings() {
         // SampleStart
         df.pivot("city", inward = true)
-        // SampleEnd
-    }
-
-    @Test
-    fun pivotAnd_properties() {
-        // SampleStart
-        df.pivotCount(inward = true) { name.firstName }.print() // ["city"]["Moscow"].print()
-        // SampleEnd
-    }
-
-    @Test
-    fun pivotAnd_accessors() {
-        // SampleStart
-        val city by column<String?>()
-        val name by columnGroup()
-        val firstName by name.column<String>()
-
-        df.pivot { city and firstName }
-        // SampleEnd
-    }
-
-    @Test
-    fun pivotAnd_strings() {
-        // SampleStart
-        df.pivot { "city" and "name"["firstName"] }
-        // SampleEnd
-    }
-
-    @Test
-    fun pivotThen_properties() {
-        // SampleStart
-        df.pivot { city then name.firstName }
-        // SampleEnd
-    }
-
-    @Test
-    fun pivotThen_accessors() {
-        // SampleStart
-        val city by column<String?>()
-        val name by columnGroup()
-        val firstName by name.column<String>()
-
-        df.pivot { city then firstName }
-        // SampleEnd
-    }
-
-    @Test
-    fun pivotThen_strings() {
-        // SampleStart
-        df.pivot { "city" then "name"["firstName"] }
         // SampleEnd
     }
 
@@ -633,6 +613,13 @@ class Analyze : TestBase() {
         df.pivot("city").groupBy("name")
         // same as
         df.groupBy("name").pivot("city")
+        // SampleEnd
+    }
+
+    @Test
+    fun pivotGroupByOther() {
+        // SampleStart
+        df.pivot { city }.groupByOther()
         // SampleEnd
     }
 
@@ -828,6 +815,24 @@ class Analyze : TestBase() {
             }
             count() into "total"
         }
+        // SampleEnd
+    }
+
+    @Test
+    fun pivotCount() {
+        // SampleStart
+        df.pivotCount { city }
+        // same as
+        df.pivot(inward = true) { city }.groupByOther().count()
+        // SampleEnd
+    }
+
+    @Test
+    fun pivotMatches() {
+        // SampleStart
+        df.pivotMatches { city }
+        // same as
+        df.pivot(inward = true) { city }.groupByOther().matches()
         // SampleEnd
     }
 }
