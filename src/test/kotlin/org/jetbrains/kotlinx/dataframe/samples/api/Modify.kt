@@ -362,7 +362,8 @@ class Modify : TestBase() {
     fun gatherNames() {
         val pivoted = df.dropNulls { city }.pivotCount(inward = false) { city }
         // SampleStart
-        pivoted.gather { "London".."Tokyo" }.cast<Int>().where { it > 0 }.into("city")
+        pivoted.gather { "London".."Tokyo" }.cast<Int>()
+            .where { it > 0 }.into("city")
         // SampleEnd
     }
 
@@ -378,7 +379,10 @@ class Modify : TestBase() {
     fun gatherWithMapping() {
         val pivoted = df.dropNulls { city }.pivotCount(inward = false) { city }
         // SampleStart
-        pivoted.gather { "London".."Tokyo" }.cast<Int>().mapKeys { it.lowercase() }.mapValues { 1.0 / it }.into("city", "density")
+        pivoted.gather { "London".."Tokyo" }.cast<Int>()
+            .mapKeys { it.lowercase() }
+            .mapValues { 1.0 / it }
+            .into("city", "density")
         // SampleEnd
     }
 

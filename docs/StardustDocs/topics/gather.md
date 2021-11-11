@@ -35,7 +35,10 @@ To convert gathered keys or values use `mapKeys` and `mapValues`. If columns wer
 <!---FUN gatherWithMapping-->
 
 ```kotlin
-pivoted.gather { "London".."Tokyo" }.cast<Int>().mapKeys { it.lowercase() }.mapValues { 1.0 / it }.into("city", "density")
+ pivoted.gather { "London".."Tokyo" }.cast<Int>()
+    .mapKeys { it.lowercase() }
+    .mapValues { 1.0 / it }
+    .into("city", "density")
 ```
 
 <!---END-->
@@ -45,7 +48,8 @@ When `valueColumnName` is not defined, only `key` column is created. This can be
 <!---FUN gatherNames-->
 
 ```kotlin
-pivoted.gather { "London".."Tokyo" }.cast<Int>().where { it > 0 }.into("city")
+pivoted.gather { "London".."Tokyo" }.cast<Int>()
+    .where { it > 0 }.into("city")
 ```
 
 <!---END-->
