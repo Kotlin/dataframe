@@ -1,9 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.person
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.addRowNumber
 import org.jetbrains.kotlinx.dataframe.api.all
@@ -44,13 +42,6 @@ class JoinTests : BaseTest() {
         val origin: String?
         val grade: Int
     }
-
-    val DataRow<Person2>.name @JvmName("get-name") get() = this["name"] as String
-    val DataRow<Person2>.origin get() = this["origin"] as String?
-    val DataRow<Person2>.grade get() = this["grade"] as Int
-    val ColumnsContainer<Person2>.name @JvmName("get-name") get() = this["name"].cast<String>()
-    val ColumnsContainer<Person2>.origin get() = this["origin"].cast<String?>()
-    val ColumnsContainer<Person2>.grade get() = this["grade"].cast<Int>()
 
     val typed2: DataFrame<Person2> = df2.cast()
 

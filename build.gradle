@@ -16,6 +16,7 @@ plugins {
     id "org.jetbrains.kotlin.libs.publisher" version "$libsPublisherVersion"
     id("io.github.devcrocod.korro") version "0.1.1-dev-29"
     id("org.jmailen.kotlinter") version "$ktlint_version"
+    id("org.jetbrains.kotlin.plugin.dataframe") version "0.8.0-dev-456"
 }
 
 apply plugin: "org.jetbrains.kotlin.jupyter.api"
@@ -149,6 +150,15 @@ lintKotlinMain {
     exclude '**/*keywords*/**'
 }
 
+lintKotlinTest {
+    exclude {
+        it.name.endsWith(".Generated.kt")
+    }
+    exclude {
+        it.name.endsWith("\$Extensions.kt")
+    }
+}
+
 lintKotlinTest.enabled = true
 
 kotlinter {
@@ -206,5 +216,10 @@ artifacts {
     instrumentedJars(jar.archiveFile) {
         builtBy(jar)
     }
+}
+
+sourceSets {
+    main.kotlin.srcDir("build/generated/ksp/main/kotlin/")
+    test.kotlin.srcDir("build/generated/ksp/test/kotlin/")
 }
 
