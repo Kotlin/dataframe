@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.SortDsl
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
-import org.jetbrains.kotlinx.dataframe.api.frameColumn
+import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
@@ -28,7 +28,7 @@ internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>)
         .update { groups }
         .with { it.sortByImpl(UnresolvedColumnsPolicy.Skip, columns) }
         .sortByImpl(UnresolvedColumnsPolicy.Skip, columns as SortColumnsSelector<T, *>)
-        .asGroupBy { it.frameColumn(groups.name()).castFrameColumn() }
+        .asGroupBy { it.getFrameColumn(groups.name()).castFrameColumn() }
 }
 
 internal fun <T, C> DataFrame<T>.sortByImpl(

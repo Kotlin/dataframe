@@ -35,11 +35,10 @@ public fun <T> DataFrame<T>.getRows(range: IntRange): DataFrame<T> = if (range =
 public fun <T> DataFrame<T>.getRows(indices: Iterable<Int>): DataFrame<T> = columns().map { col -> col[indices] }.toDataFrame().cast()
 public fun <T> DataFrame<T>.getOrNull(index: Int): DataRow<T>? = if (index < 0 || index >= nrow()) null else get(index)
 
-public fun <T> ColumnsContainer<T>.frameColumn(columnPath: ColumnPath): FrameColumn<*> = get(columnPath).asFrameColumn()
-public fun <T> ColumnsContainer<T>.frameColumn(columnName: String): FrameColumn<*> = get(columnName).asFrameColumn()
+public fun <T> ColumnsContainer<T>.getFrameColumn(columnPath: ColumnPath): FrameColumn<*> = get(columnPath).asFrameColumn()
+public fun <T> ColumnsContainer<T>.getFrameColumn(columnName: String): FrameColumn<*> = get(columnName).asFrameColumn()
 public fun <T> ColumnsContainer<T>.tryGetColumn(columnIndex: Int): AnyCol? = if (columnIndex in 0 until ncol()) getColumn(columnIndex) else null
 public fun <T> ColumnsContainer<T>.getColumnGroup(columnPath: ColumnPath): ColumnGroup<*> = get(columnPath).asColumnGroup()
-public fun <T> ColumnsContainer<T>.getColumnGroup(columnName: String): ColumnGroup<*> = get(columnName).asColumnGroup()
 
 public fun <T, C> ColumnsContainer<T>.getColumn(selector: ColumnSelector<T, C>): DataColumn<C> = get(selector)
 

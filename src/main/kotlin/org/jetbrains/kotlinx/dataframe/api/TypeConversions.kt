@@ -174,10 +174,10 @@ public fun <T> DataFrame<T>.toColumnGroup(name: String): ColumnGroup<T> = DataCo
 // region as GroupedDataFrame
 
 public fun <T> DataFrame<T>.asGroupBy(groupedColumnName: String): GroupBy<T, T> =
-    GroupByImpl(this, frameColumn(groupedColumnName).castFrameColumn()) { none() }
+    GroupByImpl(this, getFrameColumn(groupedColumnName).castFrameColumn()) { none() }
 
 public fun <T, G> DataFrame<T>.asGroupBy(groupedColumn: ColumnReference<DataFrame<G>>): GroupBy<T, G> =
-    GroupByImpl(this, frameColumn(groupedColumn.name()).castFrameColumn()) { none() }
+    GroupByImpl(this, getFrameColumn(groupedColumn.name()).castFrameColumn()) { none() }
 
 public fun <T> DataFrame<T>.asGroupBy(): GroupBy<T, T> {
     val groupCol = columns().single { it.isFrameColumn() }.asFrameColumn().castFrameColumn<T>()
