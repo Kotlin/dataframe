@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dfsOf
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explode
+import org.jetbrains.kotlinx.dataframe.api.fillNaNs
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.groupBy
@@ -52,6 +53,7 @@ import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.withValue
+import org.jetbrains.kotlinx.dataframe.api.withZero
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
@@ -149,9 +151,9 @@ class Modify : TestBase() {
     }
 
     @Test
-    fun nullToZero() {
+    fun fillNaNs() {
         // SampleStart
-        df.nullToZero { weight }
+        df.fillNaNs { doubleCols() }.withZero()
         // SampleEnd
     }
 
@@ -456,11 +458,11 @@ class Modify : TestBase() {
         df.add("year of birth") { 2021 - "age"<Int>() }
         // SampleEnd
     }
-    
+
     @Test
     fun addExisting() {
         // SampleStart
-        val score by columnOf(4,3,5,2,1,3,5)
+        val score by columnOf(4, 3, 5, 2, 1, 3, 5)
 
         df.add(score)
         df + score
@@ -469,7 +471,7 @@ class Modify : TestBase() {
 
     @Test
     fun addDataFrame() {
-        val otherDf = df.select { name named "name2"}
+        val otherDf = df.select { name named "name2" }
         // SampleStart
         df.add(otherDf)
         // SampleEnd

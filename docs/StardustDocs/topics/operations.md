@@ -45,7 +45,7 @@
 * [convert](convert.md)
 * [parse](parse.md)
 * [fillNulls](fillNulls.md)
-* [nullToZero](nullToZero.md)
+* [fillNaNs](fillNaNs.md)
 * [split](split.md)
 * [merge](merge.md)
 * [explode](explode.md)

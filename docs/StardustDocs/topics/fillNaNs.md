@@ -1,10 +1,10 @@
-[//]: # (title: fillNulls)
+[//]: # (title: fillNaNs)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Replaces `null` values with given value or expression. 
+Replaces `Double.NaN` and `Float.NaN` values with given value or expression. 
 
-<!---FUN fillNulls-->
+<!---FUN fillNaNs-->
 
 ```kotlin
 df.fillNulls { intCols() }.with { -1 }
