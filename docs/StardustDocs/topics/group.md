@@ -1,14 +1,26 @@
 [//]: # (title: group)
 
-Group columns into column groups. It is a special case of [move](move.md) operation
-```
-df.group { columns }.into(groupName)
-df.group { columns }.into { groupNameExpression }
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
+
+Group columns into [`ColumnsGroups`](DataColumn.md#columngroup). 
+
+It is a special case of [`move`](move.md) operation.
+
+```kotlin
+group { columns }
+    .into(groupName) | .into { groupNameExpression }
 
 groupNameExpression = DataColumn.(DataColumn) -> String
 ```
-Examples
+
+<!---FUN group-->
+
 ```kotlin
-df.group { firstName and lastName }.into("name")
-df.group { nameContains(":") }.into { name.substringBefore(":") }
+df.group { age and city }.into("info")
+
+df.group { all() }.into { it.type().toString() }.print()
 ```
+
+<!---END-->
+
+To ungroup grouped columns use [`ungroup`](ungroup.md) operation.
