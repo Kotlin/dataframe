@@ -7,10 +7,6 @@ This section describes ways to create [`DataFrame`](DataFrame.md).
 
 Returns [`DataFrame`](DataFrame.md) with given column names and values.
 
-```kotlin
-dataFrameOf(columnNames)(columnValues)
-```
-
 <!---FUN createDataFrameOf-->
 
 ```kotlin
@@ -27,8 +23,8 @@ val df = dataFrameOf("name", "age")(
 <!---FUN createDataFrameFromColumns-->
 
 ```kotlin
-val name by columnOf("Alice", "Bob")
-val age by columnOf(15, 20)
+val name by columnOf("Alice", "Bob", "Mark")
+val age by columnOf(15, 20, 22)
 
 // DataFrame with 2 columns
 val df = dataFrameOf(name, age)
@@ -42,7 +38,8 @@ val df = dataFrameOf(name, age)
 val names = listOf("name", "age")
 val values = listOf(
     "Alice", 15,
-    "Bob", 20
+    "Bob", 20,
+    "Mark", 22
 )
 val df = dataFrameOf(names, values)
 ```
@@ -86,10 +83,9 @@ val df = dataFrameOf(names).fill(15, true)
 <!---FUN createDataFrameFromIterable-->
 
 ```kotlin
-val name by columnOf("Alice", "Bob")
-val age by columnOf(15, 20)
+val name by columnOf("Alice", "Bob", "Mark")
+val age by columnOf(15, 20, 22)
 
-// DataFrame with 2 columns
 listOf(name, age).toDataFrame()
 ```
 
@@ -100,7 +96,7 @@ listOf(name, age).toDataFrame()
 <!---FUN createDataFrameFromMap-->
 
 ```kotlin
-val map = mapOf("name" to listOf("Alice", "Bob"), "age" to listOf(15, 20))
+val map = mapOf("name" to listOf("Alice", "Bob", "Mark"), "age" to listOf(15, 20, 22))
 
 // DataFrame with 2 columns
 map.toDataFrame()

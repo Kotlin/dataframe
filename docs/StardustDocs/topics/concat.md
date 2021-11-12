@@ -14,7 +14,7 @@ df.concat(otherDf)
 
 <!---END-->
 
-### Concat many DataFrames
+### Concat several DataFrames
 
 `concat` is available for:
 

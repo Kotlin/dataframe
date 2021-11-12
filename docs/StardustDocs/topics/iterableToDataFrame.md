@@ -7,7 +7,7 @@ To create `DataFrame` from `Iterable` of any objects use `createDataFrame` exten
 
 ```kotlin
 data class Person(val name: String, val age: Int)
-val persons = listOf(Person("Alice", 15), Person("Bob", 20))
+val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Mark", 22))
 
 val df = persons.toDataFrame()
 ```
