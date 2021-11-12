@@ -19,7 +19,7 @@ public fun <T : Number> Sequence<T>.mean(type: KType, skipNaN: Boolean): Double 
         Long::class -> (this as Sequence<Long>).map { it.toDouble() }.mean(false)
         BigDecimal::class -> (this as Sequence<BigDecimal>).map { it.toDouble() }.mean(false)
         Number::class -> (this as Sequence<Number>).map { it.toDouble() }.mean(skipNaN)
-        else -> throw IllegalArgumentException()
+        else -> throw IllegalArgumentException("Unable to compute mean for type $type")
     }
 }
 
