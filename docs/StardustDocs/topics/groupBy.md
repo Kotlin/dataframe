@@ -74,7 +74,7 @@ It supports the following operations:
 
 Any `DataFrame` with `FrameColumn` can be reinterpreted as `GroupBy`:
 
-<!---FUN dataFrameToGrouped-->
+<!---FUN dataFrameToGroupBy-->
 
 ```kotlin
 val key by columnOf(1, 2) // create int column with name "key"

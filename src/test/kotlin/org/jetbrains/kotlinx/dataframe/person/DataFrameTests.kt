@@ -1956,7 +1956,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `filter GroupedDataFrame by groups`() {
+    fun `filter GroupBy by groups`() {
         val grouped = typed.groupBy { name }
         val filtered = grouped.filter { group.nrow() > 2 }.concat()
         filtered shouldBe typed.filter { name == "Mark" }
