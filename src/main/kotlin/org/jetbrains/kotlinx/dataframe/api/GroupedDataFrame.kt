@@ -36,7 +36,7 @@ public interface GroupedDataFrame<out T, out G> : Grouped<G> {
 
     public operator fun get(key: GroupKey): DataFrame<T>
 
-    public fun <R> mapGroups(transform: Selector<DataFrame<G>?, DataFrame<R>?>): GroupedDataFrame<T, R>
+    public fun <R> mapGroups(transform: Selector<DataFrame<G>, DataFrame<R>>): GroupedDataFrame<T, R>
 
     public fun filter(predicate: GroupedRowFilter<T, G>): GroupedDataFrame<T, G>
 

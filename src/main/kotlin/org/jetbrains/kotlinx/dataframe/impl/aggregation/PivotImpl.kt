@@ -2,9 +2,9 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
-import org.jetbrains.kotlinx.dataframe.api.PivotColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.Pivot
+import org.jetbrains.kotlinx.dataframe.api.PivotColumnsSelector
+import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 
 internal data class PivotImpl<T>(

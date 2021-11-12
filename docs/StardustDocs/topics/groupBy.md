@@ -4,7 +4,14 @@
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
 Splits the rows of `DataFrame` into groups using one or several columns as grouping keys.
-See [column selectors](ColumnSelectors.md)
+
+```kotlin
+groupBy { columns }
+    [transformations]
+    [aggregations]
+```
+
+See [column selectors](ColumnSelectors.md), [groupBy transformations](#groupeddataframe) and [groupBy aggregations](aggregateGroupBy.md)
 
 <!---FUN groupBy-->
 <tabs>
@@ -53,9 +60,18 @@ df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<St
 </tab></tabs>
 <!---END-->
 
-Returns `GroupedDataFrame`.
+Returns `GroupedDataFrame` object.
 
-`GroupedDataFrame` is just a `DataFrame` with one chosen [`FrameColumn`](DataColumn.md#framecolumn) containing data groups, so any `DataFrame` with `FrameColumn` can be reinterpreted as `GroupedDataFrame`:
+### GroupedDataFrame
+
+`GroupedDataFrame` is a `DataFrame` with one chosen [`FrameColumn`](DataColumn.md#framecolumn) containing data groups.
+
+It supports the following operations:
+* [`add`](add.md)
+* [`sortBy`](sortBy.md)
+* [`map`](map.md)
+
+Any `DataFrame` with `FrameColumn` can be reinterpreted as `GroupedDataFrame`:
 
 <!---FUN dataFrameToGrouped-->
 

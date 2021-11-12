@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.mapNotNullGroups
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -134,7 +133,7 @@ class GatherTests {
         val mode by column<String>()
         val gathered = typed.gather { except(name) }.into(mode)
 
-        val expected = typed.groupBy { name }.mapNotNullGroups {
+        val expected = typed.groupBy { name }.mapGroups {
             val cols = columns().drop(1).map { it.asColumnGroup() } // drop 'name' column
             val dataRows = cols.map { it[0] }
 
