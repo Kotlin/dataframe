@@ -14,9 +14,9 @@ import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.excludeJoin
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.filterJoin
+import org.jetbrains.kotlinx.dataframe.api.fullJoin
 import org.jetbrains.kotlinx.dataframe.api.innerJoin
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
-import org.jetbrains.kotlinx.dataframe.api.fullJoin
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.api.select

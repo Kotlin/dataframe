@@ -312,7 +312,9 @@ class Modify : TestBase() {
         val merged = df.merge { name.lastName and name.firstName }.with { it[0] + " (" + it[1] + ")" }.into("name")
         val name by column<String>()
         // SampleStart
-        merged.split { name }.with("""(.*) \((.*)\)""".toRegex()).inward("firstName", "lastName")
+        merged.split { name }
+            .with("""(.*) \((.*)\)""".toRegex())
+            .inward("firstName", "lastName")
         // SampleEnd
     }
 
@@ -343,6 +345,36 @@ class Modify : TestBase() {
         df.split { "name"["firstName"]<String>() }.with { it.chars().toList() }.intoRows()
 
         df.split { group("name") }.with { it.values() }.intoRows()
+        // SampleEnd
+    }
+
+    @Test
+    fun merge() {
+        // SampleStart
+        df.merge { name.firstName and name.lastName }.by(" ").into("name")
+        // SampleEnd
+    }
+
+    @Test
+    fun mergeSameWith() {
+        // SampleStart
+        df.merge { name.firstName and name.lastName }.with { it[0].first() + "." + it[1].first() + "." }.into("initials")
+        // SampleEnd
+    }
+
+    @Test
+    fun mergeDifferentWith() {
+        // SampleStart
+        df.merge { name.firstName and age and isHappy }
+            .with { "${it[0]} aged ${it[1]} is " + (if (it[2] as Boolean) "" else "not ") + "happy" }
+            .into("status")
+        // SampleEnd
+    }
+
+    @Test
+    fun mergeDefault() {
+        // SampleStart
+        df.merge { numberCols() }.into("data")
         // SampleEnd
     }
 

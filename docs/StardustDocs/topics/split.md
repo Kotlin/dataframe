@@ -10,7 +10,7 @@ The following types of columns can be splitted by default:
 * `DataFrame`: split into rows
 
 ## Split horizontally
-Reverse operation to [merge](merge.md)
+Reverse operation to [`merge`](merge.md)
 
 ```kotlin
 df.split { columns }
@@ -21,11 +21,9 @@ splitter = DataRow.(T) -> Iterable<Any>
 columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
 ```
 
-`columnNamesGenerator` is used to generate names for additional columns when the list of explicitly specified `columnNames` was not long enough.  
-`columnIndex` in `columnNamesGenerator` starts with `1` for the first additional column name.  
-Default `columnNamesGenerator` generates column names `splitted1`, `splitted2`...
+`columnNamesGenerator` is used to generate names for additional columns when the list of explicitly specified `columnNames` was not long enough. `columnIndex` starts with `1` for the first additional column name.  
 
-Examples:
+Default `columnNamesGenerator` generates column names `splitted1`, `splitted2`...
 
 <!---FUN split-->
 <tabs>
@@ -68,7 +66,7 @@ df.split { "name"["lastName"] }.by(" ").inward { "word$it" }
 </tab></tabs>
 <!---END-->
 
-`String` columns can be splitted with [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
+`String` columns can also be splitted with [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
 
 <!---FUN splitRegex-->
 
@@ -79,7 +77,11 @@ merged.split { name }.with("""(.*) \((.*)\)""".toRegex()).inward("firstName", "l
 <!---END-->
 
 ## Split vertically
-Returns `DataFrame` with duplicated rows for every splitted value. Use `.intoRows()` terminal operation to spread splitted values vertically.
+Returns `DataFrame` with duplicated rows for every splitted value. 
+
+Reverse operation to [`mergeRows`](mergeRows.md).
+
+Use `.intoRows()` terminal operation in `split` configuration to spread splitted values vertically:
 
 <!---FUN splitIntoRows-->
 <tabs>
@@ -115,12 +117,4 @@ df.split { group("name") }.with { it.values() }.intoRows()
 </tab></tabs>
 <!---END-->
 
-This operation is reverse to [mergeRows](mergeRows.md).
-
-`split { column }...intoRows()` 
-
-is equivalent to 
-
-`split { column }...inplace().explode { column }`
-
-See [explode](explode.md) for details
+Equals to `split { column }...inplace().explode { column }`. See [`explode`](explode.md) for details.
