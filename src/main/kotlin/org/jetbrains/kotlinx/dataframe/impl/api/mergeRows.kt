@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.mapNotNullGroups
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.api.with
@@ -15,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 
 internal fun <T, C> DataFrame<T>.mergeRowsImpl(dropNulls: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> {
-    return groupBy { except(columns) }.mapNotNullGroups {
+    return groupBy { except(columns) }.mapGroups {
         replace(columns).with {
             val column = it
             val filterNulls = dropNulls && column.hasNulls()

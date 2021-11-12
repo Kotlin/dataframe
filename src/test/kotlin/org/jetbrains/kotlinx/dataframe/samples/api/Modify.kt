@@ -594,7 +594,7 @@ class Modify : TestBase() {
         }
         // SampleEnd
     }
-    
+
     @Test
     fun group() {
         // SampleStart
@@ -612,7 +612,7 @@ class Modify : TestBase() {
         df.ungroup { name }
         // SampleEnd
     }
-    
+
     @Test
     fun flatten() {
         // SampleStart

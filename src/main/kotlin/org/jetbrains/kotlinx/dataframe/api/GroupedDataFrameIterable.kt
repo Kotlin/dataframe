@@ -15,8 +15,6 @@ import kotlin.reflect.KProperty
 
 // region map
 
-public fun <T, G, R> GroupedDataFrame<T, G>.mapNotNullGroups(transform: DataFrame<G>.() -> DataFrame<R>?): GroupedDataFrame<T, R> = mapGroups { if (it == null) null else transform(it) }
-
 public fun <T, G, R> GroupedDataFrame<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): List<R> = keys.mapIndexedNotNull { index, row ->
     val group = groups[index]
     val g = GroupWithKey(row, group)

@@ -25,7 +25,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 internal fun <T, G> GroupedDataFrame<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>): GroupedDataFrame<T, G> {
     return toDataFrame()
         .update { groups }
-        .with { it?.sortByImpl(UnresolvedColumnsPolicy.Skip, columns) }
+        .with { it.sortByImpl(UnresolvedColumnsPolicy.Skip, columns) }
         .sortByImpl(UnresolvedColumnsPolicy.Skip, columns as SortColumnsSelector<T, *>)
         .asGroupedDataFrame { it.frameColumn(groups.name()).castFrameColumn() }
 }
@@ -34,9 +34,9 @@ internal fun <T, C> DataFrame<T>.sortByImpl(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail,
     columns: SortColumnsSelector<T, C>
 ): DataFrame<T> {
-    val columns = getSortColumns(columns, unresolvedColumnsPolicy)
+    val sortColumns = getSortColumns(columns, unresolvedColumnsPolicy)
 
-    val compChain = columns.map {
+    val compChain = sortColumns.map {
         when (it.direction) {
             SortDirection.Asc -> it.column.createComparator(it.nullsLast)
             SortDirection.Desc -> it.column.createComparator(it.nullsLast).reversed()

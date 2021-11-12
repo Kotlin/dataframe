@@ -54,7 +54,7 @@ internal class GroupedDataFrameImpl<T, G>(
         return filtered.frameColumn(groups.name()).values.concat().cast<T>()
     }
 
-    override fun <R> mapGroups(transform: Selector<DataFrame<G>?, DataFrame<R>?>) =
+    override fun <R> mapGroups(transform: Selector<DataFrame<G>, DataFrame<R>>) =
         df.convert(groups) { transform(it, it) }.asGroupedDataFrame(groups.name()) as GroupedDataFrame<T, R>
 
     override fun toDataFrame(groupedColumnName: String?) = if (groupedColumnName == null || groupedColumnName == groups.name()) df else df.rename(groups).into(groupedColumnName)

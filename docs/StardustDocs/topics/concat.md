@@ -4,7 +4,7 @@
 
 Returns `DataFrame` with the union of rows from several given DataFrames.
 
-To union columns instead of rows, see [add](add.md)
+To union columns instead of rows, see [`add`](add.md)
 
 <!---FUN concat-->
 
@@ -14,9 +14,11 @@ df.concat(otherDf)
 
 <!---END-->
 
-You can also concatenate a list of DataFrames. `.concat()` is available for:
+### Concat many DataFrames
 
-* `Iterable<DataFrame>`
+`concat` is available for:
+
+* `Iterable<DataFrame>`:
 
 <!---FUN concatIterable-->
 
@@ -26,7 +28,7 @@ listOf(df[0..1], df[4..5]).concat()
 
 <!---END-->
 
-* `Iterable<DataRow>`
+* `Iterable<DataRow>`:
 
 <!---FUN concatRows-->
 
@@ -37,7 +39,7 @@ rows.concat()
 
 <!---END-->
 
-* `GroupedDataFrame`
+* `GroupedDataFrame`:
 
 <!---FUN concatGroupedDataFrame-->
 
@@ -47,7 +49,7 @@ df.groupBy { name }.concat()
 
 <!---END-->
 
-* [`FrameColumn`](DataColumn.md#framecolumn):
+* [`FrameColumn`](DataColumn.md#framecolumn):z
 
 <!---FUN concatFrameColumn-->
 
@@ -62,6 +64,6 @@ frameColumn.concat()
 
 If input DataFrames have different schemas, every column in resulting `DataFrame` will have the most common type of the original columns with the same name. 
 
-For example, if one `DataFrame` has column `A` of type `Int` and other `DataFrame` has column `A` of type `Double`, resulting `DataFrame` will have column `A` of type `Number`.
+For example, if one `DataFrame` has column `A: Int` and other `DataFrame` has column `A: Double`, resulting `DataFrame` will have column `A: Number`.
 
 Missing columns in DataFrames will be filled with `null`.
