@@ -20,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.type
-import java.math.BigDecimal
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
