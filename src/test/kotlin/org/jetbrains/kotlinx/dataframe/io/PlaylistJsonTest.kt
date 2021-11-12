@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
+import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
@@ -297,7 +297,7 @@ class PlaylistJsonTest {
 
     @Test
     fun `aggregate by column`() {
-        val res = typed.asGroupedDataFrame { items }.aggregate {
+        val res = typed.asGroupBy { items }.aggregate {
             this into "items"
             minBy { snippet.publishedAt }.snippet into "earliest"
         }

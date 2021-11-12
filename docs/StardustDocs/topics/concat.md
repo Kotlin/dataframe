@@ -39,9 +39,9 @@ rows.concat()
 
 <!---END-->
 
-* `GroupedDataFrame`:
+* `GroupBy`:
 
-<!---FUN concatGroupedDataFrame-->
+<!---FUN concatGroupBy-->
 
 ```kotlin
 df.groupBy { name }.concat()

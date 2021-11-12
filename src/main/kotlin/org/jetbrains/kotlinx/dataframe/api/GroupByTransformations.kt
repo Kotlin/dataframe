@@ -10,10 +10,10 @@ import kotlin.reflect.KProperty
 
 // region pivot GroupedDataFrame
 
-public fun <G> GroupedDataFrame<*, G>.pivot(inward: Boolean? = null, columns: ColumnsSelector<G, *>): PivotGroupBy<G> = PivotGroupByImpl(this, columns, inward)
-public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: Column, inward: Boolean? = null): PivotGroupBy<G> = pivot(inward) { columns.toColumns() }
-public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: String, inward: Boolean? = null): PivotGroupBy<G> = pivot(inward) { columns.toColumns() }
-public fun <G> GroupedDataFrame<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean? = null): PivotGroupBy<G> = pivot(inward) { columns.toColumns() }
+public fun <G> GroupBy<*, G>.pivot(inward: Boolean? = null, columns: ColumnsSelector<G, *>): PivotGroupBy<G> = PivotGroupByImpl(this, columns, inward)
+public fun <G> GroupBy<*, G>.pivot(vararg columns: Column, inward: Boolean? = null): PivotGroupBy<G> = pivot(inward) { columns.toColumns() }
+public fun <G> GroupBy<*, G>.pivot(vararg columns: String, inward: Boolean? = null): PivotGroupBy<G> = pivot(inward) { columns.toColumns() }
+public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean? = null): PivotGroupBy<G> = pivot(inward) { columns.toColumns() }
 
 // endregion
 

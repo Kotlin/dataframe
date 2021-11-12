@@ -182,7 +182,7 @@ df.pivot("city").groupBy("name").default(0).min()
 
 ## Pivot inside aggregate
 
-[pivot](pivot.md) operation can also be used inside `aggregate` body of `GroupedDataFrame`. This allows to combine column pivoting with other aggregation functions:
+[pivot](pivot.md) operation can also be used inside `aggregate` body of `GroupBy`. This allows to combine column pivoting with other aggregation functions:
 
 <!---FUN pivotInAggregate-->
 <tabs>

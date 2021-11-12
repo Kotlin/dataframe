@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.addRowNumber
 import org.jetbrains.kotlinx.dataframe.api.allNulls
-import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
+import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
@@ -1405,7 +1405,7 @@ class DataFrameTests : BaseTest() {
         val dfs = (0 until grouped.nrow()).map {
             grouped[it..it]
         }
-        val dst = dfs.concat().asGroupedDataFrame().concat().sortBy("id").remove("id")
+        val dst = dfs.concat().asGroupBy().concat().sortBy("id").remove("id")
         dst shouldBe typed
     }
 
@@ -2164,7 +2164,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `groupByGroup name clash`() {
-        val groupName = GroupedDataFrame.groupedColumnAccessor.name()
+        val groupName = GroupBy.groupedColumnAccessor.name()
         typed.add(groupName) { name }
             .groupBy(groupName)
             .toDataFrame()

@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.asComparable
-import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
+import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.describe
@@ -306,12 +306,12 @@ class Analyze : TestBase() {
         val data by columnOf(df[0..3], df[4..6]) // create frame column with name "data"
         val df = dataFrameOf(key, data) // create dataframe with two columns
 
-        df.asGroupedDataFrame { data } // convert dataframe to GroupedDataFrame by interpreting 'data' column as groups
+        df.asGroupBy { data } // convert dataframe to GroupedDataFrame by interpreting 'data' column as groups
         // SampleEnd
     }
 
     @Test
-    fun groupedDataFrameToFrame() {
+    fun groupByToFrame() {
         // SampleStart
         df.groupBy { city }.toDataFrame()
         // SampleEnd

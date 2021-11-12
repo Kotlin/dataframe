@@ -183,11 +183,11 @@ public fun <T, C> DataFrame<T>.forEachIn(
 
 // region groupBy
 
-public fun <T> DataFrame<T>.groupBy(moveToTop: Boolean = true, cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T> = groupByImpl(moveToTop, cols)
-public fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>): GroupedDataFrame<T, T> = groupBy { cols.toColumnSet() }
-public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupedDataFrame<T, T> = groupBy { cols.toColumns() }
-public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupedDataFrame<T, T> = groupBy { cols.toColumns() }
-public fun <T> DataFrame<T>.groupBy(vararg cols: Column, moveToTop: Boolean = true): GroupedDataFrame<T, T> = groupBy(moveToTop) { cols.toColumns() }
+public fun <T> DataFrame<T>.groupBy(moveToTop: Boolean = true, cols: ColumnsSelector<T, *>): GroupBy<T, T> = groupByImpl(moveToTop, cols)
+public fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>): GroupBy<T, T> = groupBy { cols.toColumnSet() }
+public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = groupBy { cols.toColumns() }
+public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupBy<T, T> = groupBy { cols.toColumns() }
+public fun <T> DataFrame<T>.groupBy(vararg cols: Column, moveToTop: Boolean = true): GroupBy<T, T> = groupBy(moveToTop) { cols.toColumns() }
 
 // endregion
 

@@ -6,10 +6,10 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
+import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.GroupKey
-import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
 import org.jetbrains.kotlinx.dataframe.api.GroupedRowFilter
-import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
+import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
@@ -19,11 +19,9 @@ import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.minus
-import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.values
-import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateBodyInternal
@@ -36,12 +34,12 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.pathOf
 import org.jetbrains.kotlinx.dataframe.values
 
-internal class GroupedDataFrameImpl<T, G>(
+internal class GroupByImpl<T, G>(
     val df: DataFrame<T>,
     override val groups: FrameColumn<G>,
     private val keyColumnsInGroups: ColumnsSelector<G, *>
 ) :
-    GroupedDataFrame<T, G>,
+    GroupBy<T, G>,
     AggregatableInternal<G> {
 
     override val keys by lazy { df - groups }
@@ -55,7 +53,7 @@ internal class GroupedDataFrameImpl<T, G>(
     }
 
     override fun <R> mapGroups(transform: Selector<DataFrame<G>, DataFrame<R>>) =
-        df.convert(groups) { transform(it, it) }.asGroupedDataFrame(groups.name()) as GroupedDataFrame<T, R>
+        df.convert(groups) { transform(it, it) }.asGroupBy(groups.name()) as GroupBy<T, R>
 
     override fun toDataFrame(groupedColumnName: String?) = if (groupedColumnName == null || groupedColumnName == groups.name()) df else df.rename(groups).into(groupedColumnName)
 
@@ -67,12 +65,12 @@ internal class GroupedDataFrameImpl<T, G>(
 
     override fun <R> aggregateInternal(body: AggregateBodyInternal<G, R>) = aggregate(body as AggregateGroupedBody<G, R>)
 
-    override fun filter(predicate: GroupedRowFilter<T, G>): GroupedDataFrame<T, G> {
+    override fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G> {
         val indices = (0 until df.nrow()).filter {
             val row = GroupedDataRowImpl(df.get(it), groups)
             predicate(row, row)
         }
-        return df[indices].asGroupedDataFrame(groups)
+        return df[indices].asGroupBy(groups)
     }
 }
 
