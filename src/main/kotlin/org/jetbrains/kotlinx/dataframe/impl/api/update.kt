@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
+import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.api.UpdateClause
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.forEach
@@ -27,15 +28,10 @@ import kotlin.reflect.jvm.jvmErasure
 @PublishedApi
 internal fun <T, C> UpdateClause<T, C>.updateImpl(expression: (DataRow<T>, DataColumn<C>, C) -> C): DataFrame<T> = df.replace(columns).with { it.updateImpl(df, filter, expression) }
 
-internal fun <T, C> UpdateClause<T, C>.updateToZero() = df.replace(columns).with {
-    when (it.type().jvmErasure) {
-        Double::class -> it.cast<Double?>().updateImpl(df, filter as RowValueFilter<T, Double?>) { _, _, _ -> .0 }
-        Float::class -> it.cast<Float?>().updateImpl(df, filter as RowValueFilter<T, Float?>) { _, _, _ -> 0f }
-        Int::class -> it.cast<Int?>().updateImpl(df, filter as RowValueFilter<T, Int?>) { _, _, _ -> 0 }
-        Long::class -> it.cast<Long?>().updateImpl(df, filter as RowValueFilter<T, Long?>) { _, _, _ -> 0 }
-        BigDecimal::class -> it.cast<BigDecimal?>().updateImpl(df, filter as RowValueFilter<T, BigDecimal?>) { _, _, _ -> BigDecimal.ZERO }
-        else -> it
-    }
+internal fun <T, C> UpdateClause<T, C>.updateWithValuePerColumnImpl(selector: Selector<DataColumn<C>, C>) = df.replace(columns).with {
+    val value = selector(it, it)
+    val convertedValue = value?.convertTo(it.type()) as C
+    it.updateImpl(df, filter) { _, _, _ -> convertedValue }
 }
 
 internal fun <T, C> DataColumn<C>.updateImpl(

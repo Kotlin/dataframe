@@ -2139,7 +2139,7 @@ class DataFrameTests : BaseTest() {
     fun updateWithZero() {
         val updated = typed
             .convert { weight }.toDouble()
-            .update { all() }.where { name == "Mark" }.withZero()
+            .update { numberCols() }.where { name == "Mark" }.withZero()
         updated.age.type shouldBe getType<Int>()
         updated["weight"].type shouldBe getType<Double>()
         val filtered = updated.filter { name == "Mark" }

@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -11,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
+import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -32,6 +34,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateToZero
+import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
@@ -73,11 +76,17 @@ public fun <T, C> UpdateClause<T, C>.at(rowIndices: Collection<Int>): UpdateClau
 public fun <T, C> UpdateClause<T, C>.at(vararg rowIndices: Int): UpdateClause<T, C> = at(rowIndices.toSet())
 public fun <T, C> UpdateClause<T, C>.at(rowRange: IntRange): UpdateClause<T, C> = where { index in rowRange }
 
-public infix fun <T, C> UpdateClause<T, C>.withRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> = updateImpl { row, column, _ -> expression(row, column) }
+public infix fun <T, C> UpdateClause<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> = updateImpl { row, column, _ -> expression(row, column) }
 
 public infix fun <T, C> UpdateClause<T, C>.with(expression: RowValueExpression<T, C, C>): DataFrame<T> = withExpression(expression)
 
 public fun <T, C> UpdateClause<T, C>.asNullable(): UpdateClause<T, C?> = this as UpdateClause<T, C?>
+
+public fun <T, C> UpdateClause<T, C>.perCol(values: Map<String, C>): DataFrame<T> = updateWithValuePerColumnImpl { values[it.name()] ?: throw IllegalArgumentException("Update value for column ${it.name()} is not defined") }
+
+public fun <T, C> UpdateClause<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(values.toMap() as Map<String, C>)
+
+public fun <T, C> UpdateClause<T, C>.perCol(valueSelector: Selector<DataColumn<C>, C>): DataFrame<T> = updateWithValuePerColumnImpl(valueSelector)
 
 public fun <T, C> UpdateClause<T, C>.withExpression(expression: RowValueExpression<T, C, C>): DataFrame<T> = updateImpl { row, _, value ->
     expression(row, value)
@@ -118,7 +127,7 @@ public fun <T> DataFrame<T>.update(
 
 public fun <T, C> UpdateClause<T, C>.withNull(): DataFrame<T> = asNullable().withValue(null)
 
-public fun <T, C> UpdateClause<T, C>.withZero(): DataFrame<T> = updateToZero()
+public fun <T, C> UpdateClause<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }
 
 public infix fun <T, C> UpdateClause<T, C>.withValue(value: C): DataFrame<T> = withExpression { value }
 
@@ -169,7 +178,7 @@ public fun <T> ConvertClause<T, *>.to(type: KType): DataFrame<T> = to { it.conve
 public inline fun <T, C, reified R> ConvertClause<T, C>.with(noinline rowConverter: RowValueExpression<T, C, R>): DataFrame<T> =
     convertRowCellImpl(getType<R>(), rowConverter)
 
-public inline fun <T, C, reified R> ConvertClause<T, C>.withRowCol(noinline expression: RowColumnExpression<T, C, R>): DataFrame<T> =
+public inline fun <T, C, reified R> ConvertClause<T, C>.perRowCol(noinline expression: RowColumnExpression<T, C, R>): DataFrame<T> =
     convertRowColumnImpl(getType<R>(), expression)
 
 public fun <T, C> ConvertClause<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyCol): DataFrame<T> =

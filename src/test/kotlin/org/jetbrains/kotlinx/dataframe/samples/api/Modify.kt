@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -26,6 +27,8 @@ import org.jetbrains.kotlinx.dataframe.api.lowercase
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
 import org.jetbrains.kotlinx.dataframe.api.mapValues
+import org.jetbrains.kotlinx.dataframe.api.mean
+import org.jetbrains.kotlinx.dataframe.api.meanFor
 import org.jetbrains.kotlinx.dataframe.api.merge
 import org.jetbrains.kotlinx.dataframe.api.mergeRows
 import org.jetbrains.kotlinx.dataframe.api.minus
@@ -34,6 +37,8 @@ import org.jetbrains.kotlinx.dataframe.api.movingAverage
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
+import org.jetbrains.kotlinx.dataframe.api.perCol
+import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.nullToZero
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.parser
@@ -49,6 +54,7 @@ import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.api.toLeft
+import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.api.toPath
 import org.jetbrains.kotlinx.dataframe.api.toTop
 import org.jetbrains.kotlinx.dataframe.api.under
@@ -76,10 +82,44 @@ class Modify : TestBase() {
         // SampleStart
         df.update { age }.with { it * 2 }
         df.update { dfsOf<String>() }.with { it.uppercase() }
-        df.update { city }.where { name.firstName == "Alice" }.withValue("Paris")
         df.update { weight }.at(1..4).notNull { it / 2 }
         df.update { name.lastName and age }.at(1, 3, 4).withNull()
-        df.update { age }.with { movingAverage(2) { age }.toInt() }
+        // SampleEnd
+    }
+
+    @Test
+    fun updateWith() {
+        // SampleStart
+        df.update { city }.with { name.firstName + " from " + it }
+        // SampleEnd
+    }
+
+    @Test
+    fun updateWithConst() {
+        // SampleStart
+        df.update { city }.where { name.firstName == "Alice" }.withValue("Paris")
+        // SampleEnd
+    }
+
+    @Test
+    fun updatePerColumn() {
+        val updated =
+            // SampleStart
+            df.update { numberCols() }.perCol { mean(skipNA = true) }
+        // SampleEnd
+        updated.age.ndistinct() shouldBe 1
+        updated.weight.ndistinct() shouldBe 1
+
+        val means = df.meanFor(skipNA = true) { numberCols() }
+        df.update { numberCols() }.perCol(means) shouldBe updated
+        df.update { numberCols() }.perCol(means.toMap() as Map<String, Double>) shouldBe updated
+    }
+
+    @Test
+    fun updatePerRowCol() {
+        val updated =
+            // SampleStart
+            df.update { stringCols() }.perRowCol { row, col -> col.name() + ": " + row.index() }
         // SampleEnd
     }
 

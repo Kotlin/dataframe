@@ -53,6 +53,7 @@ import org.jetbrains.kotlinx.dataframe.api.moveTo
 import org.jetbrains.kotlinx.dataframe.api.moveToLeft
 import org.jetbrains.kotlinx.dataframe.api.moveToRight
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
@@ -69,7 +70,6 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
-import org.jetbrains.kotlinx.dataframe.api.withRowCol
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnMany
@@ -402,7 +402,7 @@ class DataFrameTreeTests : BaseTest() {
     fun `update grouped column to table`() {
         val info by columnGroup()
         val grouped = typed.group { age and weight }.into(info)
-        val updated = grouped.convert(info).withRowCol { row, column -> column.asColumnGroup().df }
+        val updated = grouped.convert(info).perRowCol { row, column -> column.asColumnGroup().df }
         val col = updated[info.name()]
         col.kind() shouldBe ColumnKind.Frame
         val table = col.asFrameColumn()
