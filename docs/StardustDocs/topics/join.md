@@ -90,11 +90,11 @@ df.join(other)
 ### Join types
 
 Supported join types:
-* Inner (default) - only matched rows from left and right dataframes
-* Left - all rows from left dataframe, mismatches from right dataframe filled with `null`
-* Right - all rows from right dataframe, mismatches from left dataframe filled with `null`
-* Outer - all rows from left and right dataframes, any mismatches filled with `null`
-* Exclude - only mismatched rows from left
+* `Inner` (default) - only matched rows from left and right dataframes
+* `Left` - all rows from left dataframe, mismatches from right dataframe filled with `null`
+* `Right` - all rows from right dataframe, mismatches from left dataframe filled with `null`
+* `Full` - all rows from left and right dataframes, any mismatches filled with `null`
+* `Exclude` - only mismatched rows from left
 
 For every join type there is a shortcut operation:
 
@@ -106,7 +106,7 @@ For every join type there is a shortcut operation:
 df.innerJoin(other) { name and city }
 df.leftJoin(other) { name and city }
 df.rightJoin(other) { name and city }
-df.outerJoin(other) { name and city }
+df.fullJoin(other) { name and city }
 df.excludeJoin(other) { name and city }
 ```
 
@@ -120,7 +120,7 @@ val city by column<String>()
 df.innerJoin(other) { name and city }
 df.leftJoin(other) { name and city }
 df.rightJoin(other) { name and city }
-df.outerJoin(other) { name and city }
+df.fullJoin(other) { name and city }
 df.excludeJoin(other) { name and city }
 ```
 
@@ -131,7 +131,7 @@ df.excludeJoin(other) { name and city }
 df.innerJoin(other, "name", "city")
 df.leftJoin(other, "name", "city")
 df.rightJoin(other, "name", "city")
-df.outerJoin(other, "name", "city")
+df.fullJoin(other, "name", "city")
 df.excludeJoin(other, "name", "city")
 ```
 

@@ -63,15 +63,15 @@ public fun <A, B> DataFrame<A>.rightJoin(
     vararg columns: String
 ): DataFrame<A> = rightJoin(other) { columns.toColumns() }
 
-public fun <A, B> DataFrame<A>.outerJoin(
+public fun <A, B> DataFrame<A>.fullJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null
-): DataFrame<A> = join(other, JoinType.Outer, selector = selector)
+): DataFrame<A> = join(other, JoinType.Full, selector = selector)
 
-public fun <A, B> DataFrame<A>.outerJoin(
+public fun <A, B> DataFrame<A>.fullJoin(
     other: DataFrame<B>,
     vararg columns: String
-): DataFrame<A> = outerJoin(other) { columns.toColumns() }
+): DataFrame<A> = fullJoin(other) { columns.toColumns() }
 
 public fun <A, B> DataFrame<A>.filterJoin(
     other: DataFrame<B>,
@@ -131,12 +131,12 @@ public enum class JoinType {
     Left, // all data from left data frame, nulls for mismatches in right data frame
     Right, // all data from right data frame, nulls for mismatches in left data frame
     Inner, // only matched data from right and left data frame
-    Outer, // all data from left and from right data frame, nulls for any mismatches
+    Full, // all data from left and from right data frame, nulls for any mismatches
     Exclude // mismatched rows from left data frame
 }
 
-public val JoinType.allowLeftNulls: Boolean get() = this == JoinType.Right || this == JoinType.Outer
-public val JoinType.allowRightNulls: Boolean get() = this == JoinType.Left || this == JoinType.Outer || this == JoinType.Exclude
+public val JoinType.allowLeftNulls: Boolean get() = this == JoinType.Right || this == JoinType.Full
+public val JoinType.allowRightNulls: Boolean get() = this == JoinType.Left || this == JoinType.Full || this == JoinType.Exclude
 
 // endregion
 

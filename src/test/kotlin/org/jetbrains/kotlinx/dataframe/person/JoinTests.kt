@@ -16,7 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.filterJoin
 import org.jetbrains.kotlinx.dataframe.api.innerJoin
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
-import org.jetbrains.kotlinx.dataframe.api.outerJoin
+import org.jetbrains.kotlinx.dataframe.api.fullJoin
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.api.select
@@ -94,7 +94,7 @@ class JoinTests : BaseTest() {
 
     @Test
     fun `outer join`() {
-        val res = typed.outerJoin(typed2) { name and it.city.match(right.origin) }
+        val res = typed.fullJoin(typed2) { name and it.city.match(right.origin) }
         println(res)
         res.ncol() shouldBe 6
         res.nrow() shouldBe 12
