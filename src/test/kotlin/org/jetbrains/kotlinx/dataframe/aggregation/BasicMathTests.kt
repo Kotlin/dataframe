@@ -17,6 +17,6 @@ class BasicMathTests {
     @Test
     fun `mean with nans and nulls`() {
         columnOf(10, 20, Double.NaN, null).mean() shouldBe Double.NaN
-        columnOf(10, 20, Double.NaN, null).mean(skipNa = true) shouldBe 15
+        columnOf(10, 20, Double.NaN, null).mean(skipNA = true) shouldBe 15
     }
 }
