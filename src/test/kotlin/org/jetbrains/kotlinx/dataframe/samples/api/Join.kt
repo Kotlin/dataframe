@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.innerJoin
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.join
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
-import org.jetbrains.kotlinx.dataframe.api.outerJoin
+import org.jetbrains.kotlinx.dataframe.api.fullJoin
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.api.select
@@ -92,7 +92,7 @@ class Join : TestBase() {
         df.innerJoin(other) { name and city }
         df.leftJoin(other) { name and city }
         df.rightJoin(other) { name and city }
-        df.outerJoin(other) { name and city }
+        df.fullJoin(other) { name and city }
         df.excludeJoin(other) { name and city }
         // SampleEnd
     }
@@ -106,7 +106,7 @@ class Join : TestBase() {
         df.innerJoin(other) { name and city }
         df.leftJoin(other) { name and city }
         df.rightJoin(other) { name and city }
-        df.outerJoin(other) { name and city }
+        df.fullJoin(other) { name and city }
         df.excludeJoin(other) { name and city }
         // SampleEnd
     }
@@ -117,7 +117,7 @@ class Join : TestBase() {
         df.innerJoin(other, "name", "city")
         df.leftJoin(other, "name", "city")
         df.rightJoin(other, "name", "city")
-        df.outerJoin(other, "name", "city")
+        df.fullJoin(other, "name", "city")
         df.excludeJoin(other, "name", "city")
         // SampleEnd
     }
