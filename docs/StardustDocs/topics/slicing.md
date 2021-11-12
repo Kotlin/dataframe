@@ -4,7 +4,13 @@
 
 Returns `DataFrame` with rows at given indices:
 
-<!---FUN getSeveralRowByIndices-->
+<!---FUN getSeveralRowsByIndices-->
+
+```kotlin
+df[0, 3, 4]
+```
+
+<!---END-->
 
 Returns `DataFrame` with rows inside given index ranges:
 
