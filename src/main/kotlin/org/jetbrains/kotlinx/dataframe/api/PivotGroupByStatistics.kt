@@ -151,37 +151,37 @@ public inline fun <T, reified R : Number> PivotGroupBy<T>.sumOf(crossinline expr
 
 // region mean
 
-public fun <T> PivotGroupBy<T>.mean(skipNa: Boolean = false, separate: Boolean = false): DataFrame<T> = meanFor(skipNa, separate, numberColumns())
+public fun <T> PivotGroupBy<T>.mean(skipNA: Boolean = false, separate: Boolean = false): DataFrame<T> = meanFor(skipNA, separate, numberColumns())
 
 public fun <T, C : Number> PivotGroupBy<T>.meanFor(
-    skipNa: Boolean = false,
+    skipNA: Boolean = false,
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, C?>
-): DataFrame<T> = Aggregators.mean(skipNa).aggregateFor(this, separate, columns)
+): DataFrame<T> = Aggregators.mean(skipNA).aggregateFor(this, separate, columns)
 public fun <T> PivotGroupBy<T>.meanFor(
     vararg columns: String,
-    skipNa: Boolean = false,
+    skipNA: Boolean = false,
     separate: Boolean = false
-): DataFrame<T> = meanFor(skipNa, separate) { columns.toNumberColumns() }
+): DataFrame<T> = meanFor(skipNA, separate) { columns.toNumberColumns() }
 public fun <T, C : Number> PivotGroupBy<T>.meanFor(
     vararg columns: ColumnReference<C?>,
-    skipNa: Boolean = false,
+    skipNA: Boolean = false,
     separate: Boolean = false
-): DataFrame<T> = meanFor(skipNa, separate) { columns.toColumns() }
+): DataFrame<T> = meanFor(skipNA, separate) { columns.toColumns() }
 public fun <T, C : Number> PivotGroupBy<T>.meanFor(
     vararg columns: KProperty<C?>,
-    skipNa: Boolean = false,
+    skipNA: Boolean = false,
     separate: Boolean = false
-): DataFrame<T> = meanFor(skipNa, separate) { columns.toColumns() }
+): DataFrame<T> = meanFor(skipNA, separate) { columns.toColumns() }
 
-public fun <T, R : Number> PivotGroupBy<T>.mean(skipNa: Boolean = true, columns: ColumnsSelector<T, R?>): DataFrame<T> =
-    Aggregators.mean(skipNa).aggregateAll(this, columns)
+public fun <T, R : Number> PivotGroupBy<T>.mean(skipNA: Boolean = true, columns: ColumnsSelector<T, R?>): DataFrame<T> =
+    Aggregators.mean(skipNA).aggregateAll(this, columns)
 
 public inline fun <T, reified R : Number> PivotGroupBy<T>.meanOf(
-    skipNa: Boolean = false,
+    skipNA: Boolean = false,
     crossinline expression: RowExpression<T, R?>
 ): DataFrame<T> =
-    Aggregators.mean(skipNa).aggregateOf(this, expression)
+    Aggregators.mean(skipNA).aggregateOf(this, expression)
 
 // endregion
 
