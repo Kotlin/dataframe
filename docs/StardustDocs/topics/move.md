@@ -47,3 +47,8 @@ df.move { dfs { it.name == "e" } }.toTop { it.parent!!.name + it.name }
 ```
 
 <!---END-->
+
+Special cases of `move`:
+* [`group`](group.md) - groups columns into [`ColumnGroups`](DataColumn.md#columngroup)
+* [`ungroup`](ungroup.md) - ungroups [`ColumnGroups`](DataColumn.md#columngroup)
+* [`flatten`](flatten.md) - removes all column groupings
