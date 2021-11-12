@@ -5,11 +5,11 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.excludeJoin
+import org.jetbrains.kotlinx.dataframe.api.fullJoin
 import org.jetbrains.kotlinx.dataframe.api.innerJoin
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.join
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
-import org.jetbrains.kotlinx.dataframe.api.fullJoin
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.api.select
@@ -64,7 +64,7 @@ class Join : TestBase() {
             df.join(other) { name match right.fullName }
         // SampleEnd
         joined.nrow() shouldBe df.nrow()
-        joined.ncol() shouldBe df.ncol() + 1
+        joined.ncol() shouldBe df.ncol() + 2
     }
 
     @Test
@@ -85,7 +85,7 @@ class Join : TestBase() {
         df.join(other) { "name" match "fullName" }
         // SampleEnd
     }
-    
+
     @Test
     fun joinSpecial_properties() {
         // SampleStart

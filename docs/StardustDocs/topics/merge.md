@@ -1,20 +1,29 @@
 [//]: # (title: merge)
 
-Merges several columns into a single column. Reverse operation to [split](split.md)
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
+
+Merges several columns into a single column. 
+
+Reverse operation to [`split`](split.md)
 
 ```kotlin
-df.merge { columns }.into(columnPath)
-df.merge { columns }.by(delimeters, options).into(columnPath)
-df.merge { columns }.by { merger }.into(columnPath)
+merge { columns }
+    .by(delimeter) | with { merger } 
+    .into(column)
 
-merger = (DataRow).List<T> -> Any
+merger: (DataRow).List<T> -> Any
 ```
 
-When no `delimeter` or `merger` are defined, values will be merged into the `List`
-```kotlin
-df.merge { firstName and lastName }.by(" ").into("fullName")
+<!---FUN merge-->
 
-df.merge { cols { it.name.startsWith("value") } }.into("values")
+`merger` accepts a `List` of collected values for every row typed by their common type:
 
-df.merge { protocol and host and port and path }.by { it[0] + "://" + it[1] + ":" + it[2] + "/" + it[3] }.into("address")
-```
+<!---FUN mergeSameWith-->
+
+When heterogeneous columns are merged, they may need to be cast to valid types in `merger`:
+
+<!---FUN mergeDifferentWith-->
+
+By default, when no `delimeter` or `merger` is specified, values will be merged into the `List`:
+
+<!---FUN mergeDefault-->
