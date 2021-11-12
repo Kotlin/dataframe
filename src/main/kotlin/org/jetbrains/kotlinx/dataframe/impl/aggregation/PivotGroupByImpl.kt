@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateBody
 import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
-import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
+import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.PivotColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.firstOrNull
@@ -15,13 +15,13 @@ import org.jetbrains.kotlinx.dataframe.impl.api.getPivotColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 
-internal data class GroupedPivotImpl<T>(
+internal data class PivotGroupByImpl<T>(
     val df: GroupedDataFrame<*, T>,
     val columns: PivotColumnsSelector<T, *>,
     val inward: Boolean?,
     val separateStatistics: Boolean = false,
     val default: Any? = null
-) : GroupedPivot<T>, AggregatableInternal<T> {
+) : PivotGroupBy<T>, AggregatableInternal<T> {
     override fun <R> aggregate(separate: Boolean, body: AggregateBody<T, R>): DataFrame<T> {
         return df.aggregate {
             aggregatePivot(this as GroupByReceiverImpl<T>, columns, separate, inward, default, body)

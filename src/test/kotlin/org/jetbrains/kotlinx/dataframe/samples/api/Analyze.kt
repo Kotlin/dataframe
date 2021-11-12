@@ -495,8 +495,6 @@ class Analyze : TestBase() {
     fun pivot_properties() {
         // SampleStart
         df.pivot { city }
-        df.pivot { city and name.firstName }
-        df.pivot { city then name.lastName }
         // SampleEnd
     }
 
@@ -504,11 +502,8 @@ class Analyze : TestBase() {
     fun pivot_accessors() {
         // SampleStart
         val city by column<String?>()
-        val name by columnGroup()
-        val firstName by name.column<String>()
 
         df.pivot { city }
-        df.pivot { city and firstName }
         // SampleEnd
     }
 
@@ -516,7 +511,6 @@ class Analyze : TestBase() {
     fun pivot_strings() {
         // SampleStart
         df.pivot("city")
-        df.pivot { "city" and "name"["firstName"] }
         // SampleEnd
     }
 

@@ -12,8 +12,6 @@ Pass a column to `pivot` function to use its values as grouping keys and names f
 
 ```kotlin
 df.pivot { city }
-df.pivot { city and name.firstName }
-df.pivot { city then name.lastName }
 ```
 
 </tab>
@@ -21,11 +19,8 @@ df.pivot { city then name.lastName }
 
 ```kotlin
 val city by column<String?>()
-val name by columnGroup()
-val firstName by name.column<String>()
 
 df.pivot { city }
-df.pivot { city and firstName }
 ```
 
 </tab>
@@ -33,13 +28,12 @@ df.pivot { city and firstName }
 
 ```kotlin
 df.pivot("city")
-df.pivot { "city" and "name"["firstName"] }
 ```
 
 </tab></tabs>
 <!---END-->
 
-Returns `PivotedDataFrame`: an intermediate object that can be configured for further transformation and aggregation of data.
+Returns `Pivot`: an intermediate object that can be configured for further transformation and aggregation of data.
 
 See [pivot aggregations](aggregatePivot.md)
 
@@ -110,7 +104,7 @@ df.pivot { "city" then "name"["firstName"] }
 
 ## pivot + groupBy
 
-To create matrix table that is expanded both horizontally and vertically, apply `groupBy` function at `PivotedDataFrame` passing the columns for vertical grouping. Reversed order of `pivot` and `groupBy` operations will produce the same result.
+To create matrix table that is expanded both horizontally and vertically, apply `groupBy` function at `Pivot` passing the columns for vertical grouping. Reversed order of `pivot` and `groupBy` operations will produce the same result.
 
 <!---FUN pivotGroupBy-->
 <tabs>
@@ -146,7 +140,7 @@ df.groupBy("name").pivot("city")
 </tab></tabs>
 <!---END-->
 
-Combination of `pivot` and `groupBy` operations returns `GroupedPivot` that can be used for further aggregation of data groups within matrix cells. 
+Combination of `pivot` and `groupBy` operations returns `PivotGroupBy` that can be used for further aggregation of data groups within matrix cells. 
 
 See [pivot aggregations](aggregatePivot.md)
 
@@ -160,7 +154,11 @@ df.pivot { city }.groupByOther()
 
 <!---END-->
 
-`PivotedDataFrame` can be converted to `DataRow` and `GroupedPivot` can be converted to `DataFrame` without any additional transformations. Generated columns will have type `FrameColumn` and will contain data groups (similar to `GroupedDataFrame`)
+Pivot operation can be performed without any data aggregation:
+* `Pivot` object can be converted to `DataRow` or `DataFrame`.
+* `GroupedPivot` object can be converted to `DataFrame`.
+
+Generated columns will have type [`FrameColumn`](DataColumn.md#framecolumn) and will contain data groups.
 
 <!---FUN pivotAsDataRowOrFrame-->
 
