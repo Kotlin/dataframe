@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
-import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -18,8 +17,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.frameColumn
-import org.jetbrains.kotlinx.dataframe.impl.GroupedDataFrameImpl
+import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.ManyImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
@@ -166,20 +164,20 @@ public fun <T> DataFrame<T>.toColumnGroup(name: String): ColumnGroup<T> = DataCo
 
 // region as GroupedDataFrame
 
-public fun <T> DataFrame<T>.asGroupedDataFrame(groupedColumnName: String): GroupedDataFrame<T, T> =
-    GroupedDataFrameImpl(this, frameColumn(groupedColumnName).castFrameColumn()) { none() }
+public fun <T> DataFrame<T>.asGroupBy(groupedColumnName: String): GroupBy<T, T> =
+    GroupByImpl(this, frameColumn(groupedColumnName).castFrameColumn()) { none() }
 
-public fun <T, G> DataFrame<T>.asGroupedDataFrame(groupedColumn: ColumnReference<DataFrame<G>>): GroupedDataFrame<T, G> =
-    GroupedDataFrameImpl(this, frameColumn(groupedColumn.name()).castFrameColumn()) { none() }
+public fun <T, G> DataFrame<T>.asGroupBy(groupedColumn: ColumnReference<DataFrame<G>>): GroupBy<T, G> =
+    GroupByImpl(this, frameColumn(groupedColumn.name()).castFrameColumn()) { none() }
 
-public fun <T> DataFrame<T>.asGroupedDataFrame(): GroupedDataFrame<T, T> {
+public fun <T> DataFrame<T>.asGroupBy(): GroupBy<T, T> {
     val groupCol = columns().single { it.isFrameColumn() }.asFrameColumn().castFrameColumn<T>()
-    return asGroupedDataFrame { groupCol }
+    return asGroupBy { groupCol }
 }
 
-public fun <T, G> DataFrame<T>.asGroupedDataFrame(selector: ColumnSelector<T, DataFrame<G>?>): GroupedDataFrame<T, G> {
+public fun <T, G> DataFrame<T>.asGroupBy(selector: ColumnSelector<T, DataFrame<G>?>): GroupBy<T, G> {
     val column = getColumn(selector).asFrameColumn()
-    return GroupedDataFrameImpl(this, column) { none() }
+    return GroupByImpl(this, column) { none() }
 }
 
 // endregion

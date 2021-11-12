@@ -19,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.append
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
-import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
+import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.asIterable
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -132,7 +132,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun createFrameColumn() {
         val rowsColumn by columnOf(typed[0..3], typed[4..5], typed[6..6])
-        val df = dataFrameOf(rowsColumn).asGroupedDataFrame { rowsColumn }
+        val df = dataFrameOf(rowsColumn).asGroupBy { rowsColumn }
         val res = df.concat()
         res shouldBe typed
     }

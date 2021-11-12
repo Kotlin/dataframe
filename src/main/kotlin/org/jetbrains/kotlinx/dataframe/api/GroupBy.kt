@@ -22,7 +22,7 @@ public val <T, G> GroupedDataRow<T, G>.group: DataFrame<G> get() = group()
 
 public data class GroupWithKey<T, G>(val key: DataRow<T>, val group: DataFrame<G>)
 
-public interface GroupedDataFrame<out T, out G> : Grouped<G> {
+public interface GroupBy<out T, out G> : Grouped<G> {
 
     public val groups: FrameColumn<G>
 
@@ -36,9 +36,9 @@ public interface GroupedDataFrame<out T, out G> : Grouped<G> {
 
     public operator fun get(key: GroupKey): DataFrame<T>
 
-    public fun <R> mapGroups(transform: Selector<DataFrame<G>, DataFrame<R>>): GroupedDataFrame<T, R>
+    public fun <R> mapGroups(transform: Selector<DataFrame<G>, DataFrame<R>>): GroupBy<T, R>
 
-    public fun filter(predicate: GroupedRowFilter<T, G>): GroupedDataFrame<T, G>
+    public fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G>
 
     public data class Entry<T, G>(val key: DataRow<T>, val group: DataFrame<G>?)
 

@@ -454,7 +454,7 @@ class Modify : TestBase() {
     }
 
     @Test
-    fun concatGroupedDataFrame() {
+    fun concatGroupBy() {
         // SampleStart
         df.groupBy { name }.concat()
         // SampleEnd
