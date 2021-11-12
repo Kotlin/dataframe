@@ -26,16 +26,30 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T>, 
 
         val invalidSizeColumns = columns.filter { it.size != nrow() }
         require(invalidSizeColumns.isEmpty()) { "Unequal column sizes:\n${columns.joinToString("\n") { it.name + " (" + it.size + ")" }}" }
-
         columnsMap = mutableMapOf()
+        var hasUntitledColumns = false
         columns.forEachIndexed { i, col ->
             val name = col.name
-            if (columnsMap.containsKey(name)) {
-                if (name != "") {
+            if (name == "") hasUntitledColumns = true
+            else {
+                require(!columnsMap.containsKey(name)) {
                     val names = columns.groupBy { it.name }.filter { it.key != "" && it.value.size > 1 }.map { it.key }
-                    throw IllegalArgumentException("Duplicate column names: $names. All columns: ${columnNames()}")
+                    "Duplicate column names: $names. All columns: ${columnNames()}"
                 }
-            } else columnsMap[name] = i
+                columnsMap[name] = i
+            }
+        }
+        if (hasUntitledColumns) {
+            val nameGenerator = this.nameGenerator()
+            columns = columns.mapIndexed { i, col ->
+                val name = col.name
+                if (name == "") {
+                    val uniqueName = nameGenerator.addUnique("untitled")
+                    val renamed = col.rename(uniqueName)
+                    columnsMap[uniqueName] = i
+                    renamed
+                } else col
+            }
         }
     }
 
@@ -55,14 +69,16 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T>, 
 
         val renamed = value.rename(columnName)
         val index = getColumnIndex(columnName)
-        val newCols = if (index == -1) columns + renamed else columns.mapIndexed { i, col -> if (i == index) renamed else col }
+        val newCols =
+            if (index == -1) columns + renamed else columns.mapIndexed { i, col -> if (i == index) renamed else col }
         columnsMap[columnName] = if (index == -1) ncol() else index
         columns = newCols
     }
 
     override fun columns() = columns
 
-    override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) = aggregate(body as AggregateGroupedBody<T, R>).df()
+    override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) =
+        aggregate(body as AggregateGroupedBody<T, R>).df()
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all() }
 

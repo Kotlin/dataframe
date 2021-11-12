@@ -97,7 +97,7 @@ class CsvTests {
     @Test
     fun `read first rows`() {
         val expected =
-            listOf("", "user_id", "name", "duplicate", "username", "duplicate1", "duplicate_1_1", "double", "number", "time", "empty")
+            listOf("", "user_id", "name", "duplicate", "username", "duplicate1", "duplicate11", "double", "number", "time", "empty")
         val dfHeader = DataFrame.readCSV(PATH_TO_DATA_1, readLines = 0)
         dfHeader.nrow() shouldBe 0
         dfHeader.columnNames() shouldBe expected
