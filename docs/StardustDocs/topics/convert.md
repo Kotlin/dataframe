@@ -5,11 +5,11 @@ Returns `DataFrame` with changed values in some columns. Allows to change column
 
 ```kotlin
 convert { columnsSelector }
-    .with { rowExpression } | .withConst(value) | .withRowCol { rowColExpression } | to<Type>() | to { colExpression }
+    .with { rowExpression } | .perRowCol { rowColExpression } | .withValue(value)  | to<Type>() | to { colExpression }
 
 rowExpression = DataRow.(OldValue) -> NewValue
 rowColExpression = DataRow.(DataColumn) -> NewValue
-colExpression = DataFrame.(DataColumn) -> NewValue
+colExpression = DataFrame.(DataColumn) -> DataColumn
 ```
 
 See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-expressions)

@@ -24,8 +24,10 @@ import java.time.ZoneId
 import java.util.TimeZone
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.jvmErasure
 
 @PublishedApi
 internal fun <T, C, R> ConvertClause<T, C>.convertRowCellImpl(type: KType, rowConverter: RowValueExpression<T, C, R>): DataFrame<T> =
@@ -72,6 +74,14 @@ internal val convertersCache = mutableMapOf<Pair<KType, KType>, TypeConverter?>(
 internal fun getConverter(from: KType, to: KType): TypeConverter? = convertersCache.getOrPut(from to to) { createConverter(from, to) }
 
 internal typealias TypeConverter = (Any) -> Any?
+
+internal fun Any.convertTo(type: KType): Any? {
+    val clazz = javaClass.kotlin
+    if (clazz.isSubclassOf(type.jvmErasure)) return this
+    val converter = getConverter(clazz.createStarProjectedType(false), type)
+    require(converter != null) { "Can not convert $this to type $type" }
+    return converter(this)
+}
 
 internal inline fun <T> convert(crossinline converter: (T) -> Any?): TypeConverter = { converter(it as T) }
 

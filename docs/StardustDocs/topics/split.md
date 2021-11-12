@@ -71,7 +71,9 @@ df.split { "name"["lastName"] }.by(" ").inward { "word$it" }
 <!---FUN splitRegex-->
 
 ```kotlin
-merged.split { name }.with("""(.*) \((.*)\)""".toRegex()).inward("firstName", "lastName")
+merged.split { name }
+    .with("""(.*) \((.*)\)""".toRegex())
+    .inward("firstName", "lastName")
 ```
 
 <!---END-->
