@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.impl.EmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.api.concatImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.joinImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWith
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import kotlin.reflect.KProperty
@@ -26,35 +27,71 @@ public fun <A, B> DataFrame<A>.join(
     selector: JoinColumnsSelector<A, B>? = null
 ): DataFrame<A> = joinImpl(other, type, true, selector)
 
+public fun <A, B> DataFrame<A>.join(
+    other: DataFrame<B>,
+    vararg columns: String,
+    type: JoinType = JoinType.Inner
+): DataFrame<A> = join(other, type) { columns.toColumns() }
+
 public fun <A, B> DataFrame<A>.innerJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null
 ): DataFrame<A> = join(other, JoinType.Inner, selector = selector)
+
+public fun <A, B> DataFrame<A>.innerJoin(
+    other: DataFrame<B>,
+    vararg columns: String
+): DataFrame<A> = innerJoin(other) { columns.toColumns() }
 
 public fun <A, B> DataFrame<A>.leftJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null
 ): DataFrame<A> = join(other, JoinType.Left, selector = selector)
 
+public fun <A, B> DataFrame<A>.leftJoin(
+    other: DataFrame<B>,
+    vararg columns: String
+): DataFrame<A> = leftJoin(other) { columns.toColumns() }
+
 public fun <A, B> DataFrame<A>.rightJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null
 ): DataFrame<A> = join(other, JoinType.Right, selector = selector)
+
+public fun <A, B> DataFrame<A>.rightJoin(
+    other: DataFrame<B>,
+    vararg columns: String
+): DataFrame<A> = rightJoin(other) { columns.toColumns() }
 
 public fun <A, B> DataFrame<A>.outerJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null
 ): DataFrame<A> = join(other, JoinType.Outer, selector = selector)
 
+public fun <A, B> DataFrame<A>.outerJoin(
+    other: DataFrame<B>,
+    vararg columns: String
+): DataFrame<A> = outerJoin(other) { columns.toColumns() }
+
 public fun <A, B> DataFrame<A>.filterJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null
 ): DataFrame<A> = joinImpl(other, JoinType.Inner, addNewColumns = false, selector = selector)
 
+public fun <A, B> DataFrame<A>.filterJoin(
+    other: DataFrame<B>,
+    vararg columns: String
+): DataFrame<A> = filterJoin(other) { columns.toColumns() }
+
 public fun <A, B> DataFrame<A>.excludeJoin(
     other: DataFrame<B>,
     selector: JoinColumnsSelector<A, B>? = null
 ): DataFrame<A> = joinImpl(other, JoinType.Exclude, addNewColumns = false, selector = selector)
+
+public fun <A, B> DataFrame<A>.excludeJoin(
+    other: DataFrame<B>,
+    vararg columns: String
+): DataFrame<A> = excludeJoin(other) { columns.toColumns() }
 
 public fun <T> Iterable<DataFrame<T>>.joinOrNull(
     joinType: JoinType = JoinType.Inner,

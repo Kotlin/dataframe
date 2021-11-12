@@ -81,7 +81,7 @@ val key by columnOf(1, 2) // create int column with name "key"
 val data by columnOf(df[0..3], df[4..6]) // create frame column with name "data"
 val df = dataFrameOf(key, data) // create dataframe with two columns
 
-df.asGroupBy { data } // convert dataframe to GroupedDataFrame by interpreting 'data' column as groups
+df.asGroupBy { data } // convert dataframe to GroupBy by interpreting 'data' column as groups
 ```
 
 <!---END-->
