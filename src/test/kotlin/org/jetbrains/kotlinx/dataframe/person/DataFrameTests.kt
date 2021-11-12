@@ -104,8 +104,8 @@ class DataFrameTests : BaseTest() {
         val d = dataFrameOf(a, b)
         d.nrow() shouldBe 2
         d.ncol() shouldBe 2
-        d.columnNames() shouldBe listOf("", "")
-        d[""] shouldBe d.getColumn(0)
+        d.columnNames() shouldBe listOf("untitled", "untitled1")
+        d["untitled"] shouldBe d.getColumn(0)
     }
 
     @Test(expected = IllegalArgumentException::class)
