@@ -221,8 +221,8 @@ class Create : TestBase() {
     fun createDataFrameFromColumns() {
         // SampleStart
 
-        val name by columnOf("Alice", "Bob")
-        val age by columnOf(15, 20)
+        val name by columnOf("Alice", "Bob", "Mark")
+        val age by columnOf(15, 20, 22)
 
         // DataFrame with 2 columns
         val df = dataFrameOf(name, age)
@@ -232,7 +232,7 @@ class Create : TestBase() {
     @Test
     fun createDataFrameFromMap() {
         // SampleStart
-        val map = mapOf("name" to listOf("Alice", "Bob"), "age" to listOf(15, 20))
+        val map = mapOf("name" to listOf("Alice", "Bob", "Mark"), "age" to listOf(15, 20, 22))
 
         // DataFrame with 2 columns
         map.toDataFrame()
@@ -242,10 +242,9 @@ class Create : TestBase() {
     @Test
     fun createDataFrameFromIterable() {
         // SampleStart
-        val name by columnOf("Alice", "Bob")
-        val age by columnOf(15, 20)
+        val name by columnOf("Alice", "Bob", "Mark")
+        val age by columnOf(15, 20, 22)
 
-        // DataFrame with 2 columns
         listOf(name, age).toDataFrame()
         // SampleEnd
     }
@@ -256,12 +255,13 @@ class Create : TestBase() {
         val names = listOf("name", "age")
         val values = listOf(
             "Alice", 15,
-            "Bob", 20
+            "Bob", 20,
+            "Mark", 22
         )
         val df = dataFrameOf(names, values)
         // SampleEnd
         df.columnNames() shouldBe listOf("name", "age")
-        df.nrow() shouldBe 2
+        df.nrow() shouldBe 3
         df["name"].type() shouldBe getType<String>()
         df["age"].type() shouldBe getType<Int>()
     }
@@ -270,12 +270,12 @@ class Create : TestBase() {
     fun createDataFrameFromObject() {
         // SampleStart
         data class Person(val name: String, val age: Int)
-        val persons = listOf(Person("Alice", 15), Person("Bob", 20))
+        val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Mark", 22))
 
         val df = persons.toDataFrame()
         // SampleEnd
         df.ncol() shouldBe 2
-        df.nrow() shouldBe 2
+        df.nrow() shouldBe 3
         df["name"].type() shouldBe getType<String>()
         df["age"].type() shouldBe getType<Int>()
     }
@@ -284,7 +284,7 @@ class Create : TestBase() {
     fun createDataFrameFromObjectExplicit() {
         // SampleStart
         data class Person(val name: String, val age: Int)
-        val persons = listOf(Person("Alice", 15), Person("Bob", 20))
+        val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Mark", 22))
 
         val df = persons.createDataFrame {
             "name" from { it.name }
@@ -292,7 +292,7 @@ class Create : TestBase() {
         }
         // SampleEnd
         df.ncol() shouldBe 2
-        df.nrow() shouldBe 2
+        df.nrow() shouldBe 3
         df["name"].type() shouldBe getType<String>()
         df["year of birth"].type() shouldBe getType<Int>()
     }
