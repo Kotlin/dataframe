@@ -4,25 +4,50 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.excludeJoin
+import org.jetbrains.kotlinx.dataframe.api.innerJoin
+import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.join
+import org.jetbrains.kotlinx.dataframe.api.leftJoin
+import org.jetbrains.kotlinx.dataframe.api.outerJoin
+import org.jetbrains.kotlinx.dataframe.api.rename
+import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.junit.Test
 
 class Join : TestBase() {
 
+    private val other = df.add("year") { 2021 - age }.select { name and city and "year" }
+
     @Test
-    fun join() {
-        val other = df.add("year") { 2021 - age }.select { name and city and "year" }
+    fun join_properties() {
         // SampleStart
         df.join(other) { name and city }
         // SampleEnd
     }
 
     @Test
+    fun join_accessors() {
+        // SampleStart
+        val name by columnGroup()
+        val city by column<String>()
+
+        df.join(other) { name and city }
+        // SampleEnd
+    }
+
+    @Test
+    fun join_strings() {
+        // SampleStart
+        df.join(other, "name", "city")
+        // SampleEnd
+    }
+
+    @Test
     fun joinDefault() {
-        val other = df.add("year") { 2021 - age }.select { name and city and "year" }
         // SampleStart
         df.join(other)
         // SampleEnd
@@ -33,7 +58,7 @@ class Join : TestBase() {
 
     @Test
     fun joinWithMatch_properties() {
-        val other = df.add("year") { 2021 - age }.select { name named "fullName" and "year" }.cast<Right>()
+        val other = other.rename { name }.into("fullName").cast<Right>()
         val joined =
             // SampleStart
             df.join(other) { name match right.fullName }
@@ -58,6 +83,42 @@ class Join : TestBase() {
         val other = df.add("year") { 2021 - age }.select { name named "fullName" and "year" }
         // SampleStart
         df.join(other) { "name" match "fullName" }
+        // SampleEnd
+    }
+    
+    @Test
+    fun joinSpecial_properties() {
+        // SampleStart
+        df.innerJoin(other) { name and city }
+        df.leftJoin(other) { name and city }
+        df.rightJoin(other) { name and city }
+        df.outerJoin(other) { name and city }
+        df.excludeJoin(other) { name and city }
+        // SampleEnd
+    }
+
+    @Test
+    fun joinSpecial_accessors() {
+        // SampleStart
+        val name by columnGroup()
+        val city by column<String>()
+
+        df.innerJoin(other) { name and city }
+        df.leftJoin(other) { name and city }
+        df.rightJoin(other) { name and city }
+        df.outerJoin(other) { name and city }
+        df.excludeJoin(other) { name and city }
+        // SampleEnd
+    }
+
+    @Test
+    fun joinSpecial_strings() {
+        // SampleStart
+        df.innerJoin(other, "name", "city")
+        df.leftJoin(other, "name", "city")
+        df.rightJoin(other, "name", "city")
+        df.outerJoin(other, "name", "city")
+        df.excludeJoin(other, "name", "city")
         // SampleEnd
     }
 }
