@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-To aggregate data groups in [`PivotedDataFrame`](pivot.md) or `GroupedPivot` with one or several aggregation functions use `aggregate`:
+To aggregate data groups in [`Pivot`](pivot.md) or [`PivotGroupBy`](pivot.md#pivot-groupby) with one or several statistics use `aggregate`:
 
 <!---FUN pivotAggregate-->
 <tabs>

@@ -4,20 +4,20 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateBody
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl
-import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
+import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateBodyInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.public
 import org.jetbrains.kotlinx.dataframe.impl.api.AggregatedPivot
 import org.jetbrains.kotlinx.dataframe.impl.api.aggregatePivot
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 
-internal data class GroupedPivotInsideAggregateImpl<T>(
+internal data class GroupByAggregatePivotImpl<T>(
     val aggregator: AggregateGroupedDsl<T>,
     val columns: ColumnsSelector<T, *>,
     val inward: Boolean?,
     val groupValues: Boolean = false,
     val default: Any? = null
-) : GroupedPivot<T>, AggregatableInternal<T> {
+) : PivotGroupBy<T>, AggregatableInternal<T> {
 
     override fun separateStatistics(flag: Boolean) = if (flag == groupValues) this else copy(groupValues = flag)
 
