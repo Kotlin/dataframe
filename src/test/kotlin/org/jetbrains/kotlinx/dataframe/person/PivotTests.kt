@@ -18,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.gather
-import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy

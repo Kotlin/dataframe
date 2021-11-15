@@ -8,7 +8,7 @@ Reverse operation to [`split`](split.md)
 
 ```kotlin
 merge { columns }
-    .by(delimeter) | with { merger } 
+    .by(delimeter) | .by { merger } 
     .into(column)
 
 merger: (DataRow).List<T> -> Any
@@ -27,7 +27,7 @@ df.merge { name.firstName and name.lastName }.by(" ").into("name")
 <!---FUN mergeSameWith-->
 
 ```kotlin
-df.merge { name.firstName and name.lastName }.with { it[0].first() + "." + it[1].first() + "." }.into("initials")
+df.merge { name.firstName and name.lastName }.by { it[0].first() + "." + it[1].first() + "." }.into("initials")
 ```
 
 <!---END-->
@@ -38,7 +38,7 @@ When heterogeneous columns are merged, they may need to be cast to valid types i
 
 ```kotlin
 df.merge { name.firstName and age and isHappy }
-    .with { "${it[0]} aged ${it[1]} is " + (if (it[2] as Boolean) "" else "not ") + "happy" }
+    .by { "${it[0]} aged ${it[1]} is " + (if (it[2] as Boolean) "" else "not ") + "happy" }
     .into("status")
 ```
 

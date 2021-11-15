@@ -27,6 +27,7 @@ import org.jetbrains.kotlinx.dataframe.api.lowercase
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
 import org.jetbrains.kotlinx.dataframe.api.mapValues
+import org.jetbrains.kotlinx.dataframe.api.match
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.meanFor
 import org.jetbrains.kotlinx.dataframe.api.merge
@@ -312,9 +313,9 @@ class Modify : TestBase() {
     @Test
     fun split_properties() {
         // SampleStart
-        df.split { name.firstName }.with { it.chars().toList() }.inplace()
+        df.split { name.firstName }.by { it.chars().toList() }.inplace()
 
-        df.split { name }.with { it.values() }.into("nameParts")
+        df.split { name }.by { it.values() }.into("nameParts")
 
         df.split { name.lastName }.by(" ").inward { "word$it" }
         // SampleEnd
@@ -327,9 +328,9 @@ class Modify : TestBase() {
         val firstName by name.column<String>()
         val lastName by name.column<String>()
 
-        df.split { firstName }.with { it.chars().toList() }.inplace()
+        df.split { firstName }.by { it.chars().toList() }.inplace()
 
-        df.split { name }.with { it.values() }.into("nameParts")
+        df.split { name }.by { it.values() }.into("nameParts")
 
         df.split { lastName }.by(" ").inward { "word$it" }
         // SampleEnd
@@ -338,9 +339,9 @@ class Modify : TestBase() {
     @Test
     fun split_strings() {
         // SampleStart
-        df.split { "name"["firstName"]<String>() }.with { it.chars().toList() }.inplace()
+        df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.inplace()
 
-        df.split { name }.with { it.values() }.into("nameParts")
+        df.split { name }.by { it.values() }.into("nameParts")
 
         df.split { "name"["lastName"] }.by(" ").inward { "word$it" }
         // SampleEnd
@@ -348,11 +349,11 @@ class Modify : TestBase() {
 
     @Test
     fun splitRegex() {
-        val merged = df.merge { name.lastName and name.firstName }.with { it[0] + " (" + it[1] + ")" }.into("name")
+        val merged = df.merge { name.lastName and name.firstName }.by { it[0] + " (" + it[1] + ")" }.into("name")
         val name by column<String>()
         // SampleStart
         merged.split { name }
-            .with("""(.*) \((.*)\)""".toRegex())
+            .match("""(.*) \((.*)\)""".toRegex())
             .inward("firstName", "lastName")
         // SampleEnd
     }
@@ -360,9 +361,9 @@ class Modify : TestBase() {
     @Test
     fun splitIntoRows_properties() {
         // SampleStart
-        df.split { name.firstName }.with { it.chars().toList() }.intoRows()
+        df.split { name.firstName }.by { it.chars().toList() }.intoRows()
 
-        df.split { name }.with { it.values() }.intoRows()
+        df.split { name }.by { it.values() }.intoRows()
         // SampleEnd
     }
 
@@ -372,18 +373,18 @@ class Modify : TestBase() {
         val name by columnGroup()
         val firstName by name.column<String>()
 
-        df.split { firstName }.with { it.chars().toList() }.intoRows()
+        df.split { firstName }.by { it.chars().toList() }.intoRows()
 
-        df.split { name }.with { it.values() }.intoRows()
+        df.split { name }.by { it.values() }.intoRows()
         // SampleEnd
     }
 
     @Test
     fun splitIntoRows_strings() {
         // SampleStart
-        df.split { "name"["firstName"]<String>() }.with { it.chars().toList() }.intoRows()
+        df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.intoRows()
 
-        df.split { group("name") }.with { it.values() }.intoRows()
+        df.split { group("name") }.by { it.values() }.intoRows()
         // SampleEnd
     }
 
@@ -397,7 +398,7 @@ class Modify : TestBase() {
     @Test
     fun mergeSameWith() {
         // SampleStart
-        df.merge { name.firstName and name.lastName }.with { it[0].first() + "." + it[1].first() + "." }.into("initials")
+        df.merge { name.firstName and name.lastName }.by { it[0].first() + "." + it[1].first() + "." }.into("initials")
         // SampleEnd
     }
 
@@ -405,7 +406,7 @@ class Modify : TestBase() {
     fun mergeDifferentWith() {
         // SampleStart
         df.merge { name.firstName and age and isHappy }
-            .with { "${it[0]} aged ${it[1]} is " + (if (it[2] as Boolean) "" else "not ") + "happy" }
+            .by { "${it[0]} aged ${it[1]} is " + (if (it[2] as Boolean) "" else "not ") + "happy" }
             .into("status")
         // SampleEnd
     }

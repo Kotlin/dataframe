@@ -9,7 +9,7 @@ Returns `DataFrameSchema` object with `DataFrame` schema description. It can be 
 <!---FUN schema-->
 
 ```kotlin
-df.schema().print()
+df.schema()
 ```
 
 <!---END-->
@@ -31,7 +31,7 @@ isHappy: Boolean
 <!---FUN schemaGroupBy-->
 
 ```kotlin
-df.groupBy { city }.schema().print()
+df.groupBy { city }.schema()
 ```
 
 <!---END-->
