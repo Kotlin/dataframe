@@ -17,7 +17,7 @@ public fun <T : Number> Iterable<T?>.std(type: KType): Double {
         Int::class, Short::class, Byte::class -> (this as Iterable<Int>).std()
         Long::class -> (this as Iterable<Long>).std()
         BigDecimal::class -> (this as Iterable<BigDecimal>).std()
-        else -> throw IllegalArgumentException()
+        else -> throw IllegalArgumentException("Unsupported type ${type.classifier}")
     }
 }
 

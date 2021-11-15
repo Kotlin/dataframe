@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.schema.extractSchema
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
@@ -33,7 +34,7 @@ internal fun <T> AnyFrame.typedImpl(type: KType, allowConversion: Boolean, extra
                 }
             } else {
                 visited++
-                val currentSchema = it.schema()
+                val currentSchema = it.extractSchema()
                 when {
                     targetColumn == currentSchema -> it
                     !allowConversion -> throw IllegalArgumentException("Column `${it.name}` has type `${it.type()}` that differs from target type `${targetColumn.type}`")

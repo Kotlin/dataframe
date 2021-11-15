@@ -217,7 +217,7 @@ public fun <T> Pivot<T>.std(vararg columns: ColumnReference<Number?>): DataRow<T
 public fun <T> Pivot<T>.std(vararg columns: String): DataRow<T> = std { columns.toColumnsOf() }
 public fun <T> Pivot<T>.std(vararg columns: KProperty<Number?>): DataRow<T> = std { columns.toColumns() }
 
-public fun <T> Pivot<T>.stdOf(expression: RowExpression<T, Number?>): DataRow<T> = delegate { stdOf(expression) }
+public inline fun <reified T : Number> Pivot<T>.stdOf(crossinline expression: RowExpression<T, T?>): DataRow<T> = delegate { stdOf(expression) }
 
 // endregion
 

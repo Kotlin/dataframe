@@ -14,10 +14,10 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
 import java.net.URL
-import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import kotlin.reflect.KType
+import kotlin.reflect.jvm.jvmErasure
 
 internal fun String.truncate(limit: Int): RenderedContent = if (limit in 1 until length) {
     if (limit < 4) RenderedContent.truncatedText("...", this)
@@ -46,6 +46,8 @@ internal fun renderType(column: ColumnSchema) =
         else -> throw NotImplementedError()
     }
 
+internal val classesToBeRenderedShort = setOf(URL::class, LocalDateTime::class, LocalTime::class)
+
 internal fun renderType(type: KType): String {
     return when (type.classifier) {
         List::class -> {
@@ -56,14 +58,11 @@ internal fun renderType(type: KType): String {
             val argument = type.arguments[0].type?.let { renderType(it) } ?: "*"
             "Many<$argument>"
         }
-        URL::class -> "URL"
-        LocalDateTime::class -> "DateTime"
-        LocalDate::class -> "Date"
-        LocalTime::class -> "Time"
         else -> {
             val result = type.toString()
-            if (result.startsWith("kotlin.")) result.substring(7)
-            else result
+            if (classesToBeRenderedShort.contains(type.classifier) || result.startsWith("kotlin.") || result.startsWith("org.jetbrains.kotlinx.dataframe.")) {
+                (type.jvmErasure.simpleName?.let { if (type.isMarkedNullable) "$it?" else it }) ?: result
+            } else result
         }
     }
 }

@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.impl.ManyImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.asValues
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
@@ -68,7 +69,7 @@ public fun AnyBaseColumn.toDataFrame(): AnyFrame = dataFrameOf(listOf(this))
 @JvmName("asNumberAny?")
 public fun DataColumn<Any?>.asNumbers(): ValueColumn<Number?> {
     require(isNumber())
-    return this as ValueColumn<Number?>
+    return this.asValues()
 }
 
 @JvmName("asNumberAny")

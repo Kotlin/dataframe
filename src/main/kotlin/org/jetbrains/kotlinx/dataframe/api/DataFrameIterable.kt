@@ -375,6 +375,13 @@ public abstract class CreateDataFrameDsl<T>(public val source: Iterable<T>) {
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
         add(name, expression)
 
+    public inline infix fun <reified R> KProperty<R>.from(inferType: InferType<T, R>): Unit =
+        add(DataColumn.createWithTypeInference(name, source.map { inferType.expression(it) }))
+
+    public data class InferType<T, R>(val expression: (T) -> R)
+
+    public inline fun <reified R> inferType(noinline expression: (T) -> R): InferType<T, R> = InferType(expression)
+
     public abstract operator fun String.invoke(builder: CreateDataFrameDsl<T>.() -> Unit)
 }
 

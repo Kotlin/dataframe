@@ -59,7 +59,7 @@ internal fun Iterable<ColumnWithPath<*>>.dfs(): List<ColumnWithPath<*>> {
         cols.forEach {
             result.add(it)
             val path = it.path
-            val df = it.df
+            val df = it.host
             if (it.data.isColumnGroup()) {
                 dfs(it.data.asColumnGroup().columns().map { it.addPath(path + it.name(), df) })
             }
