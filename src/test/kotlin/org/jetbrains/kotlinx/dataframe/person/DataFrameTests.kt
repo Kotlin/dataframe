@@ -1213,6 +1213,12 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `split by with default`() {
+        val res = typed.split { city }.by('o').default("--").into { "a$it" }
+        res.sumOf { values().count { it == "--" } } shouldBe 7
+    }
+
+    @Test
     fun `merge cols with conversion`() {
         val pivoted = typed.groupBy { name }.pivot { city }.count()
         val res = pivoted.merge { intCols() }.by { it.filterNotNull().sum() }.into("cities")
@@ -2174,7 +2180,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun describe() {
         val desc = typed.group { age and weight }.into("info").groupBy { city }.toDataFrame().describe()
-        // desc.nrow() shouldBe typed.ncol() + 1
+        desc.nrow() shouldBe typed.ncol() + 1
         desc.print()
     }
 }
