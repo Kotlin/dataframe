@@ -2170,4 +2170,11 @@ class DataFrameTests : BaseTest() {
             .toDataFrame()
             .ncol() shouldBe 2
     }
+
+    @Test
+    fun describe() {
+        val desc = typed.group { age and weight }.into("info").groupBy { city }.toDataFrame().describe()
+        // desc.nrow() shouldBe typed.ncol() + 1
+        desc.print()
+    }
 }

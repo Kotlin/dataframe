@@ -193,6 +193,9 @@ public fun <T> Grouped<T>.std(vararg columns: ColumnReference<Number?>, name: St
 public fun <T> Grouped<T>.std(vararg columns: String, name: String? = null): DataFrame<T> = std(name) { columns.toColumnsOf() }
 public fun <T> Grouped<T>.std(vararg columns: KProperty<Number?>, name: String? = null): DataFrame<T> = std(name) { columns.toColumns() }
 
-public fun <T> Grouped<T>.stdOf(name: String? = null, expression: RowExpression<T, Number?>): DataFrame<T> = Aggregators.std.aggregateOf(this, name, expression)
+public inline fun <T, reified R : Number> Grouped<T>.stdOf(
+    name: String? = null,
+    crossinline expression: RowExpression<T, R?>
+): DataFrame<T> = Aggregators.std.aggregateOf(this, name, expression)
 
 // endregion

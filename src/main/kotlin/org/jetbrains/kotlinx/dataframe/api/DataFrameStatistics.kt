@@ -176,7 +176,7 @@ public fun <T> DataFrame<T>.std(vararg columns: ColumnReference<Number?>): Doubl
 public fun <T> DataFrame<T>.std(vararg columns: String): Double = std { columns.toColumnsOf() }
 public fun <T> DataFrame<T>.std(vararg columns: KProperty<Number?>): Double = std { columns.toColumns() }
 
-public fun <T> DataFrame<T>.stdOf(expression: RowExpression<T, Number?>): Double = Aggregators.std.aggregateOf(this, expression) ?: .0
+public inline fun <T, reified R : Number> DataFrame<T>.stdOf(crossinline expression: RowExpression<T, R?>): Double = Aggregators.std.aggregateOf(this, expression) ?: .0
 
 // endregion
 

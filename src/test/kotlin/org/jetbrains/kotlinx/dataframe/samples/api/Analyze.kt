@@ -62,6 +62,51 @@ class Analyze : TestBase() {
     }
 
     @Test
+    fun schema() {
+        // SampleStart
+        df.schema()
+        // SampleEnd
+    }
+
+    @Test
+    fun schemaGroupBy() {
+        // SampleStart
+        df.groupBy { city }.schema()
+        // SampleEnd
+    }
+
+    @Test
+    fun describe() {
+        // SampleStart
+        df.describe()
+        // SampleEnd
+    }
+
+    @Test
+    fun describeColumns_properties() {
+        // SampleStart
+        df.describe { age and name.all() }
+        // SampleEnd
+    }
+
+    @Test
+    fun describeColumns_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val name by columnGroup()
+
+        df.describe { age and name.all() }
+        // SampleEnd
+    }
+
+    @Test
+    fun describeColumns_strings() {
+        // SampleStart
+        df.describe { "age" and "name".all() }
+        // SampleEnd
+    }
+
+    @Test
     fun countCondition() {
         // SampleStart
         df.count { age > 15 }
@@ -83,7 +128,7 @@ class Analyze : TestBase() {
         df.pivot { name.firstName }.groupBy { name.lastName }.count()
         // SampleEnd
     }
-    
+
     @Test
     fun sumAggregations() {
         // SampleStart

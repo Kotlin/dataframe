@@ -237,6 +237,6 @@ public fun <T> PivotGroupBy<T>.std(vararg columns: ColumnReference<Number?>): Da
 public fun <T> PivotGroupBy<T>.std(vararg columns: String): DataFrame<T> = std { columns.toColumnsOf() }
 public fun <T> PivotGroupBy<T>.std(vararg columns: KProperty<Number?>): DataFrame<T> = std { columns.toColumns() }
 
-public fun <T> PivotGroupBy<T>.stdOf(expression: RowExpression<T, Number?>): DataFrame<T> = Aggregators.std.aggregateOf(this, expression)
+public inline fun <T, reified R : Number> PivotGroupBy<T>.stdOf(crossinline expression: RowExpression<T, R?>): DataFrame<T> = Aggregators.std.aggregateOf(this, expression)
 
 // endregion

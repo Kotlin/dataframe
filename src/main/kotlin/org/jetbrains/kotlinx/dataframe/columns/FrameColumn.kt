@@ -12,5 +12,7 @@ public interface FrameColumn<out T> : DataColumn<DataFrame<T>> {
 
     override fun kind(): ColumnKind = ColumnKind.Frame
 
+    override fun rename(newName: String): FrameColumn<T>
+
     override fun get(indices: Iterable<Int>): FrameColumn<T>
 }

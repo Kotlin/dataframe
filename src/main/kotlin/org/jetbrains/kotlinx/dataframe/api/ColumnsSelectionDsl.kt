@@ -123,6 +123,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun SingleColumn<*>.all(): ColumnSet<*> = transformSingle { it.children() }
 
+    public fun String.all(): ColumnSet<*> = toColumnAccessor().transformSingle { it.children() }
+
     public fun none(): ColumnSet<*> = ColumnsList<Any?>(emptyList())
 
     public fun ColumnSet<*>.dfs(): ColumnSet<Any?> = dfs { !it.isColumnGroup() }
@@ -238,7 +240,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public infix fun <C> ColumnSet<C>.except(other: ColumnSet<*>): ColumnSet<*> =
         createColumnSet { resolve(it).allColumnsExcept(other.resolve(it)) }
 
-    public infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): ColumnSet<C> =
+    public infix fun <R, C> ColumnSet<C>.except(selector: ColumnsSelector<R, *>): ColumnSet<C> =
         except(selector.toColumns()) as ColumnSet<C>
 
     public operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnSet<C> =
