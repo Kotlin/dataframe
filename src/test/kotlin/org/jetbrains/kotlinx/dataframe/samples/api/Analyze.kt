@@ -33,7 +33,9 @@ import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.pivotCount
 import org.jetbrains.kotlinx.dataframe.api.pivotMatches
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.api.stdFor
+import org.jetbrains.kotlinx.dataframe.api.stdOf
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.sumFor
 import org.jetbrains.kotlinx.dataframe.api.sumOf
@@ -60,9 +62,196 @@ class Analyze : TestBase() {
     }
 
     @Test
-    fun count() {
+    fun countCondition() {
         // SampleStart
         df.count { age > 15 }
+        // SampleEnd
+    }
+
+    @Test
+    fun count() {
+        // SampleStart
+        df.count()
+        // SampleEnd
+    }
+
+    @Test
+    fun countAggregation() {
+        // SampleStart
+        df.groupBy { city }.count()
+        df.pivot { city }.count { age > 18 }
+        df.pivot { name.firstName }.groupBy { name.lastName }.count()
+        // SampleEnd
+    }
+    
+    @Test
+    fun sumAggregations() {
+        // SampleStart
+        df.age.sum()
+        df.groupBy { city }.sum()
+        df.pivot { city }.sum()
+        df.pivot { city }.groupBy { name.lastName }.sum()
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticModes() {
+        // SampleStart
+        df.sum() // sum of values per every numeric column
+        df.sum { age and weight } // sum of all values in `age` and `weight`
+        df.sumFor { age and weight } // sum of values per `age` and `weight` separately
+        df.sumOf { (weight ?: 0) / age } // sum of expression evaluated for every row
+        // SampleEnd
+    }
+
+    @Test
+    fun minmaxModes() {
+        // SampleStart
+        df.min() // min of values per every comparable column
+        df.min { age and weight } // min of all values in `age` and `weight`
+        df.minFor { age and weight } // min of values per `age` and `weight` separately
+        df.minOf { (weight ?: 0) / age } // min of expression evaluated for every row
+        df.minBy { age } // DataRow with minimal `age`
+        // SampleEnd
+    }
+
+    @Test
+    fun minmaxAggregations() {
+        // SampleStart
+        df.min()
+        df.age.min()
+        df.groupBy { city }.min()
+        df.pivot { city }.min()
+        df.pivot { city }.groupBy { name.lastName }.min()
+        // SampleEnd
+    }
+
+    @Test
+    fun medianModes() {
+        // SampleStart
+        df.median() // median of values per every comparable column
+        df.median { age and weight } // median of all values in `age` and `weight`
+        df.medianFor { age and weight } // median of values per `age` and `weight` separately
+        df.medianOf { (weight ?: 0) / age } // median of expression evaluated for every row
+        // SampleEnd
+    }
+
+    @Test
+    fun medianAggregations() {
+        // SampleStart
+        df.median()
+        df.age.median()
+        df.groupBy { city }.median()
+        df.pivot { city }.median()
+        df.pivot { city }.groupBy { name.lastName }.median()
+        // SampleEnd
+    }
+
+    @Test
+    fun meanModes() {
+        // SampleStart
+        df.mean() // mean of values per every numeric column
+        df.mean(skipNA = true) { age and weight } // mean of all values in `age` and `weight`, skips NA
+        df.meanFor(skipNA = true) { age and weight } // mean of values per `age` and `weight` separately, skips NA
+        df.meanOf { (weight ?: 0) / age } // median of expression evaluated for every row
+        // SampleEnd
+    }
+
+    @Test
+    fun meanAggregations() {
+        // SampleStart
+        df.mean()
+        df.age.mean()
+        df.groupBy { city }.mean()
+        df.pivot { city }.mean()
+        df.pivot { city }.groupBy { name.lastName }.mean()
+        // SampleEnd
+    }
+
+    @Test
+    fun stdModes() {
+        // SampleStart
+        df.std() // std of values per every numeric column
+        df.std { age and weight } // std of all values in `age` and `weight`
+        df.stdFor { age and weight } // std of values per `age` and `weight` separately, skips NA
+        df.stdOf { (weight ?: 0) / age } // std of expression evaluated for every row
+        // SampleEnd
+    }
+
+    @Test
+    fun stdAggregations() {
+        // SampleStart
+        df.std()
+        df.age.std()
+        df.groupBy { city }.std()
+        df.pivot { city }.std()
+        df.pivot { city }.groupBy { name.lastName }.std()
+        // SampleEnd
+    }
+
+    @Test
+    fun meanAggregationsSkipNA() {
+        // SampleStart
+        df.mean(skipNA = true)
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticAggregations() {
+        // SampleStart
+        df.mean()
+        df.age.sum()
+        df.groupBy { city }.mean()
+        df.pivot { city }.median()
+        df.pivot { city }.groupBy { name.lastName }.std()
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticGroupBySingle() {
+        // SampleStart
+        df.groupBy { city }.mean { age } // [`city`, `mean`]
+        df.groupBy { city }.meanOf { age / 2 } // [`city`, `mean`]
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticGroupBySingleNamed() {
+        // SampleStart
+        df.groupBy { city }.mean("mean age") { age } // [`city`, `mean age`]
+        df.groupBy { city }.meanOf("custom") { age / 2 } // [`city`, `custom`]
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticGroupByMany() {
+        // SampleStart
+        df.groupBy { city }.meanFor { age and weight } // [`city`, `age`, `weight`]
+        df.groupBy { city }.mean() // [`city`, `age`, `weight`, ...]
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticPivotSingle() {
+        // SampleStart
+        df.groupBy { city }.pivot { name.lastName }.mean { age }
+        df.groupBy { city }.pivot { name.lastName }.meanOf { age / 2 }
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticPivotMany() {
+        // SampleStart
+        df.groupBy { city }.pivot { name.lastName }.meanFor { age and weight }
+        df.groupBy { city }.pivot { name.lastName }.mean()
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticPivotManySeparate() {
+        // SampleStart
+        df.groupBy { city }.pivot { name.lastName }.meanFor(separate = true) { age and weight }
+        df.groupBy { city }.pivot { name.lastName }.mean(separate = true)
         // SampleEnd
     }
 
