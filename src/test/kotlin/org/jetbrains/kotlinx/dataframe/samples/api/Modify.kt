@@ -317,7 +317,7 @@ class Modify : TestBase() {
 
         df.split { name }.by { it.values() }.into("nameParts")
 
-        df.split { name.lastName }.by(" ").inward { "word$it" }
+        df.split { name.lastName }.by(" ").default("").inward { "word$it" }
         // SampleEnd
     }
 
@@ -332,7 +332,7 @@ class Modify : TestBase() {
 
         df.split { name }.by { it.values() }.into("nameParts")
 
-        df.split { lastName }.by(" ").inward { "word$it" }
+        df.split { lastName }.by(" ").default("").inward { "word$it" }
         // SampleEnd
     }
 
@@ -343,7 +343,7 @@ class Modify : TestBase() {
 
         df.split { name }.by { it.values() }.into("nameParts")
 
-        df.split { "name"["lastName"] }.by(" ").inward { "word$it" }
+        df.split { "name"["lastName"] }.by(" ").default("").inward { "word$it" }
         // SampleEnd
     }
 
@@ -353,7 +353,7 @@ class Modify : TestBase() {
         val name by column<String>()
         // SampleStart
         merged.split { name }
-            .match("""(.*) \((.*)\)""".toRegex())
+            .match("""(.*) \((.*)\)""")
             .inward("firstName", "lastName")
         // SampleEnd
     }

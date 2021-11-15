@@ -275,6 +275,29 @@ public fun <T, C> DataFrame<T>.split(vararg columns: KProperty<C?>): Split<T, C>
 public interface Split<out T, out C>
 
 public fun <T, C> Split<T, C>.by(
+    vararg delimiters: Char,
+    trim: Boolean = true,
+    ignoreCase: Boolean = false,
+    limit: Int = 0
+): SplitWithTransform<T, C, String> = by {
+    it.toString().split(*delimiters, ignoreCase = ignoreCase, limit = limit).let {
+        if (trim) it.map { it.trim() }
+        else it
+    }
+}
+
+public fun <T, C> Split<T, C>.by(
+    regex: Regex,
+    trim: Boolean = true,
+    limit: Int = 0
+): SplitWithTransform<T, C, String> = by {
+    it.toString().split(regex, limit = limit).let {
+        if (trim) it.map { it.trim() }
+        else it
+    }
+}
+
+public fun <T, C> Split<T, C>.by(
     vararg delimiters: String,
     trim: Boolean = true,
     ignoreCase: Boolean = false,
@@ -297,11 +320,13 @@ public interface SplitWithTransform<out T, out C, in R> {
     public fun inward(vararg names: String, extraNamesGenerator: ColumnNamesGenerator<C>? = null): DataFrame<T> = inward(names.toList(), extraNamesGenerator)
 
     public fun inward(names: Iterable<String>, extraNamesGenerator: ColumnNamesGenerator<C>? = null): DataFrame<T>
+
+    public fun default(value: R?): SplitWithTransform<T, C, R>
 }
 
 public class SplitClause<T, C>(
-    public val df: DataFrame<T>,
-    public val columns: ColumnsSelector<T, C?>
+    internal val df: DataFrame<T>,
+    internal val columns: ColumnsSelector<T, C?>,
 ) : Split<T, C>
 
 public inline fun <T, C, reified R> Split<T, C>.by(noinline splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> =
@@ -326,7 +351,8 @@ public data class SplitClauseWithTransform<T, C, R>(
     val columns: ColumnsSelector<T, C?>,
     val inward: Boolean,
     val targetType: KType,
-    val transform: DataRow<T>.(C) -> Iterable<R>
+    val default: R? = null,
+    val transform: DataRow<T>.(C) -> Iterable<R>,
 ) : SplitWithTransform<T, C, R> {
 
     private fun ConvertClause<T, C?>.splitInplace() = convertRowCellImpl(Many::class.createTypeWithArgument(targetType)) { if (it == null) emptyMany() else transform(it).toMany() }
@@ -339,6 +365,8 @@ public data class SplitClauseWithTransform<T, C, R>(
     override fun inplace(): DataFrame<T> = df.convert(columns).splitInplace()
 
     override fun inward(names: Iterable<String>, extraNamesGenerator: ColumnNamesGenerator<C>?): DataFrame<T> = copy(inward = true).into(names.toList(), extraNamesGenerator)
+
+    override fun default(value: R?): SplitWithTransform<T, C, R> = copy(default = value)
 }
 
 public class FrameSplit<T, C>(
@@ -370,6 +398,10 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.into(
         names + (1..(numberOfNewCols - names.size)).map { extraNamesGenerator(col, it) }
     } else names
 }
+
+public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.default(value: R?): SplitWithTransform<T, C, R> = by { it }.default(value)
+
+public fun <T> Split<T, String>.default(value: String?): SplitWithTransform<T, String, String> = by { it.splitDefault() }.default(value)
 
 @JvmName("intoRowsTC")
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> = by { it }

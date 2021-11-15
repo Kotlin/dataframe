@@ -11,8 +11,9 @@ The following types of columns can be splitted by default:
 
 ```kotlin
 df.split { columns }
-    [.by(delimeters) | .by { splitter } | .match(regex)] // how to split
-    .into(columnNames) [ { columnNamesGenerator } ] | .inward(columnNames) [ { columnNamesGenerator } ] // where to store
+    [.by(delimeters) | .by { splitter } | .match(regex)] // how to split cell value
+    [.default(value)] // how to fill nulls
+    .into(columnNames) [ { columnNamesGenerator } ] | .inward(columnNames) [ { columnNamesGenerator } ] // where to store results
 
 splitter = DataRow.(T) -> Iterable<Any>
 columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
@@ -34,7 +35,7 @@ df.split { name.firstName }.by { it.chars().toList() }.inplace()
 
 df.split { name }.by { it.values() }.into("nameParts")
 
-df.split { name.lastName }.by(" ").inward { "word$it" }
+df.split { name.lastName }.by(" ").default("").inward { "word$it" }
 ```
 
 </tab>
@@ -49,7 +50,7 @@ df.split { firstName }.by { it.chars().toList() }.inplace()
 
 df.split { name }.by { it.values() }.into("nameParts")
 
-df.split { lastName }.by(" ").inward { "word$it" }
+df.split { lastName }.by(" ").default("").inward { "word$it" }
 ```
 
 </tab>
@@ -60,19 +61,19 @@ df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.inplace()
 
 df.split { name }.by { it.values() }.into("nameParts")
 
-df.split { "name"["lastName"] }.by(" ").inward { "word$it" }
+df.split { "name"["lastName"] }.by(" ").default("").inward { "word$it" }
 ```
 
 </tab></tabs>
 <!---END-->
 
-`String` columns can also be splitted with [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
+`String` columns can also be splitted into group matches of [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
 
 <!---FUN splitRegex-->
 
 ```kotlin
 merged.split { name }
-    .match("""(.*) \((.*)\)""".toRegex())
+    .match("""(.*) \((.*)\)""")
     .inward("firstName", "lastName")
 ```
 

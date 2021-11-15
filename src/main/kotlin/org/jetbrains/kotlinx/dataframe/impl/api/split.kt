@@ -41,7 +41,7 @@ internal fun <T, C, R> splitImpl(
                 columnCollectors[j].add(list[j])
             }
             for (j in list.size until columnCollectors.size)
-                columnCollectors[j].add(null)
+                columnCollectors[j].add(clause.default)
         }
 
         var names = columnNamesGenerator(column, columnCollectors.size)
