@@ -11,7 +11,7 @@ groupBy { columns }
     [aggregations]
 ```
 
-See [column selectors](ColumnSelectors.md), [groupBy transformations](#GroupBy) and [groupBy aggregations](aggregateGroupBy.md)
+See [column selectors](ColumnSelectors.md), [groupBy transformations](#groupby) and [groupBy aggregations](aggregateGroupBy.md)
 
 <!---FUN groupBy-->
 <tabs>
@@ -70,7 +70,7 @@ It supports the following operations:
 * [`add`](add.md)
 * [`sortBy`](sortBy.md)
 * [`map`](map.md)
-* [`pivot`](pivot.md#pivot--groupby)
+* [`pivot`](pivot.md#pivot-groupby)
 
 Any `DataFrame` with `FrameColumn` can be reinterpreted as `GroupBy`:
 
