@@ -279,7 +279,7 @@ public fun <T, C> Split<T, C>.by(
     trim: Boolean = true,
     ignoreCase: Boolean = false,
     limit: Int = 0
-): SplitWithTransform<T, C, String> = with {
+): SplitWithTransform<T, C, String> = by {
     it.toString().split(*delimiters, ignoreCase = ignoreCase, limit = limit).let {
         if (trim) it.map { it.trim() }
         else it
@@ -304,14 +304,17 @@ public class SplitClause<T, C>(
     public val columns: ColumnsSelector<T, C?>
 ) : Split<T, C>
 
-public inline fun <T, C, reified R> Split<T, C>.with(noinline splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> = with(getType<R>(), splitter)
+public inline fun <T, C, reified R> Split<T, C>.by(noinline splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> =
+    by(getType<R>(), splitter)
 
-public fun <T> Split<T, String?>.with(regex: Regex): SplitWithTransform<T, String?, String?> = with {
+public fun <T> Split<T, String?>.match(regex: String): SplitWithTransform<T, String?, String?> = match(regex.toRegex())
+
+public fun <T> Split<T, String?>.match(regex: Regex): SplitWithTransform<T, String?, String?> = by {
     it?.let { regex.matchEntire(it)?.groups?.drop(1)?.map { it?.value } } ?: emptyList<String>()
 }
 
 @PublishedApi
-internal fun <T, C, R> Split<T, C>.with(type: KType, splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> {
+internal fun <T, C, R> Split<T, C>.by(type: KType, splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> {
     require(this is SplitClause<T, C>)
     return SplitClauseWithTransform(df, columns, false, type) {
         if (it == null) emptyMany() else splitter(it).toMany()
@@ -369,33 +372,33 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.into(
 }
 
 @JvmName("intoRowsTC")
-public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> = with { it }
+public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> = by { it }
     .intoRows(dropEmpty)
 
 @JvmName("intoRowsFrame")
-public fun <T> Split<T, AnyFrame>.intoRows(dropEmpty: Boolean = true): DataFrame<T> = with { it.rows() }.intoRows(dropEmpty)
+public fun <T> Split<T, AnyFrame>.intoRows(dropEmpty: Boolean = true): DataFrame<T> = by { it.rows() }.intoRows(dropEmpty)
 
 @JvmName("inplaceTC")
-public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inplace(): DataFrame<T> = with { it }.inplace()
+public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inplace(): DataFrame<T> = by { it }.inplace()
 
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inward(
     vararg names: String,
     noinline extraNamesGenerator: ColumnNamesGenerator<C>? = null
 ): DataFrame<T> =
-    with { it }.inward(names.toList(), extraNamesGenerator)
+    by { it }.inward(names.toList(), extraNamesGenerator)
 
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.into(
     vararg names: String,
     noinline extraNamesGenerator: ColumnNamesGenerator<C>? = null
 ): DataFrame<T> =
-    with { it }.into(names.toList(), extraNamesGenerator)
+    by { it }.into(names.toList(), extraNamesGenerator)
 
 @JvmName("intoTC")
 public fun <T> Split<T, String>.into(
     vararg names: String,
     extraNamesGenerator: (ColumnWithPath<String>.(extraColumnIndex: Int) -> String)? = null
 ): DataFrame<T> =
-    with { it.splitDefault() }.into(names.toList(), extraNamesGenerator)
+    by { it.splitDefault() }.into(names.toList(), extraNamesGenerator)
 
 // endregion
 
@@ -434,7 +437,7 @@ public fun <T, C, R> MergeClause<T, C, R>.by(
 ): MergeClause<T, C, String> =
     MergeClause(df, selector) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix, limit = limit, truncated = truncated) }
 
-public inline fun <T, C, R, reified V> MergeClause<T, C, R>.with(crossinline transform: DataRow<T>.(R) -> V): MergeClause<T, C, V> = MergeClause(df, selector) { transform(this@with.transform(this, it)) }
+public inline fun <T, C, R, reified V> MergeClause<T, C, R>.by(crossinline transform: DataRow<T>.(R) -> V): MergeClause<T, C, V> = MergeClause(df, selector) { transform(this@by.transform(this, it)) }
 
 // endregion
 

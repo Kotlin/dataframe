@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.asIterable
 import org.jetbrains.kotlinx.dataframe.api.at
+import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
@@ -354,7 +355,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun splitCols() {
-        val split = typed2.split { nameAndCity.name }.with { it.toCharArray().toList() }.inward { "char$it" }
+        val split = typed2.split { nameAndCity.name }.by { it.toCharArray().toList() }.inward { "char$it" }
         split.columnNames() shouldBe typed2.columnNames()
         split.nrow() shouldBe typed2.nrow()
         split.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames()
@@ -366,7 +367,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `split into rows`() {
-        val split = typed2.split { nameAndCity.name }.with { it.toCharArray().toList() }.intoRows()
+        val split = typed2.split { nameAndCity.name }.by { it.toCharArray().toList() }.intoRows()
         val merged = split.mergeRows { nameAndCity.name }
         val joined = merged.convert { nameAndCity.name }.cast<List<Char>>().with { it.joinToString("") }
         joined shouldBe typed2

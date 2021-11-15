@@ -1122,7 +1122,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun mergeColsCustom() {
         val merged =
-            typed.merge { name and city and age }.with { it[0].toString() + " from " + it[1] + " aged " + it[2] }
+            typed.merge { name and city and age }.by { it[0].toString() + " from " + it[1] + " aged " + it[2] }
                 .into("info")
         merged.ncol() shouldBe 2
         merged.nrow() shouldBe typed.nrow()
@@ -1131,7 +1131,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun mergeColsCustom2() {
-        val merged = typed.merge { name and city and age }.with { "$name from $city aged $age" }.into("info")
+        val merged = typed.merge { name and city and age }.by { "$name from $city aged $age" }.into("info")
         merged.ncol() shouldBe 2
         merged.nrow() shouldBe typed.nrow()
         merged[0]["info"] shouldBe "Alice from London aged 15"
@@ -1189,7 +1189,7 @@ class DataFrameTests : BaseTest() {
             }
         }.toList()
 
-        val res = typed.split { age }.with { digits(it) }.into { "digit$it" }
+        val res = typed.split { age }.by { digits(it) }.into { "digit$it" }
     }
 
     @Test
@@ -1215,7 +1215,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `merge cols with conversion`() {
         val pivoted = typed.groupBy { name }.pivot { city }.count()
-        val res = pivoted.merge { intCols() }.with { it.filterNotNull().sum() }.into("cities")
+        val res = pivoted.merge { intCols() }.by { it.filterNotNull().sum() }.into("cities")
         val expected = typed.select { name and city }.groupBy { name }.count("cities")
         res shouldBe expected
     }
@@ -1964,13 +1964,13 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `split inplace`() {
-        val splitted = typed.split { name }.with { it.toCharArray().asIterable() }.inplace()
+        val splitted = typed.split { name }.by { it.toCharArray().asIterable() }.inplace()
         splitted["name"] shouldBe typed.name.map { it.toCharArray().asIterable().toMany() }
     }
 
     @Test
     fun `split into rows with transform`() {
-        val splitted = typed.split { city }.with { it.toCharArray().toList() }.intoRows()
+        val splitted = typed.split { city }.by { it.toCharArray().toList() }.intoRows()
         splitted.nrow shouldBe typed.city.sumOf { it?.length ?: 0 }
     }
 
@@ -2109,13 +2109,13 @@ class DataFrameTests : BaseTest() {
     fun splitWithRegex() {
         val data by column<String>()
         val merged = typed.merge { name and city }.by("|").into(data)
-        merged.split { data }.with("""(.*)\|(.*)""".toRegex()).into("name", "city") shouldBe
+        merged.split { data }.match("""(.*)\|(.*)""".toRegex()).into("name", "city") shouldBe
             typed.update { city }.with { it ?: "null" }.move { city }.to(1)
     }
 
     @Test
     fun splitIntoThisAndNewColumn() {
-        val splitted = typed.split { name }.with { listOf(it.dropLast(1), it.last()) }.into("name", "lastChar")
+        val splitted = typed.split { name }.by { listOf(it.dropLast(1), it.last()) }.into("name", "lastChar")
         splitted.columnNames().sorted() shouldBe (typed.columnNames() + "lastChar").sorted()
     }
 

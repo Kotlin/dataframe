@@ -1,6 +1,6 @@
 [//]: # (title: describe)
 
-<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
 Returns `DataFrame` with general statistics for all [`ValueColumns`](DataColumn.md#valuecolumn).
 
@@ -8,7 +8,7 @@ Returns `DataFrame` with general statistics for all [`ValueColumns`](DataColumn.
 
 Collected statistics:
 * name - column name
-* path - path to the column (for hierarchical dataframes)
+* path - path to the column (for hierarchical `DataFrame`)
 * type - type of values
 * count - number of rows
 * unique - number of unique values
@@ -23,6 +23,38 @@ Collected statistics:
 
 <!---FUN describe-->
 
+```kotlin
+df.describe()
+```
+
+<!---END-->
+
 To describe only specific columns, pass them as an argument:
 
 <!---FUN describeColumns-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.describe { age and name.all() }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val age by column<Int>()
+val name by columnGroup()
+
+df.describe { age and name.all() }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.describe { "age" and "name".all() }
+```
+
+</tab></tabs>
+<!---END-->
