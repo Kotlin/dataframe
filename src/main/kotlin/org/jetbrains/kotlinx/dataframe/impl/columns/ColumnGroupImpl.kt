@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
-import org.jetbrains.kotlinx.dataframe.columns.resolveFor
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.renderSchema
 import kotlin.reflect.KType
@@ -70,14 +69,20 @@ internal open class ColumnGroupImpl<T>(override val df: DataFrame<T>, val name: 
 
     override fun iterator() = df.iterator()
 
-    override fun forceResolve() = ResolvingColumnGroup(df, name)
-
-    override fun getValue(row: AnyRow) = resolveFor(row.df())[row.index()]
+    override fun forceResolve() = ResolvingColumnGroup(this)
 
     override fun get(range: IntRange): ColumnGroupImpl<T> = ColumnGroupImpl(df[range], name)
 }
 
-internal class ResolvingColumnGroup<T>(df: DataFrame<T>, name: String) : ColumnGroupImpl<T>(df, name) {
+internal class ResolvingColumnGroup<T>(
+    override val source: ColumnGroupImpl<T>
+) : DataColumnGroup<T> by source, ForceResolvedColumn<DataRow<T>> {
 
-    override fun resolveSingle(context: ColumnResolutionContext) = context.df.getColumn<DataRow<T>>(name, context.unresolvedColumnsPolicy)?.addPath(context.df)
+    override fun resolve(context: ColumnResolutionContext) = super<DataColumnGroup>.resolve(context)
+
+    override fun resolveSingle(context: ColumnResolutionContext) = context.df.getColumn<DataRow<T>>(source.name(), context.unresolvedColumnsPolicy)?.addPath(context.df)
+
+    override fun getValue(row: AnyRow) = super<DataColumnGroup>.getValue(row)
+
+    override fun rename(newName: String) = ResolvingColumnGroup(source.rename(newName))
 }

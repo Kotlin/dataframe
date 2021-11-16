@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
@@ -43,16 +44,18 @@ internal open class ValueColumnImpl<T>(
 
     override fun defaultValue() = defaultValue
 
-    override fun forceResolve() = ResolvingValueColumn(values, name, type, defaultValue, distinct)
+    override fun forceResolve() = ResolvingValueColumn(this)
 }
 
 internal class ResolvingValueColumn<T>(
-    values: List<T>,
-    name: String,
-    type: KType,
-    defaultValue: T? = null,
-    distinct: Lazy<Set<T>>? = null
-) : ValueColumnImpl<T>(values, name, type, defaultValue, distinct) {
+    override val source: ValueColumn<T>
+) : ValueColumn<T> by source, ForceResolvedColumn<T> {
 
-    override fun resolveSingle(context: ColumnResolutionContext) = context.df.getColumn<T>(name, context.unresolvedColumnsPolicy)?.addPath(context.df)
+    override fun resolve(context: ColumnResolutionContext) = super<ValueColumn>.resolve(context)
+
+    override fun resolveSingle(context: ColumnResolutionContext) = context.df.getColumn<T>(source.name(), context.unresolvedColumnsPolicy)?.addPath(context.df)
+
+    override fun getValue(row: AnyRow) = super<ValueColumn>.getValue(row)
+
+    override fun rename(newName: String) = ResolvingValueColumn(source.rename(newName))
 }

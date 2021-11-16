@@ -23,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.asValues
+import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
@@ -123,23 +124,25 @@ public fun <T> ColumnSet<T>.asComparable(): ColumnSet<Comparable<T>> = this as C
 // region Iterable
 
 public fun <T> Iterable<DataFrame<T>>.toFrameColumn(name: String = ""): FrameColumn<T> =
-    DataColumn.createFrameColumn(name, asList())
+    DataColumn.createFrameColumn(name, asList()).forceResolve()
 
-public inline fun <reified T> Iterable<T>.toValueColumn(name: String = ""): ValueColumn<T> = DataColumn.createValueColumn(name, asList())
+public inline fun <reified T> Iterable<T>.toValueColumn(name: String = ""): ValueColumn<T> = DataColumn.createValueColumn(name, asList()).forceResolve()
 
 public inline fun <reified T> Iterable<T>.toColumn(
     name: String = "",
     inferNulls: Boolean? = null,
     inferType: Boolean = false
 ): DataColumn<T> =
-    if (inferType) DataColumn.createWithTypeInference(name, asList(), nullable = inferNulls?.let { if (it) null else getType<T>().isMarkedNullable })
-    else DataColumn.create(name, asList(), getType<T>(), checkForNulls = inferNulls == true)
+    (
+        if (inferType) DataColumn.createWithTypeInference(name, asList(), nullable = inferNulls?.let { if (it) null else getType<T>().isMarkedNullable })
+        else DataColumn.create(name, asList(), getType<T>(), checkForNulls = inferNulls == true)
+        ).forceResolve()
 
 public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataColumn<T> =
-    DataColumn.create(name, asList() as List<T>, getType<T>())
+    DataColumn.create(name, asList() as List<T>, getType<T>()).forceResolve()
 
 public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): DataColumn<T> =
-    DataColumn.create(ref.name(), asList())
+    DataColumn.create(ref.name(), asList()).forceResolve()
 
 public fun <T> Iterable<T>.toMany(): Many<T> = when (this) {
     is Many<T> -> this

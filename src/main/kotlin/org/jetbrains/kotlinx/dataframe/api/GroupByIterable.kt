@@ -25,7 +25,7 @@ public fun <T, G> GroupBy<T, G>.mapToRows(body: Selector<GroupWithKey<T, G>, Dat
     map(body).concat()
 
 public fun <T, G> GroupBy<T, G>.mapToFrames(body: Selector<GroupWithKey<T, G>, DataFrame<G>>): FrameColumn<G> =
-    map(body).toFrameColumn(groups.name)
+    DataColumn.createFrameColumn(groups.name, map(body))
 
 // endregion
 

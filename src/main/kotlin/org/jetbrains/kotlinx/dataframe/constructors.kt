@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
+import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumnWithActualType
 import org.jetbrains.kotlinx.dataframe.impl.getType
@@ -61,17 +62,17 @@ public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null)
 
 // region create DataColumn
 
-public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> = createColumn(values.asIterable(), getType<T>(), true)
+public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> = createColumn(values.asIterable(), getType<T>(), true).forceResolve()
 
-public fun columnOf(vararg values: AnyBaseColumn): DataColumn<AnyRow> = columnOf(values.asIterable())
+public fun columnOf(vararg values: AnyBaseColumn): DataColumn<AnyRow> = columnOf(values.asIterable()).forceResolve()
 
-public fun <T> columnOf(vararg frames: DataFrame<T>): FrameColumn<T> = columnOf(frames.asIterable())
+public fun <T> columnOf(vararg frames: DataFrame<T>): FrameColumn<T> = columnOf(frames.asIterable()).forceResolve()
 
-public fun columnOf(columns: Iterable<AnyBaseColumn>): DataColumn<AnyRow> = DataColumn.createColumnGroup("", dataFrameOf(columns)) as DataColumn<AnyRow>
+public fun columnOf(columns: Iterable<AnyBaseColumn>): DataColumn<AnyRow> = (DataColumn.createColumnGroup("", dataFrameOf(columns)) as DataColumn<AnyRow>).forceResolve()
 
-public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> = DataColumn.createFrameColumn("", frames.toList())
+public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> = DataColumn.createFrameColumn("", frames.toList()).forceResolve()
 
-public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> = createColumn(values, getType<T>(), false)
+public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> = createColumn(values, getType<T>(), false).forceResolve()
 
 // TODO: replace with extension
 public inline fun <reified T> column(name: String, values: List<T>): DataColumn<T> = when {

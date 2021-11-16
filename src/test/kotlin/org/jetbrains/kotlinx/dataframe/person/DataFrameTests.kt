@@ -2183,4 +2183,19 @@ class DataFrameTests : BaseTest() {
         desc.nrow() shouldBe typed.ncol() + 1
         desc.print()
     }
+
+    @Test
+    fun `index by column accessor`() {
+        val col = listOf(1, 2, 3, 4, 5).toColumn("name")
+        col.toDataFrame()[1..2][col].size shouldBe 2
+
+        val col2 = columnOf(1, 2, 3, 4, 5) named "name"
+        col2.toDataFrame()[1..2][col2].size shouldBe 2
+
+        val col3 by columnOf(1, 2, 3, 4, 5)
+        col3.toDataFrame()[1..2][col3].size shouldBe 2
+
+        val col4 by listOf(1, 2, 3, 4, 5).toColumn()
+        col4.toDataFrame()[1..2][col4].size shouldBe 2
+    }
 }
