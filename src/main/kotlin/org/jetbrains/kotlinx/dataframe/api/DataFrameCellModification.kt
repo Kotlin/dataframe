@@ -232,13 +232,17 @@ public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>): DataFrame<T>
 public interface DataFrameParserOptions {
 
     public fun addDateTimeFormat(format: String)
+
+    public fun resetToDefault()
+
+    public var locale: Locale
 }
 
-public fun DataColumn<String?>.tryParse(locale: Locale = Locale.getDefault()): DataColumn<*> = tryParseImpl(locale)
+public fun DataColumn<String?>.tryParse(locale: Locale = Parsers.locale): DataColumn<*> = tryParseImpl(locale)
 
-public fun <T> DataFrame<T>.parse(locale: Locale = Locale.getDefault()): DataFrame<T> = parse({ dfs() }, locale)
+public fun <T> DataFrame<T>.parse(locale: Locale = Parsers.locale): DataFrame<T> = parse(locale) { dfs() }
 
-public fun <T> DataFrame<T>.parse(columns: ColumnsSelector<T, Any?>, locale: Locale): DataFrame<T> = convert(columns).to {
+public fun <T> DataFrame<T>.parse(locale: Locale = Parsers.locale, columns: ColumnsSelector<T, Any?>): DataFrame<T> = convert(columns).to {
     when {
         it.isFrameColumn() -> it.castTo<AnyFrame?>().parse()
         it.typeClass == String::class -> it.castTo<String?>().tryParse(locale)
@@ -246,7 +250,7 @@ public fun <T> DataFrame<T>.parse(columns: ColumnsSelector<T, Any?>, locale: Loc
     }
 }
 
-public fun DataColumn<String?>.parse(locale: Locale = Locale.getDefault()): DataColumn<*> = tryParse(locale).also { if (it.typeClass == String::class) error("Can't guess column type") }
+public fun DataColumn<String?>.parse(locale: Locale = Parsers.locale): DataColumn<*> = tryParse(locale).also { if (it.typeClass == String::class) error("Can't guess column type") }
 
 @JvmName("tryParseAnyFrame?")
 public fun DataColumn<AnyFrame?>.parse(): DataColumn<AnyFrame?> = map { it?.parse() }

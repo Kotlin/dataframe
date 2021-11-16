@@ -33,32 +33,59 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
-internal open class StringParser<T : Any>(val type: KType, val parse: ((String) -> T?)?) {
-    open fun toConverter(): TypeConverter = {
-        parse?.invoke(it as String)
-    }
+internal interface StringParser<T> {
+    fun toConverter(): TypeConverter
+    fun withLocale(locale: Locale): (String) -> T?
+    val type: KType
 }
 
-internal class StringParserWithFormat<T : Any>(type: KType, val parseWithLocale: (String, NumberFormat) -> T?) : StringParser<T>(type, null) {
+internal open class DelegatedStringParser<T>(override val type: KType, val handle: (String) -> T?) : StringParser<T> {
     override fun toConverter(): TypeConverter = {
-        parseWithLocale(it as String, it as NumberFormat)
+        handle(it as String)
+    }
+
+    override fun withLocale(locale: Locale): (String) -> T? = handle
+}
+
+internal class StringParserWithFormat<T>(override val type: KType, val handle: (String, NumberFormat) -> T?) :
+    StringParser<T> {
+    override fun toConverter(): TypeConverter = {
+        handle(it as String, it as NumberFormat)
+    }
+
+    override fun withLocale(locale: Locale): (String) -> T? {
+        val numberFormat = NumberFormat.getInstance(locale)
+        return { handle(it, numberFormat) }
     }
 }
 
 internal object Parsers : DataFrameParserOptions {
 
-    private val formatterDateTime = DateTimeFormatterBuilder()
-        .parseCaseInsensitive()
-        .append(DateTimeFormatter.ISO_LOCAL_DATE)
-        .appendLiteral(' ')
-        .append(DateTimeFormatter.ISO_LOCAL_TIME).toFormatter()
+    private val formatters: MutableList<DateTimeFormatter> = mutableListOf()
 
-    private val formatters = mutableListOf(
-        DateTimeFormatter.ISO_LOCAL_DATE_TIME,
-        formatterDateTime
-    )
+    override fun addDateTimeFormat(format: String) {
+        formatters.add(DateTimeFormatter.ofPattern(format))
+    }
 
-    override fun addDateTimeFormat(format: String) { formatters.add(DateTimeFormatter.ofPattern(format)) }
+    override var locale: Locale = Locale.getDefault()
+
+    override fun resetToDefault() {
+        formatters.clear()
+        formatters.add(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+
+        DateTimeFormatterBuilder()
+            .parseCaseInsensitive()
+            .append(DateTimeFormatter.ISO_LOCAL_DATE)
+            .appendLiteral(' ')
+            .append(DateTimeFormatter.ISO_LOCAL_TIME).toFormatter()
+            .let { formatters.add(it) }
+
+        locale = Locale.getDefault()
+    }
+
+    init {
+        resetToDefault()
+    }
 
     private fun String.toLocalDateTimeOrNull(): LocalDateTime? {
         for (format in formatters) {
@@ -110,9 +137,10 @@ internal object Parsers : DataFrameParserOptions {
             }
         }
 
-    inline fun <reified T : Any> stringParser(noinline body: (String) -> T?) = StringParser(getType<T>(), body)
+    inline fun <reified T : Any> stringParser(noinline body: (String) -> T?) = DelegatedStringParser(getType<T>(), body)
 
-    inline fun <reified T : Any> stringParserWithFormat(noinline body: (String, NumberFormat) -> T?) = StringParserWithFormat(getType<T>(), body)
+    inline fun <reified T : Any> stringParserWithFormat(noinline body: (String, NumberFormat) -> T?) =
+        StringParserWithFormat(getType<T>(), body)
 
     val All = listOf(
         stringParser { it.toIntOrNull() },
@@ -141,21 +169,17 @@ internal object Parsers : DataFrameParserOptions {
 
 internal fun DataColumn<String?>.tryParseImpl(locale: Locale): DataColumn<*> {
     if (allNulls()) return this
-    val format = NumberFormat.getInstance(locale)
+
     var parserId = 0
     val parsedValues = mutableListOf<Any?>()
 
     do {
-        val parser = Parsers[parserId]
+        val parser = Parsers[parserId].withLocale(locale)
         parsedValues.clear()
         for (str in values) {
             if (str == null) parsedValues.add(null)
             else {
-                val res = if (parser is StringParserWithFormat) {
-                    parser.parseWithLocale.invoke(str, format)
-                } else {
-                    parser.parse?.invoke(str)
-                }
+                val res = parser(str)
 
                 if (res == null) {
                     parserId++
@@ -169,10 +193,11 @@ internal fun DataColumn<String?>.tryParseImpl(locale: Locale): DataColumn<*> {
     return DataColumn.createValueColumn(name(), parsedValues, Parsers[parserId].type.withNullability(hasNulls))
 }
 
-internal fun <T : Any> DataColumn<String?>.parse(parser: StringParser<T>): DataColumn<T?> {
+internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, locale: Locale): DataColumn<T?> {
+    val handler = parser.withLocale(locale)
     val parsedValues = values.map {
         it?.let {
-            parser.parse?.invoke(it) ?: throw Exception("Couldn't parse '$it' to type ${parser.type}")
+            handler(it) ?: throw IllegalStateException("Couldn't parse '$it' into type ${parser.type}")
         }
     }
     return DataColumn.createValueColumn(name(), parsedValues, parser.type.withNullability(hasNulls)) as DataColumn<T?>

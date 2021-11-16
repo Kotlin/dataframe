@@ -304,7 +304,7 @@ public fun DataFrame.Companion.readDelim(
                 ColType.String -> column
                 else -> {
                     val parser = Parsers[colType.toType()]!!
-                    column.parse(parser)
+                    column.parse(parser, locale)
                 }
             }
         }
