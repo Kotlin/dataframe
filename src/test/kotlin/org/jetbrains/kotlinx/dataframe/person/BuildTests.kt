@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.person
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.createDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.column
 import org.junit.Test
@@ -21,5 +22,12 @@ class BuildTests {
     @Test(expected = IllegalArgumentException::class)
     fun `unequal column sizes`() {
         persons.toDataFrame() + column("id", listOf(1, 2, 3))
+    }
+
+    @Test
+    fun `create dataframe`() {
+        persons.createDataFrame {
+            expr { it.age + 4 } into "age"
+        }
     }
 }

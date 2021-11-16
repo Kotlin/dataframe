@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnWithParent
+import org.jetbrains.kotlinx.dataframe.impl.columns.ForceResolvedColumn
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.isSubtypeWithNullabilityOf
 import org.jetbrains.kotlinx.dataframe.type
@@ -35,5 +36,6 @@ public fun AnyCol.inferType(): DataColumn<*> = DataColumn.createWithTypeInferenc
 public fun AnyBaseColumn.unbox(): AnyCol = when (this) {
     is ColumnWithPath<*> -> data.unbox()
     is ColumnWithParent<*> -> source.unbox()
+    is ForceResolvedColumn<*> -> source.unbox()
     else -> this as AnyCol
 }

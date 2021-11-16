@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
@@ -42,18 +43,20 @@ internal open class FrameColumnImpl<T> constructor(
         values.mapNotNull { it.takeIf { it.nrow > 0 }?.schema() }.intersectSchemas()
     }
 
-    override fun forceResolve() = ResolvingFrameColumn(name, values, schema, distinct)
+    override fun forceResolve() = ResolvingFrameColumn(this)
 
     override fun get(indices: Iterable<Int>): FrameColumn<T> = DataColumn.createFrameColumn(name, indices.map { values[it] })
 }
 
 internal class ResolvingFrameColumn<T>(
-    name: String,
-    values: List<DataFrame<T>>,
-    columnSchema: Lazy<DataFrameSchema>,
-    distinct: Lazy<Set<DataFrame<T>>>
-) :
-    FrameColumnImpl<T>(name, values, columnSchema, distinct) {
+    override val source: FrameColumn<T>
+) : FrameColumn<T> by source, ForceResolvedColumn<DataFrame<T>> {
 
-    override fun resolveSingle(context: ColumnResolutionContext) = context.df.getColumn<DataFrame<T>>(name, context.unresolvedColumnsPolicy)?.addPath(context.df)
+    override fun resolve(context: ColumnResolutionContext) = super<FrameColumn>.resolve(context)
+
+    override fun resolveSingle(context: ColumnResolutionContext) = context.df.getColumn<DataFrame<T>>(source.name(), context.unresolvedColumnsPolicy)?.addPath(context.df)
+
+    override fun getValue(row: AnyRow) = super<FrameColumn>.getValue(row)
+
+    override fun rename(newName: String) = ResolvingFrameColumn(source.rename(newName))
 }
