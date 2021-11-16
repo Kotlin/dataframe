@@ -3,8 +3,6 @@
 
 Returns `DataFrame` with changed values in some columns. Column types can be changed.
 
-#### Syntax
-
 ```kotlin
 convert { columnsSelector }
     .with { rowExpression } | .withConst(value) | .withRowCol { rowColExpression } | to<Type>() | to { colExpression }
@@ -16,8 +14,6 @@ colExpression = DataFrame.(DataColumn) -> NewValue
 
 See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-expressions)
 
-#### Examples
-
 <!---FUN convert-->
 
 ```kotlin
@@ -26,8 +22,6 @@ df.convert { dfsOf<String>() }.with { it.toCharArray().toList() }
 ```
 
 <!---END-->
-
-### Type conversions
 
 `convert` supports automatic type conversions between the following types:
 * `Int`

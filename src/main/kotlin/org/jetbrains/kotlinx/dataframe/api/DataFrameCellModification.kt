@@ -45,6 +45,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -221,38 +222,34 @@ public fun <T> DataColumn<Many<Many<T>>>.toDataFrames(containsColumns: Boolean =
 
 // region parse
 
-public val DataFrame.Companion.parser: ParserOptions get() = Parsers
+public val DataFrame.Companion.parser: GlobalParserOptions get() = Parsers
 
-public fun <T> DataFrame<T>.parse(columns: ColumnsSelector<T, Any?>): DataFrame<T> = parseImpl(columns)
-public fun <T> DataFrame<T>.parse(vararg columns: String): DataFrame<T> = parse { columns.toColumns() }
-public fun <T, C> DataFrame<T>.parse(vararg columns: ColumnReference<C>): DataFrame<T> = parse { columns.toColumns() }
-public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>): DataFrame<T> = parse { columns.toColumns() }
+public fun <T> DataFrame<T>.parse(options: ParserOptions? = null, columns: ColumnsSelector<T, Any?>): DataFrame<T> = parseImpl(options, columns)
+public fun <T> DataFrame<T>.parse(vararg columns: String, options: ParserOptions? = null): DataFrame<T> = parse(options) { columns.toColumns() }
+public fun <T, C> DataFrame<T>.parse(vararg columns: ColumnReference<C>, options: ParserOptions? = null): DataFrame<T> = parse(options) { columns.toColumns() }
+public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>, options: ParserOptions? = null): DataFrame<T> = parse(options) { columns.toColumns() }
 
-public interface ParserOptions {
+public interface GlobalParserOptions {
 
     public fun addDateTimeFormat(format: String)
+
+    public fun addDateTimeFormatter(formatter: DateTimeFormatter)
 
     public fun resetToDefault()
 
     public var locale: Locale
 }
 
-public fun DataColumn<String?>.tryParse(locale: Locale = Parsers.locale): DataColumn<*> = tryParseImpl(locale)
+public data class ParserOptions(val locale: Locale? = null, val dateTimeFormatter: DateTimeFormatter? = null)
 
-public fun <T> DataFrame<T>.parse(locale: Locale = Parsers.locale): DataFrame<T> = parse(locale) { dfs() }
+public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataColumn<*> = tryParseImpl(options)
 
-public fun <T> DataFrame<T>.parse(locale: Locale = Parsers.locale, columns: ColumnsSelector<T, Any?>): DataFrame<T> = convert(columns).to {
-    when {
-        it.isFrameColumn() -> it.cast<AnyFrame?>().parse()
-        it.typeClass == String::class -> it.cast<String?>().tryParse(locale)
-        else -> it
-    }
-}
+public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> = parse(options) { dfs() }
 
-public fun DataColumn<String?>.parse(locale: Locale = Parsers.locale): DataColumn<*> = tryParse(locale).also { if (it.typeClass == String::class) error("Can't guess column type") }
+public fun DataColumn<String?>.parse(options: ParserOptions? = null): DataColumn<*> = tryParse(options).also { if (it.typeClass == String::class) error("Can't guess column type") }
 
-@JvmName("tryParseAnyFrame?")
-public fun DataColumn<AnyFrame?>.parse(): DataColumn<AnyFrame?> = map { it?.parse() }
+@JvmName("parseAnyFrame?")
+public fun DataColumn<AnyFrame?>.parse(options: ParserOptions? = null): DataColumn<AnyFrame?> = map { it?.parse(options) }
 
 // endregion
 
