@@ -222,14 +222,14 @@ public fun <T> DataColumn<Many<Many<T>>>.toDataFrames(containsColumns: Boolean =
 
 // region parse
 
-public val DataFrame.Companion.parser: DataFrameParserOptions get() = Parsers
+public val DataFrame.Companion.parser: ParserOptions get() = Parsers
 
 public fun <T> DataFrame<T>.parse(columns: ColumnsSelector<T, Any?>): DataFrame<T> = parseImpl(columns)
 public fun <T> DataFrame<T>.parse(vararg columns: String): DataFrame<T> = parse { columns.toColumns() }
 public fun <T, C> DataFrame<T>.parse(vararg columns: ColumnReference<C>): DataFrame<T> = parse { columns.toColumns() }
 public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>): DataFrame<T> = parse { columns.toColumns() }
 
-public interface DataFrameParserOptions {
+public interface ParserOptions {
 
     public fun addDateTimeFormat(format: String)
 

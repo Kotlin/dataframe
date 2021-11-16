@@ -3,10 +3,9 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.DataFrameParserOptions
 import org.jetbrains.kotlinx.dataframe.api.allNulls
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.parse
@@ -59,7 +58,7 @@ internal class StringParserWithFormat<T>(override val type: KType, val handle: (
     }
 }
 
-internal object Parsers : DataFrameParserOptions {
+internal object Parsers : ParserOptions {
 
     private val formatters: MutableList<DateTimeFormatter> = mutableListOf()
 
