@@ -153,8 +153,6 @@ internal object Parsers : GlobalParserOptions {
     val All = listOf(
         stringParser { it.toIntOrNull() },
         stringParser { it.toLongOrNull() },
-        stringParser { it.toBooleanOrNull() },
-        stringParser { it.toBigDecimalOrNull() },
         stringParser { it.toLocalDateOrNull() },
         stringParser { it.toLocalTimeOrNull() },
 
@@ -170,7 +168,9 @@ internal object Parsers : GlobalParserOptions {
             val numberFormat = NumberFormat.getInstance(options?.locale ?: Locale.getDefault())
             val parser = { it: String -> it.parseDouble(numberFormat) }
             parser
-        }
+        },
+        stringParser { it.toBooleanOrNull() },
+        stringParser { it.toBigDecimalOrNull() },
     )
 
     private val parsersMap = All.associateBy { it.type }
