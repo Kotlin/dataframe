@@ -46,7 +46,6 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.util.*
-import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
@@ -244,8 +243,8 @@ public fun <T> DataFrame<T>.parse(locale: Locale = Parsers.locale): DataFrame<T>
 
 public fun <T> DataFrame<T>.parse(locale: Locale = Parsers.locale, columns: ColumnsSelector<T, Any?>): DataFrame<T> = convert(columns).to {
     when {
-        it.isFrameColumn() -> it.castTo<AnyFrame?>().parse()
-        it.typeClass == String::class -> it.castTo<String?>().tryParse(locale)
+        it.isFrameColumn() -> it.cast<AnyFrame?>().parse()
+        it.typeClass == String::class -> it.cast<String?>().tryParse(locale)
         else -> it
     }
 }
