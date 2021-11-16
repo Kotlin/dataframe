@@ -2,14 +2,11 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.convertTo
-import org.jetbrains.kotlinx.dataframe.api.parse
-import org.jetbrains.kotlinx.dataframe.api.parser
-import org.jetbrains.kotlinx.dataframe.api.tryParse
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 class ParserTests {
@@ -49,5 +46,14 @@ class ParserTests {
         converted.type() shouldBe getType<Int>()
         converted[0] shouldBe 1
         converted[1] shouldBe 1
+    }
+
+    @Test
+    fun `convert BigDecimal column`() {
+        val col by columnOf(BigDecimal(1.0), BigDecimal(0.321))
+        val converted = col.convertTo<Float>()
+        converted.type() shouldBe getType<Float>()
+        converted[0] shouldBe 1.0f
+        converted[1] shouldBe 0.321f
     }
 }
