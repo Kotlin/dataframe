@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
@@ -66,7 +67,7 @@ class CsvTests {
 
     @Test
     fun readCSVwithFrenchLocaleAndAlternativeDelimiter() {
-        val df = DataFrame.readCSV(PATH_TO_DATA_2, delimiter = ';', locale = Locale.FRENCH)
+        val df = DataFrame.readCSV(PATH_TO_DATA_2, delimiter = ';', parserOptions = ParserOptions(locale = Locale.FRENCH))
 
         df.ncol() shouldBe 11
         df.nrow() shouldBe 5

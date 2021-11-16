@@ -4,6 +4,7 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.tryParse
@@ -87,7 +88,7 @@ public fun DataFrame.Companion.readCSV(
     readLines: Int? = null,
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
-    locale: Locale = Locale.getDefault()
+    parserOptions: ParserOptions? = null,
 ): DataFrame<*> =
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
@@ -96,7 +97,7 @@ public fun DataFrame.Companion.readCSV(
             CSVType.DEFAULT, colTypes,
             skipLines, readLines,
             duplicate, charset,
-            locale
+            parserOptions
         )
     }
 
@@ -110,7 +111,7 @@ public fun DataFrame.Companion.readCSV(
     readLines: Int? = null,
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
-    locale: Locale = Locale.getDefault()
+    parserOptions: ParserOptions? = null
 ): DataFrame<*> =
     readDelim(
         FileInputStream(file), delimiter,
@@ -118,7 +119,7 @@ public fun DataFrame.Companion.readCSV(
         CSVType.DEFAULT, colTypes,
         skipLines, readLines,
         duplicate, charset,
-        locale
+        parserOptions
     )
 
 public fun DataFrame.Companion.readCSV(
@@ -131,7 +132,7 @@ public fun DataFrame.Companion.readCSV(
     readLines: Int? = null,
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
-    locale: Locale = Locale.getDefault()
+    parserOptions: ParserOptions? = null
 ): DataFrame<*> =
     readDelim(
         url.openStream(), delimiter,
@@ -139,7 +140,7 @@ public fun DataFrame.Companion.readCSV(
         CSVType.DEFAULT, colTypes,
         skipLines, readLines,
         duplicate, charset,
-        locale
+        parserOptions
     )
 
 public fun DataFrame.Companion.readTSV(
@@ -152,7 +153,7 @@ public fun DataFrame.Companion.readTSV(
     readLines: Int? = null,
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
-    locale: Locale = Locale.getDefault()
+    parserOptions: ParserOptions? = null
 ): DataFrame<*> =
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
@@ -161,7 +162,7 @@ public fun DataFrame.Companion.readTSV(
             CSVType.TDF, colTypes,
             skipLines, readLines,
             duplicate, charset,
-            locale
+            parserOptions
         )
     }
 
@@ -222,14 +223,14 @@ public fun DataFrame.Companion.readDelim(
     readLines: Int? = null,
     duplicate: Boolean = true,
     charset: Charset = defaultCharset,
-    locale: Locale = defaultLocale
+    parserOptions: ParserOptions? = null,
 ): AnyFrame =
     if (isCompressed) {
         InputStreamReader(GZIPInputStream(inStream), charset)
     } else {
         BufferedReader(InputStreamReader(inStream, charset))
     }.run {
-        readDelim(this, getFormat(csvType, delimiter, headers, duplicate), nullStrings, colTypes, skipLines, readLines, locale)
+        readDelim(this, getFormat(csvType, delimiter, headers, duplicate), nullStrings, colTypes, skipLines, readLines, parserOptions)
     }
 
 internal fun isURL(fileOrUrl: String): Boolean = listOf("http:", "https:", "ftp:").any { fileOrUrl.startsWith(it) }
@@ -265,7 +266,7 @@ public fun DataFrame.Companion.readDelim(
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
-    locale: Locale = Locale.getDefault()
+    parserOptions: ParserOptions? = null
 ): AnyFrame {
     var reader = reader
     if (skipLines > 0) {
@@ -300,11 +301,11 @@ public fun DataFrame.Companion.readDelim(
             val values = records.map { it[colIndex]?.emptyAsNull(nullStrings).also { if (it == null) hasNulls = true } }
             val column = column(colName, values, hasNulls)
             when (colType) {
-                null -> column.tryParse(locale)
+                null -> column.tryParse(parserOptions)
                 ColType.String -> column
                 else -> {
                     val parser = Parsers[colType.toType()]!!
-                    column.parse(parser, locale)
+                    column.parse(parser, parserOptions)
                 }
             }
         }

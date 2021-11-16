@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.api.ConvertClause
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -74,7 +75,7 @@ internal typealias TypeConverter = (Any) -> Any?
 
 internal inline fun <T> convert(crossinline converter: (T) -> Any?): TypeConverter = { converter(it as T) }
 
-internal fun createConverter(from: KType, to: KType): TypeConverter? {
+internal fun createConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? {
     if (from.arguments.isNotEmpty() || to.arguments.isNotEmpty()) return null
     if (from.isMarkedNullable) {
         val res = createConverter(from.withNullability(false), to) ?: return null
@@ -86,7 +87,7 @@ internal fun createConverter(from: KType, to: KType): TypeConverter? {
     if (fromClass == toClass) return { it }
 
     return when {
-        fromClass == String::class -> Parsers[to]?.toConverter()
+        fromClass == String::class -> Parsers[to]?.toConverter(options)
         toClass == String::class -> convert<Any> { it.toString() }
         fromClass == Number::class -> when (toClass) {
             Double::class -> convert<Number> { it.toDouble() }

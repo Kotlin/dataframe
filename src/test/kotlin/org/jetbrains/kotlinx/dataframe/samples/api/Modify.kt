@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.convert
@@ -20,6 +22,8 @@ import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.nullToZero
+import org.jetbrains.kotlinx.dataframe.api.parse
+import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.pivotCount
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.shuffle
@@ -43,6 +47,8 @@ import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.pathOf
 import org.junit.Test
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 import kotlin.streams.toList
 
 class Modify : TestBase() {
@@ -74,6 +80,35 @@ class Modify : TestBase() {
         df.convert { numberCols() }.to<String>()
         df.convert { name.firstName and name.lastName }.to { it.length() }
         df.convert { weight }.toFloat()
+        // SampleEnd
+    }
+
+    @Test
+    fun parseAll() {
+        // SampleStart
+        df.parse()
+        // SampleEnd
+    }
+
+    @Test
+    fun parseSome() {
+        // SampleStart
+        df.parse { age and weight }
+        // SampleEnd
+    }
+
+    @Test
+    fun parseWithOptions() {
+        // SampleStart
+        df.parse(options = ParserOptions(locale = Locale.CHINA, dateTimeFormatter = DateTimeFormatter.ISO_WEEK_DATE))
+        // SampleEnd
+    }
+
+    @Test
+    fun globalParserOptions() {
+        // SampleStart
+        DataFrame.parser.locale = Locale.FRANCE
+        DataFrame.parser.addDateTimeFormat("dd.MM.uuuu HH:mm:ss")
         // SampleEnd
     }
 
