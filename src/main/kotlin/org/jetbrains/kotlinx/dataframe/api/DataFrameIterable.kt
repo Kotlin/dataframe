@@ -253,9 +253,10 @@ public fun <T, C> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comp
 
 public inline fun <reified T> Iterable<T>.createDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> = createDataFrameImpl(T::class, body)
 
-public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>, depth: Int = 1): DataFrame<T> = createDataFrame {
-    properties(roots = props, depth = depth)
-}
+public inline fun <reified T> Iterable<T>.createDataFrame(vararg props: KProperty<*>, depth: Int = 1): DataFrame<T> =
+    createDataFrame {
+        properties(roots = props, depth = depth)
+    }
 
 @JvmName("toDataFrameT")
 public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {

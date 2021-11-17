@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.createDataFrame
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.pivot
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toListOf
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.junit.Test
@@ -22,7 +22,7 @@ class DataClassesTests {
             Record("female", 5, 20),
             Record("female", 6, 15)
         )
-            .toDataFrame()
+            .createDataFrame()
             .pivot(Record::sex).groupBy(Record::grade).values(Record::count)
             .toListOf<PivotedRecord>() shouldBe
             listOf(
