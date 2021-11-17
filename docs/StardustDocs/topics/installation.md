@@ -1,5 +1,5 @@
 [//]: # (title: Installation)
 
-# Jupiter
+# Jupyter Notebook
 
-# IntelliJ Idea
+# IntelliJ IDEA

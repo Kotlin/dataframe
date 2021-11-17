@@ -1,3 +1,3 @@
-[//]: # (title: gradle.md)
+[//]: # (title: Gradle)
 
 Start writing here.
