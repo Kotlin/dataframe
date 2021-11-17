@@ -43,8 +43,6 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     override fun getColumn(columnIndex: Int): DataColumn<*> = columns()[columnIndex]
 
-    public operator fun set(columnName: String, value: AnyCol)
-
     override operator fun get(index: Int): DataRow<T> = DataRowImpl(index, this)
 
     override operator fun get(columnName: String): DataColumn<*> =

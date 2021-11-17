@@ -1420,14 +1420,6 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun `set column`() {
-        val copy = typed.select { all() }
-        copy["new"] = copy.age
-        copy.ncol() shouldBe typed.ncol() + 1
-        copy["new"].toList() shouldBe typed.age.toList()
-    }
-
-    @Test
     fun `columns sum`() {
         val name by columnOf("Alice", "Bob", "Mark")
         val age by columnOf(15, 20, 24)
