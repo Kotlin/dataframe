@@ -16,7 +16,7 @@ fun gradleRunner(buildDir: File, task: String): GradleRunner = GradleRunner.crea
     .withProjectDir(buildDir)
     .withGradleVersion("7.0")
     .withPluginClasspath()
-    .withArguments(task)
+    .withArguments(task, "--stacktrace", "--info")
     .withDebug(true)
 
 data class Build(val buildDir: File, val buildResult: BuildResult)

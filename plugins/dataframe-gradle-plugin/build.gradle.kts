@@ -71,8 +71,8 @@ tasks.withType<JavaCompile>().all {
 
 dependencies {
     implementation(project(":"))
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin-api")
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin")
+    implementation(kotlin("gradle-plugin-api", "1.5.30"))
+    implementation(kotlin("gradle-plugin", "1.5.30"))
     implementation("com.beust:klaxon:5.5")
     implementation(libs.ksp.gradle)
     implementation(libs.ksp.api)

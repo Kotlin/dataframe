@@ -10,8 +10,9 @@ buildscript {
 }
 
 plugins {
+    id "com.google.devtools.ksp" version "$kspVersion"
     id "org.jetbrains.kotlin.jvm" version "$kotlin_version"
-    id "org.jetbrains.dokka" version "$kotlin_version"
+    id "org.jetbrains.dokka" version "$dokkaVersion"
     id "org.jetbrains.dataframe.generator"
     id "org.jetbrains.kotlin.libs.publisher" version "$libsPublisherVersion"
     id("io.github.devcrocod.korro") version "0.1.1-dev-29"

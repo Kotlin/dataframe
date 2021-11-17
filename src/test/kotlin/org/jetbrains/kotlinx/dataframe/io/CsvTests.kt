@@ -124,7 +124,7 @@ class CsvTests {
     }
 
     companion object {
-        private fun testCsv(name: String) = "src/test/resources/$name.csv"
+        private fun testCsv(name: String) = this::class.java.classLoader.getResource("$name.csv")!!
 
         private val simpleCsv = testCsv("testCSV")
         private val csvWithFrenchLocale = testCsv("testCSVwithFrenchLocale")

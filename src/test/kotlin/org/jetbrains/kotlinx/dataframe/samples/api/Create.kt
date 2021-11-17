@@ -105,7 +105,6 @@ class Create : TestBase() {
         // SampleEnd
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun createValueColumnInferred() {
         // SampleStart
