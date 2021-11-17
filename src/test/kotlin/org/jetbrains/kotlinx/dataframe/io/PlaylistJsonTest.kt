@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
+import org.jetbrains.kotlinx.dataframe.getColumnGroupOrNull
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
 
@@ -267,7 +268,7 @@ class PlaylistJsonTest {
     fun `remove all from group`() {
         val item2 = item.remove { snippet.thumbnails.default and snippet.thumbnails.maxres and snippet.thumbnails.medium and snippet.thumbnails.high and snippet.thumbnails.standard }
         item2.snippet.ncol() shouldBe item.snippet.ncol() - 1
-        item2.snippet.tryGetColumnGroup("thumbnails") shouldBe null
+        item2.snippet.getColumnGroupOrNull("thumbnails") shouldBe null
     }
 
     @Test

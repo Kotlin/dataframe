@@ -6,19 +6,16 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
+import org.jetbrains.kotlinx.dataframe.getColumnOrNull
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupWithParent
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingColumnGroup
-import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingValueColumn
 import org.jetbrains.kotlinx.dataframe.pathOf
 
@@ -45,7 +42,7 @@ internal open class DataFrameReceiver<T>(source: DataFrame<T>, private val allow
     override operator fun get(columnName: String) = getColumnChecked(pathOf(columnName)) ?: MissingValueColumn<Any?>()
 
     fun <R> getColumnChecked(path: ColumnPath): DataColumn<R>? {
-        val col = source.tryGetColumn(path)
+        val col = source.getColumnOrNull(path)
         if (col == null) {
             if (allowMissingColumns) return null
             throw IllegalStateException("Column not found: '$path'")
@@ -53,12 +50,8 @@ internal open class DataFrameReceiver<T>(source: DataFrame<T>, private val allow
         return col.cast()
     }
 
-    fun <R> getColumnChecked(reference: ColumnReference<R>): DataColumn<R>? {
+    override fun <R> resolve(column: ColumnReference<R>): ColumnWithPath<R>? {
         val context = ColumnResolutionContext(this, if (allowMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail)
-        return reference.resolveSingle(context)?.data
+        return column.resolveSingle(context)
     }
-
-    override operator fun <R> get(column: ColumnReference<R>): DataColumn<R> = getColumnChecked(column) ?: MissingValueColumn()
-    override operator fun <R> get(column: ColumnReference<DataRow<R>>): ColumnGroup<R> = (getColumnChecked(column) ?: MissingColumnGroup<R>()) as ColumnGroup<R>
-    override operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R> = (getColumnChecked(column) ?: MissingFrameColumn<R>()) as FrameColumn<R>
 }

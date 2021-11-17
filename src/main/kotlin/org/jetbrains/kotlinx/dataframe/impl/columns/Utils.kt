@@ -20,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.getColumnOrNull
 import org.jetbrains.kotlinx.dataframe.impl.asNullable
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.TreeNode
@@ -123,7 +124,7 @@ internal fun <T> ColumnSet<T>.getAt(index: Int) = object : SingleColumn<T> {
 internal fun <T> ColumnSet<T>.getChildrenAt(index: Int): ColumnSet<Any?> = transform { it.mapNotNull { it.getChild(index) } }
 
 internal fun <C> ColumnsContainer<*>.getColumn(name: String, policy: UnresolvedColumnsPolicy) =
-    tryGetColumn(name)?.cast()
+    getColumnOrNull(name)?.cast()
         ?: when (policy) {
             UnresolvedColumnsPolicy.Fail ->
                 error("Column not found: $name")
@@ -132,7 +133,7 @@ internal fun <C> ColumnsContainer<*>.getColumn(name: String, policy: UnresolvedC
         }
 
 internal fun <C> ColumnsContainer<*>.getColumn(path: ColumnPath, policy: UnresolvedColumnsPolicy) =
-    tryGetColumn(path)?.cast()
+    getColumnOrNull(path)?.cast()
         ?: when (policy) {
             UnresolvedColumnsPolicy.Fail ->
                 error("Column not found: $path")
@@ -179,5 +180,5 @@ internal fun <C> ColumnSet<C>.resolve(
 internal fun <C> SingleColumn<C>.resolveSingle(
     df: DataFrame<*>,
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail
-) =
+): ColumnWithPath<C>? =
     resolveSingle(ColumnResolutionContext(df, unresolvedColumnsPolicy))

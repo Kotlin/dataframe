@@ -41,7 +41,7 @@ import kotlin.reflect.KType
 
 public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
-    public operator fun <C> ColumnReference<C>.invoke(): DataColumn<C> = getColumn(this)
+    public operator fun <C> ColumnReference<C>.invoke(): DataColumn<C> = get(this)
 
     public operator fun <C> ColumnReference<C>.invoke(newName: String): ColumnReference<C> = renamedReference(newName)
 

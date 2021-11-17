@@ -82,6 +82,7 @@ import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.emptyMany
 import org.jetbrains.kotlinx.dataframe.frameColumn
+import org.jetbrains.kotlinx.dataframe.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
@@ -267,7 +268,10 @@ class DataFrameTreeTests : BaseTest() {
         val selected = typed2.select { nameAndCity }
         val nested = selected.mergeRows(dropNulls = false) { nameAndCity.city }
         val mergedCity = columnMany<String?>("city")
-        val res = nested.split { nameAndCity[mergedCity] }.intoRows()
+        val res = nested.split {
+            val group = nameAndCity
+            group.get(mergedCity)
+        }.intoRows()
         val expected = selected.sortBy { nameAndCity.name }
         val actual = res.sortBy { nameAndCity.name }
         actual shouldBe expected

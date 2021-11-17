@@ -5,21 +5,14 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnGroup
 
 internal class MissingColumnGroup<T> : MissingDataColumn<DataRow<T>>(), DataColumnGroup<T> {
 
-    override fun <R> get(column: ColumnReference<R>) = MissingValueColumn<R>()
-
-    override fun <R> get(column: ColumnReference<DataRow<R>>) = MissingColumnGroup<R>()
-
-    override fun <R> get(column: ColumnReference<DataFrame<R>>) = MissingFrameColumn<R>()
-
     override val df: DataFrame<T>
         get() = throw UnsupportedOperationException()
 
-    override fun tryGetColumn(columnName: String): AnyCol? {
+    override fun getColumnOrNull(name: String): AnyCol? {
         return null
     }
 

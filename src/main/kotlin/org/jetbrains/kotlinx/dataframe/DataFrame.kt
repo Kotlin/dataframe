@@ -3,15 +3,13 @@ package org.jetbrains.kotlinx.dataframe
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
@@ -41,22 +39,6 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     public fun <C> valuesNotNull(byRow: Boolean = false, columns: ColumnsSelector<T, C?>): Sequence<C> = values(byRow, columns).filterNotNull()
     public fun valuesNotNull(byRow: Boolean = false): Sequence<Any> = valuesNotNull(byRow) { all() }
 
-    override fun getColumn(columnIndex: Int): DataColumn<*> = columns()[columnIndex]
-
-    override operator fun get(index: Int): DataRow<T> = DataRowImpl(index, this)
-
-    override operator fun get(columnName: String): DataColumn<*> =
-        tryGetColumn(columnName) ?: throw Exception("Column not found: '$columnName'")
-
-    override operator fun <R> get(column: ColumnReference<R>): DataColumn<R> = tryGetColumn(column)
-        ?: error("Column not found: ${column.path().joinToString("/")}")
-
-    override operator fun <R> get(column: ColumnReference<DataRow<R>>): ColumnGroup<R> =
-        get<DataRow<R>>(column) as ColumnGroup<R>
-
-    override operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R> =
-        get<DataFrame<R>>(column) as FrameColumn<R>
-
     override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = getColumns(false, columns)
 
     public operator fun get(indices: Iterable<Int>): DataFrame<T> = getRows(indices)
@@ -73,27 +55,18 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     public fun getColumnIndex(name: String): Int
 
-    public fun <R> tryGetColumn(column: ColumnReference<R>): DataColumn<R>? = column.resolveSingle(
-        this,
-        UnresolvedColumnsPolicy.Skip
-    )?.data
+    override fun <R> resolve(reference: ColumnReference<R>): ColumnWithPath<R>? = reference.resolveSingle(this, UnresolvedColumnsPolicy.Skip)
 
-    override fun tryGetColumn(columnName: String): AnyCol? =
-        getColumnIndex(columnName).let { if (it != -1) getColumn(it) else null }
+    override fun getColumnOrNull(name: String): AnyCol? =
+        getColumnIndex(name).let { if (it != -1) getColumn(it) else null }
 
-    override fun tryGetColumn(path: ColumnPath): AnyCol? =
-        when (path.size) {
-            0 -> DataColumn.createColumnGroup("", this).asDataColumn()
-            1 -> tryGetColumn(path[0])
-            else -> path.dropLast(1).fold(this as AnyFrame?) { df, name -> df?.tryGetColumn(name) as? AnyFrame? }
-                ?.tryGetColumn(path.last())
-        }
-
-    public fun tryGetColumnGroup(name: String): ColumnGroup<*>? = tryGetColumn(name) as? ColumnGroup<*>
+    override fun asColumnGroup(): ColumnGroup<*> = DataColumn.createColumnGroup("", this)
 
     public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
 
     public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T>
+
+    public operator fun get(index: Int): DataRow<T> = DataRowImpl(index, this)
 
     public fun nrow(): Int
     public fun rows(): Iterable<DataRow<T>>

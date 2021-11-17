@@ -137,4 +137,6 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>) : DataFrame<T>, Aggrega
                 }
             }
     }
+
+    override fun getColumn(index: Int) = columns[index]
 }

@@ -50,7 +50,7 @@ internal open class DataRowImpl<T>(private val index: Int, val owner: DataFrame<
 
     override fun tryGet(name: String): Any? {
         ColumnAccessTracker.registerColumnAccess(name)
-        return owner.tryGetColumn(name)?.get(index)
+        return owner.getColumnOrNull(name)?.get(index)
     }
 
     override fun prev(): DataRow<T>? {
