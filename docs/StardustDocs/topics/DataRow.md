@@ -1,31 +1,33 @@
 [//]: # (title: DataRow)
 
+`DataRow` represents a record, one piece of data within a `DataFrame`
+
 ## Row properties
 `DataRow` properties:
 * `index: Int` - sequential row number in `DataFrame`, starts from 0
 * `prev: DataRow?` - previous row (`null` for the first row)
 * `next: DataRow?` - next row (`null` for the last row)
 
-`DataRow` functions:
-* `getRow(Int): DataRow` - row from `DataFrame` by row index
-* `neighbours(Iterable<Int>)` - sequence of nearest rows by relative index: `neighbours(-1..1)` will return previous, current and next row
-* `get(column)` - cell value from column by current row index
-* `values()` - list of all cell values from current row
-* `df()` - `DataFrame` that current row belongs to
-
 If some of these properties clash with generated extension properties, they still can be accessed as functions `index()`, `prev()`, `next()`
 
+`DataRow` functions:
+* `getRow(Int): DataRow` - row from `DataFrame` by row index
+* `neighbours(Iterable<Int>)` - sequence of the nearest rows by relative index: `neighbours(-1..1)` will return previous, current and next row
+* `get(column)` - cell value from `column` in this row
+* `values()` - list of all cell values from the current row
+* `df()` - `DataFrame` that current row belongs to
+
 ## Row expressions
-Row expressions provide a value for every row of `DataFrame` and are used in [add](add.md), [filter](filter.md), [forEach](iterate.md), [update](update.md) and other operations
+Row expressions provide a value for every row of `DataFrame` and are used in [add](add.md), [filter](filter.md), [forEach](iterate.md), [update](update.md) and other operations:
 ```kotlin
 df.add("fullName") { firstName + " " + lastName }
 ```
-Within row expression you can access [row-properties](#row-properties)
+[Row properties](#row-properties) are also accessible within row expressions:
 ```kotlin
 df.add("diff") { value - prev?.value }
 df.filter { index % 5 == 0 }
 ```
-Row expression signature is ```DataRow.(DataRow) -> T```, so row values can be accessed with or without ```it``` keyword
+Row expression signature is ```DataRow.(DataRow) -> T```, so row values can be accessed with or without ```it``` keyword. Implicit and explicit argument represent the same `DataRow` object.
 
 ## Row conditions
 Row condition is a [row expression](#row-expressions) that returns `Boolean`. Its signature is ```DataRow.(DataRow) -> Boolean```

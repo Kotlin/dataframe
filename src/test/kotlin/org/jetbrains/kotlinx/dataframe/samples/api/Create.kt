@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.frameColumn
@@ -47,10 +48,22 @@ class Create : TestBase() {
         // SampleStart
         val age by column<Int>()
 
+        // Access fourth cell in the "age" column of dataframe `df`.
+        // This expression returns `Int` because variable `age` has `ColumnAccessor<Int>` type.
+        // If dataframe `df` has no column "age" or column "age" has type which is incompatible with `Int`,
+        // runtime exception will be thrown.
         df[age][3] + 5
-        df[1][age] * 2
+
+        // Access first cell in the "age" column of dataframe `df`.
+        df[0][age] * 2
+
+        // Returns new dataframe sorted by age column (ascending)
         df.sortBy(age)
+
+        // Returns new dataframe with the column "year of birth" added
         df.add("year of birth") { 2021 - age }
+
+        // Returns new dataframe containing only rows with age > 30
         df.filter { age > 30 }
         // SampleEnd
     }
@@ -59,8 +72,11 @@ class Create : TestBase() {
     fun columnAccessorToColumn() {
         // SampleStart
         val age by column<Int>()
-        val ageCol = age.withValues(15, 20)
+        val ageCol1 = age.withValues(15, 20)
+        val ageCol2 = age.withValues(1..10)
         // SampleEnd
+
+        ageCol2.size shouldBe 10
     }
 
     @Test
