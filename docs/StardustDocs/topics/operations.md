@@ -50,7 +50,7 @@
 * [split](split.md)
 * [merge](merge.md)
 * [explode](explode.md)
-* [mergeRows](mergeRows.md)
+* [implode](implode.md)
 * [append](append.md)
 * [select](select.md)
 * [add](add.md)

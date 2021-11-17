@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.groupByOther
+import org.jetbrains.kotlinx.dataframe.api.implode
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isMany
 import org.jetbrains.kotlinx.dataframe.api.join
@@ -29,7 +30,6 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
 import org.jetbrains.kotlinx.dataframe.api.mapValues
 import org.jetbrains.kotlinx.dataframe.api.matches
-import org.jetbrains.kotlinx.dataframe.api.mergeRows
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.pivot
@@ -258,7 +258,7 @@ class PivotTests {
         val expected = typed.dropNulls { value }.add {
             "Int" from { value as? Int }
             "String" from { value as? String }
-        }.remove("value").mergeRows("Int", dropNulls = true)
+        }.remove("value").implode("Int", dropNulls = true)
 
         pivoted shouldBe expected
     }

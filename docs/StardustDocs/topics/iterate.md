@@ -9,11 +9,11 @@ Iterate over rows:
 <tab title="Properties">
 
 ```kotlin
-for(row in df) {
+for (row in df) {
     println(row.age)
 }
 
-df.forEach {
+df.forEachRow {
     println(it.age)
 }
 
@@ -28,11 +28,11 @@ df.rows().forEach {
 ```kotlin
 val age by column<Int>()
 
-for(row in df) {
+for (row in df) {
     println(row[age])
 }
 
-df.forEach {
+df.forEachRow {
     println(it[age])
 }
 
@@ -45,11 +45,11 @@ df.rows().forEach {
 <tab title="Strings">
 
 ```kotlin
-for(row in df) {
+for (row in df) {
     println(row["age"])
 }
 
-df.forEach {
+df.forEachRow {
     println(it["age"])
 }
 
@@ -66,6 +66,10 @@ Iterate over columns:
 <!---FUN forColumn-->
 
 ```kotlin
+df.forEachColumn {
+    println(it.name())
+}
+
 df.columns().forEach {
     println(it.name())
 }

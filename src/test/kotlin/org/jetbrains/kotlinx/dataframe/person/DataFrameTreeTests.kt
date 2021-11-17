@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.api.forEachRow
 import org.jetbrains.kotlinx.dataframe.api.getColumnPath
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.implode
 import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.intoRows
@@ -46,7 +47,6 @@ import org.jetbrains.kotlinx.dataframe.api.join
 import org.jetbrains.kotlinx.dataframe.api.last
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.max
-import org.jetbrains.kotlinx.dataframe.api.mergeRows
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.moveTo
@@ -265,7 +265,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun splitRows() {
         val selected = typed2.select { nameAndCity }
-        val nested = selected.mergeRows(dropNulls = false) { nameAndCity.city }
+        val nested = selected.implode(dropNulls = false) { nameAndCity.city }
         val mergedCity = columnMany<String?>("city")
         val res = nested.split {
             val group = nameAndCity
@@ -371,7 +371,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `split into rows`() {
         val split = typed2.split { nameAndCity.name }.by { it.toCharArray().toList() }.intoRows()
-        val merged = split.mergeRows { nameAndCity.name }
+        val merged = split.implode { nameAndCity.name }
         val joined = merged.convert { nameAndCity.name }.cast<List<Char>>().with { it.joinToString("") }
         joined shouldBe typed2
     }
@@ -396,7 +396,7 @@ class DataFrameTreeTests : BaseTest() {
     fun `merge rows into table`() {
         val info by columnGroup()
         val moved = typed.group { except(name) }.into(info)
-        val merged = moved.mergeRows { info }
+        val merged = moved.implode { info }
         val grouped = typed.groupBy { name }.mapGroups { remove { name } }
         val expected = grouped.toDataFrame().rename(grouped.groups).into(info)
         merged shouldBe expected

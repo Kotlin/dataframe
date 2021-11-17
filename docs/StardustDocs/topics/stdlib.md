@@ -6,7 +6,7 @@
 <!---FUN iterableApi-->
 
 ```kotlin
-df.forEach { println(it) }
+df.forEachRow { println(it) }
 df.take(5)
 df.drop(2)
 df.chunked(10)
@@ -20,7 +20,7 @@ df.chunked(10)
 <!---FUN asIterableOrSequence-->
 
 ```kotlin
-df.asIterable()
+df.rows()
 df.asSequence()
 ```
 
