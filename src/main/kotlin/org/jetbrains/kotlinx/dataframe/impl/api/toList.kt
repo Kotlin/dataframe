@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.api.asIterable
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -60,7 +59,7 @@ internal fun AnyFrame.toListImpl(type: KType): List<Any> {
         convertedColumn
     }
 
-    return asIterable().map { row ->
+    return rows().map { row ->
         val parameters = convertedColumns.map {
             row[it]
         }.toTypedArray()

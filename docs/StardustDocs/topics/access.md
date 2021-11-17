@@ -7,8 +7,9 @@ Get [rows](DataRow.md) or [columns](DataColumn.md):
 <!---FUN getRowsColumns-->
 
 ```kotlin
-df.rows() // Iterable<DataRow>
 df.columns() // List<DataColumn>
+df.rows() // Iterable<DataRow>
+df.values() // Sequence<Any?>
 ```
 
 <!---END-->

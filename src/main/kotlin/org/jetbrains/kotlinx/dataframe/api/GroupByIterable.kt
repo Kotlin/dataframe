@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.sortByImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.index
 import kotlin.reflect.KProperty
 
 // region map
@@ -86,8 +87,8 @@ public fun <T, G> GroupBy<T, G>.forEach(body: (GroupBy.Entry<T, G>) -> Unit): Un
     )
 }
 public fun <T, G> GroupBy<T, G>.forEach(body: (key: DataRow<T>, group: DataFrame<G>?) -> Unit): Unit =
-    keys.forEachIndexed { index, row ->
-        val group = groups[index]
+    keys.forEachRow { row ->
+        val group = groups[row.index()]
         body(row, group)
     }
 

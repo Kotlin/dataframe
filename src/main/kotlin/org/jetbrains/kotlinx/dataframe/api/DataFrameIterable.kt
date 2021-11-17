@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
@@ -40,8 +41,7 @@ import kotlin.reflect.KProperty
 
 // region DataFrame Iterable API
 
-public fun <T> DataFrame<T>.asIterable(): Iterable<DataRow<T>> = rows()
-public fun <T> DataFrame<T>.asSequence(): Sequence<DataRow<T>> = asIterable().asSequence()
+public fun <T> DataFrame<T>.asSequence(): Sequence<DataRow<T>> = rows().asSequence()
 
 public fun <T> DataFrame<T>.any(predicate: RowFilter<T>): Boolean = rows().any { predicate(it, it) }
 public fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all { predicate(it, it) }
@@ -163,21 +163,12 @@ public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataF
 
 // region forEach
 
-public fun <T> DataFrame<T>.forEach(action: RowExpression<T, Unit>): Unit = rows().forEach { action(it, it) }
+public fun <T> DataFrame<T>.forEachRow(action: RowExpression<T, Unit>): Unit = rows().forEach { action(it, it) }
 
-public fun <T> DataFrame<T>.forEachIndexed(action: (Int, DataRow<T>) -> Unit): Unit = rows().forEachIndexed(action)
+public fun <T> DataFrame<T>.forEachColumn(action: (AnyCol) -> Unit): Unit = columns().forEach(action)
 
-public fun <T, C> DataFrame<T>.forEachIn(
-    columns: ColumnsSelector<T, C>,
-    action: (DataRow<T>, DataColumn<C>) -> Unit
-): Unit =
-    getColumnsWithPaths(columns).let { cols ->
-        rows().forEach { row ->
-            cols.forEach { col ->
-                action(row, col.data)
-            }
-        }
-    }
+public fun <T> DataFrame<T>.forEachColumnIndexed(action: (Int, AnyCol) -> Unit): Unit =
+    columns().forEachIndexed(action)
 
 // endregion
 

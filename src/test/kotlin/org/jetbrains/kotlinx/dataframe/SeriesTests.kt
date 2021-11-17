@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.asIterable
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.diff
 import org.jetbrains.kotlinx.dataframe.api.groupBy
@@ -56,8 +55,8 @@ class SeriesTests {
             .add("diff") { diff { it.temp } }
             .concat()
 
-        val srcData = typed.asIterable().map { (it.city to it.day) to it.temp }.toMap()
-        val expected = typed.sortBy { city and day }.asIterable().map { row -> srcData[row.city to (row.day - 1)]?.let { row.temp - it } ?: 0 }
+        val srcData = typed.rows().map { (it.city to it.day) to it.temp }.toMap()
+        val expected = typed.sortBy { city and day }.rows().map { row -> srcData[row.city to (row.day - 1)]?.let { row.temp - it } ?: 0 }
         withDiff["diff"].toList() shouldBe expected
     }
 
@@ -70,10 +69,10 @@ class SeriesTests {
             .add("ma_temp") { it.movingAverage(k) { it.temp } }
             .concat()
 
-        val srcData = typed.asIterable().map { (it.city to it.day) to it.temp }.toMap()
+        val srcData = typed.rows().map { (it.city to it.day) to it.temp }.toMap()
         val expected = typed
             .sortBy { city and day }
-            .asIterable()
+            .rows()
             .map { row -> (0 until k).map { srcData[row.city to row.day - it] }.filterNotNull().let { it.sum().toDouble() / it.size } }
 
         withMa["ma_temp"].toList() shouldBe expected

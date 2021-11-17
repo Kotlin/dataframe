@@ -223,8 +223,9 @@ class Access : TestBase() {
     @Test
     fun getRowsColumns() {
         // SampleStart
-        df.rows() // Iterable<DataRow>
         df.columns() // List<DataColumn>
+        df.rows() // Iterable<DataRow>
+        df.values() // Sequence<Any?>
         // SampleEnd
     }
 
@@ -443,7 +444,7 @@ class Access : TestBase() {
     @Test
     fun iterableApi() {
         // SampleStart
-        df.forEach { println(it) }
+        df.forEachRow { println(it) }
         df.take(5)
         df.drop(2)
         df.chunked(10)
@@ -453,7 +454,7 @@ class Access : TestBase() {
     @Test
     fun asIterableOrSequence() {
         // SampleStart
-        df.asIterable()
+        df.rows()
         df.asSequence()
         // SampleEnd
     }
@@ -712,6 +713,87 @@ class Access : TestBase() {
 
         // exclude columns from column set
         df.select { dfs().except { age } }
+        // SampleEnd
+    }
+
+    @Test
+    fun forRows_properties() {
+        // SampleStart
+        for (row in df) {
+            println(row.age)
+        }
+
+        df.forEachRow {
+            println(it.age)
+        }
+
+        df.rows().forEach {
+            println(it.age)
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun forRows_accessors() {
+        // SampleStart
+        val age by column<Int>()
+
+        for (row in df) {
+            println(row[age])
+        }
+
+        df.forEachRow {
+            println(it[age])
+        }
+
+        df.rows().forEach {
+            println(it[age])
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun forRows_strings() {
+        // SampleStart
+        for (row in df) {
+            println(row["age"])
+        }
+
+        df.forEachRow {
+            println(it["age"])
+        }
+
+        df.rows().forEach {
+            println(it["age"])
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun forColumn() {
+        // SampleStart
+        df.forEachColumn {
+            println(it.name())
+        }
+
+        df.columns().forEach {
+            println(it.name())
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun forCells() {
+        // SampleStart
+        // from top to bottom, then from left to right
+        df.values().forEach {
+            println(it)
+        }
+
+        // from left to right, then from top to bottom
+        df.values(byRow = true).forEach {
+            println(it)
+        }
         // SampleEnd
     }
 }

@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.asIterable
 import org.jetbrains.kotlinx.dataframe.api.associate
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.columns
@@ -123,10 +122,10 @@ class PivotTests {
         res.ncol() shouldBe 1 + filtered.key.ndistinct()
         res.nrow() shouldBe filtered.name.ndistinct()
 
-        val expected = filtered.asIterable().map { (it.name to it.key) }.toSet()
+        val expected = filtered.rows().map { (it.name to it.key) }.toSet()
         val actual = res.columns().subList(1, res.ncol()).flatMap {
             val columnName = it.name()
-            res.asIterable().map {
+            res.rows().map {
                 val value = it[columnName] as Boolean
                 if (value) {
                     (it.name to columnName)

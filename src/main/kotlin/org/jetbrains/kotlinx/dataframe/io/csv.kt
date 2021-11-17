@@ -5,7 +5,7 @@ import org.apache.commons.csv.CSVRecord
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.forEachRow
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.column
@@ -330,7 +330,7 @@ public fun AnyFrame.writeCSV(path: String, format: CSVFormat = CSVFormat.DEFAULT
 public fun AnyFrame.writeCSV(writer: Appendable, format: CSVFormat = CSVFormat.DEFAULT.withHeader()): Unit =
     format.print(writer).use { printer ->
         printer.printRecord(columnNames())
-        forEach {
+        forEachRow {
             printer.printRecord(it.values)
         }
     }

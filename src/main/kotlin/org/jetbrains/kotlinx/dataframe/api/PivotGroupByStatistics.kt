@@ -33,7 +33,7 @@ public fun <T, R> PivotGroupBy<T>.matches(yes: R, no: R): DataFrame<T> = aggrega
 public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<T> {
     val type = getType<V>()
     return aggregateInternal {
-        val values = df.asIterable().map {
+        val values = df.rows().map {
             val value = expression(it, it)
             if (value is ColumnReference<*>) it[value]
             else value
