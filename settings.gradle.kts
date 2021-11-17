@@ -5,10 +5,12 @@ includeBuild("generator")
 include("plugins:dataframe-gradle-plugin")
 include("plugins:symbol-processor")
 
+val kspVersion: String by settings
+
 dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
-            version("ksp", "1.6.0-RC-1.0.0")
+            version("ksp", kspVersion)
             alias("ksp-gradle").to("com.google.devtools.ksp", "symbol-processing-gradle-plugin").versionRef("ksp")
             alias("ksp-api").to("com.google.devtools.ksp", "symbol-processing-api").versionRef("ksp")
         }
