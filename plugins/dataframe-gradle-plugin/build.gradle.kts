@@ -71,8 +71,8 @@ tasks.withType<JavaCompile>().all {
 
 dependencies {
     implementation(project(":"))
-    implementation(kotlin("gradle-plugin-api", "1.5.30"))
-    implementation(kotlin("gradle-plugin", "1.5.30"))
+    implementation(kotlin("gradle-plugin-api"))
+    implementation(kotlin("gradle-plugin"))
     implementation("com.beust:klaxon:5.5")
     implementation(libs.ksp.gradle)
     implementation(libs.ksp.api)
@@ -81,6 +81,7 @@ dependencies {
     testImplementation("io.kotest:kotest-assertions-core:4.6.0")
     testImplementation("com.android.tools.build:gradle-api:4.1.1")
     testImplementation("com.android.tools.build:gradle:4.1.1")
+    testImplementation(gradleApi())
 }
 
 sourceSets {
