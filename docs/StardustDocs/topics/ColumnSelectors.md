@@ -136,7 +136,7 @@ df.select { "name".dfs() }
 df.select { col(2) }
 
 // by several indices
-df.select { cols(2, 4, 5) }
+df.select { cols(0, 1, 3) }
 
 // by range of indices
 df.select { cols(1..4) }
