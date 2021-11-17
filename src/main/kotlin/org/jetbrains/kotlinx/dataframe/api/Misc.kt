@@ -16,7 +16,7 @@ public fun <T> DataFrame<T>.copy(): DataFrame<T> = columns().toDataFrame().cast(
 
 // region transpose
 
-public fun <T> DataRow<T>.transpose(): DataFrame<*> = dataFrameOf(owner.columnNames().toValueColumn("key"), values.toColumn(inferType = true, name = "value"))
+public fun <T> DataRow<T>.transpose(): DataFrame<*> = dataFrameOf(owner.columnNames().toValueColumn("key"), values.toColumn(name = "value", Infer.Type))
 
 // endregion
 

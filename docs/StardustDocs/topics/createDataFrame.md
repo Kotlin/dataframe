@@ -49,8 +49,8 @@ val df = dataFrameOf(names, values)
 <!---FUN createDataFrameWithFill-->
 
 ```kotlin
-// DataFrame with columns from 'a' to 'z' and values from 1 to 10 for each column
-val df = dataFrameOf('a'..'z') { 1..10 }
+// Multiplication table
+dataFrameOf(1..10) { x -> (1..10).map { x * it } }
 ```
 
 <!---END-->

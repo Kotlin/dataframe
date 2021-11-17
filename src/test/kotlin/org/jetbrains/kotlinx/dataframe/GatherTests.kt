@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe
 import io.kotest.matchers.shouldBe
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.groupBy
@@ -140,8 +141,8 @@ class GatherTests {
             val newDf = listOf(
                 name.withValues(List(cols.size) { name[0] }),
                 mode.withValues(cols.map { it.name }),
-                dataRows.map { it.tryGet("c1") as? String }.toColumn("c1", inferType = true),
-                dataRows.map { it.tryGet("c2") as? String }.toColumn("c2", inferType = true),
+                dataRows.map { it.tryGet("c1") as? String }.toColumn("c1", Infer.Type),
+                dataRows.map { it.tryGet("c2") as? String }.toColumn("c2", Infer.Type),
                 column("c3", dataRows.map { it.tryGet("c3") as? String })
             ).toDataFrame()
 

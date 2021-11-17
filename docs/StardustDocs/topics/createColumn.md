@@ -66,11 +66,9 @@ listOf("Alice", "Bob").toColumn("name")
 
 <!---END-->
 
-To compute column type at runtime by scanning through actual values, set `inferType` flag. 
+To compute column type at runtime by scanning through actual values, set `Infer.Type` option. 
 
-To inspect values only for nullability set `inferNulls` flag.
-
-Default value for both flags is `false`.
+To inspect values only for nullability set `Infer.Nulls` option.
 
 <!---FUN createValueColumnInferred-->
 
@@ -78,17 +76,15 @@ Default value for both flags is `false`.
 val values: List<Any?> = listOf(1, 2.5)
 
 values.toColumn("data") // type: Any?
-values.toColumn("data", inferType = true) // type: Number
-values.toColumn("data", inferNulls = true) // type: Any
-values.toColumn("data", inferType = true, inferNulls = false) // type: Number?
-values.toColumnOf<Number?>("data") // type: Number?
+values.toColumn("data", Infer.Type) // type: Number
+values.toColumn("data", Infer.Nulls) // type: Any
 ```
 
 <!---END-->
 
 ### toColumnOf
 
-Converts `Iterable` of values into column of specific type
+Converts `Iterable` of values into column of given type
 
 <!---FUN createValueColumnOfType-->
 

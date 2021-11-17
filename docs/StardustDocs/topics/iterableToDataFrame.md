@@ -9,7 +9,7 @@ To create `DataFrame` from `Iterable` of any objects use `createDataFrame` exten
 data class Person(val name: String, val age: Int)
 val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Mark", 22))
 
-val df = persons.toDataFrame()
+val df = persons.createDataFrame()
 ```
 
 <!---END-->
@@ -30,7 +30,7 @@ val students = listOf(
     Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5)))
 )
 
-val df = students.toDataFrame(depth = 2)
+val df = students.createDataFrame(depth = 2)
 ```
 
 <!---END-->

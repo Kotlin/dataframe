@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.createDataFrame
 import org.jetbrains.kotlinx.dataframe.api.filter
@@ -126,10 +127,8 @@ class Create : TestBase() {
         val values: List<Any?> = listOf(1, 2.5)
 
         values.toColumn("data") // type: Any?
-        values.toColumn("data", inferType = true) // type: Number
-        values.toColumn("data", inferNulls = true) // type: Any
-        values.toColumn("data", inferType = true, inferNulls = false) // type: Number?
-        values.toColumnOf<Number?>("data") // type: Number?
+        values.toColumn("data", Infer.Type) // type: Number
+        values.toColumn("data", Infer.Nulls) // type: Any
         // SampleEnd
     }
 
