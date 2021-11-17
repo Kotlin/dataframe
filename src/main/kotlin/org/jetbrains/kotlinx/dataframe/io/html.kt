@@ -198,7 +198,7 @@ public data class DisplayConfiguration(
     }
 }
 
-internal fun String.escapeNewLines() = replace("\n", "\\n")
+internal fun String.escapeNewLines() = replace("\n", "\\n").replace("\r", "\\r")
 
 internal fun String.escapeForHtmlInJs() = replace("\"", "\\\"").escapeNewLines()
 
