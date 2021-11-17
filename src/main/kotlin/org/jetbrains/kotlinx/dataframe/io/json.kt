@@ -22,7 +22,6 @@ import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.type
 import java.io.File
-import java.io.FileWriter
 import java.net.URL
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
@@ -198,7 +197,7 @@ public fun AnyFrame.writeJsonStr(prettyPrint: Boolean = false, canonical: Boolea
 }
 
 public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false, canonical: Boolean = false) {
-    FileWriter(file).write(writeJsonStr(prettyPrint, canonical))
+    file.writeText(writeJsonStr(prettyPrint, canonical))
 }
 
 public fun AnyFrame.writeJson(path: String, prettyPrint: Boolean = false, canonical: Boolean = false): Unit = writeJson(File(path), prettyPrint, canonical)
