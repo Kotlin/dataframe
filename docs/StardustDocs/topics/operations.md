@@ -3,7 +3,8 @@
 ## List of operations
 
 **[Data Access](access.md)**
-* [forEach](iterate.md#foreach)
+* [forEachRow](iterate.md)
+* [forEachColumn](iterate.md)
 * [single](getRow.md#single)
 * [singleOrNull](getRow.md#singleornull)
 * [first](getRow.md#first)
