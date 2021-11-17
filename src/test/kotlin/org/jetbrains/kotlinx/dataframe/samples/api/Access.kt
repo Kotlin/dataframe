@@ -221,6 +221,14 @@ class Access : TestBase() {
     }
 
     @Test
+    fun getRowsColumns() {
+        // SampleStart
+        df.rows() // Iterable<DataRow>
+        df.columns() // List<DataColumn>
+        // SampleEnd
+    }
+
+    @Test
     fun take() {
         // SampleStart
         df.take(5)
