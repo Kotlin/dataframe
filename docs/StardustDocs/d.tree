@@ -82,7 +82,7 @@
                 <toc-element id="split.md"/>
                 <toc-element id="merge.md"/>
                 <toc-element id="explode.md"/>
-                <toc-element id="mergeRows.md"/>
+                <toc-element id="implode.md"/>
             </toc-element>
             <toc-element id="append.md"/>
         </toc-element>

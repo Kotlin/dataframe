@@ -1060,7 +1060,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `merge rows keep nulls`() {
-        val merged = typed.select { name and city }.mergeRows(dropNulls = false) { city }
+        val merged = typed.select { name and city }.implode(dropNulls = false) { city }
 
         val cityList = column<Many<String?>>().named("city")
         merged[cityList].sumOf { it.size } shouldBe typed.city.size
@@ -1072,12 +1072,12 @@ class DataFrameTests : BaseTest() {
         actual shouldBe expected
 
         // check that default value for 'dropNulls' is false
-        typed.select { name and city }.mergeRows { city } shouldBe merged
+        typed.select { name and city }.implode { city } shouldBe merged
     }
 
     @Test
     fun `merge rows drop nulls`() {
-        val merged = typed.select { name and city }.mergeRows(dropNulls = true) { city }
+        val merged = typed.select { name and city }.implode(dropNulls = true) { city }
 
         val cityList = column<Many<String>>().named("city")
         merged[cityList].sumOf { it.size } shouldBe typed.city.dropNulls().size
@@ -1093,7 +1093,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun splitRows() {
         val selected = typed.select { name and city }
-        val nested = selected.mergeRows(dropNulls = false) { city }
+        val nested = selected.implode(dropNulls = false) { city }
         val mergedCity = columnMany<String?>("city")
         val res = nested.split { mergedCity }.intoRows()
         res.sortBy { name } shouldBe selected.sortBy { name }
@@ -2129,10 +2129,10 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun mergeRowsWithNulls() {
+    fun implodeWithNulls() {
         val merged = typed.update { weight }.where { name == "Mark" }.withNull()
             .select { name and weight }
-            .mergeRows(dropNulls = true) { weight }
+            .implode(dropNulls = true) { weight }
 
         merged["weight"].type() shouldBe getType<Many<Int>>()
     }

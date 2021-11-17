@@ -82,7 +82,7 @@ merged.split { name }
 ## Split vertically
 Returns `DataFrame` with duplicated rows for every splitted value. 
 
-Reverse operation to [`mergeRows`](mergeRows.md).
+Reverse operation to [`implode`](implode.md).
 
 Use `.intoRows()` terminal operation in `split` configuration to spread splitted values vertically:
 

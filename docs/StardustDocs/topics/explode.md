@@ -4,7 +4,7 @@
 
 Splits list-like values in one or several columns and spreads them vertically. Values in other columns are duplicated.  
 
-This is reverse operation to [mergeRows](mergeRows.md)
+This is reverse operation to [`implode`](implode.md)
 
 Exploded columns will change their types:
 * `List<T>` to `T`
