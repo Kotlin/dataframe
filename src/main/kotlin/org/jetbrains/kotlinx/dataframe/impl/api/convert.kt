@@ -146,6 +146,13 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             BigDecimal::class -> convert<Float> { it.toBigDecimal() }
             else -> null
         }
+        fromClass == BigDecimal::class -> when (toClass) {
+            Double::class -> convert<BigDecimal> { it.toDouble() }
+            Int::class -> convert<BigDecimal> { it.toInt() }
+            Float::class -> convert<BigDecimal> { it.toFloat() }
+            Long::class -> convert<BigDecimal> { it.toLong() }
+            else -> null
+        }
         else -> null
     }
 }
