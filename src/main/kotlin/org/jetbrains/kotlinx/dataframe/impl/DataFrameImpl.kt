@@ -77,6 +77,8 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T>, 
 
     override fun columns() = columns
 
+    override fun columnNames() = columns.map { it.name() }
+
     override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) =
         aggregate(body as AggregateGroupedBody<T, R>).df()
 

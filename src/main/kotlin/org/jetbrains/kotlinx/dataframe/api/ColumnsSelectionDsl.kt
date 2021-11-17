@@ -56,15 +56,11 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
 public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColumn<DataRow<T>> {
 
-    public fun ColumnSet<*>.first(numCols: Int): ColumnSet<Any?> = take(numCols)
-
     public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C>): SingleColumn<C> =
         transform { listOf(it.first(condition)) }.single()
 
     public fun <C> ColumnSet<C>.single(condition: ColumnFilter<C>): SingleColumn<C> =
         transform { listOf(it.single(condition)) }.single()
-
-    public fun <C> ColumnSet<C>.last(numCols: Int): ColumnSet<C> = takeLast(numCols)
 
     public fun SingleColumn<AnyRow>.col(index: Int): SingleColumn<Any?> = getChildrenAt(index).single()
 
@@ -128,6 +124,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun none(): ColumnSet<*> = ColumnsList<Any?>(emptyList())
 
     public fun ColumnSet<*>.dfs(): ColumnSet<Any?> = dfs { !it.isColumnGroup() }
+
+    public fun String.dfs(): ColumnSet<*> = toColumnAccessor().dfs()
 
     // excluding current
     public fun SingleColumn<*>.allAfter(colPath: ColumnPath): ColumnSet<Any?> {
@@ -195,7 +193,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.children(predicate: (ColumnWithPath<Any?>) -> Boolean = { true }): ColumnSet<Any?> =
         transform { it.flatMap { it.children().filter { predicate(it) } } }
 
-    public fun ColumnGroupReference.children(): ColumnSet<Any?> = transform { it.single().children() }
+    public fun ColumnGroupReference.children(): ColumnSet<Any?> = transformSingle { it.children() }
 
     public operator fun <C> List<DataColumn<C>>.get(range: IntRange): ColumnSet<C> =
         ColumnsList(subList(range.first, range.last + 1))
@@ -204,6 +202,11 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public operator fun ColumnSet<*>.get(colName: String): ColumnSet<Any?> = transform { it.mapNotNull { it.getChild(colName) } }
     public operator fun <C> ColumnSet<*>.get(column: ColumnReference<C>): ColumnSet<C> = cols(column)
+
+    public fun SingleColumn<AnyRow>.take(n: Int): ColumnSet<*> = transformSingle { it.children().take(n) }
+    public fun SingleColumn<AnyRow>.takeLast(n: Int): ColumnSet<*> = transformSingle { it.children().takeLast(n) }
+    public fun SingleColumn<AnyRow>.drop(n: Int): ColumnSet<*> = transformSingle { it.children().drop(n) }
+    public fun SingleColumn<AnyRow>.dropLast(n: Int): ColumnSet<*> = transformSingle { it.children().dropLast(n) }
 
     public fun <C> ColumnSet<C>.drop(n: Int): ColumnSet<C> = transform { it.drop(n) }
     public fun <C> ColumnSet<C>.take(n: Int): ColumnSet<C> = transform { it.take(n) }
@@ -240,7 +243,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public infix fun <C> ColumnSet<C>.except(other: ColumnSet<*>): ColumnSet<*> =
         createColumnSet { resolve(it).allColumnsExcept(other.resolve(it)) }
 
-    public infix fun <R, C> ColumnSet<C>.except(selector: ColumnsSelector<R, *>): ColumnSet<C> =
+    public infix fun <C> ColumnSet<C>.except(selector: ColumnsSelector<T, *>): ColumnSet<C> =
         except(selector.toColumns()) as ColumnSet<C>
 
     public operator fun <C> ColumnsSelector<T, C>.invoke(): ColumnSet<C> =
@@ -250,6 +253,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public infix fun String.into(newName: String): ColumnReference<Any?> = toColumnAccessor().into(newName)
 
     public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
+    public infix fun String.named(newName: String): ColumnReference<Any?> = toColumnAccessor().named(newName)
 
     public infix fun String.and(other: String): ColumnSet<Any?> = toColumnAccessor() and other.toColumnAccessor()
     public infix fun <C> String.and(other: ColumnSet<C>): ColumnSet<Any?> = toColumnAccessor() and other
@@ -317,7 +321,7 @@ internal fun ColumnSet<*>.dfsInternal(predicate: (ColumnWithPath<*>) -> Boolean)
     transform { it.filter { it.isColumnGroup() }.flatMap { it.children().dfs().filter(predicate) } }
 
 public fun <C> ColumnSet<*>.dfsOf(type: KType, predicate: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<*> =
-    dfsInternal { it.data.hasElementsOfType(type) && predicate(it.cast()) }
+    dfsInternal { it.isSubtypeOf(type) && predicate(it.cast()) }
 
 public inline fun <reified C> ColumnSet<*>.dfsOf(noinline filter: (ColumnWithPath<C>) -> Boolean = { true }): ColumnSet<C> =
     dfsOf(

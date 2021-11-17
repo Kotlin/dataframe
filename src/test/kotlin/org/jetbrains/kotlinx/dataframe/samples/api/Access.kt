@@ -484,4 +484,194 @@ class Access : TestBase() {
         df.groupBy("age", "name").mapToRows { group.first() }
         // SampleEnd
     }
+
+    @Test
+    fun columnSelectorsUsages() {
+        // SampleStart
+        df.select { age and name }
+        df.fillNaNs { dfsOf<Double>() }.withZero()
+        df.remove { cols { it.hasNulls() } }
+        df.update { city }.notNull { it.lowercase() }
+        df.gather { numberCols() }.into("key", "value")
+        df.move { name.firstName and name.lastName }.after { city }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnSelectors_properties() {
+        // SampleStart
+        // by column name
+        df.select { it.name }
+        df.select { name }
+
+        // by column path
+        df.select { name.firstName }
+
+        // with a new name
+        df.select { name named "Full Name" }
+
+        // converted
+        df.select { name.firstName.map { it.lowercase() } }
+
+        // column arithmetics
+        df.select { 2021 - age }
+
+        // two columns
+        df.select { name and age }
+
+        // range of columns
+        df.select { name..age }
+
+        // all children of ColumnGroup
+        df.select { name.all() }
+
+        // dfs traversal of children columns
+        df.select { name.dfs() }
+
+        // SampleEnd
+    }
+
+    @Test
+    fun columnSelectors_accessors() {
+        // SampleStart
+        // by column name
+        val name by columnGroup()
+        df.select { it[name] }
+        df.select { name }
+
+        // by column path
+        val firstName by name.column<String>()
+        df.select { firstName }
+
+        // with a new name
+        df.select { name named "First Name" }
+
+        // converted
+        df.select { firstName.map { it.lowercase() } }
+
+        // column arithmetics
+        val age by column<Int>()
+        df.select { 2021 - age }
+
+        // two columns
+        df.select { name and age }
+
+        // range of columns
+        df.select { name..age }
+
+        // all children of ColumnGroup
+        df.select { name.all() }
+
+        // dfs traversal of children columns
+        df.select { name.dfs() }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnSelectors_strings() {
+        // SampleStart
+        // by column name
+        df.select { it["name"] }
+
+        // by column path
+        df.select { it["name"]["firstName"] }
+        df.select { "name"["firstName"] }
+
+        // with a new name
+        df.select { "name" named "First Name" }
+
+        // converted
+        df.select { "name"["firstName"]<String>().map { it.uppercase() } }
+
+        // column arithmetics
+        df.select { 2021 - "age"() }
+
+        // two columns
+        df.select { "name" and "age" }
+
+        // by range of names
+        df.select { "name".."age" }
+
+        // all children of ColumnGroup
+        df.select { "name".all() }
+
+        // dfs traversal of children columns
+        df.select { "name".dfs() }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnsSelectorByIndices() {
+        // SampleStart
+        // by index
+        df.select { col(2) }
+
+        // by several indices
+        df.select { cols(0, 1, 3) }
+
+        // by range of indices
+        df.select { cols(1..4) }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnSelectorsMisc() {
+        // SampleStart
+        // by condition
+        df.select { cols { it.name.startsWith("year") } }
+
+        // by type
+        df.select { colsOf<String>() }
+        df.select { stringCols() }
+
+        // by type with condition
+        df.select { colsOf<String> { !it.hasNulls() } }
+        df.select { stringCols { !it.hasNulls() } }
+
+        // all top-level columns
+        df.select { all() }
+
+        // first/last n columns
+        df.select { take(2) }
+        df.select { takeLast(2) }
+
+        // all except first/last n columns
+        df.select { drop(2) }
+        df.select { dropLast(2) }
+
+        // dfs traversal of columns
+        df.select { dfs() }
+
+        // dfs traversal with condition
+        df.select { dfs { it.name.contains(":") } }
+
+        // columns of given type in dfs traversal
+        df.select { dfsOf<String>() }
+
+        // all columns except given column set
+        df.select { except { colsOf<String>() } }
+
+        // union of column sets
+        df.select { take(2) and col(3) }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnSelectorsModifySet() {
+        // SampleStart
+        // first/last n columns in column set
+        df.select { dfs().take(3) }
+        df.select { dfs().takeLast(3) }
+
+        // all except first/last n columns in column set
+        df.select { dfs().drop(3) }
+        df.select { dfs().dropLast(3) }
+
+        // filter column set by condition
+        df.select { dfs().filter { it.name.startsWith("year") } }
+
+        // exclude columns from column set
+        df.select { dfs().except { age } }
+        // SampleEnd
+    }
 }
