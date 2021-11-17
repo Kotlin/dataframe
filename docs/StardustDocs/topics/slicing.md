@@ -1,18 +1,12 @@
-[//]: # (title: Slice rows)
+[//]: # (title: Slicing)
+
+Slicing means cutting a portion of `DataFrame` by continuous range of rows or columns.
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-Returns `DataFrame` with rows at given indices:
+## Slice rows
 
-<!---FUN getSeveralRowsByIndices-->
-
-```kotlin
-df[0, 3, 4]
-```
-
-<!---END-->
-
-Returns `DataFrame` with rows inside given index ranges:
+by row indices (including boundaries):
 
 <!---FUN getSeveralRowsByRanges-->
 
@@ -23,50 +17,48 @@ df[0..2, 4..5]
 
 <!---END-->
 
-## take
+See [slice rows](sliceRows.md) for other ways to select subset of rows.
 
-Returns `DataFrame` containing first `n` rows
+## Slice columns
 
-<!---FUN take-->
+by column indices (including boundaries):
+
+<!---FUN sliceColumnsByIndex-->
 
 ```kotlin
-df.take(5)
+df.select { cols(1..3) }
 ```
 
 <!---END-->
 
-### takeLast
+by column names:
 
-Returns `DataFrame` containing last `n` rows
-
-<!---FUN takeLast-->
-
-```kotlin
-df.takeLast(5)
-```
-
-<!---END-->
-
-## drop
-
-Returns `DataFrame` containing all rows except first `n` rows
-
-<!---FUN drop-->
+<!---FUN sliceColumns-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
-df.drop(5)
+df.select { age..weight }
 ```
 
-<!---END-->
-
-## dropLast
-
-Returns `DataFrame` containing all rows except last `n` rows
-
-<!---FUN dropLast-->
+</tab>
+<tab title="Accessors">
 
 ```kotlin
-df.dropLast(5)
+val age by column<Int>()
+val weight by column<Int?>()
+
+df.select { age..weight }
 ```
 
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.select { "age".."weight" }
+```
+
+</tab></tabs>
 <!---END-->
+
+See [Column Selectors](ColumnSelectors.md) for other ways to select subset of columns. 

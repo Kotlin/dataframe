@@ -46,6 +46,7 @@
         </toc-element>
         <toc-element id="access.md" toc-title="Access"  show-structure-depth="3">
             <toc-element id="indexing.md"/>
+            <toc-element id="slicing.md"/>
             <toc-element id="iterate.md"/>
             <toc-element id="getRow.md"/>
             <toc-element id="getColumn.md"/>
@@ -59,7 +60,7 @@
             <toc-element id="std.md"/>
         </toc-element>
         <toc-element id="modify.md"  show-structure-depth="3" toc-title="Modify data">
-            <toc-element id="slicing.md"/>
+            <toc-element id="sliceRows.md"/>
             <toc-element id="filterRows.md">
                 <toc-element id="filter.md"/>
                 <toc-element id="drop.md"/>
