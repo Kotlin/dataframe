@@ -14,7 +14,7 @@ import org.junit.Test
 class SourceSetsExpectationsTest {
     @Test
     fun `there is main in default JVM project`() {
-        val project = ProjectBuilder.builder().build()
+        val project = makeProject()
         project.plugins.apply("org.jetbrains.kotlin.jvm")
         project.extensions.getByType(KotlinJvmProjectExtension::class.java).let { extension ->
             val main = extension.sourceSets.getByName("main")
@@ -26,7 +26,7 @@ class SourceSetsExpectationsTest {
 
     @Test
     fun `there is no jvmMain in default Multiplatform project`() {
-        val project = ProjectBuilder.builder().build()
+        val project = makeProject()
         project.plugins.apply("org.jetbrains.kotlin.multiplatform")
         project.extensions.getByType(KotlinMultiplatformExtension::class.java).let {
             it.sourceSets.findByName("jvmMain") shouldBe null
@@ -35,7 +35,7 @@ class SourceSetsExpectationsTest {
 
     @Test
     fun `there is main in android project`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply("com.android.application")
         project.plugins.apply("org.jetbrains.kotlin.android")
         project.extensions.getByType(KotlinAndroidProjectExtension::class.java).let { extension ->

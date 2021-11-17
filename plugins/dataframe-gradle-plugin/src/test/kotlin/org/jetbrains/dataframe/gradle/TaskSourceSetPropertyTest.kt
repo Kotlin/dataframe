@@ -17,7 +17,7 @@ import java.io.File
 class TaskSourceSetPropertyTest {
     @Test
     fun `extension sourceSet present in project`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.plugins.apply("org.jetbrains.kotlin.jvm")
         project.extensions.getByType(KotlinJvmProjectExtension::class.java).apply {
@@ -39,7 +39,7 @@ class TaskSourceSetPropertyTest {
 
     @Test
     fun `extension sourceSet not present in project`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.plugins.apply("org.jetbrains.kotlin.jvm")
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
@@ -58,7 +58,7 @@ class TaskSourceSetPropertyTest {
 
     @Test
     fun `extension sourceSet not specified`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.plugins.apply("org.jetbrains.kotlin.jvm")
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
@@ -74,7 +74,7 @@ class TaskSourceSetPropertyTest {
 
     @Test
     fun `choose most specific sourceSet`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.plugins.apply("org.jetbrains.kotlin.jvm")
         project.extensions.getByType(KotlinJvmProjectExtension::class.java).apply {
@@ -95,7 +95,7 @@ class TaskSourceSetPropertyTest {
 
     @Test
     fun `extension sourceSet specified but no kotlin plugin found`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             packageName = "org.example.test"
@@ -114,7 +114,7 @@ class TaskSourceSetPropertyTest {
 
     @Test
     fun `task with explicit src don't evaluates sourceSet`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             packageName = "org.example.test"
@@ -134,7 +134,7 @@ class TaskSourceSetPropertyTest {
 
     @Test
     fun `task and extension sourceSet not present in project`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             packageName = "org.example.test"

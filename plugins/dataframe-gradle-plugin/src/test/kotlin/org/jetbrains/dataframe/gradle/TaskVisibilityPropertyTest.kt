@@ -11,7 +11,7 @@ import org.junit.Test
 class TaskVisibilityPropertyTest {
     @Test
     fun `extension sourceSet present in project 1 `() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             sourceSet = "main1"
@@ -31,7 +31,7 @@ class TaskVisibilityPropertyTest {
 
     @Test
     fun `extension sourceSet present in project 2`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             sourceSet = "main1"
@@ -52,7 +52,7 @@ class TaskVisibilityPropertyTest {
 
     @Test
     fun `extension sourceSet present in project`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.plugins.apply("org.jetbrains.kotlin.jvm")
         project.extensions.getByType(KotlinJvmProjectExtension::class.java).apply {
