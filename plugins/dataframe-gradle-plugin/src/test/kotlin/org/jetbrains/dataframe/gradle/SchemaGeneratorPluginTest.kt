@@ -8,7 +8,7 @@ import org.junit.Test
 import java.io.File
 import java.nio.file.Files
 
-internal class SchemaGeneratorPluginTes {
+internal class SchemaGeneratorPluginTest {
 
     private lateinit var dataDir: String
 
@@ -53,7 +53,7 @@ internal class SchemaGeneratorPluginTes {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-                kotlin("jvm") version "1.4.10"
+                kotlin("jvm") version "1.6.0"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -83,7 +83,7 @@ internal class SchemaGeneratorPluginTes {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    id "org.jetbrains.kotlin.jvm" version "1.4.10"
+                    id "org.jetbrains.kotlin.jvm" version "1.6.0"
                     id "org.jetbrains.kotlin.plugin.dataframe"
                 }
                 
@@ -113,7 +113,7 @@ internal class SchemaGeneratorPluginTes {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-                kotlin("jvm") version "1.4.10"
+                kotlin("jvm") version "1.6.0"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -146,7 +146,7 @@ internal class SchemaGeneratorPluginTes {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
             plugins {
-                kotlin("jvm") version "1.4.10"
+                kotlin("jvm") version "1.6.0"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
