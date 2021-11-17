@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.api.addRowNumber
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.createDataFrame
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.group
@@ -2069,7 +2070,7 @@ class DataFrameTests : BaseTest() {
         val list = df.toListOf<Target>()
         list shouldBe df.typed<Target>().toList()
 
-        val listDf = list.toDataFrame()
+        val listDf = list.createDataFrame()
         listDf shouldBe df.sortColumnsBy { it.name }
         listDf.toList() shouldBe list
     }
@@ -2087,7 +2088,7 @@ class DataFrameTests : BaseTest() {
         val list = grouped.toListOf<Target>()
         list shouldBe grouped.typed<Target>().toList()
 
-        val listDf = list.toDataFrame(depth = 2)
+        val listDf = list.createDataFrame(depth = 2)
         listDf shouldBe grouped.update { frameColumn("students") }.with { it?.remove("city") }
             .sortColumnsBy(dfs = true) { it.name }
         listDf.toList() shouldBe list
@@ -2106,7 +2107,7 @@ class DataFrameTests : BaseTest() {
         val list = grouped.toListOf<Target>()
         list shouldBe grouped.typed<Target>().toList()
 
-        val listDf = list.toDataFrame(depth = 2)
+        val listDf = list.createDataFrame(depth = 2)
         listDf shouldBe grouped.sortColumnsBy(dfs = true) { it.name }
         listDf.toList() shouldBe list
     }

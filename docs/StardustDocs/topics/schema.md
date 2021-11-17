@@ -16,7 +16,7 @@ df.schema()
 
 Output:
 
-```
+```text
 name:
     firstName: String
     lastName: String
@@ -38,7 +38,7 @@ df.groupBy { city }.schema()
 
 Output:
 
-```
+```text
 city: String?
 group: *
     name:

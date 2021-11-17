@@ -24,7 +24,6 @@ import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class Create : TestBase() {
 
@@ -124,13 +123,22 @@ class Create : TestBase() {
     @Test
     fun createValueColumnInferred() {
         // SampleStart
-        val values = listOf("Alice", null, 1, 2.5).subList(2, 4)
+        val values: List<Any?> = listOf(1, 2.5)
 
-        values.toColumn("data").type willBe typeOf<Any?>()
-        values.toColumn("data", inferType = true).type willBe typeOf<Number>()
-        values.toColumn("data", inferNulls = true).type willBe typeOf<Any>()
-        values.toColumn("data", inferType = true, inferNulls = false).type willBe typeOf<Number?>()
-        values.toColumnOf<Number?>("data").type willBe typeOf<Number?>()
+        values.toColumn("data") // type: Any?
+        values.toColumn("data", inferType = true) // type: Number
+        values.toColumn("data", inferNulls = true) // type: Any
+        values.toColumn("data", inferType = true, inferNulls = false) // type: Number?
+        values.toColumnOf<Number?>("data") // type: Number?
+        // SampleEnd
+    }
+
+    @Test
+    fun createValueColumnOfType() {
+        // SampleStart
+        val values: List<Any?> = listOf(1, 2.5)
+
+        values.toColumnOf<Number?>("data") // type: Number?
         // SampleEnd
     }
 
@@ -208,8 +216,8 @@ class Create : TestBase() {
     @Test
     fun createDataFrameWithFill() {
         // SampleStart
-        // DataFrame with columns from 'a' to 'z' and values from 1 to 10 for each column
-        val df = dataFrameOf('a'..'z') { 1..10 }
+        // Multiplication table
+        dataFrameOf(1..10) { x -> (1..10).map { x * it } }
         // SampleEnd
     }
 
@@ -287,7 +295,7 @@ class Create : TestBase() {
         data class Person(val name: String, val age: Int)
         val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Mark", 22))
 
-        val df = persons.toDataFrame()
+        val df = persons.createDataFrame()
         // SampleEnd
         df.ncol() shouldBe 2
         df.nrow() shouldBe 3
@@ -324,7 +332,7 @@ class Create : TestBase() {
             Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5)))
         )
 
-        val df = students.toDataFrame(depth = 2)
+        val df = students.createDataFrame(depth = 2)
         // SampleEnd
         df.ncol() shouldBe 3
         df.nrow() shouldBe 2

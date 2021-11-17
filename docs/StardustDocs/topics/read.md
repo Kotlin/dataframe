@@ -2,10 +2,13 @@
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Read-->
 
 `DataFrame` supports CSV and JSON input formats.
-Use `read` method to guess input format based on file extension and content
+
+`read` method automatically detects input format based on file extension and content
+
 ```kotlin
 DataFrame.read("input.csv")
 ```
+
 Input string can be a file path or URL.
 
 ### Reading CSV
