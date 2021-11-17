@@ -332,7 +332,7 @@ public inline fun <reified C> ColumnSet<*>.dfsOf(noinline filter: (ColumnWithPat
 public fun ColumnSet<*>.colsOf(type: KType): ColumnSet<Any?> = colsOf(type) { true }
 
 public fun <C> ColumnSet<*>.colsOf(type: KType, filter: (DataColumn<C>) -> Boolean): ColumnSet<C> =
-    colsInternal { it.hasElementsOfType(type) && filter(it.cast()) } as ColumnSet<C>
+    colsInternal { it.isSubtypeOf(type) && filter(it.cast()) } as ColumnSet<C>
 
 public inline fun <reified C> ColumnSet<*>.colsOf(noinline filter: (DataColumn<C>) -> Boolean = { true }): ColumnSet<C> =
     colsOf(

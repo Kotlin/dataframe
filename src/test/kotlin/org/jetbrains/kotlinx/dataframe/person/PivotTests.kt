@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.asIterable
 import org.jetbrains.kotlinx.dataframe.api.associate
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.columns
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.count
@@ -361,8 +362,8 @@ class PivotTests {
     @Test
     fun `gather doubles with value conversion`() {
         val pivoted = typed.pivot { key }.groupBy { name }.with { valueConverter(value) }
-        val gathered = pivoted.remove("city").gather { doubleCols() }.notNull().mapValues { it.toInt() }.into("key", "value")
-        val expected = typed.filter { key != "city" && value != null }.convert { value }.to<Int>().sortBy { name and key }
+        val gathered = pivoted.remove("city").gather { drop(1) }.notNull().cast<Double>().mapValues { it.toInt() }.into("key", "value")
+        val expected = typed.filter { key != "city" && value != null }.convert { value }.toInt().sortBy { name and key }
         gathered shouldBe expected
     }
 
