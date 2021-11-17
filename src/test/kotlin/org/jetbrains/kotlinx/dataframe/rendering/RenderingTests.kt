@@ -25,15 +25,17 @@ class RenderingTests {
 
     @Test
     fun `render row with unicode values as table`() {
-        val value = "Шёл Шива по шоссе, сокрушая сущее.\nА на встречу Саша шла, круглое сосущая"
+        val value = "Шёл Шива по шоссе, сокрушая сущее.\r\nА на встречу Саша шла, круглое сосущая"
         val col by columnOf(value)
         val df = col.toDataFrame()
         val rendered = df[0].renderToStringTable()
-        rendered.contains("Шива") shouldBe true
-        rendered.contains("\n") shouldBe false
-        rendered.contains("А") shouldBe true
-        rendered.contains("...") shouldBe true
-        rendered.contains("Саша") shouldBe false
+        rendered shouldContain "Шива"
+        rendered shouldNotContain "\n"
+        rendered shouldNotContain "\r"
+        rendered shouldContain "\\r"
+        rendered shouldContain "А"
+        rendered shouldContain "..."
+        rendered shouldNotContain "Саша"
     }
 
     @Test
