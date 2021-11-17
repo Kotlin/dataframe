@@ -128,14 +128,19 @@ public fun <T> Iterable<DataFrame<T>>.toFrameColumn(name: String = ""): FrameCol
 
 public inline fun <reified T> Iterable<T>.toValueColumn(name: String = ""): ValueColumn<T> = DataColumn.createValueColumn(name, asList()).forceResolve()
 
+public enum class Infer {
+    None,
+    Type, // infer type and nullability of the column
+    Nulls // infer nullability of the column
+}
+
 public inline fun <reified T> Iterable<T>.toColumn(
     name: String = "",
-    inferNulls: Boolean? = null,
-    inferType: Boolean = false
+    infer: Infer = Infer.None
 ): DataColumn<T> =
     (
-        if (inferType) DataColumn.createWithTypeInference(name, asList(), nullable = inferNulls?.let { if (it) null else getType<T>().isMarkedNullable })
-        else DataColumn.create(name, asList(), getType<T>(), checkForNulls = inferNulls == true)
+        if (infer == Infer.Type) DataColumn.createWithTypeInference(name, asList())
+        else DataColumn.create(name, asList(), getType<T>(), infer == Infer.Nulls)
         ).forceResolve()
 
 public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataColumn<T> =

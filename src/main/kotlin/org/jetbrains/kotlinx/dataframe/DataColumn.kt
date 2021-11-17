@@ -68,9 +68,9 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
         public fun <T> createWithTypeInference(name: String, values: List<T>, nullable: Boolean? = null): DataColumn<T> = guessColumnType(name, values, nullable = nullable)
 
-        public fun <T> create(name: String, values: List<T>, type: KType, checkForNulls: Boolean = false): DataColumn<T> {
+        public fun <T> create(name: String, values: List<T>, type: KType, inferNulls: Boolean = false): DataColumn<T> {
             return when (type.toColumnKind()) {
-                ColumnKind.Value -> createValueColumn(name, values, type, checkForNulls)
+                ColumnKind.Value -> createValueColumn(name, values, type, inferNulls)
                 ColumnKind.Group -> createColumnGroup(name, (values as List<AnyRow?>).concat()).asDataColumn().cast()
                 ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame>).asDataColumn().cast()
             }
