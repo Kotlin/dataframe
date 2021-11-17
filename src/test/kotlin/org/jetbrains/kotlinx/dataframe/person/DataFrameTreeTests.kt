@@ -20,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.append
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
-import org.jetbrains.kotlinx.dataframe.api.asIterable
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -33,7 +32,7 @@ import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.duplicate
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.forEachRow
 import org.jetbrains.kotlinx.dataframe.api.getColumnPath
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
@@ -145,7 +144,7 @@ class DataFrameTreeTests : BaseTest() {
         val groups by id.map { typed[it..it] }
         val df = dataFrameOf(id, groups)
         df.nrow() shouldBe typed.nrow()
-        df.forEach {
+        df.forEachRow {
             val rowId = it[id]
             groups() shouldBe typed[rowId..rowId]
         }
@@ -300,7 +299,7 @@ class DataFrameTreeTests : BaseTest() {
 
             val actual = data.flatMap { col ->
                 val city = col.name()
-                asIterable().map { (it[name] to city) to col[it.index] }.filter { it.second != null }
+                rows().map { (it[name] to city) to col[it.index] }.filter { it.second != null }
             }.toMap()
             actual shouldBe expected
         }
@@ -349,7 +348,7 @@ class DataFrameTreeTests : BaseTest() {
                     else -> {
                         val df = value as? AnyFrame
                         df shouldNotBe null
-                        df!!.asIterable().map { it["age"] as Int to it["weight"] as Int? }
+                        df!!.rows().map { it["age"] as Int to it["weight"] as Int? }
                             .sortedBy { it.first } shouldBe expValues.sortedBy { it.first }
                     }
                 }
@@ -561,7 +560,7 @@ class DataFrameTreeTests : BaseTest() {
         joined.select { cols(0, 1) } shouldBe left.toDataFrame()
         joined.select { cols(2, 1) }.rename(name1).into(typed.name) shouldBe right.toDataFrame()
         joined.name shouldBe left.keys.name
-        joined.forEach { it[name1] shouldBe name.reversed() }
+        joined.forEachRow { it[name1] shouldBe it.name.reversed() }
     }
 
     @Test

@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.api.UpdateClause
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.forEachRow
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -41,11 +41,11 @@ internal fun <T, C> DataColumn<C>.updateImpl(
     val collector = createDataCollector<C>(size, type)
     val src = this
     if (filter == null) {
-        df.forEach { row ->
+        df.forEachRow { row ->
             collector.add(expression(row, src, src[row.index]))
         }
     } else {
-        df.forEach { row ->
+        df.forEachRow { row ->
             val currentValue = row[src]
             val newValue =
                 if (filter.invoke(row, currentValue)) expression(row, src, currentValue) else currentValue
