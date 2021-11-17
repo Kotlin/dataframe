@@ -48,10 +48,12 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.frameColumn
+import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.between
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
@@ -61,6 +63,7 @@ import org.jetbrains.kotlinx.dataframe.manyOf
 import org.jetbrains.kotlinx.dataframe.math.mean
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.pathOf
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
@@ -2198,5 +2201,32 @@ class DataFrameTests : BaseTest() {
 
         val col4 by listOf(1, 2, 3, 4, 5).toColumn()
         col4.toDataFrame()[1..2][col4].size shouldBe 2
+    }
+
+    @Test
+    fun `take drop in columns selector`() {
+        typed.select { take(3) } shouldBe typed.select { cols(0..2) }
+        typed.select { takeLast(2) } shouldBe typed.select { cols(2..3) }
+        typed.select { drop(1) } shouldBe typed.select { cols(1..3) }
+        typed.select { dropLast(1) } shouldBe typed.select { cols(0..2) }
+    }
+
+    @Test
+    fun `except in columns selector`() {
+        typed.select { except { age and weight } } shouldBe typed.select { name and city }
+
+        typed.group { age and weight }.into("info")
+            .select { dropLast(1) except { "info"["age"] } } shouldBe typed.select { name and weight }
+    }
+
+    @Test
+    fun `get by empty path`() {
+        // SampleStart
+        val all = typed[pathOf()]
+
+        all.asColumnGroup().asDataFrame() shouldBe typed
+
+        typed.getColumn { emptyPath() } shouldBe all
+        // SampleEnd
     }
 }

@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -47,9 +48,9 @@ internal open class DataFrameReceiver<T>(source: DataFrame<T>, private val allow
         val col = source.tryGetColumn(path)
         if (col == null) {
             if (allowMissingColumns) return null
-            throw Exception("Column not found: '$path'")
+            throw IllegalStateException("Column not found: '$path'")
         }
-        return col as DataColumn<R>
+        return col.cast()
     }
 
     fun <R> getColumnChecked(reference: ColumnReference<R>): DataColumn<R>? {

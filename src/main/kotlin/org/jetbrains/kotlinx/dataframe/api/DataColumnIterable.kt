@@ -37,6 +37,15 @@ public fun <T, R> DataColumn<T>.map(transform: (T) -> R): DataColumn<R> {
     return collector.toColumn(name).cast()
 }
 
+public fun <T, R> DataColumn<T?>.mapNotNull(transform: (T) -> R): DataColumn<R> {
+    val collector = createDataCollector(size)
+    values.forEach {
+        if (it == null) collector.add(null)
+        else collector.add(transform(it))
+    }
+    return collector.toColumn(name).cast()
+}
+
 public inline fun <T, reified R> DataColumn<T>.mapInline(crossinline transform: (T) -> R): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
     return guessColumnType(name, newValues, suggestedType = getType<R>(), suggestedTypeIsUpperBound = false) as DataColumn<R>

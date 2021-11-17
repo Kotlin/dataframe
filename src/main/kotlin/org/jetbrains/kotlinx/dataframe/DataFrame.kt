@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.select
@@ -28,7 +29,7 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     override fun columns(): List<AnyCol>
 
-    public fun columnNames(): List<String> = columns().map { it.name() }
+    public fun columnNames(): List<String>
 
     override fun ncol(): Int = columns().size
 
@@ -83,9 +84,12 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
         getColumnIndex(columnName).let { if (it != -1) getColumn(it) else null }
 
     override fun tryGetColumn(path: ColumnPath): AnyCol? =
-        if (path.size == 1) tryGetColumn(path[0])
-        else path.dropLast(1).fold(this as AnyFrame?) { df, name -> df?.tryGetColumn(name) as? AnyFrame? }
-            ?.tryGetColumn(path.last())
+        when (path.size) {
+            0 -> DataColumn.createColumnGroup("", this).asDataColumn()
+            1 -> tryGetColumn(path[0])
+            else -> path.dropLast(1).fold(this as AnyFrame?) { df, name -> df?.tryGetColumn(name) as? AnyFrame? }
+                ?.tryGetColumn(path.last())
+        }
 
     public fun tryGetColumnGroup(name: String): ColumnGroup<*>? = tryGetColumn(name) as? ColumnGroup<*>
 

@@ -35,6 +35,8 @@ internal class MissingColumnGroup<T> : MissingDataColumn<DataRow<T>>(), DataColu
 
     override fun columns(): List<AnyCol> = emptyList()
 
+    override fun columnNames(): List<String> = emptyList()
+
     override fun getColumnIndex(name: String) = -1
 
     override fun kind() = super.kind()

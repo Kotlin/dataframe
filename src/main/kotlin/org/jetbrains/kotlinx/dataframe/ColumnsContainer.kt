@@ -4,16 +4,16 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import kotlin.reflect.KProperty
 
 public interface ColumnsContainer<out T> {
 
-    public operator fun get(columnName: String): AnyCol
-
     public fun tryGetColumn(columnName: String): AnyCol?
     public fun tryGetColumn(path: ColumnPath): AnyCol?
+
+    public operator fun get(columnName: String): AnyCol
+    public operator fun get(columnPath: ColumnPath): AnyCol = tryGetColumn(columnPath)!!
 
     public operator fun <R> get(column: ColumnReference<R>): DataColumn<R>
     public operator fun <R> get(column: ColumnReference<DataRow<R>>): ColumnGroup<R>
@@ -34,18 +34,6 @@ public interface ColumnsContainer<out T> {
     public fun getColumn(index: Int): AnyCol
     public fun getColumnGroup(index: Int): ColumnGroup<*> = getColumn(index).asColumnGroup()
     public fun getColumnGroup(name: String): ColumnGroup<*> = getColumn(name).asColumnGroup()
-
-    public fun hasColumn(columnName: String): Boolean = tryGetColumn(columnName) != null
-
-    public operator fun get(columnPath: ColumnPath): AnyCol {
-        require(columnPath.isNotEmpty()) { "ColumnPath is empty" }
-        var res: AnyCol? = null
-        columnPath.forEach {
-            if (res == null) res = this[it]
-            else res = res!!.asColumnGroup()[it]
-        }
-        return res!!
-    }
 
     public operator fun get(index: Int): DataRow<T>
     public fun columns(): List<AnyCol>
