@@ -186,7 +186,6 @@ internal fun <C : Comparable<C>> Sequence<C?>.indexOfMax(): Int {
     return maxIndex
 }
 
-@OptIn(ExperimentalStdlibApi::class)
 @PublishedApi
 internal inline fun <reified T> getType(): KType = typeOf<T>()
 internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType =

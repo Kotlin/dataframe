@@ -14,6 +14,7 @@ class SchemaGeneratorPluginIntegrationTest {
         private const val TRANSITIVE_DF_DEPENDENCY = "KSP has dependency on latest dataframe, but it's not yet published"
         private const val FIRST_NAME = "first.csv"
         private const val SECOND_NAME = "second.csv"
+        private const val KOTLIN_VERSION = "1.6.0"
     }
     private lateinit var dataframeJarPath: String
 
@@ -34,7 +35,7 @@ class SchemaGeneratorPluginIntegrationTest {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-                kotlin("jvm") version "1.4.10"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -75,7 +76,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("jvm") version "1.4.10"
+                    kotlin("jvm") version "$KOTLIN_VERSION"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -110,7 +111,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("jvm") version "1.4.10"
+                    kotlin("jvm") version "$KOTLIN_VERSION"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -158,7 +159,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("jvm") version "1.4.10"
+                    kotlin("jvm") version "$KOTLIN_VERSION"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -195,7 +196,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("multiplatform") version "1.4.10"
+                    kotlin("multiplatform") version "$KOTLIN_VERSION"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -263,7 +264,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("jvm") version "1.4.10"
+                    kotlin("jvm") version "$KOTLIN_VERSION"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -324,7 +325,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("jvm") version "1.4.10"
+                    kotlin("jvm") version "$KOTLIN_VERSION"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -376,7 +377,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("jvm") version "1.4.10"
+                    kotlin("jvm") version "$KOTLIN_VERSION"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -406,7 +407,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("jvm") version "1.4.10"
+                    kotlin("jvm") version "$KOTLIN_VERSION"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -449,7 +450,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("multiplatform") version "1.4.10"
+                    kotlin("multiplatform") version "$KOTLIN_VERSION"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -495,7 +496,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("multiplatform") version "1.5.21"
+                    kotlin("multiplatform") version "$KOTLIN_VERSION"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
