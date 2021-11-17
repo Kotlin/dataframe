@@ -190,6 +190,37 @@ class Access : TestBase() {
     }
 
     @Test
+    fun sliceColumnsByIndex() {
+        // SampleStart
+        df.select { cols(1..3) }
+        // SampleEnd
+    }
+
+    @Test
+    fun sliceColumns_properties() {
+        // SampleStart
+        df.select { age..weight }
+        // SampleEnd
+    }
+
+    @Test
+    fun sliceColumns_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val weight by column<Int?>()
+
+        df.select { age..weight }
+        // SampleEnd
+    }
+
+    @Test
+    fun sliceColumns_strings() {
+        // SampleStart
+        df.select { "age".."weight" }
+        // SampleEnd
+    }
+
+    @Test
     fun take() {
         // SampleStart
         df.take(5)

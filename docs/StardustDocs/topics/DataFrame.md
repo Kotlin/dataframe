@@ -1,5 +1,14 @@
 [//]: # (title: DataFrame)
 
-`DataFrame` is a list of [`DataColumn`](DataColumn.md) of the same size. 
+`DataFrame` represents a list of [`DataColumn`](DataColumn.md).
 
-Every column in `DataFrame` must have unique non-empty name.
+Columns in dataframe must have equal size and unique names.
+
+**Learn how to:**
+- [Create dataframe](createDataFrame.md)
+- [Read dataframe](read.md)
+- [Get an overview of dataframe](info.md)
+- [Access data in dataframe](access.md)
+- [Modify data in dataframe](modify.md)
+- [Aggregate data in dataframe](aggregate.md)
+- [Combine several dataframes](multipleDataFrames.md)
