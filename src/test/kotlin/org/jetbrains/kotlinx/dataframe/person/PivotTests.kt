@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
+import org.jetbrains.kotlinx.dataframe.api.explodeLists
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.gather
@@ -317,14 +318,14 @@ class PivotTests {
     @Test
     fun gather() {
         val res = typed.pivot { key }.groupBy { name }.with { value }
-        val gathered = res.gather { cols().drop(1) }.into("key", "value")
+        val gathered = res.gather { drop(1) }.notNull().into("key", "value")
         gathered shouldBe typed.dropNulls { value }.sortBy { name and "key" }
     }
 
     @Test
     fun `gather with filter`() {
         val pivoted = typed.pivot { key }.groupBy { name }.with { value }
-        val gathered = pivoted.gather { cols().drop(1) }.where { it is Int }.into("key", "value")
+        val gathered = pivoted.gather { drop(1) }.explodeLists().where { it is Int }.into("key", "value")
         gathered shouldBe typed.filter { value is Int }.sortBy("name", "key").convert("value").toInt() // TODO: replace convert with cast
     }
 
@@ -343,7 +344,7 @@ class PivotTests {
         pivoted2 shouldBe pivoted
         pivoted3 shouldBe pivoted
 
-        val gathered = pivoted.gather { cols().drop(1) }.into("key", "value")
+        val gathered = pivoted.gather { drop(1) }.notNull().into("key", "value")
         val expected =
             expectedFiltered.update { key }.with { keyConverter(it) }
                 .convert { value }.with { valueConverter(it) as? Serializable }
@@ -353,14 +354,14 @@ class PivotTests {
     @Test
     fun `gather with value conversion`() {
         val pivoted = typed.pivot { key }.groupBy { name }.with { valueConverter(value) }
-        val gathered = pivoted.gather { cols().drop(1) }.mapValues { (it as? Double)?.toInt() ?: it }.into("key", "value")
+        val gathered = pivoted.gather { cols().drop(1) }.explodeLists().notNull().mapValues { (it as? Double)?.toInt() ?: it }.into("key", "value")
         gathered shouldBe expectedFiltered
     }
 
     @Test
     fun `gather doubles with value conversion`() {
         val pivoted = typed.pivot { key }.groupBy { name }.with { valueConverter(value) }
-        val gathered = pivoted.remove("city").gather { drop(1) }.notNull().cast<Double>().mapValues { it.toInt() }.into("key", "value")
+        val gathered = pivoted.remove("city").gather { drop(1) }.explodeLists().notNull().cast<Double>().mapValues { it.toInt() }.into("key", "value")
         val expected = typed.filter { key != "city" && value != null }.convert { value }.toInt().sortBy { name and key }
         gathered shouldBe expected
     }
@@ -368,7 +369,7 @@ class PivotTests {
     @Test
     fun `gather with name conversion`() {
         val pivoted = typed.pivot { key.map(keyConverter) }.groupBy { name }.with { value }
-        val gathered = pivoted.gather { cols().drop(1) }.mapKeys { it.substring(2) }.into("key", "value")
+        val gathered = pivoted.gather { cols().drop(1) }.notNull().mapKeys { it.substring(2) }.into("key", "value")
         gathered shouldBe expectedFiltered
     }
 

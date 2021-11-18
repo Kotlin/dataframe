@@ -5,20 +5,25 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.explodeLists
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.ungroup
+import org.jetbrains.kotlinx.dataframe.api.valuesInto
+import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.codeGen.generateCode
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 class GatherTests {
 
@@ -134,7 +139,8 @@ class GatherTests {
     @Test
     fun gather() {
         val mode by column<String>()
-        val gathered = typed.gather { except(name) }.into(mode)
+        val temp by column<String>()
+        val gathered = typed.gather { except(name) }.cast<String>().into(mode, temp).ungroup(temp)
 
         val expected = typed.groupBy { name }.mapGroups {
             val cols = columns().drop(1).map { it.asColumnGroup() } // drop 'name' column
@@ -166,7 +172,58 @@ class GatherTests {
         val languages by column<DataRow<Unit>>()
 
         val df = dataFrameOf(java, kotlin).group { java and kotlin }.into("languages")
-        val gathered = df.gather { languages }.into("key", "value")
-        gathered.print()
+
+        fun AnyFrame.check() {
+            this["value"].kind shouldBe ColumnKind.Group
+            ncol() shouldBe 2
+            nrow() shouldBe 3
+        }
+
+        df.gather { languages }.into("key", "value").check()
+    }
+
+    @Test
+    fun `gather mix of columns`() {
+        val a by columnOf(1, 1.1)
+        val b by columnOf(2, 2.2)
+
+        val df = dataFrameOf(a, b)[0..0]
+
+        val gathered = df.gather { a and b }
+            .into("key", "value")
+
+        gathered["value"].type() shouldBe typeOf<Int>()
+    }
+
+    @Test
+    fun `gather values`() {
+        val a by columnOf(1, 2)
+        val b by columnOf(3, 4)
+
+        var df = dataFrameOf(a, b).gather { a and b }.valuesInto("data")
+        df.ncol() shouldBe 1
+        df["data"].values() shouldBe listOf(1, 3, 2, 4)
+
+        df = dataFrameOf(a, b).gather { a and b }.where { it % 2 == 1 }.valuesInto("data")
+        df.ncol() shouldBe 1
+        df["data"].values() shouldBe listOf(1, 3)
+    }
+
+    @Test
+    fun `gather explode lists`() {
+        val a by columnOf(1, 2)
+        val b by columnOf(listOf(3, 4), listOf(5, 6))
+
+        val df = dataFrameOf(a, b).gather { a and b }
+            .explodeLists()
+            .cast<Int>()
+            .where { it % 2 == 1 }
+            .into("key", "value")
+
+        df shouldBe dataFrameOf("key", "value")(
+            "a", 1,
+            "b", 3,
+            "b", 5
+        )
     }
 }

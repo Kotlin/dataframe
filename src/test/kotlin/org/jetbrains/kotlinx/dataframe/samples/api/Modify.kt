@@ -24,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.api.implode
 import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.intoList
+import org.jetbrains.kotlinx.dataframe.api.keysInto
 import org.jetbrains.kotlinx.dataframe.api.length
 import org.jetbrains.kotlinx.dataframe.api.lowercase
 import org.jetbrains.kotlinx.dataframe.api.map
@@ -497,7 +498,7 @@ class Modify : TestBase() {
         val pivoted = df.dropNulls { city }.pivotCount(inward = false) { city }
         // SampleStart
         pivoted.gather { "London".."Tokyo" }.cast<Int>()
-            .where { it > 0 }.into("city")
+            .where { it > 0 }.keysInto("city")
         // SampleEnd
     }
 
@@ -513,7 +514,9 @@ class Modify : TestBase() {
     fun gatherWithMapping() {
         val pivoted = df.dropNulls { city }.pivotCount(inward = false) { city }
         // SampleStart
-        pivoted.gather { "London".."Tokyo" }.cast<Int>()
+        pivoted.gather { "London".."Tokyo" }
+            .cast<Int>()
+            .where { it > 10 }
             .mapKeys { it.lowercase() }
             .mapValues { 1.0 / it }
             .into("city", "density")

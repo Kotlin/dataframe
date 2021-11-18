@@ -516,7 +516,7 @@ class DataFrameTreeTests : BaseTest() {
             .update { groupCol }.at(2).with { emptyDataFrame(0).cast() }
             .update { groupCol }.at(3).with { it?.filter { false } }
         val res = plain.explode(dropEmpty = false) { groupCol }
-        val expected = plain[groupCol].sumOf { Math.max(it?.nrow() ?: 0, 1) }
+        val expected = plain[groupCol.name()].sumOf { Math.max((it as AnyFrame?)?.nrow() ?: 0, 1) }
         res.nrow() shouldBe expected
     }
 

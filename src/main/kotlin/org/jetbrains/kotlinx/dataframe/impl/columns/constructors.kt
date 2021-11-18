@@ -135,7 +135,7 @@ internal fun <T> guessColumnType(
 
     return when (type.classifier!! as KClass<*>) {
         DataRow::class -> {
-            val df = values.map { (it as AnyRow).toDataFrame() }.concat()
+            val df = values.map { (it as AnyRow?)?.toDataFrame() ?: DataFrame.empty(1) }.concat()
             DataColumn.createColumnGroup(name, df).asDataColumn().cast()
         }
         DataFrame::class -> {

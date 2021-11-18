@@ -989,7 +989,7 @@ class DataFrameTests : BaseTest() {
         val res = filtered.pivot { city.lowercase() }.groupBy { name and age }.matches()
         val cities = filtered.city.toList().map { it!!.lowercase() }
         val gathered =
-            res.gather { colsOf<Boolean> { cities.contains(it.name()) } }.where { it }.into("city")
+            res.gather { colsOf<Boolean> { cities.contains(it.name()) } }.where { it }.keysInto("city")
         val expected = filtered.select { name and age and city.map { it!!.lowercase() } }.moveToRight { city }
         gathered shouldBe expected
     }
@@ -1045,14 +1045,14 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `gather bool`() {
         val pivoted = typed.pivot { city }.groupBy { name }.matches()
-        val res = pivoted.gather { colsOf<Boolean>() }.where { it }.into("city")
+        val res = pivoted.gather { colsOf<Boolean>() }.where { it }.keysInto("city")
         val sorted = res.sortBy { name and city }
         sorted shouldBe typed.select { name and city.map { it.toString() } }.distinct().sortBy { name and city }
     }
 
     @Test
     fun `gather nothing`() {
-        val gat = typed.gather(dropNulls = false) { city and name }
+        val gat = typed.gather { city and name }
 
         gat.where { false }
             .into("key", "value").print()
@@ -2225,12 +2225,18 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `get by empty path`() {
-        // SampleStart
         val all = typed[pathOf()]
 
         all.asColumnGroup().asDataFrame() shouldBe typed
 
         typed.getColumn { emptyPath() } shouldBe all
-        // SampleEnd
+    }
+
+    @Test
+    fun `update frame column to null`() {
+        val grouped = typed.groupBy { name }.toDataFrame("group")
+        grouped["group"].kind shouldBe ColumnKind.Frame
+        val updated = grouped.update("group").at(2).withNull()
+        updated["group"].kind shouldBe ColumnKind.Value
     }
 }
