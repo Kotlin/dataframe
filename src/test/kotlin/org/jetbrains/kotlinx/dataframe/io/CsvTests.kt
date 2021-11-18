@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.getType
+import org.jetbrains.kotlinx.dataframe.test.testCsv
 import org.junit.Test
 import java.io.StringWriter
 import java.time.LocalDateTime
@@ -124,8 +125,6 @@ class CsvTests {
     }
 
     companion object {
-        private fun testCsv(name: String) = this::class.java.classLoader.getResource("$name.csv")!!
-
         private val simpleCsv = testCsv("testCSV")
         private val csvWithFrenchLocale = testCsv("testCSVwithFrenchLocale")
         private val wineCsv = testCsv("wine")
