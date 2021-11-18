@@ -22,6 +22,7 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.Reader
 import java.io.StringReader
+import java.io.StringWriter
 import java.math.BigDecimal
 import java.net.URL
 import java.nio.charset.Charset
@@ -333,3 +334,9 @@ public fun AnyFrame.writeCSV(writer: Appendable, format: CSVFormat = CSVFormat.D
             printer.printRecord(it.values)
         }
     }
+
+public fun AnyFrame.writeCSVStr(format: CSVFormat = CSVFormat.DEFAULT.withHeader()): String =
+    StringWriter().use {
+        this.writeCSV(it, format)
+        it
+    }.toString()
