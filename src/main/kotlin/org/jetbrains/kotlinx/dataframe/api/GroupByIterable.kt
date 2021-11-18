@@ -16,7 +16,7 @@ import kotlin.reflect.KProperty
 
 // region map
 
-public fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): List<R> = keys.mapIndexedNotNull { index, row ->
+internal fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): List<R> = keys.rows().mapIndexedNotNull { index, row ->
     val group = groups[index]
     val g = GroupWithKey(row, group)
     body(g, g)

@@ -28,8 +28,10 @@ import org.jetbrains.kotlinx.dataframe.impl.api.sortByImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.toIndices
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.indices
@@ -71,16 +73,13 @@ public fun AnyFrame.isNotEmpty(): Boolean = !isEmpty()
 
 // region map
 
-public fun <T, R> DataFrame<T>.mapIndexedNotNull(action: (Int, DataRow<T>) -> R?): List<R> =
-    rows().mapIndexedNotNull(action)
-
-public fun <T, R> DataFrame<T>.mapIndexed(action: (Int, DataRow<T>) -> R): List<R> = rows().mapIndexed(action)
-
 public fun <T> DataFrame<T>.map(body: AddDsl<T>.() -> Unit): AnyFrame {
     val dsl = AddDsl(this)
     body(dsl)
     return dataFrameOf(dsl.columns)
 }
+
+public inline fun <T, reified R> DataFrame<T>.map(name: String, noinline body: AddExpression<T, R>): DataColumn<R> = newColumn(getType<R>(), name, body)
 
 // endregion
 

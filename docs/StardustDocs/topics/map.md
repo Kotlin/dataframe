@@ -2,19 +2,31 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Creates `DataFrame` with columns based on original `DataFrame`.
+Creates `DataFrame` or `DataColumn` with values computed from rows of original `DataFrame`.
+
+**Map into `DataColumn`:**
+
+```kotlin
+map(columnName) { rowExpression }: DataColumn
+
+rowExpression: DataRow.(DataRow) -> Value
+```
+
+See [row expressions](DataRow.md#row-expressions)
+
+**Map into `DataFrame`:**
 
 ```kotlin
 map { 
     columnMapping
     columnMapping
     ...
-}
+} : DataFrame
 
 columnMapping = column into columnName | columnName from column | columnName from { rowExpression } | +column  
 ```
 
-<!---FUN map-->
+<!---FUN mapMany-->
 <tabs>
 <tab title="Properties">
 
