@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -19,12 +20,14 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
-import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
+
+internal fun AnyCol.explodeImpl(): AnyCol = dataFrameOf(this).explodeImpl(true) { all() }.getColumn(0)
 
 internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> {
     val columns = getColumnsWithPaths(columns)
@@ -59,14 +62,8 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: Co
                     is FrameColumn<*> -> {
                         val newDf = col.values.mapIndexed { row, frame ->
                             val expectedSize = rowExpandSizes[row]
-                            when {
-                                frame != null -> {
-                                    assert(frame.nrow <= expectedSize)
-                                    frame.appendNulls(expectedSize - frame.nrow)
-                                }
-                                expectedSize > 0 -> DataFrame.empty(expectedSize)
-                                else -> null
-                            }
+                            assert(frame.nrow <= expectedSize)
+                            frame.appendNulls(expectedSize - frame.nrow)
                         }.concat()
 
                         DataColumn.createColumnGroup(col.name, newDf)

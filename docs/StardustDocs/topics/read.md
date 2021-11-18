@@ -30,7 +30,8 @@ and headers names if your CSV is missing them
 <!---FUN readCsvCustom-->
 
 ```kotlin
-val df = DataFrame.readCSV(file,
+val df = DataFrame.readCSV(
+    file,
     delimiter = '|',
     headers = listOf("A", "B", "C", "D"),
     nullStrings = setOf("not assigned")

@@ -17,7 +17,8 @@ merger: (DataRow).List<T> -> Any
 <!---FUN merge-->
 
 ```kotlin
-df.merge { name.firstName and name.lastName }.by(" ").into("name")
+// Merge two columns into one column "fullName"
+df.merge { name.firstName and name.lastName }.by(" ").into("fullName")
 ```
 
 <!---END-->
@@ -27,7 +28,9 @@ df.merge { name.firstName and name.lastName }.by(" ").into("name")
 <!---FUN mergeSameWith-->
 
 ```kotlin
-df.merge { name.firstName and name.lastName }.by { it[0].first() + "." + it[1].first() + "." }.into("initials")
+df.merge { name.firstName and name.lastName }
+    .by { it[0] + " (" + it[1].uppercase() + ")" }
+    .into("fullName")
 ```
 
 <!---END-->
@@ -57,3 +60,10 @@ df.merge { numberCols() }.into("data")
 Merged column values can also be exported to `List`:
 
 <!---FUN mergeIntoList-->
+
+```kotlin
+// Merge data from two columns into List<String>
+df.merge { name.firstName and name.lastName }.by(",").intoList()
+```
+
+<!---END-->
