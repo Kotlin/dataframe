@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.isValueColumn
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.to
@@ -114,7 +115,7 @@ internal fun <T, C, K, R> gatherImpl(
             df = df.ungroup(valuesColumn.name())
         } else df = df.remove(valuesColumn.name())
     } else {
-        if (!valuesCol.isFrameColumn() && valueColumnType.jvmErasure != Any::class) {
+        if (valuesCol.isValueColumn() && valueColumnType.jvmErasure != Any::class) {
             df = df.convert(valuesColumn.name()).to(valueColumnType)
         }
     }
