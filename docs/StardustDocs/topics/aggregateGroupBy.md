@@ -1,4 +1,4 @@
-[//]: # (title: Aggregate GroupBy)
+[//]: # (title: Aggregate groupBy)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 

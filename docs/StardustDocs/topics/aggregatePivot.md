@@ -1,4 +1,4 @@
-[//]: # (title: Aggregate Pivot)
+[//]: # (title: Aggregate pivot)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 

@@ -1,3 +1,3 @@
-[//]: # (title: splitMerge)
+[//]: # (title: Split/merge values)
 
 Start writing here.

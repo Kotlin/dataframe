@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
@@ -146,18 +145,8 @@ class Access : TestBase() {
     }
 
     @Test
-    fun getColumnsByName_strings() {
-        // SampleStart
-        df.select { "age" and "weight" }
-        df.select("age", "weight")
-        df["age", "weight"]
-        // SampleEnd
-    }
-
-    @Test
     fun getColumnsByName_properties() {
         // SampleStart
-        df.select { age and weight }
         df[df.age, df.weight]
         // SampleEnd
     }
@@ -168,9 +157,40 @@ class Access : TestBase() {
         val age by column<Int>()
         val weight by column<Int?>()
 
+        df[age, weight]
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumnsByName_strings() {
+        // SampleStart
+        df["age", "weight"]
+        // SampleEnd
+    }
+
+    @Test
+    fun select_properties() {
+        // SampleStart
+        df.select { age and weight }
+        // SampleEnd
+    }
+
+    @Test
+    fun select_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val weight by column<Int?>()
+
         df.select { age and weight }
         df.select(age, weight)
-        df[age, weight]
+        // SampleEnd
+    }
+
+    @Test
+    fun select_strings() {
+        // SampleStart
+        df.select { "age" and "weight" }
+        df.select("age", "weight")
         // SampleEnd
     }
 
@@ -452,17 +472,10 @@ class Access : TestBase() {
     }
 
     @Test
-    fun asIterableOrSequence() {
-        // SampleStart
-        df.rows()
-        df.asSequence()
-        // SampleEnd
-    }
-
-    @Test
     fun distinct() {
         // SampleStart
         df.distinct()
+        df.chunked()
         // SampleEnd
     }
 

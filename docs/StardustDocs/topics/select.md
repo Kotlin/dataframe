@@ -1,16 +1,47 @@
-[//]: # (title: select)
+[//]: # (title: Select columns)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-Returns `DataFrame` with subset of columns
+Two ways to create `DataFrame` with a subset of columns:
+
+* [`indexing`](indexing.md)
 
 <!---FUN getColumnsByName-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.select { age and weight }
 df[df.age, df.weight]
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val age by column<Int>()
+val weight by column<Int?>()
+
+df[age, weight]
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df["age", "weight"]
+```
+
+</tab></tabs>
+<!---END-->
+
+* [`selecting`](ColumnSelectors.md)
+
+<!---FUN select-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.select { age and weight }
 ```
 
 </tab>
@@ -22,7 +53,6 @@ val weight by column<Int?>()
 
 df.select { age and weight }
 df.select(age, weight)
-df[age, weight]
 ```
 
 </tab>
@@ -31,8 +61,9 @@ df[age, weight]
 ```kotlin
 df.select { "age" and "weight" }
 df.select("age", "weight")
-df["age", "weight"]
 ```
 
 </tab></tabs>
 <!---END-->
+
+See [column selectors](ColumnSelectors.md)
