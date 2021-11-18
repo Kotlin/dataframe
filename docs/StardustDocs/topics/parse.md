@@ -35,8 +35,9 @@ df.parse { age and weight }
 * `Double`
 
 Available parser options:
-* `locale: Locale`
-* `dateTimeFormatter: DateTimeFormatter`
+* `locale: Locale` is used to parse numbers
+* `dateTimeFormatter: DateTimeFormatter` is used to parse date and time
+* `nulls: List<String>` is used to treat particular strings as `null` value. Default `null` strings: `"null"` and `"NULL"`
 
 <!---FUN parseWithOptions-->
 

@@ -475,7 +475,6 @@ class Access : TestBase() {
     fun distinct() {
         // SampleStart
         df.distinct()
-        df.chunked()
         // SampleEnd
     }
 

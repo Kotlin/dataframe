@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
@@ -33,6 +32,7 @@ import java.util.Locale
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.jvmErasure
 
 internal interface StringParser<T> {
     fun toConverter(options: ParserOptions?): TypeConverter
@@ -65,6 +65,10 @@ internal object Parsers : GlobalParserOptions {
 
     private val formatters: MutableList<DateTimeFormatter> = mutableListOf()
 
+    private val nullStrings: MutableList<String> = mutableListOf()
+
+    public val nulls: List<String> get() = nullStrings
+
     override fun addDateTimeFormat(format: String) {
         formatters.add(DateTimeFormatter.ofPattern(format))
     }
@@ -73,10 +77,16 @@ internal object Parsers : GlobalParserOptions {
         formatters.add(formatter)
     }
 
+    override fun addNullString(str: String) {
+        nullStrings.add(str)
+    }
+
     override var locale: Locale = Locale.getDefault()
 
     override fun resetToDefault() {
         formatters.clear()
+        nullStrings.clear()
+
         formatters.add(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 
         DateTimeFormatterBuilder()
@@ -87,6 +97,9 @@ internal object Parsers : GlobalParserOptions {
             .let { formatters.add(it) }
 
         locale = Locale.getDefault()
+
+        nullStrings.add("null")
+        nullStrings.add("NULL")
     }
 
     init {
@@ -171,6 +184,8 @@ internal object Parsers : GlobalParserOptions {
         },
         stringParser { it.toBooleanOrNull() },
         stringParser { it.toBigDecimalOrNull() },
+
+        stringParser { it } // must be last in the list of parsers to return original unparsed string
     )
 
     private val parsersMap = All.associateBy { it.type }
@@ -187,29 +202,46 @@ internal object Parsers : GlobalParserOptions {
 }
 
 internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColumn<*> {
-    if (allNulls()) return this
-
     var parserId = 0
     val parsedValues = mutableListOf<Any?>()
-
+    var hasNulls: Boolean
+    var hasNotNulls: Boolean
+    var nullStringParsed: Boolean
+    val nulls = options?.nulls ?: Parsers.nulls
     do {
         val parser = Parsers[parserId].applyOptions(options)
         parsedValues.clear()
+        hasNulls = false
+        hasNotNulls = false
+        nullStringParsed = false
         for (str in values) {
-            if (str == null) parsedValues.add(null)
-            else {
-                val res = parser(str)
-
-                if (res == null) {
-                    parserId++
-                    break
+            when {
+                str == null -> {
+                    parsedValues.add(null)
+                    hasNulls = true
                 }
-                parsedValues.add(res)
+                nulls.contains(str) -> {
+                    parsedValues.add(null)
+                    hasNulls = true
+                    nullStringParsed = true
+                }
+                else -> {
+                    val res = parser(str)
+                    if (res == null) {
+                        parserId++
+                        break
+                    }
+                    parsedValues.add(res)
+                    hasNotNulls = true
+                }
             }
         }
     } while (parserId < Parsers.size && parsedValues.size != size)
-    if (parserId == Parsers.size) return this
-    return DataColumn.createValueColumn(name(), parsedValues, Parsers[parserId].type.withNullability(hasNulls))
+    check(parserId < Parsers.size) { "Valid parser not found" }
+
+    val type = (if (hasNotNulls) Parsers[parserId].type else this.type()).withNullability(hasNulls)
+    if (type.jvmErasure == String::class && !nullStringParsed) return this // nothing parsed
+    return DataColumn.createValueColumn(name(), parsedValues, type)
 }
 
 internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: ParserOptions?): DataColumn<T?> {

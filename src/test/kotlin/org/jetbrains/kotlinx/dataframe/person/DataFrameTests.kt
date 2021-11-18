@@ -1125,6 +1125,18 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun mergeIntoList() {
+        val parsed = typed
+            .merge { age and city and weight }.by(", ").intoList()
+            .createDataFrame { "data" from { it } }
+            .split("data").by(", ").into(age, city, weight)
+            .parse(ParserOptions(nulls = listOf("null")))
+
+        val expected = typed[age, city, weight]
+        parsed shouldBe expected
+    }
+
+    @Test
     fun mergeColsCustom() {
         val merged =
             typed.merge { name and city and age }.by { it[0].toString() + " from " + it[1] + " aged " + it[2] }
