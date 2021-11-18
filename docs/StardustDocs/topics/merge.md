@@ -9,7 +9,7 @@ Reverse operation to [`split`](split.md)
 ```kotlin
 merge { columns }
     .by(delimeter) | .by { merger } 
-    .into(column)
+    [.into(column) | .intoList() ]
 
 merger: (DataRow).List<T> -> Any
 ```
@@ -53,3 +53,7 @@ df.merge { numberCols() }.into("data")
 ```
 
 <!---END-->
+
+Merged column values can also be exported to `List`:
+
+<!---FUN mergeIntoList-->

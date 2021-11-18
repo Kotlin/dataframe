@@ -23,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.api.gt
 import org.jetbrains.kotlinx.dataframe.api.implode
 import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.intoList
 import org.jetbrains.kotlinx.dataframe.api.length
 import org.jetbrains.kotlinx.dataframe.api.lowercase
 import org.jetbrains.kotlinx.dataframe.api.map
@@ -390,14 +391,25 @@ class Modify : TestBase() {
     @Test
     fun merge() {
         // SampleStart
-        df.merge { name.firstName and name.lastName }.by(" ").into("name")
+        // Merge two columns into one column "fullName"
+        df.merge { name.firstName and name.lastName }.by(" ").into("fullName")
+        // SampleEnd
+    }
+
+    @Test
+    fun mergeIntoList() {
+        // SampleStart
+        // Merge data from two columns into List<String>
+        df.merge { name.firstName and name.lastName }.by(",").intoList()
         // SampleEnd
     }
 
     @Test
     fun mergeSameWith() {
         // SampleStart
-        df.merge { name.firstName and name.lastName }.by { it[0].first() + "." + it[1].first() + "." }.into("initials")
+        df.merge { name.firstName and name.lastName }
+            .by { it[0] + " (" + it[1].uppercase() + ")" }
+            .into("fullName")
         // SampleEnd
     }
 

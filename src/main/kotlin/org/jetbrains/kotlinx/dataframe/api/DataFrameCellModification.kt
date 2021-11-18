@@ -246,12 +246,18 @@ public interface GlobalParserOptions {
 
     public fun addDateTimeFormatter(formatter: DateTimeFormatter)
 
+    public fun addNullString(str: String)
+
     public fun resetToDefault()
 
     public var locale: Locale
 }
 
-public data class ParserOptions(val locale: Locale? = null, val dateTimeFormatter: DateTimeFormatter? = null)
+public data class ParserOptions(
+    val locale: Locale? = null,
+    val dateTimeFormatter: DateTimeFormatter? = null,
+    val nulls: List<String>? = null
+)
 
 public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataColumn<*> = tryParseImpl(options)
 
@@ -449,6 +455,8 @@ public class MergeClause<T, C, R>(
 
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(column: ColumnAccessor<R>): DataFrame<T> = into(column.path())
+
+public fun <T, C, R> MergeClause<T, C, R>.intoList(): List<R> = df.select(selector).rows().map { transform(it, it.values() as List<C>) }
 
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnPath: ColumnPath): DataFrame<T> {
     val grouped = df.move(selector).under { columnPath }
