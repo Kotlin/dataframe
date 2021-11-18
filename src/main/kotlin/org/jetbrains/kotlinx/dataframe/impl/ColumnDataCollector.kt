@@ -38,10 +38,10 @@ internal abstract class DataCollectorBase<T>(initCapacity: Int) : DataCollector<
 
     protected fun createColumn(name: String, type: KType): DataColumn<T> {
         val classifier = type.classifier as KClass<*>
-        if (classifier.isSubclassOf(DataFrame::class)) {
+        if (classifier.isSubclassOf(DataFrame::class) && !hasNulls) {
             return DataColumn.createFrameColumn(name, data as List<AnyFrame>) as DataColumn<T>
         }
-        if (classifier.isSubclassOf(DataRow::class)) {
+        if (classifier.isSubclassOf(DataRow::class) && !hasNulls) {
             val mergedDf = (data as List<AnyRow>).map { it.toDataFrame() }.concat()
             return DataColumn.createColumnGroup(name, mergedDf) as DataColumn<T>
         }

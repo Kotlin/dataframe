@@ -432,6 +432,18 @@ public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.into(
 ): DataFrame<T> =
     by { it }.into(names.toList(), extraNamesGenerator)
 
+public fun <T, A, B> Split<T, Pair<A, B>>.into(
+    firstCol: String,
+    secondCol: String
+): DataFrame<T> =
+    by { listOf(it.first, it.second) }.into(firstCol, secondCol)
+
+public inline fun <T, reified A, reified B> Split<T, Pair<A, B>>.into(
+    firstCol: ColumnAccessor<A>,
+    secondCol: ColumnAccessor<B>
+): DataFrame<T> =
+    by { listOf(it.first, it.second) }.into(firstCol, secondCol)
+
 @JvmName("intoTC")
 public fun <T> Split<T, String>.into(
     vararg names: String,
