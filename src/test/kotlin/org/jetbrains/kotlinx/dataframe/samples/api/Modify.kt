@@ -680,7 +680,54 @@ class Modify : TestBase() {
     }
 
     @Test
+    fun remove_properties() {
+        // SampleStart
+        df.remove { name and weight }
+        // SampleEnd
+    }
+
+    @Test
+    fun remove_accessors() {
+        // SampleStart
+        val name by columnGroup()
+        val weight by column<Int?>()
+
+        df.remove { name and weight }
+        // SampleEnd
+    }
+
+    @Test
+    fun remove_strings() {
+        // SampleStart
+        df.remove("name", "weight")
+        // SampleEnd
+    }
+
+    @Test
     fun map_properties() {
+        // SampleStart
+        df.map("year of birth") { 2021 - age }
+        // SampleEnd
+    }
+
+    @Test
+    fun map_accessors() {
+        // SampleStart
+        val age by column<Int>()
+
+        df.map("year of birth") { 2021 - age }
+        // SampleEnd
+    }
+
+    @Test
+    fun map_strings() {
+        // SampleStart
+        df.map("year of birth") { 2021 - "age"<Int>() }
+        // SampleEnd
+    }
+
+    @Test
+    fun mapMany_properties() {
         // SampleStart
         df.map {
             "year of birth" from 2021 - age
@@ -693,7 +740,7 @@ class Modify : TestBase() {
     }
 
     @Test
-    fun map_accessors() {
+    fun mapMany_accessors() {
         // SampleStart
         val yob = column<Int>("year of birth")
         val lastNameLength = column<Int>("last name length")
@@ -716,7 +763,7 @@ class Modify : TestBase() {
     }
 
     @Test
-    fun map_strings() {
+    fun mapMany_strings() {
         // SampleStart
         df.map {
             "year of birth" from 2021 - "age"<Int>()
