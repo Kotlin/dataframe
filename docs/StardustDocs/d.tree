@@ -79,6 +79,7 @@
             <toc-element id="append.md"/>
             <toc-element id="addRemove.md">
                 <toc-element id="add.md"/>
+                <toc-element id="map.md"/>
                 <toc-element id="remove.md"/>
             </toc-element>
             <toc-element id="moveRename.md">
@@ -101,7 +102,6 @@
                 <toc-element id="pivot.md"/>
                 <toc-element id="gather.md"/>
             </toc-element>
-            <toc-element id="map.md" toc-title="Map DataFrame"/>
         </toc-element>
         <toc-element id="aggregate.md">
             <toc-element id="statistics.md">
