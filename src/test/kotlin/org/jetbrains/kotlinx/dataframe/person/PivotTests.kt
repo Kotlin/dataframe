@@ -51,7 +51,6 @@ import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ndistinct
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.get
 import org.jetbrains.kotlinx.dataframe.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.getType
@@ -282,16 +281,16 @@ class PivotTests {
                 else -> it.name() shouldBe "value"
             }
         }
-        pivoted["Bob"]["weight"]["value"] shouldBe 87
+        pivoted.getColumnGroup("Bob").getColumnGroup("weight")["value"] shouldBe 87
     }
 
     @Test
     fun `pivot two values without index group by value`() {
         val pivoted = typed.pivot { name }.values(separate = true) { key and value }
         pivoted.df().columnNames() shouldBe listOf("key", "value")
-        (pivoted["key"]["Alice"] as Many<String>).size shouldBe 4
-        pivoted.df()["value"]["Bob"].type() shouldBe getType<Many<Int>>()
-        pivoted["value"]["Bob"] shouldBe manyOf(45, 87)
+        (pivoted.getColumnGroup("key")["Alice"] as Many<String>).size shouldBe 4
+        pivoted.df().getColumnGroup("value")["Bob"].type() shouldBe getType<Many<Int>>()
+        pivoted.getColumnGroup("value")["Bob"] shouldBe manyOf(45, 87)
     }
 
     @Test

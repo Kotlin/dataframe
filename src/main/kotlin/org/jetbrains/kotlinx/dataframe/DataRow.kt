@@ -105,11 +105,3 @@ internal val AnyRow.values: List<Any?> get() = values()
 internal val AnyRow.index: Int get() = index()
 internal val <T> DataRow<T>.prev: DataRow<T>? get() = prev()
 internal val <T> DataRow<T>.next: DataRow<T>? get() = next()
-
-// TODO: remove
-public operator fun Any?.get(column: String): Any? = when (this) {
-    is AnyRow -> get(column)
-    is AnyCol -> get(column)
-    is AnyFrame -> get(column)
-    else -> error("Unable to get value by string index from type ${this?.javaClass}")
-}
