@@ -461,7 +461,7 @@ public fun <T, C, R> MergeClause<T, C, R>.intoList(): List<R> = df.select(select
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnPath: ColumnPath): DataFrame<T> {
     val grouped = df.move(selector).under { columnPath }
     val res = grouped.convert { getColumnGroup(columnPath) }.with {
-        val srcRow = df[index]
+        val srcRow = df[index()]
         transform(srcRow, it.values() as List<C>)
     }
     return res

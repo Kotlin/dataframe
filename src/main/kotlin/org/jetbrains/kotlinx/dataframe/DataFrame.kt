@@ -76,6 +76,6 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 internal val AnyFrame.ncol get() = ncol()
 internal val AnyFrame.nrow get() = nrow()
 internal val AnyFrame.indices get() = indices()
+internal val AnyFrame.size: DataFrameSize get() = DataFrameSize(ncol(), nrow())
 
 public fun AnyFrame.size(): DataFrameSize = DataFrameSize(ncol(), nrow())
-public val AnyFrame.size: DataFrameSize get() = DataFrameSize(ncol(), nrow())
