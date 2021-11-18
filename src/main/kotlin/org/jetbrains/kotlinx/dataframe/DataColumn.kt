@@ -30,9 +30,9 @@ import kotlin.reflect.full.withNullability
 /**
  * Column with type, name/path and values
  * Base interface for [ValueColumn] and [FrameColumn], but not for [ColumnGroup]
- * All extension functions that clash with [DataFrame] API (such as filter, forEach, map etc.) should be defined for this interface
+ * All extension functions that clash with [DataFrame] API (such as filter, forEach, map etc.) should be defined for this interface, not for [BaseColumn]
  *
- * Although [ColumnGroup] doesn't implement this interface, but [ColumnGroupImpl] does, so you can cast any actual instance of [ColumnGroup] to [DataColumn]
+ * [ColumnGroup] doesn't implement this interface, but [ColumnGroupImpl] does, so you can cast any actual column instance to [DataColumn] safely
  */
 public interface DataColumn<out T> : BaseColumn<T> {
 
@@ -98,9 +98,10 @@ public interface DataColumn<out T> : BaseColumn<T> {
     public override operator fun get(range: IntRange): DataColumn<T>
 }
 
-public val AnyCol.type: KType get() = type()
-public val AnyCol.kind: ColumnKind get() = kind()
-public val AnyCol.hasNulls: Boolean get() = hasNulls()
-public val AnyCol.typeClass: KClass<*> get() = type.classifier as KClass<*>
+internal val AnyCol.type: KType get() = type()
+internal val AnyCol.kind: ColumnKind get() = kind()
+internal val AnyCol.hasNulls: Boolean get() = hasNulls()
+internal val AnyCol.typeClass: KClass<*> get() = type.classifier as KClass<*>
+internal val AnyCol.indices: IntRange get() = indices()
+
 public fun AnyCol.indices(): IntRange = 0 until size
-public val AnyCol.indices: IntRange get() = indices()

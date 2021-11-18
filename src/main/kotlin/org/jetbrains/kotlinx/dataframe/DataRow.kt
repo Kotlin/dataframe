@@ -101,10 +101,10 @@ public interface DataRow<out T> {
     }
 }
 
-public val AnyRow.values: List<Any?> get() = values()
-public val AnyRow.index: Int get() = index()
-public val <T> DataRow<T>.prev: DataRow<T>? get() = prev()
-public val <T> DataRow<T>.next: DataRow<T>? get() = next()
+internal val AnyRow.values: List<Any?> get() = values()
+internal val AnyRow.index: Int get() = index()
+internal val <T> DataRow<T>.prev: DataRow<T>? get() = prev()
+internal val <T> DataRow<T>.next: DataRow<T>? get() = next()
 
 // TODO: remove
 public operator fun Any?.get(column: String): Any? = when (this) {
