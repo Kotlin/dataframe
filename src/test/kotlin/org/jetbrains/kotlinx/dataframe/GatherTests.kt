@@ -6,9 +6,11 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.gather
+import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.withValues
@@ -155,5 +157,16 @@ class GatherTests {
     @Test
     fun `generated code is fully typed`() {
         generatedCode.contains("<*>") shouldBe false
+    }
+
+    @Test
+    fun `gather column group`() {
+        val java by columnOf(1, 2, 3)
+        val kotlin by columnOf(1, 2, 3)
+        val languages by column<DataRow<Unit>>()
+
+        val df = dataFrameOf(java, kotlin).group { java and kotlin }.into("languages")
+        val gathered = df.gather { languages }.into("key", "value")
+        gathered.print()
     }
 }

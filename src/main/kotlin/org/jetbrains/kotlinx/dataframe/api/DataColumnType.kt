@@ -16,6 +16,8 @@ import kotlin.reflect.full.isSubtypeOf
 
 public fun AnyCol.isColumnGroup(): Boolean = kind() == ColumnKind.Group
 public fun AnyCol.isFrameColumn(): Boolean = kind() == ColumnKind.Frame
+public fun AnyCol.isValueColumn(): Boolean = kind() == ColumnKind.Value
+
 public fun AnyCol.isSubtypeOf(type: KType): Boolean = this.type.isSubtypeOf(type) && (!this.type.isMarkedNullable || type.isMarkedNullable)
 public inline fun <reified T> AnyCol.isSubtypeOf(): Boolean = isSubtypeOf(getType<T>())
 public inline fun <reified T> AnyCol.isType(): Boolean = type() == getType<T>()
