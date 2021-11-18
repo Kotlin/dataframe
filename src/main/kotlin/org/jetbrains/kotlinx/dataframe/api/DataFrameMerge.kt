@@ -149,6 +149,8 @@ public fun <T> Iterable<DataFrame<T>?>.concat(): DataFrame<T> = concatImpl(filte
 
 public fun <T> DataColumn<DataFrame<T>>.concat(): DataFrame<T> = values.concat().cast()
 
+public fun <T> DataColumn<Collection<T>>.concat(): List<T> = values.flatten()
+
 public fun <T> DataFrame<T>.concat(vararg other: DataFrame<T>): DataFrame<T> = concatImpl(listOf(this) + other.toList()).cast<T>()
 
 // endregion
