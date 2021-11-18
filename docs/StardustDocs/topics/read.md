@@ -26,6 +26,7 @@ DataFrame.readCSV(URL("https://raw.githubusercontent.com/Kotlin/dataframe/master
 All `readCSV` overloads support different options.
 For example, you can specify custom delimiter if it differs from `,`, charset
 and headers names if your CSV is missing them
+
 <!---FUN readCsvCustom-->
 
 ```kotlin
@@ -40,6 +41,7 @@ val df = DataFrame.readCSV(file,
 
 Column types will be inferred from the actual CSV data. Suppose that CSV from the previous
 example had the following content:
+
 <table>
 <tr><th>A</th><th>B</th><th>C</th><th>D</th></tr>
 <tr><td>12</td><td>tuv</td><td>0.12</td><td>true</td></tr>
@@ -48,6 +50,7 @@ example had the following content:
 </table>
 
 Dataframe schema we get is:
+
 ```
 A: Int
 B: String
@@ -70,6 +73,7 @@ JSON string literals are always supposed to have String type, number literals
 take different `Number` kinds, boolean literals are converted to `Boolean`.
 
 Let's take a look at the following JSON:
+
 ```json
 [
   { "A": "1", "B": 1, "C": 1.0, "D": true },
@@ -80,6 +84,7 @@ Let's take a look at the following JSON:
 ```
 
 We can read it from file
+
 <!---FUN readJson-->
 
 ```kotlin
