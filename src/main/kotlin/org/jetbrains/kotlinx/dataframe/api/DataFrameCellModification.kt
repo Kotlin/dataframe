@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -487,6 +488,11 @@ public fun <T> DataFrame<T>.explode(dropEmpty: Boolean = true, selector: Columns
 public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean = true): DataFrame<T> = explode(dropEmpty) { columns.toColumns() }
 public fun <T, C> DataFrame<T>.explode(vararg columns: ColumnReference<C>, dropEmpty: Boolean = true): DataFrame<T> = explode(dropEmpty) { columns.toColumns() }
 public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> = explode(dropEmpty) { columns.toColumns() }
+
+@JvmName("explodeList")
+public fun <T> DataColumn<List<T>>.explode(): DataColumn<T> = explodeImpl() as DataColumn<T>
+@JvmName("explodeFrames")
+public fun <T> DataColumn<DataFrame<T>>.explode(): ColumnGroup<T> = concat().toColumnGroup(name())
 
 // endregion
 
