@@ -55,7 +55,7 @@ df.explode { a and b }
 
 <!---END-->
 
-`DataColumn<List<*>>` or `FrameColumn` can also be exploded:
+`DataColumn<Collection>` or `FrameColumn` can also be exploded:
 
 <!---FUN explodeColumnList-->
 

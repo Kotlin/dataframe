@@ -490,7 +490,7 @@ public fun <T, C> DataFrame<T>.explode(vararg columns: ColumnReference<C>, dropE
 public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> = explode(dropEmpty) { columns.toColumns() }
 
 @JvmName("explodeList")
-public fun <T> DataColumn<List<T>>.explode(): DataColumn<T> = explodeImpl() as DataColumn<T>
+public fun <T> DataColumn<Collection<T>>.explode(): DataColumn<T> = explodeImpl() as DataColumn<T>
 @JvmName("explodeFrames")
 public fun <T> DataColumn<DataFrame<T>>.explode(): ColumnGroup<T> = concat().toColumnGroup(name())
 
