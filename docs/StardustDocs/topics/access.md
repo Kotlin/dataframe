@@ -14,7 +14,7 @@ df.values() // Sequence<Any?>
 
 <!---END-->
 
-**How to:**
+**Learn how to:**
 * [Access data by index](indexing.md)
 * [Slice portion of data](slicing.md)
 * [Iterate over data](iterate.md)
