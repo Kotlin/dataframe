@@ -22,7 +22,7 @@ import org.jetbrains.kotlinx.dataframe.io.isURL
 import org.jetbrains.kotlinx.dataframe.typeClass
 import java.net.URL
 import java.text.NumberFormat
-import java.text.ParseException
+import java.text.ParsePosition
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -151,10 +151,11 @@ internal object Parsers : GlobalParserOptions {
             "-INF" -> Double.NEGATIVE_INFINITY
             "INFINITY" -> Double.POSITIVE_INFINITY
             "-INFINITY" -> Double.NEGATIVE_INFINITY
-            else -> try {
-                format.parse(this).toDouble()
-            } catch (e: ParseException) {
-                null
+            else -> {
+                val parsePosition = ParsePosition(0)
+                val result: Double? = format.parse(this, parsePosition)?.toDouble()
+                if (parsePosition.index != this.length) null
+                else result
             }
         }
 

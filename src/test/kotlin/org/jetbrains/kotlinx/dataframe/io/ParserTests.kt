@@ -14,7 +14,7 @@ class ParserTests {
     @Test
     fun `parse datetime with custom format`() {
         val col by columnOf("04.02.2021 -- 19:44:32")
-        col.tryParse().type() shouldBe getType<Double>()
+        col.tryParse().type() shouldBe getType<String>()
         DataFrame.parser.addDateTimeFormat("dd.MM.uuuu -- HH:mm:ss")
         val parsed = col.parse()
         parsed.type() shouldBe getType<LocalDateTime>()
