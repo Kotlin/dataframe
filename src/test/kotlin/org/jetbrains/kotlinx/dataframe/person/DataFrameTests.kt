@@ -1255,6 +1255,14 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun splitMergeFrameCol() {
+        val groups by frameColumn()
+        val merged = typed.groupBy { name }.into(groups)
+        val res = merged.split(groups).into { "rec$it" }
+        res.merge { drop(1) }.notNull().into(groups.name()) shouldBe merged
+    }
+
+    @Test
     fun splitStringCol() {
         val merged = typed.merge { age and city and weight }.by(" - ").into("info")
         val info by column<String>()

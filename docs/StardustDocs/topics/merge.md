@@ -8,6 +8,7 @@ Reverse operation to [`split`](split.md)
 
 ```kotlin
 merge { columns }
+    [.notNull()]
     .by(delimeter) | .by { merger } 
     [.into(column) | .intoList() ]
 
