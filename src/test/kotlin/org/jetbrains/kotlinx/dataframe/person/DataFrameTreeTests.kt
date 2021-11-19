@@ -108,18 +108,6 @@ class DataFrameTreeTests : BaseTest() {
     val df2 = df.move { name and city }.under("nameAndCity")
     val typed2 = df2.cast<GroupedPerson>()
 
-    val DataRow<NameAndCity>.name @JvmName("get-name-row") get() = this["name"] as String
-    val DataRow<NameAndCity>.city @JvmName("get-city-row") get() = this["city"] as String?
-    val ColumnsContainer<NameAndCity>.name @JvmName("get-name") get() = this["name"].cast<String>()
-    val ColumnsContainer<NameAndCity>.city @JvmName("get-city") get() = this["city"].cast<String?>()
-
-    val DataRow<GroupedPerson>.age @JvmName("get-age-row") get() = this["age"] as Int
-    val DataRow<GroupedPerson>.weight @JvmName("get-weight-row") get() = this["weight"] as Int?
-    val DataRow<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as DataRow<NameAndCity>
-    val ColumnsContainer<GroupedPerson>.age @JvmName("get-age") get() = this["age"].cast<Int>()
-    val ColumnsContainer<GroupedPerson>.weight @JvmName("get-weight") get() = this["weight"].cast<Int?>()
-    val ColumnsContainer<GroupedPerson>.nameAndCity get() = this["nameAndCity"] as ColumnGroup<NameAndCity>
-
     val nameAndCity by columnGroup()
     val nameInGroup = nameAndCity.column<String>("name")
 
@@ -441,7 +429,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun parentColumnTest() {
-        val res = typed2.move { dfs { it.depth > 0 } }.toTop { it.parent!!.name + "-" + it.name }
+        val res = typed2.move { dfs { it.depth > 0 } }.toTop { it.parent!!.name() + "-" + it.name() }
         res.ncol() shouldBe 4
         res.columnNames() shouldBe listOf("nameAndCity-name", "nameAndCity-city", "age", "weight")
     }
@@ -449,7 +437,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `group cols`() {
         val joined = typed2.move { dfs() }.into { pathOf(it.path.joinToString(".")) }
-        val grouped = joined.group { nameContains(".") }.into { it.name.substringBefore(".") }
+        val grouped = joined.group { nameContains(".") }.into { it.name().substringBefore(".") }
         val expected = typed2.rename { nameAndCity.all() }.into { it.path.joinToString(".") }
         grouped shouldBe expected
     }
@@ -463,7 +451,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun rename() {
-        val res = typed2.rename { nameAndCity.all() }.into { it.name.capitalize() }
+        val res = typed2.rename { nameAndCity.all() }.into { it.name().capitalize() }
         res.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames().map { it.capitalize() }
     }
 

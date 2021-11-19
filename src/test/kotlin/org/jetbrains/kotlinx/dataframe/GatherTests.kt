@@ -79,24 +79,6 @@ class GatherTests {
         val c2: String
         val c3: String?
     }
-    val ColumnsContainer<Marker1>.c1: DataColumn<String>
-        @JvmName("Marker1_c1")
-        get() = this["c1"] as DataColumn<String>
-    val DataRow<Marker1>.c1: String
-        @JvmName("Marker1_c1")
-        get() = this["c1"] as String
-    val ColumnsContainer<Marker1>.c2: DataColumn<String>
-        @JvmName("Marker1_c2")
-        get() = this["c2"] as DataColumn<String>
-    val DataRow<Marker1>.c2: String
-        @JvmName("Marker1_c2")
-        get() = this["c2"] as String
-    val ColumnsContainer<Marker1>.c3: DataColumn<String?>
-        @JvmName("Marker1_c3")
-        get() = this["c3"] as DataColumn<String?>
-    val DataRow<Marker1>.c3: String?
-        @JvmName("Marker1_c3")
-        get() = this["c3"] as String?
 
     @DataSchema(isOpen = false)
     interface Marker2 {
@@ -104,18 +86,12 @@ class GatherTests {
         val c2: String
         val c3: String?
     }
-    val ColumnsContainer<Marker2>.c1: DataColumn<String> @JvmName("Marker2_c1") get() = this["c1"] as DataColumn<String>
-    val DataRow<Marker2>.c1: String @JvmName("Marker2_c1") get() = this["c1"] as String
-    val ColumnsContainer<Marker2>.c2: DataColumn<String> @JvmName("Marker2_c2") get() = this["c2"] as DataColumn<String>
-    val DataRow<Marker2>.c2: String @JvmName("Marker2_c2") get() = this["c2"] as String
-    val ColumnsContainer<Marker2>.c3: DataColumn<String?> @JvmName("Marker2_c3") get() = this["c3"] as DataColumn<String?>
-    val DataRow<Marker2>.c3: String? @JvmName("Marker2_c3") get() = this["c3"] as String?
+
     @DataSchema(isOpen = false)
     interface Marker3 {
         val c1: String
     }
-    val ColumnsContainer<Marker3>.c1: DataColumn<String> @JvmName("Marker3_c1") get() = this["c1"] as DataColumn<String>
-    val DataRow<Marker3>.c1: String @JvmName("Marker3_c1") get() = this["c1"] as String
+
     @DataSchema
     interface Marker {
         val name: String
@@ -123,14 +99,6 @@ class GatherTests {
         val reversed: DataRow<Marker2>
         val first: DataRow<Marker3>
     }
-    val ColumnsContainer<Marker>.first: ColumnGroup<*> @JvmName("Marker_first") get() = this["first"] as ColumnGroup<*>
-    val DataRow<Marker>.first: AnyRow @JvmName("Marker_first") get() = this["first"] as AnyRow
-    val ColumnsContainer<Marker>.name: DataColumn<String> @JvmName("Marker_name") get() = this["name"] as DataColumn<String>
-    val DataRow<Marker>.name: String @JvmName("Marker_name") get() = this["name"] as String
-    val ColumnsContainer<Marker>.normal: ColumnGroup<*> @JvmName("Marker_normal") get() = this["normal"] as ColumnGroup<*>
-    val DataRow<Marker>.normal: AnyRow @JvmName("Marker_normal") get() = this["normal"] as AnyRow
-    val ColumnsContainer<Marker>.reversed: ColumnGroup<*> @JvmName("Marker_reversed") get() = this["reversed"] as ColumnGroup<*>
-    val DataRow<Marker>.reversed: AnyRow @JvmName("Marker_reversed") get() = this["reversed"] as AnyRow
 
     //endregion
 
