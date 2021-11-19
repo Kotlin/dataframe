@@ -41,10 +41,6 @@ public enum class CSVType(public val format: CSVFormat) {
 
 private val defaultCharset = Charsets.UTF_8
 
-private val defaultLocale = Locale.getDefault()
-
-private val setOfNullStrings = setOf("NA", "N/A", "null")
-
 internal fun isCompressed(fileOrUrl: String) = listOf("gz", "zip").contains(fileOrUrl.split(".").last())
 
 internal fun isCompressed(file: File) = listOf("gz", "zip").contains(file.extension)
@@ -56,13 +52,12 @@ public fun DataFrame.Companion.readDelimStr(
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null
-): DataFrame<*> = readDelim(StringReader(text), CSVType.DEFAULT.format.withHeader(), setOfNullStrings, colTypes, skipLines, readLines)
+): DataFrame<*> = readDelim(StringReader(text), CSVType.DEFAULT.format.withHeader(), colTypes, skipLines, readLines)
 
 public fun DataFrame.Companion.read(
     fileOrUrl: String,
     delimiter: Char,
     headers: List<String> = listOf(),
-    nullStrings: Set<String> = setOfNullStrings,
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
@@ -72,7 +67,7 @@ public fun DataFrame.Companion.read(
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
             it, delimiter,
-            headers, nullStrings, isCompressed(fileOrUrl),
+            headers, isCompressed(fileOrUrl),
             getCSVType(fileOrUrl), colTypes,
             skipLines, readLines,
             duplicate, charset
@@ -83,7 +78,6 @@ public fun DataFrame.Companion.readCSV(
     fileOrUrl: String,
     delimiter: Char = ',',
     headers: List<String> = listOf(),
-    nullStrings: Set<String> = setOfNullStrings,
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
@@ -94,7 +88,7 @@ public fun DataFrame.Companion.readCSV(
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
             it, delimiter,
-            headers, nullStrings, isCompressed(fileOrUrl),
+            headers, isCompressed(fileOrUrl),
             CSVType.DEFAULT, colTypes,
             skipLines, readLines,
             duplicate, charset,
@@ -106,7 +100,6 @@ public fun DataFrame.Companion.readCSV(
     file: File,
     delimiter: Char = ',',
     headers: List<String> = listOf(),
-    nullStrings: Set<String> = setOfNullStrings,
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
@@ -116,7 +109,7 @@ public fun DataFrame.Companion.readCSV(
 ): DataFrame<*> =
     readDelim(
         FileInputStream(file), delimiter,
-        headers, nullStrings, isCompressed(file),
+        headers, isCompressed(file),
         CSVType.DEFAULT, colTypes,
         skipLines, readLines,
         duplicate, charset,
@@ -127,7 +120,6 @@ public fun DataFrame.Companion.readCSV(
     url: URL,
     delimiter: Char = ',',
     headers: List<String> = listOf(),
-    nullStrings: Set<String> = setOfNullStrings,
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
@@ -137,7 +129,7 @@ public fun DataFrame.Companion.readCSV(
 ): DataFrame<*> =
     readDelim(
         url.openStream(), delimiter,
-        headers, nullStrings, isCompressed(url),
+        headers, isCompressed(url),
         CSVType.DEFAULT, colTypes,
         skipLines, readLines,
         duplicate, charset,
@@ -148,7 +140,6 @@ public fun DataFrame.Companion.readTSV(
     fileOrUrl: String,
     delimiter: Char = '\t',
     headers: List<String> = listOf(),
-    nullStrings: Set<String> = setOfNullStrings,
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
@@ -159,7 +150,7 @@ public fun DataFrame.Companion.readTSV(
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
             it, delimiter,
-            headers, nullStrings, isCompressed(fileOrUrl),
+            headers, isCompressed(fileOrUrl),
             CSVType.TDF, colTypes,
             skipLines, readLines,
             duplicate, charset,
@@ -171,7 +162,6 @@ public fun DataFrame.Companion.readTSV(
     file: File,
     delimiter: Char = '\t',
     headers: List<String> = listOf(),
-    nullStrings: Set<String> = setOfNullStrings,
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
@@ -180,7 +170,7 @@ public fun DataFrame.Companion.readTSV(
 ): DataFrame<*> =
     readDelim(
         FileInputStream(file), delimiter,
-        headers, nullStrings, isCompressed(file),
+        headers, isCompressed(file),
         CSVType.TDF, colTypes,
         skipLines, readLines,
         duplicate, charset
@@ -216,7 +206,6 @@ public fun DataFrame.Companion.readDelim(
     inStream: InputStream,
     delimiter: Char = ',',
     headers: List<String> = listOf(),
-    nullStrings: Set<String> = setOfNullStrings,
     isCompressed: Boolean = false,
     csvType: CSVType,
     colTypes: Map<String, ColType> = mapOf(),
@@ -231,7 +220,7 @@ public fun DataFrame.Companion.readDelim(
     } else {
         BufferedReader(InputStreamReader(inStream, charset))
     }.run {
-        readDelim(this, getFormat(csvType, delimiter, headers, duplicate), nullStrings, colTypes, skipLines, readLines, parserOptions)
+        readDelim(this, getFormat(csvType, delimiter, headers, duplicate), colTypes, skipLines, readLines, parserOptions)
     }
 
 internal fun isURL(fileOrUrl: String): Boolean = listOf("http:", "https:", "ftp:").any { fileOrUrl.startsWith(it) }
@@ -263,7 +252,6 @@ public fun ColType.toType(): KClass<out Any> = when (this) {
 public fun DataFrame.Companion.readDelim(
     reader: Reader,
     format: CSVFormat = CSVFormat.DEFAULT.withHeader(),
-    nullStrings: Set<String> = setOfNullStrings,
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
@@ -299,11 +287,16 @@ public fun DataFrame.Companion.readDelim(
             val defaultColType = colTypes[".default"]
             val colType = colTypes[colName] ?: defaultColType
             var hasNulls = false
-            val values = records.map { it[colIndex]?.emptyAsNull(nullStrings).also { if (it == null) hasNulls = true } }
+            val values = records.map {
+                val value = it[colIndex]
+                if (value.isEmpty()) {
+                    hasNulls = true
+                    null
+                } else value
+            }
             val column = column(colName, values, hasNulls)
             when (colType) {
                 null -> column.tryParse(parserOptions)
-                ColType.String -> column
                 else -> {
                     val parser = Parsers[colType.toType()]!!
                     column.parse(parser, parserOptions)
@@ -313,13 +306,6 @@ public fun DataFrame.Companion.readDelim(
         return cols.toDataFrame()
     }
 }
-
-internal fun String.emptyAsNull(nullStrings: Set<String>): String? =
-    when {
-        this.isEmpty() -> null
-        nullStrings.contains(this) -> null
-        else -> this
-    }
 
 public fun AnyFrame.writeCSV(file: File, format: CSVFormat = CSVFormat.DEFAULT.withHeader()): Unit =
     writeCSV(FileWriter(file), format)

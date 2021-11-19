@@ -65,9 +65,9 @@ internal object Parsers : GlobalParserOptions {
 
     private val formatters: MutableList<DateTimeFormatter> = mutableListOf()
 
-    private val nullStrings: MutableList<String> = mutableListOf()
+    private val nullStrings: MutableSet<String> = mutableSetOf()
 
-    public val nulls: List<String> get() = nullStrings
+    public val nulls: Set<String> get() = nullStrings
 
     override fun addDateTimeFormat(format: String) {
         formatters.add(DateTimeFormatter.ofPattern(format))
@@ -98,8 +98,7 @@ internal object Parsers : GlobalParserOptions {
 
         locale = Locale.getDefault()
 
-        nullStrings.add("null")
-        nullStrings.add("NULL")
+        nullStrings.addAll(listOf("null", "NULL", "NA", "N/A"))
     }
 
     init {

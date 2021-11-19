@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readJson
@@ -18,7 +19,7 @@ class Read : TestBase() {
             file,
             delimiter = '|',
             headers = listOf("A", "B", "C", "D"),
-            nullStrings = setOf("not assigned")
+            parserOptions = ParserOptions(nulls = setOf("not assigned"))
         )
         // SampleEnd
         df.nrow() shouldBe 3

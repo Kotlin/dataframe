@@ -34,7 +34,7 @@ val df = DataFrame.readCSV(
     file,
     delimiter = '|',
     headers = listOf("A", "B", "C", "D"),
-    nullStrings = setOf("not assigned")
+    parserOptions = ParserOptions(nulls = setOf("not assigned"))
 )
 ```
 
