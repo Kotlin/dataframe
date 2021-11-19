@@ -60,11 +60,11 @@ internal class Integration : JupyterIntegration() {
             render<AnyCol>({ listOf(it).toDataFrame() }, { "DataColumn [${it.nrow()}]" })
             render<GroupBy<*, *>> ({ it.toDataFrame() }, { "GroupBy" })
             render<Pivot<*>> { it.toDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
-            render<PivotGroupBy<*>> { it.toDataFrame().toHTML(config.display) { "GroupedPivot: ${it.size}" } }
+            render<PivotGroupBy<*>> { it.toDataFrame().toHTML(config.display) { "PivotGroupBy: ${it.size}" } }
             render<SplitClauseWithTransform<*, *, *>> ({ it.into() }, { "Split" })
             render<SplitClause<*, *>> ({ it.toDataFrame() }, { "Split" })
             render<MergeClause<*, *, *>> ({ it.into("merged") }, { "Merge" })
-            render<GatherClause<*, *, *, *>> ({ it.into("key", "value") })
+            render<GatherClause<*, *, *, *>> ({ it.into("key", "value") }, { "Gather" })
             render<IMG> { HTML("<img src=\"${it.url}\"/>") }
         }
 
