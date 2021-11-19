@@ -633,7 +633,7 @@ class Modify : TestBase() {
     @Test
     fun addDfs() {
         val df1 = df.select { name named "name2" }
-        val df2 = df1
+        val df2 = df.select { age named "age2" }
         // SampleStart
         df.add(df1, df2)
         // SampleEnd
