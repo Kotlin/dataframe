@@ -91,13 +91,14 @@ merged.split { name }
 <!---FUN splitFrameColumn-->
 
 ```kotlin
-val df1 = dataFrameOf("a", "b")(
-    1, 2,
-    3, 4
+val df1 = dataFrameOf("a", "b", "c")(
+    1, 2, 3,
+    4, 5, 6
 )
 val df2 = dataFrameOf("a", "b")(
     5, 6,
-    7, 8
+    7, 8,
+    9, 10
 )
 val group by columnOf(df1, df2)
 val id by columnOf("x", "y")
