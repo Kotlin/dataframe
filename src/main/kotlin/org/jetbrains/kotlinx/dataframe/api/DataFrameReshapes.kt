@@ -44,9 +44,9 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
 public typealias PivotColumnsSelector<T, C> = Selector<PivotDsl<T>, ColumnSet<C>>
 
 public fun <T> DataFrame<T>.pivot(inward: Boolean? = null, columns: PivotColumnsSelector<T, *>): Pivot<T> = PivotImpl(this, columns, inward)
-public fun <T> DataFrame<T>.pivot(vararg columns: String, inward: Boolean? = false): Pivot<T> = pivot(inward) { columns.toColumns() }
-public fun <T> DataFrame<T>.pivot(vararg columns: Column, inward: Boolean? = false): Pivot<T> = pivot(inward) { columns.toColumns() }
-public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>, inward: Boolean? = false): Pivot<T> = pivot(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivot(vararg columns: String, inward: Boolean? = null): Pivot<T> = pivot(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivot(vararg columns: Column, inward: Boolean? = null): Pivot<T> = pivot(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>, inward: Boolean? = null): Pivot<T> = pivot(inward) { columns.toColumns() }
 
 public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> = pivot(inward, columns).groupByOther().matches()
 public fun <T> DataFrame<T>.pivotMatches(vararg columns: String, inward: Boolean = true): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
