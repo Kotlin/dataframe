@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.internal.codeGen
+package org.jetbrains.kotlinx.dataframe.codeGen
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
