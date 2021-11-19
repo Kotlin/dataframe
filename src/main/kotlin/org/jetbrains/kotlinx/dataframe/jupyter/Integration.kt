@@ -58,12 +58,12 @@ internal class Integration : JupyterIntegration() {
             render<AnyRow>({ it.toDataFrame() }, { "DataRow [${it.ncol}]" })
             render<ColumnGroup<*>> ({ it.df })
             render<AnyCol>({ listOf(it).toDataFrame() }, { "DataColumn [${it.nrow()}]" })
-            render<GroupBy<*, *>> ({ it.toDataFrame() })
+            render<GroupBy<*, *>> ({ it.toDataFrame() }, { "GroupBy" })
             render<Pivot<*>> { it.toDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
             render<PivotGroupBy<*>> { it.toDataFrame().toHTML(config.display) { "GroupedPivot: ${it.size}" } }
-            render<SplitClauseWithTransform<*, *, *>> ({ it.into() })
-            render<SplitClause<*, *>> ({ it.toDataFrame() })
-            render<MergeClause<*, *, *>> ({ it.into("merged") })
+            render<SplitClauseWithTransform<*, *, *>> ({ it.into() }, { "Split" })
+            render<SplitClause<*, *>> ({ it.toDataFrame() }, { "Split" })
+            render<MergeClause<*, *, *>> ({ it.into("merged") }, { "Merge" })
             render<GatherClause<*, *, *, *>> ({ it.into("key", "value") })
             render<IMG> { HTML("<img src=\"${it.url}\"/>") }
         }

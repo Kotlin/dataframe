@@ -36,6 +36,7 @@ internal fun <T, C> DataFrame<T>.sortByImpl(
     columns: SortColumnsSelector<T, C>
 ): DataFrame<T> {
     val sortColumns = getSortColumns(columns, unresolvedColumnsPolicy)
+    if(sortColumns.isEmpty()) return this
 
     val compChain = sortColumns.map {
         when (it.direction) {
