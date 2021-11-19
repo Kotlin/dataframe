@@ -23,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.api.gt
 import org.jetbrains.kotlinx.dataframe.api.implode
 import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.intoColumns
 import org.jetbrains.kotlinx.dataframe.api.intoList
 import org.jetbrains.kotlinx.dataframe.api.keysInto
 import org.jetbrains.kotlinx.dataframe.api.length
@@ -357,6 +358,25 @@ class Modify : TestBase() {
         merged.split { name }
             .match("""(.*) \((.*)\)""")
             .inward("firstName", "lastName")
+        // SampleEnd
+    }
+
+    @Test
+    fun splitFrameColumn() {
+        // SampleStart
+        val df1 = dataFrameOf("a", "b")(
+            1, 2,
+            3, 4
+        )
+        val df2 = dataFrameOf("a", "b")(
+            5, 6,
+            7, 8
+        )
+        val group by columnOf(df1, df2)
+        val id by columnOf("x", "y")
+        val df = dataFrameOf(id, group)
+
+        df.split { group }.intoColumns()
         // SampleEnd
     }
 

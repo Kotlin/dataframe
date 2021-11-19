@@ -57,6 +57,7 @@ import org.jetbrains.kotlinx.dataframe.api.implode
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.inferType
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.intoColumns
 import org.jetbrains.kotlinx.dataframe.api.intoList
 import org.jetbrains.kotlinx.dataframe.api.intoRows
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
@@ -2342,13 +2343,22 @@ class DataFrameTests : BaseTest() {
         updated["group"].kind shouldBe ColumnKind.Value
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test
     fun `merge into same name`() {
-        typed.merge { name and city }.into("age")
+        shouldThrow<IllegalStateException> {
+            typed.merge { name and city }.into("age")
+        }
     }
 
     @Test
     fun `groupBy sort`() {
         typed.groupBy { name }.sortByDesc { age }["Mark"] shouldBe typed.filter { name == "Mark" }.sortBy { age.desc }
+    }
+
+    @Test
+    fun `split into columns`() {
+        val group by frameColumn()
+        typed.groupBy { name }.into(group)
+            .split(group).intoColumns()
     }
 }

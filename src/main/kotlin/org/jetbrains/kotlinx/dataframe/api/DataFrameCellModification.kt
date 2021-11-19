@@ -380,7 +380,7 @@ public data class SplitClauseWithTransform<T, C, R>(
     override fun default(value: R?): SplitWithTransform<T, C, R> = copy(default = value)
 }
 
-public fun <T, C> SplitClause<T, C>.toDataFrame(): DataFrame<T> = by {
+internal fun <T, C> Split<T, C>.toDataFrame(): DataFrame<T> = by {
     when (it) {
         is List<*> -> it
         is AnyFrame -> it.rows()
@@ -416,6 +416,13 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.into(
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.default(value: R?): SplitWithTransform<T, C, R> = by { it }.default(value)
 
 public fun <T> Split<T, String>.default(value: String?): SplitWithTransform<T, String, String> = by { it.splitDefault() }.default(value)
+
+public fun <T> Split<T, AnyFrame>.intoColumns(): DataFrame<T> {
+    require(this is SplitClause<T, AnyFrame>)
+    return df.convert(columns).with {
+        it?.implode { all() }?.get(0)
+    }
+}
 
 @JvmName("intoRowsTC")
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> = by { it }
