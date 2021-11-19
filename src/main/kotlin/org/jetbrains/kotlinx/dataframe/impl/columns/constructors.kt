@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.api.AddDataRowImpl
 import org.jetbrains.kotlinx.dataframe.api.AddExpression
@@ -24,11 +23,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.emptyMany
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
-import org.jetbrains.kotlinx.dataframe.manyOf
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -150,26 +147,26 @@ internal fun <T> guessColumnType(
             }
             DataColumn.createFrameColumn(name, frames).asDataColumn().cast()
         }
-        Many::class -> {
+        List::class -> {
             val nullable = type.isMarkedNullable
-            var isManyOfRows: Boolean? = null
+            var isListOfRows: Boolean? = null
             val lists = values.map {
                 when (it) {
-                    null -> if (nullable) null else emptyMany()
-                    is Many<*> -> {
-                        if (isManyOfRows != false && it.isNotEmpty()) isManyOfRows = it.all { it is AnyRow }
+                    null -> if (nullable) null else emptyList()
+                    is List<*> -> {
+                        if (isListOfRows != false && it.isNotEmpty()) isListOfRows = it.all { it is AnyRow }
                         it
                     }
                     else -> {
-                        if (isManyOfRows != false) isManyOfRows = it is AnyRow
-                        manyOf(it)
+                        if (isListOfRows != false) isListOfRows = it is AnyRow
+                        listOf(it)
                     }
                 }
             }
-            if (isManyOfRows == true) {
+            if (isListOfRows == true) {
                 val frames = lists.map {
                     if (it == null) DataFrame.empty()
-                    else (it as Many<AnyRow>).concat()
+                    else (it as List<AnyRow>).concat()
                 }
                 DataColumn.createFrameColumn(name, frames).cast()
             } else {

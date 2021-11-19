@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import com.beust.klaxon.internal.firstNotNullResult
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
@@ -41,7 +40,7 @@ internal fun concatImpl(dataFrames: List<AnyFrame>): AnyFrame {
             val list = columns.flatMapIndexed { index, col ->
                 if (col != null) {
                     val type = col.type()
-                    if (type.classifier == Many::class) {
+                    if (type.classifier == List::class) {
                         val typeArgument = type.arguments[0].type
                         if (typeArgument != null) {
                             types.add(typeArgument)
@@ -63,7 +62,7 @@ internal fun concatImpl(dataFrames: List<AnyFrame>): AnyFrame {
             val guessType = types.size > 1
             val baseType = baseType(types)
             val targetType = if (guessType || !hasMany) baseType.withNullability(nulls)
-            else Many::class.createTypeWithArgument(baseType.withNullability(manyNulls))
+            else List::class.createTypeWithArgument(baseType.withNullability(manyNulls))
             guessColumnType(name, list, targetType, guessType, defaultValue)
         }
     }

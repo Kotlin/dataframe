@@ -12,11 +12,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.shortPath
-import org.jetbrains.kotlinx.dataframe.impl.EmptyMany
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
 import org.jetbrains.kotlinx.dataframe.impl.api.AggregatedPivot
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
-import org.jetbrains.kotlinx.dataframe.impl.getManyType
+import org.jetbrains.kotlinx.dataframe.impl.getListType
 import kotlin.reflect.KType
 
 internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>) :
@@ -43,7 +42,7 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>) :
                     }
                 }
                 is ValueColumn<*> -> {
-                    allValues.add(NamedValue.create(it.path, it.value.toMany(), getManyType(it.value.type()), EmptyMany))
+                    allValues.add(NamedValue.create(it.path, it.value.toMany(), getListType(it.value.type()), emptyList<Unit>()))
                 }
                 is ColumnGroup<*> -> {
                     val frameType = it.value.type().arguments.singleOrNull()?.type

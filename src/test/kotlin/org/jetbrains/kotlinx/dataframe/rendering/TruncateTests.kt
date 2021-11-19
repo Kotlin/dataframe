@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.rendering
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.manyOf
 import org.junit.Test
 
 class TruncateTests : RenderingTestsBase() {
@@ -23,59 +22,59 @@ class TruncateTests : RenderingTestsBase() {
 
     @Test
     fun truncateMany() {
-        manyOf("1", "2", "34567890").truncate(15) shouldBe "[1, 2, 3456...]"
+        listOf("1", "2", "34567890").truncate(15) shouldBe "[1, 2, 3456...]"
     }
 
     @Test
     fun truncateMany2() {
-        manyOf("1", "2345678", "9").truncate(15) shouldBe "[1, 2345678, 9]"
+        listOf("1", "2345678", "9").truncate(15) shouldBe "[1, 2345678, 9]"
     }
 
     @Test
     fun truncateMany7() {
-        manyOf("1", "23456789", "0").truncate(15) shouldBe "[1, 2345..., 0]"
+        listOf("1", "23456789", "0").truncate(15) shouldBe "[1, 2345..., 0]"
     }
 
     @Test
     fun truncateMany3() {
-        manyOf("1", "2345", "6789").truncate(15) shouldBe "[1, 2345, 6789]"
+        listOf("1", "2345", "6789").truncate(15) shouldBe "[1, 2345, 6789]"
     }
 
     @Test
     fun truncateMany4() {
-        manyOf("1", "234567", "89012").truncate(15) shouldBe "[1, 2..., 8...]"
+        listOf("1", "234567", "89012").truncate(15) shouldBe "[1, 2..., 8...]"
     }
 
     @Test
     fun truncateMany5() {
-        manyOf("1", "234567", "8901").truncate(15) shouldBe "[1, 2..., 8901]"
+        listOf("1", "234567", "8901").truncate(15) shouldBe "[1, 2..., 8901]"
     }
 
     @Test
     fun truncateMany6() {
-        manyOf("1", "234567", "8", "9").truncate(15) shouldBe "[1, 23..., ...]"
+        listOf("1", "234567", "8", "9").truncate(15) shouldBe "[1, 23..., ...]"
     }
 
     @Test
     fun truncateMany8() {
-        manyOf("123456", "789", "0", "1").truncate(15) shouldBe "[123456, ...]"
+        listOf("123456", "789", "0", "1").truncate(15) shouldBe "[123456, ...]"
     }
 
     @Test
     fun truncateMany9() {
-        manyOf("123456789", "789", "0", "1").truncate(15) shouldBe "[12345..., ...]"
+        listOf("123456789", "789", "0", "1").truncate(15) shouldBe "[12345..., ...]"
     }
 
     @Test
     fun truncateManyMany() {
-        manyOf(1).truncate(3) shouldBe "[1]"
-        manyOf(10).truncate(4) shouldBe "[10]"
-        manyOf(1, 2).truncate(4) shouldBe "[..]"
-        manyOf(100).truncate(4) shouldBe "[..]"
-        manyOf(100).truncate(5) shouldBe "[100]"
-        manyOf(1000).truncate(5) shouldBe "[...]"
-        manyOf(1, 2).truncate(5) shouldBe "[...]"
-        manyOf(1, 2).truncate(6) shouldBe "[1, 2]"
+        listOf(1).truncate(3) shouldBe "[1]"
+        listOf(10).truncate(4) shouldBe "[10]"
+        listOf(1, 2).truncate(4) shouldBe "[..]"
+        listOf(100).truncate(4) shouldBe "[..]"
+        listOf(100).truncate(5) shouldBe "[100]"
+        listOf(1000).truncate(5) shouldBe "[...]"
+        listOf(1, 2).truncate(5) shouldBe "[...]"
+        listOf(1, 2).truncate(6) shouldBe "[1, 2]"
     }
 
     @Test
@@ -112,7 +111,7 @@ class TruncateTests : RenderingTestsBase() {
 
     @Test
     fun `run truncate many`() {
-        val value = manyOf("Alice", "Bob", "Billy")
+        val value = listOf("Alice", "Bob", "Billy")
         testTruncates(
             value,
             listOf(

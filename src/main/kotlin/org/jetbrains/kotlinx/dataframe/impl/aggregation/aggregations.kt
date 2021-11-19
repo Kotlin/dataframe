@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.getManyType
+import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KType
 
@@ -22,7 +22,7 @@ internal fun <T, V> AggregateInternalDsl<T>.yieldOneOrMany(
     default: V? = null
 ) {
     if (values.size == 1) yield(path, values[0], type, default)
-    else yield(path, values.toMany(), getManyType(type), default)
+    else yield(path, values.toMany(), getListType(type), default)
 }
 
 @JvmName("toColumnSetForAggregate")

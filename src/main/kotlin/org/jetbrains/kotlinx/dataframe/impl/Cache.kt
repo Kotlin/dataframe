@@ -1,8 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
-import org.jetbrains.kotlinx.dataframe.Many
 import kotlin.reflect.KType
 
-private val manyTypes = mutableMapOf<KType, KType>()
+private val listTypes = mutableMapOf<KType, KType>()
 
-public fun getManyType(valueType: KType): KType = manyTypes.getOrPut(valueType) { Many::class.createTypeWithArgument(valueType) }
+public fun getListType(valueType: KType): KType = listTypes.getOrPut(valueType) { List::class.createTypeWithArgument(valueType) }

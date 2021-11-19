@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -99,7 +98,7 @@ class ReadTests {
             }
         """.trimIndent()
         val df = DataFrame.readJsonStr(data)
-        val values by column<Many<Many<Int>>>()
+        val values by column<List<List<Int>>>()
         df[values][0][1][1] shouldBe 5
     }
 }

@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
@@ -78,7 +77,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.depth
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
-import org.jetbrains.kotlinx.dataframe.emptyMany
 import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.hasNulls
@@ -273,14 +271,14 @@ class DataFrameTreeTests : BaseTest() {
             val value = if (key.city == "Moscow") group.age.toMany()
             else group.age[0]
             (key.name to key.city.toString()) to value
-        }.plus("Bob" to "Moscow" to emptyMany<Int>()).toMap()
+        }.plus("Bob" to "Moscow" to emptyList<Int>()).toMap()
 
         fun <T> DataFrame<T>.check() {
             ncol() shouldBe 1 + typed2.nameAndCity.city.ndistinct()
             this[name] shouldBe typed.name.distinct()
             val data = columns().drop(1)
             data.forEach {
-                if (it.name() == "Moscow") it.type() shouldBe getType<Many<Int>>()
+                if (it.name() == "Moscow") it.type() shouldBe getType<List<Int>>()
                 else it.type() shouldBe getType<Int?>()
             }
 

@@ -3,11 +3,9 @@ package org.jetbrains.kotlinx.dataframe.impl
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
@@ -207,9 +205,9 @@ internal fun <T> DataFrame<T>.splitByIndices(
     }
 }
 
-internal fun <T> List<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<Many<T>> {
+internal fun <T> List<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<List<T>> {
     return (startIndices + size).zipWithNext { start, endExclusive ->
-        subList(start, endExclusive).toMany()
+        subList(start, endExclusive)
     }
 }
 

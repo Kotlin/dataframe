@@ -8,8 +8,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 
-public interface Many<out T> : List<T>
-
 public typealias Predicate<T> = (T) -> Boolean
 
 public typealias Selector<T, R> = T.(T) -> R
@@ -63,7 +61,5 @@ public typealias AnyFrame = DataFrame<*>
 public typealias AnyRow = DataRow<*>
 
 public typealias AnyBaseColumn = BaseColumn<*>
-
-public typealias AnyMany = Many<*>
 
 // endregion
