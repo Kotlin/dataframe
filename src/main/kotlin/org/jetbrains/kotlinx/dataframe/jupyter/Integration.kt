@@ -6,7 +6,9 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
+import org.jetbrains.kotlinx.dataframe.api.GatherClause
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
+import org.jetbrains.kotlinx.dataframe.api.MergeClause
 import org.jetbrains.kotlinx.dataframe.api.Pivot
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.SplitClause
@@ -51,17 +53,18 @@ internal class Integration : JupyterIntegration() {
 
         with(JupyterHtmlRenderer(config.display, this)) {
             render<HtmlData> { it.toJupyter() }
-            render<AnyFrame> { it }
+            render<AnyFrame> ({ it })
             render<FormattedFrame<*>>({ it.df }, modifyConfig = { getDisplayConfiguration(it) })
             render<AnyRow>({ it.toDataFrame() }, { "DataRow [${it.ncol}]" })
-            render<ColumnGroup<*>> { it.df }
+            render<ColumnGroup<*>> ({ it.df })
             render<AnyCol>({ listOf(it).toDataFrame() }, { "DataColumn [${it.nrow()}]" })
-            render<GroupBy<*, *>> { it.toDataFrame() }
+            render<GroupBy<*, *>> ({ it.toDataFrame() })
             render<Pivot<*>> { it.toDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
             render<PivotGroupBy<*>> { it.toDataFrame().toHTML(config.display) { "GroupedPivot: ${it.size}" } }
-            render<SplitClauseWithTransform<*, *, *>> { it.into() }
-            render<SplitClause<*, Iterable<*>>> { it.into() }
-            render<SplitClause<*, AnyFrame>> { it.into() }
+            render<SplitClauseWithTransform<*, *, *>> ({ it.into() })
+            render<SplitClause<*, *>> ({ it.toDataFrame() })
+            render<MergeClause<*, *, *>> ({ it.into("merged") })
+            render<GatherClause<*, *, *, *>> ({ it.into("key", "value") })
             render<IMG> { HTML("<img src=\"${it.url}\"/>") }
         }
 
