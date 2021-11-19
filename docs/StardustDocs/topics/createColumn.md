@@ -3,7 +3,7 @@
 
 This section describes ways to create [`DataColumn`](DataColumn.md).
 
-### by columnOf
+### columnOf
 
 Returns new column with given elements. Column [`type`](DataColumn.md#properties) is deduced from compile-time type of elements, column [`name`](DataColumn.md#properties) is taken from the name of the variable.
 
@@ -26,7 +26,7 @@ val column = columnOf("Alice", "Bob") named "student"
 
 <!---END-->
 
-When column elements are [`DataColumns`](DataColumn.md) it returns [`ColumnGroup`](DataColumn.md#columngroup).
+When column elements are columns themselves, it returns [`ColumnGroup`](DataColumn.md#columngroup):
 
 <!---FUN createColumnGroup-->
 
@@ -66,22 +66,34 @@ listOf("Alice", "Bob").toColumn("name")
 
 <!---END-->
 
-To compute column type at runtime by scanning through actual values, set `inferType` flag. To inspect values only for nullability set `inferNulls` flag:
+To compute column type at runtime by scanning through actual values, set `Infer.Type` option. 
+
+To inspect values only for nullability set `Infer.Nulls` option.
 
 <!---FUN createValueColumnInferred-->
 
 ```kotlin
-val values = listOf("Alice", null, 1, 2.5).subList(2, 4)
+val values: List<Any?> = listOf(1, 2.5)
 
-values.toColumn("data").type willBe typeOf<Any?>()
-values.toColumn("data", inferType = true).type willBe typeOf<Number>()
-values.toColumn("data", inferNulls = true).type willBe typeOf<Any>()
-values.toColumn("data", inferType = true, inferNulls = false).type willBe typeOf<Number?>()
-values.toColumnOf<Number?>("data").type willBe typeOf<Number?>()
+values.toColumn("data") // type: Any?
+values.toColumn("data", Infer.Type) // type: Number
+values.toColumn("data", Infer.Nulls) // type: Any
 ```
 
 <!---END-->
 
+### toColumnOf
 
+Converts `Iterable` of values into column of given type
+
+<!---FUN createValueColumnOfType-->
+
+```kotlin
+val values: List<Any?> = listOf(1, 2.5)
+
+values.toColumnOf<Number?>("data") // type: Number?
+```
+
+<!---END-->
 
 

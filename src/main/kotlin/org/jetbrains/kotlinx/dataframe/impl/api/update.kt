@@ -6,9 +6,10 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
+import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.api.UpdateClause
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.forEachRow
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -26,6 +27,12 @@ import kotlin.reflect.jvm.jvmErasure
 @PublishedApi
 internal fun <T, C> UpdateClause<T, C>.updateImpl(expression: (DataRow<T>, DataColumn<C>, C) -> C): DataFrame<T> = df.replace(columns).with { it.updateImpl(df, filter, expression) }
 
+internal fun <T, C> UpdateClause<T, C>.updateWithValuePerColumnImpl(selector: Selector<DataColumn<C>, C>) = df.replace(columns).with {
+    val value = selector(it, it)
+    val convertedValue = value?.convertTo(it.type()) as C
+    it.updateImpl(df, filter) { _, _, _ -> convertedValue }
+}
+
 internal fun <T, C> DataColumn<C>.updateImpl(
     df: DataFrame<T>,
     filter: RowValueFilter<T, C>?,
@@ -34,11 +41,11 @@ internal fun <T, C> DataColumn<C>.updateImpl(
     val collector = createDataCollector<C>(size, type)
     val src = this
     if (filter == null) {
-        df.forEach { row ->
+        df.forEachRow { row ->
             collector.add(expression(row, src, src[row.index]))
         }
     } else {
-        df.forEach { row ->
+        df.forEachRow { row ->
             val currentValue = row[src]
             val newValue =
                 if (filter.invoke(row, currentValue)) expression(row, src, currentValue) else currentValue

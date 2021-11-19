@@ -9,34 +9,33 @@ The following types of columns can be splitted by default:
 * `List`: split into elements
 * `DataFrame`: split into rows
 
-## Split horizontally
-Reverse operation to [merge](merge.md)
-
 ```kotlin
 df.split { columns }
-    [.by(delimeters) | .with(regex) | .with { splitter }] // how to split
-    .into(columnNames) [ { columnNamesGenerator } ] | .inward(columnNames) [ { columnNamesGenerator } ] // where to store
+    [.by(delimeters) | .by { splitter } | .match(regex)] // how to split cell value
+    [.default(value)] // how to fill nulls
+    .into(columnNames) [ { columnNamesGenerator } ] | .inward(columnNames) [ { columnNamesGenerator } ] // where to store results
 
 splitter = DataRow.(T) -> Iterable<Any>
 columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
 ```
 
-`columnNamesGenerator` is used to generate names for additional columns when the list of explicitly specified `columnNames` was not long enough.  
-`columnIndex` in `columnNamesGenerator` starts with `1` for the first additional column name.  
+`columnNamesGenerator` is used to generate names for additional columns when the list of explicitly specified `columnNames` was not long enough. `columnIndex` starts with `1` for the first additional column name.  
+
 Default `columnNamesGenerator` generates column names `splitted1`, `splitted2`...
 
-Examples:
+## Split horizontally
+Reverse operation to [`merge`](merge.md)
 
 <!---FUN split-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.split { name.firstName }.with { it.chars().toList() }.inplace()
+df.split { name.firstName }.by { it.chars().toList() }.inplace()
 
-df.split { name }.with { it.values() }.into("nameParts")
+df.split { name }.by { it.values() }.into("nameParts")
 
-df.split { name.lastName }.by(" ").inward { "word$it" }
+df.split { name.lastName }.by(" ").default("").inward { "word$it" }
 ```
 
 </tab>
@@ -47,48 +46,54 @@ val name by columnGroup()
 val firstName by name.column<String>()
 val lastName by name.column<String>()
 
-df.split { firstName }.with { it.chars().toList() }.inplace()
+df.split { firstName }.by { it.chars().toList() }.inplace()
 
-df.split { name }.with { it.values() }.into("nameParts")
+df.split { name }.by { it.values() }.into("nameParts")
 
-df.split { lastName }.by(" ").inward { "word$it" }
+df.split { lastName }.by(" ").default("").inward { "word$it" }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.split { "name"["firstName"]<String>() }.with { it.chars().toList() }.inplace()
+df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.inplace()
 
-df.split { name }.with { it.values() }.into("nameParts")
+df.split { name }.by { it.values() }.into("nameParts")
 
-df.split { "name"["lastName"] }.by(" ").inward { "word$it" }
+df.split { "name"["lastName"] }.by(" ").default("").inward { "word$it" }
 ```
 
 </tab></tabs>
 <!---END-->
 
-`String` columns can be splitted with [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
+`String` columns can also be splitted into group matches of [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
 
 <!---FUN splitRegex-->
 
 ```kotlin
-merged.split { name }.with("""(.*) \((.*)\)""".toRegex()).inward("firstName", "lastName")
+merged.split { name }
+    .match("""(.*) \((.*)\)""")
+    .inward("firstName", "lastName")
 ```
 
 <!---END-->
 
 ## Split vertically
-Returns `DataFrame` with duplicated rows for every splitted value. Use `.intoRows()` terminal operation to spread splitted values vertically.
+Returns `DataFrame` with duplicated rows for every splitted value. 
+
+Reverse operation to [`implode`](implode.md).
+
+Use `.intoRows()` terminal operation in `split` configuration to spread splitted values vertically:
 
 <!---FUN splitIntoRows-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.split { name.firstName }.with { it.chars().toList() }.intoRows()
+df.split { name.firstName }.by { it.chars().toList() }.intoRows()
 
-df.split { name }.with { it.values() }.intoRows()
+df.split { name }.by { it.values() }.intoRows()
 ```
 
 </tab>
@@ -98,29 +103,21 @@ df.split { name }.with { it.values() }.intoRows()
 val name by columnGroup()
 val firstName by name.column<String>()
 
-df.split { firstName }.with { it.chars().toList() }.intoRows()
+df.split { firstName }.by { it.chars().toList() }.intoRows()
 
-df.split { name }.with { it.values() }.intoRows()
+df.split { name }.by { it.values() }.intoRows()
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.split { "name"["firstName"]<String>() }.with { it.chars().toList() }.intoRows()
+df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.intoRows()
 
-df.split { group("name") }.with { it.values() }.intoRows()
+df.split { group("name") }.by { it.values() }.intoRows()
 ```
 
 </tab></tabs>
 <!---END-->
 
-This operation is reverse to [mergeRows](mergeRows.md).
-
-`split { column }...intoRows()` 
-
-is equivalent to 
-
-`split { column }...inplace().explode { column }`
-
-See [explode](explode.md) for details
+Equals to `split { column }...inplace().explode { column }`. See [`explode`](explode.md) for details.

@@ -2,208 +2,127 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-To count number of rows that satisfy to [condition](DataRow.md#row-conditions) use `count`:
+Available statistics:
+* [count](count.md)
+* [sum](sum.md)
+* [min/max](minmax.md)
+* [mean](mean.md)
+* [median](median.md)
+* [std](std.md)
 
-<!---FUN count-->
+Every statistic can be used in aggregations of:
+* `DataFrame`
+* `DataColumn`
+* [`GroupBy`](#groupby-statistics)
+* [`Pivot`](aggregatePivot.md)
+* [`PivotGroupBy`](aggregatePivot.md)
+
+<!---FUN statisticAggregations-->
 
 ```kotlin
-df.count { age > 15 }
+df.mean()
+df.age.sum()
+df.groupBy { city }.mean()
+df.pivot { city }.median()
+df.pivot { city }.groupBy { name.lastName }.std()
 ```
 
 <!---END-->
 
-### Single column statistics
+[sum](sum.md), [mean](mean.md), [std](std.md) are available for numeric columns of types `Int`, `Double`, `Float`, `BigDecimal`, `Long`, `Byte`.
 
-* `sum` and `mean` are available for numeric columns
-* `min`, `max` and `median` are available for comparable columns
+[min/max](minmax.md), [median](median.md) are available for `Comparable` columns.
 
-<!---FUN columnStats-->
-<tabs>
-<tab title="Properties">
+When statistics `x` is applied to several columns, it can be computed in several modes:
+* `x(): DataRow` computes separate value per every suitable column
+* `x { columns }: Value` computes single value across all given columns 
+* `xFor { columns }: DataRow` computes separate value per every given column
+* `xOf { rowExpression }: Value` computes single value across results of [row expression](DataRow.md#row-expressions) evaluated for every row
 
-```kotlin
-df.sum { weight }
-df.min { age }
-df.mean { age }
-df.median { age }
+[min](minmax.md) and [max](minmax.md) statistics have additional mode `by`:
+* `minBy { rowExpression }: DataRow` finds a row with minimal result of [expression](DataRow.md#row-expressions)
 
-df.weight.sum()
-df.age.max()
-df.age.mean()
-df.age.median()
-```
-
-</tab>
-<tab title="Accessors">
+<!---FUN statisticModes-->
 
 ```kotlin
-val weight by column<Int?>()
-val age by column<Int>()
-
-df.sum { weight }
-df.min { age }
-df.mean { age }
-df.median { age }
-
-df.sum(weight)
-df.min(age)
-df.mean(age)
-df.median(age)
-
-df[weight].sum()
-df[age].mean()
-df[age].min()
-df[age].median()
+df.sum() // sum of values per every numeric column
+df.sum { age and weight } // sum of all values in `age` and `weight`
+df.sumFor { age and weight } // sum of values per `age` and `weight` separately
+df.sumOf { (weight ?: 0) / age } // sum of expression evaluated for every row
 ```
 
-</tab>
-<tab title="Strings">
-
-```kotlin
-df.sum("weight")
-df.min("age")
-df.mean("age")
-df.median("age")
-```
-
-</tab></tabs>
 <!---END-->
 
-### Multiple columns statistics
+### groupBy statistics
 
-When several columns are specified, statistical operations compute a single value across all given columns
+When statistics is applied to `GroupBy`, it is computed for every data group. 
 
-<!---FUN multipleColumnsStat-->
-<tabs>
-<tab title="Properties">
+If statistic is applied in a mode that returns a single value for every data group, it will be stored in a single column named by statistic name.
 
-```kotlin
-df.min { intCols() }
-df.max { name.firstName and name.lastName }
-df.sum { age and weight }
-df.mean { cols(1, 3).asNumbers() }
-df.median { name.cols().asComparable() }
-```
-
-</tab>
-<tab title="Accessors">
+<!---FUN statisticGroupBySingle-->
 
 ```kotlin
-val name by columnGroup()
-val firstName by name.column<String>()
-val lastName by name.column<String>()
-val age by column<Int>()
-val weight by column<Int?>()
-
-df.min { intCols() }
-
-df.max { firstName and lastName }
-// or
-df.max(firstName, lastName)
-
-df.sum { age and weight }
-// or
-df.sum(age, weight)
-
-df.mean { cols(1, 3).asNumbers() }
-df.median { name.cols().asComparable() }
+df.groupBy { city }.mean { age } // [`city`, `mean`]
+df.groupBy { city }.meanOf { age / 2 } // [`city`, `mean`]
 ```
 
-</tab>
-<tab title="Strings">
-
-```kotlin
-df.min { intCols() }
-
-df.max { "name"["firstName"].asComparable() and "name"["lastName"].asComparable() }
-
-df.sum("age", "weight")
-// or
-df.sum { "age"<Int>() and "weight"<Int?>() }
-
-df.mean { cols(1, 3).asNumbers() }
-df.median { name.cols().asComparable() }
-```
-
-</tab></tabs>
 <!---END-->
 
-To compute statistics separately for every column, use operations with `-for` suffix:
+You can also pass custom name for aggregated column:
 
-<!---FUN columnsFor-->
-<tabs>
-<tab title="Properties">
+<!---FUN statisticGroupBySingleNamed-->
 
 ```kotlin
-df.minFor { intCols() }
-df.maxFor { name.firstName and name.lastName }
-df.sumFor { age and weight }
-df.meanFor { cols(1, 3).asNumbers() }
-df.medianFor { name.cols().asComparable() }
+df.groupBy { city }.mean("mean age") { age } // [`city`, `mean age`]
+df.groupBy { city }.meanOf("custom") { age / 2 } // [`city`, `custom`]
 ```
 
-</tab>
-<tab title="Strings">
-
-```kotlin
-df.minFor { intCols() }
-df.maxFor { "name"["firstName"].asComparable() and "name"["lastName"].asComparable() }
-
-df.sumFor("age", "weight")
-// or
-df.sumFor { "age"<Int>() and "weight"<Int?>() }
-
-df.meanFor { cols(1, 3).asNumbers() }
-df.medianFor { name.cols().asComparable() }
-```
-
-</tab></tabs>
 <!---END-->
 
-### Row expression statistics
+If statistic is applied in a mode that returns separate value per every column in data group, aggregated values will be stored in columns with original column names.
 
-To compute statistics for some expression evaluated for every row, you should use operations with `-of` suffix:
-
-<!---FUN ofExpressions-->
-<tabs>
-<tab title="Properties">
+<!---FUN statisticGroupByMany-->
 
 ```kotlin
-df.minOf { 2021 - age }
-df.maxOf { name.firstName.length + name.lastName.length }
-df.sumOf { weight?.let { it - 50 } }
-df.meanOf { Math.log(age.toDouble()) }
-df.medianOf { city?.length }
+df.groupBy { city }.meanFor { age and weight } // [`city`, `age`, `weight`]
+df.groupBy { city }.mean() // [`city`, `age`, `weight`, ...]
 ```
 
-</tab>
-<tab title="Accessors">
+<!---END-->
+
+### pivot statistics
+
+When statistics is applied to `Pivot` or `PivotGroupBy`, it is computed for every data group.
+
+If statistic is applied in a mode that returns a single value for every data group, it will be stored in matrix cell without any name.
+
+<!---FUN statisticPivotSingle-->
 
 ```kotlin
-val name by columnGroup()
-val firstName by name.column<String>()
-val lastName by name.column<String>()
-val age by column<Int>()
-val weight by column<Int?>()
-val city by column<String?>()
-
-df.minOf { 2021 - age() }
-df.maxOf { firstName().length + lastName().length }
-df.sumOf { weight()?.let { it - 50 } }
-df.meanOf { Math.log(age().toDouble()) }
-df.medianOf { city()?.length }
+df.groupBy { city }.pivot { name.lastName }.mean { age }
+df.groupBy { city }.pivot { name.lastName }.meanOf { age / 2 }
 ```
 
-</tab>
-<tab title="Strings">
+<!---END-->
+
+If statistic is applied in such a way that it returns separate value per every column in data group, every cell in matrix will contain `DataRow` with values for every aggregated column.
+
+<!---FUN statisticPivotMany-->
 
 ```kotlin
-df.minOf { 2021 - "age"<Int>() }
-df.maxOf { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length }
-df.sumOf { "weight"<Int?>()?.let { it - 50 } }
-df.meanOf { Math.log("age"<Int>().toDouble()) }
-df.medianOf { "city"<String?>()?.length }
+df.groupBy { city }.pivot { name.lastName }.meanFor { age and weight }
+df.groupBy { city }.pivot { name.lastName }.mean()
 ```
 
-</tab></tabs>
+<!---END-->
+
+To group columns in aggregation results not by pivoted values, but by aggregated columns, apply `separate` flag:
+
+<!---FUN statisticPivotManySeparate-->
+
+```kotlin
+df.groupBy { city }.pivot { name.lastName }.meanFor(separate = true) { age and weight }
+df.groupBy { city }.pivot { name.lastName }.mean(separate = true)
+```
+
 <!---END-->

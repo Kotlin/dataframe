@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.person
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.createDataFrame
 import org.jetbrains.kotlinx.dataframe.column
 import org.junit.Test
 
@@ -14,12 +14,19 @@ class BuildTests {
     @Test
     fun test3() {
         val list = persons + listOf(null)
-        val df = list.toDataFrame()
+        val df = list.createDataFrame()
         df.nrow() shouldBe 3
     }
 
     @Test(expected = IllegalArgumentException::class)
     fun `unequal column sizes`() {
-        persons.toDataFrame() + column("id", listOf(1, 2, 3))
+        persons.createDataFrame() + column("id", listOf(1, 2, 3))
+    }
+
+    @Test
+    fun `create dataframe`() {
+        persons.createDataFrame {
+            expr { it.age + 4 } into "age"
+        }
     }
 }

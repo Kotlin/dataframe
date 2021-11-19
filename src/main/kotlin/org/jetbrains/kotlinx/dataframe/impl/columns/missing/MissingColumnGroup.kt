@@ -5,21 +5,14 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnGroup
 
 internal class MissingColumnGroup<T> : MissingDataColumn<DataRow<T>>(), DataColumnGroup<T> {
 
-    override fun <R> get(column: ColumnReference<R>) = MissingValueColumn<R>()
-
-    override fun <R> get(column: ColumnReference<DataRow<R>>) = MissingColumnGroup<R>()
-
-    override fun <R> get(column: ColumnReference<DataFrame<R>>) = MissingFrameColumn<R>()
-
     override val df: DataFrame<T>
         get() = throw UnsupportedOperationException()
 
-    override fun tryGetColumn(columnName: String): AnyCol? {
+    override fun getColumnOrNull(name: String): AnyCol? {
         return null
     }
 
@@ -35,11 +28,11 @@ internal class MissingColumnGroup<T> : MissingDataColumn<DataRow<T>>(), DataColu
 
     override fun columns(): List<AnyCol> = emptyList()
 
+    override fun columnNames(): List<String> = emptyList()
+
     override fun getColumnIndex(name: String) = -1
 
     override fun kind() = super.kind()
-
-    override fun set(columnName: String, value: AnyCol) = throw UnsupportedOperationException()
 
     override fun get(firstIndex: Int, vararg otherIndices: Int) = throw UnsupportedOperationException()
 

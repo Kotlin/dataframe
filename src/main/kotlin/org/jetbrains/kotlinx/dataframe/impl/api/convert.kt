@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.api.ConvertClause
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -23,8 +24,10 @@ import java.time.ZoneId
 import java.util.TimeZone
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.jvmErasure
 
 @PublishedApi
 internal fun <T, C, R> ConvertClause<T, C>.convertRowCellImpl(type: KType, rowConverter: RowValueExpression<T, C, R>): DataFrame<T> =
@@ -72,9 +75,17 @@ internal fun getConverter(from: KType, to: KType): TypeConverter? = convertersCa
 
 internal typealias TypeConverter = (Any) -> Any?
 
+internal fun Any.convertTo(type: KType): Any? {
+    val clazz = javaClass.kotlin
+    if (clazz.isSubclassOf(type.jvmErasure)) return this
+    val converter = getConverter(clazz.createStarProjectedType(false), type)
+    require(converter != null) { "Can not convert $this to type $type" }
+    return converter(this)
+}
+
 internal inline fun <T> convert(crossinline converter: (T) -> Any?): TypeConverter = { converter(it as T) }
 
-internal fun createConverter(from: KType, to: KType): TypeConverter? {
+internal fun createConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? {
     if (from.arguments.isNotEmpty() || to.arguments.isNotEmpty()) return null
     if (from.isMarkedNullable) {
         val res = createConverter(from.withNullability(false), to) ?: return null
@@ -86,7 +97,7 @@ internal fun createConverter(from: KType, to: KType): TypeConverter? {
     if (fromClass == toClass) return { it }
 
     return when {
-        fromClass == String::class -> Parsers[to]?.toConverter()
+        fromClass == String::class -> Parsers[to]?.toConverter(options)
         toClass == String::class -> convert<Any> { it.toString() }
         fromClass == Number::class -> when (toClass) {
             Double::class -> convert<Number> { it.toDouble() }
@@ -133,6 +144,13 @@ internal fun createConverter(from: KType, to: KType): TypeConverter? {
             Long::class -> convert<Float> { it.toLong() }
             Int::class -> convert<Float> { it.toInt() }
             BigDecimal::class -> convert<Float> { it.toBigDecimal() }
+            else -> null
+        }
+        fromClass == BigDecimal::class -> when (toClass) {
+            Double::class -> convert<BigDecimal> { it.toDouble() }
+            Int::class -> convert<BigDecimal> { it.toInt() }
+            Float::class -> convert<BigDecimal> { it.toFloat() }
+            Long::class -> convert<BigDecimal> { it.toLong() }
             else -> null
         }
         else -> null

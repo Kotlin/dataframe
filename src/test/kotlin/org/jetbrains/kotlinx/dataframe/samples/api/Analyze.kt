@@ -2,13 +2,16 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.asComparable
-import org.jetbrains.kotlinx.dataframe.api.asGroupedDataFrame
+import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.div
 import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.groupByOther
+import org.jetbrains.kotlinx.dataframe.api.length
+import org.jetbrains.kotlinx.dataframe.api.matches
 import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.maxBy
 import org.jetbrains.kotlinx.dataframe.api.maxByOrNull
@@ -26,12 +29,13 @@ import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.minFor
 import org.jetbrains.kotlinx.dataframe.api.minOf
 import org.jetbrains.kotlinx.dataframe.api.minOrNull
-import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.pivotCount
-import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.pivotMatches
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.api.stdFor
+import org.jetbrains.kotlinx.dataframe.api.stdOf
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.sumFor
 import org.jetbrains.kotlinx.dataframe.api.sumOf
@@ -58,9 +62,241 @@ class Analyze : TestBase() {
     }
 
     @Test
-    fun count() {
+    fun schema() {
+        // SampleStart
+        df.schema()
+        // SampleEnd
+    }
+
+    @Test
+    fun schemaGroupBy() {
+        // SampleStart
+        df.groupBy { city }.schema()
+        // SampleEnd
+    }
+
+    @Test
+    fun describe() {
+        // SampleStart
+        df.describe()
+        // SampleEnd
+    }
+
+    @Test
+    fun describeColumns_properties() {
+        // SampleStart
+        df.describe { age and name.all() }
+        // SampleEnd
+    }
+
+    @Test
+    fun describeColumns_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val name by columnGroup()
+
+        df.describe { age and name.all() }
+        // SampleEnd
+    }
+
+    @Test
+    fun describeColumns_strings() {
+        // SampleStart
+        df.describe { "age" and "name".all() }
+        // SampleEnd
+    }
+
+    @Test
+    fun countCondition() {
         // SampleStart
         df.count { age > 15 }
+        // SampleEnd
+    }
+
+    @Test
+    fun count() {
+        // SampleStart
+        df.count()
+        // SampleEnd
+    }
+
+    @Test
+    fun countAggregation() {
+        // SampleStart
+        df.groupBy { city }.count()
+        df.pivot { city }.count { age > 18 }
+        df.pivot { name.firstName }.groupBy { name.lastName }.count()
+        // SampleEnd
+    }
+
+    @Test
+    fun sumAggregations() {
+        // SampleStart
+        df.age.sum()
+        df.groupBy { city }.sum()
+        df.pivot { city }.sum()
+        df.pivot { city }.groupBy { name.lastName }.sum()
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticModes() {
+        // SampleStart
+        df.sum() // sum of values per every numeric column
+        df.sum { age and weight } // sum of all values in `age` and `weight`
+        df.sumFor { age and weight } // sum of values per `age` and `weight` separately
+        df.sumOf { (weight ?: 0) / age } // sum of expression evaluated for every row
+        // SampleEnd
+    }
+
+    @Test
+    fun minmaxModes() {
+        // SampleStart
+        df.min() // min of values per every comparable column
+        df.min { age and weight } // min of all values in `age` and `weight`
+        df.minFor { age and weight } // min of values per `age` and `weight` separately
+        df.minOf { (weight ?: 0) / age } // min of expression evaluated for every row
+        df.minBy { age } // DataRow with minimal `age`
+        // SampleEnd
+    }
+
+    @Test
+    fun minmaxAggregations() {
+        // SampleStart
+        df.min()
+        df.age.min()
+        df.groupBy { city }.min()
+        df.pivot { city }.min()
+        df.pivot { city }.groupBy { name.lastName }.min()
+        // SampleEnd
+    }
+
+    @Test
+    fun medianModes() {
+        // SampleStart
+        df.median() // median of values per every comparable column
+        df.median { age and weight } // median of all values in `age` and `weight`
+        df.medianFor { age and weight } // median of values per `age` and `weight` separately
+        df.medianOf { (weight ?: 0) / age } // median of expression evaluated for every row
+        // SampleEnd
+    }
+
+    @Test
+    fun medianAggregations() {
+        // SampleStart
+        df.median()
+        df.age.median()
+        df.groupBy { city }.median()
+        df.pivot { city }.median()
+        df.pivot { city }.groupBy { name.lastName }.median()
+        // SampleEnd
+    }
+
+    @Test
+    fun meanModes() {
+        // SampleStart
+        df.mean() // mean of values per every numeric column
+        df.mean(skipNA = true) { age and weight } // mean of all values in `age` and `weight`, skips NA
+        df.meanFor(skipNA = true) { age and weight } // mean of values per `age` and `weight` separately, skips NA
+        df.meanOf { (weight ?: 0) / age } // median of expression evaluated for every row
+        // SampleEnd
+    }
+
+    @Test
+    fun meanAggregations() {
+        // SampleStart
+        df.mean()
+        df.age.mean()
+        df.groupBy { city }.mean()
+        df.pivot { city }.mean()
+        df.pivot { city }.groupBy { name.lastName }.mean()
+        // SampleEnd
+    }
+
+    @Test
+    fun stdModes() {
+        // SampleStart
+        df.std() // std of values per every numeric column
+        df.std { age and weight } // std of all values in `age` and `weight`
+        df.stdFor { age and weight } // std of values per `age` and `weight` separately, skips NA
+        df.stdOf { (weight ?: 0) / age } // std of expression evaluated for every row
+        // SampleEnd
+    }
+
+    @Test
+    fun stdAggregations() {
+        // SampleStart
+        df.std()
+        df.age.std()
+        df.groupBy { city }.std()
+        df.pivot { city }.std()
+        df.pivot { city }.groupBy { name.lastName }.std()
+        // SampleEnd
+    }
+
+    @Test
+    fun meanAggregationsSkipNA() {
+        // SampleStart
+        df.mean(skipNA = true)
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticAggregations() {
+        // SampleStart
+        df.mean()
+        df.age.sum()
+        df.groupBy { city }.mean()
+        df.pivot { city }.median()
+        df.pivot { city }.groupBy { name.lastName }.std()
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticGroupBySingle() {
+        // SampleStart
+        df.groupBy { city }.mean { age } // [`city`, `mean`]
+        df.groupBy { city }.meanOf { age / 2 } // [`city`, `mean`]
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticGroupBySingleNamed() {
+        // SampleStart
+        df.groupBy { city }.mean("mean age") { age } // [`city`, `mean age`]
+        df.groupBy { city }.meanOf("custom") { age / 2 } // [`city`, `custom`]
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticGroupByMany() {
+        // SampleStart
+        df.groupBy { city }.meanFor { age and weight } // [`city`, `age`, `weight`]
+        df.groupBy { city }.mean() // [`city`, `age`, `weight`, ...]
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticPivotSingle() {
+        // SampleStart
+        df.groupBy { city }.pivot { name.lastName }.mean { age }
+        df.groupBy { city }.pivot { name.lastName }.meanOf { age / 2 }
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticPivotMany() {
+        // SampleStart
+        df.groupBy { city }.pivot { name.lastName }.meanFor { age and weight }
+        df.groupBy { city }.pivot { name.lastName }.mean()
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticPivotManySeparate() {
+        // SampleStart
+        df.groupBy { city }.pivot { name.lastName }.meanFor(separate = true) { age and weight }
+        df.groupBy { city }.pivot { name.lastName }.mean(separate = true)
         // SampleEnd
     }
 
@@ -298,18 +534,18 @@ class Analyze : TestBase() {
     }
 
     @Test
-    fun dataFrameToGrouped() {
+    fun dataFrameToGroupBy() {
         // SampleStart
         val key by columnOf(1, 2) // create int column with name "key"
         val data by columnOf(df[0..3], df[4..6]) // create frame column with name "data"
         val df = dataFrameOf(key, data) // create dataframe with two columns
 
-        df.asGroupedDataFrame { data } // convert dataframe to GroupedDataFrame by interpreting 'data' column as groups
+        df.asGroupBy { data } // convert dataframe to GroupBy by interpreting 'data' column as groups
         // SampleEnd
     }
 
     @Test
-    fun groupedDataFrameToFrame() {
+    fun groupByToFrame() {
         // SampleStart
         df.groupBy { city }.toDataFrame()
         // SampleEnd
@@ -490,18 +726,9 @@ class Analyze : TestBase() {
     }
 
     @Test
-    fun groupByUnion() {
-        // SampleStart
-        df.groupBy { city }.union()
-        // SampleEnd
-    }
-
-    @Test
     fun pivot_properties() {
         // SampleStart
         df.pivot { city }
-        df.pivot { city and name.firstName }
-        df.pivot { city then name.lastName }
         // SampleEnd
     }
 
@@ -509,11 +736,8 @@ class Analyze : TestBase() {
     fun pivot_accessors() {
         // SampleStart
         val city by column<String?>()
-        val name by columnGroup()
-        val firstName by name.column<String>()
 
         df.pivot { city }
-        df.pivot { city and firstName }
         // SampleEnd
     }
 
@@ -521,7 +745,34 @@ class Analyze : TestBase() {
     fun pivot_strings() {
         // SampleStart
         df.pivot("city")
+        // SampleEnd
+    }
+
+    @Test
+    fun pivot2_properties() {
+        // SampleStart
+        df.pivot { city and name.firstName }
+        df.pivot { city then name.firstName }
+        // SampleEnd
+    }
+
+    @Test
+    fun pivot2_accessors() {
+        // SampleStart
+        val city by column<String?>()
+        val name by columnGroup()
+        val firstName by name.column<String>()
+
+        df.pivot { city and firstName }
+        df.pivot { city then firstName }
+        // SampleEnd
+    }
+
+    @Test
+    fun pivot2_strings() {
+        // SampleStart
         df.pivot { "city" and "name"["firstName"] }
+        df.pivot { "city" then "name"["firstName"] }
         // SampleEnd
     }
 
@@ -545,56 +796,6 @@ class Analyze : TestBase() {
     fun pivotInward_strings() {
         // SampleStart
         df.pivot("city", inward = true)
-        // SampleEnd
-    }
-
-    @Test
-    fun pivotAnd_properties() {
-        // SampleStart
-        df.pivotCount(inward = true) { name.firstName }.print() // ["city"]["Moscow"].print()
-        // SampleEnd
-    }
-
-    @Test
-    fun pivotAnd_accessors() {
-        // SampleStart
-        val city by column<String?>()
-        val name by columnGroup()
-        val firstName by name.column<String>()
-
-        df.pivot { city and firstName }
-        // SampleEnd
-    }
-
-    @Test
-    fun pivotAnd_strings() {
-        // SampleStart
-        df.pivot { "city" and "name"["firstName"] }
-        // SampleEnd
-    }
-
-    @Test
-    fun pivotThen_properties() {
-        // SampleStart
-        df.pivot { city then name.firstName }
-        // SampleEnd
-    }
-
-    @Test
-    fun pivotThen_accessors() {
-        // SampleStart
-        val city by column<String?>()
-        val name by columnGroup()
-        val firstName by name.column<String>()
-
-        df.pivot { city then firstName }
-        // SampleEnd
-    }
-
-    @Test
-    fun pivotThen_strings() {
-        // SampleStart
-        df.pivot { "city" then "name"["firstName"] }
         // SampleEnd
     }
 
@@ -633,6 +834,13 @@ class Analyze : TestBase() {
         df.pivot("city").groupBy("name")
         // same as
         df.groupBy("name").pivot("city")
+        // SampleEnd
+    }
+
+    @Test
+    fun pivotGroupByOther() {
+        // SampleStart
+        df.pivot { city }.groupByOther()
         // SampleEnd
     }
 
@@ -828,6 +1036,24 @@ class Analyze : TestBase() {
             }
             count() into "total"
         }
+        // SampleEnd
+    }
+
+    @Test
+    fun pivotCount() {
+        // SampleStart
+        df.pivotCount { city }
+        // same as
+        df.pivot(inward = true) { city }.groupByOther().count()
+        // SampleEnd
+    }
+
+    @Test
+    fun pivotMatches() {
+        // SampleStart
+        df.pivotMatches { city }
+        // same as
+        df.pivot(inward = true) { city }.groupByOther().matches()
         // SampleEnd
     }
 }

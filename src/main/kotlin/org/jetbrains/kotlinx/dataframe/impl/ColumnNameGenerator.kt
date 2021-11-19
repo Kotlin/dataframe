@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.DataColumn
 
 internal class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
 
@@ -13,7 +12,7 @@ internal class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
         var name = preferredName
         var k = 1
         while (usedNames.contains(name)) {
-            name = "${preferredName}_${k++}"
+            name = "${preferredName}${k++}"
         }
         usedNames.add(name)
         colNames.add(name)
@@ -36,5 +35,3 @@ internal class ColumnNameGenerator(columnNames: List<String> = emptyList()) {
 internal fun AnyFrame.nameGenerator() = ColumnNameGenerator(columnNames())
 
 internal fun nameGenerator(vararg usedNames: String) = ColumnNameGenerator(usedNames.asList())
-
-internal fun <C> DataColumn<C>.ensureUniqueName(nameGenerator: ColumnNameGenerator) = rename(nameGenerator.addUnique(name()))

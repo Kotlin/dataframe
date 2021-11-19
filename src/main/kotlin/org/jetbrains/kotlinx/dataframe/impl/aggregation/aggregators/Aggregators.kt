@@ -24,8 +24,8 @@ internal object Aggregators {
     val min by preservesType<Comparable<Any?>> { minOrNull() }
     val max by preservesType<Comparable<Any?>> { maxOrNull() }
     val std by changesType<Number?, Double>({ std(it) }) { std() }
-    val mean by withOption<Boolean, Number, Double> { skipNa ->
-        changesType({ mean(it, skipNa) }) { mean(skipNa) }
+    val mean by withOption<Boolean, Number, Double> { skipNA ->
+        changesType({ mean(it, skipNA) }) { mean(skipNA) }
     }
     val median by preservesType<Comparable<Any?>> { median(it) }
     val sum by extendsNumbers { sum(it) }

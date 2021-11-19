@@ -14,32 +14,56 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateBodyInternal
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 
-internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T>, AggregatableInternal<T> {
+internal open class DataFrameImpl<T>(cols: List<AnyCol>) : DataFrame<T>, AggregatableInternal<T> {
 
-    private val nrow: Int = columns.firstOrNull()?.size ?: 0
+    private val columns: List<AnyCol>
+
+    private val columnsMap: Map<String, Int>
+
+    private val nrow: Int
+
+    init {
+        columnsMap = mutableMapOf()
+
+        // check that column sizes are equal
+        nrow = cols.firstOrNull()?.size ?: 0
+        val invalidSizeColumns = cols.filter { it.size != nrow }
+        require(invalidSizeColumns.isEmpty()) {
+            "Unequal column sizes:\n${cols.joinToString("\n") { it.name + ": " + it.size }}"
+        }
+
+        // check that column names are unique
+        var hasUntitledColumns = false
+        cols.forEachIndexed { i, col ->
+            val name = col.name
+            if (name == "") hasUntitledColumns = true
+            else {
+                require(!columnsMap.containsKey(name)) {
+                    val names = cols.groupBy { it.name }.filter { it.key != "" && it.value.size > 1 }.map { it.key }
+                    "Duplicate column names: $names\nAll column names: ${cols.map { it.name }}"
+                }
+                columnsMap[name] = i
+            }
+        }
+
+        // generate unique names for unnamed columns
+        if (hasUntitledColumns) {
+            val nameGenerator = ColumnNameGenerator(cols.map { it.name })
+            columns = cols.mapIndexed { i, col ->
+                val name = col.name
+                if (name == "") {
+                    val uniqueName = nameGenerator.addUnique("untitled")
+                    val renamed = col.rename(uniqueName)
+                    columnsMap[uniqueName] = i
+                    renamed
+                } else col
+            }
+        } else columns = cols
+    }
 
     override fun nrow() = nrow
 
-    private val columnsMap: MutableMap<String, Int>
-
-    init {
-
-        val invalidSizeColumns = columns.filter { it.size != nrow() }
-        require(invalidSizeColumns.isEmpty()) { "Unequal column sizes:\n${columns.joinToString("\n") { it.name + " (" + it.size + ")" }}" }
-
-        columnsMap = mutableMapOf()
-        columns.forEachIndexed { i, col ->
-            val name = col.name
-            if (columnsMap.containsKey(name)) {
-                if (name != "") {
-                    val names = columns.groupBy { it.name }.filter { it.key != "" && it.value.size > 1 }.map { it.key }
-                    throw IllegalArgumentException("Duplicate column names: $names. All columns: ${columnNames()}")
-                }
-            } else columnsMap[name] = i
-        }
-    }
-
-    override fun getColumnIndex(columnName: String) = columnsMap[columnName] ?: -1
+    override fun getColumnIndex(name: String) = columnsMap[name] ?: -1
 
     override fun equals(other: Any?): Boolean {
         val df = other as? AnyFrame ?: return false
@@ -50,19 +74,12 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T>, 
 
     override fun toString() = renderToString()
 
-    override fun set(columnName: String, value: AnyCol) {
-        require(value.size == nrow()) { "Invalid column size for column '$columnName'. Expected: ${nrow()}, actual: ${value.size}" }
-
-        val renamed = value.rename(columnName)
-        val index = getColumnIndex(columnName)
-        val newCols = if (index == -1) columns + renamed else columns.mapIndexed { i, col -> if (i == index) renamed else col }
-        columnsMap[columnName] = if (index == -1) ncol() else index
-        columns = newCols
-    }
-
     override fun columns() = columns
 
-    override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) = aggregate(body as AggregateGroupedBody<T, R>).df()
+    override fun columnNames() = columns.map { it.name() }
+
+    override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) =
+        aggregate(body as AggregateGroupedBody<T, R>).df()
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all() }
 
@@ -120,4 +137,6 @@ internal open class DataFrameImpl<T>(var columns: List<AnyCol>) : DataFrame<T>, 
                 }
             }
     }
+
+    override fun getColumn(index: Int) = columns[index]
 }

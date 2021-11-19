@@ -1,10 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation.modes
 
-import org.jetbrains.dataframe.*
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Grouped
-import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
+import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
@@ -23,7 +22,7 @@ internal fun <T, R, C> Aggregator<*, R>.aggregateAll(
 ): DataFrame<T> = data.aggregateAll(cast(), columns, name)
 
 internal fun <T, R, C> Aggregator<*, R>.aggregateAll(
-    data: GroupedPivot<T>,
+    data: PivotGroupBy<T>,
     columns: ColumnsSelector<T, C>
 ): DataFrame<T> = data.aggregateAll(cast(), columns)
 
@@ -45,7 +44,7 @@ internal fun <T, C, R> Grouped<T>.aggregateAll(
     }
 }
 
-internal fun <T, C, R> GroupedPivot<T>.aggregateAll(
+internal fun <T, C, R> PivotGroupBy<T>.aggregateAll(
     aggregator: Aggregator<C, R>,
     columns: ColumnsSelector<T, C>
 ): DataFrame<T> = aggregateInternal {

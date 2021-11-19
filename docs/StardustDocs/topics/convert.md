@@ -1,22 +1,18 @@
 [//]: # (title: convert)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` with changed values in some columns. Column types can be changed.
-
-#### Syntax
+Returns `DataFrame` with changed values in some columns. Allows to change column types.
 
 ```kotlin
 convert { columnsSelector }
-    .with { rowExpression } | .withConst(value) | .withRowCol { rowColExpression } | to<Type>() | to { colExpression }
+    .with { rowExpression } | .perRowCol { rowColExpression } | .withValue(value)  | to<Type>() | to { colExpression }
 
 rowExpression = DataRow.(OldValue) -> NewValue
 rowColExpression = DataRow.(DataColumn) -> NewValue
-colExpression = DataFrame.(DataColumn) -> NewValue
+colExpression = DataFrame.(DataColumn) -> DataColumn
 ```
 
 See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-expressions)
-
-#### Examples
 
 <!---FUN convert-->
 
@@ -26,8 +22,6 @@ df.convert { dfsOf<String>() }.with { it.toCharArray().toList() }
 ```
 
 <!---END-->
-
-### Type conversions
 
 `convert` supports automatic type conversions between the following types:
 * `Int`

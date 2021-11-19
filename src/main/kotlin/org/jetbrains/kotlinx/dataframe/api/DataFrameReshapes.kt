@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotedDataFrameImpl
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotImpl
 import org.jetbrains.kotlinx.dataframe.impl.and
 import org.jetbrains.kotlinx.dataframe.impl.api.PivotChainColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.api.gatherImpl
@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
 
 // region pivot
 
@@ -42,57 +43,97 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
 
 public typealias PivotColumnsSelector<T, C> = Selector<PivotDsl<T>, ColumnSet<C>>
 
-public fun <T> DataFrame<T>.pivot(inward: Boolean? = null, columns: PivotColumnsSelector<T, *>): PivotedDataFrame<T> = PivotedDataFrameImpl(this, columns, inward)
-public fun <T> DataFrame<T>.pivot(vararg columns: String, inward: Boolean? = false): PivotedDataFrame<T> = pivot(inward) { columns.toColumns() }
-public fun <T> DataFrame<T>.pivot(vararg columns: Column, inward: Boolean? = false): PivotedDataFrame<T> = pivot(inward) { columns.toColumns() }
-public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>, inward: Boolean? = false): PivotedDataFrame<T> = pivot(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivot(inward: Boolean? = null, columns: PivotColumnsSelector<T, *>): Pivot<T> = PivotImpl(this, columns, inward)
+public fun <T> DataFrame<T>.pivot(vararg columns: String, inward: Boolean? = false): Pivot<T> = pivot(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivot(vararg columns: Column, inward: Boolean? = false): Pivot<T> = pivot(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivot(vararg columns: KProperty<*>, inward: Boolean? = false): Pivot<T> = pivot(inward) { columns.toColumns() }
 
-public fun <T> DataFrame<T>.pivotMatches(inward: Boolean? = null, columns: ColumnsSelector<T, *>): DataFrame<T> = pivot(inward, columns).groupByOther().matches()
-public fun <T> DataFrame<T>.pivotMatches(vararg columns: String, inward: Boolean? = null): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
-public fun <T> DataFrame<T>.pivotMatches(vararg columns: Column, inward: Boolean? = null): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
-public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: Boolean? = null): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivotMatches(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> = pivot(inward, columns).groupByOther().matches()
+public fun <T> DataFrame<T>.pivotMatches(vararg columns: String, inward: Boolean = true): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivotMatches(vararg columns: Column, inward: Boolean = true): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
 
-public fun <T> DataFrame<T>.pivotCount(inward: Boolean? = null, columns: ColumnsSelector<T, *>): DataFrame<T> = pivot(inward, columns).groupByOther().count()
-public fun <T> DataFrame<T>.pivotCount(vararg columns: String, inward: Boolean? = null): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
-public fun <T> DataFrame<T>.pivotCount(vararg columns: Column, inward: Boolean? = null): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
-public fun <T> DataFrame<T>.pivotCount(vararg columns: KProperty<*>, inward: Boolean? = null): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivotCount(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> = pivot(inward, columns).groupByOther().count()
+public fun <T> DataFrame<T>.pivotCount(vararg columns: String, inward: Boolean = true): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivotCount(vararg columns: Column, inward: Boolean = true): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivotCount(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
 
 // endregion
 
 // region gather
 
-public fun <T, C> DataFrame<T>.gather(dropNulls: Boolean = true, selector: ColumnsSelector<T, C>): GatherClause<T, C, String, C> = GatherClause(this, selector, null, dropNulls, { it }, null)
-public fun <T> DataFrame<T>.gather(vararg columns: String, dropNulls: Boolean = true): GatherClause<T, Any?, String, Any?> = gather(dropNulls) { columns.toColumns() }
-public fun <T, C> DataFrame<T>.gather(vararg columns: ColumnReference<C>, dropNulls: Boolean = true): GatherClause<T, C, String, C> = gather(dropNulls) { columns.toColumns() }
-public fun <T, C> DataFrame<T>.gather(vararg columns: KProperty<C>, dropNulls: Boolean = true): GatherClause<T, C, String, C> = gather(dropNulls) { columns.toColumns() }
+public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): GatherClause<T, C, String, C> = GatherClause(
+    this, selector, null, getType<String>(),
+    { it }, null
+)
+public fun <T> DataFrame<T>.gather(vararg columns: String): GatherClause<T, Any?, String, Any?> = gather { columns.toColumns() }
+public fun <T, C> DataFrame<T>.gather(vararg columns: ColumnReference<C>): GatherClause<T, C, String, C> = gather { columns.toColumns() }
+public fun <T, C> DataFrame<T>.gather(vararg columns: KProperty<C>): GatherClause<T, C, String, C> = gather { columns.toColumns() }
 
 public fun <T, C, K, R> GatherClause<T, C, K, R>.where(filter: Predicate<C>): GatherClause<T, C, K, R> = copy(filter = this.filter and filter)
 public fun <T, C, K, R> GatherClause<T, C?, K, R>.notNull(): GatherClause<T, C, K, R> = where { it != null } as GatherClause<T, C, K, R>
-public fun <T, C, K, R> GatherClause<T, C, *, R>.mapKeys(transform: (String) -> K): GatherClause<T, C, K, R> = GatherClause(df, columns, filter, dropNulls, transform, valueTransform)
-public fun <T, C, K, R> GatherClause<T, C, K, *>.mapValues(transform: (C) -> R): GatherClause<T, C, K, R> = GatherClause(df, columns, filter, dropNulls, nameTransform, transform)
+
+public fun <T, C, K, R> GatherClause<T, C, K, R>.explodeLists(): GatherClause<T, C, K, R> = copy(explode = true)
+
+public inline fun <T, C, reified K, R> GatherClause<T, C, *, R>.mapKeys(noinline transform: (String) -> K): GatherClause<T, C, K, R> =
+    copy(keyTransform = transform as ((String) -> Nothing), keyType = getType<K>()) as GatherClause<T, C, K, R>
+
+public fun <T, C, K, R> GatherClause<T, C, K, *>.mapValues(transform: (C) -> R): GatherClause<T, C, K, R> =
+    copy(valueTransform = transform as ((C) -> Nothing)) as GatherClause<T, C, K, R>
 
 public data class GatherClause<T, C, K, R>(
-    val df: DataFrame<T>,
-    val columns: ColumnsSelector<T, C>,
-    val filter: ((C) -> Boolean)? = null,
-    val dropNulls: Boolean = true,
-    val nameTransform: ((String) -> K),
-    val valueTransform: ((C) -> R)? = null
+    internal val df: DataFrame<T>,
+    internal val columns: ColumnsSelector<T, C>,
+    internal val filter: ((C) -> Boolean)? = null,
+    internal val keyType: KType? = null,
+    internal val keyTransform: ((String) -> K),
+    internal val valueTransform: ((C) -> R)? = null,
+    internal val explode: Boolean = false
 ) {
-    public fun <P> cast(): GatherClause<T, P, K, R> = this as GatherClause<T, P, K, R>
+    public fun <P> cast(): GatherClause<T, P, K, P> {
+        // TODO: introduce GatherWithTransform to avoid this error
+        require(valueTransform == null) { "Cast is not allowed to be called after `mapValues`" }
+        return this as GatherClause<T, P, K, P>
+    }
 }
 
-public inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(
+public fun <T, C, K, R> GatherClause<T, C, K, R>.into(
     keyColumn: String,
-    valueColumn: String? = null
-): DataFrame<T> = gatherImpl(this, keyColumn, valueColumn, getType<K>(), getType<R>())
-public inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(
+    valueColumn: String
+): DataFrame<T> = gatherImpl(keyColumn, valueColumn)
+
+public fun <T, C, K, R> GatherClause<T, C, K, R>.into(
     keyColumn: ColumnAccessor<K>,
-    valueColumn: ColumnAccessor<R>? = null
-): DataFrame<T> = into(keyColumn.name(), valueColumn?.name)
-public inline fun <T, C, reified K, reified R> GatherClause<T, C, K, R>.into(
+    valueColumn: ColumnAccessor<R>
+): DataFrame<T> = into(keyColumn.name(), valueColumn.name)
+
+public fun <T, C, K, R> GatherClause<T, C, K, R>.into(
     keyColumn: KProperty<K>,
-    valueColumn: KProperty<R>? = null
-): DataFrame<T> = into(keyColumn.columnName, valueColumn?.columnName)
+    valueColumn: KProperty<R>
+): DataFrame<T> = into(keyColumn.columnName, valueColumn.columnName)
+
+public fun <T, C, K, R> GatherClause<T, C, K, R>.keysInto(
+    keyColumn: String
+): DataFrame<T> = gatherImpl(keyColumn, null)
+
+public fun <T, C, K, R> GatherClause<T, C, K, R>.keysInto(
+    keyColumn: ColumnAccessor<K>
+): DataFrame<T> = keysInto(keyColumn.name())
+
+public fun <T, C, K, R> GatherClause<T, C, K, R>.keysInto(
+    keyColumn: KProperty<K>
+): DataFrame<T> = keysInto(keyColumn.columnName)
+
+public fun <T, C, K, R> GatherClause<T, C, K, R>.valuesInto(
+    valueColumn: String
+): DataFrame<T> = gatherImpl(null, valueColumn)
+
+public fun <T, C, K, R> GatherClause<T, C, K, R>.valuesInto(
+    valueColumn: ColumnAccessor<K>
+): DataFrame<T> = valuesInto(valueColumn.name())
+
+public fun <T, C, K, R> GatherClause<T, C, K, R>.valuesInto(
+    valueColumn: KProperty<K>
+): DataFrame<T> = valuesInto(valueColumn.columnName)
 
 // endregion

@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateBody
 import org.jetbrains.kotlinx.dataframe.api.Grouped
-import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
+import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
@@ -60,7 +60,7 @@ internal inline fun <T, reified C, reified R> Aggregator<*, R>.aggregateOf(
 
 @PublishedApi
 internal inline fun <T, reified C, reified R> Aggregator<*, R>.aggregateOf(
-    data: GroupedPivot<T>,
+    data: PivotGroupBy<T>,
     crossinline expression: RowExpression<T, C>
 ): DataFrame<T> = data.aggregateOf(expression, this as Aggregator<C, R>)
 
@@ -79,7 +79,7 @@ internal inline fun <T, reified C, reified R> Grouped<T>.aggregateOf(
 }
 
 @PublishedApi
-internal inline fun <T, reified C, R> GroupedPivot<T>.aggregateOf(
+internal inline fun <T, reified C, R> PivotGroupBy<T>.aggregateOf(
     crossinline expression: RowExpression<T, C>,
     aggregator: Aggregator<C, R>
 ): DataFrame<T> = aggregateInternal {

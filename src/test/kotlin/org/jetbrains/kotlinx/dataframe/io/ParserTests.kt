@@ -2,23 +2,20 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.convertTo
-import org.jetbrains.kotlinx.dataframe.api.parse
-import org.jetbrains.kotlinx.dataframe.api.parser
-import org.jetbrains.kotlinx.dataframe.api.tryParse
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 class ParserTests {
 
     @Test
     fun `parse datetime with custom format`() {
-        val col by columnOf("04.02.2021 19:44:32")
-        col.tryParse().type() shouldBe getType<String>()
-        DataFrame.parser.addDateTimeFormat("dd.MM.uuuu HH:mm:ss")
+        val col by columnOf("04.02.2021 -- 19:44:32")
+        col.tryParse().type() shouldBe getType<Double>()
+        DataFrame.parser.addDateTimeFormat("dd.MM.uuuu -- HH:mm:ss")
         val parsed = col.parse()
         parsed.type() shouldBe getType<LocalDateTime>()
         parsed.cast<LocalDateTime>()[0].year shouldBe 2021
@@ -49,5 +46,14 @@ class ParserTests {
         converted.type() shouldBe getType<Int>()
         converted[0] shouldBe 1
         converted[1] shouldBe 1
+    }
+
+    @Test
+    fun `convert BigDecimal column`() {
+        val col by columnOf(BigDecimal(1.0), BigDecimal(0.321))
+        val converted = col.convertTo<Float>()
+        converted.type() shouldBe getType<Float>()
+        converted[0] shouldBe 1.0f
+        converted[1] shouldBe 0.321f
     }
 }

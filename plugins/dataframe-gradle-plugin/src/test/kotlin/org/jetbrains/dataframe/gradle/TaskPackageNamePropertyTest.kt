@@ -13,7 +13,7 @@ import java.io.File
 class TaskPackageNamePropertyTest {
     @Test
     fun `task inherit default packageName from extension`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             packageName = "org.example.test"
@@ -29,7 +29,7 @@ class TaskPackageNamePropertyTest {
 
     @Test
     fun `task packageName overrides packageName from extension`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             packageName = "org.example.test"
@@ -46,7 +46,7 @@ class TaskPackageNamePropertyTest {
 
     @Test
     fun `task packageName convention is package part of FQ name`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             packageName = "org.example.test"
@@ -62,7 +62,7 @@ class TaskPackageNamePropertyTest {
 
     @Test
     fun `name package part overrides packageName`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             schema {
@@ -78,7 +78,7 @@ class TaskPackageNamePropertyTest {
 
     @Test
     fun `illegal characters in package part of name cause exception`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             schema {
@@ -93,7 +93,7 @@ class TaskPackageNamePropertyTest {
 
     @Test
     fun `task infers packageName from directory structure`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.plugins.apply("org.jetbrains.kotlin.jvm")
         File(project.projectDir, "/src/main/kotlin/org/test/").also { it.mkdirs() }
@@ -109,7 +109,7 @@ class TaskPackageNamePropertyTest {
 
     @Test
     fun `task infers packageName from directory structure on android`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.plugins.apply("com.android.application")
         project.plugins.apply("org.jetbrains.kotlin.android")
@@ -129,7 +129,7 @@ class TaskPackageNamePropertyTest {
 
     @Test
     fun `task will not add _dataframe_ if inferred package ends with _dataframe_`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.plugins.apply("org.jetbrains.kotlin.jvm")
         File(project.projectDir, "/src/main/kotlin/org/dataframe/").also { it.mkdirs() }

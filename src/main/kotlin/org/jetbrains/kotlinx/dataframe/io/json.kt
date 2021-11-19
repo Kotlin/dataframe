@@ -1,6 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import com.beust.klaxon.*
+import com.beust.klaxon.JsonArray
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.KlaxonJson
+import com.beust.klaxon.Parser
+import com.beust.klaxon.json
 import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
@@ -22,7 +26,6 @@ import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.type
 import java.io.File
-import java.io.FileWriter
 import java.net.URL
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
@@ -198,7 +201,11 @@ public fun AnyFrame.writeJsonStr(prettyPrint: Boolean = false, canonical: Boolea
 }
 
 public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false, canonical: Boolean = false) {
-    FileWriter(file).write(writeJsonStr(prettyPrint, canonical))
+    file.writeText(writeJsonStr(prettyPrint, canonical))
 }
 
 public fun AnyFrame.writeJson(path: String, prettyPrint: Boolean = false, canonical: Boolean = false): Unit = writeJson(File(path), prettyPrint, canonical)
+
+public fun AnyFrame.writeJson(writer: Appendable, prettyPrint: Boolean = false, canonical: Boolean = false) {
+    writer.append(writeJsonStr(prettyPrint, canonical))
+}

@@ -1,3 +1,4 @@
-[//]: # (title: splitMerge)
+[//]: # (title: Split/merge columns)
 
-Start writing here.
+* [`split`](split.md) column values horizontally or vertically
+* [`merge`](merge.md) values from several columns into single column

@@ -2,121 +2,116 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.api.GatherClause
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
-import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
-import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.to
-import org.jetbrains.kotlinx.dataframe.api.toMany
-import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.column
-import org.jetbrains.kotlinx.dataframe.columnMany
-import kotlin.reflect.KType
-import kotlin.reflect.jvm.jvmErasure
 
-@PublishedApi
-internal fun <T, C, K, R> gatherImpl(
-    clause: GatherClause<T, C, K, R>,
-    namesTo: String,
+internal fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(
+    namesTo: String? = null,
     valuesTo: String? = null,
-    keyColumnType: KType,
-    valueColumnType: KType
 ): DataFrame<T> {
-    val removed = clause.df.removeImpl(clause.columns)
+    require(namesTo != null || valuesTo != null)
+
+    val removed = df.removeImpl(columns)
 
     val columnsToGather = removed.removedColumns.map { it.data.column as DataColumn<C> }
 
-    val isGatherGroups = columnsToGather.any { it.isColumnGroup() }
-    if (isGatherGroups && columnsToGather.any { !it.isColumnGroup() }) {
-        throw UnsupportedOperationException("Cannot mix ColumnGroups with other types of columns in 'gather' operation")
-    }
+    val keys = columnsToGather.map { keyTransform(it.name()) }
 
-    val keys = columnsToGather.map { clause.nameTransform(it.name()) }
-
-    val namesColumn = columnMany<K>(namesTo)
-    val valuesColumn = columnMany<Any?>(valuesTo ?: "newValues")
+    val keysColumn = namesTo?.let { column<List<K>>(it) }
+    val valuesColumn = valuesTo?.let { column<List<Any?>>(it) }
 
     var df = removed.df
 
-    var filter = clause.filter
-    if (clause.dropNulls && columnsToGather.any { it.hasNulls() }) {
-        if (filter == null) filter = { it != null }
-        else {
-            val oldFilter = filter
-            filter = { it != null && oldFilter(it) }
-        }
-    }
+    val filter = filter
+    val valueTransform = valueTransform
 
-    val valueTransform = clause.valueTransform
-
+    // optimization when no filter is applied
     if (filter == null) {
-        // optimization when no filter is applied
-        val wrappedKeys = keys.toMany()
+        // add key and value columns
         df = df.add { // add columns for names and values
-            namesColumn from { wrappedKeys }
-            valuesColumn from { row ->
-                columnsToGather.map { col ->
-                    val value = col[row]
-                    if (valueTransform != null) {
-                        when {
-                            value is Many<*> -> (value as Many<C>).map(valueTransform)
-                            else -> valueTransform(value)
-                        }
-                    } else value
-                }.toMany()
+            if (keysColumn != null) {
+                keysColumn from { keys }
             }
-        }.explode(namesColumn, valuesColumn) // expand collected names and values
-            .explode(valuesColumn) // expand values in Many
+            if (valuesColumn != null) {
+                valuesColumn from { row ->
+                    columnsToGather.map { col ->
+                        val value = col[row]
+                        if (valueTransform != null) {
+                            when {
+                                explode && value is List<*> -> (value as List<C>).map(valueTransform)
+                                else -> valueTransform(value)
+                            }
+                        } else value
+                    }
+                }
+            }
+        }
+
+        // explode keys and values
+        when {
+            keysColumn != null && valuesColumn != null -> df = df.explode(keysColumn, valuesColumn)
+            else -> df = df.explode(keysColumn ?: valuesColumn!!)
+        }
+
+        // explode values in lists
+        if (explode && valuesColumn != null) {
+            df = df.explode(valuesColumn)
+        }
     } else {
-        val nameAndValue = column<Many<Pair<K, Any?>>>("nameAndValue")
+        val nameAndValue = column<List<Pair<K, Any?>>>("nameAndValue")
         df = df.add(nameAndValue) { row ->
             columnsToGather.mapIndexedNotNull { colIndex, col ->
                 val value = col[row]
                 when {
-                    value is Many<*> -> {
-                        val filtered = (value as Many<C>).filter(filter).toMany()
-                        keys[colIndex] to (valueTransform?.let { filtered.map(it).toMany() } ?: filtered)
+                    explode && value is List<*> -> {
+                        val filtered = (value as List<C>).filter(filter)
+                        val transformed = valueTransform?.let { filtered.map(it) } ?: filtered
+                        keys[colIndex] to transformed
                     }
-                    filter(value) -> keys[colIndex] to (valueTransform?.invoke(value) ?: value)
+                    filter(value) -> {
+                        val transformed = valueTransform?.invoke(value) ?: value
+                        keys[colIndex] to transformed
+                    }
                     else -> null
                 }
-            }.toMany()
+            }
         }
 
         df = df.explode { nameAndValue }
 
         if (df.isEmpty()) return df
 
-        val nameAndValuePairs = nameAndValue.cast<Pair<K, C>>()
+        val nameAndValuePairs = nameAndValue.cast<Pair<*, *>>()
 
-        df = df.split { nameAndValuePairs }
-            .with { listOf(it.first, it.second) }
-            .into(namesColumn, valuesColumn)
-            .explode(valuesColumn)
+        when {
+            keysColumn != null && valuesColumn != null -> {
+                df = df.split { nameAndValuePairs }
+                    .into(keysColumn.name(), valuesColumn.name())
+                    .explode(valuesColumn)
+            }
+            keysColumn != null -> {
+                df = df.replace { nameAndValuePairs }.with { it.map { it.first } named keysColumn.name() }
+            }
+            valuesColumn != null -> {
+                df = df.replace { nameAndValuePairs }.with { it.map { it.second } named valuesColumn.name() }
+            }
+        }
     }
 
-    df = df.convert(namesColumn.name()).to(keyColumnType)
-
-    val valuesCol = df[valuesColumn.name()]
-
-    if (valuesTo == null) {
-        // values column needs to be removed
-        if (valuesCol.isColumnGroup()) {
-            df = df.ungroup(valuesColumn.name())
-        } else df = df.remove(valuesColumn.name())
-    } else {
-        if (!valuesCol.isFrameColumn() && valueColumnType.jvmErasure != Any::class) {
-            df = df.convert(valuesColumn.name()).to(valueColumnType)
-        }
+    if (keysColumn != null && keyType != null) {
+        df = df.convert(keysColumn.name()).to(keyType)
     }
 
     return df

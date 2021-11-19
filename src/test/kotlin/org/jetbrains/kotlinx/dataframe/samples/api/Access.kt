@@ -1,13 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
 import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropLast
-import org.jetbrains.kotlinx.dataframe.api.dropNa
+import org.jetbrains.kotlinx.dataframe.api.dropNA
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
@@ -26,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.getColumnGroup
 import org.junit.Test
 
 class Access : TestBase() {
@@ -145,18 +145,8 @@ class Access : TestBase() {
     }
 
     @Test
-    fun getColumnsByName_strings() {
-        // SampleStart
-        df.select { "age" and "weight" }
-        df.select("age", "weight")
-        df["age", "weight"]
-        // SampleEnd
-    }
-
-    @Test
     fun getColumnsByName_properties() {
         // SampleStart
-        df.select { age and weight }
         df[df.age, df.weight]
         // SampleEnd
     }
@@ -167,9 +157,40 @@ class Access : TestBase() {
         val age by column<Int>()
         val weight by column<Int?>()
 
+        df[age, weight]
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumnsByName_strings() {
+        // SampleStart
+        df["age", "weight"]
+        // SampleEnd
+    }
+
+    @Test
+    fun select_properties() {
+        // SampleStart
+        df.select { age and weight }
+        // SampleEnd
+    }
+
+    @Test
+    fun select_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val weight by column<Int?>()
+
         df.select { age and weight }
         df.select(age, weight)
-        df[age, weight]
+        // SampleEnd
+    }
+
+    @Test
+    fun select_strings() {
+        // SampleStart
+        df.select { "age" and "weight" }
+        df.select("age", "weight")
         // SampleEnd
     }
 
@@ -185,6 +206,46 @@ class Access : TestBase() {
         // SampleStart
         df[1..2]
         df[0..2, 4..5]
+        // SampleEnd
+    }
+
+    @Test
+    fun sliceColumnsByIndex() {
+        // SampleStart
+        df.select { cols(1..3) }
+        // SampleEnd
+    }
+
+    @Test
+    fun sliceColumns_properties() {
+        // SampleStart
+        df.select { age..weight }
+        // SampleEnd
+    }
+
+    @Test
+    fun sliceColumns_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val weight by column<Int?>()
+
+        df.select { age..weight }
+        // SampleEnd
+    }
+
+    @Test
+    fun sliceColumns_strings() {
+        // SampleStart
+        df.select { "age".."weight" }
+        // SampleEnd
+    }
+
+    @Test
+    fun getRowsColumns() {
+        // SampleStart
+        df.columns() // List<DataColumn>
+        df.rows() // Iterable<DataRow>
+        df.values() // Sequence<Any?>
         // SampleEnd
     }
 
@@ -304,13 +365,13 @@ class Access : TestBase() {
     }
 
     @Test
-    fun dropNa() {
+    fun dropNA() {
         // SampleStart
-        df.dropNa() // remove rows containing null or Double.NaN in any column
-        df.dropNa(whereAllNa = true) // remove rows with null or Double.NaN in all columns
-        df.dropNa { weight } // remove rows where 'weight' is null or Double.NaN
-        df.dropNa { age and weight } // remove rows where either 'age' or 'weight' is null or Double.NaN
-        df.dropNa(whereAllNa = true) { age and weight } // remove rows where both 'age' and 'weight' are null or Double.NaN
+        df.dropNA() // remove rows containing null or Double.NaN in any column
+        df.dropNA(whereAllNA = true) // remove rows with null or Double.NaN in all columns
+        df.dropNA { weight } // remove rows where 'weight' is null or Double.NaN
+        df.dropNA { age and weight } // remove rows where either 'age' or 'weight' is null or Double.NaN
+        df.dropNA(whereAllNA = true) { age and weight } // remove rows where both 'age' and 'weight' are null or Double.NaN
         // SampleEnd
     }
 
@@ -403,18 +464,10 @@ class Access : TestBase() {
     @Test
     fun iterableApi() {
         // SampleStart
-        df.forEach { println(it) }
+        df.forEachRow { println(it) }
         df.take(5)
         df.drop(2)
         df.chunked(10)
-        // SampleEnd
-    }
-
-    @Test
-    fun asIterableOrSequence() {
-        // SampleStart
-        df.asIterable()
-        df.asSequence()
         // SampleEnd
     }
 
@@ -482,6 +535,277 @@ class Access : TestBase() {
         df.distinctBy("age", "name")
         // same as
         df.groupBy("age", "name").mapToRows { group.first() }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnSelectorsUsages() {
+        // SampleStart
+        df.select { age and name }
+        df.fillNaNs { dfsOf<Double>() }.withZero()
+        df.remove { cols { it.hasNulls() } }
+        df.update { city }.notNull { it.lowercase() }
+        df.gather { numberCols() }.into("key", "value")
+        df.move { name.firstName and name.lastName }.after { city }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnSelectors_properties() {
+        // SampleStart
+        // by column name
+        df.select { it.name }
+        df.select { name }
+
+        // by column path
+        df.select { name.firstName }
+
+        // with a new name
+        df.select { name named "Full Name" }
+
+        // converted
+        df.select { name.firstName.map { it.lowercase() } }
+
+        // column arithmetics
+        df.select { 2021 - age }
+
+        // two columns
+        df.select { name and age }
+
+        // range of columns
+        df.select { name..age }
+
+        // all children of ColumnGroup
+        df.select { name.all() }
+
+        // dfs traversal of children columns
+        df.select { name.dfs() }
+
+        // SampleEnd
+    }
+
+    @Test
+    fun columnSelectors_accessors() {
+        // SampleStart
+        // by column name
+        val name by columnGroup()
+        df.select { it[name] }
+        df.select { name }
+
+        // by column path
+        val firstName by name.column<String>()
+        df.select { firstName }
+
+        // with a new name
+        df.select { name named "First Name" }
+
+        // converted
+        df.select { firstName.map { it.lowercase() } }
+
+        // column arithmetics
+        val age by column<Int>()
+        df.select { 2021 - age }
+
+        // two columns
+        df.select { name and age }
+
+        // range of columns
+        df.select { name..age }
+
+        // all children of ColumnGroup
+        df.select { name.all() }
+
+        // dfs traversal of children columns
+        df.select { name.dfs() }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnSelectors_strings() {
+        // SampleStart
+        // by column name
+        df.select { it["name"] }
+
+        // by column path
+        df.select { it["name"]["firstName"] }
+        df.select { "name"["firstName"] }
+
+        // with a new name
+        df.select { "name" named "First Name" }
+
+        // converted
+        df.select { "name"["firstName"]<String>().map { it.uppercase() } }
+
+        // column arithmetics
+        df.select { 2021 - "age"() }
+
+        // two columns
+        df.select { "name" and "age" }
+
+        // by range of names
+        df.select { "name".."age" }
+
+        // all children of ColumnGroup
+        df.select { "name".all() }
+
+        // dfs traversal of children columns
+        df.select { "name".dfs() }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnsSelectorByIndices() {
+        // SampleStart
+        // by index
+        df.select { col(2) }
+
+        // by several indices
+        df.select { cols(0, 1, 3) }
+
+        // by range of indices
+        df.select { cols(1..4) }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnSelectorsMisc() {
+        // SampleStart
+        // by condition
+        df.select { cols { it.name.startsWith("year") } }
+
+        // by type
+        df.select { colsOf<String>() }
+        df.select { stringCols() }
+
+        // by type with condition
+        df.select { colsOf<String> { !it.hasNulls() } }
+        df.select { stringCols { !it.hasNulls() } }
+
+        // all top-level columns
+        df.select { all() }
+
+        // first/last n columns
+        df.select { take(2) }
+        df.select { takeLast(2) }
+
+        // all except first/last n columns
+        df.select { drop(2) }
+        df.select { dropLast(2) }
+
+        // dfs traversal of columns
+        df.select { dfs() }
+
+        // dfs traversal with condition
+        df.select { dfs { it.name.contains(":") } }
+
+        // columns of given type in dfs traversal
+        df.select { dfsOf<String>() }
+
+        // all columns except given column set
+        df.select { except { colsOf<String>() } }
+
+        // union of column sets
+        df.select { take(2) and col(3) }
+        // SampleEnd
+    }
+
+    @Test
+    fun columnSelectorsModifySet() {
+        // SampleStart
+        // first/last n columns in column set
+        df.select { dfs().take(3) }
+        df.select { dfs().takeLast(3) }
+
+        // all except first/last n columns in column set
+        df.select { dfs().drop(3) }
+        df.select { dfs().dropLast(3) }
+
+        // filter column set by condition
+        df.select { dfs().filter { it.name.startsWith("year") } }
+
+        // exclude columns from column set
+        df.select { dfs().except { age } }
+        // SampleEnd
+    }
+
+    @Test
+    fun forRows_properties() {
+        // SampleStart
+        for (row in df) {
+            println(row.age)
+        }
+
+        df.forEachRow {
+            println(it.age)
+        }
+
+        df.rows().forEach {
+            println(it.age)
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun forRows_accessors() {
+        // SampleStart
+        val age by column<Int>()
+
+        for (row in df) {
+            println(row[age])
+        }
+
+        df.forEachRow {
+            println(it[age])
+        }
+
+        df.rows().forEach {
+            println(it[age])
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun forRows_strings() {
+        // SampleStart
+        for (row in df) {
+            println(row["age"])
+        }
+
+        df.forEachRow {
+            println(it["age"])
+        }
+
+        df.rows().forEach {
+            println(it["age"])
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun forColumn() {
+        // SampleStart
+        df.forEachColumn {
+            println(it.name())
+        }
+
+        df.columns().forEach {
+            println(it.name())
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun forCells() {
+        // SampleStart
+        // from top to bottom, then from left to right
+        df.values().forEach {
+            println(it)
+        }
+
+        // from left to right, then from top to bottom
+        df.values(byRow = true).forEach {
+            println(it)
+        }
         // SampleEnd
     }
 }

@@ -1,101 +1,212 @@
-[//]: # (title: ColumnsSelector)
+[//]: # (title: Column selectors)
 
-`DataFrame` provides a column selection DSL for selecting arbitrary set of columns.
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
+
+`DataFrame` provides DSL for selecting arbitrary set of columns.
+
 Column selectors are used in many operations:
+
+<!---FUN columnSelectorsUsages-->
+
 ```kotlin
-df.select { columns }
-df.remove { columns }
-df.update { columns }.with { expression }
-df.gather { columns }.into(keyName, valueName)
-df.move { columns }.under(groupName)
+df.select { age and name }
+df.fillNaNs { dfsOf<Double>() }.withZero()
+df.remove { cols { it.hasNulls() } }
+df.update { city }.notNull { it.lowercase() }
+df.gather { numberCols() }.into("key", "value")
+df.move { name.firstName and name.lastName }.after { city }
 ```
 
-## Select single column
+<!---END-->
+
+**Select columns by name:**
+
+<!---FUN columnSelectors-->
 <tabs>
-<tab title="Generated properties">
-``` kotlin 
-columnName // column by extension property
-it.columnName // column by extension property
-col(index) // column by index
-column.rename("newName") // column with a new name
+<tab title="Properties">
+
+```kotlin
+// by column name
+df.select { it.name }
+df.select { name }
+
+// by column path
+df.select { name.firstName }
+
+// with a new name
+df.select { name named "Full Name" }
+
+// converted
+df.select { name.firstName.map { it.lowercase() } }
+
+// column arithmetics
+df.select { 2021 - age }
+
+// two columns
+df.select { name and age }
+
+// range of columns
+df.select { name..age }
+
+// all children of ColumnGroup
+df.select { name.all() }
+
+// dfs traversal of children columns
+df.select { name.dfs() }
 ```
+
 </tab>
-<tab title="Column definitions">
+<tab title="Accessors">
 
-``` kotlin 
-column // column by accessor
-it[column] // column by accessor
-col(index) // column by index
-column.rename("newName") // column with a new name
+```kotlin
+// by column name
+val name by columnGroup()
+df.select { it[name] }
+df.select { name }
+
+// by column path
+val firstName by name.column<String>()
+df.select { firstName }
+
+// with a new name
+df.select { name named "First Name" }
+
+// converted
+df.select { firstName.map { it.lowercase() } }
+
+// column arithmetics
+val age by column<Int>()
+df.select { 2021 - age }
+
+// two columns
+df.select { name and age }
+
+// range of columns
+df.select { name..age }
+
+// all children of ColumnGroup
+df.select { name.all() }
+
+// dfs traversal of children columns
+df.select { name.dfs() }
 ```
 
 </tab>
-<tab title="String syntax">
-
-``` kotlin 
-it["columnName"] // column by name
-"columnName"<tabs>() // typed column by name
-col(index) // column by index
-column.rename("newName") // column with a new name
-```
-
-</tab>
-</tabs>
-
-## Select several columns
+<tab title="Strings">
 
 ```kotlin
-columnSet1 and columnSet2 // union of column sets
-cols(index1, index2, indexN) // columns by indices
-cols(index1..index2) // columns by range of indices
-cols { condition } // columns by condition
-colsOf<Type>() // columns of specific type
-colsOf<Type> { condition } // columns of specfic type that match condition
-dfs { condition } // traverse column tree and yield top-level columns that match condition
-dfsOf<Type>() // traverse column tree and yield columns of specific type
-dfsOf<Type> { condition } // traverse column tree and yield columns of specific type that match condition
-all() // all columns
-allAfter(column) // all columns that are located to the right from target column, excluding target column
-allSince(column) // all columns that are located to the right from target column, including target column
-allBefore(column) // all columns that are located to the left from target column, excluding target column
-allUntil(column) // all columns that are located to the left from target column, including target column
+// by column name
+df.select { it["name"] }
+
+// by column path
+df.select { it["name"]["firstName"] }
+df.select { "name"["firstName"] }
+
+// with a new name
+df.select { "name" named "First Name" }
+
+// converted
+df.select { "name"["firstName"]<String>().map { it.uppercase() } }
+
+// column arithmetics
+df.select { 2021 - "age"() }
+
+// two columns
+df.select { "name" and "age" }
+
+// by range of names
+df.select { "name".."age" }
+
+// all children of ColumnGroup
+df.select { "name".all() }
+
+// dfs traversal of children columns
+df.select { "name".dfs() }
 ```
 
-## Special column selectors
+</tab></tabs>
+<!---END-->
+
+**Select columns by column index:**
+
+<!---FUN columnsSelectorByIndices-->
+
 ```kotlin
-// Select columns of specific type, with optional predicate
-stringCols { condition }
-intCols { condition }
-booleanCols { condition }
-doubleCols { condition }
+// by index
+df.select { col(2) }
 
-// Select columns by column name condition
-nameContains(text)
-startsWith(prefix)
-endsWith(suffix)
+// by several indices
+df.select { cols(0, 1, 3) }
+
+// by range of indices
+df.select { cols(1..4) }
 ```
-## Modify resulting column set
+
+<!---END-->
+
+**Other column selectors:**
+
+<!---FUN columnSelectorsMisc-->
+
 ```kotlin
-columnSet.drop(n) // remove first 'n' columns from column set
-columnSet.take(n) // take first 'n' columns of column sest
-columnSet.filter { condition } // filter columns set by condition
-columnSet.except { otherColumnSet }
-columnSet.except ( otherColumnSet )
+// by condition
+df.select { cols { it.name.startsWith("year") } }
+
+// by type
+df.select { colsOf<String>() }
+df.select { stringCols() }
+
+// by type with condition
+df.select { colsOf<String> { !it.hasNulls() } }
+df.select { stringCols { !it.hasNulls() } }
+
+// all top-level columns
+df.select { all() }
+
+// first/last n columns
+df.select { take(2) }
+df.select { takeLast(2) }
+
+// all except first/last n columns
+df.select { drop(2) }
+df.select { dropLast(2) }
+
+// dfs traversal of columns
+df.select { dfs() }
+
+// dfs traversal with condition
+df.select { dfs { it.name.contains(":") } }
+
+// columns of given type in dfs traversal
+df.select { dfsOf<String>() }
+
+// all columns except given column set
+df.select { except { colsOf<String>() } }
+
+// union of column sets
+df.select { take(2) and col(3) }
 ```
-Column selectors can be used to select subcolumns of a `ColumnGroup`
+
+<!---END-->
+
+**Modify the set of selected columns:**
+
+<!---FUN columnSelectorsModifySet-->
+
 ```kotlin
-val firstName by column("Alice", "Bob")
-val middleName by column("Jr", null)
-val lastName by column("Merton", "Marley")
-val age by column(15, 20)
+// first/last n columns in column set
+df.select { dfs().take(3) }
+df.select { dfs().takeLast(3) }
 
-val fullName by column(firstName, middleName, lastName) // create column group of three columns
-val df = fullName + age
+// all except first/last n columns in column set
+df.select { dfs().drop(3) }
+df.select { dfs().dropLast(3) }
 
-df.select { fullName.cols { !it.hasNulls } } // firstName, lastName
-df.select { fullName.cols(0, 2) } // firstName, lastName
-df.select { fullName.cols(0..1) } // firstName, middleName
-df.select { fullName[firstName] }
-df.select { fullName.cols(middleName, lastName) }
-df.select { fullName.cols().drop(1) }
+// filter column set by condition
+df.select { dfs().filter { it.name.startsWith("year") } }
+
+// exclude columns from column set
+df.select { dfs().except { age } }
 ```
+
+<!---END-->

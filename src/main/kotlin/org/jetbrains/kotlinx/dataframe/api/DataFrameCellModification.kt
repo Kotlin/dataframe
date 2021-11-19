@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -11,7 +12,9 @@ import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
+import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -23,7 +26,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToTypeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.defaultTimeZone
 import org.jetbrains.kotlinx.dataframe.impl.api.explodeImpl
-import org.jetbrains.kotlinx.dataframe.impl.api.mergeRowsImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.implodeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.parseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.splitDefault
 import org.jetbrains.kotlinx.dataframe.impl.api.splitImpl
@@ -31,6 +34,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDate
 import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
@@ -45,6 +49,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.*
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 
@@ -70,11 +76,17 @@ public fun <T, C> UpdateClause<T, C>.at(rowIndices: Collection<Int>): UpdateClau
 public fun <T, C> UpdateClause<T, C>.at(vararg rowIndices: Int): UpdateClause<T, C> = at(rowIndices.toSet())
 public fun <T, C> UpdateClause<T, C>.at(rowRange: IntRange): UpdateClause<T, C> = where { index in rowRange }
 
-public infix fun <T, C> UpdateClause<T, C>.withRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> = updateImpl { row, column, _ -> expression(row, column) }
+public infix fun <T, C> UpdateClause<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> = updateImpl { row, column, _ -> expression(row, column) }
 
 public infix fun <T, C> UpdateClause<T, C>.with(expression: RowValueExpression<T, C, C>): DataFrame<T> = withExpression(expression)
 
 public fun <T, C> UpdateClause<T, C>.asNullable(): UpdateClause<T, C?> = this as UpdateClause<T, C?>
+
+public fun <T, C> UpdateClause<T, C>.perCol(values: Map<String, C>): DataFrame<T> = updateWithValuePerColumnImpl { values[it.name()] ?: throw IllegalArgumentException("Update value for column ${it.name()} is not defined") }
+
+public fun <T, C> UpdateClause<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(values.toMap() as Map<String, C>)
+
+public fun <T, C> UpdateClause<T, C>.perCol(valueSelector: Selector<DataColumn<C>, C>): DataFrame<T> = updateWithValuePerColumnImpl(valueSelector)
 
 public fun <T, C> UpdateClause<T, C>.withExpression(expression: RowValueExpression<T, C, C>): DataFrame<T> = updateImpl { row, _, value ->
     expression(row, value)
@@ -114,6 +126,8 @@ public fun <T> DataFrame<T>.update(
     update(*headPlusArray(firstCol, cols)).withExpression(expression)
 
 public fun <T, C> UpdateClause<T, C>.withNull(): DataFrame<T> = asNullable().withValue(null)
+
+public fun <T, C> UpdateClause<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }
 
 public infix fun <T, C> UpdateClause<T, C>.withValue(value: C): DataFrame<T> = withExpression { value }
 
@@ -164,7 +178,7 @@ public fun <T> ConvertClause<T, *>.to(type: KType): DataFrame<T> = to { it.conve
 public inline fun <T, C, reified R> ConvertClause<T, C>.with(noinline rowConverter: RowValueExpression<T, C, R>): DataFrame<T> =
     convertRowCellImpl(getType<R>(), rowConverter)
 
-public inline fun <T, C, reified R> ConvertClause<T, C>.withRowCol(noinline expression: RowColumnExpression<T, C, R>): DataFrame<T> =
+public inline fun <T, C, reified R> ConvertClause<T, C>.perRowCol(noinline expression: RowColumnExpression<T, C, R>): DataFrame<T> =
     convertRowColumnImpl(getType<R>(), expression)
 
 public fun <T, C> ConvertClause<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyCol): DataFrame<T> =
@@ -220,26 +234,40 @@ public fun <T> DataColumn<Many<Many<T>>>.toDataFrames(containsColumns: Boolean =
 
 // region parse
 
-public val DataFrame.Companion.parser: DataFrameParserOptions get() = Parsers
+public val DataFrame.Companion.parser: GlobalParserOptions get() = Parsers
 
-public fun <T> DataFrame<T>.parse(columns: ColumnsSelector<T, Any?>): DataFrame<T> = parseImpl(columns)
-public fun <T> DataFrame<T>.parse(vararg columns: String): DataFrame<T> = parse { columns.toColumns() }
-public fun <T, C> DataFrame<T>.parse(vararg columns: ColumnReference<C>): DataFrame<T> = parse { columns.toColumns() }
-public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>): DataFrame<T> = parse { columns.toColumns() }
+public fun <T> DataFrame<T>.parse(options: ParserOptions? = null, columns: ColumnsSelector<T, Any?>): DataFrame<T> = parseImpl(options, columns)
+public fun <T> DataFrame<T>.parse(vararg columns: String, options: ParserOptions? = null): DataFrame<T> = parse(options) { columns.toColumns() }
+public fun <T, C> DataFrame<T>.parse(vararg columns: ColumnReference<C>, options: ParserOptions? = null): DataFrame<T> = parse(options) { columns.toColumns() }
+public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>, options: ParserOptions? = null): DataFrame<T> = parse(options) { columns.toColumns() }
 
-public interface DataFrameParserOptions {
+public interface GlobalParserOptions {
 
     public fun addDateTimeFormat(format: String)
+
+    public fun addDateTimeFormatter(formatter: DateTimeFormatter)
+
+    public fun addNullString(str: String)
+
+    public fun resetToDefault()
+
+    public var locale: Locale
 }
 
-public fun DataColumn<String?>.tryParse(): DataColumn<*> = tryParseImpl()
+public data class ParserOptions(
+    val locale: Locale? = null,
+    val dateTimeFormatter: DateTimeFormatter? = null,
+    val nulls: List<String>? = null
+)
 
-public fun <T> DataFrame<T>.parse(): DataFrame<T> = parse { dfs() }
+public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataColumn<*> = tryParseImpl(options)
 
-public fun DataColumn<String?>.parse(): DataColumn<*> = tryParse().also { if (it.typeClass == String::class) error("Can't guess column type") }
+public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> = parse(options) { dfs() }
 
-@JvmName("tryParseAnyFrame?")
-public fun DataColumn<AnyFrame?>.parse(): DataColumn<AnyFrame?> = map { it?.parse() }
+public fun DataColumn<String?>.parse(options: ParserOptions? = null): DataColumn<*> = tryParse(options).also { if (it.typeClass == String::class) error("Can't guess column type") }
+
+@JvmName("parseAnyFrame?")
+public fun DataColumn<AnyFrame?>.parse(options: ParserOptions? = null): DataColumn<AnyFrame?> = map { it?.parse(options) }
 
 // endregion
 
@@ -254,11 +282,34 @@ public fun <T, C> DataFrame<T>.split(vararg columns: KProperty<C?>): Split<T, C>
 public interface Split<out T, out C>
 
 public fun <T, C> Split<T, C>.by(
+    vararg delimiters: Char,
+    trim: Boolean = true,
+    ignoreCase: Boolean = false,
+    limit: Int = 0
+): SplitWithTransform<T, C, String> = by {
+    it.toString().split(*delimiters, ignoreCase = ignoreCase, limit = limit).let {
+        if (trim) it.map { it.trim() }
+        else it
+    }
+}
+
+public fun <T, C> Split<T, C>.by(
+    regex: Regex,
+    trim: Boolean = true,
+    limit: Int = 0
+): SplitWithTransform<T, C, String> = by {
+    it.toString().split(regex, limit = limit).let {
+        if (trim) it.map { it.trim() }
+        else it
+    }
+}
+
+public fun <T, C> Split<T, C>.by(
     vararg delimiters: String,
     trim: Boolean = true,
     ignoreCase: Boolean = false,
     limit: Int = 0
-): SplitWithTransform<T, C, String> = with {
+): SplitWithTransform<T, C, String> = by {
     it.toString().split(*delimiters, ignoreCase = ignoreCase, limit = limit).let {
         if (trim) it.map { it.trim() }
         else it
@@ -276,21 +327,26 @@ public interface SplitWithTransform<out T, out C, in R> {
     public fun inward(vararg names: String, extraNamesGenerator: ColumnNamesGenerator<C>? = null): DataFrame<T> = inward(names.toList(), extraNamesGenerator)
 
     public fun inward(names: Iterable<String>, extraNamesGenerator: ColumnNamesGenerator<C>? = null): DataFrame<T>
+
+    public fun default(value: R?): SplitWithTransform<T, C, R>
 }
 
 public class SplitClause<T, C>(
-    public val df: DataFrame<T>,
-    public val columns: ColumnsSelector<T, C?>
+    internal val df: DataFrame<T>,
+    internal val columns: ColumnsSelector<T, C?>,
 ) : Split<T, C>
 
-public inline fun <T, C, reified R> Split<T, C>.with(noinline splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> = with(getType<R>(), splitter)
+public inline fun <T, C, reified R> Split<T, C>.by(noinline splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> =
+    by(getType<R>(), splitter)
 
-public fun <T> Split<T, String?>.with(regex: Regex): SplitWithTransform<T, String?, String?> = with {
+public fun <T> Split<T, String?>.match(regex: String): SplitWithTransform<T, String?, String?> = match(regex.toRegex())
+
+public fun <T> Split<T, String?>.match(regex: Regex): SplitWithTransform<T, String?, String?> = by {
     it?.let { regex.matchEntire(it)?.groups?.drop(1)?.map { it?.value } } ?: emptyList<String>()
 }
 
 @PublishedApi
-internal fun <T, C, R> Split<T, C>.with(type: KType, splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> {
+internal fun <T, C, R> Split<T, C>.by(type: KType, splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> {
     require(this is SplitClause<T, C>)
     return SplitClauseWithTransform(df, columns, false, type) {
         if (it == null) emptyMany() else splitter(it).toMany()
@@ -302,7 +358,8 @@ public data class SplitClauseWithTransform<T, C, R>(
     val columns: ColumnsSelector<T, C?>,
     val inward: Boolean,
     val targetType: KType,
-    val transform: DataRow<T>.(C) -> Iterable<R>
+    val default: R? = null,
+    val transform: DataRow<T>.(C) -> Iterable<R>,
 ) : SplitWithTransform<T, C, R> {
 
     private fun ConvertClause<T, C?>.splitInplace() = convertRowCellImpl(Many::class.createTypeWithArgument(targetType)) { if (it == null) emptyMany() else transform(it).toMany() }
@@ -315,6 +372,8 @@ public data class SplitClauseWithTransform<T, C, R>(
     override fun inplace(): DataFrame<T> = df.convert(columns).splitInplace()
 
     override fun inward(names: Iterable<String>, extraNamesGenerator: ColumnNamesGenerator<C>?): DataFrame<T> = copy(inward = true).into(names.toList(), extraNamesGenerator)
+
+    override fun default(value: R?): SplitWithTransform<T, C, R> = copy(default = value)
 }
 
 public class FrameSplit<T, C>(
@@ -347,34 +406,50 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     } else names
 }
 
+public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.default(value: R?): SplitWithTransform<T, C, R> = by { it }.default(value)
+
+public fun <T> Split<T, String>.default(value: String?): SplitWithTransform<T, String, String> = by { it.splitDefault() }.default(value)
+
 @JvmName("intoRowsTC")
-public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> = with { it }
+public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> = by { it }
     .intoRows(dropEmpty)
 
 @JvmName("intoRowsFrame")
-public fun <T> Split<T, AnyFrame>.intoRows(dropEmpty: Boolean = true): DataFrame<T> = with { it.rows() }.intoRows(dropEmpty)
+public fun <T> Split<T, AnyFrame>.intoRows(dropEmpty: Boolean = true): DataFrame<T> = by { it.rows() }.intoRows(dropEmpty)
 
 @JvmName("inplaceTC")
-public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inplace(): DataFrame<T> = with { it }.inplace()
+public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inplace(): DataFrame<T> = by { it }.inplace()
 
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inward(
     vararg names: String,
     noinline extraNamesGenerator: ColumnNamesGenerator<C>? = null
 ): DataFrame<T> =
-    with { it }.inward(names.toList(), extraNamesGenerator)
+    by { it }.inward(names.toList(), extraNamesGenerator)
 
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.into(
     vararg names: String,
     noinline extraNamesGenerator: ColumnNamesGenerator<C>? = null
 ): DataFrame<T> =
-    with { it }.into(names.toList(), extraNamesGenerator)
+    by { it }.into(names.toList(), extraNamesGenerator)
+
+public fun <T, A, B> Split<T, Pair<A, B>>.into(
+    firstCol: String,
+    secondCol: String
+): DataFrame<T> =
+    by { listOf(it.first, it.second) }.into(firstCol, secondCol)
+
+public inline fun <T, reified A, reified B> Split<T, Pair<A, B>>.into(
+    firstCol: ColumnAccessor<A>,
+    secondCol: ColumnAccessor<B>
+): DataFrame<T> =
+    by { listOf(it.first, it.second) }.into(firstCol, secondCol)
 
 @JvmName("intoTC")
 public fun <T> Split<T, String>.into(
     vararg names: String,
     extraNamesGenerator: (ColumnWithPath<String>.(extraColumnIndex: Int) -> String)? = null
 ): DataFrame<T> =
-    with { it.splitDefault() }.into(names.toList(), extraNamesGenerator)
+    by { it.splitDefault() }.into(names.toList(), extraNamesGenerator)
 
 // endregion
 
@@ -394,10 +469,12 @@ public class MergeClause<T, C, R>(
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(column: ColumnAccessor<R>): DataFrame<T> = into(column.path())
 
+public fun <T, C, R> MergeClause<T, C, R>.intoList(): List<R> = df.select(selector).rows().map { transform(it, it.values() as List<C>) }
+
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnPath: ColumnPath): DataFrame<T> {
     val grouped = df.move(selector).under { columnPath }
     val res = grouped.convert { getColumnGroup(columnPath) }.with {
-        val srcRow = df[index]
+        val srcRow = df[index()]
         transform(srcRow, it.values() as List<C>)
     }
     return res
@@ -413,7 +490,7 @@ public fun <T, C, R> MergeClause<T, C, R>.by(
 ): MergeClause<T, C, String> =
     MergeClause(df, selector) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix, limit = limit, truncated = truncated) }
 
-public inline fun <T, C, R, reified V> MergeClause<T, C, R>.with(crossinline transform: DataRow<T>.(R) -> V): MergeClause<T, C, V> = MergeClause(df, selector) { transform(this@with.transform(this, it)) }
+public inline fun <T, C, R, reified V> MergeClause<T, C, R>.by(crossinline transform: DataRow<T>.(R) -> V): MergeClause<T, C, V> = MergeClause(df, selector) { transform(this@by.transform(this, it)) }
 
 // endregion
 
@@ -424,13 +501,18 @@ public fun <T> DataFrame<T>.explode(vararg columns: String, dropEmpty: Boolean =
 public fun <T, C> DataFrame<T>.explode(vararg columns: ColumnReference<C>, dropEmpty: Boolean = true): DataFrame<T> = explode(dropEmpty) { columns.toColumns() }
 public fun <T, C> DataFrame<T>.explode(vararg columns: KProperty<C>, dropEmpty: Boolean = true): DataFrame<T> = explode(dropEmpty) { columns.toColumns() }
 
+@JvmName("explodeList")
+public fun <T> DataColumn<Collection<T>>.explode(): DataColumn<T> = explodeImpl() as DataColumn<T>
+@JvmName("explodeFrames")
+public fun <T> DataColumn<DataFrame<T>>.explode(): ColumnGroup<T> = concat().toColumnGroup(name())
+
 // endregion
 
-// region mergeRows
+// region implode
 
-public fun <T, C> DataFrame<T>.mergeRows(dropNulls: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> = mergeRowsImpl(dropNulls, columns)
-public fun <T> DataFrame<T>.mergeRows(vararg columns: String, dropNulls: Boolean = false): DataFrame<T> = mergeRows(dropNulls) { columns.toColumns() }
-public fun <T, C> DataFrame<T>.mergeRows(vararg columns: ColumnReference<C>, dropNulls: Boolean = false): DataFrame<T> = mergeRows(dropNulls) { columns.toColumns() }
-public fun <T, C> DataFrame<T>.mergeRows(vararg columns: KProperty<C>, dropNulls: Boolean = false): DataFrame<T> = mergeRows(dropNulls) { columns.toColumns() }
+public fun <T, C> DataFrame<T>.implode(dropNulls: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> = implodeImpl(dropNulls, columns)
+public fun <T> DataFrame<T>.implode(vararg columns: String, dropNulls: Boolean = false): DataFrame<T> = implode(dropNulls) { columns.toColumns() }
+public fun <T, C> DataFrame<T>.implode(vararg columns: ColumnReference<C>, dropNulls: Boolean = false): DataFrame<T> = implode(dropNulls) { columns.toColumns() }
+public fun <T, C> DataFrame<T>.implode(vararg columns: KProperty<C>, dropNulls: Boolean = false): DataFrame<T> = implode(dropNulls) { columns.toColumns() }
 
 // endregion

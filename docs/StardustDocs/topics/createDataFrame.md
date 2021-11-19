@@ -7,10 +7,6 @@ This section describes ways to create [`DataFrame`](DataFrame.md).
 
 Returns [`DataFrame`](DataFrame.md) with given column names and values.
 
-```kotlin
-dataFrameOf(columnNames)(columnValues)
-```
-
 <!---FUN createDataFrameOf-->
 
 ```kotlin
@@ -24,11 +20,37 @@ val df = dataFrameOf("name", "age")(
 
 <!---END-->
 
+<!---FUN createDataFrameFromColumns-->
+
+```kotlin
+val name by columnOf("Alice", "Bob", "Mark")
+val age by columnOf(15, 20, 22)
+
+// DataFrame with 2 columns
+val df = dataFrameOf(name, age)
+```
+
+<!---END-->
+
+<!---FUN createDataFrameFromNamesAndValues-->
+
+```kotlin
+val names = listOf("name", "age")
+val values = listOf(
+    "Alice", 15,
+    "Bob", 20,
+    "Mark", 22
+)
+val df = dataFrameOf(names, values)
+```
+
+<!---END-->
+
 <!---FUN createDataFrameWithFill-->
 
 ```kotlin
-// DataFrame with columns from 'a' to 'z' and values from 1 to 10 for each column
-val df = dataFrameOf('a'..'z') { 1..10 }
+// Multiplication table
+dataFrameOf(1..10) { x -> (1..10).map { x * it } }
 ```
 
 <!---END-->
@@ -54,18 +76,6 @@ val df = dataFrameOf(names).fill(15, true)
 
 <!---END-->
 
-<!---FUN createDataFrameFromColumns-->
-
-```kotlin
-val name by columnOf("Alice", "Bob")
-val age by columnOf(15, 20)
-
-// DataFrame with 2 columns
-val df = dataFrameOf(name, age)
-```
-
-<!---END-->
-
 ### toDataFrame
 
 `DataFrame` from `Iterable<DataColumn>`:
@@ -73,10 +83,9 @@ val df = dataFrameOf(name, age)
 <!---FUN createDataFrameFromIterable-->
 
 ```kotlin
-val name by columnOf("Alice", "Bob")
-val age by columnOf(15, 20)
+val name by columnOf("Alice", "Bob", "Mark")
+val age by columnOf(15, 20, 22)
 
-// DataFrame with 2 columns
 listOf(name, age).toDataFrame()
 ```
 
@@ -87,10 +96,71 @@ listOf(name, age).toDataFrame()
 <!---FUN createDataFrameFromMap-->
 
 ```kotlin
-val map = mapOf("name" to listOf("Alice", "Bob"), "age" to listOf(15, 20))
+val map = mapOf("name" to listOf("Alice", "Bob", "Mark"), "age" to listOf(15, 20, 22))
 
 // DataFrame with 2 columns
 map.toDataFrame()
+```
+
+<!---END-->
+
+### createDataFrame
+
+Creates `DataFrame` from `Iterable` of any objects .
+
+<!---FUN createDataFrameFromObject-->
+
+```kotlin
+data class Person(val name: String, val age: Int)
+val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Mark", 22))
+
+val df = persons.createDataFrame()
+```
+
+<!---END-->
+
+Scans object properties using reflection and creates [ValueColumn](DataColumn.md#valuecolumn) for every property. Scope of properties for scanning is defined at compile-time by formal types of objects in `Iterable`, so properties of implementation classes will not be scanned.
+
+Specify `depth` parameter to perform deep object graph traversal and convert nested objects into [ColumnGroups](DataColumn.md#columngroup) and [FrameColumns](DataColumn.md#framecolumn):
+
+<!---FUN createDataFrameFromDeepObject-->
+
+```kotlin
+data class Name(val firstName: String, val lastName: String)
+data class Score(val subject: String, val value: Int)
+data class Student(val name: Name, val age: Int, val scores: List<Score>)
+
+val students = listOf(
+    Student(Name("Alice", "Cooper"), 15, listOf(Score("math", 4), Score("biology", 3))),
+    Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5)))
+)
+
+val df = students.createDataFrame(depth = 2)
+```
+
+<!---END-->
+
+For detailed control over object graph transformation use configuration DSL. It allows you to exclude particular properties or classes from object graph traversal, compute additional columns and configure column grouping.
+
+<!---FUN createDataFrameFromDeepObjectWithExclude-->
+
+```kotlin
+val df = students.createDataFrame {
+    // add value column
+    "year of birth" from { 2021 - it.age }
+
+    // scan all properties
+    properties(depth = 2) {
+        exclude(Score::subject) // `subject` property will be skipped from object graph traversal
+        preserve<Name>() // `Name` objects will be stored as-is without transformation into DataFrame
+    }
+
+    // add column group
+    "summary" {
+        "max score" from { it.scores.maxOf { it.value } }
+        "min score" from { it.scores.minOf { it.value } }
+    }
+}
 ```
 
 <!---END-->

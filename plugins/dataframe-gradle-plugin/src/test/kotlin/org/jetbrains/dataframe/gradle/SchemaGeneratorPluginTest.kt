@@ -1,8 +1,6 @@
 package org.jetbrains.dataframe.gradle
 
 import io.kotest.matchers.shouldBe
-import org.gradle.api.internal.project.ProjectInternal
-import org.gradle.testfixtures.ProjectBuilder
 import org.gradle.testkit.runner.TaskOutcome
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.junit.Before
@@ -10,7 +8,7 @@ import org.junit.Test
 import java.io.File
 import java.nio.file.Files
 
-internal class SchemaGeneratorPluginTes {
+internal class SchemaGeneratorPluginTest {
 
     private lateinit var dataDir: String
 
@@ -27,7 +25,7 @@ internal class SchemaGeneratorPluginTes {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-                kotlin("jvm") version "1.4.10"
+                kotlin("jvm") version "1.6.0"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -55,7 +53,7 @@ internal class SchemaGeneratorPluginTes {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-                kotlin("jvm") version "1.4.10"
+                kotlin("jvm") version "1.6.0"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -85,7 +83,7 @@ internal class SchemaGeneratorPluginTes {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    id "org.jetbrains.kotlin.jvm" version "1.4.10"
+                    id "org.jetbrains.kotlin.jvm" version "1.6.0"
                     id "org.jetbrains.kotlin.plugin.dataframe"
                 }
                 
@@ -115,7 +113,7 @@ internal class SchemaGeneratorPluginTes {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-                kotlin("jvm") version "1.4.10"
+                kotlin("jvm") version "1.6.0"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -148,7 +146,7 @@ internal class SchemaGeneratorPluginTes {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
             plugins {
-                kotlin("jvm") version "1.4.10"
+                kotlin("jvm") version "1.6.0"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -176,7 +174,7 @@ internal class SchemaGeneratorPluginTes {
 
     @Test
     fun `most specific sourceSet is used in the packageName inference`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.plugins.apply("org.jetbrains.kotlin.jvm")
         project.extensions.getByType(KotlinJvmProjectExtension::class.java).apply {

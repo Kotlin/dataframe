@@ -45,10 +45,10 @@ class SeriesTests {
             .sortBy { city and day }
             .groupBy { city }
             .add("diff") { diff { it.temp } }
-            .union()
+            .concat()
 
-        val srcData = typed.map { (city to day) to temp }.toMap()
-        val expected = typed.sortBy { city and day }.map { row -> srcData[city to (day - 1)]?.let { row.temp - it } ?: 0 }
+        val srcData = typed.rows().map { (it.city to it.day) to it.temp }.toMap()
+        val expected = typed.sortBy { city and day }.rows().map { row -> srcData[row.city to (row.day - 1)]?.let { row.temp - it } ?: 0 }
         withDiff["diff"].toList() shouldBe expected
     }
 
@@ -59,12 +59,13 @@ class SeriesTests {
             .groupBy { city }
             .sortBy { city and day }
             .add("ma_temp") { it.movingAverage(k) { it.temp } }
-            .union()
+            .concat()
 
-        val srcData = typed.map { (city to day) to temp }.toMap()
+        val srcData = typed.rows().map { (it.city to it.day) to it.temp }.toMap()
         val expected = typed
             .sortBy { city and day }
-            .map { (0 until k).map { srcData[city to day - it] }.filterNotNull().let { it.sum().toDouble() / it.size } }
+            .rows()
+            .map { row -> (0 until k).map { srcData[row.city to row.day - it] }.filterNotNull().let { it.sum().toDouble() / it.size } }
 
         withMa["ma_temp"].toList() shouldBe expected
     }

@@ -51,18 +51,18 @@ df.dropNulls(whereAllNull = true) { city and weight } // remove rows with null v
 
 <!---END-->
 
-## dropNa
+## dropNA
 
-Remove rows with `null` or `Double.NaN` values
+Remove rows with `null`, `Double.NaN` or `Float.NaN` values
 
-<!---FUN dropNa-->
+<!---FUN dropNA-->
 
 ```kotlin
-df.dropNa() // remove rows containing null or Double.NaN in any column
-df.dropNa(whereAllNa = true) // remove rows with null or Double.NaN in all columns
-df.dropNa { weight } // remove rows where 'weight' is null or Double.NaN
-df.dropNa { age and weight } // remove rows where either 'age' or 'weight' is null or Double.NaN
-df.dropNa(whereAllNa = true) { age and weight } // remove rows where both 'age' and 'weight' are null or Double.NaN
+df.dropNA() // remove rows containing null or Double.NaN in any column
+df.dropNA(whereAllNA = true) // remove rows with null or Double.NaN in all columns
+df.dropNA { weight } // remove rows where 'weight' is null or Double.NaN
+df.dropNA { age and weight } // remove rows where either 'age' or 'weight' is null or Double.NaN
+df.dropNA(whereAllNA = true) { age and weight } // remove rows where both 'age' and 'weight' are null or Double.NaN
 ```
 
 <!---END-->

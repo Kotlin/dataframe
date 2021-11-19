@@ -24,7 +24,7 @@ internal fun concatImpl(dataFrames: List<AnyFrame>): AnyFrame {
 
     val columns = columnNames.map { name ->
 
-        val columns = dataFrames.map { it.tryGetColumn(name) }
+        val columns = dataFrames.map { it.getColumnOrNull(name) }
 
         if (columns.all { it == null || it.isColumnGroup() }) {
             val frames = columns.mapIndexed { index, col ->
