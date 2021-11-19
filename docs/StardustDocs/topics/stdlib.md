@@ -2,11 +2,12 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-`DataFrame` can be interpreted as an `Iterable<DataRow>`. Although `DataFrame` doesn't implement `Iterable` interface, it defines most extension functions available for `Iterable`
+`DataFrame` doesn't implement `Iterable` interface, but redefines some of extension functions available for `Iterable`:
+
 <!---FUN iterableApi-->
 
 ```kotlin
-df.forEach { println(it) }
+df.forEachRow { println(it) }
 df.take(5)
 df.drop(2)
 df.chunked(10)
@@ -14,14 +15,14 @@ df.chunked(10)
 
 <!---END-->
 
-### asIterable / asSequence
+To convert `DataFrame` into `Iterable`/`Sequence` of rows, columns or cell values use the following functions:
 
-`DataFrame` can be converted to `Iterable` or to `Sequence`:
-<!---FUN asIterableOrSequence-->
+<!---FUN getRowsColumns-->
 
 ```kotlin
-df.asIterable()
-df.asSequence()
+df.columns() // List<DataColumn>
+df.rows() // Iterable<DataRow>
+df.values() // Sequence<Any?>
 ```
 
 <!---END-->

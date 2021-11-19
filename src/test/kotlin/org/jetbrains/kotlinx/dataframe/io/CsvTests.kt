@@ -1,16 +1,20 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.getType
+import org.jetbrains.kotlinx.dataframe.test.testCsv
 import org.junit.Test
 import java.io.StringWriter
 import java.time.LocalDateTime
-
-private const val PATH_TO_DATA = "src/test/resources/testCSV.csv"
+import java.util.Locale
+import kotlin.reflect.KClass
 
 class CsvTests {
 
@@ -48,13 +52,13 @@ class CsvTests {
 
     @Test
     fun readCSV() {
-        val df = DataFrame.read(PATH_TO_DATA)
+        val df = DataFrame.read(simpleCsv)
 
         df.ncol() shouldBe 11
         df.nrow() shouldBe 5
-        df.columnNames()[5] shouldBe "duplicate_1"
-        df.columnNames()[6] shouldBe "duplicate_1_1"
-        df["duplicate_1"].type() shouldBe getType<String?>()
+        df.columnNames()[5] shouldBe "duplicate1"
+        df.columnNames()[6] shouldBe "duplicate11"
+        df["duplicate1"].type() shouldBe getType<String?>()
         df["double"].type() shouldBe getType<Double?>()
         df["time"].type() shouldBe getType<LocalDateTime>()
 
@@ -62,14 +66,45 @@ class CsvTests {
     }
 
     @Test
+    fun readCSVwithFrenchLocaleAndAlternativeDelimiter() {
+        val df = DataFrame.readCSV(csvWithFrenchLocale, delimiter = ';', parserOptions = ParserOptions(locale = Locale.FRENCH))
+
+        df.ncol() shouldBe 11
+        df.nrow() shouldBe 5
+        df.columnNames()[5] shouldBe "duplicate1"
+        df.columnNames()[6] shouldBe "duplicate11"
+        df["duplicate1"].type() shouldBe getType<String?>()
+        df["double"].type() shouldBe getType<Double?>()
+        df["number"].type() shouldBe getType<Double>()
+        df["time"].type() shouldBe getType<LocalDateTime>()
+
+        println(df)
+    }
+
+    @Test
+    fun readCsvWithFloats() {
+        val df = DataFrame.readCSV(wineCsv, delimiter = ';')
+        val schema = df.schema()
+        fun assertColumnType(columnName: String, kClass: KClass<*>) {
+            val col = schema.columns[columnName]
+            col.shouldNotBeNull()
+            col.type.classifier shouldBe kClass
+        }
+
+        assertColumnType("citric acid", Double::class)
+        assertColumnType("alcohol", Double::class)
+        assertColumnType("quality", Int::class)
+    }
+
+    @Test
     fun `read with custom header`() {
         val header = ('A'..'K').map { it.toString() }
-        val df = DataFrame.readCSV(PATH_TO_DATA, headers = header, skipLines = 1)
+        val df = DataFrame.readCSV(simpleCsv, headers = header, skipLines = 1)
         df.columnNames() shouldBe header
         df["B"].type() shouldBe getType<Int>()
 
         val headerShort = ('A'..'E').map { it.toString() }
-        val dfShort = DataFrame.readCSV(PATH_TO_DATA, headers = headerShort, skipLines = 1)
+        val dfShort = DataFrame.readCSV(simpleCsv, headers = headerShort, skipLines = 1)
         dfShort.ncol() shouldBe 5
         dfShort.columnNames() shouldBe headerShort
     }
@@ -77,15 +112,21 @@ class CsvTests {
     @Test
     fun `read first rows`() {
         val expected =
-            listOf("", "user_id", "name", "duplicate", "username", "duplicate_1", "duplicate_1_1", "double", "number", "time", "empty")
-        val dfHeader = DataFrame.readCSV(PATH_TO_DATA, readLines = 0)
+            listOf("untitled", "user_id", "name", "duplicate", "username", "duplicate1", "duplicate11", "double", "number", "time", "empty")
+        val dfHeader = DataFrame.readCSV(simpleCsv, readLines = 0)
         dfHeader.nrow() shouldBe 0
         dfHeader.columnNames() shouldBe expected
 
-        val dfThree = DataFrame.readCSV(PATH_TO_DATA, readLines = 3)
+        val dfThree = DataFrame.readCSV(simpleCsv, readLines = 3)
         dfThree.nrow() shouldBe 3
 
-        val dfFull = DataFrame.readCSV(PATH_TO_DATA, readLines = 10)
+        val dfFull = DataFrame.readCSV(simpleCsv, readLines = 10)
         dfFull.nrow() shouldBe 5
+    }
+
+    companion object {
+        private val simpleCsv = testCsv("testCSV")
+        private val csvWithFrenchLocale = testCsv("testCSVwithFrenchLocale")
+        private val wineCsv = testCsv("wine")
     }
 }

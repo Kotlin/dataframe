@@ -2,14 +2,14 @@ package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
+import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
@@ -21,12 +21,13 @@ import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
 public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     public companion object {
-        public fun empty(nrow: Int = 0): AnyFrame = EmptyDataFrame<Unit>(nrow)
+        public val Empty: AnyFrame = EmptyDataFrame<Unit>(0)
+        public fun empty(nrow: Int = 0): AnyFrame = if (nrow == 0) Empty else EmptyDataFrame<Unit>(nrow)
     }
 
     override fun columns(): List<AnyCol>
 
-    public fun columnNames(): List<String> = columns().map { it.name() }
+    public fun columnNames(): List<String>
 
     override fun ncol(): Int = columns().size
 
@@ -37,24 +38,6 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     public fun <C> valuesNotNull(byRow: Boolean = false, columns: ColumnsSelector<T, C?>): Sequence<C> = values(byRow, columns).filterNotNull()
     public fun valuesNotNull(byRow: Boolean = false): Sequence<Any> = valuesNotNull(byRow) { all() }
-
-    override fun getColumn(columnIndex: Int): DataColumn<*> = columns()[columnIndex]
-
-    public operator fun set(columnName: String, value: AnyCol)
-
-    override operator fun get(index: Int): DataRow<T> = DataRowImpl(index, this)
-
-    override operator fun get(columnName: String): DataColumn<*> =
-        tryGetColumn(columnName) ?: throw Exception("Column not found: '$columnName'")
-
-    override operator fun <R> get(column: ColumnReference<R>): DataColumn<R> = tryGetColumn(column)
-        ?: error("Column not found: ${column.path().joinToString("/")}")
-
-    override operator fun <R> get(column: ColumnReference<DataRow<R>>): ColumnGroup<R> =
-        get<DataRow<R>>(column) as ColumnGroup<R>
-
-    override operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R> =
-        get<DataFrame<R>>(column) as FrameColumn<R>
 
     override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = getColumns(false, columns)
 
@@ -67,29 +50,23 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     public operator fun get(first: Column, vararg other: Column): DataFrame<T> = select(listOf(first) + other)
     public operator fun get(first: String, vararg other: String): DataFrame<T> = select(listOf(first) + other)
 
-    public operator fun plus(col: AnyCol): DataFrame<T> = (columns() + col).toDataFrame().cast()
+    public operator fun plus(col: AnyCol): DataFrame<T> = add(col)
     public operator fun plus(cols: Iterable<AnyCol>): DataFrame<T> = (columns() + cols).toDataFrame().cast()
 
     public fun getColumnIndex(name: String): Int
 
-    public fun <R> tryGetColumn(column: ColumnReference<R>): DataColumn<R>? = column.resolveSingle(
-        this,
-        UnresolvedColumnsPolicy.Skip
-    )?.data
+    override fun <R> resolve(reference: ColumnReference<R>): ColumnWithPath<R>? = reference.resolveSingle(this, UnresolvedColumnsPolicy.Skip)
 
-    override fun tryGetColumn(columnName: String): AnyCol? =
-        getColumnIndex(columnName).let { if (it != -1) getColumn(it) else null }
+    override fun getColumnOrNull(name: String): AnyCol? =
+        getColumnIndex(name).let { if (it != -1) getColumn(it) else null }
 
-    override fun tryGetColumn(path: ColumnPath): AnyCol? =
-        if (path.size == 1) tryGetColumn(path[0])
-        else path.dropLast(1).fold(this as AnyFrame?) { df, name -> df?.tryGetColumn(name) as? AnyFrame? }
-            ?.tryGetColumn(path.last())
-
-    public fun tryGetColumnGroup(name: String): ColumnGroup<*>? = tryGetColumn(name) as? ColumnGroup<*>
+    override fun asColumnGroup(): ColumnGroup<*> = DataColumn.createColumnGroup("", this)
 
     public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
 
     public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T>
+
+    public operator fun get(index: Int): DataRow<T> = DataRowImpl(index, this)
 
     public fun nrow(): Int
     public fun rows(): Iterable<DataRow<T>>
@@ -99,6 +76,6 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 internal val AnyFrame.ncol get() = ncol()
 internal val AnyFrame.nrow get() = nrow()
 internal val AnyFrame.indices get() = indices()
+internal val AnyFrame.size: DataFrameSize get() = DataFrameSize(ncol(), nrow())
 
 public fun AnyFrame.size(): DataFrameSize = DataFrameSize(ncol(), nrow())
-public val AnyFrame.size: DataFrameSize get() = DataFrameSize(ncol(), nrow())

@@ -5,21 +5,15 @@
 Moves one or several columns within `DataFrame`.
 
 ```kotlin
-df.move { column }.into(columnPath)
-df.move { columns }.into { columnPathExpression }
-df.move { columns }.under(parentPath)
-df.move { columns }.under { parentPathExpression }
-df.move { columns }.toTop()
-df.move { columns }.toTop { columnNameExpression }
-df.move { columns }.to(position)
-df.move { columns }.toLeft()
-df.move { columns }.toRight()
-df.move { columns }.after { column }
+move { columns }
+    .into { pathSelector } | .under { parentColumn } | .after { column } | .to(position) | .toTop() | .toLeft() | .toRight()
+
+pathSelector: DataFrame.(DataColumn) -> ColumnPath
 ```
 
 See [Column Selectors](ColumnSelectors.md)
 
-Can be used to change hierarchical order of columns in `DataFrame` by providing a new `ColumnPath` for every column
+Can be used to change columns hierarchy by providing `ColumnPath` for every moved column
 
 <!---FUN move-->
 
@@ -28,27 +22,33 @@ df.move { age }.toLeft()
 
 df.move { weight }.to(1)
 
-// name -> info.name
-df.move { age }.into { pathOf("info", it.name) }
-
-// firstName -> fullName.firstName
-// lastName -> fullName.lastName
+// age -> info.age
+// weight -> info.weight
+df.move { age and weight }.into { pathOf("info", it.name) }
+df.move { age and weight }.into { "info"[it.name] }
 df.move { age and weight }.under("info")
 
 // name.firstName -> fullName.first
 // name.lastName -> fullName.last
 df.move { name.firstName and name.lastName }.into { pathOf("fullName", it.name.dropLast(4)) }
 
-dataFrameOf("a.b.c", "a.d.e")(1, 2)
-    .move { all() }.into { it.name.split(".").toPath() }
+// a|b|c -> a.b.c
+// a|d|e -> a.d.e
+dataFrameOf("a|b|c", "a|d|e")(0, 0)
+    .move { all() }.into { it.name.split("|").toPath() }
 
 // name.firstName -> firstName
 // name.lastName -> lastName
 df.move { name.cols() }.toTop()
 
-// group1.default.name -> defaultData
-// group2.field.name -> fieldData
-df.move { dfs { it.name == "data" } }.toTop { it.parent!!.name + "Data" }
+// a.b.e -> be
+// c.d.e -> de
+df.move { dfs { it.name == "e" } }.toTop { it.parent!!.name + it.name }
 ```
 
 <!---END-->
+
+Special cases of `move`:
+* [`group`](group.md) - groups columns into [`ColumnGroups`](DataColumn.md#columngroup)
+* [`ungroup`](ungroup.md) - ungroups [`ColumnGroups`](DataColumn.md#columngroup)
+* [`flatten`](flatten.md) - removes all column groupings

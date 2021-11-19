@@ -1,14 +1,14 @@
 [//]: # (title: DataColumn)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
-`DataColumn` represents a column of values. It can store primitive types, objects or other [`DataFrames`](DataFrame.md).
+`DataColumn` represents a column of values. It can store objects of primitive or reference types, or other [`DataFrames`](DataFrame.md).
 
 See [how to create columns](createColumn.md)
 
 ### Properties
-* `name: String` - unique name of the column
+* `name: String` - name of the column, should be unique within containing dataframe
 * `type: KType` - type of elements in the column
-* `size: Int` - length of the column
+* `size: Int` - number of elements in the column
 * `values: Iterable<T>` - column data
 * `hasNulls: Boolean` - flag indicating whether column contains `null` values
 
@@ -19,7 +19,7 @@ See [how to create columns](createColumn.md)
 
 Represents a sequence of values. 
 
-It can store values of primitive (integers, strings, decimals etc.) or object types. Currently, it uses [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) as underlying data storage.
+It can store values of primitive (integers, strings, decimals etc.) or reference types. Currently, it uses [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) as underlying data storage.
 
 #### ColumnGroup
 
@@ -44,10 +44,22 @@ Special case of [`ValueColumn`](#valuecolumn) that stores other [`DataFrames`](D
 ```kotlin
 val age by column<Int>()
 
+// Access fourth cell in the "age" column of dataframe `df`.
+// This expression returns `Int` because variable `age` has `ColumnAccessor<Int>` type.
+// If dataframe `df` has no column "age" or column "age" has type which is incompatible with `Int`,
+// runtime exception will be thrown.
 df[age][3] + 5
-df[1][age] * 2
+
+// Access first cell in the "age" column of dataframe `df`.
+df[0][age] * 2
+
+// Returns new dataframe sorted by age column (ascending)
 df.sortBy(age)
+
+// Returns new dataframe with the column "year of birth" added
 df.add("year of birth") { 2021 - age }
+
+// Returns new dataframe containing only rows with age > 30
 df.filter { age > 30 }
 ```
 
@@ -62,7 +74,8 @@ To convert `ColumnAccessor` into `DataColumn` just add values:
 
 ```kotlin
 val age by column<Int>()
-val ageCol = age.withValues(15, 20)
+val ageCol1 = age.withValues(15, 20)
+val ageCol2 = age.withValues(1..10)
 ```
 
 <!---END-->

@@ -17,9 +17,9 @@ public fun AnyRow.isEmpty(): Boolean = owner.columns().all { it[index] == null }
 public fun AnyRow.isNotEmpty(): Boolean = !isEmpty()
 
 public inline fun <T, reified R : Number> DataRow<T>.diff(expression: RowExpression<T, R>): Number = when (R::class) {
-    Double::class -> prev?.let { (expression(this) as Double) - (expression(it) as Double) } ?: .0
-    Int::class -> prev?.let { (expression(this) as Int) - (expression(it) as Int) } ?: 0
-    Long::class -> prev?.let { (expression(this) as Long) - (expression(it) as Long) } ?: 0
+    Double::class -> prev()?.let { (expression(this) as Double) - (expression(it) as Double) } ?: .0
+    Int::class -> prev()?.let { (expression(this) as Int) - (expression(it) as Int) } ?: 0
+    Long::class -> prev()?.let { (expression(this) as Long) - (expression(it) as Long) } ?: 0
     else -> throw NotImplementedError()
 }
 

@@ -12,14 +12,15 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
+import org.jetbrains.kotlinx.dataframe.api.explodeLists
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.gather
-import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.groupByOther
+import org.jetbrains.kotlinx.dataframe.api.implode
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isMany
 import org.jetbrains.kotlinx.dataframe.api.join
@@ -28,7 +29,6 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
 import org.jetbrains.kotlinx.dataframe.api.mapValues
 import org.jetbrains.kotlinx.dataframe.api.matches
-import org.jetbrains.kotlinx.dataframe.api.mergeRows
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.pivot
@@ -50,7 +50,7 @@ import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ndistinct
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.get
+import org.jetbrains.kotlinx.dataframe.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.manyOf
@@ -113,10 +113,10 @@ class PivotTests {
         res.ncol() shouldBe 1 + filtered.key.ndistinct()
         res.nrow() shouldBe filtered.name.ndistinct()
 
-        val expected = filtered.map { (name to key) }.toSet()
+        val expected = filtered.rows().map { (it.name to it.key) }.toSet()
         val actual = res.columns().subList(1, res.ncol()).flatMap {
             val columnName = it.name()
-            res.map {
+            res.rows().map {
                 val value = it[columnName] as Boolean
                 if (value) {
                     (it.name to columnName)
@@ -247,9 +247,9 @@ class PivotTests {
             .groupBy { name and key }.with { value }
 
         val expected = typed.dropNulls { value }.add {
-            "Int" { value as? Int }
-            "String" { value as? String }
-        }.remove("value").mergeRows("Int", dropNulls = true)
+            "Int" from { value as? Int }
+            "String" from { value as? String }
+        }.remove("value").implode("Int", dropNulls = true)
 
         pivoted shouldBe expected
     }
@@ -273,16 +273,16 @@ class PivotTests {
                 else -> it.name() shouldBe "value"
             }
         }
-        pivoted["Bob"]["weight"]["value"] shouldBe 87
+        pivoted.getColumnGroup("Bob").getColumnGroup("weight")["value"] shouldBe 87
     }
 
     @Test
     fun `pivot two values without index group by value`() {
         val pivoted = typed.pivot { name }.values(separate = true) { key and value }
         pivoted.df().columnNames() shouldBe listOf("key", "value")
-        (pivoted["key"]["Alice"] as Many<String>).size shouldBe 4
-        pivoted.df()["value"]["Bob"].type() shouldBe getType<Many<Int>>()
-        pivoted["value"]["Bob"] shouldBe manyOf(45, 87)
+        (pivoted.getColumnGroup("key")["Alice"] as Many<String>).size shouldBe 4
+        pivoted.df().getColumnGroup("value")["Bob"].type() shouldBe getType<Many<Int>>()
+        pivoted.getColumnGroup("value")["Bob"] shouldBe manyOf(45, 87)
     }
 
     @Test
@@ -309,14 +309,14 @@ class PivotTests {
     @Test
     fun gather() {
         val res = typed.pivot { key }.groupBy { name }.with { value }
-        val gathered = res.gather { cols().drop(1) }.into("key", "value")
+        val gathered = res.gather { drop(1) }.notNull().into("key", "value")
         gathered shouldBe typed.dropNulls { value }.sortBy { name and "key" }
     }
 
     @Test
     fun `gather with filter`() {
         val pivoted = typed.pivot { key }.groupBy { name }.with { value }
-        val gathered = pivoted.gather { cols().drop(1) }.where { it is Int }.into("key", "value")
+        val gathered = pivoted.gather { drop(1) }.explodeLists().where { it is Int }.into("key", "value")
         gathered shouldBe typed.filter { value is Int }.sortBy("name", "key").convert("value").toInt() // TODO: replace convert with cast
     }
 
@@ -335,7 +335,7 @@ class PivotTests {
         pivoted2 shouldBe pivoted
         pivoted3 shouldBe pivoted
 
-        val gathered = pivoted.gather { cols().drop(1) }.into("key", "value")
+        val gathered = pivoted.gather { drop(1) }.notNull().into("key", "value")
         val expected =
             expectedFiltered.update { key }.with { keyConverter(it) }
                 .convert { value }.with { valueConverter(it) as? Serializable }
@@ -345,22 +345,22 @@ class PivotTests {
     @Test
     fun `gather with value conversion`() {
         val pivoted = typed.pivot { key }.groupBy { name }.with { valueConverter(value) }
-        val gathered = pivoted.gather { cols().drop(1) }.mapValues { (it as? Double)?.toInt() ?: it }.into("key", "value")
+        val gathered = pivoted.gather { cols().drop(1) }.explodeLists().notNull().mapValues { (it as? Double)?.toInt() ?: it }.into("key", "value")
         gathered shouldBe expectedFiltered
     }
 
     @Test
     fun `gather doubles with value conversion`() {
         val pivoted = typed.pivot { key }.groupBy { name }.with { valueConverter(value) }
-        val gathered = pivoted.remove("city").gather { doubleCols() }.notNull().mapValues { it.toInt() }.into("key", "value")
-        val expected = typed.filter { key != "city" && value != null }.convert { value }.to<Int>().sortBy { name and key }
+        val gathered = pivoted.remove("city").gather { drop(1) }.explodeLists().notNull().cast<Double>().mapValues { it.toInt() }.into("key", "value")
+        val expected = typed.filter { key != "city" && value != null }.convert { value }.toInt().sortBy { name and key }
         gathered shouldBe expected
     }
 
     @Test
     fun `gather with name conversion`() {
         val pivoted = typed.pivot { key.map(keyConverter) }.groupBy { name }.with { value }
-        val gathered = pivoted.gather { cols().drop(1) }.mapKeys { it.substring(2) }.into("key", "value")
+        val gathered = pivoted.gather { cols().drop(1) }.notNull().mapKeys { it.substring(2) }.into("key", "value")
         gathered shouldBe expectedFiltered
     }
 

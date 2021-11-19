@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
-import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
+import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.getAggregateColumns
@@ -31,7 +31,7 @@ internal fun <T, C, R> Aggregatable<T>.aggregateFor(
 }
 
 internal fun <T, C, R> Aggregator<*, R>.aggregateFor(
-    data: GroupedPivot<T>,
+    data: PivotGroupBy<T>,
     separate: Boolean,
     columns: ColumnsForAggregateSelector<T, C?>
 ): DataFrame<T> = data.separateStatistics(separate).aggregateFor(columns, cast())

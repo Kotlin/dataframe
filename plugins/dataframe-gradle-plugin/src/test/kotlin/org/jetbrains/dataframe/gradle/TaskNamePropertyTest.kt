@@ -14,7 +14,7 @@ import java.io.File
 class TaskNamePropertyTest {
     @Test
     fun `task name is last part of FQ name`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             schema {
@@ -29,7 +29,7 @@ class TaskNamePropertyTest {
 
     @Test
     fun `name from task property have higher priority then inferred from data`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             schema {
@@ -44,7 +44,7 @@ class TaskNamePropertyTest {
 
     @Test
     fun `task name contains invalid characters`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             schema {
@@ -61,7 +61,7 @@ class TaskNamePropertyTest {
 
     @Test
     fun `data name should not override invalid name`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             schema {
@@ -78,7 +78,7 @@ class TaskNamePropertyTest {
 
     @Test
     fun `name convention is data file name`() {
-        val project = ProjectBuilder.builder().build() as ProjectInternal
+        val project = makeProject()
         project.plugins.apply(SchemaGeneratorPlugin::class.java)
         project.extensions.getByType(SchemaGeneratorExtension::class.java).apply {
             schema {

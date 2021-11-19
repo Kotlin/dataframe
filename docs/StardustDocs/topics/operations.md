@@ -3,7 +3,8 @@
 ## List of operations
 
 **[Data Access](access.md)**
-* [forEach](iterate.md#foreach)
+* [forEachRow](iterate.md)
+* [forEachColumn](iterate.md)
 * [single](getRow.md#single)
 * [singleOrNull](getRow.md#singleornull)
 * [first](getRow.md#first)
@@ -32,9 +33,9 @@
 * [drop](drop.md)
 * [dropNulls](drop.md#dropnulls)
 * [dropNa](drop.md#dropna)
-* [dropLast](slicing.md#droplast)
-* [take](slicing.md#take)
-* [takeLast](slicing.md#takelast)
+* [dropLast](sliceRows.md#droplast)
+* [take](sliceRows.md#take)
+* [takeLast](sliceRows.md#takelast)
 * [distinct](distinct.md)
 * [distinctBy](distinct.md#distinctby)
 * [sortBy](sortBy.md)
@@ -44,15 +45,17 @@
 * [update](update.md)
 * [convert](convert.md)
 * [parse](parse.md)
-* [fillNulls](fillNulls.md)
-* [nullToZero](nullToZero.md)
+* [fillNulls](fill.md#fillnulls)
+* [fillNaNs](fill.md#fillnans)
+* [fillNA](fill.md#fillna)
 * [split](split.md)
 * [merge](merge.md)
 * [explode](explode.md)
-* [mergeRows](mergeRows.md)
+* [implode](implode.md)
 * [append](append.md)
 * [select](select.md)
 * [add](add.md)
+* [map](map.md)
 * [remove](remove.md)
 * [move](move.md)
 * [insert](insert.md)
@@ -68,7 +71,6 @@
 **[Multiple DataFrames](multipleDataFrames.md)**
 * [join](join.md)
 * [concat](concat.md)
-* [union](union.md)
 
 **[Rendering](rendering.md)**
 * [format](format.md)

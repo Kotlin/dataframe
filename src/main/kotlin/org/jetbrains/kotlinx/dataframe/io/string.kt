@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.Many
-import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
+import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.impl.renderType
@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.size
 
-public fun <T, G> GroupedDataFrame<T, G>.print(): Unit = println(this)
+public fun <T, G> GroupBy<T, G>.print(): Unit = println(this)
 
 internal fun AnyFrame.renderToString(limit: Int = 20, truncate: Int = 40): String {
     val sb = StringBuilder()

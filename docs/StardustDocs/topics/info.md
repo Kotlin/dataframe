@@ -1,10 +1,11 @@
-[//]: # (title: Basic info)
+[//]: # (title: General info)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Basic information about `DataFrame`:
+General information about `DataFrame`:
 * `nrow()` - number of rows
 * `ncol()` - number of columns
 * `columnNames()` - list of column names
+* `head(n)` - first n rows (default 5)
 * [`schema()`](schema.md) - schema of columns
-* [`describe()`](describe.md) - basic statistics for every column
+* [`describe()`](describe.md) - general statistics for every column

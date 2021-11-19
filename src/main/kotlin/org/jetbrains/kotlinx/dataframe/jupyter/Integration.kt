@@ -6,9 +6,9 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
-import org.jetbrains.kotlinx.dataframe.api.GroupedDataFrame
-import org.jetbrains.kotlinx.dataframe.api.GroupedPivot
-import org.jetbrains.kotlinx.dataframe.api.PivotedDataFrame
+import org.jetbrains.kotlinx.dataframe.api.GroupBy
+import org.jetbrains.kotlinx.dataframe.api.Pivot
+import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -53,9 +53,9 @@ internal class Integration : JupyterIntegration() {
             render<AnyRow>({ it.toDataFrame() }, { "DataRow [${it.ncol}]" })
             render<ColumnGroup<*>>({ it.df })
             render<AnyCol>({ listOf(it).toDataFrame() }, { "DataColumn [${it.nrow()}]" })
-            render<GroupedDataFrame<*, *>>({ it.toDataFrame() })
-            render<PivotedDataFrame<*>> { it.toDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
-            render<GroupedPivot<*>> { it.toDataFrame().toHTML(config.display) { "GroupedPivot: ${it.size}" } }
+            render<GroupBy<*, *>>({ it.toDataFrame() })
+            render<Pivot<*>> { it.toDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
+            render<PivotGroupBy<*>> { it.toDataFrame().toHTML(config.display) { "GroupedPivot: ${it.size}" } }
 
             render<IMG> { HTML("<img src=\"${it.url}\"/>") }
         }

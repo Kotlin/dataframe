@@ -1,15 +1,13 @@
 [//]: # (title: replace)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Replaces one or several columns with new columns
+Replaces one or several columns with new columns.
 
 ```kotlin
-df.replace { columnsSelector }.with(newColumns)
-df.replace { columnsSelector }.with { columnExpression }
-```
+replace { columns }
+    .with(newColumns) | .with { columnExpression }
 
-```
-columnExpression = DataFrame.(DataColumn) -> DataColumn
+columnExpression: DataFrame.(DataColumn) -> DataColumn
 ```
 
 See [column selectors](ColumnSelectors.md)
@@ -24,4 +22,4 @@ df.replace { age }.with { 2021 - age named "year" }
 
 <!---END-->
 
-`replace { cols }.with { expr } ` is equivalent to [`convert { cols }.to { expr }`](convert.md)
+Note: `replace { columns }.with { columnExpression } ` is equivalent to `convert { columns }.to { columnExpression }`. See [convert](convert.md)

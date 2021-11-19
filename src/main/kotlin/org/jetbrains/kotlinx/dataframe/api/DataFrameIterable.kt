@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
@@ -27,8 +28,10 @@ import org.jetbrains.kotlinx.dataframe.impl.api.sortByImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.toIndices
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.indices
@@ -40,8 +43,7 @@ import kotlin.reflect.KProperty
 
 // region DataFrame Iterable API
 
-public fun <T> DataFrame<T>.asIterable(): Iterable<DataRow<T>> = rows()
-public fun <T> DataFrame<T>.asSequence(): Sequence<DataRow<T>> = asIterable().asSequence()
+public fun <T> DataFrame<T>.asSequence(): Sequence<DataRow<T>> = rows().asSequence()
 
 public fun <T> DataFrame<T>.any(predicate: RowFilter<T>): Boolean = rows().any { predicate(it, it) }
 public fun <T> DataFrame<T>.all(predicate: RowFilter<T>): Boolean = rows().all { predicate(it, it) }
@@ -71,17 +73,13 @@ public fun AnyFrame.isNotEmpty(): Boolean = !isEmpty()
 
 // region map
 
-public inline fun <T, R> DataFrame<T>.map(expression: RowExpression<T, R>): List<R> = rows().map { expression(it, it) }
-public fun <T, R> DataFrame<T>.mapIndexedNotNull(action: (Int, DataRow<T>) -> R?): List<R> =
-    rows().mapIndexedNotNull(action)
-
-public fun <T, R> DataFrame<T>.mapIndexed(action: (Int, DataRow<T>) -> R): List<R> = rows().mapIndexed(action)
-
-public fun <T> DataFrame<T>.mapColumns(body: AddDsl<T>.() -> Unit): AnyFrame {
+public fun <T> DataFrame<T>.map(body: AddDsl<T>.() -> Unit): AnyFrame {
     val dsl = AddDsl(this)
     body(dsl)
     return dataFrameOf(dsl.columns)
 }
+
+public inline fun <T, reified R> DataFrame<T>.map(name: String, noinline body: AddExpression<T, R>): DataColumn<R> = newColumn(getType<R>(), name, body)
 
 // endregion
 
@@ -164,31 +162,22 @@ public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataF
 
 // region forEach
 
-public fun <T> DataFrame<T>.forEach(action: RowExpression<T, Unit>): Unit = rows().forEach { action(it, it) }
+public fun <T> DataFrame<T>.forEachRow(action: RowExpression<T, Unit>): Unit = rows().forEach { action(it, it) }
 
-public fun <T> DataFrame<T>.forEachIndexed(action: (Int, DataRow<T>) -> Unit): Unit = rows().forEachIndexed(action)
+public fun <T> DataFrame<T>.forEachColumn(action: (AnyCol) -> Unit): Unit = columns().forEach(action)
 
-public fun <T, C> DataFrame<T>.forEachIn(
-    columns: ColumnsSelector<T, C>,
-    action: (DataRow<T>, DataColumn<C>) -> Unit
-): Unit =
-    getColumnsWithPaths(columns).let { cols ->
-        rows().forEach { row ->
-            cols.forEach { col ->
-                action(row, col.data)
-            }
-        }
-    }
+public fun <T> DataFrame<T>.forEachColumnIndexed(action: (Int, AnyCol) -> Unit): Unit =
+    columns().forEachIndexed(action)
 
 // endregion
 
 // region groupBy
 
-public fun <T> DataFrame<T>.groupBy(moveToTop: Boolean = true, cols: ColumnsSelector<T, *>): GroupedDataFrame<T, T> = groupByImpl(moveToTop, cols)
-public fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>): GroupedDataFrame<T, T> = groupBy { cols.toColumnSet() }
-public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupedDataFrame<T, T> = groupBy { cols.toColumns() }
-public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupedDataFrame<T, T> = groupBy { cols.toColumns() }
-public fun <T> DataFrame<T>.groupBy(vararg cols: Column, moveToTop: Boolean = true): GroupedDataFrame<T, T> = groupBy(moveToTop) { cols.toColumns() }
+public fun <T> DataFrame<T>.groupBy(moveToTop: Boolean = true, cols: ColumnsSelector<T, *>): GroupBy<T, T> = groupByImpl(moveToTop, cols)
+public fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>): GroupBy<T, T> = groupBy { cols.toColumnSet() }
+public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = groupBy { cols.toColumns() }
+public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupBy<T, T> = groupBy { cols.toColumns() }
+public fun <T> DataFrame<T>.groupBy(vararg cols: Column, moveToTop: Boolean = true): GroupBy<T, T> = groupBy(moveToTop) { cols.toColumns() }
 
 // endregion
 
@@ -254,9 +243,10 @@ public fun <T, C> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comp
 
 public inline fun <reified T> Iterable<T>.createDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> = createDataFrameImpl(T::class, body)
 
-public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>, depth: Int = 1): DataFrame<T> = createDataFrame {
-    properties(roots = props, depth = depth)
-}
+public inline fun <reified T> Iterable<T>.createDataFrame(vararg props: KProperty<*>, depth: Int = 1): DataFrame<T> =
+    createDataFrame {
+        properties(roots = props, depth = depth)
+    }
 
 @JvmName("toDataFrameT")
 public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
@@ -375,6 +365,13 @@ public abstract class CreateDataFrameDsl<T>(public val source: Iterable<T>) {
 
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
         add(name, expression)
+
+    public inline infix fun <reified R> KProperty<R>.from(inferType: InferType<T, R>): Unit =
+        add(DataColumn.createWithTypeInference(name, source.map { inferType.expression(it) }))
+
+    public data class InferType<T, R>(val expression: (T) -> R)
+
+    public inline fun <reified R> inferType(noinline expression: (T) -> R): InferType<T, R> = InferType(expression)
 
     public abstract operator fun String.invoke(builder: CreateDataFrameDsl<T>.() -> Unit)
 }

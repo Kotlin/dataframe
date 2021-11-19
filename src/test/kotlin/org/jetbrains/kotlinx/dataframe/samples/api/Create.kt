@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.createDataFrame
 import org.jetbrains.kotlinx.dataframe.api.filter
@@ -16,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.frameColumn
@@ -23,7 +25,6 @@ import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
-import kotlin.reflect.typeOf
 
 class Create : TestBase() {
 
@@ -47,10 +48,22 @@ class Create : TestBase() {
         // SampleStart
         val age by column<Int>()
 
+        // Access fourth cell in the "age" column of dataframe `df`.
+        // This expression returns `Int` because variable `age` has `ColumnAccessor<Int>` type.
+        // If dataframe `df` has no column "age" or column "age" has type which is incompatible with `Int`,
+        // runtime exception will be thrown.
         df[age][3] + 5
-        df[1][age] * 2
+
+        // Access first cell in the "age" column of dataframe `df`.
+        df[0][age] * 2
+
+        // Returns new dataframe sorted by age column (ascending)
         df.sortBy(age)
+
+        // Returns new dataframe with the column "year of birth" added
         df.add("year of birth") { 2021 - age }
+
+        // Returns new dataframe containing only rows with age > 30
         df.filter { age > 30 }
         // SampleEnd
     }
@@ -59,8 +72,11 @@ class Create : TestBase() {
     fun columnAccessorToColumn() {
         // SampleStart
         val age by column<Int>()
-        val ageCol = age.withValues(15, 20)
+        val ageCol1 = age.withValues(15, 20)
+        val ageCol2 = age.withValues(1..10)
         // SampleEnd
+
+        ageCol2.size shouldBe 10
     }
 
     @Test
@@ -105,17 +121,23 @@ class Create : TestBase() {
         // SampleEnd
     }
 
-    @OptIn(ExperimentalStdlibApi::class)
     @Test
     fun createValueColumnInferred() {
         // SampleStart
-        val values = listOf("Alice", null, 1, 2.5).subList(2, 4)
+        val values: List<Any?> = listOf(1, 2.5)
 
-        values.toColumn("data").type willBe typeOf<Any?>()
-        values.toColumn("data", inferType = true).type willBe typeOf<Number>()
-        values.toColumn("data", inferNulls = true).type willBe typeOf<Any>()
-        values.toColumn("data", inferType = true, inferNulls = false).type willBe typeOf<Number?>()
-        values.toColumnOf<Number?>("data").type willBe typeOf<Number?>()
+        values.toColumn("data") // type: Any?
+        values.toColumn("data", Infer.Type) // type: Number
+        values.toColumn("data", Infer.Nulls) // type: Any
+        // SampleEnd
+    }
+
+    @Test
+    fun createValueColumnOfType() {
+        // SampleStart
+        val values: List<Any?> = listOf(1, 2.5)
+
+        values.toColumnOf<Number?>("data") // type: Number?
         // SampleEnd
     }
 
@@ -193,8 +215,8 @@ class Create : TestBase() {
     @Test
     fun createDataFrameWithFill() {
         // SampleStart
-        // DataFrame with columns from 'a' to 'z' and values from 1 to 10 for each column
-        val df = dataFrameOf('a'..'z') { 1..10 }
+        // Multiplication table
+        dataFrameOf(1..10) { x -> (1..10).map { x * it } }
         // SampleEnd
     }
 
@@ -221,8 +243,8 @@ class Create : TestBase() {
     fun createDataFrameFromColumns() {
         // SampleStart
 
-        val name by columnOf("Alice", "Bob")
-        val age by columnOf(15, 20)
+        val name by columnOf("Alice", "Bob", "Mark")
+        val age by columnOf(15, 20, 22)
 
         // DataFrame with 2 columns
         val df = dataFrameOf(name, age)
@@ -232,7 +254,7 @@ class Create : TestBase() {
     @Test
     fun createDataFrameFromMap() {
         // SampleStart
-        val map = mapOf("name" to listOf("Alice", "Bob"), "age" to listOf(15, 20))
+        val map = mapOf("name" to listOf("Alice", "Bob", "Mark"), "age" to listOf(15, 20, 22))
 
         // DataFrame with 2 columns
         map.toDataFrame()
@@ -242,24 +264,40 @@ class Create : TestBase() {
     @Test
     fun createDataFrameFromIterable() {
         // SampleStart
-        val name by columnOf("Alice", "Bob")
-        val age by columnOf(15, 20)
+        val name by columnOf("Alice", "Bob", "Mark")
+        val age by columnOf(15, 20, 22)
 
-        // DataFrame with 2 columns
         listOf(name, age).toDataFrame()
         // SampleEnd
+    }
+
+    @Test
+    fun createDataFrameFromNamesAndValues() {
+        // SampleStart
+        val names = listOf("name", "age")
+        val values = listOf(
+            "Alice", 15,
+            "Bob", 20,
+            "Mark", 22
+        )
+        val df = dataFrameOf(names, values)
+        // SampleEnd
+        df.columnNames() shouldBe listOf("name", "age")
+        df.nrow() shouldBe 3
+        df["name"].type() shouldBe getType<String>()
+        df["age"].type() shouldBe getType<Int>()
     }
 
     @Test
     fun createDataFrameFromObject() {
         // SampleStart
         data class Person(val name: String, val age: Int)
-        val persons = listOf(Person("Alice", 15), Person("Bob", 20))
+        val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Mark", 22))
 
-        val df = persons.toDataFrame()
+        val df = persons.createDataFrame()
         // SampleEnd
         df.ncol() shouldBe 2
-        df.nrow() shouldBe 2
+        df.nrow() shouldBe 3
         df["name"].type() shouldBe getType<String>()
         df["age"].type() shouldBe getType<Int>()
     }
@@ -268,7 +306,7 @@ class Create : TestBase() {
     fun createDataFrameFromObjectExplicit() {
         // SampleStart
         data class Person(val name: String, val age: Int)
-        val persons = listOf(Person("Alice", 15), Person("Bob", 20))
+        val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Mark", 22))
 
         val df = persons.createDataFrame {
             "name" from { it.name }
@@ -276,7 +314,7 @@ class Create : TestBase() {
         }
         // SampleEnd
         df.ncol() shouldBe 2
-        df.nrow() shouldBe 2
+        df.nrow() shouldBe 3
         df["name"].type() shouldBe getType<String>()
         df["year of birth"].type() shouldBe getType<Int>()
     }
@@ -293,7 +331,7 @@ class Create : TestBase() {
             Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5)))
         )
 
-        val df = students.toDataFrame(depth = 2)
+        val df = students.createDataFrame(depth = 2)
         // SampleEnd
         df.ncol() shouldBe 3
         df.nrow() shouldBe 2

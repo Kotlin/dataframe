@@ -35,5 +35,5 @@ internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
 
     override fun <C> get(column: ColumnReference<C>) = ColumnAccessorImpl<C>(path + column.path())
 
-    override fun getValue(row: AnyRow) = row.get(path) as T
+    override fun getValue(row: AnyRow) = row[path] as T
 }

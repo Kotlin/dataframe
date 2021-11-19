@@ -1,8 +1,39 @@
 [//]: # (title: remove)
 
-Removes columns from `DataFrame`
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
+
+Returns `DataFrame` without selected columns.
+
 ```kotlin
-df.remove { columns }
-df - { columns }
+remove { columns }
 ```
-See [Column Selectors](ColumnSelectors.md) for column selection syntax
+
+See [Column Selectors](ColumnSelectors.md)
+
+<!---FUN remove-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.remove { name and weight }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val name by columnGroup()
+val weight by column<Int?>()
+
+df.remove { name and weight }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.remove("name", "weight")
+```
+
+</tab></tabs>
+<!---END-->

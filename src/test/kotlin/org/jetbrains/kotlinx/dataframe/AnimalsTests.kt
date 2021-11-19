@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.mean
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.transpose
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.withNull
@@ -22,7 +21,7 @@ class AnimalsTests {
 
     @Test
     fun `ignore nans`() {
-        df.mean("age", skipNa = true) shouldBe 3.4375
+        df.mean("age", skipNA = true) shouldBe 3.4375
     }
 
     @Test
@@ -38,7 +37,6 @@ class AnimalsTests {
     fun `mean of empty`() {
         val cleared = df.update { age }.withValue(Double.NaN).update { visits }.withNull()
         val mean = cleared.mean()
-        mean.print()
         mean[age] shouldBe Double.NaN
         (mean[visits.name()] as Double).isNaN() shouldBe true
     }

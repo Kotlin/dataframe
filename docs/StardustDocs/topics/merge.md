@@ -1,20 +1,69 @@
 [//]: # (title: merge)
 
-Merges several columns into a single column. Reverse operation to [split](split.md)
+<!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
+
+Merges several columns into a single column. 
+
+Reverse operation to [`split`](split.md)
 
 ```kotlin
-df.merge { columns }.into(columnPath)
-df.merge { columns }.by(delimeters, options).into(columnPath)
-df.merge { columns }.by { merger }.into(columnPath)
+merge { columns }
+    .by(delimeter) | .by { merger } 
+    [.into(column) | .intoList() ]
 
-merger = (DataRow).List<T> -> Any
+merger: (DataRow).List<T> -> Any
 ```
 
-When no `delimeter` or `merger` are defined, values will be merged into the `List`
+<!---FUN merge-->
+
 ```kotlin
-df.merge { firstName and lastName }.by(" ").into("fullName")
-
-df.merge { cols { it.name.startsWith("value") } }.into("values")
-
-df.merge { protocol and host and port and path }.by { it[0] + "://" + it[1] + ":" + it[2] + "/" + it[3] }.into("address")
+// Merge two columns into one column "fullName"
+df.merge { name.firstName and name.lastName }.by(" ").into("fullName")
 ```
+
+<!---END-->
+
+`merger` accepts a `List` of collected values for every row typed by their common type:
+
+<!---FUN mergeSameWith-->
+
+```kotlin
+df.merge { name.firstName and name.lastName }
+    .by { it[0] + " (" + it[1].uppercase() + ")" }
+    .into("fullName")
+```
+
+<!---END-->
+
+When heterogeneous columns are merged, they may need to be cast to valid types in `merger`:
+
+<!---FUN mergeDifferentWith-->
+
+```kotlin
+df.merge { name.firstName and age and isHappy }
+    .by { "${it[0]} aged ${it[1]} is " + (if (it[2] as Boolean) "" else "not ") + "happy" }
+    .into("status")
+```
+
+<!---END-->
+
+By default, when no `delimeter` or `merger` is specified, values will be merged into the `List`:
+
+<!---FUN mergeDefault-->
+
+```kotlin
+df.merge { numberCols() }.into("data")
+```
+
+<!---END-->
+
+Merged column values can also be exported to `List`:
+
+<!---FUN mergeIntoList-->
+
+```kotlin
+// Merge data from two columns into List<String>
+df.merge { name.firstName and name.lastName }.by(",").intoList()
+```
+
+<!---END-->

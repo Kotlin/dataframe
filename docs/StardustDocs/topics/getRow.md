@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-You can get a single [`DataRow`](DataRow.md) by [index](indexing.md):
+Get a single [`DataRow`](DataRow.md) by [index](indexing.md):
 
 <!---FUN getRowByIndex-->
 
@@ -12,7 +12,7 @@ df[2]
 
 <!---END-->
 
-Or you can get single row by [row condition](DataRow.md#row-conditions):
+Get single [`DataRow`](DataRow.md) by [row condition](DataRow.md#row-conditions):
 
 <!---FUN getRowByCondition-->
 <tabs>

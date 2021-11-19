@@ -31,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.moveTo
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
@@ -45,7 +46,6 @@ import kotlin.reflect.KProperty
 
 public fun <T> DataFrame<T>.add(cols: Iterable<AnyCol>): DataFrame<T> = this + cols
 public fun <T> DataFrame<T>.add(other: AnyFrame): DataFrame<T> = add(other.columns())
-public fun <T> DataFrame<T>.add(column: AnyCol): DataFrame<T> = this + column
 
 public interface AddDataRow<out T> : DataRow<T> {
     public fun <C> AnyRow.added(): C
@@ -66,9 +66,10 @@ public inline fun <reified R, T> DataFrame<T>.add(name: String, noinline express
 public inline fun <reified R, T> DataFrame<T>.add(property: KProperty<R>, noinline expression: RowExpression<T, R>): DataFrame<T> =
     (this + newColumn(property.name, expression))
 
-public inline fun <reified R, T> DataFrame<T>.add(column: ColumnAccessor<R>, noinline expression: AddExpression<T, R>): DataFrame<T> {
-    val col = newColumn(column.name(), expression)
-    val path = column.path()
+public inline fun <reified R, T> DataFrame<T>.add(column: ColumnAccessor<R>, noinline expression: AddExpression<T, R>): DataFrame<T> = add(column.path(), expression)
+
+public inline fun <reified R, T> DataFrame<T>.add(path: ColumnPath, noinline expression: AddExpression<T, R>): DataFrame<T> {
+    val col = newColumn(path.name(), expression)
     if (path.size == 1) return this + col
     return insert(path, col)
 }
@@ -79,35 +80,35 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     return dataFrameOf(this@add.columns() + dsl.columns).cast()
 }
 
-public inline fun <reified R, T, G> GroupedDataFrame<T, G>.add(name: String, noinline expression: RowExpression<G, R>): GroupedDataFrame<T, G> =
-    mapNotNullGroups { add(name, expression) }
+public fun <T> DataFrame<T>.add(vararg columns: AnyCol): DataFrame<T> = dataFrameOf(columns() + columns).cast()
 
-public operator fun <T> DataFrame<T>.plus(body: AddDsl<T>.() -> Unit): DataFrame<T> = add(body)
+public inline fun <reified R, T, G> GroupBy<T, G>.add(name: String, noinline expression: RowExpression<G, R>): GroupBy<T, G> =
+    mapGroups { add(name, expression) }
 
-public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsContainer<T> by df {
+public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsContainer<T> by df, ColumnSelectionDsl<T> {
 
     internal val columns = mutableListOf<AnyCol>()
 
-    public fun add(column: AnyCol): Boolean = columns.add(column)
+    public fun add(column: Column): Boolean = columns.add(column.resolveSingle(df)!!.data)
 
-    public inline fun <reified R> add(name: String, noinline expression: RowExpression<T, R>): Boolean = add(df.newColumn(name, expression))
+    public operator fun Column.unaryPlus(): Boolean = add(this)
 
-    public inline fun <reified R> add(column: ColumnReference<R>, noinline expression: RowExpression<T, R>): Boolean = add(df.newColumn(column.name(), expression))
+    public operator fun String.unaryPlus(): Boolean = add(df[this])
 
-    public inline infix fun <reified R> ColumnReference<R>.from(noinline expression: RowExpression<T, R>): Boolean = add(df.newColumn(name(), expression))
+    @PublishedApi
+    internal inline fun <reified R> add(name: String, noinline expression: RowExpression<T, R>): Boolean = add(df.newColumn(name, expression))
 
-    public inline operator fun <reified R> ColumnReference<R>.invoke(noinline expression: RowExpression<T, R>): Boolean =
-        from(expression)
+    public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean = name().from(expression)
+
+    public inline infix fun <reified R> ColumnAccessor<R>.from(column: ColumnReference<R>): Boolean = name().from(column)
 
     public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean = add(this, expression)
 
-    public inline operator fun <reified R> String.invoke(noinline expression: RowExpression<T, R>): Boolean = from(expression)
+    public infix fun String.from(column: Column): Boolean = add(column.rename(this))
 
-    public operator fun String.invoke(column: AnyCol): Boolean = add(column.rename(this))
+    public infix fun Column.into(name: String): Boolean = add(rename(name))
 
-    public inline operator fun <reified R> ColumnReference<R>.invoke(column: DataColumn<R>): Boolean = name()(column)
-
-    public infix fun AnyCol.into(name: String): Boolean = add(rename(name))
+    public infix fun <C> ColumnReference<C>.into(column: ColumnAccessor<C>): Boolean = into(column.name())
 }
 
 // endregion
@@ -134,16 +135,14 @@ public fun <T> DataFrame<T>.insert(path: ColumnPath, column: AnyCol): DataFrame<
 
 public fun <T> DataFrame<T>.insert(column: AnyCol): InsertClause<T> = InsertClause(this, column)
 
-public inline fun <T, reified R> DataFrame<T>.insert(noinline expression: RowExpression<T, R>): InsertClause<T> = insert("", expression)
-
 public inline fun <T, reified R> DataFrame<T>.insert(name: String, noinline expression: RowExpression<T, R>): InsertClause<T> = insert(newColumn(name, expression))
 
+public inline fun <T, reified R> DataFrame<T>.insert(
+    column: ColumnAccessor<R>,
+    noinline expression: RowExpression<T, R>
+): InsertClause<T> = insert(column.name(), expression)
+
 public data class InsertClause<T>(val df: DataFrame<T>, val column: AnyCol)
-
-public fun <T> InsertClause<T>.into(columnPath: ColumnPath): DataFrame<T> = df.insert(columnPath, column.rename(columnPath.last()))
-public fun <T> InsertClause<T>.into(column: ColumnAccessor<*>): DataFrame<T> = into(column.path())
-
-public fun <T> InsertClause<T>.named(name: String): InsertClause<T> = copy(column = column.named(name))
 
 public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T> = under(df.getColumnPath(column))
 public fun <T> InsertClause<T>.under(columnPath: ColumnPath): DataFrame<T> = df.insert(columnPath + column.name, column)

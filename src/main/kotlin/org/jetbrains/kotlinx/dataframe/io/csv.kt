@@ -4,7 +4,8 @@ import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.forEachRow
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.column
@@ -21,13 +22,16 @@ import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.Reader
 import java.io.StringReader
+import java.io.StringWriter
 import java.math.BigDecimal
 import java.net.URL
 import java.nio.charset.Charset
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.util.*
 import java.util.zip.GZIPInputStream
+import kotlin.collections.ArrayList
 import kotlin.reflect.KClass
 
 public enum class CSVType(public val format: CSVFormat) {
@@ -36,6 +40,8 @@ public enum class CSVType(public val format: CSVFormat) {
 }
 
 private val defaultCharset = Charsets.UTF_8
+
+private val defaultLocale = Locale.getDefault()
 
 private val setOfNullStrings = setOf("NA", "N/A", "null")
 
@@ -82,7 +88,8 @@ public fun DataFrame.Companion.readCSV(
     skipLines: Int = 0,
     readLines: Int? = null,
     duplicate: Boolean = true,
-    charset: Charset = Charsets.UTF_8
+    charset: Charset = Charsets.UTF_8,
+    parserOptions: ParserOptions? = null,
 ): DataFrame<*> =
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
@@ -90,7 +97,8 @@ public fun DataFrame.Companion.readCSV(
             headers, nullStrings, isCompressed(fileOrUrl),
             CSVType.DEFAULT, colTypes,
             skipLines, readLines,
-            duplicate, charset
+            duplicate, charset,
+            parserOptions
         )
     }
 
@@ -103,14 +111,16 @@ public fun DataFrame.Companion.readCSV(
     skipLines: Int = 0,
     readLines: Int? = null,
     duplicate: Boolean = true,
-    charset: Charset = Charsets.UTF_8
+    charset: Charset = Charsets.UTF_8,
+    parserOptions: ParserOptions? = null
 ): DataFrame<*> =
     readDelim(
         FileInputStream(file), delimiter,
         headers, nullStrings, isCompressed(file),
         CSVType.DEFAULT, colTypes,
         skipLines, readLines,
-        duplicate, charset
+        duplicate, charset,
+        parserOptions
     )
 
 public fun DataFrame.Companion.readCSV(
@@ -122,14 +132,16 @@ public fun DataFrame.Companion.readCSV(
     skipLines: Int = 0,
     readLines: Int? = null,
     duplicate: Boolean = true,
-    charset: Charset = Charsets.UTF_8
+    charset: Charset = Charsets.UTF_8,
+    parserOptions: ParserOptions? = null
 ): DataFrame<*> =
     readDelim(
         url.openStream(), delimiter,
         headers, nullStrings, isCompressed(url),
         CSVType.DEFAULT, colTypes,
         skipLines, readLines,
-        duplicate, charset
+        duplicate, charset,
+        parserOptions
     )
 
 public fun DataFrame.Companion.readTSV(
@@ -141,7 +153,8 @@ public fun DataFrame.Companion.readTSV(
     skipLines: Int = 0,
     readLines: Int? = null,
     duplicate: Boolean = true,
-    charset: Charset = Charsets.UTF_8
+    charset: Charset = Charsets.UTF_8,
+    parserOptions: ParserOptions? = null
 ): DataFrame<*> =
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
@@ -149,7 +162,8 @@ public fun DataFrame.Companion.readTSV(
             headers, nullStrings, isCompressed(fileOrUrl),
             CSVType.TDF, colTypes,
             skipLines, readLines,
-            duplicate, charset
+            duplicate, charset,
+            parserOptions
         )
     }
 
@@ -209,14 +223,15 @@ public fun DataFrame.Companion.readDelim(
     skipLines: Int = 0,
     readLines: Int? = null,
     duplicate: Boolean = true,
-    charset: Charset = defaultCharset
+    charset: Charset = defaultCharset,
+    parserOptions: ParserOptions? = null,
 ): AnyFrame =
     if (isCompressed) {
         InputStreamReader(GZIPInputStream(inStream), charset)
     } else {
         BufferedReader(InputStreamReader(inStream, charset))
     }.run {
-        readDelim(this, getFormat(csvType, delimiter, headers, duplicate), nullStrings, colTypes, skipLines, readLines)
+        readDelim(this, getFormat(csvType, delimiter, headers, duplicate), nullStrings, colTypes, skipLines, readLines, parserOptions)
     }
 
 internal fun isURL(fileOrUrl: String): Boolean = listOf("http:", "https:", "ftp:").any { fileOrUrl.startsWith(it) }
@@ -251,7 +266,8 @@ public fun DataFrame.Companion.readDelim(
     nullStrings: Set<String> = setOfNullStrings,
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
-    readLines: Int? = null
+    readLines: Int? = null,
+    parserOptions: ParserOptions? = null
 ): AnyFrame {
     var reader = reader
     if (skipLines > 0) {
@@ -286,11 +302,11 @@ public fun DataFrame.Companion.readDelim(
             val values = records.map { it[colIndex]?.emptyAsNull(nullStrings).also { if (it == null) hasNulls = true } }
             val column = column(colName, values, hasNulls)
             when (colType) {
-                null -> column.tryParse()
+                null -> column.tryParse(parserOptions)
                 ColType.String -> column
                 else -> {
                     val parser = Parsers[colType.toType()]!!
-                    column.parse(parser)
+                    column.parse(parser, parserOptions)
                 }
             }
         }
@@ -314,7 +330,13 @@ public fun AnyFrame.writeCSV(path: String, format: CSVFormat = CSVFormat.DEFAULT
 public fun AnyFrame.writeCSV(writer: Appendable, format: CSVFormat = CSVFormat.DEFAULT.withHeader()): Unit =
     format.print(writer).use { printer ->
         printer.printRecord(columnNames())
-        forEach {
+        forEachRow {
             printer.printRecord(it.values)
         }
     }
+
+public fun AnyFrame.writeCSVStr(format: CSVFormat = CSVFormat.DEFAULT.withHeader()): String =
+    StringWriter().use {
+        this.writeCSV(it, format)
+        it
+    }.toString()

@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -19,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.getColumnOrNull
 import org.jetbrains.kotlinx.dataframe.impl.asNullable
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.TreeNode
@@ -58,10 +60,15 @@ internal fun <C> TreeNode<ColumnPosition>.toColumnWithPath(df: ColumnsContainer<
 @JvmName("toColumnWithPathAnyCol")
 internal fun <C> TreeNode<DataColumn<C>>.toColumnWithPath(df: ColumnsContainer<*>) = data.addPath(pathFromRoot(), df)
 
-internal fun <T> BaseColumn<T>.addPath(path: ColumnPath, df: ColumnsContainer<*>): ColumnWithPath<T> =
-    ColumnWithPathImpl(this as DataColumn<T>, path, df)
+internal fun <T> BaseColumn<T>.addPath(path: ColumnPath, df: ColumnsContainer<*>? = null): ColumnWithPath<T> =
+    when (this) {
+        is ValueColumn<T> -> ValueColumnWithPathImpl(this, path, df)
+        is FrameColumn<*> -> FrameColumnWithPathImpl(this, path, df) as ColumnWithPath<T>
+        is ColumnGroup<*> -> ColumnGroupWithPathImpl(this, path, df) as ColumnWithPath<T>
+        else -> throw IllegalArgumentException("Can't add path to ${this.javaClass}")
+    }
 
-internal fun <T> ColumnWithPath<T>.changePath(path: ColumnPath): ColumnWithPath<T> = data.addPath(path, df)
+internal fun <T> ColumnWithPath<T>.changePath(path: ColumnPath): ColumnWithPath<T> = data.addPath(path, host)
 
 internal fun <T> BaseColumn<T>.addParentPath(path: ColumnPath, df: ColumnsContainer<*>) = addPath(path + name, df)
 
@@ -69,20 +76,20 @@ internal fun <T> BaseColumn<T>.addPath(df: ColumnsContainer<*>): ColumnWithPath<
 
 internal fun ColumnPath.depth() = size - 1
 
-internal fun ColumnWithPath<*>.asColumnGroup() = data.asColumnGroup()
+internal fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
 
-internal fun <T> AnyCol.asValues() = this as ValueColumn<T>
+internal fun <T> AnyCol.asValues(): ValueColumn<T> = this as ValueColumn<T>
+
+internal fun AnyCol.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
 
 internal fun <T> AnyCol.grouped() = this as ColumnGroup<T>
 internal fun <T> ColumnGroup<*>.withDf(newDf: DataFrame<T>) = DataColumn.createColumnGroup(name, newDf)
-internal fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
 
 @JvmName("asGroupedT")
-internal fun <T> DataColumn<DataRow<T>>.asColumnGroup(): ColumnGroup<T> = this as ColumnGroup<T>
-internal fun AnyCol.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
+internal fun <T> DataColumn<DataRow<T>>.asColumnGroup(): ColumnGroup<T> = (this as AnyCol).asColumnGroup().cast()
 
-@JvmName("asTableT")
-internal fun <T> DataColumn<DataFrame<T>?>.asFrameColumn(): FrameColumn<T> = this as FrameColumn<T>
+@JvmName("asFrameT")
+internal fun <T> DataColumn<DataFrame<T>?>.asFrameColumn(): FrameColumn<T> = (this as AnyCol).asFrameColumn().castFrameColumn()
 
 internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
     if (!type.isSubtypeOf(getType<Comparable<*>?>())) {
@@ -117,7 +124,7 @@ internal fun <T> ColumnSet<T>.getAt(index: Int) = object : SingleColumn<T> {
 internal fun <T> ColumnSet<T>.getChildrenAt(index: Int): ColumnSet<Any?> = transform { it.mapNotNull { it.getChild(index) } }
 
 internal fun <C> ColumnsContainer<*>.getColumn(name: String, policy: UnresolvedColumnsPolicy) =
-    tryGetColumn(name)?.cast()
+    getColumnOrNull(name)?.cast()
         ?: when (policy) {
             UnresolvedColumnsPolicy.Fail ->
                 error("Column not found: $name")
@@ -126,7 +133,7 @@ internal fun <C> ColumnsContainer<*>.getColumn(name: String, policy: UnresolvedC
         }
 
 internal fun <C> ColumnsContainer<*>.getColumn(path: ColumnPath, policy: UnresolvedColumnsPolicy) =
-    tryGetColumn(path)?.cast()
+    getColumnOrNull(path)?.cast()
         ?: when (policy) {
             UnresolvedColumnsPolicy.Fail ->
                 error("Column not found: $path")
@@ -142,8 +149,8 @@ internal fun <T> List<ColumnWithPath<T>>.top(): List<ColumnWithPath<T>> {
 
 internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
     if (isEmpty()) return emptyList()
-    val df = this[0].df
-    require(all { it.df === df })
+    val df = this[0].host
+    require(all { it.host === df })
     val fullTree = collectTree()
     columns.forEach {
         var node = fullTree.getOrPut(it.path).asNullable()
@@ -170,5 +177,8 @@ internal fun <C> ColumnSet<C>.resolve(
 ) =
     resolve(ColumnResolutionContext(df, unresolvedColumnsPolicy))
 
-internal fun <C> SingleColumn<C>.resolveSingle(df: DataFrame<*>, unresolvedColumnsPolicy: UnresolvedColumnsPolicy) =
+internal fun <C> SingleColumn<C>.resolveSingle(
+    df: DataFrame<*>,
+    unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail
+): ColumnWithPath<C>? =
     resolveSingle(ColumnResolutionContext(df, unresolvedColumnsPolicy))
