@@ -15,6 +15,9 @@ function addTable(df) {
         df.childFrames = { }
         const table = getTableElement(df.id)
         table.df = df
+        for(let i=0;i<df.cols.length;i++){
+            if(df.cols[i].children.length > 0) df.cols[i].expanded = true
+        }
     }else {
         const rootDf = getTableData(df.rootId)
         rootDf.childFrames[df.id] = df
