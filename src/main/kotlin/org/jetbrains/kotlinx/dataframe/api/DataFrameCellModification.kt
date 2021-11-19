@@ -144,21 +144,21 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
     vararg cols: ColumnReference<C>,
     noinline expression: RowValueExpression<T, C, R>
 ): DataFrame<T> =
-    convert(*headPlusArray(firstCol, cols)).with(expression)
+    convert(*headPlusArray(firstCol, cols)).with(inferType = false, expression)
 
 public inline fun <T, C, reified R> DataFrame<T>.convert(
     firstCol: KProperty<C>,
     vararg cols: KProperty<C>,
     noinline expression: RowValueExpression<T, C, R>
 ): DataFrame<T> =
-    convert(*headPlusArray(firstCol, cols)).with(expression)
+    convert(*headPlusArray(firstCol, cols)).with(inferType = false, expression)
 
 public inline fun <T, reified R> DataFrame<T>.convert(
     firstCol: String,
     vararg cols: String,
     noinline expression: RowValueExpression<T, Any?, R>
 ): DataFrame<T> =
-    convert(*headPlusArray(firstCol, cols)).with(expression)
+    convert(*headPlusArray(firstCol, cols)).with(inferType = false, expression)
 
 public inline fun <T, C, reified R> ConvertClause<T, C?>.notNull(crossinline expression: RowValueExpression<T, C, R>): DataFrame<T> =
     with {
@@ -174,11 +174,17 @@ public data class ConvertClause<T, C>(val df: DataFrame<T>, val columns: Columns
 
 public fun <T> ConvertClause<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
 
-public inline fun <T, C, reified R> ConvertClause<T, C>.with(noinline rowConverter: RowValueExpression<T, C, R>): DataFrame<T> =
-    convertRowCellImpl(getType<R>(), rowConverter)
+public inline fun <T, C, reified R> ConvertClause<T, C>.with(
+    inferType: Boolean = false,
+    noinline rowConverter: RowValueExpression<T, C, R>
+): DataFrame<T> =
+    convertRowCellImpl(if (inferType) null else getType<R>(), rowConverter)
 
-public inline fun <T, C, reified R> ConvertClause<T, C>.perRowCol(noinline expression: RowColumnExpression<T, C, R>): DataFrame<T> =
-    convertRowColumnImpl(getType<R>(), expression)
+public inline fun <T, C, reified R> ConvertClause<T, C>.perRowCol(
+    inferType: Boolean = false,
+    noinline expression: RowColumnExpression<T, C, R>
+): DataFrame<T> =
+    convertRowColumnImpl(if (inferType) null else getType<R>(), expression)
 
 public fun <T, C> ConvertClause<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyCol): DataFrame<T> =
     df.replace(columns).with { columnConverter(df, it) }
@@ -431,6 +437,13 @@ public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.into(
 ): DataFrame<T> =
     by { it }.into(names.toList(), extraNamesGenerator)
 
+@JvmName("splitDataFrameInto")
+public fun <T, C> Split<T, DataFrame<C>>.into(
+    vararg names: String,
+    extraNamesGenerator: ColumnNamesGenerator<DataFrame<C>>? = null
+): DataFrame<T> =
+    by { it.rows() }.into(names.toList(), extraNamesGenerator)
+
 public fun <T, A, B> Split<T, Pair<A, B>>.into(
     firstCol: String,
     secondCol: String
@@ -454,16 +467,23 @@ public fun <T> Split<T, String>.into(
 
 // region merge
 
-public fun <T, C> DataFrame<T>.merge(selector: ColumnsSelector<T, C>): MergeClause<T, C, List<C>> = MergeClause(this, selector, { it })
+public fun <T, C> DataFrame<T>.merge(selector: ColumnsSelector<T, C>): MergeClause<T, C, List<C>> = MergeClause(this, selector, false, { it })
 public fun <T> DataFrame<T>.merge(vararg columns: String): MergeClause<T, Any?, List<Any?>> = merge { columns.toColumns() }
 public fun <T, C> DataFrame<T>.merge(vararg columns: ColumnReference<C>): MergeClause<T, C, List<C>> = merge { columns.toColumns() }
 public fun <T, C> DataFrame<T>.merge(vararg columns: KProperty<C>): MergeClause<T, C, List<C>> = merge { columns.toColumns() }
 
-public class MergeClause<T, C, R>(
-    public val df: DataFrame<T>,
-    public val selector: ColumnsSelector<T, C>,
-    public val transform: DataRow<T>.(List<C>) -> R
+public data class MergeClause<T, C, R>(
+    @PublishedApi
+    internal val df: DataFrame<T>,
+    @PublishedApi
+    internal val selector: ColumnsSelector<T, C>,
+    @PublishedApi
+    internal val notNull: Boolean,
+    @PublishedApi
+    internal val transform: DataRow<T>.(List<C>) -> R,
 )
+
+public fun <T, C, R> MergeClause<T, C, R>.notNull(): MergeClause<T, C, R> = copy(notNull = true)
 
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(column: ColumnAccessor<R>): DataFrame<T> = into(column.path())
@@ -472,9 +492,15 @@ public fun <T, C, R> MergeClause<T, C, R>.intoList(): List<R> = df.select(select
 
 public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnPath: ColumnPath): DataFrame<T> {
     val grouped = df.move(selector).under { columnPath }
-    val res = grouped.convert { getColumnGroup(columnPath) }.with {
+    val res = grouped.convert { getColumnGroup(columnPath) }.with(inferType = true) {
         val srcRow = df[index()]
-        transform(srcRow, it.values() as List<C>)
+        var values = it.values() as List<C>
+        if (notNull) {
+            values = values.filter {
+                it != null && (it !is AnyRow || !it.isEmpty())
+            }
+        }
+        transform(srcRow, values)
     }
     return res
 }
@@ -487,9 +513,9 @@ public fun <T, C, R> MergeClause<T, C, R>.by(
     limit: Int = -1,
     truncated: CharSequence = "..."
 ): MergeClause<T, C, String> =
-    MergeClause(df, selector) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix, limit = limit, truncated = truncated) }
+    MergeClause(df, selector, notNull) { it.joinToString(separator = separator, prefix = prefix, postfix = postfix, limit = limit, truncated = truncated) }
 
-public inline fun <T, C, R, reified V> MergeClause<T, C, R>.by(crossinline transform: DataRow<T>.(R) -> V): MergeClause<T, C, V> = MergeClause(df, selector) { transform(this@by.transform(this, it)) }
+public inline fun <T, C, R, reified V> MergeClause<T, C, R>.by(crossinline transform: DataRow<T>.(R) -> V): MergeClause<T, C, V> = MergeClause(df, selector, notNull) { transform(this@by.transform(this, it)) }
 
 // endregion
 
