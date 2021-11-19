@@ -368,7 +368,7 @@ internal class DataFrameFormatter(
                 }
             is Pair<*, *> -> {
                 val key = value.first.toString() + ": "
-                val shortValue = render(value.second, renderer, configuration.copy(cellContentLimit = 3))
+                val shortValue = render(value.second, renderer, configuration.copy(cellContentLimit = 3)) ?: "...".addCss(structuralClass)
                 val sizeOfValue = shortValue!!.textLength
                 val keyLimit = limit - sizeOfValue
                 if (key.length > keyLimit) {
