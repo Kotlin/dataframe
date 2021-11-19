@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.rendering
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
+import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.parse
@@ -76,5 +77,14 @@ class RenderingTests {
         Jsoup.parse(formatted).text() shouldBe "{ }"
 
         grouped.renderToString() shouldBe "{ }"
+    }
+
+    @Test
+    fun `render successfully`() {
+        dataFrameOf("a","b")(listOf(1, 1), listOf(2, 4))
+            .group("a","b")
+            .into("g")
+            .add("a"){ 1 }
+            .toHTML()
     }
 }
