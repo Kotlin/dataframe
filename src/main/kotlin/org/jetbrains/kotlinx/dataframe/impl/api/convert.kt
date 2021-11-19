@@ -30,7 +30,7 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
 @PublishedApi
-internal fun <T, C, R> ConvertClause<T, C>.convertRowCellImpl(type: KType?, rowConverter: RowValueExpression<T, C, R>): DataFrame<T> =
+internal fun <T, C, R> ConvertClause<T, C>.withRowCellImpl(type: KType?, rowConverter: RowValueExpression<T, C, R>): DataFrame<T> =
     to { col -> df.newColumn(type, col.name) { rowConverter(it, it[col]) } }
 
 @PublishedApi

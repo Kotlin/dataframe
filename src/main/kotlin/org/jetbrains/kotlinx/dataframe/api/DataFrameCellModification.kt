@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -19,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
-import org.jetbrains.kotlinx.dataframe.impl.api.convertRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToTypeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.defaultTimeZone
@@ -33,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
@@ -178,7 +177,7 @@ public inline fun <T, C, reified R> ConvertClause<T, C>.with(
     inferType: Boolean = false,
     noinline rowConverter: RowValueExpression<T, C, R>
 ): DataFrame<T> =
-    convertRowCellImpl(if (inferType) null else getType<R>(), rowConverter)
+    withRowCellImpl(if (inferType) null else getType<R>(), rowConverter)
 
 public inline fun <T, C, reified R> ConvertClause<T, C>.perRowCol(
     inferType: Boolean = false,
@@ -367,7 +366,7 @@ public data class SplitClauseWithTransform<T, C, R>(
     val transform: DataRow<T>.(C) -> Iterable<R>,
 ) : SplitWithTransform<T, C, R> {
 
-    private fun ConvertClause<T, C?>.splitInplace() = convertRowCellImpl(List::class.createTypeWithArgument(targetType)) { if (it == null) emptyList() else transform(it).asList() }
+    private fun ConvertClause<T, C?>.splitInplace() = withRowCellImpl(List::class.createTypeWithArgument(targetType)) { if (it == null) emptyList() else transform(it).asList() }
 
     override fun intoRows(dropEmpty: Boolean): DataFrame<T> {
         val paths = df.getColumnPaths(columns).toColumnSet()
@@ -381,10 +380,13 @@ public data class SplitClauseWithTransform<T, C, R>(
     override fun default(value: R?): SplitWithTransform<T, C, R> = copy(default = value)
 }
 
-public class FrameSplit<T, C>(
-    public val df: DataFrame<T>,
-    public val columns: ColumnSelector<T, DataFrame<C>?>
-)
+public fun <T, C> SplitClause<T, C>.toDataFrame(): DataFrame<T> = by {
+    when (it) {
+        is List<*> -> it
+        is AnyFrame -> it.rows()
+        else -> listOf(it)
+    }
+}.into()
 
 public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     firstName: ColumnReference<*>,
@@ -485,14 +487,14 @@ public data class MergeClause<T, C, R>(
 
 public fun <T, C, R> MergeClause<T, C, R>.notNull(): MergeClause<T, C, R> = copy(notNull = true)
 
-public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
-public inline fun <T, C, reified R> MergeClause<T, C, R>.into(column: ColumnAccessor<R>): DataFrame<T> = into(column.path())
+public fun <T, C, R> MergeClause<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
+public fun <T, C, R> MergeClause<T, C, R>.into(column: ColumnAccessor<R>): DataFrame<T> = into(column.path())
 
 public fun <T, C, R> MergeClause<T, C, R>.intoList(): List<R> = df.select(selector).rows().map { transform(it, it.values() as List<C>) }
 
-public inline fun <T, C, reified R> MergeClause<T, C, R>.into(columnPath: ColumnPath): DataFrame<T> {
+public fun <T, C, R> MergeClause<T, C, R>.into(columnPath: ColumnPath): DataFrame<T> {
     val grouped = df.move(selector).under { columnPath }
-    val res = grouped.convert { getColumnGroup(columnPath) }.with(inferType = true) {
+    val res = grouped.convert { getColumnGroup(columnPath) }.withRowCellImpl(null) {
         val srcRow = df[index()]
         var values = it.values() as List<C>
         if (notNull) {

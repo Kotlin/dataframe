@@ -161,6 +161,7 @@ import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.junit.Test
+import java.lang.IllegalStateException
 import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.reflect.jvm.jvmErasure
@@ -2338,5 +2339,10 @@ class DataFrameTests : BaseTest() {
         grouped["group"].kind shouldBe ColumnKind.Frame
         val updated = grouped.update("group").at(2).withNull()
         updated["group"].kind shouldBe ColumnKind.Value
+    }
+
+    @Test(expected = IllegalStateException::class)
+    fun `merge into same name`() {
+        typed.merge { name and city }.into("age").print()
     }
 }
