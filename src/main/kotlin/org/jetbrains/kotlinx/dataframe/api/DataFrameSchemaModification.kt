@@ -48,7 +48,7 @@ import kotlin.reflect.KProperty
 // region add
 
 public fun <T> DataFrame<T>.add(cols: Iterable<AnyCol>): DataFrame<T> = this + cols
-public fun <T> DataFrame<T>.add(other: AnyFrame): DataFrame<T> = add(other.columns())
+public fun <T> DataFrame<T>.add(vararg other: AnyFrame): DataFrame<T> = add(other.flatMap { it.columns() })
 
 public interface AddDataRow<out T> : DataRow<T> {
     public fun <C> AnyRow.added(): C

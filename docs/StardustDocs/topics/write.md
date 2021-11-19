@@ -19,7 +19,7 @@ df.writeCSV(file)
 <!---FUN writeCsvStr-->
 
 ```kotlin
-val csvStr = df.writeCSVStr(CSVFormat.DEFAULT.withDelimiter(';'))
+val csvStr = df.writeCSVStr(CSVFormat.DEFAULT.withDelimiter(';').withRecordSeparator(System.lineSeparator()))
 ```
 
 <!---END-->

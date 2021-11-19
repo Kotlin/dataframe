@@ -1,4 +1,4 @@
 [//]: # (title: Move/rename columns)
 
-* [`move`](move.md) columns or change column grouping in `DataFrame` 
-* [`rename`](rename.md) columns in `DataFrame`
+* [`move`](move.md) - moves given columns or changes column grouping in `DataFrame` 
+* [`rename`](rename.md) - renames given columns in `DataFrame`

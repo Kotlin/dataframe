@@ -4,7 +4,7 @@
 
 Two ways to create `DataFrame` with a subset of columns:
 
-* [`indexing`](indexing.md)
+**indexing:**
 
 <!---FUN getColumnsByName-->
 <tabs>
@@ -34,7 +34,9 @@ df["age", "weight"]
 </tab></tabs>
 <!---END-->
 
-* [`selecting`](ColumnSelectors.md)
+See [DataFrame indexing](indexing.md)
+
+**selecting:**
 
 <!---FUN select-->
 <tabs>

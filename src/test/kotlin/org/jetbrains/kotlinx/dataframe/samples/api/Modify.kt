@@ -557,17 +557,20 @@ class Modify : TestBase() {
     }
 
     @Test
-    fun concat() {
-        val otherDf = df
+    fun concatDfs() {
+        val df1 = df
+        val df2 = df
         // SampleStart
-        df.concat(otherDf)
+        df.concat(df1, df2)
         // SampleEnd
     }
 
     @Test
     fun concatIterable() {
+        val df1 = df
+        val df2 = df
         // SampleStart
-        listOf(df[0..1], df[4..5]).concat()
+        listOf(df1, df2).concat()
         // SampleEnd
     }
 
@@ -628,10 +631,11 @@ class Modify : TestBase() {
     }
 
     @Test
-    fun addDataFrame() {
-        val otherDf = df.select { name named "name2" }
+    fun addDfs() {
+        val df1 = df.select { name named "name2" }
+        val df2 = df1
         // SampleStart
-        df.add(otherDf)
+        df.add(df1, df2)
         // SampleEnd
     }
 

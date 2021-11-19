@@ -1,4 +1,4 @@
 [//]: # (title: Insert/replace columns)
 
-* [`insert`](insert.md) column into `DataFrame`
-* [`replace`](replace.md) columns in `DataFrame`
+* [`insert`](insert.md) - inserts new column into `DataFrame`
+* [`replace`](replace.md) - replaces columns in `DataFrame`
