@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.getType
-import org.jetbrains.kotlinx.dataframe.test.testCsv
+import org.jetbrains.kotlinx.dataframe.testCsv
 import org.junit.Test
 import java.io.StringWriter
 import java.time.LocalDateTime

@@ -1,6 +1,5 @@
-package org.jetbrains.kotlinx.dataframe.test
+package org.jetbrains.kotlinx.dataframe
 
-import org.jetbrains.kotlinx.dataframe.UtilTests
 import java.net.URL
 
 fun testResource(resourcePath: String): URL = UtilTests::class.java.classLoader.getResource(resourcePath)!!

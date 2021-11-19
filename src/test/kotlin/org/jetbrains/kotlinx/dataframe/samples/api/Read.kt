@@ -5,8 +5,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readJson
-import org.jetbrains.kotlinx.dataframe.test.testCsv
-import org.jetbrains.kotlinx.dataframe.test.testJson
+import org.jetbrains.kotlinx.dataframe.testCsv
+import org.jetbrains.kotlinx.dataframe.testJson
 import org.junit.Test
 
 class Read : TestBase() {
