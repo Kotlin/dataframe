@@ -82,7 +82,7 @@ internal fun <T, R> aggregatePivot(
     body: Selector<AggregateDsl<T>, R>
 ) {
     val pivotSequences = aggregator.df.getPivotSequences(columns)
-    val effectiveInward = inward ?: (pivotSequences.distinctBy { it.first().column.path }.count() > 1)
+    val effectiveInward = inward ?: if (aggregator.hasGroupingKeys) true else (pivotSequences.distinctBy { it.first().column.path }.count() > 1)
     pivotSequences.forEach { pivotColumns ->
 
         aggregator.df.groupBy(pivotColumns.map { it.column }).forEach { key, group ->

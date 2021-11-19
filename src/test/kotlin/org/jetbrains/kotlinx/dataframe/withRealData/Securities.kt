@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.values
+import org.jetbrains.kotlinx.dataframe.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.io.read
 import org.junit.Test
 
@@ -18,6 +19,7 @@ class Securities {
     fun pivot() {
         val res = df.rename("id").into("rowId").pivot("columns").groupBy("rowId").values("data")
         res.nrow() shouldBe 100
-        res.ncol() shouldBe 17
+        res.ncol() shouldBe 2
+        res.getColumnGroup(1).ncol() shouldBe 16
     }
 }

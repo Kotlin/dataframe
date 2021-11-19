@@ -81,10 +81,10 @@ class RenderingTests {
 
     @Test
     fun `render successfully`() {
-        dataFrameOf("a","b")(listOf(1, 1), listOf(2, 4))
-            .group("a","b")
+        dataFrameOf("a", "b")(listOf(1, 1), listOf(2, 4))
+            .group("a", "b")
             .into("g")
-            .add("a"){ 1 }
+            .add("a") { 1 }
             .toHTML()
     }
 }

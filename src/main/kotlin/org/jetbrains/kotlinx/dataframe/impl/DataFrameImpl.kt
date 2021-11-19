@@ -102,7 +102,7 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>) : DataFrame<T>, Aggrega
     }
 
     override fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T> {
-        val receiver = GroupByReceiverImpl(this)
+        val receiver = GroupByReceiverImpl(this, false)
         body(receiver, receiver)
         val row = receiver.compute() ?: DataFrame.empty(1)[0]
         return row.cast()

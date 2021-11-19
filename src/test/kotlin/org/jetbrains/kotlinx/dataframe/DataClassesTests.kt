@@ -23,7 +23,7 @@ class DataClassesTests {
             Record("female", 6, 15)
         )
             .createDataFrame()
-            .pivot(Record::sex).groupBy(Record::grade).values(Record::count)
+            .pivot(Record::sex, inward = false).groupBy(Record::grade).values(Record::count)
             .toListOf<PivotedRecord>() shouldBe
             listOf(
                 PivotedRecord(5, 10, 20),
