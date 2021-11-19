@@ -124,9 +124,17 @@ class CsvTests {
         dfFull.nrow() shouldBe 5
     }
 
+    @Test
+    fun `if string starts with a number, it should be parsed as a string anyway`() {
+        val df = DataFrame.readCSV(durationCsv)
+        df["duration"].type() shouldBe getType<String>()
+        df["floatDuration"].type() shouldBe getType<String>()
+    }
+
     companion object {
         private val simpleCsv = testCsv("testCSV")
         private val csvWithFrenchLocale = testCsv("testCSVwithFrenchLocale")
         private val wineCsv = testCsv("wine")
+        private val durationCsv = testCsv("duration")
     }
 }
