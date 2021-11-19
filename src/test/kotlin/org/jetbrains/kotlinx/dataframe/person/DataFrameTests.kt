@@ -2349,6 +2349,6 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `groupBy sort`() {
-        typed.groupBy { name }.sortByDesc { age }["Mark"] shouldBe typed.filter { name == "Mark"}.sortBy { age.desc }
+        typed.groupBy { name }.sortByDesc { age }["Mark"] shouldBe typed.filter { name == "Mark" }.sortBy { age.desc }
     }
 }
