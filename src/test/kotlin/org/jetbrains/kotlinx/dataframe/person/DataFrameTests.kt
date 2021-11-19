@@ -34,6 +34,7 @@ import org.jetbrains.kotlinx.dataframe.api.corr
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.createDataFrame
 import org.jetbrains.kotlinx.dataframe.api.describe
+import org.jetbrains.kotlinx.dataframe.api.dfsOf
 import org.jetbrains.kotlinx.dataframe.api.digitize
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
@@ -47,6 +48,7 @@ import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.forEachColumn
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.getColumn
@@ -712,12 +714,13 @@ class DataFrameTests : BaseTest() {
             this["oldest origin"].toList() shouldBe listOf(null, "Dubai", "Milan")
             this["youngest origin"].toList() shouldBe listOf("London", "Tokyo", "Moscow")
             this["all with weights"].toList() shouldBe listOf(true, true, false)
-            this["from London"].toList() shouldBe listOf(1, 0, 0)
-            this["from Dubai"].toList() shouldBe listOf(0, 1, 0)
-            this["from Moscow"].toList() shouldBe listOf(0, 0, 2)
-            this["from Milan"].toList() shouldBe listOf(0, 0, 1)
-            this["from Tokyo"].toList() shouldBe listOf(0, 1, 0)
-            this["from null"].toList() shouldBe listOf(1, 0, 0)
+            val cities = getColumnGroup("city")
+            cities["from London"].toList() shouldBe listOf(1, 0, 0)
+            cities["from Dubai"].toList() shouldBe listOf(0, 1, 0)
+            cities["from Moscow"].toList() shouldBe listOf(0, 0, 2)
+            cities["from Milan"].toList() shouldBe listOf(0, 0, 1)
+            cities["from Tokyo"].toList() shouldBe listOf(0, 1, 0)
+            cities["from null"].toList() shouldBe listOf(1, 0, 0)
             this["ages"].toList() shouldBe listOf(listOf(15, 20), listOf(45, 30), listOf(20, 40, 30))
         }
 
@@ -1053,13 +1056,14 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `pivot matches`() {
         val pivoted = typed.pivot { city }.groupBy { name and age and weight }.matches()
-        pivoted.ncol() shouldBe typed.ncol() + typed.city.ndistinct() - 1
-
+        pivoted.ncol() shouldBe 4
+        typed.ncol() + typed.city.ndistinct() - 1
+        val data = pivoted.getColumnGroup("city")
         for (row in 0 until typed.nrow()) {
             val city = typed[row][city].toString()
-            pivoted[row][city] shouldBe true
-            for (col in typed.ncol() until pivoted.ncol()) {
-                val column = pivoted.getColumn(col)
+            data[city][row] shouldBe true
+            for (col in 0 until data.ncol()) {
+                val column = data.getColumn(col)
                 val pivotedValue = column.cast<Boolean>()[row]
                 val colName = column.name()
                 pivotedValue shouldBe (colName == city)
@@ -1081,7 +1085,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `pivot matches with conversion`() {
         val filtered = typed.dropNulls { city }
-        val res = filtered.pivot { city.lowercase() }.groupBy { name and age }.matches()
+        val res = filtered.pivot(inward = false) { city.lowercase() }.groupBy { name and age }.matches()
         val cities = filtered.city.toList().map { it!!.lowercase() }
         val gathered =
             res.gather { colsOf<Boolean> { cities.contains(it.name()) } }.where { it }.keysInto("city")
@@ -1091,7 +1095,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `pivot matches distinct rows`() {
-        val res = typed.pivot { city }.groupBy { name and age }.matches()
+        val res = typed.pivot(inward = false) { city }.groupBy { name and age }.matches()
         res.ncol() shouldBe 2 + typed.city.ndistinct()
         for (i in 0 until typed.nrow()) {
             val city = typed[i][city]
@@ -1105,7 +1109,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `pivot matches merged rows`() {
         val selected = typed.select { name and city }
-        val res = typed.pivot { city }.groupBy { name }.matches()
+        val res = typed.pivot(inward = false) { city }.groupBy { name }.matches()
 
         res.ncol() shouldBe selected.city.ndistinct() + 1
         res.nrow() shouldBe selected.name.ndistinct()
@@ -1122,8 +1126,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `pivot to matrix`() {
-        val others = column<List<String>>("other")
         val other by column<String>()
+        val others = other.cast<List<String>>()
         val sum by column<Int>()
 
         val names = typed.name.distinct().toMany()
@@ -1134,13 +1138,13 @@ class DataFrameTests : BaseTest() {
             .add(sum) { name.length + other().length }
 
         val matrix = src.pivot { other }.groupBy { name }.with { sum }
-        matrix.ncol() shouldBe 1 + names.size
+        matrix.getColumnGroup(other.name()).ncol() shouldBe names.size
     }
 
     @Test
     fun `gather bool`() {
         val pivoted = typed.pivot { city }.groupBy { name }.matches()
-        val res = pivoted.gather { colsOf<Boolean>() }.where { it }.keysInto("city")
+        val res = pivoted.gather { dfsOf<Boolean>() }.where { it }.keysInto("city")
         val sorted = res.sortBy { name and city }
         sorted shouldBe typed.select { name and city.map { it.toString() } }.distinct().sortBy { name and city }
     }
@@ -1341,7 +1345,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `merge cols with conversion`() {
         val pivoted = typed.groupBy { name }.pivot { city }.count()
-        val res = pivoted.merge { intCols() }.by { it.filterNotNull().sum() }.into("cities")
+        val res = pivoted.merge { city.intCols() }.by { it.filterNotNull().sum() }.into("cities")
         val expected = typed.select { name and city }.groupBy { name }.count("cities")
         res shouldBe expected
     }
@@ -1991,13 +1995,13 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `pivot max`() {
-        val pivoted = typed.pivot { city }.groupBy { name }.max { age }
+        val pivoted = typed.pivot(inward = false) { city }.groupBy { name }.max { age }
         pivoted.single { name == "Mark" }["Moscow"] shouldBe 30
     }
 
     @Test
     fun `pivot all values`() {
-        val pivoted = typed.pivot { city }.groupBy { name }.values()
+        val pivoted = typed.pivot(inward = false) { city }.groupBy { name }.values()
         pivoted.ncol shouldBe 1 + typed.city.ndistinct()
         pivoted.columns().drop(1).forEach {
             it.kind() shouldBe ColumnKind.Group
@@ -2008,7 +2012,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `pivot mean values`() {
         val pivoted = typed.pivot { city }.groupBy { name }.mean()
-        pivoted.columns().drop(1).forEach {
+        pivoted.getColumnGroup(1).columns().forEach {
             it.kind() shouldBe ColumnKind.Group
             val group = it.asColumnGroup()
             group.columnNames() shouldBe listOf("age", "weight")
@@ -2025,14 +2029,14 @@ class DataFrameTests : BaseTest() {
             pivot { name }.max { age }
             sum { weight } into "total weight"
         }
-        val expected = dataFrameOf("count", "Alice", "Bob", "Mark", "total weight")(7, 20, 45, 40, 354)[0]
-        summary shouldBe expected
+        val expected = dataFrameOf("count", "Alice", "Bob", "Mark", "total weight")(7, 20, 45, 40, 354)
+        summary shouldBe expected.group { cols(1..3) }.into("name")[0]
     }
 
     @Test
     fun `pivot grouped max`() {
         val pivoted = typed.pivot { name }.groupBy { city }.max()
-        pivoted.columns().drop(1).forEach {
+        pivoted.getColumnGroup("name").forEachColumn {
             it.kind() shouldBe ColumnKind.Group
             val group = it.asColumnGroup()
             group.columnNames() shouldBe listOf("age", "weight")

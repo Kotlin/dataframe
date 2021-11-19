@@ -19,4 +19,6 @@ internal class AggregatePivotDslImpl<T>(override val df: DataFrame<T>) : Aggrega
     override fun pathForSingleColumn(column: AnyCol) = emptyPath()
 
     override fun <R> yield(path: ColumnPath, value: R, type: KType?, default: R?) = yield(path, value, type, default, true)
+
+    override val hasGroupingKeys: Boolean get() = false
 }

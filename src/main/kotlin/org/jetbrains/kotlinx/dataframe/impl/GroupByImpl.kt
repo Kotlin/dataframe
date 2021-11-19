@@ -86,10 +86,12 @@ internal fun <T, G, R> aggregateGroupBy(
 
     val removed = df.removeImpl(selector)
 
+    val hasKeyColumns = removed.df.ncol() > 0
+
     val groupedFrame = column.values.map {
         if (it == null) null
         else {
-            val builder = GroupByReceiverImpl(it)
+            val builder = GroupByReceiverImpl(it, hasKeyColumns)
             val result = body(builder, builder)
             if (result != Unit && result !is NamedValue && result !is AggregatedPivot<*>) builder.yield(
                 NamedValue.create(

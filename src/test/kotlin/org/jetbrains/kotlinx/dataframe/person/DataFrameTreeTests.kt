@@ -33,6 +33,7 @@ import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.forEachRow
 import org.jetbrains.kotlinx.dataframe.api.getColumnPath
+import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.implode
@@ -274,9 +275,11 @@ class DataFrameTreeTests : BaseTest() {
         }.plus("Bob" to "Moscow" to emptyList<Int>()).toMap()
 
         fun <T> DataFrame<T>.check() {
-            ncol() shouldBe 1 + typed2.nameAndCity.city.ndistinct()
+            ncol() shouldBe 2
+            val cities = getColumnGroup("nameAndCity").getColumnGroup("city")
+            cities.ncol() shouldBe typed2.nameAndCity.city.ndistinct()
             this[name] shouldBe typed.name.distinct()
-            val data = columns().drop(1)
+            val data = cities.columns()
             data.forEach {
                 if (it.name() == "Moscow") it.type() shouldBe getType<List<Int>>()
                 else it.type() shouldBe getType<Int?>()
@@ -301,18 +304,18 @@ class DataFrameTreeTests : BaseTest() {
     fun `pivot grouped column`() {
         val grouped = typed.group { age and weight }.into("info")
         val pivoted = grouped.pivot { city }.groupBy { name }.values("info")
-        pivoted.ncol() shouldBe typed.city.ndistinct() + 1
+        pivoted.ncol() shouldBe 2
 
         val expected =
             typed.rows().groupBy { it.name to (it.city ?: "null") }.mapValues { it.value.map { it.age to it.weight } }
-        val dataCols = pivoted.columns().drop(1)
+        val dataCols = pivoted.getColumns { col(1).all() }
 
         dataCols.forEach { (it.isColumnGroup() || it.isFrameColumn()) shouldBe true }
 
         val names = pivoted.name
         dataCols.forEach { col ->
             val city = col.name()
-            (0 until pivoted.nrow()).forEach { row ->
+            pivoted.indices().forEach { row ->
                 val name = names[row]
                 val value = col[row]
                 val expValues = expected[name to city]

@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import kotlin.reflect.KType
 
-internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>) :
+internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override val hasGroupingKeys: Boolean) :
     AggregateGroupedDsl<T>(),
     AggregateInternalDsl<T>,
     AggregatableInternal<T> by df as AggregatableInternal<T>,
@@ -27,7 +27,7 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>) :
     private val values = mutableListOf<NamedValue>()
 
     internal fun child(): GroupByReceiverImpl<T> {
-        val child = GroupByReceiverImpl(df)
+        val child = GroupByReceiverImpl(df, true)
         values.add(NamedValue.aggregator(child))
         return child
     }

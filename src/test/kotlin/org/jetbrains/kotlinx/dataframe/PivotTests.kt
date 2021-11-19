@@ -1,12 +1,12 @@
 package org.jetbrains.kotlinx.dataframe
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.api.columns
 import org.jetbrains.kotlinx.dataframe.api.first
+import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.last
+import org.jetbrains.kotlinx.dataframe.api.matches
 import org.jetbrains.kotlinx.dataframe.api.pivot
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
@@ -21,7 +21,7 @@ class PivotTests {
 
     @Test
     fun `simple pivot`() {
-        val pivoted = df.pivot(b).groupBy(a).values(c)
+        val pivoted = df.pivot(b, inward = false).groupBy(a).values(c)
         pivoted.columnNames() shouldBe listOf("a", "q", "w")
         pivoted.nrow shouldBe 2
         pivoted["q"].values() shouldBe listOf('x', 'y')
@@ -31,30 +31,41 @@ class PivotTests {
     @Test
     fun `pivot with rename`() {
         val pivoted = df.pivot(b).groupBy(a).values { c default '?' into "d" and (c into "e") }
-        pivoted.columnNames() shouldBe listOf("a", "q", "w")
+        pivoted.columnNames() shouldBe listOf("a", "b")
         pivoted.nrow shouldBe 2
-        pivoted.print()
 
-        pivoted["q"]["d"].values() shouldBe listOf('x', 'y')
-        pivoted["q"]["e"].values() shouldBe listOf('x', 'y')
-        pivoted["w"]["d"].values() shouldBe listOf('?', 'z')
-        pivoted["w"]["e"].values() shouldBe listOf(null, 'z')
+        pivoted["b"]["q"]["d"].values() shouldBe listOf('x', 'y')
+        pivoted["b"]["q"]["e"].values() shouldBe listOf('x', 'y')
+        pivoted["b"]["w"]["d"].values() shouldBe listOf('?', 'z')
+        pivoted["b"]["w"]["e"].values() shouldBe listOf(null, 'z')
     }
 
     @Test
     fun `pivot aggregate with default`() {
-        val pivoted = df.pivot(b).groupBy(a).aggregate {
+        val pivoted = df.pivot(b, inward = false).groupBy(a).aggregate {
             get(c).first() default '-' into "first"
             get(c).last() into "last" default '?'
         }
         pivoted.ncol shouldBe 3
         pivoted.nrow shouldBe 2
-        val cols = pivoted.columns { except(a).dfsLeafs() }
+        val cols = pivoted.getColumns { except(a).dfsLeafs() }
         cols.size shouldBe 4
         cols.forEach {
             it.type() shouldBe getType<Char>()
         }
         pivoted["w"]["first"][0] shouldBe '-'
         pivoted["w"]["last"][0] shouldBe '?'
+    }
+
+    @Test
+    fun `pivot groupBy inward by default`() {
+        val df = dataFrameOf("a", "b")(
+            2, "a",
+            4, "b",
+            3, "c",
+        )
+        val pivoted = df.pivot("b").groupBy("a").matches()
+        pivoted.columnNames() shouldBe listOf("a", "b")
+        pivoted.getColumnGroup("b").columnNames() shouldBe listOf("a", "b", "c")
     }
 }

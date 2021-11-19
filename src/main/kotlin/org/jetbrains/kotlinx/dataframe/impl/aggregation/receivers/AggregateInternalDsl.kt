@@ -14,6 +14,8 @@ internal interface AggregateInternalDsl<out T> {
 
     val df: DataFrame<T>
 
+    val hasGroupingKeys: Boolean
+
     fun yield(value: NamedValue): NamedValue
 
     fun <R> yield(path: ColumnPath, value: R, type: KType?, default: R?, guessType: Boolean) =
