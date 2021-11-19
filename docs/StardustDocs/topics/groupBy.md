@@ -1,4 +1,4 @@
-[//]: # (title: Group rows with groupBy)
+[//]: # (title: groupBy)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->

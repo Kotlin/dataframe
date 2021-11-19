@@ -2,33 +2,31 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` with the union of rows from several given DataFrames.
+Returns `DataFrame` with the union of rows from several given `DataFrames`.
 
-To union columns instead of rows, see [`add`](add.md)
+`concat` is available for:
 
-<!---FUN concat-->
+`DataFrame`:
+
+<!---FUN concatDfs-->
 
 ```kotlin
-df.concat(otherDf)
+df.concat(df1, df2)
 ```
 
 <!---END-->
 
-### Concat several DataFrames
-
-`concat` is available for:
-
-* `Iterable<DataFrame>`:
+`Iterable<DataFrame>`:
 
 <!---FUN concatIterable-->
 
 ```kotlin
-listOf(df[0..1], df[4..5]).concat()
+listOf(df1, df2).concat()
 ```
 
 <!---END-->
 
-* `Iterable<DataRow>`:
+`Iterable<DataRow>`:
 
 <!---FUN concatRows-->
 
@@ -39,7 +37,7 @@ rows.concat()
 
 <!---END-->
 
-* `GroupBy`:
+[`GroupBy`](groupBy.md#groupby):
 
 <!---FUN concatGroupBy-->
 
@@ -49,7 +47,7 @@ df.groupBy { name }.concat()
 
 <!---END-->
 
-* [`FrameColumn`](DataColumn.md#framecolumn):z
+[`FrameColumn`](DataColumn.md#framecolumn):
 
 <!---FUN concatFrameColumn-->
 
@@ -60,10 +58,12 @@ frameColumn.concat()
 
 <!---END-->
 
+If you want to union columns (not rows) from several `DataFrames`, see [`add`](add.md).
+
 ## Schema unification
 
-If input DataFrames have different schemas, every column in resulting `DataFrame` will have the most common type of the original columns with the same name. 
+If input `DataFrames` have different schemas, every column in resulting `DataFrame` will have the most common type of the original columns with the same name. 
 
 For example, if one `DataFrame` has column `A: Int` and other `DataFrame` has column `A: Double`, resulting `DataFrame` will have column `A: Number`.
 
-Missing columns in DataFrames will be filled with `null`.
+Missing columns in dataframes will be filled with `null`.

@@ -117,10 +117,10 @@ df + score
 
 **Add all columns from another `DataFrame`:**
 
-<!---FUN addDataFrame-->
+<!---FUN addDfs-->
 
 ```kotlin
-df.add(otherDf)
+df.add(df1, df2)
 ```
 
 <!---END-->
