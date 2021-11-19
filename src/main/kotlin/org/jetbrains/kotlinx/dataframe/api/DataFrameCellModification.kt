@@ -257,7 +257,7 @@ public interface GlobalParserOptions {
 public data class ParserOptions(
     val locale: Locale? = null,
     val dateTimeFormatter: DateTimeFormatter? = null,
-    val nulls: List<String>? = null
+    val nulls: Set<String>? = null
 )
 
 public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataColumn<*> = tryParseImpl(options)
