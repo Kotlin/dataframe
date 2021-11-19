@@ -151,6 +151,7 @@ import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.io.print
 import org.jetbrains.kotlinx.dataframe.io.renderValueForStdout
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.math.mean
@@ -2343,6 +2344,11 @@ class DataFrameTests : BaseTest() {
 
     @Test(expected = IllegalStateException::class)
     fun `merge into same name`() {
-        typed.merge { name and city }.into("age").print()
+        typed.merge { name and city }.into("age")
+    }
+
+    @Test
+    fun `groupBy sort`() {
+        typed.groupBy { name }.sortByDesc { age }["Mark"] shouldBe typed.filter { name == "Mark"}.sortBy { age.desc }
     }
 }
