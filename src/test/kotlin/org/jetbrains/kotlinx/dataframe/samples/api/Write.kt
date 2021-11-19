@@ -33,7 +33,7 @@ class Write : TestBase() {
     @Test
     fun writeCsvStr() {
         // SampleStart
-        val csvStr = df.writeCSVStr(CSVFormat.DEFAULT.withDelimiter(';'))
+        val csvStr = df.writeCSVStr(CSVFormat.DEFAULT.withDelimiter(';').withRecordSeparator(System.lineSeparator()))
         // SampleEnd
         csvStr shouldStartWith """
             name;age;city;weight;isHappy
@@ -61,7 +61,10 @@ class Write : TestBase() {
     }
 
     companion object {
-        private fun String.rejoinWithSystemLineSeparator() = trimIndent().lines().joinToString(System.lineSeparator())
+        private fun String.rejoinWithSystemLineSeparator() = rejoinWithLineSeparator(System.lineSeparator())
+
+        private fun String.rejoinWithLineSeparator(separator: String) = trimIndent().lines().joinToString(separator)
+
         private fun useTempFile(action: (File) -> Unit) {
             val file = kotlin.io.path.createTempFile("dataframeWriteTest")
             action(file.toFile())
