@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
@@ -19,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.emptyMany
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
@@ -35,6 +33,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.impl.api.tryParseImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
+import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
@@ -206,7 +205,7 @@ public fun <T> ConvertClause<T, *>.toDate(zone: ZoneId = defaultTimeZone): DataF
 public fun <T> ConvertClause<T, *>.toTime(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.toLocalTime(zone) }
 public fun <T> ConvertClause<T, *>.toDateTime(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.toLocalDateTime(zone) }
 
-public fun <T, C> ConvertClause<T, Many<Many<C>>>.toDataFrames(containsColumns: Boolean = false): DataFrame<T> =
+public fun <T, C> ConvertClause<T, List<List<C>>>.toDataFrames(containsColumns: Boolean = false): DataFrame<T> =
     to { it.toDataFrames(containsColumns) }
 
 public fun AnyCol.toLocalDate(zone: ZoneId = defaultTimeZone): DataColumn<LocalDate> = when (typeClass) {
@@ -227,7 +226,7 @@ public fun AnyCol.toLocalTime(zone: ZoneId = defaultTimeZone): DataColumn<LocalT
     else -> convertTo(getType<LocalTime>()).cast()
 }
 
-public fun <T> DataColumn<Many<Many<T>>>.toDataFrames(containsColumns: Boolean = false): DataColumn<AnyFrame> =
+public fun <T> DataColumn<List<List<T>>>.toDataFrames(containsColumns: Boolean = false): DataColumn<AnyFrame> =
     map { it.toDataFrame(containsColumns) }
 
 // endregion
@@ -349,7 +348,7 @@ public fun <T> Split<T, String?>.match(regex: Regex): SplitWithTransform<T, Stri
 internal fun <T, C, R> Split<T, C>.by(type: KType, splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> {
     require(this is SplitClause<T, C>)
     return SplitClauseWithTransform(df, columns, false, type) {
-        if (it == null) emptyMany() else splitter(it).toMany()
+        if (it == null) emptyList() else splitter(it).asList()
     }
 }
 
@@ -362,7 +361,7 @@ public data class SplitClauseWithTransform<T, C, R>(
     val transform: DataRow<T>.(C) -> Iterable<R>,
 ) : SplitWithTransform<T, C, R> {
 
-    private fun ConvertClause<T, C?>.splitInplace() = convertRowCellImpl(Many::class.createTypeWithArgument(targetType)) { if (it == null) emptyMany() else transform(it).toMany() }
+    private fun ConvertClause<T, C?>.splitInplace() = convertRowCellImpl(List::class.createTypeWithArgument(targetType)) { if (it == null) emptyList() else transform(it).asList() }
 
     override fun intoRows(dropEmpty: Boolean): DataFrame<T> {
         val paths = df.getColumnPaths(columns).toColumnSet()

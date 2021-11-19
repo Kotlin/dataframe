@@ -40,7 +40,7 @@ class ReadTests {
         group.ncol() shouldBe 3
         group["b"].type() shouldBe getType<Int?>()
         group["value"].type() shouldBe getType<String?>()
-        group["array"].type() shouldBe getType<Many<Int>>()
+        group["array"].type() shouldBe getType<List<Int>>()
     }
 
     @Test
@@ -54,7 +54,7 @@ class ReadTests {
         val df = DataFrame.readJsonStr(json)
         df.ncol() shouldBe 1
         df.nrow() shouldBe 3
-        df["a"].type() shouldBe getType<Many<Number>>()
+        df["a"].type() shouldBe getType<List<Number>>()
         df[1]["a"] shouldBe emptyList<Int>()
     }
 

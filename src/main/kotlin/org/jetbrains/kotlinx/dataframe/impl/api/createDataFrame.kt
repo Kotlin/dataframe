@@ -4,7 +4,6 @@ import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.api.CreateDataFrameDsl
 import org.jetbrains.kotlinx.dataframe.api.TraversePropertiesDsl
 import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
@@ -130,7 +129,7 @@ internal fun convertToDataFrame(
                 else {
                     val elementClass = (elementType.classifier as KClass<*>)
                     if (elementClass.isValueType) {
-                        val manyType = Many::class.createTypeWithArgument(elementType).withNullability(nullable)
+                        val manyType = List::class.createTypeWithArgument(elementType).withNullability(nullable)
                         val manyValues = values.map {
                             (it as? Iterable<*>)?.toMany()
                         }

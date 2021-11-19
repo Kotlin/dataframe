@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ExtraColumnsBehavior
@@ -51,7 +50,6 @@ import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.getColumn
-import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
@@ -155,7 +153,6 @@ import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderValueForStdout
 import org.jetbrains.kotlinx.dataframe.kind
-import org.jetbrains.kotlinx.dataframe.manyOf
 import org.jetbrains.kotlinx.dataframe.math.mean
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -1122,7 +1119,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `pivot to matrix`() {
-        val others = column<Many<String>>("other")
+        val others = column<List<String>>("other")
         val other by column<String>()
         val sum by column<Int>()
 
@@ -1157,9 +1154,9 @@ class DataFrameTests : BaseTest() {
     fun `merge rows keep nulls`() {
         val merged = typed.select { name and city }.implode(dropNulls = false) { city }
 
-        val cityList = column<Many<String?>>().named("city")
+        val cityList = column<List<String?>>().named("city")
         merged[cityList].sumOf { it.size } shouldBe typed.city.size
-        merged[cityList].type() shouldBe getType<Many<String?>>()
+        merged[cityList].type() shouldBe getType<List<String?>>()
 
         val expected = typed.groupBy { name }.aggregate { it.city.toSet() into "city" }
         val actual = merged.convert(cityList).with { it.toSet() }
@@ -1174,9 +1171,9 @@ class DataFrameTests : BaseTest() {
     fun `merge rows drop nulls`() {
         val merged = typed.select { name and city }.implode(dropNulls = true) { city }
 
-        val cityList = column<Many<String>>().named("city")
+        val cityList = column<List<String>>().named("city")
         merged[cityList].sumOf { it.size } shouldBe typed.city.dropNulls().size
-        merged[cityList].type() shouldBe getType<Many<String>>()
+        merged[cityList].type() shouldBe getType<List<String>>()
 
         val expected =
             typed.dropNulls { city }.groupBy { name }.aggregate { it.city.toSet() as Set<String> into "city" }
@@ -1616,8 +1613,8 @@ class DataFrameTests : BaseTest() {
     @Test
     fun splitUnequalLists() {
         val values by columnOf(1, 2, 3, 4)
-        val list1 by columnOf(manyOf(1, 2, 3), manyOf(), manyOf(1, 2), null)
-        val list2 by columnOf(manyOf(1, 2), manyOf(1, 2), manyOf(1, 2), manyOf(1))
+        val list1 by columnOf(listOf(1, 2, 3), listOf(), listOf(1, 2), null)
+        val list2 by columnOf(listOf(1, 2), listOf(1, 2), listOf(1, 2), listOf(1))
         val df = dataFrameOf(values, list1, list2)
         val res = df.explode { list1 and list2 }
         val expected = dataFrameOf(values.name(), list1.name(), list2.name())(
@@ -1636,8 +1633,8 @@ class DataFrameTests : BaseTest() {
     @Test
     fun splitUnequalListAndFrames() {
         val values by columnOf(1, 2, 3)
-        val list1 by columnOf(manyOf(1, 2, 3), manyOf(1), manyOf(1, 2))
-        val frames by listOf(manyOf(1, 2), manyOf(1, 2), manyOf(1, 2)).map {
+        val list1 by columnOf(listOf(1, 2, 3), listOf(1), listOf(1, 2))
+        val frames by listOf(listOf(1, 2), listOf(1, 2), listOf(1, 2)).map {
             val data = column("data", it)
             val dataStr = column("dataStr", it.map { it.toString() })
             dataFrameOf(data, dataStr)
@@ -1975,8 +1972,8 @@ class DataFrameTests : BaseTest() {
         val values = grouped.values()
         values.nrow shouldBe 1
         values.columns().forEach {
-            it.typeClass shouldBe Many::class
-            (it[0] as Many<*>).size shouldBe typed.nrow()
+            it.typeClass shouldBe List::class
+            (it[0] as List<*>).size shouldBe typed.nrow()
         }
         values.explode() shouldBe typed
     }
@@ -2074,7 +2071,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `split inplace`() {
         val splitted = typed.split { name }.by { it.toCharArray().asIterable() }.inplace()
-        splitted["name"] shouldBe typed.name.map { it.toCharArray().asIterable().toMany() }
+        splitted["name"] shouldBe typed.name.map { it.toCharArray().toList() }
     }
 
     @Test
@@ -2232,7 +2229,7 @@ class DataFrameTests : BaseTest() {
     fun groupByAggregateSingleColumn() {
         val agg = typed.groupBy { name }.aggregate { city into "city" }
         agg shouldBe typed.groupBy { name }.values { city }
-        agg["city"].type shouldBe getType<Many<String?>>()
+        agg["city"].type shouldBe getType<List<String?>>()
     }
 
     @Test
@@ -2241,7 +2238,7 @@ class DataFrameTests : BaseTest() {
             .select { name and weight }
             .implode(dropNulls = true) { weight }
 
-        merged["weight"].type() shouldBe getType<Many<Int>>()
+        merged["weight"].type() shouldBe getType<List<Int>>()
     }
 
     @Test

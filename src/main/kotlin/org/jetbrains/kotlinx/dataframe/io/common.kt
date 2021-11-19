@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.io
 import com.github.kittinunf.fuel.httpGet
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
@@ -28,7 +27,7 @@ internal fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFr
     }
 }
 
-public fun <T> Many<Many<T>>.toDataFrame(containsColumns: Boolean = false): AnyFrame = when {
+public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyFrame = when {
     containsColumns -> {
         mapNotNull {
             if (it.size == 0) null

@@ -4,7 +4,6 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.Many
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
@@ -209,48 +208,48 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null): 
     var hasNulls = false
     var hasFrames = false
     var hasRows = false
-    var hasMany = false
-    val classesInMany = mutableSetOf<KClass<*>>()
-    var nullsInMany = false
+    var hasList = false
+    val classesInList = mutableSetOf<KClass<*>>()
+    var nullsInList = false
     values.forEach {
         when (it) {
             null -> hasNulls = true
             is AnyRow -> hasRows = true
             is AnyFrame -> hasFrames = true
-            is Many<*> -> {
-                hasMany = true
+            is List<*> -> {
+                hasList = true
                 it.forEach {
-                    if (it == null) nullsInMany = true
-                    else classesInMany.add(it.javaClass.kotlin)
+                    if (it == null) nullsInList = true
+                    else classesInList.add(it.javaClass.kotlin)
                 }
             }
             else -> classes.add(it.javaClass.kotlin)
         }
     }
-    val allManyWithRows = classesInMany.isNotEmpty() && classesInMany.all { it.isSubclassOf(DataRow::class) } && !nullsInMany
+    val allListsWithRows = classesInList.isNotEmpty() && classesInList.all { it.isSubclassOf(DataRow::class) } && !nullsInList
     return when {
         classes.isNotEmpty() -> {
             if (hasRows) classes.add(DataRow::class)
             if (hasFrames) classes.add(DataFrame::class)
-            if (hasMany) {
-                if (classesInMany.isNotEmpty()) {
-                    val typeInLists = classesInMany.commonType(nullsInMany, upperBound)
-                    val typeOfOthers = classes.commonType(nullsInMany, upperBound)
+            if (hasList) {
+                if (classesInList.isNotEmpty()) {
+                    val typeInLists = classesInList.commonType(nullsInList, upperBound)
+                    val typeOfOthers = classes.commonType(nullsInList, upperBound)
                     if (typeInLists == typeOfOthers) {
-                        return Many::class.createTypeWithArgument(typeInLists, false)
+                        return List::class.createTypeWithArgument(typeInLists, false)
                     }
                 }
-                classes.add(Many::class)
+                classes.add(List::class)
             }
             return classes.commonType(hasNulls, upperBound)
         }
-        (hasFrames && (!hasMany || allManyWithRows)) || (!hasFrames && allManyWithRows) -> DataFrame::class.createStarProjectedType(hasNulls)
-        hasRows && !hasFrames && !hasMany -> DataRow::class.createStarProjectedType(false)
-        hasMany && !hasFrames && !hasRows -> Many::class.createTypeWithArgument(classesInMany.commonType(nullsInMany, upperBound))
+        (hasFrames && (!hasList || allListsWithRows)) || (!hasFrames && allListsWithRows) -> DataFrame::class.createStarProjectedType(hasNulls)
+        hasRows && !hasFrames && !hasList -> DataRow::class.createStarProjectedType(false)
+        hasList && !hasFrames && !hasRows -> List::class.createTypeWithArgument(classesInList.commonType(nullsInList, upperBound))
         else -> {
             if (hasRows) classes.add(DataRow::class)
             if (hasFrames) classes.add(DataFrame::class)
-            if (hasMany) classes.add(Many::class)
+            if (hasList) classes.add(List::class)
             return classes.commonType(hasNulls, upperBound)
         }
     }

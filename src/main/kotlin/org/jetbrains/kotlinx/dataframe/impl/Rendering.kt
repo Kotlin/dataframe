@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
@@ -53,10 +52,6 @@ internal fun renderType(type: KType): String {
         List::class -> {
             val argument = type.arguments[0].type?.let { renderType(it) } ?: "*"
             "List<$argument>"
-        }
-        Many::class -> {
-            val argument = type.arguments[0].type?.let { renderType(it) } ?: "*"
-            "Many<$argument>"
         }
         else -> {
             val result = type.toString()

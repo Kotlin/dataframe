@@ -1,10 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.impl.owner
 
-public data class ColumnPath(val path: List<String>) : List<String> by path, Many<String>, ColumnReference<Any?> {
+public data class ColumnPath(val path: List<String>) : List<String> by path, ColumnReference<Any?> {
 
     public constructor(name: String) : this(listOf(name))
 

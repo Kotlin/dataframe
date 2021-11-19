@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.Many
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.owner
@@ -55,7 +54,7 @@ internal val valueToStringLimitForRowAsTable = 50
 internal fun AnyRow.getVisibleValues(): List<Pair<String, Any?>> {
     fun Any?.skip(): Boolean = when (this) {
         null -> true
-        is Many<*> -> this.isEmpty()
+        is List<*> -> this.isEmpty()
         is AnyRow -> values().all { it.skip() }
         else -> false
     }
@@ -102,13 +101,13 @@ internal fun renderValueToString(value: Any?) =
     when (value) {
         is AnyFrame -> "[${value.size}]".let { if (value.nrow() == 1) it + " " + value[0].toString() else it }
         is Double -> value.format(6)
-        is Many<*> -> if (value.isEmpty()) "[ ]" else value.toString()
+        is List<*> -> if (value.isEmpty()) "[ ]" else value.toString()
         else -> value.toString()
     }
 
 internal fun internallyRenderable(value: Any?): Boolean {
     return when (value) {
-        is AnyFrame, is Double, is Many<*>, null, "" -> true
+        is AnyFrame, is Double, is List<*>, null, "" -> true
         else -> false
     }
 }

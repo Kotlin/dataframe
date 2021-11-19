@@ -8,8 +8,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
-import org.jetbrains.kotlinx.dataframe.impl.EmptyMany
-import org.jetbrains.kotlinx.dataframe.impl.ManyImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
@@ -48,8 +46,8 @@ public fun ColumnGroupReference.frameColumn(): ColumnDelegate<AnyFrame> = Column
 public fun ColumnGroupReference.frameColumn(name: String): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(path() + name)
 public fun ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(this.path() + path)
 
-public fun <T> columnMany(): ColumnDelegate<Many<T>> = column()
-public fun <T> columnMany(name: String): ColumnAccessor<Many<T>> = column(name)
+public fun <T> columnMany(): ColumnDelegate<List<T>> = column()
+public fun <T> columnMany(name: String): ColumnAccessor<List<T>> = column(name)
 
 public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null) {
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.name)
@@ -197,15 +195,5 @@ public inline fun <T, reified R> ColumnsContainer<T>.newColumn(
     if (useActualType) return newColumnWithActualType(name, expression)
     return newColumn(getType<R>(), name, expression)
 }
-
-// endregion
-
-// region create Many
-
-public fun <T> emptyMany(): Many<T> = EmptyMany
-
-public fun <T> manyOf(element: T): Many<T> = ManyImpl(listOf(element))
-
-public fun <T> manyOf(vararg values: T): Many<T> = ManyImpl(listOf(*values))
 
 // endregion
