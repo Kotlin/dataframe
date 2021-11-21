@@ -1,4 +1,4 @@
-[//]: # (title: Read)
+[//]: # (title: Reading dataframes)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Read-->
 
 `DataFrame` supports CSV and JSON input formats.
@@ -52,7 +52,7 @@ example had the following content:
 
 Dataframe schema we get is:
 
-```
+```text
 A: Int
 B: String
 C: Double
@@ -95,7 +95,8 @@ val df = DataFrame.readJson(file)
 <!---END-->
 
 Corresponding dataframe schema will be
-```
+
+```text
 A: String
 B: Int
 C: Number

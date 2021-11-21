@@ -1,4 +1,4 @@
-[//]: # (title: Write)
+[//]: # (title: Writing dataframes)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Write-->
 
 DataFrames can be saved in CSV or JSON formats.
