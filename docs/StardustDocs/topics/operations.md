@@ -4,7 +4,7 @@
 
 `DataFrame` transformation pipeline usually consists of several modification operations, such as filtering, sorting, grouping, pivoting, adding/removing columns etc. 
 `DataFrame` API is designed in functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
-`DataFrame` object is immutable, so all operations defined for `DataFrame` object return a new `DataFrame` instance that reusing underlying data structures as much as possible.
+`DataFrame` is immutable, so all operations defined for `DataFrame` object will return a new `DataFrame` instance reusing underlying data structures as much as possible.
 
 ## Multiplex operations
 
@@ -21,11 +21,12 @@ df.update { age }.where { city == "Paris" }.with { it - 5 }
 
 <!---END-->
 
-First call in configuration chain for multiplex operation selects a subset of columns in `DataFrame` for which that operation should be applied. To select columns you can use [String API](stringApi.md) or [Column Selectors](ColumnSelectors.md). 
+Every multiplex operation consists of:
+- [column selector](ColumnSelectors.md) that is used to select target columns for the operation
+- optional configuration functions
+- terminal function that returns modified `DataFrame`
 
-Further operation configuration API may vary depending on types of selected columns. 
-
-Multiplex operations usually end with call to `into` or `with` function. The following naming convention is used:
+Multiplex operations usually end with `into` or `with` function. The following naming convention is used:
 * `into` defines column names where operation results should be stored. Used in [`move`](move.md), [`group`](group.md), [`split`](split.md), [`merge`](merge.md), [`gather`](gather.md), [`groupBy`](groupBy.md), [`rename`](rename.md).
 * `with` defines row-wise data transformation using [`row expression`](DataRow.md#row-expressions). Used in [`update`](update.md), [`convert`](convert.md), [`replace`](replace.md), [`pivot`](pivot.md).
 
