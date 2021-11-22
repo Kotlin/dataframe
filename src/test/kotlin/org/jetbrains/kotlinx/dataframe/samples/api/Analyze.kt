@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.div
 import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.groupByOther
+import org.jetbrains.kotlinx.dataframe.api.head
 import org.jetbrains.kotlinx.dataframe.api.length
 import org.jetbrains.kotlinx.dataframe.api.matches
 import org.jetbrains.kotlinx.dataframe.api.max
@@ -56,8 +57,16 @@ class Analyze : TestBase() {
         df.nrow()
         df.ncol()
         df.columnNames()
+        df.head()
         df.schema()
         df.describe()
+        // SampleEnd
+    }
+    
+    @Test
+    fun head() {
+        // SampleStart
+        df.head(10)
         // SampleEnd
     }
 

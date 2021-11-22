@@ -44,9 +44,11 @@ import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.perCol
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
+import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.pivotCount
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.shuffle
@@ -59,10 +61,12 @@ import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.api.toLeft
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.api.toPath
+import org.jetbrains.kotlinx.dataframe.api.toRight
 import org.jetbrains.kotlinx.dataframe.api.toTop
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
@@ -836,6 +840,16 @@ class Modify : TestBase() {
     fun flattenAll() {
         // SampleStart
         df.flatten()
+        // SampleEnd
+    }
+
+    @Test
+    fun multiCallOperations() {
+        // SampleStart
+        df.update { age }.where { city == "Paris" }.with { it - 5 }
+            .move { name.firstName and name.lastName }.after { isHappy }
+            .merge { age and weight }.by { "Age: ${it[0]}, weight: ${it[1]}" }.into("info")
+            .rename { isHappy }.into("isOkay")
         // SampleEnd
     }
 }
