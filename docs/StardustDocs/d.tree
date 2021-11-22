@@ -18,13 +18,7 @@
         </toc-element>
         <toc-element id="schemas.md"/>
     </toc-element>
-    <toc-element id="installation.md"  show-structure-depth="3">
-        <toc-element toc-title="Jupyter" id="jupyter.md"/>
-        <toc-element toc-title="Datalore" id="datalore.md"/>
-        <toc-element toc-title="Gradle" id="gradle.md">
-            <toc-element id="pluginConfig.md" toc-title="Plugin configuration"/>
-        </toc-element>
-    </toc-element>
+    <toc-element id="installation.md"/>
     <toc-element id="types.md">
         <toc-element id="DataFrame.md"/>
         <toc-element id="DataColumn.md"/>
