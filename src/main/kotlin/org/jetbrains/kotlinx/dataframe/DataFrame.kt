@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.EmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
-import org.jetbrains.kotlinx.dataframe.impl.getColumns
+import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
 
 public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
@@ -29,7 +29,7 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     public fun columnNames(): List<String>
 
-    override fun ncol(): Int = columns().size
+    override fun ncol(): Int
 
     public fun indices(): IntRange = 0 until nrow
 
@@ -39,7 +39,7 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     public fun <C> valuesNotNull(byRow: Boolean = false, columns: ColumnsSelector<T, C?>): Sequence<C> = values(byRow, columns).filterNotNull()
     public fun valuesNotNull(byRow: Boolean = false): Sequence<Any> = valuesNotNull(byRow) { all() }
 
-    override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = getColumns(false, columns)
+    override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = getColumnsImpl(UnresolvedColumnsPolicy.Fail, columns)
 
     public operator fun get(indices: Iterable<Int>): DataFrame<T> = getRows(indices)
     public operator fun get(range: IntRange): DataFrame<T> = getRows(range)
@@ -56,9 +56,6 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     public fun getColumnIndex(name: String): Int
 
     override fun <R> resolve(reference: ColumnReference<R>): ColumnWithPath<R>? = reference.resolveSingle(this, UnresolvedColumnsPolicy.Skip)
-
-    override fun getColumnOrNull(name: String): AnyCol? =
-        getColumnIndex(name).let { if (it != -1) getColumn(it) else null }
 
     override fun asColumnGroup(): ColumnGroup<*> = DataColumn.createColumnGroup("", this)
 

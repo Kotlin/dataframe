@@ -123,13 +123,11 @@ internal fun <T : Number> KClass<T>.zero(): T = when (this) {
 internal fun <T> catchSilent(body: () -> T): T? = try { body() } catch (_: Throwable) { null }
 
 internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType? = null) = commonParents(this).createType(nullable, upperBound)
-internal fun <T, C> DataFrame<T>.getColumns(
-    skipMissingColumns: Boolean,
+
+internal fun <T, C> DataFrame<T>.getColumnsImpl(
+    unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
     selector: ColumnsSelector<T, C>
-): List<DataColumn<C>> = getColumnsWithPaths(
-    if (skipMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail,
-    selector
-).map { it.data }
+): List<DataColumn<C>> = getColumnsWithPaths(unresolvedColumnsPolicy, selector).map { it.data }
 
 internal fun <T, C> DataFrame<T>.getColumnsWithPaths(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,

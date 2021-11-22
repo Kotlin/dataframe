@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.PivotColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.firstOrNull
+import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateBodyInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.public
 import org.jetbrains.kotlinx.dataframe.impl.api.aggregatePivot
@@ -32,7 +33,7 @@ internal data class PivotGroupByImpl<T>(
 
     override fun default(value: Any?) = copy(default = value)
 
-    override fun remainingColumnsSelector(): ColumnsSelector<*, *> = df.groups.firstOrNull()?.getPivotColumnPaths(columns).orEmpty().let { pivotPaths -> { all().except(pivotPaths.toColumnSet() and df.keys.columnNames().toColumns()) } }
+    override fun remainingColumnsSelector(): ColumnsSelector<*, *> = df.groups.firstOrNull()?.getPivotColumnPaths(columns).orEmpty().let { pivotPaths -> { all().except(pivotPaths.toColumnSet() and (df as GroupByImpl).keyColumnsInGroups.toColumns()) } }
 
     override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) = aggregate(separateStatistics, body.public())
 }

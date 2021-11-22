@@ -1,12 +1,15 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.distinct
+import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
+import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.renderSchema
 import kotlin.reflect.KType
@@ -14,10 +17,10 @@ import kotlin.reflect.KType
 internal val anyRowType = createTypeWithArgument<AnyRow>()
 
 internal open class ColumnGroupImpl<T>(override val df: DataFrame<T>, val name: String) :
+    DataFrameImpl<T>(df.columns()),
     ColumnGroup<T>,
     DataColumnInternal<DataRow<T>>,
-    DataColumnGroup<T>,
-    DataFrame<T> by df {
+    DataColumnGroup<T> {
 
     override fun values() = df.rows()
 
@@ -72,6 +75,8 @@ internal open class ColumnGroupImpl<T>(override val df: DataFrame<T>, val name: 
     override fun forceResolve() = ResolvingColumnGroup(this)
 
     override fun get(range: IntRange): ColumnGroupImpl<T> = ColumnGroupImpl(df[range], name)
+
+    override fun get(columnName: String): AnyCol = getColumn(columnName)
 }
 
 internal class ResolvingColumnGroup<T>(

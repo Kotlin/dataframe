@@ -9,6 +9,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.getColumn
+import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -16,10 +18,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.getColumn
 import kotlin.reflect.KProperty
 
-internal class ColumnGroupWithParent<T>(override val parent: ColumnGroupReference?, override val source: ColumnGroup<T>) : ColumnWithParent<DataRow<T>>, DataColumnGroup<T> by (source as DataColumnGroup<T>) {
+internal class ColumnGroupWithParent<T>(override val parent: ColumnGroupReference?, override val source: ColumnGroup<T>) : ColumnGroupImpl<T>(source.df, source.name()), ColumnWithParent<DataRow<T>> {
 
     override fun path() = super<ColumnWithParent>.path()
 
@@ -40,16 +41,15 @@ internal class ColumnGroupWithParent<T>(override val parent: ColumnGroupReferenc
     // region get column
 
     override fun columns() = df.columns().map { it.addParent(this) }
-    override fun getColumn(index: Int) = df.getColumn(index).addParent(this)
 
+    override fun getColumnOrNull(index: Int) = df.getColumnOrNull(index)?.addParent(this)
     override fun getColumnOrNull(name: String) = df.getColumnOrNull(name)?.addParent(this)
+    override fun <R> getColumnOrNull(column: ColumnReference<R>) = df.getColumnOrNull(column)?.addParent(this)
+    override fun getColumnOrNull(path: ColumnPath) = path.fold(this as AnyCol?) { col, name -> col?.asColumnGroup()?.getColumnOrNull(name) }
+    override fun <R> getColumnOrNull(column: ColumnSelector<T, R>) = getColumnOrNull(df.getColumnWithPath(column).path)?.cast<R>()
 
     override operator fun get(columnName: String): AnyCol = getColumn(columnName)
     override operator fun get(columnPath: ColumnPath): AnyCol = getColumn(columnPath)
-
-    override operator fun <R> get(column: ColumnReference<R>): DataColumn<R> = getColumn(column)
-    override operator fun <R> get(column: ColumnReference<DataRow<R>>): ColumnGroup<R> = getColumn(column)
-    override operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R> = getColumn(column)
 
     override operator fun <R> get(column: KProperty<R>): DataColumn<R> = get(column.name).cast()
     override operator fun <R> get(column: KProperty<DataRow<R>>): ColumnGroup<R> = get(column.name).asColumnGroup().cast()
@@ -59,4 +59,6 @@ internal class ColumnGroupWithParent<T>(override val parent: ColumnGroupReferenc
     override operator fun <C> get(column: ColumnSelector<T, C>): DataColumn<C> = get(column as ColumnsSelector<T, C>).single()
 
     // endregion
+
+    override fun get(firstIndex: Int, vararg otherIndices: Int): ColumnGroup<T> = ColumnGroupWithParent(parent, super.get(firstIndex, *otherIndices))
 }
