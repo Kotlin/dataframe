@@ -29,10 +29,11 @@ Multiplex operations usually end with call to `into` or `with` function. The fol
 * `into` defines column names where operation results should be stored. Used in [`move`](move.md), [`group`](group.md), [`split`](split.md), [`merge`](merge.md), [`gather`](gather.md), [`groupBy`](groupBy.md), [`rename`](rename.md).
 * `with` defines row-wise data transformation using [`row expression`](DataRow.md#row-expressions). Used in [`update`](update.md), [`convert`](convert.md), [`replace`](replace.md), [`pivot`](pivot.md).
 
-## Alphabetical List of operations
+## List of DataFrame operations
 
 * [add](add.md) - add columns
 * [append](append.md) - add rows
+* [columns](columns.md) - get list of columns
 * [concat](concat.md) - union rows
 * [convert](convert.md) - change column values and/or column types
 * [describe](describe.md) - basic column statistics
@@ -41,19 +42,19 @@ Multiplex operations usually end with call to `into` or `with` function. The fol
 * [explode](explode.md) - spread list-like values vertically
 * [fillNulls](fill.md#fillnulls) / [fillNaNs](fill.md#fillnans) / [fillNA](fill.md#fillna) - replace missing values
 * [filter](filter.md) / [filterBy](filter.md#filterby) - filter rows
-* [first](getRow.md#first) / [firstOrNull](getRow.md#firstornull) - first row by condition
+* [first](first.md) / [firstOrNull](first.md#firstornull) - first row by condition
 * [flatten](flatten.md) - remove column groupings recursively
 * [forEachRow](iterate.md) / [forEachColumn](iterate.md) - iterate over rows or columns
 * [format](format.md) - conditional formatting for cell rendering
 * [gather](gather.md) - convert columns into key-value pairs 
-* [getColumn](getColumn.md) / [getColumnGroup](getColumn.md) / [getColumns](getColumn.md) - get one or several columns
+* [getColumn](getColumn.md) / [getColumnOrNull](getColumn.md#getcolumnornull) / [getColumnGroup](getColumn.md#getcolumngroup) / [getColumns](getColumn.md#getcolumns) - get one or several columns
 * [group](group.md) - group columns into [`ColumnGroup`](DataColumn.md#columngroup)
 * [groupBy](groupBy.md) - group rows by key columns
 * [head](head.md) - top 5 rows
 * [implode](implode.md) - collapse column values into lists
 * [insert](insert.md) - insert column
 * [join](join.md) - join dataframes by key columns
-* [last](getRow.md#last) / [lastOrNull](getRow.md#lastornull) - last row by condition 
+* [last](last.md) / [lastOrNull](last.md#lastornull) - last row by condition 
 * [map](map.md) - map [`DataFrame`](DataFrame.md) columns to a new [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md)
 * [max](minmax.md) / [maxBy](minmax.md) / [maxOf](minmax.md) / [maxFor](minmax.md) - max of values 
 * [mean](mean.md) / [meanOf](mean.md) / [meanFor](mean.md) - average of values
@@ -67,10 +68,11 @@ Multiplex operations usually end with call to `into` or `with` function. The fol
 * [remove](remove.md) - remove columns
 * [rename](rename.md) - rename columns
 * [replace](replace.md) - replace columns
+* [rows](rows.md) / [rowsReversed](rows.md#rowsreversed)
 * [schema](schema.md) - schema of column hierarchy
 * [select](select.md) - select subset of columns
 * [shuffled](shuffle.md) - reorder rows randomly 
-* [single](getRow.md#single) / [singleOrNull](getRow.md#singleornull) - single row by condition
+* [single](single.md) / [singleOrNull](single.md#singleornull) - single row by condition
 * [sortBy](sortBy.md) / [sortByDesc](sortBy.md#sortbydesc) / [sortWith](sortBy.md#sortwith) - sort rows
 * [split](split.md) - split column values into several columns or new rows
 * [std](std.md) / [stdOf](std.md) / [stdFor](std.md) - standard deviation of values

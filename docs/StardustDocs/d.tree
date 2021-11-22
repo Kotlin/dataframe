@@ -46,8 +46,18 @@
             <toc-element id="indexing.md"/>
             <toc-element id="slicing.md"/>
             <toc-element id="iterate.md"/>
-            <toc-element id="getRow.md"/>
-            <toc-element id="getColumn.md"/>
+            <toc-element id="getRow.md">
+                <toc-element id="rows.md"/>
+                <toc-element id="single.md"/>
+                <toc-element id="first.md"/>
+                <toc-element id="last.md"/>
+                <toc-element id="minBy.md"/>
+                <toc-element id="maxBy.md"/>
+            </toc-element>
+            <toc-element id="getColumns.md">
+                <toc-element id="columns.md"/>
+                <toc-element id="getColumn.md"/>
+            </toc-element>
         </toc-element>
         <toc-element id="modify.md"  show-structure-depth="3">
             <toc-element id="sliceRows.md"/>
