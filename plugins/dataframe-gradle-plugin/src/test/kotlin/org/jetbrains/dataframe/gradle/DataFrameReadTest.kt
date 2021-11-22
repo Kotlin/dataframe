@@ -73,13 +73,6 @@ class DataFrameReadTest {
     }
 
     @Test
-    fun `URL with invalid CSV`() {
-        shouldThrow<IOException> {
-            DataFrame.read("https://github.com/Kotlin/dataframe/blob/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/census.csv")
-        }
-    }
-
-    @Test
     fun `data accessible and readable`() {
         val df = DataFrame.read(File("../../data/ghost.json"))
         val df1 = DataFrame.read(File("../../data/playlistItems.json"))
