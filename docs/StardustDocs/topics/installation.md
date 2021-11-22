@@ -39,11 +39,11 @@ After loading, all essential types will be already imported, so you can start us
 
 To start with DataFrame in Datalore, create a Kotlin notebook first:
 
-![Installation to Datalore](images/install/datalore-1.png)
+![Installation to Datalore](datalore-1.png)
 
 As the Notebook you've created is actually a Jupyter notebook, you can follow the instructions in the [previous section](#jupyter-notebook) to turn DataFrame on. The simplest way of doing this is shown on screenshot:
 
-![Datalore notebook](images/install/datalore-2.png)
+![Datalore notebook](datalore-2.png)
 
 # Gradle
 
