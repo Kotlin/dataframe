@@ -629,9 +629,12 @@ class Modify : TestBase() {
     fun add_accessors() {
         // SampleStart
         val age by column<Int>()
+        val yearOfBirth by column<Int>("year of birth")
 
-        df.add("year of birth") { 2021 - age }
+        df.add(yearOfBirth) { 2021 - age }
         // SampleEnd
+        val added = df.add(yearOfBirth) { 2021 - age }
+        added[yearOfBirth].name() shouldBe "year of birth"
     }
 
     @Test
@@ -740,8 +743,9 @@ class Modify : TestBase() {
     fun map_accessors() {
         // SampleStart
         val age by column<Int>()
+        val yearOfBirth by column<Int>("year of birth")
 
-        df.map("year of birth") { 2021 - age }
+        df.map(yearOfBirth) { 2021 - age }
         // SampleEnd
     }
 

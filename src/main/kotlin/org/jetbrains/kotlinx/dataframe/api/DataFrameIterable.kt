@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.column
+import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
@@ -80,6 +81,8 @@ public fun <T> DataFrame<T>.map(body: AddDsl<T>.() -> Unit): AnyFrame {
 }
 
 public inline fun <T, reified R> DataFrame<T>.map(name: String, noinline body: AddExpression<T, R>): DataColumn<R> = newColumn(getType<R>(), name, body)
+
+public inline fun <T, reified R> DataFrame<T>.map(column: ColumnAccessor<R>, noinline body: AddExpression<T, R>): DataColumn<R> = map(column.name(), body)
 
 // endregion
 
