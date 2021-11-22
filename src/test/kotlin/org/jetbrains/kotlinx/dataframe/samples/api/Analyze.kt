@@ -62,11 +62,11 @@ class Analyze : TestBase() {
         df.describe()
         // SampleEnd
     }
-    
+
     @Test
     fun head() {
         // SampleStart
-        df.head(10)
+        df.head(3)
         // SampleEnd
     }
 

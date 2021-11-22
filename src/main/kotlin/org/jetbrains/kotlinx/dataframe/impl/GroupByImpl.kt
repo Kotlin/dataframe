@@ -37,7 +37,7 @@ import org.jetbrains.kotlinx.dataframe.values
 internal class GroupByImpl<T, G>(
     val df: DataFrame<T>,
     override val groups: FrameColumn<G>,
-    private val keyColumnsInGroups: ColumnsSelector<G, *>
+    internal val keyColumnsInGroups: ColumnsSelector<G, *>
 ) :
     GroupBy<T, G>,
     AggregatableInternal<G> {

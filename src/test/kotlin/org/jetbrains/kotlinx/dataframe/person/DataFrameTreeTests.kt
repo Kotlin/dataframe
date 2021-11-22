@@ -32,7 +32,9 @@ import org.jetbrains.kotlinx.dataframe.api.duplicate
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.forEachRow
+import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnPath
+import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
 import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
@@ -71,7 +73,6 @@ import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
-import org.jetbrains.kotlinx.dataframe.columnMany
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -79,7 +80,6 @@ import org.jetbrains.kotlinx.dataframe.columns.depth
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.frameColumn
-import org.jetbrains.kotlinx.dataframe.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
@@ -249,13 +249,23 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
+    fun `get child column by accessor`() {
+        val cityCol by column<String?>("city")
+        val selected = typed2.getColumnWithPath {
+            val g = nameAndCity
+            val c = g.get(cityCol)
+            c
+        }
+        selected.path shouldBe pathOf("nameAndCity", "city")
+    }
+
+    @Test
     fun splitRows() {
         val selected = typed2.select { nameAndCity }
         val nested = selected.implode(dropNulls = false) { nameAndCity.city }
-        val mergedCity = columnMany<String?>("city")
+        val mergedCity = column<List<String?>>("city")
         val res = nested.split {
-            val group = nameAndCity
-            group.get(mergedCity)
+            nameAndCity[mergedCity]
         }.intoRows()
         val expected = selected.sortBy { nameAndCity.name }
         val actual = res.sortBy { nameAndCity.name }

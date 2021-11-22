@@ -1,57 +1,49 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.ColumnSelector
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
+import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
-import org.jetbrains.kotlinx.dataframe.getColumnOrNull
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupWithParent
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingValueColumn
-import org.jetbrains.kotlinx.dataframe.pathOf
+import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
 
-// TODO: don't copy columns, just wrap original DataFrame
-internal fun <T> prepareForReceiver(df: DataFrame<T>) = DataFrameImpl<T>(df.columns().map { if (it.isColumnGroup()) ColumnGroupWithParent(null, it.asColumnGroup()) else it })
+internal open class DataFrameReceiver<T>(val source: DataFrame<T>, private val allowMissingColumns: Boolean) : DataFrameImpl<T>(source.columns()), SingleColumn<DataRow<T>> {
 
-// Needed just to pass converted constructor argument into 'implement by'
-internal open class DataFrameReceiverBase<T>(protected val source: DataFrame<T>) :
-    DataFrame<T> by source,
-    SingleColumn<DataRow<T>> {
+    private fun <R> DataColumn<R>?.check(): DataColumn<R>? =
+        when (this) {
+            null -> if (allowMissingColumns) MissingColumnGroup<Any>().asDataColumn().cast() else null
+            is MissingDataColumn -> this
+            is ColumnGroup<*> -> ColumnGroupWithParent(null, this).asDataColumn().cast()
+            else -> this
+        }
+
+    override fun getColumnOrNull(name: String) = source.getColumnOrNull(name).check()
+    override fun getColumnOrNull(index: Int) = source.getColumnOrNull(index).check()
+    override fun <R> getColumnOrNull(column: ColumnReference<R>) = source.getColumnOrNull(column).check()
+    override fun getColumnOrNull(path: ColumnPath) = source.getColumnOrNull(path).check()
+    override fun <R> getColumnOrNull(column: ColumnSelector<T, R>) = source.getColumnOrNull(column).check()
+
+    override fun <R> resolve(reference: ColumnReference<R>): ColumnWithPath<R>? {
+        val context = ColumnResolutionContext(this, if (allowMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail)
+        return reference.resolveSingle(context)
+    }
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataRow<T>>? = DataColumn.createColumnGroup("", source).addPath(emptyPath(), source)
-}
 
-internal open class DataFrameReceiver<T>(source: DataFrame<T>, private val allowMissingColumns: Boolean) : DataFrameReceiverBase<T>(
-    prepareForReceiver(source)
-) {
-
-    override fun getColumn(columnIndex: Int): AnyCol {
-        if (allowMissingColumns && columnIndex < 0 || columnIndex >= ncol()) return MissingValueColumn<Any?>()
-        return super.getColumn(columnIndex)
-    }
-
-    override operator fun get(columnName: String) = getColumnChecked(pathOf(columnName)) ?: MissingValueColumn<Any?>()
-
-    fun <R> getColumnChecked(path: ColumnPath): DataColumn<R>? {
-        val col = source.getColumnOrNull(path)
-        if (col == null) {
-            if (allowMissingColumns) return null
-            throw IllegalStateException("Column not found: '$path'")
-        }
-        return col.cast()
-    }
-
-    override fun <R> resolve(column: ColumnReference<R>): ColumnWithPath<R>? {
-        val context = ColumnResolutionContext(this, if (allowMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail)
-        return column.resolveSingle(context)
-    }
+    override fun columns() = source.columns().map { if (it.isColumnGroup()) ColumnGroupWithParent(null, it.asColumnGroup()) else it }
 }

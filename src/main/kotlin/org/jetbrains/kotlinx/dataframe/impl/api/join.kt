@@ -21,7 +21,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.prepareForReceiver
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -47,7 +46,7 @@ internal fun <C> ColumnSet<C>.extractJoinColumns(): List<ColumnMatch<C>> = when 
 
 internal fun <A, B> DataFrame<A>.getColumns(other: DataFrame<B>, selector: JoinColumnsSelector<A, B>): List<ColumnMatch<Any?>> {
     val receiver = object : DataFrameReceiver<A>(this, false), JoinDsl<A, B> {
-        override val right: DataFrame<B> = prepareForReceiver(other)
+        override val right: DataFrame<B> = DataFrameReceiver(other, false)
     }
     val columns = selector(receiver, this)
     return columns.extractJoinColumns()

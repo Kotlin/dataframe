@@ -11,13 +11,11 @@ import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.mapToRows
 import org.jetbrains.kotlinx.dataframe.api.minBy
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.single
-import org.jetbrains.kotlinx.dataframe.api.singleColumn
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.takeLast
@@ -25,18 +23,9 @@ import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.getColumnGroup
 import org.junit.Test
 
 class Access : TestBase() {
-
-    @Test
-    fun getColumnByName_strings() {
-        // SampleStart
-        df["age"]
-        df["name"]["firstName"]
-        // SampleEnd
-    }
 
     @Test
     fun getColumnByName_properties() {
@@ -59,17 +48,111 @@ class Access : TestBase() {
     }
 
     @Test
-    fun getColumnByIndex() {
+    fun getColumnByName_strings() {
         // SampleStart
-        df.getColumn(2)
-        df.getColumnGroup(0).getColumn(1)
+        df["age"]
+        df["name"]["firstName"]
         // SampleEnd
     }
 
     @Test
-    fun getColumnByCondition() {
+    fun getColumn_properties() {
         // SampleStart
-        df.singleColumn { it.isNumber() && it.hasNulls() }
+        df.getColumn { age }
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumn_accessors() {
+        // SampleStart
+        val age by column<Int>()
+
+        df.getColumn { age }
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumn_strings() {
+        // SampleStart
+        df.getColumn("age")
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumnOrNull_properties() {
+        // SampleStart
+        df.getColumnOrNull { age }
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumnOrNull_accessors() {
+        // SampleStart
+        val age by column<Int>()
+
+        df.getColumnOrNull(age)
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumnOrNull_strings() {
+        // SampleStart
+        df.getColumnOrNull("age")
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumns_properties() {
+        // SampleStart
+        df.getColumns { age and name }
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumns_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val name by columnGroup()
+
+        df.getColumns { age and name }
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumns_strings() {
+        // SampleStart
+        df.getColumns("age", "name")
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumnGroup_properties() {
+        // SampleStart
+        df.getColumnGroup { name }
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumnGroup_accessors() {
+        // SampleStart
+        val name by columnGroup()
+
+        df.getColumnGroup(name)
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumnGroup_strings() {
+        // SampleStart
+        df.getColumnGroup("name")
+        // SampleEnd
+    }
+
+    @Test
+    fun getColumnByIndex() {
+        // SampleStart
+        df.getColumn(2)
+        df.getColumnGroup(0).getColumn(1)
         // SampleEnd
     }
 

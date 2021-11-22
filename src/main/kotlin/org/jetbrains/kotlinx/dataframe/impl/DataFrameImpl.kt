@@ -2,12 +2,19 @@ package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
+import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
@@ -78,6 +85,8 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>) : DataFrame<T>, Aggrega
 
     override fun columnNames() = columns.map { it.name() }
 
+    override fun ncol(): Int = columns.size
+
     override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) =
         aggregate(body as AggregateGroupedBody<T, R>).df()
 
@@ -138,5 +147,22 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>) : DataFrame<T>, Aggrega
             }
     }
 
-    override fun getColumn(index: Int) = columns[index]
+    override fun getColumnOrNull(name: String): AnyCol? =
+        getColumnIndex(name).let { if (it != -1) getColumn(it) else null }
+
+    override fun getColumnOrNull(index: Int) = if (index >= 0 && index < columns.size) columns[index] else null
+
+    override fun <R> getColumnOrNull(column: ColumnSelector<T, R>): DataColumn<R>? = getColumnsImpl(
+        UnresolvedColumnsPolicy.Skip, column
+    ).singleOrNull()
+
+    override fun <R> getColumnOrNull(column: ColumnReference<R>): DataColumn<R>? = resolve(column)?.data
+
+    override fun getColumnOrNull(path: ColumnPath): AnyCol? =
+        when (path.size) {
+            0 -> asColumnGroup().asDataColumn()
+            1 -> getColumnOrNull(path[0])
+            else -> path.dropLast(1).fold(this as AnyFrame?) { df, name -> df?.getColumnOrNull(name) as? AnyFrame? }
+                ?.getColumnOrNull(path.last())
+        }
 }
