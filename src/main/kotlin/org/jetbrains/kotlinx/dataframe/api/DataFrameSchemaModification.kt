@@ -88,6 +88,9 @@ public fun <T> DataFrame<T>.add(vararg columns: AnyCol): DataFrame<T> = dataFram
 public inline fun <reified R, T, G> GroupBy<T, G>.add(name: String, noinline expression: RowExpression<G, R>): GroupBy<T, G> =
     mapGroups { add(name, expression) }
 
+public inline fun <reified R, T, G> GroupBy<T, G>.add(column: ColumnAccessor<G>, noinline expression: RowExpression<G, R>): GroupBy<T, G> =
+    add(column.name(), expression)
+
 public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsContainer<T> by df, ColumnSelectionDsl<T> {
 
     internal val columns = mutableListOf<AnyCol>()

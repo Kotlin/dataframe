@@ -180,8 +180,9 @@ class Create : TestBase() {
     @Test
     fun createColumnAccessorRenamed() {
         // SampleStart
-        val accessor = column<String>("complex column name")
+        val accessor by column<String>("complex column name")
         // SampleEnd
+        accessor.name() shouldBe "complex column name"
     }
 
     @Test

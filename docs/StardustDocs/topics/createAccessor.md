@@ -11,12 +11,12 @@ val name by column<String>()
 
 <!---END-->
 
-To assign column name explicitly, pass it as an argument and replace `by` with `=`.
+To assign column name explicitly, pass it as an argument.
 
 <!---FUN createColumnAccessorRenamed-->
 
 ```kotlin
-val accessor = column<String>("complex column name")
+val accessor by column<String>("complex column name")
 ```
 
 <!---END-->

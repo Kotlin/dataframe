@@ -25,8 +25,9 @@ df.add("year of birth") { 2021 - age }
 
 ```kotlin
 val age by column<Int>()
+val yearOfBirth by column<Int>("year of birth")
 
-df.add("year of birth") { 2021 - age }
+df.add(yearOfBirth) { 2021 - age }
 ```
 
 </tab>
