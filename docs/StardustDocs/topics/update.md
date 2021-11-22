@@ -29,7 +29,7 @@ df.update { name.lastName and age }.at(1, 3, 4).withNull()
 
 <!---END-->
 
-**Update with constant value:**
+Update with constant value:
 
 <!---FUN updateWithConst-->
 
@@ -39,7 +39,7 @@ df.update { city }.where { name.firstName == "Alice" }.withValue("Paris")
 
 <!---END-->
 
-**Update with value depending on row:**
+Update with value depending on row:
 
 <!---FUN updateWith-->
 
@@ -49,7 +49,7 @@ df.update { city }.with { name.firstName + " from " + it }
 
 <!---END-->
 
-**Update with value depending on column:**
+Update with value depending on column:
 
 <!---FUN updatePerColumn-->
 
@@ -59,7 +59,7 @@ df.update { numberCols() }.perCol { mean(skipNA = true) }
 
 <!---END-->
 
-**Update with value depending on row and column:**
+Update with value depending on row and column:
 
 <!---FUN updatePerRowCol-->
 

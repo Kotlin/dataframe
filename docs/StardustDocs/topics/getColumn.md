@@ -1,16 +1,108 @@
-[//]: # (title: Get column)
+[//]: # (title: getColumn)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-Get single column by column name:
+Return column by column name or [column selector](ColumnSelectors.md) as [`DataColumn`](DataColumn.md). Throws exception if requested column doesn't exist.
 
-<!---FUN getColumnByName-->
+<!---FUN getColumn-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.age
-df.name.lastName
+df.getColumn { age }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val age by column<Int>()
+
+df.getColumn { age }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.getColumn("age")
+```
+
+</tab></tabs>
+<!---END-->
+
+## getColumnOrNull
+
+Return top-level column by column name or [column selector](ColumnSelectors.md) as [`DataColumn`](DataColumn.md) or null if requested column doesn't exist.
+
+<!---FUN getColumnOrNull-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.getColumnOrNull { age }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val age by column<Int>()
+
+df.getColumnOrNull(age)
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.getColumnOrNull("age")
+```
+
+</tab></tabs>
+<!---END-->
+
+## getColumnGroup
+
+Return top-level column by column name or [column selector](ColumnSelectors.md) as [`ColumnGroup`](DataColumn.md#columngroup). Throws exception if requested column doesn't exist or is not a `ColumnGroup`.
+
+<!---FUN getColumnGroup-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.getColumnGroup { name }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val name by columnGroup()
+
+df.getColumnGroup(name)
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.getColumnGroup("name")
+```
+
+</tab></tabs>
+<!---END-->
+
+## getColumns
+
+Return list of selected columns.
+
+<!---FUN getColumns-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.getColumns { age and name }
 ```
 
 </tab>
@@ -19,40 +111,16 @@ df.name.lastName
 ```kotlin
 val age by column<Int>()
 val name by columnGroup()
-val lastName by name.column<String>()
 
-df[age]
-df[lastName]
+df.getColumns { age and name }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df["age"]
-df["name"]["firstName"]
+df.getColumns("age", "name")
 ```
 
 </tab></tabs>
-<!---END-->
-
-Get single column by index (starting from 0):
-
-<!---FUN getColumnByIndex-->
-
-```kotlin
-df.getColumn(2)
-df.getColumnGroup(0).getColumn(1)
-```
-
-<!---END-->
-
-Get single column by [condition](DataColumn.md#column-conditions):
-
-<!---FUN getColumnByCondition-->
-
-```kotlin
-df.singleColumn { it.isNumber() && it.hasNulls() }
-```
-
 <!---END-->

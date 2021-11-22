@@ -19,4 +19,4 @@ df.values() // Sequence<Any?>
 * [Slice portion of data](slicing.md)
 * [Iterate over data](iterate.md)
 * [Get single row](getRow.md)
-* [Get single column](getColumn.md)
+* [Get single column](getColumns.md)
