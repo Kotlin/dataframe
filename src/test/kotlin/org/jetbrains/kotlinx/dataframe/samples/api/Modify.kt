@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.fillNA
 import org.jetbrains.kotlinx.dataframe.api.fillNaNs
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
+import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.flatten
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.group
@@ -845,9 +846,10 @@ class Modify : TestBase() {
     fun multiCallOperations() {
         // SampleStart
         df.update { age }.where { city == "Paris" }.with { it - 5 }
+            .filter { isHappy && age > 100 }
             .move { name.firstName and name.lastName }.after { isHappy }
             .merge { age and weight }.by { "Age: ${it[0]}, weight: ${it[1]}" }.into("info")
-            .rename { isHappy }.into("isOkay")
+            .rename { isHappy }.into("isOK")
         // SampleEnd
     }
 }
