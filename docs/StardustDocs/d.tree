@@ -13,9 +13,7 @@
             <toc-element toc-title="Column Accessors API" id="columnAccessorsApi.md"/>
             <toc-element id="extensionPropertiesApi.md"/>
         </toc-element>
-        <toc-element id="hierarchical.md">
-            <toc-element toc-title="JSON" id="json.md"/>
-        </toc-element>
+        <toc-element id="hierarchical.md"/>
         <toc-element id="schemas.md"/>
     </toc-element>
     <toc-element id="installation.md"/>
