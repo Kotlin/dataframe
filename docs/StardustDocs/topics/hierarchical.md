@@ -14,4 +14,5 @@ Hierarchical columns can also appear as a result of some [modification operation
 * [split](split.md) may produce `ColumnGroup`
 * [implode](implode.md) converts `ColumnGroup` into `FrameColumn`
 * [explode](explode.md) converts `FrameColumn` into `ColumnGroup`
+* [merge](merge.md) converts `ColumnGroups` into `FrameColumn`
 
