@@ -48,7 +48,12 @@ public fun <T, R> DataColumn<T?>.mapNotNull(transform: (T) -> R): DataColumn<R> 
 
 public inline fun <T, reified R> DataColumn<T>.mapInline(crossinline transform: (T) -> R): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
-    return guessColumnType(name(), newValues, suggestedType = getType<R>(), suggestedTypeIsUpperBound = false) as DataColumn<R>
+    return guessColumnType(
+        name(),
+        newValues,
+        suggestedType = getType<R>(),
+        suggestedTypeIsUpperBound = false
+    ) as DataColumn<R>
 }
 
 public fun <T, R> DataColumn<T>.map(type: KType?, transform: (T) -> R): DataColumn<R> {
@@ -66,3 +71,21 @@ public fun <T> DataColumn<T>.last(): T = get(size - 1)
 public fun <T> DataColumn<T>.lastOrNull(): T? = if (size > 0) last() else null
 public fun <C> DataColumn<C>.allNulls(): Boolean = size == 0 || all { it == null }
 public fun <C> DataColumn<C>.single(): C = values.single()
+
+// region take/drop
+
+public fun <T> DataColumn<T>.dropLast(n: Int): DataColumn<T> = take(size - n)
+public fun <T> DataColumn<T>.takeLast(n: Int): DataColumn<T> = drop(size - n)
+public fun <T> DataColumn<T>.drop(n: Int): DataColumn<T> = when {
+    n == 0 -> this
+    n >= size -> get(emptyList())
+    else -> get(n until size)
+}
+
+public fun <T> DataColumn<T>.take(n: Int): DataColumn<T> = when {
+    n == 0 -> get(emptyList())
+    n >= size -> this
+    else -> get(0 until n)
+}
+
+// endregion

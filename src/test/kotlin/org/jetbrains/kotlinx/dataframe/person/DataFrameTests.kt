@@ -40,6 +40,7 @@ import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
 import org.jetbrains.kotlinx.dataframe.api.div
 import org.jetbrains.kotlinx.dataframe.api.drop
+import org.jetbrains.kotlinx.dataframe.api.dropLast
 import org.jetbrains.kotlinx.dataframe.api.dropNA
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explode
@@ -153,7 +154,6 @@ import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
-import org.jetbrains.kotlinx.dataframe.io.print
 import org.jetbrains.kotlinx.dataframe.io.renderValueForStdout
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.math.mean
@@ -2363,5 +2363,13 @@ class DataFrameTests : BaseTest() {
         val group by frameColumn()
         typed.groupBy { name }.into(group)
             .split(group).intoColumns()
+    }
+
+    @Test
+    fun `takedrop for column`() {
+        typed.age.take(2) shouldBe typed.age[0..1]
+        typed.age.drop(2) shouldBe typed.age[2 until typed.nrow()]
+        typed.age.takeLast(2) shouldBe typed.age.drop(typed.nrow()-2)
+        typed.age.dropLast(2) shouldBe typed.age.take(typed.nrow()-2)
     }
 }
