@@ -2,3 +2,4 @@
 .idea
 .gradle
 build
+.ipynb_checkpoints
