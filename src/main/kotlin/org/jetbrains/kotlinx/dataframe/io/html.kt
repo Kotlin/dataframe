@@ -5,9 +5,12 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
+import org.jetbrains.kotlinx.dataframe.api.asNumbers
+import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
+import org.jetbrains.kotlinx.dataframe.impl.precision
 import org.jetbrains.kotlinx.dataframe.impl.truncate
 import org.jetbrains.kotlinx.dataframe.jupyter.CellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
@@ -102,7 +105,10 @@ internal fun AnyFrame.toHtmlData(
     val queue = LinkedList<Pair<AnyFrame, Int>>()
 
     fun AnyFrame.columnToJs(col: AnyCol): ColumnDataForJs {
-        val values = rows().take(configuration.rowsLimit).map {
+        val values = rows().take(configuration.rowsLimit)
+        val precision = if (col.isNumber()) col.asNumbers().precision() else 1
+        val renderConfig = configuration.copy(precision = precision)
+        val contents = values.map {
             val value = it[col]
             if (value is AnyFrame) {
                 if (value.ncol() == 0) {
@@ -113,8 +119,8 @@ internal fun AnyFrame.toHtmlData(
                     DataFrameReference(id, value.size)
                 }
             } else {
-                val html = formatter.format(value, cellRenderer, configuration)
-                val style = configuration.cellFormatter?.invoke(it, col)?.attributes()?.ifEmpty { null }?.joinToString(";") { "${it.first}:${it.second}" }
+                val html = formatter.format(value, cellRenderer, renderConfig)
+                val style = renderConfig.cellFormatter?.invoke(it, col)?.attributes()?.ifEmpty { null }?.joinToString(";") { "${it.first}:${it.second}" }
                 HtmlContent(html, style)
             }
         }
@@ -122,7 +128,7 @@ internal fun AnyFrame.toHtmlData(
             col.name(),
             if (col is ColumnGroup<*>) col.columns().map { col.columnToJs(it) } else emptyList(),
             col.isSubtypeOf<Number?>(),
-            values
+            contents
         )
     }
 
@@ -190,6 +196,7 @@ public data class DisplayConfiguration(
     var rowsLimit: Int = 20,
     var cellContentLimit: Int = 40,
     var cellFormatter: RowColFormatter<*>? = null,
+    var precision: Int = defaultPrecision
 ) {
     public companion object {
         public val DEFAULT: DisplayConfiguration = DisplayConfiguration()
@@ -200,8 +207,8 @@ internal fun String.escapeNewLines() = replace("\n", "\\n").replace("\r", "\\r")
 
 internal fun String.escapeForHtmlInJs() = replace("\"", "\\\"").escapeNewLines()
 
-internal fun renderValueForHtml(value: Any?, truncate: Int): RenderedContent {
-    return formatter.truncate(renderValueToString(value), truncate)
+internal fun renderValueForHtml(value: Any?, truncate: Int, precision: Int): RenderedContent {
+    return formatter.truncate(renderValueToString(value, precision), truncate)
 }
 
 internal fun String.escapeHTML(): String {
@@ -369,7 +376,7 @@ internal class DataFrameFormatter(
             is Pair<*, *> -> {
                 val key = value.first.toString() + ": "
                 val shortValue = render(value.second, renderer, configuration.copy(cellContentLimit = 3)) ?: "...".addCss(structuralClass)
-                val sizeOfValue = shortValue!!.textLength
+                val sizeOfValue = shortValue.textLength
                 val keyLimit = limit - sizeOfValue
                 if (key.length > keyLimit) {
                     if (limit > 3) {
