@@ -2,7 +2,7 @@
 
 <buildprofiles>
     <variables>
-        <web-root>http://www.jetbrains.com/help/</web-root>
+        <web-root>https://kotlin.github.io/dataframe/</web-root>
         <download-page/>
         <config-feedback-enabled>true</config-feedback-enabled>
         <config-feedback-widget>true</config-feedback-widget>
@@ -10,6 +10,7 @@
         <config-feedback-url>https://support.jetbrains.com</config-feedback-url>
         <config-webmaster>webmaster@jetbrains.com</config-webmaster>
         <config-search-scopes-provider>https://www.jetbrains.com/search/json/</config-search-scopes-provider>
+        <generate-sitemap-url-prefix>https://kotlin.github.io/dataframe/</generate-sitemap-url-prefix>
     </variables>
     <build-profile product="d"/>
 </buildprofiles>
