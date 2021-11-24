@@ -6,5 +6,5 @@
     <topics dir="topics"/>
     <images dir="images" version="1.0" web-path="images/" />
     <vars src="v.list"/>
-    <product src="d.tree" version="1.0"/>
+    <product src="d.tree" version="1.0" id="dataframe"/>
 </ihp>
