@@ -7,7 +7,7 @@ DataFrame can represent hierarchical data structures using two special types of 
 
 You can create `DataFrame` [from json](read.md#reading-json) or [from graph of Kotlin objects](createDataFrame.md#createdataframe) preserving original tree structure.
 
-Hierarchical columns can also appear as a result of some [modification operations](Modify.md):
+Hierarchical columns can also appear as a result of some [modification operations](modify.md):
 * [group](group.md) produces `ColumnGroup` 
 * [groupBy](groupBy.md) produces `FrameColumn`
 * [pivot](pivot.md) may produce `FrameColumn`
