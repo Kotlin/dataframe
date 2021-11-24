@@ -2,37 +2,38 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-`DataFrame` transformation pipeline usually consists of several modification operations, such as filtering, sorting, grouping, pivoting, adding/removing columns etc. 
-`DataFrame` API is designed in functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
-`DataFrame` is immutable, so all operations defined for `DataFrame` object will return a new `DataFrame` instance reusing underlying data structures as much as possible.
-
-## Multiplex operations
-
-Simple operations (such as [`filter`](filter.md) or [`select`](select.md)) return `DataFrame`, but more complex operations return an intermediate object that is used for further configuration of the operation. Let's call such operations **multiplex**.
+DataFrame transformation pipeline usually consists of several modification operations, such as filtering, sorting, grouping, pivoting, adding/removing columns etc. 
+DataFrame API is designed in functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
+`DataFrame` object is immutable, so all operations defined for `DataFrame` will return a new instance reusing underlying data structures as much as possible.
 
 <!---FUN multiCallOperations-->
 
 ```kotlin
 df.update { age }.where { city == "Paris" }.with { it - 5 }
+    .filter { isHappy && age > 100 }
     .move { name.firstName and name.lastName }.after { isHappy }
     .merge { age and weight }.by { "Age: ${it[0]}, weight: ${it[1]}" }.into("info")
-    .rename { isHappy }.into("isOkay")
+    .rename { isHappy }.into("isOK")
 ```
 
 <!---END-->
 
-Every multiplex operation consists of:
+## Multiplex operations
+
+Simple operations (such as [`filter`](filter.md) or [`select`](select.md)) return `DataFrame`, but more complex operations return an intermediate object that is used for further configuration of the operation. Let's call such operations **multiplex**.
+
+Every multiplex operation configuration consists of:
 - [column selector](ColumnSelectors.md) that is used to select target columns for the operation
-- optional configuration functions
+- additional configuration
 - terminal function that returns modified `DataFrame`
 
 Multiplex operations usually end with `into` or `with` function. The following naming convention is used:
-* `into` defines column names where operation results should be stored. Used in [`move`](move.md), [`group`](group.md), [`split`](split.md), [`merge`](merge.md), [`gather`](gather.md), [`groupBy`](groupBy.md), [`rename`](rename.md).
+* `into` defines column names for storing operation results. Used in [`move`](move.md), [`group`](group.md), [`split`](split.md), [`merge`](merge.md), [`gather`](gather.md), [`groupBy`](groupBy.md), [`rename`](rename.md).
 * `with` defines row-wise data transformation using [`row expression`](DataRow.md#row-expressions). Used in [`update`](update.md), [`convert`](convert.md), [`replace`](replace.md), [`pivot`](pivot.md).
 
-## List of DataFrame operations
+## List of all DataFrame operations
 
-* [add](add.md) - add columns
+* [add](add.md)  - add columns
 * [append](append.md) - add rows
 * [columns](columns.md) - get list of columns
 * [concat](concat.md) - union rows

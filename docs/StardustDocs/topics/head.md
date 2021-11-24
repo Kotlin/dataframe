@@ -7,7 +7,7 @@ Returns `DataFrame` containing first `n` (default 5) rows.
 <!---FUN head-->
 
 ```kotlin
-df.head(10)
+df.head(3)
 ```
 
 <!---END-->
