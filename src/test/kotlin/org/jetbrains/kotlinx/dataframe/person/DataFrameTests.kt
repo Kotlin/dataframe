@@ -2097,20 +2097,17 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `render to string`() {
         val expected = """
-            Data Frame [7 x 4]
-
-            |name:String |age:Int |city:String? |weight:Int? |
-            |------------|--------|-------------|------------|
-            |Alice       |15      |London       |54          |
-            |Bob         |45      |Dubai        |87          |
-            |Mark        |20      |Moscow       |null        |
-            |Mark        |40      |Milan        |null        |
-            |Bob         |30      |Tokyo        |68          |
-            |Alice       |20      |null         |55          |
-            |Mark        |30      |Moscow       |90          |
+               name age   city weight
+            0 Alice  15 London     54
+            1   Bob  45  Dubai     87
+            2  Mark  20 Moscow   null
+            3  Mark  40  Milan   null
+            4   Bob  30  Tokyo     68
+            5 Alice  20   null     55
+            6  Mark  30 Moscow     90
         """.trimIndent()
 
-        typed.toString().trim() shouldBe expected
+        typed.toString().trimIndent() shouldBe expected
     }
 
     @Test
@@ -2369,7 +2366,7 @@ class DataFrameTests : BaseTest() {
     fun `takedrop for column`() {
         typed.age.take(2) shouldBe typed.age[0..1]
         typed.age.drop(2) shouldBe typed.age[2 until typed.nrow()]
-        typed.age.takeLast(2) shouldBe typed.age.drop(typed.nrow()-2)
-        typed.age.dropLast(2) shouldBe typed.age.take(typed.nrow()-2)
+        typed.age.takeLast(2) shouldBe typed.age.drop(typed.nrow() - 2)
+        typed.age.dropLast(2) shouldBe typed.age.take(typed.nrow() - 2)
     }
 }

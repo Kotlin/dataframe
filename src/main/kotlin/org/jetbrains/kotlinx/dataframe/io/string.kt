@@ -2,48 +2,103 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.api.GroupBy
-import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.api.asNumbers
+import org.jetbrains.kotlinx.dataframe.api.isNumber
+import org.jetbrains.kotlinx.dataframe.api.take
+import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.impl.owner
+import org.jetbrains.kotlinx.dataframe.impl.precision
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.truncate
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.size
+import java.math.BigDecimal
 
-public fun <T, G> GroupBy<T, G>.print(): Unit = println(this)
-
-internal fun AnyFrame.renderToString(limit: Int = 20, truncate: Int = 40): String {
+internal fun AnyFrame.renderToString(
+    rowsLimit: Int = 20,
+    valueLimit: Int = 40,
+    borders: Boolean = false,
+    alignLeft: Boolean = false,
+    columnTypes: Boolean = false,
+    title: Boolean = false,
+    rowIndex: Boolean = true,
+): String {
     val sb = StringBuilder()
-    sb.appendLine("Data Frame [${size()}]")
-    sb.appendLine()
 
-    val outputRows = limit.coerceAtMost(nrow())
-    val output = columns().map { it.values.take(limit).map { renderValueForStdout(it, truncate).truncatedContent } }
-    val header = columns().map { "${it.name()}:${renderType(it)}" }
-    val columnLengths = output.mapIndexed { col, values -> (values + header[col]).map { it.length }.maxOrNull()!! + 1 }
+    // title
+    if (title) {
+        sb.appendLine("Data Frame [${size()}]")
+        sb.appendLine()
+    }
 
-    sb.append("|")
+    // data
+    val rowsCount = rowsLimit.coerceAtMost(nrow())
+    val cols = if (rowIndex) listOf((0 until rowsCount).toColumn()) + columns() else columns()
+    val header = cols.mapIndexed { colIndex, col ->
+        if (columnTypes && (!rowIndex || colIndex > 0)) {
+            "${col.name()}:${renderType(col)}"
+        } else col.name()
+    }
+    val values = cols.map {
+        val top = it.take(rowsLimit)
+        val precision = if (top.isNumber()) top.asNumbers().precision() else 0
+        top.values().map {
+            renderValueForStdout(it, valueLimit, precision = precision).truncatedContent
+        }
+    }
+    val columnLengths = values.mapIndexed { col, vals -> (vals + header[col]).map { it.length }.maxOrNull()!! + 1 }
+
+    // top border
+    if (borders) {
+        sb.append("\u230C")
+        for (i in 1 until columnLengths.sum() + columnLengths.size) sb.append('-')
+        sb.append("\u230D")
+        sb.appendLine()
+        sb.append("|")
+    }
+
+    // header
     for (col in header.indices) {
-        sb.append(header[col].padEnd(columnLengths[col]) + "|")
-    }
-    sb.appendLine()
-    sb.append("|")
-    for (colLength in columnLengths) {
-        for (i in 1..colLength) sb.append('-')
-        sb.append("|")
+        val len = columnLengths[col]
+        val str = header[col]
+        val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
+        sb.append(padded)
+        if (borders) sb.append("|")
     }
     sb.appendLine()
 
-    for (row in 0 until outputRows) {
+    // header splitter
+    if (borders) {
         sb.append("|")
-        for (col in output.indices) {
-            sb.append(output[col][row].padEnd(columnLengths[col]) + "|")
+        for (colLength in columnLengths) {
+            for (i in 1..colLength) sb.append('-')
+            sb.append("|")
         }
         sb.appendLine()
     }
-    if (nrow() > limit) {
+
+    // data
+    for (row in 0 until rowsCount) {
+        if (borders) sb.append("|")
+        for (col in values.indices) {
+            val len = columnLengths[col]
+            val str = values[col][row]
+            val padded = if (alignLeft) str.padEnd(len) else str.padStart(len)
+            sb.append(padded)
+            if (borders) sb.append("|")
+        }
+        sb.appendLine()
+    }
+
+    // footer
+    if (nrow() > rowsLimit) {
         sb.appendLine("...")
+    } else if (borders) {
+        sb.append("\u230E")
+        for (i in 1 until columnLengths.sum() + columnLengths.size) sb.append('-')
+        sb.append("\u230F")
+        sb.appendLine()
     }
     return sb.toString()
 }
@@ -65,10 +120,11 @@ internal fun AnyRow.renderToString(): String {
     val values = getVisibleValues()
     if (values.isEmpty()) return "{ }"
     return values
-        .map { "${it.first}:${renderValueForStdout(it.second).truncatedContent}" }.joinToString(prefix = "{ ", postfix = " }")
+        .map { "${it.first}:${renderValueForStdout(it.second).truncatedContent}" }
+        .joinToString(prefix = "{ ", postfix = " }")
 }
 
-public fun AnyRow.renderToStringTable(forHtml: Boolean = false): String {
+internal fun AnyRow.renderToStringTable(forHtml: Boolean = false): String {
     if (size() == 0) return ""
     val pairs = owner.columns().map { it.name() to renderValueForRowTable(it[index], forHtml) }
     val width = pairs.map { it.first.length + it.second.textLength }.maxOrNull()!! + 4
@@ -84,23 +140,33 @@ internal fun renderCollectionName(value: Collection<*>) = when (value) {
     else -> value.javaClass.simpleName
 }
 
-public fun renderValueForRowTable(value: Any?, forHtml: Boolean): RenderedContent = when (value) {
+internal fun renderValueForRowTable(value: Any?, forHtml: Boolean): RenderedContent = when (value) {
     is AnyFrame -> "DataFrame [${value.nrow()} x ${value.ncol()}]".let {
         val content = if (value.nrow() == 1) it + " " + value[0].toString() else it
         RenderedContent.textWithLength(content, "DataFrame".length)
     }
     is AnyRow -> RenderedContent.textWithLength("DataRow $value", "DataRow".length)
     is Collection<*> -> renderCollectionName(value).let { RenderedContent.textWithLength("$it $value", it.length) }
-    else -> if (forHtml) renderValueForHtml(value, valueToStringLimitForRowAsTable)
+    else -> if (forHtml) renderValueForHtml(value, valueToStringLimitForRowAsTable, defaultPrecision)
     else renderValueForStdout(value, valueToStringLimitForRowAsTable)
 }
 
-internal fun renderValueForStdout(value: Any?, truncate: Int = valueToStringLimitDefault): RenderedContent = renderValueToString(value).truncate(truncate).let { it.copy(truncatedContent = it.truncatedContent.escapeNewLines()) }
+internal fun renderValueForStdout(
+    value: Any?,
+    limit: Int = valueToStringLimitDefault,
+    precision: Int = defaultPrecision
+): RenderedContent =
+    renderValueToString(value, precision).truncate(limit)
+        .let { it.copy(truncatedContent = it.truncatedContent.escapeNewLines()) }
 
-internal fun renderValueToString(value: Any?) =
+internal val defaultPrecision = 6
+
+internal fun renderValueToString(value: Any?, precision: Int) =
     when (value) {
         is AnyFrame -> "[${value.size}]".let { if (value.nrow() == 1) it + " " + value[0].toString() else it }
-        is Double -> value.format(6)
+        is Double -> value.format(precision)
+        is Float -> value.format(precision)
+        is BigDecimal -> value.format(precision)
         is List<*> -> if (value.isEmpty()) "[ ]" else value.toString()
         else -> value.toString()
     }
@@ -112,4 +178,6 @@ internal fun internallyRenderable(value: Any?): Boolean {
     }
 }
 
-public fun Double.format(digits: Int): String = "%.${digits}f".format(this)
+internal fun Double.format(precision: Int): String = "%.${precision}f".format(this)
+internal fun Float.format(precision: Int): String = "%.${precision}f".format(this)
+internal fun BigDecimal.format(precision: Int): String = "%.${precision}f".format(this)
