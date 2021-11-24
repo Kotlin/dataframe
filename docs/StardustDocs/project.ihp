@@ -4,7 +4,7 @@
 <ihp version="2.0">
     <categories src="c.list"/>
     <topics dir="topics"/>
-    <images dir="images" version="1.0" web-path="https://resources.jetbrains.com/help/img/dataframe/1.0/" />
+    <images dir="images" version="1.0" web-path="images/" />
     <vars src="v.list"/>
     <product src="d.tree" version="1.0"/>
 </ihp>
