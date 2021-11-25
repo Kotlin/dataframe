@@ -66,6 +66,7 @@ Returns `DataFrame` containing all rows except last `n` rows
 <!---FUN dropLast-->
 
 ```kotlin
+df.dropLast() // default 1
 df.dropLast(5)
 ```
 

@@ -158,6 +158,21 @@ public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataF
 
 // endregion
 
+// region ndistinct
+
+public fun AnyFrame.ndistinct(): Int = ndistinct { all() }
+
+public fun <T, C> DataFrame<T>.ndistinct(columns: ColumnsSelector<T, C>): Int {
+    val cols = get(columns)
+    return indices.distinctBy { i -> cols.map { it[i] } }.size
+}
+
+public fun <T> DataFrame<T>.ndistinct(vararg columns: String): Int = ndistinct { columns.toColumns() }
+public fun <T, C> DataFrame<T>.ndistinct(vararg columns: KProperty<C>): Int = ndistinct { columns.toColumns() }
+public fun <T> DataFrame<T>.ndistinct(vararg columns: Column): Int = ndistinct { columns.toColumns() }
+
+// endregion
+
 // region forEach
 
 public fun <T> DataFrame<T>.forEachRow(action: RowExpression<T, Unit>): Unit = rows().forEach { action(it, it) }
