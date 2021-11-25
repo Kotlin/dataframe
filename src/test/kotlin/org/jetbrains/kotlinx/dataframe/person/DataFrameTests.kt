@@ -443,14 +443,14 @@ class DataFrameTests : BaseTest() {
 
         fun AnyFrame.check() = this[city].toList() shouldBe expected
 
-        typed.sortBy { name and age.desc }.check()
-        typed.sortBy { it.name and it.age.desc }.check()
+        typed.sortBy { name and age.desc() }.check()
+        typed.sortBy { it.name and it.age.desc() }.check()
 
-        df.sortBy { name and age.desc }.check()
+        df.sortBy { name and age.desc() }.check()
 
-        df.sortBy { Person::name and Person::age.desc }.check()
+        df.sortBy { Person::name and Person::age.desc() }.check()
 
-        df.sortBy { "name".cast<String>() and "age".desc }.check()
+        df.sortBy { "name".cast<String>() and "age".desc() }.check()
     }
 
     @Test
@@ -471,10 +471,10 @@ class DataFrameTests : BaseTest() {
 
         fun AnyFrame.check() = this[city].toList() shouldBe expected
 
-        typed.sortBy { city.nullsLast }.check()
-        df.sortBy { city.nullsLast }.check()
-        df.sortBy { Person::city.nullsLast }.check()
-        df.sortBy { "city".nullsLast }.check()
+        typed.sortBy { city.nullsLast() }.check()
+        df.sortBy { city.nullsLast() }.check()
+        df.sortBy { Person::city.nullsLast() }.check()
+        df.sortBy { "city".nullsLast() }.check()
     }
 
     @Test
@@ -499,8 +499,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `group and sort`() {
-        val expected = typed.sortBy { name.desc and age }
-        val actual = typed.groupBy { name }.sortBy { name.desc and age }.concat()
+        val expected = typed.sortBy { name.desc() and age }
+        val actual = typed.groupBy { name }.sortBy { name.desc() and age }.concat()
         actual shouldBe expected
     }
 
@@ -1942,7 +1942,7 @@ class DataFrameTests : BaseTest() {
                 r1.name > r2.name -> 1
                 else -> -r1.age.compareTo(r2.age)
             }
-        } shouldBe typed.sortBy { name and age.desc }
+        } shouldBe typed.sortBy { name and age.desc() }
 
         val comparator = Comparator<DataRow<Person>> { r1, r2 -> -r1.name.compareTo(r2.name) }
         typed.sortWith(comparator) shouldBe typed.sortByDesc { name }
@@ -1950,7 +1950,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun sortByDescDesc() {
-        typed.sortByDesc { name.desc and age } shouldBe typed.sortBy { name and age.desc }
+        typed.sortByDesc { name.desc() and age } shouldBe typed.sortBy { name and age.desc() }
     }
 
     @Test
@@ -2052,7 +2052,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `sort by expression`() {
-        val sorted = typed.sortBy { expr { name.length }.desc }
+        val sorted = typed.sortBy { expr { name.length }.desc() }
         sorted.name.values() shouldBe typed.name.values().sortedByDescending { it.length }
     }
 
@@ -2353,7 +2353,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `groupBy sort`() {
-        typed.groupBy { name }.sortByDesc { age }["Mark"] shouldBe typed.filter { name == "Mark" }.sortBy { age.desc }
+        typed.groupBy { name }.sortByDesc { age }["Mark"] shouldBe typed.filter { name == "Mark" }.sortBy { age.desc() }
     }
 
     @Test
