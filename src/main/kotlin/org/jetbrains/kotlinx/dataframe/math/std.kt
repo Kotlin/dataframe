@@ -22,10 +22,10 @@ public fun <T : Number> Iterable<T?>.std(type: KType): Double {
 }
 
 @JvmName("doubleStd")
-public fun Iterable<Double>.std(): Double = stdMean().first
+public fun Iterable<Double>.std(skipNA: Boolean = true): Double = stdMean(skipNA).first
 
 @JvmName("floatStd")
-public fun Iterable<Float>.std(): Double = stdMean().first
+public fun Iterable<Float>.std(skipNA: Boolean = true): Double = stdMean(skipNA).first
 
 @JvmName("intStd")
 public fun Iterable<Int>.std(): Double = stdMean().first

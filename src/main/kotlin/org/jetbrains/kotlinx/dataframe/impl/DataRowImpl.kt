@@ -10,13 +10,13 @@ import org.jetbrains.kotlinx.dataframe.columns.shortPath
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 
-internal open class DataRowImpl<T>(private val index: Int, val owner: DataFrame<T>) : DataRow<T> {
+internal open class DataRowImpl<T>(private val index: Int, private val df: DataFrame<T>) : DataRow<T> {
 
-    override fun df() = owner
+    override fun df() = df
 
     override operator fun get(name: String): Any? {
         ColumnAccessTracker.registerColumnAccess(name)
-        return owner[name][index]
+        return df[name][index]
     }
 
     override operator fun <R> get(column: ColumnReference<R>): R {
@@ -26,15 +26,12 @@ internal open class DataRowImpl<T>(private val index: Int, val owner: DataFrame<
 
     override fun index() = index
 
-    override fun getRow(index: Int): DataRow<T>? =
-        if (index >= 0 && index < owner.nrow()) DataRowImpl(index, owner) else null
-
-    val values by lazy { owner.columns().map { it[index] } }
+    private val values by lazy { df.columns().map { it[index] } }
 
     override fun values() = values
 
     override fun get(columnIndex: Int): Any? {
-        val column = owner.getColumn(columnIndex)
+        val column = df.getColumn(columnIndex)
         ColumnAccessTracker.registerColumnAccess(column.name())
         return column[index]
     }
@@ -42,8 +39,7 @@ internal open class DataRowImpl<T>(private val index: Int, val owner: DataFrame<
     override fun toString() = renderToString()
 
     override fun equals(other: Any?): Boolean {
-        val o = other as? DataRowImpl<T>
-        if (o == null) return false
+        val o = other as? DataRowImpl<*> ?: return false
         return values.equals(o.values)
     }
 
@@ -51,15 +47,7 @@ internal open class DataRowImpl<T>(private val index: Int, val owner: DataFrame<
 
     override fun tryGet(name: String): Any? {
         ColumnAccessTracker.registerColumnAccess(name)
-        return owner.getColumnOrNull(name)?.get(index)
-    }
-
-    override fun prev(): DataRow<T>? {
-        return if (index > 0) owner[index - 1] else null
-    }
-
-    override fun next(): DataRow<T>? {
-        return if (index < owner.nrow() - 1) owner[index + 1] else null
+        return df.getColumnOrNull(name)?.get(index)
     }
 }
 

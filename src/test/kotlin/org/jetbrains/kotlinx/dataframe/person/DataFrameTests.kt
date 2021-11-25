@@ -93,6 +93,7 @@ import org.jetbrains.kotlinx.dataframe.api.moveToLeft
 import org.jetbrains.kotlinx.dataframe.api.moveToRight
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.near
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.nullable
 import org.jetbrains.kotlinx.dataframe.api.parse
@@ -142,7 +143,6 @@ import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.hasNulls
@@ -1887,7 +1887,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun neighbours() {
-        typed[2].neighbours(-1..1).toList() shouldBe listOf(typed[1], typed[2], typed[3])
+        typed[2].near(-1..1).toList() shouldBe listOf(typed[1], typed[2], typed[3])
     }
 
     @Test

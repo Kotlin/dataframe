@@ -25,7 +25,7 @@ internal fun <T : Number> Iterable<T>.sum(type: KType): T = when (type.classifie
     Int::class, Short::class, Byte::class -> (this as Iterable<Int>).sum() as T
     Long::class -> (this as Iterable<Long>).sum() as T
     BigDecimal::class -> (this as Iterable<BigDecimal>).sum() as T
-    else -> TODO()
+    else -> throw IllegalArgumentException("Sum is not supported for $type")
 }
 
 @JvmName("sumT?")

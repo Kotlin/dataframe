@@ -47,7 +47,7 @@ public fun <T, C> UpdateClause<T, C>.at(rowRange: IntRange): UpdateClause<T, C> 
 public infix fun <T, C> UpdateClause<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }
 
-public infix fun <T, C> UpdateClause<T, C>.with(expression: RowValueExpression<T, C, C>): DataFrame<T> =
+public infix fun <T, C> UpdateClause<T, C>.with(expression: RowValueExpression<T, C, C?>): DataFrame<T> =
     withExpression(expression)
 
 public fun <T, C> UpdateClause<T, C>.asNullable(): UpdateClause<T, C?> = this as UpdateClause<T, C?>
@@ -61,7 +61,7 @@ public fun <T, C> UpdateClause<T, C>.perCol(values: AnyRow): DataFrame<T> = perC
 public fun <T, C> UpdateClause<T, C>.perCol(valueSelector: Selector<DataColumn<C>, C>): DataFrame<T> =
     updateWithValuePerColumnImpl(valueSelector)
 
-public fun <T, C> UpdateClause<T, C>.withExpression(expression: RowValueExpression<T, C, C>): DataFrame<T> =
+public fun <T, C> UpdateClause<T, C>.withExpression(expression: RowValueExpression<T, C, C?>): DataFrame<T> =
     updateImpl { row, _, value ->
         expression(row, value)
     }
