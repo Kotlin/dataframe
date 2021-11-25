@@ -1,0 +1,564 @@
+
+full_name,html_url,stargazers_count,topics,watchers
+JetBrains/JPS,https://github.com/JetBrains/JPS,23,[],23
+JetBrains/YouTrackSharp,https://github.com/JetBrains/YouTrackSharp,115,"[jetbrains, jetbrains-youtrack, youtrack, youtrack-api]",115
+JetBrains/colorSchemeTool,https://github.com/JetBrains/colorSchemeTool,290,[],290
+JetBrains/ideavim,https://github.com/JetBrains/ideavim,6120,"[ideavim, intellij, intellij-platform, jb-official, kotlin, vim, vim-emulator]",6120
+JetBrains/youtrack-vcs-hooks,https://github.com/JetBrains/youtrack-vcs-hooks,5,[],5
+JetBrains/youtrack-rest-ruby-library,https://github.com/JetBrains/youtrack-rest-ruby-library,8,[],8
+JetBrains/emacs4ij,https://github.com/JetBrains/emacs4ij,47,[],47
+JetBrains/codereview4intellij,https://github.com/JetBrains/codereview4intellij,11,[],11
+JetBrains/teamcity-nuget-support,https://github.com/JetBrains/teamcity-nuget-support,41,"[nuget, nuget-feed, teamcity, teamcity-plugin]",41
+JetBrains/Grammar-Kit,https://github.com/JetBrains/Grammar-Kit,534,[],534
+JetBrains/intellij-starteam-plugin,https://github.com/JetBrains/intellij-starteam-plugin,6,[],6
+JetBrains/la-clojure,https://github.com/JetBrains/la-clojure,218,[],218
+JetBrains/MPS,https://github.com/JetBrains/MPS,1241,"[domain-specific-language, dsl]",1241
+JetBrains/intellij-community,https://github.com/JetBrains/intellij-community,12926,"[code-editor, ide, intellij, intellij-community, intellij-platform]",12926
+JetBrains/TeamCity.ServiceMessages,https://github.com/JetBrains/TeamCity.ServiceMessages,39,"[c-sharp, teamcity, teamcity-service-messages]",39
+JetBrains/youtrack-rest-python-library,https://github.com/JetBrains/youtrack-rest-python-library,118,[],118
+JetBrains/intellij-scala,https://github.com/JetBrains/intellij-scala,1066,"[intellij-idea, intellij-plugin, scala]",1066
+JetBrains/teamcity-messages,https://github.com/JetBrains/teamcity-messages,125,[],125
+JetBrains/teamcity-cpp,https://github.com/JetBrains/teamcity-cpp,27,[],27
+JetBrains/kotlin,https://github.com/JetBrains/kotlin,39402,"[compiler, gradle-plugin, intellij-plugin, kotlin, kotlin-library, maven-plugin, programming-language]",39402
+JetBrains/teamcity-local-cloud,https://github.com/JetBrains/teamcity-local-cloud,10,[],10
+JetBrains/kotlin-web-demo,https://github.com/JetBrains/kotlin-web-demo,167,[],167
+JetBrains/intellij-plugin-verifier,https://github.com/JetBrains/intellij-plugin-verifier,113,[],113
+JetBrains/intellij-samples,https://github.com/JetBrains/intellij-samples,146,[],146
+JetBrains/dottrace-demos,https://github.com/JetBrains/dottrace-demos,6,[],6
+JetBrains/youtrack-workflows,https://github.com/JetBrains/youtrack-workflows,164,[],164
+JetBrains/intellij-plugins,https://github.com/JetBrains/intellij-plugins,1737,[],1737
+JetBrains/youtrack-slide,https://github.com/JetBrains/youtrack-slide,18,[],18
+JetBrains/teamcity-shared-resources,https://github.com/JetBrains/teamcity-shared-resources,4,[],4
+JetBrains/resharper-plugins,https://github.com/JetBrains/resharper-plugins,12,"[jetbrains, resharper, resharper-plugin]",12
+JetBrains/kannotator,https://github.com/JetBrains/kannotator,34,[],34
+JetBrains/resharper-nuget,https://github.com/JetBrains/resharper-nuget,94,"[jetbrains, nuget, resharper, resharper-extension, resharper-plugin]",94
+JetBrains/mnemonics,https://github.com/JetBrains/mnemonics,66,"[jetbrains, mnemonic, resharper, resharper-extension, resharper-plugin]",66
+JetBrains/teamcity-queue-pauser,https://github.com/JetBrains/teamcity-queue-pauser,2,[],2
+JetBrains/intellij-coffee-script-debugger,https://github.com/JetBrains/intellij-coffee-script-debugger,2,[],2
+JetBrains/coffee-script-debug-example,https://github.com/JetBrains/coffee-script-debug-example,5,[],5
+JetBrains/kara,https://github.com/JetBrains/kara,76,[],76
+JetBrains/jediterm,https://github.com/JetBrains/jediterm,483,[],483
+JetBrains/hsql1,https://github.com/JetBrains/hsql1,1,[],1
+JetBrains/teamcity-maven-archetypes,https://github.com/JetBrains/teamcity-maven-archetypes,10,[],10
+JetBrains/resharper-angularjs,https://github.com/JetBrains/resharper-angularjs,136,"[angular, angularjs, jetbrains, plugin, resharper, resharper-plugin]",136
+JetBrains/intellij-sbt,https://github.com/JetBrains/intellij-sbt,81,[],81
+JetBrains/kotlin-eclipse,https://github.com/JetBrains/kotlin-eclipse,168,[],168
+JetBrains/commit-status-publisher,https://github.com/JetBrains/commit-status-publisher,65,[],65
+JetBrains/ReSharperGallery,https://github.com/JetBrains/ReSharperGallery,16,[],16
+JetBrains/mapper,https://github.com/JetBrains/mapper,49,[],49
+JetBrains/ReTrack,https://github.com/JetBrains/ReTrack,14,[],14
+JetBrains/resharper-sample-patterns,https://github.com/JetBrains/resharper-sample-patterns,3,"[jetbrains, resharper, resharper-extension, resharper-patterns, resharper-plugin]",3
+JetBrains/dotpeek-nupeek,https://github.com/JetBrains/dotpeek-nupeek,21,[],21
+JetBrains/hackathon-Embeditor,https://github.com/JetBrains/hackathon-Embeditor,142,[],142
+JetBrains/JetBox,https://github.com/JetBrains/JetBox,19,"[dropbox, jetbrains, plugin, resharper, resharper-plugin]",19
+JetBrains/hackathon-unchain,https://github.com/JetBrains/hackathon-unchain,5,[],5
+JetBrains/intellij-feature-suggester,https://github.com/JetBrains/intellij-feature-suggester,7,"[intellij, intellij-plugin, intellij-plugins, jetbrains, jetbrains-plugin]",7
+JetBrains/resharper-rider-samples,https://github.com/JetBrains/resharper-rider-samples,182,[],182
+JetBrains/dotnet-cas-client,https://github.com/JetBrains/dotnet-cas-client,2,[],2
+JetBrains/MPS-Contrib,https://github.com/JetBrains/MPS-Contrib,1,[],1
+JetBrains/intellij-haxe,https://github.com/JetBrains/intellij-haxe,115,[],115
+JetBrains/meta-runner-power-pack,https://github.com/JetBrains/meta-runner-power-pack,247,[],247
+JetBrains/dekaf,https://github.com/JetBrains/dekaf,46,[],46
+JetBrains/ttorrent-lib,https://github.com/JetBrains/ttorrent-lib,39,[],39
+JetBrains/pty4j,https://github.com/JetBrains/pty4j,233,[],233
+JetBrains/clazz-loaderz,https://github.com/JetBrains/clazz-loaderz,3,[],3
+JetBrains/Exposed,https://github.com/JetBrains/Exposed,5688,"[dao, kotlin, orm, sql]",5688
+JetBrains/teamcity-torrent-plugin,https://github.com/JetBrains/teamcity-torrent-plugin,16,[],16
+JetBrains/NuGetOperations,https://github.com/JetBrains/NuGetOperations,2,[],2
+JetBrains/youtrack-l10n,https://github.com/JetBrains/youtrack-l10n,17,[],17
+JetBrains/youtrack.mylyn.connector,https://github.com/JetBrains/youtrack.mylyn.connector,12,[],12
+JetBrains/python-skeletons,https://github.com/JetBrains/python-skeletons,132,[],132
+JetBrains/dotpeek-peekfx,https://github.com/JetBrains/dotpeek-peekfx,15,[],15
+JetBrains/resharper-vsix,https://github.com/JetBrains/resharper-vsix,10,"[jetbrains, resharper, resharper-extension, resharper-plugin, visual-studio-extension, vsix]",10
+JetBrains/TeamCity.StaticUIExtensions,https://github.com/JetBrains/TeamCity.StaticUIExtensions,7,[],7
+JetBrains/Android-Tuts-Samples,https://github.com/JetBrains/Android-Tuts-Samples,14,[],14
+JetBrains/sbt-structure,https://github.com/JetBrains/sbt-structure,71,[],71
+JetBrains/kotlin-web-site,https://github.com/JetBrains/kotlin-web-site,1074,[kotlin],1074
+JetBrains/resharper-phantomjs,https://github.com/JetBrains/resharper-phantomjs,1,"[javascript-tests, jetbrains, phantomjs, resharper, resharper-extension, resharper-plugin]",1
+JetBrains/jetpad-projectional-open-source,https://github.com/JetBrains/jetpad-projectional-open-source,75,[],75
+JetBrains/intellij-tutorials-december-2013,https://github.com/JetBrains/intellij-tutorials-december-2013,1,[],1
+JetBrains/sbt-tc-logger,https://github.com/JetBrains/sbt-tc-logger,10,[],10
+JetBrains/tc-sbt-runner,https://github.com/JetBrains/tc-sbt-runner,14,[],14
+JetBrains/youtrack-confluence-plugin,https://github.com/JetBrains/youtrack-confluence-plugin,17,[],17
+JetBrains/phpstorm-workshop,https://github.com/JetBrains/phpstorm-workshop,277,"[exercise, php, phpstorm, phpstorm-workshop, workshop-materials]",277
+JetBrains/Chocolatey,https://github.com/JetBrains/Chocolatey,13,"[choco, chocolatey, chocolatey-packages, jetbrains]",13
+JetBrains/integration-tests-vm-scripts,https://github.com/JetBrains/integration-tests-vm-scripts,4,[],4
+JetBrains/kotlin-fiddle,https://github.com/JetBrains/kotlin-fiddle,1,[],1
+JetBrains/TeamCity.PluginTemplate,https://github.com/JetBrains/TeamCity.PluginTemplate,2,[],2
+JetBrains/TeamCity.WidgetsPlugin,https://github.com/JetBrains/TeamCity.WidgetsPlugin,3,[],3
+JetBrains/dotpeek-console,https://github.com/JetBrains/dotpeek-console,14,[],14
+JetBrains/teamcity-build-agents-diff,https://github.com/JetBrains/teamcity-build-agents-diff,4,[],4
+JetBrains/teamcity-sdk-maven-plugin,https://github.com/JetBrains/teamcity-sdk-maven-plugin,16,[],16
+JetBrains/JetPass,https://github.com/JetBrains/JetPass,1,"[authentication, authorization, hub, jetbrains, oauth2, owin]",1
+JetBrains/teamcity-achievements,https://github.com/JetBrains/teamcity-achievements,18,[],18
+JetBrains/teamcity-investigations-auto-assigner,https://github.com/JetBrains/teamcity-investigations-auto-assigner,10,[],10
+JetBrains/intellij-ipnb,https://github.com/JetBrains/intellij-ipnb,12,[],12
+JetBrains/xodus,https://github.com/JetBrains/xodus,936,"[database, db, embedded-database, entity-store, java, key-value, kotlin, log-structured, nosql, schema-less, snapshot-isolation, transactional, xodus, youtrack]",936
+JetBrains/TeamCity.Widgets,https://github.com/JetBrains/TeamCity.Widgets,2,[],2
+JetBrains/teamcity-vmware-plugin,https://github.com/JetBrains/teamcity-vmware-plugin,22,[],22
+JetBrains/resharper-devguide,https://github.com/JetBrains/resharper-devguide,59,"[docs, jetbrains, resharper, resharper-devguide, resharper-platform, resharper-plugin, sdk]",59
+JetBrains/Nitra,https://github.com/JetBrains/Nitra,548,[],548
+JetBrains/teamcity-tests-watchdog,https://github.com/JetBrains/teamcity-tests-watchdog,1,[],1
+JetBrains/nvd3,https://github.com/JetBrains/nvd3,2,[],2
+JetBrains/idea-gitignore,https://github.com/JetBrains/idea-gitignore,1181,"[gitignore, ignore-files, intellij, intellij-plugin, java]",1181
+JetBrains/CodingGame,https://github.com/JetBrains/CodingGame,4,[],4
+JetBrains/TeamCity.SonarQubePlugin,https://github.com/JetBrains/TeamCity.SonarQubePlugin,47,[],47
+JetBrains/Kotlin.TeamCity,https://github.com/JetBrains/Kotlin.TeamCity,1,[],1
+JetBrains/build-chain-export,https://github.com/JetBrains/build-chain-export,5,[],5
+JetBrains/teamcity-azure-agent,https://github.com/JetBrains/teamcity-azure-agent,41,"[azure, azure-vm, cloud, teamcity, teamcity-plugin]",41
+JetBrains/kotlin-grammar-generator,https://github.com/JetBrains/kotlin-grammar-generator,12,[],12
+JetBrains/tc-vso-rooms,https://github.com/JetBrains/tc-vso-rooms,2,[],2
+JetBrains/netty-socketio,https://github.com/JetBrains/netty-socketio,4,[],4
+JetBrains/mocha-intellij,https://github.com/JetBrains/mocha-intellij,9,[],9
+JetBrains/swot,https://github.com/JetBrains/swot,1072,[],1072
+JetBrains/odata4j,https://github.com/JetBrains/odata4j,1,[],1
+JetBrains/TeamCity.VsOnline.WorkItems,https://github.com/JetBrains/TeamCity.VsOnline.WorkItems,2,[],2
+JetBrains/ReSharperPowerToys,https://github.com/JetBrains/ReSharperPowerToys,17,"[jetbrains, resharper, resharper-extension, resharper-plugin]",17
+JetBrains/node-tick,https://github.com/JetBrains/node-tick,5,[],5
+JetBrains/appcode-workshop,https://github.com/JetBrains/appcode-workshop,84,[],84
+JetBrains/web-po2json,https://github.com/JetBrains/web-po2json,5,[],5
+JetBrains/intellij-sdk-docs,https://github.com/JetBrains/intellij-sdk-docs,990,"[docs, intellij, intellij-platform, intellij-plugin, intellijidea-plugin, jetbrains, sdk]",990
+JetBrains/intellij-coverage,https://github.com/JetBrains/intellij-coverage,41,"[coverage, coverage-agent, intellij, java]",41
+JetBrains/markdown,https://github.com/JetBrains/markdown,285,[],285
+JetBrains/resharper-presentation-assistant,https://github.com/JetBrains/resharper-presentation-assistant,48,"[jetbrains, plugin, resharper, resharper-plugin]",48
+JetBrains/teamcity-deployer-plugin,https://github.com/JetBrains/teamcity-deployer-plugin,36,"[deploy, ftp, smb, ssh, teamcity, teamcity-plugin]",36
+JetBrains/ot-coq,https://github.com/JetBrains/ot-coq,9,[],9
+JetBrains/ide-features-trainer,https://github.com/JetBrains/ide-features-trainer,48,[],48
+JetBrains/sbt-ide-settings,https://github.com/JetBrains/sbt-ide-settings,51,[],51
+JetBrains/Arend,https://github.com/JetBrains/Arend,562,[arend],562
+JetBrains/teamcity-azure-active-directory,https://github.com/JetBrains/teamcity-azure-active-directory,26,[],26
+JetBrains/phpstorm-stubs,https://github.com/JetBrains/phpstorm-stubs,1110,[],1110
+JetBrains/teamcity-rest-client,https://github.com/JetBrains/teamcity-rest-client,67,"[kotlin, teamcity, teamcity-rest-api]",67
+JetBrains/plugin-repository-rest-client,https://github.com/JetBrains/plugin-repository-rest-client,14,[],14
+JetBrains/gradle-intellij-plugin,https://github.com/JetBrains/gradle-intellij-plugin,1058,"[gradle, gradle-intellij-plugin, gradle-kotlin-dsl, groovy, intellij, intellij-ides, intellij-platform, intellij-plugin, intellij-sdk, jetbrains-plugin, kotlin, plugin-verifier, publishing-dsl, setup-dsl, teamcity, travis-configuration]",1058
+JetBrains/sdkdocs-template,https://github.com/JetBrains/sdkdocs-template,6,"[jetbrains, jetbrains-webhelp-sites, webhelp-template]",6
+JetBrains/arend-lib,https://github.com/JetBrains/arend-lib,63,[],63
+JetBrains/ShortcutMapper,https://github.com/JetBrains/ShortcutMapper,1,[],1
+JetBrains/asciidoc-manning-templates,https://github.com/JetBrains/asciidoc-manning-templates,2,[],2
+JetBrains/teamcity-process-output-parsers,https://github.com/JetBrains/teamcity-process-output-parsers,2,[],2
+JetBrains/svg-sprite-loader,https://github.com/JetBrains/svg-sprite-loader,1815,"[sprite, svg, svg-sprite, svg-stack, webpack, webpack-loader, webpack-plugin, webpack2, webpack3]",1815
+JetBrains/gitextensions,https://github.com/JetBrains/gitextensions,10,[],10
+JetBrains/teamcity-dotmemory,https://github.com/JetBrains/teamcity-dotmemory,4,[],4
+JetBrains/teamcity-dottrace,https://github.com/JetBrains/teamcity-dottrace,9,[],9
+JetBrains/resharper-cyclomatic-complexity,https://github.com/JetBrains/resharper-cyclomatic-complexity,112,"[cyclomatic-complexity, jetbrains, plugin, resharper, resharper-plugin]",112
+JetBrains/resharper-unity,https://github.com/JetBrains/resharper-unity,1017,"[hacktoberfest, jetbrains, plugin, resharper, resharper-plugin, rider, unity, unity-editor]",1017
+JetBrains/teamcity-github-issues,https://github.com/JetBrains/teamcity-github-issues,2,[],2
+JetBrains/kotlin-netbeans,https://github.com/JetBrains/kotlin-netbeans,85,[],85
+JetBrains/educational-plugin,https://github.com/JetBrains/educational-plugin,95,[],95
+JetBrains/sbt-idea-example,https://github.com/JetBrains/sbt-idea-example,19,"[idea-plugin, intellij-plugin, sbt]",19
+JetBrains/sbt-intellij,https://github.com/JetBrains/sbt-intellij,5,[],5
+JetBrains/teamcity-rust-plugin,https://github.com/JetBrains/teamcity-rust-plugin,27,"[cargo, ci, rust, teamcity, teamcity-plugin]",27
+JetBrains/xodus-entity-browser,https://github.com/JetBrains/xodus-entity-browser,52,"[ktor, xodus, xodus-database, xodus-entity-browser]",52
+JetBrains/angular-elastic,https://github.com/JetBrains/angular-elastic,1,"[angular, jetbrains-ui, textarea]",1
+JetBrains/intellij-scala-historical,https://github.com/JetBrains/intellij-scala-historical,1,[],1
+JetBrains/intellij-stats-collector,https://github.com/JetBrains/intellij-stats-collector,7,[],7
+JetBrains/teamcity-nunit-samples,https://github.com/JetBrains/teamcity-nunit-samples,1,[],1
+JetBrains/pycharm-demos,https://github.com/JetBrains/pycharm-demos,7,[],7
+JetBrains/teamcity-runas-plugin,https://github.com/JetBrains/teamcity-runas-plugin,17,"[elevated-rights, runas, teamcity, teamcity-plugin]",17
+JetBrains/link-checker,https://github.com/JetBrains/link-checker,3,[],3
+JetBrains/youtrack-idea-plugin,https://github.com/JetBrains/youtrack-idea-plugin,56,"[intellij, youtrack]",56
+JetBrains/teamcity-dotnet-plugin,https://github.com/JetBrains/teamcity-dotnet-plugin,82,"[ci, dotnet, dotnet-core, dotnet-standard, msbuild, teamcity, teamcity-plugin, vstest]",82
+JetBrains/winpty,https://github.com/JetBrains/winpty,2,[],2
+JetBrains/jetbrains-books-demos,https://github.com/JetBrains/jetbrains-books-demos,6,[],6
+JetBrains/mps-maven-plugin,https://github.com/JetBrains/mps-maven-plugin,14,[],14
+JetBrains/mps-maven-deployer,https://github.com/JetBrains/mps-maven-deployer,6,[],6
+JetBrains/resharper-ultimate-whatsnew,https://github.com/JetBrains/resharper-ultimate-whatsnew,13,[],13
+JetBrains/phpstorm-base-project,https://github.com/JetBrains/phpstorm-base-project,8,[],8
+JetBrains/jdk8u,https://github.com/JetBrains/jdk8u,121,[],121
+JetBrains/jdk8u_corba,https://github.com/JetBrains/jdk8u_corba,3,[],3
+JetBrains/jdk8u_hotspot,https://github.com/JetBrains/jdk8u_hotspot,132,[],132
+JetBrains/jdk8u_jaxp,https://github.com/JetBrains/jdk8u_jaxp,3,[],3
+JetBrains/jdk8u_jaxws,https://github.com/JetBrains/jdk8u_jaxws,4,[],4
+JetBrains/jdk8u_jdk,https://github.com/JetBrains/jdk8u_jdk,176,[],176
+JetBrains/jdk8u_langtools,https://github.com/JetBrains/jdk8u_langtools,6,[],6
+JetBrains/jdk8u_nashorn,https://github.com/JetBrains/jdk8u_nashorn,35,[],35
+JetBrains/teamcity-aws-codedeploy-plugin,https://github.com/JetBrains/teamcity-aws-codedeploy-plugin,11,[],11
+JetBrains/yavijava,https://github.com/JetBrains/yavijava,1,[],1
+JetBrains/email-parser,https://github.com/JetBrains/email-parser,25,[],25
+JetBrains/gradle-teamcity-log-errors-plugin,https://github.com/JetBrains/gradle-teamcity-log-errors-plugin,3,[],3
+JetBrains/teamcity-bitbucket-issues,https://github.com/JetBrains/teamcity-bitbucket-issues,4,[],4
+JetBrains/teamcity-caches-cleanup-plugin,https://github.com/JetBrains/teamcity-caches-cleanup-plugin,10,[teamcity],10
+JetBrains/teamcity-sysinfo-plugin,https://github.com/JetBrains/teamcity-sysinfo-plugin,2,[],2
+JetBrains/docpack,https://github.com/JetBrains/docpack,5,[],5
+JetBrains/ExternalAnnotations,https://github.com/JetBrains/ExternalAnnotations,75,"[jetbrains, plugin, resharper, resharper-plugin]",75
+JetBrains/debugger-libs,https://github.com/JetBrains/debugger-libs,3,[],3
+JetBrains/monodevelop,https://github.com/JetBrains/monodevelop,6,[],6
+JetBrains/tfsIntegration,https://github.com/JetBrains/tfsIntegration,7,[],7
+JetBrains/dotmemory-demos,https://github.com/JetBrains/dotmemory-demos,12,[],12
+JetBrains/gradle-python-envs,https://github.com/JetBrains/gradle-python-envs,43,[],43
+JetBrains/resharper-xunit-templates,https://github.com/JetBrains/resharper-xunit-templates,18,"[jetbrains, resharper, resharper-plugin, xunit]",18
+JetBrains/teamcity-aws-codepipeline-plugin,https://github.com/JetBrains/teamcity-aws-codepipeline-plugin,8,[],8
+JetBrains/karma-gwt,https://github.com/JetBrains/karma-gwt,3,[],3
+JetBrains/kotlin-native,https://github.com/JetBrains/kotlin-native,7101,"[c, compiler, kotlin, llvm, objective-c]",7101
+JetBrains/UIforETW,https://github.com/JetBrains/UIforETW,1,[],1
+JetBrains/teamcity-symbol-server,https://github.com/JetBrains/teamcity-symbol-server,15,"[pdb, symbols, teamcity, teamcity-plugin]",15
+JetBrains/hackathon16-arduino-led,https://github.com/JetBrains/hackathon16-arduino-led,4,[],4
+JetBrains/android,https://github.com/JetBrains/android,724,[],724
+JetBrains/adt-tools-base,https://github.com/JetBrains/adt-tools-base,58,[],58
+JetBrains/nunit,https://github.com/JetBrains/nunit,2,[],2
+JetBrains/programmer-games,https://github.com/JetBrains/programmer-games,6,[],6
+JetBrains/p2p-games,https://github.com/JetBrains/p2p-games,9,[],9
+JetBrains/runAs,https://github.com/JetBrains/runAs,59,"[elevated-rights, privileges, runas, user-account-control, user-accounts, windows]",59
+JetBrains/teamcity-s3-artifact-storage-plugin,https://github.com/JetBrains/teamcity-s3-artifact-storage-plugin,40,"[aws, s3-storage, teamcity, teamcity-plugin]",40
+JetBrains/xstream,https://github.com/JetBrains/xstream,3,[],3
+JetBrains/SharpZipLib,https://github.com/JetBrains/SharpZipLib,5,[],5
+JetBrains/Unity3dRider,https://github.com/JetBrains/Unity3dRider,358,[],358
+JetBrains/VSCodeDebugger,https://github.com/JetBrains/VSCodeDebugger,2,[],2
+JetBrains/webpack-toolkit,https://github.com/JetBrains/webpack-toolkit,4,[],4
+JetBrains/teamcity-commit-hooks,https://github.com/JetBrains/teamcity-commit-hooks,23,"[github-webhooks, teamcity, teamcity-plugin, webhook]",23
+JetBrains/teamcity-github-auth,https://github.com/JetBrains/teamcity-github-auth,4,[],4
+JetBrains/teamcity-docker-server,https://github.com/JetBrains/teamcity-docker-server,68,"[docker-image, teamcity, teamcity-server]",68
+JetBrains/teamcity-docker-agent,https://github.com/JetBrains/teamcity-docker-agent,72,"[docker-image, teamcity, teamcity-agent]",72
+JetBrains/teamcity-docker-minimal-agent,https://github.com/JetBrains/teamcity-docker-minimal-agent,26,"[docker-image, teamcity, teamcity-agent]",26
+JetBrains/teamcity-invitations-plugin,https://github.com/JetBrains/teamcity-invitations-plugin,2,"[teamcity, user-management]",2
+JetBrains/jdk8u_tests,https://github.com/JetBrains/jdk8u_tests,9,[],9
+JetBrains/youtrack-mobile,https://github.com/JetBrains/youtrack-mobile,210,"[android, ios, react, react-native, youtrack]",210
+JetBrains/sbt-idea-plugin,https://github.com/JetBrains/sbt-idea-plugin,61,"[intellij, intellij-ide, intellij-platform, intellij-plugin, plugin-sbt, sbt, sbt-plugin]",61
+JetBrains/webstorm-samples,https://github.com/JetBrains/webstorm-samples,7,[],7
+JetBrains/hawtio,https://github.com/JetBrains/hawtio,2,[],2
+JetBrains/typeshed,https://github.com/JetBrains/typeshed,8,[],8
+JetBrains/xodus-dnq,https://github.com/JetBrains/xodus-dnq,76,"[database, hub, kotlin, nosql, xodus, xodus-dnq, youtrack]",76
+JetBrains/merge-pull-request-trigger,https://github.com/JetBrains/merge-pull-request-trigger,6,[],6
+JetBrains/react-portal,https://github.com/JetBrains/react-portal,3,"[component, jetbrains-ui, react]",3
+JetBrains/rsynk,https://github.com/JetBrains/rsynk,30,"[jvm, kotlin, rsync]",30
+JetBrains/teamcity-aws-codebuild-plugin,https://github.com/JetBrains/teamcity-aws-codebuild-plugin,4,[],4
+JetBrains/jb-rpd-splash,https://github.com/JetBrains/jb-rpd-splash,114,"[generative-art, jetbrains, rpd-engine]",114
+JetBrains/telegraf,https://github.com/JetBrains/telegraf,2,[],2
+JetBrains/babel-plugin-angular-annotate,https://github.com/JetBrains/babel-plugin-angular-annotate,3,"[angular, babel-plugin, jetbrains-ui]",3
+JetBrains/intellij-deps-trove4j,https://github.com/JetBrains/intellij-deps-trove4j,40,[],40
+JetBrains/resharper-fsharp,https://github.com/JetBrains/resharper-fsharp,245,"[fsharp, hacktoberfest, jetbrains, plugin, resharper, rider]",245
+JetBrains/zendesk-java-client,https://github.com/JetBrains/zendesk-java-client,1,[],1
+JetBrains/cpp-russia-2017-rscpp,https://github.com/JetBrains/cpp-russia-2017-rscpp,2,[],2
+JetBrains/capture-points,https://github.com/JetBrains/capture-points,33,[],33
+JetBrains/cpp-russia-2017-clion,https://github.com/JetBrains/cpp-russia-2017-clion,7,[],7
+JetBrains/cpp-russia-2017-cmake,https://github.com/JetBrains/cpp-russia-2017-cmake,1,[],1
+JetBrains/phpstorm-docker-images,https://github.com/JetBrains/phpstorm-docker-images,132,[],132
+JetBrains/TeamCity.VSTest.TestAdapter,https://github.com/JetBrains/TeamCity.VSTest.TestAdapter,25,[],25
+JetBrains/stylelint-config,https://github.com/JetBrains/stylelint-config,6,"[jetbrains-ui, stylelint, stylelint-config, stylelint-order]",6
+JetBrains/ui,https://github.com/JetBrains/ui,26,[],26
+JetBrains/ruby-type-inference,https://github.com/JetBrains/ruby-type-inference,129,"[dynamic-analysis, ruby, rubymine, static-analysis]",129
+JetBrains/svg-mixer,https://github.com/JetBrains/svg-mixer,151,[],151
+JetBrains/sbt-idea-shell,https://github.com/JetBrains/sbt-idea-shell,5,[],5
+JetBrains/gradle-grammar-kit-plugin,https://github.com/JetBrains/gradle-grammar-kit-plugin,54,"[bnf, gradle-plugin, intellij, jflex]",54
+JetBrains/teamcity-azure-storage,https://github.com/JetBrains/teamcity-azure-storage,12,"[artifacts, azure, azure-storage, teamcity, teamcity-plugin]",12
+JetBrains/msbuild,https://github.com/JetBrains/msbuild,13,[],13
+JetBrains/teamcity-google-storage,https://github.com/JetBrains/teamcity-google-storage,12,"[artifacts, google-cloud, google-storage, teamcity, teamcity-plugin]",12
+JetBrains/teamcity-powershell,https://github.com/JetBrains/teamcity-powershell,7,"[powershell, teamcity]",7
+JetBrains/teamcity-google-agent,https://github.com/JetBrains/teamcity-google-agent,13,"[google-cloud, teamcity, teamcity-agent, teamcity-plugin]",13
+JetBrains/clrmd,https://github.com/JetBrains/clrmd,1,[],1
+JetBrains/intellij-deps-ini4j,https://github.com/JetBrains/intellij-deps-ini4j,9,[],9
+JetBrains/eslint-config,https://github.com/JetBrains/eslint-config,15,"[eslint, eslint-config, jetbrains-ui]",15
+JetBrains/hub-dashboard-addons,https://github.com/JetBrains/hub-dashboard-addons,3,[],3
+JetBrains/teamcity-kubernetes-plugin,https://github.com/JetBrains/teamcity-kubernetes-plugin,55,"[continuous-integration, docker, kubernetes, teamcity]",55
+JetBrains/andel,https://github.com/JetBrains/andel,35,[],35
+JetBrains/coreclr,https://github.com/JetBrains/coreclr,1,[],1
+JetBrains/corefx,https://github.com/JetBrains/corefx,1,[],1
+JetBrains/kotlin-wrappers,https://github.com/JetBrains/kotlin-wrappers,919,"[css, kotlin, kotlin-js, react, react-router-dom, redux, styled-components]",919
+JetBrains/create-react-kotlin-app,https://github.com/JetBrains/create-react-kotlin-app,2424,"[create-react-app, jetbrains-ui, kotlin, react, webpack]",2424
+JetBrains/ideolog,https://github.com/JetBrains/ideolog,186,[],186
+JetBrains/upsource-psi-agent-with-tools-docker,https://github.com/JetBrains/upsource-psi-agent-with-tools-docker,1,[],1
+JetBrains/upsource-with-tools-docker,https://github.com/JetBrains/upsource-with-tools-docker,16,[],16
+JetBrains/mps-coderules,https://github.com/JetBrains/mps-coderules,24,"[code-analysis, constraint-handling-rules, constraint-rules, control-flow, jetbrains-mps, type-checking]",24
+JetBrains/kotlin-playground,https://github.com/JetBrains/kotlin-playground,251,"[kotlin, kotlin-playground, playground]",251
+JetBrains/intellij-arend,https://github.com/JetBrains/intellij-arend,77,"[arend, intellij, intellij-plugin]",77
+JetBrains/teamcity-vscode-extension,https://github.com/JetBrains/teamcity-vscode-extension,27,"[teamcity, vscode-extension]",27
+JetBrains/teamcity-amazon-ecs-plugin,https://github.com/JetBrains/teamcity-amazon-ecs-plugin,22,"[aws, continuous-integration, docker, ec2, ecs, teamcity]",22
+JetBrains/babel-preset,https://github.com/JetBrains/babel-preset,3,"[babel, babel-preset, jetbrains-ui]",3
+JetBrains/sample-resharper-plugin,https://github.com/JetBrains/sample-resharper-plugin,20,[],20
+JetBrains/emoji,https://github.com/JetBrains/emoji,11,"[emoji, jetbrains-ui]",11
+JetBrains/ring-ui,https://github.com/JetBrains/ring-ui,2836,"[components, jetbrains-ui, react]",2836
+JetBrains/icons,https://github.com/JetBrains/icons,38,"[icons, jetbrains-ui, svg]",38
+JetBrains/teamcity-hashicorp-vault-plugin,https://github.com/JetBrains/teamcity-hashicorp-vault-plugin,20,"[hashicorp-vault, teamcity, vault]",20
+JetBrains/teamcity-msbuild-logger,https://github.com/JetBrains/teamcity-msbuild-logger,16,"[dotnet, msbuild, msbuild-logger, teamcity, teamcity-runner]",16
+JetBrains/logos,https://github.com/JetBrains/logos,17,"[branding, jetbrains-ui, logos, svg]",17
+JetBrains/inspection-plugin,https://github.com/JetBrains/inspection-plugin,252,[],252
+JetBrains/teamcity-react-demo,https://github.com/JetBrains/teamcity-react-demo,8,[],8
+JetBrains/youtrack-scripting,https://github.com/JetBrains/youtrack-scripting,7,"[youtrack, youtrack-workflow]",7
+JetBrains/gradle-idea-ext-plugin,https://github.com/JetBrains/gradle-idea-ext-plugin,155,[],155
+JetBrains/awesome-pycharm,https://github.com/JetBrains/awesome-pycharm,186,"[awesome, ide, pycharm, python, web-development]",186
+JetBrains/gradle-node-envs,https://github.com/JetBrains/gradle-node-envs,4,[],4
+JetBrains/intellij-scala-bundle,https://github.com/JetBrains/intellij-scala-bundle,93,"[education, intellij, scala]",93
+JetBrains/teamcity-docker-samples,https://github.com/JetBrains/teamcity-docker-samples,82,"[docker-compose, teamcity, teamcity-agent, teamcity-server]",82
+JetBrains/TeamCity.SESPlugin,https://github.com/JetBrains/TeamCity.SESPlugin,2,[],2
+JetBrains/visualfsharp,https://github.com/JetBrains/visualfsharp,1,[],1
+JetBrains/intellij-deps-jflex,https://github.com/JetBrains/intellij-deps-jflex,7,[],7
+JetBrains/intellij-deps-commons-imaging,https://github.com/JetBrains/intellij-deps-commons-imaging,1,[],1
+JetBrains/clearcase,https://github.com/JetBrains/clearcase,1,[],1
+JetBrains/vss,https://github.com/JetBrains/vss,3,[],3
+JetBrains/ring-ui-license-checker,https://github.com/JetBrains/ring-ui-license-checker,4,"[license-management, webpack-plugin]",4
+JetBrains/rd,https://github.com/JetBrains/rd,279,[hacktoberfest],279
+JetBrains/jdk8u_jb,https://github.com/JetBrains/jdk8u_jb,2,[],2
+JetBrains/toolbox-browser-extension,https://github.com/JetBrains/toolbox-browser-extension,73,[],73
+JetBrains/banner-rotator-webpack-plugin,https://github.com/JetBrains/banner-rotator-webpack-plugin,1,[],1
+JetBrains/kotlinconf-app,https://github.com/JetBrains/kotlinconf-app,2628,[],2628
+JetBrains/MPS-extensions,https://github.com/JetBrains/MPS-extensions,57,[],57
+JetBrains/gradle-ruby-envs,https://github.com/JetBrains/gradle-ruby-envs,3,[],3
+JetBrains/intellij-deps-jdom,https://github.com/JetBrains/intellij-deps-jdom,1,[],1
+JetBrains/teamcity-cloudformation-template,https://github.com/JetBrains/teamcity-cloudformation-template,10,[],10
+JetBrains/obfuscar,https://github.com/JetBrains/obfuscar,3,[],3
+JetBrains/noria-kt,https://github.com/JetBrains/noria-kt,14,[],14
+JetBrains/jdk8u_jfx,https://github.com/JetBrains/jdk8u_jfx,5,[],5
+JetBrains/teamcity-termsOfService-plugin,https://github.com/JetBrains/teamcity-termsOfService-plugin,1,[],1
+JetBrains/teamcity-google-tag-manager-plugin,https://github.com/JetBrains/teamcity-google-tag-manager-plugin,2,[],2
+JetBrains/youtrack-board-status-widget,https://github.com/JetBrains/youtrack-board-status-widget,4,"[jetbrains-hub, jetbrains-youtrack, widget]",4
+JetBrains/teamcity-azure-template,https://github.com/JetBrains/teamcity-azure-template,4,"[azure-resource-manager, teamcity, template]",4
+JetBrains/youtrack-python-scripts,https://github.com/JetBrains/youtrack-python-scripts,31,[],31
+JetBrains/hub-pub,https://github.com/JetBrains/hub-pub,7,[],7
+JetBrains/intellij-deps-asm,https://github.com/JetBrains/intellij-deps-asm,14,[],14
+JetBrains/http-request-in-editor-spec,https://github.com/JetBrains/http-request-in-editor-spec,66,[],66
+JetBrains/KotlinMultiplatformPlayground,https://github.com/JetBrains/KotlinMultiplatformPlayground,62,[],62
+JetBrains/hub-project-team-widget,https://github.com/JetBrains/hub-project-team-widget,4,"[jetbrains-hub, jetbrains-youtrack, widget]",4
+JetBrains/rider-non-bundled-keymaps,https://github.com/JetBrains/rider-non-bundled-keymaps,27,[],27
+JetBrains/java-annotations,https://github.com/JetBrains/java-annotations,226,[],226
+JetBrains/phpstorm-library-plugin,https://github.com/JetBrains/phpstorm-library-plugin,13,[],13
+JetBrains/hunspell-dictionaries,https://github.com/JetBrains/hunspell-dictionaries,13,[],13
+JetBrains/embeddedProjectJdk,https://github.com/JetBrains/embeddedProjectJdk,5,[],5
+JetBrains/hub-rss-widget,https://github.com/JetBrains/hub-rss-widget,1,[],1
+JetBrains/roslyn,https://github.com/JetBrains/roslyn,2,[],2
+JetBrains/teamcity-google-template,https://github.com/JetBrains/teamcity-google-template,16,"[deployment-manager, gcp, google-cloud, teamcity, template]",16
+JetBrains/lightbeam,https://github.com/JetBrains/lightbeam,1,[],1
+JetBrains/clion-wsl,https://github.com/JetBrains/clion-wsl,116,[],116
+JetBrains/intellij-deps-HunspellJNA,https://github.com/JetBrains/intellij-deps-HunspellJNA,2,[],2
+JetBrains/bunches,https://github.com/JetBrains/bunches,18,[],18
+JetBrains/oss-site-jekyll-theme,https://github.com/JetBrains/oss-site-jekyll-theme,6,[],6
+JetBrains/revoke-user-access-widget,https://github.com/JetBrains/revoke-user-access-widget,3,"[jetbrains-hub, jetbrains-youtrack, widget]",3
+JetBrains/binutils-gdb,https://github.com/JetBrains/binutils-gdb,1,[],1
+JetBrains/teamcity-minimal-dockerfile,https://github.com/JetBrains/teamcity-minimal-dockerfile,1,[],1
+JetBrains/homebrew-utils,https://github.com/JetBrains/homebrew-utils,2,[],2
+JetBrains/clrstack,https://github.com/JetBrains/clrstack,15,[],15
+JetBrains/jetCheck,https://github.com/JetBrains/jetCheck,74,[],74
+JetBrains/azure-tools-for-intellij,https://github.com/JetBrains/azure-tools-for-intellij,29,[],29
+JetBrains/debugger-memory-agent,https://github.com/JetBrains/debugger-memory-agent,14,"[intellij, java-agent, jvm, memory, profiling]",14
+JetBrains/rider-plugins-docker-image,https://github.com/JetBrains/rider-plugins-docker-image,2,[],2
+JetBrains/sbt-idea-compiler-indices,https://github.com/JetBrains/sbt-idea-compiler-indices,1,[],1
+JetBrains/jetbrains_guide,https://github.com/JetBrains/jetbrains_guide,145,[hacktoberfest],145
+JetBrains/performance-comparisons,https://github.com/JetBrains/performance-comparisons,1,[],1
+JetBrains/teamcity-bazel-plugin,https://github.com/JetBrains/teamcity-bazel-plugin,12,"[bazel, teamcity, teamcity-plugin]",12
+JetBrains/intellij-scala-indices-protocol,https://github.com/JetBrains/intellij-scala-indices-protocol,1,[],1
+JetBrains/teamcity-investigations-hub-widget,https://github.com/JetBrains/teamcity-investigations-hub-widget,1,"[jetbrains-hub, jetbrains-teamcity, widget]",1
+JetBrains/resharper-rider-plugin,https://github.com/JetBrains/resharper-rider-plugin,90,[],90
+JetBrains/kotlin-kythe-plugin,https://github.com/JetBrains/kotlin-kythe-plugin,2,[],2
+JetBrains/kotlin-native-shared,https://github.com/JetBrains/kotlin-native-shared,10,[],10
+JetBrains/univocity-parsers,https://github.com/JetBrains/univocity-parsers,1,[],1
+JetBrains/hub-widget-ui,https://github.com/JetBrains/hub-widget-ui,3,"[jetbrains-hub, widget]",3
+JetBrains/intellij-deps-java-compatibility,https://github.com/JetBrains/intellij-deps-java-compatibility,4,[],4
+JetBrains/JetBrainsRuntime,https://github.com/JetBrains/JetBrainsRuntime,370,"[intellij-platform, jdk, openjdk]",370
+JetBrains/jdk-sa-jdwp,https://github.com/JetBrains/jdk-sa-jdwp,13,[],13
+JetBrains/kotlin-dokka-stdlib,https://github.com/JetBrains/kotlin-dokka-stdlib,6,[],6
+JetBrains/teamcity-project-status-widget,https://github.com/JetBrains/teamcity-project-status-widget,2,"[jetbrains-hub, jetbrains-teamcity, widget]",2
+JetBrains/youtrack-personal-timetracking-widget,https://github.com/JetBrains/youtrack-personal-timetracking-widget,2,"[jetbrains-hub, jetbrains-youtrack, widget]",2
+JetBrains/teamcity-build-artifacts-widget,https://github.com/JetBrains/teamcity-build-artifacts-widget,2,"[jetbrains-hub, jetbrains-teamcity, widget]",2
+JetBrains/coursera-assignments,https://github.com/JetBrains/coursera-assignments,2,[],2
+JetBrains/youtrack-issues-list-widget,https://github.com/JetBrains/youtrack-issues-list-widget,5,"[jetbrains-hub, jetbrains-youtrack, widget]",5
+JetBrains/youtrack-issue-distribution-report-widget,https://github.com/JetBrains/youtrack-issue-distribution-report-widget,3,"[jetbrains-hub, jetbrains-youtrack, widget]",3
+JetBrains/artifacts-caching-proxy,https://github.com/JetBrains/artifacts-caching-proxy,3,[],3
+JetBrains/postcss-require-hover,https://github.com/JetBrains/postcss-require-hover,1,[],1
+JetBrains/sisu.inject,https://github.com/JetBrains/sisu.inject,1,[],1
+JetBrains/origami,https://github.com/JetBrains/origami,109,[],109
+JetBrains/async-profiler,https://github.com/JetBrains/async-profiler,8,[],8
+JetBrains/reveal.js,https://github.com/JetBrains/reveal.js,2,[],2
+JetBrains/jackson-databind,https://github.com/JetBrains/jackson-databind,1,[],1
+JetBrains/jcef,https://github.com/JetBrains/jcef,66,[],66
+JetBrains/youtrack-notifications-widget,https://github.com/JetBrains/youtrack-notifications-widget,1,[],1
+JetBrains/teamcity-clearcase,https://github.com/JetBrains/teamcity-clearcase,1,[],1
+JetBrains/teamcity-fxcop,https://github.com/JetBrains/teamcity-fxcop,1,[],1
+JetBrains/teamcity-priority-queue,https://github.com/JetBrains/teamcity-priority-queue,2,[],2
+JetBrains/teamcity-rake,https://github.com/JetBrains/teamcity-rake,1,[],1
+JetBrains/teamcity-swabra,https://github.com/JetBrains/teamcity-swabra,1,[],1
+JetBrains/teamcity-xml-tests-reporting,https://github.com/JetBrains/teamcity-xml-tests-reporting,1,[],1
+JetBrains/teamcity-vault-vcs,https://github.com/JetBrains/teamcity-vault-vcs,1,[],1
+JetBrains/teamcity-unity-plugin,https://github.com/JetBrains/teamcity-unity-plugin,53,"[teamcity-plugin, teamcity-runner, unity, unity3d]",53
+JetBrains/teamcity-test-metadata-demo,https://github.com/JetBrains/teamcity-test-metadata-demo,8,[],8
+JetBrains/intellij-deps-proxy-vole,https://github.com/JetBrains/intellij-deps-proxy-vole,3,[],3
+JetBrains/gemini-teamcity,https://github.com/JetBrains/gemini-teamcity,2,[],2
+JetBrains/teamcity-service-messages,https://github.com/JetBrains/teamcity-service-messages,1,[],1
+JetBrains/teamcity-commandline,https://github.com/JetBrains/teamcity-commandline,1,[],1
+JetBrains/teamcity-rest,https://github.com/JetBrains/teamcity-rest,16,[],16
+JetBrains/UnrealLink,https://github.com/JetBrains/UnrealLink,60,[],60
+JetBrains/teamcity-gradle,https://github.com/JetBrains/teamcity-gradle,5,[],5
+JetBrains/teamcity-usage-statistics,https://github.com/JetBrains/teamcity-usage-statistics,0,[],0
+JetBrains/teamcity-environment-fetcher,https://github.com/JetBrains/teamcity-environment-fetcher,1,[],1
+JetBrains/xunit.github.io,https://github.com/JetBrains/xunit.github.io,1,[],1
+JetBrains/nixpkgs,https://github.com/JetBrains/nixpkgs,1,[],1
+JetBrains/sdk,https://github.com/JetBrains/sdk,1,[],1
+JetBrains/hermione-teamcity-reporter,https://github.com/JetBrains/hermione-teamcity-reporter,1,[],1
+JetBrains/idea-gradle-jps-build-app,https://github.com/JetBrains/idea-gradle-jps-build-app,1,[],1
+JetBrains/java-mission-control,https://github.com/JetBrains/java-mission-control,5,[],5
+JetBrains/profiler-api,https://github.com/JetBrains/profiler-api,18,"[aarch64, arm64, aspnetcore, clr, coreclr, csharp, linux, macos, mono, net, netcoreapp, netframework, netstandard, windows, x64, x86, x86-64]",18
+JetBrains/teamcity-pipelines-dsl,https://github.com/JetBrains/teamcity-pipelines-dsl,36,[],36
+JetBrains/stylelint-teamcity,https://github.com/JetBrains/stylelint-teamcity,1,[],1
+JetBrains/lets-plot-kotlin,https://github.com/JetBrains/lets-plot-kotlin,228,"[data-science, geotools, ggplot, graphics, jupyter, jupyter-notebook, jupyter-notebooks, jvm, kotlin, kotlin-api, kotlin-js, kotlin-kernel, plot, plot-kotlin, plot-library, statistical-data]",228
+JetBrains/JetBrainsMono,https://github.com/JetBrains/JetBrainsMono,6059,"[coding-font, font, ligatures, monospaced-font, programming-font, programming-ligatures]",6059
+JetBrains/teamcity-roadmap,https://github.com/JetBrains/teamcity-roadmap,4,[],4
+JetBrains/lets-plot,https://github.com/JetBrains/lets-plot,699,"[data-science, data-visualization, datalore, geo-spatial, ggplot, jupyter, jupyter-notebooks, kotlin, plot, plot-library, pycharm, python, sciview, sciview-plugin, statistical-data]",699
+JetBrains/teamcity-sdk-docs,https://github.com/JetBrains/teamcity-sdk-docs,7,[],7
+JetBrains/intellij-obsolete-plugins,https://github.com/JetBrains/intellij-obsolete-plugins,8,[],8
+JetBrains/webteam-test,https://github.com/JetBrains/webteam-test,1,[],1
+JetBrains/teamcity-dotcover,https://github.com/JetBrains/teamcity-dotcover,2,[],2
+JetBrains/batik,https://github.com/JetBrains/batik,2,[],2
+JetBrains/profiler-self-api,https://github.com/JetBrains/profiler-self-api,42,"[aarch64, arm64, aspnetcore, clr, coreclr, csharp, linux, m1, macos, net, netcoreapp, netframework, netstandard, windows, x64, x86, x86-64]",42
+JetBrains/osx-cpu-temp,https://github.com/JetBrains/osx-cpu-temp,3,[],3
+JetBrains/ion-java,https://github.com/JetBrains/ion-java,2,[],2
+JetBrains/jsitter,https://github.com/JetBrains/jsitter,35,[],35
+JetBrains/marketplace-makemecoffee-plugin,https://github.com/JetBrains/marketplace-makemecoffee-plugin,7,[],7
+JetBrains/tree-sitter-go,https://github.com/JetBrains/tree-sitter-go,1,[],1
+JetBrains/tree-sitter,https://github.com/JetBrains/tree-sitter,1,[],1
+JetBrains/kotless,https://github.com/JetBrains/kotless,886,"[devops, faas, gradle-plugin, kotlin, lambda, serverless, web]",886
+JetBrains/JetBrains.Rider.Debugger.Launcher,https://github.com/JetBrains/JetBrains.Rider.Debugger.Launcher,2,[],2
+JetBrains/web-types,https://github.com/JetBrains/web-types,169,[],169
+JetBrains/youtrack-work-item-exporter-widget,https://github.com/JetBrains/youtrack-work-item-exporter-widget,3,[],3
+JetBrains/teamcity-documentation,https://github.com/JetBrains/teamcity-documentation,15,[],15
+JetBrains/dotnet-project-model,https://github.com/JetBrains/dotnet-project-model,2,"[csproj-tooling, dotnet]",2
+JetBrains/youtrack-activities-widget,https://github.com/JetBrains/youtrack-activities-widget,4,"[jetbrains-hub, jetbrains-youtrack, widget]",4
+JetBrains/SharpGenTools,https://github.com/JetBrains/SharpGenTools,2,[],2
+JetBrains/SharpGen.Runtime.COM,https://github.com/JetBrains/SharpGen.Runtime.COM,1,[],1
+JetBrains/NuGet.BuildTasks,https://github.com/JetBrains/NuGet.BuildTasks,1,[],1
+JetBrains/teamcity-plugin-pipelines-dsl,https://github.com/JetBrains/teamcity-plugin-pipelines-dsl,3,[],3
+JetBrains/ForTea,https://github.com/JetBrains/ForTea,46,[hacktoberfest],46
+JetBrains/kotlin-js-demo-1.3.50,https://github.com/JetBrains/kotlin-js-demo-1.3.50,11,[],11
+JetBrains/KotlinFinder,https://github.com/JetBrains/KotlinFinder,31,[],31
+JetBrains/JetBrains.EnvDTE,https://github.com/JetBrains/JetBrains.EnvDTE,9,[],9
+JetBrains/phpstorm-http-client-tutorial,https://github.com/JetBrains/phpstorm-http-client-tutorial,8,[],8
+JetBrains/hackathon19_deskovery,https://github.com/JetBrains/hackathon19_deskovery,1,"[arm, cargo, clion, cmake, cortex-m4, embedded, mcu, nucleo, openocd, rust, stm32, stm32l4, stm32l476rg, vl53l1x]",1
+JetBrains/scenebuilder,https://github.com/JetBrains/scenebuilder,3,[],3
+JetBrains/azure-profiling,https://github.com/JetBrains/azure-profiling,1,[],1
+JetBrains/ReSharperKeymap4IntelliJ,https://github.com/JetBrains/ReSharperKeymap4IntelliJ,2,[],2
+JetBrains/ij-perf-report-aggregator,https://github.com/JetBrains/ij-perf-report-aggregator,2,[],2
+JetBrains/sample_rails_app,https://github.com/JetBrains/sample_rails_app,17,[],17
+JetBrains/teamcity-aws-core-plugin,https://github.com/JetBrains/teamcity-aws-core-plugin,2,[],2
+JetBrains/NuGet.Client,https://github.com/JetBrains/NuGet.Client,1,[],1
+JetBrains/Rplugin,https://github.com/JetBrains/Rplugin,43,"[intellij-plugin, rlang, rlanguage]",43
+JetBrains/Rkernel,https://github.com/JetBrains/Rkernel,8,[],8
+JetBrains/Rkernel-proto,https://github.com/JetBrains/Rkernel-proto,1,[],1
+JetBrains/team-explorer-everywhere,https://github.com/JetBrains/team-explorer-everywhere,7,[],7
+JetBrains/webhelp-project-template,https://github.com/JetBrains/webhelp-project-template,1,[],1
+JetBrains/clion-remote,https://github.com/JetBrains/clion-remote,74,[],74
+JetBrains/teamcity-test-data,https://github.com/JetBrains/teamcity-test-data,1,[],1
+JetBrains/teamcity-webhooks,https://github.com/JetBrains/teamcity-webhooks,13,[],13
+JetBrains/aws-toolkit-jetbrains,https://github.com/JetBrains/aws-toolkit-jetbrains,6,[],6
+JetBrains/rider-theme-pack,https://github.com/JetBrains/rider-theme-pack,14,[],14
+JetBrains/RiderSourceCodeAccess,https://github.com/JetBrains/RiderSourceCodeAccess,48,[],48
+JetBrains/teamcity-dsl-params-pipeline-example,https://github.com/JetBrains/teamcity-dsl-params-pipeline-example,1,[],1
+JetBrains/intellij-deps-jdi,https://github.com/JetBrains/intellij-deps-jdi,1,[],1
+JetBrains/open-radiant,https://github.com/JetBrains/open-radiant,63,[],63
+JetBrains/attachme,https://github.com/JetBrains/attachme,24,[],24
+JetBrains/Refasmer,https://github.com/JetBrains/Refasmer,48,[],48
+JetBrains/teamcity-agent-info,https://github.com/JetBrains/teamcity-agent-info,1,[],1
+JetBrains/intellij-deps-dbus-java,https://github.com/JetBrains/intellij-deps-dbus-java,2,[],2
+JetBrains/duty-manager,https://github.com/JetBrains/duty-manager,2,[],2
+JetBrains/kotlin-mobile-docs,https://github.com/JetBrains/kotlin-mobile-docs,55,[],55
+JetBrains/intellij-platform-plugin-template,https://github.com/JetBrains/intellij-platform-plugin-template,1133,"[intellij, intellij-idea, intellij-idea-plugin, intellij-platform, intellij-plugin, intellij-plugins, jetbrains-plugin]",1133
+JetBrains/marketplace-zip-signer,https://github.com/JetBrains/marketplace-zip-signer,6,"[intellij, intellij-idea, intellij-idea-plugin, intellij-platform, intellij-plugin, intellij-plugins, jetbrains-plugin]",6
+JetBrains/space-kotlin-sdk,https://github.com/JetBrains/space-kotlin-sdk,33,[],33
+JetBrains/teamcity-git,https://github.com/JetBrains/teamcity-git,6,[],6
+JetBrains/godot-support,https://github.com/JetBrains/godot-support,108,[],108
+JetBrains/kotlin-build-jps,https://github.com/JetBrains/kotlin-build-jps,1,[],1
+JetBrains/ac_tutorial_swiftui,https://github.com/JetBrains/ac_tutorial_swiftui,3,[],3
+JetBrains/ac_tutorial_cocoapods,https://github.com/JetBrains/ac_tutorial_cocoapods,1,[],1
+JetBrains/DPA-demo,https://github.com/JetBrains/DPA-demo,2,[],2
+JetBrains/KotlinDL,https://github.com/JetBrains/KotlinDL,695,"[deeplearning, gpu, kotlin, tensorflow]",695
+JetBrains/winit,https://github.com/JetBrains/winit,2,[],2
+JetBrains/spotbugs-intellij-plugin,https://github.com/JetBrains/spotbugs-intellij-plugin,33,"[bytecode, intellij-idea, intellij-plugin, java, spotbugs, static-analysis]",33
+JetBrains/intellij-structural-search-for-kotlin,https://github.com/JetBrains/intellij-structural-search-for-kotlin,16,"[intellij, intellij-idea, intellij-plugin, kotlin]",16
+JetBrains/code-analytics-examples,https://github.com/JetBrains/code-analytics-examples,2,[],2
+JetBrains/intellij-sdk-code-samples,https://github.com/JetBrains/intellij-sdk-code-samples,412,"[intellij, intellij-idea, intellij-platform, intellij-plugin, intellij-plugins, intellij-sdk, jetbrains, jetbrains-plugin, jetbrains-plugins]",412
+JetBrains/skija,https://github.com/JetBrains/skija,2242,"[2d, graphics, java, skia]",2242
+JetBrains/golandtipsandtricks,https://github.com/JetBrains/golandtipsandtricks,96,[],96
+JetBrains/teamcity-agent-state-plugin,https://github.com/JetBrains/teamcity-agent-state-plugin,2,"[teamcity, teamcity-plugin]",2
+JetBrains/teamcity-docker-images,https://github.com/JetBrains/teamcity-docker-images,41,[],41
+JetBrains/docker-credential-space,https://github.com/JetBrains/docker-credential-space,3,[],3
+JetBrains/dl-this,https://github.com/JetBrains/dl-this,5,[intellij-plugin],5
+JetBrains/intellij-compiler-indices,https://github.com/JetBrains/intellij-compiler-indices,3,[],3
+JetBrains/teamcity-helm-plugin,https://github.com/JetBrains/teamcity-helm-plugin,2,[],2
+JetBrains/gradle-changelog-plugin,https://github.com/JetBrains/gradle-changelog-plugin,142,"[changelog, gradle, gradle-changelog-plugin, gradle-plugin, intellij, intellij-platform, intellij-plugin, jetbrains]",142
+JetBrains/intellij-deps-fastutil,https://github.com/JetBrains/intellij-deps-fastutil,2,[],2
+JetBrains/clion-debugger-plugin-stub,https://github.com/JetBrains/clion-debugger-plugin-stub,2,"[clion, clion-ide, debugger, debugging-tool, jetbrains, jetbrains-plugin]",2
+JetBrains/fbme,https://github.com/JetBrains/fbme,5,"[iec61499, mps, projectional-editor]",5
+JetBrains/projector-docker,https://github.com/JetBrains/projector-docker,1853,"[awt, docker, swing]",1853
+JetBrains/projector-demo,https://github.com/JetBrains/projector-demo,30,"[awt, swing]",30
+JetBrains/projector-server,https://github.com/JetBrains/projector-server,1025,"[awt, swing]",1025
+JetBrains/projector-client,https://github.com/JetBrains/projector-client,701,"[awt, swing]",701
+JetBrains/projector-markdown-plugin,https://github.com/JetBrains/projector-markdown-plugin,6,"[awt, swing]",6
+JetBrains/kotlin-spark-api,https://github.com/JetBrains/kotlin-spark-api,257,"[bigdata, kotlin, nullability, scala, spark]",257
+JetBrains/php-timeline,https://github.com/JetBrains/php-timeline,207,[],207
+JetBrains/ztools,https://github.com/JetBrains/ztools,16,[],16
+JetBrains/phpstorm-psalm-plugin,https://github.com/JetBrains/phpstorm-psalm-plugin,121,"[phpstorm, psalm]",121
+JetBrains/phpstorm-phpstan-plugin,https://github.com/JetBrains/phpstorm-phpstan-plugin,126,"[phpstan, phpstorm]",126
+JetBrains/vso-httpclient-java,https://github.com/JetBrains/vso-httpclient-java,1,[],1
+JetBrains/ac_tutorial_unit_testing,https://github.com/JetBrains/ac_tutorial_unit_testing,1,[],1
+JetBrains/ij_tutorial_gradle,https://github.com/JetBrains/ij_tutorial_gradle,3,[],3
+JetBrains/projector-installer,https://github.com/JetBrains/projector-installer,655,"[awt, swing]",655
+JetBrains/il-repack,https://github.com/JetBrains/il-repack,0,[],0
+JetBrains/intellij-kotlin,https://github.com/JetBrains/intellij-kotlin,68,[],68
+JetBrains/intellij-deps-ssh-nio-fs,https://github.com/JetBrains/intellij-deps-ssh-nio-fs,3,[],3
+JetBrains/eslint-plugin-angular,https://github.com/JetBrains/eslint-plugin-angular,1,[],1
+JetBrains/skiko,https://github.com/JetBrains/skiko,519,[],519
+JetBrains/vscode-debug-visualizer,https://github.com/JetBrains/vscode-debug-visualizer,1,[],1
+JetBrains/rider-debug-visualizer-web-view,https://github.com/JetBrains/rider-debug-visualizer-web-view,5,[],5
+JetBrains/teamcity-search-ql,https://github.com/JetBrains/teamcity-search-ql,2,[],2
+JetBrains/jps-javac-extension,https://github.com/JetBrains/jps-javac-extension,1,[],1
+JetBrains/bazel-bsp,https://github.com/JetBrains/bazel-bsp,52,"[bazel-bsp, bsp, bsp-server, build-server-protocol, compilation-diagnostics, diagnostics]",52
+JetBrains/teamcity-dotnet-samples,https://github.com/JetBrains/teamcity-dotnet-samples,6,[],6
+JetBrains/exposed-intellij-plugin,https://github.com/JetBrains/exposed-intellij-plugin,17,[],17
+JetBrains/teamcity-sakura-ui-plugins,https://github.com/JetBrains/teamcity-sakura-ui-plugins,2,[],2
+JetBrains/teamcity-api-js,https://github.com/JetBrains/teamcity-api-js,4,[],4
+JetBrains/compose-jb,https://github.com/JetBrains/compose-jb,6805,"[android, awt, compose, declarative-ui, desktop, gui, javascript, kotlin, multiplatform, reactive, swing, ui]",6805
+JetBrains/teamcity-slack-notifier,https://github.com/JetBrains/teamcity-slack-notifier,3,"[slack, teamcity]",3
+JetBrains/teamcity-dashboard-plugin,https://github.com/JetBrains/teamcity-dashboard-plugin,2,[],2
+JetBrains/ac_tutorial_debugging,https://github.com/JetBrains/ac_tutorial_debugging,1,[],1
+JetBrains/plugin-blockmap-patches,https://github.com/JetBrains/plugin-blockmap-patches,1,[],1
+JetBrains/gradle-jps-compiler-plugin,https://github.com/JetBrains/gradle-jps-compiler-plugin,1,[],1
+JetBrains/Avalonia,https://github.com/JetBrains/Avalonia,3,[],3
+JetBrains/intellij-ui-test-robot,https://github.com/JetBrains/intellij-ui-test-robot,45,"[ide, idea-plugin, intellij, intellij-plugin, java, kotlin, test-automation]",45
+JetBrains/compose-for-web-demos,https://github.com/JetBrains/compose-for-web-demos,175,[],175
+JetBrains/reading-club,https://github.com/JetBrains/reading-club,23,"[machine-learning, papers, software-engineering]",23
+JetBrains/skia-build,https://github.com/JetBrains/skia-build,30,[],30
+JetBrains/ac_tutorial_refactorings,https://github.com/JetBrains/ac_tutorial_refactorings,1,[],1
+JetBrains/space-dotnet-sdk,https://github.com/JetBrains/space-dotnet-sdk,11,"[dotnet, jetbrains, sdk, space]",11
+JetBrains/JavaScript-timeline,https://github.com/JetBrains/JavaScript-timeline,26,[],26
+JetBrains/teamcity-sccache-plugin,https://github.com/JetBrains/teamcity-sccache-plugin,1,[],1
+JetBrains/leveldb,https://github.com/JetBrains/leveldb,1,[],1
+JetBrains/teamcity-kotlin-trigger,https://github.com/JetBrains/teamcity-kotlin-trigger,1,"[kotlin, teamcity]",1
+JetBrains/qodana-profiles,https://github.com/JetBrains/qodana-profiles,1,[],1
+JetBrains/phpstorm-attributes,https://github.com/JetBrains/phpstorm-attributes,220,"[php8, phpstorm]",220
+JetBrains/space-app-tutorials,https://github.com/JetBrains/space-app-tutorials,4,[],4
+JetBrains/intellij-deps-jna,https://github.com/JetBrains/intellij-deps-jna,1,[],1
+JetBrains/nlc2cmd,https://github.com/JetBrains/nlc2cmd,4,[],4
+JetBrains/space-issues-import,https://github.com/JetBrains/space-issues-import,10,[],10
+JetBrains/gradle-qodana-plugin,https://github.com/JetBrains/gradle-qodana-plugin,17,[],17
+JetBrains/Qodana,https://github.com/JetBrains/Qodana,335,"[ci-cd, code-inspection, qodana]",335
+JetBrains/qodana-examples,https://github.com/JetBrains/qodana-examples,1,[],1
+JetBrains/qodana-action,https://github.com/JetBrains/qodana-action,80,[],80
+JetBrains/lets-plot-docs,https://github.com/JetBrains/lets-plot-docs,2,[],2
+JetBrains/teamcity-rest-codegen,https://github.com/JetBrains/teamcity-rest-codegen,1,[],1
+JetBrains/teamcity-rest-auto-kotlin-client,https://github.com/JetBrains/teamcity-rest-auto-kotlin-client,1,[],1
+JetBrains/clazy,https://github.com/JetBrains/clazy,1,[],1
+JetBrains/ChooseRuntime,https://github.com/JetBrains/ChooseRuntime,1,[],1
+JetBrains/datalore-configs,https://github.com/JetBrains/datalore-configs,6,[],6
+JetBrains/coverage-report,https://github.com/JetBrains/coverage-report,1,[],1
+JetBrains/ap-validation,https://github.com/JetBrains/ap-validation,4,[],4
+JetBrains/tinygo-plugin,https://github.com/JetBrains/tinygo-plugin,20,"[goland, goland-plugin, intellij, intellij-plugin, jetbrains]",20
+JetBrains/whatsnewingoland,https://github.com/JetBrains/whatsnewingoland,27,"[database, docker, docker-compose, go, goland, golang, ide, jetbrains, kubernetes, vuejs]",27
+JetBrains/symbol-storage,https://github.com/JetBrains/symbol-storage,2,"[aarch64, amazon, arm64, aws-s3, linux, macos, net50, netcore, netcore5, symbols, tools, windows, x64, x86, x86-64]",2
+JetBrains/jitsi-meet,https://github.com/JetBrains/jitsi-meet,1,[],1
+JetBrains/teamcity-kotlin-script-runner,https://github.com/JetBrains/teamcity-kotlin-script-runner,2,[],2
+JetBrains/EzArgs,https://github.com/JetBrains/EzArgs,2,[],2
+JetBrains/androidx,https://github.com/JetBrains/androidx,51,[],51
+JetBrains/qodana-clone-finder-action,https://github.com/JetBrains/qodana-clone-finder-action,7,"[ci-cd, github-actions, qodana]",7
+JetBrains/qodana-license-audit-action,https://github.com/JetBrains/qodana-license-audit-action,6,"[ci-cd, github-actions, license-checking, qodana]",6
+JetBrains/skia-pack,https://github.com/JetBrains/skia-pack,4,[],4
+JetBrains/bazel-sonatype,https://github.com/JetBrains/bazel-sonatype,1,[],1
+JetBrains/cef,https://github.com/JetBrains/cef,1,[],1
+JetBrains/doclava-mirror,https://github.com/JetBrains/doclava-mirror,1,[],1
+JetBrains/teamcity-csharp-interactive,https://github.com/JetBrains/teamcity-csharp-interactive,8,"[csharp, csharp-script, interactive, script, scripting, tool]",8
+JetBrains/passcore,https://github.com/JetBrains/passcore,1,[],1
+JetBrains/etw-host-service-updater,https://github.com/JetBrains/etw-host-service-updater,2,"[etw, updater, windows, x64, x86]",2
+JetBrains/jetbrains-gradle-plugins,https://github.com/JetBrains/jetbrains-gradle-plugins,11,"[docker, gradle-plugin, liquibase, terraform]",11
+JetBrains/Sharpmake,https://github.com/JetBrains/Sharpmake,1,[],1
+JetBrains/jsign,https://github.com/JetBrains/jsign,1,[],1
+JetBrains/CodeIgniter-phpstorm-plugin,https://github.com/JetBrains/CodeIgniter-phpstorm-plugin,1,[],1
+JetBrains/qodana-action-eap,https://github.com/JetBrains/qodana-action-eap,3,[],3
+JetBrains/JetBrains.Annotations,https://github.com/JetBrains/JetBrains.Annotations,7,[],7
+JetBrains/clion-custom-defined-compiler-examples,https://github.com/JetBrains/clion-custom-defined-compiler-examples,9,"[c, clion, cmake, cpp, embarcadero, embedded, hacktoberfest, msp430, ti-msp430]",9
+JetBrains/intellij-uncrustify,https://github.com/JetBrains/intellij-uncrustify,1,[],1
+JetBrains/mps-kotlin-typesystem,https://github.com/JetBrains/mps-kotlin-typesystem,0,[],0
