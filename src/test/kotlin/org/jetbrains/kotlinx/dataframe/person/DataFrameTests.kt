@@ -487,7 +487,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `get group by single key`() {
-        typed.groupBy { name }["Mark"] shouldBe typed.filter { name == "Mark" }
+        typed.groupBy { name }["Charlie"] shouldBe typed.filter { name == "Charlie" }
     }
 
     @Test
@@ -509,7 +509,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `filter`() {
-        val expected = listOf("Bob", "Bob", "Mark")
+        val expected = listOf("Bob", "Bob", "Charlie")
         fun AnyFrame.check() = this[name].toList() shouldBe expected
 
         val limit = 20
@@ -709,7 +709,7 @@ class DataFrameTests : BaseTest() {
     fun `groupBy`() {
         fun AnyFrame.check() {
             nrow() shouldBe 3
-            this["name"].toList() shouldBe listOf("Alice", "Bob", "Mark")
+            this["name"].toList() shouldBe listOf("Alice", "Bob", "Charlie")
             this["n"].toList() shouldBe listOf(2, 2, 3)
             this["old count"].toList() shouldBe listOf(0, 2, 2)
             this["median age"].toList() shouldBe listOf(17, 37, 30)
@@ -957,7 +957,7 @@ class DataFrameTests : BaseTest() {
         val other = dataFrameOf(name, height)(
             "Bill",
             135,
-            "Mark",
+            "Charlie",
             160
         ).cast<Unit>()
 
@@ -1546,7 +1546,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `columns sum`() {
-        val name by columnOf("Alice", "Bob", "Mark")
+        val name by columnOf("Alice", "Bob", "Charlie")
         val age by columnOf(15, 20, 24)
         val df = dataFrameOf(name, age)
 
@@ -2002,7 +2002,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `pivot max`() {
         val pivoted = typed.pivot(inward = false) { city }.groupBy { name }.max { age }
-        pivoted.single { name == "Mark" }["Moscow"] shouldBe 30
+        pivoted.single { name == "Charlie" }["Moscow"] shouldBe 30
     }
 
     @Test
@@ -2035,7 +2035,7 @@ class DataFrameTests : BaseTest() {
             pivot { name }.max { age }
             sum { weight } into "total weight"
         }
-        val expected = dataFrameOf("count", "Alice", "Bob", "Mark", "total weight")(7, 20, 45, 40, 354)
+        val expected = dataFrameOf("count", "Alice", "Bob", "Charlie", "total weight")(7, 20, 45, 40, 354)
         summary shouldBe expected.group { cols(1..3) }.into("name")[0]
     }
 
@@ -2086,7 +2086,7 @@ class DataFrameTests : BaseTest() {
     fun `filter GroupBy by groups`() {
         val grouped = typed.groupBy { name }
         val filtered = grouped.filter { group.nrow() > 2 }.concat()
-        filtered shouldBe typed.filter { name == "Mark" }
+        filtered shouldBe typed.filter { name == "Charlie" }
     }
 
     @Test
@@ -2104,14 +2104,14 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `render to string`() {
         val expected = """
-               name age   city weight
-            0 Alice  15 London     54
-            1   Bob  45  Dubai     87
-            2  Mark  20 Moscow   null
-            3  Mark  40  Milan   null
-            4   Bob  30  Tokyo     68
-            5 Alice  20   null     55
-            6  Mark  30 Moscow     90
+                 name age   city weight
+            0   Alice  15 London     54
+            1     Bob  45  Dubai     87
+            2 Charlie  20 Moscow   null
+            3 Charlie  40  Milan   null
+            4     Bob  30  Tokyo     68
+            5   Alice  20   null     55
+            6 Charlie  30 Moscow     90
         """.trimIndent()
 
         typed.toString().trimIndent() shouldBe expected
@@ -2252,7 +2252,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun implodeWithNulls() {
-        val merged = typed.update { weight }.where { name == "Mark" }.withNull()
+        val merged = typed.update { weight }.where { name == "Charlie" }.withNull()
             .select { name and weight }
             .implode(dropNulls = true) { weight }
 
@@ -2263,10 +2263,10 @@ class DataFrameTests : BaseTest() {
     fun updateWithZero() {
         val updated = typed
             .convert { weight }.toDouble()
-            .update { numberCols() }.where { name == "Mark" }.withZero()
+            .update { numberCols() }.where { name == "Charlie" }.withZero()
         updated.age.type shouldBe getType<Int>()
         updated["weight"].type shouldBe getType<Double>()
-        val filtered = updated.filter { name == "Mark" }
+        val filtered = updated.filter { name == "Charlie" }
         filtered.nrow() shouldBe 3
         filtered.age.forEach {
             it shouldBe 0
@@ -2359,7 +2359,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `groupBy sort`() {
-        typed.groupBy { name }.sortByDesc { age }["Mark"] shouldBe typed.filter { name == "Mark" }.sortBy { age.desc() }
+        typed.groupBy { name }.sortByDesc { age }["Charlie"] shouldBe typed.filter { name == "Charlie" }.sortBy { age.desc() }
     }
 
     @Test

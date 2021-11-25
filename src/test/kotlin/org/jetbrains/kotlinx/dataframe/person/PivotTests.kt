@@ -71,16 +71,16 @@ class PivotTests {
         "Alice", "weight", 54,
         "Bob", "age", 45,
         "Bob", "weight", 87,
-        "Mark", "age", 20,
-        "Mark", "city", "Moscow",
-        "Mark", "weight", null,
+        "Charlie", "age", 20,
+        "Charlie", "city", "Moscow",
+        "Charlie", "weight", null,
         "Alice", "age", 55,
     )
 
     val defaultExpected = dataFrameOf("name", "age", "city", "weight")(
         "Alice", listOf(15, 55), "London", 54,
         "Bob", listOf(45), "-", 87,
-        "Mark", listOf(20), "Moscow", "-"
+        "Charlie", listOf(20), "Moscow", "-"
     )
 
 // Generated Code
@@ -173,7 +173,7 @@ class PivotTests {
         pivoted shouldBe dataFrameOf("name", "age", "city", "weight")(
             "Alice", listOf("_15", "_55"), "_London", "_54",
             "Bob", listOf("_45"), null, "_87",
-            "Mark", listOf("_20"), "_Moscow", "_null"
+            "Charlie", listOf("_20"), "_Moscow", "_null"
         )
     }
 
@@ -266,7 +266,7 @@ class PivotTests {
             when {
                 it.isList() -> it.path().dropLast(1) shouldBe listOf("Alice", "age")
                 it.hasNulls() -> {
-                    it.path().dropLast(1) shouldBe listOf("Mark", "weight")
+                    it.path().dropLast(1) shouldBe listOf("Charlie", "weight")
                     it.typeClass shouldBe Any::class
                 }
                 it.name() == "type" -> it.typeClass shouldBe KClass::class
@@ -447,9 +447,9 @@ class PivotTests {
         pivoted.columnNames() shouldBe typed.name.distinct().values()
         pivoted.df()["Alice"].asColumnGroup().columnNames() shouldBe typed.key.distinct().values()
         pivoted.df()["Bob"].asColumnGroup().columnNames() shouldBe listOf("age", "weight")
-        pivoted.df()["Mark"].asColumnGroup().columnNames() shouldBe typed.key.distinct().values()
+        pivoted.df()["Charlie"].asColumnGroup().columnNames() shouldBe typed.key.distinct().values()
         pivoted.df()["Alice"]["age"].type() shouldBe getType<List<Int>>()
-        pivoted.df()["Mark"]["weight"].type() shouldBe getType<Any?>()
+        pivoted.df()["Charlie"]["weight"].type() shouldBe getType<Any?>()
     }
 
     @Test

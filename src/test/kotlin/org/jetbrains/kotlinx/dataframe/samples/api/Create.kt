@@ -164,7 +164,7 @@ class Create : TestBase() {
     fun createFrameColumn() {
         // SampleStart
         val df1 = dataFrameOf("name", "age")("Alice", 20, "Bob", 25)
-        val df2 = dataFrameOf("name", "temp")("Mark", 36.6)
+        val df2 = dataFrameOf("name", "temp")("Charlie", 36.6)
 
         // Create FrameColumn with two elements of type DataFrame
         val frames by columnOf(df1, df2)
@@ -209,7 +209,7 @@ class Create : TestBase() {
         val df = dataFrameOf("name", "age")(
             "Alice", 15,
             "Bob", 20,
-            "Mark", 100
+            "Charlie", 100
         )
         // SampleEnd
     }
@@ -251,7 +251,7 @@ class Create : TestBase() {
     fun createDataFrameFromColumns() {
         // SampleStart
 
-        val name by columnOf("Alice", "Bob", "Mark")
+        val name by columnOf("Alice", "Bob", "Charlie")
         val age by columnOf(15, 20, 22)
 
         // DataFrame with 2 columns
@@ -262,7 +262,7 @@ class Create : TestBase() {
     @Test
     fun createDataFrameFromMap() {
         // SampleStart
-        val map = mapOf("name" to listOf("Alice", "Bob", "Mark"), "age" to listOf(15, 20, 22))
+        val map = mapOf("name" to listOf("Alice", "Bob", "Charlie"), "age" to listOf(15, 20, 22))
 
         // DataFrame with 2 columns
         map.toDataFrame()
@@ -272,7 +272,7 @@ class Create : TestBase() {
     @Test
     fun createDataFrameFromIterable() {
         // SampleStart
-        val name by columnOf("Alice", "Bob", "Mark")
+        val name by columnOf("Alice", "Bob", "Charlie")
         val age by columnOf(15, 20, 22)
 
         listOf(name, age).toDataFrame()
@@ -286,7 +286,7 @@ class Create : TestBase() {
         val values = listOf(
             "Alice", 15,
             "Bob", 20,
-            "Mark", 22
+            "Charlie", 22
         )
         val df = dataFrameOf(names, values)
         // SampleEnd
@@ -300,7 +300,7 @@ class Create : TestBase() {
     fun createDataFrameFromObject() {
         // SampleStart
         data class Person(val name: String, val age: Int)
-        val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Mark", 22))
+        val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 22))
 
         val df = persons.createDataFrame()
         // SampleEnd
@@ -314,7 +314,7 @@ class Create : TestBase() {
     fun createDataFrameFromObjectExplicit() {
         // SampleStart
         data class Person(val name: String, val age: Int)
-        val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Mark", 22))
+        val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 22))
 
         val df = persons.createDataFrame {
             "name" from { it.name }
