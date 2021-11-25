@@ -11,6 +11,7 @@
         <toc-element id="apiLevels.md">
             <toc-element id="stringApi.md"/>
             <toc-element toc-title="Column Accessors API" id="columnAccessorsApi.md"/>
+            <toc-element id="KPropertiesApi.md"/>
             <toc-element id="extensionPropertiesApi.md"/>
         </toc-element>
         <toc-element id="hierarchical.md"/>
