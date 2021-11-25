@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.api.merge
 import org.jetbrains.kotlinx.dataframe.api.namedValues
 import org.jetbrains.kotlinx.dataframe.api.namedValuesOf
 import org.jetbrains.kotlinx.dataframe.api.next
-import org.jetbrains.kotlinx.dataframe.api.plus
 import org.jetbrains.kotlinx.dataframe.api.prev
 import org.jetbrains.kotlinx.dataframe.api.rowMean
 import org.jetbrains.kotlinx.dataframe.api.rowStd
