@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumnWithActualType
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.random.Random
+import kotlin.random.nextInt
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.withNullability
 
@@ -160,9 +161,17 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public fun randomInt(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextInt() }
 
+    public fun randomInt(nrow: Int, range: IntRange): AnyFrame = fillNotNull(nrow) { Random.nextInt(range) }
+
     public fun randomDouble(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextDouble() }
 
+    public fun randomDouble(nrow: Int, range: ClosedRange<Double>): AnyFrame = fillNotNull(nrow) { Random.nextDouble(range.start, range.endInclusive) }
+
     public fun randomFloat(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextFloat() }
+
+    public fun randomLong(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextLong() }
+
+    public fun randomLong(nrow: Int, range: ClosedRange<Long>): AnyFrame = fillNotNull(nrow) { Random.nextLong(range.start, range.endInclusive) }
 
     public fun randomBoolean(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextBoolean() }
 }

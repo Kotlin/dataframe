@@ -14,8 +14,8 @@ By default, columns are sorted in ascending order with `null` values going first
 
 ```kotlin
 df.sortBy { age }
-df.sortBy { age and name.firstName.desc }
-df.sortBy { weight.nullsLast }
+df.sortBy { age and name.firstName.desc() }
+df.sortBy { weight.nullsLast() }
 ```
 
 </tab>
@@ -29,7 +29,7 @@ val firstName by name.column<String>()
 
 df.sortBy { age }
 df.sortBy { age and firstName }
-df.sortBy { weight.nullsLast }
+df.sortBy { weight.nullsLast() }
 ```
 
 </tab>
@@ -37,8 +37,8 @@ df.sortBy { weight.nullsLast }
 
 ```kotlin
 df.sortBy("age")
-df.sortBy { "age" and "name"["firstName"].desc }
-df.sortBy { "weight".nullsLast }
+df.sortBy { "age" and "name"["firstName"].desc() }
+df.sortBy { "weight".nullsLast() }
 ```
 
 </tab></tabs>
