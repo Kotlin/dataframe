@@ -93,6 +93,7 @@ import org.jetbrains.kotlinx.dataframe.api.moveToLeft
 import org.jetbrains.kotlinx.dataframe.api.moveToRight
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.ndistinct
 import org.jetbrains.kotlinx.dataframe.api.near
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.nullable
@@ -990,9 +991,12 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `distinct`() {
-        typed.select { name and city }.distinct().nrow() shouldBe 6
+        val expected = 6
+        typed.ndistinct { name and city } shouldBe expected
+        typed.select { name and city }.distinct().nrow() shouldBe expected
+        typed.select { name and city }.ndistinct() shouldBe expected
         val d = typed.distinct { name and city }
-        d.nrow() shouldBe 6
+        d.nrow() shouldBe expected
         d.ncol() shouldBe 2
     }
 

@@ -583,6 +583,36 @@ class Access : TestBase() {
     }
 
     @Test
+    fun ndistinct_properties() {
+        // SampleStart
+        df.ndistinct()
+        // SampleEnd
+    }
+
+    @Test
+    fun ndistinctColumns_properties() {
+        // SampleStart
+        df.ndistinct { age and name }
+        // SampleEnd
+    }
+
+    @Test
+    fun ndistinctColumns_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val name by columnGroup()
+        df.ndistinct { age and name }
+        // SampleEnd
+    }
+
+    @Test
+    fun ndistinctColumns_strings() {
+        // SampleStart
+        df.ndistinct("age", "name")
+        // SampleEnd
+    }
+
+    @Test
     fun distinctColumns_strings() {
         // SampleStart
         df.distinct("age", "name")

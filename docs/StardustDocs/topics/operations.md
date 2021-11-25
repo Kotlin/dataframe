@@ -65,6 +65,8 @@ Multiplex operations usually end with `into` or `with` function. The following n
 * [min](minmax.md) / [minBy](minmax.md) / [minOf](minmax.md) / [minFor](minmax.md) - min of values
 * [move](move.md) - move columns or change column groupings
 * [ncol](ncol.md) - number of columns
+* [ndistinct](ndistinct.md) - number of distinct rows 
+* [nrow](nrow.md) - number of rows
 * [parse](parse.md) - convert `String` values into appropriate types
 * [pivot](pivot.md) - convert column values into new columns
 * [remove](remove.md) - remove columns

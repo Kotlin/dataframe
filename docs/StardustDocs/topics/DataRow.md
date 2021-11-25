@@ -30,7 +30,7 @@ Row expressions provide a value for every row of `DataFrame` and are used in [ad
 df.add("fullName") { name.firstName + " " + name.lastName }
 
 // Row expression computes updated values
-df.update { weight }.at(1,3,4).with { prev()?.weight }
+df.update { weight }.at(1, 3, 4).with { prev()?.weight }
 
 // Row expression computes cell content for values of pivoted column
 df.pivot { city }.with { name.lastName.uppercase() }

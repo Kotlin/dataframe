@@ -5,6 +5,7 @@
 General information about `DataFrame`:
 * [`nrow()`](nrow.md) - number of rows
 * [`ncol()`](ncol.md) - number of columns
+* [`ndistinct()`](ndistinct.md) - number of distinct columns
 * [`columnNames()`](columnNames.md) - list of column names
 * [`head(n)`](head.md) - first n rows (default 5)
 * [`schema()`](schema.md) - schema of columns
