@@ -4,15 +4,13 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.inward
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.split
+import org.jetbrains.kotlinx.dataframe.api.toList
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.jupyter.useSchema
-import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.junit.Test
 
 class Schemas {
@@ -71,16 +69,6 @@ class Schemas {
 
     fun DataFrame<Person>.countAdults() = count { it[Person::age] > 18 }
 
-    // @JupyterLibrary
-    internal class Integration : JupyterIntegration() {
-
-        override fun Builder.onLoaded() {
-            onLoaded {
-                useSchema<Person>()
-            }
-        }
-    }
-
     @Test
     fun convertTo() {
         // SampleStart
@@ -92,10 +80,9 @@ class Schemas {
         val df = dataFrameOf("name", "age", "weight")(
             "Merton, Alice", "15", 60.0,
             "Marley, Bob", "20", 73.5
-        ).split("name").cast<String>().inward("firstName", "lastName")
+        ).split { "name"<String>() }.inward("firstName", "lastName")
 
-        val p = df.convertTo<Person>()
-        println(p)
+        val persons = df.cast<Person>().toList()
         // SampleEnd
     }
 }
