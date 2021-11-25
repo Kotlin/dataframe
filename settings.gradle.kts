@@ -5,6 +5,8 @@ includeBuild("generator")
 include("plugins:dataframe-gradle-plugin")
 include("plugins:symbol-processor")
 
+include("examples:idea-examples:titanic")
+
 val kspVersion: String by settings
 
 dependencyResolutionManagement {
