@@ -58,8 +58,11 @@ public fun <T> DataRow<T>.next(): DataRow<T>? {
     return if (index < df.nrow() - 1) df[index + 1] else null
 }
 
+public fun <T> DataRow<T>.rows(absoluteIndices: Iterable<Int>): Sequence<DataRow<T>> =
+    absoluteIndices.asSequence().map { getRow(index + it) }
+
 public fun <T> DataRow<T>.near(relativeIndices: Iterable<Int>): Sequence<DataRow<T>> =
-    relativeIndices.asSequence().map { getRow(index + it) }
+    relativeIndices.asSequence().mapNotNull { getRowOrNull(index + it) }
 
 internal fun <T> DataRow<T>.movingAverage(k: Int, expression: RowExpression<T, Number>): Double {
     var count = 0
