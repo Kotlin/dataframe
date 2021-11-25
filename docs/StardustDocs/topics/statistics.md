@@ -11,11 +11,11 @@ Available statistics:
 * [std](std.md)
 
 Every statistic can be used in aggregations of:
-* `DataFrame`
-* `DataColumn`
+* [`DataFrame`](DataFrame.md)
+* [`DataColumn`](DataColumn.md)
 * [`GroupBy`](#groupby-statistics)
-* [`Pivot`](aggregatePivot.md)
-* [`PivotGroupBy`](aggregatePivot.md)
+* [`Pivot`](pivot.md)
+* [`PivotGroupBy`](pivot.md#pivot-groupby)
 
 <!---FUN statisticAggregations-->
 

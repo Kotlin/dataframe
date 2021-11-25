@@ -22,7 +22,7 @@ df.count { age > 15 }
 
 <!---END-->
 
-When `count` is used in [`groupBy`](aggregateGroupBy.md) or [`pivot`](aggregatePivot.md) aggregations, it counts rows for every data group:
+When `count` is used in [`groupBy`](groupBy.md#aggregation) or [`pivot`](pivot.md#aggregation) aggregations, it counts rows for every data group:
 
 <!---FUN countAggregation-->
 
