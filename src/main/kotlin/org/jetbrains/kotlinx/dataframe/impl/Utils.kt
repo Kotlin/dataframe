@@ -188,10 +188,13 @@ internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType =
     this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
 
 internal fun KType.isSubtypeWithNullabilityOf(type: KType) = this.isSubtypeOf(type) && (!this.isMarkedNullable || type.isMarkedNullable)
-public inline fun <reified C> headPlusArray(head: C, cols: Array<out C>): Array<C> =
+
+@PublishedApi
+internal inline fun <reified C> headPlusArray(head: C, cols: Array<out C>): Array<C> =
     (listOf(head) + cols.toList()).toTypedArray()
 
-public inline fun <reified C> headPlusIterable(head: C, cols: Iterable<C>): Iterable<C> =
+@PublishedApi
+internal inline fun <reified C> headPlusIterable(head: C, cols: Iterable<C>): Iterable<C> =
     (listOf(head) + cols.asIterable())
 
 internal fun <T> DataFrame<T>.splitByIndices(
@@ -211,7 +214,7 @@ internal fun <T> List<T>.splitByIndices(startIndices: Sequence<Int>): Sequence<L
 
 internal fun <T> T.asNullable() = this as T?
 internal fun <T> List<T>.last(count: Int) = subList(size - count, size)
-public fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries: Boolean = true): Boolean =
+internal fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries: Boolean = true): Boolean =
     if (includeBoundaries) this in left..right
     else this > left && this < right
 
