@@ -4,9 +4,10 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.inward
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
@@ -22,7 +23,7 @@ class Schemas {
         val age: Int
     }
 
-    fun DataFrame<Person>.splitName() = split { name }.by(",").into("firstName", "lastName")
+    fun DataFrame<Person>.splitName() = split { name }.by(",").inward("firstName", "lastName")
     fun DataFrame<Person>.adults() = filter { age > 18 }
 
     @Test
@@ -78,5 +79,23 @@ class Schemas {
                 useSchema<Person>()
             }
         }
+    }
+
+    @Test
+    fun convertTo() {
+        // SampleStart
+        @DataSchema
+        data class Name(val firstName: String, val lastName: String)
+        @DataSchema
+        data class Person(val name: Name, val age: Int?)
+
+        val df = dataFrameOf("name", "age", "weight")(
+            "Merton, Alice", "15", 60.0,
+            "Marley, Bob", "20", 73.5
+        ).split("name").cast<String>().inward("firstName", "lastName")
+
+        val p = df.convertTo<Person>()
+        println(p)
+        // SampleEnd
     }
 }

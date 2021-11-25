@@ -11,8 +11,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.impl.api.ExtraColumns
+import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.toListImpl
-import org.jetbrains.kotlinx.dataframe.impl.api.typedImpl
 import org.jetbrains.kotlinx.dataframe.impl.getType
 
 // region cast
@@ -35,14 +36,9 @@ public fun <T> ColumnAccessor<*>.cast(): ColumnAccessor<T> = this as ColumnAcces
 
 // endregion
 
-// region typed
+// region convertTo
 
-public enum class ExtraColumnsBehavior { Remove, Keep, Fail }
-
-public inline fun <reified T> AnyFrame.typed(
-    allowConversion: Boolean = true,
-    extraColumns: ExtraColumnsBehavior = ExtraColumnsBehavior.Remove
-): DataFrame<T> = typedImpl(getType<T>(), allowConversion, extraColumns)
+public inline fun <reified T> AnyFrame.convertTo(): DataFrame<T> = convertToImpl(getType<T>(), true, ExtraColumns.Remove)
 
 // endregion
 

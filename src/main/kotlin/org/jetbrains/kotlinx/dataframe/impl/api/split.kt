@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.SplitClauseWithTransform
+import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnDataCollector
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
@@ -17,7 +17,7 @@ internal fun valueToList(value: Any?, splitStrings: Boolean = true): List<Any?> 
 }
 
 internal fun <T, C, R> splitImpl(
-    clause: SplitClauseWithTransform<T, C, R>,
+    clause: SplitWithTransform<T, C, R>,
     columnNamesGenerator: ColumnWithPath<C>.(Int) -> List<String>
 ): DataFrame<T> {
     val nrow = clause.df.nrow()

@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.ExtraColumnsBehavior
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
@@ -30,9 +29,11 @@ import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.corr
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.createDataFrame
+import org.jetbrains.kotlinx.dataframe.api.default
 import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.dfsOf
 import org.jetbrains.kotlinx.dataframe.api.digitize
@@ -60,6 +61,7 @@ import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.implode
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.inferType
+import org.jetbrains.kotlinx.dataframe.api.inplace
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.intoColumns
 import org.jetbrains.kotlinx.dataframe.api.intoList
@@ -127,7 +129,6 @@ import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.api.toStr
 import org.jetbrains.kotlinx.dataframe.api.toValueColumn
-import org.jetbrains.kotlinx.dataframe.api.typed
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.update
@@ -148,6 +149,8 @@ import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
+import org.jetbrains.kotlinx.dataframe.impl.api.ExtraColumns
+import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
 import org.jetbrains.kotlinx.dataframe.impl.between
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
@@ -2146,7 +2149,7 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
-    fun typed() {
+    fun convertTo() {
         data class Target(
             val name: String,
             val age: Int,
@@ -2154,31 +2157,31 @@ class DataFrameTests : BaseTest() {
             val weight: Int?
         )
 
-        df.typed<Target>() shouldBe df
-        df.convert { age }.toStr().typed<Target>() shouldBe df
-        df.add("col") { 1 }.typed<Target>() shouldBe df
+        df.convertTo<Target>() shouldBe df
+        df.convert { age }.toStr().convertTo<Target>() shouldBe df
+        df.add("col") { 1 }.convertTo<Target>() shouldBe df
 
         val added = df.add("col") { 1 }
-        added.typed<Target>(extraColumns = ExtraColumnsBehavior.Keep) shouldBe added
+        added.convertToImpl<Target>(getType<Target>(), allowConversion = true, ExtraColumns.Keep) shouldBe added
 
         shouldThrow<IllegalArgumentException> {
-            df.remove { city }.typed<Target>()
+            df.remove { city }.convertTo<Target>()
         }
 
         shouldThrow<IllegalArgumentException> {
-            df.update { name }.at(2).withNull().typed<Target>()
+            df.update { name }.at(2).withNull().convertTo<Target>()
         }
 
         shouldThrow<IllegalArgumentException> {
-            df.convert { age }.toStr().typed<Target>(allowConversion = false)
+            df.convert { age }.toStr().convertToImpl<Target>(getType<Target>(), allowConversion = false, ExtraColumns.Remove)
         }
 
         shouldThrow<IllegalArgumentException> {
-            df.add("col") { 1 }.typed<Target>(extraColumns = ExtraColumnsBehavior.Fail) shouldBe df
+            df.add("col") { 1 }.convertToImpl<Target>(getType<Target>(), allowConversion = true, ExtraColumns.Fail) shouldBe df
         }
 
         val list = df.toListOf<Target>()
-        list shouldBe df.typed<Target>().toList()
+        list shouldBe df.convertTo<Target>().toList()
 
         val listDf = list.createDataFrame()
         listDf shouldBe df.sortColumnsBy { it.name }
@@ -2196,7 +2199,7 @@ class DataFrameTests : BaseTest() {
         val grouped = df.groupBy { city }.toDataFrame("students")
 
         val list = grouped.toListOf<Target>()
-        list shouldBe grouped.typed<Target>().toList()
+        list shouldBe grouped.convertTo<Target>().toList()
 
         val listDf = list.createDataFrame(depth = 2)
         listDf shouldBe grouped.update { getFrameColumn("students") }.with { it.remove("city") }
@@ -2215,7 +2218,7 @@ class DataFrameTests : BaseTest() {
         val grouped = typed.group { age and weight }.into("info")
 
         val list = grouped.toListOf<Target>()
-        list shouldBe grouped.typed<Target>().toList()
+        list shouldBe grouped.convertTo<Target>().toList()
 
         val listDf = list.createDataFrame(depth = 2)
         listDf shouldBe grouped.sortColumnsBy(dfs = true) { it.name }
