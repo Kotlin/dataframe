@@ -35,7 +35,7 @@ df.pivot("city")
 
 Returns `Pivot`: an intermediate object that can be configured for further transformation and aggregation of data.
 
-See [pivot aggregations](aggregatePivot.md)
+See [pivot aggregations](#aggregation)
 
 By default, pivoted column will be replaced with new columns generated from its values. Instead, you can nest new columns as sub-columns of original column using `inward` flag:
 
@@ -142,7 +142,7 @@ df.groupBy("name").pivot("city")
 
 Combination of `pivot` and `groupBy` operations returns `PivotGroupBy` that can be used for further aggregation of data groups within matrix cells. 
 
-See [pivot aggregations](aggregatePivot.md)
+See [pivot aggregations](#aggregation)
 
 To group by all columns except pivoted use `groupByOther`:
 
@@ -169,7 +169,240 @@ df.pivot { city }.groupBy { name }.toDataFrame()
 
 <!---END-->
 
-## pivotCount
+## Aggregation
+
+
+To aggregate data groups in [`Pivot`](pivot.md) or [`PivotGroupBy`](pivot.md#pivot-groupby) with one or several statistics use `aggregate`:
+
+<!---FUN pivotAggregate-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.pivot { city }.aggregate { minBy { age }.name }
+df.pivot { city }.groupBy { name.firstName }.aggregate {
+    meanFor { age and weight } into "means"
+    stdFor { age and weight } into "stds"
+    maxByOrNull { weight }?.name?.lastName into "biggest"
+}
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val city by column<String?>()
+val name by columnGroup()
+val firstName by name.column<String>()
+val age by column<Int>()
+val weight by column<Int?>()
+
+df.pivot { city }.aggregate { minBy(age).name }
+
+df.pivot { city }.groupBy { firstName }.aggregate {
+    meanFor { age and weight } into "means"
+    stdFor { age and weight } into "stds"
+    maxByOrNull(weight)?.name?.lastName into "biggest"
+}
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.pivot("city").aggregate { minBy("age")["name"] }
+
+df.pivot("city").groupBy { "name"["firstName"] }.aggregate {
+    meanFor("age", "weight") into "means"
+    stdFor("age", "weight") into "stds"
+    maxByOrNull("weight")?.getColumnGroup("name")?.get("lastName") into "biggest"
+}
+```
+
+</tab></tabs>
+<!---END-->
+
+Shortcuts for common aggregation functions are also available:
+
+<!---FUN pivotCommonAggregations-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.pivot { city }.maxFor { age and weight }
+df.groupBy { name }.pivot { city }.median { age }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val city by column<String?>()
+val name by columnGroup()
+val age by column<Int>()
+val weight by column<Int?>()
+
+df.pivot { city }.maxFor { age and weight }
+df.groupBy { name }.pivot { city }.median { age }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.pivot("city").maxFor("age", "weight")
+df.groupBy("name").pivot("city").median("age")
+```
+
+</tab></tabs>
+<!---END-->
+
+By default, when aggregation function produces several values for data group, column hierarchy in resulting `DataFrame` will be indexed first by pivot keys and then by the names of aggregated values.
+To reverse this order so that resulting columns will be indexed first by names of aggregated values and then by pivot keys, use `separate=true` flag that is available in multi-result aggregation operations, such as `aggregate` or `<stat>For`:
+
+<!---FUN pivotSeparate-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.pivot { city }.maxFor(separate = true) { age and weight }
+df.pivot { city }.aggregate(separate = true) {
+    min { age } into "min age"
+    maxOrNull { weight } into "max weight"
+}
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val city by column<String?>()
+val age by column<Int>()
+val weight by column<Int?>()
+
+df.pivot { city }.maxFor(separate = true) { age and weight }
+df.pivot { city }.aggregate(separate = true) {
+    min { age } into "min age"
+    maxOrNull { weight } into "max weight"
+}
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.pivot("city").maxFor("age", "weight", separate = true)
+df.pivot("city").aggregate(separate = true) {
+    min("age") into "min age"
+    maxOrNull("weight") into "max weight"
+}
+```
+
+</tab></tabs>
+<!---END-->
+
+By default, any aggregation function will result in `null` value for those matrix cells, where intersection of column and row keys produced an empty data group.
+You can specify default value for any aggregation by `default` infix function. This value will replace all `null` results of aggregation function over non-empty data groups as well.
+To use one default value for all aggregation functions, use `default()` before aggregation.
+
+<!---FUN pivotDefault-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.pivot { city }.groupBy { name }.aggregate { min { age } default 0 }
+df.pivot { city }.groupBy { name }.aggregate {
+    median { age } into "median age" default 0
+    minOrNull { weight } into "min weight" default 100
+}
+df.pivot { city }.groupBy { name }.default(0).min()
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val city by column<String?>()
+val age by column<Int>()
+val weight by column<Int?>()
+val name by columnGroup()
+
+df.pivot { city }.groupBy { name }.aggregate { min { age } default 0 }
+df.pivot { city }.groupBy { name }.aggregate {
+    median { age } into "median age" default 0
+    minOrNull { weight } into "min weight" default 100
+}
+df.pivot { city }.groupBy { name }.default(0).min()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.pivot("city").groupBy("name").aggregate { min("age") default 0 }
+df.pivot("city").groupBy("name").aggregate {
+    median("age") into "median age" default 0
+    minOrNull("weight") into "min weight" default 100
+}
+df.pivot("city").groupBy("name").default(0).min()
+```
+
+</tab></tabs>
+<!---END-->
+
+### Pivot inside aggregate
+
+[pivot](pivot.md) operation can also be used inside `aggregate` body of `GroupBy`. This allows to combine column pivoting with other aggregation functions:
+
+<!---FUN pivotInAggregate-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.groupBy { name.firstName }.aggregate {
+    pivot { city }.aggregate(separate = true) {
+        mean { age } into "mean age"
+        count() into "count"
+    }
+    count() into "total"
+}
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val city by column<String?>()
+val name by columnGroup()
+val firstName by name.column<String>()
+val age by column<Int>()
+
+df.groupBy { firstName }.aggregate {
+    pivot { city }.aggregate(separate = true) {
+        mean { age } into "mean age"
+        count() into "count"
+    }
+    count() into "total"
+}
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy { "name"["firstName"] }.aggregate {
+    pivot("city").aggregate(separate = true) {
+        mean("age") into "mean age"
+        count() into "count"
+    }
+    count() into "total"
+}
+```
+
+</tab></tabs>
+<!---END-->
+
+### pivotCount
 
 Pivots with `Int` count statistics one or several columns preserving all other columns of `DataFrame`.
 
@@ -183,7 +416,7 @@ df.pivot(inward = true) { city }.groupByOther().count()
 
 <!---END-->
 
-## pivotMatches
+### pivotMatches
 
 Pivots with `Boolean` statistics one or several columns preserving all other columns of `DataFrame`.
 

@@ -37,7 +37,7 @@ rows.concat()
 
 <!---END-->
 
-[`GroupBy`](groupBy.md#groupby):
+[`groupBy`](groupBy.md#transformation):
 
 <!---FUN concatGroupBy-->
 
