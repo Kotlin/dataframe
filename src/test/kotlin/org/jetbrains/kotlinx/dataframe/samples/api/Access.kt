@@ -356,6 +356,7 @@ class Access : TestBase() {
     @Test
     fun dropLast() {
         // SampleStart
+        df.dropLast() // default 1
         df.dropLast(5)
         // SampleEnd
     }

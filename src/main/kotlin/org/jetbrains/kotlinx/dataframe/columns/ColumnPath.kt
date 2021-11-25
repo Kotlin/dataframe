@@ -11,7 +11,7 @@ public data class ColumnPath(val path: List<String>) : List<String> by path, Col
 
     public fun parent(): ColumnPath? = if (path.isEmpty()) null else dropLast(1)
 
-    public fun dropLast(size: Int): ColumnPath = ColumnPath(path.dropLast(size))
+    public fun dropLast(size: Int = 1): ColumnPath = ColumnPath(path.dropLast(size))
 
     public operator fun plus(name: String): ColumnPath = ColumnPath(path + name)
 
