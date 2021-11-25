@@ -5,8 +5,6 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.PivotColumnsSelector
-import org.jetbrains.kotlinx.dataframe.api.PivotDsl
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -16,7 +14,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
-import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregatePivotDslImpl
@@ -66,11 +63,6 @@ internal fun <T> DataFrame<T>.getPivotColumnPaths(
     columns: PivotColumnsSelector<T, *>
 ): List<ColumnPath> {
     return getPivotSequences(columns).flatten().map { it.column.path }.distinct()
-}
-
-@JvmName("toColumnSetForPivot")
-internal fun <T, C> PivotColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
-    object : DataFrameReceiver<T>(it.df.cast(), it.allowMissingColumns), PivotDsl<T> {}
 }
 
 internal fun <T, R> aggregatePivot(

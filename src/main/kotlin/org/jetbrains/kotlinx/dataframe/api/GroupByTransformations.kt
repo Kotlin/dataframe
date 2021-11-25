@@ -11,7 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotGroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
-// region pivot GroupedDataFrame
+// region pivot GroupBy
 
 public fun <G> GroupBy<*, G>.pivot(inward: Boolean? = null, columns: ColumnsSelector<G, *>): PivotGroupBy<G> = PivotGroupByImpl(this, columns, inward)
 public fun <G> GroupBy<*, G>.pivot(vararg columns: Column, inward: Boolean? = null): PivotGroupBy<G> = pivot(inward) { columns.toColumns() }
@@ -20,7 +20,7 @@ public fun <G> GroupBy<*, G>.pivot(vararg columns: KProperty<*>, inward: Boolean
 
 // endregion
 
-// region pivot inside GroupedDataFrame aggregate
+// region pivot inside GroupBy aggregate
 
 public fun <T> AggregateGroupedDsl<T>.pivot(inward: Boolean? = null, columns: ColumnsSelector<T, *>): PivotGroupBy<T> =
     GroupByAggregatePivotImpl(this, columns, inward)

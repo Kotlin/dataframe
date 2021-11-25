@@ -11,22 +11,14 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.RowFilter
-import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
-import org.jetbrains.kotlinx.dataframe.impl.api.SortFlag
-import org.jetbrains.kotlinx.dataframe.impl.api.addFlag
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
-import org.jetbrains.kotlinx.dataframe.impl.api.groupByImpl
-import org.jetbrains.kotlinx.dataframe.impl.api.sortByImpl
-import org.jetbrains.kotlinx.dataframe.impl.api.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
@@ -139,7 +131,10 @@ public fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter
 public fun <T> DataFrame<T>.distinct(): DataFrame<T> = distinctBy { all() }
 
 public fun <T, C> DataFrame<T>.distinct(columns: ColumnsSelector<T, C>): DataFrame<T> = select(columns).distinct()
-public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T> = distinct { columns.toColumns() }
+public fun <T> DataFrame<T>.distinct(vararg columns: KProperty<*>): DataFrame<T> = distinct {
+    val set = columns.toColumns()
+    set
+}
 public fun <T> DataFrame<T>.distinct(vararg columns: String): DataFrame<T> = distinct { columns.toColumns() }
 public fun <T> DataFrame<T>.distinct(vararg columns: Column): DataFrame<T> = distinct { columns.toColumns() }
 
@@ -171,72 +166,6 @@ public fun <T> DataFrame<T>.forEachColumn(action: (AnyCol) -> Unit): Unit = colu
 
 public fun <T> DataFrame<T>.forEachColumnIndexed(action: (Int, AnyCol) -> Unit): Unit =
     columns().forEachIndexed(action)
-
-// endregion
-
-// region groupBy
-
-public fun <T> DataFrame<T>.groupBy(moveToTop: Boolean = true, cols: ColumnsSelector<T, *>): GroupBy<T, T> = groupByImpl(moveToTop, cols)
-public fun <T> DataFrame<T>.groupBy(cols: Iterable<Column>): GroupBy<T, T> = groupBy { cols.toColumnSet() }
-public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = groupBy { cols.toColumns() }
-public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupBy<T, T> = groupBy { cols.toColumns() }
-public fun <T> DataFrame<T>.groupBy(vararg cols: Column, moveToTop: Boolean = true): GroupBy<T, T> = groupBy(moveToTop) { cols.toColumns() }
-
-// endregion
-
-// region sort
-
-public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
-
-    public val <C> ColumnSet<C>.desc: ColumnSet<C> get() = addFlag(SortFlag.Reversed)
-    public val String.desc: ColumnSet<Comparable<*>?> get() = cast<Comparable<*>>().desc
-    public val <C> KProperty<C>.desc: ColumnSet<C> get() = toColumnAccessor().desc
-
-    public fun <C> ColumnSet<C?>.nullsLast(flag: Boolean): ColumnSet<C?> =
-        if (flag) addFlag(SortFlag.NullsLast) else this
-
-    public val <C> ColumnSet<C?>.nullsLast: ColumnSet<C?> get() = addFlag(SortFlag.NullsLast)
-    public val String.nullsLast: ColumnSet<Comparable<*>?> get() = cast<Comparable<*>>().nullsLast
-    public val <C> KProperty<C?>.nullsLast: ColumnSet<C?> get() = toColumnAccessor().nullsLast
-}
-
-public typealias SortColumnsSelector<T, C> = Selector<SortDsl<T>, ColumnSet<C>>
-
-public fun <T, C> DataFrame<T>.sortBy(columns: SortColumnsSelector<T, C>): DataFrame<T> = sortByImpl(
-    UnresolvedColumnsPolicy.Fail, columns
-)
-
-public fun <T> DataFrame<T>.sortBy(cols: Iterable<ColumnReference<Comparable<*>?>>): DataFrame<T> =
-    sortBy { cols.toColumnSet() }
-
-public fun <T> DataFrame<T>.sortBy(vararg cols: ColumnReference<Comparable<*>?>): DataFrame<T> =
-    sortBy { cols.toColumns() }
-
-public fun <T> DataFrame<T>.sortBy(vararg cols: String): DataFrame<T> = sortBy { cols.toColumns() }
-public fun <T> DataFrame<T>.sortBy(vararg cols: KProperty<Comparable<*>?>): DataFrame<T> = sortBy { cols.toColumns() }
-
-public fun <T> DataFrame<T>.sortWith(comparator: Comparator<DataRow<T>>): DataFrame<T> {
-    val permutation = rows().sortedWith(comparator).map { it.index }
-    return this[permutation]
-}
-
-public fun <T> DataFrame<T>.sortWith(comparator: (DataRow<T>, DataRow<T>) -> Int): DataFrame<T> =
-    sortWith(Comparator(comparator))
-
-public fun <T, C> DataFrame<T>.sortByDesc(columns: SortColumnsSelector<T, C>): DataFrame<T> {
-    val set = columns.toColumns()
-    return sortByImpl { set.desc }
-}
-
-public fun <T, C> DataFrame<T>.sortByDesc(vararg columns: KProperty<Comparable<C>?>): DataFrame<T> =
-    sortByDesc { columns.toColumns() }
-
-public fun <T> DataFrame<T>.sortByDesc(vararg columns: String): DataFrame<T> = sortByDesc { columns.toColumns() }
-public fun <T, C> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<Comparable<C>?>): DataFrame<T> =
-    sortByDesc { columns.toColumns() }
-
-public fun <T, C> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comparable<C>?>>): DataFrame<T> =
-    sortByDesc { columns.toColumnSet() }
 
 // endregion
 
