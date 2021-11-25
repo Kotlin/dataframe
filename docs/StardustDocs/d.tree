@@ -4,7 +4,7 @@
 
 <product-profile id="d"
                  name="Dataframe"
-                 status="eap"
+                 status="release"
                  start-page="overview.md">
     <toc-element id="gettingStarted.md"/>
     <toc-element id="overview.md"  show-structure-depth="3">
