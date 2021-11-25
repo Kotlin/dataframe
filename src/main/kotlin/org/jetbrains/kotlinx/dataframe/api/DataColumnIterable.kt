@@ -74,7 +74,7 @@ public fun <C> DataColumn<C>.single(): C = values.single()
 
 // region take/drop
 
-public fun <T> DataColumn<T>.dropLast(n: Int): DataColumn<T> = take(size - n)
+public fun <T> DataColumn<T>.dropLast(n: Int = 1): DataColumn<T> = take(size - n)
 public fun <T> DataColumn<T>.takeLast(n: Int): DataColumn<T> = drop(size - n)
 public fun <T> DataColumn<T>.drop(n: Int): DataColumn<T> = when {
     n == 0 -> this

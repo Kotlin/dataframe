@@ -118,7 +118,7 @@ public fun <T> DataFrame<T>.filterBy(column: KProperty<Boolean>): DataFrame<T> =
 
 // region take/drop
 
-public fun <T> DataFrame<T>.dropLast(numRows: Int): DataFrame<T> = take(nrow() - numRows)
+public fun <T> DataFrame<T>.dropLast(numRows: Int = 1): DataFrame<T> = take(nrow() - numRows)
 public fun <T> DataFrame<T>.takeLast(numRows: Int): DataFrame<T> = drop(nrow() - numRows)
 public fun <T> DataFrame<T>.drop(numRows: Int): DataFrame<T> = getRows(numRows until nrow())
 public fun <T> DataFrame<T>.take(numRows: Int): DataFrame<T> = getRows(0 until numRows)

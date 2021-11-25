@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortDesc
 import org.junit.Test
 
-class DataColumnTests: BaseTest() {
+class DataColumnTests : BaseTest() {
 
     @Test
     fun `sort column`() {
