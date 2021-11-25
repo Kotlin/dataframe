@@ -1,17 +1,20 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
+import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.api.SortFlag
 import org.jetbrains.kotlinx.dataframe.impl.api.addFlag
 import org.jetbrains.kotlinx.dataframe.impl.api.sortByImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KProperty
 
 public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
@@ -64,3 +67,6 @@ public fun <T, C> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<Compar
 
 public fun <T, C> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comparable<C>?>>): DataFrame<T> =
     sortByDesc { columns.toColumnSet() }
+
+public fun <T : Comparable<T>> DataColumn<T>.sort(): ValueColumn<T> = DataColumn.createValueColumn(name, values().sorted(), type, false, defaultValue())
+public fun <T : Comparable<T>> DataColumn<T>.sortDesc(): ValueColumn<T> = DataColumn.createValueColumn(name, values().sortedDescending(), type, false, defaultValue())
