@@ -92,26 +92,41 @@ kotlin {
 ## Usage
 
 ### Annotation processing
-Declare data schemas in your code and use them to access data in DataFrame's
+Declare data schemas in your code and use them to access data in DataFrame's.
 A data schema is an interface with properties and no type parameters annotated with `@DataSchema`:
 ```kotlin
 package org.example
 
-import org.jetbrains.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 
 @DataSchema
-interface Example {
+interface Person {
     val age: Int
 }
 ```
-Then execute `build` task to generate type-safe accessors for schemas.
-For each property of the data schema two extension property are generated:
+
+### **Execute `build` task to generate type-safe accessors for schemas:** 
+
 ```kotlin
-@file:Suppress("UNCHECKED_CAST")
 package org.example
 
-val DataFrameBase<Example>.age: DataColumn<Int> get() = this["age"] as DataColumn<Int>
-val DataRowBase<Example>.age: Int get() = this["age"] as Int
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
+
+@DataSchema
+interface Person {
+    val age: Int
+}
+
+fun main() {
+    val df = dataFrameOf("age")(5, 10, 15, 21).cast<Person>()
+    // age only available after executing `build` or `kspKotlin`!
+    val teens = df.filter { age in 10..19 }
+    teens.print()
+}
 ```
 
 #### Visibility
@@ -119,7 +134,7 @@ For schemas with `internal` or `public` modifiers preprocessor will generate `in
 
 ```kotlin
 @DataSchema
-internal interface Example {
+internal interface Person {
     val age: Int
 }
 ```
