@@ -139,41 +139,43 @@ internal interface Person {
 }
 ```
 
-```kotlin
-internal val DataFrameBase<Example>.age: DataColumn<Int> get() = this["age"] as DataColumn<Int>
-internal val DataRowBase<Example>.age: Int get() = this["age"] as Int
-```
-
 ### Schema inference
 Specify schema's configurations in `dataframes`  and execute the `build` task.
-For the following configuration, file `GeneratedRawCityPopulation` will be generated.
+For the following configuration, file `Repository.Generated.kt` will be generated.
 See [reference](#reference) and [examples](#examples) for more details.
+
+#### build.gradle
 ```kotlin
 dataframes {
     schema {
-        data = "https://datalore-docs.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv"
-        name = "org.example.RawCityPopulation"
+        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
+        name = "org.example.Repository"
     }
 }
 ```
 
-#### GeneratedRawCityPopulation.kt
 ```kotlin
 package org.example
 
-@DataSchema(isOpen = false)
-interface RawCityPopulation{
-    @ColumnName("City / Urban area")
-    val `City - Urban area`: String
-    val Country: String
-    val Density: String
-    @ColumnName("Land area")
-    val `Land area`: String
-    val Population: String
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.count
+import org.jetbrains.kotlinx.dataframe.api.maxBy
+import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.io.read
+
+const val REPOSITORIES_DATA = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
+
+fun main() {
+    val df = DataFrame.read(REPOSITORIES_DATA).cast<Repository>()
+    // Use generated properties to access data in rows
+    df.maxBy { stargazers_count }.print()
+    // Or to access columns in dataframe.
+    print(df.full_name.count { it.contains("kotlin") })
 }
 ```
-   
-## Reference 
+
+## Reference
 ```kotlin
 dataframes {
     sourceSet = "mySources" // [optional; default: "main"]
