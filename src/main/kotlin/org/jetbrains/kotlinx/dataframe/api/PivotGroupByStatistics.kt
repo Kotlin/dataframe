@@ -151,34 +151,34 @@ public inline fun <T, reified R : Number> PivotGroupBy<T>.sumOf(crossinline expr
 
 // region mean
 
-public fun <T> PivotGroupBy<T>.mean(skipNA: Boolean = false, separate: Boolean = false): DataFrame<T> = meanFor(skipNA, separate, numberColumns())
+public fun <T> PivotGroupBy<T>.mean(skipNA: Boolean = defaultSkipNA, separate: Boolean = false): DataFrame<T> = meanFor(skipNA, separate, numberColumns())
 
 public fun <T, C : Number> PivotGroupBy<T>.meanFor(
-    skipNA: Boolean = false,
+    skipNA: Boolean = defaultSkipNA,
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, C?>
 ): DataFrame<T> = Aggregators.mean(skipNA).aggregateFor(this, separate, columns)
 public fun <T> PivotGroupBy<T>.meanFor(
     vararg columns: String,
-    skipNA: Boolean = false,
+    skipNA: Boolean = defaultSkipNA,
     separate: Boolean = false
 ): DataFrame<T> = meanFor(skipNA, separate) { columns.toNumberColumns() }
 public fun <T, C : Number> PivotGroupBy<T>.meanFor(
     vararg columns: ColumnReference<C?>,
-    skipNA: Boolean = false,
+    skipNA: Boolean = defaultSkipNA,
     separate: Boolean = false
 ): DataFrame<T> = meanFor(skipNA, separate) { columns.toColumns() }
 public fun <T, C : Number> PivotGroupBy<T>.meanFor(
     vararg columns: KProperty<C?>,
-    skipNA: Boolean = false,
+    skipNA: Boolean = defaultSkipNA,
     separate: Boolean = false
 ): DataFrame<T> = meanFor(skipNA, separate) { columns.toColumns() }
 
-public fun <T, R : Number> PivotGroupBy<T>.mean(skipNA: Boolean = true, columns: ColumnsSelector<T, R?>): DataFrame<T> =
+public fun <T, R : Number> PivotGroupBy<T>.mean(skipNA: Boolean = defaultSkipNA, columns: ColumnsSelector<T, R?>): DataFrame<T> =
     Aggregators.mean(skipNA).aggregateAll(this, columns)
 
 public inline fun <T, reified R : Number> PivotGroupBy<T>.meanOf(
-    skipNA: Boolean = false,
+    skipNA: Boolean = defaultSkipNA,
     crossinline expression: RowExpression<T, R?>
 ): DataFrame<T> =
     Aggregators.mean(skipNA).aggregateOf(this, expression)

@@ -132,34 +132,34 @@ public inline fun <T, reified R : Number> Pivot<T>.sumOf(crossinline expression:
 
 // region mean
 
-public fun <T> Pivot<T>.mean(skipNA: Boolean = false, separate: Boolean = false): DataRow<T> = meanFor(skipNA, separate, numberColumns())
+public fun <T> Pivot<T>.mean(skipNA: Boolean = defaultSkipNA, separate: Boolean = false): DataRow<T> = meanFor(skipNA, separate, numberColumns())
 
 public fun <T, C : Number> Pivot<T>.meanFor(
-    skipNA: Boolean = false,
+    skipNA: Boolean = defaultSkipNA,
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, C?>
 ): DataRow<T> = delegate { meanFor(skipNA, separate, columns) }
 public fun <T> Pivot<T>.meanFor(
     vararg columns: String,
-    skipNA: Boolean = false,
+    skipNA: Boolean = defaultSkipNA,
     separate: Boolean = false
 ): DataRow<T> = meanFor(skipNA, separate) { columns.toNumberColumns() }
 public fun <T, C : Number> Pivot<T>.meanFor(
     vararg columns: ColumnReference<C?>,
-    skipNA: Boolean = false,
+    skipNA: Boolean = defaultSkipNA,
     separate: Boolean = false
 ): DataRow<T> = meanFor(skipNA, separate) { columns.toColumns() }
 public fun <T, C : Number> Pivot<T>.meanFor(
     vararg columns: KProperty<C?>,
-    skipNA: Boolean = false,
+    skipNA: Boolean = defaultSkipNA,
     separate: Boolean = false
 ): DataRow<T> = meanFor(skipNA, separate) { columns.toColumns() }
 
-public fun <T, R : Number> Pivot<T>.mean(skipNA: Boolean = true, columns: ColumnsSelector<T, R?>): DataRow<T> =
+public fun <T, R : Number> Pivot<T>.mean(skipNA: Boolean = defaultSkipNA, columns: ColumnsSelector<T, R?>): DataRow<T> =
     delegate { mean(skipNA, columns) }
 
 public inline fun <T, reified R : Number> Pivot<T>.meanOf(
-    skipNA: Boolean = false,
+    skipNA: Boolean = defaultSkipNA,
     crossinline expression: RowExpression<T, R?>
 ): DataRow<T> =
     delegate { meanOf(skipNA, expression) }

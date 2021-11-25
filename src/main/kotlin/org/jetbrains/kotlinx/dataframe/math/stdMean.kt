@@ -1,10 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.math
 
+import org.jetbrains.kotlinx.dataframe.api.defaultSkipNA
 import java.math.BigDecimal
 import kotlin.math.sqrt
 
 @JvmName("doubleStdMean")
-public fun Iterable<Double>.stdMean(skipNA: Boolean = true): Pair<Double, Double> {
+public fun Iterable<Double>.stdMean(skipNA: Boolean = defaultSkipNA): Pair<Double, Double> {
     val m = mean(skipNA)
     return sqrt(
         fold(0.0) { acc, el ->
@@ -15,7 +16,7 @@ public fun Iterable<Double>.stdMean(skipNA: Boolean = true): Pair<Double, Double
 }
 
 @JvmName("floatStdMean")
-public fun Iterable<Float>.stdMean(skipNA: Boolean = true): Pair<Double, Double> {
+public fun Iterable<Float>.stdMean(skipNA: Boolean = defaultSkipNA): Pair<Double, Double> {
     val m = mean(skipNA)
     return sqrt(
         fold(0.0) { acc, el ->
