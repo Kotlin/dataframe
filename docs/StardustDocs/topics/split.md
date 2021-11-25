@@ -11,6 +11,7 @@ The following types of columns can be splitted by default:
 
 ```kotlin
 df.split { columns }
+    [.cast<Type>()]
     [.by(delimeters) | .by { splitter } | .match(regex)] // how to split cell value
     [.default(value)] // how to fill nulls
     .into(columnNames) [ { columnNamesGenerator } ] | .inward(columnNames) [ { columnNamesGenerator } | .inplace() | .intoRows() | .intoColumns() ] // where to store results

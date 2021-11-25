@@ -3,11 +3,9 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.ExtraColumnsBehavior
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -20,17 +18,19 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
 
+public enum class ExtraColumns { Remove, Keep, Fail }
+
 @PublishedApi
-internal fun <T> AnyFrame.typedImpl(type: KType, allowConversion: Boolean, extraColumns: ExtraColumnsBehavior): DataFrame<T> {
+internal fun <T> AnyFrame.convertToImpl(type: KType, allowConversion: Boolean, extraColumns: ExtraColumns): DataFrame<T> {
     fun AnyFrame.convertToSchema(schema: DataFrameSchema): AnyFrame {
         var visited = 0
         val newColumns = columns().mapNotNull {
             val targetColumn = schema.columns[it.name()]
             if (targetColumn == null) {
                 when (extraColumns) {
-                    ExtraColumnsBehavior.Fail -> throw IllegalArgumentException("Column `${it.name}` is not present in target class")
-                    ExtraColumnsBehavior.Keep -> it
-                    ExtraColumnsBehavior.Remove -> null
+                    ExtraColumns.Fail -> throw IllegalArgumentException("Column `${it.name}` is not present in target class")
+                    ExtraColumns.Keep -> it
+                    ExtraColumns.Remove -> null
                 }
             } else {
                 visited++
@@ -63,7 +63,7 @@ internal fun <T> AnyFrame.typedImpl(type: KType, allowConversion: Boolean, extra
                                 }
                                 val frameColumn = it.asFrameColumn()
                                 val frameSchema = (targetColumn as ColumnSchema.Frame).schema
-                                val frames = frameColumn.values().map { it?.convertToSchema(frameSchema) }
+                                val frames = frameColumn.values().map { it.convertToSchema(frameSchema) }
                                 DataColumn.createFrameColumn(it.name(), frames, schema = lazy { frameSchema })
                             }
                         }

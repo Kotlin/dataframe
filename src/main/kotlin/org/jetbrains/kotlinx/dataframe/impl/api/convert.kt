@@ -22,7 +22,6 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.util.TimeZone
-import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSubtypeOf
@@ -94,13 +93,13 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
         val res = createConverter(from.withNullability(false), to) ?: return null
         return { res(it) }
     }
-    val fromClass = from.classifier as KClass<*>
-    val toClass = to.classifier as KClass<*>
+    val fromClass = from.jvmErasure
+    val toClass = to.jvmErasure
 
     if (fromClass == toClass) return { it }
 
     return when {
-        fromClass == String::class -> Parsers[to]?.toConverter(options)
+        fromClass == String::class -> Parsers[to.withNullability(false)]?.toConverter(options)
         toClass == String::class -> convert<Any> { it.toString() }
         fromClass == Number::class -> when (toClass) {
             Double::class -> convert<Number> { it.toDouble() }

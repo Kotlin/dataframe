@@ -11,8 +11,8 @@ import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.MergeClause
 import org.jetbrains.kotlinx.dataframe.api.Pivot
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
-import org.jetbrains.kotlinx.dataframe.api.SplitClause
-import org.jetbrains.kotlinx.dataframe.api.SplitClauseWithTransform
+import org.jetbrains.kotlinx.dataframe.api.Split
+import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
@@ -61,8 +61,8 @@ internal class Integration : JupyterIntegration() {
             render<GroupBy<*, *>> ({ it.toDataFrame() }, { "GroupBy" })
             render<Pivot<*>> { it.toDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
             render<PivotGroupBy<*>> { it.toDataFrame().toHTML(config.display) { "PivotGroupBy: ${it.size}" } }
-            render<SplitClauseWithTransform<*, *, *>> ({ it.into() }, { "Split" })
-            render<SplitClause<*, *>> ({ it.toDataFrame() }, { "Split" })
+            render<SplitWithTransform<*, *, *>> ({ it.into() }, { "Split" })
+            render<Split<*, *>> ({ it.toDataFrame() }, { "Split" })
             render<MergeClause<*, *, *>> ({ it.into("merged") }, { "Merge" })
             render<GatherClause<*, *, *, *>> ({ it.into("key", "value") }, { "Gather" })
             render<IMG> { HTML("<img src=\"${it.url}\"/>") }
