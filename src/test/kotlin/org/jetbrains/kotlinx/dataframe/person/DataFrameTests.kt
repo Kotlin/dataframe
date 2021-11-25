@@ -125,7 +125,6 @@ import org.jetbrains.kotlinx.dataframe.api.toDouble
 import org.jetbrains.kotlinx.dataframe.api.toInt
 import org.jetbrains.kotlinx.dataframe.api.toList
 import org.jetbrains.kotlinx.dataframe.api.toListOf
-import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.api.toStr
 import org.jetbrains.kotlinx.dataframe.api.toValueColumn
@@ -141,7 +140,6 @@ import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.api.withZero
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
-import org.jetbrains.kotlinx.dataframe.columnMany
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.size
@@ -1132,7 +1130,7 @@ class DataFrameTests : BaseTest() {
         val others = other.cast<List<String>>()
         val sum by column<Int>()
 
-        val names = typed.name.distinct().toMany()
+        val names = typed.name.distinct().toList()
 
         val src = typed.select { name }
             .add(others) { names }
@@ -1195,7 +1193,7 @@ class DataFrameTests : BaseTest() {
     fun splitRows() {
         val selected = typed.select { name and city }
         val nested = selected.implode(dropNulls = false) { city }
-        val mergedCity = columnMany<String?>("city")
+        val mergedCity = column<List<String?>>("city")
         val res = nested.split { mergedCity }.intoRows()
         res.sortBy { name } shouldBe selected.sortBy { name }
     }
@@ -1258,7 +1256,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun splitCol() {
         val merged = typed.merge { age and city and weight }.into("info")
-        val info by columnMany<Any>()
+        val info by column<List<Any>>()
         val res = merged.split(info).into("age", "city", "weight")
         res shouldBe typed
     }
@@ -1332,7 +1330,7 @@ class DataFrameTests : BaseTest() {
         val merged = typed.merge { name and city }.by(", ").into("nameAndCity")
             .merge { age and weight }.into("info")
         val nameAndCity by column<String>()
-        val info by columnMany<Number?>()
+        val info by column<List<Number?>>()
         val res = merged.split { nameAndCity }.into("name", "city").split(info).into("age", "weight")
         val expected = typed.update { city }.with { it.toString() }.move { city }.to(1)
         res shouldBe expected

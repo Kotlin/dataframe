@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -87,8 +86,6 @@ public fun <T> DataColumn<T?>.asNotNullable(): DataColumn<T> {
     return this as DataColumn<T>
 }
 
-public fun <T> BaseColumn<T>.toMany(): List<T> = toList()
-
 // endregion
 
 // region ColumnGroup
@@ -147,15 +144,7 @@ public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataCol
 public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): DataColumn<T> =
     DataColumn.create(ref.name(), asList()).forceResolve()
 
-public fun <T> Iterable<T>.toMany(): List<T> = asList()
-
 public fun Iterable<String>.toPath(): ColumnPath = ColumnPath(asList())
-
-// endregion
-
-// region Sequence
-
-public fun <T> Sequence<T>.toMany(): List<T> = toList()
 
 // endregion
 

@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.baseType
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
-import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
+import org.jetbrains.kotlinx.dataframe.impl.getListType
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -34,9 +34,9 @@ internal fun concatImpl(dataFrames: List<AnyFrame>): AnyFrame {
         } else {
             var nulls = false
             val types = mutableSetOf<KType>()
-            var manyNulls = false
+            var listOfNullable = false
             val defaultValue = columns.firstNotNullResult { it?.defaultValue() }
-            var hasMany = false
+            var hasList = false
             val list = columns.flatMapIndexed { index, col ->
                 if (col != null) {
                     val type = col.type()
@@ -44,8 +44,8 @@ internal fun concatImpl(dataFrames: List<AnyFrame>): AnyFrame {
                         val typeArgument = type.arguments[0].type
                         if (typeArgument != null) {
                             types.add(typeArgument)
-                            if (!manyNulls) manyNulls = typeArgument.isMarkedNullable
-                            hasMany = true
+                            if (!listOfNullable) listOfNullable = typeArgument.isMarkedNullable
+                            hasList = true
                         }
                     } else {
                         types.add(type)
@@ -61,8 +61,8 @@ internal fun concatImpl(dataFrames: List<AnyFrame>): AnyFrame {
 
             val guessType = types.size > 1
             val baseType = baseType(types)
-            val targetType = if (guessType || !hasMany) baseType.withNullability(nulls)
-            else List::class.createTypeWithArgument(baseType.withNullability(manyNulls))
+            val targetType = if (guessType || !hasList) baseType.withNullability(nulls)
+            else getListType(baseType.withNullability(listOfNullable))
             guessColumnType(name, list, targetType, guessType, defaultValue)
         }
     }

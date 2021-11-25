@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -106,7 +105,7 @@ internal fun fromJsonList(records: List<*>): AnyFrame {
                     parsed.isSingleUnnamedColumn() -> {
                         val col = parsed.getColumn(0)
                         val elementType = col.type
-                        val values = col.values.asList().splitByIndices(startIndices.asSequence()).toMany()
+                        val values = col.values.asList().splitByIndices(startIndices.asSequence()).toList()
                         DataColumn.createValueColumn(colName, values, List::class.createType(listOf(KTypeProjection.invariant(elementType))))
                     }
                     else -> DataColumn.createFrameColumn(colName, parsed, startIndices)

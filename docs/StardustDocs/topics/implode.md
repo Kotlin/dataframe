@@ -7,7 +7,7 @@ Returns `DataFrame` where values in given columns are merged into lists grouped 
 This is reverse operation to [`explode`](explode.md)
 
 Imploded columns will change their types:
-* `T` to `Many<T>`
+* `T` to `List<T>`
 * `DataRow` to `DataFrame`
 
 Note that imploded [`ColumnGroup`](DataColumn.md#columngroup) will convert into [`FrameColumn`](DataColumn.md#framecolumn)

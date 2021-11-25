@@ -164,7 +164,7 @@ df.groupBy("city").meanOf("mean ratio") {
 <!---END-->
 
 To get all column values for every group without aggregation use `values` function:
-* for [ValueColumn](DataColumn.md#valuecolumn) of type `T` it will gather group values into lists of type `Many<T>`
+* for [ValueColumn](DataColumn.md#valuecolumn) of type `T` it will gather group values into lists of type `List<T>`
 * for [ColumnGroup](DataColumn.md#columngroup) it will gather group values into `DataFrame` and convert [ColumnGroup](DataColumn.md#columngroup) into [FrameColumn](DataColumn.md#framecolumn)
 
 <!---FUN groupByWithoutAggregation-->
