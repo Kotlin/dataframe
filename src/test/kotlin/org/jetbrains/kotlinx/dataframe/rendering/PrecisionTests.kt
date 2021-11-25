@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.rendering
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.impl.precision
+import org.jetbrains.kotlinx.dataframe.io.defaultPrecision
 import org.jetbrains.kotlinx.dataframe.io.format
 import org.junit.Test
 
@@ -12,11 +13,12 @@ class PrecisionTests {
     fun precision() {
         columnOf(1.2, 3.2).precision() shouldBe 1
         columnOf(1.1232, 3.2).precision() shouldBe 4
-        columnOf(1.1220001, 12313).precision() shouldBe 7
+        columnOf(1.1220001, 12313).precision() shouldBe defaultPrecision
         columnOf(1, 2).precision() shouldBe 0
         columnOf(1.0, 2).precision() shouldBe 1
         columnOf(123121.0, -1231.0).precision() shouldBe 1
         columnOf(123121.00001, -1231.120).precision() shouldBe 5
+        columnOf(0.000343434343434343434343).precision() shouldBe defaultPrecision
     }
 
     @Test

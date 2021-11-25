@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.io.defaultPrecision
 import org.jetbrains.kotlinx.dataframe.typeClass
 import java.math.BigDecimal
 
@@ -11,7 +12,7 @@ internal fun <T : Number> DataColumn<T?>.precision(): Int {
         BigDecimal::class -> values().maxOf { (it as? BigDecimal)?.scale() ?: 1 }
         Number::class -> values().maxOf { (it as? Number)?.scale() ?: 0 }
         else -> 0
-    }
+    }.coerceAtMost(defaultPrecision)
 }
 
 internal fun Double.scale() = if (isFinite()) toBigDecimal().scale() else 0
