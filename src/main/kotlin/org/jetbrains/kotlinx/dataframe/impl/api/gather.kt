@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.GatherClause
+import org.jetbrains.kotlinx.dataframe.api.Gather
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.convert
@@ -17,7 +17,7 @@ import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.column
 
-internal fun <T, C, K, R> GatherClause<T, C, K, R>.gatherImpl(
+internal fun <T, C, K, R> Gather<T, C, K, R>.gatherImpl(
     namesTo: String? = null,
     valuesTo: String? = null,
 ): DataFrame<T> {

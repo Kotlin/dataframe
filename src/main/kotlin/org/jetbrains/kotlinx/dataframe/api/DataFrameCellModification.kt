@@ -567,19 +567,19 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.inplace(): DataFrame<T> = df.co
 
 // region merge
 
-public fun <T, C> DataFrame<T>.merge(selector: ColumnsSelector<T, C>): MergeClause<T, C, List<C>> =
-    MergeClause(this, selector, false, { it })
+public fun <T, C> DataFrame<T>.merge(selector: ColumnsSelector<T, C>): Merge<T, C, List<C>> =
+    Merge(this, selector, false, { it })
 
-public fun <T> DataFrame<T>.merge(vararg columns: String): MergeClause<T, Any?, List<Any?>> =
+public fun <T> DataFrame<T>.merge(vararg columns: String): Merge<T, Any?, List<Any?>> =
     merge { columns.toColumns() }
 
-public fun <T, C> DataFrame<T>.merge(vararg columns: ColumnReference<C>): MergeClause<T, C, List<C>> =
+public fun <T, C> DataFrame<T>.merge(vararg columns: ColumnReference<C>): Merge<T, C, List<C>> =
     merge { columns.toColumns() }
 
-public fun <T, C> DataFrame<T>.merge(vararg columns: KProperty<C>): MergeClause<T, C, List<C>> =
+public fun <T, C> DataFrame<T>.merge(vararg columns: KProperty<C>): Merge<T, C, List<C>> =
     merge { columns.toColumns() }
 
-public data class MergeClause<T, C, R>(
+public data class Merge<T, C, R>(
     @PublishedApi
     internal val df: DataFrame<T>,
     @PublishedApi
@@ -590,15 +590,15 @@ public data class MergeClause<T, C, R>(
     internal val transform: DataRow<T>.(List<C>) -> R,
 )
 
-public fun <T, C, R> MergeClause<T, C, R>.notNull(): MergeClause<T, C, R> = copy(notNull = true)
+public fun <T, C, R> Merge<T, C, R>.notNull(): Merge<T, C, R> = copy(notNull = true)
 
-public fun <T, C, R> MergeClause<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
-public fun <T, C, R> MergeClause<T, C, R>.into(column: ColumnAccessor<R>): DataFrame<T> = into(column.path())
+public fun <T, C, R> Merge<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
+public fun <T, C, R> Merge<T, C, R>.into(column: ColumnAccessor<R>): DataFrame<T> = into(column.path())
 
-public fun <T, C, R> MergeClause<T, C, R>.intoList(): List<R> =
+public fun <T, C, R> Merge<T, C, R>.intoList(): List<R> =
     df.select(selector).rows().map { transform(it, it.values() as List<C>) }
 
-public fun <T, C, R> MergeClause<T, C, R>.into(columnPath: ColumnPath): DataFrame<T> {
+public fun <T, C, R> Merge<T, C, R>.into(columnPath: ColumnPath): DataFrame<T> {
     val grouped = df.move(selector).under { columnPath }
     val res = grouped.convert { getColumnGroup(columnPath) }.withRowCellImpl(null) {
         val srcRow = df[index()]
@@ -613,15 +613,15 @@ public fun <T, C, R> MergeClause<T, C, R>.into(columnPath: ColumnPath): DataFram
     return res
 }
 
-public fun <T, C, R> MergeClause<T, C, R>.asStrings(): MergeClause<T, C, String> = by(", ")
-public fun <T, C, R> MergeClause<T, C, R>.by(
+public fun <T, C, R> Merge<T, C, R>.asStrings(): Merge<T, C, String> = by(", ")
+public fun <T, C, R> Merge<T, C, R>.by(
     separator: CharSequence = ", ",
     prefix: CharSequence = "",
     postfix: CharSequence = "",
     limit: Int = -1,
     truncated: CharSequence = "..."
-): MergeClause<T, C, String> =
-    MergeClause(df, selector, notNull) {
+): Merge<T, C, String> =
+    Merge(df, selector, notNull) {
         it.joinToString(
             separator = separator,
             prefix = prefix,
@@ -631,8 +631,8 @@ public fun <T, C, R> MergeClause<T, C, R>.by(
         )
     }
 
-public inline fun <T, C, R, reified V> MergeClause<T, C, R>.by(crossinline transform: DataRow<T>.(R) -> V): MergeClause<T, C, V> =
-    MergeClause(df, selector, notNull) { transform(this@by.transform(this, it)) }
+public inline fun <T, C, R, reified V> Merge<T, C, R>.by(crossinline transform: DataRow<T>.(R) -> V): Merge<T, C, V> =
+    Merge(df, selector, notNull) { transform(this@by.transform(this, it)) }
 
 // endregion
 
