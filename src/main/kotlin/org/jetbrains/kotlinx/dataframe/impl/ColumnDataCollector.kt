@@ -14,7 +14,7 @@ import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
-public interface DataCollector<T> {
+internal interface DataCollector<T> {
 
     public fun add(value: T)
     public val data: List<T?>
