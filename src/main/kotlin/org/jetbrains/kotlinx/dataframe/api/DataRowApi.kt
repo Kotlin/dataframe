@@ -29,13 +29,13 @@ public fun AnyRow.namedValues(): List<NameValuePair<Any?>> =
 
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataRow<T>.diff(expression: RowExpression<T, Double>): Double = prev()?.let { p -> expression(this, this) - expression(p, p) } ?: .0
+public fun <T> DataRow<T>.diff(expression: RowExpression<T, Double>): Double? = prev()?.let { p -> expression(this, this) - expression(p, p) }
 
-public fun <T> DataRow<T>.diff(expression: RowExpression<T, Int>): Int = prev()?.let { p -> expression(this, this) - expression(p, p) } ?: 0
+public fun <T> DataRow<T>.diff(expression: RowExpression<T, Int>): Int? = prev()?.let { p -> expression(this, this) - expression(p, p) }
 
-public fun <T> DataRow<T>.diff(expression: RowExpression<T, Long>): Long = prev()?.let { p -> expression(this, this) - expression(p, p) } ?: 0
+public fun <T> DataRow<T>.diff(expression: RowExpression<T, Long>): Long? = prev()?.let { p -> expression(this, this) - expression(p, p) }
 
-public fun <T> DataRow<T>.diff(expression: RowExpression<T, Float>): Float = prev()?.let { p -> expression(this, this) - expression(p, p) } ?: .0f
+public fun <T> DataRow<T>.diff(expression: RowExpression<T, Float>): Float? = prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 public fun AnyRow.ncol(): Int = df().ncol()
 public fun AnyRow.columnNames(): List<String> = df().columnNames()

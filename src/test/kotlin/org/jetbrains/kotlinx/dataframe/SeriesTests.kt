@@ -44,7 +44,7 @@ class SeriesTests {
         val withDiff = typed
             .sortBy { city and day }
             .groupBy { city }
-            .add("diff") { diff { temp } }
+            .add("diff") { diff { temp } ?: 0 }
             .concat()
 
         val srcData = typed.rows().map { (it.city to it.day) to it.temp }.toMap()
