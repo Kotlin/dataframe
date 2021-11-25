@@ -7,11 +7,11 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.CreateDataFrameDsl
 import org.jetbrains.kotlinx.dataframe.api.TraversePropertiesDsl
 import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
-import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
+import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
+import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
 import java.time.temporal.Temporal
 import kotlin.reflect.KClass
@@ -129,11 +129,11 @@ internal fun convertToDataFrame(
                 else {
                     val elementClass = (elementType.classifier as KClass<*>)
                     if (elementClass.isValueType) {
-                        val manyType = List::class.createTypeWithArgument(elementType).withNullability(nullable)
-                        val manyValues = values.map {
-                            (it as? Iterable<*>)?.toMany()
+                        val listType = getListType(elementType).withNullability(nullable)
+                        val listValues = values.map {
+                            (it as? Iterable<*>)?.asList()
                         }
-                        DataColumn.createValueColumn(it.name, manyValues, manyType)
+                        DataColumn.createValueColumn(it.name, listValues, listType)
                     } else {
                         val frames = values.map {
                             if (it == null) DataFrame.empty()

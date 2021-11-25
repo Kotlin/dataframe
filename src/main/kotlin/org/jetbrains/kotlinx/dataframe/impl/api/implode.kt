@@ -7,9 +7,9 @@ import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.replace
-import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 
@@ -19,7 +19,7 @@ internal fun <T, C> DataFrame<T>.implodeImpl(dropNulls: Boolean = false, columns
             val column = it
             val filterNulls = dropNulls && column.hasNulls()
             val value = when (column.kind()) {
-                ColumnKind.Value -> column.toList().let { if (filterNulls) (it as List<Any?>).filterNotNull() else it }.toMany()
+                ColumnKind.Value -> column.toList().let { if (filterNulls) (it as List<Any?>).filterNotNull() else it }.asList()
                 ColumnKind.Group -> column.asColumnGroup().asDataFrame()
                 ColumnKind.Frame -> column.asFrameColumn().concat()
             }

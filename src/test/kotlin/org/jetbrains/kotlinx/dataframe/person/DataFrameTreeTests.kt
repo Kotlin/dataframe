@@ -64,7 +64,6 @@ import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
-import org.jetbrains.kotlinx.dataframe.api.toMany
 import org.jetbrains.kotlinx.dataframe.api.toTop
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.api.ungroup
@@ -280,7 +279,7 @@ class DataFrameTreeTests : BaseTest() {
         val typed2 = df2.cast<GroupedPerson>()
 
         val expected = modified.cast<Person>().groupBy { name and city }.map {
-            val value = if (key.city == "Moscow") group.age.toMany()
+            val value = if (key.city == "Moscow") group.age.toList()
             else group.age[0]
             (key.name to key.city.toString()) to value
         }.plus("Bob" to "Moscow" to emptyList<Int>()).toMap()

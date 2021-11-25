@@ -46,9 +46,6 @@ public fun ColumnGroupReference.frameColumn(): ColumnDelegate<AnyFrame> = Column
 public fun ColumnGroupReference.frameColumn(name: String): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(path() + name)
 public fun ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(this.path() + path)
 
-public fun <T> columnMany(): ColumnDelegate<List<T>> = column()
-public fun <T> columnMany(name: String): ColumnAccessor<List<T>> = column(name)
-
 public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null) {
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.name)
 
