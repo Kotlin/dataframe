@@ -6,9 +6,9 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
-import org.jetbrains.kotlinx.dataframe.api.GatherClause
+import org.jetbrains.kotlinx.dataframe.api.Gather
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
-import org.jetbrains.kotlinx.dataframe.api.MergeClause
+import org.jetbrains.kotlinx.dataframe.api.Merge
 import org.jetbrains.kotlinx.dataframe.api.Pivot
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.Split
@@ -63,8 +63,8 @@ internal class Integration : JupyterIntegration() {
             render<PivotGroupBy<*>> { it.toDataFrame().toHTML(config.display) { "PivotGroupBy: ${it.size}" } }
             render<SplitWithTransform<*, *, *>> ({ it.into() }, { "Split" })
             render<Split<*, *>> ({ it.toDataFrame() }, { "Split" })
-            render<MergeClause<*, *, *>> ({ it.into("merged") }, { "Merge" })
-            render<GatherClause<*, *, *, *>> ({ it.into("key", "value") }, { "Gather" })
+            render<Merge<*, *, *>> ({ it.into("merged") }, { "Merge" })
+            render<Gather<*, *, *, *>> ({ it.into("key", "value") }, { "Gather" })
             render<IMG> { HTML("<img src=\"${it.url}\"/>") }
         }
 
