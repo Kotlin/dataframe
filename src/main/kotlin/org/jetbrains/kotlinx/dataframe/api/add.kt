@@ -22,14 +22,14 @@ public fun <T> DataFrame<T>.add(cols: Iterable<AnyCol>): DataFrame<T> = this + c
 public fun <T> DataFrame<T>.add(vararg other: AnyFrame): DataFrame<T> = add(other.flatMap { it.columns() })
 
 public interface AddDataRow<out T> : DataRow<T> {
-    public fun <C> AnyRow.added(): C
+    public fun <C> AnyRow.new(): C
 }
 
 internal class AddDataRowImpl<T>(index: Int, owner: DataFrame<T>, private val container: List<*>) :
     DataRowImpl<T>(index, owner),
     AddDataRow<T> {
 
-    override fun <C> AnyRow.added() = container[index] as C
+    override fun <C> AnyRow.new() = container[index] as C
 }
 
 public typealias AddExpression<T, C> = AddDataRow<T>.(AddDataRow<T>) -> C
