@@ -100,7 +100,8 @@ These functions will work for any `DataFrame` that matches `Person` schema:
 ```kotlin
 val df = dataFrameOf("name", "age", "weight")(
     "Merton, Alice", 15, 60.0,
-    "Marley, Bob", 20, 73.5)
+    "Marley, Bob", 20, 73.5
+)
 ```
 
 <!---END-->
@@ -114,10 +115,10 @@ val DataRowBase<DataFrameType>.age: Double get() = this["weight"] as Int
 ```
 Despite `df` has additional column `weight`, previously defined functions for `DataFrame<Person>` work for it:
 
-<!---FUN splitName-->
+<!---FUN splitNameWorks-->
 
 ```kotlin
-
+df.splitName()
 ```
 
 <!---END-->
@@ -128,10 +129,10 @@ Despite `df` has additional column `weight`, previously defined functions for `D
  1    Marley      Bob  20 73.125
 ```
 
-<!---FUN adults-->
+<!---FUN adultsWorks-->
 
 ```kotlin
-
+df.adults()
 ```
 
 <!---END-->

@@ -46,7 +46,7 @@ class Schemas {
     }
 
     @Test
-    fun splitName() {
+    fun splitNameWorks() {
         val df = dataFrameOf("name", "age", "weight")(
             "Merton, Alice", 15, 60.0,
             "Marley, Bob", 20, 73.5
@@ -57,7 +57,7 @@ class Schemas {
     }
 
     @Test
-    fun adults() {
+    fun adultsWorks() {
         val df = dataFrameOf("name", "age", "weight")(
             "Merton, Alice", 15, 60.0,
             "Marley, Bob", 20, 73.5
