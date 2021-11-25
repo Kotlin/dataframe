@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
-import org.jetbrains.kotlinx.dataframe.prev
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.full.withNullability

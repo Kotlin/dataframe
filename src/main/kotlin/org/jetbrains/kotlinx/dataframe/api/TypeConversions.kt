@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.asValues
@@ -123,6 +124,9 @@ public fun <T> Iterable<DataFrame<T>>.toFrameColumn(name: String = ""): FrameCol
 
 public inline fun <reified T> Iterable<T>.toValueColumn(name: String = ""): ValueColumn<T> = DataColumn.createValueColumn(name, asList()).forceResolve()
 
+public inline fun <reified T> Iterable<T>.toValueColumn(column: ColumnAccessor<T>): ValueColumn<T> = toValueColumn(column.name())
+public inline fun <reified T> Iterable<T>.toValueColumn(column: KProperty<T>): ValueColumn<T> = toValueColumn(column.columnName)
+
 public enum class Infer {
     None,
     Type, // infer type and nullability of the column
@@ -143,6 +147,9 @@ public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataCol
 
 public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): DataColumn<T> =
     DataColumn.create(ref.name(), asList()).forceResolve()
+
+public inline fun <reified T> Iterable<T>.toColumn(property: KProperty<T>): DataColumn<T> =
+    DataColumn.create(property.columnName, asList()).forceResolve()
 
 public fun Iterable<String>.toPath(): ColumnPath = ColumnPath(asList())
 

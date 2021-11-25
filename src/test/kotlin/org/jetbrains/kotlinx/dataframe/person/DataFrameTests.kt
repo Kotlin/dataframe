@@ -130,9 +130,11 @@ import org.jetbrains.kotlinx.dataframe.api.toListOf
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.api.toStr
 import org.jetbrains.kotlinx.dataframe.api.toValueColumn
+import org.jetbrains.kotlinx.dataframe.api.transpose
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.api.value
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
@@ -2373,5 +2375,11 @@ class DataFrameTests : BaseTest() {
         typed.age.drop(2) shouldBe typed.age[2 until typed.nrow()]
         typed.age.takeLast(2) shouldBe typed.age.drop(typed.nrow() - 2)
         typed.age.dropLast(2) shouldBe typed.age.take(typed.nrow() - 2)
+    }
+
+    @Test
+    fun `transpose row`() {
+        typed.select { age and weight }[1].transpose().maxBy { it.value as Int? }.name shouldBe "weight"
+        typed[2].transpose().dropNulls { value }.name.toList() shouldBe listOf("name", "age", "city")
     }
 }
