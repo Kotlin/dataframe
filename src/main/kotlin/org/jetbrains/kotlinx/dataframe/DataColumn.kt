@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -98,10 +99,16 @@ public interface DataColumn<out T> : BaseColumn<T> {
     public override operator fun get(range: IntRange): DataColumn<T>
 }
 
-internal val AnyCol.type: KType get() = type()
-internal val AnyCol.kind: ColumnKind get() = kind()
-internal val AnyCol.hasNulls: Boolean get() = hasNulls()
-internal val AnyCol.typeClass: KClass<*> get() = type.classifier as KClass<*>
-internal val AnyCol.indices: IntRange get() = indices()
+public val AnyCol.name: String get() = name()
+public val AnyCol.path: ColumnPath get() = path()
+
+public val <T> DataColumn<T>.values: Iterable<T> get() = values()
+public val AnyCol.hasNulls: Boolean get() = hasNulls()
+public val AnyCol.size: Int get() = size()
+public val AnyCol.indices: IntRange get() = indices()
+
+public val AnyCol.type: KType get() = type()
+public val AnyCol.kind: ColumnKind get() = kind()
+public val AnyCol.typeClass: KClass<*> get() = type.classifier as KClass<*>
 
 public fun AnyCol.indices(): IntRange = 0 until size

@@ -1,16 +1,12 @@
 [//]: # (title: DataRow)
 
-`DataRow` represents a record, one piece of data within a `DataFrame`
+`DataRow` represents a single record, one piece of data within a [`DataFrame`](DataFrame.md)
 
-## Row properties
-`DataRow` properties:
-* `index: Int` - sequential row number in `DataFrame`, starts from 0
-* `prev: DataRow?` - previous row (`null` for the first row)
-* `next: DataRow?` - next row (`null` for the last row)
+## Row functions
 
-If some of these properties clash with generated extension properties, they still can be accessed as functions `index()`, `prev()`, `next()`
-
-`DataRow` functions:
+* `index(): Int` - sequential row number in `DataFrame`, starts from 0
+* `prev(): DataRow?` - previous row (`null` for the first row)
+* `next(): DataRow?` - next row (`null` for the last row)
 * `getRow(Int): DataRow` - row from `DataFrame` by row index
 * `neighbours(Iterable<Int>)` - sequence of the nearest rows by relative index: `neighbours(-1..1)` will return previous, current and next row
 * `get(column)` - cell value from `column` in this row
@@ -22,10 +18,10 @@ Row expressions provide a value for every row of `DataFrame` and are used in [ad
 ```kotlin
 df.add("fullName") { firstName + " " + lastName }
 ```
-[Row properties](#row-properties) are also accessible within row expressions:
+[Row functions](#row-functions) can be used inside row expressions:
 ```kotlin
-df.add("diff") { value - prev?.value }
-df.filter { index % 5 == 0 }
+df.add("diff") { value - prev()?.value }
+df.filter { index() % 5 == 0 }
 ```
 Row expression signature is ```DataRow.(DataRow) -> T```, so row values can be accessed with or without ```it``` keyword. Implicit and explicit argument represent the same `DataRow` object.
 
@@ -38,9 +34,9 @@ Row conditions are used in various filtration operations:
 df.filter { it.name.startsWith("A") }
 df.filter { name.length == 5 }
 ```
-[Row properties](#row-properties) can be also used in row conditions:
+[Row functions](#row-functions) can be used inside row conditions:
 ```kotlin
-df.filter { index % 2 == 0}
-df.drop { age == prev?.age }
-df.update { score }.where { index > 20}.with { prev?.score } 
+df.filter { index() % 2 == 0}
+df.drop { age == prev()?.age }
+df.update { score }.where { index() > 20}.with { prev()?.score } 
 ```
