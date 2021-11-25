@@ -143,7 +143,7 @@ df.adults()
 ```
 
 ## Use external data schemas in Jupyter
-Sometimes it is convenient to extract reusable code from Jupyter notebook into Kotlin JVM library. If this code uses [Custom data schemas](#custom-data-schemas), schema interfaces should also be extracted. In order to later support them in Jupyter, you should register them in library [integration class](#https://github.com/Kotlin/kotlin-jupyter/blob/master/docs/libraries.md#integration-using-kotlin-api) with `useDataSchemas` function:
+Sometimes it is convenient to extract reusable code from Jupyter notebook into Kotlin JVM library. If this code uses [Custom data schemas](#custom-data-schemas), schema interfaces should also be extracted. In order to later support them in Jupyter, you should register them in library [integration class](https://github.com/Kotlin/kotlin-jupyter/blob/master/docs/libraries.md#integration-using-kotlin-api) with `useSchema` function:
 ```kotlin
 @DataSchema
 interface Person {
