@@ -6,6 +6,30 @@ DataFrame Gradle plugin can
 
 ## Setup
 
+### build.gradle.kts
+```
+plugins {
+    id("org.jetbrains.kotlin.plugin.dataframe") version "$DATAFRAME_VERSION"
+}
+
+dependencies {
+    implementation("org.jetbrains.kotlinx:dataframe:$DATAFRAME_VERSION")
+}
+
+// Make IDE aware of the generated code:
+kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
+
+// Excludes for `kotlint`:
+tasks.withType<org.jmailen.gradle.kotlinter.tasks.LintTask> {
+    exclude {
+        it.name.endsWith(".Generated.kt")
+    }
+    exclude {
+        it.name.endsWith("\$Extensions.kt")
+    }
+}
+```
+
 ### build.gradle
 ```
 plugins {
@@ -15,25 +39,27 @@ plugins {
 dependencies {
     implementation("org.jetbrains.kotlinx:dataframe:$DATAFRAME_VERSION")
 }
-```
-If you want to infer data schema from a big file (50MB+), Gradle will fail with OutOfMemory exception. Temporary workaround is to add the following line in `gradle.properties`
-```properties
-org.gradle.jvmargs=-Xmx2g -XX:MaxMetaspaceSize=512m -XX:+HeapDumpOnOutOfMemoryError -Dfile.encoding=UTF-8
-```
-## Make IDE aware of the generated code:
-### Kotlin JVM
-#### Kotlin DSL
-```kotlin
-kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
-```
-#### Groovy DSL
-```groovy
+
+// Make IDE aware of the generated code:
 sourceSets {
     main.kotlin.srcDir("build/generated/ksp/main/kotlin/")
 }
+
+// Excludes for `kotlint`:
+tasks.withType(org.jmailen.gradle.kotlinter.tasks.LintTask).all {
+    exclude {
+        it.name.endsWith(".Generated.kt")
+    }
+    exclude {
+        it.name.endsWith("\$Extensions.kt")
+    }
+}
 ```
+
 ### Kotlin Multiplatform (JVM target only)
-#### Kotlin DSL
+<details open>
+<summary>Kotlin DSL</summary>
+
 ```kotlin
 kotlin {
     jvm()
@@ -44,7 +70,12 @@ kotlin {
     }
 }
 ```
-#### Groovy DSL
+
+</details>
+
+<details open>
+<summary>Groovy DSL</summary>
+
 ```groovy
 kotlin {
     jvm()
@@ -55,6 +86,8 @@ kotlin {
     }
 }
 ```
+
+</details>
 
 ## Usage
 
