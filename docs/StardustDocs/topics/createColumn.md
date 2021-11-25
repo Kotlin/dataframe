@@ -46,7 +46,7 @@ When column elements are [`DataFrames`](DataColumn.md) it returns [`FrameColumn`
 
 ```kotlin
 val df1 = dataFrameOf("name", "age")("Alice", 20, "Bob", 25)
-val df2 = dataFrameOf("name", "temp")("Mark", 36.6)
+val df2 = dataFrameOf("name", "temp")("Charlie", 36.6)
 
 // Create FrameColumn with two elements of type DataFrame
 val frames by columnOf(df1, df2)

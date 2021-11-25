@@ -137,7 +137,7 @@ Several ways to convert data into `DataFrame`
 val df = dataFrameOf("name", "age")(
    "Alice", 15,
    "Bob", 20,
-   "Mark", 100
+   "Charlie", 100
 )
 ```
 Columns from 'a' to 'z', values from 1 to 10 for each column:

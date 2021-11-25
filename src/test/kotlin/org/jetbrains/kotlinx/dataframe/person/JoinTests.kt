@@ -29,8 +29,8 @@ class JoinTests : BaseTest() {
         "Alice", "London", 5, "old",
         "Bob", "Tokyo", 4, "young",
         "Bob", "Paris", 5, "old",
-        "Mark", "Moscow", 1, "young",
-        "Mark", "Moscow", 2, "old",
+        "Charlie", "Moscow", 1, "young",
+        "Charlie", "Moscow", 2, "old",
         "Bob", "Paris", 4, null
     )
 
@@ -51,7 +51,7 @@ class JoinTests : BaseTest() {
         res.ncol() shouldBe 6
         res.nrow() shouldBe 7
         res["age1"].hasNulls() shouldBe false
-        res.count { name == "Mark" && city == "Moscow" } shouldBe 4
+        res.count { name == "Charlie" && city == "Moscow" } shouldBe 4
         res.select { city and name }.distinct().nrow() shouldBe 3
         res[Person2::grade].hasNulls() shouldBe false
     }

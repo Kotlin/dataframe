@@ -14,7 +14,7 @@ Returns [`DataFrame`](DataFrame.md) with given column names and values.
 val df = dataFrameOf("name", "age")(
     "Alice", 15,
     "Bob", 20,
-    "Mark", 100
+    "Charlie", 100
 )
 ```
 
@@ -23,7 +23,7 @@ val df = dataFrameOf("name", "age")(
 <!---FUN createDataFrameFromColumns-->
 
 ```kotlin
-val name by columnOf("Alice", "Bob", "Mark")
+val name by columnOf("Alice", "Bob", "Charlie")
 val age by columnOf(15, 20, 22)
 
 // DataFrame with 2 columns
@@ -39,7 +39,7 @@ val names = listOf("name", "age")
 val values = listOf(
     "Alice", 15,
     "Bob", 20,
-    "Mark", 22
+    "Charlie", 22
 )
 val df = dataFrameOf(names, values)
 ```
@@ -89,7 +89,7 @@ val df = dataFrameOf(names).fill(15, true)
 <!---FUN createDataFrameFromIterable-->
 
 ```kotlin
-val name by columnOf("Alice", "Bob", "Mark")
+val name by columnOf("Alice", "Bob", "Charlie")
 val age by columnOf(15, 20, 22)
 
 listOf(name, age).toDataFrame()
@@ -102,7 +102,7 @@ listOf(name, age).toDataFrame()
 <!---FUN createDataFrameFromMap-->
 
 ```kotlin
-val map = mapOf("name" to listOf("Alice", "Bob", "Mark"), "age" to listOf(15, 20, 22))
+val map = mapOf("name" to listOf("Alice", "Bob", "Charlie"), "age" to listOf(15, 20, 22))
 
 // DataFrame with 2 columns
 map.toDataFrame()
@@ -118,7 +118,7 @@ Creates `DataFrame` from `Iterable` of any objects .
 
 ```kotlin
 data class Person(val name: String, val age: Int)
-val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Mark", 22))
+val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 22))
 
 val df = persons.createDataFrame()
 ```

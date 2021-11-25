@@ -16,7 +16,7 @@ class RenderingTests : JupyterReplTestCase() {
             val height by column<Int>()
             val df = dataFrameOf(name, height)(
                 "Bill", 135,
-                "Mark", 160
+                "Charlie", 160
             )
             df
             """.trimIndent()
