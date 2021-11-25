@@ -58,9 +58,15 @@ dataFrameOf(1..10) { x -> (1..10).map { x * it } }
 <!---FUN createDataFrameWithRandom-->
 
 ```kotlin
-// DataFrame with 5 columns filled with 7 random double values:
+// 5 columns filled with 7 random double values:
 val names = (1..5).map { "column$it" }
-val df = dataFrameOf(names).randomDouble(7)
+dataFrameOf(names).randomDouble(7)
+
+// 5 columns filled with 7 random double values between 0 and 1 (inclusive)
+dataFrameOf(names).randomDouble(7, 0.0..1.0).print()
+
+// 5 columns filled with 7 random int values between 0 and 100 (inclusive)
+dataFrameOf(names).randomInt(7, 0..100).print()
 ```
 
 <!---END-->

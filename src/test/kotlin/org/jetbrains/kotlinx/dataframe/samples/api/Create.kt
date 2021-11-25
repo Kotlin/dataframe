@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.preserve
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
@@ -234,9 +235,15 @@ class Create : TestBase() {
     @Test
     fun createDataFrameWithRandom() {
         // SampleStart
-        // DataFrame with 5 columns filled with 7 random double values:
+        // 5 columns filled with 7 random double values:
         val names = (1..5).map { "column$it" }
-        val df = dataFrameOf(names).randomDouble(7)
+        dataFrameOf(names).randomDouble(7)
+
+        // 5 columns filled with 7 random double values between 0 and 1 (inclusive)
+        dataFrameOf(names).randomDouble(7, 0.0..1.0).print()
+
+        // 5 columns filled with 7 random int values between 0 and 100 (inclusive)
+        dataFrameOf(names).randomInt(7, 0..100).print()
         // SampleEnd
     }
 
