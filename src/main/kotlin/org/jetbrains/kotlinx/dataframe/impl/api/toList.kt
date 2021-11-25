@@ -20,7 +20,7 @@ import kotlin.reflect.jvm.jvmErasure
 @PublishedApi
 internal fun AnyFrame.toListImpl(type: KType): List<Any> {
     val clazz = type.jvmErasure
-    require(clazz.isData) { "Class `$clazz` is not a data class. `toList` is supported only for data classes." }
+    require(clazz.isData) { "`$clazz` is not a data class. `toList` is supported only for data classes." }
 
     val constructor = clazz.primaryConstructor
     require(constructor != null) { "Class `$clazz` doesn't have a primary constructor" }
@@ -45,7 +45,7 @@ internal fun AnyFrame.toListImpl(type: KType): List<Any> {
                     val col: AnyCol = if (it.type.jvmErasure == List::class) {
                         val elementType = it.type.arguments[0].type
                         require(elementType != null) { "FrameColumn can not be converted to type `List<*>`" }
-                        column.asFrameColumn().map { it?.toListImpl(elementType) }
+                        column.asFrameColumn().map { it.toListImpl(elementType) }
                     } else error("FrameColumn can not be converted to type `${it.type}`")
                     col
                 }
