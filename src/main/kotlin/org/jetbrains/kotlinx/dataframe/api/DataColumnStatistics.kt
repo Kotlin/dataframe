@@ -52,10 +52,13 @@ public inline fun <T, reified R : Number> DataColumn<T>.sumOf(crossinline expres
 
 // region mean
 
-public fun <T : Number> DataColumn<T?>.mean(skipNA: Boolean = false): Double = meanOrNull(skipNA)!!
-public fun <T : Number> DataColumn<T?>.meanOrNull(skipNA: Boolean = false): Double? = Aggregators.mean(skipNA).aggregate(this)
+public fun <T : Number> DataColumn<T?>.mean(skipNA: Boolean = defaultSkipNA): Double = meanOrNull(skipNA)!!
+public fun <T : Number> DataColumn<T?>.meanOrNull(skipNA: Boolean = defaultSkipNA): Double? = Aggregators.mean(skipNA).aggregate(this)
 
-public inline fun <T, reified R : Number> DataColumn<T>.meanOf(skipNA: Boolean = false, noinline expression: (T) -> R?): Double = org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators.mean(skipNA).cast2<R?, Double>().aggregateOf(this, expression) ?: Double.NaN
+public inline fun <T, reified R : Number> DataColumn<T>.meanOf(
+    skipNA: Boolean = defaultSkipNA,
+    noinline expression: (T) -> R?
+): Double = Aggregators.mean(skipNA).cast2<R?, Double>().aggregateOf(this, expression) ?: Double.NaN
 
 // endregion
 

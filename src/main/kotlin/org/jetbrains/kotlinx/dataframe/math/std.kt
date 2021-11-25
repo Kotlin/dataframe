@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.math
 
+import org.jetbrains.kotlinx.dataframe.api.defaultSkipNA
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import java.math.BigDecimal
 import kotlin.reflect.KType
@@ -22,10 +23,10 @@ public fun <T : Number> Iterable<T?>.std(type: KType): Double {
 }
 
 @JvmName("doubleStd")
-public fun Iterable<Double>.std(skipNA: Boolean = true): Double = stdMean(skipNA).first
+public fun Iterable<Double>.std(skipNA: Boolean = defaultSkipNA): Double = stdMean(skipNA).first
 
 @JvmName("floatStd")
-public fun Iterable<Float>.std(skipNA: Boolean = true): Double = stdMean(skipNA).first
+public fun Iterable<Float>.std(skipNA: Boolean = defaultSkipNA): Double = stdMean(skipNA).first
 
 @JvmName("intStd")
 public fun Iterable<Int>.std(): Double = stdMean().first

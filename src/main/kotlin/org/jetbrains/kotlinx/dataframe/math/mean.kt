@@ -1,12 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.math
 
+import org.jetbrains.kotlinx.dataframe.api.defaultSkipNA
 import java.math.BigDecimal
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
-public fun <T : Number> Iterable<T>.mean(type: KType, skipNA: Boolean = true): Double = asSequence().mean(type, skipNA)
+public fun <T : Number> Iterable<T>.mean(type: KType, skipNA: Boolean = defaultSkipNA): Double = asSequence().mean(type, skipNA)
 
-public fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = true): Double {
+public fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = defaultSkipNA): Double {
     if (type.isMarkedNullable) {
         return filterNotNull().mean(type.withNullability(false), skipNA)
     }
@@ -23,7 +24,7 @@ public fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = true): D
     }
 }
 
-public fun Sequence<Double>.mean(skipNA: Boolean = true): Double {
+public fun Sequence<Double>.mean(skipNA: Boolean = defaultSkipNA): Double {
     var count = 0
     var sum: Double = 0.toDouble()
     for (element in this) {
@@ -38,7 +39,7 @@ public fun Sequence<Double>.mean(skipNA: Boolean = true): Double {
 }
 
 @JvmName("meanFloat")
-public fun Sequence<Float>.mean(skipNA: Boolean = true): Double {
+public fun Sequence<Float>.mean(skipNA: Boolean = defaultSkipNA): Double {
     var count = 0
     var sum: Double = 0.toDouble()
     for (element in this) {
@@ -53,10 +54,10 @@ public fun Sequence<Float>.mean(skipNA: Boolean = true): Double {
 }
 
 @JvmName("doubleMean")
-public fun Iterable<Double>.mean(skipNA: Boolean = true): Double = asSequence().mean(skipNA)
+public fun Iterable<Double>.mean(skipNA: Boolean = defaultSkipNA): Double = asSequence().mean(skipNA)
 
 @JvmName("floatMean")
-public fun Iterable<Float>.mean(skipNA: Boolean = true): Double = asSequence().mean(skipNA)
+public fun Iterable<Float>.mean(skipNA: Boolean = defaultSkipNA): Double = asSequence().mean(skipNA)
 
 @JvmName("intMean")
 public fun Iterable<Int>.mean(): Double =
