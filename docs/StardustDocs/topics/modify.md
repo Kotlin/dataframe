@@ -10,6 +10,7 @@ Similar operations for columns or rows modification have different names:
 <tr><td>remove</td><td>drop</td></tr>
 <tr><td>select</td><td>filter</td></tr>
 <tr><td>group</td><td>groupBy</td></tr>
+<tr><td>sortColumnsBy</td><td>sortBy</td></tr>
 <tr><td>join</td><td>concat</td></tr>
 </table>
 

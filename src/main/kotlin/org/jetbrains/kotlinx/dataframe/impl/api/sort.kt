@@ -4,9 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.SortColumnsSelector
-import org.jetbrains.kotlinx.dataframe.api.SortDsl
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.update
@@ -16,7 +14,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.assertIsComparable
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
@@ -59,11 +56,6 @@ internal fun AnyCol.createComparator(nullsLast: Boolean): java.util.Comparator<I
 
     val comparatorWithNulls = if (nullsLast) nullsLast(valueComparator) else nullsFirst(valueComparator)
     return Comparator { left, right -> comparatorWithNulls.compare(get(left), get(right)) }
-}
-
-@JvmName("toColumnSetForSort")
-internal fun <T, C> SortColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
-    object : DataFrameReceiver<T>(it.df.cast(), it.allowMissingColumns), SortDsl<T> {}
 }
 
 internal fun <T, C> DataFrame<T>.getSortColumns(

@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.PivotColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateBodyInternal
-import org.jetbrains.kotlinx.dataframe.impl.api.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 
 internal data class PivotImpl<T>(
     val df: DataFrame<T>,
