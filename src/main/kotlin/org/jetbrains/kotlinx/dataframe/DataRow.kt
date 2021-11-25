@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.kotlinx.dataframe.api.next
+import org.jetbrains.kotlinx.dataframe.api.prev
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.owner
@@ -12,13 +14,6 @@ public interface DataRow<out T> {
     public fun index(): Int
 
     public fun df(): DataFrame<T>
-    public fun prev(): DataRow<T>?
-    public fun next(): DataRow<T>?
-    public fun getRow(index: Int): DataRow<T>?
-    public fun neighbours(relativeIndices: Iterable<Int>): Sequence<DataRow<T>> = relativeIndices.asSequence().mapNotNull { getRow(index + it) }
-
-    public fun ncol(): Int = df().ncol()
-    public fun columnNames(): List<String> = df().columnNames()
 
     // region get cell value
 
@@ -43,7 +38,7 @@ public interface DataRow<out T> {
     public operator fun String.get(vararg path: String): ColumnPath = ColumnPath(listOf(this) + path)
 
     public operator fun <R> ColumnReference<R>.invoke(): R = get(this)
-    public operator fun <R> String.invoke(): R = this@DataRow.get(this) as R
+    public operator fun <R> String.invoke(): R = this@DataRow[this@invoke] as R
     public operator fun <R> ColumnPath.invoke(): R = get(this) as R
 
     public fun String.int(): Int = read(this)
@@ -103,5 +98,5 @@ public interface DataRow<out T> {
 
 internal val AnyRow.values: List<Any?> get() = values()
 internal val AnyRow.index: Int get() = index()
-internal val <T> DataRow<T>.prev: DataRow<T>? get() = prev()
-internal val <T> DataRow<T>.next: DataRow<T>? get() = next()
+internal val <T> DataRow<T>.prev: DataRow<T>? get() = this.prev()
+internal val <T> DataRow<T>.next: DataRow<T>? get() = this.next()

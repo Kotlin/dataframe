@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.math.sum
@@ -44,14 +46,14 @@ public fun <T : Number> DataColumn<T>.sum(): T = values.sum(type())
 public fun <T : Number> DataColumn<T?>.sum(): T = values.sum(type())
 
 public inline fun <T, reified R : Number> DataColumn<T>.sumOf(crossinline expression: (T) -> R): R? =
-    org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators.sum.cast<R>().of(this, expression)
+    (Aggregators.sum as Aggregator<*, *>).cast<R>().of(this, expression)
 
 // endregion
 
 // region mean
 
 public fun <T : Number> DataColumn<T?>.mean(skipNA: Boolean = false): Double = meanOrNull(skipNA)!!
-public fun <T : Number> DataColumn<T?>.meanOrNull(skipNA: Boolean = false): Double? = org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators.mean(skipNA).aggregate(this)
+public fun <T : Number> DataColumn<T?>.meanOrNull(skipNA: Boolean = false): Double? = Aggregators.mean(skipNA).aggregate(this)
 
 public inline fun <T, reified R : Number> DataColumn<T>.meanOf(skipNA: Boolean = false, noinline expression: (T) -> R?): Double = org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators.mean(skipNA).cast2<R?, Double>().aggregateOf(this, expression) ?: Double.NaN
 

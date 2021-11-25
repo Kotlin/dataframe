@@ -25,7 +25,7 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
 @PublishedApi
-internal fun <T, C> UpdateClause<T, C>.updateImpl(expression: (DataRow<T>, DataColumn<C>, C) -> C): DataFrame<T> = df.replace(columns).with { it.updateImpl(df, filter, expression) }
+internal fun <T, C> UpdateClause<T, C>.updateImpl(expression: (DataRow<T>, DataColumn<C>, C) -> C?): DataFrame<T> = df.replace(columns).with { it.updateImpl(df, filter, expression) }
 
 internal fun <T, C> UpdateClause<T, C>.updateWithValuePerColumnImpl(selector: Selector<DataColumn<C>, C>) = df.replace(columns).with {
     val value = selector(it, it)
@@ -36,7 +36,7 @@ internal fun <T, C> UpdateClause<T, C>.updateWithValuePerColumnImpl(selector: Se
 internal fun <T, C> DataColumn<C>.updateImpl(
     df: DataFrame<T>,
     filter: RowValueFilter<T, C>?,
-    expression: (DataRow<T>, DataColumn<C>, C) -> C
+    expression: (DataRow<T>, DataColumn<C>, C) -> C?
 ): DataColumn<C> {
     val collector = createDataCollector<C>(size, type)
     val src = this

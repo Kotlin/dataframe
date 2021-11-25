@@ -4,8 +4,8 @@ import java.math.BigDecimal
 import kotlin.math.sqrt
 
 @JvmName("doubleStdMean")
-public fun Iterable<Double>.stdMean(): Pair<Double, Double> {
-    val m = mean(false)
+public fun Iterable<Double>.stdMean(skipNA: Boolean = true): Pair<Double, Double> {
+    val m = mean(skipNA)
     return sqrt(
         fold(0.0) { acc, el ->
             val diff = el - m
@@ -15,8 +15,8 @@ public fun Iterable<Double>.stdMean(): Pair<Double, Double> {
 }
 
 @JvmName("floatStdMean")
-public fun Iterable<Float>.stdMean(): Pair<Double, Double> {
-    val m = mean(false)
+public fun Iterable<Float>.stdMean(skipNA: Boolean = true): Pair<Double, Double> {
+    val m = mean(skipNA)
     return sqrt(
         fold(0.0) { acc, el ->
             val diff = el - m
