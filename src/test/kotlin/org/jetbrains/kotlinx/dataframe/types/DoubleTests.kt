@@ -16,6 +16,6 @@ class DoubleTests {
         df.filter { age() == Double.NaN }.nrow() shouldBe 1
         df.filter { age eq Double.NaN }.nrow() shouldBe 1
         df.filter { age().isNaN }.nrow() shouldBe 1
-         df.filter { it[age].isNaN }.nrow() shouldBe 1
+        df.filter { it[age].isNaN }.nrow() shouldBe 1
     }
 }

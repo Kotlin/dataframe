@@ -22,7 +22,7 @@ class SplitTests {
     }
 
     @Test
-    fun `split with regex`(){
+    fun `split with regex`() {
         val title by columnOf(
             "Toy Story (1995)",
             "Jumanji (1995)",
