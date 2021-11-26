@@ -35,7 +35,7 @@ internal fun <T, C, R> splitImpl(
             for (j in list.indices) {
                 if (columnCollectors.size <= j) {
                     val collector = createDataCollector(nrow)
-                    repeat(row) { collector.add(null) }
+                    repeat(row) { collector.add(clause.default) }
                     columnCollectors.add(collector)
                 }
                 columnCollectors[j].add(list[j])
