@@ -21,8 +21,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.io.HtmlData
-import org.jetbrains.kotlinx.dataframe.io.initHtml
-import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListNamedStub
@@ -33,6 +31,7 @@ import org.jetbrains.kotlinx.jupyter.api.VariableName
 import org.jetbrains.kotlinx.jupyter.api.annotations.JupyterLibrary
 import org.jetbrains.kotlinx.jupyter.api.declare
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
+import org.jetbrains.kotlinx.jupyter.api.libraries.resources
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubtypeOf
@@ -48,7 +47,15 @@ internal class Integration : JupyterIntegration() {
 
         onLoaded {
             declare("dataFrameConfig" to config)
-            display(initHtml().toJupyter())
+        }
+
+        resources {
+            if (!config.display.isolatedOutputs) {
+                val initJsSha = "8a649bfc42e1760ed6c5ff8808e54f9a3ce5f6c1"
+                js("DataFrame") { url("https://cdn.jsdelivr.net/gh/Kotlin/dataframe@$initJsSha/src/main/resources/init.js") }
+                css("DataFrameTable") { classPath("table.css") }
+                css("DataFrameFormatting") { classPath("formatting.css") }
+            }
         }
 
         with(JupyterHtmlRenderer(config.display, this)) {
@@ -58,9 +65,9 @@ internal class Integration : JupyterIntegration() {
             render<AnyRow>({ it.toDataFrame() }, { "DataRow [${it.ncol}]" })
             render<ColumnGroup<*>> ({ it.df })
             render<AnyCol>({ listOf(it).toDataFrame() }, { "DataColumn [${it.nrow()}]" })
-            render<GroupBy<*, *>> ({ it.toDataFrame() }, { "GroupBy" })
-            render<Pivot<*>> { it.toDataFrame().toHTML(config.display) { "Pivot: ${it.ncol} columns" } }
-            render<PivotGroupBy<*>> { it.toDataFrame().toHTML(config.display) { "PivotGroupBy: ${it.size}" } }
+            render<GroupBy<*, *>>({ it.toDataFrame() }, { "GroupBy" })
+            render<Pivot<*>>({ it.toDataFrame() }, { "Pivot: ${it.ncol} columns" })
+            render<PivotGroupBy<*>>({ it.toDataFrame() }, { "PivotGroupBy: ${it.size}" })
             render<SplitWithTransform<*, *, *>> ({ it.into() }, { "Split" })
             render<Split<*, *>> ({ it.toDataFrame() }, { "Split" })
             render<Merge<*, *, *>> ({ it.into("merged") }, { "Merge" })
