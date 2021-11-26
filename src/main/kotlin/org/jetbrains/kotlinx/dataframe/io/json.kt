@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.getColumn
-import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -27,7 +26,6 @@ import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.type
 import java.io.File
-import java.math.BigDecimal
 import java.net.URL
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
@@ -142,9 +140,9 @@ internal fun KlaxonJson.encodeRow(frame: ColumnsContainer<*>, index: Int): JsonO
         when {
             col is ColumnGroup<*> -> encodeRow(col, index)
             col is FrameColumn<*> -> col[index]?.let { encodeFrame(it) }
-            col.isSubtypeOf<Boolean?>() || col.isSubtypeOf<Double?>() || col.isSubtypeOf<Int?>()
-                || col.isSubtypeOf<Float?>() || col.isSubtypeOf<Long?>()
-                || col.isSubtypeOf<Short?>() || col.isSubtypeOf<Byte?>() -> col[index]
+            col.isSubtypeOf<Boolean?>() || col.isSubtypeOf<Double?>() || col.isSubtypeOf<Int?>() ||
+                col.isSubtypeOf<Float?>() || col.isSubtypeOf<Long?>() ||
+                col.isSubtypeOf<Short?>() || col.isSubtypeOf<Byte?>() -> col[index]
             else -> col[index]?.toString()
         }?.let { col.name to it }
     }
