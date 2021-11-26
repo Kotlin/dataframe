@@ -2,6 +2,8 @@ package samples.ml
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.column
+import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dl.api.core.Sequential
 import org.jetbrains.kotlinx.dl.api.core.activation.Activations
@@ -35,26 +37,16 @@ fun main() {
 
     // Calculating imputing values
 
-    val sibspAvg = df.mean("sibsp").roundToInt()
-    val parchAvg = df.mean("parch").roundToInt()
-    val ageAvg = df.mean("age")
-    val fareAvg = df.mean("fare")
-
-
     val (train, test) = df
         .rename("\uFEFFpclass").into("pclass")
         // imputing
-        .fillNulls("sibsp").with { sibspAvg }
-        .fillNulls("parch").with { parchAvg }
-        .fillNulls("age").with { ageAvg }
-        .fillNulls("fare").with { fareAvg }
-        .fillNulls("sex").with { "female" }
+        .fillNulls("sibsp", "parch", "age", "fare").cast<Number>().perCol { it.mean() }
+        .fillNulls("sex").withValue("female")
         // one hot encoding
-        .oneHotEncoding("pclass", "sex")
+        .pivotMatches("pclass", "sex")
         // feature extraction
-        .select("survived", "pclass_1", "pclass_2", "pclass_3", "sibsp", "parch", "age", "fare", "sex_1", "sex_2")
-        .convert("survived", "pclass_1", "pclass_2", "pclass_3", "sibsp", "parch", "age", "fare", "sex_1", "sex_2")
-        .toFloat()
+        .select("survived", "pclass", "sibsp", "parch", "age", "fare", "sex")
+        .convert { dfsLeafs() }.toFloat()
         .shuffle()
         .toOnHeapDataset(labelColumnName = "survived")
         .split(0.7)
@@ -75,35 +67,22 @@ fun main() {
     }
 }
 
-private fun <T> DataFrame<T>.oneHotEncoding(
-    vararg columnNames: String,
-    removeSourceColumn: Boolean = true
-): DataFrame<T> {
-    val result = columnNames.fold(this) { acc, name ->
-        acc[name].distinct().values().foldIndexed(acc) { index, subAcc, value ->
-            println("$value to index: $index")
-            subAcc.add("${name}_${index + 1}") { if (it[name] == value) 1 else 0 }
-        }
-    }
-
-    return if (removeSourceColumn) result.remove(*columnNames) else result
-}
-
 private fun <T> DataFrame<T>.toOnHeapDataset(labelColumnName: String): OnHeapDataset {
     return OnHeapDataset.create(
         dataframe = this,
-        yColumn = labelColumnName
+        yColumn = column(labelColumnName)
     )
 }
 
-private fun OnHeapDataset.Companion.create(dataframe: DataFrame<Any?>, yColumn: String): OnHeapDataset {
+private fun OnHeapDataset.Companion.create(dataframe: DataFrame<Any?>, yColumn: ColumnAccessor<Float>): OnHeapDataset {
+
+    val x by column<FloatArray>("X")
+
     fun extractX(): Array<FloatArray> =
         dataframe.remove(yColumn)
-            .merge { colsOf<Number>() }.by { it.map { it.toFloat() }.toFloatArray() }.into("X")
-            .get { "X"<FloatArray>() }.toList().toTypedArray()
+            .merge { dfsOf<Float>() }.by { it.toFloatArray() }.into(x)[x].toTypedArray()
 
-    fun extractY(): FloatArray =
-        dataframe.get { yColumn<Float>() }.toList().toFloatArray()
+    fun extractY(): FloatArray = dataframe[yColumn].toFloatArray()
 
     return create(
         ::extractX,
