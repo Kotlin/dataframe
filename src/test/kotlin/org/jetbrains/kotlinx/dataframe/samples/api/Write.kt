@@ -52,10 +52,10 @@ class Write : TestBase() {
                 "firstName": "Alice",
                 "lastName": "Cooper"
               },
-              "age": "15",
+              "age": 15,
               "city": "London",
-              "weight": "54",
-              "isHappy": "true"
+              "weight": 54,
+              "isHappy": true
             }
         """.rejoinWithSystemLineSeparator()
     }
