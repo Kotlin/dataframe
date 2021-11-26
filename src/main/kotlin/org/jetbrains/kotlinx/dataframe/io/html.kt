@@ -196,7 +196,10 @@ public data class DisplayConfiguration(
     var rowsLimit: Int = 20,
     var cellContentLimit: Int = 40,
     var cellFormatter: RowColFormatter<*>? = null,
-    var precision: Int = defaultPrecision
+    var precision: Int = defaultPrecision,
+    var isolatedOutputs: Boolean = run {
+        System.getenv("LETS_PLOT_HTML_ISOLATED_FRAME")?.toBooleanStrictOrNull() ?: false
+    },
 ) {
     public companion object {
         public val DEFAULT: DisplayConfiguration = DisplayConfiguration()
