@@ -92,7 +92,7 @@ kotlin {
 ## Usage
 
 ### Annotation processing
-Declare data schemas in your code and use them to access data in DataFrame's.
+Declare data schemas in your code and use them to access data in DataFrames.
 A data schema is an interface with properties and no type parameters annotated with `@DataSchema`:
 ```kotlin
 package org.example
