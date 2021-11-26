@@ -96,6 +96,7 @@ task detectVersionForTC {
 
 version detectVersion()
 def v = version
+println("Current DataFrame version: $v")
 
 subprojects {
     version = v
