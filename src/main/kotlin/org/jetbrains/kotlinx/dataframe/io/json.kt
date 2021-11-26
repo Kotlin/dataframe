@@ -142,7 +142,9 @@ internal fun KlaxonJson.encodeRow(frame: ColumnsContainer<*>, index: Int): JsonO
         when {
             col is ColumnGroup<*> -> encodeRow(col, index)
             col is FrameColumn<*> -> col[index]?.let { encodeFrame(it) }
-            !col.isSubtypeOf<BigDecimal>() && col.isNumber() || col.isSubtypeOf<Boolean?>() -> col[index]
+            col.isSubtypeOf<Boolean?>() || col.isSubtypeOf<Double?>() || col.isSubtypeOf<Int?>()
+                || col.isSubtypeOf<Float?>() || col.isSubtypeOf<Long?>()
+                || col.isSubtypeOf<Short?>() || col.isSubtypeOf<Byte?>() -> col[index]
             else -> col[index]?.toString()
         }?.let { col.name to it }
     }
