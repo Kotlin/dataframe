@@ -67,12 +67,99 @@ dependencies {
 
 We provide a Gradle plugin that generates interfaces by your data.
 To use it in your project, pick up the latest version from [here](https://plugins.gradle.org/plugin/org.jetbrains.kotlin.plugin.dataframe)
-and declare plugin dependency in the `plugins` block:
+and follow the configuration:
+
+<tabs>
+<tab title="Groovy DSL">
+
 ```groovy
 plugins {
-  id "org.jetbrains.kotlin.plugin.dataframe" version "<version>"
+    id("org.jetbrains.kotlin.plugin.dataframe") version "<version>"
+}
+
+dependencies {
+    implementation("org.jetbrains.kotlinx:dataframe:<version>")
+}
+
+// Make IDE aware of the generated code:
+sourceSets {
+    main.kotlin.srcDir("build/generated/ksp/main/kotlin/")
+}
+
+// (Only if you use kotlint) Excludes for `kotlint`:
+tasks.withType(org.jmailen.gradle.kotlinter.tasks.LintTask).all {
+    exclude {
+        it.name.endsWith(".Generated.kt")
+    }
+    exclude {
+        it.name.endsWith("\$Extensions.kt")
+    }
 }
 ```
+
+</tab>
+
+<tab title="Kotlin DSL">
+
+```kotlin
+plugins {
+    id("org.jetbrains.kotlin.plugin.dataframe") version "<version>"
+}
+
+dependencies {
+    implementation("org.jetbrains.kotlinx:dataframe:<version>")
+}
+
+// Make IDE aware of the generated code:
+kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
+
+// (Only if you use kotlint) Excludes for `kotlint`:
+tasks.withType<org.jmailen.gradle.kotlinter.tasks.LintTask> {
+    exclude {
+        it.name.endsWith(".Generated.kt")
+    }
+    exclude {
+        it.name.endsWith("\$Extensions.kt")
+    }
+}
+```
+
+</tab>
+
+<tab title="Multiplatform (JVM target Only)">
+
+```kotlin
+plugins {
+    id("org.jetbrains.kotlin.plugin.dataframe") version "<version>"
+}
+
+kotlin {
+    jvm()
+    sourceSets {
+        val jvmMain by getting {
+            // Make IDE aware of the generated code:
+            kotlin.srcDir("build/generated/ksp/jvmMain/kotlin/")
+            dependencies {
+                implementation("org.jetbrains.kotlinx:dataframe:<version>")
+            }
+        }
+    }
+}
+
+// (Only if you use kotlint) Excludes for `kotlint`:
+tasks.withType<org.jmailen.gradle.kotlinter.tasks.LintTask> {
+    exclude {
+        it.name.endsWith(".Generated.kt")
+    }
+    exclude {
+        it.name.endsWith("\$Extensions.kt")
+    }
+}
+```
+
+</tab>
+
+</tabs>
 
 Note that it's better to use the same version for a library and plugin to avoid unpredictable errors.
 
