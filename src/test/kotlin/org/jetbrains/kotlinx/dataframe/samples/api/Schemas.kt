@@ -7,10 +7,12 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.inward
+import org.jetbrains.kotlinx.dataframe.api.maxBy
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.toList
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.io.read
 import org.junit.Test
 
 class Schemas {
@@ -83,6 +85,31 @@ class Schemas {
         ).split { "name"<String>() }.inward("firstName", "lastName")
 
         val persons = df.cast<Person>().toList()
+        // SampleEnd
+    }
+
+    @Test
+    fun useProperties() {
+        // SampleStart
+        val df = dataFrameOf("name", "age")(
+            "Alice", 15,
+            "Bob", 20
+        ).cast<Person>()
+        // age only available after executing `build` or `kspKotlin`!
+        val teens = df.filter { age in 10..19 }
+        teens.print()
+        // SampleEnd
+    }
+
+    @Test
+    fun useInferredSchema() {
+        // SampleStart
+        val REPOSITORIES_DATA = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
+        val df = DataFrame.read(REPOSITORIES_DATA).cast<Repository>()
+        // Use generated properties to access data in rows
+        df.maxBy { stargazers_count }.print()
+        // Or to access columns in dataframe.
+        print(df.full_name.count { it.contains("kotlin") })
         // SampleEnd
     }
 }

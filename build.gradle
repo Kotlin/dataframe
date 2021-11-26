@@ -230,3 +230,11 @@ sourceSets {
     test.kotlin.srcDir("build/generated/ksp/test/kotlin/")
 }
 
+dataframes {
+    schema {
+        sourceSet = "test"
+        visibility = "implicit_public"
+        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
+        name = "org.jetbrains.kotlinx.dataframe.samples.api.Repository"
+    }
+}
