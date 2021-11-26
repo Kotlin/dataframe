@@ -1,12 +1,15 @@
-package org.jetbrains.kotlinx.dataframe
+package org.jetbrains.kotlinx.dataframe.testSets.animals
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.mean
+import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.transpose
 import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.api.value
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.withValue
+import org.jetbrains.kotlinx.dataframe.columnOf
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
 
@@ -25,12 +28,12 @@ class AnimalsTests {
     }
 
     @Test
-    fun mean() {
+    fun `mean transpose`() {
         val mean = df.mean().transpose()
         mean.ncol() shouldBe 2
         mean.nrow() shouldBe 2
-        mean.getColumn(1).type() shouldBe getType<Double>()
-        mean.getColumn(0).values() shouldBe listOf("age", "visits")
+        mean.name.values() shouldBe listOf("age", "visits")
+        mean.value.type() shouldBe getType<Double>()
     }
 
     @Test

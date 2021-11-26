@@ -10,9 +10,9 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
-import org.jetbrains.kotlinx.dataframe.person.BaseTest
-import org.jetbrains.kotlinx.dataframe.person.city
-import org.jetbrains.kotlinx.dataframe.person.weight
+import org.jetbrains.kotlinx.dataframe.testSets.person.BaseTest
+import org.jetbrains.kotlinx.dataframe.testSets.person.city
+import org.jetbrains.kotlinx.dataframe.testSets.person.weight
 import org.junit.Test
 
 class ReplCodeGenTests : BaseTest() {
