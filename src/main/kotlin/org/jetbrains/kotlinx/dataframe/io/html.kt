@@ -175,7 +175,7 @@ public fun <T> DataFrame<T>.html(): String = toHTML(includeInit = true).toString
 
 public fun <T> DataFrame<T>.toHTML(
     configuration: DisplayConfiguration = org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration.DEFAULT,
-    includeInit: Boolean = true,
+    includeInit: Boolean = false,
     cellRenderer: CellRenderer = org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer,
     getFooter: (DataFrame<T>) -> String = { "DataFrame [${it.size}]" }
 ): HtmlData {
