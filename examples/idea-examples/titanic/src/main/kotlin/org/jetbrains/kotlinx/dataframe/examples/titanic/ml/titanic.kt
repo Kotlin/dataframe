@@ -1,9 +1,10 @@
-package samples.ml
+package org.jetbrains.kotlinx.dataframe.examples.titanic.ml
 
+import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.column
-import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
+import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dl.api.core.Sequential
 import org.jetbrains.kotlinx.dl.api.core.activation.Activations
@@ -16,7 +17,6 @@ import org.jetbrains.kotlinx.dl.api.core.metric.Metrics
 import org.jetbrains.kotlinx.dl.api.core.optimizer.Adam
 import org.jetbrains.kotlinx.dl.dataset.OnHeapDataset
 import java.util.*
-import kotlin.math.roundToInt
 
 private const val SEED = 12L
 private const val TEST_BATCH_SIZE = 100
@@ -32,24 +32,21 @@ private val model = Sequential.of(
 
 fun main() {
     Locale.setDefault(Locale.FRANCE)
-    val df =
-        DataFrame.readCSV(fileOrUrl = "examples/idea-examples/titanic/src/main/resources/titanic.csv", delimiter = ';')
+    val df = DataFrame.read("examples/idea-examples/titanic/src/main/resources/titanic.csv", delimiter = ';')
 
     // Calculating imputing values
 
     val (train, test) = df
         .rename("\uFEFFpclass").into("pclass")
         // imputing
-        .fillNulls("sibsp", "parch", "age", "fare").cast<Number>().perCol { it.mean() }
+        .fillNulls("sibsp", "parch", "age", "fare").perCol { it.cast<Number>().mean() }
         .fillNulls("sex").withValue("female")
         // one hot encoding
         .pivotMatches("pclass", "sex")
         // feature extraction
         .select("survived", "pclass", "sibsp", "parch", "age", "fare", "sex")
-        .convert { dfsLeafs() }.toFloat()
         .shuffle()
-        .toOnHeapDataset(labelColumnName = "survived")
-        .split(0.7)
+        .toTrainTest(0.7, "survived")
 
     model.use {
         it.compile(
@@ -61,26 +58,34 @@ fun main() {
         it.summary()
         it.fit(dataset = train, epochs = EPOCHS, batchSize = TRAINING_BATCH_SIZE)
 
-        val accuracy = model.evaluate(dataset = test, batchSize = TEST_BATCH_SIZE).metrics[Metrics.ACCURACY]
+        val accuracy = it.evaluate(dataset = test, batchSize = TEST_BATCH_SIZE).metrics[Metrics.ACCURACY]
 
         println("Accuracy: $accuracy")
     }
 }
 
-private fun <T> DataFrame<T>.toOnHeapDataset(labelColumnName: String): OnHeapDataset {
+private fun <T> DataFrame<T>.toTrainTest(trainRatio: Double, yColumn: String): Pair<OnHeapDataset, OnHeapDataset> =
+    toOnHeapDataset { yColumn() }.split(trainRatio)
+
+private fun <T> DataFrame<T>.toTrainTest(trainRatio: Double, yColumn: ColumnSelector<T, Float>): Pair<OnHeapDataset, OnHeapDataset> =
+    toOnHeapDataset(yColumn).split(trainRatio)
+
+private fun <T> DataFrame<T>.toOnHeapDataset(yColumn: ColumnSelector<T, Float>): OnHeapDataset {
     return OnHeapDataset.create(
         dataframe = this,
-        yColumn = column(labelColumnName)
+        yColumn = yColumn
     )
 }
 
-private fun OnHeapDataset.Companion.create(dataframe: DataFrame<Any?>, yColumn: ColumnAccessor<Float>): OnHeapDataset {
+private fun <T> OnHeapDataset.Companion.create(dataframe: DataFrame<T>, yColumn: ColumnSelector<T, Float>): OnHeapDataset {
 
     val x by column<FloatArray>("X")
 
     fun extractX(): Array<FloatArray> =
         dataframe.remove(yColumn)
-            .merge { dfsOf<Float>() }.by { it.toFloatArray() }.into(x)[x].toTypedArray()
+            .convert { dfsLeafs() }.toFloat()
+            .merge { dfsOf<Float>() }.by { it.toFloatArray() }.into(x)
+            .getColumn(x).toTypedArray()
 
     fun extractY(): FloatArray = dataframe[yColumn].toFloatArray()
 
