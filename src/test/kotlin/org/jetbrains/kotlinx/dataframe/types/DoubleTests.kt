@@ -1,7 +1,10 @@
-package org.jetbrains.kotlinx.dataframe
+package org.jetbrains.kotlinx.dataframe.types
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.isNaN
+import org.jetbrains.kotlinx.dataframe.columnOf
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.junit.Test
 
 class DoubleTests {
@@ -12,7 +15,7 @@ class DoubleTests {
         val df = dataFrameOf(age)
         df.filter { age() == Double.NaN }.nrow() shouldBe 1
         df.filter { age eq Double.NaN }.nrow() shouldBe 1
-        // df.filter { age().isNaN() }.nrow() shouldBe 1
-        // df.filter { it[age].isNaN() }.nrow() shouldBe 1
+        df.filter { age().isNaN }.nrow() shouldBe 1
+         df.filter { it[age].isNaN }.nrow() shouldBe 1
     }
 }

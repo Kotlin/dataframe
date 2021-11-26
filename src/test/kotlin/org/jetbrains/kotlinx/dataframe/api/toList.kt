@@ -1,11 +1,6 @@
-package org.jetbrains.kotlinx.dataframe
+package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.api.createDataFrame
-import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.pivot
-import org.jetbrains.kotlinx.dataframe.api.toListOf
-import org.jetbrains.kotlinx.dataframe.api.values
 import org.junit.Test
 
 class DataClassesTests {

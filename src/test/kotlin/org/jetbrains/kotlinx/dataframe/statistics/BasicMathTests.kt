@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.aggregation
+package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.mean

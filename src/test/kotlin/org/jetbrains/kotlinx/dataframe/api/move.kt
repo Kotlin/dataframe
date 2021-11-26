@@ -1,21 +1,12 @@
-package org.jetbrains.kotlinx.dataframe
+package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.api.after
-import org.jetbrains.kotlinx.dataframe.api.flatten
-import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
-import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.move
-import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.remove
-import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.toPath
-import org.jetbrains.kotlinx.dataframe.api.ungroup
+import org.jetbrains.kotlinx.dataframe.column
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.pathOf
 import org.junit.Test
 
 class MoveTests {

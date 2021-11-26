@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.person
+package org.jetbrains.kotlinx.dataframe.testSets.person
 
 import io.kotest.assertions.fail
 import io.kotest.assertions.throwables.shouldThrow

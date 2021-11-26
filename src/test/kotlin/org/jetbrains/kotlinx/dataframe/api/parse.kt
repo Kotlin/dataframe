@@ -1,13 +1,14 @@
-package org.jetbrains.kotlinx.dataframe
+package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.junit.Test
 
-class ReadTests {
+class ParseTests {
 
     @Test
     fun parseJson1() {

@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.person
+package org.jetbrains.kotlinx.dataframe.testSets.person
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
