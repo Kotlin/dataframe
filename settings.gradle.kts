@@ -6,6 +6,7 @@ include("plugins:dataframe-gradle-plugin")
 include("plugins:symbol-processor")
 
 include("examples:idea-examples:titanic")
+include("examples:idea-examples:movies")
 
 val kspVersion: String by settings
 
