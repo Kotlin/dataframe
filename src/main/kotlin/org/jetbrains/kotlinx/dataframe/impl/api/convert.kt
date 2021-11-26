@@ -22,6 +22,8 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 import java.util.TimeZone
+import kotlin.math.roundToInt
+import kotlin.math.roundToLong
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSubtypeOf
@@ -52,7 +54,7 @@ internal fun AnyCol.convertToTypeImpl(newType: KType): AnyCol {
                         if (it == null) null else {
                             val clazz = it.javaClass.kotlin
                             val type = clazz.createStarProjectedType(false)
-                            val conv = getConverter(type, newType) ?: error("Can't find converter from '$type' to '$newType'")
+                            val conv = getConverter(type, newType) ?: error("Can't find converter from $type to $newType")
                             conv(it) ?: error("Can't convert '$it' to '$newType'")
                         }
                     }
@@ -101,6 +103,24 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
     return when {
         fromClass == String::class -> Parsers[to.withNullability(false)]?.toConverter(options)
         toClass == String::class -> convert<Any> { it.toString() }
+        fromClass == Boolean::class -> when (toClass) {
+            Float::class -> convert<Boolean> { if (it) 1.0f else 0.0f }
+            Double::class -> convert<Boolean> { if (it) 1.0 else 0.0 }
+            Int::class -> convert<Boolean> { if (it) 1 else 0 }
+            Long::class -> convert<Boolean> { if (it) 1L else 0L }
+            Short::class -> convert<Boolean> {
+                val one: Short = 1
+                val zero: Short = 0
+                if (it) one else zero
+            }
+            Byte::class -> convert<Boolean> {
+                val one: Byte = 1
+                val zero: Byte = 0
+                if (it) one else zero
+            }
+            BigDecimal::class -> convert<Boolean> { if (it) BigDecimal.ONE else BigDecimal.ZERO }
+            else -> null
+        }
         fromClass == Number::class -> when (toClass) {
             Double::class -> convert<Number> { it.toDouble() }
             Int::class -> convert<Number> { it.toInt() }
@@ -123,9 +143,10 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             else -> null
         }
         fromClass == Double::class -> when (toClass) {
-            Int::class -> convert<Double> { it.toInt() }
+            Int::class -> convert<Double> { it.roundToInt() }
             Float::class -> convert<Double> { it.toFloat() }
-            Long::class -> convert<Double> { it.toLong() }
+            Long::class -> convert<Double> { it.roundToLong() }
+            Short::class -> convert<Double> { it.roundToInt().toShort() }
             BigDecimal::class -> convert<Double> { it.toBigDecimal() }
             else -> null
         }
@@ -143,8 +164,9 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
         }
         fromClass == Float::class -> when (toClass) {
             Double::class -> convert<Float> { it.toDouble() }
-            Long::class -> convert<Float> { it.toLong() }
-            Int::class -> convert<Float> { it.toInt() }
+            Long::class -> convert<Float> { it.roundToLong() }
+            Int::class -> convert<Float> { it.roundToInt() }
+            Short::class -> convert<Float> { it.roundToInt().toShort() }
             BigDecimal::class -> convert<Float> { it.toBigDecimal() }
             else -> null
         }
