@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe
+package org.jetbrains.kotlinx.dataframe.types
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.impl.commonParent

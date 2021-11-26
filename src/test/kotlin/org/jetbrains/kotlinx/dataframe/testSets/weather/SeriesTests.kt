@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe
+package org.jetbrains.kotlinx.dataframe.testSets.weather
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -6,9 +6,9 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.diff
 import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.movingAverage
 import org.jetbrains.kotlinx.dataframe.api.sortBy
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.junit.Test
 
 class SeriesTests {
