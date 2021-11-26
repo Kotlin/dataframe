@@ -1,9 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.impl.getType
+import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 
 class SplitTests {
@@ -17,7 +19,6 @@ class SplitTests {
             it.hasNulls() shouldBe false
         }
         splitted.values().count { it == 0 } shouldBe 7
-        splitted.print()
     }
 
     @Test
@@ -28,13 +29,15 @@ class SplitTests {
             "Grumpier Old Men (1995)",
             "Waiting to Exhale (1995)"
         )
-        val year by column<Int>()
 
-        val regex = """(\s*) \((d{4})\)""".toRegex()
-        title.toDataFrame()
+        val regex = """(.*) \((\d{4})\)""".toRegex()
+        val splitted = title.toDataFrame()
             .split { title }
             .match(regex)
             .into("title", "year")
-            .print()
+            .parse()
+        splitted.schema().print()
+        splitted["title"].hasNulls shouldBe false
+        splitted["year"].type shouldBe getType<Int>()
     }
 }

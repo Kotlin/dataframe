@@ -3,13 +3,16 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     application
     kotlin("jvm")
+    id("org.jetbrains.kotlin.plugin.dataframe")
 }
 
 repositories {
     mavenCentral()
 }
 
-application.mainClass.set("samples.movies.MoviesWithDataClassKt")
+kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
+
+application.mainClass.set("org.jetbrains.kotlinx.dataframe.examples.movies.MoviesWithDataClassKt")
 
 dependencies {
     implementation(project(":"))

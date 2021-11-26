@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.splitDefault
 import org.jetbrains.kotlinx.dataframe.impl.api.splitImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
@@ -135,6 +136,12 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     into(listOf(firstName.name()) + otherNames.map { it.name() })
 
 public fun <T, C, R> SplitWithTransform<T, C, R>.into(
+    firstName: KProperty<*>,
+    vararg otherNames: KProperty<*>
+): DataFrame<T> =
+    into(listOf(firstName.columnName) + otherNames.map { it.columnName })
+
+public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     vararg names: String,
     extraNamesGenerator: (ColumnWithPath<C>.(extraColumnIndex: Int) -> String)? = null
 ): DataFrame<T> = into(names.toList(), extraNamesGenerator)
@@ -200,6 +207,12 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
     vararg otherNames: ColumnAccessor<*>
 ): DataFrame<T> =
     inward(listOf(firstName.name()) + otherNames.map { it.name() })
+
+public fun <T, C, R> SplitWithTransform<T, C, R>.inward(
+    firstName: KProperty<*>,
+    vararg otherNames: KProperty<*>
+): DataFrame<T> =
+    inward(listOf(firstName.columnName) + otherNames.map { it.columnName })
 
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inward(
     vararg names: String,
