@@ -168,6 +168,8 @@ public data class HtmlData(val style: String, val body: String, val script: Stri
         HtmlData(style + "\n" + other.style, body + "\n" + other.body, script + "\n" + other.script)
 }
 
+internal fun HtmlData.print() = println(this)
+
 internal fun initHtml(): HtmlData =
     HtmlData(style = getResources("/table.css", "/formatting.css"), script = getResourceText("/init.js"), body = "")
 
@@ -237,7 +239,7 @@ internal class DataFrameFormatter(
     val dataFrameClass: String
 ) {
 
-    private fun wrap(prefix: String, content: RenderedContent, postfix: String) = content.copy(truncatedContent = prefix + content + postfix)
+    private fun wrap(prefix: String, content: RenderedContent, postfix: String): RenderedContent = content.copy(truncatedContent = prefix + content.truncatedContent + postfix)
 
     private fun String.addCss(css: String? = null): RenderedContent = RenderedContent.text(this).addCss(css)
 
