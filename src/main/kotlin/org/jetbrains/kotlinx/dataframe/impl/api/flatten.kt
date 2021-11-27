@@ -8,26 +8,29 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
+import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 
 internal fun <T, C> DataFrame<T>.flattenImpl(
-    separator: CharSequence,
     columns: ColumnsSelector<T, C>
 ): DataFrame<T> {
     val rootColumns = getColumnsWithPaths { columns.toColumns().filter { it.isColumnGroup() }.top() }
     val rootPrefixes = rootColumns.map { it.path }.toSet()
-    val nameGenerator = ColumnNameGenerator()
+    val nameGenerators = rootPrefixes.map { it.dropLast() }.distinct().associate { path ->
+        val usedNames = get(path).asColumnGroup().columns().filter { path + it.name() !in rootPrefixes }.map { it.name() }
+        path to ColumnNameGenerator(usedNames)
+    }
 
     fun getRootPrefix(path: ColumnPath) =
         (1 until path.size).asSequence().map { path.take(it) }.first { rootPrefixes.contains(it) }
 
-    val result = move { rootColumns.toColumnSet().dfs { !it.isColumnGroup() } }
+    val result = move { rootPrefixes.toColumnSet().dfsLeafs() }
         .into {
-            val prefix = getRootPrefix(it.path).dropLast(1)
-            val desiredName = it.path.drop(prefix.size).joinToString(separator)
-            val name = nameGenerator.addUnique(desiredName)
-            prefix + name
+            val targetPath = getRootPrefix(it.path).dropLast(1)
+            val nameGen = nameGenerators[targetPath]!!
+            val name = nameGen.addUnique(it.name())
+            targetPath + name
         }
     return result
 }
