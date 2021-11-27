@@ -20,7 +20,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
 
     @Test
     fun titanic() = exampleTest(
-        "titanic",
+        "titanic", "Titanic",
         replacer = CodeReplacer.byMap(
             "../../idea-examples/" to "examples/idea-examples/"
         )
