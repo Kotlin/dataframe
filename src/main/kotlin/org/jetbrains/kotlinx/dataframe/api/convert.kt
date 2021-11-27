@@ -88,44 +88,46 @@ public fun <T, C> ConvertClause<T, C>.to(columnConverter: DataFrame<T>.(DataColu
     df.replace(columns).with { columnConverter(df, it) }
 
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(getType<C>()) as DataColumn<C>
-
-public fun AnyCol.toDateTime(): DataColumn<LocalDateTime> = convertTo()
-public fun AnyCol.toDate(): DataColumn<LocalDate> = convertTo()
-public fun AnyCol.toTime(): DataColumn<LocalTime> = convertTo()
-public fun AnyCol.toInt(): DataColumn<Int> = convertTo()
-public fun AnyCol.toStr(): DataColumn<String> = convertTo()
-public fun AnyCol.toDouble(): DataColumn<Double> = convertTo()
-
 public fun AnyCol.convertTo(newType: KType): AnyCol = convertToTypeImpl(newType)
 
+public fun AnyCol.convertToLocalDateTime(): DataColumn<LocalDateTime> = convertTo()
+public fun AnyCol.convertToLocalDate(): DataColumn<LocalDate> = convertTo()
+public fun AnyCol.convertToLocalTime(): DataColumn<LocalTime> = convertTo()
+public fun AnyCol.convertToInt(): DataColumn<Int> = convertTo()
+public fun AnyCol.convertToLong(): DataColumn<Long> = convertTo()
+public fun AnyCol.convertToString(): DataColumn<String> = convertTo()
+public fun AnyCol.convertToDouble(): DataColumn<Double> = convertTo()
+public fun AnyCol.convertToFloat(): DataColumn<Float> = convertTo()
+public fun AnyCol.convertToBigDecimal(): DataColumn<BigDecimal> = convertTo()
+public fun AnyCol.convertToBoolean(): DataColumn<Boolean> = convertTo()
+
+public fun <T> ConvertClause<T, *>.toLocalDate(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDate(zone) }
+public fun <T> ConvertClause<T, *>.toLocalTime(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.convertToLocalTime(zone) }
+public fun <T> ConvertClause<T, *>.toLocalDateTime(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDateTime(zone) }
 public fun <T> ConvertClause<T, *>.toInt(): DataFrame<T> = to<Int>()
+public fun <T> ConvertClause<T, *>.toLong(): DataFrame<T> = to<Long>()
+public fun <T> ConvertClause<T, *>.toStr(): DataFrame<T> = to<String>()
 public fun <T> ConvertClause<T, *>.toDouble(): DataFrame<T> = to<Double>()
 public fun <T> ConvertClause<T, *>.toFloat(): DataFrame<T> = to<Float>()
-public fun <T> ConvertClause<T, *>.toStr(): DataFrame<T> = to<String>()
-public fun <T> ConvertClause<T, *>.toLong(): DataFrame<T> = to<Long>()
 public fun <T> ConvertClause<T, *>.toBigDecimal(): DataFrame<T> = to<BigDecimal>()
-
-public fun <T> ConvertClause<T, *>.toDate(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.toLocalDate(zone) }
-public fun <T> ConvertClause<T, *>.toTime(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.toLocalTime(zone) }
-public fun <T> ConvertClause<T, *>.toDateTime(zone: ZoneId = defaultTimeZone): DataFrame<T> =
-    to { it.toLocalDateTime(zone) }
+public fun <T> ConvertClause<T, *>.toBoolean(): DataFrame<T> = to<Boolean>()
 
 public fun <T, C> ConvertClause<T, List<List<C>>>.toDataFrames(containsColumns: Boolean = false): DataFrame<T> =
     to { it.toDataFrames(containsColumns) }
 
-public fun AnyCol.toLocalDate(zone: ZoneId = defaultTimeZone): DataColumn<LocalDate> = when (typeClass) {
+public fun AnyCol.convertToLocalDate(zone: ZoneId = defaultTimeZone): DataColumn<LocalDate> = when (typeClass) {
     Long::class -> cast<Long>().map { it.toLocalDate(zone) }
     Int::class -> cast<Int>().map { it.toLong().toLocalDate(zone) }
     else -> convertTo(getType<LocalDate>()).cast()
 }
 
-public fun AnyCol.toLocalDateTime(zone: ZoneId = defaultTimeZone): DataColumn<LocalDateTime> = when (typeClass) {
+public fun AnyCol.convertToLocalDateTime(zone: ZoneId = defaultTimeZone): DataColumn<LocalDateTime> = when (typeClass) {
     Long::class -> cast<Long>().map { it.toLocalDateTime(zone) }
     Int::class -> cast<Int>().map { it.toLong().toLocalDateTime(zone) }
     else -> convertTo(getType<LocalDateTime>()).cast()
 }
 
-public fun AnyCol.toLocalTime(zone: ZoneId = defaultTimeZone): DataColumn<LocalTime> = when (typeClass) {
+public fun AnyCol.convertToLocalTime(zone: ZoneId = defaultTimeZone): DataColumn<LocalTime> = when (typeClass) {
     Long::class -> cast<Long>().map { it.toLocalDateTime(zone).toLocalTime() }
     Int::class -> cast<Int>().map { it.toLong().toLocalDateTime(zone).toLocalTime() }
     else -> convertTo(getType<LocalTime>()).cast()
