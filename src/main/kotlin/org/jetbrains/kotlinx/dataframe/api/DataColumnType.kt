@@ -1,12 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnWithParent
-import org.jetbrains.kotlinx.dataframe.impl.columns.ForceResolvedColumn
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
@@ -30,10 +26,3 @@ public fun AnyCol.elementTypeIsNullable(): Boolean = typeOfElement().isMarkedNul
 public fun AnyCol.isComparable(): Boolean = isSubtypeOf<Comparable<*>?>()
 
 public fun AnyCol.inferType(): DataColumn<*> = DataColumn.createWithTypeInference(name, toList())
-
-public fun AnyBaseColumn.unbox(): AnyCol = when (this) {
-    is ColumnWithPath<*> -> data.unbox()
-    is ColumnWithParent<*> -> source.unbox()
-    is ForceResolvedColumn<*> -> source.unbox()
-    else -> this as AnyCol
-}
