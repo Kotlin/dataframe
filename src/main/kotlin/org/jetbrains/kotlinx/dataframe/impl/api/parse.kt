@@ -15,9 +15,6 @@ import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.hasNulls
-import org.jetbrains.kotlinx.dataframe.impl.api.Parsers.toLocalDateOrNull
-import org.jetbrains.kotlinx.dataframe.impl.api.Parsers.toLocalDateTimeOrNull
-import org.jetbrains.kotlinx.dataframe.impl.api.Parsers.toLocalTimeOrNull
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.getType
@@ -31,6 +28,7 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
+import java.time.temporal.Temporal
 import java.util.Locale
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -72,8 +70,8 @@ internal object Parsers : GlobalParserOptions {
 
     public val nulls: Set<String> get() = nullStrings
 
-    override fun addDateTimeFormat(format: String) {
-        formatters.add(DateTimeFormatter.ofPattern(format))
+    override fun addDateTimePattern(pattern: String) {
+        formatters.add(DateTimeFormatter.ofPattern(pattern))
     }
 
     override fun addNullString(str: String) {
@@ -179,19 +177,19 @@ internal object Parsers : GlobalParserOptions {
         stringParser { it.toLongOrNull() },
 
         stringParserWithOptions { options ->
-            val formatter = options?.dateTimeFormatter
+            val formatter = options?.getDateTimeFormatter()
             val parser = { it: String -> it.toLocalDateTimeOrNull(formatter) }
             parser
         },
 
         stringParserWithOptions { options ->
-            val formatter = options?.dateTimeFormatter
+            val formatter = options?.getDateTimeFormatter()
             val parser = { it: String -> it.toLocalDateOrNull(formatter) }
             parser
         },
 
         stringParserWithOptions { options ->
-            val formatter = options?.dateTimeFormatter
+            val formatter = options?.getDateTimeFormatter()
             val parser = { it: String -> it.toLocalTimeOrNull(formatter) }
             parser
         },
@@ -217,9 +215,19 @@ internal object Parsers : GlobalParserOptions {
 
     operator fun get(type: KType): StringParser<*>? = parsersMap.get(type)
 
-    operator fun <T : Any> get(type: KClass<T>): StringParser<*>? = parsersMap.get(type.createStarProjectedType(false))
+    operator fun <T : Any> get(type: KClass<T>): StringParser<T>? = parsersMap.get(type.createStarProjectedType(false)) as? StringParser<T>
 
     inline fun <reified T : Any> get(): StringParser<T>? = get(getType<T>()) as? StringParser<T>
+
+    internal fun <R : Temporal> getConverter(clazz: KClass<R>, pattern: String? = null, locale: Locale? = null): (String) -> R? {
+        val parser = get(clazz) ?: error("Can not convert String to $clazz")
+        val formatter = pattern?.let {
+            if (locale == null) DateTimeFormatter.ofPattern(it)
+            else DateTimeFormatter.ofPattern(it, locale)
+        }
+        val options = if (formatter != null || locale != null) ParserOptions(dateTimeFormatter = formatter, locale = locale) else null
+        return parser.applyOptions(options)
+    }
 }
 
 internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColumn<*> {

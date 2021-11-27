@@ -30,7 +30,7 @@ public fun <T, C> DataFrame<T>.parse(vararg columns: KProperty<C>, options: Pars
 
 public interface GlobalParserOptions {
 
-    public fun addDateTimeFormat(format: String)
+    public fun addDateTimePattern(pattern: String)
 
     public fun addNullString(str: String)
 
@@ -42,8 +42,16 @@ public interface GlobalParserOptions {
 public data class ParserOptions(
     val locale: Locale? = null,
     val dateTimeFormatter: DateTimeFormatter? = null,
+    val dateTimePattern: String? = null,
     val nulls: Set<String>? = null
-)
+) {
+    internal fun getDateTimeFormatter(): DateTimeFormatter? = when {
+        dateTimeFormatter != null -> dateTimeFormatter
+        dateTimePattern != null && locale != null -> DateTimeFormatter.ofPattern(dateTimePattern, locale)
+        dateTimePattern != null -> DateTimeFormatter.ofPattern(dateTimePattern)
+        else -> null
+    }
+}
 
 public fun DataColumn<String?>.tryParse(options: ParserOptions? = null): DataColumn<*> = tryParseImpl(options)
 
