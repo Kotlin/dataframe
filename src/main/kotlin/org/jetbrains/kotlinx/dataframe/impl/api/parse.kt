@@ -259,7 +259,8 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
                     nullStringParsed = true
                 }
                 else -> {
-                    val res = parser(str)
+                    val trimmed = str.trim()
+                    val res = parser(trimmed)
                     if (res == null) {
                         parserId++
                         break
@@ -281,7 +282,7 @@ internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: Par
     val handler = parser.applyOptions(options)
     val parsedValues = values.map {
         it?.let {
-            handler(it) ?: throw IllegalStateException("Couldn't parse '$it' into type ${parser.type}")
+            handler(it.trim()) ?: throw IllegalStateException("Couldn't parse '$it' into type ${parser.type}")
         }
     }
     return DataColumn.createValueColumn(name(), parsedValues, parser.type.withNullability(hasNulls)) as DataColumn<T?>
