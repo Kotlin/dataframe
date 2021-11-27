@@ -59,7 +59,7 @@ public fun <T> DataFrame<T>.dropNulls(vararg cols: String, whereAllNull: Boolean
 public fun <T> DataFrame<T>.dropNulls(vararg cols: Column, whereAllNull: Boolean = false): DataFrame<T> = dropNulls(whereAllNull) { cols.toColumns() }
 public fun <T> DataFrame<T>.dropNulls(cols: Iterable<Column>, whereAllNull: Boolean = false): DataFrame<T> = dropNulls(whereAllNull) { cols.toColumnSet() }
 
-public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> = filter { it != null } as DataColumn<T>
+public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> = (if (!hasNulls()) this else filter { it != null }) as DataColumn<T>
 
 // endregion
 
