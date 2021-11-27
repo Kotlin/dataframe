@@ -32,7 +32,7 @@ public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSki
 private val supportedClasses = setOf(Double::class, Float::class, Int::class, Long::class, BigDecimal::class)
 
 public fun <T, C> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA, columns: ColumnsSelector<T, C>): DataFrame<T> =
-    convert(columns).to { if(it.typeClass in supportedClasses) it.cast<Number?>().cumSum(skipNA) else it }
+    convert(columns).to { if (it.typeClass in supportedClasses) it.cast<Number?>().cumSum(skipNA) else it }
 public fun <T> DataFrame<T>.cumSum(vararg columns: String, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) { columns.toColumns() }
 public fun <T> DataFrame<T>.cumSum(vararg columns: Column, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) { columns.toColumns() }
 public fun <T> DataFrame<T>.cumSum(vararg columns: KProperty<*>, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) { columns.toColumns() }
