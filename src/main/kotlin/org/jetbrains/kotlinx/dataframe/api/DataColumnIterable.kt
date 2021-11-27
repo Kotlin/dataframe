@@ -54,7 +54,7 @@ public inline fun <T, reified R> DataColumn<T>.mapInline(crossinline transform: 
         newValues,
         suggestedType = resType,
         suggestedTypeIsUpperBound = false,
-        nullable = if(!resType.isMarkedNullable) false else null
+        nullable = if (!resType.isMarkedNullable) false else null
     )
 }
 
