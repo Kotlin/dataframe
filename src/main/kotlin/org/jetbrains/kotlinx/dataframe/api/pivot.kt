@@ -96,4 +96,3 @@ public fun <T> AggregateGroupedDsl<T>.pivotCount(vararg columns: Column, inward:
 public fun <T> AggregateGroupedDsl<T>.pivotCount(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
 
 // endregion
-
