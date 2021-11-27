@@ -32,8 +32,6 @@ public interface GlobalParserOptions {
 
     public fun addDateTimeFormat(format: String)
 
-    public fun addDateTimeFormatter(formatter: DateTimeFormatter)
-
     public fun addNullString(str: String)
 
     public fun resetToDefault()

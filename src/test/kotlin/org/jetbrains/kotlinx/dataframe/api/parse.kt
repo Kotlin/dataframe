@@ -2,11 +2,18 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.junit.Test
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.Month
+import java.time.format.DateTimeFormatter
 
 class ParseTests {
 
@@ -71,5 +78,82 @@ class ParseTests {
         df.nrow() shouldBe 2
         println(df)
         val group = df["a"] as FrameColumn<*>
+    }
+
+    @Test
+    fun parseDate() {
+        val date by columnOf("January 1, 2020")
+        val format = "MMMM d, yyyy"
+
+        val parsed = date.parse(ParserOptions(dateTimeFormatter = DateTimeFormatter.ofPattern(format))).cast<LocalDate>()
+
+        parsed.type() shouldBe getType<LocalDate>()
+        with(parsed[0]) {
+            month shouldBe Month.JANUARY
+            dayOfMonth shouldBe 1
+            year shouldBe 2020
+        }
+
+        DataFrame.parser.addDateTimeFormat(format)
+
+        date.parse() shouldBe parsed
+        date.convertTo<LocalDate>() shouldBe parsed
+
+        DataFrame.parser.resetToDefault()
+    }
+
+    @Test
+    fun parseDateTime() {
+        val dateTime by columnOf("3 Jun 2008 13:05:30")
+        val format = "d MMM yyyy HH:mm:ss"
+
+        val parsed = dateTime.parse(ParserOptions(dateTimeFormatter = DateTimeFormatter.ofPattern(format))).cast<LocalDateTime>()
+
+        parsed.type() shouldBe getType<LocalDateTime>()
+        with(parsed[0]) {
+            month shouldBe Month.JUNE
+            dayOfMonth shouldBe 3
+            year shouldBe 2008
+            hour shouldBe 13
+            minute shouldBe 5
+            second shouldBe 30
+        }
+
+        DataFrame.parser.addDateTimeFormat(format)
+
+        dateTime.parse() shouldBe parsed
+        dateTime.convertTo<LocalDateTime>() shouldBe parsed
+
+        DataFrame.parser.resetToDefault()
+    }
+
+    @Test
+    fun parseTime() {
+        val dateTime by columnOf("13-05-30")
+        val format = "HH-mm-ss"
+
+        val parsed = dateTime.parse(ParserOptions(dateTimeFormatter = DateTimeFormatter.ofPattern(format))).cast<LocalTime>()
+
+        parsed.type() shouldBe getType<LocalTime>()
+        with(parsed[0]) {
+            hour shouldBe 13
+            minute shouldBe 5
+            second shouldBe 30
+        }
+
+        DataFrame.parser.addDateTimeFormat(format)
+
+        dateTime.parse() shouldBe parsed
+        dateTime.convertTo<LocalTime>() shouldBe parsed
+
+        DataFrame.parser.resetToDefault()
+    }
+
+    @Test
+    fun `parse date without formatter`() {
+        val time by columnOf("2020-01-06", "2020-01-07")
+        val df = dataFrameOf(time)
+        val casted = df.convert(time).toDate()
+        casted[time].type() shouldBe getType<LocalDate>()
     }
 }

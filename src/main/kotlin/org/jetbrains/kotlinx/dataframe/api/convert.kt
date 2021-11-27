@@ -113,21 +113,21 @@ public fun <T> ConvertClause<T, *>.toDateTime(zone: ZoneId = defaultTimeZone): D
 public fun <T, C> ConvertClause<T, List<List<C>>>.toDataFrames(containsColumns: Boolean = false): DataFrame<T> =
     to { it.toDataFrames(containsColumns) }
 
-public fun AnyCol.toLocalDate(zone: ZoneId = org.jetbrains.kotlinx.dataframe.impl.api.defaultTimeZone): DataColumn<LocalDate> = when (typeClass) {
-    kotlin.Long::class -> cast<Long>().map { it.toLocalDate(zone) }
-    kotlin.Int::class -> cast<Int>().map { it.toLong().toLocalDate(zone) }
+public fun AnyCol.toLocalDate(zone: ZoneId = defaultTimeZone): DataColumn<LocalDate> = when (typeClass) {
+    Long::class -> cast<Long>().map { it.toLocalDate(zone) }
+    Int::class -> cast<Int>().map { it.toLong().toLocalDate(zone) }
     else -> convertTo(getType<LocalDate>()).cast()
 }
 
-public fun AnyCol.toLocalDateTime(zone: ZoneId = org.jetbrains.kotlinx.dataframe.impl.api.defaultTimeZone): DataColumn<LocalDateTime> = when (typeClass) {
-    kotlin.Long::class -> cast<Long>().map { it.toLocalDateTime(zone) }
-    kotlin.Int::class -> cast<Int>().map { it.toLong().toLocalDateTime(zone) }
+public fun AnyCol.toLocalDateTime(zone: ZoneId = defaultTimeZone): DataColumn<LocalDateTime> = when (typeClass) {
+    Long::class -> cast<Long>().map { it.toLocalDateTime(zone) }
+    Int::class -> cast<Int>().map { it.toLong().toLocalDateTime(zone) }
     else -> convertTo(getType<LocalDateTime>()).cast()
 }
 
-public fun AnyCol.toLocalTime(zone: ZoneId = org.jetbrains.kotlinx.dataframe.impl.api.defaultTimeZone): DataColumn<LocalTime> = when (typeClass) {
-    kotlin.Long::class -> cast<Long>().map { it.toLocalDateTime(zone).toLocalTime() }
-    kotlin.Int::class -> cast<Int>().map { it.toLong().toLocalDateTime(zone).toLocalTime() }
+public fun AnyCol.toLocalTime(zone: ZoneId = defaultTimeZone): DataColumn<LocalTime> = when (typeClass) {
+    Long::class -> cast<Long>().map { it.toLocalDateTime(zone).toLocalTime() }
+    Int::class -> cast<Int>().map { it.toLong().toLocalDateTime(zone).toLocalTime() }
     else -> convertTo(getType<LocalTime>()).cast()
 }
 
