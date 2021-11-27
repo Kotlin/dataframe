@@ -1053,7 +1053,15 @@ class Analyze : TestBase() {
         // SampleStart
         df.pivotCount { city }
         // same as
-        df.pivot(inward = true) { city }.groupByOther().count()
+        df.pivot { city }.groupByOther().count()
+
+        df.groupBy { name }.pivotCount { city }
+        // same as
+        df.groupBy { name }.pivot { city }.count()
+        // same as
+        df.groupBy { name }.aggregate {
+            pivotCount { city }
+        }
         // SampleEnd
     }
 
@@ -1062,7 +1070,15 @@ class Analyze : TestBase() {
         // SampleStart
         df.pivotMatches { city }
         // same as
-        df.pivot(inward = true) { city }.groupByOther().matches()
+        df.pivot { city }.groupByOther().matches()
+
+        df.groupBy { name }.pivotMatches { city }
+        // same as
+        df.groupBy { name }.pivot { city }.matches()
+        // same as
+        df.groupBy { name }.aggregate {
+            pivotMatches { city }
+        }
         // SampleEnd
     }
 }
