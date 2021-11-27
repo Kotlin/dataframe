@@ -29,4 +29,4 @@ df.pivot { city }.groupBy { name.lastName }.median()
 
 <!---END-->
 
-See [statistics](statistics.md#groupby-statistics) for details on complex data aggregations.
+See [statistics](summaryStatistics.md#groupby-statistics) for details on complex data aggregations.

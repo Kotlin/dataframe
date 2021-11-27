@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.count
+import org.jetbrains.kotlinx.dataframe.api.cumSum
 import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.div
 import org.jetbrains.kotlinx.dataframe.api.expr
@@ -33,6 +34,7 @@ import org.jetbrains.kotlinx.dataframe.api.minOrNull
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.pivotCount
 import org.jetbrains.kotlinx.dataframe.api.pivotMatches
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.api.stdFor
@@ -1079,6 +1081,14 @@ class Analyze : TestBase() {
         df.groupBy { name }.aggregate {
             pivotMatches { city }
         }
+        // SampleEnd
+    }
+
+    @Test
+    fun cumSum() {
+        // SampleStart
+        df.cumSum { weight }
+        df.weight.cumSum()
         // SampleEnd
     }
 }
