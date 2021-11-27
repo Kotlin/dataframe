@@ -97,7 +97,7 @@ class ParseTests {
         DataFrame.parser.addDateTimeFormat(format)
 
         date.parse() shouldBe parsed
-        date.convertTo<LocalDate>() shouldBe parsed
+        date.convertToLocalDate() shouldBe parsed
 
         DataFrame.parser.resetToDefault()
     }
@@ -122,7 +122,7 @@ class ParseTests {
         DataFrame.parser.addDateTimeFormat(format)
 
         dateTime.parse() shouldBe parsed
-        dateTime.convertTo<LocalDateTime>() shouldBe parsed
+        dateTime.convertToLocalDateTime() shouldBe parsed
 
         DataFrame.parser.resetToDefault()
     }
@@ -144,7 +144,7 @@ class ParseTests {
         DataFrame.parser.addDateTimeFormat(format)
 
         dateTime.parse() shouldBe parsed
-        dateTime.convertTo<LocalTime>() shouldBe parsed
+        dateTime.convertToLocalTime() shouldBe parsed
 
         DataFrame.parser.resetToDefault()
     }
@@ -153,7 +153,7 @@ class ParseTests {
     fun `parse date without formatter`() {
         val time by columnOf("2020-01-06", "2020-01-07")
         val df = dataFrameOf(time)
-        val casted = df.convert(time).toDate()
+        val casted = df.convert(time).toLocalDate()
         casted[time].type() shouldBe getType<LocalDate>()
     }
 }
