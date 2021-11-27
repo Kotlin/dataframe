@@ -13,7 +13,7 @@ Every summary statistics can be used in aggregations of:
 * [`DataFrame`](DataFrame.md)
 * [`DataColumn`](DataColumn.md)
 * [`GroupBy`](#groupby-statistics)
-* [`Pivot`](pivot.md)
+* [`Pivot`](#pivot-statistics)
 * [`PivotGroupBy`](pivot.md#pivot-groupby)
 
 <!---FUN statisticAggregations-->
