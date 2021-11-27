@@ -15,6 +15,9 @@ import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.impl.api.Parsers.toLocalDateOrNull
+import org.jetbrains.kotlinx.dataframe.impl.api.Parsers.toLocalDateTimeOrNull
+import org.jetbrains.kotlinx.dataframe.impl.api.Parsers.toLocalTimeOrNull
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.getType
@@ -73,10 +76,6 @@ internal object Parsers : GlobalParserOptions {
         formatters.add(DateTimeFormatter.ofPattern(format))
     }
 
-    override fun addDateTimeFormatter(formatter: DateTimeFormatter) {
-        formatters.add(formatter)
-    }
-
     override fun addNullString(str: String) {
         nullStrings.add(str)
     }
@@ -86,7 +85,6 @@ internal object Parsers : GlobalParserOptions {
     override fun resetToDefault() {
         formatters.clear()
         nullStrings.clear()
-
         formatters.add(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
 
         DateTimeFormatterBuilder()
@@ -105,11 +103,14 @@ internal object Parsers : GlobalParserOptions {
         resetToDefault()
     }
 
-    private fun String.toLocalDateTimeOrNull(formatter: DateTimeFormatter? = null): LocalDateTime? {
+    private fun String.toLocalDateTimeOrNull(formatter: DateTimeFormatter?): LocalDateTime? {
         if (formatter != null) {
             return catchSilent { LocalDateTime.parse(this, formatter) }
-        } else for (format in formatters) {
-            catchSilent { LocalDateTime.parse(this, format) }?.let { return it }
+        } else {
+            catchSilent { LocalDateTime.parse(this) }?.let { return it }
+            for (format in formatters) {
+                catchSilent { LocalDateTime.parse(this, format) }?.let { return it }
+            }
         }
         return null
     }
@@ -129,19 +130,29 @@ internal object Parsers : GlobalParserOptions {
             else -> null
         }
 
-    private fun String.toLocalDateOrNull(): LocalDate? =
-        try {
-            LocalDate.parse(this)
-        } catch (_: Throwable) {
-            null
+    private fun String.toLocalDateOrNull(formatter: DateTimeFormatter?): LocalDate? {
+        if (formatter != null) {
+            return catchSilent { LocalDate.parse(this, formatter) }
+        } else {
+            catchSilent { LocalDate.parse(this) }?.let { return it }
+            for (format in formatters) {
+                catchSilent { LocalDate.parse(this, format) }?.let { return it }
+            }
         }
+        return null
+    }
 
-    private fun String.toLocalTimeOrNull(): LocalTime? =
-        try {
-            LocalTime.parse(this)
-        } catch (_: Throwable) {
-            null
+    private fun String.toLocalTimeOrNull(formatter: DateTimeFormatter?): LocalTime? {
+        if (formatter != null) {
+            return catchSilent { LocalTime.parse(this, formatter) }
+        } else {
+            catchSilent { LocalTime.parse(this) }?.let { return it }
+            for (format in formatters) {
+                catchSilent { LocalTime.parse(this, format) }?.let { return it }
+            }
         }
+        return null
+    }
 
     private fun String.parseDouble(format: NumberFormat) =
         when (uppercase(Locale.getDefault())) {
@@ -166,12 +177,22 @@ internal object Parsers : GlobalParserOptions {
     val All = listOf(
         stringParser { it.toIntOrNull() },
         stringParser { it.toLongOrNull() },
-        stringParser { it.toLocalDateOrNull() },
-        stringParser { it.toLocalTimeOrNull() },
 
         stringParserWithOptions { options ->
             val formatter = options?.dateTimeFormatter
             val parser = { it: String -> it.toLocalDateTimeOrNull(formatter) }
+            parser
+        },
+
+        stringParserWithOptions { options ->
+            val formatter = options?.dateTimeFormatter
+            val parser = { it: String -> it.toLocalDateOrNull(formatter) }
+            parser
+        },
+
+        stringParserWithOptions { options ->
+            val formatter = options?.dateTimeFormatter
+            val parser = { it: String -> it.toLocalTimeOrNull(formatter) }
             parser
         },
 

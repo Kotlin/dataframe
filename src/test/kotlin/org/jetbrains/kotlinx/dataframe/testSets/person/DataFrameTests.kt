@@ -122,7 +122,6 @@ import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.toDate
 import org.jetbrains.kotlinx.dataframe.api.toDouble
 import org.jetbrains.kotlinx.dataframe.api.toInt
 import org.jetbrains.kotlinx.dataframe.api.toList
@@ -1573,14 +1572,6 @@ class DataFrameTests : BaseTest() {
         val res = typed.convert { all() }.to<String>()
         res.columns().forEach { it.typeClass shouldBe String::class }
         res.columns().map { it.hasNulls() } shouldBe typed.columns().map { it.hasNulls() }
-    }
-
-    @Test
-    fun convertToDate() {
-        val time by columnOf("2020-01-06", "2020-01-07")
-        val df = dataFrameOf(time)
-        val casted = df.convert(time).toDate()
-        casted[time].type() shouldBe getType<LocalDate>()
     }
 
     @Test
