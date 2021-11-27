@@ -175,7 +175,7 @@ class Modify : TestBase() {
     fun globalParserOptions() {
         // SampleStart
         DataFrame.parser.locale = Locale.FRANCE
-        DataFrame.parser.addDateTimeFormat("dd.MM.uuuu HH:mm:ss")
+        DataFrame.parser.addDateTimePattern("dd.MM.uuuu HH:mm:ss")
         // SampleEnd
     }
 

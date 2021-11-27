@@ -26,16 +26,17 @@ df.parse { age and weight }
 `parse` tries to parse every`String` column into one of supported types in the following order:
 * `Int`
 * `Long`
-* `Boolean`
-* `BigDecimal`
-* `LocalDate`
 * `LocalDateTime`
+* `LocalDate`
 * `LocalTime`
 * `URL`
 * `Double`
+* `Boolean`
+* `BigDecimal`
 
 Available parser options:
 * `locale: Locale` is used to parse numbers
+* `dateTimePattern: String` is used to parse date and time
 * `dateTimeFormatter: DateTimeFormatter` is used to parse date and time
 * `nulls: List<String>` is used to treat particular strings as `null` value. Default `null` strings: `"null"` and `"NULL"`
 
@@ -53,7 +54,7 @@ You can also set global parser options that will be used by default in [`read`](
 
 ```kotlin
 DataFrame.parser.locale = Locale.FRANCE
-DataFrame.parser.addDateTimeFormat("dd.MM.uuuu HH:mm:ss")
+DataFrame.parser.addDateTimePattern("dd.MM.uuuu HH:mm:ss")
 ```
 
 <!---END-->
