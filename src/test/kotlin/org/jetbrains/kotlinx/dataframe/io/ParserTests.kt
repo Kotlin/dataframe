@@ -19,6 +19,7 @@ class ParserTests {
         val parsed = col.parse()
         parsed.type() shouldBe getType<LocalDateTime>()
         parsed.cast<LocalDateTime>()[0].year shouldBe 2021
+        DataFrame.parser.resetToDefault()
     }
 
     @Test(expected = IllegalStateException::class)
