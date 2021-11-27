@@ -92,15 +92,41 @@ public fun <T, C> ConvertClause<T, C>.to(columnConverter: DataFrame<T>.(DataColu
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(getType<C>()) as DataColumn<C>
 public fun AnyCol.convertTo(newType: KType): AnyCol = convertToTypeImpl(newType)
 
-public fun AnyCol.convertToLocalDateTime(): DataColumn<LocalDateTime> = convertTo()
-public fun AnyCol.convertToLocalTime(): DataColumn<LocalTime> = convertTo()
-public fun AnyCol.convertToInt(): DataColumn<Int> = convertTo()
-public fun AnyCol.convertToLong(): DataColumn<Long> = convertTo()
-public fun AnyCol.convertToString(): DataColumn<String> = convertTo()
-public fun AnyCol.convertToDouble(): DataColumn<Double> = convertTo()
-public fun AnyCol.convertToFloat(): DataColumn<Float> = convertTo()
-public fun AnyCol.convertToBigDecimal(): DataColumn<BigDecimal> = convertTo()
-public fun AnyCol.convertToBoolean(): DataColumn<Boolean> = convertTo()
+@JvmName("convertToLocalDateTimeT")
+public fun <T : Any> DataColumn<T>.convertToLocalDateTime(): DataColumn<LocalDateTime> = convertTo()
+public fun <T : Any> DataColumn<T?>.convertToLocalDateTime(): DataColumn<LocalDateTime?> = convertTo()
+
+@JvmName("convertToLocalTimeT")
+public fun <T : Any> DataColumn<T>.convertToLocalTime(): DataColumn<LocalTime> = convertTo()
+public fun <T : Any> DataColumn<T?>.convertToLocalTime(): DataColumn<LocalTime?> = convertTo()
+
+@JvmName("convertToIntT")
+public fun <T : Any> DataColumn<T>.convertToInt(): DataColumn<Int> = convertTo()
+public fun <T : Any> DataColumn<T?>.convertToInt(): DataColumn<Int?> = convertTo()
+
+@JvmName("convertToLongT")
+public fun <T : Any> DataColumn<T>.convertToLong(): DataColumn<Long> = convertTo()
+public fun <T : Any> DataColumn<T?>.convertToLong(): DataColumn<Long?> = convertTo()
+
+@JvmName("convertToStringT")
+public fun <T : Any> DataColumn<T>.convertToString(): DataColumn<String> = convertTo()
+public fun <T : Any> DataColumn<T?>.convertToString(): DataColumn<String?> = convertTo()
+
+@JvmName("convertToDoubleT")
+public fun <T : Any> DataColumn<T>.convertToDouble(): DataColumn<Double> = convertTo()
+public fun <T : Any> DataColumn<T?>.convertToDouble(): DataColumn<Double?> = convertTo()
+
+@JvmName("convertToFloatT")
+public fun <T : Any> DataColumn<T>.convertToFloat(): DataColumn<Float> = convertTo()
+public fun <T : Any> DataColumn<T?>.convertToFloat(): DataColumn<Float?> = convertTo()
+
+@JvmName("convertToBigDecimalT")
+public fun <T : Any> DataColumn<T>.convertToBigDecimal(): DataColumn<BigDecimal> = convertTo()
+public fun <T : Any> DataColumn<T?>.convertToBigDecimal(): DataColumn<BigDecimal?> = convertTo()
+
+@JvmName("convertToBooleanT")
+public fun <T : Any> DataColumn<T>.convertToBoolean(): DataColumn<Boolean> = convertTo()
+public fun <T : Any> DataColumn<T?>.convertToBoolean(): DataColumn<Boolean?> = convertTo()
 
 // region toLocalDate
 
@@ -125,11 +151,11 @@ public fun DataColumn<String?>.convertToLocalDate(pattern: String? = null, local
 }
 
 @JvmName("toLocalDateTLong")
-public fun <T> ConvertClause<T, Long>.toLocalDate(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDate(zone) }
+public fun <T, R : Long?> ConvertClause<T, R>.toLocalDate(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDate(zone) }
 @JvmName("toLocalDateTInt")
-public fun <T> ConvertClause<T, Int>.toLocalDate(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDate(zone) }
+public fun <T, R : Int?> ConvertClause<T, R>.toLocalDate(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDate(zone) }
 
-public fun <T> ConvertClause<T, String>.toLocalDate(pattern: String? = null, locale: Locale? = null): DataFrame<T> = to { it.convertToLocalDate(pattern, locale) }
+public fun <T, R : String?> ConvertClause<T, R>.toLocalDate(pattern: String? = null, locale: Locale? = null): DataFrame<T> = to { it.convertToLocalDate(pattern, locale) }
 
 public fun <T> ConvertClause<T, *>.toLocalDate(): DataFrame<T> = to { it.convertTo<LocalDate>() }
 
@@ -158,11 +184,11 @@ public fun DataColumn<String?>.convertToLocalTime(pattern: String? = null, local
 }
 
 @JvmName("toLocalTimeTLong")
-public fun <T> ConvertClause<T, Long>.toLocalTime(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.convertToLocalTime(zone) }
+public fun <T, R : Long?> ConvertClause<T, R>.toLocalTime(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.convertToLocalTime(zone) }
 @JvmName("toLocalTimeTInt")
-public fun <T> ConvertClause<T, Int>.toLocalTime(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.convertToLocalTime(zone) }
+public fun <T, R : Int?> ConvertClause<T, R>.toLocalTime(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.convertToLocalTime(zone) }
 
-public fun <T> ConvertClause<T, String>.toLocalTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> = to { it.convertToLocalTime(pattern, locale) }
+public fun <T, R : String?> ConvertClause<T, R>.toLocalTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> = to { it.convertToLocalTime(pattern, locale) }
 
 public fun <T> ConvertClause<T, *>.toLocalTime(): DataFrame<T> = to { it.convertTo<LocalTime>() }
 
@@ -191,11 +217,11 @@ public fun DataColumn<String?>.convertToLocalDateTime(pattern: String? = null, l
 }
 
 @JvmName("toLocalDateTimeTLong")
-public fun <T> ConvertClause<T, Long>.toLocalDateTime(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDateTime(zone) }
+public fun <T, R : Long?> ConvertClause<T, R>.toLocalDateTime(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDateTime(zone) }
 @JvmName("toLocalDateTimeTInt")
-public fun <T> ConvertClause<T, Int>.toLocalDateTime(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDateTime(zone) }
+public fun <T, R : Int?> ConvertClause<T, R>.toLocalDateTime(zone: ZoneId = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDateTime(zone) }
 
-public fun <T> ConvertClause<T, String>.toLocalDateTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> = to { it.convertToLocalDateTime(pattern, locale) }
+public fun <T, R : String?> ConvertClause<T, R>.toLocalDateTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> = to { it.convertToLocalDateTime(pattern, locale) }
 
 public fun <T> ConvertClause<T, *>.toLocalDateTime(): DataFrame<T> = to { it.convertTo<LocalDateTime>() }
 
