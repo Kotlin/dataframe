@@ -177,6 +177,7 @@ class Modify : TestBase() {
         DataFrame.parser.locale = Locale.FRANCE
         DataFrame.parser.addDateTimePattern("dd.MM.uuuu HH:mm:ss")
         // SampleEnd
+        DataFrame.parser.resetToDefault()
     }
 
     @Test
