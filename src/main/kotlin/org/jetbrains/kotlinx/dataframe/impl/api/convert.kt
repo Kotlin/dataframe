@@ -181,8 +181,8 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
     }
 }
 
-internal fun Long.toLocalDateTime(zone: ZoneId) = LocalDateTime.ofInstant(Instant.ofEpochMilli(this), zone)
-internal fun Long.toLocalDate(zone: ZoneId) = toLocalDateTime(zone).toLocalDate()
-internal fun Long.toLocalTime(zone: ZoneId) = toLocalDateTime(zone).toLocalTime()
+internal fun Long.toLocalDateTime(zone: ZoneId? = null) = LocalDateTime.ofInstant(Instant.ofEpochMilli(this), zone ?: defaultTimeZone)
+internal fun Long.toLocalDate(zone: ZoneId? = null) = toLocalDateTime(zone).toLocalDate()
+internal fun Long.toLocalTime(zone: ZoneId? = null) = toLocalDateTime(zone).toLocalTime()
 
 internal val defaultTimeZone = TimeZone.getDefault().toZoneId()

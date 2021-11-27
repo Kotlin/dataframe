@@ -13,7 +13,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.Month
-import java.time.format.DateTimeFormatter
 
 class ParseTests {
 
@@ -83,9 +82,9 @@ class ParseTests {
     @Test
     fun parseDate() {
         val date by columnOf("January 1, 2020")
-        val format = "MMMM d, yyyy"
+        val pattern = "MMMM d, yyyy"
 
-        val parsed = date.parse(ParserOptions(dateTimeFormatter = DateTimeFormatter.ofPattern(format))).cast<LocalDate>()
+        val parsed = date.parse(ParserOptions(dateTimePattern = pattern)).cast<LocalDate>()
 
         parsed.type() shouldBe getType<LocalDate>()
         with(parsed[0]) {
@@ -94,7 +93,13 @@ class ParseTests {
             year shouldBe 2020
         }
 
-        DataFrame.parser.addDateTimeFormat(format)
+        date.convertToLocalDate(pattern) shouldBe parsed
+        with(date.toDataFrame()) {
+            convert { date }.toLocalDate(pattern)[date] shouldBe parsed
+            parse(ParserOptions(dateTimePattern = pattern))[date] shouldBe parsed
+        }
+
+        DataFrame.parser.addDateTimePattern(pattern)
 
         date.parse() shouldBe parsed
         date.convertToLocalDate() shouldBe parsed
@@ -105,9 +110,9 @@ class ParseTests {
     @Test
     fun parseDateTime() {
         val dateTime by columnOf("3 Jun 2008 13:05:30")
-        val format = "d MMM yyyy HH:mm:ss"
+        val pattern = "d MMM yyyy HH:mm:ss"
 
-        val parsed = dateTime.parse(ParserOptions(dateTimeFormatter = DateTimeFormatter.ofPattern(format))).cast<LocalDateTime>()
+        val parsed = dateTime.parse(ParserOptions(dateTimePattern = pattern)).cast<LocalDateTime>()
 
         parsed.type() shouldBe getType<LocalDateTime>()
         with(parsed[0]) {
@@ -119,7 +124,13 @@ class ParseTests {
             second shouldBe 30
         }
 
-        DataFrame.parser.addDateTimeFormat(format)
+        dateTime.convertToLocalDateTime(pattern) shouldBe parsed
+        with(dateTime.toDataFrame()) {
+            convert { dateTime }.toLocalDateTime(pattern)[dateTime] shouldBe parsed
+            parse(ParserOptions(dateTimePattern = pattern))[dateTime] shouldBe parsed
+        }
+
+        DataFrame.parser.addDateTimePattern(pattern)
 
         dateTime.parse() shouldBe parsed
         dateTime.convertToLocalDateTime() shouldBe parsed
@@ -129,10 +140,10 @@ class ParseTests {
 
     @Test
     fun parseTime() {
-        val dateTime by columnOf("13-05-30")
-        val format = "HH-mm-ss"
+        val time by columnOf("13-05-30")
+        val pattern = "HH-mm-ss"
 
-        val parsed = dateTime.parse(ParserOptions(dateTimeFormatter = DateTimeFormatter.ofPattern(format))).cast<LocalTime>()
+        val parsed = time.parse(ParserOptions(dateTimePattern = pattern)).cast<LocalTime>()
 
         parsed.type() shouldBe getType<LocalTime>()
         with(parsed[0]) {
@@ -140,11 +151,16 @@ class ParseTests {
             minute shouldBe 5
             second shouldBe 30
         }
+        time.convertToLocalTime(pattern) shouldBe parsed
+        with(time.toDataFrame()) {
+            convert { time }.toLocalTime(pattern)[time] shouldBe parsed
+            parse(ParserOptions(dateTimePattern = pattern))[time] shouldBe parsed
+        }
 
-        DataFrame.parser.addDateTimeFormat(format)
+        DataFrame.parser.addDateTimePattern(pattern)
 
-        dateTime.parse() shouldBe parsed
-        dateTime.convertToLocalTime() shouldBe parsed
+        time.parse() shouldBe parsed
+        time.convertToLocalTime() shouldBe parsed
 
         DataFrame.parser.resetToDefault()
     }
