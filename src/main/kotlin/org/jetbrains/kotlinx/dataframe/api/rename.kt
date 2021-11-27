@@ -42,7 +42,7 @@ public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> {
 public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>): DataFrame<T> =
     into(*newColumns.map { it.name() }.toTypedArray())
 public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> = df.move(columns).intoIndexed { col, index ->
-    col.path.drop(1) + newNames[index]
+    col.path.dropLast(1) + newNames[index]
 }
 
 public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> String): DataFrame<T> = df.move(columns).into {

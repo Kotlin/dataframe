@@ -8,13 +8,11 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
-import org.jetbrains.kotlinx.dataframe.columns.*
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.impl.*
 import org.jetbrains.kotlinx.dataframe.impl.api.flattenImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
@@ -76,14 +74,11 @@ public fun <T> DataFrame<T>.ungroup(vararg columns: KProperty<*>): DataFrame<T> 
 
 // region flatten
 
-internal val defaultFlattenSeparator: CharSequence = "_"
-
-public fun <T> DataFrame<T>.flatten(separator: CharSequence = defaultFlattenSeparator): DataFrame<T> = flatten(separator) { all() }
+public fun <T> DataFrame<T>.flatten(): DataFrame<T> = flatten { all() }
 
 public fun <T, C> DataFrame<T>.flatten(
-    separator: CharSequence = defaultFlattenSeparator,
     columns: ColumnsSelector<T, C>
-): DataFrame<T> = flattenImpl(separator, columns)
+): DataFrame<T> = flattenImpl(columns)
 
 // endregion
 
