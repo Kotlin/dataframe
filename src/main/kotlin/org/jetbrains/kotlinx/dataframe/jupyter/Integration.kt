@@ -16,8 +16,8 @@ import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.io.HtmlData
@@ -63,8 +63,7 @@ internal class Integration : JupyterIntegration() {
             render<AnyFrame> ({ it })
             render<FormattedFrame<*>>({ it.df }, modifyConfig = { getDisplayConfiguration(it) })
             render<AnyRow>({ it.toDataFrame() }, { "DataRow [${it.ncol}]" })
-            render<ColumnGroup<*>> ({ it.df })
-            render<AnyCol>({ listOf(it).toDataFrame() }, { "DataColumn [${it.nrow()}]" })
+            render<AnyCol>({ dataFrameOf(it) }, { "DataColumn [${it.nrow()}]" })
             render<GroupBy<*, *>>({ it.toDataFrame() }, { "GroupBy" })
             render<Pivot<*>>({ it.toDataFrame() }, { "Pivot: ${it.ncol} columns" })
             render<PivotGroupBy<*>>({ it.toDataFrame() }, { "PivotGroupBy: ${it.size}" })
