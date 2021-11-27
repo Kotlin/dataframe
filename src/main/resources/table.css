@@ -61,4 +61,5 @@ table.dataframe .expanderSvg {
 table.dataframe .expander {
     display: flex;
     align-items: center;
+    width: max-content;
 }
