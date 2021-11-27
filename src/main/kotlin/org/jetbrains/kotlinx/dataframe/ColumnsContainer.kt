@@ -32,6 +32,8 @@ public interface ColumnsContainer<out T> {
     public operator fun get(columnName: String): AnyCol = getColumn(columnName)
     public operator fun get(columnPath: ColumnPath): AnyCol = getColumn(columnPath)
 
+    public operator fun <R> get(column: DataColumn<R>): DataColumn<R> = getColumn(column.name()).cast()
+
     public operator fun <R> get(column: ColumnReference<R>): DataColumn<R> = getColumn(column)
     public operator fun <R> get(column: ColumnReference<DataRow<R>>): ColumnGroup<R> = getColumn(column)
     public operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R> = getColumn(column)

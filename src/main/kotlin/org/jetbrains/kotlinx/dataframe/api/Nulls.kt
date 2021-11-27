@@ -25,6 +25,10 @@ internal inline val Any?.isNaN: Boolean get() = (this is Double && isNaN()) || (
 
 internal inline val Any?.isNA: Boolean get() = this == null || isNaN
 
+internal inline val Double?.isNA: Boolean get() = this == null || this.isNaN()
+
+internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
+
 // region fillNaNs
 
 public fun <T, C> DataFrame<T>.fillNaNs(cols: ColumnsSelector<T, C>): UpdateClause<T, C> = update(cols).where { it.isNaN }

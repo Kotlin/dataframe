@@ -109,7 +109,7 @@ df.groupBy { name }.concat()
 
 ## Aggregation
 
-To compute one or several [statistics](statistics.md) per every group of `GroupBy` use `aggregate` function. Its body will be executed for every data group and has a receiver of type `DataFrame` that represents current data group being aggregated.
+To compute one or several [statistics](summaryStatistics.md) per every group of `GroupBy` use `aggregate` function. Its body will be executed for every data group and has a receiver of type `DataFrame` that represents current data group being aggregated.
 To add a new column to the resulting `DataFrame`, pass the name of new column to infix function `into`:
 
 <!---FUN groupByAggregations-->
