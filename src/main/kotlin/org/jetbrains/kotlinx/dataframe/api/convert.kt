@@ -187,7 +187,7 @@ public fun DataColumn<String>.convertToLocalDateTime(pattern: String? = null, lo
 @JvmName("convertToLocalDateTimeString?")
 public fun DataColumn<String?>.convertToLocalDateTime(pattern: String? = null, locale: Locale? = null): DataColumn<LocalDateTime?> {
     val converter = Parsers.getConverter(LocalDateTime::class, pattern, locale)
-    return map { it?.let { converter(it) ?: error("Can't convert `$it` to LocalDateTime" } }
+    return map { it?.let { converter(it) ?: error("Can't convert `$it` to LocalDateTime") } }
 }
 
 @JvmName("toLocalDateTimeTLong")
