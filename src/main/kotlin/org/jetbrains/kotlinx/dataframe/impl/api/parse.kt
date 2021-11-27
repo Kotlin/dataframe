@@ -219,13 +219,17 @@ internal object Parsers : GlobalParserOptions {
 
     inline fun <reified T : Any> get(): StringParser<T>? = get(getType<T>()) as? StringParser<T>
 
-    internal fun <R : Temporal> getConverter(clazz: KClass<R>, pattern: String? = null, locale: Locale? = null): (String) -> R? {
+    internal fun <R : Temporal> getConverter(clazz: KClass<R>, pattern: String? = null, locale: Locale? = null):
+        (String) -> R? {
         val parser = get(clazz) ?: error("Can not convert String to $clazz")
         val formatter = pattern?.let {
             if (locale == null) DateTimeFormatter.ofPattern(it)
             else DateTimeFormatter.ofPattern(it, locale)
         }
-        val options = if (formatter != null || locale != null) ParserOptions(dateTimeFormatter = formatter, locale = locale) else null
+        val options = if (formatter != null || locale != null) ParserOptions(
+            dateTimeFormatter = formatter,
+            locale = locale
+        ) else null
         return parser.applyOptions(options)
     }
 }
