@@ -65,7 +65,7 @@ internal fun AnyCol.convertToTypeImpl(newType: KType): AnyCol {
             else -> {
                 val values = values.map {
                     if (it == null) null
-                    else converter(it) ?: error("Can't convert '$it' to '$newType'")
+                    else converter(it) ?: error("Can't convert '$it' to $newType")
                 }
                 DataColumn.createValueColumn(name, values, targetType)
             }
@@ -92,7 +92,7 @@ internal inline fun <T> convert(crossinline converter: (T) -> Any?): TypeConvert
 internal fun createConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? {
     if (from.arguments.isNotEmpty() || to.arguments.isNotEmpty()) return null
     if (from.isMarkedNullable) {
-        val res = createConverter(from.withNullability(false), to) ?: return null
+        val res = createConverter(from.withNullability(false), to, options) ?: return null
         return { res(it) }
     }
     val fromClass = from.jvmErasure
