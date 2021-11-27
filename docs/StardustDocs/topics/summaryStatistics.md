@@ -1,8 +1,7 @@
-[//]: # (title: Statistics)
+[//]: # (title: Summary statistics)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Available statistics:
 * [count](count.md)
 * [sum](sum.md)
 * [min/max](minmax.md)
@@ -10,7 +9,7 @@ Available statistics:
 * [median](median.md)
 * [std](std.md)
 
-Every statistic can be used in aggregations of:
+Every summary statistics can be used in aggregations of:
 * [`DataFrame`](DataFrame.md)
 * [`DataColumn`](DataColumn.md)
 * [`GroupBy`](#groupby-statistics)
