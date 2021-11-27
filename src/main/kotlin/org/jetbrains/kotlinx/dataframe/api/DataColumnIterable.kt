@@ -48,12 +48,14 @@ public fun <T, R> DataColumn<T?>.mapNotNull(transform: (T) -> R): DataColumn<R> 
 
 public inline fun <T, reified R> DataColumn<T>.mapInline(crossinline transform: (T) -> R): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
+    val resType = getType<R>()
     return guessColumnType(
         name(),
         newValues,
-        suggestedType = getType<R>(),
-        suggestedTypeIsUpperBound = false
-    ) as DataColumn<R>
+        suggestedType = resType,
+        suggestedTypeIsUpperBound = false,
+        nullable = if(!resType.isMarkedNullable) false else null
+    )
 }
 
 public fun <T, R> DataColumn<T>.map(type: KType?, transform: (T) -> R): DataColumn<R> {

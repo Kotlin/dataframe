@@ -4,7 +4,7 @@
 
 Computes the sum of values.
 
-Is available for numeric columns. `null` and `NaN` values are ignored.
+`null` and `NaN` values are ignored.
 
 <!---FUN statisticModes-->
 
@@ -28,4 +28,4 @@ df.pivot { city }.groupBy { name.lastName }.sum()
 
 <!---END-->
 
-See [statistics](statistics.md#groupby-statistics) for details on complex data aggregations.
+See [statistics](summaryStatistics.md#groupby-statistics) for details on complex data aggregations.

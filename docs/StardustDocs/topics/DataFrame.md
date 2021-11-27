@@ -10,5 +10,5 @@ Columns in dataframe must have equal size and unique names.
 - [Get an overview of dataframe](info.md)
 - [Access data in dataframe](access.md)
 - [Modify data in dataframe](modify.md)
-- [Compute statistics for dataframe](statistics.md)
+- [Compute statistics for dataframe](summaryStatistics.md)
 - [Combine several dataframes](multipleDataFrames.md)

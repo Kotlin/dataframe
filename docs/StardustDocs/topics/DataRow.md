@@ -62,7 +62,7 @@ Row condition signature: ```DataRow.(DataRow) -> Boolean```
 
 ## Row statistics
 
-The following [statistics](statistics.md) are available for `DataRow`:
+The following [statistics](summaryStatistics.md) are available for `DataRow`:
 * `rowMax`
 * `rowMin`
 * `rowSum`
