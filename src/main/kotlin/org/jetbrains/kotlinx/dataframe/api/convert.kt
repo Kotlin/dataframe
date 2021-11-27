@@ -116,12 +116,12 @@ public fun DataColumn<Int?>.convertToLocalDate(zone: ZoneId = defaultTimeZone): 
 @JvmName("convertToLocalDateString")
 public fun DataColumn<String>.convertToLocalDate(pattern: String? = null, locale: Locale? = null): DataColumn<LocalDate> {
     val converter = Parsers.getConverter(LocalDate::class, pattern, locale)
-    return map { converter(it) ?: error("Can't convert `$it` to LocalDate") }
+    return map { converter(it.trim()) ?: error("Can't convert `$it` to LocalDate") }
 }
 @JvmName("convertToLocalDateString?")
 public fun DataColumn<String?>.convertToLocalDate(pattern: String? = null, locale: Locale? = null): DataColumn<LocalDate?> {
     val converter = Parsers.getConverter(LocalDate::class, pattern, locale)
-    return map { it?.let { converter(it) ?: error("Can't convert `$it` to LocalDate") } }
+    return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to LocalDate") } }
 }
 
 @JvmName("toLocalDateTLong")
@@ -149,12 +149,12 @@ public fun DataColumn<Int?>.convertToLocalTime(zone: ZoneId = defaultTimeZone): 
 @JvmName("convertToLocalTimeString")
 public fun DataColumn<String>.convertToLocalTime(pattern: String? = null, locale: Locale? = null): DataColumn<LocalTime> {
     val converter = Parsers.getConverter(LocalTime::class, pattern, locale)
-    return map { converter(it) ?: error("Can't convert `$it` to LocalTime") }
+    return map { converter(it.trim()) ?: error("Can't convert `$it` to LocalTime") }
 }
 @JvmName("convertToLocalTimeString?")
 public fun DataColumn<String?>.convertToLocalTime(pattern: String? = null, locale: Locale? = null): DataColumn<LocalTime?> {
     val converter = Parsers.getConverter(LocalTime::class, pattern, locale)
-    return map { it?.let { converter(it) ?: error("Can't convert `$it` to LocalTime") } }
+    return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to LocalTime") } }
 }
 
 @JvmName("toLocalTimeTLong")
@@ -182,12 +182,12 @@ public fun DataColumn<Int?>.convertToLocalDateTime(zone: ZoneId = defaultTimeZon
 @JvmName("convertToLocalDateTimeString")
 public fun DataColumn<String>.convertToLocalDateTime(pattern: String? = null, locale: Locale? = null): DataColumn<LocalDateTime> {
     val converter = Parsers.getConverter(LocalDateTime::class, pattern, locale)
-    return map { converter(it) ?: error("Can't convert `$it` to LocalDateTime") }
+    return map { converter(it.trim()) ?: error("Can't convert `$it` to LocalDateTime") }
 }
 @JvmName("convertToLocalDateTimeString?")
 public fun DataColumn<String?>.convertToLocalDateTime(pattern: String? = null, locale: Locale? = null): DataColumn<LocalDateTime?> {
     val converter = Parsers.getConverter(LocalDateTime::class, pattern, locale)
-    return map { it?.let { converter(it) ?: error("Can't convert `$it` to LocalDateTime") } }
+    return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to LocalDateTime") } }
 }
 
 @JvmName("toLocalDateTimeTLong")

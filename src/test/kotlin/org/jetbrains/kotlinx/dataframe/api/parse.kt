@@ -140,7 +140,7 @@ class ParseTests {
 
     @Test
     fun parseTime() {
-        val time by columnOf("13-05-30")
+        val time by columnOf(" 13-05-30")
         val pattern = "HH-mm-ss"
 
         val parsed = time.parse(ParserOptions(dateTimePattern = pattern)).cast<LocalTime>()
@@ -167,7 +167,7 @@ class ParseTests {
 
     @Test
     fun `parse date without formatter`() {
-        val time by columnOf("2020-01-06", "2020-01-07")
+        val time by columnOf(" 2020-01-06", "2020-01-07 ")
         val df = dataFrameOf(time)
         val casted = df.convert(time).toLocalDate()
         casted[time].type() shouldBe getType<LocalDate>()
