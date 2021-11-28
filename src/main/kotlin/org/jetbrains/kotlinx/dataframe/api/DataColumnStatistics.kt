@@ -93,7 +93,6 @@ public inline fun <T, reified R : Number> DataColumn<T>.stdOf(noinline expressio
 
 @DataSchema
 public interface ValueCount {
-    public val value: Any?
     public val count: Int
 }
 
