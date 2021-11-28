@@ -1096,7 +1096,9 @@ class Analyze : TestBase() {
     @Test
     fun valueCounts() {
         // SampleStart
-        df.city.valueCounts().xs("London").count
+        df.city.valueCounts()
+
+        df.valueCounts { name and city }
         // SampleEnd
     }
 }
