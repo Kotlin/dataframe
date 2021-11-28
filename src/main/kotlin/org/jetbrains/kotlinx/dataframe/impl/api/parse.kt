@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import kotlinx.datetime.toKotlinLocalDate
+import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -28,7 +30,6 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeFormatterBuilder
-import java.time.temporal.Temporal
 import java.util.Locale
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -103,11 +104,11 @@ internal object Parsers : GlobalParserOptions {
 
     private fun String.toLocalDateTimeOrNull(formatter: DateTimeFormatter?): LocalDateTime? {
         if (formatter != null) {
-            return catchSilent { LocalDateTime.parse(this, formatter) }
+            return catchSilent { java.time.LocalDateTime.parse(this, formatter) }
         } else {
             catchSilent { LocalDateTime.parse(this) }?.let { return it }
             for (format in formatters) {
-                catchSilent { LocalDateTime.parse(this, format) }?.let { return it }
+                catchSilent { java.time.LocalDateTime.parse(this, format) }?.let { return it }
             }
         }
         return null
@@ -130,11 +131,11 @@ internal object Parsers : GlobalParserOptions {
 
     private fun String.toLocalDateOrNull(formatter: DateTimeFormatter?): LocalDate? {
         if (formatter != null) {
-            return catchSilent { LocalDate.parse(this, formatter) }
+            return catchSilent { java.time.LocalDate.parse(this, formatter) }
         } else {
             catchSilent { LocalDate.parse(this) }?.let { return it }
             for (format in formatters) {
-                catchSilent { LocalDate.parse(this, format) }?.let { return it }
+                catchSilent { java.time.LocalDate.parse(this, format) }?.let { return it }
             }
         }
         return null
@@ -172,19 +173,21 @@ internal object Parsers : GlobalParserOptions {
     inline fun <reified T : Any> stringParserWithOptions(noinline body: (ParserOptions?) -> ((String) -> T?)) =
         StringParserWithFormat(getType<T>(), body)
 
-    val All = listOf(
+    private val parsersOrder = listOf(
         stringParser { it.toIntOrNull() },
         stringParser { it.toLongOrNull() },
 
+        // kotlinx.datetime.LocalDateTime
         stringParserWithOptions { options ->
-            val formatter = options?.getDateTimeFormatter()
-            val parser = { it: String -> it.toLocalDateTimeOrNull(formatter) }
+            val localDateTimeParser = get(LocalDateTime::class)!!.applyOptions(options)
+            val parser = { it: String -> localDateTimeParser(it)?.toKotlinLocalDateTime() }
             parser
         },
 
+        // kotlinx.datetime.LocalDate
         stringParserWithOptions { options ->
-            val formatter = options?.getDateTimeFormatter()
-            val parser = { it: String -> it.toLocalDateOrNull(formatter) }
+            val localDateParser = get(LocalDate::class)!!.applyOptions(options)
+            val parser = { it: String -> localDateParser(it)?.toKotlinLocalDate() }
             parser
         },
 
@@ -207,19 +210,36 @@ internal object Parsers : GlobalParserOptions {
         stringParser { it } // must be last in the list of parsers to return original unparsed string
     )
 
-    private val parsersMap = All.associateBy { it.type }
+    private val additionalParsers = listOf(
 
-    val size: Int = All.size
+        // java.time.LocalDate
+        stringParserWithOptions { options ->
+            val formatter = options?.getDateTimeFormatter()
+            val parser = { it: String -> it.toLocalDateOrNull(formatter) }
+            parser
+        },
 
-    operator fun get(index: Int): StringParser<*> = All[index]
+        // java.time.LocalDateTime
+        stringParserWithOptions { options ->
+            val formatter = options?.getDateTimeFormatter()
+            val parser = { it: String -> it.toLocalDateTimeOrNull(formatter) }
+            parser
+        },
+    )
 
-    operator fun get(type: KType): StringParser<*>? = parsersMap.get(type)
+    private val parsersMap = (parsersOrder + additionalParsers).associateBy { it.type }
+
+    val size: Int = parsersOrder.size
+
+    operator fun get(index: Int): StringParser<*> = parsersOrder[index]
+
+    operator fun get(type: KType): StringParser<*>? = parsersMap[type]
 
     operator fun <T : Any> get(type: KClass<T>): StringParser<T>? = parsersMap.get(type.createStarProjectedType(false)) as? StringParser<T>
 
     inline fun <reified T : Any> get(): StringParser<T>? = get(getType<T>()) as? StringParser<T>
 
-    internal fun <R : Temporal> getConverter(clazz: KClass<R>, pattern: String? = null, locale: Locale? = null):
+    internal fun <R : Any> getDateTimeConverter(clazz: KClass<R>, pattern: String? = null, locale: Locale? = null):
         (String) -> R? {
         val parser = get(clazz) ?: error("Can not convert String to $clazz")
         val formatter = pattern?.let {

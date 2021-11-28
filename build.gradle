@@ -41,6 +41,8 @@ dependencies {
     implementation "com.beust:klaxon:5.5"
     implementation "com.github.kittinunf.fuel:fuel:2.3.1"
 
+    implementation "org.jetbrains.kotlinx:kotlinx-datetime-jvm:0.3.1"
+
     testImplementation "junit:junit:4.12"
     testImplementation("io.kotest:kotest-assertions-core:4.6.0") {
         exclude group: "org.jetbrains.kotlin", module: "kotlin-stdlib-jdk8"
