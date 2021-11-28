@@ -1,12 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
+import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.comparableColumns
@@ -23,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.indexOfMax
 import org.jetbrains.kotlinx.dataframe.impl.indexOfMin
+import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.zero
 import org.jetbrains.kotlinx.dataframe.math.sumOf
 import kotlin.reflect.KProperty
@@ -188,5 +191,46 @@ public inline fun <T, reified R : Number> DataFrame<T>.stdOf(crossinline express
 public fun <T> DataFrame<T>.corr(): AnyFrame = corr { numberCols().withoutNulls() }
 
 public fun <T, C : Number> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): AnyFrame = corrImpl(this[columns])
+
+// endregion
+
+// region valueCounts
+
+public fun <T> DataFrame<T>.valueCounts(
+    sort: Boolean = true,
+    ascending: Boolean = false,
+    dropNA: Boolean = true,
+    resultColumn: String = defaultCountColumnName,
+    columns: ColumnsSelector<T, *>? = null
+): DataFrame<T> {
+    var df = if (columns != null) select(columns) else this
+    if (dropNA) df = df.dropNA()
+
+    val rows by columnGroup()
+    val countName = nameGenerator().addUnique(resultColumn)
+    return df.asColumnGroup(rows).asDataColumn().valueCounts(sort, ascending, dropNA, countName).ungroup(rows).cast()
+}
+
+public fun <T> DataFrame<T>.valueCounts(
+    vararg columns: String,
+    sort: Boolean = true,
+    ascending: Boolean = false,
+    dropNA: Boolean = true,
+    resultColumn: String = defaultCountColumnName
+): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumns() }
+public fun <T> DataFrame<T>.valueCounts(
+    vararg columns: Column,
+    sort: Boolean = true,
+    ascending: Boolean = false,
+    dropNA: Boolean = true,
+    resultColumn: String = defaultCountColumnName
+): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumns() }
+public fun <T> DataFrame<T>.valueCounts(
+    vararg columns: KProperty<*>,
+    sort: Boolean = true,
+    ascending: Boolean = false,
+    dropNA: Boolean = true,
+    resultColumn: String = defaultCountColumnName
+): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumns() }
 
 // endregion

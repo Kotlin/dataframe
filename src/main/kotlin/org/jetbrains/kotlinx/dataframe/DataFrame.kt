@@ -57,7 +57,7 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     override fun <R> resolve(reference: ColumnReference<R>): ColumnWithPath<R>? = reference.resolveSingle(this, UnresolvedColumnsPolicy.Skip)
 
-    override fun asColumnGroup(): ColumnGroup<*> = DataColumn.createColumnGroup("", this)
+    override fun asColumnGroup(name: String): ColumnGroup<*> = DataColumn.createColumnGroup(name, this)
 
     public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
 
