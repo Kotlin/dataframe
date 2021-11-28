@@ -1,5 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toJavaLocalDate
+import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toKotlinLocalDate
+import kotlinx.datetime.toKotlinLocalDateTime
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -16,12 +25,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
-import java.time.Instant
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.LocalTime
-import java.time.ZoneId
-import java.util.TimeZone
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import kotlin.reflect.KType
@@ -83,7 +87,7 @@ internal fun Any.convertTo(type: KType): Any? {
     val clazz = javaClass.kotlin
     if (clazz.isSubclassOf(type.jvmErasure)) return this
     val converter = getConverter(clazz.createStarProjectedType(false), type)
-    require(converter != null) { "Can not convert $this to type $type" }
+    require(converter != null) { "Can not convert `$this` to $type" }
     return converter(this)
 }
 
@@ -103,86 +107,112 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
     return when {
         fromClass == String::class -> Parsers[to.withNullability(false)]?.toConverter(options)
         toClass == String::class -> convert<Any> { it.toString() }
-        fromClass == Boolean::class -> when (toClass) {
-            Float::class -> convert<Boolean> { if (it) 1.0f else 0.0f }
-            Double::class -> convert<Boolean> { if (it) 1.0 else 0.0 }
-            Int::class -> convert<Boolean> { if (it) 1 else 0 }
-            Long::class -> convert<Boolean> { if (it) 1L else 0L }
-            Short::class -> convert<Boolean> {
-                val one: Short = 1
-                val zero: Short = 0
-                if (it) one else zero
+        else -> when (fromClass) {
+            Boolean::class -> when (toClass) {
+                Float::class -> convert<Boolean> { if (it) 1.0f else 0.0f }
+                Double::class -> convert<Boolean> { if (it) 1.0 else 0.0 }
+                Int::class -> convert<Boolean> { if (it) 1 else 0 }
+                Long::class -> convert<Boolean> { if (it) 1L else 0L }
+                Short::class -> convert<Boolean> {
+                    val one: Short = 1
+                    val zero: Short = 0
+                    if (it) one else zero
+                }
+                Byte::class -> convert<Boolean> {
+                    val one: Byte = 1
+                    val zero: Byte = 0
+                    if (it) one else zero
+                }
+                BigDecimal::class -> convert<Boolean> { if (it) BigDecimal.ONE else BigDecimal.ZERO }
+                else -> null
             }
-            Byte::class -> convert<Boolean> {
-                val one: Byte = 1
-                val zero: Byte = 0
-                if (it) one else zero
+            Number::class -> when (toClass) {
+                Double::class -> convert<Number> { it.toDouble() }
+                Int::class -> convert<Number> { it.toInt() }
+                Float::class -> convert<Number> { it.toFloat() }
+                Byte::class -> convert<Number> { it.toByte() }
+                Short::class -> convert<Number> { it.toShort() }
+                Long::class -> convert<Number> { it.toLong() }
+                else -> null
             }
-            BigDecimal::class -> convert<Boolean> { if (it) BigDecimal.ONE else BigDecimal.ZERO }
+            Int::class -> when (toClass) {
+                Double::class -> convert<Int> { it.toDouble() }
+                Float::class -> convert<Int> { it.toFloat() }
+                Byte::class -> convert<Int> { it.toByte() }
+                Short::class -> convert<Int> { it.toShort() }
+                Long::class -> convert<Int> { it.toLong() }
+                BigDecimal::class -> convert<Int> { it.toBigDecimal() }
+                LocalDateTime::class -> convert<Int> { it.toLong().toLocalDateTime(defaultTimeZone) }
+                LocalDate::class -> convert<Int> { it.toLong().toLocalDate(defaultTimeZone) }
+                java.time.LocalDateTime::class -> convert<Long> { it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime() }
+                java.time.LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
+                LocalTime::class -> convert<Int> { it.toLong().toLocalTime(defaultTimeZone) }
+                else -> null
+            }
+            Double::class -> when (toClass) {
+                Int::class -> convert<Double> { it.roundToInt() }
+                Float::class -> convert<Double> { it.toFloat() }
+                Long::class -> convert<Double> { it.roundToLong() }
+                Short::class -> convert<Double> { it.roundToInt().toShort() }
+                BigDecimal::class -> convert<Double> { it.toBigDecimal() }
+                else -> null
+            }
+            Long::class -> when (toClass) {
+                Double::class -> convert<Long> { it.toDouble() }
+                Float::class -> convert<Long> { it.toFloat() }
+                Byte::class -> convert<Long> { it.toByte() }
+                Short::class -> convert<Long> { it.toShort() }
+                Int::class -> convert<Long> { it.toInt() }
+                BigDecimal::class -> convert<Long> { it.toBigDecimal() }
+                LocalDateTime::class -> convert<Long> { it.toLocalDateTime(defaultTimeZone) }
+                LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone) }
+                java.time.LocalDateTime::class -> convert<Long> { it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime() }
+                java.time.LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
+                LocalTime::class -> convert<Long> { it.toLocalTime(defaultTimeZone) }
+                else -> null
+            }
+            Float::class -> when (toClass) {
+                Double::class -> convert<Float> { it.toDouble() }
+                Long::class -> convert<Float> { it.roundToLong() }
+                Int::class -> convert<Float> { it.roundToInt() }
+                Short::class -> convert<Float> { it.roundToInt().toShort() }
+                BigDecimal::class -> convert<Float> { it.toBigDecimal() }
+                else -> null
+            }
+            BigDecimal::class -> when (toClass) {
+                Double::class -> convert<BigDecimal> { it.toDouble() }
+                Int::class -> convert<BigDecimal> { it.toInt() }
+                Float::class -> convert<BigDecimal> { it.toFloat() }
+                Long::class -> convert<BigDecimal> { it.toLong() }
+                else -> null
+            }
+            LocalDateTime::class -> when (toClass) {
+                LocalDate::class -> convert<LocalDateTime> { it.date }
+                java.time.LocalDateTime::class -> convert<LocalDateTime> { it.toJavaLocalDateTime() }
+                java.time.LocalDate::class -> convert<LocalDateTime> { it.date.toJavaLocalDate() }
+                else -> null
+            }
+            java.time.LocalDateTime::class -> when (toClass) {
+                LocalDate::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime().date }
+                LocalDateTime::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime() }
+                java.time.LocalDate::class -> convert<java.time.LocalDateTime> { it.toLocalDate() }
+                else -> null
+            }
+            LocalDate::class -> when (toClass) {
+                java.time.LocalDate::class -> convert<LocalDate> { it.toJavaLocalDate() }
+                else -> null
+            }
+            java.time.LocalDate::class -> when (toClass) {
+                LocalDate::class -> convert<java.time.LocalDate> { it.toKotlinLocalDate() }
+                else -> null
+            }
             else -> null
         }
-        fromClass == Number::class -> when (toClass) {
-            Double::class -> convert<Number> { it.toDouble() }
-            Int::class -> convert<Number> { it.toInt() }
-            Float::class -> convert<Number> { it.toFloat() }
-            Byte::class -> convert<Number> { it.toByte() }
-            Short::class -> convert<Number> { it.toShort() }
-            Long::class -> convert<Number> { it.toLong() }
-            else -> null
-        }
-        fromClass == Int::class -> when (toClass) {
-            Double::class -> convert<Int> { it.toDouble() }
-            Float::class -> convert<Int> { it.toFloat() }
-            Byte::class -> convert<Int> { it.toByte() }
-            Short::class -> convert<Int> { it.toShort() }
-            Long::class -> convert<Int> { it.toLong() }
-            BigDecimal::class -> convert<Int> { it.toBigDecimal() }
-            LocalDateTime::class -> convert<Int> { it.toLong().toLocalDateTime(defaultTimeZone) }
-            LocalDate::class -> convert<Int> { it.toLong().toLocalDate(defaultTimeZone) }
-            LocalTime::class -> convert<Int> { it.toLong().toLocalTime(defaultTimeZone) }
-            else -> null
-        }
-        fromClass == Double::class -> when (toClass) {
-            Int::class -> convert<Double> { it.roundToInt() }
-            Float::class -> convert<Double> { it.toFloat() }
-            Long::class -> convert<Double> { it.roundToLong() }
-            Short::class -> convert<Double> { it.roundToInt().toShort() }
-            BigDecimal::class -> convert<Double> { it.toBigDecimal() }
-            else -> null
-        }
-        fromClass == Long::class -> when (toClass) {
-            Double::class -> convert<Long> { it.toDouble() }
-            Float::class -> convert<Long> { it.toFloat() }
-            Byte::class -> convert<Long> { it.toByte() }
-            Short::class -> convert<Long> { it.toShort() }
-            Int::class -> convert<Long> { it.toInt() }
-            BigDecimal::class -> convert<Long> { it.toBigDecimal() }
-            LocalDateTime::class -> convert<Long> { it.toLocalDateTime(defaultTimeZone) }
-            LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone) }
-            LocalTime::class -> convert<Long> { it.toLocalTime(defaultTimeZone) }
-            else -> null
-        }
-        fromClass == Float::class -> when (toClass) {
-            Double::class -> convert<Float> { it.toDouble() }
-            Long::class -> convert<Float> { it.roundToLong() }
-            Int::class -> convert<Float> { it.roundToInt() }
-            Short::class -> convert<Float> { it.roundToInt().toShort() }
-            BigDecimal::class -> convert<Float> { it.toBigDecimal() }
-            else -> null
-        }
-        fromClass == BigDecimal::class -> when (toClass) {
-            Double::class -> convert<BigDecimal> { it.toDouble() }
-            Int::class -> convert<BigDecimal> { it.toInt() }
-            Float::class -> convert<BigDecimal> { it.toFloat() }
-            Long::class -> convert<BigDecimal> { it.toLong() }
-            else -> null
-        }
-        else -> null
     }
 }
 
-internal fun Long.toLocalDateTime(zone: ZoneId? = null) = LocalDateTime.ofInstant(Instant.ofEpochMilli(this), zone ?: defaultTimeZone)
-internal fun Long.toLocalDate(zone: ZoneId? = null) = toLocalDateTime(zone).toLocalDate()
-internal fun Long.toLocalTime(zone: ZoneId? = null) = toLocalDateTime(zone).toLocalTime()
+internal fun Long.toLocalDateTime(zone: TimeZone = defaultTimeZone) = Instant.fromEpochMilliseconds(this).toLocalDateTime(zone)
+internal fun Long.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).date
+internal fun Long.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).toJavaLocalDateTime().toLocalTime()
 
-internal val defaultTimeZone = TimeZone.getDefault().toZoneId()
+internal val defaultTimeZone = TimeZone.currentSystemDefault()
