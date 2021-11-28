@@ -44,10 +44,6 @@ public interface GroupBy<out T, out G> : Grouped<G> {
 
     public fun concat(): DataFrame<G> = groups.concat().cast()
 
-    public operator fun get(vararg values: Any?): DataFrame<T> = get(values.toList())
-
-    public operator fun get(key: GroupKey): DataFrame<T>
-
     public fun <R> mapGroups(transform: Selector<DataFrame<G>, DataFrame<R>>): GroupBy<T, R>
 
     public fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G>

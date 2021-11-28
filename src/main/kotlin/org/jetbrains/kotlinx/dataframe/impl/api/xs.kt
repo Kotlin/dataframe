@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
@@ -8,6 +7,8 @@ import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.columns.isMissingColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
 
 internal fun <T, C> DataFrame<T>.xsImpl(
@@ -33,6 +34,9 @@ internal fun <T, C> DataFrame<T>.xsImpl(
 }
 
 internal fun <T, G, C> GroupBy<T, G>.xsImpl(vararg keyValues: C, keyColumns: ColumnsSelector<T, C>): GroupBy<T, G> {
-    return toDataFrame().xsImpl(keyColumns, true, *keyValues).asGroupBy(groups)
-        .mapGroups { it.xsImpl(keyColumns as ColumnSelector<G, C>, true, *keyValues) }
+    val df = toDataFrame()
+    val paths = df.getColumnPaths(UnresolvedColumnsPolicy.Create, keyColumns).toColumnSet()
+    val d1 = df.xsImpl({ paths }, true, *keyValues).asGroupBy(groups)
+    val d2 = d1.mapGroups { it.xsImpl({ paths }, true, *keyValues) }
+    return d2
 }

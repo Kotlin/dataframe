@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
-import org.jetbrains.kotlinx.dataframe.api.GroupKey
 import org.jetbrains.kotlinx.dataframe.api.GroupedRowFilter
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -16,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
-import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.rename
@@ -43,14 +41,6 @@ internal class GroupByImpl<T, G>(
     AggregatableInternal<G> {
 
     override val keys by lazy { df - groups }
-
-    override operator fun get(key: GroupKey): DataFrame<T> {
-        require(key.size < df.ncol()) { "Invalid size of the key" }
-
-        val keySize = key.size
-        val filtered = df.filter { it.values.subList(0, keySize) == key }
-        return filtered.getFrameColumn(groups.name()).values.concat().cast<T>()
-    }
 
     override fun <R> mapGroups(transform: Selector<DataFrame<G>, DataFrame<R>>) =
         df.convert(groups) { transform(it, it) }.asGroupBy(groups.name()) as GroupBy<T, R>
