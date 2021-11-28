@@ -49,7 +49,7 @@ import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.perCol
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
-import org.jetbrains.kotlinx.dataframe.api.pivotCount
+import org.jetbrains.kotlinx.dataframe.api.pivotCounts
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
@@ -524,7 +524,7 @@ class Modify : TestBase() {
 
     @Test
     fun gatherNames() {
-        val pivoted = df.dropNulls { city }.pivotCount(inward = false) { city }
+        val pivoted = df.dropNulls { city }.pivotCounts(inward = false) { city }
         // SampleStart
         pivoted.gather { "London".."Tokyo" }.cast<Int>()
             .where { it > 0 }.keysInto("city")
@@ -533,7 +533,7 @@ class Modify : TestBase() {
 
     @Test
     fun gather() {
-        val pivoted = df.dropNulls { city }.pivotCount(inward = false) { city }
+        val pivoted = df.dropNulls { city }.pivotCounts(inward = false) { city }
         // SampleStart
         pivoted.gather { "London".."Tokyo" }.into("city", "population")
         // SampleEnd
@@ -541,7 +541,7 @@ class Modify : TestBase() {
 
     @Test
     fun gatherWithMapping() {
-        val pivoted = df.dropNulls { city }.pivotCount(inward = false) { city }
+        val pivoted = df.dropNulls { city }.pivotCounts(inward = false) { city }
         // SampleStart
         pivoted.gather { "London".."Tokyo" }
             .cast<Int>()

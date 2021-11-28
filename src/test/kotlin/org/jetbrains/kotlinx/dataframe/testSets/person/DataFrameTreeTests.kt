@@ -71,6 +71,7 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
+import org.jetbrains.kotlinx.dataframe.api.xs
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
@@ -665,5 +666,10 @@ class DataFrameTreeTests : BaseTest() {
         agg["nameAndCity"].kind() shouldBe ColumnKind.Frame
         typed2.groupBy { age }.aggregate { nameAndCity.asDataFrame() into "nameAndCity" } shouldBe agg
         typed2.groupBy { age }.values { nameAndCity } shouldBe agg
+    }
+
+    @Test
+    fun `xs nested columns`(){
+        typed2.xs("Bob", "Tokyo").nrow() shouldBe 1
     }
 }
