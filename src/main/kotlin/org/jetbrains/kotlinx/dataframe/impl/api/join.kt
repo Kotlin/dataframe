@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
@@ -45,8 +46,8 @@ internal fun <C> ColumnSet<C>.extractJoinColumns(): List<ColumnMatch<C>> = when 
 }
 
 internal fun <A, B> DataFrame<A>.getColumns(other: DataFrame<B>, selector: JoinColumnsSelector<A, B>): List<ColumnMatch<Any?>> {
-    val receiver = object : DataFrameReceiver<A>(this, false), JoinDsl<A, B> {
-        override val right: DataFrame<B> = DataFrameReceiver(other, false)
+    val receiver = object : DataFrameReceiver<A>(this, UnresolvedColumnsPolicy.Fail), JoinDsl<A, B> {
+        override val right: DataFrame<B> = DataFrameReceiver(other, UnresolvedColumnsPolicy.Fail)
     }
     val columns = selector(receiver, this)
     return columns.extractJoinColumns()
@@ -58,8 +59,6 @@ internal fun <A, B> DataFrame<A>.joinImpl(
     addNewColumns: Boolean = true,
     selector: JoinColumnsSelector<A, B>?
 ): DataFrame<A> {
-    val joinByAllMatchingcolumns = selector == null
-
     val joinColumns = getColumns(other, selector ?: defaultJoinColumns(this, other))
 
     val leftJoinColumns = getColumnsWithPaths { joinColumns.map { it.left }.toColumnSet() }

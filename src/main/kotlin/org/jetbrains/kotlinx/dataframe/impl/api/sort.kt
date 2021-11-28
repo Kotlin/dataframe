@@ -91,7 +91,7 @@ internal fun <C> ColumnWithPath<C>.addFlag(flag: SortFlag): ColumnWithPath<C> {
                 SortFlag.NullsLast -> SortColumnDescriptor(col, SortDirection.Asc, true)
             }
         }
-        else -> throw IllegalArgumentException("Can not apply sort flag to ${col.kind}")
+        else -> throw IllegalArgumentException("Can not apply sort flag to column kind ${col.kind}")
     }.addPath(path, host)
 }
 

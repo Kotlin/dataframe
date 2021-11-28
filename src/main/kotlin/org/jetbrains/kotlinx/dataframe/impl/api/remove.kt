@@ -6,21 +6,22 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.TreeNode
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.allRemovedColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.withDf
+import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
 
 internal data class RemoveResult<T>(val df: DataFrame<T>, val removedColumns: List<TreeNode<ColumnPosition>>)
 
-internal fun <T> DataFrame<T>.removeImpl(columns: ColumnsSelector<T, *>): RemoveResult<T> {
-    val colPaths = getColumnPaths(columns)
+internal fun <T> DataFrame<T>.removeImpl(columns: ColumnsSelector<T, *>, allowMissingColumns: Boolean = false): RemoveResult<T> {
+    val colPaths = getColumnPaths(if (allowMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail, columns)
     val originalOrder = colPaths.mapIndexed { index, path -> path to index }.toMap()
 
     val root = TreeNode.createRoot(ColumnPosition(-1, false, null))
