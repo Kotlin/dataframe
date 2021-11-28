@@ -15,7 +15,7 @@ public fun <T> GroupBy<T, *>.into(column: ColumnAccessor<AnyFrame>): DataFrame<T
 
 // region xs
 
-public fun <T, G> GroupBy<T, G>.xs(vararg keyValues: Any?): GroupBy<T, G> = xs(*keyValues) { take(keyValues.size) }
+public fun <T, G> GroupBy<T, G>.xs(vararg keyValues: Any?): GroupBy<T, G> = xs(*keyValues) { dfsLeafs().take(keyValues.size) }
 
 public fun <T, G, C> GroupBy<T, G>.xs(vararg keyValues: C, keyColumns: ColumnsSelector<T, C>): GroupBy<T, G> = xsImpl(*keyValues, keyColumns = keyColumns)
 
