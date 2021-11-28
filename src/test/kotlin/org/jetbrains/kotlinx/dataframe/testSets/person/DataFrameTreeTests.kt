@@ -669,7 +669,7 @@ class DataFrameTreeTests : BaseTest() {
     }
 
     @Test
-    fun `xs nested columns`(){
+    fun `xs nested columns`() {
         typed2.xs("Bob", "Tokyo").nrow() shouldBe 1
     }
 }
