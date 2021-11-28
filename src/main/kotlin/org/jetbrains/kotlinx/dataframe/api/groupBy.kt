@@ -19,8 +19,6 @@ public fun <T> DataFrame<T>.groupBy(vararg cols: KProperty<*>): GroupBy<T, T> = 
 public fun <T> DataFrame<T>.groupBy(vararg cols: String): GroupBy<T, T> = groupBy { cols.toColumns() }
 public fun <T> DataFrame<T>.groupBy(vararg cols: Column, moveToTop: Boolean = true): GroupBy<T, T> = groupBy(moveToTop) { cols.toColumns() }
 
-public typealias GroupKey = List<Any?>
-
 public typealias GroupedRowSelector<T, G, R> = GroupedDataRow<T, G>.(GroupedDataRow<T, G>) -> R
 
 public typealias GroupedRowFilter<T, G> = GroupedRowSelector<T, G, Boolean>
@@ -41,8 +39,6 @@ public interface GroupBy<out T, out G> : Grouped<G> {
     public val keys: DataFrame<T>
 
     public fun toDataFrame(groupedColumnName: String? = null): DataFrame<T>
-
-    public fun concat(): DataFrame<G> = groups.concat().cast()
 
     public fun <R> mapGroups(transform: Selector<DataFrame<G>, DataFrame<R>>): GroupBy<T, R>
 
