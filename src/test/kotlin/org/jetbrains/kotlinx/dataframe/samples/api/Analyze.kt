@@ -43,7 +43,9 @@ import org.jetbrains.kotlinx.dataframe.api.sumFor
 import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataRow
+import org.jetbrains.kotlinx.dataframe.api.valueCounts
 import org.jetbrains.kotlinx.dataframe.api.values
+import org.jetbrains.kotlinx.dataframe.api.xs
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
@@ -1088,6 +1090,13 @@ class Analyze : TestBase() {
         // SampleStart
         df.cumSum { weight }
         df.weight.cumSum()
+        // SampleEnd
+    }
+
+    @Test
+    fun valueCounts() {
+        // SampleStart
+        df.city.valueCounts().xs("London").count
         // SampleEnd
     }
 }

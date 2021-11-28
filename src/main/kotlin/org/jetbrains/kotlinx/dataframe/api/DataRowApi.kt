@@ -15,6 +15,7 @@ import kotlin.reflect.full.withNullability
 
 public fun AnyRow.isEmpty(): Boolean = owner.columns().all { it[index] == null }
 public fun AnyRow.isNotEmpty(): Boolean = !isEmpty()
+public fun AnyRow.allNA(): Boolean = owner.columns().all { it[index].isNA }
 
 public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInstance<R>()
 

@@ -1,15 +1,24 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.math.sum
+import kotlin.reflect.full.withNullability
+
+// region
 
 public fun <T> DataColumn<T>.count(predicate: Predicate<T>? = null): Int = if (predicate == null) size() else values().count(predicate)
+
+// endregion
 
 // region min
 
@@ -77,5 +86,36 @@ public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOf(noinline
 public fun <T : Number> DataColumn<T?>.std(): Double = org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators.std.aggregate(this) ?: .0
 
 public inline fun <T, reified R : Number> DataColumn<T>.stdOf(noinline expression: (T) -> R?): Double = org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators.std.aggregateOf(this, expression) ?: .0
+
+// endregion
+
+// region valueCounts
+
+@DataSchema
+public interface ValueCount {
+    public val value: Any?
+    public val count: Int
+}
+
+internal val defaultCountColumnName: String = ValueCount::count.name
+
+public fun <T> DataColumn<T>.valueCounts(
+    sort: Boolean = true,
+    ascending: Boolean = false,
+    dropNA: Boolean = true,
+    resultColumn: String = defaultCountColumnName
+): DataFrame<ValueCount> {
+    var grouped = toList().groupBy { it }.map { it.key to it.value.size }
+    if (sort) {
+        grouped = if (ascending) grouped.sortedBy { it.second }
+        else grouped.sortedByDescending { it.second }
+    }
+    if (dropNA) grouped = grouped.filter { !it.first.isNA }
+    val nulls = if (dropNA) false else hasNulls()
+    val values = DataColumn.create(name(), grouped.map { it.first }, type().withNullability(nulls))
+    val countName = if (resultColumn == name()) resultColumn + "1" else resultColumn
+    val counts = DataColumn.create(countName, grouped.map { it.second }, getType<Int>())
+    return dataFrameOf(values, counts).cast()
+}
 
 // endregion
