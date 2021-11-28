@@ -4,7 +4,7 @@
 
 DataFrame transformation pipeline usually consists of several modification operations, such as filtering, sorting, grouping, pivoting, adding/removing columns etc. 
 DataFrame API is designed in functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
-`DataFrame` object is immutable, so all operations defined for `DataFrame` will return a new instance reusing underlying data structures as much as possible.
+`DataFrame` object is immutable, so all operations will return a new `DataFrame` instance reusing underlying data structures as much as possible.
 
 <!---FUN multiCallOperations-->
 
@@ -84,3 +84,4 @@ Multiplex operations usually end with `into` or `with` function. The following n
 * [take](sliceRows.md#take) / [takeLast](sliceRows.md#takelast) - first/last rows
 * [ungroup](ungroup.md) - remove column grouping
 * [update](update.md) - change column values preserving column types
+* [valueCounts](valueCounts.md) - counts for unique values 
