@@ -1,15 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns.missing
 
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
 import kotlin.reflect.KType
 
 internal abstract class MissingDataColumn<T> : DataColumnInternal<T> {
-
-    val name: String
-        get() = throw UnsupportedOperationException()
 
     override fun values() = throw UnsupportedOperationException()
 
@@ -18,8 +13,6 @@ internal abstract class MissingDataColumn<T> : DataColumnInternal<T> {
     override fun ndistinct() = throw UnsupportedOperationException()
 
     override fun size() = throw UnsupportedOperationException()
-
-    override fun name() = name
 
     override fun get(index: Int) = throw UnsupportedOperationException()
 
@@ -30,8 +23,6 @@ internal abstract class MissingDataColumn<T> : DataColumnInternal<T> {
     override fun get(indices: Iterable<Int>) = throw UnsupportedOperationException()
 
     override fun toSet() = throw UnsupportedOperationException()
-
-    override fun resolve(context: ColumnResolutionContext) = emptyList<ColumnWithPath<T>>()
 
     override fun changeType(type: KType) = throw UnsupportedOperationException()
 

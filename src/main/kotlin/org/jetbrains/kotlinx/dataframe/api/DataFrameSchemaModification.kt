@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.api.flattenImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.xsImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
@@ -121,5 +122,13 @@ public fun <T, C : Comparable<C>> DataFrame<T>.sortColumnsBy(dfs: Boolean = fals
     }
     return cols.sortedBy { it.name() }.toDataFrame().cast()
 }
+
+// endregion
+
+// region xs
+
+public fun <T> DataFrame<T>.xs(vararg keyValues: Any?): DataFrame<T> = xs(*keyValues) { take(keyValues.size) }
+
+public fun <T, C> DataFrame<T>.xs(vararg keyValues: C, keyColumns: ColumnsSelector<T, C>): DataFrame<T> = xsImpl(keyColumns, false, *keyValues)
 
 // endregion

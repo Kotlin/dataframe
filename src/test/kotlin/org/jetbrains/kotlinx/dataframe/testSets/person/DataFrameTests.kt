@@ -2368,4 +2368,42 @@ class DataFrameTests : BaseTest() {
         typed.select { age and weight }[1].transpose().maxBy { it.value as Int? }.name shouldBe "weight"
         typed[2].transpose().dropNulls { value }.name.toList() shouldBe listOf("name", "age", "city")
     }
+
+    @Test
+    fun xs() {
+        typed.xs("Charlie") shouldBe typed.filter { name == "Charlie" }.remove { name }
+        typed.xs("Charlie", 20).nrow shouldBe 1
+        typed.xs(20) { age }.nrow shouldBe 2
+        shouldThrow<java.lang.IllegalArgumentException> {
+            typed.xs(20) { age and weight }
+        }
+        shouldThrow<java.lang.IllegalArgumentException> {
+            typed.xs("Charlie", 20) { name }
+        }
+        shouldThrow<java.lang.IllegalArgumentException> {
+            typed.xs("Charlie", 20, "Moscow", null, 1)
+        }
+    }
+
+    @Test
+    fun `groupBy xs`() {
+        typed.groupBy { name }.xs("Charlie").concat() shouldBe typed.xs("Charlie")
+        typed.groupBy { name }.xs("Moscow") { city }.concat().print()
+    }
+
+    @Test
+    fun getMissingColumn() {
+        val col = typed.getColumnsImpl(UnresolvedColumnsPolicy.Create) { "unknown"<Int>() }
+        col.size shouldBe 1
+        col[0].name shouldBe "unknown"
+        col[0].isMissingColumn() shouldBe true
+    }
+
+    @Test
+    fun getMissingColumn2() {
+        val col = typed.remove { city }.getColumnsImpl(UnresolvedColumnsPolicy.Create) { city }
+        col.size shouldBe 1
+        col[0].name shouldBe typed.city.name()
+        col[0].isMissingColumn() shouldBe true
+    }
 }
