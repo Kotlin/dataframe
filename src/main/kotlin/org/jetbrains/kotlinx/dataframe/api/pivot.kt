@@ -51,10 +51,10 @@ public fun <T> DataFrame<T>.pivotMatches(vararg columns: String, inward: Boolean
 public fun <T> DataFrame<T>.pivotMatches(vararg columns: Column, inward: Boolean = true): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
 public fun <T> DataFrame<T>.pivotMatches(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
 
-public fun <T> DataFrame<T>.pivotCount(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> = pivot(inward, columns).groupByOther().count()
-public fun <T> DataFrame<T>.pivotCount(vararg columns: String, inward: Boolean = true): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
-public fun <T> DataFrame<T>.pivotCount(vararg columns: Column, inward: Boolean = true): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
-public fun <T> DataFrame<T>.pivotCount(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivotCounts(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> = pivot(inward, columns).groupByOther().count()
+public fun <T> DataFrame<T>.pivotCounts(vararg columns: String, inward: Boolean = true): DataFrame<T> = pivotCounts(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivotCounts(vararg columns: Column, inward: Boolean = true): DataFrame<T> = pivotCounts(inward) { columns.toColumns() }
+public fun <T> DataFrame<T>.pivotCounts(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> = pivotCounts(inward) { columns.toColumns() }
 
 // endregion
 
@@ -70,10 +70,10 @@ public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: String, inward: Boolea
 public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: Column, inward: Boolean = true): DataFrame<G> = pivotMatches(inward) { columns.toColumns() }
 public fun <G> GroupBy<*, G>.pivotMatches(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<G> = pivotMatches(inward) { columns.toColumns() }
 
-public fun <G> GroupBy<*, G>.pivotCount(inward: Boolean = true, columns: ColumnsSelector<G, *>): DataFrame<G> = pivot(inward, columns).count()
-public fun <G> GroupBy<*, G>.pivotCount(vararg columns: String, inward: Boolean = true): DataFrame<G> = pivotCount(inward) { columns.toColumns() }
-public fun <G> GroupBy<*, G>.pivotCount(vararg columns: Column, inward: Boolean = true): DataFrame<G> = pivotCount(inward) { columns.toColumns() }
-public fun <G> GroupBy<*, G>.pivotCount(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<G> = pivotCount(inward) { columns.toColumns() }
+public fun <G> GroupBy<*, G>.pivotCounts(inward: Boolean = true, columns: ColumnsSelector<G, *>): DataFrame<G> = pivot(inward, columns).count()
+public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: String, inward: Boolean = true): DataFrame<G> = pivotCounts(inward) { columns.toColumns() }
+public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: Column, inward: Boolean = true): DataFrame<G> = pivotCounts(inward) { columns.toColumns() }
+public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<G> = pivotCounts(inward) { columns.toColumns() }
 
 // endregion
 
@@ -90,9 +90,9 @@ public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: String, inwar
 public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: Column, inward: Boolean = true): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
 public fun <T> AggregateGroupedDsl<T>.pivotMatches(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> = pivotMatches(inward) { columns.toColumns() }
 
-public fun <T> AggregateGroupedDsl<T>.pivotCount(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> = pivot(inward, columns).matches()
-public fun <T> AggregateGroupedDsl<T>.pivotCount(vararg columns: String, inward: Boolean = true): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
-public fun <T> AggregateGroupedDsl<T>.pivotCount(vararg columns: Column, inward: Boolean = true): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
-public fun <T> AggregateGroupedDsl<T>.pivotCount(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> = pivotCount(inward) { columns.toColumns() }
+public fun <T> AggregateGroupedDsl<T>.pivotCounts(inward: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> = pivot(inward, columns).matches()
+public fun <T> AggregateGroupedDsl<T>.pivotCounts(vararg columns: String, inward: Boolean = true): DataFrame<T> = pivotCounts(inward) { columns.toColumns() }
+public fun <T> AggregateGroupedDsl<T>.pivotCounts(vararg columns: Column, inward: Boolean = true): DataFrame<T> = pivotCounts(inward) { columns.toColumns() }
+public fun <T> AggregateGroupedDsl<T>.pivotCounts(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> = pivotCounts(inward) { columns.toColumns() }
 
 // endregion

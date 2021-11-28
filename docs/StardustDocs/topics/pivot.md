@@ -402,23 +402,23 @@ df.groupBy { "name"["firstName"] }.aggregate {
 </tab></tabs>
 <!---END-->
 
-### pivotCount
+### pivotCounts
 
-Pivots with `Int` count statistics one or several columns preserving all other columns of `DataFrame`.
+Pivots with [`count`](count.md) statistics one or several columns preserving all other columns of `DataFrame` or `GroupBy`.
 
-<!---FUN pivotCount-->
+<!---FUN pivotCounts-->
 
 ```kotlin
-df.pivotCount { city }
+df.pivotCounts { city }
 // same as
 df.pivot { city }.groupByOther().count()
 
-df.groupBy { name }.pivotCount { city }
+df.groupBy { name }.pivotCounts { city }
 // same as
 df.groupBy { name }.pivot { city }.count()
 // same as
 df.groupBy { name }.aggregate {
-    pivotCount { city }
+    pivotCounts { city }
 }
 ```
 
