@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.LocalDateTime
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.allNulls
@@ -12,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.testCsv
 import org.junit.Test
 import java.io.StringWriter
-import java.time.LocalDateTime
 import java.util.Locale
 import kotlin.reflect.KClass
 
