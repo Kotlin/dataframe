@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumn
+import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -49,5 +50,6 @@ public interface ColumnsContainer<out T> {
 
     public fun <R> resolve(reference: ColumnReference<R>): ColumnWithPath<R>?
 
-    public fun asColumnGroup(): ColumnGroup<*>
+    public fun asColumnGroup(name: String = ""): ColumnGroup<*>
+    public fun asColumnGroup(column: ColumnGroupAccessor): ColumnGroup<*> = asColumnGroup(column.name)
 }

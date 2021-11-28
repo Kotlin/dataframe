@@ -141,10 +141,12 @@ import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.withValue
 import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.api.withZero
+import org.jetbrains.kotlinx.dataframe.api.xs
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.hasNulls
@@ -153,7 +155,9 @@ import org.jetbrains.kotlinx.dataframe.impl.api.ExtraColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
 import org.jetbrains.kotlinx.dataframe.impl.between
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.isMissingColumn
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
+import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
