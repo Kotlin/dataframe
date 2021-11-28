@@ -85,3 +85,4 @@ Multiplex operations usually end with `into` or `with` function. The following n
 * [ungroup](ungroup.md) - remove column grouping
 * [update](update.md) - change column values preserving column types
 * [valueCounts](valueCounts.md) - counts for unique values 
+* [xs](xs.md) - filter by key values

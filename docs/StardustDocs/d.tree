@@ -61,7 +61,9 @@
             </toc-element>
         </toc-element>
         <toc-element id="modify.md"  show-structure-depth="3">
-            <toc-element id="sliceRows.md"/>
+            <toc-element id="sliceRows.md">
+                <toc-element id="xs.md"/>
+            </toc-element>
             <toc-element id="select.md"/>
             <toc-element id="filterRows.md">
                 <toc-element id="filter.md"/>
