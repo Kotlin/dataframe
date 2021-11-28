@@ -16,7 +16,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
         cellClause = CellClause.stopAfter { cell ->
             cell.source.any { cellLine ->
                 cellLine.contains("personal access token")
-            } 
+            }
         },
         cleanup = {
             listOf(
