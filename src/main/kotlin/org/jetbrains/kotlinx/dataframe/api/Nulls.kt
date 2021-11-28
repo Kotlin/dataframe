@@ -1,11 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
@@ -23,7 +23,14 @@ public fun <T, C> DataFrame<T>.fillNulls(cols: Iterable<ColumnReference<C>>): Up
 
 internal inline val Any?.isNaN: Boolean get() = (this is Double && isNaN()) || (this is Float && isNaN())
 
-internal inline val Any?.isNA: Boolean get() = this == null || isNaN
+internal inline val Any?.isNA: Boolean get() = when (this) {
+    null -> true
+    is Double -> isNaN()
+    is Float -> isNaN()
+    is AnyRow -> allNA()
+    is AnyFrame -> isEmpty()
+    else -> false
+}
 
 internal inline val Double?.isNA: Boolean get() = this == null || this.isNaN()
 
@@ -72,10 +79,8 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> = (if (!hasNulls()) thi
 public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, selector: ColumnsSelector<T, *>): DataFrame<T> {
     val cols = this[selector]
 
-    fun DataRow<T>.checkNA(col: AnyCol) = col[this].isNA
-
-    return if (whereAllNA) drop { cols.all { checkNA(it) } }
-    else drop { cols.any { checkNA(it) } }
+    return if (whereAllNA) drop { cols.all { this[it].isNA } }
+    else drop { cols.any { this[it].isNA } }
 }
 
 public fun <T> DataFrame<T>.dropNA(vararg cols: KProperty<*>, whereAllNA: Boolean = false): DataFrame<T> = dropNA(whereAllNA) { cols.toColumns() }
