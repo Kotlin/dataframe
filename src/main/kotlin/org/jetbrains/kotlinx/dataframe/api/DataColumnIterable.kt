@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.columns.size
@@ -25,11 +24,6 @@ public fun <T> DataColumn<T>.filter(predicate: Predicate<T>): DataColumn<T> = in
 public fun <T> DataColumn<T>.forEach(action: (T) -> Unit): Unit = values.forEach(action)
 
 public fun <T> DataColumn<T>.forEachIndexed(action: (Int, T) -> Unit): Unit = values.forEachIndexed(action)
-
-public fun <T> DataColumn<T>.groupBy(cols: Iterable<AnyCol>): GroupBy<*, *> =
-    (cols + this).toDataFrame().groupBy { cols(0 until ncol() - 1) }
-
-public fun <T> DataColumn<T>.groupBy(vararg cols: AnyCol): GroupBy<*, *> = groupBy(cols.toList())
 
 public fun <T, R> DataColumn<T>.map(transform: (T) -> R): DataColumn<R> {
     val collector = createDataCollector(size)
