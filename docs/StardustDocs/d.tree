@@ -124,6 +124,7 @@
                 <toc-element id="median.md"/>
                 <toc-element id="mean.md"/>
                 <toc-element id="std.md"/>
+                <toc-element id="valueCounts.md"/>
             </toc-element>
             <toc-element id="cumulativeStatistics.md">
                 <toc-element id="cumSum.md"/>

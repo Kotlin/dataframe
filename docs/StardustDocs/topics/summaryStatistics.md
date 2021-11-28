@@ -8,6 +8,7 @@
 * [mean](mean.md)
 * [median](median.md)
 * [std](std.md)
+* [valueCounts](valueCounts.md)
 
 Every summary statistics can be used in aggregations of:
 * [`DataFrame`](DataFrame.md)
