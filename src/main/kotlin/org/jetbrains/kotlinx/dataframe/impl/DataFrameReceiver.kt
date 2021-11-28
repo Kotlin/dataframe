@@ -19,25 +19,32 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
+import org.jetbrains.kotlinx.dataframe.pathOf
 
-internal open class DataFrameReceiver<T>(val source: DataFrame<T>, private val allowMissingColumns: Boolean) : DataFrameImpl<T>(source.columns()), SingleColumn<DataRow<T>> {
+internal open class DataFrameReceiver<T>(
+    val source: DataFrame<T>,
+    private val unresolvedColumnsPolicy: UnresolvedColumnsPolicy
+) : DataFrameImpl<T>(source.columns()), SingleColumn<DataRow<T>> {
 
-    private fun <R> DataColumn<R>?.check(): DataColumn<R>? =
+    private fun <R> DataColumn<R>?.check(path: ColumnPath): DataColumn<R>? =
         when (this) {
-            null -> if (allowMissingColumns) MissingColumnGroup<Any>().asDataColumn().cast() else null
+            null -> when (unresolvedColumnsPolicy) {
+                UnresolvedColumnsPolicy.Create, UnresolvedColumnsPolicy.Skip -> MissingColumnGroup<Any>(path, this@DataFrameReceiver).asDataColumn().cast()
+                UnresolvedColumnsPolicy.Fail -> error("Column $path not found")
+            }
             is MissingDataColumn -> this
             is ColumnGroup<*> -> ColumnGroupWithParent(null, this).asDataColumn().cast()
             else -> this
         }
 
-    override fun getColumnOrNull(name: String) = source.getColumnOrNull(name).check()
-    override fun getColumnOrNull(index: Int) = source.getColumnOrNull(index).check()
-    override fun <R> getColumnOrNull(column: ColumnReference<R>) = source.getColumnOrNull(column).check()
-    override fun getColumnOrNull(path: ColumnPath) = source.getColumnOrNull(path).check()
-    override fun <R> getColumnOrNull(column: ColumnSelector<T, R>) = source.getColumnOrNull(column).check()
+    override fun getColumnOrNull(name: String) = source.getColumnOrNull(name).check(pathOf(name))
+    override fun getColumnOrNull(index: Int) = source.getColumnOrNull(index).check(pathOf(""))
+    override fun <R> getColumnOrNull(column: ColumnReference<R>) = source.getColumnOrNull(column).check(column.path())
+    override fun getColumnOrNull(path: ColumnPath) = source.getColumnOrNull(path).check(path)
+    override fun <R> getColumnOrNull(column: ColumnSelector<T, R>) = getColumnsImpl(unresolvedColumnsPolicy, column).singleOrNull()
 
     override fun <R> resolve(reference: ColumnReference<R>): ColumnWithPath<R>? {
-        val context = ColumnResolutionContext(this, if (allowMissingColumns) UnresolvedColumnsPolicy.Skip else UnresolvedColumnsPolicy.Fail)
+        val context = ColumnResolutionContext(this, unresolvedColumnsPolicy)
         return reference.resolveSingle(context)
     }
 

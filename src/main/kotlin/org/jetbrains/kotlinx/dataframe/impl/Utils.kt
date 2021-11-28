@@ -134,6 +134,11 @@ internal fun <T, C> DataFrame<T>.getColumnsWithPaths(
     selector: ColumnsSelector<T, C>
 ): List<ColumnWithPath<C>> = selector.toColumns().resolve(this, unresolvedColumnsPolicy)
 
+internal fun <T, C> DataFrame<T>.getColumnPaths(
+    unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
+    selector: ColumnsSelector<T, C>
+): List<ColumnPath> = getColumnsWithPaths(unresolvedColumnsPolicy, selector).map { it.path }
+
 internal fun <C : Comparable<C>> Sequence<C?>.indexOfMin(): Int {
     val iterator = iterator()
     if (!iterator.hasNext()) return -1

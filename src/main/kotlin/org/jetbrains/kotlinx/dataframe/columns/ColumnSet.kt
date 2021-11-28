@@ -16,7 +16,7 @@ public class ColumnResolutionContext internal constructor (
     internal val unresolvedColumnsPolicy: UnresolvedColumnsPolicy
 ) {
 
-    public val allowMissingColumns: Boolean = unresolvedColumnsPolicy == UnresolvedColumnsPolicy.Skip
+    public val allowMissingColumns: Boolean = unresolvedColumnsPolicy != UnresolvedColumnsPolicy.Fail
 }
 
 internal enum class UnresolvedColumnsPolicy { Fail, Skip, Create }

@@ -19,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
@@ -85,7 +86,7 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         transform { it.flatMap { it.children().subList(range.start, range.endInclusive + 1) } }
 
     public fun <C, R> ColumnGroup<C>.colsRange(selector: ColumnsSelector<C, R>): ColumnSet<R> {
-        val receiver = object : DataFrameReceiver<C>(this, false), ColumnsSelectionDsl<C> { }
+        val receiver = object : DataFrameReceiver<C>(this, UnresolvedColumnsPolicy.Fail), ColumnsSelectionDsl<C> { }
         return selector(receiver, receiver)
     }
 

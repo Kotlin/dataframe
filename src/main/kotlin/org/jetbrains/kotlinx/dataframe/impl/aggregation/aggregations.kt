@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
 import org.jetbrains.kotlinx.dataframe.impl.asList
@@ -27,7 +28,7 @@ internal fun <T, V> AggregateInternalDsl<T>.yieldOneOrMany(
 
 @JvmName("toColumnSetForAggregate")
 internal fun <T, C> ColumnsForAggregateSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
-    object : DataFrameReceiver<T>(it.df.cast(), true), ColumnsForAggregateSelectionDsl<T> {}
+    object : DataFrameReceiver<T>(it.df.cast(), UnresolvedColumnsPolicy.Fail), ColumnsForAggregateSelectionDsl<T> {}
 }
 
 internal fun <T, C, R> AggregateInternalDsl<T>.columnValues(
