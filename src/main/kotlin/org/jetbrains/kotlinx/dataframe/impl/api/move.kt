@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
@@ -44,7 +45,7 @@ internal fun <T, C> MoveClause<T, C>.moveImpl(
     under: Boolean = false,
     newPathExpression: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> Column
 ): DataFrame<T> {
-    val receiver = object : DataFrameReceiver<T>(df, false), ColumnsSelectionDsl<T> {}
+    val receiver = object : DataFrameReceiver<T>(df, UnresolvedColumnsPolicy.Fail), ColumnsSelectionDsl<T> {}
     val removeResult = df.removeImpl(columns)
     val columnsToInsert = removeResult.removedColumns.map {
         val col = it.toColumnWithPath<C>(df)

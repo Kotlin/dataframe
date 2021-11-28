@@ -2,24 +2,30 @@ package org.jetbrains.kotlinx.dataframe.impl.columns.missing
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
+import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 
-internal class MissingColumnGroup<T> : MissingDataColumn<DataRow<T>>(), DataColumnGroup<T> {
+internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsContainer<*>) : MissingDataColumn<DataRow<T>>(), DataColumnGroup<T> {
 
     override val df: DataFrame<T>
-        get() = throw UnsupportedOperationException()
+        get() = this
 
-    override fun getColumnOrNull(name: String) = MissingColumnGroup<Any?>()
+    override fun getColumnOrNull(name: String) = MissingColumnGroup<Any?>(path + name, host)
 
-    override fun getColumnOrNull(columnIndex: Int) = MissingValueColumn<Any?>()
+    override fun getColumnOrNull(index: Int) = MissingColumnGroup<Any?>(path + "", host)
 
     override fun ncol(): Int = 0
 
@@ -49,9 +55,17 @@ internal class MissingColumnGroup<T> : MissingDataColumn<DataRow<T>>(), DataColu
 
     override fun rowsReversed(): Iterable<DataRow<T>> = throw UnsupportedOperationException()
 
-    override fun <R> getColumnOrNull(column: ColumnReference<R>) = MissingColumnGroup<Any>().asDataColumn().cast<R>()
+    override fun <R> getColumnOrNull(column: ColumnReference<R>) = MissingColumnGroup<Any>(path + column.name(), host).asDataColumn().cast<R>()
 
-    override fun getColumnOrNull(path: ColumnPath) = MissingColumnGroup<Any?>()
+    override fun getColumnOrNull(path: ColumnPath) = MissingColumnGroup<Any?>(this.path + path, host)
 
-    override fun <R> getColumnOrNull(column: ColumnSelector<T, R>) = MissingColumnGroup<Any>().asDataColumn().cast<R>()
+    override fun <R> getColumnOrNull(column: ColumnSelector<T, R>) = MissingColumnGroup<Any>(path + "", host).asDataColumn().cast<R>()
+
+    override fun name(): String = path.name
+
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataRow<T>>? = when (context.unresolvedColumnsPolicy) {
+        UnresolvedColumnsPolicy.Skip -> null
+        UnresolvedColumnsPolicy.Create -> this.addPath(path, host)
+        UnresolvedColumnsPolicy.Fail -> error("Failed to resolve column $path")
+    }
 }

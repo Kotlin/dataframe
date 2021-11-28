@@ -99,16 +99,16 @@ internal fun <TD, T : DataFrame<TD>, C> Selector<T, ColumnSet<C>>.toColumns(
 
 @JvmName("toColumnSetForPivot")
 internal fun <T, C> PivotColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
-    object : DataFrameReceiver<T>(it.df.cast(), it.allowMissingColumns), PivotDsl<T> {}
+    object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), PivotDsl<T> {}
 }
 
 @JvmName("toColumnSetForSort")
 internal fun <T, C> SortColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
-    object : DataFrameReceiver<T>(it.df.cast(), it.allowMissingColumns), SortDsl<T> {}
+    object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), SortDsl<T> {}
 }
 
 internal fun <T, C> ColumnsSelector<T, C>.toColumns(): ColumnSet<C> = toColumns {
-    object : DataFrameReceiver<T>(it.df.cast(), it.allowMissingColumns), ColumnsSelectionDsl<T> { }
+    object : DataFrameReceiver<T>(it.df.cast(), it.unresolvedColumnsPolicy), ColumnsSelectionDsl<T> { }
 }
 
 internal fun Array<out ColumnSet<*>>.toColumns(): ColumnSet<Any?> = ColumnsList(this.asList())

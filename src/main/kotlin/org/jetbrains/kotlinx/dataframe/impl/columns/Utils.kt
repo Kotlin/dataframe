@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.asNullable
+import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.TreeNode
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.collectTree
@@ -189,3 +190,5 @@ internal fun AnyBaseColumn.unbox(): AnyCol = when (this) {
     is ForceResolvedColumn<*> -> source.unbox()
     else -> this as AnyCol
 }
+
+internal fun AnyCol.isMissingColumn() = this is MissingDataColumn

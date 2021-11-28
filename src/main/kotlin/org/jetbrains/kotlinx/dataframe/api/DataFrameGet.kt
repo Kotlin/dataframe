@@ -16,8 +16,8 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.indices
 
@@ -26,7 +26,7 @@ public fun <T, C> DataFrame<T>.getColumnsWithPaths(selector: ColumnsSelector<T, 
 
 public fun <T, C> DataFrame<T>.getColumnPath(selector: ColumnSelector<T, C>): ColumnPath = getColumnPaths(selector).single()
 public fun <T, C> DataFrame<T>.getColumnPaths(selector: ColumnsSelector<T, C>): List<ColumnPath> =
-    selector.toColumns().resolve(this, UnresolvedColumnsPolicy.Fail).map { it.path }
+    getColumnPaths(UnresolvedColumnsPolicy.Fail, selector)
 
 public fun <T, C> DataFrame<T>.getColumnWithPath(selector: ColumnSelector<T, C>): ColumnWithPath<C> = getColumnsWithPaths(selector).single()
 public fun <T, C> DataFrame<T>.getColumns(selector: ColumnsSelector<T, C>): List<DataColumn<C>> = get(selector)
