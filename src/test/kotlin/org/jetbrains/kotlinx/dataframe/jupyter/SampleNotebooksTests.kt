@@ -11,10 +11,20 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     fun puzzles() = exampleTest("puzzles", "40 puzzles")
 
     @Test
-    @Ignore("Execution of this test leads to GitHub API rate limit exceeding")
-    fun github() = exampleTest("github") {
-        File("jetbrains.json").delete()
-    }
+    fun github() = exampleTest(
+        "github",
+        cellClause = CellClause.stopAfter { cell ->
+            cell.source.any { cellLine ->
+                cellLine.contains("personal access token")
+            } 
+        },
+        cleanup = {
+            listOf(
+                "jetbrains.json",
+                "src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/Repository.Generated.kt"
+            ).forEach { File(it).delete() }
+        }
+    )
 
     @Test
     fun titanic() = exampleTest(
@@ -48,15 +58,16 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     private fun doTest(
         notebookPath: String,
         replacer: CodeReplacer,
+        cellClause: CellClause,
         cleanup: () -> Unit = {}
     ) {
         val notebookFile = File(notebookPath)
         val notebook = JupyterNotebookParser.parse(notebookFile)
-        val codeCellsData = notebook.cells.mapNotNull {
-            if (it.cell_type == "code") {
-                CodeCellData(it.source.joinToString(""), it.outputs)
-            } else null
-        }
+        val finalClause = cellClause and CellClause.IS_CODE
+
+        val codeCellsData = notebook.cells
+            .filter { finalClause.isAccepted(it) }
+            .map { CodeCellData(it.source.joinToString(""), it.outputs) }
 
         try {
             for (codeCellData in codeCellsData) {
@@ -76,10 +87,11 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
         dir: String,
         notebookName: String? = null,
         replacer: CodeReplacer = CodeReplacer.DEFAULT,
+        cellClause: CellClause = CellClause { true },
         cleanup: () -> Unit = {}
     ) {
         val fileName = if (notebookName == null) "$dir.ipynb" else "$notebookName.ipynb"
-        doTest("$jupyterExamplesPath/$dir/$fileName", replacer, cleanup)
+        doTest("$jupyterExamplesPath/$dir/$fileName", replacer, cellClause, cleanup)
     }
 
     data class CodeCellData(
