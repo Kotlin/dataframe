@@ -490,17 +490,20 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `get group by single key`() {
-        typed.groupBy { name }["Charlie"] shouldBe typed.filter { name == "Charlie" }
+        typed.groupBy { name }.xs("Charlie").concat() shouldBe typed.filter { name == "Charlie" }.remove { name }
     }
 
     @Test
     fun `get group by complex key`() {
-        typed.groupBy { city and name }["Tokyo", "Bob"] shouldBe typed.filter { name == "Bob" && city == "Tokyo" }
+        typed.groupBy { city and name }.xs("Tokyo", "Bob").concat() shouldBe
+            typed.filter { name == "Bob" && city == "Tokyo" }
+                .remove { name and city }
     }
 
     @Test
     fun `get group by partial key`() {
-        typed.groupBy { city and name }["Tokyo"] shouldBe typed.filter { city == "Tokyo" }
+        typed.groupBy { city and name }.xs("Tokyo").toDataFrame() shouldBe
+            typed.filter { city == "Tokyo" }.remove { city }.groupBy { name }.toDataFrame()
     }
 
     @Test
@@ -2349,7 +2352,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `groupBy sort`() {
-        typed.groupBy { name }.sortByDesc { age }["Charlie"] shouldBe typed.filter { name == "Charlie" }.sortBy { age.desc() }
+        typed.groupBy { name }.sortByDesc { age }.xs("Charlie").concat() shouldBe typed.filter { name == "Charlie" }.sortBy { age.desc() }.remove { name }
     }
 
     @Test
