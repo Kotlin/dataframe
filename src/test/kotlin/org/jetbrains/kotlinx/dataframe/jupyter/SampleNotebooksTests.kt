@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 
 import org.jetbrains.kotlinx.jupyter.testkit.notebook.JupyterNotebookParser
 import org.jetbrains.kotlinx.jupyter.testkit.notebook.JupyterOutput
-import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 
@@ -19,10 +18,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
             }
         },
         cleanup = {
-            listOf(
-                "jetbrains.json",
-                "src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/Repository.Generated.kt"
-            ).forEach { File(it).delete() }
+            File("jetbrains.json").delete()
         }
     )
 
@@ -30,7 +26,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     fun titanic() = exampleTest(
         "titanic", "Titanic",
         replacer = CodeReplacer.byMap(
-            "../../idea-examples/" to "examples/idea-examples/"
+            "../../idea-examples/" to "$ideaExamplesPath/"
         )
     )
 
@@ -52,8 +48,16 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     )
 
     @Test
-    @Ignore("Please provide a file ml-latest/movies.csv")
-    fun movies() = exampleTest("movies")
+    fun movies() = exampleTest(
+        "movies",
+        replacer = CodeReplacer.byMap(
+            "ml-latest/movies.csv" to "$ideaExamplesPath/movies/src/main/resources/movies.csv"
+        ),
+        // There is no tags data in repository
+        cellClause = CellClause.stopAfter { cell ->
+            cell.source.any { "tags.csv" in it }
+        }
+    )
 
     private fun doTest(
         notebookPath: String,
@@ -100,6 +104,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     )
 
     companion object {
+        const val ideaExamplesPath = "examples/idea-examples"
         const val jupyterExamplesPath = "examples/jupyter-notebooks"
 
         fun testFile(folder: String, fileName: String) = fileName to "$jupyterExamplesPath/$folder/$fileName"
