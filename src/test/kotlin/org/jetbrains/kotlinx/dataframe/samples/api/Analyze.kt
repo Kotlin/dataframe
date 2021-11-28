@@ -32,7 +32,7 @@ import org.jetbrains.kotlinx.dataframe.api.minFor
 import org.jetbrains.kotlinx.dataframe.api.minOf
 import org.jetbrains.kotlinx.dataframe.api.minOrNull
 import org.jetbrains.kotlinx.dataframe.api.pivot
-import org.jetbrains.kotlinx.dataframe.api.pivotCount
+import org.jetbrains.kotlinx.dataframe.api.pivotCounts
 import org.jetbrains.kotlinx.dataframe.api.pivotMatches
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.std
@@ -45,7 +45,6 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataRow
 import org.jetbrains.kotlinx.dataframe.api.valueCounts
 import org.jetbrains.kotlinx.dataframe.api.values
-import org.jetbrains.kotlinx.dataframe.api.xs
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
@@ -1052,18 +1051,18 @@ class Analyze : TestBase() {
     }
 
     @Test
-    fun pivotCount() {
+    fun pivotCounts() {
         // SampleStart
-        df.pivotCount { city }
+        df.pivotCounts { city }
         // same as
         df.pivot { city }.groupByOther().count()
 
-        df.groupBy { name }.pivotCount { city }
+        df.groupBy { name }.pivotCounts { city }
         // same as
         df.groupBy { name }.pivot { city }.count()
         // same as
         df.groupBy { name }.aggregate {
-            pivotCount { city }
+            pivotCounts { city }
         }
         // SampleEnd
     }

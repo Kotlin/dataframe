@@ -922,4 +922,13 @@ class Access : TestBase() {
         }
         // SampleEnd
     }
+    
+    @Test
+    fun xs() {
+        // SampleStart
+        df.xs("Charlie", "Chaplin")
+
+        df.xs("Moscow", true) { city and isHappy }
+        // SampleEnd
+    }
 }
