@@ -74,8 +74,8 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         val leftCol = leftJoinColumns[i]
         val rightCol = rightJoinColumns[i]
         if (leftCol.isColumnGroup() && rightCol.isColumnGroup()) {
-            val leftColumns = getColumnsWithPaths { leftCol.dfsLeafs() }
-            val rightColumns = other.getColumnsWithPaths { rightCol.dfsLeafs() }
+            val leftColumns = getColumnsWithPaths { leftCol.allDfs() }
+            val rightColumns = other.getColumnsWithPaths { rightCol.allDfs() }
 
             val leftPrefixLength = leftCol.path.size
             val rightPrefixLength = rightCol.path.size
@@ -147,7 +147,7 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         outputRowsCount += rightUnmatchedCount
     }
 
-    val leftColumns = getColumnsWithPaths { dfsLeafs() }
+    val leftColumns = getColumnsWithPaths { allDfs() }
 
     val rightJoinColumnPaths = allRightJoinColumns.map { it.path to it.data }.toMap()
 

@@ -69,6 +69,21 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
 
+    public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> = colsRange(this, endInclusive)
+
+    public operator fun Column.rangeTo(endInclusive: Column): ColumnSet<*> {
+        val parent = path().parent()
+        require(parent != null)
+        require(endInclusive.path().parent() == parent) { "Start and end columns have different parent column paths" }
+        return parent.colsRange(name, endInclusive.name)
+    }
+
+    public fun none(): ColumnSet<*> = ColumnsList<Any?>(emptyList())
+
+    // region cols
+
+    public fun ColumnSet<*>.cols(predicate: (AnyCol) -> Boolean = { true }): ColumnSet<Any?> = colsInternal(predicate)
+
     public fun <C> ColumnSet<*>.cols(firstCol: ColumnReference<C>, vararg otherCols: ColumnReference<C>): ColumnSet<C> =
         (listOf(firstCol) + otherCols).let { refs ->
             transform { it.flatMap { col -> refs.mapNotNull { col.getChild(it) } } }
@@ -84,6 +99,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun ColumnSet<*>.cols(range: IntRange): ColumnSet<Any?> =
         transform { it.flatMap { it.children().subList(range.start, range.endInclusive + 1) } }
+
+    // region colsRange
 
     public fun <C, R> ColumnGroup<C>.colsRange(selector: ColumnsSelector<C, R>): ColumnSet<R> {
         val receiver = object : DataFrameReceiver<C>(this, UnresolvedColumnsPolicy.Fail), ColumnsSelectionDsl<C> { }
@@ -105,28 +122,33 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         }
     }
 
-    public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> = colsRange(this, endInclusive)
+    // endregion
 
-    public operator fun Column.rangeTo(endInclusive: Column): ColumnSet<*> {
-        val parent = path().parent()
-        require(parent != null)
-        require(endInclusive.path().parent() == parent) { "Start and end columns have different parent column paths" }
-        return parent.colsRange(name, endInclusive.name)
-    }
+    // endregion
 
-    public fun ColumnSet<*>.cols(predicate: (AnyCol) -> Boolean = { true }): ColumnSet<Any?> = colsInternal(predicate)
+    // region dfs
 
-    public fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean = { true }): ColumnSet<Any?> = dfsInternal(predicate)
+    public fun <C> ColumnSet<C>.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<Any?> = dfsInternal(predicate)
+
+    public fun String.dfs(predicate: (ColumnWithPath<*>) -> Boolean): ColumnSet<*> = toColumnAccessor().dfs(predicate)
+
+    // endregion
+
+    // region all
 
     public fun SingleColumn<*>.all(): ColumnSet<*> = transformSingle { it.children() }
 
     public fun String.all(): ColumnSet<*> = toColumnAccessor().transformSingle { it.children() }
 
-    public fun none(): ColumnSet<*> = ColumnsList<Any?>(emptyList())
+    // region allDfs
 
-    public fun ColumnSet<*>.dfsLeafs(): ColumnSet<Any?> = dfs { !it.isColumnGroup() }
+    public fun ColumnSet<*>.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = if (includeGroups) dfs { true } else dfs { !it.isColumnGroup() }
 
-    public fun String.dfs(): ColumnSet<*> = toColumnAccessor().dfs()
+    public fun String.allDfs(includeGroups: Boolean = false): ColumnSet<Any?> = toColumnAccessor().allDfs(includeGroups)
+
+    // endregion
+
+    // region allAfter
 
     // excluding current
     public fun SingleColumn<*>.allAfter(colPath: ColumnPath): ColumnSet<Any?> {
@@ -143,6 +165,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun SingleColumn<*>.allAfter(colName: String): ColumnSet<Any?> = allAfter(pathOf(colName))
     public fun SingleColumn<*>.allAfter(column: Column): ColumnSet<Any?> = allAfter(column.path())
 
+    // endregion
+
+    // region allSince
+
     // including current
     public fun SingleColumn<*>.allSince(colPath: ColumnPath): ColumnSet<Any?> {
         var take = false
@@ -157,6 +183,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun SingleColumn<*>.allSince(colName: String): ColumnSet<Any?> = allSince(pathOf(colName))
     public fun SingleColumn<*>.allSince(column: Column): ColumnSet<Any?> = allSince(column.path())
+
+    // endregion
+
+    // region allBefore
 
     // excluding current
     public fun SingleColumn<*>.allBefore(colPath: ColumnPath): ColumnSet<Any?> {
@@ -173,6 +203,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun SingleColumn<*>.allBefore(colName: String): ColumnSet<Any?> = allBefore(pathOf(colName))
     public fun SingleColumn<*>.allBefore(column: Column): ColumnSet<Any?> = allBefore(column.path())
 
+    // endregion
+
+    // region allUntil
+
     // including current
     public fun SingleColumn<*>.allUntil(colPath: ColumnPath): ColumnSet<Any?> {
         var take = true
@@ -187,6 +221,10 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun SingleColumn<*>.allUntil(colName: String): ColumnSet<Any?> = allUntil(pathOf(colName))
     public fun SingleColumn<*>.allUntil(column: Column): ColumnSet<Any?> = allUntil(column.path())
+
+    // endregion
+
+    // endregion
 
     public fun SingleColumn<*>.groups(filter: (ColumnGroup<*>) -> Boolean = { true }): ColumnSet<AnyRow> =
         children { it.isColumnGroup() && filter(it.asColumnGroup()) } as ColumnSet<AnyRow>

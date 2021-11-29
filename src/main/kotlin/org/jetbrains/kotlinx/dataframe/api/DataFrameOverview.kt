@@ -18,7 +18,7 @@ import kotlin.reflect.KType
 
 // region describe
 
-public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> = describe { dfs() }
+public fun <T> DataFrame<T>.describe(): DataFrame<ColumnDescription> = describe { allDfs() }
 public fun <T> DataFrame<T>.describe(columns: ColumnsSelector<T, *>): DataFrame<ColumnDescription> = describeImpl(getColumnsWithPaths(columns))
 public fun <T> DataFrame<T>.describe(vararg columns: String): DataFrame<ColumnDescription> = describe { columns.toColumns() }
 public fun <T, C : Number?> DataFrame<T>.describe(vararg columns: ColumnReference<C>): DataFrame<ColumnDescription> = describe { columns.toColumns() }
