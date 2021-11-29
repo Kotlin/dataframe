@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 
 import org.jetbrains.kotlinx.jupyter.testkit.notebook.JupyterNotebookParser
 import org.jetbrains.kotlinx.jupyter.testkit.notebook.JupyterOutput
+import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 
@@ -48,6 +49,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     )
 
     @Test
+    @Ignore
     fun movies() = exampleTest(
         "movies",
         replacer = CodeReplacer.byMap(
