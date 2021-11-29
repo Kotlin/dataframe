@@ -180,6 +180,9 @@ public fun <T, C : Number> PivotGroupBy<T>.meanFor(
 
 public fun <T, R : Number> PivotGroupBy<T>.mean(skipNA: Boolean = defaultSkipNA, columns: ColumnsSelector<T, R?>): DataFrame<T> =
     Aggregators.mean(skipNA).aggregateAll(this, columns)
+public fun <T> PivotGroupBy<T>.mean(vararg columns: String, skipNA: Boolean = defaultSkipNA): DataFrame<T> = mean(skipNA) { columns.toColumnsOf() }
+public fun <T, R : Number> PivotGroupBy<T>.mean(vararg columns: ColumnReference<R? >, skipNA: Boolean = defaultSkipNA): DataFrame<T> = mean(skipNA) { columns.toColumns() }
+public fun <T, R : Number> PivotGroupBy<T>.mean(vararg columns: KProperty<R?>, skipNA: Boolean = defaultSkipNA): DataFrame<T> = mean(skipNA) { columns.toColumns() }
 
 public inline fun <T, reified R : Number> PivotGroupBy<T>.meanOf(
     skipNA: Boolean = defaultSkipNA,
