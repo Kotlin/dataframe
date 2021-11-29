@@ -2,11 +2,15 @@ package org.jetbrains.kotlinx.dataframe.impl.aggregation
 
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
+import org.jetbrains.kotlinx.dataframe.api.asSequence
+import org.jetbrains.kotlinx.dataframe.api.canHaveNA
+import org.jetbrains.kotlinx.dataframe.api.canHaveNaN
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.isNA
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
+import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
@@ -38,13 +42,23 @@ internal fun <T, C> ColumnsForAggregateSelector<T, C>.toColumns(): ColumnSet<C> 
 internal fun <T, C> AggregateInternalDsl<T>.columnValues(
     columns: ColumnsForAggregateSelector<T, C>,
     forceYieldLists: Boolean,
-    dropNA: Boolean
+    dropNA: Boolean,
+    distinct: Boolean
 ) {
     val cols = df.getAggregateColumns(columns)
     val isSingle = cols.size == 1
     cols.forEach { col ->
         val path = getPath(col, isSingle)
-        val values = if (dropNA) col.data.values().filter { !it.isNA } else col.data.toList()
+
+        val effectiveDropNA = if(dropNA) col.canHaveNA else false
+        // TODO: use Set for distinct values
+        val values = when {
+            effectiveDropNA && distinct -> col.asSequence().filter { !it.isNA }.distinct().toList()
+            effectiveDropNA && !distinct -> col.values.filter { !it.isNA }
+            distinct -> col.values().distinct()
+            else -> col.toList()
+        }
+
         if (forceYieldLists) yield(path, values, getListType(col.type), col.default)
         else yieldOneOrMany(path, values, col.type, col.default)
     }
