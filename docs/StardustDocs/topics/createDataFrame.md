@@ -122,17 +122,17 @@ map.toDataFrame()
 
 <!---END-->
 
-### createDataFrame
+### convertToDataFrame
 
-Creates `DataFrame` from `Iterable` of any objects .
+Converts in-memory objects into `DataFrame`. Available for any `Iterable` of objects.
 
-<!---FUN createDataFrameFromObject-->
+<!---FUN readDataFrameFromObject-->
 
 ```kotlin
 data class Person(val name: String, val age: Int)
 val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 22))
 
-val df = persons.createDataFrame()
+val df = persons.convertToDataFrame()
 ```
 
 <!---END-->
@@ -141,7 +141,7 @@ Scans object properties using reflection and creates [ValueColumn](DataColumn.md
 
 Specify `depth` parameter to perform deep object graph traversal and convert nested objects into [ColumnGroups](DataColumn.md#columngroup) and [FrameColumns](DataColumn.md#framecolumn):
 
-<!---FUN createDataFrameFromDeepObject-->
+<!---FUN readDataFrameFromDeepObject-->
 
 ```kotlin
 data class Name(val firstName: String, val lastName: String)
@@ -153,18 +153,18 @@ val students = listOf(
     Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5)))
 )
 
-val df = students.createDataFrame(depth = 2)
+val df = students.convertToDataFrame(depth = 2)
 ```
 
 <!---END-->
 
 For detailed control over object graph transformation use configuration DSL. It allows you to exclude particular properties or classes from object graph traversal, compute additional columns and configure column grouping.
 
-<!---FUN createDataFrameFromDeepObjectWithExclude-->
+<!---FUN readDataFrameFromDeepObjectWithExclude-->
 
 ```kotlin
-val df = students.createDataFrame {
-    // add value column
+val df = students.convertToDataFrame {
+    // add column
     "year of birth" from { 2021 - it.age }
 
     // scan all properties
