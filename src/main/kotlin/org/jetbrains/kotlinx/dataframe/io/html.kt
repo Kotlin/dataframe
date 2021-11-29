@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.FormattingDSL
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.isNumber
@@ -120,7 +121,7 @@ internal fun AnyFrame.toHtmlData(
                 }
             } else {
                 val html = formatter.format(value, cellRenderer, renderConfig)
-                val style = renderConfig.cellFormatter?.invoke(it, col)?.attributes()?.ifEmpty { null }?.joinToString(";") { "${it.first}:${it.second}" }
+                val style = renderConfig.cellFormatter?.invoke(FormattingDSL, it, col)?.attributes()?.ifEmpty { null }?.joinToString(";") { "${it.first}:${it.second}" }
                 HtmlContent(html, style)
             }
         }
@@ -197,7 +198,7 @@ public fun <T> DataFrame<T>.toHTML(
 public data class DisplayConfiguration(
     var rowsLimit: Int = 20,
     var cellContentLimit: Int = 40,
-    var cellFormatter: RowColFormatter<*>? = null,
+    var cellFormatter: RowColFormatter<*, *>? = null,
     var precision: Int = defaultPrecision,
     var isolatedOutputs: Boolean = run {
         System.getenv("LETS_PLOT_HTML_ISOLATED_FRAME")?.toBooleanStrictOrNull() ?: false

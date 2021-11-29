@@ -1,12 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.api.CellAttributes
-import org.jetbrains.kotlinx.dataframe.api.CellFormatter
 import org.jetbrains.kotlinx.dataframe.api.FormatClause
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.FormattingDSL
 import org.jetbrains.kotlinx.dataframe.api.RGBColor
+import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.and
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.columns.depth
@@ -46,16 +47,16 @@ internal fun linearGradient(
     }
 }
 
-internal fun <T, C> FormatClause<T, C>.formatImpl(formatter: CellFormatter<C>): FormattedFrame<T> {
+internal fun <T, C> FormatClause<T, C>.formatImpl(formatter: RowColFormatter<T, C>): FormattedFrame<T> {
     val columns =
         if (columns != null) df.getColumnsWithPaths(columns).mapNotNull { if (it.depth == 0) it.name else null }
             .toSet() else null
     return FormattedFrame(df) { row, col ->
-        val oldAttributes = oldFormatter?.invoke(row, col)
+        val oldAttributes = oldFormatter?.invoke(FormattingDSL, row, col.cast())
         if (columns == null || columns.contains(col.name())) {
             val value = row[col] as C
             if (filter == null || filter(row, value)) {
-                oldAttributes and formatter(FormattingDSL, value)
+                oldAttributes and formatter(FormattingDSL, row.cast(), col.cast())
             } else oldAttributes
         } else oldAttributes
     }
