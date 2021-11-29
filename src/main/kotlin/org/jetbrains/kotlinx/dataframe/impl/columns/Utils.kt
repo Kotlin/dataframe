@@ -77,10 +77,12 @@ internal fun <T> BaseColumn<T>.addPath(df: ColumnsContainer<*>): ColumnWithPath<
 
 internal fun ColumnPath.depth() = size - 1
 
+@PublishedApi
 internal fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
 
 internal fun <T> AnyCol.asValues(): ValueColumn<T> = this as ValueColumn<T>
 
+@PublishedApi
 internal fun AnyCol.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
 
 internal fun <T> AnyCol.grouped() = this as ColumnGroup<T>
