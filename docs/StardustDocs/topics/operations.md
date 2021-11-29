@@ -38,10 +38,12 @@ Multiplex operations usually end with `into` or `with` function. The following n
 * [columns](columns.md) - get list of columns
 * [concat](concat.md) - union rows
 * [convert](convert.md) - change column values and/or column types
+* [corr](corr.md) - pairwise correlation of columns
+* [cumSum](cumSum.md) - cumulative sum of column values
 * [describe](describe.md) - basic column statistics
 * [distinct](distinct.md) / [distinctBy](distinct.md#distinctby) - remove duplicated rows
-* [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropNulls](drop.md#dropnulls) / [dropNa](drop.md#dropna) - remove rows be condition
-* [explode](explode.md) - spread list-like values vertically
+* [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) - remove rows be condition
+* [explode](explode.md) - spread lists and dataframes vertically into new rows
 * [fillNulls](fill.md#fillnulls) / [fillNaNs](fill.md#fillnans) / [fillNA](fill.md#fillna) - replace missing values
 * [filter](filter.md) / [filterBy](filter.md#filterby) - filter rows
 * [first](first.md) / [firstOrNull](first.md#firstornull) - first row by condition
@@ -65,10 +67,10 @@ Multiplex operations usually end with `into` or `with` function. The following n
 * [min](minmax.md) / [minBy](minmax.md) / [minOf](minmax.md) / [minFor](minmax.md) - min of values
 * [move](move.md) - move columns or change column groupings
 * [ncol](ncol.md) - number of columns
-* [ndistinct](ndistinct.md) - number of distinct rows 
+* [ndistinct](ndistinct.md) - number of unique rows 
 * [nrow](nrow.md) - number of rows
 * [parse](parse.md) - convert `String` values into appropriate types
-* [pivot](pivot.md) - convert column values into new columns
+* [pivot](pivot.md) / [pivotCounts](pivot.md#pivotcounts) / [pivotMatches](pivot.md#pivotmatches) - convert column values into new columns
 * [remove](remove.md) - remove columns
 * [rename](rename.md) - rename columns
 * [replace](replace.md) - replace columns
