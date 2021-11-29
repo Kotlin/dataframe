@@ -40,7 +40,7 @@ public fun <T, C> ReplaceCause<T, C>.with(newColumns: List<AnyCol>): DataFrame<T
 }
 
 public fun <T, C> ReplaceCause<T, C>.with(transform: ColumnsContainer<T>.(DataColumn<C>) -> AnyCol): DataFrame<T> {
-    val removeResult = df.removeImpl(columns)
+    val removeResult = df.removeImpl(columns = columns)
     val toInsert = removeResult.removedColumns.map {
         val newCol = transform(df, it.data.column as DataColumn<C>)
         ColumnToInsert(it.pathFromRoot().dropLast(1) + newCol.name, newCol, it)

@@ -15,11 +15,10 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 
 internal fun <T, C> DataFrame<T>.implodeImpl(dropNulls: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> {
     return groupBy { except(columns) }.mapGroups {
-        replace(columns).with {
-            val column = it
+        replace(columns).with { column ->
             val filterNulls = dropNulls && column.hasNulls()
             val value = when (column.kind()) {
-                ColumnKind.Value -> column.toList().let { if (filterNulls) (it as List<Any?>).filterNotNull() else it }.asList()
+                ColumnKind.Value -> column.toList().let { if (filterNulls) (it as List<*>).filterNotNull() else it }.asList()
                 ColumnKind.Group -> column.asColumnGroup().asDataFrame()
                 ColumnKind.Frame -> column.asFrameColumn().concat()
             }

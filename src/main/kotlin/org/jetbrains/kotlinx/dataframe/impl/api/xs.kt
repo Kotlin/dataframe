@@ -30,7 +30,7 @@ internal fun <T, C> DataFrame<T>.xsImpl(
             }
         }
         include
-    }.removeImpl(keyColumns, allowMissingColumns).df
+    }.removeImpl(allowMissingColumns, keyColumns).df
 }
 
 internal fun <T, G, C> GroupBy<T, G>.xsImpl(vararg keyValues: C, keyColumns: ColumnsSelector<T, C>): GroupBy<T, G> {
