@@ -51,8 +51,8 @@ df.select { name..age }
 // all children of ColumnGroup
 df.select { name.all() }
 
-// dfs traversal of children columns
-df.select { name.dfs() }
+// dfs traversal of all children columns
+df.select { name.allDfs() }
 ```
 
 </tab>
@@ -87,8 +87,8 @@ df.select { name..age }
 // all children of ColumnGroup
 df.select { name.all() }
 
-// dfs traversal of children columns
-df.select { name.dfs() }
+// dfs traversal of all children columns
+df.select { name.allDfs() }
 ```
 
 </tab>
@@ -120,8 +120,8 @@ df.select { "name".."age" }
 // all children of ColumnGroup
 df.select { "name".all() }
 
-// dfs traversal of children columns
-df.select { "name".dfs() }
+// dfs traversal of all children columns
+df.select { "name".allDfs() }
 ```
 
 </tab></tabs>
@@ -171,13 +171,16 @@ df.select { takeLast(2) }
 df.select { drop(2) }
 df.select { dropLast(2) }
 
-// dfs traversal of columns
-df.select { dfs() }
+// dfs traversal of all columns, excluding ColumnGroups from result
+df.select { allDfs() }
+
+// dfs traversal of all columns, including ColumnGroups in result
+df.select { allDfs(includeGroups = true) }
 
 // dfs traversal with condition
 df.select { dfs { it.name.contains(":") } }
 
-// columns of given type in dfs traversal
+// dfs traversal of columns of given type
 df.select { dfsOf<String>() }
 
 // all columns except given column set
@@ -195,18 +198,18 @@ df.select { take(2) and col(3) }
 
 ```kotlin
 // first/last n columns in column set
-df.select { dfs().take(3) }
-df.select { dfs().takeLast(3) }
+df.select { allDfs().take(3) }
+df.select { allDfs().takeLast(3) }
 
 // all except first/last n columns in column set
-df.select { dfs().drop(3) }
-df.select { dfs().dropLast(3) }
+df.select { allDfs().drop(3) }
+df.select { allDfs().dropLast(3) }
 
 // filter column set by condition
-df.select { dfs().filter { it.name.startsWith("year") } }
+df.select { allDfs().filter { it.name.startsWith("year") } }
 
 // exclude columns from column set
-df.select { dfs().except { age } }
+df.select { allDfs().except { age } }
 ```
 
 <!---END-->
