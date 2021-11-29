@@ -131,6 +131,9 @@
             <toc-element id="cumulativeStatistics.md">
                 <toc-element id="cumSum.md"/>
             </toc-element>
+            <toc-element id="statisticalRelationship.md">
+                <toc-element id="corr.md"/>
+            </toc-element>
         </toc-element>
 
         <toc-element id="multipleDataFrames.md" show-structure-depth="3">
