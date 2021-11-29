@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
+import kotlin.reflect.KType
 
 internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsContainer<*>) : MissingDataColumn<DataRow<T>>(), DataColumnGroup<T> {
 
@@ -38,6 +39,8 @@ internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsCont
     override fun columns(): List<AnyCol> = emptyList()
 
     override fun columnNames(): List<String> = emptyList()
+
+    override fun columnTypes(): List<KType> = emptyList()
 
     override fun getColumnIndex(name: String) = -1
 

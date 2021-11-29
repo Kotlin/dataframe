@@ -51,4 +51,8 @@ internal open class DataFrameReceiver<T>(
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataRow<T>>? = DataColumn.createColumnGroup("", source).addPath(emptyPath(), source)
 
     override fun columns() = source.columns().map { if (it.isColumnGroup()) ColumnGroupWithParent(null, it.asColumnGroup()) else it }
+
+    override fun columnNames() = source.columnNames()
+
+    override fun columnTypes() = source.columnTypes()
 }
