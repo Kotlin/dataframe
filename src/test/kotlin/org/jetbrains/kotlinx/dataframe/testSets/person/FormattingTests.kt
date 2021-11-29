@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.testSets.person
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import org.jetbrains.kotlinx.dataframe.api.FormattingDSL
 import org.jetbrains.kotlinx.dataframe.api.FormattingDSL.gray
 import org.jetbrains.kotlinx.dataframe.api.FormattingDSL.green
 import org.jetbrains.kotlinx.dataframe.api.FormattingDSL.red
@@ -27,7 +28,7 @@ class FormattingTests : BaseTest() {
 
         val formatter = formattedFrame.formatter!!
         for (row in 0 until typed.nrow())
-            formatter(typed[row], typed.age)!!.attributes().size shouldBe if (typed[row].age > 10) 3 else 2
+            FormattingDSL.formatter(typed[row], typed.age)!!.attributes().size shouldBe if (typed[row].age > 10) 3 else 2
 
         formattedFrame.toHTML(DisplayConfiguration.DEFAULT).toString() shouldContain "font-style:italic"
     }
@@ -38,9 +39,9 @@ class FormattingTests : BaseTest() {
             .format { age and weight }.where { index % 2 == 0 }.with { background(gray) }.formatter!!
 
         for (row in 0 until typed.nrow() step 2)
-            formatter(typed[row], typed.age)!!.attributes() shouldBe listOf("background-color" to gray.encode())
+            FormattingDSL.formatter(typed[row], typed.age)!!.attributes() shouldBe listOf("background-color" to gray.encode())
 
         for (row in 1 until typed.nrow() step 2)
-            formatter(typed[row], typed.age)!!.attributes() shouldBe listOf("background-color" to linearGradient(typed[row].age.toDouble(), 20.0, green, 80.0, red).encode())
+            FormattingDSL.formatter(typed[row], typed.age)!!.attributes() shouldBe listOf("background-color" to linearGradient(typed[row].age.toDouble(), 20.0, green, 80.0, red).encode())
     }
 }

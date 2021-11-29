@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
@@ -22,7 +22,9 @@ public fun <T> DataFrame<T>.format(vararg columns: String): FormatClause<T, Any?
 public fun <T, C> DataFrame<T>.format(vararg columns: ColumnReference<C>): FormatClause<T, C> = format { columns.toColumns() }
 public fun <T, C> DataFrame<T>.format(vararg columns: KProperty<C>): FormatClause<T, C> = format { columns.toColumns() }
 
-public fun <T, C> FormatClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T> = formatImpl(formatter)
+public fun <T, C> FormatClause<T, C>.perRowCol(formatter: RowColFormatter<T, C>): FormattedFrame<T> = formatImpl(formatter)
+
+public fun <T, C> FormatClause<T, C>.with(formatter: CellFormatter<C>): FormattedFrame<T> = formatImpl { row, col -> formatter(row[col]) }
 public fun <T, C> FormatClause<T, C>.where(filter: RowValueFilter<T, C>): FormatClause<T, C> = copy(filter = filter)
 
 public fun <T> DataFrame<T>.format(): FormatClause<T, Any?> = FormatClause(this)
@@ -80,23 +82,23 @@ public object FormattingDSL {
     }
 }
 
-public typealias RowColFormatter<T> = (DataRow<T>, AnyCol) -> CellAttributes?
+public typealias RowColFormatter<T, C> = FormattingDSL.(DataRow<T>, DataColumn<C>) -> CellAttributes?
 
 public class FormattedFrame<T>(
     internal val df: DataFrame<T>,
-    internal val formatter: RowColFormatter<T>? = null,
+    internal val formatter: RowColFormatter<T, *>? = null,
 ) {
     public fun toHTML(configuration: DisplayConfiguration): HtmlData = df.toHTML(getDisplayConfiguration(configuration))
 
     public fun getDisplayConfiguration(configuration: DisplayConfiguration): DisplayConfiguration {
-        return configuration.copy(cellFormatter = formatter as RowColFormatter<*>?)
+        return configuration.copy(cellFormatter = formatter as RowColFormatter<*, *>?)
     }
 }
 
 public data class FormatClause<T, C>(
     val df: DataFrame<T>,
     val columns: ColumnsSelector<T, C>? = null,
-    val oldFormatter: RowColFormatter<T>? = null,
+    val oldFormatter: RowColFormatter<T, C>? = null,
     val filter: RowValueFilter<T, C> = { true },
 )
 
