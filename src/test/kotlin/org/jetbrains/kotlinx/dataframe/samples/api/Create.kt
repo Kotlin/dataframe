@@ -215,6 +215,16 @@ class Create : TestBase() {
     }
 
     @Test
+    fun createDataFrameOfPairs() {
+        // SampleStart
+        // DataFrame with 2 columns and 3 rows
+        val df = dataFrameOf(
+            "name" to listOf("Alice", "Bob", "Charlie"),
+            "age" to listOf(15, 20, 100))
+        // SampleEnd
+    }
+
+    @Test
     fun createDataFrameWithFill() {
         // SampleStart
         // Multiplication table
