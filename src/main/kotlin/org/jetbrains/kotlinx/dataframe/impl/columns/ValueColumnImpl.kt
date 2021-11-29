@@ -40,6 +40,8 @@ internal open class ValueColumnImpl<T>(
         return createWithValues(newValues, nullable)
     }
 
+    override fun get(columnName: String) = throw UnsupportedOperationException("Can not get nested column '$columnName' from ValueColumn '$name'")
+
     override operator fun get(range: IntRange): ValueColumn<T> = super<DataColumnImpl>.get(range) as ValueColumn<T>
 
     override fun defaultValue() = defaultValue

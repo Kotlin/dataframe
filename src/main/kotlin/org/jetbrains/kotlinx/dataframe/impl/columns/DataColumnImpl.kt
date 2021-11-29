@@ -29,8 +29,6 @@ internal abstract class DataColumnImpl<T>(
 
     override fun get(index: Int) = values[index]
 
-    override fun get(columnName: String) = throw UnsupportedOperationException()
-
     override fun size() = values.size
 
     override fun equals(other: Any?) = checkEquals(other)

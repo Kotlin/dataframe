@@ -46,6 +46,8 @@ internal open class FrameColumnImpl<T> constructor(
     override fun forceResolve() = ResolvingFrameColumn(this)
 
     override fun get(indices: Iterable<Int>): FrameColumn<T> = DataColumn.createFrameColumn(name, indices.map { values[it] })
+
+    override fun get(columnName: String) = throw UnsupportedOperationException("Can not get nested column '$columnName' from FrameColumn '$name'")
 }
 
 internal class ResolvingFrameColumn<T>(
