@@ -130,7 +130,7 @@ internal fun Iterable<KClass<*>>.createType(nullable: Boolean, upperBound: KType
     else {
         val upperClass = upperBound.classifier as KClass<*>
         val baseClass = filter { it.isSubclassOf(upperClass) }.withMostSuperclasses() ?: withMostSuperclasses()
-        if (baseClass == null) Any::class.createStarProjectedType(nullable)
+        if (baseClass == null) upperBound.withNullability(nullable)
         else upperBound.projectTo(baseClass).withNullability(nullable)
     }
 
@@ -245,7 +245,10 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null): 
         }
         (hasFrames && (!hasList || allListsWithRows)) || (!hasFrames && allListsWithRows) -> DataFrame::class.createStarProjectedType(hasNulls)
         hasRows && !hasFrames && !hasList -> DataRow::class.createStarProjectedType(false)
-        hasList && !hasFrames && !hasRows -> List::class.createTypeWithArgument(classesInList.commonType(nullsInList, upperBound))
+        hasList && !hasFrames && !hasRows -> {
+            val elementType = upperBound?.let { if (it.jvmErasure == List::class) it.arguments[0].type else null }
+            List::class.createTypeWithArgument(classesInList.commonType(nullsInList, elementType)).withNullability(hasNulls)
+        }
         else -> {
             if (hasRows) classes.add(DataRow::class)
             if (hasFrames) classes.add(DataFrame::class)
