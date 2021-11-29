@@ -13,9 +13,11 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
+import java.beans.Visibility
 import java.time.temporal.Temporal
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.KVisibility
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.withNullability
@@ -90,7 +92,7 @@ internal fun convertToDataFrame(
 ): AnyFrame {
     val properties = roots.ifEmpty {
         clazz.memberProperties
-            .filter { it.parameters.toList().size == 1 }
+            .filter { it.visibility == KVisibility.PUBLIC && it.parameters.toList().size == 1 }
     }
 
     val columns = properties.mapNotNull {
