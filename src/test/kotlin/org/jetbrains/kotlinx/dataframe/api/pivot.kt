@@ -65,4 +65,15 @@ class PivotTests {
         pivoted.columnNames() shouldBe listOf("a", "b")
         pivoted.getColumnGroup("b").columnNames() shouldBe listOf("a", "b", "c")
     }
+
+    @Test
+    fun `pivot values with nulls`() {
+        val df = dataFrameOf("a" to listOf(1, 2, 2, 3), "b" to listOf(1, 1, null, null))
+
+        df.pivot("a").values("b") shouldBe
+            dataFrameOf("1", "2", "3")(1, listOf(1, null), null)[0]
+
+        df.pivot("a").values("b", dropNA = true) shouldBe
+            dataFrameOf("1" to listOf(1), "2" to listOf(1), "3" to listOf<Int?>(null))[0]
+    }
 }

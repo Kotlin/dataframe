@@ -3,8 +3,11 @@ package org.jetbrains.kotlinx.dataframe.types
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.impl.commonParent
 import org.jetbrains.kotlinx.dataframe.impl.commonParents
+import org.jetbrains.kotlinx.dataframe.impl.commonType
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
 import java.io.Serializable
+import kotlin.reflect.KClass
 
 class UtilTests {
 
@@ -21,5 +24,11 @@ class UtilTests {
         commonParent(Int::class, Int::class) shouldBe Int::class
         commonParent(Double::class, Int::class) shouldBe Number::class
         commonParent(Int::class, String::class) shouldBe Serializable::class
+    }
+
+    @Test
+    fun `commonType for empty`() {
+        emptyList<KClass<*>>().commonType(false, getType<List<Int>>()) shouldBe getType<List<Int>>()
+        emptyList<KClass<*>>().commonType(true, getType<List<Int>>()) shouldBe getType<List<Int>?>()
     }
 }

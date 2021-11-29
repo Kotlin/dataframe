@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.experimental.ExperimentalTypeInference
+import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 public fun AnyRow.isEmpty(): Boolean = owner.columns().all { it[index] == null }
@@ -39,6 +40,7 @@ public fun <T> DataRow<T>.diff(expression: RowExpression<T, Float>): Float? = pr
 
 public fun AnyRow.ncol(): Int = df().ncol()
 public fun AnyRow.columnNames(): List<String> = df().columnNames()
+public fun AnyRow.columnTypes(): List<KType> = df().columnTypes()
 
 public fun <T> DataRow<T>.getRow(index: Int): DataRow<T> = getRowOrNull(index)!!
 
