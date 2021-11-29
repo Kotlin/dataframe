@@ -39,6 +39,7 @@
             <toc-element id="nrow.md"/>
             <toc-element id="ndistinct.md"/>
             <toc-element id="columnNames.md"/>
+            <toc-element id="columnTypes.md"/>
             <toc-element id="head.md"/>
             <toc-element id="schema.md"/>
             <toc-element id="describe.md"/>

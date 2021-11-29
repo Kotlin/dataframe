@@ -85,6 +85,8 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>) : DataFrame<T>, Aggrega
 
     override fun columnNames() = columns.map { it.name() }
 
+    override fun columnTypes() = columns.map { it.type() }
+
     override fun ncol(): Int = columns.size
 
     override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) =
