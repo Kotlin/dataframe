@@ -72,7 +72,7 @@ internal fun <T, G, R> aggregateGroupBy(
 
     val column = df.getColumn(selector)
 
-    val removed = df.removeImpl(selector)
+    val removed = df.removeImpl(columns = selector)
 
     val hasKeyColumns = removed.df.ncol() > 0
 

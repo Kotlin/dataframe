@@ -23,7 +23,7 @@ internal fun <T, C, K, R> Gather<T, C, K, R>.gatherImpl(
 ): DataFrame<T> {
     require(namesTo != null || valuesTo != null)
 
-    val removed = df.removeImpl(columns)
+    val removed = df.removeImpl(columns = columns)
 
     val columnsToGather = removed.removedColumns.map { it.data.column as DataColumn<C> }
 
