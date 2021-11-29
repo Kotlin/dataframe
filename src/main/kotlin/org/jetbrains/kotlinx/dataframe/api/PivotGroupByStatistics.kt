@@ -46,13 +46,17 @@ public fun <T> PivotGroupBy<T>.toDataFrame(): DataFrame<T> = aggregate { this }
 
 // region values
 
-public fun <T> PivotGroupBy<T>.values(separate: Boolean = false): DataFrame<T> = values(separate, remainingColumnsSelector())
+public fun <T> PivotGroupBy<T>.values(dropNA: Boolean = false, separate: Boolean = false): DataFrame<T> = values(dropNA, separate, remainingColumnsSelector())
 
-public fun <T> PivotGroupBy<T>.values(vararg columns: Column, separate: Boolean = false): DataFrame<T> = values(separate) { columns.toColumns() }
-public fun <T> PivotGroupBy<T>.values(vararg columns: String, separate: Boolean = false): DataFrame<T> = values(separate) { columns.toColumns() }
-public fun <T> PivotGroupBy<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataFrame<T> = values(separate) { columns.toColumns() }
-public fun <T> PivotGroupBy<T>.values(separate: Boolean = false, columns: ColumnsForAggregateSelector<T, *>): DataFrame<T> =
-    separateStatistics(separate).aggregateInternal { columnValues(columns) { it.toList() } }
+public fun <T> PivotGroupBy<T>.values(vararg columns: Column, dropNA: Boolean = false, separate: Boolean = false): DataFrame<T> = values(dropNA, separate) { columns.toColumns() }
+public fun <T> PivotGroupBy<T>.values(vararg columns: String, dropNA: Boolean = false, separate: Boolean = false): DataFrame<T> = values(dropNA, separate) { columns.toColumns() }
+public fun <T> PivotGroupBy<T>.values(vararg columns: KProperty<*>, dropNA: Boolean = false, separate: Boolean = false): DataFrame<T> = values(dropNA, separate) { columns.toColumns() }
+public fun <T> PivotGroupBy<T>.values(
+    dropNA: Boolean = false,
+    separate: Boolean = false,
+    columns: ColumnsForAggregateSelector<T, *>
+): DataFrame<T> =
+    separateStatistics(separate).aggregateInternal { columnValues(columns, false, dropNA) }
 
 // endregion
 

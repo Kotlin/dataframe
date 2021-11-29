@@ -35,10 +35,10 @@ public interface Grouped<out T> : Aggregatable<T> {
 public fun <T> Grouped<T>.count(resultName: String = "count", predicate: RowFilter<T>? = null): DataFrame<T> =
     aggregateValue(resultName) { count(predicate) default 0 }
 
-public fun <T> Grouped<T>.values(vararg columns: Column): DataFrame<T> = values { columns.toColumns() }
-public fun <T> Grouped<T>.values(vararg columns: String): DataFrame<T> = values { columns.toColumns() }
-public fun <T> Grouped<T>.values(columns: ColumnsForAggregateSelector<T, *>): DataFrame<T> = aggregateInternal { columnValues(columns) { it.toList() } }
-public fun <T> Grouped<T>.values(): DataFrame<T> = values(remainingColumnsSelector())
+public fun <T> Grouped<T>.values(vararg columns: Column, dropNA: Boolean = false): DataFrame<T> = values(dropNA) { columns.toColumns() }
+public fun <T> Grouped<T>.values(vararg columns: String, dropNA: Boolean = false): DataFrame<T> = values(dropNA) { columns.toColumns() }
+public fun <T> Grouped<T>.values(dropNA: Boolean = false, columns: ColumnsForAggregateSelector<T, *>): DataFrame<T> = aggregateInternal { columnValues(columns, true, dropNA) }
+public fun <T> Grouped<T>.values(dropNA: Boolean = false): DataFrame<T> = values(dropNA, remainingColumnsSelector())
 
 // region min
 

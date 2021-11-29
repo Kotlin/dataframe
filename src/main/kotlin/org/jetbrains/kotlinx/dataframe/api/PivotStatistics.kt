@@ -30,10 +30,14 @@ public inline fun <T, reified V> Pivot<T>.with(noinline expression: RowExpressio
 
 // region values
 
-public fun <T> Pivot<T>.values(separate: Boolean = false, columns: ColumnsForAggregateSelector<T, *>): DataRow<T> = delegate { values(separate, columns) }
-public fun <T> Pivot<T>.values(vararg columns: Column, separate: Boolean = false): DataRow<T> = values(separate) { columns.toColumns() }
-public fun <T> Pivot<T>.values(vararg columns: String, separate: Boolean = false): DataRow<T> = values(separate) { columns.toColumns() }
-public fun <T> Pivot<T>.values(vararg columns: KProperty<*>, separate: Boolean = false): DataRow<T> = values(separate) { columns.toColumns() }
+public fun <T> Pivot<T>.values(
+    dropNA: Boolean = false,
+    separate: Boolean = false,
+    columns: ColumnsForAggregateSelector<T, *>
+): DataRow<T> = delegate { values(dropNA, separate, columns) }
+public fun <T> Pivot<T>.values(vararg columns: Column, dropNA: Boolean = false, separate: Boolean = false): DataRow<T> = values(dropNA, separate) { columns.toColumns() }
+public fun <T> Pivot<T>.values(vararg columns: String, dropNA: Boolean = false, separate: Boolean = false): DataRow<T> = values(dropNA, separate) { columns.toColumns() }
+public fun <T> Pivot<T>.values(vararg columns: KProperty<*>, dropNA: Boolean = false, separate: Boolean = false): DataRow<T> = values(dropNA, separate) { columns.toColumns() }
 
 public fun <T> Pivot<T>.values(separate: Boolean = false): DataRow<T> = delegate { values(separate) }
 

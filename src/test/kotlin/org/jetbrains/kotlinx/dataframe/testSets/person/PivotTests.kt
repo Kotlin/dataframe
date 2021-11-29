@@ -255,25 +255,30 @@ class PivotTests {
     }
 
     @Test
-    fun `pivot two values without index`() {
-        val pivoted = typed.pivot { name then key }.values { value and (value.map { it?.javaClass?.kotlin } named "type") }
+    fun `pivot two values without groupBy`() {
+        typed.print(columnTypes = true)
+        val pivotedRow = typed.pivot { name then key }.values { value and (value.map { it?.javaClass?.kotlin } into "type") }
+        val pivotedDf = pivotedRow.df()
+        pivotedRow.ncol() shouldBe typed.name.ndistinct()
 
-        pivoted.ncol() shouldBe typed.name.ndistinct()
+        val nullGroup = pivotedDf["Charlie"]["weight"].asColumnGroup()
+        nullGroup.columnNames() shouldBe listOf("value", "type")
+        nullGroup.columnTypes() shouldBe listOf(getType<Serializable?>(), getType<Any?>())
 
-        val cols = pivoted.df().getColumnsWithPaths { all().allDfs() }
+        val cols = pivotedDf.getColumnsWithPaths { all().allDfs() }
         cols.size shouldBe 2 * typed.name.ndistinct() * typed.key.ndistinct() - 2
+
         cols.forEach {
             when {
                 it.isList() -> it.path().dropLast(1) shouldBe listOf("Alice", "age")
                 it.hasNulls() -> {
                     it.path().dropLast(1) shouldBe listOf("Charlie", "weight")
-                    it.typeClass shouldBe Any::class
                 }
                 it.name() == "type" -> it.typeClass shouldBe KClass::class
                 else -> it.name() shouldBe "value"
             }
         }
-        pivoted.getColumnGroup("Bob").getColumnGroup("weight")["value"] shouldBe 87
+        pivotedRow.getColumnGroup("Bob").getColumnGroup("weight")["value"] shouldBe 87
     }
 
     @Test
