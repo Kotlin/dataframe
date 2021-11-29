@@ -1,0 +1,1 @@
+{"objectID":"0.9_append.html","parent":"0.9_append.html","pageViews":0,"url":"https://kotlin.github.io/dataframe///append.html","version":"0.9","product":"","headings":"Append values","content":"df.append ( \"Mike\", 15, \"John\", 17, \"Bill\", 30)","pageTitle":"Append values","metaDescription":"","type":"Documentation","breadcrumbs":"operations.md|Operations///modify.md|Modify"}

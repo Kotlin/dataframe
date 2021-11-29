@@ -1,0 +1,138 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat"><html lang="en-US" data-colors-preset="contrast" data-primary-color="#307FFF"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="robots" content="noindex">  <meta name="built-on" content="2021-11-29T16:09:43.8835"><meta name="build-number" content="195">    <meta name="keywords" content="">   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src= '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5P98');</script><script src="https://resources.jetbrains.com/storage/help-app/v3/analytics.js"></script>  <title>groupBy | Dataframe</title>   <link href="https://resources.jetbrains.com/storage/help-app/v3/app.css" rel="stylesheet">   <link rel="apple-touch-icon" sizes="180x180" href="https://jetbrains.com/apple-touch-icon.png"><link rel="icon" type="image/png" sizes="32x32" href="https://jetbrains.com/favicon-32x32.png"><link rel="icon" type="image/png" sizes="16x16" href="https://jetbrains.com/favicon-16x16.png"><link rel="manifest" href="https://jetbrains.com/site.webmanifest"><link rel="mask-icon" href="https://jetbrains.com/safari-pinned-tab.svg" color="#000000"><meta name="msapplication-TileColor" content="#000000"/><meta name="msapplication-TileImage" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-144x144.png"/><meta name="msapplication-square70x70logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-70x70.png"/><meta name="msapplication-square150x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-150x150.png"/><meta name="msapplication-wide310x150logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x150.png"/><meta name="msapplication-square310x310logo" content="https://resources.jetbrains.com/storage/ui/favicons/mstile-310x310.png"/>  <meta name="image" content=""><!-- Open Graph --><meta property="og:title" content="groupBy | Dataframe"/><meta property="og:description" content=""/><meta property="og:image" content=""/><meta property="og:site_name" content="Dataframe Help"/><meta property="og:type" content="website"/><meta property="og:locale" content="en_US"/><meta property="og:url" content="https://kotlin.github.io/dataframe//0.9/groupby.html"/><!-- End Open Graph --><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content=""><meta name="twitter:title" content="groupBy | Dataframe"><meta name="twitter:description" content=""><meta name="twitter:creator" content=""><meta name="twitter:image:src" content=""><!-- End Twitter Card --><!-- Schema.org WebPage --><script type="application/ld+json"> { "@context": "http://schema.org", "@type": "WebPage", "@id": "https://kotlin.github.io/dataframe//0.9/groupby.html#webpage", "url": "https://kotlin.github.io/dataframe//0.9/groupby.html", "name": "groupBy | Dataframe", "description": "", "image": "", "inLanguage":"en-US" }</script><!-- End Schema.org --><!-- Schema.org WebSite --><script type="application/ld+json"> { "@type": "WebSite", "@id": "https://kotlin.github.io/dataframe/#website", "url": "https://kotlin.github.io/dataframe/", "name": "Dataframe Help" }</script><!-- End Schema.org --></head>    <body data-id="groupBy" data-main-title="groupBy" data-article-props="{&quot;seeAlsoStyle&quot;:&quot;links&quot;}"  data-template="article"  data-breadcrumbs="operations.md|Operations///modify.md|Modify///groupByConcat.md|Group/concat rows"  >  <div class="wrapper"><main class="panel _main"><header class="panel__header"><div class="container"><h3>Dataframe 0.9 Help</h3><div class="shortcuts-switcher"><label for="switch-shortcuts">Keymap:</label><select class="select _shortcuts" height="1" id="switch-shortcuts">  </select></div><div class="panel-trigger"></div></div></header><section class="panel__content"><div class="container"><article class="article" data-shortcut-switcher="inactive"><h1 data-toc="groupBy" id="groupBy.md"  >groupBy</h1><p id="230ac9bd" >Splits the rows of <code class="code "   >DataFrame</code> into groups using one or several columns as grouping keys.</p><div class="code-block" data-lang="kotlin"          >groupBy { columns }
+    [transformations]
+    [aggregations]
+</div><p id="46e1dfaf" >See <a href="columnselectors.html" id="64a3d35f"   >column selectors</a>, <a href="#transformation" id="5e2b26d7"   >groupBy transformations</a> and <a href="#aggregation" id="b514934d"   >groupBy aggregations</a></p><div class="tabs" id="703df334"><div class="tabs__content" data-gtm="tab" id="79a9f489"   data-title="Properties" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >df.groupBy { name }
+df.groupBy { city and name.lastName }
+df.groupBy { age / 10 named &quot;ageDecade&quot; }
+df.groupBy { expr { name.firstName.length + name.lastName.length } named &quot;nameLength&quot; }
+</div></div><div class="tabs__content" data-gtm="tab" id="62a5fe6"   data-title="Accessors" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >val name by columnGroup()
+val lastName by name.column&lt;String&gt;()
+val firstName by name.column&lt;String&gt;()
+val age by column&lt;Int&gt;()
+val city by column&lt;String?&gt;()
+
+df.groupBy { name }
+// or
+df.groupBy(name)
+
+df.groupBy { city and lastName }
+// or
+df.groupBy(city, lastName)
+
+df.groupBy { age / 10 named &quot;ageDecade&quot; }
+
+df.groupBy { expr { firstName().length + lastName().length } named &quot;nameLength&quot; }
+</div></div><div class="tabs__content" data-gtm="tab" id="aec83ca3"   data-title="Strings" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >df.groupBy(&quot;name&quot;)
+df.groupBy { &quot;city&quot; and &quot;name&quot;[&quot;lastName&quot;] }
+df.groupBy { &quot;age&quot;.ints() / 10 named &quot;ageDecade&quot; }
+df.groupBy { expr { &quot;name&quot;[&quot;firstName&quot;]&lt;String&gt;().length + &quot;name&quot;[&quot;lastName&quot;]&lt;String&gt;().length } named &quot;nameLength&quot; }
+</div></div></div><p id="beb89e23" >Returns <code class="code "   >GroupBy</code> object.</p><section class="chapter"  ><h2 id="transformation" data-toc="groupBy#transformation"  >Transformation</h2><p id="1ca0bd40" ><code class="code "   >GroupBy</code> is a <code class="code "   >DataFrame</code> with one chosen <a href="datacolumn.html#framecolumn" id="cee88c32"   ><code class="code "   >FrameColumn</code></a> containing data groups.</p><p id="4b63884f" >It supports the following operations:</p><ul class="list _ul" id="8978049"   ><li class="list__item" id="f852b06e" ><p><a href="add.html" id="b21ba3c"   ><code class="code "   >add</code></a></p></li><li class="list__item" id="a7609a71" ><p><a href="sortby.html" id="57ccd06a"   ><code class="code "   >sortBy</code></a></p></li><li class="list__item" id="58c4c4c4" ><p><a href="map.html" id="354fb66e"   ><code class="code "   >map</code></a></p></li><li class="list__item" id="c3970569" ><p><a href="pivot.html#pivot-groupby" id="83acbeb7"   ><code class="code "   >pivot</code></a></p></li><li class="list__item" id="8f5386e" ><p><a href="concat.html" id="7842765d"   ><code class="code "   >concat</code></a></p></li></ul><p id="ded8e928" >Any <code class="code "   >DataFrame</code> with <code class="code "   >FrameColumn</code> can be reinterpreted as <code class="code "   >GroupBy</code>:</p><div class="code-block" data-lang="kotlin"          >val key by columnOf(1, 2) // create int column with name &quot;key&quot;
+val data by columnOf(df[0..3], df[4..6]) // create frame column with name &quot;data&quot;
+val df = dataFrameOf(key, data) // create dataframe with two columns
+
+df.asGroupBy { data } // convert dataframe to GroupBy by interpreting 'data' column as groups
+</div><p id="f42db14f" >And any <code class="code "   >GroupBy</code> can be reinterpreted as <code class="code "   >DataFrame</code> with <code class="code "   >FrameColumn</code>:</p><div class="code-block" data-lang="kotlin"          >df.groupBy { city }.toDataFrame()
+</div><p id="c9addfe9" >Use <a href="concat.html" id="de7bdf9c"   ><code class="code "   >concat</code></a> to union all data groups of <code class="code "   >GroupBy</code> into original <code class="code "   >DataFrame</code> preserving new order of rows produced by grouping:</p><div class="code-block" data-lang="kotlin"          >df.groupBy { name }.concat()
+</div></section><section class="chapter"  ><h2 id="aggregation" data-toc="groupBy#aggregation"  >Aggregation</h2><p id="2ad4c545" >To compute one or several <a href="summarystatistics.html" id="13cfee72"   >statistics</a> per every group of <code class="code "   >GroupBy</code> use <code class="code "   >aggregate</code> function. Its body will be executed for every data group and has a receiver of type <code class="code "   >DataFrame</code> that represents current data group being aggregated. To add a new column to the resulting <code class="code "   >DataFrame</code>, pass the name of new column to infix function <code class="code "   >into</code>:</p><div class="tabs" id="2a5f7f92"><div class="tabs__content" data-gtm="tab" id="8f3baf4b"   data-title="Properties" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >df.groupBy { city }.aggregate {
+    nrow() into &quot;total&quot;
+    count { age &gt; 18 } into &quot;adults&quot;
+    median { age } into &quot;median age&quot;
+    min { age } into &quot;min age&quot;
+    maxBy { age }.name into &quot;oldest&quot;
+}
+</div></div><div class="tabs__content" data-gtm="tab" id="7d2ae0d0"   data-title="Accessors" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >val city by column&lt;String?&gt;()
+val age by column&lt;Int&gt;()
+val name by columnGroup()
+
+df.groupBy { city }.aggregate {
+    nrow() into &quot;total&quot;
+    count { age() &gt; 18 } into &quot;adults&quot;
+    median { age } into &quot;median age&quot;
+    min { age } into &quot;min age&quot;
+    maxBy { age() }[name] into &quot;name of oldest&quot;
+}
+// or
+df.groupBy(city).aggregate {
+    nrow() into &quot;total&quot;
+    count { age &gt; 18 } into &quot;adults&quot;
+    median(age) into &quot;median age&quot;
+    min(age) into &quot;min age&quot;
+    maxBy(age)[name] into &quot;name of oldest&quot;
+}
+</div></div><div class="tabs__content" data-gtm="tab" id="d68dd3c3"   data-title="Strings" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >df.groupBy(&quot;city&quot;).aggregate {
+    nrow() into &quot;total&quot;
+    count { &quot;age&quot;&lt;Int&gt;() &gt; 18 } into &quot;adults&quot;
+    median(&quot;age&quot;) into &quot;median age&quot;
+    min(&quot;age&quot;) into &quot;min age&quot;
+    maxBy(&quot;age&quot;)[&quot;name&quot;] into &quot;oldest&quot;
+}
+</div></div></div><p id="982f7be2" >If only one aggregation function is used, column name can be omitted:</p><div class="tabs" id="be9a386c"><div class="tabs__content" data-gtm="tab" id="51a83029"   data-title="Properties" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >df.groupBy { city }.aggregate { maxBy { age }.name }
+</div></div><div class="tabs__content" data-gtm="tab" id="c68fe2f6"   data-title="Accessors" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >val city by column&lt;String?&gt;()
+val age by column&lt;Int&gt;()
+val name by columnGroup()
+
+df.groupBy { city }.aggregate { maxBy { age() }[name] }
+// or
+df.groupBy(city).aggregate { maxBy(age)[name] }
+</div></div><div class="tabs__content" data-gtm="tab" id="84e4a1ba"   data-title="Strings" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >df.groupBy(&quot;city&quot;).aggregate { maxBy(&quot;age&quot;)[&quot;name&quot;] }
+</div></div></div><p id="400dc5d8" >Most common aggregation functions can be computed directly at <code class="code "   >GroupBy</code>:</p><div class="tabs" id="d56fbc9a"><div class="tabs__content" data-gtm="tab" id="8e68ddba"   data-title="Properties" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >df.groupBy { city }.max() // max for every comparable column
+df.groupBy { city }.mean() // mean for every numeric column
+df.groupBy { city }.max { age } // max age into column &quot;age&quot;
+df.groupBy { city }.sum(&quot;total weight&quot;) { weight } // sum of weights into column &quot;total weight&quot;
+df.groupBy { city }.count() // number of rows into column &quot;count&quot;
+df.groupBy { city }
+    .max { name.firstName.length() and name.lastName.length() } // maximum length of firstName or lastName into column &quot;max&quot;
+df.groupBy { city }
+    .medianFor { age and weight } // median age into column &quot;age&quot;, median weight into column &quot;weight&quot;
+df.groupBy { city }
+    .minFor { (age into &quot;min age&quot;) and (weight into &quot;min weight&quot;) } // min age into column &quot;min age&quot;, min weight into column &quot;min weight&quot;
+df.groupBy { city }.meanOf(&quot;mean ratio&quot;) { weight?.div(age) } // mean of weight/age into column &quot;mean ratio&quot;
+</div></div><div class="tabs__content" data-gtm="tab" id="26338bf2"   data-title="Accessors" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >val city by column&lt;String?&gt;()
+val age by column&lt;Int&gt;()
+val weight by column&lt;Int?&gt;()
+val name by columnGroup()
+val firstName by name.column&lt;String&gt;()
+val lastName by name.column&lt;String&gt;()
+
+df.groupBy { city }.max() // max for every comparable column
+df.groupBy { city }.mean() // mean for every numeric column
+df.groupBy { city }.max { age } // max age into column &quot;age&quot;
+df.groupBy { city }.sum(&quot;total weight&quot;) { weight } // sum of weights into column &quot;total weight&quot;
+df.groupBy { city }.count() // number of rows into column &quot;count&quot;
+df.groupBy { city }
+    .max { firstName.length() and lastName.length() } // maximum length of firstName or lastName into column &quot;max&quot;
+df.groupBy { city }
+    .medianFor { age and weight } // median age into column &quot;age&quot;, median weight into column &quot;weight&quot;
+df.groupBy { city }
+    .minFor { (age into &quot;min age&quot;) and (weight into &quot;min weight&quot;) } // min age into column &quot;min age&quot;, min weight into column &quot;min weight&quot;
+df.groupBy { city }.meanOf(&quot;mean ratio&quot;) { weight()?.div(age()) } // mean of weight/age into column &quot;mean ratio&quot;
+</div></div><div class="tabs__content" data-gtm="tab" id="ac28a380"   data-title="Strings" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >df.groupBy(&quot;city&quot;).max() // max for every comparable column
+df.groupBy(&quot;city&quot;).mean() // mean for every numeric column
+df.groupBy(&quot;city&quot;).max(&quot;age&quot;) // max age into column &quot;age&quot;
+df.groupBy(&quot;city&quot;).sum(&quot;weight&quot;, name = &quot;total weight&quot;) // sum of weights into column &quot;total weight&quot;
+df.groupBy(&quot;city&quot;).count() // number of rows into column &quot;count&quot;
+df.groupBy(&quot;city&quot;).max {
+    &quot;name&quot;[&quot;firstName&quot;].strings().length() and &quot;name&quot;[&quot;lastName&quot;].strings().length()
+} // maximum length of firstName or lastName into column &quot;max&quot;
+df.groupBy(&quot;city&quot;)
+    .medianFor(&quot;age&quot;, &quot;weight&quot;) // median age into column &quot;age&quot;, median weight into column &quot;weight&quot;
+df.groupBy(&quot;city&quot;)
+    .minFor { (&quot;age&quot;.ints() into &quot;min age&quot;) and (&quot;weight&quot;.intOrNulls() into &quot;min weight&quot;) } // min age into column &quot;min age&quot;, min weight into column &quot;min weight&quot;
+df.groupBy(&quot;city&quot;).meanOf(&quot;mean ratio&quot;) {
+    &quot;weight&quot;.intOrNull()?.div(&quot;age&quot;.int())
+} // mean of weight/age into column &quot;mean ratio&quot;
+</div></div></div><p id="f1ff215f" >To get all column values for every group without aggregation use <code class="code "   >values</code> function:</p><ul class="list _ul" id="7cdccd09"   ><li class="list__item" id="5b3c6326" ><p>for <a href="datacolumn.html#valuecolumn" id="ea24e9c2"   >ValueColumn</a> of type <code class="code "   >T</code> it will gather group values into lists of type <code class="code "   >List&lt;T&gt;</code></p></li><li class="list__item" id="b65af5b1" ><p>for <a href="datacolumn.html#columngroup" id="22fa7edb"   >ColumnGroup</a> it will gather group values into <code class="code "   >DataFrame</code> and convert <a href="datacolumn.html#columngroup" id="7fa7270a"   >ColumnGroup</a> into <a href="datacolumn.html#framecolumn" id="f249755c"   >FrameColumn</a></p></li></ul><div class="tabs" id="aa57e59d"><div class="tabs__content" data-gtm="tab" id="120844b4"   data-title="Properties" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >df.groupBy { city }.values()
+df.groupBy { city }.values { name and age }
+df.groupBy { city }.values { weight into &quot;weights&quot; }
+</div></div><div class="tabs__content" data-gtm="tab" id="a8401e45"   data-title="Accessors" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >val city by column&lt;String?&gt;()
+val age by column&lt;Int&gt;()
+val weight by column&lt;Int?&gt;()
+val name by columnGroup()
+
+df.groupBy(city).values()
+df.groupBy(city).values(name, age)
+df.groupBy(city).values { weight into &quot;weights&quot; }
+</div></div><div class="tabs__content" data-gtm="tab" id="438975aa"   data-title="Strings" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >df.groupBy(&quot;city&quot;).values()
+df.groupBy(&quot;city&quot;).values(&quot;name&quot;, &quot;age&quot;)
+df.groupBy(&quot;city&quot;).values { &quot;weight&quot; into &quot;weights&quot; }
+</div></div></div></section><div class="last-modified"> Last modified: 27 November 2021</div><div data-feedback-placeholder="true"></div><div class="navigation-links _bottom">  <a class="navigation-links__prev" href="groupbyconcat.html">Group/concat rows</a>   <a class="navigation-links__next" href="concat.html">concat</a>  </div></article><div id="disqus_thread"></div></div></section></main></div>  <script src="https://resources.jetbrains.com/storage/help-app/v3/app.js"></script></body></html>
