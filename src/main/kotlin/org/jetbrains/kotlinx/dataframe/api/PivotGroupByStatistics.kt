@@ -46,17 +46,33 @@ public fun <T> PivotGroupBy<T>.toDataFrame(): DataFrame<T> = aggregate { this }
 
 // region values
 
-public fun <T> PivotGroupBy<T>.values(dropNA: Boolean = false, separate: Boolean = false): DataFrame<T> = values(dropNA, separate, remainingColumnsSelector())
+public fun <T> PivotGroupBy<T>.values(dropNA: Boolean = false, distinct: Boolean = false, separate: Boolean = false): DataFrame<T> = values(dropNA, distinct, separate, remainingColumnsSelector())
 
-public fun <T> PivotGroupBy<T>.values(vararg columns: Column, dropNA: Boolean = false, separate: Boolean = false): DataFrame<T> = values(dropNA, separate) { columns.toColumns() }
-public fun <T> PivotGroupBy<T>.values(vararg columns: String, dropNA: Boolean = false, separate: Boolean = false): DataFrame<T> = values(dropNA, separate) { columns.toColumns() }
-public fun <T> PivotGroupBy<T>.values(vararg columns: KProperty<*>, dropNA: Boolean = false, separate: Boolean = false): DataFrame<T> = values(dropNA, separate) { columns.toColumns() }
+public fun <T> PivotGroupBy<T>.values(
+    vararg columns: Column,
+    dropNA: Boolean = false,
+    distinct: Boolean = false,
+    separate: Boolean = false
+): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumns() }
+public fun <T> PivotGroupBy<T>.values(
+    vararg columns: String,
+    dropNA: Boolean = false,
+    distinct: Boolean = false,
+    separate: Boolean = false
+): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumns() }
+public fun <T> PivotGroupBy<T>.values(
+    vararg columns: KProperty<*>,
+    dropNA: Boolean = false,
+    distinct: Boolean = false,
+    separate: Boolean = false
+): DataFrame<T> = values(dropNA, distinct, separate) { columns.toColumns() }
 public fun <T> PivotGroupBy<T>.values(
     dropNA: Boolean = false,
+    distinct: Boolean = false,
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>
 ): DataFrame<T> =
-    separateStatistics(separate).aggregateInternal { columnValues(columns, false, dropNA) }
+    separateStatistics(separate).aggregateInternal { columnValues(columns, false, dropNA, distinct) }
 
 // endregion
 
