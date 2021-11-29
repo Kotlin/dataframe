@@ -4,7 +4,6 @@ import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionD
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.api.asSequence
 import org.jetbrains.kotlinx.dataframe.api.canHaveNA
-import org.jetbrains.kotlinx.dataframe.api.canHaveNaN
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.isNA
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -50,7 +49,7 @@ internal fun <T, C> AggregateInternalDsl<T>.columnValues(
     cols.forEach { col ->
         val path = getPath(col, isSingle)
 
-        val effectiveDropNA = if(dropNA) col.canHaveNA else false
+        val effectiveDropNA = if (dropNA) col.canHaveNA else false
         // TODO: use Set for distinct values
         val values = when {
             effectiveDropNA && distinct -> col.asSequence().filter { !it.isNA }.distinct().toList()
