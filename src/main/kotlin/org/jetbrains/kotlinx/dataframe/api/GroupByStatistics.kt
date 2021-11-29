@@ -35,10 +35,14 @@ public interface Grouped<out T> : Aggregatable<T> {
 public fun <T> Grouped<T>.count(resultName: String = "count", predicate: RowFilter<T>? = null): DataFrame<T> =
     aggregateValue(resultName) { count(predicate) default 0 }
 
-public fun <T> Grouped<T>.values(vararg columns: Column, dropNA: Boolean = false): DataFrame<T> = values(dropNA) { columns.toColumns() }
-public fun <T> Grouped<T>.values(vararg columns: String, dropNA: Boolean = false): DataFrame<T> = values(dropNA) { columns.toColumns() }
-public fun <T> Grouped<T>.values(dropNA: Boolean = false, columns: ColumnsForAggregateSelector<T, *>): DataFrame<T> = aggregateInternal { columnValues(columns, true, dropNA) }
-public fun <T> Grouped<T>.values(dropNA: Boolean = false): DataFrame<T> = values(dropNA, remainingColumnsSelector())
+public fun <T> Grouped<T>.values(vararg columns: Column, dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> = values(dropNA, distinct) { columns.toColumns() }
+public fun <T> Grouped<T>.values(vararg columns: String, dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> = values(dropNA, distinct) { columns.toColumns() }
+public fun <T> Grouped<T>.values(
+    dropNA: Boolean = false,
+    distinct: Boolean = false,
+    columns: ColumnsForAggregateSelector<T, *>
+): DataFrame<T> = aggregateInternal { columnValues(columns, true, dropNA, distinct) }
+public fun <T> Grouped<T>.values(dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> = values(dropNA, distinct, remainingColumnsSelector())
 
 // region min
 
