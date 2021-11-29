@@ -1,6 +1,8 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.api.AddExpression
+import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -102,6 +104,8 @@ public fun dataFrameOf(vararg header: String): DataFrameBuilder = dataFrameOf(he
 public inline fun <reified C> dataFrameOf(vararg header: String, fill: (String) -> Iterable<C>): AnyFrame = dataFrameOf(header.asIterable(), fill)
 
 public fun dataFrameOf(header: Iterable<String>): DataFrameBuilder = DataFrameBuilder(header.asList())
+
+public fun dataFrameOf(vararg columns: Pair<String, List<Any?>>): AnyFrame = columns.map { it.second.toColumn(it.first, Infer.Type) }.toDataFrame()
 
 public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): AnyFrame = dataFrameOf(header).withValues(values)
 

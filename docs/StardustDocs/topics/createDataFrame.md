@@ -20,6 +20,17 @@ val df = dataFrameOf("name", "age")(
 
 <!---END-->
 
+<!---FUN createDataFrameOfPairs-->
+
+```kotlin
+// DataFrame with 2 columns and 3 rows
+val df = dataFrameOf(
+    "name" to listOf("Alice", "Bob", "Charlie"),
+    "age" to listOf(15, 20, 100))
+```
+
+<!---END-->
+
 <!---FUN createDataFrameFromColumns-->
 
 ```kotlin
