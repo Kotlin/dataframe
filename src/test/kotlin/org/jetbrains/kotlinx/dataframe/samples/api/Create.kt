@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.createDataFrame
+import org.jetbrains.kotlinx.dataframe.api.convertToDataFrame
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.named
@@ -308,12 +308,12 @@ class Create : TestBase() {
     }
 
     @Test
-    fun createDataFrameFromObject() {
+    fun readDataFrameFromObject() {
         // SampleStart
         data class Person(val name: String, val age: Int)
         val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 22))
 
-        val df = persons.createDataFrame()
+        val df = persons.convertToDataFrame()
         // SampleEnd
         df.ncol() shouldBe 2
         df.nrow() shouldBe 3
@@ -322,24 +322,7 @@ class Create : TestBase() {
     }
 
     @Test
-    fun createDataFrameFromObjectExplicit() {
-        // SampleStart
-        data class Person(val name: String, val age: Int)
-        val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 22))
-
-        val df = persons.createDataFrame {
-            "name" from { it.name }
-            "year of birth" from { 2021 - it.age }
-        }
-        // SampleEnd
-        df.ncol() shouldBe 2
-        df.nrow() shouldBe 3
-        df["name"].type() shouldBe getType<String>()
-        df["year of birth"].type() shouldBe getType<Int>()
-    }
-
-    @Test
-    fun createDataFrameFromDeepObject() {
+    fun readDataFrameFromDeepObject() {
         // SampleStart
         data class Name(val firstName: String, val lastName: String)
         data class Score(val subject: String, val value: Int)
@@ -350,7 +333,7 @@ class Create : TestBase() {
             Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5)))
         )
 
-        val df = students.createDataFrame(depth = 2)
+        val df = students.convertToDataFrame(depth = 2)
         // SampleEnd
         df.ncol() shouldBe 3
         df.nrow() shouldBe 2
@@ -360,7 +343,7 @@ class Create : TestBase() {
     }
 
     @Test
-    fun createDataFrameFromDeepObjectWithExclude() {
+    fun readDataFrameFromDeepObjectWithExclude() {
         data class Name(val firstName: String, val lastName: String)
         data class Score(val subject: String, val value: Int)
         data class Student(val name: Name, val age: Int, val scores: List<Score>)
@@ -371,8 +354,8 @@ class Create : TestBase() {
         )
 
         // SampleStart
-        val df = students.createDataFrame {
-            // add value column
+        val df = students.convertToDataFrame {
+            // add column
             "year of birth" from { 2021 - it.age }
 
             // scan all properties

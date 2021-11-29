@@ -30,9 +30,9 @@ import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.convertTo
+import org.jetbrains.kotlinx.dataframe.api.convertToDataFrame
 import org.jetbrains.kotlinx.dataframe.api.corr
 import org.jetbrains.kotlinx.dataframe.api.count
-import org.jetbrains.kotlinx.dataframe.api.createDataFrame
 import org.jetbrains.kotlinx.dataframe.api.default
 import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.dfsOf
@@ -1234,7 +1234,7 @@ class DataFrameTests : BaseTest() {
     fun mergeIntoList() {
         val parsed = typed
             .merge { age and city and weight }.by(", ").intoList()
-            .createDataFrame { "data" from { it } }
+            .convertToDataFrame { "data" from { it } }
             .split("data").by(", ").into(age, city, weight)
             .parse(ParserOptions(nulls = setOf("null")))
 
@@ -2180,7 +2180,7 @@ class DataFrameTests : BaseTest() {
         val list = df.toListOf<Target>()
         list shouldBe df.convertTo<Target>().toList()
 
-        val listDf = list.createDataFrame()
+        val listDf = list.convertToDataFrame()
         listDf shouldBe df.sortColumnsBy { it.name }
         listDf.toList() shouldBe list
     }
@@ -2198,7 +2198,7 @@ class DataFrameTests : BaseTest() {
         val list = grouped.toListOf<Target>()
         list shouldBe grouped.convertTo<Target>().toList()
 
-        val listDf = list.createDataFrame(depth = 2)
+        val listDf = list.convertToDataFrame(depth = 2)
         listDf shouldBe grouped.update { getFrameColumn("students") }.with { it.remove("city") }
             .sortColumnsBy(dfs = true) { it.name }
         listDf.toList() shouldBe list
@@ -2217,7 +2217,7 @@ class DataFrameTests : BaseTest() {
         val list = grouped.toListOf<Target>()
         list shouldBe grouped.convertTo<Target>().toList()
 
-        val listDf = list.createDataFrame(depth = 2)
+        val listDf = list.convertToDataFrame(depth = 2)
         listDf shouldBe grouped.sortColumnsBy(dfs = true) { it.name }
         listDf.toList() shouldBe list
     }
