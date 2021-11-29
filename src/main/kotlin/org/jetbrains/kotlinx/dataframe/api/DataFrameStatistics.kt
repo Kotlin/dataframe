@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -188,9 +188,26 @@ public inline fun <T, reified R : Number> DataFrame<T>.stdOf(crossinline express
 
 // region corr
 
-public fun <T> DataFrame<T>.corr(): AnyFrame = corr { numberCols().withoutNulls() }
+internal fun AnyCol.isSuitableForCorr() = isSubtypeOf<Number>() || type() == getType<Boolean>()
 
-public fun <T, C : Number> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): AnyFrame = corrImpl(this[columns])
+public data class Corr<T, C>(
+    internal val df: DataFrame<T>,
+    internal val columns: ColumnsSelector<T, C>
+)
+
+public fun <T> DataFrame<T>.corr(): DataFrame<T> = corr { dfs { it.isSuitableForCorr() } }.withItself()
+
+public fun <T, C> DataFrame<T>.corr(columns: ColumnsSelector<T, C>): Corr<T, C> = Corr(this, columns)
+public fun <T> DataFrame<T>.corr(vararg columns: String): Corr<T, Any?> = corr { columns.toColumns() }
+public fun <T, C> DataFrame<T>.corr(vararg columns: KProperty<C>): Corr<T, C> = corr { columns.toColumns() }
+public fun <T, C> DataFrame<T>.corr(vararg columns: ColumnReference<C>): Corr<T, C> = corr { columns.toColumns() }
+
+public fun <T, C, R> Corr<T, C>.with(otherColumns: ColumnsSelector<T, R>): DataFrame<T> = corrImpl(otherColumns)
+public fun <T, C> Corr<T, C>.with(vararg otherColumns: String): DataFrame<T> = with { otherColumns.toColumns() }
+public fun <T, C, R> Corr<T, C>.with(vararg otherColumns: KProperty<R>): DataFrame<T> = with { otherColumns.toColumns() }
+public fun <T, C, R> Corr<T, C>.with(vararg otherColumns: ColumnReference<R>): DataFrame<T> = with { otherColumns.toColumns() }
+
+public fun <T, C> Corr<T, C>.withItself(): DataFrame<T> = with(columns)
 
 // endregion
 
