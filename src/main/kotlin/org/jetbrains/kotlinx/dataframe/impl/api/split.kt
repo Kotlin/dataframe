@@ -22,7 +22,7 @@ internal fun <T, C, R> splitImpl(
 ): DataFrame<T> {
     val nrow = clause.df.nrow()
 
-    val removeResult = clause.df.removeImpl(clause.columns)
+    val removeResult = clause.df.removeImpl(columns = clause.columns)
     val nameGenerator = removeResult.df.nameGenerator()
 
     val toInsert = removeResult.removedColumns.flatMap { node ->
