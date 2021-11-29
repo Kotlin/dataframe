@@ -6,7 +6,9 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
+import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSubtypeOf
 
 public fun AnyCol.isColumnGroup(): Boolean = kind() == ColumnKind.Group
@@ -18,11 +20,10 @@ public inline fun <reified T> AnyCol.isSubtypeOf(): Boolean = isSubtypeOf(getTyp
 public inline fun <reified T> AnyCol.isType(): Boolean = type() == getType<T>()
 public fun AnyCol.isNumber(): Boolean = isSubtypeOf<Number?>()
 public fun AnyCol.isList(): Boolean = typeClass == List::class
-public fun AnyCol.typeOfElement(): KType =
-    if (isList()) type.arguments[0].type ?: getType<Any?>()
-    else type
-
-public fun AnyCol.elementTypeIsNullable(): Boolean = typeOfElement().isMarkedNullable
 public fun AnyCol.isComparable(): Boolean = isSubtypeOf<Comparable<*>?>()
 
 public fun AnyCol.inferType(): DataColumn<*> = DataColumn.createWithTypeInference(name, toList())
+
+internal fun AnyCol.isPrimitive(): Boolean = typeClass.isPrimitive()
+
+internal fun KClass<*>.isPrimitive(): Boolean = isSubclassOf(Number::class) || this == String::class || this == Char::class || this == Array::class || isSubclassOf(Collection::class)

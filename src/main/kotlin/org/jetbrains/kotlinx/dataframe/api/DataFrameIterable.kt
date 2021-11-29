@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -28,9 +29,13 @@ import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.toIndices
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.indices
+import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.pathOf
+import org.jetbrains.kotlinx.dataframe.typeClass
+import java.io.File
+import java.net.URL
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -194,6 +199,16 @@ public inline fun <reified T> Iterable<T>.convertToDataFrame(vararg props: KProp
     convertToDataFrame {
         properties(roots = props, depth = depth)
     }
+
+public inline fun <reified T> DataColumn<T>.read(): AnyCol = when (kind()) {
+    ColumnKind.Group, ColumnKind.Frame -> this
+    else -> when {
+        isPrimitive() -> this
+        typeClass == File::class -> cast<File?>().mapNotNullValues { DataFrame.read(it) }
+        typeClass == URL::class -> cast<URL?>().mapNotNullValues { DataFrame.read(it) }
+        else -> values().convertToDataFrame().toColumnGroup(name()).asDataColumn()
+    }
+}
 
 @JvmName("toDataFrameT")
 public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
