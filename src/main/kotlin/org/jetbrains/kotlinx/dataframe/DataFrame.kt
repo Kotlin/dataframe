@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.impl.EmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
+import kotlin.reflect.KType
 
 public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
@@ -28,6 +29,8 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     override fun columns(): List<AnyCol>
 
     public fun columnNames(): List<String>
+
+    public fun columnTypes(): List<KType>
 
     override fun ncol(): Int
 
