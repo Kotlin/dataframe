@@ -97,12 +97,36 @@ When statistics is applied to `Pivot` or `PivotGroupBy`, it is computed for ever
 If statistic is applied in a mode that returns a single value for every data group, it will be stored in matrix cell without any name.
 
 <!---FUN statisticPivotSingle-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
 df.groupBy { city }.pivot { name.lastName }.mean { age }
-df.groupBy { city }.pivot { name.lastName }.meanOf { age / 2 }
+df.groupBy { city }.pivot { name.lastName }.meanOf { age / 2.0 }
 ```
 
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val city by column<String?>()
+val age by column<Int>()
+val name by columnGroup()
+val lastName by name.column<String>()
+
+df.groupBy { city }.pivot { lastName }.mean { age }
+df.groupBy { city }.pivot { lastName }.meanOf { age() / 2.0 }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.groupBy("city").pivot { "name"["lastName"] }.mean("age")
+df.groupBy("city").pivot { "name"["lastName"] }.meanOf { "age"<Int>() / 2.0 }
+```
+
+</tab></tabs>
 <!---END-->
 
 If statistic is applied in such a way that it returns separate value per every column in data group, every cell in matrix will contain `DataRow` with values for every aggregated column.

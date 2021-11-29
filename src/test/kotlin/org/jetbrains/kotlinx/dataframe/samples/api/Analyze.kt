@@ -288,10 +288,31 @@ class Analyze : TestBase() {
     }
 
     @Test
-    fun statisticPivotSingle() {
+    fun statisticPivotSingle_properties() {
         // SampleStart
         df.groupBy { city }.pivot { name.lastName }.mean { age }
-        df.groupBy { city }.pivot { name.lastName }.meanOf { age / 2 }
+        df.groupBy { city }.pivot { name.lastName }.meanOf { age / 2.0 }
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticPivotSingle_accessors() {
+        // SampleStart
+        val city by column<String?>()
+        val age by column<Int>()
+        val name by columnGroup()
+        val lastName by name.column<String>()
+
+        df.groupBy { city }.pivot { lastName }.mean { age }
+        df.groupBy { city }.pivot { lastName }.meanOf { age() / 2.0 }
+        // SampleEnd
+    }
+
+    @Test
+    fun statisticPivotSingle_strings() {
+        // SampleStart
+        df.groupBy("city").pivot { "name"["lastName"] }.mean("age")
+        df.groupBy("city").pivot { "name"["lastName"] }.meanOf { "age"<Int>() / 2.0 }
         // SampleEnd
     }
 
