@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
-import java.beans.Visibility
+import java.lang.reflect.InvocationTargetException
 import java.time.temporal.Temporal
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -102,12 +102,21 @@ internal fun convertToDataFrame(
         property.javaField?.isAccessible = true
 
         var nullable = false
+        var hasExceptions = false
         val values = data.map { obj ->
             if (obj == null) {
                 nullable = true
                 null
             } else {
-                val value = it.call(obj)
+                val value = try {
+                    it.call(obj)
+                } catch (e: InvocationTargetException) {
+                    hasExceptions = true
+                    e.targetException
+                } catch (e: Throwable) {
+                    hasExceptions = true
+                    e
+                }
                 if (value == null) nullable = true
                 value
             }
@@ -116,6 +125,7 @@ internal fun convertToDataFrame(
         val type = property.returnType
         val kclass = (type.classifier as KClass<*>)
         when {
+            hasExceptions -> DataColumn.createWithTypeInference(it.name, values, nullable)
             depth == 1 || kclass.isValueType || preserves.contains(kclass) -> DataColumn.createValueColumn(
                 it.name,
                 values,
