@@ -31,7 +31,8 @@ public fun <T, R> DataColumn<T>.map(transform: (T) -> R): DataColumn<R> {
     return collector.toColumn(name).cast()
 }
 
-public fun <T, R> DataColumn<T?>.mapNotNull(transform: (T) -> R): DataColumn<R> {
+@PublishedApi
+internal fun <T, R> DataColumn<T?>.mapNotNullValues(transform: (T) -> R): DataColumn<R> {
     val collector = createDataCollector(size)
     values.forEach {
         if (it == null) collector.add(null)
