@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.io.read
-import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dl.api.core.Sequential
 import org.jetbrains.kotlinx.dl.api.core.activation.Activations
 import org.jetbrains.kotlinx.dl.api.core.initializer.HeNormal
@@ -83,7 +82,7 @@ private fun <T> OnHeapDataset.Companion.create(dataframe: DataFrame<T>, yColumn:
 
     fun extractX(): Array<FloatArray> =
         dataframe.remove(yColumn)
-            .convert { dfsLeafs() }.toFloat()
+            .convert { allDfs() }.toFloat()
             .merge { dfsOf<Float>() }.by { it.toFloatArray() }.into(x)
             .getColumn(x).toTypedArray()
 
