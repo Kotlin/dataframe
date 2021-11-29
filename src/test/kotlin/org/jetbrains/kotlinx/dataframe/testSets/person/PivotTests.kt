@@ -215,7 +215,7 @@ class PivotTests {
             group.columnNames() shouldBe if (it.name() == "Bob") keys - "city" else keys
         }
 
-        val leafColumns = pivoted.getColumnsWithPaths { all().drop(1).dfsLeafs() }
+        val leafColumns = pivoted.getColumnsWithPaths { all().drop(1).allDfs() }
         leafColumns.size shouldBe typed.name.ndistinct() * typed.key.ndistinct() - 1
         leafColumns.forEach { it.path.size shouldBe 2 }
 
@@ -260,7 +260,7 @@ class PivotTests {
 
         pivoted.ncol() shouldBe typed.name.ndistinct()
 
-        val cols = pivoted.df().getColumnsWithPaths { all().dfsLeafs() }
+        val cols = pivoted.df().getColumnsWithPaths { all().allDfs() }
         cols.size shouldBe 2 * typed.name.ndistinct() * typed.key.ndistinct() - 2
         cols.forEach {
             when {

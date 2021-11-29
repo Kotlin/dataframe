@@ -82,8 +82,8 @@ public fun <T> DataColumn<T>.asComparable(): DataColumn<Comparable<T>> {
     return this as DataColumn<Comparable<T>>
 }
 
-public fun <T> DataColumn<T?>.asNotNullable(): DataColumn<T> {
-    require(!hasNulls())
+public fun <T> DataColumn<T?>.castNotNull(): DataColumn<T> {
+    require(!hasNulls()) { "Column `$name` has nulls" }
     return this as DataColumn<T>
 }
 
@@ -115,7 +115,8 @@ public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = df
 
 public fun <T> FrameColumn<T>.asDataColumn(): DataColumn<DataFrame<T>?> = this
 
-public fun <T> FrameColumn<T>.toValueColumn(): ValueColumn<DataFrame<T>?> = DataColumn.createValueColumn(name, toList(), type())
+public fun <T> FrameColumn<T>.toValueColumn(): ValueColumn<DataFrame<T>?> =
+    DataColumn.createValueColumn(name, toList(), type())
 
 // endregion
 
@@ -136,10 +137,14 @@ public fun <T> ColumnSet<T>.asComparable(): ColumnSet<Comparable<T>> = this as C
 public fun <T> Iterable<DataFrame<T>>.toFrameColumn(name: String = ""): FrameColumn<T> =
     DataColumn.createFrameColumn(name, asList()).forceResolve()
 
-public inline fun <reified T> Iterable<T>.toValueColumn(name: String = ""): ValueColumn<T> = DataColumn.createValueColumn(name, asList()).forceResolve()
+public inline fun <reified T> Iterable<T>.toValueColumn(name: String = ""): ValueColumn<T> =
+    DataColumn.createValueColumn(name, asList()).forceResolve()
 
-public inline fun <reified T> Iterable<T>.toValueColumn(column: ColumnAccessor<T>): ValueColumn<T> = toValueColumn(column.name())
-public inline fun <reified T> Iterable<T>.toValueColumn(column: KProperty<T>): ValueColumn<T> = toValueColumn(column.columnName)
+public inline fun <reified T> Iterable<T>.toValueColumn(column: ColumnAccessor<T>): ValueColumn<T> =
+    toValueColumn(column.name())
+
+public inline fun <reified T> Iterable<T>.toValueColumn(column: KProperty<T>): ValueColumn<T> =
+    toValueColumn(column.columnName)
 
 public enum class Infer {
     None,
