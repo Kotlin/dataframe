@@ -32,7 +32,7 @@ class MoveTests {
 
     @Test
     fun `select all dfs`() {
-        val selected = grouped.getColumnsWithPaths { all().dfsLeafs() }.map { it.path.joinToString(".") }
+        val selected = grouped.getColumnsWithPaths { all().allDfs() }.map { it.path.joinToString(".") }
         selected shouldBe listOf("a.b", "a.c.d", "b.c", "b.d", "e.f")
     }
 
@@ -76,7 +76,7 @@ class MoveTests {
     @Test
     fun `columnsWithPath in selector`() {
         val selected = grouped.getColumnsWithPaths { it["a"] }
-        val actual = grouped.getColumnsWithPaths { selected.map { it.dfsLeafs() }.toColumnSet() }
+        val actual = grouped.getColumnsWithPaths { selected.map { it.allDfs() }.toColumnSet() }
         actual.map { it.path.joinToString(".") } shouldBe listOf("a.b", "a.c.d")
     }
 

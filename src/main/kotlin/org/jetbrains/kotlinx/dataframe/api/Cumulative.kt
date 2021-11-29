@@ -37,6 +37,6 @@ public fun <T> DataFrame<T>.cumSum(vararg columns: String, skipNA: Boolean = def
 public fun <T> DataFrame<T>.cumSum(vararg columns: Column, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) { columns.toColumns() }
 public fun <T> DataFrame<T>.cumSum(vararg columns: KProperty<*>, skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) { columns.toColumns() }
 
-public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) { dfsLeafs() }
+public fun <T> DataFrame<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataFrame<T> = cumSum(skipNA) { allDfs() }
 
 // endregion

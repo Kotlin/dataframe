@@ -21,7 +21,7 @@ public fun <T, C> DataFrame<T>.replace(columns: Iterable<ColumnReference<C>>): R
 
 public fun <T> DataFrame<T>.replaceAll(
     vararg valuePairs: Pair<Any?, Any?>,
-    columns: ColumnsSelector<T, *> = { dfsLeafs() }
+    columns: ColumnsSelector<T, *> = { allDfs() }
 ): DataFrame<T> {
     val map = valuePairs.toMap()
     return update(columns).withExpression { map[it] ?: it }

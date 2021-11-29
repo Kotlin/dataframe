@@ -127,7 +127,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.sortColumnsBy(dfs: Boolean = fals
 
 // region xs
 
-public fun <T> DataFrame<T>.xs(vararg keyValues: Any?): DataFrame<T> = xs(*keyValues) { dfsLeafs().take(keyValues.size) }
+public fun <T> DataFrame<T>.xs(vararg keyValues: Any?): DataFrame<T> = xs(*keyValues) { allDfs().take(keyValues.size) }
 
 public fun <T, C> DataFrame<T>.xs(vararg keyValues: C, keyColumns: ColumnsSelector<T, C>): DataFrame<T> = xsImpl(keyColumns, false, *keyValues)
 

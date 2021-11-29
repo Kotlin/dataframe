@@ -83,9 +83,9 @@ public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOf(noinline
 
 // region std
 
-public fun <T : Number> DataColumn<T?>.std(): Double = org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators.std.aggregate(this) ?: .0
+public fun <T : Number> DataColumn<T?>.std(): Double = Aggregators.std.aggregate(this) ?: .0
 
-public inline fun <T, reified R : Number> DataColumn<T>.stdOf(noinline expression: (T) -> R?): Double = org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators.std.aggregateOf(this, expression) ?: .0
+public inline fun <T, reified R : Number> DataColumn<T>.stdOf(noinline expression: (T) -> R?): Double = Aggregators.std.aggregateOf(this, expression) ?: .0
 
 // endregion
 
