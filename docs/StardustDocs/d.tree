@@ -119,6 +119,9 @@
                 <toc-element id="gather.md"/>
             </toc-element>
             <toc-element id="append.md"/>
+            <toc-element id="adjustSchema.md">
+                <toc-element id="cast.md"/>
+            </toc-element>
         </toc-element>
         <toc-element toc-title="Statistics">
             <toc-element id="summaryStatistics.md">
