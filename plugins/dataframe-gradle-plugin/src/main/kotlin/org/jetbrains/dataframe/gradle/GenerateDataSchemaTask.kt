@@ -83,27 +83,19 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     }
 
     private fun readDataFrame(data: Any, csvOptions: CsvOptions): AnyFrame {
-        fun isURL(fileOrUrl: String): Boolean = listOf("http:", "https:", "ftp:").any { fileOrUrl.startsWith(it) }
         fun guessFormat(url: String): SupportedFormats? = when {
             url.endsWith(".csv") -> SupportedFormats.CSV
             url.endsWith(".json") -> SupportedFormats.JSON
             else -> null
         }
+        fun readCSV(url: URL) = DataFrame.readCSV(url, delimiter = csvOptions.delimiter)
+        val url = urlOf(data)
         return try {
-            val url = when (data) {
-                is File -> data.toURI()
-                is URL -> data.toURI()
-                is String -> when {
-                    isURL(data) -> URL(data).toURI()
-                    else -> project.file(data).toURI()
-                }
-                else -> throw IllegalArgumentException("data for schema \"${interfaceName.get()}\" must be File, URL or String")
-            }.toURL()
             when (guessFormat(url.path)) {
-                SupportedFormats.CSV -> DataFrame.readCSV(url, delimiter = csvOptions.delimiter)
+                SupportedFormats.CSV -> readCSV(url)
                 SupportedFormats.JSON -> DataFrame.readJson(url)
                 else -> try {
-                    DataFrame.readCSV(url, delimiter = csvOptions.delimiter)
+                    readCSV(url)
                 } catch (e: Exception) {
                     DataFrame.readJson(url)
                 }
@@ -115,6 +107,20 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 else -> throw e
             }
         }
+    }
+
+    private fun urlOf(data: Any): URL {
+        fun isURL(fileOrUrl: String): Boolean = listOf("http:", "https:", "ftp:").any { fileOrUrl.startsWith(it) }
+
+        return when (data) {
+            is File -> data.toURI()
+            is URL -> data.toURI()
+            is String -> when {
+                isURL(data) -> URL(data).toURI()
+                else -> project.file(data).toURI()
+            }
+            else -> throw IllegalArgumentException("data for schema \"${interfaceName.get()}\" must be File, URL or String")
+        }.toURL()
     }
 
     private fun buildSourceFileContent(escapedPackageName: String, codeGenResult: CodeGenResult): String {
