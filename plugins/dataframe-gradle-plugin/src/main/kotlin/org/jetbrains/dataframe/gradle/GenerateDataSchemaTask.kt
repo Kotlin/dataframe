@@ -52,6 +52,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @TaskAction
     fun generate() {
         val df = readDataFrame(data.get(), csvOptions.get())
+        println(csvOptions.get().delimiter)
         val codeGenerator = CodeGenerator.create()
         val codeGenResult = codeGenerator.generate(
             schema = df.schema(),
@@ -99,7 +100,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 else -> throw IllegalArgumentException("data for schema \"${interfaceName.get()}\" must be File, URL or String")
             }.toURL()
             when (guessFormat(url.path)) {
-                SupportedFormats.CSV -> DataFrame.readCSV(url)
+                SupportedFormats.CSV -> DataFrame.readCSV(url, delimiter = csvOptions.delimiter)
                 SupportedFormats.JSON -> DataFrame.readJson(url)
                 else -> try {
                     DataFrame.readCSV(url, delimiter = csvOptions.delimiter)

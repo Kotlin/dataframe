@@ -1,6 +1,8 @@
 package org.jetbrains.dataframe.gradle
 
+import io.kotest.inspectors.forOne
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.gradle.testkit.runner.TaskOutcome
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.junit.Before
@@ -252,6 +254,53 @@ internal class SchemaGeneratorPluginTest {
             """.trimIndent()
         }
         result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
+    fun `custom csv delimiter`() {
+        val (buildDir, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
+            val csv = "semicolons.csv"
+            val data = File(buildDir, csv)
+            data.writeText("""
+                a;b;c
+                1;2;3
+            """.trimIndent())
+            """
+            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
+               
+            plugins {
+                kotlin("jvm") version "1.6.0"
+                id("org.jetbrains.kotlin.plugin.dataframe")
+            }
+            
+            repositories {
+                mavenCentral() 
+            }
+
+            dataframes {
+                schema {
+                    data = "$csv"
+                    name = "Test"
+                    packageName = "org.test"
+                    csvOptions {
+                        delimiter = ';'
+                    }
+                }
+            }
+            """.trimIndent()
+        }
+        result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
+        File(buildDir, "src/main/kotlin/org/test/Test.Generated.kt").readLines().let {
+            it.forOne {
+                it.shouldContain("val a")
+            }
+            it.forOne {
+                it.shouldContain("val b")
+            }
+            it.forOne {
+                it.shouldContain("val c")
+            }
+        }
     }
 
     @Test
