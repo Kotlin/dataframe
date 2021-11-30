@@ -20,7 +20,12 @@ import org.jetbrains.kotlinx.dataframe.impl.getType
 
 public fun <T> AnyFrame.cast(): DataFrame<T> = this as DataFrame<T>
 
+public inline fun <reified T> AnyFrame.cast(unsafe: Boolean = true): DataFrame<T> = if (unsafe) convertToImpl(getType<T>(), allowConversion = false, ExtraColumns.Keep)
+else cast()
+
 public fun <T> AnyRow.cast(): DataRow<T> = this as DataRow<T>
+
+public inline fun <reified T> AnyRow.cast(unsafe: Boolean = true): DataRow<T> = df().cast<T>(unsafe)[0]
 
 public fun <T> AnyCol.cast(): DataColumn<T> = this as DataColumn<T>
 
