@@ -7,7 +7,6 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
-import org.jetbrains.kotlinx.dataframe.io.read
 import java.io.File
 import java.io.IOException
 import java.net.URL
@@ -18,12 +17,18 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.dataframe.impl.codeGen.CodeGenResult
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.io.SupportedFormats
+import org.jetbrains.kotlinx.dataframe.io.readCSV
+import org.jetbrains.kotlinx.dataframe.io.readJson
 import java.io.FileNotFoundException
 
 abstract class GenerateDataSchemaTask : DefaultTask() {
 
     @get:Input
     abstract val data: Property<Any>
+
+    @get:Input
+    abstract val csvOptions: Property<CsvOptions>
 
     @get:Input
     abstract val src: Property<File>
@@ -78,6 +83,11 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
     private fun readDataFrame(data: Any, csvOptions: CsvOptions): AnyFrame {
         fun isURL(fileOrUrl: String): Boolean = listOf("http:", "https:", "ftp:").any { fileOrUrl.startsWith(it) }
+        fun guessFormat(url: String): SupportedFormats? = when {
+            url.endsWith(".csv") -> SupportedFormats.CSV
+            url.endsWith(".json") -> SupportedFormats.JSON
+            else -> null
+        }
         return try {
             val url = when (data) {
                 is File -> data.toURI()
@@ -88,7 +98,15 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 }
                 else -> throw IllegalArgumentException("data for schema \"${interfaceName.get()}\" must be File, URL or String")
             }.toURL()
-            DataFrame.read(url)
+            when (guessFormat(url.path)) {
+                SupportedFormats.CSV -> DataFrame.readCSV(url)
+                SupportedFormats.JSON -> DataFrame.readJson(url)
+                else -> try {
+                    DataFrame.readCSV(url, delimiter = csvOptions.delimiter)
+                } catch (e: Exception) {
+                    DataFrame.readJson(url)
+                }
+            }
         } catch (e: Exception) {
             when (e) {
                 is KlaxonException, is IndexOutOfBoundsException, is IOException -> throw InvalidDataException(e)
