@@ -96,7 +96,7 @@ internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int): Stri
         columns.forEach { dfs(it) }
         append("]")
     }
-    val js = getResourceText("/addTable.js", "COLUMNS" to data, "ID" to id, "ROOT" to rootId)
+    val js = getResourceText("/addTable.js", "___COLUMNS___" to data, "___ID___" to id, "___ROOT___" to rootId)
     return js
 }
 
@@ -150,7 +150,7 @@ internal fun AnyFrame.toHtmlData(
         scripts.add(js)
     }
     val body = getResourceText("/table.html", "ID" to rootId)
-    val script = scripts.joinToString("\n") + "\n" + getResourceText("/renderTable.js", "ID" to rootId)
+    val script = scripts.joinToString("\n") + "\n" + getResourceText("/renderTable.js", "___ID___" to rootId)
     return HtmlData("", body, script)
 }
 
