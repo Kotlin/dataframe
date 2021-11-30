@@ -207,13 +207,16 @@ public data class DisplayConfiguration(
     var cellContentLimit: Int = 40,
     var cellFormatter: RowColFormatter<*, *>? = null,
     var precision: Int = defaultPrecision,
-    var isolatedOutputs: Boolean = run {
-        System.getenv("LETS_PLOT_HTML_ISOLATED_FRAME")?.toBooleanStrictOrNull() ?: false
-    },
+    var isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
+    internal val localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
 ) {
     public companion object {
         public val DEFAULT: DisplayConfiguration = DisplayConfiguration()
     }
+}
+
+private fun flagFromEnv(envName: String): Boolean {
+    return System.getenv(envName)?.toBooleanStrictOrNull() ?: false
 }
 
 internal fun String.escapeNewLines() = replace("\n", "\\n").replace("\r", "\\r")
