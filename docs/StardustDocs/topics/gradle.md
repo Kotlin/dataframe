@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-In Gradle project `DataFrame` provides annotation processing and gradle tasks to infer `DataSchema` from data samples.  
+In Gradle project `DataFrame` provides annotation processing and gradle tasks to infer `DataSchema` from data samples. Follow [installation](installation.md#gradle-plugin-configuration) to configure project.
 
 ### Annotation processing
 Declare data schemas in your code and use them to access data in DataFrames.
