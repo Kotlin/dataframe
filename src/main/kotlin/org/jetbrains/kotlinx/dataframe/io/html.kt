@@ -112,8 +112,8 @@ internal fun AnyFrame.toHtmlData(
     val scripts = mutableListOf<String>()
     val queue = LinkedList<Pair<AnyFrame, Int>>()
 
-    fun AnyFrame.columnToJs(col: AnyCol): ColumnDataForJs {
-        val values = rows().take(configuration.rowsLimit)
+    fun AnyFrame.columnToJs(col: AnyCol, rowsLimit: Int): ColumnDataForJs {
+        val values = rows().take(rowsLimit)
         val precision = if (col.isNumber()) col.asNumbers().precision() else 1
         val renderConfig = configuration.copy(precision = precision)
         val contents = values.map {
@@ -134,7 +134,7 @@ internal fun AnyFrame.toHtmlData(
         }
         return ColumnDataForJs(
             col,
-            if (col is ColumnGroup<*>) col.columns().map { col.columnToJs(it) } else emptyList(),
+            if (col is ColumnGroup<*>) col.columns().map { col.columnToJs(it, rowsLimit) } else emptyList(),
             col.isSubtypeOf<Number?>(),
             contents
         )
@@ -144,7 +144,8 @@ internal fun AnyFrame.toHtmlData(
     queue.add(this to rootId)
     while (!queue.isEmpty()) {
         val (nextDf, nextId) = queue.pop()
-        val preparedColumns = nextDf.columns().map { nextDf.columnToJs(it) }
+        val rowsLimit = if(nextId == rootId) configuration.rowsLimit else 5
+        val preparedColumns = nextDf.columns().map { nextDf.columnToJs(it, rowsLimit) }
         val js = tableJs(preparedColumns, nextId, rootId)
         scripts.add(js)
     }
