@@ -12,9 +12,11 @@ import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.precision
+import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.truncate
 import org.jetbrains.kotlinx.dataframe.jupyter.CellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
+import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
@@ -36,7 +38,7 @@ internal data class DataFrameReference(val dfId: Int, val size: DataFrameSize) :
 internal data class HtmlContent(val html: String, val style: String?) : CellContent
 
 internal data class ColumnDataForJs(
-    val name: String,
+    val column: AnyCol,
     val nested: List<ColumnDataForJs>,
     val rightAlign: Boolean,
     val values: List<CellContent>
@@ -61,6 +63,11 @@ internal fun getResourceText(resource: String, vararg replacement: Pair<String, 
     return template
 }
 
+internal fun ColumnDataForJs.renderHeader(): String {
+    val tooltip = "${column.name}: ${renderType(column.type())}"
+    return "<span title=\"$tooltip\">${column.name()}</span>"
+}
+
 internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int): String {
     var index = 0
     val data = buildString {
@@ -83,7 +90,7 @@ internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int): Stri
                     else -> error("Unsupported value type: ${it.javaClass}")
                 }
             }
-            append("{ name: \"${col.name.escapeForHtmlInJs()}\", children: $children, rightAlign: ${col.rightAlign}, values: $values }, \n")
+            append("{ name: \"${col.renderHeader().escapeForHtmlInJs()}\", children: $children, rightAlign: ${col.rightAlign}, values: $values }, \n")
             return colIndex
         }
         columns.forEach { dfs(it) }
@@ -126,7 +133,7 @@ internal fun AnyFrame.toHtmlData(
             }
         }
         return ColumnDataForJs(
-            col.name(),
+            col,
             if (col is ColumnGroup<*>) col.columns().map { col.columnToJs(it) } else emptyList(),
             col.isSubtypeOf<Number?>(),
             contents
