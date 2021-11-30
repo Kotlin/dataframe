@@ -99,6 +99,7 @@
             <toc-element id="moveRename.md">
                 <toc-element id="move.md"/>
                 <toc-element id="rename.md"/>
+                <toc-element id="sortColumnsBy.md"/>
             </toc-element>
             <toc-element id="groupUngroupFlatten.md">
                 <toc-element id="group.md"/>

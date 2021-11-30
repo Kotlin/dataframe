@@ -67,7 +67,7 @@ DataFrame.readJson("https://covid.ourworldindata.org/data/owid-covid-data.json")
 ```
 
 Note that after reading a JSON with a complex structure, you can get hierarchical
-dataframe: dataframe with `GroupColumn`s and `FrameColumn`s.
+dataframe: dataframe with `ColumnGroup`s and `FrameColumn`s.
 
 Also note that type inferring process for JSON is much simpler than for CSV.
 JSON string literals are always supposed to have String type, number literals
