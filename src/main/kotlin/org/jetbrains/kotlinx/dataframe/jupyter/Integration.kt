@@ -51,8 +51,16 @@ internal class Integration : JupyterIntegration() {
 
         resources {
             if (!config.display.isolatedOutputs) {
-                val initJsSha = "8a649bfc42e1760ed6c5ff8808e54f9a3ce5f6c1"
-                js("DataFrame") { url("https://cdn.jsdelivr.net/gh/Kotlin/dataframe@$initJsSha/src/main/resources/init.js") }
+                js("DataFrame") {
+                    if (config.display.localTesting) {
+                        classPath("init.js")
+                    } else {
+                        // Update this commit when new version of init.js is pushed
+                        val initJsSha = "8a649bfc42e1760ed6c5ff8808e54f9a3ce5f6c1"
+                        url("https://cdn.jsdelivr.net/gh/Kotlin/dataframe@$initJsSha/src/main/resources/init.js")
+                    }
+                }
+
                 css("DataFrameTable") { classPath("table.css") }
                 css("DataFrameFormatting") { classPath("formatting.css") }
             }
