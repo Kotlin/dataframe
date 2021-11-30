@@ -751,7 +751,7 @@ class Access : TestBase() {
         df.select { "name"["firstName"]<String>().map { it.uppercase() } }
 
         // column arithmetics
-        df.select { 2021 - "age"() }
+        df.select { 2021 - "age"<Int>() }
 
         // two columns
         df.select { "name" and "age" }
