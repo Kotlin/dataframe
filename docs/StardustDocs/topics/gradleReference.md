@@ -19,6 +19,9 @@ dataframes {
         
         data /* URL | File | String */ = "…" // Data in JSON or CSV formats
         name = "org.jetbrains.data.Person" // [optional; default: from filename]
+        csvOptions {
+            delimiter /* Char */ = ';' // [optional; default: ',']
+        }
     }
 }
 ```
@@ -30,6 +33,18 @@ dataframes {
     // output: src/main/kotlin/org/example/dataframe/Securities.Generated.kt
     schema {
         data = "https://raw.githubusercontent.com/Kotlin/dataframe/1765966904c5920154a4a480aa1fcff23324f477/data/securities.csv"
+    }
+}
+```
+You can set parsing options for CSV:
+```kotlin
+dataframes {
+    // output: src/main/kotlin/org/example/dataframe/Securities.Generated.kt
+    schema {
+        data = "https://raw.githubusercontent.com/Kotlin/dataframe/1765966904c5920154a4a480aa1fcff23324f477/data/securities.csv"
+        csvOptions {
+            delimiter = ';'
+        }
     }
 }
 ```
