@@ -46,7 +46,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
     @TaskAction
     fun generate() {
-        val df = readDataFrame(data.get())
+        val df = readDataFrame(data.get(), csvOptions.get())
         val codeGenerator = CodeGenerator.create()
         val codeGenResult = codeGenerator.generate(
             schema = df.schema(),
@@ -76,14 +76,19 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         }
     }
 
-    private fun readDataFrame(data: Any): AnyFrame {
+    private fun readDataFrame(data: Any, csvOptions: CsvOptions): AnyFrame {
+        fun isURL(fileOrUrl: String): Boolean = listOf("http:", "https:", "ftp:").any { fileOrUrl.startsWith(it) }
         return try {
-            when (data) {
-                is File -> DataFrame.read(data)
-                is URL -> DataFrame.read(data)
-                is String -> DataFrame.read(data)
+            val url = when (data) {
+                is File -> data.toURI()
+                is URL -> data.toURI()
+                is String -> when {
+                    isURL(data) -> URL(data).toURI()
+                    else -> project.file(data).toURI()
+                }
                 else -> throw IllegalArgumentException("data for schema \"${interfaceName.get()}\" must be File, URL or String")
-            }
+            }.toURL()
+            DataFrame.read(url)
         } catch (e: Exception) {
             when (e) {
                 is KlaxonException, is IndexOutOfBoundsException, is IOException -> throw InvalidDataException(e)
