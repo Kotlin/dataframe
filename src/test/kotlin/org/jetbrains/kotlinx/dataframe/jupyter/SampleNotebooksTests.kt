@@ -1,7 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
-import org.jetbrains.kotlinx.jupyter.testkit.notebook.JupyterNotebookParser
-import org.jetbrains.kotlinx.jupyter.testkit.notebook.JupyterOutput
+import org.jetbrains.jupyter.parser.JupyterParser
+import org.jetbrains.jupyter.parser.notebook.CodeCell
+import org.jetbrains.jupyter.parser.notebook.Output
 import org.junit.Ignore
 import org.junit.Test
 import java.io.File
@@ -14,9 +15,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     fun github() = exampleTest(
         "github",
         cellClause = CellClause.stopAfter { cell ->
-            cell.source.any { cellLine ->
-                cellLine.contains("personal access token")
-            }
+            "personal access token" in cell.source
         },
         cleanup = {
             File("jetbrains.json").delete()
@@ -57,7 +56,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
         ),
         // There is no tags data in repository
         cellClause = CellClause.stopAfter { cell ->
-            cell.source.any { "tags.csv" in it }
+            "tags.csv" in cell.source
         }
     )
 
@@ -68,12 +67,12 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
         cleanup: () -> Unit = {}
     ) {
         val notebookFile = File(notebookPath)
-        val notebook = JupyterNotebookParser.parse(notebookFile)
+        val notebook = JupyterParser.parse(notebookFile)
         val finalClause = cellClause and CellClause.IS_CODE
 
         val codeCellsData = notebook.cells
             .filter { finalClause.isAccepted(it) }
-            .map { CodeCellData(it.source.joinToString(""), it.outputs) }
+            .map { CodeCellData(it.source, (it as? CodeCell)?.outputs.orEmpty()) }
 
         try {
             for (codeCellData in codeCellsData) {
@@ -102,7 +101,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
 
     data class CodeCellData(
         val code: String,
-        val outputs: List<JupyterOutput>,
+        val outputs: List<Output>,
     )
 
     companion object {
