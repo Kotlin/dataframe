@@ -40,7 +40,7 @@ internal open class DataFrameReceiver<T>(
     override fun getColumnOrNull(name: String) = source.getColumnOrNull(name).check(pathOf(name))
     override fun getColumnOrNull(index: Int) = source.getColumnOrNull(index).check(pathOf(""))
     override fun <R> getColumnOrNull(column: ColumnReference<R>) = source.getColumnOrNull(column).check(column.path())
-    override fun getColumnOrNull(path: ColumnPath) = source.getColumnOrNull(path).check(path)
+    override fun getColumnOrNull(path: ColumnPath) = super.getColumnOrNull(path).check(path)
     override fun <R> getColumnOrNull(column: ColumnSelector<T, R>) = getColumnsImpl(unresolvedColumnsPolicy, column).singleOrNull()
 
     override fun <R> resolve(reference: ColumnReference<R>): ColumnWithPath<R>? {

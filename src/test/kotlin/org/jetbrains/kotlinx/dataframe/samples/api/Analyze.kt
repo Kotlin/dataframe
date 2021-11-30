@@ -618,6 +618,14 @@ class Analyze : TestBase() {
             min(age) into "min age"
             maxBy(age)[name] into "name of oldest"
         }
+        // or
+        df.groupBy(city).aggregate {
+            nrow() into "total"
+            age().count { it > 18 } into "adults"
+            age().median() into "median age"
+            age().min() into "min age"
+            maxBy(age)[name] into "name of oldest"
+        }
         // SampleEnd
     }
 
@@ -629,6 +637,14 @@ class Analyze : TestBase() {
             count { "age"<Int>() > 18 } into "adults"
             median("age") into "median age"
             min("age") into "min age"
+            maxBy("age")["name"] into "oldest"
+        }
+        // or
+        df.groupBy("city").aggregate {
+            nrow() into "total"
+            count { "age"<Int>() > 18 } into "adults"
+            "age"<Int>().median() into "median age"
+            "age"<Int>().min() into "min age"
             maxBy("age")["name"] into "oldest"
         }
         // SampleEnd
