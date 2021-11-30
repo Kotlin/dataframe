@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
+import org.jetbrains.jupyter.parser.notebook.Cell
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.jetbrains.kotlinx.jupyter.testkit.ReplProvider
-import org.jetbrains.kotlinx.jupyter.testkit.notebook.JupyterCell
 
 abstract class DataFrameJupyterTest : JupyterReplTestCase(
     ReplProvider.forLibrariesTesting(listOf("dataframe"))
@@ -25,10 +25,10 @@ fun interface CodeReplacer {
 }
 
 fun interface CellClause {
-    fun isAccepted(cell: JupyterCell): Boolean
+    fun isAccepted(cell: Cell): Boolean
 
     companion object {
-        val IS_CODE = CellClause { it.cell_type == "code" }
+        val IS_CODE = CellClause { it.type == Cell.Type.CODE }
     }
 }
 
@@ -44,7 +44,7 @@ infix fun CellClause.and(other: CellClause): CellClause {
 fun CellClause.Companion.stopAfter(breakClause: CellClause) = object : CellClause {
     var clauseTriggered: Boolean = false
 
-    override fun isAccepted(cell: JupyterCell): Boolean {
+    override fun isAccepted(cell: Cell): Boolean {
         clauseTriggered = clauseTriggered || breakClause.isAccepted(cell)
         return !clauseTriggered
     }
