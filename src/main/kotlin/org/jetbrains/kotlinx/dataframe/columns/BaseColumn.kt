@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
 import kotlin.reflect.KProperty
@@ -47,7 +48,7 @@ public interface BaseColumn<out T> : ColumnReference<T> {
 
     public fun toSet(): Set<T>
 
-    public override operator fun getValue(thisRef: Any?, property: KProperty<*>): BaseColumn<T> = (this as DataColumnInternal<*>).rename(property.name).forceResolve() as BaseColumn<T>
+    public override operator fun getValue(thisRef: Any?, property: KProperty<*>): BaseColumn<T> = (this as DataColumnInternal<*>).rename(property.columnName).forceResolve() as BaseColumn<T>
 }
 
 internal val <T> BaseColumn<T>.values: Iterable<T> get() = values()
