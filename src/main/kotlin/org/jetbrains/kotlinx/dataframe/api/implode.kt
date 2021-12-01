@@ -7,6 +7,9 @@ import org.jetbrains.kotlinx.dataframe.impl.api.implodeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
+public fun <T> DataFrame<T>.implode(dropNulls: Boolean = false): DataFrame<T> =
+    implode(dropNulls) { all() }
+
 public fun <T, C> DataFrame<T>.implode(dropNulls: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> =
     implodeImpl(dropNulls, columns)
 
