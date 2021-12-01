@@ -193,7 +193,7 @@ internal open class ExtensionsCodeGeneratorImpl(
         val fieldsDeclaration = if (fields) marker.fields.map {
             val override = if (it.overrides) "override " else ""
             val columnNameAnnotation =
-                if (it.columnName != it.fieldName.quotedIfNeeded) "\t@ColumnName(\"${renderStringLiteral(it.columnName)}\")\n" else ""
+                if (it.columnName != it.fieldName.quotedIfNeeded) "    @ColumnName(\"${renderStringLiteral(it.columnName)}\")\n" else ""
 
             val fieldType = it.renderFieldType()
             "$columnNameAnnotation    ${propertyVisibility}${override}val ${it.fieldName.quotedIfNeeded}: $fieldType"
