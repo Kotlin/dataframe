@@ -197,7 +197,7 @@ internal open class ExtensionsCodeGeneratorImpl(
             val fieldType = it.renderFieldType()
             "$columnNameAnnotation    ${propertyVisibility}${override}val ${it.fieldName.quotedIfNeeded}: $fieldType"
         }.join() else ""
-        val body = if (fieldsDeclaration.isNotBlank()) "{\n$fieldsDeclaration\n}" else ""
+        val body = if (fieldsDeclaration.isNotBlank()) " {\n$fieldsDeclaration\n}" else ""
         resultDeclarations.add(header + baseInterfacesDeclaration + body)
         return resultDeclarations.join()
     }

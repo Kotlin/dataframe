@@ -29,7 +29,7 @@ class NameGenerationTests {
 
         val expected = """
             @DataSchema(isOpen = false)
-            interface DataType{
+            interface DataType {
             	@ColumnName("first column")
                 val `first column`: kotlin.Int
             	@ColumnName("second column")
