@@ -112,4 +112,6 @@ val d3 = d2.groupBy { From into "origin" }.aggregate {
 }
 ```
 
+[Try this example in **Datalore**](https://datalore.jetbrains.com/notebook/QOMgQYlftKHc5u9lYnqSnC/O5ACtb54oO6xlfNnb17QLh)
+
 Explore [**more examples**](examples).
