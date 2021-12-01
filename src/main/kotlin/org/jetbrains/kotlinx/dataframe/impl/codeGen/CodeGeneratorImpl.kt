@@ -52,7 +52,8 @@ internal fun String.needsQuoting(): Boolean {
         contains(charsToQuote) ||
         HardKeywords.VALUES.contains(this) ||
         ModifierKeywords.VALUES.contains(this) ||
-        any { it.category !in letterCategories }
+        all { it == '_' } ||
+        any { it != '_' && it.category !in letterCategories }
 }
 
 internal fun String.quoteIfNeeded() = if (needsQuoting()) "`$this`" else this

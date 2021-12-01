@@ -12,15 +12,7 @@ import org.junit.Test
 
 class NameGenerationTests {
 
-    val df = dataFrameOf("first column", "second column")(3, 5)
-
-    @DataSchema
-    interface DataRecord {
-        @ColumnName("first column")
-        val `first column`: Int
-        @ColumnName("second column")
-        val `second column`: Int
-    }
+    val df = dataFrameOf("first column", "second_column", "____")(3, 5, 7)
 
     @Test
     fun `interface generation`() {
@@ -30,14 +22,23 @@ class NameGenerationTests {
         val expected = """
             @DataSchema(isOpen = false)
             interface DataType {
+            	@ColumnName("____")
+                val `____`: kotlin.Int
             	@ColumnName("first column")
                 val `first column`: kotlin.Int
-            	@ColumnName("second column")
-                val `second column`: kotlin.Int
+                val second_column: kotlin.Int
             }
         """.trimIndent()
 
         code.declarations shouldBe expected
+    }
+
+    @DataSchema
+    interface DataRecord {
+        @ColumnName("first column")
+        val `first column`: Int
+        @ColumnName("second column")
+        val `second column`: Int
     }
 
     @Test
