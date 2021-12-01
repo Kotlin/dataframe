@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.FormattingDSL
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -119,7 +120,7 @@ internal fun AnyFrame.toHtmlData(
         val contents = values.map {
             val value = it[col]
             if (value is AnyFrame) {
-                if (value.ncol() == 0) {
+                if (value.isEmpty()) {
                     HtmlContent("", null)
                 } else {
                     val id = nextTableId()
