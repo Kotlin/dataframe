@@ -13,6 +13,8 @@ public data class ColumnPath(val path: List<String>) : List<String> by path, Col
 
     public fun dropLast(size: Int = 1): ColumnPath = ColumnPath(path.dropLast(size))
 
+    public fun dropFirst(size: Int = 1): ColumnPath = ColumnPath(path.drop(size))
+
     public operator fun plus(name: String): ColumnPath = ColumnPath(path + name)
 
     public operator fun plus(otherPath: ColumnPath): ColumnPath = ColumnPath(path + otherPath)
