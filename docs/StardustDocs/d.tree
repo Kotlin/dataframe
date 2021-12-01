@@ -37,7 +37,7 @@
         <toc-element id="info.md">
             <toc-element id="columnsCount.md"/>
             <toc-element id="rowsCount.md"/>
-            <toc-element id="ndistinct.md"/>
+            <toc-element id="countDistinct.md"/>
             <toc-element id="columnNames.md"/>
             <toc-element id="columnTypes.md"/>
             <toc-element id="head.md"/>

@@ -16,10 +16,16 @@ import kotlin.reflect.KType
  */
 public interface BaseColumn<out T> : ColumnReference<T> {
 
+    // region info
+
     public fun size(): Int
-    public fun ndistinct(): Int
     public fun kind(): ColumnKind
     public fun type(): KType
+    public fun defaultValue(): T?
+
+    // endregion
+
+    // region get
 
     public operator fun get(index: Int): T
     public operator fun get(firstIndex: Int, vararg otherIndices: Int): BaseColumn<T> = get(
@@ -30,27 +36,30 @@ public interface BaseColumn<out T> : ColumnReference<T> {
     )
     public operator fun get(row: AnyRow): T = get(row.index())
 
-    public fun values(): Iterable<T>
-
-    public fun toList(): List<T> = values().asList()
-
-    public fun defaultValue(): T?
-
-    public fun distinct(): BaseColumn<T>
-
     public operator fun get(range: IntRange): BaseColumn<T>
 
     public operator fun get(indices: Iterable<Int>): BaseColumn<T>
 
-    override fun rename(newName: String): BaseColumn<T>
-
     public operator fun get(columnName: String): AnyCol
 
+    // endregion
+
+    // region values
+
+    public fun values(): Iterable<T>
+
+    public fun toList(): List<T> = values().asList()
     public fun toSet(): Set<T>
+
+    public fun distinct(): BaseColumn<T>
+    public fun countDistinct(): Int
+
+    // endregion
+
+    override fun rename(newName: String): BaseColumn<T>
 
     public override operator fun getValue(thisRef: Any?, property: KProperty<*>): BaseColumn<T> = (this as DataColumnInternal<*>).rename(property.columnName).forceResolve() as BaseColumn<T>
 }
 
 internal val <T> BaseColumn<T>.values: Iterable<T> get() = values()
-internal val AnyBaseColumn.ndistinct get() = ndistinct()
 internal val AnyBaseColumn.size: Int get() = size()

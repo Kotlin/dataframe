@@ -116,8 +116,8 @@ class Modify : TestBase() {
             // SampleStart
             df.update { numberCols() }.perCol { mean(skipNA = true) }
         // SampleEnd
-        updated.age.ndistinct() shouldBe 1
-        updated.weight.ndistinct() shouldBe 1
+        updated.age.countDistinct() shouldBe 1
+        updated.weight.countDistinct() shouldBe 1
 
         val means = df.meanFor(skipNA = true) { numberCols() }
         df.update { numberCols() }.perCol(means) shouldBe updated

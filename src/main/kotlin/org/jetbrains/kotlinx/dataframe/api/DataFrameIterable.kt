@@ -164,18 +164,18 @@ public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataF
 
 // endregion
 
-// region ndistinct
+// region distinctCount
 
-public fun AnyFrame.ndistinct(): Int = ndistinct { all() }
+public fun AnyFrame.countDistinct(): Int = countDistinct { all() }
 
-public fun <T, C> DataFrame<T>.ndistinct(columns: ColumnsSelector<T, C>): Int {
+public fun <T, C> DataFrame<T>.countDistinct(columns: ColumnsSelector<T, C>): Int {
     val cols = get(columns)
     return indices.distinctBy { i -> cols.map { it[i] } }.size
 }
 
-public fun <T> DataFrame<T>.ndistinct(vararg columns: String): Int = ndistinct { columns.toColumns() }
-public fun <T, C> DataFrame<T>.ndistinct(vararg columns: KProperty<C>): Int = ndistinct { columns.toColumns() }
-public fun <T> DataFrame<T>.ndistinct(vararg columns: Column): Int = ndistinct { columns.toColumns() }
+public fun <T> DataFrame<T>.countDistinct(vararg columns: String): Int = countDistinct { columns.toColumns() }
+public fun <T, C> DataFrame<T>.countDistinct(vararg columns: KProperty<C>): Int = countDistinct { columns.toColumns() }
+public fun <T> DataFrame<T>.countDistinct(vararg columns: Column): Int = countDistinct { columns.toColumns() }
 
 // endregion
 

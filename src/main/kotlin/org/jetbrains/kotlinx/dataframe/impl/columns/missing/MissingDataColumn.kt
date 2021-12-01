@@ -10,7 +10,7 @@ internal abstract class MissingDataColumn<T> : DataColumnInternal<T> {
 
     override fun type() = throw UnsupportedOperationException()
 
-    override fun ndistinct() = throw UnsupportedOperationException()
+    override fun countDistinct() = throw UnsupportedOperationException()
 
     override fun size() = throw UnsupportedOperationException()
 
