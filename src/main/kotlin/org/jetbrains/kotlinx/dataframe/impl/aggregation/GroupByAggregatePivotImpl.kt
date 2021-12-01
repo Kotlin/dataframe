@@ -28,7 +28,7 @@ internal data class GroupByAggregatePivotImpl<T>(
 
         val childAggregator = aggregator.child()
         aggregatePivot(childAggregator, columns, separate, inward, default, body)
-        return AggregatedPivot(aggregator.df, childAggregator)
+        return AggregatedPivot(aggregator.df, inward, childAggregator)
     }
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all().except(columns.toColumns()) }

@@ -76,4 +76,45 @@ class PivotTests {
         df.pivot("a").values("b", dropNA = true) shouldBe
             dataFrameOf("1" to listOf(1), "2" to listOf(1), "3" to listOf<Int?>(null))[0]
     }
+
+    @Test
+    fun `pivot in aggregate`() {
+        val df = dataFrameOf("a" to listOf(1, 2, 2), "b" to listOf("q", "w", "q"))
+
+        val expected = dataFrameOf("a", "q", "w")(
+            1, 1, 0,
+            2, 1, 1
+        ).group("q", "w").into("b")
+
+        df.groupBy("a").aggregate {
+            pivot("b").count()
+        } shouldBe expected
+
+        df.groupBy("a").aggregate {
+            pivot("b").count() into "c"
+        } shouldBe expected.rename("b" to "c")
+    }
+
+    @Test
+    fun `pivot two in aggregate`() {
+        val df = dataFrameOf("a" to listOf(1, 2, 2), "b" to listOf("q", "w", "q"), "c" to listOf("w", "q", "w"))
+
+        val expected = dataFrameOf(
+            columnOf(1, 2) named "a",
+            columnOf(
+                columnOf(
+                    columnOf(1, 1) named "q",
+                    columnOf(0, 1) named "w"
+                ) named "b",
+                columnOf(
+                    columnOf(1, 1) named "w",
+                    columnOf(0, 1) named "q"
+                ) named "c",
+            ) named "d"
+        )
+
+        df.groupBy("a").aggregate {
+            pivot("b", "c").count() into "d"
+        } shouldBe expected
+    }
 }
