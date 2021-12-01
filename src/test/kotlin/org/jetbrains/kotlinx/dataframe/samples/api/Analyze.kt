@@ -56,8 +56,9 @@ class Analyze : TestBase() {
     @Test
     fun basicInfo() {
         // SampleStart
-        df.nrow()
-        df.ncol()
+        df.count() // same as df.rowsCount()
+        df.indices() // 0 until count()
+        df.columnsCount()
         df.columnNames()
         df.head()
         df.schema()
@@ -587,7 +588,7 @@ class Analyze : TestBase() {
     fun groupByAggregations_properties() {
         // SampleStart
         df.groupBy { city }.aggregate {
-            nrow() into "total"
+            count() into "total"
             count { age > 18 } into "adults"
             median { age } into "median age"
             min { age } into "min age"
@@ -604,7 +605,7 @@ class Analyze : TestBase() {
         val name by columnGroup()
 
         df.groupBy { city }.aggregate {
-            nrow() into "total"
+            count() into "total"
             count { age() > 18 } into "adults"
             median { age } into "median age"
             min { age } into "min age"
@@ -612,7 +613,7 @@ class Analyze : TestBase() {
         }
         // or
         df.groupBy(city).aggregate {
-            nrow() into "total"
+            count() into "total"
             count { age > 18 } into "adults"
             median(age) into "median age"
             min(age) into "min age"
@@ -620,7 +621,7 @@ class Analyze : TestBase() {
         }
         // or
         df.groupBy(city).aggregate {
-            nrow() into "total"
+            count() into "total"
             age().count { it > 18 } into "adults"
             age().median() into "median age"
             age().min() into "min age"
@@ -633,7 +634,7 @@ class Analyze : TestBase() {
     fun groupByAggregations_strings() {
         // SampleStart
         df.groupBy("city").aggregate {
-            nrow() into "total"
+            count() into "total"
             count { "age"<Int>() > 18 } into "adults"
             median("age") into "median age"
             min("age") into "min age"
@@ -641,7 +642,7 @@ class Analyze : TestBase() {
         }
         // or
         df.groupBy("city").aggregate {
-            nrow() into "total"
+            count() into "total"
             count { "age"<Int>() > 18 } into "adults"
             "age"<Int>().median() into "median age"
             "age"<Int>().min() into "min age"

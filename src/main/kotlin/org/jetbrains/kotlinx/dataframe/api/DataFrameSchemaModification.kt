@@ -23,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
 import org.jetbrains.kotlinx.dataframe.kind
+import org.jetbrains.kotlinx.dataframe.nrow
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
@@ -101,7 +102,7 @@ public fun <T> DataFrame<T>.select(columns: Iterable<Column>): DataFrame<T> = se
 public fun <T> DataFrame<T>.addRowNumber(column: ColumnReference<Int>): DataFrame<T> = addRowNumber(column.name())
 
 public fun <T> DataFrame<T>.addRowNumber(columnName: String = "id"): DataFrame<T> =
-    dataFrameOf(columns() + indexColumn(columnName, nrow())).cast()
+    dataFrameOf(columns() + indexColumn(columnName, nrow)).cast()
 
 public fun AnyCol.addRowNumber(columnName: String = "id"): AnyFrame =
     dataFrameOf(listOf(indexColumn(columnName, size), this))

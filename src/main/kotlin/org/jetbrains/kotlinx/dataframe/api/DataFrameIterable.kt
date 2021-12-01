@@ -56,10 +56,10 @@ public fun <T, K, V> DataFrame<T>.associate(transform: RowExpression<T, Pair<K, 
 public fun <T> DataFrame<T>.tail(numRows: Int = 5): DataFrame<T> = takeLast(numRows)
 public fun <T> DataFrame<T>.head(numRows: Int = 5): DataFrame<T> = take(numRows)
 
-public fun <T> DataFrame<T>.shuffle(): DataFrame<T> = getRows((0 until nrow()).shuffled())
+public fun <T> DataFrame<T>.shuffle(): DataFrame<T> = getRows(indices.shuffled())
 
 public fun <T> DataFrame<T>.chunked(size: Int): FrameColumn<T> {
-    val startIndices = (0 until nrow() step size)
+    val startIndices = (0 until nrow step size)
     return DataColumn.createFrameColumn("", this, startIndices)
 }
 
@@ -124,9 +124,9 @@ public fun <T> DataFrame<T>.filterBy(column: KProperty<Boolean>): DataFrame<T> =
 
 // region take/drop
 
-public fun <T> DataFrame<T>.dropLast(numRows: Int = 1): DataFrame<T> = take(nrow() - numRows)
-public fun <T> DataFrame<T>.takeLast(numRows: Int): DataFrame<T> = drop(nrow() - numRows)
-public fun <T> DataFrame<T>.drop(numRows: Int): DataFrame<T> = getRows(numRows until nrow())
+public fun <T> DataFrame<T>.dropLast(numRows: Int = 1): DataFrame<T> = take(nrow - numRows)
+public fun <T> DataFrame<T>.takeLast(numRows: Int): DataFrame<T> = drop(nrow - numRows)
+public fun <T> DataFrame<T>.drop(numRows: Int): DataFrame<T> = getRows(numRows until nrow)
 public fun <T> DataFrame<T>.take(numRows: Int): DataFrame<T> = getRows(0 until numRows)
 public fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter { !predicate(it, it) }
 

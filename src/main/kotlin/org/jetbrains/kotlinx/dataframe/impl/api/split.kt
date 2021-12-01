@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.impl.ColumnDataCollector
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
+import org.jetbrains.kotlinx.dataframe.nrow
 
 internal fun valueToList(value: Any?, splitStrings: Boolean = true): List<Any?> = when (value) {
     null -> emptyList()
@@ -20,7 +21,7 @@ internal fun <T, C, R> splitImpl(
     clause: SplitWithTransform<T, C, R>,
     columnNamesGenerator: ColumnWithPath<C>.(Int) -> List<String>
 ): DataFrame<T> {
-    val nrow = clause.df.nrow()
+    val nrow = clause.df.nrow
 
     val removeResult = clause.df.removeImpl(columns = clause.columns)
     val nameGenerator = removeResult.df.nameGenerator()

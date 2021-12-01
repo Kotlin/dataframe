@@ -27,6 +27,8 @@ import org.jetbrains.kotlinx.dataframe.impl.api.GroupedDataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.pathOf
 import org.jetbrains.kotlinx.dataframe.values
 
@@ -54,7 +56,7 @@ internal class GroupByImpl<T, G>(
     override fun <R> aggregateInternal(body: AggregateBodyInternal<G, R>) = aggregate(body as AggregateGroupedBody<G, R>)
 
     override fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G> {
-        val indices = (0 until df.nrow()).filter {
+        val indices = (0 until df.nrow).filter {
             val row = GroupedDataRowImpl(df.get(it), groups)
             predicate(row, row)
         }
@@ -74,7 +76,7 @@ internal fun <T, G, R> aggregateGroupBy(
 
     val removed = df.removeImpl(columns = selector)
 
-    val hasKeyColumns = removed.df.ncol() > 0
+    val hasKeyColumns = removed.df.ncol > 0
 
     val groupedFrame = column.values.map {
         if (it == null) null

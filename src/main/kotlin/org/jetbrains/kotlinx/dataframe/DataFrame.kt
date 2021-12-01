@@ -32,7 +32,7 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     public fun columnTypes(): List<KType>
 
-    override fun ncol(): Int
+    override fun columnsCount(): Int
 
     public fun indices(): IntRange = 0 until nrow
 
@@ -68,14 +68,14 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     public operator fun get(index: Int): DataRow<T> = DataRowImpl(index, this)
 
-    public fun nrow(): Int
+    public fun rowsCount(): Int
     public fun rows(): Iterable<DataRow<T>>
     public fun rowsReversed(): Iterable<DataRow<T>>
 }
 
-internal val AnyFrame.ncol get() = ncol()
-internal val AnyFrame.nrow get() = nrow()
+internal val ColumnsContainer<*>.ncol get() = columnsCount()
+internal val AnyFrame.nrow get() = rowsCount()
 internal val AnyFrame.indices get() = indices()
-internal val AnyFrame.size: DataFrameSize get() = DataFrameSize(ncol(), nrow())
+internal val AnyFrame.size: DataFrameSize get() = size()
 
-public fun AnyFrame.size(): DataFrameSize = DataFrameSize(ncol(), nrow())
+public fun AnyFrame.size(): DataFrameSize = DataFrameSize(ncol, nrow)

@@ -21,6 +21,8 @@ import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.getType
+import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 
 class PlaylistJsonTest {
@@ -165,22 +167,22 @@ class PlaylistJsonTest {
 
     @Test
     fun `select group`() {
-        item.select { snippet.thumbnails.default }.ncol() shouldBe 1
-        item.select { snippet.thumbnails.default.all() }.ncol() shouldBe 3
+        item.select { snippet.thumbnails.default }.ncol shouldBe 1
+        item.select { snippet.thumbnails.default.all() }.ncol shouldBe 3
     }
 
     @Test
     fun `deep remove`() {
         val item2 = item.remove { snippet.thumbnails.default and snippet.thumbnails.maxres and snippet.channelId and etag }
-        item2.ncol() shouldBe item.ncol() - 1
-        item2.snippet.ncol() shouldBe item.snippet.ncol() - 1
-        item2.snippet.thumbnails.ncol() shouldBe item.snippet.thumbnails.ncol() - 2
+        item2.ncol shouldBe item.ncol - 1
+        item2.snippet.ncol shouldBe item.snippet.ncol - 1
+        item2.snippet.thumbnails.ncol shouldBe item.snippet.thumbnails.ncol - 2
     }
 
     @Test
     fun `remove all from group`() {
         val item2 = item.remove { snippet.thumbnails.default and snippet.thumbnails.maxres and snippet.thumbnails.medium and snippet.thumbnails.high and snippet.thumbnails.standard }
-        item2.snippet.ncol() shouldBe item.snippet.ncol() - 1
+        item2.snippet.ncol shouldBe item.snippet.ncol - 1
         item2.snippet.getColumnGroupOrNull("thumbnails") shouldBe null
     }
 
@@ -188,16 +190,16 @@ class PlaylistJsonTest {
     fun `deep move with rename`() {
         val moved = item.move { snippet.thumbnails.default }.into { snippet.path() + "movedDefault" }
         moved.snippet.thumbnails.columnNames() shouldBe item.snippet.thumbnails.remove { default }.columnNames()
-        moved.snippet.ncol() shouldBe item.snippet.ncol() + 1
-        (moved.snippet["movedDefault"] as ColumnGroup<*>).ncol() shouldBe item.snippet.thumbnails.default.ncol()
+        moved.snippet.ncol shouldBe item.snippet.ncol + 1
+        (moved.snippet["movedDefault"] as ColumnGroup<*>).ncol shouldBe item.snippet.thumbnails.default.ncol
     }
 
     @Test
     fun `union`() {
         val merged = item.concat(item)
-        merged.nrow() shouldBe item.nrow() * 2
+        merged.nrow shouldBe item.nrow * 2
         val group = merged.snippet
-        group.nrow() shouldBe item.snippet.nrow() * 2
+        group.nrow shouldBe item.snippet.nrow * 2
         group.columnNames() shouldBe item.snippet.columnNames()
     }
 
@@ -216,7 +218,7 @@ class PlaylistJsonTest {
             minBy { snippet.publishedAt }.snippet into "earliest"
         }
 
-        res.ncol() shouldBe typed.ncol() + 1
+        res.ncol shouldBe typed.ncol + 1
         res.getColumnIndex("earliest") shouldBe typed.getColumnIndex("items") + 1
 
         val expected = typed.items.map { it.snippet.minBy { publishedAt } }.toList()

@@ -24,6 +24,8 @@ import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.kind
+import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 
@@ -302,7 +304,7 @@ class Create : TestBase() {
         val df = dataFrameOf(names, values)
         // SampleEnd
         df.columnNames() shouldBe listOf("name", "age")
-        df.nrow() shouldBe 3
+        df.nrow shouldBe 3
         df["name"].type() shouldBe getType<String>()
         df["age"].type() shouldBe getType<Int>()
     }
@@ -315,8 +317,8 @@ class Create : TestBase() {
 
         val df = persons.convertToDataFrame()
         // SampleEnd
-        df.ncol() shouldBe 2
-        df.nrow() shouldBe 3
+        df.ncol shouldBe 2
+        df.nrow shouldBe 3
         df["name"].type() shouldBe getType<String>()
         df["age"].type() shouldBe getType<Int>()
     }
@@ -335,8 +337,8 @@ class Create : TestBase() {
 
         val df = students.convertToDataFrame(depth = 2)
         // SampleEnd
-        df.ncol() shouldBe 3
-        df.nrow() shouldBe 2
+        df.ncol shouldBe 3
+        df.nrow shouldBe 2
         df["name"].kind shouldBe ColumnKind.Group
         df["name"]["firstName"].type() shouldBe getType<String>()
         df["scores"].kind shouldBe ColumnKind.Frame
@@ -371,8 +373,8 @@ class Create : TestBase() {
             }
         }
         // SampleEnd
-        df.ncol() shouldBe 5
-        df.nrow() shouldBe 2
+        df.ncol shouldBe 5
+        df.nrow shouldBe 2
         df["name"].kind shouldBe ColumnKind.Value
         df["name"].type shouldBe getType<Name>()
         df["scores"].kind shouldBe ColumnKind.Frame

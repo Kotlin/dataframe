@@ -15,9 +15,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.math.stdMean
+import org.jetbrains.kotlinx.dataframe.nrow
 
 internal fun <T, C, R> Corr<T, C>.corrImpl(otherColumns: ColumnsSelector<T, R>): DataFrame<T> {
-    val len = df.nrow()
+    val len = df.nrow
 
     fun <P> List<ColumnWithPath<P>>.unpackColumnGroups() = flatMap {
         // extract nested number columns from ColumnGroups
