@@ -46,9 +46,4 @@ class AnimalsTests {
         mean[age] shouldBe Double.NaN
         (mean[visits.name()] as Double).isNaN() shouldBe true
     }
-
-    @Test
-    fun `mean`() {
-        df.pivot(inward = false) { visits }.groupBy { animal }.mean(skipNA = true) { age }.print()
-    }
 }
