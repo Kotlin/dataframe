@@ -8,12 +8,12 @@ Kotlin DataFrame is a library for in-memory data manipulation
 * Supports hierarchical data layouts
 * Reads CSV and JSON
 * Tracks column nullability
-* Provides statically typed API via [code generation](docs/schemas.md)
+* Provides statically typed API via [code generation](https://kotlin.github.io/dataframe/overview.html)
 * Integrates with [Kotlin kernel for Jupyter](https://github.com/Kotlin/kotlin-jupyter)
 
 Inspired by [krangl](https://github.com/holgerbrandl/krangl) and [pandas](https://pandas.pydata.org/)
 
-See [API reference](docs/reference.md) for a list of  supported operations 
+Explore [**documentation**](https://kotlin.github.io/dataframe/overview.html) for details.
 
 ## Setup
 
@@ -30,93 +30,85 @@ dependencies {
 
 Install [Kotlin kernel](https://github.com/Kotlin/kotlin-jupyter) for [Jupyter](https://jupyter.org/)
 
-Import latest stable `dataframe` version into notebook: 
+Import stable `dataframe` version into notebook: 
 ```
 %use dataframe
 ```
-or specific versoin:
+or specific version:
 ```
 %use dataframe(<version>)
 ```
-## Key entities
-* `DataColumn` is a named list of values
-* `DataFrame` consists of `DataColumns` with unique names and equal size
-* `DataRow` is a single row of `DataFrame` and provides a single value for every `DataColumn`
-* `DataFrame` can be optionally typed by `DataSchema` to provide typed data access via extension properties  
-* [`DataSchema`](docs/schemas.md) is an interface that describes a single row of `DataFrame`
 
-## Data access
+## Sample
 
-DataFrame comes with three levels of API for data access
+**Create dataframe:**
+```kotlin
+// create columns
+val From_To by columnOf("LoNDon_paris", "MAdrid_miLAN", "londON_StockhOlm", "Budapest_PaRis", "Brussels_londOn")
+val FlightNumber by columnOf(10045.0, Double.NaN, 10065.0, Double.NaN, 10085.0)
+val RecentDelays by columnOf("23,47", null, "24, 43, 87", "13", "67, 32")
+val Airline by columnOf("KLM(!)", "{Air France} (12)", "(British Airways. )", "12. Air France", "'Swiss Air'")
 
-### Strings
+// create dataframe
+val d1 = dataFrameOf(From_To, FlightNumber, RecentDelays, Airline)
+```
 
-String column names are the easiest way to access data in DataFrame: 
+**Clean:**
 ```kotlin
-val df = DataFrame.read("titanic.csv")
-df.filter { it["survived"] as Boolean }.groupBy("city").max("age")
-```
-or using `invoke` operator:
-```kotlin
-df.filter { "survived"<Boolean>() }.groupBy("city").max("age")
-```
-### Column Accessors
-For frequently accessed columns type casting can be reduced by `ColumnAccessors`:
-```kotlin
-val survived by column<Boolean>() // accessor for Boolean column with name 'survived'
-val home by column<String>()
-val age by column<Int?>()
-```
-Now columns can be accessed in a type-safe way:
-```kotlin
-df.filter { it[survived] && it[home].endsWith("NY") && it[age] in 10..20 }
-```
-or just using `invoke` operator at column accessors:
-```kotlin
-df.filter { survived() && home().endsWith("NY") && age() in 10..20 }
-```
-### Extension properties
-When DataFrame is used within Jupyter Notebooks with [Kotlin Kernel](https://github.com/Kotlin/kotlin-jupyter) there is even more type safe way to access data. 
-After every REPL line execution all new global variables of type `DataFrame` are analyzed and replaced with typed `DataFrame` wrapper with auto-generated extension properties 
-for data access:
-```kotlin
-val df = DataFrame.read("titanic.csv")
-```
-Now data can be accessed by `.` member accessor
-```kotlin
-df.filter { it.survived && it.home.endsWith("NY") && it.age in 10..20 }
-```
-`it` can be omitted:    
-```kotlin
-df.filter { survived && home.endsWith("NY") && age in 10..20 }
-```
-Extension properties are generated for `DataSchema` that is extracted from `DataFrame` instance after REPL line execution.
-After that `DataFrame` variable is typed with its own `DataSchema`, so only valid extension properties corresponding 
-to actual columns in `DataFrame` will be allowed by compiler and suggested by completion.
+// column accessors for columns
+// that will appear during 
+// dataframe transformation
+val From by column<String>()
+val To by column<String>()
 
-[Learn more about data schemas and code generation](docs/schemas.md)
-### Nullability
-DataFrame distinguishes between nullable and non-nullable columns in compliance with [Kotlin null safety](https://kotlinlang.org/docs/null-safety.html).
-If `DataColumn` actually contains `null` values, it's `type` is marked nullable
+// preprocess dataframe
+val d2 = d1
+    // fill missing flight numbers
+    .fillNA { FlightNumber }.with { prev()!!.FlightNumber + 10 }
 
-Example in Jupyter: 
-```kotlin
-val df = dataFrameOf("name", "age")(
-    "Alice", 20,
-    "Bob", null)
+    // convert flight numbers to int
+    .convert { FlightNumber }.toInt()
+
+    // clean 'Airline' column
+    .update { Airline }.with { "([a-zA-Z\\s]+)".toRegex().find(it)?.value ?: "" }
+
+    // split 'From_To' column into 'From' and 'To'
+    .split { From_To }.by("_").into(From, To)
+
+    // clean 'From' and 'To' columns
+    .update { From and To }.with { it.lowercase().replaceFirstChar(Char::uppercase) }
+
+    // split lists of delays in 'RecentDelays' into separate columns 
+    // 'delay1', 'delay2'... and nest them inside original column `RecentDelays`
+    .split { RecentDelays }.inward { "delay$it" }
+
+    // convert string values in `delay1`, `delay2` into ints
+    .parse { RecentDelays }
 ```
-Typed wrapper for `df`  is generated: `age` is nullable
+
+**Aggregate into report:**
 ```kotlin
-df.filter { age > 10 } // compilation error
+// group by flight origin
+val d3 = d2.groupBy { From into "origin" }.aggregate {
+    
+    // number of flights
+    count() into "count"
+    
+    // list of flight numbers
+    FlightNumber into "flight numbers"
+    
+    // count of flights per airline
+    Airline.valueCounts() into "airlines"
+
+    // max delay across all delays in `delay1` and `delay2`
+    RecentDelays.maxOrNull { delay1 and delay2 } into "major delay"
+
+    // separate lists of recent delays for `delay1`, `delay2` etc.
+    RecentDelays.implode(dropNulls = true) into "recent delays"
+    
+    // total delay per city of destination
+    pivot { To }.sum { RecentDelays.intCols() } into "total delays to"
+}
 ```
-```kotlin
-df.filter { age != null && age!! > 10 } // ok
-df.filter { age?.let { it > 10 } ?: false } // ok
-```
-```kotlin
-val cleaned = df.filter { age != null }
-```
-Typed wrapper for `cleaned` is generated: `age` is not nullable
-```kotlin
-cleaned.filter { age > 10 } // ok
-```
+
+Find more samples [here](examples) 
