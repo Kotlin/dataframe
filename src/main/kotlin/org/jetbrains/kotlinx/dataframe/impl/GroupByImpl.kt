@@ -40,7 +40,7 @@ internal class GroupByImpl<T, G>(
 
     override val keys by lazy { df - groups }
 
-    override fun <R> mapGroups(transform: Selector<DataFrame<G>, DataFrame<R>>) =
+    override fun <R> updateGroups(transform: Selector<DataFrame<G>, DataFrame<R>>) =
         df.convert(groups) { transform(it, it) }.asGroupBy(groups.name()) as GroupBy<T, R>
 
     override fun toDataFrame(groupedColumnName: String?) = if (groupedColumnName == null || groupedColumnName == groups.name()) df else df.rename(groups).into(groupedColumnName)
