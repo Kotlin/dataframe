@@ -25,14 +25,14 @@ By default, `DataFrame` uses `name` and `returnType` of `KProperty` for typed ac
 
 ```kotlin
 data class Passenger(
-@ColumnName("survived") val isAlive: Boolean,
-@ColumnName("home") val city: String,
-val name: String
+    @ColumnName("survived") val isAlive: Boolean,
+    @ColumnName("home") val city: String,
+    val name: String
 )
 
-        val passengers = DataFrame.read("titanic.csv")
-            .filter { it[Passenger::city].endsWith("NY") }
-            .toListOf<Passenger>()
+val passengers = DataFrame.read("titanic.csv")
+    .filter { it.get(Passenger::city).endsWith("NY") }
+    .toListOf<Passenger>()
 ```
 
 <!---END-->
