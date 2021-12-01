@@ -74,11 +74,11 @@ By default, plugin will generate output in specified source set. Source set coul
 dataframes {
     packageName = "org.example"
     sourceSet = "test"
-    // output: src/test/kotlin/org/example/Data.kt
+    // output: src/test/kotlin/org/example/Data.Generated.kt
     schema {
         data = file("path/to/data.csv")
     }
-    // output: src/integrationTest/kotlin/org/example/Data.kt
+    // output: src/integrationTest/kotlin/org/example/Data.Generated.kt
     schema {
         sourceSet = "integrationTest"
         data = file("path/to/data.csv")
