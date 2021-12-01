@@ -17,6 +17,6 @@ class ImplodeTests {
     @Test
     fun `implode all`() {
         val df = dataFrameOf("a" to listOf(1, 1), "b" to listOf(2, 3))
-        df.implode() shouldBe df.implode { all() }
+        df.implode() shouldBe df.implode { all() }[0]
     }
 }
