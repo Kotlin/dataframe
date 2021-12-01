@@ -27,9 +27,9 @@ dataframes {
 In the best scenario, your schema could be defined as simple as this:
 ```kotlin
 dataframes {
-    // output: src/main/kotlin/org/example/dataframe/Securities.Generated.kt
+    // output: src/main/kotlin/org/example/dataframe/Jetbrains_repositories.Generated.kt
     schema {
-        data = "https://raw.githubusercontent.com/Kotlin/dataframe/1765966904c5920154a4a480aa1fcff23324f477/data/securities.csv"
+        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
     }
 }
 ```
@@ -38,7 +38,7 @@ In this case output path will depend on your directory structure. For project wi
 ```kotlin
 schema {
     // output: src/main/kotlin/org/example/dataframe/MyName.Generated.kt
-    data = "https://raw.githubusercontent.com/Kotlin/dataframe/1765966904c5920154a4a480aa1fcff23324f477/data/securities.csv"
+    data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
     name = "MyName"
 }
 ```
@@ -90,7 +90,7 @@ But if you need generated files in other directory, set `src`:
 dataframes {
     // output: schemas/org/example/test/OtherName.Generated.kt
     schema {
-        data = "https://raw.githubusercontent.com/Kotlin/dataframe/1765966904c5920154a4a480aa1fcff23324f477/data/securities.csv"
+        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
         name = "org.example.test.OtherName"
         src = file("schemas")
     }
