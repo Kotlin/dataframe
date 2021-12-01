@@ -252,7 +252,11 @@ public fun <T> Split<T, String>.inward(
 
 public fun <T, C : AnyFrame> Split<T, C>.intoColumns(): DataFrame<T> {
     return df.convert(columns).with {
-        it?.implode { all() }?.get(0)
+        when {
+            it == null -> null
+            it.isEmpty() -> DataRow.empty
+            else -> it.implode { all() }.single()
+        }
     }
 }
 
