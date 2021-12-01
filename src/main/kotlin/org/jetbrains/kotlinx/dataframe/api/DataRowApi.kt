@@ -9,6 +9,8 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KType
@@ -38,7 +40,7 @@ public fun <T> DataRow<T>.diff(expression: RowExpression<T, Long>): Long? = prev
 
 public fun <T> DataRow<T>.diff(expression: RowExpression<T, Float>): Float? = prev()?.let { p -> expression(this, this) - expression(p, p) }
 
-public fun AnyRow.ncol(): Int = df().ncol()
+public fun AnyRow.columnsCount(): Int = df().ncol
 public fun AnyRow.columnNames(): List<String> = df().columnNames()
 public fun AnyRow.columnTypes(): List<KType> = df().columnTypes()
 
@@ -46,7 +48,7 @@ public fun <T> DataRow<T>.getRow(index: Int): DataRow<T> = getRowOrNull(index)!!
 
 public fun <T> DataRow<T>.getRowOrNull(index: Int): DataRow<T>? {
     val df = df()
-    return if (index >= 0 && index < df.nrow()) df[index] else null
+    return if (index >= 0 && index < df.nrow) df[index] else null
 }
 
 public fun <T> DataRow<T>.prev(): DataRow<T>? {
@@ -57,7 +59,7 @@ public fun <T> DataRow<T>.prev(): DataRow<T>? {
 public fun <T> DataRow<T>.next(): DataRow<T>? {
     val index = index()
     val df = df()
-    return if (index < df.nrow() - 1) df[index + 1] else null
+    return if (index < df.nrow - 1) df[index + 1] else null
 }
 
 public fun <T> DataRow<T>.rows(absoluteIndices: Iterable<Int>): Sequence<DataRow<T>> =

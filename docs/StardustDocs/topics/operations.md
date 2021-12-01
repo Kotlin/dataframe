@@ -35,7 +35,8 @@ Multiplex operations usually end with `into` or `with` function. The following n
 
 * [add](add.md) — add columns
 * [append](append.md) — add rows
-* [columns](columns.md) / [columnNames](columnNames.md) / [columnTypes](columnTypes.md) — get list of columns, column names or column types
+* [columns](columns.md) / [columnNames](columnNames.md) / [columnTypes](columnTypes.md) — get list of top-level columns, column names or column types
+* [columnsCount](columnsCount.md) — number of top-level columns
 * [concat](concat.md) — union rows from several dataframes
 * [convert](convert.md) — change column values and/or column types
 * [corr](corr.md) — pairwise correlation of columns
@@ -66,15 +67,14 @@ Multiplex operations usually end with `into` or `with` function. The following n
 * [merge](merge.md) — merge several columns into one
 * [min](minmax.md) / [minBy](minmax.md) / [minOf](minmax.md) / [minFor](minmax.md) — min of values
 * [move](move.md) — move columns or change column groupings
-* [ncol](ncol.md) — number of columns
 * [ndistinct](ndistinct.md) — number of unique rows 
-* [nrow](nrow.md) — total number of rows
 * [parse](parse.md) — try to convert `String` values into other types
 * [pivot](pivot.md) / [pivotCounts](pivot.md#pivotcounts) / [pivotMatches](pivot.md#pivotmatches) — convert column values into new columns
 * [remove](remove.md) — remove columns
 * [rename](rename.md) — rename columns
 * [replace](replace.md) — replace columns
 * [rows](rows.md) / [rowsReversed](rows.md#rowsreversed) - get rows in direct or reversed order
+* [rowsCount](rowsCount.md) — number of rows
 * [schema](schema.md) — schema of column hierarchy
 * [select](select.md) — select subset of columns
 * [shuffle](shuffle.md) — reorder rows randomly 

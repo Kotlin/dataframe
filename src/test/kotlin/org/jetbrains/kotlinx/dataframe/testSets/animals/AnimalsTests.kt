@@ -11,6 +11,8 @@ import org.jetbrains.kotlinx.dataframe.api.withValue
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.getType
+import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 
 class AnimalsTests {
@@ -30,8 +32,8 @@ class AnimalsTests {
     @Test
     fun `mean transpose`() {
         val mean = df.mean().transpose()
-        mean.ncol() shouldBe 2
-        mean.nrow() shouldBe 2
+        mean.ncol shouldBe 2
+        mean.nrow shouldBe 2
         mean.name.values() shouldBe listOf("age", "visits")
         mean.value.type() shouldBe getType<Double>()
     }

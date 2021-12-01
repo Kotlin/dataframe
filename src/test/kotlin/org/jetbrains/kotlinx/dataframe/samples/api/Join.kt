@@ -17,6 +17,8 @@ import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 
 class Join : TestBase() {
@@ -64,8 +66,8 @@ class Join : TestBase() {
             // SampleStart
             df.join(other) { name match right.fullName }
         // SampleEnd
-        joined.nrow() shouldBe df.nrow()
-        joined.ncol() shouldBe df.ncol() + 2
+        joined.nrow shouldBe df.nrow
+        joined.ncol shouldBe df.ncol + 2
     }
 
     @Test

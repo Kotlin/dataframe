@@ -14,6 +14,8 @@ import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.kind
+import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -135,8 +137,8 @@ class GatherTests {
 
         fun AnyFrame.check() {
             this["value"].kind shouldBe ColumnKind.Group
-            ncol() shouldBe 2
-            nrow() shouldBe 3
+            ncol shouldBe 2
+            nrow shouldBe 3
         }
 
         df.gather { languages }.into("key", "value").check()
@@ -161,11 +163,11 @@ class GatherTests {
         val b by columnOf(3, 4)
 
         var df = dataFrameOf(a, b).gather { a and b }.valuesInto("data")
-        df.ncol() shouldBe 1
+        df.ncol shouldBe 1
         df["data"].values() shouldBe listOf(1, 3, 2, 4)
 
         df = dataFrameOf(a, b).gather { a and b }.where { it % 2 == 1 }.valuesInto("data")
-        df.ncol() shouldBe 1
+        df.ncol shouldBe 1
         df["data"].values() shouldBe listOf(1, 3)
     }
 

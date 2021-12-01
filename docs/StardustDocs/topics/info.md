@@ -3,8 +3,8 @@
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
 General information about `DataFrame`:
-* [`nrow()`](nrow.md) - number of rows
-* [`ncol()`](ncol.md) - number of columns
+* [`rowsCount()`](rowsCount.md) - number of rows
+* [`columnsCount()`](columnsCount.md) - number of columns
 * [`ndistinct()`](ndistinct.md) - number of distinct columns
 * [`columnNames()`](columnNames.md) - list of column names
 * [`columnTypes()`](columnTypes.md) - list of column types

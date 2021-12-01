@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.impl.truncate
 import org.jetbrains.kotlinx.dataframe.jupyter.CellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.name
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
@@ -194,8 +195,8 @@ public fun <T> DataFrame<T>.toHTML(
     val limit = configuration.rowsLimit
 
     val footer = getFooter(this)
-    val bodyFooter = if (limit < nrow()) {
-        "<p>... showing only top $limit of ${nrow()} rows</p><p>$footer</p>"
+    val bodyFooter = if (limit < nrow) {
+        "<p>... showing only top $limit of $nrow rows</p><p>$footer</p>"
     } else "<p>$footer</p>"
 
     val tableHtml = toHtmlData(configuration, cellRenderer)

@@ -17,7 +17,7 @@ import kotlin.reflect.KProperty
 public interface ColumnsContainer<out T> {
 
     public fun columns(): List<AnyCol>
-    public fun ncol(): Int
+    public fun columnsCount(): Int
 
     // region getColumnOrNull
 

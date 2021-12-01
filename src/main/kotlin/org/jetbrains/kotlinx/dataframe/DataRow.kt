@@ -33,7 +33,7 @@ public interface DataRow<out T> {
     // endregion
 
     public fun <T> read(name: String): T = get(name) as T
-    public fun size(): Int = owner.ncol()
+    public fun size(): Int = owner.ncol
     public fun values(): List<Any?>
 
     public operator fun String.get(vararg path: String): ColumnPath = ColumnPath(listOf(this) + path)

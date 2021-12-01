@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.getType
+import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 
 class CreateDataFrameTests {
@@ -27,8 +29,8 @@ class CreateDataFrameTests {
         }
 
         val df = listOf(Data()).convertToDataFrame()
-        df.ncol() shouldBe 2
-        df.nrow() shouldBe 1
+        df.ncol shouldBe 2
+        df.nrow shouldBe 1
         df.columnTypes() shouldBe listOf(getType<IllegalStateException>(), getType<Int>())
         (df["a"][0] is IllegalStateException) shouldBe true
         df["b"][0] shouldBe 1
