@@ -14,15 +14,9 @@ import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
-import org.junit.Ignore
 import org.junit.Test
 
 class ReadTests {
-
-    @Test
-    fun ghost() {
-        DataFrame.read("data/ghost.json")
-    }
 
     @Test
     fun readJsonNulls() {
@@ -48,9 +42,9 @@ class ReadTests {
         val df = DataFrame.readJsonStr(data)
         df.nrow() shouldBe 3
         val a = df["a"].asFrameColumn()
-        a[1]!!.nrow shouldBe 0
-        a[0]!!.nrow shouldBe 1
-        a[2]!!.nrow shouldBe 1
+        a[1].nrow shouldBe 0
+        a[0].nrow shouldBe 1
+        a[2].nrow shouldBe 1
         val schema = a.schema.value
         schema.columns.size shouldBe 1
         val schema2 = schema.columns["b"] as ColumnSchema.Frame
@@ -79,15 +73,6 @@ class ReadTests {
         """.trimIndent()
         val df = DataFrame.readJsonStr(data)
         println(df.getColumn("array").cast<List<Number>>()[0][1].javaClass)
-    }
-
-    @Test
-    @Ignore
-    fun `http error`() {
-        val url = "https://api.binance.com/api/v3/klines?symbol=BTCUSDT"
-        val df = dataFrame(url)
-        df.nrow() shouldBe 1
-        df.columnNames() shouldBe listOf("code", "msg")
     }
 
     @Test
