@@ -39,9 +39,9 @@ or specific version:
 %use dataframe(<version>)
 ```
 
-## Sample
+## Example
 
-**Create dataframe:**
+**Create:**
 ```kotlin
 // create columns
 val From_To by columnOf("LoNDon_paris", "MAdrid_miLAN", "londON_StockhOlm", "Budapest_PaRis", "Brussels_londOn")
@@ -86,7 +86,7 @@ val d2 = d1
     .parse { RecentDelays }
 ```
 
-**Aggregate into report:**
+**Aggregate:**
 ```kotlin
 // group by flight origin
 val d3 = d2.groupBy { From into "origin" }.aggregate {
@@ -111,4 +111,4 @@ val d3 = d2.groupBy { From into "origin" }.aggregate {
 }
 ```
 
-Find more samples [here](examples) 
+Find more examples [here](examples) 
