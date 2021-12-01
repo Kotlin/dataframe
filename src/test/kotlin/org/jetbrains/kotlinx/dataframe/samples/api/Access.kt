@@ -587,32 +587,32 @@ class Access : TestBase() {
     }
 
     @Test
-    fun ndistinct_properties() {
+    fun countDistinct() {
         // SampleStart
-        df.ndistinct()
+        df.countDistinct()
         // SampleEnd
     }
 
     @Test
-    fun ndistinctColumns_properties() {
+    fun countDistinctColumns_properties() {
         // SampleStart
-        df.ndistinct { age and name }
+        df.countDistinct { age and name }
         // SampleEnd
     }
 
     @Test
-    fun ndistinctColumns_accessors() {
+    fun countDistinctColumns_accessors() {
         // SampleStart
         val age by column<Int>()
         val name by columnGroup()
-        df.ndistinct { age and name }
+        df.countDistinct { age and name }
         // SampleEnd
     }
 
     @Test
-    fun ndistinctColumns_strings() {
+    fun countDistinctColumns_strings() {
         // SampleStart
-        df.ndistinct("age", "name")
+        df.countDistinct("age", "name")
         // SampleEnd
     }
 

@@ -40,13 +40,15 @@ Multiplex operations usually end with `into` or `with` function. The following n
 * [concat](concat.md) — union rows from several dataframes
 * [convert](convert.md) — change column values and/or column types
 * [corr](corr.md) — pairwise correlation of columns
+* [count](count.md) — number of rows that match condition 
+* [countDistinct](countDistinct.md) — number of unique rows
 * [cumSum](cumSum.md) — cumulative sum of column values
 * [describe](describe.md) — basic column statistics
 * [distinct](distinct.md) / [distinctBy](distinct.md#distinctby) — remove duplicated rows
 * [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) — remove rows by condition
 * [explode](explode.md) — spread lists and dataframes vertically into new rows
 * [fillNulls](fill.md#fillnulls) / [fillNaNs](fill.md#fillnans) / [fillNA](fill.md#fillna) — replace missing values
-* [filter](filter.md) / [filterBy](filter.md#filterby) — filter rows
+* [filter](filter.md) / [filterBy](filter.md#filterby) — filter rows by condition
 * [first](first.md) / [firstOrNull](first.md#firstornull) — find first row by condition
 * [flatten](flatten.md) — remove column groupings recursively
 * [forEachRow](iterate.md) / [forEachColumn](iterate.md) — iterate over rows or columns
@@ -67,7 +69,6 @@ Multiplex operations usually end with `into` or `with` function. The following n
 * [merge](merge.md) — merge several columns into one
 * [min](minmax.md) / [minBy](minmax.md) / [minOf](minmax.md) / [minFor](minmax.md) — min of values
 * [move](move.md) — move columns or change column groupings
-* [ndistinct](ndistinct.md) — number of unique rows 
 * [parse](parse.md) — try to convert `String` values into other types
 * [pivot](pivot.md) / [pivotCounts](pivot.md#pivotcounts) / [pivotMatches](pivot.md#pivotmatches) — convert column values into new columns
 * [remove](remove.md) — remove columns

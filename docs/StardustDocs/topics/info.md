@@ -3,9 +3,9 @@
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
 General information about `DataFrame`:
-* [`rowsCount()`](rowsCount.md) - number of rows
+* [`count`](count.md) / [`rowsCount()`](rowsCount.md) - number of rows
+* [`countDistinct()`](countDistinct.md) - number of distinct rows
 * [`columnsCount()`](columnsCount.md) - number of columns
-* [`ndistinct()`](ndistinct.md) - number of distinct columns
 * [`columnNames()`](columnNames.md) - list of column names
 * [`columnTypes()`](columnTypes.md) - list of column types
 * [`head(n)`](head.md) - first n rows (default 5)
