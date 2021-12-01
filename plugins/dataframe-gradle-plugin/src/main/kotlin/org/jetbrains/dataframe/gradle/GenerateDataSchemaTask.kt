@@ -52,8 +52,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @TaskAction
     fun generate() {
         val df = readDataFrame(data.get(), csvOptions.get())
-        println(csvOptions.get().delimiter)
-        val codeGenerator = CodeGenerator.create()
+        val codeGenerator = CodeGenerator.create(useFqNames = false)
         val codeGenResult = codeGenerator.generate(
             schema = df.schema(),
             name = interfaceName.get(),
