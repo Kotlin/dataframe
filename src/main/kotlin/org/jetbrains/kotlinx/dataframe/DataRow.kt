@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.api.next
 import org.jetbrains.kotlinx.dataframe.api.prev
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.impl.toIterable
 import kotlin.reflect.KProperty
@@ -21,7 +22,7 @@ public interface DataRow<out T> {
     public operator fun <R> get(expression: RowExpression<T, R>): R = expression(this, this)
     public operator fun <R> get(column: ColumnReference<R>): R
     public operator fun <R> get(columns: List<ColumnReference<R>>): List<R> = columns.map { get(it) }
-    public operator fun <R> get(property: KProperty<R>): R = get(property.name) as R
+    public operator fun <R> get(property: KProperty<R>): R = get(property.columnName) as R
     public operator fun get(first: Column, vararg other: Column): DataRow<T> = owner.get(first, *other)[index]
     public operator fun get(first: String, vararg other: String): DataRow<T> = owner.get(first, *other)[index]
     public operator fun get(path: ColumnPath): Any? = owner.get(path)[index]

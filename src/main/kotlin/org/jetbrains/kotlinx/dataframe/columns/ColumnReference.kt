@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.columns
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.RenamedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.getColumn
@@ -13,7 +14,7 @@ import kotlin.reflect.KProperty
  */
 public interface ColumnReference<out C> : SingleColumn<C> {
 
-    public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnReference<C> = renamedReference(property.name)
+    public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnReference<C> = renamedReference(property.columnName)
 
     public fun name(): String
 
