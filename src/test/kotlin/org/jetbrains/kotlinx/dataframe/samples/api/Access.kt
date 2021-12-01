@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.chunked
 import org.jetbrains.kotlinx.dataframe.api.distinct
@@ -23,6 +25,8 @@ import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.io.read
+import org.junit.Ignore
 import org.junit.Test
 
 class Access : TestBase() {
@@ -932,6 +936,36 @@ class Access : TestBase() {
         df.xs("Charlie", "Chaplin")
 
         df.xs("Moscow", true) { city and isHappy }
+        // SampleEnd
+    }
+
+    @Test
+    @Ignore
+    fun kpropertiesApi() {
+        // SampleStart
+        data class Passenger(val survived: Boolean, val home: String, val age: Int, val lastName: String)
+
+        val passengers = DataFrame.read("titanic.csv")
+            .add(Passenger::lastName) { "name"<String>().split(",").last() }
+            .dropNulls(Passenger::age)
+            .filter { it[Passenger::home].endsWith("NY") }
+            .toListOf<Passenger>()
+        // SampleEnd
+    }
+
+    @Test
+    @Ignore
+    fun kpropertyWithColumnNames() {
+        // SampleStart
+        data class Passenger(
+            @ColumnName("survived") val isAlive: Boolean,
+            @ColumnName("home") val city: String,
+            val name: String
+        )
+
+        val passengers = DataFrame.read("titanic.csv")
+            .filter { it.get(Passenger::city).endsWith("NY") }
+            .toListOf<Passenger>()
         // SampleEnd
     }
 }

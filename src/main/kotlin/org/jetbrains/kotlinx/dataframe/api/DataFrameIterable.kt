@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
@@ -326,10 +327,10 @@ public abstract class CreateDataFrameDsl<T>(public val source: Iterable<T>) {
         add(this, expression)
 
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
-        add(name, expression)
+        add(columnName, expression)
 
     public inline infix fun <reified R> KProperty<R>.from(inferType: InferType<T, R>): Unit =
-        add(DataColumn.createWithTypeInference(name, source.map { inferType.expression(it) }))
+        add(DataColumn.createWithTypeInference(columnName, source.map { inferType.expression(it) }))
 
     public data class InferType<T, R>(val expression: (T) -> R)
 

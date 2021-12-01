@@ -1,8 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.testSets.animals
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.pivot
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.transpose
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.value
@@ -42,5 +45,10 @@ class AnimalsTests {
         val mean = cleared.mean()
         mean[age] shouldBe Double.NaN
         (mean[visits.name()] as Double).isNaN() shouldBe true
+    }
+
+    @Test
+    fun `mean`() {
+        df.pivot(inward = false) { visits }.groupBy { animal }.mean(skipNA = true) { age }.print()
     }
 }
