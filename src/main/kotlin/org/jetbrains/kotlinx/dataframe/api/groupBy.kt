@@ -40,7 +40,7 @@ public interface GroupBy<out T, out G> : Grouped<G> {
 
     public fun toDataFrame(groupedColumnName: String? = null): DataFrame<T>
 
-    public fun <R> mapGroups(transform: Selector<DataFrame<G>, DataFrame<R>>): GroupBy<T, R>
+    public fun <R> updateGroups(transform: Selector<DataFrame<G>, DataFrame<R>>): GroupBy<T, R>
 
     public fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G>
 

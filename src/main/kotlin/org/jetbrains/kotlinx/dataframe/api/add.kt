@@ -58,7 +58,7 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
 public fun <T> DataFrame<T>.add(vararg columns: AnyCol): DataFrame<T> = dataFrameOf(columns() + columns).cast()
 
 public inline fun <reified R, T, G> GroupBy<T, G>.add(name: String, noinline expression: RowExpression<G, R>): GroupBy<T, G> =
-    mapGroups { add(name, expression) }
+    updateGroups { add(name, expression) }
 
 public inline fun <reified R, T, G> GroupBy<T, G>.add(
     column: ColumnAccessor<G>,
