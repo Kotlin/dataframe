@@ -1,4 +1,5 @@
 # Kotlin DataFrame: data manipulation library
+[![JetBrains incubator project](https://jb.gg/badges/incubator.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 [![Kotlin](https://img.shields.io/badge/kotlin-1.6.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Maven Central](https://img.shields.io/maven-central/v/org.jetbrains.kotlinx/dataframe?color=blue&label=Maven%20Central)](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
 [![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
@@ -55,13 +56,12 @@ val d1 = dataFrameOf(From_To, FlightNumber, RecentDelays, Airline)
 
 **Clean:**
 ```kotlin
-// column accessors for columns
+// typed accessors for columns
 // that will appear during 
 // dataframe transformation
 val From by column<String>()
 val To by column<String>()
 
-// preprocess dataframe
 val d2 = d1
     // fill missing flight numbers
     .fillNA { FlightNumber }.with { prev()!!.FlightNumber + 10 }
@@ -90,20 +90,21 @@ val d2 = d1
 ```kotlin
 // group by flight origin
 val d3 = d2.groupBy { From into "origin" }.aggregate {
+    // we are in the context of single data group
     
-    // number of flights
+    // number of flights from origin
     count() into "count"
     
     // list of flight numbers
     FlightNumber into "flight numbers"
     
-    // count of flights per airline
+    // counts of flights per airline
     Airline.valueCounts() into "airlines"
 
     // max delay across all delays in `delay1` and `delay2`
     RecentDelays.maxOrNull { delay1 and delay2 } into "major delay"
 
-    // separate lists of recent delays for `delay1`, `delay2` etc.
+    // separate lists of recent delays for `delay1`, `delay2` and `delay3`
     RecentDelays.implode(dropNulls = true) into "recent delays"
     
     // total delay per city of destination
@@ -111,4 +112,4 @@ val d3 = d2.groupBy { From into "origin" }.aggregate {
 }
 ```
 
-Find more examples [here](examples) 
+Explore [**more examples**](examples).
