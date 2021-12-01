@@ -51,7 +51,7 @@ class SplitTests {
             2, 3, 4,
             3, 6, 7
         )
-        val res = df.groupBy("a").mapGroups { it.remove("a") }.into("g")
+        val res = df.groupBy("a").updateGroups { it.remove("a") }.into("g")
             .update("g").at(1).with { DataFrame.empty() }
             .update("g").at(2).withNull()
             .split { "g"<AnyFrame>() }.intoColumns()

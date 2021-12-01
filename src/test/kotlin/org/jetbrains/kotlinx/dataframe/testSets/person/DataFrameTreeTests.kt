@@ -396,7 +396,7 @@ class DataFrameTreeTests : BaseTest() {
         val info by columnGroup()
         val moved = typed.group { except(name) }.into(info)
         val merged = moved.implode { info }
-        val grouped = typed.groupBy { name }.mapGroups { remove { name } }
+        val grouped = typed.groupBy { name }.updateGroups { remove { name } }
         val expected = grouped.toDataFrame().rename(grouped.groups).into(info)
         merged shouldBe expected
     }
@@ -547,9 +547,9 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `join by frame column`() {
-        val left = typed.groupBy { name }.mapGroups { it?.remove { name and city } }
+        val left = typed.groupBy { name }.updateGroups { it?.remove { name and city } }
         val right =
-            typed.update { name }.with { it.reversed() }.groupBy { name }.mapGroups { it?.remove { name and city } }
+            typed.update { name }.with { it.reversed() }.groupBy { name }.updateGroups { it?.remove { name and city } }
         val groupCol = left.groups.toColumnAccessor()
         val joined = left.toDataFrame().join(right.toDataFrame()) { groupCol }
         joined.ncol() shouldBe 3

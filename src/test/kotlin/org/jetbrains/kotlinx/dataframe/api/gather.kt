@@ -14,7 +14,6 @@ import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.kind
-import org.jetbrains.kotlinx.dataframe.name
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -103,7 +102,7 @@ class GatherTests {
         val temp by column<String>()
         val gathered = typed.gather { except(name) }.cast<String>().into(mode, temp).ungroup(temp)
 
-        val expected = typed.groupBy { name }.mapGroups {
+        val expected = typed.groupBy { name }.updateGroups {
             val cols = columns().drop(1).map { it.asColumnGroup() } // drop 'name' column
             val dataRows = cols.map { it[0] }
 
