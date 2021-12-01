@@ -151,7 +151,7 @@ class CodeGenerationTests : BaseTest() {
         val packageName = "org.jetbrains.kotlinx.dataframe"
         val expected = """
             @DataSchema
-            interface ValidPerson : $personClassName{
+            interface ValidPerson : $personClassName {
                 override val city: kotlin.String
                 override val weight: kotlin.Int
             }
@@ -182,7 +182,7 @@ class CodeGenerationTests : BaseTest() {
         val code = repl.generate(typed.schema(), "DataType", true, false, false).code.declarations
         code shouldBe """
             @DataSchema(isOpen = false)
-            interface DataType{
+            interface DataType {
                 val age: kotlin.Int
                 val city: kotlin.String?
                 val name: kotlin.String
@@ -198,7 +198,7 @@ class CodeGenerationTests : BaseTest() {
         val packageName = "org.jetbrains.kotlinx.dataframe"
         code shouldBe """
             @DataSchema(isOpen = false)
-            internal interface DataType{
+            internal interface DataType {
                 val age: kotlin.Int
                 val city: kotlin.String?
                 val name: kotlin.String
@@ -223,7 +223,7 @@ class CodeGenerationTests : BaseTest() {
         val packageName = "org.jetbrains.kotlinx.dataframe"
         code shouldBe """
             @DataSchema(isOpen = false)
-            public interface DataType{
+            public interface DataType {
                 public val age: kotlin.Int
                 public val city: kotlin.String?
                 public val name: kotlin.String
