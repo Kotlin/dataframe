@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.rendering
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.impl.precision
 import org.jetbrains.kotlinx.dataframe.io.defaultPrecision
@@ -29,5 +30,11 @@ class PrecisionTests {
         value.format(digits) shouldBe expected
         value.toFloat().format(digits) shouldBe expected
         value.toBigDecimal().format(digits) shouldBe expected
+    }
+
+    @Test
+    fun emptyColPrecision() {
+        val col by columnOf(1.0)
+        col.filter { false }.precision() shouldBe 0
     }
 }
