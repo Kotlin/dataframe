@@ -12,6 +12,8 @@ import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.impl.truncate
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
+import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
 import java.math.BigDecimal
 
@@ -33,7 +35,7 @@ internal fun AnyFrame.renderToString(
     }
 
     // data
-    val rowsCount = rowsLimit.coerceAtMost(nrow())
+    val rowsCount = rowsLimit.coerceAtMost(nrow)
     val cols = if (rowIndex) listOf((0 until rowsCount).toColumn()) + columns() else columns()
     val header = cols.mapIndexed { colIndex, col ->
         if (columnTypes && (!rowIndex || colIndex > 0)) {
@@ -92,7 +94,7 @@ internal fun AnyFrame.renderToString(
     }
 
     // footer
-    if (nrow() > rowsLimit) {
+    if (nrow > rowsLimit) {
         sb.appendLine("...")
     } else if (borders) {
         sb.append("\u230E")
@@ -141,8 +143,8 @@ internal fun renderCollectionName(value: Collection<*>) = when (value) {
 }
 
 internal fun renderValueForRowTable(value: Any?, forHtml: Boolean): RenderedContent = when (value) {
-    is AnyFrame -> "DataFrame [${value.nrow()} x ${value.ncol()}]".let {
-        val content = if (value.nrow() == 1) it + " " + value[0].toString() else it
+    is AnyFrame -> "DataFrame [${value.nrow} x ${value.ncol}]".let {
+        val content = if (value.nrow == 1) it + " " + value[0].toString() else it
         RenderedContent.textWithLength(content, "DataFrame".length)
     }
     is AnyRow -> RenderedContent.textWithLength("DataRow $value", "DataRow".length)
@@ -163,7 +165,7 @@ internal val defaultPrecision = 6
 
 internal fun renderValueToString(value: Any?, precision: Int) =
     when (value) {
-        is AnyFrame -> "[${value.size}]".let { if (value.nrow() == 1) it + " " + value[0].toString() else it }
+        is AnyFrame -> "[${value.size}]".let { if (value.nrow == 1) it + " " + value[0].toString() else it }
         is Double -> value.format(precision)
         is Float -> value.format(precision)
         is BigDecimal -> value.format(precision)

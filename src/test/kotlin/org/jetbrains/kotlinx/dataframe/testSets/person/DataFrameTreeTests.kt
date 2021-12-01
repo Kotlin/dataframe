@@ -86,6 +86,8 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.pathOf
 import org.junit.Test
 
@@ -130,7 +132,7 @@ class DataFrameTreeTests : BaseTest() {
         val id by column(typed.indices())
         val groups by id.map { typed[it..it] }
         val df = dataFrameOf(id, groups)
-        df.nrow() shouldBe typed.nrow()
+        df.nrow shouldBe typed.nrow
         df.forEachRow {
             val rowId = it[id]
             groups() shouldBe typed[rowId..rowId]
@@ -237,10 +239,10 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `distinct`() {
         val duplicated = typed2.concat(typed2)
-        duplicated.nrow() shouldBe typed2.nrow() * 2
+        duplicated.nrow shouldBe typed2.nrow * 2
         val dist = duplicated.nameAndCity.distinct()
         dist shouldBe typed2.nameAndCity.distinct()
-        dist.nrow() shouldBe typed2.nrow() - 1
+        dist.nrow shouldBe typed2.nrow - 1
     }
 
     @Test
@@ -286,9 +288,9 @@ class DataFrameTreeTests : BaseTest() {
         }.plus("Bob" to "Moscow" to emptyList<Int>()).toMap()
 
         fun <T> DataFrame<T>.check() {
-            ncol() shouldBe 2
+            ncol shouldBe 2
             val cities = getColumnGroup("nameAndCity").getColumnGroup("city")
-            cities.ncol() shouldBe typed2.nameAndCity.city.ndistinct()
+            cities.ncol shouldBe typed2.nameAndCity.city.ndistinct()
             this[name] shouldBe typed.name.distinct()
             val data = cities.columns()
             data.forEach {
@@ -315,7 +317,7 @@ class DataFrameTreeTests : BaseTest() {
     fun `pivot grouped column`() {
         val grouped = typed.group { age and weight }.into("info")
         val pivoted = grouped.pivot { city }.groupBy { name }.values("info")
-        pivoted.ncol() shouldBe 2
+        pivoted.ncol shouldBe 2
 
         val expected =
             typed.rows().groupBy { it.name to (it.city ?: "null") }.mapValues { it.value.map { it.age to it.weight } }
@@ -335,7 +337,7 @@ class DataFrameTreeTests : BaseTest() {
                         null -> {
                         }
                         is AnyRow -> value.isEmpty() shouldBe true
-                        is AnyFrame -> value.ncol() shouldBe 0
+                        is AnyFrame -> value.ncol shouldBe 0
                     }
                     expValues.size == 1 -> {
                         value shouldNotBe null
@@ -359,12 +361,12 @@ class DataFrameTreeTests : BaseTest() {
     fun splitCols() {
         val split = typed2.split { nameAndCity.name }.by { it.toCharArray().toList() }.inward { "char$it" }
         split.columnNames() shouldBe typed2.columnNames()
-        split.nrow() shouldBe typed2.nrow()
+        split.nrow shouldBe typed2.nrow
         split.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames()
         val nameGroup = split.nameAndCity.name.asColumnGroup()
         nameGroup.name() shouldBe "name"
-        nameGroup.ncol() shouldBe typed2.nameAndCity.name.map { it.length }.max()
-        nameGroup.columnNames() shouldBe (1..nameGroup.ncol()).map { "char$it" }
+        nameGroup.ncol shouldBe typed2.nameAndCity.name.map { it.length }.max()
+        nameGroup.columnNames() shouldBe (1..nameGroup.ncol).map { "char$it" }
     }
 
     @Test
@@ -388,7 +390,7 @@ class DataFrameTreeTests : BaseTest() {
         val info by columnGroup()
         val moved = typed.group { except(name) }.into(info)
         val grouped = moved.groupBy { except(info) }.toDataFrame()
-        grouped.nrow() shouldBe typed.name.ndistinct()
+        grouped.nrow shouldBe typed.name.ndistinct()
     }
 
     @Test
@@ -441,7 +443,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun parentColumnTest() {
         val res = typed2.move { dfs { it.depth > 0 } }.toTop { it.parent!!.name() + "-" + it.name() }
-        res.ncol() shouldBe 4
+        res.ncol shouldBe 4
         res.columnNames() shouldBe listOf("nameAndCity-name", "nameAndCity-city", "age", "weight")
     }
 
@@ -456,8 +458,8 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `group into column`() {
         val grouped = typed2.group { age }.into { nameAndCity }
-        grouped.nameAndCity.ncol() shouldBe 3
-        grouped.ncol() shouldBe 2
+        grouped.nameAndCity.ncol shouldBe 3
+        grouped.ncol shouldBe 2
     }
 
     @Test
@@ -469,8 +471,8 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun moveAfter() {
         val moved = typed2.move { age }.after { nameAndCity.name }
-        moved.ncol() shouldBe 2
-        moved.nameAndCity.ncol() shouldBe 3
+        moved.ncol shouldBe 2
+        moved.nameAndCity.ncol shouldBe 3
         moved.nameAndCity.select { all() } shouldBe dataFrameOf(
             typed2.nameAndCity.name,
             typed2.age,
@@ -481,8 +483,8 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun moveAfter2() {
         val moved = typed2.move { nameAndCity.name }.after { age }
-        moved.ncol() shouldBe 4
-        moved.nameAndCity.ncol() shouldBe 1
+        moved.ncol shouldBe 4
+        moved.nameAndCity.ncol shouldBe 1
         moved.remove { nameAndCity } shouldBe typed2.select { age and nameAndCity.name and weight }
     }
 
@@ -515,8 +517,8 @@ class DataFrameTreeTests : BaseTest() {
             .update { groupCol }.at(2).with { emptyDataFrame(0).cast() }
             .update { groupCol }.at(3).with { it?.filter { false } }
         val res = plain.explode(dropEmpty = false) { groupCol }
-        val expected = plain[groupCol.name()].sumOf { Math.max((it as AnyFrame?)?.nrow() ?: 0, 1) }
-        res.nrow() shouldBe expected
+        val expected = plain[groupCol.name()].sumOf { Math.max((it as AnyFrame?)?.nrow ?: 0, 1) }
+        res.nrow shouldBe expected
     }
 
     @Test
@@ -537,7 +539,7 @@ class DataFrameTreeTests : BaseTest() {
         val nameAndAge by columnGroup()
         val cityFirst by nameAndAge.column<Char?>()
         val grouped = typed.group { name and age }.into(nameAndAge).add(cityFirst) { city?.get(0) }
-        grouped[nameAndAge].ncol() shouldBe 3
+        grouped[nameAndAge].ncol shouldBe 3
 
         val left = grouped - { weight }
         val right = grouped - { city }
@@ -552,7 +554,7 @@ class DataFrameTreeTests : BaseTest() {
             typed.update { name }.with { it.reversed() }.groupBy { name }.updateGroups { it?.remove { name and city } }
         val groupCol = left.groups.toColumnAccessor()
         val joined = left.toDataFrame().join(right.toDataFrame()) { groupCol }
-        joined.ncol() shouldBe 3
+        joined.ncol shouldBe 3
         val name1 by column<String>()
         joined.columnNames() shouldBe listOf(typed.name.name(), groupCol.name(), name1.name())
         joined[groupCol].kind() shouldBe ColumnKind.Frame
@@ -573,7 +575,7 @@ class DataFrameTreeTests : BaseTest() {
     fun `insert column`() {
         val colName = "reversed"
         fun DataFrame<GroupedPerson>.check() {
-            nameAndCity.ncol() shouldBe 3
+            nameAndCity.ncol shouldBe 3
             nameAndCity.columnNames() shouldBe listOf(
                 typed2.nameAndCity.name.name(),
                 colName,
@@ -587,7 +589,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun append() {
         val res = typed2.append(listOf("Bill", "San Francisco"), null, 66)
-        res.nrow() shouldBe typed2.nrow() + 1
+        res.nrow shouldBe typed2.nrow + 1
         res.nameAndCity.last().values() shouldBe listOf("Bill", "San Francisco")
         res.age.hasNulls() shouldBe true
     }
@@ -595,7 +597,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `append nulls`() {
         val res = typed2.append(null, null, null)
-        res.nrow() shouldBe typed2.nrow() + 1
+        res.nrow shouldBe typed2.nrow + 1
         res.nameAndCity.last().values() shouldBe listOf(null, null)
         res.age.hasNulls() shouldBe true
         res.nameAndCity.name.hasNulls() shouldBe true
@@ -604,7 +606,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `create data frame from map column`() {
         val df = dataFrameOf(typed.name, typed2.nameAndCity)
-        df.nrow() shouldBe typed.nrow()
+        df.nrow shouldBe typed.nrow
     }
 
     @Test
@@ -613,7 +615,7 @@ class DataFrameTreeTests : BaseTest() {
         val renamed = typed2.nameAndCity.rename("newName")
         renamed.name() shouldBe "newName"
         renamed.select { name } shouldBe typed2.select { nameAndCity.name }
-        renamed.filter { name.startsWith("A") }.nrow() shouldBe typed.count { name.startsWith("A") }
+        renamed.filter { name.startsWith("A") }.nrow shouldBe typed.count { name.startsWith("A") }
     }
 
     @Test
@@ -670,6 +672,6 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `xs nested columns`() {
-        typed2.xs("Bob", "Tokyo").nrow() shouldBe 1
+        typed2.xs("Bob", "Tokyo").nrow shouldBe 1
     }
 }

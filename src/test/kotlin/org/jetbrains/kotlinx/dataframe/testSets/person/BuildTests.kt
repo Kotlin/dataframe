@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.testSets.person
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.convertToDataFrame
 import org.jetbrains.kotlinx.dataframe.column
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 
 class BuildTests {
@@ -15,7 +16,7 @@ class BuildTests {
     fun test3() {
         val list = persons + listOf(null)
         val df = list.convertToDataFrame()
-        df.nrow() shouldBe 3
+        df.nrow shouldBe 3
     }
 
     @Test(expected = IllegalArgumentException::class)

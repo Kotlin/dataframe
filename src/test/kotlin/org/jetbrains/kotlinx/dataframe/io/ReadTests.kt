@@ -40,7 +40,7 @@ class ReadTests {
             [{"a":[{"b":[]}]},{"a":[]},{"a":[{"b":[{"c":1}]}]}]
         """.trimIndent()
         val df = DataFrame.readJsonStr(data)
-        df.nrow() shouldBe 3
+        df.nrow shouldBe 3
         val a = df["a"].asFrameColumn()
         a[1].nrow shouldBe 0
         a[0].nrow shouldBe 1
@@ -59,11 +59,11 @@ class ReadTests {
         """.trimIndent()
 
         val df = DataFrame.readJsonStr(data)
-        df.nrow() shouldBe 2
-        df.ncol() shouldBe 1
+        df.nrow shouldBe 2
+        df.ncol shouldBe 1
         val empty = df[0][0] as AnyFrame
-        empty.nrow() shouldBe 0
-        empty.ncol() shouldBe 0
+        empty.nrow shouldBe 0
+        empty.ncol shouldBe 0
     }
 
     @Test

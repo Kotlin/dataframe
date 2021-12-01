@@ -35,8 +35,8 @@
             <toc-element id="write.md"/>
         </toc-element>
         <toc-element id="info.md">
-            <toc-element id="ncol.md"/>
-            <toc-element id="nrow.md"/>
+            <toc-element id="columnsCount.md"/>
+            <toc-element id="rowsCount.md"/>
             <toc-element id="ndistinct.md"/>
             <toc-element id="columnNames.md"/>
             <toc-element id="columnTypes.md"/>

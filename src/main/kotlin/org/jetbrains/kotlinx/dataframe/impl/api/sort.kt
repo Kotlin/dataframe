@@ -19,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.assertIsComparable
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.kind
+import org.jetbrains.kotlinx.dataframe.nrow
 
 internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>): GroupBy<T, G> {
     return toDataFrame()
@@ -42,7 +43,7 @@ internal fun <T, C> DataFrame<T>.sortByImpl(
         }
     }.reduce { a, b -> a.then(b) }
 
-    val permutation = (0 until nrow()).sortedWith(compChain)
+    val permutation = (0 until nrow).sortedWith(compChain)
 
     return this[permutation]
 }
