@@ -25,7 +25,7 @@ internal open class ColumnGroupImpl<T>(override val df: DataFrame<T>, val name: 
 
     override fun values() = df.rows()
 
-    override fun ndistinct() = distinct.nrow
+    override fun countDistinct() = distinct.nrow
 
     override fun type() = anyRowType
 

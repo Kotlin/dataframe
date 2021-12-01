@@ -33,6 +33,7 @@ import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.convertToDataFrame
 import org.jetbrains.kotlinx.dataframe.api.corr
 import org.jetbrains.kotlinx.dataframe.api.count
+import org.jetbrains.kotlinx.dataframe.api.countDistinct
 import org.jetbrains.kotlinx.dataframe.api.default
 import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.dfsOf
@@ -93,7 +94,6 @@ import org.jetbrains.kotlinx.dataframe.api.moveToLeft
 import org.jetbrains.kotlinx.dataframe.api.moveToRight
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.named
-import org.jetbrains.kotlinx.dataframe.api.ndistinct
 import org.jetbrains.kotlinx.dataframe.api.near
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.nullable
@@ -995,9 +995,9 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `distinct`() {
         val expected = 6
-        typed.ndistinct { name and city } shouldBe expected
+        typed.countDistinct { name and city } shouldBe expected
         typed.select { name and city }.distinct().nrow shouldBe expected
-        typed.select { name and city }.ndistinct() shouldBe expected
+        typed.select { name and city }.countDistinct() shouldBe expected
         val d = typed.distinct { name and city }
         d.nrow shouldBe expected
         d.ncol shouldBe 2
@@ -1050,7 +1050,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `nunique`() {
-        typed.name.ndistinct() shouldBe 3
+        typed.name.countDistinct() shouldBe 3
     }
 
     @Test
@@ -1064,7 +1064,7 @@ class DataFrameTests : BaseTest() {
     fun `pivot matches`() {
         val pivoted = typed.pivot { city }.groupBy { name and age and weight }.matches()
         pivoted.ncol shouldBe 4
-        typed.ncol + typed.city.ndistinct() - 1
+        typed.ncol + typed.city.countDistinct() - 1
         val data = pivoted.getColumnGroup("city")
         for (row in 0 until typed.nrow) {
             val city = typed[row][city].toString()
@@ -1103,7 +1103,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `pivot matches distinct rows`() {
         val res = typed.pivot(inward = false) { city }.groupBy { name and age }.matches()
-        res.ncol shouldBe 2 + typed.city.ndistinct()
+        res.ncol shouldBe 2 + typed.city.countDistinct()
         for (i in 0 until typed.nrow) {
             val city = typed[i][city]
             for (j in typed.ncol until res.ncol) {
@@ -1118,8 +1118,8 @@ class DataFrameTests : BaseTest() {
         val selected = typed.select { name and city }
         val res = typed.pivot(inward = false) { city }.groupBy { name }.matches()
 
-        res.ncol shouldBe selected.city.ndistinct() + 1
-        res.nrow shouldBe selected.name.ndistinct()
+        res.ncol shouldBe selected.city.countDistinct() + 1
+        res.nrow shouldBe selected.name.countDistinct()
         val trueValuesCount = res.columns().drop(1).sumOf { it.cast<Boolean>().toList().count { it } }
         trueValuesCount shouldBe selected.distinct().nrow
 
@@ -1512,7 +1512,7 @@ class DataFrameTests : BaseTest() {
     fun `mean for all columns`() {
         val d = typed.groupBy { name }.mean()
         d.columnNames() shouldBe listOf("name", "age", "weight")
-        d.nrow shouldBe typed.name.ndistinct()
+        d.nrow shouldBe typed.name.countDistinct()
         d["age"].type() shouldBe getType<Double>()
         d["weight"].type() shouldBe getType<Double>()
     }
@@ -2001,7 +2001,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `pivot all values`() {
         val pivoted = typed.pivot(inward = false) { city }.groupBy { name }.values()
-        pivoted.ncol shouldBe 1 + typed.city.ndistinct()
+        pivoted.ncol shouldBe 1 + typed.city.countDistinct()
         pivoted.columns().drop(1).forEach {
             it.kind() shouldBe ColumnKind.Group
             it.asColumnGroup().columnNames() shouldBe listOf("age", "weight")

@@ -20,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.std
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.columns.ndistinct
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
@@ -54,7 +53,7 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
         }
         ColumnDescription::type from { it.type.jvmErasure.simpleName }
         ColumnDescription::count from { it.size }
-        ColumnDescription::unique from { it.ndistinct }
+        ColumnDescription::unique from { it.countDistinct() }
         ColumnDescription::nulls from { it.values.count { it == null } }
         ColumnDescription::top from inferType { it.values.filterNotNull().groupBy { it }.maxByOrNull { it.value.size }?.key }
         if (hasNumeric) {

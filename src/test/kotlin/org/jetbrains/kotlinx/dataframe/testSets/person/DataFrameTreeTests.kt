@@ -290,7 +290,7 @@ class DataFrameTreeTests : BaseTest() {
         fun <T> DataFrame<T>.check() {
             ncol shouldBe 2
             val cities = getColumnGroup("nameAndCity").getColumnGroup("city")
-            cities.ncol shouldBe typed2.nameAndCity.city.ndistinct()
+            cities.ncol shouldBe typed2.nameAndCity.city.countDistinct()
             this[name] shouldBe typed.name.distinct()
             val data = cities.columns()
             data.forEach {
@@ -390,7 +390,7 @@ class DataFrameTreeTests : BaseTest() {
         val info by columnGroup()
         val moved = typed.group { except(name) }.into(info)
         val grouped = moved.groupBy { except(info) }.toDataFrame()
-        grouped.nrow shouldBe typed.name.ndistinct()
+        grouped.nrow shouldBe typed.name.countDistinct()
     }
 
     @Test

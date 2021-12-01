@@ -50,7 +50,6 @@ import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.columns.ndistinct
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
@@ -111,8 +110,8 @@ class PivotTests {
     fun `pivot matches`() {
         val filtered = typed.drop(1)
         val res = filtered.pivot(inward = false) { key }.groupBy { name }.matches()
-        res.ncol shouldBe 1 + filtered.key.ndistinct()
-        res.nrow shouldBe filtered.name.ndistinct()
+        res.ncol shouldBe 1 + filtered.key.countDistinct()
+        res.nrow shouldBe filtered.name.countDistinct()
 
         val expected = filtered.rows().map { (it.name to it.key) }.toSet()
         val actual = res.columns().subList(1, res.ncol).flatMap {
@@ -136,7 +135,7 @@ class PivotTests {
         val res = typed.pivot { key }.groupBy { name }.values { value default "-" }
 
         res.ncol shouldBe 2
-        res.nrow shouldBe typed.name.ndistinct()
+        res.nrow shouldBe typed.name.countDistinct()
 
         val data = res.getColumnGroup("key")
 
@@ -218,7 +217,7 @@ class PivotTests {
         }
 
         val leafColumns = pivoted.getColumnsWithPaths { all().drop(1).allDfs() }
-        leafColumns.size shouldBe typed.name.ndistinct() * typed.key.ndistinct() - 1
+        leafColumns.size shouldBe typed.name.countDistinct() * typed.key.countDistinct() - 1
         leafColumns.forEach { it.path.size shouldBe 2 }
 
         val data = leafColumns.associate { it.path[0] to it.path[1] to it.data[0] }
@@ -261,14 +260,14 @@ class PivotTests {
         typed.print(columnTypes = true)
         val pivotedRow = typed.pivot { name then key }.values { value and (value.map { it?.javaClass?.kotlin } into "type") }
         val pivotedDf = pivotedRow.df()
-        pivotedRow.columnsCount() shouldBe typed.name.ndistinct()
+        pivotedRow.columnsCount() shouldBe typed.name.countDistinct()
 
         val nullGroup = pivotedDf["Charlie"]["weight"].asColumnGroup()
         nullGroup.columnNames() shouldBe listOf("value", "type")
         nullGroup.columnTypes() shouldBe listOf(getType<Serializable?>(), getType<Any?>())
 
         val cols = pivotedDf.getColumnsWithPaths { all().allDfs() }
-        cols.size shouldBe 2 * typed.name.ndistinct() * typed.key.ndistinct() - 2
+        cols.size shouldBe 2 * typed.name.countDistinct() * typed.key.countDistinct() - 2
 
         cols.forEach {
             when {
@@ -472,7 +471,7 @@ class PivotTests {
         typed.pivot { name }.count() shouldBe typed.pivot(inward = false) { name }.count()
 
         typed.pivot { name and key }.count().columnNames() shouldBe listOf("name", "key")
-        typed.pivot(inward = false) { name and key }.count().columnsCount() shouldBe typed.name.ndistinct() + typed.key.ndistinct()
+        typed.pivot(inward = false) { name and key }.count().columnsCount() shouldBe typed.name.countDistinct() + typed.key.countDistinct()
         typed.pivot(inward = true) { name and key }.count() shouldBe typed.pivot { name and key }.count()
     }
 
@@ -480,6 +479,6 @@ class PivotTests {
     fun `pivot from group`() {
         val pivoted = typed.group { key and value }.into("info")
             .pivot(inward = true) { "info"["value"] }.groupByOther().count()
-        pivoted.getColumnGroup("info").getColumnGroup("value").ncol shouldBe typed.value.ndistinct
+        pivoted.getColumnGroup("info").getColumnGroup("value").ncol shouldBe typed.value.countDistinct()
     }
 }
