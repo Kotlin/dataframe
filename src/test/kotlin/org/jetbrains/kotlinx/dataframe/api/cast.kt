@@ -15,13 +15,13 @@ class CastTests {
         data class Data(val a: Int, val b: String)
 
         val df = dataFrameOf("a", "b", "c")(1, "s", 2)
-        df.cast<Data>(unsafe = true) shouldBe df
+        df.cast<Data>(verify = true) shouldBe df
 
         shouldThrow<IllegalArgumentException> {
-            df.convert("a").toDouble().cast<Data>(unsafe = true)
+            df.convert("a").toDouble().cast<Data>(verify = true)
         }
         val converted = df.convert("a").toDouble()
-        converted.cast<Data>(unsafe = false) shouldBe converted
+        converted.cast<Data>(verify = false) shouldBe converted
         converted.cast<Data>() shouldBe converted
     }
 }

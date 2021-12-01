@@ -4,11 +4,11 @@
 Changes type argument of `DataFrame` without changing its contents.
 
 ```kotlin
-cast<T>(unsafe = false)
+cast<T>(verify = false)
 ```
 
 **Parameters:**
-* `unsafe: Boolean = false` - when `true`, throws exception if `DataFrame` doesn't match given schema.
+* `verify: Boolean = false` - when `true`, throws exception if `DataFrame` doesn't match given schema. Otherwise, just changes format type without actual data check.
 
 Use this operation to change formal type of `DataFrame` to match expected schema and enable generated [extension properties](extensionPropertiesApi.md) for it.
 
