@@ -101,7 +101,7 @@ val clean = df
 ```kotlin
 clean
     // group by the flight origin renamed into "from"
-    .groupBy { origin into "from" }.aggregate {
+    .groupBy { origin named "from" }.aggregate {
         // we are in the context of single data group
 
         // total number of flights from origin
