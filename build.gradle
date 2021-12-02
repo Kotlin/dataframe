@@ -78,7 +78,7 @@ group 'org.jetbrains.kotlinx'
 def detectVersion() {
     def buildNumber = rootProject.findProperty("build.number")
     if(buildNumber != null) {
-        if (hasProperty("build.number.detection")) {
+        if (rootProject.findProperty("build.number.detection") == "true") {
             return property('version') + "-dev-" + buildNumber
         } else {
             return buildNumber
