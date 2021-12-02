@@ -51,7 +51,7 @@ val recentDelays by columnOf("23,47", null, "24, 43, 87", "13", "67, 32")
 val airline by columnOf("KLM(!)", "{Air France} (12)", "(British Airways. )", "12. Air France", "'Swiss Air'")
 
 // create dataframe
-val d1 = dataFrameOf(fromTo, flightNumber, recentDelays, airline)
+val df = dataFrameOf(fromTo, flightNumber, recentDelays, airline)
 ```
 
 **Clean:**
@@ -62,7 +62,7 @@ val d1 = dataFrameOf(fromTo, flightNumber, recentDelays, airline)
 val origin by column<String>()
 val destination by column<String>()
 
-val d2 = d1
+val dfClean = df
     // fill missing flight numbers
     .fillNA { flightNumber }.with { prev()!!.flightNumber + 10 }
 
@@ -89,7 +89,7 @@ val d2 = d1
 **Aggregate:**
 ```kotlin
 // group by flight origin
-val d3 = d2.groupBy { From into "origin" }.aggregate {
+dfClean.groupBy { From into "origin" }.aggregate {
     // we are in the context of single data group
     
     // number of flights from origin

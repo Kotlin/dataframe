@@ -30,7 +30,7 @@ If you want to always use the latest version, add another magic before `%use dat
 If you want to use specific version of DataFrame, you can specify it in brackets:
 
 ```text
-%use dataframe(0.9)
+%use dataframe(0.8.0)
 ```
 
 After loading, all essential types will be already imported, so you can start using DataFrame. Enjoy!
