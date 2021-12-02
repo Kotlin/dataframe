@@ -2,6 +2,8 @@ package org.jetbrains.dataframe.ksp
 
 import com.google.devtools.ksp.getVisibility
 import com.google.devtools.ksp.innerArguments
+import com.google.devtools.ksp.isInternal
+import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
@@ -25,26 +27,54 @@ class DataFrameSymbolProcessor(
         symbols
             .filterIsInstance<KSClassDeclaration>()
             .mapNotNull {
-                if (it.classKind == ClassKind.INTERFACE && it.validate()) {
+                if (it.validate()) {
                     if (it.typeParameters.isNotEmpty()) {
                         logger.error("@${dataSchemaAnnotation.getShortName()} interface should not have type parameters", it)
                         null
                     } else {
-                        it
+                        it.toDataSchemaDeclarationOrNull()
                     }
                 } else {
                     null
                 }
             }
             .forEach {
-                val file = it.containingFile ?: return@forEach
-                generate(file, it, it.declarations.filterIsInstance<KSPropertyDeclaration>().toList())
+                val file = it.origin.containingFile ?: return@forEach
+                generate(file, it.origin, it.properties)
             }
 
         return emptyList()
     }
 
-    private fun generate(file: KSFile, klass: KSClassDeclaration, properties: List<KSPropertyDeclaration>) {
+    private fun KSClassDeclaration.toDataSchemaDeclarationOrNull(): DataSchemaDeclaration? {
+        return when {
+            classKind == ClassKind.INTERFACE || (isDataClass() && (isPublic() || isInternal())) -> {
+                DataSchemaDeclaration(
+                    this,
+                    declarations
+                        .filterIsInstance<KSPropertyDeclaration>()
+                        .map { KSAnnotatedWithType(it, it.simpleName, it.type) }
+                        .toList()
+                )
+            }
+            else -> null
+        }
+    }
+
+    private fun KSClassDeclaration.isDataClass() = classKind == ClassKind.CLASS && modifiers.any { it == Modifier.DATA }
+
+    private class DataSchemaDeclaration(
+        val origin: KSClassDeclaration,
+        val properties: List<KSAnnotatedWithType>
+    )
+
+    class KSAnnotatedWithType(
+        private val declaration: KSAnnotated,
+        val simpleName: KSName,
+        val type: KSTypeReference
+    ) : KSAnnotated by declaration
+
+    private fun generate(file: KSFile, klass: KSClassDeclaration, properties: List<KSAnnotatedWithType>) {
         val className: String = klass.simpleName.asString()
         val packageName = file.packageName.asString()
         val fileName = if (klass.parentDeclaration == null) {
@@ -77,7 +107,7 @@ class DataFrameSymbolProcessor(
         }
     }
 
-    private fun OutputStreamWriter.writeProperties(interfaceType: KSType, interfaceName: String, properties: List<KSPropertyDeclaration>) {
+    private fun OutputStreamWriter.writeProperties(interfaceType: KSType, interfaceName: String, properties: List<KSAnnotatedWithType>) {
         val visibility = when (val visibility = interfaceType.declaration.getVisibility()) {
             Visibility.PUBLIC -> if (interfaceType.declaration.modifiers.contains(Modifier.PUBLIC)) {
                 MarkerVisibility.EXPLICIT_PUBLIC
@@ -133,7 +163,7 @@ class DataFrameSymbolProcessor(
         }
     }
 
-    private fun getColumnName(property: KSPropertyDeclaration): String {
+    private fun getColumnName(property: KSAnnotatedWithType): String {
         val columnNameAnnotation =  property.annotations.firstOrNull { annotation ->
             val annotationType = annotation.annotationType
             (annotationType.element as? KSClassifierReference)?.referencedName()
@@ -150,11 +180,11 @@ class DataFrameSymbolProcessor(
         }
     }
 
-    private fun typeMismatchError(property: KSPropertyDeclaration, arg: KSValueArgument): Nothing {
+    private fun typeMismatchError(property: KSAnnotatedWithType, arg: KSValueArgument): Nothing {
         error("Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, but got ${arg.value}")
     }
 
-    private fun argumentMismatchError(property: KSPropertyDeclaration, args: List<KSValueArgument>): Nothing {
+    private fun argumentMismatchError(property: KSAnnotatedWithType, args: List<KSValueArgument>): Nothing {
         error("Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, but got $args")
     }
 }
