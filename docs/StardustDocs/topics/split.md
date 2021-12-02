@@ -21,11 +21,11 @@ columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
 ```
 
 Storage options:
-* `into(col1, col2, ... )` - store splitted values in new top-level columns
-* `inward(col1, col2, ...)` - store splitted values in new columns nested inside original column
-* `inplace` - store splitted values in original column as `List`
-* `intoRows` - spread splitted values vertically into new rows
-* `intoColumns` - split `FrameColumn` into `ColumnGroup` storing in every cell a `List` of original values per every column
+* `into(col1, col2, ... )` — store splitted values in new top-level columns
+* `inward(col1, col2, ...)` — store splitted values in new columns nested inside original column
+* `inplace` — store splitted values in original column as `List`
+* `intoRows` — spread splitted values vertically into new rows
+* `intoColumns` — split `FrameColumn` into `ColumnGroup` storing in every cell a `List` of original values per every column
 
 `columnNamesGenerator` is used to generate names for additional columns when the list of explicitly specified `columnNames` was not long enough. `columnIndex` starts with `1` for the first additional column name.  
 

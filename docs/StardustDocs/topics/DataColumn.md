@@ -6,12 +6,12 @@
 See [how to create columns](createColumn.md)
 
 ### Properties
-* `name: String` - name of the column, should be unique within containing dataframe
-* `path: ColumnPath` - path to the column, depends on the way column was retrieved from dataframe
-* `type: KType` - type of elements in the column
-* `hasNulls: Boolean` - flag indicating whether column contains `null` values
-* `values: Iterable<T>` - column data
-* `size: Int` - number of elements in the column
+* `name: String` — name of the column, should be unique within containing dataframe
+* `path: ColumnPath` — path to the column, depends on the way column was retrieved from dataframe
+* `type: KType` — type of elements in the column
+* `hasNulls: Boolean` — flag indicating whether column contains `null` values
+* `values: Iterable<T>` — column data
+* `size: Int` — number of elements in the column
 
 ### Column kinds
 `DataColumn` instances can be one of three subtypes: `ValueColumn`, `ColumnGroup` or `FrameColumn`

@@ -5,20 +5,20 @@
 
 ## Row functions
 
-* `index(): Int` - sequential row number in `DataFrame`, starts from 0
-* `prev(): DataRow?` - previous row (`null` for the first row)
-* `next(): DataRow?` - next row (`null` for the last row)
-* `diff { rowExpression }: T` - difference between results of [row expression](#row-expressions) calculated for current and previous rows
-* `values(): List<Any?>` - list of all cell values from the current row
-* `valuesOf<T>(): List<T>` - list of values of given type 
-* `columnNames(): List<String>` - list of all column names 
-* `namedValues(): List<NameValuePair<Any?>>` - list of name-value pairs where `name` is a column name and `value` is cell value
-* `namedValuesOf<T>(): List<NameValuePair<T>>` - list of name-value pairs where value has given type 
-* `getRow(Int): DataRow` - row from `DataFrame` by row index
-* `near(Iterable<Int>): Sequence<DataRow>` - sequence of the nearest rows by relative index: `near(-1..1)` will return previous, current and next row. Requested indices will be coerced to valid range and invalid indices will be skipped
-* `rows(Iterable<Int>): Sequence<DataRow>` - sequence of the rows by absolute index. Requested indices are not coerced to valid boundaries and you should care about it
-* `get(column): T` - cell value by this row and given `column`
-* `df()` - `DataFrame` that current row belongs to
+* `index(): Int` — sequential row number in `DataFrame`, starts from 0
+* `prev(): DataRow?` — previous row (`null` for the first row)
+* `next(): DataRow?` — next row (`null` for the last row)
+* `diff { rowExpression }: T` — difference between results of [row expression](#row-expressions) calculated for current and previous rows
+* `values(): List<Any?>` — list of all cell values from the current row
+* `valuesOf<T>(): List<T>` — list of values of given type 
+* `columnNames(): List<String>` — list of all column names 
+* `namedValues(): List<NameValuePair<Any?>>` — list of name-value pairs where `name` is a column name and `value` is cell value
+* `namedValuesOf<T>(): List<NameValuePair<T>>` — list of name-value pairs where value has given type 
+* `getRow(Int): DataRow` — row from `DataFrame` by row index
+* `near(Iterable<Int>): Sequence<DataRow>` — sequence of the nearest rows by relative index: `near(-1..1)` will return previous, current and next row. Requested indices will be coerced to valid range and invalid indices will be skipped
+* `rows(Iterable<Int>): Sequence<DataRow>` — sequence of the rows by absolute index. Requested indices are not coerced to valid boundaries and you should care about it
+* `get(column): T` — cell value by this row and given `column`
+* `df()` — `DataFrame` that current row belongs to
 
 ## Row expressions
 Row expressions provide a value for every row of `DataFrame` and are used in [add](add.md), [filter](filter.md), [forEach](iterate.md), [update](update.md) and other operations.

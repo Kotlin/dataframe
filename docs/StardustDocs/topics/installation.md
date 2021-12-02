@@ -1,6 +1,6 @@
 [//]: # (title: Installation)
 
-You can use DataFrame in different environments - as any other JVM library.
+You can use DataFrame in different environments — as any other JVM library.
 The following sections will show how to use DataFrame in [Jupyter](#jupyter-notebook), [Datalore](#datalore) and in a [Gradle project](#gradle).
 
 ## Jupyter Notebook

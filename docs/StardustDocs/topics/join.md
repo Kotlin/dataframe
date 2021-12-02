@@ -90,11 +90,11 @@ df.join(other)
 ### Join types
 
 Supported join types:
-* `Inner` (default) - only matched rows from left and right dataframes
-* `Left` - all rows from left dataframe, mismatches from right dataframe filled with `null`
-* `Right` - all rows from right dataframe, mismatches from left dataframe filled with `null`
-* `Full` - all rows from left and right dataframes, any mismatches filled with `null`
-* `Exclude` - only mismatched rows from left
+* `Inner` (default) — only matched rows from left and right dataframes
+* `Left` — all rows from left dataframe, mismatches from right dataframe filled with `null`
+* `Right` — all rows from right dataframe, mismatches from left dataframe filled with `null`
+* `Full` — all rows from left and right dataframes, any mismatches filled with `null`
+* `Exclude` — only mismatched rows from left
 
 For every join type there is a shortcut operation:
 

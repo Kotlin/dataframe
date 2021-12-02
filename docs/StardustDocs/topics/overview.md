@@ -20,7 +20,7 @@ The handiness of this abstraction is not in the table itself but in a set of ope
 
 * **Safe** —`Kotlin Dataframe` provides a mechanism of on-the-fly [**generation of extension properties**](extensionPropertiesApi.md) that correspond to the columns of frame. In interactive notebooks like Jupyter or Datalore, the generation runs after each cell execution. In IntelliJ IDEA there's a Gradle plugin for generation properties based on CSV and Json. Also, we’re working on a compiler plugin that infers and transforms data frame schema while typing. <br /> The generated properties ensures you’ll never misspell column name and don’t mess up with its type, and of course nullability is also preserved.
 
-* **Generic** - columns can store objects of any type, not only numbers or strings.
+* **Generic** — columns can store objects of any type, not only numbers or strings.
 
 * [**Polymorphic**](schemas.md) — if all columns of dataframe are presented in some other dataframe, then the first one could be a superclass for latter. Thus, one can define a function on an interface with some set of columns and then execute it in a safe way on any dataframe which contains this set of columns.
 

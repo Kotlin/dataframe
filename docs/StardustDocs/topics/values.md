@@ -10,8 +10,8 @@ values(byRows: Boolean = false)
 ```
 
 **Parameters:**
-* `columns` (optional) - subset of columns for values extraction
-* `byRows: Boolean = false` - if `true`, data is traversed by rows, not by columns
+* `columns` (optional) — subset of columns for values extraction
+* `byRows: Boolean = false` — if `true`, data is traversed by rows, not by columns
 
 <!---FUN values-->
 
