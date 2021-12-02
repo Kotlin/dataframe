@@ -32,5 +32,4 @@ open class Base {
         val city: String?
         val weight: Int?
     }
-
 }
