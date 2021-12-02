@@ -98,6 +98,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             this.packageName.set(packageName)
             this.src.set(src)
             this.schemaVisibility.set(visibility)
+            this.csvOptions.set(schema.csvOptions)
         }
     }
 
