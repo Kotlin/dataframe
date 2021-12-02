@@ -45,13 +45,13 @@ or specific version:
 **Create:**
 ```kotlin
 // create columns
-val From_To by columnOf("LoNDon_paris", "MAdrid_miLAN", "londON_StockhOlm", "Budapest_PaRis", "Brussels_londOn")
-val FlightNumber by columnOf(10045.0, Double.NaN, 10065.0, Double.NaN, 10085.0)
-val RecentDelays by columnOf("23,47", null, "24, 43, 87", "13", "67, 32")
-val Airline by columnOf("KLM(!)", "{Air France} (12)", "(British Airways. )", "12. Air France", "'Swiss Air'")
+val fromTo by columnOf("LoNDon_paris", "MAdrid_miLAN", "londON_StockhOlm", "Budapest_PaRis", "Brussels_londOn")
+val flightNumber by columnOf(10045.0, Double.NaN, 10065.0, Double.NaN, 10085.0)
+val recentDelays by columnOf("23,47", null, "24, 43, 87", "13", "67, 32")
+val airline by columnOf("KLM(!)", "{Air France} (12)", "(British Airways. )", "12. Air France", "'Swiss Air'")
 
 // create dataframe
-val d1 = dataFrameOf(From_To, FlightNumber, RecentDelays, Airline)
+val d1 = dataFrameOf(fromTo, flightNumber, recentDelays, airline)
 ```
 
 **Clean:**
@@ -59,31 +59,31 @@ val d1 = dataFrameOf(From_To, FlightNumber, RecentDelays, Airline)
 // typed accessors for columns
 // that will appear during 
 // dataframe transformation
-val From by column<String>()
-val To by column<String>()
+val origin by column<String>()
+val destination by column<String>()
 
 val d2 = d1
     // fill missing flight numbers
-    .fillNA { FlightNumber }.with { prev()!!.FlightNumber + 10 }
+    .fillNA { flightNumber }.with { prev()!!.flightNumber + 10 }
 
     // convert flight numbers to int
-    .convert { FlightNumber }.toInt()
+    .convert { flightNumber }.toInt()
 
     // clean 'Airline' column
-    .update { Airline }.with { "([a-zA-Z\\s]+)".toRegex().find(it)?.value ?: "" }
+    .update { airline }.with { "([a-zA-Z\\s]+)".toRegex().find(it)?.value ?: "" }
 
     // split 'From_To' column into 'From' and 'To'
-    .split { From_To }.by("_").into(From, To)
+    .split { fromTo }.by("_").into(origin, destination)
 
     // clean 'From' and 'To' columns
-    .update { From and To }.with { it.lowercase().replaceFirstChar(Char::uppercase) }
+    .update { origin and destination }.with { it.lowercase().replaceFirstChar(Char::uppercase) }
 
     // split lists of delays in 'RecentDelays' into separate columns 
     // 'delay1', 'delay2'... and nest them inside original column `RecentDelays`
-    .split { RecentDelays }.inward { "delay$it" }
+    .split { recentDelays }.inward { "delay$it" }
 
     // convert string values in `delay1`, `delay2` into ints
-    .parse { RecentDelays }
+    .parse { recentDelays }
 ```
 
 **Aggregate:**
@@ -96,19 +96,19 @@ val d3 = d2.groupBy { From into "origin" }.aggregate {
     count() into "count"
     
     // list of flight numbers
-    FlightNumber into "flight numbers"
+    flightNumber into "flight numbers"
     
     // counts of flights per airline
-    Airline.valueCounts() into "airlines"
+    airline.valueCounts() into "airlines"
 
     // max delay across all delays in `delay1` and `delay2`
-    RecentDelays.maxOrNull { delay1 and delay2 } into "major delay"
+    recentDelays.maxOrNull { delay1 and delay2 } into "major delay"
 
     // separate lists of recent delays for `delay1`, `delay2` and `delay3`
-    RecentDelays.implode(dropNulls = true) into "recent delays"
+    recentDelays.implode(dropNulls = true) into "recent delays"
     
     // total delay per city of destination
-    pivot { To }.sum { RecentDelays.intCols() } into "total delays to"
+    pivot { To }.sum { recentDelays.intCols() } into "total delays to"
 }
 ```
 
