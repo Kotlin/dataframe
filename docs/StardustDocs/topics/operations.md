@@ -96,8 +96,8 @@ Multiplex operations usually end with `into` or `with` function. The following n
 Some operations are shortcuts for more general operations:
 * [rename](rename.md), [group](group.md), [flatten](flatten.md) are special cases of [move](move.md)
 * [valueCounts](valueCounts.md) is a special cases of [groupBy](groupBy.md)
-* [pivotCounts](pivotCounts.md), [pivotMatches](pivotMatches.md) are special cases of [pivot](pivot.md)
-* [fillNulls](fillNulls.md), [fillNaNs](fillNaNs.md), [fillNA](fillNA.md) are special cases of [update](update.md)
+* [pivotCounts](pivot.md#pivotcounts), [pivotMatches](pivot.md#pivotmatches) are special cases of [pivot](pivot.md)
+* [fillNulls](fill.md#fillnulls), [fillNaNs](fill.md#fillnans), [fillNA](fill.md#fillna) are special cases of [update](update.md)
 * [convert](convert.md) is a special case of [replace](replace.md)
 
-Use these shortcuts to apply the most common `DataFrame` transformations easier. You can always fall back to the basic operations if you need more customization.  
+Use these shortcuts to apply the most common `DataFrame` transformations easier. If you need more customization you can fall back to the general operations.   

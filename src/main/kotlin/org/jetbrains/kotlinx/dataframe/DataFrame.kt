@@ -26,6 +26,8 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
         public fun empty(nrow: Int = 0): AnyFrame = if (nrow == 0) Empty else EmptyDataFrame<Unit>(nrow)
     }
 
+    // region columns
+
     override fun columns(): List<AnyCol>
 
     public fun columnNames(): List<String>
@@ -34,43 +36,70 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     override fun columnsCount(): Int
 
-    public fun indices(): IntRange = 0 until nrow
+    // endregion
 
-    public fun <C> values(byRow: Boolean = false, columns: ColumnsSelector<T, C>): Sequence<C>
-    public fun values(byRow: Boolean = false): Sequence<Any?> = values(byRow) { all() }
-
-    public fun <C> valuesNotNull(byRow: Boolean = false, columns: ColumnsSelector<T, C?>): Sequence<C> = values(byRow, columns).filterNotNull()
-    public fun valuesNotNull(byRow: Boolean = false): Sequence<Any> = valuesNotNull(byRow) { all() }
-
-    override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = getColumnsImpl(UnresolvedColumnsPolicy.Fail, columns)
-
-    public operator fun get(indices: Iterable<Int>): DataFrame<T> = getRows(indices)
-    public operator fun get(range: IntRange): DataFrame<T> = getRows(range)
-    public operator fun get(vararg ranges: IntRange): DataFrame<T> = getRows(ranges.asSequence().flatMap { it.asSequence() }.asIterable())
-    public operator fun get(columnRange: ClosedRange<String>): DataFrame<T> = select { columnRange.start..columnRange.endInclusive }
-
-    public operator fun get(firstIndex: Int, vararg otherIndices: Int): DataFrame<T> = get(headPlusIterable(firstIndex, otherIndices.asIterable()))
-    public operator fun get(first: Column, vararg other: Column): DataFrame<T> = select(listOf(first) + other)
-    public operator fun get(first: String, vararg other: String): DataFrame<T> = select(listOf(first) + other)
-
-    public operator fun plus(col: AnyCol): DataFrame<T> = add(col)
-    public operator fun plus(cols: Iterable<AnyCol>): DataFrame<T> = (columns() + cols).toDataFrame().cast()
-
-    public fun getColumnIndex(name: String): Int
-
-    override fun <R> resolve(reference: ColumnReference<R>): ColumnWithPath<R>? = reference.resolveSingle(this, UnresolvedColumnsPolicy.Skip)
-
-    override fun asColumnGroup(name: String): ColumnGroup<*> = DataColumn.createColumnGroup(name, this)
-
-    public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
-
-    public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T>
-
-    public operator fun get(index: Int): DataRow<T> = DataRowImpl(index, this)
+    // region rows
 
     public fun rowsCount(): Int
     public fun rows(): Iterable<DataRow<T>>
     public fun rowsReversed(): Iterable<DataRow<T>>
+    public fun indices(): IntRange = 0 until nrow
+
+    // endregion
+
+    // region values
+
+    public fun <C> values(byRow: Boolean = false, columns: ColumnsSelector<T, C>): Sequence<C>
+    public fun values(byRows: Boolean = false): Sequence<Any?> = values(byRows) { all() }
+
+    public fun <C> valuesNotNull(byRow: Boolean = false, columns: ColumnsSelector<T, C?>): Sequence<C> = values(byRow, columns).filterNotNull()
+    public fun valuesNotNull(byRow: Boolean = false): Sequence<Any> = valuesNotNull(byRow) { all() }
+
+    // endregion
+
+    // region get columns
+
+    override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = getColumnsImpl(UnresolvedColumnsPolicy.Fail, columns)
+    public operator fun get(first: Column, vararg other: Column): DataFrame<T> = select(listOf(first) + other)
+    public operator fun get(first: String, vararg other: String): DataFrame<T> = select(listOf(first) + other)
+    public operator fun get(columnRange: ClosedRange<String>): DataFrame<T> = select { columnRange.start..columnRange.endInclusive }
+
+    public fun getColumnIndex(name: String): Int
+
+    // endregion
+
+    // region get rows
+
+    public operator fun get(index: Int): DataRow<T> = DataRowImpl(index, this)
+    public operator fun get(indices: Iterable<Int>): DataFrame<T> = getRows(indices)
+    public operator fun get(range: IntRange): DataFrame<T> = getRows(range)
+    public operator fun get(vararg ranges: IntRange): DataFrame<T> = getRows(ranges.asSequence().flatMap { it.asSequence() }.asIterable())
+    public operator fun get(firstIndex: Int, vararg otherIndices: Int): DataFrame<T> = get(headPlusIterable(firstIndex, otherIndices.asIterable()))
+
+    // endregion
+
+    // region plus columns
+
+    public operator fun plus(col: AnyCol): DataFrame<T> = add(col)
+    public operator fun plus(cols: Iterable<AnyCol>): DataFrame<T> = (columns() + cols).toDataFrame().cast()
+
+    // endregion
+
+    // region rows iterator
+
+    public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
+
+    // endregion
+
+    // region aggregate
+
+    public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T>
+
+    // endregion
+
+    override fun <R> resolve(reference: ColumnReference<R>): ColumnWithPath<R>? = reference.resolveSingle(this, UnresolvedColumnsPolicy.Skip)
+
+    override fun asColumnGroup(name: String): ColumnGroup<*> = DataColumn.createColumnGroup(name, this)
 }
 
 internal val ColumnsContainer<*>.ncol get() = columnsCount()
