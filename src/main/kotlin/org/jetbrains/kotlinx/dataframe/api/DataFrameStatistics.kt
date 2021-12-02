@@ -30,8 +30,13 @@ import org.jetbrains.kotlinx.dataframe.impl.zero
 import org.jetbrains.kotlinx.dataframe.math.sumOf
 import kotlin.reflect.KProperty
 
-public fun <T> DataFrame<T>.count(predicate: RowFilter<T>? = null): Int =
-    if (predicate == null) nrow() else rows().count { predicate(it, it) }
+// region count
+
+public fun <T> DataFrame<T>.count(): Int = rowsCount()
+
+public fun <T> DataFrame<T>.count(predicate: RowFilter<T>): Int = rows().count { predicate(it, it) }
+
+// endregion
 
 // region min
 

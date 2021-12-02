@@ -57,7 +57,7 @@ public fun <T> ColumnReference<T>.toColumnAccessor(): ColumnAccessor<T> = when (
 
 // region KProperty
 
-public fun <T> KProperty<T>.toColumnAccessor(): ColumnAccessor<T> = ColumnAccessorImpl<T>(name)
+public fun <T> KProperty<T>.toColumnAccessor(): ColumnAccessor<T> = ColumnAccessorImpl<T>(columnName)
 
 // endregion
 

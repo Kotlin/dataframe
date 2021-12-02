@@ -24,7 +24,8 @@ public fun <T> Pivot<T>.toDataFrame(): DataFrame<T> = toDataRow().toDataFrame()
 
 public fun <T, R> Pivot<T>.aggregate(separate: Boolean = false, body: Selector<AggregateDsl<T>, R>): DataRow<T> = delegate { aggregate(separate, body) }
 
-public fun <T> Pivot<T>.count(predicate: RowFilter<T>? = null): DataRow<T> = delegate { count(predicate) }
+public fun <T> Pivot<T>.count(): DataRow<T> = delegate { count() }
+public fun <T> Pivot<T>.count(predicate: RowFilter<T>): DataRow<T> = delegate { count(predicate) }
 
 public inline fun <T, reified V> Pivot<T>.with(noinline expression: RowExpression<T, V>): DataRow<T> = delegate { with(expression) }
 

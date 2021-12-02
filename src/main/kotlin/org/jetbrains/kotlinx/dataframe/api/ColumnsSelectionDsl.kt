@@ -46,9 +46,9 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
     public operator fun <C> ColumnReference<C>.invoke(newName: String): ColumnReference<C> = renamedReference(newName)
 
-    public operator fun <C> ColumnPath.invoke(): ColumnAccessor<C> = toColumnAccessor().cast()
+    public operator fun <C> ColumnPath.invoke(): DataColumn<C> = getColumn(this).cast()
 
-    public operator fun <C> String.invoke(): ColumnAccessor<C> = toColumnOf()
+    public operator fun <C> String.invoke(): DataColumn<C> = getColumn(this).cast()
 
     public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
 
@@ -332,10 +332,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun ColumnPath.comparables(): DataColumn<Comparable<Any?>> = getColumn(this).cast()
     public fun ColumnPath.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this).cast()
     public fun ColumnPath.numberOrNulls(): DataColumn<Number?> = getColumn(this).cast()
-
-    public fun nrow(): Int
-    public fun rows(): Iterable<DataRow<T>>
-    public fun rowsReversed(): Iterable<DataRow<T>>
 }
 
 public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(

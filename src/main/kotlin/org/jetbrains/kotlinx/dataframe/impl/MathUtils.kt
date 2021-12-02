@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.typeClass
 import java.math.BigDecimal
 
 internal fun <T : Number> DataColumn<T?>.precision(): Int {
+    if (size() == 0) return 0
     return when (typeClass) {
         Double::class -> values().maxOf { (it as? Double)?.scale() ?: 1 }
         Float::class -> values().maxOf { (it as? Float)?.scale() ?: 1 }

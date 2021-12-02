@@ -1,15 +1,15 @@
-[//]: # (title: ndistinct)
+[//]: # (title: distinctCount)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
 Returns number of distinct combinations of values in selected columns of `DataFrame`.
 
-<!---FUN ndistinctColumns-->
+<!---FUN countDistinctColumns-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.ndistinct { age and name }
+df.countDistinct { age and name }
 ```
 
 </tab>
@@ -18,14 +18,14 @@ df.ndistinct { age and name }
 ```kotlin
 val age by column<Int>()
 val name by columnGroup()
-df.ndistinct { age and name }
+df.countDistinct { age and name }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.ndistinct("age", "name")
+df.countDistinct("age", "name")
 ```
 
 </tab></tabs>
@@ -33,13 +33,10 @@ df.ndistinct("age", "name")
 
 When `columns` are not specified, returns number of distinct rows in `DataFrame`.
 
-<!---FUN ndistinct-->
-<tabs>
-<tab title="Properties">
+<!---FUN countDistinct-->
 
 ```kotlin
-df.ndistinct()
+df.countDistinct()
 ```
 
-</tab></tabs>
 <!---END-->

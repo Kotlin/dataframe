@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
@@ -50,7 +51,7 @@ public fun ColumnGroupReference.frameColumn(name: String): ColumnAccessor<AnyFra
 public fun ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(this.path() + path)
 
 public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null) {
-    public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.name)
+    public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.columnName)
 
     public infix fun named(name: String): ColumnAccessor<T> =
         parent?.let { ColumnAccessorImpl(it.path() + name) } ?: ColumnAccessorImpl(name)

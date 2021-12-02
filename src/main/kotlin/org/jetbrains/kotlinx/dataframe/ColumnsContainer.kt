@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import kotlin.reflect.KProperty
@@ -16,7 +17,7 @@ import kotlin.reflect.KProperty
 public interface ColumnsContainer<out T> {
 
     public fun columns(): List<AnyCol>
-    public fun ncol(): Int
+    public fun columnsCount(): Int
 
     // region getColumnOrNull
 
@@ -39,9 +40,9 @@ public interface ColumnsContainer<out T> {
     public operator fun <R> get(column: ColumnReference<DataRow<R>>): ColumnGroup<R> = getColumn(column)
     public operator fun <R> get(column: ColumnReference<DataFrame<R>>): FrameColumn<R> = getColumn(column)
 
-    public operator fun <R> get(column: KProperty<R>): DataColumn<R> = get(column.name).cast()
-    public operator fun <R> get(column: KProperty<DataRow<R>>): ColumnGroup<R> = get(column.name).asColumnGroup().cast()
-    public operator fun <R> get(column: KProperty<DataFrame<R>>): FrameColumn<R> = get(column.name).asFrameColumn().castFrameColumn()
+    public operator fun <R> get(column: KProperty<R>): DataColumn<R> = get(column.columnName).cast()
+    public operator fun <R> get(column: KProperty<DataRow<R>>): ColumnGroup<R> = get(column.columnName).asColumnGroup().cast()
+    public operator fun <R> get(column: KProperty<DataFrame<R>>): FrameColumn<R> = get(column.columnName).asFrameColumn().castFrameColumn()
 
     public operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>>
     public operator fun <C> get(column: ColumnSelector<T, C>): DataColumn<C> = get(column as ColumnsSelector<T, C>).single()

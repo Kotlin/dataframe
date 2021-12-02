@@ -65,10 +65,16 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
     override fun yield(value: NamedValue): NamedValue {
         when (value.value) {
             is AggregatedPivot<*> -> {
-                value.value.aggregator.values.forEach {
-                    yield(value.path + it.path, it.value, it.type, it.default, it.guessType)
+                val pivot = value.value
+                val dropFirstNameInPath = pivot.inward == true && value.path.isNotEmpty() && pivot.aggregator.values.distinctBy { it.path.firstOrNull() }.count() == 1
+                pivot.aggregator.values.forEach {
+                    val targetPath =
+                        if (dropFirstNameInPath && it.path.size > 0) value.path + it.path.dropFirst()
+                        else value.path + it.path
+
+                    yield(targetPath, it.value, it.type, it.default, it.guessType)
                 }
-                value.value.aggregator.values.clear()
+                pivot.aggregator.values.clear()
             }
             is AggregateInternalDsl<*> -> yield(value.copy(value = value.value.df))
             else -> values.add(value)
