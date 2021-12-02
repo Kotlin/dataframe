@@ -5,6 +5,7 @@ package org.jetbrains.dataframe.gradle
 import groovy.lang.Closure
 import org.gradle.api.Project
 import java.io.File
+import java.io.Serializable
 import java.net.URL
 
 open class SchemaGeneratorExtension {
@@ -15,24 +16,26 @@ open class SchemaGeneratorExtension {
     var visibility: DataSchemaVisibility? = null
 
     fun schema(config: Schema.() -> Unit) {
-        val schema = Schema().apply(config)
+        val schema = Schema(project).apply(config)
         schemas.add(schema)
     }
 
     fun schema(config: Closure<*>) {
-        val schema = Schema()
+        val schema = Schema(project)
         project.configure(schema, config)
         schemas.add(schema)
     }
 }
 
 class Schema(
+    private val project: Project,
     var data: Any? = null,
     var src: File? = null,
     var name: String? = null,
     var packageName: String? = null,
     var sourceSet: String? = null,
-    var visibility: DataSchemaVisibility? = null
+    var visibility: DataSchemaVisibility? = null,
+    val csvOptions: CsvOptions = CsvOptions()
 ) {
     fun setData(file: File) {
         data = file
@@ -45,4 +48,14 @@ class Schema(
     fun setData(url: URL) {
         data = url
     }
+
+    fun csvOptions(config: CsvOptions.() -> Unit) {
+        csvOptions.apply(config)
+    }
+    fun csvOptions(config: Closure<*>) {
+        project.configure(csvOptions, config)
+    }
 }
+
+// Without Serializable GradleRunner tests fail
+class CsvOptions(var delimiter: Char = ',') : Serializable
