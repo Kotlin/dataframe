@@ -6,15 +6,15 @@
 
 Kotlin Dataframe aims to reconcile Kotlin static typing with dynamic nature of data by utilizing both the full power of Kotlin language and opportunities provided by intermittent code execution in Jupyter notebooks and REPL.   
 
-* **Hierarchical** - represents any hierarchical data structure, such as JSON or a tree of Kotlin objects.
-* **Functional** - data processing pipeline is represented by a chain of `DataFrame` transformation operations. Every operation returns a new instance of `DataFrame` reusing underlying storage wherever it's possible.
-* **Readable** - all transformations are described in DSL close to natural language.
-* **Practical** - provides simple solutions for common problems and ability for complex data transformations.
+* **Hierarchical** - represents hierarchical data structures, such as JSON or a tree of JVM objects.
+* **Functional** - data processing pipeline is organized in a chain of `DataFrame` transformation operations. Every operation returns a new instance of `DataFrame` reusing underlying storage wherever it's possible.
+* **Readable** - data transformation operations are defined in DSL close to natural language.
+* **Practical** - provides simple solutions for common problems and ability to perform complex tasks.
 * **Minimalistic** - simple, yet powerful data model of three column kinds.
 * **Interoperable** - convertable with Kotlin data classes and collections.
 * **Generic** - can store objects of any type, not only numbers or strings.
 * **Typesafe** - on-the-fly generation of extension properties for type safe data access with Kotlin-style care for null safety.
-* **Polymorphic** - `DataFrame` type compatibility is derived from column schema compatibility. You can define a function that requires a special subset of columns in dataframe but doesn't care about existence of other columns.
+* **Polymorphic** - type compatibility derives from column schema compatibility. You can define a function that requires a special subset of columns in dataframe but doesn't care about other columns.
 
 Integrates with [Kotlin kernel for Jupyter](https://github.com/Kotlin/kotlin-jupyter). Inspired by [krangl](https://github.com/holgerbrandl/krangl), Kotlin Collections and [pandas](https://pandas.pydata.org/)
 
