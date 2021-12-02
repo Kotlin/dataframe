@@ -7,8 +7,10 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import org.jetbrains.kotlinx.dataframe.pathOf
 import kotlin.reflect.KProperty
 
@@ -43,9 +45,14 @@ public fun <T, C, R> Merge<T, C, R>.into(column: ColumnAccessor<R>): DataFrame<T
 public fun <T, C, R> Merge<T, C, R>.intoList(): List<R> =
     df.select(selector).rows().map { transform(it, it.values() as List<C>) }
 
-public fun <T, C, R> Merge<T, C, R>.into(columnPath: ColumnPath): DataFrame<T> {
-    val grouped = df.move(selector).under { columnPath }
-    val res = grouped.convert { getColumnGroup(columnPath) }.withRowCellImpl(null) {
+public fun <T, C, R> Merge<T, C, R>.into(path: ColumnPath): DataFrame<T> {
+    // If target path exists, merge into temp path
+    val mergePath = if(df.getColumnOrNull(path) != null) pathOf(nameGenerator().addUnique("temp")) else path
+
+    // move columns into group
+    val grouped = df.move(selector).under { mergePath }
+
+    var res = grouped.convert { getColumnGroup(mergePath) }.withRowCellImpl(null) {
         val srcRow = df[index()]
         var values = it.values() as List<C>
         if (notNull) {
@@ -54,6 +61,11 @@ public fun <T, C, R> Merge<T, C, R>.into(columnPath: ColumnPath): DataFrame<T> {
             }
         }
         transform(srcRow, values)
+    }
+    if(mergePath != path) {
+        // target path existed before merge, but
+        // it may have already been removed
+        res = res.removeImpl(true) { path }.df.move(mergePath).into { path }
     }
     return res
 }
