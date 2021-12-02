@@ -26,17 +26,96 @@ The handiness of this abstraction is not in the table itself but in a set of ope
 
 * **Immutable** — all operations on `DataFrame` produce new instance, while underlying data is reused wherever it's possible
 
-## Basic Syntax
+## Syntax
+
+**Basics:**
 
 ```kotlin
-DataFrame.read("titanic.csv")
-    .cast<Titanic>()
-    .filter { survived && home.endsWith("NY") && age in 10..20 }
-    .add("birthYear") { 1912 - age }
-    .groupBy { pclass }.aggregate {
-        pivot { sex }.mean { survived }
-        maxBy { age }.name into "oldest person"
-    }
-    .sortByDesc { age }
-    .print()
+val df = DataFrame.read("titanic.csv")
+```
+```kotlin
+// filter rows
+df.filter { survived && home.endsWith("NY") && age in 10..20 }
+    
+// add column
+df.add("birthYear") { 1912 - age }
+
+// sort rows
+df.sortByDesc { age }
+
+// aggregate data
+df.groupBy { pclass }.aggregate {
+    maxBy { age }.name into "oldest person"
+    count { survived } into "survived"
+}
+```
+
+**Create:**
+```kotlin
+// create columns
+val fromTo by columnOf("LoNDon_paris", "MAdrid_miLAN", "londON_StockhOlm", "Budapest_PaRis", "Brussels_londOn")
+val flightNumber by columnOf(10045.0, Double.NaN, 10065.0, Double.NaN, 10085.0)
+val recentDelays by columnOf("23,47", null, "24, 43, 87", "13", "67, 32")
+val airline by columnOf("KLM(!)", "{Air France} (12)", "(British Airways. )", "12. Air France", "'Swiss Air'")
+
+// create dataframe
+val df = dataFrameOf(fromTo, flightNumber, recentDelays, airline)
+```
+
+**Clean:**
+```kotlin
+// typed accessors for columns
+// that will appear during 
+// dataframe transformation
+val origin by column<String>()
+val destination by column<String>()
+
+val dfClean = df
+    // fill missing flight numbers
+    .fillNA { flightNumber }.with { prev()!!.flightNumber + 10 }
+
+    // convert flight numbers to int
+    .convert { flightNumber }.toInt()
+
+    // clean 'Airline' column
+    .update { airline }.with { "([a-zA-Z\\s]+)".toRegex().find(it)?.value ?: "" }
+
+    // split 'From_To' column into 'From' and 'To'
+    .split { fromTo }.by("_").into(origin, destination)
+
+    // clean 'From' and 'To' columns
+    .update { origin and destination }.with { it.lowercase().replaceFirstChar(Char::uppercase) }
+
+    // split lists of delays in 'RecentDelays' into separate columns 
+    // 'delay1', 'delay2'... and nest them inside original column `RecentDelays`
+    .split { recentDelays }.inward { "delay$it" }
+
+    // convert string values in `delay1`, `delay2` into ints
+    .parse { recentDelays }
+```
+
+**Aggregate:**
+```kotlin
+// group by flight origin
+dfClean.groupBy { From into "origin" }.aggregate {
+    // we are in the context of single data group
+    
+    // number of flights from origin
+    count() into "count"
+    
+    // list of flight numbers
+    flightNumber into "flight numbers"
+    
+    // counts of flights per airline
+    airline.valueCounts() into "airlines"
+
+    // max delay across all delays in `delay1` and `delay2`
+    recentDelays.maxOrNull { delay1 and delay2 } into "major delay"
+
+    // separate lists of recent delays for `delay1`, `delay2` and `delay3`
+    recentDelays.implode(dropNulls = true) into "recent delays"
+    
+    // total delay per city of destination
+    pivot { To }.sum { recentDelays.intCols() } into "total delays to"
+}
 ```
