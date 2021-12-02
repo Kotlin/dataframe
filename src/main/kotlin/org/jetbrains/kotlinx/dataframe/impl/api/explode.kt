@@ -37,7 +37,7 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: Co
     val rowExpandSizes = indices.map { row ->
         columns.maxOf {
             val n = when (val value = it.data[row]) {
-                is AnyFrame -> value.nrow()
+                is AnyFrame -> value.nrow
                 is List<*> -> value.size
                 else -> 1
             }

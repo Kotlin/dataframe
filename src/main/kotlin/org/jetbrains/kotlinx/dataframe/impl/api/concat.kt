@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.baseType
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.getListType
+import org.jetbrains.kotlinx.dataframe.nrow
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -27,7 +28,7 @@ internal fun concatImpl(dataFrames: List<AnyFrame>): AnyFrame {
 
         if (columns.all { it == null || it.isColumnGroup() }) {
             val frames = columns.mapIndexed { index, col ->
-                col?.asColumnGroup() ?: emptyDataFrame(dataFrames[index].nrow())
+                col?.asColumnGroup() ?: emptyDataFrame(dataFrames[index].nrow)
             }
             val merged = concatImpl(frames)
             DataColumn.createColumnGroup(name, merged)
@@ -53,7 +54,7 @@ internal fun concatImpl(dataFrames: List<AnyFrame>): AnyFrame {
                     }
                     col.toList()
                 } else {
-                    val nrow = dataFrames[index].nrow()
+                    val nrow = dataFrames[index].nrow
                     if (!nulls && nrow > 0 && defaultValue == null) nulls = true
                     List(nrow) { defaultValue }
                 }

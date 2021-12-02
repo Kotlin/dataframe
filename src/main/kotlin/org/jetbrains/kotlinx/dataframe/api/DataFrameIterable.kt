@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
@@ -55,10 +56,10 @@ public fun <T, K, V> DataFrame<T>.associate(transform: RowExpression<T, Pair<K, 
 public fun <T> DataFrame<T>.tail(numRows: Int = 5): DataFrame<T> = takeLast(numRows)
 public fun <T> DataFrame<T>.head(numRows: Int = 5): DataFrame<T> = take(numRows)
 
-public fun <T> DataFrame<T>.shuffle(): DataFrame<T> = getRows((0 until nrow()).shuffled())
+public fun <T> DataFrame<T>.shuffle(): DataFrame<T> = getRows(indices.shuffled())
 
 public fun <T> DataFrame<T>.chunked(size: Int): FrameColumn<T> {
-    val startIndices = (0 until nrow() step size)
+    val startIndices = (0 until nrow step size)
     return DataColumn.createFrameColumn("", this, startIndices)
 }
 
@@ -123,9 +124,9 @@ public fun <T> DataFrame<T>.filterBy(column: KProperty<Boolean>): DataFrame<T> =
 
 // region take/drop
 
-public fun <T> DataFrame<T>.dropLast(numRows: Int = 1): DataFrame<T> = take(nrow() - numRows)
-public fun <T> DataFrame<T>.takeLast(numRows: Int): DataFrame<T> = drop(nrow() - numRows)
-public fun <T> DataFrame<T>.drop(numRows: Int): DataFrame<T> = getRows(numRows until nrow())
+public fun <T> DataFrame<T>.dropLast(numRows: Int = 1): DataFrame<T> = take(nrow - numRows)
+public fun <T> DataFrame<T>.takeLast(numRows: Int): DataFrame<T> = drop(nrow - numRows)
+public fun <T> DataFrame<T>.drop(numRows: Int): DataFrame<T> = getRows(numRows until nrow)
 public fun <T> DataFrame<T>.take(numRows: Int): DataFrame<T> = getRows(0 until numRows)
 public fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter { !predicate(it, it) }
 
@@ -163,18 +164,18 @@ public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataF
 
 // endregion
 
-// region ndistinct
+// region distinctCount
 
-public fun AnyFrame.ndistinct(): Int = ndistinct { all() }
+public fun AnyFrame.countDistinct(): Int = countDistinct { all() }
 
-public fun <T, C> DataFrame<T>.ndistinct(columns: ColumnsSelector<T, C>): Int {
+public fun <T, C> DataFrame<T>.countDistinct(columns: ColumnsSelector<T, C>): Int {
     val cols = get(columns)
     return indices.distinctBy { i -> cols.map { it[i] } }.size
 }
 
-public fun <T> DataFrame<T>.ndistinct(vararg columns: String): Int = ndistinct { columns.toColumns() }
-public fun <T, C> DataFrame<T>.ndistinct(vararg columns: KProperty<C>): Int = ndistinct { columns.toColumns() }
-public fun <T> DataFrame<T>.ndistinct(vararg columns: Column): Int = ndistinct { columns.toColumns() }
+public fun <T> DataFrame<T>.countDistinct(vararg columns: String): Int = countDistinct { columns.toColumns() }
+public fun <T, C> DataFrame<T>.countDistinct(vararg columns: KProperty<C>): Int = countDistinct { columns.toColumns() }
+public fun <T> DataFrame<T>.countDistinct(vararg columns: Column): Int = countDistinct { columns.toColumns() }
 
 // endregion
 
@@ -326,10 +327,10 @@ public abstract class CreateDataFrameDsl<T>(public val source: Iterable<T>) {
         add(this, expression)
 
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
-        add(name, expression)
+        add(columnName, expression)
 
     public inline infix fun <reified R> KProperty<R>.from(inferType: InferType<T, R>): Unit =
-        add(DataColumn.createWithTypeInference(name, source.map { inferType.expression(it) }))
+        add(DataColumn.createWithTypeInference(columnName, source.map { inferType.expression(it) }))
 
     public data class InferType<T, R>(val expression: (T) -> R)
 

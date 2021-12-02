@@ -68,7 +68,7 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>) : DataFrame<T>, Aggrega
         } else columns = cols
     }
 
-    override fun nrow() = nrow
+    override fun rowsCount() = nrow
 
     override fun getColumnIndex(name: String) = columnsMap[name] ?: -1
 
@@ -87,7 +87,7 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>) : DataFrame<T>, Aggrega
 
     override fun columnTypes() = columns.map { it.type() }
 
-    override fun ncol(): Int = columns.size
+    override fun columnsCount(): Int = columns.size
 
     override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) =
         aggregate(body as AggregateGroupedBody<T, R>).df()

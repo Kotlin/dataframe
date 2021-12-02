@@ -583,32 +583,32 @@ class Access : TestBase() {
     }
 
     @Test
-    fun ndistinct_properties() {
+    fun countDistinct() {
         // SampleStart
-        df.ndistinct()
+        df.countDistinct()
         // SampleEnd
     }
 
     @Test
-    fun ndistinctColumns_properties() {
+    fun countDistinctColumns_properties() {
         // SampleStart
-        df.ndistinct { age and name }
+        df.countDistinct { age and name }
         // SampleEnd
     }
 
     @Test
-    fun ndistinctColumns_accessors() {
+    fun countDistinctColumns_accessors() {
         // SampleStart
         val age by column<Int>()
         val name by columnGroup()
-        df.ndistinct { age and name }
+        df.countDistinct { age and name }
         // SampleEnd
     }
 
     @Test
-    fun ndistinctColumns_strings() {
+    fun countDistinctColumns_strings() {
         // SampleStart
-        df.ndistinct("age", "name")
+        df.countDistinct("age", "name")
         // SampleEnd
     }
 
@@ -751,7 +751,7 @@ class Access : TestBase() {
         df.select { "name"["firstName"]<String>().map { it.uppercase() } }
 
         // column arithmetics
-        df.select { 2021 - "age"() }
+        df.select { 2021 - "age"<Int>() }
 
         // two columns
         df.select { "name" and "age" }
@@ -920,7 +920,7 @@ class Access : TestBase() {
         }
 
         // from left to right, then from top to bottom
-        df.values(byRow = true).forEach {
+        df.values(byRows = true).forEach {
             println(it)
         }
         // SampleEnd
@@ -932,6 +932,15 @@ class Access : TestBase() {
         df.xs("Charlie", "Chaplin")
 
         df.xs("Moscow", true) { city and isHappy }
+        // SampleEnd
+    }
+
+    @Test
+    fun values() {
+        // SampleStart
+        df.values()
+        df.values(byRows = true)
+        df.values { age and weight }
         // SampleEnd
     }
 }

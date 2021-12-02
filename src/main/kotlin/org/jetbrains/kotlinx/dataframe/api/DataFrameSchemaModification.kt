@@ -16,12 +16,14 @@ import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.api.flattenImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.xsImpl
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
 import org.jetbrains.kotlinx.dataframe.kind
+import org.jetbrains.kotlinx.dataframe.nrow
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
@@ -56,7 +58,7 @@ public infix fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(C
 public infix fun <T, C> GroupClause<T, C>.into(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> Column): DataFrame<T> = df.move(columns).under(column)
 public infix fun <T, C> GroupClause<T, C>.into(column: String): DataFrame<T> = into(columnGroup().named(column))
 public infix fun <T, C> GroupClause<T, C>.into(column: ColumnGroupAccessor): DataFrame<T> = df.move(columns).under(column)
-public infix fun <T, C> GroupClause<T, C>.into(column: KProperty<*>): DataFrame<T> = into(column.name)
+public infix fun <T, C> GroupClause<T, C>.into(column: KProperty<*>): DataFrame<T> = into(column.columnName)
 
 // endregion
 
@@ -86,7 +88,7 @@ public fun <T, C> DataFrame<T>.flatten(
 // region select
 
 public fun <T> DataFrame<T>.select(columns: ColumnsSelector<T, *>): DataFrame<T> = get(columns).toDataFrame().cast()
-public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> = select(columns.map { it.name })
+public fun <T> DataFrame<T>.select(vararg columns: KProperty<*>): DataFrame<T> = select(columns.map { it.columnName })
 public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> = select(columns.asIterable())
 public fun <T> DataFrame<T>.select(vararg columns: Column): DataFrame<T> = select { columns.toColumns() }
 @JvmName("selectT")
@@ -100,7 +102,7 @@ public fun <T> DataFrame<T>.select(columns: Iterable<Column>): DataFrame<T> = se
 public fun <T> DataFrame<T>.addRowNumber(column: ColumnReference<Int>): DataFrame<T> = addRowNumber(column.name())
 
 public fun <T> DataFrame<T>.addRowNumber(columnName: String = "id"): DataFrame<T> =
-    dataFrameOf(columns() + indexColumn(columnName, nrow())).cast()
+    dataFrameOf(columns() + indexColumn(columnName, nrow)).cast()
 
 public fun AnyCol.addRowNumber(columnName: String = "id"): AnyFrame =
     dataFrameOf(listOf(indexColumn(columnName, size), this))

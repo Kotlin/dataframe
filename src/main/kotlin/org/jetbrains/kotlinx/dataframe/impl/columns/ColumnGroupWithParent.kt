@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import kotlin.reflect.KProperty
 
 internal class ColumnGroupWithParent<T>(override val parent: ColumnGroupReference?, override val source: ColumnGroup<T>) : ColumnGroupImpl<T>(source.df, source.name()), ColumnWithParent<DataRow<T>> {
@@ -51,9 +52,9 @@ internal class ColumnGroupWithParent<T>(override val parent: ColumnGroupReferenc
     override operator fun get(columnName: String): AnyCol = getColumn(columnName)
     override operator fun get(columnPath: ColumnPath): AnyCol = getColumn(columnPath)
 
-    override operator fun <R> get(column: KProperty<R>): DataColumn<R> = get(column.name).cast()
-    override operator fun <R> get(column: KProperty<DataRow<R>>): ColumnGroup<R> = get(column.name).asColumnGroup().cast()
-    override operator fun <R> get(column: KProperty<DataFrame<R>>): FrameColumn<R> = get(column.name).asFrameColumn().castFrameColumn()
+    override operator fun <R> get(column: KProperty<R>): DataColumn<R> = get(column.columnName).cast()
+    override operator fun <R> get(column: KProperty<DataRow<R>>): ColumnGroup<R> = get(column.columnName).asColumnGroup().cast()
+    override operator fun <R> get(column: KProperty<DataFrame<R>>): FrameColumn<R> = get(column.columnName).asFrameColumn().castFrameColumn()
 
     override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = df.get(columns).map { it.addParent(this) }
     override operator fun <C> get(column: ColumnSelector<T, C>): DataColumn<C> = get(column as ColumnsSelector<T, C>).single()

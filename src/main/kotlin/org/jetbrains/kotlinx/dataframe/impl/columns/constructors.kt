@@ -30,6 +30,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
+import org.jetbrains.kotlinx.dataframe.nrow
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
@@ -56,7 +57,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumnWithActualType(name: String, ex
 
 internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T, R>): Pair<Boolean, List<R>> {
     var nullable = false
-    val list = ArrayList<R>(df.nrow())
+    val list = ArrayList<R>(df.nrow)
     df.indices().forEach {
         val row = AddDataRowImpl(it, df, list)
         val value = expression(row, row)

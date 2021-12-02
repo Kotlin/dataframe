@@ -45,7 +45,7 @@ val temp = df
 ```kotlin
 val df = temp.cast<DataFrameType>()
 ```
-> _Note, that object instance after typing remains the same_
+> _Note, that object instance after casting remains the same_
 
 To log all these additional code executions, use cell magic
 ```

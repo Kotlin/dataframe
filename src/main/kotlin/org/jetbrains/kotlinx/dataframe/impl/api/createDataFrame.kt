@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
@@ -125,16 +126,16 @@ internal fun convertToDataFrame(
         val type = property.returnType
         val kclass = (type.classifier as KClass<*>)
         when {
-            hasExceptions -> DataColumn.createWithTypeInference(it.name, values, nullable)
+            hasExceptions -> DataColumn.createWithTypeInference(it.columnName, values, nullable)
             depth == 1 || kclass.isValueType || preserves.contains(kclass) -> DataColumn.createValueColumn(
-                it.name,
+                it.columnName,
                 values,
                 property.returnType.withNullability(nullable)
             )
             kclass.isSubclassOf(Iterable::class) -> {
                 val elementType = type.projectUpTo(Iterable::class).arguments.firstOrNull()?.type
                 if (elementType == null) DataColumn.createValueColumn(
-                    it.name,
+                    it.columnName,
                     values,
                     property.returnType.withNullability(nullable)
                 )
@@ -145,7 +146,7 @@ internal fun convertToDataFrame(
                         val listValues = values.map {
                             (it as? Iterable<*>)?.asList()
                         }
-                        DataColumn.createValueColumn(it.name, listValues, listType)
+                        DataColumn.createValueColumn(it.columnName, listValues, listType)
                     } else {
                         val frames = values.map {
                             if (it == null) DataFrame.empty()
@@ -154,13 +155,13 @@ internal fun convertToDataFrame(
                                 convertToDataFrame(it, elementClass, emptyList(), excludes, preserves, depth - 1)
                             }
                         }
-                        DataColumn.createFrameColumn(it.name, frames)
+                        DataColumn.createFrameColumn(it.columnName, frames)
                     }
                 }
             }
             else -> {
                 val df = convertToDataFrame(values, kclass, emptyList(), excludes, preserves, depth - 1)
-                DataColumn.createColumnGroup(it.name, df)
+                DataColumn.createColumnGroup(it.columnName, df)
             }
         }
     }

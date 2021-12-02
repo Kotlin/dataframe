@@ -130,7 +130,7 @@ internal class SchemaGeneratorPluginTest {
                     packageName = "org.test"
                 }
                 schema {
-                    data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/ghost.json")
+                    data = URL("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv")
                     name = "Schema"
                     packageName = "org.test"
                 }
@@ -158,7 +158,7 @@ internal class SchemaGeneratorPluginTest {
 
             dataframes {
                 schema {
-                    data = "$dataDir/ghost.json"
+                    data = "$dataDir/jetbrains_repositories.csv"
                     name = "Test"
                     packageName = "org.test"
                 }

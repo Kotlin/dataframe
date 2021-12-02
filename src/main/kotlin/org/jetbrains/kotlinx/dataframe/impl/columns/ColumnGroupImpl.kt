@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.renderSchema
+import org.jetbrains.kotlinx.dataframe.nrow
 import kotlin.reflect.KType
 
 internal val anyRowType = createTypeWithArgument<AnyRow>()
@@ -24,7 +25,7 @@ internal open class ColumnGroupImpl<T>(override val df: DataFrame<T>, val name: 
 
     override fun values() = df.rows()
 
-    override fun ndistinct() = distinct.nrow()
+    override fun countDistinct() = distinct.nrow
 
     override fun type() = anyRowType
 
@@ -34,7 +35,7 @@ internal open class ColumnGroupImpl<T>(override val df: DataFrame<T>, val name: 
 
     override fun toSet() = set
 
-    override fun size() = df.nrow()
+    override fun size() = df.nrow
 
     override fun get(index: Int) = df[index]
 

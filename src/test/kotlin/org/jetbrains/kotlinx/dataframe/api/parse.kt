@@ -10,6 +10,8 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
+import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 import java.time.LocalTime
 import java.time.Month
@@ -24,8 +26,8 @@ class ParseTests {
             ]
         """.trimIndent()
         val df = DataFrame.readJsonStr(json)
-        df.ncol() shouldBe 3
-        df.nrow() shouldBe 2
+        df.ncol shouldBe 3
+        df.nrow shouldBe 2
         df["a"].type() shouldBe getType<Int>()
         df["b"].type() shouldBe getType<Comparable<*>>()
         df["c"].type() shouldBe getType<Double?>()
@@ -41,10 +43,10 @@ class ParseTests {
         """.trimIndent()
         val df = DataFrame.readJsonStr(json)
         println(df)
-        df.ncol() shouldBe 1
-        df.nrow() shouldBe 3
+        df.ncol shouldBe 1
+        df.nrow shouldBe 3
         val group = df["a"] as ColumnGroup<*>
-        group.ncol() shouldBe 3
+        group.ncol shouldBe 3
         group["b"].type() shouldBe getType<Int?>()
         group["value"].type() shouldBe getType<String?>()
         group["array"].type() shouldBe getType<List<Int>>()
@@ -59,8 +61,8 @@ class ParseTests {
             ]
         """.trimIndent()
         val df = DataFrame.readJsonStr(json)
-        df.ncol() shouldBe 1
-        df.nrow() shouldBe 3
+        df.ncol shouldBe 1
+        df.nrow shouldBe 3
         df["a"].type() shouldBe getType<List<Number>>()
         df[1]["a"] shouldBe emptyList<Int>()
     }
@@ -73,8 +75,8 @@ class ParseTests {
             ]
         """.trimIndent()
         val df = DataFrame.readJsonStr(json)
-        df.ncol() shouldBe 1
-        df.nrow() shouldBe 2
+        df.ncol shouldBe 1
+        df.nrow shouldBe 2
         println(df)
         val group = df["a"] as FrameColumn<*>
     }
@@ -171,5 +173,14 @@ class ParseTests {
         val df = dataFrameOf(time)
         val casted = df.convert(time).toLocalDate()
         casted[time].type() shouldBe getType<LocalDate>()
+    }
+
+    @Test
+    fun `parse column group`() {
+        val df = dataFrameOf("a", "b")("1", "2")
+        df
+            .group("a", "b").into("c")
+            .parse("c")
+            .ungroup("c") shouldBe dataFrameOf("a", "b")(1, 2)
     }
 }

@@ -20,6 +20,8 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.indices
+import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 
 public fun <T, C> DataFrame<T>.getColumnsWithPaths(selector: ColumnsSelector<T, C>): List<ColumnWithPath<C>> =
     getColumnsWithPaths(UnresolvedColumnsPolicy.Fail, selector)
@@ -35,7 +37,7 @@ public fun <T> DataFrame<T>.getColumns(vararg columns: String): List<AnyCol> = g
 public fun <T> DataFrame<T>.getColumnIndex(col: AnyCol): Int = getColumnIndex(col.name())
 public fun <T> DataFrame<T>.getRows(range: IntRange): DataFrame<T> = if (range == indices()) this else columns().map { col -> col[range] }.toDataFrame().cast()
 public fun <T> DataFrame<T>.getRows(indices: Iterable<Int>): DataFrame<T> = columns().map { col -> col[indices] }.toDataFrame().cast()
-public fun <T> DataFrame<T>.getOrNull(index: Int): DataRow<T>? = if (index < 0 || index >= nrow()) null else get(index)
+public fun <T> DataFrame<T>.getOrNull(index: Int): DataRow<T>? = if (index < 0 || index >= nrow) null else get(index)
 
 public fun <T> ColumnsContainer<T>.getFrameColumn(columnPath: ColumnPath): FrameColumn<*> = get(columnPath).asFrameColumn()
 public fun <T> ColumnsContainer<T>.getFrameColumn(columnName: String): FrameColumn<*> = get(columnName).asFrameColumn()
@@ -62,7 +64,7 @@ public fun <T, R> ColumnsContainer<T>.getColumn(column: ColumnReference<R>): Dat
 
 public fun <T> ColumnsContainer<T>.getColumn(path: ColumnPath): AnyCol = getColumnOrNull(path) ?: throw IllegalArgumentException("Column not found: '$path'")
 
-public fun <T> ColumnsContainer<T>.getColumn(index: Int): AnyCol = getColumnOrNull(index) ?: throw IllegalArgumentException("Column index is out of bounds: $index. Columns count = ${ncol()}")
+public fun <T> ColumnsContainer<T>.getColumn(index: Int): AnyCol = getColumnOrNull(index) ?: throw IllegalArgumentException("Column index is out of bounds: $index. Columns count = $ncol")
 
 public fun <T, C> ColumnsContainer<T>.getColumn(selector: ColumnSelector<T, C>): DataColumn<C> = get(selector)
 

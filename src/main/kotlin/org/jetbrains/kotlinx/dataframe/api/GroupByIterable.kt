@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.api.sortByImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.nrow
 import kotlin.reflect.KProperty
 
 // region map
@@ -67,8 +68,8 @@ public fun <T, G, C> GroupBy<T, G>.sortByGroupDesc(
     createColumnFromGroupExpression(this, expression).desc().nullsLast(nullsLast)
 }.asGroupBy(groups)
 
-public fun <T, G> GroupBy<T, G>.sortByCountAsc(): GroupBy<T, G> = sortByGroup { nrow() }
-public fun <T, G> GroupBy<T, G>.sortByCount(): GroupBy<T, G> = sortByGroupDesc { nrow() }
+public fun <T, G> GroupBy<T, G>.sortByCountAsc(): GroupBy<T, G> = sortByGroup { nrow }
+public fun <T, G> GroupBy<T, G>.sortByCount(): GroupBy<T, G> = sortByGroupDesc { nrow }
 
 public fun <T, G> GroupBy<T, G>.sortByKeyDesc(nullsLast: Boolean = false): GroupBy<T, G> = toDataFrame()
     .sortBy { keys.columns().toColumnSet().desc().nullsLast(nullsLast) }.asGroupBy(groups)

@@ -25,7 +25,7 @@ internal abstract class DataColumnImpl<T>(
 
     override fun toString() = dataFrameOf(this).toString() // "${name()}: $type"
 
-    override fun ndistinct() = toSet().size
+    override fun countDistinct() = toSet().size
 
     override fun get(index: Int) = values[index]
 

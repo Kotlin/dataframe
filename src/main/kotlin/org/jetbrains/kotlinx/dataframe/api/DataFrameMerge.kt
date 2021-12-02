@@ -30,7 +30,7 @@ public fun <T> DataFrame<T>.concat(vararg other: DataFrame<T>): DataFrame<T> = c
 
 public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
     val ncol = ncol
-    assert(values.size % ncol == 0) { "Invalid number of arguments. Multiple of ${ncol()} is expected, but actual was: ${values.size}" }
+    assert(values.size % ncol == 0) { "Invalid number of arguments. Multiple of $ncol is expected, but actual was: ${values.size}" }
     val newRows = values.size / ncol
     return columns().mapIndexed { colIndex, col ->
         val newValues = (0 until newRows).map { values[colIndex + it * ncol] }
@@ -41,7 +41,7 @@ public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
 public fun <T> DataFrame<T>.appendNulls(numberOfRows: Int = 1): DataFrame<T> {
     require(numberOfRows >= 0)
     if (numberOfRows == 0) return this
-    if (ncol() == 0) return EmptyDataFrame(nrow + numberOfRows)
+    if (ncol == 0) return EmptyDataFrame(nrow + numberOfRows)
     return columns().map { col ->
         col.updateWith(col.values + arrayOfNulls(numberOfRows))
     }.toDataFrame().cast()

@@ -32,7 +32,10 @@ public interface Grouped<out T> : Aggregatable<T> {
     public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataFrame<T>
 }
 
-public fun <T> Grouped<T>.count(resultName: String = "count", predicate: RowFilter<T>? = null): DataFrame<T> =
+public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
+    aggregateValue(resultName) { count() default 0 }
+
+public fun <T> Grouped<T>.count(resultName: String = "count", predicate: RowFilter<T>): DataFrame<T> =
     aggregateValue(resultName) { count(predicate) default 0 }
 
 public fun <T> Grouped<T>.values(vararg columns: Column, dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> = values(dropNA, distinct) { columns.toColumns() }

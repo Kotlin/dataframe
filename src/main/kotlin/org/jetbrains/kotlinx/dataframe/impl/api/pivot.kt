@@ -20,7 +20,11 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregatePivot
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 
-internal class AggregatedPivot<T>(private val df: DataFrame<T>, internal var aggregator: GroupByReceiverImpl<T>) :
+internal class AggregatedPivot<T>(
+    private val df: DataFrame<T>,
+    val inward: Boolean?,
+    internal var aggregator: GroupByReceiverImpl<T>
+) :
     DataFrame<T> by df
 
 internal data class PivotChainElement(val column: ColumnWithPath<Any?>, val includeColumnName: Boolean)

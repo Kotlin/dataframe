@@ -25,10 +25,19 @@ import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.reflect.KProperty
 
-public fun <T> PivotGroupBy<T>.count(predicate: RowFilter<T>? = null): DataFrame<T> = aggregate { count(predicate) default 0 }
+// region count
+
+public fun <T> PivotGroupBy<T>.count(): DataFrame<T> = aggregate { count() default 0 }
+public fun <T> PivotGroupBy<T>.count(predicate: RowFilter<T>): DataFrame<T> = aggregate { count(predicate) default 0 }
+
+// endregion
+
+// region matches
 
 public fun <T> PivotGroupBy<T>.matches(): DataFrame<T> = matches(yes = true, no = false)
 public fun <T, R> PivotGroupBy<T>.matches(yes: R, no: R): DataFrame<T> = aggregate { yes default no }
+
+// endregion
 
 public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<T> {
     val type = getType<V>()
