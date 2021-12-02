@@ -74,7 +74,7 @@ Multiplex operations usually end with `into` or `with` function. The following n
 * [remove](remove.md) — remove columns
 * [rename](rename.md) — rename columns
 * [replace](replace.md) — replace columns
-* [rows](rows.md) / [rowsReversed](rows.md#rowsreversed) - get rows in direct or reversed order
+* [rows](rows.md) / [rowsReversed](rows.md#rowsreversed) — get rows in direct or reversed order
 * [rowsCount](rowsCount.md) — number of rows
 * [schema](schema.md) — schema of column hierarchy
 * [select](select.md) — select subset of columns
