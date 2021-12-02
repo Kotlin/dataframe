@@ -258,7 +258,15 @@
         }
     })()
 
-    window.call_DataFrame = window.call_DataFrame || function(f) {
+    window.call_DataFrame = function(f) {
         return f();
     };
+
+    let funQueue = window["kotlinQueues"] && window["kotlinQueues"]["DataFrame"];
+    if (funQueue) {
+        funQueue.forEach(function(f) {
+            f();
+        });
+        funQueue = [];
+    }
 })()
