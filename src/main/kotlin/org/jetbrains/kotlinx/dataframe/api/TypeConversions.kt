@@ -89,13 +89,13 @@ public fun <T> DataColumn<T?>.castNotNull(): DataColumn<T> {
 
 public inline fun <reified T> DataColumn<T>.toTypedArray(): Array<T> = toList().toTypedArray()
 
-public fun DataColumn<Number>.toFloatArray(): FloatArray = convertTo<Float>().toList().toFloatArray()
+public fun DataColumn<Number>.toFloatArray(): FloatArray = convertToFloat().toList().toFloatArray()
 
-public fun DataColumn<Number>.toDoubleArray(): DoubleArray = convertTo<Double>().toList().toDoubleArray()
+public fun DataColumn<Number>.toDoubleArray(): DoubleArray = convertToDouble().toList().toDoubleArray()
 
-public fun DataColumn<Number>.toIntArray(): IntArray = convertTo<Int>().toList().toIntArray()
+public fun DataColumn<Number>.toIntArray(): IntArray = convertToInt().toList().toIntArray()
 
-public fun DataColumn<Number>.toLongArray(): LongArray = convertTo<Long>().toList().toLongArray()
+public fun DataColumn<Number>.toLongArray(): LongArray = convertToLong().toList().toLongArray()
 
 public fun DataColumn<Number>.toShortArray(): ShortArray = convertTo<Short>().toList().toShortArray()
 
