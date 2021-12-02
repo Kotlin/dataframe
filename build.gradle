@@ -17,7 +17,7 @@ plugins {
     id "org.jetbrains.kotlin.libs.publisher" version "$libsPublisherVersion"
     id("io.github.devcrocod.korro") version "0.1.1-dev-29"
     id("org.jmailen.kotlinter") version "$ktlint_version"
-    id("org.jetbrains.kotlin.plugin.dataframe") version "0.8.0-dev-456"
+    id("org.jetbrains.kotlin.plugin.dataframe") version "0.8.0-rc"
     id("org.jetbrains.kotlin.plugin.serialization") version "$kotlin_version"
 }
 
