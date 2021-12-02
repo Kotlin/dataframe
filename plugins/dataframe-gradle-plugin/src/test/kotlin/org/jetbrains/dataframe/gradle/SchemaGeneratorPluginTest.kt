@@ -174,10 +174,13 @@ internal class SchemaGeneratorPluginTest {
         result.task(":generateDataFrameSchema")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
+    private val jsonStr = """{"name": "Test"}"""
+
     @Test
     fun `data is string and relative path`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
-            File(dataDir).copyRecursively(File(buildDir, "data"))
+            val dataDir = File(buildDir, "data").also { it.mkdirs() }
+            File(dataDir, "test.json").writeText(jsonStr)
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -192,7 +195,7 @@ internal class SchemaGeneratorPluginTest {
 
             dataframes {
                 schema {
-                    data = "data/ghost.json"
+                    data = "data/test.json"
                     name = "Test"
                     packageName = "org.test"
                 }
@@ -205,6 +208,8 @@ internal class SchemaGeneratorPluginTest {
     @Test
     fun `data is string and absolute path`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
+            val dataDir = File(buildDir, "data").also { it.mkdirs() }
+            File(dataDir, "test.json").writeText(jsonStr)
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -219,7 +224,7 @@ internal class SchemaGeneratorPluginTest {
 
             dataframes {
                 schema {
-                    data = "$dataDir/ghost.json"
+                    data = "$dataDir/test.json"
                     name = "Test"
                     packageName = "org.test"
                 }
