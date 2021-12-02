@@ -33,9 +33,9 @@ Every multiplex operation configuration consists of:
 - additional configuration functions
 - terminal function that returns modified `DataFrame`
 
-Multiplex operations usually end with `into` or `with` function. The following naming convention is used:
+Most multiplex operations end with `into` or `with` function. The following naming convention is used:
 * `into` defines column names for storing operation results. Used in [`move`](move.md), [`group`](group.md), [`split`](split.md), [`merge`](merge.md), [`gather`](gather.md), [`groupBy`](groupBy.md), [`rename`](rename.md).
-* `with` defines row-wise data transformation using [`row expression`](DataRow.md#row-expressions). Used in [`update`](update.md), [`convert`](convert.md), [`replace`](replace.md), [`pivot`](pivot.md).
+* `with` defines row-wise data transformation with [`row expression`](DataRow.md#row-expressions). Used in [`update`](update.md), [`convert`](convert.md), [`replace`](replace.md), [`pivot`](pivot.md).
 
 ## List of all DataFrame operations
 
@@ -68,31 +68,31 @@ Multiplex operations usually end with `into` or `with` function. The following n
 * [insert](insert.md) — insert column
 * [join](join.md) — join dataframes by key columns
 * [last](last.md) / [lastOrNull](last.md#lastornull) — find last row by condition 
-* [map](map.md) — map [`DataFrame`](DataFrame.md) columns to a new [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md)
+* [map](map.md) — map columns into new [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md)
 * [max](minmax.md) / [maxBy](minmax.md) / [maxOf](minmax.md) / [maxFor](minmax.md) — max of values 
 * [mean](mean.md) / [meanOf](mean.md) / [meanFor](mean.md) — average of values
 * [median](median.md) / [medianOf](median.md) / [medianFor](median.md) — median of values
 * [merge](merge.md) — merge several columns into one
 * [min](minmax.md) / [minBy](minmax.md) / [minOf](minmax.md) / [minFor](minmax.md) — min of values
 * [move](move.md) — move columns or change column groupings
-* [parse](parse.md) — try to convert `String` values into other types
+* [parse](parse.md) — try to convert strings into other types
 * [pivot](pivot.md) / [pivotCounts](pivot.md#pivotcounts) / [pivotMatches](pivot.md#pivotmatches) — convert column values into new columns
 * [remove](remove.md) — remove columns
 * [rename](rename.md) — rename columns
 * [replace](replace.md) — replace columns
 * [rows](rows.md) / [rowsReversed](rows.md#rowsreversed) — get rows in direct or reversed order
 * [rowsCount](rowsCount.md) — number of rows
-* [schema](schema.md) — schema of column hierarchy
+* [schema](schema.md) — schema of columns: names, types and hierarchy
 * [select](select.md) — select subset of columns
 * [shuffle](shuffle.md) — reorder rows randomly 
 * [single](single.md) / [singleOrNull](single.md#singleornull) — get single row by condition
 * [sortBy](sortBy.md) / [sortByDesc](sortBy.md#sortbydesc) / [sortWith](sortBy.md#sortwith) — sort rows
 * [sortColumnsBy](sortColumnsBy.md) — sort columns
-* [split](split.md) — split column values into several columns or new rows
+* [split](split.md) — split column values into new rows/columns or inplace into lists
 * [std](std.md) / [stdOf](std.md) / [stdFor](std.md) — standard deviation of values
 * [sum](sum.md) / [sumOf](sum.md) / [sumFor](sum.md) — sum of values
 * [take](sliceRows.md#take) / [takeLast](sliceRows.md#takelast) — get first/last rows
-* [ungroup](ungroup.md) — remove column grouping
+* [ungroup](ungroup.md) — remove column groupings
 * [update](update.md) — update column values preserving column types
 * [values](values.md) — `Sequence` of values traversed by row or by column 
 * [valueCounts](valueCounts.md) — counts for unique values 
@@ -101,9 +101,9 @@ Multiplex operations usually end with `into` or `with` function. The following n
 ## Shortcut operations
 Some operations are shortcuts for more general operations:
 * [rename](rename.md), [group](group.md), [flatten](flatten.md) are special cases of [move](move.md)
-* [valueCounts](valueCounts.md) is a special cases of [groupBy](groupBy.md)
+* [valueCounts](valueCounts.md) is a special case of [groupBy](groupBy.md)
 * [pivotCounts](pivot.md#pivotcounts), [pivotMatches](pivot.md#pivotmatches) are special cases of [pivot](pivot.md)
 * [fillNulls](fill.md#fillnulls), [fillNaNs](fill.md#fillnans), [fillNA](fill.md#fillna) are special cases of [update](update.md)
 * [convert](convert.md) is a special case of [replace](replace.md)
 
-Use these shortcuts to apply the most common `DataFrame` transformations easier. If you need more customization you can fall back to the general operations.   
+You can use these shortcuts to apply the most common `DataFrame` transformations easier, but you can always fall back to general operations if you need more customization.    
