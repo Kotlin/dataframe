@@ -2345,9 +2345,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `merge into same name`() {
-        shouldThrow<IllegalStateException> {
-            typed.merge { name and city }.into("age")
-        }
+        typed.merge { name and city }.into("age") shouldBe
+            typed.merge { name and city }.into("data").remove("age").rename("data" to "age")
     }
 
     @Test
@@ -2413,4 +2412,5 @@ class DataFrameTests : BaseTest() {
         col[0].name shouldBe typed.city.name()
         col[0].isMissingColumn() shouldBe true
     }
+
 }
