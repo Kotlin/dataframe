@@ -18,6 +18,12 @@ df.update { age }.where { city == "Paris" }.with { it - 5 }
 
 <!---END-->
 
+<tip>
+
+You can play with "people" dataset that is used in `DataFrame` operations guide [here](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)
+
+</tip>
+
 ## Multiplex operations
 
 Simple operations (such as [`filter`](filter.md) or [`select`](select.md)) return new `DataFrame` immediately, while more complex operations return an intermediate object that is used for further configuration of the operation. Let's call such operations **multiplex**.
