@@ -31,15 +31,9 @@ In the most of the code snippets in this documentation there's a tab selector th
 <tabs>
     <tab title = "Generated Properties">
         
-<!---FUN extensionProperties1-->
-
 ```kotlin
 val df = DataFrame.read("titanic.csv")
 ```
-
-<!---END-->
-
-<!---FUN extensionProperties2-->
 
 ```kotlin
 df.add("lastName") { name.split(",").last() }
@@ -47,12 +41,8 @@ df.add("lastName") { name.split(",").last() }
     .filter { survived && home.endsWith("NY") && age in 10..20 }
 ```
 
-<!---END-->
-
     </tab>
     <tab title="Strings">
-
-<!---FUN strings-->
 
 ```kotlin
 DataFrame.read("titanic.csv")
@@ -61,12 +51,8 @@ DataFrame.read("titanic.csv")
     .filter { "survived"<Boolean>() && "home"<String>().endsWith("NY") && "age"<Int>() in 10..20 }
 ```
 
-<!---END-->
-
     </tab>
     <tab title="Accessors">
-        
-<!---FUN accessors3-->
 
 ```kotlin
 val survived by column<Boolean>()
@@ -81,12 +67,8 @@ DataFrame.read("titanic.csv")
     .filter { survived() && home().endsWith("NY") && age()!! in 10..20 }
 ```
 
-<!---END-->
-
     </tab>
     <tab title = "KProperties">
-
-<!---FUN kproperties1-->
 
 ```kotlin
 data class Passenger(val survived: Boolean, val home: String, val age: Int, val lastName: String)
@@ -98,17 +80,17 @@ val passengers = DataFrame.read("titanic.csv")
     .toListOf<Passenger>()
 ```
 
-<!---END-->
-
     </tab>
 </tabs>
 
 # Comparing of APIs
 [String API](stringApi.md) is the simplest one and the most unsafe of all. The main advantage of it is that it can be used at any time, including accessing new columns in chain calls. So we can write something like:
+
 ```kotlin
 df.add("weight") { ... } // adding a new column named `weight`, calculated by some expression
   .sortBy("weight") // sorting data frame rows by its value
 ```
+
 So we don't need to interrupt a method chain and declare a column accessor or generate new properties.
 
 In contrast, generated [extension properties](extensionPropertiesApi.md) are the most convenient and safe API. Using it you can be always sure that you work with correct data and types. But its bottleneck — the moment of generation. To get new extension properties you have to run a cell in a notebook, which could lead to unnecessary variable declarations. Currently, we are working on compiler a plugin that generates these properties on the fly while user typing.
