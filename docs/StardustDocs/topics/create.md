@@ -1,9 +1,9 @@
 [//]: # (title: Create)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
-Different ways to create dataframes from the data that already loaded into memory,
-are described in this section. You usually either [create `Column`s from iterables](createColumn.md), and then
-[convert them into `DataFrame`](createDataFrame.md), or create small dataframes for tests using `vararg` variants
-of the [corresponding functions](createDataFrame.md) directly from values.
+There are several ways to create dataframes from the data that is already loaded into memory:
+* [create columns with data](createColumn.md) and then [bundle them](createDataFrame.md) into `DataFrame`
+* create and initialize `DataFrame` directly from values using `vararg` variants of the [corresponding functions](createDataFrame.md) .
+* [convert Kotlin objects](createDataFrame.md#converttodataframe) into `DataFrame` 
 
-Creating dataframes from files and URLs is described [in the next section](read.md)
+To learn how to read dataframes from files and URLs go to [the next section](read.md).
