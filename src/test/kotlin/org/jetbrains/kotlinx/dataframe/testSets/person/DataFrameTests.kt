@@ -171,7 +171,6 @@ import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.junit.Test
-import java.lang.IllegalStateException
 import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.reflect.jvm.jvmErasure
@@ -2412,5 +2411,4 @@ class DataFrameTests : BaseTest() {
         col[0].name shouldBe typed.city.name()
         col[0].isMissingColumn() shouldBe true
     }
-
 }

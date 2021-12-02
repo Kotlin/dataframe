@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.junit.Test
 
-class MergeTests: Base() {
+class MergeTests : Base() {
 
     @Test
     fun `merge inplace`() {

@@ -47,7 +47,7 @@ public fun <T, C, R> Merge<T, C, R>.intoList(): List<R> =
 
 public fun <T, C, R> Merge<T, C, R>.into(path: ColumnPath): DataFrame<T> {
     // If target path exists, merge into temp path
-    val mergePath = if(df.getColumnOrNull(path) != null) pathOf(nameGenerator().addUnique("temp")) else path
+    val mergePath = if (df.getColumnOrNull(path) != null) pathOf(nameGenerator().addUnique("temp")) else path
 
     // move columns into group
     val grouped = df.move(selector).under { mergePath }
@@ -62,7 +62,7 @@ public fun <T, C, R> Merge<T, C, R>.into(path: ColumnPath): DataFrame<T> {
         }
         transform(srcRow, values)
     }
-    if(mergePath != path) {
+    if (mergePath != path) {
         // target path existed before merge, but
         // it may have already been removed
         res = res.removeImpl(true) { path }.df.move(mergePath).into { path }
