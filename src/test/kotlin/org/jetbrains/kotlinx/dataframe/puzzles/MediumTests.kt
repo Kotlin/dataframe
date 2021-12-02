@@ -59,7 +59,7 @@ class MediumTests {
     @Test
     fun `count unique rows`() {
         val df = dataFrameOf("a", "b", "c") { List(30) { random.nextInt(0..2) } }
-        df.distinct().nrow() shouldBe 19
+        df.countDistinct() shouldBe 19
     }
 
     @Test
