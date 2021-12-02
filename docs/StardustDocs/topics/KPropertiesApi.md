@@ -12,14 +12,17 @@ data class Passenger(
     val survived: Boolean,
     val home: String,
     val age: Int,
-    val lastName: String)
+    val lastName: String
+)
 
 val passengers = DataFrame.read("titanic.csv")
     .add(Passenger::lastName) { "name"<String>().split(",").last() }
     .dropNulls(Passenger::age)
-    .filter { it[Passenger::survived]
-        && it[Passenger::home].endsWith("NY")
-        && it[Passenger::age] in 10..20 }
+    .filter {
+        it[Passenger::survived] &&
+            it[Passenger::home].endsWith("NY") &&
+            it[Passenger::age] in 10..20
+    }
     .toListOf<Passenger>()
 ```
 
