@@ -106,6 +106,8 @@ subprojects {
 }
 
 kotlinPublications {
+    fairDokkaJars.set(false)
+
     sonatypeSettings(
             project.findProperty("kds.sonatype.user"),
             project.findProperty("kds.sonatype.password"),
