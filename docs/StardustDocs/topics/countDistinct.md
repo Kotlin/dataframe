@@ -9,7 +9,7 @@ Returns number of distinct combinations of values in selected columns of `DataFr
 <tab title="Properties">
 
 ```kotlin
-df.ndistinct { age and name }
+df.countDistinct { age and name }
 ```
 
 </tab>
@@ -18,14 +18,14 @@ df.ndistinct { age and name }
 ```kotlin
 val age by column<Int>()
 val name by columnGroup()
-df.ndistinct { age and name }
+df.countDistinct { age and name }
 ```
 
 </tab>
 <tab title="Strings">
 
 ```kotlin
-df.ndistinct("age", "name")
+df.countDistinct("age", "name")
 ```
 
 </tab></tabs>
@@ -34,12 +34,9 @@ df.ndistinct("age", "name")
 When `columns` are not specified, returns number of distinct rows in `DataFrame`.
 
 <!---FUN countDistinct-->
-<tabs>
-<tab title="Properties">
 
 ```kotlin
-df.ndistinct()
+df.countDistinct()
 ```
 
-</tab></tabs>
 <!---END-->

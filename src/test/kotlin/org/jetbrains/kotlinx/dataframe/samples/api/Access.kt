@@ -924,7 +924,7 @@ class Access : TestBase() {
         }
 
         // from left to right, then from top to bottom
-        df.values(byRow = true).forEach {
+        df.values(byRows = true).forEach {
             println(it)
         }
         // SampleEnd
@@ -966,6 +966,15 @@ class Access : TestBase() {
         val passengers = DataFrame.read("titanic.csv")
             .filter { it.get(Passenger::city).endsWith("NY") }
             .toListOf<Passenger>()
+        // SampleEnd
+    }
+
+    @Test
+    fun values() {
+        // SampleStart
+        df.values()
+        df.values(byRows = true)
+        df.values { age and weight }
         // SampleEnd
     }
 }
