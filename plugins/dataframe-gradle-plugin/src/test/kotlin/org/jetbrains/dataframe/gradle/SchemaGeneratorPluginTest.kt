@@ -6,6 +6,7 @@ import io.kotest.matchers.string.shouldContain
 import org.gradle.testkit.runner.TaskOutcome
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.nio.file.Files
@@ -206,6 +207,7 @@ internal class SchemaGeneratorPluginTest {
     }
 
     @Test
+    @Ignore
     fun `data is string and absolute path`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
             val dataDir = File(buildDir, "data").also { it.mkdirs() }
