@@ -58,7 +58,10 @@ df.add("lastName") { name.split(",").last() }
 DataFrame.read("titanic.csv")
     .add("lastName") { "name"<String>().split(",").last() }
     .dropNulls("age")
-    .filter { "survived"<Boolean>() && "home"<String>().endsWith("NY") && "age"<Int>() in 10..20 }
+    .filter { "survived"<Boolean>()
+        && "home"<String>().endsWith("NY")
+        && "age"<Int>() in 10..20
+    }
 ```
 
 <!---END-->
@@ -89,12 +92,18 @@ DataFrame.read("titanic.csv")
 <!---FUN kproperties1-->
 
 ```kotlin
-data class Passenger(val survived: Boolean, val home: String, val age: Int, val lastName: String)
+data class Passenger(
+    val survived: Boolean,
+    val home: String,
+    val age: Int,
+    val lastName: String)
 
 val passengers = DataFrame.read("titanic.csv")
     .add(Passenger::lastName) { "name"<String>().split(",").last() }
     .dropNulls(Passenger::age)
-    .filter { it[Passenger::survived] && it[Passenger::home].endsWith("NY") && it[Passenger::age] in 10..20 }
+    .filter { it[Passenger::survived]
+        && it[Passenger::home].endsWith("NY")
+        && it[Passenger::age] in 10..20 }
     .toListOf<Passenger>()
 ```
 
@@ -106,8 +115,8 @@ val passengers = DataFrame.read("titanic.csv")
 # Comparing of APIs
 [String API](stringApi.md) is the simplest one and the most unsafe of all. The main advantage of it is that it can be used at any time, including accessing new columns in chain calls. So we can write something like:
 ```kotlin
-df.add("weight") { ... } // adding a new column named `weight`, calculated by some expression
-  .sortBy("weight") // sorting data frame rows by its value
+df.add("weight") { ... } // add a new column `weight`, calculated by some expression
+  .sortBy("weight") // sorting dataframe rows by its value
 ```
 So we don't need to interrupt a method chain and declare a column accessor or generate new properties.
 

@@ -10,7 +10,10 @@ String column names are the easiest way to access data in DataFrame:
 DataFrame.read("titanic.csv")
     .add("lastName") { "name"<String>().split(",").last() }
     .dropNulls("age")
-    .filter { "survived"<Boolean>() && "home"<String>().endsWith("NY") && "age"<Int>() in 10..20 }
+    .filter { "survived"<Boolean>()
+        && "home"<String>().endsWith("NY")
+        && "age"<Int>() in 10..20
+    }
 ```
 
 <!---END-->
