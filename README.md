@@ -57,12 +57,12 @@ val df = dataFrameOf(fromTo, flightNumber, recentDelays, airline)
 **Clean:**
 ```kotlin
 // typed accessors for columns
-// that will appear during 
+// that will appear during
 // dataframe transformation
 val origin by column<String>()
 val destination by column<String>()
 
-val dfClean = df
+val clean = df
     // fill missing flight numbers
     .fillNA { flightNumber }.with { prev()!!.flightNumber + 10 }
 
@@ -78,7 +78,7 @@ val dfClean = df
     // clean 'From' and 'To' columns
     .update { origin and destination }.with { it.lowercase().replaceFirstChar(Char::uppercase) }
 
-    // split lists of delays in 'RecentDelays' into separate columns 
+    // split lists of delays in 'RecentDelays' into separate columns
     // 'delay1', 'delay2'... and nest them inside original column `RecentDelays`
     .split { recentDelays }.inward { "delay$it" }
 
@@ -89,29 +89,31 @@ val dfClean = df
 **Aggregate:**
 ```kotlin
 // group by flight origin
-dfClean.groupBy { From into "origin" }.aggregate {
-    // we are in the context of single data group
-    
-    // number of flights from origin
-    count() into "count"
-    
-    // list of flight numbers
-    flightNumber into "flight numbers"
-    
-    // counts of flights per airline
-    airline.valueCounts() into "airlines"
+clean
+    // group by flight origin
+    .groupBy { origin into "from" }.aggregate {
+        // we are in the context of single data group
 
-    // max delay across all delays in `delay1` and `delay2`
-    recentDelays.maxOrNull { delay1 and delay2 } into "major delay"
+        // number of flights from origin
+        count() into "count"
 
-    // separate lists of recent delays for `delay1`, `delay2` and `delay3`
-    recentDelays.implode(dropNulls = true) into "recent delays"
-    
-    // total delay per city of destination
-    pivot { To }.sum { recentDelays.intCols() } into "total delays to"
-}
+        // list of flight numbers
+        flightNumber into "flight numbers"
+
+        // counts of flights per airline
+        airline.valueCounts() into "airlines"
+
+        // max delay across all delays in `delay1` and `delay2`
+        recentDelays.maxOrNull { delay1 and delay2 } into "major delay"
+
+        // separate lists of recent delays for `delay1`, `delay2` and `delay3`
+        recentDelays.implode(dropNulls = true) into "recent delays"
+
+        // total delay per city of destination
+        pivot { destination }.sum { recentDelays.intCols() } into "total delays to"
+    }
 ```
 
-[Try this example in **Datalore**](https://datalore.jetbrains.com/notebook/QOMgQYlftKHc5u9lYnqSnC/O5ACtb54oO6xlfNnb17QLh)
+[Try this example in **Datalore**](https://datalore.jetbrains.com/view/notebook/vq5j45KWkYiSQnACA2Ymij)
 
 Explore [**more examples**](examples).
