@@ -80,17 +80,17 @@ val clean = df
     // convert flight numbers to int
     .convert { flightNumber }.toInt()
 
-    // clean 'Airline' column
+    // clean 'airline' column
     .update { airline }.with { "([a-zA-Z\\s]+)".toRegex().find(it)?.value ?: "" }
 
-    // split 'From_To' column into 'From' and 'To'
+    // split 'fromTo' column into 'origin' and 'destination'
     .split { fromTo }.by("_").into(origin, destination)
 
-    // clean 'From' and 'To' columns
+    // clean 'origin' and 'destination' columns
     .update { origin and destination }.with { it.lowercase().replaceFirstChar(Char::uppercase) }
 
-    // split lists of delays in 'RecentDelays' into separate columns
-    // 'delay1', 'delay2'... and nest them inside original column `RecentDelays`
+    // split lists of delays in 'recentDelays' into separate columns
+    // 'delay1', 'delay2'... and nest them inside original column `recentDelays`
     .split { recentDelays }.inward { "delay$it" }
 
     // convert string values in `delay1`, `delay2` into ints
@@ -99,13 +99,12 @@ val clean = df
 
 **Aggregate:**
 ```kotlin
-// group by flight origin
 clean
-    // group by flight origin
+    // group by the flight origin renamed into "from"
     .groupBy { origin into "from" }.aggregate {
         // we are in the context of single data group
 
-        // number of flights from origin
+        // total number of flights from origin
         count() into "count"
 
         // list of flight numbers
@@ -120,7 +119,7 @@ clean
         // separate lists of recent delays for `delay1`, `delay2` and `delay3`
         recentDelays.implode(dropNulls = true) into "recent delays"
 
-        // total delay per city of destination
+        // total delay per destination
         pivot { destination }.sum { recentDelays.intCols() } into "total delays to"
     }
 ```
