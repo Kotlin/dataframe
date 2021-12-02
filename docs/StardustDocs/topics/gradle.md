@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-In Gradle project `Kotin DataFrame` provides annotation processing to [generate extension properties](extensionPropertiesApi.md) and gradle tasks to infer `DataSchema` from data sets.  
+In Gradle project `Kotlin DataFrame` provides annotation processing for generatation of extension properties and gradle tasks to `DataSchema` inference from datasets.  
 
 To use [extension properties API](extensionPropertiesApi.md) in Gradle project you should [configure Kotlin DataFrame plugin](installation.md#gradle-plugin-configuration).
 
