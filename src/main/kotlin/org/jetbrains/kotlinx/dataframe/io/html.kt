@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.FormattingDSL
 import org.jetbrains.kotlinx.dataframe.api.RowColFormatter
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -17,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.impl.truncate
 import org.jetbrains.kotlinx.dataframe.jupyter.CellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.name
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
@@ -119,7 +121,7 @@ internal fun AnyFrame.toHtmlData(
         val contents = values.map {
             val value = it[col]
             if (value is AnyFrame) {
-                if (value.ncol() == 0) {
+                if (value.isEmpty()) {
                     HtmlContent("", null)
                 } else {
                     val id = nextTableId()
@@ -193,8 +195,8 @@ public fun <T> DataFrame<T>.toHTML(
     val limit = configuration.rowsLimit
 
     val footer = getFooter(this)
-    val bodyFooter = if (limit < nrow()) {
-        "<p>... showing only top $limit of ${nrow()} rows</p><p>$footer</p>"
+    val bodyFooter = if (limit < nrow) {
+        "<p>... showing only top $limit of $nrow rows</p><p>$footer</p>"
     } else "<p>$footer</p>"
 
     val tableHtml = toHtmlData(configuration, cellRenderer)

@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.TreeNode
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.allRemovedColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.withDf
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.nrow
 
 internal data class RemoveResult<T>(val df: DataFrame<T>, val removedColumns: List<TreeNode<ColumnPosition>>)
 
@@ -57,7 +58,7 @@ internal fun <T> DataFrame<T>.removeImpl(allowMissingColumns: Boolean = false, c
         return newCols.toDataFrame()
     }
 
-    val newDf = dfs(columns(), colWithPaths, root) ?: emptyDataFrame(nrow())
+    val newDf = dfs(columns(), colWithPaths, root) ?: emptyDataFrame(nrow)
 
     val removedColumns = root.allRemovedColumns().map { it.pathFromRoot() to it }.sortedBy { originalOrder[it.first] }.map { it.second }
 

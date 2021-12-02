@@ -118,7 +118,7 @@ To add a new column to the resulting `DataFrame`, pass the name of new column to
 
 ```kotlin
 df.groupBy { city }.aggregate {
-    nrow() into "total"
+    count() into "total"
     count { age > 18 } into "adults"
     median { age } into "median age"
     min { age } into "min age"
@@ -135,7 +135,7 @@ val age by column<Int>()
 val name by columnGroup()
 
 df.groupBy { city }.aggregate {
-    nrow() into "total"
+    count() into "total"
     count { age() > 18 } into "adults"
     median { age } into "median age"
     min { age } into "min age"
@@ -143,10 +143,18 @@ df.groupBy { city }.aggregate {
 }
 // or
 df.groupBy(city).aggregate {
-    nrow() into "total"
+    count() into "total"
     count { age > 18 } into "adults"
     median(age) into "median age"
     min(age) into "min age"
+    maxBy(age)[name] into "name of oldest"
+}
+// or
+df.groupBy(city).aggregate {
+    count() into "total"
+    age().count { it > 18 } into "adults"
+    age().median() into "median age"
+    age().min() into "min age"
     maxBy(age)[name] into "name of oldest"
 }
 ```
@@ -156,10 +164,18 @@ df.groupBy(city).aggregate {
 
 ```kotlin
 df.groupBy("city").aggregate {
-    nrow() into "total"
+    count() into "total"
     count { "age"<Int>() > 18 } into "adults"
     median("age") into "median age"
     min("age") into "min age"
+    maxBy("age")["name"] into "oldest"
+}
+// or
+df.groupBy("city").aggregate {
+    count() into "total"
+    count { "age"<Int>() > 18 } into "adults"
+    "age"<Int>().median() into "median age"
+    "age"<Int>().min() into "min age"
     maxBy("age")["name"] into "oldest"
 }
 ```

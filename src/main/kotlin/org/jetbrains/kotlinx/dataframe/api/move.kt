@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.afterOrBefore
 import org.jetbrains.kotlinx.dataframe.impl.api.moveImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.moveTo
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.pathOf
 import kotlin.reflect.KProperty
 
@@ -79,6 +80,6 @@ fun <T, C> MoveColsClause<T, C>.before(column: ColumnSelector<T, *>) = afterOrBe
 */
 
 public fun <T, C> MoveClause<T, C>.toLeft(): DataFrame<T> = to(0)
-public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol())
+public fun <T, C> MoveClause<T, C>.toRight(): DataFrame<T> = to(df.ncol)
 
 public class MoveClause<T, C>(internal val df: DataFrame<T>, internal val columns: ColumnsSelector<T, C>)

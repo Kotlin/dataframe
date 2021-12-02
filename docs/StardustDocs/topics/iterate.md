@@ -88,7 +88,7 @@ df.values().forEach {
 }
 
 // from left to right, then from top to bottom
-df.values(byRow = true).forEach {
+df.values(byRows = true).forEach {
     println(it)
 }
 ```

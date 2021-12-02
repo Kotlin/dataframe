@@ -13,4 +13,10 @@ class ImplodeTests {
         val expected = dataFrameOf("a" to listOf(1), "c" to listOf(listOf(2, 3)))
         imploded shouldBe expected
     }
+
+    @Test
+    fun `implode all`() {
+        val df = dataFrameOf("a" to listOf(1, 1), "b" to listOf(2, 3))
+        df.implode() shouldBe df.implode { all() }[0]
+    }
 }

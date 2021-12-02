@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 
 internal fun <T, C> DataFrame<T>.implodeImpl(dropNulls: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> {
-    return groupBy { except(columns) }.mapGroups {
+    return groupBy { except(columns) }.updateGroups {
         replace(columns).with { column ->
             val filterNulls = dropNulls && column.hasNulls()
             val value = when (column.kind()) {

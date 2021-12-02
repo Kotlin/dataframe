@@ -28,13 +28,13 @@ internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsCont
 
     override fun getColumnOrNull(index: Int) = MissingColumnGroup<Any?>(path + "", host)
 
-    override fun ncol(): Int = 0
+    override fun columnsCount(): Int = 0
 
     override fun get(index: Int) = throw UnsupportedOperationException()
 
     override fun get(columnName: String) = throw UnsupportedOperationException()
 
-    override fun nrow(): Int = 0
+    override fun rowsCount(): Int = 0
 
     override fun columns(): List<AnyCol> = emptyList()
 

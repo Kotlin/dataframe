@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.io.HtmlData
 import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListNamedStub
 import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListTypedStub
@@ -71,7 +72,7 @@ internal class Integration : JupyterIntegration() {
             render<AnyFrame> ({ it })
             render<FormattedFrame<*>>({ it.df }, modifyConfig = { getDisplayConfiguration(it) })
             render<AnyRow>({ it.toDataFrame() }, { "DataRow [${it.ncol}]" })
-            render<AnyCol>({ dataFrameOf(it) }, { "DataColumn [${it.nrow()}]" })
+            render<AnyCol>({ dataFrameOf(it) }, { "DataColumn [${it.nrow}]" })
             render<GroupBy<*, *>>({ it.toDataFrame() }, { "GroupBy" })
             render<Pivot<*>>({ it.toDataFrame() }, { "Pivot: ${it.ncol} columns" })
             render<PivotGroupBy<*>>({ it.toDataFrame() }, { "PivotGroupBy: ${it.size}" })

@@ -37,6 +37,6 @@ internal fun <T, G, C> GroupBy<T, G>.xsImpl(vararg keyValues: C, keyColumns: Col
     val df = toDataFrame()
     val paths = df.getColumnPaths(UnresolvedColumnsPolicy.Create, keyColumns).toColumnSet()
     val d1 = df.xsImpl({ paths }, true, *keyValues).asGroupBy(groups)
-    val d2 = d1.mapGroups { it.xsImpl({ paths }, true, *keyValues) }
+    val d2 = d1.updateGroups { it.xsImpl({ paths }, true, *keyValues) }
     return d2
 }

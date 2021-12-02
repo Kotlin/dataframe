@@ -10,6 +10,8 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.getType
+import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.testCsv
 import org.junit.Test
 import java.io.StringWriter
@@ -26,8 +28,8 @@ class CsvTests {
             3,,
         """.trimIndent()
         val df = DataFrame.readDelimStr(src)
-        df.nrow() shouldBe 2
-        df.ncol() shouldBe 2
+        df.nrow shouldBe 2
+        df.ncol shouldBe 2
         df["first"].type() shouldBe getType<Int>()
         df["second"].allNulls() shouldBe true
         df["second"].type() shouldBe getType<String?>()
@@ -54,8 +56,8 @@ class CsvTests {
     fun readCSV() {
         val df = DataFrame.read(simpleCsv)
 
-        df.ncol() shouldBe 11
-        df.nrow() shouldBe 5
+        df.ncol shouldBe 11
+        df.nrow shouldBe 5
         df.columnNames()[5] shouldBe "duplicate1"
         df.columnNames()[6] shouldBe "duplicate11"
         df["duplicate1"].type() shouldBe getType<String?>()
@@ -69,8 +71,8 @@ class CsvTests {
     fun readCSVwithFrenchLocaleAndAlternativeDelimiter() {
         val df = DataFrame.readCSV(csvWithFrenchLocale, delimiter = ';', parserOptions = ParserOptions(locale = Locale.FRENCH))
 
-        df.ncol() shouldBe 11
-        df.nrow() shouldBe 5
+        df.ncol shouldBe 11
+        df.nrow shouldBe 5
         df.columnNames()[5] shouldBe "duplicate1"
         df.columnNames()[6] shouldBe "duplicate11"
         df["duplicate1"].type() shouldBe getType<String?>()
@@ -105,7 +107,7 @@ class CsvTests {
 
         val headerShort = ('A'..'E').map { it.toString() }
         val dfShort = DataFrame.readCSV(simpleCsv, headers = headerShort, skipLines = 1)
-        dfShort.ncol() shouldBe 5
+        dfShort.ncol shouldBe 5
         dfShort.columnNames() shouldBe headerShort
     }
 
@@ -114,14 +116,14 @@ class CsvTests {
         val expected =
             listOf("untitled", "user_id", "name", "duplicate", "username", "duplicate1", "duplicate11", "double", "number", "time", "empty")
         val dfHeader = DataFrame.readCSV(simpleCsv, readLines = 0)
-        dfHeader.nrow() shouldBe 0
+        dfHeader.nrow shouldBe 0
         dfHeader.columnNames() shouldBe expected
 
         val dfThree = DataFrame.readCSV(simpleCsv, readLines = 3)
-        dfThree.nrow() shouldBe 3
+        dfThree.nrow shouldBe 3
 
         val dfFull = DataFrame.readCSV(simpleCsv, readLines = 10)
-        dfFull.nrow() shouldBe 5
+        dfFull.nrow shouldBe 5
     }
 
     @Test
