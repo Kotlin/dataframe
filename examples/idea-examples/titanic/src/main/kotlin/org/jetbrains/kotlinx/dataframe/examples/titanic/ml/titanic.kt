@@ -30,22 +30,26 @@ private val model = Sequential.of(
 )
 
 fun main() {
+
     Locale.setDefault(Locale.FRANCE)
+
     val df = DataFrame.read("examples/idea-examples/titanic/src/main/resources/titanic.csv", delimiter = ';')
+        .cast<Passenger>()
+
+    val pclass by column<Int>()
 
     // Calculating imputing values
-
     val (train, test) = df
-        .rename("\uFEFFpclass").into("pclass")
+        .rename { it.`﻿pclass`}.into(pclass)
         // imputing
-        .fillNulls("sibsp", "parch", "age", "fare").perCol { it.cast<Number>().mean() }
-        .fillNulls("sex").withValue("female")
+        .fillNulls { sibsp and parch and age and fare }.perCol { it.mean() }
+        .fillNulls { sex }.withValue("female")
         // one hot encoding
-        .pivotMatches("pclass", "sex")
+        .pivotMatches { pclass and sex }
         // feature extraction
-        .select("survived", "pclass", "sibsp", "parch", "age", "fare", "sex")
+        .select { survived and pclass and sibsp and parch and age and fare and sex}
         .shuffle()
-        .toTrainTest(0.7, "survived")
+        .toTrainTest(0.7) { survived }
 
     model.use {
         it.compile(
@@ -63,20 +67,17 @@ fun main() {
     }
 }
 
-private fun <T> DataFrame<T>.toTrainTest(trainRatio: Double, yColumn: String): Pair<OnHeapDataset, OnHeapDataset> =
-    toOnHeapDataset { yColumn() }.split(trainRatio)
-
-private fun <T> DataFrame<T>.toTrainTest(trainRatio: Double, yColumn: ColumnSelector<T, Float>): Pair<OnHeapDataset, OnHeapDataset> =
+fun <T> DataFrame<T>.toTrainTest(trainRatio: Double, yColumn: ColumnSelector<T, Number>): Pair<OnHeapDataset, OnHeapDataset> =
     toOnHeapDataset(yColumn).split(trainRatio)
 
-private fun <T> DataFrame<T>.toOnHeapDataset(yColumn: ColumnSelector<T, Float>): OnHeapDataset {
+private fun <T> DataFrame<T>.toOnHeapDataset(yColumn: ColumnSelector<T, Number>): OnHeapDataset {
     return OnHeapDataset.create(
         dataframe = this,
         yColumn = yColumn
     )
 }
 
-private fun <T> OnHeapDataset.Companion.create(dataframe: DataFrame<T>, yColumn: ColumnSelector<T, Float>): OnHeapDataset {
+private fun <T> OnHeapDataset.Companion.create(dataframe: DataFrame<T>, yColumn: ColumnSelector<T, Number>): OnHeapDataset {
 
     val x by column<FloatArray>("X")
 
