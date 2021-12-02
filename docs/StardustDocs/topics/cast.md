@@ -22,4 +22,4 @@ interface Person {
 df.cast<Person>()
 ```
 
-To convert `DataFrame` columns to mtach given schema, use [`convertTo`](convertTo.md) operation.
+To convert `DataFrame` columns to match given schema, use [`convertTo`](convertTo.md) operation.

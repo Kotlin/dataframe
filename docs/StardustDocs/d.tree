@@ -60,6 +60,9 @@
                 <toc-element id="columns.md"/>
                 <toc-element id="getColumn.md"/>
             </toc-element>
+            <toc-element id="getValues.md">
+                <toc-element id="values.md"/>
+            </toc-element>
         </toc-element>
         <toc-element id="modify.md"  show-structure-depth="3">
             <toc-element id="sliceRows.md">
@@ -121,6 +124,7 @@
             <toc-element id="append.md"/>
             <toc-element id="adjustSchema.md">
                 <toc-element id="cast.md"/>
+                <toc-element id="convertTo.md"/>
             </toc-element>
         </toc-element>
         <toc-element toc-title="Statistics">
@@ -140,7 +144,6 @@
                 <toc-element id="corr.md"/>
             </toc-element>
         </toc-element>
-
         <toc-element id="multipleDataFrames.md" show-structure-depth="3">
             <toc-element id="addDf.md"/>
             <toc-element id="concatDf.md"/>
