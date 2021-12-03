@@ -6,8 +6,8 @@ Returns `DataFrame` which contains all columns from original `DataFrame` followe
 
 **Create new column and add it to `DataFrame`:**
 
-```kotlin
-add(columnName) { rowExpression }
+```
+add(columnName: String) { rowExpression }
 
 rowExpression: DataRow.(DataRow) -> Value
 ```
@@ -125,3 +125,14 @@ df.add(df1, df2)
 ```
 
 <!---END-->
+
+## addId
+
+Adds column with sequential values 0, 1, 2,... New column will be added in the beginning of columns list and will become the first column in `DataFrame`.
+
+```
+addId(name: String = "id")
+```
+
+**Parameters:**
+* `name: String = "id"` - name of the new column.
