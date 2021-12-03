@@ -1,4 +1,4 @@
-# Kotlin Dataframe: typesafe in-memory data processing in JVM
+# Kotlin Dataframe: typesafe in-memory data processing for JVM
 [![JetBrains incubator project](https://jb.gg/badges/incubator.svg)](https://confluence.jetbrains.com/display/ALL/JetBrains+on+GitHub)
 [![Kotlin](https://img.shields.io/badge/kotlin-1.6.0-blue.svg?logo=kotlin)](http://kotlinlang.org)
 [![Maven Central](https://img.shields.io/maven-central/v/org.jetbrains.kotlinx/dataframe?color=blue&label=Maven%20Central)](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe)
@@ -125,3 +125,11 @@ clean
 ```
 
 [Try it in **Datalore**](https://datalore.jetbrains.com/view/notebook/vq5j45KWkYiSQnACA2Ymij) and explore [**more examples here**](examples).
+
+## Code of Conduct
+
+This project and the corresponding community are governed by the [JetBrains Open Source and Community Code of Conduct](https://confluence.jetbrains.com/display/ALL/JetBrains+Open+Source+and+Community+Code+of+Conduct). Please make sure you read it.
+
+## License
+
+Kotlin Dataframe is licensed under the [Apache 2.0 License](LICENSE).
