@@ -13,8 +13,10 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.primaryConstructor
+import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
 @PublishedApi
@@ -53,7 +55,10 @@ internal fun AnyFrame.toListImpl(type: KType): List<Any> {
                     DataColumn.createValueColumn(column.name(), column.asColumnGroup().df.toListImpl(it.type))
                 }
                 ColumnKind.Value -> {
-                    column.convertTo(it.type)
+                    require(!column.hasNulls() || it.type.isMarkedNullable) { "Can not set `null` in non-nullable property `${it.name}: ${it.type}`" }
+                    val converted = column.convertTo(it.type)
+                    require(converted.type.withNullability(false).isSubtypeOf(it.type)) { "Can not convert ${column.type()} to ${it.type} for column `${column.name()}`" }
+                    converted
                 }
             }
         } else column
