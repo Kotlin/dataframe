@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.addRowNumber
+import org.jetbrains.kotlinx.dataframe.api.addId
 import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.append
@@ -1054,7 +1054,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `encode names`() {
-        val encoding = typed.name.distinct().addRowNumber("name_id")
+        val encoding = typed.name.distinct().addId("name_id")
         val res = typed.leftJoin(encoding)
         res["name_id"].toList() shouldBe listOf(0, 1, 2, 2, 1, 0, 2)
     }
@@ -1536,7 +1536,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `union table columns`() {
-        val grouped = typed.addRowNumber("id").groupBy { name }.toDataFrame()
+        val grouped = typed.addId("id").groupBy { name }.toDataFrame()
         val dfs = (0 until grouped.nrow).map {
             grouped[it..it]
         }

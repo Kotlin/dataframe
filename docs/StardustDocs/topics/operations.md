@@ -40,6 +40,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 ## List of all DataFrame operations
 
 * [add](add.md) — add columns
+* [addId](add.md#addid) — add `id` column
 * [append](append.md) — add rows
 * [columns](columns.md) / [columnNames](columnNames.md) / [columnTypes](columnTypes.md) — get list of top-level columns, column names or column types
 * [columnsCount](columnsCount.md) — number of top-level columns

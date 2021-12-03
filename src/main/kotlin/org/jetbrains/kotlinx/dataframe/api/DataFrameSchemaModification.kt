@@ -8,11 +8,9 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.columns.size
-import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.api.flattenImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.xsImpl
@@ -23,7 +21,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
 import org.jetbrains.kotlinx.dataframe.kind
-import org.jetbrains.kotlinx.dataframe.nrow
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
@@ -97,17 +94,15 @@ public fun <T> DataFrame<T>.select(columns: Iterable<Column>): DataFrame<T> = se
 
 // endregion
 
-// region addRowNumber
+// region addId
 
-public fun <T> DataFrame<T>.addRowNumber(column: ColumnReference<Int>): DataFrame<T> = addRowNumber(column.name())
+public fun <T> DataFrame<T>.addId(column: ColumnAccessor<Int>): DataFrame<T> = insert(column) { index() }.at(0)
 
-public fun <T> DataFrame<T>.addRowNumber(columnName: String = "id"): DataFrame<T> =
-    dataFrameOf(columns() + indexColumn(columnName, nrow)).cast()
+public fun <T> DataFrame<T>.addId(columnName: String = "id"): DataFrame<T> =
+    insert(columnName) { index() }.at(0)
 
-public fun AnyCol.addRowNumber(columnName: String = "id"): AnyFrame =
-    dataFrameOf(listOf(indexColumn(columnName, size), this))
-
-internal fun indexColumn(columnName: String, size: Int): AnyCol = column(columnName, (0 until size).toList())
+public fun AnyCol.addId(columnName: String = "id"): AnyFrame =
+    toDataFrame().addId(columnName)
 
 // endregion
 
