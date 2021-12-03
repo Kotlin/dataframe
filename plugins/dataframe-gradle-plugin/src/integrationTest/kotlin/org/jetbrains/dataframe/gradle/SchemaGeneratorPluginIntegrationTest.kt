@@ -14,7 +14,7 @@ class SchemaGeneratorPluginIntegrationTest {
         private const val TRANSITIVE_DF_DEPENDENCY = "KSP has dependency on latest dataframe, but it's not yet published"
         private const val FIRST_NAME = "first.csv"
         private const val SECOND_NAME = "second.csv"
-        private const val KOTLIN_VERSION = "1.6.0"
+        private val KOTLIN_VERSION = TestData.kotlinVersion
     }
     private lateinit var dataframeJarPath: String
 
