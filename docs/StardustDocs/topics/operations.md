@@ -93,6 +93,8 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [std](std.md) / [stdOf](std.md) / [stdFor](std.md) — standard deviation of values
 * [sum](sum.md) / [sumOf](sum.md) / [sumFor](sum.md) — sum of values
 * [take](sliceRows.md#take) / [takeLast](sliceRows.md#takelast) — get first/last rows
+* [toList](toList.md) / [toListOf](toList.md#tolistof) — export dataframe into a list of data classes
+* [toMap](toMap.md) — export dataframe into a map from column names to column values
 * [ungroup](ungroup.md) — remove column groupings
 * [update](update.md) — update column values preserving column types
 * [values](values.md) — `Sequence` of values traversed by row or by column 

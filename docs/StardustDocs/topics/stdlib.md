@@ -15,7 +15,7 @@ df.chunked(10)
 
 <!---END-->
 
-To convert `DataFrame` into `Iterable`/`Sequence` of rows, columns or cell values use the following functions:
+To convert `DataFrame` into `Iterable`/`Sequence` of rows, columns or cell values:
 
 <!---FUN getRowsColumns-->
 
@@ -26,3 +26,6 @@ df.values() // Sequence<Any?>
 ```
 
 <!---END-->
+
+* [toMap](toMap.md) - converts `DataFrame` into mapping from column names to column types `Map<String, List<*>>`
+* [toList](toList.md) - converts `DataFrame` into `List` of data class objects 
