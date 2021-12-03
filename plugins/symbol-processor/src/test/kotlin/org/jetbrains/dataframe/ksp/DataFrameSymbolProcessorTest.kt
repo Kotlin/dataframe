@@ -602,6 +602,68 @@ class DataFrameSymbolProcessorTest {
         }
     }
 
+
+    @Test
+    fun `private class`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                package org.example
+
+                $imports
+                   
+                @DataSchema
+                private class Hello(val name: Int)
+               
+            """.trimIndent()))
+            ))
+        result.successfulCompilation shouldBe false
+    }
+
+    @Test
+    fun `effectively private interface`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                package org.example
+
+                $imports
+                   
+                private class Outer {
+                    @DataSchema
+                    interface Hello {
+                        val name: Int
+                    }
+                }
+               
+            """.trimIndent()))
+            ))
+        result.successfulCompilation shouldBe false
+    }
+
+    @Test
+    fun `parent of interface is effectively private`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                package org.example
+
+                $imports
+                   
+                private class Outer {
+                    class Outer1 {
+                        @DataSchema
+                        interface Hello {
+                            val name: Int
+                        }
+                    }
+                }
+               
+            """.trimIndent()))
+            ))
+        result.successfulCompilation shouldBe false
+    }
+
     private fun KotlinCompileTestingCompilationResult.inspectLines(f: (List<String>) -> Unit) {
         inspectLines(generatedFile, f)
     }
