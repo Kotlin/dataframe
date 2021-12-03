@@ -159,7 +159,9 @@
             </toc-element>
         </toc-element>
         <toc-element id="ColumnSelectors.md"/>
-        <toc-element id="stdlib.md"/>
+        <toc-element id="stdlib.md">
+            <toc-element id="toList.md"/>
+        </toc-element>
         <toc-element id="rendering.md">
             <toc-element id="format.md"/>
         </toc-element>
