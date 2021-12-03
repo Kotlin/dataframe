@@ -2,8 +2,6 @@ package org.jetbrains.dataframe.ksp
 
 import com.google.devtools.ksp.getVisibility
 import com.google.devtools.ksp.innerArguments
-import com.google.devtools.ksp.isInternal
-import com.google.devtools.ksp.isPublic
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
@@ -48,7 +46,7 @@ class DataFrameSymbolProcessor(
 
     private fun KSClassDeclaration.toDataSchemaDeclarationOrNull(): DataSchemaDeclaration? {
         return when {
-            classKind == ClassKind.INTERFACE || (isClass() && (isPublic() || isInternal())) -> {
+             isClassOrInterface() && effectivelyPublicOrInternal() -> {
                 DataSchemaDeclaration(
                     this,
                     declarations
@@ -61,7 +59,39 @@ class DataFrameSymbolProcessor(
         }
     }
 
-    private fun KSClassDeclaration.isClass() = classKind == ClassKind.CLASS
+    private fun KSClassDeclaration.isClassOrInterface() = classKind == ClassKind.INTERFACE || classKind == ClassKind.CLASS
+
+    private fun KSClassDeclaration.effectivelyPublicOrInternal(): Boolean {
+        return effectivelyPublicOrInternalOrNull(dataSchema = this) != null
+    }
+
+    val KSDeclaration.nameString get() = (qualifiedName ?: simpleName).asString()
+
+    private fun KSDeclaration.effectivelyPublicOrInternalOrNull(dataSchema: KSClassDeclaration): Visibility? {
+        val visibility = getVisibility()
+        if (visibility !in EXPECTED_VISIBILITIES) {
+            val message = buildString {
+                append("DataSchema declaration ${dataSchema.nameString} at ${dataSchema.location} should be $EXPECTED_VISIBILITIES")
+                if (this@effectivelyPublicOrInternalOrNull != dataSchema) {
+                    append(", but it's parent $nameString is $visibility")
+                } else {
+                    append("but is $visibility")
+                }
+            }
+            logger.error(message)
+            return null
+        }
+
+        return when (val parentDeclaration = parentDeclaration) {
+            null -> visibility
+            else -> when (parentDeclaration.effectivelyPublicOrInternalOrNull(dataSchema)) {
+                Visibility.PUBLIC -> visibility
+                Visibility.INTERNAL -> Visibility.INTERNAL
+                null -> null
+                else -> null
+            }
+        }
+    }
 
     private class DataSchemaDeclaration(
         val origin: KSClassDeclaration,
