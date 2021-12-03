@@ -29,7 +29,6 @@ import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListTypedStub
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.VariableName
-import org.jetbrains.kotlinx.jupyter.api.annotations.JupyterLibrary
 import org.jetbrains.kotlinx.jupyter.api.declare
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.api.libraries.resources
@@ -39,7 +38,6 @@ import kotlin.reflect.full.isSubtypeOf
 
 internal val newDataSchemas = mutableListOf<KClass<*>>()
 
-@JupyterLibrary
 internal class Integration : JupyterIntegration() {
 
     override fun Builder.onLoaded() {

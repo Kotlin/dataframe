@@ -1,3 +1,5 @@
+@file:Suppress("UnstableApiUsage")
+
 rootProject.name = "dataframe"
 enableFeaturePreview("VERSION_CATALOGS")
 
@@ -8,19 +10,18 @@ include("plugins:symbol-processor")
 include("examples:idea-examples:titanic")
 include("examples:idea-examples:movies")
 
-val kspVersion: String by settings
+val jupyterApiTCRepo: String by settings
 
 dependencyResolutionManagement {
-    versionCatalogs {
-        create("libs") {
-            version("ksp", kspVersion)
-            alias("ksp-gradle").to("com.google.devtools.ksp", "symbol-processing-gradle-plugin").versionRef("ksp")
-            alias("ksp-api").to("com.google.devtools.ksp", "symbol-processing-api").versionRef("ksp")
-        }
+    repositories {
+        mavenCentral()
+        maven(jupyterApiTCRepo)
     }
 }
+
 pluginManagement {
     repositories {
+        mavenLocal()
         gradlePluginPortal()
     }
 }
