@@ -711,7 +711,7 @@ class Access : TestBase() {
         df.select { firstName }
 
         // with a new name
-        df.select { name named "First Name" }
+        df.select { name named "Full Name" }
 
         // converted
         df.select { firstName.map { it.lowercase() } }
@@ -745,7 +745,7 @@ class Access : TestBase() {
         df.select { "name"["firstName"] }
 
         // with a new name
-        df.select { "name" named "First Name" }
+        df.select { "name" named "Full Name" }
 
         // converted
         df.select { "name"["firstName"]<String>().map { it.uppercase() } }

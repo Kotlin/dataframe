@@ -69,7 +69,7 @@ val firstName by name.column<String>()
 df.select { firstName }
 
 // with a new name
-df.select { name named "First Name" }
+df.select { name named "Full Name" }
 
 // converted
 df.select { firstName.map { it.lowercase() } }
@@ -103,7 +103,7 @@ df.select { it["name"]["firstName"] }
 df.select { "name"["firstName"] }
 
 // with a new name
-df.select { "name" named "First Name" }
+df.select { "name" named "Full Name" }
 
 // converted
 df.select { "name"["firstName"]<String>().map { it.uppercase() } }
