@@ -17,7 +17,7 @@ internal class SchemaGeneratorPluginTest {
 
     @Before
     fun before() {
-        dataDir = File("../../data").absolutePath.replace(File.separatorChar, '/')
+        dataDir = File("../../data").invariantSeparatorsPath
     }
 
     @Test
@@ -207,11 +207,11 @@ internal class SchemaGeneratorPluginTest {
     }
 
     @Test
-    @Ignore
     fun `data is string and absolute path`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
             val dataDir = File(buildDir, "data").also { it.mkdirs() }
-            File(dataDir, "test.json").writeText(jsonStr)
+            val file = File(dataDir, "test.json").also { it.writeText(jsonStr) }
+            val absolutePath = file.invariantSeparatorsPath
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -226,7 +226,7 @@ internal class SchemaGeneratorPluginTest {
 
             dataframes {
                 schema {
-                    data = "$dataDir/test.json"
+                    data = "$absolutePath"
                     name = "Test"
                     packageName = "org.test"
                 }
