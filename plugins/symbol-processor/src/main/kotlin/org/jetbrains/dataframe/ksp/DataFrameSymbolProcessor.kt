@@ -17,7 +17,7 @@ class DataFrameSymbolProcessor(
 ) : SymbolProcessor {
 
     private companion object {
-        val EXPECTED_VISIBILITIES = listOf(Visibility.PUBLIC, Visibility.INTERNAL)
+        val EXPECTED_VISIBILITIES = setOf(Visibility.PUBLIC, Visibility.INTERNAL)
     }
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
@@ -48,7 +48,7 @@ class DataFrameSymbolProcessor(
 
     private fun KSClassDeclaration.toDataSchemaDeclarationOrNull(): DataSchemaDeclaration? {
         return when {
-            classKind == ClassKind.INTERFACE || (isDataClass() && (isPublic() || isInternal())) -> {
+            classKind == ClassKind.INTERFACE || (isClass() && (isPublic() || isInternal())) -> {
                 DataSchemaDeclaration(
                     this,
                     declarations
@@ -61,7 +61,7 @@ class DataFrameSymbolProcessor(
         }
     }
 
-    private fun KSClassDeclaration.isDataClass() = classKind == ClassKind.CLASS && modifiers.any { it == Modifier.DATA }
+    private fun KSClassDeclaration.isClass() = classKind == ClassKind.CLASS
 
     private class DataSchemaDeclaration(
         val origin: KSClassDeclaration,
