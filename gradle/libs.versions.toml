@@ -1,0 +1,47 @@
+[versions]
+ksp = "1.6.0-1.0.1"
+kotlinJupyter = "0.11.0-3-63"
+ktlint = "3.4.5"
+kotlin = "1.6.0"
+dokka = "1.5.31"
+libsPublisher = "0.0.60-dev-30"
+dataframe = "0.8.0-rc"
+korro = "0.1.1-dev-29"
+
+commonsCsv = "1.8"
+klaxon = "5.5"
+fuel = "2.3.1"
+kotlinDatetime = "0.3.1"
+
+junit = "4.13.2"
+kotestAsserions = "4.6.3"
+jsoup = "1.14.3"
+
+[libraries]
+ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
+ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", version.ref = "ksp" }
+jupyter-api = { module = "org.jetbrains.kotlinx:kotlin-jupyter-kernel", version.ref = "kotlinJupyter" }
+
+kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
+kotlin-scriptingJvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin" }
+commonsCsv = { module = "org.apache.commons:commons-csv", version.ref = "commonsCsv" }
+klaxon = { module = "com.beust:klaxon", version.ref = "klaxon" }
+fuel = { module = "com.github.kittinunf.fuel:fuel", version.ref = "fuel" }
+kotlin-datetimeJvm = { module = "org.jetbrains.kotlinx:kotlinx-datetime-jvm", version.ref = "kotlinDatetime" }
+
+junit = { module = "junit:junit", version.ref = "junit" }
+kotestAssertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotestAsserions" }
+jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
+
+[plugins]
+jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }
+
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+keywordGenerator = { id = "org.jetbrains.dataframe.generator", version = "1.0" }
+publisher = { id = "org.jetbrains.kotlin.libs.publisher", version.ref = "libsPublisher" }
+korro = { id = "io.github.devcrocod.korro", version.ref = "korro" }
+kotlinter = { id = "org.jmailen.kotlinter", version.ref = "ktlint" }
+dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "dataframe" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
