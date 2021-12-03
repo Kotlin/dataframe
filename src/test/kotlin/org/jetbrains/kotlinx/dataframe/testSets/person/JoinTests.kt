@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.testSets.person
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.addRowNumber
+import org.jetbrains.kotlinx.dataframe.api.addId
 import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.append
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -113,7 +113,7 @@ class JoinTests : BaseTest() {
         res.city.toSet() shouldBe typed.city.toSet() - typed2.origin.toSet()
 
         val indexColumn = column<Int>("__index__")
-        val withIndex = typed.addRowNumber(indexColumn)
+        val withIndex = typed.addId(indexColumn)
         val joined = withIndex.filterJoin(typed2) { city.match(right.origin) }
         val joinedIndices = joined[indexColumn].toSet()
         val expected = withIndex.filter { !joinedIndices.contains(it[indexColumn]) }.remove(indexColumn)
