@@ -5,20 +5,11 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.gradle.testkit.runner.TaskOutcome
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
-import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.nio.file.Files
 
 internal class SchemaGeneratorPluginTest {
-
-    private lateinit var dataDir: String
-
-    @Before
-    fun before() {
-        dataDir = File("../../data").invariantSeparatorsPath
-    }
 
     @Test
     fun `plugin configured via configure`() {
@@ -145,6 +136,11 @@ internal class SchemaGeneratorPluginTest {
     @Test
     fun `plugin configure multiple schemas from strings via extension`() {
         val (_, result) = runGradleBuild(":generateDataFrames") { buildDir ->
+            File(buildDir, "data").also {
+                it.mkdirs()
+                File(it, TestData.csvName).writeText(TestData.csvSample)
+                File(it, TestData.jsonName).writeText(TestData.jsonSample)
+            }
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -159,12 +155,12 @@ internal class SchemaGeneratorPluginTest {
 
             dataframes {
                 schema {
-                    data = "$dataDir/jetbrains_repositories.csv"
+                    data = "data/${TestData.csvName}"
                     name = "Test"
                     packageName = "org.test"
                 }
                 schema {
-                    data = "$dataDir/playlistItems.json"
+                    data = "data/${TestData.jsonName}"
                     name = "Schema"
                     packageName = "org.test"
                 }
@@ -175,13 +171,12 @@ internal class SchemaGeneratorPluginTest {
         result.task(":generateDataFrameSchema")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
-    private val jsonStr = """{"name": "Test"}"""
 
     @Test
     fun `data is string and relative path`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
             val dataDir = File(buildDir, "data").also { it.mkdirs() }
-            File(dataDir, "test.json").writeText(jsonStr)
+            File(dataDir, TestData.jsonName).writeText(TestData.jsonSample)
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -196,7 +191,7 @@ internal class SchemaGeneratorPluginTest {
 
             dataframes {
                 schema {
-                    data = "data/test.json"
+                    data = "data/${TestData.jsonName}"
                     name = "Test"
                     packageName = "org.test"
                 }
@@ -210,8 +205,8 @@ internal class SchemaGeneratorPluginTest {
     fun `data is string and absolute path`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
             val dataDir = File(buildDir, "data").also { it.mkdirs() }
-            val file = File(dataDir, "test.json").also { it.writeText(jsonStr) }
-            val absolutePath = file.invariantSeparatorsPath
+            val file = File(dataDir, TestData.jsonName).also { it.writeText(TestData.jsonSample) }
+            val absolutePath = file.absolutePath.replace(File.separatorChar, '/')
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
