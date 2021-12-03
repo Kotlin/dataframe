@@ -11,6 +11,10 @@ import java.nio.file.Files
 
 internal class SchemaGeneratorPluginTest {
 
+    private companion object {
+        private val KOTLIN_VERSION = TestData.kotlinVersion
+    }
+
     @Test
     fun `plugin configured via configure`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") {
@@ -19,7 +23,7 @@ internal class SchemaGeneratorPluginTest {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -47,7 +51,7 @@ internal class SchemaGeneratorPluginTest {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -77,7 +81,7 @@ internal class SchemaGeneratorPluginTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    id "org.jetbrains.kotlin.jvm" version "1.6.0"
+                    id "org.jetbrains.kotlin.jvm" version "$KOTLIN_VERSION"
                     id "org.jetbrains.kotlin.plugin.dataframe"
                 }
                 
@@ -107,7 +111,7 @@ internal class SchemaGeneratorPluginTest {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -145,7 +149,7 @@ internal class SchemaGeneratorPluginTest {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -181,7 +185,7 @@ internal class SchemaGeneratorPluginTest {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -211,7 +215,7 @@ internal class SchemaGeneratorPluginTest {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -238,7 +242,7 @@ internal class SchemaGeneratorPluginTest {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -271,7 +275,7 @@ internal class SchemaGeneratorPluginTest {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             

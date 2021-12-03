@@ -12,4 +12,6 @@ object TestData {
     val jsonSample = """{"name": "Test"}"""
 
     val jsonName = "test.json"
+
+    val kotlinVersion = "1.6.0"
 }
