@@ -8,4 +8,8 @@ object TestData {
         """.trimIndent()
 
     val csvName = "data.csv"
+
+    val jsonSample = """{"name": "Test"}"""
+
+    val jsonName = "test.json"
 }
