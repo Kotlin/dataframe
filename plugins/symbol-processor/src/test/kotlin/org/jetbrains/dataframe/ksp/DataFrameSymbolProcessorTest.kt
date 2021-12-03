@@ -39,22 +39,22 @@ class DataFrameSymbolProcessorTest {
                 @DataSchema(isOpen = false)
                 interface Hello {
                     val name: String
-                    val `test name`: InnerClass
+                    val `test name`: NestedClass
                     val nullableProperty: Int?
                     val a: () -> Unit
                     val d: List<List<*>>
                     
-                    class InnerClass
+                    class NestedClass
                 }
 
                 val ColumnsContainer<Hello>.col1: DataColumn<String> get() = name
-                val ColumnsContainer<Hello>.col2: DataColumn<Hello.InnerClass> get() = `test name`
+                val ColumnsContainer<Hello>.col2: DataColumn<Hello.NestedClass> get() = `test name`
                 val ColumnsContainer<Hello>.col3: DataColumn<Int?> get() = nullableProperty
                 val ColumnsContainer<Hello>.col4: DataColumn<() -> Unit> get() = a
                 val ColumnsContainer<Hello>.col5: DataColumn<List<List<*>>> get() = d
                 
                 val DataRow<Hello>.row1: String get() = name
-                val DataRow<Hello>.row2: Hello.InnerClass get() = `test name`
+                val DataRow<Hello>.row2: Hello.NestedClass get() = `test name`
                 val DataRow<Hello>.row3: Int? get() = nullableProperty
                 val DataRow<Hello>.row4: () -> Unit get() = a
                 val DataRow<Hello>.row5: List<List<*>> get() = d
@@ -76,11 +76,13 @@ class DataFrameSymbolProcessorTest {
                 data class Hello(
                     val name: String,
                     val `test name`: InnerClass,
+                    val nestedClass: Nested,
                     val nullableProperty: Int?,
                 ) {
                     val a: () -> Unit = TODO()
                     val d: List<List<*>> = TODO() 
-                    class InnerClass
+                    inner class InnerClass
+                    class Nested
                 }
 
                 val ColumnsContainer<Hello>.col1: DataColumn<String> get() = name
@@ -88,12 +90,14 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.col3: DataColumn<Int?> get() = nullableProperty
                 val ColumnsContainer<Hello>.col4: DataColumn<() -> Unit> get() = a
                 val ColumnsContainer<Hello>.col5: DataColumn<List<List<*>>> get() = d
+                val ColumnsContainer<Hello>.col6: DataColumn<Hello.Nested> get() = nestedClass
                 
                 val DataRow<Hello>.row1: String get() = name
                 val DataRow<Hello>.row2: Hello.InnerClass get() = `test name`
                 val DataRow<Hello>.row3: Int? get() = nullableProperty
                 val DataRow<Hello>.row4: () -> Unit get() = a
                 val DataRow<Hello>.row5: List<List<*>> get() = d
+                val DataRow<Hello>.row6: Hello.Nested get() = nestedClass
             """.trimIndent()))
             ))
         result.successfulCompilation shouldBe true
@@ -112,12 +116,14 @@ class DataFrameSymbolProcessorTest {
                 class Hello(
                     val name: String,
                     val `test name`: InnerClass,
+                    val nestedClass: Nested,
                     val nullableProperty: Int?,
                     justParameter: Int
                 ) {
                     val a: () -> Unit = TODO()
                     val d: List<List<*>> = TODO() 
-                    class InnerClass
+                    inner class InnerClass
+                    class Nested
                 }
 
                 val ColumnsContainer<Hello>.col1: DataColumn<String> get() = name
@@ -125,12 +131,14 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.col3: DataColumn<Int?> get() = nullableProperty
                 val ColumnsContainer<Hello>.col4: DataColumn<() -> Unit> get() = a
                 val ColumnsContainer<Hello>.col5: DataColumn<List<List<*>>> get() = d
+                val ColumnsContainer<Hello>.col6: DataColumn<Hello.Nested> get() = nestedClass
                 
                 val DataRow<Hello>.row1: String get() = name
                 val DataRow<Hello>.row2: Hello.InnerClass get() = `test name`
                 val DataRow<Hello>.row3: Int? get() = nullableProperty
                 val DataRow<Hello>.row4: () -> Unit get() = a
                 val DataRow<Hello>.row5: List<List<*>> get() = d
+                val DataRow<Hello>.row6: Hello.Nested get() = nestedClass
             """.trimIndent()))
             ))
         result.successfulCompilation shouldBe true
