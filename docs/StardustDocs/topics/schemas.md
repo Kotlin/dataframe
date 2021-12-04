@@ -134,9 +134,9 @@ df.splitName()
 <!---END-->
 
 ```text
-   firstName lastName age weight
- 0    Merton    Alice  15 60.000
- 1    Marley      Bob  20 73.125
+firstName lastName age weight
+   Merton    Alice  15 60.000
+   Marley      Bob  20 73.125
 ```
 
 <!---FUN adultsWorks-->
@@ -148,8 +148,8 @@ df.adults()
 <!---END-->
 
 ```text
-          name age weight
- 0 Marley, Bob  20   73.5
+name        age weight
+Marley, Bob  20   73.5
 ```
 
 In JVM project you will have to [cast](cast.md) `DataFrame` explicitly to the target interface:
