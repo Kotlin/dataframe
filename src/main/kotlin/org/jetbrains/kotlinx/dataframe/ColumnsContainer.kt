@@ -19,6 +19,8 @@ public interface ColumnsContainer<out T> {
     public fun columns(): List<AnyCol>
     public fun columnsCount(): Int
 
+    public fun containsColumn(name: String): Boolean
+
     // region getColumnOrNull
 
     public fun getColumnOrNull(name: String): AnyCol?
