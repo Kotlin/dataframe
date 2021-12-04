@@ -71,4 +71,6 @@ internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsCont
         UnresolvedColumnsPolicy.Create -> this.addPath(path, host)
         UnresolvedColumnsPolicy.Fail -> error("Failed to resolve column $path")
     }
+
+    override fun containsColumn(name: String): Boolean = false
 }

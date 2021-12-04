@@ -167,4 +167,6 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>) : DataFrame<T>, Aggrega
             else -> path.dropLast(1).fold(this as AnyFrame?) { df, name -> df?.getColumnOrNull(name) as? AnyFrame? }
                 ?.getColumnOrNull(path.last())
         }
+
+    override fun containsColumn(name: String): Boolean = columnsMap.containsKey(name)
 }
