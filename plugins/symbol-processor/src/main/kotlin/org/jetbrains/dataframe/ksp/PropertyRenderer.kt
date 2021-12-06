@@ -1,7 +1,7 @@
 package org.jetbrains.dataframe.ksp
 
 import org.jetbrains.kotlinx.dataframe.codeGen.BaseField
-import org.jetbrains.kotlinx.dataframe.codeGen.ColumnInfo
+import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.ExtensionsCodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.IsolatedMarker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
@@ -12,18 +12,19 @@ internal fun renderExtensions(interfaceName: String, visibility: MarkerVisibilit
     return generator.generate(object : IsolatedMarker {
         override val name: String = interfaceName
         override val fields: List<BaseField> = properties.map {
-            val columnInfo = when (it.propertyType.fqName) {
-                DataFrameNames.DATA_ROW -> ColumnInfo.ColumnGroupInfo
-                DataFrameNames.DATA_FRAME -> ColumnInfo.FrameColumnInfo
-                else -> ColumnInfo.ValueColumnInfo(it.propertyType.toString())
+            val fieldType = when (it.propertyType.fqName) {
+                DataFrameNames.DATA_ROW -> FieldType.GroupFieldType(it.propertyType.marker!!)
+                DataFrameNames.DATA_FRAME -> FieldType.FrameFieldType
+                else -> FieldType.ValueFieldType(it.propertyType.toString())
             }
+
 
             BaseFieldImpl(
                 fieldName = ValidFieldName.of(it.fieldName),
                 columnName = it.columnName,
                 markerName = it.propertyType.marker,
                 nullable = it.propertyType.isNullable,
-                columnInfo = columnInfo
+                fieldType = fieldType
             )
         }
         override val visibility: MarkerVisibility = visibility
@@ -32,7 +33,7 @@ internal fun renderExtensions(interfaceName: String, visibility: MarkerVisibilit
 
 internal class Property(val columnName: String, val fieldName: String, val propertyType: RenderedType)
 
-internal class RenderedType(val fqName: String, val marker: String?, val isNullable: Boolean) {
+internal class RenderedType(val fqName: String, val marker: String?, val isNullable: Boolean, val isDataSchema: Boolean) {
     override fun toString(): String {
         return buildString {
             append(fqName)
@@ -53,5 +54,5 @@ internal class BaseFieldImpl(
     override val columnName: String,
     override val markerName: String?,
     override val nullable: Boolean,
-    override val columnInfo: ColumnInfo
+    override val fieldType: FieldType
 ) : BaseField
