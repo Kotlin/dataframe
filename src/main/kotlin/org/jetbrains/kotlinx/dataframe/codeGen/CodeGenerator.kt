@@ -6,6 +6,8 @@ import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGeneratorImpl
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.FqNames
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.ShortNames
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 
@@ -32,7 +34,13 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
     public fun generate(marker: Marker, interfaceMode: InterfaceGenerationMode, extensionProperties: Boolean): CodeWithConverter
 
     public companion object {
-        public fun create(): CodeGenerator = CodeGeneratorImpl()
+        public fun create(useFqNames: Boolean = true): CodeGenerator {
+            return if (useFqNames) {
+                CodeGeneratorImpl(FqNames)
+            } else {
+                CodeGeneratorImpl(ShortNames)
+            }
+        }
     }
 }
 
