@@ -12,10 +12,18 @@ internal fun renderExtensions(interfaceName: String, visibility: MarkerVisibilit
     return generator.generate(object : IsolatedMarker {
         override val name: String = interfaceName
         override val fields: List<BaseField> = properties.map {
-            val fieldType = when (it.propertyType.fqName) {
-                DataFrameNames.DATA_ROW -> FieldType.GroupFieldType(it.propertyType.marker!!)
-                DataFrameNames.DATA_FRAME -> FieldType.FrameFieldType(it.propertyType.marker!!, it.propertyType.isNullable)
-                else -> FieldType.ValueFieldType(it.propertyType.toString())
+            val fieldType = if (it.propertyType.isDataSchema) {
+                if (it.propertyType.fqName == "kotlin.collections.List") {
+                    FieldType.FrameFieldType(it.propertyType.marker!!, it.propertyType.isNullable)
+                } else {
+                    FieldType.GroupFieldType(it.propertyType.toString())
+                }
+            } else {
+                when (it.propertyType.fqName) {
+                    DataFrameNames.DATA_ROW -> FieldType.GroupFieldType(it.propertyType.marker!!)
+                    DataFrameNames.DATA_FRAME -> FieldType.FrameFieldType(it.propertyType.marker!!, it.propertyType.isNullable)
+                    else -> FieldType.ValueFieldType(it.propertyType.toString())
+                }
             }
 
 
