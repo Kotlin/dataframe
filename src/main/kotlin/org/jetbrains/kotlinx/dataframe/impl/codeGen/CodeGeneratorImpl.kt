@@ -12,8 +12,8 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.codeGen.BaseField
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
-import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.ExtensionsCodeGenerator
+import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.IsolatedMarker
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
@@ -68,15 +68,15 @@ internal object FqNames : TypeRenderingStrategy {
     override fun BaseField.renderColumnType(): Code =
         when (val fieldType = fieldType) {
             is FieldType.ValueFieldType -> "${DataColumn::class.qualifiedName}<${fieldType.typeFqName}>"
-            is FieldType.GroupFieldType -> "${ColumnGroup::class.qualifiedName}<$markerName>"
-            is FieldType.FrameFieldType -> "${DataColumn::class.qualifiedName}<${DataFrame::class.qualifiedName}<$markerName>${renderNullability(nullable)}>"
+            is FieldType.GroupFieldType -> "${ColumnGroup::class.qualifiedName}<${fieldType.markerName}>"
+            is FieldType.FrameFieldType -> "${DataColumn::class.qualifiedName}<${DataFrame::class.qualifiedName}<${fieldType.markerName}>${renderNullability(fieldType.nullable)}>"
         }
 
     override fun BaseField.renderFieldType(): Code =
         when (val fieldType = fieldType) {
             is FieldType.ValueFieldType -> fieldType.typeFqName
-            is FieldType.GroupFieldType -> "${DataRow::class.qualifiedName}<$markerName>"
-            is FieldType.FrameFieldType -> "${DataFrame::class.qualifiedName}<$markerName>${renderNullability(nullable)}"
+            is FieldType.GroupFieldType -> "${DataRow::class.qualifiedName}<${fieldType.markerName}>"
+            is FieldType.FrameFieldType -> "${DataFrame::class.qualifiedName}<${fieldType.markerName}>${renderNullability(fieldType.nullable)}"
         }
 }
 
@@ -93,14 +93,14 @@ internal object ShortNames : TypeRenderingStrategy {
         when (val fieldType = fieldType) {
             is FieldType.ValueFieldType -> "${DataColumn::class.simpleName}<${fieldType.typeFqName.shorten()}>"
             is FieldType.GroupFieldType -> "${ColumnGroup::class.simpleName}<${fieldType.markerName}>"
-            is FieldType.FrameFieldType -> "${DataColumn::class.simpleName}<${DataFrame::class.simpleName}<$markerName>${renderNullability(nullable)}>"
+            is FieldType.FrameFieldType -> "${DataColumn::class.simpleName}<${DataFrame::class.simpleName}<${fieldType.markerName}>${renderNullability(fieldType.nullable)}>"
         }
 
     override fun BaseField.renderFieldType(): Code =
         when (val fieldType = fieldType) {
             is FieldType.ValueFieldType -> fieldType.typeFqName.shorten()
-            is FieldType.GroupFieldType -> "${DataRow::class.simpleName}<$markerName>"
-            is FieldType.FrameFieldType -> "${DataFrame::class.simpleName}<$markerName>${renderNullability(nullable)}"
+            is FieldType.GroupFieldType -> "${DataRow::class.simpleName}<${fieldType.markerName}>"
+            is FieldType.FrameFieldType -> "${DataFrame::class.simpleName}<${fieldType.markerName}>${renderNullability(fieldType.nullable)}"
         }
 
     private fun String.shorten() = removeRedundantQualifier(this)

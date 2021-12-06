@@ -14,7 +14,7 @@ internal fun renderExtensions(interfaceName: String, visibility: MarkerVisibilit
         override val fields: List<BaseField> = properties.map {
             val fieldType = when (it.propertyType.fqName) {
                 DataFrameNames.DATA_ROW -> FieldType.GroupFieldType(it.propertyType.marker!!)
-                DataFrameNames.DATA_FRAME -> FieldType.FrameFieldType
+                DataFrameNames.DATA_FRAME -> FieldType.FrameFieldType(it.propertyType.marker!!, it.propertyType.isNullable)
                 else -> FieldType.ValueFieldType(it.propertyType.toString())
             }
 
@@ -22,8 +22,6 @@ internal fun renderExtensions(interfaceName: String, visibility: MarkerVisibilit
             BaseFieldImpl(
                 fieldName = ValidFieldName.of(it.fieldName),
                 columnName = it.columnName,
-                markerName = it.propertyType.marker,
-                nullable = it.propertyType.isNullable,
                 fieldType = fieldType
             )
         }
@@ -52,7 +50,5 @@ internal class RenderedType(val fqName: String, val marker: String?, val isNulla
 internal class BaseFieldImpl(
     override val fieldName: ValidFieldName,
     override val columnName: String,
-    override val markerName: String?,
-    override val nullable: Boolean,
     override val fieldType: FieldType
 ) : BaseField
