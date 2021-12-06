@@ -18,7 +18,7 @@ class CreateDataFrameTests {
             public val d = 4
         }
 
-        listOf(Data()).convertToDataFrame() shouldBe dataFrameOf("d")(4)
+        listOf(Data()).toDataFrame() shouldBe dataFrameOf("d")(4)
     }
 
     @Test
@@ -28,7 +28,7 @@ class CreateDataFrameTests {
             val b = 1
         }
 
-        val df = listOf(Data()).convertToDataFrame()
+        val df = listOf(Data()).toDataFrame()
         df.ncol shouldBe 2
         df.nrow shouldBe 1
         df.columnTypes() shouldBe listOf(getType<IllegalStateException>(), getType<Int>())

@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.convertToDataFrame
 import org.jetbrains.kotlinx.dataframe.api.isComparable
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.max
@@ -19,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.min
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.std
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -46,7 +46,7 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
     val hasNumeric = all.any { it.isNumber() }
     val hasComparable = all.any { it.isComparable() }
     val hasLongPaths = all.any { it.path().size > 1 }
-    var df = all.convertToDataFrame {
+    var df = all.toDataFrame {
         ColumnDescription::name from { it.name() }
         if (hasLongPaths) {
             ColumnDescription::path from { it.path() }
