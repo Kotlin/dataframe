@@ -15,7 +15,7 @@ class DataFrameSymbolProcessor(
 ) : SymbolProcessor {
 
     private companion object {
-        val EXPECTED_VISIBILITIES = listOf(Visibility.PUBLIC, Visibility.INTERNAL)
+        val EXPECTED_VISIBILITIES = setOf(Visibility.PUBLIC, Visibility.INTERNAL)
     }
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
@@ -25,26 +25,86 @@ class DataFrameSymbolProcessor(
         symbols
             .filterIsInstance<KSClassDeclaration>()
             .mapNotNull {
-                if (it.classKind == ClassKind.INTERFACE && it.validate()) {
+                if (it.validate()) {
                     if (it.typeParameters.isNotEmpty()) {
                         logger.error("@${dataSchemaAnnotation.getShortName()} interface should not have type parameters", it)
                         null
                     } else {
-                        it
+                        it.toDataSchemaDeclarationOrNull()
                     }
                 } else {
                     null
                 }
             }
             .forEach {
-                val file = it.containingFile ?: return@forEach
-                generate(file, it, it.declarations.filterIsInstance<KSPropertyDeclaration>().toList())
+                val file = it.origin.containingFile ?: return@forEach
+                generate(file, it.origin, it.properties)
             }
 
         return emptyList()
     }
 
-    private fun generate(file: KSFile, klass: KSClassDeclaration, properties: List<KSPropertyDeclaration>) {
+    private fun KSClassDeclaration.toDataSchemaDeclarationOrNull(): DataSchemaDeclaration? {
+        return when {
+             isClassOrInterface() && effectivelyPublicOrInternal() -> {
+                DataSchemaDeclaration(
+                    this,
+                    declarations
+                        .filterIsInstance<KSPropertyDeclaration>()
+                        .map { KSAnnotatedWithType(it, it.simpleName, it.type) }
+                        .toList()
+                )
+            }
+            else -> null
+        }
+    }
+
+    private fun KSClassDeclaration.isClassOrInterface() = classKind == ClassKind.INTERFACE || classKind == ClassKind.CLASS
+
+    private fun KSClassDeclaration.effectivelyPublicOrInternal(): Boolean {
+        return effectivelyPublicOrInternalOrNull(dataSchema = this) != null
+    }
+
+    val KSDeclaration.nameString get() = (qualifiedName ?: simpleName).asString()
+
+    private fun KSDeclaration.effectivelyPublicOrInternalOrNull(dataSchema: KSClassDeclaration): Visibility? {
+        val visibility = getVisibility()
+        if (visibility !in EXPECTED_VISIBILITIES) {
+            val message = buildString {
+                append("DataSchema declaration ${dataSchema.nameString} at ${dataSchema.location} should be $EXPECTED_VISIBILITIES")
+                if (this@effectivelyPublicOrInternalOrNull != dataSchema) {
+                    append(", but it's parent $nameString is $visibility")
+                } else {
+                    append("but is $visibility")
+                }
+            }
+            logger.error(message)
+            return null
+        }
+
+        return when (val parentDeclaration = parentDeclaration) {
+            null -> visibility
+            else -> when (parentDeclaration.effectivelyPublicOrInternalOrNull(dataSchema)) {
+                Visibility.PUBLIC -> visibility
+                Visibility.INTERNAL -> Visibility.INTERNAL
+                null -> null
+                else -> null
+            }
+        }
+    }
+
+    private class DataSchemaDeclaration(
+        val origin: KSClassDeclaration,
+        val properties: List<KSAnnotatedWithType>
+    )
+
+    class KSAnnotatedWithType(
+        private val declaration: KSAnnotated,
+        val simpleName: KSName,
+        val type: KSTypeReference
+    ) : KSAnnotated by declaration
+
+    private fun generate(file: KSFile, klass: KSClassDeclaration, properties: List<KSAnnotatedWithType>) {
         val className: String = klass.simpleName.asString()
         val packageName = file.packageName.asString()
         val fileName = if (klass.parentDeclaration == null) {
@@ -58,10 +118,16 @@ class DataFrameSymbolProcessor(
         )
         try {
             generatedFile.writer().use {
-                it.appendLine("""@file:Suppress("UNCHECKED_CAST")""")
+                it.appendLine("""@file:Suppress("UNCHECKED_CAST", "USELESS_CAST")""")
                 if (packageName.isNotEmpty()) {
                     it.appendLine("package $packageName")
                 }
+                it.appendLine("import org.jetbrains.kotlinx.dataframe.annotations.*")
+                it.appendLine("import org.jetbrains.kotlinx.dataframe.ColumnsContainer")
+                it.appendLine("import org.jetbrains.kotlinx.dataframe.DataColumn")
+                it.appendLine("import org.jetbrains.kotlinx.dataframe.DataFrame")
+                it.appendLine("import org.jetbrains.kotlinx.dataframe.DataRow")
+                it.appendLine("import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup")
                 it.appendLine()
                 val name = klass.qualifiedName ?: error("@DataSchema declaration at ${klass.location} must have name")
                 it.writeProperties(klass.asType(emptyList()), name.asString(), properties)
@@ -71,7 +137,7 @@ class DataFrameSymbolProcessor(
         }
     }
 
-    private fun OutputStreamWriter.writeProperties(interfaceType: KSType, interfaceName: String, properties: List<KSPropertyDeclaration>) {
+    private fun OutputStreamWriter.writeProperties(interfaceType: KSType, interfaceName: String, properties: List<KSAnnotatedWithType>) {
         val visibility = when (val visibility = interfaceType.declaration.getVisibility()) {
             Visibility.PUBLIC -> if (interfaceType.declaration.modifiers.contains(Modifier.PUBLIC)) {
                 MarkerVisibility.EXPLICIT_PUBLIC
@@ -127,7 +193,7 @@ class DataFrameSymbolProcessor(
         }
     }
 
-    private fun getColumnName(property: KSPropertyDeclaration): String {
+    private fun getColumnName(property: KSAnnotatedWithType): String {
         val columnNameAnnotation =  property.annotations.firstOrNull { annotation ->
             val annotationType = annotation.annotationType
             (annotationType.element as? KSClassifierReference)?.referencedName()
@@ -144,11 +210,11 @@ class DataFrameSymbolProcessor(
         }
     }
 
-    private fun typeMismatchError(property: KSPropertyDeclaration, arg: KSValueArgument): Nothing {
+    private fun typeMismatchError(property: KSAnnotatedWithType, arg: KSValueArgument): Nothing {
         error("Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, but got ${arg.value}")
     }
 
-    private fun argumentMismatchError(property: KSPropertyDeclaration, args: List<KSValueArgument>): Nothing {
+    private fun argumentMismatchError(property: KSAnnotatedWithType, args: List<KSValueArgument>): Nothing {
         error("Expected one argument of type String in annotation ColumnName on property ${property.simpleName}, but got $args")
     }
 }
