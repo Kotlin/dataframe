@@ -44,7 +44,7 @@ class RenderingTests : JupyterReplTestCase() {
         val html1 = execHtml(
             """
             data class Person(val age: Int, val name: String)
-            val df = (1..70).map { Person(it, "A".repeat(it)) }.convertToDataFrame()
+            val df = (1..70).map { Person(it, "A".repeat(it)) }.toDataFrame()
             df
             """.trimIndent()
         )

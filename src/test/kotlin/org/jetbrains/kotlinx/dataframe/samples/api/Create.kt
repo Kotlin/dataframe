@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.convertToDataFrame
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.named
@@ -315,7 +314,7 @@ class Create : TestBase() {
         data class Person(val name: String, val age: Int)
         val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 22))
 
-        val df = persons.convertToDataFrame()
+        val df = persons.toDataFrame()
         // SampleEnd
         df.ncol shouldBe 2
         df.nrow shouldBe 3
@@ -335,7 +334,7 @@ class Create : TestBase() {
             Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5)))
         )
 
-        val df = students.convertToDataFrame(depth = 2)
+        val df = students.toDataFrame(depth = 2)
         // SampleEnd
         df.ncol shouldBe 3
         df.nrow shouldBe 2
@@ -356,7 +355,7 @@ class Create : TestBase() {
         )
 
         // SampleStart
-        val df = students.convertToDataFrame {
+        val df = students.toDataFrame {
             // add column
             "year of birth" from { 2021 - it.age }
 

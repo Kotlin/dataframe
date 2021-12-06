@@ -194,10 +194,14 @@ public fun <T> DataFrame<T>.forEachColumnIndexed(action: (Int, AnyCol) -> Unit):
 
 // region read DataFrame from objects
 
-public inline fun <reified T> Iterable<T>.convertToDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> = createDataFrameImpl(T::class, body)
+public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> = toDataFrame {
+    properties(depth = 1)
+}
 
-public inline fun <reified T> Iterable<T>.convertToDataFrame(vararg props: KProperty<*>, depth: Int = 1): DataFrame<T> =
-    convertToDataFrame {
+public inline fun <reified T> Iterable<T>.toDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> = createDataFrameImpl(T::class, body)
+
+public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>, depth: Int = 1): DataFrame<T> =
+    toDataFrame {
         properties(roots = props, depth = depth)
     }
 
@@ -207,7 +211,7 @@ public inline fun <reified T> DataColumn<T>.read(): AnyCol = when (kind()) {
         isPrimitive() -> this
         typeClass == File::class -> cast<File?>().mapNotNullValues { DataFrame.read(it) }
         typeClass == URL::class -> cast<URL?>().mapNotNullValues { DataFrame.read(it) }
-        else -> values().convertToDataFrame().toColumnGroup(name()).asDataColumn()
+        else -> values().toDataFrame().toColumnGroup(name()).asDataColumn()
     }
 }
 
