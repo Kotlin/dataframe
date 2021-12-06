@@ -75,7 +75,6 @@ class DataFrameReadTest {
     @Test
     fun `data accessible and readable`() {
         val df = DataFrame.read(File("../../data/jetbrains_repositories.csv"))
-        val df1 = DataFrame.read(File("../../data/playlistItems.json"))
     }
 
     @Test

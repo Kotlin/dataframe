@@ -5,19 +5,14 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.gradle.testkit.runner.TaskOutcome
 import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
-import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.nio.file.Files
 
 internal class SchemaGeneratorPluginTest {
 
-    private lateinit var dataDir: String
-
-    @Before
-    fun before() {
-        dataDir = File("../../data").absolutePath.replace(File.separatorChar, '/')
+    private companion object {
+        private val KOTLIN_VERSION = TestData.kotlinVersion
     }
 
     @Test
@@ -28,7 +23,7 @@ internal class SchemaGeneratorPluginTest {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -56,7 +51,7 @@ internal class SchemaGeneratorPluginTest {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -86,7 +81,7 @@ internal class SchemaGeneratorPluginTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    id "org.jetbrains.kotlin.jvm" version "1.6.0"
+                    id "org.jetbrains.kotlin.jvm" version "$KOTLIN_VERSION"
                     id "org.jetbrains.kotlin.plugin.dataframe"
                 }
                 
@@ -116,7 +111,7 @@ internal class SchemaGeneratorPluginTest {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -145,11 +140,16 @@ internal class SchemaGeneratorPluginTest {
     @Test
     fun `plugin configure multiple schemas from strings via extension`() {
         val (_, result) = runGradleBuild(":generateDataFrames") { buildDir ->
+            File(buildDir, "data").also {
+                it.mkdirs()
+                File(it, TestData.csvName).writeText(TestData.csvSample)
+                File(it, TestData.jsonName).writeText(TestData.jsonSample)
+            }
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -159,12 +159,12 @@ internal class SchemaGeneratorPluginTest {
 
             dataframes {
                 schema {
-                    data = "$dataDir/jetbrains_repositories.csv"
+                    data = "data/${TestData.csvName}"
                     name = "Test"
                     packageName = "org.test"
                 }
                 schema {
-                    data = "$dataDir/playlistItems.json"
+                    data = "data/${TestData.jsonName}"
                     name = "Schema"
                     packageName = "org.test"
                 }
@@ -175,18 +175,17 @@ internal class SchemaGeneratorPluginTest {
         result.task(":generateDataFrameSchema")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
-    private val jsonStr = """{"name": "Test"}"""
 
     @Test
     fun `data is string and relative path`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
             val dataDir = File(buildDir, "data").also { it.mkdirs() }
-            File(dataDir, "test.json").writeText(jsonStr)
+            File(dataDir, TestData.jsonName).writeText(TestData.jsonSample)
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -196,7 +195,7 @@ internal class SchemaGeneratorPluginTest {
 
             dataframes {
                 schema {
-                    data = "data/test.json"
+                    data = "data/${TestData.jsonName}"
                     name = "Test"
                     packageName = "org.test"
                 }
@@ -207,16 +206,16 @@ internal class SchemaGeneratorPluginTest {
     }
 
     @Test
-    @Ignore
     fun `data is string and absolute path`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
             val dataDir = File(buildDir, "data").also { it.mkdirs() }
-            File(dataDir, "test.json").writeText(jsonStr)
+            val file = File(dataDir, TestData.jsonName).also { it.writeText(TestData.jsonSample) }
+            val absolutePath = file.absolutePath.replace(File.separatorChar, '/')
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -226,7 +225,7 @@ internal class SchemaGeneratorPluginTest {
 
             dataframes {
                 schema {
-                    data = "$dataDir/test.json"
+                    data = "$absolutePath"
                     name = "Test"
                     packageName = "org.test"
                 }
@@ -243,7 +242,7 @@ internal class SchemaGeneratorPluginTest {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -276,7 +275,7 @@ internal class SchemaGeneratorPluginTest {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
             plugins {
-                kotlin("jvm") version "1.6.0"
+                kotlin("jvm") version "$KOTLIN_VERSION"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
