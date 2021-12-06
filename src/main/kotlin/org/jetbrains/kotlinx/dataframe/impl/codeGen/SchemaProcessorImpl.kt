@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.codeGen
 
+import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
@@ -54,10 +55,10 @@ internal class SchemaProcessorImpl(
     ): List<GeneratedField> {
         val usedFieldNames = requiredSuperMarkers.flatMap { it.allFields.map { it.fieldName.quotedIfNeeded } }.toMutableSet()
 
-        fun getMarker(column: ColumnSchema) = when (column) {
-            is ColumnSchema.Value -> null
-            is ColumnSchema.Group -> process(column.schema, false, visibility)
-            is ColumnSchema.Frame -> process(column.schema, false, visibility)
+        fun getFieldType(columnSchema: ColumnSchema): FieldType = when (columnSchema) {
+            is ColumnSchema.Value -> FieldType.ValueFieldType(columnSchema.type.toString())
+            is ColumnSchema.Group -> FieldType.GroupFieldType(process(columnSchema.schema, false, visibility).name)
+            is ColumnSchema.Frame -> FieldType.FrameFieldType(process(columnSchema.schema, false, visibility).name, columnSchema.nullable)
             else -> throw NotImplementedError()
         }
 
@@ -71,13 +72,13 @@ internal class SchemaProcessorImpl(
 
             val newFields = when {
                 fieldsToOverride.isNotEmpty() -> fieldsToOverride.map {
-                    GeneratedField(it.fieldName, it.columnName, true, columnSchema, getMarker(columnSchema)?.name)
+                    GeneratedField(it.fieldName, it.columnName, true, columnSchema, getFieldType(columnSchema))
                 }
                 superFields.isNotEmpty() -> emptyList()
                 else -> {
                     val fieldName = generateValidFieldName(columnName, index, usedFieldNames)
                     usedFieldNames.add(fieldName.quotedIfNeeded)
-                    listOf(GeneratedField(fieldName, columnName, false, columnSchema, getMarker(columnSchema)?.name))
+                    listOf(GeneratedField(fieldName, columnName, false, columnSchema, getFieldType(columnSchema)))
                 }
             }
             newFields
