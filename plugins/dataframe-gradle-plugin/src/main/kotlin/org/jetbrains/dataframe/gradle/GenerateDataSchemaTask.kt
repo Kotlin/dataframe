@@ -52,8 +52,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @TaskAction
     fun generate() {
         val df = readDataFrame(data.get(), csvOptions.get())
-        println(csvOptions.get().delimiter)
-        val codeGenerator = CodeGenerator.create()
+        val codeGenerator = CodeGenerator.create(useFqNames = false)
         val codeGenResult = codeGenerator.generate(
             schema = df.schema(),
             name = interfaceName.get(),
@@ -128,11 +127,11 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             appendLine(
                 """
                 @file:Suppress(
-                    "RemoveRedundantBackticks", 
-                    "RemoveRedundantQualifierName", 
-                    "unused", "ObjectPropertyName", 
+                    "RemoveRedundantBackticks",
+                    "RemoveRedundantQualifierName",
+                    "unused", "ObjectPropertyName",
                     "UNCHECKED_CAST", "PropertyName",
-                    "ClassName"
+                    "ClassName", "UnusedImport"
                 )
                 """.trimIndent()
             )
@@ -141,7 +140,13 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 appendLine("package $escapedPackageName")
                 appendLine()
             }
-            appendLine("import org.jetbrains.kotlinx.dataframe.annotations.*")
+            appendLine("import org.jetbrains.kotlinx.dataframe.ColumnsContainer")
+            appendLine("import org.jetbrains.kotlinx.dataframe.DataColumn")
+            appendLine("import org.jetbrains.kotlinx.dataframe.DataFrame")
+            appendLine("import org.jetbrains.kotlinx.dataframe.DataRow")
+            appendLine("import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup")
+            appendLine("import org.jetbrains.kotlinx.dataframe.annotations.ColumnName")
+            appendLine("import org.jetbrains.kotlinx.dataframe.annotations.DataSchema")
             appendLine()
             appendLine("// GENERATED. DO NOT EDIT MANUALLY")
             appendLine(codeGenResult.code.declarations)
