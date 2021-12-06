@@ -1,10 +1,13 @@
 package org.jetbrains.dataframe.ksp
 
+import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.getVisibility
 import com.google.devtools.ksp.innerArguments
+import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import java.io.IOException
 import java.io.OutputStreamWriter
@@ -152,20 +155,29 @@ class DataFrameSymbolProcessor(
         val extensions = renderExtensions(
             interfaceName = interfaceName,
             visibility = visibility,
-            properties.map { property -> Property(getColumnName(property), property.simpleName.asString(), render(property.type)) }
+            properties.map { property ->
+                Property(getColumnName(property), property.simpleName.asString(), render(property.type))
+            }
         )
         appendLine(extensions)
     }
 
+    @OptIn(KspExperimental::class)
     private fun render(typeReference: KSTypeReference): RenderedType {
         val type = typeReference.resolve()
+        val isDataSchema: Boolean
         val fqName = type.declaration.qualifiedName?.asString() ?: error("")
+        if (fqName == "kotlin.collections.List") {
+            isDataSchema = type.innerArguments.first().type?.resolve()?.declaration?.isAnnotationPresent(DataSchema::class) ?: false
+        } else {
+            isDataSchema  = type.declaration.isAnnotationPresent(DataSchema::class)
+        }
         val renderedArguments = if (type.innerArguments.isNotEmpty()) {
             type.innerArguments.joinToString(", ") { render(it) }
         } else {
             null
         }
-        return RenderedType(fqName, renderedArguments, type.isMarkedNullable)
+        return RenderedType(fqName, renderedArguments, type.isMarkedNullable, isDataSchema)
     }
 
     private fun render(typeArgument: KSTypeArgument): String {

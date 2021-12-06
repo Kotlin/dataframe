@@ -348,6 +348,57 @@ class DataFrameSymbolProcessorTest {
     }
 
     @Test
+    fun `type annotated with dataschema rendered to column group`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                $imports
+
+                @DataSchema
+                interface A
+
+                @DataSchema(isOpen = false)
+                interface Hello {
+                    val a: A
+                }
+
+                val ColumnsContainer<Hello>.col1: ColumnGroup<A> get() = a
+                val DataRow<Hello>.row1: DataRow<A> get() = a
+                
+            """.trimIndent()))
+            ))
+        result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
+            result.successfulCompilation shouldBe true
+        }
+    }
+
+    @Test
+    fun `type annotated with dataschema rendered to frame column`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                $imports
+
+                @DataSchema
+                interface A
+
+                @DataSchema(isOpen = false)
+                interface Hello {
+                    val a: List<A>
+                }
+
+                val ColumnsContainer<Hello>.col1: DataColumn<DataFrame<A>> get() = a
+                val DataRow<Hello>.row1: DataFrame<A> get() = a
+                
+            """.trimIndent()))
+            ))
+        result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
+            result.successfulCompilation shouldBe true
+        }
+    }
+
+
+    @Test
     fun `column name from annotation is used`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
