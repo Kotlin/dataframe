@@ -122,7 +122,7 @@ map.toDataFrame()
 
 <!---END-->
 
-### convertToDataFrame
+### toDataFrame
 
 Converts in-memory objects into `DataFrame`. Available for any `Iterable` of objects.
 
@@ -132,7 +132,7 @@ Converts in-memory objects into `DataFrame`. Available for any `Iterable` of obj
 data class Person(val name: String, val age: Int)
 val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 22))
 
-val df = persons.convertToDataFrame()
+val df = persons.toDataFrame()
 ```
 
 <!---END-->
@@ -153,7 +153,7 @@ val students = listOf(
     Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5)))
 )
 
-val df = students.convertToDataFrame(depth = 2)
+val df = students.toDataFrame(depth = 2)
 ```
 
 <!---END-->
@@ -163,7 +163,7 @@ For detailed control over object graph transformation use configuration DSL. It 
 <!---FUN readDataFrameFromDeepObjectWithExclude-->
 
 ```kotlin
-val df = students.convertToDataFrame {
+val df = students.toDataFrame {
     // add column
     "year of birth" from { 2021 - it.age }
 
