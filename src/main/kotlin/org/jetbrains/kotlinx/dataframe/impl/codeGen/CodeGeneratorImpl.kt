@@ -24,13 +24,6 @@ import org.jetbrains.kotlinx.jupyter.api.Code
 
 private fun renderNullability(nullable: Boolean) = if (nullable) "?" else ""
 
-internal fun BaseField.renderFieldType(): Code =
-    when (val columnInfo = fieldType) {
-        is FieldType.ValueFieldType -> columnInfo.typeFqName
-        is FieldType.GroupFieldType -> "${DataRow::class.qualifiedName}<$markerName>"
-        is FieldType.FrameFieldType -> "${DataFrame::class.qualifiedName}<$markerName>${renderNullability(nullable)}"
-    }
-
 internal fun getRequiredMarkers(schema: DataFrameSchema, markers: Iterable<Marker>) = markers
     .filter { it.isOpen && it.schema.compare(schema).isSuperOrEqual() }
 
