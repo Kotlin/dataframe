@@ -348,7 +348,7 @@ internal class DataFrameFormatter(
                             values.last(),
                             renderer,
                             configuration.copy(cellContentLimit = 4)
-                        )!!.textLength
+                        )?.textLength ?: 3
                         limit - sb.len - ", ".length - sizeOfLast - postfix.length
                     }
                     else -> limit - sb.len - ", ...".length - postfix.length
@@ -373,6 +373,7 @@ internal class DataFrameFormatter(
                     values.isEmpty() -> "{ }".addCss(nullClass)
                     else -> {
                         when (limit) {
+                            3 -> "...".structural()
                             4 -> "{..}".structural()
                             5 -> "{...}".structural()
                             6 -> "{ ...}".structural()
@@ -402,7 +403,8 @@ internal class DataFrameFormatter(
                         (key + "...").truncate(limit).addCss(structuralClass)
                     } else null
                 } else {
-                    key.addCss(structuralClass) + render(value.second, renderer, configuration.copy(cellContentLimit = limit - key.length))!!
+                    val renderedValue = render(value.second, renderer, configuration.copy(cellContentLimit = limit - key.length)) ?: "...".addCss(structuralClass)
+                    key.addCss(structuralClass) + renderedValue
                 }
             }
             is Number -> renderer.content(value, configuration).addCss(numberClass)

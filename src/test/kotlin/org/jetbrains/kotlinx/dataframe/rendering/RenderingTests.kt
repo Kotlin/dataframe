@@ -6,6 +6,7 @@ import io.kotest.matchers.string.shouldNotContain
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columnOf
@@ -14,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.escapeHTML
 import org.jetbrains.kotlinx.dataframe.io.formatter
+import org.jetbrains.kotlinx.dataframe.io.print
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.io.renderToStringTable
 import org.jetbrains.kotlinx.dataframe.io.toHTML
@@ -94,5 +96,13 @@ class RenderingTests {
         val df = dataFrameOf("url")("https://api.github.com/orgs/JetBrains")
         val html = df.parse().toHTML()
         html.toString() shouldNotContain RenderedContent::class.simpleName!!
+    }
+
+    @Test
+    fun `render successfully 2`() {
+        val df = dataFrameOf("name", "parent", "type")("Boston (MA)", "123wazxdPag5", "Campus")
+            .move("parent").into { "parent"["id"] }
+            .group { all() }.into("Campus")
+        df.toHTML().print()
     }
 }
