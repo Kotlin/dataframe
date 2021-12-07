@@ -1,10 +1,13 @@
 package org.jetbrains.dataframe.ksp
 
+import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.getVisibility
 import com.google.devtools.ksp.innerArguments
+import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import java.io.IOException
 import java.io.OutputStreamWriter
@@ -152,45 +155,11 @@ class DataFrameSymbolProcessor(
         val extensions = renderExtensions(
             interfaceName = interfaceName,
             visibility = visibility,
-            properties.map { property -> Property(getColumnName(property), property.simpleName.asString(), render(property.type)) }
+            properties.map { property ->
+                Property(getColumnName(property), property.simpleName.asString(), property.type)
+            }
         )
         appendLine(extensions)
-    }
-
-    private fun render(typeReference: KSTypeReference): RenderedType {
-        val type = typeReference.resolve()
-        val fqName = type.declaration.qualifiedName?.asString() ?: error("")
-        val renderedArguments = if (type.innerArguments.isNotEmpty()) {
-            type.innerArguments.joinToString(", ") { render(it) }
-        } else {
-            null
-        }
-        return RenderedType(fqName, renderedArguments, type.isMarkedNullable)
-    }
-
-    private fun render(typeArgument: KSTypeArgument): String {
-        return when (val variance = typeArgument.variance) {
-            Variance.STAR -> variance.label
-            Variance.INVARIANT -> renderRecursively(typeArgument.type ?: error("typeArgument.type should only be null for Variance.STAR"))
-            Variance.COVARIANT, Variance.CONTRAVARIANT -> "${variance.label} ${renderRecursively(typeArgument.type ?: error("typeArgument.type should only be null for Variance.STAR"))}"
-        }
-    }
-
-    private fun renderRecursively(typeReference: KSTypeReference): String {
-        val type = typeReference.resolve()
-        val fqName = type.declaration.qualifiedName?.asString() ?: error("")
-        return buildString {
-            append(fqName)
-            if (type.innerArguments.isNotEmpty()) {
-                append("<")
-                val renderedArguments = type.innerArguments.joinToString(", ") { render(it) }
-                append(renderedArguments)
-                append(">")
-            }
-            if (type.isMarkedNullable) {
-                append("?")
-            }
-        }
     }
 
     private fun getColumnName(property: KSAnnotatedWithType): String {

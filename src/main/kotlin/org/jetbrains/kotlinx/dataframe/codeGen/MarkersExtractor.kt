@@ -31,21 +31,27 @@ internal object MarkersExtractor {
             val fieldName = ValidFieldName.of(it.name)
             val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName.unquoted
             val type = it.returnType
-            var marker: Marker? = null
+            val fieldType: FieldType
             val clazz = type.jvmErasure
             val columnSchema = when {
                 clazz == DataRow::class || clazz.hasAnnotation<DataSchema>() -> {
                     val nestedType = if (clazz == DataRow::class) type.arguments[0].type!! else type
-                    marker = get(nestedType.jvmErasure)
+                    val marker = get(nestedType.jvmErasure)
+                    fieldType = FieldType.GroupFieldType(marker.name)
                     ColumnSchema.Group(marker.schema)
                 }
                 clazz == DataFrame::class || (clazz == List::class && type.arguments[0].type?.jvmErasure?.hasAnnotation<DataSchema>() == true) -> {
                     val frameType = type.arguments[0].type!!
-                    marker = get(frameType.jvmErasure)
+                    val marker = get(frameType.jvmErasure)
+                    fieldType = FieldType.FrameFieldType(marker.name, type.isMarkedNullable)
                     ColumnSchema.Frame(marker.schema, type.isMarkedNullable)
                 }
-                else -> ColumnSchema.Value(type)
+                else -> {
+                    fieldType = FieldType.ValueFieldType(type.toString())
+                    ColumnSchema.Value(type)
+                }
             }
-            GeneratedField(fieldName, columnName, false, columnSchema, marker?.name)
+
+            GeneratedField(fieldName, columnName, false, columnSchema, fieldType)
         }
 }
