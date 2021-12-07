@@ -86,6 +86,13 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) : DataFr
 
     override fun columnsCount(): Int = columns.size
 
+    override operator fun get(index: Int): DataRow<T> {
+        if (index < 0 || index >= nrow) {
+            throw IndexOutOfBoundsException("index: $index, rowsCount: $nrow")
+        }
+        return DataRowImpl(index, this)
+    }
+
     override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) =
         aggregate(body as AggregateGroupedBody<T, R>).df()
 
