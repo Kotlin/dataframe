@@ -89,20 +89,36 @@ public inline fun <T, reified R> DataFrame<T>.map(column: ColumnAccessor<R>, noi
 public fun <T> DataFrame<T>.firstOrNull(predicate: RowFilter<T>): DataRow<T>? = rows().firstOrNull { predicate(it, it) }
 public fun <T> DataFrame<T>.first(predicate: RowFilter<T>): DataRow<T> = rows().first { predicate(it, it) }
 public fun <T> DataFrame<T>.firstOrNull(): DataRow<T>? = if (nrow > 0) first() else null
-public fun <T> DataFrame<T>.first(): DataRow<T> = get(0)
+public fun <T> DataFrame<T>.first(): DataRow<T> {
+    if (nrow == 0) {
+        throw NoSuchElementException("DataFrame has no rows. Use `firstOrNull`.")
+    }
+    return get(0)
+}
 
 public fun <T> DataFrame<T>.lastOrNull(predicate: RowFilter<T>): DataRow<T>? =
     rowsReversed().firstOrNull { predicate(it, it) }
 
 public fun <T> DataFrame<T>.last(predicate: RowFilter<T>): DataRow<T> = rowsReversed().first { predicate(it, it) }
-public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) last() else null
-public fun <T> DataFrame<T>.last(): DataRow<T> = get(nrow - 1)
+public fun <T> DataFrame<T>.lastOrNull(): DataRow<T>? = if (nrow > 0) get(nrow - 1) else null
+public fun <T> DataFrame<T>.last(): DataRow<T> {
+    if (nrow == 0) {
+        throw NoSuchElementException("DataFrame has no rows. Use `lastOrNull`.")
+    }
+    return get(nrow - 1)
+}
 
 public fun <T> DataFrame<T>.single(predicate: RowExpression<T, Boolean>): DataRow<T> = rows().single { predicate(it, it) }
 public fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): DataRow<T>? =
     rows().singleOrNull { predicate(it, it) }
 
-public fun <T> DataFrame<T>.single(): DataRow<T> = rows().single()
+public fun <T> DataFrame<T>.single(): DataRow<T> =
+    when(nrow) {
+        0 -> throw NoSuchElementException("DataFrame has no rows. Use `singleOrNull`.")
+        1 -> get(0)
+        else -> throw IllegalArgumentException("DataFrame has more than one row.")
+    }
+
 public fun <T> DataFrame<T>.singleOrNull(): DataRow<T>? = rows().singleOrNull()
 
 // endregion
