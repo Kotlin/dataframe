@@ -1,13 +1,9 @@
 package org.jetbrains.dataframe.ksp
 
-import com.google.devtools.ksp.KspExperimental
 import com.google.devtools.ksp.getVisibility
-import com.google.devtools.ksp.innerArguments
-import com.google.devtools.ksp.isAnnotationPresent
 import com.google.devtools.ksp.processing.*
 import com.google.devtools.ksp.symbol.*
 import com.google.devtools.ksp.validate
-import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import java.io.IOException
 import java.io.OutputStreamWriter
@@ -29,12 +25,7 @@ class DataFrameSymbolProcessor(
             .filterIsInstance<KSClassDeclaration>()
             .mapNotNull {
                 if (it.validate()) {
-                    if (it.typeParameters.isNotEmpty()) {
-                        logger.error("@${dataSchemaAnnotation.getShortName()} interface should not have type parameters", it)
-                        null
-                    } else {
-                        it.toDataSchemaDeclarationOrNull()
-                    }
+                    it.toDataSchemaDeclarationOrNull()
                 } else {
                     null
                 }
@@ -133,14 +124,19 @@ class DataFrameSymbolProcessor(
                 it.appendLine("import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup")
                 it.appendLine()
                 val name = klass.qualifiedName ?: error("@DataSchema declaration at ${klass.location} must have name")
-                it.writeProperties(klass.asType(emptyList()), name.asString(), properties)
+                it.writeProperties(klass, name.asString(), properties)
             }
         } catch (e: IOException) {
             throw IOException("Error writing ${fileName} generated from declaration at ${file.location}", e)
         }
     }
 
-    private fun OutputStreamWriter.writeProperties(interfaceType: KSType, interfaceName: String, properties: List<KSAnnotatedWithType>) {
+    private fun OutputStreamWriter.writeProperties(
+        declaration: KSClassDeclaration,
+        interfaceName: String,
+        properties: List<KSAnnotatedWithType>
+    ) {
+        val interfaceType = declaration.asType(emptyList())
         val visibility = when (val visibility = interfaceType.declaration.getVisibility()) {
             Visibility.PUBLIC -> if (interfaceType.declaration.modifiers.contains(Modifier.PUBLIC)) {
                 MarkerVisibility.EXPLICIT_PUBLIC
@@ -153,6 +149,7 @@ class DataFrameSymbolProcessor(
             }
         }
         val extensions = renderExtensions(
+            declaration = declaration,
             interfaceName = interfaceName,
             visibility = visibility,
             properties.map { property ->

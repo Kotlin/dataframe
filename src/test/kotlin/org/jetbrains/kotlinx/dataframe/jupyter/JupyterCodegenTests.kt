@@ -109,4 +109,66 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         )
         res2 shouldBe listOf(1)
     }
+
+    @Test
+    fun `generic interface`() {
+        val res1 = exec(
+            """
+            @DataSchema
+            interface Generic<T> {
+                val field: T
+            }
+            """.trimIndent()
+        )
+        res1.shouldBeInstanceOf<Unit>()
+        val res2 = exec(
+            """
+                val <T> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
+                val <T> DataRow<Generic<T>>.test2: T get() = field
+            """.trimIndent()
+        )
+        res2.shouldBeInstanceOf<Unit>()
+    }
+
+    @Test
+    fun `generic interface with upper bound`() {
+        val res1 = exec(
+            """
+                @DataSchema
+                interface Generic <T : String> {
+                    val field: T
+                }
+            """.trimIndent()
+        )
+        res1.shouldBeInstanceOf<Unit>()
+        val res2 = exec(
+            """
+                val <T : String> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
+                val <T : String> DataRow<Generic<T>>.test2: T get() = field
+            """.trimIndent()
+        )
+        res2.shouldBeInstanceOf<Unit>()
+    }
+
+    @Test
+    fun `generic interface with variance and user type in type parameters`() {
+        val res1 = exec(
+            """
+                interface UpperBound
+
+                @DataSchema(isOpen = false)
+                interface Generic <out T : UpperBound> {
+                    val field: T
+                }
+            """.trimIndent()
+        )
+        res1.shouldBeInstanceOf<Unit>()
+        val res2 = exec(
+            """
+                val <T : UpperBound> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
+                val <T : UpperBound> DataRow<Generic<T>>.test2: T get() = field
+            """.trimIndent()
+        )
+        res2.shouldBeInstanceOf<Unit>()
+    }
 }

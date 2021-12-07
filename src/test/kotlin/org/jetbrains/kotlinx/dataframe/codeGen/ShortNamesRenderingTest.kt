@@ -113,4 +113,18 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
             fields["f"]!!.renderColumnType() shouldBe "DataColumn<DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>>"
         }
     }
+
+    interface GenericDataSchema<A> {
+        val a: A
+    }
+
+    @Test
+    fun `generic field`() {
+        MarkersExtractor[GenericDataSchema::class].allFields[0].renderFieldType() shouldBe "A"
+    }
+
+    @Test
+    fun `generic column`() {
+        MarkersExtractor[GenericDataSchema::class].allFields[0].renderColumnType() shouldBe "DataColumn<A>"
+    }
 }
