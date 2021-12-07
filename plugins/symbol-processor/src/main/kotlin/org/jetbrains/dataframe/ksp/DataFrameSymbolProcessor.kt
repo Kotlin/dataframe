@@ -156,53 +156,10 @@ class DataFrameSymbolProcessor(
             interfaceName = interfaceName,
             visibility = visibility,
             properties.map { property ->
-                Property(getColumnName(property), property.simpleName.asString(), render(property.type))
+                Property(getColumnName(property), property.simpleName.asString(), property.type)
             }
         )
         appendLine(extensions)
-    }
-
-    @OptIn(KspExperimental::class)
-    private fun render(typeReference: KSTypeReference): RenderedType {
-        val type = typeReference.resolve()
-        val isDataSchema: Boolean
-        val fqName = type.declaration.qualifiedName?.asString() ?: error("")
-        if (fqName == "kotlin.collections.List") {
-            isDataSchema = type.innerArguments.first().type?.resolve()?.declaration?.isAnnotationPresent(DataSchema::class) ?: false
-        } else {
-            isDataSchema  = type.declaration.isAnnotationPresent(DataSchema::class)
-        }
-        val renderedArguments = if (type.innerArguments.isNotEmpty()) {
-            type.innerArguments.joinToString(", ") { render(it) }
-        } else {
-            null
-        }
-        return RenderedType(fqName, renderedArguments, type.isMarkedNullable, isDataSchema)
-    }
-
-    private fun render(typeArgument: KSTypeArgument): String {
-        return when (val variance = typeArgument.variance) {
-            Variance.STAR -> variance.label
-            Variance.INVARIANT -> renderRecursively(typeArgument.type ?: error("typeArgument.type should only be null for Variance.STAR"))
-            Variance.COVARIANT, Variance.CONTRAVARIANT -> "${variance.label} ${renderRecursively(typeArgument.type ?: error("typeArgument.type should only be null for Variance.STAR"))}"
-        }
-    }
-
-    private fun renderRecursively(typeReference: KSTypeReference): String {
-        val type = typeReference.resolve()
-        val fqName = type.declaration.qualifiedName?.asString() ?: error("")
-        return buildString {
-            append(fqName)
-            if (type.innerArguments.isNotEmpty()) {
-                append("<")
-                val renderedArguments = type.innerArguments.joinToString(", ") { render(it) }
-                append(renderedArguments)
-                append(">")
-            }
-            if (type.isMarkedNullable) {
-                append("?")
-            }
-        }
     }
 
     private fun getColumnName(property: KSAnnotatedWithType): String {
