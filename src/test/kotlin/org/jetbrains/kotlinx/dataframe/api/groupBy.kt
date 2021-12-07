@@ -1,7 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
 
 class GroupByTests {
@@ -24,5 +26,15 @@ class GroupByTests {
             2, listOf<Int>(),
             3, listOf(1)
         )
+    }
+
+    @Test
+    fun `aggregate FrameColumns into new column`() {
+        val df = dataFrameOf("a", "b", "c")(1, 2, 3, 4, 5, 6)
+        val agg = df.groupBy("a", "b").into("d")
+            .groupBy("a").aggregate {
+                getColumn("d") into "e"
+            }
+        agg["e"].type() shouldBe getType<List<AnyFrame>>()
     }
 }
