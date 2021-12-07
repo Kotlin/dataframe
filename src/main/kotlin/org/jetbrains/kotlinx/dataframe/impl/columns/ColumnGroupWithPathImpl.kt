@@ -12,7 +12,7 @@ internal class ColumnGroupWithPathImpl<T> internal constructor(
     val column: ColumnGroup<T>,
     override val path: ColumnPath,
     val container: ColumnsContainer<*>?
-) : ColumnWithPath<DataRow<T>>, ColumnGroupImpl<T>(column.df, column.name) {
+) : ColumnWithPath<DataRow<T>>, ColumnGroupImpl<T>(column.name, column) {
 
     override val parent by lazy {
         if (path.isNotEmpty()) path.dropLast(1).let { host[it].addPath(it, host) } else null

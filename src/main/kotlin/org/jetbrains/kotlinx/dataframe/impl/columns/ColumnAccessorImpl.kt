@@ -25,7 +25,7 @@ internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
         for (colName in path) {
             col = df.getColumn<Any?>(colName, context.unresolvedColumnsPolicy) ?: return null
             if (col.isColumnGroup()) {
-                df = col.asColumnGroup().df
+                df = col.asColumnGroup()
             }
         }
         return col?.cast<T>()?.addPath(path, context.df)

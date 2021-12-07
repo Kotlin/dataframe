@@ -65,7 +65,7 @@ internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
 
 internal fun AnyCol.extractSchema(): ColumnSchema = when (this) {
     is ValueColumn<*> -> ColumnSchema.Value(type)
-    is ColumnGroup<*> -> ColumnSchema.Group(df.schema())
+    is ColumnGroup<*> -> ColumnSchema.Group(schema())
     is FrameColumn<*> -> ColumnSchema.Frame(
         schema.value,
         hasNulls

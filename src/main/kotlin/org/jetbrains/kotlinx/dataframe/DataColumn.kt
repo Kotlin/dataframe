@@ -47,7 +47,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
             defaultValue: T? = null
         ): ValueColumn<T> = ValueColumnImpl(values, name, type.let { if (checkForNulls) it.withNullability(values.anyNull()) else it }, defaultValue)
 
-        public fun <T> createColumnGroup(name: String, df: DataFrame<T>): ColumnGroup<T> = ColumnGroupImpl(df, name)
+        public fun <T> createColumnGroup(name: String, df: DataFrame<T>): ColumnGroup<T> = ColumnGroupImpl(name, df)
 
         public fun <T> createFrameColumn(
             name: String,

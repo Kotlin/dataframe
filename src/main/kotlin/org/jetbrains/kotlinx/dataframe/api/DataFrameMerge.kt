@@ -5,9 +5,9 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.emptyDataFrame
-import org.jetbrains.kotlinx.dataframe.impl.EmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.api.concatImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWith
+import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 
@@ -16,7 +16,9 @@ import org.jetbrains.kotlinx.dataframe.nrow
 @JvmName("concatRows")
 public fun <T> Iterable<DataRow<T>?>.concat(): DataFrame<T> = concatImpl(map { it?.toDataFrame() ?: emptyDataFrame(1) }).cast()
 
-public fun <T> Iterable<DataFrame<T>?>.concat(): DataFrame<T> = concatImpl(filterNotNull()).cast()
+public fun <T> Iterable<DataFrame<T>>.concat(): DataFrame<T> {
+    return concatImpl(asList()).cast()
+}
 
 public fun <T> DataColumn<DataFrame<T>>.concat(): DataFrame<T> = values.concat().cast()
 
@@ -41,7 +43,7 @@ public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
 public fun <T> DataFrame<T>.appendNulls(numberOfRows: Int = 1): DataFrame<T> {
     require(numberOfRows >= 0)
     if (numberOfRows == 0) return this
-    if (ncol == 0) return EmptyDataFrame(nrow + numberOfRows)
+    if (ncol == 0) return DataFrame.empty(nrow + numberOfRows).cast()
     return columns().map { col ->
         col.updateWith(col.values + arrayOfNulls(numberOfRows))
     }.toDataFrame().cast()

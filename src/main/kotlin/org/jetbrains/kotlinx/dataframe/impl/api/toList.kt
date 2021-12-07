@@ -52,7 +52,7 @@ internal fun AnyFrame.toListImpl(type: KType): List<Any> {
                     col
                 }
                 ColumnKind.Group -> {
-                    DataColumn.createValueColumn(column.name(), column.asColumnGroup().df.toListImpl(it.type))
+                    DataColumn.createValueColumn(column.name(), column.asColumnGroup().toListImpl(it.type))
                 }
                 ColumnKind.Value -> {
                     require(!column.hasNulls() || it.type.isMarkedNullable) { "Can not set `null` in non-nullable property `${it.name}: ${it.type}`" }
