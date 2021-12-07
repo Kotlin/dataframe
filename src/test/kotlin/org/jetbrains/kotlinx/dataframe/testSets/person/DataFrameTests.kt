@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
@@ -2409,5 +2410,18 @@ class DataFrameTests : BaseTest() {
         col.size shouldBe 1
         col[0].name shouldBe typed.city.name()
         col[0].isMissingColumn() shouldBe true
+    }
+
+    @Test
+    fun `groupBy into accessor or kproperty`() {
+        val n by column<Int>()
+
+        data class Data(@ColumnName("total") val count: Int)
+
+        typed.groupBy { name }.aggregate {
+            count() into n
+            count() into Data::count
+        } shouldBe typed.groupBy { name }.count(n.name())
+            .add("total") { "n"<Int>() }
     }
 }
