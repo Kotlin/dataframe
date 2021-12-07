@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.FqNames.renderFieldType
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListNamedStub
 import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListTypedStub

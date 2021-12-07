@@ -4,10 +4,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.needsQuoting
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 
-public sealed interface ColumnInfo {
-    public class ValueColumnInfo(public val typeFqName: String) : ColumnInfo
-    public object FrameColumnInfo : ColumnInfo
-    public object ColumnGroupInfo : ColumnInfo
+public sealed interface FieldType {
+    public class ValueFieldType(public val typeFqName: String) : FieldType
+    public class FrameFieldType(public val markerName: String, public val nullable: Boolean) : FieldType
+    public class GroupFieldType(public val markerName: String) : FieldType
 }
 
 public class ValidFieldName private constructor(private val identifier: String, public val needsQuote: Boolean) {
@@ -45,9 +45,7 @@ public class ValidFieldName private constructor(private val identifier: String, 
 public interface BaseField {
     public val fieldName: ValidFieldName
     public val columnName: String
-    public val markerName: String?
-    public val nullable: Boolean
-    public val columnInfo: ColumnInfo
+    public val fieldType: FieldType
 }
 
 public data class GeneratedField(
@@ -55,13 +53,7 @@ public data class GeneratedField(
     override val columnName: String,
     val overrides: Boolean,
     val columnSchema: ColumnSchema,
-    override val markerName: String?
+    override val fieldType: FieldType
 ) : BaseField {
     val columnKind: ColumnKind get() = columnSchema.kind
-    override val nullable: Boolean = columnSchema.nullable
-    override val columnInfo: ColumnInfo = when (columnKind) {
-        ColumnKind.Value -> ColumnInfo.ValueColumnInfo((columnSchema as ColumnSchema.Value).type.toString())
-        ColumnKind.Group -> ColumnInfo.ColumnGroupInfo
-        ColumnKind.Frame -> ColumnInfo.FrameColumnInfo
-    }
 }
