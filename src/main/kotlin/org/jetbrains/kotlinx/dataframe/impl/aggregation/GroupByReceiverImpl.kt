@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.shortPath
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
@@ -46,6 +47,9 @@ internal class GroupByReceiverImpl<T>(override val df: DataFrame<T>, override va
                 is ColumnGroup<*> -> {
                     val frameType = it.value.type().arguments.singleOrNull()?.type
                     allValues.add(NamedValue.create(it.path, it.value.asDataFrame(), DataFrame::class.createTypeWithArgument(frameType), DataFrame.Empty))
+                }
+                is FrameColumn<*> -> {
+                    allValues.add(NamedValue.create(it.path, it.value.toList(), getListType(it.value.type()), emptyList<Unit>()))
                 }
                 else -> {
                     allValues.add(it)
