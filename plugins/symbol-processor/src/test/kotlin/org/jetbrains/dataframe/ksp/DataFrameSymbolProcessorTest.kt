@@ -518,7 +518,7 @@ class DataFrameSymbolProcessorTest {
     }
 
     @Test
-    fun `interface with type parameters`() {
+    fun `generic interface`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
                 sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
@@ -527,12 +527,59 @@ class DataFrameSymbolProcessorTest {
                 $imports
 
                 @DataSchema(isOpen = false)
-                interface Hello <T> {
-                    val name: T
+                interface Generic <T> {
+                    val field: T
                 }
+
+                val <T> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
+                val <T> DataRow<Generic<T>>.test2: T get() = field
             """.trimIndent()))
             ))
-        result.successfulCompilation shouldBe false
+        result.successfulCompilation shouldBe true
+    }
+
+    @Test
+    fun `generic interface with upper bound`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                package org.example
+
+                $imports
+
+                @DataSchema(isOpen = false)
+                interface Generic <T : String> {
+                    val field: T
+                }
+
+                val <T : String> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
+                val <T : String> DataRow<Generic<T>>.test2: T get() = field
+            """.trimIndent()))
+            ))
+        result.successfulCompilation shouldBe true
+    }
+
+    @Test
+    fun `generic interface with variance and user type in type parameters`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                package org.example
+
+                $imports
+
+                interface UpperBound 
+
+                @DataSchema(isOpen = false)
+                interface Generic <out T : UpperBound> {
+                    val field: T
+                }
+
+                val <T : UpperBound> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
+                val <T : UpperBound> DataRow<Generic<T>>.test2: T get() = field
+            """.trimIndent()))
+            ))
+        result.successfulCompilation shouldBe true
     }
 
     @Test
