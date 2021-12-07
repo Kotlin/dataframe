@@ -130,6 +130,7 @@ internal open class ExtensionsCodeGeneratorImpl(
 
     protected fun generateExtensionProperties(marker: IsolatedMarker): Code {
         val markerName = marker.name
+        val markerType = "$markerName${marker.typeArguments}"
         val visibility = renderTopLevelDeclarationVisibility(marker)
         val shortMarkerName = markerName.substring(markerName.lastIndexOf('.') + 1)
         fun generatePropertyCode(
@@ -140,12 +141,19 @@ internal open class ExtensionsCodeGeneratorImpl(
             visibility: String
         ): String {
             val jvmName = "${shortMarkerName}_${name.removeQuotes()}"
-            return "${visibility}val $typeName.$name: $propertyType @JvmName(\"${renderStringLiteral(jvmName)}\") get() = $getter as $propertyType"
+            val typeParameters = marker.typeParameters.let {
+                if (it.isNotEmpty() && !it.startsWith(" ")) {
+                    " $it"
+                } else {
+                    it
+                }
+            }
+            return "${visibility}val$typeParameters $typeName.$name: $propertyType @JvmName(\"${renderStringLiteral(jvmName)}\") get() = $getter as $propertyType"
         }
 
         val declarations = mutableListOf<String>()
-        val dfTypename = renderDfTypename(markerName)
-        val rowTypename = renderRowTypename(markerName)
+        val dfTypename = renderDfTypename(markerType)
+        val rowTypename = renderRowTypename(markerType)
         marker.fields.sortedBy { it.fieldName.quotedIfNeeded }.forEach {
             val getter = "this[\"${renderStringLiteral(it.columnName)}\"]"
             val name = it.fieldName
