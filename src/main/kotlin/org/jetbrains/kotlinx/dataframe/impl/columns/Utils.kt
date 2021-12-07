@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asNullable
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
@@ -32,6 +33,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.topDfs
 import org.jetbrains.kotlinx.dataframe.impl.equalsByElement
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.rollingHash
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.pathOf
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KType
@@ -81,6 +83,8 @@ internal fun ColumnPath.depth() = size - 1
 internal fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
 
 internal fun <T> AnyCol.asValues(): ValueColumn<T> = this as ValueColumn<T>
+
+internal fun <T> DataColumn<T>.asValueColumn(): ValueColumn<T> = this as ValueColumn<T>
 
 @PublishedApi
 internal fun AnyCol.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
@@ -194,3 +198,7 @@ internal fun AnyBaseColumn.unbox(): AnyCol = when (this) {
 }
 
 internal fun AnyCol.isMissingColumn() = this is MissingDataColumn
+
+internal fun <T> ColumnGroup<T>.extractDataFrame(): DataFrame<T> = DataFrameImpl(columns(), nrow)
+
+internal fun <T> BaseColumn<T>.addParent(parent: ColumnGroup<*>) = (this as DataColumnInternal<T>).addParent(parent)

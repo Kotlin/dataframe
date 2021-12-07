@@ -107,7 +107,7 @@ public fun DataColumn<Number>.toByteArray(): ByteArray = convertTo<Byte>().toLis
 
 public fun <T> ColumnGroup<T>.asDataColumn(): DataColumn<DataRow<T>> = this as DataColumn<DataRow<T>>
 
-public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = df
+public fun <T> ColumnGroup<T>.asDataFrame(): DataFrame<T> = this
 
 // endregion
 

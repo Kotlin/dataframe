@@ -54,7 +54,7 @@ internal fun <T> AnyFrame.convertToImpl(type: KType, allowConversion: Boolean, e
                                 val columnGroup = it.asColumnGroup()
                                 DataColumn.createColumnGroup(
                                     it.name(),
-                                    columnGroup.df.convertToSchema((targetColumn as ColumnSchema.Group).schema)
+                                    columnGroup.convertToSchema((targetColumn as ColumnSchema.Group).schema)
                                 )
                             }
                             ColumnKind.Frame -> {

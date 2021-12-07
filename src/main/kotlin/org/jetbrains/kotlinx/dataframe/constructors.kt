@@ -92,8 +92,8 @@ public inline fun <reified T> column(name: String, values: List<T>, hasNulls: Bo
 
 public fun dataFrameOf(columns: Iterable<AnyBaseColumn>): AnyFrame {
     val cols = columns.map { it.unbox() }
-    if (cols.isEmpty()) return DataFrame.empty()
-    return DataFrameImpl<Unit>(cols)
+    val nrow = if (cols.isEmpty()) 0 else cols[0].size
+    return DataFrameImpl<Unit>(cols, nrow)
 }
 
 public fun dataFrameOf(vararg header: ColumnReference<*>): DataFrameBuilder = DataFrameBuilder(header.map { it.name() })

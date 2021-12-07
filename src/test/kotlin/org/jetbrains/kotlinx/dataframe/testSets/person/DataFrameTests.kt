@@ -69,6 +69,7 @@ import org.jetbrains.kotlinx.dataframe.api.intoList
 import org.jetbrains.kotlinx.dataframe.api.intoRows
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.isNA
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.keysInto
 import org.jetbrains.kotlinx.dataframe.api.last
@@ -2329,7 +2330,7 @@ class DataFrameTests : BaseTest() {
     fun `get by empty path`() {
         val all = typed[pathOf()]
 
-        all.asColumnGroup().asDataFrame() shouldBe typed
+        all.asColumnGroup().asDataFrame().columns() shouldBe typed.columns()
 
         typed.getColumn { emptyPath() } shouldBe all
     }
@@ -2423,5 +2424,16 @@ class DataFrameTests : BaseTest() {
             count() into Data::count
         } shouldBe typed.groupBy { name }.count(n.name())
             .add("total") { "n"<Int>() }
+    }
+
+    @Test
+    fun `aggregate null row`() {
+        val aggregated = typed.groupBy { name }.aggregate {
+            (if (name.first().startsWith("A")) first() else null) into "agg"
+        }["agg"]
+
+        aggregated.kind shouldBe ColumnKind.Group
+        aggregated.size shouldBe 3
+        aggregated.count { it.isNA } shouldBe 2
     }
 }

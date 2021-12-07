@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
@@ -71,12 +72,12 @@ internal fun renderType(column: AnyCol) =
         }
         ColumnKind.Group -> {
             val group = column.asColumnGroup()
-            "{${renderSchema(group.df)}}"
+            "{${renderSchema(group)}}"
         }
     }
 
 internal fun AnyCol.renderShort() = when (kind()) {
     ColumnKind.Value -> "ValueColumn<${renderType(type)}>: $size entries".escapeHTML()
     ColumnKind.Frame -> "FrameColumn: $size entries"
-    ColumnKind.Group -> "ColumnGroup ${asColumnGroup().df.size}}"
+    ColumnKind.Group -> "ColumnGroup ${asColumnGroup().asDataFrame().size}}"
 }

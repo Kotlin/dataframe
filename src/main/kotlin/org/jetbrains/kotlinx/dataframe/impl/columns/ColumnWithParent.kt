@@ -23,7 +23,7 @@ internal interface ColumnWithParent<out C> : ColumnReference<C> {
             else -> {
                 val parentCol = parentDef.resolveSingle(context) ?: return null
                 val group = parentCol.data.asColumnGroup()
-                group.df to parentCol.path
+                group to parentCol.path
             }
         }
 

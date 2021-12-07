@@ -19,12 +19,13 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.pathOf
 
 internal open class DataFrameReceiver<T>(
     val source: DataFrame<T>,
     private val unresolvedColumnsPolicy: UnresolvedColumnsPolicy
-) : DataFrameImpl<T>(source.columns()), SingleColumn<DataRow<T>> {
+) : DataFrameImpl<T>(source.columns(), source.nrow), SingleColumn<DataRow<T>> {
 
     private fun <R> DataColumn<R>?.check(path: ColumnPath): DataColumn<R>? =
         when (this) {

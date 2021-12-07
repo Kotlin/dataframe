@@ -407,7 +407,7 @@ class DataFrameTreeTests : BaseTest() {
     fun `update grouped column to table`() {
         val info by columnGroup()
         val grouped = typed.group { age and weight }.into(info)
-        val updated = grouped.convert(info).perRowCol { row, column -> column.asColumnGroup().df }
+        val updated = grouped.convert(info).perRowCol { row, column -> column.asColumnGroup().asDataFrame() }
         val col = updated[info.name()]
         col.kind() shouldBe ColumnKind.Frame
         val table = col.asFrameColumn()
