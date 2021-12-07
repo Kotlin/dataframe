@@ -4,7 +4,6 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
@@ -20,9 +19,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import kotlin.reflect.KType
 
 internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsContainer<*>) : MissingDataColumn<DataRow<T>>(), DataColumnGroup<T> {
-
-    override val df: DataFrame<T>
-        get() = this
 
     override fun getColumnOrNull(name: String) = MissingColumnGroup<Any?>(path + name, host)
 

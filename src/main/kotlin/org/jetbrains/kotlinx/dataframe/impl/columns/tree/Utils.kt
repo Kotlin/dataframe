@@ -83,7 +83,7 @@ internal fun <D> List<ColumnWithPath<*>>.collectTree(emptyData: D, createData: (
     }
     forEach {
         if (it.path.isEmpty()) {
-            it.data.asColumnGroup().df.columns().forEach {
+            it.data.asColumnGroup().columns().forEach {
                 collectColumns(it, root)
             }
         } else {

@@ -17,13 +17,12 @@ import kotlin.reflect.KType
 
 internal val anyRowType = createTypeWithArgument<AnyRow>()
 
-internal open class ColumnGroupImpl<T>(override val df: DataFrame<T>, val name: String) :
-    DataFrameImpl<T>(df.columns()),
-    ColumnGroup<T>,
+internal open class ColumnGroupImpl<T>(val name: String, df: DataFrame<T>) :
+    DataFrameImpl<T>(df.columns(), df.nrow),
     DataColumnInternal<DataRow<T>>,
     DataColumnGroup<T> {
 
-    override fun values() = df.rows()
+    override fun values() = rows()
 
     override fun countDistinct() = distinct.nrow
 
@@ -35,47 +34,49 @@ internal open class ColumnGroupImpl<T>(override val df: DataFrame<T>, val name: 
 
     override fun toSet() = set
 
-    override fun size() = df.nrow
+    override fun size() = rowsCount()
 
-    override fun get(index: Int) = df[index]
+    override fun get(index: Int) = super<DataFrameImpl>.get(index)
 
-    override fun get(firstIndex: Int, vararg otherIndices: Int): ColumnGroup<T> = DataColumn.createColumnGroup(name, df.get(firstIndex, *otherIndices))
+    override fun get(firstIndex: Int, vararg otherIndices: Int) = ColumnGroupImpl(name, super<DataFrameImpl>.get(firstIndex, *otherIndices))
 
-    override fun rename(newName: String) = ColumnGroupImpl(df, newName)
+    override fun rename(newName: String) = if (newName == name) this else ColumnGroupImpl(newName, this)
 
     override fun defaultValue() = null
 
-    override fun get(indices: Iterable<Int>) = ColumnGroupImpl(df[indices], name)
+    override fun get(indices: Iterable<Int>) = ColumnGroupImpl(name, super<DataFrameImpl>.get(indices))
 
     override fun addParent(parent: ColumnGroup<*>): DataColumn<DataRow<T>> = ColumnGroupWithParent(parent, this)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         val g = other as? ColumnGroup<*> ?: return false
-        return name == g.name() && df == other.df
+        return name == g.name() && columns == other.columns()
     }
 
-    private val hashCode by lazy { name.hashCode() * 31 + df.hashCode() }
+    private fun computeHashCode() = name.hashCode() * 31 + super.hashCode()
+
+    private val hashCode by lazy { computeHashCode() }
 
     override fun hashCode() = hashCode
 
-    override fun toString() = "$name: {${renderSchema(df)}}"
+    override fun toString() = "$name: {${renderSchema(this)}}"
 
     override fun changeType(type: KType) = throw UnsupportedOperationException()
 
     override fun name() = name
 
-    override fun distinct() = ColumnGroupImpl(distinct, name)
+    override fun distinct() = ColumnGroupImpl(name, distinct)
 
     override fun resolve(context: ColumnResolutionContext) = super<DataColumnInternal>.resolve(context)
 
     override fun resolveSingle(context: ColumnResolutionContext) = super<DataColumnInternal>.resolveSingle(context)
 
-    override fun iterator() = df.iterator()
+    override fun iterator() = super<DataFrameImpl>.iterator()
 
     override fun forceResolve() = ResolvingColumnGroup(this)
 
-    override fun get(range: IntRange): ColumnGroupImpl<T> = ColumnGroupImpl(df[range], name)
+    override fun get(range: IntRange) = ColumnGroupImpl(name, super<DataFrameImpl>.get(range))
 
     override fun get(columnName: String): AnyCol = getColumn(columnName)
 }

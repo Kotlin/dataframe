@@ -21,19 +21,16 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateBodyInternal
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 
-internal open class DataFrameImpl<T>(cols: List<AnyCol>) : DataFrame<T>, AggregatableInternal<T> {
-
-    private val columns: List<AnyCol>
+internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) : DataFrame<T>, AggregatableInternal<T> {
 
     private val columnsMap: Map<String, Int>
 
-    private val nrow: Int
+    protected val columns: List<AnyCol>
 
     init {
         columnsMap = mutableMapOf()
 
         // check that column sizes are equal
-        nrow = cols.firstOrNull()?.size ?: 0
         val invalidSizeColumns = cols.filter { it.size != nrow }
         require(invalidSizeColumns.isEmpty()) {
             "Unequal column sizes:\n${cols.joinToString("\n") { it.name + ": " + it.size }}"

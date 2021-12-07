@@ -52,7 +52,7 @@ internal fun <T> insertImpl(
             check(invalidPath == null) { "Can not insert column `" + invalidPath!!.insertionPath.joinToString(".") + "` because column with this path already exists in DataFrame" }
             val group = it as? ColumnGroup<*>
             check(group != null) { "Can not insert columns under a column '${it.name()}', because it is not a column group" }
-            val newDf = insertImpl(group.df, subTree, treeNode?.get(it.name()), childDepth)
+            val newDf = insertImpl(group, subTree, treeNode?.get(it.name()), childDepth)
             val newCol = group.withDf(newDf)
             newColumns.add(newCol)
             columnsMap.remove(it.name())
@@ -107,7 +107,7 @@ internal fun <T> insertImpl(
                 assert(columns.count { it.insertionPath.size == childDepth } == 1) { "Can not insert more than one column into the path ${nodeToInsert.insertionPath}" }
                 val group = column as ColumnGroup<*>
                 val newDf = insertImpl(
-                    group.df,
+                    group,
                     columns.filter { it.insertionPath.size > childDepth },
                     treeNode?.get(name),
                     childDepth

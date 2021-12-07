@@ -42,7 +42,7 @@ internal fun <T> DataFrame<T>.removeImpl(allowMissingColumns: Boolean = false, c
                 val node = node.addChild(column.name, ColumnPosition(index, true, null))
                 if (toRemove.all { it.path.size > depth + 1 }) {
                     val groupCol = (column as ColumnGroup<*>)
-                    val newDf = dfs(groupCol.df.columns(), toRemove, node)
+                    val newDf = dfs(groupCol.columns(), toRemove, node)
                     if (newDf != null) {
                         val newCol = groupCol.withDf(newDf)
                         newCols.add(newCol)

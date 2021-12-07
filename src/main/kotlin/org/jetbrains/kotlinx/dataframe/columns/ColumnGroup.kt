@@ -7,8 +7,6 @@ import kotlin.reflect.KProperty
 
 public interface ColumnGroup<out T> : BaseColumn<DataRow<T>>, DataFrame<T> {
 
-    public val df: DataFrame<T>
-
     override fun get(index: Int): DataRow<T>
 
     override fun get(indices: Iterable<Int>): ColumnGroup<T>
@@ -25,7 +23,7 @@ public interface ColumnGroup<out T> : BaseColumn<DataRow<T>>, DataFrame<T> {
 
     override fun rename(newName: String): ColumnGroup<T>
 
-    override fun asColumnGroup(name: String): ColumnGroup<*> = this
+    override fun asColumnGroup(name: String): ColumnGroup<*> = rename(name)
 
     override operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnGroup<T> = super.getValue(thisRef, property) as ColumnGroup<T>
 }
