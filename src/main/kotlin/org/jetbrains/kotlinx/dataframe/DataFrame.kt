@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
-import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
@@ -70,7 +69,7 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     // region get rows
 
-    public operator fun get(index: Int): DataRow<T> = DataRowImpl(index, this)
+    public operator fun get(index: Int): DataRow<T>
     public operator fun get(indices: Iterable<Int>): DataFrame<T> = getRows(indices)
     public operator fun get(range: IntRange): DataFrame<T> = getRows(range)
     public operator fun get(vararg ranges: IntRange): DataFrame<T> = getRows(ranges.asSequence().flatMap { it.asSequence() }.asIterable())
