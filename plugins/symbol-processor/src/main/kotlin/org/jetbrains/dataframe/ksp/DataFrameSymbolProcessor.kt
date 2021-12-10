@@ -91,21 +91,15 @@ class DataFrameSymbolProcessor(
         val properties: List<KSAnnotatedWithType>
     )
 
-    class KSAnnotatedWithType(
+    private class KSAnnotatedWithType(
         private val declaration: KSAnnotated,
         val simpleName: KSName,
         val type: KSTypeReference
     ) : KSAnnotated by declaration
 
-    private fun generate(file: KSFile, klass: KSClassDeclaration, properties: List<KSAnnotatedWithType>) {
+    private fun generate(file: KSFile, dataSchema: KSClassDeclaration, properties: List<KSAnnotatedWithType>) {
         val packageName = file.packageName.asString()
-        val fileName = if (klass.parentDeclaration == null) {
-            val simpleName = klass.simpleName.asString()
-            "$simpleName${'$'}Extensions"
-        } else {
-            val fqName = klass.qualifiedName?.asString() ?: error("@DataSchema declaration at ${klass.location} must have name")
-            "${fqName}${'$'}Extensions"
-        }
+        val fileName = getFileName(dataSchema)
         val generatedFile = codeGenerator.createNewFile(Dependencies(false, file), packageName, fileName)
         try {
             generatedFile.writer().use {
@@ -113,28 +107,50 @@ class DataFrameSymbolProcessor(
                 if (packageName.isNotEmpty()) {
                     it.appendLine("package $packageName")
                 }
-                it.appendLine("import org.jetbrains.kotlinx.dataframe.annotations.*")
-                it.appendLine("import org.jetbrains.kotlinx.dataframe.ColumnsContainer")
-                it.appendLine("import org.jetbrains.kotlinx.dataframe.DataColumn")
-                it.appendLine("import org.jetbrains.kotlinx.dataframe.DataFrame")
-                it.appendLine("import org.jetbrains.kotlinx.dataframe.DataRow")
-                it.appendLine("import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup")
-                it.appendLine()
-                val name = klass.qualifiedName ?: error("@DataSchema declaration at ${klass.location} must have name")
-                it.writeProperties(klass, name.asString(), properties)
+                it.writeImports()
+                val extensions = renderExtensions(
+                    declaration = dataSchema,
+                    interfaceName = dataSchema.getQualifiedNameOrThrow(),
+                    visibility = getMarkerVisibility(dataSchema),
+                    properties.map { property ->
+                        Property(getColumnName(property), property.simpleName.asString(), property.type)
+                    }
+                )
+                it.appendLine(extensions)
             }
         } catch (e: IOException) {
-            throw IOException("Error writing ${fileName} generated from declaration at ${file.location}", e)
+            throw IOException("Error writing $fileName generated from declaration at ${file.location}", e)
         }
     }
 
-    private fun OutputStreamWriter.writeProperties(
-        declaration: KSClassDeclaration,
-        interfaceName: String,
-        properties: List<KSAnnotatedWithType>
-    ) {
-        val visibility = when (val visibility = declaration.getVisibility()) {
-            Visibility.PUBLIC -> if (declaration.modifiers.contains(Modifier.PUBLIC)) {
+    fun KSDeclaration.getQualifiedNameOrThrow(): String {
+        return (qualifiedName ?: error("@DataSchema declaration at $location must have name")).asString()
+    }
+
+    private fun OutputStreamWriter.writeImports() {
+        appendLine("import org.jetbrains.kotlinx.dataframe.annotations.*")
+        appendLine("import org.jetbrains.kotlinx.dataframe.ColumnsContainer")
+        appendLine("import org.jetbrains.kotlinx.dataframe.DataColumn")
+        appendLine("import org.jetbrains.kotlinx.dataframe.DataFrame")
+        appendLine("import org.jetbrains.kotlinx.dataframe.DataRow")
+        appendLine("import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup")
+        appendLine()
+    }
+
+    private fun getFileName(dataSchema: KSClassDeclaration) =
+        if (dataSchema.isTopLevel) {
+            val simpleName = dataSchema.simpleName.asString()
+            "$simpleName${'$'}Extensions"
+        } else {
+            val fqName = dataSchema.getQualifiedNameOrThrow()
+            "${fqName}${'$'}Extensions"
+        }
+
+    private val KSDeclaration.isTopLevel get() = parentDeclaration == null
+
+    private fun getMarkerVisibility(dataSchema: KSClassDeclaration) =
+        when (val visibility = dataSchema.getVisibility()) {
+            Visibility.PUBLIC -> if (dataSchema.modifiers.contains(Modifier.PUBLIC)) {
                 MarkerVisibility.EXPLICIT_PUBLIC
             } else {
                 MarkerVisibility.IMPLICIT_PUBLIC
@@ -144,16 +160,6 @@ class DataFrameSymbolProcessor(
                 error("DataSchema declaration should have $EXPECTED_VISIBILITIES, but was $visibility")
             }
         }
-        val extensions = renderExtensions(
-            declaration = declaration,
-            interfaceName = interfaceName,
-            visibility = visibility,
-            properties.map { property ->
-                Property(getColumnName(property), property.simpleName.asString(), property.type)
-            }
-        )
-        appendLine(extensions)
-    }
 
     private fun getColumnName(property: KSAnnotatedWithType): String {
         val columnNameAnnotation =  property.annotations.firstOrNull { annotation ->
