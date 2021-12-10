@@ -1649,8 +1649,8 @@ class DataFrameTests : BaseTest() {
         val values by columnOf(1, 2, 3)
         val list1 by columnOf(listOf(1, 2, 3), listOf(1), listOf(1, 2))
         val frames by listOf(listOf(1, 2), listOf(1, 2), listOf(1, 2)).map {
-            val data = column("data", it)
-            val dataStr = column("dataStr", it.map { it.toString() })
+            val data = it.toColumn("data")
+            val dataStr = it.map { it.toString() }.toColumn("dataStr")
             dataFrameOf(data, dataStr)
         }.toColumn()
         frames.kind shouldBe ColumnKind.Frame

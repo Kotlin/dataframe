@@ -3,15 +3,16 @@ package org.jetbrains.kotlinx.dataframe.io
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.forEachRow
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.tryParse
-import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
+import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.values
 import java.io.BufferedReader
 import java.io.File
@@ -29,10 +30,9 @@ import java.nio.charset.Charset
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
-import java.util.*
 import java.util.zip.GZIPInputStream
-import kotlin.collections.ArrayList
 import kotlin.reflect.KClass
+import kotlin.reflect.full.withNullability
 
 public enum class CSVType(public val format: CSVFormat) {
     DEFAULT(CSVFormat.DEFAULT.withAllowMissingColumnNames().withIgnoreSurroundingSpaces()),
@@ -288,13 +288,12 @@ public fun DataFrame.Companion.readDelim(
             val colType = colTypes[colName] ?: defaultColType
             var hasNulls = false
             val values = records.map {
-                val value = it[colIndex]
-                if (value.isEmpty()) {
+                it[colIndex].ifEmpty {
                     hasNulls = true
                     null
-                } else value
+                }
             }
-            val column = column(colName, values, hasNulls)
+            val column = DataColumn.createValueColumn(colName, values, getType<String>().withNullability(hasNulls))
             when (colType) {
                 null -> column.tryParse(parserOptions)
                 else -> {
