@@ -34,7 +34,7 @@ class DataFrameSymbolProcessorTest {
     fun `all interface`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-            sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+            sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
                 class OuterClass
@@ -71,7 +71,7 @@ class DataFrameSymbolProcessorTest {
     fun `all data class`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
                 class OuterClass
@@ -112,7 +112,7 @@ class DataFrameSymbolProcessorTest {
     fun `all class`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
                 class OuterClass
@@ -154,7 +154,7 @@ class DataFrameSymbolProcessorTest {
     fun `functional type`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
                 @DataSchema(isOpen = false)
@@ -186,7 +186,7 @@ class DataFrameSymbolProcessorTest {
     fun `suspend functional type`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
                 @DataSchema(isOpen = false)
@@ -219,7 +219,7 @@ class DataFrameSymbolProcessorTest {
     fun `nullable functional type`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
                 @DataSchema(isOpen = false)
@@ -251,7 +251,7 @@ class DataFrameSymbolProcessorTest {
     fun `functional type with receiver`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
                 @DataSchema(isOpen = false)
@@ -283,7 +283,7 @@ class DataFrameSymbolProcessorTest {
     fun `named lambda parameter`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
                 @DataSchema(isOpen = false)
@@ -315,7 +315,7 @@ class DataFrameSymbolProcessorTest {
     fun `inferred type`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
                 @DataSchema(isOpen = false)
@@ -338,7 +338,7 @@ class DataFrameSymbolProcessorTest {
     fun `typealias`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
                 class OuterClass
@@ -364,7 +364,7 @@ class DataFrameSymbolProcessorTest {
     fun `type annotated with dataschema rendered to column group`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
                 @DataSchema
@@ -390,7 +390,7 @@ class DataFrameSymbolProcessorTest {
     fun `type annotated with dataschema rendered to frame column`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
                 @DataSchema
@@ -417,7 +417,7 @@ class DataFrameSymbolProcessorTest {
     fun `column name from annotation is used`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
                 @DataSchema(isOpen = false)
@@ -443,7 +443,7 @@ class DataFrameSymbolProcessorTest {
     fun `jvm name`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
 
@@ -470,7 +470,7 @@ class DataFrameSymbolProcessorTest {
     fun `DataRow property`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
                 interface Marker
@@ -495,7 +495,7 @@ class DataFrameSymbolProcessorTest {
     fun `DataFrame property`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 $imports
 
                 interface Marker
@@ -519,7 +519,7 @@ class DataFrameSymbolProcessorTest {
     fun `extension accessible from same package`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 package org.example
 
                 $imports
@@ -541,7 +541,7 @@ class DataFrameSymbolProcessorTest {
     fun `generic interface`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 package org.example
 
                 $imports
@@ -563,7 +563,7 @@ class DataFrameSymbolProcessorTest {
     fun `generic interface with upper bound`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 package org.example
 
                 $imports
@@ -585,7 +585,7 @@ class DataFrameSymbolProcessorTest {
     fun `generic interface with variance and user type in type parameters`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 package org.example
 
                 $imports
@@ -609,7 +609,7 @@ class DataFrameSymbolProcessorTest {
     fun `nested interface`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 package org.example
 
                 $imports
@@ -630,7 +630,7 @@ class DataFrameSymbolProcessorTest {
     fun `redeclaration in different scopes`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 package org.example
 
                 $imports
@@ -660,7 +660,7 @@ class DataFrameSymbolProcessorTest {
     fun `interface with internal visibility`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 package org.example
 
                 $imports
@@ -684,7 +684,7 @@ class DataFrameSymbolProcessorTest {
     fun `interface with public visibility`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 package org.example
 
                 $imports
@@ -708,7 +708,7 @@ class DataFrameSymbolProcessorTest {
     fun `interface with implicit visibility`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 package org.example
 
                 $imports
@@ -733,7 +733,7 @@ class DataFrameSymbolProcessorTest {
     fun `private class`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 package org.example
 
                 $imports
@@ -751,7 +751,7 @@ class DataFrameSymbolProcessorTest {
     fun `effectively private interface`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 package org.example
 
                 $imports
@@ -773,7 +773,7 @@ class DataFrameSymbolProcessorTest {
     fun `parent of interface is effectively private`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(annotations, dataColumn, dataFrame, dataRow, SourceFile.kotlin("MySources.kt", """
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
                 package org.example
 
                 $imports
