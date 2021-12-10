@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.cumSum
 import org.jetbrains.kotlinx.dataframe.api.describe
 import org.jetbrains.kotlinx.dataframe.api.div
 import org.jetbrains.kotlinx.dataframe.api.expr
+import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.groupByOther
 import org.jetbrains.kotlinx.dataframe.api.head
@@ -41,8 +42,6 @@ import org.jetbrains.kotlinx.dataframe.api.stdOf
 import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.sumFor
 import org.jetbrains.kotlinx.dataframe.api.sumOf
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.toDataRow
 import org.jetbrains.kotlinx.dataframe.api.valueCounts
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.column
@@ -851,8 +850,8 @@ class Analyze : TestBase() {
     @Test
     fun pivotAsDataRowOrFrame() {
         // SampleStart
-        df.pivot { city }.toDataRow()
-        df.pivot { city }.groupBy { name }.toDataFrame()
+        df.pivot { city }.frames()
+        df.pivot { city }.groupBy { name }.frames()
         // SampleEnd
     }
 

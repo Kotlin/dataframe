@@ -51,7 +51,7 @@ public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowEx
     }
 }
 
-public fun <T> PivotGroupBy<T>.toDataFrame(): DataFrame<T> = aggregate { this }
+public fun <T> PivotGroupBy<T>.frames(): DataFrame<T> = aggregate { this }
 
 // region values
 
