@@ -20,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateBodyInternal
 import org.jetbrains.kotlinx.dataframe.impl.api.AggregatedPivot
 import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
 import org.jetbrains.kotlinx.dataframe.impl.api.GroupedDataRowImpl
@@ -52,8 +51,6 @@ internal class GroupByImpl<T, G>(
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = keyColumnsInGroups.toColumns().let { groupCols -> { all().except(groupCols) } }
 
     override fun <R> aggregate(body: AggregateGroupedBody<G, R>) = aggregateGroupBy(toDataFrame(), { groups }, removeColumns = true, body).cast<G>()
-
-    override fun <R> aggregateInternal(body: AggregateBodyInternal<G, R>) = aggregate(body as AggregateGroupedBody<G, R>)
 
     override fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G> {
         val indices = (0 until df.nrow).filter {

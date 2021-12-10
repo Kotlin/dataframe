@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.pathOf
@@ -82,6 +83,6 @@ internal inline fun <T, reified C, reified R> Grouped<T>.aggregateOf(
 internal inline fun <T, reified C, R> PivotGroupBy<T>.aggregateOf(
     crossinline expression: RowExpression<T, C>,
     aggregator: Aggregator<C, R>
-): DataFrame<T> = aggregateInternal {
-    yield(emptyPath(), aggregator.aggregateOf(df, expression))
+): DataFrame<T> = aggregate {
+    internal().yield(emptyPath(), aggregator.aggregateOf(this, expression))
 }

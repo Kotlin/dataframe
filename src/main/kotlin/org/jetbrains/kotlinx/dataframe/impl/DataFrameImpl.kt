@@ -18,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateBodyInternal
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 
 internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) : DataFrame<T>, AggregatableInternal<T> {
@@ -92,9 +91,6 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) : DataFr
         }
         return DataRowImpl(index, this)
     }
-
-    override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) =
-        aggregate(body as AggregateGroupedBody<T, R>).df()
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all() }
 

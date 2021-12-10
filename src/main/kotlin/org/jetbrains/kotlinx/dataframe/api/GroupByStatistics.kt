@@ -9,10 +9,10 @@ import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.columnValues
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.comparableColumns
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateBy
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
@@ -44,7 +44,7 @@ public fun <T> Grouped<T>.values(
     dropNA: Boolean = false,
     distinct: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>
-): DataFrame<T> = aggregateInternal { columnValues(columns, true, dropNA, distinct) }
+): DataFrame<T> = aggregate { internal().columnValues(columns, true, dropNA, distinct) }
 public fun <T> Grouped<T>.values(dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> = values(dropNA, distinct, remainingColumnsSelector())
 
 // region min

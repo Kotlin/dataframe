@@ -9,8 +9,6 @@ import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.firstOrNull
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateBodyInternal
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.public
 import org.jetbrains.kotlinx.dataframe.impl.api.aggregatePivot
 import org.jetbrains.kotlinx.dataframe.impl.api.getPivotColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
@@ -20,7 +18,6 @@ internal data class PivotGroupByImpl<T>(
     val df: GroupBy<*, T>,
     val columns: PivotColumnsSelector<T, *>,
     val inward: Boolean?,
-    val separateStatistics: Boolean = false,
     val default: Any? = null
 ) : PivotGroupBy<T>, AggregatableInternal<T> {
     override fun <R> aggregate(separate: Boolean, body: AggregateBody<T, R>): DataFrame<T> {
@@ -29,11 +26,7 @@ internal data class PivotGroupByImpl<T>(
         }.cast()
     }
 
-    override fun separateStatistics(flag: Boolean) = if (flag == separateStatistics) this else copy(separateStatistics = flag)
-
     override fun default(value: Any?) = copy(default = value)
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = df.groups.firstOrNull()?.getPivotColumnPaths(columns).orEmpty().let { pivotPaths -> { all().except(pivotPaths.toColumnSet() and (df as GroupByImpl).keyColumnsInGroups.toColumns()) } }
-
-    override fun <R> aggregateInternal(body: AggregateBodyInternal<T, R>) = aggregate(separateStatistics, body.public())
 }
