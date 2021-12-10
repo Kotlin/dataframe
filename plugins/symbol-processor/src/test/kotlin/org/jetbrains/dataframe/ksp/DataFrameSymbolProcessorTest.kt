@@ -7,6 +7,9 @@ import io.kotest.inspectors.forOne
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldStartWith
+import org.jetbrains.dataframe.ksp.runner.KotlinCompileTestingCompilationResult
+import org.jetbrains.dataframe.ksp.runner.KspCompilationTestRunner
+import org.jetbrains.dataframe.ksp.runner.TestCompilationParameters
 import org.junit.Before
 import kotlin.test.Test
 
@@ -59,7 +62,8 @@ class DataFrameSymbolProcessorTest {
                 val DataRow<Hello>.row4: () -> Unit get() = a
                 val DataRow<Hello>.row5: List<List<*>> get() = d
             """.trimIndent()))
-        ))
+        )
+        )
         result.successfulCompilation shouldBe true
     }
 
@@ -99,7 +103,8 @@ class DataFrameSymbolProcessorTest {
                 val DataRow<Hello>.row5: List<List<*>> get() = d
                 val DataRow<Hello>.row6: Hello.Nested get() = nestedClass
             """.trimIndent()))
-            ))
+            )
+        )
         result.successfulCompilation shouldBe true
     }
 
@@ -140,7 +145,8 @@ class DataFrameSymbolProcessorTest {
                 val DataRow<Hello>.row5: List<List<*>> get() = d
                 val DataRow<Hello>.row6: Hello.Nested get() = nestedClass
             """.trimIndent()))
-            ))
+            )
+        )
         result.successfulCompilation shouldBe true
     }
 
@@ -159,7 +165,8 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.test1: DataColumn<() -> Unit?> get() = a
                 val DataRow<Hello>.test2: () -> Unit? get() = a
             """.trimIndent()))
-            ))
+            )
+        )
         result.inspectLines { codeLines ->
             codeLines.forOne {
                 it
@@ -190,7 +197,8 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.test1: DataColumn<suspend () -> Unit?> get() = a
                 val DataRow<Hello>.test2: suspend () -> Unit? get() = a
             """.trimIndent()))
-            ))
+            )
+        )
 
         result.inspectLines { codeLines ->
             codeLines.forOne {
@@ -222,7 +230,8 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.test1: DataColumn<(() -> String)?> get() = a
                 val DataRow<Hello>.test2: (() -> String)? get() = a
             """.trimIndent()))
-            ))
+            )
+        )
         result.inspectLines { codeLines ->
             codeLines.forOne {
                 it
@@ -253,7 +262,8 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.test1: DataColumn<(Int.() -> String)?> get() = a
                 val DataRow<Hello>.test2: (Int.() -> String)? get() = a
             """.trimIndent()))
-            ))
+            )
+        )
         result.inspectLines { codeLines ->
             codeLines.forOne {
                 it
@@ -284,7 +294,8 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.test1: DataColumn<(a: String) -> Unit> get() = a
                 val DataRow<Hello>.test2: (a: String) -> Unit get() = a
             """.trimIndent()))
-            ))
+            )
+        )
         result.inspectLines { codeLines ->
             codeLines.forOne {
                 it
@@ -316,7 +327,8 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.test1: DataColumn<Int> get() = b
                 val DataRow<Hello>.test2: Int get() = b
             """.trimIndent()))
-            ))
+            )
+        )
         result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
             result.successfulCompilation shouldBe true
         }
@@ -341,7 +353,8 @@ class DataFrameSymbolProcessorTest {
                 val DataRow<Hello>.row1: A get() = a
                 
             """.trimIndent()))
-            ))
+            )
+        )
         result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
             result.successfulCompilation shouldBe true
         }
@@ -366,7 +379,8 @@ class DataFrameSymbolProcessorTest {
                 val DataRow<Hello>.row1: DataRow<A> get() = a
                 
             """.trimIndent()))
-            ))
+            )
+        )
         result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
             result.successfulCompilation shouldBe true
         }
@@ -391,7 +405,8 @@ class DataFrameSymbolProcessorTest {
                 val DataRow<Hello>.row1: DataFrame<A> get() = a
                 
             """.trimIndent()))
-            ))
+            )
+        )
         result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
             result.successfulCompilation shouldBe true
         }
@@ -414,7 +429,8 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.test2: DataColumn<Int> get() = `test name`
                 val DataRow<Hello>.test4: Int get() = `test name`
             """.trimIndent()))
-            ))
+            )
+        )
         result.inspectLines { codeLines ->
             codeLines.forExactly(2) {
                 it.shouldContain("this[\"test-name\"]")
@@ -440,7 +456,8 @@ class DataFrameSymbolProcessorTest {
                 val DataRow<Hello>.row1: Int get() = a
                 
             """.trimIndent()))
-            ))
+            )
+        )
         result.inspectLines { codeLines ->
             codeLines.forExactly(2) {
                 it.shouldContain("@JvmName(\"Hello_a\")")
@@ -467,7 +484,8 @@ class DataFrameSymbolProcessorTest {
                 val DataRow<Hello>.row1: DataRow<Marker> get() = a
                 
             """.trimIndent()))
-            ))
+            )
+        )
         result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
             result.successfulCompilation shouldBe true
         }
@@ -491,7 +509,8 @@ class DataFrameSymbolProcessorTest {
                 val DataRow<Hello>.row1: DataFrame<Marker> get() = a
                 
             """.trimIndent()))
-            ))
+            )
+        )
         result.successfulCompilation shouldBe true
     }
 
@@ -513,7 +532,8 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.test1: DataColumn<String> get() = name
                 val DataRow<Hello>.test2: String get() = name
             """.trimIndent()))
-            ))
+            )
+        )
         result.successfulCompilation shouldBe true
     }
 
@@ -534,7 +554,8 @@ class DataFrameSymbolProcessorTest {
                 val <T> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
                 val <T> DataRow<Generic<T>>.test2: T get() = field
             """.trimIndent()))
-            ))
+            )
+        )
         result.successfulCompilation shouldBe true
     }
 
@@ -555,7 +576,8 @@ class DataFrameSymbolProcessorTest {
                 val <T : String> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
                 val <T : String> DataRow<Generic<T>>.test2: T get() = field
             """.trimIndent()))
-            ))
+            )
+        )
         result.successfulCompilation shouldBe true
     }
 
@@ -578,7 +600,8 @@ class DataFrameSymbolProcessorTest {
                 val <T : UpperBound> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
                 val <T : UpperBound> DataRow<Generic<T>>.test2: T get() = field
             """.trimIndent()))
-            ))
+            )
+        )
         result.successfulCompilation shouldBe true
     }
 
@@ -598,7 +621,8 @@ class DataFrameSymbolProcessorTest {
                 }
                
             """.trimIndent()))
-            ))
+            )
+        )
         result.successfulCompilation shouldBe true
     }
 
@@ -626,7 +650,8 @@ class DataFrameSymbolProcessorTest {
 
                
             """.trimIndent()))
-            ))
+            )
+        )
         println(result.kspGeneratedFiles)
         result.successfulCompilation shouldBe true
     }
@@ -645,7 +670,8 @@ class DataFrameSymbolProcessorTest {
                     val name: Int
                 }
             """.trimIndent()))
-            ))
+            )
+        )
         result.inspectLines { codeLines ->
             codeLines.forExactly(2) {
                 it.shouldContain("""internal val """)
@@ -668,7 +694,8 @@ class DataFrameSymbolProcessorTest {
                     val name: Int
                 }
             """.trimIndent()))
-            ))
+            )
+        )
         result.inspectLines { codeLines ->
             codeLines.forExactly(2) {
                 it.shouldContain("""public val""")
@@ -691,7 +718,8 @@ class DataFrameSymbolProcessorTest {
                     val name: Int
                 }
             """.trimIndent()))
-            ))
+            )
+        )
         result.inspectLines { codeLines ->
             codeLines.forExactly(2) {
                 it.shouldStartWith("""val """)
@@ -714,7 +742,8 @@ class DataFrameSymbolProcessorTest {
                 private class Hello(val name: Int)
                
             """.trimIndent()))
-            ))
+            )
+        )
         result.successfulCompilation shouldBe false
     }
 
@@ -735,7 +764,8 @@ class DataFrameSymbolProcessorTest {
                 }
                
             """.trimIndent()))
-            ))
+            )
+        )
         result.successfulCompilation shouldBe false
     }
 
@@ -758,7 +788,8 @@ class DataFrameSymbolProcessorTest {
                 }
                
             """.trimIndent()))
-            ))
+            )
+        )
         result.successfulCompilation shouldBe false
     }
 
