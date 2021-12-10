@@ -73,19 +73,6 @@ public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> = DataCo
 
 public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> = createColumn(values, getType<T>(), false).forceResolve()
 
-// TODO: replace with extension
-public inline fun <reified T> column(name: String, values: List<T>): DataColumn<T> = when {
-    values.size > 0 && values.all { it is AnyCol } -> DataColumn.createColumnGroup(
-        name,
-        values.map { it as AnyCol }.toDataFrame()
-    ) as DataColumn<T>
-    else -> column(name, values, values.any { it == null })
-}
-
-// TODO: replace with extension
-public inline fun <reified T> column(name: String, values: List<T>, hasNulls: Boolean): DataColumn<T> =
-    DataColumn.createValueColumn(name, values, getType<T>().withNullability(hasNulls))
-
 // endregion
 
 // region create DataFrame

@@ -45,8 +45,8 @@ class CreateDataFrameTests {
             "a" from { it }
             "b" from { df }
             "c" from { df[0] }
-            "d" from { if(it == 1) it else null }
-            "e" from { if(true) it else null }
+            "d" from { if (it == 1) it else null }
+            "e" from { if (true) it else null }
         }
         res["a"].kind shouldBe ColumnKind.Value
         res["a"].type() shouldBe getType<Int>()

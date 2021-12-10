@@ -113,7 +113,7 @@ public fun <T> DataFrame<T>.singleOrNull(predicate: RowExpression<T, Boolean>): 
     rows().singleOrNull { predicate(it, it) }
 
 public fun <T> DataFrame<T>.single(): DataRow<T> =
-    when(nrow) {
+    when (nrow) {
         0 -> throw NoSuchElementException("DataFrame has no rows. Use `singleOrNull`.")
         1 -> get(0)
         else -> throw IllegalArgumentException("DataFrame has more than one row.")
