@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.Pivot
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.Split
 import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
+import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
@@ -72,8 +73,8 @@ internal class Integration : JupyterIntegration() {
             render<AnyRow>({ it.toDataFrame() }, { "DataRow [${it.ncol}]" })
             render<AnyCol>({ dataFrameOf(it) }, { "DataColumn [${it.nrow}]" })
             render<GroupBy<*, *>>({ it.toDataFrame() }, { "GroupBy" })
-            render<Pivot<*>>({ it.toDataFrame() }, { "Pivot: ${it.ncol} columns" })
-            render<PivotGroupBy<*>>({ it.toDataFrame() }, { "PivotGroupBy: ${it.size}" })
+            render<Pivot<*>>({ it.frames().toDataFrame() }, { "Pivot: ${it.ncol} columns" })
+            render<PivotGroupBy<*>>({ it.frames() }, { "PivotGroupBy: ${it.size}" })
             render<SplitWithTransform<*, *, *>> ({ it.into() }, { "Split" })
             render<Split<*, *>> ({ it.toDataFrame() }, { "Split" })
             render<Merge<*, *, *>> ({ it.into("merged") }, { "Merge" })
