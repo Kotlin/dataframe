@@ -1,4 +1,4 @@
-package org.jetbrains.dataframe.ksp
+package org.jetbrains.dataframe.ksp.runner
 
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.SourceFile
