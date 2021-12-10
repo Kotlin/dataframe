@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
@@ -12,7 +11,7 @@ import org.junit.Test
 class MoveTests {
 
     val columnNames = listOf("q", "a.b", "b.c", "w", "a.c.d", "e.f", "b.d", "r")
-    val columns = columnNames.map { column(it, emptyList<Int>()) }
+    val columns = columnNames.map { emptyList<Int>().toColumn(it) }
     val df = columns.toDataFrame()
     val grouped = df.move { cols { it.name.contains(".") } }.into { it.name.split(".").toPath() }
 
