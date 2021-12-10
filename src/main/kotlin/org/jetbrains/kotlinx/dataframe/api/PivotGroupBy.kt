@@ -8,6 +8,5 @@ public interface PivotGroupBy<out T> : Aggregatable<T> {
 
     public fun <R> aggregate(separate: Boolean = false, body: AggregateBody<T, R>): DataFrame<T>
 
-    public fun separateStatistics(flag: Boolean = true): PivotGroupBy<T>
     public fun default(value: Any?): PivotGroupBy<T>
 }

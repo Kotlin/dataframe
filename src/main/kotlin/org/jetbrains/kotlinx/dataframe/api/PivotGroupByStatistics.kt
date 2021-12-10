@@ -7,10 +7,10 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.columnValues
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.comparableColumns
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
@@ -41,13 +41,13 @@ public fun <T, R> PivotGroupBy<T>.matches(yes: R, no: R): DataFrame<T> = aggrega
 
 public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<T> {
     val type = getType<V>()
-    return aggregateInternal {
-        val values = df.rows().map {
+    return aggregate {
+        val values = rows().map {
             val value = expression(it, it)
             if (value is ColumnReference<*>) it[value]
             else value
         }
-        yieldOneOrMany(emptyPath(), values, type)
+        internal().yieldOneOrMany(emptyPath(), values, type)
     }
 }
 
@@ -81,7 +81,7 @@ public fun <T> PivotGroupBy<T>.values(
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, *>
 ): DataFrame<T> =
-    separateStatistics(separate).aggregateInternal { columnValues(columns, false, dropNA, distinct) }
+    aggregate(separate = separate) { internal().columnValues(columns, false, dropNA, distinct) }
 
 // endregion
 

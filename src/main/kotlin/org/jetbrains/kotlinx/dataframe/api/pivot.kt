@@ -7,9 +7,9 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByAggregatePivotImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotGroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotImpl
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotInAggregateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.PivotChainColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
@@ -80,7 +80,7 @@ public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: KProperty<*>, inward: B
 // region groupBy.aggregate { pivot { } }
 
 public fun <T> AggregateGroupedDsl<T>.pivot(inward: Boolean = true, columns: ColumnsSelector<T, *>): PivotGroupBy<T> =
-    GroupByAggregatePivotImpl(this, columns, inward)
+    PivotInAggregateImpl(this, columns, inward)
 public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: String, inward: Boolean = true): PivotGroupBy<T> = pivot(inward) { columns.toColumns() }
 public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: Column, inward: Boolean = true): PivotGroupBy<T> = pivot(inward) { columns.toColumns() }
 public fun <T> AggregateGroupedDsl<T>.pivot(vararg columns: KProperty<*>, inward: Boolean = true): PivotGroupBy<T> = pivot(inward) { columns.toColumns() }
