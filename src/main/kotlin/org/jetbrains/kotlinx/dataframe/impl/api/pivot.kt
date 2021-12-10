@@ -72,7 +72,7 @@ internal fun <T> DataFrame<T>.getPivotColumnPaths(
 internal fun <T, R> aggregatePivot(
     aggregator: AggregateInternalDsl<T>,
     columns: PivotColumnsSelector<T, *>,
-    groupByStatistic: Boolean,
+    separate: Boolean,
     inward: Boolean? = null,
     globalDefault: Any? = null,
     body: Selector<AggregateDsl<T>, R>
@@ -109,7 +109,7 @@ internal fun <T, R> aggregatePivot(
                 )
                 else -> {
                     values.forEach {
-                        val targetPath = if (groupByStatistic) it.path + path else path + it.path
+                        val targetPath = if (separate) it.path + path else path + it.path
                         aggregator.yield(it.apply(targetPath))
                     }
                 }

@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.pathOf
 
@@ -47,11 +48,11 @@ internal fun <T, C, R> Grouped<T>.aggregateAll(
 internal fun <T, C, R> PivotGroupBy<T>.aggregateAll(
     aggregator: Aggregator<C, R>,
     columns: ColumnsSelector<T, C>
-): DataFrame<T> = aggregateInternal {
-    val cols = df[columns]
+): DataFrame<T> = aggregate {
+    val cols = get(columns)
     if (cols.size == 1) {
-        yield(emptyPath(), aggregator.aggregate(cols[0]))
+        internal().yield(emptyPath(), aggregator.aggregate(cols[0]))
     } else {
-        yield(emptyPath(), aggregator.aggregate(cols))
+        internal().yield(emptyPath(), aggregator.aggregate(cols))
     }
 }
