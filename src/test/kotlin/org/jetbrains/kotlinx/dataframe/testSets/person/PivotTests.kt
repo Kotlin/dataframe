@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.explodeLists
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.forEachColumn
+import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumns
@@ -40,7 +41,6 @@ import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sumOf
-import org.jetbrains.kotlinx.dataframe.api.toDataRow
 import org.jetbrains.kotlinx.dataframe.api.toInt
 import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.update
@@ -470,7 +470,7 @@ class PivotTests {
 
     @Test
     fun `pivot plain`() {
-        val pivoted = typed.pivot { name }.toDataRow()
+        val pivoted = typed.pivot { name }.frames()
         pivoted.columnNames() shouldBe typed.name.distinct().toList()
         pivoted["Bob"] shouldBe typed.filter { name == "Bob" }
     }
