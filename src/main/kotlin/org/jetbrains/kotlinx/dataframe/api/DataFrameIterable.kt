@@ -340,10 +340,10 @@ public abstract class CreateDataFrameDsl<T>(public val source: Iterable<T>) {
     public inline fun <reified R> expr(noinline expression: (T) -> R): DataColumn<R> =
         source.map { expression(it) }.toColumn()
 
-    public inline fun <reified R> add(name: String, noinline expression: (T) -> R?): Unit =
-        add(column(name, source.map { expression(it) }))
+    public inline fun <reified R> add(name: String, noinline expression: (T) -> R): Unit =
+        add(source.map { expression(it) }.toColumn(name, Infer.Nulls))
 
-    public inline infix fun <reified R> String.from(noinline expression: (T) -> R?): Unit =
+    public inline infix fun <reified R> String.from(noinline expression: (T) -> R): Unit =
         add(this, expression)
 
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: (T) -> R): Unit =
