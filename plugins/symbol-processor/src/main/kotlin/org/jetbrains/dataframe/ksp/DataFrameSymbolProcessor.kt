@@ -123,10 +123,6 @@ class DataFrameSymbolProcessor(
         }
     }
 
-    fun KSDeclaration.getQualifiedNameOrThrow(): String {
-        return (qualifiedName ?: error("@DataSchema declaration at $location must have name")).asString()
-    }
-
     private fun OutputStreamWriter.writeImports() {
         appendLine("import org.jetbrains.kotlinx.dataframe.annotations.*")
         appendLine("import org.jetbrains.kotlinx.dataframe.ColumnsContainer")
