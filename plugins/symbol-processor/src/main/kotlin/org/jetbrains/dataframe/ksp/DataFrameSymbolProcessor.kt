@@ -58,9 +58,6 @@ class DataFrameSymbolProcessor(
     private fun KSClassDeclaration.effectivelyPublicOrInternal(): Boolean {
         return effectivelyPublicOrInternalOrNull(dataSchema = this) != null
     }
-
-    val KSDeclaration.nameString get() = (qualifiedName ?: simpleName).asString()
-
     private fun KSDeclaration.effectivelyPublicOrInternalOrNull(dataSchema: KSClassDeclaration): Visibility? {
         val visibility = getVisibility()
         if (visibility !in EXPECTED_VISIBILITIES) {
@@ -87,6 +84,8 @@ class DataFrameSymbolProcessor(
         }
     }
 
+    private val KSDeclaration.nameString get() = (qualifiedName ?: simpleName).asString()
+
     private class DataSchemaDeclaration(
         val origin: KSClassDeclaration,
         val properties: List<KSAnnotatedWithType>
@@ -99,17 +98,15 @@ class DataFrameSymbolProcessor(
     ) : KSAnnotated by declaration
 
     private fun generate(file: KSFile, klass: KSClassDeclaration, properties: List<KSAnnotatedWithType>) {
-        val className: String = klass.simpleName.asString()
         val packageName = file.packageName.asString()
         val fileName = if (klass.parentDeclaration == null) {
-            "$className${'$'}Extensions"
+            val simpleName = klass.simpleName.asString()
+            "$simpleName${'$'}Extensions"
         } else {
-            val name = klass.qualifiedName?.asString() ?: error("@DataSchema declaration at ${klass.location} must have name")
-            "${name}${'$'}Extensions"
+            val fqName = klass.qualifiedName?.asString() ?: error("@DataSchema declaration at ${klass.location} must have name")
+            "${fqName}${'$'}Extensions"
         }
-        val generatedFile = codeGenerator.createNewFile(
-            Dependencies(false, file), packageName, fileName
-        )
+        val generatedFile = codeGenerator.createNewFile(Dependencies(false, file), packageName, fileName)
         try {
             generatedFile.writer().use {
                 it.appendLine("""@file:Suppress("UNCHECKED_CAST", "USELESS_CAST")""")
@@ -136,9 +133,8 @@ class DataFrameSymbolProcessor(
         interfaceName: String,
         properties: List<KSAnnotatedWithType>
     ) {
-        val interfaceType = declaration.asType(emptyList())
-        val visibility = when (val visibility = interfaceType.declaration.getVisibility()) {
-            Visibility.PUBLIC -> if (interfaceType.declaration.modifiers.contains(Modifier.PUBLIC)) {
+        val visibility = when (val visibility = declaration.getVisibility()) {
+            Visibility.PUBLIC -> if (declaration.modifiers.contains(Modifier.PUBLIC)) {
                 MarkerVisibility.EXPLICIT_PUBLIC
             } else {
                 MarkerVisibility.IMPLICIT_PUBLIC
