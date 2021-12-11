@@ -40,7 +40,7 @@ public interface DataRow<out T> {
 
     public operator fun <R> ColumnReference<R>.invoke(): R = get(this)
     public operator fun <R> String.invoke(): R = this@DataRow[this@invoke] as R
-    public operator fun <R> ColumnPath.invoke(): R = get(this) as R
+    public operator fun <R> ColumnPath.invoke(): R = this@DataRow.get(this) as R
 
     public fun String.int(): Int = read(this)
     public fun String.intOrNull(): Int? = read(this)

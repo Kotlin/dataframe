@@ -3,8 +3,10 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
@@ -16,13 +18,14 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.remainingColumnsSelector
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.yieldOneOrMany
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.withExpr
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnsOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getType
+import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KProperty
 
 // region count
@@ -39,19 +42,20 @@ public fun <T, R> PivotGroupBy<T>.matches(yes: R, no: R): DataFrame<T> = aggrega
 
 // endregion
 
-public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<T> {
-    val type = getType<V>()
-    return aggregate {
-        val values = rows().map {
-            val value = expression(it, it)
-            if (value is ColumnReference<*>) it[value]
-            else value
-        }
-        internal().yieldOneOrMany(emptyPath(), values, type)
-    }
-}
+// region frames
 
 public fun <T> PivotGroupBy<T>.frames(): DataFrame<T> = aggregate { this }
+
+// endregion
+
+// region with
+
+public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<T> {
+    val type = getType<V>()
+    return aggregate { internal().withExpr(type, emptyPath(), expression) }
+}
+
+// endregion
 
 // region values
 
@@ -85,6 +89,80 @@ public fun <T> PivotGroupBy<T>.values(
 
 // endregion
 
+// region reducers
+
+public data class ReducedPivotGroupBy<T>(
+    @PublishedApi internal val pivot: PivotGroupBy<T>,
+    @PublishedApi internal val reducer: Selector<DataFrame<T>, DataRow<T>?>
+)
+
+@PublishedApi
+internal fun <T> PivotGroupBy<T>.reduce(reducer: Selector<DataFrame<T>, DataRow<T>?>): ReducedPivotGroupBy<T> = ReducedPivotGroupBy(this, reducer)
+
+public fun <T> PivotGroupBy<T>.first(): ReducedPivotGroupBy<T> = reduce { firstOrNull() }
+
+public fun <T> PivotGroupBy<T>.first(predicate: RowFilter<T>): ReducedPivotGroupBy<T> = reduce { firstOrNull(predicate) }
+
+public fun <T> PivotGroupBy<T>.last(): ReducedPivotGroupBy<T> = reduce { lastOrNull() }
+
+public fun <T> PivotGroupBy<T>.last(predicate: RowFilter<T>): ReducedPivotGroupBy<T> = reduce { lastOrNull(predicate) }
+
+public fun <T, R : Comparable<R>> PivotGroupBy<T>.minBy(rowExpression: RowExpression<T, R>): ReducedPivotGroupBy<T> = reduce { minByOrNull(rowExpression) }
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.minBy(column: ColumnReference<C?>): ReducedPivotGroupBy<T> = reduce { minByOrNull(column) }
+public fun <T> PivotGroupBy<T>.minBy(column: String): ReducedPivotGroupBy<T> = minBy(column.toColumnAccessor().cast<Comparable<Any?>>())
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.minBy(column: KProperty<C?>): ReducedPivotGroupBy<T> = minBy(column.toColumnAccessor())
+
+public fun <T, R : Comparable<R>> PivotGroupBy<T>.maxBy(rowExpression: RowExpression<T, R>): ReducedPivotGroupBy<T> = reduce { maxByOrNull(rowExpression) }
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.maxBy(column: ColumnReference<C?>): ReducedPivotGroupBy<T> = reduce { maxByOrNull(column) }
+public fun <T> PivotGroupBy<T>.maxBy(column: String): ReducedPivotGroupBy<T> = maxBy(column.toColumnAccessor().cast<Comparable<Any?>>())
+public fun <T, C : Comparable<C>> PivotGroupBy<T>.maxBy(column: KProperty<C?>): ReducedPivotGroupBy<T> = maxBy(column.toColumnAccessor())
+
+// region values
+
+public fun <T> ReducedPivotGroupBy<T>.values(
+    separate: Boolean = false
+): DataFrame<T> = values(separate, pivot.remainingColumnsSelector())
+
+public fun <T> ReducedPivotGroupBy<T>.values(
+    vararg columns: Column,
+    separate: Boolean = false
+): DataFrame<T> = values(separate) { columns.toColumns() }
+
+public fun <T> ReducedPivotGroupBy<T>.values(
+    vararg columns: String,
+    separate: Boolean = false
+): DataFrame<T> = values(separate) { columns.toColumns() }
+
+public fun <T> ReducedPivotGroupBy<T>.values(
+    vararg columns: KProperty<*>,
+    separate: Boolean = false
+): DataFrame<T> = values(separate) { columns.toColumns() }
+
+public fun <T> ReducedPivotGroupBy<T>.values(
+    separate: Boolean = false,
+    columns: ColumnsForAggregateSelector<T, *>
+): DataFrame<T> = pivot.aggregate(separate = separate) { internal().columnValues(columns, reducer) }
+
+// endregion
+
+// region with
+
+public inline fun <T, reified V> ReducedPivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<T> {
+    val type = getType<V>()
+    return pivot.aggregate {
+        val value = reducer(this)?.let {
+            val value = expression(it, it)
+            if (value is Column) it[value]
+            else value
+        }
+        internal().yield(emptyPath(), value, type)
+    }
+}
+
+// endregion
+
+// endregion
+
 // region min
 
 public fun <T> PivotGroupBy<T>.min(separate: Boolean = false): DataFrame<T> = minFor(separate, comparableColumns())
@@ -110,11 +188,6 @@ public fun <T, R : Comparable<R>> PivotGroupBy<T>.min(vararg columns: ColumnRefe
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.min(vararg columns: KProperty<R?>): DataFrame<T> = min { columns.toColumns() }
 
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.minOf(rowExpression: RowExpression<T, R>): DataFrame<T> = aggregate { minOf(rowExpression) }
-
-public fun <T, R : Comparable<R>> PivotGroupBy<T>.minBy(rowExpression: RowExpression<T, R>): DataFrame<T> = aggregate { minBy(rowExpression) }
-public fun <T> PivotGroupBy<T>.minBy(column: String): DataFrame<T> = aggregate { minBy(column) }
-public fun <T, C : Comparable<C>> PivotGroupBy<T>.minBy(column: ColumnReference<C?>): DataFrame<T> = aggregate { minBy(column) }
-public fun <T, C : Comparable<C>> PivotGroupBy<T>.minBy(column: KProperty<C?>): DataFrame<T> = aggregate { minBy(column) }
 
 // endregion
 
@@ -143,11 +216,6 @@ public fun <T, R : Comparable<R>> PivotGroupBy<T>.max(vararg columns: ColumnRefe
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.max(vararg columns: KProperty<R?>): DataFrame<T> = max { columns.toColumns() }
 
 public fun <T, R : Comparable<R>> PivotGroupBy<T>.maxOf(rowExpression: RowExpression<T, R>): DataFrame<T> = aggregate { maxOf(rowExpression) }
-
-public fun <T, R : Comparable<R>> PivotGroupBy<T>.maxBy(rowExpression: RowExpression<T, R>): DataFrame<T> = aggregate { maxBy(rowExpression) }
-public fun <T> PivotGroupBy<T>.maxBy(column: String): DataFrame<T> = aggregate { maxBy(column) }
-public fun <T, C : Comparable<C>> PivotGroupBy<T>.maxBy(column: ColumnReference<C?>): DataFrame<T> = aggregate { maxBy(column) }
-public fun <T, C : Comparable<C>> PivotGroupBy<T>.maxBy(column: KProperty<C?>): DataFrame<T> = aggregate { maxBy(column) }
 
 // endregion
 
