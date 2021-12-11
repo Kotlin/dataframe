@@ -77,7 +77,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [min](minmax.md) / [minBy](minmax.md) / [minOf](minmax.md) / [minFor](minmax.md) — min of values
 * [move](move.md) — move columns or change column groupings
 * [parse](parse.md) — try to convert strings into other types
-* [pivot](pivot.md) / [pivotCounts](pivot.md#pivotcounts) / [pivotMatches](pivot.md#pivotmatches) — convert column values into new columns
+* [pivot](pivot.md) / [pivotCounts](pivot.md#pivotcounts) / [pivotMatches](pivot.md#pivotmatches) — convert values into new columns
 * [remove](remove.md) — remove columns
 * [rename](rename.md) — rename columns
 * [replace](replace.md) — replace columns

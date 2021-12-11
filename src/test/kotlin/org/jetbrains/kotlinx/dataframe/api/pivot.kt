@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.pathOf
 import org.junit.Test
 
 class PivotTests {
@@ -116,5 +117,35 @@ class PivotTests {
         df.groupBy("a").aggregate {
             pivot("b", "c").count() into "d"
         } shouldBe expected
+    }
+
+    @Test
+    fun `pivot minBy values`() {
+        val df = dataFrameOf("a", "b", "c", "d")(
+            1, 2, 3, 5,
+            1, 0, 2, 4,
+            2, 1, 3, 2,
+            2, 5, 5, 3
+        )
+        df.pivot("a").minBy("b").values("c", "d", separate = true) shouldBe
+            dataFrameOf("c1", "c2", "d1", "d2")(
+                2, 3, 4, 2
+            ).move { all() }.into { pathOf(it.name[0].toString(), it.name[1].toString()) }[0]
+    }
+
+    @Test
+    fun `pivot groupBy last with`() {
+        val df = dataFrameOf("a", "b", "c")(
+            1, 2, 3,
+            1, 0, 2,
+            2, 1, 3,
+            2, 1, 5
+        )
+        df.pivot("a", inward = false).groupBy("b").default(-1).last().with { "c"<Int>() } shouldBe
+            dataFrameOf("b", "1", "2")(
+                2, 3, -1,
+                0, 2, -1,
+                1, -1, 5
+            )
     }
 }

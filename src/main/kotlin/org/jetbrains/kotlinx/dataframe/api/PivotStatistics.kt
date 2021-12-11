@@ -58,6 +58,69 @@ public fun <T> Pivot<T>.values(dropNA: Boolean = false, distinct: Boolean = fals
 
 // endregion
 
+// region reducers
+
+public data class ReducedPivot<T>(
+    @PublishedApi internal val pivot: Pivot<T>,
+    @PublishedApi internal val reducer: Selector<DataFrame<T>, DataRow<T>?>
+)
+
+internal fun <T> Pivot<T>.reduce(reducer: Selector<DataFrame<T>, DataRow<T>?>) = ReducedPivot(this, reducer)
+
+public fun <T> Pivot<T>.first(): ReducedPivot<T> = reduce { firstOrNull() }
+
+public fun <T> Pivot<T>.first(predicate: RowFilter<T>): ReducedPivot<T> = reduce { firstOrNull(predicate) }
+
+public fun <T> Pivot<T>.last(): ReducedPivot<T> = reduce { lastOrNull() }
+
+public fun <T> Pivot<T>.last(predicate: RowFilter<T>): ReducedPivot<T> = reduce { lastOrNull(predicate) }
+
+public fun <T, R : Comparable<R>> Pivot<T>.minBy(rowExpression: RowExpression<T, R>): ReducedPivot<T> = reduce { minByOrNull(rowExpression) }
+public fun <T, C : Comparable<C>> Pivot<T>.minBy(column: ColumnReference<C?>): ReducedPivot<T> = reduce { minByOrNull(column) }
+public fun <T> Pivot<T>.minBy(column: String): ReducedPivot<T> = minBy(column.toColumnAccessor().cast<Comparable<Any?>>())
+public fun <T, C : Comparable<C>> Pivot<T>.minBy(column: KProperty<C?>): ReducedPivot<T> = minBy(column.toColumnAccessor())
+
+public fun <T, R : Comparable<R>> Pivot<T>.maxBy(rowExpression: RowExpression<T, R>): ReducedPivot<T> = reduce { maxByOrNull(rowExpression) }
+public fun <T, C : Comparable<C>> Pivot<T>.maxBy(column: ColumnReference<C?>): ReducedPivot<T> = reduce { maxByOrNull(column) }
+public fun <T> Pivot<T>.maxBy(column: String): ReducedPivot<T> = maxBy(column.toColumnAccessor().cast<Comparable<Any?>>())
+public fun <T, C : Comparable<C>> Pivot<T>.maxBy(column: KProperty<C?>): ReducedPivot<T> = maxBy(column.toColumnAccessor())
+
+// region values
+
+public fun <T> ReducedPivot<T>.values(
+    separate: Boolean = false
+): DataRow<T> = pivot.delegate { reduce(reducer).values(separate = separate) }
+
+public fun <T> ReducedPivot<T>.values(
+    vararg columns: Column,
+    separate: Boolean = false
+): DataRow<T> = values(separate) { columns.toColumns() }
+
+public fun <T> ReducedPivot<T>.values(
+    vararg columns: String,
+    separate: Boolean = false
+): DataRow<T> = values(separate) { columns.toColumns() }
+
+public fun <T> ReducedPivot<T>.values(
+    vararg columns: KProperty<*>,
+    separate: Boolean = false
+): DataRow<T> = values(separate) { columns.toColumns() }
+
+public fun <T> ReducedPivot<T>.values(
+    separate: Boolean = false,
+    columns: ColumnsForAggregateSelector<T, *>
+): DataRow<T> = pivot.delegate { reduce(reducer).values(separate = separate, columns = columns) }
+
+// endregion
+
+// region with
+
+public inline fun <T, reified V> ReducedPivot<T>.with(noinline expression: RowExpression<T, V>): DataRow<T> = pivot.delegate { reduce(reducer).with(expression) }
+
+// endregion
+
+// endregion
+
 // region min
 
 public fun <T> Pivot<T>.min(separate: Boolean = false): DataRow<T> = delegate { min(separate) }
@@ -82,11 +145,6 @@ public fun <T, R : Comparable<R>> Pivot<T>.min(vararg columns: ColumnReference<R
 public fun <T, R : Comparable<R>> Pivot<T>.min(vararg columns: KProperty<R?>): DataRow<T> = min { columns.toColumns() }
 
 public fun <T, R : Comparable<R>> Pivot<T>.minOf(rowExpression: RowExpression<T, R>): DataRow<T> = delegate { minOf(rowExpression) }
-
-public fun <T, R : Comparable<R>> Pivot<T>.minBy(rowExpression: RowExpression<T, R>): DataRow<T> = delegate { minBy(rowExpression) }
-public fun <T> Pivot<T>.minBy(column: String): DataRow<T> = aggregate { minBy(column) }
-public fun <T, C : Comparable<C>> Pivot<T>.minBy(column: ColumnReference<C?>): DataRow<T> = aggregate { minBy(column) }
-public fun <T, C : Comparable<C>> Pivot<T>.minBy(column: KProperty<C?>): DataRow<T> = aggregate { minBy(column) }
 
 // endregion
 
@@ -114,11 +172,6 @@ public fun <T, R : Comparable<R>> Pivot<T>.max(vararg columns: ColumnReference<R
 public fun <T, R : Comparable<R>> Pivot<T>.max(vararg columns: KProperty<R?>): DataRow<T> = max { columns.toColumns() }
 
 public fun <T, R : Comparable<R>> Pivot<T>.maxOf(rowExpression: RowExpression<T, R>): DataRow<T> = delegate { maxOf(rowExpression) }
-
-public fun <T, R : Comparable<R>> Pivot<T>.maxBy(rowExpression: RowExpression<T, R>): DataRow<T> = delegate { maxBy(rowExpression) }
-public fun <T> Pivot<T>.maxBy(column: String): DataRow<T> = aggregate { maxBy(column) }
-public fun <T, C : Comparable<C>> Pivot<T>.maxBy(column: ColumnReference<C?>): DataRow<T> = aggregate { maxBy(column) }
-public fun <T, C : Comparable<C>> Pivot<T>.maxBy(column: KProperty<C?>): DataRow<T> = aggregate { maxBy(column) }
 
 // endregion
 

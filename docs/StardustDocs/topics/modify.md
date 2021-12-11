@@ -17,16 +17,16 @@ On the other hand, `Kotlin dataframe` follows `Koltin Collections` naming for ro
 * [add](add.md) columns / [append](append.md) rows
 * [remove](remove.md) columns / [drop](drop.md) rows
 * [select](select.md) columns / [filter](filter.md) rows
-* [group](group.md) for grouping columns / [groupBy](groupBy.md) for grouping rows by columns
-* [sortColumnsBy](sortColumnsBy.md) for sorting columns / [sortBy](sortBy.md) for sorting rows by columns
-* [join](join.md) for uniting columns / [concat](concat.md) for uniting rows
+* [group](group.md) for columns / [groupBy](groupBy.md) for rows
+* [sortColumnsBy](sortColumnsBy.md) for columns / [sortBy](sortBy.md) for rows
+* [join](join.md) to unite columns / [concat](concat.md) to unite rows
 
 **Horizontal (column) operations:**
 * [add](add.md) — add columns
 * [flatten](flatten.md) — remove column groupings recursively
 * [group](group.md) — group columns into [`ColumnGroup`](DataColumn.md#columngroup)
 * [insert](insert.md) — insert column
-* [map](map.md) — map [`DataFrame`](DataFrame.md) columns to a new [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md)
+* [map](map.md) — map columns into new [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md)
 * [merge](merge.md) — merge several columns into one
 * [move](move.md) — move columns or change column groupings
 * [remove](remove.md) — remove columns
@@ -34,7 +34,7 @@ On the other hand, `Kotlin dataframe` follows `Koltin Collections` naming for ro
 * [replace](replace.md) — replace columns
 * [select](select.md) — select subset of columns
 * [sortColumnsBy](sortColumnsBy.md) — sort columns
-* [split](split.md) — split column values into several columns or new rows
+* [split](split.md) — split values into new columns
 * [ungroup](ungroup.md) — remove column grouping
 
 **Vertical (row) operations:**
@@ -44,20 +44,20 @@ On the other hand, `Kotlin dataframe` follows `Koltin Collections` naming for ro
 * [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) — remove rows by condition
 * [explode](explode.md) — spread lists and dataframes vertically into new rows
 * [filter](filter.md) / [filterBy](filter.md#filterby) — filter rows
-* [implode](implode.md) — collapse column values into lists grouping by other columns
+* [implode](implode.md) — merge column values into lists grouping by other columns
 * [shuffle](shuffle.md) — reorder rows randomly
 * [sortBy](sortBy.md) / [sortByDesc](sortBy.md#sortbydesc) / [sortWith](sortBy.md#sortwith) — sort rows
-* [split](split.md) — split column values into several columns or new rows
+* [split](split.md) — split values into new rows
 
 **Value modification:**
-* [convert](convert.md) — change column values and/or column types
-* [parse](parse.md) — try to convert `String` values into other types
-* [update](update.md) — update column values preserving column types
+* [convert](convert.md) — convert values into new types
+* [parse](parse.md) — try to convert `String` values into appropriate types
+* [update](update.md) — update values preserving column types
 * [fillNulls](fill.md#fillnulls) / [fillNaNs](fill.md#fillnans) / [fillNA](fill.md#fillna) — replace missing values
 
 **Reshaping:**
-* [pivot](pivot.md) / [pivotCounts](pivot.md#pivotcounts) / [pivotMatches](pivot.md#pivotmatches) — convert column values into new columns
-* [gather](gather.md) — convert pairs of column names and values into new columns
+* [pivot](pivot.md) / [pivotCounts](pivot.md#pivotcounts) / [pivotMatches](pivot.md#pivotmatches) — convert values into new columns
+* [gather](gather.md) — convert pairs of column names and values into `key` and `value` columns
 
 **Learn how to:**
 * [Slice rows](sliceRows.md)

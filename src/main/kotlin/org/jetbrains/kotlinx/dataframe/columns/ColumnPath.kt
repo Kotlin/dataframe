@@ -1,9 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.owner
 
-public data class ColumnPath(val path: List<String>) : List<String> by path, ColumnReference<Any?> {
+public data class ColumnPath(val path: List<String>) : List<String> by path, ColumnAccessor<Any?> {
 
     public constructor(name: String) : this(listOf(name))
 
@@ -36,4 +37,6 @@ public data class ColumnPath(val path: List<String>) : List<String> by path, Col
     override fun getValue(row: AnyRow): Any? = row.owner[this][row.index()]
 
     override fun toString(): String = path.toString()
+
+    override fun <C> get(column: ColumnReference<C>): ColumnAccessor<C> = ColumnAccessorImpl(this + column.path())
 }
