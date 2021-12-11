@@ -5,13 +5,26 @@
 
 Splits the rows of `DataFrame` into groups using one or several columns as grouping keys.
 
-```kotlin
+```text
 groupBy { columns }
-    [transformations]
-    [aggregations]
+      [ transformations ]
+      reducer | aggregator | pivot
+
+transformations = [ .sortByCount() | .sortByCountAsc() | .sortBy { columns } | .sortByDesc { columns } ]
+                  [ .updateGroups { frameExpression } ]
+                  [ .add(column) { rowExpression } ]
+    
+reducer = .minBy { column } | .maxBy { column } | .first [ { rowCondition } ] | .last [ { rowCondition } ] 
+          .concat() | .into([column]) [{ rowExpression }] | .values { valueColumns } 
+
+aggregator = .count() | .concat() | .into([column]) [{ rowExpression }] | .values { valueColumns } | .aggregate { aggregations } | .<stat> [ { columns } ]
+
+pivot = .pivot { columns }
+      [ .default(defaultValue) ]
+         pivotReducer | pivotAggregator  
 ```
 
-See [column selectors](ColumnSelectors.md), [groupBy transformations](#transformation) and [groupBy aggregations](#aggregation)
+See [column selectors](ColumnSelectors.md), [groupBy transformations](#transformation), [groupBy aggregations](#aggregation), [pivot+groupBy](pivot.md#pivot-groupby)
 
 <!---FUN groupBy-->
 <tabs>

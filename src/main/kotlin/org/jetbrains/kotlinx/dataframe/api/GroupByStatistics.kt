@@ -1,13 +1,18 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.RowFilter
+import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
+import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.columnValues
@@ -21,10 +26,14 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOfDelegat
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateValue
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.remainingColumnsSelector
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.withExpr
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnsOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
+import org.jetbrains.kotlinx.dataframe.impl.getType
+import org.jetbrains.kotlinx.dataframe.pathOf
 import kotlin.reflect.KProperty
 
 public interface Grouped<out T> : Aggregatable<T> {
@@ -32,11 +41,23 @@ public interface Grouped<out T> : Aggregatable<T> {
     public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataFrame<T>
 }
 
+// region concat
+
+public fun <T, G> GroupBy<T, G>.concat(): DataFrame<G> = groups.concat()
+
+// endregion
+
+// region count
+
 public fun <T> Grouped<T>.count(resultName: String = "count"): DataFrame<T> =
     aggregateValue(resultName) { count() default 0 }
 
 public fun <T> Grouped<T>.count(resultName: String = "count", predicate: RowFilter<T>): DataFrame<T> =
     aggregateValue(resultName) { count(predicate) default 0 }
+
+// endregion
+
+// region values
 
 public fun <T> Grouped<T>.values(vararg columns: Column, dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> = values(dropNA, distinct) { columns.toColumns() }
 public fun <T> Grouped<T>.values(vararg columns: String, dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> = values(dropNA, distinct) { columns.toColumns() }
@@ -46,6 +67,115 @@ public fun <T> Grouped<T>.values(
     columns: ColumnsForAggregateSelector<T, *>
 ): DataFrame<T> = aggregate { internal().columnValues(columns, true, dropNA, distinct) }
 public fun <T> Grouped<T>.values(dropNA: Boolean = false, distinct: Boolean = false): DataFrame<T> = values(dropNA, distinct, remainingColumnsSelector())
+
+// endregion
+
+// region into
+
+public fun <T, G> GroupBy<T, G>.into(column: String): DataFrame<T> = toDataFrame(column)
+public fun <T> GroupBy<T, *>.into(column: ColumnAccessor<AnyFrame>): DataFrame<T> = toDataFrame(column.name())
+public fun <T> GroupBy<T, *>.into(column: KProperty<AnyFrame>): DataFrame<T> = toDataFrame(column.columnName)
+
+public inline fun <T, G, reified V> GroupBy<T, G>.into(
+    columnName: String? = null,
+    noinline expression: RowExpression<G, V>
+): DataFrame<G> = into(pathOf(columnName ?: groups.name()).cast(), expression)
+public inline fun <T, G, reified V> GroupBy<T, G>.into(
+    column: ColumnAccessor<V>,
+    noinline expression: RowExpression<G, V>
+): DataFrame<G> {
+    val type = getType<V>()
+    val path = column.path()
+    return aggregate {
+        internal().withExpr(type, path, expression)
+    }
+}
+public inline fun <T, G, reified V> GroupBy<T, G>.into(column: KProperty<V>, noinline expression: RowExpression<G, V>): DataFrame<G> = into(column.columnName, expression)
+
+// endregion
+
+// region reducers
+
+public data class ReducedGroupBy<T, G>(
+    @PublishedApi internal val groupBy: GroupBy<T, G>,
+    @PublishedApi internal val reducer: Selector<DataFrame<G>, DataRow<G>?>
+)
+
+internal fun <T, G> GroupBy<T, G>.reduce(reducer: Selector<DataFrame<G>, DataRow<G>?>) = ReducedGroupBy(this, reducer)
+
+public fun <T, G> GroupBy<T, G>.first(): ReducedGroupBy<T, G> = reduce { firstOrNull() }
+
+public fun <T, G> GroupBy<T, G>.first(predicate: RowFilter<G>): ReducedGroupBy<T, G> = reduce { firstOrNull(predicate) }
+
+public fun <T, G> GroupBy<T, G>.last(): ReducedGroupBy<T, G> = reduce { lastOrNull() }
+
+public fun <T, G> GroupBy<T, G>.last(predicate: RowFilter<G>): ReducedGroupBy<T, G> = reduce { lastOrNull(predicate) }
+
+public fun <T, G, R : Comparable<R>> GroupBy<T, G>.minBy(rowExpression: RowExpression<G, R>): ReducedGroupBy<T, G> = reduce { minByOrNull(rowExpression) }
+public fun <T, G, C : Comparable<C>> GroupBy<T, G>.minBy(column: ColumnReference<C?>): ReducedGroupBy<T, G> = reduce { minByOrNull(column) }
+public fun <T, G> GroupBy<T, G>.minBy(column: String): ReducedGroupBy<T, G> = minBy(column.toColumnAccessor().cast<Comparable<Any?>>())
+public fun <T, G, C : Comparable<C>> GroupBy<T, G>.minBy(column: KProperty<C?>): ReducedGroupBy<T, G> = minBy(column.toColumnAccessor())
+
+public fun <T, G, R : Comparable<R>> GroupBy<T, G>.maxBy(rowExpression: RowExpression<G, R>): ReducedGroupBy<T, G> = reduce { maxByOrNull(rowExpression) }
+public fun <T, G, C : Comparable<C>> GroupBy<T, G>.maxBy(column: ColumnReference<C?>): ReducedGroupBy<T, G> = reduce { maxByOrNull(column) }
+public fun <T, G> GroupBy<T, G>.maxBy(column: String): ReducedGroupBy<T, G> = maxBy(column.toColumnAccessor().cast<Comparable<Any?>>())
+public fun <T, G, C : Comparable<C>> GroupBy<T, G>.maxBy(column: KProperty<C?>): ReducedGroupBy<T, G> = maxBy(column.toColumnAccessor())
+
+// region values
+
+public fun <T, G> ReducedGroupBy<T, G>.values(): DataFrame<G> = values(groupBy.remainingColumnsSelector())
+
+public fun <T, G> ReducedGroupBy<T, G>.values(
+    vararg columns: Column
+): DataFrame<G> = values { columns.toColumns() }
+
+public fun <T, G> ReducedGroupBy<T, G>.values(
+    vararg columns: String
+): DataFrame<G> = values { columns.toColumns() }
+
+public fun <T, G> ReducedGroupBy<T, G>.values(
+    vararg columns: KProperty<*>
+): DataFrame<G> = values { columns.toColumns() }
+
+public fun <T, G> ReducedGroupBy<T, G>.values(
+    columns: ColumnsForAggregateSelector<G, *>
+): DataFrame<G> = groupBy.aggregate { internal().columnValues(columns, reducer) }
+
+// endregion
+
+// region into
+
+public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
+    columnName: String? = null,
+    noinline expression: RowExpression<G, V>
+): DataFrame<G> {
+    val type = getType<V>()
+    val name = columnName ?: groupBy.groups.name()
+    return groupBy.aggregate {
+        val row = reducer(it, it)
+        if (row != null) {
+            internal().yield(pathOf(name), expression(row, row), type)
+        }
+    }
+}
+public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
+    column: ColumnAccessor<V>,
+    noinline expression: RowExpression<G, V>
+): DataFrame<G> = into(column.name(), expression)
+public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
+    column: KProperty<V>,
+    noinline expression: RowExpression<G, V>
+): DataFrame<G> = into(column.columnName, expression)
+
+public fun <T, G> ReducedGroupBy<T, G>.into(columnName: String): DataFrame<G> = into(columnName) { this }
+public fun <T, G> ReducedGroupBy<T, G>.into(column: ColumnAccessor<AnyRow>): DataFrame<G> = into(column) { this }
+public fun <T, G> ReducedGroupBy<T, G>.into(column: KProperty<AnyRow>): DataFrame<G> = into(column) { this }
+
+public fun <T, G> ReducedGroupBy<T, G>.concat(): DataFrame<G> = groupBy.groups.values().map { reducer(it, it) }.concat()
+
+// endregion
+
+// endregion
 
 // region min
 

@@ -4,7 +4,24 @@
 
 Splits the rows of `DataFrame` and groups them horizontally into new columns based on values from one or several columns of original `DataFrame`.
 
-Pass a column to `pivot` function to use its values as grouping keys and names for new columns.
+```text
+pivot (inward = true) { pivotColumns }
+  [ .groupBy { indexColumns } | .groupByOther() ]
+  [ .default(defaultValue) ]
+     reducer | aggregator
+    
+reducer = .minBy { column } | .maxBy { column } | .first [ { rowCondition } ] | .last [ { rowCondition } ] 
+          .with { rowExpression } | .values { valueColumns }
+
+aggregator = .count() | .matches() | .frames() | .with { rowExpression } | .values { valueColumns } | .aggregate { aggregations } | .<stat> [ { columns } ]
+```
+
+**Parameters:**
+* `inward: Boolean = true` - if `true` generated columns will be nested inside original column, otherwise they will be top-level
+* `pivotColumns` - columns with values for horizontal data grouping and generation of new columns
+* `indexColumns` - columns with values for vertical data grouping
+* `defaultValue` - value to fill mismatched pivot-index column pairs
+* `valueColumns` - columns with output values
 
 <!---FUN pivot-->
 <tabs>
@@ -33,42 +50,9 @@ df.pivot("city")
 </tab></tabs>
 <!---END-->
 
-Returns `Pivot`: an intermediate object that can be configured for further transformation and aggregation of data.
-
-See [pivot aggregations](#aggregation)
-
-By default, pivoted column will be replaced with new columns generated from its values. Instead, you can nest new columns as sub-columns of original column using `inward` flag:
-
-<!---FUN pivotInward-->
-<tabs>
-<tab title="Properties">
-
-```kotlin
-df.pivot(inward = true) { city }
-```
-
-</tab>
-<tab title="Accessors">
-
-```kotlin
-val city by column<String?>()
-
-df.pivot(inward = true) { city }
-```
-
-</tab>
-<tab title="Strings">
-
-```kotlin
-df.pivot("city", inward = true)
-```
-
-</tab></tabs>
-<!---END-->
-
-To pivot several columns in one operation you can combine them using `and` or `then` infix function:
+To pivot several columns at once you can combine them using `and` or `then` infix function:
 * `and` will pivot columns independently
-* `then` will create column hierarchy based on possible combinations of column values
+* `then` will create column hierarchy from combinations of values from pivoted columns
 
 <!---FUN pivot2-->
 <tabs>
@@ -104,7 +88,7 @@ df.pivot { "city" then "name"["firstName"] }
 
 ## pivot + groupBy
 
-To create matrix table that is expanded both horizontally and vertically, apply `groupBy` function at `Pivot` passing the columns for vertical grouping. Reversed order of `pivot` and `groupBy` operations will produce the same result.
+To create matrix table that is expanded both horizontally and vertically, apply `groupBy` transformation passing the columns for vertical grouping. Reversed order of `pivot` and `groupBy` will produce the same result.
 
 <!---FUN pivotGroupBy-->
 <tabs>
@@ -140,10 +124,6 @@ df.groupBy("name").pivot("city")
 </tab></tabs>
 <!---END-->
 
-Combination of `pivot` and `groupBy` operations returns `PivotGroupBy` that can be used for further aggregation of data groups within matrix cells. 
-
-See [pivot aggregations](#aggregation)
-
 To group by all columns except pivoted use `groupByOther`:
 
 <!---FUN pivotGroupByOther-->
@@ -154,25 +134,9 @@ df.pivot { city }.groupByOther()
 
 <!---END-->
 
-Pivot operation can be performed without any data aggregation:
-* `Pivot` object can be converted to `DataRow` or `DataFrame`.
-* `GroupedPivot` object can be converted to `DataFrame`.
-
-Generated columns will have type [`FrameColumn`](DataColumn.md#framecolumn) and will contain data groups.
-
-<!---FUN pivotAsDataRowOrFrame-->
-
-```kotlin
-df.pivot { city }.toDataRow()
-df.pivot { city }.groupBy { name }.toDataFrame()
-```
-
-<!---END-->
-
 ## Aggregation
 
-
-To aggregate data groups in [`Pivot`](pivot.md) or [`PivotGroupBy`](pivot.md#pivot-groupby) with one or several statistics use `aggregate`:
+To aggregate data groups with one or several statistics use `aggregate`:
 
 <!---FUN pivotAggregate-->
 <tabs>
@@ -257,7 +221,7 @@ df.groupBy("name").pivot("city").median("age")
 </tab></tabs>
 <!---END-->
 
-By default, when aggregation function produces several values for data group, column hierarchy in resulting `DataFrame` will be indexed first by pivot keys and then by the names of aggregated values.
+By default, when aggregation function produces several values for single data group, column hierarchy in resulting `DataFrame` will be indexed first by pivot keys and then by the names of aggregated values.
 To reverse this order so that resulting columns will be indexed first by names of aggregated values and then by pivot keys, use `separate=true` flag that is available in multi-result aggregation operations, such as `aggregate` or `<stat>For`:
 
 <!---FUN pivotSeparate-->
@@ -352,7 +316,7 @@ df.pivot("city").groupBy("name").default(0).min()
 
 ### Pivot inside aggregate
 
-[pivot](pivot.md) operation can also be used inside `aggregate` body of `GroupBy`. This allows to combine column pivoting with other aggregation functions:
+[pivot](pivot.md) transformation can be used inside [`aggregate`](groupBy.md#aggregation) function of [`GroupBy`](groupBy.md). This allows to combine column pivoting with other [`groupBy`](groupBy.md) aggregations:
 
 <!---FUN pivotInAggregate-->
 <tabs>

@@ -1,5 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation
 
+import org.jetbrains.kotlinx.dataframe.Column
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelectionDsl
 import org.jetbrains.kotlinx.dataframe.aggregation.ColumnsForAggregateSelector
@@ -65,4 +70,28 @@ internal fun <T, C> AggregateInternalDsl<T>.columnValues(
         if (forceYieldLists) yield(path, values, getListType(col.type), col.default)
         else yieldOneOrMany(path, values, col.type, col.default)
     }
+}
+
+internal fun <T, C> AggregateInternalDsl<T>.columnValues(
+    columns: ColumnsForAggregateSelector<T, C>,
+    reducer: Selector<DataFrame<T>, DataRow<T>?>
+) {
+    val row = reducer(df, df)
+    val cols = df.getAggregateColumns(columns)
+    val isSingle = cols.size == 1
+    cols.forEach { col ->
+        val path = getPath(col, isSingle)
+        val value = if (row != null) col[row] else null
+        yield(path, value, col.type, col.default)
+    }
+}
+
+@PublishedApi
+internal fun <T, V> AggregateInternalDsl<T>.withExpr(type: KType, path: ColumnPath, expression: RowExpression<T, V>) {
+    val values = df.rows().map {
+        val value = expression(it, it)
+        if (value is Column) it[value]
+        else value
+    }
+    yieldOneOrMany(path, values, type)
 }
