@@ -336,14 +336,9 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
 public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
     name: String = "",
-    useActualType: Boolean = false,
+    infer: Infer = Infer.Nulls,
     noinline expression: AddExpression<T, R>
-): DataColumn<R> = newColumn(name, useActualType, expression)
-
-internal fun <T, R> ColumnsSelectionDsl<T>.exprWithActualType(
-    name: String = "",
-    expression: AddExpression<T, R>
-): DataColumn<R> = newColumnWithActualType(name, expression)
+): DataColumn<R> = map(name, infer, expression)
 
 internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> =
     { this@filter(it, it).filter(predicate) }

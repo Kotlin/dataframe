@@ -55,7 +55,6 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.newColumn
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.values
@@ -445,9 +444,11 @@ class PivotTests {
 
     @Test
     fun `pivot two value columns into one name`() {
-        val type by typed.newColumn { value?.javaClass?.kotlin ?: Unit::class }
+        val type by column<KClass<*>>()
+
         val pivoted =
-            (typed + type).pivot { key }.groupBy { name }.values { value and (type default Any::class) into "data" }
+            typed.add(type) { value?.javaClass?.kotlin ?: Unit::class }
+                .pivot { key }.groupBy { name }.values { value and (type default Any::class) into "data" }
 
         pivoted.getColumnGroup("key").forEachColumn {
             val group = it.asColumnGroup()

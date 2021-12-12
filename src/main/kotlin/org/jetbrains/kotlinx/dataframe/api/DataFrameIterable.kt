@@ -5,13 +5,13 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.RowFilter
-import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -24,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.newColumnWithActualType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.getType
@@ -78,9 +79,27 @@ public fun <T> DataFrame<T>.map(body: AddDsl<T>.() -> Unit): AnyFrame {
     return dataFrameOf(dsl.columns)
 }
 
-public inline fun <T, reified R> DataFrame<T>.map(name: String, noinline body: AddExpression<T, R>): DataColumn<R> = newColumn(getType<R>(), name, body)
+public inline fun <T, reified R> ColumnsContainer<T>.map(
+    name: String,
+    infer: Infer = Infer.Nulls,
+    noinline body: AddExpression<T, R>
+): DataColumn<R> = when (infer) {
+    Infer.Type -> newColumnWithActualType(name, body)
+    Infer.Nulls -> newColumn(getType<R>(), name, true, body)
+    Infer.None -> newColumn(getType<R>(), name, false, body)
+}
 
-public inline fun <T, reified R> DataFrame<T>.map(column: ColumnAccessor<R>, noinline body: AddExpression<T, R>): DataColumn<R> = map(column.name(), body)
+public inline fun <T, reified R> ColumnsContainer<T>.map(
+    column: ColumnAccessor<R>,
+    infer: Infer = Infer.Nulls,
+    noinline body: AddExpression<T, R>
+): DataColumn<R> = map(column.name(), infer, body)
+
+public inline fun <T, reified R> ColumnsContainer<T>.map(
+    column: KProperty<R>,
+    infer: Infer = Infer.Nulls,
+    noinline body: AddExpression<T, R>
+): DataColumn<R> = map(column.columnName, infer, body)
 
 // endregion
 

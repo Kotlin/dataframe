@@ -13,10 +13,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
-import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.index
-import org.jetbrains.kotlinx.dataframe.newColumn
 import kotlin.reflect.KProperty
 
 public fun <T> DataFrame<T>.add(cols: Iterable<AnyCol>): DataFrame<T> = this + cols
@@ -35,16 +33,33 @@ internal class AddDataRowImpl<T>(index: Int, owner: DataFrame<T>, private val co
 
 public typealias AddExpression<T, C> = AddDataRow<T>.(AddDataRow<T>) -> C
 
-public inline fun <reified R, T> DataFrame<T>.add(name: String, noinline expression: AddExpression<T, R>): DataFrame<T> =
-    (this + newColumn(name, expression))
+public inline fun <reified R, T> DataFrame<T>.add(
+    name: String,
+    infer: Infer = Infer.Nulls,
+    noinline expression: AddExpression<T, R>
+): DataFrame<T> =
+    (this + map(name, infer, expression))
 
-public inline fun <reified R, T> DataFrame<T>.add(property: KProperty<R>, noinline expression: RowExpression<T, R>): DataFrame<T> =
-    (this + newColumn(property.columnName, expression))
+public inline fun <reified R, T> DataFrame<T>.add(
+    property: KProperty<R>,
+    infer: Infer = Infer.Nulls,
+    noinline expression: RowExpression<T, R>
+): DataFrame<T> =
+    (this + map(property, infer, expression))
 
-public inline fun <reified R, T> DataFrame<T>.add(column: ColumnAccessor<R>, noinline expression: AddExpression<T, R>): DataFrame<T> = add(column.path(), expression)
+public inline fun <reified R, T> DataFrame<T>.add(
+    column: ColumnAccessor<R>,
+    infer: Infer = Infer.Nulls,
+    noinline expression: AddExpression<T, R>
+): DataFrame<T> =
+    add(column.path(), infer, expression)
 
-public inline fun <reified R, T> DataFrame<T>.add(path: ColumnPath, noinline expression: AddExpression<T, R>): DataFrame<T> {
-    val col = newColumn(path.name(), expression)
+public inline fun <reified R, T> DataFrame<T>.add(
+    path: ColumnPath,
+    infer: Infer = Infer.Nulls,
+    noinline expression: AddExpression<T, R>
+): DataFrame<T> {
+    val col = map(path.name(), infer, expression)
     if (path.size == 1) return this + col
     return insert(path, col)
 }
@@ -57,14 +72,19 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
 
 public fun <T> DataFrame<T>.add(vararg columns: AnyCol): DataFrame<T> = dataFrameOf(columns() + columns).cast()
 
-public inline fun <reified R, T, G> GroupBy<T, G>.add(name: String, noinline expression: RowExpression<G, R>): GroupBy<T, G> =
-    updateGroups { add(name, expression) }
+public inline fun <reified R, T, G> GroupBy<T, G>.add(
+    name: String,
+    infer: Infer = Infer.Nulls,
+    noinline expression: RowExpression<G, R>
+): GroupBy<T, G> =
+    updateGroups { add(name, infer, expression) }
 
 public inline fun <reified R, T, G> GroupBy<T, G>.add(
     column: ColumnAccessor<G>,
+    infer: Infer = Infer.Nulls,
     noinline expression: RowExpression<G, R>
 ): GroupBy<T, G> =
-    add(column.name(), expression)
+    add(column.name(), infer, expression)
 
 public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsContainer<T> by df, ColumnSelectionDsl<T> {
 
@@ -77,13 +97,17 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
     public operator fun String.unaryPlus(): Boolean = add(df[this])
 
     @PublishedApi
-    internal inline fun <reified R> add(name: String, noinline expression: RowExpression<T, R>): Boolean = add(df.newColumn(name, expression))
+    internal inline fun <reified R> add(
+        name: String,
+        infer: Infer = Infer.Nulls,
+        noinline expression: RowExpression<T, R>
+    ): Boolean = add(df.map(name, infer, expression))
 
     public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean = name().from(expression)
 
     public inline infix fun <reified R> ColumnAccessor<R>.from(column: ColumnReference<R>): Boolean = name().from(column)
 
-    public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean = add(this, expression)
+    public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean = add(this, Infer.Nulls, expression)
 
     public infix fun String.from(column: Column): Boolean = add(column.rename(this))
 
