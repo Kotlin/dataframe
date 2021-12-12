@@ -31,7 +31,7 @@ public fun <T> ColumnGroupReference.column(name: String): ColumnAccessor<T> = Co
 public fun <T> ColumnGroupReference.column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(this.path() + path)
 
 public inline fun <reified T> column(name: String = "", noinline expression: RowExpression<Any?, T>): ColumnReference<T> = createComputedColumnReference(name, getType<T>(), expression)
-public inline fun <T, reified C> DataFrame<T>.column(name: String = "", noinline expression: RowExpression<T, C>): ColumnReference<C> = createComputedColumnReference(name, getType<C>(), expression as RowExpression<Any?, C>)
+public inline fun <T, reified C> column(df: DataFrame<T>, name: String = "", noinline expression: RowExpression<T, C>): ColumnReference<C> = createComputedColumnReference(name, getType<C>(), expression as RowExpression<Any?, C>)
 
 public fun columnGroup(): ColumnDelegate<AnyRow> = column()
 public fun columnGroup(name: String): ColumnAccessor<AnyRow> = column(name)

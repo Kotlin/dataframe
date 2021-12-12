@@ -94,7 +94,7 @@ class Create : TestBase() {
     @Test
     fun columnAccessorComputed_properties() {
         // SampleStart
-        val fullName by df.column { name.firstName + " " + name.lastName }
+        val fullName by column(df) { name.firstName + " " + name.lastName }
 
         df[fullName]
         // SampleEnd
