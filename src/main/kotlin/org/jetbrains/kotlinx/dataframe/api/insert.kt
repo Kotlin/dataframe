@@ -9,19 +9,23 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.api.ColumnToInsert
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
-import org.jetbrains.kotlinx.dataframe.newColumn
 
 public fun <T> DataFrame<T>.insert(path: ColumnPath, column: AnyCol): DataFrame<T> =
     insertImpl(this, listOf(ColumnToInsert(path, column)))
 
 public fun <T> DataFrame<T>.insert(column: AnyCol): InsertClause<T> = InsertClause(this, column)
 
-public inline fun <T, reified R> DataFrame<T>.insert(name: String, noinline expression: RowExpression<T, R>): InsertClause<T> = insert(newColumn(name, expression))
+public inline fun <T, reified R> DataFrame<T>.insert(
+    name: String,
+    infer: Infer = Infer.Nulls,
+    noinline expression: RowExpression<T, R>
+): InsertClause<T> = insert(map(name, infer, expression))
 
 public inline fun <T, reified R> DataFrame<T>.insert(
     column: ColumnAccessor<R>,
+    infer: Infer = Infer.Nulls,
     noinline expression: RowExpression<T, R>
-): InsertClause<T> = insert(column.name(), expression)
+): InsertClause<T> = insert(column.name(), infer, expression)
 
 public data class InsertClause<T>(val df: DataFrame<T>, val column: AnyCol)
 

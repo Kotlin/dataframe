@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe
 
-import org.jetbrains.kotlinx.dataframe.api.AddExpression
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -15,8 +14,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
-import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.newColumnWithActualType
 import org.jetbrains.kotlinx.dataframe.impl.columns.unbox
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.random.Random
@@ -175,23 +172,5 @@ public fun emptyDataFrame(nrow: Int = 0): AnyFrame = DataFrame.empty(nrow)
 // region create ColumnPath
 
 public fun pathOf(vararg columnNames: String): ColumnPath = ColumnPath(columnNames.asList())
-
-// endregion
-
-// region create DataColumn from DataFrame
-
-public inline fun <T, reified R> ColumnsContainer<T>.newColumn(
-    name: String = "",
-    noinline expression: AddExpression<T, R>
-): DataColumn<R> = newColumn(name, false, expression)
-
-public inline fun <T, reified R> ColumnsContainer<T>.newColumn(
-    name: String = "",
-    useActualType: Boolean,
-    noinline expression: AddExpression<T, R>
-): DataColumn<R> {
-    if (useActualType) return newColumnWithActualType(name, expression)
-    return newColumn(getType<R>(), name, expression)
-}
 
 // endregion
