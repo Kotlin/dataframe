@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
+import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnDataCollector
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnWithPath

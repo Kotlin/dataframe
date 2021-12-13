@@ -1,28 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.api.chunked
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.columnGroup
-import org.jetbrains.kotlinx.dataframe.api.columnOf
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.distinct
-import org.jetbrains.kotlinx.dataframe.api.distinctBy
-import org.jetbrains.kotlinx.dataframe.api.drop
-import org.jetbrains.kotlinx.dataframe.api.dropLast
-import org.jetbrains.kotlinx.dataframe.api.dropNA
-import org.jetbrains.kotlinx.dataframe.api.dropNulls
-import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.first
-import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.mapToRows
-import org.jetbrains.kotlinx.dataframe.api.minBy
-import org.jetbrains.kotlinx.dataframe.api.named
-import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.single
-import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.api.take
-import org.jetbrains.kotlinx.dataframe.api.takeLast
 import org.junit.Test
 
 class Access : TestBase() {

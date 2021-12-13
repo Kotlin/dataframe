@@ -47,10 +47,6 @@ internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsCont
 
     override fun <R> aggregate(body: AggregateGroupedBody<T, R>) = throw UnsupportedOperationException()
 
-    override fun rows(): Iterable<DataRow<T>> = throw UnsupportedOperationException()
-
-    override fun rowsReversed(): Iterable<DataRow<T>> = throw UnsupportedOperationException()
-
     override fun <R> getColumnOrNull(column: ColumnReference<R>) = MissingColumnGroup<Any>(path + column.name(), host).asDataColumn().cast<R>()
 
     override fun getColumnOrNull(path: ColumnPath) = MissingColumnGroup<Any?>(this.path + path, host)

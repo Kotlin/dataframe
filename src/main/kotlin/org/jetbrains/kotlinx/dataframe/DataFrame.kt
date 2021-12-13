@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getRows
 import org.jetbrains.kotlinx.dataframe.api.indices
+import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -41,8 +42,6 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     // region rows
 
     public fun rowsCount(): Int
-    public fun rows(): Iterable<DataRow<T>>
-    public fun rowsReversed(): Iterable<DataRow<T>>
 
     // endregion
 
