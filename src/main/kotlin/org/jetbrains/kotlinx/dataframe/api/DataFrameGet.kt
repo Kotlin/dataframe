@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
@@ -45,6 +46,8 @@ public fun <T> ColumnsContainer<T>.getFrameColumn(columnName: String): FrameColu
 public fun <T> ColumnsContainer<T>.getColumnGroup(columnPath: ColumnPath): ColumnGroup<*> = get(columnPath).asColumnGroup()
 
 // region indices
+
+public fun AnyFrame.indices(): IntRange = 0 until rowsCount()
 
 public fun <T> DataFrame<T>.indices(filter: RowFilter<T>): List<Int> = indices.filter {
     val row = get(it)
