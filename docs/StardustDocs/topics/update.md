@@ -4,7 +4,7 @@
 
 Returns `DataFrame` with changed values in some cells. Column types can not be changed.
 
-```
+```text
 update { columns }
     [.where { rowCondition } ]
     [.at(rowIndices) ] 
