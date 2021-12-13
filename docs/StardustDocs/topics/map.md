@@ -6,7 +6,7 @@ Creates `DataFrame` or `DataColumn` with values computed from rows of original `
 
 **Map into `DataColumn`:**
 
-```kotlin
+```text
 map(columnName) { rowExpression }: DataColumn
 
 rowExpression: DataRow.(DataRow) -> Value

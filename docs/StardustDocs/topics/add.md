@@ -6,7 +6,7 @@ Returns `DataFrame` which contains all columns from original `DataFrame` followe
 
 **Create new column and add it to `DataFrame`:**
 
-```
+```text
 add(columnName: String) { rowExpression }
 
 rowExpression: DataRow.(DataRow) -> Value

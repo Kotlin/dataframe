@@ -3,7 +3,7 @@
 
 Returns `DataFrame` with changed values in some columns. Allows to change column types.
 
-```kotlin
+```text
 convert { columnsSelector }
     .with { rowExpression } | .perRowCol { rowColExpression } | .withValue(value)  | to<Type>() | to { colExpression }
 
