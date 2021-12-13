@@ -19,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.impl.valuesImpl
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -85,5 +86,15 @@ public fun <T, C> ColumnsContainer<T>.getColumnGroup(column: ColumnSelector<T, D
 // region getColumnGroupOrNull
 
 public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(name: String): ColumnGroup<*>? = getColumnOrNull(name)?.asColumnGroup()
+
+// endregion
+
+// region values
+
+public fun <T, C> DataFrame<T>.values(byRow: Boolean = false, columns: ColumnsSelector<T, C>): Sequence<C> = valuesImpl(byRow, columns)
+public fun <T> DataFrame<T>.values(byRows: Boolean = false): Sequence<Any?> = values(byRows) { all() }
+
+public fun <T, C> DataFrame<T>.valuesNotNull(byRow: Boolean = false, columns: ColumnsSelector<T, C?>): Sequence<C> = values(byRow, columns).filterNotNull()
+public fun <T> DataFrame<T>.valuesNotNull(byRow: Boolean = false): Sequence<Any> = valuesNotNull(byRow) { all() }
 
 // endregion

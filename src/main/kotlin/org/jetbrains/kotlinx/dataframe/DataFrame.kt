@@ -46,16 +46,6 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     // endregion
 
-    // region values
-
-    public fun <C> values(byRow: Boolean = false, columns: ColumnsSelector<T, C>): Sequence<C>
-    public fun values(byRows: Boolean = false): Sequence<Any?> = values(byRows) { all() }
-
-    public fun <C> valuesNotNull(byRow: Boolean = false, columns: ColumnsSelector<T, C?>): Sequence<C> = values(byRow, columns).filterNotNull()
-    public fun valuesNotNull(byRow: Boolean = false): Sequence<Any> = valuesNotNull(byRow) { all() }
-
-    // endregion
-
     // region get columns
 
     override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = getColumnsImpl(UnresolvedColumnsPolicy.Fail, columns)

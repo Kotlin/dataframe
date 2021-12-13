@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.impl.columns.missing
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedBody
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
@@ -45,8 +44,6 @@ internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsCont
     override fun get(firstIndex: Int, vararg otherIndices: Int) = throw UnsupportedOperationException()
 
     override fun distinct() = throw UnsupportedOperationException()
-
-    override fun <C> values(byRow: Boolean, columns: ColumnsSelector<T, C>) = throw UnsupportedOperationException()
 
     override fun <R> aggregate(body: AggregateGroupedBody<T, R>) = throw UnsupportedOperationException()
 
