@@ -10,10 +10,10 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.value
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.withValue
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 class AnimalsTests {
 
@@ -35,7 +35,7 @@ class AnimalsTests {
         mean.ncol shouldBe 2
         mean.nrow shouldBe 2
         mean.name.values() shouldBe listOf("age", "visits")
-        mean.value.type() shouldBe getType<Double>()
+        mean.value.type() shouldBe typeOf<Double>()
     }
 
     @Test

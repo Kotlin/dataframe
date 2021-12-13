@@ -9,11 +9,11 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.baseType
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 internal fun AnyFrame.extractSchema(): DataFrameSchema =
     DataFrameSchemaImpl(columns().filter { it.name().isNotEmpty() }.map { it.name() to it.extractSchema() }.toMap())
@@ -41,7 +41,7 @@ internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
         val columnKinds = it.value.map { it.kind }.distinct()
         val kind = columnKinds.first()
         when {
-            columnKinds.size > 1 -> ColumnSchema.Value(getType<Any>().withNullability(it.value.any { it.nullable }))
+            columnKinds.size > 1 -> ColumnSchema.Value(typeOf<Any>().withNullability(it.value.any { it.nullable }))
             kind == ColumnKind.Value -> ColumnSchema.Value(
                 baseType(
                     it.value.map { (it as ColumnSchema.Value).type }

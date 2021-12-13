@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.escapeHTML
 import org.jetbrains.kotlinx.dataframe.io.formatter
@@ -24,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jsoup.Jsoup
 import org.junit.Test
 import java.net.URL
+import kotlin.reflect.typeOf
 
 class RenderingTests {
 
@@ -45,7 +45,7 @@ class RenderingTests {
     @Test
     fun `parse url`() {
         val df = dataFrameOf("url")("http://www.google.com").parse()
-        df["url"].type() shouldBe getType<URL>()
+        df["url"].type() shouldBe typeOf<URL>()
     }
 
     @Test

@@ -26,7 +26,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumnWithActualType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.toIndices
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.indices
@@ -38,6 +37,7 @@ import java.io.File
 import java.net.URL
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
+import kotlin.reflect.typeOf
 
 // region DataFrame Iterable API
 
@@ -83,8 +83,8 @@ public inline fun <T, reified R> ColumnsContainer<T>.map(
     noinline body: AddExpression<T, R>
 ): DataColumn<R> = when (infer) {
     Infer.Type -> newColumnWithActualType(name, body)
-    Infer.Nulls -> newColumn(getType<R>(), name, true, body)
-    Infer.None -> newColumn(getType<R>(), name, false, body)
+    Infer.Nulls -> newColumn(typeOf<R>(), name, true, body)
+    Infer.None -> newColumn(typeOf<R>(), name, false, body)
 }
 
 public inline fun <T, reified R> ColumnsContainer<T>.map(

@@ -16,9 +16,9 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 public fun <T, C> DataFrame<T>.split(columns: ColumnsSelector<T, C?>): Split<T, C> =
     Split(this, columns)
@@ -38,7 +38,7 @@ public data class SplitWithTransform<T, C, R>(
     internal val df: DataFrame<T>,
     internal val columns: ColumnsSelector<T, C?>,
     internal val inward: Boolean,
-    internal val targetType: KType,
+    internal val tartypeOf: KType,
     internal val default: R? = null,
     internal val transform: DataRow<T>.(C) -> Iterable<R>
 )
@@ -60,7 +60,7 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.default(value: R?): SplitWithTr
 // region by
 
 public inline fun <T, C, reified R> Split<T, C>.by(noinline splitter: DataRow<T>.(C) -> Iterable<R>): SplitWithTransform<T, C, R> =
-    by(getType<R>(), splitter)
+    by(typeOf<R>(), splitter)
 
 public fun <T, C> Split<T, C>.by(
     vararg delimiters: Char,
@@ -273,12 +273,12 @@ public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty
 public fun <T, C : AnyFrame> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> =
     by { it.rows() }.intoRows(dropEmpty)
 
-internal fun <T, C, R> ConvertClause<T, C?>.splitInplace(targetType: KType, transform: DataRow<T>.(C) -> Iterable<R>) =
-    withRowCellImpl(List::class.createTypeWithArgument(targetType)) { if (it == null) emptyList() else transform(it).asList() }
+internal fun <T, C, R> ConvertClause<T, C?>.splitInplace(tartypeOf: KType, transform: DataRow<T>.(C) -> Iterable<R>) =
+    withRowCellImpl(List::class.createTypeWithArgument(tartypeOf)) { if (it == null) emptyList() else transform(it).asList() }
 
 public fun <T, C, R> SplitWithTransform<T, C, R>.intoRows(dropEmpty: Boolean = true): DataFrame<T> {
     val paths = df.getColumnPaths(columns).toColumnSet()
-    return df.convert { paths as ColumnSet<C?> }.splitInplace(targetType, transform).explode(dropEmpty) { paths }
+    return df.convert { paths as ColumnSet<C?> }.splitInplace(tartypeOf, transform).explode(dropEmpty) { paths }
 }
 
 // endregion
@@ -288,6 +288,6 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.intoRows(dropEmpty: Boolean = t
 @JvmName("inplaceTC")
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inplace(): DataFrame<T> = by { it }.inplace()
 
-public fun <T, C, R> SplitWithTransform<T, C, R>.inplace(): DataFrame<T> = df.convert(columns).splitInplace(targetType, transform)
+public fun <T, C, R> SplitWithTransform<T, C, R>.inplace(): DataFrame<T> = df.convert(columns).splitInplace(tartypeOf, transform)
 
 // endregion

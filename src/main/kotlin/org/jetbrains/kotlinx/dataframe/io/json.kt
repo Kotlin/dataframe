@@ -23,7 +23,6 @@ import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.type
@@ -31,6 +30,7 @@ import java.io.File
 import java.net.URL
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
+import kotlin.reflect.typeOf
 
 public fun DataFrame.Companion.readJson(file: File): AnyFrame = readJson(file.toURI().toURL())
 
@@ -126,7 +126,7 @@ internal fun fromJsonList(records: List<*>): AnyFrame {
 
                 val parsed = fromJsonList(values)
                 when {
-                    parsed.ncol == 0 -> DataColumn.createValueColumn(colName, arrayOfNulls<Any?>(values.size).toList(), getType<Any?>())
+                    parsed.ncol == 0 -> DataColumn.createValueColumn(colName, arrayOfNulls<Any?>(values.size).toList(), typeOf<Any?>())
                     parsed.isSingleUnnamedColumn() -> parsed.getColumn(0).rename(colName)
                     else -> DataColumn.createColumnGroup(colName, parsed)
                 }

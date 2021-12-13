@@ -5,27 +5,27 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.math.cumSum
 import org.jetbrains.kotlinx.dataframe.math.defaultCumSumSkipNA
 import org.jetbrains.kotlinx.dataframe.typeClass
 import java.math.BigDecimal
 import kotlin.reflect.KProperty
+import kotlin.reflect.typeOf
 
 // region cumSum
 
 public fun <T : Number?> DataColumn<T>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<T> = when (type()) {
-    getType<Double>() -> cast<Double>().cumSum(skipNA).cast()
-    getType<Double?>() -> cast<Double?>().cumSum(skipNA).cast()
-    getType<Float>() -> cast<Float>().cumSum(skipNA).cast()
-    getType<Float?>() -> cast<Float?>().cumSum(skipNA).cast()
-    getType<Int>() -> cast<Int>().cumSum().cast()
-    getType<Int?>() -> cast<Int?>().cumSum(skipNA).cast()
-    getType<Long>() -> cast<Long>().cumSum().cast()
-    getType<Long?>() -> cast<Long?>().cumSum(skipNA).cast()
-    getType<BigDecimal>() -> cast<BigDecimal>().cumSum().cast()
-    getType<BigDecimal?>() -> cast<BigDecimal?>().cumSum(skipNA).cast()
-    getType<Number?>(), getType<Number>() -> convertToDouble().cumSum(skipNA).cast()
+    typeOf<Double>() -> cast<Double>().cumSum(skipNA).cast()
+    typeOf<Double?>() -> cast<Double?>().cumSum(skipNA).cast()
+    typeOf<Float>() -> cast<Float>().cumSum(skipNA).cast()
+    typeOf<Float?>() -> cast<Float?>().cumSum(skipNA).cast()
+    typeOf<Int>() -> cast<Int>().cumSum().cast()
+    typeOf<Int?>() -> cast<Int?>().cumSum(skipNA).cast()
+    typeOf<Long>() -> cast<Long>().cumSum().cast()
+    typeOf<Long?>() -> cast<Long?>().cumSum(skipNA).cast()
+    typeOf<BigDecimal>() -> cast<BigDecimal>().cumSum().cast()
+    typeOf<BigDecimal?>() -> cast<BigDecimal?>().cumSum(skipNA).cast()
+    typeOf<Number?>(), typeOf<Number>() -> convertToDouble().cumSum(skipNA).cast()
     else -> error("Cumsum for type ${type()} is not supported")
 }
 

@@ -4,9 +4,9 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.hasNulls
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 class SplitTests {
 
@@ -38,7 +38,7 @@ class SplitTests {
             .parse()
         splitted.schema().print()
         splitted["title"].hasNulls shouldBe false
-        splitted["year"].type shouldBe getType<Int>()
+        splitted["year"].type shouldBe typeOf<Int>()
     }
 
     @Test

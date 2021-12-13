@@ -49,7 +49,7 @@ internal abstract class DataCollectorBase<T>(initCapacity: Int) : DataCollector<
     }
 }
 
-internal open class ColumnDataCollector(initCapacity: Int = 0, val getType: (KClass<*>) -> KType) : DataCollectorBase<Any?>(initCapacity) {
+internal open class ColumnDataCollector(initCapacity: Int = 0, val typeOf: (KClass<*>) -> KType) : DataCollectorBase<Any?>(initCapacity) {
 
     override fun toColumn(name: String) = guessColumnType(name, values)
 }
@@ -70,6 +70,6 @@ internal class TypedColumnDataCollector<T>(initCapacity: Int = 0, val type: KTyp
 
 internal fun createDataCollector(initCapacity: Int = 0) = createDataCollector(initCapacity) { it.createStarProjectedType(false) }
 
-internal fun createDataCollector(initCapacity: Int = 0, getType: (KClass<*>) -> KType) = ColumnDataCollector(initCapacity, getType)
+internal fun createDataCollector(initCapacity: Int = 0, typeOf: (KClass<*>) -> KType) = ColumnDataCollector(initCapacity, typeOf)
 
 internal fun <T> createDataCollector(initCapacity: Int = 0, type: KType) = TypedColumnDataCollector<T>(initCapacity, type)

@@ -4,8 +4,8 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 class BasicTests {
 
@@ -164,8 +164,8 @@ class BasicTests {
         val convertedDfAcc = df.convert { priority }.with { it == "yes" }
         val convertedDfStr = df.convert { "priority"<String>() }.with { it == "yes" }
 
-        convertedDfAcc[priority].type() shouldBe getType<Boolean>()
-        convertedDfAcc["priority"].type() shouldBe getType<Boolean>()
+        convertedDfAcc[priority].type() shouldBe typeOf<Boolean>()
+        convertedDfAcc["priority"].type() shouldBe typeOf<Boolean>()
 
         convertedDfStr[priority][5] shouldBe false
         convertedDfStr["priority"][5] shouldBe false

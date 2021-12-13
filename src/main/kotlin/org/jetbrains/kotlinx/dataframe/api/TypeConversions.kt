@@ -22,10 +22,10 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.asValues
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
 import kotlin.reflect.KProperty
+import kotlin.reflect.typeOf
 
 // region String
 
@@ -158,11 +158,11 @@ public inline fun <reified T> Iterable<T>.toColumn(
 ): DataColumn<T> =
     (
         if (infer == Infer.Type) DataColumn.createWithTypeInference(name, asList())
-        else DataColumn.create(name, asList(), getType<T>(), infer == Infer.Nulls)
+        else DataColumn.create(name, asList(), typeOf<T>(), infer == Infer.Nulls)
         ).forceResolve()
 
 public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataColumn<T> =
-    DataColumn.create(name, asList() as List<T>, getType<T>()).forceResolve()
+    DataColumn.create(name, asList() as List<T>, typeOf<T>()).forceResolve()
 
 public inline fun <reified T> Iterable<T>.toColumn(ref: ColumnReference<T>): DataColumn<T> =
     DataColumn.create(ref.name(), asList()).forceResolve()
@@ -218,7 +218,7 @@ public fun AnyRow.toMap(): Map<String, Any?> = df().columns().map { it.name() to
 // region Array
 
 public inline fun <reified T> Array<T>.toValueColumn(name: String): ValueColumn<T> =
-    DataColumn.createValueColumn(name, this.asList(), getType<T>())
+    DataColumn.createValueColumn(name, this.asList(), typeOf<T>())
 
 public fun Array<out String>.toPath(): ColumnPath = ColumnPath(this.asList())
 
