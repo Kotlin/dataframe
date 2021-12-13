@@ -1,6 +1,7 @@
-package org.jetbrains.dataframe.ksp
+package org.jetbrains.dataframe.ksp.runner
 
 import com.tschuchort.compiletesting.*
+import org.jetbrains.dataframe.ksp.DataFrameSymbolProcessorProvider
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.file.Paths

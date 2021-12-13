@@ -121,7 +121,14 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
 
                 if (baseClassNames == tempBaseClassNames) {
                     val newBaseMarkers = baseClasses.map { resolve(it) }
-                    val newMarker = Marker(clazz.qualifiedName!!, temp.isOpen, temp.fields, newBaseMarkers, MarkerVisibility.IMPLICIT_PUBLIC)
+                    val newMarker = Marker(
+                        clazz.qualifiedName!!,
+                        temp.isOpen,
+                        temp.fields,
+                        newBaseMarkers,
+                        MarkerVisibility.IMPLICIT_PUBLIC,
+                        clazz
+                    )
                     registeredMarkers[markerClass] = newMarker
                     generatedMarkers.remove(temp.name)
                     return newMarker

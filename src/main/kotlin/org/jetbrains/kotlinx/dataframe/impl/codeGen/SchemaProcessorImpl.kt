@@ -118,7 +118,7 @@ internal class SchemaProcessorImpl(
             }
             generateFields(scheme, visibility, baseMarkers)
         } else generateFields(scheme, visibility)
-        return Marker(name, isOpen, fields, baseMarkers.onlyLeafs(), visibility)
+        return Marker(name, isOpen, fields, baseMarkers.onlyLeafs(), visibility, emptyList(), emptyList())
     }
 
     private fun DataFrameSchema.getRequiredMarkers() = getRequiredMarkers(this, registeredMarkers)
