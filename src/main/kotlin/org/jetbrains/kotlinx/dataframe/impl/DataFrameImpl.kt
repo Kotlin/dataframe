@@ -19,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
+import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 
 internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) : DataFrame<T>, AggregatableInternal<T> {
@@ -111,7 +112,7 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) : DataFr
         UnresolvedColumnsPolicy.Skip, column
     ).singleOrNull()
 
-    override fun <R> getColumnOrNull(column: ColumnReference<R>): DataColumn<R>? = resolve(column)?.data
+    override fun <R> getColumnOrNull(column: ColumnReference<R>): DataColumn<R>? = column.resolveSingle(this, UnresolvedColumnsPolicy.Skip)?.data
 
     override fun getColumnOrNull(path: ColumnPath): AnyCol? =
         when (path.size) {
