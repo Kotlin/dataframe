@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.getAggregateColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.getPath
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal

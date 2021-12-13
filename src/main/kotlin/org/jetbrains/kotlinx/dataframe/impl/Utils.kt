@@ -17,10 +17,13 @@ import java.math.BigInteger
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.KTypeProjection
+import kotlin.reflect.full.createType
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.starProjectedType
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
 internal infix fun <T> (Predicate<T>?).and(other: Predicate<T>): Predicate<T> = if (this == null) other else { it: T -> this(it) && other(it) }
@@ -123,6 +126,25 @@ internal fun <T : Number> KClass<T>.zero(): T = when (this) {
 internal fun <T> catchSilent(body: () -> T): T? = try { body() } catch (_: Throwable) { null }
 
 internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType? = null) = commonParents(this).createType(nullable, upperBound)
+
+internal fun Iterable<KType?>.commonType(): KType {
+    val distinct = distinct()
+    val nullable = distinct.any { it?.isMarkedNullable ?: true }
+    return when {
+        distinct.isEmpty() || distinct.contains(null) -> Any::class.createStarProjectedType(nullable)
+        distinct.size == 1 -> distinct[0]!!
+        else -> {
+            val kclass = commonParent(distinct.map { it!!.jvmErasure }) ?: return getType<Any>()
+            val projections = distinct.map { it!!.projectUpTo(kclass).replaceTypeParameters() }
+            require(projections.all { it.jvmErasure == kclass })
+            val arguments = kclass.typeParameters.mapIndexed { i, p ->
+                val type = projections.map { it.arguments[i].type }.commonType()
+                KTypeProjection.invariant(type)
+            }
+            kclass.createType(arguments, nullable)
+        }
+    }
+}
 
 internal fun <T, C> DataFrame<T>.getColumnsImpl(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
