@@ -4,7 +4,7 @@
 
 Returns `DataFrame` without selected columns.
 
-```kotlin
+```text
 remove { columns }
 ```
 
