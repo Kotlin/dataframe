@@ -35,7 +35,11 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     public fun rowsCount(): Int
 
+    public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
+
     // endregion
+
+    public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T>
 
     // region get columns
 
@@ -43,8 +47,6 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     public operator fun get(first: Column, vararg other: Column): DataFrame<T> = select(listOf(first) + other)
     public operator fun get(first: String, vararg other: String): DataFrame<T> = select(listOf(first) + other)
     public operator fun get(columnRange: ClosedRange<String>): DataFrame<T> = select { columnRange.start..columnRange.endInclusive }
-
-    public fun getColumnIndex(name: String): Int
 
     // endregion
 
@@ -62,18 +64,6 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     public operator fun plus(col: AnyCol): DataFrame<T> = add(col)
     public operator fun plus(cols: Iterable<AnyCol>): DataFrame<T> = (columns() + cols).toDataFrame().cast()
-
-    // endregion
-
-    // region rows iterator
-
-    public operator fun iterator(): Iterator<DataRow<T>> = rows().iterator()
-
-    // endregion
-
-    // region aggregate
-
-    public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T>
 
     // endregion
 }
