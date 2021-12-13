@@ -12,18 +12,28 @@ import org.jetbrains.kotlinx.dataframe.nrow
 
 // region concat
 
-@JvmName("concatRows")
-public fun <T> Iterable<DataRow<T>?>.concat(): DataFrame<T> = concatImpl(map { it?.toDataFrame() ?: emptyDataFrame(1) }).cast()
+public fun <T> DataFrame<T>.concat(vararg other: DataFrame<T>): DataFrame<T> = concatImpl(listOf(this) + other)
+
+public fun <T> DataColumn<T>.concat(vararg other: DataColumn<T>): DataColumn<T> = concatImpl(name, listOf(this) + other)
+
+public fun <T> DataRow<T>.concat(vararg other: DataRow<T>): DataFrame<T> = (listOf(this) + other).concat()
 
 public fun <T> Iterable<DataFrame<T>>.concat(): DataFrame<T> {
-    return concatImpl(asList()).cast()
+    return concatImpl(asList())
 }
 
-public fun <T> DataColumn<DataFrame<T>>.concat(): DataFrame<T> = values.concat().cast()
+public fun <T> Iterable<DataColumn<T>>.concat(): DataColumn<T> {
+    val list = asList()
+    if (list.isEmpty()) return DataColumn.empty().cast()
+    return concatImpl(list[0].name(), list)
+}
+
+@JvmName("concatRows")
+public fun <T> Iterable<DataRow<T>?>.concat(): DataFrame<T> = concatImpl(map { it?.toDataFrame() ?: emptyDataFrame(1).cast() })
+
+public fun <T> DataColumn<DataFrame<T>>.concat(): DataFrame<T> = values.concat()
 
 public fun <T> DataColumn<Collection<T>>.concat(): List<T> = values.flatten()
-
-public fun <T> DataFrame<T>.concat(vararg other: DataFrame<T>): DataFrame<T> = concatImpl(listOf(this) + other.toList()).cast<T>()
 
 // endregion
 

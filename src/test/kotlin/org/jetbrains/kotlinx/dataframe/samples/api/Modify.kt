@@ -594,6 +594,26 @@ class Modify : TestBase() {
     }
 
     @Test
+    fun concatColumns() {
+        // SampleStart
+        val a by columnOf(1, 2)
+        val b by columnOf(3, 4)
+        a.concat(b)
+            // SampleEnd
+            .shouldBe(columnOf(1, 2, 3, 4).named("a"))
+    }
+
+    @Test
+    fun concatColumnsIterable() {
+        // SampleStart
+        val a by columnOf(1, 2)
+        val b by columnOf(3, 4)
+        listOf(a, b).concat()
+            // SampleEnd
+            .shouldBe(columnOf(1, 2, 3, 4).named("a"))
+    }
+
+    @Test
     fun concatIterable() {
         val df1 = df
         val df2 = df
@@ -613,7 +633,15 @@ class Modify : TestBase() {
     @Test
     fun concatFrameColumn() {
         // SampleStart
-        val frameColumn by columnOf(df[0..1], df[4..5])
+        val x = dataFrameOf("a", "b")(
+            1, 2,
+            3, 4
+        )
+        val y = dataFrameOf("b", "c")(
+            5, 6,
+            7, 8
+        )
+        val frameColumn by columnOf(x, y)
         frameColumn.concat()
         // SampleEnd
     }

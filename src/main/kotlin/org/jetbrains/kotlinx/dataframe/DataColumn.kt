@@ -79,7 +79,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
         public inline fun <reified T> create(name: String, values: List<T>, checkForNulls: Boolean = false): DataColumn<T> = create(name, values, getType<T>(), checkForNulls)
 
-        public fun empty(): AnyCol = createValueColumn("", emptyList<Unit>(), getType<Unit>())
+        public fun empty(name: String = ""): AnyCol = createValueColumn(name, emptyList<Unit>(), getType<Unit>())
     }
 
     public fun hasNulls(): Boolean = type().isMarkedNullable

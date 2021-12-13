@@ -16,6 +16,18 @@ df.concat(df1, df2)
 
 <!---END-->
 
+`DataColumn`:
+
+<!---FUN concatColumns-->
+
+```kotlin
+val a by columnOf(1, 2)
+val b by columnOf(3, 4)
+a.concat(b)
+```
+
+<!---END-->
+
 `Iterable<DataFrame>`:
 
 <!---FUN concatIterable-->
@@ -37,6 +49,18 @@ rows.concat()
 
 <!---END-->
 
+`Iterable<DataColumn>`:
+
+<!---FUN concatColumnsIterable-->
+
+```kotlin
+val a by columnOf(1, 2)
+val b by columnOf(3, 4)
+listOf(a, b).concat()
+```
+
+<!---END-->
+
 [`groupBy`](groupBy.md#transformation):
 
 <!---FUN concatGroupBy-->
@@ -52,7 +76,15 @@ df.groupBy { name }.concat()
 <!---FUN concatFrameColumn-->
 
 ```kotlin
-val frameColumn by columnOf(df[0..1], df[4..5])
+val x = dataFrameOf("a", "b")(
+    1, 2,
+    3, 4
+)
+val y = dataFrameOf("b", "c")(
+    5, 6,
+    7, 8
+)
+val frameColumn by columnOf(x, y)
 frameColumn.concat()
 ```
 
