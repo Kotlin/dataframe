@@ -54,7 +54,7 @@ Computed column accessor evaluates custom expression on every data access.
 <tab title="Properties">
 
 ```kotlin
-val fullName by df.column { name.firstName + " " + name.lastName }
+val fullName by column(df) { name.firstName + " " + name.lastName }
 
 df[fullName]
 ```
