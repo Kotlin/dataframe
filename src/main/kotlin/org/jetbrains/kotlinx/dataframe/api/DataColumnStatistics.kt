@@ -11,10 +11,10 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast2
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
 import org.jetbrains.kotlinx.dataframe.math.sum
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 // region
 
@@ -115,7 +115,7 @@ public fun <T> DataColumn<T>.valueCounts(
     val nulls = if (dropNA) false else hasNulls()
     val values = DataColumn.create(name(), grouped.map { it.first }, type().withNullability(nulls))
     val countName = if (resultColumn == name()) resultColumn + "1" else resultColumn
-    val counts = DataColumn.create(countName, grouped.map { it.second }, getType<Int>())
+    val counts = DataColumn.create(countName, grouped.map { it.second }, typeOf<Int>())
     return dataFrameOf(values, counts).cast()
 }
 

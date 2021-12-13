@@ -32,12 +32,12 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.tree.getOrPut
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.put
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.topDfs
 import org.jetbrains.kotlinx.dataframe.impl.equalsByElement
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.rollingHash
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.typeOf
 
 internal fun <T> BaseColumn<T>.checkEquals(other: Any?): Boolean {
     if (this === other) return true
@@ -99,7 +99,7 @@ internal fun <T> DataColumn<DataRow<T>>.asColumnGroup(): ColumnGroup<T> = (this 
 internal fun <T> DataColumn<DataFrame<T>?>.asFrameColumn(): FrameColumn<T> = (this as AnyCol).asFrameColumn().castFrameColumn()
 
 internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
-    if (!type.isSubtypeOf(getType<Comparable<*>?>())) {
+    if (!type.isSubtypeOf(typeOf<Comparable<*>?>())) {
         throw RuntimeException("Column '$name' has type '$type' that is not Comparable")
     }
     return this
@@ -173,8 +173,8 @@ internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWi
 
 @PublishedApi
 internal fun KType.toColumnKind(): ColumnKind = when {
-    isSubtypeOf(getType<ColumnsContainer<*>?>()) -> ColumnKind.Frame
-    isSubtypeOf(getType<DataRow<*>?>()) -> ColumnKind.Group
+    isSubtypeOf(typeOf<ColumnsContainer<*>?>()) -> ColumnKind.Frame
+    isSubtypeOf(typeOf<DataRow<*>?>()) -> ColumnKind.Group
     else -> ColumnKind.Value
 }
 

@@ -3,13 +3,13 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.testCsv
 import org.jetbrains.kotlinx.dataframe.testJson
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 class Read : TestBase() {
     @Test
@@ -25,8 +25,8 @@ class Read : TestBase() {
         // SampleEnd
         df.nrow shouldBe 3
         df.columnNames() shouldBe listOf("A", "B", "C", "D")
-        df["A"].type() shouldBe getType<Int>()
-        df["D"].type() shouldBe getType<Boolean?>()
+        df["A"].type() shouldBe typeOf<Int>()
+        df["D"].type() shouldBe typeOf<Boolean?>()
     }
 
     @Test
@@ -37,8 +37,8 @@ class Read : TestBase() {
         // SampleEnd
         df.nrow shouldBe 4
         df.columnNames() shouldBe listOf("A", "B", "C", "D")
-        df["A"].type() shouldBe getType<String>()
-        df["B"].type() shouldBe getType<Int>()
-        df["D"].type() shouldBe getType<Boolean?>()
+        df["A"].type() shouldBe typeOf<String>()
+        df["B"].type() shouldBe typeOf<Int>()
+        df["D"].type() shouldBe typeOf<Boolean?>()
     }
 }

@@ -2,8 +2,8 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 class GroupByTests {
 
@@ -34,10 +34,10 @@ class GroupByTests {
 
         grouped.groupBy("a").aggregate {
             getColumn("d") into "e"
-        }["e"].type() shouldBe getType<List<AnyFrame>>()
+        }["e"].type() shouldBe typeOf<List<AnyFrame>>()
 
         grouped.groupBy("a").aggregate {
             getFrameColumn("d") into "e"
-        }["e"].type() shouldBe getType<List<AnyFrame>>()
+        }["e"].type() shouldBe typeOf<List<AnyFrame>>()
     }
 }

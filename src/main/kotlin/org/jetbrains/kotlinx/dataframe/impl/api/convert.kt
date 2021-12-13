@@ -47,10 +47,10 @@ internal fun <T, C, R> ConvertClause<T, C>.convertRowColumnImpl(
 
 internal fun AnyCol.convertToTypeImpl(newType: KType): AnyCol {
     val from = type
-    val targetType = newType.withNullability(hasNulls)
+    val tartypeOf = newType.withNullability(hasNulls)
     return when {
         from == newType -> this
-        from.isSubtypeOf(newType) -> (this as DataColumnInternal<*>).changeType(targetType)
+        from.isSubtypeOf(newType) -> (this as DataColumnInternal<*>).changeType(tartypeOf)
         else -> when (val converter = getConverter(from, newType)) {
             null -> when (from.classifier) {
                 Any::class, Number::class, java.io.Serializable::class -> {
@@ -62,7 +62,7 @@ internal fun AnyCol.convertToTypeImpl(newType: KType): AnyCol {
                             conv(it) ?: error("Can't convert '$it' to '$newType'")
                         }
                     }
-                    DataColumn.createValueColumn(name, values, targetType)
+                    DataColumn.createValueColumn(name, values, tartypeOf)
                 }
                 else -> error("Can't find converter from $from to $newType")
             }
@@ -71,7 +71,7 @@ internal fun AnyCol.convertToTypeImpl(newType: KType): AnyCol {
                     if (it == null) null
                     else converter(it) ?: error("Can't convert '$it' to $newType")
                 }
-                DataColumn.createValueColumn(name, values, targetType)
+                DataColumn.createValueColumn(name, values, tartypeOf)
             }
         }
     }

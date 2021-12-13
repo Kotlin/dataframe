@@ -8,8 +8,8 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupWithParent
 import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.impl.createTypeUsing
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 class TypeProjectionTests {
     class TypeInferenceTest1 {
@@ -18,8 +18,8 @@ class TypeProjectionTests {
 
         @Test
         fun test() {
-            X::class.createTypeUsing<A<List<Int>>>() shouldBe getType<X<Int>>()
-            A::class.createTypeUsing<X<Int>>() shouldBe getType<A<List<Int>>>()
+            X::class.createTypeUsing<A<List<Int>>>() shouldBe typeOf<X<Int>>()
+            A::class.createTypeUsing<X<Int>>() shouldBe typeOf<A<List<Int>>>()
         }
     }
 
@@ -32,27 +32,27 @@ class TypeProjectionTests {
 
         @Test
         fun test() {
-            X::class.createTypeUsing<A<A<A<Int>>>>() shouldBe getType<X<Int, *>>()
-            A::class.createTypeUsing<X<Double, Int>?>() shouldBe getType<A<B<Double>>?>()
+            X::class.createTypeUsing<A<A<A<Int>>>>() shouldBe typeOf<X<Int, *>>()
+            A::class.createTypeUsing<X<Double, Int>?>() shouldBe typeOf<A<B<Double>>?>()
         }
     }
 
     @Test
     fun `collection to list projection`() {
-        List::class.createTypeUsing<Collection<Int>?>() shouldBe getType<List<Int>?>()
-        Collection::class.createTypeUsing<List<Int>>() shouldBe getType<Collection<Int>>()
+        List::class.createTypeUsing<Collection<Int>?>() shouldBe typeOf<List<Int>?>()
+        Collection::class.createTypeUsing<List<Int>>() shouldBe typeOf<Collection<Int>>()
     }
 
     @Test
     fun `column group projections`() {
-        ColumnGroup::class.createTypeUsing<ColumnReference<DataRow<Int>>>() shouldBe getType<ColumnGroup<Int>>()
-        SingleColumn::class.createTypeUsing<ColumnGroupWithParent<Int>>() shouldBe getType<SingleColumn<DataRow<Int>>>()
+        ColumnGroup::class.createTypeUsing<ColumnReference<DataRow<Int>>>() shouldBe typeOf<ColumnGroup<Int>>()
+        SingleColumn::class.createTypeUsing<ColumnGroupWithParent<Int>>() shouldBe typeOf<SingleColumn<DataRow<Int>>>()
     }
 
     @Test
     fun `common type tests`() {
-        listOf(getType<List<Int>>(), getType<Set<Double?>>()).commonType() shouldBe getType<Collection<Number?>>()
-        listOf(getType<List<Int>>(), getType<Set<*>>()).commonType() shouldBe getType<Collection<Any?>>()
-        listOf(getType<List<Int>>(), getType<Set<*>?>()).commonType() shouldBe getType<Collection<Any?>?>()
+        listOf(typeOf<List<Int>>(), typeOf<Set<Double?>>()).commonType() shouldBe typeOf<Collection<Number?>>()
+        listOf(typeOf<List<Int>>(), typeOf<Set<*>>()).commonType() shouldBe typeOf<Collection<Any?>>()
+        listOf(typeOf<List<Int>>(), typeOf<Set<*>?>()).commonType() shouldBe typeOf<Collection<Any?>?>()
     }
 }

@@ -32,7 +32,7 @@ public fun <T> DataRow<T>.transpose(): DataFrame<NameValueSchema> {
 
 /*
 
-public inline fun <reified T> AnyRow.transposeTo(): DataFrame<NameValuePair<T>> = transposeTo(getType<T>())
+public inline fun <reified T> AnyRow.transposeTo(): DataFrame<NameValuePair<T>> = transposeTo(typeOf<T>())
 
 @PublishedApi
 internal fun <T> AnyRow.transposeTo(type: KType): DataFrame<NameValuePair<T>> {

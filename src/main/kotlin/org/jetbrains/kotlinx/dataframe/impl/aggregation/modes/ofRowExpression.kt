@@ -12,13 +12,13 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
-import org.jetbrains.kotlinx.dataframe.impl.getType
+import kotlin.reflect.typeOf
 
 @PublishedApi
 internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
     values: Iterable<C>,
     noinline transform: (C) -> V
-): R? = aggregate(values.asSequence().map(transform).asIterable(), getType<V>())
+): R? = aggregate(values.asSequence().map(transform).asIterable(), typeOf<V>())
 
 @PublishedApi
 internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(
@@ -73,7 +73,7 @@ internal inline fun <T, reified C, reified R> Grouped<T>.aggregateOf(
     aggregator: Aggregator<C, R>
 ): DataFrame<T> {
     val path = pathOf(resultName ?: aggregator.name)
-    val type = getType<R>()
+    val type = typeOf<R>()
     return aggregateInternal {
         val value = aggregator.aggregateOf(df, expression)
         yield(path, value, type, null, false)

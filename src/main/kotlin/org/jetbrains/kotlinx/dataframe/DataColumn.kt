@@ -20,13 +20,13 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnKind
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 /**
  * Column with type, name/path and values
@@ -63,7 +63,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
         ): FrameColumn<T> = FrameColumnImpl(name, groups, schema)
 
         public inline fun <reified T> createValueColumn(name: String, values: List<T>, checkForNulls: Boolean = false): ValueColumn<T> {
-            val type = if (checkForNulls) getType<T>().withNullability(values.anyNull()) else getType<T>()
+            val type = if (checkForNulls) typeOf<T>().withNullability(values.anyNull()) else typeOf<T>()
             return createValueColumn(name, values, type)
         }
 
@@ -77,9 +77,9 @@ public interface DataColumn<out T> : BaseColumn<T> {
             }
         }
 
-        public inline fun <reified T> create(name: String, values: List<T>, checkForNulls: Boolean = false): DataColumn<T> = create(name, values, getType<T>(), checkForNulls)
+        public inline fun <reified T> create(name: String, values: List<T>, checkForNulls: Boolean = false): DataColumn<T> = create(name, values, typeOf<T>(), checkForNulls)
 
-        public fun empty(name: String = ""): AnyCol = createValueColumn(name, emptyList<Unit>(), getType<Unit>())
+        public fun empty(name: String = ""): AnyCol = createValueColumn(name, emptyList<Unit>(), typeOf<Unit>())
     }
 
     public fun hasNulls(): Boolean = type().isMarkedNullable

@@ -20,7 +20,6 @@ import org.jetbrains.kotlinx.dataframe.impl.api.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.impl.api.toLocalTime
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import java.math.BigDecimal
@@ -28,6 +27,7 @@ import java.time.LocalTime
 import java.util.Locale
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): ConvertClause<T, C> =
     ConvertClause(this, columns)
@@ -69,7 +69,7 @@ public inline fun <T, C, reified R> ConvertClause<T, C?>.notNull(crossinline exp
 public data class ConvertClause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>) {
     public fun <R> cast(): ConvertClause<T, R> = ConvertClause(df, columns as ColumnsSelector<T, R>)
 
-    public inline fun <reified D> to(): DataFrame<T> = to(getType<D>())
+    public inline fun <reified D> to(): DataFrame<T> = to(typeOf<D>())
 }
 
 public fun <T> ConvertClause<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
@@ -78,18 +78,18 @@ public inline fun <T, C, reified R> ConvertClause<T, C>.with(
     inferType: Boolean = false,
     noinline rowConverter: RowValueExpression<T, C, R>
 ): DataFrame<T> =
-    withRowCellImpl(if (inferType) null else getType<R>(), rowConverter)
+    withRowCellImpl(if (inferType) null else typeOf<R>(), rowConverter)
 
 public inline fun <T, C, reified R> ConvertClause<T, C>.perRowCol(
     inferType: Boolean = false,
     noinline expression: RowColumnExpression<T, C, R>
 ): DataFrame<T> =
-    convertRowColumnImpl(if (inferType) null else getType<R>(), expression)
+    convertRowColumnImpl(if (inferType) null else typeOf<R>(), expression)
 
 public fun <T, C> ConvertClause<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyCol): DataFrame<T> =
     df.replace(columns).with { columnConverter(df, it) }
 
-public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(getType<C>()) as DataColumn<C>
+public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
 public fun AnyCol.convertTo(newType: KType): AnyCol = convertToTypeImpl(newType)
 
 @JvmName("convertToLocalDateTimeT")

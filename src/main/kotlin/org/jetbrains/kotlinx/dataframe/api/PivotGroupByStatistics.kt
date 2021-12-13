@@ -24,9 +24,8 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnsOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
-import org.jetbrains.kotlinx.dataframe.impl.getType
-import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KProperty
+import kotlin.reflect.typeOf
 
 // region count
 
@@ -51,7 +50,7 @@ public fun <T> PivotGroupBy<T>.frames(): DataFrame<T> = aggregate { this }
 // region with
 
 public inline fun <T, reified V> PivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<T> {
-    val type = getType<V>()
+    val type = typeOf<V>()
     return aggregate { internal().withExpr(type, emptyPath(), expression) }
 }
 
@@ -148,7 +147,7 @@ public fun <T> ReducedPivotGroupBy<T>.values(
 // region with
 
 public inline fun <T, reified V> ReducedPivotGroupBy<T>.with(noinline expression: RowExpression<T, V>): DataFrame<T> {
-    val type = getType<V>()
+    val type = typeOf<V>()
     return pivot.aggregate {
         val value = reducer(this)?.let {
             val value = expression(it, it)

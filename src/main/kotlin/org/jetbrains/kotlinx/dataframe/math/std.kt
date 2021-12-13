@@ -1,12 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.math
 
 import org.jetbrains.kotlinx.dataframe.api.defaultSkipNA
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import java.math.BigDecimal
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
-public inline fun <reified T : Number> Iterable<T>.std(): Double = std(getType<T>())
+public inline fun <reified T : Number> Iterable<T>.std(): Double = std(typeOf<T>())
 
 public fun <T : Number> Iterable<T?>.std(type: KType): Double {
     if (type.isMarkedNullable) {

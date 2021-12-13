@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.values
 import java.io.BufferedReader
 import java.io.File
@@ -33,6 +32,7 @@ import java.time.LocalTime
 import java.util.zip.GZIPInputStream
 import kotlin.reflect.KClass
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 public enum class CSVType(public val format: CSVFormat) {
     DEFAULT(CSVFormat.DEFAULT.withAllowMissingColumnNames().withIgnoreSurroundingSpaces()),
@@ -293,7 +293,7 @@ public fun DataFrame.Companion.readDelim(
                     null
                 }
             }
-            val column = DataColumn.createValueColumn(colName, values, getType<String>().withNullability(hasNulls))
+            val column = DataColumn.createValueColumn(colName, values, typeOf<String>().withNullability(hasNulls))
             when (colType) {
                 null -> column.tryParse(parserOptions)
                 else -> {

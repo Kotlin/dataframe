@@ -20,12 +20,12 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.createColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.unbox
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.size
 import kotlin.random.Random
 import kotlin.random.nextInt
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.withNullability
+import kotlin.reflect.typeOf
 
 // region create ColumnAccessor
 
@@ -36,8 +36,8 @@ public fun <T> ColumnGroupReference.column(): ColumnDelegate<T> = ColumnDelegate
 public fun <T> ColumnGroupReference.column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(path() + name)
 public fun <T> ColumnGroupReference.column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(this.path() + path)
 
-public inline fun <reified T> column(name: String = "", noinline expression: RowExpression<Any?, T>): ColumnReference<T> = createComputedColumnReference(name, getType<T>(), expression)
-public inline fun <T, reified C> column(df: DataFrame<T>, name: String = "", noinline expression: RowExpression<T, C>): ColumnReference<C> = createComputedColumnReference(name, getType<C>(), expression as RowExpression<Any?, C>)
+public inline fun <reified T> column(name: String = "", noinline expression: RowExpression<Any?, T>): ColumnReference<T> = createComputedColumnReference(name, typeOf<T>(), expression)
+public inline fun <T, reified C> column(df: DataFrame<T>, name: String = "", noinline expression: RowExpression<T, C>): ColumnReference<C> = createComputedColumnReference(name, typeOf<C>(), expression as RowExpression<Any?, C>)
 
 public fun columnGroup(): ColumnDelegate<AnyRow> = column()
 public fun columnGroup(name: String): ColumnAccessor<AnyRow> = column(name)
@@ -64,7 +64,7 @@ public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null)
 
 // region create DataColumn
 
-public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> = createColumn(values.asIterable(), getType<T>(), true).forceResolve()
+public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> = createColumn(values.asIterable(), typeOf<T>(), true).forceResolve()
 
 public fun columnOf(vararg values: AnyBaseColumn): DataColumn<AnyRow> = columnOf(values.asIterable()).forceResolve()
 
@@ -82,7 +82,7 @@ public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> = DataCo
     frames.toList()
 ).forceResolve()
 
-public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> = createColumn(values, getType<T>(), false).forceResolve()
+public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> = createColumn(values, typeOf<T>(), false).forceResolve()
 
 // endregion
 
@@ -170,7 +170,7 @@ public class DataFrameBuilder(private val header: List<String>) {
         DataColumn.createValueColumn(
             name,
             List(nrow) { value },
-            getType<C>().withNullability(value == null)
+            typeOf<C>().withNullability(value == null)
         )
     }
 
@@ -194,7 +194,7 @@ public class DataFrameBuilder(private val header: List<String>) {
         DataColumn.createValueColumn(
             name,
             List(nrow, init),
-            getType<C>()
+            typeOf<C>()
         )
     }
 
