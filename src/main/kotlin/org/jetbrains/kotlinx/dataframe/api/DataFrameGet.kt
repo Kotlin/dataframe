@@ -101,3 +101,37 @@ public fun <T, C> DataFrame<T>.valuesNotNull(byRow: Boolean = false, columns: Co
 public fun <T> DataFrame<T>.valuesNotNull(byRow: Boolean = false): Sequence<Any> = valuesNotNull(byRow) { all() }
 
 // endregion
+
+// region rows
+
+public fun <T> DataFrame<T>.rows(): Iterable<DataRow<T>> = object : Iterable<DataRow<T>> {
+    override fun iterator() =
+
+        object : Iterator<DataRow<T>> {
+            var nextRow = 0
+
+            override fun hasNext(): Boolean = nextRow < nrow
+
+            override fun next(): DataRow<T> {
+                require(nextRow < nrow)
+                return get(nextRow++)
+            }
+        }
+}
+
+public fun <T> DataFrame<T>.rowsReversed(): Iterable<DataRow<T>> = object : Iterable<DataRow<T>> {
+    override fun iterator() =
+
+        object : Iterator<DataRow<T>> {
+            var nextRow = nrow - 1
+
+            override fun hasNext(): Boolean = nextRow >= 0
+
+            override fun next(): DataRow<T> {
+                require(nextRow >= 0)
+                return get(nextRow--)
+            }
+        }
+}
+
+// endregion
