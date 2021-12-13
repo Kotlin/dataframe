@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
@@ -77,8 +76,6 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T>
 
     // endregion
-
-    override fun asColumnGroup(name: String): ColumnGroup<*> = DataColumn.createColumnGroup(name, this)
 }
 
 internal val ColumnsContainer<*>.ncol get() = columnsCount()

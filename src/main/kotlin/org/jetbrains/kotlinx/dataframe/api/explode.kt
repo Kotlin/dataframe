@@ -52,6 +52,6 @@ public fun <T, C> DataRow<T>.explode(vararg columns: KProperty<C>, dropEmpty: Bo
 public fun <T> DataColumn<Collection<T>>.explode(): DataColumn<T> = explodeImpl() as DataColumn<T>
 
 @JvmName("explodeFrames")
-public fun <T> DataColumn<DataFrame<T>>.explode(): ColumnGroup<T> = concat().toColumnGroup(name())
+public fun <T> DataColumn<DataFrame<T>>.explode(): ColumnGroup<T> = concat().asColumnGroup(name())
 
 // endregion

@@ -53,11 +53,10 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: Co
 
             val dstCol = data[pathOf(srcCol.name)]
             if (srcCol is ColumnGroup<*>) { // go to nested columns recursively
-                val group = srcCol.asColumnGroup()
                 val newData = data.mapNotNull {
                     if (it.key.isNotEmpty() && it.key[0] == srcCol.name) it.key.drop(1) to it.value else null
                 }.toMap()
-                val newDf = splitIntoRows(group, newData)
+                val newDf = splitIntoRows(srcCol, newData)
                 DataColumn.createColumnGroup(srcCol.name, newDf)
             } else if (dstCol != null) { // values in current column will be splitted
                 when (dstCol) {
