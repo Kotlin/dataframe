@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupWithParent
+import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.impl.createTypeUsing
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
@@ -46,5 +47,12 @@ class TypeProjectionTests {
     fun `column group projections`() {
         ColumnGroup::class.createTypeUsing<ColumnReference<DataRow<Int>>>() shouldBe getType<ColumnGroup<Int>>()
         SingleColumn::class.createTypeUsing<ColumnGroupWithParent<Int>>() shouldBe getType<SingleColumn<DataRow<Int>>>()
+    }
+
+    @Test
+    fun `common type tests`() {
+        listOf(getType<List<Int>>(), getType<Set<Double?>>()).commonType() shouldBe getType<Collection<Number?>>()
+        listOf(getType<List<Int>>(), getType<Set<*>>()).commonType() shouldBe getType<Collection<Any?>>()
+        listOf(getType<List<Int>>(), getType<Set<*>?>()).commonType() shouldBe getType<Collection<Any?>?>()
     }
 }

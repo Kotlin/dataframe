@@ -15,8 +15,10 @@ internal interface Aggregator<C, R> {
     fun aggregate(columns: Iterable<DataColumn<C?>>): R?
 
     fun aggregate(values: Iterable<C>, type: KType): R?
-
-    fun <T> cast() = this as Aggregator<T, T>
-
-    fun <T, P> cast2() = this as Aggregator<T, P>
 }
+
+@PublishedApi
+internal fun <T> Aggregator<*, *>.cast(): Aggregator<T, T> = this as Aggregator<T, T>
+
+@PublishedApi
+internal fun <T, P> Aggregator<*, *>.cast2(): Aggregator<T, P> = this as Aggregator<T, P>
