@@ -1,4 +1,4 @@
-[//]: # (title: distinctCount)
+[//]: # (title: countDistinct)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 

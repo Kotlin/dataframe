@@ -197,7 +197,7 @@ public fun <T, C> DataFrame<T>.distinctBy(columns: ColumnsSelector<T, C>): DataF
 
 // endregion
 
-// region distinctCount
+// region countDistinct
 
 public fun AnyFrame.countDistinct(): Int = countDistinct { all() }
 
