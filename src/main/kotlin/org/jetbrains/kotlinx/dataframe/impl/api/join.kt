@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.JoinType
 import org.jetbrains.kotlinx.dataframe.api.allowLeftNulls
 import org.jetbrains.kotlinx.dataframe.api.allowRightNulls
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
+import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
