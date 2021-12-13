@@ -2,14 +2,15 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
+import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
 import org.jetbrains.kotlinx.dataframe.math.mean
 import org.jetbrains.kotlinx.dataframe.math.std
 
 public fun AnyRow.rowMinOrNull(): Any? = values().filterIsInstance<Comparable<*>>().minWithOrNull(compareBy { it })
-public fun AnyRow.rowMin(): Any = rowMinOrNull()!!
+public fun AnyRow.rowMin(): Any = rowMinOrNull().suggestIfNull("rowMin")
 
 public fun AnyRow.rowMaxOrNull(): Any? = values().filterIsInstance<Comparable<*>>().maxWithOrNull(compareBy { it })
-public fun AnyRow.rowMax(): Any = rowMaxOrNull()!!
+public fun AnyRow.rowMax(): Any = rowMaxOrNull().suggestIfNull("rowMax")
 
 public fun AnyRow.rowMean(skipNA: Boolean = defaultSkipNA): Double = values().filterIsInstance<Number>().map { it.toDouble() }.mean(skipNA)
 

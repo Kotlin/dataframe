@@ -26,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.indexOfMax
 import org.jetbrains.kotlinx.dataframe.impl.indexOfMin
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
+import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
 import org.jetbrains.kotlinx.dataframe.impl.zero
 import org.jetbrains.kotlinx.dataframe.math.sumOf
 import kotlin.reflect.KProperty
@@ -47,23 +48,23 @@ public fun <T> DataFrame<T>.minFor(vararg columns: String): DataRow<T> = minFor 
 public fun <T, C : Comparable<C>> DataFrame<T>.minFor(vararg columns: ColumnReference<C?>): DataRow<T> = minFor { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.minFor(vararg columns: KProperty<C?>): DataRow<T> = minFor { columns.toColumns() }
 
-public fun <T, C : Comparable<C>> DataFrame<T>.min(columns: ColumnsSelector<T, C?>): C = minOrNull(columns)!!
-public fun <T> DataFrame<T>.min(vararg columns: String): Comparable<Any> = minOrNull(*columns)!!
-public fun <T, C : Comparable<C>> DataFrame<T>.min(vararg columns: ColumnReference<C?>): C = minOrNull(*columns)!!
-public fun <T, C : Comparable<C>> DataFrame<T>.min(vararg columns: KProperty<C?>): C = minOrNull(*columns)!!
+public fun <T, C : Comparable<C>> DataFrame<T>.min(columns: ColumnsSelector<T, C?>): C = minOrNull(columns).suggestIfNull("min")
+public fun <T> DataFrame<T>.min(vararg columns: String): Comparable<Any> = minOrNull(*columns).suggestIfNull("min")
+public fun <T, C : Comparable<C>> DataFrame<T>.min(vararg columns: ColumnReference<C?>): C = minOrNull(*columns).suggestIfNull("min")
+public fun <T, C : Comparable<C>> DataFrame<T>.min(vararg columns: KProperty<C?>): C = minOrNull(*columns).suggestIfNull("min")
 
 public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(columns: ColumnsSelector<T, C?>): C? = Aggregators.min.aggregateAll(this, columns)
 public fun <T> DataFrame<T>.minOrNull(vararg columns: String): Comparable<Any?>? = minOrNull { columns.toComparableColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(vararg columns: ColumnReference<C?>): C? = minOrNull { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(vararg columns: KProperty<C?>): C? = minOrNull { columns.toColumns() }
 
-public fun <T, C : Comparable<C>> DataFrame<T>.minOf(expression: RowExpression<T, C>): C = minOfOrNull(expression)!!
+public fun <T, C : Comparable<C>> DataFrame<T>.minOf(expression: RowExpression<T, C>): C = minOfOrNull(expression).suggestIfNull("minOf")
 public fun <T, C : Comparable<C>> DataFrame<T>.minOfOrNull(expression: RowExpression<T, C>): C? = rows().minOfOrNull { expression(it, it) }
 
-public fun <T, C : Comparable<C>> DataFrame<T>.minBy(expression: RowExpression<T, C?>): DataRow<T> = minByOrNull(expression)!!
-public fun <T> DataFrame<T>.minBy(column: String): DataRow<T> = minByOrNull(column)!!
-public fun <T, C : Comparable<C>> DataFrame<T>.minBy(column: ColumnReference<C?>): DataRow<T> = minByOrNull(column)!!
-public fun <T, C : Comparable<C>> DataFrame<T>.minBy(column: KProperty<C?>): DataRow<T> = minByOrNull(column)!!
+public fun <T, C : Comparable<C>> DataFrame<T>.minBy(expression: RowExpression<T, C?>): DataRow<T> = minByOrNull(expression).suggestIfNull("minBy")
+public fun <T> DataFrame<T>.minBy(column: String): DataRow<T> = minByOrNull(column).suggestIfNull("minBy")
+public fun <T, C : Comparable<C>> DataFrame<T>.minBy(column: ColumnReference<C?>): DataRow<T> = minByOrNull(column).suggestIfNull("minBy")
+public fun <T, C : Comparable<C>> DataFrame<T>.minBy(column: KProperty<C?>): DataRow<T> = minByOrNull(column).suggestIfNull("minBy")
 
 public fun <T, C : Comparable<C>> DataFrame<T>.minByOrNull(expression: RowExpression<T, C?>): DataRow<T>? = getOrNull(rows().asSequence().map { expression(it, it) }.indexOfMin())
 public fun <T> DataFrame<T>.minByOrNull(column: String): DataRow<T>? = minByOrNull(column.toColumnOf<Comparable<Any?>?>())
@@ -81,23 +82,23 @@ public fun <T> DataFrame<T>.maxFor(vararg columns: String): DataRow<T> = maxFor 
 public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(vararg columns: ColumnReference<C?>): DataRow<T> = maxFor { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.maxFor(vararg columns: KProperty<C?>): DataRow<T> = maxFor { columns.toColumns() }
 
-public fun <T, C : Comparable<C>> DataFrame<T>.max(columns: ColumnsSelector<T, C?>): C = maxOrNull(columns)!!
-public fun <T> DataFrame<T>.max(vararg columns: String): Comparable<Any?> = maxOrNull(*columns)!!
-public fun <T, C : Comparable<C>> DataFrame<T>.max(vararg columns: ColumnReference<C?>): C = maxOrNull(*columns)!!
-public fun <T, C : Comparable<C>> DataFrame<T>.max(vararg columns: KProperty<C?>): C = maxOrNull(*columns)!!
+public fun <T, C : Comparable<C>> DataFrame<T>.max(columns: ColumnsSelector<T, C?>): C = maxOrNull(columns).suggestIfNull("max")
+public fun <T> DataFrame<T>.max(vararg columns: String): Comparable<Any?> = maxOrNull(*columns).suggestIfNull("max")
+public fun <T, C : Comparable<C>> DataFrame<T>.max(vararg columns: ColumnReference<C?>): C = maxOrNull(*columns).suggestIfNull("max")
+public fun <T, C : Comparable<C>> DataFrame<T>.max(vararg columns: KProperty<C?>): C = maxOrNull(*columns).suggestIfNull("max")
 
 public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(columns: ColumnsSelector<T, C?>): C? = Aggregators.max.aggregateAll(this, columns)
 public fun <T> DataFrame<T>.maxOrNull(vararg columns: String): Comparable<Any?>? = maxOrNull { columns.toComparableColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(vararg columns: ColumnReference<C?>): C? = maxOrNull { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(vararg columns: KProperty<C?>): C? = maxOrNull { columns.toColumns() }
 
-public fun <T, C : Comparable<C>> DataFrame<T>.maxOf(expression: RowExpression<T, C>): C = maxOfOrNull(expression)!!
+public fun <T, C : Comparable<C>> DataFrame<T>.maxOf(expression: RowExpression<T, C>): C = maxOfOrNull(expression).suggestIfNull("maxOf")
 public fun <T, C : Comparable<C>> DataFrame<T>.maxOfOrNull(expression: RowExpression<T, C>): C? = rows().maxOfOrNull { expression(it, it) }
 
-public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(expression: RowExpression<T, C?>): DataRow<T> = maxByOrNull(expression)!!
-public fun <T> DataFrame<T>.maxBy(column: String): DataRow<T> = maxByOrNull(column)!!
-public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(column: ColumnReference<C?>): DataRow<T> = maxByOrNull(column)!!
-public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(column: KProperty<C?>): DataRow<T> = maxByOrNull(column)!!
+public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(expression: RowExpression<T, C?>): DataRow<T> = maxByOrNull(expression).suggestIfNull("maxBy")
+public fun <T> DataFrame<T>.maxBy(column: String): DataRow<T> = maxByOrNull(column).suggestIfNull("maxBy")
+public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(column: ColumnReference<C?>): DataRow<T> = maxByOrNull(column).suggestIfNull("maxBy")
+public fun <T, C : Comparable<C>> DataFrame<T>.maxBy(column: KProperty<C?>): DataRow<T> = maxByOrNull(column).suggestIfNull("maxBy")
 
 public fun <T, C : Comparable<C>> DataFrame<T>.maxByOrNull(expression: RowExpression<T, C?>): DataRow<T>? = getOrNull(rows().asSequence().map { expression(it, it) }.indexOfMax())
 public fun <T> DataFrame<T>.maxByOrNull(column: String): DataRow<T>? = maxByOrNull(column.toColumnOf<Comparable<Any?>?>())
@@ -159,7 +160,7 @@ public fun <T> DataFrame<T>.medianFor(vararg columns: String): DataRow<T> = medi
 public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(vararg columns: ColumnReference<C?>): DataRow<T> = medianFor { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.medianFor(vararg columns: KProperty<C?>): DataRow<T> = medianFor { columns.toColumns() }
 
-public fun <T, C : Comparable<C>> DataFrame<T>.median(columns: ColumnsSelector<T, C?>): C = medianOrNull(columns)!!
+public fun <T, C : Comparable<C>> DataFrame<T>.median(columns: ColumnsSelector<T, C?>): C = medianOrNull(columns).suggestIfNull("median")
 public fun <T> DataFrame<T>.median(vararg columns: String): Any = median { columns.toComparableColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.median(vararg columns: ColumnReference<C?>): C = median { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.median(vararg columns: KProperty<C?>): C = median { columns.toColumns() }
