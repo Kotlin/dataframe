@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
@@ -16,10 +15,13 @@ import kotlin.reflect.KProperty
 
 public interface ColumnsContainer<out T> {
 
+    // region columns
+
     public fun columns(): List<AnyCol>
     public fun columnsCount(): Int
-
     public fun containsColumn(name: String): Boolean
+
+    // endregion
 
     // region getColumnOrNull
 
@@ -50,8 +52,6 @@ public interface ColumnsContainer<out T> {
     public operator fun <C> get(column: ColumnSelector<T, C>): DataColumn<C> = get(column as ColumnsSelector<T, C>).single()
 
     // endregion
-
-    public fun <R> resolve(reference: ColumnReference<R>): ColumnWithPath<R>?
 
     public fun asColumnGroup(name: String = ""): ColumnGroup<*>
     public fun asColumnGroup(column: ColumnGroupAccessor): ColumnGroup<*> = asColumnGroup(column.name)

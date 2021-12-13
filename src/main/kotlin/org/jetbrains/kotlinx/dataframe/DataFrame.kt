@@ -10,12 +10,9 @@ import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
-import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
 import kotlin.reflect.KType
@@ -80,8 +77,6 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     public fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T>
 
     // endregion
-
-    override fun <R> resolve(reference: ColumnReference<R>): ColumnWithPath<R>? = reference.resolveSingle(this, UnresolvedColumnsPolicy.Skip)
 
     override fun asColumnGroup(name: String): ColumnGroup<*> = DataColumn.createColumnGroup(name, this)
 }
