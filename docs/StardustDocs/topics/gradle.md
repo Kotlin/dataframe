@@ -2,13 +2,13 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-In Gradle project `Kotlin DataFrame` provides annotation processing for generatation of extension properties and gradle tasks to `DataSchema` inference from datasets.  
+In Gradle project `Kotlin DataFrame` provides annotation processing for generation of extension properties and gradle tasks to `DataSchema` inference from datasets.  
 
 To use [extension properties API](extensionPropertiesApi.md) in Gradle project you should [configure Kotlin DataFrame plugin](installation.md#gradle-plugin-configuration).
 
 ### Annotation processing
 Declare data schemas in your code and use them to access data in DataFrames.
-A data schema is an interface with properties and no type parameters annotated with `@DataSchema`:
+A data schema is a class or interface annotated with `@DataSchema`:
 ```kotlin
 package org.example
 
