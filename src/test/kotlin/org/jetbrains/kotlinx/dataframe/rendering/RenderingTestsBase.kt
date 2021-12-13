@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.rendering
 
-import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.formatter
 import org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer

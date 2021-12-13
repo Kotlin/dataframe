@@ -4,7 +4,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.values
-import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.api.concatImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWith
 import org.jetbrains.kotlinx.dataframe.impl.asList

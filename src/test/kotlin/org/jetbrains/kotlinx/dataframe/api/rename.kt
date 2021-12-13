@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.asClue
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.junit.Test
 

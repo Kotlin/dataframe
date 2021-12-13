@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.examples.movies
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.column
+import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.io.read
 
 private const val pathToCsv = "examples/idea-examples/movies/src/main/resources/movies.csv"
