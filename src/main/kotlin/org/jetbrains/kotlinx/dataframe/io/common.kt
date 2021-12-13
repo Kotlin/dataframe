@@ -3,8 +3,8 @@ package org.jetbrains.kotlinx.dataframe.io
 import com.github.kittinunf.fuel.httpGet
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import java.io.IOException
 import java.io.InputStream

@@ -33,7 +33,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnsOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
 import org.jetbrains.kotlinx.dataframe.impl.getType
-import org.jetbrains.kotlinx.dataframe.pathOf
 import kotlin.reflect.KProperty
 
 public interface Grouped<out T> : Aggregatable<T> {

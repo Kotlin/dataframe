@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.junit.Test
 
 class JsonTests {

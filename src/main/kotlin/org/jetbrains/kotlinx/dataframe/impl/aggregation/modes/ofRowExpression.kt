@@ -6,12 +6,12 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateBody
 import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getType
-import org.jetbrains.kotlinx.dataframe.pathOf
 
 @PublishedApi
 internal inline fun <C, reified V, R> Aggregator<V, R>.aggregateOf(

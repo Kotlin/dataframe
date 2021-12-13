@@ -3,9 +3,9 @@ package org.jetbrains.kotlinx.dataframe.testSets.person2
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.dataFrameOf
 
 open class Base {
     val df = dataFrameOf("firstName", "lastName", "age", "city", "weight")(

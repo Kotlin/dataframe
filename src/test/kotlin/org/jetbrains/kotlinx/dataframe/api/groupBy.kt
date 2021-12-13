@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
 

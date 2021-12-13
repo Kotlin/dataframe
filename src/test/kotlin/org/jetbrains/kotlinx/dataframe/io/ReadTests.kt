@@ -6,8 +6,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.getColumn
-import org.jetbrains.kotlinx.dataframe.column
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.getType

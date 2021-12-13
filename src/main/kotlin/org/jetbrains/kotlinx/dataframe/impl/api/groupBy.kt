@@ -9,10 +9,10 @@ import org.jetbrains.kotlinx.dataframe.api.GroupedDataRow
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.api.getRows
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
-import org.jetbrains.kotlinx.dataframe.pathOf
 
 internal class GroupedDataRowImpl<T, G>(private val row: DataRow<T>, private val frameCol: FrameColumn<G>) : GroupedDataRow<T, G>, DataRow<T> by row {
 

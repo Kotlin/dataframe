@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
-import org.jetbrains.kotlinx.dataframe.emptyDataFrame
 import org.junit.Test
 
 class GetTests {

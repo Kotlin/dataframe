@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import kotlin.reflect.KType
 
 internal abstract class DataColumnImpl<T>(

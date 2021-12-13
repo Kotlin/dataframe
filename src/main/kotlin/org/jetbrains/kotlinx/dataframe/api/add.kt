@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.index

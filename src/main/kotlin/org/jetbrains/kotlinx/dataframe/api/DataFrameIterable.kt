@@ -17,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
@@ -34,7 +33,6 @@ import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
-import org.jetbrains.kotlinx.dataframe.pathOf
 import org.jetbrains.kotlinx.dataframe.typeClass
 import java.io.File
 import java.net.URL

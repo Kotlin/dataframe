@@ -2,13 +2,12 @@ package org.jetbrains.kotlinx.dataframe.aggregation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
-import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.ValueWithDefault
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.internal
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.getType
-import org.jetbrains.kotlinx.dataframe.pathOf
 import kotlin.reflect.KProperty
 
 public abstract class AggregateDsl<out T> : DataFrame<T>, ColumnSelectionDsl<T> {

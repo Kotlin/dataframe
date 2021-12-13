@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.impl.api.moveImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.moveTo
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.pathOf
 import kotlin.reflect.KProperty
 
 public fun <T, C> DataFrame<T>.move(columns: ColumnsSelector<T, C>): MoveClause<T, C> = MoveClause(this, columns)

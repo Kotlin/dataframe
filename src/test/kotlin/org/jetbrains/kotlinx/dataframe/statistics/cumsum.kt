@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.cumSum
-import org.jetbrains.kotlinx.dataframe.columnOf
-import org.jetbrains.kotlinx.dataframe.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.junit.Test
 
 class CumsumTests {

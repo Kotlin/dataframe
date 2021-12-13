@@ -22,16 +22,22 @@ import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.column
+import org.jetbrains.kotlinx.dataframe.api.columnGroup
+import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.count
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.dfsOf
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.duplicate
+import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.forEachRow
+import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnPath
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
@@ -55,6 +61,7 @@ import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.moveTo
 import org.jetbrains.kotlinx.dataframe.api.moveToLeft
 import org.jetbrains.kotlinx.dataframe.api.moveToRight
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.perRowCol
 import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.remove
@@ -72,15 +79,9 @@ import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.xs
-import org.jetbrains.kotlinx.dataframe.column
-import org.jetbrains.kotlinx.dataframe.columnGroup
-import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.depth
-import org.jetbrains.kotlinx.dataframe.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.emptyDataFrame
-import org.jetbrains.kotlinx.dataframe.frameColumn
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
@@ -88,7 +89,6 @@ import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
-import org.jetbrains.kotlinx.dataframe.pathOf
 import org.junit.Test
 
 class DataFrameTreeTests : BaseTest() {

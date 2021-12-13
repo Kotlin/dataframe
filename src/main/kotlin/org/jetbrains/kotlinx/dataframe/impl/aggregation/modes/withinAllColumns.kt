@@ -4,12 +4,12 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Grouped
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
-import org.jetbrains.kotlinx.dataframe.pathOf
 
 @PublishedApi
 internal fun <T, C, R> Aggregator<*, R>.aggregateAll(
