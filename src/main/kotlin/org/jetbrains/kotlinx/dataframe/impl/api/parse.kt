@@ -23,7 +23,6 @@ import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.io.isURL
 import org.jetbrains.kotlinx.dataframe.typeClass
 import java.net.URL
@@ -39,6 +38,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.typeOf
 
 internal interface StringParser<T> {
     fun toConverter(options: ParserOptions?): TypeConverter
@@ -172,10 +172,10 @@ internal object Parsers : GlobalParserOptions {
             }
         }
 
-    inline fun <reified T : Any> stringParser(noinline body: (String) -> T?) = DelegatedStringParser(getType<T>(), body)
+    inline fun <reified T : Any> stringParser(noinline body: (String) -> T?) = DelegatedStringParser(typeOf<T>(), body)
 
     inline fun <reified T : Any> stringParserWithOptions(noinline body: (ParserOptions?) -> ((String) -> T?)) =
-        StringParserWithFormat(getType<T>(), body)
+        StringParserWithFormat(typeOf<T>(), body)
 
     private val parsersOrder = listOf(
         stringParser { it.toIntOrNull() },
@@ -241,7 +241,7 @@ internal object Parsers : GlobalParserOptions {
 
     operator fun <T : Any> get(type: KClass<T>): StringParser<T>? = parsersMap.get(type.createStarProjectedType(false)) as? StringParser<T>
 
-    inline fun <reified T : Any> get(): StringParser<T>? = get(getType<T>()) as? StringParser<T>
+    inline fun <reified T : Any> get(): StringParser<T>? = get(typeOf<T>()) as? StringParser<T>
 
     internal fun <R : Any> getDateTimeConverter(clazz: KClass<R>, pattern: String? = null, locale: Locale? = null):
         (String) -> R? {

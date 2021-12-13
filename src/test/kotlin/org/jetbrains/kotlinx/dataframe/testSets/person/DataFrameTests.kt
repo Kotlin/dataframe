@@ -162,7 +162,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.isMissingColumn
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderValueForStdout
@@ -177,6 +176,7 @@ import org.junit.Test
 import java.math.BigDecimal
 import java.time.LocalDate
 import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.typeOf
 
 class DataFrameTests : BaseTest() {
 
@@ -246,10 +246,10 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `guess column type`() {
         val col by columnOf("Alice", 1, 3.5)
-        col.type() shouldBe getType<Comparable<*>>()
+        col.type() shouldBe typeOf<Comparable<*>>()
         val filtered = col.filter { it is String }
-        filtered.type() shouldBe getType<Comparable<*>>()
-        filtered.inferType().type() shouldBe getType<String>()
+        filtered.type() shouldBe typeOf<Comparable<*>>()
+        filtered.inferType().type() shouldBe typeOf<String>()
     }
 
     @Test
@@ -259,8 +259,8 @@ class DataFrameTests : BaseTest() {
         df.ncol shouldBe 2
         df.nrow shouldBe 2
         df.columnNames() shouldBe listOf("name", "age")
-        df["name"].type() shouldBe getType<String>()
-        df["age"].type() shouldBe getType<Int?>()
+        df["name"].type() shouldBe typeOf<String>()
+        df["age"].type() shouldBe typeOf<Int?>()
     }
 
     @Test
@@ -987,11 +987,11 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `union dataframes with different type of the same column`() {
         val df2 = dataFrameOf("age")(32.6, 56.3, null)
-        df2["age"].type() shouldBe getType<Double?>()
+        df2["age"].type() shouldBe typeOf<Double?>()
         val merged = df.concat(df2)
-        merged["age"].type() shouldBe getType<Number?>()
+        merged["age"].type() shouldBe typeOf<Number?>()
         val updated = merged.convert("age") { "age"<Number?>()?.toDouble() }
-        updated["age"].type() shouldBe getType<Double?>()
+        updated["age"].type() shouldBe typeOf<Double?>()
     }
 
     @Test
@@ -1018,10 +1018,10 @@ class DataFrameTests : BaseTest() {
     fun `addRow`() {
         val res = typed.append("Bob", null, "Paris", null)
         res.nrow shouldBe typed.nrow + 1
-        res.name.type() shouldBe getType<String>()
-        res.age.type() shouldBe getType<Int?>()
-        res.city.type() shouldBe getType<String?>()
-        res.weight.type() shouldBe getType<Int?>()
+        res.name.type() shouldBe typeOf<String>()
+        res.age.type() shouldBe typeOf<Int?>()
+        res.city.type() shouldBe typeOf<String?>()
+        res.weight.type() shouldBe typeOf<Int?>()
 
         val row = res.last()
         row.name shouldBe "Bob"
@@ -1172,7 +1172,7 @@ class DataFrameTests : BaseTest() {
 
         val cityList = column<List<String?>>().named("city")
         merged[cityList].sumOf { it.size } shouldBe typed.city.size
-        merged[cityList].type() shouldBe getType<List<String?>>()
+        merged[cityList].type() shouldBe typeOf<List<String?>>()
 
         val expected = typed.groupBy { name }.aggregate { it.city.toSet() into "city" }
         val actual = merged.convert(cityList).with { it.toSet() }
@@ -1189,7 +1189,7 @@ class DataFrameTests : BaseTest() {
 
         val cityList = column<List<String>>().named("city")
         merged[cityList].sumOf { it.size } shouldBe typed.city.dropNulls().size
-        merged[cityList].type() shouldBe getType<List<String>>()
+        merged[cityList].type() shouldBe typeOf<List<String>>()
 
         val expected =
             typed.dropNulls { city }.groupBy { name }.aggregate { it.city.toSet() as Set<String> into "city" }
@@ -1506,7 +1506,7 @@ class DataFrameTests : BaseTest() {
         mean.ncol shouldBe 2
         mean.columnNames() shouldBe listOf("age", "weight")
         mean.columns().forEach {
-            it.type() shouldBe getType<Double>()
+            it.type() shouldBe typeOf<Double>()
         }
     }
 
@@ -1515,8 +1515,8 @@ class DataFrameTests : BaseTest() {
         val d = typed.groupBy { name }.mean()
         d.columnNames() shouldBe listOf("name", "age", "weight")
         d.nrow shouldBe typed.name.countDistinct()
-        d["age"].type() shouldBe getType<Double>()
-        d["weight"].type() shouldBe getType<Double>()
+        d["age"].type() shouldBe typeOf<Double>()
+        d["weight"].type() shouldBe typeOf<Double>()
     }
 
     @Test
@@ -1812,7 +1812,7 @@ class DataFrameTests : BaseTest() {
         val df = dataFrameOf('a'..'f').randomInt(3)
         df.nrow shouldBe 3
         df.ncol shouldBe ('a'..'f').count()
-        df.columns().forEach { it.type() shouldBe getType<Int>() }
+        df.columns().forEach { it.type() shouldBe typeOf<Int>() }
     }
 
     @Test
@@ -1845,7 +1845,7 @@ class DataFrameTests : BaseTest() {
         val df = dataFrameOf(names).nulls<Double>(10)
         df.nrow shouldBe 10
         df.ncol shouldBe 2
-        df.columns().forEach { col -> (col.type() == getType<Double?>() && col.allNulls()) shouldBe true }
+        df.columns().forEach { col -> (col.type() == typeOf<Double?>() && col.allNulls()) shouldBe true }
     }
 
     @Test
@@ -1855,7 +1855,7 @@ class DataFrameTests : BaseTest() {
         val df = dataFrameOf(first, second).fill(5) { true }
         df.nrow shouldBe 5
         df.ncol shouldBe 2
-        df.columns().forEach { col -> (col.type() == getType<Boolean>() && col.all { it == true }) shouldBe true }
+        df.columns().forEach { col -> (col.type() == typeOf<Boolean>() && col.all { it == true }) shouldBe true }
     }
 
     @Test
@@ -1970,7 +1970,7 @@ class DataFrameTests : BaseTest() {
     fun `null column test`() {
         val df = dataFrameOf("col")(null, null)
         df["col"].kind() shouldBe ColumnKind.Value
-        df["col"].type() shouldBe getType<Any?>()
+        df["col"].type() shouldBe typeOf<Any?>()
     }
 
     @Test
@@ -2018,7 +2018,7 @@ class DataFrameTests : BaseTest() {
             val group = it.asColumnGroup()
             group.columnNames() shouldBe listOf("age", "weight")
             group.columns().forEach {
-                it.type() shouldBe getType<Double?>()
+                it.type() shouldBe typeOf<Double?>()
             }
         }
     }
@@ -2161,7 +2161,7 @@ class DataFrameTests : BaseTest() {
         df.add("col") { 1 }.convertTo<Target>() shouldBe df
 
         val added = df.add("col") { 1 }
-        added.convertToImpl<Target>(getType<Target>(), allowConversion = true, ExtraColumns.Keep) shouldBe added
+        added.convertToImpl<Target>(typeOf<Target>(), allowConversion = true, ExtraColumns.Keep) shouldBe added
 
         shouldThrow<IllegalArgumentException> {
             df.remove { city }.convertTo<Target>()
@@ -2172,11 +2172,11 @@ class DataFrameTests : BaseTest() {
         }
 
         shouldThrow<IllegalArgumentException> {
-            df.convert { age }.toStr().convertToImpl<Target>(getType<Target>(), allowConversion = false, ExtraColumns.Remove)
+            df.convert { age }.toStr().convertToImpl<Target>(typeOf<Target>(), allowConversion = false, ExtraColumns.Remove)
         }
 
         shouldThrow<IllegalArgumentException> {
-            df.add("col") { 1 }.convertToImpl<Target>(getType<Target>(), allowConversion = true, ExtraColumns.Fail) shouldBe df
+            df.add("col") { 1 }.convertToImpl<Target>(typeOf<Target>(), allowConversion = true, ExtraColumns.Fail) shouldBe df
         }
 
         val list = df.toListOf<Target>()
@@ -2242,7 +2242,7 @@ class DataFrameTests : BaseTest() {
     fun groupByAggregateSingleColumn() {
         val agg = typed.groupBy { name }.aggregate { city into "city" }
         agg shouldBe typed.groupBy { name }.values { city }
-        agg["city"].type shouldBe getType<List<String?>>()
+        agg["city"].type shouldBe typeOf<List<String?>>()
     }
 
     @Test
@@ -2251,7 +2251,7 @@ class DataFrameTests : BaseTest() {
             .select { name and weight }
             .implode(dropNulls = true) { weight }
 
-        merged["weight"].type() shouldBe getType<List<Int>>()
+        merged["weight"].type() shouldBe typeOf<List<Int>>()
     }
 
     @Test
@@ -2259,8 +2259,8 @@ class DataFrameTests : BaseTest() {
         val updated = typed
             .convert { weight }.toDouble()
             .update { numberCols() }.where { name == "Charlie" }.withZero()
-        updated.age.type shouldBe getType<Int>()
-        updated["weight"].type shouldBe getType<Double>()
+        updated.age.type shouldBe typeOf<Int>()
+        updated["weight"].type shouldBe typeOf<Double>()
         val filtered = updated.filter { name == "Charlie" }
         filtered.nrow shouldBe 3
         filtered.age.forEach {

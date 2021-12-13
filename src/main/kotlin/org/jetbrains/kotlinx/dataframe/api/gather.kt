@@ -9,12 +9,12 @@ import org.jetbrains.kotlinx.dataframe.impl.and
 import org.jetbrains.kotlinx.dataframe.impl.api.gatherImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T, C, String, C> = Gather(
-    this, selector, null, getType<String>(),
+    this, selector, null, typeOf<String>(),
     { it }, null
 )
 public fun <T> DataFrame<T>.gather(vararg columns: String): Gather<T, Any?, String, Any?> = gather { columns.toColumns() }
@@ -27,7 +27,7 @@ public fun <T, C, K, R> Gather<T, C?, K, R>.notNull(): Gather<T, C, K, R> = wher
 public fun <T, C, K, R> Gather<T, C, K, R>.explodeLists(): Gather<T, C, K, R> = copy(explode = true)
 
 public inline fun <T, C, reified K, R> Gather<T, C, *, R>.mapKeys(noinline transform: (String) -> K): Gather<T, C, K, R> =
-    copy(keyTransform = transform as ((String) -> Nothing), keyType = getType<K>()) as Gather<T, C, K, R>
+    copy(keyTransform = transform as ((String) -> Nothing), keyType = typeOf<K>()) as Gather<T, C, K, R>
 
 public fun <T, C, K, R> Gather<T, C, K, *>.mapValues(transform: (C) -> R): Gather<T, C, K, R> =
     copy(valueTransform = transform as ((C) -> Nothing)) as Gather<T, C, K, R>

@@ -58,12 +58,12 @@ internal fun <T> List<T>.removeAt(index: Int) = subList(0, index) + subList(inde
 
 internal inline fun <reified T : Any> Int.cast() = convert(this, T::class)
 
-internal fun <T : Any> convert(src: Int, targetType: KClass<T>): T = when (targetType) {
+internal fun <T : Any> convert(src: Int, tartypeOf: KClass<T>): T = when (tartypeOf) {
     Double::class -> src.toDouble() as T
     Long::class -> src.toLong() as T
     Float::class -> src.toFloat() as T
     BigDecimal::class -> src.toBigDecimal() as T
-    else -> throw NotImplementedError("Casting int to $targetType is not supported")
+    else -> throw NotImplementedError("Casting int to $tartypeOf is not supported")
 }
 
 internal fun BooleanArray.toIndices(): List<Int> {
@@ -134,7 +134,7 @@ internal fun Iterable<KType?>.commonType(): KType {
         distinct.isEmpty() || distinct.contains(null) -> Any::class.createStarProjectedType(nullable)
         distinct.size == 1 -> distinct[0]!!
         else -> {
-            val kclass = commonParent(distinct.map { it!!.jvmErasure }) ?: return getType<Any>()
+            val kclass = commonParent(distinct.map { it!!.jvmErasure }) ?: return typeOf<Any>()
             val projections = distinct.map { it!!.projectUpTo(kclass).replaceTypeParameters() }
             require(projections.all { it.jvmErasure == kclass })
             val arguments = kclass.typeParameters.mapIndexed { i, p ->
@@ -209,8 +209,6 @@ internal fun <C : Comparable<C>> Sequence<C?>.indexOfMax(): Int {
     return maxIndex
 }
 
-@PublishedApi
-internal inline fun <reified T> getType(): KType = typeOf<T>()
 internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType =
     this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
 

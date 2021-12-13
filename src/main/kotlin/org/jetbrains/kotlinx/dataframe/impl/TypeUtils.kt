@@ -11,8 +11,9 @@ import kotlin.reflect.KTypeProjection
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.*
 import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.typeOf
 
-internal inline fun <reified T> KClass<*>.createTypeUsing() = getType<T>().projectTo(this)
+internal inline fun <reified T> KClass<*>.createTypeUsing() = typeOf<T>().projectTo(this)
 
 internal fun KType.projectTo(targetClass: KClass<*>): KType {
     val currentClass = classifier as? KClass<*>
@@ -42,10 +43,10 @@ internal fun KType.replaceTypeParameters(): KType {
     val arguments = arguments.map {
         val type = it.type
         val newType = when {
-            type == null -> getType<Any?>()
+            type == null -> typeOf<Any?>()
             type.classifier is KTypeParameter -> {
                 replaced = true
-                (type.classifier as KTypeParameter).upperBounds.firstOrNull() ?: getType<Any?>()
+                (type.classifier as KTypeParameter).upperBounds.firstOrNull() ?: typeOf<Any?>()
             }
             else -> type
         }
@@ -178,7 +179,7 @@ internal fun commonParents(classes: Iterable<KClass<*>>): List<KClass<*>> =
 internal fun baseType(types: Set<KType>): KType {
     val nullable = types.any { it.isMarkedNullable }
     return when (types.size) {
-        0 -> getType<Unit>()
+        0 -> typeOf<Unit>()
         1 -> types.single()
         else -> {
             val classes = types.map { it.jvmErasure }.distinct()

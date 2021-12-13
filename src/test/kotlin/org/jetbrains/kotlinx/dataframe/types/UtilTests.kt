@@ -4,10 +4,10 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.impl.commonParent
 import org.jetbrains.kotlinx.dataframe.impl.commonParents
 import org.jetbrains.kotlinx.dataframe.impl.commonType
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
 import java.io.Serializable
 import kotlin.reflect.KClass
+import kotlin.reflect.typeOf
 
 class UtilTests {
 
@@ -28,7 +28,7 @@ class UtilTests {
 
     @Test
     fun `commonType for empty`() {
-        emptyList<KClass<*>>().commonType(false, getType<List<Int>>()) shouldBe getType<List<Int>>()
-        emptyList<KClass<*>>().commonType(true, getType<List<Int>>()) shouldBe getType<List<Int>?>()
+        emptyList<KClass<*>>().commonType(false, typeOf<List<Int>>()) shouldBe typeOf<List<Int>>()
+        emptyList<KClass<*>>().commonType(true, typeOf<List<Int>>()) shouldBe typeOf<List<Int>?>()
     }
 }

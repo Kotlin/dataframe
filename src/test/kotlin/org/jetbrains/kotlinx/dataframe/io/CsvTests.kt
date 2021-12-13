@@ -9,7 +9,6 @@ import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.schema
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.testCsv
@@ -17,6 +16,7 @@ import org.junit.Test
 import java.io.StringWriter
 import java.util.Locale
 import kotlin.reflect.KClass
+import kotlin.reflect.typeOf
 
 class CsvTests {
 
@@ -30,9 +30,9 @@ class CsvTests {
         val df = DataFrame.readDelimStr(src)
         df.nrow shouldBe 2
         df.ncol shouldBe 2
-        df["first"].type() shouldBe getType<Int>()
+        df["first"].type() shouldBe typeOf<Int>()
         df["second"].allNulls() shouldBe true
-        df["second"].type() shouldBe getType<String?>()
+        df["second"].type() shouldBe typeOf<String?>()
     }
 
     @Test
@@ -60,9 +60,9 @@ class CsvTests {
         df.nrow shouldBe 5
         df.columnNames()[5] shouldBe "duplicate1"
         df.columnNames()[6] shouldBe "duplicate11"
-        df["duplicate1"].type() shouldBe getType<String?>()
-        df["double"].type() shouldBe getType<Double?>()
-        df["time"].type() shouldBe getType<LocalDateTime>()
+        df["duplicate1"].type() shouldBe typeOf<String?>()
+        df["double"].type() shouldBe typeOf<Double?>()
+        df["time"].type() shouldBe typeOf<LocalDateTime>()
 
         println(df)
     }
@@ -75,10 +75,10 @@ class CsvTests {
         df.nrow shouldBe 5
         df.columnNames()[5] shouldBe "duplicate1"
         df.columnNames()[6] shouldBe "duplicate11"
-        df["duplicate1"].type() shouldBe getType<String?>()
-        df["double"].type() shouldBe getType<Double?>()
-        df["number"].type() shouldBe getType<Double>()
-        df["time"].type() shouldBe getType<LocalDateTime>()
+        df["duplicate1"].type() shouldBe typeOf<String?>()
+        df["double"].type() shouldBe typeOf<Double?>()
+        df["number"].type() shouldBe typeOf<Double>()
+        df["time"].type() shouldBe typeOf<LocalDateTime>()
 
         println(df)
     }
@@ -103,7 +103,7 @@ class CsvTests {
         val header = ('A'..'K').map { it.toString() }
         val df = DataFrame.readCSV(simpleCsv, headers = header, skipLines = 1)
         df.columnNames() shouldBe header
-        df["B"].type() shouldBe getType<Int>()
+        df["B"].type() shouldBe typeOf<Int>()
 
         val headerShort = ('A'..'E').map { it.toString() }
         val dfShort = DataFrame.readCSV(simpleCsv, headers = headerShort, skipLines = 1)
@@ -129,8 +129,8 @@ class CsvTests {
     @Test
     fun `if string starts with a number, it should be parsed as a string anyway`() {
         val df = DataFrame.readCSV(durationCsv)
-        df["duration"].type() shouldBe getType<String>()
-        df["floatDuration"].type() shouldBe getType<String>()
+        df["duration"].type() shouldBe typeOf<String>()
+        df["floatDuration"].type() shouldBe typeOf<String>()
     }
 
     companion object {

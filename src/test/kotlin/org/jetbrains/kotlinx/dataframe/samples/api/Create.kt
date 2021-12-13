@@ -21,12 +21,12 @@ import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 class Create : TestBase() {
 
@@ -304,8 +304,8 @@ class Create : TestBase() {
         // SampleEnd
         df.columnNames() shouldBe listOf("name", "age")
         df.nrow shouldBe 3
-        df["name"].type() shouldBe getType<String>()
-        df["age"].type() shouldBe getType<Int>()
+        df["name"].type() shouldBe typeOf<String>()
+        df["age"].type() shouldBe typeOf<Int>()
     }
 
     @Test
@@ -318,8 +318,8 @@ class Create : TestBase() {
         // SampleEnd
         df.ncol shouldBe 2
         df.nrow shouldBe 3
-        df["name"].type() shouldBe getType<String>()
-        df["age"].type() shouldBe getType<Int>()
+        df["name"].type() shouldBe typeOf<String>()
+        df["age"].type() shouldBe typeOf<Int>()
     }
 
     @Test
@@ -339,7 +339,7 @@ class Create : TestBase() {
         df.ncol shouldBe 3
         df.nrow shouldBe 2
         df["name"].kind shouldBe ColumnKind.Group
-        df["name"]["firstName"].type() shouldBe getType<String>()
+        df["name"]["firstName"].type() shouldBe typeOf<String>()
         df["scores"].kind shouldBe ColumnKind.Frame
     }
 
@@ -375,7 +375,7 @@ class Create : TestBase() {
         df.ncol shouldBe 5
         df.nrow shouldBe 2
         df["name"].kind shouldBe ColumnKind.Value
-        df["name"].type shouldBe getType<Name>()
+        df["name"].type shouldBe typeOf<Name>()
         df["scores"].kind shouldBe ColumnKind.Frame
         df["summary"]["min score"].values shouldBe listOf(3, 5)
     }

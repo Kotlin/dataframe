@@ -3,10 +3,10 @@ package org.jetbrains.kotlinx.dataframe.schema
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.isSupertypeOf
+import kotlin.reflect.typeOf
 
 public abstract class ColumnSchema {
 
@@ -31,14 +31,14 @@ public abstract class ColumnSchema {
     public class Group(public val schema: DataFrameSchema) : ColumnSchema() {
         override val kind: ColumnKind = ColumnKind.Group
         override val nullable: Boolean = false
-        override val type: KType get() = getType<AnyRow>()
+        override val type: KType get() = typeOf<AnyRow>()
 
         public fun compare(other: Group): CompareResult = schema.compare(other.schema)
     }
 
     public class Frame(public val schema: DataFrameSchema, override val nullable: Boolean) : ColumnSchema() {
         public override val kind: ColumnKind = ColumnKind.Frame
-        override val type: KType get() = getType<AnyFrame>()
+        override val type: KType get() = typeOf<AnyFrame>()
 
         public fun compare(other: Frame): CompareResult =
             schema.compare(other.schema).combine(CompareResult.compareNullability(nullable, other.nullable))

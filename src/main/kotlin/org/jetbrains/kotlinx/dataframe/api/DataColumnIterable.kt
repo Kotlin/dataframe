@@ -6,9 +6,9 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.indices
 import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 public fun <T> DataColumn<T>.asIterable(): Iterable<T> = values()
 public fun <T> DataColumn<T>.asSequence(): Sequence<T> = asIterable().asSequence()
@@ -43,7 +43,7 @@ internal fun <T, R> DataColumn<T?>.mapNotNullValues(transform: (T) -> R): DataCo
 
 public inline fun <T, reified R> DataColumn<T>.mapInline(crossinline transform: (T) -> R): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
-    val resType = getType<R>()
+    val resType = typeOf<R>()
     return guessColumnType(
         name(),
         newValues,

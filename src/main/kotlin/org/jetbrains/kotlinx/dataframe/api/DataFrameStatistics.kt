@@ -21,7 +21,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnsOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.impl.indexOfMax
 import org.jetbrains.kotlinx.dataframe.impl.indexOfMin
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
@@ -29,6 +28,7 @@ import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
 import org.jetbrains.kotlinx.dataframe.impl.zero
 import org.jetbrains.kotlinx.dataframe.math.sumOf
 import kotlin.reflect.KProperty
+import kotlin.reflect.typeOf
 
 // region count
 
@@ -121,7 +121,7 @@ public fun <T> DataFrame<T>.sum(vararg columns: String): Number = sum { columns.
 public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: KProperty<C?>): C = sum { columns.toColumns() }
 
 public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(crossinline expression: RowExpression<T, C>): C = rows().sumOf(
-    getType<C>()
+    typeOf<C>()
 ) { expression(it, it) }
 
 // endregion
@@ -193,7 +193,7 @@ public inline fun <T, reified R : Number> DataFrame<T>.stdOf(crossinline express
 
 // region corr
 
-internal fun AnyCol.isSuitableForCorr() = isSubtypeOf<Number>() || type() == getType<Boolean>()
+internal fun AnyCol.isSuitableForCorr() = isSubtypeOf<Number>() || type() == typeOf<Boolean>()
 
 public data class Corr<T, C>(
     internal val df: DataFrame<T>,

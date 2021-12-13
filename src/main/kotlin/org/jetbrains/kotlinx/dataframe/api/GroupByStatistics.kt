@@ -32,8 +32,8 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnsOf
 import org.jetbrains.kotlinx.dataframe.impl.columns.toComparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.toNumberColumns
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import kotlin.reflect.KProperty
+import kotlin.reflect.typeOf
 
 public interface Grouped<out T> : Aggregatable<T> {
 
@@ -83,7 +83,7 @@ public inline fun <T, G, reified V> GroupBy<T, G>.into(
     column: ColumnAccessor<V>,
     noinline expression: RowExpression<G, V>
 ): DataFrame<G> {
-    val type = getType<V>()
+    val type = typeOf<V>()
     val path = column.path()
     return aggregate {
         internal().withExpr(type, path, expression)
@@ -148,7 +148,7 @@ public inline fun <T, G, reified V> ReducedGroupBy<T, G>.into(
     columnName: String? = null,
     noinline expression: RowExpression<G, V>
 ): DataFrame<G> {
-    val type = getType<V>()
+    val type = typeOf<V>()
     val name = columnName ?: groupBy.groups.name()
     return groupBy.aggregate {
         val row = reducer(it, it)

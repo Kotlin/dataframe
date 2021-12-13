@@ -14,13 +14,13 @@ import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.api.ExtraColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.toListImpl
-import org.jetbrains.kotlinx.dataframe.impl.getType
+import kotlin.reflect.typeOf
 
 // region cast
 
 public fun <T> AnyFrame.cast(): DataFrame<T> = this as DataFrame<T>
 
-public inline fun <reified T> AnyFrame.cast(verify: Boolean = true): DataFrame<T> = if (verify) convertToImpl(getType<T>(), allowConversion = false, ExtraColumns.Keep)
+public inline fun <reified T> AnyFrame.cast(verify: Boolean = true): DataFrame<T> = if (verify) convertToImpl(typeOf<T>(), allowConversion = false, ExtraColumns.Keep)
 else cast()
 
 public fun <T> AnyRow.cast(): DataRow<T> = this as DataRow<T>
@@ -43,10 +43,10 @@ public fun <T> ColumnAccessor<*>.cast(): ColumnAccessor<T> = this as ColumnAcces
 
 // region convertTo
 
-public inline fun <reified T> AnyFrame.convertTo(): DataFrame<T> = convertToImpl(getType<T>(), true, ExtraColumns.Remove)
+public inline fun <reified T> AnyFrame.convertTo(): DataFrame<T> = convertToImpl(typeOf<T>(), true, ExtraColumns.Remove)
 
 // endregion
 
-public inline fun <reified T> DataFrame<T>.toList(): List<T> = toListImpl(getType<T>()) as List<T>
+public inline fun <reified T> DataFrame<T>.toList(): List<T> = toListImpl(typeOf<T>()) as List<T>
 
-public inline fun <reified T> AnyFrame.toListOf(): List<T> = toListImpl(getType<T>()) as List<T>
+public inline fun <reified T> AnyFrame.toListOf(): List<T> = toListImpl(typeOf<T>()) as List<T>

@@ -54,7 +54,6 @@ import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.typeClass
@@ -63,6 +62,7 @@ import org.junit.Test
 import java.io.Serializable
 import java.util.AbstractSet
 import kotlin.reflect.KClass
+import kotlin.reflect.typeOf
 
 class PivotTests {
 
@@ -125,9 +125,9 @@ class PivotTests {
         }.toSet()
 
         actual shouldBe expected
-        res["age"].type() shouldBe getType<Boolean>()
-        res["city"].type() shouldBe getType<Boolean>()
-        res["weight"].type() shouldBe getType<Boolean>()
+        res["age"].type() shouldBe typeOf<Boolean>()
+        res["city"].type() shouldBe typeOf<Boolean>()
+        res["weight"].type() shouldBe typeOf<Boolean>()
     }
 
     @Test
@@ -139,9 +139,9 @@ class PivotTests {
 
         val data = res.getColumnGroup("key")
 
-        data["age"].type() shouldBe getType<List<Int>>()
-        data["city"].type() shouldBe getType<String>()
-        data["weight"].type() shouldBe getType<Serializable>()
+        data["age"].type() shouldBe typeOf<List<Int>>()
+        data["city"].type() shouldBe typeOf<String>()
+        data["weight"].type() shouldBe typeOf<Serializable>()
 
         res shouldBe defaultExpected.group { drop(1) }.into("key")
 
@@ -268,7 +268,7 @@ class PivotTests {
 
         val nullGroup = pivotedDf["Charlie"]["weight"].asColumnGroup()
         nullGroup.columnNames() shouldBe listOf("value", "type")
-        nullGroup.columnTypes() shouldBe listOf(getType<Serializable?>(), getType<Any?>())
+        nullGroup.columnTypes() shouldBe listOf(typeOf<Serializable?>(), typeOf<Any?>())
 
         val cols = pivotedDf.getColumnsWithPaths { all().allDfs() }
         cols.size shouldBe 2 * typed.name.countDistinct() * typed.key.countDistinct() - 2
@@ -291,7 +291,7 @@ class PivotTests {
         val pivoted = typed.pivot { name }.values(separate = true) { key and value }
         pivoted.df().columnNames() shouldBe listOf("key", "value")
         (pivoted.getColumnGroup("key")["Alice"] as List<String>).size shouldBe 4
-        pivoted.df().getColumnGroup("value")["Bob"].type() shouldBe getType<List<Int>>()
+        pivoted.df().getColumnGroup("value")["Bob"].type() shouldBe typeOf<List<Int>>()
         pivoted.getColumnGroup("value")["Bob"] shouldBe listOf(45, 87)
     }
 
@@ -385,12 +385,12 @@ class PivotTests {
         val name by columnOf("set", "list", "set", "list")
         val data by columnOf(setOf(1), listOf(1), setOf(2), listOf(2))
         val df = dataFrameOf(id, name, data)
-        df[data].type() shouldBe getType<Collection<Int>>()
+        df[data].type() shouldBe typeOf<Collection<Int>>()
         val pivoted = df.pivot(inward = false) { name }.groupBy { id }.values { data }
         pivoted.nrow shouldBe 2
         pivoted.ncol shouldBe 3
-        pivoted["set"].type() shouldBe getType<AbstractSet<Int>>()
-        pivoted["list"].type() shouldBe getType<List<Int>>()
+        pivoted["set"].type() shouldBe typeOf<AbstractSet<Int>>()
+        pivoted["list"].type() shouldBe typeOf<List<Int>>()
     }
 
     @Test
@@ -398,11 +398,11 @@ class PivotTests {
         val name by columnOf("set", "list")
         val data by columnOf(setOf(1), listOf(1))
         val df = dataFrameOf(name, data)
-        df[data].type() shouldBe getType<Collection<Int>>()
+        df[data].type() shouldBe typeOf<Collection<Int>>()
         val pivoted = df.pivot { name }.values { data }
         pivoted.columnsCount() shouldBe 2
-        pivoted.df()["set"].type() shouldBe getType<AbstractSet<Int>>()
-        pivoted.df()["list"].type() shouldBe getType<List<Int>>()
+        pivoted.df()["set"].type() shouldBe typeOf<AbstractSet<Int>>()
+        pivoted.df()["list"].type() shouldBe typeOf<List<Int>>()
     }
 
     @Test
@@ -466,8 +466,8 @@ class PivotTests {
         pivoted.df()["Alice"].asColumnGroup().columnNames() shouldBe typed.key.distinct().values()
         pivoted.df()["Bob"].asColumnGroup().columnNames() shouldBe listOf("age", "weight")
         pivoted.df()["Charlie"].asColumnGroup().columnNames() shouldBe typed.key.distinct().values()
-        pivoted.df()["Alice"]["age"].type() shouldBe getType<List<Int>>()
-        pivoted.df()["Charlie"]["weight"].type() shouldBe getType<Any?>()
+        pivoted.df()["Alice"]["age"].type() shouldBe typeOf<List<Int>>()
+        pivoted.df()["Charlie"]["weight"].type() shouldBe typeOf<Any?>()
     }
 
     @Test

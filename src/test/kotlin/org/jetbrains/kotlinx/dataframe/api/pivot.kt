@@ -1,10 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 class PivotTests {
 
@@ -46,7 +46,7 @@ class PivotTests {
         val cols = pivoted.getColumns { except(a).allDfs() }
         cols.size shouldBe 4
         cols.forEach {
-            it.type() shouldBe getType<Char>()
+            it.type() shouldBe typeOf<Char>()
         }
         pivoted["w"]["first"][0] shouldBe '-'
         pivoted["w"]["last"][0] shouldBe '?'

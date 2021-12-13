@@ -6,13 +6,13 @@ import kotlinx.datetime.LocalDateTime
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 import java.time.LocalTime
 import java.time.Month
+import kotlin.reflect.typeOf
 
 class ParseTests {
 
@@ -26,9 +26,9 @@ class ParseTests {
         val df = DataFrame.readJsonStr(json)
         df.ncol shouldBe 3
         df.nrow shouldBe 2
-        df["a"].type() shouldBe getType<Int>()
-        df["b"].type() shouldBe getType<Comparable<*>>()
-        df["c"].type() shouldBe getType<Double?>()
+        df["a"].type() shouldBe typeOf<Int>()
+        df["b"].type() shouldBe typeOf<Comparable<*>>()
+        df["c"].type() shouldBe typeOf<Double?>()
     }
 
     @Test
@@ -45,9 +45,9 @@ class ParseTests {
         df.nrow shouldBe 3
         val group = df["a"] as ColumnGroup<*>
         group.ncol shouldBe 3
-        group["b"].type() shouldBe getType<Int?>()
-        group["value"].type() shouldBe getType<String?>()
-        group["array"].type() shouldBe getType<List<Int>>()
+        group["b"].type() shouldBe typeOf<Int?>()
+        group["value"].type() shouldBe typeOf<String?>()
+        group["array"].type() shouldBe typeOf<List<Int>>()
     }
 
     @Test
@@ -61,7 +61,7 @@ class ParseTests {
         val df = DataFrame.readJsonStr(json)
         df.ncol shouldBe 1
         df.nrow shouldBe 3
-        df["a"].type() shouldBe getType<List<Number>>()
+        df["a"].type() shouldBe typeOf<List<Number>>()
         df[1]["a"] shouldBe emptyList<Int>()
     }
 
@@ -86,7 +86,7 @@ class ParseTests {
 
         val parsed = date.parse(ParserOptions(dateTimePattern = pattern)).cast<LocalDate>()
 
-        parsed.type() shouldBe getType<LocalDate>()
+        parsed.type() shouldBe typeOf<LocalDate>()
         with(parsed[0]) {
             month shouldBe Month.JANUARY
             dayOfMonth shouldBe 1
@@ -114,7 +114,7 @@ class ParseTests {
 
         val parsed = dateTime.parse(ParserOptions(dateTimePattern = pattern)).cast<LocalDateTime>()
 
-        parsed.type() shouldBe getType<LocalDateTime>()
+        parsed.type() shouldBe typeOf<LocalDateTime>()
         with(parsed[0]) {
             month shouldBe Month.JUNE
             dayOfMonth shouldBe 3
@@ -145,7 +145,7 @@ class ParseTests {
 
         val parsed = time.parse(ParserOptions(dateTimePattern = pattern)).cast<LocalTime>()
 
-        parsed.type() shouldBe getType<LocalTime>()
+        parsed.type() shouldBe typeOf<LocalTime>()
         with(parsed[0]) {
             hour shouldBe 13
             minute shouldBe 5
@@ -170,7 +170,7 @@ class ParseTests {
         val time by columnOf(" 2020-01-06", "2020-01-07 ")
         val df = dataFrameOf(time)
         val casted = df.convert(time).toLocalDate()
-        casted[time].type() shouldBe getType<LocalDate>()
+        casted[time].type() shouldBe typeOf<LocalDate>()
     }
 
     @Test

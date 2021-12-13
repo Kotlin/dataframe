@@ -41,11 +41,11 @@ internal fun <T> AnyFrame.convertToImpl(type: KType, allowConversion: Boolean, e
                     else -> {
                         when (targetColumn.kind) {
                             ColumnKind.Value -> {
-                                val targetType = targetColumn.type
-                                require(!it.hasNulls() || targetType.isMarkedNullable) {
-                                    "Column `${it.name}` has nulls and can not be converted to non-nullable type `$targetType`"
+                                val tartypeOf = targetColumn.type
+                                require(!it.hasNulls() || tartypeOf.isMarkedNullable) {
+                                    "Column `${it.name}` has nulls and can not be converted to non-nullable type `$tartypeOf`"
                                 }
-                                it.convertTo(targetType)
+                                it.convertTo(tartypeOf)
                             }
                             ColumnKind.Group -> {
                                 require(it.kind == ColumnKind.Group) {

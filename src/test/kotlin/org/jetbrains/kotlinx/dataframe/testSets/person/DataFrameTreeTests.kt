@@ -87,11 +87,11 @@ import org.jetbrains.kotlinx.dataframe.columns.depth
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
-import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 class DataFrameTreeTests : BaseTest() {
 
@@ -296,8 +296,8 @@ class DataFrameTreeTests : BaseTest() {
             this[name] shouldBe typed.name.distinct()
             val data = cities.columns()
             data.forEach {
-                if (it.name() == "Moscow") it.type() shouldBe getType<List<Int>>()
-                else it.type() shouldBe getType<Int?>()
+                if (it.name() == "Moscow") it.type() shouldBe typeOf<List<Int>>()
+                else it.type() shouldBe typeOf<Int?>()
             }
 
             val actual = data.flatMap { col ->
