@@ -94,24 +94,6 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) : DataFr
 
     override fun remainingColumnsSelector(): ColumnsSelector<*, *> = { all() }
 
-    override fun <C> values(byRow: Boolean, columns: ColumnsSelector<T, C>): Sequence<C> {
-        val cols = get(columns)
-        return if (byRow) sequence {
-            indices().forEach { row ->
-                cols.forEach {
-                    yield(it[row])
-                }
-            }
-        }
-        else sequence {
-            cols.forEach { col ->
-                col.values().forEach {
-                    yield(it)
-                }
-            }
-        }
-    }
-
     override fun <R> aggregate(body: AggregateGroupedBody<T, R>): DataRow<T> {
         val receiver = GroupByReceiverImpl(this, false)
         body(receiver, receiver)
@@ -169,4 +151,22 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) : DataFr
         }
 
     override fun containsColumn(name: String): Boolean = columnsMap.containsKey(name)
+}
+
+internal fun <T, C> DataFrame<T>.valuesImpl(byRow: Boolean, columns: ColumnsSelector<T, C>): Sequence<C> {
+    val cols = get(columns)
+    return if (byRow) sequence {
+        indices().forEach { row ->
+            cols.forEach {
+                yield(it[row])
+            }
+        }
+    }
+    else sequence {
+        cols.forEach { col ->
+            col.values().forEach {
+                yield(it)
+            }
+        }
+    }
 }
