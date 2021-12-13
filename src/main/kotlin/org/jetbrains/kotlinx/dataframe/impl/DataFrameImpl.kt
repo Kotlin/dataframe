@@ -102,36 +102,6 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) : DataFr
         return row.cast()
     }
 
-    override fun rows(): Iterable<DataRow<T>> = object : Iterable<DataRow<T>> {
-        override fun iterator() =
-
-            object : Iterator<DataRow<T>> {
-                var nextRow = 0
-
-                override fun hasNext(): Boolean = nextRow < nrow
-
-                override fun next(): DataRow<T> {
-                    require(nextRow < nrow)
-                    return get(nextRow++)
-                }
-            }
-    }
-
-    override fun rowsReversed(): Iterable<DataRow<T>> = object : Iterable<DataRow<T>> {
-        override fun iterator() =
-
-            object : Iterator<DataRow<T>> {
-                var nextRow = nrow - 1
-
-                override fun hasNext(): Boolean = nextRow >= 0
-
-                override fun next(): DataRow<T> {
-                    require(nextRow >= 0)
-                    return get(nextRow--)
-                }
-            }
-    }
-
     override fun getColumnOrNull(name: String): AnyCol? =
         getColumnIndex(name).let { if (it != -1) getColumn(it) else null }
 
