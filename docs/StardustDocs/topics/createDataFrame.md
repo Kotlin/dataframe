@@ -122,9 +122,7 @@ map.toDataFrame()
 
 <!---END-->
 
-### toDataFrame
-
-Converts in-memory objects into `DataFrame`. Available for any `Iterable` of objects.
+`DataFrame` from `Iterable` of objects:
 
 <!---FUN readDataFrameFromObject-->
 
