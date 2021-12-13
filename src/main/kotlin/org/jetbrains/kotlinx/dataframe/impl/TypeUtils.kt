@@ -28,13 +28,31 @@ internal fun KType.projectTo(targetClass: KClass<*>): KType {
 }
 
 internal fun KType.projectUpTo(superClass: KClass<*>): KType {
-    val chain = inheritanceChain(classifier as KClass<*>, superClass)
+    val chain = inheritanceChain(jvmErasure, superClass)
     var current = this
     chain.forEach { (clazz, declaredBaseType) ->
         val substitution = clazz.typeParameters.zip(current.arguments.map { it.type }).toMap()
         current = declaredBaseType.replace(substitution)
     }
     return current.withNullability(isMarkedNullable)
+}
+
+internal fun KType.replaceTypeParameters(): KType {
+    var replaced = false
+    val arguments = arguments.map {
+        val type = it.type
+        val newType = when {
+            type == null -> getType<Any?>()
+            type.classifier is KTypeParameter -> {
+                replaced = true
+                (type.classifier as KTypeParameter).upperBounds.firstOrNull() ?: getType<Any?>()
+            }
+            else -> type
+        }
+        KTypeProjection.invariant(newType)
+    }
+    return if (replaced) jvmErasure.createType(arguments, isMarkedNullable)
+    else this
 }
 
 internal fun inheritanceChain(subClass: KClass<*>, superClass: KClass<*>): List<Pair<KClass<*>, KType>> {

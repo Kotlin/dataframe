@@ -12,6 +12,9 @@ internal object Aggregators {
     private fun <C> preservesType(aggregate: Iterable<C>.(KType) -> C?) =
         TwoStepAggregator.Factory(aggregate, aggregate, true)
 
+    private fun <C : Any> mergedValues(aggregate: Iterable<C?>.(KType) -> C?) =
+        MergedValuesAggregator.Factory(aggregate, true)
+
     private fun <C, R> changesType(aggregate1: Iterable<C>.(KType) -> R, aggregate2: Iterable<R>.(KType) -> R) =
         TwoStepAggregator.Factory(aggregate1, aggregate2, false)
 
@@ -27,6 +30,6 @@ internal object Aggregators {
     val mean by withOption<Boolean, Number, Double> { skipNA ->
         changesType({ mean(it, skipNA) }) { mean(skipNA) }
     }
-    val median by preservesType<Comparable<Any?>> { median(it) }
+    val median by mergedValues<Comparable<Any?>> { median(it) }
     val sum by extendsNumbers { sum(it) }
 }
