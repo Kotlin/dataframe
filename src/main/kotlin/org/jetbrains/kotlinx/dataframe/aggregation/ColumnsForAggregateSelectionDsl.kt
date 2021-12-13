@@ -1,10 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.aggregation
 
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.ConfiguredAggregateColumn
-import org.jetbrains.kotlinx.dataframe.pathOf
 
 public interface ColumnsForAggregateSelectionDsl<out T> : ColumnsSelectionDsl<T> {
 

@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.rendering
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.impl.precision
 import org.jetbrains.kotlinx.dataframe.io.defaultPrecision
 import org.jetbrains.kotlinx.dataframe.io.format

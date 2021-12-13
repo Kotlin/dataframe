@@ -2,11 +2,11 @@ package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.median
 import org.jetbrains.kotlinx.dataframe.api.rowMedian
-import org.jetbrains.kotlinx.dataframe.columnOf
-import org.jetbrains.kotlinx.dataframe.dataFrameOf
 import org.junit.Test
 
 class MedianTests {

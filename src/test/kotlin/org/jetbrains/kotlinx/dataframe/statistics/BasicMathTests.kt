@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.mean
-import org.jetbrains.kotlinx.dataframe.columnOf
 import org.jetbrains.kotlinx.dataframe.impl.getType
 import org.junit.Test
 
