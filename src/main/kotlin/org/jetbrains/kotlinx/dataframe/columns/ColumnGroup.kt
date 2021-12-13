@@ -21,7 +21,5 @@ public interface ColumnGroup<out T> : BaseColumn<DataRow<T>>, DataFrame<T> {
 
     override fun rename(newName: String): ColumnGroup<T>
 
-    override fun asColumnGroup(name: String): ColumnGroup<*> = rename(name)
-
     override operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnGroup<T> = super.getValue(thisRef, property) as ColumnGroup<T>
 }

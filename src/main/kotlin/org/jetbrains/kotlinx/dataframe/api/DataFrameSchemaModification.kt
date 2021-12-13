@@ -112,7 +112,7 @@ public fun <T, C : Comparable<C>> DataFrame<T>.sortColumnsBy(dfs: Boolean = fals
         when (it.kind) {
             ColumnKind.Value -> it
             ColumnKind.Frame -> it.asFrameColumn().map { it.sortColumnsBy(true, selector) }
-            ColumnKind.Group -> it.asColumnGroup().sortColumnsBy(true, selector).toColumnGroup(it.name())
+            ColumnKind.Group -> it.asColumnGroup().sortColumnsBy(true, selector).asColumnGroup(it.name())
         } as AnyCol
     }
     return cols.sortedBy { it.name() }.toDataFrame().cast()

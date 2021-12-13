@@ -244,7 +244,7 @@ public inline fun <reified T> DataColumn<T>.read(): AnyCol = when (kind()) {
         isPrimitive() -> this
         typeClass == File::class -> cast<File?>().mapNotNullValues { DataFrame.read(it) }
         typeClass == URL::class -> cast<URL?>().mapNotNullValues { DataFrame.read(it) }
-        else -> values().toDataFrame().toColumnGroup(name()).asDataColumn()
+        else -> values().toDataFrame().asColumnGroup(name()).asDataColumn()
     }
 }
 

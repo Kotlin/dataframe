@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.ColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -177,7 +178,12 @@ public fun Iterable<String>.toPath(): ColumnPath = ColumnPath(asList())
 
 public fun AnyFrame.toMap(): Map<String, List<Any?>> = columns().associateBy({ it.name }, { it.toList() })
 
-public fun <T> DataFrame<T>.toColumnGroup(name: String): ColumnGroup<T> = DataColumn.createColumnGroup(name, this)
+public fun <T> DataFrame<T>.asColumnGroup(name: String = ""): ColumnGroup<T> = when (this) {
+    is ColumnGroup<T> -> rename(name)
+    else -> DataColumn.createColumnGroup(name, this)
+}
+
+public fun <T> DataFrame<T>.asColumnGroup(column: ColumnGroupAccessor): ColumnGroup<*> = asColumnGroup(column.name)
 
 // region as GroupedDataFrame
 

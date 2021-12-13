@@ -52,7 +52,4 @@ public interface ColumnsContainer<out T> {
     public operator fun <C> get(column: ColumnSelector<T, C>): DataColumn<C> = get(column as ColumnsSelector<T, C>).single()
 
     // endregion
-
-    public fun asColumnGroup(name: String = ""): ColumnGroup<*>
-    public fun asColumnGroup(column: ColumnGroupAccessor): ColumnGroup<*> = asColumnGroup(column.name)
 }
