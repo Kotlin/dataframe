@@ -29,13 +29,9 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     // region columns
 
-    override fun columns(): List<AnyCol>
-
     public fun columnNames(): List<String>
 
     public fun columnTypes(): List<KType>
-
-    override fun columnsCount(): Int
 
     // endregion
 
