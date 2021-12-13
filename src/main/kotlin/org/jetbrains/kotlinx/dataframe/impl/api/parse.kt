@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.GlobalParserOptions
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.convert
@@ -15,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.to
-import org.jetbrains.kotlinx.dataframe.api.toColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
@@ -316,7 +316,7 @@ internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: Column
     convert(columns).to {
         when {
             it.isFrameColumn() -> it.cast<AnyFrame?>().parse(options)
-            it.isColumnGroup() -> it.asColumnGroup().parse { all() }.toColumnGroup(it.name()).asDataColumn()
+            it.isColumnGroup() -> it.asColumnGroup().parse { all() }.asColumnGroup(it.name()).asDataColumn()
             it.typeClass == String::class -> it.cast<String?>().tryParse(options)
             else -> it
         }
