@@ -17,7 +17,7 @@ columnExpression: DataColumn.(DataColumn) -> Value
 <tab title="Properties">
 
 ```kotlin
-    df.reorder {  age..isHappy }.byName()
+    df.reorder { age..isHappy }.byName()
 }
 ```
 
@@ -28,7 +28,7 @@ columnExpression: DataColumn.(DataColumn) -> Value
     val age by column<Int>()
     val isHappy by column<Boolean>()
 
-    df.reorder {  age..isHappy }.byName()
+    df.reorder { age..isHappy }.byName()
 }
 ```
 
@@ -36,7 +36,7 @@ columnExpression: DataColumn.(DataColumn) -> Value
 <tab title="Strings">
 
 ```kotlin
-    df.reorder {  "age".."isHappy" }.byName()
+    df.reorder { "age".."isHappy" }.byName()
 }
 ```
 
@@ -51,8 +51,8 @@ If selected columns belong to different column groups, they will be reordered wi
 
 ```kotlin
 val df = dataFrameOf("c", "d", "a", "b")(
-    3,4,1,2,
-    1,1,1,1
+    3, 4, 1, 2,
+    1, 1, 1, 1
 )
 df.reorder("d", "b").cast<Int>().by { sum() } // [c, b, a, d]
 ```
