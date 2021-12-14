@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -15,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.withDf
 
 internal data class ColumnToInsert(
     val insertionPath: ColumnPath,
-    val column: AnyCol,
+    val column: AnyBaseColumn,
     val referenceNode: ReadonlyTreeNode<ReferenceData>? = null
 )
 
@@ -104,15 +103,15 @@ internal fun <T> insertImpl(
         val newCol = if (nodeToInsert != null) {
             val column = nodeToInsert.column
             if (columns.size > 1) {
-                assert(columns.count { it.insertionPath.size == childDepth } == 1) { "Can not insert more than one column into the path ${nodeToInsert.insertionPath}" }
-                val group = column as ColumnGroup<*>
+                check(columns.count { it.insertionPath.size == childDepth } == 1) { "Can not insert more than one column into the path ${nodeToInsert.insertionPath}" }
+                check(column is ColumnGroup<*>)
                 val newDf = insertImpl(
-                    group,
+                    column,
                     columns.filter { it.insertionPath.size > childDepth },
                     treeNode?.get(name),
                     childDepth
                 )
-                group.withDf(newDf)
+                column.withDf(newDf)
             } else column.rename(name)
         } else {
             val newDf =
