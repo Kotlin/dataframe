@@ -54,4 +54,14 @@ class CreateDataFrameTests {
         res["d"].type() shouldBe typeOf<Int?>()
         res["e"].type() shouldBe typeOf<Int>()
     }
+
+    @Test
+    fun `preserve fields order`() {
+        class B(val x: Int, val c: String, d: Double) {
+            val b: Int = x
+            val a: Double = d
+        }
+
+        listOf(B(1, "a", 2.0)).toDataFrame().columnNames() shouldBe listOf("x", "c", "a", "b")
+    }
 }
