@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.Merge
 import org.jetbrains.kotlinx.dataframe.api.Pivot
 import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
+import org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy
 import org.jetbrains.kotlinx.dataframe.api.ReducedPivot
 import org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.Split
@@ -76,6 +77,7 @@ internal class Integration : JupyterIntegration() {
             render<AnyRow>({ it.toDataFrame() }, { "DataRow [${it.ncol}]" })
             render<AnyCol>({ dataFrameOf(it) }, { "DataColumn [${it.nrow}]" })
             render<GroupBy<*, *>>({ it.toDataFrame() }, { "GroupBy" })
+            render<ReducedGroupBy<*,*>>({ it.into(it.groupBy.groups.name()) }, { "ReducedGroupBy: ${it.size}" })
             render<Pivot<*>>({ it.frames().toDataFrame() }, { "Pivot: ${it.ncol} columns" })
             render<ReducedPivot<*>>({ it.values().toDataFrame() }, { "ReducedPivot: ${it.ncol} columns" })
             render<PivotGroupBy<*>>({ it.frames() }, { "PivotGroupBy: ${it.size}" })
