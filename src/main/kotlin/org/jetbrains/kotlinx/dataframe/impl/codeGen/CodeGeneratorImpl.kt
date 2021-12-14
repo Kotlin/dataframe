@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.codeGen.BaseField
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.ExtensionsCodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.IsolatedMarker
@@ -204,15 +205,16 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
         extensionProperties: Boolean,
         isOpen: Boolean,
         visibility: MarkerVisibility,
-        knownMarkers: Iterable<Marker>
+        knownMarkers: Iterable<Marker>,
+        readJsonMethod: DefaultReadJsonMethod?
     ): CodeGenResult {
         val context = SchemaProcessor.create(name, knownMarkers)
         val marker = context.process(schema, isOpen, visibility)
         val declarations = mutableListOf<Code>()
-        context.generatedMarkers.forEach {
-            declarations.add(generateInterface(it, fields))
+        context.generatedMarkers.forEach { itMarker ->
+            declarations.add(generateInterface(itMarker, fields, readJsonMethod.takeIf { marker == itMarker }))
             if (extensionProperties) {
-                declarations.add(generateExtensionProperties(it))
+                declarations.add(generateExtensionProperties(itMarker))
             }
         }
         val code = createCodeWithConverter(declarations.joinToString("\n\n"), marker.name)
@@ -226,7 +228,8 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
 
     private fun generateInterface(
         marker: Marker,
-        fields: Boolean
+        fields: Boolean,
+        readJsonMethod: DefaultReadJsonMethod? = null
     ): Code {
         val annotationName = DataSchema::class.simpleName
 
@@ -248,7 +251,21 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
             val fieldType = it.renderFieldType()
             "$columnNameAnnotation    ${propertyVisibility}${override}val ${it.fieldName.quotedIfNeeded}: $fieldType"
         }.join() else ""
-        val body = if (fieldsDeclaration.isNotBlank()) " {\n$fieldsDeclaration\n}" else ""
+        val body = if (fieldsDeclaration.isNotBlank()) buildString {
+            append(" {\n")
+            append(fieldsDeclaration)
+            if (readJsonMethod != null) {
+                append("\n")
+                append(
+                    """
+                    |    ${propertyVisibility}companion object {
+                    |${readJsonMethod.toDeclaration(marker.shortName, propertyVisibility)}
+                    |    }
+                """.trimMargin()
+                )
+            }
+            append("\n}")
+        } else ""
         resultDeclarations.add(header + baseInterfacesDeclaration + body)
         return resultDeclarations.join()
     }
