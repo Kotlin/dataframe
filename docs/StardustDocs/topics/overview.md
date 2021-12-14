@@ -16,7 +16,7 @@ The handiness of this abstraction is not in the table itself but in a set of ope
 
 * [**Hierarchical**](hierarchical.md) — `Kotlin Dataframe`  is able to read and present data from different sources including not only plain **CSV** but also **JSON**. That’s why it has been designed hierarchical and allows nesting of columns and cells.
 
-* [**Interoperable**](stdlib.md) — hierarchical data layout also opens a possibility of converting any objects structure in application memory to a data frame and vice versa.
+* [**Interoperable**](collectionsInterop.md) — hierarchical data layout also opens a possibility of converting any objects structure in application memory to a data frame and vice versa.
 
 * **Safe** —`Kotlin Dataframe` provides a mechanism of on-the-fly [**generation of extension properties**](extensionPropertiesApi.md) that correspond to the columns of frame. In interactive notebooks like Jupyter or Datalore, the generation runs after each cell execution. In IntelliJ IDEA there's a Gradle plugin for generation properties based on CSV and Json. Also, we’re working on a compiler plugin that infers and transforms data frame schema while typing. <br /> The generated properties ensures you’ll never misspell column name and don’t mess up with its type, and of course nullability is also preserved.
 
