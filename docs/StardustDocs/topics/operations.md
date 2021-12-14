@@ -80,6 +80,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [pivot](pivot.md) / [pivotCounts](pivot.md#pivotcounts) / [pivotMatches](pivot.md#pivotmatches) — convert values into new columns
 * [remove](remove.md) — remove columns
 * [rename](rename.md) — rename columns
+* [reorder](reorder.md) / [reorderColumnsBy](reorder.md#reordercolumnsby) / [reorderColumnsByName](reorder.md#reordercolumnsbyname) — reorder columns
 * [replace](replace.md) — replace columns
 * [rows](rows.md) / [rowsReversed](rows.md#rowsreversed) — get rows in direct or reversed order
 * [rowsCount](rowsCount.md) — number of rows
@@ -88,7 +89,6 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [shuffle](shuffle.md) — reorder rows randomly 
 * [single](single.md) / [singleOrNull](single.md#singleornull) — get single row by condition
 * [sortBy](sortBy.md) / [sortByDesc](sortBy.md#sortbydesc) / [sortWith](sortBy.md#sortwith) — sort rows
-* [sortColumnsBy](sortColumnsBy.md) — sort columns
 * [split](split.md) — split column values into new rows/columns or inplace into lists
 * [std](std.md) / [stdOf](std.md) / [stdFor](std.md) — standard deviation of values
 * [sum](sum.md) / [sumOf](sum.md) / [sumFor](sum.md) — sum of values

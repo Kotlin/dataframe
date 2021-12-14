@@ -5,20 +5,20 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
-import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.api.flattenImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.reorderImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.xsImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
-import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.removeAt
-import org.jetbrains.kotlinx.dataframe.kind
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 
@@ -104,19 +104,34 @@ public fun AnyCol.addId(columnName: String = "id"): AnyFrame =
 
 // endregion
 
-// region sortColumnsBy
+// region reorder
 
-public fun <T, C : Comparable<C>> DataFrame<T>.sortColumnsBy(dfs: Boolean = false, selector: (AnyCol) -> C): DataFrame<T> {
-    var cols = columns()
-    if (dfs) cols = cols.map {
-        when (it.kind) {
-            ColumnKind.Value -> it
-            ColumnKind.Frame -> it.asFrameColumn().map { it.sortColumnsBy(true, selector) }
-            ColumnKind.Group -> it.asColumnGroup().sortColumnsBy(true, selector).asColumnGroup(it.name())
-        } as AnyCol
-    }
-    return cols.sortedBy { it.name() }.toDataFrame().cast()
+public data class Reorder<T, C>(
+    internal val df: DataFrame<T>,
+    internal val columns: ColumnsSelector<T, C>,
+    internal val inFrameColumns: Boolean
+) {
+    public fun <R> cast(): Reorder<T, R> = this as Reorder<T, R>
 }
+
+public fun <T, C> DataFrame<T>.reorder(selector: ColumnsSelector<T, C>): Reorder<T, C> = Reorder(this, selector, false)
+public fun <T, C> DataFrame<T>.reorder(vararg columns: ColumnReference<C>): Reorder<T, C> = reorder { columns.toColumns() }
+public fun <T, C> DataFrame<T>.reorder(vararg columns: KProperty<C>): Reorder<T, C> = reorder { columns.toColumns() }
+public fun <T> DataFrame<T>.reorder(vararg columns: String): Reorder<T, *> = reorder { columns.toColumns() }
+
+public fun <T, C, V : Comparable<V>> Reorder<T, C>.by(expression: Selector<DataColumn<C>, V>): DataFrame<T> = reorderImpl(false, expression)
+
+public fun <T, C> Reorder<T, C>.byName(desc: Boolean = false): DataFrame<T> = if (desc) byDesc { it.name } else by { it.name }
+
+public fun <T, C, V : Comparable<V>> Reorder<T, C>.byDesc(expression: Selector<DataColumn<C>, V>): DataFrame<T> = reorderImpl(true, expression)
+
+public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
+    dfs: Boolean = true,
+    desc: Boolean = false,
+    expression: Selector<AnyCol, V>
+): DataFrame<T> = Reorder(this, { if (dfs) allDfs(true) else all() }, dfs).reorderImpl(desc, expression)
+
+public fun <T> DataFrame<T>.reorderColumnsByName(dfs: Boolean = true, desc: Boolean = false): DataFrame<T> = reorderColumnsBy(dfs, desc) { name() }
 
 // endregion
 

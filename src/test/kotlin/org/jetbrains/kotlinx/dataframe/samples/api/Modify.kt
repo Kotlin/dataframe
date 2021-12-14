@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.by
+import org.jetbrains.kotlinx.dataframe.api.byName
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -58,6 +59,7 @@ import org.jetbrains.kotlinx.dataframe.api.pivotCounts
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
+import org.jetbrains.kotlinx.dataframe.api.reorder
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.shuffle
@@ -65,6 +67,7 @@ import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.split
+import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toFloat
 import org.jetbrains.kotlinx.dataframe.api.toLeft
@@ -318,6 +321,47 @@ class Modify : TestBase() {
             }
         }
         // SampleEnd
+    }
+
+    @Test
+    fun reorder_properties() {
+        // SampleStart
+        df.reorder { age..isHappy }.byName()
+    }
+
+    @Test
+    fun reorder_accessors() {
+        // SampleStart
+        val age by column<Int>()
+        val isHappy by column<Boolean>()
+
+        df.reorder { age..isHappy }.byName()
+    }
+
+    @Test
+    fun reorder_strings() {
+        // SampleStart
+        df.reorder { "age".."isHappy" }.byName()
+    }
+
+    @Test
+    fun reorderSome() {
+        // SampleStart
+        val df = dataFrameOf("c", "d", "a", "b")(
+            3, 4, 1, 2,
+            1, 1, 1, 1
+        )
+        df.reorder("d", "b").cast<Int>().by { sum() } // [c, b, a, d]
+            // SampleEnd
+            .columnNames() shouldBe listOf("c", "b", "a", "d")
+    }
+
+    @Test
+    fun reorderInGroup() {
+        // SampleStart
+        df.reorder { name }.byName(desc = true) // [name.lastName, name.firstName]
+            // SampleEnd
+            .name.columnNames() shouldBe listOf("lastName", "firstName")
     }
 
     @Test
