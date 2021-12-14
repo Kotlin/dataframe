@@ -18,7 +18,7 @@ On the other hand, `Kotlin dataframe` follows `Koltin Collections` naming for ro
 * [remove](remove.md) columns / [drop](drop.md) rows
 * [select](select.md) columns / [filter](filter.md) rows
 * [group](group.md) for columns / [groupBy](groupBy.md) for rows
-* [sortColumnsBy](sortColumnsBy.md) for columns / [sortBy](sortBy.md) for rows
+* [reorder](reorder.md) for columns / [sortBy](sortBy.md) for rows
 * [join](join.md) to unite columns / [concat](concat.md) to unite rows
 
 **Horizontal (column) operations:**
@@ -31,9 +31,9 @@ On the other hand, `Kotlin dataframe` follows `Koltin Collections` naming for ro
 * [move](move.md) — move columns or change column groupings
 * [remove](remove.md) — remove columns
 * [rename](rename.md) — rename columns
+* [reorder](reorder.md) — reorder columns
 * [replace](replace.md) — replace columns
 * [select](select.md) — select subset of columns
-* [sortColumnsBy](sortColumnsBy.md) — sort columns
 * [split](split.md) — split values into new columns
 * [ungroup](ungroup.md) — remove column grouping
 
