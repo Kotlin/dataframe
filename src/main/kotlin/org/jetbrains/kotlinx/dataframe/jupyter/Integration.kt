@@ -29,8 +29,6 @@ import org.jetbrains.kotlinx.dataframe.io.HtmlData
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
-import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListNamedStub
-import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListTypedStub
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.VariableName
@@ -112,16 +110,6 @@ internal class Integration : JupyterIntegration() {
 
         updateVariable<AnyRow> { row, property ->
             execute(codeGen.process(row, property), property)
-        }
-
-        updateVariable<DataFrameToListNamedStub> { stub, prop ->
-            val code = codeGen.process(stub).with(prop.name)
-            execute(code).name
-        }
-
-        updateVariable<DataFrameToListTypedStub> { stub, prop ->
-            val code = codeGen.process(stub).with(prop.name)
-            execute(code).name
         }
 
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {
