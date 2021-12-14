@@ -2183,7 +2183,7 @@ class DataFrameTests : BaseTest() {
         list shouldBe df.convertTo<Target>().toList()
 
         val listDf = list.toDataFrame()
-        listDf shouldBe df.reorderColumnsByName()
+        listDf shouldBe df
         listDf.toList() shouldBe list
     }
 
@@ -2202,7 +2202,6 @@ class DataFrameTests : BaseTest() {
 
         val listDf = list.toDataFrame(depth = 2)
         listDf shouldBe grouped.update { getFrameColumn("students") }.with { it.remove("city") }
-            .reorderColumnsByName()
 
         listDf.toList() shouldBe list
     }
@@ -2221,7 +2220,7 @@ class DataFrameTests : BaseTest() {
         data class Info(val age: Int, val weight: Int?)
 
         @DataSchema
-        data class Target(val name: String, val city: String?, val info: Info)
+        data class Target(val name: String, val info: Info, val city: String?)
 
         val grouped = typed.group { age and weight }.into("info")
 
@@ -2229,7 +2228,7 @@ class DataFrameTests : BaseTest() {
         list shouldBe grouped.convertTo<Target>().toList()
 
         val listDf = list.toDataFrame(depth = 2)
-        listDf shouldBe grouped.reorderColumnsByName(dfs = true)
+        listDf shouldBe grouped
         listDf.toList() shouldBe list
     }
 
