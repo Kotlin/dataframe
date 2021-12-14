@@ -1,5 +1,5 @@
-[//]: # (title: Move/rename/sort columns)
+[//]: # (title: Move/rename/reorder columns)
 
-* [`move`](move.md) — moves given columns or changes column grouping in `DataFrame` 
-* [`rename`](rename.md) — renames given columns in `DataFrame`
-* [`sortColumnsBy`](sortColumnsBy.md) — sorts columns by expression
+* [`move`](move.md) — move columns or change column grouping
+* [`rename`](rename.md) — rename columns
+* [`reorder`](reorder.md) — reorder columns

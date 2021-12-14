@@ -109,6 +109,8 @@ import org.jetbrains.kotlinx.dataframe.api.pivot
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
+import org.jetbrains.kotlinx.dataframe.api.reorder
+import org.jetbrains.kotlinx.dataframe.api.reorderColumnsByName
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.select
@@ -117,7 +119,6 @@ import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.sortByCount
 import org.jetbrains.kotlinx.dataframe.api.sortByDesc
 import org.jetbrains.kotlinx.dataframe.api.sortByKey
-import org.jetbrains.kotlinx.dataframe.api.sortColumnsBy
 import org.jetbrains.kotlinx.dataframe.api.sortWith
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sum
@@ -2183,7 +2184,7 @@ class DataFrameTests : BaseTest() {
         list shouldBe df.convertTo<Target>().toList()
 
         val listDf = list.toDataFrame()
-        listDf shouldBe df.sortColumnsBy { it.name }
+        listDf shouldBe df.reorderColumnsByName()
         listDf.toList() shouldBe list
     }
 
@@ -2202,8 +2203,17 @@ class DataFrameTests : BaseTest() {
 
         val listDf = list.toDataFrame(depth = 2)
         listDf shouldBe grouped.update { getFrameColumn("students") }.with { it.remove("city") }
-            .sortColumnsBy(dfs = true) { it.name }
+            .reorderColumnsByName()
+
         listDf.toList() shouldBe list
+    }
+
+    @Test
+    fun reorderColumns() {
+        typed.reorderColumnsByName().columnNames() shouldBe typed.columnNames().sorted()
+        val grouped = typed.groupBy { city }.into("a").reorderColumnsByName()
+        grouped.columnNames() shouldBe listOf("a", "city")
+        grouped.getFrameColumn("a")[0].columnNames() shouldBe typed.columnNames().sorted()
     }
 
     @Test
@@ -2220,7 +2230,7 @@ class DataFrameTests : BaseTest() {
         list shouldBe grouped.convertTo<Target>().toList()
 
         val listDf = list.toDataFrame(depth = 2)
-        listDf shouldBe grouped.sortColumnsBy(dfs = true) { it.name }
+        listDf shouldBe grouped.reorderColumnsByName(dfs = true)
         listDf.toList() shouldBe list
     }
 

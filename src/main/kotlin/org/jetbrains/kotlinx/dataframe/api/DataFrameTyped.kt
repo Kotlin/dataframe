@@ -8,8 +8,11 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.api.ExtraColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
@@ -38,6 +41,12 @@ public fun <T> ColumnGroup<*>.cast(): ColumnGroup<T> = this as ColumnGroup<T>
 public fun <T> ColumnWithPath<*>.cast(): ColumnWithPath<T> = this as ColumnWithPath<T>
 
 public fun <T> ColumnAccessor<*>.cast(): ColumnAccessor<T> = this as ColumnAccessor<T>
+
+public fun <C> ColumnSet<*>.cast(): ColumnSet<C> = this as ColumnSet<C>
+
+public fun <C> ColumnReference<*>.cast(): ColumnReference<C> = this as ColumnReference<C>
+
+public fun <C> SingleColumn<*>.cast(): SingleColumn<C> = this as SingleColumn<C>
 
 // endregion
 

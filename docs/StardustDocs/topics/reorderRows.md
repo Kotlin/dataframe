@@ -1,3 +1,4 @@
 [//]: # (title: Reorder rows)
 
-Start writing here.
+* [`sortBy`](sortBy.md) — sort rows by key columns
+* [`shuffle`](shuffle.md) — reorder rows randomly
