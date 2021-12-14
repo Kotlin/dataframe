@@ -159,7 +159,7 @@
             </toc-element>
         </toc-element>
         <toc-element id="ColumnSelectors.md"/>
-        <toc-element id="stdlib.md">
+        <toc-element id="collectionsInterop.md">
             <toc-element id="toList.md"/>
             <toc-element id="toMap.md"/>
         </toc-element>
