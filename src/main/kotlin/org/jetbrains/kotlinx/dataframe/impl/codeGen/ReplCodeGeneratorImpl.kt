@@ -9,15 +9,10 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
-import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
-import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
-import org.jetbrains.kotlinx.dataframe.impl.codeGen.FqNames.renderFieldType
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
-import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListNamedStub
-import org.jetbrains.kotlinx.dataframe.stubs.DataFrameToListTypedStub
 import org.jetbrains.kotlinx.jupyter.api.Code
 import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
@@ -142,49 +137,5 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
 
         val marker = resolve(markerClass)
         return newMarkers.map { generator.generate(marker, InterfaceGenerationMode.None, true).declarations }.join()
-    }
-
-    override fun process(stub: DataFrameToListTypedStub): CodeWithConverter {
-        val df = stub.df
-        val sourceSchema = df.schema()
-        val marker = MarkersExtractor.get(stub.interfaceClass)
-        val requestedSchema = marker.schema
-        if (!requestedSchema.compare(sourceSchema).isSuperOrEqual()) {
-            throw Exception() // TODO
-        }
-        val interfaceName = stub.interfaceClass.simpleName!!
-        val interfaceFullName = stub.interfaceClass.qualifiedName!!
-        val className = interfaceName + "Impl"
-
-        return generateToListConverter(className, marker.fields, interfaceFullName)
-    }
-
-    override fun process(stub: DataFrameToListNamedStub): CodeWithConverter {
-        val schemaGenerator = SchemaProcessor.create(
-            stub.className,
-            emptyList()
-        )
-        val marker = schemaGenerator.process(stub.df.schema(), true, MarkerVisibility.IMPLICIT_PUBLIC)
-        return generateToListConverter(stub.className, marker.fields, null)
-    }
-
-    private fun generateToListConverter(
-        className: String,
-        fields: List<GeneratedField>,
-        interfaceName: String? = null
-    ): CodeWithConverter {
-        val override = if (interfaceName != null) "override " else ""
-        val baseTypes = if (interfaceName != null) " : $interfaceName" else ""
-        val classDeclaration = "data class $className(" +
-            fields.map {
-                "${override}val ${it.fieldName.quotedIfNeeded}: ${it.renderFieldType()}"
-            }.joinToString() + ") " + baseTypes
-
-        fun converter(argumentName: String) = "$argumentName.df.rows().map { $className(" +
-            fields.map {
-                "it[\"${it.columnName}\"] as ${it.renderFieldType()}"
-            }.joinToString() + ")}"
-
-        return CodeWithConverter(classDeclaration, ::converter)
     }
 }
