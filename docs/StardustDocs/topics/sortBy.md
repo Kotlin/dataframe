@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` sorted by one or several columns.
+Returns `DataFrame` with rows sorted by one or several columns.
 
 By default, columns are sorted in ascending order with `null` values going first. Available modifiers:
 * `.desc` — changes column sort order from ascending to descending

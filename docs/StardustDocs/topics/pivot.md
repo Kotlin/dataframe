@@ -17,7 +17,7 @@ aggregator = .count() | .matches() | .frames() | .with { rowExpression } | .valu
 ```
 
 **Parameters:**
-* `inward: Boolean = true` - if `true` generated columns will be nested inside original column, otherwise they will be top-level
+* `inward` - if `true` generated columns will be nested inside original column, otherwise they will be top-level
 * `pivotColumns` - columns with values for horizontal data grouping and generation of new columns
 * `indexColumns` - columns with values for vertical data grouping
 * `defaultValue` - value to fill mismatched pivot-index column pairs

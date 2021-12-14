@@ -1,4 +1,4 @@
-[//]: # (title: toList.md)
+[//]: # (title: toList)
 
 Converts `DataFrame` into a `List` of data class instances by current `DataFrame` type argument.
 
