@@ -149,6 +149,12 @@ kotlinPublications {
 
 tasks.lintKotlinMain {
     exclude("**/*keywords*/**")
+    exclude {
+        it.name.endsWith(".Generated.kt")
+    }
+    exclude {
+        it.name.endsWith("\$Extensions.kt")
+    }
 }
 
 tasks.lintKotlinTest {
