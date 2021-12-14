@@ -5,7 +5,7 @@ DataFrames can be saved in CSV or JSON formats.
 
 ### Writing to CSV
 
-You can write your dataframe in CSV format to file, to string or to `Appendable`
+You can write `DataFrame` in CSV format to file, to `String` or to `Appendable`
 (i.e. to `Writer`).
 
 <!---FUN writeCsv-->
@@ -19,10 +19,12 @@ df.writeCSV(file)
 <!---FUN writeCsvStr-->
 
 ```kotlin
-val csvStr = df.writeCSVStr(CSVFormat.DEFAULT.withDelimiter(';').withRecordSeparator(System.lineSeparator()))
+val csvStr = df.toCsv(CSVFormat.DEFAULT.withDelimiter(';').withRecordSeparator(System.lineSeparator()))
 ```
 
 <!---END-->
+
+`ColumnGroup` and `FrameColumn` values will be serialized as JSON strings.
 
 ### Writing to JSON
 
@@ -40,7 +42,7 @@ df.writeJson(file)
 <!---FUN writeJsonStr-->
 
 ```kotlin
-val jsonStr = df.writeJsonStr(prettyPrint = true)
+val jsonStr = df.toJson(prettyPrint = true)
 ```
 
 <!---END-->

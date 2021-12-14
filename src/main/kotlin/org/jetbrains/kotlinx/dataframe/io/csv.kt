@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io
 import org.apache.commons.csv.CSVFormat
 import org.apache.commons.csv.CSVRecord
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
@@ -316,11 +317,18 @@ public fun AnyFrame.writeCSV(writer: Appendable, format: CSVFormat = CSVFormat.D
     format.print(writer).use { printer ->
         printer.printRecord(columnNames())
         forEachRow {
-            printer.printRecord(it.values)
+            val values = it.values.map {
+                when (it) {
+                    is AnyRow -> it.toJson()
+                    is AnyFrame -> it.toJson()
+                    else -> it
+                }
+            }
+            printer.printRecord(values)
         }
     }
 
-public fun AnyFrame.writeCSVStr(format: CSVFormat = CSVFormat.DEFAULT.withHeader()): String =
+public fun AnyFrame.toCsv(format: CSVFormat = CSVFormat.DEFAULT.withHeader()): String =
     StringWriter().use {
         this.writeCSV(it, format)
         it

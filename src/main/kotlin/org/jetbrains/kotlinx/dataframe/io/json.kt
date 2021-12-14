@@ -7,6 +7,7 @@ import com.beust.klaxon.Parser
 import com.beust.klaxon.json
 import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -199,18 +200,24 @@ internal fun KlaxonJson.encodeFrame(frame: AnyFrame): JsonArray<*> {
     return array(data)
 }
 
-public fun AnyFrame.writeJsonStr(prettyPrint: Boolean = false, canonical: Boolean = false): String {
+public fun AnyFrame.toJson(prettyPrint: Boolean = false, canonical: Boolean = false): String {
     return json {
-        encodeFrame(this@writeJsonStr)
+        encodeFrame(this@toJson)
     }.toJsonString(prettyPrint, canonical)
 }
 
+public fun AnyRow.toJson(prettyPrint: Boolean = false, canonical: Boolean = false): String {
+    return json {
+        encodeRow(df(), index())
+    }?.toJsonString(prettyPrint, canonical) ?: ""
+}
+
 public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false, canonical: Boolean = false) {
-    file.writeText(writeJsonStr(prettyPrint, canonical))
+    file.writeText(toJson(prettyPrint, canonical))
 }
 
 public fun AnyFrame.writeJson(path: String, prettyPrint: Boolean = false, canonical: Boolean = false): Unit = writeJson(File(path), prettyPrint, canonical)
 
 public fun AnyFrame.writeJson(writer: Appendable, prettyPrint: Boolean = false, canonical: Boolean = false) {
-    writer.append(writeJsonStr(prettyPrint, canonical))
+    writer.append(toJson(prettyPrint, canonical))
 }
