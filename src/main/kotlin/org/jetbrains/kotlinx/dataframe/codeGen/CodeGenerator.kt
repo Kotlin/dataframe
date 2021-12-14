@@ -1,6 +1,7 @@
 package org.jetbrains.dataframe.impl.codeGen
 
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.ExtensionsCodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
@@ -28,7 +29,8 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
         extensionProperties: Boolean,
         isOpen: Boolean,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-        knownMarkers: Iterable<Marker> = emptyList()
+        knownMarkers: Iterable<Marker> = emptyList(),
+        readJsonMethod: DefaultReadJsonMethod? = null
     ): CodeGenResult
 
     public fun generate(marker: Marker, interfaceMode: InterfaceGenerationMode, extensionProperties: Boolean): CodeWithConverter
