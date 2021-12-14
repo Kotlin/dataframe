@@ -2,10 +2,10 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.string.shouldStartWith
 import org.apache.commons.csv.CSVFormat
+import org.jetbrains.kotlinx.dataframe.io.toCsv
+import org.jetbrains.kotlinx.dataframe.io.toJson
 import org.jetbrains.kotlinx.dataframe.io.writeCSV
-import org.jetbrains.kotlinx.dataframe.io.writeCSVStr
 import org.jetbrains.kotlinx.dataframe.io.writeJson
-import org.jetbrains.kotlinx.dataframe.io.writeJsonStr
 import org.junit.Test
 import java.io.File
 import kotlin.io.path.deleteExisting
@@ -33,18 +33,18 @@ class Write : TestBase() {
     @Test
     fun writeCsvStr() {
         // SampleStart
-        val csvStr = df.writeCSVStr(CSVFormat.DEFAULT.withDelimiter(';').withRecordSeparator(System.lineSeparator()))
+        val csvStr = df.toCsv(CSVFormat.DEFAULT.withDelimiter(';').withRecordSeparator(System.lineSeparator()))
         // SampleEnd
         csvStr shouldStartWith """
             name;age;city;weight;isHappy
-            { firstName:Alice, lastName:Cooper };15;London;54;true
+            "{""firstName"":""Alice"",""lastName"":""Cooper""}";15;London;54;true
         """.rejoinWithSystemLineSeparator()
     }
 
     @Test
     fun writeJsonStr() {
         // SampleStart
-        val jsonStr = df.writeJsonStr(prettyPrint = true)
+        val jsonStr = df.toJson(prettyPrint = true)
         // SampleEnd
         jsonStr shouldStartWith """
             [{

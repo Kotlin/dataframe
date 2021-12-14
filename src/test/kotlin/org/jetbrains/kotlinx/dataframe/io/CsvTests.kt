@@ -8,6 +8,9 @@ import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.group
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -131,6 +134,31 @@ class CsvTests {
         val df = DataFrame.readCSV(durationCsv)
         df["duration"].type() shouldBe typeOf<String>()
         df["floatDuration"].type() shouldBe typeOf<String>()
+    }
+
+    @Test
+    fun `write and read frame column`() {
+        val df = dataFrameOf("a", "b", "c")(
+            1, 2, 3,
+            1, 3, 2,
+            2, 1, 3
+        )
+        val grouped = df.groupBy("a").into("g")
+        val str = grouped.toCsv()
+        val res = DataFrame.readDelimStr(str)
+        res shouldBe grouped
+    }
+
+    @Test
+    fun `write and read column group`() {
+        val df = dataFrameOf("a", "b", "c")(
+            1, 2, 3,
+            1, 3, 2
+        )
+        val grouped = df.group("b", "c").into("d")
+        val str = grouped.toCsv()
+        val res = DataFrame.readDelimStr(str)
+        res shouldBe grouped
     }
 
     companion object {

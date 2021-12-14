@@ -15,7 +15,7 @@ class JsonTests {
             3, 3.0, null
         )
 
-        val res = DataFrame.readJsonStr(df.writeJsonStr())
+        val res = DataFrame.readJsonStr(df.toJson())
         res shouldBe df
     }
 }

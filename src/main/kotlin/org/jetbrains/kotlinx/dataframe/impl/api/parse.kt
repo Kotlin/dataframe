@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.parse
+import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.size
@@ -24,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.io.isURL
+import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.typeClass
 import java.net.URL
 import java.text.NumberFormat
@@ -172,7 +174,10 @@ internal object Parsers : GlobalParserOptions {
             }
         }
 
-    inline fun <reified T : Any> stringParser(noinline body: (String) -> T?) = DelegatedStringParser(typeOf<T>(), body)
+    inline fun <reified T : Any> stringParser(catch: Boolean = false, noinline body: (String) -> T?): StringParser<T> {
+        return if (catch) DelegatedStringParser(typeOf<T>()) { try { body(it) } catch (e: Throwable) { null } }
+        else DelegatedStringParser(typeOf<T>(), body)
+    }
 
     inline fun <reified T : Any> stringParserWithOptions(noinline body: (ParserOptions?) -> ((String) -> T?)) =
         StringParserWithFormat(typeOf<T>(), body)
@@ -210,6 +215,9 @@ internal object Parsers : GlobalParserOptions {
         },
         stringParser { it.toBooleanOrNull() },
         stringParser { it.toBigDecimalOrNull() },
+
+        stringParser(catch = true) { if (it.startsWith("[")) DataFrame.readJsonStr(it) else null },
+        stringParser(catch = true) { if (it.startsWith("{")) DataFrame.readJsonStr(it).single() else null },
 
         stringParser { it } // must be last in the list of parsers to return original unparsed string
     )
@@ -299,7 +307,7 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
 
     val type = (if (hasNotNulls) Parsers[parserId].type else this.type()).withNullability(hasNulls)
     if (type.jvmErasure == String::class && !nullStringParsed) return this // nothing parsed
-    return DataColumn.createValueColumn(name(), parsedValues, type)
+    return DataColumn.create(name(), parsedValues, type)
 }
 
 internal fun <T> DataColumn<String?>.parse(parser: StringParser<T>, options: ParserOptions?): DataColumn<T?> {
