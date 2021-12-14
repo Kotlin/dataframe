@@ -17,11 +17,11 @@ aggregator = .count() | .matches() | .frames() | .with { rowExpression } | .valu
 ```
 
 **Parameters:**
-* `inward` - if `true` generated columns will be nested inside original column, otherwise they will be top-level
-* `pivotColumns` - columns with values for horizontal data grouping and generation of new columns
-* `indexColumns` - columns with values for vertical data grouping
-* `defaultValue` - value to fill mismatched pivot-index column pairs
-* `valueColumns` - columns with output values
+* `inward` — if `true` generated columns will be nested inside original column, otherwise they will be top-level
+* `pivotColumns` — columns with values for horizontal data grouping and generation of new columns
+* `indexColumns` — columns with values for vertical data grouping
+* `defaultValue` — value to fill mismatched pivot-index column pairs
+* `valueColumns` — columns with output values
 
 <!---FUN pivot-->
 <tabs>

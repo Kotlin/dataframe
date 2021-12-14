@@ -351,7 +351,7 @@ class DataFrameTests : BaseTest() {
         val res = df.chunked(2)
         res.size() shouldBe 4
         res.toList().dropLast(1).forEach {
-            it!!.nrow shouldBe 2
+            it.nrow shouldBe 2
         }
     }
 
