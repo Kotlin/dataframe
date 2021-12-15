@@ -19,7 +19,7 @@ import kotlin.reflect.KType
 /**
  * An ordered list of [DataColumn] with distinct non-empty [DataColumn.name] and equal [DataColumn.size].
  *
- * @param T - type that represents column schema of [DataFrame]. Used only for generation of schema-specific extension properties for typed access to [DataFrame] and is not used inside [DataFrame] itself.
+ * @param T - schema marker. The type that identifies column schema of [DataFrame]. Used only for generation of schema-specific extension properties for typed access to [DataFrame] and is not used by [DataFrame] itself.
  */
 public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
