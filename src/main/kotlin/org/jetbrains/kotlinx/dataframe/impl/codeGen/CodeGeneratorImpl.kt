@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.codeGen.BaseField
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
-import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.ExtensionsCodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.IsolatedMarker
@@ -206,13 +206,13 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
         isOpen: Boolean,
         visibility: MarkerVisibility,
         knownMarkers: Iterable<Marker>,
-        readJsonMethod: DefaultReadJsonMethod?
+        readDfMethod: DefaultReadDfMethod?
     ): CodeGenResult {
         val context = SchemaProcessor.create(name, knownMarkers)
         val marker = context.process(schema, isOpen, visibility)
         val declarations = mutableListOf<Code>()
         context.generatedMarkers.forEach { itMarker ->
-            declarations.add(generateInterface(itMarker, fields, readJsonMethod.takeIf { marker == itMarker }))
+            declarations.add(generateInterface(itMarker, fields, readDfMethod.takeIf { marker == itMarker }))
             if (extensionProperties) {
                 declarations.add(generateExtensionProperties(itMarker))
             }
@@ -229,7 +229,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
     private fun generateInterface(
         marker: Marker,
         fields: Boolean,
-        readJsonMethod: DefaultReadJsonMethod? = null
+        readDfMethod: DefaultReadDfMethod? = null
     ): Code {
         val annotationName = DataSchema::class.simpleName
 
@@ -254,12 +254,12 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
         val body = if (fieldsDeclaration.isNotBlank()) buildString {
             append(" {\n")
             append(fieldsDeclaration)
-            if (readJsonMethod != null) {
+            if (readDfMethod != null) {
                 append("\n")
                 append(
                     """
                     |    ${propertyVisibility}companion object {
-                    |${readJsonMethod.toDeclaration(marker.shortName, propertyVisibility)}
+                    |${readDfMethod.toDeclaration(marker.shortName, propertyVisibility)}
                     |    }
                 """.trimMargin()
                 )
