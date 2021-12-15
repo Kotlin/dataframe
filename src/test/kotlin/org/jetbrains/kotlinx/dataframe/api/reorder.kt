@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.junit.Test
 
 class ReorderTests {

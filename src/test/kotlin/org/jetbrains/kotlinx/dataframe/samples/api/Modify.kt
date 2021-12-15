@@ -327,6 +327,7 @@ class Modify : TestBase() {
     fun reorder_properties() {
         // SampleStart
         df.reorder { age..isHappy }.byName()
+        // SampleEnd
     }
 
     @Test
@@ -336,6 +337,7 @@ class Modify : TestBase() {
         val isHappy by column<Boolean>()
 
         df.reorder { age..isHappy }.byName()
+        // SampleEnd
     }
 
     @Test
@@ -354,6 +356,7 @@ class Modify : TestBase() {
         df.reorder("d", "b").cast<Int>().by { sum() } // [c, b, a, d]
             // SampleEnd
             .columnNames() shouldBe listOf("c", "b", "a", "d")
+        // SampleEnd
     }
 
     @Test

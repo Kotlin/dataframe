@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumn
@@ -10,16 +11,15 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columnName
-import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import kotlin.reflect.KProperty
 
 /**
- * Provides access to columns.
+ * Provides access to [columns][DataColumn].
  *
- * Base interface for [DataFrame] and column selection DSLs derived from [ColumnSelectionDsl]
+ * Base interface for [DataFrame] and [column selection DSLs][ColumnSelectionDsl]
  *
- * @param T - schema marker. Used to generate extension properties for typed column access.
+ * @param T Schema marker. Used to generate extension properties for typed column access.
  */
 public interface ColumnsContainer<out T> {
 

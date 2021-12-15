@@ -3,7 +3,10 @@ package org.jetbrains.kotlinx.dataframe
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -29,11 +32,12 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 /**
- * Column with [type], [name]/[path] and [values]
- * Base interface for [ValueColumn] and [FrameColumn]. [ColumnGroup] doesn't derive from it, but its implementation [ColumnGroupImpl] does, so any actual column instance can cast to [DataColumn] safely.
- * All column extension functions that clash with [DataFrame] API (such as filter, forEach, map etc.) should be defined for [DataColumn] and not for [BaseColumn]
+ * Column with [name] and [values] of specific [type].
  *
- * @param T - type of values contained in column.
+ * Base interface for [ValueColumn] and [FrameColumn], but not for [ColumnGroup]. However, implementations for all three [column kinds][ColumnKind] derive from DataColumn and can cast to it safely.
+ * Column operations that have signature clash with [DataFrame] API ([filter], [take], [map] etc.) are defined for [DataColumn] and not for [BaseColumn].
+ *
+ * @param T - type of values in the column.
  */
 public interface DataColumn<out T> : BaseColumn<T> {
 
