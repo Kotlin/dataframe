@@ -14,6 +14,7 @@ open class SchemaGeneratorExtension {
     var packageName: String? = null
     var sourceSet: String? = null
     var visibility: DataSchemaVisibility? = null
+    internal var defaultPath: Boolean? = null
 
     fun schema(config: Schema.() -> Unit) {
         val schema = Schema(project).apply(config)
@@ -25,6 +26,10 @@ open class SchemaGeneratorExtension {
         project.configure(schema, config)
         schemas.add(schema)
     }
+
+    fun withoutDefaultPath() {
+        defaultPath = false
+    }
 }
 
 class Schema(
@@ -35,6 +40,7 @@ class Schema(
     var packageName: String? = null,
     var sourceSet: String? = null,
     var visibility: DataSchemaVisibility? = null,
+    internal var defaultPath: Boolean? = null,
     val csvOptions: CsvOptions = CsvOptions()
 ) {
     fun setData(file: File) {
@@ -54,6 +60,14 @@ class Schema(
     }
     fun csvOptions(config: Closure<*>) {
         project.configure(csvOptions, config)
+    }
+
+    fun withoutDefaultPath() {
+        defaultPath = false
+    }
+
+    fun withDefaultPath() {
+        defaultPath = true
     }
 }
 

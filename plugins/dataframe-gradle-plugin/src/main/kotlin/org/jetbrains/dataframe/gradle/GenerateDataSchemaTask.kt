@@ -44,6 +44,9 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @get:Input
     abstract val schemaVisibility: Property<DataSchemaVisibility>
 
+    @get:Input
+    abstract val defaultPath: Property<Boolean>
+
     @Suppress("LeakingThis")
     @get:OutputFile
     val dataSchema: Provider<File> = packageName.zip(interfaceName) { packageName, interfaceName ->
@@ -67,9 +70,10 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
             },
             readDfMethod = stringOf(data.get()).let {
+                val defaultPath = it.takeIf { defaultPath.get() }
                 when (format) {
-                    SupportedFormats.JSON -> DefaultReadJsonMethod(it)
-                    SupportedFormats.CSV -> DefaultReadCsvMethod(it, csvOptions.get().delimiter)
+                    SupportedFormats.JSON -> DefaultReadJsonMethod(defaultPath)
+                    SupportedFormats.CSV -> DefaultReadCsvMethod(defaultPath, csvOptions.get().delimiter)
                 }
             }
         )

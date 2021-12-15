@@ -91,6 +91,8 @@ class SchemaGeneratorPlugin : Plugin<Project> {
                 }
             }
 
+        val defaultPath = schema.defaultPath ?: extension.defaultPath ?: true
+
         return target.tasks.create("generateDataFrame${interfaceName}", GenerateDataSchemaTask::class.java) {
             group = GROUP
             data.set(schema.data)
@@ -99,6 +101,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             this.src.set(src)
             this.schemaVisibility.set(visibility)
             this.csvOptions.set(schema.csvOptions)
+            this.defaultPath.set(defaultPath)
         }
     }
 

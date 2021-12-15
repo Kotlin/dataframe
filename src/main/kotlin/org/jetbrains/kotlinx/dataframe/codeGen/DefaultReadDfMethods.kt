@@ -4,24 +4,34 @@ public interface DefaultReadDfMethod {
     public fun toDeclaration(markerName: String, visibility: String): String
 }
 
-public class DefaultReadJsonMethod(private val path: String) : DefaultReadDfMethod {
+public class DefaultReadJsonMethod(private val path: String?) : DefaultReadDfMethod {
     public override fun toDeclaration(markerName: String, visibility: String): String {
-        return """
-        |        ${visibility}const val defaultPath: String = "${path.escapeStringLiteral()}"
-        |        ${visibility}fun readJson(path: String = defaultPath): DataFrame<$markerName> = DataFrame.readJson(path).cast()
-        """.trimMargin()
+        return buildString {
+            if (path != null) {
+                append("""        ${visibility}const val defaultPath: String = "${path.escapeStringLiteral()}"""")
+                appendLine()
+            }
+            val defaultPathClause = if (path != null) " = defaultPath" else ""
+            append("        ${visibility}fun readJson(path: String$defaultPathClause): DataFrame<")
+            append(markerName)
+            append("> = DataFrame.readJson(path).cast()")
+        }
     }
 }
 
-public class DefaultReadCsvMethod(private val path: String, private val delimiter: Char) : DefaultReadDfMethod {
+public class DefaultReadCsvMethod(private val path: String?, private val delimiter: Char) : DefaultReadDfMethod {
     public override fun toDeclaration(markerName: String, visibility: String): String {
-        return """
-        |        ${visibility}const val defaultPath: String = "${path.escapeStringLiteral()}"
-        |        ${visibility}const val defaultDelimiter: Char = '$delimiter'
-        |        ${visibility}fun readCsv(path: String = defaultPath, delimiter: Char = defaultDelimiter): DataFrame<$markerName> {
-        |            return DataFrame.readCSV(path, delimiter).cast()
-        |        }
-        """.trimMargin()
+        return buildString {
+            if (path != null) {
+                append("""        ${visibility}const val defaultPath: String = "${path.escapeStringLiteral()}"""")
+                appendLine()
+            }
+            append("        ${visibility}const val defaultDelimiter: Char = '$delimiter'\n")
+            val defaultPathClause = if (path != null) " = defaultPath" else ""
+            append("        ${visibility}fun readCSV(path: String$defaultPathClause, delimiter: Char = defaultDelimiter): DataFrame<")
+            append(markerName)
+            append("> {\n            return DataFrame.readCSV(path, delimiter).cast()\n        }")
+        }
     }
 }
 
