@@ -16,6 +16,11 @@ import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
 import kotlin.reflect.KType
 
+/**
+ * An ordered list of [DataColumn] with distinct non-empty [DataColumn.name] and equal [DataColumn.size].
+ *
+ * @param T - type that represents column schema of [DataFrame]. Used only for generation of schema-specific extension properties for typed access to [DataFrame] and is not used inside [DataFrame] itself.
+ */
 public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     public companion object {
