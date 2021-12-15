@@ -38,7 +38,7 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.reflect)
 
-    implementation(libs.commonsCsv)
+    api(libs.commonsCsv)
     implementation(libs.klaxon)
     implementation(libs.fuel)
 
