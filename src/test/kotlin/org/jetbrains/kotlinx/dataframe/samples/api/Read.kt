@@ -20,7 +20,7 @@ class Read : TestBase() {
             file,
             delimiter = '|',
             headers = listOf("A", "B", "C", "D"),
-            parserOptions = ParserOptions(nulls = setOf("not assigned"))
+            parserOptions = ParserOptions(nullStrings = setOf("not assigned"))
         )
         // SampleEnd
         df.nrow shouldBe 3
