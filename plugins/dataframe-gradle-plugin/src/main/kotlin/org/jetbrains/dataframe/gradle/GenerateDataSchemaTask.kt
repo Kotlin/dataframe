@@ -16,6 +16,7 @@ import org.gradle.api.provider.Provider
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.dataframe.impl.codeGen.CodeGenResult
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.io.SupportedFormats
@@ -65,10 +66,10 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
                 DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
             },
-            readJsonMethod = (data.get() as? String)?.let {
+            readDfMethod = (data.get() as? String)?.let {
                 when (format) {
                     SupportedFormats.JSON -> DefaultReadJsonMethod(it)
-                    SupportedFormats.CSV -> null
+                    SupportedFormats.CSV -> DefaultReadCsvMethod(it, csvOptions.get().delimiter)
                 }
             }
         )
@@ -139,7 +140,8 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                     "RemoveRedundantQualifierName",
                     "unused", "ObjectPropertyName",
                     "UNCHECKED_CAST", "PropertyName",
-                    "ClassName", "UnusedImport"
+                    "ClassName", "UnusedImport",
+                    "MemberVisibilityCanBePrivate"
                 )
                 """.trimIndent()
             )
@@ -157,6 +159,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             appendLine("import org.jetbrains.kotlinx.dataframe.annotations.DataSchema")
             appendLine("import org.jetbrains.kotlinx.dataframe.api.cast")
             appendLine("import org.jetbrains.kotlinx.dataframe.io.readJson")
+            appendLine("import org.jetbrains.kotlinx.dataframe.io.readCSV")
             appendLine()
             appendLine("// GENERATED. DO NOT EDIT MANUALLY")
             appendLine(codeGenResult.code.declarations)
