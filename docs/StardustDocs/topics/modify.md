@@ -23,6 +23,7 @@ On the other hand, `Kotlin dataframe` follows `Koltin Collections` naming for ro
 
 **Horizontal (column) operations:**
 * [add](add.md) — add columns
+* [addId](add.md#addid) — add `id` column
 * [flatten](flatten.md) — remove column groupings recursively
 * [group](group.md) — group columns into [`ColumnGroup`](DataColumn.md#columngroup)
 * [insert](insert.md) — insert column

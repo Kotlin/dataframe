@@ -17,19 +17,17 @@ columnExpression: DataColumn.(DataColumn) -> Value
 <tab title="Properties">
 
 ```kotlin
-    df.reorder { age..isHappy }.byName()
-}
+df.reorder { age..isHappy }.byName()
 ```
 
 </tab>
 <tab title="Accessors">
 
 ```kotlin
-    val age by column<Int>()
-    val isHappy by column<Boolean>()
+val age by column<Int>()
+val isHappy by column<Boolean>()
 
-    df.reorder { age..isHappy }.byName()
-}
+df.reorder { age..isHappy }.byName()
 ```
 
 </tab>
@@ -43,9 +41,9 @@ columnExpression: DataColumn.(DataColumn) -> Value
 </tab></tabs>
 <!---END-->
 
-When a subset of columns is selected, they will be reordered within their original positions. Positions of other columns will not change. 
+When a subset of columns is selected they will be reordered among their original positions. Positions of other columns will not change. 
 
-If selected columns belong to different column groups, they will be reordered within their groups, so column groupings will not change.
+If selected columns belong to different column groups they will be reordered within their groups, so column grouping will be preserved.
 
 <!---FUN reorderSome-->
 
