@@ -98,4 +98,9 @@ public fun <T> DataFrame<T>.dropNA(cols: Iterable<Column>, whereAllNA: Boolean =
 
 public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> = dropNA(whereAllNA) { all() }
 
+public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> = when (typeClass) {
+    Double::class, Float::class -> filter { !it.isNA }.cast()
+    else -> (if (!hasNulls()) this else filter { it != null }) as DataColumn<T>
+}
+
 // endregion

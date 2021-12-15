@@ -252,7 +252,7 @@ class PivotTests {
             "Int" from { value as? Int }
             "String" from { value as? String }
         }.remove("value")
-            .implode("Int", dropNulls = true)
+            .implode("Int", dropNA = true)
             .group("Int", "String").into("value")
 
         pivoted shouldBe expected

@@ -267,7 +267,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun splitRows() {
         val selected = typed2.select { nameAndCity }
-        val nested = selected.implode(dropNulls = false) { nameAndCity.city }
+        val nested = selected.implode(dropNA = false) { nameAndCity.city }
         val mergedCity = column<List<String?>>("city")
         val res = nested.split {
             nameAndCity[mergedCity]

@@ -1168,7 +1168,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `merge rows keep nulls`() {
-        val merged = typed.select { name and city }.implode(dropNulls = false) { city }
+        val merged = typed.select { name and city }.implode(dropNA = false) { city }
 
         val cityList = column<List<String?>>().named("city")
         merged[cityList].sumOf { it.size } shouldBe typed.city.size
@@ -1185,7 +1185,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `merge rows drop nulls`() {
-        val merged = typed.select { name and city }.implode(dropNulls = true) { city }
+        val merged = typed.select { name and city }.implode(dropNA = true) { city }
 
         val cityList = column<List<String>>().named("city")
         merged[cityList].sumOf { it.size } shouldBe typed.city.dropNulls().size
@@ -1201,7 +1201,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun splitRows() {
         val selected = typed.select { name and city }
-        val nested = selected.implode(dropNulls = false) { city }
+        val nested = selected.implode(dropNA = false) { city }
         val mergedCity = column<List<String?>>("city")
         val res = nested.split { mergedCity }.intoRows()
         res.sortBy { name } shouldBe selected.sortBy { name }
@@ -2257,7 +2257,7 @@ class DataFrameTests : BaseTest() {
     fun implodeWithNulls() {
         val merged = typed.update { weight }.where { name == "Charlie" }.withNull()
             .select { name and weight }
-            .implode(dropNulls = true) { weight }
+            .implode(dropNA = true) { weight }
 
         merged["weight"].type() shouldBe typeOf<List<Int>>()
     }

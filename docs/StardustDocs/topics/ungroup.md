@@ -4,11 +4,11 @@
 
 Replaces `ColumnGroup` with its nested columns. 
 
-Reverse operation to [group](group.md)
-
-```kotlin
+```text
 ungroup { columns }
 ```
+
+**Reverse operation:** [`group`](group.md)
 
 See [column selectors](ColumnSelectors.md)
 
