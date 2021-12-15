@@ -56,7 +56,8 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
     @TaskAction
     fun generate() {
-        val (df, format) = readDataFrame(data.get(), csvOptions.get())
+        val csvOptions = csvOptions.get()
+        val (df, format) = readDataFrame(data.get(), csvOptions)
         val codeGenerator = CodeGenerator.create(useFqNames = false)
         val codeGenResult = codeGenerator.generate(
             schema = df.schema(),
@@ -73,7 +74,10 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 val defaultPath = it.takeIf { defaultPath.get() }
                 when (format) {
                     SupportedFormats.JSON -> DefaultReadJsonMethod(defaultPath)
-                    SupportedFormats.CSV -> DefaultReadCsvMethod(defaultPath, csvOptions.get().delimiter)
+                    SupportedFormats.CSV -> {
+                        val (delimiter) = csvOptions
+                        DefaultReadCsvMethod(defaultPath, delimiter)
+                    }
                 }
             }
         )
@@ -108,7 +112,10 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             url.endsWith(".json") -> SupportedFormats.JSON
             else -> null
         }
-        fun readCSV(url: URL) = DataFrame.readCSV(url, delimiter = csvOptions.delimiter) to SupportedFormats.CSV
+        fun readCSV(url: URL) = run {
+            val (delimiter) = csvOptions
+            DataFrame.readCSV(url, delimiter = delimiter) to SupportedFormats.CSV
+        }
         fun readJson(url: URL) = DataFrame.readJson(url) to SupportedFormats.JSON
         val url = urlOf(data)
         return try {

@@ -72,4 +72,6 @@ class Schema(
 }
 
 // Without Serializable GradleRunner tests fail
-class CsvOptions(var delimiter: Char = ',') : Serializable
+data class CsvOptions(
+    var delimiter: Char = ','
+) : Serializable
