@@ -10,6 +10,9 @@ dataframes {
     visibility = // [optional; default: if explicitApiMode enabled then EXPLICIT_PUBLIC, else IMPLICIT_PUBLIC]
     // KOTLIN SCRIPT: DataSchemaVisibility.INTERNAL DataSchemaVisibility.IMPLICIT_PUBLIC, DataSchemaVisibility.EXPLICIT_PUBLIC
     // GROOVY SCRIPT: 'internal', 'implicit_public', 'explicit_public'
+        
+    withoutDefaultPath() // disable default path for all schemas
+    // i.e. plugin won't copy "data" property of the schemas to generated companion objects
     
     schema {
         sourceSet /* String */ = "…" // [optional; override default]
@@ -22,6 +25,9 @@ dataframes {
         csvOptions {
             delimiter /* Char */ = ';' // [optional; default: ',']
         }
+        
+        withoutDefaultPath() // disable default path for this schema
+        withDefaultPath() // enable default path for this schema
     }
 }
 ```
