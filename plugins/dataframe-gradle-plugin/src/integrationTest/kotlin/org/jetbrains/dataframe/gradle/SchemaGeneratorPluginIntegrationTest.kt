@@ -511,4 +511,46 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
         }
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
     }
+
+    @Test
+    fun `companion object for csv compiles`() {
+        testCompanionObject(TestData.csvName, TestData.csvSample)
+    }
+
+    @Test
+    fun `companion object for json compiles`() {
+        testCompanionObject(TestData.jsonName, TestData.jsonSample)
+    }
+
+    private fun testCompanionObject(dataName: String, dataSample: String) {
+        val (_, result) = runGradleBuild(":build") { buildDir ->
+            val dataFile = File(buildDir, dataName)
+            dataFile.writeText(dataSample)
+            """
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                            
+                plugins {
+                    kotlin("jvm") version "$kotlinVersion"
+                    id("org.jetbrains.kotlin.plugin.dataframe")
+                }
+                
+                repositories {
+                    mavenCentral()
+                    mavenLocal()
+                }
+                
+                dependencies {
+                    implementation(files("$dataframeJarPath"))
+                }
+                
+                dataframes {
+                    schema {
+                        data = file("${dataName}")
+                        name = "Schema"
+                    }
+                }
+            """.trimIndent()
+        }
+        result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
 }
