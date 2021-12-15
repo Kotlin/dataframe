@@ -4,9 +4,11 @@
 
 Returns `DataFrame` without column groupings under selected columns
 
-```kotlin
+```text
 flatten  [ { columns } ]
 ```
+
+Columns after flattening will keep their original names. Potential column name clashes are resolved by adding minimal possible name prefix from ancestor columns.
 
 <!---FUN flatten-->
 
@@ -17,8 +19,6 @@ df.flatten { name }
 ```
 
 <!---END-->
-
-Potential column name clashes are resolved by adding minimal required prefix from ancestor column names.
 
 To remove all column groupings in `DataFrame`, invoke `flatten` without parameters:
 

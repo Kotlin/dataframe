@@ -8,17 +8,17 @@ import org.jetbrains.kotlinx.dataframe.impl.api.implodeImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
-public fun <T> DataFrame<T>.implode(dropNulls: Boolean = false): DataRow<T> =
-    implode(dropNulls) { all() }[0]
+public fun <T> DataFrame<T>.implode(dropNA: Boolean = false): DataRow<T> =
+    implode(dropNA) { all() }[0]
 
-public fun <T, C> DataFrame<T>.implode(dropNulls: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> =
-    implodeImpl(dropNulls, columns)
+public fun <T, C> DataFrame<T>.implode(dropNA: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> =
+    implodeImpl(dropNA, columns)
 
-public fun <T> DataFrame<T>.implode(vararg columns: String, dropNulls: Boolean = false): DataFrame<T> =
-    implode(dropNulls) { columns.toColumns() }
+public fun <T> DataFrame<T>.implode(vararg columns: String, dropNA: Boolean = false): DataFrame<T> =
+    implode(dropNA) { columns.toColumns() }
 
-public fun <T, C> DataFrame<T>.implode(vararg columns: ColumnReference<C>, dropNulls: Boolean = false): DataFrame<T> =
-    implode(dropNulls) { columns.toColumns() }
+public fun <T, C> DataFrame<T>.implode(vararg columns: ColumnReference<C>, dropNA: Boolean = false): DataFrame<T> =
+    implode(dropNA) { columns.toColumns() }
 
-public fun <T, C> DataFrame<T>.implode(vararg columns: KProperty<C>, dropNulls: Boolean = false): DataFrame<T> =
-    implode(dropNulls) { columns.toColumns() }
+public fun <T, C> DataFrame<T>.implode(vararg columns: KProperty<C>, dropNA: Boolean = false): DataFrame<T> =
+    implode(dropNA) { columns.toColumns() }

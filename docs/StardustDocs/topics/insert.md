@@ -4,15 +4,15 @@
 
 Inserts new column at specific position in `DataFrame`. 
 
-Similar to [add](add.md), but supports column positioning.
-
-```kotlin
+```text
 insert 
     (columnName) { rowExpression } | (column)
     .under { parentColumn } | .after { column } | .at(position)
 
 rowExpression: DataRow.(DataRow) -> Value
 ```
+
+Similar to [add](add.md), but supports column positioning.
 
 Create new column based on existing columns and insert it into `DataFrame`:
 

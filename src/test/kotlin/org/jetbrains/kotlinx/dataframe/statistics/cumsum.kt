@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.cumSum
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.junit.Test
 
 class CumsumTests {

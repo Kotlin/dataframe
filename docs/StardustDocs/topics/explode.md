@@ -2,17 +2,29 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Splits list-like values in one or several columns and spreads them vertically. Values in other columns are duplicated.  
+Splits list-like values in given columns and spreads them vertically. Values in other columns are duplicated.
 
-This is reverse operation to [`implode`](implode.md)
+```text
+explode(dropEmpty = true) [ { columns } ]
+```
+
+**Parameters:**
+* `dropEmpty` — if `true`, removes rows with empty lists or dataframes. Otherwise, they will be exploded into `null`.
+
+**Available for:**
+* `DataFrame`
+* `FrameColumn`
+* `DataColumn<Collection>`
+
+**Reverse operation:** [`implode`](implode.md)
 
 Exploded columns will change their types:
 * `List<T>` to `T`
 * `DataFrame` to `DataRow`
 
-Note that exploded [`FrameColumn`](DataColumn.md#framecolumn) will convert into [`ColumnGroup`](DataColumn.md#columngroup)
+Exploded [`FrameColumn`](DataColumn.md#framecolumn) will convert into [`ColumnGroup`](DataColumn.md#columngroup).
 
-Rows with empty lists will be skipped. If you want to keep such rows with `null` value in exploded columns, set `dropEmpty` flag to `false`.
+Explode `DataFrame`:
 
 <!---FUN explode-->
 <tabs>
@@ -56,7 +68,7 @@ df.explode { a and b }
 
 <!---END-->
 
-`DataColumn<Collection>` or `FrameColumn` can also be exploded:
+Explode `DataColumn<Collection>`:
 
 <!---FUN explodeColumnList-->
 
@@ -67,6 +79,8 @@ col.explode()
 ```
 
 <!---END-->
+
+Explode `FrameColumn`:
 
 <!---FUN explodeColumnFrames-->
 
