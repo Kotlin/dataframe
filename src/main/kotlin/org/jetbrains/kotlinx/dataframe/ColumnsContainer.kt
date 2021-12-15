@@ -17,7 +17,9 @@ import kotlin.reflect.KProperty
 /**
  * Provides access to columns.
  *
- * Base interface for [DataFrame] and DSLs for column selection, e.g. [ColumnSelectionDsl]
+ * Base interface for [DataFrame] and column selection DSLs derived from [ColumnSelectionDsl]
+ *
+ * @param T - schema marker. Used to generate extension properties for typed column access.
  */
 public interface ColumnsContainer<out T> {
 
@@ -46,6 +48,8 @@ public interface ColumnsContainer<out T> {
     public operator fun get(columnPath: ColumnPath): AnyCol = getColumn(columnPath)
 
     public operator fun <R> get(column: DataColumn<R>): DataColumn<R> = getColumn(column.name()).cast()
+    public operator fun <R> get(column: DataColumn<DataRow<R>>): ColumnGroup<R> = getColumn(column)
+    public operator fun <R> get(column: DataColumn<DataFrame<R>>): FrameColumn<R> = getColumn(column)
 
     public operator fun <R> get(column: ColumnReference<R>): DataColumn<R> = getColumn(column)
     public operator fun <R> get(column: ColumnReference<DataRow<R>>): ColumnGroup<R> = getColumn(column)
