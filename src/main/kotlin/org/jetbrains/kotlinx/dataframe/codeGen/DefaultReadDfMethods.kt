@@ -12,9 +12,12 @@ public class DefaultReadJsonMethod(private val path: String?) : DefaultReadDfMet
                 appendLine()
             }
             val defaultPathClause = if (path != null) " = defaultPath" else ""
-            append("        ${visibility}fun readJson(path: String$defaultPathClause): DataFrame<")
-            append(markerName)
-            append("> = DataFrame.readJson(path).cast()")
+            append("""
+            |        ${visibility}fun readJson(path: String$defaultPathClause, verify: Boolean? = null): DataFrame<$markerName> { 
+            |            val df = DataFrame.readJson(path)
+            |            return if (verify != null) df.cast(verify = verify) else df.cast()
+            |        }
+            """.trimMargin())
         }
     }
 }
@@ -28,9 +31,16 @@ public class DefaultReadCsvMethod(private val path: String?, private val delimit
             }
             append("        ${visibility}const val defaultDelimiter: Char = '$delimiter'\n")
             val defaultPathClause = if (path != null) " = defaultPath" else ""
-            append("        ${visibility}fun readCSV(path: String$defaultPathClause, delimiter: Char = defaultDelimiter): DataFrame<")
-            append(markerName)
-            append("> {\n            return DataFrame.readCSV(path, delimiter).cast()\n        }")
+            append("""
+            |        ${visibility}fun readCSV(
+            |            path: String$defaultPathClause,
+            |            delimiter: Char = defaultDelimiter,
+            |            verify: Boolean? = null
+            |        ): DataFrame<$markerName> { 
+            |            val df = DataFrame.readCSV(path, delimiter)
+            |            return if (verify != null) df.cast(verify = verify) else df.cast()
+            |        }
+            """.trimMargin())
         }
     }
 }
