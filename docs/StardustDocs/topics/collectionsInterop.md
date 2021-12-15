@@ -7,7 +7,7 @@ _Kotlin DataFrame_ and _Kotlin Collection_ represent two different approaches to
 * `DataFrame` stores data by fields/columns
 * `Collection` stores data by records/rows
 
-Although `DataFrame` doesn't implement `Collection` or `Iterable` interface, it has many similar operations, such as [`filter`](filter.md), [`take`](sliceRows.md#take.md), [`first`](first.md), [`map`](map.md), [`groupBy`](groupBy.md) etc.
+Although `DataFrame` doesn't implement `Collection` or `Iterable` interface, it has many similar operations, such as [`filter`](filter.md), [`take`](sliceRows.md#take), [`first`](first.md), [`map`](map.md), [`groupBy`](groupBy.md) etc.
 
 `DataFrame` has two-way compatibility with `Map` and `List`:
 * [toDataFrame](createDataFrame.md#todataframe)  — converts `List<T>` into `DataFrame<T>` and `Map<String, List<*>>` into `DataFrame<*>`.
