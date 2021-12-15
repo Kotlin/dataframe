@@ -2,28 +2,16 @@ package org.jetbrains.dataframe.gradle
 
 import io.kotest.matchers.shouldBe
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 import java.nio.file.Files
-import java.util.*
 
-class SchemaGeneratorPluginIntegrationTest {
+class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationTest() {
     private companion object {
         private const val TRANSITIVE_DF_DEPENDENCY = "KSP has dependency on latest dataframe, but it's not yet published"
         private const val FIRST_NAME = "first.csv"
         private const val SECOND_NAME = "second.csv"
-        private val KOTLIN_VERSION = TestData.kotlinVersion
-    }
-    private lateinit var dataframeJarPath: String
-
-    @Before
-    fun before() {
-        val properties = Properties().also {
-            it.load(javaClass.getResourceAsStream("df.properties"))
-        }
-        dataframeJarPath = properties.getProperty("DATAFRAME_JAR")
     }
 
     @Test
@@ -35,7 +23,7 @@ class SchemaGeneratorPluginIntegrationTest {
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                 
             plugins {
-                kotlin("jvm") version "$KOTLIN_VERSION"
+                kotlin("jvm") version "$kotlinVersion"
                 id("org.jetbrains.kotlin.plugin.dataframe")
             }
             
@@ -76,7 +64,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("jvm") version "$KOTLIN_VERSION"
+                    kotlin("jvm") version "$kotlinVersion"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -111,7 +99,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("jvm") version "$KOTLIN_VERSION"
+                    kotlin("jvm") version "$kotlinVersion"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -159,7 +147,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("jvm") version "$KOTLIN_VERSION"
+                    kotlin("jvm") version "$kotlinVersion"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -196,7 +184,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("multiplatform") version "$KOTLIN_VERSION"
+                    kotlin("multiplatform") version "$kotlinVersion"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -264,7 +252,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("jvm") version "$KOTLIN_VERSION"
+                    kotlin("jvm") version "$kotlinVersion"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -325,7 +313,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("jvm") version "$KOTLIN_VERSION"
+                    kotlin("jvm") version "$kotlinVersion"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -377,7 +365,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("jvm") version "$KOTLIN_VERSION"
+                    kotlin("jvm") version "$kotlinVersion"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -407,7 +395,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("jvm") version "$KOTLIN_VERSION"
+                    kotlin("jvm") version "$kotlinVersion"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -450,7 +438,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("multiplatform") version "$KOTLIN_VERSION"
+                    kotlin("multiplatform") version "$kotlinVersion"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -496,7 +484,7 @@ class SchemaGeneratorPluginIntegrationTest {
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
                 plugins {
-                    kotlin("multiplatform") version "$KOTLIN_VERSION"
+                    kotlin("multiplatform") version "$kotlinVersion"
                     id("org.jetbrains.kotlin.plugin.dataframe")
                 }
                 
@@ -517,6 +505,48 @@ class SchemaGeneratorPluginIntegrationTest {
                         name = "Schema"
                         packageName = ""
                         src = buildDir
+                    }
+                }
+            """.trimIndent()
+        }
+        result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
+    fun `companion object for csv compiles`() {
+        testCompanionObject(TestData.csvName, TestData.csvSample)
+    }
+
+    @Test
+    fun `companion object for json compiles`() {
+        testCompanionObject(TestData.jsonName, TestData.jsonSample)
+    }
+
+    private fun testCompanionObject(dataName: String, dataSample: String) {
+        val (_, result) = runGradleBuild(":build") { buildDir ->
+            val dataFile = File(buildDir, dataName)
+            dataFile.writeText(dataSample)
+            """
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                            
+                plugins {
+                    kotlin("jvm") version "$kotlinVersion"
+                    id("org.jetbrains.kotlin.plugin.dataframe")
+                }
+                
+                repositories {
+                    mavenCentral()
+                    mavenLocal()
+                }
+                
+                dependencies {
+                    implementation(files("$dataframeJarPath"))
+                }
+                
+                dataframes {
+                    schema {
+                        data = file("${dataName}")
+                        name = "Schema"
                     }
                 }
             """.trimIndent()
