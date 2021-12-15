@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.asNumbers
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.count
 import org.jetbrains.kotlinx.dataframe.api.cumSum
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -1127,6 +1128,7 @@ class Analyze : TestBase() {
         // SampleStart
         df.cumSum { weight }
         df.weight.cumSum()
+        df.groupBy { city }.cumSum { weight }.concat()
         // SampleEnd
     }
 
