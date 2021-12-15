@@ -366,14 +366,14 @@ class Modify : TestBase() {
             // SampleEnd
             .name.columnNames() shouldBe listOf("lastName", "firstName")
     }
-    
+
     @Test
     fun splitInplace_properties() {
         // SampleStart
         df.split { name.firstName }.by { it.chars().toList() }.inplace()
         // SampleEnd
     }
-    
+
     @Test
     fun splitInplace_accessors() {
         // SampleStart
