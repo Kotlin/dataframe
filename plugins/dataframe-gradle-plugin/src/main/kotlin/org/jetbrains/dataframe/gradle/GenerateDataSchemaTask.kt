@@ -66,7 +66,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
                 DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
             },
-            readDfMethod = (data.get() as? String)?.let {
+            readDfMethod = stringOf(data.get()).let {
                 when (format) {
                     SupportedFormats.JSON -> DefaultReadJsonMethod(it)
                     SupportedFormats.CSV -> DefaultReadCsvMethod(it, csvOptions.get().delimiter)
@@ -77,6 +77,15 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
         val dataSchema = dataSchema.get()
         dataSchema.writeText(buildSourceFileContent(escapedPackageName, codeGenResult))
+    }
+
+    private fun stringOf(data: Any): String {
+        return when (data) {
+            is File -> data.toRelativeString(base = project.projectDir)
+            is URL -> data.toExternalForm()
+            is String -> data
+            else -> unsupportedType()
+        }
     }
 
     private fun escapePackageName(packageName: String): String {
@@ -127,9 +136,12 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 isURL(data) -> URL(data).toURI()
                 else -> project.file(data).toURI()
             }
-            else -> throw IllegalArgumentException("data for schema \"${interfaceName.get()}\" must be File, URL or String")
+            else -> unsupportedType()
         }.toURL()
     }
+
+    private fun unsupportedType(): Nothing =
+        throw IllegalArgumentException("data for schema \"${interfaceName.get()}\" must be File, URL or String")
 
     private fun buildSourceFileContent(escapedPackageName: String, codeGenResult: CodeGenResult): String {
         return buildString {
