@@ -38,7 +38,7 @@ Available parser options:
 * `locale: Locale` is used to parse numbers
 * `dateTimePattern: String` is used to parse date and time
 * `dateTimeFormatter: DateTimeFormatter` is used to parse date and time
-* `nulls: List<String>` is used to treat particular strings as `null` value. Default `null` strings: `"null"` and `"NULL"`
+* `nullStrings: List<String>` is used to treat particular strings as `null` value. Default null strings are **"null"** and **"NULL"**
 
 <!---FUN parseWithOptions-->
 

@@ -1238,7 +1238,7 @@ class DataFrameTests : BaseTest() {
             .merge { age and city and weight }.by(", ").intoList()
             .toDataFrame { "data" from { it } }
             .split("data").by(", ").into(age, city, weight)
-            .parse(ParserOptions(nulls = setOf("null")))
+            .parse(ParserOptions(nullStrings = setOf("null")))
 
         val expected = typed[age, city, weight]
         parsed shouldBe expected
