@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.codeGen.BaseField
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.ExtensionsCodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.IsolatedMarker
@@ -116,7 +117,7 @@ internal object ShortNames : TypeRenderingStrategy {
 }
 
 internal open class ExtensionsCodeGeneratorImpl(
-    val typeRendering: TypeRenderingStrategy
+    private val typeRendering: TypeRenderingStrategy
 ) : ExtensionsCodeGenerator, TypeRenderingStrategy by typeRendering {
 
     fun renderStringLiteral(name: String) = name
@@ -170,47 +171,13 @@ internal open class ExtensionsCodeGeneratorImpl(
         return createCodeWithConverter(code, marker.name)
     }
 
-    private fun generateInterfaces(
-        schemas: List<Marker>,
-        fields: Boolean
-    ) = schemas.map { generateInterface(it, fields) }
-
-    protected fun generateInterface(
-        marker: Marker,
-        fields: Boolean
-    ): Code {
-        val annotationName = DataSchema::class.simpleName
-
-        val visibility = renderTopLevelDeclarationVisibility(marker)
-        val propertyVisibility = renderInternalDeclarationVisibility(marker)
-
-        val header =
-            "@$annotationName${if (marker.isOpen) "" else "(isOpen = false)"}\n${visibility}interface ${marker.name}"
-        val baseInterfacesDeclaration =
-            if (marker.baseMarkers.isNotEmpty()) " : " + marker.baseMarkers.map { it.value.name }
-                .joinToString() else ""
-        val resultDeclarations = mutableListOf<String>()
-
-        val fieldsDeclaration = if (fields) marker.fields.map {
-            val override = if (it.overrides) "override " else ""
-            val columnNameAnnotation =
-                if (it.columnName != it.fieldName.quotedIfNeeded) "    @ColumnName(\"${renderStringLiteral(it.columnName)}\")\n" else ""
-
-            val fieldType = it.renderFieldType()
-            "$columnNameAnnotation    ${propertyVisibility}${override}val ${it.fieldName.quotedIfNeeded}: $fieldType"
-        }.join() else ""
-        val body = if (fieldsDeclaration.isNotBlank()) " {\n$fieldsDeclaration\n}" else ""
-        resultDeclarations.add(header + baseInterfacesDeclaration + body)
-        return resultDeclarations.join()
-    }
-
-    private fun renderTopLevelDeclarationVisibility(marker: IsolatedMarker) = when (marker.visibility) {
+    protected fun renderTopLevelDeclarationVisibility(marker: IsolatedMarker) = when (marker.visibility) {
         MarkerVisibility.INTERNAL -> "internal "
         MarkerVisibility.IMPLICIT_PUBLIC -> ""
         MarkerVisibility.EXPLICIT_PUBLIC -> "public "
     }
 
-    private fun renderInternalDeclarationVisibility(marker: IsolatedMarker) = when (marker.visibility) {
+    protected fun renderInternalDeclarationVisibility(marker: IsolatedMarker) = when (marker.visibility) {
         MarkerVisibility.INTERNAL -> ""
         MarkerVisibility.IMPLICIT_PUBLIC -> ""
         MarkerVisibility.EXPLICIT_PUBLIC -> "public "
@@ -238,18 +205,68 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
         extensionProperties: Boolean,
         isOpen: Boolean,
         visibility: MarkerVisibility,
-        knownMarkers: Iterable<Marker>
+        knownMarkers: Iterable<Marker>,
+        readDfMethod: DefaultReadDfMethod?
     ): CodeGenResult {
         val context = SchemaProcessor.create(name, knownMarkers)
         val marker = context.process(schema, isOpen, visibility)
         val declarations = mutableListOf<Code>()
-        context.generatedMarkers.forEach {
-            declarations.add(generateInterface(it, fields))
+        context.generatedMarkers.forEach { itMarker ->
+            declarations.add(generateInterface(itMarker, fields, readDfMethod.takeIf { marker == itMarker }))
             if (extensionProperties) {
-                declarations.add(generateExtensionProperties(it))
+                declarations.add(generateExtensionProperties(itMarker))
             }
         }
         val code = createCodeWithConverter(declarations.joinToString("\n\n"), marker.name)
         return CodeGenResult(code, context.generatedMarkers)
+    }
+
+    private fun generateInterfaces(
+        schemas: List<Marker>,
+        fields: Boolean
+    ) = schemas.map { generateInterface(it, fields) }
+
+    private fun generateInterface(
+        marker: Marker,
+        fields: Boolean,
+        readDfMethod: DefaultReadDfMethod? = null
+    ): Code {
+        val annotationName = DataSchema::class.simpleName
+
+        val visibility = renderTopLevelDeclarationVisibility(marker)
+        val propertyVisibility = renderInternalDeclarationVisibility(marker)
+
+        val header =
+            "@$annotationName${if (marker.isOpen) "" else "(isOpen = false)"}\n${visibility}interface ${marker.name}"
+        val baseInterfacesDeclaration =
+            if (marker.baseMarkers.isNotEmpty()) " : " + marker.baseMarkers.map { it.value.name }
+                .joinToString() else ""
+        val resultDeclarations = mutableListOf<String>()
+
+        val fieldsDeclaration = if (fields) marker.fields.map {
+            val override = if (it.overrides) "override " else ""
+            val columnNameAnnotation =
+                if (it.columnName != it.fieldName.quotedIfNeeded) "    @ColumnName(\"${renderStringLiteral(it.columnName)}\")\n" else ""
+
+            val fieldType = it.renderFieldType()
+            "$columnNameAnnotation    ${propertyVisibility}${override}val ${it.fieldName.quotedIfNeeded}: $fieldType"
+        }.join() else ""
+        val body = if (fieldsDeclaration.isNotBlank()) buildString {
+            append(" {\n")
+            append(fieldsDeclaration)
+            if (readDfMethod != null) {
+                append("\n")
+                append(
+                    """
+                    |    ${propertyVisibility}companion object {
+                    |${readDfMethod.toDeclaration(marker.shortName, propertyVisibility)}
+                    |    }
+                """.trimMargin()
+                )
+            }
+            append("\n}")
+        } else ""
+        resultDeclarations.add(header + baseInterfacesDeclaration + body)
+        return resultDeclarations.join()
     }
 }
