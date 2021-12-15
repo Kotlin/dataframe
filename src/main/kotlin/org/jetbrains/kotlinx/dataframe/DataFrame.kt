@@ -21,7 +21,7 @@ import kotlin.reflect.KType
  *
  * Columns in `DataFrame` have distinct non-empty [names][DataColumn.name] and equal [sizes][DataColumn.size].
  *
- * @param T Schema marker. Identifies column schema and is used to generate schema-specific extension properties for typed data access. This parameter is covariant, so `DataFrame<A>` is assignable to variable of type `DataFrame<B>` if `A` is a subtype of `B`.
+ * @param T Schema marker. It identifies column schema and is used to generate schema-specific extension properties for typed data access. It is covariant, so `DataFrame<A>` is assignable to variable of type `DataFrame<B>` if `A` is a subtype of `B`.
  */
 public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
