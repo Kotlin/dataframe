@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.impl.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.toPath

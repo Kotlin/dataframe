@@ -2,10 +2,10 @@ package org.jetbrains.kotlinx.dataframe.impl
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.size
-import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import org.jetbrains.kotlinx.dataframe.io.escapeHTML
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent

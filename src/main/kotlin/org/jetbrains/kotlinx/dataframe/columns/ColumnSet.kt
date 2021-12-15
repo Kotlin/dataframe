@@ -1,10 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 
 /**
- * A set of columns. Used in column selectors API
- * @param C common type of columns
+ * Entity that can be resolved into a list of [columns][DataColumn].
+ *
+ * Used as a return type of [ColumnsSelector].
+ * @param C common type of resolved columns
  */
 public interface ColumnSet<out C> {
 

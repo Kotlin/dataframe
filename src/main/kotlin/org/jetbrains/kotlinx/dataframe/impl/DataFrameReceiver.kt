@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
@@ -17,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupWithParent
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
-import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
 import org.jetbrains.kotlinx.dataframe.nrow
