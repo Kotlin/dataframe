@@ -366,12 +366,34 @@ class Modify : TestBase() {
             // SampleEnd
             .name.columnNames() shouldBe listOf("lastName", "firstName")
     }
+    
+    @Test
+    fun splitInplace_properties() {
+        // SampleStart
+        df.split { name.firstName }.by { it.chars().toList() }.inplace()
+        // SampleEnd
+    }
+    
+    @Test
+    fun splitInplace_accessors() {
+        // SampleStart
+        val name by columnGroup()
+        val firstName by name.column<String>()
+
+        df.split { firstName }.by { it.chars().toList() }.inplace()
+        // SampleEnd
+    }
+
+    @Test
+    fun splitInplace_strings() {
+        // SampleStart
+        df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.inplace()
+        // SampleEnd
+    }
 
     @Test
     fun split_properties() {
         // SampleStart
-        df.split { name.firstName }.by { it.chars().toList() }.inplace()
-
         df.split { name }.by { it.values() }.into("nameParts")
 
         df.split { name.lastName }.by(" ").default("").inward { "word$it" }
@@ -382,10 +404,7 @@ class Modify : TestBase() {
     fun split_accessors() {
         // SampleStart
         val name by columnGroup()
-        val firstName by name.column<String>()
         val lastName by name.column<String>()
-
-        df.split { firstName }.by { it.chars().toList() }.inplace()
 
         df.split { name }.by { it.values() }.into("nameParts")
 
@@ -396,8 +415,6 @@ class Modify : TestBase() {
     @Test
     fun split_strings() {
         // SampleStart
-        df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.inplace()
-
         df.split { name }.by { it.values() }.into("nameParts")
 
         df.split { "name"["lastName"] }.by(" ").default("").inward { "word$it" }
