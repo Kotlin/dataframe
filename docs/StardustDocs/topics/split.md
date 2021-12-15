@@ -2,14 +2,9 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Splits every value in the given columns into several values. Splitted values can be spread horizontally or vertically or remain inside the original column as `List`
+Splits every value in the given columns into several values and optionally spreads them horizontally or vertically.
 
-The following types of columns can be splitted by default:
-* `String`: split by `,` and trim
-* `List`: split into elements
-* `DataFrame`: split into rows
-
-```kotlin
+```text
 df.split { columns }
     [.cast<Type>()]
     [.by(delimeters) | .by { splitter } | .match(regex)] // how to split cell value
@@ -19,28 +14,63 @@ df.split { columns }
 splitter = DataRow.(T) -> Iterable<Any>
 columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
 ```
+The following types of columns can be split without any _splitter_ configuration:
+* `String`: split by `,` and trim
+* `List`: split into elements
+* `DataFrame`: split into rows
 
-Storage options:
-* `into(col1, col2, ... )` — store splitted values in new top-level columns
-* `inward(col1, col2, ...)` — store splitted values in new columns nested inside original column
-* `inplace` — store splitted values in original column as `List`
-* `intoRows` — spread splitted values vertically into new rows
-* `intoColumns` — split `FrameColumn` into `ColumnGroup` storing in every cell a `List` of original values per every column
+## Split inplace
 
-`columnNamesGenerator` is used to generate names for additional columns when the list of explicitly specified `columnNames` was not long enough. `columnIndex` starts with `1` for the first additional column name.  
+Stores split values as lists in original columns.
 
-Default `columnNamesGenerator` generates column names `splitted1`, `splitted2`...
+Use `.inplace()` terminal operation in `split` configuration to spread split values inplace:
+
+<!---FUN splitInplace-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.split { name.firstName }.by { it.chars().toList() }.inplace()
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val name by columnGroup()
+val firstName by name.column<String>()
+
+df.split { firstName }.by { it.chars().toList() }.inplace()
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.inplace()
+```
+
+</tab></tabs>
+<!---END-->
 
 ## Split horizontally
-Reverse operation to [`merge`](merge.md)
+
+Stores split values in new columns.
+* `into(col1, col2, ... )` — store splitted values in new top-level columns
+* `inward(col1, col2, ...)` — store splitted values in new columns nested inside original column
+* `intoColumns` — split `FrameColumn` into `ColumnGroup` storing in every cell a `List` of original values per every column
+
+**Reverse operation:** [`merge`](merge.md)
+
+`columnNamesGenerator` is used to generate names for additional columns when the list of explicitly specified `columnNames` was not long enough. `columnIndex` starts with `1` for the first additional column name.
+
+Default `columnNamesGenerator` generates column names `splitted1`, `splitted2`...
 
 <!---FUN split-->
 <tabs>
 <tab title="Properties">
 
 ```kotlin
-df.split { name.firstName }.by { it.chars().toList() }.inplace()
-
 df.split { name }.by { it.values() }.into("nameParts")
 
 df.split { name.lastName }.by(" ").default("").inward { "word$it" }
@@ -51,10 +81,7 @@ df.split { name.lastName }.by(" ").default("").inward { "word$it" }
 
 ```kotlin
 val name by columnGroup()
-val firstName by name.column<String>()
 val lastName by name.column<String>()
-
-df.split { firstName }.by { it.chars().toList() }.inplace()
 
 df.split { name }.by { it.values() }.into("nameParts")
 
@@ -65,8 +92,6 @@ df.split { lastName }.by(" ").default("").inward { "word$it" }
 <tab title="Strings">
 
 ```kotlin
-df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.inplace()
-
 df.split { name }.by { it.values() }.into("nameParts")
 
 df.split { "name"["lastName"] }.by(" ").default("").inward { "word$it" }
@@ -111,11 +136,12 @@ df.split { group }.intoColumns()
 <!---END-->
 
 ## Split vertically
-Returns `DataFrame` with duplicated rows for every splitted value. 
 
-Reverse operation to [`implode`](implode.md).
+Stores split values in new rows duplicating values in other columns.
 
-Use `.intoRows()` terminal operation in `split` configuration to spread splitted values vertically:
+**Reverse operation:** [`implode`](implode.md)
+
+Use `.intoRows()` terminal operation in `split` configuration to spread split values vertically:
 
 <!---FUN splitIntoRows-->
 <tabs>
