@@ -43,7 +43,7 @@ public data class ParserOptions(
     val locale: Locale? = null,
     val dateTimeFormatter: DateTimeFormatter? = null,
     val dateTimePattern: String? = null,
-    val nulls: Set<String>? = null
+    val nullStrings: Set<String>? = null
 ) {
     internal fun getDateTimeFormatter(): DateTimeFormatter? = when {
         dateTimeFormatter != null -> dateTimeFormatter

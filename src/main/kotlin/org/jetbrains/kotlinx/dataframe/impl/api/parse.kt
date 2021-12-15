@@ -271,7 +271,7 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
     var hasNulls: Boolean
     var hasNotNulls: Boolean
     var nullStringParsed: Boolean
-    val nulls = options?.nulls ?: Parsers.nulls
+    val nulls = options?.nullStrings ?: Parsers.nulls
     do {
         val parser = Parsers[parserId].applyOptions(options)
         parsedValues.clear()
