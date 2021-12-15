@@ -7,7 +7,7 @@ public interface DefaultReadDfMethod {
 public class DefaultReadJsonMethod(private val path: String) : DefaultReadDfMethod {
     public override fun toDeclaration(markerName: String, visibility: String): String {
         return """
-        |        ${visibility}const val defaultPath: String = "$path"
+        |        ${visibility}const val defaultPath: String = "${path.escapeStringLiteral()}"
         |        ${visibility}fun readJson(path: String = defaultPath): DataFrame<$markerName> = DataFrame.readJson(path).cast()
         """.trimMargin()
     }
@@ -16,7 +16,7 @@ public class DefaultReadJsonMethod(private val path: String) : DefaultReadDfMeth
 public class DefaultReadCsvMethod(private val path: String, private val delimiter: Char) : DefaultReadDfMethod {
     public override fun toDeclaration(markerName: String, visibility: String): String {
         return """
-        |        ${visibility}const val defaultPath: String = "$path"
+        |        ${visibility}const val defaultPath: String = "${path.escapeStringLiteral()}"
         |        ${visibility}const val defaultDelimiter: Char = '$delimiter'
         |        ${visibility}fun readCsv(path: String = defaultPath, delimiter: Char = defaultDelimiter): DataFrame<$markerName> {
         |            return DataFrame.readCSV(path, delimiter).cast()
@@ -24,3 +24,7 @@ public class DefaultReadCsvMethod(private val path: String, private val delimite
         """.trimMargin()
     }
 }
+
+private fun String.escapeStringLiteral(): String = replace("\\", "\\\\")
+    .replace("$", "\\\$")
+    .replace("\"", "\\\"")
