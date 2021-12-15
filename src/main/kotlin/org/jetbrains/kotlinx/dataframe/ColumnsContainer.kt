@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumn
@@ -13,6 +14,11 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
 import kotlin.reflect.KProperty
 
+/**
+ * Provides access to columns.
+ *
+ * Base interface for [DataFrame] and DSLs for column selection, e.g. [ColumnSelectionDsl]
+ */
 public interface ColumnsContainer<out T> {
 
     // region columns

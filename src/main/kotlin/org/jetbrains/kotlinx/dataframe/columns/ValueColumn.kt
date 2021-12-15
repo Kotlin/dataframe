@@ -3,7 +3,12 @@ package org.jetbrains.kotlinx.dataframe.columns
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import kotlin.reflect.KProperty
 
-public interface ValueColumn<T> : DataColumn<T> {
+/**
+ * Column that stores values.
+ *
+ * @param T - type of values
+ */
+public interface ValueColumn<out T> : DataColumn<T> {
 
     override fun kind(): ColumnKind = ColumnKind.Value
 
