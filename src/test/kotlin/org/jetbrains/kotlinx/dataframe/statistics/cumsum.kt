@@ -2,8 +2,11 @@ package org.jetbrains.kotlinx.dataframe.statistics
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.cumSum
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.junit.Test
 
 class CumsumTests {
@@ -43,5 +46,24 @@ class CumsumTests {
     fun `number column`() {
         val doubles by columnOf(1, 2, null, Double.NaN, 4)
         doubles.cumSum().toList() shouldBe listOf(1.0, 3.0, Double.NaN, Double.NaN, 7.0)
+    }
+
+    @Test
+    fun `groupBy`() {
+        val df = dataFrameOf("str", "col")(
+            "a", 1,
+            "b", 2,
+            "c", null,
+            "a", 3,
+            "c", 4
+        )
+        df.groupBy("str").cumSum().concat() shouldBe
+            dataFrameOf("str", "col")(
+                "a", 1,
+                "a", 4,
+                "b", 2,
+                "c", null,
+                "c", 4
+            )
     }
 }
