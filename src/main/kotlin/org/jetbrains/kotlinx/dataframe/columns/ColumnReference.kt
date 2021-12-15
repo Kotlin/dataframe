@@ -2,6 +2,9 @@ package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.RenamedColumnReference
@@ -10,7 +13,10 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.getColumn
 import kotlin.reflect.KProperty
 
 /**
- * Column with type and name/path
+ * Entity that can retrieve [DataColumn] from [DataFrame] or value from [DataRow].
+ *
+ * Base interface for [DataColumn] and [ColumnAccessor].
+ * @param C Expected [type][DataColumn.type] of values in the column
  */
 public interface ColumnReference<out C> : SingleColumn<C> {
 

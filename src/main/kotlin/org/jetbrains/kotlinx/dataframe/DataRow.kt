@@ -10,6 +10,11 @@ import org.jetbrains.kotlinx.dataframe.impl.toIterable
 import kotlin.reflect.KProperty
 import kotlin.reflect.KProperty1
 
+/**
+ * Single row of a [DataFrame].
+ *
+ * @param T Schema marker. See [DataFrame] for details
+ */
 public interface DataRow<out T> {
 
     public fun index(): Int

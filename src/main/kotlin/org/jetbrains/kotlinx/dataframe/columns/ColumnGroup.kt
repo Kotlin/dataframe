@@ -1,31 +1,28 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import kotlin.reflect.KProperty
 
 /**
- * Group of nested columns. Supports all [DataFrame] operations, but also has column [name] and [type].
+ * Group of columns. Used to create column hierarchy in [DataFrame].
  *
- * This interface can be obtained by:
- * - generated extension property for [DataFrame]
- * - [ColumnAccessor] created with [columnGroup] delegate
+ * ColumnGroup is a mix of [DataFrame] and [DataColumn] that supports all [DataFrame] operations but also has [column name][name] and [column type][type].
+ * It derives not from [DataColumn], but from [BaseColumn] to avoid API clashes between [DataFrame] and [DataColumn].
+ *
+ * ColumnGroup interface can be returned by:
+ * - extension property generated for [DataSchema]
+ * - [ColumnAccessor] created by [columnGroup] delegate
  * - explicit cast using [asColumnGroup]
  *
- * @param T - schema marker. See [DataFrame] for details.
+ * @param T Schema marker. See [DataFrame] for details.
  */
 public interface ColumnGroup<out T> : BaseColumn<DataRow<T>>, DataFrame<T> {
-    /**
-     * Group of nested columns. Supports all [DataFrame] operations, but also has column [name] and [type].
-     *
-     * This interface can be obtained by:
-     * - generated extension property for [DataFrame]
-     * - [ColumnAccessor] created with [columnGroup] delegate
-     * - explicit cast using [asColumnGroup]
-     */
 
     override fun get(indices: Iterable<Int>): ColumnGroup<T>
 

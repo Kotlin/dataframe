@@ -1,9 +1,16 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.owner
 
+/**
+ * Path to a [column][DataColumn] in [DataFrame].
+ *
+ * Stores a list of [column names][DataColumn.name] that are used to retrieve columns through a chain of [column groups][ColumnGroup].
+ */
 public data class ColumnPath(val path: List<String>) : List<String> by path, ColumnAccessor<Any?> {
 
     public constructor(name: String) : this(listOf(name))

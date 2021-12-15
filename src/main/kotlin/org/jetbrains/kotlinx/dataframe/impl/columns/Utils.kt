@@ -79,9 +79,6 @@ internal fun <T> BaseColumn<T>.addPath(df: ColumnsContainer<*>): ColumnWithPath<
 
 internal fun ColumnPath.depth() = size - 1
 
-@PublishedApi
-internal fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
-
 internal fun <T> AnyCol.asValues(): ValueColumn<T> = this as ValueColumn<T>
 
 internal fun <T> DataColumn<T>.asValueColumn(): ValueColumn<T> = this as ValueColumn<T>
@@ -91,9 +88,6 @@ internal fun AnyCol.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
 
 internal fun <T> AnyCol.grouped() = this as ColumnGroup<T>
 internal fun <T> ColumnGroup<*>.withDf(newDf: DataFrame<T>) = DataColumn.createColumnGroup(name, newDf)
-
-@JvmName("asGroupedT")
-internal fun <T> DataColumn<DataRow<T>>.asColumnGroup(): ColumnGroup<T> = (this as AnyCol).asColumnGroup().cast()
 
 @JvmName("asFrameT")
 internal fun <T> DataColumn<DataFrame<T>?>.asFrameColumn(): FrameColumn<T> = (this as AnyCol).asFrameColumn().castFrameColumn()

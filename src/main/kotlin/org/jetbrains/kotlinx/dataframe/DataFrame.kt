@@ -17,9 +17,11 @@ import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
 import kotlin.reflect.KType
 
 /**
- * An ordered list of [DataColumn] with distinct non-empty [DataColumn.name] and equal [DataColumn.size].
+ * An ordered list of [columns][DataColumn].
  *
- * @param T - schema marker. Identifies column schema of [DataFrame]. Used only for generation of schema-specific extension properties for typed data access and is not used by [DataFrame] itself.
+ * Columns in DataFrame have distinct non-empty [names][DataColumn.name] and equal [sizes][DataColumn.size].
+ *
+ * @param T Schema marker. Identifies column schema of DataFrame. Used for generation of schema-specific extension properties for typed data access.
  */
 public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 

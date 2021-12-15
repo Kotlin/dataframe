@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnGroupAccessor
@@ -87,6 +88,8 @@ public fun <T> DataColumn<T?>.castNotNull(): DataColumn<T> {
     return this as DataColumn<T>
 }
 
+// region to array
+
 public inline fun <reified T> DataColumn<T>.toTypedArray(): Array<T> = toList().toTypedArray()
 
 public fun DataColumn<Number>.toFloatArray(): FloatArray = convertToFloat().toList().toFloatArray()
@@ -100,6 +103,13 @@ public fun DataColumn<Number>.toLongArray(): LongArray = convertToLong().toList(
 public fun DataColumn<Number>.toShortArray(): ShortArray = convertTo<Short>().toList().toShortArray()
 
 public fun DataColumn<Number>.toByteArray(): ByteArray = convertTo<Byte>().toList().toByteArray()
+
+// endregion
+
+public fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
+
+@JvmName("asGroupedT")
+public fun <T> DataColumn<DataRow<T>>.asColumnGroup(): ColumnGroup<T> = (this as AnyCol).asColumnGroup().cast()
 
 // endregion
 
