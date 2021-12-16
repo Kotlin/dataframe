@@ -28,7 +28,7 @@ internal fun <T : Number> Iterable<T>.sum(type: KType): T = when (type.classifie
     else -> throw IllegalArgumentException("Sum is not supported for $type")
 }
 
-@JvmName("sumT?")
+@JvmName("sumNullableT")
 @PublishedApi
 internal fun <T : Number> Iterable<T?>.sum(type: KType): T = when (type.classifier) {
     Double::class -> (this as Iterable<Double?>).asSequence().filterNotNull().sum() as T

@@ -319,7 +319,7 @@ public fun <T> Iterable<Pair<ColumnPath, AnyBaseColumn>>.toDataFrameFromPairs():
     return columns.map { it!! }.toDataFrame().cast()
 }
 
-@JvmName("toDataFrameColumnPathAny?")
+@JvmName("toDataFrameColumnPathAnyNullable")
 public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame {
     return map { it.first to guessColumnType(it.first.last(), it.second.asList()) }.toDataFrameFromPairs<Unit>()
 }
@@ -384,7 +384,7 @@ public fun Map<String, Iterable<Any?>>.toDataFrame(): AnyFrame {
     return map { DataColumn.createWithTypeInference(it.key, it.value.asList()) }.toDataFrame()
 }
 
-@JvmName("toDataFrameColumnPathAny?")
+@JvmName("toDataFrameColumnPathAnyNullable")
 public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame {
     return map { it.key to DataColumn.createWithTypeInference(it.key.last(), it.value.asList()) }.toDataFrameFromPairs<Unit>()
 }
