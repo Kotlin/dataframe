@@ -60,6 +60,6 @@ public fun <T> DataFrame<T>.parse(options: ParserOptions? = null): DataFrame<T> 
 public fun DataColumn<String?>.parse(options: ParserOptions? = null): DataColumn<*> =
     tryParse(options).also { if (it.typeClass == String::class) error("Can't guess column type") }
 
-@JvmName("parseAnyFrame?")
+@JvmName("parseAnyFrameNullable")
 public fun DataColumn<AnyFrame?>.parse(options: ParserOptions? = null): DataColumn<AnyFrame?> =
     map { it?.parse(options) }

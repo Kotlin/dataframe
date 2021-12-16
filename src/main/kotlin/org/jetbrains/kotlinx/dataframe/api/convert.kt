@@ -92,67 +92,67 @@ public fun <T, C> ConvertClause<T, C>.to(columnConverter: DataFrame<T>.(DataColu
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
 public fun AnyCol.convertTo(newType: KType): AnyCol = convertToTypeImpl(newType)
 
-@JvmName("convertToLocalDateTimeT")
+@JvmName("convertToLocalDateTimeFromT")
 public fun <T : Any> DataColumn<T>.convertToLocalDateTime(): DataColumn<LocalDateTime> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToLocalDateTime(): DataColumn<LocalDateTime?> = convertTo()
 
-@JvmName("convertToLocalTimeT")
+@JvmName("convertToLocalTimeFromT")
 public fun <T : Any> DataColumn<T>.convertToLocalTime(): DataColumn<LocalTime> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToLocalTime(): DataColumn<LocalTime?> = convertTo()
 
-@JvmName("convertToIntT")
+@JvmName("convertToIntFromT")
 public fun <T : Any> DataColumn<T>.convertToInt(): DataColumn<Int> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToInt(): DataColumn<Int?> = convertTo()
 
-@JvmName("convertToLongT")
+@JvmName("convertToLongFromT")
 public fun <T : Any> DataColumn<T>.convertToLong(): DataColumn<Long> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToLong(): DataColumn<Long?> = convertTo()
 
-@JvmName("convertToStringT")
+@JvmName("convertToStringFromT")
 public fun <T : Any> DataColumn<T>.convertToString(): DataColumn<String> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToString(): DataColumn<String?> = convertTo()
 
-@JvmName("convertToDoubleT")
+@JvmName("convertToDoubleFromT")
 public fun <T : Any> DataColumn<T>.convertToDouble(): DataColumn<Double> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToDouble(): DataColumn<Double?> = convertTo()
 
-@JvmName("convertToFloatT")
+@JvmName("convertToFloatFromT")
 public fun <T : Any> DataColumn<T>.convertToFloat(): DataColumn<Float> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToFloat(): DataColumn<Float?> = convertTo()
 
-@JvmName("convertToBigDecimalT")
+@JvmName("convertToBigDecimalFromT")
 public fun <T : Any> DataColumn<T>.convertToBigDecimal(): DataColumn<BigDecimal> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToBigDecimal(): DataColumn<BigDecimal?> = convertTo()
 
-@JvmName("convertToBooleanT")
+@JvmName("convertToBooleanFromT")
 public fun <T : Any> DataColumn<T>.convertToBoolean(): DataColumn<Boolean> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToBoolean(): DataColumn<Boolean?> = convertTo()
 
 // region toLocalDate
 
-@JvmName("convertToLocalDateLong")
+@JvmName("convertToLocalDateFromLong")
 public fun DataColumn<Long>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate> = map { it.toLocalDate(zone) }
 public fun DataColumn<Long?>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate?> = map { it?.toLocalDate(zone) }
 
-@JvmName("convertToLocalDateInt")
+@JvmName("convertToLocalDateFromInt")
 public fun DataColumn<Int>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate> = map { it.toLong().toLocalDate(zone) }
-@JvmName("convertToLocalDateInt?")
+@JvmName("convertToLocalDateFromIntNullable")
 public fun DataColumn<Int?>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate?> = map { it?.toLong()?.toLocalDate(zone) }
 
-@JvmName("convertToLocalDateString")
+@JvmName("convertToLocalDateFromString")
 public fun DataColumn<String>.convertToLocalDate(pattern: String? = null, locale: Locale? = null): DataColumn<LocalDate> {
     val converter = Parsers.getDateTimeConverter(LocalDate::class, pattern, locale)
     return map { converter(it.trim()) ?: error("Can't convert `$it` to LocalDate") }
 }
-@JvmName("convertToLocalDateString?")
+@JvmName("convertToLocalDateFromStringNullable")
 public fun DataColumn<String?>.convertToLocalDate(pattern: String? = null, locale: Locale? = null): DataColumn<LocalDate?> {
     val converter = Parsers.getDateTimeConverter(LocalDate::class, pattern, locale)
     return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to LocalDate") } }
 }
 
-@JvmName("toLocalDateTLong")
+@JvmName("toLocalDateFromTLong")
 public fun <T, R : Long?> ConvertClause<T, R>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDate(zone) }
-@JvmName("toLocalDateTInt")
+@JvmName("toLocalDateFromTInt")
 public fun <T, R : Int?> ConvertClause<T, R>.toLocalDate(zone: TimeZone = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDate(zone) }
 
 public fun <T, R : String?> ConvertClause<T, R>.toLocalDate(pattern: String? = null, locale: Locale? = null): DataFrame<T> = to { it.convertToLocalDate(pattern, locale) }
@@ -163,29 +163,29 @@ public fun <T> ConvertClause<T, *>.toLocalDate(): DataFrame<T> = to { it.convert
 
 // region toLocalTime
 
-@JvmName("convertToLocalTimeLong")
+@JvmName("convertToLocalTimeFromLong")
 public fun DataColumn<Long>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime> = map { it.toLocalTime(zone) }
 public fun DataColumn<Long?>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime?> = map { it?.toLocalTime(zone) }
 
-@JvmName("convertToLocalTimeInt")
+@JvmName("convertToLocalTimeFromInt")
 public fun DataColumn<Int>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime> = map { it.toLong().toLocalTime(zone) }
-@JvmName("convertToLocalTimeInt?")
+@JvmName("convertToLocalTimeIntNullable")
 public fun DataColumn<Int?>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime?> = map { it?.toLong()?.toLocalTime(zone) }
 
-@JvmName("convertToLocalTimeString")
+@JvmName("convertToLocalTimeFromString")
 public fun DataColumn<String>.convertToLocalTime(pattern: String? = null, locale: Locale? = null): DataColumn<LocalTime> {
     val converter = Parsers.getDateTimeConverter(LocalTime::class, pattern, locale)
     return map { converter(it.trim()) ?: error("Can't convert `$it` to LocalTime") }
 }
-@JvmName("convertToLocalTimeString?")
+@JvmName("convertToLocalTimeFromStringNullable")
 public fun DataColumn<String?>.convertToLocalTime(pattern: String? = null, locale: Locale? = null): DataColumn<LocalTime?> {
     val converter = Parsers.getDateTimeConverter(LocalTime::class, pattern, locale)
     return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to LocalTime") } }
 }
 
-@JvmName("toLocalTimeTLong")
+@JvmName("toLocalTimeFromTLong")
 public fun <T, R : Long?> ConvertClause<T, R>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> = to { it.convertToLocalTime(zone) }
-@JvmName("toLocalTimeTInt")
+@JvmName("toLocalTimeFromTInt")
 public fun <T, R : Int?> ConvertClause<T, R>.toLocalTime(zone: TimeZone = defaultTimeZone): DataFrame<T> = to { it.convertToLocalTime(zone) }
 
 public fun <T, R : String?> ConvertClause<T, R>.toLocalTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> = to { it.convertToLocalTime(pattern, locale) }
@@ -196,29 +196,29 @@ public fun <T> ConvertClause<T, *>.toLocalTime(): DataFrame<T> = to { it.convert
 
 // region toLocalDateTime
 
-@JvmName("convertToLocalDateTimeLong")
+@JvmName("convertToLocalDateTimeFromLong")
 public fun DataColumn<Long>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime> = map { it.toLocalDateTime(zone) }
 public fun DataColumn<Long?>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime?> = map { it?.toLocalDateTime(zone) }
 
-@JvmName("convertToLocalDateTimeInt")
+@JvmName("convertToLocalDateTimeFromInt")
 public fun DataColumn<Int>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime> = map { it.toLong().toLocalDateTime(zone) }
-@JvmName("convertToLocalDateTimeInt?")
+@JvmName("convertToLocalDateTimeFromIntNullable")
 public fun DataColumn<Int?>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime?> = map { it?.toLong()?.toLocalDateTime(zone) }
 
-@JvmName("convertToLocalDateTimeString")
+@JvmName("convertToLocalDateTimeFromString")
 public fun DataColumn<String>.convertToLocalDateTime(pattern: String? = null, locale: Locale? = null): DataColumn<LocalDateTime> {
     val converter = Parsers.getDateTimeConverter(LocalDateTime::class, pattern, locale)
     return map { converter(it.trim()) ?: error("Can't convert `$it` to LocalDateTime") }
 }
-@JvmName("convertToLocalDateTimeString?")
+@JvmName("convertToLocalDateTimeFromStringNullable")
 public fun DataColumn<String?>.convertToLocalDateTime(pattern: String? = null, locale: Locale? = null): DataColumn<LocalDateTime?> {
     val converter = Parsers.getDateTimeConverter(LocalDateTime::class, pattern, locale)
     return map { it?.let { converter(it.trim()) ?: error("Can't convert `$it` to LocalDateTime") } }
 }
 
-@JvmName("toLocalDateTimeTLong")
+@JvmName("toLocalDateTimeFromTLong")
 public fun <T, R : Long?> ConvertClause<T, R>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDateTime(zone) }
-@JvmName("toLocalDateTimeTInt")
+@JvmName("toLocalDateTimeFromTInt")
 public fun <T, R : Int?> ConvertClause<T, R>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDateTime(zone) }
 
 public fun <T, R : String?> ConvertClause<T, R>.toLocalDateTime(pattern: String? = null, locale: Locale? = null): DataFrame<T> = to { it.convertToLocalDateTime(pattern, locale) }
