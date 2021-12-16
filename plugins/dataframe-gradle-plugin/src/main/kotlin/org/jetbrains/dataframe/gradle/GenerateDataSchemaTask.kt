@@ -156,19 +156,6 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
     private fun buildSourceFileContent(escapedPackageName: String, codeGenResult: CodeGenResult): String {
         return buildString {
-            appendLine(
-                """
-                @file:Suppress(
-                    "RemoveRedundantBackticks",
-                    "RemoveRedundantQualifierName",
-                    "unused", "ObjectPropertyName",
-                    "UNCHECKED_CAST", "PropertyName",
-                    "ClassName", "UnusedImport",
-                    "MemberVisibilityCanBePrivate"
-                )
-                """.trimIndent()
-            )
-
             if (escapedPackageName.isNotEmpty()) {
                 appendLine("package $escapedPackageName")
                 appendLine()
@@ -184,7 +171,6 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             appendLine("import org.jetbrains.kotlinx.dataframe.io.readJson")
             appendLine("import org.jetbrains.kotlinx.dataframe.io.readCSV")
             appendLine()
-            appendLine("// GENERATED. DO NOT EDIT MANUALLY")
             appendLine(codeGenResult.code.declarations)
         }
     }
