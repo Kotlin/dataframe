@@ -39,7 +39,7 @@ teens.print()
 
 ### Schema inference
 Specify schema's configurations in `dataframes`  and execute the `build` task.
-For the following configuration, file `Repository.Generated.kt` will be generated.
+For the following configuration, file `Repository.Generated.kt` will be generated to `build/generated/dataframe` folder
 See [reference](gradleReference.md) and [examples](gradleReference.md#examples) for more details.
 
 #### build.gradle

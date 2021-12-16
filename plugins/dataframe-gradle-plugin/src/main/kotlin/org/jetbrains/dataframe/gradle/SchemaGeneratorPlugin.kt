@@ -61,11 +61,9 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             ?: run {
                 appliedPlugin ?: propertyError("src")
                 val sourceSet = appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSetName)
-                val path = appliedPlugin.sourceSetConfiguration.getKotlinRoot(
-                    sourceSet.kotlin.sourceDirectories,
-                    sourceSetName
-                )
-                target.file(path)
+                val src = target.file(Paths.get("build/generated/dataframe/", sourceSetName, "kotlin").toFile())
+                sourceSet.kotlin.srcDir(src)
+                src
             }
 
         val packageName = schema.name?.let { name -> extractPackageName(name) }
@@ -73,6 +71,12 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             ?: extension.packageName
             ?: run {
                 (appliedPlugin ?: propertyError("packageName"))
+                val sourceSet = appliedPlugin.kotlinExtension.sourceSets.getByName(sourceSetName)
+                val path = appliedPlugin.sourceSetConfiguration.getKotlinRoot(
+                    sourceSet.kotlin.sourceDirectories,
+                    sourceSetName
+                )
+                val src = target.file(path)
                 inferPackageName(src)
             }
 
