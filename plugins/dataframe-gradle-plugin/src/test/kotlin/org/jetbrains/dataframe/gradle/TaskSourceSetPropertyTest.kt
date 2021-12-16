@@ -34,7 +34,7 @@ class TaskSourceSetPropertyTest {
             project.evaluate()
         }
         (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).src.get()
-            .shouldBe(project.file("src/main1/kotlin/"))
+            .shouldBe(project.file("build/generated/dataframe/main1/kotlin/"))
     }
 
     @Test
@@ -69,7 +69,7 @@ class TaskSourceSetPropertyTest {
         }
         project.evaluate()
         (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).src.get()
-            .shouldBe(project.file("src/main/kotlin/"))
+            .shouldBe(project.file("build/generated/dataframe/main/kotlin/"))
     }
 
     @Test
@@ -90,7 +90,7 @@ class TaskSourceSetPropertyTest {
         }
         project.evaluate()
         (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).src.get()
-            .shouldBe(project.file("src/main1/kotlin/"))
+            .shouldBe(project.file("build/generated/dataframe/main1/kotlin/"))
     }
 
     @Test

@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe.gradle
 
+import io.kotest.assertions.asClue
 import io.kotest.matchers.shouldBe
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Ignore
@@ -86,7 +87,9 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
             """.trimIndent()
         }
         result.task(":generateDataFrameData")?.outcome shouldBe TaskOutcome.SUCCESS
-        File(dir, "src/main/kotlin/dataframe/Data.Generated.kt").exists() shouldBe true
+        File(dir, "build/generated/dataframe").walkBottomUp().toList().asClue {
+            File(dir, "build/generated/dataframe/main/kotlin/dataframe/Data.Generated.kt").exists() shouldBe true
+        }
     }
 
     @Test
@@ -122,9 +125,8 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
         result.task(":generateDataFrameData")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
-    @Ignore(TRANSITIVE_DF_DEPENDENCY)
     @Test
-    fun `generated schemas and extensions resolved`() {
+    fun `generated schemas resolved`() {
         val (_, result) = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, "data.csv")
             dataFile.writeText(TestData.csvSample)
@@ -132,15 +134,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
             val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
             main.writeText("""
-                import org.jetbrains.kotlinx.DataFrame
-                import org.jetbrains.kotlinx.read
-                import org.jetbrains.kotlinx.typed
-                import org.jetbrains.kotlinx.filter
-                
-                fun main() {
-                    val df = DataFrame.read("$dataFile").typed<Schema>()
-                    val df1 = df.filter { age != null }
-                }
+                import org.example.Schema
             """.trimIndent())
 
             """
@@ -166,8 +160,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 dataframes {
                     schema {
                         data = "$dataFile"
-                        name = "Schema"
-                        packageName = ""
+                        name = "org.example.Schema"
                     }
                 }
             """.trimIndent()
@@ -178,8 +171,14 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
     @Test
     fun `generated schemas resolved in jvmMain source set for multiplatform project`() {
         val (_, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, TestData.csvName)
+            val dataFile = File(buildDir, "data.csv")
             dataFile.writeText(TestData.csvSample)
+
+            val kotlin = File(buildDir, "src/jvmMain/kotlin").also { it.mkdirs() }
+            val main = File(kotlin, "Main.kt")
+            main.writeText("""
+                import org.example.Schema
+            """.trimIndent())
             """
                 import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
                     
@@ -208,8 +207,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 dataframes {
                     schema {
                         data = file("${TestData.csvName}")
-                        name = "Schema"
-                        packageName = ""
+                        name = "org.example.Schema"
                     }
                 }
             """.trimIndent()
