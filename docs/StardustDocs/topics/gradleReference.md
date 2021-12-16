@@ -18,7 +18,7 @@ dataframes {
         sourceSet /* String */ = "…" // [optional; override default]
         packageName /* String */ = "…" // [optional; override default]
         visibility /* DataSchemaVisibility */ = "…" // [optional; override default]
-        src /* File */ = file("…") // [optional; default: file("src/$sourceSet/kotlin")]
+        src /* File */ = file("…") // [optional; default: file("build/generated/dataframe/$sourceSet/kotlin")]
         
         data /* URL | File | String */ = "…" // Data in JSON or CSV formats
         name = "org.jetbrains.data.Person" // [optional; default: from filename]
@@ -36,7 +36,7 @@ dataframes {
 In the best scenario, your schema could be defined as simple as this:
 ```kotlin
 dataframes {
-    // output: src/main/kotlin/org/example/dataframe/Jetbrains_repositories.Generated.kt
+    // output: build/generated/dataframe/main/kotlin/org/example/dataframe/Jetbrains_repositories.Generated.kt
     schema {
         data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
     }
@@ -45,7 +45,7 @@ dataframes {
 You can set parsing options for CSV:
 ```kotlin
 dataframes {
-    // output: src/main/kotlin/org/example/dataframe/Securities.Generated.kt
+    // output: build/generated/dataframe/main/kotlin/org/example/dataframe/Securities.Generated.kt
     schema {
         data = "https://raw.githubusercontent.com/Kotlin/dataframe/1765966904c5920154a4a480aa1fcff23324f477/data/securities.csv"
         csvOptions {
@@ -54,11 +54,11 @@ dataframes {
     }
 }
 ```
-In this case output path will depend on your directory structure. For project with package `org.example` path will be `src/main/kotlin/org/example/dataframe/Securities.Generated.kt
+In this case output path will depend on your directory structure. For project with package `org.example` path will be `build/generated/dataframe/main/kotlin/org/example/dataframe/Securities.Generated.kt
 `. Note that name of the Kotlin file is derived from the name of the data file with the suffix `.Generated` and the package is derived from the directory structure with child directory `dataframe`. The name of the **data schema** itself is `Securities`. You could specify it explicitly:
 ```kotlin
 schema {
-    // output: src/main/kotlin/org/example/dataframe/MyName.Generated.kt
+    // output: build/generated/dataframe/main/kotlin/org/example/dataframe/MyName.Generated.kt
     data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
     name = "MyName"
 }
@@ -73,7 +73,7 @@ dataframes {
 Then you can set packageName for specific schema exclusively:
 ```kotlin
 dataframes {
-    // output: src/main/kotlin/org/example/data/OtherName.Generated.kt
+    // output: build/generated/dataframe/main/kotlin/org/example/data/OtherName.Generated.kt
     schema {
         packageName = "org.example.data"
         data = file("path/to/data.csv")
@@ -83,7 +83,7 @@ dataframes {
 If you want non-default name and package, consider using fully-qualified name:
 ```kotlin
 dataframes {
-    // output: src/main/kotlin/org/example/data/OtherName.Generated.kt
+    // output: build/generated/dataframe/main/kotlin/org/example/data/OtherName.Generated.kt
     schema {
         name = org.example.data.OtherName
         data = file("path/to/data.csv")
@@ -95,11 +95,11 @@ By default, plugin will generate output in specified source set. Source set coul
 dataframes {
     packageName = "org.example"
     sourceSet = "test"
-    // output: src/test/kotlin/org/example/Data.Generated.kt
+    // output: build/generated/dataframe/test/kotlin/org/example/Data.Generated.kt
     schema {
         data = file("path/to/data.csv")
     }
-    // output: src/integrationTest/kotlin/org/example/Data.Generated.kt
+    // output: build/generated/dataframe/integrationTest/kotlin/org/example/Data.Generated.kt
     schema {
         sourceSet = "integrationTest"
         data = file("path/to/data.csv")

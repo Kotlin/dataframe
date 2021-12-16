@@ -296,7 +296,7 @@ internal class SchemaGeneratorPluginTest {
             """.trimIndent()
         }
         result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
-        File(buildDir, "src/main/kotlin/org/test/Test.Generated.kt").readLines().let {
+        File(buildDir, "build/generated/dataframe/main/kotlin/org/test/Test.Generated.kt").readLines().let {
             it.forOne {
                 it.shouldContain("val a")
             }
@@ -328,6 +328,6 @@ internal class SchemaGeneratorPluginTest {
         project.file("src/main1/kotlin/org/example/test").also { it.mkdirs() }
         project.evaluate()
         (project.tasks.getByName("generateDataFrame321") as GenerateDataSchemaTask).dataSchema.get()
-            .shouldBe(project.file("src/main1/kotlin/org/example/test/dataframe/321.Generated.kt"))
+            .shouldBe(project.file("build/generated/dataframe/main1/kotlin/org/example/test/dataframe/321.Generated.kt"))
     }
 }
