@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe.gradle
 
+import io.kotest.assertions.asClue
 import io.kotest.matchers.shouldBe
 import org.gradle.testkit.runner.TaskOutcome
 import org.junit.Ignore
@@ -86,7 +87,9 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
             """.trimIndent()
         }
         result.task(":generateDataFrameData")?.outcome shouldBe TaskOutcome.SUCCESS
-        File(dir, "src/main/kotlin/dataframe/Data.Generated.kt").exists() shouldBe true
+        File(dir, "build/generated/dataframe").walkBottomUp().toList().asClue {
+            File(dir, "build/generated/dataframe/main/kotlin/dataframe/Data.Generated.kt").exists() shouldBe true
+        }
     }
 
     @Test
