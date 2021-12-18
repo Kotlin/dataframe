@@ -30,7 +30,8 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
         isOpen: Boolean,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
         knownMarkers: Iterable<Marker> = emptyList(),
-        readDfMethod: DefaultReadDfMethod? = null
+        readDfMethod: DefaultReadDfMethod? = null,
+        normalizeFieldNames: Boolean = false
     ): CodeGenResult
 
     public fun generate(marker: Marker, interfaceMode: InterfaceGenerationMode, extensionProperties: Boolean): CodeWithConverter
