@@ -22,7 +22,7 @@ Exploded columns will change their types:
 * `List<T>` to `T`
 * `DataFrame` to `DataRow`
 
-Exploded [`FrameColumn`](DataColumn.md#framecolumn) will convert into [`ColumnGroup`](DataColumn.md#columngroup).
+Exploded [`FrameColumn`](DataColumn.md#framecolumn) will be converted into [`ColumnGroup`](DataColumn.md#columngroup).
 
 Explode `DataFrame`:
 
