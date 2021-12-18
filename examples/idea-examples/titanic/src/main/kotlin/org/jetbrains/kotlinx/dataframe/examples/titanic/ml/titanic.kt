@@ -31,10 +31,13 @@ private val model = Sequential.of(
 
 fun main() {
 
+    // Set working directory for correct path resolution
+    System.setProperty("user.dir", System.getProperty("user.dir") + "/examples/idea-examples/titanic")
+
+    // Set Locale for correct number parsing
     Locale.setDefault(Locale.FRANCE)
 
-    val df = DataFrame.read("examples/idea-examples/titanic/src/main/resources/titanic.csv", delimiter = ';')
-        .cast<Passenger>()
+    val df = Passenger.readCSV()
 
     val pclass by column<Int>()
 

@@ -104,8 +104,7 @@ class Schemas {
     @Test
     fun useInferredSchema() {
         // SampleStart
-        val REPOSITORIES_DATA = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
-        val df = DataFrame.read(REPOSITORIES_DATA).cast<Repository>()
+        val df = Repository.readCSV()
         // Use generated properties to access data in rows
         df.maxBy { stargazers_count }.print()
         // Or to access columns in dataframe.
