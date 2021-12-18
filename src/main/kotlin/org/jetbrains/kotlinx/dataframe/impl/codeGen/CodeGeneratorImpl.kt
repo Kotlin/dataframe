@@ -206,9 +206,10 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
         isOpen: Boolean,
         visibility: MarkerVisibility,
         knownMarkers: Iterable<Marker>,
-        readDfMethod: DefaultReadDfMethod?
+        readDfMethod: DefaultReadDfMethod?,
+        normalizeFieldNames: Boolean
     ): CodeGenResult {
-        val context = SchemaProcessor.create(name, knownMarkers)
+        val context = SchemaProcessor.create(name, knownMarkers, normalizeFieldNames)
         val marker = context.process(schema, isOpen, visibility)
         val declarations = mutableListOf<Code>()
         context.generatedMarkers.forEach { itMarker ->

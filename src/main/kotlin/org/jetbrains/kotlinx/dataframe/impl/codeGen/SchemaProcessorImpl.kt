@@ -11,7 +11,8 @@ import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 
 internal class SchemaProcessorImpl(
     existingMarkers: Iterable<Marker>,
-    override val namePrefix: String
+    override val namePrefix: String,
+    private val fieldNameNormalizer: (String) -> String = { it }
 ) : SchemaProcessor {
 
     private val registeredMarkers = existingMarkers.toMutableList()
@@ -30,11 +31,12 @@ internal class SchemaProcessorImpl(
 
     private fun generateValidFieldName(columnName: String, index: Int, usedNames: Collection<String>): ValidFieldName {
         var result = ValidFieldName.of(columnName)
+        result = ValidFieldName.of(fieldNameNormalizer(result.unquoted))
         if (result.unquoted.isEmpty()) result = ValidFieldName.of("_$index")
         val baseName = result
         var attempt = 2
         while (usedNames.contains(result.quotedIfNeeded)) {
-            result = if (result.needsQuote) baseName + ValidFieldName.of(" ($attempt)") else baseName + ValidFieldName.of("_$attempt")
+            result = if (result.needsQuote) baseName + ValidFieldName.of(" ($attempt)") else baseName + ValidFieldName.of("$attempt")
             attempt++
         }
         return result
