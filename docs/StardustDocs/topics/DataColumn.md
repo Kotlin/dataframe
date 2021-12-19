@@ -34,11 +34,9 @@ Special case of [`ValueColumn`](#valuecolumn) that stores other [`DataFrames`](D
 
 `FrameColumn` may appear after [reading](read.md) from JSON or other hierarchical data structures, or after grouping operations such as [groupBy](groupBy.md) or [pivot](pivot.md).  
 
-## Column conditions
-
 ## Column accessors
 
-`ColumnAccessors` are used for [typed data access](columnAccessorsApi.md) in `DataFrame`:
+`ColumnAccessors` are used for [typed data access](columnAccessorsApi.md) in `DataFrame`. `ColumnAccessor` stores column [`name`](#properties) (for top-level columns) or column path (for nested columns), has type argument that corresponds to [`type`](#properties) of thep column, but it doesn't contain any actual data.
 
 <!---FUN columnAccessorsUsage-->
 
@@ -66,10 +64,99 @@ df.filter { age > 30 }
 
 <!---END-->
 
-See [how to create column accessor](createAccessor.md)
+[Column accessors](DataColumn.md#column-accessors) are created by [property delegate](https://kotlinlang.org/docs/delegated-properties.html) `column`. Column [`type`](DataColumn.md#properties) should be passed as type argument, column [`name`](DataColumn.md#properties) will be taken from the variable name.
 
-`ColumnAccessor` stores column [`name`](#properties) (for top-level columns) or column path (for nested columns), has type argument that corresponds to column [`type`](#properties), but doesn't contain any data.
-To convert `ColumnAccessor` into `DataColumn` just add values:
+<!---FUN createColumnAccessor-->
+
+```kotlin
+val name by column<String>()
+```
+
+<!---END-->
+
+To assign column name explicitly, pass it as an argument.
+
+<!---FUN createColumnAccessorRenamed-->
+
+```kotlin
+val accessor by column<String>("complex column name")
+```
+
+<!---END-->
+
+You can also create column accessors for [ColumnGroups](DataColumn.md#columngroup) and [FrameColumns](DataColumn.md#framecolumn)
+
+<!---FUN createGroupOrFrameColumnAccessor-->
+
+```kotlin
+val columns by columnGroup()
+val frames by frameColumn()
+```
+
+<!---END-->
+
+To reference nested columns inside [ColumnGroups](DataColumn.md#columngroup), invoke `column<T>()` on accessor to parent [`ColumnGroup`](#columngroup):
+
+<!---FUN createDeepColumnAccessor-->
+
+```kotlin
+val name by columnGroup()
+val firstName by name.column<String>()
+```
+
+<!---END-->
+
+You can also create virtual accessor that doesn't point to a real column but computes some expression on every data access:
+
+<!---FUN columnAccessorComputed-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+val fullName by column(df) { name.firstName + " " + name.lastName }
+
+df[fullName]
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val name by columnGroup()
+val firstName by name.column<String>()
+val lastName by name.column<String>()
+
+val fullName by column { firstName() + " " + lastName() }
+
+df[fullName]
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+val fullName by column { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
+
+df[fullName]
+```
+
+</tab></tabs>
+<!---END-->
+
+If expression depends only on one column, you can also use `map`:
+
+<!---FUN columnAccessorMap-->
+
+```kotlin
+val age by column<Int>()
+val year by age.map { 2021 - it }
+
+df.filter { year > 2000 }
+```
+
+<!---END-->
+
+To convert `ColumnAccessor` into [`DataColumn`](DataColumn.md) add values using `withValues` function:
 
 <!---FUN columnAccessorToColumn-->
 

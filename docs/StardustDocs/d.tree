@@ -29,7 +29,6 @@
         <toc-element id="create.md"  show-structure-depth="3">
             <toc-element id="createColumn.md" toc-title="DataColumn"/>
             <toc-element id="createDataFrame.md" toc-title="DataFrame"/>
-            <toc-element id="createAccessor.md" toc-title="ColumnAccessor"/>
         </toc-element>
         <toc-element id="io.md">
             <toc-element id="read.md"/>
