@@ -28,7 +28,7 @@ repositories {
     mavenCentral()
 }
 dependencies {
-    implementation 'org.jetbrains.kotlin:dataframe:0.8.0-rc-2'
+    implementation 'org.jetbrains.kotlin:dataframe:0.8.0-rc-3'
 }
 ```
 ### Jupyter Notebook
