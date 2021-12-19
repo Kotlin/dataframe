@@ -10,8 +10,10 @@ _Kotlin DataFrame_ and _Kotlin Collection_ represent two different approaches to
 Although `DataFrame` doesn't implement `Collection` or `Iterable` interface, it has many similar operations, such as [`filter`](filter.md), [`take`](sliceRows.md#take), [`first`](first.md), [`map`](map.md), [`groupBy`](groupBy.md) etc.
 
 `DataFrame` has two-way compatibility with `Map` and `List`:
-* [toDataFrame](createDataFrame.md#todataframe)  — converts `List<T>` into `DataFrame<T>` and `Map<String, List<*>>` into `DataFrame<*>`.
-* [toMap](toMap.md) and [toList](toList.md) — converts `DataFrame<T>` into `List<T>` or `Map<String, List<*>>`.
+* `List<T>` -> `DataFrame<T>`: [toDataFrame](createDataFrame.md#todataframe)
+* `DataFrame<T>` -> `List<T>`: [toList](toList.md)
+* `Map<String, List<*>>` -> `DataFrame<*>`: [toDataFrame](createDataFrame.md#todataframe)
+* `DataFrame<*>` -> `Map<String, List<*>>`: [toMap](toMap.md)
 
 Columns, rows and values of `DataFrame` can be accessed as [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/), [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) and [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/) accordingly:
 
