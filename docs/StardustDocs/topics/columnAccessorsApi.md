@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels-->
 
-For frequently accessed columns type casting can be reduced by [Column Accessors](createAccessor.md):
+For frequently accessed columns type casting can be reduced by [Column Accessors](DataColumn.md#column-accessors):
 
 <!---FUN accessors1-->
 
