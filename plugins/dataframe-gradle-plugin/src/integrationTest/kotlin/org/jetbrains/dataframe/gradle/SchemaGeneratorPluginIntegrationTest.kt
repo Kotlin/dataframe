@@ -159,7 +159,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
 
                 dataframes {
                     schema {
-                        data = "$dataFile"
+                        data = file("${TestData.csvName}")
                         name = "org.example.Schema"
                     }
                 }
