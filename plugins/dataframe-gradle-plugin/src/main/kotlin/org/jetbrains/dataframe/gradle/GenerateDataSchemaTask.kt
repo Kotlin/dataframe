@@ -79,7 +79,8 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                         DefaultReadCsvMethod(defaultPath, delimiter)
                     }
                 }
-            }
+            },
+            normalizeFieldNames = true
         )
         val escapedPackageName = escapePackageName(packageName.get())
 
