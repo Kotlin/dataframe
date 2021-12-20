@@ -88,6 +88,6 @@ class TaskNamePropertyTest {
             }
         }
         project.evaluate()
-        project.tasks.getByName("generateDataFrameCity_population") shouldNotBe null
+        project.tasks.getByName("generateDataFrameCityPopulation") shouldNotBe null
     }
 }
