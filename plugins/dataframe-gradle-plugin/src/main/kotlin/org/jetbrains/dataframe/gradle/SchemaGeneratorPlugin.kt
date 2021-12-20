@@ -111,11 +111,23 @@ class SchemaGeneratorPlugin : Plugin<Project> {
 
     private fun getInterfaceName(schema: Schema): String? {
         val rawName = schema.name?.substringAfterLast('.')
-            ?: fileName(schema.data)?.capitalize()
+            ?: fileName(schema.data)
+                ?.toCamelCaseByDelimiters(delimiters)
+                ?.capitalize()
                 ?.removeSurrounding("`")
             ?: return null
         NameChecker.checkValidIdentifier(rawName)
         return rawName
+    }
+
+    private val delimiters = "[\\s_]".toRegex()
+
+    private fun String.toCamelCaseByDelimiters(delimiters: Regex): String {
+        return split(delimiters).joinToCamelCaseString()
+    }
+
+    private fun List<String>.joinToCamelCaseString(): String {
+        return joinToString(separator = "") { it.capitalize() }
     }
 
     private class AppliedPlugin(
