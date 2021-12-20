@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.math
 
 import java.math.BigDecimal
-import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
 
