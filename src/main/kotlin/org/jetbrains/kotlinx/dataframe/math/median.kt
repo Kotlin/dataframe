@@ -3,8 +3,13 @@ package org.jetbrains.kotlinx.dataframe.math
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import java.math.BigDecimal
 import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
-public inline fun <reified T : Comparable<T>> Iterable<T?>.median(type: KType): T? {
+public inline fun <reified T : Comparable<T>> Iterable<T>.medianOrNull(): T? = median(typeOf<T>())
+public inline fun <reified T : Comparable<T>> Iterable<T>.median(): T = medianOrNull()!!
+
+@PublishedApi
+internal inline fun <reified T : Comparable<T>> Iterable<T?>.median(type: KType): T? {
     val list = if (type.isMarkedNullable) filterNotNull() else (this as Iterable<T>).asList()
     val size = list.size
     if (size == 0) return null

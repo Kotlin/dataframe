@@ -2,8 +2,10 @@ package org.jetbrains.kotlinx.dataframe.math
 
 import java.math.BigDecimal
 import kotlin.reflect.KClass
+import kotlin.reflect.KType
+import kotlin.reflect.jvm.jvmErasure
 
-internal fun <T : Number> Iterable<T>.min(clazz: KClass<*>) = when (clazz) {
+internal fun <T : Number> Iterable<T>.min(type: KType) = when (type.jvmErasure) {
     Double::class -> (this as Iterable<Double>).minOrNull()
     Float::class -> (this as Iterable<Float>).minOrNull()
     Int::class, Short::class, Byte::class -> (this as Iterable<Int>).minOrNull()
@@ -12,7 +14,7 @@ internal fun <T : Number> Iterable<T>.min(clazz: KClass<*>) = when (clazz) {
     else -> throw IllegalArgumentException()
 }
 
-internal fun <T : Number> Iterable<T>.max(clazz: KClass<*>) = when (clazz) {
+internal fun <T : Number> Iterable<T>.max(type: KType) = when (type.jvmErasure) {
     Double::class -> (this as Iterable<Double>).maxOrNull()
     Float::class -> (this as Iterable<Float>).maxOrNull()
     Int::class, Short::class, Byte::class -> (this as Iterable<Int>).maxOrNull()

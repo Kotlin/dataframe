@@ -5,9 +5,9 @@ import java.math.BigDecimal
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
-public fun <T : Number> Iterable<T>.mean(type: KType, skipNA: Boolean = defaultSkipNA): Double = asSequence().mean(type, skipNA)
+internal fun <T : Number> Iterable<T>.mean(type: KType, skipNA: Boolean = defaultSkipNA): Double = asSequence().mean(type, skipNA)
 
-public fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = defaultSkipNA): Double {
+internal fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = defaultSkipNA): Double {
     if (type.isMarkedNullable) {
         return filterNotNull().mean(type.withNullability(false), skipNA)
     }
