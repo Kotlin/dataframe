@@ -19,7 +19,7 @@ internal fun DataColumn<Double>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): D
     }
 }
 
-@JvmName("cumsumDouble?")
+@JvmName("cumsumDoubleNullable")
 internal fun DataColumn<Double?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Double> {
     var sum = .0
     return mapInline {
@@ -91,7 +91,7 @@ internal fun DataColumn<Long>.cumSum(): DataColumn<Long> {
     }
 }
 
-@JvmName("cumsumLong?")
+@JvmName("cumsumLongNullable")
 internal fun DataColumn<Long?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Long?> {
     var sum = 0L
     var fillNull = false
@@ -119,7 +119,7 @@ internal fun DataColumn<BigDecimal>.cumSum(): DataColumn<BigDecimal> {
     }
 }
 
-@JvmName("cumsumBigDecimal?")
+@JvmName("cumsumBigDecimalNullable")
 internal fun DataColumn<BigDecimal?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<BigDecimal?> {
     var sum = BigDecimal.ZERO
     var fillNull = false

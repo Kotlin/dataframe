@@ -66,7 +66,7 @@ public fun <T> KProperty<T>.toColumnAccessor(): ColumnAccessor<T> = ColumnAccess
 
 public fun AnyBaseColumn.toDataFrame(): AnyFrame = dataFrameOf(listOf(this))
 
-@JvmName("asNumberAny?")
+@JvmName("asNumberAnyNullable")
 public fun DataColumn<Any?>.asNumbers(): ValueColumn<Number?> {
     require(isNumber())
     return this.asValues()
@@ -135,7 +135,7 @@ public fun <T> FrameColumn<T>.toValueColumn(): ValueColumn<DataFrame<T>?> =
 @JvmName("asNumbersAny")
 public fun ColumnSet<Any>.asNumbers(): ColumnSet<Number> = this as ColumnSet<Number>
 
-@JvmName("asNumbersAny?")
+@JvmName("asNumbersAnyNullable")
 public fun ColumnSet<Any?>.asNumbers(): ColumnSet<Number?> = this as ColumnSet<Number?>
 
 public fun <T> ColumnSet<T>.asComparable(): ColumnSet<Comparable<T>> = this as ColumnSet<Comparable<T>>

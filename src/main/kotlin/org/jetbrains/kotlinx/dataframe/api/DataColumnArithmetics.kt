@@ -25,21 +25,21 @@ public operator fun ColumnReference<Int>.div(value: Int): ColumnReference<Int> =
 public operator fun Int.div(column: ColumnReference<Int>): ColumnReference<Int> = column.map { this / it }
 public operator fun ColumnReference<Any?>.plus(str: String): ColumnReference<String> = map { it.toString() + str }
 
-@JvmName("plusInt?")
+@JvmName("plusIntNullable")
 public operator fun DataColumn<Int?>.plus(value: Int): DataColumn<Int?> = map { it?.plus(value) }
-@JvmName("minusInt?")
+@JvmName("minusIntNullable")
 public operator fun DataColumn<Int?>.minus(value: Int): DataColumn<Int?> = map { it?.minus(value) }
-@JvmName("plus?")
+@JvmName("plusNullable")
 public operator fun Int.plus(column: DataColumn<Int?>): DataColumn<Int?> = column.map { it?.plus(this) }
-@JvmName("minus?")
+@JvmName("minusNullable")
 public operator fun Int.minus(column: DataColumn<Int?>): DataColumn<Int?> = column.map { it?.let { this - it } }
-@JvmName("unaryMinusInt?")
+@JvmName("unaryMinusIntNullable")
 public operator fun DataColumn<Int?>.unaryMinus(): DataColumn<Int?> = map { it?.unaryMinus() }
-@JvmName("timesInt?")
+@JvmName("timesIntNullable")
 public operator fun DataColumn<Int?>.times(value: Int): DataColumn<Int?> = map { it?.times(value) }
-@JvmName("divInt?")
+@JvmName("divIntNullable")
 public operator fun DataColumn<Int?>.div(value: Int): DataColumn<Int?> = map { it?.div(value) }
-@JvmName("div?")
+@JvmName("divNullable")
 public operator fun Int.div(column: DataColumn<Int?>): DataColumn<Int?> = column.map { it?.let { this / it } }
 
 @JvmName("plusInt")

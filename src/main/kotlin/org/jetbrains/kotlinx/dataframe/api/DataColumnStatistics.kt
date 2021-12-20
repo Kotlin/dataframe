@@ -53,7 +53,7 @@ public fun <T, R : Comparable<R>> DataColumn<T>.maxOfOrNull(selector: (T) -> R):
 @JvmName("sumT")
 public fun <T : Number> DataColumn<T>.sum(): T = values.sum(type())
 
-@JvmName("sumT?")
+@JvmName("sumTNullable")
 public fun <T : Number> DataColumn<T?>.sum(): T = values.sum(type())
 
 public inline fun <T, reified R : Number> DataColumn<T>.sumOf(crossinline expression: (T) -> R): R? =
