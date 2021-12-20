@@ -68,6 +68,14 @@ The following [statistics](summaryStatistics.md) are available for `DataRow`:
 * `rowSum`
 * `rowMean`
 * `rowStd`
+* `rowMedian`
 
-All these statistics are applied only to values of appropriate types and incompatible values will be ignored.
+These statistics will be applied only to values of appropriate types and incompatible values will be ignored.
 For example, if `DataFrame` has columns of type `String` and `Int`, `rowSum()` will successfully compute sum of `Int` values in a row and ignore `String` values.
+
+To apply statistics only to values of particular type use `-Of` versions:
+* `rowMaxOf<T>`
+* `rowMinOf<T>`
+* `rowSumOf<T>`
+* `rowMeanOf<T>`
+* `rowMedianOf<T>`
