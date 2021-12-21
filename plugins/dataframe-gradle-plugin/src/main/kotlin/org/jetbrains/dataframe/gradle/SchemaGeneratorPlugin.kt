@@ -96,6 +96,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             }
 
         val defaultPath = schema.defaultPath ?: extension.defaultPath ?: true
+        val delimiters = schema.withNormalizationBy ?: extension.withNormalizationBy ?: setOf('\t', ' ', '_')
 
         return target.tasks.create("generateDataFrame${interfaceName}", GenerateDataSchemaTask::class.java) {
             group = GROUP
@@ -106,6 +107,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             this.schemaVisibility.set(visibility)
             this.csvOptions.set(schema.csvOptions)
             this.defaultPath.set(defaultPath)
+            this.delimiters.set(delimiters)
         }
     }
 
@@ -121,14 +123,6 @@ class SchemaGeneratorPlugin : Plugin<Project> {
     }
 
     private val delimiters = "[\\s_]".toRegex()
-
-    private fun String.toCamelCaseByDelimiters(delimiters: Regex): String {
-        return split(delimiters).joinToCamelCaseString()
-    }
-
-    private fun List<String>.joinToCamelCaseString(): String {
-        return joinToString(separator = "") { it.capitalize() }
-    }
 
     private class AppliedPlugin(
         val kotlinExtension: KotlinProjectExtension,
