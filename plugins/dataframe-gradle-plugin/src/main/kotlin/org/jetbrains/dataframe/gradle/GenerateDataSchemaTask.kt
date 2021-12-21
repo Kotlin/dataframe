@@ -13,6 +13,7 @@ import java.net.URL
 import java.nio.file.Paths
 import com.beust.klaxon.KlaxonException
 import org.gradle.api.provider.Provider
+import org.gradle.api.provider.SetProperty
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.dataframe.impl.codeGen.CodeGenResult
 import org.jetbrains.kotlinx.dataframe.api.schema
@@ -47,6 +48,9 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @get:Input
     abstract val defaultPath: Property<Boolean>
 
+    @get:Input
+    abstract val delimiters: SetProperty<Char>
+
     @Suppress("LeakingThis")
     @get:OutputFile
     val dataSchema: Provider<File> = packageName.zip(interfaceName) { packageName, interfaceName ->
@@ -59,6 +63,9 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         val csvOptions = csvOptions.get()
         val (df, format) = readDataFrame(data.get(), csvOptions)
         val codeGenerator = CodeGenerator.create(useFqNames = false)
+        val delimiters = delimiters.get()
+        val delimitersSet = delimiters.joinToString("", "[", "]")
+        val delimitedStringRegex = ".+${delimitersSet}.+".toRegex()
         val codeGenResult = codeGenerator.generate(
             schema = df.schema(),
             name = interfaceName.get(),
@@ -79,9 +86,16 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                         DefaultReadCsvMethod(defaultPath, delimiter)
                     }
                 }
-            },
-            normalizeFieldNames = true
-        )
+            }
+        ) {
+            when {
+                delimiters.isEmpty() -> it
+                it matches delimitedStringRegex -> {
+                    it.toLowerCase().toCamelCaseByDelimiters(delimitersSet.toRegex())
+                }
+                else -> it
+            }
+        }
         val escapedPackageName = escapePackageName(packageName.get())
 
         val dataSchema = dataSchema.get()
