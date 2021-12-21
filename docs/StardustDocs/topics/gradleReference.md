@@ -13,6 +13,11 @@ dataframes {
         
     withoutDefaultPath() // disable default path for all schemas
     // i.e. plugin won't copy "data" property of the schemas to generated companion objects
+
+    // split field names by delimiters (arguments of this method), lowercase parts and join to camel case
+    // enabled by default
+    withNormalizationBy('_') // [optional: default: ['\t', '_', ' ']]
+    withoutNormalization() // disable field names normalization
     
     schema {
         sourceSet /* String */ = "…" // [optional; override default]
@@ -25,6 +30,10 @@ dataframes {
         csvOptions {
             delimiter /* Char */ = ';' // [optional; default: ',']
         }
+
+        // See names normalization
+        withNormalizationBy('_') // enable field names normalization for this schema and use these delimiters
+        withoutNormalization() // disable field names normalization for this schema
         
         withoutDefaultPath() // disable default path for this schema
         withDefaultPath() // enable default path for this schema
@@ -36,12 +45,13 @@ dataframes {
 In the best scenario, your schema could be defined as simple as this:
 ```kotlin
 dataframes {
-    // output: build/generated/dataframe/main/kotlin/org/example/dataframe/Jetbrains_repositories.Generated.kt
+    // output: build/generated/dataframe/main/kotlin/org/example/dataframe/JetbrainsRepositories.Generated.kt
     schema {
         data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
     }
 }
 ```
+Note than name of the file and the interface are normalized: split by '_' and ' ' and joined to camel case.
 You can set parsing options for CSV:
 ```kotlin
 dataframes {
