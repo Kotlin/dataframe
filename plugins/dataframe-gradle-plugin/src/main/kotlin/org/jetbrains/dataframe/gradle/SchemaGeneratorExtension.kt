@@ -15,6 +15,7 @@ open class SchemaGeneratorExtension {
     var sourceSet: String? = null
     var visibility: DataSchemaVisibility? = null
     internal var defaultPath: Boolean? = null
+    internal var withNormalizationBy: Set<Char>? = null
 
     fun schema(config: Schema.() -> Unit) {
         val schema = Schema(project).apply(config)
@@ -30,6 +31,20 @@ open class SchemaGeneratorExtension {
     fun withoutDefaultPath() {
         defaultPath = false
     }
+
+    fun withNormalizationBy(vararg delimiter: Char) {
+        withNormalizationBy = delimiter.toSet()
+    }
+
+    // Overload for Groovy.
+    // It's impossible to call a method with char argument without type cast in groovy, because it only has string literals
+    fun withNormalizationBy(delimiter: String) {
+        withNormalizationBy = delimiter.toSet()
+    }
+
+    fun withoutNormalization() {
+        withNormalizationBy = emptySet()
+    }
 }
 
 class Schema(
@@ -41,6 +56,7 @@ class Schema(
     var sourceSet: String? = null,
     var visibility: DataSchemaVisibility? = null,
     internal var defaultPath: Boolean? = null,
+    internal var withNormalizationBy: Set<Char>? = null,
     val csvOptions: CsvOptions = CsvOptions()
 ) {
     fun setData(file: File) {
@@ -68,6 +84,20 @@ class Schema(
 
     fun withDefaultPath() {
         defaultPath = true
+    }
+
+    fun withNormalizationBy(vararg delimiter: Char) {
+        withNormalizationBy = delimiter.toSet()
+    }
+
+    // Overload for Groovy.
+    // It's impossible to call a method with char argument without type cast in groovy, because it only has string literals
+    fun withNormalizationBy(delimiter: String) {
+        withNormalizationBy = delimiter.toSet()
+    }
+
+    fun withoutNormalization() {
+        withNormalizationBy = emptySet()
     }
 }
 
