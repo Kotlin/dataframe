@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.impl.toIterable
 import kotlin.reflect.KProperty
-import kotlin.reflect.KProperty1
 
 /**
  * Single row of a [DataFrame].
@@ -47,18 +46,6 @@ public interface DataRow<out T> {
     public operator fun <R> String.invoke(): R = this@DataRow[this@invoke] as R
     public operator fun <R> ColumnPath.invoke(): R = this@DataRow.get(this) as R
 
-    public fun String.int(): Int = read(this)
-    public fun String.intOrNull(): Int? = read(this)
-    public fun String.string(): String = read(this)
-    public fun String.stringOrNull(): String? = read(this)
-    public fun String.boolean(): Boolean = read(this)
-    public fun String.booleanOrNull(): Boolean? = read(this)
-    public fun String.double(): Double = read(this)
-    public fun String.doubleOrNull(): Double? = read(this)
-    public fun String.comparable(): Comparable<Any?> = read(this)
-    public fun String.comparableOrNull(): Comparable<Any?>? = read(this)
-    public fun String.numberOrNull(): Number? = read(this)
-
     public fun forwardIterable(): Iterable<DataRow<T>> = this.toIterable { it.next }
     public fun backwardIterable(): Iterable<DataRow<T>> = this.toIterable { it.prev }
 
@@ -91,11 +78,6 @@ public interface DataRow<out T> {
     public operator fun ColumnReference<Double>.div(a: Int): Double = get(this) / a
     public operator fun ColumnReference<Long>.div(a: Int): Long = get(this) / a
     public operator fun ColumnReference<Double>.div(a: Long): Double = get(this) / a
-
-    public infix fun <R> ColumnReference<R>.eq(a: R?): Boolean = get(this) == a
-    public infix fun <R> KProperty1<*, R>.eq(a: R?): Boolean = get(this) == a
-    public infix fun <R> ColumnReference<R>.neq(a: R?): Boolean = get(this) != a
-    public infix fun <R> KProperty1<*, R>.neq(a: R?): Boolean = get(this) != a
 
     public companion object {
         public val empty: AnyRow = DataFrame.empty(1)[0]

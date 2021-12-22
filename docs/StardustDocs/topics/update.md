@@ -54,7 +54,7 @@ Update with value depending on column:
 <!---FUN updatePerColumn-->
 
 ```kotlin
-df.update { numberCols() }.perCol { mean(skipNA = true) }
+df.update { colsOf<Number?>() }.perCol { mean(skipNA = true) }
 ```
 
 <!---END-->
@@ -64,7 +64,7 @@ Update with value depending on row and column:
 <!---FUN updatePerRowCol-->
 
 ```kotlin
-df.update { stringCols() }.perRowCol { row, col -> col.name() + ": " + row.index() }
+df.update { colsOf<String?>() }.perRowCol { row, col -> col.name() + ": " + row.index() }
 ```
 
 <!---END-->

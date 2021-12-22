@@ -16,7 +16,7 @@ See [column selectors](ColumnSelectors.md)
 
 ```kotlin
 df.replace { name }.with { name.firstName }
-df.replace { stringCols() }.with { it.lowercase() }
+df.replace { colsOf<String?>() }.with { it.lowercase() }
 df.replace { age }.with { 2021 - age named "year" }
 ```
 

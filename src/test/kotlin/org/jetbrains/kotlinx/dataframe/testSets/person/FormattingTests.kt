@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.FormattingDSL.gray
 import org.jetbrains.kotlinx.dataframe.api.FormattingDSL.green
 import org.jetbrains.kotlinx.dataframe.api.FormattingDSL.red
 import org.jetbrains.kotlinx.dataframe.api.and
+import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.format
 import org.jetbrains.kotlinx.dataframe.api.linearBg
 import org.jetbrains.kotlinx.dataframe.api.where
@@ -22,7 +23,7 @@ class FormattingTests : BaseTest() {
 
     @Test
     fun `conditional formatting`() {
-        val formattedFrame = typed.format { intCols().withoutNulls() }.with {
+        val formattedFrame = typed.format { colsOf<Int>() }.with {
             if (it > 10) background(white) and bold and italic
             else textColor(linear(it, 30.5 to red, 50 to green)) and underline
         }

@@ -66,7 +66,7 @@ df.groupBy { expr { firstName().length + lastName().length } named "nameLength" 
 ```kotlin
 df.groupBy("name")
 df.groupBy { "city" and "name"["lastName"] }
-df.groupBy { "age".ints() / 10 named "ageDecade" }
+df.groupBy { "age"<Int>() / 10 named "ageDecade" }
 df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named "nameLength" }
 ```
 
@@ -285,14 +285,14 @@ df.groupBy("city").max("age") // max age into column "age"
 df.groupBy("city").sum("weight", name = "total weight") // sum of weights into column "total weight"
 df.groupBy("city").count() // number of rows into column "count"
 df.groupBy("city").max {
-    "name"["firstName"].strings().length() and "name"["lastName"].strings().length()
+    "name"["firstName"]<String>().length() and "name"["lastName"]<String>().length()
 } // maximum length of firstName or lastName into column "max"
 df.groupBy("city")
     .medianFor("age", "weight") // median age into column "age", median weight into column "weight"
 df.groupBy("city")
-    .minFor { ("age".ints() into "min age") and ("weight".intOrNulls() into "min weight") } // min age into column "min age", min weight into column "min weight"
+    .minFor { ("age"<Int>() into "min age") and ("weight"<Int?>() into "min weight") } // min age into column "min age", min weight into column "min weight"
 df.groupBy("city").meanOf("mean ratio") {
-    "weight".intOrNull()?.div("age".int())
+    "weight"<Int?>()?.div("age"<Int>())
 } // mean of weight/age into column "mean ratio"
 ```
 

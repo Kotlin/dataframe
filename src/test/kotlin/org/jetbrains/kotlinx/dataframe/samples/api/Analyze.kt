@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.api.aggregate
 import org.jetbrains.kotlinx.dataframe.api.asComparable
 import org.jetbrains.kotlinx.dataframe.api.asGroupBy
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
+import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -385,7 +386,7 @@ class Analyze : TestBase() {
     @Test
     fun multipleColumnsStat_properties() {
         // SampleStart
-        df.min { intCols() }
+        df.min { colsOf<Int>() }
         df.max { name.firstName and name.lastName }
         df.sum { age and weight }
         df.mean { cols(1, 3).asNumbers() }
@@ -402,7 +403,7 @@ class Analyze : TestBase() {
         val age by column<Int>()
         val weight by column<Int?>()
 
-        df.min { intCols() }
+        df.min { colsOf<Int>() }
 
         df.max { firstName and lastName }
         // or
@@ -421,7 +422,7 @@ class Analyze : TestBase() {
     fun multipleColumnsStat_strings() {
         // SampleStart
 
-        df.min { intCols() }
+        df.min { colsOf<Int>() }
 
         df.max { "name"["firstName"].asComparable() and "name"["lastName"].asComparable() }
 
@@ -437,7 +438,7 @@ class Analyze : TestBase() {
     @Test
     fun columnsFor_properties() {
         // SampleStart
-        df.minFor { intCols() }
+        df.minFor { colsOf<Int>() }
         df.maxFor { name.firstName and name.lastName }
         df.sumFor { age and weight }
         df.meanFor { cols(1, 3).asNumbers() }
@@ -454,7 +455,7 @@ class Analyze : TestBase() {
         val age by column<Int>()
         val weight by column<Int?>()
 
-        df.minFor { intCols() }
+        df.minFor { colsOf<Int>() }
 
         df.maxFor { firstName and lastName }
         // or
@@ -472,7 +473,7 @@ class Analyze : TestBase() {
     @Test
     fun columnsFor_strings() {
         // SampleStart
-        df.minFor { intCols() }
+        df.minFor { colsOf<Int>() }
         df.maxFor { "name"["firstName"].asComparable() and "name"["lastName"].asComparable() }
 
         df.sumFor("age", "weight")
@@ -562,7 +563,7 @@ class Analyze : TestBase() {
         // SampleStart
         df.groupBy("name")
         df.groupBy { "city" and "name"["lastName"] }
-        df.groupBy { "age".ints() / 10 named "ageDecade" }
+        df.groupBy { "age"<Int>() / 10 named "ageDecade" }
         df.groupBy { expr { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length } named "nameLength" }
         // SampleEnd
     }
@@ -731,14 +732,14 @@ class Analyze : TestBase() {
         df.groupBy("city").sum("weight", name = "total weight") // sum of weights into column "total weight"
         df.groupBy("city").count() // number of rows into column "count"
         df.groupBy("city").max {
-            "name"["firstName"].strings().length() and "name"["lastName"].strings().length()
+            "name"["firstName"]<String>().length() and "name"["lastName"]<String>().length()
         } // maximum length of firstName or lastName into column "max"
         df.groupBy("city")
             .medianFor("age", "weight") // median age into column "age", median weight into column "weight"
         df.groupBy("city")
-            .minFor { ("age".ints() into "min age") and ("weight".intOrNulls() into "min weight") } // min age into column "min age", min weight into column "min weight"
+            .minFor { ("age"<Int>() into "min age") and ("weight"<Int?>() into "min weight") } // min age into column "min age", min weight into column "min weight"
         df.groupBy("city").meanOf("mean ratio") {
-            "weight".intOrNull()?.div("age".int())
+            "weight"<Int?>()?.div("age"<Int>())
         } // mean of weight/age into column "mean ratio"
         // SampleEnd
     }

@@ -20,7 +20,7 @@ df.update { age }.where { city == "Paris" }.with { it - 5 }
 
 <tip>
 
-You can play with "people" dataset that is used in `DataFrame` operations guide [here](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)
+You can plain with "people" dataset that is used in present guide [here](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)
 
 </tip>
 
@@ -37,7 +37,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * `into` defines column names for storing operation results. Used in [`move`](move.md), [`group`](group.md), [`split`](split.md), [`merge`](merge.md), [`gather`](gather.md), [`groupBy`](groupBy.md), [`rename`](rename.md).
 * `with` defines row-wise data transformation with [`row expression`](DataRow.md#row-expressions). Used in [`update`](update.md), [`convert`](convert.md), [`replace`](replace.md), [`pivot`](pivot.md).
 
-## List of all DataFrame operations
+## List of DataFrame operations
 
 * [add](add.md) — add columns
 * [addId](add.md#addid) — add `id` column
