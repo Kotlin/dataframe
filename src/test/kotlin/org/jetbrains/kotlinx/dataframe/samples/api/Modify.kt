@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.after
 import org.jetbrains.kotlinx.dataframe.api.at
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.byName
+import org.jetbrains.kotlinx.dataframe.api.colsOf
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -117,21 +118,21 @@ class Modify : TestBase() {
     fun updatePerColumn() {
         val updated =
             // SampleStart
-            df.update { numberCols() }.perCol { mean(skipNA = true) }
+            df.update { colsOf<Number?>() }.perCol { mean(skipNA = true) }
         // SampleEnd
         updated.age.countDistinct() shouldBe 1
         updated.weight.countDistinct() shouldBe 1
 
-        val means = df.meanFor(skipNA = true) { numberCols() }
-        df.update { numberCols() }.perCol(means) shouldBe updated
-        df.update { numberCols() }.perCol(means.toMap() as Map<String, Double>) shouldBe updated
+        val means = df.meanFor(skipNA = true) { colsOf() }
+        df.update { colsOf<Number?>() }.perCol(means) shouldBe updated
+        df.update { colsOf<Number?>() }.perCol(means.toMap() as Map<String, Double>) shouldBe updated
     }
 
     @Test
     fun updatePerRowCol() {
         val updated =
             // SampleStart
-            df.update { stringCols() }.perRowCol { row, col -> col.name() + ": " + row.index() }
+            df.update { colsOf<String?>() }.perRowCol { row, col -> col.name() + ": " + row.index() }
         // SampleEnd
     }
 
@@ -147,7 +148,7 @@ class Modify : TestBase() {
     fun convertTo() {
         // SampleStart
         df.convert { age }.to<Double>()
-        df.convert { numberCols() }.to<String>()
+        df.convert { colsOf<Number>() }.to<String>()
         df.convert { name.firstName and name.lastName }.to { it.length() }
         df.convert { weight }.toFloat()
         // SampleEnd
@@ -187,7 +188,7 @@ class Modify : TestBase() {
     fun replace() {
         // SampleStart
         df.replace { name }.with { name.firstName }
-        df.replace { stringCols() }.with { it.lowercase() }
+        df.replace { colsOf<String?>() }.with { it.lowercase() }
         df.replace { age }.with { 2021 - age named "year" }
         // SampleEnd
     }
@@ -202,16 +203,16 @@ class Modify : TestBase() {
     @Test
     fun fillNulls() {
         // SampleStart
-        df.fillNulls { intCols() }.with { -1 }
+        df.fillNulls { colsOf<Int?>() }.with { -1 }
         // same as
-        df.update { intCols() }.where { it == null }.with { -1 }
+        df.update { colsOf<Int?>() }.where { it == null }.with { -1 }
         // SampleEnd
     }
 
     @Test
     fun fillNaNs() {
         // SampleStart
-        df.fillNaNs { doubleCols() }.withZero()
+        df.fillNaNs { colsOf<Double>() }.withZero()
         // SampleEnd
     }
 
@@ -519,7 +520,7 @@ class Modify : TestBase() {
     @Test
     fun mergeDefault() {
         // SampleStart
-        df.merge { numberCols() }.into("data")
+        df.merge { colsOf<Number>() }.into("data")
         // SampleEnd
     }
 

@@ -1,17 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.*
-import org.jetbrains.kotlinx.dataframe.BooleanCol
 import org.jetbrains.kotlinx.dataframe.ColumnFilter
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DoubleCol
-import org.jetbrains.kotlinx.dataframe.IntCol
-import org.jetbrains.kotlinx.dataframe.NumberCol
 import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.RowExpression
-import org.jetbrains.kotlinx.dataframe.StringCol
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -260,12 +255,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun <C> ColumnSet<C>.filter(predicate: Predicate<ColumnWithPath<C>>): ColumnSet<C> =
         transform { it.filter(predicate) }
 
-    public fun ColumnSet<*>.numberCols(filter: (NumberCol) -> Boolean = { true }): ColumnSet<Number?> = colsOf(filter)
-    public fun ColumnSet<*>.stringCols(filter: (StringCol) -> Boolean = { true }): ColumnSet<String?> = colsOf(filter)
-    public fun ColumnSet<*>.intCols(filter: (IntCol) -> Boolean = { true }): ColumnSet<Int?> = colsOf(filter)
-    public fun ColumnSet<*>.doubleCols(filter: (DoubleCol) -> Boolean = { true }): ColumnSet<Double?> = colsOf(filter)
-    public fun ColumnSet<*>.booleanCols(filter: (BooleanCol) -> Boolean = { true }): ColumnSet<Boolean?> = colsOf(filter)
-
     public fun ColumnSet<*>.nameContains(text: CharSequence): ColumnSet<Any?> = cols { it.name.contains(text) }
     public fun ColumnSet<*>.nameContains(regex: Regex): ColumnSet<Any?> = cols { it.name.contains(regex) }
     public fun ColumnSet<*>.startsWith(prefix: CharSequence): ColumnSet<Any?> = cols { it.name.startsWith(prefix) }
@@ -307,30 +296,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public infix fun <C> String.by(newColumnExpression: RowExpression<T, C>): DataColumn<C> =
         newColumnWithActualType(this, newColumnExpression)
-
-    public fun String.ints(): DataColumn<Int> = getColumn(this).cast()
-    public fun String.intOrNulls(): DataColumn<Int?> = getColumn(this).cast()
-    public fun String.strings(): DataColumn<String> = getColumn(this).cast()
-    public fun String.stringOrNulls(): DataColumn<String?> = getColumn(this).cast()
-    public fun String.booleans(): DataColumn<Boolean> = getColumn(this).cast()
-    public fun String.booleanOrNulls(): DataColumn<Boolean?> = getColumn(this).cast()
-    public fun String.doubles(): DataColumn<Double> = getColumn(this).cast()
-    public fun String.doubleOrNulls(): DataColumn<Double?> = getColumn(this).cast()
-    public fun String.comparables(): DataColumn<Comparable<Any?>> = getColumn(this).cast()
-    public fun String.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this).cast()
-    public fun String.numberOrNulls(): DataColumn<Number?> = getColumn(this).cast()
-
-    public fun ColumnPath.ints(): DataColumn<Int> = getColumn(this).cast()
-    public fun ColumnPath.intOrNulls(): DataColumn<Int?> = getColumn(this).cast()
-    public fun ColumnPath.strings(): DataColumn<String> = getColumn(this).cast()
-    public fun ColumnPath.stringOrNulls(): DataColumn<String?> = getColumn(this).cast()
-    public fun ColumnPath.booleans(): DataColumn<Boolean> = getColumn(this).cast()
-    public fun ColumnPath.booleanOrNulls(): DataColumn<Boolean?> = getColumn(this).cast()
-    public fun ColumnPath.doubles(): DataColumn<Double> = getColumn(this).cast()
-    public fun ColumnPath.doubleOrNulls(): DataColumn<Double?> = getColumn(this).cast()
-    public fun ColumnPath.comparables(): DataColumn<Comparable<Any?>> = getColumn(this).cast()
-    public fun ColumnPath.comparableOrNulls(): DataColumn<Comparable<Any?>?> = getColumn(this).cast()
-    public fun ColumnPath.numberOrNulls(): DataColumn<Number?> = getColumn(this).cast()
 }
 
 public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(

@@ -373,7 +373,6 @@ class DataFrameTests : BaseTest() {
 
         df.update(Person::age) { it * 2 }.check()
 
-        df.update("age") { "age".int() * 2 }.check()
         df.update("age") { "age"<Int>() * 2 }.check()
     }
 
@@ -529,9 +528,7 @@ class DataFrameTests : BaseTest() {
 
         df.filter { age > limit && weight() != null }.check()
         df.filter { it[age] > limit && this[weight] != null }.check()
-        df.filter { age > limit && weight neq null }.check()
 
-        df.filter { "age".int() > limit && "weight".intOrNull() != null }.check()
         df.filter { "age"<Int>() > limit && "weight"<Int?>() != null }.check()
     }
 
@@ -697,7 +694,7 @@ class DataFrameTests : BaseTest() {
         res["Name"].values() shouldBe typed.name.values().map { it.lowercase() }
         df.select { name.map { it.lowercase() } named "Name" } shouldBe res
         df.select { it[Person::name].map { it.lowercase() } named "Name" } shouldBe res
-        df.select { "name".strings().map { it.lowercase() } named "Name" } shouldBe res
+        df.select { "name"<String>().map { it.lowercase() } named "Name" } shouldBe res
     }
 
     @Test
@@ -764,7 +761,7 @@ class DataFrameTests : BaseTest() {
             count { age > 25 } into "old count"
             median(age) into "median age"
             min(age) into "min age"
-            all { weight neq null } into "all with weights"
+            all { weight() != null } into "all with weights"
             maxBy(age)[city] into "oldest origin"
             sortBy(age).first()[city] into "youngest origin"
             pivot(city.map { "from $it" }).count()
@@ -776,7 +773,7 @@ class DataFrameTests : BaseTest() {
             count { it[Person::age] > 25 } into "old count"
             median(Person::age) into "median age"
             min(Person::age) into "min age"
-            all { Person::weight neq null } into "all with weights"
+            all { it[Person::weight] != null } into "all with weights"
             maxBy(Person::age)[Person::city] into "oldest origin"
             sortBy(Person::age).first()[Person::city] into "youngest origin"
             pivot { it[Person::city].map { "from $it" } }.count()
@@ -785,11 +782,11 @@ class DataFrameTests : BaseTest() {
 
         df.groupBy("name").aggregate {
             count() into "n"
-            count { "age".int() > 25 } into "old count"
-            median { "age".ints() } into "median age"
-            min { "age".ints() } into "min age"
+            count { "age"<Int>() > 25 } into "old count"
+            median { "age"<Int>() } into "median age"
+            min { "age"<Int>() } into "min age"
             all { it["weight"] != null } into "all with weights"
-            maxBy { "age".int() }["city"] into "oldest origin"
+            maxBy { "age"<Int>() }["city"] into "oldest origin"
             sortBy("age").first()["city"] into "youngest origin"
             pivot { it["city"].map { "from $it" } }.count()
             it["age"].toList() into "ages"
@@ -816,7 +813,7 @@ class DataFrameTests : BaseTest() {
         df.min(age).check()
         df[age].min().check()
 
-        df.min { "age".ints() }.check()
+        df.min { "age"<Int>() }.check()
         df.min("age").check()
         df["age"].cast<Int>().min().check()
     }
@@ -835,7 +832,7 @@ class DataFrameTests : BaseTest() {
         df.max(weight).check()
         df[weight].max().check()
 
-        df.max { "weight".intOrNulls() }.check()
+        df.max { "weight"<Int?>() }.check()
         df["weight"].cast<Int?>().max().check()
         (df.max("weight") as Int?).check()
     }
@@ -853,7 +850,7 @@ class DataFrameTests : BaseTest() {
         df.dropNulls(weight).minBy(weight).check()
         df.minBy(weight).check()
 
-        df.dropNulls("weight").minBy { "weight".intOrNull() }.check()
+        df.dropNulls("weight").minBy { "weight"<Int?>() }.check()
         df.dropNulls("weight").minBy("weight").check()
         df.minBy("weight").check()
     }
@@ -871,7 +868,7 @@ class DataFrameTests : BaseTest() {
         df.maxBy { age() }.check()
         df.maxBy(age).check()
 
-        df.maxBy { "age".int() }.check()
+        df.maxBy { "age"<Int>() }.check()
         df.maxBy("age").check()
     }
 
@@ -887,7 +884,6 @@ class DataFrameTests : BaseTest() {
 
         df.add("year") { now - age }.check()
 
-        df.add("year") { now - "age".int() }.check()
         df.add("year") { now - "age"<Int>() }.check()
     }
 
@@ -1354,7 +1350,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `merge cols with conversion`() {
         val pivoted = typed.groupBy { name }.pivot { city }.count()
-        val res = pivoted.merge { city.intCols() }.by { it.filterNotNull().sum() }.into("cities")
+        val res = pivoted.merge { city.colsOf<Int>() }.by { it.filterNotNull().sum() }.into("cities")
         val expected = typed.select { name and city }.groupBy { name }.count("cities")
         res shouldBe expected
     }
@@ -1593,7 +1589,7 @@ class DataFrameTests : BaseTest() {
 
     @Test(expected = IllegalArgumentException::class)
     fun `replace exception`() {
-        typed.replace { intCols() }.with(typed.name)
+        typed.replace { colsOf<Int?>() }.with(typed.name)
     }
 
     @Test
@@ -1912,7 +1908,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `drop where any na`() {
         val updated = typed.convert { weight }.with { if (name == "Alice") Double.NaN else it?.toDouble() }
-        val expected = updated.count { city != null && !("weight".doubleOrNull()?.isNaN() ?: true) }
+        val expected = updated.count { city != null && !("weight"<Double?>()?.isNaN() ?: true) }
 
         fun AnyFrame.check() = nrow shouldBe expected
 
@@ -1925,7 +1921,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `drop where all na`() {
         val updated = typed.convert { weight }.with { if (name == "Alice") Double.NaN else it?.toDouble() }
-        val expected = updated.count { city != null || !("weight".doubleOrNull()?.isNaN() ?: true) }
+        val expected = updated.count { city != null || !("weight"<Double?>()?.isNaN() ?: true) }
 
         fun AnyFrame.check() = nrow shouldBe expected
 
@@ -2048,7 +2044,7 @@ class DataFrameTests : BaseTest() {
     fun `find the longest string`() {
         val longestCityName = "Taumatawhakatangihangakoauauotamateaturipukakapikimaungahoronukupokaiwhenuakitanatahu"
         val updated = typed.update { city }.where { it == "Dubai" }.withValue(longestCityName)
-        updated.valuesNotNull { stringCols() }.maxByOrNull { it.length } shouldBe longestCityName
+        updated.valuesNotNull { colsOf<String?>() }.maxByOrNull { it.length } shouldBe longestCityName
     }
 
     @Test
@@ -2266,7 +2262,7 @@ class DataFrameTests : BaseTest() {
     fun updateWithZero() {
         val updated = typed
             .convert { weight }.toDouble()
-            .update { numberCols() }.where { name == "Charlie" }.withZero()
+            .update { colsOf<Number?>() }.where { name == "Charlie" }.withZero()
         updated.age.type shouldBe typeOf<Int>()
         updated["weight"].type shouldBe typeOf<Double>()
         val filtered = updated.filter { name == "Charlie" }

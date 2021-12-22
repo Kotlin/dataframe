@@ -53,7 +53,7 @@ By default, when no `delimeter` or `merger` is specified, values will be merged 
 <!---FUN mergeDefault-->
 
 ```kotlin
-df.merge { numberCols() }.into("data")
+df.merge { colsOf<Number>() }.into("data")
 ```
 
 <!---END-->
