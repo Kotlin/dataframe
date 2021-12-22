@@ -96,6 +96,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             }
 
         val defaultPath = schema.defaultPath ?: extension.defaultPath ?: true
+        val delimiters = schema.withNormalizationBy ?: extension.withNormalizationBy ?: setOf('\t', ' ', '_')
 
         return target.tasks.create("generateDataFrame${interfaceName}", GenerateDataSchemaTask::class.java) {
             group = GROUP
@@ -106,17 +107,22 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             this.schemaVisibility.set(visibility)
             this.csvOptions.set(schema.csvOptions)
             this.defaultPath.set(defaultPath)
+            this.delimiters.set(delimiters)
         }
     }
 
     private fun getInterfaceName(schema: Schema): String? {
         val rawName = schema.name?.substringAfterLast('.')
-            ?: fileName(schema.data)?.capitalize()
+            ?: fileName(schema.data)
+                ?.toCamelCaseByDelimiters(delimiters)
+                ?.capitalize()
                 ?.removeSurrounding("`")
             ?: return null
         NameChecker.checkValidIdentifier(rawName)
         return rawName
     }
+
+    private val delimiters = "[\\s_]".toRegex()
 
     private class AppliedPlugin(
         val kotlinExtension: KotlinProjectExtension,

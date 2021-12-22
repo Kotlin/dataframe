@@ -16,6 +16,12 @@ internal interface SchemaProcessor {
     ): Marker
 
     companion object {
-        fun create(namePrefix: String, existingMarkers: Iterable<Marker> = emptyList()) = SchemaProcessorImpl(existingMarkers, namePrefix)
+        fun create(
+            namePrefix: String,
+            existingMarkers: Iterable<Marker> = emptyList(),
+            fieldNameNormalizer: (String) -> String = { it }
+        ): SchemaProcessorImpl {
+            return SchemaProcessorImpl(existingMarkers, namePrefix, fieldNameNormalizer)
+        }
     }
 }
