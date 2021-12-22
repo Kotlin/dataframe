@@ -103,6 +103,38 @@ internal class SchemaGeneratorPluginTest {
     }
 
     @Test
+    fun `delimiters configured with Groovy`() {
+        val buildDir = Files.createTempDirectory("test").toFile()
+        val buildFile = File(buildDir, "build.gradle")
+        buildFile.writeText(
+            """
+                import java.net.URL
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                    
+                plugins {
+                    id "org.jetbrains.kotlin.jvm" version "$KOTLIN_VERSION"
+                    id "org.jetbrains.kotlin.plugin.dataframe"
+                }
+                
+                repositories {
+                    mavenCentral() 
+                }
+    
+                dataframes {
+                    schema {
+                        data = new URL("https://raw.githubusercontent.com/Kotlin/dataframe/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
+                        name = "Test"
+                        packageName = "org.test"
+                        withNormalizationBy('-_\t ')
+                    }
+                }
+            """.trimIndent()
+        )
+        val result = gradleRunner(buildDir, ":generateDataFrameTest").build()
+        result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
     fun `plugin configure multiple schemas from URLs via extension`() {
         val (_, result) = runGradleBuild(":generateDataFrames") {
             """
