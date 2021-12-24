@@ -24,6 +24,7 @@ import org.jetbrains.kotlinx.dataframe.io.SupportedFormats
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import java.io.FileNotFoundException
+import java.net.URI
 
 abstract class GenerateDataSchemaTask : DefaultTask() {
 
@@ -144,11 +145,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 }
             }
         } catch (e: Exception) {
-            when (e) {
-                is KlaxonException, is IndexOutOfBoundsException, is IOException -> throw InvalidDataException(e)
-                is FileNotFoundException, is IllegalArgumentException -> throw MissingDataException(e)
-                else -> throw e
-            }
+            throw Exception("Error while reading dataframe from data at $url", e)
         }
     }
 
