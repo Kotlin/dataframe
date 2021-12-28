@@ -6,7 +6,7 @@ import java.util.*
 
 public fun NameNormalizer.Companion.from(normalizationDelimiters: Set<Char>): NameNormalizer {
     val delimitersSet = normalizationDelimiters.joinToString("", "[", "]")
-    val delimitedStringRegex = ".+${delimitersSet}.+".toRegex()
+    val delimitedStringRegex = ".+$delimitersSet.+".toRegex()
     return NameNormalizer {
         when {
             normalizationDelimiters.isEmpty() -> it
