@@ -20,6 +20,8 @@ import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 import org.jetbrains.kotlinx.dataframe.io.SupportedFormats
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readJson
@@ -65,8 +67,6 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         val (df, format) = readDataFrame(data.get(), csvOptions)
         val codeGenerator = CodeGenerator.create(useFqNames = false)
         val delimiters = delimiters.get()
-        val delimitersSet = delimiters.joinToString("", "[", "]")
-        val delimitedStringRegex = ".+${delimitersSet}.+".toRegex()
         val codeGenResult = codeGenerator.generate(
             schema = df.schema(),
             name = interfaceName.get(),
@@ -87,16 +87,9 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                         DefaultReadCsvMethod(defaultPath, delimiter)
                     }
                 }
-            }
-        ) {
-            when {
-                delimiters.isEmpty() -> it
-                it matches delimitedStringRegex -> {
-                    it.toLowerCase().toCamelCaseByDelimiters(delimitersSet.toRegex())
-                }
-                else -> it
-            }
-        }
+            },
+            fieldNameNormalizer = NameNormalizer.from(delimiters)
+        )
         val escapedPackageName = escapePackageName(packageName.get())
 
         val dataSchema = dataSchema.get()
