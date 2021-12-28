@@ -2,20 +2,15 @@ package org.jetbrains.dataframe.gradle
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.Provider
+import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
-import java.io.File
-import java.io.IOException
-import java.net.URL
-import java.nio.file.Paths
-import com.beust.klaxon.KlaxonException
-import org.gradle.api.provider.Provider
-import org.gradle.api.provider.SetProperty
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.dataframe.impl.codeGen.CodeGenResult
+import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
+import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
@@ -25,8 +20,9 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 import org.jetbrains.kotlinx.dataframe.io.SupportedFormats
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readJson
-import java.io.FileNotFoundException
-import java.net.URI
+import java.io.File
+import java.net.URL
+import java.nio.file.Paths
 
 abstract class GenerateDataSchemaTask : DefaultTask() {
 
@@ -126,7 +122,6 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             DataFrame.readCSV(url, delimiter = delimiter) to SupportedFormats.CSV
         }
         fun readJson(url: URL) = DataFrame.readJson(url) to SupportedFormats.JSON
-        val url = urlOf(data)
         return try {
             when (guessFormat(url.path)) {
                 SupportedFormats.CSV -> readCSV(url)
@@ -180,6 +175,3 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         }
     }
 }
-
-class MissingDataException(cause: Exception) : Exception(cause)
-class InvalidDataException(cause: Exception) : Exception(cause)
