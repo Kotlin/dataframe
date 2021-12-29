@@ -23,6 +23,7 @@ import com.google.devtools.ksp.validate
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchemaVisibility
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchemaByAbsolutePath
 import org.jetbrains.kotlinx.dataframe.codeGen.CsvOptions
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
@@ -30,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.DfReadResult
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlReader
+import java.io.File
 import java.io.IOException
 import java.io.OutputStreamWriter
 import java.net.MalformedURLException
@@ -64,49 +66,101 @@ class DataFrameSymbolProcessor(
                 generate(file, it.origin, it.properties)
             }
 
-        val files = resolver.getSymbolsWithAnnotation(ImportDataSchema::class.qualifiedName!!)
+        val importStatements = buildList<ImportDataSchemaStatement> {
+            this += resolver
+                .getSymbolsWithAnnotation(ImportDataSchema::class.qualifiedName!!)
+                .filterIsInstance<KSFile>()
+                .flatMap { file ->
+                    file.getAnnotationsByType(ImportDataSchema::class).mapNotNull { it.toStatement(file) }
+                }
 
-        files.filterIsInstance<KSFile>().forEach { file ->
-            val packageName = file.packageName.asString()
-            file
-                .getAnnotationsByType(ImportDataSchema::class)
-                .forEach schemas@{ importedSchema ->
-                    val name = importedSchema.name
-                    val csvOptions = CsvOptions(importedSchema.csvOptions.delimiter)
-                    val schemaFile = codeGenerator.createNewFile(Dependencies(true, file), packageName, name)
-                    val url = try {
-                        URL(importedSchema.url)
-                    } catch (exception: MalformedURLException) {
-                        logger.error("'${importedSchema.url}' is not valid URL: ${exception.message}", file)
-                        return@schemas
-                    }
-                    val parsedDf = when (val readResult = CodeGenerator.urlReader(url, csvOptions)) {
-                        is DfReadResult.Success -> readResult
-                        is DfReadResult.Error -> {
-                            logger.error("Error while reading dataframe from data at $url: ${readResult.reason}")
-                            return@schemas
-                        }
-                    }
-                    val codeGenerator = CodeGenerator.create(useFqNames = false)
-                    val codeGenResult = codeGenerator.generate(
-                        parsedDf.schema,
-                        name,
-                        fields = true,
-                        extensionProperties = false,
-                        isOpen = true,
-                        importedSchema.visibility.toMarkerVisibility(),
-                        emptyList(),
-                        parsedDf.getReadDfMethod(importedSchema.url.takeIf { importedSchema.withDefaultPath }),
-                        NameNormalizer.from(importedSchema.normalizationDelimiters.toSet())
-                    )
-                    val code = codeGenResult.toStandaloneSnippet(packageName)
-                    schemaFile.bufferedWriter().use {
-                        it.write(code)
-                    }
+            this += resolver
+                .getSymbolsWithAnnotation(ImportDataSchemaByAbsolutePath::class.qualifiedName!!)
+                .filterIsInstance<KSFile>()
+                .flatMap { file ->
+                    file.getAnnotationsByType(ImportDataSchemaByAbsolutePath::class).mapNotNull { it.toStatement(file) }
                 }
         }
 
+        importStatements.forEach { importedSchema ->
+            val packageName = importedSchema.origin.packageName.asString()
+            val name = importedSchema.name
+            val csvOptions = CsvOptions(importedSchema.csvOptions.delimiter)
+            val schemaFile = codeGenerator.createNewFile(Dependencies(true, importedSchema.origin), packageName, name)
+
+            val parsedDf = when (val readResult = CodeGenerator.urlReader(importedSchema.data, csvOptions)) {
+                is DfReadResult.Success -> readResult
+                is DfReadResult.Error -> {
+                    logger.error("Error while reading dataframe from data at ${importedSchema.data.toExternalForm()}: ${readResult.reason}")
+                    return@forEach
+                }
+            }
+            val codeGenerator = CodeGenerator.create(useFqNames = false)
+            val codeGenResult = codeGenerator.generate(
+                parsedDf.schema,
+                name,
+                fields = true,
+                extensionProperties = false,
+                isOpen = true,
+                importedSchema.visibility,
+                emptyList(),
+                parsedDf.getReadDfMethod(importedSchema.data.toExternalForm().takeIf { importedSchema.withDefaultPath }),
+                NameNormalizer.from(importedSchema.normalizationDelimiters.toSet())
+            )
+            val code = codeGenResult.toStandaloneSnippet(packageName)
+            schemaFile.bufferedWriter().use {
+                it.write(code)
+            }
+        }
+
         return emptyList()
+    }
+
+    private class ImportDataSchemaStatement(
+        val origin: KSFile,
+        val name: String,
+        val data: URL,
+        val visibility: MarkerVisibility,
+        val normalizationDelimiters: List<Char>,
+        val withDefaultPath: Boolean,
+        val csvOptions: CsvOptions
+    )
+
+    private fun ImportDataSchema.toStatement(file: KSFile): ImportDataSchemaStatement? {
+        val url = try {
+            URL(this.url)
+        } catch (exception: MalformedURLException) {
+            logger.error("'${this.url}' is not valid URL: ${exception.message}", file)
+            return null
+        }
+        return ImportDataSchemaStatement(
+            file,
+            name,
+            url,
+            visibility.toMarkerVisibility(),
+            normalizationDelimiters.toList(),
+            withDefaultPath,
+            CsvOptions(csvOptions.delimiter)
+        )
+    }
+
+    private fun ImportDataSchemaByAbsolutePath.toStatement(file: KSFile): ImportDataSchemaStatement? {
+        val data = File(absolutePath)
+        val url = try {
+            data.toURI().toURL()
+        } catch (exception: MalformedURLException) {
+            logger.error("$absolutePath is not valid URL: ${exception.message}", file)
+            return null
+        }
+        return ImportDataSchemaStatement(
+            file,
+            name,
+            url,
+            visibility.toMarkerVisibility(),
+            normalizationDelimiters.toList(),
+            withDefaultPath,
+            CsvOptions(csvOptions.delimiter)
+        )
     }
 
     private fun DataSchemaVisibility.toMarkerVisibility(): MarkerVisibility = when (this) {
