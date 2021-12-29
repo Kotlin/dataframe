@@ -1,3 +1,5 @@
+
+
 package org.jetbrains.dataframe.ksp
 
 import com.tschuchort.compiletesting.SourceFile
@@ -13,6 +15,7 @@ import org.jetbrains.dataframe.ksp.runner.TestCompilationParameters
 import org.junit.Before
 import kotlin.test.Test
 
+@Suppress("unused")
 class DataFrameSymbolProcessorTest {
 
     companion object {
@@ -787,6 +790,45 @@ class DataFrameSymbolProcessorTest {
                     }
                 }
                
+            """.trimIndent()))
+            )
+        )
+        result.successfulCompilation shouldBe false
+    }
+
+    @Test
+    fun `imported schema resolved`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                @file:ImportDataSchema(
+                    "Schema", 
+                    "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv",
+                    
+                )
+                package org.example
+                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+
+                fun resolve() = Schema.readCSV()
+            """.trimIndent()))
+            )
+        )
+        result.successfulCompilation shouldBe true
+    }
+
+    @Test
+    fun `io error on schema import`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                @file:ImportDataSchema(
+                    "Schema", 
+                    "123",
+                )
+                package org.example
+                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
             """.trimIndent()))
             )
         )

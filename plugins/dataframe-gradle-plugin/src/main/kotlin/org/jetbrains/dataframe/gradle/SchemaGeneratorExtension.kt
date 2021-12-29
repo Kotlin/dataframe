@@ -57,7 +57,7 @@ class Schema(
     var visibility: DataSchemaVisibility? = null,
     internal var defaultPath: Boolean? = null,
     internal var withNormalizationBy: Set<Char>? = null,
-    val csvOptions: CsvOptions = CsvOptions()
+    val csvOptions: CsvOptionsDsl = CsvOptionsDsl()
 ) {
     fun setData(file: File) {
         data = file
@@ -71,7 +71,7 @@ class Schema(
         data = url
     }
 
-    fun csvOptions(config: CsvOptions.() -> Unit) {
+    fun csvOptions(config: CsvOptionsDsl.() -> Unit) {
         csvOptions.apply(config)
     }
     fun csvOptions(config: Closure<*>) {
@@ -102,6 +102,6 @@ class Schema(
 }
 
 // Without Serializable GradleRunner tests fail
-data class CsvOptions(
+data class CsvOptionsDsl(
     var delimiter: Char = ','
 ) : Serializable
