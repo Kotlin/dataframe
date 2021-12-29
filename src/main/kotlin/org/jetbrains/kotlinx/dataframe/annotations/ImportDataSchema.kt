@@ -18,3 +18,14 @@ public enum class DataSchemaVisibility {
 public annotation class CsvOptions(
     val delimiter: Char
 )
+
+@Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.FILE)
+public annotation class ImportDataSchemaByAbsolutePath(
+    val name: String,
+    val absolutePath: String,
+    val visibility: DataSchemaVisibility = DataSchemaVisibility.IMPLICIT_PUBLIC,
+    val normalizationDelimiters: CharArray = ['\t', ' ', '_'],
+    val withDefaultPath: Boolean = true,
+    val csvOptions: CsvOptions = CsvOptions(',')
+)
