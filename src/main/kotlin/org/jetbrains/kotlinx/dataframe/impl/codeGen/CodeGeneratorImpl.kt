@@ -272,3 +272,24 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
         return resultDeclarations.join()
     }
 }
+
+public fun CodeGenResult.toStandaloneSnippet(packageName: String): String {
+    return buildString {
+        if (packageName.isNotEmpty()) {
+            appendLine("package $packageName")
+            appendLine()
+        }
+        appendLine("import org.jetbrains.kotlinx.dataframe.ColumnsContainer")
+        appendLine("import org.jetbrains.kotlinx.dataframe.DataColumn")
+        appendLine("import org.jetbrains.kotlinx.dataframe.DataFrame")
+        appendLine("import org.jetbrains.kotlinx.dataframe.DataRow")
+        appendLine("import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup")
+        appendLine("import org.jetbrains.kotlinx.dataframe.annotations.ColumnName")
+        appendLine("import org.jetbrains.kotlinx.dataframe.annotations.DataSchema")
+        appendLine("import org.jetbrains.kotlinx.dataframe.api.cast")
+        appendLine("import org.jetbrains.kotlinx.dataframe.io.readJson")
+        appendLine("import org.jetbrains.kotlinx.dataframe.io.readCSV")
+        appendLine()
+        appendLine(code.declarations)
+    }
+}

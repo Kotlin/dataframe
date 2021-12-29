@@ -1,15 +1,44 @@
 package org.jetbrains.dataframe.ksp
 
+import com.google.devtools.ksp.KspExperimental
+import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.getVisibility
-import com.google.devtools.ksp.processing.*
-import com.google.devtools.ksp.symbol.*
+import com.google.devtools.ksp.processing.Dependencies
+import com.google.devtools.ksp.processing.KSPLogger
+import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.processing.SymbolProcessor
+import com.google.devtools.ksp.symbol.ClassKind
+import com.google.devtools.ksp.symbol.KSAnnotated
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSClassifierReference
+import com.google.devtools.ksp.symbol.KSDeclaration
+import com.google.devtools.ksp.symbol.KSFile
+import com.google.devtools.ksp.symbol.KSName
+import com.google.devtools.ksp.symbol.KSPropertyDeclaration
+import com.google.devtools.ksp.symbol.KSTypeReference
+import com.google.devtools.ksp.symbol.KSValueArgument
+import com.google.devtools.ksp.symbol.Modifier
+import com.google.devtools.ksp.symbol.Visibility
 import com.google.devtools.ksp.validate
+import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchemaVisibility
+import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+import org.jetbrains.kotlinx.dataframe.codeGen.CsvOptions
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.DfReadResult
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlReader
 import java.io.IOException
 import java.io.OutputStreamWriter
+import java.net.MalformedURLException
+import java.net.URL
+import com.google.devtools.ksp.processing.CodeGenerator as KspCodeGenerator
 
+@OptIn(KspExperimental::class)
 class DataFrameSymbolProcessor(
-    private val codeGenerator: CodeGenerator,
+    private val codeGenerator: KspCodeGenerator,
     private val logger: KSPLogger,
 ) : SymbolProcessor {
 
@@ -35,7 +64,55 @@ class DataFrameSymbolProcessor(
                 generate(file, it.origin, it.properties)
             }
 
+        val files = resolver.getSymbolsWithAnnotation(ImportDataSchema::class.qualifiedName!!)
+
+        files.filterIsInstance<KSFile>().forEach { file ->
+            val packageName = file.packageName.asString()
+            file
+                .getAnnotationsByType(ImportDataSchema::class)
+                .forEach schemas@{ importedSchema ->
+                    val name = importedSchema.name
+                    val csvOptions = CsvOptions(importedSchema.csvOptions.delimiter)
+                    val schemaFile = codeGenerator.createNewFile(Dependencies(true, file), packageName, name)
+                    val url = try {
+                        URL(importedSchema.url)
+                    } catch (exception: MalformedURLException) {
+                        logger.error("'${importedSchema.url}' is not valid URL: ${exception.message}", file)
+                        return@schemas
+                    }
+                    val parsedDf = when (val readResult = CodeGenerator.urlReader(url, csvOptions)) {
+                        is DfReadResult.Success -> readResult
+                        is DfReadResult.Error -> {
+                            logger.error("Error while reading dataframe from data at $url: ${readResult.reason}")
+                            return@schemas
+                        }
+                    }
+                    val codeGenerator = CodeGenerator.create(useFqNames = false)
+                    val codeGenResult = codeGenerator.generate(
+                        parsedDf.schema,
+                        name,
+                        fields = true,
+                        extensionProperties = false,
+                        isOpen = true,
+                        importedSchema.visibility.toMarkerVisibility(),
+                        emptyList(),
+                        parsedDf.getReadDfMethod(importedSchema.url.takeIf { importedSchema.withDefaultPath }),
+                        NameNormalizer.from(importedSchema.normalizationDelimiters.toSet())
+                    )
+                    val code = codeGenResult.toStandaloneSnippet(packageName)
+                    schemaFile.bufferedWriter().use {
+                        it.write(code)
+                    }
+                }
+        }
+
         return emptyList()
+    }
+
+    private fun DataSchemaVisibility.toMarkerVisibility(): MarkerVisibility = when (this) {
+        DataSchemaVisibility.INTERNAL -> MarkerVisibility.INTERNAL
+        DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
+        DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
     }
 
     private fun KSClassDeclaration.toDataSchemaDeclarationOrNull(): DataSchemaDeclaration? {
