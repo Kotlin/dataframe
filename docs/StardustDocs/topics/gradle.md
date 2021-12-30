@@ -2,7 +2,10 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-In Gradle project `Kotlin DataFrame` provides annotation processing for generation of extension properties and gradle tasks to `DataSchema` inference from datasets.  
+In Gradle project `Kotlin DataFrame` provides
+1. Annotation processing for generation of extension properties
+2. Annotation processing for `DataSchema` inference from datasets.  
+3. Gradle task for `DataSchema` inference from datasets.
 
 To use [extension properties API](extensionPropertiesApi.md) in Gradle project you should [configure Kotlin DataFrame plugin](installation.md#gradle-plugin-configuration).
 
@@ -38,11 +41,31 @@ teens.print()
 <!---END-->
 
 ### Schema inference
-Specify schema's configurations in `dataframes`  and execute the `build` task.
-For the following configuration, file `Repository.Generated.kt` will be generated to `build/generated/dataframe` folder
+Specify schema with preferred method and execute the `build` task.
+For the following configuration, file `Repository.Generated.kt` will be generated to `build/generated/dataframe/org/example` folder
 See [reference](gradleReference.md) and [examples](gradleReference.md#examples) for more details.
 
-#### build.gradle
+<tabs>
+<tab title="Method 1. Annotation processing">
+
+ImportDataSchema annotation must be above package directive. 
+You can put this annotation in the same file as data processing code
+```kotlin
+@file:ImportDataSchema(
+    "Repository",
+    "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
+)
+
+package org.example
+
+import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+```
+
+</tab>
+
+<tab title="Method 2. Gradle task">
+
+Put this in `build.gradle` or `build.gradle.kts`
 ```kotlin
 dataframes {
     schema {
@@ -51,6 +74,9 @@ dataframes {
     }
 }
 ```
+
+</tab>
+</tabs>
 
 After `build`, the following code should compile and run:
 
