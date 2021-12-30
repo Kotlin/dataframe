@@ -1,1 +1,0 @@
-{"objectID":"0.8_slicerows.html","parent":"0.8_slicerows.html","pageViews":0,"url":"https://kotlin.github.io/dataframe///slicerows.html","version":"0.8","product":"","headings":"Slice rows","content":"df[1..2] df[0..2, 4..5]","pageTitle":"Slice rows","metaDescription":"","type":"Documentation","breadcrumbs":"operations.md|Operations///modify.md|Modify"}
