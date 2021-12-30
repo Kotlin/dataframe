@@ -86,7 +86,7 @@ class DataFrameSymbolProcessor(
             val packageName = importedSchema.origin.packageName.asString()
             val name = importedSchema.name
             val csvOptions = CsvOptions(importedSchema.csvOptions.delimiter)
-            val schemaFile = codeGenerator.createNewFile(Dependencies(true, importedSchema.origin), packageName, name)
+            val schemaFile = codeGenerator.createNewFile(Dependencies(true, importedSchema.origin), packageName, "$name.Generated")
 
             val parsedDf = when (val readResult = CodeGenerator.urlReader(importedSchema.data, csvOptions)) {
                 is DfReadResult.Success -> readResult
