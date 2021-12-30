@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.annotations
 
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FILE)
+@Repeatable
 public annotation class ImportDataSchema(
     val name: String,
     val url: String,
@@ -21,6 +22,7 @@ public annotation class CsvOptions(
 
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FILE)
+@Repeatable
 public annotation class ImportDataSchemaByAbsolutePath(
     val name: String,
     val absolutePath: String,
