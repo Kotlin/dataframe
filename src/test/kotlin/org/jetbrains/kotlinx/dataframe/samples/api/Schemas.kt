@@ -106,9 +106,9 @@ class Schemas {
         // Repository.readCSV() has argument 'path' with default value https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv
         val df = Repository.readCSV()
         // Use generated properties to access data in rows
-        df.maxBy { stargazers_count }.print()
+        df.maxBy { stargazersCount }.print()
         // Or to access columns in dataframe.
-        print(df.full_name.count { it.contains("kotlin") })
+        print(df.fullName.count { it.contains("kotlin") })
         // SampleEnd
     }
 }
