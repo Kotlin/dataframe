@@ -42,7 +42,7 @@ teens.print()
 
 ### Schema inference
 Specify schema with preferred method and execute the `build` task.
-For the following configuration, file `Repository.Generated.kt` will be generated to `build/generated/dataframe/org/example` folder
+For the following configuration, file `Repository.Generated.kt` will be generated to `build/generated/dataframe/org/example` folder.
 See [reference](gradleReference.md) and [examples](gradleReference.md#examples) for more details.
 
 <tabs>
@@ -86,9 +86,9 @@ After `build`, the following code should compile and run:
 // Repository.readCSV() has argument 'path' with default value https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv
 val df = Repository.readCSV()
 // Use generated properties to access data in rows
-df.maxBy { stargazers_count }.print()
+df.maxBy { stargazersCount }.print()
 // Or to access columns in dataframe.
-print(df.full_name.count { it.contains("kotlin") })
+print(df.fullName.count { it.contains("kotlin") })
 ```
 
 <!---END-->
