@@ -7,14 +7,14 @@ In Gradle project `Kotlin DataFrame` provides
 2. Annotation processing for `DataSchema` inference from datasets.  
 3. Gradle task for `DataSchema` inference from datasets.
 
+### Configuration
+
 To use [extension properties API](extensionPropertiesApi.md) in Gradle project you should [configure Kotlin DataFrame plugin](installation.md#gradle-plugin-configuration).
 
 ### Annotation processing
 Declare data schemas in your code and use them to access data in DataFrames.
 A data schema is a class or interface annotated with `@DataSchema`:
 ```kotlin
-package org.example
-
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 
 @DataSchema
@@ -42,7 +42,6 @@ teens.print()
 
 ### Schema inference
 Specify schema with preferred method and execute the `build` task.
-For the following configuration, file `Repository.Generated.kt` will be generated to `build/generated/dataframe/org/example` folder.
 See [reference](gradleReference.md) and [examples](gradleReference.md#examples) for more details.
 
 <tabs>
@@ -50,13 +49,12 @@ See [reference](gradleReference.md) and [examples](gradleReference.md#examples) 
 
 ImportDataSchema annotation must be above package directive. 
 You can put this annotation in the same file as data processing code
+For the following configuration, file `Repository.Generated.kt` will be generated to `build/generated/ksp/` folder in the same package as file containing the annotation.
 ```kotlin
 @file:ImportDataSchema(
     "Repository",
     "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
 )
-
-package org.example
 
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 ```
@@ -66,6 +64,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 <tab title="Method 2. Gradle task">
 
 Put this in `build.gradle` or `build.gradle.kts`
+For the following configuration, file `Repository.Generated.kt` will be generated to `build/generated/dataframe/org/example` folder.
 ```kotlin
 dataframes {
     schema {

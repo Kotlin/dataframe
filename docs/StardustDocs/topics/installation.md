@@ -162,6 +162,7 @@ tasks.withType<org.jmailen.gradle.kotlinter.tasks.LintTask> {
 </tabs>
 
 Note that it's better to use the same version for a library and plugin to avoid unpredictable errors.
+After plugin configuration you can try it out with [example](gradle.md#annotation-processing).
 
 ## Other build systems
 
