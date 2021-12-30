@@ -4,6 +4,7 @@ package org.jetbrains.dataframe.ksp
 
 import com.tschuchort.compiletesting.SourceFile
 import io.kotest.assertions.asClue
+import io.kotest.inspectors.forAtLeastOne
 import io.kotest.inspectors.forExactly
 import io.kotest.inspectors.forOne
 import io.kotest.matchers.shouldBe
@@ -833,6 +834,49 @@ class DataFrameSymbolProcessorTest {
             )
         )
         result.successfulCompilation shouldBe false
+    }
+
+    @Test
+    fun `normalization disabled`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                @file:ImportDataSchema(
+                    "Schema", 
+                    "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv",
+                    normalizationDelimiters = []
+                )
+                package org.example
+                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+            """.trimIndent()))
+            )
+        )
+        println(result.kspGeneratedFiles)
+        result.inspectLines("Schema.Generated.kt") {
+            it.forAtLeastOne { it shouldContain "Land area" }
+        }
+    }
+
+    @Test
+    fun `normalization enabled`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                @file:ImportDataSchema(
+                    "Schema", 
+                    "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv",
+                )
+                package org.example
+                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+            """.trimIndent()))
+            )
+        )
+        println(result.kspGeneratedFiles)
+        result.inspectLines("Schema.Generated.kt") {
+            it.forAtLeastOne { it shouldContain "landArea" }
+        }
     }
 
     private fun KotlinCompileTestingCompilationResult.inspectLines(f: (List<String>) -> Unit) {
