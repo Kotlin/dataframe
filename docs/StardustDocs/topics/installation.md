@@ -70,35 +70,6 @@ To use it in your project, pick up the latest version from [here](https://plugin
 and follow the configuration:
 
 <tabs>
-<tab title="Groovy DSL">
-
-```groovy
-plugins {
-    id("org.jetbrains.kotlin.plugin.dataframe") version "<version>"
-}
-
-dependencies {
-    implementation("org.jetbrains.kotlinx:dataframe:<version>")
-}
-
-// Make IDE aware of the generated code:
-sourceSets {
-    main.kotlin.srcDir("build/generated/ksp/main/kotlin/")
-}
-
-// (Only if you use kotlint) Excludes for `kotlint`:
-tasks.withType(org.jmailen.gradle.kotlinter.tasks.LintTask).all {
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
-}
-```
-
-</tab>
-
 <tab title="Kotlin DSL">
 
 ```kotlin
@@ -115,6 +86,33 @@ kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotl
 
 // (Only if you use kotlint) Excludes for `kotlint`:
 tasks.withType<org.jmailen.gradle.kotlinter.tasks.LintTask> {
+    exclude {
+        it.name.endsWith(".Generated.kt")
+    }
+    exclude {
+        it.name.endsWith("\$Extensions.kt")
+    }
+}
+```
+
+</tab>
+
+<tab title="Groovy DSL">
+
+```groovy
+plugins {
+    id("org.jetbrains.kotlin.plugin.dataframe") version "<version>"
+}
+
+dependencies {
+    implementation("org.jetbrains.kotlinx:dataframe:<version>")
+}
+
+// Make IDE aware of the generated code:
+kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
+
+// (Only if you use kotlint) Excludes for `kotlint`:
+tasks.withType(org.jmailen.gradle.kotlinter.tasks.LintTask).all {
     exclude {
         it.name.endsWith(".Generated.kt")
     }
