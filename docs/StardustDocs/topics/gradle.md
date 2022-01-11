@@ -42,14 +42,16 @@ teens.print()
 
 ### Schema inference
 Specify schema with preferred method and execute the `build` task.
-See [reference](gradleReference.md) and [examples](gradleReference.md#examples) for more details.
 
 <tabs>
 <tab title="Method 1. Annotation processing">
 
-ImportDataSchema annotation must be above package directive. 
-You can put this annotation in the same file as data processing code
+ImportDataSchema annotation must be above package directive. You can put this annotation in the same file as data processing code. Right now import by URL and absolute file path is supported.
+
+**Note that due to incremental processing, imported schema will be re-generated only if some source code has changed from previous invocation, at least one character**
+
 For the following configuration, file `Repository.Generated.kt` will be generated to `build/generated/ksp/` folder in the same package as file containing the annotation.
+
 ```kotlin
 @file:ImportDataSchema(
     "Repository",
@@ -59,12 +61,15 @@ For the following configuration, file `Repository.Generated.kt` will be generate
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 ```
 
+See KDocs for `ImportDataSchema` and `ImportDataSchemaByAbsolutePath` in  IDE or [github](ttps://github.com/Kotlin/dataframe/tree/master/src/main/kotlin/org/jetbrains/kotlinx/dataframe/annotations/ImportDataSchema.kt) for more details
+
 </tab>
 
 <tab title="Method 2. Gradle task">
 
 Put this in `build.gradle` or `build.gradle.kts`
 For the following configuration, file `Repository.Generated.kt` will be generated to `build/generated/dataframe/org/example` folder.
+
 ```kotlin
 dataframes {
     schema {
@@ -73,6 +78,8 @@ dataframes {
     }
 }
 ```
+
+See [reference](gradleReference.md) and [examples](gradleReference.md#examples) for more details.
 
 </tab>
 </tabs>
