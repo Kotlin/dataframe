@@ -88,10 +88,10 @@ class DataFrameSymbolProcessor(
             val csvOptions = CsvOptions(importedSchema.csvOptions.delimiter)
             val schemaFile = codeGenerator.createNewFile(Dependencies(true, importedSchema.origin), packageName, "$name.Generated")
 
-            val parsedDf = when (val readResult = CodeGenerator.urlReader(importedSchema.data, csvOptions)) {
+            val parsedDf = when (val readResult = CodeGenerator.urlReader(importedSchema.dataSource.data, csvOptions)) {
                 is DfReadResult.Success -> readResult
                 is DfReadResult.Error -> {
-                    logger.error("Error while reading dataframe from data at ${importedSchema.data.toExternalForm()}: ${readResult.reason}")
+                    logger.error("Error while reading dataframe from data at ${importedSchema.dataSource.pathRepresentation}: ${readResult.reason}")
                     return@forEach
                 }
             }
@@ -104,7 +104,7 @@ class DataFrameSymbolProcessor(
                 isOpen = true,
                 importedSchema.visibility,
                 emptyList(),
-                parsedDf.getReadDfMethod(importedSchema.data.toExternalForm().takeIf { importedSchema.withDefaultPath }),
+                parsedDf.getReadDfMethod(importedSchema.dataSource.pathRepresentation.takeIf { importedSchema.withDefaultPath }),
                 NameNormalizer.from(importedSchema.normalizationDelimiters.toSet())
             )
             val code = codeGenResult.toStandaloneSnippet(packageName)
@@ -119,12 +119,14 @@ class DataFrameSymbolProcessor(
     private class ImportDataSchemaStatement(
         val origin: KSFile,
         val name: String,
-        val data: URL,
+        val dataSource: CodeGeneratorDataSource,
         val visibility: MarkerVisibility,
         val normalizationDelimiters: List<Char>,
         val withDefaultPath: Boolean,
         val csvOptions: CsvOptions
     )
+
+    private class CodeGeneratorDataSource(val pathRepresentation: String, val data: URL)
 
     private fun ImportDataSchema.toStatement(file: KSFile): ImportDataSchemaStatement? {
         val url = try {
@@ -136,7 +138,7 @@ class DataFrameSymbolProcessor(
         return ImportDataSchemaStatement(
             file,
             name,
-            url,
+            CodeGeneratorDataSource(this.url, url),
             visibility.toMarkerVisibility(),
             normalizationDelimiters.toList(),
             withDefaultPath,
@@ -155,7 +157,7 @@ class DataFrameSymbolProcessor(
         return ImportDataSchemaStatement(
             file,
             name,
-            url,
+            CodeGeneratorDataSource(absolutePath, url),
             visibility.toMarkerVisibility(),
             normalizationDelimiters.toList(),
             withDefaultPath,
