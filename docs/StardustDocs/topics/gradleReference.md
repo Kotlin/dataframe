@@ -1,46 +1,5 @@
 [//]: # (title: Gradle plugin reference)
 
-Here is full DSL for declaring data schemas:
-
-```kotlin
-dataframes {
-    sourceSet = "mySources" // [optional; default: "main"]
-    packageName = "org.jetbrains.data" // [optional; default: common package under source set]
-    
-    visibility = // [optional; default: if explicitApiMode enabled then EXPLICIT_PUBLIC, else IMPLICIT_PUBLIC]
-    // KOTLIN SCRIPT: DataSchemaVisibility.INTERNAL DataSchemaVisibility.IMPLICIT_PUBLIC, DataSchemaVisibility.EXPLICIT_PUBLIC
-    // GROOVY SCRIPT: 'internal', 'implicit_public', 'explicit_public'
-        
-    withoutDefaultPath() // disable default path for all schemas
-    // i.e. plugin won't copy "data" property of the schemas to generated companion objects
-
-    // split field names by delimiters (arguments of this method), lowercase parts and join to camel case
-    // enabled by default
-    withNormalizationBy('_') // [optional: default: ['\t', '_', ' ']]
-    withoutNormalization() // disable field names normalization
-    
-    schema {
-        sourceSet /* String */ = "…" // [optional; override default]
-        packageName /* String */ = "…" // [optional; override default]
-        visibility /* DataSchemaVisibility */ = "…" // [optional; override default]
-        src /* File */ = file("…") // [optional; default: file("build/generated/dataframe/$sourceSet/kotlin")]
-        
-        data /* URL | File | String */ = "…" // Data in JSON or CSV formats
-        name = "org.jetbrains.data.Person" // [optional; default: from filename]
-        csvOptions {
-            delimiter /* Char */ = ';' // [optional; default: ',']
-        }
-
-        // See names normalization
-        withNormalizationBy('_') // enable field names normalization for this schema and use these delimiters
-        withoutNormalization() // disable field names normalization for this schema
-        
-        withoutDefaultPath() // disable default path for this schema
-        withDefaultPath() // enable default path for this schema
-    }
-}
-```
-
 ## Examples
 In the best scenario, your schema could be defined as simple as this:
 ```kotlin
@@ -124,6 +83,49 @@ dataframes {
         data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
         name = "org.example.test.OtherName"
         src = file("schemas")
+    }
+}
+```
+
+## DSL reference
+Inside `dataframes` you can configure parameters that will apply to all schemas. Configuration inside `schema` will override these defaults for specific schema.
+Here is full DSL for declaring data schemas:
+
+```kotlin
+dataframes {
+    sourceSet = "mySources" // [optional; default: "main"]
+    packageName = "org.jetbrains.data" // [optional; default: common package under source set]
+    
+    visibility = // [optional; default: if explicitApiMode enabled then EXPLICIT_PUBLIC, else IMPLICIT_PUBLIC]
+    // KOTLIN SCRIPT: DataSchemaVisibility.INTERNAL DataSchemaVisibility.IMPLICIT_PUBLIC, DataSchemaVisibility.EXPLICIT_PUBLIC
+    // GROOVY SCRIPT: 'internal', 'implicit_public', 'explicit_public'
+        
+    withoutDefaultPath() // disable default path for all schemas
+    // i.e. plugin won't copy "data" property of the schemas to generated companion objects
+
+    // split property names by delimiters (arguments of this method), lowercase parts and join to camel case
+    // enabled by default
+    withNormalizationBy('_') // [optional: default: ['\t', '_', ' ']]
+    withoutNormalization() // disable property names normalization
+    
+    schema {
+        sourceSet /* String */ = "…" // [optional; override default]
+        packageName /* String */ = "…" // [optional; override default]
+        visibility /* DataSchemaVisibility */ = "…" // [optional; override default]
+        src /* File */ = file("…") // [optional; default: file("build/generated/dataframe/$sourceSet/kotlin")]
+        
+        data /* URL | File | String */ = "…" // Data in JSON or CSV formats
+        name = "org.jetbrains.data.Person" // [optional; default: from filename]
+        csvOptions {
+            delimiter /* Char */ = ';' // [optional; default: ',']
+        }
+
+        // See names normalization
+        withNormalizationBy('_') // enable property names normalization for this schema and use these delimiters
+        withoutNormalization() // disable property names normalization for this schema
+        
+        withoutDefaultPath() // disable default path for this schema
+        withDefaultPath() // enable default path for this schema
     }
 }
 ```
