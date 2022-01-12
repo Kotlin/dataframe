@@ -6,9 +6,11 @@ import org.jetbrains.kotlinx.dataframe.codeGen.ExtensionsCodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
+import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGeneratorImpl
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.FqNames
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ShortNames
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.id
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 
@@ -31,7 +33,7 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
         knownMarkers: Iterable<Marker> = emptyList(),
         readDfMethod: DefaultReadDfMethod? = null,
-        fieldNameNormalizer: (String) -> String = { it }
+        fieldNameNormalizer: NameNormalizer = NameNormalizer.id()
     ): CodeGenResult
 
     public fun generate(marker: Marker, interfaceMode: InterfaceGenerationMode, extensionProperties: Boolean): CodeWithConverter

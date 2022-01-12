@@ -1,15 +1,46 @@
 package org.jetbrains.dataframe.ksp
 
+import com.google.devtools.ksp.KspExperimental
+import com.google.devtools.ksp.getAnnotationsByType
 import com.google.devtools.ksp.getVisibility
-import com.google.devtools.ksp.processing.*
-import com.google.devtools.ksp.symbol.*
+import com.google.devtools.ksp.processing.Dependencies
+import com.google.devtools.ksp.processing.KSPLogger
+import com.google.devtools.ksp.processing.Resolver
+import com.google.devtools.ksp.processing.SymbolProcessor
+import com.google.devtools.ksp.symbol.ClassKind
+import com.google.devtools.ksp.symbol.KSAnnotated
+import com.google.devtools.ksp.symbol.KSClassDeclaration
+import com.google.devtools.ksp.symbol.KSClassifierReference
+import com.google.devtools.ksp.symbol.KSDeclaration
+import com.google.devtools.ksp.symbol.KSFile
+import com.google.devtools.ksp.symbol.KSName
+import com.google.devtools.ksp.symbol.KSPropertyDeclaration
+import com.google.devtools.ksp.symbol.KSTypeReference
+import com.google.devtools.ksp.symbol.KSValueArgument
+import com.google.devtools.ksp.symbol.Modifier
+import com.google.devtools.ksp.symbol.Visibility
 import com.google.devtools.ksp.validate
+import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchemaVisibility
+import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchemaByAbsolutePath
+import org.jetbrains.kotlinx.dataframe.codeGen.CsvOptions
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.DfReadResult
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlReader
+import java.io.File
 import java.io.IOException
 import java.io.OutputStreamWriter
+import java.net.MalformedURLException
+import java.net.URL
+import com.google.devtools.ksp.processing.CodeGenerator as KspCodeGenerator
 
+@OptIn(KspExperimental::class)
 class DataFrameSymbolProcessor(
-    private val codeGenerator: CodeGenerator,
+    private val codeGenerator: KspCodeGenerator,
     private val logger: KSPLogger,
 ) : SymbolProcessor {
 
@@ -35,7 +66,109 @@ class DataFrameSymbolProcessor(
                 generate(file, it.origin, it.properties)
             }
 
+        val importStatements = buildList<ImportDataSchemaStatement> {
+            this += resolver
+                .getSymbolsWithAnnotation(ImportDataSchema::class.qualifiedName!!)
+                .filterIsInstance<KSFile>()
+                .flatMap { file ->
+                    file.getAnnotationsByType(ImportDataSchema::class).mapNotNull { it.toStatement(file) }
+                }
+
+            this += resolver
+                .getSymbolsWithAnnotation(ImportDataSchemaByAbsolutePath::class.qualifiedName!!)
+                .filterIsInstance<KSFile>()
+                .flatMap { file ->
+                    file.getAnnotationsByType(ImportDataSchemaByAbsolutePath::class).mapNotNull { it.toStatement(file) }
+                }
+        }
+
+        importStatements.forEach { importedSchema ->
+            val packageName = importedSchema.origin.packageName.asString()
+            val name = importedSchema.name
+            val csvOptions = CsvOptions(importedSchema.csvOptions.delimiter)
+            val schemaFile = codeGenerator.createNewFile(Dependencies(true, importedSchema.origin), packageName, "$name.Generated")
+
+            val parsedDf = when (val readResult = CodeGenerator.urlReader(importedSchema.dataSource.data, csvOptions)) {
+                is DfReadResult.Success -> readResult
+                is DfReadResult.Error -> {
+                    logger.error("Error while reading dataframe from data at ${importedSchema.dataSource.pathRepresentation}: ${readResult.reason}")
+                    return@forEach
+                }
+            }
+            val codeGenerator = CodeGenerator.create(useFqNames = false)
+            val codeGenResult = codeGenerator.generate(
+                parsedDf.schema,
+                name,
+                fields = true,
+                extensionProperties = false,
+                isOpen = true,
+                importedSchema.visibility,
+                emptyList(),
+                parsedDf.getReadDfMethod(importedSchema.dataSource.pathRepresentation.takeIf { importedSchema.withDefaultPath }),
+                NameNormalizer.from(importedSchema.normalizationDelimiters.toSet())
+            )
+            val code = codeGenResult.toStandaloneSnippet(packageName)
+            schemaFile.bufferedWriter().use {
+                it.write(code)
+            }
+        }
+
         return emptyList()
+    }
+
+    private class ImportDataSchemaStatement(
+        val origin: KSFile,
+        val name: String,
+        val dataSource: CodeGeneratorDataSource,
+        val visibility: MarkerVisibility,
+        val normalizationDelimiters: List<Char>,
+        val withDefaultPath: Boolean,
+        val csvOptions: CsvOptions
+    )
+
+    private class CodeGeneratorDataSource(val pathRepresentation: String, val data: URL)
+
+    private fun ImportDataSchema.toStatement(file: KSFile): ImportDataSchemaStatement? {
+        val url = try {
+            URL(this.url)
+        } catch (exception: MalformedURLException) {
+            logger.error("'${this.url}' is not valid URL: ${exception.message}", file)
+            return null
+        }
+        return ImportDataSchemaStatement(
+            file,
+            name,
+            CodeGeneratorDataSource(this.url, url),
+            visibility.toMarkerVisibility(),
+            normalizationDelimiters.toList(),
+            withDefaultPath,
+            CsvOptions(csvOptions.delimiter)
+        )
+    }
+
+    private fun ImportDataSchemaByAbsolutePath.toStatement(file: KSFile): ImportDataSchemaStatement? {
+        val data = File(absolutePath)
+        val url = try {
+            data.toURI().toURL()
+        } catch (exception: MalformedURLException) {
+            logger.error("$absolutePath is not valid URL: ${exception.message}", file)
+            return null
+        }
+        return ImportDataSchemaStatement(
+            file,
+            name,
+            CodeGeneratorDataSource(absolutePath, url),
+            visibility.toMarkerVisibility(),
+            normalizationDelimiters.toList(),
+            withDefaultPath,
+            CsvOptions(csvOptions.delimiter)
+        )
+    }
+
+    private fun DataSchemaVisibility.toMarkerVisibility(): MarkerVisibility = when (this) {
+        DataSchemaVisibility.INTERNAL -> MarkerVisibility.INTERNAL
+        DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
+        DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
     }
 
     private fun KSClassDeclaration.toDataSchemaDeclarationOrNull(): DataSchemaDeclaration? {

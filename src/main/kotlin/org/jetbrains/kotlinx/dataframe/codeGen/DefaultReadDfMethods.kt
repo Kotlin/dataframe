@@ -30,8 +30,9 @@ public class DefaultReadJsonMethod(private val path: String?) : DefaultReadDfMet
     }
 }
 
-public class DefaultReadCsvMethod(private val path: String?, private val delimiter: Char) : DefaultReadDfMethod {
+public class DefaultReadCsvMethod(private val path: String?, private val csvOptions: CsvOptions) : DefaultReadDfMethod {
     public override fun toDeclaration(markerName: String, visibility: String): String {
+        val (delimiter) = csvOptions
         return buildString {
             if (path != null) {
                 append("""        ${visibility}const val defaultPath: String = "${path.escapeStringLiteral()}"""")
@@ -54,6 +55,8 @@ public class DefaultReadCsvMethod(private val path: String?, private val delimit
         }
     }
 }
+
+public data class CsvOptions(val delimiter: Char)
 
 private fun String.escapeStringLiteral(): String = replace("\\", "\\\\")
     .replace("$", "\\\$")
