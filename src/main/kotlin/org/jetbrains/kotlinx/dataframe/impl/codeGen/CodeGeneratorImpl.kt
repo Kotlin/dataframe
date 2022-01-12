@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.IsolatedMarker
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
@@ -207,7 +208,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
         visibility: MarkerVisibility,
         knownMarkers: Iterable<Marker>,
         readDfMethod: DefaultReadDfMethod?,
-        fieldNameNormalizer: (String) -> String
+        fieldNameNormalizer: NameNormalizer
     ): CodeGenResult {
         val context = SchemaProcessor.create(name, knownMarkers, fieldNameNormalizer)
         val marker = context.process(schema, isOpen, visibility)
@@ -269,5 +270,26 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
         } else ""
         resultDeclarations.add(header + baseInterfacesDeclaration + body)
         return resultDeclarations.join()
+    }
+}
+
+public fun CodeGenResult.toStandaloneSnippet(packageName: String): String {
+    return buildString {
+        if (packageName.isNotEmpty()) {
+            appendLine("package $packageName")
+            appendLine()
+        }
+        appendLine("import org.jetbrains.kotlinx.dataframe.ColumnsContainer")
+        appendLine("import org.jetbrains.kotlinx.dataframe.DataColumn")
+        appendLine("import org.jetbrains.kotlinx.dataframe.DataFrame")
+        appendLine("import org.jetbrains.kotlinx.dataframe.DataRow")
+        appendLine("import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup")
+        appendLine("import org.jetbrains.kotlinx.dataframe.annotations.ColumnName")
+        appendLine("import org.jetbrains.kotlinx.dataframe.annotations.DataSchema")
+        appendLine("import org.jetbrains.kotlinx.dataframe.api.cast")
+        appendLine("import org.jetbrains.kotlinx.dataframe.io.readJson")
+        appendLine("import org.jetbrains.kotlinx.dataframe.io.readCSV")
+        appendLine()
+        appendLine(code.declarations)
     }
 }

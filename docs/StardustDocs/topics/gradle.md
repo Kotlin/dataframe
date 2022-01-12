@@ -2,7 +2,12 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-In Gradle project `Kotlin DataFrame` provides annotation processing for generation of extension properties and gradle tasks to `DataSchema` inference from datasets.  
+In Gradle project `Kotlin DataFrame` provides
+1. Annotation processing for generation of extension properties
+2. Annotation processing for `DataSchema` inference from datasets.  
+3. Gradle task for `DataSchema` inference from datasets.
+
+### Configuration
 
 To use [extension properties API](extensionPropertiesApi.md) in Gradle project you should [configure Kotlin DataFrame plugin](installation.md#gradle-plugin-configuration).
 
@@ -10,8 +15,6 @@ To use [extension properties API](extensionPropertiesApi.md) in Gradle project y
 Declare data schemas in your code and use them to access data in DataFrames.
 A data schema is a class or interface annotated with `@DataSchema`:
 ```kotlin
-package org.example
-
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 
 @DataSchema
@@ -38,11 +41,35 @@ teens.print()
 <!---END-->
 
 ### Schema inference
-Specify schema's configurations in `dataframes`  and execute the `build` task.
-For the following configuration, file `Repository.Generated.kt` will be generated to `build/generated/dataframe` folder
-See [reference](gradleReference.md) and [examples](gradleReference.md#examples) for more details.
+Specify schema with preferred method and execute the `build` task.
 
-#### build.gradle
+<tabs>
+<tab title="Method 1. Annotation processing">
+
+ImportDataSchema annotation must be above package directive. You can put this annotation in the same file as data processing code. Right now import by URL and absolute file path is supported.
+
+**Note that due to incremental processing, imported schema will be re-generated only if some source code has changed from previous invocation, at least one character**
+
+For the following configuration, file `Repository.Generated.kt` will be generated to `build/generated/ksp/` folder in the same package as file containing the annotation.
+
+```kotlin
+@file:ImportDataSchema(
+    "Repository",
+    "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv",
+)
+
+import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+```
+
+See KDocs for `ImportDataSchema` and `ImportDataSchemaByAbsolutePath` in  IDE or [github](ttps://github.com/Kotlin/dataframe/tree/master/src/main/kotlin/org/jetbrains/kotlinx/dataframe/annotations/ImportDataSchema.kt) for more details
+
+</tab>
+
+<tab title="Method 2. Gradle task">
+
+Put this in `build.gradle` or `build.gradle.kts`
+For the following configuration, file `Repository.Generated.kt` will be generated to `build/generated/dataframe/org/example` folder.
+
 ```kotlin
 dataframes {
     schema {
@@ -52,6 +79,11 @@ dataframes {
 }
 ```
 
+See [reference](gradleReference.md) and [examples](gradleReference.md#examples) for more details.
+
+</tab>
+</tabs>
+
 After `build`, the following code should compile and run:
 
 <!---FUN useInferredSchema-->
@@ -60,9 +92,9 @@ After `build`, the following code should compile and run:
 // Repository.readCSV() has argument 'path' with default value https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv
 val df = Repository.readCSV()
 // Use generated properties to access data in rows
-df.maxBy { stargazers_count }.print()
+df.maxBy { stargazersCount }.print()
 // Or to access columns in dataframe.
-print(df.full_name.count { it.contains("kotlin") })
+print(df.fullName.count { it.contains("kotlin") })
 ```
 
 <!---END-->

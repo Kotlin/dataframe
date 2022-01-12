@@ -2,29 +2,22 @@ package org.jetbrains.dataframe.gradle
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.provider.Property
+import org.gradle.api.provider.Provider
+import org.gradle.api.provider.SetProperty
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
+import org.jetbrains.kotlinx.dataframe.codeGen.CsvOptions
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
+import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.DfReadResult
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlReader
 import java.io.File
-import java.io.IOException
 import java.net.URL
 import java.nio.file.Paths
-import com.beust.klaxon.KlaxonException
-import org.gradle.api.provider.Provider
-import org.gradle.api.provider.SetProperty
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.dataframe.impl.codeGen.CodeGenResult
-import org.jetbrains.kotlinx.dataframe.api.schema
-import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
-import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
-import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
-import org.jetbrains.kotlinx.dataframe.io.SupportedFormats
-import org.jetbrains.kotlinx.dataframe.io.readCSV
-import org.jetbrains.kotlinx.dataframe.io.readJson
-import java.io.FileNotFoundException
-import java.net.URI
 
 abstract class GenerateDataSchemaTask : DefaultTask() {
 
@@ -32,7 +25,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     abstract val data: Property<Any>
 
     @get:Input
-    abstract val csvOptions: Property<CsvOptions>
+    abstract val csvOptions: Property<CsvOptionsDsl>
 
     @get:Input
     abstract val src: Property<File>
@@ -62,13 +55,16 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @TaskAction
     fun generate() {
         val csvOptions = csvOptions.get()
-        val (df, format) = readDataFrame(data.get(), csvOptions)
+        val (delimiter) = csvOptions
+        val url = urlOf(data.get())
+        val res = when (val readResult = CodeGenerator.urlReader(url, CsvOptions(delimiter))) {
+            is DfReadResult.Success -> readResult
+            is DfReadResult.Error -> throw Exception("Error while reading dataframe from data at $url", readResult.reason)
+        }
         val codeGenerator = CodeGenerator.create(useFqNames = false)
         val delimiters = delimiters.get()
-        val delimitersSet = delimiters.joinToString("", "[", "]")
-        val delimitedStringRegex = ".+${delimitersSet}.+".toRegex()
         val codeGenResult = codeGenerator.generate(
-            schema = df.schema(),
+            schema = res.schema,
             name = interfaceName.get(),
             fields = true,
             extensionProperties = false,
@@ -78,29 +74,13 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
                 DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
             },
-            readDfMethod = stringOf(data.get()).let {
-                val defaultPath = it.takeIf { defaultPath.get() }
-                when (format) {
-                    SupportedFormats.JSON -> DefaultReadJsonMethod(defaultPath)
-                    SupportedFormats.CSV -> {
-                        val (delimiter) = csvOptions
-                        DefaultReadCsvMethod(defaultPath, delimiter)
-                    }
-                }
-            }
-        ) {
-            when {
-                delimiters.isEmpty() -> it
-                it matches delimitedStringRegex -> {
-                    it.toLowerCase().toCamelCaseByDelimiters(delimitersSet.toRegex())
-                }
-                else -> it
-            }
-        }
+            readDfMethod = res.getReadDfMethod(stringOf(data.get())),
+            fieldNameNormalizer = NameNormalizer.from(delimiters)
+        )
         val escapedPackageName = escapePackageName(packageName.get())
 
         val dataSchema = dataSchema.get()
-        dataSchema.writeText(buildSourceFileContent(escapedPackageName, codeGenResult))
+        dataSchema.writeText(codeGenResult.toStandaloneSnippet(escapedPackageName))
     }
 
     private fun stringOf(data: Any): String {
@@ -122,33 +102,6 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         }
     }
 
-    private fun readDataFrame(data: Any, csvOptions: CsvOptions): Pair<AnyFrame, SupportedFormats> {
-        fun guessFormat(url: String): SupportedFormats? = when {
-            url.endsWith(".csv") -> SupportedFormats.CSV
-            url.endsWith(".json") -> SupportedFormats.JSON
-            else -> null
-        }
-        fun readCSV(url: URL) = run {
-            val (delimiter) = csvOptions
-            DataFrame.readCSV(url, delimiter = delimiter) to SupportedFormats.CSV
-        }
-        fun readJson(url: URL) = DataFrame.readJson(url) to SupportedFormats.JSON
-        val url = urlOf(data)
-        return try {
-            when (guessFormat(url.path)) {
-                SupportedFormats.CSV -> readCSV(url)
-                SupportedFormats.JSON -> readJson(url)
-                else -> try {
-                    readCSV(url)
-                } catch (e: Exception) {
-                    readJson(url)
-                }
-            }
-        } catch (e: Exception) {
-            throw Exception("Error while reading dataframe from data at $url", e)
-        }
-    }
-
     private fun urlOf(data: Any): URL {
         fun isURL(fileOrUrl: String): Boolean = listOf("http:", "https:", "ftp:").any { fileOrUrl.startsWith(it) }
 
@@ -165,28 +118,4 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
     private fun unsupportedType(): Nothing =
         throw IllegalArgumentException("data for schema \"${interfaceName.get()}\" must be File, URL or String")
-
-    private fun buildSourceFileContent(escapedPackageName: String, codeGenResult: CodeGenResult): String {
-        return buildString {
-            if (escapedPackageName.isNotEmpty()) {
-                appendLine("package $escapedPackageName")
-                appendLine()
-            }
-            appendLine("import org.jetbrains.kotlinx.dataframe.ColumnsContainer")
-            appendLine("import org.jetbrains.kotlinx.dataframe.DataColumn")
-            appendLine("import org.jetbrains.kotlinx.dataframe.DataFrame")
-            appendLine("import org.jetbrains.kotlinx.dataframe.DataRow")
-            appendLine("import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup")
-            appendLine("import org.jetbrains.kotlinx.dataframe.annotations.ColumnName")
-            appendLine("import org.jetbrains.kotlinx.dataframe.annotations.DataSchema")
-            appendLine("import org.jetbrains.kotlinx.dataframe.api.cast")
-            appendLine("import org.jetbrains.kotlinx.dataframe.io.readJson")
-            appendLine("import org.jetbrains.kotlinx.dataframe.io.readCSV")
-            appendLine()
-            appendLine(codeGenResult.code.declarations)
-        }
-    }
 }
-
-class MissingDataException(cause: Exception) : Exception(cause)
-class InvalidDataException(cause: Exception) : Exception(cause)

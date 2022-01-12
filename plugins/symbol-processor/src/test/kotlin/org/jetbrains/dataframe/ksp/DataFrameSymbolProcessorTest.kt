@@ -1,7 +1,10 @@
+
+
 package org.jetbrains.dataframe.ksp
 
 import com.tschuchort.compiletesting.SourceFile
 import io.kotest.assertions.asClue
+import io.kotest.inspectors.forAtLeastOne
 import io.kotest.inspectors.forExactly
 import io.kotest.inspectors.forOne
 import io.kotest.matchers.shouldBe
@@ -13,6 +16,7 @@ import org.jetbrains.dataframe.ksp.runner.TestCompilationParameters
 import org.junit.Before
 import kotlin.test.Test
 
+@Suppress("unused")
 class DataFrameSymbolProcessorTest {
 
     companion object {
@@ -791,6 +795,88 @@ class DataFrameSymbolProcessorTest {
             )
         )
         result.successfulCompilation shouldBe false
+    }
+
+    @Test
+    fun `imported schema resolved`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                @file:ImportDataSchema(
+                    "Schema", 
+                    "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv",
+                    
+                )
+                package org.example
+                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+
+                fun resolve() = Schema.readCSV()
+            """.trimIndent()))
+            )
+        )
+        result.successfulCompilation shouldBe true
+    }
+
+    @Test
+    fun `io error on schema import`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                @file:ImportDataSchema(
+                    "Schema", 
+                    "123",
+                )
+                package org.example
+                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+            """.trimIndent()))
+            )
+        )
+        result.successfulCompilation shouldBe false
+    }
+
+    @Test
+    fun `normalization disabled`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                @file:ImportDataSchema(
+                    "Schema", 
+                    "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv",
+                    normalizationDelimiters = []
+                )
+                package org.example
+                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+            """.trimIndent()))
+            )
+        )
+        println(result.kspGeneratedFiles)
+        result.inspectLines("Schema.Generated.kt") {
+            it.forAtLeastOne { it shouldContain "Land area" }
+        }
+    }
+
+    @Test
+    fun `normalization enabled`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                @file:ImportDataSchema(
+                    "Schema", 
+                    "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv",
+                )
+                package org.example
+                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+            """.trimIndent()))
+            )
+        )
+        println(result.kspGeneratedFiles)
+        result.inspectLines("Schema.Generated.kt") {
+            it.forAtLeastOne { it shouldContain "landArea" }
+        }
     }
 
     private fun KotlinCompileTestingCompilationResult.inspectLines(f: (List<String>) -> Unit) {
