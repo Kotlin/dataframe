@@ -1,6 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.junit.Test
 import java.time.LocalTime
@@ -20,5 +23,14 @@ class ConvertTests {
         val col by columnOf("1", null)
         col.convertToInt().forEach {
         }
+    }
+
+    @DataSchema
+    data class Schema(val time: Instant)
+
+    @Test
+    fun `Instant to LocalDateTime`() {
+        val df = listOf(Schema(Clock.System.now())).toDataFrame()
+        df.convert { time }.toLocalDateTime()
     }
 }

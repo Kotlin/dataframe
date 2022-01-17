@@ -4,6 +4,7 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDate
@@ -171,6 +172,15 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 LocalTime::class -> convert<Long> { it.toLocalTime(defaultTimeZone) }
                 else -> null
             }
+            Instant::class -> when (toClass) {
+                Long::class -> convert<Instant> { it.toEpochMilliseconds() }
+                LocalDateTime::class -> convert<Instant> { it.toLocalDateTime(defaultTimeZone) }
+                LocalDate::class -> convert<Instant> { it.toLocalDate(defaultTimeZone) }
+                java.time.LocalDateTime::class -> convert<Instant> { it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime() }
+                java.time.LocalDate::class -> convert<Instant> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
+                LocalTime::class -> convert<Instant> { it.toLocalTime(defaultTimeZone) }
+                else -> null
+            }
             Float::class -> when (toClass) {
                 Double::class -> convert<Float> { it.toDouble() }
                 Long::class -> convert<Float> { it.roundToLong() }
@@ -188,6 +198,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             }
             LocalDateTime::class -> when (toClass) {
                 LocalDate::class -> convert<LocalDateTime> { it.date }
+                Instant::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone) }
                 java.time.LocalDateTime::class -> convert<LocalDateTime> { it.toJavaLocalDateTime() }
                 java.time.LocalDate::class -> convert<LocalDateTime> { it.date.toJavaLocalDate() }
                 else -> null
@@ -214,5 +225,8 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 internal fun Long.toLocalDateTime(zone: TimeZone = defaultTimeZone) = Instant.fromEpochMilliseconds(this).toLocalDateTime(zone)
 internal fun Long.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).date
 internal fun Long.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).toJavaLocalDateTime().toLocalTime()
+
+internal fun Instant.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).date
+internal fun Instant.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).toJavaLocalDateTime().toLocalTime()
 
 internal val defaultTimeZone = TimeZone.currentSystemDefault()
