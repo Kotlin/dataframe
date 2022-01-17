@@ -1,8 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
@@ -200,6 +202,11 @@ public fun <T> ConvertClause<T, *>.toLocalTime(): DataFrame<T> = to { it.convert
 public fun DataColumn<Long>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime> = map { it.toLocalDateTime(zone) }
 public fun DataColumn<Long?>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime?> = map { it?.toLocalDateTime(zone) }
 
+@JvmName("convertToLocalDateTimeFromInstant")
+public fun DataColumn<Instant>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime> = map { it.toLocalDateTime(zone) }
+@JvmName("convertToLocalDateTimeFromInstant?")
+public fun DataColumn<Instant?>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime?> = map { it?.toLocalDateTime(zone) }
+
 @JvmName("convertToLocalDateTimeFromInt")
 public fun DataColumn<Int>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime> = map { it.toLong().toLocalDateTime(zone) }
 @JvmName("convertToLocalDateTimeFromIntNullable")
@@ -218,6 +225,10 @@ public fun DataColumn<String?>.convertToLocalDateTime(pattern: String? = null, l
 
 @JvmName("toLocalDateTimeFromTLong")
 public fun <T, R : Long?> ConvertClause<T, R>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDateTime(zone) }
+
+@JvmName("toLocalDateTimeFromTInstant")
+public fun <T, R : Instant?> ConvertClause<T, R>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDateTime(zone) }
+
 @JvmName("toLocalDateTimeFromTInt")
 public fun <T, R : Int?> ConvertClause<T, R>.toLocalDateTime(zone: TimeZone = defaultTimeZone): DataFrame<T> = to { it.convertToLocalDateTime(zone) }
 
