@@ -13,9 +13,12 @@ import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.isComparable
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.max
+import org.jetbrains.kotlinx.dataframe.api.maxOrNull
 import org.jetbrains.kotlinx.dataframe.api.mean
 import org.jetbrains.kotlinx.dataframe.api.median
+import org.jetbrains.kotlinx.dataframe.api.medianOrNull
 import org.jetbrains.kotlinx.dataframe.api.min
+import org.jetbrains.kotlinx.dataframe.api.minOrNull
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.std
@@ -61,9 +64,9 @@ internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
             ColumnDescription::std from { if (it.isNumber()) it.asNumbers().std() else null }
         }
         if (hasComparable) {
-            ColumnDescription::min from inferType { if (it.isComparable()) it.asComparable().min() else null }
-            ColumnDescription::median from inferType { if (it.isComparable()) it.asComparable().median() else null }
-            ColumnDescription::max from inferType { if (it.isComparable()) it.asComparable().max() else null }
+            ColumnDescription::min from inferType { if (it.isComparable()) it.asComparable().minOrNull() else null }
+            ColumnDescription::median from inferType { if (it.isComparable()) it.asComparable().medianOrNull() else null }
+            ColumnDescription::max from inferType { if (it.isComparable()) it.asComparable().maxOrNull() else null }
         }
     }
     df = df.add(ColumnDescription::freq) {
