@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -9,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 import java.time.LocalTime
 import java.time.Month
@@ -180,5 +182,13 @@ class ParseTests {
             .group("a", "b").into("c")
             .parse("c")
             .ungroup("c") shouldBe dataFrameOf("a", "b")(1, 2)
+    }
+
+    @Test
+    fun `parse instant`() {
+        columnOf("2022-01-23T04:29:40Z").parse().type shouldBe typeOf<Instant>()
+        columnOf("2022-01-23T04:29:40+01:00").parse().type shouldBe typeOf<Instant>()
+
+        columnOf("2022-01-23T04:29:40").parse().type shouldBe typeOf<LocalDateTime>()
     }
 }

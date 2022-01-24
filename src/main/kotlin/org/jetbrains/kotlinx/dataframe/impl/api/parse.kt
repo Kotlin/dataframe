@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
+import kotlinx.datetime.Instant
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -185,17 +186,20 @@ internal object Parsers : GlobalParserOptions {
         stringParser { it.toIntOrNull() },
         stringParser { it.toLongOrNull() },
 
+        // kotlinx.datetime.Instant
+        stringParser { catchSilent { Instant.parse(it) } },
+
         // kotlinx.datetime.LocalDateTime
         stringParserWithOptions { options ->
-            val localDateTimeParser = get(LocalDateTime::class)!!.applyOptions(options)
-            val parser = { it: String -> localDateTimeParser(it)?.toKotlinLocalDateTime() }
+            val formatter = options?.getDateTimeFormatter()
+            val parser = { it: String -> it.toLocalDateTimeOrNull(formatter)?.toKotlinLocalDateTime() }
             parser
         },
 
         // kotlinx.datetime.LocalDate
         stringParserWithOptions { options ->
-            val localDateParser = get(LocalDate::class)!!.applyOptions(options)
-            val parser = { it: String -> localDateParser(it)?.toKotlinLocalDate() }
+            val formatter = options?.getDateTimeFormatter()
+            val parser = { it: String -> it.toLocalDateOrNull(formatter)?.toKotlinLocalDate() }
             parser
         },
 
@@ -208,6 +212,7 @@ internal object Parsers : GlobalParserOptions {
         stringParser { it.toUrlOrNull() },
 
         stringParserWithOptions { options ->
+
             val numberFormat = NumberFormat.getInstance(options?.locale ?: Locale.getDefault())
             val parser = { it: String -> it.parseDouble(numberFormat) }
             parser
@@ -221,24 +226,7 @@ internal object Parsers : GlobalParserOptions {
         stringParser { it } // must be last in the list of parsers to return original unparsed string
     )
 
-    private val additionalParsers = listOf(
-
-        // java.time.LocalDate
-        stringParserWithOptions { options ->
-            val formatter = options?.getDateTimeFormatter()
-            val parser = { it: String -> it.toLocalDateOrNull(formatter) }
-            parser
-        },
-
-        // java.time.LocalDateTime
-        stringParserWithOptions { options ->
-            val formatter = options?.getDateTimeFormatter()
-            val parser = { it: String -> it.toLocalDateTimeOrNull(formatter) }
-            parser
-        },
-    )
-
-    private val parsersMap = (parsersOrder + additionalParsers).associateBy { it.type }
+    private val parsersMap = parsersOrder.associateBy { it.type }
 
     val size: Int = parsersOrder.size
 
