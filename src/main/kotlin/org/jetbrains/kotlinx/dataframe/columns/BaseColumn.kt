@@ -57,6 +57,8 @@ public interface BaseColumn<out T> : ColumnReference<T> {
     public fun distinct(): BaseColumn<T>
     public fun countDistinct(): Int
 
+    public fun contains(value: @UnsafeVariance T): Boolean
+
     // endregion
 
     override fun rename(newName: String): BaseColumn<T>
