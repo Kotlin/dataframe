@@ -26,7 +26,7 @@ import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import java.math.BigDecimal
 import java.time.LocalTime
-import java.util.Locale
+import java.util.*
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -204,7 +204,7 @@ public fun DataColumn<Long?>.convertToLocalDateTime(zone: TimeZone = defaultTime
 
 @JvmName("convertToLocalDateTimeFromInstant")
 public fun DataColumn<Instant>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime> = map { it.toLocalDateTime(zone) }
-@JvmName("convertToLocalDateTimeFromInstant?")
+@JvmName("convertToLocalDateTimeFromInstantNullable")
 public fun DataColumn<Instant?>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime?> = map { it?.toLocalDateTime(zone) }
 
 @JvmName("convertToLocalDateTimeFromInt")
