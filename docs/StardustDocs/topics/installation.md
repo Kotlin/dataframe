@@ -74,7 +74,7 @@ and follow the configuration:
 
 ```kotlin
 plugins {
-    id("org.jetbrains.kotlin.plugin.dataframe") version "<version>"
+    kotlin("plugin.dataframe") version "<version>"
 }
 
 dependencies {
@@ -128,7 +128,7 @@ tasks.withType(org.jmailen.gradle.kotlinter.tasks.LintTask).all {
 
 ```kotlin
 plugins {
-    id("org.jetbrains.kotlin.plugin.dataframe") version "<version>"
+    kotlin("plugin.dataframe") version "<version>"
 }
 
 kotlin {

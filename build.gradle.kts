@@ -1,8 +1,8 @@
+import org.jetbrains.dataframe.gradle.DataSchemaVisibility.IMPLICIT_PUBLIC
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
-import org.jetbrains.dataframe.gradle.DataSchemaVisibility.IMPLICIT_PUBLIC
 
 @Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
@@ -10,13 +10,13 @@ plugins {
     kotlin("libs.publisher") version libs.versions.libsPublisher
     kotlin("plugin.serialization") version libs.versions.kotlin
     kotlin("jupyter.api") version libs.versions.kotlinJupyter
+    kotlin("plugin.dataframe") version libs.versions.dataframe
 
     id("org.jetbrains.dokka") version libs.versions.dokka
     id("org.jetbrains.dataframe.generator")
 
     id("io.github.devcrocod.korro") version libs.versions.korro
     id("org.jmailen.kotlinter") version libs.versions.ktlint
-    id("org.jetbrains.kotlin.plugin.dataframe") version libs.versions.dataframe
 
 }
 
