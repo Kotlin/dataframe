@@ -21,7 +21,7 @@ internal abstract class DataColumnImpl<T>(
 
     override fun toSet() = distinct.value
 
-    fun contains(value: T) = toSet().contains(value)
+    override fun contains(value: T): Boolean = if (distinct.isInitialized()) distinct.value.contains(value) else values.contains(value)
 
     override fun toString() = dataFrameOf(this).toString() // "${name()}: $type"
 

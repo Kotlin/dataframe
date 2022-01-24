@@ -5,7 +5,9 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.distinct
+import org.jetbrains.kotlinx.dataframe.api.firstOrNull
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -25,15 +27,13 @@ internal open class ColumnGroupImpl<T>(val name: String, df: DataFrame<T>) :
 
     override fun values() = rows()
 
-    override fun countDistinct() = distinct.nrow
+    override fun countDistinct() = distinct.value.size
 
     override fun type() = anyRowType
 
-    private val distinct by lazy { df.distinct() }
+    private val distinct = lazy { df.rows().toSet() }
 
-    private val set by lazy { distinct.rows().toSet() }
-
-    override fun toSet() = set
+    override fun toSet() = distinct.value
 
     override fun size() = rowsCount()
 
@@ -67,7 +67,7 @@ internal open class ColumnGroupImpl<T>(val name: String, df: DataFrame<T>) :
 
     override fun name() = name
 
-    override fun distinct() = ColumnGroupImpl(name, distinct)
+    override fun distinct() = ColumnGroupImpl(name, get(distinct.value.map { it.index() }))
 
     override fun resolve(context: ColumnResolutionContext) = super<DataColumnInternal>.resolve(context)
 
@@ -80,6 +80,8 @@ internal open class ColumnGroupImpl<T>(val name: String, df: DataFrame<T>) :
     override fun get(range: IntRange) = ColumnGroupImpl(name, super<DataFrameImpl>.get(range))
 
     override fun get(columnName: String): AnyCol = getColumn(columnName)
+
+    override fun contains(value: DataRow<T>) = if (distinct.isInitialized()) distinct.value.contains(value) else asDataFrame().firstOrNull { it == value } != null
 }
 
 internal class ResolvingColumnGroup<T>(

@@ -62,4 +62,6 @@ internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsCont
     }
 
     override fun containsColumn(name: String): Boolean = false
+
+    override fun contains(value: DataRow<T>) = false
 }
