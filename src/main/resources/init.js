@@ -18,7 +18,8 @@
                 const table = this.getTableElement(df.id)
                 table.df = df
                 for(let i=0;i<df.cols.length;i++){
-                    if(df.cols[i].children.length > 0) df.cols[i].expanded = true
+                    let col = df.cols[i]
+                    if(col.parent === undefined && col.children.length > 0) col.expanded = true
                 }
             }else {
                 const rootDf = this.getTableData(df.rootId)
