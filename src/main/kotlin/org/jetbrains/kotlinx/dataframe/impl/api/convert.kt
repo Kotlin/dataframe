@@ -20,12 +20,15 @@ import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
+import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
+import java.net.URL
 import java.time.LocalTime
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
@@ -215,6 +218,11 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             }
             java.time.LocalDate::class -> when (toClass) {
                 LocalDate::class -> convert<java.time.LocalDate> { it.toKotlinLocalDate() }
+                else -> null
+            }
+            URL::class -> when (toClass) {
+                IMG::class -> convert<URL> { IMG(it.toString()) }
+                IFRAME::class -> convert<URL> { IFRAME(it.toString()) }
                 else -> null
             }
             else -> null

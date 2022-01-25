@@ -23,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.io.HtmlData
@@ -84,7 +85,8 @@ internal class Integration : JupyterIntegration() {
             render<Split<*, *>> ({ it.toDataFrame() }, { "Split" })
             render<Merge<*, *, *>> ({ it.into("merged") }, { "Merge" })
             render<Gather<*, *, *, *>> ({ it.into("key", "value") }, { "Gather" })
-            render<IMG> { HTML("<img src=\"${it.url}\"/>") }
+            render<IMG> { HTML(it.toString()) }
+            render<IFRAME> { HTML(it.toString()) }
         }
 
         import("org.jetbrains.kotlinx.dataframe.api.*")
@@ -92,6 +94,7 @@ internal class Integration : JupyterIntegration() {
         import("org.jetbrains.kotlinx.dataframe.annotations.*")
         import("org.jetbrains.kotlinx.dataframe.io.*")
         import("java.net.URL")
+        import("java.io.File")
         import("org.jetbrains.kotlinx.dataframe.dataTypes.*")
 
         fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, property: KProperty<*>): VariableName? {
