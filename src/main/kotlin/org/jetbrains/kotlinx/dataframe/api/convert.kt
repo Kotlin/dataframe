@@ -13,6 +13,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
+import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToTypeImpl
@@ -25,6 +27,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import java.math.BigDecimal
+import java.net.URL
 import java.time.LocalTime
 import java.util.*
 import kotlin.reflect.KProperty
@@ -129,6 +132,13 @@ public fun <T : Any> DataColumn<T?>.convertToBigDecimal(): DataColumn<BigDecimal
 @JvmName("convertToBooleanFromT")
 public fun <T : Any> DataColumn<T>.convertToBoolean(): DataColumn<Boolean> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToBoolean(): DataColumn<Boolean?> = convertTo()
+
+// region convert URL
+
+public fun <T, R : URL?> ConvertClause<T, R>.toIFrame(border: Boolean = false, width: Int? = null, height: Int? = null): DataFrame<T> = to { it.mapInline { IFRAME(it.toString(), border, width, height) } }
+public fun <T, R : URL?> ConvertClause<T, R>.toImg(width: Int? = null, height: Int? = null): DataFrame<T> = to { it.mapInline { IMG(it.toString(), width, height) } }
+
+// endregion
 
 // region toLocalDate
 
