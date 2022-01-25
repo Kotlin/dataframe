@@ -20,7 +20,7 @@ df.update { age }.where { city == "Paris" }.with { it - 5 }
 
 <tip>
 
-You can plain with "people" dataset that is used in present guide [here](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)
+You can play with "people" dataset that is used in present guide [here](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)
 
 </tip>
 
