@@ -100,6 +100,9 @@ internal class Integration : JupyterIntegration() {
         import("org.jetbrains.kotlinx.dataframe.io.*")
         import("java.net.URL")
         import("java.io.File")
+        import("kotlinx.datetime.Instant")
+        import("kotlinx.datetime.LocalDateTime")
+        import("kotlinx.datetime.LocalDate")
         import("org.jetbrains.kotlinx.dataframe.dataTypes.*")
 
         fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, argument: String): VariableName? {
