@@ -16,19 +16,22 @@ import org.jetbrains.kotlinx.dataframe.api.ReducedPivot
 import org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.Split
 import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
+import org.jetbrains.kotlinx.dataframe.api.asDataFrame
+import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
+import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.io.HtmlData
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
@@ -71,16 +74,17 @@ internal class Integration : JupyterIntegration() {
 
         with(JupyterHtmlRenderer(config.display, this)) {
             render<HtmlData> { it.toJupyter() }
-            render<AnyFrame> ({ it })
-            render<FormattedFrame<*>>({ it.df }, modifyConfig = { getDisplayConfiguration(it) })
-            render<AnyRow>({ it.toDataFrame() }, { "DataRow [${it.ncol}]" })
-            render<AnyCol>({ dataFrameOf(it) }, { "DataColumn [${it.nrow}]" })
+            render<AnyRow>({ it.toDataFrame() }, { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" })
+            render<ColumnGroup<*>>({ it.asDataFrame() }, { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" })
+            render<AnyCol>({ dataFrameOf(it) }, { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" })
+            render<AnyFrame> ({ it }, { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" })
+            render<FormattedFrame<*>>({ it.df }, { "DataFrame: rowsCount = ${it.df.rowsCount() }, columnsCount = ${it.df.columnsCount() }" }, modifyConfig = { getDisplayConfiguration(it) })
             render<GroupBy<*, *>>({ it.toDataFrame() }, { "GroupBy" })
-            render<ReducedGroupBy<*, *>>({ it.into(it.groupBy.groups.name()) }, { "ReducedGroupBy: ${it.size}" })
-            render<Pivot<*>>({ it.frames().toDataFrame() }, { "Pivot: ${it.ncol} columns" })
-            render<ReducedPivot<*>>({ it.values().toDataFrame() }, { "ReducedPivot: ${it.ncol} columns" })
-            render<PivotGroupBy<*>>({ it.frames() }, { "PivotGroupBy: ${it.size}" })
-            render<ReducedPivotGroupBy<*>>({ it.values() }, { "ReducedPivotGroupBy: ${it.size}" })
+            render<ReducedGroupBy<*, *>>({ it.into(it.groupBy.groups.name()) }, { "ReducedGroupBy" })
+            render<Pivot<*>>({ it.frames().toDataFrame() }, { "Pivot" })
+            render<ReducedPivot<*>>({ it.values().toDataFrame() }, { "ReducedPivot" })
+            render<PivotGroupBy<*>>({ it.frames() }, { "PivotGroupBy" })
+            render<ReducedPivotGroupBy<*>>({ it.values() }, { "ReducedPivotGroupBy" })
             render<SplitWithTransform<*, *, *>> ({ it.into() }, { "Split" })
             render<Split<*, *>> ({ it.toDataFrame() }, { "Split" })
             render<Merge<*, *, *>> ({ it.into("merged") }, { "Merge" })
