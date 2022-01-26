@@ -2,7 +2,10 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.columnNames
+import org.jetbrains.kotlinx.dataframe.api.columnTypes
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -40,5 +43,15 @@ class Read : TestBase() {
         df["A"].type() shouldBe typeOf<String>()
         df["B"].type() shouldBe typeOf<Int>()
         df["D"].type() shouldBe typeOf<Boolean?>()
+    }
+
+    @Test
+    fun readJsonRow() {
+        val file = testJson("syntheticObj")
+        // SampleStart
+        val row = DataRow.readJson(file)
+        // SampleEnd
+        row.columnNames() shouldBe listOf("A", "B", "C", "D")
+        row.columnTypes() shouldBe listOf(typeOf<String>(), typeOf<Int>(), typeOf<Double>(), typeOf<Boolean>())
     }
 }

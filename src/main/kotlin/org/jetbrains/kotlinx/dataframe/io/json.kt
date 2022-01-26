@@ -11,11 +11,13 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -34,6 +36,7 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.typeOf
 
 public fun DataFrame.Companion.readJson(file: File): AnyFrame = readJson(file.toURI().toURL())
+public fun DataRow.Companion.readJson(file: File): AnyRow = DataFrame.readJson(file).single()
 
 public fun DataFrame.Companion.readJson(path: String): AnyFrame {
     val url = when {
@@ -42,12 +45,15 @@ public fun DataFrame.Companion.readJson(path: String): AnyFrame {
     }
     return readJson(url.toURL())
 }
+public fun DataRow.Companion.readJson(path: String): AnyRow = DataFrame.readJson(path).single()
 
 @Suppress("UNCHECKED_CAST")
 public fun DataFrame.Companion.readJson(url: URL): AnyFrame =
     catchHttpResponse(url) { readJson(Parser.default().parse(it)) }
+public fun DataRow.Companion.readJson(url: URL): AnyRow = DataFrame.readJson(url).single()
 
 public fun DataFrame.Companion.readJsonStr(text: String): DataFrame<Any?> = readJson(Parser.default().parse(StringBuilder(text)))
+public fun DataRow.Companion.readJsonStr(text: String): AnyRow = DataFrame.readJsonStr(text).single()
 
 private fun readJson(parsed: Any?) = when (parsed) {
     is JsonArray<*> -> fromJsonList(parsed.value)
@@ -219,5 +225,17 @@ public fun AnyFrame.writeJson(file: File, prettyPrint: Boolean = false, canonica
 public fun AnyFrame.writeJson(path: String, prettyPrint: Boolean = false, canonical: Boolean = false): Unit = writeJson(File(path), prettyPrint, canonical)
 
 public fun AnyFrame.writeJson(writer: Appendable, prettyPrint: Boolean = false, canonical: Boolean = false) {
+    writer.append(toJson(prettyPrint, canonical))
+}
+
+public fun AnyRow.writeJson(file: File, prettyPrint: Boolean = false, canonical: Boolean = false) {
+    file.writeText(toJson(prettyPrint, canonical))
+}
+
+public fun AnyRow.writeJson(path: String, prettyPrint: Boolean = false, canonical: Boolean = false) {
+    writeJson(File(path), prettyPrint, canonical)
+}
+
+public fun AnyRow.writeJson(writer: Appendable, prettyPrint: Boolean = false, canonical: Boolean = false) {
     writer.append(toJson(prettyPrint, canonical))
 }
