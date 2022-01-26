@@ -11,7 +11,9 @@
 * `diff { rowExpression }: T` — difference between results of [row expression](#row-expressions) calculated for current and previous rows
 * `values(): List<Any?>` — list of all cell values from the current row
 * `valuesOf<T>(): List<T>` — list of values of given type 
-* `columnNames(): List<String>` — list of all column names 
+* `columnsCount(): Int` — number of columns
+* `columnNames(): List<String>` — list of all column names
+* `columnTypes(): List<KType>` — list of all column types 
 * `namedValues(): List<NameValuePair<Any?>>` — list of name-value pairs where `name` is a column name and `value` is cell value
 * `namedValuesOf<T>(): List<NameValuePair<T>>` — list of name-value pairs where value has given type 
 * `getRow(Int): DataRow` — row from `DataFrame` by row index
