@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.suggestIfNull
 import org.jetbrains.kotlinx.dataframe.math.mean
@@ -8,6 +9,9 @@ import org.jetbrains.kotlinx.dataframe.math.medianOrNull
 import org.jetbrains.kotlinx.dataframe.math.std
 import org.jetbrains.kotlinx.dataframe.math.sum
 import kotlin.reflect.typeOf
+
+public fun AnyRow.count(): Int = columnsCount()
+public fun AnyRow.count(predicate: Predicate<Any?>): Int = values().count(predicate)
 
 public fun AnyRow.rowMinOrNull(): Any? = values().filterIsInstance<Comparable<*>>().minWithOrNull(compareBy { it })
 public fun AnyRow.rowMin(): Any = rowMinOrNull().suggestIfNull("rowMin")
