@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
-import org.jetbrains.kotlinx.dataframe.io.getDefaultFooter
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 
@@ -13,10 +12,11 @@ internal class JupyterHtmlRenderer(
 
 internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     crossinline getDf: (T) -> DataFrame<*>,
-    noinline getFooter: (DataFrame<*>) -> String = ::getDefaultFooter,
+    noinline getFooter: (T) -> String,
     crossinline modifyConfig: T.(DisplayConfiguration) -> DisplayConfiguration = { it }
 ) = builder.renderWithHost<T> { host, value ->
     val contextRenderer = JupyterCellRenderer(this.notebook, host)
     val reifiedDisplayConfiguration = value.modifyConfig(display)
-    getDf(value).toHTML(reifiedDisplayConfiguration, includeInit = reifiedDisplayConfiguration.isolatedOutputs, contextRenderer, getFooter).toJupyter()
+    val footer = getFooter(value)
+    getDf(value).toHTML(reifiedDisplayConfiguration, includeInit = reifiedDisplayConfiguration.isolatedOutputs, contextRenderer, { footer }).toJupyter()
 }
