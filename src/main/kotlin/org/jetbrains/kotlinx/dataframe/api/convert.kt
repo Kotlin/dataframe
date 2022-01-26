@@ -140,6 +140,21 @@ public fun <T, R : URL?> ConvertClause<T, R>.toImg(width: Int? = null, height: I
 
 // endregion
 
+// region toURL
+
+public fun DataColumn<String>.convertToURL(): DataColumn<URL> {
+    return mapInline { URL(it) }
+}
+
+@JvmName("convertToURLFromStringNullable")
+public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> {
+    return mapInline { it?.let { URL(it) } }
+}
+
+public fun <T, R : String?> ConvertClause<T, R>.toURL(): DataFrame<T> = to { it.convertToURL() }
+
+// endregion
+
 // region toInstant
 
 public fun DataColumn<String>.convertToInstant(): DataColumn<Instant> {
