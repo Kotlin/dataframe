@@ -45,10 +45,12 @@ internal open class DataRowImpl<T>(private val index: Int, private val df: DataF
 
     override fun hashCode() = values.hashCode()
 
-    override fun tryGet(name: String): Any? {
+    override fun getOrNull(name: String): Any? {
         ColumnAccessTracker.registerColumnAccess(name)
         return df.getColumnOrNull(name)?.get(index)
     }
+
+    override fun containsKey(name: String): Boolean = df.containsColumn(name)
 }
 
 internal val <T> DataRow<T>.owner: DataFrame<T> get() = df()

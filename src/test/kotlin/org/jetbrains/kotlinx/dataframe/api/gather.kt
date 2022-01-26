@@ -107,9 +107,9 @@ class GatherTests {
             val newDf = listOf(
                 name.withValues(List(cols.size) { name[0] }),
                 mode.withValues(cols.map { it.name }),
-                dataRows.map { it.tryGet("c1") as? String }.toColumn("c1"),
-                dataRows.map { it.tryGet("c2") as? String }.toColumn("c2"),
-                dataRows.map { it.tryGet("c3") as? String }.toColumn("c3")
+                dataRows.map { it.getValueOrNull<String>("c1") }.toColumn("c1"),
+                dataRows.map { it.getValueOrNull<String>("c2") }.toColumn("c2"),
+                dataRows.map { it.getValueOrNull<String>("c3") }.toColumn("c3")
             ).toDataFrame()
 
             newDf
