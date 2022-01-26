@@ -214,9 +214,15 @@
                             const childTable = document.createElement("table")
                             childTable.className = "dataframe"
                             childTable.id = "df_" + frameId
-                            childTable.df = rootDf.childFrames[frameId]
+                            let childDf = rootDf.childFrames[frameId]
+                            childTable.df = childDf
                             td.appendChild(childTable)
                             this.renderTable(frameId)
+                            if(childDf.nrow != childDf.totalRows) {
+                                const footer = document.createElement("p")
+                                footer.innerText = "... showing only top " + childDf.nrow + " of " + childDf.totalRows + " rows"
+                                td.appendChild(footer)
+                            }
                         } else {
                             td.appendChild(link)
                         }

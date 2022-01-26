@@ -30,10 +30,6 @@ import java.util.Random
 
 internal val tooltipLimit = 1000
 
-internal fun getDefaultFooter(df: DataFrame<*>): String {
-    return "DataFrame [${df.size}]"
-}
-
 internal interface CellContent
 
 internal data class DataFrameReference(val dfId: Int, val size: DataFrameSize) : CellContent
@@ -71,7 +67,7 @@ internal fun ColumnDataForJs.renderHeader(): String {
     return "<span title=\"$tooltip\">${column.name()}</span>"
 }
 
-internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int): String {
+internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int, nrow: Int): String {
     var index = 0
     val data = buildString {
         append("[")
@@ -99,7 +95,7 @@ internal fun tableJs(columns: List<ColumnDataForJs>, id: Int, rootId: Int): Stri
         columns.forEach { dfs(it) }
         append("]")
     }
-    val js = getResourceText("/addTable.js", "___COLUMNS___" to data, "___ID___" to id, "___ROOT___" to rootId)
+    val js = getResourceText("/addTable.js", "___COLUMNS___" to data, "___ID___" to id, "___ROOT___" to rootId, "___NROW___" to nrow)
     return js
 }
 
@@ -107,9 +103,8 @@ internal var tableInSessionId = 0
 internal val sessionId = (Random().nextInt() % 128) shl 24
 internal fun nextTableId() = sessionId + (tableInSessionId++)
 
-// TODO: display tooltips for column headers
 internal fun AnyFrame.toHtmlData(
-    configuration: DisplayConfiguration = org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration.DEFAULT,
+    configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     cellRenderer: CellRenderer
 ): HtmlData {
     val scripts = mutableListOf<String>()
@@ -149,7 +144,7 @@ internal fun AnyFrame.toHtmlData(
         val (nextDf, nextId) = queue.pop()
         val rowsLimit = if (nextId == rootId) configuration.rowsLimit else 5
         val preparedColumns = nextDf.columns().map { nextDf.columnToJs(it, rowsLimit) }
-        val js = tableJs(preparedColumns, nextId, rootId)
+        val js = tableJs(preparedColumns, nextId, rootId, nextDf.nrow)
         scripts.add(js)
     }
     val body = getResourceText("/table.html", "ID" to rootId)
@@ -188,7 +183,7 @@ internal fun initHtml(): HtmlData =
 public fun <T> DataFrame<T>.html(): String = toHTML(includeInit = true).toString()
 
 public fun <T> DataFrame<T>.toHTML(
-    configuration: DisplayConfiguration = org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration.DEFAULT,
+    configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
     includeInit: Boolean = false,
     cellRenderer: CellRenderer = org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer,
     getFooter: (DataFrame<T>) -> String = { "DataFrame [${it.size}]" }
