@@ -23,4 +23,3 @@ public fun <T> DataColumn<T>.chunked(size: Int): ValueColumn<List<T>> {
 public fun <T> ColumnGroup<T>.chunked(size: Int): FrameColumn<T> = chunked(size, name())
 
 public fun <T> DataColumn<DataRow<T>>.chunked(size: Int): FrameColumn<T> = asColumnGroup().chunked(size)
-
