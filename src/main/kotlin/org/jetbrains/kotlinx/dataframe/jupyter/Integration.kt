@@ -16,11 +16,13 @@ import org.jetbrains.kotlinx.dataframe.api.ReducedPivot
 import org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.Split
 import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.values
@@ -32,7 +34,6 @@ import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.io.HtmlData
-import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.VariableName
@@ -101,8 +102,8 @@ internal class Integration : JupyterIntegration() {
         import("java.io.File")
         import("org.jetbrains.kotlinx.dataframe.dataTypes.*")
 
-        fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, property: KProperty<*>): VariableName? {
-            val code = codeWithConverter.with(property.name)
+        fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, argument: String): VariableName? {
+            val code = codeWithConverter.with(argument)
             return if (code.isNotBlank()) {
                 val result = execute(code)
                 if (codeWithConverter.hasConverter) {
@@ -111,12 +112,25 @@ internal class Integration : JupyterIntegration() {
             } else null
         }
 
+        fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, property: KProperty<*>): VariableName? = execute(codeWithConverter, property.name)
+
         updateVariable<AnyFrame> { df, property ->
             execute(codeGen.process(df, property), property)
         }
 
         updateVariable<AnyRow> { row, property ->
             execute(codeGen.process(row, property), property)
+        }
+
+        updateVariable<ColumnGroup<*>> { col, property ->
+            execute(codeGen.process(col.asDataFrame(), property), property)
+        }
+
+        updateVariable<AnyCol> { col, property ->
+            if(col.isColumnGroup()) {
+                val codeWithConverter = codeGen.process(col.asColumnGroup().asDataFrame(), property)
+                execute(codeWithConverter,"${property.name}.asColumnGroup()")
+            }else null
         }
 
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {
