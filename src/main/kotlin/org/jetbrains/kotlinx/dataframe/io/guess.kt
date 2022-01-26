@@ -1,7 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.single
 import java.io.File
 import java.net.URL
 
@@ -34,6 +37,8 @@ public fun DataFrame.Companion.read(file: File): AnyFrame = when (guessFormat(fi
     }
 }
 
+public fun DataRow.Companion.read(file: File): AnyRow = DataFrame.read(file).single()
+
 public fun DataFrame.Companion.read(url: URL): AnyFrame = when (guessFormat(url)) {
     SupportedFormats.CSV -> readCSV(url)
     SupportedFormats.JSON -> readJson(url)
@@ -43,6 +48,8 @@ public fun DataFrame.Companion.read(url: URL): AnyFrame = when (guessFormat(url)
         readJson(url)
     }
 }
+
+public fun DataRow.Companion.read(url: URL): AnyRow = DataFrame.read(url).single()
 
 public fun DataFrame.Companion.read(path: String): AnyFrame = when (guessFormat(path)) {
     SupportedFormats.CSV -> readCSV(path)
@@ -54,6 +61,10 @@ public fun DataFrame.Companion.read(path: String): AnyFrame = when (guessFormat(
     }
 }
 
+public fun DataRow.Companion.read(path: String): AnyRow = DataFrame.read(path).single()
+
 public fun URL.readDataFrame(): AnyFrame = DataFrame.read(this)
+public fun URL.readDataRow(): AnyRow = DataRow.read(this)
+
 public fun File.readDataFrame(): AnyFrame = DataFrame.read(this)
-public fun dataFrame(url: String): AnyFrame = DataFrame.read(url)
+public fun File.readDataRow(): AnyRow = DataRow.read(this)
