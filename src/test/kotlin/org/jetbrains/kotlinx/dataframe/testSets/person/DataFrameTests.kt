@@ -63,6 +63,7 @@ import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.getValue
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.implode
@@ -307,7 +308,7 @@ class DataFrameTests : BaseTest() {
         df[i][Person::age].check()
         df[Person::age][i].check()
 
-        df[i].read<Int>("age").check()
+        df[i].getValue<Int>("age").check()
         (df[i]["age"] as Int).check()
 
         df["age"].cast<Int>()[i].check()
@@ -329,7 +330,7 @@ class DataFrameTests : BaseTest() {
         df[i][Person::city].check()
         df[Person::city][i].check()
 
-        df[i].read<String?>("city").check()
+        df[i].getValue<String?>("city").check()
         (df[i]["city"] as String?).check()
 
         df["city"].cast<String?>()[i].check()

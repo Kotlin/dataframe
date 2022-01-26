@@ -43,6 +43,7 @@ import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnPath
 import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
 import org.jetbrains.kotlinx.dataframe.api.getColumns
+import org.jetbrains.kotlinx.dataframe.api.getValue
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.implode
@@ -346,7 +347,7 @@ class DataFrameTreeTests : BaseTest() {
                         val single =
                             if (value is AnyRow) value else if (value is AnyFrame) value[0] else fail("invalid value type")
                         single.size() shouldBe 2
-                        single.read<Int>("age") to single.read<Int?>("weight") shouldBe expValues[0]
+                        single.getValue<Int>("age") to single.getValue<Int?>("weight") shouldBe expValues[0]
                     }
                     else -> {
                         val df = value as? AnyFrame

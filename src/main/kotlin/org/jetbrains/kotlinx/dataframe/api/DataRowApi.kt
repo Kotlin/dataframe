@@ -7,12 +7,15 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.experimental.ExperimentalTypeInference
+import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
@@ -29,6 +32,13 @@ public inline fun <reified R> AnyRow.namedValuesOf(): List<NameValuePair<R>> =
 
 public fun AnyRow.namedValues(): List<NameValuePair<Any?>> =
     values().zip(columnNames()) { value, name -> NameValuePair(name, value) }
+
+public fun <T> AnyRow.getValue(columnName: String): T = get(columnName) as T
+public fun <T> AnyRow.getValue(column: ColumnReference<T>): T = get(column)
+public fun <T> AnyRow.getValue(column: KProperty<T>): T = get(column)
+
+public fun <T> AnyRow.getValueOrNull(columnName: String): T? = getOrNull(columnName) as T?
+public fun <T> AnyRow.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<T>(column.columnName)
 
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType

@@ -32,11 +32,11 @@ public interface DataRow<out T> {
     public operator fun get(path: ColumnPath): Any? = owner.get(path)[index]
     public operator fun get(name: String): Any?
     public fun getColumnGroup(columnName: String): AnyRow = get(columnName) as AnyRow
-    public fun tryGet(name: String): Any?
+    public fun getOrNull(name: String): Any?
+    public fun containsKey(name: String): Boolean
 
     // endregion
 
-    public fun <T> read(name: String): T = get(name) as T
     public fun size(): Int = owner.ncol
     public fun values(): List<Any?>
 
