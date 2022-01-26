@@ -31,16 +31,6 @@ public fun <T, R> DataColumn<T>.map(transform: (T) -> R): DataColumn<R> {
     return collector.toColumn(name).cast()
 }
 
-@PublishedApi
-internal fun <T, R> DataColumn<T?>.mapNotNullValues(transform: (T) -> R): DataColumn<R> {
-    val collector = createDataCollector(size)
-    values.forEach {
-        if (it == null) collector.add(null)
-        else collector.add(transform(it))
-    }
-    return collector.toColumn(name).cast()
-}
-
 public inline fun <T, reified R> DataColumn<T>.mapInline(crossinline transform: (T) -> R): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
     val resType = typeOf<R>()
