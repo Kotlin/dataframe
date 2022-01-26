@@ -127,10 +127,10 @@ internal class Integration : JupyterIntegration() {
         }
 
         updateVariable<AnyCol> { col, property ->
-            if(col.isColumnGroup()) {
+            if (col.isColumnGroup()) {
                 val codeWithConverter = codeGen.process(col.asColumnGroup().asDataFrame(), property)
-                execute(codeWithConverter,"${property.name}.asColumnGroup()")
-            }else null
+                execute(codeWithConverter, "${property.name}.asColumnGroup()")
+            } else null
         }
 
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {
