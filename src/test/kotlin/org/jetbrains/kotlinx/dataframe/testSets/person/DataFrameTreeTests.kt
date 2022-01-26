@@ -346,7 +346,7 @@ class DataFrameTreeTests : BaseTest() {
                         value shouldNotBe null
                         val single =
                             if (value is AnyRow) value else if (value is AnyFrame) value[0] else fail("invalid value type")
-                        single.size() shouldBe 2
+                        single.columnsCount() shouldBe 2
                         single.getValue<Int>("age") to single.getValue<Int?>("weight") shouldBe expValues[0]
                     }
                     else -> {

@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.api.asNumbers
+import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toColumn
@@ -127,7 +128,7 @@ internal fun AnyRow.renderToString(): String {
 }
 
 internal fun AnyRow.renderToStringTable(forHtml: Boolean = false): String {
-    if (size() == 0) return ""
+    if (columnsCount() == 0) return ""
     val pairs = owner.columns().map { it.name() to renderValueForRowTable(it[index], forHtml) }
     val width = pairs.map { it.first.length + it.second.textLength }.maxOrNull()!! + 4
     return pairs.joinToString("\n") {
