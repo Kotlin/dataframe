@@ -16,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
@@ -56,11 +55,6 @@ public fun <T> DataFrame<T>.tail(numRows: Int = 5): DataFrame<T> = takeLast(numR
 public fun <T> DataFrame<T>.head(numRows: Int = 5): DataFrame<T> = take(numRows)
 
 public fun <T> DataFrame<T>.shuffle(): DataFrame<T> = getRows(indices.shuffled())
-
-public fun <T> DataFrame<T>.chunked(size: Int): FrameColumn<T> {
-    val startIndices = (0 until nrow step size)
-    return DataColumn.createFrameColumn("", this, startIndices)
-}
 
 // region isEmpty
 
