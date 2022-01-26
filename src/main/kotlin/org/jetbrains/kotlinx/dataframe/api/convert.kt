@@ -140,6 +140,21 @@ public fun <T, R : URL?> ConvertClause<T, R>.toImg(width: Int? = null, height: I
 
 // endregion
 
+// region toInstant
+
+public fun DataColumn<String>.convertToInstant(): DataColumn<Instant> {
+    return mapInline { Instant.parse(it) }
+}
+
+@JvmName("convertToInstantFromStringNullable")
+public fun DataColumn<String?>.convertToInstant(): DataColumn<Instant?> {
+    return mapInline { it?.let { Instant.parse(it) } }
+}
+
+public fun <T, R : String?> ConvertClause<T, R>.toInstant(): DataFrame<T> = to { it.convertToInstant() }
+
+// endregion
+
 // region toLocalDate
 
 @JvmName("convertToLocalDateFromLong")
