@@ -202,6 +202,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             LocalDateTime::class -> when (toClass) {
                 LocalDate::class -> convert<LocalDateTime> { it.date }
                 Instant::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone) }
+                Long::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone).toEpochMilliseconds() }
                 java.time.LocalDateTime::class -> convert<LocalDateTime> { it.toJavaLocalDateTime() }
                 java.time.LocalDate::class -> convert<LocalDateTime> { it.date.toJavaLocalDate() }
                 else -> null
@@ -209,6 +210,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             java.time.LocalDateTime::class -> when (toClass) {
                 LocalDate::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime().date }
                 LocalDateTime::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime() }
+                Long::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime().toInstant(defaultTimeZone).toEpochMilliseconds() }
                 java.time.LocalDate::class -> convert<java.time.LocalDateTime> { it.toLocalDate() }
                 else -> null
             }
