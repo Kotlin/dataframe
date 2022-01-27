@@ -17,6 +17,9 @@ table.dataframe tr:nth-child(odd) {
 table.dataframe tr:nth-child(even) {
     background: #FFF
 }
+table.dataframe img {
+    max-width: fit-content;
+}
 table.dataframe tr:hover {
     background: rgba(66, 165, 245, 0.2);
 }
