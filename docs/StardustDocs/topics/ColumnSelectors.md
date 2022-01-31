@@ -13,7 +13,7 @@ df.select { age and name }
 df.fillNaNs { dfsOf<Double>() }.withZero()
 df.remove { cols { it.hasNulls() } }
 df.update { city }.notNull { it.lowercase() }
-df.gather { numberCols() }.into("key", "value")
+df.gather { colsOf<Number>() }.into("key", "value")
 df.move { name.firstName and name.lastName }.after { city }
 ```
 
@@ -151,14 +151,13 @@ df.select { cols(1..4) }
 ```kotlin
 // by condition
 df.select { cols { it.name.startsWith("year") } }
+df.select { startsWith("year") }
 
 // by type
 df.select { colsOf<String>() }
-df.select { stringCols() }
 
 // by type with condition
-df.select { colsOf<String> { !it.hasNulls() } }
-df.select { stringCols { !it.hasNulls() } }
+df.select { colsOf<String?> { it.countDistinct() > 5 } }
 
 // all top-level columns
 df.select { all() }
