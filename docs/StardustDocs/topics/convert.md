@@ -39,7 +39,7 @@ df.convert { dfsOf<String>() }.with { it.toCharArray().toList() }
 
 ```kotlin
 df.convert { age }.to<Double>()
-df.convert { numberCols() }.to<String>()
+df.convert { colsOf<Number>() }.to<String>()
 df.convert { name.firstName and name.lastName }.to { it.length() }
 df.convert { weight }.toFloat()
 ```
