@@ -2495,4 +2495,10 @@ class DataFrameTests : BaseTest() {
         typed.take(typed.nrow) shouldBe typed
         typed.take(20) shouldBe typed
     }
+
+    @Test
+    fun `select into accessor`() {
+        val newName by column<String>()
+        typed.select { name into newName and age }.columnNames() shouldBe listOf("newName", "age")
+    }
 }

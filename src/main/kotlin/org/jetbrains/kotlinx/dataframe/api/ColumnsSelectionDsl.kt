@@ -278,6 +278,8 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
     public infix fun String.into(newName: String): ColumnReference<Any?> = toColumnAccessor().into(newName)
+    public infix fun <C> ColumnReference<C>.into(column: ColumnAccessor<C>): ColumnReference<C> = into(column.name())
+    public infix fun String.into(column: ColumnAccessor<*>): ColumnReference<Any?> = toColumnAccessor().into(column.name())
 
     public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
     public infix fun String.named(newName: String): ColumnReference<Any?> = toColumnAccessor().named(newName)
