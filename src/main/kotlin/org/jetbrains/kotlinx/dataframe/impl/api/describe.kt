@@ -12,12 +12,9 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.isComparable
 import org.jetbrains.kotlinx.dataframe.api.isNumber
-import org.jetbrains.kotlinx.dataframe.api.max
 import org.jetbrains.kotlinx.dataframe.api.maxOrNull
 import org.jetbrains.kotlinx.dataframe.api.mean
-import org.jetbrains.kotlinx.dataframe.api.median
 import org.jetbrains.kotlinx.dataframe.api.medianOrNull
-import org.jetbrains.kotlinx.dataframe.api.min
 import org.jetbrains.kotlinx.dataframe.api.minOrNull
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -27,7 +24,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
-import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
@@ -36,7 +33,7 @@ import kotlin.reflect.jvm.jvmErasure
 internal fun describeImpl(cols: List<AnyCol>): DataFrame<ColumnDescription> {
     fun List<AnyCol>.collectAll(dfs: Boolean): List<AnyCol> = flatMap { col ->
         when (col.kind) {
-            ColumnKind.Frame -> col.asFrameColumn().concat().columns().map {
+            ColumnKind.Frame -> col.asAnyFrameColumn().concat().columns().map {
                 it.addPath(col.path() + it.name)
             }.collectAll(true)
             ColumnKind.Group -> if (dfs) col.asColumnGroup().columns().map { it.addPath(col.path() + it.name) }.collectAll(true) else listOf(col)

@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.schema.extractSchema
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
@@ -61,7 +61,7 @@ internal fun <T> AnyFrame.convertToImpl(type: KType, allowConversion: Boolean, e
                                 require(it.kind == ColumnKind.Frame) {
                                     "Column `${it.name}` is ${it.kind}Column and can not be converted to `FrameColumn`"
                                 }
-                                val frameColumn = it.asFrameColumn()
+                                val frameColumn = it.asAnyFrameColumn()
                                 val frameSchema = (targetColumn as ColumnSchema.Frame).schema
                                 val frames = frameColumn.values().map { it.convertToSchema(frameSchema) }
                                 DataColumn.createFrameColumn(it.name(), frames, schema = lazy { frameSchema })

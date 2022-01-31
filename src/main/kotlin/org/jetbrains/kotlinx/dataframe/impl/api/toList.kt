@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.columnName
-import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KType
@@ -48,7 +48,7 @@ internal fun AnyFrame.toListImpl(type: KType): List<Any> {
                     val col: AnyCol = if (it.type.jvmErasure == List::class) {
                         val elementType = it.type.arguments[0].type
                         require(elementType != null) { "FrameColumn can not be converted to type `List<*>`" }
-                        column.asFrameColumn().map { it.toListImpl(elementType) }
+                        column.asAnyFrameColumn().map { it.toListImpl(elementType) }
                     } else error("FrameColumn can not be converted to type `${it.type}`")
                     col
                 }

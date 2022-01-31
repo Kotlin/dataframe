@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.extractDataFrame
 
 internal fun <T, C> DataFrame<T>.implodeImpl(dropNA: Boolean = false, columns: ColumnsSelector<T, C>): DataFrame<T> {
@@ -19,7 +19,7 @@ internal fun <T, C> DataFrame<T>.implodeImpl(dropNA: Boolean = false, columns: C
             val value = when (column.kind()) {
                 ColumnKind.Value -> (if (dropNA) column.dropNA() else column).toList()
                 ColumnKind.Group -> column.asColumnGroup().extractDataFrame()
-                ColumnKind.Frame -> column.asFrameColumn().concat()
+                ColumnKind.Frame -> column.asAnyFrameColumn().concat()
             }
             var first = true
             column.map {

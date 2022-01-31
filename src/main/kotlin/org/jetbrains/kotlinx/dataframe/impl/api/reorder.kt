@@ -14,7 +14,7 @@ import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.reorder
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.with
-import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.ColumnPosition
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.TreeNode
@@ -59,7 +59,7 @@ internal fun <T, C, V : Comparable<V>> Reorder<T, C>.reorderImpl(
                 val path = src.treeNode.pathFromRoot().rename(c.column.name())
                 var column = c.column
                 if (inFrameColumns && column.isFrameColumn()) {
-                    column = column.asFrameColumn().map { it.cast<T>().reorder(columns).reorderImpl(desc, expression) }.cast()
+                    column = column.asAnyFrameColumn().map { it.cast<T>().reorder(columns).reorderImpl(desc, expression) }.cast()
                 }
                 ColumnToInsert(path, column, src.treeNode)
             }

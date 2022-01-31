@@ -20,7 +20,7 @@ import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
-import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.asValues
 import org.jetbrains.kotlinx.dataframe.impl.columns.forceResolve
 import org.jetbrains.kotlinx.dataframe.impl.owner
@@ -107,6 +107,8 @@ public fun DataColumn<Number>.toByteArray(): ByteArray = convertTo<Byte>().toLis
 // endregion
 
 public fun AnyCol.asColumnGroup(): ColumnGroup<*> = this as ColumnGroup<*>
+
+public fun <T> DataColumn<DataFrame<T>>.asFrameColumn(): FrameColumn<T> = (this as AnyCol).asAnyFrameColumn().castFrameColumn()
 
 @JvmName("asGroupedT")
 public fun <T> DataColumn<DataRow<T>>.asColumnGroup(): ColumnGroup<T> = (this as AnyCol).asColumnGroup().cast()
@@ -204,11 +206,11 @@ public fun <T, G> DataFrame<T>.asGroupBy(groupedColumn: ColumnReference<DataFram
     GroupByImpl(this, getFrameColumn(groupedColumn.name()).castFrameColumn()) { none() }
 
 public fun <T> DataFrame<T>.asGroupBy(): GroupBy<T, T> {
-    val groupCol = columns().single { it.isFrameColumn() }.asFrameColumn().castFrameColumn<T>()
+    val groupCol = columns().single { it.isFrameColumn() }.asAnyFrameColumn().castFrameColumn<T>()
     return asGroupBy { groupCol }
 }
 
-public fun <T, G> DataFrame<T>.asGroupBy(selector: ColumnSelector<T, DataFrame<G>?>): GroupBy<T, G> {
+public fun <T, G> DataFrame<T>.asGroupBy(selector: ColumnSelector<T, DataFrame<G>>): GroupBy<T, G> {
     val column = getColumn(selector).asFrameColumn()
     return GroupByImpl(this, column) { none() }
 }
