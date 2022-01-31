@@ -2449,7 +2449,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun takeWhile() {
         typed.takeWhile { weight != null } shouldBe typed[0..1]
-        typed.takeWhile { false } shouldBe typed
+        typed.takeWhile { true } shouldBe typed
     }
 
     @Test
