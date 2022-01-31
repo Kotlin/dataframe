@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.castFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
@@ -84,13 +83,10 @@ internal fun <T> AnyCol.asValues(): ValueColumn<T> = this as ValueColumn<T>
 internal fun <T> DataColumn<T>.asValueColumn(): ValueColumn<T> = this as ValueColumn<T>
 
 @PublishedApi
-internal fun AnyCol.asFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
+internal fun AnyCol.asAnyFrameColumn(): FrameColumn<*> = this as FrameColumn<*>
 
 internal fun <T> AnyCol.grouped() = this as ColumnGroup<T>
 internal fun <T> ColumnGroup<*>.withDf(newDf: DataFrame<T>) = DataColumn.createColumnGroup(name, newDf)
-
-@JvmName("asFrameT")
-internal fun <T> DataColumn<DataFrame<T>?>.asFrameColumn(): FrameColumn<T> = (this as AnyCol).asFrameColumn().castFrameColumn()
 
 internal fun <T> DataColumn<T>.assertIsComparable(): DataColumn<T> {
     if (!type.isSubtypeOf(typeOf<Comparable<*>?>())) {

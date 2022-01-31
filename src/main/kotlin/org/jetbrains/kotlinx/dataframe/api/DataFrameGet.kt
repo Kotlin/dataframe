@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
-import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
@@ -40,8 +40,8 @@ public fun <T> DataFrame<T>.getRows(range: IntRange): DataFrame<T> = if (range =
 public fun <T> DataFrame<T>.getRows(indices: Iterable<Int>): DataFrame<T> = columns().map { col -> col[indices] }.toDataFrame().cast()
 public fun <T> DataFrame<T>.getOrNull(index: Int): DataRow<T>? = if (index < 0 || index >= nrow) null else get(index)
 
-public fun <T> ColumnsContainer<T>.getFrameColumn(columnPath: ColumnPath): FrameColumn<*> = get(columnPath).asFrameColumn()
-public fun <T> ColumnsContainer<T>.getFrameColumn(columnName: String): FrameColumn<*> = get(columnName).asFrameColumn()
+public fun <T> ColumnsContainer<T>.getFrameColumn(columnPath: ColumnPath): FrameColumn<*> = get(columnPath).asAnyFrameColumn()
+public fun <T> ColumnsContainer<T>.getFrameColumn(columnName: String): FrameColumn<*> = get(columnName).asAnyFrameColumn()
 public fun <T> ColumnsContainer<T>.getColumnGroup(columnPath: ColumnPath): ColumnGroup<*> = get(columnPath).asColumnGroup()
 
 // region indices

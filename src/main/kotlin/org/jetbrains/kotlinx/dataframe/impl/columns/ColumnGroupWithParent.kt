@@ -49,7 +49,7 @@ internal class ColumnGroupWithParent<T>(override val parent: ColumnGroupReferenc
 
     override operator fun <R> get(column: KProperty<R>): DataColumn<R> = get(column.columnName).cast()
     override operator fun <R> get(column: KProperty<DataRow<R>>): ColumnGroup<R> = get(column.columnName).asColumnGroup().cast()
-    override operator fun <R> get(column: KProperty<DataFrame<R>>): FrameColumn<R> = get(column.columnName).asFrameColumn().castFrameColumn()
+    override operator fun <R> get(column: KProperty<DataFrame<R>>): FrameColumn<R> = get(column.columnName).asAnyFrameColumn().castFrameColumn()
 
     override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = super.get(columns).map { it.addParent(this) }
     override operator fun <C> get(column: ColumnSelector<T, C>): DataColumn<C> = get(column as ColumnsSelector<T, C>).single()

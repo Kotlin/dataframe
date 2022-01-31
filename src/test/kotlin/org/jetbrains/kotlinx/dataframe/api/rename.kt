@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.asClue
 import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.impl.columns.asFrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.junit.Test
 
 class RenameTests {
@@ -42,7 +42,7 @@ class RenameTests {
         df.schema().asClue {
             df.columnNames() shouldBe listOf("testName")
             df.getColumnGroup("testName").columnNames() shouldBe listOf("groupName")
-            df["testName"]["groupName"].asFrameColumn()[0]!!.columnNames() shouldBe listOf("anotherName")
+            df["testName"]["groupName"].asAnyFrameColumn()[0]!!.columnNames() shouldBe listOf("anotherName")
         }
     }
 
@@ -51,7 +51,7 @@ class RenameTests {
         val df = deeplyNestedFrameColumn.renameToCamelCase()
         df.schema().asClue {
             shouldNotThrowAny {
-                df["col2"].asFrameColumn().firstOrNull()!!["col1"].asFrameColumn().firstOrNull()!!["col0"]
+                df["col2"].asAnyFrameColumn().firstOrNull()!!["col1"].asAnyFrameColumn().firstOrNull()!!["col0"]
             }
         }
     }
