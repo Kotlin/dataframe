@@ -294,6 +294,13 @@ class Access : TestBase() {
     }
 
     @Test
+    fun takeWhile() {
+        // SampleStart
+        df.takeWhile { isHappy }
+        // SampleEnd
+    }
+
+    @Test
     fun drop() {
         // SampleStart
         df.drop(5)
@@ -305,6 +312,13 @@ class Access : TestBase() {
         // SampleStart
         df.dropLast() // default 1
         df.dropLast(5)
+        // SampleEnd
+    }
+
+    @Test
+    fun dropWhile() {
+        // SampleStart
+        df.dropWhile { !isHappy }
         // SampleEnd
     }
 

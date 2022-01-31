@@ -50,6 +50,7 @@ import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropLast
 import org.jetbrains.kotlinx.dataframe.api.dropNA
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
+import org.jetbrains.kotlinx.dataframe.api.dropWhile
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
@@ -126,6 +127,7 @@ import org.jetbrains.kotlinx.dataframe.api.sum
 import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.takeLast
+import org.jetbrains.kotlinx.dataframe.api.takeWhile
 import org.jetbrains.kotlinx.dataframe.api.times
 import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.toColumn
@@ -2442,5 +2444,55 @@ class DataFrameTests : BaseTest() {
         aggregated.kind shouldBe ColumnKind.Group
         aggregated.size shouldBe 3
         aggregated.count { it.isNA } shouldBe 2
+    }
+
+    @Test
+    fun takeWhile() {
+        typed.takeWhile { weight != null } shouldBe typed[0..1]
+        typed.takeWhile { false } shouldBe typed
+    }
+
+    @Test
+    fun dropWhile() {
+        typed.dropWhile { weight != null } shouldBe typed.drop(2)
+        typed.dropWhile { false } shouldBe typed
+    }
+
+    @Test
+    fun takeLast() {
+        typed.takeLast(2) shouldBe typed[5..6]
+        shouldThrow<IllegalArgumentException> {
+            typed.takeLast(-1)
+        }
+        typed.takeLast(20) shouldBe typed
+    }
+
+    @Test
+    fun dropLast() {
+        typed.dropLast(2) shouldBe typed[0..4]
+        shouldThrow<IllegalArgumentException> {
+            typed.dropLast(-1)
+        }
+        typed.dropLast(20) shouldBe typed.take(0)
+    }
+
+    @Test
+    fun drop() {
+        typed.drop(2) shouldBe typed[2..6]
+        shouldThrow<IllegalArgumentException> {
+            typed.drop(-1)
+        }
+        typed.drop(typed.nrow) shouldBe typed.filter { false }
+        typed.drop(20) shouldBe typed.filter { false }
+    }
+
+    @Test
+    fun take() {
+        typed.take(2) shouldBe typed[0..1]
+        shouldThrow<IllegalArgumentException> {
+            typed.take(-1)
+        }
+        typed.take(typed.nrow) shouldBe typed
+        typed.take(20) shouldBe typed
     }
 }

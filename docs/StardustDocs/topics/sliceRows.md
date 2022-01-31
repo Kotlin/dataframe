@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-Returns `DataFrame` with rows at given indices:
+Returns a `DataFrame` with rows at given indices:
 
 <!---FUN getSeveralRowsByIndices-->
 
@@ -12,7 +12,7 @@ df[0, 3, 4]
 
 <!---END-->
 
-Returns `DataFrame` with rows inside given index ranges (including boundary indices):
+Returns a `DataFrame` with rows inside given index ranges (including boundary indices):
 
 <!---FUN getSeveralRowsByRanges-->
 
@@ -25,7 +25,7 @@ df[0..2, 4..5]
 
 ## take
 
-Returns `DataFrame` containing first `n` rows
+Returns a `DataFrame` containing first `n` rows
 
 <!---FUN take-->
 
@@ -37,7 +37,7 @@ df.take(5)
 
 ## takeLast
 
-Returns `DataFrame` containing last `n` rows
+Returns a `DataFrame` containing last `n` rows
 
 <!---FUN takeLast-->
 
@@ -47,9 +47,21 @@ df.takeLast(5)
 
 <!---END-->
 
+## takeWhile
+
+Returns a `DataFrame` containing first rows that satisfy the given [condition](DataRow.md#row-conditions)
+
+<!---FUN takeWhile-->
+
+```kotlin
+df.takeWhile { isHappy }
+```
+
+<!---END-->
+
 ## drop
 
-Returns `DataFrame` containing all rows except first `n` rows
+Returns a `DataFrame` containing all rows except first `n` rows
 
 <!---FUN drop-->
 
@@ -61,13 +73,25 @@ df.drop(5)
 
 ## dropLast
 
-Returns `DataFrame` containing all rows except last `n` rows
+Returns a `DataFrame` containing all rows except last `n` rows
 
 <!---FUN dropLast-->
 
 ```kotlin
 df.dropLast() // default 1
 df.dropLast(5)
+```
+
+<!---END-->
+
+## dropWhile
+
+Returns a `DataFrame` containing all rows except first rows that satisfy the given [condition](DataRow.md#row-conditions)
+
+<!---FUN dropWhile-->
+
+```kotlin
+df.dropWhile { !isHappy }
 ```
 
 <!---END-->
