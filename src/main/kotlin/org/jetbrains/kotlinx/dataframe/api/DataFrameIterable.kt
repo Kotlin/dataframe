@@ -152,11 +152,60 @@ public fun <T> DataFrame<T>.filterBy(column: KProperty<Boolean>): DataFrame<T> =
 
 // region take/drop
 
-public fun <T> DataFrame<T>.dropLast(numRows: Int = 1): DataFrame<T> = take(nrow - numRows)
-public fun <T> DataFrame<T>.takeLast(numRows: Int): DataFrame<T> = drop(nrow - numRows)
-public fun <T> DataFrame<T>.drop(numRows: Int): DataFrame<T> = getRows(numRows until nrow)
-public fun <T> DataFrame<T>.take(numRows: Int): DataFrame<T> = getRows(0 until numRows)
+/**
+ * Returns a DataFrame containing first [n] rows.
+ *
+ * @throws IllegalArgumentException if [n] is negative.
+ */
+public fun <T> DataFrame<T>.take(n: Int): DataFrame<T> {
+    require(n >= 0) { "Requested rows count $n is less than zero." }
+    return getRows(0 until n.coerceAtMost(nrow))
+}
+
+/**
+ * Returns a DataFrame containing all rows except first [n] rows.
+ *
+ * @throws IllegalArgumentException if [n] is negative.
+ */
+public fun <T> DataFrame<T>.drop(n: Int): DataFrame<T> {
+    require(n >= 0) { "Requested rows count $n is less than zero." }
+    return getRows(n.coerceAtMost(nrow) until nrow)
+}
+
+/**
+ * Returns a DataFrame containing last [n] rows.
+ *
+ * @throws IllegalArgumentException if [n] is negative.
+ */
+public fun <T> DataFrame<T>.takeLast(n: Int): DataFrame<T> {
+    require(n >= 0) { "Requested rows count $n is less than zero." }
+    return drop((nrow - n).coerceAtLeast(0))
+}
+
+/**
+ * Returns a DataFrame containing all rows except last [n] rows.
+ *
+ * @throws IllegalArgumentException if [n] is negative.
+ */
+public fun <T> DataFrame<T>.dropLast(n: Int = 1): DataFrame<T> {
+    require(n >= 0) { "Requested rows count $n is less than zero." }
+    return take((nrow - n).coerceAtLeast(0))
+}
+
+/**
+ * Returns a DataFrame containing all rows except rows that satisfy the given [predicate].
+ */
 public fun <T> DataFrame<T>.drop(predicate: RowFilter<T>): DataFrame<T> = filter { !predicate(it, it) }
+
+/**
+ * Returns a DataFrame containing first rows that satisfy the given [predicate].
+ */
+public fun <T> DataFrame<T>.takeWhile(predicate: RowFilter<T>): DataFrame<T> = firstOrNull { !predicate(it, it) }?.let { take(it.index) } ?: this
+
+/**
+ * Returns a DataFrame containing all rows except first rows that satisfy the given [predicate].
+ */
+public fun <T> DataFrame<T>.dropWhile(predicate: RowFilter<T>): DataFrame<T> = firstOrNull { !predicate(it, it) }?.let { drop(it.index) } ?: this
 
 // endregion
 

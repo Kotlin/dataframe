@@ -52,7 +52,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [cumSum](cumSum.md) — cumulative sum of column values
 * [describe](describe.md) — basic column statistics
 * [distinct](distinct.md) / [distinctBy](distinct.md#distinctby) — remove duplicated rows
-* [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) — remove rows by condition
+* [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropWhile](sliceRows.md#dropWhile) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) — remove rows by condition
 * [explode](explode.md) — spread lists and dataframes vertically into new rows
 * [fillNulls](fill.md#fillnulls) / [fillNaNs](fill.md#fillnans) / [fillNA](fill.md#fillna) — replace missing values
 * [filter](filter.md) / [filterBy](filter.md#filterby) — filter rows by condition
@@ -92,7 +92,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [split](split.md) — split column values into new rows/columns or inplace into lists
 * [std](std.md) / [stdOf](std.md) / [stdFor](std.md) — standard deviation of values
 * [sum](sum.md) / [sumOf](sum.md) / [sumFor](sum.md) — sum of values
-* [take](sliceRows.md#take) / [takeLast](sliceRows.md#takelast) — get first/last rows
+* [take](sliceRows.md#take) / [takeLast](sliceRows.md#takelast) / [takeWhile](sliceRows.md#takeWhile) — get first/last rows
 * [toList](toList.md) / [toListOf](toList.md#tolistof) — export dataframe into a list of data classes
 * [toMap](toMap.md) — export dataframe into a map from column names to column values
 * [ungroup](ungroup.md) — remove column groupings
