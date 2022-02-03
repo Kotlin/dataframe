@@ -215,7 +215,7 @@
                             this.renderTable(frameId)
                             if (childDf.nrow != childDf.totalRows) {
                                 const footer = document.createElement("p")
-                                footer.innerText = "... showing only top " + childDf.nrow + " of " + childDf.totalRows + " rows"
+                                footer.innerText = `... showing only top ${childDf.nrow} of ${childDf.totalRows} rows`
                                 td.appendChild(footer)
                             }
                         } else {

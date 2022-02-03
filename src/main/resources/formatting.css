@@ -1,4 +1,4 @@
-table.dataframe .null {
+/*table.dataframe .null {
     color: #b3b3cc;
 }
 table.dataframe .structural {
@@ -16,4 +16,4 @@ table.dataframe td:hover > .formatted .structural {
 }
 table.dataframe td:hover > .formatted .null {
     color: black;
-}
+}*/
