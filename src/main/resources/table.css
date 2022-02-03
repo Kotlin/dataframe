@@ -1,68 +1,146 @@
 :root {
-    --background: #FFF;
-    --background-odd: rgb(245, 245, 245);
-    --background-hover: rgba(66, 165, 245, 0.2);
+    --background: #fff;
+    --background-odd: #f5f5f5;
+    --background-hover: #d9edfd;
+    --header-text-color: #474747;
+    --text-color: #848484;
+    --text-color-dark: #000;
+    --text-color-medium: #737373;
+    --text-color-pale: #b3b3b3;
     --inner-border-color: #aaa;
+    --bold-border-color: #000;
+    --link-color: #296eaa;
+    --link-color-pale: #296eaa;
+    --link-hover: #1a466c;
+}
+
+:root[theme="dark"] {
+    --background: #303030;
+    --background-odd: #3c3c3c;
+    --background-hover: #464646;
+    --header-text-color: #dddddd;
+    --text-color: #b3b3b3;
+    --text-color-dark: #dddddd;
+    --text-color-medium: #b2b2b2;
+    --text-color-pale: #737373;
+    --inner-border-color: #707070;
+    --bold-border-color: #777777;
+    --link-color: #008dc0;
+    --link-color-pale: #97e1fb;
+    --link-hover: #00688e;
 }
 
 table.dataframe {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 12px;
     background-color: var(--background);
+    color: var(--text-color);
     border: none;
     border-collapse: collapse;
 }
-table.dataframe th {
+
+table.dataframe th, td {
     padding: 6px;
     border: 1px solid transparent;
     text-align: left;
-    border-bottom-color: black;
 }
 
-table.dataframe tr:nth-child(odd) {
-    background: var(--background-odd);
-}
-table.dataframe tr:hover {
-    background: var(--background-hover);
+table.dataframe th {
+    background-color: var(--background);
+    color: var(--header-text-color);
 }
 
 table.dataframe td {
-    padding: 6px;
-    border: 1px solid transparent;
-    text-align: left;
     vertical-align: top;
 }
+
+/*table.dataframe tr.border-bottom {
+    border-bottom-color: var(--bold-border-color);
+}*/
+
+table.dataframe th.bottomBorder {
+    border-bottom-color: var(--bold-border-color);
+}
+
+table.dataframe tbody > tr:nth-child(odd) {
+    background: var(--background-odd);
+}
+
+table.dataframe tbody > tr:hover {
+    background: var(--background-hover);
+}
+
 table.dataframe a {
     cursor: pointer;
-    color: #296eaa;
+    color: var(--link-color);
     text-decoration: none;
 }
+
+table.dataframe tr:hover td a {
+    color: var(--link-color-pale);
+}
+
 table.dataframe a:hover {
-    color: #1a466c;
+    color: var(--link-hover);
     text-decoration: underline;
 }
+
 table.dataframe img {
     max-width: fit-content;
 }
+
 table.dataframe th.complex {
     background-color: var(--background);
     border: 1px solid var(--background);
 }
+
 table.dataframe .leftBorder {
     border-left-color: var(--inner-border-color);
 }
+
 table.dataframe .rightBorder {
     border-right-color: var(--inner-border-color);
 }
+
 table.dataframe .rightAlign {
     text-align: right;
 }
+
 table.dataframe .expanderSvg {
     width: 8px;
     height: 8px;
     margin-right: 3px;
 }
+
 table.dataframe .expander {
     display: flex;
     align-items: center;
 }
+
+/* formatting */
+
+table.dataframe .null {
+    color: var(--text-color-pale);
+}
+
+table.dataframe .structural {
+    color: var(--text-color-medium);
+    font-weight: bold;
+}
+
+table.dataframe .dataFrameCaption {
+    font-weight: bold;
+}
+
+table.dataframe .numbers {
+    color: var(--text-color-dark);
+}
+
+table.dataframe td:hover .formatted .structural, .null {
+    color: var(--text-color-dark);
+}
+
+table.dataframe tr:hover .formatted .structural, .null {
+    color: var(--text-color-dark);
+}
+
