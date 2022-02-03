@@ -1,6 +1,36 @@
+:root {
+    --background: #FFF;
+    --background-odd: rgb(245, 245, 245);
+    --background-hover: rgba(66, 165, 245, 0.2);
+    --inner-border-color: #aaa;
+}
+
 table.dataframe {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 12px;
+    background-color: var(--background);
+    border: none;
+    border-collapse: collapse;
+}
+table.dataframe th {
+    padding: 6px;
+    border: 1px solid transparent;
+    text-align: left;
+    border-bottom-color: black;
+}
+
+table.dataframe tr:nth-child(odd) {
+    background: var(--background-odd);
+}
+table.dataframe tr:hover {
+    background: var(--background-hover);
+}
+
+table.dataframe td {
+    padding: 6px;
+    border: 1px solid transparent;
+    text-align: left;
+    vertical-align: top;
 }
 table.dataframe a {
     cursor: pointer;
@@ -11,47 +41,18 @@ table.dataframe a:hover {
     color: #1a466c;
     text-decoration: underline;
 }
-table.dataframe tr:nth-child(odd) {
-    background: rgb(245, 245, 245);
-}
-table.dataframe tr:nth-child(even) {
-    background: #FFF
-}
 table.dataframe img {
     max-width: fit-content;
 }
-table.dataframe tr:hover {
-    background: rgba(66, 165, 245, 0.2);
-}
-th.complex {
-    background-color: white;
-    border: 1px solid #ffffff;
-}
-table.dataframe th {
-    background-color: white;
-    padding: 6px;
-    border: 1px solid transparent;
-    text-align: left;
-}
-
-table.dataframe td {
-    padding: 6px;
-    border: 1px solid transparent;
-    text-align: left;
-    vertical-align: top;
-}
-table.dataframe th.bottomBorder {
-    border-bottom-color: black;
-}
-table.dataframe {
-    border: none;
-    border-collapse: collapse;
+table.dataframe th.complex {
+    background-color: var(--background);
+    border: 1px solid var(--background);
 }
 table.dataframe .leftBorder {
-    border-left-color: #aaa;
+    border-left-color: var(--inner-border-color);
 }
 table.dataframe .rightBorder {
-    border-right-color: #aaa;
+    border-right-color: var(--inner-border-color);
 }
 table.dataframe .rightAlign {
     text-align: right;
