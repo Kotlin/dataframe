@@ -178,7 +178,7 @@ public data class HtmlData(val style: String, val body: String, val script: Stri
 internal fun HtmlData.print() = println(this)
 
 internal fun initHtml(): HtmlData =
-    HtmlData(style = getResources("/table.css", "/formatting.css"), script = getResourceText("/init.js"), body = "")
+    HtmlData(style = getResources("/table.css"), script = getResourceText("/init.js"), body = "")
 
 public fun <T> DataFrame<T>.html(): String = toHTML(includeInit = true).toString()
 

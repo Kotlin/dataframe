@@ -1,11 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.rendering.html
 
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.junit.Ignore
 import org.junit.Test
 
 class Browsing {
 
-    //@Ignore
+    @Ignore
     @Test
     fun test() {
 
