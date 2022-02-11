@@ -14,7 +14,7 @@
     --link-hover: #1a466c;
 }
 
-:root[theme="dark"] {
+:root[theme="dark"], :root [data-jp-theme-light="false"]{
     --background: #303030;
     --background-odd: #3c3c3c;
     --background-hover: #464646;
@@ -54,10 +54,6 @@ table.dataframe td {
     vertical-align: top;
 }
 
-/*table.dataframe tr.border-bottom {
-    border-bottom-color: var(--bold-border-color);
-}*/
-
 table.dataframe th.bottomBorder {
     border-bottom-color: var(--bold-border-color);
 }
@@ -76,7 +72,7 @@ table.dataframe a {
     text-decoration: none;
 }
 
-table.dataframe tr:hover td a {
+table.dataframe tr:hover > td a {
     color: var(--link-color-pale);
 }
 
