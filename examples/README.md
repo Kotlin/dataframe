@@ -3,6 +3,7 @@
 ### Idea examples
 * [movies](idea-examples/movies)
 * [titanic](idea-examples/titanic)
+* [youtube](idea-examples/youtube)
 
 ### Notebook examples
 
@@ -27,3 +28,6 @@ Let's see how the new library will show itself on the famous Titanic dataset.
 ___
 * wine ([Jupyter](jupyter-notebooks/wine/WineNetWIthKotlinDL.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/aK9vYHH8pCA8H1KbKB5WsI)) &ndash;
   Wine. Kotlin Dataframe. KotlinDL. What came out of this can be seen in this notebook.
+___
+* youtube ([Jupyter](jupyter-notebooks/youtube/Youtube.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/uXH0VfIM6qrrmwPJnLBi0j)) &ndash;
+Explore YouTube videos with YouTube REST API and Kotlin Dataframe 
