@@ -14,6 +14,7 @@ import org.jetbrains.dataframe.ksp.runner.KotlinCompileTestingCompilationResult
 import org.jetbrains.dataframe.ksp.runner.KspCompilationTestRunner
 import org.jetbrains.dataframe.ksp.runner.TestCompilationParameters
 import org.junit.Before
+import java.io.File
 import kotlin.test.Test
 
 @Suppress("unused")
@@ -797,14 +798,17 @@ class DataFrameSymbolProcessorTest {
         result.successfulCompilation shouldBe false
     }
 
+    private val file = File("../../data/jetbrains_repositories.csv")
+
     @Test
     fun `imported schema resolved`() {
-        val result = KspCompilationTestRunner.compile(
-            TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+        useHostedFile(file) {
+            val result = KspCompilationTestRunner.compile(
+                TestCompilationParameters(
+                    sources = listOf(SourceFile.kotlin("MySources.kt", """
                 @file:ImportDataSchema(
                     "Schema", 
-                    "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv",
+                    "$it",
                     
                 )
                 package org.example
@@ -813,9 +817,10 @@ class DataFrameSymbolProcessorTest {
 
                 fun resolve() = Schema.readCSV()
             """.trimIndent()))
+                )
             )
-        )
-        result.successfulCompilation shouldBe true
+            result.successfulCompilation shouldBe true
+        }
     }
 
     @Test
@@ -838,44 +843,48 @@ class DataFrameSymbolProcessorTest {
 
     @Test
     fun `normalization disabled`() {
-        val result = KspCompilationTestRunner.compile(
-            TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+        useHostedFile(file) {
+            val result = KspCompilationTestRunner.compile(
+                TestCompilationParameters(
+                    sources = listOf(SourceFile.kotlin("MySources.kt", """
                 @file:ImportDataSchema(
                     "Schema", 
-                    "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv",
+                    "$it",
                     normalizationDelimiters = []
                 )
                 package org.example
                 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
                 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
             """.trimIndent()))
+                )
             )
-        )
-        println(result.kspGeneratedFiles)
-        result.inspectLines("Schema.Generated.kt") {
-            it.forAtLeastOne { it shouldContain "Land area" }
+            println(result.kspGeneratedFiles)
+            result.inspectLines("Schema.Generated.kt") {
+                it.forAtLeastOne { it shouldContain "full_name" }
+            }
         }
     }
 
     @Test
     fun `normalization enabled`() {
-        val result = KspCompilationTestRunner.compile(
-            TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+        useHostedFile(file) {
+            val result = KspCompilationTestRunner.compile(
+                TestCompilationParameters(
+                    sources = listOf(SourceFile.kotlin("MySources.kt", """
                 @file:ImportDataSchema(
                     "Schema", 
-                    "https://datalore-samples.s3-eu-west-1.amazonaws.com/datalore_gallery_of_samples/city_population.csv",
+                    "$it",
                 )
                 package org.example
                 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
                 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
             """.trimIndent()))
+                )
             )
-        )
-        println(result.kspGeneratedFiles)
-        result.inspectLines("Schema.Generated.kt") {
-            it.forAtLeastOne { it shouldContain "landArea" }
+            println(result.kspGeneratedFiles)
+            result.inspectLines("Schema.Generated.kt") {
+                it.forAtLeastOne { it shouldContain "fullName" }
+            }
         }
     }
 
