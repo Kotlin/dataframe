@@ -9,7 +9,6 @@ class Browsing {
     @Ignore
     @Test
     fun test() {
-
         data class Name(val firstName: String, val lastName: String?)
         data class Score(val subject: String, val value: Int)
         data class Student(val name: Name, val age: Int, val scores: List<Score>)
