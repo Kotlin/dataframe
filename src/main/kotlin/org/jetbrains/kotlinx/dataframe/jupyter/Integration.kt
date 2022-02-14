@@ -69,7 +69,6 @@ internal class Integration : JupyterIntegration() {
                 }
 
                 css("DataFrameTable") { classPath("table.css") }
-                css("DataFrameFormatting") { classPath("formatting.css") }
             }
         }
 
