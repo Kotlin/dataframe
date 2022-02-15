@@ -17,6 +17,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.4.4")
     testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.4.4")
+    testImplementation("io.ktor:ktor-server-netty:1.6.7")
     testImplementation("io.kotest:kotest-assertions-core:4.6.0")
 }
 

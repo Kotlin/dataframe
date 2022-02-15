@@ -55,23 +55,27 @@ class DataFrameReadTest {
 
     @Test
     fun `valid url`() {
-        val df = DataFrame.read(URL("http://example.com"))
-        println(df)
+        useHostedJson("{}") {
+            DataFrame.read(URL(it))
+        }
     }
 
     @Test
     fun `path that is valid url`() {
-        val df = DataFrame.read("http://example.com")
-        println(df)
+        useHostedJson("{}") {
+            DataFrame.read(it)
+        }
     }
 
     @Test
     fun `URL with invalid JSON`() {
-        shouldThrow<KlaxonException> {
-            DataFrame.read("https://github.com/Kotlin/dataframe/blob/8ea139c35aaf2247614bb227756d6fdba7359f6a/data/playlistItems.json")
+        useHostedJson("<invalid json>") { url ->
+            shouldThrow<KlaxonException> {
+                DataFrame.read(url).also { println(it) }
+            }
         }
     }
-
+    
     @Test
     fun `data accessible and readable`() {
         val df = DataFrame.read(File("../../data/jetbrains_repositories.csv"))
