@@ -9,7 +9,7 @@ include("plugins:symbol-processor")
 
 include("examples:idea-examples:titanic")
 include("examples:idea-examples:movies")
-include("examples:idea-examples:youtube")
+//include("examples:idea-examples:youtube")
 
 val jupyterApiTCRepo: String by settings
 
