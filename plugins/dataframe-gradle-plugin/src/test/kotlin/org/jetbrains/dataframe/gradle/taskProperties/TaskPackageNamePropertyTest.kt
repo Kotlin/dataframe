@@ -1,12 +1,13 @@
-package org.jetbrains.dataframe.gradle
+package org.jetbrains.dataframe.gradle.taskProperties
 
 import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.gradle.api.ProjectConfigurationException
-import org.gradle.api.internal.project.ProjectInternal
-import org.gradle.testfixtures.ProjectBuilder
-import org.gradle.testkit.runner.TaskOutcome
+import org.jetbrains.dataframe.gradle.GenerateDataSchemaTask
+import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension
+import org.jetbrains.dataframe.gradle.SchemaGeneratorPlugin
+import org.jetbrains.dataframe.gradle.makeProject
 import org.junit.Test
 import java.io.File
 

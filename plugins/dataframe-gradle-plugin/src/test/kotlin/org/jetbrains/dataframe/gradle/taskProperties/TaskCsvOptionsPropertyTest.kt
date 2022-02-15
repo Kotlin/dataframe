@@ -1,6 +1,10 @@
-package org.jetbrains.dataframe.gradle
+package org.jetbrains.dataframe.gradle.taskProperties
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.dataframe.gradle.GenerateDataSchemaTask
+import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension
+import org.jetbrains.dataframe.gradle.SchemaGeneratorPlugin
+import org.jetbrains.dataframe.gradle.makeProject
 import org.junit.Test
 
 class TaskCsvOptionsPropertyTest {
