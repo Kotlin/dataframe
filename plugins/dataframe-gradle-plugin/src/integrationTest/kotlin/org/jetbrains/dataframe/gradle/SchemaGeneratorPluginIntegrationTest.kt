@@ -384,6 +384,51 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
     }
 
     @Test
+    fun `preprocessor imports schema from local file`() {
+        val (_, result) = runGradleBuild(":build") { buildDir ->
+            val dataFile = File(buildDir, "data.csv")
+            dataFile.writeText(TestData.csvSample)
+
+            val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
+            val main = File(kotlin, "Main.kt")
+            main.writeText("""
+                @file:ImportDataSchemaByRelativePath(name = "MySchema", path = "${TestData.csvName}")
+                
+                package test
+                
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchemaByRelativePath
+                import org.jetbrains.kotlinx.dataframe.api.filter
+                
+                fun main() {
+                    val df = MySchema.readCSV()
+                    val df1 = df.filter { age != null }
+                }
+            """.trimIndent())
+
+            """
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                    
+                plugins {
+                    kotlin("jvm") version "$kotlinVersion"
+                    kotlin("plugin.dataframe")
+                }
+                
+                repositories {
+                    mavenLocal()
+                    mavenCentral()
+                }
+                
+                dependencies {
+                    implementation(files("$dataframeJarPath"))
+                }
+                
+                kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
+            """.trimIndent()
+        }
+        result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
     fun `generated code compiles in explicit api mode`() {
         val (_, result) = runGradleBuild(":build") { buildDir ->
             val dataFile = File(buildDir, TestData.csvName)

@@ -24,6 +24,7 @@ import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchemaVisibility
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchemaByAbsolutePath
+import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchemaByRelativePath
 import org.jetbrains.kotlinx.dataframe.codeGen.CsvOptions
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
@@ -36,12 +37,12 @@ import java.io.IOException
 import java.io.OutputStreamWriter
 import java.net.MalformedURLException
 import java.net.URL
-import com.google.devtools.ksp.processing.CodeGenerator as KspCodeGenerator
 
 @OptIn(KspExperimental::class)
 class DataFrameSymbolProcessor(
-    private val codeGenerator: KspCodeGenerator,
+    private val codeGenerator: com.google.devtools.ksp.processing.CodeGenerator,
     private val logger: KSPLogger,
+    private val resolutionDir: String?,
 ) : SymbolProcessor {
 
     private companion object {
@@ -80,6 +81,21 @@ class DataFrameSymbolProcessor(
                 .flatMap { file ->
                     file.getAnnotationsByType(ImportDataSchemaByAbsolutePath::class).mapNotNull { it.toStatement(file) }
                 }
+
+            val localImports = resolver
+                .getSymbolsWithAnnotation(ImportDataSchemaByRelativePath::class.qualifiedName!!)
+                .filterIsInstance<KSFile>()
+                .toList()
+
+            if (localImports.isNotEmpty()) {
+                val resolutionDir = resolutionDir ?: return emptyList<KSAnnotated>().also { reportMissingKspArgument(localImports.first()) }
+                this += localImports
+                    .flatMap { file ->
+                        file
+                            .getAnnotationsByType(ImportDataSchemaByRelativePath::class)
+                            .mapNotNull { it.toStatement(file, resolutionDir) }
+                    }
+            }
         }
 
         importStatements.forEach { importedSchema ->
@@ -133,8 +149,8 @@ class DataFrameSymbolProcessor(
             URL(this.url)
         } catch (exception: MalformedURLException) {
             logger.error("'${this.url}' is not valid URL: ${exception.message}", file)
-            return null
-        }
+            null
+        } ?: return null
         return ImportDataSchemaStatement(
             file,
             name,
@@ -152,12 +168,31 @@ class DataFrameSymbolProcessor(
             data.toURI().toURL()
         } catch (exception: MalformedURLException) {
             logger.error("$absolutePath is not valid URL: ${exception.message}", file)
-            return null
-        }
+            null
+        } ?: return null
         return ImportDataSchemaStatement(
             file,
             name,
             CodeGeneratorDataSource(absolutePath, url),
+            visibility.toMarkerVisibility(),
+            normalizationDelimiters.toList(),
+            withDefaultPath,
+            CsvOptions(csvOptions.delimiter)
+        )
+    }
+
+    private fun ImportDataSchemaByRelativePath.toStatement(file: KSFile, resolutionDir: String): ImportDataSchemaStatement? {
+        val data = File(resolutionDir, path)
+        val url = try {
+            data.toURI().toURL()
+        } catch (exception: MalformedURLException) {
+            logger.error("$path is not valid URL: ${exception.message}", file)
+            null
+        } ?: return null
+        return ImportDataSchemaStatement(
+            file,
+            name,
+            CodeGeneratorDataSource(path, url),
             visibility.toMarkerVisibility(),
             normalizationDelimiters.toList(),
             withDefaultPath,
@@ -229,6 +264,14 @@ class DataFrameSymbolProcessor(
         val simpleName: KSName,
         val type: KSTypeReference
     ) : KSAnnotated by declaration
+
+    private fun reportMissingKspArgument(file: KSFile) {
+        logger.error("""
+            |KSP option with key "dataframe.resolutionDir" must be set in order to use @${ImportDataSchemaByRelativePath::class.simpleName}
+            |DataFrame Gradle plugin should set it by default to "project.rootDir".
+            |If you do not use DataFrame Gradle plugin, configure option manually 
+        """.trimMargin(), symbol = file)
+    }
 
     private fun generate(file: KSFile, dataSchema: KSClassDeclaration, properties: List<KSAnnotatedWithType>) {
         val packageName = file.packageName.asString()
