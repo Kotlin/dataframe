@@ -57,3 +57,15 @@ public annotation class ImportDataSchemaByAbsolutePath(
     val withDefaultPath: Boolean = true,
     val csvOptions: CsvOptions = CsvOptions(',')
 )
+
+@Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.FILE)
+@Repeatable
+public annotation class ImportDataSchemaByRelativePath(
+    val name: String,
+    val path: String,
+    val visibility: DataSchemaVisibility = DataSchemaVisibility.IMPLICIT_PUBLIC,
+    val normalizationDelimiters: CharArray = ['\t', ' ', '_'],
+    val withDefaultPath: Boolean = true,
+    val csvOptions: CsvOptions = CsvOptions(',')
+)
