@@ -333,11 +333,11 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
             val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
             main.writeText("""
-                @file:ImportDataSchemaByRelativePath(name = "MySchema", path = "${TestData.csvName}")
+                @file:ImportDataSchema(name = "MySchema", path = "${TestData.csvName}")
                 
                 package test
                 
-                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchemaByRelativePath
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
                 import org.jetbrains.kotlinx.dataframe.api.filter
                 
                 fun main() {
