@@ -3,14 +3,11 @@ package org.jetbrains.dataframe.gradle
 import io.kotest.assertions.asClue
 import io.kotest.matchers.shouldBe
 import org.gradle.testkit.runner.TaskOutcome
-import org.junit.Ignore
 import org.junit.Test
 import java.io.File
-import java.nio.file.Files
 
 class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationTest() {
     private companion object {
-        private const val TRANSITIVE_DF_DEPENDENCY = "KSP has dependency on latest dataframe, but it's not yet published"
         private const val FIRST_NAME = "first.csv"
         private const val SECOND_NAME = "second.csv"
     }
@@ -216,7 +213,6 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
-    @Ignore(TRANSITIVE_DF_DEPENDENCY)
     @Test
     fun `kotlin identifiers generated from csv names`() {
         fun escapeDoubleQuotes(it: Char) = if (it == '"') "\"\"" else it.toString()
@@ -236,13 +232,14 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
             val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
             main.writeText("""
-                import org.jetbrains.kotlinx.DataFrame
-                import org.jetbrains.kotlinx.read
-                import org.jetbrains.kotlinx.typed
-                import org.jetbrains.kotlinx.filter
+                import org.jetbrains.kotlinx.dataframe.DataFrame
+                import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+                import org.jetbrains.kotlinx.dataframe.io.read
+                import org.jetbrains.kotlinx.dataframe.api.cast
+                import org.jetbrains.kotlinx.dataframe.api.filter
                 
                 fun main() {
-                    val df = DataFrame.read("$dataFile").typed<Schema>()
+                    val df = DataFrame.read("$dataFile").cast<Schema>()
                 }
             """.trimIndent())
 
@@ -257,7 +254,6 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 repositories {
                     mavenLocal()
                     mavenCentral() 
-                    maven(url="https://jitpack.io")
                 }
                 
                 dependencies {
@@ -278,61 +274,6 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
-    @Ignore(TRANSITIVE_DF_DEPENDENCY)
-    @Test
-    fun `code with preprocessing errors won't compile`() {
-        val buildDir = Files.createTempDirectory("test").toFile()
-        val buildFile = File(buildDir, "build.gradle.kts")
-        val dataFile = File(buildDir, "data.csv")
-        dataFile.writeText(TestData.csvSample)
-        val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
-        val main = File(kotlin, "Main.kt")
-        main.writeText(
-            """
-                import org.jetbrains.kotlinx.DataFrame
-                import org.jetbrains.kotlinx.read
-                import org.jetbrains.kotlinx.typed
-                import org.jetbrains.kotlinx.filter
-                
-                @org.jetbrains.dataframe.annotations.DataSchema
-                interface MySchema<T> {
-                    val age: Int
-                }
-                
-                fun main() {
-                    val df = DataFrame.read("$dataFile").typed<MySchema>()
-                    val df1 = df.filter { age != null }
-                }
-            """.trimIndent()
-        )
-        buildFile.writeText(
-            (@Suppress("DuplicatedCode")
-            """
-                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
-                    
-                plugins {
-                    kotlin("jvm") version "$kotlinVersion"
-                    id("org.jetbrains.kotlin.plugin.dataframe")
-                }
-                
-                repositories {
-                    mavenLocal()
-                    mavenCentral() 
-                    maven(url="https://jitpack.io")
-                }
-                
-                dependencies {
-                    implementation(files("$dataframeJarPath"))
-                }
-                
-                kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
-            """.trimIndent())
-        )
-        val result = gradleRunner(buildDir, ":build").buildAndFail()
-        result.task(":kspKotlin")?.outcome shouldBe TaskOutcome.FAILED
-    }
-
-    @Ignore(TRANSITIVE_DF_DEPENDENCY)
     @Test
     fun `preprocessor generates extensions for DataSchema`() {
         val (_, result) = runGradleBuild(":build") { buildDir ->
@@ -342,18 +283,19 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
             val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
             val main = File(kotlin, "Main.kt")
             main.writeText("""
-                import org.jetbrains.kotlinx.DataFrame
-                import org.jetbrains.kotlinx.read
-                import org.jetbrains.kotlinx.typed
-                import org.jetbrains.kotlinx.filter
+                import org.jetbrains.kotlinx.dataframe.DataFrame
+                import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+                import org.jetbrains.kotlinx.dataframe.io.read
+                import org.jetbrains.kotlinx.dataframe.api.cast
+                import org.jetbrains.kotlinx.dataframe.api.filter
                 
-                @org.jetbrains.dataframe.annotations.DataSchema
+                @DataSchema
                 interface MySchema {
                     val age: Int
                 }
                 
                 fun main() {
-                    val df = DataFrame.read("$dataFile").typed<MySchema>()
+                    val df = DataFrame.read("$dataFile").cast<MySchema>()
                     val df1 = df.filter { age != null }
                 }
             """.trimIndent())
@@ -370,7 +312,51 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 repositories {
                     mavenLocal()
                     mavenCentral()
-                    maven(url="https://jitpack.io")
+                }
+                
+                dependencies {
+                    implementation(files("$dataframeJarPath"))
+                }
+                
+                kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotlin/")
+            """.trimIndent()
+        }
+        result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
+    fun `preprocessor imports schema from local file`() {
+        val (_, result) = runGradleBuild(":build") { buildDir ->
+            val dataFile = File(buildDir, "data.csv")
+            dataFile.writeText(TestData.csvSample)
+
+            val kotlin = File(buildDir, "src/main/kotlin").also { it.mkdirs() }
+            val main = File(kotlin, "Main.kt")
+            main.writeText("""
+                @file:ImportDataSchema(name = "MySchema", path = "${TestData.csvName}")
+                
+                package test
+                
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                import org.jetbrains.kotlinx.dataframe.api.filter
+                
+                fun main() {
+                    val df = MySchema.readCSV()
+                    val df1 = df.filter { age != null }
+                }
+            """.trimIndent())
+
+            """
+                import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension    
+                    
+                plugins {
+                    kotlin("jvm") version "$kotlinVersion"
+                    kotlin("plugin.dataframe")
+                }
+                
+                repositories {
+                    mavenLocal()
+                    mavenCentral()
                 }
                 
                 dependencies {
