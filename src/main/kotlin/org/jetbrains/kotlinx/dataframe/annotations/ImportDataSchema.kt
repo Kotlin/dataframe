@@ -6,7 +6,9 @@ package org.jetbrains.kotlinx.dataframe.annotations
  * `read method` is either `readCSV` or `readJson` that returns `DataFrame<name>`
  *
  * @param name name of the generated interface
- * @param url annotation preprocessor read data from this url
+ * @param path URL or relative path to data.
+ * if path starts with protocol (http, https, ftp), it's considered a URL. Otherwise, it's treated as relative path.
+ * It will be resolved relatively to project root dir, i.e. File(projectRootDir, path)
  * @param visibility visibility of the generated interface.
  * @param normalizationDelimiters if not empty, split property names by delimiters,
  * lowercase parts and join to camel case. Set empty list to disable normalization
@@ -18,7 +20,7 @@ package org.jetbrains.kotlinx.dataframe.annotations
 @Repeatable
 public annotation class ImportDataSchema(
     val name: String,
-    val url: String,
+    val path: String,
     val visibility: DataSchemaVisibility = DataSchemaVisibility.IMPLICIT_PUBLIC,
     val normalizationDelimiters: CharArray = ['\t', ' ', '_'],
     val withDefaultPath: Boolean = true,
@@ -52,18 +54,6 @@ public annotation class CsvOptions(
 public annotation class ImportDataSchemaByAbsolutePath(
     val name: String,
     val absolutePath: String,
-    val visibility: DataSchemaVisibility = DataSchemaVisibility.IMPLICIT_PUBLIC,
-    val normalizationDelimiters: CharArray = ['\t', ' ', '_'],
-    val withDefaultPath: Boolean = true,
-    val csvOptions: CsvOptions = CsvOptions(',')
-)
-
-@Retention(AnnotationRetention.SOURCE)
-@Target(AnnotationTarget.FILE)
-@Repeatable
-public annotation class ImportDataSchemaByRelativePath(
-    val name: String,
-    val path: String,
     val visibility: DataSchemaVisibility = DataSchemaVisibility.IMPLICIT_PUBLIC,
     val normalizationDelimiters: CharArray = ['\t', ' ', '_'],
     val withDefaultPath: Boolean = true,
