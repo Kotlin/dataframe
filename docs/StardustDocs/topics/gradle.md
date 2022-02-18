@@ -46,7 +46,7 @@ Specify schema with preferred method and execute the `build` task.
 <tabs>
 <tab title="Method 1. Annotation processing">
 
-ImportDataSchema annotation must be above package directive. You can put this annotation in the same file as data processing code. Right now import by URL and absolute file path is supported.
+ImportDataSchema annotation must be above package directive. You can put this annotation in the same file as data processing code. You can import schema from URL or relative path of the file. Relative path is resolved to project root directory.
 
 **Note that due to incremental processing, imported schema will be re-generated only if some source code has changed from previous invocation, at least one character**
 
