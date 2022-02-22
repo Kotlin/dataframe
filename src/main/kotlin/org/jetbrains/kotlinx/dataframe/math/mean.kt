@@ -1,14 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.api.defaultSkipNA
+import org.jetbrains.kotlinx.dataframe.api.skipNA_default
 import java.math.BigDecimal
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 @PublishedApi
-internal fun <T : Number> Iterable<T>.mean(type: KType, skipNA: Boolean = defaultSkipNA): Double = asSequence().mean(type, skipNA)
+internal fun <T : Number> Iterable<T>.mean(type: KType, skipNA: Boolean = skipNA_default): Double = asSequence().mean(type, skipNA)
 
-internal fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = defaultSkipNA): Double {
+internal fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = skipNA_default): Double {
     if (type.isMarkedNullable) {
         return filterNotNull().mean(type.withNullability(false), skipNA)
     }
@@ -25,7 +25,7 @@ internal fun <T : Number> Sequence<T>.mean(type: KType, skipNA: Boolean = defaul
     }
 }
 
-public fun Sequence<Double>.mean(skipNA: Boolean = defaultSkipNA): Double {
+public fun Sequence<Double>.mean(skipNA: Boolean = skipNA_default): Double {
     var count = 0
     var sum: Double = 0.toDouble()
     for (element in this) {
@@ -40,7 +40,7 @@ public fun Sequence<Double>.mean(skipNA: Boolean = defaultSkipNA): Double {
 }
 
 @JvmName("meanFloat")
-public fun Sequence<Float>.mean(skipNA: Boolean = defaultSkipNA): Double {
+public fun Sequence<Float>.mean(skipNA: Boolean = skipNA_default): Double {
     var count = 0
     var sum: Double = 0.toDouble()
     for (element in this) {
@@ -55,10 +55,10 @@ public fun Sequence<Float>.mean(skipNA: Boolean = defaultSkipNA): Double {
 }
 
 @JvmName("doubleMean")
-public fun Iterable<Double>.mean(skipNA: Boolean = defaultSkipNA): Double = asSequence().mean(skipNA)
+public fun Iterable<Double>.mean(skipNA: Boolean = skipNA_default): Double = asSequence().mean(skipNA)
 
 @JvmName("floatMean")
-public fun Iterable<Float>.mean(skipNA: Boolean = defaultSkipNA): Double = asSequence().mean(skipNA)
+public fun Iterable<Float>.mean(skipNA: Boolean = skipNA_default): Double = asSequence().mean(skipNA)
 
 @JvmName("intMean")
 public fun Iterable<Int>.mean(): Double =

@@ -204,34 +204,34 @@ public inline fun <T, reified R : Number> Pivot<T>.sumOf(crossinline expression:
 
 // region mean
 
-public fun <T> Pivot<T>.mean(skipNA: Boolean = defaultSkipNA, separate: Boolean = false): DataRow<T> = meanFor(skipNA, separate, numberColumns())
+public fun <T> Pivot<T>.mean(skipNA: Boolean = skipNA_default, separate: Boolean = false): DataRow<T> = meanFor(skipNA, separate, numberColumns())
 
 public fun <T, C : Number> Pivot<T>.meanFor(
-    skipNA: Boolean = defaultSkipNA,
+    skipNA: Boolean = skipNA_default,
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, C?>
 ): DataRow<T> = delegate { meanFor(skipNA, separate, columns) }
 public fun <T> Pivot<T>.meanFor(
     vararg columns: String,
-    skipNA: Boolean = defaultSkipNA,
+    skipNA: Boolean = skipNA_default,
     separate: Boolean = false
 ): DataRow<T> = meanFor(skipNA, separate) { columns.toNumberColumns() }
 public fun <T, C : Number> Pivot<T>.meanFor(
     vararg columns: ColumnReference<C?>,
-    skipNA: Boolean = defaultSkipNA,
+    skipNA: Boolean = skipNA_default,
     separate: Boolean = false
 ): DataRow<T> = meanFor(skipNA, separate) { columns.toColumns() }
 public fun <T, C : Number> Pivot<T>.meanFor(
     vararg columns: KProperty<C?>,
-    skipNA: Boolean = defaultSkipNA,
+    skipNA: Boolean = skipNA_default,
     separate: Boolean = false
 ): DataRow<T> = meanFor(skipNA, separate) { columns.toColumns() }
 
-public fun <T, R : Number> Pivot<T>.mean(skipNA: Boolean = defaultSkipNA, columns: ColumnsSelector<T, R?>): DataRow<T> =
+public fun <T, R : Number> Pivot<T>.mean(skipNA: Boolean = skipNA_default, columns: ColumnsSelector<T, R?>): DataRow<T> =
     delegate { mean(skipNA, columns) }
 
 public inline fun <T, reified R : Number> Pivot<T>.meanOf(
-    skipNA: Boolean = defaultSkipNA,
+    skipNA: Boolean = skipNA_default,
     crossinline expression: RowExpression<T, R?>
 ): DataRow<T> =
     delegate { meanOf(skipNA, expression) }
@@ -271,25 +271,55 @@ public inline fun <T, reified R : Comparable<R>> Pivot<T>.medianOf(
 
 // region std
 
-public fun <T> Pivot<T>.std(separate: Boolean = false): DataRow<T> = stdFor(separate, numberColumns())
+public fun <T> Pivot<T>.std(separate: Boolean = false, skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): DataRow<T> = stdFor(separate, skipNA, ddof, numberColumns())
 
 public fun <T, R : Number> Pivot<T>.stdFor(
     separate: Boolean = false,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
     columns: ColumnsForAggregateSelector<T, R?>
-): DataRow<T> = delegate { stdFor(separate, columns) }
-public fun <T> Pivot<T>.stdFor(vararg columns: String, separate: Boolean = false): DataRow<T> = stdFor(separate) { columns.toColumnsOf() }
+): DataRow<T> = delegate { stdFor(separate, skipNA, ddof, columns) }
+public fun <T> Pivot<T>.stdFor(
+    vararg columns: String,
+    separate: Boolean = false,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataRow<T> = stdFor(separate, skipNA, ddof) { columns.toColumnsOf() }
 public fun <T, C : Number> Pivot<T>.stdFor(
     vararg columns: ColumnReference<C?>,
-    separate: Boolean = false
-): DataRow<T> = stdFor(separate) { columns.toColumns() }
-public fun <T, C : Number> Pivot<T>.stdFor(vararg columns: KProperty<C?>, separate: Boolean = false): DataRow<T> = stdFor(separate) { columns.toColumns() }
+    separate: Boolean = false,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataRow<T> = stdFor(separate, skipNA, ddof) { columns.toColumns() }
+public fun <T, C : Number> Pivot<T>.stdFor(
+    vararg columns: KProperty<C?>,
+    separate: Boolean = false,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataRow<T> = stdFor(separate, skipNA, ddof) { columns.toColumns() }
 
-public fun <T> Pivot<T>.std(columns: ColumnsSelector<T, Number?>): DataRow<T> = delegate { std(columns) }
-public fun <T> Pivot<T>.std(vararg columns: ColumnReference<Number?>): DataRow<T> = std { columns.toColumns() }
-public fun <T> Pivot<T>.std(vararg columns: String): DataRow<T> = std { columns.toColumnsOf() }
-public fun <T> Pivot<T>.std(vararg columns: KProperty<Number?>): DataRow<T> = std { columns.toColumns() }
+public fun <T> Pivot<T>.std(
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+    columns: ColumnsSelector<T, Number?>
+): DataRow<T> = delegate { std(skipNA, ddof, columns) }
+public fun <T> Pivot<T>.std(
+    vararg columns: ColumnReference<Number?>,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataRow<T> = std(skipNA, ddof) { columns.toColumns() }
+public fun <T> Pivot<T>.std(vararg columns: String, skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): DataRow<T> = std(skipNA, ddof) { columns.toColumnsOf() }
+public fun <T> Pivot<T>.std(
+    vararg columns: KProperty<Number?>,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataRow<T> = std(skipNA, ddof) { columns.toColumns() }
 
-public inline fun <reified T : Number> Pivot<T>.stdOf(crossinline expression: RowExpression<T, T?>): DataRow<T> = delegate { stdOf(expression) }
+public inline fun <reified T : Number> Pivot<T>.stdOf(
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+    crossinline expression: RowExpression<T, T?>
+): DataRow<T> = delegate { stdOf(skipNA, ddof, expression) }
 
 // endregion
 

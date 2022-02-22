@@ -63,11 +63,11 @@ public inline fun <T, reified R : Number> DataColumn<T>.sumOf(crossinline expres
 
 // region mean
 
-public fun <T : Number> DataColumn<T?>.mean(skipNA: Boolean = defaultSkipNA): Double = meanOrNull(skipNA).suggestIfNull("mean")
-public fun <T : Number> DataColumn<T?>.meanOrNull(skipNA: Boolean = defaultSkipNA): Double? = Aggregators.mean(skipNA).aggregate(this)
+public fun <T : Number> DataColumn<T?>.mean(skipNA: Boolean = skipNA_default): Double = meanOrNull(skipNA).suggestIfNull("mean")
+public fun <T : Number> DataColumn<T?>.meanOrNull(skipNA: Boolean = skipNA_default): Double? = Aggregators.mean(skipNA).aggregate(this)
 
 public inline fun <T, reified R : Number> DataColumn<T>.meanOf(
-    skipNA: Boolean = defaultSkipNA,
+    skipNA: Boolean = skipNA_default,
     noinline expression: (T) -> R?
 ): Double = Aggregators.mean(skipNA).cast2<R?, Double>().aggregateOf(this, expression) ?: Double.NaN
 
@@ -85,9 +85,13 @@ public inline fun <T, reified R : Comparable<R>> DataColumn<T>.medianOf(noinline
 
 // region std
 
-public fun <T : Number> DataColumn<T?>.std(): Double = Aggregators.std.aggregate(this) ?: .0
+public fun <T : Number> DataColumn<T?>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double = Aggregators.std(skipNA, ddof).aggregate(this) ?: .0
 
-public inline fun <T, reified R : Number> DataColumn<T>.stdOf(noinline expression: (T) -> R?): Double = Aggregators.std.aggregateOf(this, expression) ?: .0
+public inline fun <T, reified R : Number> DataColumn<T>.stdOf(
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+    noinline expression: (T) -> R?
+): Double = Aggregators.std(skipNA, ddof).cast2<R?, Double>().aggregateOf(this, expression) ?: .0
 
 // endregion
 

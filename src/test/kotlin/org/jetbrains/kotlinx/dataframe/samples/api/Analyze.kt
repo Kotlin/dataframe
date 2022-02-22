@@ -52,6 +52,7 @@ import org.jetbrains.kotlinx.dataframe.api.sumOf
 import org.jetbrains.kotlinx.dataframe.api.valueCounts
 import org.jetbrains.kotlinx.dataframe.api.values
 import org.junit.Test
+import kotlin.math.ln
 
 class Analyze : TestBase() {
 
@@ -491,7 +492,7 @@ class Analyze : TestBase() {
         df.minOf { 2021 - age }
         df.maxOf { name.firstName.length + name.lastName.length }
         df.sumOf { weight?.let { it - 50 } }
-        df.meanOf { Math.log(age.toDouble()) }
+        df.meanOf { ln(age.toDouble()) }
         df.medianOf { city?.length }
         // SampleEnd
     }
@@ -509,7 +510,7 @@ class Analyze : TestBase() {
         df.minOf { 2021 - age() }
         df.maxOf { firstName().length + lastName().length }
         df.sumOf { weight()?.let { it - 50 } }
-        df.meanOf { Math.log(age().toDouble()) }
+        df.meanOf { ln(age().toDouble()) }
         df.medianOf { city()?.length }
         // SampleEnd
     }
@@ -520,7 +521,7 @@ class Analyze : TestBase() {
         df.minOf { 2021 - "age"<Int>() }
         df.maxOf { "name"["firstName"]<String>().length + "name"["lastName"]<String>().length }
         df.sumOf { "weight"<Int?>()?.let { it - 50 } }
-        df.meanOf { Math.log("age"<Int>().toDouble()) }
+        df.meanOf { ln("age"<Int>().toDouble()) }
         df.medianOf { "city"<String?>()?.length }
         // SampleEnd
     }
