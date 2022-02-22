@@ -247,37 +247,37 @@ public inline fun <T, reified R : Number> PivotGroupBy<T>.sumOf(crossinline expr
 
 // region mean
 
-public fun <T> PivotGroupBy<T>.mean(skipNA: Boolean = defaultSkipNA, separate: Boolean = false): DataFrame<T> = meanFor(skipNA, separate, numberColumns())
+public fun <T> PivotGroupBy<T>.mean(separate: Boolean = false, skipNA: Boolean = skipNA_default): DataFrame<T> = meanFor(skipNA, separate, numberColumns())
 
 public fun <T, C : Number> PivotGroupBy<T>.meanFor(
-    skipNA: Boolean = defaultSkipNA,
+    skipNA: Boolean = skipNA_default,
     separate: Boolean = false,
     columns: ColumnsForAggregateSelector<T, C?>
 ): DataFrame<T> = Aggregators.mean(skipNA).aggregateFor(this, separate, columns)
 public fun <T> PivotGroupBy<T>.meanFor(
     vararg columns: String,
-    skipNA: Boolean = defaultSkipNA,
-    separate: Boolean = false
+    separate: Boolean = false,
+    skipNA: Boolean = skipNA_default
 ): DataFrame<T> = meanFor(skipNA, separate) { columns.toNumberColumns() }
 public fun <T, C : Number> PivotGroupBy<T>.meanFor(
     vararg columns: ColumnReference<C?>,
-    skipNA: Boolean = defaultSkipNA,
-    separate: Boolean = false
+    separate: Boolean = false,
+    skipNA: Boolean = skipNA_default,
 ): DataFrame<T> = meanFor(skipNA, separate) { columns.toColumns() }
 public fun <T, C : Number> PivotGroupBy<T>.meanFor(
     vararg columns: KProperty<C?>,
-    skipNA: Boolean = defaultSkipNA,
-    separate: Boolean = false
+    separate: Boolean = false,
+    skipNA: Boolean = skipNA_default,
 ): DataFrame<T> = meanFor(skipNA, separate) { columns.toColumns() }
 
-public fun <T, R : Number> PivotGroupBy<T>.mean(skipNA: Boolean = defaultSkipNA, columns: ColumnsSelector<T, R?>): DataFrame<T> =
+public fun <T, R : Number> PivotGroupBy<T>.mean(skipNA: Boolean = skipNA_default, columns: ColumnsSelector<T, R?>): DataFrame<T> =
     Aggregators.mean(skipNA).aggregateAll(this, columns)
-public fun <T> PivotGroupBy<T>.mean(vararg columns: String, skipNA: Boolean = defaultSkipNA): DataFrame<T> = mean(skipNA) { columns.toColumnsOf() }
-public fun <T, R : Number> PivotGroupBy<T>.mean(vararg columns: ColumnReference<R?>, skipNA: Boolean = defaultSkipNA): DataFrame<T> = mean(skipNA) { columns.toColumns() }
-public fun <T, R : Number> PivotGroupBy<T>.mean(vararg columns: KProperty<R?>, skipNA: Boolean = defaultSkipNA): DataFrame<T> = mean(skipNA) { columns.toColumns() }
+public fun <T> PivotGroupBy<T>.mean(vararg columns: String, skipNA: Boolean = skipNA_default): DataFrame<T> = mean(skipNA) { columns.toColumnsOf() }
+public fun <T, R : Number> PivotGroupBy<T>.mean(vararg columns: ColumnReference<R?>, skipNA: Boolean = skipNA_default): DataFrame<T> = mean(skipNA) { columns.toColumns() }
+public fun <T, R : Number> PivotGroupBy<T>.mean(vararg columns: KProperty<R?>, skipNA: Boolean = skipNA_default): DataFrame<T> = mean(skipNA) { columns.toColumns() }
 
 public inline fun <T, reified R : Number> PivotGroupBy<T>.meanOf(
-    skipNA: Boolean = defaultSkipNA,
+    skipNA: Boolean = skipNA_default,
     crossinline expression: RowExpression<T, R?>
 ): DataFrame<T> =
     Aggregators.mean(skipNA).aggregateOf(this, expression)
@@ -317,25 +317,59 @@ public inline fun <T, reified R : Comparable<R>> PivotGroupBy<T>.medianOf(
 
 // region std
 
-public fun <T> PivotGroupBy<T>.std(separate: Boolean = false): DataFrame<T> = stdFor(separate, numberColumns())
+public fun <T> PivotGroupBy<T>.std(
+    separate: Boolean = false,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataFrame<T> = stdFor(separate, skipNA, ddof, numberColumns())
 
 public fun <T, R : Number> PivotGroupBy<T>.stdFor(
     separate: Boolean = false,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
     columns: ColumnsForAggregateSelector<T, R?>
 ): DataFrame<T> =
-    Aggregators.std.aggregateFor(this, separate, columns)
-public fun <T> PivotGroupBy<T>.stdFor(vararg columns: String, separate: Boolean = false): DataFrame<T> = stdFor(separate) { columns.toColumnsOf() }
+    Aggregators.std(skipNA, ddof).aggregateFor(this, separate, columns)
+public fun <T> PivotGroupBy<T>.stdFor(
+    vararg columns: String,
+    separate: Boolean = false,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataFrame<T> = stdFor(separate, skipNA, ddof) { columns.toColumnsOf() }
 public fun <T, C : Number> PivotGroupBy<T>.stdFor(
     vararg columns: ColumnReference<C?>,
-    separate: Boolean = false
-): DataFrame<T> = stdFor(separate) { columns.toColumns() }
-public fun <T, C : Number> PivotGroupBy<T>.stdFor(vararg columns: KProperty<C?>, separate: Boolean = false): DataFrame<T> = stdFor(separate) { columns.toColumns() }
+    separate: Boolean = false,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataFrame<T> = stdFor(separate, skipNA, ddof) { columns.toColumns() }
+public fun <T, C : Number> PivotGroupBy<T>.stdFor(
+    vararg columns: KProperty<C?>,
+    separate: Boolean = false,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataFrame<T> = stdFor(separate, skipNA, ddof) { columns.toColumns() }
 
-public fun <T> PivotGroupBy<T>.std(columns: ColumnsSelector<T, Number?>): DataFrame<T> = Aggregators.std.aggregateAll(this, columns)
-public fun <T> PivotGroupBy<T>.std(vararg columns: ColumnReference<Number?>): DataFrame<T> = std { columns.toColumns() }
-public fun <T> PivotGroupBy<T>.std(vararg columns: String): DataFrame<T> = std { columns.toColumnsOf() }
-public fun <T> PivotGroupBy<T>.std(vararg columns: KProperty<Number?>): DataFrame<T> = std { columns.toColumns() }
+public fun <T> PivotGroupBy<T>.std(
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+    columns: ColumnsSelector<T, Number?>
+): DataFrame<T> = Aggregators.std(skipNA, ddof).aggregateAll(this, columns)
+public fun <T> PivotGroupBy<T>.std(
+    vararg columns: ColumnReference<Number?>,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataFrame<T> = std(skipNA, ddof) { columns.toColumns() }
+public fun <T> PivotGroupBy<T>.std(vararg columns: String, skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): DataFrame<T> = std(skipNA, ddof) { columns.toColumnsOf() }
+public fun <T> PivotGroupBy<T>.std(
+    vararg columns: KProperty<Number?>,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataFrame<T> = std(skipNA, ddof) { columns.toColumns() }
 
-public inline fun <T, reified R : Number> PivotGroupBy<T>.stdOf(crossinline expression: RowExpression<T, R?>): DataFrame<T> = Aggregators.std.aggregateOf(this, expression)
+public inline fun <T, reified R : Number> PivotGroupBy<T>.stdOf(
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+    crossinline expression: RowExpression<T, R?>
+): DataFrame<T> = Aggregators.std(skipNA, ddof).aggregateOf(this, expression)
 
 // endregion

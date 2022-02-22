@@ -23,11 +23,11 @@ public fun AnyRow.rowMax(): Any = rowMaxOrNull().suggestIfNull("rowMax")
 public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOfOrNull(): T? = values().filterIsInstance<T>().maxOrNull()
 public inline fun <reified T : Comparable<T>> AnyRow.rowMaxOf(): T = rowMaxOfOrNull<T>().suggestIfNull("rowMaxOf")
 
-public fun AnyRow.rowMean(skipNA: Boolean = defaultSkipNA): Double = values().filterIsInstance<Number>().map { it.toDouble() }.mean(skipNA)
+public fun AnyRow.rowMean(skipNA: Boolean = skipNA_default): Double = values().filterIsInstance<Number>().map { it.toDouble() }.mean(skipNA)
 public inline fun <reified T : Number> AnyRow.rowMeanOf(): Double = values().filterIsInstance<T>().mean(typeOf<T>())
 
-public fun AnyRow.rowStd(skipNA: Boolean = defaultSkipNA): Double = values().filterIsInstance<Number>().map { it.toDouble() }.std(skipNA)
-public inline fun <reified T : Number> AnyRow.rowStdOf(): Double = values().filterIsInstance<T>().std(typeOf<T>())
+public fun AnyRow.rowStd(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): Double = values().filterIsInstance<Number>().map { it.toDouble() }.std(skipNA, ddof)
+public inline fun <reified T : Number> AnyRow.rowStdOf(ddof: Int = ddof_default): Double = values().filterIsInstance<T>().std(typeOf<T>(), ddof = ddof)
 
 public fun AnyRow.rowSum(): Number = Aggregators.sum.aggregateMixed(values().filterIsInstance<Number>()) ?: 0
 public inline fun <reified T : Number> AnyRow.rowSumOf(): T = values().filterIsInstance<T>().sum(typeOf<T>())

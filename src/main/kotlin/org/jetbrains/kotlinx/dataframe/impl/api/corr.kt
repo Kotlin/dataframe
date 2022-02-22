@@ -14,8 +14,9 @@ import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
-import org.jetbrains.kotlinx.dataframe.math.stdMean
+import org.jetbrains.kotlinx.dataframe.math.varianceAndMean
 import org.jetbrains.kotlinx.dataframe.nrow
+import kotlin.math.sqrt
 
 internal fun <T, C, R> Corr<T, C>.corrImpl(otherColumns: ColumnsSelector<T, R>): DataFrame<T> {
     val len = df.nrow
@@ -48,7 +49,7 @@ internal fun <T, C, R> Corr<T, C>.corrImpl(otherColumns: ColumnsSelector<T, R>):
     }
 
     val stdMeans = cols.mapValues {
-        it.value.toList().stdMean()
+        it.value.toList().varianceAndMean()
     }
 
     val cache = mutableMapOf<Pair<ColumnPath, ColumnPath>, Double>()
@@ -58,12 +59,11 @@ internal fun <T, C, R> Corr<T, C>.corrImpl(otherColumns: ColumnsSelector<T, R>):
             val cachedValue = cache[c2.path to c1.path]
             if (cachedValue != null) cachedValue
             else {
-                val (d1, m1) = stdMeans[c1.path]!!
-                val (d2, m2) = stdMeans[c2.path]!!
+                val s1 = stdMeans[c1.path]!!
+                val s2 = stdMeans[c2.path]!!
                 val v1 = cols[c1.path]!!
                 val v2 = cols[c2.path]!!
-                val cov = (0 until len).sumOf { (v1[it] - m1) * (v2[it] - m2) }
-                val res = cov / (d1 * d2)
+                val res = (0 until len).sumOf { (v1[it] - s1.mean) * (v2[it] - s2.mean) } / sqrt(s1.variance * s2.variance)
                 cache[c1.path to c2.path] = res
                 res
             }

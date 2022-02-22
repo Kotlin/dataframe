@@ -1,60 +1,110 @@
+@file:Suppress("DuplicatedCode")
+
 package org.jetbrains.kotlinx.dataframe.math
 
-import org.jetbrains.kotlinx.dataframe.api.defaultSkipNA
+import org.jetbrains.kotlinx.dataframe.api.skipNA_default
 import java.math.BigDecimal
 import kotlin.math.sqrt
 
-@JvmName("doubleStdMean")
-public fun Iterable<Double>.stdMean(skipNA: Boolean = defaultSkipNA): Pair<Double, Double> {
-    val m = mean(skipNA)
-    return sqrt(
-        fold(0.0) { acc, el ->
-            val diff = el - m
-            acc + diff * diff
-        }
-    ) to m
+public data class BasicStats(val count: Int, val mean: Double, val variance: Double) {
+
+    public fun std(ddof: Int): Double {
+        if (count <= ddof) return Double.NaN
+        return sqrt(variance / (count - ddof))
+    }
 }
 
-@JvmName("floatStdMean")
-public fun Iterable<Float>.stdMean(skipNA: Boolean = defaultSkipNA): Pair<Double, Double> {
-    val m = mean(skipNA)
-    return sqrt(
-        fold(0.0) { acc, el ->
-            val diff = el - m
-            acc + diff * diff
+@JvmName("doubleVarianceAndMean")
+public fun Iterable<Double>.varianceAndMean(skipNA: Boolean = skipNA_default): BasicStats? {
+    var count = 0
+    var sum = .0
+    for (element in this) {
+        if (element.isNaN()) {
+            if (skipNA) continue
+            else return null
         }
-    ) to m
+        sum += element
+        count++
+    }
+    val mean = sum / count
+    var variance = .0
+    for (element in this) {
+        if (element.isNaN()) continue
+        val diff = element - mean
+        variance += diff * diff
+    }
+    return BasicStats(count, mean, variance)
 }
 
-@JvmName("intStdMean")
-public fun Iterable<Int>.stdMean(): Pair<Double, Double> {
-    val m = mean()
-    return sqrt(
-        fold(0.0) { acc, el ->
-            val diff = el - m
-            acc + diff * diff
+@JvmName("floatVarianceAndMean")
+public fun Iterable<Float>.varianceAndMean(skipNA: Boolean = skipNA_default): BasicStats? {
+    var count = 0
+    var sum = .0
+    for (element in this) {
+        if (element.isNaN()) {
+            if (skipNA) continue
+            else return null
         }
-    ) to m
+        sum += element
+        count++
+    }
+    val mean = sum / count
+    var variance = .0
+    for (element in this) {
+        if (element.isNaN()) continue
+        val diff = element - mean
+        variance += diff * diff
+    }
+    return BasicStats(count, mean, variance)
 }
 
-@JvmName("longStdMean")
-public fun Iterable<Long>.stdMean(): Pair<Double, Double> {
-    val m = mean()
-    return sqrt(
-        fold(0.0) { acc, el ->
-            val diff = el - m
-            acc + diff * diff
-        }
-    ) to m
+@JvmName("intVarianceAndMean")
+public fun Iterable<Int>.varianceAndMean(): BasicStats {
+    var count = 0
+    var sum = .0
+    for (element in this) {
+        sum += element
+        count++
+    }
+    val mean = sum / count
+    var variance = .0
+    for (element in this) {
+        val diff = element - mean
+        variance += diff * diff
+    }
+    return BasicStats(count, mean, variance)
 }
 
-@JvmName("bigDecimalStdMean")
-public fun Iterable<BigDecimal>.stdMean(): Pair<Double, Double> {
-    val m = mean()
-    return sqrt(
-        fold(0.0) { acc, el ->
-            val diff = el.toDouble() - m
-            acc + diff * diff
-        }
-    ) to m
+@JvmName("longVarianceAndMean")
+public fun Iterable<Long>.varianceAndMean(): BasicStats {
+    var count = 0
+    var sum = .0
+    for (element in this) {
+        sum += element
+        count++
+    }
+    val mean = sum / count
+    var variance = .0
+    for (element in this) {
+        val diff = element - mean
+        variance += diff * diff
+    }
+    return BasicStats(count, mean, variance)
+}
+
+@JvmName("bigDecimalVarianceAndMean")
+public fun Iterable<BigDecimal>.varianceAndMean(): BasicStats {
+    var count = 0
+    var sum = BigDecimal.ZERO
+    for (element in this) {
+        sum += element
+        count++
+    }
+    val mean = sum.div(count.toBigDecimal())
+    var variance = BigDecimal.ZERO
+    for (element in this) {
+        val diff = element - mean
+        variance += diff * diff
+    }
+    return BasicStats(count, mean.toDouble(), variance.toDouble())
 }

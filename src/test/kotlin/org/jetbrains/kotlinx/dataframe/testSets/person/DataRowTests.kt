@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.valuesOf
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.junit.Test
+import kotlin.math.sqrt
 
 class DataRowTests : BaseTest() {
 
@@ -45,12 +46,12 @@ class DataRowTests : BaseTest() {
 
     @Test
     fun std() {
-        typed.map("std") { rowStd() }.values() shouldBe typed.age.values()
+        typed.map("std") { rowStd(skipNA = true, ddof = 0) }.values() shouldBe typed.age.values()
             .zip(typed.weight.values()) { a, b ->
                 if (b == null) .0
                 else {
                     val mean = (a + b) / 2.0
-                    Math.sqrt((a - mean) * (a - mean) + (b - mean) * (b - mean))
+                    sqrt(((a - mean) * (a - mean) + (b - mean) * (b - mean)) / 2)
                 }
             }
     }

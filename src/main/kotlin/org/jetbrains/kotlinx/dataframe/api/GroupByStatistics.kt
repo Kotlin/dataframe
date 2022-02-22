@@ -252,39 +252,39 @@ public inline fun <T, reified R : Number> Grouped<T>.sumOf(
 
 // region mean
 
-public fun <T> Grouped<T>.mean(skipNA: Boolean = defaultSkipNA): DataFrame<T> = meanFor(skipNA, numberColumns())
+public fun <T> Grouped<T>.mean(skipNA: Boolean = skipNA_default): DataFrame<T> = meanFor(skipNA, numberColumns())
 
 public fun <T, C : Number> Grouped<T>.meanFor(
-    skipNA: Boolean = defaultSkipNA,
+    skipNA: Boolean = skipNA_default,
     columns: ColumnsForAggregateSelector<T, C?>
 ): DataFrame<T> = Aggregators.mean(skipNA).aggregateFor(this, columns)
-public fun <T> Grouped<T>.meanFor(vararg columns: String, skipNA: Boolean = defaultSkipNA): DataFrame<T> = meanFor(skipNA) { columns.toNumberColumns() }
-public fun <T, C : Number> Grouped<T>.meanFor(vararg columns: ColumnReference<C?>, skipNA: Boolean = defaultSkipNA): DataFrame<T> = meanFor(skipNA) { columns.toColumns() }
-public fun <T, C : Number> Grouped<T>.meanFor(vararg columns: KProperty<C?>, skipNA: Boolean = defaultSkipNA): DataFrame<T> = meanFor(skipNA) { columns.toColumns() }
+public fun <T> Grouped<T>.meanFor(vararg columns: String, skipNA: Boolean = skipNA_default): DataFrame<T> = meanFor(skipNA) { columns.toNumberColumns() }
+public fun <T, C : Number> Grouped<T>.meanFor(vararg columns: ColumnReference<C?>, skipNA: Boolean = skipNA_default): DataFrame<T> = meanFor(skipNA) { columns.toColumns() }
+public fun <T, C : Number> Grouped<T>.meanFor(vararg columns: KProperty<C?>, skipNA: Boolean = skipNA_default): DataFrame<T> = meanFor(skipNA) { columns.toColumns() }
 
 public fun <T, C : Number> Grouped<T>.mean(
     name: String? = null,
-    skipNA: Boolean = defaultSkipNA,
+    skipNA: Boolean = skipNA_default,
     columns: ColumnsSelector<T, C?>
 ): DataFrame<T> = Aggregators.mean(skipNA).aggregateAll(this, name, columns)
 
-public fun <T> Grouped<T>.mean(vararg columns: String, name: String? = null, skipNA: Boolean = defaultSkipNA): DataFrame<T> = mean(name, skipNA) { columns.toNumberColumns() }
+public fun <T> Grouped<T>.mean(vararg columns: String, name: String? = null, skipNA: Boolean = skipNA_default): DataFrame<T> = mean(name, skipNA) { columns.toNumberColumns() }
 
 public fun <T, C : Number> Grouped<T>.mean(
     vararg columns: ColumnReference<C?>,
     name: String? = null,
-    skipNA: Boolean = defaultSkipNA
+    skipNA: Boolean = skipNA_default
 ): DataFrame<T> = mean(name, skipNA) { columns.toColumns() }
 
 public fun <T, C : Number> Grouped<T>.mean(
     vararg columns: KProperty<C?>,
     name: String? = null,
-    skipNA: Boolean = defaultSkipNA
+    skipNA: Boolean = skipNA_default
 ): DataFrame<T> = mean(name, skipNA) { columns.toColumns() }
 
 public inline fun <T, reified R : Number> Grouped<T>.meanOf(
     name: String? = null,
-    skipNA: Boolean = defaultSkipNA,
+    skipNA: Boolean = skipNA_default,
     crossinline expression: RowExpression<T, R?>
 ): DataFrame<T> =
     Aggregators.mean(skipNA).aggregateOf(this, name, expression)
@@ -317,21 +317,55 @@ public inline fun <T, reified R : Comparable<R>> Grouped<T>.medianOf(
 
 // region std
 
-public fun <T> Grouped<T>.std(): DataFrame<T> = stdFor(numberColumns())
+public fun <T> Grouped<T>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): DataFrame<T> = stdFor(skipNA, ddof, numberColumns())
 
-public fun <T> Grouped<T>.stdFor(columns: ColumnsForAggregateSelector<T, Number?>): DataFrame<T> = Aggregators.std.aggregateFor(this, columns)
-public fun <T> Grouped<T>.stdFor(vararg columns: String): DataFrame<T> = stdFor { columns.toColumnsOf() }
-public fun <T, C : Number> Grouped<T>.stdFor(vararg columns: ColumnReference<C?>): DataFrame<T> = stdFor { columns.toColumns() }
-public fun <T, C : Number> Grouped<T>.stdFor(vararg columns: KProperty<C?>): DataFrame<T> = stdFor { columns.toColumns() }
+public fun <T> Grouped<T>.stdFor(
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+    columns: ColumnsForAggregateSelector<T, Number?>
+): DataFrame<T> = Aggregators.std(skipNA, ddof).aggregateFor(this, columns)
+public fun <T> Grouped<T>.stdFor(vararg columns: String, skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): DataFrame<T> = stdFor(skipNA, ddof) { columns.toColumnsOf() }
+public fun <T, C : Number> Grouped<T>.stdFor(
+    vararg columns: ColumnReference<C?>,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataFrame<T> = stdFor(skipNA, ddof) { columns.toColumns() }
+public fun <T, C : Number> Grouped<T>.stdFor(
+    vararg columns: KProperty<C?>,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataFrame<T> = stdFor(skipNA, ddof) { columns.toColumns() }
 
-public fun <T> Grouped<T>.std(name: String? = null, columns: ColumnsSelector<T, Number?>): DataFrame<T> = Aggregators.std.aggregateAll(this, name, columns)
-public fun <T> Grouped<T>.std(vararg columns: ColumnReference<Number?>, name: String? = null): DataFrame<T> = std(name) { columns.toColumns() }
-public fun <T> Grouped<T>.std(vararg columns: String, name: String? = null): DataFrame<T> = std(name) { columns.toColumnsOf() }
-public fun <T> Grouped<T>.std(vararg columns: KProperty<Number?>, name: String? = null): DataFrame<T> = std(name) { columns.toColumns() }
+public fun <T> Grouped<T>.std(
+    name: String? = null,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+    columns: ColumnsSelector<T, Number?>
+): DataFrame<T> = Aggregators.std(skipNA, ddof).aggregateAll(this, name, columns)
+public fun <T> Grouped<T>.std(
+    vararg columns: ColumnReference<Number?>,
+    name: String? = null,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataFrame<T> = std(name, skipNA, ddof) { columns.toColumns() }
+public fun <T> Grouped<T>.std(
+    vararg columns: String,
+    name: String? = null,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataFrame<T> = std(name, skipNA, ddof) { columns.toColumnsOf() }
+public fun <T> Grouped<T>.std(
+    vararg columns: KProperty<Number?>,
+    name: String? = null,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataFrame<T> = std(name, skipNA, ddof) { columns.toColumns() }
 
 public inline fun <T, reified R : Number> Grouped<T>.stdOf(
     name: String? = null,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
     crossinline expression: RowExpression<T, R?>
-): DataFrame<T> = Aggregators.std.aggregateOf(this, name, expression)
+): DataFrame<T> = Aggregators.std(skipNA, ddof).aggregateOf(this, name, expression)
 
 // endregion

@@ -13,7 +13,6 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregators
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.comparableColumns
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateAll
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateFor
-import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.aggregateOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.modes.of
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.numberColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.corrImpl
@@ -52,7 +51,7 @@ public fun <T> DataFrame<T>.min(vararg columns: String): Comparable<Any> = minOr
 public fun <T, C : Comparable<C>> DataFrame<T>.min(vararg columns: ColumnReference<C?>): C = minOrNull(*columns).suggestIfNull("min")
 public fun <T, C : Comparable<C>> DataFrame<T>.min(vararg columns: KProperty<C?>): C = minOrNull(*columns).suggestIfNull("min")
 
-public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(columns: ColumnsSelector<T, C?>): C? = Aggregators.min.aggregateAll(this, columns)
+public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(columns: ColumnsSelector<T, C?>): C? = Aggregators.min.aggregateAll(this, columns) as C?
 public fun <T> DataFrame<T>.minOrNull(vararg columns: String): Comparable<Any?>? = minOrNull { columns.toComparableColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(vararg columns: ColumnReference<C?>): C? = minOrNull { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.minOrNull(vararg columns: KProperty<C?>): C? = minOrNull { columns.toColumns() }
@@ -86,7 +85,7 @@ public fun <T> DataFrame<T>.max(vararg columns: String): Comparable<Any?> = maxO
 public fun <T, C : Comparable<C>> DataFrame<T>.max(vararg columns: ColumnReference<C?>): C = maxOrNull(*columns).suggestIfNull("max")
 public fun <T, C : Comparable<C>> DataFrame<T>.max(vararg columns: KProperty<C?>): C = maxOrNull(*columns).suggestIfNull("max")
 
-public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(columns: ColumnsSelector<T, C?>): C? = Aggregators.max.aggregateAll(this, columns)
+public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(columns: ColumnsSelector<T, C?>): C? = Aggregators.max.aggregateAll(this, columns) as C?
 public fun <T> DataFrame<T>.maxOrNull(vararg columns: String): Comparable<Any?>? = maxOrNull { columns.toComparableColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(vararg columns: ColumnReference<C?>): C? = maxOrNull { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.maxOrNull(vararg columns: KProperty<C?>): C? = maxOrNull { columns.toColumns() }
@@ -115,7 +114,7 @@ public fun <T> DataFrame<T>.sumFor(vararg columns: String): DataRow<T> = sumFor 
 public fun <T, C : Number> DataFrame<T>.sumFor(vararg columns: ColumnReference<C?>): DataRow<T> = sumFor { columns.toColumns() }
 public fun <T, C : Number> DataFrame<T>.sumFor(vararg columns: KProperty<C?>): DataRow<T> = sumFor { columns.toColumns() }
 
-public inline fun <T, reified C : Number> DataFrame<T>.sum(noinline columns: ColumnsSelector<T, C?>): C = Aggregators.sum.aggregateAll(this, columns) ?: C::class.zero()
+public inline fun <T, reified C : Number> DataFrame<T>.sum(noinline columns: ColumnsSelector<T, C?>): C = (Aggregators.sum.aggregateAll(this, columns) as C?) ?: C::class.zero()
 public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: ColumnReference<C?>): C = sum { columns.toColumns() }
 public fun <T> DataFrame<T>.sum(vararg columns: String): Number = sum { columns.toColumnsOf() }
 public inline fun <T, reified C : Number> DataFrame<T>.sum(vararg columns: KProperty<C?>): C = sum { columns.toColumns() }
@@ -128,23 +127,23 @@ public inline fun <T, reified C : Number?> DataFrame<T>.sumOf(crossinline expres
 
 // region mean
 
-public fun <T> DataFrame<T>.mean(skipNA: Boolean = defaultSkipNA): DataRow<T> = meanFor(skipNA, numberColumns())
+public fun <T> DataFrame<T>.mean(skipNA: Boolean = skipNA_default): DataRow<T> = meanFor(skipNA, numberColumns())
 
 public fun <T, C : Number> DataFrame<T>.meanFor(
-    skipNA: Boolean = defaultSkipNA,
+    skipNA: Boolean = skipNA_default,
     columns: ColumnsForAggregateSelector<T, C?>
 ): DataRow<T> = Aggregators.mean(skipNA).aggregateFor(this, columns)
-public fun <T> DataFrame<T>.meanFor(vararg columns: String, skipNA: Boolean = defaultSkipNA): DataRow<T> = meanFor(skipNA) { columns.toNumberColumns() }
-public fun <T, C : Number> DataFrame<T>.meanFor(vararg columns: ColumnReference<C?>, skipNA: Boolean = defaultSkipNA): DataRow<T> = meanFor(skipNA) { columns.toColumns() }
-public fun <T, C : Number> DataFrame<T>.meanFor(vararg columns: KProperty<C?>, skipNA: Boolean = defaultSkipNA): DataRow<T> = meanFor(skipNA) { columns.toColumns() }
+public fun <T> DataFrame<T>.meanFor(vararg columns: String, skipNA: Boolean = skipNA_default): DataRow<T> = meanFor(skipNA) { columns.toNumberColumns() }
+public fun <T, C : Number> DataFrame<T>.meanFor(vararg columns: ColumnReference<C?>, skipNA: Boolean = skipNA_default): DataRow<T> = meanFor(skipNA) { columns.toColumns() }
+public fun <T, C : Number> DataFrame<T>.meanFor(vararg columns: KProperty<C?>, skipNA: Boolean = skipNA_default): DataRow<T> = meanFor(skipNA) { columns.toColumns() }
 
-public fun <T, C : Number> DataFrame<T>.mean(skipNA: Boolean = defaultSkipNA, columns: ColumnsSelector<T, C?>): Double = Aggregators.mean(skipNA).aggregateAll(this, columns) as Double? ?: Double.NaN
-public fun <T> DataFrame<T>.mean(vararg columns: String, skipNA: Boolean = defaultSkipNA): Double = mean(skipNA) { columns.toNumberColumns() }
-public fun <T, C : Number> DataFrame<T>.mean(vararg columns: ColumnReference<C?>, skipNA: Boolean = defaultSkipNA): Double = mean(skipNA) { columns.toColumns() }
-public fun <T, C : Number> DataFrame<T>.mean(vararg columns: KProperty<C?>, skipNA: Boolean = defaultSkipNA): Double = mean(skipNA) { columns.toColumns() }
+public fun <T, C : Number> DataFrame<T>.mean(skipNA: Boolean = skipNA_default, columns: ColumnsSelector<T, C?>): Double = Aggregators.mean(skipNA).aggregateAll(this, columns) as Double? ?: Double.NaN
+public fun <T> DataFrame<T>.mean(vararg columns: String, skipNA: Boolean = skipNA_default): Double = mean(skipNA) { columns.toNumberColumns() }
+public fun <T, C : Number> DataFrame<T>.mean(vararg columns: ColumnReference<C?>, skipNA: Boolean = skipNA_default): Double = mean(skipNA) { columns.toColumns() }
+public fun <T, C : Number> DataFrame<T>.mean(vararg columns: KProperty<C?>, skipNA: Boolean = skipNA_default): Double = mean(skipNA) { columns.toColumns() }
 
 public inline fun <T, reified D : Number> DataFrame<T>.meanOf(
-    skipNA: Boolean = defaultSkipNA,
+    skipNA: Boolean = skipNA_default,
     noinline expression: RowExpression<T, D?>
 ): Double = Aggregators.mean(skipNA).of(this, expression) ?: Double.NaN
 
@@ -164,7 +163,7 @@ public fun <T> DataFrame<T>.median(vararg columns: String): Any = median { colum
 public fun <T, C : Comparable<C>> DataFrame<T>.median(vararg columns: ColumnReference<C?>): C = median { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.median(vararg columns: KProperty<C?>): C = median { columns.toColumns() }
 
-public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(columns: ColumnsSelector<T, C?>): C? = Aggregators.median.aggregateAll(this, columns)
+public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(columns: ColumnsSelector<T, C?>): C? = Aggregators.median.aggregateAll(this, columns) as C?
 public fun <T> DataFrame<T>.medianOrNull(vararg columns: String): Any? = medianOrNull { columns.toComparableColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(vararg columns: ColumnReference<C?>): C? = medianOrNull { columns.toColumns() }
 public fun <T, C : Comparable<C>> DataFrame<T>.medianOrNull(vararg columns: KProperty<C?>): C? = medianOrNull { columns.toColumns() }
@@ -175,19 +174,39 @@ public inline fun <T, reified R : Comparable<R>> DataFrame<T>.medianOf(crossinli
 
 // region std
 
-public fun <T> DataFrame<T>.std(): DataRow<T> = stdFor(numberColumns())
+public fun <T> DataFrame<T>.std(skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): DataRow<T> = stdFor(skipNA, ddof, numberColumns())
 
-public fun <T> DataFrame<T>.stdFor(columns: ColumnsForAggregateSelector<T, Number?>): DataRow<T> = Aggregators.std.aggregateFor(this, columns)
-public fun <T> DataFrame<T>.stdFor(vararg columns: String): DataRow<T> = stdFor { columns.toColumnsOf() }
-public fun <T, C : Number> DataFrame<T>.stdFor(vararg columns: ColumnReference<C?>): DataRow<T> = stdFor { columns.toColumns() }
-public fun <T, C : Number> DataFrame<T>.stdFor(vararg columns: KProperty<C?>): DataRow<T> = stdFor { columns.toColumns() }
+public fun <T> DataFrame<T>.stdFor(
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+    columns: ColumnsForAggregateSelector<T, Number?>
+): DataRow<T> = Aggregators.std(skipNA, ddof).aggregateFor(this, columns)
+public fun <T> DataFrame<T>.stdFor(vararg columns: String, skipNA: Boolean = skipNA_default, ddof: Int = ddof_default): DataRow<T> = stdFor(skipNA, ddof) { columns.toColumnsOf() }
+public fun <T, C : Number> DataFrame<T>.stdFor(
+    vararg columns: ColumnReference<C?>,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataRow<T> = stdFor(skipNA, ddof) { columns.toColumns() }
+public fun <T, C : Number> DataFrame<T>.stdFor(
+    vararg columns: KProperty<C?>,
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default
+): DataRow<T> = stdFor(skipNA, ddof) { columns.toColumns() }
 
-public fun <T> DataFrame<T>.std(columns: ColumnsSelector<T, Number?>): Double = aggregateAll(Aggregators.std, columns) ?: .0
+public fun <T> DataFrame<T>.std(
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+    columns: ColumnsSelector<T, Number?>
+): Double = Aggregators.std(skipNA, ddof).aggregateAll(this, columns) ?: .0
 public fun <T> DataFrame<T>.std(vararg columns: ColumnReference<Number?>): Double = std { columns.toColumns() }
 public fun <T> DataFrame<T>.std(vararg columns: String): Double = std { columns.toColumnsOf() }
 public fun <T> DataFrame<T>.std(vararg columns: KProperty<Number?>): Double = std { columns.toColumns() }
 
-public inline fun <T, reified R : Number> DataFrame<T>.stdOf(crossinline expression: RowExpression<T, R?>): Double = Aggregators.std.aggregateOf(this, expression) ?: .0
+public inline fun <T, reified R : Number> DataFrame<T>.stdOf(
+    skipNA: Boolean = skipNA_default,
+    ddof: Int = ddof_default,
+    crossinline expression: RowExpression<T, R?>
+): Double = Aggregators.std(skipNA, ddof).of(this, expression) ?: .0
 
 // endregion
 

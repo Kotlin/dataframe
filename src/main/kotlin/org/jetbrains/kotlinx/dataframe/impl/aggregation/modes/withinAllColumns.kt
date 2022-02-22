@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregateInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.Aggregator
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast
+import org.jetbrains.kotlinx.dataframe.impl.aggregation.aggregators.cast2
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.internal
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 
@@ -15,7 +16,7 @@ import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 internal fun <T, C, R> Aggregator<*, R>.aggregateAll(
     data: DataFrame<T>,
     columns: ColumnsSelector<T, C>
-): C? = data.aggregateAll(cast(), columns)
+): R? = data.aggregateAll(cast2(), columns)
 
 internal fun <T, R, C> Aggregator<*, R>.aggregateAll(
     data: Grouped<T>,
@@ -30,7 +31,7 @@ internal fun <T, R, C> Aggregator<*, R>.aggregateAll(
 
 internal fun <T, C, R> DataFrame<T>.aggregateAll(
     aggregator: Aggregator<C, R>,
-    columns: ColumnsSelector<T, C>
+    columns: ColumnsSelector<T, C?>
 ): R? = aggregator.aggregate(get(columns))
 
 internal fun <T, C, R> Grouped<T>.aggregateAll(
