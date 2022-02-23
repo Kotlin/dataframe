@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
@@ -21,8 +20,6 @@ public inline fun <reified T> AnyCol.isType(): Boolean = type() == typeOf<T>()
 public fun AnyCol.isNumber(): Boolean = isSubtypeOf<Number?>()
 public fun AnyCol.isList(): Boolean = typeClass == List::class
 public fun AnyCol.isComparable(): Boolean = isSubtypeOf<Comparable<*>?>()
-
-public fun AnyCol.inferType(): DataColumn<*> = DataColumn.createWithTypeInference(name, toList())
 
 @PublishedApi
 internal fun AnyCol.isPrimitive(): Boolean = typeClass.isPrimitive()

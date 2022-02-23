@@ -69,7 +69,6 @@ import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.implode
 import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.inferType
 import org.jetbrains.kotlinx.dataframe.api.inplace
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.intoColumns
@@ -244,15 +243,6 @@ class DataFrameTests : BaseTest() {
         val col1 = name.withValues(values)
         val col2 = values.toColumn(name)
         col1 shouldBe col2
-    }
-
-    @Test
-    fun `guess column type`() {
-        val col by columnOf("Alice", 1, 3.5)
-        col.type() shouldBe typeOf<Comparable<*>>()
-        val filtered = col.filter { it is String }
-        filtered.type() shouldBe typeOf<Comparable<*>>()
-        filtered.inferType().type() shouldBe typeOf<String>()
     }
 
     @Test
