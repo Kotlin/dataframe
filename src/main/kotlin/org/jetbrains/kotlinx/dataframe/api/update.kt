@@ -17,53 +17,53 @@ import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.index
 import kotlin.reflect.KProperty
 
-public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): UpdateClause<T, C> =
-    UpdateClause(this, null, columns)
+public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T, C> =
+    Update(this, null, columns)
 
-public fun <T, C> DataFrame<T>.update(columns: Iterable<ColumnReference<C>>): UpdateClause<T, C> =
+public fun <T, C> DataFrame<T>.update(columns: Iterable<ColumnReference<C>>): Update<T, C> =
     update { columns.toColumnSet() }
 
-public fun <T> DataFrame<T>.update(vararg columns: String): UpdateClause<T, Any?> = update { columns.toColumns() }
-public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): UpdateClause<T, C> = update { columns.toColumns() }
-public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): UpdateClause<T, C> =
+public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = update { columns.toColumns() }
+public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C> = update { columns.toColumns() }
+public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Update<T, C> =
     update { columns.toColumns() }
 
-public data class UpdateClause<T, C>(
+public data class Update<T, C>(
     val df: DataFrame<T>,
     val filter: RowValueFilter<T, C>?,
     val columns: ColumnsSelector<T, C>
 ) {
-    public fun <R : C> cast(): UpdateClause<T, R> =
-        UpdateClause(df, filter as RowValueFilter<T, R>?, columns as ColumnsSelector<T, R>)
+    public fun <R : C> cast(): Update<T, R> =
+        Update(df, filter as RowValueFilter<T, R>?, columns as ColumnsSelector<T, R>)
 }
 
-public fun <T, C> UpdateClause<T, C>.where(predicate: RowValueFilter<T, C>): UpdateClause<T, C> =
+public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T, C> =
     copy(filter = filter and predicate)
 
-public fun <T, C> UpdateClause<T, C>.at(rowIndices: Collection<Int>): UpdateClause<T, C> = where { index in rowIndices }
-public fun <T, C> UpdateClause<T, C>.at(vararg rowIndices: Int): UpdateClause<T, C> = at(rowIndices.toSet())
-public fun <T, C> UpdateClause<T, C>.at(rowRange: IntRange): UpdateClause<T, C> = where { index in rowRange }
+public fun <T, C> Update<T, C>.at(rowIndices: Collection<Int>): Update<T, C> = where { index in rowIndices }
+public fun <T, C> Update<T, C>.at(vararg rowIndices: Int): Update<T, C> = at(rowIndices.toSet())
+public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { index in rowRange }
 
-public infix fun <T, C> UpdateClause<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
+public infix fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }
 
 public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
 
-public infix fun <T, C> UpdateClause<T, C>.with(expression: UpdateExpression<T, C, C?>): DataFrame<T> =
+public infix fun <T, C> Update<T, C>.with(expression: UpdateExpression<T, C, C?>): DataFrame<T> =
     withExpression(expression)
 
-public fun <T, C> UpdateClause<T, C>.asNullable(): UpdateClause<T, C?> = this as UpdateClause<T, C?>
+public fun <T, C> Update<T, C>.asNullable(): Update<T, C?> = this as Update<T, C?>
 
-public fun <T, C> UpdateClause<T, C>.perCol(values: Map<String, C>): DataFrame<T> = updateWithValuePerColumnImpl {
+public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> = updateWithValuePerColumnImpl {
     values[it.name()] ?: throw IllegalArgumentException("Update value for column ${it.name()} is not defined")
 }
 
-public fun <T, C> UpdateClause<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(values.toMap() as Map<String, C>)
+public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(values.toMap() as Map<String, C>)
 
-public fun <T, C> UpdateClause<T, C>.perCol(valueSelector: Selector<DataColumn<C>, C>): DataFrame<T> =
+public fun <T, C> Update<T, C>.perCol(valueSelector: Selector<DataColumn<C>, C>): DataFrame<T> =
     updateWithValuePerColumnImpl(valueSelector)
 
-public fun <T, C> UpdateClause<T, C>.withExpression(expression: UpdateExpression<T, C, C?>): DataFrame<T> =
+public fun <T, C> Update<T, C>.withExpression(expression: UpdateExpression<T, C, C?>): DataFrame<T> =
     updateImpl { row, _, value ->
         expression(row, value)
     }
@@ -74,10 +74,10 @@ internal infix fun <T, C> RowValueFilter<T, C>?.and(other: RowValueFilter<T, C>)
     return { thisExp(this, it) && other(this, it) }
 }
 
-public fun <T, C> UpdateClause<T, C?>.notNull(): UpdateClause<T, C> =
-    copy(filter = filter and { it != null }) as UpdateClause<T, C>
+public fun <T, C> Update<T, C?>.notNull(): Update<T, C> =
+    copy(filter = filter and { it != null }) as Update<T, C>
 
-public fun <T, C> UpdateClause<T, C?>.notNull(expression: RowValueExpression<T, C, C>): DataFrame<T> =
+public fun <T, C> Update<T, C?>.notNull(expression: RowValueExpression<T, C, C>): DataFrame<T> =
     notNull().updateImpl { row, column, value ->
         expression(row, value)
     }
@@ -103,8 +103,8 @@ public fun <T> DataFrame<T>.update(
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).withExpression(expression)
 
-public fun <T, C> UpdateClause<T, C>.withNull(): DataFrame<T> = asNullable().withValue(null)
+public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = asNullable().withValue(null)
 
-public fun <T, C> UpdateClause<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }
+public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }
 
-public infix fun <T, C> UpdateClause<T, C>.withValue(value: C): DataFrame<T> = withExpression { value }
+public infix fun <T, C> Update<T, C>.withValue(value: C): DataFrame<T> = withExpression { value }

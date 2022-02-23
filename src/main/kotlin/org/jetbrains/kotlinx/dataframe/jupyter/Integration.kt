@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.Convert
 import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
 import org.jetbrains.kotlinx.dataframe.api.Gather
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
@@ -16,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.api.ReducedPivot
 import org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy
 import org.jetbrains.kotlinx.dataframe.api.Split
 import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
+import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
@@ -91,6 +93,8 @@ internal class Integration : JupyterIntegration() {
             render<Gather<*, *, *, *>> ({ it.into("key", "value") }, { "Gather" })
             render<IMG> { HTML(it.toString()) }
             render<IFRAME> { HTML(it.toString()) }
+            render<Update<*,*>>({ it.df }, { "Update" })
+            render<Convert<*, *>>({ it.df }, { "Convert" })
         }
 
         import("org.jetbrains.kotlinx.dataframe.api.*")

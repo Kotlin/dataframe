@@ -17,11 +17,11 @@ import kotlin.reflect.KProperty
 
 // region fillNulls
 
-public fun <T, C> DataFrame<T>.fillNulls(cols: ColumnsSelector<T, C>): UpdateClause<T, C> = update(cols).where { it == null }
-public fun <T> DataFrame<T>.fillNulls(vararg cols: String): UpdateClause<T, Any?> = fillNulls { cols.toColumns() }
-public fun <T, C> DataFrame<T>.fillNulls(vararg cols: KProperty<C>): UpdateClause<T, C> = fillNulls { cols.toColumns() }
-public fun <T, C> DataFrame<T>.fillNulls(vararg cols: ColumnReference<C>): UpdateClause<T, C> = fillNulls { cols.toColumns() }
-public fun <T, C> DataFrame<T>.fillNulls(cols: Iterable<ColumnReference<C>>): UpdateClause<T, C> = fillNulls { cols.toColumnSet() }
+public fun <T, C> DataFrame<T>.fillNulls(cols: ColumnsSelector<T, C>): Update<T, C> = update(cols).where { it == null }
+public fun <T> DataFrame<T>.fillNulls(vararg cols: String): Update<T, Any?> = fillNulls { cols.toColumns() }
+public fun <T, C> DataFrame<T>.fillNulls(vararg cols: KProperty<C>): Update<T, C> = fillNulls { cols.toColumns() }
+public fun <T, C> DataFrame<T>.fillNulls(vararg cols: ColumnReference<C>): Update<T, C> = fillNulls { cols.toColumns() }
+public fun <T, C> DataFrame<T>.fillNulls(cols: Iterable<ColumnReference<C>>): Update<T, C> = fillNulls { cols.toColumnSet() }
 
 // endregion
 
@@ -46,21 +46,21 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
 
 // region fillNaNs
 
-public fun <T, C> DataFrame<T>.fillNaNs(cols: ColumnsSelector<T, C>): UpdateClause<T, C> = update(cols).where { it.isNaN }
-public fun <T> DataFrame<T>.fillNaNs(vararg cols: String): UpdateClause<T, Any?> = fillNaNs { cols.toColumns() }
-public fun <T, C> DataFrame<T>.fillNaNs(vararg cols: KProperty<C>): UpdateClause<T, C> = fillNaNs { cols.toColumns() }
-public fun <T, C> DataFrame<T>.fillNaNs(vararg cols: ColumnReference<C>): UpdateClause<T, C> = fillNaNs { cols.toColumns() }
-public fun <T, C> DataFrame<T>.fillNaNs(cols: Iterable<ColumnReference<C>>): UpdateClause<T, C> = fillNaNs { cols.toColumnSet() }
+public fun <T, C> DataFrame<T>.fillNaNs(cols: ColumnsSelector<T, C>): Update<T, C> = update(cols).where { it.isNaN }
+public fun <T> DataFrame<T>.fillNaNs(vararg cols: String): Update<T, Any?> = fillNaNs { cols.toColumns() }
+public fun <T, C> DataFrame<T>.fillNaNs(vararg cols: KProperty<C>): Update<T, C> = fillNaNs { cols.toColumns() }
+public fun <T, C> DataFrame<T>.fillNaNs(vararg cols: ColumnReference<C>): Update<T, C> = fillNaNs { cols.toColumns() }
+public fun <T, C> DataFrame<T>.fillNaNs(cols: Iterable<ColumnReference<C>>): Update<T, C> = fillNaNs { cols.toColumnSet() }
 
 // endregion
 
 // region fillNA
 
-public fun <T, C> DataFrame<T>.fillNA(cols: ColumnsSelector<T, C>): UpdateClause<T, C> = update(cols).where { it.isNA }
-public fun <T> DataFrame<T>.fillNA(vararg cols: String): UpdateClause<T, Any?> = fillNA { cols.toColumns() }
-public fun <T, C> DataFrame<T>.fillNA(vararg cols: KProperty<C>): UpdateClause<T, C> = fillNA { cols.toColumns() }
-public fun <T, C> DataFrame<T>.fillNA(vararg cols: ColumnReference<C>): UpdateClause<T, C> = fillNA { cols.toColumns() }
-public fun <T, C> DataFrame<T>.fillNA(cols: Iterable<ColumnReference<C>>): UpdateClause<T, C> = fillNA { cols.toColumnSet() }
+public fun <T, C> DataFrame<T>.fillNA(cols: ColumnsSelector<T, C>): Update<T, C> = update(cols).where { it.isNA }
+public fun <T> DataFrame<T>.fillNA(vararg cols: String): Update<T, Any?> = fillNA { cols.toColumns() }
+public fun <T, C> DataFrame<T>.fillNA(vararg cols: KProperty<C>): Update<T, C> = fillNA { cols.toColumns() }
+public fun <T, C> DataFrame<T>.fillNA(vararg cols: ColumnReference<C>): Update<T, C> = fillNA { cols.toColumns() }
+public fun <T, C> DataFrame<T>.fillNA(cols: Iterable<ColumnReference<C>>): Update<T, C> = fillNA { cols.toColumnSet() }
 
 // endregion
 
