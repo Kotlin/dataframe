@@ -66,6 +66,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [groupBy](groupBy.md) — group rows by key columns
 * [head](head.md) — get first 5 rows of dataframe
 * [implode](implode.md) — collapse column values into lists grouping by other columns
+* [inferType](inferType.md) — infer column type from column values
 * [insert](insert.md) — insert column
 * [join](join.md) — join dataframes by key columns
 * [last](last.md) / [lastOrNull](last.md#lastornull) — find last row by condition 

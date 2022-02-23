@@ -7,3 +7,4 @@ Actual data in `DataFrame` may diverge from compile-time schema marker `T` due t
 To match your knowledge with expected real-time `DataFrame` contents you can use one of two functions:
 * [`cast`](cast.md) — change type argument of `DataFrame` to the expected schema without changing data in `DataFrame`.
 * [`convertTo`](convertTo.md) — convert `DataFrame` contents to match the expected schema.
+
