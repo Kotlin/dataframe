@@ -62,6 +62,10 @@ table.dataframe tbody > tr:nth-child(odd) {
     background: var(--background-odd);
 }
 
+table.dataframe tbody > tr:nth-child(even) {
+    background: var(--background);
+}
+
 table.dataframe tbody > tr:hover {
     background: var(--background-hover);
 }
