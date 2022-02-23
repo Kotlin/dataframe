@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
-import org.jetbrains.kotlinx.dataframe.api.ConvertClause
+import org.jetbrains.kotlinx.dataframe.api.Convert
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.to
@@ -39,11 +39,11 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
 @PublishedApi
-internal fun <T, C, R> ConvertClause<T, C>.withRowCellImpl(type: KType?, rowConverter: RowValueExpression<T, C, R>): DataFrame<T> =
+internal fun <T, C, R> Convert<T, C>.withRowCellImpl(type: KType?, rowConverter: RowValueExpression<T, C, R>): DataFrame<T> =
     to { col -> df.newColumn(type, col.name) { rowConverter(it, it[col]) } }
 
 @PublishedApi
-internal fun <T, C, R> ConvertClause<T, C>.convertRowColumnImpl(
+internal fun <T, C, R> Convert<T, C>.convertRowColumnImpl(
     type: KType?,
     rowConverter: RowColumnExpression<T, C, R>
 ): DataFrame<T> =

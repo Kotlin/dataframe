@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.api.AddDataRow
 import org.jetbrains.kotlinx.dataframe.api.AddDataRowImpl
-import org.jetbrains.kotlinx.dataframe.api.UpdateClause
+import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -25,9 +25,9 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
 @PublishedApi
-internal fun <T, C> UpdateClause<T, C>.updateImpl(expression: (AddDataRow<T>, DataColumn<C>, C) -> C?): DataFrame<T> = df.replace(columns).with { it.updateImpl(df, filter, expression) }
+internal fun <T, C> Update<T, C>.updateImpl(expression: (AddDataRow<T>, DataColumn<C>, C) -> C?): DataFrame<T> = df.replace(columns).with { it.updateImpl(df, filter, expression) }
 
-internal fun <T, C> UpdateClause<T, C>.updateWithValuePerColumnImpl(selector: Selector<DataColumn<C>, C>) = df.replace(columns).with {
+internal fun <T, C> Update<T, C>.updateWithValuePerColumnImpl(selector: Selector<DataColumn<C>, C>) = df.replace(columns).with {
     val value = selector(it, it)
     val convertedValue = value?.convertTo(it.type()) as C
     it.updateImpl(df, filter) { _, _, _ -> convertedValue }

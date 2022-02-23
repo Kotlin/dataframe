@@ -273,7 +273,7 @@ public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty
 public fun <T, C : AnyFrame> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> =
     by { it.rows() }.intoRows(dropEmpty)
 
-internal fun <T, C, R> ConvertClause<T, C?>.splitInplace(tartypeOf: KType, transform: DataRow<T>.(C) -> Iterable<R>) =
+internal fun <T, C, R> Convert<T, C?>.splitInplace(tartypeOf: KType, transform: DataRow<T>.(C) -> Iterable<R>) =
     withRowCellImpl(List::class.createTypeWithArgument(tartypeOf)) { if (it == null) emptyList() else transform(it).asList() }
 
 public fun <T, C, R> SplitWithTransform<T, C, R>.intoRows(dropEmpty: Boolean = true): DataFrame<T> {
