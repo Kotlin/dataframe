@@ -16,12 +16,12 @@ In IDEA projects you can use [gradle plugin](installation.md#gradle-plugin-confi
 
 After execution of cell
 
-<!---FUN createDf-->
+<!---FUN createDfNullable-->
 
 ```kotlin
 val df = dataFrameOf("name", "age")(
     "Alice", 15,
-    "Bob", null
+    "Bob", 20
 )
 ```
 
@@ -85,7 +85,7 @@ Then variable `filtered` is cast to new interface:
 val temp = filtered
 ```
 ```kotlin
-val filtered = temp.cast<DataFrameType1>
+val filtered = temp.cast<DataFrameType1>()
 ```
 
 ## Custom data schemas
@@ -120,8 +120,8 @@ Schema of `df` is compatible with `Person`, so auto-generated schema interface w
 ```kotlin
 @DataSchema(isOpen = false)
 interface DataFrameType : Person
-val DataFrameBase<DataFrameType>.age: DataColumn<Double> get() = this["weight"] as DataColumn<Double>
-val DataRowBase<DataFrameType>.age: Double get() = this["weight"] as Int
+val ColumnsContainer<DataFrameType>.weight: DataColumn<Double> get() = this["weight"] as DataColumn<Double>
+val DataRow<DataFrameType>.weight: Double get() = this["weight"] as Double
 ```
 Despite `df` has additional column `weight`, previously defined functions for `DataFrame<Person>` will work for it:
 
@@ -187,7 +187,7 @@ After loading this library into Jupyter notebook, schema interfaces for all `Dat
 ```kotlin
 val df = dataFrameOf("name", "age")(
     "Alice", 15,
-    "Bob", null
+    "Bob", 20
 )
 ```
 

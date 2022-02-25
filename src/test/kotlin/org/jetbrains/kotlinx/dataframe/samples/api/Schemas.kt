@@ -26,7 +26,7 @@ class Schemas {
     fun DataFrame<Person>.adults() = filter { age > 18 }
 
     @Test
-    fun createDf() {
+    fun createDfNullable() {
         // SampleStart
         val df = dataFrameOf("name", "age")(
             "Alice", 15,
@@ -34,6 +34,17 @@ class Schemas {
         )
         // SampleEnd
     }
+
+    @Test
+    fun createDf() {
+        // SampleStart
+        val df = dataFrameOf("name", "age")(
+            "Alice", 15,
+            "Bob", 20
+        )
+        // SampleEnd
+    }
+
 
     @Test
     fun extendedDf() {
