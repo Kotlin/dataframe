@@ -40,7 +40,7 @@ public fun DataRow.Companion.readJson(file: File): AnyRow = DataFrame.readJson(f
 
 public fun DataFrame.Companion.readJson(path: String): AnyFrame {
     val url = when {
-        isURL(path) -> URL(path).toURI()
+        path.isURL() -> URL(path).toURI()
         else -> File(path).toURI()
     }
     return readJson(url.toURL())

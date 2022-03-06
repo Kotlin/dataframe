@@ -36,6 +36,7 @@ configurations {
 
 dependencies {
     implementation(libs.kotlin.stdlib)
+    implementation(libs.kotlin.stdlib.jdk8)
     implementation(libs.kotlin.reflect)
 
     api(libs.commonsCsv)
@@ -43,6 +44,10 @@ dependencies {
     implementation(libs.fuel)
 
     implementation(libs.kotlin.datetimeJvm)
+
+    implementation(libs.arrow.vector)
+    implementation(libs.arrow.format)
+    implementation(libs.arrow.memory)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {

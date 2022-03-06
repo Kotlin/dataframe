@@ -5,10 +5,12 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.CsvOptions
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadArrowMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
 import org.jetbrains.kotlinx.dataframe.io.SupportedFormats
+import org.jetbrains.kotlinx.dataframe.io.readArrow
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
@@ -20,6 +22,7 @@ public val CodeGenerator.Companion.urlReader: (url: URL, csvOptions: CsvOptions)
             fun guessFormat(url: String): SupportedFormats? = when {
                 url.endsWith(".csv") -> SupportedFormats.CSV
                 url.endsWith(".json") -> SupportedFormats.JSON
+                url.endsWith(".feather") -> SupportedFormats.ARROW
                 else -> null
             }
 
@@ -28,11 +31,16 @@ public val CodeGenerator.Companion.urlReader: (url: URL, csvOptions: CsvOptions)
                 DfReadResult.Success(DataFrame.readCSV(url, delimiter = delimiter), SupportedFormats.CSV, csvOptions)
             }
 
+            fun readArrow(url:URL) = run {
+                DfReadResult.Success(DataFrame.readArrow(url), SupportedFormats.ARROW, csvOptions)
+            }
+
             fun readJson(url: URL) = DfReadResult.Success(DataFrame.readJson(url), SupportedFormats.JSON, csvOptions)
             try {
                 val res = when (guessFormat(url.path)) {
                     SupportedFormats.CSV -> readCSV(url)
                     SupportedFormats.JSON -> readJson(url)
+                    SupportedFormats.ARROW -> readArrow(url)
                     else -> try {
                         readCSV(url)
                     } catch (e: Exception) {
@@ -57,6 +65,7 @@ public sealed interface DfReadResult {
             return when (format) {
                 SupportedFormats.CSV -> DefaultReadCsvMethod(pathRepresentation, csvOptions)
                 SupportedFormats.JSON -> DefaultReadJsonMethod(pathRepresentation)
+                SupportedFormats.ARROW -> DefaultReadArrowMethod(pathRepresentation)
             }
         }
 

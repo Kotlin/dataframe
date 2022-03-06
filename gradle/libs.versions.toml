@@ -16,6 +16,7 @@ kotlinDatetime = "0.3.1"
 junit = "4.13.2"
 kotestAsserions = "4.6.3"
 jsoup = "1.14.3"
+arrow = "7.0.0"
 
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
@@ -23,6 +24,8 @@ ksp-api = { group = "com.google.devtools.ksp", name = "symbol-processing-api", v
 jupyter-api = { module = "org.jetbrains.kotlinx:kotlin-jupyter-kernel", version.ref = "kotlinJupyter" }
 
 kotlin-stdlib = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib", version.ref = "kotlin" }
+kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk8", version.ref = "kotlin" }
+
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlin-scriptingJvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin" }
 commonsCsv = { module = "org.apache.commons:commons-csv", version.ref = "commonsCsv" }
@@ -33,6 +36,10 @@ kotlin-datetimeJvm = { module = "org.jetbrains.kotlinx:kotlinx-datetime-jvm", ve
 junit = { module = "junit:junit", version.ref = "junit" }
 kotestAssertions = { module = "io.kotest:kotest-assertions-core", version.ref = "kotestAsserions" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
+
+arrow-format = { group = "org.apache.arrow", name = "arrow-format", version.ref = "arrow" }
+arrow-vector = { group = "org.apache.arrow", name = "arrow-vector", version.ref = "arrow" }
+arrow-memory = { group = "org.apache.arrow", name = "arrow-memory-unsafe", version.ref = "arrow" }
 
 [plugins]
 jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }
