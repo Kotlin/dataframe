@@ -10,12 +10,14 @@ import java.net.URL
 
 public enum class SupportedFormats {
     CSV,
-    JSON
+    JSON,
+    ARROW,
 }
 
 internal fun guessFormat(file: File): SupportedFormats? = when (file.extension.toLowerCase()) {
     "json" -> SupportedFormats.JSON
     "csv" -> SupportedFormats.CSV
+    "feather" -> SupportedFormats.ARROW
     else -> null
 }
 
@@ -24,12 +26,14 @@ internal fun guessFormat(url: URL): SupportedFormats? = guessFormat(url.path)
 internal fun guessFormat(url: String): SupportedFormats? = when {
     url.endsWith(".csv") -> SupportedFormats.CSV
     url.endsWith(".json") -> SupportedFormats.JSON
+    url.endsWith(".feather") -> SupportedFormats.ARROW
     else -> null
 }
 
 public fun DataFrame.Companion.read(file: File): AnyFrame = when (guessFormat(file)) {
     SupportedFormats.CSV -> readCSV(file)
     SupportedFormats.JSON -> readJson(file)
+    SupportedFormats.ARROW -> readArrow(file)
     else -> try {
         readCSV(file)
     } catch (e: Exception) {
@@ -42,6 +46,7 @@ public fun DataRow.Companion.read(file: File): AnyRow = DataFrame.read(file).sin
 public fun DataFrame.Companion.read(url: URL): AnyFrame = when (guessFormat(url)) {
     SupportedFormats.CSV -> readCSV(url)
     SupportedFormats.JSON -> readJson(url)
+    SupportedFormats.ARROW -> readArrow(url)
     else -> try {
         readCSV(url)
     } catch (e: Exception) {
@@ -54,6 +59,7 @@ public fun DataRow.Companion.read(url: URL): AnyRow = DataFrame.read(url).single
 public fun DataFrame.Companion.read(path: String): AnyFrame = when (guessFormat(path)) {
     SupportedFormats.CSV -> readCSV(path)
     SupportedFormats.JSON -> readJson(path)
+    SupportedFormats.ARROW -> readArrow(path)
     else -> try {
         readCSV(path)
     } catch (e: Exception) {

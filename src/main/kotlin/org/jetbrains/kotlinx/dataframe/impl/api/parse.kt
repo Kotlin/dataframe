@@ -121,7 +121,7 @@ internal object Parsers : GlobalParserOptions {
     }
 
     private fun String.toUrlOrNull(): URL? {
-        return if (isURL(this)) catchSilent { URL(this) } else null
+        return if (isURL()) catchSilent { URL(this) } else null
     }
 
     private fun String.toBooleanOrNull() =
