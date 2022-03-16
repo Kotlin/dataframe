@@ -34,7 +34,7 @@ table.dataframe {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 12px;
     background-color: var(--background);
-    color: var(--text-color);
+    color: var(--text-color-dark);
     border: none;
     border-collapse: collapse;
 }
