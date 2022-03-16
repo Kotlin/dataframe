@@ -93,7 +93,7 @@ internal class Integration : JupyterIntegration() {
             render<Gather<*, *, *, *>> ({ it.into("key", "value") }, { "Gather" })
             render<IMG> { HTML(it.toString()) }
             render<IFRAME> { HTML(it.toString()) }
-            render<Update<*,*>>({ it.df }, { "Update" })
+            render<Update<*, *>>({ it.df }, { "Update" })
             render<Convert<*, *>>({ it.df }, { "Convert" })
         }
 
