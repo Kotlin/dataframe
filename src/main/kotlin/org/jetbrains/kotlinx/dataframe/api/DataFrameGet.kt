@@ -1,14 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.RowFilter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -19,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
-import org.jetbrains.kotlinx.dataframe.impl.valuesImpl
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -43,17 +40,6 @@ public fun <T> DataFrame<T>.getOrNull(index: Int): DataRow<T>? = if (index < 0 |
 public fun <T> ColumnsContainer<T>.getFrameColumn(columnPath: ColumnPath): FrameColumn<*> = get(columnPath).asAnyFrameColumn()
 public fun <T> ColumnsContainer<T>.getFrameColumn(columnName: String): FrameColumn<*> = get(columnName).asAnyFrameColumn()
 public fun <T> ColumnsContainer<T>.getColumnGroup(columnPath: ColumnPath): ColumnGroup<*> = get(columnPath).asColumnGroup()
-
-// region indices
-
-public fun AnyFrame.indices(): IntRange = 0 until rowsCount()
-
-public fun <T> DataFrame<T>.indices(filter: RowFilter<T>): List<Int> = indices.filter {
-    val row = get(it)
-    filter(row, row)
-}
-
-// endregion
 
 // region getColumn
 
@@ -88,16 +74,6 @@ public fun <T, C> ColumnsContainer<T>.getColumnGroup(column: ColumnSelector<T, D
 // region getColumnGroupOrNull
 
 public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(name: String): ColumnGroup<*>? = getColumnOrNull(name)?.asColumnGroup()
-
-// endregion
-
-// region values
-
-public fun <T, C> DataFrame<T>.values(byRow: Boolean = false, columns: ColumnsSelector<T, C>): Sequence<C> = valuesImpl(byRow, columns)
-public fun <T> DataFrame<T>.values(byRows: Boolean = false): Sequence<Any?> = values(byRows) { all() }
-
-public fun <T, C> DataFrame<T>.valuesNotNull(byRow: Boolean = false, columns: ColumnsSelector<T, C?>): Sequence<C> = values(byRow, columns).filterNotNull()
-public fun <T> DataFrame<T>.valuesNotNull(byRow: Boolean = false): Sequence<Any> = valuesNotNull(byRow) { all() }
 
 // endregion
 
