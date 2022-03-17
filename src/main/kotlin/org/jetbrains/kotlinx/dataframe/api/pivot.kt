@@ -3,8 +3,10 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.aggregation.Aggregatable
+import org.jetbrains.kotlinx.dataframe.aggregation.AggregateBody
 import org.jetbrains.kotlinx.dataframe.aggregation.AggregateGroupedDsl
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.PivotGroupByImpl
@@ -35,11 +37,7 @@ public interface PivotDsl<out T> : ColumnsSelectionDsl<T> {
     public infix fun <C> String.then(other: KProperty<C>): ColumnSet<C> = toColumnOf<C>() then other.toColumnAccessor()
 }
 
-public interface Pivot<T> : Aggregatable<T>
-
-public typealias PivotColumnsSelector<T, C> = Selector<PivotDsl<T>, ColumnSet<C>>
-
-// region df.pivot { }
+// region DataFrame
 
 public fun <T> DataFrame<T>.pivot(inward: Boolean? = null, columns: PivotColumnsSelector<T, *>): Pivot<T> = PivotImpl(this, columns, inward)
 public fun <T> DataFrame<T>.pivot(vararg columns: String, inward: Boolean? = null): Pivot<T> = pivot(inward) { columns.toColumns() }
@@ -58,7 +56,7 @@ public fun <T> DataFrame<T>.pivotCounts(vararg columns: KProperty<*>, inward: Bo
 
 // endregion
 
-// region groupBy { }.pivot { }
+// region GroupBy
 
 public fun <G> GroupBy<*, G>.pivot(inward: Boolean = true, columns: ColumnsSelector<G, *>): PivotGroupBy<G> = PivotGroupByImpl(this, columns, inward)
 public fun <G> GroupBy<*, G>.pivot(vararg columns: Column, inward: Boolean = true): PivotGroupBy<G> = pivot(inward) { columns.toColumns() }
@@ -77,7 +75,7 @@ public fun <G> GroupBy<*, G>.pivotCounts(vararg columns: KProperty<*>, inward: B
 
 // endregion
 
-// region groupBy.aggregate { pivot { } }
+// region GroupBy.aggregate
 
 public fun <T> AggregateGroupedDsl<T>.pivot(inward: Boolean = true, columns: ColumnsSelector<T, *>): PivotGroupBy<T> =
     PivotInAggregateImpl(this, columns, inward)
@@ -96,3 +94,32 @@ public fun <T> AggregateGroupedDsl<T>.pivotCounts(vararg columns: Column, inward
 public fun <T> AggregateGroupedDsl<T>.pivotCounts(vararg columns: KProperty<*>, inward: Boolean = true): DataFrame<T> = pivotCounts(inward) { columns.toColumns() }
 
 // endregion
+
+public interface Pivot<T> : Aggregatable<T>
+
+public typealias PivotColumnsSelector<T, C> = Selector<PivotDsl<T>, ColumnSet<C>>
+
+public data class ReducedPivot<T>(
+    @PublishedApi internal val pivot: Pivot<T>,
+    @PublishedApi internal val reducer: Selector<DataFrame<T>, DataRow<T>?>
+)
+
+internal fun <T> Pivot<T>.reduce(reducer: Selector<DataFrame<T>, DataRow<T>?>) = ReducedPivot(this, reducer)
+
+@PublishedApi
+internal inline fun <T> Pivot<T>.delegate(crossinline body: PivotGroupBy<T>.() -> DataFrame<T>): DataRow<T> = body(groupBy { none() })[0]
+
+public interface PivotGroupBy<out T> : Aggregatable<T> {
+
+    public fun <R> aggregate(separate: Boolean = false, body: AggregateBody<T, R>): DataFrame<T>
+
+    public fun default(value: Any?): PivotGroupBy<T>
+}
+
+public data class ReducedPivotGroupBy<T>(
+    @PublishedApi internal val pivot: PivotGroupBy<T>,
+    @PublishedApi internal val reducer: Selector<DataFrame<T>, DataRow<T>?>
+)
+
+@PublishedApi
+internal fun <T> PivotGroupBy<T>.reduce(reducer: Selector<DataFrame<T>, DataRow<T>?>): ReducedPivotGroupBy<T> = ReducedPivotGroupBy(this, reducer)

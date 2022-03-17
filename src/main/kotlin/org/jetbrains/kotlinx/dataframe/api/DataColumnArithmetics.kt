@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.Predicate
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import java.math.BigDecimal
 
@@ -106,3 +107,5 @@ public infix fun <T> DataColumn<T>.eq(value: T): DataColumn<Boolean> = isMatchin
 public infix fun <T> DataColumn<T>.neq(value: T): DataColumn<Boolean> = isMatching { it != value }
 public infix fun <T : Comparable<T>> DataColumn<T>.gt(value: T): DataColumn<Boolean> = isMatching { it > value }
 public infix fun <T : Comparable<T>> DataColumn<T>.lt(value: T): DataColumn<Boolean> = isMatching { it < value }
+
+internal infix fun <T> DataColumn<T>.isMatching(predicate: Predicate<T>): DataColumn<Boolean> = mapInline(predicate)
