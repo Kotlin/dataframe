@@ -170,6 +170,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 BigDecimal::class -> convert<Long> { it.toBigDecimal() }
                 LocalDateTime::class -> convert<Long> { it.toLocalDateTime(defaultTimeZone) }
                 LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone) }
+                Instant::class -> convert<Long> { Instant.fromEpochMilliseconds(it) }
                 java.time.LocalDateTime::class -> convert<Long> { it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime() }
                 java.time.LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
                 LocalTime::class -> convert<Long> { it.toLocalTime(defaultTimeZone) }
