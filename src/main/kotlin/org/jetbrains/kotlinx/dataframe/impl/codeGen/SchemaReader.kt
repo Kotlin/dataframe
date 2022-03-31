@@ -31,7 +31,7 @@ public val CodeGenerator.Companion.urlReader: (url: URL, csvOptions: CsvOptions)
                 DfReadResult.Success(DataFrame.readCSV(url, delimiter = delimiter), SupportedFormats.CSV, csvOptions)
             }
 
-            fun readArrow(url:URL) = run {
+            fun readArrow(url: URL) = run {
                 DfReadResult.Success(DataFrame.readArrow(url), SupportedFormats.ARROW, csvOptions)
             }
 
