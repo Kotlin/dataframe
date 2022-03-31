@@ -8,6 +8,7 @@ public interface DefaultReadDfMethod {
 private const val cast = "cast"
 private const val verify = "verify" // cast(true) is obscure, i think it's better to use named argument here
 private const val readCSV = "readCSV"
+private const val readTSV = "readTSV"
 private const val readJson = "readJson"
 
 public class DefaultReadJsonMethod(private val path: String?) : DefaultReadDfMethod {
@@ -48,6 +49,29 @@ public class DefaultReadCsvMethod(private val path: String?, private val csvOpti
                 |            $verify: Boolean? = null
                 |        ): DataFrame<$markerName> { 
                 |            val df = DataFrame.$readCSV(path, delimiter)
+                |            return if ($verify != null) df.$cast($verify = $verify) else df.$cast()
+                |        }
+                """.trimMargin()
+            )
+        }
+    }
+}
+
+public class DefaultReadTsvMethod(private val path: String?) : DefaultReadDfMethod {
+    public override fun toDeclaration(markerName: String, visibility: String): String {
+        return buildString {
+            if (path != null) {
+                append("""        ${visibility}const val defaultPath: String = "${path.escapeStringLiteral()}"""")
+                appendLine()
+            }
+            val defaultPathClause = if (path != null) " = defaultPath" else ""
+            append(
+                """
+                |        ${visibility}fun $readTSV(
+                |            path: String$defaultPathClause,
+                |            $verify: Boolean? = null
+                |        ): DataFrame<$markerName> { 
+                |            val df = DataFrame.$readTSV(path, delimiter)
                 |            return if ($verify != null) df.$cast($verify = $verify) else df.$cast()
                 |        }
                 """.trimMargin()
