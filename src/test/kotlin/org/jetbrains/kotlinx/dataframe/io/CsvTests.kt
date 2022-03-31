@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.testCsv
+import org.jetbrains.kotlinx.dataframe.testResource
 import org.junit.Test
 import java.io.StringWriter
 import java.util.Locale
@@ -159,6 +160,13 @@ class CsvTests {
         val str = grouped.toCsv()
         val res = DataFrame.readDelimStr(str)
         res shouldBe grouped
+    }
+
+    @Test
+    fun `guess tsv`() {
+        val df = DataFrame.read(testResource("abc.tsv"))
+        df.columnsCount() shouldBe 3
+        df.rowsCount() shouldBe 2
     }
 
     companion object {

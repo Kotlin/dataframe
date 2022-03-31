@@ -137,46 +137,6 @@ public fun DataFrame.Companion.readCSV(
         parserOptions
     )
 
-public fun DataFrame.Companion.readTSV(
-    fileOrUrl: String,
-    delimiter: Char = '\t',
-    headers: List<String> = listOf(),
-    colTypes: Map<String, ColType> = mapOf(),
-    skipLines: Int = 0,
-    readLines: Int? = null,
-    duplicate: Boolean = true,
-    charset: Charset = Charsets.UTF_8,
-    parserOptions: ParserOptions? = null
-): DataFrame<*> =
-    catchHttpResponse(asURL(fileOrUrl)) {
-        readDelim(
-            it, delimiter,
-            headers, isCompressed(fileOrUrl),
-            CSVType.TDF, colTypes,
-            skipLines, readLines,
-            duplicate, charset,
-            parserOptions
-        )
-    }
-
-public fun DataFrame.Companion.readTSV(
-    file: File,
-    delimiter: Char = '\t',
-    headers: List<String> = listOf(),
-    colTypes: Map<String, ColType> = mapOf(),
-    skipLines: Int = 0,
-    readLines: Int? = null,
-    duplicate: Boolean = true,
-    charset: Charset = Charsets.UTF_8
-): DataFrame<*> =
-    readDelim(
-        FileInputStream(file), delimiter,
-        headers, isCompressed(file),
-        CSVType.TDF, colTypes,
-        skipLines, readLines,
-        duplicate, charset
-    )
-
 private fun getCSVType(path: String): CSVType =
     when (path.substringAfterLast('.').toLowerCase()) {
         "csv" -> CSVType.DEFAULT
@@ -192,7 +152,7 @@ private fun asStream(fileOrUrl: String) = (
     }
     ).toURL().openStream()
 
-private fun asURL(fileOrUrl: String): URL = (
+internal fun asURL(fileOrUrl: String): URL = (
     if (isURL(fileOrUrl)) {
         URL(fileOrUrl).toURI()
     } else {

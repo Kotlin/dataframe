@@ -8,41 +8,44 @@ import org.jetbrains.kotlinx.dataframe.codeGen.CsvOptions
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadTsvMethod
 import org.jetbrains.kotlinx.dataframe.io.SupportedFormats
+import org.jetbrains.kotlinx.dataframe.io.guessFormat
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readJson
+import org.jetbrains.kotlinx.dataframe.io.readTSV
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.net.URL
 
 public val CodeGenerator.Companion.urlReader: (url: URL, csvOptions: CsvOptions) -> DfReadResult
-    get() {
-        return { url, csvOptions ->
-            fun guessFormat(url: String): SupportedFormats? = when {
-                url.endsWith(".csv") -> SupportedFormats.CSV
-                url.endsWith(".json") -> SupportedFormats.JSON
-                else -> null
-            }
+    get() = { url, csvOptions ->
 
-            fun readCSV(url: URL) = run {
-                val (delimiter) = csvOptions
-                DfReadResult.Success(DataFrame.readCSV(url, delimiter = delimiter), SupportedFormats.CSV, csvOptions)
-            }
+        fun readCSV(url: URL) = run {
+            val (delimiter) = csvOptions
+            DfReadResult.Success(DataFrame.readCSV(url, delimiter = delimiter), SupportedFormats.CSV, csvOptions)
+        }
 
-            fun readJson(url: URL) = DfReadResult.Success(DataFrame.readJson(url), SupportedFormats.JSON, csvOptions)
-            try {
-                val res = when (guessFormat(url.path)) {
-                    SupportedFormats.CSV -> readCSV(url)
-                    SupportedFormats.JSON -> readJson(url)
-                    else -> try {
-                        readCSV(url)
+        fun readTSV(url: URL) = DfReadResult.Success(DataFrame.readTSV(url), SupportedFormats.TSV, csvOptions)
+
+        fun readJson(url: URL) = DfReadResult.Success(DataFrame.readJson(url), SupportedFormats.JSON, csvOptions)
+        try {
+            val res = when (guessFormat(url.path)) {
+                SupportedFormats.CSV -> readCSV(url)
+                SupportedFormats.TSV -> readTSV(url)
+                SupportedFormats.JSON -> readJson(url)
+                else -> try {
+                    readCSV(url)
+                } catch (e: Exception) {
+                    try {
+                        readTSV(url)
                     } catch (e: Exception) {
                         readJson(url)
                     }
                 }
-                res
-            } catch (e: Throwable) {
-                DfReadResult.Error(e)
             }
+            res
+        } catch (e: Throwable) {
+            DfReadResult.Error(e)
         }
     }
 
@@ -57,6 +60,7 @@ public sealed interface DfReadResult {
             return when (format) {
                 SupportedFormats.CSV -> DefaultReadCsvMethod(pathRepresentation, csvOptions)
                 SupportedFormats.JSON -> DefaultReadJsonMethod(pathRepresentation)
+                SupportedFormats.TSV -> DefaultReadTsvMethod(pathRepresentation)
             }
         }
 
