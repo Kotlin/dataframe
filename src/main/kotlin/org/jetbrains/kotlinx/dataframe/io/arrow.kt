@@ -44,7 +44,6 @@ import java.nio.file.Files
 import java.time.Duration
 import java.time.LocalDateTime
 
-
 internal object Allocator {
     val ROOT by lazy {
         RootAllocator(Long.MAX_VALUE)
@@ -194,4 +193,3 @@ public fun DataFrame.Companion.readArrow(path: String): AnyFrame = if (path.isUR
 } else {
     readArrow(File(path))
 }
-

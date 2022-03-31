@@ -29,7 +29,6 @@ public class DefaultReadArrowMethod(private val path: String?) : DefaultReadDfMe
             )
         }
     }
-
 }
 
 public class DefaultReadJsonMethod(private val path: String?) : DefaultReadDfMethod {
