@@ -9,14 +9,36 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import java.io.File
+import java.io.InputStream
+import java.net.URL
 
 public fun DataFrame.Companion.readExcel(
-    fileName: String,
+    url: URL,
+    sheetName: String,
+    columns: String? = null,
+    rowsCount: Int? = null
+): AnyFrame = readExcel(url.openStream(), sheetName, columns, rowsCount)
+
+public fun DataFrame.Companion.readExcel(
+    file: File,
+    sheetName: String,
+    columns: String? = null,
+    rowsCount: Int? = null
+): AnyFrame = readExcel(file.inputStream(), sheetName, columns, rowsCount)
+
+public fun DataFrame.Companion.readExcel(
+    fileOrUrl: String,
+    sheetName: String,
+    columns: String? = null,
+    rowsCount: Int? = null
+): AnyFrame = readExcel(asURL(fileOrUrl), sheetName, columns, rowsCount)
+
+public fun DataFrame.Companion.readExcel(
+    inputStream: InputStream,
     sheetName: String,
     columns: String? = null,
     rowsCount: Int? = null
 ): AnyFrame {
-    val inputStream = File(fileName).inputStream()
     return inputStream.use {
         val sheet = WorkbookFactory.create(inputStream).getSheet(sheetName)
 
