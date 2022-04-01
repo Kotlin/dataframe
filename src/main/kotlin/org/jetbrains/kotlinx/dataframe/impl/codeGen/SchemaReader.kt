@@ -40,7 +40,7 @@ public val CodeGenerator.Companion.urlReader: (url: URL, csvOptions: CsvOptions)
                 SupportedFormats.TSV -> readTSV(url)
                 SupportedFormats.JSON -> readJson(url)
                 SupportedFormats.ARROW -> readArrow(url)
-                else -> try {
+                null -> try {
                     readCSV(url)
                 } catch (e: Exception) {
                     try {
