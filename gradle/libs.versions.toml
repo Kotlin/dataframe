@@ -11,6 +11,7 @@ korro = "0.1.1-dev-29"
 commonsCsv = "1.8"
 klaxon = "5.5"
 fuel = "2.3.1"
+poi = "5.2.0"
 kotlinDatetime = "0.3.1"
 
 junit = "4.13.2"
@@ -31,6 +32,8 @@ kotlin-scriptingJvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting
 commonsCsv = { module = "org.apache.commons:commons-csv", version.ref = "commonsCsv" }
 klaxon = { module = "com.beust:klaxon", version.ref = "klaxon" }
 fuel = { module = "com.github.kittinunf.fuel:fuel", version.ref = "fuel" }
+poi = { module = "org.apache.poi:poi", version.ref = "poi" }
+poi-ooxml = { module = "org.apache.poi:poi-ooxml", version.ref = "poi" }
 kotlin-datetimeJvm = { module = "org.jetbrains.kotlinx:kotlinx-datetime-jvm", version.ref = "kotlinDatetime" }
 
 junit = { module = "junit:junit", version.ref = "junit" }
