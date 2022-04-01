@@ -38,7 +38,7 @@ public fun DataFrame.Companion.read(file: File): AnyFrame = when (guessFormat(fi
     SupportedFormats.TSV -> readTSV(file)
     SupportedFormats.JSON -> readJson(file)
     SupportedFormats.ARROW -> readArrow(file)
-    else -> try {
+    null -> try {
         readCSV(file)
     } catch (e: Exception) {
         try {
@@ -56,7 +56,7 @@ public fun DataFrame.Companion.read(url: URL): AnyFrame = when (guessFormat(url)
     SupportedFormats.TSV -> readTSV(url)
     SupportedFormats.JSON -> readJson(url)
     SupportedFormats.ARROW -> readArrow(url)
-    else -> try {
+    null -> try {
         readCSV(url)
     } catch (e: Exception) {
         try {
@@ -74,7 +74,7 @@ public fun DataFrame.Companion.read(path: String): AnyFrame = when (guessFormat(
     SupportedFormats.TSV -> readTSV(path)
     SupportedFormats.JSON -> readJson(path)
     SupportedFormats.ARROW -> readArrow(path)
-    else -> try {
+    null -> try {
         readCSV(path)
     } catch (e: Exception) {
         try {
