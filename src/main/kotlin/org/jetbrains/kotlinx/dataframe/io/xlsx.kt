@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellType
+import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -14,33 +15,36 @@ import java.net.URL
 
 public fun DataFrame.Companion.readExcel(
     url: URL,
-    sheetName: String,
+    sheetName: String? = null,
     columns: String? = null,
     rowsCount: Int? = null
 ): AnyFrame = readExcel(url.openStream(), sheetName, columns, rowsCount)
 
 public fun DataFrame.Companion.readExcel(
     file: File,
-    sheetName: String,
+    sheetName: String? = null,
     columns: String? = null,
     rowsCount: Int? = null
 ): AnyFrame = readExcel(file.inputStream(), sheetName, columns, rowsCount)
 
 public fun DataFrame.Companion.readExcel(
     fileOrUrl: String,
-    sheetName: String,
+    sheetName: String? = null,
     columns: String? = null,
     rowsCount: Int? = null
 ): AnyFrame = readExcel(asURL(fileOrUrl), sheetName, columns, rowsCount)
 
 public fun DataFrame.Companion.readExcel(
     inputStream: InputStream,
-    sheetName: String,
+    sheetName: String? = null,
     columns: String? = null,
     rowsCount: Int? = null
 ): AnyFrame {
     return inputStream.use {
-        val sheet = WorkbookFactory.create(inputStream).getSheet(sheetName)
+        val wb = WorkbookFactory.create(inputStream)
+        val sheet: Sheet = sheetName
+            ?.let { wb.getSheet(it) ?: error("Sheet with name $sheetName not found") }
+            ?: wb.getSheetAt(0)
 
         val columnIndexes = if (columns != null) {
             columns.split(",").flatMap {
