@@ -93,7 +93,7 @@ public class DefaultReadTsvMethod(private val path: String?) : DefaultReadDfMeth
                 |            path: String$defaultPathClause,
                 |            $verify: Boolean? = null
                 |        ): DataFrame<$markerName> { 
-                |            val df = DataFrame.$readTSV(path, delimiter)
+                |            val df = DataFrame.$readTSV(path)
                 |            return if ($verify != null) df.$cast($verify = $verify) else df.$cast()
                 |        }
                 """.trimMargin()
