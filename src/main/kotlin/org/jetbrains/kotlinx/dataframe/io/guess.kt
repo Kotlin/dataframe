@@ -13,6 +13,7 @@ public enum class SupportedFormats {
     TSV,
     JSON,
     ARROW,
+    EXCEL,
 }
 
 internal fun guessFormat(file: File): SupportedFormats? = when (file.extension.toLowerCase()) {
@@ -20,6 +21,7 @@ internal fun guessFormat(file: File): SupportedFormats? = when (file.extension.t
     "csv" -> SupportedFormats.CSV
     "tsv" -> SupportedFormats.TSV
     "feather" -> SupportedFormats.ARROW
+    "xls", "xlsx" -> SupportedFormats.EXCEL
     else -> null
 }
 
@@ -30,6 +32,7 @@ internal fun guessFormat(url: String): SupportedFormats? = when {
     url.endsWith(".tsv") -> SupportedFormats.TSV
     url.endsWith(".json") -> SupportedFormats.JSON
     url.endsWith(".feather") -> SupportedFormats.ARROW
+    url.endsWith(".xls") || url.endsWith(".xlsx") -> SupportedFormats.EXCEL
     else -> null
 }
 
@@ -38,13 +41,18 @@ public fun DataFrame.Companion.read(file: File): AnyFrame = when (guessFormat(fi
     SupportedFormats.TSV -> readTSV(file)
     SupportedFormats.JSON -> readJson(file)
     SupportedFormats.ARROW -> readArrow(file)
+    SupportedFormats.EXCEL -> readExcel(file)
     null -> try {
-        readCSV(file)
+        readExcel(file)
     } catch (e: Exception) {
         try {
-            readTSV(file)
+            readCSV(file)
         } catch (e: Exception) {
-            readJson(file)
+            try {
+                readTSV(file)
+            } catch (e: Exception) {
+                readJson(file)
+            }
         }
     }
 }
@@ -56,13 +64,18 @@ public fun DataFrame.Companion.read(url: URL): AnyFrame = when (guessFormat(url)
     SupportedFormats.TSV -> readTSV(url)
     SupportedFormats.JSON -> readJson(url)
     SupportedFormats.ARROW -> readArrow(url)
+    SupportedFormats.EXCEL -> readExcel(url)
     null -> try {
-        readCSV(url)
+        readExcel(url)
     } catch (e: Exception) {
         try {
-            readTSV(url)
+            readCSV(url)
         } catch (e: Exception) {
-            readJson(url)
+            try {
+                readTSV(url)
+            } catch (e: Exception) {
+                readJson(url)
+            }
         }
     }
 }
@@ -74,13 +87,18 @@ public fun DataFrame.Companion.read(path: String): AnyFrame = when (guessFormat(
     SupportedFormats.TSV -> readTSV(path)
     SupportedFormats.JSON -> readJson(path)
     SupportedFormats.ARROW -> readArrow(path)
+    SupportedFormats.EXCEL -> readExcel(path)
     null -> try {
-        readCSV(path)
+        readExcel(path)
     } catch (e: Exception) {
         try {
-            readTSV(path)
+            readCSV(path)
         } catch (e: Exception) {
-            readJson(path)
+            try {
+                readTSV(path)
+            } catch (e: Exception) {
+                readJson(path)
+            }
         }
     }
 }

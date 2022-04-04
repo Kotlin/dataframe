@@ -289,6 +289,7 @@ public fun CodeGenResult.toStandaloneSnippet(packageName: String): String {
         appendLine("import org.jetbrains.kotlinx.dataframe.api.cast")
         appendLine("import org.jetbrains.kotlinx.dataframe.io.readJson")
         appendLine("import org.jetbrains.kotlinx.dataframe.io.readCSV")
+        appendLine("import org.jetbrains.kotlinx.dataframe.io.readExcel")
         appendLine()
         appendLine(code.declarations)
     }
