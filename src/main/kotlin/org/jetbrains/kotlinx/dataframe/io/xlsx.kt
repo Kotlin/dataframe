@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
+import org.apache.poi.hssf.usermodel.HSSFCell
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellType
@@ -130,44 +131,12 @@ public fun <T> DataFrame<T>.writeExcel(
     columns.forEachRow {
         val row = sheet.createRow(i)
         it.values().forEachIndexed { index, any ->
-            val cell = row.createCell(index)
-            when (any) {
-                is AnyRow -> {
-                    cell.setCellValue(any.toJson())
-                }
-                is AnyFrame ->  {
-                    cell.setCellValue(any.toJson())
-                }
-                is Number -> {
-                    cell.setCellValue(any.toDouble())
-                }
-                is LocalDate -> {
-                    cell.setCellValue(any)
-                }
-                is LocalDateTime -> {
-                    cell.setCellValue(any)
-                }
-                is Boolean -> {
-                    cell.setCellValue(any)
-                }
-                is Calendar -> {
-                    cell.setCellValue(any.time)
-                }
-                is Date -> {
-                    cell.setCellValue(any)
-                }
-                is RichTextString -> {
-                    cell.setCellValue(any)
-                }
-                is String -> {
-                    cell.setCellValue(any)
-                }
-                is kotlinx.datetime.LocalDate -> {
-                    cell.setCellValue(any.toJavaLocalDate())
-                }
-                is kotlinx.datetime.LocalDateTime -> {
-                    cell.setCellValue(any.toJavaLocalDateTime())
-                }
+            // In file created by LibreOffice Calc (empty_cell.xls)
+            // empty cell B2 is treated by Apache POI as null (See XlsxTest.empty cell is null)
+            // so here we don't create cell for null value
+            if (any != null) {
+                val cell = row.createCell(index)
+                cell.setCellValueByGuessedType(any)
             }
         }
         i++
@@ -175,5 +144,52 @@ public fun <T> DataFrame<T>.writeExcel(
 
     file.outputStream().use {
         wb.write(it)
+    }
+}
+
+private fun HSSFCell.setCellValueByGuessedType(any: Any) {
+    return when (any) {
+        is AnyRow -> {
+            this.setCellValue(any.toJson())
+        }
+        is AnyFrame -> {
+            this.setCellValue(any.toJson())
+        }
+        is Number -> {
+            this.setCellValue(any.toDouble())
+        }
+        is LocalDate -> {
+            this.setCellValue(any)
+        }
+        is LocalDateTime -> {
+            this.setCellValue(any)
+        }
+        is Boolean -> {
+            this.setCellValue(any)
+        }
+        is Calendar -> {
+            this.setCellValue(any.time)
+        }
+        is Date -> {
+            this.setCellValue(any)
+        }
+        is RichTextString -> {
+            this.setCellValue(any)
+        }
+        is String -> {
+            this.setCellValue(any)
+        }
+        is kotlinx.datetime.LocalDate -> {
+            this.setCellValue(any.toJavaLocalDate())
+        }
+        is kotlinx.datetime.LocalDateTime -> {
+            this.setCellValue(any.toJavaLocalDateTime())
+        }
+        // Another option would be to serialize everything else to string,
+        // but people can convert columns to string with any serialization framework they want
+        // so i think toString should do until more use cases arise.
+        else -> {
+            this.setCellValue(any.toString())
+        }
     }
 }
