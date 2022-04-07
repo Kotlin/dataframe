@@ -20,7 +20,7 @@ import java.net.URL
 
 DataFrame.readCSV("input.csv")
 DataFrame.readCSV(File("input.csv"))
-DataFrame.readCSV(URL("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/securities.csv"))
+DataFrame.readCSV(URL("https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"))
 ```
 
 All `readCSV` overloads support different options.
