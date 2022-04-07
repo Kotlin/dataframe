@@ -1,7 +1,7 @@
 [//]: # (title: Read)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Read-->
 
-`DataFrame` supports CSV and JSON input formats.
+`DataFrame` supports CSV, TSV and JSON input formats.
 
 `read` method automatically detects input format based on file extension and content
 
