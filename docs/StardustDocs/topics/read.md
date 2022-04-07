@@ -59,6 +59,37 @@ C: Double
 D: Boolean?
 ```
 
+DataFrame will try to parse columns as JSON, so when reading following table with JSON object in column D: 
+
+<table>
+<tr><th>A</th><th>D</th></tr>
+<tr><td>12</td><td>{"B":2,"C":3}</td></tr>
+<tr><td>41</td><td>{"B":3,"C":2}</td></tr>
+</table>
+
+We get this data schema where D is ColumnGroup with 2 children columns:
+```text
+A: Int
+D:
+    B: Int
+    C: Int
+```
+
+For column where values are lists of JSON values:
+<table>
+<tr><th>A</th><th>G</th></tr>
+<tr><td>12</td><td>[{"B":1,"C":2,"D":3},{"B":1,"C":3,"D":2}]</td></tr>
+<tr><td>41</td><td>[{"B":2,"C":1,"D":3}]</td></tr>
+</table>
+
+```text
+A: Int
+G: *
+    B: Int
+    C: Int
+    D: Int
+```
+
 ### Reading JSON
 Basics for reading JSONs are the same: you can read from file or from remote URL.
 
