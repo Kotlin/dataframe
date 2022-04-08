@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
+import kotlinx.datetime.LocalDateTime
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.concat
@@ -9,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.testResource
 import org.junit.Test
 import java.nio.file.Files
+import kotlin.reflect.typeOf
 
 class XlsxTest {
 
@@ -59,5 +61,11 @@ class XlsxTest {
         extendedDf.writeExcel(temp)
         val extendedDf1 = DataFrame.readExcel(temp)
         extendedDf shouldBe extendedDf1
+    }
+
+    @Test
+    fun `read date time`() {
+        val df = DataFrame.read(testResource("datetime.xlsx"))
+        df["time"].type() shouldBe typeOf<LocalDateTime>()
     }
 }

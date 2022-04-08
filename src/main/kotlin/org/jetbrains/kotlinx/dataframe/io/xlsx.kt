@@ -2,10 +2,12 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toKotlinLocalDateTime
 import org.apache.poi.hssf.usermodel.HSSFCell
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellType
+import org.apache.poi.ss.usermodel.DateUtil
 import org.apache.poi.ss.usermodel.RichTextString
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.WorkbookFactory
@@ -24,6 +26,8 @@ import java.net.URL
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.math.floor
+import kotlin.math.roundToInt
 
 public fun DataFrame.Companion.readExcel(
     url: URL,
@@ -79,7 +83,13 @@ public fun DataFrame.Companion.readExcel(
                 val cell: Cell? = it.getCell(index)
                 when (cell?.cellType) {
                     CellType._NONE -> error("Cell ${cell.address} of sheet ${sheet.sheetName} has a CellType that should only be used internally. This is a bug, please report https://github.com/Kotlin/dataframe/issues")
-                    CellType.NUMERIC -> cell.numericCellValue
+                    CellType.NUMERIC -> {
+                        val number = cell.numericCellValue
+                        when {
+                            DateUtil.isCellDateFormatted(cell) -> DateUtil.getLocalDateTime(number).toKotlinLocalDateTime()
+                            else -> number
+                        }
+                    }
                     CellType.STRING -> cell.stringCellValue
                     CellType.FORMULA -> cell.numericCellValue
                     CellType.BLANK -> cell.stringCellValue
