@@ -3,15 +3,16 @@ package org.jetbrains.kotlinx.dataframe.io
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
-import org.apache.poi.hssf.usermodel.HSSFCell
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
 import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.DateUtil
 import org.apache.poi.ss.usermodel.RichTextString
 import org.apache.poi.ss.usermodel.Sheet
+import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
+import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
@@ -22,12 +23,11 @@ import org.jetbrains.kotlinx.dataframe.api.forEachRow
 import org.jetbrains.kotlinx.dataframe.api.select
 import java.io.File
 import java.io.InputStream
+import java.io.OutputStream
 import java.net.URL
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
-import kotlin.math.floor
-import kotlin.math.roundToInt
 
 public fun DataFrame.Companion.readExcel(
     url: URL,
@@ -108,18 +108,40 @@ public fun <T> DataFrame<T>.writeExcel(
     path: String,
     columnsSelector: ColumnsSelector<T, *> = { all() },
     sheetName: String? = null,
-    writeHeader: Boolean = true
+    writeHeader: Boolean = true,
+    workBookType: WorkBookType = WorkBookType.XLSX
 ) {
-    return writeExcel(File(path), columnsSelector, sheetName, writeHeader)
+    return writeExcel(File(path), columnsSelector, sheetName, writeHeader, workBookType)
+}
+
+public enum class WorkBookType {
+    XLS, XLSX
 }
 
 public fun <T> DataFrame<T>.writeExcel(
     file: File,
     columnsSelector: ColumnsSelector<T, *> = { all() },
     sheetName: String? = null,
-    writeHeader: Boolean = true
+    writeHeader: Boolean = true,
+    workBookType: WorkBookType = WorkBookType.XLSX
 ) {
-    val wb = HSSFWorkbook()
+    val factory = when (workBookType) {
+        WorkBookType.XLS -> { { HSSFWorkbook() } }
+        WorkBookType.XLSX -> { { XSSFWorkbook() } }
+    }
+    return file.outputStream().use {
+        writeExcel(it, columnsSelector, sheetName, writeHeader, factory)
+    }
+}
+
+public fun <T> DataFrame<T>.writeExcel(
+    outputStream: OutputStream,
+    columnsSelector: ColumnsSelector<T, *> = { all() },
+    sheetName: String? = null,
+    writeHeader: Boolean = true,
+    factory: () -> Workbook
+) {
+    val wb: Workbook = factory()
     val sheet = if (sheetName != null) {
         wb.createSheet(sheetName)
     } else {
@@ -151,13 +173,10 @@ public fun <T> DataFrame<T>.writeExcel(
         }
         i++
     }
-
-    file.outputStream().use {
-        wb.write(it)
-    }
+    wb.write(outputStream)
 }
 
-private fun HSSFCell.setCellValueByGuessedType(any: Any) {
+private fun Cell.setCellValueByGuessedType(any: Any) {
     return when (any) {
         is AnyRow -> {
             this.setCellValue(any.toJson())
