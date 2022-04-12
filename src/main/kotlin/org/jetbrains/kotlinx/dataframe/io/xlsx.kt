@@ -35,10 +35,8 @@ public fun DataFrame.Companion.readExcel(
     columns: String? = null,
     rowsCount: Int? = null
 ): AnyFrame {
-    return url.openStream().use {
-        val wb = WorkbookFactory.create(it)
-        readExcel(wb, sheetName, columns, rowsCount)
-    }
+    val wb = WorkbookFactory.create(url.openStream())
+    return wb.use { readExcel(wb, sheetName, columns, rowsCount) }
 }
 
 public fun DataFrame.Companion.readExcel(
@@ -48,7 +46,7 @@ public fun DataFrame.Companion.readExcel(
     rowsCount: Int? = null
 ): AnyFrame {
     val wb = WorkbookFactory.create(file)
-    return readExcel(wb, sheetName, columns, rowsCount)
+    return wb.use { readExcel(it, sheetName, columns, rowsCount) }
 }
 
 public fun DataFrame.Companion.readExcel(
@@ -65,7 +63,7 @@ public fun DataFrame.Companion.readExcel(
     rowsCount: Int? = null
 ): AnyFrame {
     val wb = WorkbookFactory.create(inputStream)
-    return readExcel(wb, sheetName, columns, rowsCount)
+    return wb.use { readExcel(it, sheetName, columns, rowsCount) }
 }
 
 internal fun DataFrame.Companion.readExcel(
@@ -189,6 +187,7 @@ public fun <T> DataFrame<T>.writeExcel(
         i++
     }
     wb.write(outputStream)
+    wb.close()
 }
 
 private fun Cell.setCellValueByGuessedType(any: Any) {
