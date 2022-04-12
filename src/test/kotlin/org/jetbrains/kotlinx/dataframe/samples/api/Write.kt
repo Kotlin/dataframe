@@ -5,6 +5,7 @@ import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.io.toCsv
 import org.jetbrains.kotlinx.dataframe.io.toJson
 import org.jetbrains.kotlinx.dataframe.io.writeCSV
+import org.jetbrains.kotlinx.dataframe.io.writeExcel
 import org.jetbrains.kotlinx.dataframe.io.writeJson
 import org.junit.Test
 import java.io.File
@@ -58,6 +59,13 @@ class Write : TestBase() {
               "isHappy": true
             }
         """.rejoinWithSystemLineSeparator()
+    }
+
+    @Test
+    fun writeXls() {
+        useTempFile { file ->
+            df.writeExcel(file)
+        }
     }
 
     companion object {
