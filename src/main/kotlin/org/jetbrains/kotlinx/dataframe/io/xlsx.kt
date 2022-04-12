@@ -34,14 +34,22 @@ public fun DataFrame.Companion.readExcel(
     sheetName: String? = null,
     columns: String? = null,
     rowsCount: Int? = null
-): AnyFrame = readExcel(url.openStream(), sheetName, columns, rowsCount)
+): AnyFrame {
+    return url.openStream().use {
+        val wb = WorkbookFactory.create(it)
+        readExcel(wb, sheetName, columns, rowsCount)
+    }
+}
 
 public fun DataFrame.Companion.readExcel(
     file: File,
     sheetName: String? = null,
     columns: String? = null,
     rowsCount: Int? = null
-): AnyFrame = readExcel(file.inputStream(), sheetName, columns, rowsCount)
+): AnyFrame {
+    val wb = WorkbookFactory.create(file)
+    return readExcel(wb, sheetName, columns, rowsCount)
+}
 
 public fun DataFrame.Companion.readExcel(
     fileOrUrl: String,
@@ -56,52 +64,59 @@ public fun DataFrame.Companion.readExcel(
     columns: String? = null,
     rowsCount: Int? = null
 ): AnyFrame {
-    return inputStream.use {
-        val wb = WorkbookFactory.create(inputStream)
-        val sheet: Sheet = sheetName
-            ?.let { wb.getSheet(it) ?: error("Sheet with name $sheetName not found") }
-            ?: wb.getSheetAt(0)
+    val wb = WorkbookFactory.create(inputStream)
+    return readExcel(wb, sheetName, columns, rowsCount)
+}
 
-        val columnIndexes = if (columns != null) {
-            columns.split(",").flatMap {
-                if (it.contains(":")) {
-                    val (start, end) = it.split(":").map { CellReference.convertColStringToIndex(it) }
-                    start..end
-                } else {
-                    listOf(CellReference.convertColStringToIndex(it))
-                }
-            }
-        } else {
-            sheet.getRow(0).map { it.columnIndex }
-        }
+internal fun DataFrame.Companion.readExcel(
+    wb: Workbook,
+    sheetName: String? = null,
+    columns: String? = null,
+    rowsCount: Int? = null
+): AnyFrame {
+    val sheet: Sheet = sheetName
+        ?.let { wb.getSheet(it) ?: error("Sheet with name $sheetName not found") }
+        ?: wb.getSheetAt(0)
 
-        val headerRow = sheet.getRow(0)
-        val valueRows = sheet.drop(1).let { if (rowsCount != null) it.take(rowsCount) else it }
-        val columns = columnIndexes.map { index ->
-            val name = headerRow.getCell(index)?.stringCellValue ?: CellReference.convertNumToColString(index)
-            val values = valueRows.map {
-                val cell: Cell? = it.getCell(index)
-                when (cell?.cellType) {
-                    CellType._NONE -> error("Cell ${cell.address} of sheet ${sheet.sheetName} has a CellType that should only be used internally. This is a bug, please report https://github.com/Kotlin/dataframe/issues")
-                    CellType.NUMERIC -> {
-                        val number = cell.numericCellValue
-                        when {
-                            DateUtil.isCellDateFormatted(cell) -> DateUtil.getLocalDateTime(number).toKotlinLocalDateTime()
-                            else -> number
-                        }
-                    }
-                    CellType.STRING -> cell.stringCellValue
-                    CellType.FORMULA -> cell.numericCellValue
-                    CellType.BLANK -> cell.stringCellValue
-                    CellType.BOOLEAN -> cell.booleanCellValue
-                    CellType.ERROR -> cell.errorCellValue
-                    null -> null
-                }
+    val columnIndexes = if (columns != null) {
+        columns.split(",").flatMap {
+            if (it.contains(":")) {
+                val (start, end) = it.split(":").map { CellReference.convertColStringToIndex(it) }
+                start..end
+            } else {
+                listOf(CellReference.convertColStringToIndex(it))
             }
-            DataColumn.createWithTypeInference(name, values)
         }
-        dataFrameOf(columns)
+    } else {
+        sheet.getRow(0).map { it.columnIndex }
     }
+
+    val headerRow = sheet.getRow(0)
+    val valueRows = sheet.drop(1).let { if (rowsCount != null) it.take(rowsCount) else it }
+    val columns = columnIndexes.map { index ->
+        val name = headerRow.getCell(index)?.stringCellValue ?: CellReference.convertNumToColString(index)
+        val values = valueRows.map {
+            val cell: Cell? = it.getCell(index)
+            when (cell?.cellType) {
+                CellType._NONE -> error("Cell ${cell.address} of sheet ${sheet.sheetName} has a CellType that should only be used internally. This is a bug, please report https://github.com/Kotlin/dataframe/issues")
+                CellType.NUMERIC -> {
+                    val number = cell.numericCellValue
+                    when {
+                        DateUtil.isCellDateFormatted(cell) -> DateUtil.getLocalDateTime(number).toKotlinLocalDateTime()
+                        else -> number
+                    }
+                }
+                CellType.STRING -> cell.stringCellValue
+                CellType.FORMULA -> cell.numericCellValue
+                CellType.BLANK -> cell.stringCellValue
+                CellType.BOOLEAN -> cell.booleanCellValue
+                CellType.ERROR -> cell.errorCellValue
+                null -> null
+            }
+        }
+        DataColumn.createWithTypeInference(name, values)
+    }
+    return dataFrameOf(columns)
 }
 
 public fun <T> DataFrame<T>.writeExcel(
