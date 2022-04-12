@@ -6,6 +6,9 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.api.columnTypes
+import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -53,5 +56,20 @@ class Read : TestBase() {
         // SampleEnd
         row.columnNames() shouldBe listOf("A", "B", "C", "D")
         row.columnTypes() shouldBe listOf(typeOf<String>(), typeOf<Int>(), typeOf<Double>(), typeOf<Boolean>())
+    }
+
+    @Test
+    fun fixMixedColumn() {
+        // SampleStart
+        val df = dataFrameOf("IDS")(100.0, "A100", "B100", "C100")
+        val df1 = df.convert("IDS").with(inferType = true) {
+            if (it is Double) {
+                it.toLong().toString()
+            } else {
+                it
+            }
+        }
+        df1["IDS"].type() shouldBe typeOf<String>()
+        // SampleEnd
     }
 }

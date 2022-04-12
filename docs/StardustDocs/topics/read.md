@@ -1,7 +1,7 @@
 [//]: # (title: Read)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Read-->
 
-`DataFrame` supports CSV, TSV and JSON input formats.
+`DataFrame` supports CSV, TSV, JSON, XLS and XLSX input formats.
 
 `read` method automatically detects input format based on file extension and content
 
@@ -135,3 +135,41 @@ D: Boolean?
 ```
 
 Column A has `String` type because all values are string literals, no implicit conversion is performed. Column C has `Number` type because it's the least common type for `Int` and `Double`.
+
+### Reading spreadsheets
+
+Right now DataFrame only supports reading Excel formats: xls, xlsx.
+
+You can read from file or URL.
+
+Cells representing dates will be read as `kotlinx.datetime.LocalDateTime`.
+Cells with number values, including whole numbers such as "100", or calculated formulas will be read as `Double` 
+
+Sometimes cells can have wrong format in Excel file, for example you expect to read column of String:
+```
+IDS
+100 <-- Intended to be String, but has wrong cell format in original .xlsx file
+A100
+B100
+C100
+```
+
+You will get column of Serializable instead (common parent for Double & String)
+
+You can fix it using convert: 
+
+<!---FUN fixMixedColumn-->
+
+```kotlin
+val df = dataFrameOf("IDS")(100.0, "A100", "B100", "C100")
+val df1 = df.convert("IDS").with(inferType = true) {
+    if (it is Double) {
+        it.toLong().toString()
+    } else {
+        it
+    }
+}
+df1["IDS"].type() shouldBe typeOf<String>()
+```
+
+<!---END-->
