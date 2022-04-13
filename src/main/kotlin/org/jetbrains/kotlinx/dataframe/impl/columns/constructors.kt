@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.api.AddDataRowImpl
 import org.jetbrains.kotlinx.dataframe.api.AddExpression
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
+import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.PivotColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.PivotDsl
 import org.jetbrains.kotlinx.dataframe.api.SortColumnsSelector
@@ -195,13 +196,13 @@ internal fun <T> guessColumnType(
                 }
                 DataColumn.createFrameColumn(name, frames).cast()
             } else {
-                DataColumn.createValueColumn(name, lists, type, checkForNulls = false, defaultValue).cast()
+                DataColumn.createValueColumn(name, lists, type, defaultValue = defaultValue).cast()
             }
         }
         else -> {
             if (nullable == null) {
-                DataColumn.createValueColumn(name, values, type, checkForNulls = !detectType, defaultValue)
-            } else DataColumn.createValueColumn(name, values, type.withNullability(nullable), checkForNulls = false, defaultValue)
+                DataColumn.createValueColumn(name, values, type, infer = if (detectType) Infer.None else Infer.Nulls, defaultValue)
+            } else DataColumn.createValueColumn(name, values, type.withNullability(nullable), defaultValue = defaultValue)
         }
     }
 }
