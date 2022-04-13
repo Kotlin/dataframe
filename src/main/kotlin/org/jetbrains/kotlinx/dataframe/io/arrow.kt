@@ -31,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import java.io.File
@@ -43,6 +44,7 @@ import java.nio.channels.SeekableByteChannel
 import java.nio.file.Files
 import java.time.Duration
 import java.time.LocalDateTime
+import kotlin.reflect.typeOf
 
 internal object Allocator {
     val ROOT by lazy {
@@ -134,36 +136,38 @@ private fun LargeVarCharVector.values(range: IntRange): List<String?> = range.ma
     }
 }
 
+private inline fun <reified T> List<T>.withType() = this to typeOf<T>()
+
 private fun readField(root: VectorSchemaRoot, field: Field): AnyBaseColumn {
     val range = 0 until root.rowCount
-    val result = when (val vector = root.getVector(field)) {
-        is VarCharVector -> vector.values(range)
-        is LargeVarCharVector -> vector.values(range)
-        is VarBinaryVector -> vector.values(range)
-        is LargeVarBinaryVector -> vector.values(range)
-        is SmallIntVector -> vector.values(range)
-        is TinyIntVector -> vector.values(range)
-        is UInt1Vector -> vector.values(range)
-        is UInt2Vector -> vector.values(range)
-        is UInt4Vector -> vector.values(range)
-        is UInt8Vector -> vector.values(range)
-        is IntVector -> vector.values(range)
-        is BigIntVector -> vector.values(range)
-        is DecimalVector -> vector.values(range)
-        is Decimal256Vector -> vector.values(range)
-        is Float8Vector -> vector.values(range)
-        is Float4Vector -> vector.values(range)
-        is DurationVector -> vector.values(range)
-        is TimeNanoVector -> vector.values(range)
-        is TimeMicroVector -> vector.values(range)
-        is TimeMilliVector -> vector.values(range)
-        is TimeSecVector -> vector.values(range)
-        is StructVector -> vector.values(range)
+    val (list, type) = when (val vector = root.getVector(field)) {
+        is VarCharVector -> vector.values(range).withType()
+        is LargeVarCharVector -> vector.values(range).withType()
+        is VarBinaryVector -> vector.values(range).withType()
+        is LargeVarBinaryVector -> vector.values(range).withType()
+        is SmallIntVector -> vector.values(range).withType()
+        is TinyIntVector -> vector.values(range).withType()
+        is UInt1Vector -> vector.values(range).withType()
+        is UInt2Vector -> vector.values(range).withType()
+        is UInt4Vector -> vector.values(range).withType()
+        is UInt8Vector -> vector.values(range).withType()
+        is IntVector -> vector.values(range).withType()
+        is BigIntVector -> vector.values(range).withType()
+        is DecimalVector -> vector.values(range).withType()
+        is Decimal256Vector -> vector.values(range).withType()
+        is Float8Vector -> vector.values(range).withType()
+        is Float4Vector -> vector.values(range).withType()
+        is DurationVector -> vector.values(range).withType()
+        is TimeNanoVector -> vector.values(range).withType()
+        is TimeMicroVector -> vector.values(range).withType()
+        is TimeMilliVector -> vector.values(range).withType()
+        is TimeSecVector -> vector.values(range).withType()
+        is StructVector -> vector.values(range).withType()
         else -> {
             TODO("not fully implemented")
         }
     }
-    return DataColumn.createValueColumn(field.name, result, field.isNullable)
+    return DataColumn.createValueColumn(field.name, list, type, Infer.Nulls)
 }
 
 public fun DataFrame.Companion.readArrow(file: File): AnyFrame {

@@ -68,5 +68,5 @@ public fun <T, C> DataFrame<T>.sortByDesc(vararg columns: ColumnReference<Compar
 public fun <T, C> DataFrame<T>.sortByDesc(columns: Iterable<ColumnReference<Comparable<C>?>>): DataFrame<T> =
     sortByDesc { columns.toColumnSet() }
 
-public fun <T : Comparable<T>> DataColumn<T>.sort(): ValueColumn<T> = DataColumn.createValueColumn(name, values().sorted(), type, false, defaultValue())
-public fun <T : Comparable<T>> DataColumn<T>.sortDesc(): ValueColumn<T> = DataColumn.createValueColumn(name, values().sortedDescending(), type, false, defaultValue())
+public fun <T : Comparable<T>> DataColumn<T>.sort(): ValueColumn<T> = DataColumn.createValueColumn(name, values().sorted(), type, defaultValue = defaultValue())
+public fun <T : Comparable<T>> DataColumn<T>.sortDesc(): ValueColumn<T> = DataColumn.createValueColumn(name, values().sortedDescending(), type, defaultValue = defaultValue())

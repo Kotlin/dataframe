@@ -49,3 +49,5 @@ public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyF
         }.toDataFrame()
     }
 }
+
+internal fun String.isURL(): Boolean = listOf("http:", "https:", "ftp:").any { startsWith(it) }
