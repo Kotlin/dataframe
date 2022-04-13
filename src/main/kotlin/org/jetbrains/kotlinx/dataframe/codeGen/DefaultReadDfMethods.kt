@@ -10,6 +10,27 @@ private const val verify = "verify" // cast(true) is obscure, i think it's bette
 private const val readCSV = "readCSV"
 private const val readTSV = "readTSV"
 private const val readJson = "readJson"
+private const val readArrow = "readArrow"
+
+public class DefaultReadArrowMethod(private val path: String?) : DefaultReadDfMethod {
+    override fun toDeclaration(markerName: String, visibility: String): String {
+        return buildString {
+            if (path != null) {
+                append("""        ${visibility}const val defaultPath: String = "${path.escapeStringLiteral()}"""")
+                appendLine()
+            }
+            val defaultPathClause = if (path != null) " = defaultPath" else ""
+            append(
+                """
+                |        ${visibility}fun $readArrow(path: String$defaultPathClause, $verify: Boolean? = null): DataFrame<$markerName> { 
+                |            val df = DataFrame.$readArrow(path)
+                |            return if ($verify != null) df.$cast($verify = $verify) else df.$cast()
+                |        }
+                """.trimMargin()
+            )
+        }
+    }
+}
 
 public class DefaultReadJsonMethod(private val path: String?) : DefaultReadDfMethod {
     public override fun toDeclaration(markerName: String, visibility: String): String {

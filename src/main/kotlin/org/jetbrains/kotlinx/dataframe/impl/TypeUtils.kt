@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.Infer
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
@@ -222,6 +223,14 @@ internal fun KClass<*>.createTypeWithArgument(argument: KType? = null, nullable:
 internal inline fun <reified T> createTypeWithArgument(typeArgument: KType? = null) =
     T::class.createTypeWithArgument(typeArgument)
 
+@PublishedApi
+internal fun <T> getValuesType(values: List<T>, type: KType, infer: Infer): KType = when (infer) {
+    Infer.Nulls -> type.withNullability(values.anyNull())
+    Infer.Type -> guessValueType(values.asSequence(), type)
+    Infer.None -> type
+}
+
+@PublishedApi
 internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null): KType {
     val classes = mutableSetOf<KClass<*>>()
     var hasNulls = false

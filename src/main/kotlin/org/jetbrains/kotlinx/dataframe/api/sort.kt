@@ -37,8 +37,8 @@ public typealias SortColumnsSelector<T, C> = Selector<SortDsl<T>, ColumnSet<C>>
 
 // region DataColumn
 
-public fun <T : Comparable<T>> DataColumn<T>.sort(): ValueColumn<T> = DataColumn.createValueColumn(name, values().sorted(), type, false, defaultValue())
-public fun <T : Comparable<T>> DataColumn<T>.sortDesc(): ValueColumn<T> = DataColumn.createValueColumn(name, values().sortedDescending(), type, false, defaultValue())
+public fun <T : Comparable<T>> DataColumn<T>.sort(): ValueColumn<T> = DataColumn.createValueColumn(name, values().sorted(), type, defaultValue = defaultValue())
+public fun <T : Comparable<T>> DataColumn<T>.sortDesc(): ValueColumn<T> = DataColumn.createValueColumn(name, values().sortedDescending(), type, defaultValue = defaultValue())
 
 // endregion
 

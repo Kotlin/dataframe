@@ -30,13 +30,13 @@ internal fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFr
 public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyFrame = when {
     containsColumns -> {
         mapNotNull {
-            if (it.size == 0) null
+            if (it.isEmpty()) return@mapNotNull null
             val name = it[0].toString()
             val values = it.drop(1)
             guessColumnType(name, values)
         }.toDataFrame()
     }
-    size == 0 -> emptyDataFrame(0)
+    isEmpty() -> emptyDataFrame(0)
     else -> {
         val header = get(0).map { it.toString() }
         val data = drop(1)
@@ -49,3 +49,5 @@ public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyF
         }.toDataFrame()
     }
 }
+
+internal fun String.isURL(): Boolean = listOf("http:", "https:", "ftp:").any { startsWith(it) }

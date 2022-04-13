@@ -145,7 +145,7 @@ private fun getCSVType(path: String): CSVType =
     }
 
 private fun asStream(fileOrUrl: String) = (
-    if (isURL(fileOrUrl)) {
+    if (fileOrUrl.isURL()) {
         URL(fileOrUrl).toURI()
     } else {
         File(fileOrUrl).toURI()
@@ -153,7 +153,7 @@ private fun asStream(fileOrUrl: String) = (
     ).toURL().openStream()
 
 internal fun asURL(fileOrUrl: String): URL = (
-    if (isURL(fileOrUrl)) {
+    if (fileOrUrl.isURL()) {
         URL(fileOrUrl).toURI()
     } else {
         File(fileOrUrl).toURI()
@@ -183,8 +183,6 @@ public fun DataFrame.Companion.readDelim(
     }.run {
         readDelim(this, getFormat(csvType, delimiter, headers, duplicate), colTypes, skipLines, readLines, parserOptions)
     }
-
-internal fun isURL(fileOrUrl: String): Boolean = listOf("http:", "https:", "ftp:").any { fileOrUrl.startsWith(it) }
 
 public enum class ColType {
     Int,

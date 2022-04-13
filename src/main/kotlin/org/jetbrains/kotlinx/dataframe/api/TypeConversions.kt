@@ -159,9 +159,9 @@ public inline fun <reified T> Iterable<T>.toValueColumn(column: KProperty<T>): V
     toValueColumn(column.columnName)
 
 public enum class Infer {
-    None,
-    Type, // infer type and nullability of the column
-    Nulls // infer nullability of the column
+    None, // use reified type argument as column type
+    Nulls, // infer nullability from actual column values
+    Type // infer type and nullability of from actual column values using optionally provided type as supertype
 }
 
 public inline fun <reified T> Iterable<T>.toColumn(
@@ -170,7 +170,7 @@ public inline fun <reified T> Iterable<T>.toColumn(
 ): DataColumn<T> =
     (
         if (infer == Infer.Type) DataColumn.createWithTypeInference(name, asList())
-        else DataColumn.create(name, asList(), typeOf<T>(), infer == Infer.Nulls)
+        else DataColumn.create(name, asList(), typeOf<T>(), infer)
         ).forceResolve()
 
 public inline fun <reified T> Iterable<*>.toColumnOf(name: String = ""): DataColumn<T> =
