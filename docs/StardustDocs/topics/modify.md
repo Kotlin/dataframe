@@ -46,6 +46,7 @@ On the other hand, `Kotlin dataframe` follows `Koltin Collections` naming for ro
 * [explode](explode.md) — spread lists and dataframes vertically into new rows
 * [filter](filter.md) / [filterBy](filter.md#filterby) — filter rows
 * [implode](implode.md) — merge column values into lists grouping by other columns
+* [reverse](reverse.md) — reverse rows 
 * [shuffle](shuffle.md) — reorder rows randomly
 * [sortBy](sortBy.md) / [sortByDesc](sortBy.md#sortbydesc) / [sortWith](sortBy.md#sortwith) — sort rows
 * [split](split.md) — split values into new rows

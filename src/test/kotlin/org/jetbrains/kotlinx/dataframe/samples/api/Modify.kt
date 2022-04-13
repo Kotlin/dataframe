@@ -201,6 +201,13 @@ class Modify : TestBase() {
     }
 
     @Test
+    fun reverse() {
+        // SampleStart
+        df.reverse()
+        // SampleEnd
+    }
+
+    @Test
     fun fillNulls() {
         // SampleStart
         df.fillNulls { colsOf<Int?>() }.with { -1 }

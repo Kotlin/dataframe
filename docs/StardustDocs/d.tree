@@ -76,6 +76,7 @@
             <toc-element id="reorderRows.md">
                 <toc-element id="sortBy.md"/>
                 <toc-element id="shuffle.md"/>
+                <toc-element id="reverse.md"/>
             </toc-element>
             <toc-element id="groupByConcat.md">
                 <toc-element id="groupBy.md"/>
