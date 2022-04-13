@@ -21,7 +21,7 @@ After execution of cell
 ```kotlin
 val df = dataFrameOf("name", "age")(
     "Alice", 15,
-    "Bob", 20
+    "Bob", null
 )
 ```
 

@@ -83,6 +83,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [rename](rename.md) — rename columns
 * [reorder](reorder.md) / [reorderColumnsBy](reorder.md#reordercolumnsby) / [reorderColumnsByName](reorder.md#reordercolumnsbyname) — reorder columns
 * [replace](replace.md) — replace columns
+* [reverse](reverse.md) — reverse rows 
 * [rows](rows.md) / [rowsReversed](rows.md#rowsreversed) — get rows in direct or reversed order
 * [rowsCount](rowsCount.md) — number of rows
 * [schema](schema.md) — schema of columns: names, types and hierarchy
