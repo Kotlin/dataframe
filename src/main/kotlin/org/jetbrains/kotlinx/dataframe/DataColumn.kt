@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe
 
+import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
@@ -16,19 +17,18 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
-import org.jetbrains.kotlinx.dataframe.impl.anyNull
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.FrameColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnKind
+import org.jetbrains.kotlinx.dataframe.impl.getValuesType
 import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
 /**
@@ -43,13 +43,40 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
     public companion object {
 
+        /**
+         * Creates [ValueColumn] using given [name], [values] and [type].
+         *
+         * @param name name of the column
+         * @param values list of column values
+         * @param type type of the column
+         * @param infer column type inference mode
+         */
         public fun <T> createValueColumn(
             name: String,
             values: List<T>,
             type: KType,
-            checkForNulls: Boolean = false,
+            infer: Infer = Infer.None,
             defaultValue: T? = null
-        ): ValueColumn<T> = ValueColumnImpl(values, name, type.let { if (checkForNulls) it.withNullability(values.anyNull()) else it }, defaultValue)
+        ): ValueColumn<T> = ValueColumnImpl(values, name, getValuesType(values, type, infer), defaultValue)
+
+        /**
+         * Creates [ValueColumn] using given [name], [values] and reified column [type].
+         *
+         * Note, that column [type] will be defined at compile-time using [T] argument
+         *
+         * @param T type of the column
+         * @param name name of the column
+         * @param values list of column values
+         * @param infer column type inference mode
+         */
+        public inline fun <reified T> createValueColumn(name: String, values: List<T>, infer: Infer = Infer.None): ValueColumn<T> = createValueColumn(
+            name, values,
+            getValuesType(
+                values,
+                typeOf<T>(),
+                infer
+            )
+        )
 
         public fun <T> createColumnGroup(name: String, df: DataFrame<T>): ColumnGroup<T> = ColumnGroupImpl(name, df)
 
@@ -66,22 +93,17 @@ public interface DataColumn<out T> : BaseColumn<T> {
             schema: Lazy<DataFrameSchema>? = null
         ): FrameColumn<T> = FrameColumnImpl(name, groups, schema)
 
-        public inline fun <reified T> createValueColumn(name: String, values: List<T>, checkForNulls: Boolean = false): ValueColumn<T> {
-            val type = if (checkForNulls) typeOf<T>().withNullability(values.anyNull()) else typeOf<T>()
-            return createValueColumn(name, values, type)
-        }
-
         public fun <T> createWithTypeInference(name: String, values: List<T>, nullable: Boolean? = null): DataColumn<T> = guessColumnType(name, values, nullable = nullable)
 
-        public fun <T> create(name: String, values: List<T>, type: KType, inferNulls: Boolean = false): DataColumn<T> {
+        public fun <T> create(name: String, values: List<T>, type: KType, infer: Infer = Infer.None): DataColumn<T> {
             return when (type.toColumnKind()) {
-                ColumnKind.Value -> createValueColumn(name, values, type, inferNulls)
+                ColumnKind.Value -> createValueColumn(name, values, type, infer)
                 ColumnKind.Group -> createColumnGroup(name, (values as List<AnyRow?>).concat()).asDataColumn().cast()
                 ColumnKind.Frame -> createFrameColumn(name, values as List<AnyFrame>).asDataColumn().cast()
             }
         }
 
-        public inline fun <reified T> create(name: String, values: List<T>, checkForNulls: Boolean = false): DataColumn<T> = create(name, values, typeOf<T>(), checkForNulls)
+        public inline fun <reified T> create(name: String, values: List<T>, infer: Infer = Infer.None): DataColumn<T> = create(name, values, typeOf<T>(), infer)
 
         public fun empty(name: String = ""): AnyCol = createValueColumn(name, emptyList<Unit>(), typeOf<Unit>())
     }

@@ -224,8 +224,6 @@ public fun DataFrame.Companion.readDelim(
         readDelim(this, getFormat(csvType, delimiter, headers, duplicate), colTypes, skipLines, readLines, parserOptions)
     }
 
-internal fun String.isURL(): Boolean = listOf("http:", "https:", "ftp:").any { startsWith(it) }
-
 public enum class ColType {
     Int,
     Long,
