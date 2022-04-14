@@ -80,6 +80,7 @@ public data class Convert<T, C>(val df: DataFrame<T>, val columns: ColumnsSelect
 public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
 
 public inline fun <T, C, reified R> Convert<T, C>.with(
+    // TODO: replace with `Infer`
     inferType: Boolean = false,
     noinline rowConverter: RowValueExpression<T, C, R>
 ): DataFrame<T> =
