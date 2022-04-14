@@ -22,6 +22,7 @@ public interface ColumnReference<out C> : SingleColumn<C> {
 
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnReference<C> = renamedReference(property.columnName)
 
+    // TODO: move to extension
     public fun name(): String
 
     public fun rename(newName: String): ColumnReference<C>

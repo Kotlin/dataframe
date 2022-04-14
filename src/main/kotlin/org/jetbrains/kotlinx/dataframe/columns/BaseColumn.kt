@@ -24,6 +24,8 @@ public interface BaseColumn<out T> : ColumnReference<T> {
     public fun size(): Int
     public fun kind(): ColumnKind
     public fun type(): KType
+
+    // TODO: remove
     public fun defaultValue(): T?
 
     // endregion
