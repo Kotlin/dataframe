@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.io.SupportedFormats
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.api.Code
 
@@ -287,9 +288,20 @@ public fun CodeGenResult.toStandaloneSnippet(packageName: String): String {
         appendLine("import org.jetbrains.kotlinx.dataframe.annotations.ColumnName")
         appendLine("import org.jetbrains.kotlinx.dataframe.annotations.DataSchema")
         appendLine("import org.jetbrains.kotlinx.dataframe.api.cast")
-        appendLine("import org.jetbrains.kotlinx.dataframe.io.readJson")
-        appendLine("import org.jetbrains.kotlinx.dataframe.io.readCSV")
+        SupportedFormats.values().flatMap { collectAdditionalImports(it) }.forEach {
+            appendLine(it)
+        }
         appendLine()
         appendLine(code.declarations)
+    }
+}
+
+private fun collectAdditionalImports(format: SupportedFormats): List<String> {
+    return when (format) {
+        SupportedFormats.CSV -> listOf("import org.jetbrains.kotlinx.dataframe.io.readCSV")
+        SupportedFormats.TSV -> listOf("import org.jetbrains.kotlinx.dataframe.io.readTSV")
+        SupportedFormats.JSON -> listOf("import org.jetbrains.kotlinx.dataframe.io.readJson")
+        SupportedFormats.EXCEL -> listOf("import org.jetbrains.kotlinx.dataframe.io.readExcel")
+        SupportedFormats.ARROW -> listOf("import org.jetbrains.kotlinx.dataframe.io.readArrow")
     }
 }
