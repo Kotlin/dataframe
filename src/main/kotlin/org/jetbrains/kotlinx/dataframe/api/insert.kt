@@ -32,6 +32,7 @@ public data class InsertClause<T>(val df: DataFrame<T>, val column: AnyCol)
 public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T> = under(df.getColumnPath(column))
 public fun <T> InsertClause<T>.under(columnPath: ColumnPath): DataFrame<T> = df.insert(columnPath + column.name, column)
 public fun <T> InsertClause<T>.under(column: ColumnAccessor<*>): DataFrame<T> = under(column.path())
+public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under(pathOf(column))
 
 public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T> = after(df.getColumnPath(column))
 public fun <T> InsertClause<T>.after(column: String): DataFrame<T> = df.add(this.column).move(this.column).after(column)
