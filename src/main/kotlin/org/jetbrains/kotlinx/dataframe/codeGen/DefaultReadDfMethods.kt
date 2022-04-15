@@ -9,6 +9,7 @@ private const val cast = "cast"
 private const val verify = "verify" // cast(true) is obscure, i think it's better to use named argument here
 private const val readCSV = "readCSV"
 private const val readTSV = "readTSV"
+private const val readExcel = "readExcel"
 private const val readJson = "readJson"
 private const val readArrow = "readArrow"
 
@@ -92,7 +93,30 @@ public class DefaultReadTsvMethod(private val path: String?) : DefaultReadDfMeth
                 |            path: String$defaultPathClause,
                 |            $verify: Boolean? = null
                 |        ): DataFrame<$markerName> { 
-                |            val df = DataFrame.$readTSV(path, delimiter)
+                |            val df = DataFrame.$readTSV(path)
+                |            return if ($verify != null) df.$cast($verify = $verify) else df.$cast()
+                |        }
+                """.trimMargin()
+            )
+        }
+    }
+}
+
+public class DefaultReadExcelMethod(private val path: String?) : DefaultReadDfMethod {
+    public override fun toDeclaration(markerName: String, visibility: String): String {
+        return buildString {
+            if (path != null) {
+                append("""        ${visibility}const val defaultPath: String = "${path.escapeStringLiteral()}"""")
+                appendLine()
+            }
+            val defaultPathClause = if (path != null) " = defaultPath" else ""
+            append(
+                """
+                |        ${visibility}fun $readExcel(
+                |            path: String$defaultPathClause,
+                |            $verify: Boolean? = null
+                |        ): DataFrame<$markerName> { 
+                |            val df = DataFrame.$readExcel(path)
                 |            return if ($verify != null) df.$cast($verify = $verify) else df.$cast()
                 |        }
                 """.trimMargin()
