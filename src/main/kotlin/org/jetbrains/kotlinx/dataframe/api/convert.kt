@@ -136,20 +136,20 @@ public fun <T : Any> DataColumn<T?>.convertToBoolean(): DataColumn<Boolean?> = c
 
 // region convert URL
 
-public fun <T, R : URL?> Convert<T, R>.toIFrame(border: Boolean = false, width: Int? = null, height: Int? = null): DataFrame<T> = to { it.mapInline { IFRAME(it.toString(), border, width, height) } }
-public fun <T, R : URL?> Convert<T, R>.toImg(width: Int? = null, height: Int? = null): DataFrame<T> = to { it.mapInline { IMG(it.toString(), width, height) } }
+public fun <T, R : URL?> Convert<T, R>.toIFrame(border: Boolean = false, width: Int? = null, height: Int? = null): DataFrame<T> = to { it.map { IFRAME(it.toString(), border, width, height) } }
+public fun <T, R : URL?> Convert<T, R>.toImg(width: Int? = null, height: Int? = null): DataFrame<T> = to { it.map { IMG(it.toString(), width, height) } }
 
 // endregion
 
 // region toURL
 
 public fun DataColumn<String>.convertToURL(): DataColumn<URL> {
-    return mapInline { URL(it) }
+    return map { URL(it) }
 }
 
 @JvmName("convertToURLFromStringNullable")
 public fun DataColumn<String?>.convertToURL(): DataColumn<URL?> {
-    return mapInline { it?.let { URL(it) } }
+    return map { it?.let { URL(it) } }
 }
 
 public fun <T, R : String?> Convert<T, R>.toURL(): DataFrame<T> = to { it.convertToURL() }
@@ -159,12 +159,12 @@ public fun <T, R : String?> Convert<T, R>.toURL(): DataFrame<T> = to { it.conver
 // region toInstant
 
 public fun DataColumn<String>.convertToInstant(): DataColumn<Instant> {
-    return mapInline { Instant.parse(it) }
+    return map { Instant.parse(it) }
 }
 
 @JvmName("convertToInstantFromStringNullable")
 public fun DataColumn<String?>.convertToInstant(): DataColumn<Instant?> {
-    return mapInline { it?.let { Instant.parse(it) } }
+    return map { it?.let { Instant.parse(it) } }
 }
 
 public fun <T, R : String?> Convert<T, R>.toInstant(): DataFrame<T> = to { it.convertToInstant() }

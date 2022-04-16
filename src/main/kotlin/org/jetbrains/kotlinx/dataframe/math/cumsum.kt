@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.math
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.isNA
-import org.jetbrains.kotlinx.dataframe.api.mapInline
+import org.jetbrains.kotlinx.dataframe.api.map
 import java.math.BigDecimal
 
 internal val defaultCumSumSkipNA: Boolean = true
@@ -10,7 +10,7 @@ internal val defaultCumSumSkipNA: Boolean = true
 @JvmName("doubleCumsum")
 internal fun DataColumn<Double>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Double> {
     var sum = .0
-    return mapInline {
+    return map {
         if (skipNA && it.isNaN()) it
         else {
             sum += it
@@ -22,7 +22,7 @@ internal fun DataColumn<Double>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): D
 @JvmName("cumsumDoubleNullable")
 internal fun DataColumn<Double?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Double> {
     var sum = .0
-    return mapInline {
+    return map {
         if (skipNA && it.isNA) Double.NaN
         else {
             sum += it ?: Double.NaN
@@ -34,7 +34,7 @@ internal fun DataColumn<Double?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): 
 @JvmName("floatCumsum")
 internal fun DataColumn<Float>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Float> {
     var sum = .0f
-    return mapInline {
+    return map {
         if (skipNA && it.isNaN()) it
         else {
             sum += it
@@ -45,7 +45,7 @@ internal fun DataColumn<Float>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Da
 
 internal fun DataColumn<Float?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Float> {
     var sum = .0f
-    return mapInline {
+    return map {
         if (skipNA && it.isNA) Float.NaN
         else {
             sum += it ?: Float.NaN
@@ -57,7 +57,7 @@ internal fun DataColumn<Float?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): D
 @JvmName("intCumsum")
 internal fun DataColumn<Int>.cumSum(): DataColumn<Int> {
     var sum = 0
-    return mapInline {
+    return map {
         sum += it
         sum
     }
@@ -67,7 +67,7 @@ internal fun DataColumn<Int>.cumSum(): DataColumn<Int> {
 internal fun DataColumn<Int?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Int?> {
     var sum = 0
     var fillNull = false
-    return mapInline {
+    return map {
         when {
             it == null -> {
                 if (!skipNA) fillNull = true
@@ -85,7 +85,7 @@ internal fun DataColumn<Int?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Dat
 @JvmName("longCumsum")
 internal fun DataColumn<Long>.cumSum(): DataColumn<Long> {
     var sum = 0L
-    return mapInline {
+    return map {
         sum += it
         sum
     }
@@ -95,7 +95,7 @@ internal fun DataColumn<Long>.cumSum(): DataColumn<Long> {
 internal fun DataColumn<Long?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<Long?> {
     var sum = 0L
     var fillNull = false
-    return mapInline {
+    return map {
         when {
             it == null -> {
                 if (!skipNA) fillNull = true
@@ -113,7 +113,7 @@ internal fun DataColumn<Long?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): Da
 @JvmName("bigDecimalCumsum")
 internal fun DataColumn<BigDecimal>.cumSum(): DataColumn<BigDecimal> {
     var sum = BigDecimal.ZERO
-    return mapInline {
+    return map {
         sum += it
         sum
     }
@@ -123,7 +123,7 @@ internal fun DataColumn<BigDecimal>.cumSum(): DataColumn<BigDecimal> {
 internal fun DataColumn<BigDecimal?>.cumSum(skipNA: Boolean = defaultCumSumSkipNA): DataColumn<BigDecimal?> {
     var sum = BigDecimal.ZERO
     var fillNull = false
-    return mapInline {
+    return map {
         when {
             it == null -> {
                 if (!skipNA) fillNull = true
