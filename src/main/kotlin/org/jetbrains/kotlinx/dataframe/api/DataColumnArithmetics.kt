@@ -108,4 +108,4 @@ public infix fun <T> DataColumn<T>.neq(value: T): DataColumn<Boolean> = isMatchi
 public infix fun <T : Comparable<T>> DataColumn<T>.gt(value: T): DataColumn<Boolean> = isMatching { it > value }
 public infix fun <T : Comparable<T>> DataColumn<T>.lt(value: T): DataColumn<Boolean> = isMatching { it < value }
 
-internal infix fun <T> DataColumn<T>.isMatching(predicate: Predicate<T>): DataColumn<Boolean> = mapInline(predicate)
+internal infix fun <T> DataColumn<T>.isMatching(predicate: Predicate<T>): DataColumn<Boolean> = map { predicate(it) }

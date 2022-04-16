@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.testSets.person
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.associate
@@ -187,7 +188,7 @@ class PivotTests {
         val expected = defaultExpected.replace("age", "city", "weight").with {
             columnOf(
                 it named "value",
-                it.map {
+                it.map(Infer.Type) {
                     if (it is List<*>) it.map { it?.toString() }.asList()
                     else it?.toString()
                 } named "str"
@@ -268,7 +269,7 @@ class PivotTests {
 
         val nullGroup = pivotedDf["Charlie"]["weight"].asColumnGroup()
         nullGroup.columnNames() shouldBe listOf("value", "type")
-        nullGroup.columnTypes() shouldBe listOf(typeOf<Serializable?>(), typeOf<Any?>())
+        nullGroup.columnTypes() shouldBe listOf(typeOf<Serializable?>(), typeOf<KClass<Any>?>())
 
         val cols = pivotedDf.getColumnsWithPaths { all().allDfs() }
         cols.size shouldBe 2 * typed.name.countDistinct() * typed.key.countDistinct() - 2

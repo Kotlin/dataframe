@@ -13,10 +13,8 @@ import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
-import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumnWithActualType
-import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -33,36 +31,26 @@ public fun <C, R> ColumnReference<C>.map(tartypeOf: KType?, transform: (C) -> R)
 
 // region DataColumn
 
-public fun <T, R> DataColumn<T>.map(transform: (T) -> R): DataColumn<R> {
-    val collector = createDataCollector(size)
-    values.forEach { collector.add(transform(it)) }
-    return collector.toColumn(name).cast()
-}
-
-public inline fun <T, reified R> DataColumn<T>.mapInline(crossinline transform: (T) -> R): DataColumn<R> {
+public inline fun <T, reified R> DataColumn<T>.map(
+    infer: Infer = if (typeOf<R>().isMarkedNullable) Infer.Nulls else Infer.None,
+    crossinline transform: (T) -> R
+): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
-    val resType = typeOf<R>()
-    return guessColumnType(
-        name(),
-        newValues,
-        suggestedType = resType,
-        suggestedTypeIsUpperBound = false,
-        nullable = if (!resType.isMarkedNullable) false else null
-    )
+    return DataColumn.create(name(), newValues, typeOf<R>(), infer)
 }
 
-public fun <T, R> DataColumn<T>.map(type: KType?, transform: (T) -> R): DataColumn<R> {
-    if (type == null) return map(transform)
-    val collector = createDataCollector<R>(size, type)
-    values.forEach { collector.add(transform(it)) }
-    return collector.toColumn(name) as DataColumn<R>
+public fun <T, R> DataColumn<T>.mapTo(
+    type: KType,
+    infer: Infer = if (type.isMarkedNullable) Infer.Nulls else Infer.None,
+    transform: (T) -> R
+): DataColumn<R> {
+    val values = Array<Any?>(size()) { transform(get(it)) }.asList()
+    return DataColumn.create(name, values, type, infer).cast()
 }
 
 // endregion
 
 // region DataFrame
-
-// region map
 
 public fun <T> DataFrame<T>.map(body: AddDsl<T>.() -> Unit): AnyFrame {
     val dsl = AddDsl(this)
