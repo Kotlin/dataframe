@@ -124,6 +124,8 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) : DataFr
         }
 
     override fun containsColumn(name: String): Boolean = columnsMap.containsKey(name)
+
+    override fun containsColumn(path: ColumnPath): Boolean = getColumnOrNull(path) != null
 }
 
 internal fun <T, C> DataFrame<T>.valuesImpl(byRow: Boolean, columns: ColumnsSelector<T, C>): Sequence<C> {
