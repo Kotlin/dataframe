@@ -19,4 +19,26 @@ class ContainsTests {
         col.contains(df[0]) shouldBe true
         col.contains(df.update("b").withValue(0)[0]) shouldBe false
     }
+
+    @Test
+    fun `contains column`() {
+        val a by column<Int>()
+        val df = dataFrameOf("a")(1, 2)
+        (a in df) shouldBe true
+        df.containsColumn(a) shouldBe true
+        df.containsColumn("a") shouldBe true
+        df.containsColumn(df["a"]) shouldBe true
+        val b by column<Int>()
+        (b in df) shouldBe false
+        df.containsColumn(b) shouldBe false
+    }
+
+    @Test
+    fun `contains nested column`() {
+        val g by columnGroup()
+        val a by g.column<Int>()
+
+        val df = dataFrameOf("a")(1, 2).group("a").into("g")
+        (a in df) shouldBe true
+    }
 }

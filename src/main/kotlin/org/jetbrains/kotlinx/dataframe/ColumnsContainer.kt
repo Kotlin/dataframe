@@ -27,6 +27,7 @@ public interface ColumnsContainer<out T> {
     public fun columns(): List<AnyCol>
     public fun columnsCount(): Int
     public fun containsColumn(name: String): Boolean
+    public fun containsColumn(path: ColumnPath): Boolean
     public fun getColumnIndex(name: String): Int
 
     // endregion

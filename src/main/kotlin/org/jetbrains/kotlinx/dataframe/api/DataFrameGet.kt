@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
@@ -69,13 +70,19 @@ public fun <T, C> ColumnsContainer<T>.getColumnGroup(column: ColumnReference<Dat
 
 public fun <T, C> ColumnsContainer<T>.getColumnGroup(column: ColumnSelector<T, DataRow<C>>): ColumnGroup<C> = get(column).asColumnGroup()
 
-// region endregion
+// endregion
 
 // region getColumnGroupOrNull
 
 public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(name: String): ColumnGroup<*>? = getColumnOrNull(name)?.asColumnGroup()
 
 // endregion
+
+// region containsColumn
+
+public fun <T> ColumnsContainer<T>.containsColumn(column: Column): Boolean = containsColumn(column.path())
+
+public operator fun <T> ColumnsContainer<T>.contains(column: Column): Boolean = containsColumn(column)
 
 // region rows
 
