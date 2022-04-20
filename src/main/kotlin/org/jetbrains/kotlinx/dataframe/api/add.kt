@@ -102,17 +102,15 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
         noinline expression: RowExpression<T, R>
     ): Boolean = add(df.map(name, infer, expression))
 
-    public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean = name().from(expression)
-
-    public inline infix fun <reified R> ColumnAccessor<R>.from(column: ColumnReference<R>): Boolean = name().from(column)
-
     public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean = add(this, Infer.Nulls, expression)
-
+    public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean = name().from(expression)
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: RowExpression<T, R>): Boolean = add(name, Infer.Nulls, expression)
 
     public infix fun String.from(column: Column): Boolean = add(column.rename(this))
+    public inline infix fun <reified R> ColumnAccessor<R>.from(column: ColumnReference<R>): Boolean = name() from column
+    public inline infix fun <reified R> KProperty<R>.from(column: ColumnReference<R>): Boolean = name from column
 
     public infix fun Column.into(name: String): Boolean = add(rename(name))
-
-    public infix fun <C> ColumnReference<C>.into(column: ColumnAccessor<C>): Boolean = into(column.name())
+    public infix fun <R> ColumnReference<R>.into(column: ColumnAccessor<R>): Boolean = into(column.name())
+    public infix fun <R> ColumnReference<R>.into(column: KProperty<R>): Boolean = into(column.name)
 }
