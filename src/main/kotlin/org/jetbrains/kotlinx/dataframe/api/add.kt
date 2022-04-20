@@ -108,6 +108,8 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
 
     public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean = add(this, Infer.Nulls, expression)
 
+    public inline infix fun <reified R> KProperty<R>.from(noinline expression: RowExpression<T, R>): Boolean = add(name, Infer.Nulls, expression)
+
     public infix fun String.from(column: Column): Boolean = add(column.rename(this))
 
     public infix fun Column.into(name: String): Boolean = add(rename(name))
