@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
@@ -135,6 +136,23 @@ class CsvTests {
         val df = DataFrame.readCSV(durationCsv)
         df["duration"].type() shouldBe typeOf<String>()
         df["floatDuration"].type() shouldBe typeOf<String>()
+    }
+
+    @Test
+    fun `if record has fewer columns than header then pad it with nulls`() {
+        val csvContent = """col1,col2,col3
+            568,801,587
+            780,588
+        """.trimIndent()
+
+        val df = shouldNotThrowAny {
+            DataFrame.readDelimStr(csvContent)
+        }
+
+        df shouldBe dataFrameOf("col1", "col2", "col3")(
+            568, 801, 587,
+            780, 588, null
+        )
     }
 
     @Test
