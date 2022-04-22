@@ -155,9 +155,9 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.into(
     } else names
 }
 
-public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.into(
+public fun <T, C : Iterable<*>> Split<T, C>.into(
     vararg names: String,
-    noinline extraNamesGenerator: ColumnNamesGenerator<C>? = null
+    extraNamesGenerator: ColumnNamesGenerator<C>? = null
 ): DataFrame<T> =
     by { it }.into(names.toList(), extraNamesGenerator)
 
