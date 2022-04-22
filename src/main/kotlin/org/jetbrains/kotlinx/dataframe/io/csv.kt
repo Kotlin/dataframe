@@ -274,7 +274,12 @@ public fun DataFrame.Companion.readDelim(
         val colType = colTypes[colName] ?: defaultColType
         var hasNulls = false
         val values = records.map {
-            it[colIndex].ifEmpty {
+            if (it.isSet(colIndex)) {
+                it[colIndex].ifEmpty {
+                    hasNulls = true
+                    null
+                }
+            } else {
                 hasNulls = true
                 null
             }
