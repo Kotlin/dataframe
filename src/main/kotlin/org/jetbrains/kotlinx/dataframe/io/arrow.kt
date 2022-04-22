@@ -35,6 +35,7 @@ import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import java.io.File
+import java.io.InputStream
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
@@ -174,23 +175,16 @@ public fun DataFrame.Companion.readArrow(file: File): AnyFrame {
     return Files.newByteChannel(file.toPath()).use { readArrow(it) }
 }
 
-public fun DataFrame.Companion.readArrow(url: URL): AnyFrame {
+public fun DataFrame.Companion.readArrow(stream: InputStream): AnyFrame = Channels.newChannel(stream).use { readArrow(it) }
+
+public fun DataFrame.Companion.readArrow(url: URL): AnyFrame =
     when {
-        setOf("http", "https", "ftp").any { url.protocol == it } -> {
-            url.openStream().use { stream ->
-                Channels.newChannel(stream).use { channel ->
-                    return readArrow(channel)
-                }
-            }
-        }
-        setOf("file").any { url.protocol == it } -> {
-            return readArrow(File(url.path))
-        }
+        url.isFile() -> readArrow(url.asFile())
+        url.isProtocolSupported() -> url.openStream().use { readArrow(it) }
         else -> {
-            throw IllegalArgumentException("invalid protocol for url $url")
+            throw IllegalArgumentException("Invalid protocol for url $url")
         }
     }
-}
 
 public fun DataFrame.Companion.readArrow(path: String): AnyFrame = if (path.isURL()) {
     readArrow(URL(path))

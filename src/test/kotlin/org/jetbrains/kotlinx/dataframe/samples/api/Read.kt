@@ -25,7 +25,7 @@ class Read : TestBase() {
         val df = DataFrame.readCSV(
             file,
             delimiter = '|',
-            headers = listOf("A", "B", "C", "D"),
+            header = listOf("A", "B", "C", "D"),
             parserOptions = ParserOptions(nullStrings = setOf("not assigned"))
         )
         // SampleEnd

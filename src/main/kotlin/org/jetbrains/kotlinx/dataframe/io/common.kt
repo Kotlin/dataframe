@@ -6,14 +6,14 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import java.io.File
 import java.io.IOException
 import java.io.InputStream
 import java.net.URL
 
 internal fun catchHttpResponse(url: URL, body: (InputStream) -> AnyFrame): AnyFrame {
     try {
-        val stream = url.openStream()
-        return body(stream)
+        return url.openStream().use(body)
     } catch (e: IOException) {
         if (e.message?.startsWith("Server returned HTTP response code") == true) {
             val (_, response, _) = url.toString().httpGet().responseString()
@@ -51,3 +51,11 @@ public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyF
 }
 
 internal fun String.isURL(): Boolean = listOf("http:", "https:", "ftp:").any { startsWith(it) }
+
+internal fun URL.isFile(): Boolean = protocol == "file"
+
+internal fun URL.asFileOrNull(): File? = if (isFile()) File(path) else null
+
+internal fun URL.asFile(): File = asFileOrNull()!!
+
+internal fun URL.isProtocolSupported(): Boolean = protocol in setOf("http", "https", "ftp")

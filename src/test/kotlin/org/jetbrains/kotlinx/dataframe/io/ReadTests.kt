@@ -86,4 +86,18 @@ class ReadTests {
         val values by column<List<List<Int>>>()
         df[values][0][1][1] shouldBe 5
     }
+
+    @Test
+    fun `read json with header`() {
+        val data = """
+            [[1,2,3],
+            [4,5,6]]
+        """.trimIndent()
+        val header = listOf("a", "b", "c")
+        val df = DataFrame.readJsonStr(data, header)
+        df.rowsCount() shouldBe 2
+        df.columnsCount() shouldBe 3
+        df.columnNames() shouldBe header
+        df.columnTypes() shouldBe List(3) { typeOf<Int>() }
+    }
 }

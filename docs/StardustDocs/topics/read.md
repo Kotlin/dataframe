@@ -25,7 +25,7 @@ DataFrame.readCSV(URL("https://raw.githubusercontent.com/Kotlin/dataframe/master
 
 All `readCSV` overloads support different options.
 For example, you can specify custom delimiter if it differs from `,`, charset
-and headers names if your CSV is missing them
+and column names if your CSV is missing them
 
 <!---FUN readCsvCustom-->
 
@@ -33,7 +33,7 @@ and headers names if your CSV is missing them
 val df = DataFrame.readCSV(
     file,
     delimiter = '|',
-    headers = listOf("A", "B", "C", "D"),
+    header = listOf("A", "B", "C", "D"),
     parserOptions = ParserOptions(nullStrings = setOf("not assigned"))
 )
 ```
