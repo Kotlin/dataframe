@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
+import org.jetbrains.kotlinx.dataframe.annotations.*
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
@@ -28,11 +29,14 @@ import org.jetbrains.kotlinx.dataframe.impl.api.toLocalTime
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
+import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.math.BigDecimal
 import java.net.URL
 import java.time.LocalTime
 import java.util.Locale
+import kotlin.jvm.internal.Reflection
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -43,7 +47,8 @@ public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): Convert<
 public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T, C> =
     convert { columns.toColumns() }
 
-public fun <T> DataFrame<T>.convert(vararg columns: String): Convert<T, Any?> = convert { columns.toColumns() }
+@Interpretable<ConvertInterpreter>(ConvertInterpreter::class)
+public fun <T> @receiver:Schema DataFrame<T>.convert(@Value vararg columns: String): Convert<T, Any?> = convert { columns.toColumns() }
 public fun <T, C> DataFrame<T>.convert(vararg columns: ColumnReference<C>): Convert<T, C> =
     convert { columns.toColumns() }
 
@@ -77,6 +82,7 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(crossinline expressio
         else expression(this, it)
     }
 
+@HasSchema(schemaArg = 0)
 public data class Convert<T, out C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>) {
     public fun <R> cast(): Convert<T, R> = Convert(df, columns as ColumnsSelector<T, R>)
 
@@ -85,6 +91,32 @@ public data class Convert<T, out C>(val df: DataFrame<T>, val columns: ColumnsSe
 
 public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
 
+public class With : SchemaModificationInterpreter {
+    override fun process(parent: String, map: Map<String, Any>): AnalysisResult {
+        val convert = map["this"] as ConvertApproximation
+        val type = map["rowConverter"] as TypeApproximation
+
+        val names = convert.columns.toSet()
+        val klass = Class.forName(type.fqName)
+        val kType = if (type.nullable) {
+            Reflection.nullableTypeOf(klass)
+        } else {
+            Reflection.typeOf(klass)
+        }
+
+        val newColumns = convert.schema.columns.mapValues { (key, value) ->
+            if (listOf(key) in names) {
+                ColumnSchema.Value(kType)
+            } else {
+                value
+            }
+        }
+        DataFrameSchemaImpl(newColumns)
+    }
+
+}
+
+@SchemaProcessor<With>(With::class)
 public inline fun <T, C, reified R> Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
     noinline rowConverter: RowValueExpression<T, C, R>
