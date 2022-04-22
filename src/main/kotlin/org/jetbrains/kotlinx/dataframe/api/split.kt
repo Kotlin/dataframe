@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
@@ -289,5 +290,11 @@ public fun <T, C, R> SplitWithTransform<T, C, R>.intoRows(dropEmpty: Boolean = t
 public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.inplace(): DataFrame<T> = by { it }.inplace()
 
 public fun <T, C, R> SplitWithTransform<T, C, R>.inplace(): DataFrame<T> = df.convert(columns).splitInplace(tartypeOf, transform)
+
+// endregion
+
+// region DataColumn
+
+public fun DataColumn<Iterable<*>>.splitInto(vararg names: String): AnyFrame = toDataFrame().split { this@splitInto }.into(*names)
 
 // endregion

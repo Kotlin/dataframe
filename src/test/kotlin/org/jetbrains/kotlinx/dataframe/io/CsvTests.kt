@@ -105,12 +105,12 @@ class CsvTests {
     @Test
     fun `read with custom header`() {
         val header = ('A'..'K').map { it.toString() }
-        val df = DataFrame.readCSV(simpleCsv, headers = header, skipLines = 1)
+        val df = DataFrame.readCSV(simpleCsv, header = header, skipLines = 1)
         df.columnNames() shouldBe header
         df["B"].type() shouldBe typeOf<Int>()
 
         val headerShort = ('A'..'E').map { it.toString() }
-        val dfShort = DataFrame.readCSV(simpleCsv, headers = headerShort, skipLines = 1)
+        val dfShort = DataFrame.readCSV(simpleCsv, header = headerShort, skipLines = 1)
         dfShort.ncol shouldBe 5
         dfShort.columnNames() shouldBe headerShort
     }

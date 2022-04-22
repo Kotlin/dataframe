@@ -53,12 +53,12 @@ public fun DataFrame.Companion.readDelimStr(
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null
-): DataFrame<*> = readDelim(StringReader(text), CSVType.DEFAULT.format.withHeader(), colTypes, skipLines, readLines)
+): DataFrame<*> = StringReader(text).use { readDelim(it, CSVType.DEFAULT.format.withHeader(), colTypes, skipLines, readLines) }
 
 public fun DataFrame.Companion.read(
     fileOrUrl: String,
     delimiter: Char,
-    headers: List<String> = listOf(),
+    header: List<String> = listOf(),
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
@@ -68,7 +68,7 @@ public fun DataFrame.Companion.read(
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
             it, delimiter,
-            headers, isCompressed(fileOrUrl),
+            header, isCompressed(fileOrUrl),
             getCSVType(fileOrUrl), colTypes,
             skipLines, readLines,
             duplicate, charset
@@ -78,7 +78,7 @@ public fun DataFrame.Companion.read(
 public fun DataFrame.Companion.readCSV(
     fileOrUrl: String,
     delimiter: Char = ',',
-    headers: List<String> = listOf(),
+    header: List<String> = listOf(),
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
@@ -89,7 +89,7 @@ public fun DataFrame.Companion.readCSV(
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
             it, delimiter,
-            headers, isCompressed(fileOrUrl),
+            header, isCompressed(fileOrUrl),
             CSVType.DEFAULT, colTypes,
             skipLines, readLines,
             duplicate, charset,
@@ -100,7 +100,7 @@ public fun DataFrame.Companion.readCSV(
 public fun DataFrame.Companion.readCSV(
     file: File,
     delimiter: Char = ',',
-    headers: List<String> = listOf(),
+    header: List<String> = listOf(),
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
@@ -110,7 +110,7 @@ public fun DataFrame.Companion.readCSV(
 ): DataFrame<*> =
     readDelim(
         FileInputStream(file), delimiter,
-        headers, isCompressed(file),
+        header, isCompressed(file),
         CSVType.DEFAULT, colTypes,
         skipLines, readLines,
         duplicate, charset,
@@ -120,7 +120,7 @@ public fun DataFrame.Companion.readCSV(
 public fun DataFrame.Companion.readCSV(
     url: URL,
     delimiter: Char = ',',
-    headers: List<String> = listOf(),
+    header: List<String> = listOf(),
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
@@ -128,14 +128,34 @@ public fun DataFrame.Companion.readCSV(
     charset: Charset = Charsets.UTF_8,
     parserOptions: ParserOptions? = null
 ): DataFrame<*> =
-    readDelim(
+    readCSV(
         url.openStream(), delimiter,
-        headers, isCompressed(url),
-        CSVType.DEFAULT, colTypes,
+        header, isCompressed(url),
+        colTypes,
         skipLines, readLines,
         duplicate, charset,
         parserOptions
     )
+
+public fun DataFrame.Companion.readCSV(
+    stream: InputStream,
+    delimiter: Char = ',',
+    header: List<String> = listOf(),
+    isCompressed: Boolean = false,
+    colTypes: Map<String, ColType> = mapOf(),
+    skipLines: Int = 0,
+    readLines: Int? = null,
+    duplicate: Boolean = true,
+    charset: Charset = Charsets.UTF_8,
+    parserOptions: ParserOptions? = null
+): DataFrame<*> = readDelim(
+    stream, delimiter,
+    header, isCompressed,
+    CSVType.DEFAULT, colTypes,
+    skipLines, readLines,
+    duplicate, charset,
+    parserOptions
+)
 
 private fun getCSVType(path: String): CSVType =
     when (path.substringAfterLast('.').toLowerCase()) {
@@ -160,13 +180,13 @@ internal fun asURL(fileOrUrl: String): URL = (
     }
     ).toURL()
 
-private fun getFormat(type: CSVType, delimiter: Char, headers: List<String>, duplicate: Boolean): CSVFormat =
-    type.format.withDelimiter(delimiter).withHeader(*headers.toTypedArray()).withAllowDuplicateHeaderNames(duplicate)
+private fun getFormat(type: CSVType, delimiter: Char, header: List<String>, duplicate: Boolean): CSVFormat =
+    type.format.withDelimiter(delimiter).withHeader(*header.toTypedArray()).withAllowDuplicateHeaderNames(duplicate)
 
 public fun DataFrame.Companion.readDelim(
     inStream: InputStream,
     delimiter: Char = ',',
-    headers: List<String> = listOf(),
+    header: List<String> = listOf(),
     isCompressed: Boolean = false,
     csvType: CSVType,
     colTypes: Map<String, ColType> = mapOf(),
@@ -181,7 +201,14 @@ public fun DataFrame.Companion.readDelim(
     } else {
         BufferedReader(InputStreamReader(inStream, charset))
     }.run {
-        readDelim(this, getFormat(csvType, delimiter, headers, duplicate), colTypes, skipLines, readLines, parserOptions)
+        readDelim(
+            this,
+            getFormat(csvType, delimiter, header, duplicate),
+            colTypes,
+            skipLines,
+            readLines,
+            parserOptions
+        )
     }
 
 public enum class ColType {
@@ -222,47 +249,46 @@ public fun DataFrame.Companion.readDelim(
         repeat(skipLines) { reader.readLine() }
     }
 
-    format.parse(reader).use { csvParser ->
-        val records = if (readLines == null) {
-            csvParser.records
-        } else {
-            require(readLines >= 0) { "`readLines` must not be negative" }
-            val records = ArrayList<CSVRecord>(readLines)
-            val iter = csvParser.iterator()
-            var count = readLines ?: 0
-            while (iter.hasNext() && 0 < count--) {
-                records.add(iter.next())
-            }
-            records
+    val csvParser = format.parse(reader)
+    val records = if (readLines == null) {
+        csvParser.records
+    } else {
+        require(readLines >= 0) { "`readLines` must not be negative" }
+        val records = ArrayList<CSVRecord>(readLines)
+        val iter = csvParser.iterator()
+        var count = readLines ?: 0
+        while (iter.hasNext() && 0 < count--) {
+            records.add(iter.next())
         }
-
-        val columnNames = csvParser.headerNames.takeIf { it.isNotEmpty() }
-            ?: (1..records[0].count()).map { index -> "X$index" }
-
-        val generator = ColumnNameGenerator()
-        val uniqueNames = columnNames.map { generator.addUnique(it) }
-
-        val cols = uniqueNames.mapIndexed { colIndex, colName ->
-            val defaultColType = colTypes[".default"]
-            val colType = colTypes[colName] ?: defaultColType
-            var hasNulls = false
-            val values = records.map {
-                it[colIndex].ifEmpty {
-                    hasNulls = true
-                    null
-                }
-            }
-            val column = DataColumn.createValueColumn(colName, values, typeOf<String>().withNullability(hasNulls))
-            when (colType) {
-                null -> column.tryParse(parserOptions)
-                else -> {
-                    val parser = Parsers[colType.toType()]!!
-                    column.parse(parser, parserOptions)
-                }
-            }
-        }
-        return cols.toDataFrame()
+        records
     }
+
+    val columnNames = csvParser.headerNames.takeIf { it.isNotEmpty() }
+        ?: (1..records[0].count()).map { index -> "X$index" }
+
+    val generator = ColumnNameGenerator()
+    val uniqueNames = columnNames.map { generator.addUnique(it) }
+
+    val cols = uniqueNames.mapIndexed { colIndex, colName ->
+        val defaultColType = colTypes[".default"]
+        val colType = colTypes[colName] ?: defaultColType
+        var hasNulls = false
+        val values = records.map {
+            it[colIndex].ifEmpty {
+                hasNulls = true
+                null
+            }
+        }
+        val column = DataColumn.createValueColumn(colName, values, typeOf<String>().withNullability(hasNulls))
+        when (colType) {
+            null -> column.tryParse(parserOptions)
+            else -> {
+                val parser = Parsers[colType.toType()]!!
+                column.parse(parser, parserOptions)
+            }
+        }
+    }
+    return cols.toDataFrame()
 }
 
 public fun AnyFrame.writeCSV(file: File, format: CSVFormat = CSVFormat.DEFAULT.withHeader()): Unit =
