@@ -25,7 +25,7 @@ class RemoveTests {
     }
 
     @Test
-    fun `remove missing column`(){
+    fun `remove missing column`() {
         val d = df.remove { b }
 
         d.remove("b") shouldBe d
