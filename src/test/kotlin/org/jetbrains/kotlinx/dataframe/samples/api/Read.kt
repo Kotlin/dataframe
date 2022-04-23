@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.api.columnTypes
@@ -62,7 +63,7 @@ class Read : TestBase() {
     fun fixMixedColumn() {
         // SampleStart
         val df = dataFrameOf("IDS")(100.0, "A100", "B100", "C100")
-        val df1 = df.convert("IDS").with(inferType = true) {
+        val df1 = df.convert("IDS").with(Infer.Type) {
             if (it is Double) {
                 it.toLong().toString()
             } else {

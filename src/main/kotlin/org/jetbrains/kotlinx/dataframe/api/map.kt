@@ -9,30 +9,24 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.columns.size
-import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.createComputedColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
-import org.jetbrains.kotlinx.dataframe.impl.columns.newColumnWithActualType
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 // region ColumnReference
 
-public inline fun <C, reified R> ColumnReference<C>.map(noinline transform: (C) -> R): ColumnReference<R> =
-    map(typeOf<R>(), transform)
-
-public fun <C, R> ColumnReference<C>.map(tartypeOf: KType?, transform: (C) -> R): ColumnReference<R> =
-    createComputedColumnReference(this.name, tartypeOf) { transform(this@map()) }
+public inline fun <C, reified R> ColumnReference<C>.map(infer: Infer = Infer.Nulls, noinline transform: (C) -> R): ColumnReference<R> =
+    createComputedColumnReference(name(), typeOf<R>(), infer) { transform(this@map()) }
 
 // endregion
 
 // region DataColumn
 
 public inline fun <T, reified R> DataColumn<T>.map(
-    infer: Infer = if (typeOf<R>().isMarkedNullable) Infer.Nulls else Infer.None,
+    infer: Infer = Infer.Nulls,
     crossinline transform: (T) -> R
 ): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
@@ -41,7 +35,7 @@ public inline fun <T, reified R> DataColumn<T>.map(
 
 public fun <T, R> DataColumn<T>.mapTo(
     type: KType,
-    infer: Infer = if (type.isMarkedNullable) Infer.Nulls else Infer.None,
+    infer: Infer = Infer.Nulls,
     transform: (T) -> R
 ): DataColumn<R> {
     val values = Array<Any?>(size()) { transform(get(it)) }.asList()
@@ -62,11 +56,7 @@ public inline fun <T, reified R> ColumnsContainer<T>.map(
     name: String,
     infer: Infer = Infer.Nulls,
     noinline body: AddExpression<T, R>
-): DataColumn<R> = when (infer) {
-    Infer.Type -> newColumnWithActualType(name, body)
-    Infer.Nulls -> newColumn(typeOf<R>(), name, true, body)
-    Infer.None -> newColumn(typeOf<R>(), name, false, body)
-}
+): DataColumn<R> = newColumn(typeOf<R>(), name, infer, body)
 
 public inline fun <T, reified R> ColumnsContainer<T>.map(
     column: ColumnAccessor<R>,

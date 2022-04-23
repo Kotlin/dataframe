@@ -16,7 +16,7 @@ import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
+import org.jetbrains.kotlinx.dataframe.impl.getListType
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -274,8 +274,8 @@ public inline fun <T, C : Iterable<R>, reified R> Split<T, C>.intoRows(dropEmpty
 public fun <T, C : AnyFrame> Split<T, C>.intoRows(dropEmpty: Boolean = true): DataFrame<T> =
     by { it.rows() }.intoRows(dropEmpty)
 
-internal fun <T, C, R> Convert<T, C?>.splitInplace(tartypeOf: KType, transform: DataRow<T>.(C) -> Iterable<R>) =
-    withRowCellImpl(List::class.createTypeWithArgument(tartypeOf)) { if (it == null) emptyList() else transform(it).asList() }
+internal fun <T, C, R> Convert<T, C?>.splitInplace(type: KType, transform: DataRow<T>.(C) -> Iterable<R>) =
+    withRowCellImpl(getListType(type), Infer.None) { if (it == null) emptyList() else transform(it).asList() }
 
 public fun <T, C, R> SplitWithTransform<T, C, R>.intoRows(dropEmpty: Boolean = true): DataFrame<T> {
     val paths = df.getColumnPaths(columns).toColumnSet()

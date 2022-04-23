@@ -1262,9 +1262,10 @@ class DataFrameTests : BaseTest() {
     @Test
     fun splitMergeFrameCol() {
         val groups by frameColumn()
-        val merged = typed.groupBy { name }.into(groups)
-        val res = merged.split(groups).into { "rec$it" }
-        res.merge { drop(1) }.notNull().into(groups.name()) shouldBe merged
+        val grouped = typed.groupBy { name }.into(groups)
+        val split = grouped.split(groups).into { "rec$it" }
+        val merged = split.merge { drop(1) }.notNull().into(groups)
+        merged shouldBe grouped
     }
 
     @Test

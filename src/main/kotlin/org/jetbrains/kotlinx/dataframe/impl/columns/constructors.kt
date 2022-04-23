@@ -42,17 +42,16 @@ import kotlin.reflect.full.withNullability
 
 @PublishedApi
 internal fun <T, R> ColumnsContainer<T>.newColumn(
-    type: KType?,
+    type: KType,
     name: String = "",
-    inferNulls: Boolean = true,
+    infer: Infer = Infer.Nulls,
     expression: AddExpression<T, R>
 ): DataColumn<R> {
     val (nullable, values) = computeValues(this as DataFrame<T>, expression)
-    if (type == null) return guessColumnType(name, values)
-    return when (type.classifier) {
-        DataFrame::class -> DataColumn.createFrameColumn(name, values as List<AnyFrame>) as DataColumn<R>
-        DataRow::class -> DataColumn.createColumnGroup(name, (values as List<AnyRow>).concat()) as DataColumn<R>
-        else -> DataColumn.createValueColumn(name, values, if (inferNulls) type.withNullability(nullable) else type)
+    return when (infer) {
+        Infer.Nulls -> DataColumn.create(name, values, type.withNullability(nullable), Infer.None)
+        Infer.Type -> DataColumn.createWithTypeInference(name, values, nullable)
+        Infer.None -> DataColumn.create(name, values, type, Infer.None)
     }
 }
 
