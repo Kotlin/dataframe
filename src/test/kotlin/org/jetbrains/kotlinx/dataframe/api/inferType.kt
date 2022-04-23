@@ -22,7 +22,7 @@ class InferTypeTests {
     fun `infer type with argument`() {
         val col by columnOf(1)
         val df = dataFrameOf(col)
-        val converted = df.convert(col).with(inferType = false) {
+        val converted = df.convert(col).with(Infer.None) {
             B(it) as A<Int>
         }
         converted[col].type() shouldBe typeOf<A<Int>>()

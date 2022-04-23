@@ -47,23 +47,26 @@ public fun <T, C> DataFrame<T>.convert(vararg columns: ColumnReference<C>): Conv
 public inline fun <T, C, reified R> DataFrame<T>.convert(
     firstCol: ColumnReference<C>,
     vararg cols: ColumnReference<C>,
+    infer: Infer = Infer.Nulls,
     noinline expression: RowValueExpression<T, C, R>
 ): DataFrame<T> =
-    convert(*headPlusArray(firstCol, cols)).with(inferType = false, expression)
+    convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
 public inline fun <T, C, reified R> DataFrame<T>.convert(
     firstCol: KProperty<C>,
     vararg cols: KProperty<C>,
+    infer: Infer = Infer.Nulls,
     noinline expression: RowValueExpression<T, C, R>
 ): DataFrame<T> =
-    convert(*headPlusArray(firstCol, cols)).with(inferType = false, expression)
+    convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
 public inline fun <T, reified R> DataFrame<T>.convert(
     firstCol: String,
     vararg cols: String,
+    infer: Infer = Infer.Nulls,
     noinline expression: RowValueExpression<T, Any?, R>
 ): DataFrame<T> =
-    convert(*headPlusArray(firstCol, cols)).with(inferType = false, expression)
+    convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
 public inline fun <T, C, reified R> Convert<T, C?>.notNull(crossinline expression: RowValueExpression<T, C, R>): DataFrame<T> =
     with {
@@ -80,17 +83,16 @@ public data class Convert<T, C>(val df: DataFrame<T>, val columns: ColumnsSelect
 public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
 
 public inline fun <T, C, reified R> Convert<T, C>.with(
-    // TODO: replace with `Infer`
-    inferType: Boolean = false,
+    infer: Infer = Infer.Nulls,
     noinline rowConverter: RowValueExpression<T, C, R>
 ): DataFrame<T> =
-    withRowCellImpl(if (inferType) null else typeOf<R>(), rowConverter)
+    withRowCellImpl(typeOf<R>(), infer, rowConverter)
 
 public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
-    inferType: Boolean = false,
+    infer: Infer = Infer.Nulls,
     noinline expression: RowColumnExpression<T, C, R>
 ): DataFrame<T> =
-    convertRowColumnImpl(if (inferType) null else typeOf<R>(), expression)
+    convertRowColumnImpl(typeOf<R>(), infer, expression)
 
 public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyCol): DataFrame<T> =
     df.replace(columns).with { columnConverter(df, it) }

@@ -10,19 +10,22 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import kotlin.reflect.KProperty
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 public fun <T, C> DataFrame<T>.merge(selector: ColumnsSelector<T, C>): Merge<T, C, List<C>> =
-    Merge(this, selector, false, { it })
+    Merge(this, selector, false, { it }, typeOf<Any?>(), Infer.Type)
 
 public fun <T> DataFrame<T>.merge(vararg columns: String): Merge<T, Any?, List<Any?>> =
     merge { columns.toColumns() }
 
-public fun <T, C> DataFrame<T>.merge(vararg columns: ColumnReference<C>): Merge<T, C, List<C>> =
+public inline fun <T, reified C> DataFrame<T>.merge(vararg columns: ColumnReference<C>): Merge<T, C, List<C>> =
     merge { columns.toColumns() }
 
-public fun <T, C> DataFrame<T>.merge(vararg columns: KProperty<C>): Merge<T, C, List<C>> =
+public inline fun <T, reified C> DataFrame<T>.merge(vararg columns: KProperty<C>): Merge<T, C, List<C>> =
     merge { columns.toColumns() }
 
 public data class Merge<T, C, R>(
@@ -34,12 +37,16 @@ public data class Merge<T, C, R>(
     internal val notNull: Boolean,
     @PublishedApi
     internal val transform: DataRow<T>.(List<C>) -> R,
+    @PublishedApi
+    internal val resultType: KType,
+    @PublishedApi
+    internal val infer: Infer,
 )
 
 public fun <T, C, R> Merge<T, C, R>.notNull(): Merge<T, C, R> = copy(notNull = true)
 
 public fun <T, C, R> Merge<T, C, R>.into(columnName: String): DataFrame<T> = into(pathOf(columnName))
-public fun <T, C, R> Merge<T, C, R>.into(column: ColumnAccessor<R>): DataFrame<T> = into(column.path())
+public fun <T, C, R> Merge<T, C, R>.into(column: ColumnAccessor<*>): DataFrame<T> = into(column.path())
 
 public fun <T, C, R> Merge<T, C, R>.intoList(): List<R> =
     df.select(selector).rows().map { transform(it, it.values() as List<C>) }
@@ -51,7 +58,7 @@ public fun <T, C, R> Merge<T, C, R>.into(path: ColumnPath): DataFrame<T> {
     // move columns into group
     val grouped = df.move(selector).under { mergePath }
 
-    var res = grouped.convert { getColumnGroup(mergePath) }.withRowCellImpl(null) {
+    var res = grouped.convert { getColumnGroup(mergePath) }.withRowCellImpl(resultType, infer) {
         val srcRow = df[index()]
         var values = it.values() as List<C>
         if (notNull) {
@@ -77,15 +84,22 @@ public fun <T, C, R> Merge<T, C, R>.by(
     limit: Int = -1,
     truncated: CharSequence = "..."
 ): Merge<T, C, String> =
-    Merge(df, selector, notNull) {
-        it.joinToString(
-            separator = separator,
-            prefix = prefix,
-            postfix = postfix,
-            limit = limit,
-            truncated = truncated
-        )
-    }
+    Merge(
+        df, selector, notNull,
+        transform = {
+            it.joinToString(
+                separator = separator,
+                prefix = prefix,
+                postfix = postfix,
+                limit = limit,
+                truncated = truncated
+            )
+        },
+        typeOf<String>(), Infer.Nulls
+    )
 
-public inline fun <T, C, R, reified V> Merge<T, C, R>.by(crossinline transform: DataRow<T>.(R) -> V): Merge<T, C, V> =
-    Merge(df, selector, notNull) { transform(this@by.transform(this, it)) }
+public inline fun <T, C, R, reified V> Merge<T, C, R>.by(
+    infer: Infer = Infer.Nulls,
+    crossinline transform: DataRow<T>.(R) -> V
+): Merge<T, C, V> =
+    Merge(df, selector, notNull, { transform(this@by.transform(this, it)) }, typeOf<V>(), infer)

@@ -336,14 +336,14 @@ class PivotTests {
     fun `grouped pivot with key and value conversions`() {
         val grouped = typed.groupBy { name }
 
-        val pivoted = grouped.pivot(inward = false) { key.map(keyConverter) }.with { valueConverter(value) }
+        val pivoted = grouped.pivot(inward = false) { key.map(transform = keyConverter) }.with { valueConverter(value) }
 
         val pivoted2 = grouped.aggregate {
-            pivot(inward = false) { key.map(keyConverter) }.with { valueConverter(value) }
+            pivot(inward = false) { key.map(transform = keyConverter) }.with { valueConverter(value) }
         }
 
         val pivoted3 =
-            typed.pivot(inward = false) { key.map(keyConverter) }.groupBy { name }.values { value.map(valueConverter) }
+            typed.pivot(inward = false) { key.map(transform = keyConverter) }.groupBy { name }.values { value.map(transform = valueConverter) }
 
         pivoted2 shouldBe pivoted
         pivoted3 shouldBe pivoted
@@ -375,7 +375,7 @@ class PivotTests {
 
     @Test
     fun `gather with name conversion`() {
-        val pivoted = typed.pivot { key.map(keyConverter) }.groupBy { name }.with { value }
+        val pivoted = typed.pivot { key.map(transform = keyConverter) }.groupBy { name }.with { value }
         val gathered = pivoted.gather { "key".all() }.notNull().mapKeys { it.substring(2) }.into("key", "value")
         gathered shouldBe expectedFiltered
     }
