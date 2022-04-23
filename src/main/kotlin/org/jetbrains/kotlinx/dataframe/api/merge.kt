@@ -64,7 +64,7 @@ public fun <T, C, R> Merge<T, C, R>.into(path: ColumnPath): DataFrame<T> {
     if (mergePath != path) {
         // target path existed before merge, but
         // it may have already been removed
-        res = res.removeImpl(true) { path }.df.move(mergePath).into { path }
+        res = res.removeImpl(allowMissingColumns = true) { path }.df.move(mergePath).into { path }
     }
     return res
 }
