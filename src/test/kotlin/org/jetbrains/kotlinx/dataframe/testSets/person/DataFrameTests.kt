@@ -2147,7 +2147,7 @@ class DataFrameTests : BaseTest() {
 
         df.convertTo<Target>() shouldBe df
         df.convert { age }.toStr().convertTo<Target>() shouldBe df
-        df.add("col") { 1 }.convertTo<Target>() shouldBe df
+        df.add("col") { 1 }.convertTo<Target>(ExtraColumns.Remove) shouldBe df
 
         val added = df.add("col") { 1 }
         added.convertToImpl<Target>(typeOf<Target>(), allowConversion = true, ExtraColumns.Keep) shouldBe added
@@ -2165,7 +2165,7 @@ class DataFrameTests : BaseTest() {
         }
 
         shouldThrow<IllegalArgumentException> {
-            df.add("col") { 1 }.convertToImpl<Target>(typeOf<Target>(), allowConversion = true, ExtraColumns.Fail) shouldBe df
+            df.add("col") { 1 }.convertTo<Target>(ExtraColumns.Fail) shouldBe df
         }
 
         val list = df.toListOf<Target>()

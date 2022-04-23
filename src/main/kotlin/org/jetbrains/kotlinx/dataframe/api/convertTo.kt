@@ -8,6 +8,6 @@ import kotlin.reflect.typeOf
 
 // region DataFrame
 
-public inline fun <reified T> AnyFrame.convertTo(): DataFrame<T> = convertToImpl(typeOf<T>(), true, org.jetbrains.kotlinx.dataframe.impl.api.ExtraColumns.Remove)
+public inline fun <reified T> AnyFrame.convertTo(extraColumnsBehavior: ExtraColumns = ExtraColumns.Keep): DataFrame<T> = convertToImpl(typeOf<T>(), true, extraColumnsBehavior)
 
 // endregion
