@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.getColumnPaths
@@ -21,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
+import kotlin.reflect.KProperty
 
 public fun <T, C> DataFrame<T>.getColumnsWithPaths(selector: ColumnsSelector<T, C>): List<ColumnWithPath<C>> =
     getColumnsWithPaths(UnresolvedColumnsPolicy.Fail, selector)
@@ -80,9 +82,11 @@ public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(name: String): ColumnGro
 
 // region containsColumn
 
-public fun <T> ColumnsContainer<T>.containsColumn(column: Column): Boolean = containsColumn(column.path())
+public fun ColumnsContainer<*>.containsColumn(column: Column): Boolean = containsColumn(column.path())
+public fun ColumnsContainer<*>.containsColumn(column: KProperty<*>): Boolean = containsColumn(column.columnName)
 
-public operator fun <T> ColumnsContainer<T>.contains(column: Column): Boolean = containsColumn(column)
+public operator fun ColumnsContainer<*>.contains(column: Column): Boolean = containsColumn(column)
+public operator fun ColumnsContainer<*>.contains(column: KProperty<*>): Boolean = containsColumn(column)
 
 // region rows
 
