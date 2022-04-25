@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.api.removeImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
