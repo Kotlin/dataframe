@@ -115,7 +115,7 @@ class HardTests {
 
         df.add("id") { index() }
             .groupBy { groups }.add("res") {
-                round(near(-2..0).map { it[value] }.filter { !it.isNaN() }.average())
+                round(relative(-2..0)[value].filter { !it.isNaN() }.mean())
             }.concat()
             .sortBy("id")
             .remove("id") shouldBe expected

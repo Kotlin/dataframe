@@ -17,8 +17,8 @@
 * `namedValues(): List<NameValuePair<Any?>>` — list of name-value pairs where `name` is a column name and `value` is cell value
 * `namedValuesOf<T>(): List<NameValuePair<T>>` — list of name-value pairs where value has given type 
 * `getRow(Int): DataRow` — row from `DataFrame` by row index
-* `near(Iterable<Int>): Sequence<DataRow>` — sequence of the nearest rows by relative index: `near(-1..1)` will return previous, current and next row. Requested indices will be coerced to valid range and invalid indices will be skipped
-* `rows(Iterable<Int>): Sequence<DataRow>` — sequence of the rows by absolute index. Requested indices are not coerced to valid boundaries and you should care about it
+* `getRows(Iterable<Int>): DataFrame` — dataframe with subset of rows selected by absolute row index. 
+* `relative(Iterable<Int>): DataFrame` — dataframe with subset of rows selected by relative row index: `relative(-1..1)` will return previous, current and next row. Requested indices will be coerced to the valid range and invalid indices will be skipped
 * `get(column): T` — cell value by this row and given `column`
 * `df()` — `DataFrame` that current row belongs to
 

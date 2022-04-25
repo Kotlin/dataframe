@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.api.namedValues
 import org.jetbrains.kotlinx.dataframe.api.namedValuesOf
 import org.jetbrains.kotlinx.dataframe.api.next
 import org.jetbrains.kotlinx.dataframe.api.prev
+import org.jetbrains.kotlinx.dataframe.api.relative
 import org.jetbrains.kotlinx.dataframe.api.rowMean
 import org.jetbrains.kotlinx.dataframe.api.rowStd
 import org.jetbrains.kotlinx.dataframe.api.rowSum
@@ -84,5 +85,12 @@ class DataRowTests : BaseTest() {
             val firstNullIndex = values().indexOfFirst { it == null }
             if (firstNullIndex == -1) null else columnNames()[firstNullIndex]
         }
+    }
+
+    @Test
+    fun relativeTest() {
+        typed[1].relative(0..0) shouldBe typed[1..1]
+        typed[1].relative(-2..2) shouldBe typed[0..3]
+        typed[1].relative(listOf(2, -1, -3, 0)) shouldBe typed[3, 0, 1]
     }
 }
