@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.index
+import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
@@ -55,6 +56,9 @@ public fun AnyRow.columnTypes(): List<KType> = df().columnTypes()
 
 public fun <T> DataRow<T>.getRow(index: Int): DataRow<T> = getRowOrNull(index)!!
 
+public fun <T> DataRow<T>.getRows(indices: Iterable<Int>): DataFrame<T> = df().getRows(indices)
+public fun <T> DataRow<T>.getRows(indices: IntRange): DataFrame<T> = df().getRows(indices)
+
 public fun <T> DataRow<T>.getRowOrNull(index: Int): DataRow<T>? {
     val df = df()
     return if (index >= 0 && index < df.nrow) df[index] else null
@@ -71,11 +75,11 @@ public fun <T> DataRow<T>.next(): DataRow<T>? {
     return if (index < df.nrow - 1) df[index + 1] else null
 }
 
-public fun <T> DataRow<T>.rows(absoluteIndices: Iterable<Int>): Sequence<DataRow<T>> =
-    absoluteIndices.asSequence().map { getRow(index + it) }
+public fun <T> DataRow<T>.relative(relativeIndices: Iterable<Int>): DataFrame<T> =
+    getRows(relativeIndices.mapNotNull { (index + it).let { if (it >= 0 && it < df().rowsCount()) it else null } })
 
-public fun <T> DataRow<T>.near(relativeIndices: Iterable<Int>): Sequence<DataRow<T>> =
-    relativeIndices.asSequence().mapNotNull { getRowOrNull(index + it) }
+public fun <T> DataRow<T>.relative(relativeIndices: IntRange): DataFrame<T> =
+    getRows((relativeIndices.start + index).coerceIn(df().indices)..(relativeIndices.endInclusive + index).coerceIn(df().indices))
 
 internal fun <T> DataRow<T>.movingAverage(k: Int, expression: RowExpression<T, Number>): Double {
     var count = 0

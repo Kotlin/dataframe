@@ -102,7 +102,6 @@ import org.jetbrains.kotlinx.dataframe.api.moveToLeft
 import org.jetbrains.kotlinx.dataframe.api.moveToRight
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.named
-import org.jetbrains.kotlinx.dataframe.api.near
 import org.jetbrains.kotlinx.dataframe.api.notNull
 import org.jetbrains.kotlinx.dataframe.api.nullable
 import org.jetbrains.kotlinx.dataframe.api.parse
@@ -1874,11 +1873,6 @@ class DataFrameTests : BaseTest() {
     fun `cols of type`() {
         val stringCols = typed.select { colsOf<String?>() }
         stringCols.columnNames() shouldBe listOf("name", "city")
-    }
-
-    @Test
-    fun neighbours() {
-        typed[2].near(-1..1).toList() shouldBe listOf(typed[1], typed[2], typed[3])
     }
 
     @Test
