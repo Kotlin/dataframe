@@ -4,6 +4,8 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.atTime
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
@@ -217,16 +219,25 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             java.time.LocalDateTime::class -> when (toClass) {
                 LocalDate::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime().date }
                 LocalDateTime::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime() }
+                Instant::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime().toInstant(defaultTimeZone) }
                 Long::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime().toInstant(defaultTimeZone).toEpochMilliseconds() }
                 java.time.LocalDate::class -> convert<java.time.LocalDateTime> { it.toLocalDate() }
                 else -> null
             }
             LocalDate::class -> when (toClass) {
+                LocalDateTime::class -> convert<LocalDate> { it.atTime(0, 0) }
+                Instant::class -> convert<LocalDate> { it.atStartOfDayIn(defaultTimeZone) }
+                Long::class -> convert<LocalDate> { it.atStartOfDayIn(defaultTimeZone).toEpochMilliseconds() }
                 java.time.LocalDate::class -> convert<LocalDate> { it.toJavaLocalDate() }
+                java.time.LocalDateTime::class -> convert<LocalDate> { it.atTime(0, 0).toJavaLocalDateTime() }
                 else -> null
             }
             java.time.LocalDate::class -> when (toClass) {
                 LocalDate::class -> convert<java.time.LocalDate> { it.toKotlinLocalDate() }
+                LocalDateTime::class -> convert<java.time.LocalDate> { it.atTime(0, 0).toKotlinLocalDateTime() }
+                Instant::class -> convert<java.time.LocalDate> { it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone) }
+                Long::class -> convert<java.time.LocalDate> { it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone).toEpochMilliseconds() }
+                java.time.LocalDateTime::class -> convert<java.time.LocalDate> { it.atStartOfDay() }
                 else -> null
             }
             URL::class -> when (toClass) {
