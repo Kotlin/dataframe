@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.junit.Test
 import java.lang.ClassCastException
 import java.lang.IllegalArgumentException
@@ -49,5 +50,31 @@ class GetTests {
         shouldThrow<ClassCastException> { added.getValue(c) + 1 }
         shouldThrow<ClassCastException> { added.getValue<Int>("c") + 1 }
         shouldThrow<ClassCastException> { added.getValue(A::c) + 1 }
+    }
+
+    @DataSchema
+    data class Schema(val a: Int)
+
+    @Test
+    fun `create typed frame column accessor`() {
+        val df = dataFrameOf(
+            columnOf(
+                dataFrameOf("a")(1),
+                dataFrameOf("a", "b")(2, 3, 4, 5)
+            ).named("x")
+        )
+        val x by frameColumn<Schema>()
+        df[x][0].a[0] shouldBe 1
+        df[1][x].a[1] shouldBe 4
+    }
+
+    @Test
+    fun `create typed column group accessor`() {
+        val df = dataFrameOf(
+            dataFrameOf("a", "b")(1, 2, 3, 4).asColumnGroup("x")
+        )
+        val x by columnGroup<Schema>()
+        df[x][0].a shouldBe 1
+        df[1][x].a shouldBe 3
     }
 }
