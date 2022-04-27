@@ -82,7 +82,7 @@ public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(name: String): ColumnGro
 
 // region containsColumn
 
-public fun ColumnsContainer<*>.containsColumn(column: Column): Boolean = containsColumn(column.path())
+public fun <C> ColumnsContainer<*>.containsColumn(column: ColumnReference<C>): Boolean = getColumnOrNull(column) != null
 public fun ColumnsContainer<*>.containsColumn(column: KProperty<*>): Boolean = containsColumn(column.columnName)
 
 public operator fun ColumnsContainer<*>.contains(column: Column): Boolean = containsColumn(column)

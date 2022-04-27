@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -33,12 +34,27 @@ public inline fun <reified R> AnyRow.namedValuesOf(): List<NameValuePair<R>> =
 public fun AnyRow.namedValues(): List<NameValuePair<Any?>> =
     values().zip(columnNames()) { value, name -> NameValuePair(name, value) }
 
+// region getValue
+
 public fun <T> AnyRow.getValue(columnName: String): T = get(columnName) as T
 public fun <T> AnyRow.getValue(column: ColumnReference<T>): T = get(column)
 public fun <T> AnyRow.getValue(column: KProperty<T>): T = get(column)
 
 public fun <T> AnyRow.getValueOrNull(columnName: String): T? = getOrNull(columnName) as T?
 public fun <T> AnyRow.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<T>(column.columnName)
+
+// endregion
+
+// region contains
+
+public fun AnyRow.containsKey(columnName: String): Boolean = owner.containsColumn(columnName)
+public fun AnyRow.containsKey(column: Column): Boolean = owner.containsColumn(column)
+public fun AnyRow.containsKey(column: KProperty<*>): Boolean = owner.containsColumn(column)
+
+public operator fun AnyRow.contains(column: Column): Boolean = containsKey(column)
+public operator fun AnyRow.contains(column: KProperty<*>): Boolean = containsKey(column)
+
+// endregion
 
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType

@@ -41,4 +41,24 @@ class ContainsTests {
         val df = dataFrameOf("a")(1, 2).group("a").into("g")
         (a in df) shouldBe true
     }
+
+    @Test
+    fun `row contains key`() {
+        val a by column<Int>()
+        val b by column<Int>()
+        data class A(val a: Int, val b: Int)
+
+        val df = dataFrameOf("a")(1, 2)
+        val row = df[0]
+
+        row.containsKey("a") shouldBe true
+        row.containsKey(a) shouldBe true
+        row.containsKey(A::a) shouldBe true
+        (A::a in row) shouldBe true
+        (a in row) shouldBe true
+
+        row.containsKey("b") shouldBe false
+        row.containsKey(b) shouldBe false
+        row.containsKey(A::b) shouldBe false
+    }
 }
