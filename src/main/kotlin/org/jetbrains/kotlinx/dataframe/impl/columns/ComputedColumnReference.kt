@@ -25,6 +25,8 @@ internal class ComputedColumnReference<R>(
     override fun rename(newName: String) = ComputedColumnReference(newName, type, infer, compute)
 
     override fun getValue(row: AnyRow) = compute(row, row)
+
+    override fun getValueOrNull(row: AnyRow) = compute(row, row)
 }
 
 @PublishedApi

@@ -24,6 +24,11 @@ internal open class DataRowImpl<T>(private val index: Int, private val df: DataF
         return column.getValue(this)
     }
 
+    override fun <R> getValueOrNull(column: ColumnReference<R>): R? {
+        ColumnAccessTracker.registerColumnAccess(column.name())
+        return column.getValueOrNull(this)
+    }
+
     override fun index() = index
 
     private val values by lazy { df.columns().map { it[index] } }

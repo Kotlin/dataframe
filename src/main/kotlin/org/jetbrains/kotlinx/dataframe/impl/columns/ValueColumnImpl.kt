@@ -59,5 +59,7 @@ internal class ResolvingValueColumn<T>(
 
     override fun getValue(row: AnyRow) = super<ValueColumn>.getValue(row)
 
+    override fun getValueOrNull(row: AnyRow) = super<ValueColumn>.getValueOrNull(row)
+
     override fun rename(newName: String) = ResolvingValueColumn(source.rename(newName))
 }

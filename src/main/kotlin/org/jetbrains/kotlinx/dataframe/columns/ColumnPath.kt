@@ -43,6 +43,8 @@ public data class ColumnPath(val path: List<String>) : List<String> by path, Col
 
     override fun getValue(row: AnyRow): Any? = row.owner[this][row.index()]
 
+    override fun getValueOrNull(row: AnyRow): Any? = row.owner.getColumnOrNull(this)?.get(row.index())
+
     override fun toString(): String = path.toString()
 
     override fun <C> get(column: ColumnReference<C>): ColumnAccessor<C> = ColumnAccessorImpl(this + column.path())

@@ -29,7 +29,9 @@ public interface ColumnReference<out C> : SingleColumn<C> {
 
     public fun path(): ColumnPath = ColumnPath(name)
 
-    public fun getValue(row: AnyRow): C = resolveFor(row)
+    public fun getValue(row: AnyRow): C = resolveFor(row.df())!![row.index()]
+
+    public fun getValueOrNull(row: AnyRow): C? = resolveFor(row.df())?.get(row.index())
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
         return context.df.getColumn<C>(path(), context.unresolvedColumnsPolicy)?.addPath(path(), context.df)
@@ -40,6 +42,4 @@ internal fun <C> ColumnReference<C>.renamedReference(newName: String): ColumnRef
 
 internal fun ColumnReference<*>.shortPath() = ColumnPath(name)
 
-internal fun <C> ColumnReference<C>.resolveFor(df: AnyFrame): ColumnWithPath<C> = resolveSingle(ColumnResolutionContext(df, UnresolvedColumnsPolicy.Fail))!!
-
-internal fun <C> ColumnReference<C>.resolveFor(row: AnyRow): C = resolveFor(row.df())[row.index()]
+internal fun <C> ColumnReference<C>.resolveFor(df: AnyFrame): ColumnWithPath<C>? = resolveSingle(ColumnResolutionContext(df, UnresolvedColumnsPolicy.Skip))
