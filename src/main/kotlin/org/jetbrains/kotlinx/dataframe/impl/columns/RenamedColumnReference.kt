@@ -16,4 +16,6 @@ internal class RenamedColumnReference<C>(val source: ColumnReference<C>, val nam
     override fun rename(newName: String) = RenamedColumnReference(source, newName)
 
     override fun getValue(row: AnyRow) = source.getValue(row)
+
+    override fun getValueOrNull(row: AnyRow) = source.getValueOrNull(row)
 }

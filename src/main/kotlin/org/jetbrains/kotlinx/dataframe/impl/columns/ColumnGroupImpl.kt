@@ -94,5 +94,7 @@ internal class ResolvingColumnGroup<T>(
 
     override fun getValue(row: AnyRow) = super<DataColumnGroup>.getValue(row)
 
+    override fun getValueOrNull(row: AnyRow) = super<DataColumnGroup>.getValueOrNull(row)
+
     override fun rename(newName: String) = ResolvingColumnGroup(source.rename(newName))
 }

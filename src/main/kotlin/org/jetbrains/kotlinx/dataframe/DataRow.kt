@@ -33,6 +33,7 @@ public interface DataRow<out T> {
     public operator fun get(name: String): Any?
     public fun getColumnGroup(columnName: String): AnyRow = get(columnName) as AnyRow
     public fun getOrNull(name: String): Any?
+    public fun <R> getValueOrNull(column: ColumnReference<R>): R?
     public fun containsKey(name: String): Boolean
 
     // endregion
