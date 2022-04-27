@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnGroupReference
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -29,6 +30,8 @@ import kotlin.reflect.typeOf
 
 // region create ColumnAccessor
 
+// region column
+
 public fun <T> column(): ColumnDelegate<T> = ColumnDelegate()
 public fun <T> column(name: String): ColumnAccessor<T> = ColumnAccessorImpl(name)
 public fun <T> column(path: ColumnPath): ColumnAccessor<T> = ColumnAccessorImpl(path)
@@ -48,19 +51,63 @@ public inline fun <T, reified C> column(
     noinline expression: RowExpression<T, C>
 ): ColumnReference<C> = createComputedColumnReference(name, typeOf<C>(), infer, expression as RowExpression<Any?, C>)
 
+// endregion
+
+// region columnGroup
+
 public fun columnGroup(): ColumnDelegate<AnyRow> = column()
+@JvmName("columnGroupTyped")
+public fun <T> columnGroup(): ColumnDelegate<DataRow<T>> = column()
+
 public fun columnGroup(name: String): ColumnAccessor<AnyRow> = column(name)
+@JvmName("columnGroupTyped")
+public fun <T> columnGroup(name: String): ColumnAccessor<DataRow<T>> = column(name)
+
 public fun columnGroup(path: ColumnPath): ColumnAccessor<AnyRow> = column(path)
+@JvmName("columnGroupTyped")
+public fun <T> columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> = column(path)
+
 public fun ColumnGroupReference.columnGroup(): ColumnDelegate<AnyRow> = ColumnDelegate(this)
+@JvmName("columnGroupTyped")
+public fun <T> ColumnGroupReference.columnGroup(): ColumnDelegate<DataRow<T>> = ColumnDelegate(this)
+
 public fun ColumnGroupReference.columnGroup(name: String): ColumnAccessor<AnyRow> = ColumnAccessorImpl(path() + name)
+@JvmName("columnGroupTyped")
+public fun <T> ColumnGroupReference.columnGroup(name: String): ColumnAccessor<DataRow<T>> = ColumnAccessorImpl(path() + name)
+
 public fun ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccessor<AnyRow> = ColumnAccessorImpl(this.path() + path)
+@JvmName("columnGroupTyped")
+public fun <T> ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> = ColumnAccessorImpl(this.path() + path)
+
+// endregion
+
+// region frameColumn
 
 public fun frameColumn(): ColumnDelegate<AnyFrame> = column()
+@JvmName("frameColumnTyped")
+public fun <T> frameColumn(): ColumnDelegate<DataFrame<T>> = column()
+
 public fun frameColumn(name: String): ColumnAccessor<AnyFrame> = column(name)
+@JvmName("frameColumnTyped")
+public fun <T> frameColumn(name: String): ColumnAccessor<DataFrame<T>> = column(name)
+
 public fun frameColumn(path: ColumnPath): ColumnAccessor<AnyFrame> = column(path)
+@JvmName("frameColumnTyped")
+public fun <T> frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> = column(path)
+
 public fun ColumnGroupReference.frameColumn(): ColumnDelegate<AnyFrame> = ColumnDelegate(this)
+@JvmName("frameColumnTyped")
+public fun <T> ColumnGroupReference.frameColumn(): ColumnDelegate<DataFrame<T>> = ColumnDelegate(this)
+
 public fun ColumnGroupReference.frameColumn(name: String): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(path() + name)
+@JvmName("frameColumnTyped")
+public fun <T> ColumnGroupReference.frameColumn(name: String): ColumnAccessor<DataFrame<T>> = ColumnAccessorImpl(path() + name)
+
 public fun ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(this.path() + path)
+@JvmName("frameColumnTyped")
+public fun <T> ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> = ColumnAccessorImpl(this.path() + path)
+
+// endregion
 
 public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null) {
     public operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = named(property.columnName)
