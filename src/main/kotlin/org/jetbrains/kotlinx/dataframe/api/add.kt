@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.index
 import kotlin.reflect.KProperty
@@ -60,7 +61,7 @@ public inline fun <reified R, T> DataFrame<T>.add(
 ): DataFrame<T> {
     val col = map(path.name(), infer, expression)
     if (path.size == 1) return this + col
-    return insert(path, col)
+    return insertImpl(path, col)
 }
 
 public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
