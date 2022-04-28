@@ -53,6 +53,9 @@ class ReplCodeGenTests : BaseTest() {
             override val x: List<Int>
         }
 
+        @DataSchema
+        interface D : A
+
         val df = dataFrameOf("x")(listOf(1))
     }
 
@@ -169,5 +172,15 @@ class ReplCodeGenTests : BaseTest() {
         repl.process<Test3.C>()
         val c = repl.process(Test3.df, Test3::df)
         c.declarations.shouldBeEmpty()
+    }
+
+    @Test
+    fun `process diamond inheritance`() {
+        val repl = ReplCodeGenerator.create()
+        repl.process<Test3.A>()
+        repl.process<Test3.B>()
+        repl.process<Test3.D>()
+        val c = repl.process(Test3.df, Test3::df)
+        """val .*ColumnsContainer<\w*>.x:""".toRegex().findAll(c.declarations).count() shouldBe 1
     }
 }
