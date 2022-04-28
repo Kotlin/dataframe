@@ -25,7 +25,7 @@ internal class SchemaProcessorImpl(
         .filter { it.schema.compare(this).isSuperOrEqual() }
 
     private fun List<Marker>.onlyLeafs(): List<Marker> {
-        val skip = flatMap { it.allBaseMarkers.keys }.toSet()
+        val skip = flatMap { it.allSuperMarkers.keys }.toSet()
         return filter { !skip.contains(it.name) }
     }
 

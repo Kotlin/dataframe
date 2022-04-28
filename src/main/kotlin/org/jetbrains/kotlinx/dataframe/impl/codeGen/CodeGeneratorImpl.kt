@@ -242,7 +242,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
         val header =
             "@$annotationName${if (marker.isOpen) "" else "(isOpen = false)"}\n${visibility}interface ${marker.name}"
         val baseInterfacesDeclaration =
-            if (marker.baseMarkers.isNotEmpty()) " : " + marker.baseMarkers.map { it.value.name }
+            if (marker.superMarkers.isNotEmpty()) " : " + marker.superMarkers.map { it.value.name }
                 .joinToString() else ""
         val resultDeclarations = mutableListOf<String>()
 

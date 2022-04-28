@@ -34,7 +34,7 @@ public open class Marker(
     override val name: String,
     public val isOpen: Boolean,
     override val fields: List<GeneratedField>,
-    base: List<Marker>,
+    superMarkers: List<Marker>,
     override val visibility: MarkerVisibility,
     typeParameters: List<String>,
     typeArguments: List<String>
@@ -43,12 +43,12 @@ public open class Marker(
     public val shortName: String
         get() = name.substringAfterLast(".")
 
-    public val baseMarkers: Map<String, Marker> = base.associateBy { it.name }
+    public val superMarkers: Map<String, Marker> = superMarkers.associateBy { it.name }
 
-    public val allBaseMarkers: Map<String, Marker> by lazy {
-        val result = baseMarkers.toMutableMap()
-        baseMarkers.forEach {
-            result.putAll(it.value.allBaseMarkers)
+    public val allSuperMarkers: Map<String, Marker> by lazy {
+        val result = this.superMarkers.toMutableMap()
+        this.superMarkers.forEach {
+            result.putAll(it.value.allSuperMarkers)
         }
         result
     }
@@ -56,7 +56,7 @@ public open class Marker(
     public val allFields: List<GeneratedField> by lazy {
 
         val fieldsMap = mutableMapOf<String, GeneratedField>()
-        baseMarkers.values.forEach {
+        this.superMarkers.values.forEach {
             it.allFields.forEach {
                 fieldsMap[it.fieldName.quotedIfNeeded] = it
             }
@@ -79,7 +79,7 @@ public open class Marker(
 
     public val schema: DataFrameSchema by lazy { DataFrameSchemaImpl(allFields.map { it.columnName to it.columnSchema }.toMap()) }
 
-    public fun implements(schema: Marker): Boolean = if (schema.name == name) true else baseMarkers[schema.name]?.let { it === schema } ?: false
+    public fun implements(schema: Marker): Boolean = if (schema.name == name) true else allSuperMarkers[schema.name]?.let { it === schema } ?: false
 
     public fun implementsAll(schemas: Iterable<Marker>): Boolean = schemas.all { implements(it) }
 
@@ -88,7 +88,7 @@ public open class Marker(
             name: String,
             isOpen: Boolean,
             fields: List<GeneratedField>,
-            base: List<Marker>,
+            superMarkers: List<Marker>,
             visibility: MarkerVisibility,
             klass: KClass<*>
         ): Marker {
@@ -102,7 +102,7 @@ public open class Marker(
                 }
             }
             val typeArguments = klass.typeParameters.map { it.name }
-            return Marker(name, isOpen, fields, base, visibility, typeParameters, typeArguments)
+            return Marker(name, isOpen, fields, superMarkers, visibility, typeParameters, typeArguments)
         }
     }
 }

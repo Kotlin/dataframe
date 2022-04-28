@@ -1,12 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldBeEmpty
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.process
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
@@ -37,6 +39,21 @@ class ReplCodeGenTests : BaseTest() {
 
         @DataSchema(isOpen = false)
         interface _DataFrameType2 : _DataFrameType, _DataFrameType1
+    }
+
+    object Test3 {
+        @DataSchema
+        interface A { val x: List<*> }
+
+        @DataSchema
+        interface B : A
+
+        @DataSchema(isOpen = false)
+        interface C : B {
+            override val x: List<Int>
+        }
+
+        val df = dataFrameOf("x")(listOf(1))
     }
 
     @Test
@@ -142,5 +159,15 @@ class ReplCodeGenTests : BaseTest() {
 
         val code = repl.process(typed).declarations.trimIndent()
         code shouldBe expected
+    }
+
+    @Test
+    fun `process overriden property`() {
+        val repl = ReplCodeGenerator.create()
+        repl.process<Test3.A>()
+        repl.process<Test3.B>()
+        repl.process<Test3.C>()
+        val c = repl.process(Test3.df, Test3::df)
+        c.declarations.shouldBeEmpty()
     }
 }
