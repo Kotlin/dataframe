@@ -44,7 +44,7 @@ public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T>
     df.move(columns).intoIndexed { col, index ->
         col.path.dropLast(1) + newNames[index]
     }
-public fun <T, C> RenameClause<T, C>.into(vararg newNames: KProperty<C>): DataFrame<T> =
+public fun <T, C> RenameClause<T, C>.into(vararg newNames: KProperty<*>): DataFrame<T> =
     into(*newNames.map { it.name }.toTypedArray())
 
 public fun <T, C> RenameClause<T, C>.into(transform: (ColumnWithPath<C>) -> String): DataFrame<T> =
