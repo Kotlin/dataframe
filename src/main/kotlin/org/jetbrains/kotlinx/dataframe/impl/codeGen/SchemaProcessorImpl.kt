@@ -66,21 +66,21 @@ internal class SchemaProcessorImpl(
 
         return schema.columns.asIterable().sortedBy { it.key }.flatMapIndexed { index, column ->
             val (columnName, columnSchema) = column
-
+            val fieldType = getFieldType(columnSchema)
             // find all fields that were already generated for this column name in base interfaces
             val superFields = requiredSuperMarkers.mapNotNull { it.getField(columnName) }
 
-            val fieldsToOverride = superFields.filter { it.columnSchema != columnSchema }
+            val fieldsToOverride = superFields.filter { it.columnSchema != columnSchema }.map { it.fieldName }.distinct()
 
             val newFields = when {
                 fieldsToOverride.isNotEmpty() -> fieldsToOverride.map {
-                    GeneratedField(it.fieldName, it.columnName, true, columnSchema, getFieldType(columnSchema))
+                    GeneratedField(it, columnName, true, columnSchema, fieldType)
                 }
                 superFields.isNotEmpty() -> emptyList()
                 else -> {
                     val fieldName = generateValidFieldName(columnName, index, usedFieldNames)
                     usedFieldNames.add(fieldName.quotedIfNeeded)
-                    listOf(GeneratedField(fieldName, columnName, false, columnSchema, getFieldType(columnSchema)))
+                    listOf(GeneratedField(fieldName, columnName, false, columnSchema, fieldType))
                 }
             }
             newFields
