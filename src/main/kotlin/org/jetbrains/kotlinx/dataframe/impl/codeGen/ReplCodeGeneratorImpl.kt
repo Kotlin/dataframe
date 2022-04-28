@@ -112,7 +112,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                     it.simpleName!!
                 }.sorted()
 
-                val tempBaseClassNames = temp.baseMarkers.map { it.value.shortName }.sorted()
+                val tempBaseClassNames = temp.superMarkers.map { it.value.shortName }.sorted()
 
                 if (baseClassNames == tempBaseClassNames) {
                     val newBaseMarkers = baseClasses.map { resolve(it) }
