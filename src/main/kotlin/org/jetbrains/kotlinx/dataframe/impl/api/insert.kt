@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
+import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -17,6 +18,10 @@ internal data class ColumnToInsert(
     val column: AnyBaseColumn,
     val referenceNode: ReadonlyTreeNode<ReferenceData>? = null
 )
+
+@PublishedApi
+internal fun <T> DataFrame<T>.insertImpl(path: ColumnPath, column: AnyCol): DataFrame<T> =
+    insertImpl(this, listOf(ColumnToInsert(path, column)))
 
 @JvmName("insertImplT")
 internal fun <T> DataFrame<T>.insertImpl(columns: List<ColumnToInsert>) =
