@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
+import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExcept
@@ -277,9 +278,12 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
         this(this@ColumnsSelectionDsl, this@ColumnsSelectionDsl)
 
     public infix fun <C> ColumnReference<C>.into(newName: String): ColumnReference<C> = named(newName)
+    public infix fun <C> ColumnReference<C>.into(column: ColumnAccessor<*>): ColumnReference<C> = into(column.name())
+    public infix fun <C> ColumnReference<C>.into(column: KProperty<*>): ColumnReference<C> = named(column.columnName)
+
     public infix fun String.into(newName: String): ColumnReference<Any?> = toColumnAccessor().into(newName)
-    public infix fun <C> ColumnReference<C>.into(column: ColumnAccessor<C>): ColumnReference<C> = into(column.name())
     public infix fun String.into(column: ColumnAccessor<*>): ColumnReference<Any?> = toColumnAccessor().into(column.name())
+    public infix fun String.into(column: KProperty<*>): ColumnReference<Any?> = toColumnAccessor().into(column.columnName)
 
     public infix fun <C> ColumnReference<C>.named(newName: String): ColumnReference<C> = renamedReference(newName)
     public infix fun String.named(newName: String): ColumnReference<Any?> = toColumnAccessor().named(newName)
