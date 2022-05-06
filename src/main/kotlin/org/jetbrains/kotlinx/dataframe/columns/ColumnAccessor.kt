@@ -17,7 +17,7 @@ import kotlin.reflect.KProperty
  *
  * @param T Expected [type][DataColumn.type] of values in the column
  */
-public interface ColumnAccessor<T> : ColumnReference<T> {
+public interface ColumnAccessor<out T> : ColumnReference<T> {
 
     public override operator fun getValue(thisRef: Any?, property: KProperty<*>): ColumnAccessor<T> = this
 
