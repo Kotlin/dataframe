@@ -218,7 +218,8 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
         fun escapeDoubleQuotes(it: Char) = if (it == '"') "\"\"" else it.toString()
 
         val (_, result) = runGradleBuild(":build") { buildDir ->
-            val dataFile = File(buildDir, "data.csv")
+            val filename = "data.csv"
+            val dataFile = File(buildDir, filename)
             val notSupportedChars = setOf('\n', '\r')
             (Char.MIN_VALUE..Char.MAX_VALUE).asSequence()
                 .filterNot { it in notSupportedChars }
@@ -239,7 +240,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 import org.jetbrains.kotlinx.dataframe.api.filter
                 
                 fun main() {
-                    val df = DataFrame.read("$dataFile").cast<Schema>()
+                        val df = DataFrame.read("${TestData.csvName}").cast<Schema>()
                 }
             """.trimIndent())
 
@@ -264,7 +265,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
 
                 dataframes {
                     schema {
-                        data = "$dataFile"
+                        data = "${TestData.csvName}"
                         name = "Schema"
                         packageName = ""
                     }
@@ -295,7 +296,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 }
                 
                 fun main() {
-                    val df = DataFrame.read("$dataFile").cast<MySchema>()
+                    val df = DataFrame.read("${TestData.csvName}").cast<MySchema>()
                     val df1 = df.filter { age != null }
                 }
             """.trimIndent())

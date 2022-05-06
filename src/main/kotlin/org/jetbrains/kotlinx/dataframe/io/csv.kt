@@ -6,10 +6,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.api.forEachRow
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.tryParse
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
@@ -296,13 +293,22 @@ public fun DataFrame.Companion.readDelim(
     return cols.toDataFrame()
 }
 
-public fun AnyFrame.writeCSV(file: File, format: CSVFormat = CSVFormat.DEFAULT.withHeader()): Unit =
+public fun AnyFrame.writeCSV(
+    file: File,
+    format: CSVFormat = CSVFormat.DEFAULT
+): Unit =
     writeCSV(FileWriter(file), format)
 
-public fun AnyFrame.writeCSV(path: String, format: CSVFormat = CSVFormat.DEFAULT.withHeader()): Unit =
+public fun AnyFrame.writeCSV(
+    path: String,
+    format: CSVFormat = CSVFormat.DEFAULT
+): Unit =
     writeCSV(FileWriter(path), format)
 
-public fun AnyFrame.writeCSV(writer: Appendable, format: CSVFormat = CSVFormat.DEFAULT.withHeader()): Unit =
+public fun AnyFrame.writeCSV(
+    writer: Appendable,
+    format: CSVFormat = CSVFormat.DEFAULT
+) {
     format.print(writer).use { printer ->
         printer.printRecord(columnNames())
         forEachRow {
@@ -316,8 +322,9 @@ public fun AnyFrame.writeCSV(writer: Appendable, format: CSVFormat = CSVFormat.D
             printer.printRecord(values)
         }
     }
+}
 
-public fun AnyFrame.toCsv(format: CSVFormat = CSVFormat.DEFAULT.withHeader()): String =
+public fun AnyFrame.toCsv(format: CSVFormat = CSVFormat.DEFAULT): String =
     StringWriter().use {
         this.writeCSV(it, format)
         it

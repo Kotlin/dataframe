@@ -181,6 +181,12 @@ class CsvTests {
     }
 
     @Test
+    fun `CSV String of saved dataframe starts with column name`() {
+        val df = dataFrameOf("a")(1)
+        df.toCsv().first() shouldBe 'a'
+    }
+
+    @Test
     fun `guess tsv`() {
         val df = DataFrame.read(testResource("abc.tsv"))
         df.columnsCount() shouldBe 3
