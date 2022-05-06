@@ -101,6 +101,7 @@ internal class Integration : JupyterIntegration() {
         import("org.jetbrains.kotlinx.dataframe.*")
         import("org.jetbrains.kotlinx.dataframe.annotations.*")
         import("org.jetbrains.kotlinx.dataframe.io.*")
+        import("org.jetbrains.kotlinx.dataframe.columns.*")
         import("java.net.URL")
         import("java.io.File")
         import("kotlinx.datetime.Instant")
