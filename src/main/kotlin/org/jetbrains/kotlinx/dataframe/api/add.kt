@@ -43,7 +43,7 @@ public inline fun <reified R, T> DataFrame<T>.add(
 public inline fun <reified R, T> DataFrame<T>.add(
     property: KProperty<R>,
     infer: Infer = Infer.Nulls,
-    noinline expression: RowExpression<T, R>
+    noinline expression: AddExpression<T, R>
 ): DataFrame<T> =
     (this + map(property, infer, expression))
 
