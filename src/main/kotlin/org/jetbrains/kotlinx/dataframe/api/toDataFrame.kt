@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.Column
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
@@ -14,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.mapNotNullValues
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.typeClass
@@ -46,6 +49,11 @@ public inline fun <reified T> DataColumn<T>.read(): AnyCol = when (kind()) {
         }.asColumnGroup(name()).asDataColumn()
     }
 }
+
+public fun <T> DataFrame<T>.read(columns: ColumnsSelector<T, *>): DataFrame<T> = replace(columns).with { it.read() }
+public fun <T> DataFrame<T>.read(vararg columns: String): DataFrame<T> = read { columns.toColumns() }
+public fun <T> DataFrame<T>.read(vararg columns: KProperty<*>): DataFrame<T> = read { columns.toColumns() }
+public fun <T> DataFrame<T>.read(vararg columns: Column): DataFrame<T> = read { columns.toColumns() }
 
 @JvmName("toDataFrameT")
 public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
