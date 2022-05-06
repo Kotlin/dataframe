@@ -68,6 +68,8 @@ public fun <T> ColumnsContainer<T>.getColumnGroup(index: Int): ColumnGroup<*> = 
 
 public fun <T> ColumnsContainer<T>.getColumnGroup(name: String): ColumnGroup<*> = getColumn(name).asColumnGroup()
 
+public fun <T> ColumnsContainer<T>.getColumnGroup(column: KProperty<*>): ColumnGroup<*> = getColumnGroup(column.columnName)
+
 public fun <T, C> ColumnsContainer<T>.getColumnGroup(column: ColumnReference<DataRow<C>>): ColumnGroup<C> = getColumn(column)
 
 public fun <T, C> ColumnsContainer<T>.getColumnGroup(column: ColumnSelector<T, DataRow<C>>): ColumnGroup<C> = get(column).asColumnGroup()
@@ -77,6 +79,8 @@ public fun <T, C> ColumnsContainer<T>.getColumnGroup(column: ColumnSelector<T, D
 // region getColumnGroupOrNull
 
 public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(name: String): ColumnGroup<*>? = getColumnOrNull(name)?.asColumnGroup()
+
+public fun <T> ColumnsContainer<T>.getColumnGroupOrNull(column: KProperty<*>): ColumnGroup<*>? = getColumnGroupOrNull(column.columnName)
 
 // endregion
 
