@@ -39,6 +39,8 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
     public operator fun <C> ColumnReference<C>.invoke(): DataColumn<C> = get(this)
 
+    public operator fun <T> ColumnReference<DataRow<T>>.invoke(): ColumnGroup<T> = get(this)
+
     public operator fun <C> ColumnReference<C>.invoke(newName: String): ColumnReference<C> = renamedReference(newName)
 
     public operator fun <C> ColumnPath.invoke(): DataColumn<C> = getColumn(this).cast()
