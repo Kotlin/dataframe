@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.io
 import com.github.kittinunf.fuel.httpGet
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
 import java.io.File
@@ -36,7 +35,7 @@ public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyF
             guessColumnType(name, values)
         }.toDataFrame()
     }
-    isEmpty() -> emptyDataFrame(0)
+    isEmpty() -> DataFrame.Empty
     else -> {
         val header = get(0).map { it.toString() }
         val data = drop(1)
@@ -50,12 +49,12 @@ public fun <T> List<List<T>>.toDataFrame(containsColumns: Boolean = false): AnyF
     }
 }
 
-internal fun String.isURL(): Boolean = listOf("http:", "https:", "ftp:").any { startsWith(it) }
+public fun isURL(path: String): Boolean = listOf("http:", "https:", "ftp:").any { path.startsWith(it) }
 
-internal fun URL.isFile(): Boolean = protocol == "file"
+public fun isFile(url: URL): Boolean = url.protocol == "file"
 
-internal fun URL.asFileOrNull(): File? = if (isFile()) File(path) else null
+public fun asFileOrNull(url: URL): File? = if (isFile(url)) File(url.path) else null
 
-internal fun URL.asFile(): File = asFileOrNull()!!
+public fun urlAsFile(url: URL): File = File(url.path)
 
-internal fun URL.isProtocolSupported(): Boolean = protocol in setOf("http", "https", "ftp")
+public fun isProtocolSupported(url: URL): Boolean = url.protocol in setOf("http", "https", "ftp")

@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -58,7 +57,7 @@ internal fun <T> DataFrame<T>.removeImpl(allowMissingColumns: Boolean = false, c
         return newCols.toDataFrame()
     }
 
-    val newDf = dfs(columns(), colWithPaths, root) ?: emptyDataFrame(nrow)
+    val newDf = dfs(columns(), colWithPaths, root) ?: DataFrame.empty(nrow)
 
     val removedColumns = root.allRemovedColumns().map { it.pathFromRoot() to it }.sortedBy { originalOrder[it.first] }.map { it.second }
 

@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.junit.Test
 import java.lang.ClassCastException
@@ -11,7 +12,7 @@ class GetTests {
 
     @Test
     fun `exceptions from empty dataframe`() {
-        val empty = emptyDataFrame()
+        val empty = DataFrame.Empty
         shouldThrow<NoSuchElementException> {
             empty.first()
         }

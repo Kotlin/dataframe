@@ -518,8 +518,8 @@ class DataFrameTreeTests : BaseTest() {
         val groupCol = grouped.groups.toColumnAccessor()
         val plain = grouped.toDataFrame()
             .update { groupCol }.at(1).withNull()
-            .update { groupCol }.at(2).with { emptyDataFrame(0).cast() }
-            .update { groupCol }.at(3).with { it?.filter { false } }
+            .update { groupCol }.at(2).with { emptyDataFrame() }
+            .update { groupCol }.at(3).with { it.filter { false } }
         val res = plain.explode(dropEmpty = false) { groupCol }
         val expected = plain[groupCol.name()].sumOf { Math.max((it as AnyFrame?)?.nrow ?: 0, 1) }
         res.nrow shouldBe expected

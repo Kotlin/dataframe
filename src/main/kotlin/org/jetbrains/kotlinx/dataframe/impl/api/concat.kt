@@ -70,7 +70,7 @@ internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>?>, columnS
 
 internal fun <T> concatImpl(dataFrames: List<DataFrame<T>>): DataFrame<T> {
     when (dataFrames.size) {
-        0 -> return emptyDataFrame().cast()
+        0 -> return emptyDataFrame()
         1 -> return dataFrames[0]
     }
 
