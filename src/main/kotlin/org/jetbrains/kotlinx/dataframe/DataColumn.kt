@@ -37,7 +37,7 @@ import kotlin.reflect.typeOf
  * Base interface for [ValueColumn] and [FrameColumn], but not for [ColumnGroup]. However, implementations for all three [column kinds][ColumnKind] derive from DataColumn and can cast to it safely.
  * Column operations that have signature clash with [DataFrame] API ([filter], [take], [map] etc.) are defined for [DataColumn] and not for [BaseColumn].
  *
- * @param T - type of values in the column.
+ * @param T type of values in the column.
  */
 public interface DataColumn<out T> : BaseColumn<T> {
 

@@ -15,7 +15,7 @@ import kotlin.reflect.KType
  * Base interface for all three kinds of columns: [ValueColumn], [ColumnGroup] and [FrameColumn].
  * Column operations that doesn't clash by signature with [DataFrame] operations can be defined for [BaseColumn]
  *
- * @param T - type of values contained in column.
+ * @param T type of values contained in column.
  */
 public interface BaseColumn<out T> : ColumnReference<T> {
 
