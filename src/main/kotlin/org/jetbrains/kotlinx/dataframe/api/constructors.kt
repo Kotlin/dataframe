@@ -271,7 +271,7 @@ public class DataFrameBuilder(private val header: List<String>) {
     public fun randomBoolean(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextBoolean() }
 }
 
-public fun emptyDataFrame(nrow: Int = 0): AnyFrame = DataFrame.empty(nrow)
+public fun <T> emptyDataFrame(nrow: Int = 0): DataFrame<T> = DataFrame.empty(nrow).cast()
 
 // endregion
 
