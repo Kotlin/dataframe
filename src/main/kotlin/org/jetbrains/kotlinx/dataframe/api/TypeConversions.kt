@@ -83,10 +83,16 @@ public fun <T> DataColumn<T>.asComparable(): DataColumn<Comparable<T>> {
     return this as DataColumn<Comparable<T>>
 }
 
-public fun <T> DataColumn<T?>.castNotNull(): DataColumn<T> {
+public fun <T> ColumnReference<T?>.castToNotNullable(): ColumnReference<T> = cast()
+
+public fun <T> DataColumn<T?>.castToNotNullable(): DataColumn<T> {
     require(!hasNulls()) { "Column `$name` has nulls" }
     return this as DataColumn<T>
 }
+
+public fun <T> DataColumn<T>.castToNullable(): DataColumn<T?> = cast()
+
+public fun <T> ColumnReference<T>.castToNullable(): ColumnReference<T?> = cast()
 
 // region to array
 
