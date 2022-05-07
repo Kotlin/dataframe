@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Corr
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.castNotNull
+import org.jetbrains.kotlinx.dataframe.api.castToNotNullable
 import org.jetbrains.kotlinx.dataframe.api.convertToDouble
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.getColumnsWithPaths
@@ -41,10 +41,10 @@ internal fun <T, C, R> Corr<T, C>.corrImpl(otherColumns: ColumnsSelector<T, R>):
 
     val index = cols1.map { it.name }.toValueColumn(indexColumnName)
 
-    val cols = cols1.associateTo(mutableMapOf()) { it.path to it.data.convertToDouble().castNotNull() }
+    val cols = cols1.associateTo(mutableMapOf()) { it.path to it.data.convertToDouble().castToNotNullable() }
     cols2.forEach {
         if (!cols.containsKey(it.path)) {
-            cols[it.path] = it.data.convertToDouble().castNotNull()
+            cols[it.path] = it.data.convertToDouble().castToNotNullable()
         }
     }
 
