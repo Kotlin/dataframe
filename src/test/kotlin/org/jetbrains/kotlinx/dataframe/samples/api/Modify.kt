@@ -777,8 +777,10 @@ class Modify : TestBase() {
         df.add {
             "year of birth" from 2021 - age
             age gt 18 into "is adult"
-            name.lastName.length() into "last name length"
-            "full name" from { name.firstName + " " + name.lastName }
+            "details" {
+                name.lastName.length() into "last name length"
+                "full name" from { name.firstName + " " + name.lastName }
+            }
         }
         // SampleEnd
     }
@@ -792,14 +794,17 @@ class Modify : TestBase() {
         val isAdult = column<Boolean>("is adult")
         val fullName = column<String>("full name")
         val name by columnGroup()
+        val details by columnGroup()
         val firstName by name.column<String>()
         val lastName by name.column<String>()
 
         df.add {
             yob from 2021 - age
             age gt 18 into isAdult
-            lastName.length() into lastNameLength
-            fullName from { firstName() + " " + lastName() }
+            details from {
+                lastName.length() into lastNameLength
+                fullName from { firstName() + " " + lastName() }
+            }
         }
         // SampleEnd
     }
@@ -810,8 +815,10 @@ class Modify : TestBase() {
         df.add {
             "year of birth" from 2021 - "age"<Int>()
             "age"<Int>() gt 18 into "is adult"
-            "name"["lastName"]<String>().length() into "last name length"
-            "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
+            "details" {
+                "name"["lastName"]<String>().length() into "last name length"
+                "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
+            }
         }
         // SampleEnd
     }

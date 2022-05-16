@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.Column
@@ -88,6 +89,7 @@ public inline fun <reified R, T, G> GroupBy<T, G>.add(
 
 public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsContainer<T> by df, ColumnSelectionDsl<T> {
 
+    // TODO: support adding column into path
     internal val columns = mutableListOf<AnyCol>()
 
     public fun add(column: Column): Boolean = columns.add(column.resolveSingle(df)!!.data)
@@ -104,6 +106,8 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
     ): Boolean = add(df.map(name, infer, expression))
 
     public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean = add(this, Infer.Nulls, expression)
+
+    // TODO: use path instead of name
     public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean = name().from(expression)
     public inline infix fun <reified R> KProperty<R>.from(noinline expression: RowExpression<T, R>): Boolean = add(name, Infer.Nulls, expression)
 
@@ -114,4 +118,21 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
     public infix fun Column.into(name: String): Boolean = add(rename(name))
     public infix fun <R> ColumnReference<R>.into(column: ColumnAccessor<R>): Boolean = into(column.name())
     public infix fun <R> ColumnReference<R>.into(column: KProperty<R>): Boolean = into(column.name)
+
+    public operator fun String.invoke(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
+    public infix fun AnyColumnGroupAccessor.from(body: AddDsl<T>.() -> Unit): Unit = group(this, body)
+
+    public fun group(column: AnyColumnGroupAccessor, body: AddDsl<T>.() -> Unit): Unit = group(column.name(), body)
+    public fun group(name: String, body: AddDsl<T>.() -> Unit) {
+        val dsl = AddDsl(df)
+        body(dsl)
+        add(dsl.columns.toColumnGroup(name))
+    }
+
+    public fun group(body: AddDsl<T>.() -> Unit): AddGroup<T> = AddGroup(body)
+
+    public infix fun AddGroup<T>.into(groupName: String): Unit = group(groupName, body)
+    public infix fun AddGroup<T>.into(column: AnyColumnGroupAccessor): Unit = into(column.name())
 }
+
+public data class AddGroup<T>(internal val body: AddDsl<T>.() -> Unit)
