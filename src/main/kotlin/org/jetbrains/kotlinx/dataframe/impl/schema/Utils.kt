@@ -2,7 +2,10 @@ package org.jetbrains.kotlinx.dataframe.impl.schema
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -12,6 +15,8 @@ import org.jetbrains.kotlinx.dataframe.impl.baseType
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.type
+import kotlin.reflect.KClass
+import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
@@ -72,3 +77,17 @@ internal fun AnyCol.extractSchema(): ColumnSchema = when (this) {
     )
     else -> throw RuntimeException()
 }
+
+internal fun ColumnSchema.createEmptyColumn(name: String): AnyCol = when (this) {
+    is ColumnSchema.Value -> DataColumn.createValueColumn<Any?>(name, emptyList(), type)
+    is ColumnSchema.Group -> DataColumn.createColumnGroup(name, schema.createEmptyDataFrame()) as AnyCol
+    is ColumnSchema.Frame -> DataColumn.createFrameColumn<Any?>(name, emptyList(), lazyOf(schema))
+    else -> error("Unexpected ColumnSchema: $this")
+}
+internal fun DataFrameSchema.createEmptyDataFrame(): AnyFrame = columns.map { (name, schema) -> schema.createEmptyColumn(name) }.toDataFrame()
+
+@PublishedApi
+internal fun createEmptyDataFrameOf(clazz: KClass<*>): AnyFrame = MarkersExtractor[clazz].schema.createEmptyDataFrame()
+
+internal fun getPropertiesOrder(clazz: KClass<*>): Map<String, Int> =
+    clazz.primaryConstructor?.parameters?.mapNotNull { it.name }?.mapIndexed { i, v -> v to i }?.toMap() ?: emptyMap()

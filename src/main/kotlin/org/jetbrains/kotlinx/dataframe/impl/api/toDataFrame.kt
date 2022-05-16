@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.impl.projectUpTo
+import org.jetbrains.kotlinx.dataframe.impl.schema.getPropertiesOrder
 import java.lang.reflect.InvocationTargetException
 import java.time.temporal.Temporal
 import kotlin.reflect.KClass
@@ -21,7 +22,6 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
-import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.javaField
 
@@ -92,12 +92,12 @@ internal fun convertToDataFrame(
     preserves: Set<KClass<*>>,
     depth: Int
 ): AnyFrame {
-    val constructorParameters = clazz.primaryConstructor?.parameters?.mapNotNull { it.name }?.mapIndexed { i, v -> v to i }?.toMap() ?: emptyMap()
+    val order = getPropertiesOrder(clazz)
 
     val properties = roots.ifEmpty {
         clazz.memberProperties
             .filter { it.visibility == KVisibility.PUBLIC && it.parameters.toList().size == 1 }
-    }.sortedBy { constructorParameters[it.name] ?: Int.MAX_VALUE }
+    }.sortedBy { order[it.name] ?: Int.MAX_VALUE }
 
     val columns = properties.mapNotNull {
         val property = it
