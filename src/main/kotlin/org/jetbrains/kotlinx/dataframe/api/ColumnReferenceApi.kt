@@ -11,8 +11,6 @@ public inline fun <reified T> ColumnReference<T>.withValues(vararg values: T): V
 public inline fun <reified T> ColumnReference<T>.withValues(values: Iterable<T>): ValueColumn<T> =
     DataColumn.createValueColumn(name(), values.asList(), typeOf<T>())
 
-public infix fun <T, C : ColumnReference<T>> C.named(name: String): C = rename(name) as C
-
 public infix fun <C : Comparable<C>> ColumnReference<C>.gt(value: C): ColumnReference<Boolean> = map { it > value }
 public infix fun <C : Comparable<C>> ColumnReference<C>.lt(value: C): ColumnReference<Boolean> = map { it < value }
 public infix fun <C> ColumnReference<C>.eq(value: C): ColumnReference<Boolean> = map { it == value }
