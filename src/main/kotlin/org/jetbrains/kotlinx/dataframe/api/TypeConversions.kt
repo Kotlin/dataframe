@@ -190,6 +190,11 @@ public inline fun <reified T> Iterable<T>.toColumn(property: KProperty<T>): Data
 
 public fun Iterable<String>.toPath(): ColumnPath = ColumnPath(asList())
 
+public fun Iterable<AnyBaseColumn>.toColumnGroup(name: String): ColumnGroup<*> = dataFrameOf(this).asColumnGroup(name)
+public fun <T> Iterable<AnyBaseColumn>.toColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> = dataFrameOf(this).cast<T>().asColumnGroup(column)
+
+public fun <T> Iterable<AnyBaseColumn>.toColumnGroupOf(name: String): ColumnGroup<T> = toColumnGroup(name).cast()
+
 // endregion
 
 // region DataFrame
@@ -201,7 +206,7 @@ public fun <T> DataFrame<T>.asColumnGroup(name: String = ""): ColumnGroup<T> = w
     else -> DataColumn.createColumnGroup(name, this)
 }
 
-public fun <T> DataFrame<T>.asColumnGroup(column: ColumnGroupAccessor): ColumnGroup<*> = asColumnGroup(column.name)
+public fun <T> DataFrame<T>.asColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> = asColumnGroup(column.name)
 
 // region as GroupedDataFrame
 

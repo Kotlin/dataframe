@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.Column
-import org.jetbrains.kotlinx.dataframe.ColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -51,7 +51,7 @@ public fun <T, C> MoveClause<T, C>.intoIndexed(
 }
 
 public fun <T, C> MoveClause<T, C>.under(column: String): DataFrame<T> = pathOf(column).let { path -> under { path } }
-public fun <T, C> MoveClause<T, C>.under(column: ColumnGroupAccessor): DataFrame<T> = column.path().let { path -> under { path } }
+public fun <T, C> MoveClause<T, C>.under(column: AnyColumnGroupAccessor): DataFrame<T> = column.path().let { path -> under { path } }
 public fun <T, C> MoveClause<T, C>.under(column: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> Column): DataFrame<T> = moveImpl(
     under = true,
     column

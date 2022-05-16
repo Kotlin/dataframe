@@ -43,7 +43,8 @@ public typealias RowValueFilter<T, C> = RowValueExpression<T, C, Boolean>
 public typealias Column = ColumnReference<*>
 
 public typealias ColumnGroupReference = ColumnReference<AnyRow>
-public typealias ColumnGroupAccessor = ColumnAccessor<AnyRow>
+public typealias ColumnGroupAccessor<T> = ColumnAccessor<DataRow<T>>
+public typealias AnyColumnGroupAccessor = ColumnGroupAccessor<*>
 
 public typealias DoubleCol = DataColumn<Double?>
 public typealias BooleanCol = DataColumn<Boolean?>
