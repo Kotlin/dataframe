@@ -63,6 +63,7 @@ import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.getColumns
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.getValue
 import org.jetbrains.kotlinx.dataframe.api.group
@@ -883,14 +884,32 @@ class DataFrameTests : BaseTest() {
     fun `add several columns`() {
         val now = 2020
         val expected = typed.rows().map { now - it.age }
+        val g by columnGroup()
 
-        fun AnyFrame.check() = (1..3).forEach { this["year$it"].toList() shouldBe expected }
+        val df = typed.add {
+            "a" from { now - age }
+            "b" from now - age
+            now - age into "c"
+            "d" {
+                "f" from { now - age }
+            }
+            group {
+                g from {
+                    add(age.map { now - it }.named("h"))
+                }
+            } into "e"
+        }.remove { allBefore("a") }
 
-        typed.add {
-            "year1" from { now - age }
-            "year2" from now - age
-            now - age into "year3"
-        }.check()
+        df.columnNames() shouldBe listOf("a", "b", "c", "d", "e")
+        df["d"].kind() shouldBe ColumnKind.Group
+        df["e"].kind() shouldBe ColumnKind.Group
+        df.getColumnGroup("d").columnNames() shouldBe listOf("f")
+        df.getColumnGroup("e").getColumnGroup("g").columnNames() shouldBe listOf("h")
+        val cols = df.getColumns { allDfs() }
+        cols.size shouldBe 5
+        cols.forEach {
+            it.toList() shouldBe expected
+        }
     }
 
     @Test
