@@ -11,8 +11,10 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.extractSchema
 import org.jetbrains.kotlinx.dataframe.kind
+import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KType
@@ -23,6 +25,7 @@ public enum class ExtraColumns { Remove, Keep, Fail }
 @PublishedApi
 internal fun <T> AnyFrame.convertToImpl(type: KType, allowConversion: Boolean, extraColumns: ExtraColumns): DataFrame<T> {
     fun AnyFrame.convertToSchema(schema: DataFrameSchema): AnyFrame {
+        if (ncol == 0) return schema.createEmptyDataFrame()
         var visited = 0
         val newColumns = columns().mapNotNull {
             val targetColumn = schema.columns[it.name()]

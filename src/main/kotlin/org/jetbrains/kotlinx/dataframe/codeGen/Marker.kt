@@ -64,7 +64,7 @@ public open class Marker(
         fields.forEach {
             fieldsMap[it.fieldName.quotedIfNeeded] = it
         }
-        fieldsMap.values.sortedBy { it.fieldName.quotedIfNeeded }
+        fieldsMap.values.toList()
     }
 
     public val allFieldsByColumn: Map<String, GeneratedField> by lazy {

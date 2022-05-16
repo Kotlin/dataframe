@@ -48,6 +48,6 @@ public fun <T> Iterable<DataColumn<T>>.concat(): DataColumn<T> {
 }
 
 @JvmName("concatRows")
-public fun <T> Iterable<DataRow<T>?>.concat(): DataFrame<T> = concatImpl(map { it?.toDataFrame() ?: emptyDataFrame(1) })
+public fun <T> Iterable<DataRow<T>?>.concat(): DataFrame<T> = concatImpl(map { it?.toDataFrame() ?: DataFrame.empty(1).cast() })
 
 // endregion

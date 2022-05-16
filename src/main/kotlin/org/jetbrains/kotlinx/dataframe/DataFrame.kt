@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
+import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrameOf
 import kotlin.reflect.KType
 
 /**
@@ -28,6 +29,8 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     public companion object {
         public val Empty: AnyFrame = DataFrameImpl<Unit>(emptyList(), 0)
         public fun empty(nrow: Int = 0): AnyFrame = if (nrow == 0) Empty else DataFrameImpl<Unit>(emptyList(), nrow)
+
+        public inline fun <reified T> emptyOf(): DataFrame<T> = createEmptyDataFrameOf(T::class).cast()
     }
 
     // region columns

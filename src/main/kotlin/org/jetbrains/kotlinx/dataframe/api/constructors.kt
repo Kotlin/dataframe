@@ -271,7 +271,14 @@ public class DataFrameBuilder(private val header: List<String>) {
     public fun randomBoolean(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextBoolean() }
 }
 
-public fun <T> emptyDataFrame(nrow: Int = 0): DataFrame<T> = DataFrame.empty(nrow).cast()
+/**
+ * Returns [DataFrame] with no rows and no columns.
+ *
+ * To create [DataFrame] with empty columns or empty rows see [DataFrame.empty]
+ *
+ * @param T schema marker for [DataFrame]
+ */
+public fun <T> emptyDataFrame(): DataFrame<T> = DataFrame.empty().cast()
 
 // endregion
 

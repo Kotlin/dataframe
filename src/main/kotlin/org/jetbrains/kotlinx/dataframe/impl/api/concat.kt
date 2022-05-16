@@ -28,7 +28,7 @@ internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>?>, columnS
 
     if (columns.all { it == null || it.isColumnGroup() }) {
         val frames = columns.mapIndexed { index, col ->
-            col?.asColumnGroup() ?: emptyDataFrame(columnSizes[index])
+            col?.asColumnGroup() ?: DataFrame.empty(columnSizes[index])
         }
         val merged = concatImpl(frames)
         return DataColumn.createColumnGroup(name, merged).asDataColumn().cast()
