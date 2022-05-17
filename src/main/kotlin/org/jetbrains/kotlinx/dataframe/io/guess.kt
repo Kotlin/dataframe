@@ -124,8 +124,8 @@ public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList
 public fun DataRow.Companion.read(file: File, header: List<String> = emptyList()): AnyRow = DataFrame.read(file, header).single()
 
 public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()): AnyFrame = when {
-    url.isFile() -> read(url.asFile(), header)
-    url.isProtocolSupported() -> catchHttpResponse(url) { read(it, guessFormat(url), header) }
+    isFile(url) -> read(urlAsFile(url), header)
+    isProtocolSupported(url) -> catchHttpResponse(url) { read(it, guessFormat(url), header) }
     else -> throw IllegalArgumentException("Invalid protocol for url $url")
 }
 

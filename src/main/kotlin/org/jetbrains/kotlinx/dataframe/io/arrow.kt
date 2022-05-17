@@ -179,14 +179,14 @@ public fun DataFrame.Companion.readArrow(stream: InputStream): AnyFrame = Channe
 
 public fun DataFrame.Companion.readArrow(url: URL): AnyFrame =
     when {
-        url.isFile() -> readArrow(url.asFile())
-        url.isProtocolSupported() -> url.openStream().use { readArrow(it) }
+        isFile(url) -> readArrow(urlAsFile(url))
+        isProtocolSupported(url) -> url.openStream().use { readArrow(it) }
         else -> {
             throw IllegalArgumentException("Invalid protocol for url $url")
         }
     }
 
-public fun DataFrame.Companion.readArrow(path: String): AnyFrame = if (path.isURL()) {
+public fun DataFrame.Companion.readArrow(path: String): AnyFrame = if (isURL(path)) {
     readArrow(URL(path))
 } else {
     readArrow(File(path))

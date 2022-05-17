@@ -162,7 +162,7 @@ private fun getCSVType(path: String): CSVType =
     }
 
 private fun asStream(fileOrUrl: String) = (
-    if (fileOrUrl.isURL()) {
+    if (isURL(fileOrUrl)) {
         URL(fileOrUrl).toURI()
     } else {
         File(fileOrUrl).toURI()
@@ -170,7 +170,7 @@ private fun asStream(fileOrUrl: String) = (
     ).toURL().openStream()
 
 internal fun asURL(fileOrUrl: String): URL = (
-    if (fileOrUrl.isURL()) {
+    if (isURL(fileOrUrl)) {
         URL(fileOrUrl).toURI()
     } else {
         File(fileOrUrl).toURI()
