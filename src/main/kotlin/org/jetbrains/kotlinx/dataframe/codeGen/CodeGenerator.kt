@@ -48,18 +48,18 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
         }
     }
 }
-
+@PublishedApi
 internal fun CodeGenerator.generate(
     markerClass: KClass<*>,
     interfaceMode: InterfaceGenerationMode,
     extensionProperties: Boolean
-) = generate(
+): CodeWithConverter = generate(
     MarkersExtractor.get(markerClass),
     interfaceMode,
     extensionProperties
 )
 
-internal inline fun <reified T> CodeGenerator.generate(
+public inline fun <reified T> CodeGenerator.generate(
     interfaceMode: InterfaceGenerationMode,
     extensionProperties: Boolean
-) = generate(T::class, interfaceMode, extensionProperties)
+): CodeWithConverter = generate(T::class, interfaceMode, extensionProperties)

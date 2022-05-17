@@ -97,7 +97,7 @@ public fun <T> DataRow<T>.relative(relativeIndices: Iterable<Int>): DataFrame<T>
 public fun <T> DataRow<T>.relative(relativeIndices: IntRange): DataFrame<T> =
     getRows((relativeIndices.start + index).coerceIn(df().indices)..(relativeIndices.endInclusive + index).coerceIn(df().indices))
 
-internal fun <T> DataRow<T>.movingAverage(k: Int, expression: RowExpression<T, Number>): Double {
+public fun <T> DataRow<T>.movingAverage(k: Int, expression: RowExpression<T, Number>): Double {
     var count = 0
     return backwardIterable().take(k).sumByDouble {
         count++
@@ -105,7 +105,7 @@ internal fun <T> DataRow<T>.movingAverage(k: Int, expression: RowExpression<T, N
     } / count
 }
 
-internal fun <T> DataRow<T>.duplicate(n: Int): DataFrame<T> = this.owner.columns().mapIndexed { colIndex, col ->
+public fun <T> DataRow<T>.duplicate(n: Int): DataFrame<T> = this.owner.columns().mapIndexed { colIndex, col ->
     when (col) {
         is ColumnGroup<*> -> DataColumn.createColumnGroup(col.name, col[index].duplicate(n))
         else -> {
