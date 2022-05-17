@@ -6,6 +6,7 @@ enableFeaturePreview("VERSION_CATALOGS")
 includeBuild("generator")
 include("plugins:dataframe-gradle-plugin")
 include("plugins:symbol-processor")
+include("tests")
 
 //include("examples:idea-examples:titanic")
 //include("examples:idea-examples:movies")
