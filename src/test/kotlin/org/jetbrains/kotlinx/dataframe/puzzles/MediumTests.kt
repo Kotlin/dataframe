@@ -76,7 +76,7 @@ class MediumTests {
 
         val expected = columnOf("e", "c", "d", "h", "d").named("res")
 
-        df.map("res") {
+        df.mapToColumn("res") {
             namedValuesOf<Double>().filter { it.value.isNaN }.drop(2).firstOrNull()?.name
         } shouldBe expected
     }

@@ -17,7 +17,7 @@ public inline fun <T, reified R> DataFrame<T>.insert(
     name: String,
     infer: Infer = Infer.Nulls,
     noinline expression: RowExpression<T, R>
-): InsertClause<T> = insert(map(name, infer, expression))
+): InsertClause<T> = insert(mapToColumn(name, infer, expression))
 
 public inline fun <T, reified R> DataFrame<T>.insert(
     column: ColumnAccessor<R>,

@@ -4,7 +4,7 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.median
 import org.jetbrains.kotlinx.dataframe.api.rowMedian
 import org.junit.Test
@@ -28,6 +28,6 @@ class MedianTests {
             2, 4,
             7, 7
         )
-        df.map("", Infer.Type) { it.rowMedian() } shouldBe columnOf(2, 3, 7)
+        df.mapToColumn("", Infer.Type) { it.rowMedian() } shouldBe columnOf(2, 3, 7)
     }
 }

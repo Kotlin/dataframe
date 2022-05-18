@@ -84,6 +84,7 @@ import org.jetbrains.kotlinx.dataframe.api.last
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
 import org.jetbrains.kotlinx.dataframe.api.lowercase
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.mapToFrame
 import org.jetbrains.kotlinx.dataframe.api.match
 import org.jetbrains.kotlinx.dataframe.api.matches
 import org.jetbrains.kotlinx.dataframe.api.max
@@ -2284,7 +2285,7 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun map() {
-        val mapped = typed.map {
+        val mapped = typed.mapToFrame {
             name into "name"
             "year" from 2021 - age
             "CITY" from { city?.uppercase() }

@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dropNA
 import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.mapTo
+import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
@@ -25,7 +25,7 @@ internal fun <T, C> DataFrame<T>.implodeImpl(dropNA: Boolean = false, columns: C
                 ColumnKind.Frame -> column.asAnyFrameColumn().concat() to typeOf<List<AnyFrame>>()
             }
             var first = true
-            column.mapTo(type) {
+            column.map(type) {
                 if (first) {
                     first = false
                     value

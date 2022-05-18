@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -32,21 +33,21 @@ internal class AddDataRowImpl<T>(index: Int, owner: DataFrame<T>, private val co
     override fun <C> AnyRow.new() = container[index] as C
 }
 
-public typealias AddExpression<T, C> = AddDataRow<T>.(AddDataRow<T>) -> C
+public typealias AddExpression<T, C> = Selector<AddDataRow<T>, C>
 
 public inline fun <reified R, T> DataFrame<T>.add(
     name: String,
     infer: Infer = Infer.Nulls,
     noinline expression: AddExpression<T, R>
 ): DataFrame<T> =
-    (this + map(name, infer, expression))
+    (this + mapToColumn(name, infer, expression))
 
 public inline fun <reified R, T> DataFrame<T>.add(
     property: KProperty<R>,
     infer: Infer = Infer.Nulls,
     noinline expression: AddExpression<T, R>
 ): DataFrame<T> =
-    (this + map(property, infer, expression))
+    (this + mapToColumn(property, infer, expression))
 
 public inline fun <reified R, T> DataFrame<T>.add(
     column: ColumnAccessor<R>,
@@ -60,7 +61,7 @@ public inline fun <reified R, T> DataFrame<T>.add(
     infer: Infer = Infer.Nulls,
     noinline expression: AddExpression<T, R>
 ): DataFrame<T> {
-    val col = map(path.name(), infer, expression)
+    val col = mapToColumn(path.name(), infer, expression)
     if (path.size == 1) return this + col
     return insertImpl(path, col)
 }
@@ -103,7 +104,7 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
         name: String,
         infer: Infer = Infer.Nulls,
         noinline expression: RowExpression<T, R>
-    ): Boolean = add(df.map(name, infer, expression))
+    ): Boolean = add(df.mapToColumn(name, infer, expression))
 
     public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean = add(this, Infer.Nulls, expression)
 

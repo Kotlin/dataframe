@@ -41,6 +41,8 @@ import org.jetbrains.kotlinx.dataframe.api.length
 import org.jetbrains.kotlinx.dataframe.api.lowercase
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapKeys
+import org.jetbrains.kotlinx.dataframe.api.mapToColumn
+import org.jetbrains.kotlinx.dataframe.api.mapToFrame
 import org.jetbrains.kotlinx.dataframe.api.mapValues
 import org.jetbrains.kotlinx.dataframe.api.match
 import org.jetbrains.kotlinx.dataframe.api.mean
@@ -848,33 +850,40 @@ class Modify : TestBase() {
     }
 
     @Test
-    fun map_properties() {
+    fun map() {
         // SampleStart
-        df.map("year of birth") { 2021 - age }
+        df.map { 2021 - it.age }
         // SampleEnd
     }
 
     @Test
-    fun map_accessors() {
+    fun mapToColumn_properties() {
+        // SampleStart
+        df.mapToColumn("year of birth") { 2021 - age }
+        // SampleEnd
+    }
+
+    @Test
+    fun mapToColumn_accessors() {
         // SampleStart
         val age by column<Int>()
         val yearOfBirth by column<Int>("year of birth")
 
-        df.map(yearOfBirth) { 2021 - age }
+        df.mapToColumn(yearOfBirth) { 2021 - age }
         // SampleEnd
     }
 
     @Test
-    fun map_strings() {
+    fun mapToColumn_strings() {
         // SampleStart
-        df.map("year of birth") { 2021 - "age"<Int>() }
+        df.mapToColumn("year of birth") { 2021 - "age"<Int>() }
         // SampleEnd
     }
 
     @Test
     fun mapMany_properties() {
         // SampleStart
-        df.map {
+        df.mapToFrame {
             "year of birth" from 2021 - age
             age gt 18 into "is adult"
             name.lastName.length() into "last name length"
@@ -897,7 +906,7 @@ class Modify : TestBase() {
         val lastName by name.column<String>()
         val city by column<String?>()
 
-        df.map {
+        df.mapToFrame {
             yob from 2021 - age
             age gt 18 into isAdult
             lastName.length() into lastNameLength
@@ -910,7 +919,7 @@ class Modify : TestBase() {
     @Test
     fun mapMany_strings() {
         // SampleStart
-        df.map {
+        df.mapToFrame {
             "year of birth" from 2021 - "age"<Int>()
             "age"<Int>() gt 18 into "is adult"
             "name"["lastName"]<String>().length() into "last name length"

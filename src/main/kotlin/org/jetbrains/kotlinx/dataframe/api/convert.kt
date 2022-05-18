@@ -180,9 +180,11 @@ public fun DataColumn<Long>.convertToLocalDate(zone: TimeZone = defaultTimeZone)
 public fun DataColumn<Long?>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate?> = map { it?.toLocalDate(zone) }
 
 @JvmName("convertToLocalDateFromInt")
-public fun DataColumn<Int>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate> = map { it.toLong().toLocalDate(zone) }
+public fun DataColumn<Int>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate> =
+    map { it.toLong().toLocalDate(zone) }
 @JvmName("convertToLocalDateFromIntNullable")
-public fun DataColumn<Int?>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate?> = map { it?.toLong()?.toLocalDate(zone) }
+public fun DataColumn<Int?>.convertToLocalDate(zone: TimeZone = defaultTimeZone): DataColumn<LocalDate?> =
+    map { it?.toLong()?.toLocalDate(zone) }
 
 @JvmName("convertToLocalDateFromString")
 public fun DataColumn<String>.convertToLocalDate(pattern: String? = null, locale: Locale? = null): DataColumn<LocalDate> {
@@ -213,9 +215,11 @@ public fun DataColumn<Long>.convertToLocalTime(zone: TimeZone = defaultTimeZone)
 public fun DataColumn<Long?>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime?> = map { it?.toLocalTime(zone) }
 
 @JvmName("convertToLocalTimeFromInt")
-public fun DataColumn<Int>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime> = map { it.toLong().toLocalTime(zone) }
+public fun DataColumn<Int>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime> =
+    map { it.toLong().toLocalTime(zone) }
 @JvmName("convertToLocalTimeIntNullable")
-public fun DataColumn<Int?>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime?> = map { it?.toLong()?.toLocalTime(zone) }
+public fun DataColumn<Int?>.convertToLocalTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalTime?> =
+    map { it?.toLong()?.toLocalTime(zone) }
 
 @JvmName("convertToLocalTimeFromString")
 public fun DataColumn<String>.convertToLocalTime(pattern: String? = null, locale: Locale? = null): DataColumn<LocalTime> {
@@ -246,14 +250,18 @@ public fun DataColumn<Long>.convertToLocalDateTime(zone: TimeZone = defaultTimeZ
 public fun DataColumn<Long?>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime?> = map { it?.toLocalDateTime(zone) }
 
 @JvmName("convertToLocalDateTimeFromInstant")
-public fun DataColumn<Instant>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime> = map { it.toLocalDateTime(zone) }
+public fun DataColumn<Instant>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime> =
+    map { it.toLocalDateTime(zone) }
 @JvmName("convertToLocalDateTimeFromInstantNullable")
-public fun DataColumn<Instant?>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime?> = map { it?.toLocalDateTime(zone) }
+public fun DataColumn<Instant?>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime?> =
+    map { it?.toLocalDateTime(zone) }
 
 @JvmName("convertToLocalDateTimeFromInt")
-public fun DataColumn<Int>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime> = map { it.toLong().toLocalDateTime(zone) }
+public fun DataColumn<Int>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime> =
+    map { it.toLong().toLocalDateTime(zone) }
 @JvmName("convertToLocalDateTimeFromIntNullable")
-public fun DataColumn<Int?>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime?> = map { it?.toLong()?.toLocalDateTime(zone) }
+public fun DataColumn<Int?>.convertToLocalDateTime(zone: TimeZone = defaultTimeZone): DataColumn<LocalDateTime?> =
+    map { it?.toLong()?.toLocalDateTime(zone) }
 
 @JvmName("convertToLocalDateTimeFromString")
 public fun DataColumn<String>.convertToLocalDateTime(pattern: String? = null, locale: Locale? = null): DataColumn<LocalDateTime> {
