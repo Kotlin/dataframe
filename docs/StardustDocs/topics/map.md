@@ -2,7 +2,23 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Creates `DataFrame` or `DataColumn` with values computed from rows of original `DataFrame`.
+Creates `List`, [DataFrame](DataFrame.md) or [DataColumn](DataColumn.md) with values computed from rows of original `DataFrame`.
+
+**Map into `List`:**
+
+```text
+map { transform }: List<T>
+
+transform: (DataRow) -> T
+```
+
+<!---FUN map-->
+
+```kotlin
+df.map { 2021 - it.age }
+```
+
+<!---END-->
 
 **Map into `DataColumn`:**
 
@@ -11,6 +27,34 @@ map(columnName) { rowExpression }: DataColumn
 
 rowExpression: DataRow.(DataRow) -> Value
 ```
+
+<!---FUN mapToColumn-->
+<tabs>
+<tab title="Properties">
+
+```kotlin
+df.mapToColumn("year of birth") { 2021 - age }
+```
+
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val age by column<Int>()
+val yearOfBirth by column<Int>("year of birth")
+
+df.mapToColumn(yearOfBirth) { 2021 - age }
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+df.mapToColumn("year of birth") { 2021 - "age"<Int>() }
+```
+
+</tab></tabs>
+<!---END-->
 
 See [row expressions](DataRow.md#row-expressions)
 
@@ -31,7 +75,7 @@ columnMapping = column into columnName | columnName from column | columnName fro
 <tab title="Properties">
 
 ```kotlin
-df.map {
+df.mapToFrame {
     "year of birth" from 2021 - age
     age gt 18 into "is adult"
     name.lastName.length() into "last name length"
@@ -54,7 +98,7 @@ val firstName by name.column<String>()
 val lastName by name.column<String>()
 val city by column<String?>()
 
-df.map {
+df.mapToFrame {
     yob from 2021 - age
     age gt 18 into isAdult
     lastName.length() into lastNameLength
@@ -67,7 +111,7 @@ df.map {
 <tab title="Strings">
 
 ```kotlin
-df.map {
+df.mapToFrame {
     "year of birth" from 2021 - "age"<Int>()
     "age"<Int>() gt 18 into "is adult"
     "name"["lastName"]<String>().length() into "last name length"

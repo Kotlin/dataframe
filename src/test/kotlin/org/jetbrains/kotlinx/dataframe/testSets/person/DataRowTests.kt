@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.diff
 import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropLast
 import org.jetbrains.kotlinx.dataframe.api.intoList
-import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.merge
 import org.jetbrains.kotlinx.dataframe.api.namedValues
 import org.jetbrains.kotlinx.dataframe.api.namedValuesOf
@@ -41,13 +41,13 @@ class DataRowTests : BaseTest() {
 
     @Test
     fun mean() {
-        typed.map("mean") { rowMean() }.values() shouldBe typed.age.values()
+        typed.mapToColumn("mean") { rowMean() }.values() shouldBe typed.age.values()
             .zip(typed.weight.values()) { a, b -> if (b != null) (a + b) / 2.0 else a }
     }
 
     @Test
     fun std() {
-        typed.map("std") { rowStd(skipNA = true, ddof = 0) }.values() shouldBe typed.age.values()
+        typed.mapToColumn("std") { rowStd(skipNA = true, ddof = 0) }.values() shouldBe typed.age.values()
             .zip(typed.weight.values()) { a, b ->
                 if (b == null) .0
                 else {
@@ -60,28 +60,28 @@ class DataRowTests : BaseTest() {
     @Test
     fun sum() {
         typed.convert { weight }.toDouble()
-            .map("sum") { rowSum() }.values() shouldBe typed.age.values().zip(typed.weight.values()) { a, b -> a + (b ?: 0).toDouble() }
+            .mapToColumn("sum") { rowSum() }.values() shouldBe typed.age.values().zip(typed.weight.values()) { a, b -> a + (b ?: 0).toDouble() }
     }
 
     @Test
     fun namedValuesOf() {
-        typed.map("vals") {
+        typed.mapToColumn("vals") {
             namedValuesOf<Int>().map { it.value }
         }.values() shouldBe typed.merge { age and weight }.by { it.filterNotNull() }.intoList()
     }
 
     @Test
     fun valuesOf() {
-        typed.map("vals") {
+        typed.mapToColumn("vals") {
             valuesOf<String>()
         }.values() shouldBe typed.merge { name and city }.by { it.filterNotNull() }.intoList()
     }
 
     @Test
     fun namedValuesFilter() {
-        typed.map("vals") {
+        typed.mapToColumn("vals") {
             namedValues().firstOrNull { it.value == null }?.name
-        } shouldBe typed.map("vals") {
+        } shouldBe typed.mapToColumn("vals") {
             val firstNullIndex = values().indexOfFirst { it == null }
             if (firstNullIndex == -1) null else columnNames()[firstNullIndex]
         }

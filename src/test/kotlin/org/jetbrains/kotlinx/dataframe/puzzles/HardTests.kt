@@ -17,11 +17,11 @@ class HardTests {
         val df = x.toDataFrame()
         val y = columnOf(1, 2, 0, 1, 2, 3, 4, 0, 1, 2).named("Y")
 
-        df.map("Y") {
+        df.mapToColumn("Y") {
             if (it[x] == 0) 0 else (prev()?.new() ?: 0) + 1
         } shouldBe y
 
-        df.map("Y") {
+        df.mapToColumn("Y") {
             if (it["X"] == 0) 0 else (prev()?.new() ?: 0) + 1
         } shouldBe y
     }

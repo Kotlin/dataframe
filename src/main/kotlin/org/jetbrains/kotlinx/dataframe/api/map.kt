@@ -26,15 +26,17 @@ public inline fun <C, reified R> ColumnReference<C>.map(infer: Infer = Infer.Nul
 // region DataColumn
 
 public inline fun <T, reified R> DataColumn<T>.map(
+    name: String = name(),
     infer: Infer = Infer.Nulls,
     crossinline transform: (T) -> R
 ): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
-    return DataColumn.create(name(), newValues, typeOf<R>(), infer)
+    return DataColumn.create(name, newValues, typeOf<R>(), infer)
 }
 
-public fun <T, R> DataColumn<T>.mapTo(
+public fun <T, R> DataColumn<T>.map(
     type: KType,
+    name: String = name(),
     infer: Infer = Infer.Nulls,
     transform: (T) -> R
 ): DataColumn<R> {
@@ -46,29 +48,52 @@ public fun <T, R> DataColumn<T>.mapTo(
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.map(body: AddDsl<T>.() -> Unit): AnyFrame {
+public fun <T, R> DataFrame<T>.map(transform: (DataRow<T>) -> R): List<R> = rows().map(transform)
+
+public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
+    name: String,
+    infer: Infer = Infer.Nulls,
+    noinline body: AddExpression<T, R>
+): DataColumn<R> = mapToColumn(name, typeOf<R>(), infer, body)
+
+public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
+    column: ColumnAccessor<R>,
+    infer: Infer = Infer.Nulls,
+    noinline body: AddExpression<T, R>
+): DataColumn<R> = mapToColumn(column, typeOf<R>(), infer, body)
+
+public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
+    column: KProperty<R>,
+    infer: Infer = Infer.Nulls,
+    noinline body: AddExpression<T, R>
+): DataColumn<R> = mapToColumn(column, typeOf<R>(), infer, body)
+
+public fun <T, R> ColumnsContainer<T>.mapToColumn(
+    name: String,
+    type: KType,
+    infer: Infer = Infer.Nulls,
+    body: AddExpression<T, R>
+): DataColumn<R> = newColumn(type, name, infer, body)
+
+public fun <T, R> ColumnsContainer<T>.mapToColumn(
+    column: ColumnAccessor<R>,
+    type: KType,
+    infer: Infer = Infer.Nulls,
+    body: AddExpression<T, R>
+): DataColumn<R> = mapToColumn(column.name(), type, infer, body)
+
+public fun <T, R> ColumnsContainer<T>.mapToColumn(
+    column: KProperty<R>,
+    type: KType,
+    infer: Infer = Infer.Nulls,
+    body: AddExpression<T, R>
+): DataColumn<R> = mapToColumn(column.columnName, type, infer, body)
+
+public fun <T> DataFrame<T>.mapToFrame(body: AddDsl<T>.() -> Unit): AnyFrame {
     val dsl = AddDsl(this)
     body(dsl)
     return dataFrameOf(dsl.columns)
 }
-
-public inline fun <T, reified R> ColumnsContainer<T>.map(
-    name: String,
-    infer: Infer = Infer.Nulls,
-    noinline body: AddExpression<T, R>
-): DataColumn<R> = newColumn(typeOf<R>(), name, infer, body)
-
-public inline fun <T, reified R> ColumnsContainer<T>.map(
-    column: ColumnAccessor<R>,
-    infer: Infer = Infer.Nulls,
-    noinline body: AddExpression<T, R>
-): DataColumn<R> = map(column.name(), infer, body)
-
-public inline fun <T, reified R> ColumnsContainer<T>.map(
-    column: KProperty<R>,
-    infer: Infer = Infer.Nulls,
-    noinline body: AddExpression<T, R>
-): DataColumn<R> = map(column.columnName, infer, body)
 
 // endregion
 

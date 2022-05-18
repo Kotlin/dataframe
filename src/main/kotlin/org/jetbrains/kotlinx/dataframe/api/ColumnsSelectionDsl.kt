@@ -341,7 +341,7 @@ public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
     name: String = "",
     infer: Infer = Infer.Nulls,
     noinline expression: AddExpression<T, R>
-): DataColumn<R> = map(name, infer, expression)
+): DataColumn<R> = mapToColumn(name, infer, expression)
 
 internal fun <T, C> ColumnsSelector<T, C>.filter(predicate: (ColumnWithPath<C>) -> Boolean): ColumnsSelector<T, C> =
     { this@filter(it, it).filter(predicate) }
