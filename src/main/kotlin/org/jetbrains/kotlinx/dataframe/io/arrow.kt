@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.BigIntVector
+import org.apache.arrow.vector.BitVector
 import org.apache.arrow.vector.Decimal256Vector
 import org.apache.arrow.vector.DecimalVector
 import org.apache.arrow.vector.DurationVector
@@ -27,6 +28,7 @@ import org.apache.arrow.vector.complex.StructVector
 import org.apache.arrow.vector.ipc.ArrowFileReader
 import org.apache.arrow.vector.ipc.ArrowStreamReader
 import org.apache.arrow.vector.types.pojo.Field
+import org.apache.commons.compress.utils.SeekableInMemoryByteChannel
 import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -53,7 +55,22 @@ internal object Allocator {
     }
 }
 
-private fun readArrow(channel: ReadableByteChannel, allocator: RootAllocator = Allocator.ROOT): AnyFrame {
+public enum class ArrowFormat() {
+    /**
+     * [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
+     */
+    IPC,
+
+    /**
+     * [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
+     */
+    FEATHER
+}
+
+/**
+ * Read [ArrowFormat.IPC] data from existing [channel]
+ */
+public fun readArrowIPC(channel: ReadableByteChannel, allocator: RootAllocator = Allocator.ROOT): AnyFrame {
     ArrowStreamReader(channel, allocator).use { reader ->
         val dfs = buildList {
             val root = reader.vectorSchemaRoot
@@ -67,7 +84,10 @@ private fun readArrow(channel: ReadableByteChannel, allocator: RootAllocator = A
     }
 }
 
-private fun readArrow(channel: SeekableByteChannel, allocator: RootAllocator = Allocator.ROOT): AnyFrame {
+/**
+ * Read [ArrowFormat.FEATHER] data from existing [channel]
+ */
+public fun readArrowFeather(channel: SeekableByteChannel, allocator: RootAllocator = Allocator.ROOT): AnyFrame {
     ArrowFileReader(channel, allocator).use { reader ->
         val dfs = buildList {
             reader.recordBlocks.forEach { block ->
@@ -81,6 +101,8 @@ private fun readArrow(channel: SeekableByteChannel, allocator: RootAllocator = A
         return dfs.concat()
     }
 }
+
+private fun BitVector.values(range: IntRange): List<Boolean?> = range.map { getObject(it) }
 
 private fun UInt1Vector.values(range: IntRange): List<Byte?> = range.map { getObject(it) }
 private fun UInt2Vector.values(range: IntRange): List<Char?> = range.map { getObject(it) }
@@ -146,6 +168,7 @@ private fun readField(root: VectorSchemaRoot, field: Field): AnyBaseColumn {
         is LargeVarCharVector -> vector.values(range).withType()
         is VarBinaryVector -> vector.values(range).withType()
         is LargeVarBinaryVector -> vector.values(range).withType()
+        is BitVector -> vector.values(range).withType()
         is SmallIntVector -> vector.values(range).withType()
         is TinyIntVector -> vector.values(range).withType()
         is UInt1Vector -> vector.values(range).withType()
@@ -171,23 +194,80 @@ private fun readField(root: VectorSchemaRoot, field: Field): AnyBaseColumn {
     return DataColumn.createValueColumn(field.name, list, type, Infer.Nulls)
 }
 
-public fun DataFrame.Companion.readArrow(file: File): AnyFrame {
-    return Files.newByteChannel(file.toPath()).use { readArrow(it) }
-}
+// IPC reading block
 
-public fun DataFrame.Companion.readArrow(stream: InputStream): AnyFrame = Channels.newChannel(stream).use { readArrow(it) }
+private fun DataFrame.Companion.readArrowIPC(file: File): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowIPC(it) }
 
-public fun DataFrame.Companion.readArrow(url: URL): AnyFrame =
+private fun DataFrame.Companion.readArrowIPC(byteArray: ByteArray): AnyFrame = SeekableInMemoryByteChannel(byteArray).use { readArrowIPC(it) }
+
+private fun DataFrame.Companion.readArrowIPC(stream: InputStream): AnyFrame = Channels.newChannel(stream).use { readArrowIPC(it) }
+
+private fun DataFrame.Companion.readArrowIPC(url: URL): AnyFrame =
     when {
-        isFile(url) -> readArrow(urlAsFile(url))
-        isProtocolSupported(url) -> url.openStream().use { readArrow(it) }
+        isFile(url) -> readArrowIPC(urlAsFile(url))
+        isProtocolSupported(url) -> url.openStream().use { readArrowIPC(it) }
         else -> {
             throw IllegalArgumentException("Invalid protocol for url $url")
         }
     }
 
-public fun DataFrame.Companion.readArrow(path: String): AnyFrame = if (isURL(path)) {
-    readArrow(URL(path))
+private fun DataFrame.Companion.readArrowIPC(path: String): AnyFrame = if (isURL(path)) {
+    readArrowIPC(URL(path))
 } else {
-    readArrow(File(path))
+    readArrowIPC(File(path))
 }
+
+// Feather reading block
+
+private fun DataFrame.Companion.readArrowFeather(file: File): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowFeather(it) }
+
+private fun DataFrame.Companion.readArrowFeather(byteArray: ByteArray): AnyFrame = SeekableInMemoryByteChannel(byteArray).use { readArrowFeather(it) }
+
+private fun DataFrame.Companion.readArrowFeather(stream: InputStream): AnyFrame = readArrowFeather(stream.readAllBytes())
+
+private fun DataFrame.Companion.readArrowFeather(url: URL): AnyFrame =
+    when {
+        isFile(url) -> readArrowFeather(urlAsFile(url))
+        isProtocolSupported(url) -> readArrowFeather(url.readBytes())
+        else -> {
+            throw IllegalArgumentException("Invalid protocol for url $url")
+        }
+    }
+
+private fun DataFrame.Companion.readArrowFeather(path: String): AnyFrame = if (isURL(path)) {
+    readArrowFeather(URL(path))
+} else {
+    readArrowFeather(File(path))
+}
+
+// Common reading block
+
+public fun DataFrame.Companion.readArrow(file: File, format: ArrowFormat = ArrowFormat.FEATHER): AnyFrame =
+    when (format) {
+        ArrowFormat.IPC -> readArrowIPC(file)
+        ArrowFormat.FEATHER -> readArrowFeather(file)
+    }
+
+public fun DataFrame.Companion.readArrow(byteArray: ByteArray, format: ArrowFormat = ArrowFormat.FEATHER): AnyFrame =
+    when (format) {
+        ArrowFormat.IPC -> readArrowIPC(byteArray)
+        ArrowFormat.FEATHER -> readArrowFeather(byteArray)
+    }
+
+public fun DataFrame.Companion.readArrow(stream: InputStream, format: ArrowFormat = ArrowFormat.IPC): AnyFrame =
+    when (format) {
+        ArrowFormat.IPC -> readArrowIPC(stream)
+        ArrowFormat.FEATHER -> readArrowFeather(stream)
+    }
+
+public fun DataFrame.Companion.readArrow(url: URL, format: ArrowFormat = ArrowFormat.IPC): AnyFrame =
+    when (format) {
+        ArrowFormat.IPC -> readArrowIPC(url)
+        ArrowFormat.FEATHER -> readArrowFeather(url)
+    }
+
+public fun DataFrame.Companion.readArrow(path: String, format: ArrowFormat = ArrowFormat.IPC): AnyFrame =
+    when (format) {
+        ArrowFormat.IPC -> readArrowIPC(path)
+        ArrowFormat.FEATHER -> readArrowFeather(path)
+    }

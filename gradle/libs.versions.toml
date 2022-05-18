@@ -17,7 +17,7 @@ kotlinDatetime = "0.3.1"
 junit = "4.13.2"
 kotestAsserions = "4.6.3"
 jsoup = "1.14.3"
-arrow = "7.0.0"
+arrow = "8.0.0"
 
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
