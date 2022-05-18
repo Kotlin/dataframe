@@ -209,6 +209,9 @@ df.select { allDfs().filter { it.name.startsWith("year") } }
 
 // exclude columns from column set
 df.select { allDfs().except { age } }
+
+// keep only unique columns
+df.select { (colsOf<Int>() and age).distinct() }
 ```
 
 <!---END-->
