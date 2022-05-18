@@ -162,7 +162,7 @@ You can fix it using convert:
 
 ```kotlin
 val df = dataFrameOf("IDS")(100.0, "A100", "B100", "C100")
-val df1 = df.convert("IDS").with(inferType = true) {
+val df1 = df.convert("IDS").with(Infer.Type) {
     if (it is Double) {
         it.toLong().toString()
     } else {
