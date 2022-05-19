@@ -155,7 +155,7 @@ internal fun <A, B> DataFrame<A>.joinImpl(
     val newRightColumns =
         if (addNewColumns) other.getColumnsWithPaths { dfs { !it.isColumnGroup() && !rightJoinColumnPaths.contains(it.path) } } else emptyList()
 
-    // for every column index from left data frame stores matching column from right data frame
+    // for every column index from the left dataframe store matching column from the right dataframe
     val leftToRightColumns = leftColumns.map { rightJoinColumnPaths[pathMapping[it.path()]] }
 
     val leftColumnsCount = leftColumns.size
