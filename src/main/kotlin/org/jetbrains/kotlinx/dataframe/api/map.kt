@@ -26,22 +26,20 @@ public inline fun <C, reified R> ColumnReference<C>.map(infer: Infer = Infer.Nul
 // region DataColumn
 
 public inline fun <T, reified R> DataColumn<T>.map(
-    name: String = name(),
     infer: Infer = Infer.Nulls,
     crossinline transform: (T) -> R
 ): DataColumn<R> {
     val newValues = Array(size()) { transform(get(it)) }.asList()
-    return DataColumn.create(name, newValues, typeOf<R>(), infer)
+    return DataColumn.create(name(), newValues, typeOf<R>(), infer)
 }
 
 public fun <T, R> DataColumn<T>.map(
     type: KType,
-    name: String = name(),
     infer: Infer = Infer.Nulls,
     transform: (T) -> R
 ): DataColumn<R> {
     val values = Array<Any?>(size()) { transform(get(it)) }.asList()
-    return DataColumn.create(name, values, type, infer).cast()
+    return DataColumn.create(name(), values, type, infer).cast()
 }
 
 // endregion
