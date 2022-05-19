@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
 internal fun <T> BaseColumn<T>.checkEquals(other: Any?): Boolean {
@@ -161,11 +162,12 @@ internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWi
     return dfs.map { it.data!!.addPath(it.pathFromRoot(), df) }
 }
 
-@PublishedApi
-internal fun KType.toColumnKind(): ColumnKind = when {
-    isSubtypeOf(typeOf<ColumnsContainer<*>?>()) -> ColumnKind.Frame
-    isSubtypeOf(typeOf<DataRow<*>?>()) -> ColumnKind.Group
-    else -> ColumnKind.Value
+internal fun KType.toColumnKind(): ColumnKind = jvmErasure.let {
+    when (it) {
+        DataFrame::class -> ColumnKind.Frame
+        DataRow::class -> ColumnKind.Group
+        else -> ColumnKind.Value
+    }
 }
 
 internal fun <C> ColumnSet<C>.resolve(
