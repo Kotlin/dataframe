@@ -12,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readJson
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.testCsv
 import org.jetbrains.kotlinx.dataframe.testJson
 import org.junit.Test
@@ -30,7 +29,7 @@ class Read : TestBase() {
             parserOptions = ParserOptions(nullStrings = setOf("not assigned"))
         )
         // SampleEnd
-        df.nrow shouldBe 3
+        df.rowsCount() shouldBe 3
         df.columnNames() shouldBe listOf("A", "B", "C", "D")
         df["A"].type() shouldBe typeOf<Int>()
         df["D"].type() shouldBe typeOf<Boolean?>()
@@ -42,7 +41,7 @@ class Read : TestBase() {
         // SampleStart
         val df = DataFrame.readJson(file)
         // SampleEnd
-        df.nrow shouldBe 4
+        df.rowsCount() shouldBe 4
         df.columnNames() shouldBe listOf("A", "B", "C", "D")
         df["A"].type() shouldBe typeOf<String>()
         df["B"].type() shouldBe typeOf<Int>()

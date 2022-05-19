@@ -1,7 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -20,8 +19,6 @@ import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -113,25 +110,7 @@ class PlaylistJsonTest {
         val pageInfo: DataRow<DataFrameType10>
     }
 
-    fun generateExtensionProperties(): List<String> {
-        val types = listOf(
-            DataFrameType1::class,
-            DataFrameType2::class,
-            DataFrameType3::class,
-            DataFrameType4::class,
-            DataFrameType5::class,
-            DataFrameType6::class,
-            DataFrameType7::class,
-            DataFrameType8::class,
-            DataFrameType9::class,
-            DataFrameType10::class,
-            DataRecord::class
-        )
-        val codeGen = ReplCodeGenerator.create()
-        return types.map { codeGen.process(it) }
-    }
-
-    val path = "data/playlistItems.json"
+    val path = "../data/playlistItems.json"
     val df = DataFrame.read(path)
     val typed = df.cast<DataRecord>()
     val item = typed.items[0]
@@ -157,7 +136,7 @@ class PlaylistJsonTest {
 
     @Test
     fun `deep batch update all`() {
-        val updated = item.convert { dfs { it.name == "url" } }.with { (it as? String)?.let { IMG(it) } }
+        val updated = item.convert { dfs { it.name() == "url" } }.with { (it as? String)?.let { IMG(it) } }
         updated.snippet.thumbnails.default.url.type() shouldBe typeOf<IMG>()
         updated.snippet.thumbnails.maxres.url.type() shouldBe typeOf<IMG?>()
         updated.snippet.thumbnails.standard.url.type() shouldBe typeOf<IMG?>()
@@ -167,22 +146,22 @@ class PlaylistJsonTest {
 
     @Test
     fun `select group`() {
-        item.select { snippet.thumbnails.default }.ncol shouldBe 1
-        item.select { snippet.thumbnails.default.all() }.ncol shouldBe 3
+        item.select { snippet.thumbnails.default }.columnsCount() shouldBe 1
+        item.select { snippet.thumbnails.default.all() }.columnsCount() shouldBe 3
     }
 
     @Test
     fun `deep remove`() {
         val item2 = item.remove { snippet.thumbnails.default and snippet.thumbnails.maxres and snippet.channelId and etag }
-        item2.ncol shouldBe item.ncol - 1
-        item2.snippet.ncol shouldBe item.snippet.ncol - 1
-        item2.snippet.thumbnails.ncol shouldBe item.snippet.thumbnails.ncol - 2
+        item2.columnsCount() shouldBe item.columnsCount() - 1
+        item2.snippet.columnsCount() shouldBe item.snippet.columnsCount() - 1
+        item2.snippet.thumbnails.columnsCount() shouldBe item.snippet.thumbnails.columnsCount() - 2
     }
 
     @Test
     fun `remove all from group`() {
         val item2 = item.remove { snippet.thumbnails.default and snippet.thumbnails.maxres and snippet.thumbnails.medium and snippet.thumbnails.high and snippet.thumbnails.standard }
-        item2.snippet.ncol shouldBe item.snippet.ncol - 1
+        item2.snippet.columnsCount() shouldBe item.snippet.columnsCount() - 1
         item2.snippet.getColumnGroupOrNull("thumbnails") shouldBe null
     }
 
@@ -190,16 +169,16 @@ class PlaylistJsonTest {
     fun `deep move with rename`() {
         val moved = item.move { snippet.thumbnails.default }.into { snippet.path() + "movedDefault" }
         moved.snippet.thumbnails.columnNames() shouldBe item.snippet.thumbnails.remove { default }.columnNames()
-        moved.snippet.ncol shouldBe item.snippet.ncol + 1
-        (moved.snippet["movedDefault"] as ColumnGroup<*>).ncol shouldBe item.snippet.thumbnails.default.ncol
+        moved.snippet.columnsCount() shouldBe item.snippet.columnsCount() + 1
+        (moved.snippet["movedDefault"] as ColumnGroup<*>).columnsCount() shouldBe item.snippet.thumbnails.default.columnsCount()
     }
 
     @Test
     fun `union`() {
         val merged = item.concat(item)
-        merged.nrow shouldBe item.nrow * 2
+        merged.rowsCount() shouldBe item.rowsCount() * 2
         val group = merged.snippet
-        group.nrow shouldBe item.snippet.nrow * 2
+        group.rowsCount() shouldBe item.snippet.rowsCount() * 2
         group.columnNames() shouldBe item.snippet.columnNames()
     }
 
@@ -218,7 +197,7 @@ class PlaylistJsonTest {
             minBy { snippet.publishedAt }.snippet into "earliest"
         }
 
-        res.ncol shouldBe typed.ncol + 1
+        res.columnsCount() shouldBe typed.columnsCount() + 1
         res.getColumnIndex("earliest") shouldBe typed.getColumnIndex("items") + 1
 
         val expected = typed.items.map { it.snippet.minBy { publishedAt } }.toList()

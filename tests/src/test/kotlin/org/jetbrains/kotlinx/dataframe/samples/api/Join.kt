@@ -17,8 +17,6 @@ import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 
 class Join : TestBase() {
@@ -66,8 +64,8 @@ class Join : TestBase() {
             // SampleStart
             df.join(other) { name match right.fullName }
         // SampleEnd
-        joined.nrow shouldBe df.nrow
-        joined.ncol shouldBe df.ncol + 2
+        joined.rowsCount() shouldBe df.rowsCount()
+        joined.columnsCount() shouldBe df.columnsCount() + 2
     }
 
     @Test

@@ -8,8 +8,6 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 import java.time.LocalTime
@@ -26,8 +24,8 @@ class ParseTests {
             ]
         """.trimIndent()
         val df = DataFrame.readJsonStr(json)
-        df.ncol shouldBe 3
-        df.nrow shouldBe 2
+        df.columnsCount() shouldBe 3
+        df.rowsCount() shouldBe 2
         df["a"].type() shouldBe typeOf<Int>()
         df["b"].type() shouldBe typeOf<Comparable<*>>()
         df["c"].type() shouldBe typeOf<Double?>()
@@ -43,10 +41,10 @@ class ParseTests {
         """.trimIndent()
         val df = DataFrame.readJsonStr(json)
         println(df)
-        df.ncol shouldBe 1
-        df.nrow shouldBe 3
+        df.columnsCount() shouldBe 1
+        df.rowsCount() shouldBe 3
         val group = df["a"] as ColumnGroup<*>
-        group.ncol shouldBe 3
+        group.columnsCount() shouldBe 3
         group["b"].type() shouldBe typeOf<Int?>()
         group["value"].type() shouldBe typeOf<String?>()
         group["array"].type() shouldBe typeOf<List<Int>>()
@@ -61,8 +59,8 @@ class ParseTests {
             ]
         """.trimIndent()
         val df = DataFrame.readJsonStr(json)
-        df.ncol shouldBe 1
-        df.nrow shouldBe 3
+        df.columnsCount() shouldBe 1
+        df.rowsCount() shouldBe 3
         df["a"].type() shouldBe typeOf<List<Number>>()
         df[1]["a"] shouldBe emptyList<Int>()
     }
@@ -75,8 +73,8 @@ class ParseTests {
             ]
         """.trimIndent()
         val df = DataFrame.readJsonStr(json)
-        df.ncol shouldBe 1
-        df.nrow shouldBe 2
+        df.columnsCount() shouldBe 1
+        df.rowsCount() shouldBe 2
         println(df)
         val group = df["a"] as FrameColumn<*>
     }

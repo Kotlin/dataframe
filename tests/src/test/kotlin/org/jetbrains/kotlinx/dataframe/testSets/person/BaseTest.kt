@@ -1,9 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.testSets.person
 
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.column
@@ -17,15 +14,6 @@ interface Person {
     val city: String?
     val weight: Int?
 }
-
-val DataRow<Person>.name: String get() = this["name"] as String
-val DataRow<Person>.age: Int get() = this["age"] as Int
-val DataRow<Person>.city: String? get() = this["city"] as String?
-val DataRow<Person>.weight: Int? get() = this["weight"] as Int?
-val ColumnsContainer<Person>.name: DataColumn<String> get() = this["name"] as DataColumn<String>
-val ColumnsContainer<Person>.age: DataColumn<Int> get() = this["age"] as DataColumn<Int>
-val ColumnsContainer<Person>.city: DataColumn<String?> get() = this["city"] as DataColumn<String?>
-val ColumnsContainer<Person>.weight: DataColumn<Int?> get() = this["weight"] as DataColumn<Int?>
 
 open class BaseTest {
 
