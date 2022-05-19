@@ -33,13 +33,14 @@ public enum class SupportedFormats {
 
         override fun acceptsExtension(ext: String): Boolean = ext == "json"
     },
-    ARROW {
+
+/*    ARROW {
         override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readArrow(stream)
 
         override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readArrow(file)
 
         override fun acceptsExtension(ext: String): Boolean = ext == "feather"
-    },
+    }, */
     EXCEL {
         override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readExcel(stream)
 
@@ -60,7 +61,7 @@ private val testOrder get() = listOf(
     SupportedFormats.CSV,
     SupportedFormats.TSV,
     SupportedFormats.EXCEL,
-    SupportedFormats.ARROW,
+//    SupportedFormats.ARROW,
 )
 
 internal fun guessFormatForExtension(ext: String) = SupportedFormats.values().firstOrNull { it.acceptsExtension(ext) }

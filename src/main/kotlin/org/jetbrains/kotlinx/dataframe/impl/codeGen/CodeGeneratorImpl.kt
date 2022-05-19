@@ -302,6 +302,6 @@ private fun collectAdditionalImports(format: SupportedFormats): List<String> {
         SupportedFormats.TSV -> listOf("import org.jetbrains.kotlinx.dataframe.io.readTSV")
         SupportedFormats.JSON -> listOf("import org.jetbrains.kotlinx.dataframe.io.readJson")
         SupportedFormats.EXCEL -> listOf("import org.jetbrains.kotlinx.dataframe.io.readExcel")
-        SupportedFormats.ARROW -> listOf("import org.jetbrains.kotlinx.dataframe.io.readArrow")
+//        SupportedFormats.ARROW -> listOf("import org.jetbrains.kotlinx.dataframe.io.readArrow")
     }
 }

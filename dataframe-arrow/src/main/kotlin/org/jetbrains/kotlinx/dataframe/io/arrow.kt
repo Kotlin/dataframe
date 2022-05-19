@@ -196,13 +196,13 @@ private fun readField(root: VectorSchemaRoot, field: Field): AnyBaseColumn {
 
 // IPC reading block
 
-private fun DataFrame.Companion.readArrowIPC(file: File): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowIPC(it) }
+public fun DataFrame.Companion.readArrowIPC(file: File): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowIPC(it) }
 
-private fun DataFrame.Companion.readArrowIPC(byteArray: ByteArray): AnyFrame = SeekableInMemoryByteChannel(byteArray).use { readArrowIPC(it) }
+public fun DataFrame.Companion.readArrowIPC(byteArray: ByteArray): AnyFrame = SeekableInMemoryByteChannel(byteArray).use { readArrowIPC(it) }
 
-private fun DataFrame.Companion.readArrowIPC(stream: InputStream): AnyFrame = Channels.newChannel(stream).use { readArrowIPC(it) }
+public fun DataFrame.Companion.readArrowIPC(stream: InputStream): AnyFrame = Channels.newChannel(stream).use { readArrowIPC(it) }
 
-private fun DataFrame.Companion.readArrowIPC(url: URL): AnyFrame =
+public fun DataFrame.Companion.readArrowIPC(url: URL): AnyFrame =
     when {
         isFile(url) -> readArrowIPC(urlAsFile(url))
         isProtocolSupported(url) -> url.openStream().use { readArrowIPC(it) }
@@ -211,7 +211,7 @@ private fun DataFrame.Companion.readArrowIPC(url: URL): AnyFrame =
         }
     }
 
-private fun DataFrame.Companion.readArrowIPC(path: String): AnyFrame = if (isURL(path)) {
+public fun DataFrame.Companion.readArrowIPC(path: String): AnyFrame = if (isURL(path)) {
     readArrowIPC(URL(path))
 } else {
     readArrowIPC(File(path))
@@ -219,13 +219,13 @@ private fun DataFrame.Companion.readArrowIPC(path: String): AnyFrame = if (isURL
 
 // Feather reading block
 
-private fun DataFrame.Companion.readArrowFeather(file: File): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowFeather(it) }
+public fun DataFrame.Companion.readArrowFeather(file: File): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowFeather(it) }
 
-private fun DataFrame.Companion.readArrowFeather(byteArray: ByteArray): AnyFrame = SeekableInMemoryByteChannel(byteArray).use { readArrowFeather(it) }
+public fun DataFrame.Companion.readArrowFeather(byteArray: ByteArray): AnyFrame = SeekableInMemoryByteChannel(byteArray).use { readArrowFeather(it) }
 
-private fun DataFrame.Companion.readArrowFeather(stream: InputStream): AnyFrame = readArrowFeather(stream.readAllBytes())
+public fun DataFrame.Companion.readArrowFeather(stream: InputStream): AnyFrame = readArrowFeather(stream.readAllBytes())
 
-private fun DataFrame.Companion.readArrowFeather(url: URL): AnyFrame =
+public fun DataFrame.Companion.readArrowFeather(url: URL): AnyFrame =
     when {
         isFile(url) -> readArrowFeather(urlAsFile(url))
         isProtocolSupported(url) -> readArrowFeather(url.readBytes())
@@ -234,40 +234,8 @@ private fun DataFrame.Companion.readArrowFeather(url: URL): AnyFrame =
         }
     }
 
-private fun DataFrame.Companion.readArrowFeather(path: String): AnyFrame = if (isURL(path)) {
+public fun DataFrame.Companion.readArrowFeather(path: String): AnyFrame = if (isURL(path)) {
     readArrowFeather(URL(path))
 } else {
     readArrowFeather(File(path))
 }
-
-// Common reading block
-
-public fun DataFrame.Companion.readArrow(file: File, format: ArrowFormat = ArrowFormat.FEATHER): AnyFrame =
-    when (format) {
-        ArrowFormat.IPC -> readArrowIPC(file)
-        ArrowFormat.FEATHER -> readArrowFeather(file)
-    }
-
-public fun DataFrame.Companion.readArrow(byteArray: ByteArray, format: ArrowFormat = ArrowFormat.FEATHER): AnyFrame =
-    when (format) {
-        ArrowFormat.IPC -> readArrowIPC(byteArray)
-        ArrowFormat.FEATHER -> readArrowFeather(byteArray)
-    }
-
-public fun DataFrame.Companion.readArrow(stream: InputStream, format: ArrowFormat = ArrowFormat.IPC): AnyFrame =
-    when (format) {
-        ArrowFormat.IPC -> readArrowIPC(stream)
-        ArrowFormat.FEATHER -> readArrowFeather(stream)
-    }
-
-public fun DataFrame.Companion.readArrow(url: URL, format: ArrowFormat = ArrowFormat.IPC): AnyFrame =
-    when (format) {
-        ArrowFormat.IPC -> readArrowIPC(url)
-        ArrowFormat.FEATHER -> readArrowFeather(url)
-    }
-
-public fun DataFrame.Companion.readArrow(path: String, format: ArrowFormat = ArrowFormat.IPC): AnyFrame =
-    when (format) {
-        ArrowFormat.IPC -> readArrowIPC(path)
-        ArrowFormat.FEATHER -> readArrowFeather(path)
-    }
