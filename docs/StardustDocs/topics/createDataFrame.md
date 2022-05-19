@@ -128,6 +128,7 @@ map.toDataFrame()
 
 ```kotlin
 data class Person(val name: String, val age: Int)
+
 val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 22))
 
 val df = persons.toDataFrame()
