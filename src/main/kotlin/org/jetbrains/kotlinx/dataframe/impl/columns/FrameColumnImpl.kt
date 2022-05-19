@@ -63,4 +63,10 @@ internal class ResolvingFrameColumn<T>(
     override fun getValueOrNull(row: AnyRow) = super<FrameColumn>.getValueOrNull(row)
 
     override fun rename(newName: String) = ResolvingFrameColumn(source.rename(newName))
+
+    override fun toString(): String = source.toString()
+
+    override fun equals(other: Any?) = source.checkEquals(other)
+
+    override fun hashCode(): Int = source.hashCode()
 }
