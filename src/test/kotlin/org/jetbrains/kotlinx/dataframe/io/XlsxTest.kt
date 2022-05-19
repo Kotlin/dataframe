@@ -68,4 +68,12 @@ class XlsxTest {
         val df = DataFrame.read(testResource("datetime.xlsx"))
         df["time"].type() shouldBe typeOf<LocalDateTime>()
     }
+
+    @Test
+    fun `write date time`() {
+        val df = DataFrame.read(testResource("datetime.xlsx"))
+        val temp = Files.createTempFile("excel", ".xlsx").toFile()
+        df.writeExcel(temp)
+        DataFrame.readExcel(temp) shouldBe df
+    }
 }

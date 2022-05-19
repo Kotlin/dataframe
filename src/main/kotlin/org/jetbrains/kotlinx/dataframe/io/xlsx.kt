@@ -82,7 +82,7 @@ public fun DataFrame.Companion.readExcel(
     return wb.use { readExcel(it, sheetName, columns, rowsCount) }
 }
 
-internal fun DataFrame.Companion.readExcel(
+public fun DataFrame.Companion.readExcel(
     wb: Workbook,
     sheetName: String? = null,
     columns: String? = null,
@@ -91,7 +91,14 @@ internal fun DataFrame.Companion.readExcel(
     val sheet: Sheet = sheetName
         ?.let { wb.getSheet(it) ?: error("Sheet with name $sheetName not found") }
         ?: wb.getSheetAt(0)
+    return readExcel(sheet, columns, rowsCount)
+}
 
+public fun DataFrame.Companion.readExcel(
+    sheet: Sheet,
+    columns: String? = null,
+    rowsCount: Int? = null
+): AnyFrame {
     val columnIndexes = if (columns != null) {
         columns.split(",").flatMap {
             if (it.contains(":")) {
@@ -108,7 +115,12 @@ internal fun DataFrame.Companion.readExcel(
     val headerRow = sheet.getRow(0)
     val valueRows = sheet.drop(1).let { if (rowsCount != null) it.take(rowsCount) else it }
     val columns = columnIndexes.map { index ->
-        val name = headerRow.getCell(index)?.stringCellValue ?: CellReference.convertNumToColString(index)
+        val headerCell = headerRow.getCell(index)
+        val name = if (headerCell?.cellType == CellType.NUMERIC) {
+            headerCell.numericCellValue.toString() // Support numeric-named columns
+        } else {
+            headerCell?.stringCellValue ?: CellReference.convertNumToColString(index) // Use Excel column names if no data
+        }
         val values = valueRows.map {
             val cell: Cell? = it.getCell(index)
             when (cell?.cellType) {
@@ -171,6 +183,17 @@ public fun <T> DataFrame<T>.writeExcel(
     factory: () -> Workbook
 ) {
     val wb: Workbook = factory()
+    writeExcel(wb, columnsSelector, sheetName, writeHeader)
+    wb.write(outputStream)
+    wb.close()
+}
+
+public fun <T> DataFrame<T>.writeExcel(
+    wb: Workbook,
+    columnsSelector: ColumnsSelector<T, *> = { all() },
+    sheetName: String? = null,
+    writeHeader: Boolean = true
+): Sheet {
     val sheet = if (sheetName != null) {
         wb.createSheet(sheetName)
     } else {
@@ -189,6 +212,12 @@ public fun <T> DataFrame<T>.writeExcel(
         i++
     }
 
+    val createHelper = wb.creationHelper
+    val cellStyleDate = wb.createCellStyle()
+    val cellStyleDateTime = wb.createCellStyle()
+    cellStyleDate.dataFormat = createHelper.createDataFormat().getFormat("dd.mm.yyyy")
+    cellStyleDateTime.dataFormat = createHelper.createDataFormat().getFormat("dd.mm.yyyy hh:mm:ss")
+
     columns.forEachRow {
         val row = sheet.createRow(i)
         it.values().forEachIndexed { index, any ->
@@ -198,12 +227,21 @@ public fun <T> DataFrame<T>.writeExcel(
             if (any != null) {
                 val cell = row.createCell(index)
                 cell.setCellValueByGuessedType(any)
+
+                when (any) {
+                    is LocalDate, is kotlinx.datetime.LocalDate -> {
+                        cell.cellStyle = cellStyleDate
+                    }
+                    is LocalDateTime, is kotlinx.datetime.LocalDateTime, is Calendar, is Date -> {
+                        cell.cellStyle = cellStyleDateTime
+                    }
+                    else -> {}
+                }
             }
         }
         i++
     }
-    wb.write(outputStream)
-    wb.close()
+    return sheet
 }
 
 private fun Cell.setCellValueByGuessedType(any: Any) {
