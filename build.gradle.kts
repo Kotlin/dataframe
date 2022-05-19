@@ -45,10 +45,6 @@ dependencies {
 
     implementation(libs.kotlin.datetimeJvm)
 
-    implementation(libs.arrow.vector)
-    implementation(libs.arrow.format)
-    implementation(libs.arrow.memory)
-
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")

@@ -5,7 +5,6 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.CsvOptions
-import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadArrowMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadExcelMethod
@@ -13,7 +12,6 @@ import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadTsvMethod
 import org.jetbrains.kotlinx.dataframe.io.SupportedFormats
 import org.jetbrains.kotlinx.dataframe.io.guessFormat
-import org.jetbrains.kotlinx.dataframe.io.readArrow
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readExcel
 import org.jetbrains.kotlinx.dataframe.io.readJson
@@ -29,9 +27,9 @@ public val CodeGenerator.Companion.urlReader: (url: URL, csvOptions: CsvOptions)
             DfReadResult.Success(DataFrame.readCSV(url, delimiter = delimiter), SupportedFormats.CSV, csvOptions)
         }
 
-        fun readArrow(url: URL) = run {
+/*        fun readArrow(url: URL) = run {
             DfReadResult.Success(DataFrame.readArrow(url), SupportedFormats.ARROW, csvOptions)
-        }
+        } */
 
         fun readTSV(url: URL) = DfReadResult.Success(DataFrame.readTSV(url), SupportedFormats.TSV, csvOptions)
 
@@ -43,7 +41,7 @@ public val CodeGenerator.Companion.urlReader: (url: URL, csvOptions: CsvOptions)
                 SupportedFormats.CSV -> readCSV(url)
                 SupportedFormats.TSV -> readTSV(url)
                 SupportedFormats.JSON -> readJson(url)
-                SupportedFormats.ARROW -> readArrow(url)
+//                SupportedFormats.ARROW -> readArrow(url)
                 SupportedFormats.EXCEL -> readExcel(url)
                 null -> try {
                     readExcel(url)
@@ -77,7 +75,7 @@ public sealed interface DfReadResult {
                 SupportedFormats.CSV -> DefaultReadCsvMethod(pathRepresentation, csvOptions)
                 SupportedFormats.JSON -> DefaultReadJsonMethod(pathRepresentation)
                 SupportedFormats.TSV -> DefaultReadTsvMethod(pathRepresentation)
-                SupportedFormats.ARROW -> DefaultReadArrowMethod(pathRepresentation)
+//                SupportedFormats.ARROW -> DefaultReadArrowMethod(pathRepresentation)
                 SupportedFormats.EXCEL -> DefaultReadExcelMethod(pathRepresentation)
             }
         }
