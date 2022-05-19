@@ -1,4 +1,3 @@
-import org.jetbrains.dataframe.gradle.DataSchemaVisibility.IMPLICIT_PUBLIC
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
@@ -10,7 +9,7 @@ plugins {
     kotlin("libs.publisher") version libs.versions.libsPublisher
     kotlin("plugin.serialization") version libs.versions.kotlin
     kotlin("jupyter.api") version libs.versions.kotlinJupyter
-    kotlin("plugin.dataframe") version libs.versions.dataframe
+    kotlin("plugin.dataframe") version libs.versions.dataframe apply false
 
     id("org.jetbrains.dokka") version libs.versions.dokka
     id("org.jetbrains.dataframe.generator")
@@ -156,21 +155,9 @@ kotlinPublications {
 
 tasks.lintKotlinMain {
     exclude("**/*keywords*/**")
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
 }
 
 tasks.lintKotlinTest {
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
     enabled = true
 }
 
@@ -187,35 +174,6 @@ kotlinter {
             "max-line-length",
             "filename"
     )
-}
-
-korro {
-    docs = fileTree(rootProject.rootDir) {
-        include("docs/StardustDocs/topics/*.md")
-    }
-
-    samples = fileTree(project.projectDir) {
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/*.kt")
-        include("src/test/kotlin/org/jetbrains/kotlinx/dataframe/samples/api/*.kt")
-    }
-
-    groupSamples {
-
-        beforeSample.set("<tab title=\"NAME\">\n")
-        afterSample.set("\n</tab>")
-
-        funSuffix("_properties") {
-            replaceText("NAME", "Properties")
-        }
-        funSuffix("_accessors") {
-            replaceText("NAME", "Accessors")
-        }
-        funSuffix("_strings") {
-            replaceText("NAME", "Strings")
-        }
-        beforeGroup.set("<tabs>\n")
-        afterGroup.set("</tabs>")
-    }
 }
 
 val instrumentedJars: Configuration by configurations.creating {
@@ -237,20 +195,3 @@ tasks.processJupyterApiResources {
     libraryProducers = listOf("org.jetbrains.kotlinx.dataframe.jupyter.Integration")
 }
 
-kotlin.sourceSets {
-    main {
-        kotlin.srcDir("build/generated/ksp/main/kotlin/")
-    }
-    test {
-        kotlin.srcDir("build/generated/ksp/test/kotlin/")
-    }
-}
-
-dataframes {
-    schema {
-        sourceSet = "test"
-        visibility = IMPLICIT_PUBLIC
-        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
-        name = "org.jetbrains.kotlinx.dataframe.samples.api.Repository"
-    }
-}

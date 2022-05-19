@@ -1,8 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
@@ -15,6 +13,11 @@ public interface NameValueSchema {
     public val name: String
     public val value: Any?
 }
+
+public val DataRow<NameValueSchema>.name: String get() = this["name"] as String
+public val ColumnsContainer<NameValueSchema>.name: DataColumn<String> get() = this["name"] as DataColumn<String>
+public val DataRow<NameValueSchema>.value: Any? get() = this["value"]
+public val ColumnsContainer<NameValueSchema>.value: DataColumn<Any?> get() = this["value"]
 
 public fun <T> DataRow<T>.transpose(): DataFrame<NameValueSchema> {
     val valueColumn = DataColumn.createWithTypeInference(NameValueSchema::value.columnName, values)
