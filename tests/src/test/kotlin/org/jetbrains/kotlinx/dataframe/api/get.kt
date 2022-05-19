@@ -12,7 +12,7 @@ class GetTests {
 
     @Test
     fun `exceptions from empty dataframe`() {
-        val empty = DataFrame.Empty
+        val empty = DataFrame.empty()
         shouldThrow<NoSuchElementException> {
             empty.first()
         }

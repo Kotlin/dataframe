@@ -20,8 +20,6 @@ import org.jetbrains.kotlinx.dataframe.api.leftJoin
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rightJoin
 import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 
 class JoinTests : BaseTest() {
@@ -50,11 +48,11 @@ class JoinTests : BaseTest() {
     @Test
     fun `inner join`() {
         val res = typed.innerJoin(typed2) { name and it.city.match(right.origin) }
-        res.ncol shouldBe 6
-        res.nrow shouldBe 7
+        res.columnsCount() shouldBe 6
+        res.rowsCount() shouldBe 7
         res["age1"].hasNulls() shouldBe false
         res.count { name == "Charlie" && city == "Moscow" } shouldBe 4
-        res.select { city and name }.distinct().nrow shouldBe 3
+        res.select { city and name }.distinct().rowsCount() shouldBe 3
         res[Person2::grade].hasNulls() shouldBe false
     }
 
@@ -62,10 +60,10 @@ class JoinTests : BaseTest() {
     fun `left join`() {
         val res = typed.leftJoin(typed2) { name and it.city.match(right.origin) }
 
-        res.ncol shouldBe 6
-        res.nrow shouldBe 10
+        res.columnsCount() shouldBe 6
+        res.rowsCount() shouldBe 10
         res["age1"].hasNulls() shouldBe true
-        res.select { city and name }.distinct().nrow shouldBe 6
+        res.select { city and name }.distinct().rowsCount() shouldBe 6
         res.count { it["grade"] == null } shouldBe 3
         res.age.hasNulls() shouldBe false
     }
@@ -74,14 +72,14 @@ class JoinTests : BaseTest() {
     fun `right join`() {
         val res = typed.rightJoin(typed2) { name and it.city.match(right.origin) }
 
-        res.ncol shouldBe 6
-        res.nrow shouldBe 9
+        res.columnsCount() shouldBe 6
+        res.rowsCount() shouldBe 9
         res["age1"].hasNulls() shouldBe true
-        res.select { city and name }.distinct().nrow shouldBe 4
+        res.select { city and name }.distinct().rowsCount() shouldBe 4
         res[Person2::grade].hasNulls() shouldBe false
         res.age.hasNulls() shouldBe true
         val newEntries = res.filter { it["age"] == null }
-        newEntries.nrow shouldBe 2
+        newEntries.rowsCount() shouldBe 2
         newEntries.all { name == "Bob" && city == "Paris" && weight == null } shouldBe true
     }
 
@@ -89,11 +87,11 @@ class JoinTests : BaseTest() {
     fun `outer join`() {
         val res = typed.fullJoin(typed2) { name and it.city.match(right.origin) }
         println(res)
-        res.ncol shouldBe 6
-        res.nrow shouldBe 12
+        res.columnsCount() shouldBe 6
+        res.rowsCount() shouldBe 12
         res.name.hasNulls() shouldBe false
         res.columns().filter { it != res.name }.all { it.hasNulls() } shouldBe true
-        res.select { city and name }.distinct().nrow shouldBe 7
+        res.select { city and name }.distinct().rowsCount() shouldBe 7
         val distinct = res.select { name and age and city and weight }.distinct()
         val expected = typed.append("Bob", null, "Paris", null)
         distinct shouldBe expected
@@ -109,7 +107,7 @@ class JoinTests : BaseTest() {
     @Test
     fun `filter not join`() {
         val res = typed.excludeJoin(typed2) { city.match(right.origin) }
-        res.nrow shouldBe 3
+        res.rowsCount() shouldBe 3
         res.city.toSet() shouldBe typed.city.toSet() - typed2.origin.toSet()
 
         val indexColumn = column<Int>("__index__")

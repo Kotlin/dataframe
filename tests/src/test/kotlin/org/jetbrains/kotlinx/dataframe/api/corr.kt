@@ -3,8 +3,6 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.matchers.doubles.ToleranceMatcher
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 
 class CorrTests {
@@ -17,8 +15,8 @@ class CorrTests {
     @Test
     fun `corr with boolean`() {
         val corr = df.corr("a", "b").with("c")
-        corr.nrow shouldBe 2
-        corr.ncol shouldBe 2
+        corr.rowsCount() shouldBe 2
+        corr.columnsCount() shouldBe 2
         corr.getColumn(0) shouldBe (columnOf("a", "b") named "column")
         corr.getColumn(1).name() shouldBe "c"
         corr["c"][0] as Double should ToleranceMatcher(1.0, 0.01)

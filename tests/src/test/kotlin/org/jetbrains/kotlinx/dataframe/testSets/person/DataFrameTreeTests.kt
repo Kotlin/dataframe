@@ -7,91 +7,13 @@ import io.kotest.matchers.shouldNotBe
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
 import org.jetbrains.dataframe.impl.codeGen.generate
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.ColumnsContainer
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.after
-import org.jetbrains.kotlinx.dataframe.api.append
-import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.asDataFrame
-import org.jetbrains.kotlinx.dataframe.api.asGroupBy
-import org.jetbrains.kotlinx.dataframe.api.at
-import org.jetbrains.kotlinx.dataframe.api.by
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.columnGroup
-import org.jetbrains.kotlinx.dataframe.api.columnOf
-import org.jetbrains.kotlinx.dataframe.api.columnsCount
-import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.count
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.dfsOf
-import org.jetbrains.kotlinx.dataframe.api.distinct
-import org.jetbrains.kotlinx.dataframe.api.dropNulls
-import org.jetbrains.kotlinx.dataframe.api.duplicate
-import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
-import org.jetbrains.kotlinx.dataframe.api.explode
-import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.forEachRow
-import org.jetbrains.kotlinx.dataframe.api.frameColumn
-import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.getColumnPath
-import org.jetbrains.kotlinx.dataframe.api.getColumnWithPath
-import org.jetbrains.kotlinx.dataframe.api.getColumns
-import org.jetbrains.kotlinx.dataframe.api.getValue
-import org.jetbrains.kotlinx.dataframe.api.group
-import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.implode
-import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.insert
-import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.intoRows
-import org.jetbrains.kotlinx.dataframe.api.inward
-import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.isEmpty
-import org.jetbrains.kotlinx.dataframe.api.isFrameColumn
-import org.jetbrains.kotlinx.dataframe.api.join
-import org.jetbrains.kotlinx.dataframe.api.last
-import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.max
-import org.jetbrains.kotlinx.dataframe.api.minus
-import org.jetbrains.kotlinx.dataframe.api.move
-import org.jetbrains.kotlinx.dataframe.api.moveTo
-import org.jetbrains.kotlinx.dataframe.api.moveToLeft
-import org.jetbrains.kotlinx.dataframe.api.moveToRight
-import org.jetbrains.kotlinx.dataframe.api.pathOf
-import org.jetbrains.kotlinx.dataframe.api.perRowCol
-import org.jetbrains.kotlinx.dataframe.api.pivot
-import org.jetbrains.kotlinx.dataframe.api.remove
-import org.jetbrains.kotlinx.dataframe.api.rename
-import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.api.split
-import org.jetbrains.kotlinx.dataframe.api.sumOf
-import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
-import org.jetbrains.kotlinx.dataframe.api.toTop
-import org.jetbrains.kotlinx.dataframe.api.under
-import org.jetbrains.kotlinx.dataframe.api.ungroup
-import org.jetbrains.kotlinx.dataframe.api.update
-import org.jetbrains.kotlinx.dataframe.api.values
-import org.jetbrains.kotlinx.dataframe.api.with
-import org.jetbrains.kotlinx.dataframe.api.withNull
-import org.jetbrains.kotlinx.dataframe.api.xs
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.depth
-import org.jetbrains.kotlinx.dataframe.hasNulls
-import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
-import org.jetbrains.kotlinx.dataframe.index
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -136,7 +58,7 @@ class DataFrameTreeTests : BaseTest() {
         val id by column(typed.indices())
         val groups by id.map { typed[it..it] }
         val df = dataFrameOf(id, groups)
-        df.nrow shouldBe typed.nrow
+        df.rowsCount() shouldBe typed.rowsCount()
         df.forEachRow {
             val rowId = it[id]
             groups() shouldBe typed[rowId..rowId]
@@ -243,10 +165,10 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `distinct`() {
         val duplicated = typed2.concat(typed2)
-        duplicated.nrow shouldBe typed2.nrow * 2
+        duplicated.rowsCount() shouldBe typed2.rowsCount() * 2
         val dist = duplicated.nameAndCity.distinct()
         dist shouldBe typed2.nameAndCity.distinct()
-        dist.nrow shouldBe typed2.nrow - 1
+        dist.rowsCount() shouldBe typed2.rowsCount() - 1
     }
 
     @Test
@@ -285,6 +207,12 @@ class DataFrameTreeTests : BaseTest() {
         val df2 = modified.move { name and city }.under("nameAndCity")
         val typed2 = df2.cast<GroupedPerson>()
 
+        fun <T, G, R> GroupBy<T, G>.map(body: Selector<GroupWithKey<T, G>, R>): List<R> = keys.rows().mapIndexedNotNull { index, row ->
+            val group = groups[index]
+            val g = GroupWithKey(row, group)
+            body(g, g)
+        }
+
         val expected = modified.cast<Person>().groupBy { name and city }.map {
             val value = if (key.city == "Moscow") group.age.toList()
             else group.age[0]
@@ -292,9 +220,9 @@ class DataFrameTreeTests : BaseTest() {
         }.plus("Bob" to "Moscow" to emptyList<Int>()).toMap()
 
         fun <T> DataFrame<T>.check() {
-            ncol shouldBe 2
+            columnsCount() shouldBe 2
             val cities = getColumnGroup("nameAndCity").getColumnGroup("city")
-            cities.ncol shouldBe typed2.nameAndCity.city.countDistinct()
+            cities.columnsCount() shouldBe typed2.nameAndCity.city.countDistinct()
             this[name] shouldBe typed.name.distinct()
             val data = cities.columns()
             data.forEach {
@@ -304,7 +232,7 @@ class DataFrameTreeTests : BaseTest() {
 
             val actual = data.flatMap { col ->
                 val city = col.name()
-                rows().map { (it[name] to city) to col[it.index] }.filter { it.second != null }
+                rows().map { (it[name] to city) to col[it.index()] }.filter { it.second != null }
             }.toMap()
             actual shouldBe expected
         }
@@ -321,7 +249,7 @@ class DataFrameTreeTests : BaseTest() {
     fun `pivot grouped column`() {
         val grouped = typed.group { age and weight }.into("info")
         val pivoted = grouped.pivot { city }.groupBy { name }.values("info")
-        pivoted.ncol shouldBe 2
+        pivoted.columnsCount() shouldBe 2
 
         val expected =
             typed.rows().groupBy { it.name to (it.city ?: "null") }.mapValues { it.value.map { it.age to it.weight } }
@@ -341,7 +269,7 @@ class DataFrameTreeTests : BaseTest() {
                         null -> {
                         }
                         is AnyRow -> value.isEmpty() shouldBe true
-                        is AnyFrame -> value.ncol shouldBe 0
+                        is AnyFrame -> value.columnsCount() shouldBe 0
                     }
                     expValues.size == 1 -> {
                         value shouldNotBe null
@@ -365,12 +293,12 @@ class DataFrameTreeTests : BaseTest() {
     fun splitCols() {
         val split = typed2.split { nameAndCity.name }.by { it.toCharArray().toList() }.inward { "char$it" }
         split.columnNames() shouldBe typed2.columnNames()
-        split.nrow shouldBe typed2.nrow
+        split.rowsCount() shouldBe typed2.rowsCount()
         split.nameAndCity.columnNames() shouldBe typed2.nameAndCity.columnNames()
         val nameGroup = split.nameAndCity.name.asColumnGroup()
         nameGroup.name() shouldBe "name"
-        nameGroup.ncol shouldBe typed2.nameAndCity.name.map { it.length }.max()
-        nameGroup.columnNames() shouldBe (1..nameGroup.ncol).map { "char$it" }
+        nameGroup.columnsCount() shouldBe typed2.nameAndCity.name.map { it.length }.max()
+        nameGroup.columnNames() shouldBe (1..nameGroup.columnsCount()).map { "char$it" }
     }
 
     @Test
@@ -394,7 +322,7 @@ class DataFrameTreeTests : BaseTest() {
         val info by columnGroup()
         val moved = typed.group { except(name) }.into(info)
         val grouped = moved.groupBy { except(info) }.toDataFrame()
-        grouped.nrow shouldBe typed.name.countDistinct()
+        grouped.rowsCount() shouldBe typed.name.countDistinct()
     }
 
     @Test
@@ -414,7 +342,7 @@ class DataFrameTreeTests : BaseTest() {
         val updated = grouped.convert(info).perRowCol { row, column -> column.asColumnGroup().asDataFrame() }
         val col = updated[info.name()]
         col.kind() shouldBe ColumnKind.Frame
-        val table = col.asAnyFrameColumn()
+        val table = col as FrameColumn<*>
         table.schema.value.columns.map { it.key }.sorted() shouldBe typed.select { age and weight }.columnNames()
             .sorted()
     }
@@ -447,7 +375,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun parentColumnTest() {
         val res = typed2.move { dfs { it.depth > 0 } }.toTop { it.parent!!.name() + "-" + it.name() }
-        res.ncol shouldBe 4
+        res.columnsCount() shouldBe 4
         res.columnNames() shouldBe listOf("nameAndCity-name", "nameAndCity-city", "age", "weight")
     }
 
@@ -462,8 +390,8 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `group into column`() {
         val grouped = typed2.group { age }.into { nameAndCity }
-        grouped.nameAndCity.ncol shouldBe 3
-        grouped.ncol shouldBe 2
+        grouped.nameAndCity.columnsCount() shouldBe 3
+        grouped.columnsCount() shouldBe 2
     }
 
     @Test
@@ -475,8 +403,8 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun moveAfter() {
         val moved = typed2.move { age }.after { nameAndCity.name }
-        moved.ncol shouldBe 2
-        moved.nameAndCity.ncol shouldBe 3
+        moved.columnsCount() shouldBe 2
+        moved.nameAndCity.columnsCount() shouldBe 3
         moved.nameAndCity.select { all() } shouldBe dataFrameOf(
             typed2.nameAndCity.name,
             typed2.age,
@@ -487,8 +415,8 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun moveAfter2() {
         val moved = typed2.move { nameAndCity.name }.after { age }
-        moved.ncol shouldBe 4
-        moved.nameAndCity.ncol shouldBe 1
+        moved.columnsCount() shouldBe 4
+        moved.nameAndCity.columnsCount() shouldBe 1
         moved.remove { nameAndCity } shouldBe typed2.select { age and nameAndCity.name and weight }
     }
 
@@ -519,10 +447,10 @@ class DataFrameTreeTests : BaseTest() {
         val plain = grouped.toDataFrame()
             .update { groupCol }.at(1).withNull()
             .update { groupCol }.at(2).with { emptyDataFrame() }
-            .update { groupCol }.at(3).with { it.filter { false } }
+            .update { groupCol }.at(3).with { it?.filter { false } }
         val res = plain.explode(dropEmpty = false) { groupCol }
-        val expected = plain[groupCol.name()].sumOf { Math.max((it as AnyFrame?)?.nrow ?: 0, 1) }
-        res.nrow shouldBe expected
+        val expected = plain[groupCol.name()].sumOf { Math.max((it as AnyFrame?)?.rowsCount() ?: 0, 1) }
+        res.rowsCount() shouldBe expected
     }
 
     @Test
@@ -543,7 +471,7 @@ class DataFrameTreeTests : BaseTest() {
         val nameAndAge by columnGroup()
         val cityFirst by nameAndAge.column<Char?>()
         val grouped = typed.group { name and age }.into(nameAndAge).add(cityFirst) { city?.get(0) }
-        grouped[nameAndAge].ncol shouldBe 3
+        grouped[nameAndAge].columnsCount() shouldBe 3
 
         val left = grouped - { weight }
         val right = grouped - { city }
@@ -558,7 +486,7 @@ class DataFrameTreeTests : BaseTest() {
             typed.update { name }.with { it.reversed() }.groupBy { name }.updateGroups { it?.remove { name and city } }
         val groupCol = left.groups.toColumnAccessor()
         val joined = left.toDataFrame().join(right.toDataFrame()) { groupCol }
-        joined.ncol shouldBe 3
+        joined.columnsCount() shouldBe 3
         val name1 by column<String>()
         joined.columnNames() shouldBe listOf(typed.name.name(), groupCol.name(), name1.name())
         joined[groupCol].kind() shouldBe ColumnKind.Frame
@@ -579,7 +507,7 @@ class DataFrameTreeTests : BaseTest() {
     fun `insert column`() {
         val colName = "reversed"
         fun DataFrame<GroupedPerson>.check() {
-            nameAndCity.ncol shouldBe 3
+            nameAndCity.columnsCount() shouldBe 3
             nameAndCity.columnNames() shouldBe listOf(
                 typed2.nameAndCity.name.name(),
                 colName,
@@ -593,7 +521,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun append() {
         val res = typed2.append(listOf("Bill", "San Francisco"), null, 66)
-        res.nrow shouldBe typed2.nrow + 1
+        res.rowsCount() shouldBe typed2.rowsCount() + 1
         res.nameAndCity.last().values() shouldBe listOf("Bill", "San Francisco")
         res.age.hasNulls() shouldBe true
     }
@@ -601,7 +529,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `append nulls`() {
         val res = typed2.append(null, null, null)
-        res.nrow shouldBe typed2.nrow + 1
+        res.rowsCount() shouldBe typed2.rowsCount() + 1
         res.nameAndCity.last().values() shouldBe listOf(null, null)
         res.age.hasNulls() shouldBe true
         res.nameAndCity.name.hasNulls() shouldBe true
@@ -610,7 +538,7 @@ class DataFrameTreeTests : BaseTest() {
     @Test
     fun `create data frame from map column`() {
         val df = dataFrameOf(typed.name, typed2.nameAndCity)
-        df.nrow shouldBe typed.nrow
+        df.rowsCount() shouldBe typed.rowsCount()
     }
 
     @Test
@@ -619,7 +547,7 @@ class DataFrameTreeTests : BaseTest() {
         val renamed = typed2.nameAndCity.rename("newName")
         renamed.name() shouldBe "newName"
         renamed.select { name } shouldBe typed2.select { nameAndCity.name }
-        renamed.filter { name.startsWith("A") }.nrow shouldBe typed.count { name.startsWith("A") }
+        renamed.filter { name.startsWith("A") }.rowsCount() shouldBe typed.count { name.startsWith("A") }
     }
 
     @Test
@@ -676,6 +604,6 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `xs nested columns`() {
-        typed2.xs("Bob", "Tokyo").nrow shouldBe 1
+        typed2.xs("Bob", "Tokyo").rowsCount() shouldBe 1
     }
 }

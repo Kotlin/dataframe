@@ -10,8 +10,6 @@ import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.value
 import org.jetbrains.kotlinx.dataframe.api.withNull
 import org.jetbrains.kotlinx.dataframe.api.withValue
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -32,8 +30,8 @@ class AnimalsTests {
     @Test
     fun `mean transpose`() {
         val mean = df.mean().transpose()
-        mean.ncol shouldBe 2
-        mean.nrow shouldBe 2
+        mean.columnsCount() shouldBe 2
+        mean.rowsCount() shouldBe 2
         mean.name.values() shouldBe listOf("age", "visits")
         mean.value.type() shouldBe typeOf<Double>()
     }

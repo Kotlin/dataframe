@@ -19,11 +19,7 @@ import org.jetbrains.kotlinx.dataframe.api.toColumnOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.withValues
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
-import org.jetbrains.kotlinx.dataframe.columns.size
-import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.kind
-import org.jetbrains.kotlinx.dataframe.ncol
-import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 import kotlin.reflect.typeOf
@@ -78,7 +74,7 @@ class Create : TestBase() {
         val ageCol2 = age.withValues(1..10)
         // SampleEnd
 
-        ageCol2.size shouldBe 10
+        ageCol2.size() shouldBe 10
     }
 
     @Test
@@ -303,7 +299,7 @@ class Create : TestBase() {
         val df = dataFrameOf(names, values)
         // SampleEnd
         df.columnNames() shouldBe listOf("name", "age")
-        df.nrow shouldBe 3
+        df.rowsCount() shouldBe 3
         df["name"].type() shouldBe typeOf<String>()
         df["age"].type() shouldBe typeOf<Int>()
     }
@@ -312,12 +308,13 @@ class Create : TestBase() {
     fun readDataFrameFromObject() {
         // SampleStart
         data class Person(val name: String, val age: Int)
+
         val persons = listOf(Person("Alice", 15), Person("Bob", 20), Person("Charlie", 22))
 
         val df = persons.toDataFrame()
         // SampleEnd
-        df.ncol shouldBe 2
-        df.nrow shouldBe 3
+        df.columnsCount() shouldBe 2
+        df.rowsCount() shouldBe 3
         df["name"].type() shouldBe typeOf<String>()
         df["age"].type() shouldBe typeOf<Int>()
     }
@@ -336,8 +333,8 @@ class Create : TestBase() {
 
         val df = students.toDataFrame(depth = 2)
         // SampleEnd
-        df.ncol shouldBe 3
-        df.nrow shouldBe 2
+        df.columnsCount() shouldBe 3
+        df.rowsCount() shouldBe 2
         df["name"].kind shouldBe ColumnKind.Group
         df["name"]["firstName"].type() shouldBe typeOf<String>()
         df["scores"].kind shouldBe ColumnKind.Frame
@@ -372,11 +369,11 @@ class Create : TestBase() {
             }
         }
         // SampleEnd
-        df.ncol shouldBe 5
-        df.nrow shouldBe 2
+        df.columnsCount() shouldBe 5
+        df.rowsCount() shouldBe 2
         df["name"].kind shouldBe ColumnKind.Value
         df["name"].type shouldBe typeOf<Name>()
         df["scores"].kind shouldBe ColumnKind.Frame
-        df["summary"]["min score"].values shouldBe listOf(3, 5)
+        df["summary"]["min score"].values() shouldBe listOf(3, 5)
     }
 }

@@ -2,90 +2,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.ParserOptions
-import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.after
-import org.jetbrains.kotlinx.dataframe.api.at
-import org.jetbrains.kotlinx.dataframe.api.by
-import org.jetbrains.kotlinx.dataframe.api.byName
-import org.jetbrains.kotlinx.dataframe.api.colsOf
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.columnGroup
-import org.jetbrains.kotlinx.dataframe.api.columnOf
-import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.default
-import org.jetbrains.kotlinx.dataframe.api.dfsOf
-import org.jetbrains.kotlinx.dataframe.api.dropNulls
-import org.jetbrains.kotlinx.dataframe.api.explode
-import org.jetbrains.kotlinx.dataframe.api.fillNA
-import org.jetbrains.kotlinx.dataframe.api.fillNaNs
-import org.jetbrains.kotlinx.dataframe.api.fillNulls
-import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.flatten
-import org.jetbrains.kotlinx.dataframe.api.gather
-import org.jetbrains.kotlinx.dataframe.api.group
-import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.gt
-import org.jetbrains.kotlinx.dataframe.api.implode
-import org.jetbrains.kotlinx.dataframe.api.inplace
-import org.jetbrains.kotlinx.dataframe.api.insert
-import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.intoColumns
-import org.jetbrains.kotlinx.dataframe.api.intoList
-import org.jetbrains.kotlinx.dataframe.api.intoRows
-import org.jetbrains.kotlinx.dataframe.api.inward
-import org.jetbrains.kotlinx.dataframe.api.keysInto
-import org.jetbrains.kotlinx.dataframe.api.length
-import org.jetbrains.kotlinx.dataframe.api.lowercase
-import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.mapKeys
-import org.jetbrains.kotlinx.dataframe.api.mapToColumn
-import org.jetbrains.kotlinx.dataframe.api.mapToFrame
-import org.jetbrains.kotlinx.dataframe.api.mapValues
-import org.jetbrains.kotlinx.dataframe.api.match
-import org.jetbrains.kotlinx.dataframe.api.mean
-import org.jetbrains.kotlinx.dataframe.api.meanFor
-import org.jetbrains.kotlinx.dataframe.api.merge
-import org.jetbrains.kotlinx.dataframe.api.minus
-import org.jetbrains.kotlinx.dataframe.api.move
-import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.named
-import org.jetbrains.kotlinx.dataframe.api.notNull
-import org.jetbrains.kotlinx.dataframe.api.parse
-import org.jetbrains.kotlinx.dataframe.api.parser
-import org.jetbrains.kotlinx.dataframe.api.pathOf
-import org.jetbrains.kotlinx.dataframe.api.perCol
-import org.jetbrains.kotlinx.dataframe.api.perRowCol
-import org.jetbrains.kotlinx.dataframe.api.pivotCounts
-import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.api.remove
-import org.jetbrains.kotlinx.dataframe.api.rename
-import org.jetbrains.kotlinx.dataframe.api.reorder
-import org.jetbrains.kotlinx.dataframe.api.replace
-import org.jetbrains.kotlinx.dataframe.api.reverse
-import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.shuffle
-import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.api.sortByDesc
-import org.jetbrains.kotlinx.dataframe.api.sortWith
-import org.jetbrains.kotlinx.dataframe.api.split
-import org.jetbrains.kotlinx.dataframe.api.sum
-import org.jetbrains.kotlinx.dataframe.api.to
-import org.jetbrains.kotlinx.dataframe.api.toFloat
-import org.jetbrains.kotlinx.dataframe.api.toLeft
-import org.jetbrains.kotlinx.dataframe.api.toMap
-import org.jetbrains.kotlinx.dataframe.api.toPath
-import org.jetbrains.kotlinx.dataframe.api.toTop
-import org.jetbrains.kotlinx.dataframe.api.under
-import org.jetbrains.kotlinx.dataframe.api.ungroup
-import org.jetbrains.kotlinx.dataframe.api.update
-import org.jetbrains.kotlinx.dataframe.api.where
-import org.jetbrains.kotlinx.dataframe.api.with
-import org.jetbrains.kotlinx.dataframe.api.withNull
-import org.jetbrains.kotlinx.dataframe.api.withValue
-import org.jetbrains.kotlinx.dataframe.api.withZero
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.junit.Test
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -242,18 +159,18 @@ class Modify : TestBase() {
 
         // age -> info.age
         // weight -> info.weight
-        df.move { age and weight }.into { pathOf("info", it.name) }
-        df.move { age and weight }.into { "info"[it.name] }
+        df.move { age and weight }.into { pathOf("info", it.name()) }
+        df.move { age and weight }.into { "info"[it.name()] }
         df.move { age and weight }.under("info")
 
         // name.firstName -> fullName.first
         // name.lastName -> fullName.last
-        df.move { name.firstName and name.lastName }.into { pathOf("fullName", it.name.dropLast(4)) }
+        df.move { name.firstName and name.lastName }.into { pathOf("fullName", it.name().dropLast(4)) }
 
         // a|b|c -> a.b.c
         // a|d|e -> a.d.e
         dataFrameOf("a|b|c", "a|d|e")(0, 0)
-            .move { all() }.into { it.name.split("|").toPath() }
+            .move { all() }.into { it.name().split("|").toPath() }
 
         // name.firstName -> firstName
         // name.lastName -> lastName
@@ -261,7 +178,7 @@ class Modify : TestBase() {
 
         // a.b.e -> be
         // c.d.e -> de
-        df.move { dfs { it.name == "e" } }.toTop { it.parent!!.name + it.name }
+        df.move { dfs { it.name() == "e" } }.toTop { it.parent!!.name() + it.name() }
         // SampleEnd
     }
 
@@ -779,10 +696,8 @@ class Modify : TestBase() {
         df.add {
             "year of birth" from 2021 - age
             age gt 18 into "is adult"
-            "details" {
-                name.lastName.length() into "last name length"
-                "full name" from { name.firstName + " " + name.lastName }
-            }
+            name.lastName.length() into "last name length"
+            "full name" from { name.firstName + " " + name.lastName }
         }
         // SampleEnd
     }
@@ -796,17 +711,14 @@ class Modify : TestBase() {
         val isAdult = column<Boolean>("is adult")
         val fullName = column<String>("full name")
         val name by columnGroup()
-        val details by columnGroup()
         val firstName by name.column<String>()
         val lastName by name.column<String>()
 
         df.add {
             yob from 2021 - age
             age gt 18 into isAdult
-            details from {
-                lastName.length() into lastNameLength
-                fullName from { firstName() + " " + lastName() }
-            }
+            lastName.length() into lastNameLength
+            fullName from { firstName() + " " + lastName() }
         }
         // SampleEnd
     }
@@ -817,10 +729,8 @@ class Modify : TestBase() {
         df.add {
             "year of birth" from 2021 - "age"<Int>()
             "age"<Int>() gt 18 into "is adult"
-            "details" {
-                "name"["lastName"]<String>().length() into "last name length"
-                "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
-            }
+            "name"["lastName"]<String>().length() into "last name length"
+            "full name" from { "name"["firstName"]<String>() + " " + "name"["lastName"]<String>() }
         }
         // SampleEnd
     }
