@@ -150,7 +150,7 @@ df.select { cols(1..4) }
 
 ```kotlin
 // by condition
-df.select { cols { it.name.startsWith("year") } }
+df.select { cols { it.name().startsWith("year") } }
 df.select { startsWith("year") }
 
 // by type
@@ -177,7 +177,7 @@ df.select { allDfs() }
 df.select { allDfs(includeGroups = true) }
 
 // dfs traversal with condition
-df.select { dfs { it.name.contains(":") } }
+df.select { dfs { it.name().contains(":") } }
 
 // dfs traversal of columns of given type
 df.select { dfsOf<String>() }
@@ -205,7 +205,7 @@ df.select { allDfs().drop(3) }
 df.select { allDfs().dropLast(3) }
 
 // filter column set by condition
-df.select { allDfs().filter { it.name.startsWith("year") } }
+df.select { allDfs().filter { it.name().startsWith("year") } }
 
 // exclude columns from column set
 df.select { allDfs().except { age } }
