@@ -1,4 +1,4 @@
-[//]: # (title: Append values)
+[//]: # (title: append)
 
 Adds one or several rows to `DataFrame`
 ```kotlin

@@ -43,6 +43,7 @@ On the other hand, `Kotlin dataframe` follows `Koltin Collections` naming for ro
 * [concat](concat.md) — union rows from several dataframes
 * [distinct](distinct.md) / [distinctBy](distinct.md#distinctby) — remove duplicated rows
 * [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropWhile](sliceRows.md#dropWhile) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) — remove rows by condition
+* [duplicate](duplicate.md) — duplicate rows 
 * [explode](explode.md) — spread lists and dataframes vertically into new rows
 * [filter](filter.md) / [filterBy](filter.md#filterby) — filter rows
 * [implode](implode.md) — merge column values into lists grouping by other columns

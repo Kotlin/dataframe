@@ -53,6 +53,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [describe](describe.md) — basic column statistics
 * [distinct](distinct.md) / [distinctBy](distinct.md#distinctby) — remove duplicated rows
 * [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropWhile](sliceRows.md#dropWhile) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) — remove rows by condition
+* [duplicate](duplicate.md) — duplicate rows 
 * [explode](explode.md) — spread lists and dataframes vertically into new rows
 * [fillNulls](fill.md#fillnulls) / [fillNaNs](fill.md#fillnans) / [fillNA](fill.md#fillna) — replace missing values
 * [filter](filter.md) / [filterBy](filter.md#filterby) — filter rows by condition

@@ -1,13 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.Column
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
@@ -15,11 +12,9 @@ import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.indices
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
-import org.jetbrains.kotlinx.dataframe.type
 import kotlin.experimental.ExperimentalTypeInference
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
-import kotlin.reflect.full.withNullability
 
 public fun AnyRow.isEmpty(): Boolean = owner.columns().all { it[index] == null }
 public fun AnyRow.isNotEmpty(): Boolean = !isEmpty()
@@ -104,19 +99,3 @@ public fun <T> DataRow<T>.movingAverage(k: Int, expression: RowExpression<T, Num
         expression(it).toDouble()
     } / count
 }
-
-public fun <T> DataRow<T>.duplicate(n: Int): DataFrame<T> = this.owner.columns().mapIndexed { colIndex, col ->
-    when (col) {
-        is ColumnGroup<*> -> DataColumn.createColumnGroup(col.name, col[index].duplicate(n))
-        else -> {
-            val value = col[index]
-            if (value is AnyFrame) {
-                DataColumn.createFrameColumn(col.name, MutableList(n) { value })
-            } else DataColumn.createValueColumn(
-                col.name,
-                MutableList(n) { value },
-                col.type.withNullability(value == null)
-            )
-        }
-    }
-}.toDataFrame().cast()
