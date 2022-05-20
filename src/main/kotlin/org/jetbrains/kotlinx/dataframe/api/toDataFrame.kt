@@ -137,19 +137,32 @@ public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFra
 
 public interface TraversePropertiesDsl {
 
+    /**
+     * Skip given [classes] during dfs traversal
+     */
+    public fun exclude(vararg classes: KClass<*>)
+
+    /**
+     * Skip given [properties] during dfs traversal
+     */
     public fun exclude(vararg properties: KProperty<*>)
 
     /**
-     * Skip instances of given [classes] from transformation into ColumnGroups and FrameColumns and store them in ValueColumn
+     * Store given [classes] in ValueColumns without transformation into ColumnGroups or FrameColumns
      */
     public fun preserve(vararg classes: KClass<*>)
 
+    /**
+     * Store given [properties] in ValueColumns without transformation into ColumnGroups or FrameColumns
+     */
     public fun preserve(vararg properties: KProperty<*>)
 }
 
 public inline fun <reified T> TraversePropertiesDsl.preserve(): Unit = preserve(T::class)
 
-public abstract class CreateDataFrameDsl<T>(public val source: Iterable<T>) {
+public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
+
+    public abstract val source: Iterable<T>
 
     public abstract fun add(column: AnyBaseColumn, path: ColumnPath? = null)
 

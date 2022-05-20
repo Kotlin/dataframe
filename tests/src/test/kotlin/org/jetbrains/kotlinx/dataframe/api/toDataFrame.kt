@@ -96,7 +96,7 @@ class CreateDataFrameTests {
         df.list[1].v[0] shouldBe 6
         df.a[0].v shouldBe 7
 
-        val df2 = data.toDataFrame { properties { preserve(B::row); preserve(DataFrame::class) } }
+        val df2 = data.toDataFrame { preserve(B::row); properties { preserve(DataFrame::class) } }
         df2.frame.kind shouldBe ColumnKind.Value
         df2.frame.type shouldBe typeOf<DataFrame<A>>()
         df2["row"].kind shouldBe ColumnKind.Value
