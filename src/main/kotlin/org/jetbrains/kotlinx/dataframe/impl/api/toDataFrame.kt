@@ -33,10 +33,11 @@ import kotlin.reflect.jvm.javaField
 internal val KClass<*>.isValueType: Boolean get() = this == String::class || this.isSubclassOf(Number::class) || this.isSubclassOf(Temporal::class)
 
 internal class CreateDataFrameDslImpl<T>(
-    source: Iterable<T>,
+    override val source: Iterable<T>,
     private val clazz: KClass<*>,
-    private val prefix: ColumnPath = emptyPath()
-) : CreateDataFrameDsl<T>(source) {
+    private val prefix: ColumnPath = emptyPath(),
+    private val configuration: TraverseConfiguration = TraverseConfiguration()
+) : CreateDataFrameDsl<T>(), TraversePropertiesDsl by configuration {
 
     internal val columns = mutableListOf<Pair<ColumnPath, AnyBaseColumn>>()
 
@@ -52,16 +53,29 @@ internal class CreateDataFrameDslImpl<T>(
         columns.addAll(child.columns)
     }
 
-    private class TraversePropertiesDslImpl : TraversePropertiesDsl {
+    internal class TraverseConfiguration : TraversePropertiesDsl {
 
-        val excludes = mutableSetOf<KProperty<*>>()
+        val excludeProperties = mutableSetOf<KProperty<*>>()
 
-        val preserveClasses: MutableSet<KClass<*>> = mutableSetOf()
+        val excludeClasses = mutableSetOf<KClass<*>>()
 
-        val preserveProperties: MutableSet<KProperty<*>> = mutableSetOf()
+        val preserveClasses = mutableSetOf<KClass<*>>()
+
+        val preserveProperties = mutableSetOf<KProperty<*>>()
+
+        fun clone(): TraverseConfiguration = TraverseConfiguration().also {
+            it.excludeClasses.addAll(excludeClasses)
+            it.excludeProperties.addAll(excludeProperties)
+            it.preserveProperties.addAll(preserveProperties)
+            it.preserveClasses.addAll(preserveClasses)
+        }
 
         override fun exclude(vararg properties: KProperty<*>) {
-            excludes.addAll(properties)
+            excludeProperties.addAll(properties)
+        }
+
+        override fun exclude(vararg classes: KClass<*>) {
+            excludeClasses.addAll(classes)
         }
 
         override fun preserve(vararg classes: KClass<*>) {
@@ -74,11 +88,11 @@ internal class CreateDataFrameDslImpl<T>(
     }
 
     override fun properties(vararg roots: KProperty<*>, depth: Int, body: (TraversePropertiesDsl.() -> Unit)?) {
-        val dsl = TraversePropertiesDslImpl()
+        val dsl = configuration.clone()
         if (body != null) {
             body(dsl)
         }
-        val df = convertToDataFrame(source, clazz, roots.toList(), dsl.excludes, dsl.preserveClasses, dsl.preserveProperties, depth)
+        val df = convertToDataFrame(source, clazz, roots.toList(), dsl.excludeProperties, dsl.preserveClasses, dsl.preserveProperties, depth)
         df.columns().forEach {
             add(it)
         }
@@ -164,7 +178,7 @@ internal fun convertToDataFrame(
                             if (it == null) DataFrame.empty()
                             else {
                                 require(it is Iterable<*>)
-                                convertToDataFrame(it, elementClass, emptyList(), excludes, preserveClasses, preserveProperties,depth - 1)
+                                convertToDataFrame(it, elementClass, emptyList(), excludes, preserveClasses, preserveProperties, depth - 1)
                             }
                         }
                         DataColumn.createFrameColumn(it.columnName, frames)
@@ -172,7 +186,7 @@ internal fun convertToDataFrame(
                 }
             }
             else -> {
-                val df = convertToDataFrame(values, kclass, emptyList(), excludes, preserveClasses, preserveProperties,depth - 1)
+                val df = convertToDataFrame(values, kclass, emptyList(), excludes, preserveClasses, preserveProperties, depth - 1)
                 DataColumn.createColumnGroup(it.columnName, df)
             }
         }
