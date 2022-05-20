@@ -143,6 +143,8 @@ public interface TraversePropertiesDsl {
      * Skip instances of given [classes] from transformation into ColumnGroups and FrameColumns and store them in ValueColumn
      */
     public fun preserve(vararg classes: KClass<*>)
+
+    public fun preserve(vararg properties: KProperty<*>)
 }
 
 public inline fun <reified T> TraversePropertiesDsl.preserve(): Unit = preserve(T::class)

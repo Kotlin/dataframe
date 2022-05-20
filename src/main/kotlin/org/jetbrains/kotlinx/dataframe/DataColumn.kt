@@ -136,4 +136,4 @@ public val AnyCol.type: KType get() = type()
 public val AnyCol.kind: ColumnKind get() = kind()
 public val AnyCol.typeClass: KClass<*> get() = type.classifier as KClass<*>
 
-public fun AnyCol.indices(): IntRange = 0 until size
+public fun AnyBaseColumn.indices(): IntRange = 0 until size()
