@@ -1,8 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.kind
+import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -61,5 +65,43 @@ class CreateDataFrameTests {
         }
 
         listOf(B(1, "a", 2.0)).toDataFrame().columnNames() shouldBe listOf("x", "c", "a", "b")
+    }
+
+    @DataSchema
+    data class A(val v: Int)
+
+    @DataSchema
+    data class B(val str: String, val frame: DataFrame<A>, val row: DataRow<A>, val list: List<A>, val a: A)
+
+    @Test
+    fun `preserve properties test`() {
+        val d1 = listOf(A(2), A(3)).toDataFrame()
+        val d2 = listOf(A(4), A(5)).toDataFrame()
+
+        val data = listOf(
+            B("q", d1, d1[0], emptyList(), A(7)),
+            B("w", d2, d2[1], listOf(A(6)), A(8))
+        )
+
+        val df = data.toDataFrame()
+
+        df.frame.kind shouldBe ColumnKind.Frame
+        df.row.kind() shouldBe ColumnKind.Group
+        df.list.kind shouldBe ColumnKind.Frame
+        df.a.kind() shouldBe ColumnKind.Group
+
+        df.str[1] shouldBe "w"
+        df.frame[0].v[1] shouldBe 3
+        df.row[1].v shouldBe 5
+        df.list[1].v[0] shouldBe 6
+        df.a[0].v shouldBe 7
+
+        val df2 = data.toDataFrame { properties { preserve(B::row); preserve(DataFrame::class) } }
+        df2.frame.kind shouldBe ColumnKind.Value
+        df2.frame.type shouldBe typeOf<DataFrame<A>>()
+        df2["row"].kind shouldBe ColumnKind.Value
+        df2["row"].type shouldBe typeOf<DataRow<A>>()
+        df2.list.kind shouldBe ColumnKind.Frame
+        df2.a.kind() shouldBe ColumnKind.Group
     }
 }

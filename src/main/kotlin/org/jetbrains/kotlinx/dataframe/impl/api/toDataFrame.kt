@@ -2,12 +2,17 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.CreateDataFrameDsl
 import org.jetbrains.kotlinx.dataframe.api.TraversePropertiesDsl
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.toDataFrameFromPairs
+import org.jetbrains.kotlinx.dataframe.codeGen.shouldBeConvertedToColumnGroup
+import org.jetbrains.kotlinx.dataframe.codeGen.shouldBeConvertedToFrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -25,9 +30,7 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.javaField
 
-internal val KClass<*>.isValueType: Boolean get() {
-    return this == String::class || this.isSubclassOf(Number::class) || this.isSubclassOf(Temporal::class)
-}
+internal val KClass<*>.isValueType: Boolean get() = this == String::class || this.isSubclassOf(Number::class) || this.isSubclassOf(Temporal::class)
 
 internal class CreateDataFrameDslImpl<T>(
     source: Iterable<T>,
@@ -53,14 +56,20 @@ internal class CreateDataFrameDslImpl<T>(
 
         val excludes = mutableSetOf<KProperty<*>>()
 
-        val preserves: MutableSet<KClass<*>> = mutableSetOf()
+        val preserveClasses: MutableSet<KClass<*>> = mutableSetOf()
+
+        val preserveProperties: MutableSet<KProperty<*>> = mutableSetOf()
 
         override fun exclude(vararg properties: KProperty<*>) {
             excludes.addAll(properties)
         }
 
         override fun preserve(vararg classes: KClass<*>) {
-            preserves.addAll(classes)
+            preserveClasses.addAll(classes)
+        }
+
+        override fun preserve(vararg properties: KProperty<*>) {
+            preserveProperties.addAll(properties)
         }
     }
 
@@ -69,7 +78,7 @@ internal class CreateDataFrameDslImpl<T>(
         if (body != null) {
             body(dsl)
         }
-        val df = convertToDataFrame(source, clazz, roots.toList(), dsl.excludes, dsl.preserves, depth)
+        val df = convertToDataFrame(source, clazz, roots.toList(), dsl.excludes, dsl.preserveClasses, dsl.preserveProperties, depth)
         df.columns().forEach {
             add(it)
         }
@@ -89,7 +98,8 @@ internal fun convertToDataFrame(
     clazz: KClass<*>,
     roots: List<KProperty<*>>,
     excludes: Set<KProperty<*>>,
-    preserves: Set<KClass<*>>,
+    preserveClasses: Set<KClass<*>>,
+    preserveProperties: Set<KProperty<*>>,
     depth: Int
 ): AnyFrame {
     val order = getPropertiesOrder(clazz)
@@ -130,11 +140,10 @@ internal fun convertToDataFrame(
         val kclass = (type.classifier as KClass<*>)
         when {
             hasExceptions -> DataColumn.createWithTypeInference(it.columnName, values, nullable)
-            depth == 1 || kclass.isValueType || preserves.contains(kclass) -> DataColumn.createValueColumn(
-                it.columnName,
-                values,
-                property.returnType.withNullability(nullable)
-            )
+            preserveClasses.contains(kclass) || preserveProperties.contains(property) || (depth == 1 && !type.shouldBeConvertedToFrameColumn() && !type.shouldBeConvertedToColumnGroup()) || kclass.isValueType ->
+                DataColumn.createValueColumn(it.columnName, values, property.returnType.withNullability(nullable))
+            kclass == DataFrame::class && !nullable -> DataColumn.createFrameColumn(it.columnName, values as List<AnyFrame>)
+            kclass == DataRow::class -> DataColumn.createColumnGroup(it.columnName, (values as List<AnyRow>).concat())
             kclass.isSubclassOf(Iterable::class) -> {
                 val elementType = type.projectUpTo(Iterable::class).arguments.firstOrNull()?.type
                 if (elementType == null) DataColumn.createValueColumn(
@@ -155,7 +164,7 @@ internal fun convertToDataFrame(
                             if (it == null) DataFrame.empty()
                             else {
                                 require(it is Iterable<*>)
-                                convertToDataFrame(it, elementClass, emptyList(), excludes, preserves, depth - 1)
+                                convertToDataFrame(it, elementClass, emptyList(), excludes, preserveClasses, preserveProperties,depth - 1)
                             }
                         }
                         DataColumn.createFrameColumn(it.columnName, frames)
@@ -163,7 +172,7 @@ internal fun convertToDataFrame(
                 }
             }
             else -> {
-                val df = convertToDataFrame(values, kclass, emptyList(), excludes, preserves, depth - 1)
+                val df = convertToDataFrame(values, kclass, emptyList(), excludes, preserveClasses, preserveProperties,depth - 1)
                 DataColumn.createColumnGroup(it.columnName, df)
             }
         }

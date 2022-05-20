@@ -7,11 +7,22 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.impl.schema.getPropertiesOrder
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import kotlin.reflect.KClass
+import kotlin.reflect.KType
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.superclasses
 import kotlin.reflect.jvm.jvmErasure
+
+internal fun KType.shouldBeConvertedToFrameColumn(): Boolean = when (jvmErasure) {
+    DataFrame::class -> true
+    List::class -> arguments[0].type?.jvmErasure?.hasAnnotation<DataSchema>() == true
+    else -> false
+}
+
+internal fun KType.shouldBeConvertedToColumnGroup(): Boolean = jvmErasure.let {
+    it == DataRow::class || it.hasAnnotation<DataSchema>()
+}
 
 internal object MarkersExtractor {
 
@@ -43,13 +54,13 @@ internal object MarkersExtractor {
             val fieldType: FieldType
             val clazz = type.jvmErasure
             val columnSchema = when {
-                clazz == DataRow::class || clazz.hasAnnotation<DataSchema>() -> {
+                type.shouldBeConvertedToColumnGroup() -> {
                     val nestedType = if (clazz == DataRow::class) type.arguments[0].type!! else type
                     val marker = get(nestedType.jvmErasure)
                     fieldType = FieldType.GroupFieldType(marker.name)
                     ColumnSchema.Group(marker.schema)
                 }
-                clazz == DataFrame::class || (clazz == List::class && type.arguments[0].type?.jvmErasure?.hasAnnotation<DataSchema>() == true) -> {
+                type.shouldBeConvertedToFrameColumn() -> {
                     val frameType = type.arguments[0].type!!
                     val marker = get(frameType.jvmErasure)
                     fieldType = FieldType.FrameFieldType(marker.name, type.isMarkedNullable)
