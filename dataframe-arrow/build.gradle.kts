@@ -1,10 +1,9 @@
 plugins {
-    kotlin("jvm") apply true
+    kotlin("jvm")
+    kotlin("libs.publisher")
 }
 
-repositories {
-    mavenCentral()
-}
+group = "org.jetbrains.kotlinx"
 
 dependencies {
     api(project(":"))
@@ -18,5 +17,14 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
+    }
+}
+
+kotlinPublications {
+    publication {
+        publicationName.set("dataframe-arrow")
+        artifactId.set(project.name)
+        description.set("Apache Arrow support for Kotlin Dataframe")
+        packageName.set(artifactId)
     }
 }
