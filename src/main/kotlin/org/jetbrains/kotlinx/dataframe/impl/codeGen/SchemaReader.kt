@@ -10,7 +10,11 @@ import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadExcelMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadTsvMethod
+import org.jetbrains.kotlinx.dataframe.io.CSV
+import org.jetbrains.kotlinx.dataframe.io.Excel
+import org.jetbrains.kotlinx.dataframe.io.JSON
 import org.jetbrains.kotlinx.dataframe.io.SupportedFormats
+import org.jetbrains.kotlinx.dataframe.io.TSV
 import org.jetbrains.kotlinx.dataframe.io.guessFormat
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readExcel
@@ -38,11 +42,11 @@ public val CodeGenerator.Companion.urlReader: (url: URL, csvOptions: CsvOptions)
         fun readExcel(url: URL) = DfReadResult.Success(DataFrame.readExcel(url), SupportedFormats.EXCEL, csvOptions)
         try {
             val res = when (guessFormat(url.path)) {
-                SupportedFormats.CSV -> readCSV(url)
-                SupportedFormats.TSV -> readTSV(url)
-                SupportedFormats.JSON -> readJson(url)
+                is CSV -> readCSV(url)
+                is TSV -> readTSV(url)
+                is JSON -> readJson(url)
 //                SupportedFormats.ARROW -> readArrow(url)
-                SupportedFormats.EXCEL -> readExcel(url)
+                is Excel -> readExcel(url)
                 null -> try {
                     readExcel(url)
                 } catch (e: Exception) {
@@ -56,6 +60,7 @@ public val CodeGenerator.Companion.urlReader: (url: URL, csvOptions: CsvOptions)
                         }
                     }
                 }
+                else -> TODO()
             }
             res
         } catch (e: Throwable) {

@@ -10,6 +10,19 @@ import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.net.URL
+import java.util.ServiceLoader
+
+public interface SupportedFormat {
+    public fun readDataFrame(stream: InputStream, header: List<String> = emptyList()): AnyFrame
+
+    public fun readDataFrame(file: File, header: List<String> = emptyList()): AnyFrame
+
+    public fun acceptsExtension(ext: String): Boolean
+
+    // `DataFrame.Companion.read` methods uses this to sort list of all supported formats in ascending order (-1, 2, 10)
+    // sorted list is used to test if any format can read given input
+    public val testOrder: Int
+}
 
 public enum class SupportedFormats {
     CSV {
@@ -56,21 +69,19 @@ public enum class SupportedFormats {
     internal abstract fun acceptsExtension(ext: String): Boolean
 }
 
-private val testOrder get() = listOf(
-    SupportedFormats.JSON,
-    SupportedFormats.CSV,
-    SupportedFormats.TSV,
-    SupportedFormats.EXCEL,
-//    SupportedFormats.ARROW,
-)
+internal val supportedFormats: List<SupportedFormat> by lazy {
+    ServiceLoader.load(SupportedFormat::class.java).toList()
+}
 
-internal fun guessFormatForExtension(ext: String) = SupportedFormats.values().firstOrNull { it.acceptsExtension(ext) }
+internal val testOrder: List<SupportedFormat> by lazy { supportedFormats.sortedBy { it.testOrder } }
 
-internal fun guessFormat(file: File): SupportedFormats? = file.extension.lowercase().let { guessFormatForExtension(it) }
+internal fun guessFormatForExtension(ext: String) = supportedFormats.firstOrNull { it.acceptsExtension(ext) }
 
-internal fun guessFormat(url: URL): SupportedFormats? = guessFormat(url.path)
+internal fun guessFormat(file: File): SupportedFormat? = file.extension.lowercase().let { guessFormatForExtension(it) }
 
-internal fun guessFormat(url: String): SupportedFormats? = guessFormatForExtension(url.substringAfterLast("."))
+internal fun guessFormat(url: URL): SupportedFormat? = guessFormat(url.path)
+
+internal fun guessFormat(url: String): SupportedFormat? = guessFormatForExtension(url.substringAfterLast("."))
 
 private class NotCloseableStream(val src: InputStream) : InputStream() {
     override fun read(): Int = src.read()
@@ -85,10 +96,10 @@ private class NotCloseableStream(val src: InputStream) : InputStream() {
 
 internal fun DataFrame.Companion.read(
     stream: InputStream,
-    format: SupportedFormats? = null,
+    format: SupportedFormat? = null,
     header: List<String> = emptyList()
-): AnyFrame {
-    if (format != null) return format.readDataFrame(stream, header = header)
+): ReadAnyFrame {
+    if (format != null) return format to format.readDataFrame(stream, header = header)
     val input = NotCloseableStream(if (stream.markSupported()) stream else BufferedInputStream(stream))
     try {
         val readLimit = 10000
@@ -97,7 +108,7 @@ internal fun DataFrame.Companion.read(
         testOrder.forEach {
             try {
                 input.reset()
-                return it.readDataFrame(input, header = header)
+                return it to it.readDataFrame(input, header = header)
             } catch (e: Exception) {
             }
         }
@@ -109,24 +120,28 @@ internal fun DataFrame.Companion.read(
 
 internal fun DataFrame.Companion.read(
     file: File,
-    format: SupportedFormats? = null,
+    format: SupportedFormat? = null,
     header: List<String> = emptyList()
-): AnyFrame {
-    if (format != null) return format.readDataFrame(file, header = header)
+): ReadAnyFrame {
+    if (format != null) return format to format.readDataFrame(file, header = header)
     testOrder.forEach {
         try {
-            return it.readDataFrame(file, header = header)
+            return it to it.readDataFrame(file, header = header)
         } catch (e: FileNotFoundException) { throw e } catch (e: Exception) { }
     }
     throw IllegalArgumentException("Unknown file format")
 }
 
-public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame = read(file, guessFormat(file), header)
+internal data class ReadAnyFrame(val format: SupportedFormat, val df: AnyFrame)
+
+internal infix fun SupportedFormat.to(df: AnyFrame) = ReadAnyFrame(this, df)
+
+public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame = read(file, guessFormat(file), header).df
 public fun DataRow.Companion.read(file: File, header: List<String> = emptyList()): AnyRow = DataFrame.read(file, header).single()
 
 public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()): AnyFrame = when {
     isFile(url) -> read(urlAsFile(url), header)
-    isProtocolSupported(url) -> catchHttpResponse(url) { read(it, guessFormat(url), header) }
+    isProtocolSupported(url) -> catchHttpResponse(url) { read(it, guessFormat(url), header).df }
     else -> throw IllegalArgumentException("Invalid protocol for url $url")
 }
 

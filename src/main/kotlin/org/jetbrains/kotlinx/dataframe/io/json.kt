@@ -39,6 +39,16 @@ import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
 import kotlin.reflect.typeOf
 
+public class JSON : SupportedFormat {
+    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readJson(stream, header = header)
+
+    override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readJson(file, header = header)
+
+    override fun acceptsExtension(ext: String): Boolean = ext == "json"
+
+    override val testOrder: Int = 10000
+}
+
 public fun DataFrame.Companion.readJson(file: File, header: List<String> = emptyList()): AnyFrame = readJson(file.toURI().toURL(), header)
 public fun DataRow.Companion.readJson(file: File, header: List<String> = emptyList()): AnyRow = DataFrame.readJson(file, header).single()
 
