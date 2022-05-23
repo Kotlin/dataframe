@@ -15,6 +15,9 @@ fun useHostedFile(file: File, f: (url: String) -> Unit) {
             }
         }
     }.start()
-    f("http://0.0.0.0:8080/")
-    server.stop(500, 1000)
+    try {
+        f("http://0.0.0.0:8080/")
+    } finally {
+        server.stop(500, 1000)
+    }
 }
