@@ -29,6 +29,16 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
+public class Excel : SupportedFormat {
+    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readExcel(stream)
+
+    override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readExcel(file)
+
+    override fun acceptsExtension(ext: String): Boolean = ext == "xls" || ext == "xlsx"
+
+    override val testOrder: Int = 40000
+}
+
 public fun DataFrame.Companion.readExcel(
     url: URL,
     sheetName: String? = null,

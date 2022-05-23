@@ -49,6 +49,16 @@ import java.time.Duration
 import java.time.LocalDateTime
 import kotlin.reflect.typeOf
 
+public class ArrowFeather : SupportedFormat {
+    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readArrowFeather(stream)
+
+    override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readArrowFeather(file)
+
+    override fun acceptsExtension(ext: String): Boolean = ext == "feather"
+
+    override val testOrder: Int = 50000
+}
+
 internal object Allocator {
     val ROOT by lazy {
         RootAllocator(Long.MAX_VALUE)
