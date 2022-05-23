@@ -41,6 +41,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
+import kotlin.time.Duration
 
 internal interface StringParser<T> {
     fun toConverter(options: ParserOptions?): TypeConverter
@@ -202,6 +203,9 @@ internal object Parsers : GlobalParserOptions {
             val parser = { it: String -> it.toLocalDateOrNull(formatter)?.toKotlinLocalDate() }
             parser
         },
+
+        // kotlin.time.duration
+        stringParser { catchSilent { Duration.parse(it) } },
 
         stringParserWithOptions { options ->
             val formatter = options?.getDateTimeFormatter()

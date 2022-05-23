@@ -13,6 +13,10 @@ import org.junit.Test
 import java.time.LocalTime
 import java.time.Month
 import kotlin.reflect.typeOf
+import kotlin.time.Duration.Companion.days
+import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Duration.Companion.seconds
 
 class ParseTests {
 
@@ -188,5 +192,10 @@ class ParseTests {
         columnOf("2022-01-23T04:29:40+01:00").parse().type shouldBe typeOf<Instant>()
 
         columnOf("2022-01-23T04:29:40").parse().type shouldBe typeOf<LocalDateTime>()
+    }
+
+    @Test
+    fun `parse duration`() {
+        columnOf("1d 15m", "20h 35m 11s").parse() shouldBe columnOf(1.days + 15.minutes, 20.hours + 35.minutes + 11.seconds)
     }
 }
