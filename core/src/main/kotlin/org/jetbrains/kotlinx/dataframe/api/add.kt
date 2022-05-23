@@ -15,8 +15,10 @@ import org.jetbrains.kotlinx.dataframe.annotations.Add
 import org.jetbrains.kotlinx.dataframe.annotations.AddWithDsl
 import org.jetbrains.kotlinx.dataframe.annotations.Dsl
 import org.jetbrains.kotlinx.dataframe.annotations.From
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.Name
 import org.jetbrains.kotlinx.dataframe.annotations.ReturnType
+import org.jetbrains.kotlinx.dataframe.annotations.Schema
 import org.jetbrains.kotlinx.dataframe.annotations.SchemaProcessor
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
@@ -116,7 +118,7 @@ public typealias AddExpression<T, C> = Selector<AddDataRow<T>, C>
  * @throws DuplicateColumnNamesException if [DataFrame] already contains a column with given [name]
  */
 @SchemaProcessor<Add>(Add::class)
-public inline fun <reified R, T> DataFrame<T>.add(
+public inline fun <reified R, T> @receiver:Schema DataFrame<T>.add(
     @Name name: String,
     infer: Infer = Infer.Nulls,
     @ReturnType noinline expression: AddExpression<T, R>
@@ -169,7 +171,7 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
         noinline expression: RowExpression<T, R>
     ): Boolean = add(df.mapToColumn(name, infer, expression))
 
-    @SchemaProcessor<From>(From::class)
+    @Interpretable<From>(From::class)
     public inline infix fun <reified R> @receiver:Name String.from(@ReturnType noinline expression: RowExpression<T, R>): Boolean = add(this, Infer.Nulls, expression)
 
     // TODO: use path instead of name
@@ -201,7 +203,7 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
 }
 
 @SchemaProcessor<AddWithDsl>(AddWithDsl::class)
-public fun <T> DataFrame<T>.add(@Dsl body: AddDsl<T>.() -> Unit): DataFrame<T> {
+public fun <T> @receiver:Schema DataFrame<T>.add(@Dsl body: AddDsl<T>.() -> Unit): DataFrame<T> {
     val dsl = AddDsl(this)
     body(dsl)
     return dataFrameOf(this@add.columns() + dsl.columns).cast()

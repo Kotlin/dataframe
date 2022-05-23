@@ -29,14 +29,11 @@ import org.jetbrains.kotlinx.dataframe.impl.api.toLocalTime
 import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
-import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.math.BigDecimal
 import java.net.URL
 import java.time.LocalTime
-import java.util.Locale
-import kotlin.jvm.internal.Reflection
+import java.util.*
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -91,35 +88,30 @@ public data class Convert<T, out C>(val df: DataFrame<T>, val columns: ColumnsSe
 
 public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
 
-public class With : SchemaModificationInterpreter {
-    override fun process(parent: String, map: Map<String, Any>): AnalysisResult {
-        val convert = map["this"] as ConvertApproximation
-        val type = map["rowConverter"] as TypeApproximation
+public class With : AbstractSchemaModificationInterpreter() {
 
+    public val Arguments.convert: ConvertApproximation by arg("this")
+    public val Arguments.type: TypeApproximation by arg("rowConverter")
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
         val names = convert.columns.toSet()
-        val klass = Class.forName(type.fqName)
-        val kType = if (type.nullable) {
-            Reflection.nullableTypeOf(klass)
-        } else {
-            Reflection.typeOf(klass)
-        }
 
         val newColumns = convert.schema.columns.mapValues { (key, value) ->
             if (listOf(key) in names) {
-                ColumnSchema.Value(kType)
+                PluginColumnSchema(type)
             } else {
                 value
             }
         }
-        DataFrameSchemaImpl(newColumns)
-    }
 
+        return PluginDataFrameSchema(newColumns)
+    }
 }
 
 @SchemaProcessor<With>(With::class)
-public inline fun <T, C, reified R> Convert<T, C>.with(
+public inline fun <T, C, reified R> @receiver:Value Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
-    noinline rowConverter: RowValueExpression<T, C, R>
+    @ReturnType noinline rowConverter: RowValueExpression<T, C, R>
 ): DataFrame<T> =
     withRowCellImpl(typeOf<R>(), infer, rowConverter)
 
