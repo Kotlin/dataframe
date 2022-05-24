@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.codeGen
 
+import com.squareup.kotlinpoet.buildCodeBlock
 import org.jetbrains.dataframe.impl.codeGen.CodeGenResult
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
@@ -21,7 +22,6 @@ import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.io.SupportedFormats
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.api.Code
 
@@ -259,13 +259,13 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
             append(fieldsDeclaration)
             if (readDfMethod != null) {
                 append("\n")
-                append(
-                    """
-                    |    ${propertyVisibility}companion object {
-                    |${readDfMethod.toDeclaration(marker.shortName, propertyVisibility)}
-                    |    }
-                """.trimMargin()
-                )
+                val companionObject = buildCodeBlock {
+                    add("    ")
+                    indent()
+                    indent()
+                    add(readDfMethod.toDeclaration(marker.shortName, propertyVisibility))
+                }
+                append(companionObject.toString())
             }
             append("\n}")
         } else ""
@@ -274,7 +274,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
     }
 }
 
-public fun CodeGenResult.toStandaloneSnippet(packageName: String): String {
+public fun CodeGenResult.toStandaloneSnippet(packageName: String, additionalImports: List<String>): String {
     return buildString {
         if (packageName.isNotEmpty()) {
             appendLine("package $packageName")
@@ -288,20 +288,10 @@ public fun CodeGenResult.toStandaloneSnippet(packageName: String): String {
         appendLine("import org.jetbrains.kotlinx.dataframe.annotations.ColumnName")
         appendLine("import org.jetbrains.kotlinx.dataframe.annotations.DataSchema")
         appendLine("import org.jetbrains.kotlinx.dataframe.api.cast")
-        SupportedFormats.values().flatMap { collectAdditionalImports(it) }.forEach {
+        additionalImports.forEach {
             appendLine(it)
         }
         appendLine()
         appendLine(code.declarations)
-    }
-}
-
-private fun collectAdditionalImports(format: SupportedFormats): List<String> {
-    return when (format) {
-        SupportedFormats.CSV -> listOf("import org.jetbrains.kotlinx.dataframe.io.readCSV")
-        SupportedFormats.TSV -> listOf("import org.jetbrains.kotlinx.dataframe.io.readTSV")
-        SupportedFormats.JSON -> listOf("import org.jetbrains.kotlinx.dataframe.io.readJson")
-        SupportedFormats.EXCEL -> listOf("import org.jetbrains.kotlinx.dataframe.io.readExcel")
-//        SupportedFormats.ARROW -> listOf("import org.jetbrains.kotlinx.dataframe.io.readArrow")
     }
 }

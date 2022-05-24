@@ -21,6 +21,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.forEachRow
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadExcelMethod
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
@@ -37,6 +39,10 @@ public class Excel : SupportedFormat {
     override fun acceptsExtension(ext: String): Boolean = ext == "xls" || ext == "xlsx"
 
     override val testOrder: Int = 40000
+
+    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
+        return DefaultReadExcelMethod(pathRepresentation)
+    }
 }
 
 public fun DataFrame.Companion.readExcel(

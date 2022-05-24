@@ -7,6 +7,8 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
@@ -32,14 +34,21 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
-public class CSV : SupportedFormat {
-    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readCSV(stream, header = header)
+public class CSV(private val delimiter: Char = ',') : SupportedFormat {
+    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
+        DataFrame.readCSV(stream, delimiter = delimiter, header = header)
 
-    override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readCSV(file, header = header)
+    override fun readDataFrame(file: File, header: List<String>): AnyFrame =
+        DataFrame.readCSV(file, delimiter = delimiter, header = header)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "csv"
 
     override val testOrder: Int = 20000
+
+    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
+        val arguments = MethodArguments().add("delimiter", typeOf<Char>(), "'%L'", delimiter)
+        return DefaultReadCsvMethod(pathRepresentation, arguments)
+    }
 }
 
 public enum class CSVType(public val format: CSVFormat) {
@@ -60,7 +69,8 @@ public fun DataFrame.Companion.readDelimStr(
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null
-): DataFrame<*> = StringReader(text).use { readDelim(it, CSVType.DEFAULT.format.withHeader(), colTypes, skipLines, readLines) }
+): DataFrame<*> =
+    StringReader(text).use { readDelim(it, CSVType.DEFAULT.format.withHeader(), colTypes, skipLines, readLines) }
 
 public fun DataFrame.Companion.read(
     fileOrUrl: String,

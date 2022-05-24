@@ -8,13 +8,17 @@ import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
-import org.jetbrains.kotlinx.dataframe.codeGen.CsvOptions
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.DfReadResult
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlReader
+import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
+import org.jetbrains.kotlinx.dataframe.io.CSV
+import org.jetbrains.kotlinx.dataframe.io.Excel
+import org.jetbrains.kotlinx.dataframe.io.JSON
+import org.jetbrains.kotlinx.dataframe.io.TSV
 import java.io.File
 import java.net.URL
 import java.nio.file.Paths
@@ -55,14 +59,32 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @TaskAction
     fun generate() {
         val csvOptions = csvOptions.get()
-        val (delimiter) = csvOptions
         val url = urlOf(data.get())
-        val res = when (val readResult = CodeGenerator.urlReader(url, CsvOptions(delimiter))) {
+        val formats = listOf(
+            CSV(delimiter = csvOptions.delimiter),
+            JSON(),
+            Excel(),
+            TSV(),
+            ArrowFeather()
+        )
+        val res = when (val readResult = CodeGenerator.urlReader(url, formats)) {
             is DfReadResult.Success -> readResult
             is DfReadResult.Error -> throw Exception("Error while reading dataframe from data at $url", readResult.reason)
         }
+        if (res.format is ArrowFeather) {
+            val arrowDependency = project.configurations.asSequence()
+                .mapNotNull { configuration ->
+                    configuration.allDependencies.find { it.group?.equals("org.jetbrains.kotlinx") ?: false && it.name == "dataframe-arrow"  }
+                }
+                .firstOrNull()
+
+            if (arrowDependency == null) {
+                project.logger.warn("Add dependency on \"org.jetbrains.kotlinx:dataframe-arrow\" to compile schema ${interfaceName.get()} generated from ${data.get()}")
+            }
+        }
         val codeGenerator = CodeGenerator.create(useFqNames = false)
         val delimiters = delimiters.get()
+        val readDfMethod = res.getReadDfMethod(stringOf(data.get()))
         val codeGenResult = codeGenerator.generate(
             schema = res.schema,
             name = interfaceName.get(),
@@ -74,13 +96,13 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
                 DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
             },
-            readDfMethod = res.getReadDfMethod(stringOf(data.get())),
+            readDfMethod = readDfMethod,
             fieldNameNormalizer = NameNormalizer.from(delimiters)
         )
         val escapedPackageName = escapePackageName(packageName.get())
 
         val dataSchema = dataSchema.get()
-        dataSchema.writeText(codeGenResult.toStandaloneSnippet(escapedPackageName))
+        dataSchema.writeText(codeGenResult.toStandaloneSnippet(escapedPackageName, readDfMethod.additionalImports))
     }
 
     private fun stringOf(data: Any): String {

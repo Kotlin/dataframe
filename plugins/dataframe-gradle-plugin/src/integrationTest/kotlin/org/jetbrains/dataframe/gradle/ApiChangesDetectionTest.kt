@@ -3,20 +3,14 @@ package org.jetbrains.dataframe.gradle
 import io.kotest.matchers.shouldBe
 import org.gradle.testkit.runner.TaskOutcome
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
-import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
 import org.junit.Test
 import java.io.File
-import kotlin.reflect.KClass
-
-annotation class RelatedGenerator(vararg val clazz: KClass<*>)
 
 class ApiChangesDetectionTest : AbstractDataFramePluginIntegrationTest() {
-    @RelatedGenerator(
-        GenerateDataSchemaTask::class,
-        DefaultReadCsvMethod::class,
-        DefaultReadJsonMethod::class
-    )
+
+   // GenerateDataSchemaTask::class,
+   // DefaultReadCsvMethod::class,
+   // DefaultReadJsonMethod::class
     @Test
     fun `cast api`() {
         compiles {
@@ -34,10 +28,8 @@ class ApiChangesDetectionTest : AbstractDataFramePluginIntegrationTest() {
         }
     }
 
-    @RelatedGenerator(
-        GenerateDataSchemaTask::class,
-        DefaultReadJsonMethod::class
-    )
+    // GenerateDataSchemaTask::class,
+    // DefaultReadJsonMethod::class
     @Test
     fun `read json api`() {
         compiles {
@@ -51,11 +43,8 @@ class ApiChangesDetectionTest : AbstractDataFramePluginIntegrationTest() {
             """.trimIndent()
         }
     }
-
-    @RelatedGenerator(
-        GenerateDataSchemaTask::class,
-        DefaultReadCsvMethod::class,
-    )
+    // GenerateDataSchemaTask::class,
+    // DefaultReadCsvMethod::class,
     @Test
     fun `read csv api`() {
         compiles {
