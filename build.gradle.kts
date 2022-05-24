@@ -14,7 +14,6 @@ plugins {
     id("org.jetbrains.dokka") version libs.versions.dokka
     id("org.jetbrains.dataframe.generator")
 
-    id("io.github.devcrocod.korro") version libs.versions.korro
     id("org.jmailen.kotlinter") version libs.versions.ktlint
 
 }
