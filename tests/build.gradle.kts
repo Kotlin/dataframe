@@ -1,10 +1,11 @@
 import org.jetbrains.dataframe.gradle.DataSchemaVisibility
 
+@Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
     id("java")
     kotlin("jvm")
     kotlin("plugin.dataframe")
-    id("io.github.devcrocod.korro")
+    id("io.github.devcrocod.korro") version libs.versions.korro
     id("org.jmailen.kotlinter")
 }
 
