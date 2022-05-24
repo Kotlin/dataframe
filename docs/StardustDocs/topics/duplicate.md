@@ -5,7 +5,7 @@ Returns [`DataFrame`](DataFrame.md) with original [`DataRow`](DataRow.md) repeat
 DataRow.duplicate(n): DataFrame
 ```
 
-Returns [`FrameColumn`](DataColumn.md#FrameColumn) with original [`DataFrame`](DataFrame.md) repeated `n` times. Resulting `FrameColumn` will have an empty [`name`](DataColumn.md#properties).
+Returns [`FrameColumn`](DataColumn.md#framecolumn) with original [`DataFrame`](DataFrame.md) repeated `n` times. Resulting `FrameColumn` will have an empty [`name`](DataColumn.md#properties).
 ```text
 DataFrame.duplicate(n): FrameColumn
 ```
