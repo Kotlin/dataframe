@@ -798,11 +798,11 @@ class DataFrameSymbolProcessorTest {
         result.successfulCompilation shouldBe false
     }
 
-    private val file = File("../../data/jetbrains_repositories.csv")
+    private val jetbrainsCsv = File("../../data/jetbrains_repositories.csv")
 
     @Test
     fun `imported schema resolved`() {
-        useHostedFile(file) {
+        useHostedFile(jetbrainsCsv) {
             val result = KspCompilationTestRunner.compile(
                 TestCompilationParameters(
                     sources = listOf(SourceFile.kotlin("MySources.kt", """
@@ -843,7 +843,7 @@ class DataFrameSymbolProcessorTest {
 
     @Test
     fun `normalization disabled`() {
-        useHostedFile(file) {
+        useHostedFile(jetbrainsCsv) {
             val result = KspCompilationTestRunner.compile(
                 TestCompilationParameters(
                     sources = listOf(SourceFile.kotlin("MySources.kt", """
@@ -867,7 +867,7 @@ class DataFrameSymbolProcessorTest {
 
     @Test
     fun `normalization enabled`() {
-        useHostedFile(file) {
+        useHostedFile(jetbrainsCsv) {
             val result = KspCompilationTestRunner.compile(
                 TestCompilationParameters(
                     sources = listOf(SourceFile.kotlin("MySources.kt", """
