@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.poi.ooxml)
 
     implementation(libs.kotlin.datetimeJvm)
+    implementation("com.squareup:kotlinpoet:1.11.0")
 
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {

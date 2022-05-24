@@ -36,6 +36,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import java.io.File
 import java.io.InputStream
 import java.math.BigDecimal
@@ -57,7 +59,15 @@ public class ArrowFeather : SupportedFormat {
     override fun acceptsExtension(ext: String): Boolean = ext == "feather"
 
     override val testOrder: Int = 50000
+
+    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
+        return DefaultReadArrowMethod(pathRepresentation)
+    }
 }
+
+private const val readArrowFeather = "readArrowFeather"
+
+private class DefaultReadArrowMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readArrowFeather)
 
 internal object Allocator {
     val ROOT by lazy {
@@ -78,7 +88,7 @@ public enum class ArrowFormat() {
 }
 
 /**
- * Read [ArrowFormat.IPC] data from existing [channel]
+ * Read [ArrowFeather.IPC] data from existing [channel]
  */
 public fun readArrowIPC(channel: ReadableByteChannel, allocator: RootAllocator = Allocator.ROOT): AnyFrame {
     ArrowStreamReader(channel, allocator).use { reader ->
@@ -95,7 +105,7 @@ public fun readArrowIPC(channel: ReadableByteChannel, allocator: RootAllocator =
 }
 
 /**
- * Read [ArrowFormat.FEATHER] data from existing [channel]
+ * Read [ArrowFeather.FEATHER] data from existing [channel]
  */
 public fun readArrowFeather(channel: SeekableByteChannel, allocator: RootAllocator = Allocator.ROOT): AnyFrame {
     ArrowFileReader(channel, allocator).use { reader ->

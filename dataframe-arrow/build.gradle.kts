@@ -28,3 +28,7 @@ kotlinPublications {
         packageName.set(artifactId)
     }
 }
+
+kotlin {
+    explicitApi()
+}
