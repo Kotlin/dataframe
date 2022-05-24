@@ -1,10 +1,10 @@
-<!DOCTYPE html SYSTEM "about:legacy-compat"><html lang="en-US" data-colors-preset="contrast" data-primary-color="#307FFF"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="robots" content="noindex">  <meta name="built-on" content="2022-01-12T12:21:55.430979"><meta name="build-number" content="287">    <meta name="keywords" content="">   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src= '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5P98');</script><script src="https://resources.jetbrains.com/storage/help-app/v3/analytics.js"></script>  <title>Column selectors | Dataframe</title>   <link href="https://resources.jetbrains.com/storage/help-app/v3/app.css" rel="stylesheet">   <link rel="icon" href="https://resources.jetbrains.com/storage/products/jetbrains/img/icons/favicon.ico" sizes="any"><!-- 32×32 --><link rel="icon" href="https://resources.jetbrains.com/storage/products/jetbrains/img/icons/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="https://resources.jetbrains.com/storage/products/jetbrains/img/icons/apple-touch-icon.png"><!-- 180×180 --><link rel="manifest" href="https://www.jetbrains.com/site.webmanifest"><meta name="apple-mobile-web-app-title" content="JetBrains"><meta name="application-name" content="JetBrains"><meta name="msapplication-TileColor" content="#000000"><meta name="theme-color" content="#000000">  <meta name="image" content=""><!-- Open Graph --><meta property="og:title" content="Column selectors | Dataframe"/><meta property="og:description" content=""/><meta property="og:image" content=""/><meta property="og:site_name" content="Dataframe Help"/><meta property="og:type" content="website"/><meta property="og:locale" content="en_US"/><meta property="og:url" content="https://kotlin.github.io/dataframe//0.8/columnselectors.html"/><!-- End Open Graph --><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content=""><meta name="twitter:title" content="Column selectors | Dataframe"><meta name="twitter:description" content=""><meta name="twitter:creator" content=""><meta name="twitter:image:src" content=""><!-- End Twitter Card --><!-- Schema.org WebPage --><script type="application/ld+json"> { "@context": "http://schema.org", "@type": "WebPage", "@id": "https://kotlin.github.io/dataframe//0.8/columnselectors.html#webpage", "url": "https://kotlin.github.io/dataframe//0.8/columnselectors.html", "name": "Column selectors | Dataframe", "description": "", "image": "", "inLanguage":"en-US" }</script><!-- End Schema.org --><!-- Schema.org WebSite --><script type="application/ld+json"> { "@type": "WebSite", "@id": "https://kotlin.github.io/dataframe/#website", "url": "https://kotlin.github.io/dataframe/", "name": "Dataframe Help" }</script><!-- End Schema.org --></head>    <body data-id="ColumnSelectors" data-main-title="Column selectors" data-article-props="{&quot;seeAlsoStyle&quot;:&quot;links&quot;}"  data-template="article"  data-breadcrumbs="operations.md|Operations"  >  <div class="wrapper"><main class="panel _main"><header class="panel__header"><div class="container"><h3>Dataframe 0.8 Help</h3><div class="shortcuts-switcher"><label for="switch-shortcuts">Keymap:</label><select class="select _shortcuts" height="1" id="switch-shortcuts">  </select></div><div class="panel-trigger"></div></div></header><section class="panel__content"><div class="container"><article class="article" data-shortcut-switcher="inactive"><h1 data-toc="ColumnSelectors" id="ColumnSelectors.md"  >Column selectors</h1><p id="a919ce9b" ><code class="code "   >DataFrame</code> provides DSL for selecting arbitrary set of columns.</p><p id="dd5020cd" >Column selectors are used in many operations:</p><div class="code-block" data-lang="kotlin"          >df.select { age and name }
+<!DOCTYPE html SYSTEM "about:legacy-compat"><html lang="en-US" data-preset="contrast" data-primary-color="#307FFF"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta charset="UTF-8"><meta name="robots" content="noindex">  <meta name="built-on" content="2022-05-24T17:09:18.99179"><meta name="build-number" content="355">    <meta name="keywords" content="">   <script> (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src= '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-5P98'); </script><script src="https://resources.jetbrains.com/storage/help-app/v4/analytics.js"></script>  <title>Column selectors | Dataframe</title><script id="virtual-toc-data" type="application/json">{}</script>   <link href="https://resources.jetbrains.com/storage/help-app/v4/app.css" rel="stylesheet">   <link rel="icon" href="https://resources.jetbrains.com/storage/products/jetbrains/img/icons/favicon.ico" sizes="any"><!-- 32×32 --><link rel="icon" href="https://resources.jetbrains.com/storage/products/jetbrains/img/icons/icon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="https://resources.jetbrains.com/storage/products/jetbrains/img/icons/apple-touch-icon.png"><!-- 180×180 --><link rel="manifest" href="https://www.jetbrains.com/site.webmanifest"><meta name="apple-mobile-web-app-title" content="JetBrains"><meta name="application-name" content="JetBrains"><meta name="msapplication-TileColor" content="#000000"><meta name="theme-color" content="#000000">  <meta name="image" content=""><!-- Open Graph --><meta property="og:title" content="Column selectors | Dataframe"/><meta property="og:description" content=""/><meta property="og:image" content=""/><meta property="og:site_name" content="Dataframe Help"/><meta property="og:type" content="website"/><meta property="og:locale" content="en_US"/><meta property="og:url" content="https://kotlin.github.io/dataframe//0.8/columnselectors.html"/><!-- End Open Graph --><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content=""><meta name="twitter:title" content="Column selectors | Dataframe"><meta name="twitter:description" content=""><meta name="twitter:creator" content=""><meta name="twitter:image:src" content=""><!-- End Twitter Card --><!-- Schema.org WebPage --><script type="application/ld+json"> { "@context": "http://schema.org", "@type": "WebPage", "@id": "https://kotlin.github.io/dataframe//0.8/columnselectors.html#webpage", "url": "https://kotlin.github.io/dataframe//0.8/columnselectors.html", "name": "Column selectors | Dataframe", "description": "", "image": "", "inLanguage":"en-US" }</script><!-- End Schema.org --><!-- Schema.org WebSite --><script type="application/ld+json"> { "@type": "WebSite", "@id": "https://kotlin.github.io/dataframe/#website", "url": "https://kotlin.github.io/dataframe/", "name": "Dataframe Help" }</script><!-- End Schema.org --></head>    <body data-id="ColumnSelectors" data-main-title="Column selectors" data-article-props="{&quot;seeAlsoStyle&quot;:&quot;links&quot;}"  data-template="article"  data-breadcrumbs="operations.md|Operations"  >  <div class="wrapper"><main class="panel _main"><header class="panel__header"><div class="container"><h3>Dataframe 0.8 Help</h3><div class="shortcuts-switcher"><label for="switch-shortcuts">Keymap:</label><select class="select _shortcuts" height="1" id="switch-shortcuts">  </select></div><div class="panel-trigger"></div></div></header><section class="panel__content"><div class="container"><article class="article" data-shortcut-switcher="inactive"><h1 data-toc="ColumnSelectors" id="ColumnSelectors.md"  >Column selectors</h1><p id="a6302a52" ><code class="code "   >DataFrame</code> provides DSL for selecting arbitrary set of columns.</p><p id="bcbb96ef" >Column selectors are used in many operations:</p><div class="code-block" data-lang="kotlin"      data-anchors="[f64899ad]"     >df.select { age and name }
 df.fillNaNs { dfsOf&lt;Double&gt;() }.withZero()
 df.remove { cols { it.hasNulls() } }
 df.update { city }.notNull { it.lowercase() }
-df.gather { numberCols() }.into(&quot;key&quot;, &quot;value&quot;)
+df.gather { colsOf&lt;Number&gt;() }.into(&quot;key&quot;, &quot;value&quot;)
 df.move { name.firstName and name.lastName }.after { city }
-</div><p id="9ea6721" ><b id="2643fef8" class=""  >Select columns by name:</b></p><div class="tabs" id="5972dddd"><div class="tabs__content" data-gtm="tab" id="61979967"   data-title="Properties" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >// by column name
+</div><p id="92d21eba" ><b id="8f7db43b" class=""  >Select columns by name:</b></p><div class="tabs" id="8ccd487a"data-anchors="[96c2702e,467f0d05,9e9502f1,3ade5af0,3cd22832,53c9cc32,8ccd487a]"><div class="tabs__content" data-gtm="tab" id="96c2702e"   data-title="Properties" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"  data-anchors="[467f0d05]"     >// by column name
 df.select { it.name }
 df.select { name }
 
@@ -31,7 +31,7 @@ df.select { name.all() }
 
 // dfs traversal of all children columns
 df.select { name.allDfs() }
-</div></div><div class="tabs__content" data-gtm="tab" id="c6286679"   data-title="Accessors" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >// by column name
+</div></div><div class="tabs__content" data-gtm="tab" id="9e9502f1"   data-title="Accessors" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"  data-anchors="[3ade5af0]"     >// by column name
 val name by columnGroup()
 df.select { it[name] }
 df.select { name }
@@ -61,7 +61,7 @@ df.select { name.all() }
 
 // dfs traversal of all children columns
 df.select { name.allDfs() }
-</div></div><div class="tabs__content" data-gtm="tab" id="b54688b5"   data-title="Strings" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"      >// by column name
+</div></div><div class="tabs__content" data-gtm="tab" id="3cd22832"   data-title="Strings" ><div class="code-block" data-lang="kotlin"    data-title="Kotlin"  data-anchors="[53c9cc32]"     >// by column name
 df.select { it[&quot;name&quot;] }
 
 // by column path
@@ -88,7 +88,7 @@ df.select { &quot;name&quot;.all() }
 
 // dfs traversal of all children columns
 df.select { &quot;name&quot;.allDfs() }
-</div></div></div><p id="fdc4a91b" ><b id="b11c7c57" class=""  >Select columns by column index:</b></p><div class="code-block" data-lang="kotlin"          >// by index
+</div></div></div><p id="8651e0be" ><b id="5a3894e8" class=""  >Select columns by column index:</b></p><div class="code-block" data-lang="kotlin"      data-anchors="[69322a62]"     >// by index
 df.select { col(2) }
 
 // by several indices
@@ -96,16 +96,15 @@ df.select { cols(0, 1, 3) }
 
 // by range of indices
 df.select { cols(1..4) }
-</div><p id="fa500d0d" ><b id="7dadde64" class=""  >Other column selectors:</b></p><div class="code-block" data-lang="kotlin"          >// by condition
-df.select { cols { it.name.startsWith(&quot;year&quot;) } }
+</div><p id="623c2aa5" ><b id="b117602b" class=""  >Other column selectors:</b></p><div class="code-block" data-lang="kotlin"      data-anchors="[2e32f5f2]"     >// by condition
+df.select { cols { it.name().startsWith(&quot;year&quot;) } }
+df.select { startsWith(&quot;year&quot;) }
 
 // by type
 df.select { colsOf&lt;String&gt;() }
-df.select { stringCols() }
 
 // by type with condition
-df.select { colsOf&lt;String&gt; { !it.hasNulls() } }
-df.select { stringCols { !it.hasNulls() } }
+df.select { colsOf&lt;String?&gt; { it.countDistinct() &gt; 5 } }
 
 // all top-level columns
 df.select { all() }
@@ -125,7 +124,7 @@ df.select { allDfs() }
 df.select { allDfs(includeGroups = true) }
 
 // dfs traversal with condition
-df.select { dfs { it.name.contains(&quot;:&quot;) } }
+df.select { dfs { it.name().contains(&quot;:&quot;) } }
 
 // dfs traversal of columns of given type
 df.select { dfsOf&lt;String&gt;() }
@@ -135,7 +134,7 @@ df.select { except { colsOf&lt;String&gt;() } }
 
 // union of column sets
 df.select { take(2) and col(3) }
-</div><p id="b1d38e0" ><b id="24aa0225" class=""  >Modify the set of selected columns:</b></p><div class="code-block" data-lang="kotlin"          >// first/last n columns in column set
+</div><p id="3da1f776" ><b id="25de1be6" class=""  >Modify the set of selected columns:</b></p><div class="code-block" data-lang="kotlin"      data-anchors="[1d47f5b3]"     >// first/last n columns in column set
 df.select { allDfs().take(3) }
 df.select { allDfs().takeLast(3) }
 
@@ -144,8 +143,11 @@ df.select { allDfs().drop(3) }
 df.select { allDfs().dropLast(3) }
 
 // filter column set by condition
-df.select { allDfs().filter { it.name.startsWith(&quot;year&quot;) } }
+df.select { allDfs().filter { it.name().startsWith(&quot;year&quot;) } }
 
 // exclude columns from column set
 df.select { allDfs().except { age } }
-</div><div class="last-modified"> Last modified: 03 December 2021</div><div data-feedback-placeholder="true"></div><div class="navigation-links _bottom">  <a class="navigation-links__prev" href="datetimecolumns.html">Datetime Columns</a>   <a class="navigation-links__next" href="collectionsinterop.html">Interop with Collections</a>  </div></article>  </div></section></main></div>  <script src="https://resources.jetbrains.com/storage/help-app/v3/app.js"></script>  </body></html>
+
+// keep only unique columns
+df.select { (colsOf&lt;Int&gt;() and age).distinct() }
+</div><div class="last-modified"> Last modified: 19 May 2022</div><div data-feedback-placeholder="true"></div><div class="navigation-links _bottom">   <a class="navigation-links__prev" href="datetimecolumns.html">Datetime Columns</a>   <a class="navigation-links__next" href="collectionsinterop.html">Interop with Collections</a>   </div></article>  </div></section></main></div>  <script src="https://resources.jetbrains.com/storage/help-app/v4/app.js"></script>  </body></html>
