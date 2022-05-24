@@ -42,7 +42,7 @@ On the other hand, `Kotlin dataframe` follows `Koltin Collections` naming for ro
 * [append](append.md) — add rows
 * [concat](concat.md) — union rows from several dataframes
 * [distinct](distinct.md) / [distinctBy](distinct.md#distinctby) — remove duplicated rows
-* [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropWhile](sliceRows.md#dropWhile) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) — remove rows by condition
+* [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropWhile](sliceRows.md#dropwhile) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) — remove rows by condition
 * [duplicate](duplicate.md) — duplicate rows 
 * [explode](explode.md) — spread lists and dataframes vertically into new rows
 * [filter](filter.md) / [filterBy](filter.md#filterby) — filter rows
@@ -51,7 +51,7 @@ On the other hand, `Kotlin dataframe` follows `Koltin Collections` naming for ro
 * [shuffle](shuffle.md) — reorder rows randomly
 * [sortBy](sortBy.md) / [sortByDesc](sortBy.md#sortbydesc) / [sortWith](sortBy.md#sortwith) — sort rows
 * [split](split.md) — split values into new rows
-* [take](sliceRows.md#take) / [takeLast](sliceRows.md#takelast) / [takeWhile](sliceRows.md#takeWhile) — get first/last rows
+* [take](sliceRows.md#take) / [takeLast](sliceRows.md#takelast) / [takeWhile](sliceRows.md#takewhile) — get first/last rows
 
 **Value modification:**
 * [convert](convert.md) — convert values into new types
