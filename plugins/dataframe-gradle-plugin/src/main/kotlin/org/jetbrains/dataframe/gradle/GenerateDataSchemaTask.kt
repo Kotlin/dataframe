@@ -77,7 +77,6 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                     configuration.allDependencies.find { it.group?.equals("org.jetbrains.kotlinx") ?: false && it.name == "dataframe-arrow"  }
                 }
                 .firstOrNull()
-
             if (arrowDependency == null) {
                 project.logger.warn("Add dependency on \"org.jetbrains.kotlinx:dataframe-arrow\" to compile schema ${interfaceName.get()} generated from ${data.get()}")
             }
