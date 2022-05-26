@@ -75,20 +75,8 @@ internal object Allocator {
     }
 }
 
-public enum class ArrowFormat() {
-    /**
-     * [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
-     */
-    IPC,
-
-    /**
-     * [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
-     */
-    FEATHER
-}
-
 /**
- * Read [ArrowFeather.IPC] data from existing [channel]
+ * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [channel]
  */
 public fun readArrowIPC(channel: ReadableByteChannel, allocator: RootAllocator = Allocator.ROOT): AnyFrame {
     ArrowStreamReader(channel, allocator).use { reader ->
@@ -105,7 +93,7 @@ public fun readArrowIPC(channel: ReadableByteChannel, allocator: RootAllocator =
 }
 
 /**
- * Read [ArrowFeather.FEATHER] data from existing [channel]
+ * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [channel]
  */
 public fun readArrowFeather(channel: SeekableByteChannel, allocator: RootAllocator = Allocator.ROOT): AnyFrame {
     ArrowFileReader(channel, allocator).use { reader ->
@@ -216,12 +204,24 @@ private fun readField(root: VectorSchemaRoot, field: Field): AnyBaseColumn {
 
 // IPC reading block
 
+/**
+ * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [file]
+ */
 public fun DataFrame.Companion.readArrowIPC(file: File): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowIPC(it) }
 
+/**
+ * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [byteArray]
+ */
 public fun DataFrame.Companion.readArrowIPC(byteArray: ByteArray): AnyFrame = SeekableInMemoryByteChannel(byteArray).use { readArrowIPC(it) }
 
+/**
+ * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [stream]
+ */
 public fun DataFrame.Companion.readArrowIPC(stream: InputStream): AnyFrame = Channels.newChannel(stream).use { readArrowIPC(it) }
 
+/**
+ * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [url]
+ */
 public fun DataFrame.Companion.readArrowIPC(url: URL): AnyFrame =
     when {
         isFile(url) -> readArrowIPC(urlAsFile(url))
@@ -239,12 +239,24 @@ public fun DataFrame.Companion.readArrowIPC(path: String): AnyFrame = if (isURL(
 
 // Feather reading block
 
+/**
+ * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [file]
+ */
 public fun DataFrame.Companion.readArrowFeather(file: File): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowFeather(it) }
 
+/**
+ * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [byteArray]
+ */
 public fun DataFrame.Companion.readArrowFeather(byteArray: ByteArray): AnyFrame = SeekableInMemoryByteChannel(byteArray).use { readArrowFeather(it) }
 
+/**
+ * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [stream]
+ */
 public fun DataFrame.Companion.readArrowFeather(stream: InputStream): AnyFrame = readArrowFeather(stream.readAllBytes())
 
+/**
+ * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [url]
+ */
 public fun DataFrame.Companion.readArrowFeather(url: URL): AnyFrame =
     when {
         isFile(url) -> readArrowFeather(urlAsFile(url))
@@ -254,6 +266,9 @@ public fun DataFrame.Companion.readArrowFeather(url: URL): AnyFrame =
         }
     }
 
+/**
+ * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [path]
+ */
 public fun DataFrame.Companion.readArrowFeather(path: String): AnyFrame = if (isURL(path)) {
     readArrowFeather(URL(path))
 } else {
