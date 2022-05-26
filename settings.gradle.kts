@@ -9,9 +9,10 @@ include("plugins:symbol-processor")
 include("tests")
 include("dataframe-arrow")
 
-//include("examples:idea-examples:titanic")
-//include("examples:idea-examples:movies")
-//include("examples:idea-examples:youtube")
+include("examples:idea-examples:titanic")
+include("examples:idea-examples:movies")
+// TODO: replace url in ImportDataSchema with a sample of response from youtube api
+// include("examples:idea-examples:youtube")
 
 val jupyterApiTCRepo: String by settings
 
