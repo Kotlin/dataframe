@@ -12,6 +12,8 @@ import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
+import org.apache.poi.util.LocaleUtil
+import org.apache.poi.util.LocaleUtil.getUserTimeZone
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -29,7 +31,8 @@ import java.io.OutputStream
 import java.net.URL
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 public class Excel : SupportedFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readExcel(stream)
@@ -215,8 +218,10 @@ public fun <T> DataFrame<T>.writeExcel(
     val createHelper = wb.creationHelper
     val cellStyleDate = wb.createCellStyle()
     val cellStyleDateTime = wb.createCellStyle()
+    val cellStyleTime = wb.createCellStyle()
     cellStyleDate.dataFormat = createHelper.createDataFormat().getFormat("dd.mm.yyyy")
     cellStyleDateTime.dataFormat = createHelper.createDataFormat().getFormat("dd.mm.yyyy hh:mm:ss")
+    cellStyleTime.dataFormat = createHelper.createDataFormat().getFormat("hh:mm:ss")
 
     columns.forEachRow {
         val row = sheet.createRow(i)
@@ -232,8 +237,22 @@ public fun <T> DataFrame<T>.writeExcel(
                     is LocalDate, is kotlinx.datetime.LocalDate -> {
                         cell.cellStyle = cellStyleDate
                     }
-                    is LocalDateTime, is kotlinx.datetime.LocalDateTime, is Calendar, is Date -> {
+                    is Calendar, is Date -> {
                         cell.cellStyle = cellStyleDateTime
+                    }
+                    is LocalDateTime -> {
+                        if (any.year < 1900) {
+                            cell.cellStyle = cellStyleTime
+                        } else {
+                            cell.cellStyle = cellStyleDateTime
+                        }
+                    }
+                    is kotlinx.datetime.LocalDateTime -> {
+                        if (any.year < 1900) {
+                            cell.cellStyle = cellStyleTime
+                        } else {
+                            cell.cellStyle = cellStyleDateTime
+                        }
                     }
                     else -> {}
                 }
@@ -259,16 +278,16 @@ private fun Cell.setCellValueByGuessedType(any: Any) {
             this.setCellValue(any)
         }
         is LocalDateTime -> {
-            this.setCellValue(any)
+            this.setTime(any)
         }
         is Boolean -> {
             this.setCellValue(any)
         }
         is Calendar -> {
-            this.setCellValue(any.time)
+            this.setDate(any.time)
         }
         is Date -> {
-            this.setCellValue(any)
+            this.setDate(any)
         }
         is RichTextString -> {
             this.setCellValue(any)
@@ -280,7 +299,7 @@ private fun Cell.setCellValueByGuessedType(any: Any) {
             this.setCellValue(any.toJavaLocalDate())
         }
         is kotlinx.datetime.LocalDateTime -> {
-            this.setCellValue(any.toJavaLocalDateTime())
+            this.setTime(any.toJavaLocalDateTime())
         }
         // Another option would be to serialize everything else to string,
         // but people can convert columns to string with any serialization framework they want
@@ -289,4 +308,26 @@ private fun Cell.setCellValueByGuessedType(any: Any) {
             this.setCellValue(any.toString())
         }
     }
+}
+
+/**
+ * Set LocalDateTime value correctly also if date have zero value in Excel.
+ * Zero date is usually used fore storing time component only,
+ * is displayed as 00.01.1900 in Excel and as 30.12.1899 in LibreOffice Calc and also in POI.
+ * POI can not set 1899 year directly.
+ */
+private fun Cell.setTime(localDateTime: LocalDateTime) {
+    this.setCellValue(DateUtil.getExcelDate(localDateTime.plusDays(1)) - 1.0)
+}
+
+/**
+ * Set Date value correctly also if date have zero value in Excel.
+ * Zero date is usually used fore storing time component only,
+ * is displayed as 00.01.1900 in Excel and as 30.12.1899 in LibreOffice Calc and also in POI.
+ * POI can not set 1899 year directly.
+ */
+private fun Cell.setDate(date: Date) {
+    val calStart = LocaleUtil.getLocaleCalendar()
+    calStart.time = date
+    this.setTime(calStart.toInstant().atZone(getUserTimeZone().toZoneId()).toLocalDateTime())
 }
