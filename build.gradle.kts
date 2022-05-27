@@ -64,6 +64,7 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.withType<KotlinCompile> {
+    dependsOn(tasks.lintKotlin)
     kotlinOptions {
         freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn")
     }
