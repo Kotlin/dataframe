@@ -1,12 +1,29 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadTsvMethod
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStream
 import java.net.URL
 import java.nio.charset.Charset
+
+public class TSV : SupportedFormat {
+    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readTSV(stream, header = header)
+
+    override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readTSV(file, header = header)
+
+    override fun acceptsExtension(ext: String): Boolean = ext == "tsv"
+
+    override val testOrder: Int = 30000
+
+    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
+        return DefaultReadTsvMethod(pathRepresentation)
+    }
+}
 
 private val tabChar = '\t'
 

@@ -1,5 +1,6 @@
 package org.jetbrains.dataframe.gradle
 
+import io.kotest.assertions.asClue
 import io.kotest.inspectors.forOne
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
@@ -328,15 +329,17 @@ internal class SchemaGeneratorPluginTest {
             """.trimIndent()
         }
         result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
-        File(buildDir, "build/generated/dataframe/main/kotlin/org/test/Test.Generated.kt").readLines().let {
-            it.forOne {
-                it.shouldContain("val a")
-            }
-            it.forOne {
-                it.shouldContain("val b")
-            }
-            it.forOne {
-                it.shouldContain("val c")
+        File(buildDir, "build/generated/dataframe/main/kotlin/org/test/Test.Generated.kt").asClue {
+            it.readLines().let {
+                it.forOne {
+                    it.shouldContain("val a")
+                }
+                it.forOne {
+                    it.shouldContain("val b")
+                }
+                it.forOne {
+                    it.shouldContain("val c")
+                }
             }
         }
     }

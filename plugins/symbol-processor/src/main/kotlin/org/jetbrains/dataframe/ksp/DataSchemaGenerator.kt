@@ -7,16 +7,21 @@ import com.google.devtools.ksp.processing.KSPLogger
 import com.google.devtools.ksp.processing.Resolver
 import com.google.devtools.ksp.symbol.KSFile
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
+import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchemaVisibility
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchemaByAbsolutePath
-import org.jetbrains.kotlinx.dataframe.codeGen.CsvOptions
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.DfReadResult
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlReader
+import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
+import org.jetbrains.kotlinx.dataframe.io.CSV
+import org.jetbrains.kotlinx.dataframe.io.Excel
+import org.jetbrains.kotlinx.dataframe.io.JSON
+import org.jetbrains.kotlinx.dataframe.io.TSV
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
@@ -92,7 +97,7 @@ class DataSchemaGenerator(
             visibility.toMarkerVisibility(),
             normalizationDelimiters.toList(),
             withDefaultPath,
-            CsvOptions(csvOptions.delimiter)
+            csvOptions
         )
     }
 
@@ -111,7 +116,7 @@ class DataSchemaGenerator(
             visibility.toMarkerVisibility(),
             normalizationDelimiters.toList(),
             withDefaultPath,
-            CsvOptions(csvOptions.delimiter)
+            csvOptions
         )
     }
 
@@ -133,11 +138,18 @@ class DataSchemaGenerator(
     fun generateDataSchema(importStatement: ImportDataSchemaStatement) {
         val packageName = importStatement.origin.packageName.asString()
         val name = importStatement.name
-        val csvOptions = CsvOptions(importStatement.csvOptions.delimiter)
         val schemaFile =
             codeGenerator.createNewFile(Dependencies(true, importStatement.origin), packageName, "$name.Generated")
 
-        val parsedDf = when (val readResult = CodeGenerator.urlReader(importStatement.dataSource.data, csvOptions)) {
+        val formats = listOf(
+            CSV(delimiter = importStatement.csvOptions.delimiter),
+            JSON(),
+            Excel(),
+            TSV(),
+            ArrowFeather()
+        )
+
+        val parsedDf = when (val readResult = CodeGenerator.urlReader(importStatement.dataSource.data, formats)) {
             is DfReadResult.Success -> readResult
             is DfReadResult.Error -> {
                 logger.error("Error while reading dataframe from data at ${importStatement.dataSource.pathRepresentation}: ${readResult.reason}")
@@ -145,6 +157,9 @@ class DataSchemaGenerator(
             }
         }
         val codeGenerator = CodeGenerator.create(useFqNames = false)
+
+        val readDfMethod =
+            parsedDf.getReadDfMethod(importStatement.dataSource.pathRepresentation.takeIf { importStatement.withDefaultPath })
         val codeGenResult = codeGenerator.generate(
             parsedDf.schema,
             name,
@@ -153,10 +168,10 @@ class DataSchemaGenerator(
             isOpen = true,
             importStatement.visibility,
             emptyList(),
-            parsedDf.getReadDfMethod(importStatement.dataSource.pathRepresentation.takeIf { importStatement.withDefaultPath }),
+            readDfMethod,
             NameNormalizer.from(importStatement.normalizationDelimiters.toSet())
         )
-        val code = codeGenResult.toStandaloneSnippet(packageName)
+        val code = codeGenResult.toStandaloneSnippet(packageName, readDfMethod.additionalImports)
         schemaFile.bufferedWriter().use {
             it.write(code)
         }
