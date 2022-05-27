@@ -3,13 +3,13 @@ plugins {
     id("org.jetbrains.kotlin.libs.publisher")
 }
 
-group = "org.jetbrains.kotlinx.dataframe"
-
 repositories {
-    // Required for integrationTest
-    mavenLocal()
     mavenCentral()
+    maven { url="https://jitpack.io" }
+    maven { url "https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven" }
 }
+
+group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
     implementation(project(":"))
