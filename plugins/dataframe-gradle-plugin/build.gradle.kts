@@ -13,6 +13,23 @@ repositories {
 
 group = "org.jetbrains.kotlin"
 
+dependencies {
+    implementation(project(":"))
+    implementation(project(":dataframe-arrow"))
+    implementation(kotlin("gradle-plugin-api"))
+    implementation(kotlin("gradle-plugin"))
+    implementation("com.beust:klaxon:5.5")
+    implementation(libs.ksp.gradle)
+    implementation(libs.ksp.api)
+
+    testImplementation("junit:junit:4.12")
+    testImplementation("io.kotest:kotest-assertions-core:4.6.0")
+    testImplementation("com.android.tools.build:gradle-api:4.1.1")
+    testImplementation("com.android.tools.build:gradle:4.1.1")
+    testImplementation("io.ktor:ktor-server-netty:1.6.7")
+    testImplementation(gradleApi())
+}
+
 tasks.withType<ProcessResources> {
     filesMatching("**/plugin.properties") {
         filter {
@@ -69,22 +86,6 @@ tasks.withType<JavaCompile>().all {
     targetCompatibility = JavaVersion.VERSION_1_8.toString()
 }
 
-dependencies {
-    implementation(project(":"))
-    implementation(kotlin("gradle-plugin-api"))
-    implementation(kotlin("gradle-plugin"))
-    implementation("com.beust:klaxon:5.5")
-    implementation(libs.ksp.gradle)
-    implementation(libs.ksp.api)
-
-    testImplementation("junit:junit:4.12")
-    testImplementation("io.kotest:kotest-assertions-core:4.6.0")
-    testImplementation("com.android.tools.build:gradle-api:4.1.1")
-    testImplementation("com.android.tools.build:gradle:4.1.1")
-    testImplementation("io.ktor:ktor-server-netty:1.6.7")
-    testImplementation(gradleApi())
-}
-
 sourceSets {
     create("integrationTest") {
         withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
@@ -103,7 +104,9 @@ val integrationTestConfiguration by configurations.creating {
 
 val integrationTestTask = task<Test>("integrationTest") {
     dependsOn(":plugins:symbol-processor:publishToMavenLocal")
+    dependsOn(":dataframe-arrow:publishToMavenLocal")
     dependsOn(":publishApiPublicationToMavenLocal")
+    dependsOn(":dataframe-arrow:publishDataframeArrowPublicationToMavenLocal")
     description = "Runs integration tests."
     group = "verification"
 

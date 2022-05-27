@@ -13,6 +13,7 @@ group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
     implementation(project(":"))
+    implementation(project(":dataframe-arrow"))
     implementation(libs.ksp.api)
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.4.4")

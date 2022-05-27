@@ -9,6 +9,7 @@ dataframe = "0.8.0-dev-939"
 korro = "0.1.1-dev-29"
 
 commonsCsv = "1.8"
+commonsCompress = "1.21"
 klaxon = "5.5"
 fuel = "2.3.1"
 poi = "5.2.0"
@@ -17,7 +18,7 @@ kotlinDatetime = "0.3.1"
 junit = "4.13.2"
 kotestAsserions = "4.6.3"
 jsoup = "1.14.3"
-arrow = "7.0.0"
+arrow = "8.0.0"
 
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
@@ -30,6 +31,7 @@ kotlin-stdlib-jdk8 = { group = "org.jetbrains.kotlin", name = "kotlin-stdlib-jdk
 kotlin-reflect = { group = "org.jetbrains.kotlin", name = "kotlin-reflect", version.ref = "kotlin" }
 kotlin-scriptingJvm = { group = "org.jetbrains.kotlin", name = "kotlin-scripting-jvm", version.ref = "kotlin" }
 commonsCsv = { module = "org.apache.commons:commons-csv", version.ref = "commonsCsv" }
+commonsCompress = { module = "org.apache.commons:commons-compress", version.ref = "commonsCompress" }
 klaxon = { module = "com.beust:klaxon", version.ref = "klaxon" }
 fuel = { module = "com.github.kittinunf.fuel:fuel", version.ref = "fuel" }
 poi = { module = "org.apache.poi:poi", version.ref = "poi" }

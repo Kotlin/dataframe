@@ -44,10 +44,7 @@ dependencies {
     implementation(libs.poi.ooxml)
 
     implementation(libs.kotlin.datetimeJvm)
-
-    implementation(libs.arrow.vector)
-    implementation(libs.arrow.format)
-    implementation(libs.arrow.memory)
+    implementation("com.squareup:kotlinpoet:1.11.0")
 
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
@@ -67,6 +64,7 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.withType<KotlinCompile> {
+    dependsOn(tasks.lintKotlin)
     kotlinOptions {
         freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn")
     }

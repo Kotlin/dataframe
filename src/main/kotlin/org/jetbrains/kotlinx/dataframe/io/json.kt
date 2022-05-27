@@ -21,6 +21,8 @@ import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.splitInto
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -38,6 +40,20 @@ import java.net.URL
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
 import kotlin.reflect.typeOf
+
+public class JSON : SupportedFormat {
+    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readJson(stream, header = header)
+
+    override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readJson(file, header = header)
+
+    override fun acceptsExtension(ext: String): Boolean = ext == "json"
+
+    override val testOrder: Int = 10000
+
+    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
+        return DefaultReadJsonMethod(pathRepresentation)
+    }
+}
 
 public fun DataFrame.Companion.readJson(file: File, header: List<String> = emptyList()): AnyFrame = readJson(file.toURI().toURL(), header)
 public fun DataRow.Companion.readJson(file: File, header: List<String> = emptyList()): AnyRow = DataFrame.readJson(file, header).single()

@@ -1,75 +1,73 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.asTypeName
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.single
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.InputStream
 import java.net.URL
+import java.util.ServiceLoader
+import kotlin.reflect.KType
 
-public enum class SupportedFormats {
-    CSV {
-        override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readCSV(stream, header = header)
+public interface SupportedFormat {
+    public fun readDataFrame(stream: InputStream, header: List<String> = emptyList()): AnyFrame
 
-        override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readCSV(file, header = header)
+    public fun readDataFrame(file: File, header: List<String> = emptyList()): AnyFrame
 
-        override fun acceptsExtension(ext: String): Boolean = ext == "csv"
-    },
-    TSV {
-        override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readTSV(stream, header = header)
+    public fun acceptsExtension(ext: String): Boolean
 
-        override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readTSV(file, header = header)
+    // `DataFrame.Companion.read` methods uses this to sort list of all supported formats in ascending order (-1, 2, 10)
+    // sorted list is used to test if any format can read given input
+    public val testOrder: Int
 
-        override fun acceptsExtension(ext: String): Boolean = ext == "tsv"
-    },
-    JSON {
-        override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readJson(stream, header = header)
-
-        override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readJson(file, header = header)
-
-        override fun acceptsExtension(ext: String): Boolean = ext == "json"
-    },
-    ARROW {
-        override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readArrow(stream)
-
-        override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readArrow(file)
-
-        override fun acceptsExtension(ext: String): Boolean = ext == "feather"
-    },
-    EXCEL {
-        override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readExcel(stream)
-
-        override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readExcel(file)
-
-        override fun acceptsExtension(ext: String): Boolean = ext == "xls" || ext == "xlsx"
-    };
-
-    public abstract fun readDataFrame(stream: InputStream, header: List<String> = emptyList()): AnyFrame
-
-    public abstract fun readDataFrame(file: File, header: List<String> = emptyList()): AnyFrame
-
-    internal abstract fun acceptsExtension(ext: String): Boolean
+    public fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod
 }
 
-private val testOrder get() = listOf(
-    SupportedFormats.JSON,
-    SupportedFormats.CSV,
-    SupportedFormats.TSV,
-    SupportedFormats.EXCEL,
-    SupportedFormats.ARROW,
-)
+public class MethodArguments {
+    internal val defaultValues = mutableListOf<Argument>()
 
-internal fun guessFormatForExtension(ext: String) = SupportedFormats.values().firstOrNull { it.acceptsExtension(ext) }
+    public fun add(name: String, type: KType, initializerTemplate: String, vararg values: Any?): MethodArguments {
+        val capitalizedName = name.replaceFirstChar { it.uppercaseChar() }
+        val propertyName = "default$capitalizedName"
 
-internal fun guessFormat(file: File): SupportedFormats? = file.extension.lowercase().let { guessFormatForExtension(it) }
+        val property = PropertySpec
+            .builder(propertyName, type.asTypeName())
+            .initializer(initializerTemplate, args = values)
+            .build()
 
-internal fun guessFormat(url: URL): SupportedFormats? = guessFormat(url.path)
+        defaultValues += Argument(name, property)
+        return this
+    }
 
-internal fun guessFormat(url: String): SupportedFormats? = guessFormatForExtension(url.substringAfterLast("."))
+    internal class Argument(val name: String, val property: PropertySpec)
+
+    public companion object {
+        public val EMPTY: MethodArguments get() = MethodArguments()
+    }
+}
+
+internal val supportedFormats: List<SupportedFormat> by lazy {
+    ServiceLoader.load(SupportedFormat::class.java).toList()
+}
+
+internal fun guessFormatForExtension(ext: String, formats: List<SupportedFormat> = supportedFormats) =
+    formats.firstOrNull { it.acceptsExtension(ext) }
+
+internal fun guessFormat(file: File, formats: List<SupportedFormat> = supportedFormats): SupportedFormat? =
+    file.extension.lowercase().let { guessFormatForExtension(it, formats) }
+
+internal fun guessFormat(url: URL, formats: List<SupportedFormat> = supportedFormats): SupportedFormat? =
+    guessFormat(url.path, formats)
+
+internal fun guessFormat(url: String, formats: List<SupportedFormat> = supportedFormats): SupportedFormat? =
+    guessFormatForExtension(url.substringAfterLast("."), formats)
 
 private class NotCloseableStream(val src: InputStream) : InputStream() {
     override fun read(): Int = src.read()
@@ -84,19 +82,20 @@ private class NotCloseableStream(val src: InputStream) : InputStream() {
 
 internal fun DataFrame.Companion.read(
     stream: InputStream,
-    format: SupportedFormats? = null,
-    header: List<String> = emptyList()
-): AnyFrame {
-    if (format != null) return format.readDataFrame(stream, header = header)
+    format: SupportedFormat? = null,
+    header: List<String> = emptyList(),
+    formats: List<SupportedFormat> = supportedFormats
+): ReadAnyFrame {
+    if (format != null) return format to format.readDataFrame(stream, header = header)
     val input = NotCloseableStream(if (stream.markSupported()) stream else BufferedInputStream(stream))
     try {
         val readLimit = 10000
         input.mark(readLimit)
 
-        testOrder.forEach {
+        formats.sortedBy { it.testOrder }.forEach {
             try {
                 input.reset()
-                return it.readDataFrame(input, header = header)
+                return it to it.readDataFrame(input, header = header)
             } catch (e: Exception) {
             }
         }
@@ -108,31 +107,46 @@ internal fun DataFrame.Companion.read(
 
 internal fun DataFrame.Companion.read(
     file: File,
-    format: SupportedFormats? = null,
-    header: List<String> = emptyList()
-): AnyFrame {
-    if (format != null) return format.readDataFrame(file, header = header)
-    testOrder.forEach {
+    format: SupportedFormat? = null,
+    header: List<String> = emptyList(),
+    formats: List<SupportedFormat> = supportedFormats
+): ReadAnyFrame {
+    if (format != null) return format to format.readDataFrame(file, header = header)
+    formats.sortedBy { it.testOrder }.forEach {
         try {
-            return it.readDataFrame(file, header = header)
-        } catch (e: FileNotFoundException) { throw e } catch (e: Exception) { }
+            return it to it.readDataFrame(file, header = header)
+        } catch (e: FileNotFoundException) {
+            throw e
+        } catch (e: Exception) {
+        }
     }
     throw IllegalArgumentException("Unknown file format")
 }
 
-public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame = read(file, guessFormat(file), header)
-public fun DataRow.Companion.read(file: File, header: List<String> = emptyList()): AnyRow = DataFrame.read(file, header).single()
+internal data class ReadAnyFrame(val format: SupportedFormat, val df: AnyFrame)
+
+internal infix fun SupportedFormat.to(df: AnyFrame) = ReadAnyFrame(this, df)
+
+public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame =
+    read(file, guessFormat(file), header).df
+
+public fun DataRow.Companion.read(file: File, header: List<String> = emptyList()): AnyRow =
+    DataFrame.read(file, header).single()
 
 public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()): AnyFrame = when {
     isFile(url) -> read(urlAsFile(url), header)
-    isProtocolSupported(url) -> catchHttpResponse(url) { read(it, guessFormat(url), header) }
+    isProtocolSupported(url) -> catchHttpResponse(url) { read(it, guessFormat(url), header).df }
     else -> throw IllegalArgumentException("Invalid protocol for url $url")
 }
 
-public fun DataRow.Companion.read(url: URL, header: List<String> = emptyList()): AnyRow = DataFrame.read(url, header).single()
+public fun DataRow.Companion.read(url: URL, header: List<String> = emptyList()): AnyRow =
+    DataFrame.read(url, header).single()
 
-public fun DataFrame.Companion.read(path: String, header: List<String> = emptyList()): AnyFrame = read(asURL(path), header)
-public fun DataRow.Companion.read(path: String, header: List<String> = emptyList()): AnyRow = DataFrame.read(path, header).single()
+public fun DataFrame.Companion.read(path: String, header: List<String> = emptyList()): AnyFrame =
+    read(asURL(path), header)
+
+public fun DataRow.Companion.read(path: String, header: List<String> = emptyList()): AnyRow =
+    DataFrame.read(path, header).single()
 
 public fun URL.readDataFrame(header: List<String> = emptyList()): AnyFrame = DataFrame.read(this, header)
 public fun URL.readDataRow(header: List<String> = emptyList()): AnyRow = DataRow.read(this, header)
