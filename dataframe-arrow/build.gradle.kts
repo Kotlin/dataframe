@@ -22,7 +22,7 @@ dependencies {
 
 kotlinPublications {
     publication {
-        publicationName.set("dataframe-arrow")
+        publicationName.set("dataframeArrow")
         artifactId.set(project.name)
         description.set("Apache Arrow support for Kotlin Dataframe")
         packageName.set(artifactId)
