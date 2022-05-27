@@ -104,7 +104,9 @@ val integrationTestConfiguration by configurations.creating {
 
 val integrationTestTask = task<Test>("integrationTest") {
     dependsOn(":plugins:symbol-processor:publishToMavenLocal")
+    dependsOn(":dataframe-arrow:publishToMavenLocal")
     dependsOn(":publishApiPublicationToMavenLocal")
+    dependsOn(":dataframe-arrow:publishDataframeArrowPublicationToMavenLocal")
     description = "Runs integration tests."
     group = "verification"
 
