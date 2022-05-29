@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.explodeLists
+import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.forEachColumn
@@ -181,7 +182,7 @@ class PivotTests {
     @Test
     fun `pivot two values`() {
         val pivoted = typed.pivot(inward = false) { key }.groupBy { name }
-            .values { value and "str" { value?.toString() } default "-" }
+            .values { value and (expr { value?.toString() } into "str") default "-" }
 
         val expected = defaultExpected.replace("age", "city", "weight").with {
             columnOf(
