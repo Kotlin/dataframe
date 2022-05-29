@@ -1055,7 +1055,6 @@ class DataFrameTests : BaseTest() {
     fun `select with rename`() {
         val expected = typed.select { name and age }.rename { all() }.into { it.name + 2 }
         typed.select { name into "name2" and age.into("age2") } shouldBe expected
-        df.select { name("name2") and age("age2") } shouldBe expected
     }
 
     @Test
