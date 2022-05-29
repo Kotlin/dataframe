@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
@@ -34,6 +35,12 @@ import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
+
+    public operator fun <C> ColumnReference<C>.invoke(): DataColumn<C> = get(this)
+
+    public operator fun <T> ColumnReference<DataRow<T>>.invoke(): ColumnGroup<T> = get(this)
+
+    public operator fun <T> ColumnReference<DataFrame<T>>.invoke(): FrameColumn<T> = get(this)
 
     public operator fun <C> ColumnPath.invoke(): DataColumn<C> = getColumn(this).cast()
 

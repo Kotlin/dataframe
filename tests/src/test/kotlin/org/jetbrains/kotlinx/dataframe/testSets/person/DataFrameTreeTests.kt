@@ -37,6 +37,7 @@ import org.jetbrains.kotlinx.dataframe.api.duplicate
 import org.jetbrains.kotlinx.dataframe.api.duplicateRows
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.explode
+import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.forEachRow
@@ -61,6 +62,8 @@ import org.jetbrains.kotlinx.dataframe.api.join
 import org.jetbrains.kotlinx.dataframe.api.last
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.max
+import org.jetbrains.kotlinx.dataframe.api.maxBy
+import org.jetbrains.kotlinx.dataframe.api.median
 import org.jetbrains.kotlinx.dataframe.api.minus
 import org.jetbrains.kotlinx.dataframe.api.move
 import org.jetbrains.kotlinx.dataframe.api.moveTo
@@ -73,6 +76,7 @@ import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rename
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.sortBy
 import org.jetbrains.kotlinx.dataframe.api.split
 import org.jetbrains.kotlinx.dataframe.api.sumOf
@@ -703,5 +707,23 @@ class DataFrameTreeTests : BaseTest() {
         typed2.duplicateRows(2) shouldBe typed2.addId("id").let {
             it.concat(it).sortBy("id").remove("id")
         }
+    }
+
+    @Test
+    fun `select column group`() {
+        typed2.aggregate {
+            nameAndCity()[2..3].name.distinct().single() into "name"
+        }["name"] shouldBe "Charlie"
+    }
+
+    @Test
+    fun `select frame column`() {
+        val group by frameColumn<GroupedPerson>()
+
+        typed2
+            .groupBy { expr { age > 30 } into "isOld" }.into(group)
+            .aggregate {
+                group().maxBy { rowsCount() }.weight.median() into "m"
+            }["m"] shouldBe 61
     }
 }
