@@ -112,7 +112,11 @@ class BasicTests {
     @Test
     fun `calculate sum of all visits`() {
         df[visits].sum() shouldBe 19
-        df[ { "visits"<Int>() }].sum() shouldBe 19
+        df.sum { visits } shouldBe 19
+
+        df["visits"].cast<Int>().sum() shouldBe 19
+        df.sum { "visits"<Int>() } shouldBe 19
+        df.sum("visits") shouldBe 19
     }
 
     @Test
