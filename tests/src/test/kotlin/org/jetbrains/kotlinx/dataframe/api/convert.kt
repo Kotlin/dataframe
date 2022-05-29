@@ -33,4 +33,11 @@ class ConvertTests {
         val df = listOf(Schema(Clock.System.now())).toDataFrame()
         df.convert { time }.toLocalDateTime()
     }
+
+    enum class Value { A, B }
+
+    @Test
+    fun `convert string to enum`() {
+        columnOf("A", "B").convertTo<Value>() shouldBe columnOf(Value.A, Value.B)
+    }
 }
