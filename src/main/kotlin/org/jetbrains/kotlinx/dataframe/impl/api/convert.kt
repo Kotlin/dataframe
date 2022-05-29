@@ -105,6 +105,8 @@ internal fun Any.convertTo(type: KType): Any? {
 
 internal inline fun <T> convert(crossinline converter: (T) -> Any?): TypeConverter = { converter(it as T) }
 
+private enum class DummyEnum
+
 internal fun createConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? {
     if (from.arguments.isNotEmpty() || to.arguments.isNotEmpty()) return null
     if (from.isMarkedNullable) {
@@ -117,7 +119,11 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
     if (fromClass == toClass) return { it }
 
     return when {
-        fromClass == String::class -> Parsers[to.withNullability(false)]?.toConverter(options)
+        fromClass == String::class -> {
+            Parsers[to.withNullability(false)]?.toConverter(options)
+                ?: if (toClass.isSubclassOf(Enum::class)) convert<String> { java.lang.Enum.valueOf(toClass.java as Class<DummyEnum>, it) }
+                else null
+        }
         toClass == String::class -> convert<Any> { it.toString() }
         else -> when (fromClass) {
             Boolean::class -> when (toClass) {

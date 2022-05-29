@@ -74,6 +74,18 @@ class Modify : TestBase() {
         // SampleEnd
     }
 
+    enum class Direction {
+        NORTH, SOUTH, WEST, EAST
+    }
+
+    @Test
+    fun convertToEnum() {
+        // SampleStart
+        dataFrameOf("direction")("NORTH", "WEST")
+            .convert("direction").to<Direction>()
+        // SampleEnd
+    }
+
     @Test
     fun parseAll() {
         // SampleStart

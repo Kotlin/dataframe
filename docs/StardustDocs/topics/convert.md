@@ -34,6 +34,7 @@ df.convert { dfsOf<String>() }.with { it.toCharArray().toList() }
 * `LocalDateTime`
 * `LocalDate`
 * `LocalTime`
+* `Duration`
 
 <!---FUN convertTo-->
 
@@ -42,6 +43,21 @@ df.convert { age }.to<Double>()
 df.convert { colsOf<Number>() }.to<String>()
 df.convert { name.firstName and name.lastName }.to { it.length() }
 df.convert { weight }.toFloat()
+```
+
+<!---END-->
+
+Automatic conversion from `String` into enum class is also supported:
+
+```kotlin
+enum class Direction { NORTH, SOUTH, WEST, EAST }
+```
+
+<!---FUN convertToEnum-->
+
+```kotlin
+dataFrameOf("direction")("NORTH", "WEST")
+   .convert("direction").to<Direction>()
 ```
 
 <!---END-->
