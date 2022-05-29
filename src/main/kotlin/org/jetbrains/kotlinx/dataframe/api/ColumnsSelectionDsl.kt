@@ -17,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columnName
-import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.DistinctColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExcept
@@ -36,19 +35,11 @@ import kotlin.reflect.typeOf
 
 public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
-    public operator fun <C> ColumnReference<C>.invoke(): DataColumn<C> = get(this)
-
-    public operator fun <T> ColumnReference<DataRow<T>>.invoke(): ColumnGroup<T> = get(this)
-
-    public operator fun <C> ColumnReference<C>.invoke(newName: String): ColumnReference<C> = renamedReference(newName)
-
     public operator fun <C> ColumnPath.invoke(): DataColumn<C> = getColumn(this).cast()
 
     public operator fun <C> String.invoke(): DataColumn<C> = getColumn(this).cast()
 
     public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
-
-    public fun <C> String.cast(): ColumnAccessor<C> = ColumnAccessorImpl(this)
 }
 
 public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColumn<DataRow<T>> {

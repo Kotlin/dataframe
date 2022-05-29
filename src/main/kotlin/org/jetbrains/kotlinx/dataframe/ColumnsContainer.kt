@@ -16,7 +16,7 @@ import kotlin.reflect.KProperty
 /**
  * Provides access to [columns][DataColumn].
  *
- * Base interface for [DataFrame] and [column selection DSLs][ColumnSelectionDsl]
+ * Base interface for [DataFrame] and [ColumnSelectionDsl]
  *
  * @param T Schema marker. Used to generate extension properties for typed column access.
  */

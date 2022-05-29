@@ -451,7 +451,7 @@ class DataFrameTests : BaseTest() {
 
         df.sortBy { Person::name and Person::age.desc() }.check()
 
-        df.sortBy { "name".cast<String>() and "age".desc() }.check()
+        df.sortBy { "name"<String>() and "age".desc() }.check()
     }
 
     @Test

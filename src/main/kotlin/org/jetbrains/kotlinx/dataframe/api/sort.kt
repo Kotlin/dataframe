@@ -23,13 +23,13 @@ import kotlin.reflect.KProperty
 public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
 
     public fun <C> ColumnSet<C>.desc(): ColumnSet<C> = addFlag(SortFlag.Reversed)
-    public fun String.desc(): ColumnSet<Comparable<*>?> = cast<Comparable<*>>().desc()
+    public fun String.desc(): ColumnSet<Comparable<*>?> = invoke<Comparable<*>>().desc()
     public fun <C> KProperty<C>.desc(): ColumnSet<C> = toColumnAccessor().desc()
 
     public fun <C> ColumnSet<C?>.nullsLast(flag: Boolean = true): ColumnSet<C?> =
         if (flag) addFlag(SortFlag.NullsLast) else this
 
-    public fun String.nullsLast(flag: Boolean = true): ColumnSet<Comparable<*>?> = cast<Comparable<*>>().nullsLast(flag)
+    public fun String.nullsLast(flag: Boolean = true): ColumnSet<Comparable<*>?> = invoke<Comparable<*>>().nullsLast(flag)
     public fun <C> KProperty<C?>.nullsLast(flag: Boolean = true): ColumnSet<C?> = toColumnAccessor().nullsLast(flag)
 }
 
