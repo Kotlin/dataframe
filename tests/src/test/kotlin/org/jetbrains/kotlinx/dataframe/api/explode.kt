@@ -28,4 +28,10 @@ class ExplodeTests {
             1, 3, 6, 7, null
         )
     }
+
+    @Test
+    fun `explode nothing`() {
+        val df = dataFrameOf("a", "b")(1, 2)
+        df.explode() shouldBe df
+    }
 }

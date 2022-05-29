@@ -33,6 +33,7 @@ internal fun AnyCol.explodeImpl(): AnyCol = dataFrameOf(this).explodeImpl(true) 
 
 internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: ColumnsSelector<T, *>): DataFrame<T> {
     val columns = getColumnsWithPaths(columns)
+    if (columns.isEmpty()) return this
 
     val rowExpandSizes = indices.map { row ->
         columns.maxOf {
