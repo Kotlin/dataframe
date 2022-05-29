@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.Predicate
-import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -25,7 +24,6 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExcept
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.getChildrenAt
-import org.jetbrains.kotlinx.dataframe.impl.columns.newColumnWithActualType
 import org.jetbrains.kotlinx.dataframe.impl.columns.single
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.columns.top
@@ -329,12 +327,6 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     // endregion
 
     public fun <C> ColumnSet<C>.distinct(): ColumnSet<C> = DistinctColumnSet(this)
-
-    public operator fun <C> String.invoke(newColumnExpression: RowExpression<T, C>): DataColumn<C> =
-        newColumnWithActualType(this, newColumnExpression)
-
-    public infix fun <C> String.by(newColumnExpression: RowExpression<T, C>): DataColumn<C> =
-        newColumnWithActualType(this, newColumnExpression)
 }
 
 public inline fun <T, reified R> ColumnsSelectionDsl<T>.expr(
