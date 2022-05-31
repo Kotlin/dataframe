@@ -331,7 +331,7 @@ public fun AnyFrame.writeCSV(
 ) {
     format.print(writer).use { printer ->
         printer.printRecord(columnNames())
-        forEachRow {
+        forEach {
             val values = it.values.map {
                 when (it) {
                     is AnyRow -> it.toJson()

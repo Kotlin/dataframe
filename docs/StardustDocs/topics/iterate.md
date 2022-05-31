@@ -13,7 +13,7 @@ for (row in df) {
     println(row.age)
 }
 
-df.forEachRow {
+df.forEach {
     println(it.age)
 }
 
@@ -32,7 +32,7 @@ for (row in df) {
     println(row[age])
 }
 
-df.forEachRow {
+df.forEach {
     println(it[age])
 }
 
@@ -49,7 +49,7 @@ for (row in df) {
     println(row["age"])
 }
 
-df.forEachRow {
+df.forEach {
     println(it["age"])
 }
 
@@ -66,10 +66,6 @@ Iterate over columns:
 <!---FUN forColumn-->
 
 ```kotlin
-df.forEachColumn {
-    println(it.name())
-}
-
 df.columns().forEach {
     println(it.name())
 }
