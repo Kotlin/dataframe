@@ -252,7 +252,7 @@ public fun DataFrame.Companion.readArrowFeather(byteArray: ByteArray): AnyFrame 
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [stream]
  */
-public fun DataFrame.Companion.readArrowFeather(stream: InputStream): AnyFrame = readArrowFeather(stream.readAllBytes())
+public fun DataFrame.Companion.readArrowFeather(stream: InputStream): AnyFrame = readArrowFeather(stream.readBytes())
 
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [url]
