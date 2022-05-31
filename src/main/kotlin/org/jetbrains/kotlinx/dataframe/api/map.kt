@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -46,7 +47,7 @@ public fun <T, R> DataColumn<T>.map(
 
 // region DataFrame
 
-public fun <T, R> DataFrame<T>.map(transform: (DataRow<T>) -> R): List<R> = rows().map(transform)
+public fun <T, R> DataFrame<T>.map(transform: RowExpression<T, R>): List<R> = rows().map { transform(it, it) }
 
 public inline fun <T, reified R> ColumnsContainer<T>.mapToColumn(
     name: String,
