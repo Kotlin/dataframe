@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.columns.values
 
@@ -22,15 +21,9 @@ public fun <T> DataFrame<T>.forEach(action: RowExpression<T, Unit>): Unit = rows
 
 // region GroupBy
 
-public fun <T, G> GroupBy<T, G>.forEach(body: (GroupBy.Entry<T, G>) -> Unit): Unit = forEach { key, group ->
-    body(
-        GroupBy.Entry(key, group)
-    )
+public fun <T, G> GroupBy<T, G>.forEach(body: (GroupBy.Entry<T, G>) -> Unit): Unit = keys.forEach { key ->
+    val group = groups[key.index()]
+    body(GroupBy.Entry(key, group))
 }
-public fun <T, G> GroupBy<T, G>.forEach(body: (key: DataRow<T>, group: DataFrame<G>?) -> Unit): Unit =
-    keys.forEach { row ->
-        val group = groups[row.index()]
-        body(row, group)
-    }
 
 // endregion

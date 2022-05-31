@@ -66,7 +66,7 @@ public interface GroupBy<out T, out G> : Grouped<G> {
 
     public fun filter(predicate: GroupedRowFilter<T, G>): GroupBy<T, G>
 
-    public data class Entry<T, G>(val key: DataRow<T>, val group: DataFrame<G>?)
+    public data class Entry<T, G>(val key: DataRow<T>, val group: DataFrame<G>)
 
     public companion object {
         internal val groupedColumnAccessor = column<AnyFrame>("group")

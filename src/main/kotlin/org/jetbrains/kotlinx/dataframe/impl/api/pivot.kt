@@ -81,7 +81,7 @@ internal fun <T, R> aggregatePivot(
     val effectiveInward = inward ?: if (aggregator.hasGroupingKeys) true else (pivotSequences.distinctBy { it.first().column.path }.count() > 1)
     pivotSequences.forEach { pivotColumns ->
 
-        aggregator.df.groupBy(pivotColumns.map { it.column }).forEach { key, group ->
+        aggregator.df.groupBy(pivotColumns.map { it.column }).forEach { (key, group) ->
 
             val pathNames = mutableListOf<String>()
             key.values().forEachIndexed { i, v ->
@@ -90,7 +90,7 @@ internal fun <T, R> aggregatePivot(
                 pathNames.add(v.toString())
             }
             val path = pathNames.toPath()
-            val builder = AggregatePivotDslImpl(group!!)
+            val builder = AggregatePivotDslImpl(group)
             val result = body(builder, builder)
             val hasResult = result != null && result != Unit
 
