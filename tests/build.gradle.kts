@@ -20,6 +20,7 @@ dependencies {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
     }
     testImplementation(libs.kotlin.datetimeJvm)
+    testImplementation(libs.poi)
 }
 
 kotlin.sourceSets {
