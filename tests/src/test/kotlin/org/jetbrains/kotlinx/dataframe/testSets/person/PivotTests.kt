@@ -21,7 +21,6 @@ import org.jetbrains.kotlinx.dataframe.api.explodeLists
 import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
-import org.jetbrains.kotlinx.dataframe.api.forEachColumn
 import org.jetbrains.kotlinx.dataframe.api.frames
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
@@ -437,7 +436,7 @@ class PivotTests {
             value.last() into "last value"
             "unused"
         }
-        pivoted.getColumnGroup("key").forEachColumn {
+        pivoted.getColumnGroup("key").columns().forEach {
             it.kind() shouldBe ColumnKind.Group
             it.asColumnGroup().columnNames() shouldBe listOf("first value", "last value")
         }
@@ -451,7 +450,7 @@ class PivotTests {
             typed.add(type) { value?.javaClass?.kotlin ?: Unit::class }
                 .pivot { key }.groupBy { name }.values { value and (type default Any::class) into "data" }
 
-        pivoted.getColumnGroup("key").forEachColumn {
+        pivoted.getColumnGroup("key").columns().forEach {
             val group = it.asColumnGroup()
             group.columnNames() shouldBe listOf("data")
             group["data"].asColumnGroup().columnNames() shouldBe listOf("value", "type")

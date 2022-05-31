@@ -57,7 +57,6 @@ import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.forEach
-import org.jetbrains.kotlinx.dataframe.api.forEachColumn
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.gather
@@ -2040,7 +2039,7 @@ class DataFrameTests : BaseTest() {
     @Test
     fun `pivot grouped max`() {
         val pivoted = typed.pivot { name }.groupBy { city }.max()
-        pivoted.getColumnGroup("name").forEachColumn {
+        pivoted.getColumnGroup("name").columns().forEach {
             it.kind() shouldBe ColumnKind.Group
             val group = it.asColumnGroup()
             group.columnNames() shouldBe listOf("age", "weight")

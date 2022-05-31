@@ -40,7 +40,7 @@ import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.forEach
-import org.jetbrains.kotlinx.dataframe.api.forEachRow
+import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getColumnPath
@@ -138,7 +138,7 @@ class DataFrameTreeTests : BaseTest() {
         val groups by id.map { typed[it..it] }
         val df = dataFrameOf(id, groups)
         df.rowsCount() shouldBe typed.rowsCount()
-        df.forEachRow {
+        df.forEach {
             val rowId = it[id]
             groups() shouldBe typed[rowId..rowId]
         }
@@ -572,7 +572,7 @@ class DataFrameTreeTests : BaseTest() {
         joined.select { cols(0, 1) } shouldBe left.toDataFrame()
         joined.select { cols(2, 1) }.rename(name1).into(typed.name) shouldBe right.toDataFrame()
         joined.name shouldBe left.keys.name
-        joined.forEachRow { it[name1] shouldBe it.name.reversed() }
+        joined.forEach { it[name1] shouldBe it.name.reversed() }
     }
 
     @Test

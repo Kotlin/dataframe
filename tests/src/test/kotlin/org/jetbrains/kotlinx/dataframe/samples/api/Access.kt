@@ -509,7 +509,7 @@ class Access : TestBase() {
     @Test
     fun iterableApi() {
         // SampleStart
-        df.forEachRow { println(it) }
+        df.forEach { println(it) }
         df.take(5)
         df.drop(2)
         df.chunked(10)
@@ -815,7 +815,7 @@ class Access : TestBase() {
             println(row.age)
         }
 
-        df.forEachRow {
+        df.forEach {
             println(it.age)
         }
 
@@ -834,7 +834,7 @@ class Access : TestBase() {
             println(row[age])
         }
 
-        df.forEachRow {
+        df.forEach {
             println(it[age])
         }
 
@@ -851,7 +851,7 @@ class Access : TestBase() {
             println(row["age"])
         }
 
-        df.forEachRow {
+        df.forEach {
             println(it["age"])
         }
 
@@ -864,10 +864,6 @@ class Access : TestBase() {
     @Test
     fun forColumn() {
         // SampleStart
-        df.forEachColumn {
-            println(it.name())
-        }
-
         df.columns().forEach {
             println(it.name())
         }

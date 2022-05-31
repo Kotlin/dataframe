@@ -19,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.forEachRow
+import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.select
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadExcelMethod
@@ -189,7 +189,7 @@ public fun <T> DataFrame<T>.writeExcel(
         i++
     }
 
-    columns.forEachRow {
+    columns.forEach {
         val row = sheet.createRow(i)
         it.values().forEachIndexed { index, any ->
             // In file created by LibreOffice Calc (empty_cell.xls)
