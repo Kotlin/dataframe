@@ -7,9 +7,9 @@ Creates `List`, [DataFrame](DataFrame.md) or [DataColumn](DataColumn.md) with va
 **Map into `List`:**
 
 ```text
-map { transform }: List<T>
+map { rowExpression }: List<T>
 
-transform: (DataRow) -> T
+rowExpression: DataRow.(DataRow) -> Value
 ```
 
 <!---FUN map-->
@@ -23,7 +23,7 @@ df.map { 2021 - it.age }
 **Map into `DataColumn`:**
 
 ```text
-map(columnName) { rowExpression }: DataColumn
+mapToColumn(columnName) { rowExpression }: DataColumn
 
 rowExpression: DataRow.(DataRow) -> Value
 ```
@@ -61,7 +61,7 @@ See [row expressions](DataRow.md#row-expressions)
 **Map into `DataFrame`:**
 
 ```kotlin
-map { 
+mapToFrame { 
     columnMapping
     columnMapping
     ...
