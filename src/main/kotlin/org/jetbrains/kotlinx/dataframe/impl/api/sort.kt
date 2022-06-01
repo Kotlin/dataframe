@@ -93,7 +93,7 @@ internal fun <C> ColumnWithPath<C>.addFlag(flag: SortFlag): ColumnWithPath<C> {
             }
         }
         else -> throw IllegalArgumentException("Can not apply sort flag to column kind ${col.kind}")
-    }.addPath(path, host)
+    }.addPath(path)
 }
 
 internal class ColumnsWithSortFlag<C>(val column: ColumnSet<C>, val flag: SortFlag) : ColumnSet<C> {

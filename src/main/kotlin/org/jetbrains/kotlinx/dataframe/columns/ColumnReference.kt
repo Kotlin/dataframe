@@ -34,7 +34,7 @@ public interface ColumnReference<out C> : SingleColumn<C> {
     public fun getValueOrNull(row: AnyRow): C? = resolveFor(row.df())?.get(row.index())
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<C>? {
-        return context.df.getColumn<C>(path(), context.unresolvedColumnsPolicy)?.addPath(path(), context.df)
+        return context.df.getColumn<C>(path(), context.unresolvedColumnsPolicy)?.addPath(path())
     }
 }
 

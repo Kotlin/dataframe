@@ -39,6 +39,10 @@ public data class ColumnPath(val path: List<String>) : List<String> by path, Col
 
     override fun name(): String = path.last()
 
+    val columnName: String get() = name()
+
+    val parentName: String? get() = if (path.size > 1) path[path.size - 2] else null
+
     override fun rename(newName: String): ColumnPath = ColumnPath(path.dropLast(1) + newName)
 
     override fun getValue(row: AnyRow): Any? = row.owner[this][row.index()]

@@ -57,7 +57,7 @@ internal class MissingColumnGroup<T>(val path: ColumnPath, val host: ColumnsCont
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataRow<T>>? = when (context.unresolvedColumnsPolicy) {
         UnresolvedColumnsPolicy.Skip -> null
-        UnresolvedColumnsPolicy.Create -> this.addPath(path, host)
+        UnresolvedColumnsPolicy.Create -> this.addPath(path)
         UnresolvedColumnsPolicy.Fail -> error("Failed to resolve column $path")
     }
 

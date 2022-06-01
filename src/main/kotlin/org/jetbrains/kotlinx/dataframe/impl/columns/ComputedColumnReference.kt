@@ -17,7 +17,7 @@ internal class ComputedColumnReference<R>(
     ColumnReference<R> {
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<R> {
-        return context.df.newColumn(type, name, infer) { compute(it, it) }.addPath(context.df)
+        return context.df.newColumn(type, name, infer) { compute(it, it) }.addPath()
     }
 
     override fun name() = name

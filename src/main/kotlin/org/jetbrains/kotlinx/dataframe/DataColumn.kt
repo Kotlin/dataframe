@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.FrameColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
@@ -115,7 +114,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
     override fun rename(newName: String): DataColumn<T>
 
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? = this.addPath(context.df)
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? = this.addPath()
 
     override operator fun getValue(thisRef: Any?, property: KProperty<*>): DataColumn<T> = super.getValue(thisRef, property) as DataColumn<T>
 

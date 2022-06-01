@@ -55,7 +55,7 @@ internal class ResolvingValueColumn<T>(
 
     override fun resolve(context: ColumnResolutionContext) = super<ValueColumn>.resolve(context)
 
-    override fun resolveSingle(context: ColumnResolutionContext) = context.df.getColumn<T>(source.name(), context.unresolvedColumnsPolicy)?.addPath(context.df)
+    override fun resolveSingle(context: ColumnResolutionContext) = context.df.getColumn<T>(source.name(), context.unresolvedColumnsPolicy)?.addPath()
 
     override fun getValue(row: AnyRow) = super<ValueColumn>.getValue(row)
 

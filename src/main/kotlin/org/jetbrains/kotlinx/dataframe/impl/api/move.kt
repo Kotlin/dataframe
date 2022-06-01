@@ -36,7 +36,7 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
     val parentPath = targetPath.dropLast(1)
     val toInsert = removeResult.removedColumns.map {
         val path = parentPath + it.name
-        ColumnToInsert(path, it.toColumnWithPath<C>(df).data, refNode)
+        ColumnToInsert(path, it.toColumnWithPath<C>().data, refNode)
     }
     return removeResult.df.insertImpl(toInsert)
 }
@@ -48,7 +48,7 @@ internal fun <T, C> MoveClause<T, C>.moveImpl(
     val receiver = object : DataFrameReceiver<T>(df, UnresolvedColumnsPolicy.Fail), ColumnsSelectionDsl<T> {}
     val removeResult = df.removeImpl(columns = columns)
     val columnsToInsert = removeResult.removedColumns.map {
-        val col = it.toColumnWithPath<C>(df)
+        val col = it.toColumnWithPath<C>()
         var path = newPathExpression(receiver, col).path()
         if (under) path += col.name()
         ColumnToInsert(path, col.data, it)

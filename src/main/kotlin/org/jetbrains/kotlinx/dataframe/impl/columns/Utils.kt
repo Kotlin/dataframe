@@ -57,25 +57,22 @@ internal fun AnyCol.getHashCode(): Int {
     return result
 }
 
-internal fun <C> TreeNode<ColumnPosition>.toColumnWithPath(df: ColumnsContainer<*>) =
-    (data.column as DataColumn<C>).addPath(pathFromRoot(), df)
+internal fun <C> TreeNode<ColumnPosition>.toColumnWithPath() =
+    (data.column as DataColumn<C>).addPath(pathFromRoot())
 
-@JvmName("toColumnWithPathAnyCol")
-internal fun <C> TreeNode<DataColumn<C>>.toColumnWithPath(df: ColumnsContainer<*>) = data.addPath(pathFromRoot(), df)
-
-internal fun <T> BaseColumn<T>.addPath(path: ColumnPath, df: ColumnsContainer<*>? = null): ColumnWithPath<T> =
+internal fun <T> BaseColumn<T>.addPath(path: ColumnPath): ColumnWithPath<T> =
     when (this) {
-        is ValueColumn<T> -> ValueColumnWithPathImpl(this, path, df)
-        is FrameColumn<*> -> FrameColumnWithPathImpl(this, path, df) as ColumnWithPath<T>
-        is ColumnGroup<*> -> ColumnGroupWithPathImpl(this, path, df) as ColumnWithPath<T>
+        is ValueColumn<T> -> ValueColumnWithPathImpl(this, path)
+        is FrameColumn<*> -> FrameColumnWithPathImpl(this, path) as ColumnWithPath<T>
+        is ColumnGroup<*> -> ColumnGroupWithPathImpl(this, path) as ColumnWithPath<T>
         else -> throw IllegalArgumentException("Can't add path to ${this.javaClass}")
     }
 
-internal fun <T> ColumnWithPath<T>.changePath(path: ColumnPath): ColumnWithPath<T> = data.addPath(path, host)
+internal fun <T> ColumnWithPath<T>.changePath(path: ColumnPath): ColumnWithPath<T> = data.addPath(path)
 
-internal fun <T> BaseColumn<T>.addParentPath(path: ColumnPath, df: ColumnsContainer<*>) = addPath(path + name, df)
+internal fun <T> BaseColumn<T>.addParentPath(path: ColumnPath) = addPath(path + name)
 
-internal fun <T> BaseColumn<T>.addPath(df: ColumnsContainer<*>): ColumnWithPath<T> = addPath(pathOf(name), df)
+internal fun <T> BaseColumn<T>.addPath(): ColumnWithPath<T> = addPath(pathOf(name))
 
 internal fun ColumnPath.depth() = size - 1
 
@@ -147,8 +144,6 @@ internal fun <T> List<ColumnWithPath<T>>.top(): List<ColumnWithPath<T>> {
 
 internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWithPath<*>>): List<ColumnWithPath<*>> {
     if (isEmpty()) return emptyList()
-    val df = this[0].host
-    require(all { it.host === df })
     val fullTree = collectTree()
     columns.forEach {
         var node = fullTree.getOrPut(it.path).asNullable()
@@ -159,7 +154,7 @@ internal fun List<ColumnWithPath<*>>.allColumnsExcept(columns: Iterable<ColumnWi
         }
     }
     val dfs = fullTree.topDfs { it.data != null }
-    return dfs.map { it.data!!.addPath(it.pathFromRoot(), df) }
+    return dfs.map { it.data!!.addPath(it.pathFromRoot()) }
 }
 
 internal fun KType.toColumnKind(): ColumnKind = jvmErasure.let {

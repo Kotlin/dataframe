@@ -56,7 +56,7 @@ internal class ResolvingFrameColumn<T>(
 
     override fun resolve(context: ColumnResolutionContext) = super<FrameColumn>.resolve(context)
 
-    override fun resolveSingle(context: ColumnResolutionContext) = context.df.getColumn<DataFrame<T>>(source.name(), context.unresolvedColumnsPolicy)?.addPath(context.df)
+    override fun resolveSingle(context: ColumnResolutionContext) = context.df.getColumn<DataFrame<T>>(source.name(), context.unresolvedColumnsPolicy)?.addPath()
 
     override fun getValue(row: AnyRow) = super<FrameColumn>.getValue(row)
 

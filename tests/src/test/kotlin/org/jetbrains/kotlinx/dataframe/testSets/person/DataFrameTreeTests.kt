@@ -452,7 +452,7 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun parentColumnTest() {
-        val res = typed2.move { dfs { it.depth > 0 } }.toTop { it.parent!!.name() + "-" + it.name() }
+        val res = typed2.move { dfs { it.depth > 0 } }.toTop { it.parentName + "-" + it.name }
         res.columnsCount() shouldBe 4
         res.columnNames() shouldBe listOf("nameAndCity-name", "nameAndCity-city", "age", "weight")
     }
@@ -666,11 +666,9 @@ class DataFrameTreeTests : BaseTest() {
             added.select { weight..nameAndCity.name }
         }
 
-        shouldThrow<IllegalArgumentException> {
-            added.select { nameAndCity.city..nameAndCity.name }
-        }
+        added.select { nameAndCity.city..nameAndCity.name }.isEmpty() shouldBe true
 
-        added.select { nameAndCity.colsRange { name..city } } shouldBe expected
+        added.select { nameAndCity.select { name..city } } shouldBe expected
     }
 
     @Test

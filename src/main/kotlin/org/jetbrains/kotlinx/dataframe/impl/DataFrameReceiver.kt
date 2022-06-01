@@ -17,15 +17,24 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupWithParent
+import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupWithPathImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingDataColumn
 import org.jetbrains.kotlinx.dataframe.nrow
 
+private fun <T> DataFrame<T>.unbox(): DataFrame<T> = when (this) {
+    is ColumnGroupWithParent -> source.unbox()
+    is ColumnGroupWithPathImpl -> column.unbox()
+    else -> this
+}
+
+internal abstract class DataFrameReceiverBase<T>(protected val df: DataFrame<T>) : DataFrameImpl<T>(df.columns(), df.nrow)
+
 internal open class DataFrameReceiver<T>(
-    val source: DataFrame<T>,
+    source: DataFrame<T>,
     private val unresolvedColumnsPolicy: UnresolvedColumnsPolicy
-) : DataFrameImpl<T>(source.columns(), source.nrow), SingleColumn<DataRow<T>> {
+) : DataFrameReceiverBase<T>(source.unbox()), SingleColumn<DataRow<T>> {
 
     private fun <R> DataColumn<R>?.check(path: ColumnPath): DataColumn<R>? =
         when (this) {
@@ -38,8 +47,8 @@ internal open class DataFrameReceiver<T>(
             else -> this
         }
 
-    override fun getColumnOrNull(name: String) = source.getColumnOrNull(name).check(pathOf(name))
-    override fun getColumnOrNull(index: Int) = source.getColumnOrNull(index).check(pathOf(""))
+    override fun getColumnOrNull(name: String) = df.getColumnOrNull(name).check(pathOf(name))
+    override fun getColumnOrNull(index: Int) = df.getColumnOrNull(index).check(pathOf(""))
 
     override fun <R> getColumnOrNull(column: ColumnReference<R>): DataColumn<R>? {
         val context = ColumnResolutionContext(this, unresolvedColumnsPolicy)
@@ -49,11 +58,11 @@ internal open class DataFrameReceiver<T>(
     override fun getColumnOrNull(path: ColumnPath) = super.getColumnOrNull(path).check(path)
     override fun <R> getColumnOrNull(column: ColumnSelector<T, R>) = getColumnsImpl(unresolvedColumnsPolicy, column).singleOrNull()
 
-    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataRow<T>>? = DataColumn.createColumnGroup("", source).addPath(emptyPath(), source)
+    override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<DataRow<T>>? = DataColumn.createColumnGroup("", df).addPath(emptyPath())
 
-    override fun columns() = source.columns().map { if (it.isColumnGroup()) ColumnGroupWithParent(null, it.asColumnGroup()) else it }
+    override fun columns() = df.columns().map { if (it.isColumnGroup()) ColumnGroupWithParent(null, it.asColumnGroup()) else it }
 
-    override fun columnNames() = source.columnNames()
+    override fun columnNames() = df.columnNames()
 
-    override fun columnTypes() = source.columnTypes()
+    override fun columnTypes() = df.columnTypes()
 }
