@@ -39,7 +39,7 @@ class Modify : TestBase() {
         val res =
             // SampleStart
             df.update { name }.asFrame { select { lastName } }
-            // SampleEnd
+        // SampleEnd
         res shouldBe df.remove { name.firstName }
     }
 
