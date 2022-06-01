@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
     implementation(project(":"))
+    implementation(project(":dataframe-spreadsheets"))
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")

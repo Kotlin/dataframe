@@ -40,8 +40,6 @@ dependencies {
     api(libs.commonsCsv)
     implementation(libs.klaxon)
     implementation(libs.fuel)
-    implementation(libs.poi)
-    implementation(libs.poi.ooxml)
 
     implementation(libs.kotlin.datetimeJvm)
     implementation("com.squareup:kotlinpoet:1.11.0")

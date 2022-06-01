@@ -23,8 +23,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
-import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadExcelMethod
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
@@ -47,6 +47,10 @@ public class Excel : SupportedFormat {
         return DefaultReadExcelMethod(pathRepresentation)
     }
 }
+
+internal class DefaultReadExcelMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readExcel)
+
+private const val readExcel = "readExcel"
 
 public fun DataFrame.Companion.readExcel(
     url: URL,

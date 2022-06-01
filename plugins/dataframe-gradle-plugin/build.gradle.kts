@@ -16,6 +16,7 @@ group = "org.jetbrains.kotlin"
 dependencies {
     implementation(project(":"))
     implementation(project(":dataframe-arrow"))
+    implementation(project(":dataframe-spreadsheets"))
     implementation(kotlin("gradle-plugin-api"))
     implementation(kotlin("gradle-plugin"))
     implementation("com.beust:klaxon:5.5")
@@ -105,8 +106,10 @@ val integrationTestConfiguration by configurations.creating {
 val integrationTestTask = task<Test>("integrationTest") {
     dependsOn(":plugins:symbol-processor:publishToMavenLocal")
     dependsOn(":dataframe-arrow:publishToMavenLocal")
+    dependsOn(":dataframe-spreadsheets:publishToMavenLocal")
     dependsOn(":publishApiPublicationToMavenLocal")
     dependsOn(":dataframe-arrow:publishDataframeArrowPublicationToMavenLocal")
+    dependsOn(":dataframe-spreadsheets:publishDataframeSpreadsheetsPublicationToMavenLocal")
     description = "Runs integration tests."
     group = "verification"
 

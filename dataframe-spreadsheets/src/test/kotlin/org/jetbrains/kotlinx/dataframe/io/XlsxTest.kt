@@ -7,12 +7,14 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.toColumn
-import org.jetbrains.kotlinx.dataframe.testResource
 import org.junit.Test
+import java.net.URL
 import java.nio.file.Files
 import kotlin.reflect.typeOf
 
 class XlsxTest {
+
+    fun testResource(resourcePath: String): URL = this::class.java.classLoader.getResource(resourcePath)!!
 
     @Test
     fun `numerical columns`() {

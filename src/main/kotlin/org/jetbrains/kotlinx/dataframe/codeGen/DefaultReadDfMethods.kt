@@ -23,7 +23,6 @@ private const val cast = "cast"
 private const val verify = "verify" // cast(true) is obscure, i think it's better to use named argument here
 private const val readCSV = "readCSV"
 private const val readTSV = "readTSV"
-private const val readExcel = "readExcel"
 private const val readJson = "readJson"
 
 public abstract class AbstractDefaultReadMethod(
@@ -98,5 +97,3 @@ internal class DefaultReadCsvMethod(
 ) : AbstractDefaultReadMethod(path, arguments, readCSV)
 
 internal class DefaultReadTsvMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readTSV)
-
-internal class DefaultReadExcelMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readExcel)

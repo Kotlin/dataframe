@@ -189,7 +189,7 @@ private fun asStream(fileOrUrl: String) = (
     }
     ).toURL().openStream()
 
-internal fun asURL(fileOrUrl: String): URL = (
+public fun asURL(fileOrUrl: String): URL = (
     if (isURL(fileOrUrl)) {
         URL(fileOrUrl).toURI()
     } else {
