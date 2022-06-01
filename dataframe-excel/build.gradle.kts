@@ -24,9 +24,9 @@ dependencies {
 
 kotlinPublications {
     publication {
-        publicationName.set("dataframeSpreadsheets")
+        publicationName.set("dataframeExcel")
         artifactId.set(project.name)
-        description.set("Spreadsheets support for Kotlin Dataframe")
+        description.set("Excel support for Kotlin Dataframe")
         packageName.set(artifactId)
     }
 }

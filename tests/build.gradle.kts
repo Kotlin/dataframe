@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     implementation(project(":"))
-    implementation(project(":dataframe-spreadsheets"))
+    implementation(project(":dataframe-excel"))
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")

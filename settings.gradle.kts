@@ -29,4 +29,4 @@ pluginManagement {
         gradlePluginPortal()
     }
 }
-include("dataframe-spreadsheets")
+include("dataframe-excel")
