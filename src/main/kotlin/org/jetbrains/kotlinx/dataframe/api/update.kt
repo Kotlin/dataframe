@@ -50,7 +50,9 @@ public infix fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T
 public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
 
 public infix fun <T, C> Update<T, C>.with(expression: UpdateExpression<T, C, C?>): DataFrame<T> =
-    withExpression(expression)
+    updateImpl { row, _, value ->
+        expression(row, value)
+    }
 
 public fun <T, C> Update<T, C>.asNullable(): Update<T, C?> = this as Update<T, C?>
 
@@ -62,11 +64,6 @@ public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(val
 
 public fun <T, C> Update<T, C>.perCol(valueSelector: Selector<DataColumn<C>, C>): DataFrame<T> =
     updateWithValuePerColumnImpl(valueSelector)
-
-public fun <T, C> Update<T, C>.withExpression(expression: UpdateExpression<T, C, C?>): DataFrame<T> =
-    updateImpl { row, _, value ->
-        expression(row, value)
-    }
 
 internal infix fun <T, C> RowValueFilter<T, C>?.and(other: RowValueFilter<T, C>): RowValueFilter<T, C> {
     if (this == null) return other
@@ -101,10 +98,10 @@ public fun <T> DataFrame<T>.update(
     vararg cols: String,
     expression: RowValueExpression<T, Any?, Any?>
 ): DataFrame<T> =
-    update(*headPlusArray(firstCol, cols)).withExpression(expression)
+    update(*headPlusArray(firstCol, cols)).with(expression)
 
 public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = asNullable().withValue(null)
 
 public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }
 
-public infix fun <T, C> Update<T, C>.withValue(value: C): DataFrame<T> = withExpression { value }
+public infix fun <T, C> Update<T, C>.withValue(value: C): DataFrame<T> = with { value }

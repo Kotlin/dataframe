@@ -25,7 +25,7 @@ public fun <T> DataFrame<T>.replaceAll(
     columns: ColumnsSelector<T, *> = { allDfs() }
 ): DataFrame<T> {
     val map = valuePairs.toMap()
-    return update(columns).withExpression { map[it] ?: it }
+    return update(columns).with { map[it] ?: it }
 }
 
 public data class ReplaceCause<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>)
