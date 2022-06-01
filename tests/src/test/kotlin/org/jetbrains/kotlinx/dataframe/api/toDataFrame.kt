@@ -116,4 +116,17 @@ class CreateDataFrameTests {
             it.kind shouldBe ColumnKind.Value
         }
     }
+
+    @Test
+    fun `convert type with no properties`() {
+        class Child
+        class Entry(val a: Int, val child: Child)
+
+        val df = listOf(Entry(1, Child())).toDataFrame(depth = 100)
+        df.rowsCount() shouldBe 1
+
+        val childCol = df[Entry::child]
+        childCol.kind() shouldBe ColumnKind.Group
+        childCol.asColumnGroup().columnsCount() shouldBe 0
+    }
 }

@@ -35,7 +35,7 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) : DataFr
         // check that column sizes are equal
         val invalidSizeColumns = cols.filter { it.size != nrow }
         require(invalidSizeColumns.isEmpty()) {
-            "Unequal column sizes:\n${cols.joinToString("\n") { it.name + ": " + it.size }}"
+            "Unequal column sizes. Expected rows count = $nrow, but was:\n${cols.joinToString("\n") { it.name + ": " + it.size }}"
         }
 
         // check that column names are unique
