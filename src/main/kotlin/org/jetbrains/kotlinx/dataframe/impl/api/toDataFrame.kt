@@ -204,5 +204,7 @@ internal fun convertToDataFrame(
             }
         }
     }
-    return dataFrameOf(columns)
+    return if (columns.isEmpty()) {
+        DataFrame.empty(data.count())
+    } else dataFrameOf(columns)
 }
