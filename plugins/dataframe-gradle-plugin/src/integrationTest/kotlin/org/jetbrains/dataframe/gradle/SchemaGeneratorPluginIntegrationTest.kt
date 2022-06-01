@@ -3,6 +3,7 @@ package org.jetbrains.dataframe.gradle
 import io.kotest.assertions.asClue
 import io.kotest.matchers.shouldBe
 import org.gradle.testkit.runner.TaskOutcome
+import org.junit.Ignore
 import org.junit.Test
 import java.io.File
 
@@ -213,6 +214,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
         result.task(":build")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
+    @Ignore
     @Test
     fun `kotlin identifiers generated from csv names`() {
         fun escapeDoubleQuotes(it: Char) = if (it == '"') "\"\"" else it.toString()
