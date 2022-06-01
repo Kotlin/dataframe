@@ -111,7 +111,7 @@ class CreateDataFrameTests {
     fun `don't convert value types`() {
         data class Entry(val a: Int, val b: String, val c: Boolean, val e: DummyEnum)
 
-        val df = listOf(Entry(1, "s", true, DummyEnum.A)).toDataFrame(depth = 100)
+        val df = listOf(Entry(1, "s", true, DummyEnum.A)).toDataFrame(maxDepth = 100)
         df.columns().forEach {
             it.kind shouldBe ColumnKind.Value
         }
@@ -122,11 +122,31 @@ class CreateDataFrameTests {
         class Child
         class Entry(val a: Int, val child: Child)
 
-        val df = listOf(Entry(1, Child())).toDataFrame(depth = 100)
+        val df = listOf(Entry(1, Child())).toDataFrame(maxDepth = 100)
         df.rowsCount() shouldBe 1
 
         val childCol = df[Entry::child]
         childCol.kind() shouldBe ColumnKind.Group
         childCol.asColumnGroup().columnsCount() shouldBe 0
+    }
+
+    @Test
+    fun `convert child schemas`() {
+        class Child2(val s: String)
+
+        @DataSchema
+        class Child1(val child: Child2)
+
+        @DataSchema
+        class Entry(val a: Int, val child: Child1)
+
+        val df = listOf(Entry(1, Child1(Child2("s")))).toDataFrame()
+        df.rowsCount() shouldBe 1
+
+        val child1 = df[Entry::child]
+        child1.kind shouldBe ColumnKind.Group
+
+        val child2 = child1.asColumnGroup()[Child1::child]
+        child2.kind shouldBe ColumnKind.Value
     }
 }

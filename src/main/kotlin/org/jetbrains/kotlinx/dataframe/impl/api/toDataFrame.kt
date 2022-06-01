@@ -100,12 +100,12 @@ internal class CreateDataFrameDslImpl<T>(
         }
     }
 
-    override fun properties(vararg roots: KProperty<*>, depth: Int, body: (TraversePropertiesDsl.() -> Unit)?) {
+    override fun properties(vararg roots: KProperty<*>, maxDepth: Int, body: (TraversePropertiesDsl.() -> Unit)?) {
         val dsl = configuration.clone()
         if (body != null) {
             body(dsl)
         }
-        val df = convertToDataFrame(source, clazz, roots.toList(), dsl.excludeProperties, dsl.preserveClasses, dsl.preserveProperties, depth)
+        val df = convertToDataFrame(source, clazz, roots.toList(), dsl.excludeProperties, dsl.preserveClasses, dsl.preserveProperties, maxDepth)
         df.columns().forEach {
             add(it)
         }
@@ -127,7 +127,7 @@ internal fun convertToDataFrame(
     excludes: Set<KProperty<*>>,
     preserveClasses: Set<KClass<*>>,
     preserveProperties: Set<KProperty<*>>,
-    depth: Int
+    maxDepth: Int
 ): AnyFrame {
     val order = getPropertiesOrder(clazz)
 
@@ -167,7 +167,7 @@ internal fun convertToDataFrame(
         val kclass = (type.classifier as KClass<*>)
         when {
             hasExceptions -> DataColumn.createWithTypeInference(it.columnName, values, nullable)
-            preserveClasses.contains(kclass) || preserveProperties.contains(property) || (depth == 1 && !type.shouldBeConvertedToFrameColumn() && !type.shouldBeConvertedToColumnGroup()) || kclass.isValueType ->
+            preserveClasses.contains(kclass) || preserveProperties.contains(property) || (maxDepth <= 0 && !type.shouldBeConvertedToFrameColumn() && !type.shouldBeConvertedToColumnGroup()) || kclass.isValueType ->
                 DataColumn.createValueColumn(it.columnName, values, property.returnType.withNullability(nullable))
             kclass == DataFrame::class && !nullable -> DataColumn.createFrameColumn(it.columnName, values as List<AnyFrame>)
             kclass == DataRow::class -> DataColumn.createColumnGroup(it.columnName, (values as List<AnyRow>).concat())
@@ -191,7 +191,7 @@ internal fun convertToDataFrame(
                             if (it == null) DataFrame.empty()
                             else {
                                 require(it is Iterable<*>)
-                                convertToDataFrame(it, elementClass, emptyList(), excludes, preserveClasses, preserveProperties, depth - 1)
+                                convertToDataFrame(it, elementClass, emptyList(), excludes, preserveClasses, preserveProperties, maxDepth - 1)
                             }
                         }
                         DataColumn.createFrameColumn(it.columnName, frames)
@@ -199,7 +199,7 @@ internal fun convertToDataFrame(
                 }
             }
             else -> {
-                val df = convertToDataFrame(values, kclass, emptyList(), excludes, preserveClasses, preserveProperties, depth - 1)
+                val df = convertToDataFrame(values, kclass, emptyList(), excludes, preserveClasses, preserveProperties, maxDepth - 1)
                 DataColumn.createColumnGroup(it.columnName, df)
             }
         }

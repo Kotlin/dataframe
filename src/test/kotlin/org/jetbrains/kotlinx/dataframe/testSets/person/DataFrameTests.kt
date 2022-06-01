@@ -2202,7 +2202,7 @@ class DataFrameTests : BaseTest() {
         val list = grouped.toListOf<Target>()
         list shouldBe grouped.convertTo<Target>().toList()
 
-        val listDf = list.toDataFrame(depth = 2)
+        val listDf = list.toDataFrame(maxDepth = 2)
         listDf shouldBe grouped.update { getFrameColumn("students") }.with { it.remove("city") }
 
         listDf.toList() shouldBe list
@@ -2229,7 +2229,7 @@ class DataFrameTests : BaseTest() {
         val list = grouped.toListOf<Target>()
         list shouldBe grouped.convertTo<Target>().toList()
 
-        val listDf = list.toDataFrame(depth = 2)
+        val listDf = list.toDataFrame(maxDepth = 2)
         listDf shouldBe grouped
         listDf.toList() shouldBe list
     }

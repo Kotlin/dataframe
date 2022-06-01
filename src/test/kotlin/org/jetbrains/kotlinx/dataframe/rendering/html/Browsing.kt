@@ -24,7 +24,7 @@ class Browsing {
         val df = students.toDataFrame {
             "year of birth" from { 2021 - it.age }
 
-            properties(depth = 2) {
+            properties(maxDepth = 1) {
 //                exclude(Score::subject) // `subject` property will be skipped from object graph traversal
 //                preserve<Name>() // `Name` objects will be stored as-is without transformation into DataFrame
             }

@@ -331,7 +331,7 @@ class Create : TestBase() {
             Student(Name("Bob", "Marley"), 20, listOf(Score("music", 5)))
         )
 
-        val df = students.toDataFrame(depth = 2)
+        val df = students.toDataFrame(maxDepth = 1)
         // SampleEnd
         df.columnsCount() shouldBe 3
         df.rowsCount() shouldBe 2
@@ -357,7 +357,7 @@ class Create : TestBase() {
             "year of birth" from { 2021 - it.age }
 
             // scan all properties
-            properties(depth = 2) {
+            properties(maxDepth = 1) {
                 exclude(Score::subject) // `subject` property will be skipped from object graph traversal
                 preserve<Name>() // `Name` objects will be stored as-is without transformation into DataFrame
             }
