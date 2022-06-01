@@ -11,7 +11,7 @@ repositories {
 
 dependencies {
     api(project(":"))
-    implementation(libs.poi)
+    api(libs.poi)
     implementation(libs.poi.ooxml)
 
     implementation(libs.kotlin.datetimeJvm)
