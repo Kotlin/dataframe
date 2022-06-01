@@ -30,7 +30,20 @@ import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.javaField
 
-internal val KClass<*>.isValueType: Boolean get() = this == String::class || this.isSubclassOf(Number::class) || this.isSubclassOf(Temporal::class)
+internal val valueTypes = setOf(
+    String::class,
+    Boolean::class,
+    kotlin.time.Duration::class,
+    kotlinx.datetime.LocalDate::class,
+    kotlinx.datetime.LocalDateTime::class,
+    kotlinx.datetime.Instant::class,
+)
+
+internal val KClass<*>.isValueType: Boolean get() =
+    this in valueTypes ||
+        this.isSubclassOf(Number::class) ||
+        this.isSubclassOf(Enum::class) ||
+        this.isSubclassOf(Temporal::class)
 
 internal class CreateDataFrameDslImpl<T>(
     override val source: Iterable<T>,
