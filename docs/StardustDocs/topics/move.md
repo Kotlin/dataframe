@@ -43,7 +43,7 @@ df.move { name.cols() }.toTop()
 
 // a.b.e -> be
 // c.d.e -> de
-df.move { dfs { it.name() == "e" } }.toTop { it.parent!!.name() + it.name() }
+df.move { dfs { it.name() == "e" } }.toTop { it.parentName + it.name() }
 ```
 
 <!---END-->
