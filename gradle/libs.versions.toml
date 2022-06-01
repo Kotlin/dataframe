@@ -12,7 +12,7 @@ commonsCsv = "1.8"
 commonsCompress = "1.21"
 klaxon = "5.5"
 fuel = "2.3.1"
-poi = "5.2.0"
+poi = "5.2.2"
 kotlinDatetime = "0.3.1"
 
 junit = "4.13.2"

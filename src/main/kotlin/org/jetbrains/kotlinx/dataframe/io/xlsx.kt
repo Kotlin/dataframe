@@ -12,6 +12,8 @@ import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.ss.util.CellReference
+import org.apache.poi.util.LocaleUtil
+import org.apache.poi.util.LocaleUtil.getUserTimeZone
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -29,7 +31,8 @@ import java.io.OutputStream
 import java.net.URL
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.*
+import java.util.Calendar
+import java.util.Date
 
 public class Excel : SupportedFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readExcel(stream)
@@ -82,7 +85,7 @@ public fun DataFrame.Companion.readExcel(
     return wb.use { readExcel(it, sheetName, columns, rowsCount) }
 }
 
-internal fun DataFrame.Companion.readExcel(
+public fun DataFrame.Companion.readExcel(
     wb: Workbook,
     sheetName: String? = null,
     columns: String? = null,
@@ -91,7 +94,14 @@ internal fun DataFrame.Companion.readExcel(
     val sheet: Sheet = sheetName
         ?.let { wb.getSheet(it) ?: error("Sheet with name $sheetName not found") }
         ?: wb.getSheetAt(0)
+    return readExcel(sheet, columns, rowsCount)
+}
 
+public fun DataFrame.Companion.readExcel(
+    sheet: Sheet,
+    columns: String? = null,
+    rowsCount: Int? = null
+): AnyFrame {
     val columnIndexes = if (columns != null) {
         columns.split(",").flatMap {
             if (it.contains(":")) {
@@ -108,7 +118,12 @@ internal fun DataFrame.Companion.readExcel(
     val headerRow = sheet.getRow(0)
     val valueRows = sheet.drop(1).let { if (rowsCount != null) it.take(rowsCount) else it }
     val columns = columnIndexes.map { index ->
-        val name = headerRow.getCell(index)?.stringCellValue ?: CellReference.convertNumToColString(index)
+        val headerCell = headerRow.getCell(index)
+        val name = if (headerCell?.cellType == CellType.NUMERIC) {
+            headerCell.numericCellValue.toString() // Support numeric-named columns
+        } else {
+            headerCell?.stringCellValue ?: CellReference.convertNumToColString(index) // Use Excel column names if no data
+        }
         val values = valueRows.map {
             val cell: Cell? = it.getCell(index)
             when (cell?.cellType) {
@@ -171,6 +186,17 @@ public fun <T> DataFrame<T>.writeExcel(
     factory: () -> Workbook
 ) {
     val wb: Workbook = factory()
+    writeExcel(wb, columnsSelector, sheetName, writeHeader)
+    wb.write(outputStream)
+    wb.close()
+}
+
+public fun <T> DataFrame<T>.writeExcel(
+    wb: Workbook,
+    columnsSelector: ColumnsSelector<T, *> = { all() },
+    sheetName: String? = null,
+    writeHeader: Boolean = true
+): Sheet {
     val sheet = if (sheetName != null) {
         wb.createSheet(sheetName)
     } else {
@@ -189,6 +215,14 @@ public fun <T> DataFrame<T>.writeExcel(
         i++
     }
 
+    val createHelper = wb.creationHelper
+    val cellStyleDate = wb.createCellStyle()
+    val cellStyleDateTime = wb.createCellStyle()
+    val cellStyleTime = wb.createCellStyle()
+    cellStyleDate.dataFormat = createHelper.createDataFormat().getFormat("dd.mm.yyyy")
+    cellStyleDateTime.dataFormat = createHelper.createDataFormat().getFormat("dd.mm.yyyy hh:mm:ss")
+    cellStyleTime.dataFormat = createHelper.createDataFormat().getFormat("hh:mm:ss")
+
     columns.forEach {
         val row = sheet.createRow(i)
         it.values().forEachIndexed { index, any ->
@@ -198,12 +232,35 @@ public fun <T> DataFrame<T>.writeExcel(
             if (any != null) {
                 val cell = row.createCell(index)
                 cell.setCellValueByGuessedType(any)
+
+                when (any) {
+                    is LocalDate, is kotlinx.datetime.LocalDate -> {
+                        cell.cellStyle = cellStyleDate
+                    }
+                    is Calendar, is Date -> {
+                        cell.cellStyle = cellStyleDateTime
+                    }
+                    is LocalDateTime -> {
+                        if (any.year < 1900) {
+                            cell.cellStyle = cellStyleTime
+                        } else {
+                            cell.cellStyle = cellStyleDateTime
+                        }
+                    }
+                    is kotlinx.datetime.LocalDateTime -> {
+                        if (any.year < 1900) {
+                            cell.cellStyle = cellStyleTime
+                        } else {
+                            cell.cellStyle = cellStyleDateTime
+                        }
+                    }
+                    else -> {}
+                }
             }
         }
         i++
     }
-    wb.write(outputStream)
-    wb.close()
+    return sheet
 }
 
 private fun Cell.setCellValueByGuessedType(any: Any) {
@@ -221,16 +278,16 @@ private fun Cell.setCellValueByGuessedType(any: Any) {
             this.setCellValue(any)
         }
         is LocalDateTime -> {
-            this.setCellValue(any)
+            this.setTime(any)
         }
         is Boolean -> {
             this.setCellValue(any)
         }
         is Calendar -> {
-            this.setCellValue(any.time)
+            this.setDate(any.time)
         }
         is Date -> {
-            this.setCellValue(any)
+            this.setDate(any)
         }
         is RichTextString -> {
             this.setCellValue(any)
@@ -242,7 +299,7 @@ private fun Cell.setCellValueByGuessedType(any: Any) {
             this.setCellValue(any.toJavaLocalDate())
         }
         is kotlinx.datetime.LocalDateTime -> {
-            this.setCellValue(any.toJavaLocalDateTime())
+            this.setTime(any.toJavaLocalDateTime())
         }
         // Another option would be to serialize everything else to string,
         // but people can convert columns to string with any serialization framework they want
@@ -251,4 +308,26 @@ private fun Cell.setCellValueByGuessedType(any: Any) {
             this.setCellValue(any.toString())
         }
     }
+}
+
+/**
+ * Set LocalDateTime value correctly also if date have zero value in Excel.
+ * Zero date is usually used fore storing time component only,
+ * is displayed as 00.01.1900 in Excel and as 30.12.1899 in LibreOffice Calc and also in POI.
+ * POI can not set 1899 year directly.
+ */
+private fun Cell.setTime(localDateTime: LocalDateTime) {
+    this.setCellValue(DateUtil.getExcelDate(localDateTime.plusDays(1)) - 1.0)
+}
+
+/**
+ * Set Date value correctly also if date have zero value in Excel.
+ * Zero date is usually used fore storing time component only,
+ * is displayed as 00.01.1900 in Excel and as 30.12.1899 in LibreOffice Calc and also in POI.
+ * POI can not set 1899 year directly.
+ */
+private fun Cell.setDate(date: Date) {
+    val calStart = LocaleUtil.getLocaleCalendar()
+    calStart.time = date
+    this.setTime(calStart.toInstant().atZone(getUserTimeZone().toZoneId()).toLocalDateTime())
 }
