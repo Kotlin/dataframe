@@ -6,7 +6,6 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.asDataFrame
-import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.firstOrNull
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.rows
@@ -20,7 +19,7 @@ import kotlin.reflect.KType
 
 internal val anyRowType = createTypeWithArgument<AnyRow>()
 
-internal open class ColumnGroupImpl<T>(val name: String, df: DataFrame<T>) :
+internal open class ColumnGroupImpl<T>(private val name: String, df: DataFrame<T>) :
     DataFrameImpl<T>(df.columns(), df.nrow),
     DataColumnInternal<DataRow<T>>,
     DataColumnGroup<T> {
@@ -90,7 +89,7 @@ internal class ResolvingColumnGroup<T>(
 
     override fun resolve(context: ColumnResolutionContext) = super<DataColumnGroup>.resolve(context)
 
-    override fun resolveSingle(context: ColumnResolutionContext) = context.df.getColumn<DataRow<T>>(source.name(), context.unresolvedColumnsPolicy)?.addPath(context.df)
+    override fun resolveSingle(context: ColumnResolutionContext) = context.df.getColumn<DataRow<T>>(source.name(), context.unresolvedColumnsPolicy)?.addPath()
 
     override fun getValue(row: AnyRow) = super<DataColumnGroup>.getValue(row)
 

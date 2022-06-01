@@ -10,17 +10,18 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
-import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.renamedReference
-import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnsList
 import org.jetbrains.kotlinx.dataframe.impl.columns.DistinctColumnSet
+import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.allColumnsExcept
+import org.jetbrains.kotlinx.dataframe.impl.columns.changePath
 import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.getAt
 import org.jetbrains.kotlinx.dataframe.impl.columns.getChildrenAt
@@ -30,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.top
 import org.jetbrains.kotlinx.dataframe.impl.columns.transform
 import org.jetbrains.kotlinx.dataframe.impl.columns.transformSingle
 import org.jetbrains.kotlinx.dataframe.impl.columns.tree.dfs
+import org.jetbrains.kotlinx.dataframe.impl.getColumnsWithPaths
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -63,13 +65,23 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
 
     public fun ColumnsContainer<*>.group(name: String): ColumnGroupReference = name.toColumnOf()
 
-    public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> = colsRange(this, endInclusive)
+    public operator fun String.rangeTo(endInclusive: String): ColumnSet<*> = toColumnAccessor().rangeTo(endInclusive.toColumnAccessor())
 
-    public operator fun Column.rangeTo(endInclusive: Column): ColumnSet<*> {
-        val parent = path().parent()
-        require(parent != null)
-        require(endInclusive.path().parent() == parent) { "Start and end columns have different parent column paths" }
-        return parent.colsRange(name, endInclusive.name)
+    public operator fun Column.rangeTo(endInclusive: Column): ColumnSet<*> = object : ColumnSet<Any?> {
+        override fun resolve(context: ColumnResolutionContext): List<ColumnWithPath<Any?>> {
+            val startPath = this@rangeTo.resolveSingle(context)!!.path
+            val endPath = endInclusive.resolveSingle(context)!!.path
+            val parentPath = startPath.parent()!!
+            require(parentPath == endPath.parent()) { "Start and end columns have different parent column paths" }
+            val parentCol = context.df.getColumnGroup(parentPath)
+            val startIndex = parentCol.getColumnIndex(startPath.name)
+            val endIndex = parentCol.getColumnIndex(endPath.name)
+            return (startIndex..endIndex).map {
+                parentCol.getColumn(it).let {
+                    it.addPath(parentPath + it.name)
+                }
+            }
+        }
     }
 
     public fun none(): ColumnSet<*> = ColumnsList<Any?>(emptyList())
@@ -94,24 +106,16 @@ public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColum
     public fun ColumnSet<*>.cols(range: IntRange): ColumnSet<Any?> =
         transform { it.flatMap { it.children().subList(range.start, range.endInclusive + 1) } }
 
-    // region colsRange
+    // region select
 
-    public fun <C, R> ColumnGroup<C>.colsRange(selector: ColumnsSelector<C, R>): ColumnSet<R> {
-        val receiver = object : DataFrameReceiver<C>(this, UnresolvedColumnsPolicy.Fail), ColumnsSelectionDsl<C> { }
-        return selector(receiver, receiver)
-    }
+    public fun <C> ColumnSet<DataRow<C>>.select(vararg columns: String): ColumnSet<*> = select { columns.toColumns() }
 
-    public fun ColumnSet<*>.colsRange(start: String, endInclusive: String): ColumnSet<Any?> {
-        val set = this
-        return set.transform {
-            it.flatMap {
-                val children = it.children()
-                val startIndex = children.indexOfFirst { it.name == start }
-                require(startIndex >= 0) { "Column `$start` not found" }
-                val endIndex = children.indexOfLast { it.name == endInclusive }
-                require(endIndex >= 0) { "Column `$endInclusive` not found" }
-                require(endIndex >= startIndex) { "End column `$endInclusive` is before start column `$start`" }
-                children.subList(startIndex, endIndex + 1)
+    public fun <C, R> ColumnSet<DataRow<C>>.select(vararg columns: KProperty<R>): ColumnSet<R> = select { columns.toColumns() }
+
+    public fun <C, R> ColumnSet<DataRow<C>>.select(selector: ColumnsSelector<C, R>): ColumnSet<R> = createColumnSet {
+        this@select.resolve(it).flatMap { group ->
+            group.asColumnGroup().getColumnsWithPaths(selector).map {
+                it.changePath(group.path + it.path)
             }
         }
     }

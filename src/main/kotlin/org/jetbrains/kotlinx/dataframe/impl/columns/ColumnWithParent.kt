@@ -29,6 +29,6 @@ internal interface ColumnWithParent<out C> : ColumnReference<C> {
         }
 
         val data = targetDf.getColumn<C>(name(), context.unresolvedColumnsPolicy)
-        return data?.addPath(pathPrefix + name(), context.df)
+        return data?.addPath(pathPrefix + name())
     }
 }

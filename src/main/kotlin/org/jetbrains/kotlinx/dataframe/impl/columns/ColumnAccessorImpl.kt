@@ -29,7 +29,7 @@ internal class ColumnAccessorImpl<T>(val path: ColumnPath) : ColumnAccessor<T> {
                 df = col.asColumnGroup()
             }
         }
-        return col?.cast<T>()?.addPath(path, context.df)
+        return col?.cast<T>()?.addPath(path)
     }
 
     override fun rename(newName: String) = ColumnAccessorImpl<T>(path.dropLast(1) + newName)

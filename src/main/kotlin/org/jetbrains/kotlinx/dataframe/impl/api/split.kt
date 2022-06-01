@@ -29,7 +29,7 @@ internal fun <T, C, R> splitImpl(
 
     val toInsert = removeResult.removedColumns.flatMap { node ->
 
-        val column = node.toColumnWithPath<C>(clause.df)
+        val column = node.toColumnWithPath<C>()
         val columnCollectors = mutableListOf<ColumnDataCollector>()
         for (row in 0 until nrow) {
             val value = clause.transform(clause.df[row], column.data[row])
