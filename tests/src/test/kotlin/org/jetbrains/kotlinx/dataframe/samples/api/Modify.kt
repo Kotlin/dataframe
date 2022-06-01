@@ -35,6 +35,15 @@ class Modify : TestBase() {
     }
 
     @Test
+    fun updateAsFrame() {
+        val res =
+            // SampleStart
+            df.update { name }.asFrame { select { lastName } }
+            // SampleEnd
+        res shouldBe df.remove { name.firstName }
+    }
+
+    @Test
     fun updatePerColumn() {
         val updated =
             // SampleStart

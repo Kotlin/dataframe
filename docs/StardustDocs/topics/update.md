@@ -8,12 +8,13 @@ Returns `DataFrame` with changed values in some cells. Column types can not be c
 update { columns }
     [.where { rowCondition } ]
     [.at(rowIndices) ] 
-     .with { rowExpression } | .notNull { rowExpression } | .perCol { colExpression } | .perRowCol { rowColExpression } | .withValue(value) | .withNull() | .withZero() 
+     .with { rowExpression } | .notNull { rowExpression } | .perCol { colExpression } | .perRowCol { rowColExpression } | .withValue(value) | .withNull() | .withZero() | .asFrame { frameExpression } 
 
 rowCondition: DataRow.(OldValue) -> Boolean
 rowExpression: DataRow.(OldValue) -> NewValue
 colExpression: DataColumn.(DataColumn) -> NewValue
 rowColExpression: DataRow.(DataColumn) -> NewValue
+frameExpression: DataFrame.(DataFrame) -> DataFrame
 ```
 
 See [column selectors](ColumnSelectors.md) and [row expressions](DataRow.md#row-expressions)
@@ -65,6 +66,16 @@ Update with value depending on row and column:
 
 ```kotlin
 df.update { colsOf<String?>() }.perRowCol { row, col -> col.name() + ": " + row.index() }
+```
+
+<!---END-->
+
+Update [ColumnGroup](DataColumn.md#columngroup) as [DataFrame](DataFrame.md):
+
+<!---FUN updateAsFrame-->
+
+```kotlin
+df.update { name }.asFrame { select { lastName } }
 ```
 
 <!---END-->
