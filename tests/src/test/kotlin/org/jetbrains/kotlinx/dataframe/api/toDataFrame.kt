@@ -104,4 +104,16 @@ class CreateDataFrameTests {
         df2.list.kind shouldBe ColumnKind.Frame
         df2.a.kind() shouldBe ColumnKind.Group
     }
+
+    enum class DummyEnum { A }
+
+    @Test
+    fun `don't convert value types`() {
+        data class Entry(val a: Int, val b: String, val c: Boolean, val e: DummyEnum)
+
+        val df = listOf(Entry(1, "s", true, DummyEnum.A)).toDataFrame(depth = 100)
+        df.columns().forEach {
+            it.kind shouldBe ColumnKind.Value
+        }
+    }
 }
