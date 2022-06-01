@@ -2,6 +2,10 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.string.shouldStartWith
 import org.apache.commons.csv.CSVFormat
+import org.apache.poi.ss.usermodel.Sheet
+import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.io.toCsv
 import org.jetbrains.kotlinx.dataframe.io.toJson
 import org.jetbrains.kotlinx.dataframe.io.writeCSV
@@ -64,7 +68,56 @@ class Write : TestBase() {
     @Test
     fun writeXls() {
         useTempFile { file ->
+            // SampleStart
             df.writeExcel(file)
+            // SampleEnd
+        }
+    }
+
+    @Test
+    fun writeXlsAppendAndPostProcessing() {
+        useTempFile { file ->
+            // SampleStart
+            /**
+             * Do something with generated sheets. Here we set bold style for headers and italic style for first data column
+             */
+            fun setStyles(sheet: Sheet) {
+                val headerFont = sheet.workbook.createFont()
+                headerFont.bold = true
+                val headerStyle = sheet.workbook.createCellStyle()
+                headerStyle.setFont(headerFont)
+
+                val indexFont = sheet.workbook.createFont()
+                indexFont.italic = true
+                val indexStyle = sheet.workbook.createCellStyle()
+                indexStyle.setFont(indexFont)
+
+                sheet.forEachIndexed { index, row ->
+                    if (index == 0) {
+                        for (cell in row) {
+                            cell.cellStyle = headerStyle
+                        }
+                    } else {
+                        row.first().cellStyle = indexStyle
+                    }
+                }
+            }
+
+            // Create a workbook (or use existing)
+            val wb = WorkbookFactory.create(true)
+
+            // Create different sheets from different data frames in the workbook
+            val allPersonsSheet = df.writeExcel(wb, sheetName = "allPersons")
+            val happyPersonsSheet = df.filter { person -> person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "happyPersons")
+            val unhappyPersonsSheet = df.filter { person -> !person.isHappy }.remove("isHappy").writeExcel(wb, sheetName = "unhappyPersons")
+
+            // Do anything you want by POI
+            listOf(happyPersonsSheet, unhappyPersonsSheet).forEach { setStyles(it) }
+
+            // Save the result
+            wb.write(file.outputStream())
+            wb.close()
+            // SampleEnd
         }
     }
 
