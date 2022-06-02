@@ -57,7 +57,7 @@ enum class Direction { NORTH, SOUTH, WEST, EAST }
 
 ```kotlin
 dataFrameOf("direction")("NORTH", "WEST")
-   .convert("direction").to<Direction>()
+    .convert("direction").to<Direction>()
 ```
 
 <!---END-->
