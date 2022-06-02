@@ -78,7 +78,7 @@ internal object Allocator {
 /**
  * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [channel]
  */
-public fun readArrowIPC(channel: ReadableByteChannel, allocator: RootAllocator = Allocator.ROOT): AnyFrame {
+public fun DataFrame.Companion.readArrowIPC(channel: ReadableByteChannel, allocator: RootAllocator = Allocator.ROOT): AnyFrame {
     ArrowStreamReader(channel, allocator).use { reader ->
         val dfs = buildList {
             val root = reader.vectorSchemaRoot
@@ -95,7 +95,7 @@ public fun readArrowIPC(channel: ReadableByteChannel, allocator: RootAllocator =
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [channel]
  */
-public fun readArrowFeather(channel: SeekableByteChannel, allocator: RootAllocator = Allocator.ROOT): AnyFrame {
+public fun DataFrame.Companion.readArrowFeather(channel: SeekableByteChannel, allocator: RootAllocator = Allocator.ROOT): AnyFrame {
     ArrowFileReader(channel, allocator).use { reader ->
         val dfs = buildList {
             reader.recordBlocks.forEach { block ->
