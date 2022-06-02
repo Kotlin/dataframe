@@ -10,8 +10,10 @@ import org.jetbrains.kotlinx.dataframe.api.columnTypes
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.io.readArrowFeather
 import org.jetbrains.kotlinx.dataframe.io.readCSV
 import org.jetbrains.kotlinx.dataframe.io.readJson
+import org.jetbrains.kotlinx.dataframe.testArrowFeather
 import org.jetbrains.kotlinx.dataframe.testCsv
 import org.jetbrains.kotlinx.dataframe.testJson
 import org.junit.Test
@@ -71,5 +73,15 @@ class Read : TestBase() {
         }
         df1["IDS"].type() shouldBe typeOf<String>()
         // SampleEnd
+    }
+
+    @Test
+    fun readArrowFeather() {
+        val file = testArrowFeather("data-arrow_2.0.0_uncompressed")
+        // SampleStart
+        val df = DataFrame.readArrowFeather(file)
+        // SampleEnd
+        df.rowsCount() shouldBe 1
+        df.columnsCount() shouldBe 4
     }
 }
