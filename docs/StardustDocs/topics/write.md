@@ -51,7 +51,13 @@ val jsonStr = df.toJson(prettyPrint = true)
 
 ### Writing spreadsheets
 
-You can write your dataframe in XLS, XLSX format to a file or `OutputStream`
+Add dependency:
+
+```kotlin
+implementation("org.jetbrains.kotlinx:dataframe-excel:$dataframe_version")
+```
+
+You can write your dataframe in XLS, XLSX format to a file, `OutputStream` or Workbook object.
 
 <!---FUN writeXls-->
 

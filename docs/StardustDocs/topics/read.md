@@ -1,7 +1,7 @@
 [//]: # (title: Read)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Read-->
 
-`DataFrame` supports CSV, TSV, JSON, XLS and XLSX input formats.
+`DataFrame` supports CSV, TSV, JSON, XLS and XLSX, Apache Arrow input formats.
 
 `read` method automatically detects input format based on file extension and content
 
@@ -136,9 +136,15 @@ D: Boolean?
 
 Column A has `String` type because all values are string literals, no implicit conversion is performed. Column C has `Number` type because it's the least common type for `Int` and `Double`.
 
-### Reading spreadsheets
+### Reading Excel
 
-Right now DataFrame only supports reading Excel formats: xls, xlsx.
+Add dependency:
+
+```kotlin
+implementation("org.jetbrains.kotlinx:dataframe-excel:$dataframe_version")
+```
+
+Right now DataFrame supports reading Excel spreadsheet formats: xls, xlsx.
 
 You can read from file or URL.
 
@@ -146,7 +152,8 @@ Cells representing dates will be read as `kotlinx.datetime.LocalDateTime`.
 Cells with number values, including whole numbers such as "100", or calculated formulas will be read as `Double` 
 
 Sometimes cells can have wrong format in Excel file, for example you expect to read column of String:
-```
+
+```text
 IDS
 100 <-- Intended to be String, but has wrong cell format in original .xlsx file
 A100
@@ -173,3 +180,23 @@ df1["IDS"].type() shouldBe typeOf<String>()
 ```
 
 <!---END-->
+
+### Reading Apache Arrow formats
+
+Add dependency:
+
+```kotlin
+implementation("org.jetbrains.kotlinx:dataframe-arrow:$dataframe_version")
+```
+
+Dataframe supports reading from [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) and [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
+
+<!---FUN readArrowFeather-->
+
+```kotlin
+val df = DataFrame.readArrowFeather(file)
+```
+
+<!---END-->
+
+
