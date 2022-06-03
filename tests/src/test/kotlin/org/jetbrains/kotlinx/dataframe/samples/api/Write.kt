@@ -115,7 +115,7 @@ class Write : TestBase() {
             listOf(happyPersonsSheet, unhappyPersonsSheet).forEach { setStyles(it) }
 
             // Save the result
-            wb.write(file.outputStream())
+            file.outputStream().use { wb.write(it) }
             wb.close()
             // SampleEnd
         }
