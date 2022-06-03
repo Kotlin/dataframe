@@ -15,7 +15,7 @@ kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotl
 application.mainClass.set("org.jetbrains.kotlinx.dataframe.examples.youtube.YoutubeKt")
 
 dependencies {
-    implementation(project(":"))
+    implementation(project(":core"))
     implementation(libs.kotlin.datetimeJvm)
 }
 

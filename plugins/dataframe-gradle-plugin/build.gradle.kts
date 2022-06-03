@@ -14,7 +14,7 @@ repositories {
 group = "org.jetbrains.kotlin"
 
 dependencies {
-    implementation(project(":"))
+    implementation(project(":core"))
     implementation(project(":dataframe-arrow"))
     implementation(project(":dataframe-excel"))
     implementation(kotlin("gradle-plugin-api"))
@@ -44,7 +44,7 @@ tasks.withType<ProcessResources> {
         filter {
             it.replace(
                 "%DATAFRAME_JAR%",
-                project(":").configurations.getByName("instrumentedJars").artifacts.single().file.absolutePath.replace(File.separatorChar, '/')
+                project(":core").configurations.getByName("instrumentedJars").artifacts.single().file.absolutePath.replace(File.separatorChar, '/')
             )
         }
     }
@@ -107,9 +107,10 @@ val integrationTestTask = task<Test>("integrationTest") {
     dependsOn(":plugins:symbol-processor:publishToMavenLocal")
     dependsOn(":dataframe-arrow:publishToMavenLocal")
     dependsOn(":dataframe-excel:publishToMavenLocal")
-    dependsOn(":publishApiPublicationToMavenLocal")
+ //   dependsOn(":publishApiPublicationToMavenLocal")
     dependsOn(":dataframe-arrow:publishDataframeArrowPublicationToMavenLocal")
     dependsOn(":dataframe-excel:publishDataframeExcelPublicationToMavenLocal")
+    dependsOn(":core:publishCorePublicationToMavenLocal")
     description = "Runs integration tests."
     group = "verification"
 

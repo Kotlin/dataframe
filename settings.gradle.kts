@@ -30,3 +30,4 @@ pluginManagement {
     }
 }
 include("dataframe-excel")
+include("core")

@@ -16,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
-import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.receivers.AggregateInternalDsl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
