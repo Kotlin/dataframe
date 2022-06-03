@@ -50,20 +50,67 @@ As the Notebook you've created is actually a Jupyter notebook, you can follow th
 DataFrame is published to Maven Central, so you can simply add the following line to your Kotlin DSL
 buildscript to depend on it:
 
+### All-in-one artifact
+
+<tabs>
+<tab title="Kotlin DSL">
+
 ```kotlin
 dependencies {
     implementation("org.jetbrains.kotlinx:dataframe:<version>")
 }
 ```
 
-In Groovy DSL buildscript setup is very similar:
-```groovy
+</tab>
+
+<tab title="Groovy DSL">
+
+```kotlin
 dependencies {
     implementation 'org.jetbrains.kotlinx:dataframe:<version>'
 }
 ```
 
-### Gradle plugin configuration
+</tab>
+
+</tabs>
+
+### Only what you need
+
+If you want to avoid adding unnecessary dependency, you can choose whatever you need:
+
+<tabs>
+<tab title="Kotlin DSL">
+
+```kotlin
+dependencies {
+    // Artifact containing all APIs and implementations
+    implementation("org.jetbrains.kotlinx:dataframe-core:<version>")
+    // Optional formats support
+    implementation("org.jetbrains.kotlinx:dataframe-excel:<version>")
+    implementation("org.jetbrains.kotlinx:dataframe-arrow:<version>")
+}
+```
+
+</tab>
+
+<tab title="Groovy DSL">
+
+```groovy
+dependencies {
+    // Artifact containing all APIs and implementations
+    implementation 'org.jetbrains.kotlinx:dataframe-core:<version>'
+    // Optional formats support 
+    implementation 'org.jetbrains.kotlinx:dataframe-excel:<version>'
+    implementation 'org.jetbrains.kotlinx:dataframe-arrow:<version>'
+}
+```
+
+</tab>
+
+</tabs>
+
+### Data schema preprocessor
 
 We provide a Gradle plugin that generates interfaces by your data.
 To use it in your project, pick up the latest version from [here](https://plugins.gradle.org/plugin/org.jetbrains.kotlin.plugin.dataframe)
