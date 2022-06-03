@@ -105,8 +105,8 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     )
 
     companion object {
-        const val ideaExamplesPath = "examples/idea-examples"
-        const val jupyterExamplesPath = "examples/jupyter-notebooks"
+        const val ideaExamplesPath = "../examples/idea-examples"
+        const val jupyterExamplesPath = "../examples/jupyter-notebooks"
 
         fun testFile(folder: String, fileName: String) = fileName to "$jupyterExamplesPath/$folder/$fileName"
     }

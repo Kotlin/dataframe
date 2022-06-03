@@ -12,7 +12,7 @@ repositories {
 group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
-    implementation(project(":"))
+    implementation(project(":core"))
     implementation(project(":dataframe-arrow"))
     implementation(project(":dataframe-excel"))
     implementation(libs.ksp.api)
