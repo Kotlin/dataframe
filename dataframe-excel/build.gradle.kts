@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    api(project(":"))
+    api(project(":core"))
     api(libs.poi)
     implementation(libs.poi.ooxml)
 

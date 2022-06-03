@@ -14,7 +14,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":"))
+    implementation(project(":core"))
     implementation(project(":dataframe-excel"))
     implementation(project(":dataframe-arrow"))
     testImplementation(libs.junit)

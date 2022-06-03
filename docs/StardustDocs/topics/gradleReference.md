@@ -54,7 +54,7 @@ If you want non-default name and package, consider using fully-qualified name:
 dataframes {
     // output: build/generated/dataframe/main/kotlin/org/example/data/OtherName.Generated.kt
     schema {
-        name = org.example.data.OtherName
+        name = "org.example.data.OtherName"
         data = file("path/to/data.csv")
     }
 }

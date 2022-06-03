@@ -15,7 +15,7 @@ kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotl
 application.mainClass.set("org.jetbrains.kotlinx.dataframe.examples.movies.MoviesWithDataClassKt")
 
 dependencies {
-    implementation(project(":"))
+    implementation(project(":core"))
 }
 
 tasks.withType<KotlinCompile> {
