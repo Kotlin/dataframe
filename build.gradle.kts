@@ -8,14 +8,11 @@ plugins {
     kotlin("jvm") version libs.versions.kotlin
     kotlin("libs.publisher") version libs.versions.libsPublisher
     kotlin("plugin.serialization") version libs.versions.kotlin
-    kotlin("jupyter.api") version libs.versions.kotlinJupyter
     kotlin("plugin.dataframe") version libs.versions.dataframe apply false
 
     id("org.jetbrains.dokka") version libs.versions.dokka
-    id("org.jetbrains.dataframe.generator")
 
     id("org.jmailen.kotlinter") version libs.versions.ktlint
-
 }
 
 val jupyterApiTCRepo: String by project
@@ -33,40 +30,11 @@ configurations {
 }
 
 dependencies {
-    implementation(libs.kotlin.stdlib)
-    implementation(libs.kotlin.stdlib.jdk8)
-    implementation(libs.kotlin.reflect)
-
-    api(libs.commonsCsv)
-    implementation(libs.klaxon)
-    implementation(libs.fuel)
-
-    implementation(libs.kotlin.datetimeJvm)
-    implementation("com.squareup:kotlinpoet:1.11.0")
-
-    testImplementation(libs.junit)
-    testImplementation(libs.kotestAssertions) {
-        exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
-    }
-    testImplementation(libs.kotlin.scriptingJvm)
-    testImplementation(libs.jsoup)
+    api(project(":core"))
+    api(project(":dataframe-arrow"))
+    api(project(":dataframe-excel"))
 }
 
-kotlin {
-    explicitApi()
-}
-
-tasks.withType<JavaCompile> {
-    sourceCompatibility = JavaVersion.VERSION_1_8.toString()
-    targetCompatibility = JavaVersion.VERSION_1_8.toString()
-}
-
-tasks.withType<KotlinCompile> {
-    dependsOn(tasks.lintKotlin)
-    kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn")
-    }
-}
 
 allprojects {
     tasks.withType<KotlinCompile> {
@@ -147,46 +115,3 @@ kotlinPublications {
         }
     }
 }
-
-tasks.lintKotlinMain {
-    exclude("**/*keywords*/**")
-}
-
-tasks.lintKotlinTest {
-    enabled = true
-}
-
-kotlinter {
-    ignoreFailures = false
-    reporters = arrayOf("checkstyle", "plain")
-    experimentalRules = true
-    disabledRules = arrayOf(
-            "no-wildcard-imports",
-            "experimental:spacing-between-declarations-with-annotations",
-            "experimental:enum-entry-name-case",
-            "experimental:argument-list-wrapping",
-            "experimental:annotation",
-            "max-line-length",
-            "filename"
-    )
-}
-
-val instrumentedJars: Configuration by configurations.creating {
-    isCanBeConsumed = true
-    isCanBeResolved = false
-}
-
-artifacts {
-    add("instrumentedJars", tasks.jar.get().archiveFile) {
-        builtBy(tasks.jar)
-    }
-}
-
-tasks.test {
-    maxHeapSize = "2048m"
-}
-
-tasks.processJupyterApiResources {
-    libraryProducers = listOf("org.jetbrains.kotlinx.dataframe.jupyter.Integration")
-}
-
