@@ -46,7 +46,7 @@ Specify schema with preferred method and execute the `build` task.
 <tabs>
 <tab title="Method 1. Annotation processing">
 
-ImportDataSchema annotation must be above package directive. You can put this annotation in the same file as data processing code. You can import schema from URL or relative path of the file. Relative path is resolved to project root directory.
+ImportDataSchema annotation must be above package directive. You can put this annotation in the same file as data processing code. You can import schema from URL or relative path of the file. Relative path by default is resolved to project root directory. You can configure it by [passing](https://kotlinlang.org/docs/ksp-quickstart.html#pass-options-to-processors) `dataframe.resolutionDir` option to preprocessor 
 
 **Note that due to incremental processing, imported schema will be re-generated only if some source code has changed from previous invocation, at least one character**
 
@@ -61,7 +61,7 @@ For the following configuration, file `Repository.Generated.kt` will be generate
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 ```
 
-See KDocs for `ImportDataSchema` and `ImportDataSchemaByAbsolutePath` in  IDE or [github](ttps://github.com/Kotlin/dataframe/tree/master/src/main/kotlin/org/jetbrains/kotlinx/dataframe/annotations/ImportDataSchema.kt) for more details
+See KDocs for `ImportDataSchema` in  IDE or [github](ttps://github.com/Kotlin/dataframe/tree/master/src/main/kotlin/org/jetbrains/kotlinx/dataframe/annotations/ImportDataSchema.kt) for more details
 
 </tab>
 

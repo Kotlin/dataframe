@@ -10,7 +10,6 @@ import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchemaVisibility
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
-import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchemaByAbsolutePath
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.DfReadResult
@@ -36,7 +35,6 @@ class DataSchemaGenerator(
 
     fun resolveImportStatements() = listOf(
         ::resolvePathImports,
-        ::resolveAbsolutePathImports
     ).flatMap { it(resolver) }
 
     class ImportDataSchemaStatement(
@@ -56,13 +54,6 @@ class DataSchemaGenerator(
         .filterIsInstance<KSFile>()
         .flatMap { file ->
             file.getAnnotationsByType(ImportDataSchema::class).mapNotNull { it.toStatement(file, logger) }
-        }
-
-    private fun resolveAbsolutePathImports(resolver: Resolver) = resolver
-        .getSymbolsWithAnnotation(ImportDataSchemaByAbsolutePath::class.qualifiedName!!)
-        .filterIsInstance<KSFile>()
-        .flatMap { file ->
-            file.getAnnotationsByType(ImportDataSchemaByAbsolutePath::class).mapNotNull { it.toStatement(file, logger) }
         }
 
     private fun ImportDataSchema.toStatement(file: KSFile, logger: KSPLogger): ImportDataSchemaStatement? {
@@ -94,25 +85,6 @@ class DataSchemaGenerator(
             file,
             name,
             CodeGeneratorDataSource(this.path, url),
-            visibility.toMarkerVisibility(),
-            normalizationDelimiters.toList(),
-            withDefaultPath,
-            csvOptions
-        )
-    }
-
-    private fun ImportDataSchemaByAbsolutePath.toStatement(file: KSFile, logger: KSPLogger): ImportDataSchemaStatement? {
-        val data = File(absolutePath)
-        val url = try {
-            data.toURI().toURL()
-        } catch (exception: MalformedURLException) {
-            logger.error("$absolutePath is not valid URL: ${exception.message}", file)
-            null
-        } ?: return null
-        return ImportDataSchemaStatement(
-            file,
-            name,
-            CodeGeneratorDataSource(absolutePath, url),
             visibility.toMarkerVisibility(),
             normalizationDelimiters.toList(),
             withDefaultPath,
