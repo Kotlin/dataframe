@@ -34,10 +34,28 @@ class ConvertTests {
         df.convert { time }.toLocalDateTime()
     }
 
-    enum class Value { A, B }
+    enum class EnumClass { A, B }
 
     @Test
     fun `convert string to enum`() {
-        columnOf("A", "B").convertTo<Value>() shouldBe columnOf(Value.A, Value.B)
+        columnOf("A", "B").convertTo<EnumClass>() shouldBe columnOf(EnumClass.A, EnumClass.B)
+    }
+
+    @JvmInline
+    value class ValueClass(val v: Int)
+
+    @Test
+    fun `convert string to value class`() {
+        columnOf("1").convertTo<ValueClass>() shouldBe columnOf(ValueClass(1))
+    }
+
+    @Test
+    fun `convert double to value class`() {
+        columnOf(1.0).convertTo<ValueClass>() shouldBe columnOf(ValueClass(1))
+    }
+
+    @Test
+    fun `convert value class to double`() {
+        columnOf(ValueClass(1)).convertTo<Double>() shouldBe columnOf(1.0)
     }
 }

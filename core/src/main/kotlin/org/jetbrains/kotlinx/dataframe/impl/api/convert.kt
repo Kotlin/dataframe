@@ -38,6 +38,8 @@ import kotlin.math.roundToLong
 import kotlin.reflect.KType
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.full.primaryConstructor
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
@@ -118,11 +120,43 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
 
     if (fromClass == toClass) return { it }
 
+    if (toClass.isValue) {
+        val constructor =
+            toClass.primaryConstructor ?: error("Value type $toClass doesn't have primary constructor")
+        val underlyingType = constructor.parameters.single().type
+        val converter = getConverter(from, underlyingType)
+            ?: error("Can't find converter from $underlyingType to $to")
+        return convert<Any> {
+            val converted = converter(it)
+            constructor.call(converted)
+        }
+    }
+
+    if (fromClass.isValue) {
+        val constructor =
+            fromClass.primaryConstructor ?: error("Value type $fromClass doesn't have primary constructor")
+        val constructorParameter = constructor.parameters.single()
+        val underlyingType = constructorParameter.type
+        val converter = getConverter(underlyingType, to)
+            ?: error("Can't find converter from $underlyingType to $to")
+        val property = fromClass.memberProperties.single { it.name == constructorParameter.name } as kotlin.reflect.KProperty1<Any, *>
+
+        return convert<Any> {
+            val value = property.get(it)!!
+            converter(value)
+        }
+    }
+
     return when {
         fromClass == String::class -> {
-            Parsers[to.withNullability(false)]?.toConverter(options)
-                ?: if (toClass.isSubclassOf(Enum::class)) convert<String> { java.lang.Enum.valueOf(toClass.java as Class<DummyEnum>, it) }
-                else null
+            val parser = Parsers[to.withNullability(false)]
+            when {
+                parser != null -> parser.toConverter(options)
+                toClass.isSubclassOf(Enum::class) -> convert<String> {
+                    java.lang.Enum.valueOf(toClass.java as Class<DummyEnum>, it)
+                }
+                else -> null
+            }
         }
         toClass == String::class -> convert<Any> { it.toString() }
         else -> when (fromClass) {
