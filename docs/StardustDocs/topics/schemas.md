@@ -10,7 +10,7 @@ It ignores order of columns in `DataFrame`, but tracks column hierarchy.
 
 In Jupyter environment compile-time `DataFrame` schema is synchronized with real-time data after every cell execution.
 
-In IDEA projects you can use [gradle plugin](installation.md#gradle-plugin-configuration) to extract schema from dataset and generate extension properties.
+In IDEA projects you can use [gradle plugin](installation.md#data-schema-preprocessor) to extract schema from dataset and generate extension properties.
 
 ## DataSchema workflow in Jupyter
 
