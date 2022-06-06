@@ -9,7 +9,7 @@ In Gradle project `Kotlin DataFrame` provides
 
 ### Configuration
 
-To use [extension properties API](extensionPropertiesApi.md) in Gradle project you should [configure Kotlin DataFrame plugin](installation.md#gradle-plugin-configuration).
+To use [extension properties API](extensionPropertiesApi.md) in Gradle project you should [configure Kotlin DataFrame plugin](installation.md#data-schema-preprocessor).
 
 ### Annotation processing
 Declare data schemas in your code and use them to access data in DataFrames.
