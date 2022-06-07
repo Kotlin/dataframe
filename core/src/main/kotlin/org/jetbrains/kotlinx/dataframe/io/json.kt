@@ -15,7 +15,6 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -186,14 +185,14 @@ internal fun fromJsonList(records: List<*>, header: List<String> = emptyList()):
     }
 }
 
+private val valueTypes = setOf(Boolean::class, Double::class, Int::class, Float::class, Long::class, Short::class, Byte::class)
+
 internal fun KlaxonJson.encodeRow(frame: ColumnsContainer<*>, index: Int): JsonObject? {
     val values = frame.columns().mapNotNull { col ->
         when {
             col is ColumnGroup<*> -> encodeRow(col, index)
             col is FrameColumn<*> -> col[index]?.let { encodeFrame(it) }
-            col.isSubtypeOf<Boolean?>() || col.isSubtypeOf<Double?>() || col.isSubtypeOf<Int?>() ||
-                col.isSubtypeOf<Float?>() || col.isSubtypeOf<Long?>() ||
-                col.isSubtypeOf<Short?>() || col.isSubtypeOf<Byte?>() -> {
+            col.typeClass in valueTypes -> {
                 val v = col[index]
                 if ((v is Double && v.isNaN()) || (v is Float && v.isNaN())) {
                     v.toString()
