@@ -16,6 +16,8 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
+import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.single
@@ -110,14 +112,35 @@ internal fun fromJsonList(records: List<*>, header: List<String> = emptyList()):
         when {
             colName == valueColumn -> {
                 val collector = createDataCollector(records.size)
-                records.forEach {
-                    when (it) {
+                val nanIndices = mutableListOf<Int>()
+                records.forEachIndexed { i, v ->
+                    when (v) {
                         is JsonObject -> collector.add(null)
                         is JsonArray<*> -> collector.add(null)
-                        else -> collector.add(it)
+                        "NaN" -> { nanIndices.add(i); collector.add(null) }
+                        else -> collector.add(v)
                     }
                 }
-                collector.toColumn(colName)
+                val column = collector.toColumn(colName)
+                if (nanIndices.isNotEmpty()) {
+                    fun <C> DataColumn<C>.updateNaNs(nanValue: C): DataColumn<C> {
+                        var j = 0
+                        var nextNanIndex = nanIndices[j]
+                        return mapIndexed(column.type) { i, v ->
+                            if (i == nextNanIndex) {
+                                j++
+                                nextNanIndex = if (j < nanIndices.size) nanIndices[j] else -1
+                                nanValue
+                            } else v
+                        }
+                    }
+                    when (column.typeClass) {
+                        Double::class -> column.cast<Double?>().updateNaNs(Double.NaN)
+                        Float::class -> column.cast<Float?>().updateNaNs(Float.NaN)
+                        String::class -> column.cast<String?>().updateNaNs("NaN")
+                        else -> column
+                    }
+                } else column
             }
             colName == arrayColumn -> {
                 val values = mutableListOf<Any?>()
@@ -170,7 +193,12 @@ internal fun KlaxonJson.encodeRow(frame: ColumnsContainer<*>, index: Int): JsonO
             col is FrameColumn<*> -> col[index]?.let { encodeFrame(it) }
             col.isSubtypeOf<Boolean?>() || col.isSubtypeOf<Double?>() || col.isSubtypeOf<Int?>() ||
                 col.isSubtypeOf<Float?>() || col.isSubtypeOf<Long?>() ||
-                col.isSubtypeOf<Short?>() || col.isSubtypeOf<Byte?>() -> col[index]
+                col.isSubtypeOf<Short?>() || col.isSubtypeOf<Byte?>() -> {
+                val v = col[index]
+                if ((v is Double && v.isNaN()) || (v is Float && v.isNaN())) {
+                    v.toString()
+                } else v
+            }
             else -> col[index]?.toString()
         }?.let { col.name to it }
     }
