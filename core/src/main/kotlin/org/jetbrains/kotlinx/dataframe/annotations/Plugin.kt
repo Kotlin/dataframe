@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.annotations
 
+import org.jetbrains.kotlinx.dataframe.plugin.schema
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
@@ -41,13 +42,23 @@ public abstract class AbstractInterpreter<T> : Interpreter<T> {
     internal val _expectedArguments: MutableList<Interpreter.ExpectedArgument> = mutableListOf()
 
     override val expectedArguments: List<Interpreter.ExpectedArgument> = _expectedArguments
-    public fun <Value> arg(name: String? = null): PropertyDelegateProvider<Any?, ReadOnlyProperty<Arguments, Value>> = PropertyDelegateProvider { thisRef: Any?, property ->
-        val name = name ?: property.name
+    public fun <Value> arg(name: ArgumentName? = null): PropertyDelegateProvider<Any?, ReadOnlyProperty<Arguments, Value>> = PropertyDelegateProvider { thisRef: Any?, property ->
+        val name = name?.value ?: property.name
         _expectedArguments.add(Interpreter.ExpectedArgument(name, property.returnType))
         ReadOnlyProperty { args, _ -> args[name] as Value }
     }
 
-    public fun schema(s: String): PropertyDelegateProvider<Any?, ReadOnlyProperty<Arguments, PluginDataFrameSchema>> = arg(s)
+    public class ArgumentName private constructor(public val value: String) {
+        public companion object {
+            public val THIS: ArgumentName = ArgumentName("this")
+
+            public fun of(name: String): ArgumentName = ArgumentName(name)
+        }
+    }
+
+    public val THIS: ArgumentName = ArgumentName.THIS
+
+    public fun name(name: String): ArgumentName = ArgumentName.of(name)
 
     final override fun interpret(arguments: Map<String, Any>): T {
         return Arguments(arguments).interpret()
@@ -66,7 +77,7 @@ public abstract class AbstractSchemaModificationInterpreter : AbstractInterprete
 public class ConvertApproximation(public val schema: PluginDataFrameSchema, public val columns: List<List<String>>)
 
 public class ConvertInterpreter : AbstractInterpreter<ConvertApproximation>() {
-    public val Arguments.schema: PluginDataFrameSchema by arg("this")
+    public val Arguments.schema: PluginDataFrameSchema by arg(ArgumentName.THIS)
     public val Arguments.columns: List<String> by arg()
 
     override fun Arguments.interpret(): ConvertApproximation {
@@ -77,9 +88,9 @@ public class ConvertInterpreter : AbstractInterpreter<ConvertApproximation>() {
 public annotation class Interpretable<I : Interpreter<*>>(val interpreter: KClass<I>)
 
 public class Add : AbstractSchemaModificationInterpreter() {
-    public val Arguments.df: PluginDataFrameSchema by arg("this")
+    public val Arguments.df: PluginDataFrameSchema by arg(THIS)
     public val Arguments.name: String by arg()
-    public val Arguments.type: TypeApproximation by arg("expression")
+    public val Arguments.type: TypeApproximation by arg(name("expression"))
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         return PluginDataFrameSchema(mapOf(name to PluginColumnSchema(type)))
@@ -111,8 +122,8 @@ public class Add1 : AbstractSchemaModificationInterpreter() {
 
 public class From : AbstractInterpreter<Unit>() {
     public val Arguments.receiver: AddDslApproximation by arg()
-    public val Arguments.name: String by arg("this")
-    public val Arguments.type: TypeApproximation by arg("expression")
+    public val Arguments.name: String by arg(THIS)
+    public val Arguments.type: TypeApproximation by arg(name("expression"))
 
     override fun Arguments.interpret() {
         receiver.columns += (name to PluginColumnSchema(type))
@@ -122,7 +133,7 @@ public class From : AbstractInterpreter<Unit>() {
 public class AddDslApproximation(public val columns: MutableList<Pair<String, PluginColumnSchema>>)
 
 public class AddWithDsl : AbstractSchemaModificationInterpreter() {
-    public val Arguments.df: PluginDataFrameSchema by schema("this")
+    public val Arguments.df: PluginDataFrameSchema by schema(THIS)
     public val Arguments.body: (Any) -> Unit by arg()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
