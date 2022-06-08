@@ -103,18 +103,6 @@ public class Add1 : AbstractSchemaModificationInterpreter() {
     override fun Arguments.interpret(): PluginDataFrameSchema {
         return PluginDataFrameSchema(mapOf(name to PluginColumnSchema(expression)))
     }
-//    override fun interpret(arguments: Map<String, Any>): PluginDataFrameSchema {
-//        val name = arguments["name"] as String
-//        val type = arguments["expression"] as TypeApproximation
-//        val parent = arguments["<parent>"] as String
-//
-//        return PluginDataFrameSchema(mapOf(name to PluginColumnSchema(type)))
-// //        return AnalysisResult.Update(
-// //            parent,
-// //            updatedProperties = emptyList(),
-// //            newProperties = listOf(Property(name, type))
-// //        )
-//    }
 }
 
 public class From : AbstractInterpreter<Unit>() {
@@ -154,24 +142,9 @@ public sealed interface AnalysisResult {
     ) : AnalysisResult
 }
 
-// public class DslResult(public val properties: List<Property>) {
-//    public constructor(property: Property) : this(listOf(property))
-//
-//    public operator fun plus(other: DslResult): DslResult {
-//        return DslResult(properties + other.properties)
-//    }
-// }
-
 public data class Property(val name: String, val type: String)
 
 public annotation class SchemaProcessor<A : SchemaModificationInterpreter>(val processor: KClass<A>)
-
-@SchemaProcessor<SchemaModificationInterpreter>(SchemaModificationInterpreter::class)
-public fun <A : SchemaModificationInterpreter> test(processor: SchemaProcessor<A>) {
-    val processor: SchemaModificationInterpreter = processor.processor.java.getDeclaredConstructor().newInstance()
-
-    processor
-}
 
 public class PluginDataFrameSchema(public val columns: Map<String, PluginColumnSchema>)
 
