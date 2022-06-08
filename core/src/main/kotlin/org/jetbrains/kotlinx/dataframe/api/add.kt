@@ -16,10 +16,10 @@ import org.jetbrains.kotlinx.dataframe.annotations.AddWithDsl
 import org.jetbrains.kotlinx.dataframe.annotations.Dsl
 import org.jetbrains.kotlinx.dataframe.annotations.From
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.annotations.Name
 import org.jetbrains.kotlinx.dataframe.annotations.ReturnType
 import org.jetbrains.kotlinx.dataframe.annotations.Schema
 import org.jetbrains.kotlinx.dataframe.annotations.SchemaProcessor
+import org.jetbrains.kotlinx.dataframe.annotations.Value
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -119,7 +119,7 @@ public typealias AddExpression<T, C> = Selector<AddDataRow<T>, C>
  */
 @SchemaProcessor<Add>(Add::class)
 public inline fun <reified R, T> @receiver:Schema DataFrame<T>.add(
-    @Name name: String,
+    @Value name: String,
     infer: Infer = Infer.Nulls,
     @ReturnType noinline expression: AddExpression<T, R>
 ): DataFrame<T> =
@@ -172,7 +172,9 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
     ): Boolean = add(df.mapToColumn(name, infer, expression))
 
     @Interpretable<From>(From::class)
-    public inline infix fun <reified R> @receiver:Name String.from(@ReturnType noinline expression: RowExpression<T, R>): Boolean = add(this, Infer.Nulls, expression)
+    public inline infix fun <reified R> @receiver:Value String.from(
+        @ReturnType noinline expression: RowExpression<T, R>
+    ): Boolean = add(this, Infer.Nulls, expression)
 
     // TODO: use path instead of name
     public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean = name().from(expression)

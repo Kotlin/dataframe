@@ -9,9 +9,6 @@ import kotlin.reflect.KType
 public annotation class Dsl
 
 @Target(AnnotationTarget.VALUE_PARAMETER)
-public annotation class Name
-
-@Target(AnnotationTarget.VALUE_PARAMETER)
 public annotation class Value
 
 @Target(AnnotationTarget.VALUE_PARAMETER)
