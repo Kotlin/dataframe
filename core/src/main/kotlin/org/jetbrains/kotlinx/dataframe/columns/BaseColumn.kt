@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.columns
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.impl.api.Col
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
@@ -17,7 +18,7 @@ import kotlin.reflect.KType
  *
  * @param T type of values contained in column.
  */
-public interface BaseColumn<out T> : ColumnReference<T> {
+public interface BaseColumn<out T> : ColumnReference<T>, Col {
 
     // region info
 
