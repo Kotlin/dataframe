@@ -524,7 +524,7 @@ class DataFrameTreeTests : BaseTest() {
         val plain = grouped.toDataFrame()
             .update { groupCol }.at(1).withNull()
             .update { groupCol }.at(2).with { emptyDataFrame() }
-            .update { groupCol }.at(3).with { it?.filter { false } }
+            .update { groupCol }.at(3).with { it.filter { false } }
         val res = plain.explode(dropEmpty = false) { groupCol }
         val expected = plain[groupCol.name()].sumOf { Math.max((it as AnyFrame?)?.rowsCount() ?: 0, 1) }
         res.rowsCount() shouldBe expected
@@ -558,9 +558,9 @@ class DataFrameTreeTests : BaseTest() {
 
     @Test
     fun `join by frame column`() {
-        val left = typed.groupBy { name }.updateGroups { it?.remove { name and city } }
+        val left = typed.groupBy { name }.updateGroups { it.remove { name and city } }
         val right =
-            typed.update { name }.with { it.reversed() }.groupBy { name }.updateGroups { it?.remove { name and city } }
+            typed.update { name }.with { it.reversed() }.groupBy { name }.updateGroups { it.remove { name and city } }
         val groupCol = left.groups.toColumnAccessor()
         val joined = left.toDataFrame().join(right.toDataFrame()) { groupCol }
         joined.columnsCount() shouldBe 3
