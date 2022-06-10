@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.annotations
 
+import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
+import org.jetbrains.kotlinx.dataframe.plugin.SimpleCol
 import org.jetbrains.kotlinx.dataframe.plugin.schema
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
@@ -14,7 +16,13 @@ public annotation class Value
 @Target(AnnotationTarget.VALUE_PARAMETER)
 public annotation class ReturnType
 
-public class TypeApproximation(public val fqName: String, public val nullable: Boolean)
+public sealed interface TypeApproximation
+
+public class TypeApproximationImpl(public val fqName: String, public val nullable: Boolean) : TypeApproximation
+
+public fun TypeApproximation(fqName: String, nullable: Boolean): TypeApproximation = TypeApproximationImpl(fqName, nullable)
+
+public object ColumnGroupTypeApproximation : TypeApproximation
 
 @Target(AnnotationTarget.CLASS)
 public annotation class HasSchema(val schemaArg: Int)
@@ -90,7 +98,7 @@ public class Add : AbstractSchemaModificationInterpreter() {
     public val Arguments.type: TypeApproximation by arg(name("expression"))
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        return PluginDataFrameSchema(mapOf(name to PluginColumnSchema(type)))
+        return PluginDataFrameSchema(listOf(SimpleCol(name, type)))
     }
 }
 
@@ -101,7 +109,7 @@ public class Add1 : AbstractSchemaModificationInterpreter() {
     public val Arguments.parent: String by arg()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        return PluginDataFrameSchema(mapOf(name to PluginColumnSchema(expression)))
+        return PluginDataFrameSchema(listOf(SimpleCol(name, expression)))
     }
 }
 
@@ -111,20 +119,24 @@ public class From : AbstractInterpreter<Unit>() {
     public val Arguments.type: TypeApproximation by arg(name("expression"))
 
     override fun Arguments.interpret() {
-        receiver.columns += (name to PluginColumnSchema(type))
+        receiver.columns += SimpleCol(name, type)
     }
 }
 
-public class AddDslApproximation(public val columns: MutableList<Pair<String, PluginColumnSchema>>)
+public class AddDslApproximation(public val columns: MutableList<SimpleCol>)
+
+public fun AddDslApproximation(columns: List<Pair<String, PluginColumnSchema>>): AddDslApproximation {
+    return AddDslApproximation(columns.mapTo(mutableListOf()) { SimpleCol(it.first, it.second.type) })
+}
 
 public class AddWithDsl : AbstractSchemaModificationInterpreter() {
     public val Arguments.df: PluginDataFrameSchema by schema(THIS)
     public val Arguments.body: (Any) -> Unit by arg()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        val addDsl = AddDslApproximation(mutableListOf())
+        val addDsl = AddDslApproximation(listOf())
         body(addDsl)
-        return PluginDataFrameSchema(addDsl.columns.toMap())
+        return PluginDataFrameSchema(addDsl.columns)
     }
 }
 
@@ -145,8 +157,6 @@ public sealed interface AnalysisResult {
 public data class Property(val name: String, val type: String)
 
 public annotation class SchemaProcessor(val processor: KClass<out SchemaModificationInterpreter>)
-
-public class PluginDataFrameSchema(public val columns: Map<String, PluginColumnSchema>)
 
 public class PluginColumnSchema(public val type: TypeApproximation)
 
