@@ -46,7 +46,7 @@ internal class AddDataRowImpl<T>(index: Int, owner: DataFrame<T>, private val co
     DataRowImpl<T>(index, owner),
     AddDataRow<T> {
 
-    override fun <C> AnyRow.new() = container[index] as C
+    override fun <C> AnyRow.newValue() = container[index] as C
 }
 
 @PublishedApi

@@ -81,11 +81,18 @@ public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T>
 // region Create and add a single column
 
 /**
- * Receiver that is used in [add] and [update] operations to access new (added or updated) column value in preceding row
+ * Receiver that is used in [add] and [update] operations to access new (added or updated) column value in preceding row.
  */
 public interface AddDataRow<out T> : DataRow<T> {
 
-    public fun <C> AnyRow.new(): C
+    /**
+     * Returns a new value that was already computed for some preceding row during current [add] or [update] column operation.
+     *
+     * Can be used to compute series of values with recurrence relations, e.g. fibonacci.
+     *
+     * @throws IndexOutOfBoundsException when called on a successive row that doesn't have new value yet
+     */
+    public fun <C> AnyRow.newValue(): C
 }
 
 public typealias AddExpression<T, C> = Selector<AddDataRow<T>, C>
