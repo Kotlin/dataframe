@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
+import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -124,11 +124,11 @@ public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null)
 
 public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> = createColumn(values.asIterable(), typeOf<T>(), true).forceResolve()
 
-public fun columnOf(vararg values: AnyBaseColumn): DataColumn<AnyRow> = columnOf(values.asIterable()).forceResolve()
+public fun columnOf(vararg values: AnyBaseCol): DataColumn<AnyRow> = columnOf(values.asIterable()).forceResolve()
 
 public fun <T> columnOf(vararg frames: DataFrame<T>): FrameColumn<T> = columnOf(frames.asIterable()).forceResolve()
 
-public fun columnOf(columns: Iterable<AnyBaseColumn>): DataColumn<AnyRow> = (
+public fun columnOf(columns: Iterable<AnyBaseCol>): DataColumn<AnyRow> = (
     DataColumn.createColumnGroup(
         "",
         dataFrameOf(columns)
@@ -157,7 +157,7 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> = creat
  * @throws [UnequalColumnSizesException] if column size are not equal
  * @param columns columns for [DataFrame]
  */
-public fun dataFrameOf(columns: Iterable<AnyBaseColumn>): AnyFrame {
+public fun dataFrameOf(columns: Iterable<AnyBaseCol>): AnyFrame {
     val cols = columns.map { it.unbox() }
     val nrow = if (cols.isEmpty()) 0 else cols[0].size
     return DataFrameImpl<Unit>(cols, nrow)
@@ -165,7 +165,7 @@ public fun dataFrameOf(columns: Iterable<AnyBaseColumn>): AnyFrame {
 
 public fun dataFrameOf(vararg header: ColumnReference<*>): DataFrameBuilder = DataFrameBuilder(header.map { it.name() })
 
-public fun dataFrameOf(vararg columns: AnyBaseColumn): AnyFrame = dataFrameOf(columns.asIterable())
+public fun dataFrameOf(vararg columns: AnyBaseCol): AnyFrame = dataFrameOf(columns.asIterable())
 
 public fun dataFrameOf(vararg header: String): DataFrameBuilder = dataFrameOf(header.toList())
 

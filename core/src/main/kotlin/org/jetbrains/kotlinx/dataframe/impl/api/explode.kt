@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
+import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
@@ -50,7 +50,7 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: Co
     val outputRowsCount = rowExpandSizes.sum()
 
     fun splitIntoRows(df: AnyFrame, data: Map<ColumnPath, AnyCol>): AnyFrame {
-        val newColumns: List<AnyBaseColumn> = df.columns().map { srcCol ->
+        val newColumns: List<AnyBaseCol> = df.columns().map { srcCol ->
 
             val dstCol = data[pathOf(srcCol.name)]
             if (srcCol is ColumnGroup<*>) { // go to nested columns recursively

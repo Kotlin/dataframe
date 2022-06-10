@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.columns
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
+import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.impl.asList
@@ -69,4 +69,4 @@ public interface BaseColumn<out T> : ColumnReference<T> {
 }
 
 internal val <T> BaseColumn<T>.values: Iterable<T> get() = values()
-internal val AnyBaseColumn.size: Int get() = size()
+internal val AnyBaseCol.size: Int get() = size()

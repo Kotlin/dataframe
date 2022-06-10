@@ -72,8 +72,8 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     // region plus columns
 
-    public operator fun plus(col: AnyBaseColumn): DataFrame<T> = add(col)
-    public operator fun plus(cols: Iterable<AnyBaseColumn>): DataFrame<T> = (columns() + cols).toDataFrame().cast()
+    public operator fun plus(col: AnyBaseCol): DataFrame<T> = add(col)
+    public operator fun plus(cols: Iterable<AnyBaseCol>): DataFrame<T> = (columns() + cols).toDataFrame().cast()
 
     // endregion
 }

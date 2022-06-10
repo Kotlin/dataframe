@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
+import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -32,7 +32,7 @@ import kotlin.reflect.KProperty
  * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
  * @return new [DataFrame] with added columns
  */
-public fun <T> DataFrame<T>.add(vararg columns: AnyBaseColumn): DataFrame<T> = addAll(columns.asIterable())
+public fun <T> DataFrame<T>.add(vararg columns: AnyBaseCol): DataFrame<T> = addAll(columns.asIterable())
 
 /**
  * Creates new [DataFrame] with given columns added to the end of original [DataFrame.columns] list.
@@ -44,7 +44,7 @@ public fun <T> DataFrame<T>.add(vararg columns: AnyBaseColumn): DataFrame<T> = a
  * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
  * @return new [DataFrame] with added columns
  */
-public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseColumn>): DataFrame<T> = dataFrameOf(columns() + columns).cast()
+public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> = dataFrameOf(columns() + columns).cast()
 
 /**
  * Creates new [DataFrame] with all columns from given [dataFrames] added to the end of original [DataFrame.columns] list.

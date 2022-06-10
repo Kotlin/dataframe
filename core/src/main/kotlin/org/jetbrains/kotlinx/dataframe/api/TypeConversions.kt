@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
+import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
@@ -64,7 +64,7 @@ public fun <T> KProperty<T>.toColumnAccessor(): ColumnAccessor<T> = ColumnAccess
 
 // region DataColumn
 
-public fun AnyBaseColumn.toDataFrame(): AnyFrame = dataFrameOf(listOf(this))
+public fun AnyBaseCol.toDataFrame(): AnyFrame = dataFrameOf(listOf(this))
 
 @JvmName("asNumberAnyNullable")
 public fun DataColumn<Any?>.asNumbers(): ValueColumn<Number?> {
@@ -192,10 +192,10 @@ public inline fun <reified T> Iterable<T>.toColumn(property: KProperty<T>): Data
 
 public fun Iterable<String>.toPath(): ColumnPath = ColumnPath(asList())
 
-public fun Iterable<AnyBaseColumn>.toColumnGroup(name: String): ColumnGroup<*> = dataFrameOf(this).asColumnGroup(name)
-public fun <T> Iterable<AnyBaseColumn>.toColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> = dataFrameOf(this).cast<T>().asColumnGroup(column)
+public fun Iterable<AnyBaseCol>.toColumnGroup(name: String): ColumnGroup<*> = dataFrameOf(this).asColumnGroup(name)
+public fun <T> Iterable<AnyBaseCol>.toColumnGroup(column: ColumnGroupAccessor<T>): ColumnGroup<T> = dataFrameOf(this).cast<T>().asColumnGroup(column)
 
-public fun <T> Iterable<AnyBaseColumn>.toColumnGroupOf(name: String): ColumnGroup<T> = toColumnGroup(name).cast()
+public fun <T> Iterable<AnyBaseCol>.toColumnGroupOf(name: String): ColumnGroup<T> = toColumnGroup(name).cast()
 
 // endregion
 
