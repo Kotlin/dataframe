@@ -56,7 +56,6 @@ import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.typeClass
-import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
 import java.io.Serializable
 import java.util.AbstractSet
