@@ -42,7 +42,7 @@ public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): Convert<
 public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T, C> =
     convert { columns.toColumns() }
 
-@Interpretable<ConvertInterpreter>(ConvertInterpreter::class)
+@Interpretable(ConvertInterpreter::class)
 public fun <T> @receiver:Schema DataFrame<T>.convert(@Value vararg columns: String): Convert<T, Any?> = convert { columns.toColumns() }
 public fun <T, C> DataFrame<T>.convert(vararg columns: ColumnReference<C>): Convert<T, C> =
     convert { columns.toColumns() }
@@ -105,7 +105,7 @@ public class With : AbstractSchemaModificationInterpreter() {
     }
 }
 
-@SchemaProcessor<With>(With::class)
+@SchemaProcessor(With::class)
 public inline fun <T, C, reified R> @receiver:Value Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
     @ReturnType noinline rowConverter: RowValueExpression<T, C, R>

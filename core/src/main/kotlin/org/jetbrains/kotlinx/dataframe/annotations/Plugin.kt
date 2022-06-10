@@ -82,7 +82,7 @@ public class ConvertInterpreter : AbstractInterpreter<ConvertApproximation>() {
     }
 }
 
-public annotation class Interpretable<I : Interpreter<*>>(val interpreter: KClass<I>)
+public annotation class Interpretable(val interpreter: KClass<out Interpreter<*>>)
 
 public class Add : AbstractSchemaModificationInterpreter() {
     public val Arguments.df: PluginDataFrameSchema by arg(THIS)
@@ -144,7 +144,7 @@ public sealed interface AnalysisResult {
 
 public data class Property(val name: String, val type: String)
 
-public annotation class SchemaProcessor<A : SchemaModificationInterpreter>(val processor: KClass<A>)
+public annotation class SchemaProcessor(val processor: KClass<out SchemaModificationInterpreter>)
 
 public class PluginDataFrameSchema(public val columns: Map<String, PluginColumnSchema>)
 
