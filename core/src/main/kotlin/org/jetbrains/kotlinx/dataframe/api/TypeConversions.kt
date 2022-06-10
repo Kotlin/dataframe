@@ -166,10 +166,27 @@ public inline fun <reified T> Iterable<T>.toValueColumn(column: ColumnAccessor<T
 public inline fun <reified T> Iterable<T>.toValueColumn(column: KProperty<T>): ValueColumn<T> =
     toValueColumn(column.columnName)
 
+/**
+ * Indicates how [DataColumn.type] should be calculated.
+ *
+ * Used in [add], [insert], [convert], [map], [merge], [split] and other [DataFrame] operations
+ */
 public enum class Infer {
-    None, // use reified type argument as column type
-    Nulls, // infer nullability from actual column values
-    Type // infer type and nullability of from actual column values using optionally provided type as supertype
+
+    /**
+     * Use reified type argument of an inline [DataFrame] operation as [DataColumn.type].
+     */
+    None,
+
+    /**
+     * Use reified type argument of an inline [DataFrame] operation as [DataColumn.type], but compute [DataColumn.hasNulls] by checking column [DataColumn.values] for an actual presence of *null* values.
+     */
+    Nulls,
+
+    /**
+     * Infer [DataColumn.type] and [DataColumn.hasNulls] from actual [DataColumn.values] using optionally provided base type as an upper bound.
+     */
+    Type
 }
 
 public inline fun <reified T> Iterable<T>.toColumn(

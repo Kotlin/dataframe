@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Selector
-import org.jetbrains.kotlinx.dataframe.api.AddDataRowImpl
+import org.jetbrains.kotlinx.dataframe.api.AddDataRow
 import org.jetbrains.kotlinx.dataframe.api.AddExpression
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
 import org.jetbrains.kotlinx.dataframe.api.Infer
@@ -30,8 +30,10 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
+import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
+import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.nrow
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
@@ -39,6 +41,13 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 
 // region create DataColumn
+
+internal class AddDataRowImpl<T>(index: Int, owner: DataFrame<T>, private val container: List<*>) :
+    DataRowImpl<T>(index, owner),
+    AddDataRow<T> {
+
+    override fun <C> AnyRow.new() = container[index] as C
+}
 
 @PublishedApi
 internal fun <T, R> ColumnsContainer<T>.newColumn(
