@@ -48,7 +48,7 @@ You can use `newValue()` function to access value that was already calculated fo
 
 ```kotlin
 df.add("fibonacci") {
-    if(index() < 2) 1
+    if (index() < 2) 1
     else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
 }
 ```

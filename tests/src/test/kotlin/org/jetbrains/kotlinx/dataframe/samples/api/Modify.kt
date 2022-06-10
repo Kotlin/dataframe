@@ -696,7 +696,7 @@ class Modify : TestBase() {
     fun addRecurrent() {
         // SampleStart
         df.add("fibonacci") {
-            if(index() < 2) 1
+            if (index() < 2) 1
             else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
         }
         // SampleEnd
