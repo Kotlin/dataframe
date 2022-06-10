@@ -17,8 +17,8 @@ dependencies {
     implementation(project(":dataframe-excel"))
     implementation(libs.ksp.api)
     testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.4.4")
-    testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.4.4")
+    testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.4.8")
+    testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.4.8")
     testImplementation("io.ktor:ktor-server-netty:1.6.7")
     testImplementation("io.kotest:kotest-assertions-core:4.6.0")
 }
