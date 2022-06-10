@@ -42,6 +42,19 @@ df.add("year of birth") { 2021 - "age"<Int>() }
 
 See [row expressions](DataRow.md#row-expressions)
 
+You can use `newValue()` function to access value that was already calculated for preceding row. It is helpful for recurrent computations:
+
+<!---FUN addRecurrent-->
+
+```kotlin
+df.add("fibonacci") {
+    if(index() < 2) 1
+    else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
+}
+```
+
+<!---END-->
+
 **Create and add several columns to `DataFrame`:**
 
 ```kotlin

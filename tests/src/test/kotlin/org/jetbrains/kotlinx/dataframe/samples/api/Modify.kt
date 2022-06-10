@@ -693,6 +693,16 @@ class Modify : TestBase() {
     }
 
     @Test
+    fun addRecurrent() {
+        // SampleStart
+        df.add("fibonacci") {
+            if(index() < 2) 1
+            else prev()!!.newValue<Int>() + prev()!!.prev()!!.newValue<Int>()
+        }
+        // SampleEnd
+    }
+
+    @Test
     fun addExisting() {
         // SampleStart
         val score by columnOf(4, 3, 5, 2, 1, 3, 5)
