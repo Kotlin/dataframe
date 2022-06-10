@@ -11,16 +11,21 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.Selector
+import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
 import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
-import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
-import org.jetbrains.kotlinx.dataframe.index
 import kotlin.reflect.KProperty
+
+/**
+ * `add` operation adds new columns to DataFrame.
+ */
+
+// region Add existing columns
 
 /**
  * Creates new [DataFrame] with given columns added to the end of original [DataFrame.columns] list.
@@ -71,21 +76,31 @@ public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = add
 @JvmName("addAllFrames")
 public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T> = addAll(dataFrames.flatMap { it.columns() })
 
-// region Add DSL
+// endregion
 
+// region Create and add a single column
+
+/**
+ * Receiver that is used in [add] and [update] operations to access new (added or updated) column value in preceding row
+ */
 public interface AddDataRow<out T> : DataRow<T> {
+
     public fun <C> AnyRow.new(): C
-}
-
-internal class AddDataRowImpl<T>(index: Int, owner: DataFrame<T>, private val container: List<*>) :
-    DataRowImpl<T>(index, owner),
-    AddDataRow<T> {
-
-    override fun <C> AnyRow.new() = container[index] as C
 }
 
 public typealias AddExpression<T, C> = Selector<AddDataRow<T>, C>
 
+/**
+ * Creates new column using row [expression] and adds it to the end of [DataFrame]
+ *
+ * Original [DataFrame] is not modified.
+ *
+ * @param name name for a new column. If it is empty, a unique column name will be generated. Otherwise, it should be unique for original [DataFrame].
+ * @param infer a value of [Infer] that specifies how to compute column [type][BaseColumn.type] for a new column
+ * @param expression [AddExpression] that computes column value for every [DataRow]
+ * @return new [DataFrame] with added column
+ * @throws DuplicateColumnNamesException if [DataFrame] already contains a column with given [name]
+ */
 public inline fun <reified R, T> DataFrame<T>.add(
     name: String,
     infer: Infer = Infer.Nulls,
@@ -117,25 +132,9 @@ public inline fun <reified R, T> DataFrame<T>.add(
     return insertImpl(path, col)
 }
 
-public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
-    val dsl = AddDsl(this)
-    body(dsl)
-    return dataFrameOf(this@add.columns() + dsl.columns).cast()
-}
+// endregion
 
-public inline fun <reified R, T, G> GroupBy<T, G>.add(
-    name: String,
-    infer: Infer = Infer.Nulls,
-    noinline expression: RowExpression<G, R>
-): GroupBy<T, G> =
-    updateGroups { add(name, infer, expression) }
-
-public inline fun <reified R, T, G> GroupBy<T, G>.add(
-    column: ColumnAccessor<G>,
-    infer: Infer = Infer.Nulls,
-    noinline expression: RowExpression<G, R>
-): GroupBy<T, G> =
-    add(column.name(), infer, expression)
+// region Create and add several columns
 
 public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsContainer<T> by df, ColumnSelectionDsl<T> {
 
@@ -185,6 +184,26 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
     public infix fun AddGroup<T>.into(column: AnyColumnGroupAccessor): Unit = into(column.name())
 }
 
-public data class AddGroup<T>(internal val body: AddDsl<T>.() -> Unit)
+public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
+    val dsl = AddDsl(this)
+    body(dsl)
+    return dataFrameOf(this@add.columns() + dsl.columns).cast()
+}
+
+public inline fun <reified R, T, G> GroupBy<T, G>.add(
+    name: String,
+    infer: Infer = Infer.Nulls,
+    noinline expression: RowExpression<G, R>
+): GroupBy<T, G> =
+    updateGroups { add(name, infer, expression) }
+
+public inline fun <reified R, T, G> GroupBy<T, G>.add(
+    column: ColumnAccessor<G>,
+    infer: Infer = Infer.Nulls,
+    noinline expression: RowExpression<G, R>
+): GroupBy<T, G> =
+    add(column.name(), infer, expression)
+
+public class AddGroup<T>(internal val body: AddDsl<T>.() -> Unit)
 
 // endregion
