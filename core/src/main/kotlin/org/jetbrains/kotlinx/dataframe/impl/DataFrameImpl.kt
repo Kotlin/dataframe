@@ -25,13 +25,13 @@ import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.io.renderToString
 
+private const val unnamedColumnPrefix = "untitled"
+
 internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) : DataFrame<T>, AggregatableInternal<T> {
 
     private val columnsMap: Map<String, Int>
 
     protected val columns: List<AnyCol>
-
-    private val unnamedColumnPrefix = "untitled"
 
     init {
         columnsMap = mutableMapOf()
