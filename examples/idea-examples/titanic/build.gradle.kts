@@ -12,8 +12,8 @@ application.mainClass.set("org.jetbrains.kotlinx.dataframe.examples.titanic.ml.T
 
 dependencies {
     implementation(project(":core"))
-    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-api:0.3.0")
-    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-dataset:0.3.0")
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-api:0.4.0")
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-dataset:0.4.0")
 }
 
 // Make IDE aware of the generated code:
