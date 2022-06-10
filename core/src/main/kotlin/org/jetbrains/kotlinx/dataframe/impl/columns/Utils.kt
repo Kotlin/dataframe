@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.columns
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
+import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -177,7 +177,7 @@ internal fun <C> SingleColumn<C>.resolveSingle(
 ): ColumnWithPath<C>? =
     resolveSingle(ColumnResolutionContext(df, unresolvedColumnsPolicy))
 
-internal fun AnyBaseColumn.unbox(): AnyCol = when (this) {
+internal fun AnyBaseCol.unbox(): AnyCol = when (this) {
     is ColumnWithPath<*> -> data.unbox()
     is ColumnWithParent<*> -> source.unbox()
     is ForceResolvedColumn<*> -> source.unbox()

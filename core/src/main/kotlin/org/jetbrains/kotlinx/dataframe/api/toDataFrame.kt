@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
+import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.Column
@@ -74,14 +74,14 @@ public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {
 }
 
 @JvmName("toDataFrameAnyColumn")
-public fun Iterable<AnyBaseColumn>.toDataFrame(): AnyFrame = dataFrameOf(this)
+public fun Iterable<AnyBaseCol>.toDataFrame(): AnyFrame = dataFrameOf(this)
 
 @JvmName("toDataFramePairColumnPathAnyCol")
-public fun <T> Iterable<Pair<ColumnPath, AnyBaseColumn>>.toDataFrameFromPairs(): DataFrame<T> {
+public fun <T> Iterable<Pair<ColumnPath, AnyBaseCol>>.toDataFrameFromPairs(): DataFrame<T> {
     val nameGenerator = ColumnNameGenerator()
     val columnNames = mutableListOf<String>()
-    val columnGroups = mutableListOf<MutableList<Pair<ColumnPath, AnyBaseColumn>>?>()
-    val columns = mutableListOf<AnyBaseColumn?>()
+    val columnGroups = mutableListOf<MutableList<Pair<ColumnPath, AnyBaseCol>>?>()
+    val columns = mutableListOf<AnyBaseCol?>()
     val columnIndices = mutableMapOf<String, Int>()
     val columnGroupName = mutableMapOf<String, String>()
 
@@ -164,11 +164,11 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
 
     public abstract val source: Iterable<T>
 
-    public abstract fun add(column: AnyBaseColumn, path: ColumnPath? = null)
+    public abstract fun add(column: AnyBaseCol, path: ColumnPath? = null)
 
-    public infix fun AnyBaseColumn.into(name: String): Unit = add(this, pathOf(name))
+    public infix fun AnyBaseCol.into(name: String): Unit = add(this, pathOf(name))
 
-    public infix fun AnyBaseColumn.into(path: ColumnPath): Unit = add(this, path)
+    public infix fun AnyBaseCol.into(path: ColumnPath): Unit = add(this, path)
 
     public abstract fun properties(
         vararg roots: KProperty<*>,

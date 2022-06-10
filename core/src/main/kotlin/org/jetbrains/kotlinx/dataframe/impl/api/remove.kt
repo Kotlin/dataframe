@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
+import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -28,12 +28,12 @@ internal fun <T> DataFrame<T>.removeImpl(allowMissingColumns: Boolean = false, c
 
     if (colPaths.isEmpty()) return RemoveResult(this, emptyList())
 
-    fun dfs(cols: Iterable<AnyBaseColumn>, removePaths: List<ColumnWithPath<*>>, node: TreeNode<ColumnPosition>): AnyFrame? {
+    fun dfs(cols: Iterable<AnyBaseCol>, removePaths: List<ColumnWithPath<*>>, node: TreeNode<ColumnPosition>): AnyFrame? {
         if (removePaths.isEmpty()) return null
 
         val depth = node.depth
         val childrenToRemove = removePaths.groupBy { it.path[depth] }
-        val newCols = mutableListOf<AnyBaseColumn>()
+        val newCols = mutableListOf<AnyBaseCol>()
 
         cols.forEachIndexed { index, column ->
             val toRemove = childrenToRemove[column.name()]

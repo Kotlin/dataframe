@@ -61,6 +61,6 @@ public typealias AnyFrame = DataFrame<*>
 
 public typealias AnyRow = DataRow<*>
 
-public typealias AnyBaseColumn = BaseColumn<*>
+public typealias AnyBaseCol = BaseColumn<*>
 
 // endregion

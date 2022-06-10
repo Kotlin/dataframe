@@ -29,7 +29,7 @@ import org.apache.arrow.vector.ipc.ArrowFileReader
 import org.apache.arrow.vector.ipc.ArrowStreamReader
 import org.apache.arrow.vector.types.pojo.Field
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel
-import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
+import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -169,7 +169,7 @@ private fun LargeVarCharVector.values(range: IntRange): List<String?> = range.ma
 
 private inline fun <reified T> List<T>.withType() = this to typeOf<T>()
 
-private fun readField(root: VectorSchemaRoot, field: Field): AnyBaseColumn {
+private fun readField(root: VectorSchemaRoot, field: Field): AnyBaseCol {
     val range = 0 until root.rowCount
     val (list, type) = when (val vector = root.getVector(field)) {
         is VarCharVector -> vector.values(range).withType()

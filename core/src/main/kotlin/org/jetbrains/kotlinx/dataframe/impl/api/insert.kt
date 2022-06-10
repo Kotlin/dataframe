@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
+import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.withDf
 
 internal data class ColumnToInsert(
     val insertionPath: ColumnPath,
-    val column: AnyBaseColumn,
+    val column: AnyBaseCol,
     val referenceNode: ReadonlyTreeNode<ReferenceData>? = null
 )
 
@@ -45,7 +45,7 @@ internal fun <T> insertImpl(
 
     val columnsMap = columns.groupBy { it.insertionPath[depth] }.toMutableMap() // map: columnName -> columnsToAdd
 
-    val newColumns = mutableListOf<AnyBaseColumn>()
+    val newColumns = mutableListOf<AnyBaseCol>()
 
     // insert new columns under existing
     df?.columns()?.forEach {
