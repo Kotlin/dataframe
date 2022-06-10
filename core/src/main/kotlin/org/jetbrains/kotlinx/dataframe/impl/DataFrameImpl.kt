@@ -18,6 +18,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.size
+import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
+import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.AggregatableInternal
 import org.jetbrains.kotlinx.dataframe.impl.aggregation.GroupByReceiverImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
@@ -29,36 +31,36 @@ internal open class DataFrameImpl<T>(cols: List<AnyCol>, val nrow: Int) : DataFr
 
     protected val columns: List<AnyCol>
 
+    private val unnamedColumnPrefix = "untitled"
+
     init {
         columnsMap = mutableMapOf()
 
         // check that column sizes are equal
-        val invalidSizeColumns = cols.filter { it.size != nrow }
-        require(invalidSizeColumns.isEmpty()) {
-            "Unequal column sizes. Expected rows count = $nrow, but was:\n${cols.joinToString("\n") { it.name + ": " + it.size }}"
+        if (cols.any { it.size != nrow }) {
+            throw UnequalColumnSizesException(nrow, cols.map { it.name to it.size })
         }
 
         // check that column names are unique
-        var hasUntitledColumns = false
+        var hasUnnamedColumns = false
         cols.forEachIndexed { i, col ->
             val name = col.name
-            if (name == "") hasUntitledColumns = true
+            if (name.isEmpty()) hasUnnamedColumns = true
             else {
-                require(!columnsMap.containsKey(name)) {
-                    val names = cols.groupBy { it.name }.filter { it.key != "" && it.value.size > 1 }.map { it.key }
-                    "Duplicate column names: $names\nAll column names: ${cols.map { it.name }}"
+                if (columnsMap.containsKey(name)) {
+                    throw DuplicateColumnNamesException(cols.map { it.name })
                 }
                 columnsMap[name] = i
             }
         }
 
         // generate unique names for unnamed columns
-        if (hasUntitledColumns) {
+        if (hasUnnamedColumns) {
             val nameGenerator = ColumnNameGenerator(cols.map { it.name })
             columns = cols.mapIndexed { i, col ->
                 val name = col.name
-                if (name == "") {
-                    val uniqueName = nameGenerator.addUnique("untitled")
+                if (name.isEmpty()) {
+                    val uniqueName = nameGenerator.addUnique(unnamedColumnPrefix)
                     val renamed = col.rename(uniqueName)
                     columnsMap[uniqueName] = i
                     renamed
