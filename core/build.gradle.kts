@@ -83,6 +83,13 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 
 tasks.test {
     maxHeapSize = "2048m"
+//    filter {
+//        exclude
+//    }
+}
+
+tasks.create<Test>("testApi") {
+    
 }
 
 tasks.processJupyterApiResources {
