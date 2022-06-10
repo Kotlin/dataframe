@@ -49,7 +49,7 @@ val jsonStr = df.toJson(prettyPrint = true)
 
 <!---END-->
 
-### Writing spreadsheets
+### Write to excel spreadsheet
 
 Add dependency:
 
@@ -111,7 +111,7 @@ val unhappyPersonsSheet = df.filter { person -> !person.isHappy }.remove("isHapp
 listOf(happyPersonsSheet, unhappyPersonsSheet).forEach { setStyles(it) }
 
 // Save the result
-wb.write(file.outputStream())
+file.outputStream().use { wb.write(it) }
 wb.close()
 ```
 
