@@ -13,6 +13,8 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
+import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -144,6 +146,17 @@ public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> = creat
 
 // region create DataFrame
 
+/**
+ * Creates new [DataFrame] with given [columns]
+ *
+ * All named columns must have unique names. For columns with empty names unique column names are generated: "untitled", "untitiled1", "untitled2" etc.
+ *
+ * All columns must have equal sizes.
+ *
+ * @throws [DuplicateColumnNamesException] if column names are not unique
+ * @throws [UnequalColumnSizesException] if column size are not equal
+ * @param columns columns for [DataFrame]
+ */
 public fun dataFrameOf(columns: Iterable<AnyBaseColumn>): AnyFrame {
     val cols = columns.map { it.unbox() }
     val nrow = if (cols.isEmpty()) 0 else cols[0].size

@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.addAll
 import org.jetbrains.kotlinx.dataframe.api.addId
 import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.allNulls
@@ -1622,7 +1623,7 @@ class DataFrameTests : BaseTest() {
         val first = typed.select { name and age }
         val second = typed.select { city and weight }
         first.add(second) shouldBe typed
-        first.add(second.columns()) shouldBe typed
+        first.addAll(second.columns()) shouldBe typed
         first + second.columns() shouldBe typed
     }
 
