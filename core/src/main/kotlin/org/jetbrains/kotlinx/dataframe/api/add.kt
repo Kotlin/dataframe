@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.AnyBaseColumn
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -13,14 +14,64 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
+import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import org.jetbrains.kotlinx.dataframe.index
 import kotlin.reflect.KProperty
 
-public fun <T> DataFrame<T>.add(cols: Iterable<AnyCol>): DataFrame<T> = this + cols
-public fun <T> DataFrame<T>.add(vararg other: AnyFrame): DataFrame<T> = add(other.flatMap { it.columns() })
+/**
+ * Creates new [DataFrame] with given columns added to the end of original [DataFrame.columns] list.
+ *
+ * Original [DataFrame] is not modified.
+ *
+ * @param columns columns to add
+ * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
+ * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
+ * @return new [DataFrame] with added columns
+ */
+public fun <T> DataFrame<T>.add(vararg columns: AnyBaseColumn): DataFrame<T> = addAll(columns.asIterable())
+
+/**
+ * Creates new [DataFrame] with given columns added to the end of original [DataFrame.columns] list.
+ *
+ * Original [DataFrame] is not modified.
+ *
+ * @param columns columns to add
+ * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
+ * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
+ * @return new [DataFrame] with added columns
+ */
+public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseColumn>): DataFrame<T> = dataFrameOf(columns() + columns).cast()
+
+/**
+ * Creates new [DataFrame] with all columns from given [dataFrames] added to the end of original [DataFrame.columns] list.
+ *
+ * Original [DataFrame] is not modified.
+ *
+ * @param dataFrames dataFrames to get columns from
+ * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
+ * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
+ * @return new [DataFrame] with added columns
+ */
+public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = addAll(dataFrames.asIterable())
+
+/**
+ * Creates new [DataFrame] with all columns from given [dataFrames] added to the end of original [DataFrame.columns] list.
+ *
+ * Original [DataFrame] is not modified.
+ *
+ * @param dataFrames dataFrames to get columns from
+ * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
+ * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
+ * @return new [DataFrame] with added columns
+ */
+@JvmName("addAllFrames")
+public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T> = addAll(dataFrames.flatMap { it.columns() })
+
+// region Add DSL
 
 public interface AddDataRow<out T> : DataRow<T> {
     public fun <C> AnyRow.new(): C
@@ -71,8 +122,6 @@ public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     body(dsl)
     return dataFrameOf(this@add.columns() + dsl.columns).cast()
 }
-
-public fun <T> DataFrame<T>.add(vararg columns: AnyCol): DataFrame<T> = dataFrameOf(columns() + columns).cast()
 
 public inline fun <reified R, T, G> GroupBy<T, G>.add(
     name: String,
@@ -137,3 +186,5 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
 }
 
 public data class AddGroup<T>(internal val body: AddDsl<T>.() -> Unit)
+
+// endregion
