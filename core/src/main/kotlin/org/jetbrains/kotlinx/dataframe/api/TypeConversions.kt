@@ -119,6 +119,8 @@ public fun <T> DataColumn<DataFrame<T>>.asFrameColumn(): FrameColumn<T> = (this 
 @JvmName("asGroupedT")
 public fun <T> DataColumn<DataRow<T>>.asColumnGroup(): ColumnGroup<T> = (this as AnyCol).asColumnGroup().cast()
 
+public fun <T> DataColumn<DataRow<T>>.asDataFrame(): DataFrame<T> = asColumnGroup()
+
 // endregion
 
 // region ColumnGroup
