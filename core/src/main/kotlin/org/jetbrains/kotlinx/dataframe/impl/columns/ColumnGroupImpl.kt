@@ -5,7 +5,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.asDataFrame
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.firstOrNull
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.rows
@@ -80,7 +80,7 @@ internal open class ColumnGroupImpl<T>(private val name: String, df: DataFrame<T
 
     override fun get(columnName: String): AnyCol = getColumn(columnName)
 
-    override fun contains(value: DataRow<T>) = if (distinct.isInitialized()) distinct.value.contains(value) else asDataFrame().firstOrNull { it == value } != null
+    override fun contains(value: DataRow<T>) = if (distinct.isInitialized()) distinct.value.contains(value) else asColumnGroup().firstOrNull { it == value } != null
 }
 
 internal class ResolvingColumnGroup<T>(

@@ -722,4 +722,10 @@ class DataFrameTreeTests : BaseTest() {
                 group().maxBy { rowsCount() }.weight.median() into "m"
             }["m"] shouldBe 61
     }
+
+    @Test
+    fun `column group as DataFrame`() {
+        val a: DataFrame<NameAndCity> = typed2["nameAndCity"].cast<DataRow<NameAndCity>>().asDataFrame()
+        val b: DataFrame<NameAndCity> = typed2[nameAndCity].cast<NameAndCity>().asDataFrame()
+    }
 }
