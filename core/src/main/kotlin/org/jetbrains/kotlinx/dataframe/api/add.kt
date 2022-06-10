@@ -117,7 +117,7 @@ public typealias AddExpression<T, C> = Selector<AddDataRow<T>, C>
  * @return new [DataFrame] with added column
  * @throws DuplicateColumnNamesException if [DataFrame] already contains a column with given [name]
  */
-@SchemaProcessor<Add>(Add::class)
+@SchemaProcessor(Add::class)
 public inline fun <reified R, T> @receiver:Schema DataFrame<T>.add(
     @Value name: String,
     infer: Infer = Infer.Nulls,
@@ -171,7 +171,7 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
         noinline expression: RowExpression<T, R>
     ): Boolean = add(df.mapToColumn(name, infer, expression))
 
-    @Interpretable<From>(From::class)
+    @Interpretable(From::class)
     public inline infix fun <reified R> @receiver:Value String.from(
         @ReturnType noinline expression: RowExpression<T, R>
     ): Boolean = add(this, Infer.Nulls, expression)
@@ -204,7 +204,7 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
     public infix fun AddGroup<T>.into(column: AnyColumnGroupAccessor): Unit = into(column.name())
 }
 
-@SchemaProcessor<AddWithDsl>(AddWithDsl::class)
+@SchemaProcessor(AddWithDsl::class)
 public fun <T> @receiver:Schema DataFrame<T>.add(@Dsl body: AddDsl<T>.() -> Unit): DataFrame<T> {
     val dsl = AddDsl(this)
     body(dsl)

@@ -40,7 +40,7 @@ public class Rename : AbstractInterpreter<RenameClauseApproximation>() {
     }
 }
 
-@Interpretable<Rename>(Rename::class)
+@Interpretable(Rename::class)
 public fun <T, C> @receiver:Schema DataFrame<T>.rename(@Value columns: ColumnsSelector<T, C>): RenameClause<T, C> = RenameClause(this, columns)
 public fun <T, C> DataFrame<T>.rename(vararg cols: ColumnReference<C>): RenameClause<T, C> = rename { cols.toColumns() }
 public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T, C> = rename { cols.toColumns() }
@@ -80,7 +80,7 @@ public class Into : AbstractSchemaModificationInterpreter() {
 public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>): DataFrame<T> =
     into(*newColumns.map { it.name() }.toTypedArray())
 
-@Interpretable<Into>(Into::class)
+@Interpretable(Into::class)
 public fun <T, C> @receiver:Value RenameClause<T, C>.into(@Value vararg newNames: String): DataFrame<T> =
     df.move(columns).intoIndexed { col, index ->
         col.path.dropLast(1) + newNames[index]
