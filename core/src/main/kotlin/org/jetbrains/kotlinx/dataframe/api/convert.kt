@@ -28,6 +28,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
+import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
 import java.math.BigDecimal
 import java.net.URL
 import java.time.LocalTime
@@ -93,11 +94,11 @@ public class With : AbstractSchemaModificationInterpreter() {
     override fun Arguments.interpret(): PluginDataFrameSchema {
         val names = convert.columns.toSet()
 
-        val newColumns = convert.schema.columns.mapValues { (key, value) ->
-            if (listOf(key) in names) {
-                PluginColumnSchema(type)
+        val newColumns = convert.schema.columns().map {
+            if (listOf(it.name()) in names) {
+                it.changeType(type)
             } else {
-                value
+                it
             }
         }
 

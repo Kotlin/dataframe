@@ -8,7 +8,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.AbstractSchemaModificationInt
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.annotations.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Schema
 import org.jetbrains.kotlinx.dataframe.annotations.Value
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
@@ -20,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
+import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.columnsSelector
 import org.jetbrains.kotlinx.dataframe.plugin.renameClause
 import org.jetbrains.kotlinx.dataframe.plugin.schema

@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.plugin
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter.*
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
-import org.jetbrains.kotlinx.dataframe.annotations.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.api.RenameClauseApproximation
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
