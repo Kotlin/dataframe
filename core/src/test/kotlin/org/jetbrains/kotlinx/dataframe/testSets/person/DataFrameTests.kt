@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.ExtraColumns
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
@@ -159,7 +160,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
-import org.jetbrains.kotlinx.dataframe.impl.api.ExtraColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
 import org.jetbrains.kotlinx.dataframe.impl.between
 import org.jetbrains.kotlinx.dataframe.impl.columns.isMissingColumn
