@@ -14,13 +14,12 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
-import org.jetbrains.kotlinx.dataframe.impl.api.ExtraColumns
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
 import kotlin.reflect.typeOf
 
 public fun <T> AnyFrame.cast(): DataFrame<T> = this as DataFrame<T>
 
-public inline fun <reified T> AnyFrame.cast(verify: Boolean = true): DataFrame<T> = if (verify) convertToImpl(typeOf<T>(), allowConversion = false, org.jetbrains.kotlinx.dataframe.impl.api.ExtraColumns.Keep)
+public inline fun <reified T> AnyFrame.cast(verify: Boolean = true): DataFrame<T> = if (verify) convertToImpl(typeOf<T>(), allowConversion = false, ExtraColumns.Keep)
 else cast()
 
 public fun <T> AnyRow.cast(): DataRow<T> = this as DataRow<T>

@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.ExtraColumns
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.convertTo
@@ -19,8 +20,6 @@ import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
-
-public enum class ExtraColumns { Remove, Keep, Fail }
 
 @PublishedApi
 internal fun <T> AnyFrame.convertToImpl(type: KType, allowConversion: Boolean, extraColumns: ExtraColumns): DataFrame<T> {
