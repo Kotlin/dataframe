@@ -119,7 +119,10 @@ internal class Integration : JupyterIntegration() {
             } else null
         }
 
-        fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, property: KProperty<*>): VariableName? = execute(codeWithConverter, property.name)
+        fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, property: KProperty<*>): VariableName? {
+            val variableName = property.name + if (property.returnType.isMarkedNullable) "!!" else ""
+            return execute(codeWithConverter, variableName)
+        }
 
         updateVariable<AnyFrame> { df, property ->
             execute(codeGen.process(df, property), property)
@@ -135,8 +138,10 @@ internal class Integration : JupyterIntegration() {
 
         updateVariable<AnyCol> { col, property ->
             if (col.isColumnGroup()) {
-                val codeWithConverter = codeGen.process(col.asColumnGroup().asDataFrame(), property)
-                execute(codeWithConverter, "${property.name}.asColumnGroup()")
+                val codeWithConverter = codeGen.process(col.asColumnGroup().asDataFrame(), property).let { c ->
+                    CodeWithConverter(c.declarations) { c.converter(it + ".asColumnGroup()") }
+                }
+                execute(codeWithConverter, property)
             } else null
         }
 
