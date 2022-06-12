@@ -2,10 +2,8 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ExtraColumns
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -22,7 +20,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.jvm.jvmErasure
 
 @PublishedApi
-internal fun <T> AnyFrame.convertToImpl(type: KType, allowConversion: Boolean, extraColumns: ExtraColumns): DataFrame<T> {
+internal fun AnyFrame.convertToImpl(type: KType, allowConversion: Boolean, extraColumns: ExtraColumns): AnyFrame {
     fun AnyFrame.convertToSchema(schema: DataFrameSchema): AnyFrame {
         if (ncol == 0) return schema.createEmptyDataFrame()
         var visited = 0
@@ -83,5 +81,5 @@ internal fun <T> AnyFrame.convertToImpl(type: KType, allowConversion: Boolean, e
 
     val clazz = type.jvmErasure
     val marker = MarkersExtractor[clazz]
-    return convertToSchema(marker.schema).cast()
+    return convertToSchema(marker.schema)
 }

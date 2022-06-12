@@ -2164,7 +2164,7 @@ class DataFrameTests : BaseTest() {
         df.add("col") { 1 }.convertTo<Target>(ExtraColumns.Remove) shouldBe df
 
         val added = df.add("col") { 1 }
-        added.convertToImpl<Target>(typeOf<Target>(), allowConversion = true, ExtraColumns.Keep) shouldBe added
+        added.convertTo(typeOf<Target>(), ExtraColumns.Keep) shouldBe added
 
         shouldThrow<IllegalArgumentException> {
             df.remove { city }.convertTo<Target>()
@@ -2175,7 +2175,7 @@ class DataFrameTests : BaseTest() {
         }
 
         shouldThrow<IllegalArgumentException> {
-            df.convert { age }.toStr().convertToImpl<Target>(typeOf<Target>(), allowConversion = false, ExtraColumns.Remove)
+            df.convert { age }.toStr().convertToImpl(typeOf<Target>(), allowConversion = false, ExtraColumns.Remove)
         }
 
         shouldThrow<IllegalArgumentException> {
