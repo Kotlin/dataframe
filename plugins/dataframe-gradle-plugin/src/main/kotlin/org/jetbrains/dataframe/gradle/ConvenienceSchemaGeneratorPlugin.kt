@@ -23,6 +23,6 @@ internal class KspPluginApplier : Plugin<Project> {
         target.configurations.getByName("ksp").dependencies.add(
             target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor:$preprocessorVersion")
         )
-        target.extensions.getByType<KspExtension>().arg("dataframe.resolutionDir", target.rootDir.absolutePath)
+        target.extensions.getByType<KspExtension>().arg("dataframe.resolutionDir", target.projectDir.absolutePath)
     }
 }
