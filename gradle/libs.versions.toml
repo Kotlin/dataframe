@@ -2,10 +2,10 @@
 ksp = "1.7.0-1.0.6"
 kotlinJupyter = "0.11.0-30"
 ktlint = "3.4.5"
-kotlin = "1.6.20"
+kotlin = "1.7.0"
 dokka = "1.5.31"
 libsPublisher = "0.0.60-dev-30"
-dataframe = "0.8.0-rc-9"
+dataframe = "0.8.0-dev-1038"
 korro = "0.1.1-dev-29"
 
 commonsCsv = "1.8"
