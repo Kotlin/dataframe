@@ -101,7 +101,7 @@ class DataSchemaGenerator(
     private fun reportMissingKspArgument(file: KSFile) {
         logger.error("""
         |KSP option with key "dataframe.resolutionDir" must be set in order to use relative path in @${ImportDataSchema::class.simpleName}
-        |DataFrame Gradle plugin should set it by default to "project.rootDir".
+        |DataFrame Gradle plugin should set it by default to "project.projectDir".
         |If you do not use DataFrame Gradle plugin, configure option manually 
     """.trimMargin(), symbol = file)
     }

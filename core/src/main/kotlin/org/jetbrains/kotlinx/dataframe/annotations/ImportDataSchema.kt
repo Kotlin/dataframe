@@ -9,7 +9,7 @@ package org.jetbrains.kotlinx.dataframe.annotations
  * @param name name of the generated interface
  * @param path URL or relative path to data.
  * if path starts with protocol (http, https, ftp), it's considered a URL. Otherwise, it's treated as relative path.
- * By default, it will be resolved relatively to project root dir, i.e. File(projectRootDir, path)
+ * By default, it will be resolved relatively to project dir, i.e. File(projectDir, path)
  * You can configure it by passing `dataframe.resolutionDir` option to preprocessor, see https://kotlinlang.org/docs/ksp-quickstart.html#pass-options-to-processors
  * @param visibility visibility of the generated interface.
  * @param normalizationDelimiters if not empty, split property names by delimiters,
