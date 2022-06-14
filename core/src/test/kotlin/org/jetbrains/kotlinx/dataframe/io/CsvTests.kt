@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.toStr
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.testCsv
@@ -47,7 +48,7 @@ class CsvTests {
             null,
             2,
             null
-        ).convert("col2").to<String>()
+        ).convert("col2").toStr()
 
         val str = StringWriter()
         df.writeCSV(str)

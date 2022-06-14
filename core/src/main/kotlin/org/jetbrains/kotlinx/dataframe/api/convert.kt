@@ -74,7 +74,7 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(crossinline expressio
         else expression(this, it)
     }
 
-public data class Convert<T, C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>) {
+public data class Convert<T, out C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>) {
     public fun <R> cast(): Convert<T, R> = Convert(df, columns as ColumnsSelector<T, R>)
 
     public inline fun <reified D> to(): DataFrame<T> = to(typeOf<D>())
@@ -289,13 +289,33 @@ public fun <T> Convert<T, *>.toLocalDateTime(): DataFrame<T> = to { it.convertTo
 
 // endregion
 
-public fun <T> Convert<T, *>.toInt(): DataFrame<T> = to<Int>()
-public fun <T> Convert<T, *>.toLong(): DataFrame<T> = to<Long>()
-public fun <T> Convert<T, *>.toStr(): DataFrame<T> = to<String>()
-public fun <T> Convert<T, *>.toDouble(): DataFrame<T> = to<Double>()
-public fun <T> Convert<T, *>.toFloat(): DataFrame<T> = to<Float>()
-public fun <T> Convert<T, *>.toBigDecimal(): DataFrame<T> = to<BigDecimal>()
-public fun <T> Convert<T, *>.toBoolean(): DataFrame<T> = to<Boolean>()
+@JvmName("toIntTAny")
+public fun <T> Convert<T, Any>.toInt(): DataFrame<T> = to<Int>()
+public fun <T> Convert<T, Any?>.toInt(): DataFrame<T> = to<Int?>()
+
+@JvmName("toLongTAny")
+public fun <T> Convert<T, Any>.toLong(): DataFrame<T> = to<Long>()
+public fun <T> Convert<T, Any?>.toLong(): DataFrame<T> = to<Long?>()
+
+@JvmName("toStrTAny")
+public fun <T> Convert<T, Any>.toStr(): DataFrame<T> = to<String>()
+public fun <T> Convert<T, Any?>.toStr(): DataFrame<T> = to<String?>()
+
+@JvmName("toDoubleTAny")
+public fun <T> Convert<T, Any>.toDouble(): DataFrame<T> = to<Double>()
+public fun <T> Convert<T, Any?>.toDouble(): DataFrame<T> = to<Double?>()
+
+@JvmName("toFloatTAny")
+public fun <T> Convert<T, Any>.toFloat(): DataFrame<T> = to<Float>()
+public fun <T> Convert<T, Any?>.toFloat(): DataFrame<T> = to<Float?>()
+
+@JvmName("toBigDecimalTAny")
+public fun <T> Convert<T, Any>.toBigDecimal(): DataFrame<T> = to<BigDecimal>()
+public fun <T> Convert<T, Any?>.toBigDecimal(): DataFrame<T> = to<BigDecimal?>()
+
+@JvmName("toBooleanTAny")
+public fun <T> Convert<T, Any>.toBoolean(): DataFrame<T> = to<Boolean>()
+public fun <T> Convert<T, Any?>.toBoolean(): DataFrame<T> = to<Boolean?>()
 
 public fun <T, C> Convert<T, List<List<C>>>.toDataFrames(containsColumns: Boolean = false): DataFrame<T> =
     to { it.toDataFrames(containsColumns) }

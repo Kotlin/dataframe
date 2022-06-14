@@ -1,12 +1,18 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
+import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
+import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.junit.Test
 import java.time.LocalTime
+import kotlin.reflect.*
 
 class ConvertTests {
 
@@ -42,20 +48,93 @@ class ConvertTests {
     }
 
     @JvmInline
-    value class ValueClass(val v: Int)
+    value class IntClass(val v: Int)
+
+    @JvmInline
+    value class StringClass(val s: String?)
 
     @Test
     fun `convert string to value class`() {
-        columnOf("1").convertTo<ValueClass>() shouldBe columnOf(ValueClass(1))
+        columnOf("1").convertTo<IntClass>() shouldBe columnOf(IntClass(1))
     }
 
     @Test
     fun `convert double to value class`() {
-        columnOf(1.0).convertTo<ValueClass>() shouldBe columnOf(ValueClass(1))
+        columnOf(1.0).convertTo<IntClass>() shouldBe columnOf(IntClass(1))
     }
 
     @Test
-    fun `convert value class to double`() {
-        columnOf(ValueClass(1)).convertTo<Double>() shouldBe columnOf(1.0)
+    fun `convert from value class `() {
+        columnOf(IntClass(1)).convertTo<Double>() shouldBe columnOf(1.0)
+        columnOf(StringClass("1"), StringClass(null)).convertTo<Double?>() shouldBe columnOf(1.0, null)
+    }
+
+    @Test
+    fun `convert to value class exceptions`() {
+        shouldThrow<TypeConversionException> {
+            columnOf("a").convertTo<IntClass>()
+        }
+
+        shouldThrow<TypeConverterNotFoundException> {
+            columnOf(EnumClass.A).convertTo<IntClass>()
+        }
+    }
+
+    @Test
+    fun `convert from value class exceptions`() {
+        shouldThrow<TypeConversionException> {
+            columnOf(StringClass("a")).convertTo<Int>()
+        }.from shouldBe typeOf<String>()
+
+        shouldThrow<TypeConverterNotFoundException> {
+            columnOf(IntClass(1)).convertTo<EnumClass>()
+        }
+
+        shouldThrow<TypeConversionException> {
+            columnOf(StringClass(null)).convertTo<Double>()
+        }
+    }
+
+    @Test
+    fun `convert null strings`() {
+        val col = columnOf("none")
+
+        shouldThrow<TypeConversionException> {
+            col.convertTo<Int>()
+        }
+
+        shouldThrow<TypeConversionException> {
+            col.convertTo<Int?>()
+        }
+
+        DataFrame.parser.addNullString("none")
+
+        shouldThrow<TypeConversionException> {
+            col.convertTo<Int>()
+        }
+
+        col.convertTo<Int?>() shouldBe DataColumn.createValueColumn("", listOf(null), typeOf<Int?>())
+
+        DataFrame.parser.resetToDefault()
+    }
+
+    @Test
+    fun `convert to not nullable`() {
+        val col = columnOf(1.0, null)
+
+        col.convertToInt() shouldBe columnOf(1, null)
+
+        shouldThrow<TypeConversionException> {
+            col.cast<Double>().convertToInt()
+        }
+
+        col.convertTo<Int?>() shouldBe columnOf(1, null)
+    }
+
+    @Test
+    fun `convert to nullable without nulls`() {
+        val col = columnOf(1.0, 2.0)
+
+        col.convertTo<Int?>().hasNulls() shouldBe false
     }
 }

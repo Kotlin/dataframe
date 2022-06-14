@@ -25,7 +25,8 @@ import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
-import org.jetbrains.kotlinx.dataframe.hasNulls
+import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
+import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
@@ -59,33 +60,46 @@ internal fun <T, C, R> Convert<T, C>.convertRowColumnImpl(
 ): DataFrame<T> =
     to { col -> df.newColumn(type, col.name, infer) { rowConverter(it, col) } }
 
-internal fun AnyCol.convertToTypeImpl(newType: KType): AnyCol {
+internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
     val from = type
-    val tartypeOf = newType.withNullability(hasNulls)
+
+    val nullsAreAllowed = to.isMarkedNullable
+
+    var nullsFound = false
+
+    fun Any?.checkNulls() = when {
+        this != null -> this
+        nullsAreAllowed -> {
+            nullsFound = true
+            null
+        }
+        else -> throw TypeConversionException(null, from, to)
+    }
+
     return when {
-        from == newType -> this
-        from.isSubtypeOf(newType) -> (this as DataColumnInternal<*>).changeType(tartypeOf)
-        else -> when (val converter = getConverter(from, newType)) {
+        from == to -> this
+        from.isSubtypeOf(to) -> (this as DataColumnInternal<*>).changeType(to.withNullability(hasNulls()))
+        else -> when (val converter = getConverter(from, to)) {
             null -> when (from.classifier) {
                 Any::class, Number::class, java.io.Serializable::class -> {
+                    // find converter for every value
                     val values = values.map {
-                        if (it == null) null else {
+                        it?.let {
                             val clazz = it.javaClass.kotlin
                             val type = clazz.createStarProjectedType(false)
-                            val conv = getConverter(type, newType) ?: error("Can't find converter from $type to $newType")
-                            conv(it) ?: error("Can't convert '$it' to '$newType'")
-                        }
+                            val converter = getConverter(type, to) ?: throw TypeConverterNotFoundException(from, to)
+                            converter(it)
+                        }.checkNulls()
                     }
-                    DataColumn.createValueColumn(name, values, tartypeOf)
+                    DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
                 }
-                else -> error("Can't find converter from $from to $newType")
+                else -> throw TypeConverterNotFoundException(from, to)
             }
             else -> {
                 val values = values.map {
-                    if (it == null) null
-                    else converter(it) ?: error("Can't convert '$it' to $newType")
+                    it?.let { converter(it) }.checkNulls()
                 }
-                DataColumn.createValueColumn(name, values, tartypeOf)
+                DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
             }
         }
     }
@@ -100,8 +114,8 @@ internal typealias TypeConverter = (Any) -> Any?
 internal fun Any.convertTo(type: KType): Any? {
     val clazz = javaClass.kotlin
     if (clazz.isSubclassOf(type.jvmErasure)) return this
-    val converter = getConverter(clazz.createStarProjectedType(false), type)
-    require(converter != null) { "Can not convert `$this` to $type" }
+    val from = clazz.createStarProjectedType(false)
+    val converter = getConverter(from, type) ?: throw TypeConverterNotFoundException(from, type)
     return converter(this)
 }
 
@@ -125,9 +139,12 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             toClass.primaryConstructor ?: error("Value type $toClass doesn't have primary constructor")
         val underlyingType = constructor.parameters.single().type
         val converter = getConverter(from, underlyingType)
-            ?: error("Can't find converter from $underlyingType to $to")
+            ?: throw TypeConverterNotFoundException(from, underlyingType)
         return convert<Any> {
             val converted = converter(it)
+            if (converted == null && !underlyingType.isMarkedNullable) {
+                throw TypeConversionException(it, from, underlyingType)
+            }
             constructor.call(converted)
         }
     }
@@ -138,12 +155,13 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
         val constructorParameter = constructor.parameters.single()
         val underlyingType = constructorParameter.type
         val converter = getConverter(underlyingType, to)
-            ?: error("Can't find converter from $underlyingType to $to")
+            ?: throw TypeConverterNotFoundException(underlyingType, to)
         val property = fromClass.memberProperties.single { it.name == constructorParameter.name } as kotlin.reflect.KProperty1<Any, *>
 
         return convert<Any> {
-            val value = property.get(it)!!
-            converter(value)
+            property.get(it)?.let {
+                converter(it)
+            }
         }
     }
 

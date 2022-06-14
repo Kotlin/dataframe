@@ -19,7 +19,11 @@ import kotlin.reflect.typeOf
 
 public fun <T> AnyFrame.cast(): DataFrame<T> = this as DataFrame<T>
 
-public inline fun <reified T> AnyFrame.cast(verify: Boolean = true): DataFrame<T> = if (verify) convertToImpl(typeOf<T>(), allowConversion = false, ExtraColumns.Keep).cast()
+public inline fun <reified T> AnyFrame.cast(verify: Boolean = true): DataFrame<T> = if (verify) convertToImpl(
+    typeOf<T>(),
+    allowConversion = false,
+    ExtraColumns.Keep
+).cast()
 else cast()
 
 public fun <T> AnyRow.cast(): DataRow<T> = this as DataRow<T>

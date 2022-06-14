@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.columns.values
+import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.catchSilent
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
@@ -50,8 +51,13 @@ internal interface StringParser<T> {
 }
 
 internal open class DelegatedStringParser<T>(override val type: KType, val handle: (String) -> T?) : StringParser<T> {
-    override fun toConverter(options: ParserOptions?): TypeConverter = {
-        handle(it as String)
+    override fun toConverter(options: ParserOptions?): TypeConverter {
+        val nulls = options?.nullStrings ?: Parsers.nulls
+        return {
+            val str = it as String
+            if (str in nulls) null
+            else handle(str) ?: throw TypeConversionException(it, typeOf<String>(), type)
+        }
     }
 
     override fun applyOptions(options: ParserOptions?): (String) -> T? = handle
@@ -61,7 +67,12 @@ internal class StringParserWithFormat<T>(override val type: KType, val getParser
     StringParser<T> {
     override fun toConverter(options: ParserOptions?): TypeConverter {
         val handler = getParser(options)
-        return { handler(it as String) }
+        val nulls = options?.nullStrings ?: Parsers.nulls
+        return {
+            val str = it as String
+            if (str in nulls) null
+            else handler(str) ?: throw TypeConversionException(it, typeOf<String>(), type)
+        }
     }
 
     override fun applyOptions(options: ParserOptions?): (String) -> T? {
