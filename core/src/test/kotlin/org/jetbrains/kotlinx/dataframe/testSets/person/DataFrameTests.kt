@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.ExtraColumns
+import org.jetbrains.kotlinx.dataframe.api.ExcessiveColumns
 import org.jetbrains.kotlinx.dataframe.api.GroupBy
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.add
@@ -2163,10 +2163,10 @@ class DataFrameTests : BaseTest() {
 
         df.convertTo<Target>() shouldBe df
         df.convert { age }.toStr().convertTo<Target>() shouldBe df
-        df.add("col") { 1 }.convertTo<Target>(ExtraColumns.Remove) shouldBe df
+        df.add("col") { 1 }.convertTo<Target>(ExcessiveColumns.Remove) shouldBe df
 
         val added = df.add("col") { 1 }
-        added.convertTo(typeOf<Target>(), ExtraColumns.Keep) shouldBe added
+        added.convertTo(typeOf<Target>(), ExcessiveColumns.Keep) shouldBe added
 
         shouldThrow<IllegalArgumentException> {
             df.remove { city }.convertTo<Target>()
@@ -2180,12 +2180,12 @@ class DataFrameTests : BaseTest() {
             df.convert { age }.toStr().convertToImpl(
                 typeOf<Target>(),
                 allowConversion = false,
-                ExtraColumns.Remove
+                ExcessiveColumns.Remove
             )
         }
 
         shouldThrow<ExcessiveColumnsException> {
-            df.add("col") { 1 }.convertTo<Target>(ExtraColumns.Fail) shouldBe df
+            df.add("col") { 1 }.convertTo<Target>(ExcessiveColumns.Fail) shouldBe df
         }
 
         val list = df.toListOf<Target>()

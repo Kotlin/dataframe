@@ -9,7 +9,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-public enum class ExtraColumns { Remove, Keep, Fail }
+public enum class ExcessiveColumns { Remove, Keep, Fail }
 
 public interface ConvertSchemaDsl<in T> {
 
@@ -51,20 +51,20 @@ public class ConvertType<T>(
  * @param [T] class that defines target schema for conversion.
  * @param [excessiveColumnsBehavior] how to handle excessive columns in the original [DataFrame].
  * @throws [ColumnNotFoundException] if [DataFrame] doesn't contain columns that are required by destination schema.
- * @throws [ExcessiveColumnsException] if [DataFrame] contains columns that are not required by destination schema and [excessiveColumnsBehavior] is set to [ExtraColumns.Fail].
+ * @throws [ExcessiveColumnsException] if [DataFrame] contains columns that are not required by destination schema and [excessiveColumnsBehavior] is set to [ExcessiveColumns.Fail].
  * @throws [TypeConverterNotFoundException] if suitable type converter for some column was not found.
  * @throws [TypeConversionException] if type converter failed to convert column values.
  * @return converted [DataFrame].
  */
 public inline fun <reified T : Any> AnyFrame.convertTo(
-    excessiveColumnsBehavior: ExtraColumns = ExtraColumns.Keep,
+    excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
     noinline body: ConvertSchemaDsl<T>.() -> Unit = {}
 ): DataFrame<T> = convertTo(typeOf<T>(), excessiveColumnsBehavior, body).cast()
 
 public fun AnyFrame.convertTo(
     schemaType: KType,
-    extraColumnsBehavior: ExtraColumns = ExtraColumns.Keep,
+    excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
     body: ConvertSchemaDsl<Any>.() -> Unit = {}
-): AnyFrame = convertToImpl(schemaType, true, extraColumnsBehavior, body)
+): AnyFrame = convertToImpl(schemaType, true, excessiveColumnsBehavior, body)
 
 // endregion
