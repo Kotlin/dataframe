@@ -5,6 +5,7 @@ import kotlinx.datetime.LocalDateTime
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.junit.Test
 import java.math.BigDecimal
 import kotlin.reflect.typeOf
@@ -28,13 +29,13 @@ class ParserTests {
         col.parse()
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test(expected = TypeConversionException::class)
     fun `converter should throw`() {
         val col by columnOf("a", "b")
         col.convertTo<Int>()
     }
 
-    @Test(expected = IllegalStateException::class)
+    @Test(expected = TypeConversionException::class)
     fun `converter for mixed column should throw`() {
         val col by columnOf(1, "a")
         col.convertTo<Int>()

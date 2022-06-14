@@ -158,6 +158,8 @@ import org.jetbrains.kotlinx.dataframe.api.withZero
 import org.jetbrains.kotlinx.dataframe.api.xs
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
+import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
+import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
@@ -1574,14 +1576,14 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun convert2() {
-        val res = typed.convert { weight }.to<BigDecimal>()
+        val res = typed.convert { weight }.to<BigDecimal?>()
         res.weight.typeClass shouldBe BigDecimal::class
         res["weight"].all { it == null || it is BigDecimal } shouldBe true
     }
 
     @Test
     fun convert3() {
-        val res = typed.convert { all() }.to<String>()
+        val res = typed.convert { all() }.to<String?>()
         res.columns().forEach { it.typeClass shouldBe String::class }
         res.columns().map { it.hasNulls() } shouldBe typed.columns().map { it.hasNulls() }
     }
@@ -2170,15 +2172,19 @@ class DataFrameTests : BaseTest() {
             df.remove { city }.convertTo<Target>()
         }
 
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<TypeConversionException> {
             df.update { name }.at(2).withNull().convertTo<Target>()
         }
 
         shouldThrow<IllegalArgumentException> {
-            df.convert { age }.toStr().convertToImpl(typeOf<Target>(), allowConversion = false, ExtraColumns.Remove)
+            df.convert { age }.toStr().convertToImpl(
+                typeOf<Target>(),
+                allowConversion = false,
+                ExtraColumns.Remove
+            )
         }
 
-        shouldThrow<IllegalArgumentException> {
+        shouldThrow<ExcessiveColumnsException> {
             df.add("col") { 1 }.convertTo<Target>(ExtraColumns.Fail) shouldBe df
         }
 
