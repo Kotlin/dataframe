@@ -42,7 +42,7 @@ class RenameTests {
         df.schema().asClue {
             df.columnNames() shouldBe listOf("testName")
             df.getColumnGroup("testName").columnNames() shouldBe listOf("groupName")
-            df["testName"]["groupName"].asAnyFrameColumn()[0]!!.columnNames() shouldBe listOf("anotherName")
+            df["testName"]["groupName"].asAnyFrameColumn()[0].columnNames() shouldBe listOf("anotherName")
         }
     }
 

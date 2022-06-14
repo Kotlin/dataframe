@@ -175,7 +175,7 @@ public fun DataFrame.Companion.readCSV(
 )
 
 private fun getCSVType(path: String): CSVType =
-    when (path.substringAfterLast('.').toLowerCase()) {
+    when (path.substringAfterLast('.').lowercase()) {
         "csv" -> CSVType.DEFAULT
         "tdf" -> CSVType.TDF
         else -> throw IOException("Unknown file format")
