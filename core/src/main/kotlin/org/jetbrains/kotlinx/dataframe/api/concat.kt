@@ -19,13 +19,18 @@ public fun <T> DataColumn<Collection<T>>.concat(): List<T> = values.flatten()
 
 // region DataRow
 
-public fun <T> DataRow<T>.concat(vararg other: DataRow<T>): DataFrame<T> = (listOf(this) + other).concat()
+public fun <T> DataRow<T>.concat(vararg rows: DataRow<T>): DataFrame<T> = (listOf(this) + rows).concat()
 
 // endregion
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.concat(vararg other: DataFrame<T>): DataFrame<T> = concatImpl(listOf(this) + other)
+public fun <T> DataFrame<T>.concat(vararg frames: DataFrame<T>): DataFrame<T> = concatImpl(listOf(this) + frames)
+
+@JvmName("concatT")
+public fun <T> DataFrame<T>.concat(rows: Iterable<DataRow<T>>): DataFrame<T> = (rows() + rows).concat()
+
+public fun <T> DataFrame<T>.concat(frames: Iterable<DataFrame<T>>): DataFrame<T> = (listOf(this) + frames).concat()
 
 // endregion
 
