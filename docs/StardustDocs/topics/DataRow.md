@@ -16,6 +16,8 @@
 * `columnTypes(): List<KType>` — list of all column types 
 * `namedValues(): List<NameValuePair<Any?>>` — list of name-value pairs where `name` is a column name and `value` is cell value
 * `namedValuesOf<T>(): List<NameValuePair<T>>` — list of name-value pairs where value has given type 
+* `transpose(): DataFrame<NameValuePair<*>>` — dataframe of two columns: `name: String` is column names and `value: Any?` is cell values
+* `transposeTo<T>(): DataFrame<NameValuePair<T>>`— dataframe of two columns: `name: String` is column names and `value: T` is cell values
 * `getRow(Int): DataRow` — row from `DataFrame` by row index
 * `getRows(Iterable<Int>): DataFrame` — dataframe with subset of rows selected by absolute row index. 
 * `relative(Iterable<Int>): DataFrame` — dataframe with subset of rows selected by relative row index: `relative(-1..1)` will return previous, current and next row. Requested indices will be coerced to the valid range and invalid indices will be skipped
