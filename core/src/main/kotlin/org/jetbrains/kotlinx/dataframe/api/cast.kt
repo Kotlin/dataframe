@@ -22,7 +22,7 @@ public fun <T> AnyFrame.cast(): DataFrame<T> = this as DataFrame<T>
 public inline fun <reified T> AnyFrame.cast(verify: Boolean = true): DataFrame<T> = if (verify) convertToImpl(
     typeOf<T>(),
     allowConversion = false,
-    ExtraColumns.Keep
+    ExcessiveColumns.Keep
 ).cast()
 else cast()
 

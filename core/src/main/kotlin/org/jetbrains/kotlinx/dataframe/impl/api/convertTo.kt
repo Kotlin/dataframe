@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
-import org.jetbrains.kotlinx.dataframe.api.ExtraColumns
+import org.jetbrains.kotlinx.dataframe.api.ExcessiveColumns
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.convertTo
@@ -45,7 +45,7 @@ private class ConvertSchemaDslImpl<T> : ConvertSchemaDsl<T> {
 internal fun AnyFrame.convertToImpl(
     type: KType,
     allowConversion: Boolean,
-    extraColumns: ExtraColumns,
+    excessiveColumns: ExcessiveColumns,
     body: ConvertSchemaDsl<Any>.() -> Unit = {}
 ): AnyFrame {
     val dsl = ConvertSchemaDslImpl<Any>()
@@ -57,10 +57,10 @@ internal fun AnyFrame.convertToImpl(
         val newColumns = columns().mapNotNull {
             val targetColumn = schema.columns[it.name()]
             if (targetColumn == null) {
-                when (extraColumns) {
-                    ExtraColumns.Fail -> throw ExcessiveColumnsException(listOf(it.name))
-                    ExtraColumns.Keep -> it
-                    ExtraColumns.Remove -> null
+                when (excessiveColumns) {
+                    ExcessiveColumns.Fail -> throw ExcessiveColumnsException(listOf(it.name))
+                    ExcessiveColumns.Keep -> it
+                    ExcessiveColumns.Remove -> null
                 }
             } else {
                 visited++
