@@ -32,3 +32,6 @@ pluginManagement {
 }
 include("dataframe-excel")
 include("core")
+include("plugins:dataframe-introspection")
+findProject(":plugins:dataframe-introspection")?.name = "dataframe-introspection"
+

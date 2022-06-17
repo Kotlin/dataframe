@@ -64,6 +64,7 @@ koverMerged {
                 ":plugins:dataframe-gradle-plugin",
                 ":plugins:symbol-processor",
                 ":plugins:dataframe-gradle-plugin",
+                ":plugins:dataframe-introspection"
             )
         }
     }
