@@ -13,6 +13,7 @@ plugins {
     id("org.jetbrains.dokka") version libs.versions.dokka
 
     id("org.jmailen.kotlinter") version libs.versions.ktlint
+    kotlin("jupyter.api") version libs.versions.kotlinJupyter apply false
 }
 
 val jupyterApiTCRepo: String by project
@@ -48,6 +49,8 @@ allprojects {
         targetCompatibility = JavaVersion.VERSION_1_8.toString()
     }
 }
+
+tasks.compileKotlin.map { it.sources }.get()
 
 group = "org.jetbrains.kotlinx"
 

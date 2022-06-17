@@ -4,8 +4,7 @@ plugins {
     kotlin("jvm")
     kotlin("libs.publisher")
     kotlin("plugin.serialization")
-    kotlin("jupyter.api") version libs.versions.kotlinJupyter
-
+    kotlin("jupyter.api")
     id("org.jetbrains.dataframe.generator")
 
     id("org.jmailen.kotlinter")
@@ -20,6 +19,22 @@ repositories {
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
     maven(jupyterApiTCRepo)
+}
+
+val introspect by sourceSets.creating {
+    withConvention(org.jetbrains.kotlin.gradle.plugin.KotlinSourceSet::class) {
+        kotlin.srcDir("src/main/kotlin")
+        compileClasspath += sourceSets.main.get().output
+        runtimeClasspath += sourceSets.main.get().output
+    }
+}
+
+val introspectImplementation by configurations.getting {
+    extendsFrom(configurations.implementation.get())
+}
+
+val introspectCompileOnly by configurations.getting {
+    extendsFrom(configurations.compileOnly.get())
 }
 
 dependencies {
@@ -40,6 +55,9 @@ dependencies {
     }
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
+
+    val kotlinCompilerPluginClasspathIntrospect by configurations.getting
+    kotlinCompilerPluginClasspathIntrospect(project(":plugins:dataframe-introspection"))
 }
 
 tasks.lintKotlinMain {
