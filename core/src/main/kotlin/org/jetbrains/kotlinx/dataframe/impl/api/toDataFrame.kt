@@ -29,6 +29,7 @@ import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.javaField
+import kotlin.reflect.typeOf
 
 internal val valueTypes = setOf(
     String::class,
@@ -163,38 +164,56 @@ internal fun convertToDataFrame(
             }
         }
 
-        val type = property.returnType
-        val kclass = (type.classifier as KClass<*>)
+        val returnType = property.returnType.let { type ->
+            if (type.classifier is KClass<*>) {
+                type
+            } else {
+                typeOf<Any>()
+            }
+        }
+        val kclass = (returnType.classifier as KClass<*>)
         when {
             hasExceptions -> DataColumn.createWithTypeInference(it.columnName, values, nullable)
-            preserveClasses.contains(kclass) || preserveProperties.contains(property) || (maxDepth <= 0 && !type.shouldBeConvertedToFrameColumn() && !type.shouldBeConvertedToColumnGroup()) || kclass.isValueType ->
-                DataColumn.createValueColumn(it.columnName, values, property.returnType.withNullability(nullable))
+            kclass == Any::class || preserveClasses.contains(kclass) || preserveProperties.contains(property) || (maxDepth <= 0 && !returnType.shouldBeConvertedToFrameColumn() && !returnType.shouldBeConvertedToColumnGroup()) || kclass.isValueType ->
+                DataColumn.createValueColumn(it.columnName, values, returnType.withNullability(nullable))
             kclass == DataFrame::class && !nullable -> DataColumn.createFrameColumn(it.columnName, values as List<AnyFrame>)
             kclass == DataRow::class -> DataColumn.createColumnGroup(it.columnName, (values as List<AnyRow>).concat())
             kclass.isSubclassOf(Iterable::class) -> {
-                val elementType = type.projectUpTo(Iterable::class).arguments.firstOrNull()?.type
-                if (elementType == null) DataColumn.createValueColumn(
-                    it.columnName,
-                    values,
-                    property.returnType.withNullability(nullable)
-                )
-                else {
-                    val elementClass = (elementType.classifier as KClass<*>)
-                    if (elementClass.isValueType) {
-                        val listType = getListType(elementType).withNullability(nullable)
-                        val listValues = values.map {
-                            (it as? Iterable<*>)?.asList()
-                        }
-                        DataColumn.createValueColumn(it.columnName, listValues, listType)
-                    } else {
-                        val frames = values.map {
-                            if (it == null) DataFrame.empty()
-                            else {
-                                require(it is Iterable<*>)
-                                convertToDataFrame(it, elementClass, emptyList(), excludes, preserveClasses, preserveProperties, maxDepth - 1)
+                val elementType = returnType.projectUpTo(Iterable::class).arguments.firstOrNull()?.type
+                if (elementType == null) {
+                    DataColumn.createValueColumn(
+                        it.columnName,
+                        values,
+                        returnType.withNullability(nullable)
+                    )
+                } else {
+                    val elementClass = (elementType.classifier as? KClass<*>)
+
+                    when {
+                        elementClass == null -> {
+                            val listValues = values.map {
+                                (it as? Iterable<*>)?.asList()
                             }
+
+                            DataColumn.createWithTypeInference(it.columnName, listValues)
                         }
-                        DataColumn.createFrameColumn(it.columnName, frames)
+                        elementClass.isValueType -> {
+                            val listType = getListType(elementType).withNullability(nullable)
+                            val listValues = values.map {
+                                (it as? Iterable<*>)?.asList()
+                            }
+                            DataColumn.createValueColumn(it.columnName, listValues, listType)
+                        }
+                        else -> {
+                            val frames = values.map {
+                                if (it == null) DataFrame.empty()
+                                else {
+                                    require(it is Iterable<*>)
+                                    convertToDataFrame(it, elementClass, emptyList(), excludes, preserveClasses, preserveProperties, maxDepth - 1)
+                                }
+                            }
+                            DataColumn.createFrameColumn(it.columnName, frames)
+                        }
                     }
                 }
             }

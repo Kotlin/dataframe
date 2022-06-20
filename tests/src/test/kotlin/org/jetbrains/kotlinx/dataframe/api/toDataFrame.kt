@@ -149,4 +149,38 @@ class CreateDataFrameTests {
         val child2 = child1.asColumnGroup()[Child1::child]
         child2.kind shouldBe ColumnKind.Value
     }
+
+    @Test
+    fun inferredTypeForPropertyWithGenericIterableType() {
+        class Container<E>(val data: Set<E>)
+
+        val element = Container(setOf(1))
+        val value = listOf(element).toDataFrame(maxDepth = 10)
+
+        value["data"].type() shouldBe typeOf<List<Int>>()
+    }
+
+    @Test
+    fun inferredNullableTypeForPropertyWithGenericIterableType() {
+        class Container<E>(val data: List<E>)
+
+        val element = Container(listOf(1, null))
+        val value = listOf(element).toDataFrame(maxDepth = 10)
+
+        value["data"].type() shouldBe typeOf<List<Int?>>()
+    }
+
+    @Suppress("unused")
+    @Test
+    fun treatErasedGenericAsAny() {
+        class IncompatibleVersionErrorData<T>(val expected: T, val actual: T)
+        class DeserializedContainerSource(val incompatibility: IncompatibleVersionErrorData<*>)
+        val functions = listOf(DeserializedContainerSource(IncompatibleVersionErrorData(1, 2)))
+
+        val df = functions.toDataFrame(maxDepth = 2)
+
+        val col = df.getColumnGroup(DeserializedContainerSource::incompatibility)
+        col[IncompatibleVersionErrorData<*>::actual].type() shouldBe typeOf<Any>()
+        col[IncompatibleVersionErrorData<*>::expected].type() shouldBe typeOf<Any>()
+    }
 }
