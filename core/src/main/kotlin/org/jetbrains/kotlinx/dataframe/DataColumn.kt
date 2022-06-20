@@ -133,6 +133,6 @@ public val AnyCol.indices: IntRange get() = indices()
 
 public val AnyCol.type: KType get() = type()
 public val AnyCol.kind: ColumnKind get() = kind()
-public val AnyCol.typeClass: KClass<*> get() = type.classifier as KClass<*>
+public val AnyCol.typeClass: KClass<*> get() = type.classifier as? KClass<*> ?: error("Cannot cast ${type.classifier?.javaClass} to a ${KClass::class}. Column $name: $type")
 
 public fun AnyBaseCol.indices(): IntRange = 0 until size()
