@@ -183,4 +183,18 @@ class CreateDataFrameTests {
         col[IncompatibleVersionErrorData<*>::actual].type() shouldBe typeOf<Any>()
         col[IncompatibleVersionErrorData<*>::expected].type() shouldBe typeOf<Any>()
     }
+
+    interface Named {
+        val name: String get() = "default impl"
+    }
+
+    class Data(override val name: String) : Named
+
+    @Test
+    fun simpleInheritance() {
+        val name = "temp"
+        val df = listOf(Data(name)).toDataFrame(maxDepth = 1)
+
+        df["name"][0] shouldBe name
+    }
 }
