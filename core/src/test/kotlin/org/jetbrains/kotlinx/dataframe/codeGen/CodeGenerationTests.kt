@@ -6,6 +6,8 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ColumnDescription
+import org.jetbrains.kotlinx.dataframe.api.ValueCount
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.move
@@ -250,6 +252,16 @@ class CodeGenerationTests : BaseTest() {
             val matches = "`$it`".toRegex().findAll(declarations).toList()
             matches.size shouldBe 2
         }
+    }
+
+    @Test
+    fun generateApi() {
+        val generator = CodeGenerator.create()
+        val valueCount = generator.generate<ValueCount>(InterfaceGenerationMode.None, extensionProperties = true)
+        println(valueCount.declarations)
+        println()
+        val describe = generator.generate<ColumnDescription>(InterfaceGenerationMode.None, extensionProperties = true)
+        println(describe.declarations)
     }
 
     @Test
