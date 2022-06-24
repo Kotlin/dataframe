@@ -1,9 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.Column
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.nameGenerator
@@ -11,12 +13,19 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
-// region DataColumn
+// region DataSchema
 
 @DataSchema
 public interface ValueCount {
     public val count: Int
 }
+
+public val ColumnsContainer<ValueCount>.count: DataColumn<Int> @JvmName("ValueCount_count") get() = this["count"] as DataColumn<Int>
+public val DataRow<ValueCount>.count: Int @JvmName("ValueCount_count") get() = this["count"] as Int
+
+// endregion
+
+// region DataColumn
 
 internal val defaultCountColumnName: String = ValueCount::count.name
 
