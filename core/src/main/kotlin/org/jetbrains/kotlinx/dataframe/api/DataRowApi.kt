@@ -2,9 +2,12 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.Column
+import org.jetbrains.kotlinx.dataframe.ColumnsContainer
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
@@ -21,7 +24,20 @@ public fun AnyRow.isNotEmpty(): Boolean = !isEmpty()
 
 public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInstance<R>()
 
+@DataSchema
 public data class NameValuePair<V>(val name: String, val value: V)
+
+public val <V> ColumnsContainer<NameValuePair<V>>.name: DataColumn<String> @JvmName("NameValuePair_name") get() = this["name"] as DataColumn<String>
+public val <V> DataRow<NameValuePair<V>>.name: String @JvmName("NameValuePair_name") get() = this["name"] as String
+public val <V> ColumnsContainer<NameValuePair<V>>.value: DataColumn<V> @JvmName("NameValuePair_value") get() = this["value"] as DataColumn<V>
+public val <V> DataRow<NameValuePair<V>>.value: V @JvmName("NameValuePair_value") get() = this["value"] as V
+
+// Without these overloads row.transpose().name or row.map { name } won't resolve
+public val ColumnsContainer<NameValuePair<*>>.name: DataColumn<String> @JvmName("NameValuePairAny_name") get() = this["name"] as DataColumn<String>
+public val DataRow<NameValuePair<*>>.name: String @JvmName("NameValuePairAny_name") get() = this["name"] as String
+
+public val ColumnsContainer<NameValuePair<*>>.value: DataColumn<*> @JvmName("NameValuePairAny_value") get() = this["value"]
+public val DataRow<NameValuePair<*>>.value: Any? @JvmName("NameValuePairAny_value") get() = this["value"]
 
 public inline fun <reified R> AnyRow.namedValuesOf(): List<NameValuePair<R>> =
     values().zip(columnNames()).filter { it.first is R }.map { NameValuePair(it.second, it.first as R) }

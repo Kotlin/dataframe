@@ -1,31 +1,20 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.*
-import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.impl.api.convertTo
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.owner
 import org.jetbrains.kotlinx.dataframe.values
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 // region DataRow
 
-@DataSchema
-public interface NameValueSchema {
-    public val name: String
-    public val value: Any?
-}
-
-public val DataRow<NameValueSchema>.name: String get() = this["name"] as String
-public val ColumnsContainer<NameValueSchema>.name: DataColumn<String> get() = this["name"] as DataColumn<String>
-public val DataRow<NameValueSchema>.value: Any? get() = this["value"]
-public val ColumnsContainer<NameValueSchema>.value: DataColumn<Any?> get() = this["value"]
-
-public fun <T> DataRow<T>.transpose(): DataFrame<NameValueSchema> {
-    val valueColumn = DataColumn.createWithTypeInference(NameValueSchema::value.columnName, values)
-    val nameColumn = owner.columnNames().toValueColumn(NameValuePair<T>::name)
+public fun <T> DataRow<T>.transpose(): DataFrame<NameValuePair<*>> {
+    val valueColumn = DataColumn.createWithTypeInference(NameValuePair<*>::value.columnName, values)
+    val nameColumn = owner.columnNames().toValueColumn(NameValuePair<*>::name)
     return dataFrameOf(nameColumn, valueColumn).cast()
 }
-
-/*
 
 public inline fun <reified T> AnyRow.transposeTo(): DataFrame<NameValuePair<T>> = transposeTo(typeOf<T>())
 
@@ -36,7 +25,5 @@ internal fun <T> AnyRow.transposeTo(type: KType): DataFrame<NameValuePair<T>> {
     val nameColumn = owner.columnNames().toValueColumn(NameValuePair<T>::name)
     return dataFrameOf(nameColumn, valueColumn).cast()
 }
-
- */
 
 // endregion

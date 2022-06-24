@@ -4,12 +4,15 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.diff
 import org.jetbrains.kotlinx.dataframe.api.drop
 import org.jetbrains.kotlinx.dataframe.api.dropLast
+import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.intoList
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.merge
+import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.namedValues
 import org.jetbrains.kotlinx.dataframe.api.namedValuesOf
 import org.jetbrains.kotlinx.dataframe.api.next
@@ -19,7 +22,9 @@ import org.jetbrains.kotlinx.dataframe.api.rowMean
 import org.jetbrains.kotlinx.dataframe.api.rowStd
 import org.jetbrains.kotlinx.dataframe.api.rowSum
 import org.jetbrains.kotlinx.dataframe.api.toDouble
+import org.jetbrains.kotlinx.dataframe.api.transposeTo
 import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.api.value
 import org.jetbrains.kotlinx.dataframe.api.valuesOf
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.junit.Test
@@ -85,6 +90,13 @@ class DataRowTests : BaseTest() {
             val firstNullIndex = values().indexOfFirst { it == null }
             if (firstNullIndex == -1) null else columnNames()[firstNullIndex]
         }
+    }
+
+    @Test
+    fun transposeTo() {
+        val df = dataFrameOf("a", "b")(1, 2).first().transposeTo<Int>()
+        df.name.toList() shouldBe listOf("a", "b")
+        df.value.toList() shouldBe listOf(1, 2)
     }
 
     @Test
