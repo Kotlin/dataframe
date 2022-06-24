@@ -49,10 +49,8 @@ class MediumTests {
     fun `smallest sum`() {
         val names = ('a'..'j').map { it.toString() }
         val df = dataFrameOf(names) { List(5) { random.nextDouble() } }
-        val value by column<Double>()
-        val name by column<String>()
 
-        df.sum().transpose().minBy { value() }[name] shouldBe "b"
+        df.sum().transposeTo<Double>().minBy { value }.name shouldBe "b"
         df.sum().transpose().minBy("value")["name"] shouldBe "b"
     }
 
