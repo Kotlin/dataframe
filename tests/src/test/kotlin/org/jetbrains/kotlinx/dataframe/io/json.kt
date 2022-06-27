@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
@@ -137,6 +138,23 @@ class JsonTests {
     fun `list serialization`() {
         val df = dataFrameOf("a")(listOf(1, 2, 3))
         DataFrame.readJsonStr(df.toJson()) shouldBe df
+    }
+
+    @Test
+    fun `list serialization with nulls`() {
+        val df = dataFrameOf("a")(listOf(1, 2, 3), null)
+        val text = df.toJson()
+        val df1 = DataFrame.readJsonStr(text)
+        df1["a"][1] shouldBe emptyList<Int>()
+    }
+
+    @Test
+    fun `serialize column with name 'value'`() {
+        val df = dataFrameOf("a")(dataFrameOf("value")(1, 2, 3))
+        val json = df.toJson()
+        json shouldContain "\"value\":1"
+        val df1 = DataFrame.readJsonStr(json)
+        df shouldBe df1
     }
 
     @Test
