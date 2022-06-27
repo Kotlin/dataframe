@@ -211,7 +211,7 @@ internal fun KlaxonJson.encodeRow(frame: ColumnsContainer<*>, index: Int): JsonO
             col is ColumnGroup<*> -> encodeRow(col, index)
             col is FrameColumn<*> -> col[index]?.let { encodeFrame(it) }
             col.isList() -> {
-                array(col[index] as List<*>)
+                col[index]?.let { array(it as List<*>) } ?: array()
             }
             col.typeClass in valueTypes -> {
                 val v = col[index]
@@ -229,8 +229,13 @@ internal fun KlaxonJson.encodeRow(frame: ColumnsContainer<*>, index: Int): JsonO
 internal fun KlaxonJson.encodeFrame(frame: AnyFrame): JsonArray<*> {
     val allColumns = frame.columns()
 
+    // if there is only 1 column, then `isValidValueColumn` always true.
+    // But at the same time, we shouldn't treat dataFrameOf("value")(1,2,3) like unnamed column
+    // because it was created by user.
+    val isPossibleToFindUnnamedColumns = allColumns.size != 1
     val valueColumn = allColumns.filter { it.name.startsWith(valueColumnName) }
-        .maxByOrNull { it.name }?.let { valueCol ->
+        .takeIf { isPossibleToFindUnnamedColumns }
+        ?.maxByOrNull { it.name }?.let { valueCol ->
             if (valueCol.kind() != ColumnKind.Value) null
             else {
                 // check that value in this column is not null only when other values are null
@@ -248,7 +253,8 @@ internal fun KlaxonJson.encodeFrame(frame: AnyFrame): JsonArray<*> {
         }
 
     val arrayColumn = frame.columns().filter { it.name.startsWith(arrayColumnName) }
-        .maxByOrNull { it.name }?.let { arrayCol ->
+        .takeIf { isPossibleToFindUnnamedColumns }
+        ?.maxByOrNull { it.name }?.let { arrayCol ->
             if (arrayCol.kind() == ColumnKind.Group) null
             else {
                 // check that value in this column is not null only when other values are null
