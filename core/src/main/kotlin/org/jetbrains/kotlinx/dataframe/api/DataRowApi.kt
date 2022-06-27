@@ -24,6 +24,7 @@ public fun AnyRow.isNotEmpty(): Boolean = !isEmpty()
 
 public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInstance<R>()
 
+// region DataSchema
 @DataSchema
 public data class NameValuePair<V>(val name: String, val value: V)
 
@@ -38,6 +39,8 @@ public val DataRow<NameValuePair<*>>.name: String @JvmName("NameValuePairAny_nam
 
 public val ColumnsContainer<NameValuePair<*>>.value: DataColumn<*> @JvmName("NameValuePairAny_value") get() = this["value"]
 public val DataRow<NameValuePair<*>>.value: Any? @JvmName("NameValuePairAny_value") get() = this["value"]
+
+// endregion
 
 public inline fun <reified R> AnyRow.namedValuesOf(): List<NameValuePair<R>> =
     values().zip(columnNames()).filter { it.first is R }.map { NameValuePair(it.second, it.first as R) }
@@ -106,11 +109,11 @@ public fun <T> DataRow<T>.relative(relativeIndices: Iterable<Int>): DataFrame<T>
     getRows(relativeIndices.mapNotNull { (index + it).let { if (it >= 0 && it < df().rowsCount()) it else null } })
 
 public fun <T> DataRow<T>.relative(relativeIndices: IntRange): DataFrame<T> =
-    getRows((relativeIndices.start + index).coerceIn(df().indices)..(relativeIndices.endInclusive + index).coerceIn(df().indices))
+    getRows((relativeIndices.first + index).coerceIn(df().indices)..(relativeIndices.last + index).coerceIn(df().indices))
 
 public fun <T> DataRow<T>.movingAverage(k: Int, expression: RowExpression<T, Number>): Double {
     var count = 0
-    return backwardIterable().take(k).sumByDouble {
+    return backwardIterable().take(k).sumOf {
         count++
         expression(it).toDouble()
     } / count

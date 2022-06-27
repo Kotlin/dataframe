@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlinx.dataframe.api.next
 import org.jetbrains.kotlinx.dataframe.api.prev
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -31,7 +32,17 @@ public interface DataRow<out T> {
     public operator fun get(first: String, vararg other: String): DataRow<T> = owner.get(first, *other)[index]
     public operator fun get(path: ColumnPath): Any? = owner.get(path)[index]
     public operator fun get(name: String): Any?
-    public fun getColumnGroup(columnName: String): AnyRow = get(columnName) as AnyRow
+    public fun getColumnGroup(columnName: String): AnyRow {
+        val value = get(columnName)
+        if (value == null) {
+            val kind = df()[columnName].kind()
+            if (kind != ColumnKind.Group) {
+                error("Cannot cast null value of a $kind to a ${DataRow::class}")
+            }
+        }
+        return value as AnyRow
+    }
+
     public fun getOrNull(name: String): Any?
     public fun <R> getValueOrNull(column: ColumnReference<R>): R?
 

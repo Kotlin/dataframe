@@ -62,7 +62,6 @@ public fun DataRow.Companion.readJson(file: File, header: List<String> = emptyLi
 public fun DataFrame.Companion.readJson(path: String, header: List<String> = emptyList()): AnyFrame = readJson(asURL(path), header)
 public fun DataRow.Companion.readJson(path: String, header: List<String> = emptyList()): AnyRow = DataFrame.readJson(path, header).single()
 
-@Suppress("UNCHECKED_CAST")
 public fun DataFrame.Companion.readJson(url: URL, header: List<String> = emptyList()): AnyFrame = catchHttpResponse(url) { readJson(it, header) }
 public fun DataRow.Companion.readJson(url: URL, header: List<String> = emptyList()): AnyRow = DataFrame.readJson(url, header).single()
 

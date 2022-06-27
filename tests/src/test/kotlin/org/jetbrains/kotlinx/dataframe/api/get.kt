@@ -1,7 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.junit.Test
@@ -77,5 +79,14 @@ class GetTests {
         val x by columnGroup<Schema>()
         df[x][0].a shouldBe 1
         df[1][x].a shouldBe 3
+    }
+
+    @Test
+    fun `throw meaningful exception when traverse columns in DataRow`() {
+        val df = dataFrameOf("a")(null)
+        val throwable = shouldThrowAny {
+            df[0].getColumnGroup("a")
+        }
+        throwable.message shouldContain "Cannot cast null value of a ValueColumn to"
     }
 }
