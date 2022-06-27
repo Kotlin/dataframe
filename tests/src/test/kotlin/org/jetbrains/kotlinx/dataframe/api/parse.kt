@@ -5,9 +5,6 @@ import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.io.readJsonStr
 import org.jetbrains.kotlinx.dataframe.type
 import org.junit.Test
 import java.time.LocalTime
@@ -19,70 +16,6 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 class ParseTests {
-
-    @Test
-    fun parseJson1() {
-        val json = """[
-                {"a":1, "b":"text"},
-                {"a":2, "b":5, "c":4.5}
-            ]
-        """.trimIndent()
-        val df = DataFrame.readJsonStr(json)
-        df.columnsCount() shouldBe 3
-        df.rowsCount() shouldBe 2
-        df["a"].type() shouldBe typeOf<Int>()
-        df["b"].type() shouldBe typeOf<Comparable<*>>()
-        df["c"].type() shouldBe typeOf<Double?>()
-    }
-
-    @Test
-    fun parseJson2() {
-        val json = """[
-                {"a":"text"},
-                {"a":{"b":2}},
-                {"a":[6,7,8]}
-            ]
-        """.trimIndent()
-        val df = DataFrame.readJsonStr(json)
-        println(df)
-        df.columnsCount() shouldBe 1
-        df.rowsCount() shouldBe 3
-        val group = df["a"] as ColumnGroup<*>
-        group.columnsCount() shouldBe 3
-        group["b"].type() shouldBe typeOf<Int?>()
-        group["value"].type() shouldBe typeOf<String?>()
-        group["array"].type() shouldBe typeOf<List<Int>>()
-    }
-
-    @Test
-    fun parseJson3() {
-        val json = """[
-                {"a":[3, 5]},
-                {},
-                {"a":[3.4, 5.6]}
-            ]
-        """.trimIndent()
-        val df = DataFrame.readJsonStr(json)
-        df.columnsCount() shouldBe 1
-        df.rowsCount() shouldBe 3
-        df["a"].type() shouldBe typeOf<List<Number>>()
-        df[1]["a"] shouldBe emptyList<Int>()
-    }
-
-    @Test
-    fun parseJson4() {
-        val json = """[
-                {"a":[ {"b":2}, {"c":3} ]},
-                {"a":[ {"b":4}, {"d":5} ]}
-            ]
-        """.trimIndent()
-        val df = DataFrame.readJsonStr(json)
-        df.columnsCount() shouldBe 1
-        df.rowsCount() shouldBe 2
-        println(df)
-        val group = df["a"] as FrameColumn<*>
-    }
-
     @Test
     fun parseDate() {
         val date by columnOf("January 1, 2020")
