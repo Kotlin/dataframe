@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.indices
+import org.jetbrains.kotlinx.dataframe.api.isList
 import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.rows
@@ -209,6 +210,9 @@ internal fun KlaxonJson.encodeRow(frame: ColumnsContainer<*>, index: Int): JsonO
         when {
             col is ColumnGroup<*> -> encodeRow(col, index)
             col is FrameColumn<*> -> col[index]?.let { encodeFrame(it) }
+            col.isList() -> {
+                array(col[index] as List<*>)
+            }
             col.typeClass in valueTypes -> {
                 val v = col[index]
                 if ((v is Double && v.isNaN()) || (v is Float && v.isNaN())) {

@@ -134,6 +134,12 @@ class JsonTests {
     }
 
     @Test
+    fun `list serialization`() {
+        val df = dataFrameOf("a")(listOf(1, 2, 3))
+        DataFrame.readJsonStr(df.toJson()) shouldBe df
+    }
+
+    @Test
     fun `literal json field named 'value'`() {
         val json = """
                 {
