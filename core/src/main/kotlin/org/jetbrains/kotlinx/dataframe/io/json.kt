@@ -13,9 +13,9 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.rows
@@ -71,17 +71,25 @@ public fun DataRow.Companion.readJson(stream: InputStream, header: List<String> 
 public fun DataFrame.Companion.readJsonStr(text: String, header: List<String> = emptyList()): AnyFrame = readJson(Parser.default().parse(StringBuilder(text)), header)
 public fun DataRow.Companion.readJsonStr(text: String, header: List<String> = emptyList()): AnyRow = DataFrame.readJsonStr(text, header).single()
 
-private fun readJson(parsed: Any?, header: List<String>) = when (parsed) {
-    is JsonArray<*> -> fromJsonList(parsed.value, header)
-    else -> fromJsonList(listOf(parsed))
+private fun readJson(parsed: Any?, header: List<String>): DataFrame<*> {
+    val df = when (parsed) {
+        is JsonArray<*> -> fromJsonList(parsed.value, header)
+        else -> fromJsonList(listOf(parsed))
+    }
+    return df.unwrapUnnamedColumns()
 }
+
+private fun DataFrame<Any?>.unwrapUnnamedColumns() =
+    dataFrameOf(columns().map { it.unwrapUnnamedColumn() })
+
+private fun AnyCol.unwrapUnnamedColumn() = if (this is UnnamedColumn) col else this
 
 private val arrayColumnName = "array"
 
 internal val valueColumnName = "value"
 
 internal fun fromJsonList(records: List<*>, header: List<String> = emptyList()): AnyFrame {
-    fun AnyFrame.isSingleUnnamedColumn() = ncol == 1 && getColumn(0).name.let { it == org.jetbrains.kotlinx.dataframe.io.valueColumnName || it == org.jetbrains.kotlinx.dataframe.io.arrayColumnName }
+    fun AnyFrame.isSingleUnnamedColumn() = ncol == 1 && getColumn(0) is UnnamedColumn
 
     var hasPrimitive = false
     var hasArray = false
@@ -108,7 +116,7 @@ internal fun fromJsonList(records: List<*>, header: List<String> = emptyList()):
 
     val columns: List<AnyCol> = nameGenerator.names.map { colName ->
         when {
-            colName == valueColumn -> {
+            colName == valueColumn && hasPrimitive -> {
                 val collector = createDataCollector(records.size)
                 val nanIndices = mutableListOf<Int>()
                 records.forEachIndexed { i, v ->
@@ -120,7 +128,7 @@ internal fun fromJsonList(records: List<*>, header: List<String> = emptyList()):
                     }
                 }
                 val column = collector.toColumn(colName)
-                if (nanIndices.isNotEmpty()) {
+                val res = if (nanIndices.isNotEmpty()) {
                     fun <C> DataColumn<C>.updateNaNs(nanValue: C): DataColumn<C> {
                         var j = 0
                         var nextNanIndex = nanIndices[j]
@@ -139,8 +147,9 @@ internal fun fromJsonList(records: List<*>, header: List<String> = emptyList()):
                         else -> column
                     }
                 } else column
+                UnnamedColumn(res)
             }
-            colName == arrayColumn -> {
+            colName == arrayColumn && hasArray -> {
                 val values = mutableListOf<Any?>()
                 val startIndices = ArrayList<Int>()
                 records.forEach {
@@ -148,15 +157,17 @@ internal fun fromJsonList(records: List<*>, header: List<String> = emptyList()):
                     if (it is JsonArray<*>) values.addAll(it.value)
                 }
                 val parsed = fromJsonList(values)
-                when {
+
+                val res = when {
                     parsed.isSingleUnnamedColumn() -> {
-                        val col = parsed.getColumn(0)
+                        val col = (parsed.getColumn(0) as UnnamedColumn).col
                         val elementType = col.type
                         val values = col.values.asList().splitByIndices(startIndices.asSequence()).toList()
                         DataColumn.createValueColumn(colName, values, List::class.createType(listOf(KTypeProjection.invariant(elementType))))
                     }
-                    else -> DataColumn.createFrameColumn(colName, parsed, startIndices)
+                    else -> DataColumn.createFrameColumn(colName, parsed.unwrapUnnamedColumns(), startIndices)
                 }
+                UnnamedColumn(res)
             }
             else -> {
                 val values = ArrayList<Any?>(records.size)
@@ -171,18 +182,25 @@ internal fun fromJsonList(records: List<*>, header: List<String> = emptyList()):
                 val parsed = fromJsonList(values)
                 when {
                     parsed.ncol == 0 -> DataColumn.createValueColumn(colName, arrayOfNulls<Any?>(values.size).toList(), typeOf<Any?>())
-                    parsed.isSingleUnnamedColumn() -> parsed.getColumn(0).rename(colName)
-                    else -> DataColumn.createColumnGroup(colName, parsed) as AnyCol
+                    parsed.isSingleUnnamedColumn() -> (parsed.getColumn(0) as UnnamedColumn).col.rename(colName)
+                    else -> DataColumn.createColumnGroup(colName, parsed.unwrapUnnamedColumns()) as AnyCol
                 }
             }
         }
     }
+
     return when {
         columns.isEmpty() -> DataFrame.empty(records.size)
         columns.size == 1 && hasArray && header.isNotEmpty() && columns[0].typeClass == List::class -> columns[0].cast<List<*>>().splitInto(*header.toTypedArray())
         else -> columns.toDataFrame()
     }
 }
+
+// we need it to check if AnyFrame created by recursive call has single unnamed column,
+// unnamed column means this column is not created from field of a record [{"value": 1}, {"value": 2}],
+// but filtered values [1, { ... }, []] -> [1, null, null]
+// or arrays: [1, { ...}, []] -> [null, null, []]
+private class UnnamedColumn(val col: DataColumn<Any?>) : DataColumn<Any?> by col
 
 private val valueTypes = setOf(Boolean::class, Double::class, Int::class, Float::class, Long::class, Short::class, Byte::class)
 

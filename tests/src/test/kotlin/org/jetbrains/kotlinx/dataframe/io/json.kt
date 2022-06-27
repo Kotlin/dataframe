@@ -4,6 +4,8 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
 import org.jetbrains.kotlinx.dataframe.api.toDouble
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
@@ -77,6 +79,28 @@ class JsonTests {
     }
 
     @Test
+    fun `parse json with nested json array with mixed values`() {
+        val json = """[
+                {"a":"text"},
+                {"a":{"b":2}},
+                {"a":[6, {"a": "b"}, [1, {"a" : "b"}],8]}
+            ]
+        """.trimIndent()
+        val df = DataFrame.readJsonStr(json)
+        df.columnsCount() shouldBe 1
+        df.rowsCount() shouldBe 3
+        val group = df["a"] as ColumnGroup<*>
+        group.columnsCount() shouldBe 3
+        group["b"].type() shouldBe typeOf<Int?>()
+        group["value"].type() shouldBe typeOf<String?>()
+        group["array"].type() shouldBe typeOf<DataFrame<*>>()
+        val nestedDf = group.getFrameColumn("array")[2]
+        nestedDf["a"].type() shouldBe typeOf<String?>()
+        nestedDf["value"].type() shouldBe typeOf<Int?>()
+        nestedDf["array"].type() shouldBe typeOf<DataFrame<*>>()
+    }
+
+    @Test
     fun `write df with primitive types`() {
         val df = dataFrameOf("colInt", "colDouble?", "colBoolean?")(
             1, 1.0, true,
@@ -107,5 +131,79 @@ class JsonTests {
         val df = dataFrameOf("v")("NaM", "NaN")
         df["v"].type() shouldBe typeOf<String>()
         DataFrame.readJsonStr(df.toJson()) shouldBe df
+    }
+
+    @Test
+    fun `literal json field named 'value'`() {
+        val json = """
+                {
+                    "data": {
+                        "source": {
+                            "value": "123"
+                        }
+                    }
+                }
+        """.trimIndent()
+        val df = DataFrame.readJsonStr(json)
+        df[0].getColumnGroup("data").getColumnGroup("source")["value"] shouldBe "123"
+    }
+
+    @Test
+    fun `array json field named 'value'`() {
+        val json = """{ "value": ["123"] }"""
+
+        val df = DataFrame.readJsonStr(json)
+        df[0]["value"] shouldBe listOf("123")
+    }
+
+    @Test
+    fun `record json field named 'value'`() {
+        val json = """{ "value": { "test" : "123" } }"""
+
+        val df = DataFrame.readJsonStr(json)
+        df[0].getColumnGroup("value")["test"] shouldBe "123"
+    }
+
+    @Test
+    fun `json field named 'array'`() {
+        val json = """
+            {
+                "data": {
+                    "source": {
+                        "array": "123"
+                    }
+                }
+            }
+        """.trimIndent()
+
+        val df = DataFrame.readJsonStr(json)
+        df[0].getColumnGroup("data").getColumnGroup("source")["array"] shouldBe "123"
+    }
+
+    @Test
+    fun `array json field named 'array'`() {
+        val json = """
+            [{
+              "a": {
+                "value": "text",
+                "array": []
+              }
+            }, {
+              "a": {
+                "b": 2,
+                "array": []
+              }
+            }, {
+              "a": {
+                "array": [6, 7, 8]
+              }
+            }]
+        """.trimIndent()
+
+        val df = DataFrame.readJsonStr(json)
+        val group = df.getColumnGroup("a")
+        group["array"].type() shouldBe typeOf<List<Int>>()
+        group["value"].type() shouldBe typeOf<String?>()
+        group["b"].type() shouldBe typeOf<Int?>()
     }
 }
