@@ -30,7 +30,7 @@ If you want to always use the latest version, add another magic before `%use dat
 If you want to use specific version of DataFrame, you can specify it in brackets:
 
 ```text
-%use dataframe(0.8.0-rc-5)
+%use dataframe(0.8.0)
 ```
 
 After loading, all essential types will be already imported, so you can start using DataFrame. Enjoy!
@@ -218,4 +218,4 @@ After plugin configuration you can try it out with [example](gradle.md#annotatio
 ## Other build systems
 
 If you are using Maven, Ivy or Bazel to configure your build, you can still use DataFrame in your project.
-Just follow the instructions for your build system on [this page](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe/0.8.0-dev-515/jar).
+Just follow the instructions for your build system on [this page](https://search.maven.org/artifact/org.jetbrains.kotlinx/dataframe/0.8.0/jar).
