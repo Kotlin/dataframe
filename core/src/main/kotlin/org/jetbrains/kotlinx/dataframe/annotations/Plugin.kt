@@ -7,6 +7,7 @@ import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 
 public annotation class Dsl
 
@@ -47,9 +48,18 @@ public abstract class AbstractInterpreter<T> : Interpreter<T> {
     internal val _expectedArguments: MutableList<Interpreter.ExpectedArgument> = mutableListOf()
 
     override val expectedArguments: List<Interpreter.ExpectedArgument> = _expectedArguments
-    public fun <Value> arg(name: ArgumentName? = null): PropertyDelegateProvider<Any?, ReadOnlyProperty<Arguments, Value>> = PropertyDelegateProvider { thisRef: Any?, property ->
+
+    public inline fun <Value, reified CompileTimeValue> arg(
+        name: ArgumentName? = null, crossinline converter: (CompileTimeValue) -> Value
+    ): PropertyDelegateProvider<Any?, ReadOnlyProperty<Arguments, Value>> = PropertyDelegateProvider { thisRef: Any?, property ->
         val name = name?.value ?: property.name
-        _expectedArguments.add(Interpreter.ExpectedArgument(name, property.returnType))
+        _expectedArguments.add(Interpreter.ExpectedArgument(name, typeOf<CompileTimeValue>()))
+        ReadOnlyProperty { args, _ -> converter(args[name] as CompileTimeValue) }
+    }
+
+    public fun <Value> arg(name: ArgumentName? = null, expectedType: KType? = null): PropertyDelegateProvider<Any?, ReadOnlyProperty<Arguments, Value>> = PropertyDelegateProvider { thisRef: Any?, property ->
+        val name = name?.value ?: property.name
+        _expectedArguments.add(Interpreter.ExpectedArgument(name, expectedType ?: property.returnType))
         ReadOnlyProperty { args, _ -> args[name] as Value }
     }
 
