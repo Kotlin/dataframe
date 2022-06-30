@@ -5,6 +5,7 @@ plugins {
 group = "org.jetbrains.kotlinx"
 
 dependencies {
+    implementation(project(":"))
     implementation(kotlin("compiler-embeddable"))
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
