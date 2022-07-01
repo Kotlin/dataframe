@@ -77,7 +77,7 @@ private fun getQualifiedTypeReference(type: KSType) = when (val declaration = ty
 private fun KSType.singleTypeArgumentIsDataSchema() =
     innerArguments.singleOrNull()?.type?.resolve()?.declaration?.isAnnotationPresent(DataSchema::class) ?: false
 
-private fun KSType.render(): String {
+fun KSType.render(): String {
     val fqTypeReference = getQualifiedTypeReference(this)
     return buildString {
         append(fqTypeReference)

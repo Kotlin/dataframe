@@ -1207,6 +1207,36 @@ class DataFrameSymbolProcessorTest {
         }
     }
 
+    @Test
+    fun `constructors`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                package org.example
+
+                $imports
+                import org.jetbrains.kotlinx.dataframe.api.*
+
+                @DataSchema
+                interface Hello : DataRowSchema {
+                    val name: Int
+                    
+                    @GenerateConstructor
+                    companion object
+                }
+                
+                fun test(): Hello = Hello(123)
+            """.trimIndent()))
+            )
+        )
+        result.inspectLines { codeLines ->
+            codeLines.forExactly(2) {
+                it.shouldStartWith("""val """)
+            }
+            result.successfulCompilation shouldBe true
+        }
+    }
+
     private fun KotlinCompileTestingCompilationResult.inspectLines(f: (List<String>) -> Unit) {
         inspectLines(generatedFile, f)
     }
