@@ -1,4 +1,7 @@
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.GenerateConstructor
+import org.jetbrains.kotlinx.dataframe.api.DataRowSchema
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.addId
@@ -11,7 +14,6 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.distinct
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
 import org.jetbrains.kotlinx.dataframe.api.explode
-import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.print
@@ -86,49 +88,60 @@ class Prototype {
 
     }
 
-    interface Parameter {
+    @DataSchema
+    interface Function : DataRowSchema {
+        val receiverType: String
+        val function: String
+        val functionReturnType: String
+        val parameters: List<Parameter>
+
+        @GenerateConstructor
+        companion object
+    }
+
+    @DataSchema
+    interface Parameter : DataRowSchema {
         val name: String
         val returnType: String
         val defaultValue: String?
+
+        @GenerateConstructor
+        companion object
     }
 
     val id by column<Int>()
     val name by column<String>()
-    val returnType by column<String>()
-    val defaultValue by column<String>()
-    val parametersBuilder = dataFrameOf(name, returnType, defaultValue)
 
-    val functions = dataFrameOf("receiverType","function", "functionReturnType", "parameters")(
-        "DataFrame<T>", "insert", "InsertClause<T>", parametersBuilder(
-            "column", "ColumnAccessor<R>", null,
-            "infer", "Infer", "Infer.Nulls",
-            "expression", "RowExpression<T, R>", null
-        ),
-        "DataFrame<T>", "insert", "InsertClause<T>", parametersBuilder(
-            "column", "String", null,
-            "infer", "Infer", "Infer.Nulls",
-            "expression", "RowExpression<T, R>", null
-        ),
-        "DataFrame<T>", "insert", "InsertClause<T>", parametersBuilder(
-            "column", "KProperty<R>", null,
-            "infer", "Infer", "Infer.Nulls",
-            "expression", "RowExpression<T, R>", null
-        ),
-        "DataFrame<T>", "insert", "InsertClause<T>", parametersBuilder("column", "DataColumn<C>", null)
+    val functions = dataFrameOf(
+        Function("DataFrame<T>", "insert", "InsertClause<T>", listOf(
+            Parameter("column", "ColumnAccessor<R>", null),
+            Parameter("infer", "Infer", "Infer.Nulls"),
+            Parameter("expression", "RowExpression<T, R>", null)
+        )),
+        Function("DataFrame<T>", "insert", "InsertClause<T>", listOf(
+            Parameter("column", "String", null),
+            Parameter("infer", "Infer", "Infer.Nulls"),
+            Parameter("expression", "RowExpression<T, R>", null)
+        )),
+        Function("DataFrame<T>", "insert", "InsertClause<T>", listOf(
+            Parameter("column", "KProperty<R>", null),
+            Parameter("infer", "Infer", "Infer.Nulls"),
+            Parameter("expression", "RowExpression<T, R>", null)
+        )),
+        Function("DataFrame<T>", "insert", "InsertClause<T>", listOf(Parameter("column", "DataColumn<C>", null)))
     )
         .addId()
-        .update("parameters") { (it as DataFrame<*>).append("<this>", this["receiverType"], null) }
+        .update { parameters }.with { it.append(Parameter("<this>", receiverType, null)) }
 
     @Test
     fun `generate mapper`() {
         val returnType by column<String>()
-        val functionReturnType by column<String>()
 
         val uniqueReturnTypes = functions
-            .explode("parameters")
-            .ungroup("parameters")
+            .explode { parameters }
+            .ungroup { parameters }
             .distinct("returnType")[returnType]
-            .concat(functions[functionReturnType].distinct())
+            .concat(functions.functionReturnType.distinct())
 
         uniqueReturnTypes.print()
         val mapper = uniqueReturnTypes.toList()
@@ -150,15 +163,25 @@ class Prototype {
     val approximation by column<String>()
     val converter by column<String>()
 
-    private val bridges = dataFrameOf(type, approximation, converter)(
-        "ColumnAccessor<R>", "ColumnAccessorApproximation", "columnAccessor",
-        "Infer", "Infer", "enum",
-        "RowExpression<T, R>", "TypeApproximation", "type",
-        "DataFrame<T>", "PluginDataFrameSchema", "dataFrame",
-        "String", "String", "arg<String>",
-        "KProperty<R>", "String", "arg<String>",
-        "DataColumn<C>", "SimpleCol", "dataColumn",
-        "InsertClause<T>", "InsertClauseApproximation", "insertClause"
+    @DataSchema
+    interface Bridge : DataRowSchema {
+        val type: String
+        val approximation: String
+        val converter: String
+
+        @GenerateConstructor
+        companion object
+    }
+
+    private val bridges = dataFrameOf(
+        Bridge("ColumnAccessor<R>", "ColumnAccessorApproximation", "columnAccessor"),
+        Bridge("Infer", "Infer", "enum"),
+        Bridge("RowExpression<T, R>", "TypeApproximation", "type"),
+        Bridge("DataFrame<T>", "PluginDataFrameSchema", "dataFrame"),
+        Bridge("String", "String", "arg<String>"),
+        Bridge("KProperty<R>", "String", "arg<String>"),
+        Bridge("DataColumn<C>", "SimpleCol", "dataColumn"),
+        Bridge("InsertClause<T>", "InsertClauseApproximation", "insertClause")
     )
 
     private val mapping = bridges.associateBy { it["type"] }
@@ -178,28 +201,26 @@ class Prototype {
 
         functions
             .leftJoin(bridges) { it[functionReturnType].match(type) }
-            .convert { frameColumn("parameters") }.with { it.leftJoin(bridges) { it[returnType].match(type) } }
+            .convert { parameters }.with { it.leftJoin(bridges) { it[returnType].match(type) } }
             .schema()
             .print()
 
         val interpreters = functions
             .leftJoin(bridges) { it[functionReturnType].match(type) }
-            .convert { frameColumn("parameters") }.with { it.leftJoin(bridges) { it[returnType].match(type) } }
-            .convert { frameColumn("parameters") }.with {
+            .convert { parameters }.with { it.leftJoin(bridges) { it[returnType].match(type) } }
+            .convert { parameters }.with {
                 it.add("arguments") {
-                    val (name, runtimeName) = name().let {
-                        if (it == "<this>") {
+                    val (name, runtimeName) = if (name == "<this>") {
                             "receiver" to "THIS"
                         } else {
-                            it to ""
+                            name to ""
                         }
-                    }
 
                     "val Arguments.${name}: ${approximation()} by ${converter()}($runtimeName)"
                 }
             }
             .add("argumentsStr") {
-                it.getFrameColumn("parameters")["arguments"].values().joinToString("\n") { "|   $it" }
+                it.parameters["arguments"].values().joinToString("\n") { "|   $it" }
             }
             .add("interpreterName") {
                 val name = it[function].replaceFirstChar { it.uppercaseChar() }
