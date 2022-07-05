@@ -21,8 +21,8 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.columnsSelector
+import org.jetbrains.kotlinx.dataframe.plugin.dataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.renameClause
-import org.jetbrains.kotlinx.dataframe.plugin.schema
 import org.jetbrains.kotlinx.dataframe.plugin.varargString
 import kotlin.reflect.KProperty
 
@@ -33,7 +33,7 @@ public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataF
         .into(*mappings.map { it.second }.toTypedArray())
 
 public class Rename : AbstractInterpreter<RenameClauseApproximation>() {
-    private val Arguments.df by schema(THIS)
+    private val Arguments.df by dataFrame(THIS)
     private val Arguments.columns by columnsSelector()
     override fun Arguments.interpret(): RenameClauseApproximation {
         return RenameClauseApproximation(df, columns)

@@ -31,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
+import org.jetbrains.kotlinx.dataframe.plugin.type
 import java.math.BigDecimal
 import java.net.URL
 import java.time.LocalTime
@@ -90,8 +91,8 @@ public data class Convert<T, out C>(val df: DataFrame<T>, val columns: ColumnsSe
 public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
 
 public class With : AbstractSchemaModificationInterpreter() {
-    public val Arguments.convert: ConvertApproximation by arg(THIS)
-    public val Arguments.type: TypeApproximation by arg(name("rowConverter"))
+    public val Arguments.convert: ConvertApproximation by arg(THIS, lens = Interpreter.Value)
+    public val Arguments.type: TypeApproximation by type(name("rowConverter"))
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         val names = convert.columns.toSet()

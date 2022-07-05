@@ -25,7 +25,7 @@ class InterpreterTests {
     data class Data(val a: Int)
 
     class Subject1 : AbstractInterpreter<Data>() {
-        val Arguments.a by arg { i: Int -> Data(i) }
+        val Arguments.a by argConvert { i: Int -> Data(i) }
 
         override fun Arguments.interpret(): Data {
             return a
