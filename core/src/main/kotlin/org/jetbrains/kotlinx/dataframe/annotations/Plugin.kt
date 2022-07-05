@@ -48,11 +48,32 @@ public interface Interpreter<T> {
 
     public object Schema : Lens
 
-    public fun interpret(arguments: Map<String, Any>): T
+    public fun interpret(arguments: Map<String, Success<Any?>>): InterpretationResult<T>
+
+    public sealed interface InterpretationResult<out T>
+
+    public class Success<out T>(public val value: T) : InterpretationResult<T> {
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as Success<*>
+
+            if (value != other.value) return false
+
+            return true
+        }
+
+        override fun hashCode(): Int {
+            return value?.hashCode() ?: 0
+        }
+    }
+
+    public class Error(public val message: String?) : InterpretationResult<Nothing>
 }
 
-public open class Arguments(private val arguments: Map<String, Any>) {
-    public operator fun get(s: String): Any? = arguments[s]
+public open class Arguments(private val arguments: Map<String, Interpreter.Success<Any?>>) {
+    public operator fun get(s: String): Any? = (arguments[s] ?: error("")).value
 }
 
 public abstract class AbstractInterpreter<T> : Interpreter<T> {
@@ -93,8 +114,12 @@ public abstract class AbstractInterpreter<T> : Interpreter<T> {
 
     public fun name(name: String): ArgumentName = ArgumentName.of(name)
 
-    final override fun interpret(arguments: Map<String, Any>): T {
-        return Arguments(arguments).interpret()
+    final override fun interpret(arguments: Map<String, Interpreter.Success<Any?>>): Interpreter.InterpretationResult<T> {
+        return try {
+            Arguments(arguments).interpret().let { Interpreter.Success(it) }
+        } catch (e: Exception) {
+            Interpreter.Error(e.message)
+        }
     }
 
     public abstract fun Arguments.interpret(): T
@@ -102,7 +127,7 @@ public abstract class AbstractInterpreter<T> : Interpreter<T> {
 
 public interface SchemaModificationInterpreter : Interpreter<PluginDataFrameSchema> {
 
-    override fun interpret(arguments: Map<String, Any>): PluginDataFrameSchema
+    override fun interpret(arguments: Map<String, Interpreter.Success<Any?>>): Interpreter.InterpretationResult<PluginDataFrameSchema>
 }
 
 public abstract class AbstractSchemaModificationInterpreter : AbstractInterpreter<PluginDataFrameSchema>(), SchemaModificationInterpreter
