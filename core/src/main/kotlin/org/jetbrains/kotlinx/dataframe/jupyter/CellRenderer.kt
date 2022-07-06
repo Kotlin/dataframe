@@ -61,11 +61,11 @@ public abstract class ChainedCellRenderer(
 
 public object DefaultCellRenderer : CellRenderer {
     public override fun content(value: Any?, configuration: DisplayConfiguration): RenderedContent {
-        return renderValueForHtml(value, configuration.cellContentLimit, configuration.precision)
+        return renderValueForHtml(value, configuration.cellContentLimit, configuration.decimalFormat)
     }
 
     public override fun tooltip(value: Any?, configuration: DisplayConfiguration): String {
-        return renderValueForHtml(value, tooltipLimit, configuration.precision).truncatedContent
+        return renderValueForHtml(value, tooltipLimit, configuration.decimalFormat).truncatedContent
     }
 }
 
@@ -81,7 +81,7 @@ internal class JupyterCellRenderer(
         if (finalVal is MimeTypedResult && "text/html" in finalVal) return RenderedContent.media(
             finalVal["text/html"] ?: ""
         )
-        return renderValueForHtml(finalVal, configuration.cellContentLimit, configuration.precision)
+        return renderValueForHtml(finalVal, configuration.cellContentLimit, configuration.decimalFormat)
     }
 
     override fun maybeTooltip(value: Any?, configuration: DisplayConfiguration): String? {
