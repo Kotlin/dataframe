@@ -8,8 +8,8 @@ import org.jetbrains.kotlinx.dataframe.api.isNumber
 import org.jetbrains.kotlinx.dataframe.api.take
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.impl.owner
-import org.jetbrains.kotlinx.dataframe.impl.precision
 import org.jetbrains.kotlinx.dataframe.impl.renderType
+import org.jetbrains.kotlinx.dataframe.impl.scale
 import org.jetbrains.kotlinx.dataframe.impl.truncate
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
@@ -45,9 +45,10 @@ internal fun AnyFrame.renderToString(
     }
     val values = cols.map {
         val top = it.take(rowsLimit)
-        val precision = if (top.isNumber()) top.asNumbers().precision() else 0
+        val precision = if (top.isNumber()) top.asNumbers().scale() else 0
+        val decimalFormat = if (precision >= 0) RendererDecimalFormat.fromPrecision(precision) else RendererDecimalFormat.of("%e")
         top.values().map {
-            renderValueForStdout(it, valueLimit, precision = precision).truncatedContent
+            renderValueForStdout(it, valueLimit, decimalFormat = decimalFormat).truncatedContent
         }
     }
     val columnLengths = values.mapIndexed { col, vals -> (vals + header[col]).map { it.length }.maxOrNull()!! + 1 }
@@ -150,26 +151,24 @@ internal fun renderValueForRowTable(value: Any?, forHtml: Boolean): RenderedCont
     }
     is AnyRow -> RenderedContent.textWithLength("DataRow $value", "DataRow".length)
     is Collection<*> -> renderCollectionName(value).let { RenderedContent.textWithLength("$it $value", it.length) }
-    else -> if (forHtml) renderValueForHtml(value, valueToStringLimitForRowAsTable, defaultPrecision)
+    else -> if (forHtml) renderValueForHtml(value, valueToStringLimitForRowAsTable, RendererDecimalFormat.DEFAULT)
     else renderValueForStdout(value, valueToStringLimitForRowAsTable)
 }
 
 internal fun renderValueForStdout(
     value: Any?,
     limit: Int = valueToStringLimitDefault,
-    precision: Int = defaultPrecision
+    decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT
 ): RenderedContent =
-    renderValueToString(value, precision).truncate(limit)
+    renderValueToString(value, decimalFormat).truncate(limit)
         .let { it.copy(truncatedContent = it.truncatedContent.escapeNewLines()) }
 
-internal val defaultPrecision = 6
-
-internal fun renderValueToString(value: Any?, precision: Int) =
+internal fun renderValueToString(value: Any?, decimalFormat: RendererDecimalFormat) =
     when (value) {
         is AnyFrame -> "[${value.size}]".let { if (value.nrow == 1) it + " " + value[0].toString() else it }
-        is Double -> value.format(precision)
-        is Float -> value.format(precision)
-        is BigDecimal -> value.format(precision)
+        is Double -> value.format(decimalFormat)
+        is Float -> value.format(decimalFormat)
+        is BigDecimal -> value.format(decimalFormat)
         is List<*> -> if (value.isEmpty()) "[ ]" else value.toString()
         else -> value.toString()
     }
@@ -181,6 +180,6 @@ internal fun internallyRenderable(value: Any?): Boolean {
     }
 }
 
-internal fun Double.format(precision: Int): String = "%.${precision}f".format(this)
-internal fun Float.format(precision: Int): String = "%.${precision}f".format(this)
-internal fun BigDecimal.format(precision: Int): String = "%.${precision}f".format(this)
+internal fun Double.format(decimalFormat: RendererDecimalFormat): String = decimalFormat.format.format(this)
+internal fun Float.format(decimalFormat: RendererDecimalFormat): String = decimalFormat.format.format(this)
+internal fun BigDecimal.format(decimalFormat: RendererDecimalFormat): String = decimalFormat.format.format(this)
