@@ -105,4 +105,15 @@ class RenderingTests {
             .group { all() }.into("Campus")
         df.toHTML().print()
     }
+
+    @Test
+    fun `render double with exponent`() {
+        listOf(
+            dataFrameOf("col")(1E27) to "1.000000e+27",
+            dataFrameOf("col")(1.123) to "1.123",
+            dataFrameOf("col")(1.0) to "1.0",
+        ).forEach { (df, rendered) ->
+            df.toHTML().script shouldContain rendered
+        }
+    }
 }

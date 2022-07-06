@@ -13,8 +13,8 @@ import org.jetbrains.kotlinx.dataframe.api.isSubtypeOf
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
-import org.jetbrains.kotlinx.dataframe.impl.precision
 import org.jetbrains.kotlinx.dataframe.impl.renderType
+import org.jetbrains.kotlinx.dataframe.impl.scale
 import org.jetbrains.kotlinx.dataframe.impl.truncate
 import org.jetbrains.kotlinx.dataframe.jupyter.CellRenderer
 import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
@@ -112,8 +112,13 @@ internal fun AnyFrame.toHtmlData(
 
     fun AnyFrame.columnToJs(col: AnyCol, rowsLimit: Int): ColumnDataForJs {
         val values = rows().take(rowsLimit)
-        val precision = if (col.isNumber()) col.asNumbers().precision() else 1
-        val renderConfig = configuration.copy(precision = precision)
+        val scale = if (col.isNumber()) col.asNumbers().scale() else 1
+        val format = if (scale > 0) {
+            RendererDecimalFormat.fromPrecision(scale)
+        } else {
+            RendererDecimalFormat.of("%e")
+        }
+        val renderConfig = configuration.copy(decimalFormat = format)
         val contents = values.map {
             val value = it[col]
             if (value is AnyFrame) {
@@ -205,7 +210,7 @@ public data class DisplayConfiguration(
     var rowsLimit: Int = 20,
     var cellContentLimit: Int = 40,
     var cellFormatter: RowColFormatter<*, *>? = null,
-    var precision: Int = defaultPrecision,
+    var decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
     var isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
     internal val localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
 ) {
@@ -213,6 +218,24 @@ public data class DisplayConfiguration(
         public val DEFAULT: DisplayConfiguration = DisplayConfiguration()
     }
 }
+
+@JvmInline
+public value class RendererDecimalFormat private constructor(internal val format: String) {
+    public companion object {
+        public fun fromPrecision(precision: Int): RendererDecimalFormat {
+            require(precision >= 0) { "precision must be >= 0. for custom format use RendererDecimalFormat.of" }
+            return RendererDecimalFormat("%.${precision}f")
+        }
+
+        public fun of(format: String): RendererDecimalFormat {
+            return RendererDecimalFormat(format)
+        }
+
+        internal val DEFAULT: RendererDecimalFormat = fromPrecision(defaultPrecision)
+    }
+}
+
+internal const val defaultPrecision = 6
 
 private fun flagFromEnv(envName: String): Boolean {
     return System.getenv(envName)?.toBooleanStrictOrNull() ?: false
@@ -222,8 +245,8 @@ internal fun String.escapeNewLines() = replace("\n", "\\n").replace("\r", "\\r")
 
 internal fun String.escapeForHtmlInJs() = replace("\"", "\\\"").escapeNewLines()
 
-internal fun renderValueForHtml(value: Any?, truncate: Int, precision: Int): RenderedContent {
-    return formatter.truncate(renderValueToString(value, precision), truncate)
+internal fun renderValueForHtml(value: Any?, truncate: Int, format: RendererDecimalFormat): RenderedContent {
+    return formatter.truncate(renderValueToString(value, format), truncate)
 }
 
 internal fun String.escapeHTML(): String {
