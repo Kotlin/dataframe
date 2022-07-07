@@ -3,6 +3,8 @@ package org.jetbrains.kotlinx.dataframe.io
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.BigIntVector
 import org.apache.arrow.vector.BitVector
+import org.apache.arrow.vector.DateDayVector
+import org.apache.arrow.vector.DateMilliVector
 import org.apache.arrow.vector.Decimal256Vector
 import org.apache.arrow.vector.DecimalVector
 import org.apache.arrow.vector.DurationVector
@@ -28,16 +30,21 @@ import org.apache.arrow.vector.complex.StructVector
 import org.apache.arrow.vector.ipc.ArrowFileReader
 import org.apache.arrow.vector.ipc.ArrowStreamReader
 import org.apache.arrow.vector.types.pojo.Field
+import org.apache.arrow.vector.util.DateUtility
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
-import org.jetbrains.kotlinx.dataframe.api.concat
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
+import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
+import org.jetbrains.kotlinx.dataframe.impl.asList
 import java.io.File
 import java.io.InputStream
 import java.math.BigDecimal
@@ -48,6 +55,7 @@ import java.nio.channels.ReadableByteChannel
 import java.nio.channels.SeekableByteChannel
 import java.nio.file.Files
 import java.time.Duration
+import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.reflect.typeOf
 
@@ -76,6 +84,25 @@ internal object Allocator {
 }
 
 /**
+ * same as [Iterable<DataFrame<T>>.concat()] without internal type guessing (all batches should have the same schema)
+ */
+internal fun <T> Iterable<DataFrame<T>>.concatKeepingSchema(): DataFrame<T> {
+    val dataFrames = asList()
+    when (dataFrames.size) {
+        0 -> return emptyDataFrame()
+        1 -> return dataFrames[0]
+    }
+
+    val columnNames = dataFrames.first().columnNames()
+
+    val columns = columnNames.map { name ->
+        val values = dataFrames.flatMap { it.getColumn(name).values() }
+        DataColumn.createValueColumn(name, values, dataFrames.first().getColumn(name).type())
+    }
+    return dataFrameOf(columns).cast()
+}
+
+/**
  * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [channel]
  */
 public fun DataFrame.Companion.readArrowIPC(channel: ReadableByteChannel, allocator: RootAllocator = Allocator.ROOT): AnyFrame {
@@ -88,7 +115,7 @@ public fun DataFrame.Companion.readArrowIPC(channel: ReadableByteChannel, alloca
                 add(df)
             }
         }
-        return dfs.concat()
+        return dfs.concatKeepingSchema()
     }
 }
 
@@ -106,7 +133,7 @@ public fun DataFrame.Companion.readArrowFeather(channel: SeekableByteChannel, al
                 add(df)
             }
         }
-        return dfs.concat()
+        return dfs.concatKeepingSchema()
     }
 }
 
@@ -129,6 +156,11 @@ private fun Float4Vector.values(range: IntRange): List<Float?> = range.map { get
 private fun Float8Vector.values(range: IntRange): List<Double?> = range.map { getObject(it) }
 
 private fun DurationVector.values(range: IntRange): List<Duration?> = range.map { getObject(it) }
+private fun DateDayVector.values(range: IntRange): List<LocalDate?> = range.map {
+    DateUtility.getLocalDateTimeFromEpochMilli(getObject(it).toLong() * DateUtility.daysToStandardMillis).toLocalDate()
+}
+private fun DateMilliVector.values(range: IntRange): List<LocalDateTime?> = range.map { getObject(it) }
+
 private fun TimeNanoVector.values(range: IntRange): List<Long?> = range.map { getObject(it) }
 private fun TimeMicroVector.values(range: IntRange): List<Long?> = range.map { getObject(it) }
 private fun TimeMilliVector.values(range: IntRange): List<LocalDateTime?> = range.map { getObject(it) }
@@ -190,6 +222,8 @@ private fun readField(root: VectorSchemaRoot, field: Field): AnyBaseCol {
         is Float8Vector -> vector.values(range).withType()
         is Float4Vector -> vector.values(range).withType()
         is DurationVector -> vector.values(range).withType()
+        is DateDayVector -> vector.values(range).withType()
+        is DateMilliVector -> vector.values(range).withType()
         is TimeNanoVector -> vector.values(range).withType()
         is TimeMicroVector -> vector.values(range).withType()
         is TimeMilliVector -> vector.values(range).withType()
@@ -199,7 +233,7 @@ private fun readField(root: VectorSchemaRoot, field: Field): AnyBaseCol {
             TODO("not fully implemented")
         }
     }
-    return DataColumn.createValueColumn(field.name, list, type, Infer.Nulls)
+    return DataColumn.createValueColumn(field.name, list, type, Infer.None)
 }
 
 // IPC reading block
