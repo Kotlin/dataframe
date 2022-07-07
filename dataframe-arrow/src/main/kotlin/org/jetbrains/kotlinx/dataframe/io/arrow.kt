@@ -139,8 +139,8 @@ public fun DataFrame.Companion.readArrowFeather(channel: SeekableByteChannel, al
 
 private fun BitVector.values(range: IntRange): List<Boolean?> = range.map { getObject(it) }
 
-private fun UInt1Vector.values(range: IntRange): List<Byte?> = range.map { getObject(it) }
-private fun UInt2Vector.values(range: IntRange): List<Char?> = range.map { getObject(it) }
+private fun UInt1Vector.values(range: IntRange): List<Short?> = range.map { getObjectNoOverflow(it) }
+private fun UInt2Vector.values(range: IntRange): List<Int?> = range.map { getObject(it).code }
 private fun UInt4Vector.values(range: IntRange): List<Long?> = range.map { getObjectNoOverflow(it) }
 private fun UInt8Vector.values(range: IntRange): List<BigInteger?> = range.map { getObjectNoOverflow(it) }
 
