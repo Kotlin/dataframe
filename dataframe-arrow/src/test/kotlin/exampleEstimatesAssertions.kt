@@ -4,7 +4,11 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import java.math.BigInteger
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneOffset
 import kotlin.math.absoluteValue
+import kotlin.math.pow
 import kotlin.reflect.typeOf
 
 /**
@@ -90,8 +94,29 @@ internal fun assertEstimations(exampleFrame: AnyFrame) {
         element shouldBe (iBatch(i).toBigInteger() * 100000000000000000L.toBigInteger() % (Long.MIN_VALUE.toBigInteger() * 2.toBigInteger()).abs())
     }
 
-    val dateCol = exampleFrame["date32"]
-    val datetimeCol = exampleFrame["date64"]
+    val floatCol = exampleFrame["float"] as DataColumn<Float?>
+    floatCol.type() shouldBe typeOf<Float?>()
+    floatCol.forEachIndexed { i, element ->
+        element shouldBe (2.0f.pow(iBatch(i).toFloat()))
+    }
+
+    val doubleCol = exampleFrame["double"] as DataColumn<Double?>
+    doubleCol.type() shouldBe typeOf<Double?>()
+    doubleCol.forEachIndexed { i, element ->
+        element shouldBe (2.0.pow(iBatch(i).toDouble()))
+    }
+
+    val dateCol = exampleFrame["date32"] as DataColumn<LocalDate?>
+    dateCol.type() shouldBe typeOf<LocalDate?>()
+    dateCol.forEachIndexed { i, element ->
+        element shouldBe LocalDate.ofEpochDay(iBatch(i).toLong() * 30)
+    }
+
+    val datetimeCol = exampleFrame["date64"] as DataColumn<LocalDateTime?>
+    datetimeCol.type() shouldBe typeOf<LocalDateTime?>()
+    datetimeCol.forEachIndexed { i, element ->
+        element shouldBe LocalDateTime.ofEpochSecond(iBatch(i).toLong() * 60 * 60 * 24 * 30, 0, ZoneOffset.UTC)
+    }
 
     val timeSecCol = exampleFrame["time32_seconds"]
     val timeMilliCol = exampleFrame["time32_milli"]
