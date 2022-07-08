@@ -57,6 +57,7 @@ import java.nio.file.Files
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import kotlin.reflect.typeOf
 
 public class ArrowFeather : SupportedFormat {
@@ -161,10 +162,11 @@ private fun DateDayVector.values(range: IntRange): List<LocalDate?> = range.map 
 }
 private fun DateMilliVector.values(range: IntRange): List<LocalDateTime?> = range.map { getObject(it) }
 
-private fun TimeNanoVector.values(range: IntRange): List<Long?> = range.map { getObject(it) }
-private fun TimeMicroVector.values(range: IntRange): List<Long?> = range.map { getObject(it) }
-private fun TimeMilliVector.values(range: IntRange): List<LocalDateTime?> = range.map { getObject(it) }
-private fun TimeSecVector.values(range: IntRange): List<Int?> = range.map { getObject(it) }
+private fun TimeNanoVector.values(range: IntRange): List<LocalTime?> = range.map { LocalTime.ofNanoOfDay(get(it)) }
+private fun TimeMicroVector.values(range: IntRange): List<LocalTime?> = range.map { LocalTime.ofNanoOfDay(get(it) * 1000) }
+private fun TimeMilliVector.values(range: IntRange): List<LocalTime?> = range.map { LocalTime.ofNanoOfDay(get(it).toLong() * 1000_000) }
+private fun TimeSecVector.values(range: IntRange): List<LocalTime?> = range.map { LocalTime.ofSecondOfDay(get(it).toLong()) }
+
 private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> = range.map { getObject(it) }
 
 private fun VarCharVector.values(range: IntRange): List<String?> = range.map {

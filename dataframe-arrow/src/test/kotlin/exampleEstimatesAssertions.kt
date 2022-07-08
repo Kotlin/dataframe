@@ -1,11 +1,11 @@
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import java.math.BigInteger
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.ZoneOffset
 import kotlin.math.absoluteValue
 import kotlin.math.pow
@@ -118,9 +118,28 @@ internal fun assertEstimations(exampleFrame: AnyFrame) {
         element shouldBe LocalDateTime.ofEpochSecond(iBatch(i).toLong() * 60 * 60 * 24 * 30, 0, ZoneOffset.UTC)
     }
 
-    val timeSecCol = exampleFrame["time32_seconds"]
-    val timeMilliCol = exampleFrame["time32_milli"]
+    val timeSecCol = exampleFrame["time32_seconds"] as DataColumn<LocalTime?>
+    timeSecCol.type() shouldBe typeOf<LocalTime?>()
+    timeSecCol.forEachIndexed { i, element ->
+        element shouldBe LocalTime.ofSecondOfDay(iBatch(i).toLong())
+    }
 
-    val timeMicroCol = exampleFrame["time64_micro"]
-    val timeNanoCol = exampleFrame["time64_nano"]
+    val timeMilliCol = exampleFrame["time32_milli"] as DataColumn<LocalTime?>
+    timeMilliCol.type() shouldBe typeOf<LocalTime?>()
+    timeMilliCol.forEachIndexed { i, element ->
+        element shouldBe LocalTime.ofNanoOfDay(iBatch(i).toLong() * 1000_000)
+    }
+
+    val timeMicroCol = exampleFrame["time64_micro"] as DataColumn<LocalTime?>
+    timeMicroCol.type() shouldBe typeOf<LocalTime?>()
+    timeMicroCol.forEachIndexed { i, element ->
+        element shouldBe LocalTime.ofNanoOfDay(iBatch(i).toLong() * 1000)
+    }
+
+    val timeNanoCol = exampleFrame["time64_nano"] as DataColumn<LocalTime?>
+    timeNanoCol.type() shouldBe typeOf<LocalTime?>()
+    timeNanoCol.forEachIndexed { i, element ->
+        element shouldBe LocalTime.ofNanoOfDay(iBatch(i).toLong())
+    }
+
 }
