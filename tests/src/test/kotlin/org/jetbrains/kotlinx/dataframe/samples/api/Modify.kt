@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.junit.Test
 import java.time.format.DateTimeFormatter
@@ -919,6 +920,21 @@ class Modify : TestBase() {
             .move { name.firstName and name.lastName }.after { isHappy }
             .merge { age and weight }.by { "Age: ${it[0]}, weight: ${it[1]}" }.into("info")
             .rename { isHappy }.into("isOK")
+        // SampleEnd
+    }
+
+    @Test
+    fun customConverters() {
+        // SampleStart
+        class IntClass(val value: Int)
+
+        @DataSchema
+        class IntSchema(val ints: IntClass)
+
+        val df = dataFrameOf("ints")(1, 2, 3)
+        df.convertTo<IntSchema> {
+            convert<Int>().with { IntClass(it) }
+        }
         // SampleEnd
     }
 }

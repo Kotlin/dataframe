@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import io.kotest.assertions.throwables.shouldNotThrow
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.Clock
@@ -136,5 +137,15 @@ class ConvertTests {
         val col = columnOf(1.0, 2.0)
 
         col.convertTo<Int?>().hasNulls() shouldBe false
+    }
+
+    @Test
+    fun `convert instant`() {
+        println(Clock.System.now().toEpochMilliseconds())
+        val kotlinxInstants = columnOf(Instant.fromEpochMilliseconds(1657283006955))
+        shouldNotThrow<TypeConverterNotFoundException> {
+            val javaInstant = kotlinxInstants.convertTo<java.time.Instant>()
+            javaInstant.convertTo<Instant>() shouldBe kotlinxInstants
+        }
     }
 }

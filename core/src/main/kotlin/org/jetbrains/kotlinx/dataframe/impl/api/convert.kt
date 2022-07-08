@@ -7,8 +7,10 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.atTime
 import kotlinx.datetime.toInstant
+import kotlinx.datetime.toJavaInstant
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
+import kotlinx.datetime.toKotlinInstant
 import kotlinx.datetime.toKotlinLocalDate
 import kotlinx.datetime.toKotlinLocalDateTime
 import kotlinx.datetime.toLocalDateTime
@@ -248,7 +250,18 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 LocalDate::class -> convert<Instant> { it.toLocalDate(defaultTimeZone) }
                 java.time.LocalDateTime::class -> convert<Instant> { it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime() }
                 java.time.LocalDate::class -> convert<Instant> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
+                java.time.Instant::class -> convert<Instant> { it.toJavaInstant() }
                 LocalTime::class -> convert<Instant> { it.toLocalTime(defaultTimeZone) }
+                else -> null
+            }
+            java.time.Instant::class -> when (toClass) {
+                Long::class -> convert<java.time.Instant> { it.toEpochMilli() }
+                LocalDateTime::class -> convert<java.time.Instant> { it.toKotlinInstant().toLocalDateTime(defaultTimeZone) }
+                LocalDate::class -> convert<java.time.Instant> { it.toKotlinInstant().toLocalDate(defaultTimeZone) }
+                java.time.LocalDateTime::class -> convert<java.time.Instant> { it.toKotlinInstant().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime() }
+                java.time.LocalDate::class -> convert<java.time.Instant> { it.toKotlinInstant().toLocalDate(defaultTimeZone).toJavaLocalDate() }
+                Instant::class -> convert<java.time.Instant> { it.toKotlinInstant() }
+                LocalTime::class -> convert<java.time.Instant> { it.toKotlinInstant().toLocalTime(defaultTimeZone) }
                 else -> null
             }
             Float::class -> when (toClass) {
