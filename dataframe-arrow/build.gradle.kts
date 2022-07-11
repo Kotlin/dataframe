@@ -12,6 +12,7 @@ dependencies {
     implementation(libs.arrow.format)
     implementation(libs.arrow.memory)
     implementation(libs.commonsCompress)
+    implementation(libs.kotlin.reflect)
 
     testApi(project(":core"))
     testImplementation(libs.junit)

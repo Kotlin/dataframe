@@ -38,7 +38,25 @@ internal class ArrowKtTest {
 
     @Test
     fun testReadingAllTypesAsEstimated() {
-        assertEstimations(DataFrame.readArrowFeather(testArrowFeather("test.arrow")))
-        assertEstimations(DataFrame.readArrowIPC(testArrowIPC("test.arrow")))
+        assertEstimations(DataFrame.readArrowFeather(testArrowFeather("test.arrow")), true, false)
+        assertEstimations(DataFrame.readArrowIPC(testArrowIPC("test.arrow")), true, false)
+    }
+
+    @Test
+    fun testReadingAllTypesAsEstimatedWithNulls() {
+        assertEstimations(DataFrame.readArrowFeather(testArrowFeather("test-with-nulls.arrow")), true, true)
+        assertEstimations(DataFrame.readArrowIPC(testArrowIPC("test-with-nulls.arrow")), true, true)
+    }
+
+    @Test
+    fun testReadingAllTypesAsEstimatedNotNullable() {
+        assertEstimations(DataFrame.readArrowFeather(testArrowFeather("test-not-nullable.arrow")), false, false)
+        assertEstimations(DataFrame.readArrowIPC(testArrowIPC("test-not-nullable.arrow")), false, false)
+    }
+
+    @Test
+    fun testReadingAllTypesAsEstimatedNotNullableWithNulls() {
+        assertEstimations(DataFrame.readArrowFeather(testArrowFeather("test-illegal.arrow")), false, true)
+        assertEstimations(DataFrame.readArrowIPC(testArrowIPC("test-illegal.arrow")), false, true)
     }
 }
