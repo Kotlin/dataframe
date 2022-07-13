@@ -5,4 +5,4 @@ import org.jetbrains.kotlinx.dataframe.api.InsertClause
 /**
  * @see InsertClause
 */
-internal class InsertClauseApproximation(val df: PluginDataFrameSchema, val column: SimpleCol)
+public data class InsertClauseApproximation(public val df: PluginDataFrameSchema, public val column: SimpleCol)

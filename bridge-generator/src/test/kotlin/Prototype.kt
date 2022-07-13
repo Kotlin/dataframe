@@ -1,5 +1,7 @@
+import java.util.*
+import kotlin.reflect.KType
+import kotlin.reflect.typeOf
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.GenerateConstructor
 import org.jetbrains.kotlinx.dataframe.api.DataRowSchema
@@ -7,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.InsertClause
 import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.addId
+import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.append
 import org.jetbrains.kotlinx.dataframe.api.associateBy
 import org.jetbrains.kotlinx.dataframe.api.column
@@ -15,23 +18,24 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
 import org.jetbrains.kotlinx.dataframe.api.explode
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.leftJoin
+import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.mapToColumn
 import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.under
 import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.with
-import org.junit.jupiter.api.Test
-import kotlin.reflect.KProperty0
-import kotlin.reflect.KType
-import kotlin.reflect.typeOf
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
+import org.junit.jupiter.api.Test
 
 //private val mapping = mapOf(
 //    DataFrame::class to PluginDataFrameSchema::class,
@@ -122,7 +126,7 @@ class Prototype {
     val otherFunctions = dataFrameOf(
         Function("DataFrame<T>", "insert", "InsertClause<T>", listOf(Parameter("column", "DataColumn<C>", null))),
         Function("DataFrame<T>", "insert", "InsertClause<T>", listOf(
-            Parameter("column", "String", null),
+            Parameter("name", "String", null),
             Parameter("infer", "Infer", "Infer.Nulls"),
             Parameter("expression", "RowExpression<T, R>", null)
         )),
@@ -159,7 +163,7 @@ class Prototype {
         ))
     )
 
-    val functions = (otherFunctions.concat(dfFunctions))
+    val functions = (otherFunctions concat dfFunctions)
         .groupBy { function }
         .updateGroups { it.addId() }
         .concat()
@@ -226,27 +230,44 @@ class Prototype {
     val approximation by column<String>()
     val converter by column<String>()
 
-    @DataSchema
-    interface Bridge : DataRowSchema {
-        val type: String
-        val approximation: String
-        val converter: String
-        val lens: String
+//    @DataSchema
+//    interface Bridge : DataRowSchema {
+//        val type: String
+//        val approximation: String
+//        val converter: String
+//        val lens: String
+//        val supported: Boolean
+//
+//        @GenerateConstructor
+//        companion object
+//    }
 
-        @GenerateConstructor
-        companion object
-    }
+    @DataSchema
+    class Bridge(val type: String,
+                 val approximation: String,
+                 val converter: String,
+                 val lens: String,
+                 val supported: Boolean = false) : DataRowSchema
+
+//    @DataSchema
+//    interface ValueExample : DataRowSchema {
+//        val constructor: String?
+//        val usage: String
+//
+//        @GenerateConstructor
+//        companion object
+//    }
 
     private val bridges = dataFrameOf(
         Bridge("DataColumn<C>", "SimpleCol", "dataColumn", "Value"),
-        Bridge("DataFrame<T>", "PluginDataFrameSchema", "dataFrame", "Schema"),
-        Bridge("String", "String", "string", "Value"),
-        Bridge("Infer", "Infer", "enum", "Value"),
-        Bridge("RowExpression<T, R>", "TypeApproximation", "type", "ReturnType"),
+        Bridge("DataFrame<T>", "PluginDataFrameSchema", "dataFrame", "Schema", true),
+        Bridge("String", "String", "string", "Value", true),
+        Bridge("Infer", "Infer", "enum", "Value", true),
+        Bridge("RowExpression<T, R>", "TypeApproximation", "type", "ReturnType", true),
         Bridge("ColumnAccessor<R>", "ColumnAccessorApproximation", "columnAccessor", "Value"),
         Bridge("KProperty<R>", "KPropertyApproximation", "kproperty", "Value"),
         Bridge("ColumnSelector<T, *>", "ColumnWithPathApproximation", "columnWithPath", "Value"),
-        Bridge("InsertClause<T>", "InsertClauseApproximation", "insertClause", "Value"),
+        Bridge("InsertClause<T>", "InsertClauseApproximation", "insertClause", "Value", true),
         Bridge("ColumnPath", "ColumnPathApproximation", "columnPath", "Value"),
         Bridge("ColumnAccessor<*>", "ColumnAccessorApproximation", "columnAccessor", "Value"),
         Bridge("KProperty<*>", "KPropertyApproximation", "kproperty", "Value"),
@@ -263,11 +284,11 @@ class Prototype {
      * @see ConvertInterpreter
      */
     @Test
-    fun `generate adapters`() {
-        `generate adapters`(functions, bridges)
+    fun `generate interpreters`() {
+        `generate interpreters`(functions, bridges)
     }
 
-    private fun `generate adapters`(functions: DataFrame<Function>, bridges: DataFrame<Bridge>) {
+    private fun `generate interpreters`(functions: DataFrame<Function>, bridges: DataFrame<Bridge>) {
         println(functions)
 
         val function by column<String>()
@@ -328,6 +349,129 @@ class Prototype {
 
         println(df["code"].toList())
 
+    }
+
+    @Test
+    fun `generate tests stubs`() {
+        bridges
+            .filter { supported }
+            .forEach {
+                println(it.converter)
+                println()
+                val titleCaseConverter =
+                    converter.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                println("""
+                    package org.jetbrains.kotlinx.dataframe.plugin.testing
+                    
+                    import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
+                    import org.jetbrains.kotlinx.dataframe.annotations.Arguments
+                    import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+                    import org.jetbrains.kotlinx.dataframe.plugin.*
+                    
+                    @Interpretable(${titleCaseConverter}Identity::class)
+                    public fun $converter(v: $type): $type {
+                        return v
+                    }
+                    
+                    public class ${titleCaseConverter}Identity : AbstractInterpreter<$approximation>() {
+                        internal val Arguments.v: $approximation by $converter()
+                        
+                        override fun Arguments.interpret(): $approximation {
+                            return v
+                        }
+                    }
+                    
+                    internal fun ${converter}Test() {
+                        
+                    }
+                """.trimIndent())
+                println()
+            }
+    }
+
+    //dataFrameOf\((".+",?)+\)\(.*\)
+
+    @Test
+    fun printFunctionsThatShouldWork() {
+        val supportedFunctions = functions
+            .leftJoin(bridges) { it[functionReturnType].match(type) }
+            .convert { parameters }.with { it.leftJoin(bridges) { it[returnType].match(type) } }
+            .also {
+                it.forEach {
+                    parameters.print()
+                }
+            }
+            .filter {
+                it.parameters.all { it[Bridge::supported] }
+            }
+
+        supportedFunctions
+            .remove(Bridge::supported, Bridge::lens, Bridge::converter, Bridge::approximation)
+            .convert { parameters }.with { df ->
+                df.map {
+                    val default = it.defaultValue?.let { " = ${it}" } ?: ""
+                    "${it.name}: ${it.returnType}$default"
+                }
+            }
+            .print(valueLimit = 500)
+    }
+
+//    @Test
+//    fun test() {
+//        val dfExpression = """dataFrameOf("test")(123)"""
+//        val repl = object : JupyterReplTestCase() {
+//
+//        }
+//        val functionCall = """df.insert("age") { 42 }.under("test")"""
+//        //val df = dataFrameOf("test")(123)
+//        val df = repl.exec<DataFrame<*>>("val df = $dfExpression; df")
+//        val df1 = repl.exec("""
+//                try {
+//                    $functionCall
+//                } catch (e: Exception) {
+//                    e
+//                }
+//            """.trimIndent())
+//        when (df1) {
+//            is DataFrame<*> ->
+//
+//        }
+//    }
+
+    val expressions = listOf(
+        """dataFrameOf("age")(17)""",
+        """dataFrameOf("name", "age")("Name", 17).group("name", "age").into("person")""",
+        """dataFrameOf("persons")(dataFrameOf("name", "age")("Name", 17).group("name", "age").into("person"))"""
+    )
+
+    @DataSchema
+    interface TestCase : DataRowSchema {
+        val dfExpression: String
+        val functionCalls: List<String>
+
+        @GenerateConstructor
+        companion object
+    }
+
+    val expressions1 = dataFrameOf(
+        TestCase("""dataFrameOf("age", "name")(17, "Name")""", listOf(
+            """df.insert("col1") { 42 }.after("age")""",
+            """df.insert("col1") { 42 }.after("name")"""
+        )),
+    )
+
+    fun wfetest() {
+        val repl = object : JupyterReplTestCase() {
+
+        }
+        val df = expressions.toDataFrame {
+            "expression" from { it }
+            "df" from { repl.exec<DataFrame<*>>(it) }
+        }.add {
+            "schema" from {
+                "df"<DataFrame<*>>().schema()
+            }
+        }
     }
 }
 

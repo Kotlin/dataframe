@@ -1,5 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.plugin
 
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnGroupTypeApproximation
@@ -25,13 +28,13 @@ internal class Insert0 : AbstractInterpreter<InsertClauseApproximation>() {
 }
 
 internal class Insert1 : AbstractInterpreter<InsertClauseApproximation>() {
-    val Arguments.column: String by string()
+    val Arguments.name: String by string()
     val Arguments.infer: Infer by enum()
     val Arguments.expression: TypeApproximation by type()
     val Arguments.receiver: PluginDataFrameSchema by dataFrame(THIS)
 
     override fun Arguments.interpret(): InsertClauseApproximation {
-        return InsertClauseApproximation(receiver, SimpleCol(column, expression))
+        return InsertClauseApproximation(receiver, SimpleCol(name, expression))
     }
 }
 
@@ -102,13 +105,35 @@ internal class Under4 : AbstractInterpreter<PluginDataFrameSchema>() {
     }
 }
 
-public class PluginDataFrameSchema(private val columns: List<SimpleCol>) : DataFrameLikeContainer<SimpleCol> {
+@Serializable
+public class PluginDataFrameSchema(
+    @Contextual private val columns: List<SimpleCol>
+) : DataFrameLikeContainer<SimpleCol> {
     override fun columns(): List<SimpleCol> {
         return columns
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as PluginDataFrameSchema
+
+        if (columns != other.columns) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return columns.hashCode()
+    }
 }
 
-public open class SimpleCol internal constructor(private val name: String, public open val type: TypeApproximation) : Col {
+@Serializable
+public open class SimpleCol internal constructor(
+    public val name: String,
+    @SerialName("valuesType") public open val type: TypeApproximation
+) : Col {
     public constructor(name: String, type: TypeApproximationImpl) : this(name, type as TypeApproximation)
 
     override fun name(): String {
@@ -122,12 +147,31 @@ public open class SimpleCol internal constructor(private val name: String, publi
     public open fun changeType(type: TypeApproximation): SimpleCol {
         return SimpleCol(name, type)
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as SimpleCol
+
+        if (name != other.name) return false
+        if (type != other.type) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = name.hashCode()
+        result = 31 * result + type.hashCode()
+        return result
+    }
 }
 
-internal class SimpleColumnGroup(
-    name: String,
+@Serializable
+public class SimpleColumnGroup(
+    private val name1: String,
     private val columns: List<SimpleCol>
-) : MyColumnGroup<SimpleCol>, SimpleCol(name, ColumnGroupTypeApproximation) {
+) : MyColumnGroup<SimpleCol>, SimpleCol(name1, ColumnGroupTypeApproximation) {
 
     override fun columns(): List<SimpleCol> {
         return columns
@@ -139,6 +183,26 @@ internal class SimpleColumnGroup(
 
     override fun changeType(type: TypeApproximation): SimpleCol {
         return TODO()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+        if (!super.equals(other)) return false
+
+        other as SimpleColumnGroup
+
+        if (name != other.name) return false
+        if (columns != other.columns) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = super.hashCode()
+        result = 31 * result + name.hashCode()
+        result = 31 * result + columns.hashCode()
+        return result
     }
 }
 

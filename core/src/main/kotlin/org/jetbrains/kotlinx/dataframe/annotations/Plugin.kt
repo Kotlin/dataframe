@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.annotations
 
+import kotlinx.serialization.Serializable
 import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.SimpleCol
 import org.jetbrains.kotlinx.dataframe.plugin.dataFrame
@@ -19,12 +20,15 @@ public annotation class Value
 @Target(AnnotationTarget.VALUE_PARAMETER)
 public annotation class ReturnType
 
+@Serializable
 public sealed interface TypeApproximation
 
-public class TypeApproximationImpl(public val fqName: String, public val nullable: Boolean) : TypeApproximation
+@Serializable
+public data class TypeApproximationImpl(public val fqName: String, public val nullable: Boolean) : TypeApproximation
 
 public fun TypeApproximation(fqName: String, nullable: Boolean): TypeApproximation = TypeApproximationImpl(fqName, nullable)
 
+@Serializable
 public object ColumnGroupTypeApproximation : TypeApproximation
 
 @Target(AnnotationTarget.CLASS)

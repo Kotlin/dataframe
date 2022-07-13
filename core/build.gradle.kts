@@ -43,6 +43,7 @@ dependencies {
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.stdlib.jdk8)
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 
     api(libs.commonsCsv)
     implementation(libs.klaxon)
