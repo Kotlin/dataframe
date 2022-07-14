@@ -109,7 +109,7 @@ public class With : AbstractSchemaModificationInterpreter() {
     }
 }
 
-@SchemaProcessor(With::class)
+@Interpretable(With::class)
 public inline fun <T, C, reified R> @receiver:Value Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
     @ReturnType noinline rowConverter: RowValueExpression<T, C, R>

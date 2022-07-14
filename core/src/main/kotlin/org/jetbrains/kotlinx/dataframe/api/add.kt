@@ -18,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.From
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.annotations.ReturnType
 import org.jetbrains.kotlinx.dataframe.annotations.Schema
-import org.jetbrains.kotlinx.dataframe.annotations.SchemaProcessor
 import org.jetbrains.kotlinx.dataframe.annotations.Value
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
@@ -117,7 +116,7 @@ public typealias AddExpression<T, C> = Selector<AddDataRow<T>, C>
  * @return new [DataFrame] with added column
  * @throws DuplicateColumnNamesException if [DataFrame] already contains a column with given [name]
  */
-@SchemaProcessor(Add::class)
+@Interpretable(Add::class)
 public inline fun <reified R, T> @receiver:Schema DataFrame<T>.add(
     @Value name: String,
     infer: Infer = Infer.Nulls,
@@ -204,7 +203,7 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
     public infix fun AddGroup<T>.into(column: AnyColumnGroupAccessor): Unit = into(column.name())
 }
 
-@SchemaProcessor(AddWithDsl::class)
+@Interpretable(AddWithDsl::class)
 public fun <T> @receiver:Schema DataFrame<T>.add(@Dsl body: AddDsl<T>.() -> Unit): DataFrame<T> {
     val dsl = AddDsl(this)
     body(dsl)

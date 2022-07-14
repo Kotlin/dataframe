@@ -110,8 +110,6 @@ public sealed interface AnalysisResult {
 
 public data class Property(val name: String, val type: String)
 
-public annotation class SchemaProcessor(val processor: KClass<out SchemaModificationInterpreter>)
-
 public class PluginColumnSchema(public val type: TypeApproximation)
 
 // public sealed interface PluginColumnSchema {
