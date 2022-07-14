@@ -4,6 +4,7 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.Interpreter
+import org.jetbrains.kotlinx.dataframe.annotations.Present
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -38,5 +39,19 @@ class InterpreterTests {
         val subject1 = Subject1()
         subject1.interpret(mapOf("a" to Interpreter.Success(1))) shouldBe Interpreter.Success(Data(1))
         subject1.expectedArguments.first().klass shouldBe typeOf<Int>()
+    }
+
+    class Subject2 : AbstractInterpreter<Int>() {
+        val Arguments.a by arg(defaultValue = Present(123))
+        val Arguments.b by argConvert(defaultValue = Present(123)) { it: Int -> 321 }
+
+        override fun Arguments.interpret(): Int {
+            return a + b
+        }
+    }
+
+    @Test
+    fun `default value`() {
+        Subject2().interpret(mapOf()) shouldBe Interpreter.Success(246)
     }
 }

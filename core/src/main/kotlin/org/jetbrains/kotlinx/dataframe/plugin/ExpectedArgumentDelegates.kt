@@ -1,8 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.plugin
 
+import org.jetbrains.kotlinx.dataframe.annotations.Absent
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter.*
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
+import org.jetbrains.kotlinx.dataframe.annotations.DefaultValue
 import org.jetbrains.kotlinx.dataframe.annotations.Interpreter
 import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximation
 import org.jetbrains.kotlinx.dataframe.api.RenameClauseApproximation
@@ -32,8 +34,9 @@ public fun <T> AbstractInterpreter<T>.type(
 ): ExpectedArgumentProvider<TypeApproximation> = arg(name, lens = Interpreter.ReturnType)
 
 public fun <T, E : Enum<E>> AbstractInterpreter<T>.enum(
-    name: ArgumentName? = null
-): ExpectedArgumentProvider<E> = arg(name, lens = Interpreter.Value)
+    name: ArgumentName? = null,
+    defaultValue: DefaultValue<E> = Absent
+): ExpectedArgumentProvider<E> = arg(name, lens = Interpreter.Value, defaultValue = defaultValue)
 
 public fun <T> AbstractInterpreter<T>.columnAccessor(
     name: ArgumentName? = null

@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnGroupTypeApproximation
+import org.jetbrains.kotlinx.dataframe.annotations.Present
 import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximation
 import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximationImpl
 import org.jetbrains.kotlinx.dataframe.api.Infer
@@ -18,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.DataFrameLikeContainer
 import org.jetbrains.kotlinx.dataframe.impl.api.MyColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImplGenericContainer
 
+// DataFrame.insert
 internal class Insert0 : AbstractInterpreter<InsertClauseApproximation>() {
     val Arguments.column: SimpleCol by dataColumn()
     val Arguments.receiver: PluginDataFrameSchema by dataFrame(THIS)
@@ -29,7 +31,7 @@ internal class Insert0 : AbstractInterpreter<InsertClauseApproximation>() {
 
 internal class Insert1 : AbstractInterpreter<InsertClauseApproximation>() {
     val Arguments.name: String by string()
-    val Arguments.infer: Infer by enum()
+    val Arguments.infer: Infer by enum(defaultValue = Present(Infer.Nulls))
     val Arguments.expression: TypeApproximation by type()
     val Arguments.receiver: PluginDataFrameSchema by dataFrame(THIS)
 
@@ -40,7 +42,7 @@ internal class Insert1 : AbstractInterpreter<InsertClauseApproximation>() {
 
 internal class Insert2 : AbstractInterpreter<InsertClauseApproximation>() {
     val Arguments.column: ColumnAccessorApproximation by columnAccessor()
-    val Arguments.infer: Infer by enum()
+    val Arguments.infer: Infer by enum(defaultValue = Present(Infer.Nulls))
     val Arguments.expression: TypeApproximation by type()
     val Arguments.receiver: PluginDataFrameSchema by dataFrame(THIS)
 
@@ -51,7 +53,7 @@ internal class Insert2 : AbstractInterpreter<InsertClauseApproximation>() {
 
 internal class Insert3 : AbstractInterpreter<InsertClauseApproximation>() {
     val Arguments.column: KPropertyApproximation by kproperty()
-    val Arguments.infer: Infer by enum()
+    val Arguments.infer: Infer by enum(defaultValue = Present(Infer.Nulls))
     val Arguments.expression: TypeApproximation by type()
     val Arguments.receiver: PluginDataFrameSchema by dataFrame(THIS)
 
@@ -106,26 +108,11 @@ internal class Under4 : AbstractInterpreter<PluginDataFrameSchema>() {
 }
 
 @Serializable
-public class PluginDataFrameSchema(
+public data class PluginDataFrameSchema(
     @Contextual private val columns: List<SimpleCol>
 ) : DataFrameLikeContainer<SimpleCol> {
     override fun columns(): List<SimpleCol> {
         return columns
-    }
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as PluginDataFrameSchema
-
-        if (columns != other.columns) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        return columns.hashCode()
     }
 }
 
@@ -164,6 +151,10 @@ public open class SimpleCol internal constructor(
         var result = name.hashCode()
         result = 31 * result + type.hashCode()
         return result
+    }
+
+    override fun toString(): String {
+        return "SimpleCol(name='$name', type=$type)"
     }
 }
 
