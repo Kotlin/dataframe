@@ -79,14 +79,6 @@ public inline fun <reified T> T.type(): KType {
 
 class Prototype {
 
-//    @Test
-    fun `load enum from class name + instance name`() {
-        (Class.forName("")!! as Class<Infer>).enumConstants
-
-        val forName: Class<*> = Class.forName("")
-        java.lang.Enum.valueOf(forName as Class<out Enum<*>>, "")
-    }
-
     /**
      * also this:
      * @see DataFrame.distinctBy

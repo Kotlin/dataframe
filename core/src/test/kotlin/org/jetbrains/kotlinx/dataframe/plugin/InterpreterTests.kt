@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.Interpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Present
+import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -53,5 +54,29 @@ class InterpreterTests {
     @Test
     fun `default value`() {
         Subject2().interpret(mapOf()) shouldBe Interpreter.Success(246)
+    }
+
+    class EnumSubject : AbstractInterpreter<Infer>() {
+        val Arguments.v: Infer by enum()
+
+        override fun Arguments.interpret(): Infer {
+            return v
+        }
+    }
+
+    @Test
+    fun `enum`() {
+        val res = EnumSubject().interpret(
+            mapOf(
+                "v" to Interpreter.Success(
+                    DataFrameCallableId(
+                        "org.jetbrains.kotlinx.dataframe.api",
+                        "Infer",
+                        "Type"
+                    )
+                )
+            )
+        )
+        res shouldBe Interpreter.Success(Infer.Type)
     }
 }

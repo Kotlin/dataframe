@@ -36,7 +36,10 @@ public fun <T> AbstractInterpreter<T>.type(
 public fun <T, E : Enum<E>> AbstractInterpreter<T>.enum(
     name: ArgumentName? = null,
     defaultValue: DefaultValue<E> = Absent
-): ExpectedArgumentProvider<E> = arg(name, lens = Interpreter.Value, defaultValue = defaultValue)
+): ExpectedArgumentProvider<E> = argConvert(name = name, lens = Interpreter.Value, defaultValue = defaultValue) { it: DataFrameCallableId ->
+    val forName: Class<*> = Class.forName("${it.packageName}.${it.className}")
+    java.lang.Enum.valueOf(forName as Class<out Enum<*>>, it.callableName) as E
+}
 
 public fun <T> AbstractInterpreter<T>.columnAccessor(
     name: ArgumentName? = null
