@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.distinctBy
 import org.jetbrains.kotlinx.dataframe.api.explode
+import org.jetbrains.kotlinx.dataframe.api.expr
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.groupBy
@@ -257,12 +258,12 @@ class Prototype {
         Bridge("Infer", "Infer", "enum", "Value", true),
         Bridge("RowExpression<T, R>", "TypeApproximation", "type", "ReturnType", true),
         Bridge("ColumnAccessor<R>", "ColumnAccessorApproximation", "columnAccessor", "Value"),
-        Bridge("KProperty<R>", "KPropertyApproximation", "kproperty", "Value"),
+        Bridge("KProperty<R>", "KPropertyApproximation", "kproperty", "Value", true),
         Bridge("ColumnSelector<T, *>", "ColumnWithPathApproximation", "columnWithPath", "Value"),
         Bridge("InsertClause<T>", "InsertClauseApproximation", "insertClause", "Value", true),
         Bridge("ColumnPath", "ColumnPathApproximation", "columnPath", "Value"),
         Bridge("ColumnAccessor<*>", "ColumnAccessorApproximation", "columnAccessor", "Value"),
-        Bridge("KProperty<*>", "KPropertyApproximation", "kproperty", "Value"),
+        Bridge("KProperty<*>", "KPropertyApproximation", "kproperty", "Value", true),
         Bridge("AnyCol", "SimpleCol", "dataColumn", "Value")
     )
 
@@ -346,6 +347,7 @@ class Prototype {
     @Test
     fun `generate tests stubs`() {
         bridges
+            .distinctBy { expr { type.substringBefore("<") } }
             .filter { supported }
             .forEach {
                 println(it.converter)
