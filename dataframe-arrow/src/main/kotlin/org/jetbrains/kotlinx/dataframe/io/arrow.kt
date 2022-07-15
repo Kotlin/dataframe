@@ -37,6 +37,9 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
+import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
+import org.jetbrains.kotlinx.dataframe.api.applyNullability
+import org.jetbrains.kotlinx.dataframe.api.NullabilityException
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
@@ -108,13 +111,13 @@ internal fun <T> Iterable<DataFrame<T>>.concatKeepingSchema(): DataFrame<T> {
 /**
  * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [channel]
  */
-public fun DataFrame.Companion.readArrowIPC(channel: ReadableByteChannel, allocator: RootAllocator = Allocator.ROOT): AnyFrame {
+public fun DataFrame.Companion.readArrowIPC(channel: ReadableByteChannel, allocator: RootAllocator = Allocator.ROOT, nullability: NullabilityOptions = NullabilityOptions.Keeping): AnyFrame {
     ArrowStreamReader(channel, allocator).use { reader ->
         val dfs = buildList {
             val root = reader.vectorSchemaRoot
             val schema = root.schema
             while (reader.loadNextBatch()) {
-                val df = schema.fields.map { f -> readField(root, f) }.toDataFrame()
+                val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
                 add(df)
             }
         }
@@ -125,14 +128,14 @@ public fun DataFrame.Companion.readArrowIPC(channel: ReadableByteChannel, alloca
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [channel]
  */
-public fun DataFrame.Companion.readArrowFeather(channel: SeekableByteChannel, allocator: RootAllocator = Allocator.ROOT): AnyFrame {
+public fun DataFrame.Companion.readArrowFeather(channel: SeekableByteChannel, allocator: RootAllocator = Allocator.ROOT, nullability: NullabilityOptions = NullabilityOptions.Keeping): AnyFrame {
     ArrowFileReader(channel, allocator).use { reader ->
         val dfs = buildList {
             reader.recordBlocks.forEach { block ->
                 reader.loadRecordBatch(block)
                 val root = reader.vectorSchemaRoot
                 val schema = root.schema
-                val df = schema.fields.map { f -> readField(root, f) }.toDataFrame()
+                val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
                 add(df)
             }
         }
@@ -222,41 +225,48 @@ private fun LargeVarCharVector.values(range: IntRange): List<String?> = range.ma
     }
 }
 
-private inline fun <reified T> List<T>.withType(nullability: Boolean) = this to typeOf<T>().withNullability(nullability)
+private inline fun <reified T> List<T?>.withTypeNullable(expectedNulls: Boolean, nullabilityOptions: NullabilityOptions): Pair<List<T?>, KType> {
+    val nullable = nullabilityOptions.applyNullability(this, expectedNulls)
+    return this to typeOf<T>().withNullability(nullable)
+}
 
-private fun readField(root: VectorSchemaRoot, field: Field): AnyBaseCol {
-    val range = 0 until root.rowCount
-    val (list, type) = when (val vector = root.getVector(field)) {
-        is VarCharVector -> vector.values(range).withType(field.isNullable)
-        is LargeVarCharVector -> vector.values(range).withType(field.isNullable)
-        is VarBinaryVector -> vector.values(range).withType(field.isNullable)
-        is LargeVarBinaryVector -> vector.values(range).withType(field.isNullable)
-        is BitVector -> vector.values(range).withType(field.isNullable)
-        is SmallIntVector -> vector.values(range).withType(field.isNullable)
-        is TinyIntVector -> vector.values(range).withType(field.isNullable)
-        is UInt1Vector -> vector.values(range).withType(field.isNullable)
-        is UInt2Vector -> vector.values(range).withType(field.isNullable)
-        is UInt4Vector -> vector.values(range).withType(field.isNullable)
-        is UInt8Vector -> vector.values(range).withType(field.isNullable)
-        is IntVector -> vector.values(range).withType(field.isNullable)
-        is BigIntVector -> vector.values(range).withType(field.isNullable)
-        is DecimalVector -> vector.values(range).withType(field.isNullable)
-        is Decimal256Vector -> vector.values(range).withType(field.isNullable)
-        is Float8Vector -> vector.values(range).withType(field.isNullable)
-        is Float4Vector -> vector.values(range).withType(field.isNullable)
-        is DurationVector -> vector.values(range).withType(field.isNullable)
-        is DateDayVector -> vector.values(range).withType(field.isNullable)
-        is DateMilliVector -> vector.values(range).withType(field.isNullable)
-        is TimeNanoVector -> vector.values(range).withType(field.isNullable)
-        is TimeMicroVector -> vector.values(range).withType(field.isNullable)
-        is TimeMilliVector -> vector.values(range).withType(field.isNullable)
-        is TimeSecVector -> vector.values(range).withType(field.isNullable)
-        is StructVector -> vector.values(range).withType(field.isNullable)
-        else -> {
-            TODO("not fully implemented")
+private fun readField(root: VectorSchemaRoot, field: Field, nullability: NullabilityOptions): AnyBaseCol {
+    try {
+        val range = 0 until root.rowCount
+        val (list, type) = when (val vector = root.getVector(field)) {
+            is VarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is LargeVarCharVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is VarBinaryVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is LargeVarBinaryVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is BitVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is SmallIntVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is TinyIntVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is UInt1Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is UInt2Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is UInt4Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is UInt8Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is IntVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is BigIntVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is DecimalVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is Decimal256Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is Float8Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is Float4Vector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is DurationVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is DateDayVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is DateMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is TimeNanoVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is TimeMicroVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is TimeMilliVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is TimeSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            is StructVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
+            else -> {
+                TODO("not fully implemented")
+            }
         }
+        return DataColumn.createValueColumn(field.name, list, type, Infer.None)
+    } catch (unexpectedNull: NullabilityException) {
+        throw IllegalArgumentException("Column `${field.name}` should be not nullable but has nulls")
     }
-    return DataColumn.createValueColumn(field.name, list, type, Infer.None)
 }
 
 // IPC reading block
@@ -264,34 +274,37 @@ private fun readField(root: VectorSchemaRoot, field: Field): AnyBaseCol {
 /**
  * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [file]
  */
-public fun DataFrame.Companion.readArrowIPC(file: File): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowIPC(it) }
+public fun DataFrame.Companion.readArrowIPC(file: File, nullability: NullabilityOptions = NullabilityOptions.Keeping): AnyFrame =
+        Files.newByteChannel(file.toPath()).use { readArrowIPC(it, nullability = nullability) }
 
 /**
  * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [byteArray]
  */
-public fun DataFrame.Companion.readArrowIPC(byteArray: ByteArray): AnyFrame = SeekableInMemoryByteChannel(byteArray).use { readArrowIPC(it) }
+public fun DataFrame.Companion.readArrowIPC(byteArray: ByteArray, nullability: NullabilityOptions = NullabilityOptions.Keeping): AnyFrame =
+        SeekableInMemoryByteChannel(byteArray).use { readArrowIPC(it, nullability = nullability) }
 
 /**
  * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [stream]
  */
-public fun DataFrame.Companion.readArrowIPC(stream: InputStream): AnyFrame = Channels.newChannel(stream).use { readArrowIPC(it) }
+public fun DataFrame.Companion.readArrowIPC(stream: InputStream, nullability: NullabilityOptions = NullabilityOptions.Keeping): AnyFrame =
+        Channels.newChannel(stream).use { readArrowIPC(it, nullability = nullability) }
 
 /**
  * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [url]
  */
-public fun DataFrame.Companion.readArrowIPC(url: URL): AnyFrame =
+public fun DataFrame.Companion.readArrowIPC(url: URL, nullability: NullabilityOptions = NullabilityOptions.Keeping): AnyFrame =
     when {
-        isFile(url) -> readArrowIPC(urlAsFile(url))
-        isProtocolSupported(url) -> url.openStream().use { readArrowIPC(it) }
+        isFile(url) -> readArrowIPC(urlAsFile(url), nullability)
+        isProtocolSupported(url) -> url.openStream().use { readArrowIPC(it, nullability) }
         else -> {
             throw IllegalArgumentException("Invalid protocol for url $url")
         }
     }
 
-public fun DataFrame.Companion.readArrowIPC(path: String): AnyFrame = if (isURL(path)) {
-    readArrowIPC(URL(path))
+public fun DataFrame.Companion.readArrowIPC(path: String, nullability: NullabilityOptions = NullabilityOptions.Keeping): AnyFrame = if (isURL(path)) {
+    readArrowIPC(URL(path), nullability)
 } else {
-    readArrowIPC(File(path))
+    readArrowIPC(File(path), nullability)
 }
 
 // Feather reading block
@@ -299,25 +312,28 @@ public fun DataFrame.Companion.readArrowIPC(path: String): AnyFrame = if (isURL(
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [file]
  */
-public fun DataFrame.Companion.readArrowFeather(file: File): AnyFrame = Files.newByteChannel(file.toPath()).use { readArrowFeather(it) }
+public fun DataFrame.Companion.readArrowFeather(file: File, nullability: NullabilityOptions = NullabilityOptions.Keeping): AnyFrame =
+        Files.newByteChannel(file.toPath()).use { readArrowFeather(it, nullability = nullability) }
 
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [byteArray]
  */
-public fun DataFrame.Companion.readArrowFeather(byteArray: ByteArray): AnyFrame = SeekableInMemoryByteChannel(byteArray).use { readArrowFeather(it) }
+public fun DataFrame.Companion.readArrowFeather(byteArray: ByteArray, nullability: NullabilityOptions = NullabilityOptions.Keeping): AnyFrame =
+        SeekableInMemoryByteChannel(byteArray).use { readArrowFeather(it, nullability = nullability) }
 
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [stream]
  */
-public fun DataFrame.Companion.readArrowFeather(stream: InputStream): AnyFrame = readArrowFeather(stream.readBytes())
+public fun DataFrame.Companion.readArrowFeather(stream: InputStream, nullability: NullabilityOptions = NullabilityOptions.Keeping): AnyFrame =
+        readArrowFeather(stream.readBytes(), nullability)
 
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [url]
  */
-public fun DataFrame.Companion.readArrowFeather(url: URL): AnyFrame =
+public fun DataFrame.Companion.readArrowFeather(url: URL, nullability: NullabilityOptions = NullabilityOptions.Keeping): AnyFrame =
     when {
-        isFile(url) -> readArrowFeather(urlAsFile(url))
-        isProtocolSupported(url) -> readArrowFeather(url.readBytes())
+        isFile(url) -> readArrowFeather(urlAsFile(url), nullability)
+        isProtocolSupported(url) -> readArrowFeather(url.readBytes(), nullability)
         else -> {
             throw IllegalArgumentException("Invalid protocol for url $url")
         }
@@ -326,8 +342,8 @@ public fun DataFrame.Companion.readArrowFeather(url: URL): AnyFrame =
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [path]
  */
-public fun DataFrame.Companion.readArrowFeather(path: String): AnyFrame = if (isURL(path)) {
-    readArrowFeather(URL(path))
+public fun DataFrame.Companion.readArrowFeather(path: String, nullability: NullabilityOptions = NullabilityOptions.Keeping): AnyFrame = if (isURL(path)) {
+    readArrowFeather(URL(path), nullability)
 } else {
-    readArrowFeather(File(path))
+    readArrowFeather(File(path), nullability)
 }
