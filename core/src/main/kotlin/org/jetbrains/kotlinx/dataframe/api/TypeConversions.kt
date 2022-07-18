@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.GroupByImpl
+import org.jetbrains.kotlinx.dataframe.impl.anyNull
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnAccessorImpl
@@ -187,6 +188,50 @@ public enum class Infer {
      * Infer [DataColumn.type] and [DataColumn.hasNulls] from actual [DataColumn.values] using optionally provided base type as an upper bound.
      */
     Type
+}
+
+/**
+ * Indicates how [DataColumn.hasNulls] (or, more accurately, DataColumn.type.isMarkedNullable) should be initialized from
+ * expected schema and actual data when reading schema-defined data formats.
+ */
+public enum class NullabilityOptions {
+    /**
+     * Use only actual data, set [DataColumn.hasNulls] to true if and only if there are null values in the column.
+     * On empty dataset use False.
+     */
+    Infer,
+
+    /**
+     * Set [DataColumn.hasNulls] to expected value. Throw exception if column should be not nullable but there are null values.
+     */
+    Checking,
+
+    /**
+     * Set [DataColumn.hasNulls] to expected value by default. Change False to True if column should be not nullable but there are null values.
+     */
+    Widening
+}
+
+public class NullabilityException() : Exception()
+
+/**
+ * @return if column should be marked nullable for current [NullabilityOptions] value with actual [data] and [expectedNulls] per some schema/signature.
+ * @throws [NullabilityException] for [NullabilityOptions.Checking] if [expectedNulls] is false and [data] contains nulls.
+ */
+public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: Boolean): Boolean {
+    val hasNulls = data.anyNull()
+    return when (this) {
+        NullabilityOptions.Infer -> hasNulls
+        NullabilityOptions.Checking -> {
+            if (!expectedNulls && hasNulls) {
+                throw NullabilityException()
+            }
+            expectedNulls
+        }
+        NullabilityOptions.Widening -> {
+            expectedNulls || hasNulls
+        }
+    }
 }
 
 public inline fun <reified T> Iterable<T>.toColumn(
