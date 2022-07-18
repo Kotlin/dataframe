@@ -199,7 +199,7 @@ public enum class NullabilityOptions {
      * Use only actual data, set [DataColumn.hasNulls] to true if and only if there are null values in the column.
      * On empty dataset use False.
      */
-    Keeping,
+    Infer,
 
     /**
      * Set [DataColumn.hasNulls] to expected value. Throw exception if column should be not nullable but there are null values.
@@ -221,7 +221,7 @@ public class NullabilityException() : Exception()
 public fun NullabilityOptions.applyNullability(data: List<Any?>, expectedNulls: Boolean): Boolean {
     val hasNulls = data.anyNull()
     return when (this) {
-        NullabilityOptions.Keeping -> hasNulls
+        NullabilityOptions.Infer -> hasNulls
         NullabilityOptions.Checking -> {
             if (!expectedNulls && hasNulls) {
                 throw NullabilityException()
