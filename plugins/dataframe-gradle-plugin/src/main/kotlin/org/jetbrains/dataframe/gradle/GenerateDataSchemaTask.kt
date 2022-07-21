@@ -71,16 +71,6 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             is DfReadResult.Success -> readResult
             is DfReadResult.Error -> throw Exception("Error while reading dataframe from data at $url", readResult.reason)
         }
-        if (res.format is ArrowFeather) {
-            val arrowDependency = project.configurations.asSequence()
-                .mapNotNull { configuration ->
-                    configuration.allDependencies.find { it.group?.equals("org.jetbrains.kotlinx") ?: false && it.name == "dataframe-arrow"  }
-                }
-                .firstOrNull()
-            if (arrowDependency == null) {
-                project.logger.warn("Add dependency on \"org.jetbrains.kotlinx:dataframe-arrow\" to compile schema ${interfaceName.get()} generated from ${data.get()}")
-            }
-        }
         val codeGenerator = CodeGenerator.create(useFqNames = false)
         val delimiters = delimiters.get()
         val readDfMethod = res.getReadDfMethod(stringOf(data.get()))
