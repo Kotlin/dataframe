@@ -14,6 +14,14 @@ class ConvenienceSchemaGeneratorPlugin : Plugin<Project> {
     }
 }
 
+@Suppress("unused")
+class DeprecatingSchemaGeneratorPlugin : Plugin<Project> {
+    override fun apply(target: Project) {
+        target.logger.warn("DEPRECATION: Replace plugin id(\"org.jetbrains.kotlin.plugin.dataframe\") and kotlin(\"plugin.dataframe\") with id(\"org.jetbrains.kotlinx.dataframe\").")
+        target.plugins.apply(ConvenienceSchemaGeneratorPlugin::class.java)
+    }
+}
+
 internal class KspPluginApplier : Plugin<Project> {
     override fun apply(target: Project) {
         val properties = Properties()
