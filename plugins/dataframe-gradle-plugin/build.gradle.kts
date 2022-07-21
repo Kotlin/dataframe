@@ -56,6 +56,10 @@ gradlePlugin {
             id = "org.jetbrains.kotlinx.dataframe"
             implementationClass = "org.jetbrains.dataframe.gradle.ConvenienceSchemaGeneratorPlugin"
         }
+        create("deprecatedSchemaGeneratorPlugin") {
+            id = "org.jetbrains.kotlin.plugin.dataframe"
+            implementationClass = "org.jetbrains.dataframe.gradle.DeprecatingSchemaGeneratorPlugin"
+        }
     }
 }
 
@@ -69,6 +73,12 @@ pluginBundle {
             // id is captured from java-gradle-plugin configuration
             displayName = "Kotlin Dataframe gradle plugin"
             description = "Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
+            tags = listOf("dataframe", "kotlin")
+        }
+        "deprecatedSchemaGeneratorPlugin" {
+            // id is captured from java-gradle-plugin configuration
+            displayName = "Kotlin Dataframe gradle plugin"
+            description = "The plugin was moved to 'org.jetbrains.kotlinx.dataframe'. Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
             tags = listOf("dataframe", "kotlin")
         }
     }
