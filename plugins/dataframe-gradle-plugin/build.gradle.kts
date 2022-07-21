@@ -11,7 +11,7 @@ repositories {
     google()
 }
 
-group = "org.jetbrains.kotlin"
+group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
     implementation(project(":core"))
@@ -53,7 +53,7 @@ tasks.withType<ProcessResources> {
 gradlePlugin {
     plugins {
         create("schemaGeneratorPlugin") {
-            id = "org.jetbrains.kotlin.plugin.dataframe"
+            id = "org.jetbrains.kotlinx.dataframe"
             implementationClass = "org.jetbrains.dataframe.gradle.ConvenienceSchemaGeneratorPlugin"
         }
     }
