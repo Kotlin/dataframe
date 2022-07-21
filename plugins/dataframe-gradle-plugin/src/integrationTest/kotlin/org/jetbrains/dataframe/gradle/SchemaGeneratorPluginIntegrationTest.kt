@@ -23,7 +23,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 
             plugins {
                 kotlin("jvm") version "$kotlinVersion"
-                id("org.jetbrains.kotlin.plugin.dataframe")
+                id("org.jetbrains.kotlinx.dataframe")
             }
             
             repositories {
@@ -64,7 +64,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                     
                 plugins {
                     kotlin("jvm") version "$kotlinVersion"
-                    id("org.jetbrains.kotlin.plugin.dataframe")
+                    id("org.jetbrains.kotlinx.dataframe")
                 }
                 
                 repositories {
@@ -101,7 +101,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                     
                 plugins {
                     kotlin("jvm") version "$kotlinVersion"
-                    id("org.jetbrains.kotlin.plugin.dataframe")
+                    id("org.jetbrains.kotlinx.dataframe")
                 }
                 
                 repositories {
@@ -140,7 +140,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                     
                 plugins {
                     kotlin("jvm") version "$kotlinVersion"
-                    id("org.jetbrains.kotlin.plugin.dataframe")
+                    id("org.jetbrains.kotlinx.dataframe")
                 }
                 
                 repositories {
@@ -182,7 +182,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                     
                 plugins {
                     kotlin("multiplatform") version "$kotlinVersion"
-                    id("org.jetbrains.kotlin.plugin.dataframe")
+                    id("org.jetbrains.kotlinx.dataframe")
                 }
                 
                 repositories {
@@ -251,7 +251,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                     
                 plugins {
                     kotlin("jvm") version "$kotlinVersion"
-                    id("org.jetbrains.kotlin.plugin.dataframe")
+                    id("org.jetbrains.kotlinx.dataframe")
                 }
                 
                 repositories {
@@ -309,7 +309,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                     
                 plugins {
                     kotlin("jvm") version "$kotlinVersion"
-                    id("org.jetbrains.kotlin.plugin.dataframe")
+                    id("org.jetbrains.kotlinx.dataframe")
                 }
                 
                 repositories {
@@ -354,7 +354,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                     
                 plugins {
                     kotlin("jvm") version "$kotlinVersion"
-                    kotlin("plugin.dataframe")
+                    id("org.jetbrains.kotlinx.dataframe")
                 }
                 
                 repositories {
@@ -383,7 +383,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                     
                 plugins {
                     kotlin("jvm") version "$kotlinVersion"
-                    id("org.jetbrains.kotlin.plugin.dataframe")
+                    id("org.jetbrains.kotlinx.dataframe")
                 }
                 
                 repositories {
@@ -426,7 +426,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                     
                 plugins {
                     kotlin("multiplatform") version "$kotlinVersion"
-                    id("org.jetbrains.kotlin.plugin.dataframe")
+                    id("org.jetbrains.kotlinx.dataframe")
                 }
                 
                 repositories {
@@ -472,7 +472,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                     
                 plugins {
                     kotlin("multiplatform") version "$kotlinVersion"
-                    id("org.jetbrains.kotlin.plugin.dataframe")
+                    id("org.jetbrains.kotlinx.dataframe")
                 }
                 
                 repositories {
@@ -518,7 +518,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                             
                 plugins {
                     kotlin("jvm") version "$kotlinVersion"
-                    id("org.jetbrains.kotlin.plugin.dataframe")
+                    id("org.jetbrains.kotlinx.dataframe")
                 }
                 
                 repositories {

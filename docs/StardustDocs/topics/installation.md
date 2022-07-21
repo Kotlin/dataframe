@@ -113,7 +113,7 @@ dependencies {
 ### Data schema preprocessor
 
 We provide a Gradle plugin that generates interfaces by your data.
-To use it in your project, pick up the latest version from [here](https://plugins.gradle.org/plugin/org.jetbrains.kotlin.plugin.dataframe)
+To use it in your project, pick up the latest version from [here](https://plugins.gradle.org/plugin/org.jetbrains.kotlinx.dataframe)
 and follow the configuration:
 
 <tabs>
@@ -121,7 +121,7 @@ and follow the configuration:
 
 ```kotlin
 plugins {
-    kotlin("plugin.dataframe") version "<version>"
+    id("org.jetbrains.kotlinx.dataframe") version "<version>"
 }
 
 dependencies {
@@ -148,7 +148,7 @@ tasks.withType<org.jmailen.gradle.kotlinter.tasks.LintTask> {
 
 ```groovy
 plugins {
-    id("org.jetbrains.kotlin.plugin.dataframe") version "<version>"
+    id("org.jetbrains.kotlinx.dataframe") version "<version>"
 }
 
 dependencies {
@@ -175,7 +175,7 @@ tasks.withType(org.jmailen.gradle.kotlinter.tasks.LintTask).all {
 
 ```kotlin
 plugins {
-    kotlin("plugin.dataframe") version "<version>"
+    id("org.jetbrains.kotlinx.dataframe") version "<version>"
 }
 
 kotlin {
