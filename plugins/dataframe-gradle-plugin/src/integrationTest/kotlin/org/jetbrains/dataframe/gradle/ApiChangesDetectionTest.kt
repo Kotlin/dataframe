@@ -67,7 +67,7 @@ class ApiChangesDetectionTest : AbstractDataFramePluginIntegrationTest() {
             """
                 plugins {
                     kotlin("jvm") version "$kotlinVersion"
-                    id("org.jetbrains.kotlin.plugin.dataframe")
+                    id("org.jetbrains.kotlinx.dataframe")
                 }
                 
                 dependencies {

@@ -25,7 +25,7 @@ internal class SchemaGeneratorPluginTest {
                 
             plugins {
                 kotlin("jvm") version "$KOTLIN_VERSION"
-                id("org.jetbrains.kotlin.plugin.dataframe")
+                id("org.jetbrains.kotlinx.dataframe")
             }
             
             repositories {
@@ -53,7 +53,7 @@ internal class SchemaGeneratorPluginTest {
                 
             plugins {
                 kotlin("jvm") version "$KOTLIN_VERSION"
-                id("org.jetbrains.kotlin.plugin.dataframe")
+                id("org.jetbrains.kotlinx.dataframe")
             }
             
             repositories {
@@ -83,7 +83,7 @@ internal class SchemaGeneratorPluginTest {
                     
                 plugins {
                     id "org.jetbrains.kotlin.jvm" version "$KOTLIN_VERSION"
-                    id "org.jetbrains.kotlin.plugin.dataframe"
+                    id "org.jetbrains.kotlinx.dataframe"
                 }
                 
                 repositories {
@@ -114,7 +114,7 @@ internal class SchemaGeneratorPluginTest {
                     
                 plugins {
                     id "org.jetbrains.kotlin.jvm" version "$KOTLIN_VERSION"
-                    id "org.jetbrains.kotlin.plugin.dataframe"
+                    id "org.jetbrains.kotlinx.dataframe"
                 }
                 
                 repositories {
@@ -145,7 +145,7 @@ internal class SchemaGeneratorPluginTest {
                 
             plugins {
                 kotlin("jvm") version "$KOTLIN_VERSION"
-                id("org.jetbrains.kotlin.plugin.dataframe")
+                id("org.jetbrains.kotlinx.dataframe")
             }
             
             repositories {
@@ -183,7 +183,7 @@ internal class SchemaGeneratorPluginTest {
                
             plugins {
                 kotlin("jvm") version "$KOTLIN_VERSION"
-                id("org.jetbrains.kotlin.plugin.dataframe")
+                id("org.jetbrains.kotlinx.dataframe")
             }
             
             repositories {
@@ -219,7 +219,7 @@ internal class SchemaGeneratorPluginTest {
                
             plugins {
                 kotlin("jvm") version "$KOTLIN_VERSION"
-                id("org.jetbrains.kotlin.plugin.dataframe")
+                id("org.jetbrains.kotlinx.dataframe")
             }
             
             repositories {
@@ -249,7 +249,7 @@ internal class SchemaGeneratorPluginTest {
                
             plugins {
                 kotlin("jvm") version "$KOTLIN_VERSION"
-                id("org.jetbrains.kotlin.plugin.dataframe")
+                id("org.jetbrains.kotlinx.dataframe")
             }
             
             repositories {
@@ -276,7 +276,7 @@ internal class SchemaGeneratorPluginTest {
                
             plugins {
                 kotlin("jvm") version "$KOTLIN_VERSION"
-                id("org.jetbrains.kotlin.plugin.dataframe")
+                id("org.jetbrains.kotlinx.dataframe")
             }
             
             repositories {
@@ -309,7 +309,7 @@ internal class SchemaGeneratorPluginTest {
                
             plugins {
                 kotlin("jvm") version "$KOTLIN_VERSION"
-                id("org.jetbrains.kotlin.plugin.dataframe")
+                id("org.jetbrains.kotlinx.dataframe")
             }
             
             repositories {
