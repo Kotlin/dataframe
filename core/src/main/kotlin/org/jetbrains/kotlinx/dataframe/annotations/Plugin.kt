@@ -27,6 +27,9 @@ public fun TypeApproximation(fqName: String, nullable: Boolean): TypeApproximati
 @Serializable
 public object ColumnGroupTypeApproximation : TypeApproximation
 
+@Serializable
+public object FrameColumnTypeApproximation : TypeApproximation
+
 @Target(AnnotationTarget.CLASS)
 public annotation class HasSchema(val schemaArg: Int)
 

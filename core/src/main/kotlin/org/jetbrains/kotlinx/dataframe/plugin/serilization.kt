@@ -15,6 +15,7 @@ public val pluginSerializationModule: SerializersModule = SerializersModule {
     contextual(ColumnsSerializer)
     polymorphic(SimpleCol::class, SimpleCol.serializer()) {
         subclass(SimpleColumnGroup::class)
+        subclass(SimpleFrameColumn::class)
     }
 }
 

@@ -3,12 +3,8 @@ package org.jetbrains.kotlinx.dataframe.plugin
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
-import org.jetbrains.kotlinx.dataframe.annotations.Arguments
-import org.jetbrains.kotlinx.dataframe.annotations.ColumnGroupTypeApproximation
-import org.jetbrains.kotlinx.dataframe.annotations.Present
-import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximation
-import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximationImpl
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.*
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.toPath
@@ -19,7 +15,9 @@ import org.jetbrains.kotlinx.dataframe.impl.api.DataFrameLikeContainer
 import org.jetbrains.kotlinx.dataframe.impl.api.MyColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImplGenericContainer
 
-// DataFrame.insert
+/**
+ * @see DataFrame.insert
+ */
 internal class Insert0 : AbstractInterpreter<InsertClauseApproximation>() {
     val Arguments.column: SimpleCol by dataColumn()
     val Arguments.receiver: PluginDataFrameSchema by dataFrame(THIS)
@@ -155,6 +153,17 @@ public open class SimpleCol internal constructor(
 
     override fun toString(): String {
         return "SimpleCol(name='$name', type=$type)"
+    }
+}
+
+@Serializable
+public data class SimpleFrameColumn(
+    private val name1: String,
+    private val columns: List<SimpleCol>,
+    val nullable: Boolean
+) : MyColumnGroup<SimpleCol>, SimpleCol(name1, FrameColumnTypeApproximation) {
+    override fun columns(): List<SimpleCol> {
+        return columns
     }
 }
 

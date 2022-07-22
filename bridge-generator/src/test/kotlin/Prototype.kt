@@ -1,82 +1,18 @@
-import java.util.*
-import kotlin.reflect.KType
-import kotlin.reflect.typeOf
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.GenerateConstructor
-import org.jetbrains.kotlinx.dataframe.api.DataRowSchema
-import org.jetbrains.kotlinx.dataframe.api.Infer
-import org.jetbrains.kotlinx.dataframe.api.InsertClause
-import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.addId
-import org.jetbrains.kotlinx.dataframe.api.all
-import org.jetbrains.kotlinx.dataframe.api.append
-import org.jetbrains.kotlinx.dataframe.api.associateBy
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.distinctBy
-import org.jetbrains.kotlinx.dataframe.api.explode
-import org.jetbrains.kotlinx.dataframe.api.expr
-import org.jetbrains.kotlinx.dataframe.api.filter
-import org.jetbrains.kotlinx.dataframe.api.forEach
-import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.leftJoin
-import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.mapToColumn
-import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.api.remove
-import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.schema
-import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.under
-import org.jetbrains.kotlinx.dataframe.api.ungroup
-import org.jetbrains.kotlinx.dataframe.api.update
-import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
+import org.jetbrains.kotlinx.dataframe.plugin.pluginJsonFormat
+import org.jetbrains.kotlinx.dataframe.plugin.testing.schemaRender.toPluginDataFrameSchema
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.jupiter.api.Test
-
-//private val mapping = mapOf(
-//    DataFrame::class to PluginDataFrameSchema::class,
-//    String::class to String::class,
-//    KFunction::class to TypeApproximation::class
-//)
-
-//@OptIn(ExperimentalReflectionOnLambdas::class, ExperimentalStdlibApi::class)
-//internal fun main() {
-//    println("Hello, world!")
-//
-//    val insert1: DataFrame<*>.(String, Infer, RowExpression<*, *>) -> InsertClause<*> = DataFrame<*>::insert
-//    val insert2: DataFrame<*>.(String, Infer, RowExpression<*, *>) -> InsertClause<*> = DataFrame<*>::insert
-//    val insert3: DataFrame<*>.(String, Infer, RowExpression<*, *>) -> InsertClause<*> = DataFrame<*>::insert
-//
-////    println(insert1.reflect())
-////    insert1.
-//
-//    val a = { it: String -> 42 }
-//    println(a.reflect())
-//    println(insert1.reflect())
-//    println(::test.javaClass.getAnnotation(Metadata::class.java))
-//
-//    println(::test.reflect())
-//
-//    insert1.type().let {
-//        it.arguments
-//        val wtf = (it.javaType as ParameterizedType).rawType
-//
-//        wtf as Function<*>
-//
-//        (it.javaType as Function<*>).reflect()
-//    }
-//
-//    Function4<*, *, *, *, *>::reflect
-//}
-
-public inline fun <reified T> T.type(): KType {
-    return typeOf<T>()
-}
+import java.util.*
 
 class Prototype {
 
@@ -308,6 +244,7 @@ class Prototype {
                 }
             }
             .add("argumentsStr") {
+                // generate deprecated property with name argumentStr
                 it.parameters["arguments"].values().joinToString("\n") { "|   $it" }
             }
             .add("interpreterName") {
@@ -410,27 +347,125 @@ class Prototype {
             .print(valueLimit = 500)
     }
 
-//    @Test
-//    fun test() {
-//        val dfExpression = """dataFrameOf("test")(123)"""
-//        val repl = object : JupyterReplTestCase() {
-//
-//        }
-//        val functionCall = """df.insert("age") { 42 }.under("test")"""
-//        //val df = dataFrameOf("test")(123)
-//        val df = repl.exec<DataFrame<*>>("val df = $dfExpression; df")
-//        val df1 = repl.exec("""
-//                try {
-//                    $functionCall
-//                } catch (e: Exception) {
-//                    e
-//                }
-//            """.trimIndent())
+    @Test
+    fun test() {
+        val dfExpression = """dataFrameOf("test")(123)"""
+        val repl = object : JupyterReplTestCase() {
+
+        }
+        val functionCall = """df.insert("age") { 42 }.under("test")"""
+        //val df = dataFrameOf("test")(123)
+        val df = repl.exec<DataFrame<*>>("val df = $dfExpression; df")
+        val df1 = repl.exec("""
+                try {
+                    $functionCall
+                } catch (e: Exception) {
+                    e
+                }
+            """.trimIndent())
 //        when (df1) {
 //            is DataFrame<*> ->
 //
 //        }
-//    }
+    }
+
+    @Test
+    fun `schema tests`() {
+        generateSchemaTestStub("DataFrame.readJson(\"functions.json\")")
+    }
+
+    private fun generateSchemaTestStub(s: String) {
+        val repl = object : JupyterReplTestCase() {
+
+        }
+        val df = repl.execRaw("val df = $s; df") as DataFrame<*>
+        val expressions = mutableListOf<String>()
+        var i = 0
+        fun accept(s: String, columns: Map<String, ColumnSchema>) {
+            columns.forEach { (t, u) ->
+                when (u) {
+                    is ColumnSchema.Frame -> {
+                        accept("${s}.$t[0]", u.schema.columns)
+                    }
+
+                    is ColumnSchema.Value -> {
+                        val funName = "col${i}"
+                        expressions.add("fun $funName(v: ${u.type.toString()}) {}")
+                        i++
+                        expressions.add("${funName}(${s}.$t[0])")
+                    }
+
+                    is ColumnSchema.Group -> {
+                        accept("${s}.$t", u.schema.columns)
+                    }
+                }
+            }
+        }
+
+        val generator = CodeGenerator.create(useFqNames = false)
+        val declaration =
+                generator.generate(df.schema(), name = "Schema1", fields = true, extensionProperties = true, isOpen = true)
+                    .code.declarations
+                    .replace(Regex("@JvmName\\(.*\"\\)"), "")
+        accept("df", df.schema().columns)
+        val schemaTestCode = expressions.joinToString("\n")
+        println(schemaTestCode)
+        repl.exec(schemaTestCode)
+
+        val pluginSchema = df.schema().toPluginDataFrameSchema()
+
+        val jsonString = pluginJsonFormat.encodeToString(pluginSchema)
+        val decodedSchema = pluginJsonFormat.decodeFromString<PluginDataFrameSchema>(jsonString)
+
+        assert(decodedSchema == pluginSchema)
+        println("")
+        println(jsonString)
+        println()
+        bridges.first { it.type == "DataFrame<T>" }.run {
+            println("""
+                        package org.jetbrains.kotlinx.dataframe.plugin.testing.schemaRender
+                        
+                        import kotlinx.serialization.decodeFromString
+                        import org.jetbrains.kotlinx.dataframe.DataFrame
+                        import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
+                        import org.jetbrains.kotlinx.dataframe.annotations.Arguments
+                        import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+                        import org.jetbrains.kotlinx.dataframe.plugin.*
+                        
+                        @Interpretable(Schema1::class)
+                        public fun schema1(): DataFrame<*> {
+                            return TODO("won't run")
+                        }
+                        
+                        public class Schema1 : AbstractInterpreter<$approximation>() {
+                            override fun Arguments.interpret(): $approximation {
+                                return pluginJsonFormat.decodeFromString<PluginDataFrameSchema>(
+                                    ${"\"\"\""}$jsonString${"\"\"\""}
+                                )
+                            }
+                        }
+                """.trimIndent())
+        }
+        val schemaDeclaration = declaration.lineSequence().joinToString("\n|")
+        println("schema1")
+        println()
+        println("""
+                |import org.jetbrains.kotlinx.dataframe.*
+                |import org.jetbrains.kotlinx.dataframe.api.*
+                |import org.jetbrains.kotlinx.dataframe.annotations.*
+                |import org.jetbrains.kotlinx.dataframe.plugin.testing.*
+                |import org.jetbrains.kotlinx.dataframe.plugin.testing.schemaRender.*
+                |
+                |/*
+                |$schemaDeclaration
+                |*/
+                |
+                |internal fun schemaTest() {
+                |    val df = schema1()
+                |    ${expressions.joinToString("\n|    ")}
+                |}
+            """.trimMargin())
+    }
 
     val expressions = listOf(
         """dataFrameOf("age")(17)""",

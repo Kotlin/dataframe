@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "1.7.0"
+    kotlin("jupyter.api") version "0.11.0-95"
     kotlin("plugin.dataframe")
 }
 
@@ -11,6 +12,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:dataframe")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 //    implementation(kotlin("stdlib"))
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
