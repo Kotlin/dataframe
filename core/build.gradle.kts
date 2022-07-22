@@ -123,7 +123,7 @@ korro {
 
 kotlinter {
     ignoreFailures = false
-    reporters = arrayOf("checkstyle", "plain")
+    reporters = arrayOf("checkstyle", "plain", "json")
     experimentalRules = true
     disabledRules = arrayOf(
         "no-wildcard-imports",
