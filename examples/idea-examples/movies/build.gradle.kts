@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     application
     kotlin("jvm")
-    kotlin("plugin.dataframe")
+    id("org.jetbrains.kotlinx.dataframe")
 }
 
 repositories {

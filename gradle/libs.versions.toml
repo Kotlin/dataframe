@@ -2,10 +2,10 @@
 ksp = "1.7.10-1.0.6"
 kotlinJupyter = "0.11.0-95"
 ktlint = "3.4.5"
-kotlin = "1.7.0"
+kotlin = "1.7.10"
 dokka = "1.5.31"
 libsPublisher = "0.0.60-dev-30"
-dataframe = "0.8.0-dev-1055"
+dataframe = "0.8.1-dev-1068"
 korro = "0.1.1-dev-29"
 
 commonsCsv = "1.8"
@@ -55,5 +55,5 @@ keywordGenerator = { id = "org.jetbrains.dataframe.generator", version = "1.0" }
 publisher = { id = "org.jetbrains.kotlin.libs.publisher", version.ref = "libsPublisher" }
 korro = { id = "io.github.devcrocod.korro", version.ref = "korro" }
 kotlinter = { id = "org.jmailen.kotlinter", version.ref = "ktlint" }
-dataframe = { id = "org.jetbrains.kotlin.plugin.dataframe", version.ref = "dataframe" }
+dataframe = { id = "org.jetbrains.kotlinx.dataframe", version.ref = "dataframe" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
