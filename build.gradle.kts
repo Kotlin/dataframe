@@ -8,7 +8,7 @@ plugins {
     kotlin("jvm") version libs.versions.kotlin
     kotlin("libs.publisher") version libs.versions.libsPublisher
     kotlin("plugin.serialization") version libs.versions.kotlin
-    kotlin("plugin.dataframe") version libs.versions.dataframe apply false
+    id("org.jetbrains.kotlinx.dataframe") version libs.versions.dataframe apply false
 
     id("org.jetbrains.dokka") version libs.versions.dokka
 

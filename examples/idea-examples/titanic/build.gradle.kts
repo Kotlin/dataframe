@@ -1,7 +1,7 @@
 plugins {
     application
     kotlin("jvm")
-    kotlin("plugin.dataframe")
+    id("org.jetbrains.kotlinx.dataframe")
 }
 
 repositories {
