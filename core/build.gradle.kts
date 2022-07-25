@@ -43,7 +43,8 @@ dependencies {
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.stdlib.jdk8)
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+    // TODO: check if all compiler tests run pass with implementation
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
 
     api(libs.commonsCsv)
     implementation(libs.klaxon)

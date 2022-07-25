@@ -159,7 +159,7 @@ public open class SimpleCol internal constructor(
 @Serializable
 public data class SimpleFrameColumn(
     private val name1: String,
-    private val columns: List<SimpleCol>,
+    @Contextual private val columns: List<SimpleCol>,
     val nullable: Boolean
 ) : MyColumnGroup<SimpleCol>, SimpleCol(name1, FrameColumnTypeApproximation) {
     override fun columns(): List<SimpleCol> {
@@ -170,7 +170,7 @@ public data class SimpleFrameColumn(
 @Serializable
 public class SimpleColumnGroup(
     private val name1: String,
-    private val columns: List<SimpleCol>
+    @Contextual private val columns: List<SimpleCol>
 ) : MyColumnGroup<SimpleCol>, SimpleCol(name1, ColumnGroupTypeApproximation) {
 
     override fun columns(): List<SimpleCol> {

@@ -1,3 +1,4 @@
+import io.kotest.matchers.shouldBe
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
@@ -9,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.pluginJsonFormat
 import org.jetbrains.kotlinx.dataframe.plugin.testing.schemaRender.toPluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
-import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.jupiter.api.Test
 import java.util.*
@@ -370,11 +370,26 @@ class Prototype {
     }
 
     @Test
-    fun `schema tests`() {
-        generateSchemaTestStub("DataFrame.readJson(\"functions.json\")")
+    fun `schema1 test`() {
+        generateSchemaTestStub("schema1", "DataFrame.readJson(\"functions.json\")")
     }
 
-    private fun generateSchemaTestStub(s: String) {
+    @Test
+    fun `schema2 test`() {
+        generateSchemaTestStub("schema2", """run {
+            |val name by columnOf("name")
+            |val returnType by columnOf("")
+            |val df = dataFrameOf(name, returnType)
+            |val functions by columnOf(df)
+            |val function by columnOf(name, returnType)
+            |val nestedGroup by columnOf(name)
+            |val group by columnOf(nestedGroup)
+            |dataFrameOf(name, functions, function, group)
+            |}""".trimMargin())
+    }
+
+    private fun generateSchemaTestStub(name: String, s: String) {
+        val capitalizedName = name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
         val repl = object : JupyterReplTestCase() {
 
         }
@@ -404,7 +419,7 @@ class Prototype {
 
         val generator = CodeGenerator.create(useFqNames = false)
         val declaration =
-                generator.generate(df.schema(), name = "Schema1", fields = true, extensionProperties = true, isOpen = true)
+                generator.generate(df.schema(), name = capitalizedName, fields = true, extensionProperties = true, isOpen = true)
                     .code.declarations
                     .replace(Regex("@JvmName\\(.*\"\\)"), "")
         accept("df", df.schema().columns)
@@ -416,8 +431,8 @@ class Prototype {
 
         val jsonString = pluginJsonFormat.encodeToString(pluginSchema)
         val decodedSchema = pluginJsonFormat.decodeFromString<PluginDataFrameSchema>(jsonString)
+        decodedSchema shouldBe pluginSchema
 
-        assert(decodedSchema == pluginSchema)
         println("")
         println(jsonString)
         println()
@@ -432,12 +447,12 @@ class Prototype {
                         import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
                         import org.jetbrains.kotlinx.dataframe.plugin.*
                         
-                        @Interpretable(Schema1::class)
-                        public fun schema1(): DataFrame<*> {
+                        @Interpretable(${capitalizedName}::class)
+                        public fun $name(): DataFrame<*> {
                             return TODO("won't run")
                         }
                         
-                        public class Schema1 : AbstractInterpreter<$approximation>() {
+                        public class ${capitalizedName} : AbstractInterpreter<$approximation>() {
                             override fun Arguments.interpret(): $approximation {
                                 return pluginJsonFormat.decodeFromString<PluginDataFrameSchema>(
                                     ${"\"\"\""}$jsonString${"\"\"\""}
@@ -447,7 +462,7 @@ class Prototype {
                 """.trimIndent())
         }
         val schemaDeclaration = declaration.lineSequence().joinToString("\n|")
-        println("schema1")
+        println(name)
         println()
         println("""
                 |import org.jetbrains.kotlinx.dataframe.*
@@ -461,7 +476,7 @@ class Prototype {
                 |*/
                 |
                 |internal fun schemaTest() {
-                |    val df = schema1()
+                |    val df = $name()
                 |    ${expressions.joinToString("\n|    ")}
                 |}
             """.trimMargin())
