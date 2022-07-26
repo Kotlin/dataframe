@@ -6,6 +6,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.GenerateConstructor
 import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.io.readJson
+import org.jetbrains.kotlinx.dataframe.io.writeJson
 import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.pluginJsonFormat
 import org.jetbrains.kotlinx.dataframe.plugin.testing.schemaRender.toPluginDataFrameSchema
@@ -30,73 +32,100 @@ class Prototype {
     }
 
     @DataSchema
-    interface Function : DataRowSchema {
-        val receiverType: String
-        val function: String
-        val functionReturnType: String
+    class Function(
+        val receiverType: String,
+        val function: String,
+        val functionReturnType: Type,
         val parameters: List<Parameter>
-
-        @GenerateConstructor
-        companion object
+    ) : DataRowSchema {
     }
 
     @DataSchema
-    interface Parameter : DataRowSchema {
-        val name: String
-        val returnType: String
-        val defaultValue: String?
+    class Parameter(
+        val name: String,
+        val returnType: Type,
+        val defaultValue: String?,
+    ) : DataRowSchema
 
-        @GenerateConstructor
-        companion object
-    }
+    @DataSchema
+    data class Type(val name: String, val vararg: Boolean)
 
     val id by column<Int>()
 
     val otherFunctions = dataFrameOf(
-        Function("DataFrame<T>", "insert", "InsertClause<T>", listOf(Parameter("column", "DataColumn<C>", null))),
-        Function("DataFrame<T>", "insert", "InsertClause<T>", listOf(
-            Parameter("name", "String", null),
-            Parameter("infer", "Infer", "Infer.Nulls"),
-            Parameter("expression", "RowExpression<T, R>", null)
+        Function("DataFrame<T>", "insert", Type("InsertClause<T>", false), listOf(Parameter("column", Type("DataColumn<C>", false), null))),
+        Function("DataFrame<T>", "insert", Type("InsertClause<T>", false), listOf(
+            Parameter("name", Type("String", false), null),
+            Parameter("infer", Type("Infer", false), "Infer.Nulls"),
+            Parameter("expression", Type("RowExpression<T, R>", false), null)
         )),
-        Function("DataFrame<T>", "insert", "InsertClause<T>", listOf(
-            Parameter("column", "ColumnAccessor<R>", null),
-            Parameter("infer", "Infer", "Infer.Nulls"),
-            Parameter("expression", "RowExpression<T, R>", null)
+        Function("DataFrame<T>", "insert", Type("InsertClause<T>", false), listOf(
+            Parameter("column", Type("ColumnAccessor<R>", false), null),
+            Parameter("infer", Type("Infer", false), "Infer.Nulls"),
+            Parameter("expression", Type("RowExpression<T, R>", false), null)
         )),
-        Function("DataFrame<T>", "insert", "InsertClause<T>", listOf(
-            Parameter("column", "KProperty<R>", null),
-            Parameter("infer", "Infer", "Infer.Nulls"),
-            Parameter("expression", "RowExpression<T, R>", null)
+        Function("DataFrame<T>", "insert", Type("InsertClause<T>", false), listOf(
+            Parameter("column", Type("KProperty<R>", false), null),
+            Parameter("infer", Type("Infer", false), "Infer.Nulls"),
+            Parameter("expression", Type("RowExpression<T, R>", false), null)
         )),
     )
 
     val dfFunctions = dataFrameOf(
-    /**
-     * @see InsertClause.under
-     */
-        Function("InsertClause<T>", "under", "DataFrame<T>", listOf(
-            Parameter("column", "ColumnSelector<T, *>", null)
+        /**
+         * @see InsertClause.under
+         */
+        Function("InsertClause<T>", "under", Type("DataFrame<T>", false), listOf(
+            Parameter("column", Type("ColumnSelector<T, *>", false), null)
         )),
-        Function("InsertClause<T>", "under", "DataFrame<T>", listOf(
-            Parameter("columnPath", "ColumnPath", null)
+        Function("InsertClause<T>", "under", Type("DataFrame<T>", false), listOf(
+            Parameter("columnPath", Type("ColumnPath", false), null)
         )),
-        Function("InsertClause<T>", "under", "DataFrame<T>", listOf(
-            Parameter("column", "ColumnAccessor<*>", null)
+        Function("InsertClause<T>", "under", Type("DataFrame<T>", false), listOf(
+            Parameter("column", Type("ColumnAccessor<*>", false), null)
         )),
-        Function("InsertClause<T>", "under", "DataFrame<T>", listOf(
-            Parameter("column", "KProperty<*>", null)
+        Function("InsertClause<T>", "under", Type("DataFrame<T>", false), listOf(
+            Parameter("column", Type("KProperty<*>", false), null)
         )),
-        Function("InsertClause<T>", "under", "DataFrame<T>", listOf(
-            Parameter("column", "String", null)
-        ))
+        Function("InsertClause<T>", "under", Type("DataFrame<T>", false), listOf(
+            Parameter("column", Type("String", false), null)
+        )),
+//        Function("DataFrame<T>", "add", Type("DataFrame<T>", false), listOf(
+//            Parameter("columns", Type("AnyBaseCol", vararg = true), null)
+//        )),
+//        Function("DataFrame<T>", "addAll", Type("DataFrame<T>", false), listOf(
+//            Parameter("columns", Type("Iterable<AnyBaseCol>", false), null)
+//        )),
+//        Function("DataFrame<T>", "addAll", Type("DataFrame<T>", false), listOf(
+//            Parameter("dataFrames", Type("AnyFrame", vararg = true), null)
+//        )),
+        Function("DataFrame<T>", "add", Type("DataFrame<T>", false), listOf(
+            Parameter("name", Type("String", false), null),
+            Parameter("infer", Type("Infer", false), "Infer.Nulls"),
+            Parameter("expression", Type("AddExpression<T, R>", false), null),
+        )),
+//        Function("DataFrame<T>", "add", Type("DataFrame<T>", false), listOf(
+//            Parameter("property", Type("KProperty<R>", false), null),
+//            Parameter("infer", Type("Infer", false), "Infer.Nulls"),
+//            Parameter("expression", Type("AddExpression<T, R>", false), null),
+//        )),
+//        Function("DataFrame<T>", "add", Type("DataFrame<T>", false), listOf(
+//            Parameter("column", Type("ColumnAccessor<R>", false), null),
+//            Parameter("infer", Type("Infer", false), "Infer.Nulls"),
+//            Parameter("expression", Type("AddExpression<T, R>", false), null),
+//        )),
+//        Function("DataFrame<T>", "add", Type("DataFrame<T>", false), listOf(
+//            Parameter("path", Type("ColumnPath", false), null),
+//            Parameter("infer", Type("Infer", false), "Infer.Nulls"),
+//            Parameter("expression", Type("AddExpression<T, R>", false), null),
+//        ))
     )
 
     val functions = (otherFunctions concat dfFunctions)
         .groupBy { function }
         .updateGroups { it.addId() }
         .concat()
-        .update { parameters }.with { it.append(Parameter("<this>", receiverType, null)) }
+        .update { parameters }.with { it.append(Parameter("<this>", Type(receiverType, false), null)) }
 
     // region classes
 
@@ -112,16 +141,16 @@ class Prototype {
     // "val df: DataFrame<T>, val column: AnyCol"
     val classes = dataFrameOf(
         ClassDeclaration("InsertClause<T>", listOf(
-            Parameter("df", "DataFrame<T>", null),
-            Parameter("column", "AnyCol", null),
+            Parameter("df", Type("DataFrame<T>", false), null),
+            Parameter("column", Type("AnyCol", false), null),
         )),
     )
 
     // endregion
 
-    val returnType by column<String>()
+    val returnType by columnGroup<Type>()
 
-    val uniqueReturnTypes = functions
+    val uniqueReturnTypes: DataFrame<Type> = functions
         .explode { parameters }
         .ungroup { parameters }[returnType]
         .concat(functions.functionReturnType)
@@ -131,27 +160,66 @@ class Prototype {
                 .explode { parameters }
                 .ungroup { parameters }[returnType]
         )
-        .concat(classes.name.distinct())
+        .concat(classes.name.distinct().map { Type(it, false) }.asIterable().toDataFrame())
         .distinct()
 
     @Test
-    fun `generate bridges`() {
-        val mapper = uniqueReturnTypes.toList()
-            .joinToString(
-                ",\n\t",
-                prefix = "private val bridges = dataFrameOf(\n\t",
-                "\n)"
-            ) {
-                val reference = mapping[it]
-                    ?.get(approximation)?.let { simpleName -> "\"$simpleName\"" }
-                    ?: "null"
+    fun `class cast exception`() {
+        val returnType by column<Type>()
+        // when actual returnType is in fact ColumnGroup<Type>, not DataColumn<Type>
+        // compiler doesn't complain, but it's an error
+        val res = functions
+            .explode { parameters }
+            .ungroup { parameters }[returnType]
+        res.map { it.name }
 
-                val converter = mapping[it]
-                    ?.get(converter)?.let { simpleName -> "\"$simpleName\"" }
-                    ?: "null"
-                "Bridge(\"$it\", $reference, $converter)"
+        // and we can do this, still no error
+        //res.concat(functions.functionReturnType.toListOf<Type>().toColumn(""))
+    }
+
+    @Test
+    fun `generate bridges`() {
+        val df = uniqueReturnTypes
+            .rename { name }.into("name")
+            .join(bridges) {
+                // join keeps only left column!!
+                "name".match(right.type.map(Infer.Nulls) { it.name })
             }
-        println(mapper)
+            //.rename { "type"["type"] }.into("name")
+            .remove("name", "vararg")
+            .cast<Bridge>(verify = true)
+
+        df.writeJson("bridges.json", prettyPrint = true)
+    }
+
+    @Test
+    fun `join removes column from column group`() {
+        val a by columnOf(1)
+        val group by columnOf(a)
+
+        val groupReference by columnGroup("group")
+        val aa by groupReference.column<Int>("a")
+
+        val df = dataFrameOf(a)
+        val df1 = dataFrameOf(group)
+        val res = df.join(df1) {
+            "a".match(aa.map { it })
+        }
+
+        val res1 = df.join(df1) {
+            "a".match(aa)
+        }
+        println(res1.schema())
+    }
+
+    @DataSchema
+    class Data(val a: Int)
+    class Record(val data: Data)
+    @Test
+    fun `cast and convert error should print schema maybe`() {
+        val b by columnOf(1)
+        val data by columnOf(b)
+        dataFrameOf(data).cast<Record>(verify = true)
     }
 
     // region bridges
@@ -172,7 +240,7 @@ class Prototype {
 //    }
 
     @DataSchema
-    class Bridge(val type: String,
+    class Bridge(val type: Type,
                  val approximation: String,
                  val converter: String,
                  val lens: String,
@@ -187,25 +255,7 @@ class Prototype {
 //        companion object
 //    }
 
-    private val bridges = dataFrameOf(
-        Bridge("DataColumn<C>", "SimpleCol", "dataColumn", "Value"),
-        Bridge("DataFrame<T>", "PluginDataFrameSchema", "dataFrame", "Schema", true),
-        Bridge("String", "String", "string", "Value", true),
-        Bridge("Infer", "Infer", "enum", "Value", true),
-        Bridge("RowExpression<T, R>", "TypeApproximation", "type", "ReturnType", true),
-        Bridge("ColumnAccessor<R>", "ColumnAccessorApproximation", "columnAccessor", "Value"),
-        Bridge("KProperty<R>", "KPropertyApproximation", "kproperty", "Value", true),
-        Bridge("ColumnSelector<T, *>", "ColumnWithPathApproximation", "columnWithPath", "Value"),
-        Bridge("InsertClause<T>", "InsertClauseApproximation", "insertClause", "Value", true),
-        Bridge("ColumnPath", "ColumnPathApproximation", "columnPath", "Value"),
-        Bridge("ColumnAccessor<*>", "ColumnAccessorApproximation", "columnAccessor", "Value"),
-        Bridge("KProperty<*>", "KPropertyApproximation", "kproperty", "Value", true),
-        Bridge("AnyCol", "SimpleCol", "dataColumn", "Value")
-    )
-
-
-    private val mapping = bridges.associateBy { it["type"] }
-    private fun findBridge(type: String) = mapping[type]
+    private val bridges by lazy { DataFrame.readJson("bridges.json").cast<Bridge>(verify = true) }
 
     // endregion
 
@@ -220,18 +270,18 @@ class Prototype {
     private fun `generate interpreters`(functions: DataFrame<Function>, bridges: DataFrame<Bridge>) {
         println(functions)
 
-        val function by column<String>()
-        val functionReturnType by column<String>()
-
         functions
-            .leftJoin(bridges) { it[functionReturnType].match(type) }
-            .convert { parameters }.with { it.leftJoin(bridges) { it[returnType].match(type) } }
+            .leftJoin(bridges) { functions.functionReturnType.match(right.type) }
+            .convert { parameters }.with { it.leftJoin(bridges) { it[returnType].map(Infer.Nulls) { it.name }.match(right.type.name) } }
             .schema()
             .print()
 
         val interpreters = functions
-            .leftJoin(bridges) { it[functionReturnType].match(type) }
-            .convert { parameters }.with { it.leftJoin(bridges) { it[returnType].match(type) } }
+            .leftJoin(bridges) {
+                //functions.functionReturnType.match(type) TODO: Shouldn't compile
+                functions.functionReturnType.name.match(right.type.name)
+            }
+            .convert { parameters }.with { it.leftJoin(bridges) { it[returnType].name.match(right.type.name) } }
             .convert { parameters }.with {
                 it.add("arguments") {
                     val (name, runtimeName) = if (name == "<this>") {
@@ -248,7 +298,7 @@ class Prototype {
                 it.parameters["arguments"].values().joinToString("\n") { "|   $it" }
             }
             .add("interpreterName") {
-                val name = it[function].replaceFirstChar { it.uppercaseChar() }
+                val name = it.function.replaceFirstChar { it.uppercaseChar() }
                 "$name${it[id]}"
             }
             .mapToColumn("interpreters") {
@@ -268,7 +318,7 @@ class Prototype {
     @Test
     fun `generate approximations`() {
         val df = classes
-            .leftJoin(bridges) { name.match(right.type) }
+            .leftJoin(bridges) { name.match(right.type.name) }
             .convert { parameters }.with {
                 it.leftJoin(bridges) { returnType.match(right.type) }
             }
@@ -284,7 +334,7 @@ class Prototype {
     @Test
     fun `generate tests stubs`() {
         bridges
-            .distinctBy { expr { type.substringBefore("<") } }
+            .distinctBy { expr { type.name.substringBefore("<") } }
             .filter { supported }
             .forEach {
                 println(it.converter)
@@ -325,8 +375,12 @@ class Prototype {
     @Test
     fun printFunctionsThatShouldWork() {
         val supportedFunctions = functions
-            .leftJoin(bridges) { it[functionReturnType].match(type) }
-            .convert { parameters }.with { it.leftJoin(bridges) { it[returnType].match(type) } }
+            .leftJoin(bridges) { functionReturnType.name.match(right.type.name) }
+            .convert { parameters }.with {
+                it.leftJoin(bridges) {
+                    it.returnType.name.match<String>(right.type.name)
+                }
+            }
             .also {
                 it.forEach {
                     parameters.print()
@@ -436,7 +490,7 @@ class Prototype {
         println("")
         println(jsonString)
         println()
-        bridges.first { it.type == "DataFrame<T>" }.run {
+        bridges.first { it.type.name == "DataFrame<T>" }.run {
             println("""
                         package org.jetbrains.kotlinx.dataframe.plugin.testing.schemaRender
                         

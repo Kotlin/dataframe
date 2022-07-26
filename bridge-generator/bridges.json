@@ -1,0 +1,127 @@
+[{
+  "type": {
+    "name": "DataColumn<C>",
+    "vararg": false
+  },
+  "approximation": "SimpleCol",
+  "converter": "dataColumn",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "DataFrame<T>",
+    "vararg": false
+  },
+  "approximation": "PluginDataFrameSchema",
+  "converter": "dataFrame",
+  "lens": "Schema",
+  "supported": true
+}, {
+  "type": {
+    "name": "String",
+    "vararg": false
+  },
+  "approximation": "String",
+  "converter": "string",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "Infer",
+    "vararg": false
+  },
+  "approximation": "Infer",
+  "converter": "enum",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "RowExpression<T, R>",
+    "vararg": false
+  },
+  "approximation": "TypeApproximation",
+  "converter": "type",
+  "lens": "ReturnType",
+  "supported": true
+}, {
+  "type": {
+    "name": "ColumnAccessor<R>",
+    "vararg": false
+  },
+  "approximation": "ColumnAccessorApproximation",
+  "converter": "columnAccessor",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "KProperty<R>",
+    "vararg": false
+  },
+  "approximation": "KPropertyApproximation",
+  "converter": "kproperty",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "ColumnSelector<T, *>",
+    "vararg": false
+  },
+  "approximation": "ColumnWithPathApproximation",
+  "converter": "columnWithPath",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "InsertClause<T>",
+    "vararg": false
+  },
+  "approximation": "InsertClauseApproximation",
+  "converter": "insertClause",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "ColumnPath",
+    "vararg": false
+  },
+  "approximation": "ColumnPathApproximation",
+  "converter": "columnPath",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "ColumnAccessor<*>",
+    "vararg": false
+  },
+  "approximation": "ColumnAccessorApproximation",
+  "converter": "columnAccessor",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "KProperty<*>",
+    "vararg": false
+  },
+  "approximation": "KPropertyApproximation",
+  "converter": "kproperty",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "AddExpression<T, R>",
+    "vararg": false
+  },
+  "approximation": "TypeApproximation",
+  "converter": "type",
+  "lens": "ReturnType",
+  "supported": false
+}, {
+  "type": {
+    "name": "AnyCol",
+    "vararg": false
+  },
+  "approximation": "SimpleCol",
+  "converter": "dataColumn",
+  "lens": "Value",
+  "supported": false
+}]
