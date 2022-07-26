@@ -114,7 +114,7 @@
   "approximation": "TypeApproximation",
   "converter": "type",
   "lens": "ReturnType",
-  "supported": false
+  "supported": true
 }, {
   "type": {
     "name": "AnyCol",

@@ -186,6 +186,8 @@ class Prototype {
                 "name".match(right.type.map(Infer.Nulls) { it.name })
             }
             //.rename { "type"["type"] }.into("name")
+            .fillNulls(Bridge::supported).with { false }
+//            .fillNulls(Bridge::).with { false }
             .remove("name", "vararg")
             .cast<Bridge>(verify = true)
 
@@ -333,14 +335,22 @@ class Prototype {
 
     @Test
     fun `generate tests stubs`() {
+        val name by column<String>()
         bridges
             .distinctBy { expr { type.name.substringBefore("<") } }
+            .groupBy { converter }
+            .updateGroups { df ->
+                add(name) {
+                    type.name.substringBefore("<")
+                }
+            }
+            .concat()
             .filter { supported }
             .forEach {
-                println(it.converter)
+                val testSubjectName = name().replaceFirstChar { it.lowercase() }
+                println(name())
                 println()
-                val titleCaseConverter =
-                    converter.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                val interpreterName = name()
                 println("""
                     package org.jetbrains.kotlinx.dataframe.plugin.testing
                     
@@ -349,12 +359,12 @@ class Prototype {
                     import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
                     import org.jetbrains.kotlinx.dataframe.plugin.*
                     
-                    @Interpretable(${titleCaseConverter}Identity::class)
-                    public fun $converter(v: $type): $type {
+                    @Interpretable(${interpreterName}Identity::class)
+                    public fun ${testSubjectName}(v: ${type.name}): ${type.name} {
                         return v
                     }
                     
-                    public class ${titleCaseConverter}Identity : AbstractInterpreter<$approximation>() {
+                    public class ${interpreterName}Identity : AbstractInterpreter<$approximation>() {
                         internal val Arguments.v: $approximation by $converter()
                         
                         override fun Arguments.interpret(): $approximation {
@@ -362,7 +372,7 @@ class Prototype {
                         }
                     }
                     
-                    internal fun ${converter}Test() {
+                    internal fun ${testSubjectName}Test() {
                         
                     }
                 """.trimIndent())
