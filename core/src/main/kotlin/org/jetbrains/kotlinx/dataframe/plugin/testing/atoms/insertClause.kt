@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.plugin.testing
+package org.jetbrains.kotlinx.dataframe.plugin.testing.atoms
 
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.insert
 import org.jetbrains.kotlinx.dataframe.plugin.*
 import org.jetbrains.kotlinx.dataframe.plugin.InsertClauseApproximation
+import org.jetbrains.kotlinx.dataframe.plugin.testing.test
 
 @Interpretable(InsertClauseIdentity::class)
 public fun <T> insertClause(v: InsertClause<T>): InsertClause<T> {

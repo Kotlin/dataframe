@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.plugin.testing
+package org.jetbrains.kotlinx.dataframe.plugin.testing.atoms
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.dataFrame
+import org.jetbrains.kotlinx.dataframe.plugin.testing.test
 
 @Interpretable(DataFrameIdentity::class)
 public fun dataFrame(v: DataFrame<*>): DataFrame<*> {

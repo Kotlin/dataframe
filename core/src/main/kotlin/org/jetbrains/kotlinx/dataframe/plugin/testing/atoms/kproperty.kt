@@ -1,10 +1,11 @@
-package org.jetbrains.kotlinx.dataframe.plugin.testing
+package org.jetbrains.kotlinx.dataframe.plugin.testing.atoms
 
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.plugin.*
+import org.jetbrains.kotlinx.dataframe.plugin.testing.test
 import kotlin.reflect.KProperty
 
 @Interpretable(KpropertyIdentity::class)

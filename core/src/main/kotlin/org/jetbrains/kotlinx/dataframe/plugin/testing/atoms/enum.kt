@@ -1,10 +1,11 @@
-package org.jetbrains.kotlinx.dataframe.plugin.testing
+package org.jetbrains.kotlinx.dataframe.plugin.testing.atoms
 
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.plugin.*
+import org.jetbrains.kotlinx.dataframe.plugin.testing.test
 
 @Interpretable(EnumIdentity::class)
 public fun enum(v: Infer): Infer {

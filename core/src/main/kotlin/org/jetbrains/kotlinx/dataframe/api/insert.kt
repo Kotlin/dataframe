@@ -16,6 +16,10 @@ import org.jetbrains.kotlinx.dataframe.plugin.Insert1
 import org.jetbrains.kotlinx.dataframe.plugin.Insert2
 import org.jetbrains.kotlinx.dataframe.plugin.Insert3
 import org.jetbrains.kotlinx.dataframe.plugin.Under0
+import org.jetbrains.kotlinx.dataframe.plugin.Under1
+import org.jetbrains.kotlinx.dataframe.plugin.Under2
+import org.jetbrains.kotlinx.dataframe.plugin.Under3
+import org.jetbrains.kotlinx.dataframe.plugin.Under4
 import kotlin.reflect.KProperty
 
 @Interpretable(Insert0::class)
@@ -46,9 +50,13 @@ public data class InsertClause<T>(val df: DataFrame<T>, val column: AnyCol)
 
 @Interpretable(Under0::class)
 public fun <T> InsertClause<T>.under(column: ColumnSelector<T, *>): DataFrame<T> = under(df.getColumnPath(column))
+@Interpretable(Under1::class)
 public fun <T> InsertClause<T>.under(columnPath: ColumnPath): DataFrame<T> = df.insertImpl(columnPath + column.name, column)
+@Interpretable(Under2::class)
 public fun <T> InsertClause<T>.under(column: ColumnAccessor<*>): DataFrame<T> = under(column.path())
+@Interpretable(Under3::class)
 public fun <T> InsertClause<T>.under(column: KProperty<*>): DataFrame<T> = under(column.columnName)
+@Interpretable(Under4::class)
 public fun <T> InsertClause<T>.under(column: String): DataFrame<T> = under(pathOf(column))
 
 public fun <T> InsertClause<T>.after(column: ColumnSelector<T, *>): DataFrame<T> = after(df.getColumnPath(column))

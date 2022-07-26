@@ -1,4 +1,4 @@
-package org.jetbrains.kotlinx.dataframe.plugin.testing
+package org.jetbrains.kotlinx.dataframe.plugin.testing.atoms
 
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
