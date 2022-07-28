@@ -412,28 +412,6 @@ class Prototype {
     }
 
     @Test
-    fun test() {
-        val dfExpression = """dataFrameOf("test")(123)"""
-        val repl = object : JupyterReplTestCase() {
-
-        }
-        val functionCall = """df.insert("age") { 42 }.under("test")"""
-        //val df = dataFrameOf("test")(123)
-        val df = repl.exec<DataFrame<*>>("val df = $dfExpression; df")
-        val df1 = repl.exec("""
-                try {
-                    $functionCall
-                } catch (e: Exception) {
-                    e
-                }
-            """.trimIndent())
-//        when (df1) {
-//            is DataFrame<*> ->
-//
-//        }
-    }
-
-    @Test
     fun `schema1 test`() {
         generateSchemaTestStub("schema1", "DataFrame.readJson(\"functions.json\")")
     }
@@ -452,19 +430,20 @@ class Prototype {
             |}""".trimMargin())
     }
 
-    private fun generateSchemaTestStub(name: String, s: String) {
-        val capitalizedName = name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-        val repl = object : JupyterReplTestCase() {
-
-        }
-        val df = repl.execRaw("val df = $s; df") as DataFrame<*>
-        val expressions = mutableListOf<String>()
+    fun Map<String, ColumnSchema>.accept(
+        s: String,
+    ): List<String> {
         var i = 0
-        fun accept(s: String, columns: Map<String, ColumnSchema>) {
+        val expressions = mutableListOf<String>()
+        fun acceptInt(
+            s: String,
+            columns: Map<String, ColumnSchema>,
+            expressions: MutableList<String>,
+        ) {
             columns.forEach { (t, u) ->
                 when (u) {
                     is ColumnSchema.Frame -> {
-                        accept("${s}.$t[0]", u.schema.columns)
+                        acceptInt("${s}.$t[0]", u.schema.columns, expressions)
                     }
 
                     is ColumnSchema.Value -> {
@@ -475,31 +454,36 @@ class Prototype {
                     }
 
                     is ColumnSchema.Group -> {
-                        accept("${s}.$t", u.schema.columns)
+                        acceptInt("${s}.$t", u.schema.columns, expressions)
                     }
                 }
             }
         }
+        acceptInt(s, this, expressions)
+        return expressions.toList()
+    }
 
+    private fun generateSchemaTestStub(name: String, expression: String) {
+        val capitalizedName = name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+
+        val repl = object : JupyterReplTestCase() {
+        }
+        val df = repl.execRaw("val df = $expression; df") as DataFrame<*>
         val generator = CodeGenerator.create(useFqNames = false)
         val declaration =
-                generator.generate(df.schema(), name = capitalizedName, fields = true, extensionProperties = true, isOpen = true)
-                    .code.declarations
-                    .replace(Regex("@JvmName\\(.*\"\\)"), "")
-        accept("df", df.schema().columns)
-        val schemaTestCode = expressions.joinToString("\n")
+            generator.generate(df.schema(), name = capitalizedName, fields = true, extensionProperties = true, isOpen = true)
+                .code.declarations
+                .replace(Regex("@JvmName\\(.*\"\\)"), "")
+        val schemaTestCode = df.generateTestCode()
         println(schemaTestCode)
         repl.exec(schemaTestCode)
-
         val pluginSchema = df.schema().toPluginDataFrameSchema()
-
-        val jsonString = pluginJsonFormat.encodeToString(pluginSchema)
-        val decodedSchema = pluginJsonFormat.decodeFromString<PluginDataFrameSchema>(jsonString)
-        decodedSchema shouldBe pluginSchema
+        val jsonString = pluginSchema.toJson()
 
         println("")
         println(jsonString)
         println()
+
         bridges.first { it.type.name == "DataFrame<T>" }.run {
             println("""
                         package org.jetbrains.kotlinx.dataframe.plugin.testing.schemaRender
@@ -541,9 +525,81 @@ class Prototype {
                 |
                 |internal fun schemaTest() {
                 |    val df = $name()
-                |    ${expressions.joinToString("\n|    ")}
+                |    ${schemaTestCode}
                 |}
             """.trimMargin())
+    }
+
+    private fun DataFrame<*>.generateTestCode(): String {
+        val expressions = schema().columns.accept("df")
+        return expressions.joinToString("\n")
+    }
+
+    @Test
+    fun generateDfFunctionTestStub() {
+        val schemaName = "Add0"
+        val expression = "dataFrameOf(\"a\")(1)"
+        val modify = "add(\"\") { 42 }"
+        val id = "add0"
+        generateDfFunctionTestStub(expression, schemaName, modify, id, "add.kt")
+    }
+
+    private fun generateDfFunctionTestStub(expression: String, schemaName: String, modify: String, id: String, file: String) {
+        val repl = object : JupyterReplTestCase() {
+        }
+        // region schema before
+        val df = repl.execRaw("val df = $expression; df") as DataFrame<*>
+        val generator = CodeGenerator.create(useFqNames = false)
+        val declarationBefore =
+                generator.generate(df.schema(), name = schemaName, fields = true, extensionProperties = true, isOpen = true)
+                    .code.declarations
+                    .replace(Regex("@JvmName\\(.*\"\\)"), "")
+        val pluginSchema = df.schema().toPluginDataFrameSchema()
+        val beforePluginSchema = pluginSchema.toJson()
+        // endregion
+
+
+        val dfRes = repl.execRaw("val df1 = df.$modify; df1") as DataFrame<*>
+        val schemaTestCode = dfRes.schema().columns.accept("df1").joinToString("\n")
+        repl.exec(schemaTestCode)
+        val afterPluginSchema = dfRes.schema().toPluginDataFrameSchema()
+
+        printCompilerTest(file, schemaName, declarationBefore, beforePluginSchema, schemaTestCode, modify, afterPluginSchema.toJson(), id)
+    }
+
+    private fun PluginDataFrameSchema.toJson(): String {
+        val afterJson = pluginJsonFormat.encodeToString(this)
+        val decodedSchema = pluginJsonFormat.decodeFromString<PluginDataFrameSchema>(afterJson)
+        decodedSchema shouldBe this
+        return afterJson
+    }
+
+    private fun printCompilerTest(file: String, schemaName: String, schemaDeclaration: String, before: String, schemaTestCode: String, modify: String, after: String, id: String) {
+        println(file)
+        val test = buildString {
+            appendLine("""
+                import org.jetbrains.kotlinx.dataframe.*
+                import org.jetbrains.kotlinx.dataframe.api.*
+                import org.jetbrains.kotlinx.dataframe.annotations.*
+                import org.jetbrains.kotlinx.dataframe.plugin.testing.*
+            """.trimIndent())
+            appendLine()
+            appendLine(schemaDeclaration)
+            appendLine()
+            appendLine("""
+                fun $id(df: DataFrame<$schemaName>) {
+                    test(id = "${id}_schema", call = df)
+                    val df1 = test(id = "$id", call = df.$modify)
+            """.trimIndent())
+            appendLine(schemaTestCode.prependIndent())
+            append("}")
+        }
+        println(test)
+        println()
+        println("""
+            "${id}_schema" to pluginJsonFormat.decodeFromString<PluginDataFrameSchema>(${"\"\"\""}$before${"\"\"\""}),
+            "$id" to pluginJsonFormat.decodeFromString<PluginDataFrameSchema>(${"\"\"\""}$after${"\"\"\""}),
+        """.trimIndent())
     }
 
     val expressions = listOf(
@@ -567,19 +623,5 @@ class Prototype {
             """df.insert("col1") { 42 }.after("name")"""
         )),
     )
-
-    fun wfetest() {
-        val repl = object : JupyterReplTestCase() {
-
-        }
-        val df = expressions.toDataFrame {
-            "expression" from { it }
-            "df" from { repl.exec<DataFrame<*>>(it) }
-        }.add {
-            "schema" from {
-                "df"<DataFrame<*>>().schema()
-            }
-        }
-    }
 }
 

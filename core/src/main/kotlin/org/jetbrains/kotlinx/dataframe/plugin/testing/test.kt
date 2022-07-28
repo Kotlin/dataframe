@@ -1,4 +1,4 @@
 package org.jetbrains.kotlinx.dataframe.plugin.testing
 
 @Suppress("UNUSED_PARAMETER")
-public fun test(id: String, call: Any?) {}
+public fun <T> test(id: String, call: T): T { return call }
