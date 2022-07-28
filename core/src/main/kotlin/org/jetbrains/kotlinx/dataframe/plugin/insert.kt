@@ -112,6 +112,33 @@ public data class PluginDataFrameSchema(
     override fun columns(): List<SimpleCol> {
         return columns
     }
+
+    override fun toString(): String {
+        return columns.asString()
+    }
+}
+
+private fun List<SimpleCol>.asString(indent: String = ""): String {
+    return joinToString("\n") {
+        val col = when (it) {
+            is SimpleFrameColumn -> {
+                val nullability = if (it.nullable) "?" else ""
+                "*${it.name}$nullability\n" + it.columns().asString("$indent   ")
+            }
+            is SimpleColumnGroup -> {
+                "${it.name}\n" + it.columns().asString("$indent   ")
+            }
+            is SimpleCol -> {
+                val type = (it.type as TypeApproximationImpl).let {
+                    val nullability = if (it.nullable) "?" else ""
+                    "${it.fqName}$nullability"
+                }
+                "${it.name}: $type"
+            }
+            else -> TODO()
+        }
+        "$indent$col"
+    }
 }
 
 @Serializable
