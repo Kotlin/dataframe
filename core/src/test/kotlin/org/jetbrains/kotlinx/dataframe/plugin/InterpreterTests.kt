@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.Interpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Present
+import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximationImpl
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.junit.Test
 import kotlin.reflect.typeOf
@@ -78,5 +79,22 @@ class InterpreterTests {
             )
         )
         res shouldBe Interpreter.Success(Infer.Type)
+    }
+
+    class DataFrameIdSubject() : AbstractInterpreter<PluginDataFrameSchema>() {
+        val Arguments.receiver by dataFrame()
+
+        override val Arguments.startingSchema: PluginDataFrameSchema? get() = receiver
+
+        override fun Arguments.interpret(): PluginDataFrameSchema {
+            TODO("Not yet implemented")
+        }
+    }
+
+    @Test
+    fun `starting schema`() {
+        val schema = PluginDataFrameSchema(listOf(SimpleCol("col", TypeApproximationImpl("kotlin.Int", false))))
+        val res = DataFrameIdSubject().startingSchema(mapOf("receiver" to Interpreter.Success(schema)))
+        res shouldBe schema
     }
 }

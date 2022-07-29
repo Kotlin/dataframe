@@ -26,6 +26,9 @@ public interface Interpreter<T> {
 
     public object Schema : Lens
 
+    // required to compute whether resulting schema should be inheritor of previous class or a new class
+    public fun startingSchema(arguments: Map<String, Success<Any?>>): PluginDataFrameSchema?
+
     public fun interpret(arguments: Map<String, Success<Any?>>): InterpretationResult<T>
 
     public sealed interface InterpretationResult<out T>
@@ -67,6 +70,12 @@ public abstract class AbstractInterpreter<T> : Interpreter<T> {
     internal val _expectedArguments: MutableList<Interpreter.ExpectedArgument> = mutableListOf()
 
     override val expectedArguments: List<Interpreter.ExpectedArgument> = _expectedArguments
+
+    protected open val Arguments.startingSchema: PluginDataFrameSchema? get() = null
+
+    final override fun startingSchema(arguments: Map<String, Interpreter.Success<Any?>>): PluginDataFrameSchema? {
+        return Arguments(arguments).startingSchema
+    }
 
     public inline fun <Value, reified CompileTimeValue> argConvert(
         defaultValue: DefaultValue<Value> = Absent,

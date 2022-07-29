@@ -125,7 +125,7 @@ class Prototype {
         .groupBy { function }
         .updateGroups { it.addId() }
         .concat()
-        .update { parameters }.with { it.append(Parameter("<this>", Type(receiverType, false), null)) }
+        .update { parameters }.with { it.append(Parameter("receiver", Type(receiverType, false), null)) }
 
     // region classes
 
@@ -229,18 +229,6 @@ class Prototype {
     val approximation by column<String>()
     val converter by column<String>()
 
-//    @DataSchema
-//    interface Bridge : DataRowSchema {
-//        val type: String
-//        val approximation: String
-//        val converter: String
-//        val lens: String
-//        val supported: Boolean
-//
-//        @GenerateConstructor
-//        companion object
-//    }
-
     @DataSchema
     class Bridge(val type: Type,
                  val approximation: String,
@@ -248,16 +236,27 @@ class Prototype {
                  val lens: String,
                  val supported: Boolean = false) : DataRowSchema
 
-//    @DataSchema
-//    interface ValueExample : DataRowSchema {
-//        val constructor: String?
-//        val usage: String
-//
-//        @GenerateConstructor
-//        companion object
-//    }
-
     private val bridges by lazy { DataFrame.readJson("bridges.json").cast<Bridge>(verify = true) }
+
+    val refinedFunctions = functions
+        .leftJoin(bridges) {
+            //functions.functionReturnType.match(type) TODO: Shouldn't compile
+            functions.functionReturnType.name.match(right.type.name)
+        }
+        .convert { parameters }.with { it.leftJoin(bridges) { it[returnType].name.match(right.type.name) } }
+        .add(RefinedFunction::startingSchema) {
+            parameters.firstOrNull { it.name == "receiver" }
+        }
+        .cast<RefinedFunction>()
+
+    @DataSchema
+    class RefinedFunction(
+        val receiverType: String,
+        val function: String,
+        val functionReturnType: Type,
+        val parameters: List<Parameter>,
+        val startingSchema: Parameter
+    ) : DataRowSchema
 
     // endregion
 
@@ -266,38 +265,28 @@ class Prototype {
      */
     @Test
     fun `generate interpreters`() {
-        `generate interpreters`(functions, bridges)
+        `generate interpreters`(refinedFunctions)
     }
 
-    private fun `generate interpreters`(functions: DataFrame<Function>, bridges: DataFrame<Bridge>) {
+    private fun `generate interpreters`(functions: DataFrame<RefinedFunction>) {
         println(functions)
 
-        functions
-            .leftJoin(bridges) { functions.functionReturnType.match(right.type) }
-            .convert { parameters }.with { it.leftJoin(bridges) { it[returnType].map(Infer.Nulls) { it.name }.match(right.type.name) } }
-            .schema()
-            .print()
-
         val interpreters = functions
-            .leftJoin(bridges) {
-                //functions.functionReturnType.match(type) TODO: Shouldn't compile
-                functions.functionReturnType.name.match(right.type.name)
-            }
-            .convert { parameters }.with { it.leftJoin(bridges) { it[returnType].name.match(right.type.name) } }
             .convert { parameters }.with {
                 it.add("arguments") {
-                    val (name, runtimeName) = if (name == "<this>") {
-                        "receiver" to "THIS"
-                    } else {
-                        name to ""
-                    }
-
-                    "val Arguments.${name}: ${approximation()} by ${converter()}($runtimeName)"
+                    "val Arguments.${name}: ${approximation()} by ${converter()}()"
                 }
             }
             .add("argumentsStr") {
-                // generate deprecated property with name argumentStr
-                it.parameters["arguments"].values().joinToString("\n") { "|   $it" }
+                // generate deprecated property with name argumentStr?
+                buildString {
+                    append(it.parameters["arguments"].values().joinToString("\n") { "|  $it" })
+                    // how to handle nullable property? make all columns nullable? forbid it?
+                    it.startingSchema.name?.let {
+                        appendLine()
+                        append("  override val Arguments.startingSchema get() = ${it}")
+                    }
+                }
             }
             .add("interpreterName") {
                 val name = it.function.replaceFirstChar { it.uppercaseChar() }
