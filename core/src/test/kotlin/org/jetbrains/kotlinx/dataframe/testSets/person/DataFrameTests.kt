@@ -1753,6 +1753,17 @@ class DataFrameTests : BaseTest() {
     }
 
     @Test
+    fun `append wrong number of arguments`() {
+        shouldThrow<IllegalStateException> {
+            dataFrameOf("name", "age")(
+                "Alice", 15,
+                "Bob", 20
+            )
+                .append("John")
+        }
+    }
+
+    @Test
     fun `first last`() {
         typed.first() shouldBe typed[0]
         typed.last() shouldBe typed[typed.nrow - 1]
