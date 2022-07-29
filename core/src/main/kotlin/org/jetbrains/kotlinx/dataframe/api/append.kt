@@ -10,7 +10,7 @@ import org.jetbrains.kotlinx.dataframe.nrow
 
 public fun <T> DataFrame<T>.append(vararg values: Any?): DataFrame<T> {
     val ncol = ncol
-    assert(values.size % ncol == 0) { "Invalid number of arguments. Multiple of $ncol is expected, but actual was: ${values.size}" }
+    check(values.size % ncol == 0) { "Invalid number of arguments. Multiple of $ncol is expected, but actual was: ${values.size}" }
     val newRows = values.size / ncol
     return columns().mapIndexed { colIndex, col ->
         val newValues = (0 until newRows).map { values[colIndex + it * ncol] }
