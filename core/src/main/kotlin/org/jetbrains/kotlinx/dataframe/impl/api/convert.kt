@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
 import java.net.URL
 import java.time.LocalTime
+import java.util.*
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import kotlin.reflect.KType
@@ -81,7 +82,7 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
     return when {
         from == to -> this
         from.isSubtypeOf(to) -> (this as DataColumnInternal<*>).changeType(to.withNullability(hasNulls()))
-        else -> when (val converter = getConverter(from, to)) {
+        else -> when (val converter = getConverter(from, to, ParserOptions(locale = Locale.getDefault()))) {
             null -> when (from.classifier) {
                 Any::class, Number::class, java.io.Serializable::class -> {
                     // find converter for every value
@@ -89,7 +90,7 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
                         it?.let {
                             val clazz = it.javaClass.kotlin
                             val type = clazz.createStarProjectedType(false)
-                            val converter = getConverter(type, to) ?: throw TypeConverterNotFoundException(from, to)
+                            val converter = getConverter(type, to, ParserOptions(locale = Locale.getDefault())) ?: throw TypeConverterNotFoundException(from, to)
                             converter(it)
                         }.checkNulls()
                     }
@@ -107,9 +108,9 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
     }
 }
 
-internal val convertersCache = mutableMapOf<Pair<KType, KType>, TypeConverter?>()
+internal val convertersCache = mutableMapOf<Triple<KType, KType, ParserOptions?>, TypeConverter?>()
 
-internal fun getConverter(from: KType, to: KType): TypeConverter? = convertersCache.getOrPut(from to to) { createConverter(from, to) }
+internal fun getConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? = convertersCache.getOrPut(Triple(from, to, options)) { createConverter(from, to, options) }
 
 internal typealias TypeConverter = (Any) -> Any?
 
