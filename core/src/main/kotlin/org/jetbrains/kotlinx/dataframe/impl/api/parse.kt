@@ -171,7 +171,9 @@ internal object Parsers : GlobalParserOptions {
         return null
     }
 
-    private fun String.parseDouble(format: NumberFormat) =
+    private val posixNumberFormat = NumberFormat.getInstance(Locale.forLanguageTag("C.UTF-8"))
+
+    private fun String.parseDouble(userNumberFormat: NumberFormat) =
         when (uppercase(Locale.getDefault())) {
             "NAN" -> Double.NaN
             "INF" -> Double.POSITIVE_INFINITY
@@ -179,10 +181,13 @@ internal object Parsers : GlobalParserOptions {
             "INFINITY" -> Double.POSITIVE_INFINITY
             "-INFINITY" -> Double.NEGATIVE_INFINITY
             else -> {
-                val parsePosition = ParsePosition(0)
-                val result: Double? = format.parse(this, parsePosition)?.toDouble()
-                if (parsePosition.index != this.length) null
-                else result
+                fun parseWithFormat(format: NumberFormat): Double? {
+                    val parsePosition = ParsePosition(0)
+                    val result: Double? = format.parse(this, parsePosition)?.toDouble()
+                    return if (parsePosition.index != this.length) null
+                    else result
+                }
+                parseWithFormat(userNumberFormat) ?: parseWithFormat(posixNumberFormat)
             }
         }
 
