@@ -2,12 +2,14 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.junit.Test
 import java.math.BigDecimal
+import java.util.*
 import kotlin.reflect.typeOf
 
 class ParserTests {
@@ -57,5 +59,24 @@ class ParserTests {
         converted.type() shouldBe typeOf<Float>()
         converted[0] shouldBe 1.0f
         converted[1] shouldBe 0.321f
+    }
+
+    @Test
+    fun `converting string to double in different locales`() {
+        val currentLocale = Locale.getDefault()
+        try {
+            val stringValues = listOf("1", "2.3", "4,5")
+            val stringColumn = DataColumn.createValueColumn("nums", stringValues, typeOf<String>())
+            Locale.setDefault(Locale.forLanguageTag("ru-RU"))
+            stringColumn.convertToDouble().shouldBe(
+                DataColumn.createValueColumn("nums", listOf(1.0, 2.3, 4.5), typeOf<Double>())
+            )
+            Locale.setDefault(Locale.forLanguageTag("en-US"))
+            stringColumn.convertToDouble().shouldBe(
+                DataColumn.createValueColumn("nums", listOf(1.0, 2.3, 45.0), typeOf<Double>())
+            )
+        } finally {
+            Locale.setDefault(currentLocale)
+        }
     }
 }
