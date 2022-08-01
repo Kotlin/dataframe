@@ -4,12 +4,16 @@ import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.convertTo
+import org.jetbrains.kotlinx.dataframe.api.parse
+import org.jetbrains.kotlinx.dataframe.api.parser
+import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.junit.Test
 import java.math.BigDecimal
-import java.util.*
+import java.util.Locale
 import kotlin.reflect.typeOf
 
 class ParserTests {
@@ -62,17 +66,27 @@ class ParserTests {
     }
 
     @Test
-    fun `converting string to double in different locales`() {
+    fun `convert to Boolean`() {
+        val col by columnOf(BigDecimal(1.0), BigDecimal(0.0), 0, 1, 10L, 0.0, 0.1)
+        col.convertTo<Boolean>().shouldBe(
+            DataColumn.createValueColumn("col", listOf(true, false, false, true, true, false, true), typeOf<Boolean>())
+        )
+    }
+
+    @Test
+    fun `converting String to Double in different locales`() {
         val currentLocale = Locale.getDefault()
         try {
             val stringValues = listOf("1", "2.3", "4,5")
             val stringColumn = DataColumn.createValueColumn("nums", stringValues, typeOf<String>())
             Locale.setDefault(Locale.forLanguageTag("ru-RU"))
-            stringColumn.convertToDouble().shouldBe(
+            // Use comma as local decimal separator and dot as fallback default (as it is used in POSIX/C.UTF-8)
+            stringColumn.convertTo<Double>().shouldBe(
                 DataColumn.createValueColumn("nums", listOf(1.0, 2.3, 4.5), typeOf<Double>())
             )
             Locale.setDefault(Locale.forLanguageTag("en-US"))
-            stringColumn.convertToDouble().shouldBe(
+            // Use dot as local decimal separator. Comma is ignored (as it is group separator in this locale).
+            stringColumn.convertTo<Double>().shouldBe(
                 DataColumn.createValueColumn("nums", listOf(1.0, 2.3, 45.0), typeOf<Double>())
             )
         } finally {

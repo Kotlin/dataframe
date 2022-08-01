@@ -36,7 +36,7 @@ import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
 import java.net.URL
 import java.time.LocalTime
-import java.util.*
+import java.util.Locale
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import kotlin.reflect.KType
@@ -206,7 +206,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Byte::class -> convert<Number> { it.toByte() }
                 Short::class -> convert<Number> { it.toShort() }
                 Long::class -> convert<Number> { it.toLong() }
-                Boolean::class -> convert<Number> { it != 0 }
+                Boolean::class -> convert<Number> { it.toDouble() != 0.0 }
                 else -> null
             }
             Int::class -> when (toClass) {
