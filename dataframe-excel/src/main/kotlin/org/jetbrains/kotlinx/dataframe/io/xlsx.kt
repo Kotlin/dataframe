@@ -52,58 +52,100 @@ internal class DefaultReadExcelMethod(path: String?) : AbstractDefaultReadMethod
 
 private const val readExcel = "readExcel"
 
+/**
+ * @param sheetName sheet to read. By default, first sheet in the document
+ * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
+ * @param skipRows number of rows before header
+ * @param rowsCount number of rows to read.
+ */
 public fun DataFrame.Companion.readExcel(
     url: URL,
     sheetName: String? = null,
+    skipRows: Int = 0,
     columns: String? = null,
     rowsCount: Int? = null
 ): AnyFrame {
     val wb = WorkbookFactory.create(url.openStream())
-    return wb.use { readExcel(wb, sheetName, columns, rowsCount) }
+    return wb.use { readExcel(wb, sheetName, skipRows, columns, rowsCount) }
 }
 
+/**
+ * @param sheetName sheet to read. By default, first sheet in the document
+ * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
+ * @param skipRows number of rows before header
+ * @param rowsCount number of rows to read.
+ */
 public fun DataFrame.Companion.readExcel(
     file: File,
     sheetName: String? = null,
+    skipRows: Int = 0,
     columns: String? = null,
     rowsCount: Int? = null
 ): AnyFrame {
     val wb = WorkbookFactory.create(file)
-    return wb.use { readExcel(it, sheetName, columns, rowsCount) }
+    return wb.use { readExcel(it, sheetName, skipRows, columns, rowsCount) }
 }
 
+/**
+ * @param sheetName sheet to read. By default, first sheet in the document
+ * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
+ * @param skipRows number of rows before header
+ * @param rowsCount number of rows to read.
+ */
 public fun DataFrame.Companion.readExcel(
     fileOrUrl: String,
     sheetName: String? = null,
+    skipRows: Int = 0,
     columns: String? = null,
     rowsCount: Int? = null
-): AnyFrame = readExcel(asURL(fileOrUrl), sheetName, columns, rowsCount)
+): AnyFrame = readExcel(asURL(fileOrUrl), sheetName, skipRows, columns, rowsCount)
 
+/**
+ * @param sheetName sheet to read. By default, first sheet in the document
+ * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
+ * @param skipRows number of rows before header
+ * @param rowsCount number of rows to read.
+ */
 public fun DataFrame.Companion.readExcel(
     inputStream: InputStream,
     sheetName: String? = null,
+    skipRows: Int = 0,
     columns: String? = null,
     rowsCount: Int? = null
 ): AnyFrame {
     val wb = WorkbookFactory.create(inputStream)
-    return wb.use { readExcel(it, sheetName, columns, rowsCount) }
+    return wb.use { readExcel(it, sheetName, skipRows, columns, rowsCount) }
 }
 
+/**
+ * @param sheetName sheet to read. By default, first sheet in the document
+ * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
+ * @param skipRows number of rows before header
+ * @param rowsCount number of rows to read.
+ */
 public fun DataFrame.Companion.readExcel(
     wb: Workbook,
     sheetName: String? = null,
+    skipRows: Int = 0,
     columns: String? = null,
     rowsCount: Int? = null
 ): AnyFrame {
     val sheet: Sheet = sheetName
         ?.let { wb.getSheet(it) ?: error("Sheet with name $sheetName not found") }
         ?: wb.getSheetAt(0)
-    return readExcel(sheet, columns, rowsCount)
+    return readExcel(sheet, columns, skipRows, rowsCount)
 }
 
+/**
+ * @param sheet sheet to read.
+ * @param columns comma separated list of Excel column letters and column ranges (e.g. “A:E” or “A,C,E:F”)
+ * @param skipRows number of rows before header
+ * @param rowsCount number of rows to read.
+ */
 public fun DataFrame.Companion.readExcel(
     sheet: Sheet,
     columns: String? = null,
+    skipRows: Int = 0,
     rowsCount: Int? = null
 ): AnyFrame {
     val columnIndexes = if (columns != null) {
@@ -119,8 +161,8 @@ public fun DataFrame.Companion.readExcel(
         sheet.getRow(0).map { it.columnIndex }
     }
 
-    val headerRow = sheet.getRow(0)
-    val valueRows = sheet.drop(1).let { if (rowsCount != null) it.take(rowsCount) else it }
+    val headerRow = sheet.getRow(skipRows)
+    val valueRows = sheet.drop(1 + skipRows).let { if (rowsCount != null) it.take(rowsCount) else it }
     val columns = columnIndexes.map { index ->
         val headerCell = headerRow.getCell(index)
         val name = if (headerCell?.cellType == CellType.NUMERIC) {
@@ -128,7 +170,7 @@ public fun DataFrame.Companion.readExcel(
         } else {
             headerCell?.stringCellValue ?: CellReference.convertNumToColString(index) // Use Excel column names if no data
         }
-        val values = valueRows.map {
+        val values: List<Any?> = valueRows.map {
             val cell: Cell? = it.getCell(index)
             when (cell?.cellType) {
                 CellType._NONE -> error("Cell ${cell.address} of sheet ${sheet.sheetName} has a CellType that should only be used internally. This is a bug, please report https://github.com/Kotlin/dataframe/issues")
