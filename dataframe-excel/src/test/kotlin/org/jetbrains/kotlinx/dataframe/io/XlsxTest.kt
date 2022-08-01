@@ -36,7 +36,7 @@ class XlsxTest {
 
     @Test
     fun `column with empty header`() {
-        val df = DataFrame.readExcel(testResource("sample2.xlsx"), "Sheet1", "A:C")
+        val df = DataFrame.readExcel(testResource("sample2.xlsx"), "Sheet1", columns = "A:C")
         df shouldBe dataFrameOf("col1", "col2", "C")(1.0, null, 3.0)
     }
 
@@ -77,5 +77,11 @@ class XlsxTest {
         val temp = Files.createTempFile("excel", ".xlsx").toFile()
         df.writeExcel(temp)
         DataFrame.readExcel(temp) shouldBe df
+    }
+
+    @Test
+    fun `read header on second row`() {
+        val df = DataFrame.readExcel(testResource("custom_header_position.xlsx"), skipRows = 1)
+        df.columnNames() shouldBe listOf("header1", "header2")
     }
 }
