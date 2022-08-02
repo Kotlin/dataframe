@@ -376,7 +376,7 @@ internal fun <T> DataFrame<T>.parseImpl(options: ParserOptions?, columns: Column
     convert(columns).to {
         when {
             it.isFrameColumn() -> it.cast<AnyFrame?>().parse(options)
-            it.isColumnGroup() -> it.asColumnGroup().parse { all() }.asColumnGroup(it.name()).asDataColumn()
+            it.isColumnGroup() -> it.asColumnGroup().parse(options) { all() }.asColumnGroup(it.name()).asDataColumn()
             it.typeClass == String::class -> it.cast<String?>().tryParse(options)
             else -> it
         }
