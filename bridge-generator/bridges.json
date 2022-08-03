@@ -27,6 +27,15 @@
   "supported": true
 }, {
   "type": {
+    "name": "String",
+    "vararg": false
+  },
+  "approximation": "String",
+  "converter": "string",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
     "name": "Infer",
     "vararg": false
   },
@@ -115,6 +124,42 @@
   "converter": "type",
   "lens": "ReturnType",
   "supported": true
+}, {
+  "type": {
+    "name": "ColumnsSelector<T, C>",
+    "vararg": false
+  },
+  "approximation": "TypeApproximation",
+  "converter": "type",
+  "lens": "ReturnType",
+  "supported": false
+}, {
+  "type": {
+    "name": "KProperty<C>",
+    "vararg": true
+  },
+  "approximation": "List<TypeApproximation>",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "String",
+    "vararg": true
+  },
+  "approximation": "List<String",
+  "converter": "varargString",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "Convert<T, C>",
+    "vararg": false
+  },
+  "approximation": "ConvertApproximation",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": false
 }, {
   "type": {
     "name": "AnyCol",

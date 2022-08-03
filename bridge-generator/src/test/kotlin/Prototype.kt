@@ -6,6 +6,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.GenerateConstructor
 import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.io.writeJson
 import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
@@ -14,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.testing.schemaRender.toPluginDataF
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.jupiter.api.Test
+import java.io.File
 import java.util.*
 
 class Prototype {
@@ -118,7 +120,16 @@ class Prototype {
 //            Parameter("path", Type("ColumnPath", false), null),
 //            Parameter("infer", Type("Infer", false), "Infer.Nulls"),
 //            Parameter("expression", Type("AddExpression<T, R>", false), null),
-//        ))
+//        )),
+        Function("DataFrame<T>", "convert", Type("Convert<T, C>", false), listOf(
+            Parameter("columns", Type("ColumnsSelector<T, C>", false), null)
+        )),
+        Function("DataFrame<T>", "convert", Type("Convert<T, C>", false), listOf(
+            Parameter("columns", Type("KProperty<C>", true), null)
+        )),
+        Function("DataFrame<T>", "convert", Type("Convert<T, C>", false), listOf(
+            Parameter("columns", Type("String", true), null)
+        )),
     )
 
     val functions = (otherFunctions concat dfFunctions)
@@ -150,7 +161,7 @@ class Prototype {
 
     val returnType by columnGroup<Type>()
 
-    val uniqueReturnTypes: DataFrame<Type> = functions
+    val uniqueReturnTypes: ColumnGroup<Type> = functions
         .explode { parameters }
         .ungroup { parameters }[returnType]
         .concat(functions.functionReturnType)
@@ -162,6 +173,7 @@ class Prototype {
         )
         .concat(classes.name.distinct().map { Type(it, false) }.asIterable().toDataFrame())
         .distinct()
+        .asColumnGroup("type")
 
     @Test
     fun `class cast exception`() {
@@ -179,14 +191,13 @@ class Prototype {
 
     @Test
     fun `generate bridges`() {
-        val df = uniqueReturnTypes
-            .rename { name }.into("name")
-            .join(bridges) {
+        val df = dataFrameOf(uniqueReturnTypes)
+            .leftJoin(bridges) {
                 // join keeps only left column!!
-                "name".match(right.type.map(Infer.Nulls) { it.name })
+                "type" match right.type
             }
             //.rename { "type"["type"] }.into("name")
-            .fillNulls(Bridge::supported).with { false }
+            .fillNulls("supported").with { false }
 //            .fillNulls(Bridge::).with { false }
             .remove("name", "vararg")
             .cast<Bridge>(verify = true)
@@ -321,16 +332,30 @@ class Prototype {
         println(df["code"].toList())
 
     }
-
     @Test
-    fun `generate tests stubs`() {
+    fun `generate atoms tests`() {
+        `generate atoms tests`(bridges)
+    }
+
+    fun `generate atoms tests`(bridges: DataFrame<Bridge>) {
+
+        fun writeTestStub(name: String, s: String) {
+            // val root = TODO()
+            val atoms = File(root, "kotlin/org/jetbrains/kotlinx/dataframe/plugin/testing/atoms").also { it.mkdirs() }
+            File(atoms, "$name.kt").writeText(s)
+        }
+
         val name by column<String>()
         bridges
-            .distinctBy { expr { type.name.substringBefore("<") } }
+            .distinctBy { expr { type.name.substringBefore("<") } and type.vararg }
             .groupBy { converter }
             .updateGroups { df ->
                 add(name) {
-                    type.name.substringBefore("<")
+                    var name = type.name.substringBefore("<")
+                    if (type.vararg) {
+                        name = "Vararg$name"
+                    }
+                    name
                 }
             }
             .concat()
