@@ -84,4 +84,10 @@ class XlsxTest {
         val df = DataFrame.readExcel(testResource("custom_header_position.xlsx"), skipRows = 1)
         df.columnNames() shouldBe listOf("header1", "header2")
     }
+
+    @Test
+    fun `consider skipRows when obtaining column indexes`() {
+        val df = DataFrame.readExcel(testResource("header.xlsx"), skipRows = 6)
+        df.columnNames() shouldBe listOf("Well", "Well Position", "Omit", "Sample Name", "Target Name", "Task", "Reporter", "Quencher")
+    }
 }
