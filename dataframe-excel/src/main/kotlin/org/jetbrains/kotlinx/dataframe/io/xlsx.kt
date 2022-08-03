@@ -158,7 +158,7 @@ public fun DataFrame.Companion.readExcel(
             }
         }
     } else {
-        sheet.getRow(0).map { it.columnIndex }
+        sheet.getRow(skipRows).map { it.columnIndex }
     }
 
     val headerRow = sheet.getRow(skipRows)
