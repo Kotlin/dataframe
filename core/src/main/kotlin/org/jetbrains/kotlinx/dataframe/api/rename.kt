@@ -33,10 +33,10 @@ public fun <T> DataFrame<T>.rename(vararg mappings: Pair<String, String>): DataF
         .into(*mappings.map { it.second }.toTypedArray())
 
 public class Rename : AbstractInterpreter<RenameClauseApproximation>() {
-    private val Arguments.df by dataFrame(THIS)
+    private val Arguments.receiver by dataFrame()
     private val Arguments.columns by columnsSelector()
     override fun Arguments.interpret(): RenameClauseApproximation {
-        return RenameClauseApproximation(df, columns)
+        return RenameClauseApproximation(receiver, columns)
     }
 }
 
@@ -66,7 +66,7 @@ public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> {
 }
 
 public class Into : AbstractSchemaModificationInterpreter() {
-    public val Arguments.receiver: RenameClauseApproximation by renameClause(THIS)
+    public val Arguments.receiver: RenameClauseApproximation by renameClause()
     public val Arguments.newNames: List<String> by varargString()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {

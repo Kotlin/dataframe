@@ -113,13 +113,9 @@ public abstract class AbstractInterpreter<T> : Interpreter<T> {
 
     public class ArgumentName private constructor(public val value: String) {
         public companion object {
-            public val THIS: ArgumentName = ArgumentName("this")
-
             public fun of(name: String): ArgumentName = ArgumentName(name)
         }
     }
-
-    public val THIS: ArgumentName = ArgumentName.THIS
 
     public fun name(name: String): ArgumentName = ArgumentName.of(name)
 

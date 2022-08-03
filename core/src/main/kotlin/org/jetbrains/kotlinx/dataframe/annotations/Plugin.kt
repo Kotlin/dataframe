@@ -38,19 +38,10 @@ public annotation class Schema
 
 public class ConvertApproximation(public val schema: PluginDataFrameSchema, public val columns: List<List<String>>)
 
-public class ConvertInterpreter : AbstractInterpreter<ConvertApproximation>() {
-    public val Arguments.schema: PluginDataFrameSchema by dataFrame(ArgumentName.THIS)
-    public val Arguments.columns: List<String> by arg(lens = Interpreter.Value)
-
-    override fun Arguments.interpret(): ConvertApproximation {
-        return ConvertApproximation(schema, columns.map { listOf(it) })
-    }
-}
-
 public annotation class Interpretable(val interpreter: KClass<out Interpreter<*>>)
 
 public class Add : AbstractSchemaModificationInterpreter() {
-    public val Arguments.df: PluginDataFrameSchema by dataFrame(THIS)
+    public val Arguments.receiver: PluginDataFrameSchema by dataFrame()
     public val Arguments.name: String by string()
     public val Arguments.type: TypeApproximation by type(name("expression"))
 
@@ -71,12 +62,12 @@ public class Add1 : AbstractSchemaModificationInterpreter() {
 }
 
 public class From : AbstractInterpreter<Unit>() {
-    public val Arguments.receiver: AddDslApproximation by arg(lens = Interpreter.Value)
-    public val Arguments.name: String by string(THIS)
+    public val Arguments.dsl: AddDslApproximation by arg(lens = Interpreter.Value)
+    public val Arguments.receiver: String by string()
     public val Arguments.type: TypeApproximation by type(name("expression"))
 
     override fun Arguments.interpret() {
-        receiver.columns += SimpleCol(name, type)
+        dsl.columns += SimpleCol(receiver, type)
     }
 }
 
@@ -87,7 +78,7 @@ public fun AddDslApproximation(columns: List<Pair<String, PluginColumnSchema>>):
 }
 
 public class AddWithDsl : AbstractSchemaModificationInterpreter() {
-    public val Arguments.df: PluginDataFrameSchema by dataFrame(THIS)
+    public val Arguments.receiver: PluginDataFrameSchema by dataFrame()
     public val Arguments.body: (Any) -> Unit by arg(lens = Interpreter.Dsl)
 
     override fun Arguments.interpret(): PluginDataFrameSchema {

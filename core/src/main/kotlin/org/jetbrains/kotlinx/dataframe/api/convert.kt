@@ -30,8 +30,8 @@ import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
-import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
-import org.jetbrains.kotlinx.dataframe.plugin.type
+import org.jetbrains.kotlinx.dataframe.plugin.Convert2
+import org.jetbrains.kotlinx.dataframe.plugin.With0
 import java.math.BigDecimal
 import java.net.URL
 import java.time.LocalTime
@@ -46,8 +46,8 @@ public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): Convert<
 public fun <T, C> DataFrame<T>.convert(vararg columns: KProperty<C>): Convert<T, C> =
     convert { columns.toColumns() }
 
-@Interpretable(ConvertInterpreter::class)
-public fun <T> @receiver:Schema DataFrame<T>.convert(@Value vararg columns: String): Convert<T, Any?> = convert { columns.toColumns() }
+@Interpretable(Convert2::class)
+public fun <T> DataFrame<T>.convert(vararg columns: String): Convert<T, Any?> = convert { columns.toColumns() }
 public fun <T, C> DataFrame<T>.convert(vararg columns: ColumnReference<C>): Convert<T, C> =
     convert { columns.toColumns() }
 
@@ -90,26 +90,7 @@ public data class Convert<T, out C>(val df: DataFrame<T>, val columns: ColumnsSe
 
 public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
 
-public class With : AbstractSchemaModificationInterpreter() {
-    public val Arguments.convert: ConvertApproximation by arg(THIS, lens = Interpreter.Value)
-    public val Arguments.type: TypeApproximation by type(name("rowConverter"))
-
-    override fun Arguments.interpret(): PluginDataFrameSchema {
-        val names = convert.columns.toSet()
-
-        val newColumns = convert.schema.columns().map {
-            if (listOf(it.name()) in names) {
-                it.changeType(type)
-            } else {
-                it
-            }
-        }
-
-        return PluginDataFrameSchema(newColumns)
-    }
-}
-
-@Interpretable(With::class)
+@Interpretable(With0::class)
 public inline fun <T, C, reified R> @receiver:Value Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
     @ReturnType noinline rowConverter: RowValueExpression<T, C, R>

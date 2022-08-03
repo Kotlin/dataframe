@@ -20,7 +20,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.insertImplGenericContainer
  */
 internal class Insert0 : AbstractInterpreter<InsertClauseApproximation>() {
     val Arguments.column: SimpleCol by dataColumn()
-    val Arguments.receiver: PluginDataFrameSchema by dataFrame(THIS)
+    val Arguments.receiver: PluginDataFrameSchema by dataFrame()
 
     override fun Arguments.interpret(): InsertClauseApproximation {
         return InsertClauseApproximation(receiver, column)
@@ -31,7 +31,7 @@ internal class Insert1 : AbstractInterpreter<InsertClauseApproximation>() {
     val Arguments.name: String by string()
     val Arguments.infer: Infer by enum(defaultValue = Present(Infer.Nulls))
     val Arguments.expression: TypeApproximation by type()
-    val Arguments.receiver: PluginDataFrameSchema by dataFrame(THIS)
+    val Arguments.receiver: PluginDataFrameSchema by dataFrame()
 
     override fun Arguments.interpret(): InsertClauseApproximation {
         return InsertClauseApproximation(receiver, SimpleCol(name, expression))
@@ -42,7 +42,7 @@ internal class Insert2 : AbstractInterpreter<InsertClauseApproximation>() {
     val Arguments.column: ColumnAccessorApproximation by columnAccessor()
     val Arguments.infer: Infer by enum(defaultValue = Present(Infer.Nulls))
     val Arguments.expression: TypeApproximation by type()
-    val Arguments.receiver: PluginDataFrameSchema by dataFrame(THIS)
+    val Arguments.receiver: PluginDataFrameSchema by dataFrame()
 
     override fun Arguments.interpret(): InsertClauseApproximation {
         return InsertClauseApproximation(receiver, SimpleCol(column.name, expression))
@@ -53,7 +53,7 @@ internal class Insert3 : AbstractInterpreter<InsertClauseApproximation>() {
     val Arguments.column: KPropertyApproximation by kproperty()
     val Arguments.infer: Infer by enum(defaultValue = Present(Infer.Nulls))
     val Arguments.expression: TypeApproximation by type()
-    val Arguments.receiver: PluginDataFrameSchema by dataFrame(THIS)
+    val Arguments.receiver: PluginDataFrameSchema by dataFrame()
 
     override fun Arguments.interpret(): InsertClauseApproximation {
         return InsertClauseApproximation(receiver, SimpleCol(column.name, expression))
@@ -62,7 +62,7 @@ internal class Insert3 : AbstractInterpreter<InsertClauseApproximation>() {
 
 internal class Under0 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.column: ColumnWithPathApproximation by columnWithPath()
-    val Arguments.receiver: InsertClauseApproximation by insertClause(THIS)
+    val Arguments.receiver: InsertClauseApproximation by insertClause()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         return receiver.df.insertImpl(column.path.path.toPath(), receiver.column)
@@ -71,7 +71,7 @@ internal class Under0 : AbstractInterpreter<PluginDataFrameSchema>() {
 
 internal class Under1 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.columnPath: ColumnPathApproximation by columnPath()
-    val Arguments.receiver: InsertClauseApproximation by insertClause(THIS)
+    val Arguments.receiver: InsertClauseApproximation by insertClause()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         return receiver.df.insertImpl(columnPath.path.toPath(), receiver.column)
@@ -80,7 +80,7 @@ internal class Under1 : AbstractInterpreter<PluginDataFrameSchema>() {
 
 internal class Under2 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.column: ColumnAccessorApproximation by columnAccessor()
-    val Arguments.receiver: InsertClauseApproximation by insertClause(THIS)
+    val Arguments.receiver: InsertClauseApproximation by insertClause()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         return receiver.df.insertImpl(pathOf(column.name), receiver.column)
@@ -89,7 +89,7 @@ internal class Under2 : AbstractInterpreter<PluginDataFrameSchema>() {
 
 internal class Under3 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.column: KPropertyApproximation by kproperty()
-    val Arguments.receiver: InsertClauseApproximation by insertClause(THIS)
+    val Arguments.receiver: InsertClauseApproximation by insertClause()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         return receiver.df.insertImpl(pathOf(column.name), receiver.column)
@@ -98,7 +98,7 @@ internal class Under3 : AbstractInterpreter<PluginDataFrameSchema>() {
 
 internal class Under4 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.column: String by string()
-    val Arguments.receiver: InsertClauseApproximation by insertClause(THIS)
+    val Arguments.receiver: InsertClauseApproximation by insertClause()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         return receiver.df.insertImpl(pathOf(column), receiver.column)
