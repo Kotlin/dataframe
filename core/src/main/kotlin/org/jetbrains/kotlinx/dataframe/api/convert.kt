@@ -91,9 +91,9 @@ public data class Convert<T, out C>(val df: DataFrame<T>, val columns: ColumnsSe
 public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
 
 @Interpretable(With0::class)
-public inline fun <T, C, reified R> @receiver:Value Convert<T, C>.with(
+public inline fun <T, C, reified R> Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
-    @ReturnType noinline rowConverter: RowValueExpression<T, C, R>
+    noinline rowConverter: RowValueExpression<T, C, R>
 ): DataFrame<T> =
     withRowCellImpl(typeOf<R>(), infer, rowConverter)
 

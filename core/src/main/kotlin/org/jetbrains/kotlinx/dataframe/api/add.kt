@@ -13,12 +13,8 @@ import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.annotations.Add
 import org.jetbrains.kotlinx.dataframe.annotations.AddWithDsl
-import org.jetbrains.kotlinx.dataframe.annotations.Dsl
 import org.jetbrains.kotlinx.dataframe.annotations.From
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.annotations.ReturnType
-import org.jetbrains.kotlinx.dataframe.annotations.Schema
-import org.jetbrains.kotlinx.dataframe.annotations.Value
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -117,10 +113,10 @@ public typealias AddExpression<T, C> = Selector<AddDataRow<T>, C>
  * @throws DuplicateColumnNamesException if [DataFrame] already contains a column with given [name]
  */
 @Interpretable(Add::class)
-public inline fun <reified R, T> @receiver:Schema DataFrame<T>.add(
-    @Value name: String,
+public inline fun <reified R, T> DataFrame<T>.add(
+    name: String,
     infer: Infer = Infer.Nulls,
-    @ReturnType noinline expression: AddExpression<T, R>
+    noinline expression: AddExpression<T, R>
 ): DataFrame<T> =
     (this + mapToColumn(name, infer, expression))
 
@@ -171,8 +167,8 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
     ): Boolean = add(df.mapToColumn(name, infer, expression))
 
     @Interpretable(From::class)
-    public inline infix fun <reified R> @receiver:Value String.from(
-        @ReturnType noinline expression: RowExpression<T, R>
+    public inline infix fun <reified R> String.from(
+        noinline expression: RowExpression<T, R>
     ): Boolean = add(this, Infer.Nulls, expression)
 
     // TODO: use path instead of name
@@ -204,7 +200,7 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
 }
 
 @Interpretable(AddWithDsl::class)
-public fun <T> @receiver:Schema DataFrame<T>.add(@Dsl body: AddDsl<T>.() -> Unit): DataFrame<T> {
+public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     val dsl = AddDsl(this)
     body(dsl)
     return dataFrameOf(this@add.columns() + dsl.columns).cast()

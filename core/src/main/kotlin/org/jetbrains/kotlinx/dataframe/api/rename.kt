@@ -8,8 +8,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.AbstractSchemaModificationInt
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.HasSchema
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.annotations.Schema
-import org.jetbrains.kotlinx.dataframe.annotations.Value
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
@@ -41,7 +39,7 @@ public class Rename : AbstractInterpreter<RenameClauseApproximation>() {
 }
 
 @Interpretable(Rename::class)
-public fun <T, C> @receiver:Schema DataFrame<T>.rename(@Value columns: ColumnsSelector<T, C>): RenameClause<T, C> = RenameClause(this, columns)
+public fun <T, C> DataFrame<T>.rename(columns: ColumnsSelector<T, C>): RenameClause<T, C> = RenameClause(this, columns)
 public fun <T, C> DataFrame<T>.rename(vararg cols: ColumnReference<C>): RenameClause<T, C> = rename { cols.toColumns() }
 public fun <T, C> DataFrame<T>.rename(vararg cols: KProperty<C>): RenameClause<T, C> = rename { cols.toColumns() }
 public fun <T> DataFrame<T>.rename(vararg cols: String): RenameClause<T, Any?> = rename { cols.toColumns() }
@@ -81,7 +79,7 @@ public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>)
     into(*newColumns.map { it.name() }.toTypedArray())
 
 @Interpretable(Into::class)
-public fun <T, C> @receiver:Value RenameClause<T, C>.into(@Value vararg newNames: String): DataFrame<T> =
+public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> =
     df.move(columns).intoIndexed { col, index ->
         col.path.dropLast(1) + newNames[index]
     }

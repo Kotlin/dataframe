@@ -8,14 +8,6 @@ import org.jetbrains.kotlinx.dataframe.plugin.string
 import org.jetbrains.kotlinx.dataframe.plugin.type
 import kotlin.reflect.KClass
 
-public annotation class Dsl
-
-@Target(AnnotationTarget.VALUE_PARAMETER)
-public annotation class Value
-
-@Target(AnnotationTarget.VALUE_PARAMETER)
-public annotation class ReturnType
-
 @Serializable
 public sealed interface TypeApproximation
 
@@ -32,9 +24,6 @@ public object FrameColumnTypeApproximation : TypeApproximation
 
 @Target(AnnotationTarget.CLASS)
 public annotation class HasSchema(val schemaArg: Int)
-
-@Target(AnnotationTarget.VALUE_PARAMETER)
-public annotation class Schema
 
 public class ConvertApproximation(public val schema: PluginDataFrameSchema, public val columns: List<List<String>>)
 
