@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -7,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.convertTo
+import org.jetbrains.kotlinx.dataframe.api.convertToDouble
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.parser
 import org.jetbrains.kotlinx.dataframe.api.tryParse
@@ -77,18 +79,73 @@ class ParserTests {
     fun `converting String to Double in different locales`() {
         val currentLocale = Locale.getDefault()
         try {
-            val stringValues = listOf("1", "2.3", "4,5")
-            val stringColumn = DataColumn.createValueColumn("nums", stringValues, typeOf<String>())
-            Locale.setDefault(Locale.forLanguageTag("ru-RU"))
-            // Use comma as local decimal separator and dot as fallback default (as it is used in POSIX/C.UTF-8)
-            stringColumn.convertTo<Double>().shouldBe(
-                DataColumn.createValueColumn("nums", listOf(1.0, 2.3, 4.5), typeOf<Double>())
-            )
+            // Test 36 behaviour combinations:
+
+            // 3 source columns
+            val columnDot = columnOf("12.345", "67.890")
+            val columnComma = columnOf("12,345", "67,890")
+            val columnMixed = columnOf("12.345", "67,890")
+            // *
+            // (3 locales as converting parameter + original converting)
+            val parsingLocaleNotDefined: Locale? = null
+            val parsingLocaleUsesDot: Locale = Locale.forLanguageTag("en-US")
+            val parsingLocaleUsesComma: Locale = Locale.forLanguageTag("ru-RU")
+            // *
+            // 3 system locales
+
+            Locale.setDefault(Locale.forLanguageTag("C.UTF-8"))
+
+            columnDot.convertTo<Double>().shouldBe(columnOf(12.345, 67.89))
+            columnComma.convertTo<Double>().shouldBe(columnOf(12345.0, 67890.0))
+            columnMixed.convertTo<Double>().shouldBe(columnOf(12.345, 67890.0))
+
+            columnDot.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12.345, 67.89))
+            columnComma.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12345.0, 67890.0))
+            columnMixed.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12.345, 67890.0))
+
+            columnDot.convertToDouble(parsingLocaleUsesDot).shouldBe(columnOf(12.345, 67.89))
+            columnComma.convertToDouble(parsingLocaleUsesDot).shouldBe(columnOf(12345.0, 67890.0))
+            columnMixed.convertToDouble(parsingLocaleUsesDot).shouldBe(columnOf(12.345, 67890.0))
+
+            shouldThrow<TypeConversionException> { columnDot.convertToDouble(parsingLocaleUsesComma) }
+            columnComma.convertToDouble(parsingLocaleUsesComma).shouldBe(columnOf(12.345, 67.89))
+            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleUsesComma) }
+
             Locale.setDefault(Locale.forLanguageTag("en-US"))
-            // Use dot as local decimal separator. Comma is ignored (as it is group separator in this locale).
-            stringColumn.convertTo<Double>().shouldBe(
-                DataColumn.createValueColumn("nums", listOf(1.0, 2.3, 45.0), typeOf<Double>())
-            )
+
+            columnDot.convertTo<Double>().shouldBe(columnOf(12.345, 67.89))
+            columnComma.convertTo<Double>().shouldBe(columnOf(12345.0, 67890.0))
+            columnMixed.convertTo<Double>().shouldBe(columnOf(12.345, 67890.0))
+
+            columnDot.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12.345, 67.89))
+            columnComma.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12345.0, 67890.0))
+            columnMixed.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12.345, 67890.0))
+
+            columnDot.convertToDouble(parsingLocaleUsesDot).shouldBe(columnOf(12.345, 67.89))
+            columnComma.convertToDouble(parsingLocaleUsesDot).shouldBe(columnOf(12345.0, 67890.0))
+            columnMixed.convertToDouble(parsingLocaleUsesDot).shouldBe(columnOf(12.345, 67890.0))
+
+            shouldThrow<TypeConversionException> { columnDot.convertToDouble(parsingLocaleUsesComma) }
+            columnComma.convertToDouble(parsingLocaleUsesComma).shouldBe(columnOf(12.345, 67.89))
+            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleUsesComma) }
+
+            Locale.setDefault(Locale.forLanguageTag("ru-RU"))
+
+            columnDot.convertTo<Double>().shouldBe(columnOf(12.345, 67.89))
+            columnComma.convertTo<Double>().shouldBe(columnOf(12345.0, 67890.0))
+            columnMixed.convertTo<Double>().shouldBe(columnOf(12.345, 67890.0))
+
+            columnDot.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12.345, 67.89))
+            columnComma.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12.345, 67.89))
+            columnMixed.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12.345, 67890.0))
+
+            columnDot.convertToDouble(parsingLocaleUsesDot).shouldBe(columnOf(12.345, 67.89))
+            columnComma.convertToDouble(parsingLocaleUsesDot).shouldBe(columnOf(12345.0, 67890.0))
+            columnMixed.convertToDouble(parsingLocaleUsesDot).shouldBe(columnOf(12.345, 67890.0))
+
+            shouldThrow<TypeConversionException> { columnDot.convertToDouble(parsingLocaleUsesComma) }
+            columnComma.convertToDouble(parsingLocaleUsesComma).shouldBe(columnOf(12.345, 67.89))
+            shouldThrow<TypeConversionException> { columnMixed.convertToDouble(parsingLocaleUsesComma) }
         } finally {
             Locale.setDefault(currentLocale)
         }

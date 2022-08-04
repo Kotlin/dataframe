@@ -105,6 +105,27 @@ class CsvTests {
     }
 
     @Test
+    fun `read standard CSV with floats when user has alternative locale`() {
+        val currentLocale = Locale.getDefault()
+        try {
+            Locale.setDefault(Locale.forLanguageTag("ru-RU"))
+            val df = DataFrame.readCSV(wineCsv, delimiter = ';')
+            val schema = df.schema()
+            fun assertColumnType(columnName: String, kClass: KClass<*>) {
+                val col = schema.columns[columnName]
+                col.shouldNotBeNull()
+                col.type.classifier shouldBe kClass
+            }
+
+            assertColumnType("citric acid", Double::class)
+            assertColumnType("alcohol", Double::class)
+            assertColumnType("quality", Int::class)
+        } finally {
+            Locale.setDefault(currentLocale)
+        }
+    }
+
+    @Test
     fun `read with custom header`() {
         val header = ('A'..'K').map { it.toString() }
         val df = DataFrame.readCSV(simpleCsv, header = header, skipLines = 1)

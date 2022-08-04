@@ -171,9 +171,7 @@ internal object Parsers : GlobalParserOptions {
         return null
     }
 
-    private val posixNumberFormat = NumberFormat.getInstance(Locale.forLanguageTag("C.UTF-8"))
-
-    private fun String.parseDouble(userNumberFormat: NumberFormat) =
+    private fun String.parseDouble(format: NumberFormat) =
         when (uppercase(Locale.getDefault())) {
             "NAN" -> Double.NaN
             "INF" -> Double.POSITIVE_INFINITY
@@ -181,13 +179,10 @@ internal object Parsers : GlobalParserOptions {
             "INFINITY" -> Double.POSITIVE_INFINITY
             "-INFINITY" -> Double.NEGATIVE_INFINITY
             else -> {
-                fun parseWithFormat(format: NumberFormat): Double? {
-                    val parsePosition = ParsePosition(0)
-                    val result: Double? = format.parse(this, parsePosition)?.toDouble()
-                    return if (parsePosition.index != this.length) null
-                    else result
-                }
-                parseWithFormat(userNumberFormat) ?: parseWithFormat(posixNumberFormat)
+                val parsePosition = ParsePosition(0)
+                val result: Double? = format.parse(this, parsePosition)?.toDouble()
+                if (parsePosition.index != this.length) null
+                else result
             }
         }
 
@@ -198,6 +193,12 @@ internal object Parsers : GlobalParserOptions {
 
     inline fun <reified T : Any> stringParserWithOptions(noinline body: (ParserOptions?) -> ((String) -> T?)) =
         StringParserWithFormat(typeOf<T>(), body)
+
+    private val parserToDoubleWithOptions = stringParserWithOptions { options ->
+        val numberFormat = NumberFormat.getInstance(options?.locale ?: Locale.getDefault())
+        val parser = { it: String -> it.parseDouble(numberFormat) }
+        parser
+    }
 
     private val parsersOrder = listOf(
         stringParser { it.toIntOrNull() },
@@ -231,12 +232,12 @@ internal object Parsers : GlobalParserOptions {
 
         stringParser { it.toUrlOrNull() },
 
-        stringParserWithOptions { options ->
+        // Double, with explicit number format or taken from current locale
+        parserToDoubleWithOptions,
 
-            val numberFormat = NumberFormat.getInstance(options?.locale ?: Locale.getDefault())
-            val parser = { it: String -> it.parseDouble(numberFormat) }
-            parser
-        },
+        // Double, with POSIX format
+        stringParser { it.parseDouble(NumberFormat.getInstance(Locale.forLanguageTag("C.UTF-8"))) },
+
         stringParser { it.toBooleanOrNull() },
         stringParser { it.toBigDecimalOrNull() },
 
@@ -270,6 +271,13 @@ internal object Parsers : GlobalParserOptions {
             locale = locale
         ) else null
         return parser.applyOptions(options)
+    }
+
+    internal fun getDoubleConverter(locale: Locale? = null): TypeConverter {
+        val options = if (locale != null) ParserOptions(
+            locale = locale
+        ) else null
+        return parserToDoubleWithOptions.toConverter(options)
     }
 }
 
