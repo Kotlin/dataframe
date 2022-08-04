@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
+import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToTypeImpl
@@ -124,6 +125,48 @@ public fun <T : Any> DataColumn<T?>.convertToString(): DataColumn<String?> = con
 @JvmName("convertToDoubleFromT")
 public fun <T : Any> DataColumn<T>.convertToDouble(): DataColumn<Double> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToDouble(): DataColumn<Double?> = convertTo()
+
+/**
+ * Parse String column to Double considering locale (number format).
+ * If [locale] parameter is defined, it's number format is used for parsing.
+ * If [locale] parameter is null, the current system locale is used. If column can not be parsed, then POSIX format is used.
+ */
+@JvmName("convertToDoubleFromString")
+public fun DataColumn<String>.convertToDouble(locale: Locale? = null): DataColumn<Double> {
+    if (locale is Locale) {
+        val explicitConverter = Parsers.getDoubleConverter(locale) as (String) -> Double?
+        return map { explicitConverter(it.trim()) ?: error("Can't convert `$it` to Double") }
+    } else {
+        return try {
+            val defaultConverter = Parsers.getDoubleConverter() as (String) -> Double?
+            map { defaultConverter(it.trim()) ?: error("Can't convert `$it` to Double") }
+        } catch (e: TypeConversionException) {
+            val posixConverter = Parsers.getDoubleConverter(Locale.forLanguageTag("C.UTF-8")) as (String) -> Double?
+            map { posixConverter(it.trim()) ?: error("Can't convert `$it` to Double") }
+        }
+    }
+}
+
+/**
+ * Parse String column to Double considering locale (number format).
+ * If [locale] parameter is defined, it's number format is used for parsing.
+ * If [locale] parameter is null, the current system locale is used. If column can not be parsed, then POSIX format is used.
+ */
+@JvmName("convertToDoubleFromStringNullable")
+public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColumn<Double?> {
+    if (locale is Locale) {
+        val explicitConverter = Parsers.getDoubleConverter(locale) as (String) -> Double?
+        return map { it?.let { explicitConverter(it.trim()) ?: error("Can't convert `$it` to Double") } }
+    } else {
+        return try {
+            val defaultConverter = Parsers.getDoubleConverter() as (String) -> Double?
+            map { it?.let { defaultConverter(it.trim()) ?: error("Can't convert `$it` to Double") } }
+        } catch (e: IllegalStateException) {
+            val posixConverter = Parsers.getDoubleConverter(Locale.forLanguageTag("C.UTF-8")) as (String) -> Double?
+            map { it?.let { posixConverter(it.trim()) ?: error("Can't convert `$it` to Double") } }
+        }
+    }
+}
 
 @JvmName("convertToFloatFromT")
 public fun <T : Any> DataColumn<T>.convertToFloat(): DataColumn<Float> = convertTo()
