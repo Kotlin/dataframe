@@ -52,8 +52,6 @@ class Prototype {
     @DataSchema
     data class Type(val name: String, val vararg: Boolean)
 
-    val id by column<Int>()
-
     val otherFunctions = dataFrameOf(
         Function("DataFrame<T>", "insert", Type("InsertClause<T>", false), listOf(Parameter("column", Type("DataColumn<C>", false), null))),
         Function("DataFrame<T>", "insert", Type("InsertClause<T>", false), listOf(
@@ -132,11 +130,18 @@ class Prototype {
         )),
     )
 
-    val functions = (otherFunctions concat dfFunctions)
-        .groupBy { function }
+    val convert = dataFrameOf(
+        Function("Convert<T, C>", "to", Type("DataFrame<T>", false), emptyList())
+    )
+
+    private val functions = (otherFunctions concat dfFunctions).appendReceiverAndId()
+
+    fun DataFrame<Function>.appendReceiverAndId() = groupBy { function }
         .updateGroups { it.addId() }
         .concat()
-        .update { parameters }.with { it.append(Parameter("receiver", Type(receiverType, false), null)) }
+        .update { parameters }.with {
+            it.append(Parameter("receiver", Type(receiverType, false), null))
+        }
 
     // region classes
 
@@ -159,21 +164,7 @@ class Prototype {
 
     // endregion
 
-    val returnType by columnGroup<Type>()
-
-    val uniqueReturnTypes: ColumnGroup<Type> = functions
-        .explode { parameters }
-        .ungroup { parameters }[returnType]
-        .concat(functions.functionReturnType)
-        .concat(
-            classes
-                .select { parameters }
-                .explode { parameters }
-                .ungroup { parameters }[returnType]
-        )
-        .concat(classes.name.distinct().map { Type(it, false) }.asIterable().toDataFrame())
-        .distinct()
-        .asColumnGroup("type")
+    val uniqueReturnTypes: ColumnGroup<Type> = functions.collectUsedTypes(classes)
 
     @Test
     fun `class cast exception`() {
@@ -191,18 +182,7 @@ class Prototype {
 
     @Test
     fun `generate bridges`() {
-        val df = dataFrameOf(uniqueReturnTypes)
-            .leftJoin(bridges) {
-                // join keeps only left column!!
-                "type" match right.type
-            }
-            //.rename { "type"["type"] }.into("name")
-            .fillNulls("supported").with { false }
-//            .fillNulls(Bridge::).with { false }
-            .remove("name", "vararg")
-            .cast<Bridge>(verify = true)
-
-        df.writeJson("bridges.json", prettyPrint = true)
+        uniqueReturnTypes.joinBridges(bridges, verify = true)
     }
 
     @Test
@@ -237,8 +217,6 @@ class Prototype {
 
     // region bridges
     val type by column<String>()
-    val approximation by column<String>()
-    val converter by column<String>()
 
     @DataSchema
     class Bridge(val type: Type,
@@ -249,16 +227,7 @@ class Prototype {
 
     private val bridges by lazy { DataFrame.readJson("bridges.json").cast<Bridge>(verify = true) }
 
-    val refinedFunctions = functions
-        .leftJoin(bridges) {
-            //functions.functionReturnType.match(type) TODO: Shouldn't compile
-            functions.functionReturnType.name.match(right.type.name)
-        }
-        .convert { parameters }.with { it.leftJoin(bridges) { it[returnType].name.match(right.type.name) } }
-        .add(RefinedFunction::startingSchema) {
-            parameters.firstOrNull { it.name == "receiver" }
-        }
-        .cast<RefinedFunction>()
+    val refinedFunctions = functions.refine(bridges)
 
     @DataSchema
     class RefinedFunction(
@@ -276,49 +245,12 @@ class Prototype {
      */
     @Test
     fun `generate interpreters`() {
-        `generate interpreters`(refinedFunctions)
-    }
-
-    private fun `generate interpreters`(functions: DataFrame<RefinedFunction>) {
-        println(functions)
-
-        val interpreters = functions
-            .convert { parameters }.with {
-                it.add("arguments") {
-                    "val Arguments.${name}: ${approximation()} by ${converter()}()"
-                }
-            }
-            .add("argumentsStr") {
-                // generate deprecated property with name argumentStr?
-                buildString {
-                    append(it.parameters["arguments"].values().joinToString("\n") { "|  $it" })
-                    // how to handle nullable property? make all columns nullable? forbid it?
-                    it.startingSchema.name?.let {
-                        appendLine()
-                        append("  override val Arguments.startingSchema get() = ${it}")
-                    }
-                }
-            }
-            .add("interpreterName") {
-                val name = it.function.replaceFirstChar { it.uppercaseChar() }
-                "$name${it[id]}"
-            }
-            .mapToColumn("interpreters") {
-                """
-                    |internal class ${it["interpreterName"]} : AbstractInterpreter<${approximation()}>() {
-                        ${it["argumentsStr"]}
-                    |    
-                    |    override fun Arguments.interpret(): ${approximation()} {
-                    |        TODO()
-                    |    }
-                    |}
-                    """.trimMargin()
-            }
-        println(interpreters.values().joinToString("\n\n"))
+        refinedFunctions.generateInterpreters()
     }
 
     @Test
     fun `generate approximations`() {
+        val approximation by column<String>()
         val df = classes
             .leftJoin(bridges) { name.match(right.type.name) }
             .convert { parameters }.with {
@@ -365,7 +297,7 @@ class Prototype {
                 println(name())
                 println()
                 val interpreterName = name()
-                println("""
+                writeTestStub(testSubjectName, """
                     package org.jetbrains.kotlinx.dataframe.plugin.testing
                     
                     import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
@@ -476,30 +408,35 @@ class Prototype {
         acceptInt(s, this, expressions)
         return expressions.toList()
     }
-
+    val root = File("build/tmp/prototype")
     private fun generateSchemaTestStub(name: String, expression: String) {
+
+        fun writeInterpreter(s: String) {
+            // val root = File("/home/nikitak/IdeaProjects/dataframe/core/src/main")
+            val schemaRender = File(root, "kotlin/org/jetbrains/kotlinx/dataframe/plugin/testing/schemaRender").also { it.mkdirs() }
+            File(schemaRender, "$name.kt").writeText(s)
+        }
+
+        fun writeTestStub(s: String) {
+            // val root = File("/home/nikitak/Downloads/kotlin/plugins/kotlin-dataframe")
+            val schemaRender = File(root, "testData/diagnostics/schemaRender").also { it.mkdirs() }
+            File(schemaRender, "$name.kt")
+        }
+
         val capitalizedName = name.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
 
         val repl = object : JupyterReplTestCase() {
         }
         val df = repl.execRaw("val df = $expression; df") as DataFrame<*>
-        val generator = CodeGenerator.create(useFqNames = false)
-        val declaration =
-            generator.generate(df.schema(), name = capitalizedName, fields = true, extensionProperties = true, isOpen = true)
-                .code.declarations
-                .replace(Regex("@JvmName\\(.*\"\\)"), "")
+        val declaration = df.generateSchemaDeclaration(capitalizedName)
         val schemaTestCode = df.generateTestCode()
-        println(schemaTestCode)
         repl.exec(schemaTestCode)
-        val pluginSchema = df.schema().toPluginDataFrameSchema()
+        val pluginSchema = df.pluginSchema()
         val jsonString = pluginSchema.toJson()
 
-        println("")
-        println(jsonString)
-        println()
 
         bridges.first { it.type.name == "DataFrame<T>" }.run {
-            println("""
+            writeInterpreter("""
                         package org.jetbrains.kotlinx.dataframe.plugin.testing.schemaRender
                         
                         import kotlinx.serialization.decodeFromString
@@ -524,9 +461,7 @@ class Prototype {
                 """.trimIndent())
         }
         val schemaDeclaration = declaration.lineSequence().joinToString("\n|")
-        println(name)
-        println()
-        println("""
+        writeTestStub("""
                 |import org.jetbrains.kotlinx.dataframe.*
                 |import org.jetbrains.kotlinx.dataframe.api.*
                 |import org.jetbrains.kotlinx.dataframe.annotations.*
@@ -563,12 +498,8 @@ class Prototype {
         }
         // region schema before
         val df = repl.execRaw("val df = $expression; df") as DataFrame<*>
-        val generator = CodeGenerator.create(useFqNames = false)
-        val declarationBefore =
-                generator.generate(df.schema(), name = schemaName, fields = true, extensionProperties = true, isOpen = true)
-                    .code.declarations
-                    .replace(Regex("@JvmName\\(.*\"\\)"), "")
-        val pluginSchema = df.schema().toPluginDataFrameSchema()
+        val declarationBefore = df.generateSchemaDeclaration(schemaName)
+        val pluginSchema = df.pluginSchema()
         val beforePluginSchema = pluginSchema.toJson()
         // endregion
 
@@ -576,16 +507,9 @@ class Prototype {
         val dfRes = repl.execRaw("val df1 = df.$modify; df1") as DataFrame<*>
         val schemaTestCode = dfRes.schema().columns.accept("df1").joinToString("\n")
         repl.exec(schemaTestCode)
-        val afterPluginSchema = dfRes.schema().toPluginDataFrameSchema()
+        val afterPluginSchema = dfRes.pluginSchema()
 
         printCompilerTest(file, schemaName, declarationBefore, beforePluginSchema, schemaTestCode, modify, afterPluginSchema.toJson(), id)
-    }
-
-    private fun PluginDataFrameSchema.toJson(): String {
-        val afterJson = pluginJsonFormat.encodeToString(this)
-        val decodedSchema = pluginJsonFormat.decodeFromString<PluginDataFrameSchema>(afterJson)
-        decodedSchema shouldBe this
-        return afterJson
     }
 
     private fun printCompilerTest(file: String, schemaName: String, schemaDeclaration: String, before: String, schemaTestCode: String, modify: String, after: String, id: String) {
@@ -637,5 +561,130 @@ class Prototype {
             """df.insert("col1") { 42 }.after("name")"""
         )),
     )
+
+    @Test
+    fun `convert APIs`() {
+        val convert = convert.appendReceiverAndId()
+        val types = convert.collectUsedTypes(classes.take(1))
+        val rawBridges = types.joinBridges(bridges, verify = false)
+        val path = "convert_bridges.json"
+        File(path).let {
+            if (!it.exists()) {
+                rawBridges.writeJson(it, prettyPrint = true)
+            }
+        }
+
+        val editedBridges = DataFrame.readJson(path).cast<Bridge>(verify = true)
+        val allBridges = bridges.concat(editedBridges).distinct().cast<Bridge>(verify = true)
+        allBridges.writeJson("bridges.json", prettyPrint = true)
+
+        val refine = convert
+            .refine(allBridges)
+            //.also { println(it.schema()) }
+            .convertTo<RefinedFunction>()
+            //.also { println(it.schema()) }
+            //.cast<RefinedFunction>(verify = true)
+
+        refine.generateInterpreters()
+    }
 }
+
+private val returnType by columnGroup<Prototype.Type>()
+fun DataFrame<Prototype.Function>.collectUsedTypes(
+    classes: DataFrame<Prototype.ClassDeclaration> = emptyDataFrame()
+) = explode { parameters }
+    .ungroup { parameters }[returnType]
+    .concat(functionReturnType)
+    .concat(
+        classes
+            .select { parameters }
+            .explode { parameters }
+            .ungroup { parameters }[returnType]
+    )
+    .concat(classes.name.distinct().map { Prototype.Type(it, false) }.asIterable().toDataFrame())
+    .distinct()
+    .asColumnGroup("type")
+
+fun ColumnGroup<Prototype.Type>.joinBridges(bridges: DataFrame<Prototype.Bridge>, verify: Boolean): DataFrame<Prototype.Bridge> {
+    val df = dataFrameOf(this)
+        .leftJoin(bridges) {
+            // join keeps only left column!!
+            "type" match right.type
+        }
+        //.rename { "type"["type"] }.into("name")
+        .fillNulls("supported").with { false }
+        .remove("name", "vararg")
+        .cast<Prototype.Bridge>(verify = verify)
+
+    return df
+}
+
+fun DataFrame<Prototype.Function>.refine(bridges: DataFrame<Prototype.Bridge>): DataFrame<Prototype.RefinedFunction> {
+    val functions = this
+    return functions.leftJoin(bridges) {
+        //functions.functionReturnType.match(type) TODO: Shouldn't compile
+        functions.functionReturnType.name.match(right.type.name)
+    }
+        .convert { parameters }.with { it.leftJoin(bridges) { it[returnType].name.match(right.type.name) } }
+        .add("startingSchema") {
+            parameters.first { it.name == "receiver" }
+        }
+        .cast<Prototype.RefinedFunction>()
+}
+
+fun DataFrame<Prototype.RefinedFunction>.generateInterpreters() {
+    val approximation by column<String>()
+    val converter by column<String>()
+    val id by column<Int>()
+    println(this)
+
+    val interpreters = convert { parameters }.with {
+        it.add("arguments") {
+            "val Arguments.$name: ${approximation()} by ${converter()}()"
+        }
+    }
+        .add("argumentsStr") {
+            // generate deprecated property with name argumentStr?
+            buildString {
+                append(it.parameters["arguments"].values().joinToString("\n") { "|  $it" })
+                // how to handle nullable property? make all columns nullable? forbid it?
+                it.startingSchema.name?.let {
+                    appendLine()
+                    append("  override val Arguments.startingSchema get() = ${it}")
+                }
+            }
+        }
+        .add("interpreterName") {
+            val name = it.function.replaceFirstChar { it.uppercaseChar() }
+            "$name${it[id]}"
+        }
+        .mapToColumn("interpreters") {
+            """
+                    |internal class ${it["interpreterName"]} : AbstractInterpreter<${approximation()}>() {
+                        ${it["argumentsStr"]}
+                    |    
+                    |    override fun Arguments.interpret(): ${approximation()} {
+                    |        TODO()
+                    |    }
+                    |}
+                    """.trimMargin()
+        }
+    println(interpreters.values().joinToString("\n\n"))
+}
+
+fun PluginDataFrameSchema.toJson(): String {
+    val afterJson = pluginJsonFormat.encodeToString(this)
+    val decodedSchema = pluginJsonFormat.decodeFromString<PluginDataFrameSchema>(afterJson)
+    decodedSchema shouldBe this
+    return afterJson
+}
+
+fun DataFrame<*>.pluginSchema() = schema().toPluginDataFrameSchema()
+
+fun DataFrame<*>.generateSchemaDeclaration(
+    capitalizedName: String,
+    generator: CodeGenerator = CodeGenerator.create(useFqNames = false)
+) = generator.generate(schema(), name = capitalizedName, fields = true, extensionProperties = true, isOpen = true)
+        .code.declarations
+        .replace(Regex("@JvmName\\(.*\"\\)"), "")
 

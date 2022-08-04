@@ -33,3 +33,12 @@ public class With0 : AbstractSchemaModificationInterpreter() {
         return PluginDataFrameSchema(newColumns)
     }
 }
+
+internal class To0 : AbstractInterpreter<PluginDataFrameSchema>() {
+    val Arguments.receiver: ConvertApproximation by arg()
+    override val Arguments.startingSchema get() = receiver.schema
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        TODO()
+    }
+}

@@ -27,15 +27,6 @@
   "supported": true
 }, {
   "type": {
-    "name": "String",
-    "vararg": false
-  },
-  "approximation": "String",
-  "converter": "string",
-  "lens": "Value",
-  "supported": true
-}, {
-  "type": {
     "name": "Infer",
     "vararg": false
   },
