@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
 import org.apache.poi.ss.usermodel.WorkbookFactory
@@ -7,6 +8,8 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.toColumn
+import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
+import org.jetbrains.kotlinx.dataframe.size
 import org.junit.Test
 import java.net.URL
 import java.nio.file.Files
@@ -83,11 +86,27 @@ class XlsxTest {
     fun `read header on second row`() {
         val df = DataFrame.readExcel(testResource("custom_header_position.xlsx"), skipRows = 1)
         df.columnNames() shouldBe listOf("header1", "header2")
+        df.size() shouldBe DataFrameSize(2, 3)
     }
 
     @Test
     fun `consider skipRows when obtaining column indexes`() {
-        val df = DataFrame.readExcel(testResource("header.xlsx"), skipRows = 6)
+        val df = DataFrame.readExcel(testResource("header.xlsx"), skipRows = 6, rowsCount = 1)
         df.columnNames() shouldBe listOf("Well", "Well Position", "Omit", "Sample Name", "Target Name", "Task", "Reporter", "Quencher")
+        df shouldBe dataFrameOf("Well", "Well Position", "Omit", "Sample Name", "Target Name", "Task", "Reporter", "Quencher")(1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0,)
+    }
+
+    @Test
+    fun `use indexes math to skip rows`() {
+        val df = DataFrame.readExcel(testResource("repro.xls"), skipRows = 4)
+        df.columnNames() shouldBe listOf("a")
+        df.rowsCount() shouldBe 2
+    }
+
+    @Test
+    fun `throw when there are no defined cells on header row`() {
+        shouldThrow<IllegalStateException> {
+            DataFrame.readExcel(testResource("xlsx6.xlsx"), skipRows = 4)
+        }
     }
 }

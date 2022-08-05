@@ -8,6 +8,7 @@ import org.apache.poi.ss.usermodel.Cell
 import org.apache.poi.ss.usermodel.CellType
 import org.apache.poi.ss.usermodel.DateUtil
 import org.apache.poi.ss.usermodel.RichTextString
+import org.apache.poi.ss.usermodel.Row
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.usermodel.WorkbookFactory
@@ -148,7 +149,7 @@ public fun DataFrame.Companion.readExcel(
     skipRows: Int = 0,
     rowsCount: Int? = null
 ): AnyFrame {
-    val columnIndexes = if (columns != null) {
+    val columnIndexes: Iterable<Int> = if (columns != null) {
         columns.split(",").flatMap {
             if (it.contains(":")) {
                 val (start, end) = it.split(":").map { CellReference.convertColStringToIndex(it) }
@@ -158,41 +159,57 @@ public fun DataFrame.Companion.readExcel(
             }
         }
     } else {
-        sheet.getRow(skipRows).map { it.columnIndex }
+        val headerRow = checkNotNull(sheet.getRow(skipRows)) {
+            "Row number ${skipRows + 1} (1-based index) is not defined on the sheet ${sheet.sheetName}"
+        }
+        val firstCellNum = headerRow.firstCellNum
+        check(firstCellNum != (-1).toShort()) {
+            "There are no defined cells on header row number ${skipRows + 1} (1-based index). Pass `columns` argument to specify what columns to read or make sure the index is correct"
+        }
+        headerRow.firstCellNum until headerRow.lastCellNum
     }
 
-    val headerRow = sheet.getRow(skipRows)
-    val valueRows = sheet.drop(1 + skipRows).let { if (rowsCount != null) it.take(rowsCount) else it }
+    val headerRow: Row? = sheet.getRow(skipRows)
+    val first = skipRows + 1
+    val last = rowsCount?.let { first + it - 1 } ?: sheet.lastRowNum
+    val valueRowsRange = (first..last)
+
     val columns = columnIndexes.map { index ->
-        val headerCell = headerRow.getCell(index)
+        val headerCell = headerRow?.getCell(index)
         val name = if (headerCell?.cellType == CellType.NUMERIC) {
             headerCell.numericCellValue.toString() // Support numeric-named columns
         } else {
             headerCell?.stringCellValue ?: CellReference.convertNumToColString(index) // Use Excel column names if no data
         }
-        val values: List<Any?> = valueRows.map {
-            val cell: Cell? = it.getCell(index)
-            when (cell?.cellType) {
-                CellType._NONE -> error("Cell ${cell.address} of sheet ${sheet.sheetName} has a CellType that should only be used internally. This is a bug, please report https://github.com/Kotlin/dataframe/issues")
-                CellType.NUMERIC -> {
-                    val number = cell.numericCellValue
-                    when {
-                        DateUtil.isCellDateFormatted(cell) -> DateUtil.getLocalDateTime(number).toKotlinLocalDateTime()
-                        else -> number
-                    }
-                }
-                CellType.STRING -> cell.stringCellValue
-                CellType.FORMULA -> cell.numericCellValue
-                CellType.BLANK -> cell.stringCellValue
-                CellType.BOOLEAN -> cell.booleanCellValue
-                CellType.ERROR -> cell.errorCellValue
-                null -> null
-            }
+
+        val values: List<Any?> = valueRowsRange.map {
+            val row: Row? = sheet.getRow(it)
+            val cell: Cell? = row?.getCell(index)
+            cell.cellValue(sheet.sheetName)
         }
         DataColumn.createWithTypeInference(name, values)
     }
     return dataFrameOf(columns)
 }
+
+private fun Cell?.cellValue(sheetName: String): Any? =
+    when (this?.cellType) {
+        CellType._NONE -> error("Cell $address of sheet $sheetName has a CellType that should only be used internally. This is a bug, please report https://github.com/Kotlin/dataframe/issues")
+        CellType.NUMERIC -> {
+            val number = numericCellValue
+            when {
+                DateUtil.isCellDateFormatted(this) -> DateUtil.getLocalDateTime(number).toKotlinLocalDateTime()
+                else -> number
+            }
+        }
+
+        CellType.STRING -> stringCellValue
+        CellType.FORMULA -> numericCellValue
+        CellType.BLANK -> stringCellValue
+        CellType.BOOLEAN -> booleanCellValue
+        CellType.ERROR -> errorCellValue
+        null -> null
+    }
 
 public fun <T> DataFrame<T>.writeExcel(
     path: String,
