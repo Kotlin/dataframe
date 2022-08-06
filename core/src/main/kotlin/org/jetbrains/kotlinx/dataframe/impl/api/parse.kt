@@ -273,11 +273,11 @@ internal object Parsers : GlobalParserOptions {
         return parser.applyOptions(options)
     }
 
-    internal fun getDoubleConverter(locale: Locale? = null): TypeConverter {
+    internal fun getDoubleParser(locale: Locale? = null): (String) -> Double? {
         val options = if (locale != null) ParserOptions(
             locale = locale
         ) else null
-        return parserToDoubleWithOptions.toConverter(options)
+        return parserToDoubleWithOptions.applyOptions(options)
     }
 }
 

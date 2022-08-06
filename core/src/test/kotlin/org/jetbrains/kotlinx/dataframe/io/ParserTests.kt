@@ -132,7 +132,7 @@ class ParserTests {
             Locale.setDefault(Locale.forLanguageTag("ru-RU"))
 
             columnDot.convertTo<Double>().shouldBe(columnOf(12.345, 67.89))
-            columnComma.convertTo<Double>().shouldBe(columnOf(12345.0, 67890.0))
+            columnComma.convertTo<Double>().shouldBe(columnOf(12.345, 67.89))
             columnMixed.convertTo<Double>().shouldBe(columnOf(12.345, 67890.0))
 
             columnDot.convertToDouble(parsingLocaleNotDefined).shouldBe(columnOf(12.345, 67.89))
