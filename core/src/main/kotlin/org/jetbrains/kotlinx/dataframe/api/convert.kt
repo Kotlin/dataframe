@@ -100,7 +100,11 @@ public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>)
     df.replace(columns).with { columnConverter(df, it) }
 
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
-public fun AnyCol.convertTo(newType: KType): AnyCol = convertToTypeImpl(newType)
+public fun AnyCol.convertTo(newType: KType): AnyCol {
+    if (this.type() == typeOf<String>() && newType == typeOf<Double>()) return (this as DataColumn<String>).convertToDouble()
+    if (this.type() == typeOf<String?>() && newType == typeOf<Double?>()) return (this as DataColumn<String?>).convertToDouble()
+    return convertToTypeImpl(newType)
+}
 
 @JvmName("convertToLocalDateTimeFromT")
 public fun <T : Any> DataColumn<T>.convertToLocalDateTime(): DataColumn<LocalDateTime> = convertTo()
@@ -133,18 +137,7 @@ public fun <T : Any> DataColumn<T?>.convertToDouble(): DataColumn<Double?> = con
  */
 @JvmName("convertToDoubleFromString")
 public fun DataColumn<String>.convertToDouble(locale: Locale? = null): DataColumn<Double> {
-    if (locale is Locale) {
-        val explicitConverter = Parsers.getDoubleConverter(locale) as (String) -> Double?
-        return map { explicitConverter(it.trim()) ?: error("Can't convert `$it` to Double") }
-    } else {
-        return try {
-            val defaultConverter = Parsers.getDoubleConverter() as (String) -> Double?
-            map { defaultConverter(it.trim()) ?: error("Can't convert `$it` to Double") }
-        } catch (e: TypeConversionException) {
-            val posixConverter = Parsers.getDoubleConverter(Locale.forLanguageTag("C.UTF-8")) as (String) -> Double?
-            map { posixConverter(it.trim()) ?: error("Can't convert `$it` to Double") }
-        }
-    }
+    return this.castToNullable().convertToDouble(locale).castToNotNullable()
 }
 
 /**
@@ -154,16 +147,16 @@ public fun DataColumn<String>.convertToDouble(locale: Locale? = null): DataColum
  */
 @JvmName("convertToDoubleFromStringNullable")
 public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColumn<Double?> {
-    if (locale is Locale) {
-        val explicitConverter = Parsers.getDoubleConverter(locale) as (String) -> Double?
-        return map { it?.let { explicitConverter(it.trim()) ?: error("Can't convert `$it` to Double") } }
+    if (locale != null) {
+        val explicitParser = Parsers.getDoubleParser(locale)
+        return map { it?.let { explicitParser(it.trim()) ?: throw TypeConversionException(it, typeOf<String>(), typeOf<Double>()) } }
     } else {
         return try {
-            val defaultConverter = Parsers.getDoubleConverter() as (String) -> Double?
-            map { it?.let { defaultConverter(it.trim()) ?: error("Can't convert `$it` to Double") } }
-        } catch (e: IllegalStateException) {
-            val posixConverter = Parsers.getDoubleConverter(Locale.forLanguageTag("C.UTF-8")) as (String) -> Double?
-            map { it?.let { posixConverter(it.trim()) ?: error("Can't convert `$it` to Double") } }
+            val defaultParser = Parsers.getDoubleParser()
+            map { it?.let { defaultParser(it.trim()) ?: throw TypeConversionException(it, typeOf<String>(), typeOf<Double>()) } }
+        } catch (e: TypeConversionException) {
+            val posixParser = Parsers.getDoubleParser(Locale.forLanguageTag("C.UTF-8"))
+            map { it?.let { posixParser(it.trim()) ?: throw TypeConversionException(it, typeOf<String>(), typeOf<Double>()) } }
         }
     }
 }
