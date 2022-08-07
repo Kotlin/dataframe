@@ -6,6 +6,7 @@ import org.jetbrains.jupyter.parser.notebook.Output
 import org.junit.Ignore
 import org.junit.Test
 import java.io.File
+import java.util.Locale
 
 class SampleNotebooksTests : DataFrameJupyterTest() {
     @Test
@@ -39,13 +40,23 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     )
 
     @Test
-    fun netflix() = exampleTest(
-        "netflix",
-        replacer = CodeReplacer.byMap(
-            testFile("netflix", "country_codes.csv"),
-            testFile("netflix", "netflix_titles.csv"),
-        )
-    )
+    fun netflix() {
+        val currentLocale = Locale.getDefault()
+        try {
+            // Set explicit locale as of test data contains locale-dependent values (date for parsing)
+            Locale.setDefault(Locale.forLanguageTag("en-US"))
+
+            exampleTest(
+                "netflix",
+                replacer = CodeReplacer.byMap(
+                    testFile("netflix", "country_codes.csv"),
+                    testFile("netflix", "netflix_titles.csv"),
+                )
+            )
+        } finally {
+            Locale.setDefault(currentLocale)
+        }
+    }
 
     @Test
     @Ignore

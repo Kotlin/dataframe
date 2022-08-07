@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.junit.Test
+import java.text.DecimalFormatSymbols
 import kotlin.reflect.typeOf
 
 class BasicTests {
@@ -135,7 +136,8 @@ class BasicTests {
     fun `append and drop new row`() {
         val modifiedDf = df.append("dog", 5.5, 2, "no")
 
-        modifiedDf[10].toString() shouldBe "{ animal:dog, age:5.500000, visits:2, priority:no }"
+        val d = DecimalFormatSymbols.getInstance().decimalSeparator
+        modifiedDf[10].toString() shouldBe "{ animal:dog, age:5${d}500000, visits:2, priority:no }"
 
         modifiedDf.dropLast() shouldBe df
     }
