@@ -138,7 +138,7 @@
     "name": "String",
     "vararg": true
   },
-  "approximation": "List<String",
+  "approximation": "List<String>",
   "converter": "varargString",
   "lens": "Value",
   "supported": false
@@ -160,4 +160,13 @@
   "converter": "dataColumn",
   "lens": "Value",
   "supported": false
+}, {
+  "type": {
+    "name": "RowValueExpression<T, Any?, R>",
+    "vararg": false
+  },
+  "approximation": "TypeApproximation",
+  "converter": "type",
+  "lens": "ReturnType",
+  "supported": true
 }]
