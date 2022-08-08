@@ -1,22 +1,32 @@
+import Prototype.*
 import io.kotest.matchers.shouldBe
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
-import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.GenerateConstructor
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.io.readJson
-import org.jetbrains.kotlinx.dataframe.io.writeJson
 import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
+import org.jetbrains.kotlinx.dataframe.plugin.accept
+import org.jetbrains.kotlinx.dataframe.plugin.generateSchemaDeclaration
+import org.jetbrains.kotlinx.dataframe.plugin.generateTestCode
 import org.jetbrains.kotlinx.dataframe.plugin.pluginJsonFormat
-import org.jetbrains.kotlinx.dataframe.plugin.testing.schemaRender.toPluginDataFrameSchema
-import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import org.jetbrains.kotlinx.dataframe.plugin.pluginSchema
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.jupiter.api.Test
 import java.io.File
 import java.util.*
+
+val bridges by lazy { DataFrame.readJson("bridges.json").cast<Bridge>(verify = true) }
+
+val classes = dataFrameOf(
+    ClassDeclaration("InsertClause<T>", listOf(
+        Parameter("df", Type("DataFrame<T>", false), null),
+        Parameter("column", Type("AnyCol", false), null),
+    )),
+)
 
 class Prototype {
 
@@ -119,20 +129,9 @@ class Prototype {
 //            Parameter("infer", Type("Infer", false), "Infer.Nulls"),
 //            Parameter("expression", Type("AddExpression<T, R>", false), null),
 //        )),
-        Function("DataFrame<T>", "convert", Type("Convert<T, C>", false), listOf(
-            Parameter("columns", Type("ColumnsSelector<T, C>", false), null)
-        )),
-        Function("DataFrame<T>", "convert", Type("Convert<T, C>", false), listOf(
-            Parameter("columns", Type("KProperty<C>", true), null)
-        )),
-        Function("DataFrame<T>", "convert", Type("Convert<T, C>", false), listOf(
-            Parameter("columns", Type("String", true), null)
-        )),
     )
 
-    val convert = dataFrameOf(
-        Function("Convert<T, C>", "to", Type("DataFrame<T>", false), emptyList())
-    )
+
 
     private val functions = (otherFunctions concat dfFunctions).appendReceiverAndId()
 
@@ -148,12 +147,6 @@ class Prototype {
     }
 
     // "val df: DataFrame<T>, val column: AnyCol"
-    val classes = dataFrameOf(
-        ClassDeclaration("InsertClause<T>", listOf(
-            Parameter("df", Type("DataFrame<T>", false), null),
-            Parameter("column", Type("AnyCol", false), null),
-        )),
-    )
 
     // endregion
 
@@ -218,8 +211,6 @@ class Prototype {
                  val lens: String,
                  val supported: Boolean = false) : DataRowSchema
 
-    private val bridges by lazy { DataFrame.readJson("bridges.json").cast<Bridge>(verify = true) }
-
     val refinedFunctions = functions.refine(bridges)
 
     @DataSchema
@@ -259,64 +250,7 @@ class Prototype {
     }
     @Test
     fun `generate atoms tests`() {
-        `generate atoms tests`(bridges)
-    }
-
-    fun `generate atoms tests`(bridges: DataFrame<Bridge>) {
-
-        fun writeTestStub(name: String, s: String) {
-            // val root = TODO()
-            val atoms = File(root, "kotlin/org/jetbrains/kotlinx/dataframe/plugin/testing/atoms").also { it.mkdirs() }
-            File(atoms, "$name.kt").writeText(s)
-        }
-
-        val name by column<String>()
-        bridges
-            .distinctBy { expr { type.name.substringBefore("<") } and type.vararg }
-            .groupBy { converter }
-            .updateGroups { df ->
-                add(name) {
-                    var name = type.name.substringBefore("<")
-                    if (type.vararg) {
-                        name = "Vararg$name"
-                    }
-                    name
-                }
-            }
-            .concat()
-            .filter { supported }
-            .forEach {
-                val testSubjectName = name().replaceFirstChar { it.lowercase() }
-                println(name())
-                println()
-                val interpreterName = name()
-                writeTestStub(testSubjectName, """
-                    package org.jetbrains.kotlinx.dataframe.plugin.testing
-                    
-                    import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
-                    import org.jetbrains.kotlinx.dataframe.annotations.Arguments
-                    import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-                    import org.jetbrains.kotlinx.dataframe.plugin.*
-                    
-                    @Interpretable(${interpreterName}Identity::class)
-                    public fun ${testSubjectName}(v: ${type.name}): ${type.name} {
-                        return v
-                    }
-                    
-                    public class ${interpreterName}Identity : AbstractInterpreter<$approximation>() {
-                        internal val Arguments.v: $approximation by $converter()
-                        
-                        override fun Arguments.interpret(): $approximation {
-                            return v
-                        }
-                    }
-                    
-                    internal fun ${testSubjectName}Test() {
-                        
-                    }
-                """.trimIndent())
-                println()
-            }
+        bridges.generateAtomsTests()
     }
 
     //dataFrameOf\((".+",?)+\)\(.*\)
@@ -517,37 +451,11 @@ class Prototype {
             """df.insert("col1") { 42 }.after("name")"""
         )),
     )
-
-    @Test
-    fun `convert APIs`() {
-        val convert = convert.appendReceiverAndId()
-        val types = convert.collectUsedTypes(classes.take(1))
-        val rawBridges = types.joinBridges(bridges, verify = false)
-        val path = "convert_bridges.json"
-        File(path).let {
-            if (!it.exists()) {
-                rawBridges.writeJson(it, prettyPrint = true)
-            }
-        }
-
-        val editedBridges = DataFrame.readJson(path).cast<Bridge>(verify = true)
-        val allBridges = bridges.concat(editedBridges).distinct().cast<Bridge>(verify = true)
-        allBridges.writeJson("bridges.json", prettyPrint = true)
-
-        val refine = convert
-            .refine(allBridges)
-            //.also { println(it.schema()) }
-            .convertTo<RefinedFunction>()
-            //.also { println(it.schema()) }
-            //.cast<RefinedFunction>(verify = true)
-
-        refine.generateInterpreters()
-    }
 }
 
-private val returnType by columnGroup<Prototype.Type>()
+private val returnType by columnGroup<Type>()
 fun DataFrame<Prototype.Function>.collectUsedTypes(
-    classes: DataFrame<Prototype.ClassDeclaration> = emptyDataFrame()
+    classes: DataFrame<ClassDeclaration> = emptyDataFrame()
 ) = explode { parameters }
     .ungroup { parameters }[returnType]
     .concat(functionReturnType)
@@ -557,11 +465,11 @@ fun DataFrame<Prototype.Function>.collectUsedTypes(
             .explode { parameters }
             .ungroup { parameters }[returnType]
     )
-    .concat(classes.name.distinct().map { Prototype.Type(it, false) }.asIterable().toDataFrame())
+    .concat(classes.name.distinct().map { Type(it, false) }.asIterable().toDataFrame())
     .distinct()
     .asColumnGroup("type")
 
-fun ColumnGroup<Prototype.Type>.joinBridges(bridges: DataFrame<Prototype.Bridge>, verify: Boolean): DataFrame<Prototype.Bridge> {
+fun ColumnGroup<Type>.joinBridges(bridges: DataFrame<Bridge>, verify: Boolean): DataFrame<Bridge> {
     val df = dataFrameOf(this)
         .leftJoin(bridges) {
             // join keeps only left column!!
@@ -570,25 +478,25 @@ fun ColumnGroup<Prototype.Type>.joinBridges(bridges: DataFrame<Prototype.Bridge>
         //.rename { "type"["type"] }.into("name")
         .fillNulls("supported").with { false }
         .remove("name", "vararg")
-        .cast<Prototype.Bridge>(verify = verify)
+        .cast<Bridge>(verify = verify)
 
     return df
 }
 
-fun DataFrame<Prototype.Function>.refine(bridges: DataFrame<Prototype.Bridge>): DataFrame<Prototype.RefinedFunction> {
+fun DataFrame<Prototype.Function>.refine(bridges: DataFrame<Bridge>): DataFrame<RefinedFunction> {
     val functions = this
     return functions.leftJoin(bridges) {
         //functions.functionReturnType.match(type) TODO: Shouldn't compile
         functions.functionReturnType.name.match(right.type.name)
     }
-        .convert { parameters }.with { it.leftJoin(bridges) { it[returnType].name.match(right.type.name) } }
+        .convert { parameters }.with { it.leftJoin(bridges) { it.returnType.match(right.type) } }
         .add("startingSchema") {
             parameters.first { it.name == "receiver" }
         }
-        .cast<Prototype.RefinedFunction>()
+        .cast<RefinedFunction>()
 }
 
-fun DataFrame<Prototype.RefinedFunction>.generateInterpreters() {
+fun DataFrame<RefinedFunction>.generateInterpreters() {
     val approximation by column<String>()
     val converter by column<String>()
     val id by column<Int>()
@@ -596,7 +504,14 @@ fun DataFrame<Prototype.RefinedFunction>.generateInterpreters() {
 
     val interpreters = convert { parameters }.with {
         it.add("arguments") {
-            "val Arguments.$name: ${approximation()} by ${converter()}()"
+            var defaultValue = it.defaultValue?.let { "defaultValue = Present($it)" }
+            if (defaultValue == null && it.returnType.vararg) {
+                defaultValue = "defaultValue = Present(emptyList())"
+            }
+            if (defaultValue == null) {
+                defaultValue = ""
+            }
+            "val Arguments.$name: ${approximation()} by ${converter()}($defaultValue)"
         }
     }
         .add("argumentsStr") {
@@ -635,12 +550,65 @@ fun PluginDataFrameSchema.toJson(): String {
     return afterJson
 }
 
-fun DataFrame<*>.pluginSchema() = schema().toPluginDataFrameSchema()
+fun DataFrame<Prototype.Function>.appendReceiverAndId() = groupBy { function }
+    .updateGroups { it.addId() }
+    .concat()
+    .update { parameters }.with {
+        it.append(Parameter("receiver", Type(receiverType, false), null))
+    }
 
-fun DataFrame<*>.generateSchemaDeclaration(
-    capitalizedName: String,
-    generator: CodeGenerator = CodeGenerator.create(useFqNames = false)
-) = generator.generate(schema(), name = capitalizedName, fields = true, extensionProperties = true, isOpen = true)
-        .code.declarations
-        .replace(Regex("@JvmName\\(.*\"\\)"), "")
+fun DataFrame<Bridge>.generateAtomsTests() {
 
+    fun writeTestStub(name: String, s: String) {
+        // val root = TODO()
+//        val atoms = File(root, "kotlin/org/jetbrains/kotlinx/dataframe/plugin/testing/atoms").also { it.mkdirs() }
+//        File(atoms, "$name.kt").writeText(s)
+        println(s)
+    }
+
+    val name by column<String>()
+    distinctBy { expr { type.name.substringBefore("<") } and type.vararg }
+        .groupBy { converter }
+        .updateGroups { df ->
+            add(name) {
+                var name = type.name.substringBefore("<")
+                if (type.vararg) {
+                    name = "Vararg$name"
+                }
+                name
+            }
+        }
+        .concat()
+        .filter { supported }
+        .forEach {
+            val testSubjectName = name().replaceFirstChar { it.lowercase() }
+            println(name())
+            println()
+            val interpreterName = name()
+            writeTestStub(testSubjectName, """
+                    package org.jetbrains.kotlinx.dataframe.plugin.testing
+                    
+                    import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
+                    import org.jetbrains.kotlinx.dataframe.annotations.Arguments
+                    import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+                    import org.jetbrains.kotlinx.dataframe.plugin.*
+                    
+                    @Interpretable(${interpreterName}Identity::class)
+                    public fun ${testSubjectName}(v: ${type.name}): ${type.name} {
+                        return v
+                    }
+                    
+                    public class ${interpreterName}Identity : AbstractInterpreter<$approximation>() {
+                        internal val Arguments.v: $approximation by $converter()
+                        override fun Arguments.interpret(): $approximation {
+                            return v
+                        }
+                    }
+                    
+                    internal fun ${testSubjectName}Test() {
+                        
+                    }
+                """.trimIndent())
+            println()
+        }
+}
