@@ -23,6 +23,7 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jsoup.Jsoup
 import org.junit.Test
 import java.net.URL
+import java.text.DecimalFormatSymbols
 import kotlin.reflect.typeOf
 
 class RenderingTests {
@@ -108,10 +109,11 @@ class RenderingTests {
 
     @Test
     fun `render double with exponent`() {
+        val d = DecimalFormatSymbols.getInstance().decimalSeparator
         listOf(
-            dataFrameOf("col")(1E27) to "1.000000e+27",
-            dataFrameOf("col")(1.123) to "1.123",
-            dataFrameOf("col")(1.0) to "1.0",
+            dataFrameOf("col")(1E27) to "1${d}000000e+27",
+            dataFrameOf("col")(1.123) to "1${d}123",
+            dataFrameOf("col")(1.0) to "1${d}0",
         ).forEach { (df, rendered) ->
             df.toHTML().script shouldContain rendered
         }

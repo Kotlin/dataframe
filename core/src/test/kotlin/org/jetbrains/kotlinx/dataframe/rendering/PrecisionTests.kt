@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.io.RendererDecimalFormat
 import org.jetbrains.kotlinx.dataframe.io.defaultPrecision
 import org.jetbrains.kotlinx.dataframe.io.format
 import org.junit.Test
+import java.text.DecimalFormatSymbols
 
 class PrecisionTests {
 
@@ -26,8 +27,9 @@ class PrecisionTests {
 
     @Test
     fun format() {
+        val d = DecimalFormatSymbols.getInstance().decimalSeparator
         val value = 1.2341
-        val expected = "1.23"
+        val expected = "1${d}23"
         val digits = 2
         val formatter = RendererDecimalFormat.fromPrecision(digits)
         value.format(formatter) shouldBe expected
