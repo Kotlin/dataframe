@@ -36,6 +36,7 @@ import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
 import java.net.URL
 import java.time.LocalTime
+import java.util.Locale
 import kotlin.math.roundToInt
 import kotlin.math.roundToLong
 import kotlin.reflect.KType
@@ -81,7 +82,7 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
     return when {
         from == to -> this
         from.isSubtypeOf(to) -> (this as DataColumnInternal<*>).changeType(to.withNullability(hasNulls()))
-        else -> when (val converter = getConverter(from, to)) {
+        else -> when (val converter = getConverter(from, to, ParserOptions(locale = Locale.getDefault()))) {
             null -> when (from.classifier) {
                 Any::class, Number::class, java.io.Serializable::class -> {
                     // find converter for every value
@@ -89,7 +90,7 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
                         it?.let {
                             val clazz = it.javaClass.kotlin
                             val type = clazz.createStarProjectedType(false)
-                            val converter = getConverter(type, to) ?: throw TypeConverterNotFoundException(from, to)
+                            val converter = getConverter(type, to, ParserOptions(locale = Locale.getDefault())) ?: throw TypeConverterNotFoundException(from, to)
                             converter(it)
                         }.checkNulls()
                     }
@@ -107,9 +108,9 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
     }
 }
 
-internal val convertersCache = mutableMapOf<Pair<KType, KType>, TypeConverter?>()
+internal val convertersCache = mutableMapOf<Triple<KType, KType, ParserOptions?>, TypeConverter?>()
 
-internal fun getConverter(from: KType, to: KType): TypeConverter? = convertersCache.getOrPut(from to to) { createConverter(from, to) }
+internal fun getConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? = convertersCache.getOrPut(Triple(from, to, options)) { createConverter(from, to, options) }
 
 internal typealias TypeConverter = (Any) -> Any?
 
@@ -205,6 +206,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Byte::class -> convert<Number> { it.toByte() }
                 Short::class -> convert<Number> { it.toShort() }
                 Long::class -> convert<Number> { it.toLong() }
+                Boolean::class -> convert<Number> { it.toDouble() != 0.0 }
                 else -> null
             }
             Int::class -> when (toClass) {
@@ -214,6 +216,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Short::class -> convert<Int> { it.toShort() }
                 Long::class -> convert<Int> { it.toLong() }
                 BigDecimal::class -> convert<Int> { it.toBigDecimal() }
+                Boolean::class -> convert<Int> { it != 0 }
                 LocalDateTime::class -> convert<Int> { it.toLong().toLocalDateTime(defaultTimeZone) }
                 LocalDate::class -> convert<Int> { it.toLong().toLocalDate(defaultTimeZone) }
                 java.time.LocalDateTime::class -> convert<Long> { it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime() }
@@ -227,6 +230,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Long::class -> convert<Double> { it.roundToLong() }
                 Short::class -> convert<Double> { it.roundToInt().toShort() }
                 BigDecimal::class -> convert<Double> { it.toBigDecimal() }
+                Boolean::class -> convert<Double> { it != 0.0 }
                 else -> null
             }
             Long::class -> when (toClass) {
@@ -236,6 +240,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Short::class -> convert<Long> { it.toShort() }
                 Int::class -> convert<Long> { it.toInt() }
                 BigDecimal::class -> convert<Long> { it.toBigDecimal() }
+                Boolean::class -> convert<Long> { it != 0L }
                 LocalDateTime::class -> convert<Long> { it.toLocalDateTime(defaultTimeZone) }
                 LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone) }
                 Instant::class -> convert<Long> { Instant.fromEpochMilliseconds(it) }
@@ -270,6 +275,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Int::class -> convert<Float> { it.roundToInt() }
                 Short::class -> convert<Float> { it.roundToInt().toShort() }
                 BigDecimal::class -> convert<Float> { it.toBigDecimal() }
+                Boolean::class -> convert<Float> { it != 0.0F }
                 else -> null
             }
             BigDecimal::class -> when (toClass) {
@@ -277,6 +283,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Int::class -> convert<BigDecimal> { it.toInt() }
                 Float::class -> convert<BigDecimal> { it.toFloat() }
                 Long::class -> convert<BigDecimal> { it.toLong() }
+                Boolean::class -> convert<BigDecimal> { it != BigDecimal.ZERO }
                 else -> null
             }
             LocalDateTime::class -> when (toClass) {
@@ -285,6 +292,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Long::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone).toEpochMilliseconds() }
                 java.time.LocalDateTime::class -> convert<LocalDateTime> { it.toJavaLocalDateTime() }
                 java.time.LocalDate::class -> convert<LocalDateTime> { it.date.toJavaLocalDate() }
+                java.time.LocalTime::class -> convert<LocalDateTime> { it.toJavaLocalDateTime().toLocalTime() }
                 else -> null
             }
             java.time.LocalDateTime::class -> when (toClass) {
@@ -293,6 +301,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Instant::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime().toInstant(defaultTimeZone) }
                 Long::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime().toInstant(defaultTimeZone).toEpochMilliseconds() }
                 java.time.LocalDate::class -> convert<java.time.LocalDateTime> { it.toLocalDate() }
+                java.time.LocalTime::class -> convert<java.time.LocalDateTime> { it.toLocalTime() }
                 else -> null
             }
             LocalDate::class -> when (toClass) {

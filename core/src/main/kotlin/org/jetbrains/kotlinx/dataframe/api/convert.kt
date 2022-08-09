@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
+import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToTypeImpl
@@ -30,7 +31,7 @@ import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import java.math.BigDecimal
 import java.net.URL
 import java.time.LocalTime
-import java.util.*
+import java.util.Locale
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
@@ -99,7 +100,11 @@ public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>)
     df.replace(columns).with { columnConverter(df, it) }
 
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
-public fun AnyCol.convertTo(newType: KType): AnyCol = convertToTypeImpl(newType)
+public fun AnyCol.convertTo(newType: KType): AnyCol {
+    if (this.type() == typeOf<String>() && newType == typeOf<Double>()) return (this as DataColumn<String>).convertToDouble()
+    if (this.type() == typeOf<String?>() && newType == typeOf<Double?>()) return (this as DataColumn<String?>).convertToDouble()
+    return convertToTypeImpl(newType)
+}
 
 @JvmName("convertToLocalDateTimeFromT")
 public fun <T : Any> DataColumn<T>.convertToLocalDateTime(): DataColumn<LocalDateTime> = convertTo()
@@ -124,6 +129,37 @@ public fun <T : Any> DataColumn<T?>.convertToString(): DataColumn<String?> = con
 @JvmName("convertToDoubleFromT")
 public fun <T : Any> DataColumn<T>.convertToDouble(): DataColumn<Double> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToDouble(): DataColumn<Double?> = convertTo()
+
+/**
+ * Parse String column to Double considering locale (number format).
+ * If [locale] parameter is defined, it's number format is used for parsing.
+ * If [locale] parameter is null, the current system locale is used. If column can not be parsed, then POSIX format is used.
+ */
+@JvmName("convertToDoubleFromString")
+public fun DataColumn<String>.convertToDouble(locale: Locale? = null): DataColumn<Double> {
+    return this.castToNullable().convertToDouble(locale).castToNotNullable()
+}
+
+/**
+ * Parse String column to Double considering locale (number format).
+ * If [locale] parameter is defined, it's number format is used for parsing.
+ * If [locale] parameter is null, the current system locale is used. If column can not be parsed, then POSIX format is used.
+ */
+@JvmName("convertToDoubleFromStringNullable")
+public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColumn<Double?> {
+    if (locale != null) {
+        val explicitParser = Parsers.getDoubleParser(locale)
+        return map { it?.let { explicitParser(it.trim()) ?: throw TypeConversionException(it, typeOf<String>(), typeOf<Double>()) } }
+    } else {
+        return try {
+            val defaultParser = Parsers.getDoubleParser()
+            map { it?.let { defaultParser(it.trim()) ?: throw TypeConversionException(it, typeOf<String>(), typeOf<Double>()) } }
+        } catch (e: TypeConversionException) {
+            val posixParser = Parsers.getDoubleParser(Locale.forLanguageTag("C.UTF-8"))
+            map { it?.let { posixParser(it.trim()) ?: throw TypeConversionException(it, typeOf<String>(), typeOf<Double>()) } }
+        }
+    }
+}
 
 @JvmName("convertToFloatFromT")
 public fun <T : Any> DataColumn<T>.convertToFloat(): DataColumn<Float> = convertTo()
