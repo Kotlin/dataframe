@@ -31,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.Convert2
+import org.jetbrains.kotlinx.dataframe.plugin.Convert6
 import org.jetbrains.kotlinx.dataframe.plugin.To0
 import org.jetbrains.kotlinx.dataframe.plugin.With0
 import java.math.BigDecimal
@@ -68,6 +69,7 @@ public inline fun <T, C, reified R> DataFrame<T>.convert(
 ): DataFrame<T> =
     convert(*headPlusArray(firstCol, cols)).with(infer, expression)
 
+@Interpretable(Convert6::class)
 public inline fun <T, reified R> DataFrame<T>.convert(
     firstCol: String,
     vararg cols: String,
@@ -92,6 +94,9 @@ public data class Convert<T, out C>(val df: DataFrame<T>, val columns: ColumnsSe
 
 public fun <T> Convert<T, *>.to(type: KType): DataFrame<T> = to { it.convertTo(type) }
 
+public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> =
+    df.replace(columns).with { columnConverter(df, it) }
+
 @Interpretable(With0::class)
 public inline fun <T, C, reified R> Convert<T, C>.with(
     infer: Infer = Infer.Nulls,
@@ -104,9 +109,6 @@ public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
     noinline expression: RowColumnExpression<T, C, R>
 ): DataFrame<T> =
     convertRowColumnImpl(typeOf<R>(), infer, expression)
-
-public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>) -> AnyBaseCol): DataFrame<T> =
-    df.replace(columns).with { columnConverter(df, it) }
 
 public inline fun <reified C> AnyCol.convertTo(): DataColumn<C> = convertTo(typeOf<C>()) as DataColumn<C>
 public fun AnyCol.convertTo(newType: KType): AnyCol {

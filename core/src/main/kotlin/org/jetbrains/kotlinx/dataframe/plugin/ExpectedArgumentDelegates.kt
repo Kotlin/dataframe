@@ -18,8 +18,9 @@ public fun <T> AbstractInterpreter<T>.dataFrame(
 ): ExpectedArgumentProvider<PluginDataFrameSchema> = arg(name, lens = Interpreter.Schema)
 
 public fun <T> AbstractInterpreter<T>.varargString(
-    name: ArgumentName? = null
-): ExpectedArgumentProvider<List<String>> = arg(name, lens = Interpreter.Value)
+    name: ArgumentName? = null,
+    defaultValue: DefaultValue<List<String>> = Absent
+): ExpectedArgumentProvider<List<String>> = arg(name, lens = Interpreter.Value, defaultValue = defaultValue)
 
 public fun <T> AbstractInterpreter<T>.renameClause(
     name: ArgumentName? = null

@@ -4,7 +4,9 @@ import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractSchemaModificationInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.ConvertApproximation
+import org.jetbrains.kotlinx.dataframe.annotations.Present
 import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximation
+import org.jetbrains.kotlinx.dataframe.api.Infer
 
 public class Convert2 : AbstractInterpreter<ConvertApproximation>() {
     public val Arguments.receiver: PluginDataFrameSchema by dataFrame()
@@ -12,6 +14,20 @@ public class Convert2 : AbstractInterpreter<ConvertApproximation>() {
 
     override fun Arguments.interpret(): ConvertApproximation {
         return ConvertApproximation(receiver, columns.map { listOf(it) })
+    }
+}
+
+internal class Convert6 : AbstractInterpreter<PluginDataFrameSchema>() {
+    val Arguments.firstCol: String by string()
+    val Arguments.cols: List<String> by varargString(defaultValue = Present(emptyList()))
+    val Arguments.infer: Infer by enum(defaultValue = Present(Infer.Nulls))
+    val Arguments.expression: TypeApproximation by type()
+    val Arguments.receiver: PluginDataFrameSchema by dataFrame()
+    override val Arguments.startingSchema get() = receiver
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        val columns = (listOf(firstCol) + cols).map { listOf(it) }
+        return convertImpl(ConvertApproximation(receiver, columns), expression)
     }
 }
 
