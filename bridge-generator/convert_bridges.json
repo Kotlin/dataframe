@@ -37,5 +37,14 @@
     "converter": "type",
     "lens": "ReturnType",
     "supported": true
+  }, {
+  "type": {
+    "name": "ColumnsSelector<T, C>",
+    "vararg": false
+  },
+  "approximation": "List<ColumnWithPathApproximation>",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": true
   }
 ]

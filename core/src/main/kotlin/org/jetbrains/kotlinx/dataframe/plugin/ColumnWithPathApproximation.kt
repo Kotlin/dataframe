@@ -5,4 +5,4 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 /**
  * @see ColumnWithPath
  */
-internal class ColumnWithPathApproximation(val path: ColumnPathApproximation, val column: SimpleCol)
+public data class ColumnWithPathApproximation(public val path: ColumnPathApproximation, public val column: SimpleCol)

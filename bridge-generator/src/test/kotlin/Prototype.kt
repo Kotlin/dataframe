@@ -599,7 +599,7 @@ fun DataFrame<Bridge>.generateAtomsTests() {
                     }
                     
                     public class ${interpreterName}Identity : AbstractInterpreter<$approximation>() {
-                        internal val Arguments.v: $approximation by $converter()
+                        internal val Arguments.v: $approximation by $converter(lens = Interpreter.$lens)
                         override fun Arguments.interpret(): $approximation {
                             return v
                         }

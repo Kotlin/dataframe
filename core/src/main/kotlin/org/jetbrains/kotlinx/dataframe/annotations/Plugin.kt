@@ -9,7 +9,9 @@ import org.jetbrains.kotlinx.dataframe.plugin.type
 import kotlin.reflect.KClass
 
 @Serializable
-public sealed interface TypeApproximation
+public sealed interface TypeApproximation {
+    public companion object
+}
 
 @Serializable
 public data class TypeApproximationImpl(public val fqName: String, public val nullable: Boolean) : TypeApproximation
