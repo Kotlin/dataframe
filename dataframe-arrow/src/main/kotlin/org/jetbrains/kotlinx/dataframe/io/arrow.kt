@@ -50,6 +50,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import java.io.File
 import java.io.InputStream
+import java.io.OutputStream
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
@@ -347,3 +348,44 @@ public fun DataFrame.Companion.readArrowFeather(path: String, nullability: Nulla
 } else {
     readArrowFeather(File(path), nullability)
 }
+
+//// IPC saving block
+//
+///**
+// * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new or existing [file].
+// * If file exists, it can be recreated or expanded.
+// */
+//public fun AnyFrame.writeArrowIPC(file: File, append: Boolean = true) {
+//
+//}
+//
+///**
+// * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to [ByteArray]
+// */
+//public fun AnyFrame.writeArrowIPCToByteArray() {
+//
+//}
+//
+//// Feather saving block
+//
+///**
+// * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to new or existing [file].
+// * If file exists, it would be recreated.
+// */
+//public fun AnyFrame.writeArrowFeather(file: File) {
+//
+//}
+//
+///**
+// * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to [ByteArray]
+// */
+//public fun DataFrame.Companion.writeArrowFeatherToByteArray(): ByteArray {
+//
+//}
+//
+///**
+// * Write [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) from existing [stream]
+// */
+//public fun DataFrame.Companion.writeArrowFeather(stream: OutputStream) {
+//
+//}
