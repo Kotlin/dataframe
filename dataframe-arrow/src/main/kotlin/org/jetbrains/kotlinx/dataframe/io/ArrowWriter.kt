@@ -5,6 +5,8 @@ import kotlinx.datetime.toInstant
 import kotlinx.datetime.toJavaLocalDate
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.*
+import org.apache.arrow.vector.ipc.ArrowFileWriter
+import org.apache.arrow.vector.ipc.ArrowStreamWriter
 import org.apache.arrow.vector.types.DateUnit
 import org.apache.arrow.vector.types.FloatingPointPrecision
 import org.apache.arrow.vector.types.TimeUnit
@@ -16,6 +18,9 @@ import org.apache.arrow.vector.util.Text
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
+import java.io.ByteArrayOutputStream
+import java.nio.channels.Channels
+import java.nio.channels.WritableByteChannel
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -62,6 +67,10 @@ public fun List<AnyCol>.toArrowSchema(): Schema {
     }
     return Schema(fields)
 }
+
+public fun DataFrame<*>.arrowWriter(): ArrowWriter = ArrowWriter(this, this.columns().toArrowSchema())
+
+public fun DataFrame<*>.arrowWriter(targetSchema: Schema): ArrowWriter = ArrowWriter(this, targetSchema)
 
 /**
  * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray or stream) with [targetSchema].
@@ -124,21 +133,34 @@ public class ArrowWriter(public val dataFrame: DataFrame<*>, public val targetSc
 
     }
 
-    private fun List<AnyCol>.toVectors(): List<FieldVector> {
-        val actualSchema = this.toArrowSchema()
-        val vectors = ArrayList<FieldVector>()
-        for ((i, field) in actualSchema.fields.withIndex()) {
-            val column = this[i]
-            val vector = field.createVector(allocator)!!
-            allocateVector(vector, dataFrame.rowsCount())
-            infillVector(vector, column)
-            vectors.add(vector)
+    private fun allocateVectorAndInfill(field: Field, column: AnyCol?, strictType: Boolean, strictNullable: Boolean): FieldVector {
+        val containNulls = (column == null || column.hasNulls())
+        val vector = if (!field.isNullable && containNulls) {
+            if (strictNullable) {
+                throw Exception("${field.name} column contains nulls but should be not nullable")
+            } else {
+                Field(field.name, FieldType(true, field.fieldType.type, field.fieldType.dictionary), field.children).createVector(allocator)!!
+            }
+        } else {
+            field.createVector(allocator)!!
         }
-        return vectors
+
+        allocateVector(vector, dataFrame.rowsCount())
+        if (column == null) {
+            check(field.isNullable)
+            infillWithNulls(vector, dataFrame.rowsCount())
+        } else {
+            infillVector(vector, column)
+        }
+        return vector
     }
 
-        /**
-     * Create Arrow VectorSchemaRoot with [dataFrame] content casted to [targetSchema].
+    private fun List<AnyCol>.toVectors(): List<FieldVector> = this.toArrowSchema().fields.mapIndexed { i, field ->
+        allocateVectorAndInfill(field, this[i], true, true)
+    }
+
+    /**
+     * Create Arrow VectorSchemaRoot with [dataFrame] content cast to [targetSchema].
      * If [restrictWidening] is true, [dataFrame] columns not described in [targetSchema] would not be saved (otherwise, would be saved as is).
      * If [restrictNarrowing] is true, [targetSchema] fields that are not nullable and do not exist in [dataFrame] will produce exception (otherwise, would not be saved).
      * If [strictType] is true, [dataFrame] columns described in [targetSchema] with non-compatible type will produce exception (otherwise, would be saved as is).
@@ -153,7 +175,6 @@ public class ArrowWriter(public val dataFrame: DataFrame<*>, public val targetSc
         val mainVectors = LinkedHashMap<String, FieldVector>()
         for (field in targetSchema.fields) {
             val column = dataFrame.getColumnOrNull(field.name)
-            val vector = field.createVector(allocator)!!
             if (column == null && !field.isNullable) {
                 if (restrictNarrowing) {
                     throw Exception("${field.name} column is not presented")
@@ -162,13 +183,7 @@ public class ArrowWriter(public val dataFrame: DataFrame<*>, public val targetSc
                 }
             }
 
-            allocateVector(vector, dataFrame.rowsCount())
-            if (column == null) {
-                check(field.isNullable)
-                infillWithNulls(vector, dataFrame.rowsCount())
-            } else {
-                infillVector(vector, column)
-            }
+            val vector = allocateVectorAndInfill(field, column, strictType, strictNullable)
             mainVectors[field.name] = vector
         }
         val vectors = ArrayList<FieldVector>()
@@ -180,7 +195,82 @@ public class ArrowWriter(public val dataFrame: DataFrame<*>, public val targetSc
         return VectorSchemaRoot(vectors)
     }
 
+    public fun featherToChannel(channel: WritableByteChannel) {
+        allocateVectorSchemaRoot(false, false, false, false).use { vectorSchemaRoot ->
+            ArrowFileWriter(vectorSchemaRoot, null, channel).use { writer ->
+                writer.writeBatch();
+            }
+        }
+    }
+
+    public fun ipcToChannel(channel: WritableByteChannel) {
+        allocateVectorSchemaRoot(false, false, false, false).use { vectorSchemaRoot ->
+            ArrowStreamWriter(vectorSchemaRoot, null, channel).use { writer ->
+                writer.writeBatch();
+            }
+        }
+    }
+
+    public fun featherToByteArray(): ByteArray {
+        ByteArrayOutputStream().use { byteArrayStream ->
+            Channels.newChannel(byteArrayStream).use { channel ->
+                featherToChannel(channel)
+                return byteArrayStream.toByteArray()
+            }
+        }
+    }
+
+    public fun iptToByteArray(): ByteArray {
+        ByteArrayOutputStream().use { byteArrayStream ->
+            Channels.newChannel(byteArrayStream).use { channel ->
+                ipcToChannel(channel)
+                return byteArrayStream.toByteArray()
+            }
+        }
+    }
+
     override fun close() {
         allocator.close()
     }
 }
+//
+//// IPC saving block
+//
+///**
+// * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new or existing [file].
+// * If file exists, it can be recreated or expanded.
+// */
+//public fun AnyFrame.writeArrowIPC(file: File, append: Boolean = true) {
+//
+//}
+//
+///**
+// * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to [ByteArray]
+// */
+//public fun AnyFrame.writeArrowIPCToByteArray() {
+//
+//}
+//
+//// Feather saving block
+//
+///**
+// * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to new or existing [file].
+// * If file exists, it would be recreated.
+// */
+//public fun AnyFrame.writeArrowFeather(file: File) {
+//
+//}
+//
+///**
+// * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to [ByteArray]
+// */
+//public fun DataFrame.Companion.writeArrowFeatherToByteArray(): ByteArray {
+//
+//}
+//
+///**
+// * Write [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) from existing [stream]
+// */
+//public fun DataFrame.Companion.writeArrowFeather(stream: OutputStream) {
+//
+//}
