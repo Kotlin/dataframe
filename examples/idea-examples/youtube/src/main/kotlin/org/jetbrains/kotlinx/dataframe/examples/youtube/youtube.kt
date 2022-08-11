@@ -1,57 +1,24 @@
 @file:ImportDataSchema(
     "SearchResponse",
-    "$basePath/search?q=cats&part=snippet&key=$apiKey"
+    "src/main/resources/searchResponse.json",
 )
 @file:ImportDataSchema(
     "StatisticsResponse",
-    "$basePath/videos?part=statistics&id=uHKfrz65KSU&key=$apiKey"
+    "src/main/resources/statisticsResponse.json",
 )
 
 package org.jetbrains.kotlinx.dataframe.examples.youtube
 
+import kotlinx.datetime.Instant
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
-import org.jetbrains.kotlinx.dataframe.api.add
-import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.chunked
-import org.jetbrains.kotlinx.dataframe.api.column
-import org.jetbrains.kotlinx.dataframe.api.columnGroup
-import org.jetbrains.kotlinx.dataframe.api.concat
-import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.dfsOf
-import org.jetbrains.kotlinx.dataframe.api.distinct
-import org.jetbrains.kotlinx.dataframe.api.dropNulls
-import org.jetbrains.kotlinx.dataframe.api.flatten
-import org.jetbrains.kotlinx.dataframe.api.getValueOrNull
-import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.join
-import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.maxBy
-import org.jetbrains.kotlinx.dataframe.api.move
-import org.jetbrains.kotlinx.dataframe.api.parse
-import org.jetbrains.kotlinx.dataframe.api.remove
-import org.jetbrains.kotlinx.dataframe.api.select
-import org.jetbrains.kotlinx.dataframe.api.sortByDesc
-import org.jetbrains.kotlinx.dataframe.api.sum
-import org.jetbrains.kotlinx.dataframe.api.toTop
-import org.jetbrains.kotlinx.dataframe.api.under
-import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.io.read
 import java.net.URL
-import kotlinx.datetime.Instant
-import org.jetbrains.kotlinx.dataframe.api.cumSum
-import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.api.sortBy
-import org.jetbrains.kotlinx.dataframe.api.sumFor
-import org.jetbrains.kotlinx.dataframe.api.toLong
-import org.jetbrains.kotlinx.dataframe.io.toHTML
-import java.awt.Desktop
-import java.io.File
 
 fun load(path: String) = DataRow.read("$basePath/$path&key=$apiKey")
 
@@ -62,14 +29,13 @@ fun load(path: String, maxPages: Int): AnyFrame {
         val row = load(pagePath)
         rows.add(row)
         val next = row.getValueOrNull<String>("nextPageToken")
-        pagePath = path + "&pageToken=" + next
+        pagePath = "$path&pageToken=$next"
 
     } while (next != null && rows.size < maxPages)
     return rows.concat()
 }
 
 fun main() {
-
     val searchRequest = "cute%20cats"
     val resultsPerPage = 50
     val maxPages = 5
@@ -78,7 +44,10 @@ fun main() {
     val channel by columnGroup()
 
     val videos = load("search?q=$searchRequest&maxResults=$resultsPerPage&part=snippet", maxPages)
-        .cast<SearchResponse>()
+        .convertTo<SearchResponse> {
+            convert<String?>().with { it.toString() }
+            convert<Int?>().with { it ?: 0 }
+        }
         .items.concat()
         .dropNulls { id.videoId }
         .select { id.videoId into videoId and snippet }
@@ -113,7 +82,7 @@ fun main() {
         .sortByDesc { viewCount }
         .flatten()
 
-    channels.print()
+    channels.print(borders = true, columnTypes = true)
 
     val growth = withStat
         .select { publishTime and viewCount }
@@ -121,5 +90,5 @@ fun main() {
         .sortBy { publishTime }
         .cumSum { viewCount }
 
-    growth.print()
+    growth.print(borders = true, columnTypes = true)
 }
