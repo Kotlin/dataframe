@@ -30,19 +30,14 @@ private val model = Sequential.of(
 
 fun main() {
 
-    // Set working directory for correct path resolution
-    System.setProperty("user.dir", System.getProperty("user.dir") + "/examples/idea-examples/titanic")
-
     // Set Locale for correct number parsing
     Locale.setDefault(Locale.FRANCE)
 
-    val df = Passenger.readCSV()
-
-    val pclass by column<Int>()
+    // Set path for correct resolution (https://github.com/Kotlin/dataframe/issues/139)
+    val df = Passenger.readCSV("examples/idea-examples/titanic/src/main/resources/titanic.csv")
 
     // Calculating imputing values
     val (train, test) = df
-        .rename { it.`﻿pclass`}.into(pclass)
         // imputing
         .fillNulls { sibsp and parch and age and fare }.perCol { it.mean() }
         .fillNulls { sex }.withValue("female")
