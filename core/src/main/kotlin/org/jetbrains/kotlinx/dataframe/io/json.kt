@@ -12,17 +12,8 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.getColumn
-import org.jetbrains.kotlinx.dataframe.api.indices
-import org.jetbrains.kotlinx.dataframe.api.isList
-import org.jetbrains.kotlinx.dataframe.api.mapIndexed
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.rows
-import org.jetbrains.kotlinx.dataframe.api.single
-import org.jetbrains.kotlinx.dataframe.api.splitInto
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadJsonMethod
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -107,7 +98,7 @@ internal fun fromJsonList(records: List<*>, header: List<String> = emptyList()):
         }
     }
 
-    val valueColumn = if (hasPrimitive) {
+    val valueColumn = if (hasPrimitive || records.isEmpty()) {
         nameGenerator.addUnique(valueColumnName)
     } else valueColumnName
 
@@ -117,7 +108,7 @@ internal fun fromJsonList(records: List<*>, header: List<String> = emptyList()):
 
     val columns: List<AnyCol> = nameGenerator.names.map { colName ->
         when {
-            colName == valueColumn && hasPrimitive -> {
+            colName == valueColumn && (hasPrimitive || records.isEmpty()) -> {
                 val collector = createDataCollector(records.size)
                 val nanIndices = mutableListOf<Int>()
                 records.forEachIndexed { i, v ->
