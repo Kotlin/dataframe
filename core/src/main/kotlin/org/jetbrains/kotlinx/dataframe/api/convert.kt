@@ -30,6 +30,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
+import org.jetbrains.kotlinx.dataframe.plugin.Convert0
 import org.jetbrains.kotlinx.dataframe.plugin.Convert2
 import org.jetbrains.kotlinx.dataframe.plugin.Convert6
 import org.jetbrains.kotlinx.dataframe.plugin.To0
@@ -42,6 +43,7 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
+@Interpretable(Convert0::class)
 public fun <T, C> DataFrame<T>.convert(columns: ColumnsSelector<T, C>): Convert<T, C> =
     Convert(this, columns)
 

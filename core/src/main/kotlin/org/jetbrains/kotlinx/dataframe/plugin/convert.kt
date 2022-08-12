@@ -8,6 +8,16 @@ import org.jetbrains.kotlinx.dataframe.annotations.Present
 import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximation
 import org.jetbrains.kotlinx.dataframe.api.Infer
 
+internal class Convert0 : AbstractInterpreter<ConvertApproximation>() {
+    val Arguments.columns: List<ColumnWithPathApproximation> by arg()
+    val Arguments.receiver: PluginDataFrameSchema by dataFrame()
+    override val Arguments.startingSchema get() = receiver
+
+    override fun Arguments.interpret(): ConvertApproximation {
+        return ConvertApproximation(receiver, columns.map { it.path.path })
+    }
+}
+
 public class Convert2 : AbstractInterpreter<ConvertApproximation>() {
     public val Arguments.receiver: PluginDataFrameSchema by dataFrame()
     public val Arguments.columns: List<String> by varargString()
@@ -40,15 +50,26 @@ public class With0 : AbstractSchemaModificationInterpreter() {
     }
 }
 
-private fun convertImpl(receiver: ConvertApproximation, type: TypeApproximation): PluginDataFrameSchema {
-    val names = receiver.columns.toSet()
+internal fun convertImpl(receiver: ConvertApproximation, type: TypeApproximation): PluginDataFrameSchema {
+    val columns = receiver.columns.toSet()
 
-    val newColumns = receiver.schema.columns().map {
-        if (listOf(it.name()) in names) {
+    fun simpleCol(it: SimpleCol, path: List<String>): SimpleCol = when (it) {
+        is SimpleColumnGroup -> {
+            val path1 = path + listOf(it.name)
+            val newColumns = it.columns().map {
+                simpleCol(it, path1)
+            }
+            SimpleColumnGroup(it.name, newColumns)
+        }
+        else -> if (path + listOf(it.name()) in columns) {
             it.changeType(type)
         } else {
             it
         }
+    }
+
+    val newColumns = receiver.schema.columns().map {
+        simpleCol(it, emptyList())
     }
 
     return PluginDataFrameSchema(newColumns)
