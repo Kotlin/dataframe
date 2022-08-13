@@ -18,6 +18,7 @@ import org.apache.arrow.vector.util.Text
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import java.io.ByteArrayOutputStream
 import java.nio.channels.Channels
 import java.nio.channels.WritableByteChannel
@@ -96,21 +97,47 @@ public class ArrowWriter(public val dataFrame: DataFrame<*>, public val targetSc
         vector.valueCount = size
     }
 
+    private fun convertColumnToTarget(column: AnyCol?, targetFieldType: ArrowType): AnyCol? {
+        if (column == null) return null
+        return when (targetFieldType) {
+            ArrowType.Utf8() -> column.convertToString()
+            ArrowType.LargeUtf8() -> column.convertToString()
+            ArrowType.Binary(), ArrowType.LargeBinary() -> TODO("Saving var binary is currently not implemented")
+            ArrowType.Bool() -> column.convertToBoolean()
+            ArrowType.Int(8, true) -> column.convertTo<Byte>()
+            ArrowType.Int(16, true) -> column.convertTo<Short>()
+            ArrowType.Int(32, true) -> column.convertTo<Int>()
+            ArrowType.Int(64, true) -> column.convertTo<Long>()
+//            ArrowType.Int(8, false), ArrowType.Int(16, false), ArrowType.Int(32, false), ArrowType.Int(64, false) ->
+            is ArrowType.Decimal -> column.convertToBigDecimal()
+            ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE) -> column.convertToFloat()
+            ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE) -> column.convertToDouble()
+            ArrowType.Date(DateUnit.DAY) -> column.convertToLocalDate()
+            ArrowType.Date(DateUnit.MILLISECOND) -> column.convertToLocalDateTime()
+            is ArrowType.Time -> column.convertToLocalTime()
+//            is ArrowType.Duration ->
+//            is ArrowType.Struct ->
+            else -> {
+                TODO("Saving ${targetFieldType.javaClass.canonicalName} is not implemented")
+            }
+        }
+    }
+
     private fun infillVector(vector: FieldVector, column: AnyCol) {
         when (vector) {
-            is VarCharVector -> column.forEachIndexed { i, value -> value?.let { vector.set(i, Text(value.toString())); value} ?: vector.setNull(i) }
-            is LargeVarCharVector -> column.forEachIndexed { i, value -> value?.let { vector.set(i, Text(value.toString())); value} ?: vector.setNull(i) }
+            is VarCharVector -> column.convertToString().forEachIndexed { i, value -> value?.let { vector.set(i, Text(value)); value} ?: vector.setNull(i) }
+            is LargeVarCharVector -> column.convertToString().forEachIndexed { i, value -> value?.let { vector.set(i, Text(value)); value} ?: vector.setNull(i) }
 //            is VarBinaryVector -> vector.values(range).withType()
 //            is LargeVarBinaryVector -> vector.values(range).withType()
             is BitVector -> column.convertToBoolean().forEachIndexed { i, value -> value?.let { vector.set(i, value.compareTo(false)); value} ?: vector.setNull(i) }
-            is SmallIntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
             is TinyIntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
+            is SmallIntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
+            is IntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
+            is BigIntVector -> column.convertToLong().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
 //            is UInt1Vector -> vector.values(range).withType()
 //            is UInt2Vector -> vector.values(range).withType()
 //            is UInt4Vector -> vector.values(range).withType()
 //            is UInt8Vector -> vector.values(range).withType()
-            is IntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
-            is BigIntVector -> column.convertToLong().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
             is DecimalVector -> column.convertToBigDecimal().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
             is Decimal256Vector -> column.convertToBigDecimal().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
             is Float8Vector -> column.convertToDouble().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
@@ -125,7 +152,7 @@ public class ArrowWriter(public val dataFrame: DataFrame<*>, public val targetSc
             is TimeSecVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, (value.toNanoOfDay() / 1000 / 1000 / 1000).toInt()); value} ?: vector.setNull(i) }
 //            is StructVector -> vector.values(range).withType()
             else -> {
-                TODO("not fully implemented, ${vector.javaClass.canonicalName}")
+                TODO("Saving to ${vector.javaClass.canonicalName} is not implemented")
             }
         }
 
@@ -135,22 +162,36 @@ public class ArrowWriter(public val dataFrame: DataFrame<*>, public val targetSc
 
     private fun allocateVectorAndInfill(field: Field, column: AnyCol?, strictType: Boolean, strictNullable: Boolean): FieldVector {
         val containNulls = (column == null || column.hasNulls())
-        val vector = if (!field.isNullable && containNulls) {
-            if (strictNullable) {
-                throw Exception("${field.name} column contains nulls but should be not nullable")
+        // Convert the column to type specified in field. (If we already have target type, convertTo will do nothing)
+        val (convertedColumn, actualField) =  try {
+            convertColumnToTarget(column, field.type) to field
+        } catch (e: TypeConversionException) {
+            if (strictType) {
+                // If conversion failed but strictType is enabled, throw the exception
+                throw e
             } else {
-                Field(field.name, FieldType(true, field.fieldType.type, field.fieldType.dictionary), field.children).createVector(allocator)!!
+                // If strictType is not enabled, use original data with its type. Target nullable is saved at this step.
+                val actualType = listOf(column!!).toArrowSchema().fields.first().fieldType.type
+                val actualField = Field(field.name, FieldType(field.isNullable, actualType, field.fieldType.dictionary), field.children)
+                column to actualField
+            }
+        }
+        val vector = if (!actualField.isNullable && containNulls) {
+            if (strictNullable) {
+                throw Exception("${actualField.name} column contains nulls but should be not nullable")
+            } else {
+                Field(actualField.name, FieldType(true, actualField.fieldType.type, actualField.fieldType.dictionary), actualField.children).createVector(allocator)!!
             }
         } else {
-            field.createVector(allocator)!!
+            actualField.createVector(allocator)!!
         }
 
         allocateVector(vector, dataFrame.rowsCount())
-        if (column == null) {
-            check(field.isNullable)
+        if (convertedColumn == null) {
+            check(actualField.isNullable)
             infillWithNulls(vector, dataFrame.rowsCount())
         } else {
-            infillVector(vector, column)
+            infillVector(vector, convertedColumn)
         }
         return vector
     }
