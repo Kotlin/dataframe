@@ -5,7 +5,7 @@ ktlint = "3.4.5"
 kotlin = "1.7.10"
 dokka = "1.5.31"
 libsPublisher = "0.0.60-dev-30"
-dataframe = "0.8.1-dev-1068"
+dataframe = "0.9.0-dev"#"0.8.1-dev-1068"
 korro = "0.1.1-dev-29"
 
 commonsCsv = "1.8"
@@ -46,8 +46,12 @@ arrow-format = { group = "org.apache.arrow", name = "arrow-format", version.ref 
 arrow-vector = { group = "org.apache.arrow", name = "arrow-vector", version.ref = "arrow" }
 arrow-memory = { group = "org.apache.arrow", name = "arrow-memory-unsafe", version.ref = "arrow" }
 
+openapi = { group = "org.openapitools", name = "openapi-generator", version = "6.0.1" }
+swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version = "2.1.2" }
+
 [plugins]
 jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }
+
 
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
