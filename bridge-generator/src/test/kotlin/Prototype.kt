@@ -5,7 +5,43 @@ import kotlinx.serialization.encodeToString
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.GenerateConstructor
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.DataRowSchema
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.addId
+import org.jetbrains.kotlinx.dataframe.api.all
+import org.jetbrains.kotlinx.dataframe.api.append
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.asIterable
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.column
+import org.jetbrains.kotlinx.dataframe.api.columnGroup
+import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.concat
+import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.distinct
+import org.jetbrains.kotlinx.dataframe.api.distinctBy
+import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
+import org.jetbrains.kotlinx.dataframe.api.explode
+import org.jetbrains.kotlinx.dataframe.api.expr
+import org.jetbrains.kotlinx.dataframe.api.fillNulls
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.first
+import org.jetbrains.kotlinx.dataframe.api.forEach
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.join
+import org.jetbrains.kotlinx.dataframe.api.leftJoin
+import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.mapToColumn
+import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.ungroup
+import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.io.readJson
 import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
@@ -132,7 +168,6 @@ class Prototype {
     )
 
 
-
     private val functions = (otherFunctions concat dfFunctions).appendReceiverAndId()
 
     // region classes
@@ -194,6 +229,7 @@ class Prototype {
     @DataSchema
     class Data(val a: Int)
     class Record(val data: Data)
+
     @Test
     fun `cast and convert error should print schema maybe`() {
         val b by columnOf(1)
@@ -248,6 +284,7 @@ class Prototype {
         println(df["code"].toList())
 
     }
+
     @Test
     fun `generate atoms tests`() {
         bridges.generateAtomsTests()
