@@ -181,6 +181,14 @@ public open class SimpleCol internal constructor(
     override fun toString(): String {
         return "SimpleCol(name='$name', type=$type)"
     }
+
+    public open fun kind(): SimpleColumnKind {
+        return SimpleColumnKind.VALUE
+    }
+}
+
+public enum class SimpleColumnKind {
+    VALUE, GROUP, FRAME
 }
 
 @Serializable
@@ -191,6 +199,10 @@ public data class SimpleFrameColumn(
 ) : MyColumnGroup<SimpleCol>, SimpleCol(name1, FrameColumnTypeApproximation) {
     override fun columns(): List<SimpleCol> {
         return columns
+    }
+
+    override fun kind(): SimpleColumnKind {
+        return SimpleColumnKind.FRAME
     }
 }
 
@@ -230,6 +242,10 @@ public class SimpleColumnGroup(
         result = 31 * result + name.hashCode()
         result = 31 * result + columns.hashCode()
         return result
+    }
+
+    override fun kind(): SimpleColumnKind {
+        return SimpleColumnKind.GROUP
     }
 }
 

@@ -26,6 +26,6 @@ class ConvertKtTest {
             columns = listOf(listOf("person", "age"))
         )
         val type = TypeApproximationImpl("kotlin.Number", false)
-        convertImpl(convert, type).columns()[1].shouldBeInstanceOf<SimpleColumnGroup>().columns()[0].type shouldBe TypeApproximationImpl("kotlin.Number", false)
+        convertImpl(convert.schema, convert.columns, type).columns()[1].shouldBeInstanceOf<SimpleColumnGroup>().columns()[0].type shouldBe TypeApproximationImpl("kotlin.Number", false)
     }
 }

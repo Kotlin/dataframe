@@ -37,7 +37,7 @@ internal class Convert6 : AbstractInterpreter<PluginDataFrameSchema>() {
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         val columns = (listOf(firstCol) + cols).map { listOf(it) }
-        return convertImpl(ConvertApproximation(receiver, columns), expression)
+        return convertImpl(receiver, columns, expression)
     }
 }
 
@@ -46,33 +46,69 @@ public class With0 : AbstractSchemaModificationInterpreter() {
     public val Arguments.type: TypeApproximation by type(name("rowConverter"))
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        return convertImpl(receiver, type)
+        return convertImpl(receiver.schema, receiver.columns, type)
     }
 }
 
-internal fun convertImpl(receiver: ConvertApproximation, type: TypeApproximation): PluginDataFrameSchema {
-    val columns = receiver.columns.toSet()
+internal fun convertImpl(
+    pluginDataFrameSchema: PluginDataFrameSchema,
+    columns: List<List<String>>,
+    type: TypeApproximation
+): PluginDataFrameSchema {
+    return pluginDataFrameSchema.map(columns.toSet()) { path, column ->
+        require(column.kind() == SimpleColumnKind.VALUE) {
+            "$path must be ${SimpleColumnKind.VALUE}, but was ${column.kind()}"
+        }
+        column.changeType(type)
+    }
+}
 
-    fun simpleCol(it: SimpleCol, path: List<String>): SimpleCol = when (it) {
-        is SimpleColumnGroup -> {
-            val path1 = path + listOf(it.name)
-            val newColumns = it.columns().map {
-                simpleCol(it, path1)
+internal fun PluginDataFrameSchema.map(selected: ColumnsSet, transform: ColumnMapper): PluginDataFrameSchema {
+    return PluginDataFrameSchema(
+        f(columns(), transform, selected, emptyList())
+    )
+}
+
+internal typealias ColumnsSet = Set<List<String>>
+
+internal typealias ColumnMapper = (List<String>, SimpleCol) -> SimpleCol
+
+internal fun f(columns: List<SimpleCol>, transform: ColumnMapper, selected: ColumnsSet, path: List<String>): List<SimpleCol> {
+    return columns.map {
+        val fullPath = path + listOf(it.name)
+        when (it) {
+            is SimpleColumnGroup -> if (fullPath in selected) {
+                transform(fullPath, it)
+            } else {
+                it.map(transform, selected, fullPath)
             }
-            SimpleColumnGroup(it.name, newColumns)
-        }
-        else -> if (path + listOf(it.name()) in columns) {
-            it.changeType(type)
-        } else {
-            it
+            is SimpleFrameColumn -> if (fullPath in selected) {
+                transform(fullPath, it)
+            } else {
+                it.map(transform, selected, fullPath)
+            }
+            else -> if (fullPath in selected) {
+                transform(path, it)
+            } else {
+                it
+            }
         }
     }
+}
 
-    val newColumns = receiver.schema.columns().map {
-        simpleCol(it, emptyList())
-    }
+internal fun SimpleColumnGroup.map(transform: ColumnMapper, selected: ColumnsSet, path: List<String>): SimpleColumnGroup {
+    return SimpleColumnGroup(
+        name,
+        f(columns(), transform, selected, path)
+    )
+}
 
-    return PluginDataFrameSchema(newColumns)
+internal fun SimpleFrameColumn.map(transform: ColumnMapper, selected: ColumnsSet, path: List<String>): SimpleFrameColumn {
+    return SimpleFrameColumn(
+        name,
+        f(columns(), transform, selected, path),
+        nullable
+    )
 }
 
 internal class To0 : AbstractInterpreter<PluginDataFrameSchema>() {
@@ -81,6 +117,6 @@ internal class To0 : AbstractInterpreter<PluginDataFrameSchema>() {
     override val Arguments.startingSchema get() = receiver.schema
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        return convertImpl(receiver, typeArg0)
+        return convertImpl(receiver.schema, receiver.columns, typeArg0)
     }
 }
