@@ -169,4 +169,40 @@
   "converter": "type",
   "lens": "ReturnType",
   "supported": true
+}, {
+  "type": {
+    "name": "DataFrame<T>.(DataColumn<C>) -> AnyBaseCol",
+    "vararg": false
+  },
+  "approximation": "SimpleCol",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "ColumnSet<C>",
+    "vararg": false
+  },
+  "approximation": "List<ColumnWithPathApproximation>",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "Boolean",
+    "vararg": false
+  },
+  "approximation": "Boolean",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "ColumnsSelector<T, *>",
+    "vararg": false
+  },
+  "approximation": "List<ColumnWithPathApproximation>",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": true
 }]

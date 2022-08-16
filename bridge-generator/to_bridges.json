@@ -1,0 +1,10 @@
+[{
+  "type": {
+    "name": "DataFrame<T>.(DataColumn<C>) -> AnyBaseCol",
+    "vararg": false
+  },
+  "approximation": "SimpleCol",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": true
+}]

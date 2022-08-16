@@ -48,35 +48,53 @@ val convert = dataFrameOf(
         Parameter("infer", Type("Infer", false), "Infer.Nulls"),
         Parameter("expression", Type("RowValueExpression<T, Any?, R>", false), null),
     )),
+)
+
+val to = dataFrameOf(
     Function("Convert<T, C>", "to", Type("DataFrame<T>", false), emptyList()),
+    Function("Convert<T, *>", "to", Type("DataFrame<T>", false), listOf(
+        Parameter("type", Type("KType", false), null)
+    )),
+    Function("Convert<T, C>", "to", Type("DataFrame<T>", false), listOf(
+        Parameter("columnConverter", Type("DataFrame<T>.(DataColumn<C>) -> AnyBaseCol", false), null)
+    ))
 )
 
 class Convert {
     @Test
     fun `convert APIs`() {
-        val convert = convert.appendReceiverAndId()
-        val types = convert.collectUsedTypes(classes.take(1))
-        val rawBridges = types.joinBridges(bridges, verify = false)
-        val path = "convert_bridges.json"
-        File(path).let {
-            if (!it.exists()) {
-                rawBridges.writeJson(it, prettyPrint = true)
-            } else {
-                val json = rawBridges.filter { it["converter"] == null }.toJson(prettyPrint = true)
-                println(json)
-            }
+        convert.generateAll("convert_bridges.json")
+    }
+
+    @Test
+    fun `to APIs`() {
+        to.generateAll("to_bridges.json")
+    }
+}
+
+fun DataFrame<Function>.generateAll(batchBridgePath: String) {
+    val functions = appendReceiverAndId()
+    val types = functions.collectUsedTypes(classes.take(1))
+    val rawBridges = types.joinBridges(bridges, verify = false)
+    File(batchBridgePath).let {
+        if (!it.exists()) {
+            rawBridges.writeJson(it, prettyPrint = true)
+        } else {
+            val json = rawBridges.filter { it["converter"] == null }.toJson(prettyPrint = true)
+            println(json)
         }
+    }
 
-        val editedBridges = DataFrame.readJson(path).cast<Bridge>(verify = true)
-        val allBridges = bridges.concat(editedBridges).distinct().cast<Bridge>(verify = true)
-        allBridges.writeJson("bridges.json", prettyPrint = true)
+    val editedBridges = DataFrame.readJson(batchBridgePath).cast<Bridge>(verify = true)
+    val allBridges = bridges.concat(editedBridges).distinct().cast<Bridge>(verify = true)
+    allBridges.writeJson("bridges.json", prettyPrint = true)
 
-        val refine = convert
-            .refine(allBridges)
-            //.also { println(it.schema()) }
-            .convertTo<RefinedFunction>()
+    val refine = functions
+        .refine(allBridges)
         //.also { println(it.schema()) }
-        //.cast<RefinedFunction>(verify = true)
+        .convertTo<RefinedFunction>()
+    //.also { println(it.schema()) }
+    //.cast<RefinedFunction>(verify = true)
 
     editedBridges.generateAtomsTests()
     refine.generateInterpreters()

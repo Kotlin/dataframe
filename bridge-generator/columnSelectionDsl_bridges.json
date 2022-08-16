@@ -1,0 +1,37 @@
+[{
+  "type": {
+    "name": "ColumnSet<C>",
+    "vararg": false
+  },
+  "approximation": "List<ColumnWithPathApproximation>",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "DataFrame<T>",
+    "vararg": false
+  },
+  "approximation": "PluginDataFrameSchema",
+  "converter": "dataFrame",
+  "lens": "Schema",
+  "supported": true
+}, {
+  "type": {
+    "name": "AnyCol",
+    "vararg": false
+  },
+  "approximation": "SimpleCol",
+  "converter": "dataColumn",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "InsertClause<T>",
+    "vararg": false
+  },
+  "approximation": "InsertClauseApproximation",
+  "converter": "insertClause",
+  "lens": "Value",
+  "supported": true
+}]
