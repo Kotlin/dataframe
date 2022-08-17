@@ -10,7 +10,8 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.id
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Any.createSchema
-import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.createSchema
+import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.createSchemaAsFrame
+import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.createSchemaAsList
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Boolean.createSchema
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Integer.createSchema
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Number.createSchema
@@ -44,16 +45,16 @@ public fun main() {
     val knownMarkers = mutableListOf<Marker>()
 
     for ((name, dataFrameSchema) in result) {
-        println("$name:")
-        println(dataFrameSchema)
-        println()
-        println("generated code:")
+//        println("$name:")
+//        println(dataFrameSchema)
+//        println()
+//        println("generated code:")
         println(
             codeGenerator.generate(
                 schema = dataFrameSchema,
                 name = name,
                 fields = true,
-                extensionProperties = false,
+                extensionProperties = true,
                 isOpen = false,
                 knownMarkers = knownMarkers,
                 readDfMethod = null,
@@ -176,9 +177,15 @@ private sealed class OpenApiType(val name: kotlin.String?) {
             List::class.createTypeWithArgument(type, nullable)
 
         // TODO use arraySchema.
-        fun createSchema(nullable: kotlin.Boolean, arraySchema: ColumnSchema): ColumnSchema =
+        fun createSchemaAsList(nullable: kotlin.Boolean, arraySchema: ColumnSchema): ColumnSchema =
             ColumnSchema.Value(
                 type = getType(nullable, arraySchema.type),
+            )
+
+        fun createSchemaAsFrame(nullable: kotlin.Boolean, arraySchema: DataFrameSchema): ColumnSchema =
+            ColumnSchema.Frame(
+                schema = arraySchema,
+                nullable = nullable,
             )
     }
 
@@ -223,7 +230,7 @@ private fun Map<String, Schema<*>>.toDataFrameSchema(): List<Pair<String, DataFr
             )
 
             if (res is DataFrameSchemaResult.Success) {
-                dataFrames[name] = res.schema
+                dataFrames[name] = res.dataFrameSchema
                 true
             } else false
         }
@@ -235,7 +242,7 @@ private fun Map<String, Schema<*>>.toDataFrameSchema(): List<Pair<String, DataFr
 
 private sealed interface OpenApiTypeResult {
 
-    data class UsingRef(val name: String, val schema: ColumnSchema) : OpenApiTypeResult
+    data class UsingRef(val name: String, val columnSchema: ColumnSchema) : OpenApiTypeResult
 
     object CannotFindRefSchema : OpenApiTypeResult
 
@@ -251,10 +258,10 @@ private fun Schema<*>.toOpenApiType(
 
         return OpenApiTypeResult.UsingRef(
             name = typeName,
-            schema = ColumnSchema.Group(
+            columnSchema = ColumnSchema.Group(
                 when (val it = getRefSchema(typeName)) {
                     is DataFrameSchemaResult.CannotFindRefSchema -> return OpenApiTypeResult.CannotFindRefSchema
-                    is DataFrameSchemaResult.Success -> it.schema
+                    is DataFrameSchemaResult.Success -> it.dataFrameSchema
                 },
             ),
         )
@@ -298,10 +305,10 @@ private fun Schema<*>.toOpenApiType(
 
                 return OpenApiTypeResult.UsingRef(
                     name = typeName,
-                    schema = ColumnSchema.Group(
+                    columnSchema = ColumnSchema.Group(
                         when (val it = getRefSchema(typeName)) {
                             is DataFrameSchemaResult.CannotFindRefSchema -> return OpenApiTypeResult.CannotFindRefSchema
-                            is DataFrameSchemaResult.Success -> it.schema
+                            is DataFrameSchemaResult.Success -> it.dataFrameSchema
                         },
                     ),
                 )
@@ -324,7 +331,7 @@ private sealed interface DataFrameSchemaResult {
 
     object CannotFindRefSchema : DataFrameSchemaResult
 
-    data class Success(val schema: DataFrameSchema) : DataFrameSchemaResult
+    data class Success(val dataFrameSchema: DataFrameSchema) : DataFrameSchemaResult
 
     companion object {
         fun fromNullable(schema: DataFrameSchema?): DataFrameSchemaResult =
@@ -352,7 +359,7 @@ private fun OpenApiType.toColumnSchema(
 
             is OpenApiType.Array -> {
                 if (prop.items == null) {
-                    this.createSchema(
+                    this.createSchemaAsList(
                         nullable = nullable,
                         arraySchema = OpenApiType.Any.createSchema(nullable = true),
                     ) // make List<Any?>
@@ -367,7 +374,10 @@ private fun OpenApiType.toColumnSchema(
                             return ColumnSchemaResult.CannotFindRefSchema
 
                         is OpenApiTypeResult.UsingRef ->
-                            createSchema(nullable, it.schema)
+                            createSchemaAsFrame(
+                                nullable = nullable,
+                                arraySchema = (it.columnSchema as ColumnSchema.Group).schema,
+                            )
 
                         is OpenApiTypeResult.Success -> {
                             val arrayTypeSchemaResult = it.openApiType.toColumnSchema(
@@ -383,7 +393,7 @@ private fun OpenApiType.toColumnSchema(
                                     return ColumnSchemaResult.CannotFindRefSchema
 
                                 is ColumnSchemaResult.Success ->
-                                    createSchema(
+                                    createSchemaAsList(
                                         nullable = nullable,
                                         arraySchema = arrayTypeSchemaResult.schema,
                                     )
@@ -409,8 +419,8 @@ private fun OpenApiType.toColumnSchema(
                 when (val it = prop.toDataFrameSchema(getRefSchema, produceAdditionalSchema)) {
                     is DataFrameSchemaResult.CannotFindRefSchema -> return ColumnSchemaResult.CannotFindRefSchema
                     is DataFrameSchemaResult.Success -> {
-                        produceAdditionalSchema(name, it.schema)
-                        it.schema
+                        produceAdditionalSchema(name, it.dataFrameSchema)
+                        it.dataFrameSchema
                     }
                 },
             )
