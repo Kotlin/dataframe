@@ -446,8 +446,7 @@ private fun Schema<*>.toDataFrameSchema(
                     return DataFrameSchemaResult.CannotFindRefSchema
 
                 is OpenApiTypeResult.UsingRef -> {
-                    val (refName, schema) = openApiTypeResult
-                    this[refName] = schema
+                    this[name] = openApiTypeResult.columnSchema
                     continue
                 }
 
