@@ -136,13 +136,6 @@ class Prototype {
 
     private val functions = (otherFunctions concat dfFunctions).appendReceiverAndId()
 
-    fun DataFrame<Function>.appendReceiverAndId() = groupBy { function }
-        .updateGroups { it.addId() }
-        .concat()
-        .update { parameters }.with {
-            it.append(Parameter("receiver", Type(receiverType, false), null))
-        }
-
     // region classes
 
     @DataSchema
@@ -376,38 +369,6 @@ class Prototype {
             |}""".trimMargin())
     }
 
-    fun Map<String, ColumnSchema>.accept(
-        s: String,
-    ): List<String> {
-        var i = 0
-        val expressions = mutableListOf<String>()
-        fun acceptInt(
-            s: String,
-            columns: Map<String, ColumnSchema>,
-            expressions: MutableList<String>,
-        ) {
-            columns.forEach { (t, u) ->
-                when (u) {
-                    is ColumnSchema.Frame -> {
-                        acceptInt("${s}.$t[0]", u.schema.columns, expressions)
-                    }
-
-                    is ColumnSchema.Value -> {
-                        val funName = "col${i}"
-                        expressions.add("fun $funName(v: ${u.type.toString()}) {}")
-                        i++
-                        expressions.add("${funName}(${s}.$t[0])")
-                    }
-
-                    is ColumnSchema.Group -> {
-                        acceptInt("${s}.$t", u.schema.columns, expressions)
-                    }
-                }
-            }
-        }
-        acceptInt(s, this, expressions)
-        return expressions.toList()
-    }
     val root = File("build/tmp/prototype")
     private fun generateSchemaTestStub(name: String, expression: String) {
 
@@ -477,11 +438,6 @@ class Prototype {
                 |    ${schemaTestCode}
                 |}
             """.trimMargin())
-    }
-
-    private fun DataFrame<*>.generateTestCode(): String {
-        val expressions = schema().columns.accept("df")
-        return expressions.joinToString("\n")
     }
 
     @Test

@@ -136,6 +136,7 @@ kotlinter {
         "filename",
         "comment-spacing",
         "curly-spacing",
+        "string-template",
     )
 }
 
