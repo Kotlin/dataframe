@@ -189,6 +189,10 @@ Add dependency:
 implementation("org.jetbrains.kotlinx:dataframe-arrow:$dataframe_version")
 ```
 
+<warning>
+Make sure to follow [Apache Arrow Java compatibility](https://arrow.apache.org/docs/java/install.html#java-compatibility) guide when using Java 9+ 
+</warning>
+
 Dataframe supports reading from [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) and [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
 
 <!---FUN readArrowFeather-->
