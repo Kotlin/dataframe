@@ -5,6 +5,8 @@ import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.media.Schema
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
+import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.id
 import org.jetbrains.kotlinx.dataframe.impl.createTypeWithArgument
 import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Any.createSchema
@@ -17,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Object.createSchema
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.String.createSchema
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import java.io.File
 import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.reflect.KType
@@ -24,8 +27,8 @@ import kotlin.reflect.typeOf
 
 public fun main() {
     val openAPI: OpenAPI = OpenAPIParser()
-        .readLocation(
-            "https://petstore3.swagger.io/api/v3/openapi.json",
+        .readContents(
+            File("/data/Projects/dataframe/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/io/openapi-sample.yaml").readText(),
             null,
             null
         )
@@ -35,7 +38,7 @@ public fun main() {
         .openAPI ?: error("Failed to parse OpenAPI")
 
     val result = openAPI.components?.schemas?.toMap()
-        ?.filter { it.value.type == "object" }
+        ?.filter { it.value.type == "object" || it.value.allOf != null }
         ?.toDataFrameSchemas()
         ?.toList()
         ?: emptyList()
@@ -44,24 +47,24 @@ public fun main() {
     val knownMarkers = mutableListOf<Marker>()
 
     for ((name, dataFrameSchema) in result) {
-        println("$name:")
-        println(dataFrameSchema)
-        println()
+//        println("$name:")
+//        println(dataFrameSchema)
+//        println()
 //        println("generated code:")
-//        println(
-//            codeGenerator.generate(
-//                schema = dataFrameSchema,
-//                name = name,
-//                fields = true,
-//                extensionProperties = true,
-//                isOpen = false,
-//                knownMarkers = knownMarkers,
-//                readDfMethod = null,
-//                fieldNameNormalizer = NameNormalizer.id(),
-//            ).also {
-//                knownMarkers += it.newMarkers
-//            }.code.declarations
-//        )
+        println(
+            codeGenerator.generate(
+                schema = dataFrameSchema,
+                name = name,
+                fields = true,
+                extensionProperties = true,
+                isOpen = false,
+                knownMarkers = knownMarkers,
+                readDfMethod = null,
+                fieldNameNormalizer = NameNormalizer.id(),
+            ).also {
+                knownMarkers += it.newMarkers
+            }.code.declarations
+        )
     }
 }
 
@@ -69,14 +72,20 @@ public fun main() {
  * Converts named OpenApi schemas to DataFrameSchemas with name.
  */
 private fun Map<String, Schema<*>>.toDataFrameSchemas(): Map<String, DataFrameSchema> {
-    val retrievableColumnSchemas = mapValues { (_, value) ->
-        RetrievableDataFrameSchema(value::toDataFrameSchema)
+    val retrievableColumnSchemas = mapValues { (typeName, value) ->
+        RetrievableDataFrameSchema { getRefSchema, produceAdditionalSchema ->
+            value.toDataFrameSchema(
+                typeName = typeName,
+                getRefSchema = getRefSchema,
+                produceAdditionalSchema = produceAdditionalSchema
+            )
+        }
     }.toMutableMap()
 
     val dataFrames = mutableMapOf<String, DataFrameSchema>()
 
     while (retrievableColumnSchemas.isNotEmpty()) {
-        val (res, _) = retrievableColumnSchemas.entries.first { (name, columnSchemas) ->
+        val retrievedColumn = retrievableColumnSchemas.entries.first { (name, columnSchemas) ->
             val res = columnSchemas(
                 getRefSchema = { DataFrameSchemaResult.fromNullable(dataFrames[it]) },
                 produceAdditionalSchema = dataFrames::put,
@@ -86,8 +95,8 @@ private fun Map<String, Schema<*>>.toDataFrameSchemas(): Map<String, DataFrameSc
                 dataFrames[name] = res.dataFrameSchema
                 true
             } else false
-        }
-        retrievableColumnSchemas -= res
+        }.key
+        retrievableColumnSchemas -= retrievedColumn
     }
 
     return dataFrames
@@ -139,6 +148,7 @@ private fun interface RetrievableDataFrameSchema {
  * Converts a single OpenApi object type schema to a [DataFrameSchema] if successful.
  *
  * @receiver The object type schema to convert.
+ * @param typeName                  The name of the object type schema. Only used in allOf schemas.
  * @param getRefSchema              A function that returns a [DataFrameSchema] for a given reference name if successful.
  * @param produceAdditionalSchema   A function that produces an additional [DataFrameSchema] for a given name.
  *                                  This is used for `object` types not present in the root of `components/schemas`.
@@ -146,45 +156,95 @@ private fun interface RetrievableDataFrameSchema {
  * @return A [DataFrameSchemaResult.Success] if successful, otherwise [DataFrameSchemaResult.CannotFindRefSchema].
  */
 private fun Schema<*>.toDataFrameSchema(
+    typeName: String,
     getRefSchema: GetRefSchema,
     produceAdditionalSchema: ProduceAdditionalSchema,
 ): DataFrameSchemaResult {
-    require(type == "object") { "Only object types can be converted to a DataFrameSchema" }
+    require(type == "object" || allOf != null) { "Only object- or allOf types can be converted to a DataFrameSchema" }
 
-    val columns = buildMap {
-        for ((name, property) in (properties ?: emptyMap())) {
-            val openApiTypeResult = property.toOpenApiType(
-                isRequired = required?.contains(name) == true,
-                getRefSchema = getRefSchema,
-            )
+    if (additionalProperties != false) {
+        println("An object does not have `additionalProperties == false` and thus might have extra fields that will not be encoded. additionalProperties: $additionalProperties")
+    }
 
-            val (openApiType, nullable) = when (openApiTypeResult) {
-                is OpenApiTypeResult.CannotFindRefSchema ->
-                    return DataFrameSchemaResult.CannotFindRefSchema
-
-                is OpenApiTypeResult.UsingRef -> {
-                    this[name] = openApiTypeResult.columnSchema
-                    continue
-                }
-
-                is OpenApiTypeResult.Success ->
-                    openApiTypeResult
+    val columns: Map<String, ColumnSchema> = buildMap {
+        if (allOf != null) {
+            val allOfSchemas = allOf!!.map {
+                it to it.toOpenApiType(true, getRefSchema)
             }
 
-            val columnSchemaResult = openApiType.toColumnSchema(
-                property = property,
-                propertyName = name,
-                nullable = nullable,
-                getRefSchema = getRefSchema,
-                produceAdditionalSchema = produceAdditionalSchema,
-            )
+            for ((schema, openApiTypeResult) in allOfSchemas) {
+                val (openApiType, nullable) = when (openApiTypeResult) {
+                    is OpenApiTypeResult.CannotFindRefSchema ->
+                        return DataFrameSchemaResult.CannotFindRefSchema
 
-            when (columnSchemaResult) {
-                is ColumnSchemaResult.CannotFindRefSchema ->
-                    return DataFrameSchemaResult.CannotFindRefSchema
+                    is OpenApiTypeResult.UsingRef -> {
+                        this += (openApiTypeResult.columnSchema as ColumnSchema.Group)
+                            .schema
+                            .columns
 
-                is ColumnSchemaResult.Success ->
-                    this[name] = columnSchemaResult.columnSchema
+                        continue
+                    }
+
+                    is OpenApiTypeResult.Success ->
+                        openApiTypeResult
+                }
+
+                // must be an object
+                openApiType as OpenApiType.Object
+
+                val columnSchemaResult = openApiType.toColumnSchema(
+                    property = schema,
+                    propertyName = typeName,
+                    nullable = nullable,
+                    getRefSchema = getRefSchema,
+                    produceAdditionalSchema = produceAdditionalSchema,
+                )
+
+                when (columnSchemaResult) {
+                    is ColumnSchemaResult.CannotFindRefSchema ->
+                        return DataFrameSchemaResult.CannotFindRefSchema
+
+                    is ColumnSchemaResult.Success ->
+                        this += (columnSchemaResult.columnSchema as ColumnSchema.Group)
+                            .schema
+                            .columns
+                }
+            }
+        } else {
+            for ((name, property) in (properties ?: emptyMap())) {
+                val openApiTypeResult = property.toOpenApiType(
+                    isRequired = required?.contains(name) == true,
+                    getRefSchema = getRefSchema,
+                )
+
+                val (openApiType, nullable) = when (openApiTypeResult) {
+                    is OpenApiTypeResult.CannotFindRefSchema ->
+                        return DataFrameSchemaResult.CannotFindRefSchema
+
+                    is OpenApiTypeResult.UsingRef -> {
+                        this[name] = openApiTypeResult.columnSchema
+                        continue
+                    }
+
+                    is OpenApiTypeResult.Success ->
+                        openApiTypeResult
+                }
+
+                val columnSchemaResult = openApiType.toColumnSchema(
+                    property = property,
+                    propertyName = name,
+                    nullable = nullable,
+                    getRefSchema = getRefSchema,
+                    produceAdditionalSchema = produceAdditionalSchema,
+                )
+
+                when (columnSchemaResult) {
+                    is ColumnSchemaResult.CannotFindRefSchema ->
+                        return DataFrameSchemaResult.CannotFindRefSchema
+
+                    is ColumnSchemaResult.Success ->
+                        this[name] = columnSchemaResult.columnSchema
+                }
             }
         }
     }
@@ -323,6 +383,9 @@ private sealed class OpenApiType(val name: kotlin.String?) {
     override fun toString(): kotlin.String = name.toString()
 
     companion object {
+
+        val all: List<OpenApiType> = listOf(String, Integer, Number, Boolean, Object, Any)
+
         fun fromString(type: kotlin.String?): OpenApiType =
             fromStringOrNull(type) ?: throw IllegalArgumentException("Unknown type: $type")
 
@@ -385,36 +448,24 @@ private fun Schema<*>.toOpenApiType(
         println("TODO enum not yet implemented")
     }
 
-    if (not != null) {
-        // TODO
-        println("TODO not not yet implemented")
-    }
-
-    if (allOf != null) {
-        // TODO https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/
-        println("TODO allOf not yet implemented")
-    }
-
     var openApiType = OpenApiType.fromStringOrNull(type)
 
-    if (openApiType == null) { // check for anyOf/oneOf
+    if (openApiType == null) { // check for anyOf/oneOf/not
         val anyOf = ((anyOf ?: emptyList()) + (oneOf ?: emptyList()))
-
-        val refs = anyOf.mapNotNull { it.`$ref` }
-
-        val types = anyOf.mapNotNull { it.type }
+        val anyOfRefs = anyOf.mapNotNull { it.`$ref` }
+        val anyOfTypes = anyOf.mapNotNull { it.type }
             .mapNotNull(OpenApiType.Companion::fromStringOrNull)
             .distinct()
 
         openApiType = when {
-            types.size == 1 && refs.isEmpty() -> types.first()
+            anyOfTypes.size == 1 && anyOfRefs.isEmpty() -> anyOfTypes.first()
 
-            types.size == 2 && refs.isEmpty() && types.containsAll(
+            anyOfTypes.size == 2 && anyOfRefs.isEmpty() && anyOfTypes.containsAll(
                 listOf(OpenApiType.Number, OpenApiType.Integer)
             ) -> OpenApiType.Number
 
-            types.isEmpty() && refs.size == 1 -> {
-                val typeName = refs.first().takeLastWhile { it != '/' }
+            anyOfTypes.isEmpty() && anyOfRefs.size == 1 -> {
+                val typeName = anyOfRefs.first().takeLastWhile { it != '/' }
 
                 return OpenApiTypeResult.UsingRef(
                     name = typeName,
@@ -426,6 +477,8 @@ private fun Schema<*>.toOpenApiType(
                     ),
                 )
             }
+            // cannot assume anything about a type when there are multiple types except one
+            not != null -> OpenApiType.Any
 
             else -> OpenApiType.Any
         }
@@ -481,7 +534,7 @@ private fun OpenApiType.toColumnSchema(
                         arraySchema = OpenApiType.Any.createSchema(nullable = true),
                     )
                 } else { // Try to get the array type
-                    val arrayTypeResult = property.items.toOpenApiType(
+                    val arrayTypeResult = property.items!!.toOpenApiType(
                         isRequired = true,
                         getRefSchema = getRefSchema,
                     )
@@ -498,7 +551,7 @@ private fun OpenApiType.toColumnSchema(
 
                         is OpenApiTypeResult.Success -> {
                             val arrayTypeSchemaResult = arrayTypeResult.openApiType.toColumnSchema(
-                                property = property.items,
+                                property = property.items!!,
                                 propertyName = propertyName,
                                 nullable = arrayTypeResult.nullable,
                                 getRefSchema = getRefSchema,
@@ -531,19 +584,27 @@ private fun OpenApiType.toColumnSchema(
                 format = OpenApiNumberFormat.fromStringOrNull(property.format),
             )
 
-            is OpenApiType.Object -> createSchema(
-                when (val it = property.toDataFrameSchema(getRefSchema, produceAdditionalSchema)) {
-                    is DataFrameSchemaResult.CannotFindRefSchema -> return ColumnSchemaResult.CannotFindRefSchema
+            is OpenApiType.Object -> {
+                val dataFrameSchemaResult = property.toDataFrameSchema(
+                    typeName = propertyName.snakeToUpperCamelCase(),
+                    getRefSchema = getRefSchema,
+                    produceAdditionalSchema = produceAdditionalSchema,
+                )
+
+                when (dataFrameSchemaResult) {
+                    is DataFrameSchemaResult.CannotFindRefSchema ->
+                        return ColumnSchemaResult.CannotFindRefSchema
+
                     is DataFrameSchemaResult.Success -> {
                         produceAdditionalSchema(
                             propertyName.snakeToUpperCamelCase(),
-                            it.dataFrameSchema,
+                            dataFrameSchemaResult.dataFrameSchema,
                         )
 
-                        it.dataFrameSchema
+                        createSchema(dataFrameSchemaResult.dataFrameSchema)
                     }
-                },
-            )
+                }
+            }
 
             is OpenApiType.String -> createSchema(
                 nullable = nullable,
