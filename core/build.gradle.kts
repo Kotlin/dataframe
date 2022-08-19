@@ -7,7 +7,7 @@ plugins {
     kotlin("jupyter.api") version libs.versions.kotlinJupyter
 
     id("org.jetbrains.dataframe.generator")
-
+    id("org.jetbrains.kotlinx.kover")
     id("org.jmailen.kotlinter")
 }
 
@@ -83,6 +83,12 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 
 tasks.test {
     maxHeapSize = "2048m"
+    extensions.configure(kotlinx.kover.api.KoverTaskExtension::class) {
+        excludes.set(listOf(
+            "org.jetbrains.kotlinx.dataframe.jupyter.*",
+            "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests"
+        ))
+    }
 }
 
 tasks.processJupyterApiResources {
