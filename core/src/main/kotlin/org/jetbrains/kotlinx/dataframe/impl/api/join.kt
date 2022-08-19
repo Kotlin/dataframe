@@ -67,7 +67,7 @@ internal fun <A, B> DataFrame<A>.joinImpl(
 
     require(leftJoinColumns.size == rightJoinColumns.size)
 
-    // replace all MapColumns in join with nested columns, matching by column path
+    // replace all ColumnGroups in join with nested columns, matching by column path
     val allLeftJoinColumns = mutableListOf<ColumnWithPath<*>>()
     val allRightJoinColumns = mutableListOf<ColumnWithPath<*>>()
 
@@ -220,7 +220,7 @@ internal fun <A, B> DataFrame<A>.joinImpl(
         val newColumn = when (srcColumn.kind) {
             ColumnKind.Value -> DataColumn.createValueColumn(srcColumn.name, columnValues.asList(), srcColumn.type.withNullability(hasNulls))
             ColumnKind.Frame -> DataColumn.createFrameColumn(srcColumn.name, columnValues.asList() as List<AnyFrame>)
-            ColumnKind.Group -> error("Unexpected MapColumn at path ${srcColumn.path}")
+            ColumnKind.Group -> error("Unexpected ColumnGroup at path ${srcColumn.path}")
         }
         srcColumn.path to newColumn
     }

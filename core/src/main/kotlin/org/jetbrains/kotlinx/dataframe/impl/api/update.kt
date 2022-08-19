@@ -75,7 +75,7 @@ internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> = when
                     null -> null
                     is List<*> -> it[colIndex]
                     is AnyRow -> it.getOrNull(col.name)
-                    else -> require(false) { "Can not add value '$it' to MapColumn" }
+                    else -> require(false) { "Can not add value '$it' to ColumnGroup" }
                 }
             }
             col.updateWith(newValues)
