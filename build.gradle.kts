@@ -11,7 +11,7 @@ plugins {
     id("org.jetbrains.kotlinx.dataframe") version libs.versions.dataframe apply false
 
     id("org.jetbrains.dokka") version libs.versions.dokka
-
+    id("org.jetbrains.kotlinx.kover") version libs.versions.kover
     id("org.jmailen.kotlinter") version libs.versions.ktlint
 }
 
@@ -46,6 +46,25 @@ allprojects {
     tasks.withType<JavaCompile> {
         sourceCompatibility = JavaVersion.VERSION_1_8.toString()
         targetCompatibility = JavaVersion.VERSION_1_8.toString()
+    }
+}
+
+koverMerged {
+    enable()
+    filters {
+        projects {
+            excludes += listOf(
+                ":examples:idea-examples:youtube",
+                ":examples:idea-examples:titanic",
+                ":examples:idea-examples:movies",
+                ":examples:idea-examples",
+                ":examples",
+                ":plugins",
+                ":plugins:dataframe-gradle-plugin",
+                ":plugins:symbol-processor",
+                ":plugins:dataframe-gradle-plugin",
+            )
+        }
     }
 }
 
