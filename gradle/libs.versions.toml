@@ -7,6 +7,7 @@ dokka = "1.5.31"
 libsPublisher = "0.0.60-dev-30"
 dataframe = "0.8.1-dev-1068"
 korro = "0.1.1-dev-29"
+kover = "0.6.0-Beta"
 
 commonsCsv = "1.8"
 commonsCompress = "1.21"

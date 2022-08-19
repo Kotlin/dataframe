@@ -7,6 +7,7 @@ plugins {
     id("org.jetbrains.kotlinx.dataframe")
     id("io.github.devcrocod.korro") version libs.versions.korro
     id("org.jmailen.kotlinter")
+    id("org.jetbrains.kotlinx.kover")
 }
 
 repositories {
