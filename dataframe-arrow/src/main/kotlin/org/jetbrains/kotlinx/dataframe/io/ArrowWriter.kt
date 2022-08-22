@@ -16,10 +16,14 @@ import org.apache.arrow.vector.types.pojo.FieldType
 import org.apache.arrow.vector.types.pojo.Schema
 import org.apache.arrow.vector.util.Text
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.OutputStream
 import java.nio.channels.Channels
 import java.nio.channels.WritableByteChannel
 import java.time.LocalDate
@@ -27,6 +31,10 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import kotlin.reflect.typeOf
 
+/**
+ * Create Arrow [Schema] matching [this] actual data.
+ * Columns with not supported types will be interpreted as String
+ */
 public fun List<AnyCol>.toArrowSchema(): Schema {
     val fields = this.map { column ->
         when (column.type()) {
@@ -69,15 +77,42 @@ public fun List<AnyCol>.toArrowSchema(): Schema {
     return Schema(fields)
 }
 
-public fun DataFrame<*>.arrowWriter(): ArrowWriter = ArrowWriter(this, this.columns().toArrowSchema())
-
-public fun DataFrame<*>.arrowWriter(targetSchema: Schema): ArrowWriter = ArrowWriter(this, targetSchema)
+/**
+ * Create [ArrowWriter] for [this] DataFrame with target schema matching actual data
+ */
+public fun DataFrame<*>.arrowWriter(): ArrowWriter = this.arrowWriter(this.columns().toArrowSchema())
 
 /**
- * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray or stream) with [targetSchema].
- *
+ * Create [ArrowWriter] for [this] DataFrame with explicit [targetSchema]
  */
-public class ArrowWriter(public val dataFrame: DataFrame<*>, public val targetSchema: Schema): AutoCloseable {
+public fun DataFrame<*>.arrowWriter(targetSchema: Schema, mode: ArrowWriter.Companion.Mode = ArrowWriter.Companion.Mode.STRICT): ArrowWriter = ArrowWriter(this, targetSchema, mode)
+
+/**
+ * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream or raw Channel) with [targetSchema].
+ * If [dataFrame] content does not match with [targetSchema], behaviour is specified by [mode]
+ */
+public class ArrowWriter(private val dataFrame: DataFrame<*>, private val targetSchema: Schema, private val mode: Mode): AutoCloseable {
+
+    public companion object {
+        /**
+         * If [restrictWidening] is true, [dataFrame] columns not described in [targetSchema] would not be saved (otherwise, would be saved as is).
+         * If [restrictNarrowing] is true, [targetSchema] fields that are not nullable and do not exist in [dataFrame] will produce exception (otherwise, would not be saved).
+         * If [strictType] is true, [dataFrame] columns described in [targetSchema] with non-compatible type will produce exception (otherwise, would be saved as is).
+         * If [strictNullable] is true, [targetSchema] fields that are not nullable and contain nulls in [dataFrame] will produce exception (otherwise, would be saved as is with nullable = true).
+         */
+        public class Mode(
+            public val restrictWidening: Boolean,
+            public val restrictNarrowing: Boolean,
+            public val strictType: Boolean,
+            public val strictNullable: Boolean
+        ) {
+            public companion object {
+                public val STRICT: Mode = Mode(true, true, true, true)
+                public val LOYAL: Mode = Mode(false, false, false, false)
+            }
+        }
+    }
+
     private val allocator = RootAllocator()
 
     private fun allocateVector(vector: FieldVector, size: Int) {
@@ -201,117 +236,185 @@ public class ArrowWriter(public val dataFrame: DataFrame<*>, public val targetSc
     }
 
     /**
-     * Create Arrow VectorSchemaRoot with [dataFrame] content cast to [targetSchema].
-     * If [restrictWidening] is true, [dataFrame] columns not described in [targetSchema] would not be saved (otherwise, would be saved as is).
-     * If [restrictNarrowing] is true, [targetSchema] fields that are not nullable and do not exist in [dataFrame] will produce exception (otherwise, would not be saved).
-     * If [strictType] is true, [dataFrame] columns described in [targetSchema] with non-compatible type will produce exception (otherwise, would be saved as is).
-     * If [strictNullable] is true, [targetSchema] fields that are not nullable and contain nulls in [dataFrame] will produce exception (otherwise, would be saved as is with nullable = true).
+     * Create Arrow VectorSchemaRoot with [dataFrame] content cast to [targetSchema] according to the [mode].
      */
-    private fun allocateVectorSchemaRoot(
-        restrictWidening: Boolean = true,
-        restrictNarrowing: Boolean = true,
-        strictType: Boolean = true,
-        strictNullable: Boolean = true
-    ): VectorSchemaRoot {
+    private fun allocateVectorSchemaRoot(): VectorSchemaRoot {
         val mainVectors = LinkedHashMap<String, FieldVector>()
         for (field in targetSchema.fields) {
             val column = dataFrame.getColumnOrNull(field.name)
             if (column == null && !field.isNullable) {
-                if (restrictNarrowing) {
+                if (mode.restrictNarrowing) {
                     throw Exception("${field.name} column is not presented")
                 } else {
                     continue
                 }
             }
 
-            val vector = allocateVectorAndInfill(field, column, strictType, strictNullable)
+            val vector = allocateVectorAndInfill(field, column, mode.strictType, mode.strictNullable)
             mainVectors[field.name] = vector
         }
         val vectors = ArrayList<FieldVector>()
         vectors.addAll(mainVectors.values)
-        if (!restrictWidening) {
+        if (!mode.restrictWidening) {
             val otherVectors = dataFrame.columns().filter { column -> !mainVectors.containsKey(column.name()) }.toVectors()
             vectors.addAll(otherVectors)
         }
         return VectorSchemaRoot(vectors)
     }
 
-    public fun featherToChannel(channel: WritableByteChannel) {
-        allocateVectorSchemaRoot(false, false, false, false).use { vectorSchemaRoot ->
-            ArrowFileWriter(vectorSchemaRoot, null, channel).use { writer ->
-                writer.writeBatch();
-            }
-        }
-    }
+    // IPC saving block
 
-    public fun ipcToChannel(channel: WritableByteChannel) {
-        allocateVectorSchemaRoot(false, false, false, false).use { vectorSchemaRoot ->
+    /**
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to opened [channel].
+     */
+    public fun writeArrowIPC(channel: WritableByteChannel) {
+        allocateVectorSchemaRoot().use { vectorSchemaRoot ->
             ArrowStreamWriter(vectorSchemaRoot, null, channel).use { writer ->
                 writer.writeBatch();
             }
         }
     }
 
-    public fun featherToByteArray(): ByteArray {
-        ByteArrayOutputStream().use { byteArrayStream ->
-            Channels.newChannel(byteArrayStream).use { channel ->
-                featherToChannel(channel)
-                return byteArrayStream.toByteArray()
+    /**
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to opened [stream].
+     */
+    public fun writeArrowIPC(stream: OutputStream) {
+        writeArrowIPC(Channels.newChannel(stream))
+    }
+
+    /**
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new or existing [file].
+     * If file exists, it can be recreated or expanded.
+     */
+    public fun writeArrowIPC(file: File, append: Boolean = true) {
+        writeArrowIPC(FileOutputStream(file, append))
+    }
+
+    /**
+     * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new [ByteArray]
+     */
+    public fun saveArrowIPCToByteArray(): ByteArray {
+        val stream = ByteArrayOutputStream()
+        writeArrowIPC(stream)
+        return stream.toByteArray()
+    }
+
+    // Feather saving block
+
+    /**
+     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to opened [channel].
+     */
+    public fun writeArrowFeather(channel: WritableByteChannel) {
+        allocateVectorSchemaRoot().use { vectorSchemaRoot ->
+            ArrowFileWriter(vectorSchemaRoot, null, channel).use { writer ->
+                writer.writeBatch();
             }
         }
     }
 
-    public fun iptToByteArray(): ByteArray {
-        ByteArrayOutputStream().use { byteArrayStream ->
-            Channels.newChannel(byteArrayStream).use { channel ->
-                ipcToChannel(channel)
-                return byteArrayStream.toByteArray()
-            }
-        }
+    /**
+     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to opened [stream].
+     */
+    public fun writeArrowFeather(stream: OutputStream) {
+        writeArrowFeather(Channels.newChannel(stream))
+    }
+
+    /**
+     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to new or existing [file].
+     * If file exists, it would be recreated.
+     */
+    public fun writeArrowFeather(file: File) {
+        writeArrowFeather(FileOutputStream(file))
+    }
+
+    /**
+     * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to new [ByteArray]
+     */
+    public fun saveArrowFeatherToByteArray(): ByteArray {
+        val stream = ByteArrayOutputStream()
+        writeArrowFeather(stream)
+        return stream.toByteArray()
     }
 
     override fun close() {
         allocator.close()
     }
 }
-//
-//// IPC saving block
-//
-///**
-// * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new or existing [file].
-// * If file exists, it can be recreated or expanded.
-// */
-//public fun AnyFrame.writeArrowIPC(file: File, append: Boolean = true) {
-//
-//}
-//
-///**
-// * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to [ByteArray]
-// */
-//public fun AnyFrame.writeArrowIPCToByteArray() {
-//
-//}
-//
-//// Feather saving block
-//
-///**
-// * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to new or existing [file].
-// * If file exists, it would be recreated.
-// */
-//public fun AnyFrame.writeArrowFeather(file: File) {
-//
-//}
-//
-///**
-// * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to [ByteArray]
-// */
-//public fun DataFrame.Companion.writeArrowFeatherToByteArray(): ByteArray {
-//
-//}
-//
-///**
-// * Write [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) from existing [stream]
-// */
-//public fun DataFrame.Companion.writeArrowFeather(stream: OutputStream) {
-//
-//}
+
+// IPC saving block with default parameters
+
+/**
+ * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to opened [channel].
+ */
+public fun AnyFrame.writeArrowIPC(channel: WritableByteChannel) {
+    this.arrowWriter().use { writer ->
+        writer.writeArrowIPC(channel)
+    }
+}
+
+/**
+ * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to opened [stream].
+ */
+public fun AnyFrame.writeArrowIPC(stream: OutputStream) {
+    this.arrowWriter().use { writer ->
+        writer.writeArrowIPC(stream)
+    }
+}
+
+/**
+ * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new or existing [file].
+ * If file exists, it can be recreated or expanded.
+ */
+public fun AnyFrame.writeArrowIPC(file: File, append: Boolean = true) {
+    this.arrowWriter().use { writer ->
+        writer.writeArrowIPC(file, append)
+    }
+}
+
+/**
+ * Save data to [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format), write to new [ByteArray]
+ */
+public fun AnyFrame.saveArrowIPCToByteArray(): ByteArray {
+    return this.arrowWriter().use { writer ->
+        writer.saveArrowIPCToByteArray()
+    }
+}
+
+// Feather saving block with default parameters
+
+/**
+ * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to opened [channel].
+ */
+public fun AnyFrame.writeArrowFeather(channel: WritableByteChannel) {
+    this.arrowWriter().use { writer ->
+        writer.writeArrowFeather(channel)
+    }
+}
+
+/**
+ * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to opened [stream].
+ */
+public fun AnyFrame.writeArrowFeather(stream: OutputStream) {
+    this.arrowWriter().use { writer ->
+        writer.writeArrowFeather(stream)
+    }
+}
+
+/**
+ * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to new or existing [file].
+ * If file exists, it would be recreated.
+ */
+public fun AnyFrame.writeArrowFeather(file: File) {
+    this.arrowWriter().use { writer ->
+        writer.writeArrowFeather(file)
+    }
+}
+
+/**
+ * Save data to [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files), write to new [ByteArray]
+ */
+public fun AnyFrame.saveArrowFeatherToByteArray(): ByteArray {
+    return this.arrowWriter().use { writer ->
+        writer.saveArrowFeatherToByteArray()
+    }
+}
