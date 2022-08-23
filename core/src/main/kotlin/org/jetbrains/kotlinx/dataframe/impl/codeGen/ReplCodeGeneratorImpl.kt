@@ -33,7 +33,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
 
     private val generatedMarkers = mutableMapOf<String, Marker>()
 
-    private val generator: CodeGenerator = CodeGeneratorImpl()
+    private val generator: CodeGenerator = CodeGenerator.create(useFqNames = false)
 
     private fun getMarkerClass(type: KType): KClass<*>? =
         when (type.classifier) {
