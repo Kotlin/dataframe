@@ -411,62 +411,6 @@ class Prototype {
             """.trimMargin())
     }
 
-    @Test
-    fun generateDfFunctionTestStub() {
-        val schemaName = "Add0"
-        val expression = "dataFrameOf(\"a\")(1)"
-        val modify = "add(\"\") { 42 }"
-        val id = "add0"
-        generateDfFunctionTestStub(expression, schemaName, modify, id, "add.kt")
-    }
-
-    private fun generateDfFunctionTestStub(expression: String, schemaName: String, modify: String, id: String, file: String) {
-        val repl = object : JupyterReplTestCase() {
-        }
-        // region schema before
-        val df = repl.execRaw("val df = $expression; df") as DataFrame<*>
-        val declarationBefore = df.generateSchemaDeclaration(schemaName)
-        val pluginSchema = df.pluginSchema()
-        val beforePluginSchema = pluginSchema.toJson()
-        // endregion
-
-
-        val dfRes = repl.execRaw("val df1 = df.$modify; df1") as DataFrame<*>
-        val schemaTestCode = dfRes.schema().columns.accept("df1").joinToString("\n")
-        repl.exec(schemaTestCode)
-        val afterPluginSchema = dfRes.pluginSchema()
-
-        printCompilerTest(file, schemaName, declarationBefore, beforePluginSchema, schemaTestCode, modify, afterPluginSchema.toJson(), id)
-    }
-
-    private fun printCompilerTest(file: String, schemaName: String, schemaDeclaration: String, before: String, schemaTestCode: String, modify: String, after: String, id: String) {
-        println(file)
-        val test = buildString {
-            appendLine("""
-                import org.jetbrains.kotlinx.dataframe.*
-                import org.jetbrains.kotlinx.dataframe.api.*
-                import org.jetbrains.kotlinx.dataframe.annotations.*
-                import org.jetbrains.kotlinx.dataframe.plugin.testing.*
-            """.trimIndent())
-            appendLine()
-            appendLine(schemaDeclaration)
-            appendLine()
-            appendLine("""
-                fun $id(df: DataFrame<$schemaName>) {
-                    test(id = "${id}_schema", call = df)
-                    val df1 = test(id = "$id", call = df.$modify)
-            """.trimIndent())
-            appendLine(schemaTestCode.prependIndent())
-            append("}")
-        }
-        println(test)
-        println()
-        println("""
-            "${id}_schema" to pluginJsonFormat.decodeFromString<PluginDataFrameSchema>(${"\"\"\""}$before${"\"\"\""}),
-            "$id" to pluginJsonFormat.decodeFromString<PluginDataFrameSchema>(${"\"\"\""}$after${"\"\"\""}),
-        """.trimIndent())
-    }
-
     val expressions = listOf(
         """dataFrameOf("age")(17)""",
         """dataFrameOf("name", "age")("Name", 17).group("name", "age").into("person")""",
