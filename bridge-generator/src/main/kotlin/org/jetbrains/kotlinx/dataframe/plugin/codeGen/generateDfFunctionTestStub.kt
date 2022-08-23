@@ -4,31 +4,29 @@ import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.accept
 import org.jetbrains.kotlinx.dataframe.plugin.generateSchemaDeclaration
 import org.jetbrains.kotlinx.dataframe.plugin.pluginSchema
-import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 
 internal fun generateDfFunctionTestStub(
-    expression: String,
+    expression: () -> DataFrame<*>,
     schemaName: String,
-    modify: String,
+    modify: (DataFrame<*>) -> DataFrame<*>,
+    modifyRepr: String,
     id: String,
     file: String
 ): Pair<PluginDataFrameSchema, PluginDataFrameSchema> {
-    val repl = object : JupyterReplTestCase() {
-    }
     // region schema before
-    val df = repl.execRaw("val df = $expression; df") as DataFrame<*>
+    val df = expression()
+
     val declarationBefore = df.generateSchemaDeclaration(schemaName)
     val pluginSchema = df.pluginSchema()
-    val beforePluginSchema = pluginSchema.toJson()
     // endregion
 
 
-    val dfRes = repl.execRaw("val df1 = df.$modify; df1") as DataFrame<*>
+    val dfRes = modify(df)
     val schemaTestCode = dfRes.schema().columns.accept("df1").joinToString("\n")
-    repl.exec(schemaTestCode)
+    //repl.exec(schemaTestCode)
     val afterPluginSchema = dfRes.pluginSchema()
 
-    printCompilerTest(file, schemaName, declarationBefore, schemaTestCode, modify, id)
+    printCompilerTest(file, schemaName, declarationBefore, schemaTestCode, modifyRepr, id)
 
     return pluginSchema to afterPluginSchema
 }
