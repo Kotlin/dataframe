@@ -123,7 +123,7 @@ private fun List<SimpleCol>.asString(indent: String = ""): String {
         val col = when (it) {
             is SimpleFrameColumn -> {
                 val nullability = if (it.nullable) "?" else ""
-                "*${it.name}$nullability\n" + it.columns().asString("$indent   ")
+                "${it.name}$nullability*\n" + it.columns().asString("$indent   ")
             }
             is SimpleColumnGroup -> {
                 "${it.name}\n" + it.columns().asString("$indent   ")

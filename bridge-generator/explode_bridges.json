@@ -1,0 +1,46 @@
+[{
+  "type": {
+    "name": "Boolean",
+    "vararg": false
+  },
+  "approximation": "Boolean",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "ColumnsSelector<T, *>",
+    "vararg": false
+  },
+  "approximation": "List<ColumnWithPathApproximation>",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "DataFrame<T>",
+    "vararg": false
+  },
+  "approximation": "PluginDataFrameSchema",
+  "converter": "dataFrame",
+  "lens": "Schema",
+  "supported": true
+}, {
+  "type": {
+    "name": "AnyCol",
+    "vararg": false
+  },
+  "approximation": "SimpleCol",
+  "converter": "dataColumn",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "InsertClause<T>",
+    "vararg": false
+  },
+  "approximation": "InsertClauseApproximation",
+  "converter": "insertClause",
+  "lens": "Value",
+  "supported": true
+}]
