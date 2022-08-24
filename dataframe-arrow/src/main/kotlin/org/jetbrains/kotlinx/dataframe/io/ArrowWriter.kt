@@ -245,6 +245,9 @@ public class ArrowWriter(
 
     }
 
+    /**
+     * Create Arrow FieldVector with [column] content cast to [field] type according to [strictType] and [strictNullable] settings.
+     */
     private fun allocateVectorAndInfill(field: Field, column: AnyCol?, strictType: Boolean, strictNullable: Boolean): FieldVector {
         val containNulls = (column == null || column.hasNulls())
         // Convert the column to type specified in field. (If we already have target type, convertTo will do nothing)
@@ -264,7 +267,7 @@ public class ArrowWriter(
         }
         val vector = if (!actualField.isNullable && containNulls) {
             if (strictNullable) {
-                throw Exception("${actualField.name} column contains nulls but should be not nullable")
+                throw IllegalArgumentException("${actualField.name} column contains nulls but should be not nullable")
             } else {
                 warningSubscriber("${actualField.name} column contains nulls but expected not nullable")
                 Field(actualField.name, FieldType(true, actualField.fieldType.type, actualField.fieldType.dictionary), actualField.children).createVector(allocator)!!
@@ -296,7 +299,7 @@ public class ArrowWriter(
             val column = dataFrame.getColumnOrNull(field.name)
             if (column == null && !field.isNullable) {
                 if (mode.restrictNarrowing) {
-                    throw Exception("${field.name} column is not presented")
+                    throw IllegalArgumentException("${field.name} column is not presented")
                 } else {
                     warningSubscriber("${field.name} column is not presented")
                     continue
