@@ -4,7 +4,29 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toJavaLocalDate
 import org.apache.arrow.memory.RootAllocator
-import org.apache.arrow.vector.*
+import org.apache.arrow.vector.BaseFixedWidthVector
+import org.apache.arrow.vector.BaseVariableWidthVector
+import org.apache.arrow.vector.FieldVector
+import org.apache.arrow.vector.FixedWidthVector
+import org.apache.arrow.vector.LargeVarCharVector
+import org.apache.arrow.vector.TinyIntVector
+import org.apache.arrow.vector.SmallIntVector
+import org.apache.arrow.vector.IntVector
+import org.apache.arrow.vector.BigIntVector
+import org.apache.arrow.vector.BitVector
+import org.apache.arrow.vector.DateDayVector
+import org.apache.arrow.vector.DateMilliVector
+import org.apache.arrow.vector.DecimalVector
+import org.apache.arrow.vector.Decimal256Vector
+import org.apache.arrow.vector.Float4Vector
+import org.apache.arrow.vector.Float8Vector
+import org.apache.arrow.vector.TimeMicroVector
+import org.apache.arrow.vector.TimeMilliVector
+import org.apache.arrow.vector.TimeNanoVector
+import org.apache.arrow.vector.TimeSecVector
+import org.apache.arrow.vector.VariableWidthVector
+import org.apache.arrow.vector.VarCharVector
+import org.apache.arrow.vector.VectorSchemaRoot
 import org.apache.arrow.vector.ipc.ArrowFileWriter
 import org.apache.arrow.vector.ipc.ArrowStreamWriter
 import org.apache.arrow.vector.types.DateUnit
@@ -18,8 +40,22 @@ import org.apache.arrow.vector.util.Text
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.convertTo
+import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
+import org.jetbrains.kotlinx.dataframe.api.convertToBigDecimal
+import org.jetbrains.kotlinx.dataframe.api.convertToDouble
+import org.jetbrains.kotlinx.dataframe.api.convertToFloat
+import org.jetbrains.kotlinx.dataframe.api.convertToLong
+import org.jetbrains.kotlinx.dataframe.api.convertToInt
+import org.jetbrains.kotlinx.dataframe.api.convertToLocalDate
+import org.jetbrains.kotlinx.dataframe.api.convertToLocalTime
+import org.jetbrains.kotlinx.dataframe.api.convertToLocalDateTime
+import org.jetbrains.kotlinx.dataframe.api.convertToString
+import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
+import org.jetbrains.kotlinx.dataframe.typeClass
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -31,11 +67,13 @@ import java.time.LocalDateTime
 import java.time.LocalTime
 import kotlin.reflect.typeOf
 
+private val writeWarningMessage: (String) -> Unit = {message: String -> System.err.println(message)}
+
 /**
  * Create Arrow [Schema] matching [this] actual data.
  * Columns with not supported types will be interpreted as String
  */
-public fun List<AnyCol>.toArrowSchema(): Schema {
+public fun List<AnyCol>.toArrowSchema(warningSubscriber: (String) -> Unit = writeWarningMessage): Schema {
     val fields = this.map { column ->
         when (column.type()) {
             typeOf<String?>() -> Field(column.name(), FieldType(true, ArrowType.Utf8(), null), emptyList())
@@ -71,7 +109,10 @@ public fun List<AnyCol>.toArrowSchema(): Schema {
             typeOf<LocalTime?>() -> Field(column.name(), FieldType(true, ArrowType.Time(TimeUnit.NANOSECOND, 64), null), emptyList())
             typeOf<LocalTime>() -> Field(column.name(), FieldType(false, ArrowType.Time(TimeUnit.NANOSECOND, 64), null), emptyList())
 
-            else -> Field(column.name(), FieldType(true, ArrowType.Utf8(), null), emptyList())
+            else -> {
+                warningSubscriber("Column ${column.name()} has type ${column.typeClass.java.canonicalName}, will be saved as String")
+                Field(column.name(), FieldType(true, ArrowType.Utf8(), null), emptyList())
+            }
         }
     }
     return Schema(fields)
@@ -85,13 +126,22 @@ public fun DataFrame<*>.arrowWriter(): ArrowWriter = this.arrowWriter(this.colum
 /**
  * Create [ArrowWriter] for [this] DataFrame with explicit [targetSchema]
  */
-public fun DataFrame<*>.arrowWriter(targetSchema: Schema, mode: ArrowWriter.Companion.Mode = ArrowWriter.Companion.Mode.STRICT): ArrowWriter = ArrowWriter(this, targetSchema, mode)
+public fun DataFrame<*>.arrowWriter(
+    targetSchema: Schema,
+    mode: ArrowWriter.Companion.Mode = ArrowWriter.Companion.Mode.STRICT,
+    warningSubscriber: (String) -> Unit = writeWarningMessage
+): ArrowWriter = ArrowWriter(this, targetSchema, mode, warningSubscriber)
 
 /**
  * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream or raw Channel) with [targetSchema].
  * If [dataFrame] content does not match with [targetSchema], behaviour is specified by [mode]
  */
-public class ArrowWriter(private val dataFrame: DataFrame<*>, private val targetSchema: Schema, private val mode: Mode): AutoCloseable {
+public class ArrowWriter(
+    private val dataFrame: DataFrame<*>,
+    private val targetSchema: Schema,
+    private val mode: Mode,
+    private val warningSubscriber: (String) -> Unit = writeWarningMessage
+): AutoCloseable {
 
     public companion object {
         /**
@@ -143,15 +193,15 @@ public class ArrowWriter(private val dataFrame: DataFrame<*>, private val target
             ArrowType.Int(16, true) -> column.convertTo<Short>()
             ArrowType.Int(32, true) -> column.convertTo<Int>()
             ArrowType.Int(64, true) -> column.convertTo<Long>()
-//            ArrowType.Int(8, false), ArrowType.Int(16, false), ArrowType.Int(32, false), ArrowType.Int(64, false) ->
+//            ArrowType.Int(8, false), ArrowType.Int(16, false), ArrowType.Int(32, false), ArrowType.Int(64, false) -> todo
             is ArrowType.Decimal -> column.convertToBigDecimal()
             ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE) -> column.convertToFloat()
             ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE) -> column.convertToDouble()
             ArrowType.Date(DateUnit.DAY) -> column.convertToLocalDate()
             ArrowType.Date(DateUnit.MILLISECOND) -> column.convertToLocalDateTime()
             is ArrowType.Time -> column.convertToLocalTime()
-//            is ArrowType.Duration ->
-//            is ArrowType.Struct ->
+//            is ArrowType.Duration -> todo
+//            is ArrowType.Struct -> todo
             else -> {
                 TODO("Saving ${targetFieldType.javaClass.canonicalName} is not implemented")
             }
@@ -162,17 +212,17 @@ public class ArrowWriter(private val dataFrame: DataFrame<*>, private val target
         when (vector) {
             is VarCharVector -> column.convertToString().forEachIndexed { i, value -> value?.let { vector.set(i, Text(value)); value} ?: vector.setNull(i) }
             is LargeVarCharVector -> column.convertToString().forEachIndexed { i, value -> value?.let { vector.set(i, Text(value)); value} ?: vector.setNull(i) }
-//            is VarBinaryVector -> vector.values(range).withType()
-//            is LargeVarBinaryVector -> vector.values(range).withType()
+//            is VarBinaryVector -> todo
+//            is LargeVarBinaryVector -> todo
             is BitVector -> column.convertToBoolean().forEachIndexed { i, value -> value?.let { vector.set(i, value.compareTo(false)); value} ?: vector.setNull(i) }
             is TinyIntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
             is SmallIntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
             is IntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
             is BigIntVector -> column.convertToLong().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
-//            is UInt1Vector -> vector.values(range).withType()
-//            is UInt2Vector -> vector.values(range).withType()
-//            is UInt4Vector -> vector.values(range).withType()
-//            is UInt8Vector -> vector.values(range).withType()
+//            is UInt1Vector -> todo
+//            is UInt2Vector -> todo
+//            is UInt4Vector -> todo
+//            is UInt8Vector -> todo
             is DecimalVector -> column.convertToBigDecimal().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
             is Decimal256Vector -> column.convertToBigDecimal().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
             is Float8Vector -> column.convertToDouble().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
@@ -180,12 +230,12 @@ public class ArrowWriter(private val dataFrame: DataFrame<*>, private val target
 
             is DateDayVector -> column.convertToLocalDate().forEachIndexed { i, value -> value?.let { vector.set(i, (value.toJavaLocalDate().toEpochDay()).toInt()); value} ?: vector.setNull(i) }
             is DateMilliVector -> column.convertToLocalDateTime().forEachIndexed { i, value -> value?.let { vector.set(i, value.toInstant(TimeZone.UTC).toEpochMilliseconds()); value} ?: vector.setNull(i) }
-//            is DurationVector -> vector.values(range).withType()
+//            is DurationVector -> todo
             is TimeNanoVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, value.toNanoOfDay()); value} ?: vector.setNull(i) }
             is TimeMicroVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, value.toNanoOfDay() / 1000); value} ?: vector.setNull(i) }
             is TimeMilliVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, (value.toNanoOfDay() / 1000 / 1000).toInt()); value} ?: vector.setNull(i) }
             is TimeSecVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, (value.toNanoOfDay() / 1000 / 1000 / 1000).toInt()); value} ?: vector.setNull(i) }
-//            is StructVector -> vector.values(range).withType()
+//            is StructVector -> todo
             else -> {
                 TODO("Saving to ${vector.javaClass.canonicalName} is not implemented")
             }
@@ -206,7 +256,8 @@ public class ArrowWriter(private val dataFrame: DataFrame<*>, private val target
                 throw e
             } else {
                 // If strictType is not enabled, use original data with its type. Target nullable is saved at this step.
-                val actualType = listOf(column!!).toArrowSchema().fields.first().fieldType.type
+                warningSubscriber(e.message)
+                val actualType = listOf(column!!).toArrowSchema(warningSubscriber).fields.first().fieldType.type
                 val actualField = Field(field.name, FieldType(field.isNullable, actualType, field.fieldType.dictionary), field.children)
                 column to actualField
             }
@@ -215,6 +266,7 @@ public class ArrowWriter(private val dataFrame: DataFrame<*>, private val target
             if (strictNullable) {
                 throw Exception("${actualField.name} column contains nulls but should be not nullable")
             } else {
+                warningSubscriber("${actualField.name} column contains nulls but expected not nullable")
                 Field(actualField.name, FieldType(true, actualField.fieldType.type, actualField.fieldType.dictionary), actualField.children).createVector(allocator)!!
             }
         } else {
@@ -231,7 +283,7 @@ public class ArrowWriter(private val dataFrame: DataFrame<*>, private val target
         return vector
     }
 
-    private fun List<AnyCol>.toVectors(): List<FieldVector> = this.toArrowSchema().fields.mapIndexed { i, field ->
+    private fun List<AnyCol>.toVectors(): List<FieldVector> = this.toArrowSchema(warningSubscriber).fields.mapIndexed { i, field ->
         allocateVectorAndInfill(field, this[i], true, true)
     }
 
@@ -246,6 +298,7 @@ public class ArrowWriter(private val dataFrame: DataFrame<*>, private val target
                 if (mode.restrictNarrowing) {
                     throw Exception("${field.name} column is not presented")
                 } else {
+                    warningSubscriber("${field.name} column is not presented")
                     continue
                 }
             }
@@ -255,9 +308,11 @@ public class ArrowWriter(private val dataFrame: DataFrame<*>, private val target
         }
         val vectors = ArrayList<FieldVector>()
         vectors.addAll(mainVectors.values)
+        val otherVectors = dataFrame.columns().filter { column -> !mainVectors.containsKey(column.name()) }.toVectors()
         if (!mode.restrictWidening) {
-            val otherVectors = dataFrame.columns().filter { column -> !mainVectors.containsKey(column.name()) }.toVectors()
             vectors.addAll(otherVectors)
+        } else {
+            otherVectors.forEach { warningSubscriber("${it.name} column is not described in target schema and was ignored") }
         }
         return VectorSchemaRoot(vectors)
     }
