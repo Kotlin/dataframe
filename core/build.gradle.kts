@@ -45,6 +45,7 @@ dependencies {
     implementation(libs.kotlin.stdlib.jdk8)
     // TODO: check if all compiler tests run pass with implementation
     api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
+    api(project(":type-api"))
 
     api(libs.commonsCsv)
     implementation(libs.klaxon)
