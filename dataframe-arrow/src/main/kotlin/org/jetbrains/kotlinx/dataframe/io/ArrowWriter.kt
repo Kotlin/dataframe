@@ -68,13 +68,14 @@ import java.time.LocalTime
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
+private val ignoreWarningMessage: (String) -> Unit = { message: String -> }
 private val writeWarningMessage: (String) -> Unit = {message: String -> System.err.println(message)}
 
 /**
  * Create Arrow [Schema] matching [this] actual data.
  * Columns with not supported types will be interpreted as String
  */
-public fun List<AnyCol>.toArrowSchema(warningSubscriber: (String) -> Unit = writeWarningMessage): Schema {
+public fun List<AnyCol>.toArrowSchema(warningSubscriber: (String) -> Unit = ignoreWarningMessage): Schema {
     val fields = this.map { column ->
         val columnType = column.type()
         val nullable = columnType.isMarkedNullable
@@ -121,7 +122,7 @@ public fun DataFrame<*>.arrowWriter(): ArrowWriter = this.arrowWriter(this.colum
 public fun DataFrame<*>.arrowWriter(
     targetSchema: Schema,
     mode: ArrowWriter.Companion.Mode = ArrowWriter.Companion.Mode.STRICT,
-    warningSubscriber: (String) -> Unit = writeWarningMessage
+    warningSubscriber: (String) -> Unit = ignoreWarningMessage
 ): ArrowWriter = ArrowWriter(this, targetSchema, mode, warningSubscriber)
 
 /**
@@ -132,7 +133,7 @@ public class ArrowWriter(
     private val dataFrame: DataFrame<*>,
     private val targetSchema: Schema,
     private val mode: Mode,
-    private val warningSubscriber: (String) -> Unit = writeWarningMessage
+    private val warningSubscriber: (String) -> Unit = ignoreWarningMessage
 ): AutoCloseable {
 
     public companion object {
