@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractSchemaModificationInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.ConvertApproximation
+import org.jetbrains.kotlinx.dataframe.annotations.FrameColumnTypeApproximation
 import org.jetbrains.kotlinx.dataframe.annotations.Present
 import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximation
 import org.jetbrains.kotlinx.dataframe.api.Infer
@@ -99,7 +100,8 @@ internal fun f(columns: List<SimpleCol>, transform: ColumnMapper, selected: Colu
 internal fun SimpleColumnGroup.map(transform: ColumnMapper, selected: ColumnsSet, path: List<String>): SimpleColumnGroup {
     return SimpleColumnGroup(
         name,
-        f(columns(), transform, selected, path)
+        f(columns(), transform, selected, path),
+        type
     )
 }
 
@@ -107,7 +109,8 @@ internal fun SimpleFrameColumn.map(transform: ColumnMapper, selected: ColumnsSet
     return SimpleFrameColumn(
         name,
         f(columns(), transform, selected, path),
-        nullable
+        nullable,
+        anyFrameType
     )
 }
 

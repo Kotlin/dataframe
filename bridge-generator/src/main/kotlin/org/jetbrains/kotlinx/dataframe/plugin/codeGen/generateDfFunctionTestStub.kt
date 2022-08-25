@@ -1,11 +1,12 @@
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.KotlinTypeFacade
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.accept
 import org.jetbrains.kotlinx.dataframe.plugin.generateSchemaDeclaration
 import org.jetbrains.kotlinx.dataframe.plugin.pluginSchema
 
-internal fun generateDfFunctionTestStub(
+internal fun KotlinTypeFacade.generateDfFunctionTestStub(
     expression: () -> DataFrame<*>,
     schemaName: String,
     modify: (DataFrame<*>) -> DataFrame<*>,

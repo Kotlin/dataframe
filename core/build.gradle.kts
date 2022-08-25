@@ -20,6 +20,7 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven")
+    maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
     maven(jupyterApiTCRepo)
 }
 
@@ -45,7 +46,7 @@ dependencies {
     implementation(libs.kotlin.stdlib.jdk8)
     // TODO: check if all compiler tests run pass with implementation
     api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
-    api(project(":type-api"))
+    api(project(":plugins:type-api"))
 
     api(libs.commonsCsv)
     implementation(libs.klaxon)
@@ -60,6 +61,7 @@ dependencies {
     }
     testImplementation(libs.kotlin.scriptingJvm)
     testImplementation(libs.jsoup)
+    testImplementation(kotlin("compiler-embeddable"))
 
     val kotlinCompilerPluginClasspathIntrospect by configurations.getting
     kotlinCompilerPluginClasspathIntrospect(project(":plugins:dataframe-introspection"))
@@ -124,7 +126,7 @@ korro {
 }
 
 kotlinter {
-    ignoreFailures = false
+    ignoreFailures = true
     reporters = arrayOf("checkstyle", "plain", "json")
     experimentalRules = true
     disabledRules = arrayOf(

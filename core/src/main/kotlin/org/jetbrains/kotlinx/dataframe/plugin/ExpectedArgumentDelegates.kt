@@ -50,7 +50,7 @@ public fun <T> AbstractInterpreter<T>.dataColumn(
     name: ArgumentName? = null
 ): ExpectedArgumentProvider<SimpleCol> = arg(name, lens = Interpreter.Value)
 
-internal fun <T> AbstractInterpreter<T>.insertClause(
+public fun <T> AbstractInterpreter<T>.insertClause(
     name: ArgumentName? = null
 ): ExpectedArgumentProvider<InsertClauseApproximation> = arg(name, lens = Interpreter.Value)
 
@@ -62,7 +62,7 @@ internal fun <T> AbstractInterpreter<T>.columnWithPath(
     name: ArgumentName? = null
 ): ExpectedArgumentProvider<ColumnWithPathApproximation> = arg(name, lens = Interpreter.Value)
 
-internal fun <T> AbstractInterpreter<T>.kproperty(
+public fun <T> AbstractInterpreter<T>.kproperty(
     name: ArgumentName? = null
 ): ExpectedArgumentProvider<KPropertyApproximation> = arg(name, lens = Interpreter.Value)
 

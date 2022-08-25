@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.plugin
 
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.*
 import org.jetbrains.kotlinx.dataframe.api.Infer
@@ -65,7 +64,7 @@ internal class Under0 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.receiver: InsertClauseApproximation by insertClause()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        return receiver.df.insertImpl(column.path.path.toPath(), receiver.column)
+        return receiver.df.insertImpl(column.path.path.toPath(), receiver.column, anyDataFrame)
     }
 }
 
@@ -74,7 +73,7 @@ internal class Under1 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.receiver: InsertClauseApproximation by insertClause()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        return receiver.df.insertImpl(columnPath.path.toPath(), receiver.column)
+        return receiver.df.insertImpl(columnPath.path.toPath(), receiver.column, anyRow)
     }
 }
 
@@ -83,7 +82,7 @@ internal class Under2 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.receiver: InsertClauseApproximation by insertClause()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        return receiver.df.insertImpl(pathOf(column.name), receiver.column)
+        return receiver.df.insertImpl(pathOf(column.name), receiver.column, anyRow)
     }
 }
 
@@ -92,7 +91,7 @@ internal class Under3 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.receiver: InsertClauseApproximation by insertClause()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        return receiver.df.insertImpl(pathOf(column.name), receiver.column)
+        return receiver.df.insertImpl(pathOf(column.name), receiver.column, anyRow)
     }
 }
 
@@ -101,11 +100,11 @@ internal class Under4 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.receiver: InsertClauseApproximation by insertClause()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        return receiver.df.insertImpl(pathOf(column), receiver.column)
+        return receiver.df.insertImpl(pathOf(column), receiver.column, anyRow)
     }
 }
 
-@Serializable
+//@Serializable
 public data class PluginDataFrameSchema(
     @Contextual private val columns: List<SimpleCol>
 ) : DataFrameLikeContainer<SimpleCol> {
@@ -129,11 +128,11 @@ private fun List<SimpleCol>.asString(indent: String = ""): String {
                 "${it.name}\n" + it.columns().asString("$indent   ")
             }
             is SimpleCol -> {
-                val type = (it.type as TypeApproximationImpl).let {
-                    val nullability = if (it.nullable) "?" else ""
-                    "${it.fqName}$nullability"
-                }
-                "${it.name}: $type"
+//                val type = (it.type as TypeApproximationImpl).let {
+//                    val nullability = if (it.nullable) "?" else ""
+//                    "${it.fqName}$nullability"
+//                }
+                "${it.name}: ${it.type}"
             }
             else -> TODO()
         }
@@ -141,12 +140,12 @@ private fun List<SimpleCol>.asString(indent: String = ""): String {
     }
 }
 
-@Serializable
-public open class SimpleCol internal constructor(
+//@Serializable
+public open class SimpleCol(
     public val name: String,
     @SerialName("valuesType") public open val type: TypeApproximation
 ) : Col {
-    public constructor(name: String, type: TypeApproximationImpl) : this(name, type as TypeApproximation)
+//    public constructor(name: String, type: TypeApproximation) : this(name, type as TypeApproximation)
 
     override fun name(): String {
         return name
@@ -191,12 +190,13 @@ public enum class SimpleColumnKind {
     VALUE, GROUP, FRAME
 }
 
-@Serializable
+//@Serializable
 public data class SimpleFrameColumn(
     private val name1: String,
     @Contextual private val columns: List<SimpleCol>,
-    val nullable: Boolean
-) : MyColumnGroup<SimpleCol>, SimpleCol(name1, FrameColumnTypeApproximation) {
+    val nullable: Boolean,
+    val anyFrameType: TypeApproximation,
+) : MyColumnGroup<SimpleCol>, SimpleCol(name1, anyFrameType) {
     override fun columns(): List<SimpleCol> {
         return columns
     }
@@ -206,18 +206,19 @@ public data class SimpleFrameColumn(
     }
 }
 
-@Serializable
+//@Serializable
 public class SimpleColumnGroup(
     private val name1: String,
-    @Contextual private val columns: List<SimpleCol>
-) : MyColumnGroup<SimpleCol>, SimpleCol(name1, ColumnGroupTypeApproximation) {
+    @Contextual private val columns: List<SimpleCol>,
+    columnGroupType: TypeApproximation
+) : MyColumnGroup<SimpleCol>, SimpleCol(name1, columnGroupType) {
 
     override fun columns(): List<SimpleCol> {
         return columns
     }
 
     override fun rename(s: String): SimpleColumnGroup {
-        return SimpleColumnGroup(s, columns)
+        return SimpleColumnGroup(s, columns, type)
     }
 
     override fun changeType(type: TypeApproximation): SimpleCol {
@@ -250,7 +251,7 @@ public class SimpleColumnGroup(
 }
 
 @PublishedApi
-internal fun PluginDataFrameSchema.insertImpl(path: ColumnPath, column: SimpleCol): PluginDataFrameSchema {
+internal fun PluginDataFrameSchema.insertImpl(path: ColumnPath, column: SimpleCol, columnGroupType: TypeApproximation): PluginDataFrameSchema {
     val columns = listOf(ColumnToInsert1(path, column))
 
     return insertImplGenericContainer<PluginDataFrameSchema, SimpleCol, MyColumnGroup<SimpleCol>>(
@@ -262,7 +263,7 @@ internal fun PluginDataFrameSchema.insertImpl(path: ColumnPath, column: SimpleCo
         empty = PluginDataFrameSchema(emptyList()),
         rename = { rename(it) },
         createColumnGroup = { name, columns ->
-            SimpleColumnGroup(name, columns)
+            SimpleColumnGroup(name, columns, columnGroupType)
         }
     )
 }

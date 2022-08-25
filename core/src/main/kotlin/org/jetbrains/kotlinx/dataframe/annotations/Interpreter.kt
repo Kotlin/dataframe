@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.annotations
 
+import org.jetbrains.kotlinx.dataframe.KotlinTypeFacade
 import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
 import kotlin.properties.PropertyDelegateProvider
 import kotlin.properties.ReadOnlyProperty
@@ -27,9 +28,9 @@ public interface Interpreter<T> {
     public object Schema : Lens
 
     // required to compute whether resulting schema should be inheritor of previous class or a new class
-    public fun startingSchema(arguments: Map<String, Success<Any?>>): PluginDataFrameSchema?
+    public fun startingSchema(arguments: Map<String, Success<Any?>>, kotlinTypeFacade: KotlinTypeFacade): PluginDataFrameSchema?
 
-    public fun interpret(arguments: Map<String, Success<Any?>>): InterpretationResult<T>
+    public fun interpret(arguments: Map<String, Success<Any?>>, kotlinTypeFacade: KotlinTypeFacade): InterpretationResult<T>
 
     public sealed interface InterpretationResult<out T>
 
@@ -58,7 +59,7 @@ public sealed interface DefaultValue<out T>
 public class Present<T>(public val value: T) : DefaultValue<T>
 public object Absent : DefaultValue<Nothing>
 
-public open class Arguments(private val arguments: Map<String, Interpreter.Success<Any?>>) {
+public open class Arguments(private val arguments: Map<String, Interpreter.Success<Any?>>, kotlinTypeFacade: KotlinTypeFacade): KotlinTypeFacade by kotlinTypeFacade {
     public operator fun get(s: String): Any? = (arguments[s] ?: error("")).value
     public operator fun contains(key: String): Boolean {
         return arguments.contains(key)
@@ -73,8 +74,8 @@ public abstract class AbstractInterpreter<T> : Interpreter<T> {
 
     protected open val Arguments.startingSchema: PluginDataFrameSchema? get() = null
 
-    final override fun startingSchema(arguments: Map<String, Interpreter.Success<Any?>>): PluginDataFrameSchema? {
-        return Arguments(arguments).startingSchema
+    final override fun startingSchema(arguments: Map<String, Interpreter.Success<Any?>>, kotlinTypeFacade: KotlinTypeFacade): PluginDataFrameSchema? {
+        return Arguments(arguments, kotlinTypeFacade).startingSchema
     }
 
     public inline fun <Value, reified CompileTimeValue> argConvert(
@@ -119,11 +120,11 @@ public abstract class AbstractInterpreter<T> : Interpreter<T> {
 
     public fun name(name: String): ArgumentName = ArgumentName.of(name)
 
-    final override fun interpret(arguments: Map<String, Interpreter.Success<Any?>>): Interpreter.InterpretationResult<T> {
+    final override fun interpret(arguments: Map<String, Interpreter.Success<Any?>>, kotlinTypeFacade: KotlinTypeFacade): Interpreter.InterpretationResult<T> {
         return try {
-            Arguments(arguments).interpret().let { Interpreter.Success(it) }
+            Arguments(arguments, kotlinTypeFacade).interpret().let { Interpreter.Success(it) }
         } catch (e: Exception) {
-            Interpreter.Error(e.message)
+            Interpreter.Error(e.message + e.stackTrace.contentToString())
         }
     }
 
@@ -132,7 +133,7 @@ public abstract class AbstractInterpreter<T> : Interpreter<T> {
 
 public interface SchemaModificationInterpreter : Interpreter<PluginDataFrameSchema> {
 
-    override fun interpret(arguments: Map<String, Interpreter.Success<Any?>>): Interpreter.InterpretationResult<PluginDataFrameSchema>
+    override fun interpret(arguments: Map<String, Interpreter.Success<Any?>>, kotlinTypeFacade: KotlinTypeFacade): Interpreter.InterpretationResult<PluginDataFrameSchema>
 }
 
 public abstract class AbstractSchemaModificationInterpreter :

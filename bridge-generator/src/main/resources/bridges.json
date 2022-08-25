@@ -1,0 +1,208 @@
+[{
+  "type": {
+    "name": "DataColumn<C>",
+    "vararg": false
+  },
+  "approximation": "SimpleCol",
+  "converter": "dataColumn",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "DataFrame<T>",
+    "vararg": false
+  },
+  "approximation": "PluginDataFrameSchema",
+  "converter": "dataFrame",
+  "lens": "Schema",
+  "supported": true
+}, {
+  "type": {
+    "name": "String",
+    "vararg": false
+  },
+  "approximation": "String",
+  "converter": "string",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "Infer",
+    "vararg": false
+  },
+  "approximation": "Infer",
+  "converter": "enum",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "RowExpression<T, R>",
+    "vararg": false
+  },
+  "approximation": "TypeApproximation",
+  "converter": "type",
+  "lens": "ReturnType",
+  "supported": true
+}, {
+  "type": {
+    "name": "ColumnAccessor<R>",
+    "vararg": false
+  },
+  "approximation": "ColumnAccessorApproximation",
+  "converter": "columnAccessor",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "KProperty<R>",
+    "vararg": false
+  },
+  "approximation": "KPropertyApproximation",
+  "converter": "kproperty",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "ColumnSelector<T, *>",
+    "vararg": false
+  },
+  "approximation": "ColumnWithPathApproximation",
+  "converter": "columnWithPath",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "InsertClause<T>",
+    "vararg": false
+  },
+  "approximation": "InsertClauseApproximation",
+  "converter": "insertClause",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "ColumnPath",
+    "vararg": false
+  },
+  "approximation": "ColumnPathApproximation",
+  "converter": "columnPath",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "ColumnAccessor<*>",
+    "vararg": false
+  },
+  "approximation": "ColumnAccessorApproximation",
+  "converter": "columnAccessor",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "KProperty<*>",
+    "vararg": false
+  },
+  "approximation": "KPropertyApproximation",
+  "converter": "kproperty",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "AddExpression<T, R>",
+    "vararg": false
+  },
+  "approximation": "TypeApproximation",
+  "converter": "type",
+  "lens": "ReturnType",
+  "supported": true
+}, {
+  "type": {
+    "name": "ColumnsSelector<T, C>",
+    "vararg": false
+  },
+  "approximation": "List<ColumnWithPathApproximation>",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "KProperty<C>",
+    "vararg": true
+  },
+  "approximation": "List<TypeApproximation>",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "String",
+    "vararg": true
+  },
+  "approximation": "List<String>",
+  "converter": "varargString",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "Convert<T, C>",
+    "vararg": false
+  },
+  "approximation": "ConvertApproximation",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "AnyCol",
+    "vararg": false
+  },
+  "approximation": "SimpleCol",
+  "converter": "dataColumn",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "RowValueExpression<T, Any?, R>",
+    "vararg": false
+  },
+  "approximation": "TypeApproximation",
+  "converter": "type",
+  "lens": "ReturnType",
+  "supported": true
+}, {
+  "type": {
+    "name": "DataFrame<T>.(DataColumn<C>) -> AnyBaseCol",
+    "vararg": false
+  },
+  "approximation": "SimpleCol",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "ColumnSet<C>",
+    "vararg": false
+  },
+  "approximation": "List<ColumnWithPathApproximation>",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": false
+}, {
+  "type": {
+    "name": "Boolean",
+    "vararg": false
+  },
+  "approximation": "Boolean",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": true
+}, {
+  "type": {
+    "name": "ColumnsSelector<T, *>",
+    "vararg": false
+  },
+  "approximation": "List<ColumnWithPathApproximation>",
+  "converter": "arg",
+  "lens": "Value",
+  "supported": true
+}]

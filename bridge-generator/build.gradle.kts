@@ -9,6 +9,7 @@ version = "0.9.0-dev"
 
 repositories {
     mavenCentral()
+    maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
 }
 
 dependencies {
@@ -34,6 +35,7 @@ tasks.withType<JavaCompile> {
 
 
 kotlinPublications {
+    fairDokkaJars.set(false)
     publication {
         publicationName.set("api")
         artifactId.set("bridge-generator")

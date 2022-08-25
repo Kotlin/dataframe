@@ -1,0 +1,24 @@
+FILE: simple.kt
+    package foo.bar
+
+    public final fun box(): R|kotlin/String| {
+        lval result: R|kotlin/String| = R|foo/bar/MyClass|().R|foo/bar/MyClass.foo|()
+        ^box when () {
+            ==(R|<local>/result|, String(Hello world)) ->  {
+                String(OK)
+            }
+            else ->  {
+                <strcat>(String(Fail: ), R|<local>/result|)
+            }
+        }
+
+    }
+FILE: __GENERATED DECLARATIONS__.kt
+    package foo.bar
+
+    public final class MyClass : R|kotlin/Any| {
+        public final fun foo(): R|kotlin/String|
+
+        public constructor(): R|foo/bar/MyClass|
+
+    }

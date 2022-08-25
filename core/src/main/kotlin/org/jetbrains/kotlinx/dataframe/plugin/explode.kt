@@ -1,10 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.plugin
 
+import org.jetbrains.kotlinx.dataframe.KotlinTypeFacade
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.Present
-import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximation
-import org.jetbrains.kotlinx.dataframe.annotations.TypeApproximationImpl
 
 internal class Explode0 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.dropEmpty: Boolean by arg(defaultValue = Present(true))
@@ -14,22 +13,24 @@ internal class Explode0 : AbstractInterpreter<PluginDataFrameSchema>() {
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         val columns = selector ?: TODO()
-        return receiver.explodeImpl(dropEmpty, columns.map { ColumnPathApproximation(it.path.path) })
+        val kotlinTypeFacade: KotlinTypeFacade = TODO()
+        return kotlinTypeFacade.run { receiver.explodeImpl(dropEmpty, columns.map { ColumnPathApproximation(it.path.path) }) }
     }
 }
 
-public fun PluginDataFrameSchema.explodeImpl(dropEmpty: Boolean, selector: List<ColumnPathApproximation>?): PluginDataFrameSchema {
+public val KotlinTypeFacade.explodeImpl: PluginDataFrameSchema.(dropEmpty: Boolean, selector: List<ColumnPathApproximation>?) -> PluginDataFrameSchema get()  = { dropEmpty, selector ->
     val columns = selector ?: TODO()
 
     val selected: Set<List<String>> = columns.map { it.path }.toSet()
 
     fun makeNullable(column: SimpleCol): SimpleCol {
         return when (column) {
-            is SimpleColumnGroup -> SimpleColumnGroup(column.name, column.columns().map { makeNullable(it) })
+            is SimpleColumnGroup -> SimpleColumnGroup(column.name, column.columns().map { makeNullable(it) }, column.type)
             is SimpleFrameColumn -> column
             else -> {
-                val nullable = if (dropEmpty) (column.type as TypeApproximationImpl).nullable else true
-                column.changeType(type = TypeApproximation((column.type as TypeApproximationImpl).fqName, nullable))
+//                val nullable = if (dropEmpty) (column.type as TypeApproximationImpl).nullable else true
+
+                column.changeType(type = column.type.changeNullability { nullable -> if (dropEmpty) nullable else true })
             }
         }
     }
@@ -37,10 +38,10 @@ public fun PluginDataFrameSchema.explodeImpl(dropEmpty: Boolean, selector: List<
     fun explode(column: SimpleCol, path: List<String>): SimpleCol {
         val fullPath = path + listOf(column.name)
         return when (column) {
-            is SimpleColumnGroup -> SimpleColumnGroup(column.name, column.columns().map { explode(column, fullPath) })
+            is SimpleColumnGroup -> SimpleColumnGroup(column.name, column.columns().map { explode(column, fullPath) }, column.type)
             is SimpleFrameColumn -> {
                 if (fullPath in selected) {
-                    SimpleColumnGroup(column.name, column.columns().map { makeNullable(it) })
+                    SimpleColumnGroup(column.name, column.columns().map { makeNullable(it) }, anyDataFrame)
                 } else {
                     column
                 }
@@ -53,7 +54,7 @@ public fun PluginDataFrameSchema.explodeImpl(dropEmpty: Boolean, selector: List<
         }
     }
 
-    return PluginDataFrameSchema(
+    PluginDataFrameSchema(
         columns().map { column ->
             explode(column, emptyList())
         }

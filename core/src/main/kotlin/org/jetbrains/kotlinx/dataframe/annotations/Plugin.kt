@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.annotations
 
-import kotlinx.serialization.Serializable
+import org.jetbrains.kotlinx.dataframe.KotlinTypeFacade
 import org.jetbrains.kotlinx.dataframe.plugin.PluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.plugin.SimpleCol
 import org.jetbrains.kotlinx.dataframe.plugin.dataFrame
@@ -8,21 +8,28 @@ import org.jetbrains.kotlinx.dataframe.plugin.string
 import org.jetbrains.kotlinx.dataframe.plugin.type
 import kotlin.reflect.KClass
 
-@Serializable
-public sealed interface TypeApproximation {
-    public companion object
+//@Serializable
+//public sealed interface TypeApproximation {
+//    public companion object
+//}
+
+public typealias TypeApproximation = org.jetbrains.kotlinx.dataframe.Marker
+
+//@Serializable
+//public data class TypeApproximationImpl(public val fqName: String, public val nullable: Boolean) : TypeApproximation
+
+public fun KotlinTypeFacade.TypeApproximationImpl(fqName: String, nullable: Boolean): TypeApproximation {
+
+    return fromFqName(fqName, nullable)
 }
 
-@Serializable
-public data class TypeApproximationImpl(public val fqName: String, public val nullable: Boolean) : TypeApproximation
+//public fun TypeApproximation(fqName: String, nullable: Boolean): TypeApproximation = TypeApproximationImpl(fqName, nullable)
 
-public fun TypeApproximation(fqName: String, nullable: Boolean): TypeApproximation = TypeApproximationImpl(fqName, nullable)
+//@Serializable
 
-@Serializable
-public object ColumnGroupTypeApproximation : TypeApproximation
-
-@Serializable
-public object FrameColumnTypeApproximation : TypeApproximation
+//@Serializable
+//public object FrameColumnTypeApproximation : TypeApproximation
+public val FrameColumnTypeApproximation: TypeApproximation get() = TODO()
 
 @Target(AnnotationTarget.CLASS)
 public annotation class HasSchema(val schemaArg: Int)

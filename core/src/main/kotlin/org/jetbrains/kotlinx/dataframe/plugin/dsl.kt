@@ -2,11 +2,11 @@ package org.jetbrains.kotlinx.dataframe.plugin
 
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.KotlinTypeFacade
 import org.jetbrains.kotlinx.dataframe.api.schema
-import org.jetbrains.kotlinx.dataframe.plugin.testing.schemaRender.toPluginDataFrameSchema
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 
-public fun DataFrame<*>.pluginSchema(): PluginDataFrameSchema = schema().toPluginDataFrameSchema()
+public val KotlinTypeFacade.pluginSchema: DataFrame<*>.() -> PluginDataFrameSchema get() = { schema().toPluginDataFrameSchema() }
 
 public fun DataFrame<*>.generateSchemaDeclaration(
     capitalizedName: String,

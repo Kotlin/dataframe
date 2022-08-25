@@ -1,0 +1,18 @@
+FILE fqName:foo.bar fileName:/simple.kt
+  FUN name:box visibility:public modality:FINAL <> () returnType:kotlin.String
+    BLOCK_BODY
+      VAR name:result type:kotlin.String [val]
+        CALL 'public final fun foo (): kotlin.String declared in foo.bar.MyClass' type=kotlin.String origin=null
+          $this: CONSTRUCTOR_CALL 'public constructor <init> () [primary] declared in foo.bar.MyClass' type=foo.bar.MyClass origin=null
+      RETURN type=kotlin.Nothing from='public final fun box (): kotlin.String declared in foo.bar'
+        WHEN type=kotlin.String origin=IF
+          BRANCH
+            if: CALL 'public final fun EQEQ (arg0: kotlin.Any?, arg1: kotlin.Any?): kotlin.Boolean declared in kotlin.internal.ir' type=kotlin.Boolean origin=EQEQ
+              arg0: GET_VAR 'val result: kotlin.String [val] declared in foo.bar.box' type=kotlin.String origin=null
+              arg1: CONST String type=kotlin.String value="Hello world"
+            then: CONST String type=kotlin.String value="OK"
+          BRANCH
+            if: CONST Boolean type=kotlin.Boolean value=true
+            then: STRING_CONCATENATION type=kotlin.String
+              CONST String type=kotlin.String value="Fail: "
+              GET_VAR 'val result: kotlin.String [val] declared in foo.bar.box' type=kotlin.String origin=null

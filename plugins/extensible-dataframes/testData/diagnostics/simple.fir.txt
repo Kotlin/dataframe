@@ -1,0 +1,16 @@
+FILE: simple.kt
+    package foo.bar
+
+    @R|org/itmo/my/pretty/plugin/SomeAnnotation|() public final fun test(): R|kotlin/Unit| {
+        lval s: R|kotlin/String| = R|foo/bar/MyClass|().R|foo/bar/MyClass.foo|()
+        R|<local>/s|.<Unresolved name: inc>#()
+    }
+FILE: __GENERATED DECLARATIONS__.kt
+    package foo.bar
+
+    public final class MyClass : R|kotlin/Any| {
+        public final fun foo(): R|kotlin/String|
+
+        public constructor(): R|foo/bar/MyClass|
+
+    }
