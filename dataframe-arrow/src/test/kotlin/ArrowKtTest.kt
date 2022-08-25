@@ -1,5 +1,6 @@
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.apache.arrow.vector.types.pojo.Schema
 import org.apache.arrow.vector.util.Text
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -7,13 +8,12 @@ import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.toColumn
-import org.jetbrains.kotlinx.dataframe.io.arrowWriter
-import org.jetbrains.kotlinx.dataframe.io.readArrowFeather
-import org.jetbrains.kotlinx.dataframe.io.readArrowIPC
+import org.jetbrains.kotlinx.dataframe.io.*
 import org.junit.Test
 import java.io.File
 import java.net.URL
 import java.time.LocalDate
+import java.time.LocalDateTime
 import kotlin.reflect.typeOf
 
 internal class ArrowKtTest {
@@ -93,75 +93,38 @@ internal class ArrowKtTest {
         assertEstimations(DataFrame.readArrowIPC(testArrowIPC("test-illegal.arrow"), NullabilityOptions.Widening), true, true)
     }
 
-    val cities = dataFrameOf(
-        DataColumn.createValueColumn("name", listOf(
-            "Berlin",
-            "Hamburg",
-            "New York",
-            "Washington",
-            "Saint Petersburg",
-            "Vatican"
-        )),
-        DataColumn.createValueColumn("affiliation", listOf(
-            "Germany",
-            "Germany",
-            "The USA",
-            "The USA",
-            "Russia",
-            null
-        )),
-        DataColumn.createValueColumn("is_capital", listOf(
-            true,
-            false,
-            false,
-            true,
-            false,
-            null
-        )),
-        DataColumn.createValueColumn("population", listOf(
-            3_769_495,
-            1_845_229,
-            8_467_513,
-            689_545,
-            5_377_503,
-            825
-        )),
-        DataColumn.createValueColumn("area", listOf(
-            891.7,
-            755.22,
-            1223.59,
-            177.0,
-            1439.0,
-            0.44
-        )),
-        DataColumn.createValueColumn("settled", listOf(
-            LocalDate.of(1237, 1, 1),
-            LocalDate.of(1189, 5, 7),
-            LocalDate.of(1624, 1, 1),
-            LocalDate.of(1790, 7, 16),
-            LocalDate.of(1703, 5, 27),
-            LocalDate.of(1929, 2, 11)
-        ))
-    )
 
     @Test
     fun testWritingGeneral() {
         fun assertEstimation(citiesDeserialized: DataFrame<*>) {
-            citiesDeserialized["name"] shouldBe cities["name"]
-            citiesDeserialized["affiliation"] shouldBe cities["affiliation"]
-            citiesDeserialized["is_capital"] shouldBe cities["is_capital"]
-            citiesDeserialized["population"] shouldBe cities["population"]
-            citiesDeserialized["area"] shouldBe cities["area"]
+            citiesDeserialized["name"] shouldBe citiesExampleFrame["name"]
+            citiesDeserialized["affiliation"] shouldBe citiesExampleFrame["affiliation"]
+            citiesDeserialized["is_capital"] shouldBe citiesExampleFrame["is_capital"]
+            citiesDeserialized["population"] shouldBe citiesExampleFrame["population"]
+            citiesDeserialized["area"] shouldBe citiesExampleFrame["area"]
             citiesDeserialized["settled"].type() shouldBe typeOf<LocalDate>() // cities["settled"].type() refers to FlexibleTypeImpl(LocalDate..LocalDate?) and does not match typeOf<LocalDate>()
-            citiesDeserialized["settled"].values() shouldBe cities["settled"].values()
+            citiesDeserialized["settled"].values() shouldBe citiesExampleFrame["settled"].values()
+            citiesDeserialized["page_in_wiki"].type() shouldBe typeOf<String>() // cities["page_in_wiki"].type() is URI, not supported by Arrow directly
+            citiesDeserialized["page_in_wiki"].values() shouldBe citiesExampleFrame["page_in_wiki"].values().map { it.toString() }
         }
 
         val testFile = File.createTempFile("cities", "arrow")
-        cities.arrowWriter().writeArrowFeather(testFile)
+        citiesExampleFrame.writeArrowFeather(testFile)
         assertEstimation(DataFrame.readArrowFeather(testFile))
 
-        val testByteArray = cities.arrowWriter().saveArrowIPCToByteArray()
+        val testByteArray = citiesExampleFrame.arrowWriter().saveArrowIPCToByteArray()
         assertEstimation(DataFrame.readArrowIPC(testByteArray))
     }
 
+    @Test
+    fun testWritingBySchema() {
+        val testFile = File.createTempFile("cities", "arrow")
+        citiesExampleFrame.arrowWriter(Schema.fromJSON(citiesExampleSchema)).writeArrowFeather(testFile)
+        val citiesDeserialized = DataFrame.readArrowFeather(testFile, NullabilityOptions.Checking)
+        citiesDeserialized["population"].type() shouldBe typeOf<Long?>()
+        citiesDeserialized["area"].type() shouldBe typeOf<Float>()
+        citiesDeserialized["settled"].type() shouldBe typeOf<LocalDateTime>()
+        shouldThrow<IllegalArgumentException> { citiesDeserialized["page_in_wiki"] shouldBe null }
+        citiesDeserialized["film_in_youtube"] shouldBe DataColumn.createValueColumn("film_in_youtube", arrayOfNulls<String>(citiesExampleFrame.rowsCount()).asList())
+    }
 }
