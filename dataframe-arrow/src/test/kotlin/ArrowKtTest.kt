@@ -14,6 +14,7 @@ import org.junit.Test
 import java.io.File
 import java.net.URL
 import java.time.LocalDate
+import kotlin.reflect.typeOf
 
 internal class ArrowKtTest {
 
@@ -98,51 +99,69 @@ internal class ArrowKtTest {
             "Hamburg",
             "New York",
             "Washington",
-            "Saint Petersburg"
+            "Saint Petersburg",
+            "Vatican"
         )),
         DataColumn.createValueColumn("affiliation", listOf(
             "Germany",
             "Germany",
             "The USA",
             "The USA",
-            "Russia"
+            "Russia",
+            null
         )),
         DataColumn.createValueColumn("is_capital", listOf(
             true,
             false,
             false,
             true,
-            false
+            false,
+            null
         )),
         DataColumn.createValueColumn("population", listOf(
             3_769_495,
             1_845_229,
             8_467_513,
             689_545,
-            5_377_503
+            5_377_503,
+            825
         )),
         DataColumn.createValueColumn("area", listOf(
             891.7,
             755.22,
             1223.59,
             177.0,
-            1439.0
+            1439.0,
+            0.44
         )),
-//        DataColumn.createValueColumn("settled", listOf(
-//            LocalDate.of(1237, 1, 1),
-//            LocalDate.of(1189, 5, 7),
-//            LocalDate.of(1624, 1, 1),
-//            LocalDate.of(1790, 7, 16),
-//            LocalDate.of(1703, 5, 27)
-//        ))
+        DataColumn.createValueColumn("settled", listOf(
+            LocalDate.of(1237, 1, 1),
+            LocalDate.of(1189, 5, 7),
+            LocalDate.of(1624, 1, 1),
+            LocalDate.of(1790, 7, 16),
+            LocalDate.of(1703, 5, 27),
+            LocalDate.of(1929, 2, 11)
+        ))
     )
 
     @Test
     fun testWritingGeneral() {
+        fun assertEstimation(citiesDeserialized: DataFrame<*>) {
+            citiesDeserialized["name"] shouldBe cities["name"]
+            citiesDeserialized["affiliation"] shouldBe cities["affiliation"]
+            citiesDeserialized["is_capital"] shouldBe cities["is_capital"]
+            citiesDeserialized["population"] shouldBe cities["population"]
+            citiesDeserialized["area"] shouldBe cities["area"]
+            citiesDeserialized["settled"].type() shouldBe typeOf<LocalDate>() // cities["settled"].type() refers to FlexibleTypeImpl(LocalDate..LocalDate?) and does not match typeOf<LocalDate>()
+            citiesDeserialized["settled"].values() shouldBe cities["settled"].values()
+        }
+
         val testFile = File.createTempFile("cities", "arrow")
         cities.arrowWriter().writeArrowFeather(testFile)
-        DataFrame.readArrowFeather(testFile).shouldBe(cities)
-    }
+        assertEstimation(DataFrame.readArrowFeather(testFile))
 
+        val testByteArray = cities.arrowWriter().saveArrowIPCToByteArray()
+        assertEstimation(DataFrame.readArrowIPC(testByteArray))
+    }
 
 }
