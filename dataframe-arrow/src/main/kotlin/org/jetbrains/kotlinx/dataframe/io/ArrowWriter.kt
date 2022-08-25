@@ -65,6 +65,7 @@ import java.nio.channels.WritableByteChannel
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
 private val writeWarningMessage: (String) -> Unit = {message: String -> System.err.println(message)}
@@ -75,39 +76,30 @@ private val writeWarningMessage: (String) -> Unit = {message: String -> System.e
  */
 public fun List<AnyCol>.toArrowSchema(warningSubscriber: (String) -> Unit = writeWarningMessage): Schema {
     val fields = this.map { column ->
-        when (column.type()) {
-            typeOf<String?>() -> Field(column.name(), FieldType(true, ArrowType.Utf8(), null), emptyList())
-            typeOf<String>() -> Field(column.name(), FieldType(false, ArrowType.Utf8(), null), emptyList())
+        val columnType = column.type()
+        val nullable = columnType.isMarkedNullable
+        when {
+            columnType.isSubtypeOf(typeOf<String?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Utf8(), null), emptyList())
 
-            typeOf<Boolean?>() -> Field(column.name(), FieldType(true, ArrowType.Bool(), null), emptyList())
-            typeOf<Boolean>() -> Field(column.name(), FieldType(false, ArrowType.Bool(), null), emptyList())
+            columnType.isSubtypeOf(typeOf<Boolean?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Bool(), null), emptyList())
 
-            typeOf<Byte?>() -> Field(column.name(), FieldType(true, ArrowType.Int(8, true), null), emptyList())
-            typeOf<Byte>() -> Field(column.name(), FieldType(false, ArrowType.Int(8, true), null), emptyList())
+            columnType.isSubtypeOf(typeOf<Byte?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Int(8, true), null), emptyList())
 
-            typeOf<Short?>() -> Field(column.name(), FieldType(true, ArrowType.Int(16, true), null), emptyList())
-            typeOf<Short>() -> Field(column.name(), FieldType(false, ArrowType.Int(16, true), null), emptyList())
+            columnType.isSubtypeOf(typeOf<Short?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Int(16, true), null), emptyList())
 
-            typeOf<Int?>() -> Field(column.name(), FieldType(true, ArrowType.Int(32, true), null), emptyList())
-            typeOf<Int>() -> Field(column.name(), FieldType(false, ArrowType.Int(32, true), null), emptyList())
+            columnType.isSubtypeOf(typeOf<Int?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Int(32, true), null), emptyList())
 
-            typeOf<Long?>() -> Field(column.name(), FieldType(true, ArrowType.Int(64, true), null), emptyList())
-            typeOf<Long>() -> Field(column.name(), FieldType(false, ArrowType.Int(64, true), null), emptyList())
+            columnType.isSubtypeOf(typeOf<Long?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Int(64, true), null), emptyList())
 
-            typeOf<Float?>() -> Field(column.name(), FieldType(true, ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE), null), emptyList())
-            typeOf<Float>() -> Field(column.name(), FieldType(false, ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE), null), emptyList())
+            columnType.isSubtypeOf(typeOf<Float?>()) -> Field(column.name(), FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE), null), emptyList())
 
-            typeOf<Double?>() -> Field(column.name(), FieldType(true, ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE), null), emptyList())
-            typeOf<Double>() -> Field(column.name(), FieldType(false, ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE), null), emptyList())
+            columnType.isSubtypeOf(typeOf<Double?>()) -> Field(column.name(), FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE), null), emptyList())
 
-            typeOf<LocalDate?>(), typeOf<kotlinx.datetime.LocalDate?>() -> Field(column.name(), FieldType(true, ArrowType.Date(DateUnit.DAY), null), emptyList())
-            typeOf<LocalDate>(),  typeOf<kotlinx.datetime.LocalDate>() -> Field(column.name(), FieldType(false, ArrowType.Date(DateUnit.DAY), null), emptyList())
+            columnType.isSubtypeOf(typeOf<LocalDate?>()) || columnType.isSubtypeOf(typeOf<kotlinx.datetime.LocalDate?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Date(DateUnit.DAY), null), emptyList())
 
-            typeOf<LocalDateTime?>(), typeOf<kotlinx.datetime.LocalDateTime?>() -> Field(column.name(), FieldType(true, ArrowType.Date(DateUnit.MILLISECOND), null), emptyList())
-            typeOf<LocalDateTime>(), typeOf<kotlinx.datetime.LocalDateTime>() -> Field(column.name(), FieldType(false, ArrowType.Date(DateUnit.MILLISECOND), null), emptyList())
+            columnType.isSubtypeOf(typeOf<LocalDateTime?>()) || columnType.isSubtypeOf(typeOf<kotlinx.datetime.LocalDateTime?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Date(DateUnit.MILLISECOND), null), emptyList())
 
-            typeOf<LocalTime?>() -> Field(column.name(), FieldType(true, ArrowType.Time(TimeUnit.NANOSECOND, 64), null), emptyList())
-            typeOf<LocalTime>() -> Field(column.name(), FieldType(false, ArrowType.Time(TimeUnit.NANOSECOND, 64), null), emptyList())
+            columnType.isSubtypeOf(typeOf<LocalTime?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Time(TimeUnit.NANOSECOND, 64), null), emptyList())
 
             else -> {
                 warningSubscriber("Column ${column.name()} has type ${column.typeClass.java.canonicalName}, will be saved as String")
