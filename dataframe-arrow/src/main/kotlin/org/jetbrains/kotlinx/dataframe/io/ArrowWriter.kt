@@ -55,6 +55,7 @@ import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.typeClass
+import org.slf4j.LoggerFactory
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -69,6 +70,10 @@ import kotlin.reflect.typeOf
 
 public val ignoreWarningMessage: (String) -> Unit = { message: String -> }
 public val writeWarningMessage: (String) -> Unit = { message: String -> System.err.println(message) }
+
+private val logger = LoggerFactory.getLogger(ArrowWriter::class.java)
+
+public val logWarningMessage: (String) -> Unit = { message: String -> logger.debug(message) }
 
 /**
  * Create Arrow [Schema] matching [this] actual data.
