@@ -1,3 +1,5 @@
+package org.jetbrains.kotlinx.dataframe.io
+
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import java.net.URL
