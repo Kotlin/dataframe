@@ -20,12 +20,12 @@ internal fun assertEstimations(exampleFrame: AnyFrame, expectedNullable: Boolean
      * In [exampleFrame] we get two concatenated batches. To assert the estimations, we should transform frame row number to batch row number
      */
     fun iBatch(iFrame: Int): Int {
-        val firstBatchSize = 100;
+        val firstBatchSize = 100
         return if (iFrame < firstBatchSize) iFrame else iFrame - firstBatchSize
     }
 
     fun expectedNull(rowNumber: Int): Boolean {
-        return (rowNumber + 1) % 5 == 0;
+        return (rowNumber + 1) % 5 == 0
     }
 
     fun assertValueOrNull(rowNumber: Int, actual: Any?, expected: Any) {
@@ -155,5 +155,4 @@ internal fun assertEstimations(exampleFrame: AnyFrame, expectedNullable: Boolean
     timeNanoCol.forEachIndexed { i, element ->
         assertValueOrNull(iBatch(i), element, LocalTime.ofNanoOfDay(iBatch(i).toLong()))
     }
-
 }
