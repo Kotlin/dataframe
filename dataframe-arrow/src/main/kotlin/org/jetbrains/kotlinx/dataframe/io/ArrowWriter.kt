@@ -53,6 +53,7 @@ import org.jetbrains.kotlinx.dataframe.api.convertToLocalDateTime
 import org.jetbrains.kotlinx.dataframe.api.convertToString
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
+import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -244,25 +245,33 @@ public class ArrowWriter(
     private fun allocateVectorAndInfill(field: Field, column: AnyCol?, strictType: Boolean, strictNullable: Boolean): FieldVector {
         val containNulls = (column == null || column.hasNulls())
         // Convert the column to type specified in field. (If we already have target type, convertTo will do nothing)
-        val (convertedColumn, actualField) =  try {
-            convertColumnToTarget(column, field.type) to field
-        } catch (e: TypeConversionException) {
+
+        fun handleConversionFail(e: Exception): Pair<AnyCol?, Field> {
             if (strictType) {
                 // If conversion failed but strictType is enabled, throw the exception
                 throw e
             } else {
                 // If strictType is not enabled, use original data with its type. Target nullable is saved at this step.
-                warningSubscriber(e.message)
+                warningSubscriber(e.message!!)
                 val actualType = listOf(column!!).toArrowSchema(warningSubscriber).fields.first().fieldType.type
                 val actualField = Field(field.name, FieldType(field.isNullable, actualType, field.fieldType.dictionary), field.children)
-                column to actualField
+                return column to actualField
             }
         }
+
+        val (convertedColumn, actualField) =  try {
+            convertColumnToTarget(column, field.type) to field
+        } catch (e: TypeConversionException) {
+            handleConversionFail(e)
+        } catch (e: TypeConverterNotFoundException) {
+            handleConversionFail(e)
+        }
+
         val vector = if (!actualField.isNullable && containNulls) {
             if (strictNullable) {
-                throw IllegalArgumentException("${actualField.name} column contains nulls but should be not nullable")
+                throw IllegalArgumentException("Column \"${actualField.name}\" contains nulls but should be not nullable")
             } else {
-                warningSubscriber("${actualField.name} column contains nulls but expected not nullable")
+                warningSubscriber("Column \"${actualField.name}\" contains nulls but expected not nullable")
                 Field(actualField.name, FieldType(true, actualField.fieldType.type, actualField.fieldType.dictionary), actualField.children).createVector(allocator)!!
             }
         } else {
@@ -288,27 +297,32 @@ public class ArrowWriter(
      */
     private fun allocateVectorSchemaRoot(): VectorSchemaRoot {
         val mainVectors = LinkedHashMap<String, FieldVector>()
-        for (field in targetSchema.fields) {
-            val column = dataFrame.getColumnOrNull(field.name)
-            if (column == null && !field.isNullable) {
-                if (mode.restrictNarrowing) {
-                    throw IllegalArgumentException("${field.name} column is not presented")
-                } else {
-                    warningSubscriber("${field.name} column is not presented")
-                    continue
+        try {
+            for (field in targetSchema.fields) {
+                val column = dataFrame.getColumnOrNull(field.name)
+                if (column == null && !field.isNullable) {
+                    if (mode.restrictNarrowing) {
+                        throw IllegalArgumentException("Column \"${field.name}\" is not presented")
+                    } else {
+                        warningSubscriber("Column \"${field.name}\" is not presented")
+                        continue
+                    }
                 }
-            }
 
-            val vector = allocateVectorAndInfill(field, column, mode.strictType, mode.strictNullable)
-            mainVectors[field.name] = vector
+                val vector = allocateVectorAndInfill(field, column, mode.strictType, mode.strictNullable)
+                mainVectors[field.name] = vector
+            }
+        } catch (e: Exception) {
+            mainVectors.values.forEach { it.close() } //Clear buffers before throwing exception
+            throw e
         }
         val vectors = ArrayList<FieldVector>()
         vectors.addAll(mainVectors.values)
-        val otherVectors = dataFrame.columns().filter { column -> !mainVectors.containsKey(column.name()) }.toVectors()
+        val otherColumns = dataFrame.columns().filter { column -> !mainVectors.containsKey(column.name()) }
         if (!mode.restrictWidening) {
-            vectors.addAll(otherVectors)
+            vectors.addAll(otherColumns.toVectors())
         } else {
-            otherVectors.forEach { warningSubscriber("${it.name} column is not described in target schema and was ignored") }
+            otherColumns.forEach { warningSubscriber("Column \"${it.name()}\" is not described in target schema and was ignored") }
         }
         return VectorSchemaRoot(vectors)
     }
