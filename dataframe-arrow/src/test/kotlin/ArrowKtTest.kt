@@ -12,14 +12,14 @@ import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
 import org.jetbrains.kotlinx.dataframe.api.copy
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.io.ArrowWriter
 import org.jetbrains.kotlinx.dataframe.io.arrowWriter
 import org.jetbrains.kotlinx.dataframe.io.readArrowFeather
 import org.jetbrains.kotlinx.dataframe.io.readArrowIPC
-import org.jetbrains.kotlinx.dataframe.io.writeArrowFeather
 import org.jetbrains.kotlinx.dataframe.io.saveArrowIPCToByteArray
+import org.jetbrains.kotlinx.dataframe.io.writeArrowFeather
 import org.junit.Test
 import java.io.File
 import java.net.URL
@@ -103,7 +103,6 @@ internal class ArrowKtTest {
         assertEstimations(DataFrame.readArrowFeather(testArrowFeather("test-illegal.arrow"), NullabilityOptions.Widening), true, true)
         assertEstimations(DataFrame.readArrowIPC(testArrowIPC("test-illegal.arrow"), NullabilityOptions.Widening), true, true)
     }
-
 
     @Test
     fun testWritingGeneral() {
@@ -238,5 +237,4 @@ internal class ArrowKtTest {
         DataFrame.readArrowFeather(testLoyalNullable)["settled"].type() shouldBe typeOf<LocalDateTime?>()
         DataFrame.readArrowFeather(testLoyalNullable)["settled"].values() shouldBe arrayOfNulls<LocalDate>(frameRenaming.rowsCount()).asList()
     }
-
 }
