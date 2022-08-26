@@ -1,14 +1,25 @@
 import io.kotest.assertions.throwables.shouldThrow
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import org.apache.arrow.vector.types.pojo.Schema
 import org.apache.arrow.vector.util.Text
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
+import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
+import org.jetbrains.kotlinx.dataframe.api.copy
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.toColumn
-import org.jetbrains.kotlinx.dataframe.io.*
+import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.io.ArrowWriter
+import org.jetbrains.kotlinx.dataframe.io.arrowWriter
+import org.jetbrains.kotlinx.dataframe.io.readArrowFeather
+import org.jetbrains.kotlinx.dataframe.io.readArrowIPC
+import org.jetbrains.kotlinx.dataframe.io.writeArrowFeather
+import org.jetbrains.kotlinx.dataframe.io.saveArrowIPCToByteArray
 import org.junit.Test
 import java.io.File
 import java.net.URL
@@ -112,19 +123,120 @@ internal class ArrowKtTest {
         citiesExampleFrame.writeArrowFeather(testFile)
         assertEstimation(DataFrame.readArrowFeather(testFile))
 
-        val testByteArray = citiesExampleFrame.arrowWriter().saveArrowIPCToByteArray()
+        val testByteArray = citiesExampleFrame.saveArrowIPCToByteArray()
         assertEstimation(DataFrame.readArrowIPC(testByteArray))
     }
 
     @Test
     fun testWritingBySchema() {
         val testFile = File.createTempFile("cities", "arrow")
-        citiesExampleFrame.arrowWriter(Schema.fromJSON(citiesExampleSchema)).writeArrowFeather(testFile)
+        citiesExampleFrame.arrowWriter(Schema.fromJSON(citiesExampleSchema)).use { it.writeArrowFeather(testFile) }
         val citiesDeserialized = DataFrame.readArrowFeather(testFile, NullabilityOptions.Checking)
         citiesDeserialized["population"].type() shouldBe typeOf<Long?>()
         citiesDeserialized["area"].type() shouldBe typeOf<Float>()
         citiesDeserialized["settled"].type() shouldBe typeOf<LocalDateTime>()
-        shouldThrow<IllegalArgumentException> { citiesDeserialized["page_in_wiki"] shouldBe null }
+        shouldThrow<IllegalArgumentException> { citiesDeserialized["page_in_wiki"] }
         citiesDeserialized["film_in_youtube"] shouldBe DataColumn.createValueColumn("film_in_youtube", arrayOfNulls<String>(citiesExampleFrame.rowsCount()).asList())
     }
+
+    @Test
+    fun testWidening() {
+        val warnings = ArrayList<String>()
+        val testRestrictWidening = citiesExampleFrame.arrowWriter(
+            Schema.fromJSON(citiesExampleSchema),
+            ArrowWriter.Companion.Mode.STRICT
+        ) { warning -> warnings.add(warning) }.use { it.saveArrowFeatherToByteArray() }
+        warnings.shouldContain("Column \"page_in_wiki\" is not described in target schema and was ignored")
+        shouldThrow<IllegalArgumentException> { DataFrame.readArrowFeather(testRestrictWidening)["page_in_wiki"] }
+
+        val testAllowWidening = citiesExampleFrame.arrowWriter(
+            Schema.fromJSON(citiesExampleSchema),
+            ArrowWriter.Companion.Mode(
+                restrictWidening = false,
+                restrictNarrowing = true,
+                strictType = true,
+                strictNullable = true
+            )
+        ).use { it.saveArrowFeatherToByteArray() }
+        DataFrame.readArrowFeather(testAllowWidening)["page_in_wiki"].values() shouldBe citiesExampleFrame["page_in_wiki"].values().map { it.toString() }
+    }
+
+    @Test
+    fun testNarrowing() {
+        val frameWithoutRequiredField = citiesExampleFrame.copy().remove("settled")
+
+        frameWithoutRequiredField.arrowWriter(
+            Schema.fromJSON(citiesExampleSchema),
+            ArrowWriter.Companion.Mode.STRICT
+        ).use {
+            shouldThrow<IllegalArgumentException> { it.saveArrowFeatherToByteArray() }
+        }
+
+        val warnings = ArrayList<String>()
+        val testAllowNarrowing = frameWithoutRequiredField.arrowWriter(
+            Schema.fromJSON(citiesExampleSchema),
+            ArrowWriter.Companion.Mode(
+                restrictWidening = true,
+                restrictNarrowing = false,
+                strictType = true,
+                strictNullable = true
+            )
+        ) { warning -> warnings.add(warning) }.use { it.saveArrowFeatherToByteArray() }
+        warnings.shouldContain("Column \"settled\" is not presented")
+        shouldThrow<IllegalArgumentException> { DataFrame.readArrowFeather(testAllowNarrowing)["settled"] }
+    }
+
+    @Test
+    fun testStrictType() {
+        val frameRenaming = citiesExampleFrame.copy().remove("settled")
+        val frameWithIncompatibleField = frameRenaming.add(frameRenaming["is_capital"].map { value -> value ?: false }.rename("settled").convertToBoolean())
+
+        frameWithIncompatibleField.arrowWriter(
+            Schema.fromJSON(citiesExampleSchema),
+            ArrowWriter.Companion.Mode.STRICT
+        ).use {
+            shouldThrow<IllegalArgumentException> { it.saveArrowFeatherToByteArray() }
+        }
+
+        val warnings = ArrayList<String>()
+        val testLoyalType = frameWithIncompatibleField.arrowWriter(
+            Schema.fromJSON(citiesExampleSchema),
+            ArrowWriter.Companion.Mode(
+                restrictWidening = true,
+                restrictNarrowing = true,
+                strictType = false,
+                strictNullable = true
+            )
+        ) { warning -> warnings.add(warning) }.use { it.saveArrowFeatherToByteArray() }
+        warnings.shouldContain("Type converter from kotlin.Boolean to kotlinx.datetime.LocalDateTime? is not found")
+        DataFrame.readArrowFeather(testLoyalType)["settled"].type() shouldBe typeOf<Boolean>()
+    }
+
+    @Test
+    fun testStrictNullable() {
+        val frameRenaming = citiesExampleFrame.copy().remove("settled")
+        val frameWithNulls = frameRenaming.add(DataColumn.createValueColumn("settled", arrayOfNulls<LocalDate>(frameRenaming.rowsCount()).asList()))
+
+        frameWithNulls.arrowWriter(
+            Schema.fromJSON(citiesExampleSchema),
+            ArrowWriter.Companion.Mode.STRICT
+        ).use {
+            shouldThrow<IllegalArgumentException> { it.saveArrowFeatherToByteArray() }
+        }
+
+        val warnings = ArrayList<String>()
+        val testLoyalNullable = frameWithNulls.arrowWriter(
+            Schema.fromJSON(citiesExampleSchema),
+            ArrowWriter.Companion.Mode(
+                restrictWidening = true,
+                restrictNarrowing = true,
+                strictType = true,
+                strictNullable = false
+            )
+        ) { warning -> warnings.add(warning) }.use { it.saveArrowFeatherToByteArray() }
+        warnings.shouldContain("Column \"settled\" contains nulls but expected not nullable")
+        DataFrame.readArrowFeather(testLoyalNullable)["settled"].type() shouldBe typeOf<LocalDateTime?>()
+        DataFrame.readArrowFeather(testLoyalNullable)["settled"].values() shouldBe arrayOfNulls<LocalDate>(frameRenaming.rowsCount()).asList()
+    }
+
 }
