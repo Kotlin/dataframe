@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.unit
 
+import org.jetbrains.kotlin.fir.FirSession
+import org.jetbrains.kotlin.fir.expressions.FirFunctionCall
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.KotlinTypeFacade
@@ -61,14 +63,14 @@ val df = dataFrameOf("name", "age", "city", "weight")(
 
 @Suppress("IncorrectFormatting")
 class Explode1 : DataFrameUnitTests({ session, _ ->
-    df
+    val grouped = df
         .filter { it["city"] != null }
         .remove("age", "weight")
         .groupBy("city")
         .toDataFrame()
 
     val facade = KotlinTypeFacadeImpl(session)
-    df.explodeTest(facade) { it["group"] }
+    grouped.explodeTest(facade) { it["group"] }
 }) {
 
     @Test
@@ -77,8 +79,16 @@ class Explode1 : DataFrameUnitTests({ session, _ ->
     }
 }
 
-@Suppress("IncorrectFormatting")
-class Explode2 : DataFrameUnitTests({ session, _ ->
+class Explode2 : DataFrameUnitTests(::explode2) {
+
+    // null in frame column
+    //@Test
+    fun test() {
+        runTest("testData/diagnostics/dummy.kt")
+    }
+}
+
+fun explode2(session: FirSession, call: FirFunctionCall) {
     val grouped = df.groupBy("city")
     val groupCol = grouped.groups.toColumnAccessor()
     val plain = grouped
@@ -89,10 +99,43 @@ class Explode2 : DataFrameUnitTests({ session, _ ->
 
     val facade = KotlinTypeFacadeImpl(session)
     plain.explodeTest(facade = facade, dropEmpty = false) { it["group"] }
-}) {
+}
 
+class Explode3 : DataFrameUnitTests(::explode3) {
     @Test
     fun test() {
         runTest("testData/diagnostics/dummy.kt")
     }
+}
+
+fun explode3(session: FirSession, call: FirFunctionCall) {
+    val df = dataFrameOf("packageName", "files")(
+        "org.jetbrains.kotlinx.dataframe.api", listOf("add.kt", "addId.kt", "all.kt"),
+        "org.jetbrains.kotlinx.dataframe.io", listOf("common.kt", "csv.kt", "guess.kt")
+    )
+
+    val facade = KotlinTypeFacadeImpl(session)
+    df.explodeTest(facade = facade, dropEmpty = false) { it["files"] }
+}
+
+class Explode4 : DataFrameUnitTests(::explode4) {
+    @Test
+    fun test() {
+        runTest("testData/diagnostics/dummy.kt")
+    }
+}
+
+fun explode4(session: FirSession, call: FirFunctionCall) {
+
+}
+
+class Explode5 : DataFrameUnitTests(::explode5) {
+    @Test
+    fun test() {
+        runTest("testData/diagnostics/dummy.kt")
+    }
+}
+
+fun explode5(session: FirSession, call: FirFunctionCall) {
+
 }

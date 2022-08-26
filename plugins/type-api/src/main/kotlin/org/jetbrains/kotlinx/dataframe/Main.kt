@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe
 
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.symbols.impl.ConeClassLikeLookupTagImpl
+import org.jetbrains.kotlin.fir.types.ConeClassLikeType
 import org.jetbrains.kotlin.fir.types.ConeKotlinType
 import org.jetbrains.kotlin.fir.types.ConeNullability
 import org.jetbrains.kotlin.fir.types.constructType
@@ -12,6 +13,7 @@ import org.jetbrains.kotlin.fir.types.withNullability
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
+import org.jetbrains.kotlin.name.StandardClassIds
 
 val DF_CLASS_ID: ClassId
     get() = ClassId.topLevel(FqName.fromSegments(listOf("org", "jetbrains", "kotlinx", "dataframe", "DataFrame")))
@@ -67,7 +69,28 @@ interface KotlinTypeFacade {
 //        type.withNullability()
         return Marker(type = type.withNullability(coneNullability, session.typeContext))
     }
+
+    fun Marker.isList(): Boolean {
+        return type.isBuiltinType(List, isNullable = null)
+    }
+
+    fun Marker.typeArgument(): Marker {
+        val argument = when (val argument = type.typeArguments[0]) {
+            is ConeKotlinType -> argument
+            else -> error("${argument::class} ${argument}")
+        }
+        return Marker(argument)
+    }
 }
+
+private val List = "List".collectionsId()
+
+private fun ConeKotlinType.isBuiltinType(classId: ClassId, isNullable: Boolean?): Boolean {
+    if (this !is ConeClassLikeType) return false
+    return lookupTag.classId == classId && (isNullable == null || type.isNullable == isNullable)
+}
+
+private fun String.collectionsId() = ClassId(StandardClassIds.BASE_COLLECTIONS_PACKAGE, Name.identifier(this))
 
 class KotlinTypeFacadeImpl(override val session: FirSession) : KotlinTypeFacade
 

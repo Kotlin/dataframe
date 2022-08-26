@@ -47,7 +47,11 @@ public val KotlinTypeFacade.explodeImpl: PluginDataFrameSchema.(dropEmpty: Boole
                 }
             }
             else -> if (fullPath in selected) {
-                TODO("explode lists")
+                val newType = when {
+                    column.type.isList() -> column.type.typeArgument()
+                    else -> column.type
+                }
+                SimpleCol(column.name, newType)
             } else {
                 column
             }
