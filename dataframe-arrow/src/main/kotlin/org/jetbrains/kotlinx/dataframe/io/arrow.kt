@@ -50,7 +50,6 @@ import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import java.io.File
 import java.io.InputStream
-import java.io.OutputStream
 import java.math.BigDecimal
 import java.math.BigInteger
 import java.net.URL
@@ -177,9 +176,10 @@ private fun Float8Vector.values(range: IntRange): List<Double?> = range.map { ge
 
 private fun DurationVector.values(range: IntRange): List<Duration?> = range.map { getObject(it) }
 private fun DateDayVector.values(range: IntRange): List<LocalDate?> = range.map {
-    if (getObject(it) == null) null else
+    if (getObject(it) == null) null else {
         DateUtility.getLocalDateTimeFromEpochMilli(getObject(it).toLong() * DateUtility.daysToStandardMillis)
             .toLocalDate()
+    }
 }
 
 private fun DateMilliVector.values(range: IntRange): List<LocalDateTime?> = range.map { getObject(it) }
@@ -210,8 +210,9 @@ private fun TimeMilliVector.values(range: IntRange): List<LocalTime?> = range.ma
 
 private fun TimeSecVector.values(range: IntRange): List<LocalTime?> =
     range.map { getObject(it)?.let { LocalTime.ofSecondOfDay(it.toLong()) } }
-
-private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> = range.map { getObject(it) }
+private fun StructVector.values(range: IntRange): List<Map<String, Any?>?> = range.map {
+    getObject(it)
+}
 
 private fun VarCharVector.values(range: IntRange): List<String?> = range.map {
     if (isNull(it)) {

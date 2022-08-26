@@ -6,26 +6,26 @@ import kotlinx.datetime.toJavaLocalDate
 import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.BaseFixedWidthVector
 import org.apache.arrow.vector.BaseVariableWidthVector
-import org.apache.arrow.vector.FieldVector
-import org.apache.arrow.vector.FixedWidthVector
-import org.apache.arrow.vector.LargeVarCharVector
-import org.apache.arrow.vector.TinyIntVector
-import org.apache.arrow.vector.SmallIntVector
-import org.apache.arrow.vector.IntVector
 import org.apache.arrow.vector.BigIntVector
 import org.apache.arrow.vector.BitVector
 import org.apache.arrow.vector.DateDayVector
 import org.apache.arrow.vector.DateMilliVector
-import org.apache.arrow.vector.DecimalVector
 import org.apache.arrow.vector.Decimal256Vector
+import org.apache.arrow.vector.DecimalVector
+import org.apache.arrow.vector.FieldVector
+import org.apache.arrow.vector.FixedWidthVector
 import org.apache.arrow.vector.Float4Vector
 import org.apache.arrow.vector.Float8Vector
+import org.apache.arrow.vector.IntVector
+import org.apache.arrow.vector.LargeVarCharVector
+import org.apache.arrow.vector.SmallIntVector
 import org.apache.arrow.vector.TimeMicroVector
 import org.apache.arrow.vector.TimeMilliVector
 import org.apache.arrow.vector.TimeNanoVector
 import org.apache.arrow.vector.TimeSecVector
-import org.apache.arrow.vector.VariableWidthVector
+import org.apache.arrow.vector.TinyIntVector
 import org.apache.arrow.vector.VarCharVector
+import org.apache.arrow.vector.VariableWidthVector
 import org.apache.arrow.vector.VectorSchemaRoot
 import org.apache.arrow.vector.ipc.ArrowFileWriter
 import org.apache.arrow.vector.ipc.ArrowStreamWriter
@@ -41,22 +41,20 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.convertTo
-import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
 import org.jetbrains.kotlinx.dataframe.api.convertToBigDecimal
+import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
 import org.jetbrains.kotlinx.dataframe.api.convertToDouble
 import org.jetbrains.kotlinx.dataframe.api.convertToFloat
-import org.jetbrains.kotlinx.dataframe.api.convertToLong
 import org.jetbrains.kotlinx.dataframe.api.convertToInt
 import org.jetbrains.kotlinx.dataframe.api.convertToLocalDate
-import org.jetbrains.kotlinx.dataframe.api.convertToLocalTime
 import org.jetbrains.kotlinx.dataframe.api.convertToLocalDateTime
+import org.jetbrains.kotlinx.dataframe.api.convertToLocalTime
+import org.jetbrains.kotlinx.dataframe.api.convertToLong
 import org.jetbrains.kotlinx.dataframe.api.convertToString
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.typeClass
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -69,8 +67,8 @@ import java.time.LocalTime
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
-private val ignoreWarningMessage: (String) -> Unit = { message: String -> }
-private val writeWarningMessage: (String) -> Unit = {message: String -> System.err.println(message)}
+public val ignoreWarningMessage: (String) -> Unit = { message: String -> }
+public val writeWarningMessage: (String) -> Unit = { message: String -> System.err.println(message) }
 
 /**
  * Create Arrow [Schema] matching [this] actual data.
@@ -135,7 +133,7 @@ public class ArrowWriter(
     private val targetSchema: Schema,
     private val mode: Mode,
     private val warningSubscriber: (String) -> Unit = ignoreWarningMessage
-): AutoCloseable {
+) : AutoCloseable {
 
     public companion object {
         /**
@@ -169,8 +167,8 @@ public class ArrowWriter(
 
     private fun infillWithNulls(vector: FieldVector, size: Int) {
         when (vector) {
-            is BaseFixedWidthVector -> for ( i in 0 until size) { vector.setNull(i) }
-            is BaseVariableWidthVector -> for ( i in 0 until size) { vector.setNull(i) }
+            is BaseFixedWidthVector -> for (i in 0 until size) { vector.setNull(i) }
+            is BaseVariableWidthVector -> for (i in 0 until size) { vector.setNull(i) }
             else -> TODO("Not implemented for ${vector.javaClass.canonicalName}")
         }
         vector.valueCount = size
@@ -204,31 +202,31 @@ public class ArrowWriter(
 
     private fun infillVector(vector: FieldVector, column: AnyCol) {
         when (vector) {
-            is VarCharVector -> column.convertToString().forEachIndexed { i, value -> value?.let { vector.set(i, Text(value)); value} ?: vector.setNull(i) }
-            is LargeVarCharVector -> column.convertToString().forEachIndexed { i, value -> value?.let { vector.set(i, Text(value)); value} ?: vector.setNull(i) }
+            is VarCharVector -> column.convertToString().forEachIndexed { i, value -> value?.let { vector.set(i, Text(value)); value } ?: vector.setNull(i) }
+            is LargeVarCharVector -> column.convertToString().forEachIndexed { i, value -> value?.let { vector.set(i, Text(value)); value } ?: vector.setNull(i) }
 //            is VarBinaryVector -> todo
 //            is LargeVarBinaryVector -> todo
-            is BitVector -> column.convertToBoolean().forEachIndexed { i, value -> value?.let { vector.set(i, value.compareTo(false)); value} ?: vector.setNull(i) }
-            is TinyIntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
-            is SmallIntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
-            is IntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
-            is BigIntVector -> column.convertToLong().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
+            is BitVector -> column.convertToBoolean().forEachIndexed { i, value -> value?.let { vector.set(i, value.compareTo(false)); value } ?: vector.setNull(i) }
+            is TinyIntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value } ?: vector.setNull(i) }
+            is SmallIntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value } ?: vector.setNull(i) }
+            is IntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value } ?: vector.setNull(i) }
+            is BigIntVector -> column.convertToLong().forEachIndexed { i, value -> value?.let { vector.set(i, value); value } ?: vector.setNull(i) }
 //            is UInt1Vector -> todo
 //            is UInt2Vector -> todo
 //            is UInt4Vector -> todo
 //            is UInt8Vector -> todo
-            is DecimalVector -> column.convertToBigDecimal().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
-            is Decimal256Vector -> column.convertToBigDecimal().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
-            is Float8Vector -> column.convertToDouble().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
-            is Float4Vector -> column.convertToFloat().forEachIndexed { i, value -> value?.let { vector.set(i, value); value} ?: vector.setNull(i) }
+            is DecimalVector -> column.convertToBigDecimal().forEachIndexed { i, value -> value?.let { vector.set(i, value); value } ?: vector.setNull(i) }
+            is Decimal256Vector -> column.convertToBigDecimal().forEachIndexed { i, value -> value?.let { vector.set(i, value); value } ?: vector.setNull(i) }
+            is Float8Vector -> column.convertToDouble().forEachIndexed { i, value -> value?.let { vector.set(i, value); value } ?: vector.setNull(i) }
+            is Float4Vector -> column.convertToFloat().forEachIndexed { i, value -> value?.let { vector.set(i, value); value } ?: vector.setNull(i) }
 
-            is DateDayVector -> column.convertToLocalDate().forEachIndexed { i, value -> value?.let { vector.set(i, (value.toJavaLocalDate().toEpochDay()).toInt()); value} ?: vector.setNull(i) }
-            is DateMilliVector -> column.convertToLocalDateTime().forEachIndexed { i, value -> value?.let { vector.set(i, value.toInstant(TimeZone.UTC).toEpochMilliseconds()); value} ?: vector.setNull(i) }
+            is DateDayVector -> column.convertToLocalDate().forEachIndexed { i, value -> value?.let { vector.set(i, (value.toJavaLocalDate().toEpochDay()).toInt()); value } ?: vector.setNull(i) }
+            is DateMilliVector -> column.convertToLocalDateTime().forEachIndexed { i, value -> value?.let { vector.set(i, value.toInstant(TimeZone.UTC).toEpochMilliseconds()); value } ?: vector.setNull(i) }
 //            is DurationVector -> todo
-            is TimeNanoVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, value.toNanoOfDay()); value} ?: vector.setNull(i) }
-            is TimeMicroVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, value.toNanoOfDay() / 1000); value} ?: vector.setNull(i) }
-            is TimeMilliVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, (value.toNanoOfDay() / 1000 / 1000).toInt()); value} ?: vector.setNull(i) }
-            is TimeSecVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, (value.toNanoOfDay() / 1000 / 1000 / 1000).toInt()); value} ?: vector.setNull(i) }
+            is TimeNanoVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, value.toNanoOfDay()); value } ?: vector.setNull(i) }
+            is TimeMicroVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, value.toNanoOfDay() / 1000); value } ?: vector.setNull(i) }
+            is TimeMilliVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, (value.toNanoOfDay() / 1000 / 1000).toInt()); value } ?: vector.setNull(i) }
+            is TimeSecVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, (value.toNanoOfDay() / 1000 / 1000 / 1000).toInt()); value } ?: vector.setNull(i) }
 //            is StructVector -> todo
             else -> {
                 TODO("Saving to ${vector.javaClass.canonicalName} is not implemented")
@@ -236,7 +234,6 @@ public class ArrowWriter(
         }
 
         vector.valueCount = dataFrame.rowsCount()
-
     }
 
     /**
@@ -259,7 +256,7 @@ public class ArrowWriter(
             }
         }
 
-        val (convertedColumn, actualField) =  try {
+        val (convertedColumn, actualField) = try {
             convertColumnToTarget(column, field.type) to field
         } catch (e: TypeConversionException) {
             handleConversionFail(e)
@@ -313,7 +310,7 @@ public class ArrowWriter(
                 mainVectors[field.name] = vector
             }
         } catch (e: Exception) {
-            mainVectors.values.forEach { it.close() } //Clear buffers before throwing exception
+            mainVectors.values.forEach { it.close() } // Clear buffers before throwing exception
             throw e
         }
         val vectors = ArrayList<FieldVector>()
@@ -322,7 +319,9 @@ public class ArrowWriter(
         if (!mode.restrictWidening) {
             vectors.addAll(otherColumns.toVectors())
         } else {
-            otherColumns.forEach { warningSubscriber("Column \"${it.name()}\" is not described in target schema and was ignored") }
+            otherColumns.forEach {
+                warningSubscriber("Column \"${it.name()}\" is not described in target schema and was ignored")
+            }
         }
         return VectorSchemaRoot(vectors)
     }
@@ -335,7 +334,7 @@ public class ArrowWriter(
     public fun writeArrowIPC(channel: WritableByteChannel) {
         allocateVectorSchemaRoot().use { vectorSchemaRoot ->
             ArrowStreamWriter(vectorSchemaRoot, null, channel).use { writer ->
-                writer.writeBatch();
+                writer.writeBatch()
             }
         }
     }
@@ -372,7 +371,7 @@ public class ArrowWriter(
     public fun writeArrowFeather(channel: WritableByteChannel) {
         allocateVectorSchemaRoot().use { vectorSchemaRoot ->
             ArrowFileWriter(vectorSchemaRoot, null, channel).use { writer ->
-                writer.writeBatch();
+                writer.writeBatch()
             }
         }
     }

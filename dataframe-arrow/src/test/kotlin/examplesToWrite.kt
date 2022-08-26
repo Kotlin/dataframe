@@ -7,62 +7,83 @@ import java.time.LocalDate
  * DataFrame to be saved in Apache Arrow
  */
 val citiesExampleFrame = dataFrameOf(
-    DataColumn.createValueColumn("name", listOf(
-        "Berlin",
-        "Hamburg",
-        "New York",
-        "Washington",
-        "Saint Petersburg",
-        "Vatican"
-    )),
-    DataColumn.createValueColumn("affiliation", listOf(
-        "Germany",
-        "Germany",
-        "The USA",
-        "The USA",
-        "Russia",
-        null
-    )),
-    DataColumn.createValueColumn("is_capital", listOf(
-        true,
-        false,
-        false,
-        true,
-        false,
-        null
-    )),
-    DataColumn.createValueColumn("population", listOf(
-        3_769_495,
-        1_845_229,
-        8_467_513,
-        689_545,
-        5_377_503,
-        825
-    )),
-    DataColumn.createValueColumn("area", listOf(
-        891.7,
-        755.22,
-        1223.59,
-        177.0,
-        1439.0,
-        0.44
-    )),
-    DataColumn.createValueColumn("settled", listOf(
-        LocalDate.of(1237, 1, 1),
-        LocalDate.of(1189, 5, 7),
-        LocalDate.of(1624, 1, 1),
-        LocalDate.of(1790, 7, 16),
-        LocalDate.of(1703, 5, 27),
-        LocalDate.of(1929, 2, 11)
-    )),
-    DataColumn.createValueColumn("page_in_wiki", listOf(
-        URL("https://en.wikipedia.org/wiki/Berlin"),
-        URL("https://en.wikipedia.org/wiki/Hamburg"),
-        URL("https://en.wikipedia.org/wiki/New_York_City"),
-        URL("https://en.wikipedia.org/wiki/Washington,_D.C."),
-        URL("https://en.wikipedia.org/wiki/Saint_Petersburg"),
-        URL("https://en.wikipedia.org/wiki/Vatican_City")
-    ))
+    DataColumn.createValueColumn(
+        "name",
+        listOf(
+            "Berlin",
+            "Hamburg",
+            "New York",
+            "Washington",
+            "Saint Petersburg",
+            "Vatican"
+        )
+    ),
+    DataColumn.createValueColumn(
+        "affiliation",
+        listOf(
+            "Germany",
+            "Germany",
+            "The USA",
+            "The USA",
+            "Russia",
+            null
+        )
+    ),
+    DataColumn.createValueColumn(
+        "is_capital",
+        listOf(
+            true,
+            false,
+            false,
+            true,
+            false,
+            null
+        )
+    ),
+    DataColumn.createValueColumn(
+        "population",
+        listOf(
+            3_769_495,
+            1_845_229,
+            8_467_513,
+            689_545,
+            5_377_503,
+            825
+        )
+    ),
+    DataColumn.createValueColumn(
+        "area",
+        listOf(
+            891.7,
+            755.22,
+            1223.59,
+            177.0,
+            1439.0,
+            0.44
+        )
+    ),
+    DataColumn.createValueColumn(
+        "settled",
+        listOf(
+            LocalDate.of(1237, 1, 1),
+            LocalDate.of(1189, 5, 7),
+            LocalDate.of(1624, 1, 1),
+            LocalDate.of(1790, 7, 16),
+            LocalDate.of(1703, 5, 27),
+            LocalDate.of(1929, 2, 11)
+        )
+    ),
+    DataColumn.createValueColumn(
+        "page_in_wiki",
+        listOf(
+            URL("https://en.wikipedia.org/wiki/Berlin"),
+            URL("https://en.wikipedia.org/wiki/Hamburg"),
+            URL("https://en.wikipedia.org/wiki/New_York_City"),
+            URL("https://en.wikipedia.org/wiki/Washington,_D.C."),
+            URL("https://en.wikipedia.org/wiki/Saint_Petersburg"),
+            URL("https://en.wikipedia.org/wiki/Vatican_City")
+        )
+    )
 )
 
 /**
