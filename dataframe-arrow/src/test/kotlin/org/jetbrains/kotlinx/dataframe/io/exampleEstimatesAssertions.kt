@@ -1,3 +1,5 @@
+package org.jetbrains.kotlinx.dataframe.io
+
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -14,6 +16,7 @@ import kotlin.reflect.typeOf
 
 /**
  * Assert that we have got the same data that was originally saved on example creation.
+ * Example generation project is currently located at https://github.com/Kopilov/arrow_example
  */
 internal fun assertEstimations(exampleFrame: AnyFrame, expectedNullable: Boolean, hasNulls: Boolean) {
     /**

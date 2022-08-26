@@ -1,3 +1,5 @@
+package org.jetbrains.kotlinx.dataframe.io
+
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
@@ -14,12 +16,6 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.toColumn
-import org.jetbrains.kotlinx.dataframe.io.ArrowWriter
-import org.jetbrains.kotlinx.dataframe.io.arrowWriter
-import org.jetbrains.kotlinx.dataframe.io.readArrowFeather
-import org.jetbrains.kotlinx.dataframe.io.readArrowIPC
-import org.jetbrains.kotlinx.dataframe.io.saveArrowIPCToByteArray
-import org.jetbrains.kotlinx.dataframe.io.writeArrowFeather
 import org.junit.Test
 import java.io.File
 import java.net.URL
@@ -135,7 +131,8 @@ internal class ArrowKtTest {
         citiesDeserialized["area"].type() shouldBe typeOf<Float>()
         citiesDeserialized["settled"].type() shouldBe typeOf<LocalDateTime>()
         shouldThrow<IllegalArgumentException> { citiesDeserialized["page_in_wiki"] }
-        citiesDeserialized["film_in_youtube"] shouldBe DataColumn.createValueColumn("film_in_youtube", arrayOfNulls<String>(citiesExampleFrame.rowsCount()).asList())
+        citiesDeserialized["film_in_youtube"] shouldBe DataColumn.createValueColumn("film_in_youtube", arrayOfNulls<String>(
+            citiesExampleFrame.rowsCount()).asList())
     }
 
     @Test
