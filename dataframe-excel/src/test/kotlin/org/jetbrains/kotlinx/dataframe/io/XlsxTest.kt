@@ -114,7 +114,7 @@ class XlsxTest {
     fun `write to new sheet when erase is false`() {
         val df = DataFrame.readExcel(testResource("sample4.xls"), skipRows = 6, rowsCount = 1)
         val fileLoc = testResource("generated_wb.xlsx").toURI().toString().removeRange(0, 6)
-println(fileLoc)
+
         df.writeExcel(fileLoc, sheetName = "TestSheet1")
         df.writeExcel(fileLoc, sheetName = "TestSheet2")
 
