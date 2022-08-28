@@ -4,23 +4,12 @@ import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toJavaLocalDateTime
 import kotlinx.datetime.toKotlinLocalDateTime
 import org.apache.poi.hssf.usermodel.HSSFWorkbook
-import org.apache.poi.ss.usermodel.Cell
-import org.apache.poi.ss.usermodel.CellType
-import org.apache.poi.ss.usermodel.DateUtil
-import org.apache.poi.ss.usermodel.RichTextString
-import org.apache.poi.ss.usermodel.Row
-import org.apache.poi.ss.usermodel.Sheet
-import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.ss.usermodel.WorkbookFactory
+import org.apache.poi.ss.usermodel.*
 import org.apache.poi.ss.util.CellReference
 import org.apache.poi.util.LocaleUtil
 import org.apache.poi.util.LocaleUtil.getUserTimeZone
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.select
@@ -32,8 +21,7 @@ import java.io.OutputStream
 import java.net.URL
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.Calendar
-import java.util.Date
+import java.util.*
 
 public class Excel : SupportedFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readExcel(stream)
@@ -216,9 +204,10 @@ public fun <T> DataFrame<T>.writeExcel(
     columnsSelector: ColumnsSelector<T, *> = { all() },
     sheetName: String? = null,
     writeHeader: Boolean = true,
-    workBookType: WorkBookType = WorkBookType.XLSX
+    workBookType: WorkBookType = WorkBookType.XLSX,
+    keepFile: Boolean = false,
 ) {
-    return writeExcel(File(path), columnsSelector, sheetName, writeHeader, workBookType)
+    return writeExcel(File(path), columnsSelector, sheetName, writeHeader, workBookType, keepFile)
 }
 
 public enum class WorkBookType {
@@ -230,12 +219,23 @@ public fun <T> DataFrame<T>.writeExcel(
     columnsSelector: ColumnsSelector<T, *> = { all() },
     sheetName: String? = null,
     writeHeader: Boolean = true,
-    workBookType: WorkBookType = WorkBookType.XLSX
+    workBookType: WorkBookType = WorkBookType.XLSX,
+    keepFile: Boolean = false,
 ) {
-    val factory = when (workBookType) {
-        WorkBookType.XLS -> { { HSSFWorkbook() } }
-        WorkBookType.XLSX -> { { XSSFWorkbook() } }
-    }
+
+    val factory =
+        if (keepFile){
+            when (workBookType) {
+                WorkBookType.XLS -> HSSFWorkbook(file.inputStream())
+                WorkBookType.XLSX ->  XSSFWorkbook(file.inputStream())
+            }
+        }
+        else {
+            when (workBookType) {
+                WorkBookType.XLS ->  HSSFWorkbook()
+                WorkBookType.XLSX ->  XSSFWorkbook()
+            }
+        }
     return file.outputStream().use {
         writeExcel(it, columnsSelector, sheetName, writeHeader, factory)
     }
@@ -246,9 +246,9 @@ public fun <T> DataFrame<T>.writeExcel(
     columnsSelector: ColumnsSelector<T, *> = { all() },
     sheetName: String? = null,
     writeHeader: Boolean = true,
-    factory: () -> Workbook
+    factory: Workbook
 ) {
-    val wb: Workbook = factory()
+    val wb: Workbook = factory
     writeExcel(wb, columnsSelector, sheetName, writeHeader)
     wb.write(outputStream)
     wb.close()

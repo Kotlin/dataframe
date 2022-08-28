@@ -111,12 +111,13 @@ class XlsxTest {
     }
 
     @Test
-    fun `write to new sheet when erase is false`() {
-        val df = DataFrame.readExcel(testResource("sample4.xls"), skipRows = 6, rowsCount = 1)
+    fun `write to new sheet when keepFile is true`() {
+        val names = (1..5).map { "column$it" }
+        val df = dataFrameOf(names).randomDouble(7)
         val fileLoc = testResource("generated_wb.xlsx").toURI().toString().removeRange(0, 6)
 
         df.writeExcel(fileLoc, sheetName = "TestSheet1")
-        df.writeExcel(fileLoc, sheetName = "TestSheet2")
+        df.writeExcel(fileLoc, sheetName = "TestSheet2", keepFile = true)
 
         val testSheet1Df = DataFrame.readExcel(testResource("generated_wb.xlsx"), sheetName = "TestSheet1")
         val testSheet2Df = DataFrame.readExcel(testResource("generated_wb.xlsx"), sheetName = "TestSheet2")
