@@ -40,9 +40,9 @@ import org.apache.arrow.vector.util.Text
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.convertToBigDecimal
 import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
+import org.jetbrains.kotlinx.dataframe.api.convertToByte
 import org.jetbrains.kotlinx.dataframe.api.convertToDouble
 import org.jetbrains.kotlinx.dataframe.api.convertToFloat
 import org.jetbrains.kotlinx.dataframe.api.convertToInt
@@ -50,8 +50,10 @@ import org.jetbrains.kotlinx.dataframe.api.convertToLocalDate
 import org.jetbrains.kotlinx.dataframe.api.convertToLocalDateTime
 import org.jetbrains.kotlinx.dataframe.api.convertToLocalTime
 import org.jetbrains.kotlinx.dataframe.api.convertToLong
+import org.jetbrains.kotlinx.dataframe.api.convertToShort
 import org.jetbrains.kotlinx.dataframe.api.convertToString
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
+import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.typeClass
@@ -182,14 +184,14 @@ public class ArrowWriter(
     private fun convertColumnToTarget(column: AnyCol?, targetFieldType: ArrowType): AnyCol? {
         if (column == null) return null
         return when (targetFieldType) {
-            ArrowType.Utf8() -> column.convertToString()
-            ArrowType.LargeUtf8() -> column.convertToString()
+            ArrowType.Utf8() -> column.map { it.toString() }
+            ArrowType.LargeUtf8() -> column.map { it.toString() }
             ArrowType.Binary(), ArrowType.LargeBinary() -> TODO("Saving var binary is currently not implemented")
             ArrowType.Bool() -> column.convertToBoolean()
-            ArrowType.Int(8, true) -> column.convertTo<Byte>()
-            ArrowType.Int(16, true) -> column.convertTo<Short>()
-            ArrowType.Int(32, true) -> column.convertTo<Int>()
-            ArrowType.Int(64, true) -> column.convertTo<Long>()
+            ArrowType.Int(8, true) -> column.convertToByte()
+            ArrowType.Int(16, true) -> column.convertToShort()
+            ArrowType.Int(32, true) -> column.convertToInt()
+            ArrowType.Int(64, true) -> column.convertToLong()
 //            ArrowType.Int(8, false), ArrowType.Int(16, false), ArrowType.Int(32, false), ArrowType.Int(64, false) -> todo
             is ArrowType.Decimal -> column.convertToBigDecimal()
             ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE) -> column.convertToFloat()
