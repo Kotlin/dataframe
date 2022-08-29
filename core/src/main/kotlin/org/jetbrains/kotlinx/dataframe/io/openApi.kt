@@ -28,7 +28,8 @@ import kotlin.reflect.typeOf
 public fun main() {
     val openAPI: OpenAPI = OpenAPIParser()
         .readContents(
-            File("/data/Projects/dataframe/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/io/openapi-sample.yaml").readText(),
+//            File("/data/Projects/dataframe/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/io/openapi-sample.yaml").readText(),
+            File("C:\\Users\\Jolan.Rensen\\Projects\\dataframe\\core\\src\\main\\kotlin\\org\\jetbrains\\kotlinx\\dataframe\\io\\openapi-sample.yaml").readText(),
             null,
             null
         )
@@ -38,7 +39,7 @@ public fun main() {
         .openAPI ?: error("Failed to parse OpenAPI")
 
     val result = openAPI.components?.schemas?.toMap()
-        ?.filter { it.value.type == "object" || it.value.allOf != null }
+        ?.filter { it.value.type == "object" || it.value.allOf != null || it.value.enum != null }
         ?.toDataFrameSchemas()
         ?.toList()
         ?: emptyList()
@@ -160,90 +161,107 @@ private fun Schema<*>.toDataFrameSchema(
     getRefSchema: GetRefSchema,
     produceAdditionalSchema: ProduceAdditionalSchema,
 ): DataFrameSchemaResult {
-    require(type == "object" || allOf != null) { "Only object- or allOf types can be converted to a DataFrameSchema" }
+    require(type == "object" || allOf != null || enum != null) { "Only object-, allOf, or enum types can be converted to a DataFrameSchema" }
 
-    if (additionalProperties != false) {
-        println("An object does not have `additionalProperties == false` and thus might have extra fields that will not be encoded. additionalProperties: $additionalProperties")
-    }
+//    if (additionalProperties != false) {
+//        println("An object does not have `additionalProperties == false` and thus might have extra fields that will not be encoded. additionalProperties: $additionalProperties")
+//    }
 
     val columns: Map<String, ColumnSchema> = buildMap {
-        if (allOf != null) {
-            val allOfSchemas = allOf!!.map {
-                it to it.toOpenApiType(true, getRefSchema)
-            }
+        when {
+            allOf != null -> {
+                val allOfSchemas = allOf!!.map {
+                    it to it.toOpenApiType(true, getRefSchema)
+                }
 
-            for ((schema, openApiTypeResult) in allOfSchemas) {
-                val (openApiType, nullable) = when (openApiTypeResult) {
-                    is OpenApiTypeResult.CannotFindRefSchema ->
-                        return DataFrameSchemaResult.CannotFindRefSchema
+                for ((schema, openApiTypeResult) in allOfSchemas) {
+                    val (openApiType, nullable) = when (openApiTypeResult) {
+                        is OpenApiTypeResult.CannotFindRefSchema ->
+                            return DataFrameSchemaResult.CannotFindRefSchema
 
-                    is OpenApiTypeResult.UsingRef -> {
-                        this += (openApiTypeResult.columnSchema as ColumnSchema.Group)
-                            .schema
-                            .columns
+                        is OpenApiTypeResult.UsingRef -> {
+                            this += (openApiTypeResult.columnSchema as ColumnSchema.Group)
+                                .schema
+                                .columns
 
-                        continue
+                            continue
+                        }
+
+                        is OpenApiTypeResult.Success ->
+                            openApiTypeResult
+
+                        is OpenApiTypeResult.SuccessAsEnum -> TODO()
                     }
 
-                    is OpenApiTypeResult.Success ->
-                        openApiTypeResult
-                }
+                    // must be an object
+                    openApiType as OpenApiType.Object
 
-                // must be an object
-                openApiType as OpenApiType.Object
+                    val columnSchemaResult = openApiType.toColumnSchema(
+                        property = schema,
+                        propertyName = typeName,
+                        nullable = nullable,
+                        getRefSchema = getRefSchema,
+                        produceAdditionalSchema = produceAdditionalSchema,
+                    )
 
-                val columnSchemaResult = openApiType.toColumnSchema(
-                    property = schema,
-                    propertyName = typeName,
-                    nullable = nullable,
-                    getRefSchema = getRefSchema,
-                    produceAdditionalSchema = produceAdditionalSchema,
-                )
+                    when (columnSchemaResult) {
+                        is ColumnSchemaResult.CannotFindRefSchema ->
+                            return DataFrameSchemaResult.CannotFindRefSchema
 
-                when (columnSchemaResult) {
-                    is ColumnSchemaResult.CannotFindRefSchema ->
-                        return DataFrameSchemaResult.CannotFindRefSchema
-
-                    is ColumnSchemaResult.Success ->
-                        this += (columnSchemaResult.columnSchema as ColumnSchema.Group)
-                            .schema
-                            .columns
+                        is ColumnSchemaResult.Success ->
+                            this += (columnSchemaResult.columnSchema as ColumnSchema.Group)
+                                .schema
+                                .columns
+                    }
                 }
             }
-        } else {
-            for ((name, property) in (properties ?: emptyMap())) {
-                val openApiTypeResult = property.toOpenApiType(
-                    isRequired = required?.contains(name) == true,
-                    getRefSchema = getRefSchema,
-                )
 
-                val (openApiType, nullable) = when (openApiTypeResult) {
-                    is OpenApiTypeResult.CannotFindRefSchema ->
-                        return DataFrameSchemaResult.CannotFindRefSchema
+//            enum != null -> {
+//                when(val res = toOpenApiType(true, getRefSchema)) {
+//                    is OpenApiTypeResult.SuccessAsEnum -> {
+//                        TODO()
+//                    }
+//                    else -> error("Malformed enum type: $typeName")
+//                }
+//            }
 
-                    is OpenApiTypeResult.UsingRef -> {
-                        this[name] = openApiTypeResult.columnSchema
-                        continue
+            else -> {
+                for ((name, property) in (properties ?: emptyMap())) {
+                    val openApiTypeResult = property.toOpenApiType(
+                        isRequired = required?.contains(name) == true,
+                        getRefSchema = getRefSchema,
+                    )
+
+                    val (openApiType, nullable) = when (openApiTypeResult) {
+                        is OpenApiTypeResult.CannotFindRefSchema ->
+                            return DataFrameSchemaResult.CannotFindRefSchema
+
+                        is OpenApiTypeResult.UsingRef -> {
+                            this[name] = openApiTypeResult.columnSchema
+                            continue
+                        }
+
+                        is OpenApiTypeResult.Success ->
+                            openApiTypeResult
+
+                        is OpenApiTypeResult.SuccessAsEnum -> TODO()
                     }
 
-                    is OpenApiTypeResult.Success ->
-                        openApiTypeResult
-                }
+                    val columnSchemaResult = openApiType.toColumnSchema(
+                        property = property,
+                        propertyName = name,
+                        nullable = nullable,
+                        getRefSchema = getRefSchema,
+                        produceAdditionalSchema = produceAdditionalSchema,
+                    )
 
-                val columnSchemaResult = openApiType.toColumnSchema(
-                    property = property,
-                    propertyName = name,
-                    nullable = nullable,
-                    getRefSchema = getRefSchema,
-                    produceAdditionalSchema = produceAdditionalSchema,
-                )
+                    when (columnSchemaResult) {
+                        is ColumnSchemaResult.CannotFindRefSchema ->
+                            return DataFrameSchemaResult.CannotFindRefSchema
 
-                when (columnSchemaResult) {
-                    is ColumnSchemaResult.CannotFindRefSchema ->
-                        return DataFrameSchemaResult.CannotFindRefSchema
-
-                    is ColumnSchemaResult.Success ->
-                        this[name] = columnSchemaResult.columnSchema
+                        is ColumnSchemaResult.Success ->
+                            this[name] = columnSchemaResult.columnSchema
+                    }
                 }
             }
         }
@@ -412,6 +430,9 @@ private sealed interface OpenApiTypeResult {
 
     /** Property is a schema with OpenApiType [openApiType]. */
     data class Success(val openApiType: OpenApiType, val nullable: Boolean) : OpenApiTypeResult
+
+    /** Property is an enum with OpenApiType [openApiType]. */
+    data class SuccessAsEnum(val openApiType: OpenApiType, val nullable: Boolean, val values: List<Any?>) : OpenApiTypeResult
 }
 
 /**
@@ -444,8 +465,14 @@ private fun Schema<*>.toOpenApiType(
     }
 
     if (enum != null) {
-        // TODO
-        println("TODO enum not yet implemented")
+        val nullable = enum.any { it == null }
+        val openApiType = OpenApiType.fromStringOrNull(type)!!
+
+//        return OpenApiTypeResult.SuccessAsEnum(
+//            openApiType = openApiType,
+//            nullable = nullable,
+//            values = enum.toList(),
+//        )
     }
 
     var openApiType = OpenApiType.fromStringOrNull(type)
@@ -569,6 +596,8 @@ private fun OpenApiType.toColumnSchema(
                                     )
                             }
                         }
+
+                        is OpenApiTypeResult.SuccessAsEnum -> TODO()
                     }
                 }
 
