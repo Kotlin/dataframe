@@ -184,8 +184,8 @@ public class ArrowWriter(
     private fun convertColumnToTarget(column: AnyCol?, targetFieldType: ArrowType): AnyCol? {
         if (column == null) return null
         return when (targetFieldType) {
-            ArrowType.Utf8() -> column.map { it.toString() }
-            ArrowType.LargeUtf8() -> column.map { it.toString() }
+            ArrowType.Utf8() -> column.map { it?.toString() }
+            ArrowType.LargeUtf8() -> column.map { it?.toString() }
             ArrowType.Binary(), ArrowType.LargeBinary() -> TODO("Saving var binary is currently not implemented")
             ArrowType.Bool() -> column.convertToBoolean()
             ArrowType.Int(8, true) -> column.convertToByte()
