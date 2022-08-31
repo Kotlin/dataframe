@@ -36,7 +36,8 @@ internal class SchemaProcessorImpl(
         val baseName = result
         var attempt = 2
         while (usedNames.contains(result.quotedIfNeeded)) {
-            result = if (result.needsQuote) baseName + ValidFieldName.of(" ($attempt)") else baseName + ValidFieldName.of("$attempt")
+            result =
+                if (result.needsQuote) baseName + ValidFieldName.of(" ($attempt)") else baseName + ValidFieldName.of("$attempt")
             attempt++
         }
         return result
@@ -55,12 +56,17 @@ internal class SchemaProcessorImpl(
         visibility: MarkerVisibility,
         requiredSuperMarkers: List<Marker> = emptyList()
     ): List<GeneratedField> {
-        val usedFieldNames = requiredSuperMarkers.flatMap { it.allFields.map { it.fieldName.quotedIfNeeded } }.toMutableSet()
+        val usedFieldNames =
+            requiredSuperMarkers.flatMap { it.allFields.map { it.fieldName.quotedIfNeeded } }.toMutableSet()
 
         fun getFieldType(columnSchema: ColumnSchema): FieldType = when (columnSchema) {
             is ColumnSchema.Value -> FieldType.ValueFieldType(columnSchema.type.toString())
             is ColumnSchema.Group -> FieldType.GroupFieldType(process(columnSchema.schema, false, visibility).name)
-            is ColumnSchema.Frame -> FieldType.FrameFieldType(process(columnSchema.schema, false, visibility).name, columnSchema.nullable)
+            is ColumnSchema.Frame -> FieldType.FrameFieldType(
+                process(columnSchema.schema, false, visibility).name,
+                columnSchema.nullable
+            )
+
             else -> throw NotImplementedError()
         }
 
@@ -70,12 +76,14 @@ internal class SchemaProcessorImpl(
             // find all fields that were already generated for this column name in base interfaces
             val superFields = requiredSuperMarkers.mapNotNull { it.getField(columnName) }
 
-            val fieldsToOverride = superFields.filter { it.columnSchema != columnSchema }.map { it.fieldName }.distinct()
+            val fieldsToOverride =
+                superFields.filter { it.columnSchema != columnSchema }.map { it.fieldName }.distinct()
 
             val newFields = when {
                 fieldsToOverride.isNotEmpty() -> fieldsToOverride.map {
                     GeneratedField(it, columnName, true, columnSchema, fieldType)
                 }
+
                 superFields.isNotEmpty() -> emptyList()
                 else -> {
                     val fieldName = generateValidFieldName(columnName, index, usedFieldNames)

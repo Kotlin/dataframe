@@ -22,8 +22,11 @@ import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.schema.DataFrameSchemaImpl
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.api.Code
+import kotlin.reflect.typeOf
 
 private fun renderNullability(nullable: Boolean) = if (nullable) "?" else ""
 
@@ -32,7 +35,8 @@ internal fun getRequiredMarkers(schema: DataFrameSchema, markers: Iterable<Marke
 
 internal val charsToQuote = """[ `(){}\[\].<>'"/|\\!?@:;%^&*#$-]""".toRegex()
 
-internal fun createCodeWithConverter(code: String, markerName: String) = CodeWithConverter(code) { "$it.cast<$markerName>()" }
+internal fun createCodeWithConverter(code: String, markerName: String) =
+    CodeWithConverter(code) { "$it.cast<$markerName>()" }
 
 private val letterCategories = setOf(
     CharCategory.UPPERCASE_LETTER,
@@ -186,13 +190,22 @@ internal open class ExtensionsCodeGeneratorImpl(
     }
 }
 
-internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames) : ExtensionsCodeGeneratorImpl(typeRendering), CodeGenerator {
-    override fun generate(marker: Marker, interfaceMode: InterfaceGenerationMode, extensionProperties: Boolean): CodeWithConverter {
+internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames) :
+    ExtensionsCodeGeneratorImpl(typeRendering), CodeGenerator {
+    override fun generate(
+        marker: Marker,
+        interfaceMode: InterfaceGenerationMode,
+        extensionProperties: Boolean
+    ): CodeWithConverter {
         val generateInterface = interfaceMode != InterfaceGenerationMode.None
         val code = when {
-            generateInterface && extensionProperties -> generateInterface(marker, interfaceMode == InterfaceGenerationMode.WithFields) + "\n" + generateExtensionProperties(
+            generateInterface && extensionProperties -> generateInterface(
+                marker,
+                interfaceMode == InterfaceGenerationMode.WithFields
+            ) + "\n" + generateExtensionProperties(
                 marker
             )
+
             generateInterface -> generateInterface(marker, interfaceMode == InterfaceGenerationMode.WithFields)
             extensionProperties -> generateExtensionProperties(marker)
             else -> ""
@@ -215,9 +228,9 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
         val marker = context.process(schema, isOpen, visibility)
         val declarations = mutableListOf<Code>()
         context.generatedMarkers.forEach { itMarker ->
-            declarations.add(generateInterface(itMarker, fields, readDfMethod.takeIf { marker == itMarker }))
+            declarations += generateInterface(itMarker, fields, readDfMethod.takeIf { marker == itMarker })
             if (extensionProperties) {
-                declarations.add(generateExtensionProperties(itMarker))
+                declarations += generateExtensionProperties(itMarker)
             }
         }
         val code = createCodeWithConverter(declarations.joinToString("\n\n"), marker.name)
@@ -271,6 +284,88 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
         } else ""
         resultDeclarations.add(header + baseInterfacesDeclaration + body)
         return resultDeclarations.join()
+    }
+
+    // TODO temp
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            val name = "Tag"
+            val isOpen = false
+            val visibility = MarkerVisibility.EXPLICIT_PUBLIC
+
+            val names = listOf(
+                "123",
+                "RABBIT",
+                "CHICKEN",
+                "DOG",
+                "FISH",
+                "BIRD",
+                "REPTILE",
+                "OTHER",
+            )
+
+            val schema = DataFrameSchemaImpl(
+                names.associateWith {
+                    ColumnSchema.Value(
+                        type = typeOf<String>(),
+                    )
+                }
+            )
+
+            val code = CodeGeneratorImpl().generateEnumClass(
+                schema = schema,
+                name = name,
+                generateFields = true,
+                isOpen = true,
+            )
+
+            println(code)
+        }
+    }
+
+    override fun generateEnumClass(
+        schema: DataFrameSchema,
+        name: String,
+        generateFields: Boolean,
+        isOpen: Boolean,
+        visibility: MarkerVisibility,
+        knownMarkers: Iterable<Marker>,
+        fieldNameNormalizer: NameNormalizer,
+    ): CodeGenResult {
+        val context = SchemaProcessor.create(name, emptyList(), NameNormalizer.id())
+        val marker = context.process(schema, isOpen, visibility)
+
+        val declaration = CodeGeneratorImpl().generateEnum(
+            marker = marker,
+            generateFields = true,
+        )
+        val code = createCodeWithConverter(declaration, marker.name)
+
+        return CodeGenResult(code, context.generatedMarkers)
+    }
+
+    private fun generateEnum(
+        marker: Marker,
+        generateFields: Boolean,
+    ): Code {
+        val visibility = renderTopLevelDeclarationVisibility(marker)
+        val propertyVisibility = renderInternalDeclarationVisibility(marker)
+
+        val header = "${visibility}enum class ${marker.name}"
+
+        val fieldsDeclaration = if (generateFields) marker.fields.mapIndexed { i, it ->
+            val isLast = i == marker.fields.size - 1
+            "${it.fieldName.quotedIfNeeded}${if (isLast) ";" else ","}"
+        }.join() else ""
+
+        val body = if (fieldsDeclaration.isNotBlank()) buildString {
+            append(" {\n")
+            append(fieldsDeclaration)
+            append("\n}")
+        } else ""
+
+        return listOf(header + body).join()
     }
 }
 

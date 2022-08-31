@@ -28,8 +28,7 @@ import kotlin.reflect.typeOf
 public fun main() {
     val openAPI: OpenAPI = OpenAPIParser()
         .readContents(
-//            File("/data/Projects/dataframe/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/io/openapi-sample.yaml").readText(),
-            File("C:\\Users\\Jolan.Rensen\\Projects\\dataframe\\core\\src\\main\\kotlin\\org\\jetbrains\\kotlinx\\dataframe\\io\\openapi-sample.yaml").readText(),
+            File("/data/Projects/dataframe/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/io/petstore-expanded.yaml").readText(),
             null,
             null
         )

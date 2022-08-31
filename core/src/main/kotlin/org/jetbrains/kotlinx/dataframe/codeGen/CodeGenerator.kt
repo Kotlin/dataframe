@@ -38,6 +38,16 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
 
     public fun generate(marker: Marker, interfaceMode: InterfaceGenerationMode, extensionProperties: Boolean): CodeWithConverter
 
+    public fun generateEnumClass(
+        schema: DataFrameSchema,
+        name: String,
+        generateFields: Boolean,
+        isOpen: Boolean,
+        visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+        knownMarkers: Iterable<Marker> = emptyList(),
+        fieldNameNormalizer: NameNormalizer = NameNormalizer.id(),
+    ): CodeGenResult
+
     public companion object {
         public fun create(useFqNames: Boolean = true): CodeGenerator {
             return if (useFqNames) {
