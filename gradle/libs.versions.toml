@@ -47,6 +47,8 @@ arrow-format = { group = "org.apache.arrow", name = "arrow-format", version.ref 
 arrow-vector = { group = "org.apache.arrow", name = "arrow-vector", version.ref = "arrow" }
 arrow-memory = { group = "org.apache.arrow", name = "arrow-memory-unsafe", version.ref = "arrow" }
 
+swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version = "2.1.2" }
+
 [plugins]
 jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }
 

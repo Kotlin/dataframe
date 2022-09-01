@@ -34,6 +34,8 @@ dependencies {
     implementation(libs.kotlin.datetimeJvm)
     implementation("com.squareup:kotlinpoet:1.11.0")
 
+    implementation(libs.swagger)
+
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
         exclude("org.jetbrains.kotlin", "kotlin-stdlib-jdk8")
