@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
@@ -119,7 +120,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                     val newMarker = Marker(
                         clazz.qualifiedName!!,
                         temp.isOpen,
-                        temp.fields,
+                        temp.fields.filterIsInstance<GeneratedField>(),
                         newBaseMarkers,
                         MarkerVisibility.IMPLICIT_PUBLIC,
                         clazz
