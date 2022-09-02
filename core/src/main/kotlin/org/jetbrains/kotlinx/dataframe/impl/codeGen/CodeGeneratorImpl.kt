@@ -194,15 +194,20 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
             NoFields, WithFields ->
                 generateInterface(marker, interfaceMode == WithFields) + if (extensionProperties) "\n" + generateExtensionProperties(marker) else ""
 
-            Enum -> {
-//                if (extensionProperties) println("Extension properties are not supported for enums")
-                generateEnum(marker)
-            }
+            Enum -> generateEnum(marker)
+
+            TypeAlias -> generateTypeAlias(marker)
 
             None -> if (extensionProperties) generateExtensionProperties(marker) else ""
         }
 
         return createCodeWithConverter(code, marker.name)
+    }
+
+    private fun generateTypeAlias(marker: Marker): Code {
+        val visibility = renderTopLevelDeclarationVisibility(marker)
+
+        return "${visibility}typealias ${marker.name} = ${marker.superMarkers.keys.single()}"
     }
 
     private fun generateEnum(marker: Marker): Code {
