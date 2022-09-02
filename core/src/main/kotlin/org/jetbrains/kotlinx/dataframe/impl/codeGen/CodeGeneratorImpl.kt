@@ -4,6 +4,8 @@ import com.squareup.kotlinpoet.buildCodeBlock
 import org.jetbrains.dataframe.impl.codeGen.CodeGenResult
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
+import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode.*
+import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode.Enum
 import org.jetbrains.dataframe.keywords.HardKeywords
 import org.jetbrains.dataframe.keywords.ModifierKeywords
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
@@ -16,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.ExtensionsCodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
-import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
 import org.jetbrains.kotlinx.dataframe.codeGen.IsolatedMarker
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
@@ -189,16 +190,38 @@ internal open class ExtensionsCodeGeneratorImpl(
 
 internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames) : ExtensionsCodeGeneratorImpl(typeRendering), CodeGenerator {
     override fun generate(marker: Marker, interfaceMode: InterfaceGenerationMode, extensionProperties: Boolean): CodeWithConverter {
-        val generateInterface = interfaceMode != InterfaceGenerationMode.None
-        val code = when {
-            generateInterface && extensionProperties -> generateInterface(marker, interfaceMode == InterfaceGenerationMode.WithFields) + "\n" + generateExtensionProperties(
-                marker
-            )
-            generateInterface -> generateInterface(marker, interfaceMode == InterfaceGenerationMode.WithFields)
-            extensionProperties -> generateExtensionProperties(marker)
-            else -> ""
+        val code = when (interfaceMode) {
+            NoFields, WithFields ->
+                generateInterface(marker, interfaceMode == WithFields) + if (extensionProperties) "\n" + generateExtensionProperties(marker) else ""
+
+            Enum -> {
+//                if (extensionProperties) println("Extension properties are not supported for enums")
+                generateEnum(marker)
+            }
+
+            None -> if (extensionProperties) generateExtensionProperties(marker) else ""
         }
+
         return createCodeWithConverter(code, marker.name)
+    }
+
+    private fun generateEnum(marker: Marker): Code {
+        val visibility = renderTopLevelDeclarationVisibility(marker)
+
+        val header = "${visibility}enum class ${marker.name}"
+
+        val fieldsDeclaration = marker.fields.mapIndexed { i, it ->
+            val isLast = i == marker.fields.size - 1
+            "    ${it.fieldName.quotedIfNeeded}${if (isLast) ";" else ","}"
+        }.join()
+
+        val body = if (fieldsDeclaration.isNotBlank()) buildString {
+            append(" {\n")
+            append(fieldsDeclaration)
+            append("\n}")
+        } else ""
+
+        return listOf(header + body).join()
     }
 
     override fun generate(
@@ -248,7 +271,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
         val resultDeclarations = mutableListOf<String>()
 
         val fieldsDeclaration = if (fields) marker.fields.map {
-            val override = if ((it as? GeneratedField)?.overrides == true) "override " else ""
+            val override = if (it.overrides) "override " else ""
             val columnNameAnnotation =
                 if (it.columnName != it.fieldName.quotedIfNeeded) "    @ColumnName(\"${renderStringLiteral(it.columnName)}\")\n" else ""
 

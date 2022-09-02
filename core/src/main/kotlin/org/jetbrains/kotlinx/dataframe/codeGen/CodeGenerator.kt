@@ -17,7 +17,8 @@ import kotlin.reflect.KClass
 public enum class InterfaceGenerationMode {
     NoFields,
     WithFields,
-    None
+    Enum,
+    None;
 }
 
 public data class CodeGenResult(val code: CodeWithConverter, val newMarkers: List<Marker>)

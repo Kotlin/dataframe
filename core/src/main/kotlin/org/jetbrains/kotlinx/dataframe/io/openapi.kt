@@ -5,7 +5,6 @@ import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.media.Schema
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
-import org.jetbrains.kotlinx.dataframe.codeGen.BaseField
 import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
@@ -40,27 +39,50 @@ public fun main() {
     val codeGenerator = CodeGenerator.create(useFqNames = false)
 
     for ((name, marker) in result) {
-        println("$name:")
-        println(marker.describe())
-        println()
-        println("generated code:")
+//        println("$name:")
+//        println(marker)
+//        println()
+//        println("generated code:")
         println(
             codeGenerator.generate(
                 marker = marker,
-                interfaceMode = InterfaceGenerationMode.WithFields,
-                extensionProperties = true,
+                interfaceMode = if (marker.isEnum) {
+                    InterfaceGenerationMode.Enum
+                } else {
+                    InterfaceGenerationMode.WithFields
+                },
+                extensionProperties = false,
             ).declarations
         )
     }
 }
 
-private fun Marker.describe() =
-    "Marker(name = $name, isOpen = $isOpen, fields = $fields, superMarkers = $superMarkers, visibility = $visibility, typeParameters = $typeParameters, typeArguments = $typeArguments)" // ktlint-disable max-line-length
+/** Local marker helper class. */
+private class MyMarker(
+    val isEnum: Boolean,
+    name: String,
+    fields: List<GeneratedField>,
+    superMarkers: List<Marker>,
+    visibility: MarkerVisibility,
+) : Marker(
+    name = name,
+    isOpen = false,
+    fields = fields,
+    superMarkers = superMarkers,
+    visibility = visibility,
+    typeParameters = emptyList(),
+    typeArguments = emptyList(),
+) {
+    fun withName(name: String) = MyMarker(isEnum, name, fields, superMarkers.values.toList(), visibility)
+
+    override fun toString(): String =
+        "MyMarker(name = $name, isOpen = $isOpen, fields = $fields, superMarkers = $superMarkers, visibility = $visibility, typeParameters = $typeParameters, typeArguments = $typeArguments)"
+}
 
 /**
  * Converts named OpenApi schemas to Markers with name.
  */
-private fun Map<String, Schema<*>>.toMarkers(): Map<String, Marker> {
+private fun Map<String, Schema<*>>.toMarkers(): Map<String, MyMarker> {
     val retrievableMarkers = mapValues { (typeName, value) ->
         RetrievableMarker { getRefMarker, produceAdditionalMarker ->
             value.toMarker(
@@ -71,13 +93,24 @@ private fun Map<String, Schema<*>>.toMarkers(): Map<String, Marker> {
         }
     }.toMutableMap()
 
-    val markers = mutableMapOf<String, Marker>()
+    val markers = mutableMapOf<String, MyMarker>()
 
     while (retrievableMarkers.isNotEmpty()) {
         val retrievedMarker = retrievableMarkers.entries.first { (name, retrieveMarker) ->
             val res = retrieveMarker(
                 getRefMarker = { MarkerResult.fromNullable(markers[it]) },
-                produceAdditionalMarker = markers::put
+                produceAdditionalMarker = { validName, marker ->
+                    var result = ValidFieldName.of(validName.unquoted)
+                    val baseName = result
+                    var attempt = 1
+                    while (result.quotedIfNeeded in markers) {
+                        result = if (result.needsQuote) baseName + ValidFieldName.of(" ($attempt)") else baseName + ValidFieldName.of("$attempt")
+                        attempt++
+                    }
+
+                    markers[result.quotedIfNeeded] = marker.withName(result.quotedIfNeeded)
+                    result.quotedIfNeeded
+                }
             )
 
             if (res is MarkerResult.Success) {
@@ -97,17 +130,17 @@ private sealed interface MarkerResult {
     object CannotFindRefMarker : MarkerResult
 
     /** Successfully found or created [marker]. */
-    data class Success(val marker: Marker) : MarkerResult
+    data class Success(val marker: MyMarker) : MarkerResult
 
     companion object {
-        fun fromNullable(schema: Marker?): MarkerResult =
+        fun fromNullable(schema: MyMarker?): MarkerResult =
             if (schema == null) CannotFindRefMarker else Success(schema)
     }
 }
 
 private typealias GetRefMarker = (String) -> MarkerResult
 
-private typealias ProduceAdditionalMarker = (String, Marker) -> Unit
+private typealias ProduceAdditionalMarker = (ValidFieldName, MyMarker) -> String
 
 /**
  * Represents a call to [toMarker] that can be repeated until it returns a [MarkerResult.Success].
@@ -129,15 +162,28 @@ private fun interface RetrievableMarker {
     ): MarkerResult
 }
 
-private class BaseFieldImpl(
-    override val fieldName: ValidFieldName,
-    override val columnName: String,
-    override val fieldType: FieldType
-) : BaseField {
-    override fun toString(): String {
-        return "BaseFieldImpl(fieldName=${fieldName.quotedIfNeeded}, columnName='$columnName', fieldType=$fieldType)"
-    }
-}
+private fun generatedFieldOf(
+    fieldName: ValidFieldName,
+    columnName: String,
+    overrides: Boolean,
+    fieldType: FieldType
+) = GeneratedField(
+    fieldName = fieldName,
+    columnName = columnName,
+    overrides = overrides,
+    columnSchema = ColumnSchema.Value(typeOf<Any?>()), // unused
+    fieldType = fieldType,
+)
+
+private fun generatedEnumFieldOf(
+    fieldName: ValidFieldName,
+    columnName: String,
+) = generatedFieldOf(
+    fieldName = fieldName,
+    columnName = columnName,
+    overrides = false,
+    fieldType = FieldType.ValueFieldType(typeOf<String>().toString()),
+)
 
 private fun FieldType.isNullable(): Boolean = when (this) {
     is FieldType.FrameFieldType -> nullable
@@ -172,7 +218,7 @@ private fun Schema<*>.toMarker(
             val requiredFields = allOfSchemas.keys.flatMap { it.required ?: emptyList() }.distinct()
 
             val superMarkers = mutableListOf<Marker>()
-            val fields = mutableListOf<BaseField>()
+            val fields = mutableListOf<GeneratedField>()
 
             for ((schema, openApiTypeResult) in allOfSchemas)
                 when (openApiTypeResult) {
@@ -187,17 +233,16 @@ private fun Schema<*>.toMarker(
                             .filter {
                                 it.fieldName.unquoted in requiredFields && it.fieldType.isNullable()
                             }.map {
-                                GeneratedField(
+                                generatedFieldOf(
                                     fieldName = it.fieldName,
                                     columnName = it.columnName,
                                     fieldType = it.fieldType.toNotNullable(),
                                     overrides = true,
-                                    columnSchema = ColumnSchema.Value(typeOf<Any?>()), // unused
                                 )
                             }
                     }
 
-                    is OpenApiTypeResult.SuccessAsEnum -> TODO()
+                    is OpenApiTypeResult.SuccessAsEnum -> error("allOf cannot contain enum types")
 
                     is OpenApiTypeResult.Success -> {
                         val (openApiType, nullable) = openApiTypeResult
@@ -205,15 +250,16 @@ private fun Schema<*>.toMarker(
                         // must be an object
                         openApiType as OpenApiType.Object
 
-                        var tempMarker: Marker? = null
+                        var tempMarker: MyMarker? = null
 
                         val fieldTypeResult = openApiType.toFieldType(
                             property = schema,
                             propertyName = typeName,
                             nullable = nullable,
                             getRefMarker = getRefMarker,
-                            produceAdditionalMarker = { _, marker ->
+                            produceAdditionalMarker = { name, marker ->
                                 tempMarker = marker
+                                name.quotedIfNeeded
                             },
                         )
 
@@ -228,84 +274,119 @@ private fun Schema<*>.toMarker(
                 }
 
             MarkerResult.Success(
-                Marker(
+                MyMarker(
+                    isEnum = false,
                     name = typeName,
-                    isOpen = false,
                     fields = fields,
                     superMarkers = superMarkers,
                     visibility = MarkerVisibility.EXPLICIT_PUBLIC,
-                    typeParameters = emptyList(),
-                    typeArguments = emptyList()
                 )
             )
         }
 
-        enum != null -> TODO()
+        enum != null -> {
+            val openApiTypeResult = this.toOpenApiType(
+                isRequired = required?.contains(name) == true,
+                getRefMarker = getRefMarker,
+            ) as OpenApiTypeResult.SuccessAsEnum // must be an enum
+
+            val enumMarker = produceNewEnum(
+                name = typeName,
+                values = openApiTypeResult.values,
+                produceAdditionalMarker = produceAdditionalMarker,
+            )
+
+            MarkerResult.Success(enumMarker)
+        }
+
         type == "object" -> {
-            val fields = buildList<BaseField> {
+            val fields = buildList {
                 for ((name, property) in (properties ?: emptyMap())) {
+                    val isRequired = required?.contains(name) == true
                     val openApiTypeResult = property.toOpenApiType(
-                        isRequired = required?.contains(name) == true,
-                        getRefMarker = getRefMarker
+                        isRequired = isRequired,
+                        getRefMarker = getRefMarker,
                     )
 
-                    val (openApiType, nullable) = when (openApiTypeResult) {
+                    when (openApiTypeResult) {
                         is OpenApiTypeResult.CannotFindRefMarker ->
                             return MarkerResult.CannotFindRefMarker
 
                         is OpenApiTypeResult.UsingRef -> {
                             val validName = ValidFieldName.of(name.snakeToLowerCamelCase())
 
-                            this += BaseFieldImpl(
+                            this += generatedFieldOf(
+                                overrides = false,
                                 fieldName = validName,
                                 columnName = name,
-                                fieldType = FieldType.GroupFieldType(
-                                    markerName = openApiTypeResult.marker.name
-                                )
+                                fieldType = if (openApiTypeResult.marker.isEnum) {
+                                    FieldType.ValueFieldType(
+                                        typeFqName = openApiTypeResult.marker.name + if (isRequired) "" else "?",
+                                    )
+                                } else {
+                                    FieldType.GroupFieldType(
+                                        markerName = openApiTypeResult.marker.name
+                                    )
+                                }
                             )
-                            continue
                         }
 
-                        is OpenApiTypeResult.SuccessAsEnum -> TODO()
-
-                        is OpenApiTypeResult.Success ->
-                            openApiTypeResult
-                    }
-                    val fieldTypeResult = openApiType
-                        .toFieldType(
-                            property = property,
-                            propertyName = name,
-                            nullable = nullable,
-                            getRefMarker = getRefMarker,
-                            produceAdditionalMarker = produceAdditionalMarker
-                        )
-
-                    when (fieldTypeResult) {
-                        is FieldTypeResult.CannotFindRefMarker ->
-                            return MarkerResult.CannotFindRefMarker
-
-                        is FieldTypeResult.Success -> {
-                            val validName = ValidFieldName.of(name.snakeToLowerCamelCase())
-
-                            this += BaseFieldImpl(
-                                fieldName = validName,
-                                columnName = name,
-                                fieldType = fieldTypeResult.fieldType
+                        is OpenApiTypeResult.SuccessAsEnum -> {
+                            val enumMarker = produceNewEnum(
+                                name = name,
+                                values = openApiTypeResult.values,
+                                produceAdditionalMarker = produceAdditionalMarker,
                             )
+
+                            this += generatedFieldOf(
+                                overrides = false,
+                                fieldName = ValidFieldName.of(name.snakeToLowerCamelCase()),
+                                columnName = name,
+                                fieldType = FieldType.ValueFieldType(
+                                    typeFqName = enumMarker.name,
+                                ),
+                            )
+                        }
+
+                        is OpenApiTypeResult.Success -> {
+                            val (openApiType, nullable) = openApiTypeResult
+
+                            val fieldTypeResult = openApiType
+                                .toFieldType(
+                                    property = property,
+                                    propertyName = name,
+                                    nullable = nullable,
+                                    getRefMarker = getRefMarker,
+                                    produceAdditionalMarker = produceAdditionalMarker
+                                )
+
+                            when (fieldTypeResult) {
+                                is FieldTypeResult.CannotFindRefMarker ->
+                                    return MarkerResult.CannotFindRefMarker
+
+                                is FieldTypeResult.Success -> {
+                                    val validName = ValidFieldName.of(name.snakeToLowerCamelCase())
+
+                                    this += generatedFieldOf(
+                                        overrides = false,
+                                        fieldName = validName,
+                                        columnName = name,
+                                        fieldType = fieldTypeResult.fieldType
+                                    )
+                                }
+                            }
                         }
                     }
                 }
             }
 
             MarkerResult.Success(
-                Marker(
+                MyMarker(
+                    isEnum = false,
                     name = typeName,
-                    isOpen = false,
                     fields = fields,
                     superMarkers = emptyList(),
                     visibility = MarkerVisibility.EXPLICIT_PUBLIC,
-                    typeParameters = emptyList(),
-                    typeArguments = emptyList()
                 )
             )
         }
@@ -314,6 +395,29 @@ private fun Schema<*>.toMarker(
             TODO("other types like array can also occur, typealias??")
         }
     }
+}
+
+private fun produceNewEnum(
+    name: String,
+    values: List<String>,
+    produceAdditionalMarker: ProduceAdditionalMarker,
+): MyMarker {
+    val enumName = ValidFieldName.of(name.snakeToUpperCamelCase())
+    val enumMarker = MyMarker(
+        isEnum = true,
+        name = enumName.quotedIfNeeded,
+        fields = values.map {
+            generatedEnumFieldOf(
+                fieldName = ValidFieldName.of(it),
+                columnName = it,
+            )
+        },
+        superMarkers = emptyList(),
+        visibility = MarkerVisibility.EXPLICIT_PUBLIC,
+    )
+    val newName = produceAdditionalMarker(enumName, enumMarker)
+
+    return enumMarker.withName(newName)
 }
 
 private enum class OpenApiIntegerFormat(val value: String) {
@@ -398,7 +502,7 @@ private sealed class OpenApiType(val name: kotlin.String?) {
 
     object Object : OpenApiType("object") {
 
-        fun getType(marker: Marker): FieldType =
+        fun getType(marker: MyMarker): FieldType =
             FieldType.GroupFieldType(
                 markerName = marker.name,
             )
@@ -452,7 +556,7 @@ private sealed class OpenApiType(val name: kotlin.String?) {
 private sealed interface OpenApiTypeResult {
 
     /** Property is a reference with name [name] and ColumnSchema [columnSchema]. */
-    class UsingRef(val marker: Marker) : OpenApiTypeResult
+    class UsingRef(val marker: MyMarker) : OpenApiTypeResult
 
     /** A marker reference cannot be found at this time, try again later. */
     object CannotFindRefMarker : OpenApiTypeResult
@@ -461,7 +565,7 @@ private sealed interface OpenApiTypeResult {
     data class Success(val openApiType: OpenApiType, val nullable: Boolean) : OpenApiTypeResult
 
     /** Property is an enum with OpenApiType [openApiType]. */
-    class SuccessAsEnum() : OpenApiTypeResult
+    data class SuccessAsEnum(val values: List<String>, val nullable: Boolean) : OpenApiTypeResult
 }
 
 /**  Converts a single property of an OpenApi type schema to [OpenApiType] */
@@ -482,9 +586,9 @@ private fun Schema<*>.toOpenApiType(
 
     if (enum != null) {
         val nullable = enum.any { it == null }
-        val openApiType = OpenApiType.fromStringOrNull(type)!!
+        // Note: type doesn't matter, all is interpreted as (quoted) string
 
-        return TODO()
+        return OpenApiTypeResult.SuccessAsEnum(enum.filterNotNull().map { it.toString() }, nullable)
     }
 
     var openApiType = OpenApiType.fromStringOrNull(type)
@@ -513,6 +617,14 @@ private fun Schema<*>.toOpenApiType(
                         OpenApiTypeResult.UsingRef(it.marker)
                 }
             }
+
+            anyOfTypes.isEmpty() && anyOfRefs.isNotEmpty() -> {
+                // TODO
+                println("TODO merge oneOf refs")
+
+                OpenApiType.Any
+            }
+
             // cannot assume anything about a type when there are multiple types except one
             not != null -> OpenApiType.Any
 
@@ -568,10 +680,17 @@ private fun OpenApiType.toFieldType(
                             return FieldTypeResult.CannotFindRefMarker
 
                         is OpenApiTypeResult.UsingRef ->
-                            getTypeAsFrame(
-                                nullable = nullable,
-                                markerName = arrayTypeResult.marker.name
-                            )
+                            if (arrayTypeResult.marker.isEnum) {
+                                getTypeAsList(
+                                    nullable = nullable,
+                                    typeFqName = arrayTypeResult.marker.name,
+                                )
+                            } else {
+                                getTypeAsFrame(
+                                    nullable = nullable,
+                                    markerName = arrayTypeResult.marker.name,
+                                )
+                            }
 
                         is OpenApiTypeResult.Success -> {
                             val arrayTypeSchemaResult = arrayTypeResult.openApiType.toFieldType(
@@ -598,7 +717,18 @@ private fun OpenApiType.toFieldType(
                             }
                         }
 
-                        is OpenApiTypeResult.SuccessAsEnum -> TODO()
+                        is OpenApiTypeResult.SuccessAsEnum -> {
+                            val enumMarker = produceNewEnum(
+                                name = propertyName,
+                                values = arrayTypeResult.values,
+                                produceAdditionalMarker = produceAdditionalMarker,
+                            )
+
+                            getTypeAsList(
+                                nullable = nullable,
+                                typeFqName = enumMarker.name,
+                            )
+                        }
                     }
                 }
 
@@ -626,12 +756,12 @@ private fun OpenApiType.toFieldType(
                         return FieldTypeResult.CannotFindRefMarker
 
                     is MarkerResult.Success -> {
-                        produceAdditionalMarker(
-                            propertyName.snakeToUpperCamelCase(),
+                        val newName = produceAdditionalMarker(
+                            ValidFieldName.of(propertyName.snakeToUpperCamelCase()),
                             dataFrameSchemaResult.marker,
                         )
 
-                        getType(dataFrameSchemaResult.marker)
+                        getType(dataFrameSchemaResult.marker.withName(newName))
                     }
                 }
             }
