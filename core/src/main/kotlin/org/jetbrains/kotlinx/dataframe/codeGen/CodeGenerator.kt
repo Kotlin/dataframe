@@ -18,6 +18,7 @@ public enum class InterfaceGenerationMode {
     NoFields,
     WithFields,
     Enum,
+    TypeAlias,
     None;
 }
 
