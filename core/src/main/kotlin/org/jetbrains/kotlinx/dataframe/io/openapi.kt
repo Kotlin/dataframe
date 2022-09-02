@@ -31,7 +31,6 @@ public fun main() {
         .openAPI ?: error("Failed to parse OpenAPI")
 
     val result = openAPI.components?.schemas?.toMap()
-//        ?.filter { it.value.type == "object" || it.value.allOf != null || it.value.enum != null }
         ?.toMarkers()
         ?.toList()
         ?: emptyList()
@@ -216,10 +215,6 @@ private fun Schema<*>.toMarker(
     getRefMarker: GetRefMarker,
     produceAdditionalMarker: ProduceAdditionalMarker
 ): MarkerResult {
-//    require(type == "object" || allOf != null || enum != null) {
-//        "Only object-, allOf, or enum types can be converted to a DataFrameSchema"
-//    }
-
     return when {
         allOf != null -> {
             val allOfSchemas = allOf!!.associateWith {
