@@ -33,7 +33,7 @@ public abstract class AbstractMarker(
 public open class Marker(
     override val name: String,
     public val isOpen: Boolean,
-    override val fields: List<BaseField>,
+    override val fields: List<GeneratedField>,
     superMarkers: List<Marker>,
     override val visibility: MarkerVisibility,
     typeParameters: List<String>,
@@ -53,9 +53,9 @@ public open class Marker(
         result
     }
 
-    public val allFields: List<BaseField> by lazy {
+    public val allFields: List<GeneratedField> by lazy {
 
-        val fieldsMap = mutableMapOf<String, BaseField>()
+        val fieldsMap = mutableMapOf<String, GeneratedField>()
         this.superMarkers.values.forEach {
             it.allFields.forEach {
                 fieldsMap[it.fieldName.quotedIfNeeded] = it
@@ -67,24 +67,17 @@ public open class Marker(
         fieldsMap.values.toList()
     }
 
-    public val allFieldsByColumn: Map<String, BaseField> by lazy {
+    public val allFieldsByColumn: Map<String, GeneratedField> by lazy {
         allFields.associateBy { it.columnName }
     }
 
-    public fun getField(columnName: String): BaseField? = allFieldsByColumn[columnName]
+    public fun getField(columnName: String): GeneratedField? = allFieldsByColumn[columnName]
 
     public fun containsColumn(columnName: String): Boolean = allFieldsByColumn.containsKey(columnName)
 
     public val columnNames: List<String> get() = allFields.map { it.columnName }
 
-    public val schema: DataFrameSchema by lazy {
-        DataFrameSchemaImpl(
-            allFields.mapNotNull {
-                if (it !is GeneratedField) return@mapNotNull null
-                it.columnName to it.columnSchema
-            }.toMap()
-        )
-    }
+    public val schema: DataFrameSchema by lazy { DataFrameSchemaImpl(allFields.map { it.columnName to it.columnSchema }.toMap()) }
 
     public fun implements(schema: Marker): Boolean = if (schema.name == name) true else allSuperMarkers[schema.name]?.let { it === schema } ?: false
 
