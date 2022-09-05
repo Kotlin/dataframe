@@ -2,7 +2,7 @@ package org.jetbrains.kotlinx.dataframe.annotations
 
 /**
  * Annotation preprocessing will generate a DataSchema interface from the data at `path`.
- * Data must be of supported format: CSV, JSON, Apache Arrow, Excel.
+ * Data must be of supported format: CSV, JSON, Apache Arrow, Excel, OpenAPI (Swagger) in YAML/JSON.
  * Generated data schema has properties inferred from data and a companion object with `read method`.
  * `read method` is either `readCSV` or `readJson` that returns `DataFrame<name>`
  *

@@ -35,7 +35,7 @@ import java.time.LocalDateTime
 import java.util.Calendar
 import java.util.Date
 
-public class Excel : SupportedFormat {
+public class Excel : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readExcel(stream)
 
     override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readExcel(file)

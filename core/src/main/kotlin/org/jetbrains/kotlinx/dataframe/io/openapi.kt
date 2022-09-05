@@ -1,5 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.io // ktlint-disable filename
 
+import com.beust.klaxon.JsonObject
+import com.beust.klaxon.Parser
 import io.swagger.parser.OpenAPIParser
 import io.swagger.v3.oas.models.media.Schema
 import io.swagger.v3.parser.core.models.AuthorizationValue
@@ -7,44 +9,96 @@ import io.swagger.v3.parser.core.models.ParseOptions
 import io.swagger.v3.parser.core.models.SwaggerParseResult
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
+import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
+import org.jetbrains.kotlinx.dataframe.codeGen.plus
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import java.io.File
+import java.io.InputStream
+import java.net.URL
 import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.reflect.typeOf
 
 public fun main() {
-    val results = readOpenApi("/data/Projects/dataframe 2/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/io/petstore-expanded.yaml")
+    val result = readOpenApi("/data/Projects/dataframe 2/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/io/petstore-expanded.yaml")
 
-    for (result in results) {
 //        println("$name:")
 //        println(marker)
 //        println()
 //        println("generated code:")
-        println(
-            result.declarations
-        )
+    println(result.declarations)
+}
+
+public class OpenApi : SupportedCodeGenerationFormat {
+    override fun readCodeForGeneration(stream: InputStream): CodeWithConverter =
+        readOpenApiAsString(stream.bufferedReader().readText())
+
+    override fun readCodeForGeneration(file: File): CodeWithConverter =
+        readOpenApi(file.absolutePath)
+
+    override fun acceptsExtension(ext: String): Boolean = ext in listOf("yaml", "yml", "json")
+
+    override val testOrder: Int = 60000
+
+    // TODO
+    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
+        DefaultReadOpenApiMethod(pathRepresentation)
+}
+
+private const val readOpenApi = "readOpenApi"
+
+private class DefaultReadOpenApiMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readOpenApi)
+
+internal fun isOpenApi(path: String): Boolean = isOpenApi(asURL(path))
+
+internal fun isOpenApi(url: URL): Boolean {
+    if (url.path.endsWith(".yml") || url.path.endsWith("yaml")) {
+        return true
+    }
+    if (!url.path.endsWith("json")) {
+        return false
+    }
+
+    return url.openStream().use {
+        val parsed = Parser.default().parse(it) as? JsonObject ?: return false
+        parsed["openapi"] != null
     }
 }
 
+internal fun isOpenApi(file: File): Boolean {
+    if (file.extension.lowercase() in listOf("yml", "yaml")) {
+        return true
+    }
+
+    if (file.extension.lowercase() != "json") {
+        return false
+    }
+
+    val parsed = Parser.default().parse(file.inputStream()) as? JsonObject ?: return false
+
+    return parsed["openapi"] != null
+}
+
 public fun readOpenApi(
-    url: String,
+    uri: String,
     auth: List<AuthorizationValue>? = null,
     options: ParseOptions? = null,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): List<CodeWithConverter> = readOpenApi(OpenAPIParser().readLocation(url, auth, options), visibility)
+): CodeWithConverter = readOpenApi(OpenAPIParser().readLocation(uri, auth, options), visibility)
 
 public fun readOpenApiAsString(
     openApiAsString: String,
     auth: List<AuthorizationValue>? = null,
     options: ParseOptions? = null,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): List<CodeWithConverter> = readOpenApi(OpenAPIParser().readContents(openApiAsString, auth, options), visibility)
+): CodeWithConverter = readOpenApi(OpenAPIParser().readContents(openApiAsString, auth, options), visibility)
 
 /**
  * Converts a parsed OpenAPI specification into a list of [CodeWithConverter] objects.
@@ -52,12 +106,12 @@ public fun readOpenApiAsString(
  * @param swaggerParseResult the result of parsing an OpenAPI specification, created using [readOpenApi] or [readOpenApiAsString].
  * @param visibility the visibility of the generated marker classes.
  *
- * @return a list of [CodeWithConverter] objects, each representing a marker class and its generated code.
+ * @return a [CodeWithConverter] object, representing the generated code.
  */
 private fun readOpenApi(
     swaggerParseResult: SwaggerParseResult,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): List<CodeWithConverter> {
+): CodeWithConverter {
     val openApi = swaggerParseResult.openAPI
         ?: error("Failed to parse OpenAPI, ${swaggerParseResult.messages.toList()}")
 
@@ -81,7 +135,7 @@ private fun readOpenApi(
             },
             extensionProperties = false,
         )
-    }
+    }.reduce { a, b -> a + b }
 }
 
 /** Represents the type of markers that we can generate. */
@@ -250,7 +304,7 @@ private fun generatedFieldOf(
     fieldName: ValidFieldName,
     columnName: String,
     overrides: Boolean,
-    fieldType: FieldType
+    fieldType: FieldType,
 ): GeneratedField = GeneratedField(
     fieldName = fieldName,
     columnName = columnName,
@@ -784,8 +838,8 @@ private fun Schema<*>.toOpenApiType(
 
             // more than one ref
             anyOfTypes.isEmpty() && anyOfRefs.isNotEmpty() -> {
-                // TODO merge oneOf refs, can even be enums
-                println("TODO merge oneOf refs, can even be enums")
+                // TODO merge oneOf refs, can be enums
+                println("TODO merge oneOf refs, can be enums")
 
                 OpenApiType.Any
             }

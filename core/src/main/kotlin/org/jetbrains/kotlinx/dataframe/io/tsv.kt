@@ -11,7 +11,7 @@ import java.io.InputStream
 import java.net.URL
 import java.nio.charset.Charset
 
-public class TSV : SupportedFormat {
+public class TSV : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readTSV(stream, header = header)
 
     override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readTSV(file, header = header)

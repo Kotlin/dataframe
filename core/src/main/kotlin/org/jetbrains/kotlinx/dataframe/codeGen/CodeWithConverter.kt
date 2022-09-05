@@ -15,3 +15,10 @@ public data class CodeWithConverter(val declarations: Code, val converter: (Vari
         return declarations + "\n" + converter(name)
     }
 }
+
+public infix fun CodeWithConverter.merge(other: CodeWithConverter): CodeWithConverter = CodeWithConverter(
+    declarations = declarations + "\n" + other.declarations,
+    converter = this.converter,
+)
+
+public operator fun CodeWithConverter.plus(other: CodeWithConverter): CodeWithConverter = merge(other)
