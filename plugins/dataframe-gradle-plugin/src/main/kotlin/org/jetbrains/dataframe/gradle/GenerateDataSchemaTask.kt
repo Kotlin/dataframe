@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.DfReadResult
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
-import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlReader
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlDfReader
 import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
 import org.jetbrains.kotlinx.dataframe.io.CSV
 import org.jetbrains.kotlinx.dataframe.io.Excel
@@ -67,7 +67,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             TSV(),
             ArrowFeather()
         )
-        val res = when (val readResult = CodeGenerator.urlReader(url, formats)) {
+        val res = when (val readResult = CodeGenerator.urlDfReader(url, formats)) {
             is DfReadResult.Success -> readResult
             is DfReadResult.Error -> throw Exception("Error while reading dataframe from data at $url", readResult.reason)
         }

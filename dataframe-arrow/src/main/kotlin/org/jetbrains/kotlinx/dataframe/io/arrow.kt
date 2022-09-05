@@ -65,7 +65,7 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
-public class ArrowFeather : SupportedFormat {
+public class ArrowFeather : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readArrowFeather(stream, NullabilityOptions.Widening)
 
     override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readArrowFeather(file, NullabilityOptions.Widening)

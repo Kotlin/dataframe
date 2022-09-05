@@ -43,7 +43,7 @@ import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
 import kotlin.reflect.typeOf
 
-public class JSON : SupportedFormat {
+public class JSON : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readJson(stream, header = header)
 
     override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readJson(file, header = header)

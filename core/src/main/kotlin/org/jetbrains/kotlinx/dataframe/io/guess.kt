@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.single
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import java.io.BufferedInputStream
 import java.io.File
@@ -17,9 +18,6 @@ import java.util.ServiceLoader
 import kotlin.reflect.KType
 
 public interface SupportedFormat {
-    public fun readDataFrame(stream: InputStream, header: List<String> = emptyList()): AnyFrame
-
-    public fun readDataFrame(file: File, header: List<String> = emptyList()): AnyFrame
 
     public fun acceptsExtension(ext: String): Boolean
 
@@ -28,6 +26,19 @@ public interface SupportedFormat {
     public val testOrder: Int
 
     public fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod
+}
+
+public interface SupportedDataFrameFormat : SupportedFormat {
+    public fun readDataFrame(stream: InputStream, header: List<String> = emptyList()): DataFrame<*>
+
+    public fun readDataFrame(file: File, header: List<String> = emptyList()): DataFrame<*>
+}
+
+public interface SupportedCodeGenerationFormat : SupportedFormat {
+
+    public fun readCodeForGeneration(stream: InputStream): CodeWithConverter
+
+    public fun readCodeForGeneration(file: File): CodeWithConverter
 }
 
 public class MethodArguments {
@@ -54,20 +65,43 @@ public class MethodArguments {
 }
 
 internal val supportedFormats: List<SupportedFormat> by lazy {
-    ServiceLoader.load(SupportedFormat::class.java).toList()
+    ServiceLoader.load(SupportedDataFrameFormat::class.java).toList() +
+        ServiceLoader.load(SupportedCodeGenerationFormat::class.java).toList()
 }
 
-internal fun guessFormatForExtension(ext: String, formats: List<SupportedFormat> = supportedFormats) =
+internal fun guessFormatForExtension(
+    ext: String,
+    formats: List<SupportedFormat> = supportedFormats,
+    sample: Any? = null
+): SupportedFormat? =
     formats.firstOrNull { it.acceptsExtension(ext) }
+        ?.let {
+            // a json file can be read both for openApi as for JSON try to make the distinction
+            if (it is JSON || it is OpenApi) {
+                val isOpenApi = when (sample) {
+                    is File -> isOpenApi(sample)
+                    is URL -> isOpenApi(sample)
+                    is String -> isOpenApi(sample)
+                    else -> false
+                }
+
+                if (isOpenApi) {
+                    supportedFormats.firstOrNull { it is OpenApi }
+                        ?: supportedFormats.firstOrNull { it is JSON }
+                } else {
+                    it
+                }
+            } else it
+        }
 
 internal fun guessFormat(file: File, formats: List<SupportedFormat> = supportedFormats): SupportedFormat? =
-    file.extension.lowercase().let { guessFormatForExtension(it, formats) }
+    file.extension.lowercase().let { guessFormatForExtension(it, formats, sample = file) }
 
 internal fun guessFormat(url: URL, formats: List<SupportedFormat> = supportedFormats): SupportedFormat? =
     guessFormat(url.path, formats)
 
 internal fun guessFormat(url: String, formats: List<SupportedFormat> = supportedFormats): SupportedFormat? =
-    guessFormatForExtension(url.substringAfterLast("."), formats)
+    guessFormatForExtension(url.substringAfterLast("."), formats, sample = url)
 
 private class NotCloseableStream(val src: InputStream) : InputStream() {
     override fun read(): Int = src.read()
@@ -82,9 +116,9 @@ private class NotCloseableStream(val src: InputStream) : InputStream() {
 
 internal fun DataFrame.Companion.read(
     stream: InputStream,
-    format: SupportedFormat? = null,
+    format: SupportedDataFrameFormat? = null,
     header: List<String> = emptyList(),
-    formats: List<SupportedFormat> = supportedFormats
+    formats: List<SupportedDataFrameFormat> = supportedFormats.filterIsInstance<SupportedDataFrameFormat>(),
 ): ReadAnyFrame {
     if (format != null) return format to format.readDataFrame(stream, header = header)
     val input = NotCloseableStream(if (stream.markSupported()) stream else BufferedInputStream(stream))
@@ -107,9 +141,9 @@ internal fun DataFrame.Companion.read(
 
 internal fun DataFrame.Companion.read(
     file: File,
-    format: SupportedFormat? = null,
+    format: SupportedDataFrameFormat? = null,
     header: List<String> = emptyList(),
-    formats: List<SupportedFormat> = supportedFormats
+    formats: List<SupportedDataFrameFormat> = supportedFormats.filterIsInstance<SupportedDataFrameFormat>()
 ): ReadAnyFrame {
     if (format != null) return format to format.readDataFrame(file, header = header)
     formats.sortedBy { it.testOrder }.forEach {
@@ -128,14 +162,29 @@ internal data class ReadAnyFrame(val format: SupportedFormat, val df: AnyFrame)
 internal infix fun SupportedFormat.to(df: AnyFrame) = ReadAnyFrame(this, df)
 
 public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame =
-    read(file, guessFormat(file), header).df
+    read(
+        file = file,
+        format = guessFormat(file)?.also {
+            if (it !is SupportedDataFrameFormat) error("Format $it does not support reading dataframes")
+        } as SupportedDataFrameFormat?,
+        header = header,
+    ).df
 
 public fun DataRow.Companion.read(file: File, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(file, header).single()
 
 public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()): AnyFrame = when {
     isFile(url) -> read(urlAsFile(url), header)
-    isProtocolSupported(url) -> catchHttpResponse(url) { read(it, guessFormat(url), header).df }
+    isProtocolSupported(url) -> catchHttpResponse(url) {
+        read(
+            stream = it,
+            format = guessFormat(url)?.also {
+                if (it !is SupportedDataFrameFormat) error("Format $it does not support reading dataframes")
+            } as SupportedDataFrameFormat?,
+            header = header,
+        ).df
+    }
+
     else -> throw IllegalArgumentException("Invalid protocol for url $url")
 }
 

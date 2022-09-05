@@ -34,7 +34,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
 
-public class CSV(private val delimiter: Char = ',') : SupportedFormat {
+public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
         DataFrame.readCSV(stream, delimiter = delimiter, header = header)
 
