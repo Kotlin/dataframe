@@ -1,72 +1,117 @@
 package org.jetbrains.kotlinx.dataframe.io // ktlint-disable filename
 
 import io.swagger.parser.OpenAPIParser
-import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.media.Schema
+import io.swagger.v3.parser.core.models.AuthorizationValue
+import io.swagger.v3.parser.core.models.ParseOptions
+import io.swagger.v3.parser.core.models.SwaggerParseResult
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
+import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
-import java.io.File
 import java.time.LocalDate
 import java.time.LocalDateTime
 import kotlin.reflect.typeOf
 
 public fun main() {
-    val openAPI: OpenAPI = OpenAPIParser()
-        .readContents(
-            File(
-                "/data/Projects/dataframe 2/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/io/petstore-expanded.yaml"
-            ).readText(),
-            null,
-            null
-        )
-        .also {
-            if (it.messages != null) println("messages: ${it.messages.toList()}")
-        }
-        .openAPI ?: error("Failed to parse OpenAPI")
+    val results = readOpenApi("/data/Projects/dataframe 2/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/io/petstore-expanded.yaml")
 
-    val result = openAPI.components?.schemas?.toMap()
-        ?.toMarkers()
-        ?.toList()
-        ?: emptyList()
-
-    val codeGenerator = CodeGenerator.create(useFqNames = false)
-
-    for ((name, marker) in result) {
+    for (result in results) {
 //        println("$name:")
 //        println(marker)
 //        println()
 //        println("generated code:")
         println(
-            codeGenerator.generate(
-                marker = marker,
-                interfaceMode = when (marker.markerType) {
-                    MarkerType.ENUM -> InterfaceGenerationMode.Enum
-                    MarkerType.INTERFACE -> InterfaceGenerationMode.WithFields
-                    MarkerType.TYPE_ALIAS -> InterfaceGenerationMode.TypeAlias
-                },
-                extensionProperties = false,
-            ).declarations
+            result.declarations
         )
     }
 }
 
-private enum class MarkerType {
-    ENUM, INTERFACE, TYPE_ALIAS
+public fun readOpenApi(
+    url: String,
+    auth: List<AuthorizationValue>? = null,
+    options: ParseOptions? = null,
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+): List<CodeWithConverter> = readOpenApi(OpenAPIParser().readLocation(url, auth, options), visibility)
+
+public fun readOpenApiAsString(
+    openApiAsString: String,
+    auth: List<AuthorizationValue>? = null,
+    options: ParseOptions? = null,
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+): List<CodeWithConverter> = readOpenApi(OpenAPIParser().readContents(openApiAsString, auth, options), visibility)
+
+/**
+ * Converts a parsed OpenAPI specification into a list of [CodeWithConverter] objects.
+ *
+ * @param swaggerParseResult the result of parsing an OpenAPI specification, created using [readOpenApi] or [readOpenApiAsString].
+ * @param visibility the visibility of the generated marker classes.
+ *
+ * @return a list of [CodeWithConverter] objects, each representing a marker class and its generated code.
+ */
+private fun readOpenApi(
+    swaggerParseResult: SwaggerParseResult,
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+): List<CodeWithConverter> {
+    val openApi = swaggerParseResult.openAPI
+        ?: error("Failed to parse OpenAPI, ${swaggerParseResult.messages.toList()}")
+
+    // take the components.schemas from the openApi spec and convert them to a list of Markers, representing the
+    // interfaces, enums, and typealiases that need to be generated.
+    val result = openApi.components?.schemas
+        ?.toMap()
+        ?.toMarkers()
+        ?.toList()
+        ?: emptyList()
+
+    val codeGenerator = CodeGenerator.create(useFqNames = true)
+
+    return result.map { marker ->
+        codeGenerator.generate(
+            marker = marker.withVisibility(visibility),
+            interfaceMode = when (marker.markerType) {
+                MarkerType.ENUM -> InterfaceGenerationMode.Enum
+                MarkerType.INTERFACE -> InterfaceGenerationMode.WithFields
+                MarkerType.TYPE_ALIAS, MarkerType.MARKER_ALIAS -> InterfaceGenerationMode.TypeAlias
+            },
+            extensionProperties = false,
+        )
+    }
 }
 
-/** Local marker helper class. */
+/** Represents the type of markers that we can generate. */
+private enum class MarkerType {
+    ENUM,
+    INTERFACE,
+
+    /** Type alias that points at something other than a Marker. */
+    TYPE_ALIAS,
+
+    /** Type alias that points at another Marker. */
+    MARKER_ALIAS,
+}
+
+/**
+ * Local marker helper class including a [MarkerType], handy [toString], and copy-like operations.
+ *
+ * @param markerType the type of marker to generate.
+ * @param name the name of the marker.
+ * @param fields the fields in the marker. Is always empty for [markerType] == [MarkerType.TYPE_ALIAS].
+ * @param superMarkers the supertypes of the marker. Is always empty for [markerType] == [MarkerType.ENUM]. Contains a
+ *   single supertype for [markerType] == [MarkerType.TYPE_ALIAS].
+ * @param visibility the visibility of the marker.
+ */
 private class MyMarker(
     val markerType: MarkerType,
     name: String,
     fields: List<GeneratedField>,
     superMarkers: List<Marker>,
-    visibility: MarkerVisibility,
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
 ) : Marker(
     name = name,
     isOpen = false,
@@ -78,28 +123,33 @@ private class MyMarker(
 ) {
     fun withName(name: String) = MyMarker(markerType, name, fields, superMarkers.values.toList(), visibility)
 
+    fun withVisibility(visibility: MarkerVisibility) = MyMarker(markerType, name, fields, superMarkers.values.toList(), visibility)
+
     override fun toString(): String =
         "MyMarker(markerType = $markerType, name = $name, isOpen = $isOpen, fields = $fields, superMarkers = $superMarkers, visibility = $visibility, typeParameters = $typeParameters, typeArguments = $typeArguments)"
 }
 
 /**
- * Converts named OpenApi schemas to Markers with name.
+ * Converts named OpenApi schemas to a list of [MyMarker]s.
+ * Will cause an exception for circular references, however they shouldn't occur in OpenApi specs.
  */
-private fun Map<String, Schema<*>>.toMarkers(): Map<String, MyMarker> {
+private fun Map<String, Schema<*>>.toMarkers(): List<MyMarker> {
+    // Convert the schemas to toMarker calls that can be repeated to resolve references.
     val retrievableMarkers = mapValues { (typeName, value) ->
         RetrievableMarker { getRefMarker, produceAdditionalMarker ->
             value.toMarker(
                 typeName = typeName,
                 getRefMarker = getRefMarker,
-                produceAdditionalMarker = produceAdditionalMarker
+                produceAdditionalMarker = produceAdditionalMarker,
             )
         }
     }.toMutableMap()
 
     val markers = mutableMapOf<String, MyMarker>()
 
+    // convert all the retrievable markers to actual markers, resolving references as we go.
     while (retrievableMarkers.isNotEmpty()) {
-        val retrievedMarker = retrievableMarkers.entries.first { (name, retrieveMarker) ->
+        retrievableMarkers.entries.first { (name, retrieveMarker) ->
             val res = retrieveMarker(
                 getRefMarker = { MarkerResult.fromNullable(markers[it]) },
                 produceAdditionalMarker = { validName, marker ->
@@ -116,15 +166,20 @@ private fun Map<String, Schema<*>>.toMarkers(): Map<String, MyMarker> {
                 }
             )
 
-            if (res is MarkerResult.Success) {
-                markers[name] = res.marker
-                true
-            } else false
-        }.key
-        retrievableMarkers -= retrievedMarker
+            when (res) {
+                is MarkerResult.Success -> {
+                    markers[name] = res.marker
+                    retrievableMarkers -= name
+                    true // Marker is retrieved completely, remove it from the map.
+                }
+
+                is MarkerResult.CannotFindRefMarker ->
+                    false // Cannot find a referenced Marker for this one, so we'll try again later.
+            }
+        }
     }
 
-    return markers
+    return markers.values.toList()
 }
 
 private sealed interface MarkerResult {
@@ -141,9 +196,35 @@ private sealed interface MarkerResult {
     }
 }
 
-private typealias GetRefMarker = (String) -> MarkerResult
+/** Represents a query to find a marker with certain name. Produces a [MarkerResult]. */
+private fun interface GetRefMarker {
 
-private typealias ProduceAdditionalMarker = (ValidFieldName, MyMarker) -> String
+    /** Produces a [MarkerResult] (either [MarkerResult.CannotFindRefMarker] or [MarkerResult.Success]) for the
+     * given [refName] representing a query to find a marker with that given name. */
+    operator fun invoke(refName: String): MarkerResult
+}
+
+/**
+ * Represents a call to produce an additional Marker from inside a schema component.
+ * Not all objects or enums are named, so this is used to create and produce a name for them.
+ */
+private fun interface ProduceAdditionalMarker {
+
+    /**
+     * Produces an additional Marker with the given [validName].
+     *
+     * @return the name of the produced marker. This name is guaranteed to be unique and might not be the same as the
+     *   provided [validName].
+     */
+    operator fun invoke(
+        validName: ValidFieldName,
+        marker: MyMarker,
+    ): String
+
+    companion object {
+        val NULL = ProduceAdditionalMarker { validName, _ -> validName.quotedIfNeeded }
+    }
+}
 
 /**
  * Represents a call to [toMarker] that can be repeated until it returns a [MarkerResult.Success].
@@ -170,7 +251,7 @@ private fun generatedFieldOf(
     columnName: String,
     overrides: Boolean,
     fieldType: FieldType
-) = GeneratedField(
+): GeneratedField = GeneratedField(
     fieldName = fieldName,
     columnName = columnName,
     overrides = overrides,
@@ -181,11 +262,11 @@ private fun generatedFieldOf(
 private fun generatedEnumFieldOf(
     fieldName: ValidFieldName,
     columnName: String,
-) = generatedFieldOf(
+): GeneratedField = generatedFieldOf(
     fieldName = fieldName,
     columnName = columnName,
     overrides = false,
-    fieldType = FieldType.ValueFieldType(typeOf<String>().toString()),
+    fieldType = FieldType.ValueFieldType(typeOf<String>().toString()), // all enums will be of type String
 )
 
 private fun FieldType.isNullable(): Boolean = when (this) {
@@ -209,18 +290,30 @@ private val FieldType.name
         is FieldType.ValueFieldType -> typeFqName
     }
 
-/** Converts a single OpenApi object type schema to a [Marker] if successful. */
+/**
+ * Converts a single OpenApi object type schema to a [Marker] if successful.
+ *
+ * @param typeName The name of the schema / type to convert.
+ * @param getRefMarker Function to retrieve a [Marker] for a given reference name.
+ * @param produceAdditionalMarker Function to produce an additional [Marker] on the fly, such as for
+ *   inline enums/classes in arrays.
+ *
+ * @return A [MarkerResult.Success] if successful, otherwise [MarkerResult.CannotFindRefMarker].
+ */
 private fun Schema<*>.toMarker(
     typeName: String,
     getRefMarker: GetRefMarker,
-    produceAdditionalMarker: ProduceAdditionalMarker
+    produceAdditionalMarker: ProduceAdditionalMarker,
 ): MarkerResult {
     return when {
+        // If allOf is defined, multiple objects are to be composed together. This is done using inheritance.
+        // https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/#allof
         allOf != null -> {
             val allOfSchemas = allOf!!.associateWith {
                 it.toOpenApiType(isRequired = true, getRefMarker = getRefMarker)
             }
 
+            // An un-required super field might be required from a child schema.
             val requiredFields = allOfSchemas.keys.flatMap { it.required ?: emptyList() }.distinct()
 
             val superMarkers = mutableListOf<Marker>()
@@ -259,8 +352,8 @@ private fun Schema<*>.toMarker(
                         var tempMarker: MyMarker? = null
 
                         val fieldTypeResult = openApiType.toFieldType(
-                            property = schema,
-                            propertyName = typeName,
+                            schema = schema,
+                            schemaName = typeName,
                             nullable = nullable,
                             getRefMarker = getRefMarker,
                             produceAdditionalMarker = { name, marker ->
@@ -285,13 +378,14 @@ private fun Schema<*>.toMarker(
                     name = typeName,
                     fields = fields,
                     superMarkers = superMarkers,
-                    visibility = MarkerVisibility.EXPLICIT_PUBLIC,
                 )
             )
         }
 
+        // If enum is defined, create an enum class.
+        // https://swagger.io/docs/specification/data-models/enums/
         enum != null -> {
-            val openApiTypeResult = this.toOpenApiType(
+            val openApiTypeResult = toOpenApiType(
                 isRequired = required?.contains(name) == true,
                 getRefMarker = getRefMarker,
             ) as OpenApiTypeResult.SuccessAsEnum // must be an enum
@@ -299,13 +393,15 @@ private fun Schema<*>.toMarker(
             val enumMarker = produceNewEnum(
                 name = typeName,
                 values = openApiTypeResult.values,
-                produceAdditionalMarker = produceAdditionalMarker,
             )
 
             MarkerResult.Success(enumMarker)
         }
 
+        // If type == object, create a new Marker to become an interface.
+        // https://swagger.io/docs/specification/data-models/data-types/#object
         type == "object" -> {
+            // Gather the given properties as fields
             val fields = buildList {
                 for ((name, property) in (properties ?: emptyMap())) {
                     val isRequired = required?.contains(name) == true
@@ -325,19 +421,22 @@ private fun Schema<*>.toMarker(
                                 overrides = false,
                                 fieldName = validName,
                                 columnName = name,
-                                fieldType = if (openApiTypeResult.marker.markerType != MarkerType.INTERFACE) {
-                                    FieldType.ValueFieldType(
-                                        typeFqName = openApiTypeResult.marker.name + if (isRequired) "" else "?",
-                                    )
-                                } else {
-                                    FieldType.GroupFieldType(
-                                        markerName = openApiTypeResult.marker.name
-                                    )
-                                }
+                                fieldType = when (openApiTypeResult.marker.markerType) {
+                                    MarkerType.TYPE_ALIAS, MarkerType.ENUM ->
+                                        FieldType.ValueFieldType(
+                                            typeFqName = openApiTypeResult.marker.name + if (isRequired) "" else "?",
+                                        )
+
+                                    MarkerType.MARKER_ALIAS, MarkerType.INTERFACE ->
+                                        FieldType.GroupFieldType(
+                                            markerName = openApiTypeResult.marker.name, // Group cannot be nullable in DF
+                                        )
+                                },
                             )
                         }
 
                         is OpenApiTypeResult.SuccessAsEnum -> {
+                            // inner enum, so produce it as additional
                             val enumMarker = produceNewEnum(
                                 name = name,
                                 values = openApiTypeResult.values,
@@ -357,14 +456,13 @@ private fun Schema<*>.toMarker(
                         is OpenApiTypeResult.Success -> {
                             val (openApiType, nullable) = openApiTypeResult
 
-                            val fieldTypeResult = openApiType
-                                .toFieldType(
-                                    property = property,
-                                    propertyName = name,
-                                    nullable = nullable,
-                                    getRefMarker = getRefMarker,
-                                    produceAdditionalMarker = produceAdditionalMarker
-                                )
+                            val fieldTypeResult = openApiType.toFieldType(
+                                schema = property,
+                                schemaName = name,
+                                nullable = nullable,
+                                getRefMarker = getRefMarker,
+                                produceAdditionalMarker = produceAdditionalMarker,
+                            )
 
                             when (fieldTypeResult) {
                                 is FieldTypeResult.CannotFindRefMarker ->
@@ -377,7 +475,7 @@ private fun Schema<*>.toMarker(
                                         overrides = false,
                                         fieldName = validName,
                                         columnName = name,
-                                        fieldType = fieldTypeResult.fieldType
+                                        fieldType = fieldTypeResult.fieldType,
                                     )
                                 }
                             }
@@ -392,13 +490,13 @@ private fun Schema<*>.toMarker(
                     name = typeName,
                     fields = fields,
                     superMarkers = emptyList(),
-                    visibility = MarkerVisibility.EXPLICIT_PUBLIC,
                 )
             )
         }
 
+        // If type is something else, produce it as type alias. Can be a reference to another OpenApi type or something else.
         else -> {
-            val openApiTypeResult = this.toOpenApiType(
+            val openApiTypeResult = toOpenApiType(
                 isRequired = true,
                 getRefMarker = getRefMarker,
             )
@@ -408,11 +506,10 @@ private fun Schema<*>.toMarker(
                     return MarkerResult.CannotFindRefMarker
 
                 is OpenApiTypeResult.UsingRef -> MyMarker(
-                    markerType = MarkerType.TYPE_ALIAS,
+                    markerType = MarkerType.MARKER_ALIAS,
                     name = ValidFieldName.of(typeName).quotedIfNeeded,
                     fields = emptyList(),
                     superMarkers = listOf(openApiTypeResult.marker),
-                    visibility = MarkerVisibility.EXPLICIT_PUBLIC,
                 )
 
                 is OpenApiTypeResult.Success -> MyMarker(
@@ -422,8 +519,8 @@ private fun Schema<*>.toMarker(
                     superMarkers = listOf(
                         Marker(
                             name = openApiTypeResult.openApiType.toFieldType(
-                                property = this,
-                                propertyName = typeName,
+                                schema = this,
+                                schemaName = typeName,
                                 nullable = false,
                                 getRefMarker = getRefMarker,
                                 produceAdditionalMarker = produceAdditionalMarker,
@@ -441,12 +538,11 @@ private fun Schema<*>.toMarker(
                             isOpen = false,
                             fields = emptyList(),
                             superMarkers = emptyList(),
-                            visibility = MarkerVisibility.EXPLICIT_PUBLIC,
+                            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
                             typeParameters = emptyList(),
                             typeArguments = emptyList(),
                         )
                     ),
-                    visibility = MarkerVisibility.EXPLICIT_PUBLIC,
                 )
 
                 is OpenApiTypeResult.SuccessAsEnum -> error("cannot happen, since enum != null is checked earlier")
@@ -457,10 +553,11 @@ private fun Schema<*>.toMarker(
     }
 }
 
+/** Small helper function to produce a new enum Marker. */
 private fun produceNewEnum(
     name: String,
     values: List<String>,
-    produceAdditionalMarker: ProduceAdditionalMarker,
+    produceAdditionalMarker: ProduceAdditionalMarker = ProduceAdditionalMarker.NULL,
 ): MyMarker {
     val enumName = ValidFieldName.of(name.snakeToUpperCamelCase())
     val enumMarker = MyMarker(
@@ -473,7 +570,6 @@ private fun produceNewEnum(
             )
         },
         superMarkers = emptyList(),
-        visibility = MarkerVisibility.EXPLICIT_PUBLIC,
     )
     val newName = produceAdditionalMarker(enumName, enumMarker)
 
@@ -511,84 +607,82 @@ private enum class OpenApiStringFormat(val value: String) {
 }
 
 /**
- * Represents all types supported by OpenApi with functions to create a [ColumnSchema] from each.
+ * Represents all types supported by OpenApi with functions to create a [FieldType] from each.
  */
 private sealed class OpenApiType(val name: kotlin.String?) {
 
     object String : OpenApiType("string") {
 
-        fun getType(nullable: kotlin.Boolean, format: OpenApiStringFormat?): FieldType =
-            FieldType.ValueFieldType(
-                when (format) {
-                    OpenApiStringFormat.DATE -> if (nullable) typeOf<LocalDate?>() else typeOf<LocalDate>()
-                    OpenApiStringFormat.DATE_TIME -> if (nullable) typeOf<LocalDateTime?>() else typeOf<LocalDateTime>()
-                    OpenApiStringFormat.PASSWORD -> if (nullable) typeOf<kotlin.String?>() else typeOf<kotlin.String>()
-                    OpenApiStringFormat.BYTE -> if (nullable) typeOf<Byte?>() else typeOf<Byte>()
-                    OpenApiStringFormat.BINARY -> if (nullable) typeOf<ByteArray?>() else typeOf<ByteArray>()
-                    null -> if (nullable) typeOf<kotlin.String?>() else typeOf<kotlin.String>()
-                }.toString()
-            )
+        fun getType(nullable: kotlin.Boolean, format: OpenApiStringFormat?): FieldType = FieldType.ValueFieldType(
+            typeFqName = when (format) {
+                OpenApiStringFormat.DATE -> if (nullable) typeOf<LocalDate?>() else typeOf<LocalDate>()
+                OpenApiStringFormat.DATE_TIME -> if (nullable) typeOf<LocalDateTime?>() else typeOf<LocalDateTime>()
+                OpenApiStringFormat.PASSWORD -> if (nullable) typeOf<kotlin.String?>() else typeOf<kotlin.String>()
+                OpenApiStringFormat.BYTE -> if (nullable) typeOf<Byte?>() else typeOf<Byte>()
+                OpenApiStringFormat.BINARY -> if (nullable) typeOf<ByteArray?>() else typeOf<ByteArray>()
+                null -> if (nullable) typeOf<kotlin.String?>() else typeOf<kotlin.String>()
+            }.toString(),
+        )
     }
 
     object Integer : OpenApiType("integer") {
 
-        fun getType(nullable: kotlin.Boolean, format: OpenApiIntegerFormat?): FieldType =
-            FieldType.ValueFieldType(
-                when (format) {
-                    null, OpenApiIntegerFormat.INT32 -> if (nullable) typeOf<Int?>() else typeOf<Int>()
-                    OpenApiIntegerFormat.INT64 -> if (nullable) typeOf<Long?>() else typeOf<Long>()
-                }.toString()
-            )
+        fun getType(nullable: kotlin.Boolean, format: OpenApiIntegerFormat?): FieldType = FieldType.ValueFieldType(
+            typeFqName = when (format) {
+                null, OpenApiIntegerFormat.INT32 -> if (nullable) typeOf<Int?>() else typeOf<Int>()
+                OpenApiIntegerFormat.INT64 -> if (nullable) typeOf<Long?>() else typeOf<Long>()
+            }.toString(),
+        )
     }
 
     object Number : OpenApiType("number") {
 
-        fun getType(nullable: kotlin.Boolean, format: OpenApiNumberFormat?): FieldType =
-            FieldType.ValueFieldType(
-                when (format) {
-                    null, OpenApiNumberFormat.FLOAT -> if (nullable) typeOf<Float?>() else typeOf<Float>()
-                    OpenApiNumberFormat.DOUBLE -> if (nullable) typeOf<Double?>() else typeOf<Double>()
-                }.toString()
-            )
+        fun getType(nullable: kotlin.Boolean, format: OpenApiNumberFormat?): FieldType = FieldType.ValueFieldType(
+            typeFqName = when (format) {
+                null, OpenApiNumberFormat.FLOAT -> if (nullable) typeOf<Float?>() else typeOf<Float>()
+                OpenApiNumberFormat.DOUBLE -> if (nullable) typeOf<Double?>() else typeOf<Double>()
+            }.toString(),
+        )
     }
 
     object Boolean : OpenApiType("boolean") {
 
-        fun getType(nullable: kotlin.Boolean): FieldType =
-            FieldType.ValueFieldType(
-                (if (nullable) typeOf<kotlin.Boolean?>() else typeOf<kotlin.Boolean>()).toString()
-            )
+        fun getType(nullable: kotlin.Boolean): FieldType = FieldType.ValueFieldType(
+            typeFqName = if (nullable) {
+                typeOf<kotlin.Boolean?>()
+            } else {
+                typeOf<kotlin.Boolean>()
+            }.toString(),
+        )
     }
 
     object Object : OpenApiType("object") {
 
-        fun getType(marker: MyMarker): FieldType =
-            FieldType.GroupFieldType(
-                markerName = marker.name,
-            )
+        fun getType(marker: MyMarker): FieldType = FieldType.GroupFieldType(markerName = marker.name)
     }
 
     object Any : OpenApiType(null) {
 
-        fun getType(nullable: kotlin.Boolean): FieldType =
-            FieldType.ValueFieldType(
-                (if (nullable) typeOf<kotlin.Any?>() else typeOf<kotlin.Any>()).toString()
-            )
+        fun getType(nullable: kotlin.Boolean): FieldType = FieldType.ValueFieldType(
+            typeFqName = if (nullable) {
+                typeOf<kotlin.Any?>()
+            } else {
+                typeOf<kotlin.Any>()
+            }.toString(),
+        )
     }
 
     object Array : OpenApiType("array") {
 
         // used for lists of primitives
-        fun getTypeAsList(nullable: kotlin.Boolean, typeFqName: kotlin.String): FieldType =
-            FieldType.ValueFieldType(
-                "${List::class.qualifiedName!!}<$typeFqName>${if (nullable) "?" else ""}"
-            )
+        fun getTypeAsList(nullable: kotlin.Boolean, typeFqName: kotlin.String): FieldType = FieldType.ValueFieldType(
+            typeFqName = "${List::class.qualifiedName!!}<$typeFqName>${if (nullable) "?" else ""}",
+        )
 
-        fun getTypeAsFrame(nullable: kotlin.Boolean, markerName: kotlin.String): FieldType =
-            FieldType.FrameFieldType(
-                markerName = markerName,
-                nullable = nullable,
-            )
+        fun getTypeAsFrame(nullable: kotlin.Boolean, markerName: kotlin.String): FieldType = FieldType.FrameFieldType(
+            markerName = markerName,
+            nullable = nullable,
+        )
     }
 
     override fun toString(): kotlin.String = name.toString()
@@ -615,7 +709,7 @@ private sealed class OpenApiType(val name: kotlin.String?) {
 
 private sealed interface OpenApiTypeResult {
 
-    /** Property is a reference with name [name] and ColumnSchema [columnSchema]. */
+    /** Property is a reference with name [name] and Marker [marker]. */
     class UsingRef(val marker: MyMarker) : OpenApiTypeResult
 
     /** A marker reference cannot be found at this time, try again later. */
@@ -624,14 +718,17 @@ private sealed interface OpenApiTypeResult {
     /** Property is a schema with OpenApiType [openApiType]. */
     data class Success(val openApiType: OpenApiType, val nullable: Boolean) : OpenApiTypeResult
 
-    /** Property is an enum with OpenApiType [openApiType]. */
+    /** Property is an enum with values [values]. */
     data class SuccessAsEnum(val values: List<String>, val nullable: Boolean) : OpenApiTypeResult
 }
 
-/**  Converts a single property of an OpenApi type schema to [OpenApiType] */
+/**
+ * Converts a single property of an OpenApi type schema to [OpenApiTypeResult].
+ * It can become an [OpenApiType], [MyMarker] reference, enum, or unresolved reference.
+ */
 private fun Schema<*>.toOpenApiType(
     isRequired: Boolean,
-    getRefMarker: GetRefMarker
+    getRefMarker: GetRefMarker,
 ): OpenApiTypeResult {
     if (`$ref` != null) {
         val typeName = `$ref`.takeLastWhile { it != '/' }
@@ -646,14 +743,18 @@ private fun Schema<*>.toOpenApiType(
 
     if (enum != null) {
         val nullable = enum.any { it == null }
+
         // Note: type doesn't matter, all is interpreted as (quoted) string
 
-        return OpenApiTypeResult.SuccessAsEnum(enum.filterNotNull().map { it.toString() }, nullable)
+        return OpenApiTypeResult.SuccessAsEnum(
+            values = enum.filterNotNull().map { it.toString() },
+            nullable = nullable,
+        )
     }
 
     var openApiType = OpenApiType.fromStringOrNull(type)
 
-    if (openApiType == null) { // check for anyOf/oneOf/not
+    if (openApiType == null) { // check for anyOf/oneOf/not, https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/
         val anyOf = ((anyOf ?: emptyList()) + (oneOf ?: emptyList()))
         val anyOfRefs = anyOf.mapNotNull { it.`$ref` }
         val anyOfTypes = anyOf.mapNotNull { it.type }
@@ -661,12 +762,15 @@ private fun Schema<*>.toOpenApiType(
             .distinct()
 
         openApiType = when {
+            // only one type
             anyOfTypes.size == 1 && anyOfRefs.isEmpty() -> anyOfTypes.first()
 
+            // just Number-like types
             anyOfTypes.size == 2 && anyOfRefs.isEmpty() && anyOfTypes.containsAll(
                 listOf(OpenApiType.Number, OpenApiType.Integer)
             ) -> OpenApiType.Number
 
+            // only one ref
             anyOfTypes.isEmpty() && anyOfRefs.size == 1 -> {
                 val typeName = anyOfRefs.first().takeLastWhile { it != '/' }
                 return when (val it = getRefMarker(typeName)) {
@@ -678,9 +782,10 @@ private fun Schema<*>.toOpenApiType(
                 }
             }
 
+            // more than one ref
             anyOfTypes.isEmpty() && anyOfRefs.isNotEmpty() -> {
-                // TODO
-                println("TODO merge oneOf refs")
+                // TODO merge oneOf refs, can even be enums
+                println("TODO merge oneOf refs, can even be enums")
 
                 OpenApiType.Any
             }
@@ -695,7 +800,7 @@ private fun Schema<*>.toOpenApiType(
     val nullable = nullable ?: !isRequired
 
     if (nullable && openApiType == OpenApiType.Object) {
-        println("Warning: type $name is marked nullable, but ColumnGroups cannot be null.")
+        println("Warning: type $name is marked nullable, but ColumnGroups cannot be null, so it will be interpreted as non-nullable.")
     }
 
     return OpenApiTypeResult.Success(openApiType, nullable)
@@ -710,26 +815,26 @@ private sealed interface FieldTypeResult {
     data class Success(val fieldType: FieldType) : FieldTypeResult
 }
 
-/** Converts an OpenApi type schema to a [FieldType] if successful. */
+/** Converts an OpenApiType with schema to a [FieldType] if successful. */
 private fun OpenApiType.toFieldType(
-    property: Schema<*>,
-    propertyName: String,
+    schema: Schema<*>,
+    schemaName: String,
     nullable: Boolean,
     getRefMarker: GetRefMarker,
-    produceAdditionalMarker: ProduceAdditionalMarker
+    produceAdditionalMarker: ProduceAdditionalMarker,
 ): FieldTypeResult {
     return FieldTypeResult.Success(
-        when (this) {
+        fieldType = when (this) {
             is OpenApiType.Any -> getType(nullable)
 
             is OpenApiType.Array ->
-                if (property.items == null) { // should in theory not occur, but make List<Any?> just in case
+                if (schema.items == null) { // should in theory not occur, but make List<Any?> just in case
                     getTypeAsList(
                         nullable = nullable,
                         typeFqName = (OpenApiType.Any.getType(nullable = true) as FieldType.ValueFieldType).typeFqName
                     )
                 } else { // Try to get the array type TODO decide whether to make nullable or not
-                    val arrayTypeResult = property.items!!
+                    val arrayTypeResult = schema.items!!
                         .toOpenApiType(
                             isRequired = true,
                             getRefMarker = getRefMarker,
@@ -740,22 +845,24 @@ private fun OpenApiType.toFieldType(
                             return FieldTypeResult.CannotFindRefMarker
 
                         is OpenApiTypeResult.UsingRef ->
-                            if (arrayTypeResult.marker.markerType != MarkerType.INTERFACE) {
-                                getTypeAsList(
-                                    nullable = nullable,
-                                    typeFqName = arrayTypeResult.marker.name,
-                                )
-                            } else {
-                                getTypeAsFrame(
-                                    nullable = nullable,
-                                    markerName = arrayTypeResult.marker.name,
-                                )
+                            when (arrayTypeResult.marker.markerType) {
+                                MarkerType.ENUM, MarkerType.TYPE_ALIAS ->
+                                    getTypeAsList(
+                                        nullable = nullable,
+                                        typeFqName = arrayTypeResult.marker.name,
+                                    )
+
+                                MarkerType.INTERFACE, MarkerType.MARKER_ALIAS ->
+                                    getTypeAsFrame(
+                                        nullable = nullable,
+                                        markerName = arrayTypeResult.marker.name,
+                                    )
                             }
 
                         is OpenApiTypeResult.Success -> {
                             val arrayTypeSchemaResult = arrayTypeResult.openApiType.toFieldType(
-                                property = property.items!!,
-                                propertyName = propertyName,
+                                schema = schema.items!!,
+                                schemaName = schemaName,
                                 nullable = arrayTypeResult.nullable,
                                 getRefMarker = getRefMarker,
                                 produceAdditionalMarker = produceAdditionalMarker
@@ -779,7 +886,7 @@ private fun OpenApiType.toFieldType(
 
                         is OpenApiTypeResult.SuccessAsEnum -> {
                             val enumMarker = produceNewEnum(
-                                name = propertyName,
+                                name = schemaName,
                                 values = arrayTypeResult.values,
                                 produceAdditionalMarker = produceAdditionalMarker,
                             )
@@ -796,17 +903,17 @@ private fun OpenApiType.toFieldType(
 
             is OpenApiType.Integer -> getType(
                 nullable = nullable,
-                format = OpenApiIntegerFormat.fromStringOrNull(property.format)
+                format = OpenApiIntegerFormat.fromStringOrNull(schema.format)
             )
 
             is OpenApiType.Number -> getType(
                 nullable = nullable,
-                format = OpenApiNumberFormat.fromStringOrNull(property.format)
+                format = OpenApiNumberFormat.fromStringOrNull(schema.format)
             )
 
             is OpenApiType.Object -> {
-                val dataFrameSchemaResult = property.toMarker(
-                    typeName = propertyName.snakeToUpperCamelCase(),
+                val dataFrameSchemaResult = schema.toMarker(
+                    typeName = schemaName.snakeToUpperCamelCase(),
                     getRefMarker = getRefMarker,
                     produceAdditionalMarker = produceAdditionalMarker,
                 )
@@ -817,8 +924,8 @@ private fun OpenApiType.toFieldType(
 
                     is MarkerResult.Success -> {
                         val newName = produceAdditionalMarker(
-                            ValidFieldName.of(propertyName.snakeToUpperCamelCase()),
-                            dataFrameSchemaResult.marker,
+                            validName = ValidFieldName.of(schemaName.snakeToUpperCamelCase()),
+                            marker = dataFrameSchemaResult.marker,
                         )
 
                         getType(dataFrameSchemaResult.marker.withName(newName))
@@ -828,9 +935,9 @@ private fun OpenApiType.toFieldType(
 
             is OpenApiType.String -> getType(
                 nullable = nullable,
-                format = OpenApiStringFormat.fromStringOrNull(property.format)
+                format = OpenApiStringFormat.fromStringOrNull(schema.format),
             )
-        }
+        },
     )
 }
 
