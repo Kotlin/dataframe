@@ -127,8 +127,6 @@ class DataSchemaGenerator(
             OpenApi(),
         )
 
-        val codeGenerator = CodeGenerator.create(useFqNames = false)
-
         // first try without creating dataframe
         when (val codeGenResult = CodeGenerator.urlCodeGenReader(importStatement.dataSource.data, formats)) {
             is CodeGenerationReadResult.Success -> {
@@ -150,11 +148,14 @@ class DataSchemaGenerator(
                 logger.error("Error while reading dataframe from data at ${importStatement.dataSource.pathRepresentation}: ${readResult.reason}")
                 return
             }
+
             is DfReadResult.Success -> readResult
         }
 
         val readDfMethod =
             parsedDf.getReadDfMethod(importStatement.dataSource.pathRepresentation.takeIf { importStatement.withDefaultPath })
+        val codeGenerator = CodeGenerator.create(useFqNames = false)
+
         val codeGenResult = codeGenerator.generate(
             schema = parsedDf.schema,
             name = name,
