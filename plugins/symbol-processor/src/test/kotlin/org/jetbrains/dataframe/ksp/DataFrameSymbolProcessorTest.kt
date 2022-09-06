@@ -1075,6 +1075,97 @@ class DataFrameSymbolProcessorTest {
             it.forAtLeastOne { it shouldContain "Pet" }
             it.forAtLeastOne { it shouldContain "Error" }
         }
+        result.inspectLines("Pet\$Extensions.kt") {
+            it.forAtLeastOne { it shouldContain "tag" }
+            it.forAtLeastOne { it shouldContain "id" }
+        }
+        result.inspectLines("Error\$Extensions.kt") {
+            it.forAtLeastOne { it shouldContain "message" }
+            it.forAtLeastOne { it shouldContain "code" }
+        }
+    }
+
+    private val jetbrainsJson = File("../../data/jetbrains.json")
+
+    @Test
+    fun `non openApi json test`(): Unit = useHostedFile(jetbrainsJson) {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
+                @file:ImportDataSchema(
+                    "JetBrains", 
+                    "$it",
+                )
+                package org.example
+                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+
+                fun resolved() {
+                    JetBrains
+                    JetBrains1
+                    JetBrains2
+                    JetBrains3
+                    JetBrains4
+                    JetBrains5
+                }
+                        """.trimIndent()
+                    )
+                )
+            )
+        )
+        println(result.kspGeneratedFiles)
+        result.inspectLines("JetBrains.Generated.kt") {
+            (('1'..'5') + "").forEach { nr ->
+                it.forAtLeastOne {
+                    it shouldContain "JetBrains$nr"
+                }
+            }
+        }
+    }
+
+    private val petstoreJson = File("../../data/petstore.json")
+
+    @Test
+    fun `openApi json test`(): Unit = useHostedFile(petstoreJson) {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
+                @file:ImportDataSchema(
+                    "Petstore", 
+                    "$it",
+                )
+                package org.example
+                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+
+                fun resolved() {
+                    Pet
+                    Error
+                }
+                        """.trimIndent()
+                    )
+                )
+            )
+        )
+        println(result.kspGeneratedFiles)
+        result.inspectLines("Petstore.Generated.kt") {
+            it.forAtLeastOne { it shouldContain "Pet" }
+            it.forAtLeastOne { it shouldContain "Error" }
+        }
+        result.inspectLines("Pet\$Extensions.kt") {
+            it.forAtLeastOne { it shouldContain "tag" }
+            it.forAtLeastOne { it shouldContain "id" }
+        }
+        result.inspectLines("Error\$Extensions.kt") {
+            it.forAtLeastOne { it shouldContain "message" }
+            it.forAtLeastOne { it shouldContain "code" }
+        }
     }
 
     private fun KotlinCompileTestingCompilationResult.inspectLines(f: (List<String>) -> Unit) {
