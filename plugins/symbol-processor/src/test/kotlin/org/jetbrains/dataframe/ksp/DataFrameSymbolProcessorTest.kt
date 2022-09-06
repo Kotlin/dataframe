@@ -13,6 +13,7 @@ import org.jetbrains.dataframe.ksp.runner.KspCompilationTestRunner
 import org.jetbrains.dataframe.ksp.runner.TestCompilationParameters
 import org.junit.Before
 import java.io.File
+import java.net.URL
 import kotlin.test.Test
 
 @Suppress("unused")
@@ -1044,6 +1045,7 @@ class DataFrameSymbolProcessorTest {
     }
 
     private val petstoreYaml = File("../../data/petstore.yaml")
+    private val petstoreYamlUrl = "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml"
 
     @Test
     fun `openApi yaml test`(): Unit = useHostedFile(petstoreYaml) {
@@ -1056,6 +1058,46 @@ class DataFrameSymbolProcessorTest {
                 @file:ImportDataSchema(
                     "Petstore", 
                     "$it",
+                )
+                package org.example
+                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+
+                fun resolved() {
+                    Pet
+                    Error
+                }
+                        """.trimIndent()
+                    )
+                )
+            )
+        )
+        println(result.kspGeneratedFiles)
+        result.inspectLines("Petstore.Generated.kt") {
+            it.forAtLeastOne { it shouldContain "Pet" }
+            it.forAtLeastOne { it shouldContain "Error" }
+        }
+        result.inspectLines("Pet\$Extensions.kt") {
+            it.forAtLeastOne { it shouldContain "tag" }
+            it.forAtLeastOne { it shouldContain "id" }
+        }
+        result.inspectLines("Error\$Extensions.kt") {
+            it.forAtLeastOne { it shouldContain "message" }
+            it.forAtLeastOne { it shouldContain "code" }
+        }
+    }
+
+    @Test
+    fun `openApi yaml url test`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
+                @file:ImportDataSchema(
+                    "Petstore", 
+                    "$petstoreYamlUrl",
                 )
                 package org.example
                 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
