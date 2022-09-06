@@ -65,6 +65,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
             JSON(),
             Excel(),
             TSV(),
+            TODO(),
             ArrowFeather()
         )
         val res = when (val readResult = CodeGenerator.urlDfReader(url, formats)) {

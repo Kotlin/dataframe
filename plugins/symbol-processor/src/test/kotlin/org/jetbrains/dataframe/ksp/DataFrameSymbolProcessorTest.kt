@@ -1,5 +1,3 @@
-
-
 package org.jetbrains.dataframe.ksp
 
 import com.tschuchort.compiletesting.SourceFile
@@ -31,7 +29,7 @@ class DataFrameSymbolProcessorTest {
     }
 
     @Before
-    fun setup(){
+    fun setup() {
         KspCompilationTestRunner.compilationDir.deleteRecursively()
     }
 
@@ -39,7 +37,10 @@ class DataFrameSymbolProcessorTest {
     fun `all interface`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-            sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
                 class OuterClass
@@ -66,8 +67,10 @@ class DataFrameSymbolProcessorTest {
                 val DataRow<Hello>.row3: Int? get() = nullableProperty
                 val DataRow<Hello>.row4: () -> Unit get() = a
                 val DataRow<Hello>.row5: List<List<*>> get() = d
-            """.trimIndent()))
-        )
+                        """.trimIndent()
+                    )
+                )
+            )
         )
         result.successfulCompilation shouldBe true
     }
@@ -76,7 +79,10 @@ class DataFrameSymbolProcessorTest {
     fun `all data class`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
                 class OuterClass
@@ -107,7 +113,9 @@ class DataFrameSymbolProcessorTest {
                 val DataRow<Hello>.row4: () -> Unit get() = a
                 val DataRow<Hello>.row5: List<List<*>> get() = d
                 val DataRow<Hello>.row6: Hello.Nested get() = nestedClass
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.successfulCompilation shouldBe true
@@ -117,7 +125,10 @@ class DataFrameSymbolProcessorTest {
     fun `all class`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
                 class OuterClass
@@ -149,7 +160,9 @@ class DataFrameSymbolProcessorTest {
                 val DataRow<Hello>.row4: () -> Unit get() = a
                 val DataRow<Hello>.row5: List<List<*>> get() = d
                 val DataRow<Hello>.row6: Hello.Nested get() = nestedClass
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.successfulCompilation shouldBe true
@@ -159,7 +172,10 @@ class DataFrameSymbolProcessorTest {
     fun `functional type`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
                 @DataSchema(isOpen = false)
@@ -169,7 +185,9 @@ class DataFrameSymbolProcessorTest {
 
                 val ColumnsContainer<Hello>.test1: DataColumn<() -> Unit?> get() = a
                 val DataRow<Hello>.test2: () -> Unit? get() = a
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.inspectLines { codeLines ->
@@ -191,7 +209,10 @@ class DataFrameSymbolProcessorTest {
     fun `suspend functional type`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
                 @DataSchema(isOpen = false)
@@ -201,7 +222,9 @@ class DataFrameSymbolProcessorTest {
 
                 val ColumnsContainer<Hello>.test1: DataColumn<suspend () -> Unit?> get() = a
                 val DataRow<Hello>.test2: suspend () -> Unit? get() = a
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
 
@@ -224,7 +247,10 @@ class DataFrameSymbolProcessorTest {
     fun `nullable functional type`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
                 @DataSchema(isOpen = false)
@@ -234,7 +260,9 @@ class DataFrameSymbolProcessorTest {
 
                 val ColumnsContainer<Hello>.test1: DataColumn<(() -> String)?> get() = a
                 val DataRow<Hello>.test2: (() -> String)? get() = a
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.inspectLines { codeLines ->
@@ -256,7 +284,10 @@ class DataFrameSymbolProcessorTest {
     fun `functional type with receiver`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
                 @DataSchema(isOpen = false)
@@ -266,7 +297,9 @@ class DataFrameSymbolProcessorTest {
 
                 val ColumnsContainer<Hello>.test1: DataColumn<(Int.() -> String)?> get() = a
                 val DataRow<Hello>.test2: (Int.() -> String)? get() = a
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.inspectLines { codeLines ->
@@ -288,7 +321,10 @@ class DataFrameSymbolProcessorTest {
     fun `named lambda parameter`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
                 @DataSchema(isOpen = false)
@@ -298,7 +334,9 @@ class DataFrameSymbolProcessorTest {
 
                 val ColumnsContainer<Hello>.test1: DataColumn<(a: String) -> Unit> get() = a
                 val DataRow<Hello>.test2: (a: String) -> Unit get() = a
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.inspectLines { codeLines ->
@@ -320,7 +358,10 @@ class DataFrameSymbolProcessorTest {
     fun `inferred type`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
                 @DataSchema(isOpen = false)
@@ -331,7 +372,9 @@ class DataFrameSymbolProcessorTest {
 
                 val ColumnsContainer<Hello>.test1: DataColumn<Int> get() = b
                 val DataRow<Hello>.test2: Int get() = b
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
@@ -343,7 +386,10 @@ class DataFrameSymbolProcessorTest {
     fun `typealias`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
                 class OuterClass
@@ -357,7 +403,9 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.col1: DataColumn<A> get() = a
                 val DataRow<Hello>.row1: A get() = a
                 
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
@@ -369,7 +417,10 @@ class DataFrameSymbolProcessorTest {
     fun `type annotated with dataschema rendered to column group`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
                 @DataSchema
@@ -383,7 +434,9 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.col1: ColumnGroup<A> get() = a
                 val DataRow<Hello>.row1: DataRow<A> get() = a
                 
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
@@ -395,7 +448,10 @@ class DataFrameSymbolProcessorTest {
     fun `type annotated with dataschema rendered to frame column`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
                 @DataSchema
@@ -409,7 +465,9 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.col1: DataColumn<DataFrame<A>> get() = a
                 val DataRow<Hello>.row1: DataFrame<A> get() = a
                 
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
@@ -417,12 +475,14 @@ class DataFrameSymbolProcessorTest {
         }
     }
 
-
     @Test
     fun `column name from annotation is used`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
                 @DataSchema(isOpen = false)
@@ -433,7 +493,9 @@ class DataFrameSymbolProcessorTest {
 
                 val ColumnsContainer<Hello>.test2: DataColumn<Int> get() = `test name`
                 val DataRow<Hello>.test4: Int get() = `test name`
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.inspectLines { codeLines ->
@@ -448,7 +510,10 @@ class DataFrameSymbolProcessorTest {
     fun `jvm name`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
 
@@ -460,7 +525,9 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.col1: DataColumn<Int> get() = a
                 val DataRow<Hello>.row1: Int get() = a
                 
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.inspectLines { codeLines ->
@@ -475,7 +542,10 @@ class DataFrameSymbolProcessorTest {
     fun `DataRow property`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
                 interface Marker
@@ -488,7 +558,9 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.col1: ColumnGroup<Marker> get() = a
                 val DataRow<Hello>.row1: DataRow<Marker> get() = a
                 
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.kspGeneratedFiles.find { it.name == generatedFile }?.readText().asClue {
@@ -500,7 +572,10 @@ class DataFrameSymbolProcessorTest {
     fun `DataFrame property`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 $imports
 
                 interface Marker
@@ -513,18 +588,22 @@ class DataFrameSymbolProcessorTest {
                 val ColumnsContainer<Hello>.col1: DataColumn<DataFrame<Marker>> get() = a
                 val DataRow<Hello>.row1: DataFrame<Marker> get() = a
                 
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.successfulCompilation shouldBe true
     }
 
-
     @Test
     fun `extension accessible from same package`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 package org.example
 
                 $imports
@@ -536,7 +615,9 @@ class DataFrameSymbolProcessorTest {
 
                 val ColumnsContainer<Hello>.test1: DataColumn<String> get() = name
                 val DataRow<Hello>.test2: String get() = name
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.successfulCompilation shouldBe true
@@ -546,7 +627,10 @@ class DataFrameSymbolProcessorTest {
     fun `generic interface`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 package org.example
 
                 $imports
@@ -558,7 +642,9 @@ class DataFrameSymbolProcessorTest {
 
                 val <T> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
                 val <T> DataRow<Generic<T>>.test2: T get() = field
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.successfulCompilation shouldBe true
@@ -568,7 +654,10 @@ class DataFrameSymbolProcessorTest {
     fun `generic interface with upper bound`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 package org.example
 
                 $imports
@@ -580,7 +669,9 @@ class DataFrameSymbolProcessorTest {
 
                 val <T : String> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
                 val <T : String> DataRow<Generic<T>>.test2: T get() = field
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.successfulCompilation shouldBe true
@@ -590,7 +681,10 @@ class DataFrameSymbolProcessorTest {
     fun `generic interface with variance and user type in type parameters`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 package org.example
 
                 $imports
@@ -604,7 +698,9 @@ class DataFrameSymbolProcessorTest {
 
                 val <T : UpperBound> ColumnsContainer<Generic<T>>.test1: DataColumn<T> get() = field
                 val <T : UpperBound> DataRow<Generic<T>>.test2: T get() = field
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.successfulCompilation shouldBe true
@@ -614,7 +710,10 @@ class DataFrameSymbolProcessorTest {
     fun `nested interface`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 package org.example
 
                 $imports
@@ -625,7 +724,9 @@ class DataFrameSymbolProcessorTest {
                     }
                 }
                
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.successfulCompilation shouldBe true
@@ -635,7 +736,10 @@ class DataFrameSymbolProcessorTest {
     fun `redeclaration in different scopes`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 package org.example
 
                 $imports
@@ -654,7 +758,9 @@ class DataFrameSymbolProcessorTest {
                 }
 
                
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         println(result.kspGeneratedFiles)
@@ -665,7 +771,10 @@ class DataFrameSymbolProcessorTest {
     fun `interface with internal visibility`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 package org.example
 
                 $imports
@@ -674,7 +783,9 @@ class DataFrameSymbolProcessorTest {
                 internal interface Hello {
                     val name: Int
                 }
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.inspectLines { codeLines ->
@@ -689,7 +800,10 @@ class DataFrameSymbolProcessorTest {
     fun `interface with public visibility`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 package org.example
 
                 $imports
@@ -698,7 +812,9 @@ class DataFrameSymbolProcessorTest {
                 public interface Hello {
                     val name: Int
                 }
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.inspectLines { codeLines ->
@@ -713,7 +829,10 @@ class DataFrameSymbolProcessorTest {
     fun `interface with implicit visibility`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 package org.example
 
                 $imports
@@ -722,7 +841,9 @@ class DataFrameSymbolProcessorTest {
                 interface Hello {
                     val name: Int
                 }
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.inspectLines { codeLines ->
@@ -733,12 +854,14 @@ class DataFrameSymbolProcessorTest {
         }
     }
 
-
     @Test
     fun `private class`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 package org.example
 
                 $imports
@@ -746,7 +869,9 @@ class DataFrameSymbolProcessorTest {
                 @DataSchema
                 private class Hello(val name: Int)
                
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.successfulCompilation shouldBe false
@@ -756,7 +881,10 @@ class DataFrameSymbolProcessorTest {
     fun `effectively private interface`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 package org.example
 
                 $imports
@@ -768,7 +896,9 @@ class DataFrameSymbolProcessorTest {
                     }
                 }
                
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.successfulCompilation shouldBe false
@@ -778,7 +908,10 @@ class DataFrameSymbolProcessorTest {
     fun `parent of interface is effectively private`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 package org.example
 
                 $imports
@@ -792,7 +925,9 @@ class DataFrameSymbolProcessorTest {
                     }
                 }
                
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.successfulCompilation shouldBe false
@@ -805,7 +940,10 @@ class DataFrameSymbolProcessorTest {
         useHostedFile(jetbrainsCsv) {
             val result = KspCompilationTestRunner.compile(
                 TestCompilationParameters(
-                    sources = listOf(SourceFile.kotlin("MySources.kt", """
+                    sources = listOf(
+                        SourceFile.kotlin(
+                            "MySources.kt",
+                            """
                 @file:ImportDataSchema(
                     "Schema", 
                     "$it",
@@ -816,7 +954,9 @@ class DataFrameSymbolProcessorTest {
                 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 
                 fun resolve() = Schema.readCSV()
-            """.trimIndent()))
+                            """.trimIndent()
+                        )
+                    )
                 )
             )
             result.successfulCompilation shouldBe true
@@ -827,7 +967,10 @@ class DataFrameSymbolProcessorTest {
     fun `io error on schema import`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
-                sources = listOf(SourceFile.kotlin("MySources.kt", """
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
                 @file:ImportDataSchema(
                     "Schema", 
                     "123",
@@ -835,7 +978,9 @@ class DataFrameSymbolProcessorTest {
                 package org.example
                 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
                 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
-            """.trimIndent()))
+                        """.trimIndent()
+                    )
+                )
             )
         )
         result.successfulCompilation shouldBe false
@@ -846,7 +991,10 @@ class DataFrameSymbolProcessorTest {
         useHostedFile(jetbrainsCsv) {
             val result = KspCompilationTestRunner.compile(
                 TestCompilationParameters(
-                    sources = listOf(SourceFile.kotlin("MySources.kt", """
+                    sources = listOf(
+                        SourceFile.kotlin(
+                            "MySources.kt",
+                            """
                 @file:ImportDataSchema(
                     "Schema", 
                     "$it",
@@ -855,7 +1003,9 @@ class DataFrameSymbolProcessorTest {
                 package org.example
                 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
                 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
-            """.trimIndent()))
+                            """.trimIndent()
+                        )
+                    )
                 )
             )
             println(result.kspGeneratedFiles)
@@ -870,7 +1020,10 @@ class DataFrameSymbolProcessorTest {
         useHostedFile(jetbrainsCsv) {
             val result = KspCompilationTestRunner.compile(
                 TestCompilationParameters(
-                    sources = listOf(SourceFile.kotlin("MySources.kt", """
+                    sources = listOf(
+                        SourceFile.kotlin(
+                            "MySources.kt",
+                            """
                 @file:ImportDataSchema(
                     "Schema", 
                     "$it",
@@ -878,13 +1031,49 @@ class DataFrameSymbolProcessorTest {
                 package org.example
                 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
                 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
-            """.trimIndent()))
+                            """.trimIndent()
+                        )
+                    )
                 )
             )
             println(result.kspGeneratedFiles)
             result.inspectLines("Schema.Generated.kt") {
                 it.forAtLeastOne { it shouldContain "fullName" }
             }
+        }
+    }
+
+    private val petstoreYaml = File("../../data/petstore.yaml")
+
+    @Test
+    fun `openApi yaml test`(): Unit = useHostedFile(petstoreYaml) {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
+                @file:ImportDataSchema(
+                    "Petstore", 
+                    "$it",
+                )
+                package org.example
+                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+
+                fun resolved() {
+                    Pet
+                    Error
+                }
+                        """.trimIndent()
+                    )
+                )
+            )
+        )
+        println(result.kspGeneratedFiles)
+        result.inspectLines("Petstore.Generated.kt") {
+            it.forAtLeastOne { it shouldContain "Pet" }
+            it.forAtLeastOne { it shouldContain "Error" }
         }
     }
 

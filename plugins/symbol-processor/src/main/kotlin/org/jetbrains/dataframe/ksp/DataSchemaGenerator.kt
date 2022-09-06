@@ -129,47 +129,46 @@ class DataSchemaGenerator(
 
         val codeGenerator = CodeGenerator.create(useFqNames = false)
 
-        when (val readResult = CodeGenerator.urlDfReader(importStatement.dataSource.data, formats)) {
-            is DfReadResult.Success -> {
-                val parsedDf = readResult
-
-                val readDfMethod = parsedDf.getReadDfMethod(
-                    importStatement.dataSource.pathRepresentation.takeIf { importStatement.withDefaultPath }
-                )
-                val codeGenResult = codeGenerator.generate(
-                    schema = parsedDf.schema,
-                    name = name,
-                    fields = true,
-                    extensionProperties = false,
-                    isOpen = true,
-                    visibility = importStatement.visibility,
-                    knownMarkers = emptyList(),
-                    readDfMethod = readDfMethod,
-                    fieldNameNormalizer = NameNormalizer.from(importStatement.normalizationDelimiters.toSet())
-                )
-                val code = codeGenResult.toStandaloneSnippet(packageName, readDfMethod.additionalImports)
+        // first try without creating dataframe
+        when (val codeGenResult = CodeGenerator.urlCodeGenReader(importStatement.dataSource.data, formats)) {
+            is CodeGenerationReadResult.Success -> {
+                val code = codeGenResult.code.toStandaloneSnippet(packageName, emptyList())
                 schemaFile.bufferedWriter().use {
                     it.write(code)
                 }
+                return
             }
-            is DfReadResult.WrongFormat -> {
-                when (val codeGenResult = CodeGenerator.urlCodeGenReader(importStatement.dataSource.data, formats)) {
-                    is CodeGenerationReadResult.Success -> {
-                        val code = codeGenResult.code.toStandaloneSnippet(packageName, emptyList())
-                        schemaFile.bufferedWriter().use {
-                            it.write(code)
-                        }
-                    }
-                    is CodeGenerationReadResult.Error -> {
-                        logger.error("Error while reading dataframe from data at ${importStatement.dataSource.pathRepresentation}: ${codeGenResult.reason}")
-                        return
-                    }
-                }
+
+            is CodeGenerationReadResult.Error -> {
+                logger.warn("Error while reading types-only from data at ${importStatement.dataSource.pathRepresentation}: ${codeGenResult.reason}")
             }
+        }
+
+        // on error, try with reading dataframe first
+        val parsedDf = when (val readResult = CodeGenerator.urlDfReader(importStatement.dataSource.data, formats)) {
             is DfReadResult.Error -> {
                 logger.error("Error while reading dataframe from data at ${importStatement.dataSource.pathRepresentation}: ${readResult.reason}")
                 return
             }
+            is DfReadResult.Success -> readResult
+        }
+
+        val readDfMethod =
+            parsedDf.getReadDfMethod(importStatement.dataSource.pathRepresentation.takeIf { importStatement.withDefaultPath })
+        val codeGenResult = codeGenerator.generate(
+            schema = parsedDf.schema,
+            name = name,
+            fields = true,
+            extensionProperties = false,
+            isOpen = true,
+            visibility = importStatement.visibility,
+            knownMarkers = emptyList(),
+            readDfMethod = readDfMethod,
+            fieldNameNormalizer = NameNormalizer.from(importStatement.normalizationDelimiters.toSet())
+        )
+        val code = codeGenResult.toStandaloneSnippet(packageName, readDfMethod.additionalImports)
+        schemaFile.bufferedWriter().use {
+            it.write(code)
         }
     }
 }

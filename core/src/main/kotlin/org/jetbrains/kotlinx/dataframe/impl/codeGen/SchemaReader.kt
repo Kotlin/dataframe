@@ -11,19 +11,21 @@ import org.jetbrains.kotlinx.dataframe.io.SupportedDataFrameFormat
 import org.jetbrains.kotlinx.dataframe.io.SupportedFormat
 import org.jetbrains.kotlinx.dataframe.io.guessFormat
 import org.jetbrains.kotlinx.dataframe.io.read
+import org.jetbrains.kotlinx.dataframe.io.readCodeForGeneration
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import java.net.URL
 
+/**
+ * Reader that can read a data frame from a URL. It tries to guess the format based on the given [formats] and returns
+ * [DfReadResult.Success], or returns [DfReadResult.Error] if it fails.
+ */
 public val CodeGenerator.Companion.urlDfReader: (url: URL, formats: List<SupportedFormat>) -> DfReadResult
     get() = { url, formats ->
-        val supportedFormat = guessFormat(url, formats)
-
-        if (supportedFormat !is SupportedDataFrameFormat?) DfReadResult.WrongFormat
-        else try {
+        try {
             val (format, df) = url.openStream().use {
                 DataFrame.read(
                     stream = it,
-                    format = supportedFormat,
+                    format = guessFormat(url, formats) as? SupportedDataFrameFormat?,
                     formats = formats.filterIsInstance<SupportedDataFrameFormat>(),
                 )
             }
@@ -46,16 +48,24 @@ public sealed interface DfReadResult {
         public val schema: DataFrameSchema = df.schema()
     }
 
-    public object WrongFormat : DfReadResult
-
     public class Error(public val reason: Throwable) : DfReadResult
 }
 
+/**
+ * Reader that can read data from a URL and generate code (type schema representations) for it.
+ * It tries to guess the format based on the given [formats] and returns [CodeGenerationReadResult.Success],
+ * or returns [CodeGenerationReadResult.Error] if it fails.
+ */
 public val CodeGenerator.Companion.urlCodeGenReader: (url: URL, formats: List<SupportedFormat>) -> CodeGenerationReadResult
     get() = { url, formats ->
         try {
-            val format = guessFormat(url, formats) as SupportedCodeGenerationFormat
-            val code = format.readCodeForGeneration(url.openStream())
+            val (format, code) = url.openStream().use {
+                readCodeForGeneration(
+                    stream = it,
+                    format = guessFormat(url, formats) as? SupportedCodeGenerationFormat?,
+                    formats = formats.filterIsInstance<SupportedCodeGenerationFormat>(),
+                )
+            }
             CodeGenerationReadResult.Success(code, format)
         } catch (e: Throwable) {
             CodeGenerationReadResult.Error(e)
