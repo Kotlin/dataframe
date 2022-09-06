@@ -114,6 +114,29 @@ private class NotCloseableStream(val src: InputStream) : InputStream() {
     override fun mark(readlimit: Int) = src.mark(readlimit)
 }
 
+internal fun readCodeForGeneration(
+    stream: InputStream,
+    format: SupportedCodeGenerationFormat? = null,
+    formats: List<SupportedCodeGenerationFormat> = supportedFormats.filterIsInstance<SupportedCodeGenerationFormat>(),
+): ReadCodeWithConverter {
+    if (format != null) return format to format.readCodeForGeneration(stream)
+    val input = NotCloseableStream(if (stream.markSupported()) stream else BufferedInputStream(stream))
+    try {
+        val readLimit = 10000
+        input.mark(readLimit)
+
+        formats.sortedBy { it.testOrder }.forEach {
+            try {
+                input.reset()
+                return it to it.readCodeForGeneration(input)
+            } catch (e: Exception) {}
+        }
+        throw IllegalArgumentException("Unknown stream format")
+    } finally {
+        input.doClose()
+    }
+}
+
 internal fun DataFrame.Companion.read(
     stream: InputStream,
     format: SupportedDataFrameFormat? = null,
@@ -157,9 +180,17 @@ internal fun DataFrame.Companion.read(
     throw IllegalArgumentException("Unknown file format")
 }
 
-internal data class ReadAnyFrame(val format: SupportedFormat, val df: AnyFrame)
+internal data class ReadAnyFrame(val format: SupportedDataFrameFormat, val df: AnyFrame)
 
-internal infix fun SupportedFormat.to(df: AnyFrame) = ReadAnyFrame(this, df)
+internal infix fun SupportedDataFrameFormat.to(df: AnyFrame) = ReadAnyFrame(this, df)
+
+internal data class ReadCodeWithConverter(
+    val format: SupportedCodeGenerationFormat,
+    val codeWithConverter: CodeWithConverter,
+)
+
+internal infix fun SupportedCodeGenerationFormat.to(codeWithConverter: CodeWithConverter) =
+    ReadCodeWithConverter(this, codeWithConverter)
 
 public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame =
     read(
