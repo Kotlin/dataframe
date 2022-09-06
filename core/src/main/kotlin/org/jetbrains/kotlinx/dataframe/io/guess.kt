@@ -94,14 +94,26 @@ internal fun guessFormatForExtension(
             } else it
         }
 
-internal fun guessFormat(file: File, formats: List<SupportedFormat> = supportedFormats): SupportedFormat? =
-    file.extension.lowercase().let { guessFormatForExtension(it, formats, sample = file) }
+internal fun guessFormat(
+    file: File,
+    formats: List<SupportedFormat> = supportedFormats,
+    sample: Any? = file,
+): SupportedFormat? =
+    guessFormatForExtension(file.extension.lowercase(), formats, sample = sample)
 
-internal fun guessFormat(url: URL, formats: List<SupportedFormat> = supportedFormats): SupportedFormat? =
-    guessFormat(url.path, formats)
+internal fun guessFormat(
+    url: URL,
+    formats: List<SupportedFormat> = supportedFormats,
+    sample: Any? = url,
+): SupportedFormat? =
+    guessFormat(url.path, formats, sample = sample)
 
-internal fun guessFormat(url: String, formats: List<SupportedFormat> = supportedFormats): SupportedFormat? =
-    guessFormatForExtension(url.substringAfterLast("."), formats, sample = url)
+internal fun guessFormat(
+    url: String,
+    formats: List<SupportedFormat> = supportedFormats,
+    sample: Any? = url,
+): SupportedFormat? =
+    guessFormatForExtension(url.substringAfterLast("."), formats, sample = sample)
 
 private class NotCloseableStream(val src: InputStream) : InputStream() {
     override fun read(): Int = src.read()
@@ -129,7 +141,8 @@ internal fun readCodeForGeneration(
             try {
                 input.reset()
                 return it to it.readCodeForGeneration(input)
-            } catch (e: Exception) {}
+            } catch (e: Exception) {
+            }
         }
         throw IllegalArgumentException("Unknown stream format")
     } finally {
