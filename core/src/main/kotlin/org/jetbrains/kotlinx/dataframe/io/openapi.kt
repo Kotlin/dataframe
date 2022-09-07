@@ -43,11 +43,15 @@ public fun main() {
 }
 
 public class OpenApi : SupportedCodeGenerationFormat {
+
+    public fun readCodeForGeneration(text: String): CodeWithConverter =
+        readOpenApiAsString(text)
+
     override fun readCodeForGeneration(stream: InputStream): CodeWithConverter =
         readOpenApiAsString(stream.bufferedReader().readText())
 
     override fun readCodeForGeneration(file: File): CodeWithConverter =
-        readOpenApi(file.absolutePath)
+        readOpenApiAsString(file.readText())
 
     override fun acceptsExtension(ext: String): Boolean = ext in listOf("yaml", "yml", "json")
 
