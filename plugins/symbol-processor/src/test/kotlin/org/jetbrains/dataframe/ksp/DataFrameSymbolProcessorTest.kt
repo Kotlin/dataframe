@@ -13,7 +13,6 @@ import org.jetbrains.dataframe.ksp.runner.KspCompilationTestRunner
 import org.jetbrains.dataframe.ksp.runner.TestCompilationParameters
 import org.junit.Before
 import java.io.File
-import java.net.URL
 import kotlin.test.Test
 
 @Suppress("unused")
@@ -1179,8 +1178,7 @@ class DataFrameSymbolProcessorTest {
                         "MySources.kt",
                         """
                 @file:ImportDataSchema(
-                    "Petstore", 
-                    "$it",
+                    path = "$it",
                 )
                 package org.example
                 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
@@ -1196,9 +1194,11 @@ class DataFrameSymbolProcessorTest {
             )
         )
         println(result.kspGeneratedFiles)
-        result.inspectLines("Petstore.Generated.kt") {
+        result.inspectLines("DataSchema.Generated.kt") {
             it.forAtLeastOne { it shouldContain "Pet" }
             it.forAtLeastOne { it shouldContain "Error" }
+            it.forAtLeastOne { it shouldContain "readJson" }
+            it.forAtLeastOne { it shouldContain "readJsonStr" }
         }
         result.inspectLines("Pet\$Extensions.kt") {
             it.forAtLeastOne { it shouldContain "tag" }

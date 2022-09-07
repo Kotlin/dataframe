@@ -39,7 +39,7 @@ public sealed interface DfReadResult {
 
     public class Success(
         private val df: AnyFrame,
-        public val format: SupportedFormat,
+        public val format: SupportedDataFrameFormat,
     ) : DfReadResult {
         public fun getReadDfMethod(pathRepresentation: String?): DefaultReadDfMethod {
             return format.createDefaultReadMethod(pathRepresentation)

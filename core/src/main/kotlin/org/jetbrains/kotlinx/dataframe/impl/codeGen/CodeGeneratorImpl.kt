@@ -189,10 +189,19 @@ internal open class ExtensionsCodeGeneratorImpl(
 }
 
 internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames) : ExtensionsCodeGeneratorImpl(typeRendering), CodeGenerator {
-    override fun generate(marker: Marker, interfaceMode: InterfaceGenerationMode, extensionProperties: Boolean): CodeWithConverter {
+    override fun generate(
+        marker: Marker,
+        interfaceMode: InterfaceGenerationMode,
+        extensionProperties: Boolean,
+        readDfMethod: DefaultReadDfMethod?,
+    ): CodeWithConverter {
         val code = when (interfaceMode) {
             NoFields, WithFields ->
-                generateInterface(marker, interfaceMode == WithFields) + if (extensionProperties) "\n" + generateExtensionProperties(marker) else ""
+                generateInterface(
+                    marker = marker,
+                    fields = interfaceMode == WithFields,
+                    readDfMethod = readDfMethod,
+                ) + if (extensionProperties) "\n" + generateExtensionProperties(marker) else ""
 
             Enum -> generateEnum(marker)
 

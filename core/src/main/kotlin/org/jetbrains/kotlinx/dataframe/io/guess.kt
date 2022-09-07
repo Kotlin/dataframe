@@ -25,7 +25,7 @@ public interface SupportedFormat {
     // sorted list is used to test if any format can read given input
     public val testOrder: Int
 
-    public fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod
+    public fun createDefaultReadMethod(pathRepresentation: String? = null): DefaultReadDfMethod
 }
 
 public interface SupportedDataFrameFormat : SupportedFormat {
