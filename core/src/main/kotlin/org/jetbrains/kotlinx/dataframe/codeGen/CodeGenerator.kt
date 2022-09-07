@@ -38,7 +38,12 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
         fieldNameNormalizer: NameNormalizer = NameNormalizer.id()
     ): CodeGenResult
 
-    public fun generate(marker: Marker, interfaceMode: InterfaceGenerationMode, extensionProperties: Boolean): CodeWithConverter
+    public fun generate(
+        marker: Marker,
+        interfaceMode: InterfaceGenerationMode,
+        extensionProperties: Boolean,
+        readDfMethod: DefaultReadDfMethod? = null,
+    ): CodeWithConverter
 
     public companion object {
         public fun create(useFqNames: Boolean = true): CodeGenerator {

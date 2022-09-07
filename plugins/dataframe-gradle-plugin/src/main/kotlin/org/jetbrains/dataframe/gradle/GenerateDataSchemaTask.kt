@@ -78,7 +78,9 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         // first try without creating dataframe
         when (val codeGenResult = CodeGenerator.urlCodeGenReader(url, formats)) {
             is CodeGenerationReadResult.Success -> {
-                val code = codeGenResult.code.toStandaloneSnippet(escapedPackageName, emptyList())
+                val readDfMethod =
+                    codeGenResult.getReadDfMethod(stringOf(data.get()))
+                val code = codeGenResult.code.toStandaloneSnippet(escapedPackageName, readDfMethod.additionalImports)
                 schemaFile.bufferedWriter().use {
                     it.write(code)
                 }

@@ -1,4 +1,3 @@
-
 @Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
     kotlin("jvm")
@@ -31,7 +30,7 @@ dependencies {
     implementation(libs.klaxon)
     implementation(libs.fuel)
 
-    implementation(libs.kotlin.datetimeJvm)
+    api(libs.kotlin.datetimeJvm)
     implementation("com.squareup:kotlinpoet:1.11.0")
 
     implementation(libs.swagger)
@@ -86,10 +85,12 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 tasks.test {
     maxHeapSize = "2048m"
     extensions.configure(kotlinx.kover.api.KoverTaskExtension::class) {
-        excludes.set(listOf(
-            "org.jetbrains.kotlinx.dataframe.jupyter.*",
-            "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests"
-        ))
+        excludes.set(
+            listOf(
+                "org.jetbrains.kotlinx.dataframe.jupyter.*",
+                "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests"
+            )
+        )
     }
 }
 

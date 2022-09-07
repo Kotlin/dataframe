@@ -2,13 +2,21 @@ package org.jetbrains.kotlinx.dataframe.io // ktlint-disable filename
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.asClassName
 import io.swagger.parser.OpenAPIParser
 import io.swagger.v3.oas.models.media.Schema
 import io.swagger.v3.parser.core.models.AuthorizationValue
 import io.swagger.v3.parser.core.models.ParseOptions
 import io.swagger.v3.parser.core.models.SwaggerParseResult
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
@@ -22,8 +30,6 @@ import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.io.File
 import java.io.InputStream
 import java.net.URL
-import java.time.LocalDate
-import java.time.LocalDateTime
 import kotlin.reflect.typeOf
 
 public fun main() {
@@ -47,14 +53,58 @@ public class OpenApi : SupportedCodeGenerationFormat {
 
     override val testOrder: Int = 60000
 
-    // TODO
-    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
-        DefaultReadOpenApiMethod(pathRepresentation)
+    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod = DefaultReadOpenApiMethod
 }
 
-private const val readOpenApi = "readOpenApi"
+/** Used to add readJson functions to the generated interfaces. */
+private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
+    path = null,
+    arguments = MethodArguments.EMPTY,
+    methodName = "",
+) {
 
-private class DefaultReadOpenApiMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readOpenApi)
+    override val additionalImports: List<String> = listOf(
+        "import org.jetbrains.kotlinx.dataframe.io.readJson",
+        "import org.jetbrains.kotlinx.dataframe.io.readJsonStr",
+        "import org.jetbrains.kotlinx.dataframe.api.convertTo",
+    )
+
+    override fun toDeclaration(markerName: String, visibility: String): String {
+        val returnType = DataFrame::class.asClassName().parameterizedBy(ClassName("", listOf(markerName)))
+        val typeSpec = TypeSpec.companionObjectBuilder()
+            .addFunction(
+                FunSpec.builder("readJson")
+                    .returns(returnType)
+                    .addParameter("url", URL::class)
+                    .addCode("""return DataFrame.readJson(url).convertTo<$markerName>()""")
+                    .build()
+            )
+            .addFunction(
+                FunSpec.builder("readJson")
+                    .returns(returnType)
+                    .addParameter("path", String::class)
+                    .addCode("""return DataFrame.readJson(path).convertTo<$markerName>()""")
+                    .build()
+            )
+            .addFunction(
+                FunSpec.builder("readJson")
+                    .returns(returnType)
+                    .addParameter("stream", InputStream::class)
+                    .addCode("""return DataFrame.readJson(stream).convertTo<$markerName>()""")
+                    .build()
+            )
+            .addFunction(
+                FunSpec.builder("readJsonStr")
+                    .returns(returnType)
+                    .addParameter("text", String::class)
+                    .addCode("""return DataFrame.readJsonStr(text).convertTo<$markerName>()""")
+                    .build()
+            )
+            .build()
+
+        return typeSpec.toString()
+    }
+}
 
 internal fun isOpenApi(path: String): Boolean = isOpenApi(asURL(path))
 
@@ -103,7 +153,7 @@ public fun readOpenApiAsString(
 /**
  * Converts a parsed OpenAPI specification into a list of [CodeWithConverter] objects.
  *
- * @param swaggerParseResult the result of parsing an OpenAPI specification, created using [readOpenApi] or [readOpenApiAsString].
+ * @param swaggerParseResult the result of parsing an OpenAPI specification, created using [readJson] or [readOpenApiAsString].
  * @param visibility the visibility of the generated marker classes.
  *
  * @return a [CodeWithConverter] object, representing the generated code.
@@ -134,6 +184,7 @@ private fun readOpenApi(
                 MarkerType.TYPE_ALIAS, MarkerType.MARKER_ALIAS -> InterfaceGenerationMode.TypeAlias
             },
             extensionProperties = false,
+            readDfMethod = if (marker.markerType == MarkerType.INTERFACE) DefaultReadOpenApiMethod else null,
         )
     }.reduce { a, b -> a + b }
 }
