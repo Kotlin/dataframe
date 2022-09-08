@@ -19,6 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.extractSchema
+import org.jetbrains.kotlinx.dataframe.impl.schema.render
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
@@ -67,7 +68,11 @@ internal fun AnyFrame.convertToImpl(
                 val currentSchema = it.extractSchema()
                 when {
                     targetColumn == currentSchema -> it
-                    !allowConversion -> throw IllegalArgumentException("Column `${it.name}` has type `${it.type()}` that differs from target type `${targetColumn.type}`")
+                    !allowConversion -> {
+                        val schema = mapOf(it.name to currentSchema).render(0, StringBuilder(), "\t")
+                        val targetSchema = mapOf(it.name to targetColumn).render(0, StringBuilder(), "\t")
+                        throw IllegalArgumentException("Column has schema:\n $schema\n that differs from target schema:\n $targetSchema")
+                    }
                     else -> {
                         val columnPath = path + it.name
                         when (targetColumn.kind) {
