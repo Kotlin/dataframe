@@ -31,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
 import org.jetbrains.kotlinx.dataframe.plugin.Convert2
+import org.jetbrains.kotlinx.dataframe.plugin.To0
 import org.jetbrains.kotlinx.dataframe.plugin.With0
 import java.math.BigDecimal
 import java.net.URL
@@ -85,6 +86,7 @@ public inline fun <T, C, reified R> Convert<T, C?>.notNull(crossinline expressio
 public data class Convert<T, out C>(val df: DataFrame<T>, val columns: ColumnsSelector<T, C>) {
     public fun <R> cast(): Convert<T, R> = Convert(df, columns as ColumnsSelector<T, R>)
 
+    @Interpretable(To0::class)
     public inline fun <reified D> to(): DataFrame<T> = to(typeOf<D>())
 }
 

@@ -20,25 +20,30 @@ public class With0 : AbstractSchemaModificationInterpreter() {
     public val Arguments.type: TypeApproximation by type(name("rowConverter"))
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        val names = receiver.columns.toSet()
-
-        val newColumns = receiver.schema.columns().map {
-            if (listOf(it.name()) in names) {
-                it.changeType(type)
-            } else {
-                it
-            }
-        }
-
-        return PluginDataFrameSchema(newColumns)
+        return convertImpl(receiver, type)
     }
+}
+
+private fun convertImpl(receiver: ConvertApproximation, type: TypeApproximation): PluginDataFrameSchema {
+    val names = receiver.columns.toSet()
+
+    val newColumns = receiver.schema.columns().map {
+        if (listOf(it.name()) in names) {
+            it.changeType(type)
+        } else {
+            it
+        }
+    }
+
+    return PluginDataFrameSchema(newColumns)
 }
 
 internal class To0 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.receiver: ConvertApproximation by arg()
+    val Arguments.typeArg0: TypeApproximation by arg()
     override val Arguments.startingSchema get() = receiver.schema
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        TODO()
+        return convertImpl(receiver, typeArg0)
     }
 }
