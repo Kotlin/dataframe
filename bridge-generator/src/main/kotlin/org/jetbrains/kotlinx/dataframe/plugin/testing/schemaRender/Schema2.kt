@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.plugin.testing.schemaRender
 
-import kotlinx.serialization.decodeFromString
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments

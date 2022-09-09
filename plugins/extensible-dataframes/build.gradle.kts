@@ -35,11 +35,17 @@ dependencies {
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-script-runtime:$kotlinVersion")
     testRuntimeOnly("org.jetbrains.kotlin:kotlin-annotations-jvm:$kotlinVersion")
 
+    constraints {
+        implementation(kotlin("compiler-embeddable", version = "1.8.0-dev-446"))
+        testImplementation(kotlin("compiler-embeddable", version = "1.8.0-dev-446"))
+        runtimeOnly(kotlin("compiler-embeddable", version = "1.8.0-dev-446"))
+    }
+
     testImplementation("org.jetbrains.kotlinx:dataframe")
 
     testImplementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-compiler-internal-test-framework:$kotlinVersion")
-    testImplementation("junit:junit:4.12")
+    //testImplementation("junit:junit:4.12")
 
     testImplementation(platform("org.junit:junit-bom:5.8.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")

@@ -13,7 +13,8 @@ repositories {
 }
 
 dependencies {
-    compileOnly(kotlin("compiler-embeddable"))
+    //compileOnly(kotlin("compiler-embeddable"))
+    compileOnly("org.jetbrains.kotlin:kotlin-compiler:1.7.10")
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
 }

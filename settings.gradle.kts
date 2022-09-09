@@ -23,19 +23,21 @@ dependencyResolutionManagement {
     repositories {
         mavenCentral()
         maven(jupyterApiTCRepo)
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
     }
 }
 
 pluginManagement {
     repositories {
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
         mavenLocal()
         gradlePluginPortal()
     }
 }
 include("dataframe-excel")
 include("core")
-include("plugins:dataframe-introspection")
-findProject(":plugins:dataframe-introspection")?.name = "dataframe-introspection"
+//include("plugins:dataframe-introspection")
+//findProject(":plugins:dataframe-introspection")?.name = "dataframe-introspection"
 //include("type-api")
 //includeBuild("plugins/extensible-dataframes")
 //findProject(":plugins:extensible-dataframes")?.name = "extensible-dataframes"

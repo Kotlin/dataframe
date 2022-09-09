@@ -9,6 +9,8 @@ pluginManagement {
 
 rootProject.name = "extensible-dataframes"
 
+include("plugin-annotations")
+
 includeBuild("../../") {
     dependencySubstitution {
         substitute(module("org.jetbrains.kotlinx:dataframe")).using(project(":"))

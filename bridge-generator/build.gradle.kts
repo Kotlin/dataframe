@@ -14,7 +14,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlinx:dataframe")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
+    //implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.2")
 //    implementation(kotlin("stdlib"))
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
     testImplementation("io.kotest:kotest-assertions-core:4.6.3")

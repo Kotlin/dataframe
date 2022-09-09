@@ -45,7 +45,7 @@ dependencies {
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.stdlib.jdk8)
     // TODO: check if all compiler tests run pass with implementation
-    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
+//    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.0-RC")
     api(project(":plugins:type-api"))
 
     api(libs.commonsCsv)
@@ -63,8 +63,8 @@ dependencies {
     testImplementation(libs.jsoup)
     testImplementation(kotlin("compiler-embeddable"))
 
-    val kotlinCompilerPluginClasspathIntrospect by configurations.getting
-    kotlinCompilerPluginClasspathIntrospect(project(":plugins:dataframe-introspection"))
+//    val kotlinCompilerPluginClasspathIntrospect by configurations.getting
+//    kotlinCompilerPluginClasspathIntrospect(project(":plugins:dataframe-introspection"))
 }
 
 kotlin.sourceSets {
