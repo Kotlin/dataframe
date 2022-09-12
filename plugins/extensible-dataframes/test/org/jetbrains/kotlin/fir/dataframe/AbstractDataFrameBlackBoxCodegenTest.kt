@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.fir.dataframe.extensions.TestBodyFiller
 import org.jetbrains.kotlin.fir.dataframe.extensions.TestGenerator
 import org.jetbrains.kotlin.fir.dataframe.extensions.TestInjector
+import org.jetbrains.kotlin.fir.dataframe.services.BaseTestRunner
 import org.jetbrains.kotlin.fir.dataframe.services.commonFirWithPluginFrontendConfiguration
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrar
 import org.jetbrains.kotlin.fir.extensions.FirExtensionRegistrarAdapter
@@ -29,7 +30,6 @@ import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerWithTargetBackend
 import org.jetbrains.kotlin.test.runners.RunnerWithTargetBackendForTestGeneratorMarker
 import org.jetbrains.kotlin.test.services.EnvironmentConfigurator
 import org.jetbrains.kotlin.test.services.TestServices
-import org.jetbrains.kotlinx.dataframe.runners.BaseTestRunner
 
 open class AbstractDataFrameBlackBoxCodegenTest : BaseTestRunner(), RunnerWithTargetBackendForTestGeneratorMarker {
 

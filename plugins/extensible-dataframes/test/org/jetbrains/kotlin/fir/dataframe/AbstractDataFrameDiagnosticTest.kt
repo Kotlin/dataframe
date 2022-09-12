@@ -5,10 +5,10 @@
 
 package org.jetbrains.kotlin.fir.dataframe
 
+import org.jetbrains.kotlin.fir.dataframe.services.BaseTestRunner
 import org.jetbrains.kotlin.fir.dataframe.services.commonFirWithPluginFrontendConfiguration
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
 import org.jetbrains.kotlin.test.runners.AbstractKotlinCompilerTest
-import org.jetbrains.kotlinx.dataframe.runners.BaseTestRunner
 
 abstract class AbstractDataFrameDiagnosticTest : BaseTestRunner() {
     override fun TestConfigurationBuilder.configuration() {

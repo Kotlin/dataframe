@@ -14,7 +14,7 @@ fun main() {
 //            }
 //        }
 
-        testGroup("tests-gen", "testData") {
+        testGroup("test-gen", "testData") {
             testClass<AbstractDataFrameDiagnosticTest> {
                 model("diagnostics")
             }
