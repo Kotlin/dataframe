@@ -5,13 +5,12 @@
 
 package org.jetbrains.kotlin.fir.dataframe
 
-import io.kotest.assertions.withClue
-import io.kotest.matchers.shouldBe
+//import io.kotest.assertions.withClue
+//import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlin.compiler.plugin.CompilerPluginRegistrar
 import org.jetbrains.kotlin.config.CompilerConfiguration
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.dataframe.extensions.*
-import org.jetbrains.kotlin.fir.dataframe.services.BaseTestRunner
 import org.jetbrains.kotlin.fir.dataframe.services.DataFramePluginAnnotationsProvider
 import org.jetbrains.kotlin.fir.expressions.FirConstExpression
 import org.jetbrains.kotlin.fir.expressions.FirFunctionCall
@@ -39,6 +38,7 @@ import org.jetbrains.kotlinx.dataframe.plugin.*
 import org.jetbrains.kotlinx.dataframe.plugin.AddData.test0After
 import org.jetbrains.kotlinx.dataframe.plugin.AddData.test0Schema
 import org.jetbrains.kotlinx.dataframe.plugin.testing.atoms.Context
+import org.jetbrains.kotlinx.dataframe.runners.BaseTestRunner
 
 abstract class AbstractDataFrameInterpretationTests : BaseTestRunner() {
     lateinit var filePath: String

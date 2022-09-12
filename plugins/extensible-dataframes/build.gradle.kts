@@ -10,6 +10,7 @@ version = "0.9.0-dev"
 val kotlinVersion: String by project.properties
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
 }
@@ -41,7 +42,8 @@ dependencies {
         runtimeOnly(kotlin("compiler-embeddable", version = "1.8.0-dev-446"))
     }
 
-    testImplementation("org.jetbrains.kotlinx:dataframe")
+    implementation("org.jetbrains.kotlinx:dataframe")
+    implementation("org.jetbrains.kotlinx.dataframe:bridge-generator:0.9.0-dev")
 
     testImplementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     testImplementation("org.jetbrains.kotlin:kotlin-compiler-internal-test-framework:$kotlinVersion")
