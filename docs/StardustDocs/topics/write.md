@@ -116,3 +116,18 @@ wb.close()
 ```
 
 <!---END-->
+
+Add new sheets without using Apache POI directly by using a parameter to keep using the same file if it already exists
+
+<!---FUN writeXlsWithMultipleSheets-->
+
+```kotlin
+// Create a new Excel workbook with a single sheet called "allPersons", replacing the file if it already exists -> Current sheets: allPersons
+val allPersonsSheet = df.writeExcel(file, sheetName = "allPersons")
+// Add a new sheet to the previous file without replacing it, by setting keepFile = true -> Current sheets: allPersons, happyPersons
+val happyPersonsSheet = df.filter { person -> person.isHappy }.remove("isHappy").writeExcel(file, sheetName = "happyPersons", keepFile = true)
+// Add a new sheet to the previous file without replacing it, by setting keepFile = true -> Current sheets: allPersons, happyPersons, unhappyPersons
+val unhappyPersonsSheet = df.filter { person -> !person.isHappy }.remove("isHappy").writeExcel(file, sheetName = "unhappyPersons", keepFile = true)
+```
+
+<!---END-->
