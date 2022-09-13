@@ -8,6 +8,7 @@ import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.io.html
+import org.jetbrains.kotlinx.dataframe.io.initHtml
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.jupyter.findNthSubstring
 import org.junit.Ignore
@@ -19,7 +20,7 @@ class HtmlRenderingTests : BaseTest() {
 
     fun AnyFrame.browse() {
         val file = File("temp.html") // File.createTempFile("df_rendering", ".html")
-        file.writeText(toHTML(includeInit = true).toString())
+        file.writeText(toHTML(extraHtml = initHtml()).toString())
         val uri = file.toURI()
         val desktop = Desktop.getDesktop()
         desktop.browse(uri)
