@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
@@ -18,6 +19,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.superclasses
 import kotlin.reflect.jvm.jvmErasure
 
@@ -54,7 +56,9 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             isMutable = property is KMutableProperty
 
             // maybe property is already properly typed, let's do some checks
-            val currentMarker = getMarkerClass(property.returnType)?.let { registeredMarkers[it] ?: MarkersExtractor[it] }
+            val currentMarker = getMarkerClass(property.returnType)
+                ?.takeIf { it.findAnnotation<DataSchema>() != null }
+                ?.let { registeredMarkers[it] ?: MarkersExtractor[it] }
             if (currentMarker != null) {
                 // if property is mutable, we need to make sure that its marker type is open in order to let derived data frames be assignable to it
                 if (!isMutable || currentMarker.isOpen) {
