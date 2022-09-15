@@ -113,7 +113,8 @@ kotlinter {
         "experimental:argument-list-wrapping",
         "experimental:annotation",
         "max-line-length",
-        "filename"
+        "filename",
+        "comment-spacing"
     )
 }
 
