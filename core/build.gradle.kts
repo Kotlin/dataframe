@@ -9,6 +9,7 @@ plugins {
     id("org.jetbrains.dataframe.generator")
     id("org.jetbrains.kotlinx.kover")
     id("org.jmailen.kotlinter")
+    id("org.jetbrains.kotlinx.dataframe")
 }
 
 group = "org.jetbrains.kotlinx"

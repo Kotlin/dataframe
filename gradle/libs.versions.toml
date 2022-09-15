@@ -5,7 +5,7 @@ ktlint = "3.4.5"
 kotlin = "1.7.20-RC"
 dokka = "1.5.31"
 libsPublisher = "0.0.60-dev-30"
-dataframe = "0.9.0-dev-1114"
+dataframe = "0.9.0-dev-1117"
 korro = "0.1.1-dev-29"
 kover = "0.6.0-Beta"
 
