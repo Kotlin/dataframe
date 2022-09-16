@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.intellij.lang.annotations.Language
@@ -170,5 +171,40 @@ class JupyterCodegenTests : JupyterReplTestCase() {
             """.trimIndent()
         )
         res2.shouldBeInstanceOf<Unit>()
+    }
+
+    @Test
+    fun `generate a new marker when dataframe marker is not a data schema so that columns are accessible with extensions`() {
+        exec(
+            """
+            enum class State {
+                Idle, Productive, Maintenance
+            }
+
+            class Event(val toolId: String, val state: State, val timestamp: Long)
+
+            val tool1 = "tool_1"
+            val tool2 = "tool_2"
+            val tool3 = "tool_3"
+            val events = listOf(
+                Event(tool1, State.Idle, 0),
+                Event(tool1, State.Productive, 5),
+                Event(tool2, State.Idle, 0),
+                Event(tool2, State.Maintenance, 10),
+                Event(tool2, State.Idle, 20),
+                Event(tool3, State.Idle, 0),
+                Event(tool3, State.Productive, 25),
+            ).toDataFrame()
+            """.trimIndent()
+        )
+        shouldNotThrowAny {
+            exec(
+                """
+                events.toolId
+                events.state
+                events.timestamp
+                """.trimIndent()
+            )
+        }
     }
 }
