@@ -110,9 +110,21 @@ public fun AnyCol.convertTo(newType: KType): AnyCol {
 public fun <T : Any> DataColumn<T>.convertToLocalDateTime(): DataColumn<LocalDateTime> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToLocalDateTime(): DataColumn<LocalDateTime?> = convertTo()
 
+@JvmName("convertToLocalDateFromT")
+public fun <T : Any> DataColumn<T>.convertToLocalDate(): DataColumn<LocalDate> = convertTo()
+public fun <T : Any> DataColumn<T?>.convertToLocalDate(): DataColumn<LocalDate?> = convertTo()
+
 @JvmName("convertToLocalTimeFromT")
 public fun <T : Any> DataColumn<T>.convertToLocalTime(): DataColumn<LocalTime> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToLocalTime(): DataColumn<LocalTime?> = convertTo()
+
+@JvmName("convertToByteFromT")
+public fun <T : Any> DataColumn<T>.convertToByte(): DataColumn<Byte> = convertTo()
+public fun <T : Any> DataColumn<T?>.convertToByte(): DataColumn<Byte?> = convertTo()
+
+@JvmName("convertToShortFromT")
+public fun <T : Any> DataColumn<T>.convertToShort(): DataColumn<Short> = convertTo()
+public fun <T : Any> DataColumn<T?>.convertToShort(): DataColumn<Short?> = convertTo()
 
 @JvmName("convertToIntFromT")
 public fun <T : Any> DataColumn<T>.convertToInt(): DataColumn<Int> = convertTo()
