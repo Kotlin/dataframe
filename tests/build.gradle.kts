@@ -37,7 +37,8 @@ kotlin.sourceSets {
 
 korro {
     docs = fileTree(rootProject.rootDir) {
-        include("docs/StardustDocs/topics/*.md")
+        include("docs/StardustDocs/topics/read.md")
+        include("docs/StardustDocs/topics/write.md")
     }
 
     samples = fileTree(project.projectDir) {
@@ -97,13 +98,4 @@ kotlinter {
         "max-line-length",
         "filename"
     )
-}
-
-dataframes {
-    schema {
-        sourceSet = "test"
-        visibility = DataSchemaVisibility.IMPLICIT_PUBLIC
-        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
-        name = "org.jetbrains.kotlinx.dataframe.samples.api.Repository"
-    }
 }
