@@ -24,7 +24,6 @@ dependencies {
     }
     testImplementation(libs.kotlin.datetimeJvm)
     testImplementation(libs.poi)
-    testImplementation(libs.arrow.vector)
 }
 
 kotlin.sourceSets {
