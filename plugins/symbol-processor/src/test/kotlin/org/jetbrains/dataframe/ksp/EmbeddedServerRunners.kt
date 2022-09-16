@@ -8,7 +8,9 @@ import io.ktor.server.netty.*
 import java.io.File
 
 fun useHostedFile(file: File, f: (url: String) -> Unit) {
-    val server = embeddedServer(Netty, port = 8080) {
+    // duplicated in gradle/EmbeddedServerRunners.kt
+    val port = 14771
+    val server = embeddedServer(Netty, port = port) {
         routing {
             get("/") {
                 call.respondFile(file)
@@ -16,7 +18,7 @@ fun useHostedFile(file: File, f: (url: String) -> Unit) {
         }
     }.start()
     try {
-        f("http://0.0.0.0:8080/")
+        f("http://0.0.0.0:$port/")
     } finally {
         server.stop(500, 1000)
     }
