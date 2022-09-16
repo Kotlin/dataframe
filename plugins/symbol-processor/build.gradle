@@ -1,4 +1,5 @@
 plugins {
+    id("com.github.johnrengelman.shadow") version "7.1.2"
     id("org.jetbrains.kotlin.jvm")
     id("org.jetbrains.kotlin.libs.publisher")
 }
@@ -40,7 +41,7 @@ kotlinPublications {
     publication {
         groupId.set("org.jetbrains.kotlinx.dataframe")
         publicationName.set("maven")
-        artifactId.set("symbol-processor")
+        artifactId.set("symbol-processor-all")
         description.set("Annotation preprocessor for DataFrame")
         packageName.set(artifactId)
     }

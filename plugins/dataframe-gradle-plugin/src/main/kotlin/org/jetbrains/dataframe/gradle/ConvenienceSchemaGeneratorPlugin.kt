@@ -29,7 +29,7 @@ internal class KspPluginApplier : Plugin<Project> {
         val preprocessorVersion = properties.getProperty("PREPROCESSOR_VERSION")
         target.plugins.apply("com.google.devtools.ksp")
         target.configurations.getByName("ksp").dependencies.add(
-            target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor:$preprocessorVersion")
+            target.dependencies.create("org.jetbrains.kotlinx.dataframe:symbol-processor-all:$preprocessorVersion")
         )
         target.extensions.getByType<KspExtension>().arg("dataframe.resolutionDir", target.projectDir.absolutePath)
     }
