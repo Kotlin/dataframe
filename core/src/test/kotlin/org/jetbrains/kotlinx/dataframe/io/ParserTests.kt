@@ -3,18 +3,27 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toKotlinLocalDate
+import kotlinx.datetime.toKotlinLocalDateTime
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.convertToDouble
+import org.jetbrains.kotlinx.dataframe.api.convertToLocalDate
+import org.jetbrains.kotlinx.dataframe.api.convertToLocalDateTime
+import org.jetbrains.kotlinx.dataframe.api.convertToLocalTime
 import org.jetbrains.kotlinx.dataframe.api.parse
 import org.jetbrains.kotlinx.dataframe.api.parser
+import org.jetbrains.kotlinx.dataframe.api.plus
+import org.jetbrains.kotlinx.dataframe.api.times
 import org.jetbrains.kotlinx.dataframe.api.tryParse
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.junit.Test
 import java.math.BigDecimal
+import java.time.LocalTime
 import java.util.Locale
 import kotlin.reflect.typeOf
 
@@ -72,6 +81,50 @@ class ParserTests {
         val col by columnOf(BigDecimal(1.0), BigDecimal(0.0), 0, 1, 10L, 0.0, 0.1)
         col.convertTo<Boolean>().shouldBe(
             DataColumn.createValueColumn("col", listOf(true, false, false, true, true, false, true), typeOf<Boolean>())
+        )
+    }
+
+    @Test
+    fun `convert to date and time`() {
+        val daysToStandardMillis = 24 * 60 * 60 * 1000L
+        val longCol = columnOf(1L, 60L, 3600L).times(1000L).plus(daysToStandardMillis * 366)
+        val datetimeCol = longCol.convertToLocalDateTime(TimeZone.UTC)
+
+        datetimeCol.shouldBe(
+            columnOf(
+                java.time.LocalDateTime.of(1971, 1, 2, 0, 0, 1).toKotlinLocalDateTime(),
+                java.time.LocalDateTime.of(1971, 1, 2, 0, 1, 0).toKotlinLocalDateTime(),
+                java.time.LocalDateTime.of(1971, 1, 2, 1, 0, 0).toKotlinLocalDateTime()
+            )
+        )
+        longCol.convertToLocalDate(TimeZone.UTC).shouldBe(
+            columnOf(
+                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate()
+            )
+        )
+        longCol.convertToLocalTime(TimeZone.UTC).shouldBe(
+            columnOf(
+                LocalTime.of(0, 0, 1),
+                LocalTime.of(0, 1, 0),
+                LocalTime.of(1, 0, 0)
+            )
+        )
+
+        datetimeCol.convertToLocalDate().shouldBe(
+            columnOf(
+                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate(),
+                java.time.LocalDate.of(1971, 1, 2).toKotlinLocalDate()
+            )
+        )
+        datetimeCol.convertToLocalTime().shouldBe(
+            columnOf(
+                LocalTime.of(0, 0, 1),
+                LocalTime.of(0, 1, 0),
+                LocalTime.of(1, 0, 0)
+            )
         )
     }
 
