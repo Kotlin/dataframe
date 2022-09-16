@@ -1,7 +1,7 @@
 [//]: # (title: Write)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Write-->
 
-`DataFrame` can be saved into CSV, TSV, JSON, XLS and XLSX, Apache Arrow formats.
+`DataFrame` can be saved into CSV, TSV, JSON and XLS, XLSX formats.
 
 ### Writing to CSV
 
@@ -49,7 +49,7 @@ val jsonStr = df.toJson(prettyPrint = true)
 
 <!---END-->
 
-### Write to Excel spreadsheet
+### Write to excel spreadsheet
 
 Add dependency:
 
@@ -116,84 +116,3 @@ wb.close()
 ```
 
 <!---END-->
-
-### Writing to Apache Arrow formats
-
-Add dependency:
-
-```kotlin
-implementation("org.jetbrains.kotlinx:dataframe-arrow:$dataframe_version")
-```
-
-<warning>
-Make sure to follow [Apache Arrow Java compatibility](https://arrow.apache.org/docs/java/install.html#java-compatibility) guide when using Java 9+
-</warning>
-
-Dataframe supports writing [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
-and [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
-to raw WritableByteChannel, OutputStream, File or ByteArray.
-
-Data may be saved "as is" or converted to match some target [Schema](https://arrow.apache.org/docs/java/reference/org/apache/arrow/vector/types/pojo/Schema.html)
-if you have it.
-
-First is quite easy:
-<!---FUN writeArrowFile-->
-
-```kotlin
-df.writeArrowIPC(file)
-// or
-df.writeArrowFeather(file)
-```
-
-<!---END-->
-(writing to file, opened stream or channel),
-<!---FUN writeArrowByteArray-->
-
-```kotlin
-val ipcByteArray: ByteArray = df.saveArrowIPCToByteArray()
-// or
-val featherByteArray: ByteArray = df.saveArrowFeatherToByteArray()
-```
-
-<!---END-->
-(creating byte array). Nested frames and columns with mixed or unsupported types will be saved as String.
-
-Second is a bit more tricky. You have to create specify schema itself and casting behavior mode as `ArrowWriter` parameters.
-Behavior `Mode` has four independent switchers: `restrictWidening`, `restrictNarrowing`, `strictType`, `strictNullable`.
-You can use `Mode.STRICT` (this is default), `Mode.LOYAL` or any combination you want.
-`ArrowWriter` object should be closed after using because Arrow uses random access buffers not managed by Java GC.
-Finally, you can specify a callback to be invoked if some data is lost or can not be saved according to your schema.
-
-Here is full example:
-<!---FUN writeArrowPerSchema-->
-
-```kotlin
-// Get schema from anywhere you want. It can be deserialized from JSON, generated from another dataset
-// (including DataFrame.columns().toArrowSchema() method), created manually and so on.
-val schema = Schema.fromJSON(schemaJson)
-
-df.arrowWriter(
-    // Specify your schema
-    schema,
-    // Specify desired behavior mode
-    ArrowWriter.Companion.Mode(
-        restrictWidening = true,
-        restrictNarrowing = true,
-        strictType = true,
-        strictNullable = false
-    ),
-    // Specify warning subscriber
-    writeWarningMessage
-).use { writer ->
-    // Save to any format and sink, like in previous example
-    writer.writeArrowFeather(file)
-}
-```
-
-<!---END-->
-On executing you should get two warnings:
->Column "city" contains nulls but expected not nullable
-
-and
-
->Column "isHappy" is not described in target schema and was ignored
