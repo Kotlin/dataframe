@@ -35,3 +35,7 @@ kotlinPublications {
 kotlin {
     explicitApi()
 }
+
+tasks.test {
+    jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED")
+}
