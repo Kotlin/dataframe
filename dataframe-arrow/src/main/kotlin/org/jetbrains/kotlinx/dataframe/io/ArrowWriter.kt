@@ -77,43 +77,89 @@ private val logger = LoggerFactory.getLogger(ArrowWriter::class.java)
 
 public val logWarningMessage: (String) -> Unit = { message: String -> logger.debug(message) }
 
+public fun AnyCol.toArrowField(warningSubscriber: (String) -> Unit = ignoreWarningMessage): Field {
+    val column = this
+    val columnType = column.type()
+    val nullable = columnType.isMarkedNullable
+    return when {
+        columnType.isSubtypeOf(typeOf<String?>()) -> Field(
+            column.name(),
+            FieldType(nullable, ArrowType.Utf8(), null),
+            emptyList()
+        )
+
+        columnType.isSubtypeOf(typeOf<Boolean?>()) -> Field(
+            column.name(),
+            FieldType(nullable, ArrowType.Bool(), null),
+            emptyList()
+        )
+
+        columnType.isSubtypeOf(typeOf<Byte?>()) -> Field(
+            column.name(),
+            FieldType(nullable, ArrowType.Int(8, true), null),
+            emptyList()
+        )
+
+        columnType.isSubtypeOf(typeOf<Short?>()) -> Field(
+            column.name(),
+            FieldType(nullable, ArrowType.Int(16, true), null),
+            emptyList()
+        )
+
+        columnType.isSubtypeOf(typeOf<Int?>()) -> Field(
+            column.name(),
+            FieldType(nullable, ArrowType.Int(32, true), null),
+            emptyList()
+        )
+
+        columnType.isSubtypeOf(typeOf<Long?>()) -> Field(
+            column.name(),
+            FieldType(nullable, ArrowType.Int(64, true), null),
+            emptyList()
+        )
+
+        columnType.isSubtypeOf(typeOf<Float?>()) -> Field(
+            column.name(),
+            FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE), null),
+            emptyList()
+        )
+
+        columnType.isSubtypeOf(typeOf<Double?>()) -> Field(
+            column.name(),
+            FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE), null),
+            emptyList()
+        )
+
+        columnType.isSubtypeOf(typeOf<LocalDate?>()) || columnType.isSubtypeOf(typeOf<kotlinx.datetime.LocalDate?>()) -> Field(
+            column.name(),
+            FieldType(nullable, ArrowType.Date(DateUnit.DAY), null),
+            emptyList()
+        )
+
+        columnType.isSubtypeOf(typeOf<LocalDateTime?>()) || columnType.isSubtypeOf(typeOf<kotlinx.datetime.LocalDateTime?>()) -> Field(
+            column.name(),
+            FieldType(nullable, ArrowType.Date(DateUnit.MILLISECOND), null),
+            emptyList()
+        )
+
+        columnType.isSubtypeOf(typeOf<LocalTime?>()) -> Field(
+            column.name(),
+            FieldType(nullable, ArrowType.Time(TimeUnit.NANOSECOND, 64), null),
+            emptyList()
+        )
+
+        else -> {
+            warningSubscriber("Column ${column.name()} has type ${column.typeClass.java.canonicalName}, will be saved as String")
+            Field(column.name(), FieldType(true, ArrowType.Utf8(), null), emptyList())
+        }
+    }
+}
 /**
  * Create Arrow [Schema] matching [this] actual data.
  * Columns with not supported types will be interpreted as String
  */
 public fun List<AnyCol>.toArrowSchema(warningSubscriber: (String) -> Unit = ignoreWarningMessage): Schema {
-    val fields = this.map { column ->
-        val columnType = column.type()
-        val nullable = columnType.isMarkedNullable
-        when {
-            columnType.isSubtypeOf(typeOf<String?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Utf8(), null), emptyList())
-
-            columnType.isSubtypeOf(typeOf<Boolean?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Bool(), null), emptyList())
-
-            columnType.isSubtypeOf(typeOf<Byte?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Int(8, true), null), emptyList())
-
-            columnType.isSubtypeOf(typeOf<Short?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Int(16, true), null), emptyList())
-
-            columnType.isSubtypeOf(typeOf<Int?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Int(32, true), null), emptyList())
-
-            columnType.isSubtypeOf(typeOf<Long?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Int(64, true), null), emptyList())
-
-            columnType.isSubtypeOf(typeOf<Float?>()) -> Field(column.name(), FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE), null), emptyList())
-
-            columnType.isSubtypeOf(typeOf<Double?>()) -> Field(column.name(), FieldType(nullable, ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE), null), emptyList())
-
-            columnType.isSubtypeOf(typeOf<LocalDate?>()) || columnType.isSubtypeOf(typeOf<kotlinx.datetime.LocalDate?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Date(DateUnit.DAY), null), emptyList())
-
-            columnType.isSubtypeOf(typeOf<LocalDateTime?>()) || columnType.isSubtypeOf(typeOf<kotlinx.datetime.LocalDateTime?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Date(DateUnit.MILLISECOND), null), emptyList())
-
-            columnType.isSubtypeOf(typeOf<LocalTime?>()) -> Field(column.name(), FieldType(nullable, ArrowType.Time(TimeUnit.NANOSECOND, 64), null), emptyList())
-
-            else -> {
-                warningSubscriber("Column ${column.name()} has type ${column.typeClass.java.canonicalName}, will be saved as String")
-                Field(column.name(), FieldType(true, ArrowType.Utf8(), null), emptyList())
-            }
-        }
-    }
+    val fields = this.map { it.toArrowField(warningSubscriber) }
     return Schema(fields)
 }
 
@@ -292,10 +338,10 @@ public class ArrowWriter(
         return vector
     }
 
-    private fun List<AnyCol>.toVectors(): List<FieldVector> = this.toArrowSchema(warningSubscriber).fields.mapIndexed { i, field ->
-        allocateVectorAndInfill(field, this[i], true, true)
+    private fun List<AnyCol>.toVectors(): List<FieldVector> = this.map {
+        val field = it.toArrowField(warningSubscriber)
+        allocateVectorAndInfill(field, it, true, true)
     }
-
     /**
      * Create Arrow VectorSchemaRoot with [dataFrame] content cast to [targetSchema] according to the [mode].
      */
