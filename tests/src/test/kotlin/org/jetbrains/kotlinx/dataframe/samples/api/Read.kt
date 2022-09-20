@@ -19,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.testJson
 import org.junit.Test
 import kotlin.reflect.typeOf
 
-class Read : TestBase() {
+class Read {
     @Test
     fun readCsvCustom() {
         val file = testCsv("syntheticSample")

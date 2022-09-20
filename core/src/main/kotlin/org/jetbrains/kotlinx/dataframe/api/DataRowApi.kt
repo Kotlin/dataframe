@@ -28,11 +28,6 @@ public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInst
 @DataSchema
 public data class NameValuePair<V>(val name: String, val value: V)
 
-public val <V> ColumnsContainer<NameValuePair<V>>.name: DataColumn<String> @JvmName("NameValuePair_name") get() = this["name"] as DataColumn<String>
-public val <V> DataRow<NameValuePair<V>>.name: String @JvmName("NameValuePair_name") get() = this["name"] as String
-public val <V> ColumnsContainer<NameValuePair<V>>.value: DataColumn<V> @JvmName("NameValuePair_value") get() = this["value"] as DataColumn<V>
-public val <V> DataRow<NameValuePair<V>>.value: V @JvmName("NameValuePair_value") get() = this["value"] as V
-
 // Without these overloads row.transpose().name or row.map { name } won't resolve
 public val ColumnsContainer<NameValuePair<*>>.name: DataColumn<String> @JvmName("NameValuePairAny_name") get() = this["name"] as DataColumn<String>
 public val DataRow<NameValuePair<*>>.name: String @JvmName("NameValuePairAny_name") get() = this["name"] as String

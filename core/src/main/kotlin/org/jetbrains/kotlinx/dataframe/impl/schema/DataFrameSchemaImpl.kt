@@ -35,33 +35,45 @@ internal class DataFrameSchemaImpl(override val columns: Map<String, ColumnSchem
     }
 
     override fun toString(): String {
-        val sb = StringBuilder()
-        val indentSequence = "    "
-        fun print(indent: Int, schema: DataFrameSchema) {
-            schema.columns.forEach { (name, columnSchema) ->
-                sb.append(indentSequence.repeat(indent))
-                sb.append(name + ":")
-                when (columnSchema) {
-                    is ColumnSchema.Group -> {
-                        sb.appendLine()
-                        print(indent + 1, columnSchema.schema)
-                    }
-                    is ColumnSchema.Frame -> {
-                        sb.appendLine(" *")
-                        print(indent + 1, columnSchema.schema)
-                    }
-                    is ColumnSchema.Value -> {
-                        sb.appendLine(" ${renderType(columnSchema.type)}")
-                    }
-                }
-            }
-        }
-        print(0, this)
-
-        return sb.toString()
+        return render()
     }
 
     override fun hashCode(): Int {
         return columns.hashCode()
     }
+}
+
+internal fun DataFrameSchemaImpl.render(): String {
+    val sb = StringBuilder()
+    val indentSequence = "    "
+    columns.render(0, sb, indentSequence)
+    return sb.toString()
+}
+
+internal fun Map<String, ColumnSchema>.render(indent: Int, sb: StringBuilder, indentSequence: String): String {
+    entries.forEachIndexed { i, (name, columnSchema) ->
+        sb.append(indentSequence.repeat(indent))
+        sb.append(name + ":")
+        when (columnSchema) {
+            is ColumnSchema.Group -> {
+                sb.appendLine()
+                columnSchema.schema.columns.render(indent + 1, sb, indentSequence)
+            }
+
+            is ColumnSchema.Frame -> {
+                sb.appendLine(" *")
+                columnSchema.schema.columns.render(indent + 1, sb, indentSequence)
+            }
+
+            is ColumnSchema.Value -> {
+                sb.append(" ${renderType(columnSchema.type)}")
+                if (i != size - 1) {
+                    sb.appendLine()
+                }
+            }
+
+            else -> throw NotImplementedError(columnSchema::class.toString())
+        }
+    }
+    return sb.toString()
 }
