@@ -59,7 +59,7 @@ class RenderingTests {
     @Test
     fun `long text is trimmed without escaping`() {
         val df = dataFrameOf("text")("asdfkjasdlkjfhasljkddasdasdasdasdasdasdhf")
-        val html = df.toHTML(includeInit = false).toString()
+        val html = df.toHTML().toString()
         html shouldNotContain "\\\\"
         html shouldNotContain "&#34;"
     }
@@ -68,7 +68,7 @@ class RenderingTests {
     fun `non ascii text`() {
         val value = "Шёл Шива по шоссе, сокрушая сущее"
         val df = dataFrameOf("text")(value)
-        val script = df.toHTML(includeInit = false).script
+        val script = df.toHTML().script
         script shouldContain value.escapeHTML()
     }
 

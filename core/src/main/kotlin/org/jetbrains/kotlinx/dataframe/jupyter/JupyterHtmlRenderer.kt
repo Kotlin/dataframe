@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
+import org.jetbrains.kotlinx.dataframe.io.initHtml
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 
@@ -18,5 +19,13 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     val contextRenderer = JupyterCellRenderer(this.notebook, host)
     val reifiedDisplayConfiguration = value.modifyConfig(display)
     val footer = getFooter(value)
-    getDf(value).toHTML(reifiedDisplayConfiguration, includeInit = reifiedDisplayConfiguration.isolatedOutputs, contextRenderer, { footer }).toJupyter()
+    getDf(value).toHTML(
+        reifiedDisplayConfiguration,
+        extraHtml = initHtml(
+            includeJs = reifiedDisplayConfiguration.isolatedOutputs,
+            includeCss = true
+        ),
+        contextRenderer
+    ) { footer }
+        .toJupyter()
 }

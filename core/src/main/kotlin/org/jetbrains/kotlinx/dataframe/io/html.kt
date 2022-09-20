@@ -182,14 +182,18 @@ public data class HtmlData(val style: String, val body: String, val script: Stri
 
 internal fun HtmlData.print() = println(this)
 
-internal fun initHtml(): HtmlData =
-    HtmlData(style = getResources("/table.css"), script = getResourceText("/init.js"), body = "")
+internal fun initHtml(includeJs: Boolean = true, includeCss: Boolean = true): HtmlData =
+    HtmlData(
+        style = if (includeCss) getResources("/table.css") else "",
+        script = if (includeJs) getResourceText("/init.js") else "",
+        body = ""
+    )
 
-public fun <T> DataFrame<T>.html(): String = toHTML(includeInit = true).toString()
+public fun <T> DataFrame<T>.html(): String = toHTML(extraHtml = initHtml()).toString()
 
 public fun <T> DataFrame<T>.toHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
-    includeInit: Boolean = false,
+    extraHtml: HtmlData? = null,
     cellRenderer: CellRenderer = org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer,
     getFooter: (DataFrame<T>) -> String = { "DataFrame [${it.size}]" }
 ): HtmlData {
@@ -203,7 +207,7 @@ public fun <T> DataFrame<T>.toHTML(
     val tableHtml = toHtmlData(configuration, cellRenderer)
     val html = tableHtml + HtmlData("", bodyFooter, "")
 
-    return if (includeInit) initHtml() + html else html
+    return if (extraHtml != null) extraHtml + html else html
 }
 
 public data class DisplayConfiguration(
