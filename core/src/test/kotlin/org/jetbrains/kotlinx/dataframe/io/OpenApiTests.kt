@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.io
 
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.print
@@ -27,9 +26,9 @@ class OpenApiTests : JupyterReplTestCase() {
         )
     }
 
-    private fun execGeneratedCode(file: File) = execGeneratedCode(openApi.readCodeForGeneration(file))
-    private fun execGeneratedCode(stream: InputStream) = execGeneratedCode(openApi.readCodeForGeneration(stream))
-    private fun execGeneratedCode(text: String) = execGeneratedCode(openApi.readCodeForGeneration(text))
+    private fun execGeneratedCode(file: File) = execGeneratedCode(code = openApi.readCodeForGeneration(file))
+    private fun execGeneratedCode(stream: InputStream) = execGeneratedCode(code = openApi.readCodeForGeneration(stream))
+    private fun execGeneratedCode(text: String) = execGeneratedCode(code = openApi.readCodeForGeneration(text))
 
     private val petstoreJson = File("../data/petstore.json")
     private val petstoreAdvancedJson = File("../data/petstore_advanced.json")
@@ -58,11 +57,13 @@ class OpenApiTests : JupyterReplTestCase() {
 
     private val somePetsTripleQuotes = "\"\"\"$somePets\"\"\""
 
-    @DataSchema(isOpen = false)
-    interface Pet {
-        val id: Long
-        val name: String
-        val tag: String?
+    object SimpleTestPetstore {
+        @DataSchema(isOpen = false)
+        interface Pet {
+            val id: Long
+            val name: String
+            val tag: String?
+        }
     }
 
     @Test
@@ -72,7 +73,7 @@ class OpenApiTests : JupyterReplTestCase() {
         @Language("kts")
         val res2 = execRaw("Pet.readJsonStr($somePetsTripleQuotes)") as AnyFrame
 
-        val res3 = res2.cast<Pet>(verify = true)
+        val res3 = res2.cast<SimpleTestPetstore.Pet>(verify = true)
         res3.print(borders = true, columnTypes = true, title = true)
     }
 
@@ -83,99 +84,100 @@ class OpenApiTests : JupyterReplTestCase() {
         @Language("kts")
         val res2 = execRaw("Pet.readJsonStr($somePetsTripleQuotes)") as AnyFrame
 
-        val res3 = res2.cast<Pet>(verify = true)
+        val res3 = res2.cast<SimpleTestPetstore.Pet>(verify = true)
         res3.print(borders = true, columnTypes = true, title = true)
     }
 
-    enum class Status {
-        placed,
-        approved,
-        delivered;
-    }
+    object AdvancedTestPetstore {
+        enum class Status {
+            placed,
+            approved,
+            delivered;
+        }
 
-    @DataSchema(isOpen = false)
-    interface Order {
-        val id: kotlin.Long?
-        val petId: kotlin.Long?
-        val quantity: kotlin.Int?
-        val shipDate: kotlinx.datetime.LocalDateTime?
-        val status: Status
-        val complete: kotlin.Boolean?
-    }
+        @DataSchema(isOpen = false)
+        interface Order {
+            val id: kotlin.Long?
+            val petId: kotlin.Long?
+            val quantity: kotlin.Int?
+            val shipDate: kotlinx.datetime.LocalDateTime?
+            val status: Status
+            val complete: kotlin.Boolean?
+        }
 
-    @DataSchema(isOpen = false)
-    interface Address {
-        val street: kotlin.String?
-        val city: kotlin.String?
-        val state: kotlin.String?
-        val zip: kotlin.String?
-    }
+        @DataSchema(isOpen = false)
+        interface Address {
+            val street: kotlin.String?
+            val city: kotlin.String?
+            val state: kotlin.String?
+            val zip: kotlin.String?
+        }
 
-    @DataSchema(isOpen = false)
-    interface Customer {
-        val id: kotlin.Long?
-        val username: kotlin.String?
-        val address: org.jetbrains.kotlinx.dataframe.DataFrame<Address>?
-    }
+        @DataSchema(isOpen = false)
+        interface Customer {
+            val id: kotlin.Long?
+            val username: kotlin.String?
+            val address: org.jetbrains.kotlinx.dataframe.DataFrame<Address>?
+        }
 
-    @DataSchema(isOpen = false)
-    interface Category {
-        val id: kotlin.Long?
-        val name: kotlin.String?
-    }
+        @DataSchema(isOpen = false)
+        interface Category {
+            val id: kotlin.Long?
+            val name: kotlin.String?
+        }
 
-    @DataSchema(isOpen = false)
-    interface User {
-        val id: kotlin.Long?
-        val username: kotlin.String?
-        val firstName: kotlin.String?
-        val lastName: kotlin.String?
-        val email: kotlin.String?
-        val password: kotlin.String?
-        val phone: kotlin.String?
-        val userStatus: kotlin.Int?
-    }
+        @DataSchema(isOpen = false)
+        interface User {
+            val id: kotlin.Long?
+            val username: kotlin.String?
+            val firstName: kotlin.String?
+            val lastName: kotlin.String?
+            val email: kotlin.String?
+            val password: kotlin.String?
+            val phone: kotlin.String?
+            val userStatus: kotlin.Int?
+        }
 
-    @DataSchema(isOpen = false)
-    interface Tag {
-        val id: kotlin.Long?
-        val name: kotlin.String?
-    }
+        @DataSchema(isOpen = false)
+        interface Tag {
+            val id: kotlin.Long?
+            val name: kotlin.String?
+        }
 
-    enum class Status1 {
-        available,
-        pending,
-        sold;
-    }
+        enum class Status1 {
+            available,
+            pending,
+            sold;
+        }
 
-    @DataSchema(isOpen = false)
-    interface Pet2 {
-        val id: kotlin.Long?
-        val name: kotlin.String
-        val category: org.jetbrains.kotlinx.dataframe.DataRow<Category>
-        val photoUrls: kotlin.collections.List<kotlin.String>
-        val tags: org.jetbrains.kotlinx.dataframe.DataFrame<Tag>?
-        val status: Status1
-    }
+        @DataSchema(isOpen = false)
+        interface Pet {
+            val id: kotlin.Long?
+            val name: kotlin.String
+            val category: org.jetbrains.kotlinx.dataframe.DataRow<Category>
+            val photoUrls: kotlin.collections.List<kotlin.String>
+            val tags: org.jetbrains.kotlinx.dataframe.DataFrame<Tag>?
+            val status: Status1
+        }
 
-    @DataSchema(isOpen = false)
-    interface ApiResponse {
-        val code: kotlin.Int?
-        val type: kotlin.String?
-        val message: kotlin.String?
+        @DataSchema(isOpen = false)
+        interface ApiResponse {
+            val code: kotlin.Int?
+            val type: kotlin.String?
+            val message: kotlin.String?
+        }
     }
 
     @Test
     fun `Advanced test Petstore Json`() {
         execGeneratedCode(petstoreAdvancedJson)
-//        execGeneratedCode(URL("https://petstore3.swagger.io/api/v3/openapi.json").openStream())
 
         @Language("kts")
-        val res2 = execRaw("Pet.readJsonStr(\"\"\"$someAdvancedPets)\"\"\"") as AnyFrame
+        val res2 = execRaw("Pet.readJsonStr(\"\"\"$someAdvancedPets\"\"\")") as AnyFrame
 
         res2.print()
 
-//        val res3 = res2.cast<Pet2>(verify = true)
-//        res3.print(borders = true, columnTypes = true, title = true)
+        val res3 = res2.cast<AdvancedTestPetstore.Pet>() // note, verify and convert fails
+        res3.print(borders = true, columnTypes = true, title = true)
     }
 }
