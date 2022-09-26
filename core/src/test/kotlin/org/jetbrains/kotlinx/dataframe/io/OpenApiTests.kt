@@ -1,11 +1,18 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import io.kotest.assertions.throwables.shouldThrowAny
+import io.kotest.matchers.booleans.shouldBeTrue
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
-import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.first
+import org.jetbrains.kotlinx.dataframe.api.last
+import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
 import java.io.File
@@ -30,10 +37,14 @@ class OpenApiTests : JupyterReplTestCase() {
     private fun execGeneratedCode(stream: InputStream) = execGeneratedCode(code = openApi.readCodeForGeneration(stream))
     private fun execGeneratedCode(text: String) = execGeneratedCode(code = openApi.readCodeForGeneration(text))
 
-    private val petstoreJson = File("../data/petstore.json")
-    private val petstoreAdvancedJson = File("../data/petstore_advanced.json")
-    private val petstoreYaml = File("../data/petstore.yaml")
-    private val someAdvancedPets = File("../data/some_advanced_pets.json").readText()
+    // TODO
+    private val advancedExample = File("src/test/resources/openapi_advanced_example.yaml")
+    private val petstoreJson = File("src/test/resources/petstore.json")
+    private val petstoreAdvancedJson = File("src/test/resources/petstore_advanced.json")
+    private val petstoreYaml = File("src/test/resources/petstore.yaml")
+    private val someAdvancedPets = File("src/test/resources/some_advanced_pets.json").readText()
+    private val someAdvancedOrders = File("src/test/resources/some_advanced_orders.json").readText()
+    private val someAdvancedFailingOrders = File("src/test/resources/some_advanced_failing_orders.json").readText()
 
     @Language("json")
     private val somePets = """
@@ -63,6 +74,12 @@ class OpenApiTests : JupyterReplTestCase() {
             val id: Long
             val name: String
             val tag: String?
+
+            object SAMPLE : Pet {
+                override val id = 0L
+                override val name = "doggie"
+                override val tag = "Dogs"
+            }
         }
     }
 
@@ -74,7 +91,10 @@ class OpenApiTests : JupyterReplTestCase() {
         val res2 = execRaw("Pet.readJsonStr($somePetsTripleQuotes)") as AnyFrame
 
         val res3 = res2.cast<SimpleTestPetstore.Pet>(verify = true)
-        res3.print(borders = true, columnTypes = true, title = true)
+        res3.schema().equalsByNames(
+            other = listOf(SimpleTestPetstore.Pet.SAMPLE).toDataFrame().schema(),
+            ignoreNullability = true,
+        ).shouldBeTrue()
     }
 
     @Test
@@ -85,9 +105,13 @@ class OpenApiTests : JupyterReplTestCase() {
         val res2 = execRaw("Pet.readJsonStr($somePetsTripleQuotes)") as AnyFrame
 
         val res3 = res2.cast<SimpleTestPetstore.Pet>(verify = true)
-        res3.print(borders = true, columnTypes = true, title = true)
+        res3.schema().equalsByNames(
+            other = listOf(SimpleTestPetstore.Pet.SAMPLE).toDataFrame().schema(),
+            ignoreNullability = true,
+        ).shouldBeTrue()
     }
 
+    //region Advanced test Petstore
     object AdvancedTestPetstore {
         enum class Status {
             placed,
@@ -103,6 +127,27 @@ class OpenApiTests : JupyterReplTestCase() {
             val shipDate: kotlinx.datetime.LocalDateTime?
             val status: Status
             val complete: kotlin.Boolean?
+
+            companion object {
+                val SAMPLE = listOf(
+                    object : Order {
+                        override val id = null
+                        override val petId = null
+                        override val quantity = null
+                        override val shipDate = null
+                        override val status = Status.placed
+                        override val complete = null
+                    },
+                    object : Order {
+                        override val id = 0L
+                        override val petId = 0L
+                        override val quantity = 0
+                        override val shipDate = kotlinx.datetime.LocalDateTime.parse("2021-01-01T00:00:00")
+                        override val status = Status.approved
+                        override val complete = true
+                    }
+                ).toDataFrame()
+            }
         }
 
         @DataSchema(isOpen = false)
@@ -124,6 +169,19 @@ class OpenApiTests : JupyterReplTestCase() {
         interface Category {
             val id: kotlin.Long?
             val name: kotlin.String?
+
+            companion object {
+                val SAMPLE = listOf(
+                    object : Category {
+                        override val id = 0L
+                        override val name = "Dog"
+                    },
+                    object : Category {
+                        override val id = null
+                        override val name = null
+                    },
+                ).toDataFrame()
+            }
         }
 
         @DataSchema(isOpen = false)
@@ -142,6 +200,19 @@ class OpenApiTests : JupyterReplTestCase() {
         interface Tag {
             val id: kotlin.Long?
             val name: kotlin.String?
+
+            companion object {
+                val SAMPLE = listOf(
+                    object : Tag {
+                        override val id = 0L
+                        override val name = "Tag name"
+                    },
+                    object : Tag {
+                        override val id = null
+                        override val name = null
+                    },
+                ).toDataFrame()
+            }
         }
 
         enum class Status1 {
@@ -158,6 +229,27 @@ class OpenApiTests : JupyterReplTestCase() {
             val photoUrls: kotlin.collections.List<kotlin.String>
             val tags: org.jetbrains.kotlinx.dataframe.DataFrame<Tag>?
             val status: Status1
+
+            companion object {
+                val SAMPLE = listOf(
+                    object : Pet {
+                        override val id = null
+                        override val name = "Toby"
+                        override val category = Category.SAMPLE.first()
+                        override val photoUrls = listOf("sample.com")
+                        override val tags = Tag.SAMPLE
+                        override val status = Status1.available
+                    },
+                    object : Pet {
+                        override val id = 0L
+                        override val name = "Toby"
+                        override val category = Category.SAMPLE.last()
+                        override val photoUrls = listOf("sample.com")
+                        override val tags = Tag.SAMPLE
+                        override val status = Status1.available
+                    },
+                ).toDataFrame()
+            }
         }
 
         @DataSchema(isOpen = false)
@@ -167,6 +259,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val message: kotlin.String?
         }
     }
+    //endregion
 
     @Test
     fun `Advanced test Petstore Json`() {
@@ -174,10 +267,149 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kts")
         val res2 = execRaw("Pet.readJsonStr(\"\"\"$someAdvancedPets\"\"\")") as AnyFrame
+        val res2Schema = res2.schema()
+        val verifySchema2 = AdvancedTestPetstore.Pet.SAMPLE.schema()
+        res2Schema.equalsByNames(
+            other = verifySchema2,
+            ignoreNullability = false,
+        ).shouldBeTrue()
 
-        res2.print()
+        @Language("kts")
+        val res3 = execRaw("Order.readJsonStr(\"\"\"$someAdvancedOrders\"\"\")") as AnyFrame
+        val res3Schema = res3.schema()
+        val verifySchema3 = AdvancedTestPetstore.Order.SAMPLE.schema()
+        res3Schema.equalsByNames(
+            other = verifySchema3,
+            ignoreNullability = false,
+        )
 
-        val res3 = res2.cast<AdvancedTestPetstore.Pet>() // note, verify and convert fails
-        res3.print(borders = true, columnTypes = true, title = true)
+        shouldThrowAny {
+            @Language("kts")
+            val res4 = execRaw("Order.readJsonStr(\"\"\"$someAdvancedFailingOrders\"\"\")") as AnyFrame
+            res4
+        }
     }
+
+    object OtherAdvancedTest {
+        @DataSchema(isOpen = false)
+        interface Pet {
+            val id: kotlin.Any
+            val name: kotlin.String
+            val tag: kotlin.String?
+            val other: kotlin.Any?
+
+            companion object {
+                val SAMPLE = listOf(
+                    object : Pet {
+                        override val id = 0L
+                        override val name = "Toby"
+                        override val tag = "Tag"
+                        override val other = null
+                    },
+                    object : Pet {
+                        override val id = "0"
+                        override val name = "Toby"
+                        override val tag = null
+                        override val other = listOf<Any>()
+                    },
+                    object : Pet {
+                        override val id = "2325"
+                        override val name = "dsdgsd"
+                        override val tag = null
+                        override val other = 234
+                    },
+                ).toDataFrame()
+            }
+        }
+
+        enum class Breed {
+            Dingo,
+            Husky,
+            Retriever,
+            Shepherd;
+        }
+
+        @DataSchema(isOpen = false)
+        interface Dog : Pet {
+            override val tag: kotlin.String
+            val bark: kotlin.Boolean?
+            val breed: Breed
+        }
+
+        enum class Breed1 {
+            Ragdoll,
+            Shorthair,
+            Persian,
+            `Maine Coon`;
+        }
+
+        @DataSchema(isOpen = false)
+        interface Cat : Pet {
+            val hunts: kotlin.Boolean?
+            val age: kotlin.Any?
+            val breed: Breed1
+        }
+
+        @DataSchema(isOpen = false)
+        interface Error {
+            val code: kotlin.Int
+            val message: kotlin.String
+        }
+    }
+
+    @Test
+    fun `Other advanced test`() {
+        execGeneratedCode(advancedExample)
+
+        // TODO
+    }
+}
+
+private typealias Pets = OpenApiTests.OtherAdvancedTest.Pet
+
+// checks equality of dataframe schemas only by name and Type-name, not exact types
+internal fun DataFrameSchema.equalsByNames(
+    other: DataFrameSchema,
+    ignoreNullability: Boolean,
+): Boolean {
+    val res = columns.entries.size == other.columns.entries.size &&
+        columns.entries.all { (name, columnSchema) ->
+            val otherSchema = other.columns[name]
+                ?: return@all run {
+                    println("Column $name is not found in other schema")
+                    false
+                }
+            if (columnSchema.kind != otherSchema.kind) return@all run {
+                println("Column $name has different kinds: ${columnSchema.kind} and ${otherSchema.kind}")
+                false
+            }
+
+            when (columnSchema) {
+                is ColumnSchema.Group ->
+                    columnSchema.schema.equalsByNames((otherSchema as ColumnSchema.Group).schema, ignoreNullability)
+
+                is ColumnSchema.Frame ->
+                    columnSchema.schema.equalsByNames((otherSchema as ColumnSchema.Frame).schema, ignoreNullability)
+
+                is ColumnSchema.Value -> {
+                    val type = columnSchema.type.toString().substringAfterLast(".")
+                        .let { if (ignoreNullability) it.removeSuffix("?") else it }
+
+                    val otherType = otherSchema.type.toString().substringAfterLast(".")
+                        .let { if (ignoreNullability) it.removeSuffix("?") else it }
+
+                    if (type != otherType) println("Column $name has different types: $type and $otherType")
+
+                    type == otherType
+                }
+
+                else -> throw NotImplementedError(columnSchema::class.toString())
+            }
+        }
+
+    if (!res) {
+        println("Difference in schemas: \n$this\n\nand\n\n$other")
+    }
+
+    return res
 }

@@ -1,0 +1,168 @@
+openapi: "3.0.0"
+info:
+  version: 1.0.0
+  title: Swagger Petstore
+  license:
+    name: MIT
+servers:
+  - url: http://petstore.swagger.io/v1
+paths:
+  /pets:
+    get:
+      summary: List all pets
+      operationId: listPets
+      tags:
+        - pets
+      parameters:
+        - name: limit
+          in: query
+          description: How many items to return at one time (max 100)
+          required: false
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: A paged array of pets
+          headers:
+            x-next:
+              description: A link to the next page of responses
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pets"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      summary: Create a pet
+      operationId: createPets
+      tags:
+        - pets
+      responses:
+        '201':
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /pets/{petId}:
+    get:
+      summary: Info for a specific pet
+      operationId: showPetById
+      tags:
+        - pets
+      parameters:
+        - name: petId
+          in: path
+          required: true
+          description: The id of the pet to retrieve
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Pet"
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+
+    Dog:
+      required:
+        - bark
+        - breed # required non-nullable enum -> breed: Breed
+        - tag
+      allOf:
+        - $ref: '#/components/schemas/Pet'
+        - type: object
+          # all other properties specific to a `Dog`
+          properties:
+            bark:
+              type: boolean
+            breed:
+              type: string
+              enum: [ Dingo, Husky, Retriever, Shepherd ]
+
+    Cat:
+      required:
+        - breed # required but nullable enum -> breed: Breed?
+        - eye_color # required but nullable enum
+      allOf:
+        - $ref: '#/components/schemas/Pet'
+        - type: object
+          # all other properties specific to a `Cat`
+          properties:
+            hunts:
+              type: boolean
+            age:
+              oneOf:
+                - type: integer
+                - type: number
+            breed:
+              type: string
+              enum: [ Ragdoll, Shorthair, Persian, Maine Coon, null ]
+
+    EyeColor: # nullable enum in reference
+      type: string
+      enum:
+        - Blue
+        - Yellow
+        - Brown
+        - Green
+        - null
+    Pet:
+      type: object
+      required:
+        - id
+        - name
+        - eye_color # required but nullable enum -> EyeColor?
+      properties:
+        id:
+          anyOf:
+            - type: integer
+              format: int64
+            - type: string
+        name:
+          type: string
+        tag:
+          type: string
+        other:
+          not:
+            type: integer
+        eye_color:
+          $ref: '#/components/schemas/EyeColor'
+
+    Pets:
+      type: array
+      items:
+        $ref: "#/components/schemas/Pet"
+    AlsoCat:
+      $ref: "#/components/schemas/Cat"
+    Integer:
+      type: integer
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string

@@ -1,9 +1,9 @@
 [
   {
-    "id": 9,
+    "id": null,
     "category": {
       "id": 4,
-      "name": "Lions"
+      "name": null
     },
     "name": "Lion 3",
     "photoUrls": [
@@ -13,7 +13,7 @@
     ],
     "tags": [
       {
-        "id": 1,
+        "id": null,
         "name": "tag3"
       },
       {
@@ -34,12 +34,7 @@
       "string",
       "/tmp/inflector3909317328902319782.tmp"
     ],
-    "tags": [
-      {
-        "id": 0,
-        "name": "string"
-      }
-    ],
+    "tags": null,
     "status": "available"
   },
   {
