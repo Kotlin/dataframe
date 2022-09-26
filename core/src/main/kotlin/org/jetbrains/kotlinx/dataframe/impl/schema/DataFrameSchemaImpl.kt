@@ -58,11 +58,13 @@ internal fun Map<String, ColumnSchema>.render(indent: Int, sb: StringBuilder, in
             is ColumnSchema.Group -> {
                 sb.appendLine()
                 columnSchema.schema.columns.render(indent + 1, sb, indentSequence)
+                sb.appendLine()
             }
 
             is ColumnSchema.Frame -> {
                 sb.appendLine(" *")
                 columnSchema.schema.columns.render(indent + 1, sb, indentSequence)
+                sb.appendLine()
             }
 
             is ColumnSchema.Value -> {
