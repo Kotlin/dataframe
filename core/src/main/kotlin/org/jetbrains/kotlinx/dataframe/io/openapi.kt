@@ -14,6 +14,7 @@ import io.swagger.v3.parser.core.models.ParseOptions
 import io.swagger.v3.parser.core.models.SwaggerParseResult
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
+import org.intellij.lang.annotations.Language
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -73,37 +74,53 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
         "import org.jetbrains.kotlinx.dataframe.io.readJson",
         "import org.jetbrains.kotlinx.dataframe.io.readJsonStr",
         "import org.jetbrains.kotlinx.dataframe.api.convertTo",
+        "import org.jetbrains.kotlinx.dataframe.api.convert",
+        "import org.jetbrains.kotlinx.dataframe.api.with",
+        "import org.jetbrains.kotlinx.dataframe.io.getVisibleValues",
+        "import org.jetbrains.kotlinx.dataframe.io.valueColumnName",
+        "import org.jetbrains.kotlinx.dataframe.io.arrayColumnName",
     )
 
     override fun toDeclaration(markerName: String, visibility: String): String {
         val returnType = DataFrame::class.asClassName().parameterizedBy(ClassName("", listOf(markerName)))
+
+        @Language("kt")
+        fun getConvertMethod(readMethod: String): String =
+            """|return DataFrame.$readMethod.convertTo<$markerName> {
+               |    convert<DataRow<*>>().with<DataRow<*>, Any?> {
+               |        if (it.getVisibleValues().isEmpty()) null
+               |        else it[valueColumnName] ?: it[arrayColumnName]
+               |    }
+               |}
+            """.trimMargin()
+
         val typeSpec = TypeSpec.companionObjectBuilder()
             .addFunction(
                 FunSpec.builder("readJson")
                     .returns(returnType)
                     .addParameter("url", URL::class)
-                    .addCode("""return DataFrame.readJson(url).convertTo<$markerName>()""")
+                    .addCode(getConvertMethod("readJson(url)"))
                     .build()
             )
             .addFunction(
                 FunSpec.builder("readJson")
                     .returns(returnType)
                     .addParameter("path", String::class)
-                    .addCode("""return DataFrame.readJson(path).convertTo<$markerName>()""")
+                    .addCode(getConvertMethod("readJson(path)"))
                     .build()
             )
             .addFunction(
                 FunSpec.builder("readJson")
                     .returns(returnType)
                     .addParameter("stream", InputStream::class)
-                    .addCode("""return DataFrame.readJson(stream).convertTo<$markerName>()""")
+                    .addCode(getConvertMethod("readJson(stream)"))
                     .build()
             )
             .addFunction(
                 FunSpec.builder("readJsonStr")
                     .returns(returnType)
                     .addParameter("text", String::class)
-                    .addCode("""return DataFrame.readJsonStr(text).convertTo<$markerName>()""")
+                    .addCode(getConvertMethod("readJsonStr(text)"))
                     .build()
             )
             .build()
@@ -920,7 +937,7 @@ private fun Schema<*>.toOpenApiType(
 
     var openApiType = OpenApiType.fromStringOrNull(type)
 
-    if (openApiType == null) { // check for anyOf/oneOf/not, https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/
+    if (openApiType == null || openApiType is OpenApiType.Any) { // check for anyOf/oneOf/not, https://swagger.io/docs/specification/data-models/oneof-anyof-allof-not/
         val anyOf = ((anyOf ?: emptyList()) + (oneOf ?: emptyList()))
         val anyOfRefs = anyOf.mapNotNull { it.`$ref` }
         val anyOfTypes = anyOf.mapNotNull { it.type }

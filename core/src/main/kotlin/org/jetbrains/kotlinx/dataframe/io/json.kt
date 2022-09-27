@@ -85,9 +85,9 @@ private fun DataFrame<Any?>.unwrapUnnamedColumns() =
 
 private fun AnyCol.unwrapUnnamedColumn() = if (this is UnnamedColumn) col else this
 
-private val arrayColumnName = "array"
+public const val arrayColumnName: String = "array"
 
-internal val valueColumnName = "value"
+public const val valueColumnName: String = "value"
 
 internal fun fromJsonList(records: List<*>, header: List<String> = emptyList()): AnyFrame {
     fun AnyFrame.isSingleUnnamedColumn() = ncol == 1 && getColumn(0) is UnnamedColumn

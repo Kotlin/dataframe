@@ -4,6 +4,7 @@ import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.matchers.booleans.shouldBeTrue
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.first
@@ -45,6 +46,7 @@ class OpenApiTests : JupyterReplTestCase() {
     private val someAdvancedPets = File("src/test/resources/some_advanced_pets.json").readText()
     private val someAdvancedOrders = File("src/test/resources/some_advanced_orders.json").readText()
     private val someAdvancedFailingOrders = File("src/test/resources/some_advanced_failing_orders.json").readText()
+    private val advancedData = File("src/test/resources/openapi_advanced_data.json").readText()
 
     @Language("json")
     private val somePets = """
@@ -291,34 +293,31 @@ class OpenApiTests : JupyterReplTestCase() {
     }
 
     object OtherAdvancedTest {
+
+        enum class EyeColor {
+            Blue,
+            Yellow,
+            Brown,
+            Green;
+        }
+
         @DataSchema(isOpen = false)
         interface Pet {
+            @ColumnName("pet_type")
+            val petType: kotlin.String
             val id: kotlin.Any
             val name: kotlin.String
             val tag: kotlin.String?
             val other: kotlin.Any?
 
+            @ColumnName("eye_color")
+            val eyeColor: EyeColor?
+
             companion object {
                 val SAMPLE = listOf(
-                    object : Pet {
-                        override val id = 0L
-                        override val name = "Toby"
-                        override val tag = "Tag"
-                        override val other = null
-                    },
-                    object : Pet {
-                        override val id = "0"
-                        override val name = "Toby"
-                        override val tag = null
-                        override val other = listOf<Any>()
-                    },
-                    object : Pet {
-                        override val id = "2325"
-                        override val name = "dsdgsd"
-                        override val tag = null
-                        override val other = 234
-                    },
-                ).toDataFrame()
+                    Dog.SAMPLE,
+                    Cat.SAMPLE,
+                ).flatten()
             }
         }
 
@@ -334,6 +333,41 @@ class OpenApiTests : JupyterReplTestCase() {
             override val tag: kotlin.String
             val bark: kotlin.Boolean?
             val breed: Breed
+
+            companion object {
+                val SAMPLE = listOf(
+                    object : Dog {
+                        override val id = 0L
+                        override val name = "Toby"
+                        override val other = null
+                        override val eyeColor = EyeColor.Blue
+                        override val tag = "Tag"
+                        override val bark = true
+                        override val breed = Breed.Dingo
+                        override val petType = "Dog"
+                    },
+                    object : Dog {
+                        override val tag = "Tag"
+                        override val bark = null
+                        override val breed = Breed.Dingo
+                        override val id = "0"
+                        override val name = "Toby"
+                        override val other = listOf<Any>()
+                        override val eyeColor = null
+                        override val petType = "Dog"
+                    },
+                    object : Dog {
+                        override val id = "2325"
+                        override val name = "dsdgsd"
+                        override val other = 234
+                        override val eyeColor = null
+                        override val tag = "Tag"
+                        override val bark = false
+                        override val breed = Breed.Dingo
+                        override val petType = "Dog"
+                    },
+                )
+            }
         }
 
         enum class Breed1 {
@@ -346,8 +380,46 @@ class OpenApiTests : JupyterReplTestCase() {
         @DataSchema(isOpen = false)
         interface Cat : Pet {
             val hunts: kotlin.Boolean?
-            val age: kotlin.Any?
-            val breed: Breed1
+            val age: kotlin.Float?
+            val breed: Breed1?
+
+            companion object {
+                val SAMPLE = listOf(
+                    object : Cat {
+                        override val id = 0L
+                        override val name = "Toby"
+                        override val tag = "Tag"
+                        override val other = null
+                        override val eyeColor = EyeColor.Blue
+                        override val hunts = true
+                        override val age = 1f
+                        override val breed = null
+                        override val petType = "Cat"
+                    },
+                    object : Cat {
+                        override val petType = "Cat"
+                        override val id = "0"
+                        override val name = "Toby"
+                        override val tag = null
+                        override val other = listOf<Any>()
+                        override val eyeColor = null
+                        override val hunts = null
+                        override val age = null
+                        override val breed = Breed1.Ragdoll
+                    },
+                    object : Cat {
+                        override val petType = "Cat"
+                        override val hunts = null
+                        override val age = 123.534645f
+                        override val breed = Breed1.Ragdoll
+                        override val id = "2325"
+                        override val name = "dsdgsd"
+                        override val tag = null
+                        override val other = 234
+                        override val eyeColor = null
+                    },
+                )
+            }
         }
 
         @DataSchema(isOpen = false)
@@ -361,11 +433,35 @@ class OpenApiTests : JupyterReplTestCase() {
     fun `Other advanced test`() {
         execGeneratedCode(advancedExample)
 
-        // TODO
+        @Language("kts")
+        val res1 = execRaw(
+            "Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Cat\" }.convertTo<Cat>(ExcessiveColumns.Remove)"
+        ) as AnyFrame
+        val res1Schema = res1.schema()
+        val verifySchema1 = OtherAdvancedTest.Cat.SAMPLE.toDataFrame().schema()
+
+        res1Schema.equalsByNames(
+            other = verifySchema1,
+            ignoreNullability = false,
+        ).shouldBeTrue()
+
+        @Language("kts")
+        val res2 = execRaw(
+            "Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Dog\" }.convertTo<Dog>(ExcessiveColumns.Remove)"
+        ) as AnyFrame
+        val res2Schema = res2.schema()
+        val verifySchema2 = OtherAdvancedTest.Dog.SAMPLE.toDataFrame().schema()
+
+        res2Schema.equalsByNames(
+            other = verifySchema2,
+            ignoreNullability = false,
+        ).shouldBeTrue()
     }
 }
 
-private typealias Pets = OpenApiTests.OtherAdvancedTest.Pet
+private typealias Pets = List<OpenApiTests.OtherAdvancedTest.Pet>
+private typealias AlsoCat = OpenApiTests.OtherAdvancedTest.Cat
+private typealias Integer = kotlin.Int
 
 // checks equality of dataframe schemas only by name and Type-name, not exact types
 internal fun DataFrameSchema.equalsByNames(

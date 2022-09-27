@@ -84,7 +84,6 @@ components:
 
     Dog:
       required:
-        - bark
         - breed # required non-nullable enum -> breed: Breed
         - tag
       allOf:
@@ -102,12 +101,14 @@ components:
       required:
         - breed # required but nullable enum -> breed: Breed?
         - eye_color # required but nullable enum
+        - hunts # required but nullable boolean
       allOf:
         - $ref: '#/components/schemas/Pet'
         - type: object
           # all other properties specific to a `Cat`
           properties:
             hunts:
+              nullable: true
               type: boolean
             age:
               oneOf:
@@ -125,13 +126,19 @@ components:
         - Brown
         - Green
         - null
+
     Pet:
       type: object
       required:
         - id
         - name
         - eye_color # required but nullable enum -> EyeColor?
+        - pet_type
+      discriminator:
+        propertyName: pet_type
       properties:
+        pet_type:
+          type: string
         id:
           anyOf:
             - type: integer
@@ -151,10 +158,13 @@ components:
       type: array
       items:
         $ref: "#/components/schemas/Pet"
+
     AlsoCat:
       $ref: "#/components/schemas/Cat"
+
     Integer:
       type: integer
+
     Error:
       type: object
       required:

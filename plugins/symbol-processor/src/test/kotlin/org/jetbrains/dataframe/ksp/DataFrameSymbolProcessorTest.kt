@@ -1043,7 +1043,7 @@ class DataFrameSymbolProcessorTest {
         }
     }
 
-    private val petstoreYaml = File("../../data/petstore.yaml")
+    private val petstoreYaml = File("../../core/src/test/resources/petstore.yaml")
     private val petstoreYamlUrl = "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml"
 
     @Test
@@ -1167,7 +1167,7 @@ class DataFrameSymbolProcessorTest {
         }
     }
 
-    private val petstoreJson = File("../../data/petstore.json")
+    private val petstoreJson = File("../../core/src/test/resources/petstore.json")
 
     @Test
     fun `openApi json test`(): Unit = useHostedFile(petstoreJson) {
