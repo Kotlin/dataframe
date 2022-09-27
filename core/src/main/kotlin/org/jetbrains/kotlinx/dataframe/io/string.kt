@@ -110,7 +110,7 @@ internal fun AnyFrame.renderToString(
 internal val valueToStringLimitDefault = 1000
 internal val valueToStringLimitForRowAsTable = 50
 
-internal fun AnyRow.getVisibleValues(): List<Pair<String, Any?>> {
+public fun AnyRow.getVisibleValues(): List<Pair<String, Any?>> {
     fun Any?.skip(): Boolean = when (this) {
         null -> true
         is List<*> -> this.isEmpty()
