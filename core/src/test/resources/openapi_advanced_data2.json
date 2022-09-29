@@ -1,0 +1,91 @@
+[
+  {
+    "pets": [
+      {
+        "pet_type": "Dog",
+        "id": 1,
+        "name": "Buddy",
+        "tag": "Golden Retriever",
+        "eye_color": "Brown",
+        "breed": "Dingo"
+      },
+      {
+        "pet_type": "Dog",
+        "id": "2",
+        "name": "Buddy",
+        "tag": "Golden Retriever",
+        "other": "something",
+        "bark": true,
+        "eye_color": null,
+        "breed": "Husky"
+      },
+      {
+        "pet_type": "Cat",
+        "id": 3,
+        "name": "Buddy",
+        "hunts": null,
+        "eye_color": "Blue",
+        "breed": "Ragdoll",
+        "age": 1.5
+      },
+      {
+        "pet_type": "Cat",
+        "id": 4,
+        "name": "Buddy",
+        "hunts": true,
+        "tag": "something",
+        "other": [1, 12],
+        "eye_color": null,
+        "breed": null
+      }
+    ],
+    "code": 123,
+    "message": "Some error"
+  },
+  {
+    "pets": [
+      {
+        "pet_type": "Dog",
+        "id": 1,
+        "name": "Buddy",
+        "tag": "Golden Retriever",
+        "eye_color": "Brown",
+        "breed": "Dingo"
+      },
+      {
+        "pet_type": "Dog",
+        "id": "2",
+        "name": "Buddy",
+        "tag": "Golden Retriever",
+        "other": "something",
+        "bark": true,
+        "eye_color": null,
+        "breed": "Husky"
+      },
+      {
+        "pet_type": "Cat",
+        "id": 3,
+        "name": "Buddy",
+        "hunts": null,
+        "eye_color": "Blue",
+        "breed": "Ragdoll",
+        "age": 1.5
+      },
+      {
+        "pet_type": "Cat",
+        "id": 4,
+        "name": "Buddy",
+        "hunts": true,
+        "tag": "something",
+        "other": [1, 12],
+        "eye_color": null,
+        "breed": null
+      }
+    ],
+    "code": 124,
+    "message": "Some error too"
+  }
+]
+
+
+
