@@ -155,9 +155,9 @@ components:
           $ref: '#/components/schemas/EyeColor'
 
     Pets:
-      type: array
-      items:
-        $ref: "#/components/schemas/Pet"
+      oneOf:
+        - $ref: "#/components/schemas/Cat"
+        - $ref: "#/components/schemas/Dog"
 
     AlsoCat:
       $ref: "#/components/schemas/Cat"
@@ -171,6 +171,15 @@ components:
         - code
         - message
       properties:
+        pets:
+          type: array
+          items:
+            oneOf:
+              - $ref: "#/components/schemas/Cat"
+              - type: object
+                properties:
+                  id:
+                    type: integer
         code:
           type: integer
           format: int32
