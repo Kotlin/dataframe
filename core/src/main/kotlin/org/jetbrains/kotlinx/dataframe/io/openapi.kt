@@ -18,6 +18,7 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
@@ -27,7 +28,6 @@ import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 import org.jetbrains.kotlinx.dataframe.codeGen.plus
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.io.File
 import java.io.InputStream
@@ -1111,19 +1111,23 @@ private fun OpenApiType.toFieldType(
                                 is FieldTypeResult.Success -> {
                                     val it = arrayTypeSchemaResult.fieldType
                                     when {
-                                        it is FieldType.GroupFieldType && it.name == typeOf<ColumnGroup<Any>>().toString() ->
+                                        it is FieldType.GroupFieldType && it.name == typeOf<DataRow<Any>>().toString() ->
                                             getTypeAsFrame(
-                                                nullable = nullable,
+                                                nullable = false, // GroupFieldType (DataFrame<*>) cannot be null
                                                 markerName = typeOf<Any>().toString(),
                                             )
 
-                                        it is FieldType.GroupFieldType || it is FieldType.FrameFieldType ->
+                                        it is FieldType.GroupFieldType ->
+                                            getTypeAsFrame(
+                                                nullable = false, // GroupFieldType (DataFrame<*>) cannot be null
+                                                markerName = it.name,
+                                            )
+
+                                        it is FieldType.FrameFieldType ->
                                             getTypeAsFrame(
                                                 nullable = nullable,
                                                 markerName = it.name,
                                             )
-
-//                                        is FieldType.FrameFieldType -> TODO("not sure if this should become ValueFieldType or FrameFieldType")
 
                                         it is FieldType.ValueFieldType ->
                                             getTypeAsList(
@@ -1167,7 +1171,7 @@ private fun OpenApiType.toFieldType(
 
             is OpenApiType.Object ->
                 if (schema.type != "object") { // aka, is result of oneOf/anyOf
-                    getType(typeOf<ColumnGroup<Any>>())
+                    getType(typeOf<DataRow<Any>>())
                 } else {
                     val dataFrameSchemaResult = schema.toMarker(
                         typeName = schemaName.snakeToUpperCamelCase(),

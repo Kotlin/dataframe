@@ -154,7 +154,7 @@ components:
         eye_color:
           $ref: '#/components/schemas/EyeColor'
 
-    Pets:
+    PetRef:
       oneOf:
         - $ref: "#/components/schemas/Cat"
         - $ref: "#/components/schemas/Dog"
@@ -165,17 +165,33 @@ components:
     Integer:
       type: integer
 
+    IntList:
+      type: object
+      required:
+        - list
+      properties:
+        list:
+          type: array
+          items:
+            type: integer
+
     Error:
       type: object
       required:
         - code
         - message
+        - petRef
       properties:
+        ints:
+          $ref: "#/components/schemas/IntList"
+        petRef:
+          $ref: "#/components/schemas/PetRef"
         pets:
           type: array
           items:
             oneOf:
               - $ref: "#/components/schemas/Cat"
+              - $ref: "#/components/schemas/Dog"
               - type: object
                 properties:
                   id:
