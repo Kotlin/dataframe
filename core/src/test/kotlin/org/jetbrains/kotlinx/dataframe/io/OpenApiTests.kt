@@ -1,9 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.throwables.shouldThrowAny
+import io.kotest.matchers.booleans.shouldBeFalse
 import io.kotest.matchers.booleans.shouldBeTrue
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.cast
@@ -47,6 +49,7 @@ class OpenApiTests : JupyterReplTestCase() {
     private val someAdvancedOrders = File("src/test/resources/some_advanced_orders.json").readText()
     private val someAdvancedFailingOrders = File("src/test/resources/some_advanced_failing_orders.json").readText()
     private val advancedData = File("src/test/resources/openapi_advanced_data.json").readText()
+    private val advancedDataError = File("src/test/resources/openapi_advanced_data2.json").readText()
 
     @Language("json")
     private val somePets = """
@@ -96,6 +99,7 @@ class OpenApiTests : JupyterReplTestCase() {
         res3.schema().equalsByNames(
             other = listOf(SimpleTestPetstore.Pet.SAMPLE).toDataFrame().schema(),
             ignoreNullability = true,
+            ignoreAnyDataframe = false,
         ).shouldBeTrue()
     }
 
@@ -110,6 +114,7 @@ class OpenApiTests : JupyterReplTestCase() {
         res3.schema().equalsByNames(
             other = listOf(SimpleTestPetstore.Pet.SAMPLE).toDataFrame().schema(),
             ignoreNullability = true,
+            ignoreAnyDataframe = false,
         ).shouldBeTrue()
     }
 
@@ -274,6 +279,7 @@ class OpenApiTests : JupyterReplTestCase() {
         res2Schema.equalsByNames(
             other = verifySchema2,
             ignoreNullability = false,
+            ignoreAnyDataframe = false,
         ).shouldBeTrue()
 
         @Language("kts")
@@ -283,6 +289,7 @@ class OpenApiTests : JupyterReplTestCase() {
         res3Schema.equalsByNames(
             other = verifySchema3,
             ignoreNullability = false,
+            ignoreAnyDataframe = false,
         )
 
         shouldThrowAny {
@@ -424,8 +431,27 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @DataSchema(isOpen = false)
         interface Error {
+            val petRef: PetRef
+            val pets: org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any>
             val code: kotlin.Int
             val message: kotlin.String
+
+            companion object {
+                val SAMPLE = listOf(
+                    object : Error {
+                        override val petRef: PetRef = Cat.SAMPLE.toDataFrame().first()
+                        override val pets = DataFrame.emptyOf<Any>()
+                        override val code = 0
+                        override val message = "Error"
+                    },
+                    object : Error {
+                        override val petRef: PetRef = Dog.SAMPLE.toDataFrame().first()
+                        override val pets = Pet.SAMPLE.toDataFrame()
+                        override val code = 0
+                        override val message = "Error"
+                    },
+                ).toDataFrame()
+            }
         }
     }
 
@@ -443,6 +469,7 @@ class OpenApiTests : JupyterReplTestCase() {
         res1Schema.equalsByNames(
             other = verifySchema1,
             ignoreNullability = false,
+            ignoreAnyDataframe = false,
         ).shouldBeTrue()
 
         @Language("kts")
@@ -455,11 +482,31 @@ class OpenApiTests : JupyterReplTestCase() {
         res2Schema.equalsByNames(
             other = verifySchema2,
             ignoreNullability = false,
+            ignoreAnyDataframe = false,
+        ).shouldBeTrue()
+
+        @Language("kts")
+        val res3 = execRaw(
+            "Error.readJsonStr(\"\"\"$advancedDataError\"\"\")"
+        ) as AnyFrame
+        val res3Schema = res3.schema()
+        val verifySchema3 = OtherAdvancedTest.Error.SAMPLE.schema()
+
+        res3Schema.equalsByNames(
+            other = verifySchema3,
+            ignoreNullability = false,
+            ignoreAnyDataframe = false,
+        ).shouldBeFalse()
+
+        res3Schema.equalsByNames( // fails for enums...
+            other = verifySchema3,
+            ignoreNullability = true, // things are merged, so nullability will be increased
+            ignoreAnyDataframe = true, // no support for merging of types
         ).shouldBeTrue()
     }
 }
 
-private typealias Pets = List<OpenApiTests.OtherAdvancedTest.Pet>
+typealias PetRef = org.jetbrains.kotlinx.dataframe.DataRow<kotlin.Any>
 private typealias AlsoCat = OpenApiTests.OtherAdvancedTest.Cat
 private typealias Integer = kotlin.Int
 
@@ -467,41 +514,63 @@ private typealias Integer = kotlin.Int
 internal fun DataFrameSchema.equalsByNames(
     other: DataFrameSchema,
     ignoreNullability: Boolean,
+    ignoreAnyDataframe: Boolean,
 ): Boolean {
-    val res = columns.entries.size == other.columns.entries.size &&
-        columns.entries.all { (name, columnSchema) ->
-            val otherSchema = other.columns[name]
-                ?: return@all run {
-                    println("Column $name is not found in other schema")
-                    false
-                }
-            if (columnSchema.kind != otherSchema.kind) return@all run {
-                println("Column $name has different kinds: ${columnSchema.kind} and ${otherSchema.kind}")
+    val entriesSize = columns.entries.size
+    val otherEntriesSize = other.columns.entries.size
+    val sameEntriesSize = entriesSize == otherEntriesSize
+    val onlyOneSchemaIsEmpty = entriesSize == 0 && otherEntriesSize != 0 || entriesSize != 0 && otherEntriesSize == 0
+
+    val res = (
+        sameEntriesSize ||
+            ignoreAnyDataframe && (onlyOneSchemaIsEmpty || entriesSize > otherEntriesSize)
+        ) && columns.entries.all { (name, columnSchema) ->
+        val otherSchema = other.columns[name]
+            ?: return@all run {
+                println("Column $name is not found in other schema")
                 false
             }
+        if (columnSchema.kind != otherSchema.kind) return@all run {
+            println("Column $name has different kinds: ${columnSchema.kind} and ${otherSchema.kind}")
+            false
+        }
 
-            when (columnSchema) {
-                is ColumnSchema.Group ->
-                    columnSchema.schema.equalsByNames((otherSchema as ColumnSchema.Group).schema, ignoreNullability)
+        when (columnSchema) {
+            is ColumnSchema.Group ->
+                columnSchema.schema.equalsByNames(
+                    other = (otherSchema as ColumnSchema.Group).schema,
+                    ignoreNullability = ignoreNullability,
+                    ignoreAnyDataframe = ignoreAnyDataframe,
+                )
 
-                is ColumnSchema.Frame ->
-                    columnSchema.schema.equalsByNames((otherSchema as ColumnSchema.Frame).schema, ignoreNullability)
+            is ColumnSchema.Frame ->
+                columnSchema.schema.equalsByNames(
+                    other = (otherSchema as ColumnSchema.Frame).schema,
+                    ignoreNullability = ignoreNullability,
+                    ignoreAnyDataframe = ignoreAnyDataframe,
+                )
 
-                is ColumnSchema.Value -> {
-                    val type = columnSchema.type.toString().substringAfterLast(".")
-                        .let { if (ignoreNullability) it.removeSuffix("?") else it }
+            is ColumnSchema.Value -> {
+                val type = columnSchema.type.toString().substringAfterLast(".")
+                    .let { if (ignoreNullability) it.removeSuffix("?") else it }
 
-                    val otherType = otherSchema.type.toString().substringAfterLast(".")
-                        .let { if (ignoreNullability) it.removeSuffix("?") else it }
+                val otherType = otherSchema.type.toString().substringAfterLast(".")
+                    .let { if (ignoreNullability) it.removeSuffix("?") else it }
 
-                    if (type != otherType) println("Column $name has different types: $type and $otherType")
+                val hasAny = type == "Any" || otherType == "Any" || type == "Any?" || otherType == "Any?"
 
-                    type == otherType
+                val isSame = type == otherType || ignoreAnyDataframe && hasAny
+
+                if (!isSame) {
+                    println("Column $name has different types: $type and $otherType")
                 }
 
-                else -> throw NotImplementedError(columnSchema::class.toString())
+                isSame
             }
+
+            else -> throw NotImplementedError(columnSchema::class.toString())
         }
+    }
 
     if (!res) {
         println("Difference in schemas: \n$this\n\nand\n\n$other")
