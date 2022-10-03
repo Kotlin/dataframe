@@ -17,7 +17,7 @@ import java.net.URL
 import java.util.ServiceLoader
 import kotlin.reflect.KType
 
-public interface SupportedFormat {
+public sealed interface SupportedFormat {
 
     public fun acceptsExtension(ext: String): Boolean
 
@@ -65,8 +65,11 @@ public class MethodArguments {
 }
 
 internal val supportedFormats: List<SupportedFormat> by lazy {
-    ServiceLoader.load(SupportedDataFrameFormat::class.java).toList() +
-        ServiceLoader.load(SupportedCodeGenerationFormat::class.java).toList()
+    (
+        ServiceLoader.load(SupportedDataFrameFormat::class.java).toList() +
+            ServiceLoader.load(SupportedCodeGenerationFormat::class.java).toList() +
+            ServiceLoader.load(SupportedFormat::class.java).toList()
+        ).distinct()
 }
 
 internal fun guessFormatForExtension(
