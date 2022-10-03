@@ -30,24 +30,14 @@ import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 import org.jetbrains.kotlinx.dataframe.codeGen.plus
+import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
+import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.io.File
 import java.io.InputStream
 import java.net.URL
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
-
-public fun main() {
-    val result = readOpenApi(
-        "/mnt/data/Projects/dataframe/core/src/test/resources/openapi_advanced_example.yaml"
-    )
-
-//        println("$name:")
-//        println(marker)
-//        println()
-//        println("generated code:")
-    println(result.declarations)
-}
 
 public class OpenApi : SupportedCodeGenerationFormat {
 
@@ -1213,13 +1203,9 @@ private fun OpenApiType.toFieldType(
     )
 }
 
-internal val camelRegex = "(?<=[a-zA-Z])[A-Z]".toRegex()
-internal val snakeRegex = "_[a-zA-Z]".toRegex()
-
-// String extensions
-internal fun String.camelToSnakeCase(): String = camelRegex.replace(this) { "_${it.value}" }.lowercase()
 internal fun String.snakeToLowerCamelCase(): String =
-    snakeRegex.replace(this) { it.value.replace("_", "").uppercase() }
+    toCamelCaseByDelimiters(DELIMITERS_REGEX)
 
-internal fun String.snakeToUpperCamelCase(): String = snakeToLowerCamelCase()
-    .replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+internal fun String.snakeToUpperCamelCase(): String =
+    snakeToLowerCamelCase()
+        .replaceFirstChar { it.uppercaseChar() }
