@@ -21,11 +21,3 @@ dependencies {
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
 }
-
-//dataframes {
-//    schema {
-//        name = "Repository"
-//        data = "https://raw.githubusercontent.com/OAI/OpenAPI-Specification/main/examples/v3.0/petstore.yaml"
-//    }
-//}
-

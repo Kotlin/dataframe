@@ -1,3 +1,4 @@
 org.jetbrains.kotlinx.dataframe.io.CSV
 org.jetbrains.kotlinx.dataframe.io.JSON
 org.jetbrains.kotlinx.dataframe.io.TSV
+org.jetbrains.kotlinx.dataframe.io.OpenApi
