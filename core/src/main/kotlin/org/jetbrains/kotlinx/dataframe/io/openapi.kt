@@ -8,6 +8,8 @@ import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asClassName
 import io.swagger.parser.OpenAPIParser
+import io.swagger.v3.oas.models.media.ArraySchema
+import io.swagger.v3.oas.models.media.ObjectSchema
 import io.swagger.v3.oas.models.media.Schema
 import io.swagger.v3.parser.core.models.AuthorizationValue
 import io.swagger.v3.parser.core.models.ParseOptions
@@ -617,6 +619,8 @@ private fun Schema<*>.toMarker(
         // If type == object, create a new Marker to become an interface.
         // https://swagger.io/docs/specification/data-models/data-types/#object
         type == "object" -> {
+            this as ObjectSchema
+
             if (nullable == true) {
                 println(
                     "Warning: type $name is marked nullable, but ColumnGroups cannot be null, so it will be interpreted as non-nullable."
@@ -1059,11 +1063,13 @@ private fun OpenApiType.toFieldType(
     produceAdditionalMarker: ProduceAdditionalMarker,
     required: List<String>,
 ): FieldTypeResult {
+    schema
     return FieldTypeResult.Success(
         fieldType = when (this) {
             is OpenApiType.Any -> getType(nullable)
 
-            is OpenApiType.Array ->
+            is OpenApiType.Array -> {
+                schema as ArraySchema
                 if (schema.items == null) { // should in theory not occur, but make List<Any?> just in case
                     getTypeAsList(
                         nullable = nullable,
@@ -1156,6 +1162,7 @@ private fun OpenApiType.toFieldType(
                         }
                     }
                 }
+            }
 
             is OpenApiType.Boolean -> getType(nullable)
 
