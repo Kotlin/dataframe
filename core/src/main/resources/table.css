@@ -14,7 +14,7 @@
     --link-hover: #1a466c;
 }
 
-:root[theme="dark"], :root [data-jp-theme-light="false"]{
+:root[theme="dark"], :root [data-jp-theme-light="false"], .dataframe_dark{
     --background: #303030;
     --background-odd: #3c3c3c;
     --background-hover: #464646;
