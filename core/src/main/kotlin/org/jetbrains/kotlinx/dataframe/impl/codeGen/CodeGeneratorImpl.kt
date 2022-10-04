@@ -131,39 +131,96 @@ internal open class ExtensionsCodeGeneratorImpl(
 
     private fun generateExtensionProperties(markers: List<Marker>) = markers.map { generateExtensionProperties(it) }
 
+    private fun generatePropertyCode(
+        marker: IsolatedMarker,
+        shortMarkerName: String,
+        typeName: String,
+        name: String,
+        propertyType: String,
+        getter: String,
+        visibility: String,
+        nullableAs: Boolean,
+    ): String {
+        val jvmName = "${shortMarkerName}_${name.removeQuotes()}"
+        val typeParameters = marker.typeParameters.let {
+            if (it.isNotEmpty() && !it.startsWith(" ")) {
+                " $it"
+            } else {
+                it
+            }
+        }
+        val `as` = if (nullableAs) "as?" else "as"
+        return "${visibility}val$typeParameters $typeName.$name: $propertyType @JvmName(\"${renderStringLiteral(jvmName)}\") get() = $getter $`as` $propertyType"
+    }
+
     protected fun generateExtensionProperties(marker: IsolatedMarker): Code {
         val markerName = marker.name
         val markerType = "$markerName${marker.typeArguments}"
         val visibility = renderTopLevelDeclarationVisibility(marker)
         val shortMarkerName = markerName.substring(markerName.lastIndexOf('.') + 1)
-        fun generatePropertyCode(
-            typeName: String,
-            name: String,
-            propertyType: String,
-            getter: String,
-            visibility: String
-        ): String {
-            val jvmName = "${shortMarkerName}_${name.removeQuotes()}"
-            val typeParameters = marker.typeParameters.let {
-                if (it.isNotEmpty() && !it.startsWith(" ")) {
-                    " $it"
-                } else {
-                    it
-                }
-            }
-            return "${visibility}val$typeParameters $typeName.$name: $propertyType @JvmName(\"${renderStringLiteral(jvmName)}\") get() = $getter as $propertyType"
-        }
+        val nullableShortMarkerName = "Nullable$shortMarkerName"
+
+        fun String.toNullable() = if (this.last() == '?') this else "$this?"
 
         val declarations = mutableListOf<String>()
         val dfTypename = renderDfTypename(markerType)
+        val nullableDfTypename = renderDfTypename(markerType.toNullable())
         val rowTypename = renderRowTypename(markerType)
+        val nullableRowTypename = renderRowTypename(markerType.toNullable())
+
         marker.fields.sortedBy { it.fieldName.quotedIfNeeded }.forEach {
             val getter = "this[\"${renderStringLiteral(it.columnName)}\"]"
             val name = it.fieldName
             val fieldType = it.renderFieldType()
             val columnType = it.renderColumnType()
-            declarations.add(generatePropertyCode(dfTypename, name.quotedIfNeeded, columnType, getter, visibility))
-            declarations.add(generatePropertyCode(rowTypename, name.quotedIfNeeded, fieldType, getter, visibility))
+
+            declarations.addAll(
+                listOf(
+                    // non nullable
+                    generatePropertyCode(
+                        marker = marker,
+                        shortMarkerName = shortMarkerName,
+                        typeName = dfTypename,
+                        name = name.quotedIfNeeded,
+                        propertyType = columnType,
+                        getter = getter,
+                        visibility = visibility,
+                        nullableAs = false,
+                    ),
+                    generatePropertyCode(
+                        marker = marker,
+                        shortMarkerName = shortMarkerName,
+                        typeName = rowTypename,
+                        name = name.quotedIfNeeded,
+                        propertyType = fieldType,
+                        getter = getter,
+                        visibility = visibility,
+                        nullableAs = false,
+                    ),
+
+                    // nullable
+                    generatePropertyCode(
+                        marker = marker,
+                        shortMarkerName = nullableShortMarkerName,
+                        typeName = nullableDfTypename,
+                        name = name.quotedIfNeeded,
+                        propertyType = columnType.toNullable(),
+                        getter = getter,
+                        visibility = visibility,
+                        nullableAs = true,
+                    ),
+                    generatePropertyCode(
+                        marker = marker,
+                        shortMarkerName = nullableShortMarkerName,
+                        typeName = nullableRowTypename,
+                        name = name.quotedIfNeeded,
+                        propertyType = fieldType.toNullable(),
+                        getter = getter,
+                        visibility = visibility,
+                        nullableAs = true,
+                    ),
+                )
+            )
         }
         return declarations.joinToString("\n")
     }
