@@ -23,7 +23,8 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
         reifiedDisplayConfiguration,
         extraHtml = initHtml(
             includeJs = reifiedDisplayConfiguration.isolatedOutputs,
-            includeCss = true
+            includeCss = true,
+            useDarkColorScheme = reifiedDisplayConfiguration.useDarkColorScheme
         ),
         contextRenderer
     ) { footer }
