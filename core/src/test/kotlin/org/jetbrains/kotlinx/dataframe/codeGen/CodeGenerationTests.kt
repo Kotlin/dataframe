@@ -34,12 +34,20 @@ class CodeGenerationTests : BaseTest() {
     fun expectedProperties(fullTypeName: String, shortTypeName: String) = """
             val $dfName<$fullTypeName>.age: $dataCol<$intName> @JvmName("${shortTypeName}_age") get() = this["age"] as $dataCol<$intName>
             val $dfRowName<$fullTypeName>.age: $intName @JvmName("${shortTypeName}_age") get() = this["age"] as $intName
+            val $dfName<$fullTypeName?>.age: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $dataCol<$intName?>
+            val $dfRowName<$fullTypeName?>.age: $intName? @JvmName("Nullable${shortTypeName}_age") get() = this["age"] as $intName?
             val $dfName<$fullTypeName>.city: $dataCol<$stringName?> @JvmName("${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>
             val $dfRowName<$fullTypeName>.city: $stringName? @JvmName("${shortTypeName}_city") get() = this["city"] as $stringName?
+            val $dfName<$fullTypeName?>.city: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $dataCol<$stringName?>
+            val $dfRowName<$fullTypeName?>.city: $stringName? @JvmName("Nullable${shortTypeName}_city") get() = this["city"] as $stringName?
             val $dfName<$fullTypeName>.name: $dataCol<$stringName> @JvmName("${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName>
             val $dfRowName<$fullTypeName>.name: $stringName @JvmName("${shortTypeName}_name") get() = this["name"] as $stringName
+            val $dfName<$fullTypeName?>.name: $dataCol<$stringName?> @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $dataCol<$stringName?>
+            val $dfRowName<$fullTypeName?>.name: $stringName? @JvmName("Nullable${shortTypeName}_name") get() = this["name"] as $stringName?
             val $dfName<$fullTypeName>.weight: $dataCol<$intName?> @JvmName("${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>
             val $dfRowName<$fullTypeName>.weight: $intName? @JvmName("${shortTypeName}_weight") get() = this["weight"] as $intName?
+            val $dfName<$fullTypeName?>.weight: $dataCol<$intName?> @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $dataCol<$intName?>
+            val $dfRowName<$fullTypeName?>.weight: $intName? @JvmName("Nullable${shortTypeName}_weight") get() = this["weight"] as $intName?
     """.trimIndent()
 
     @Test
@@ -97,8 +105,12 @@ class CodeGenerationTests : BaseTest() {
             
             val $dfName<$type1>.city: $dataCol<$stringName?> @JvmName("${type1}_city") get() = this["city"] as $dataCol<$stringName?>
             val $dfRowName<$type1>.city: $stringName? @JvmName("${type1}_city") get() = this["city"] as $stringName?
+            val $dfName<$type1?>.city: $dataCol<$stringName?> @JvmName("Nullable${type1}_city") get() = this["city"] as $dataCol<$stringName?>
+            val $dfRowName<$type1?>.city: $stringName? @JvmName("Nullable${type1}_city") get() = this["city"] as $stringName?
             val $dfName<$type1>.name: $dataCol<$stringName> @JvmName("${type1}_name") get() = this["name"] as $dataCol<$stringName>
             val $dfRowName<$type1>.name: $stringName @JvmName("${type1}_name") get() = this["name"] as $stringName
+            val $dfName<$type1?>.name: $dataCol<$stringName?> @JvmName("Nullable${type1}_name") get() = this["name"] as $dataCol<$stringName?>
+            val $dfRowName<$type1?>.name: $stringName? @JvmName("Nullable${type1}_name") get() = this["name"] as $stringName?
             
         """.trimIndent()
 
@@ -108,10 +120,16 @@ class CodeGenerationTests : BaseTest() {
             
             val $dfName<$type2>.age: $dataCol<$intName> @JvmName("${type2}_age") get() = this["age"] as $dataCol<$intName>
             val $dfRowName<$type2>.age: $intName @JvmName("${type2}_age") get() = this["age"] as $intName
+            val $dfName<$type2?>.age: $dataCol<$intName?> @JvmName("Nullable${type2}_age") get() = this["age"] as $dataCol<$intName?>
+            val $dfRowName<$type2?>.age: $intName? @JvmName("Nullable${type2}_age") get() = this["age"] as $intName?
             val $dfName<$type2>.nameAndCity: $colGroup<$type1> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $colGroup<$type1>
             val $dfRowName<$type2>.nameAndCity: $dataRow<$type1> @JvmName("${type2}_nameAndCity") get() = this["nameAndCity"] as $dataRow<$type1>
+            val $dfName<$type2?>.nameAndCity: $colGroup<$type1?> @JvmName("Nullable${type2}_nameAndCity") get() = this["nameAndCity"] as $colGroup<$type1?>
+            val $dfRowName<$type2?>.nameAndCity: $dataRow<$type1?> @JvmName("Nullable${type2}_nameAndCity") get() = this["nameAndCity"] as $dataRow<$type1?>
             val $dfName<$type2>.weight: $dataCol<$intName?> @JvmName("${type2}_weight") get() = this["weight"] as $dataCol<$intName?>
             val $dfRowName<$type2>.weight: $intName? @JvmName("${type2}_weight") get() = this["weight"] as $intName?
+            val $dfName<$type2?>.weight: $dataCol<$intName?> @JvmName("Nullable${type2}_weight") get() = this["weight"] as $dataCol<$intName?>
+            val $dfRowName<$type2?>.weight: $intName? @JvmName("Nullable${type2}_weight") get() = this["weight"] as $intName?
         """.trimIndent()
 
         val expectedConverter = "it.cast<$type2>()"
@@ -128,7 +146,8 @@ class CodeGenerationTests : BaseTest() {
             interface $personClass
         """.trimIndent() + "\n" + expectedProperties(personClassName, personShortName)
 
-        val code = CodeGenerator.create(useFqNames = false).generate<Person>(InterfaceGenerationMode.NoFields, extensionProperties = true).declarations
+        val code = CodeGenerator.create(useFqNames = false)
+            .generate<Person>(InterfaceGenerationMode.NoFields, extensionProperties = true).declarations
         code shouldBe expected
     }
 
@@ -145,8 +164,13 @@ class CodeGenerationTests : BaseTest() {
         val codeGen = CodeGenerator.create()
         val schema = df.dropNulls().schema()
         val code = codeGen.generate(
-            schema, "ValidPerson", true, true, isOpen = true, MarkerVisibility.IMPLICIT_PUBLIC,
-            listOf(
+            schema = schema,
+            name = "ValidPerson",
+            fields = true,
+            extensionProperties = true,
+            isOpen = true,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            knownMarkers = listOf(
                 MarkersExtractor.get<Person>()
             )
         ).code.declarations
@@ -160,8 +184,12 @@ class CodeGenerationTests : BaseTest() {
             
             val $packageName.ColumnsContainer<ValidPerson>.city: $packageName.DataColumn<kotlin.String> @JvmName("ValidPerson_city") get() = this["city"] as $packageName.DataColumn<kotlin.String>
             val $packageName.DataRow<ValidPerson>.city: kotlin.String @JvmName("ValidPerson_city") get() = this["city"] as kotlin.String
+            val $packageName.ColumnsContainer<ValidPerson?>.city: $packageName.DataColumn<kotlin.String?> @JvmName("NullableValidPerson_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
+            val $packageName.DataRow<ValidPerson?>.city: kotlin.String? @JvmName("NullableValidPerson_city") get() = this["city"] as kotlin.String?
             val $packageName.ColumnsContainer<ValidPerson>.weight: $packageName.DataColumn<kotlin.Int> @JvmName("ValidPerson_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int>
             val $packageName.DataRow<ValidPerson>.weight: kotlin.Int @JvmName("ValidPerson_weight") get() = this["weight"] as kotlin.Int
+            val $packageName.ColumnsContainer<ValidPerson?>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("NullableValidPerson_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
+            val $packageName.DataRow<ValidPerson?>.weight: kotlin.Int? @JvmName("NullableValidPerson_weight") get() = this["weight"] as kotlin.Int?
         """.trimIndent()
         code shouldBe expected
     }
@@ -196,7 +224,8 @@ class CodeGenerationTests : BaseTest() {
     @Test
     fun `declaration with internal visibility`() {
         val repl = CodeGenerator.create()
-        val code = repl.generate(typed.schema(), "DataType", true, true, false, MarkerVisibility.INTERNAL).code.declarations
+        val code =
+            repl.generate(typed.schema(), "DataType", true, true, false, MarkerVisibility.INTERNAL).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
         code shouldBe """
             @DataSchema(isOpen = false)
@@ -209,19 +238,34 @@ class CodeGenerationTests : BaseTest() {
             
             internal val $packageName.ColumnsContainer<DataType>.age: $packageName.DataColumn<kotlin.Int> @JvmName("DataType_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int>
             internal val $packageName.DataRow<DataType>.age: kotlin.Int @JvmName("DataType_age") get() = this["age"] as kotlin.Int
+            internal val $packageName.ColumnsContainer<DataType?>.age: $packageName.DataColumn<kotlin.Int?> @JvmName("NullableDataType_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int?>
+            internal val $packageName.DataRow<DataType?>.age: kotlin.Int? @JvmName("NullableDataType_age") get() = this["age"] as kotlin.Int?
             internal val $packageName.ColumnsContainer<DataType>.city: $packageName.DataColumn<kotlin.String?> @JvmName("DataType_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
             internal val $packageName.DataRow<DataType>.city: kotlin.String? @JvmName("DataType_city") get() = this["city"] as kotlin.String?
+            internal val $packageName.ColumnsContainer<DataType?>.city: $packageName.DataColumn<kotlin.String?> @JvmName("NullableDataType_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
+            internal val $packageName.DataRow<DataType?>.city: kotlin.String? @JvmName("NullableDataType_city") get() = this["city"] as kotlin.String?
             internal val $packageName.ColumnsContainer<DataType>.name: $packageName.DataColumn<kotlin.String> @JvmName("DataType_name") get() = this["name"] as $packageName.DataColumn<kotlin.String>
             internal val $packageName.DataRow<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
+            internal val $packageName.ColumnsContainer<DataType?>.name: $packageName.DataColumn<kotlin.String?> @JvmName("NullableDataType_name") get() = this["name"] as $packageName.DataColumn<kotlin.String?>
+            internal val $packageName.DataRow<DataType?>.name: kotlin.String? @JvmName("NullableDataType_name") get() = this["name"] as kotlin.String?
             internal val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
             internal val $packageName.DataRow<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
+            internal val $packageName.ColumnsContainer<DataType?>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("NullableDataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
+            internal val $packageName.DataRow<DataType?>.weight: kotlin.Int? @JvmName("NullableDataType_weight") get() = this["weight"] as kotlin.Int?
         """.trimIndent()
     }
 
     @Test
     fun `declaration with explicit public visibility`() {
         val repl = CodeGenerator.create()
-        val code = repl.generate(typed.schema(), "DataType", true, true, false, MarkerVisibility.EXPLICIT_PUBLIC).code.declarations
+        val code = repl.generate(
+            typed.schema(),
+            "DataType",
+            true,
+            true,
+            false,
+            MarkerVisibility.EXPLICIT_PUBLIC
+        ).code.declarations
         val packageName = "org.jetbrains.kotlinx.dataframe"
         code shouldBe """
             @DataSchema(isOpen = false)
@@ -234,12 +278,20 @@ class CodeGenerationTests : BaseTest() {
             
             public val $packageName.ColumnsContainer<DataType>.age: $packageName.DataColumn<kotlin.Int> @JvmName("DataType_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int>
             public val $packageName.DataRow<DataType>.age: kotlin.Int @JvmName("DataType_age") get() = this["age"] as kotlin.Int
+            public val $packageName.ColumnsContainer<DataType?>.age: $packageName.DataColumn<kotlin.Int?> @JvmName("NullableDataType_age") get() = this["age"] as $packageName.DataColumn<kotlin.Int?>
+            public val $packageName.DataRow<DataType?>.age: kotlin.Int? @JvmName("NullableDataType_age") get() = this["age"] as kotlin.Int?
             public val $packageName.ColumnsContainer<DataType>.city: $packageName.DataColumn<kotlin.String?> @JvmName("DataType_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
             public val $packageName.DataRow<DataType>.city: kotlin.String? @JvmName("DataType_city") get() = this["city"] as kotlin.String?
+            public val $packageName.ColumnsContainer<DataType?>.city: $packageName.DataColumn<kotlin.String?> @JvmName("NullableDataType_city") get() = this["city"] as $packageName.DataColumn<kotlin.String?>
+            public val $packageName.DataRow<DataType?>.city: kotlin.String? @JvmName("NullableDataType_city") get() = this["city"] as kotlin.String?
             public val $packageName.ColumnsContainer<DataType>.name: $packageName.DataColumn<kotlin.String> @JvmName("DataType_name") get() = this["name"] as $packageName.DataColumn<kotlin.String>
             public val $packageName.DataRow<DataType>.name: kotlin.String @JvmName("DataType_name") get() = this["name"] as kotlin.String
+            public val $packageName.ColumnsContainer<DataType?>.name: $packageName.DataColumn<kotlin.String?> @JvmName("NullableDataType_name") get() = this["name"] as $packageName.DataColumn<kotlin.String?>
+            public val $packageName.DataRow<DataType?>.name: kotlin.String? @JvmName("NullableDataType_name") get() = this["name"] as kotlin.String?
             public val $packageName.ColumnsContainer<DataType>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("DataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
             public val $packageName.DataRow<DataType>.weight: kotlin.Int? @JvmName("DataType_weight") get() = this["weight"] as kotlin.Int?
+            public val $packageName.ColumnsContainer<DataType?>.weight: $packageName.DataColumn<kotlin.Int?> @JvmName("NullableDataType_weight") get() = this["weight"] as $packageName.DataColumn<kotlin.Int?>
+            public val $packageName.DataRow<DataType?>.weight: kotlin.Int? @JvmName("NullableDataType_weight") get() = this["weight"] as kotlin.Int?
         """.trimIndent()
     }
 
@@ -250,7 +302,7 @@ class CodeGenerationTests : BaseTest() {
         val declarations = repl.generate(df.schema(), "DataType", false, true, false).code.declarations
         df.columnNames().forEach {
             val matches = "`$it`".toRegex().findAll(declarations).toList()
-            matches.size shouldBe 2
+            matches.size shouldBe 4
         }
     }
 
