@@ -437,7 +437,7 @@ class DataFrameSymbolProcessorTest {
             )
         )
         result.inspectLines { codeLines ->
-            codeLines.forExactly(2) {
+            codeLines.forExactly(4) {
                 it.shouldContain("this[\"test-name\"]")
             }
             result.successfulCompilation shouldBe true
@@ -678,7 +678,7 @@ class DataFrameSymbolProcessorTest {
             )
         )
         result.inspectLines { codeLines ->
-            codeLines.forExactly(2) {
+            codeLines.forExactly(4) {
                 it.shouldContain("""internal val """)
             }
             result.successfulCompilation shouldBe true
@@ -702,7 +702,7 @@ class DataFrameSymbolProcessorTest {
             )
         )
         result.inspectLines { codeLines ->
-            codeLines.forExactly(2) {
+            codeLines.forExactly(4) {
                 it.shouldContain("""public val""")
             }
             result.successfulCompilation shouldBe true
@@ -726,7 +726,7 @@ class DataFrameSymbolProcessorTest {
             )
         )
         result.inspectLines { codeLines ->
-            codeLines.forExactly(2) {
+            codeLines.forExactly(4) {
                 it.shouldStartWith("""val """)
             }
             result.successfulCompilation shouldBe true
