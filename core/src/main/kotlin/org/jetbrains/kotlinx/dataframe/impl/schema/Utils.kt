@@ -87,7 +87,7 @@ internal fun ColumnSchema.createEmptyColumn(name: String): AnyCol = when (this) 
 internal fun DataFrameSchema.createEmptyDataFrame(): AnyFrame = columns.map { (name, schema) -> schema.createEmptyColumn(name) }.toDataFrame()
 
 @PublishedApi
-internal fun createEmptyDataFrameOf(clazz: KClass<*>): AnyFrame = MarkersExtractor[clazz].schema.createEmptyDataFrame()
+internal fun createEmptyDataFrameOf(clazz: KClass<*>): AnyFrame = MarkersExtractor.get(clazz).schema.createEmptyDataFrame()
 
 internal fun getPropertiesOrder(clazz: KClass<*>): Map<String, Int> =
     clazz.primaryConstructor?.parameters?.mapNotNull { it.name }?.mapIndexed { i, v -> v to i }?.toMap() ?: emptyMap()
