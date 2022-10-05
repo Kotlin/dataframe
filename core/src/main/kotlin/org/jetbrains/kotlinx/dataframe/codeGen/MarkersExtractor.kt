@@ -12,6 +12,7 @@ import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.superclasses
+import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
 internal fun KType.shouldBeConvertedToFrameColumn(): Boolean = when (jvmErasure) {
@@ -24,30 +25,32 @@ internal fun KType.shouldBeConvertedToColumnGroup(): Boolean = jvmErasure.let {
     it == DataRow::class || it.hasAnnotation<DataSchema>()
 }
 
+private fun String.toNullable(): String = if (endsWith("?")) this else "$this?"
+
 internal object MarkersExtractor {
 
     private val cache = mutableMapOf<KClass<*>, Marker>()
 
     inline fun <reified T> get() = get(T::class)
 
-    operator fun get(markerClass: KClass<*>): Marker =
+    fun get(markerClass: KClass<*>, nullableProperties: Boolean = false): Marker =
         cache.getOrPut(markerClass) {
-            val fields = getFields(markerClass)
+            val fields = getFields(markerClass, nullableProperties)
             val isOpen = markerClass.findAnnotation<DataSchema>()?.isOpen ?: false
-            val baseSchemas = markerClass.superclasses.filter { it != Any::class }.map { get(it) }
+            val baseSchemas = markerClass.superclasses.filter { it != Any::class }.map { get(it, nullableProperties) }
             Marker(
-                markerClass.qualifiedName ?: markerClass.simpleName!!,
-                isOpen,
-                fields,
-                baseSchemas,
-                MarkerVisibility.IMPLICIT_PUBLIC,
-                markerClass
+                name = markerClass.qualifiedName ?: markerClass.simpleName!!,
+                isOpen = isOpen,
+                fields = fields,
+                superMarkers = baseSchemas,
+                visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                klass = markerClass,
             )
         }
 
-    private fun getFields(markerClass: KClass<*>): List<GeneratedField> {
+    private fun getFields(markerClass: KClass<*>, nullableProperties: Boolean): List<GeneratedField> {
         val order = getPropertiesOrder(markerClass)
-        return markerClass.declaredMemberProperties.sortedBy { order[it.name] ?: Int.MAX_VALUE }.mapIndexed { index, it ->
+        return markerClass.declaredMemberProperties.sortedBy { order[it.name] ?: Int.MAX_VALUE }.mapIndexed { _, it ->
             val fieldName = ValidFieldName.of(it.name)
             val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName.unquoted
             val type = it.returnType
@@ -56,19 +59,25 @@ internal object MarkersExtractor {
             val columnSchema = when {
                 type.shouldBeConvertedToColumnGroup() -> {
                     val nestedType = if (clazz == DataRow::class) type.arguments[0].type!! else type
-                    val marker = get(nestedType.jvmErasure)
+                    val marker = get(nestedType.jvmErasure, nullableProperties || type.isMarkedNullable)
                     fieldType = FieldType.GroupFieldType(marker.name)
                     ColumnSchema.Group(marker.schema)
                 }
+
                 type.shouldBeConvertedToFrameColumn() -> {
                     val frameType = type.arguments[0].type!!
-                    val marker = get(frameType.jvmErasure)
-                    fieldType = FieldType.FrameFieldType(marker.name, type.isMarkedNullable)
+                    val marker = get(frameType.jvmErasure, nullableProperties || type.isMarkedNullable)
+                    fieldType = FieldType.FrameFieldType(marker.name, type.isMarkedNullable || nullableProperties)
                     ColumnSchema.Frame(marker.schema, type.isMarkedNullable)
                 }
+
                 else -> {
-                    fieldType = FieldType.ValueFieldType(type.toString())
-                    ColumnSchema.Value(type)
+                    fieldType = FieldType.ValueFieldType(
+                        if (nullableProperties) type.toString().toNullable() else type.toString()
+                    )
+                    ColumnSchema.Value(
+                        if (nullableProperties) type.withNullability(true) else type
+                    )
                 }
             }
 

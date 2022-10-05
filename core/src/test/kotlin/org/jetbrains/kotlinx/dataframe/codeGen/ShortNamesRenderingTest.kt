@@ -27,7 +27,7 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     }
 
     private val fields by lazy {
-        MarkersExtractor[A::class].allFields.associateBy { it.fieldName.unquoted }
+        MarkersExtractor.get(A::class).allFields.associateBy { it.fieldName.unquoted }
     }
 
     @Test
@@ -120,11 +120,11 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
 
     @Test
     fun `generic field`() {
-        MarkersExtractor[GenericDataSchema::class].allFields[0].renderFieldType() shouldBe "A"
+        MarkersExtractor.get(GenericDataSchema::class).allFields[0].renderFieldType() shouldBe "A"
     }
 
     @Test
     fun `generic column`() {
-        MarkersExtractor[GenericDataSchema::class].allFields[0].renderColumnType() shouldBe "DataColumn<A>"
+        MarkersExtractor.get(GenericDataSchema::class).allFields[0].renderColumnType() shouldBe "DataColumn<A>"
     }
 }
