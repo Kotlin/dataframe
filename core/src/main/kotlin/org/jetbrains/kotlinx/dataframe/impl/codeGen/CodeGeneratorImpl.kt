@@ -21,6 +21,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
+import org.jetbrains.kotlinx.dataframe.codeGen.toNullable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.api.Code
@@ -32,7 +33,8 @@ internal fun getRequiredMarkers(schema: DataFrameSchema, markers: Iterable<Marke
 
 internal val charsToQuote = """[ `(){}\[\].<>'"/|\\!?@:;%^&*#$-]""".toRegex()
 
-internal fun createCodeWithConverter(code: String, markerName: String) = CodeWithConverter(code) { "$it.cast<$markerName>()" }
+internal fun createCodeWithConverter(code: String, markerName: String) =
+    CodeWithConverter(code) { "$it.cast<$markerName>()" }
 
 private val letterCategories = setOf(
     CharCategory.UPPERCASE_LETTER,
@@ -72,14 +74,24 @@ internal object FqNames : TypeRenderingStrategy {
         when (val fieldType = fieldType) {
             is FieldType.ValueFieldType -> "${DataColumn::class.qualifiedName}<${fieldType.typeFqName}>"
             is FieldType.GroupFieldType -> "${ColumnGroup::class.qualifiedName}<${fieldType.markerName}>"
-            is FieldType.FrameFieldType -> "${DataColumn::class.qualifiedName}<${DataFrame::class.qualifiedName}<${fieldType.markerName}>${renderNullability(fieldType.nullable)}>"
+            is FieldType.FrameFieldType ->
+                "${DataColumn::class.qualifiedName}<${DataFrame::class.qualifiedName}<${fieldType.markerName}>${
+                renderNullability(
+                    fieldType.nullable
+                )
+                }>"
         }
 
     override fun BaseField.renderFieldType(): Code =
         when (val fieldType = fieldType) {
             is FieldType.ValueFieldType -> fieldType.typeFqName
             is FieldType.GroupFieldType -> "${DataRow::class.qualifiedName}<${fieldType.markerName}>"
-            is FieldType.FrameFieldType -> "${DataFrame::class.qualifiedName}<${fieldType.markerName}>${renderNullability(fieldType.nullable)}"
+            is FieldType.FrameFieldType ->
+                "${DataFrame::class.qualifiedName}<${fieldType.markerName}>${
+                renderNullability(
+                    fieldType.nullable
+                )
+                }"
         }
 }
 
@@ -96,14 +108,24 @@ internal object ShortNames : TypeRenderingStrategy {
         when (val fieldType = fieldType) {
             is FieldType.ValueFieldType -> "${DataColumn::class.simpleName}<${fieldType.typeFqName.shorten()}>"
             is FieldType.GroupFieldType -> "${ColumnGroup::class.simpleName}<${fieldType.markerName}>"
-            is FieldType.FrameFieldType -> "${DataColumn::class.simpleName}<${DataFrame::class.simpleName}<${fieldType.markerName}>${renderNullability(fieldType.nullable)}>"
+            is FieldType.FrameFieldType ->
+                "${DataColumn::class.simpleName}<${DataFrame::class.simpleName}<${fieldType.markerName}>${
+                renderNullability(
+                    fieldType.nullable
+                )
+                }>"
         }
 
     override fun BaseField.renderFieldType(): Code =
         when (val fieldType = fieldType) {
             is FieldType.ValueFieldType -> fieldType.typeFqName.shorten()
             is FieldType.GroupFieldType -> "${DataRow::class.simpleName}<${fieldType.markerName}>"
-            is FieldType.FrameFieldType -> "${DataFrame::class.simpleName}<${fieldType.markerName}>${renderNullability(fieldType.nullable)}"
+            is FieldType.FrameFieldType ->
+                "${DataFrame::class.simpleName}<${fieldType.markerName}>${
+                renderNullability(
+                    fieldType.nullable
+                )
+                }"
         }
 
     private fun String.shorten() = removeRedundantQualifier(this)
@@ -139,7 +161,6 @@ internal open class ExtensionsCodeGeneratorImpl(
         propertyType: String,
         getter: String,
         visibility: String,
-        nullableAs: Boolean,
     ): String {
         val jvmName = "${shortMarkerName}_${name.removeQuotes()}"
         val typeParameters = marker.typeParameters.let {
@@ -149,8 +170,7 @@ internal open class ExtensionsCodeGeneratorImpl(
                 it
             }
         }
-        val `as` = if (nullableAs) "as?" else "as"
-        return "${visibility}val$typeParameters $typeName.$name: $propertyType @JvmName(\"${renderStringLiteral(jvmName)}\") get() = $getter $`as` $propertyType"
+        return "${visibility}val$typeParameters $typeName.$name: $propertyType @JvmName(\"${renderStringLiteral(jvmName)}\") get() = $getter as $propertyType"
     }
 
     protected fun generateExtensionProperties(marker: IsolatedMarker): Code {
@@ -168,11 +188,17 @@ internal open class ExtensionsCodeGeneratorImpl(
         val rowTypename = renderRowTypename(markerType)
         val nullableRowTypename = renderRowTypename(markerType.toNullable())
 
+        val nullableFields = marker.fields.map {
+            it.toNullable()
+        }.associateBy { it.columnName }
+
         marker.fields.sortedBy { it.fieldName.quotedIfNeeded }.forEach {
             val getter = "this[\"${renderStringLiteral(it.columnName)}\"]"
             val name = it.fieldName
             val fieldType = it.renderFieldType()
+            val nullableFieldType = nullableFields[it.columnName]!!.renderFieldType()
             val columnType = it.renderColumnType()
+            val nullableColumnType = nullableFields[it.columnName]!!.renderColumnType()
 
             declarations.addAll(
                 listOf(
@@ -185,7 +211,6 @@ internal open class ExtensionsCodeGeneratorImpl(
                         propertyType = columnType,
                         getter = getter,
                         visibility = visibility,
-                        nullableAs = false,
                     ),
                     generatePropertyCode(
                         marker = marker,
@@ -195,7 +220,6 @@ internal open class ExtensionsCodeGeneratorImpl(
                         propertyType = fieldType,
                         getter = getter,
                         visibility = visibility,
-                        nullableAs = false,
                     ),
 
                     // nullable
@@ -204,20 +228,18 @@ internal open class ExtensionsCodeGeneratorImpl(
                         shortMarkerName = nullableShortMarkerName,
                         typeName = nullableDfTypename,
                         name = name.quotedIfNeeded,
-                        propertyType = columnType.toNullable(),
+                        propertyType = nullableColumnType,
                         getter = getter,
                         visibility = visibility,
-                        nullableAs = true,
                     ),
                     generatePropertyCode(
                         marker = marker,
                         shortMarkerName = nullableShortMarkerName,
                         typeName = nullableRowTypename,
                         name = name.quotedIfNeeded,
-                        propertyType = fieldType.toNullable(),
+                        propertyType = nullableFieldType,
                         getter = getter,
                         visibility = visibility,
-                        nullableAs = true,
                     ),
                 )
             )
@@ -243,13 +265,22 @@ internal open class ExtensionsCodeGeneratorImpl(
     }
 }
 
-internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames) : ExtensionsCodeGeneratorImpl(typeRendering), CodeGenerator {
-    override fun generate(marker: Marker, interfaceMode: InterfaceGenerationMode, extensionProperties: Boolean): CodeWithConverter {
+internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames) :
+    ExtensionsCodeGeneratorImpl(typeRendering), CodeGenerator {
+    override fun generate(
+        marker: Marker,
+        interfaceMode: InterfaceGenerationMode,
+        extensionProperties: Boolean
+    ): CodeWithConverter {
         val generateInterface = interfaceMode != InterfaceGenerationMode.None
         val code = when {
-            generateInterface && extensionProperties -> generateInterface(marker, interfaceMode == InterfaceGenerationMode.WithFields) + "\n" + generateExtensionProperties(
+            generateInterface && extensionProperties -> generateInterface(
+                marker,
+                interfaceMode == InterfaceGenerationMode.WithFields
+            ) + "\n" + generateExtensionProperties(
                 marker
             )
+
             generateInterface -> generateInterface(marker, interfaceMode == InterfaceGenerationMode.WithFields)
             extensionProperties -> generateExtensionProperties(marker)
             else -> ""
@@ -305,8 +336,11 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
 
         val fieldsDeclaration = if (fields) marker.fields.map {
             val override = if (it.overrides) "override " else ""
-            val columnNameAnnotation =
-                if (it.columnName != it.fieldName.quotedIfNeeded) "    @ColumnName(\"${renderStringLiteral(it.columnName)}\")\n" else ""
+            val columnNameAnnotation = if (it.columnName != it.fieldName.quotedIfNeeded) {
+                "    @ColumnName(\"${renderStringLiteral(it.columnName)}\")\n"
+            } else {
+                ""
+            }
 
             val fieldType = it.renderFieldType()
             "$columnNameAnnotation    ${propertyVisibility}${override}val ${it.fieldName.quotedIfNeeded}: $fieldType"
