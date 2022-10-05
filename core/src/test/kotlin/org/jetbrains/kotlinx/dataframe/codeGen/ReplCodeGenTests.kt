@@ -79,12 +79,20 @@ class ReplCodeGenTests : BaseTest() {
             
             val $dfName<$marker>.age: $dataCol<$intName> @JvmName("${marker}_age") get() = this["age"] as $dataCol<$intName>
             val $dfRowName<$marker>.age: $intName @JvmName("${marker}_age") get() = this["age"] as $intName
+            val $dfName<$marker?>.age: $dataCol<$intName?> @JvmName("Nullable${marker}_age") get() = this["age"] as $dataCol<$intName?>
+            val $dfRowName<$marker?>.age: $intName? @JvmName("Nullable${marker}_age") get() = this["age"] as $intName?
             val $dfName<$marker>.city: $dataCol<$stringName?> @JvmName("${marker}_city") get() = this["city"] as $dataCol<$stringName?>
             val $dfRowName<$marker>.city: $stringName? @JvmName("${marker}_city") get() = this["city"] as $stringName?
+            val $dfName<$marker?>.city: $dataCol<$stringName?> @JvmName("Nullable${marker}_city") get() = this["city"] as $dataCol<$stringName?>
+            val $dfRowName<$marker?>.city: $stringName? @JvmName("Nullable${marker}_city") get() = this["city"] as $stringName?
             val $dfName<$marker>.name: $dataCol<$stringName> @JvmName("${marker}_name") get() = this["name"] as $dataCol<$stringName>
             val $dfRowName<$marker>.name: $stringName @JvmName("${marker}_name") get() = this["name"] as $stringName
+            val $dfName<$marker?>.name: $dataCol<$stringName?> @JvmName("Nullable${marker}_name") get() = this["name"] as $dataCol<$stringName?>
+            val $dfRowName<$marker?>.name: $stringName? @JvmName("Nullable${marker}_name") get() = this["name"] as $stringName?
             val $dfName<$marker>.weight: $dataCol<$intName?> @JvmName("${marker}_weight") get() = this["weight"] as $dataCol<$intName?>
             val $dfRowName<$marker>.weight: $intName? @JvmName("${marker}_weight") get() = this["weight"] as $intName?
+            val $dfName<$marker?>.weight: $dataCol<$intName?> @JvmName("Nullable${marker}_weight") get() = this["weight"] as $dataCol<$intName?>
+            val $dfRowName<$marker?>.weight: $intName? @JvmName("Nullable${marker}_weight") get() = this["weight"] as $intName?
         """.trimIndent()
         code shouldBe expected
 
@@ -100,6 +108,8 @@ class ReplCodeGenTests : BaseTest() {
             
             val $dfName<$marker3>.city: $dataCol<$stringName> @JvmName("${marker3}_city") get() = this["city"] as $dataCol<$stringName>
             val $dfRowName<$marker3>.city: $stringName @JvmName("${marker3}_city") get() = this["city"] as $stringName
+            val $dfName<$marker3?>.city: $dataCol<$stringName?> @JvmName("Nullable${marker3}_city") get() = this["city"] as $dataCol<$stringName?>
+            val $dfRowName<$marker3?>.city: $stringName? @JvmName("Nullable${marker3}_city") get() = this["city"] as $stringName?
         """.trimIndent()
 
         code3 shouldBe expected3
@@ -116,6 +126,8 @@ class ReplCodeGenTests : BaseTest() {
             
             val $dfName<$marker5>.weight: $dataCol<$intName> @JvmName("${marker5}_weight") get() = this["weight"] as $dataCol<$intName>
             val $dfRowName<$marker5>.weight: $intName @JvmName("${marker5}_weight") get() = this["weight"] as $intName
+            val $dfName<$marker5?>.weight: $dataCol<$intName?> @JvmName("Nullable${marker5}_weight") get() = this["weight"] as $dataCol<$intName?>
+            val $dfRowName<$marker5?>.weight: $intName? @JvmName("Nullable${marker5}_weight") get() = this["weight"] as $intName?
         """.trimIndent()
         code5 shouldBe expected5
 
@@ -156,8 +168,12 @@ class ReplCodeGenTests : BaseTest() {
             
             val $dfName<$marker>.city: $dataCol<$stringName?> @JvmName("${marker}_city") get() = this["city"] as $dataCol<$stringName?>
             val $dfRowName<$marker>.city: $stringName? @JvmName("${marker}_city") get() = this["city"] as $stringName?
+            val $dfName<$marker?>.city: $dataCol<$stringName?> @JvmName("Nullable${marker}_city") get() = this["city"] as $dataCol<$stringName?>
+            val $dfRowName<$marker?>.city: $stringName? @JvmName("Nullable${marker}_city") get() = this["city"] as $stringName?
             val $dfName<$marker>.weight: $dataCol<$intName?> @JvmName("${marker}_weight") get() = this["weight"] as $dataCol<$intName?>
             val $dfRowName<$marker>.weight: $intName? @JvmName("${marker}_weight") get() = this["weight"] as $intName?
+            val $dfName<$marker?>.weight: $dataCol<$intName?> @JvmName("Nullable${marker}_weight") get() = this["weight"] as $dataCol<$intName?>
+            val $dfRowName<$marker?>.weight: $intName? @JvmName("Nullable${marker}_weight") get() = this["weight"] as $intName?
         """.trimIndent()
 
         val code = repl.process(typed).declarations.trimIndent()
