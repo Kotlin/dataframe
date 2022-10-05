@@ -109,4 +109,28 @@ class ConvertToTests {
 
         converted shouldBe expected
     }
+
+    @DataSchema
+    data class Location(
+        val name: String,
+        val gps: Gps?,
+    )
+
+    @DataSchema
+    data class Gps(
+        val latitude: Double,
+        val longitude: Double,
+    )
+
+    @Test
+    fun `convert df with nullable DataRow to itself`() {
+        val locations: DataFrame<Location> = listOf(
+            Location("Home", Gps(0.0, 0.0)),
+            Location("Away", null),
+        ).toDataFrame()
+
+        val converted = locations.convertTo<Location>()
+
+        converted shouldBe locations
+    }
 }
