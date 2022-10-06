@@ -45,7 +45,7 @@ class NameGenerationTests {
     fun `properties generation`() {
         val codeGen = ReplCodeGenerator.create()
         val code = codeGen.process<DataRecord>().split("\n")
-        code.size shouldBe 4
+        code.size shouldBe 8
         code.forEach {
             it.count { it == '`' } shouldBe 2
         }
