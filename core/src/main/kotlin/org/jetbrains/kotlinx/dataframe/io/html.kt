@@ -154,10 +154,10 @@ internal fun AnyFrame.toHtmlData(
     }
     val body = getResourceText("/table.html", "ID" to rootId)
     val script = scripts.joinToString("\n") + "\n" + getResourceText("/renderTable.js", "___ID___" to rootId)
-    return HtmlData("", body, script)
+    return HtmlData("", body, script, configuration.useDarkColorScheme)
 }
 
-public data class HtmlData(val style: String, val body: String, val script: String) {
+public data class HtmlData(val style: String, val body: String, val script: String, val useDarkColorScheme: Boolean) {
     override fun toString(): String = """
         <html>
         <head>
@@ -166,7 +166,9 @@ public data class HtmlData(val style: String, val body: String, val script: Stri
             </style>
         </head>
         <body>
-            $body
+            <div${darkSchemeAttribute()}>
+                $body
+            </div>
         </body>
         <script>
             $script
@@ -174,19 +176,29 @@ public data class HtmlData(val style: String, val body: String, val script: Stri
         </html>
     """.trimIndent()
 
+    private fun darkSchemeAttribute(): String {
+        return if (useDarkColorScheme) " class=\"dataframe_dark\"" else ""
+    }
+
     public fun toJupyter(): MimeTypedResult = HTML(toString())
 
     public operator fun plus(other: HtmlData): HtmlData =
-        HtmlData(style + "\n" + other.style, body + "\n" + other.body, script + "\n" + other.script)
+        HtmlData(
+            style + "\n" + other.style,
+            body + "\n" + other.body,
+            script + "\n" + other.script,
+            useDarkColorScheme || other.useDarkColorScheme
+        )
 }
 
 internal fun HtmlData.print() = println(this)
 
-internal fun initHtml(includeJs: Boolean = true, includeCss: Boolean = true): HtmlData =
+internal fun initHtml(includeJs: Boolean = true, includeCss: Boolean = true, useDarkColorScheme: Boolean = false): HtmlData =
     HtmlData(
         style = if (includeCss) getResources("/table.css") else "",
         script = if (includeJs) getResourceText("/init.js") else "",
-        body = ""
+        body = "",
+        useDarkColorScheme = useDarkColorScheme,
     )
 
 public fun <T> DataFrame<T>.html(): String = toHTML(extraHtml = initHtml()).toString()
@@ -205,7 +217,7 @@ public fun <T> DataFrame<T>.toHTML(
     } else "<p>$footer</p>"
 
     val tableHtml = toHtmlData(configuration, cellRenderer)
-    val html = tableHtml + HtmlData("", bodyFooter, "")
+    val html = tableHtml + HtmlData("", bodyFooter, "", configuration.useDarkColorScheme)
 
     return if (extraHtml != null) extraHtml + html else html
 }
@@ -217,6 +229,7 @@ public data class DisplayConfiguration(
     var decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
     var isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
     internal val localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
+    var useDarkColorScheme: Boolean = false,
 ) {
     public companion object {
         public val DEFAULT: DisplayConfiguration = DisplayConfiguration()
