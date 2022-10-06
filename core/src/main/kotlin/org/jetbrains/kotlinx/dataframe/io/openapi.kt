@@ -28,7 +28,10 @@ import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
 import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
+import org.jetbrains.kotlinx.dataframe.codeGen.isNullable
+import org.jetbrains.kotlinx.dataframe.codeGen.name
 import org.jetbrains.kotlinx.dataframe.codeGen.plus
+import org.jetbrains.kotlinx.dataframe.codeGen.toNotNullable
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
@@ -480,29 +483,6 @@ private fun generatedEnumFieldOf(
     fieldType = FieldType.ValueFieldType(typeOf<String>().toString()), // all enums will be of type String
 )
 
-private fun FieldType.isNullable(): Boolean =
-    when (this) {
-        is FieldType.FrameFieldType -> nullable
-        is FieldType.GroupFieldType -> false
-        is FieldType.ValueFieldType -> typeFqName.endsWith("?")
-    }
-
-private fun FieldType.toNotNullable(): FieldType =
-    if (isNullable()) {
-        when (this) {
-            is FieldType.FrameFieldType -> FieldType.FrameFieldType(markerName, false)
-            is FieldType.GroupFieldType -> this
-            is FieldType.ValueFieldType -> FieldType.ValueFieldType(typeFqName = typeFqName.removeSuffix("?"))
-        }
-    } else this
-
-private val FieldType.name: String
-    get() = when (this) {
-        is FieldType.FrameFieldType -> markerName
-        is FieldType.GroupFieldType -> markerName
-        is FieldType.ValueFieldType -> typeFqName
-    }
-
 /**
  * Converts a single OpenApi object type schema to a [Marker] if successful.
  *
@@ -638,9 +618,9 @@ private fun Schema<*>.toMarker(
             )
 
             if (nullable == true) {
-                println(
-                    "Warning: type $name is marked nullable, but ColumnGroups cannot be null, so instead all properties will be made nullable."
-                )
+//                println(
+//                    "Warning: type $name is marked nullable, but ColumnGroups cannot be null, so instead all properties will be made nullable."
+//                )
             }
 
             when {
@@ -654,9 +634,10 @@ private fun Schema<*>.toMarker(
 
                     val fields = buildList {
                         for ((name, property) in (properties ?: emptyMap())) {
-                            val isRequired = name in required || !(nullable ?: false)
+                            val isRequired = name in required
+                            val isRequiredAndNotNullable = isRequired || property.nullable == false
                             val openApiTypeResult = property.toOpenApiType(
-                                isRequired = isRequired,
+                                isRequired = isRequiredAndNotNullable,
                                 getRefMarker = getRefMarker,
                             )
 
@@ -674,17 +655,20 @@ private fun Schema<*>.toMarker(
                                         fieldType = when (val marker = openApiTypeResult.marker) {
                                             is OpenApiMarker.TypeAlias ->
                                                 FieldType.ValueFieldType(
-                                                    typeFqName = marker.name + if (isRequired) "" else "?",
+                                                    typeFqName = marker.name + if (isRequiredAndNotNullable) "" else "?",
                                                 )
 
                                             is OpenApiMarker.Enum ->
                                                 FieldType.ValueFieldType(
+                                                    // nullable or not, an enum must contain null to be nullable
+                                                    // https://github.com/OAI/OpenAPI-Specification/blob/main/proposals/2019-10-31-Clarify-Nullable.md#if-a-schema-specifies-nullable-true-and-enum-1-2-3-does-that-schema-allow-null-values-see-1900
+                                                    // if not required, it can still be omitted, resulting in null in Kotlin
                                                     typeFqName = marker.name + if (!isRequired || marker.nullable) "?" else "",
                                                 )
 
                                             is OpenApiMarker.MarkerAlias, is OpenApiMarker.Interface ->
                                                 FieldType.GroupFieldType(
-                                                    markerName = marker.name, // Group cannot be nullable in DF
+                                                    markerName = marker.name + if (isRequiredAndNotNullable) "" else "?",
                                                 )
                                         },
                                     )
@@ -704,7 +688,7 @@ private fun Schema<*>.toMarker(
                                         fieldName = ValidFieldName.of(name.snakeToLowerCamelCase()),
                                         columnName = name,
                                         fieldType = FieldType.ValueFieldType(
-                                            typeFqName = enumMarker.name + if (!isRequired || enumMarker.nullable) "?" else "",
+                                            typeFqName = enumMarker.name + if (!isRequiredAndNotNullable || enumMarker.nullable) "?" else "",
                                         ),
                                     )
                                 }
@@ -927,6 +911,8 @@ private enum class OpenApiStringFormat(val value: String) {
     }
 }
 
+private fun String.toNullable() = if (this.last() == '?') this else "$this?"
+
 /**
  * Represents all types supported by OpenApi with functions to create a [FieldType] from each.
  */
@@ -979,22 +965,35 @@ private sealed class OpenApiType(val name: kotlin.String?, override val isPrimit
 
     object Object : OpenApiType("object", false) {
 
-        fun getType(marker: OpenApiMarker): FieldType = FieldType.GroupFieldType(markerName = marker.name)
-        fun getType(type: KType): FieldType = FieldType.GroupFieldType(markerName = type.toString())
+        fun getType(nullable: kotlin.Boolean, marker: OpenApiMarker): FieldType =
+            FieldType.GroupFieldType(
+                markerName = marker.name.let {
+                    if (nullable) it.toNullable() else it
+                },
+            )
+
+        fun getType(nullable: kotlin.Boolean, type: KType): FieldType =
+            FieldType.GroupFieldType(
+                markerName = type.toString().let {
+                    if (nullable) it.toNullable() else it
+                },
+            )
     }
 
     object Array : OpenApiType("array", false) {
 
         // used for list of primitives
-        fun getTypeAsList(nullable: kotlin.Boolean, typeFqName: kotlin.String): FieldType = FieldType.ValueFieldType(
-            typeFqName = "${List::class.qualifiedName!!}<$typeFqName>${if (nullable) "?" else ""}",
-        )
+        fun getTypeAsList(nullableArray: kotlin.Boolean, typeFqName: kotlin.String): FieldType =
+            FieldType.ValueFieldType(
+                typeFqName = "${List::class.qualifiedName!!}<$typeFqName>${if (nullableArray) "?" else ""}",
+            )
 
         // used for list of objects
-        fun getTypeAsFrame(nullable: kotlin.Boolean, markerName: kotlin.String): FieldType = FieldType.FrameFieldType(
-            markerName = markerName,
-            nullable = nullable,
-        )
+        fun getTypeAsFrame(nullableArray: kotlin.Boolean, markerName: kotlin.String): FieldType =
+            FieldType.FrameFieldType(
+                markerName = markerName,
+                nullable = nullableArray,
+            )
     }
 
     object Any : OpenApiType(null, true) {
@@ -1111,6 +1110,19 @@ private fun Schema<*>.toOpenApiType(
             anyOfTypes.isEmpty() && anyOfRefs.size == 1 ->
                 return OpenApiTypeResult.UsingRef(anyOfRefs.first())
 
+            // only refs
+            anyOfTypes.isEmpty() && anyOfRefs.isNotEmpty() -> {
+                val commonSuperMarker = anyOfRefs.map { it.allSuperMarkers.values.toSet() }
+                    .reduce(Set<Marker>::intersect)
+                    .firstOrNull() as? OpenApiMarker?
+
+                if (commonSuperMarker != null) {
+                    return OpenApiTypeResult.UsingRef(commonSuperMarker)
+                } else {
+                    OpenApiType.Object
+                }
+            }
+
             // more than one ref or types
             allTypes.isNotEmpty() && !allTypes.any { it.isPrimitive } -> OpenApiType.Object
 
@@ -1124,9 +1136,9 @@ private fun Schema<*>.toOpenApiType(
     val nullable = nullable ?: !isRequired
 
     if (nullable && openApiType == OpenApiType.Object) {
-        println(
-            "Warning: type $name is marked nullable, but ColumnGroups cannot be null, so instead all properties will be made nullable."
-        )
+//        println(
+//            "Warning: type $name is marked nullable, but ColumnGroups cannot be null, so instead all properties will be made nullable."
+//        )
     }
 
     return OpenApiTypeResult.Success(openApiType, nullable)
@@ -1158,7 +1170,7 @@ private fun OpenApiType.toFieldType(
                 schema as ArraySchema
                 if (schema.items == null) { // should in theory not occur, but make List<Any?> just in case
                     getTypeAsList(
-                        nullable = nullable,
+                        nullableArray = nullable,
                         typeFqName = (OpenApiType.Any.getType(nullable = true) as FieldType.ValueFieldType).typeFqName
                     )
                 } else { // Try to get the array type TODO decide whether to make nullable or not
@@ -1175,12 +1187,12 @@ private fun OpenApiType.toFieldType(
                         is OpenApiTypeResult.UsingRef ->
                             if (arrayTypeResult.marker.isPrimitive) {
                                 getTypeAsList(
-                                    nullable = nullable,
+                                    nullableArray = nullable,
                                     typeFqName = arrayTypeResult.marker.name,
                                 )
                             } else {
                                 getTypeAsFrame(
-                                    nullable = nullable,
+                                    nullableArray = nullable,
                                     markerName = arrayTypeResult.marker.name,
                                 )
                             }
@@ -1205,25 +1217,31 @@ private fun OpenApiType.toFieldType(
                                     when {
                                         it is FieldType.GroupFieldType && it.name == typeOf<DataRow<Any>>().toString() ->
                                             getTypeAsFrame(
-                                                nullable = false, // GroupFieldType (DataFrame<*>) cannot be null
+                                                nullableArray = nullable,
                                                 markerName = typeOf<Any>().toString(),
+                                            )
+
+                                        it is FieldType.GroupFieldType && it.name == typeOf<DataRow<Any?>>().toString() ->
+                                            getTypeAsFrame(
+                                                nullableArray = nullable,
+                                                markerName = typeOf<Any?>().toString(),
                                             )
 
                                         it is FieldType.GroupFieldType ->
                                             getTypeAsFrame(
-                                                nullable = false, // GroupFieldType (DataFrame<*>) cannot be null
+                                                nullableArray = nullable, // GroupFieldType (DataFrame<*>) cannot be null
                                                 markerName = it.name,
                                             )
 
                                         it is FieldType.FrameFieldType ->
                                             getTypeAsFrame(
-                                                nullable = nullable,
+                                                nullableArray = nullable,
                                                 markerName = it.name,
                                             )
 
                                         it is FieldType.ValueFieldType ->
                                             getTypeAsList(
-                                                nullable = nullable,
+                                                nullableArray = nullable,
                                                 typeFqName = it.name,
                                             )
 
@@ -1242,7 +1260,7 @@ private fun OpenApiType.toFieldType(
                             )
 
                             getTypeAsList(
-                                nullable = nullable,
+                                nullableArray = nullable,
                                 typeFqName = enumMarker.name + if (enumMarker.nullable) "?" else "",
                             )
                         }
@@ -1264,7 +1282,10 @@ private fun OpenApiType.toFieldType(
 
             is OpenApiType.Object ->
                 if (schema.type != "object") { // aka, is result of oneOf/anyOf
-                    getType(typeOf<DataRow<Any>>())
+                    getType(
+                        nullable = false,
+                        type = if (nullable) typeOf<DataRow<Any?>>() else typeOf<DataRow<Any>>(),
+                    )
                 } else {
                     val dataFrameSchemaResult = schema.toMarker(
                         typeName = schemaName.snakeToUpperCamelCase(),
@@ -1286,7 +1307,10 @@ private fun OpenApiType.toFieldType(
                                 isTopLevelObject = true,
                             )
 
-                            getType(dataFrameSchemaResult.marker.withName(newName))
+                            getType(
+                                nullable = nullable,
+                                marker = dataFrameSchemaResult.marker.withName(newName),
+                            )
                         }
                     }
                 }
