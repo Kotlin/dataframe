@@ -122,6 +122,6 @@ internal fun AnyFrame.convertToImpl(
     }
 
     val clazz = type.jvmErasure
-    val marker = MarkersExtractor[clazz]
+    val marker = MarkersExtractor.get(clazz)
     return convertToSchema(marker.schema, emptyPath())
 }
