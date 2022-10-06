@@ -4,6 +4,7 @@
     "id": 1,
     "name": "Buddy",
     "tag": "Golden Retriever",
+    "other": null,
     "eye_color": "Brown",
     "breed": "Dingo"
   },
