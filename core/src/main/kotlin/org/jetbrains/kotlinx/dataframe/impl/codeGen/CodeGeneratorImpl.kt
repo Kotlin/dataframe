@@ -267,7 +267,8 @@ internal open class ExtensionsCodeGeneratorImpl(
     }
 }
 
-internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames) : ExtensionsCodeGeneratorImpl(typeRendering), CodeGenerator {
+internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames) :
+    ExtensionsCodeGeneratorImpl(typeRendering), CodeGenerator {
     override fun generate(
         marker: Marker,
         interfaceMode: InterfaceGenerationMode,
