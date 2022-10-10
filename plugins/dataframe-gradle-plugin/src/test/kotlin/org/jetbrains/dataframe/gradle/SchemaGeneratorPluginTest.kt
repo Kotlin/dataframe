@@ -270,6 +270,7 @@ internal class SchemaGeneratorPluginTest {
     @Test
     fun `data is string and url`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
+            println("Build dir: $buildDir")
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
