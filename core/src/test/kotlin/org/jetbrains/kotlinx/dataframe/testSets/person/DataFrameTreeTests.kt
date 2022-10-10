@@ -441,10 +441,16 @@ class DataFrameTreeTests : BaseTest() {
         val expected = """
             val $columnsContainer<$className>.age: $columnData<kotlin.Int> @JvmName("${shortName}_age") get() = this["age"] as $columnData<kotlin.Int>
             val $dataFrameRowBase<$className>.age: kotlin.Int @JvmName("${shortName}_age") get() = this["age"] as kotlin.Int
+            val $columnsContainer<$className?>.age: $columnData<kotlin.Int?> @JvmName("Nullable${shortName}_age") get() = this["age"] as $columnData<kotlin.Int?>
+            val $dataFrameRowBase<$className?>.age: kotlin.Int? @JvmName("Nullable${shortName}_age") get() = this["age"] as kotlin.Int?
             val $columnsContainer<$className>.nameAndCity: $groupedColumn<$nameAndCity> @JvmName("${shortName}_nameAndCity") get() = this["nameAndCity"] as $groupedColumn<$nameAndCity>
             val $dataFrameRowBase<$className>.nameAndCity: $dataFrameRow<$nameAndCity> @JvmName("${shortName}_nameAndCity") get() = this["nameAndCity"] as $dataFrameRow<$nameAndCity>
+            val $columnsContainer<$className?>.nameAndCity: $groupedColumn<$nameAndCity?> @JvmName("Nullable${shortName}_nameAndCity") get() = this["nameAndCity"] as $groupedColumn<$nameAndCity?>
+            val $dataFrameRowBase<$className?>.nameAndCity: $dataFrameRow<$nameAndCity?> @JvmName("Nullable${shortName}_nameAndCity") get() = this["nameAndCity"] as $dataFrameRow<$nameAndCity?>
             val $columnsContainer<$className>.weight: $columnData<kotlin.Int?> @JvmName("${shortName}_weight") get() = this["weight"] as $columnData<kotlin.Int?>
             val $dataFrameRowBase<$className>.weight: kotlin.Int? @JvmName("${shortName}_weight") get() = this["weight"] as kotlin.Int?
+            val $columnsContainer<$className?>.weight: $columnData<kotlin.Int?> @JvmName("Nullable${shortName}_weight") get() = this["weight"] as $columnData<kotlin.Int?>
+            val $dataFrameRowBase<$className?>.weight: kotlin.Int? @JvmName("Nullable${shortName}_weight") get() = this["weight"] as kotlin.Int?
         """.trimIndent()
         code shouldBe expected
     }
