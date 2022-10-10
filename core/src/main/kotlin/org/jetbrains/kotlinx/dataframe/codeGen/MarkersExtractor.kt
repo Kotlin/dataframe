@@ -14,6 +14,7 @@ import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.superclasses
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
+import kotlin.reflect.typeOf
 
 internal fun KType.shouldBeConvertedToFrameColumn(): Boolean = when (jvmErasure) {
     DataFrame::class -> true
@@ -58,14 +59,14 @@ internal object MarkersExtractor {
             val clazz = type.jvmErasure
             val columnSchema = when {
                 type.shouldBeConvertedToColumnGroup() -> {
-                    val nestedType = if (clazz == DataRow::class) type.arguments[0].type!! else type
+                    val nestedType = if (clazz == DataRow::class) type.arguments[0].type ?: typeOf<Any?>() else type
                     val marker = get(nestedType.jvmErasure, nullableProperties || type.isMarkedNullable)
                     fieldType = FieldType.GroupFieldType(marker.name)
                     ColumnSchema.Group(marker.schema)
                 }
 
                 type.shouldBeConvertedToFrameColumn() -> {
-                    val frameType = type.arguments[0].type!!
+                    val frameType = type.arguments[0].type ?: typeOf<Any?>()
                     val marker = get(frameType.jvmErasure, nullableProperties || type.isMarkedNullable)
                     fieldType = FieldType.FrameFieldType(marker.name, type.isMarkedNullable || nullableProperties)
                     ColumnSchema.Frame(marker.schema, type.isMarkedNullable)
