@@ -43,14 +43,20 @@ import kotlin.reflect.typeOf
 
 public class OpenApi : SupportedCodeGenerationFormat {
 
-    public fun readCodeForGeneration(text: String): CodeWithConverter =
-        readOpenApiAsString(text)
+    public fun readCodeForGeneration(text: String, extensionProperties: Boolean = false): CodeWithConverter =
+        readOpenApiAsString(text, extensionProperties = extensionProperties)
 
     override fun readCodeForGeneration(stream: InputStream): CodeWithConverter =
-        readOpenApiAsString(stream.bufferedReader().readText())
+        readOpenApiAsString(stream.bufferedReader().readText(), extensionProperties = false)
+
+    public fun readCodeForGeneration(stream: InputStream, extensionProperties: Boolean): CodeWithConverter =
+        readOpenApiAsString(stream.bufferedReader().readText(), extensionProperties = extensionProperties)
 
     override fun readCodeForGeneration(file: File): CodeWithConverter =
-        readOpenApiAsString(file.readText())
+        readOpenApiAsString(file.readText(), extensionProperties = false)
+
+    public fun readCodeForGeneration(file: File, extensionProperties: Boolean): CodeWithConverter =
+        readOpenApiAsString(file.readText(), extensionProperties = extensionProperties)
 
     override fun acceptsExtension(ext: String): Boolean = ext in listOf("yaml", "yml", "json")
 
@@ -159,15 +165,17 @@ public fun readOpenApi(
     uri: String,
     auth: List<AuthorizationValue>? = null,
     options: ParseOptions? = null,
+    extensionProperties: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): CodeWithConverter = readOpenApi(OpenAPIParser().readLocation(uri, auth, options), visibility)
+): CodeWithConverter = readOpenApi(OpenAPIParser().readLocation(uri, auth, options), extensionProperties, visibility)
 
 public fun readOpenApiAsString(
     openApiAsString: String,
     auth: List<AuthorizationValue>? = null,
     options: ParseOptions? = null,
+    extensionProperties: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): CodeWithConverter = readOpenApi(OpenAPIParser().readContents(openApiAsString, auth, options), visibility)
+): CodeWithConverter = readOpenApi(OpenAPIParser().readContents(openApiAsString, auth, options), extensionProperties, visibility)
 
 /**
  * Converts a parsed OpenAPI specification into a list of [CodeWithConverter] objects.
@@ -179,6 +187,7 @@ public fun readOpenApiAsString(
  */
 private fun readOpenApi(
     swaggerParseResult: SwaggerParseResult,
+    extensionProperties: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
 ): CodeWithConverter {
     val openApi = swaggerParseResult.openAPI
@@ -202,7 +211,7 @@ private fun readOpenApi(
                 is OpenApiMarker.Interface -> InterfaceGenerationMode.WithFields
                 is OpenApiMarker.TypeAlias, is OpenApiMarker.MarkerAlias -> InterfaceGenerationMode.TypeAlias
             },
-            extensionProperties = true, // TODO why was this false?
+            extensionProperties = extensionProperties,
             readDfMethod = if (marker is OpenApiMarker.Interface) DefaultReadOpenApiMethod else null,
         )
     }.reduce { a, b -> a + b }

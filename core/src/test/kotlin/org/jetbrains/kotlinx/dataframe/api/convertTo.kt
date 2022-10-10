@@ -145,8 +145,61 @@ class ConvertToTests {
             Location("Away", null),
         ).toDataFrame()
 
-        val converted = locations.convertTo<Location>()
+        val converted = locations.convertTo(typeOf<Location>())
 
         converted shouldBe locations
     }
+
+    @DataSchema
+    data class DataSchemaWithAnyFrame(
+        val dfs: AnyFrame?
+    )
+
+    @Test
+    fun `convert df with AnyFrame to itself`() {
+        val locations = listOf(
+            Location("Home", Gps(0.0, 0.0)),
+            Location("Away", null),
+            null,
+        ).toDataFrame().debug()
+
+        val gps = listOf(
+            Gps(0.0, 0.0),
+            null,
+        ).toDataFrame().debug()
+
+        val df1 = listOf(
+            DataSchemaWithAnyFrame(locations),
+        ).toDataFrame().debug()
+
+        df1.convertTo<DataSchemaWithAnyFrame>()
+
+        return
+
+        val df2 = listOf(
+            DataSchemaWithAnyFrame(gps),
+        ).toDataFrame().debug()
+
+        df2.convertTo<DataSchemaWithAnyFrame>()
+
+        val df3 = listOf(
+            DataSchemaWithAnyFrame(null),
+        ).toDataFrame().debug()
+
+        df3.convertTo<DataSchemaWithAnyFrame>()
+
+        val df4 = listOf(
+            DataSchemaWithAnyFrame(null),
+            DataSchemaWithAnyFrame(locations),
+            DataSchemaWithAnyFrame(gps),
+        ).toDataFrame().debug()
+
+        df4.convertTo<DataSchemaWithAnyFrame>()
+    }
+}
+
+fun <T : DataFrame<*>> T.debug(): T {
+    print(borders = true, title = true, columnTypes = true, valueLimit = -1)
+    schema().print()
+    return this
 }

@@ -5,12 +5,14 @@ import io.kotest.matchers.should
 import io.kotest.matchers.string.haveSubstring
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.convertTo
+import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.with
@@ -36,9 +38,9 @@ class OpenApiTests : JupyterReplTestCase() {
         return code
     }
 
-    private fun execGeneratedCode(file: File) = execGeneratedCode(code = openApi.readCodeForGeneration(file))
-    private fun execGeneratedCode(stream: InputStream) = execGeneratedCode(code = openApi.readCodeForGeneration(stream))
-    private fun execGeneratedCode(text: String) = execGeneratedCode(code = openApi.readCodeForGeneration(text))
+    private fun execGeneratedCode(file: File) = execGeneratedCode(code = openApi.readCodeForGeneration(file, true))
+    private fun execGeneratedCode(stream: InputStream) = execGeneratedCode(code = openApi.readCodeForGeneration(stream, true))
+    private fun execGeneratedCode(text: String) = execGeneratedCode(code = openApi.readCodeForGeneration(text, true))
 
     // TODO
     private val advancedExample = File("src/test/resources/openapi_advanced_example.yaml")
@@ -796,7 +798,7 @@ class OpenApiTests : JupyterReplTestCase() {
     interface Error {
         val ints: org.jetbrains.kotlinx.dataframe.DataRow<IntList?>
         val petRef: org.jetbrains.kotlinx.dataframe.DataRow<PetRef>
-        val pets: org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>?
+        val pets: org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any>?
         val code: kotlin.Int
         val message: kotlin.String
 
@@ -848,8 +850,13 @@ class OpenApiTests : JupyterReplTestCase() {
 
         df
             .apply {
-                print(borders = true, columnTypes = true, title = true)
+                print(borders = true, columnTypes = true, title = true, valueLimit = -1)
                 schema().print()
+
+                (this["pets"] as DataColumn<DataFrame<*>>).forEach {
+                    it.print(borders = true, columnTypes = true, title = true, valueLimit = -1)
+                    it.schema().print()
+                }
             }
 
         df.convertTo<Error> {
@@ -865,4 +872,3 @@ class OpenApiTests : JupyterReplTestCase() {
 }
 
 typealias PetRef = OpenApiTests.Pet
-
