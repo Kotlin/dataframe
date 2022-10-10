@@ -145,7 +145,7 @@ class ConvertToTests {
             Location("Away", null),
         ).toDataFrame()
 
-        val converted = locations.convertTo(typeOf<Location>())
+        val converted = locations.convertTo<Location>()
 
         converted shouldBe locations
     }
@@ -174,8 +174,6 @@ class ConvertToTests {
 
         df1.convertTo<DataSchemaWithAnyFrame>()
 
-        return
-
         val df2 = listOf(
             DataSchemaWithAnyFrame(gps),
         ).toDataFrame().debug()
@@ -196,10 +194,10 @@ class ConvertToTests {
 
         df4.convertTo<DataSchemaWithAnyFrame>()
     }
+    private fun <T : DataFrame<*>> T.debug(): T = apply {
+        print(borders = true, title = true, columnTypes = true, valueLimit = -1)
+        schema().print()
+    }
 }
 
-fun <T : DataFrame<*>> T.debug(): T {
-    print(borders = true, title = true, columnTypes = true, valueLimit = -1)
-    schema().print()
-    return this
-}
+
