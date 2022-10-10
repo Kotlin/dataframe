@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
@@ -58,5 +59,19 @@ class RenderingTests : JupyterReplTestCase() {
             """.trimIndent()
         )
         html2 shouldContain "showing only top 50 of 70 rows"
+    }
+
+    @Test
+    fun `dark color scheme`() {
+        fun execSimpleDf() = execHtml("""dataFrameOf("a", "b")(1, 2, 3, 4)""")
+
+        val htmlLight = execSimpleDf()
+        val r1 = exec("notebook.changeColorScheme(ColorScheme.DARK); 1")
+        val htmlDark = execSimpleDf()
+
+        r1 shouldBe 1
+        val darkClassAttribute = """class="dataframe_dark""""
+        htmlLight shouldNotContain darkClassAttribute
+        htmlDark shouldContain darkClassAttribute
     }
 }
