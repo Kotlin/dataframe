@@ -2,6 +2,7 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
@@ -108,5 +109,44 @@ class ConvertToTests {
         val expected = dataFrameOf("a")(IntClass(1))
 
         converted shouldBe expected
+    }
+
+    @DataSchema
+    data class Location(
+        val name: String,
+        val gps: Gps?,
+    )
+
+    @DataSchema
+    data class Gps(
+        val latitude: Double,
+        val longitude: Double,
+    )
+
+    // @Test TODO: https://github.com/Kotlin/dataframe/issues/177
+    fun `convert df with nullable DataRow`() {
+        val locations: AnyFrame = dataFrameOf("name", "gps")(
+            "Home", Gps(0.0, 0.0),
+            "Away", null,
+        )
+
+        locations.print(borders = true, title = true, columnTypes = true)
+        locations.schema().print()
+
+        val converted = locations.convertTo<Location>()
+
+        converted shouldBe locations
+    }
+
+    @Test
+    fun `convert df with nullable DataRow to itself`() {
+        val locations: DataFrame<Location> = listOf(
+            Location("Home", Gps(0.0, 0.0)),
+            Location("Away", null),
+        ).toDataFrame()
+
+        val converted = locations.convertTo<Location>()
+
+        converted shouldBe locations
     }
 }

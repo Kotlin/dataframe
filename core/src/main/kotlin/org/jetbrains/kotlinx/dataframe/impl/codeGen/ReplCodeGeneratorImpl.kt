@@ -58,7 +58,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             // maybe property is already properly typed, let's do some checks
             val currentMarker = getMarkerClass(property.returnType)
                 ?.takeIf { it.findAnnotation<DataSchema>() != null }
-                ?.let { registeredMarkers[it] ?: MarkersExtractor[it] }
+                ?.let { registeredMarkers[it] ?: MarkersExtractor.get(it) }
             if (currentMarker != null) {
                 // if property is mutable, we need to make sure that its marker type is open in order to let derived data frames be assignable to it
                 if (!isMutable || currentMarker.isOpen) {
@@ -133,7 +133,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                     return newMarker
                 }
             }
-            val marker = MarkersExtractor[markerClass]
+            val marker = MarkersExtractor.get(markerClass)
             registeredMarkers[markerClass] = marker
             newMarkers.add(marker)
             return marker
