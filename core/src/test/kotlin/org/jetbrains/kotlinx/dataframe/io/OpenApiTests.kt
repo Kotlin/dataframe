@@ -5,15 +5,12 @@ import io.kotest.matchers.should
 import io.kotest.matchers.string.haveSubstring
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.convertTo
-import org.jetbrains.kotlinx.dataframe.api.forEach
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
@@ -837,38 +834,38 @@ class OpenApiTests : JupyterReplTestCase() {
         }
     }
 
-    @Test
-    fun main() {
-        val pets = DataFrame.readJsonStr(advancedData)
-
-        pets.apply {
-            print(borders = true, columnTypes = true, title = true)
-            schema().print()
-        }
-
-        val df = DataFrame.readJsonStr(OpenApiTests().advancedDataError)
-
-        df
-            .apply {
-                print(borders = true, columnTypes = true, title = true, valueLimit = -1)
-                schema().print()
-
-                (this["pets"] as DataColumn<DataFrame<*>>).forEach {
-                    it.print(borders = true, columnTypes = true, title = true, valueLimit = -1)
-                    it.schema().print()
-                }
-            }
-
-        df.convertTo<Error> {
-            convert<DataRow<*>>().with<_, Any?> {
-                if (it.getVisibleValues().isEmpty()) null
-                else it[valueColumnName] ?: it[arrayColumnName]
-            }
-//            convert<DataRow<DataFrame<DataRow<*>>>>().with<_, DataRow<DataFrame<Any?>>> {
-//                it
+//    @Test
+//    fun main() {
+//        val pets = DataFrame.readJsonStr(advancedData)
+//
+//        pets.apply {
+//            print(borders = true, columnTypes = true, title = true)
+//            schema().print()
+//        }
+//
+//        val df = DataFrame.readJsonStr(OpenApiTests().advancedDataError)
+//
+//        df
+//            .apply {
+//                print(borders = true, columnTypes = true, title = true, valueLimit = -1)
+//                schema().print()
+//
+//                (this["pets"] as DataColumn<DataFrame<*>>).forEach {
+//                    it.print(borders = true, columnTypes = true, title = true, valueLimit = -1)
+//                    it.schema().print()
+//                }
 //            }
-        }
-    }
+//
+//        df.convertTo<Error> {
+//            convert<DataRow<*>>().with<_, Any?> {
+//                if (it.getVisibleValues().isEmpty()) null
+//                else it[valueColumnName] ?: it[arrayColumnName]
+//            }
+////            convert<DataRow<DataFrame<DataRow<*>>>>().with<_, DataRow<DataFrame<Any?>>> {
+////                it
+////            }
+//        }
+//    }
 }
 
 typealias PetRef = OpenApiTests.Pet
