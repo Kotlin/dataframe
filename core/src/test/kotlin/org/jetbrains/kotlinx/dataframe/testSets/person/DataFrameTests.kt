@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.testSets.person
 
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.doubles.ToleranceMatcher
 import io.kotest.matchers.should
@@ -2179,7 +2180,8 @@ class DataFrameTests : BaseTest() {
         val added = df.add("col") { 1 }
         added.convertTo(typeOf<Target>(), ExcessiveColumns.Keep) shouldBe added
 
-        shouldThrow<IllegalArgumentException> {
+        shouldNotThrowAny {
+            // now gets filled in with null!
             df.remove { city }.convertTo<Target>()
         }
 

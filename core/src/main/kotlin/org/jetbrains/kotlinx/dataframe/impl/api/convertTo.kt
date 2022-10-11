@@ -20,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
+import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyColumn
 import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.extractSchema
 import org.jetbrains.kotlinx.dataframe.impl.schema.render
@@ -27,6 +28,7 @@ import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.dataframe.size
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
@@ -57,7 +59,8 @@ internal fun AnyFrame.convertToImpl(
     dsl.body()
 
     fun AnyFrame.convertToSchema(schema: DataFrameSchema, path: ColumnPath): AnyFrame {
-        if (ncol == 0) return schema.createEmptyDataFrame()
+        // if current frame is empty,
+        if (ncol == 0 && !schema.columns.all { it.value.type.isMarkedNullable }) return schema.createEmptyDataFrame()
         var visited = 0
         val newColumns = columns().mapNotNull { originalColumn ->
             val targetColumn = schema.columns[originalColumn.name()]
@@ -152,11 +155,21 @@ internal fun AnyFrame.convertToImpl(
                     }
                 }
             }
+        }.toMutableList()
+
+        // when the target is nullable but the source does not contain a column, fill it in with nulls / empty dataframes
+        val newColumnsNames = newColumns.map { it.name() }
+        val size = this.size.nrow
+        schema.columns.forEach { (name, targetColumn) ->
+            if (name !in newColumnsNames && (targetColumn.nullable || targetColumn.type.isMarkedNullable)) {
+                visited++
+                newColumns += targetColumn.createEmptyColumn(name, size)
+            }
         }
 
         if (visited != schema.columns.size) {
-            val unvisited = schema.columns.keys - columnNames()
-            throw IllegalArgumentException("The following columns were not found in DataFrame: $unvisited")
+            val unvisited = schema.columns.keys - columnNames().toSet()
+            throw IllegalArgumentException("The following columns were not found in DataFrame: $unvisited, and the type was not nullable")
         }
         return newColumns.toDataFrame()
     }
