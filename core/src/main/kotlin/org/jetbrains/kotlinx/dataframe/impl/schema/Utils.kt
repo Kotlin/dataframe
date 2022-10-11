@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.schema
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
@@ -86,6 +87,14 @@ internal fun ColumnSchema.createEmptyColumn(name: String): AnyCol = when (this) 
     is ColumnSchema.Value -> DataColumn.createValueColumn<Any?>(name, emptyList(), type)
     is ColumnSchema.Group -> DataColumn.createColumnGroup(name, schema.createEmptyDataFrame()) as AnyCol
     is ColumnSchema.Frame -> DataColumn.createFrameColumn<Any?>(name, emptyList(), lazyOf(schema))
+    else -> error("Unexpected ColumnSchema: $this")
+}
+
+/** Create "empty" column, filled with either null or empty dataframes. */
+internal fun ColumnSchema.createEmptyColumn(name: String, nrows: Int): AnyCol = when (this) {
+    is ColumnSchema.Value -> DataColumn.createValueColumn(name, List(nrows) { null }, type)
+    is ColumnSchema.Group -> DataColumn.createColumnGroup(name, schema.createEmptyDataFrame()) as AnyCol
+    is ColumnSchema.Frame -> DataColumn.createFrameColumn(name, List(nrows) { emptyDataFrame<Any?>() }, lazyOf(schema))
     else -> error("Unexpected ColumnSchema: $this")
 }
 

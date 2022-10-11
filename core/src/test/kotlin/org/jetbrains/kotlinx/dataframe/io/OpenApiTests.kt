@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.convertTo
+import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
@@ -376,7 +377,7 @@ class OpenApiTests : JupyterReplTestCase() {
             interface Pet {
                 val id: kotlin.Long?
                 val name: kotlin.String
-                val category: org.jetbrains.kotlinx.dataframe.DataRow<Category>
+                val category: org.jetbrains.kotlinx.dataframe.DataRow<Category?>
                 val photoUrls: kotlin.collections.List<kotlin.String>
                 val tags: org.jetbrains.kotlinx.dataframe.DataFrame<Tag>?
                 val status: Status1?
@@ -386,8 +387,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val petExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.category: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Category> @JvmName("Pet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Category>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.category: org.jetbrains.kotlinx.dataframe.DataRow<Category> @JvmName("Pet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.DataRow<Category>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.category: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Category?> @JvmName("Pet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Category?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.category: org.jetbrains.kotlinx.dataframe.DataRow<Category?> @JvmName("Pet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.DataRow<Category?>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.category: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Category?> @JvmName("NullablePet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Category?>
             val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.category: org.jetbrains.kotlinx.dataframe.DataRow<Category?> @JvmName("NullablePet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.DataRow<Category?>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("Pet_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
@@ -834,38 +835,34 @@ class OpenApiTests : JupyterReplTestCase() {
         }
     }
 
-//    @Test
-//    fun main() {
+    @Test
+    fun main() {
 //        val pets = DataFrame.readJsonStr(advancedData)
 //
 //        pets.apply {
 //            print(borders = true, columnTypes = true, title = true)
 //            schema().print()
 //        }
-//
-//        val df = DataFrame.readJsonStr(OpenApiTests().advancedDataError)
-//
-//        df
-//            .apply {
-//                print(borders = true, columnTypes = true, title = true, valueLimit = -1)
-//                schema().print()
-//
-//                (this["pets"] as DataColumn<DataFrame<*>>).forEach {
-//                    it.print(borders = true, columnTypes = true, title = true, valueLimit = -1)
-//                    it.schema().print()
-//                }
+
+        val df = DataFrame.readJsonStr(OpenApiTests().advancedDataError)
+            .alsoDebug("error data:")
+
+        df.convertTo<Error> {
+            convert<DataRow<*>>().with<_, Any?> {
+                if (it.getVisibleValues().isEmpty()) null
+                else it[valueColumnName] ?: it[arrayColumnName]
+            }
+//            convert<DataRow<DataFrame<DataRow<*>>>>().with<_, DataRow<DataFrame<Any?>>> {
+//                it
 //            }
-//
-//        df.convertTo<Error> {
-//            convert<DataRow<*>>().with<_, Any?> {
-//                if (it.getVisibleValues().isEmpty()) null
-//                else it[valueColumnName] ?: it[arrayColumnName]
-//            }
-////            convert<DataRow<DataFrame<DataRow<*>>>>().with<_, DataRow<DataFrame<Any?>>> {
-////                it
-////            }
-//        }
-//    }
+        }.alsoDebug("result:")
+    }
+
+    private fun <T : DataFrame<*>> T.alsoDebug(println: String? = null): T = apply {
+        println?.let { println(it) }
+        print(borders = true, title = true, columnTypes = true, valueLimit = -1)
+        schema().print()
+    }
 }
 
 typealias PetRef = OpenApiTests.Pet
