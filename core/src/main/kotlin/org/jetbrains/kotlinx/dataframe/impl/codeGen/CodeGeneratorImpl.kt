@@ -64,70 +64,82 @@ internal interface TypeRenderingStrategy {
     fun renderRowTypename(markerName: String): String
     fun renderDfTypename(markerName: String): String
     fun BaseField.renderColumnType(): Code
-    fun BaseField.renderFieldType(): Code
+    fun BaseField.renderFieldType(asAccessor: Boolean): Code
 }
 
 internal object FqNames : TypeRenderingStrategy {
-    override fun renderRowTypename(markerName: String) = "${DataRow::class.qualifiedName}<$markerName>"
 
-    override fun renderDfTypename(markerName: String) = "${ColumnsContainer::class.qualifiedName}<$markerName>"
+    private val DataRow = DataRow::class.qualifiedName!!
+    private val ColumnsContainer = ColumnsContainer::class.qualifiedName!!
+    private val DataFrame = DataFrame::class.qualifiedName!!
+    private val DataColumn = DataColumn::class.qualifiedName!!
+    private val ColumnGroup = ColumnGroup::class.qualifiedName!!
+
+    override fun renderRowTypename(markerName: String) = "$DataRow<$markerName>"
+
+    override fun renderDfTypename(markerName: String) = "$ColumnsContainer<$markerName>"
 
     override fun BaseField.renderColumnType(): Code =
         when (val fieldType = fieldType) {
-            is FieldType.ValueFieldType -> "${DataColumn::class.qualifiedName}<${fieldType.typeFqName}>"
-            is FieldType.GroupFieldType -> "${ColumnGroup::class.qualifiedName}<${fieldType.markerName}>"
+            is FieldType.ValueFieldType ->
+                "$DataColumn<${fieldType.typeFqName}>"
+
+            is FieldType.GroupFieldType ->
+                "$ColumnGroup<${fieldType.markerName}>"
+
             is FieldType.FrameFieldType ->
-                "${DataColumn::class.qualifiedName}<${DataFrame::class.qualifiedName}<${fieldType.markerName}>${
-                renderNullability(
-                    fieldType.nullable
-                )
-                }>"
+                "$DataColumn<$DataFrame<${fieldType.markerName}>${renderNullability(fieldType.nullable)}>"
         }
 
-    override fun BaseField.renderFieldType(): Code =
+    override fun BaseField.renderFieldType(asAccessor: Boolean): Code =
         when (val fieldType = fieldType) {
-            is FieldType.ValueFieldType -> fieldType.typeFqName
-            is FieldType.GroupFieldType -> "${DataRow::class.qualifiedName}<${fieldType.markerName}>"
+            is FieldType.ValueFieldType ->
+                fieldType.typeFqName
+
+            is FieldType.GroupFieldType ->
+                if (asAccessor) "$DataRow<${fieldType.markerName}>"
+                else fieldType.markerName
+
             is FieldType.FrameFieldType ->
-                "${DataFrame::class.qualifiedName}<${fieldType.markerName}>${
-                renderNullability(
-                    fieldType.nullable
-                )
-                }"
+                "$DataFrame<${fieldType.markerName}>${renderNullability(fieldType.nullable)}"
         }
 }
 
 internal object ShortNames : TypeRenderingStrategy {
-    override fun renderRowTypename(markerName: String): String {
-        return "${DataRow::class.simpleName}<${markerName.shorten()}>"
-    }
 
-    override fun renderDfTypename(markerName: String): String {
-        return "${ColumnsContainer::class.simpleName}<${markerName.shorten()}>"
-    }
+    private val DataRow = DataRow::class.simpleName!!
+    private val ColumnsContainer = ColumnsContainer::class.simpleName!!
+    private val DataFrame = DataFrame::class.simpleName!!
+    private val DataColumn = DataColumn::class.simpleName!!
+    private val ColumnGroup = ColumnGroup::class.simpleName!!
+
+    override fun renderRowTypename(markerName: String): String = "$DataRow<${markerName.shorten()}>"
+
+    override fun renderDfTypename(markerName: String): String = "$ColumnsContainer<${markerName.shorten()}>"
 
     override fun BaseField.renderColumnType(): Code =
         when (val fieldType = fieldType) {
-            is FieldType.ValueFieldType -> "${DataColumn::class.simpleName}<${fieldType.typeFqName.shorten()}>"
-            is FieldType.GroupFieldType -> "${ColumnGroup::class.simpleName}<${fieldType.markerName}>"
+            is FieldType.ValueFieldType ->
+                "$DataColumn<${fieldType.typeFqName.shorten()}>"
+
+            is FieldType.GroupFieldType ->
+                "$ColumnGroup<${fieldType.markerName}>"
+
             is FieldType.FrameFieldType ->
-                "${DataColumn::class.simpleName}<${DataFrame::class.simpleName}<${fieldType.markerName}>${
-                renderNullability(
-                    fieldType.nullable
-                )
-                }>"
+                "$DataColumn<$DataFrame<${fieldType.markerName}>${renderNullability(fieldType.nullable)}>"
         }
 
-    override fun BaseField.renderFieldType(): Code =
+    override fun BaseField.renderFieldType(asAccessor: Boolean): Code =
         when (val fieldType = fieldType) {
-            is FieldType.ValueFieldType -> fieldType.typeFqName.shorten()
-            is FieldType.GroupFieldType -> "${DataRow::class.simpleName}<${fieldType.markerName}>"
+            is FieldType.ValueFieldType ->
+                fieldType.typeFqName.shorten()
+
+            is FieldType.GroupFieldType ->
+                if (asAccessor) "$DataRow<${fieldType.markerName}>"
+                else fieldType.markerName
+
             is FieldType.FrameFieldType ->
-                "${DataFrame::class.simpleName}<${fieldType.markerName}>${
-                renderNullability(
-                    fieldType.nullable
-                )
-                }"
+                "$DataFrame<${fieldType.markerName}>${renderNullability(fieldType.nullable)}"
         }
 
     private fun String.shorten() = removeRedundantQualifier(this)
@@ -197,8 +209,8 @@ internal open class ExtensionsCodeGeneratorImpl(
         marker.fields.sortedBy { it.fieldName.quotedIfNeeded }.forEach {
             val getter = "this[\"${renderStringLiteral(it.columnName)}\"]"
             val name = it.fieldName
-            val fieldType = it.renderFieldType()
-            val nullableFieldType = nullableFields[it.columnName]!!.renderFieldType()
+            val fieldType = it.renderFieldType(asAccessor = true)
+            val nullableFieldType = nullableFields[it.columnName]!!.renderFieldType(asAccessor = true)
             val columnType = it.renderColumnType()
             val nullableColumnType = nullableFields[it.columnName]!!.renderColumnType()
 
@@ -372,7 +384,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
                 ""
             }
 
-            val fieldType = it.renderFieldType()
+            val fieldType = it.renderFieldType(asAccessor = false)
             "$columnNameAnnotation    ${propertyVisibility}${override}val ${it.fieldName.quotedIfNeeded}: $fieldType"
         }.join() else ""
         val body = if (fieldsDeclaration.isNotBlank()) buildString {
