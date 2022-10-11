@@ -1,6 +1,6 @@
 [versions]
 ksp = "1.7.20-1.0.6"
-kotlinJupyter = "0.11.0-95"
+kotlinJupyter = "0.11.0-171-1"
 ktlint = "3.4.5"
 kotlin = "1.7.20"
 dokka = "1.5.31"
