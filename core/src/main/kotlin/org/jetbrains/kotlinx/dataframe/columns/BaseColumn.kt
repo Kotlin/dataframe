@@ -59,7 +59,7 @@ public interface BaseColumn<out T> : ColumnReference<T> {
     public fun distinct(): BaseColumn<T>
     public fun countDistinct(): Int
 
-    public fun contains(value: @UnsafeVariance T): Boolean
+    public operator fun contains(value: @UnsafeVariance T): Boolean
 
     // endregion
 

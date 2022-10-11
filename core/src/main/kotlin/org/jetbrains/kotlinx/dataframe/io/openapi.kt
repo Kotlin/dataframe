@@ -167,7 +167,11 @@ public fun readOpenApi(
     options: ParseOptions? = null,
     extensionProperties: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): CodeWithConverter = readOpenApi(OpenAPIParser().readLocation(uri, auth, options), extensionProperties, visibility)
+): CodeWithConverter = readOpenApi(
+    swaggerParseResult = OpenAPIParser().readLocation(uri, auth, options),
+    extensionProperties = extensionProperties,
+    visibility = visibility,
+)
 
 public fun readOpenApiAsString(
     openApiAsString: String,
@@ -175,7 +179,11 @@ public fun readOpenApiAsString(
     options: ParseOptions? = null,
     extensionProperties: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): CodeWithConverter = readOpenApi(OpenAPIParser().readContents(openApiAsString, auth, options), extensionProperties, visibility)
+): CodeWithConverter = readOpenApi(
+    swaggerParseResult = OpenAPIParser().readContents(openApiAsString, auth, options),
+    extensionProperties = extensionProperties,
+    visibility = visibility,
+)
 
 /**
  * Converts a parsed OpenAPI specification into a list of [CodeWithConverter] objects.
@@ -377,7 +385,7 @@ private fun Map<String, Schema<*>>.toMarkers(): List<OpenApiMarker> {
     }
 
     // convert all the retrievable markers to actual markers, resolving references as we go.
-    while (retrievableMarkers.isNotEmpty()) {
+    while (retrievableMarkers.isNotEmpty()) try {
         retrievableMarkers.entries.first { (name, retrieveMarker) ->
             val res = retrieveMarker(
                 getRefMarker = getRefMarker,
@@ -395,6 +403,11 @@ private fun Map<String, Schema<*>>.toMarkers(): List<OpenApiMarker> {
                     false // Cannot find a referenced Marker for this one, so we'll try again later.
             }
         }
+    } catch (e: NoSuchElementException) {
+        throw IllegalStateException(
+            "Exception while converting OpenApi schemas to markers. ${retrievableMarkers.keys.toList()} cannot find a ref marker.",
+            e,
+        )
     }
 
     return markers.values.toList()
@@ -1000,8 +1013,8 @@ private sealed class OpenApiType(val name: kotlin.String?, override val isPrimit
         // used for list of objects
         fun getTypeAsFrame(nullableArray: kotlin.Boolean, markerName: kotlin.String): FieldType =
             FieldType.FrameFieldType(
-                markerName = markerName,
-                nullable = nullableArray,
+                markerName = markerName.let { if (nullableArray) it.toNullable() else it },
+                nullable = false, // preferring DataFrame<Something?> over DataFrame<Something>?
             )
     }
 

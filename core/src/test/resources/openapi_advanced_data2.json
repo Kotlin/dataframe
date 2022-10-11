@@ -54,7 +54,8 @@
       "breed": "Dingo"
     },
     "code": 123,
-    "message": "Some error"
+    "message": "Some error",
+    "objectWithAdditional": {}
   },
   {
     "pets": [
@@ -119,7 +120,12 @@
       "breed": "Ragdoll",
       "age": 1.5
     },
-    "message": "Some error too"
+    "message": "Some error too",
+    "objectWithAdditional": {
+      "abvdwsefew": "1",
+      "b": "5"
+    },
+    "objectWithAdditional2": null
   },
   {
     "pets": null,
@@ -134,7 +140,15 @@
       "breed": "Ragdoll",
       "age": 1.5
     },
-    "message": "Some error too"
+    "message": "Some error too",
+    "objectWithAdditional": {
+      "a": "1",
+      "b": "2"
+    },
+    "objectWithAdditional2": {
+      "a": "1",
+      "sdgewrgb": 1234
+    }
   }
 ]
 

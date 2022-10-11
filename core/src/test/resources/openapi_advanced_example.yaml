@@ -181,6 +181,7 @@ components:
         - code
         - message
         - petRef
+        - objectWithAdditional
       properties:
         ints:
           $ref: "#/components/schemas/IntList"
@@ -201,3 +202,16 @@ components:
           format: int32
         message:
           type: string
+        objectWithAdditional:
+          $ref: "#/components/schemas/ObjectWithAdditionalProperties"
+        objectWithAdditional2:
+          type: object
+          additionalProperties:
+            oneOf:
+              - type: string
+              - type: integer
+
+    ObjectWithAdditionalProperties:
+      type: object
+      additionalProperties:
+        type: string
