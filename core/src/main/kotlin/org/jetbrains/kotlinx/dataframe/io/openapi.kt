@@ -18,8 +18,13 @@ import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
+import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.toMap
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
@@ -34,12 +39,29 @@ import org.jetbrains.kotlinx.dataframe.codeGen.plus
 import org.jetbrains.kotlinx.dataframe.codeGen.toNotNullable
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
+import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Any.getType
+import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.getTypeAsFrame
+import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.getTypeAsList
+import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Boolean.getType
+import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Integer.getType
+import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Number.getType
+import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Object.getType
+import org.jetbrains.kotlinx.dataframe.io.OpenApiType.String.getType
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import java.io.File
 import java.io.InputStream
 import java.net.URL
 import kotlin.reflect.KType
+import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
+
+public fun main() {
+    val a = typeOf<Map<String, String?>?>()
+    val b = typeOf<Map<String, Any?>>()
+
+    println(a.isSubtypeOf(typeOf<Map<*, *>>()) || a.isSubtypeOf(typeOf<Map<*, *>?>()))
+    println(a.arguments[0].type == typeOf<String>())
+}
 
 public class OpenApi : SupportedCodeGenerationFormat {
 
@@ -65,6 +87,45 @@ public class OpenApi : SupportedCodeGenerationFormat {
     override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod = DefaultReadOpenApiMethod
 }
 
+/**
+ * Function to be used in [ConvertSchemaDsl] ([AnyFrame.convertTo]) to help convert a DataFrame to adhere to an
+ * OpenApi schema.
+ */
+@Suppress("RemoveExplicitTypeArguments")
+public fun ConvertSchemaDsl<*>.convertDataRowsWithOpenApi() {
+    convert<DataRow<*>>().with<_, Any?> {
+        if (it.getVisibleValues().isEmpty()) null
+        else it[valueColumnName] ?: it[arrayColumnName]
+    }
+
+    convert( // TODO
+        from = { it == typeOf<DataRow<*>>() },
+        to = { // any type of Map<String, Any?> or Map<String, Any?>?
+            (it.isSubtypeOf(typeOf<Map<*, *>>()) || it.isSubtypeOf(typeOf<Map<*, *>?>())) &&
+                it.arguments.getOrNull(0)?.type == typeOf<String>() &&
+                it.arguments.getOrNull(1)?.type == typeOf<Any?>()
+        }
+    ) {
+        val map = (it as DataRow<*>).toMap()
+        if (map.values.all { it is DataRow<*>? }) {
+            map.mapValues { (_, value) ->
+                (value as DataRow<*>?)?.let {
+                    if (it.getVisibleValues().isEmpty()) null
+                    else it[valueColumnName] ?: it[arrayColumnName]
+                }
+            }
+        } else map
+    }
+
+    convert(
+        from = { it == typeOf<DataRow<*>>() },
+        to = { // any type of Map<String, _> or Map<String, _>?
+            (it.isSubtypeOf(typeOf<Map<*, *>>()) || it.isSubtypeOf(typeOf<Map<*, *>?>())) &&
+                it.arguments.getOrNull(0)?.type == typeOf<String>()
+        }
+    ) { (it as DataRow<*>).toMap() }
+}
+
 /** Used to add readJson functions to the generated interfaces. */
 private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
     path = null,
@@ -76,11 +137,7 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
         "import org.jetbrains.kotlinx.dataframe.io.readJson",
         "import org.jetbrains.kotlinx.dataframe.io.readJsonStr",
         "import org.jetbrains.kotlinx.dataframe.api.convertTo",
-        "import org.jetbrains.kotlinx.dataframe.api.convert",
-        "import org.jetbrains.kotlinx.dataframe.api.with",
-        "import org.jetbrains.kotlinx.dataframe.io.getVisibleValues",
-        "import org.jetbrains.kotlinx.dataframe.io.valueColumnName",
-        "import org.jetbrains.kotlinx.dataframe.io.arrayColumnName",
+        "import org.jetbrains.kotlinx.dataframe.io.${ConvertSchemaDsl<*>::convertDataRowsWithOpenApi.name}",
     )
 
     override fun toDeclaration(markerName: String, visibility: String): String {
@@ -88,13 +145,8 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
 
         @Language("kt")
         fun getConvertMethod(readMethod: String): String =
-            """|return DataFrame.$readMethod.convertTo<$markerName> {
-               |    convert<DataRow<*>>().with<DataRow<*>, Any?> {
-               |        if (it.getVisibleValues().isEmpty()) null
-               |        else it[valueColumnName] ?: it[arrayColumnName]
-               |    }
-               |}
-            """.trimMargin()
+            """return DataFrame.$readMethod.convertTo<$markerName> { ${ConvertSchemaDsl<*>::convertDataRowsWithOpenApi.name}() }
+            """.trimIndent()
 
         val typeSpec = TypeSpec.companionObjectBuilder()
             .addFunction(
@@ -649,9 +701,7 @@ private fun Schema<*>.toMarker(
                 // Gather the given properties as fields
                 properties != null -> {
                     if (additionalProperties != null) {
-                        println(
-                            "Warning: type $name has both properties and additionalProperties defined, but only properties will be generated in the data schema."
-                        )
+                        println("OpenAPI warning: type $name has both properties and additionalProperties defined, but only properties will be generated in the data schema.")
                     }
 
                     val fields = buildList {
@@ -766,15 +816,22 @@ private fun Schema<*>.toMarker(
                                 return MarkerResult.CannotFindRefMarker
 
                             is OpenApiTypeResult.UsingRef ->
-                                valueTypeResult.marker.name
+                                if (valueTypeResult.marker.isPrimitive) {
+                                    valueTypeResult.marker.name
+                                } else {
+                                    "${DataRow::class.qualifiedName}<${valueTypeResult.marker.name}>"
+                                }
 
                             is OpenApiTypeResult.Success -> {
+                                if (!valueTypeResult.nullable) {
+                                    println("OpenAPI warning: $typeName is marked to have additionalProperties that are not nullable, however in DataFrame is may still have null values based off keys from other instances of $typeName.")
+                                }
                                 val fieldTypeRes = valueTypeResult
                                     .openApiType
                                     .toFieldType(
                                         schema = this,
                                         schemaName = typeName,
-                                        nullable = false,
+                                        nullable = true,
                                         getRefMarker = getRefMarker,
                                         produceAdditionalMarker = produceAdditionalMarker,
                                         required = required,
@@ -786,7 +843,9 @@ private fun Schema<*>.toMarker(
 
                                     is FieldTypeResult.Success ->
                                         when (fieldTypeRes.fieldType) {
-                                            is FieldType.ValueFieldType, is FieldType.GroupFieldType -> fieldTypeRes.fieldType.name
+                                            is FieldType.ValueFieldType, is FieldType.GroupFieldType ->
+                                                fieldTypeRes.fieldType.name
+
                                             is FieldType.FrameFieldType ->
                                                 "${DataFrame::class.qualifiedName!!}<${fieldTypeRes.fieldType.name}>"
                                         }
@@ -1002,6 +1061,15 @@ private sealed class OpenApiType(val name: kotlin.String?, override val isPrimit
             )
     }
 
+    /** Represents a merged object which will turn into DataRow<Any?> */
+    object AnyObject : OpenApiType(null, false) {
+
+        fun getType(nullable: kotlin.Boolean): FieldType =
+            FieldType.GroupFieldType(
+                markerName = (if (nullable) typeOf<DataRow<kotlin.Any?>>() else typeOf<DataRow<kotlin.Any>>()).toString(),
+            )
+    }
+
     object Array : OpenApiType("array", false) {
 
         // used for list of primitives
@@ -1141,12 +1209,12 @@ private fun Schema<*>.toOpenApiType(
                 if (commonSuperMarker != null) {
                     return OpenApiTypeResult.UsingRef(commonSuperMarker)
                 } else {
-                    OpenApiType.Object
+                    OpenApiType.AnyObject
                 }
             }
 
             // more than one ref or types
-            allTypes.isNotEmpty() && !allTypes.any { it.isPrimitive } -> OpenApiType.Object
+            allTypes.isNotEmpty() && !allTypes.any { it.isPrimitive } -> OpenApiType.AnyObject
 
             // cannot assume anything about a type when there are multiple types except one
             not != null -> OpenApiType.Any
@@ -1302,40 +1370,38 @@ private fun OpenApiType.toFieldType(
                 format = OpenApiNumberFormat.fromStringOrNull(schema.format)
             )
 
-            is OpenApiType.Object ->
-                if (schema.type != "object") { // aka, is result of oneOf/anyOf
-                    getType(
-                        nullable = false,
-                        type = if (nullable) typeOf<DataRow<Any?>>() else typeOf<DataRow<Any>>(),
-                    )
-                } else {
-                    val dataFrameSchemaResult = schema.toMarker(
-                        typeName = schemaName.snakeToUpperCamelCase(),
-                        getRefMarker = getRefMarker,
-                        produceAdditionalMarker = { validName, marker, _ ->
-                            produceAdditionalMarker(validName, marker, isTopLevelObject = false)
-                        },
-                        required = required,
-                    )
+            is OpenApiType.AnyObject -> getType(
+                nullable = nullable,
+            )
 
-                    when (dataFrameSchemaResult) {
-                        is MarkerResult.CannotFindRefMarker ->
-                            return FieldTypeResult.CannotFindRefMarker
+            is OpenApiType.Object -> {
+                val dataFrameSchemaResult = schema.toMarker(
+                    typeName = schemaName.snakeToUpperCamelCase(),
+                    getRefMarker = getRefMarker,
+                    produceAdditionalMarker = { validName, marker, _ ->
+                        produceAdditionalMarker(validName, marker, isTopLevelObject = false)
+                    },
+                    required = required,
+                )
 
-                        is MarkerResult.Success -> {
-                            val newName = produceAdditionalMarker(
-                                validName = ValidFieldName.of(schemaName.snakeToUpperCamelCase()),
-                                marker = dataFrameSchemaResult.marker,
-                                isTopLevelObject = true,
-                            )
+                when (dataFrameSchemaResult) {
+                    is MarkerResult.CannotFindRefMarker ->
+                        return FieldTypeResult.CannotFindRefMarker
 
-                            getType(
-                                nullable = nullable,
-                                marker = dataFrameSchemaResult.marker.withName(newName),
-                            )
-                        }
+                    is MarkerResult.Success -> {
+                        val newName = produceAdditionalMarker(
+                            validName = ValidFieldName.of(schemaName.snakeToUpperCamelCase()),
+                            marker = dataFrameSchemaResult.marker,
+                            isTopLevelObject = true,
+                        )
+
+                        getType(
+                            nullable = nullable,
+                            marker = dataFrameSchemaResult.marker.withName(newName),
+                        )
                     }
                 }
+            }
 
             is OpenApiType.String -> getType(
                 nullable = nullable,

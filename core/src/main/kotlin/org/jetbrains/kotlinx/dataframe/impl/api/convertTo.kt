@@ -36,16 +36,29 @@ import kotlin.reflect.jvm.jvmErasure
 private class Converter(val transform: (Any?) -> Any?, val skipNulls: Boolean)
 
 private class ConvertSchemaDslImpl<T> : ConvertSchemaDsl<T> {
-    val converters = mutableMapOf<Pair<KType, KType>, Converter>()
+    val converters: MutableMap<Pair<KType, KType>, Converter> = mutableMapOf()
 
+    val flexibleConverters: MutableMap<Pair<(KType) -> Boolean, (KType) -> Boolean>, Converter> = mutableMapOf()
+
+    @Suppress("UNCHECKED_CAST")
     override fun <A, B> convert(from: KType, to: KType, converter: (A) -> B) {
         converters[from.withNullability(false) to to.withNullability(false)] =
             Converter(converter as (Any?) -> Any?, !from.isMarkedNullable)
     }
 
-    fun getConverter(from: KType, to: KType): Converter? {
-        return converters[from.withNullability(false) to to.withNullability(false)]
+    override fun convert(from: (KType) -> Boolean, to: (KType) -> Boolean, converter: (Any?) -> Any?) {
+        flexibleConverters[from to to] = Converter(converter, false)
     }
+
+    /**
+     * Attempts to find a converter for the given types. First tries to find an exact match,
+     * then tries to find a flexible match where the last match will be used (so conversion can be overridden).
+     */
+    fun getConverter(from: KType, to: KType): Converter? =
+        converters[from.withNullability(false) to to.withNullability(false)]
+            ?: flexibleConverters.entries.lastOrNull { (predicate, _) ->
+                predicate.first(from) && predicate.second(to)
+            }?.value
 }
 
 @PublishedApi

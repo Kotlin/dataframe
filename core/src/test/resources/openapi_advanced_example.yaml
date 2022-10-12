@@ -207,9 +207,23 @@ components:
         objectWithAdditional2:
           type: object
           additionalProperties:
+            nullable: false
             oneOf:
               - type: string
               - type: integer
+        objectWithAdditional3:
+          type: object
+          additionalProperties:
+            oneOf:
+              - type: array
+                items:
+                  type: integer
+              - $ref: "#/components/schemas/Cat"
+              - $ref: "#/components/schemas/Dog"
+              - type: object
+                properties:
+                  id:
+                    type: integer
 
     ObjectWithAdditionalProperties:
       type: object
