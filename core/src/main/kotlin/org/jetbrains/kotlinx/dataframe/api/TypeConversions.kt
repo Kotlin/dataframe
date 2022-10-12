@@ -298,7 +298,7 @@ public fun <T, G> DataFrame<T>.asGroupBy(selector: ColumnSelector<T, DataFrame<G
 
 public fun <T> DataRow<T>.toDataFrame(): DataFrame<T> = owner[index..index]
 
-public fun AnyRow.toMap(): Map<String, Any?> = df().columns().map { it.name() to it[index] }.toMap()
+public fun AnyRow.toMap(): Map<String, Any?> = df().columns().associate { it.name() to it[index] }
 
 // endregion
 
