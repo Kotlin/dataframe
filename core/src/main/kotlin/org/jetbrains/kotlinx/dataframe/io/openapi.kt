@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
+import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.api.with
@@ -55,14 +56,6 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
-public fun main() {
-    val a = typeOf<Map<String, String?>?>()
-    val b = typeOf<Map<String, Any?>>()
-
-    println(a.isSubtypeOf(typeOf<Map<*, *>>()) || a.isSubtypeOf(typeOf<Map<*, *>?>()))
-    println(a.arguments[0].type == typeOf<String>())
-}
-
 public class OpenApi : SupportedCodeGenerationFormat {
 
     public fun readCodeForGeneration(text: String, extensionProperties: Boolean = false): CodeWithConverter =
@@ -88,35 +81,59 @@ public class OpenApi : SupportedCodeGenerationFormat {
 }
 
 /**
+ * Attempt to undo the creation of `value` and `array` columns by the json -> DF decoder.
+ */
+private fun DataRow<*>.unwrapJsonColumn(): Any? {
+    // for clashes like array and array1, take the highest number (this may break, but not much I can do about it)
+    val valueName = columnNames().filter { it.contains(valueColumnName) }.maxOfOrNull { it }
+    val arrayName = columnNames().filter { it.contains(arrayColumnName) }.maxOfOrNull { it }
+
+    return when {
+        getVisibleValues().isEmpty() -> null
+
+        // Can't unwrap anything
+        valueName == null && arrayName == null -> this
+
+        else -> valueName?.let(::getOrNull) ?: arrayName?.let(::getOrNull)
+    }
+}
+
+/**
+ * Attempt to undo the creation of `value` and `array` columns by the json -> DF decoder for Maps.
+ */
+@Suppress("UNCHECKED_CAST")
+private fun Map<String, *>.unwrapJsonColumn(): Map<String, Any?> =
+    mapValues { (_, value) ->
+        when {
+            value is DataRow<*>? -> value?.unwrapJsonColumn()
+
+            value is Map<*, *> && value.keys.all { it is String } ->
+                (value as Map<String, *>).unwrapJsonColumn()
+
+            else -> value
+        }
+    }
+
+/**
  * Function to be used in [ConvertSchemaDsl] ([AnyFrame.convertTo]) to help convert a DataFrame to adhere to an
  * OpenApi schema.
  */
 @Suppress("RemoveExplicitTypeArguments")
 public fun ConvertSchemaDsl<*>.convertDataRowsWithOpenApi() {
-    convert<DataRow<*>>().with<_, Any?> {
-        if (it.getVisibleValues().isEmpty()) null
-        else it[valueColumnName] ?: it[arrayColumnName]
-    }
+    // undo Json wrapping of values that should be Any?
+    convert<DataRow<*>>().with<_, Any?>(DataRow<*>::unwrapJsonColumn)
 
-    convert( // TODO
+    // undo Json wrapping of maps with values that should be Any?
+    convert(
         from = { it == typeOf<DataRow<*>>() },
-        to = { // any type of Map<String, Any?> or Map<String, Any?>?
+        to = { // any type of Map<String, Any? / *> or Map<String, Any? / *>?
             (it.isSubtypeOf(typeOf<Map<*, *>>()) || it.isSubtypeOf(typeOf<Map<*, *>?>())) &&
                 it.arguments.getOrNull(0)?.type == typeOf<String>() &&
-                it.arguments.getOrNull(1)?.type == typeOf<Any?>()
+                it.arguments.getOrNull(1)?.type.let { it == typeOf<Any?>() || it == null }
         }
-    ) {
-        val map = (it as DataRow<*>).toMap()
-        if (map.values.all { it is DataRow<*>? }) {
-            map.mapValues { (_, value) ->
-                (value as DataRow<*>?)?.let {
-                    if (it.getVisibleValues().isEmpty()) null
-                    else it[valueColumnName] ?: it[arrayColumnName]
-                }
-            }
-        } else map
-    }
+    ) { (it as DataRow<*>).toMap().unwrapJsonColumn() }
 
+    // convert DataRows to Maps if required by the schema
     convert(
         from = { it == typeOf<DataRow<*>>() },
         to = { // any type of Map<String, _> or Map<String, _>?
@@ -254,7 +271,7 @@ private fun readOpenApi(
         ?: error("Failed to parse OpenAPI, ${swaggerParseResult.messages.toList()}")
 
     // take the components.schemas from the openApi spec and convert them to a list of Markers, representing the
-    // interfaces, enums, and typealiases that need to be generated.
+    // interfaces, enums, and typeAliases that need to be generated.
     val result = openApi.components?.schemas
         ?.toMap()
         ?.toMarkers()
@@ -381,7 +398,7 @@ private sealed class OpenApiMarker private constructor(
 
     /** Type alias that points at another Marker. */
     class MarkerAlias(
-        val superMarker: Marker,
+        val superMarker: OpenApiMarker,
         name: String,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     ) : OpenApiMarker(
@@ -391,7 +408,8 @@ private sealed class OpenApiMarker private constructor(
         superMarkers = listOf(superMarker),
     ) {
 
-        override val isPrimitive = false
+        // depends on the marker it points to whether it's primitive or not
+        override val isPrimitive = superMarker.isPrimitive
 
         override fun withName(name: String): MarkerAlias = MarkerAlias(superMarker, name, visibility)
 
@@ -403,6 +421,19 @@ private sealed class OpenApiMarker private constructor(
 /**
  * Converts named OpenApi schemas to a list of [OpenApiMarker]s.
  * Will cause an exception for circular references, however they shouldn't occur in OpenApi specs.
+ *
+ * Some explanation:
+ * OpenApi provides schemas for all the types used. For each type, we want to generate a [Marker]
+ * (Which can be an interface, enum or typealias). However, the OpenApi schema is not ordered per se,
+ * so when we are reading the schema it might be that we have a reference to a (super)type
+ * (which are queried using [getRefMarker]) for which we have not yet created a [Marker].
+ * In that case, we "pause" that one (by returning [CannotFindRefMarker]) and try to read another type schema first.
+ * Circular references cannot exist since it's encoded in JSON, so we never get stuck in an infinite loop.
+ * When all markers are "retrieved" (so turned from a [RetrievableMarker] to a [MarkerResult.Success]),
+ * we're done and have converted everything!
+ * As for [produceAdditionalMarker]: In OpenAPI not all enums/objects have to be defined as a separate schema.
+ * Although recommended, you can still define an object anonymously directly as a type. For this, we have
+ * [produceAdditionalMarker] since during the conversion of a schema -> [Marker] we get an additional new [Marker].
  */
 private fun Map<String, Schema<*>>.toMarkers(): List<OpenApiMarker> {
     // Convert the schemas to toMarker calls that can be repeated to resolve references.
@@ -436,7 +467,7 @@ private fun Map<String, Schema<*>>.toMarkers(): List<OpenApiMarker> {
         MarkerResult.fromNullable(markers[it])
     }
 
-    // convert all the retrievable markers to actual markers, resolving references as we go.
+    // convert all the retrievable markers to actual markers, resolving references as we go and if possible
     while (retrievableMarkers.isNotEmpty()) try {
         retrievableMarkers.entries.first { (name, retrieveMarker) ->
             val res = retrieveMarker(
@@ -448,11 +479,11 @@ private fun Map<String, Schema<*>>.toMarkers(): List<OpenApiMarker> {
                 is MarkerResult.Success -> {
                     markers[name] = res.marker
                     retrievableMarkers -= name
-                    true // Marker is retrieved completely, remove it from the map.
+                    true // Marker is retrieved completely, remove it from the map
                 }
 
                 is MarkerResult.CannotFindRefMarker ->
-                    false // Cannot find a referenced Marker for this one, so we'll try again later.
+                    false // Cannot find a referenced Marker for this one, so we'll try again later
             }
         }
     } catch (e: NoSuchElementException) {
@@ -1070,7 +1101,7 @@ private sealed class OpenApiType(val name: kotlin.String?, override val isPrimit
             )
     }
 
-    object Array : OpenApiType("array", false) {
+    object Array : OpenApiType("array", true) {
 
         // used for list of primitives
         fun getTypeAsList(nullableArray: kotlin.Boolean, typeFqName: kotlin.String): FieldType =

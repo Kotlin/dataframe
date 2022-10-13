@@ -23,8 +23,23 @@ public enum class ExcessiveColumns { Remove, Keep, Fail }
  */
 public interface ConvertSchemaDsl<in T> {
 
+    /**
+     * Defines how to convert [from]: [A] to [to]: [B].
+     *
+     * Note: In most cases using `convert<Type>().with { }` is more convenient, however
+     * if you only have [KType], this method can be used.
+     */
     public fun <A, B> convert(from: KType, to: KType, converter: (A) -> B)
 
+    /**
+     * If you want to define a common conversion for multiple types (or any type), use this method.
+     * The exact type conversion does have higher priority. After that, the flexible conversions will be checked
+     * in order.
+     *
+     * @param from a function that should return `true` if the conversion should be applied 'from' the given [fromType]
+     * @param to a function that should return `true` if the conversion should be applied 'to' the given [toType]
+     * @param converter a function that performs the conversion
+     */
     public fun convert(
         from: (fromType: KType) -> Boolean,
         to: (toType: KType) -> Boolean,
