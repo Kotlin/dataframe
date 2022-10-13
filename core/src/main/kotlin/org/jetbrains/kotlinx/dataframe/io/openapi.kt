@@ -1322,7 +1322,7 @@ private fun OpenApiType.toFieldType(
                             val arrayTypeSchemaResult = arrayTypeResult.openApiType
                                 .toFieldType(
                                     schema = schema.items!!,
-                                    schemaName = schemaName,
+                                    schemaName = schemaName + "Content", // type name objects in the array will get
                                     nullable = arrayTypeResult.nullable,
                                     getRefMarker = getRefMarker,
                                     produceAdditionalMarker = produceAdditionalMarker,
