@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
+import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.toMap
@@ -154,6 +155,7 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
         "import org.jetbrains.kotlinx.dataframe.io.readJson",
         "import org.jetbrains.kotlinx.dataframe.io.readJsonStr",
         "import org.jetbrains.kotlinx.dataframe.api.convertTo",
+        "import org.jetbrains.kotlinx.dataframe.api.${DataSchemaEnum::class.simpleName}",
         "import org.jetbrains.kotlinx.dataframe.io.${ConvertSchemaDsl<*>::convertDataRowsWithOpenApi.name}",
     )
 

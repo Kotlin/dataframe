@@ -1,7 +1,7 @@
 [
   {
     "pet_type": "Dog",
-    "id": 1,
+    "value": 1,
     "name": "Buddy",
     "tag": "Golden Retriever",
     "other": null,
@@ -10,7 +10,7 @@
   },
   {
     "pet_type": "Dog",
-    "id": "2",
+    "value": "2",
     "name": "Buddy",
     "tag": "Golden Retriever",
     "other": "something",
@@ -20,7 +20,7 @@
   },
   {
     "pet_type": "Cat",
-    "id": 3,
+    "value": 3,
     "name": "Buddy",
     "hunts": null,
     "eye_color": "Blue",
@@ -29,12 +29,26 @@
   },
   {
     "pet_type": "Cat",
-    "id": 4,
+    "value": 4,
     "name": "Buddy",
     "hunts": true,
     "tag": "something",
     "other": [1, 12],
     "eye_color": null,
     "breed": null
+  },
+  {
+    "pet_type": "Cat",
+    "value": 56,
+    "name": "Buddy",
+    "hunts": false,
+    "tag": "something",
+    "other": {
+      "a" : {
+        "b" : [1, 12]
+      }
+    },
+    "eye_color": null,
+    "breed": ""
   }
 ]

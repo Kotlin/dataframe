@@ -26,7 +26,8 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
-internal infix fun <T> (Predicate<T>?).and(other: Predicate<T>): Predicate<T> = if (this == null) other else { it: T -> this(it) && other(it) }
+internal infix fun <T> (Predicate<T>?).and(other: Predicate<T>): Predicate<T> =
+    if (this == null) other else { it: T -> this(it) && other(it) }
 
 internal fun <T> T.toIterable(getNext: (T) -> T?) = Iterable<T> {
     object : Iterator<T> {
@@ -123,9 +124,14 @@ internal fun <T : Number> KClass<T>.zero(): T = when (this) {
     else -> TODO()
 }
 
-internal fun <T> catchSilent(body: () -> T): T? = try { body() } catch (_: Throwable) { null }
+internal fun <T> catchSilent(body: () -> T): T? = try {
+    body()
+} catch (_: Throwable) {
+    null
+}
 
-internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType? = null) = commonParents(this).createType(nullable, upperBound)
+internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType? = null) =
+    commonParents(this).createType(nullable, upperBound)
 
 internal fun Iterable<KType?>.commonType(): KType {
     val distinct = distinct()
@@ -212,7 +218,8 @@ internal fun <C : Comparable<C>> Sequence<C?>.indexOfMax(): Int {
 internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType =
     this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
 
-internal fun KType.isSubtypeWithNullabilityOf(type: KType) = this.isSubtypeOf(type) && (!this.isMarkedNullable || type.isMarkedNullable)
+internal fun KType.isSubtypeWithNullabilityOf(type: KType) =
+    this.isSubtypeOf(type) && (!this.isMarkedNullable || type.isMarkedNullable)
 
 @PublishedApi
 internal inline fun <reified C> headPlusArray(head: C, cols: Array<out C>): Array<C> =
@@ -247,9 +254,21 @@ private const val DELIMITERS = "[_\\s]"
 internal val DELIMITERS_REGEX = DELIMITERS.toRegex()
 internal val DELIMITED_STRING_REGEX: Regex = ".+$DELIMITERS.+".toRegex()
 
+internal val CAMEL_REGEX = "(?<=[a-zA-Z])[A-Z]".toRegex()
+
 internal fun String.toCamelCaseByDelimiters(delimiters: Regex): String {
     return split(delimiters).joinToCamelCaseString()
 }
+
+internal fun String.toSnakeCase(): String =
+    if ("[A-Z_]+".toRegex().matches(this)) {
+        this
+    } else {
+        CAMEL_REGEX
+            .replace(this) { "_${it.value}" }
+            .replace(" ", "_")
+            .lowercase()
+    }
 
 internal fun List<String>.joinToCamelCaseString(): String {
     return joinToString(separator = "") { it.replaceFirstChar { it.uppercaseChar() } }

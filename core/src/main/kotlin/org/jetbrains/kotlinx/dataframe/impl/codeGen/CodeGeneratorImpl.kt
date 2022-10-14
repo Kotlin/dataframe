@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.codeGen.BaseField
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
@@ -23,8 +24,10 @@ import org.jetbrains.kotlinx.dataframe.codeGen.Marker
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.codeGen.SchemaProcessor
+import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 import org.jetbrains.kotlinx.dataframe.codeGen.toNullable
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.impl.toSnakeCase
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.api.Code
 
@@ -314,11 +317,22 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
     private fun generateEnum(marker: Marker): Code {
         val visibility = renderTopLevelDeclarationVisibility(marker)
 
-        val header = "${visibility}enum class ${marker.name}"
+        val header = "${visibility}enum class ${marker.name}(override val value: ${String::class.qualifiedName}) : ${DataSchemaEnum::class.qualifiedName}"
 
+        val fieldNames = mutableSetOf<String>()
         val fieldsDeclaration = marker.fields.mapIndexed { i, it ->
+            val originalFieldName = it.fieldName.unquoted.toSnakeCase().uppercase().ifEmpty { "EMPTY_STRING" }
+            var fieldName = originalFieldName
+            var j = 1
+            while (fieldName in fieldNames) {
+                fieldName = "${originalFieldName}_${j++}"
+            }
+            fieldNames += fieldName
+
+            val valueName = it.fieldName.unquoted
             val isLast = i == marker.fields.size - 1
-            "    ${it.fieldName.quotedIfNeeded}${if (isLast) ";" else ","}"
+
+            "    ${ValidFieldName.of(fieldName).quotedIfNeeded}(\"$valueName\")${if (isLast) ";" else ","}"
         }.join()
 
         val body = if (fieldsDeclaration.isNotBlank()) buildString {

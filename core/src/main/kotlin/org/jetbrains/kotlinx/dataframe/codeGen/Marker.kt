@@ -77,7 +77,7 @@ public open class Marker(
 
     public val columnNames: List<String> get() = allFields.map { it.columnName }
 
-    public val schema: DataFrameSchema by lazy { DataFrameSchemaImpl(allFields.map { it.columnName to it.columnSchema }.toMap()) }
+    public val schema: DataFrameSchema by lazy { DataFrameSchemaImpl(allFields.associate { it.columnName to it.columnSchema }) }
 
     public fun implements(schema: Marker): Boolean = if (schema.name == name) true else allSuperMarkers[schema.name]?.let { it === schema } ?: false
 
