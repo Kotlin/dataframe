@@ -116,7 +116,7 @@ components:
                 - type: number
             breed:
               type: string
-              enum: [ Ragdoll, Shorthair, Persian, Maine Coon, null ]
+              enum: [ Ragdoll, Shorthair, Persian, Maine Coon, maine_coon, "", 1, null ]
 
     EyeColor: # nullable enum in reference
       type: string
@@ -139,7 +139,7 @@ components:
       properties:
         pet_type:
           type: string
-        id:
+        value:
           anyOf:
             - type: integer
               format: int64
@@ -229,3 +229,22 @@ components:
       type: object
       additionalProperties:
         type: string
+
+    SomeArray:
+      type: array
+      items:
+        type: object
+        required:
+          - op
+          - path
+        properties:
+          op:
+            type: string
+            enum:
+              - add
+              - remove
+              - replace
+          path:
+            type: string
+          value:
+            type: object

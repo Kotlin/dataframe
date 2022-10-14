@@ -208,7 +208,10 @@ internal object Parsers : GlobalParserOptions {
     }
 
     private val parsersOrder = listOf(
+        // Int
         stringParser { it.toIntOrNull() },
+
+        // Long
         stringParser { it.toLongOrNull() },
 
         // kotlinx.datetime.Instant
@@ -267,7 +270,10 @@ internal object Parsers : GlobalParserOptions {
         // Double, with POSIX format
         stringParser { it.parseDouble(NumberFormat.getInstance(Locale.forLanguageTag("C.UTF-8"))) },
 
+        // Boolean
         stringParser { it.toBooleanOrNull() },
+
+        // BigDecimal
         stringParser { it.toBigDecimalOrNull() },
 
         stringParser(catch = true) { if (it.startsWith("[")) DataFrame.readJsonStr(it) else null },

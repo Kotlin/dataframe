@@ -51,6 +51,8 @@ class OpenApiTests : JupyterReplTestCase() {
     private val advancedData = File("src/test/resources/openapi_advanced_data.json").readText()
     private val advancedDataError = File("src/test/resources/openapi_advanced_data2.json").readText()
 
+    private val onePasswordJson = File("src/test/resources/1password_openapi.yaml")
+
     @Language("json")
     private val somePets = """
         [
@@ -158,10 +160,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kts")
         val statusInterface = """
-            enum class Status {
-                placed,
-                approved,
-                delivered;
+            enum class Status(override val value: kotlin.String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
+                PLACED("placed"),
+                APPROVED("approved"),
+                DELIVERED("delivered");
             }
         """.trimIndent()
 
@@ -370,10 +372,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val status1Enum = """
-            enum class Status1 {
-                available,
-                pending,
-                sold;
+            enum class Status1(override val value: kotlin.String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
+                AVAILABLE("available"),
+                PENDING("pending"),
+                SOLD("sold");
             }
         """.trimIndent()
 
@@ -473,11 +475,11 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val breedEnum = """
-            enum class Breed {
-                Dingo,
-                Husky,
-                Retriever,
-                Shepherd;
+            enum class Breed(override val value: kotlin.String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
+                DINGO("Dingo"),
+                HUSKY("Husky"),
+                RETRIEVER("Retriever"),
+                SHEPHERD("Shepherd");
             }
         """.trimIndent()
 
@@ -515,11 +517,14 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val breed1Enum = """
-            enum class Breed1 {
-                Ragdoll,
-                Shorthair,
-                Persian,
-                `Maine Coon`;
+            enum class Breed1(override val value: kotlin.String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
+                RAGDOLL("Ragdoll"),
+                SHORTHAIR("Shorthair"),
+                PERSIAN("Persian"),
+                MAINE_COON("Maine Coon"),
+                MAINE_COON_1("maine_coon"),
+                EMPTY_STRING(""),
+                `1`("1");
             }
         """.trimIndent() // nullable enum, but taken care of in properties that use this enum
 
@@ -557,11 +562,11 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val eyeColorEnum = """
-            enum class EyeColor {
-                Blue,
-                Yellow,
-                Brown,
-                Green;
+            enum class EyeColor(override val value: kotlin.String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
+                BLUE("Blue"),
+                YELLOW("Yellow"),
+                BROWN("Brown"),
+                GREEN("Green");
             }
         """.trimIndent() // nullable enum, but taken care of in properties that use this enum
 
@@ -573,7 +578,8 @@ class OpenApiTests : JupyterReplTestCase() {
             interface Pet {
                 @ColumnName("pet_type")
                 val petType: kotlin.String
-                val id: kotlin.Any
+                @ColumnName("value")
+                val `value`: kotlin.Any?
                 val name: kotlin.String
                 val tag: kotlin.String?
                 val other: kotlin.Any?
@@ -586,14 +592,14 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val petExtensions = """
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("Pet_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.`value`: kotlin.Any? @JvmName("Pet_value") get() = this["value"] as kotlin.Any?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullablePet_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.`value`: kotlin.Any? @JvmName("NullablePet_value") get() = this["value"] as kotlin.Any?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.eyeColor: org.jetbrains.kotlinx.dataframe.DataColumn<EyeColor?> @JvmName("Pet_eyeColor") get() = this["eye_color"] as org.jetbrains.kotlinx.dataframe.DataColumn<EyeColor?>
             val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.eyeColor: EyeColor? @JvmName("Pet_eyeColor") get() = this["eye_color"] as EyeColor?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.eyeColor: org.jetbrains.kotlinx.dataframe.DataColumn<EyeColor?> @JvmName("NullablePet_eyeColor") get() = this["eye_color"] as org.jetbrains.kotlinx.dataframe.DataColumn<EyeColor?>
             val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.eyeColor: EyeColor? @JvmName("NullablePet_eyeColor") get() = this["eye_color"] as EyeColor?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any> @JvmName("Pet_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.id: kotlin.Any @JvmName("Pet_id") get() = this["id"] as kotlin.Any
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullablePet_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.id: kotlin.Any? @JvmName("NullablePet_id") get() = this["id"] as kotlin.Any?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Pet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
             val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.name: kotlin.String @JvmName("Pet_name") get() = this["name"] as kotlin.String
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
@@ -731,6 +737,52 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(errorExtensions)
 
+        @Language("kt")
+        val valueInterface = """
+            @DataSchema(isOpen = false)
+            interface Value
+        """.trimIndent()
+
+        code should haveSubstring(valueInterface)
+
+        @Language("kt")
+        val someArrayContentInterface = """
+            @DataSchema(isOpen = false)
+            interface SomeArrayContent {
+                val op: Op
+                val path: kotlin.String
+                @ColumnName("value")
+                val `value`: Value?
+                public companion object {
+        """.trimIndent()
+
+        code should haveSubstring(someArrayContentInterface)
+
+        @Language("kt")
+        val someArrayContentExtensions = """
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent>.`value`: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Value?> @JvmName("SomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Value?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent>.`value`: org.jetbrains.kotlinx.dataframe.DataRow<Value?> @JvmName("SomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataRow<Value?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent?>.`value`: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Value?> @JvmName("NullableSomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Value?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent?>.`value`: org.jetbrains.kotlinx.dataframe.DataRow<Value?> @JvmName("NullableSomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataRow<Value?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent>.op: org.jetbrains.kotlinx.dataframe.DataColumn<Op> @JvmName("SomeArrayContent_op") get() = this["op"] as org.jetbrains.kotlinx.dataframe.DataColumn<Op>
+            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent>.op: Op @JvmName("SomeArrayContent_op") get() = this["op"] as Op
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent?>.op: org.jetbrains.kotlinx.dataframe.DataColumn<Op?> @JvmName("NullableSomeArrayContent_op") get() = this["op"] as org.jetbrains.kotlinx.dataframe.DataColumn<Op?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent?>.op: Op? @JvmName("NullableSomeArrayContent_op") get() = this["op"] as Op?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent>.path: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("SomeArrayContent_path") get() = this["path"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
+            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent>.path: kotlin.String @JvmName("SomeArrayContent_path") get() = this["path"] as kotlin.String
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent?>.path: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableSomeArrayContent_path") get() = this["path"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent?>.path: kotlin.String? @JvmName("NullableSomeArrayContent_path") get() = this["path"] as kotlin.String?
+        """.trimIndent()
+
+        code should haveSubstring(someArrayContentExtensions)
+
+        @Language("kt")
+        val someArrayTypeAlias = """
+            typealias SomeArray = org.jetbrains.kotlinx.dataframe.DataFrame<SomeArrayContent>
+        """.trimIndent()
+
+        code should haveSubstring(someArrayTypeAlias)
+
         @Language("kts")
         val res1 = execRaw(
             "Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Cat\" }.convertTo<Cat>(ExcessiveColumns.Remove)"
@@ -749,6 +801,11 @@ class OpenApiTests : JupyterReplTestCase() {
         ) as AnyFrame
         val res3Schema = res3.schema()
     }
+
+//    @Test
+//    fun `1Password test`() {
+//        val code = execGeneratedCode(onePasswordJson).declarations.trimIndent()
+//    }
 
     enum class EyeColor {
         Blue,
