@@ -82,6 +82,11 @@
         "value": 3,
         "name": "Buddy",
         "hunts": null,
+        "other": {
+          "a" : {
+            "b" : [1, 12]
+          }
+        },
         "eye_color": "Blue",
         "breed": "Ragdoll",
         "age": 1.5

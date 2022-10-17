@@ -25,6 +25,8 @@ import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
 import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.api.columnNames
 import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
@@ -142,6 +144,16 @@ public fun ConvertSchemaDsl<*>.convertDataRowsWithOpenApi() {
                 it.arguments.getOrNull(0)?.type == typeOf<String>()
         }
     ) { (it as DataRow<*>).toMap() }
+
+    // convert DataFrame to DataFrame<Any?> if required by the schema
+    convert(
+        from = { it == typeOf<DataFrame<*>>() },
+        to = { it.isSubtypeOf(typeOf<DataFrame<Any>>()) || it.isSubtypeOf(typeOf<DataFrame<Any?>>()) }
+    ) {
+        (it as DataFrame<*>).map {
+            it.unwrapJsonColumn()
+        }.toDataFrame()
+    }
 }
 
 /** Used to add readJson functions to the generated interfaces. */
