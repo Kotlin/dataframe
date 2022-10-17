@@ -6,13 +6,12 @@ import io.kotest.matchers.string.haveSubstring
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.convertTo
-import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.api.schema
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
@@ -807,56 +806,58 @@ class OpenApiTests : JupyterReplTestCase() {
 //        val code = execGeneratedCode(onePasswordJson).declarations.trimIndent()
 //    }
 
-    enum class EyeColor {
-        Blue,
-        Yellow,
-        Brown,
-        Green;
+    enum class EyeColor(override val value: String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
+        BLUE("Blue"),
+        YELLOW("Yellow"),
+        BROWN("Brown"),
+        GREEN("Green");
     }
 
     @DataSchema(isOpen = false)
     interface Pet {
         @ColumnName("pet_type")
-        val petType: kotlin.String
-        val id: kotlin.Any
-        val name: kotlin.String
-        val tag: kotlin.String?
-        val other: kotlin.Any?
+        val petType: String
+
+        @ColumnName("value")
+        val `value`: Any?
+        val name: String
+        val tag: String?
+        val other: Any?
 
         @ColumnName("eye_color")
         val eyeColor: EyeColor?
 
-        public companion object {
-            public fun readJson(url: java.net.URL): org.jetbrains.kotlinx.dataframe.DataFrame<Pet> =
-                DataFrame.readJson(url).convertTo<Pet> { convertDataRowsWithOpenApi() }
+        companion object {
+            fun readJson(url: java.net.URL): DataFrame<Pet> =
+                DataFrame.readJson(url).convertTo { convertDataRowsWithOpenApi() }
 
-            public fun readJson(path: kotlin.String): org.jetbrains.kotlinx.dataframe.DataFrame<Pet> =
-                DataFrame.readJson(path).convertTo<Pet> { convertDataRowsWithOpenApi() }
+            fun readJson(path: String): DataFrame<Pet> =
+                DataFrame.readJson(path).convertTo { convertDataRowsWithOpenApi() }
 
-            public fun readJson(stream: java.io.InputStream): org.jetbrains.kotlinx.dataframe.DataFrame<Pet> =
-                DataFrame.readJson(stream).convertTo<Pet> { convertDataRowsWithOpenApi() }
+            fun readJson(stream: InputStream): DataFrame<Pet> =
+                DataFrame.readJson(stream).convertTo { convertDataRowsWithOpenApi() }
 
-            public fun readJsonStr(text: kotlin.String): org.jetbrains.kotlinx.dataframe.DataFrame<Pet> =
-                DataFrame.readJsonStr(text).convertTo<Pet> { convertDataRowsWithOpenApi() }
+            fun readJsonStr(text: String): DataFrame<Pet> =
+                DataFrame.readJsonStr(text).convertTo { convertDataRowsWithOpenApi() }
         }
     }
 
     @DataSchema(isOpen = false)
     interface IntList {
-        val list: kotlin.collections.List<kotlin.Int>
+        val list: List<Int>
 
-        public companion object {
-            public fun readJson(url: java.net.URL): org.jetbrains.kotlinx.dataframe.DataFrame<IntList> =
-                DataFrame.readJson(url).convertTo<IntList> { convertDataRowsWithOpenApi() }
+        companion object {
+            fun readJson(url: java.net.URL): DataFrame<IntList> =
+                DataFrame.readJson(url).convertTo { convertDataRowsWithOpenApi() }
 
-            public fun readJson(path: kotlin.String): org.jetbrains.kotlinx.dataframe.DataFrame<IntList> =
-                DataFrame.readJson(path).convertTo<IntList> { convertDataRowsWithOpenApi() }
+            fun readJson(path: String): DataFrame<IntList> =
+                DataFrame.readJson(path).convertTo { convertDataRowsWithOpenApi() }
 
-            public fun readJson(stream: java.io.InputStream): org.jetbrains.kotlinx.dataframe.DataFrame<IntList> =
-                DataFrame.readJson(stream).convertTo<IntList> { convertDataRowsWithOpenApi() }
+            fun readJson(stream: InputStream): DataFrame<IntList> =
+                DataFrame.readJson(stream).convertTo { convertDataRowsWithOpenApi() }
 
-            public fun readJsonStr(text: kotlin.String): org.jetbrains.kotlinx.dataframe.DataFrame<IntList> =
-                DataFrame.readJsonStr(text).convertTo<IntList> { convertDataRowsWithOpenApi() }
+            fun readJsonStr(text: String): DataFrame<IntList> =
+                DataFrame.readJsonStr(text).convertTo { convertDataRowsWithOpenApi() }
         }
     }
 
@@ -864,25 +865,25 @@ class OpenApiTests : JupyterReplTestCase() {
     interface Error {
         val ints: IntList?
         val petRef: PetRef
-        val pets: org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>
-        val code: kotlin.Int
-        val message: kotlin.String
+        val pets: DataFrame<Any?>
+        val code: Int
+        val message: String
         val objectWithAdditional: ObjectWithAdditionalProperties
         val objectWithAdditional2: ObjectWithAdditional2?
         val objectWithAdditional3: ObjectWithAdditional3?
 
-        public companion object {
-            public fun readJson(url: java.net.URL): org.jetbrains.kotlinx.dataframe.DataFrame<Error> =
-                DataFrame.readJson(url).convertTo<Error> { convertDataRowsWithOpenApi() }
+        companion object {
+            fun readJson(url: java.net.URL): DataFrame<Error> =
+                DataFrame.readJson(url).convertTo { convertDataRowsWithOpenApi() }
 
-            public fun readJson(path: kotlin.String): org.jetbrains.kotlinx.dataframe.DataFrame<Error> =
-                DataFrame.readJson(path).convertTo<Error> { convertDataRowsWithOpenApi() }
+            fun readJson(path: String): DataFrame<Error> =
+                DataFrame.readJson(path).convertTo { convertDataRowsWithOpenApi() }
 
-            public fun readJson(stream: java.io.InputStream): org.jetbrains.kotlinx.dataframe.DataFrame<Error> =
-                DataFrame.readJson(stream).convertTo<Error> { convertDataRowsWithOpenApi() }
+            fun readJson(stream: InputStream): DataFrame<Error> =
+                DataFrame.readJson(stream).convertTo { convertDataRowsWithOpenApi() }
 
-            public fun readJsonStr(text: kotlin.String): org.jetbrains.kotlinx.dataframe.DataFrame<Error> =
-                DataFrame.readJsonStr(text).convertTo<Error> { convertDataRowsWithOpenApi() }
+            fun readJsonStr(text: String): DataFrame<Error> =
+                DataFrame.readJsonStr(text).convertTo { convertDataRowsWithOpenApi() }
         }
     }
 
@@ -905,23 +906,13 @@ class OpenApiTests : JupyterReplTestCase() {
         df.convertTo<Error> {
             convertDataRowsWithOpenApi()
         }.alsoDebug("result:")
-            .objectWithAdditional3
-            .map {
-                val res = it?.get("d") // TODO, should not have "array:" key
-                res
+            .pets.forEachIndexed { i, it ->
+                it.alsoDebug("pet $i:")
             }
-            .toDataFrame()
-            .alsoDebug("objectWithAdditional3:")
-    }
-
-    private fun <T : DataFrame<*>> T.alsoDebug(println: String? = null): T = apply {
-        println?.let { println(it) }
-        print(borders = true, title = true, columnTypes = true, valueLimit = -1)
-        schema().print()
     }
 }
 
 typealias PetRef = OpenApiTests.Pet
-typealias ObjectWithAdditionalProperties = kotlin.collections.Map<kotlin.String, kotlin.String?>
-typealias ObjectWithAdditional2 = kotlin.collections.Map<kotlin.String, kotlin.Any?>
-typealias ObjectWithAdditional3 = kotlin.collections.Map<kotlin.String, kotlin.Any?>
+typealias ObjectWithAdditionalProperties = Map<String, String?>
+typealias ObjectWithAdditional2 = Map<String, Any?>
+typealias ObjectWithAdditional3 = Map<String, Any?>
