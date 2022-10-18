@@ -56,15 +56,15 @@ df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.inplace()
 ## Split horizontally
 
 Stores split values in new columns.
-* `into(col1, col2, ... )` — store splitted values in new top-level columns
-* `inward(col1, col2, ...)` — store splitted values in new columns nested inside original column
+* `into(col1, col2, ... )` — store split values in new top-level columns
+* `inward(col1, col2, ...)` — store split values in new columns nested inside original column
 * `intoColumns` — split `FrameColumn` into `ColumnGroup` storing in every cell a `List` of original values per every column
 
 **Reverse operation:** [`merge`](merge.md)
 
 `columnNamesGenerator` is used to generate names for additional columns when the list of explicitly specified `columnNames` was not long enough. `columnIndex` starts with `1` for the first additional column name.
 
-Default `columnNamesGenerator` generates column names `splitted1`, `splitted2`...
+Default `columnNamesGenerator` generates column names `split1`, `split2`...
 
 <!---FUN split-->
 <tabs>
@@ -100,7 +100,7 @@ df.split { "name"["lastName"] }.by(" ").default("").inward { "word$it" }
 </tab></tabs>
 <!---END-->
 
-`String` columns can also be splitted into group matches of [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
+`String` columns can also be split into group matches of [`Regex`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.text/-regex/) pattern:
 
 <!---FUN splitRegex-->
 
@@ -112,7 +112,7 @@ merged.split { name }
 
 <!---END-->
 
-`FrameColumn` can be splitted into columns:
+`FrameColumn` can be split into columns:
 
 <!---FUN splitFrameColumn-->
 

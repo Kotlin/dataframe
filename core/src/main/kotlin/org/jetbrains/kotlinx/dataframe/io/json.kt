@@ -31,6 +31,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
+import org.jetbrains.kotlinx.dataframe.impl.DataCollectorBase
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
 import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
@@ -72,14 +73,14 @@ public class JSON : SupportedDataFrameFormat {
      *  ]
      * ```
      *
-     * [ARRAY_AND_VALUE_COLUMNS] (default) will create a [DataFrame] looking like:
+     * [ARRAY_AND_VALUE_COLUMNS] (default) will create a [DataFrame] looking like (including `null` and `[]` values):
      * ```
      * ⌌----------------------------------------------⌍
      * |  | a:{b:Int?, value:String?, array:List<Int>}|
      * |--|-------------------------------------------|
-     * | 0|                             { value:text }|
-     * | 1|                                    { b:2 }|
-     * | 2|                        { array:[6, 7, 8] }|
+     * | 0|         { b:null, value:"text", array:[] }|
+     * | 1|              { b:2, value:null, array:[] }|
+     * | 2|    { b:null, value:null, array:[6, 7, 8] }|
      * ⌎----------------------------------------------⌏
      * ```
      * So, for the type clashing argument it will create a [ColumnGroup] with the properties `value`, `array`,
@@ -90,12 +91,11 @@ public class JSON : SupportedDataFrameFormat {
      * ⌌-------------⌍
      * |  |     a:Any|
      * |--|----------|
-     * | 0|      text|
+     * | 0|    "text"|
      * | 1|   { b:2 }|
      * | 2| [6, 7, 8]|
      * ⌎-------------⌏
      * ```
-     *
      */
     public enum class TypeClashTactic {
         ARRAY_AND_VALUE_COLUMNS,
@@ -198,8 +198,6 @@ private enum class AnyColType {
 }
 
 internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emptyList()): AnyFrame {
-    fun AnyFrame.isSingleUnnamedColumn() = ncol == 1 && getColumn(0) is UnnamedColumn
-
     var hasPrimitive = false
     var hasArray = false
     var hasObject = false
@@ -226,10 +224,15 @@ internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emp
         hasObject && !hasPrimitive && !hasArray -> AnyColType.OBJECTS
         else -> AnyColType.ANY
     }
+    val justPrimitives = hasPrimitive && !hasArray && !hasObject
 
     val columns: List<AnyCol> = when (colType) {
+        // Create one column of type Any? (or guessed primitive type) from all the records
         AnyColType.ANY -> {
-            val collector = createDataCollector<Any?>(records.size, typeOf<Any?>())
+            val collector: DataCollectorBase<Any?> =
+                if (justPrimitives) createDataCollector(records.size) // guess the type
+                else createDataCollector(records.size, typeOf<Any?>()) // use Any?
+
             val nanIndices = mutableListOf<Int>()
             records.forEachIndexed { i, v ->
                 when (v) {
@@ -250,7 +253,8 @@ internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emp
                     }
 
                     "NaN" -> {
-                        nanIndices.add(i); collector.add(null)
+                        nanIndices.add(i)
+                        collector.add(null)
                     }
 
                     else -> collector.add(v)
@@ -279,6 +283,7 @@ internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emp
             listOf(UnnamedColumn(res))
         }
 
+        // Create one column of type FrameColumn, or List<> from all the records if they are all arrays
         AnyColType.ARRAYS -> {
             val values = mutableListOf<Any?>()
             val startIndices = ArrayList<Int>()
@@ -309,6 +314,7 @@ internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emp
             listOf(UnnamedColumn(res))
         }
 
+        // Create multiple columns from all the records if they are all objects, merging the objects in essence
         AnyColType.OBJECTS -> {
             nameGenerator.names.map { colName ->
                 val values = ArrayList<Any?>(records.size)
@@ -316,6 +322,7 @@ internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emp
                 records.forEach {
                     when (it) {
                         is JsonObject -> values.add(it[colName])
+                        null -> values.add(null)
                         else -> error("Expected JsonObject, got $it")
                     }
                 }
@@ -350,9 +357,9 @@ internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emp
 internal const val arrayColumnName: String = "array"
 internal const val valueColumnName: String = "value"
 
-internal fun fromJsonListArrayAndValueColumns(records: List<*>, header: List<String> = emptyList()): AnyFrame {
-    fun AnyFrame.isSingleUnnamedColumn() = ncol == 1 && getColumn(0) is UnnamedColumn
+private fun AnyFrame.isSingleUnnamedColumn() = ncol == 1 && getColumn(0) is UnnamedColumn
 
+internal fun fromJsonListArrayAndValueColumns(records: List<*>, header: List<String> = emptyList()): AnyFrame {
     var hasPrimitive = false
     var hasArray = false
     // list element type can be JsonObject, JsonArray or primitive
