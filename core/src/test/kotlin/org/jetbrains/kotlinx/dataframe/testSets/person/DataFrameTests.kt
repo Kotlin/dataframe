@@ -1320,7 +1320,7 @@ class DataFrameTests : BaseTest() {
         val merged = typed.merge { age and city and weight }.by(",").into("info")
         val info by column<String>()
         val res = merged.split(info).into("age")
-        res.columnNames() shouldBe listOf("name", "age", "splitted1", "splitted2")
+        res.columnNames() shouldBe listOf("name", "age", "split1", "split2")
     }
 
     @Test
@@ -2103,14 +2103,14 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `split inplace`() {
-        val splitted = typed.split { name }.by { it.toCharArray().asIterable() }.inplace()
-        splitted["name"] shouldBe typed.name.map { it.toCharArray().toList() }
+        val split = typed.split { name }.by { it.toCharArray().asIterable() }.inplace()
+        split["name"] shouldBe typed.name.map { it.toCharArray().toList() }
     }
 
     @Test
     fun `split into rows with transform`() {
-        val splitted = typed.split { city }.by { it.toCharArray().toList() }.intoRows()
-        splitted.nrow shouldBe typed.city.sumOf { it?.length ?: 0 }
+        val split = typed.split { city }.by { it.toCharArray().toList() }.intoRows()
+        split.nrow shouldBe typed.city.sumOf { it?.length ?: 0 }
     }
 
     @Test
@@ -2264,8 +2264,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun splitIntoThisAndNewColumn() {
-        val splitted = typed.split { name }.by { listOf(it.dropLast(1), it.last()) }.into("name", "lastChar")
-        splitted.columnNames().sorted() shouldBe (typed.columnNames() + "lastChar").sorted()
+        val split = typed.split { name }.by { listOf(it.dropLast(1), it.last()) }.into("name", "lastChar")
+        split.columnNames().sorted() shouldBe (typed.columnNames() + "lastChar").sorted()
     }
 
     @Test

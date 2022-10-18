@@ -59,7 +59,7 @@ internal fun <T> DataFrame<T>.explodeImpl(dropEmpty: Boolean = true, columns: Co
                 }.toMap()
                 val newDf = splitIntoRows(srcCol, newData)
                 DataColumn.createColumnGroup(srcCol.name, newDf)
-            } else if (dstCol != null) { // values in current column will be splitted
+            } else if (dstCol != null) { // values in current column will be split
                 when (dstCol) {
                     is FrameColumn<*> -> {
                         val newDf = dstCol.values.mapIndexed { row, frame ->
