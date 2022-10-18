@@ -24,11 +24,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
 import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.api.columnNames
-import org.jetbrains.kotlinx.dataframe.api.convert
-import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.toMap
-import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
@@ -44,6 +40,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.toNotNullable
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Any.getType
+import org.jetbrains.kotlinx.dataframe.io.OpenApiType.AnyObject.getType
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.getTypeAsFrame
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.getTypeAsList
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Boolean.getType
@@ -124,17 +121,17 @@ private fun Map<String, *>.unwrapJsonColumn(): Map<String, Any?> =
 @Suppress("RemoveExplicitTypeArguments")
 public fun ConvertSchemaDsl<*>.convertDataRowsWithOpenApi() {
     // undo Json wrapping of values that should be Any?
-    convert<DataRow<*>>().with<_, Any?>(DataRow<*>::unwrapJsonColumn)
+//    convert<DataRow<*>>().with<_, Any?>(DataRow<*>::unwrapJsonColumn)
 
     // undo Json wrapping of maps with values that should be Any?
-    convert(
-        from = { it == typeOf<DataRow<*>>() },
-        to = { // any type of Map<String, Any? / *> or Map<String, Any? / *>?
-            (it.isSubtypeOf(typeOf<Map<*, *>>()) || it.isSubtypeOf(typeOf<Map<*, *>?>())) &&
-                it.arguments.getOrNull(0)?.type == typeOf<String>() &&
-                it.arguments.getOrNull(1)?.type.let { it == typeOf<Any?>() || it == null }
-        }
-    ) { (it as DataRow<*>).toMap().unwrapJsonColumn() }
+//    convert(
+//        from = { it == typeOf<DataRow<*>>() },
+//        to = { // any type of Map<String, Any? / *> or Map<String, Any? / *>?
+//            (it.isSubtypeOf(typeOf<Map<*, *>>()) || it.isSubtypeOf(typeOf<Map<*, *>?>())) &&
+//                it.arguments.getOrNull(0)?.type == typeOf<String>() &&
+//                it.arguments.getOrNull(1)?.type.let { it == typeOf<Any?>() || it == null }
+//        }
+//    ) { (it as DataRow<*>).toMap().unwrapJsonColumn() }
 
     // convert DataRows to Maps if required by the schema
     convert(
@@ -146,14 +143,14 @@ public fun ConvertSchemaDsl<*>.convertDataRowsWithOpenApi() {
     ) { (it as DataRow<*>).toMap() }
 
     // convert DataFrame to DataFrame<Any?> if required by the schema
-    convert(
-        from = { it == typeOf<DataFrame<*>>() },
-        to = { it.isSubtypeOf(typeOf<DataFrame<Any>>()) || it.isSubtypeOf(typeOf<DataFrame<Any?>>()) }
-    ) {
-        (it as DataFrame<*>).map {
-            it.unwrapJsonColumn()
-        }.toDataFrame()
-    }
+//    convert(
+//        from = { it == typeOf<DataFrame<*>>() },
+//        to = { it.isSubtypeOf(typeOf<DataFrame<Any>>()) || it.isSubtypeOf(typeOf<DataFrame<Any?>>()) }
+//    ) {
+//        (it as DataFrame<*>).map {
+//            it.unwrapJsonColumn()
+//        }.toDataFrame()
+//    }
 }
 
 /** Used to add readJson functions to the generated interfaces. */
@@ -168,6 +165,7 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
         "import org.jetbrains.kotlinx.dataframe.io.readJsonStr",
         "import org.jetbrains.kotlinx.dataframe.api.convertTo",
         "import org.jetbrains.kotlinx.dataframe.api.${DataSchemaEnum::class.simpleName}",
+        "import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.*",
         "import org.jetbrains.kotlinx.dataframe.io.${ConvertSchemaDsl<*>::convertDataRowsWithOpenApi.name}",
     )
 
@@ -184,28 +182,28 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
                 FunSpec.builder("readJson")
                     .returns(returnType)
                     .addParameter("url", URL::class)
-                    .addCode(getConvertMethod("readJson(url)"))
+                    .addCode(getConvertMethod("readJson(url, typeClashTactic = ANY_COLUMNS)"))
                     .build()
             )
             .addFunction(
                 FunSpec.builder("readJson")
                     .returns(returnType)
                     .addParameter("path", String::class)
-                    .addCode(getConvertMethod("readJson(path)"))
+                    .addCode(getConvertMethod("readJson(path, typeClashTactic = ANY_COLUMNS)"))
                     .build()
             )
             .addFunction(
                 FunSpec.builder("readJson")
                     .returns(returnType)
                     .addParameter("stream", InputStream::class)
-                    .addCode(getConvertMethod("readJson(stream)"))
+                    .addCode(getConvertMethod("readJson(stream, typeClashTactic = ANY_COLUMNS)"))
                     .build()
             )
             .addFunction(
                 FunSpec.builder("readJsonStr")
                     .returns(returnType)
                     .addParameter("text", String::class)
-                    .addCode(getConvertMethod("readJsonStr(text)"))
+                    .addCode(getConvertMethod("readJsonStr(text, typeClashTactic = ANY_COLUMNS)"))
                     .build()
             )
             .build()

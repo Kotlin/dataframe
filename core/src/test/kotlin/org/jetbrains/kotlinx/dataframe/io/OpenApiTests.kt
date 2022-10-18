@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
 import java.io.File
@@ -829,16 +830,16 @@ class OpenApiTests : JupyterReplTestCase() {
 
         companion object {
             fun readJson(url: java.net.URL): DataFrame<Pet> =
-                DataFrame.readJson(url).convertTo { convertDataRowsWithOpenApi() }
+                DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS).convertTo()
 
             fun readJson(path: String): DataFrame<Pet> =
-                DataFrame.readJson(path).convertTo { convertDataRowsWithOpenApi() }
+                DataFrame.readJson(path, typeClashTactic = ANY_COLUMNS).convertTo()
 
             fun readJson(stream: InputStream): DataFrame<Pet> =
-                DataFrame.readJson(stream).convertTo { convertDataRowsWithOpenApi() }
+                DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS).convertTo()
 
             fun readJsonStr(text: String): DataFrame<Pet> =
-                DataFrame.readJsonStr(text).convertTo { convertDataRowsWithOpenApi() }
+                DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS).convertTo()
         }
     }
 
@@ -848,16 +849,16 @@ class OpenApiTests : JupyterReplTestCase() {
 
         companion object {
             fun readJson(url: java.net.URL): DataFrame<IntList> =
-                DataFrame.readJson(url).convertTo { convertDataRowsWithOpenApi() }
+                DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS).convertTo()
 
             fun readJson(path: String): DataFrame<IntList> =
-                DataFrame.readJson(path).convertTo { convertDataRowsWithOpenApi() }
+                DataFrame.readJson(path, typeClashTactic = ANY_COLUMNS).convertTo()
 
             fun readJson(stream: InputStream): DataFrame<IntList> =
-                DataFrame.readJson(stream).convertTo { convertDataRowsWithOpenApi() }
+                DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS).convertTo()
 
             fun readJsonStr(text: String): DataFrame<IntList> =
-                DataFrame.readJsonStr(text).convertTo { convertDataRowsWithOpenApi() }
+                DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS).convertTo()
         }
     }
 
@@ -874,16 +875,16 @@ class OpenApiTests : JupyterReplTestCase() {
 
         companion object {
             fun readJson(url: java.net.URL): DataFrame<Error> =
-                DataFrame.readJson(url).convertTo { convertDataRowsWithOpenApi() }
+                DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS).convertTo()
 
             fun readJson(path: String): DataFrame<Error> =
-                DataFrame.readJson(path).convertTo { convertDataRowsWithOpenApi() }
+                DataFrame.readJson(path, typeClashTactic = ANY_COLUMNS).convertTo()
 
             fun readJson(stream: InputStream): DataFrame<Error> =
-                DataFrame.readJson(stream).convertTo { convertDataRowsWithOpenApi() }
+                DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS).convertTo()
 
             fun readJsonStr(text: String): DataFrame<Error> =
-                DataFrame.readJsonStr(text).convertTo { convertDataRowsWithOpenApi() }
+                DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS).convertTo()
         }
     }
 
@@ -900,12 +901,11 @@ class OpenApiTests : JupyterReplTestCase() {
 //            schema().print()
 //        }
 
-        val df = DataFrame.readJsonStr(OpenApiTests().advancedDataError)
+        val df = DataFrame.readJsonStr(OpenApiTests().advancedDataError, typeClashTactic = ANY_COLUMNS)
             .alsoDebug("error data:")
 
-        df.convertTo<Error> {
-            convertDataRowsWithOpenApi()
-        }.alsoDebug("result:")
+        df.convertTo<Error> { convertDataRowsWithOpenApi() }
+            .alsoDebug("result:")
             .pets.forEachIndexed { i, it ->
                 it.alsoDebug("pet $i:")
             }
