@@ -17,6 +17,7 @@ import org.jetbrains.kotlinx.dataframe.api.toDouble
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.*
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.values
 import org.junit.Test
@@ -57,7 +58,7 @@ class JsonTests {
                 [5, "e"]                
             ]
         """.trimIndent()
-        val df = DataFrame.readJsonStr(json, header = listOf("numbers", "letters"), typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
+        val df = DataFrame.readJsonStr(json, header = listOf("numbers", "letters"), typeClashTactic = ANY_COLUMNS)
             .alsoDebug()
 
         df.columnsCount() shouldBe 2
@@ -93,7 +94,7 @@ class JsonTests {
                 {"a":2, "b":5, "c":4.5}
             ]
         """.trimIndent()
-        val df = DataFrame.readJsonStr(json, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS)
             .alsoDebug()
         df.columnsCount() shouldBe 3
         df.rowsCount() shouldBe 2
@@ -131,7 +132,7 @@ class JsonTests {
                 {"a":[6,7,8]}
             ]
         """.trimIndent()
-        val df = DataFrame.readJsonStr(json, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS)
             .alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 3
@@ -168,7 +169,7 @@ class JsonTests {
                 {"a":[3.4, 5.6]}
             ]
         """.trimIndent()
-        val df = DataFrame.readJsonStr(json, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS)
             .alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 3
@@ -222,7 +223,7 @@ class JsonTests {
                 {"a":[ {"b":4}, {"d":5} ]}
             ]
         """.trimIndent()
-        val df = DataFrame.readJsonStr(json, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS)
             .alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 2
@@ -295,7 +296,7 @@ class JsonTests {
                 {"a":[{"a": "b"}, {"a" : "c"}, {"a" : "d"}]}
             ]
         """.trimIndent()
-        val df = DataFrame.readJsonStr(json, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS).alsoDebug()
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS).alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 4
         val a = df["a"] as ValueColumn<*>
@@ -351,7 +352,7 @@ class JsonTests {
         ).alsoDebug("df:")
 
         val res =
-            DataFrame.readJsonStr(df.toJson(), typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS).alsoDebug("res:")
+            DataFrame.readJsonStr(df.toJson(), typeClashTactic = ANY_COLUMNS).alsoDebug("res:")
         res shouldBe df
     }
 
@@ -366,7 +367,7 @@ class JsonTests {
     fun `NaN double serialization Any`() {
         val df = dataFrameOf("v")(1.1, Double.NaN)
         df["v"].type() shouldBe typeOf<Double>()
-        DataFrame.readJsonStr(df.toJson(), typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS) shouldBe df
+        DataFrame.readJsonStr(df.toJson(), typeClashTactic = ANY_COLUMNS) shouldBe df
     }
 
     @Test
@@ -380,7 +381,7 @@ class JsonTests {
     fun `NaN float serialization Any`() {
         val df = dataFrameOf("v")(1.1f, Float.NaN)
         df["v"].type() shouldBe typeOf<Float>()
-        DataFrame.readJsonStr(df.toJson(), typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS) shouldBe df.convert("v")
+        DataFrame.readJsonStr(df.toJson(), typeClashTactic = ANY_COLUMNS) shouldBe df.convert("v")
             .toDouble()
     }
 
@@ -395,7 +396,7 @@ class JsonTests {
     fun `NaN string serialization Any`() {
         val df = dataFrameOf("v")("NaM", "NaN")
         df["v"].type() shouldBe typeOf<String>()
-        DataFrame.readJsonStr(df.toJson(), typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS) shouldBe df
+        DataFrame.readJsonStr(df.toJson(), typeClashTactic = ANY_COLUMNS) shouldBe df
     }
 
     @Test
@@ -407,7 +408,7 @@ class JsonTests {
     @Test
     fun `list serialization Any`() {
         val df = dataFrameOf("a")(listOf(1, 2, 3))
-        DataFrame.readJsonStr(df.toJson(), typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS) shouldBe df
+        DataFrame.readJsonStr(df.toJson(), typeClashTactic = ANY_COLUMNS) shouldBe df
     }
 
     @Test
@@ -422,7 +423,7 @@ class JsonTests {
     fun `list serialization with nulls Any`() {
         val df = dataFrameOf("a")(listOf(1, 2, 3), null)
         val text = df.toJson()
-        val df1 = DataFrame.readJsonStr(text, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
+        val df1 = DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS)
         df1["a"][1] shouldBe emptyList<Int>()
     }
 
@@ -551,7 +552,7 @@ class JsonTests {
                 null
             ]
         """.trimIndent()
-        val df = DataFrame.readJsonStr(json, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS)
             .alsoDebug()
         df.columnsCount() shouldBe 2
         df.rowsCount() shouldBe 4
@@ -586,7 +587,7 @@ class JsonTests {
                 null
             ]
         """.trimIndent()
-        val df = DataFrame.readJsonStr(json, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS)
             .alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 7
@@ -612,7 +613,7 @@ class JsonTests {
                 null
             ]
         """.trimIndent()
-        val df = DataFrame.readJsonStr(json, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS)
             .alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 6
@@ -637,7 +638,7 @@ class JsonTests {
                 null
             ]
         """.trimIndent()
-        val df = DataFrame.readJsonStr(json, typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS)
+        val df = DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS)
             .alsoDebug()
         df.columnsCount() shouldBe 1
         df.rowsCount() shouldBe 6
