@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
+import org.jetbrains.kotlinx.dataframe.api.ConverterScope
 import org.jetbrains.kotlinx.dataframe.api.ExcessiveColumns
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.all
@@ -33,20 +34,25 @@ import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
-private class Converter(val transform: (Any?) -> Any?, val skipNulls: Boolean)
+private open class Converter(val transform: ConverterScope.(Any?) -> Any?, val skipNulls: Boolean)
 
 private class ConvertSchemaDslImpl<T> : ConvertSchemaDsl<T> {
     private val converters: MutableMap<Pair<KType, KType>, Converter> = mutableMapOf()
 
-    private val flexibleConverters: MutableMap<Pair<(KType) -> Boolean, (KType) -> Boolean>, Converter> = mutableMapOf()
+    private val flexibleConverters: MutableMap<Pair<(KType) -> Boolean, (ColumnSchema) -> Boolean>, Converter> =
+        mutableMapOf()
 
     @Suppress("UNCHECKED_CAST")
     override fun <A, B> convert(from: KType, to: KType, converter: (A) -> B) {
         converters[from.withNullability(false) to to.withNullability(false)] =
-            Converter(converter as (Any?) -> Any?, !from.isMarkedNullable)
+            Converter({ converter(it as A) }, !from.isMarkedNullable)
     }
 
-    override fun convert(from: (KType) -> Boolean, to: (KType) -> Boolean, converter: (Any?) -> Any?) {
+    override fun convertIf(
+        from: (KType) -> Boolean,
+        to: (ColumnSchema) -> Boolean,
+        converter: ConverterScope.(Any?) -> Any?,
+    ) {
         flexibleConverters[from to to] = Converter(converter, false)
     }
 
@@ -54,12 +60,12 @@ private class ConvertSchemaDslImpl<T> : ConvertSchemaDsl<T> {
      * Attempts to find a converter for the given types. First it tries to find an exact match,
      * then it tries to find a flexible match where the first one will be used.
      */
-    fun getConverter(from: KType, to: KType): Converter? =
-        converters[from.withNullability(false) to to.withNullability(false)]
+    fun getConverter(fromType: KType, toSchema: ColumnSchema): Converter? =
+        converters[fromType.withNullability(false) to toSchema.type.withNullability(false)]
             ?: flexibleConverters
                 .entries
                 .firstOrNull { (predicate, _) ->
-                    predicate.first(from) && predicate.second(to)
+                    predicate.first(fromType) && predicate.second(toSchema)
                 }?.value
 }
 
@@ -68,7 +74,7 @@ internal fun AnyFrame.convertToImpl(
     type: KType,
     allowConversion: Boolean,
     excessiveColumns: ExcessiveColumns,
-    body: ConvertSchemaDsl<Any>.() -> Unit = {}
+    body: ConvertSchemaDsl<Any>.() -> Unit = {},
 ): AnyFrame {
     val dsl = ConvertSchemaDslImpl<Any>()
     dsl.body()
@@ -105,34 +111,40 @@ internal fun AnyFrame.convertToImpl(
                     else -> {
                         val columnPath = path + originalColumn.name
 
-                        when (targetColumn.kind) {
-                            ColumnKind.Value -> {
-                                val from = originalColumn.type()
-                                val to = targetColumn.type
-                                val converter = dsl.getConverter(from, to)
+                        // try to perform any user-specified conversions first
+                        val from = originalColumn.type()
+                        val to = targetColumn.type
+                        val converter = dsl.getConverter(from, targetColumn)
 
-                                if (converter != null) {
-                                    val nullsAllowed = to.isMarkedNullable
-                                    originalColumn.map(to, Infer.Nulls) {
-                                        val result =
-                                            if (it != null || !converter.skipNulls) converter.transform(it)
-                                            else it
-
-                                        if (!nullsAllowed && result == null) throw TypeConversionException(it, from, to)
-
-                                        result
+                        val convertedColumn = if (converter != null) {
+                            val nullsAllowed = to.isMarkedNullable
+                            originalColumn.map(to, Infer.Nulls) {
+                                val result =
+                                    if (it != null || !converter.skipNulls) {
+                                        converter.transform(ConverterScope(from, targetColumn), it)
+                                    } else {
+                                        it
                                     }
-                                } else originalColumn.convertTo(to)
+
+                                if (!nullsAllowed && result == null) throw TypeConversionException(it, from, to)
+
+                                result
                             }
+                        } else null
+
+                        when (targetColumn.kind) {
+                            ColumnKind.Value ->
+                                convertedColumn ?: originalColumn.convertTo(to)
 
                             ColumnKind.Group -> {
-                                require(originalColumn.kind == ColumnKind.Group) {
-                                    "Column `${originalColumn.name}` is ${originalColumn.kind}Column and can not be converted to `ColumnGroup`"
+                                val column = convertedColumn ?: originalColumn
+                                require(column.kind == ColumnKind.Group) {
+                                    "Column `${column.name}` is ${column.kind}Column and can not be converted to `ColumnGroup`"
                                 }
-                                val columnGroup = originalColumn.asColumnGroup()
+                                val columnGroup = column.asColumnGroup()
 
                                 DataColumn.createColumnGroup(
-                                    name = originalColumn.name(),
+                                    name = column.name(),
                                     df = columnGroup.convertToSchema(
                                         schema = (targetColumn as ColumnSchema.Group).schema,
                                         path = columnPath,
@@ -141,16 +153,18 @@ internal fun AnyFrame.convertToImpl(
                             }
 
                             ColumnKind.Frame -> {
+                                val column = convertedColumn ?: originalColumn
+
                                 // perform any patches if needed to be able to convert a column to a frame column
                                 val patchedOriginalColumn: AnyCol = when {
                                     // a value column of AnyFrame? can be converted to a frame column by making nulls empty dataframes
-                                    originalColumn.kind == ColumnKind.Value && originalColumn.all { it is AnyFrame? } -> {
-                                        originalColumn
+                                    column.kind == ColumnKind.Value && column.all { it is AnyFrame? } -> {
+                                        column
                                             .map { (it ?: emptyDataFrame<Any?>()) as AnyFrame }
                                             .convertTo<AnyFrame>()
                                     }
 
-                                    else -> originalColumn
+                                    else -> column
                                 }
 
                                 require(patchedOriginalColumn.kind == ColumnKind.Frame) {
@@ -184,7 +198,7 @@ internal fun AnyFrame.convertToImpl(
 
         if (visited != schema.columns.size) {
             val unvisited = schema.columns.keys - columnNames().toSet()
-            throw IllegalArgumentException("The following columns were not found in DataFrame: $unvisited, and the type was not nullable")
+            throw IllegalArgumentException("The following columns were not found in DataFrame: $unvisited, and their type was not nullable")
         }
         return newColumns.toDataFrame()
     }

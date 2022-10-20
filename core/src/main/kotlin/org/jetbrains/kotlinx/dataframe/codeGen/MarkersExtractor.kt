@@ -62,14 +62,14 @@ internal object MarkersExtractor {
                     val nestedType = if (clazz == DataRow::class) type.arguments[0].type ?: typeOf<Any?>() else type
                     val marker = get(nestedType.jvmErasure, nullableProperties || type.isMarkedNullable)
                     fieldType = FieldType.GroupFieldType(marker.name)
-                    ColumnSchema.Group(marker.schema)
+                    ColumnSchema.Group(marker.schema, nestedType)
                 }
 
                 type.shouldBeConvertedToFrameColumn() -> {
                     val frameType = type.arguments[0].type ?: typeOf<Any?>()
                     val marker = get(frameType.jvmErasure, nullableProperties || type.isMarkedNullable)
                     fieldType = FieldType.FrameFieldType(marker.name, type.isMarkedNullable || nullableProperties)
-                    ColumnSchema.Frame(marker.schema, type.isMarkedNullable)
+                    ColumnSchema.Frame(marker.schema, type.isMarkedNullable, frameType)
                 }
 
                 else -> {

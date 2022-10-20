@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.io.MethodArguments
 
 public interface DefaultReadDfMethod {
-    public fun toDeclaration(markerName: String, visibility: String): String
+    public fun toDeclaration(marker: Marker, visibility: String): String
 
     public val additionalImports: List<String>
 }
@@ -28,9 +28,9 @@ private const val readJson = "readJson"
 public abstract class AbstractDefaultReadMethod(
     private val path: String?,
     private val arguments: MethodArguments,
-    private val methodName: String
+    private val methodName: String,
 ) : DefaultReadDfMethod {
-    override fun toDeclaration(markerName: String, visibility: String): String {
+    override fun toDeclaration(marker: Marker, visibility: String): String {
         val parameters = arguments.defaultValues.map {
             ParameterSpec.builder(it.name, it.property.type)
                 .defaultValue("%N", it.property)
@@ -43,7 +43,7 @@ public abstract class AbstractDefaultReadMethod(
                 .build()
         }
 
-        val type = DataFrame::class.asClassName().parameterizedBy(ClassName("", listOf(markerName)))
+        val type = DataFrame::class.asClassName().parameterizedBy(ClassName("", listOf(marker.shortName)))
 
         val arguments = parameters.joinToString(", ") { "${it.name} = ${it.name}" }
 
@@ -93,7 +93,7 @@ internal class DefaultReadJsonMethod(path: String?) : AbstractDefaultReadMethod(
 
 internal class DefaultReadCsvMethod(
     path: String?,
-    arguments: MethodArguments
+    arguments: MethodArguments,
 ) : AbstractDefaultReadMethod(path, arguments, readCSV)
 
 internal class DefaultReadTsvMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readTSV)

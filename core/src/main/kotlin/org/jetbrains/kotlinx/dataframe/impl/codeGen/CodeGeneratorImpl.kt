@@ -4,8 +4,11 @@ import com.squareup.kotlinpoet.buildCodeBlock
 import org.jetbrains.dataframe.impl.codeGen.CodeGenResult
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
-import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode.*
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode.Enum
+import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode.NoFields
+import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode.None
+import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode.TypeAlias
+import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode.WithFields
 import org.jetbrains.dataframe.keywords.HardKeywords
 import org.jetbrains.dataframe.keywords.ModifierKeywords
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
@@ -158,7 +161,7 @@ internal object ShortNames : TypeRenderingStrategy {
 }
 
 internal open class ExtensionsCodeGeneratorImpl(
-    private val typeRendering: TypeRenderingStrategy
+    private val typeRendering: TypeRenderingStrategy,
 ) : ExtensionsCodeGenerator, TypeRenderingStrategy by typeRendering {
 
     fun renderStringLiteral(name: String) = name
@@ -317,7 +320,8 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
     private fun generateEnum(marker: Marker): Code {
         val visibility = renderTopLevelDeclarationVisibility(marker)
 
-        val header = "${visibility}enum class ${marker.name}(override val value: ${String::class.qualifiedName}) : ${DataSchemaEnum::class.qualifiedName}"
+        val header =
+            "${visibility}enum class ${marker.name}(override val value: ${String::class.qualifiedName}) : ${DataSchemaEnum::class.qualifiedName}"
 
         val fieldNames = mutableSetOf<String>()
         val fieldsDeclaration = marker.fields.mapIndexed { i, it ->
@@ -353,7 +357,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
         visibility: MarkerVisibility,
         knownMarkers: Iterable<Marker>,
         readDfMethod: DefaultReadDfMethod?,
-        fieldNameNormalizer: NameNormalizer
+        fieldNameNormalizer: NameNormalizer,
     ): CodeGenResult {
         val context = SchemaProcessor.create(name, knownMarkers, fieldNameNormalizer)
         val marker = context.process(schema, isOpen, visibility)
@@ -370,13 +374,13 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
 
     private fun generateInterfaces(
         schemas: List<Marker>,
-        fields: Boolean
+        fields: Boolean,
     ) = schemas.map { generateInterface(it, fields) }
 
     private fun generateInterface(
         marker: Marker,
         fields: Boolean,
-        readDfMethod: DefaultReadDfMethod? = null
+        readDfMethod: DefaultReadDfMethod? = null,
     ): Code {
         val annotationName = DataSchema::class.simpleName
 
@@ -410,7 +414,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
                     add("    ")
                     indent()
                     indent()
-                    add(readDfMethod.toDeclaration(marker.shortName, propertyVisibility))
+                    add(readDfMethod.toDeclaration(marker, propertyVisibility))
                 }
                 append(companionObject.toString())
             }

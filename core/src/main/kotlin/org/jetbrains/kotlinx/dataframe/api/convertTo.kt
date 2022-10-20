@@ -5,11 +5,15 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.exceptions.*
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
+import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 public enum class ExcessiveColumns { Remove, Keep, Fail }
+
+/** Provides access to [fromType] and [toSchema] in the flexible [ConvertSchemaDsl.convertIf] method. */
+public class ConverterScope(public val fromType: KType, public val toSchema: ColumnSchema)
 
 /** Dsl to define how specific type conversion should occur.
  *
@@ -32,18 +36,21 @@ public interface ConvertSchemaDsl<in T> {
     public fun <A, B> convert(from: KType, to: KType, converter: (A) -> B)
 
     /**
-     * If you want to define a common conversion for multiple types (or any type), use this method.
-     * The exact type conversion does have higher priority. After that, the flexible conversions will be checked
+     * Advanced version of [convert].
+     * If you want to define a common conversion for multiple types (or any type), or
+     * you need extra information about the target, such as its schema, use this method.
+     *
+     * The exact type conversion does have higher priority. After that, this flexible conversions will be checked
      * in order.
      *
      * @param from a function that should return `true` if the conversion should be applied 'from' the given [fromType]
-     * @param to a function that should return `true` if the conversion should be applied 'to' the given [toType]
-     * @param converter a function that performs the conversion
+     * @param to a function that should return `true` if the conversion should be applied 'to' the given [toSchema]
+     * @param converter a function that performs the conversion with access to a [ConverterScope].
      */
-    public fun convert(
+    public fun convertIf(
         from: (fromType: KType) -> Boolean,
-        to: (toType: KType) -> Boolean,
-        converter: (from: Any?) -> Any?,
+        to: (toSchema: ColumnSchema) -> Boolean,
+        converter: ConverterScope.(Any?) -> Any?,
     )
 }
 
@@ -67,7 +74,7 @@ public inline fun <C, reified R> ConvertType<C>.with(noinline converter: (C) -> 
 public class ConvertType<T>(
     @PublishedApi internal val dsl: ConvertSchemaDsl<*>,
     @PublishedApi internal val from: KType,
-    internal val property: KProperty<T>? = null
+    internal val property: KProperty<T>? = null,
 )
 
 // region DataFrame
@@ -100,7 +107,7 @@ public class ConvertType<T>(
  */
 public inline fun <reified T : Any> AnyFrame.convertTo(
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
-    noinline body: ConvertSchemaDsl<T>.() -> Unit = {}
+    noinline body: ConvertSchemaDsl<T>.() -> Unit = {},
 ): DataFrame<T> = convertTo(typeOf<T>(), excessiveColumnsBehavior, body).cast()
 
 /**
@@ -132,7 +139,7 @@ public inline fun <reified T : Any> AnyFrame.convertTo(
 public fun AnyFrame.convertTo(
     schemaType: KType,
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
-    body: ConvertSchemaDsl<Any>.() -> Unit = {}
+    body: ConvertSchemaDsl<Any>.() -> Unit = {},
 ): AnyFrame = convertToImpl(schemaType, true, excessiveColumnsBehavior, body)
 
 // endregion

@@ -52,7 +52,7 @@ import kotlin.reflect.jvm.jvmErasure
 internal fun <T, C, R> Convert<T, C>.withRowCellImpl(
     type: KType,
     infer: Infer,
-    rowConverter: RowValueExpression<T, C, R>
+    rowConverter: RowValueExpression<T, C, R>,
 ): DataFrame<T> =
     to { col -> df.newColumn(type, col.name, infer) { rowConverter(it, it[col]) } }
 
@@ -60,7 +60,7 @@ internal fun <T, C, R> Convert<T, C>.withRowCellImpl(
 internal fun <T, C, R> Convert<T, C>.convertRowColumnImpl(
     type: KType,
     infer: Infer,
-    rowConverter: RowColumnExpression<T, C, R>
+    rowConverter: RowColumnExpression<T, C, R>,
 ): DataFrame<T> =
     to { col -> df.newColumn(type, col.name, infer) { rowConverter(it, col) } }
 
@@ -81,34 +81,37 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
         else -> throw TypeConversionException(null, from, to)
     }
 
-    return when {
-        from == to -> this
-        from.isSubtypeOf(to) -> (this as DataColumnInternal<*>).changeType(to.withNullability(hasNulls()))
-        else -> when (val converter = getConverter(from, to, ParserOptions(locale = Locale.getDefault()))) {
-            null -> when (from.classifier) {
-                Any::class, Number::class, java.io.Serializable::class -> {
-                    // find converter for every value
-                    val values = values.map {
-                        it?.let {
-                            val clazz = it.javaClass.kotlin
-                            val type = clazz.createStarProjectedType(false)
-                            val converter = getConverter(type, to, ParserOptions(locale = Locale.getDefault()))
-                                ?: throw TypeConverterNotFoundException(from, to)
-                            converter(it)
-                        }.checkNulls()
-                    }
-                    DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
-                }
+    if (from == to) return this
 
-                else -> throw TypeConverterNotFoundException(from, to)
-            }
+    if (from.isSubtypeOf(to)) try {
+        return (this as DataColumnInternal<*>).changeType(to.withNullability(hasNulls()))
+    } catch (e: UnsupportedOperationException) { /* */
+    }
 
-            else -> {
+    return when (val converter = getConverter(from, to, ParserOptions(locale = Locale.getDefault()))) {
+        null -> when (from.classifier) {
+            Any::class, Number::class, java.io.Serializable::class -> {
+                // find converter for every value
                 val values = values.map {
-                    it?.let { converter(it) }.checkNulls()
+                    it?.let {
+                        val clazz = it.javaClass.kotlin
+                        val type = clazz.createStarProjectedType(false)
+                        val converter = getConverter(type, to, ParserOptions(locale = Locale.getDefault()))
+                            ?: throw TypeConverterNotFoundException(from, to)
+                        converter(it)
+                    }.checkNulls()
                 }
                 DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
             }
+
+            else -> throw TypeConverterNotFoundException(from, to)
+        }
+
+        else -> {
+            val values = values.map {
+                it?.let { converter(it) }.checkNulls()
+            }
+            DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
         }
     }
 }
