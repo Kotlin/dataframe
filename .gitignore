@@ -3,4 +3,3 @@
 .gradle
 build
 .ipynb_checkpoints
-/dataframe-excel/src/test/resources/generated_wb.xlsx
