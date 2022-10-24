@@ -6,6 +6,8 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
@@ -28,12 +30,22 @@ public sealed interface SupportedFormat {
     public fun createDefaultReadMethod(pathRepresentation: String? = null): DefaultReadDfMethod
 }
 
+/**
+ * Implement this interface to provide additional supported formats for DataFrames (such as JSON, XML, CSV, etc.).
+ * A [SupportedDataFrameFormat] is read directly to a DataFrame. If specified using
+ * [ImportDataSchema] or using the Gradle plugin, the read DataFrame will be used to
+ * generate [DataSchema] interfaces.
+ */
 public interface SupportedDataFrameFormat : SupportedFormat {
     public fun readDataFrame(stream: InputStream, header: List<String> = emptyList()): DataFrame<*>
 
     public fun readDataFrame(file: File, header: List<String> = emptyList()): DataFrame<*>
 }
 
+/**
+ * Implement this interface to provide additional [DataSchema] interface generation formats for DataFrames (such as OpenAPI).
+ * Note, this doesn't add functionality to [DataFrame.Companion.read], just [ImportDataSchema] and Gradle plugin.
+ */
 public interface SupportedCodeGenerationFormat : SupportedFormat {
 
     public fun readCodeForGeneration(stream: InputStream): CodeWithConverter
@@ -64,6 +76,11 @@ public class MethodArguments {
     }
 }
 
+/**
+ * NOTE: Needs to have fully qualified name in
+ * resources/META-INF/services/org.jetbrains.kotlinx.dataframe.io.SupportedFormat
+ * to be detected here.
+ */
 internal val supportedFormats: List<SupportedFormat> by lazy {
     (
         ServiceLoader.load(SupportedDataFrameFormat::class.java).toList() +
@@ -75,7 +92,7 @@ internal val supportedFormats: List<SupportedFormat> by lazy {
 internal fun guessFormatForExtension(
     ext: String,
     formats: List<SupportedFormat> = supportedFormats,
-    sample: Any? = null
+    sample: Any? = null,
 ): SupportedFormat? =
     formats.firstOrNull { it.acceptsExtension(ext) }
         ?.let {
@@ -182,7 +199,7 @@ internal fun DataFrame.Companion.read(
     file: File,
     format: SupportedDataFrameFormat? = null,
     header: List<String> = emptyList(),
-    formats: List<SupportedDataFrameFormat> = supportedFormats.filterIsInstance<SupportedDataFrameFormat>()
+    formats: List<SupportedDataFrameFormat> = supportedFormats.filterIsInstance<SupportedDataFrameFormat>(),
 ): ReadAnyFrame {
     if (format != null) return format to format.readDataFrame(file, header = header)
     formats.sortedBy { it.testOrder }.forEach {

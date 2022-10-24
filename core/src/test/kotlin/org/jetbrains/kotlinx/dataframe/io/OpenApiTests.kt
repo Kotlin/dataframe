@@ -1,5 +1,5 @@
 @file:ImportDataSchema(
-    name = "1Password", path = "src/test/resources/1password_openapi.yaml"
+    name = "ApiGuru", path = "src/test/resources/ApiGuruOpenApi.yaml"
 )
 
 @file:ImportDataSchema(
@@ -21,13 +21,9 @@ import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
-import org.jetbrains.kotlinx.dataframe.api.groupBy
 import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.schema
-import org.jetbrains.kotlinx.dataframe.api.ungroup
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
-import org.jetbrains.kotlinx.dataframe.io.AdditionalProperty.Companion.convertToAdditionalProperties
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.OpenApiTests.Error.Companion.convertToError
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
@@ -66,8 +62,6 @@ class OpenApiTests : JupyterReplTestCase() {
     private val advancedExample = File("src/test/resources/openapi_advanced_example.yaml")
     private val advancedData = File("src/test/resources/openapi_advanced_data.json").readText()
     private val advancedDataError = File("src/test/resources/openapi_advanced_data2.json").readText()
-
-    private val onePasswordJson = File("src/test/resources/1password_openapi.yaml")
 
     @Language("json")
     private val somePets = """
@@ -766,40 +760,20 @@ class OpenApiTests : JupyterReplTestCase() {
         val res3Schema = res3.schema()
     }
 
-//    @Test
-//    fun `1Password test`() {
-//        val code = execGeneratedCode(onePasswordJson).declarations.trimIndent()
-//    }
+    @Test
+    fun `Apis guru Test`() {
+        val url = URL("https://api.apis.guru/v2/list.json")
+        DataFrame.read(url)
+            .print(borders = true, columnTypes = true, title = true)
+//        val json = Klaxon().parseJsonObject(
+//            JsonReader(URL("https://api.apis.guru/v2/list.json").openStream().reader())
+//        ).apply {
+//            val keysToRemove = map.keys - map.keys.toList().take(50).toSet()
+//            map.keys.removeAll(keysToRemove)
+//        }
 
-//    @Test
-//    fun `IP Geolocation test`() {
-//        val res = inline_response_200.readJson(
-//            "https://ipgeolocation.abstractapi.com/v1/?api_key=6576705c38804340ab8abd307f050318"
-//        ).alsoDebug()
-////
-////        val a = res.currency.currencyName[0]
-//        val res2 = IpGeolocationData.readJson(
-//            "/mnt/data/Projects/dataframe/core/src/test/resources/ipgeolocation_data.json"
-//        ).alsoDebug()
-//    }
-
-    @DataSchema
-    interface PeopleWithLocation : AdditionalProperty {
-        override val value: PersonWithLocation
-
-        companion object {
-
-            public fun DataFrame<*>.convertToPeopleWithLocation(
-                convertTo: ConvertSchemaDsl<PeopleWithLocation>.() -> Unit = {},
-            ): DataFrame<PeopleWithLocation> = convertToAdditionalProperties(true) {
-                convertDataRowsWithOpenApi()
-                convertTo()
-            }
-
-            public fun readJson(url: URL): DataFrame<PeopleWithLocation> =
-                DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS)
-                    .convertToAdditionalProperties(true) { convertDataRowsWithOpenApi() }
-        }
+        val df = APIs.readJson(url, filterEmptyValues = false)
+            .alsoDebug(rowsLimit = 100)
     }
 
     @Test
@@ -809,17 +783,17 @@ class OpenApiTests : JupyterReplTestCase() {
 
         DataFrame.read(url).alsoDebug()
 
-        val df = PeopleWithLocation.readJson(URL(url))
+        val df = PeopleWithLocation.readJson(url)
             .alsoDebug("first mlc:")
-            .ungroup("value")
-            .alsoDebug("final mlc:")
-            .groupBy("key")
-            .updateGroups {
-                it.remove("key")
-                    .convertTo<PersonWithLocation>()
-            }.aggregate { }
-            .also { it.print() }
-            .alsoDebug()
+//            .ungroup("value")
+//            .alsoDebug("final mlc:")
+//            .groupBy("key")
+//            .updateGroups {
+//                it.remove("key")
+//                    .convertTo<PersonWithLocation>()
+//            }.aggregate { }
+//            .also { it.print() }
+//            .alsoDebug()
     }
 
     enum class EyeColor(override val value: String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {

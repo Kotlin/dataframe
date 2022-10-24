@@ -9,8 +9,8 @@ fun testResource(resourcePath: String): URL = UtilTests::class.java.classLoader.
 fun testCsv(csvName: String) = testResource("$csvName.csv")
 fun testJson(jsonName: String) = testResource("$jsonName.json")
 
-fun <T : DataFrame<*>> T.alsoDebug(println: String? = null): T = apply {
+fun <T : DataFrame<*>> T.alsoDebug(println: String? = null, rowsLimit: Int = 20): T = apply {
     println?.let { println(it) }
-    print(borders = true, title = true, columnTypes = true, valueLimit = -1)
+    print(borders = true, title = true, columnTypes = true, valueLimit = -1, rowsLimit = rowsLimit)
     schema().print()
 }
