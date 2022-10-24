@@ -42,7 +42,7 @@ class OpenApiTests : JupyterReplTestCase() {
             """
             $additionalImports
             ${code.declarations}
-            """.trimIndent()
+            """.trimLines()
         )
         return code
     }
@@ -81,12 +81,12 @@ class OpenApiTests : JupyterReplTestCase() {
               "name": "puppy"
             }
         ]
-    """.trimIndent()
+    """.trimLines()
 
     private val somePetsTripleQuotes = "\"\"\"$somePets\"\"\""
 
     private fun simpleTest(file: File) {
-        val code = execGeneratedCode(file).declarations.trimIndent()
+        val code = execGeneratedCode(file).declarations.trimLines()
 
         @Language("kt") val petInterface = """
             @DataSchema(isOpen = false)
@@ -95,7 +95,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val name: kotlin.String
                 val tag: kotlin.String?
                 public companion object {
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(petInterface)
 
@@ -112,13 +112,13 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.tag: kotlin.String? @JvmName("Pet_tag") get() = this["tag"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.tag: kotlin.String? @JvmName("NullablePet_tag") get() = this["tag"] as kotlin.String?
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(petExtensions)
 
         @Language("kt") val petsTypeAlias = """
             typealias Pets = org.jetbrains.kotlinx.dataframe.DataFrame<Pet>
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(petsTypeAlias)
 
@@ -128,7 +128,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val code: kotlin.Int
                 val message: kotlin.String
                 public companion object {
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(errorInterface)
 
@@ -141,7 +141,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<Error>.message: kotlin.String @JvmName("Error_message") get() = this["message"] as kotlin.String
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.message: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableError_message") get() = this["message"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.message: kotlin.String? @JvmName("NullableError_message") get() = this["message"] as kotlin.String?
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(errorExtensions)
 
@@ -168,7 +168,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 APPROVED("approved"),
                 DELIVERED("delivered");
             }
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(statusInterface)
 
@@ -182,7 +182,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val status: Status?
                 val complete: kotlin.Boolean?
                 public companion object {
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(orderInterface)
 
@@ -193,7 +193,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val username: kotlin.String?
                 val address: org.jetbrains.kotlinx.dataframe.DataFrame<Address?>
                 public companion object {
-        """.trimIndent() // address is a nullable array of objects -> DataFrame<Address?>
+        """.trimLines() // address is a nullable array of objects -> DataFrame<Address?>
 
         code should haveSubstring(customerInterface)
 
@@ -210,7 +210,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<Customer>.username: kotlin.String? @JvmName("Customer_username") get() = this["username"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Customer?>.username: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableCustomer_username") get() = this["username"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<Customer?>.username: kotlin.String? @JvmName("NullableCustomer_username") get() = this["username"] as kotlin.String?
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(customerExtensions)
 
@@ -239,7 +239,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<Order>.status: Status? @JvmName("Order_status") get() = this["status"] as Status?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Order?>.status: org.jetbrains.kotlinx.dataframe.DataColumn<Status?> @JvmName("NullableOrder_status") get() = this["status"] as org.jetbrains.kotlinx.dataframe.DataColumn<Status?>
             val org.jetbrains.kotlinx.dataframe.DataRow<Order?>.status: Status? @JvmName("NullableOrder_status") get() = this["status"] as Status?
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(orderExtensions)
 
@@ -251,7 +251,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val state: kotlin.String?
                 val zip: kotlin.String?
                 public companion object {
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(addressInterface)
 
@@ -272,7 +272,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<Address>.zip: kotlin.String? @JvmName("Address_zip") get() = this["zip"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Address?>.zip: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableAddress_zip") get() = this["zip"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<Address?>.zip: kotlin.String? @JvmName("NullableAddress_zip") get() = this["zip"] as kotlin.String?
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(addressExtensions)
 
@@ -282,7 +282,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val id: kotlin.Long?
                 val name: kotlin.String?
                 public companion object {
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(categoryInterface)
 
@@ -295,7 +295,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<Category>.name: kotlin.String? @JvmName("Category_name") get() = this["name"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Category?>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableCategory_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<Category?>.name: kotlin.String? @JvmName("NullableCategory_name") get() = this["name"] as kotlin.String?
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(categoryExtensions)
 
@@ -311,7 +311,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val phone: kotlin.String?
                 val userStatus: kotlin.Int?
                 public companion object {
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(userInterface)
 
@@ -348,7 +348,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<User>.username: kotlin.String? @JvmName("User_username") get() = this["username"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User?>.username: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableUser_username") get() = this["username"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<User?>.username: kotlin.String? @JvmName("NullableUser_username") get() = this["username"] as kotlin.String?
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(userExtensions)
 
@@ -358,7 +358,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val id: kotlin.Long?
                 val name: kotlin.String?
                 public companion object {
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(tagInterface)
 
@@ -368,7 +368,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 PENDING("pending"),
                 SOLD("sold");
             }
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(status1Enum)
 
@@ -382,7 +382,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val tags: org.jetbrains.kotlinx.dataframe.DataFrame<Tag?>
                 val status: Status1?
                 public companion object {
-        """.trimIndent() // category is a single other object, photoUrls is a primitive array, tags is a nullable array of objects
+        """.trimLines() // category is a single other object, photoUrls is a primitive array, tags is a nullable array of objects
 
         code should haveSubstring(petInterface)
 
@@ -411,7 +411,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.tags: org.jetbrains.kotlinx.dataframe.DataFrame<Tag?> @JvmName("Pet_tags") get() = this["tags"] as org.jetbrains.kotlinx.dataframe.DataFrame<Tag?>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.tags: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Tag?>> @JvmName("NullablePet_tags") get() = this["tags"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Tag?>>
             val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.tags: org.jetbrains.kotlinx.dataframe.DataFrame<Tag?> @JvmName("NullablePet_tags") get() = this["tags"] as org.jetbrains.kotlinx.dataframe.DataFrame<Tag?>
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(petExtensions)
 
@@ -422,7 +422,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val type: kotlin.String?
                 val message: kotlin.String?
                 public companion object {
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(apiResponseInterface)
 
@@ -439,7 +439,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<ApiResponse>.type: kotlin.String? @JvmName("ApiResponse_type") get() = this["type"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ApiResponse?>.type: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableApiResponse_type") get() = this["type"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<ApiResponse?>.type: kotlin.String? @JvmName("NullableApiResponse_type") get() = this["type"] as kotlin.String?
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(apiResponseExtensions)
 
@@ -455,7 +455,7 @@ class OpenApiTests : JupyterReplTestCase() {
 
     @Test
     fun `Other advanced test`() {
-        val code = execGeneratedCode(advancedExample).declarations.trimIndent()
+        val code = execGeneratedCode(advancedExample).declarations.trimLines()
 
         @Language("kt") val breedEnum = """
             enum class Breed(override val value: kotlin.String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
@@ -464,7 +464,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 RETRIEVER("Retriever"),
                 SHEPHERD("Shepherd");
             }
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(breedEnum)
 
@@ -475,7 +475,11 @@ class OpenApiTests : JupyterReplTestCase() {
                 val bark: kotlin.Boolean?
                 val breed: Breed
                 public companion object {
-        """.trimIndent() // tag is nullable in Pet but required in Dog
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToDog(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<Dog>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<Dog> = convertTo<Dog> { 
+                        convertDataRowsWithOpenApi() 
+                        convertTo()
+                    }
+        """.trimLines() // tag is nullable in Pet but required in Dog
 
         code should haveSubstring(dogInterface)
 
@@ -492,7 +496,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<Dog>.tag: kotlin.String @JvmName("Dog_tag") get() = this["tag"] as kotlin.String
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Dog?>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableDog_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<Dog?>.tag: kotlin.String? @JvmName("NullableDog_tag") get() = this["tag"] as kotlin.String?
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(dogExtensions)
 
@@ -506,7 +510,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 EMPTY_STRING(""),
                 `1`("1");
             }
-        """.trimIndent() // nullable enum, but taken care of in properties that use this enum
+        """.trimLines() // nullable enum, but taken care of in properties that use this enum
 
         code should haveSubstring(breed1Enum)
 
@@ -517,7 +521,11 @@ class OpenApiTests : JupyterReplTestCase() {
                 val age: kotlin.Float?
                 val breed: Breed1?
                 public companion object {
-        """.trimIndent() // hunts is required but marked nullable, age is either integer or number, breed is nullable enum
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToCat(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<Cat>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<Cat> = convertTo<Cat> { 
+                          convertDataRowsWithOpenApi() 
+                          convertTo()
+                    }
+        """.trimLines() // hunts is required but marked nullable, age is either integer or number, breed is nullable enum
 
         code should haveSubstring(catInterface)
 
@@ -534,7 +542,7 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<Cat>.hunts: kotlin.Boolean? @JvmName("Cat_hunts") get() = this["hunts"] as kotlin.Boolean?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Cat?>.hunts: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("NullableCat_hunts") get() = this["hunts"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
             val org.jetbrains.kotlinx.dataframe.DataRow<Cat?>.hunts: kotlin.Boolean? @JvmName("NullableCat_hunts") get() = this["hunts"] as kotlin.Boolean?
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(catExtensions)
 
@@ -545,7 +553,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 BROWN("Brown"),
                 GREEN("Green");
             }
-        """.trimIndent() // nullable enum, but taken care of in properties that use this enum
+        """.trimLines() // nullable enum, but taken care of in properties that use this enum
 
         code should haveSubstring(eyeColorEnum)
 
@@ -562,7 +570,11 @@ class OpenApiTests : JupyterReplTestCase() {
                 @ColumnName("eye_color")
                 val eyeColor: EyeColor?
                 public companion object {
-        """.trimIndent() // petType was named pet_type, id is either Long or String, other is not integer, eyeColor is a required but nullable enum
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToPet(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<Pet>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<Pet> = convertTo<Pet> { 
+                          convertDataRowsWithOpenApi() 
+                          convertTo()
+                      }
+        """.trimLines() // petType was named pet_type, id is either Long or String, other is not integer, eyeColor is a required but nullable enum
 
         code should haveSubstring(petInterface)
 
@@ -591,25 +603,25 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.tag: kotlin.String? @JvmName("Pet_tag") get() = this["tag"] as kotlin.String?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.tag: kotlin.String? @JvmName("NullablePet_tag") get() = this["tag"] as kotlin.String?
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(petExtensions)
 
         @Language("kt") val petRefTypeAlias = """
             typealias PetRef = Pet
-        """.trimIndent() // is either Cat or Dog, we cannot merge objects, but they have the same ancestor, so Pet
+        """.trimLines() // is either Cat or Dog, we cannot merge objects, but they have the same ancestor, so Pet
 
         code should haveSubstring(petRefTypeAlias)
 
         @Language("kt") val alsoCatTypeAlias = """
             typealias AlsoCat = Cat
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(alsoCatTypeAlias)
 
         @Language("kt") val integerTypeAlias = """
             typealias Integer = kotlin.Int
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(integerTypeAlias)
 
@@ -618,7 +630,11 @@ class OpenApiTests : JupyterReplTestCase() {
             interface IntList {
                 val list: kotlin.collections.List<kotlin.Int>
                 public companion object {
-        """.trimIndent() // array of primitives, so list int
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToIntList(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<IntList>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<IntList> = convertTo<IntList> { 
+                        convertDataRowsWithOpenApi() 
+                        convertTo()
+                    }
+        """.trimLines() // array of primitives, so list int
 
         code should haveSubstring(intListInterface)
 
@@ -627,28 +643,86 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<IntList>.list: kotlin.collections.List<kotlin.Int> @JvmName("IntList_list") get() = this["list"] as kotlin.collections.List<kotlin.Int>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<IntList?>.list: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.Int>?> @JvmName("NullableIntList_list") get() = this["list"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.Int>?>
             val org.jetbrains.kotlinx.dataframe.DataRow<IntList?>.list: kotlin.collections.List<kotlin.Int>? @JvmName("NullableIntList_list") get() = this["list"] as kotlin.collections.List<kotlin.Int>?
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(intListExtensions)
 
-        @Language("kt") val objectWithAdditionalPropertiesTypeAlias = """
-            typealias ObjectWithAdditionalProperties = kotlin.collections.Map<kotlin.String, kotlin.String?>
-        """.trimIndent()
+        @Language("kt")
+        val objectWithAdditionalPropertiesInterface = """
+            @DataSchema(isOpen = false)
+            interface ObjectWithAdditionalProperties : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty {
+                @ColumnName("value")
+                override val `value`: kotlin.String?
+                public companion object {
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditionalProperties(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditionalProperties>.() -> kotlin.Unit = {}, filterEmptyValues: kotlin.Boolean = true): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties> = convertToAdditionalProperties<ObjectWithAdditionalProperties>(filterEmptyValues = filterEmptyValues) { 
+                        convertDataRowsWithOpenApi() 
+                        convertTo()
+                    }
+        """.trimLines()
 
-        code should haveSubstring(objectWithAdditionalPropertiesTypeAlias)
+        code should haveSubstring(objectWithAdditionalPropertiesInterface)
 
-        @Language("kt") val objectWithAdditional2TypeAlias = """
-            typealias ObjectWithAdditional2 = kotlin.collections.Map<kotlin.String, kotlin.Any?>
-        """.trimIndent()
+        @Language("kt")
+        val objectWithAdditionalPropertiesExtensions = """
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditionalProperties>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("ObjectWithAdditionalProperties_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditionalProperties>.`value`: kotlin.String? @JvmName("ObjectWithAdditionalProperties_value") get() = this["value"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditionalProperties?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableObjectWithAdditionalProperties_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditionalProperties?>.`value`: kotlin.String? @JvmName("NullableObjectWithAdditionalProperties_value") get() = this["value"] as kotlin.String?
+        """.trimLines()
 
-        code should haveSubstring(objectWithAdditional2TypeAlias)
+        code should haveSubstring(objectWithAdditionalPropertiesExtensions)
 
-        @Language("kt") val objectWithAdditional3TypeAlias = """
-            typealias ObjectWithAdditional3 = kotlin.collections.Map<kotlin.String, kotlin.Any?>
-        """.trimIndent()
+        @Language("kt")
+        val objectWithAdditional2Interface = """
+            @DataSchema(isOpen = false)
+            interface ObjectWithAdditional2 : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty {
+                @ColumnName("value")
+                override val `value`: kotlin.Any?
+                public companion object {
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditional2(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditional2>.() -> kotlin.Unit = {}, filterEmptyValues: kotlin.Boolean = true): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2> = convertToAdditionalProperties<ObjectWithAdditional2>(filterEmptyValues = filterEmptyValues) { 
+                        convertDataRowsWithOpenApi() 
+                        convertTo()
+                    }
+        """.trimLines()
 
-        code should haveSubstring(objectWithAdditional3TypeAlias)
+        code should haveSubstring(objectWithAdditional2Interface)
 
+        @Language("kt")
+        val objectWithAdditional2Extensions = """
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditional2>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("ObjectWithAdditional2_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional2>.`value`: kotlin.Any? @JvmName("ObjectWithAdditional2_value") get() = this["value"] as kotlin.Any?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditional2?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullableObjectWithAdditional2_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional2?>.`value`: kotlin.Any? @JvmName("NullableObjectWithAdditional2_value") get() = this["value"] as kotlin.Any?
+        """.trimLines()
+
+        code should haveSubstring(objectWithAdditional2Extensions)
+
+        @Language("kt")
+        val objectWithAdditional3Interface = """
+            @DataSchema(isOpen = false)
+            interface ObjectWithAdditional3 : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty {
+                @ColumnName("value")
+                override val `value`: kotlin.Any?
+                public companion object {
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditional3(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditional3>.() -> kotlin.Unit = {}, filterEmptyValues: kotlin.Boolean = true): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3> = convertToAdditionalProperties<ObjectWithAdditional3>(filterEmptyValues = filterEmptyValues) { 
+                        convertDataRowsWithOpenApi() 
+                        convertTo()
+                    }
+        """.trimLines()
+
+        code should haveSubstring(objectWithAdditional3Interface)
+
+        @Language("kt")
+        val objectWithAdditional3Extensions = """
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditional3>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("ObjectWithAdditional3_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional3>.`value`: kotlin.Any? @JvmName("ObjectWithAdditional3_value") get() = this["value"] as kotlin.Any?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditional3?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullableObjectWithAdditional3_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional3?>.`value`: kotlin.Any? @JvmName("NullableObjectWithAdditional3_value") get() = this["value"] as kotlin.Any?
+        """.trimLines()
+
+        code should haveSubstring(objectWithAdditional3Extensions)
+
+        // TODO broke PetRef?
         @Language("kt") val errorInterface = """
             @DataSchema(isOpen = false)
             interface Error {
@@ -657,11 +731,15 @@ class OpenApiTests : JupyterReplTestCase() {
                 val pets: org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>
                 val code: kotlin.Int
                 val message: kotlin.String
-                val objectWithAdditional: ObjectWithAdditionalProperties
-                val objectWithAdditional2: ObjectWithAdditional2?
-                val objectWithAdditional3: ObjectWithAdditional3?
+                val objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties?>
+                val objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>
+                val objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3?>
                 public companion object {
-        """.trimIndent()
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToError(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<Error>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<Error> = convertTo<Error> { 
+                        convertDataRowsWithOpenApi() 
+                        convertTo()
+                    }
+        """.trimLines()
 
         code should haveSubstring(errorInterface)
 
@@ -698,14 +776,14 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<Error>.pets: org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?> @JvmName("Error_pets") get() = this["pets"] as org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.pets: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>> @JvmName("NullableError_pets") get() = this["pets"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>>
             val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.pets: org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?> @JvmName("NullableError_pets") get() = this["pets"] as org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(errorExtensions)
 
         @Language("kt") val valueInterface = """
             @DataSchema(isOpen = false)
             interface Value
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(valueInterface)
 
@@ -717,7 +795,11 @@ class OpenApiTests : JupyterReplTestCase() {
                 @ColumnName("value")
                 val `value`: Value?
                 public companion object {
-        """.trimIndent()
+                   public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToSomeArrayContent(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<SomeArrayContent>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<SomeArrayContent> = convertTo<SomeArrayContent> { 
+                       convertDataRowsWithOpenApi() 
+                       convertTo()
+                   }
+        """.trimLines()
 
         code should haveSubstring(someArrayContentInterface)
 
@@ -734,13 +816,13 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent>.path: kotlin.String @JvmName("SomeArrayContent_path") get() = this["path"] as kotlin.String
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent?>.path: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableSomeArrayContent_path") get() = this["path"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent?>.path: kotlin.String? @JvmName("NullableSomeArrayContent_path") get() = this["path"] as kotlin.String?
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(someArrayContentExtensions)
 
         @Language("kt") val someArrayTypeAlias = """
             typealias SomeArray = org.jetbrains.kotlinx.dataframe.DataFrame<SomeArrayContent>
-        """.trimIndent()
+        """.trimLines()
 
         code should haveSubstring(someArrayTypeAlias)
 
@@ -1012,6 +1094,8 @@ class OpenApiTests : JupyterReplTestCase() {
             it.print(borders = true, columnTypes = true, title = true)
         }
     }
+
+    private fun String.trimLines(): String = trim().removeSurrounding("\n").lines().joinToString("\n") { it.trim() }
 }
 
 typealias PetRef = OpenApiTests.Pet

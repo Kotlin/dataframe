@@ -50,6 +50,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.isNullable
 import org.jetbrains.kotlinx.dataframe.codeGen.name
 import org.jetbrains.kotlinx.dataframe.codeGen.plus
 import org.jetbrains.kotlinx.dataframe.codeGen.toNotNullable
+import org.jetbrains.kotlinx.dataframe.codeGen.toNullable
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.io.AdditionalProperty.Companion.convertToAdditionalProperties
@@ -565,8 +566,8 @@ private sealed class OpenApiMarker private constructor(
         override val isObject = true
 
         override fun toFieldType(): FieldType =
-            FieldType.ValueFieldType(
-                typeFqName = name + if (nullable) "?" else "",
+            FieldType.GroupFieldType(
+                markerName = name + if (nullable) "?" else "",
             )
 
         override fun withName(name: String): Interface =
@@ -671,15 +672,17 @@ private sealed class OpenApiMarker private constructor(
      * A [Marker] that will be used to generate a type alias that points at another [Marker].
      *
      * @param superMarker the type that the type alias points at.
+     * @param nullable whether the typealias points at a nullable type.
      * @param name the name of the type alias.
      * @param visibility the visibility of the type alias.
      */
     class MarkerAlias(
         val superMarker: OpenApiMarker,
+        nullable: Boolean,
         name: String,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     ) : OpenApiMarker(
-        nullable = superMarker.nullable,
+        nullable = nullable || superMarker.nullable,
         name = name,
         visibility = visibility,
         fields = emptyList(),
@@ -694,10 +697,10 @@ private sealed class OpenApiMarker private constructor(
                 markerName = name + if (nullable) "?" else "",
             )
 
-        override fun withName(name: String): MarkerAlias = MarkerAlias(superMarker, name, visibility)
+        override fun withName(name: String): MarkerAlias = MarkerAlias(superMarker, nullable, name, visibility)
 
         override fun withVisibility(visibility: MarkerVisibility): MarkerAlias =
-            MarkerAlias(superMarker, name, visibility)
+            MarkerAlias(superMarker, nullable, name, visibility)
     }
 }
 
@@ -1026,11 +1029,10 @@ private fun Schema<*>.toMarker(
                 val fields = buildList {
                     for ((name, property) in (properties ?: emptyMap())) {
                         val isRequired = name in required
-                        val isRequiredAndNotNullable = isRequired || !(property.nullable ?: false)
 
                         // find the OpenApiType of the property (or ref or enum)
                         val openApiTypeResult = property.toOpenApiType(
-                            isRequired = isRequiredAndNotNullable,
+                            isRequired = isRequired,
                             getRefMarker = getRefMarker,
                         )
 
@@ -1043,6 +1045,7 @@ private fun Schema<*>.toMarker(
 
                                 // find the field type of the marker reference
                                 val fieldType = openApiTypeResult.marker.toFieldType()
+                                    .let { if (openApiTypeResult.nullable) it.toNullable() else it }
 
                                 this += generatedFieldOf(
                                     overrides = false,
@@ -1066,7 +1069,7 @@ private fun Schema<*>.toMarker(
                                     fieldName = ValidFieldName.of(name.snakeToLowerCamelCase()),
                                     columnName = name,
                                     fieldType = FieldType.ValueFieldType(
-                                        typeFqName = enumMarker.name + if (!isRequiredAndNotNullable || enumMarker.nullable) "?" else "",
+                                        typeFqName = enumMarker.name + if (enumMarker.nullable) "?" else "",
                                     ),
                                 )
                             }
@@ -1124,6 +1127,7 @@ private fun Schema<*>.toMarker(
 
                     is OpenApiTypeResult.UsingRef ->
                         openApiTypeResult.marker.toFieldType()
+                            .let { if (openApiTypeResult.nullable) it.toNullable() else it }
 
                     is OpenApiTypeResult.OpenApiType -> {
                         if (!openApiTypeResult.nullable) {
@@ -1201,6 +1205,7 @@ private fun Schema<*>.toMarker(
                 is OpenApiTypeResult.UsingRef -> OpenApiMarker.MarkerAlias(
                     name = ValidFieldName.of(typeName).quotedIfNeeded,
                     superMarker = openApiTypeResult.marker,
+                    nullable = openApiTypeResult.nullable,
                 )
 
                 is OpenApiTypeResult.OpenApiType -> {
@@ -1420,7 +1425,7 @@ private sealed class OpenApiType(val name: kotlin.String?) : IsObjectOrNot {
 private sealed interface OpenApiTypeResult {
 
     /** Property is a reference with name [name] and Marker [marker]. */
-    class UsingRef(val marker: OpenApiMarker) : OpenApiTypeResult
+    class UsingRef(val marker: OpenApiMarker, val nullable: Boolean) : OpenApiTypeResult
 
     /** A marker reference cannot be found at this time, try again later. */
     object CannotFindRefMarker : OpenApiTypeResult
@@ -1453,6 +1458,8 @@ private fun Schema<*>.toOpenApiType(
     isRequired: Boolean,
     getRefMarker: GetRefMarker,
 ): OpenApiTypeResult {
+    val nullable = nullable ?: false
+
     // if it's a reference, resolve it or try again later
     if (`$ref` != null) {
         val typeName = `$ref`.takeLastWhile { it != '/' }
@@ -1461,19 +1468,20 @@ private fun Schema<*>.toOpenApiType(
                 OpenApiTypeResult.CannotFindRefMarker
 
             is MarkerResult.OpenApiMarker ->
-                OpenApiTypeResult.UsingRef(it.marker)
+                OpenApiTypeResult.UsingRef(it.marker, nullable || !isRequired)
         }
     }
 
     // if it's an enum, return the enum
     if (enum != null) {
+        // nullability of an enum is given only by the enum itself
+        // https://github.com/OAI/OpenAPI-Specification/blob/main/proposals/2019-10-31-Clarify-Nullable.md#if-a-schema-specifies-nullable-true-and-enum-1-2-3-does-that-schema-allow-null-values-see-1900
+        @Suppress("NAME_SHADOWING")
         val nullable = enum.any { it == null }
-
-        // Note: type doesn't matter, all is interpreted as (quoted) string
 
         return OpenApiTypeResult.Enum(
             values = enum.filterNotNull().map { it.toString() },
-            nullable = nullable,
+            nullable = nullable || !isRequired, // enum can still become null in Kotlin if not required
         )
     }
 
@@ -1513,7 +1521,7 @@ private fun Schema<*>.toOpenApiType(
 
             // only one ref
             anyOfTypes.isEmpty() && anyOfRefs.size == 1 ->
-                return OpenApiTypeResult.UsingRef(anyOfRefs.first())
+                return OpenApiTypeResult.UsingRef(anyOfRefs.first(), nullable)
 
             // only refs
             anyOfTypes.isEmpty() && anyOfRefs.isNotEmpty() -> {
@@ -1522,7 +1530,7 @@ private fun Schema<*>.toOpenApiType(
                     .firstOrNull() as? OpenApiMarker?
 
                 if (commonSuperMarker != null) {
-                    return OpenApiTypeResult.UsingRef(commonSuperMarker)
+                    return OpenApiTypeResult.UsingRef(commonSuperMarker, nullable)
                 } else {
                     OpenApiType.AnyObject
                 }
@@ -1538,9 +1546,7 @@ private fun Schema<*>.toOpenApiType(
         }
     }
 
-    val nullable = !isRequired || (nullable ?: false)
-
-    return OpenApiTypeResult.OpenApiType(openApiType, nullable)
+    return OpenApiTypeResult.OpenApiType(openApiType, !isRequired || nullable)
 }
 
 /** Either [FieldTypeResult.CannotFindRefMarker] or [FieldTypeResult.FieldType]. */
@@ -1627,12 +1633,12 @@ private fun OpenApiType.toFieldType(
                         is OpenApiTypeResult.UsingRef ->
                             if (arrayTypeResult.marker.isObject) {
                                 getTypeAsFrame(
-                                    nullableArray = nullable || arrayTypeResult.marker.nullable,
+                                    nullableArray = nullable || arrayTypeResult.nullable || arrayTypeResult.marker.nullable,
                                     markerName = arrayTypeResult.marker.name,
                                 )
                             } else {
                                 getTypeAsList(
-                                    nullableArray = nullable || arrayTypeResult.marker.nullable,
+                                    nullableArray = nullable || arrayTypeResult.nullable || arrayTypeResult.marker.nullable,
                                     typeFqName = arrayTypeResult.marker.name,
                                 )
                             }
