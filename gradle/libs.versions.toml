@@ -1,9 +1,9 @@
 [versions]
-ksp = "1.7.20-RC-1.0.6"
-kotlinJupyter = "0.11.0-171-1"
+ksp = "1.7.20-1.0.7"
+kotlinJupyter = "0.11.0-176"
 ktlint = "3.4.5"
-kotlin = "1.7.20-RC"
-dokka = "1.5.31"
+kotlin = "1.7.20"
+dokka = "1.6.20"
 libsPublisher = "0.0.60-dev-30"
 dataframe = "0.9.0-dev-1117"
 korro = "0.1.1-dev-29"
