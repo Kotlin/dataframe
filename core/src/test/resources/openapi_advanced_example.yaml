@@ -83,6 +83,7 @@ components:
   schemas:
 
     Dog:
+      nullable: false
       required:
         - breed # required non-nullable enum -> breed: Breed
         - tag
@@ -182,6 +183,8 @@ components:
         - message
         - petRef
         - objectWithAdditional
+        - objectWithAdditional2
+        - objectWithAdditional3
       properties:
         ints:
           $ref: "#/components/schemas/IntList"
@@ -206,14 +209,15 @@ components:
           $ref: "#/components/schemas/ObjectWithAdditionalProperties"
         objectWithAdditional2:
           type: object
+          nullable: true
           additionalProperties:
-            nullable: false
             oneOf:
               - type: string
               - type: integer
         objectWithAdditional3:
           type: object
           additionalProperties:
+            nullable: true
             oneOf:
               - type: array
                 items:
@@ -227,10 +231,13 @@ components:
 
     ObjectWithAdditionalProperties:
       type: object
+      nullable: false
       additionalProperties:
+        nullable: false
         type: string
 
     SomeArray:
+      nullable: false
       type: array
       items:
         type: object
