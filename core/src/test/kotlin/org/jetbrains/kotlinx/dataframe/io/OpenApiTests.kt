@@ -652,7 +652,7 @@ class OpenApiTests : JupyterReplTestCase() {
             @DataSchema(isOpen = false)
             interface ObjectWithAdditionalProperties : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty {
                 @ColumnName("value")
-                override val `value`: kotlin.String?
+                override val `value`: kotlin.String
                 public companion object {
                     public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditionalProperties(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditionalProperties>.() -> kotlin.Unit = {}, filterEmptyValues: kotlin.Boolean = true): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties> = convertToAdditionalProperties<ObjectWithAdditionalProperties>(filterEmptyValues = filterEmptyValues) { 
                         convertDataRowsWithOpenApi() 
@@ -664,8 +664,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val objectWithAdditionalPropertiesExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditionalProperties>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("ObjectWithAdditionalProperties_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditionalProperties>.`value`: kotlin.String? @JvmName("ObjectWithAdditionalProperties_value") get() = this["value"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditionalProperties>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("ObjectWithAdditionalProperties_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
+            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditionalProperties>.`value`: kotlin.String @JvmName("ObjectWithAdditionalProperties_value") get() = this["value"] as kotlin.String
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditionalProperties?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableObjectWithAdditionalProperties_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditionalProperties?>.`value`: kotlin.String? @JvmName("NullableObjectWithAdditionalProperties_value") get() = this["value"] as kotlin.String?
         """.trimLines()
@@ -677,7 +677,7 @@ class OpenApiTests : JupyterReplTestCase() {
             @DataSchema(isOpen = false)
             interface ObjectWithAdditional2 : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty {
                 @ColumnName("value")
-                override val `value`: kotlin.Any?
+                override val `value`: kotlin.Any
                 public companion object {
                     public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditional2(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditional2>.() -> kotlin.Unit = {}, filterEmptyValues: kotlin.Boolean = true): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2> = convertToAdditionalProperties<ObjectWithAdditional2>(filterEmptyValues = filterEmptyValues) { 
                         convertDataRowsWithOpenApi() 
@@ -689,8 +689,8 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val objectWithAdditional2Extensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditional2>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("ObjectWithAdditional2_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional2>.`value`: kotlin.Any? @JvmName("ObjectWithAdditional2_value") get() = this["value"] as kotlin.Any?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditional2>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any> @JvmName("ObjectWithAdditional2_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any>
+            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional2>.`value`: kotlin.Any @JvmName("ObjectWithAdditional2_value") get() = this["value"] as kotlin.Any
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditional2?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullableObjectWithAdditional2_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
             val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional2?>.`value`: kotlin.Any? @JvmName("NullableObjectWithAdditional2_value") get() = this["value"] as kotlin.Any?
         """.trimLines()
@@ -731,9 +731,9 @@ class OpenApiTests : JupyterReplTestCase() {
                 val pets: org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>
                 val code: kotlin.Int
                 val message: kotlin.String
-                val objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties?>
+                val objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>
                 val objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>
-                val objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3?>
+                val objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3>
                 public companion object {
                     public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToError(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<Error>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<Error> = convertTo<Error> { 
                         convertDataRowsWithOpenApi() 
@@ -756,18 +756,18 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<Error>.message: kotlin.String @JvmName("Error_message") get() = this["message"] as kotlin.String
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.message: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableError_message") get() = this["message"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
             val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.message: kotlin.String? @JvmName("NullableError_message") get() = this["message"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<ObjectWithAdditionalProperties> @JvmName("Error_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<ObjectWithAdditionalProperties>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.objectWithAdditional: ObjectWithAdditionalProperties @JvmName("Error_objectWithAdditional") get() = this["objectWithAdditional"] as ObjectWithAdditionalProperties
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<ObjectWithAdditionalProperties?> @JvmName("NullableError_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<ObjectWithAdditionalProperties?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.objectWithAdditional: ObjectWithAdditionalProperties? @JvmName("NullableError_objectWithAdditional") get() = this["objectWithAdditional"] as ObjectWithAdditionalProperties?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<ObjectWithAdditional2?> @JvmName("Error_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<ObjectWithAdditional2?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional2?> @JvmName("Error_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional2?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<ObjectWithAdditional2?> @JvmName("NullableError_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<ObjectWithAdditional2?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional2?> @JvmName("NullableError_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional2?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<ObjectWithAdditional3?> @JvmName("Error_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<ObjectWithAdditional3?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional3?> @JvmName("Error_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional3?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<ObjectWithAdditional3?> @JvmName("NullableError_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<ObjectWithAdditional3?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional3?> @JvmName("NullableError_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional3?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>> @JvmName("Error_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties> @JvmName("Error_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties?>> @JvmName("NullableError_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties?> @JvmName("NullableError_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>> @JvmName("Error_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?> @JvmName("Error_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>> @JvmName("NullableError_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?> @JvmName("NullableError_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3>> @JvmName("Error_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3> @JvmName("Error_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3?>> @JvmName("NullableError_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3?> @JvmName("NullableError_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3?>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.petRef: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef> @JvmName("Error_petRef") get() = this["petRef"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef>
             val org.jetbrains.kotlinx.dataframe.DataRow<Error>.petRef: org.jetbrains.kotlinx.dataframe.DataRow<PetRef> @JvmName("Error_petRef") get() = this["petRef"] as org.jetbrains.kotlinx.dataframe.DataRow<PetRef>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.petRef: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef?> @JvmName("NullableError_petRef") get() = this["petRef"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef?>
