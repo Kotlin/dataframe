@@ -199,4 +199,24 @@ class ReplCodeGenTests : BaseTest() {
         val c = repl.process(Test3.df, Test3::df)
         """val .*ColumnsContainer<\w*>.x:""".toRegex().findAll(c.declarations).count() shouldBe 1
     }
+
+    object Test4 {
+
+        @DataSchema
+        interface A { val a: Int? }
+
+        @DataSchema
+        interface B { val a: Int? }
+
+        val df = dataFrameOf("a")(1)
+    }
+
+    @Test
+    fun `process duplicate override`() {
+        val repl = ReplCodeGenerator.create()
+        repl.process<Test4.A>()
+        repl.process<Test4.B>()
+        val c = repl.process(Test4.df, Test4::df)
+        """val .*ColumnsContainer<\w*>.a:""".toRegex().findAll(c.declarations).count() shouldBe 1
+    }
 }
