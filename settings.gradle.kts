@@ -10,7 +10,7 @@ include("plugins:type-api")
 include("tests")
 include("dataframe-arrow")
 include("dataframe-openapi")
-include("bridge-generator")
+//include("bridge-generator")
 
 include("examples:idea-examples:titanic")
 include("examples:idea-examples:movies")
