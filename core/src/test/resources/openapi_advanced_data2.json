@@ -83,8 +83,11 @@
         "name": "Buddy",
         "hunts": null,
         "other": {
-          "a" : {
-            "b" : [1, 12]
+          "a": {
+            "b": [
+              1,
+              12
+            ]
           }
         },
         "eye_color": "Blue",
@@ -132,7 +135,11 @@
     },
     "objectWithAdditional2": null,
     "objectWithAdditional3": {
-      "d": [1, 2, 3]
+      "d": [
+        1,
+        2,
+        3
+      ]
     }
   },
   {
@@ -182,7 +189,45 @@
       "c": {
         "id": 1234
       }
-    }
+    },
+    "array": [
+      [
+        [
+          {
+            "op": "add",
+            "path": "some path"
+          },
+          {
+            "op": "add",
+            "path": "somepath",
+            "value": {
+              "a": "1"
+            }
+          }
+        ],
+        [
+          {
+            "op": "add",
+            "path": "some path"
+          },
+          {
+            "op": "add",
+            "path": "somepath",
+            "value": {
+              "a": "1"
+            }
+          }
+        ],
+        [
+          {
+            "op": "add",
+            "path": "some path"
+          }
+        ],
+        []
+      ],
+      []
+    ]
   }
 ]
 

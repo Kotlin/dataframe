@@ -2,7 +2,6 @@ package org.jetbrains.kotlinx.dataframe.io // ktlint-disable filename
 
 import com.beust.klaxon.JsonObject
 import com.beust.klaxon.Parser
-import com.squareup.kotlinpoet.BOOLEAN
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.LambdaTypeName
@@ -30,12 +29,15 @@ import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
 import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
+import org.jetbrains.kotlinx.dataframe.api.any
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.convertTo
-import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.isNotEmpty
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
+import org.jetbrains.kotlinx.dataframe.api.isNA
+import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
@@ -51,6 +53,9 @@ import org.jetbrains.kotlinx.dataframe.codeGen.name
 import org.jetbrains.kotlinx.dataframe.codeGen.plus
 import org.jetbrains.kotlinx.dataframe.codeGen.toNotNullable
 import org.jetbrains.kotlinx.dataframe.codeGen.toNullable
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.io.AdditionalProperty.Companion.convertToAdditionalProperties
@@ -71,6 +76,7 @@ import kotlin.String
 import kotlin.reflect.KType
 import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
 public fun main() {
@@ -110,27 +116,69 @@ public class OpenApi : SupportedCodeGenerationFormat {
  * Function to be used in [ConvertSchemaDsl] ([AnyFrame.convertTo]) to help convert a DataFrame to adhere to an
  * OpenApi schema.
  */
-@Suppress("RemoveExplicitTypeArguments")
 public fun ConvertSchemaDsl<*>.convertDataRowsWithOpenApi() {
+    // Convert DataRow to Any if the schema requires the types to be erased.
     convert<DataRow<*>>().with<_, Any?> { it }
 
-    // convert DataRow to DataFrame<AdditionalProperty> if required by the schema
-    convertIf(
-        from = { it == typeOf<DataRow<*>>() },
-        to = { // any type of MapLikeDataSchema or MapLikeDataSchema?
-            it.type == typeOf<DataFrame<*>>() && (
-                it.contentType?.isSubtypeOf(typeOf<AdditionalProperty>()) == true ||
-                    it.contentType?.isSubtypeOf(typeOf<AdditionalProperty?>()) == true
-                )
-        },
-    ) {
+    // Convert DataRow to DataFrame<AdditionalProperty> if required by the schema
+    convertIf({ fromType, toSchema ->
+        fromType == typeOf<DataRow<*>>() &&
+            // any type of MapLikeDataSchema or MapLikeDataSchema?
+            toSchema.type == typeOf<DataFrame<*>>() && (
+            toSchema.contentType?.isSubtypeOf(typeOf<AdditionalProperty<*>>()) == true ||
+                toSchema.contentType?.isSubtypeOf(typeOf<AdditionalProperty<*>?>()) == true
+            )
+    }) {
         (it as DataRow<*>)
             .toDataFrame()
-            .convertToAdditionalProperties(
-                schemaType = toSchema.contentType!!,
-                filterEmptyValues = true,
-            ) { convertDataRowsWithOpenApi() }
+            .convertToAdditionalProperties(schemaType = toSchema.contentType!!) {
+                convertDataRowsWithOpenApi()
+            }
     }
+
+    // Provide converter for (recursive) List<DataFrame<>>
+    convertIf({ fromType, toSchema ->
+        val (fromIsRecursiveListOfDataFrame, fromDepth) = fromType.isRecursiveListOfDataFrame()
+        val (toIsRecursiveListOfDataFrame, toDepth) = toSchema.type.isRecursiveListOfDataFrame()
+
+        fromIsRecursiveListOfDataFrame && toIsRecursiveListOfDataFrame && fromDepth == toDepth
+    }) {
+        try {
+            it.convertRecursiveListOfDataFrame(toSchema.type) {
+                convertDataRowsWithOpenApi()
+            }
+        } catch (_: Exception) {
+            it
+        }
+    }
+}
+
+/**
+ * @receiver [KType] to check if it is a recursive list of [DataFrame]s
+ * @return [Pair] of result and the recursive depth.
+ *   `true` if Receiver is a recursive list of [DataFrame]s, like [List]<[List]<[DataFrame]<*>>>
+ */
+private fun KType.isRecursiveListOfDataFrame(depth: Int = 0): Pair<Boolean, Int> = when (jvmErasure) {
+    typeOf<List<*>>().jvmErasure -> arguments[0].type?.isRecursiveListOfDataFrame(depth + 1) ?: (false to depth)
+    typeOf<DataFrame<*>>().jvmErasure -> true to depth
+    typeOf<DataFrame<*>?>().jvmErasure -> true to depth
+    else -> false to depth
+}
+
+/**
+ * @receiver Recursive [List] of [DataFrame]s, like [List]<[List]<[DataFrame]<*>>>, for which to convert the [DataFrame]s.
+ * @param type Type to which to convert the [DataFrame]s.
+ * @param convertTo Optional [ConvertSchemaDsl] to use for the conversion.
+ * @return Receiver with converted [DataFrame]s.
+ */
+private fun Any?.convertRecursiveListOfDataFrame(
+    type: KType,
+    convertTo: ConvertSchemaDsl<*>.() -> Unit = {},
+): Any? = when (this) {
+    is List<*> -> map { it?.convertRecursiveListOfDataFrame(type.arguments[0].type!!, convertTo) }
+    is DataFrame<*> -> convertTo(schemaType = type.arguments[0].type!!, body = convertTo)
+    null -> null
+    else -> throw IllegalArgumentException("$this is not a List or DataFrame")
 }
 
 /**
@@ -171,14 +219,6 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
             .defaultValue("{}")
             .build()
 
-        val filterEmptyValuesParameter = ParameterSpec
-            .builder(
-                name = "filterEmptyValues",
-                type = BOOLEAN,
-            )
-            .defaultValue("true")
-            .build()
-
         @Language("kt")
         fun getConvertMethod(): String =
             """return convertTo<${marker.shortName}> { 
@@ -189,7 +229,7 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
 
         @Language("kt")
         fun getConvertToAdditionalPropertiesMethod(): String =
-            """return convertToAdditionalProperties<${marker.shortName}>(filterEmptyValues = filterEmptyValues) { 
+            """return convertToAdditionalProperties<${marker.shortName}>() { 
                     ${ConvertSchemaDsl<*>::convertDataRowsWithOpenApi.name}() 
                     convertTo()
                 }
@@ -198,7 +238,7 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
         @Language("kt")
         fun getReadAndConvertMethod(
             readMethod: String,
-            arguments: String = if (marker is OpenApiMarker.AdditionalPropertyInterface) "filterEmptyValues = filterEmptyValues" else "",
+            arguments: String = "",
         ): String =
             """return ${DataFrame::class.asClassName()}.$readMethod.convertTo${marker.shortName}($arguments)
             """.trimIndent()
@@ -210,7 +250,6 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
                     .addParameter(convertToParameter)
                     .let {
                         if (marker is OpenApiMarker.AdditionalPropertyInterface) {
-                            it.addParameter(filterEmptyValuesParameter)
                             it.addCode(getConvertToAdditionalPropertiesMethod())
                         } else {
                             it.addCode(getConvertMethod())
@@ -223,11 +262,6 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
                 FunSpec.builder("readJson")
                     .returns(returnType)
                     .addParameter("url", URL::class)
-                    .let {
-                        if (marker is OpenApiMarker.AdditionalPropertyInterface) {
-                            it.addParameter(filterEmptyValuesParameter)
-                        } else it
-                    }
                     .addCode(getReadAndConvertMethod("readJson(url, typeClashTactic = ANY_COLUMNS)"))
                     .build()
             )
@@ -235,11 +269,6 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
                 FunSpec.builder("readJson")
                     .returns(returnType)
                     .addParameter("path", String::class)
-                    .let {
-                        if (marker is OpenApiMarker.AdditionalPropertyInterface) {
-                            it.addParameter(filterEmptyValuesParameter)
-                        } else it
-                    }
                     .addCode(getReadAndConvertMethod("readJson(path, typeClashTactic = ANY_COLUMNS)"))
                     .build()
             )
@@ -247,11 +276,6 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
                 FunSpec.builder("readJson")
                     .returns(returnType)
                     .addParameter("stream", InputStream::class)
-                    .let {
-                        if (marker is OpenApiMarker.AdditionalPropertyInterface) {
-                            it.addParameter(filterEmptyValuesParameter)
-                        } else it
-                    }
                     .addCode(getReadAndConvertMethod("readJson(stream, typeClashTactic = ANY_COLUMNS)"))
                     .build()
             )
@@ -259,11 +283,6 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
                 FunSpec.builder("readJsonStr")
                     .returns(returnType)
                     .addParameter("text", String::class)
-                    .let {
-                        if (marker is OpenApiMarker.AdditionalPropertyInterface) {
-                            it.addParameter(filterEmptyValuesParameter)
-                        } else it
-                    }
                     .addCode(getReadAndConvertMethod("readJsonStr(text, typeClashTactic = ANY_COLUMNS)"))
                     .build()
             )
@@ -380,26 +399,26 @@ private interface IsObjectOrNot {
  * A [DataSchema] interface can implement this if it represents a map-like data schema (so key: value).
  * Used in OpenAPI to represent objects with 'just' additionalProperties of a certain type.
  */
-public interface AdditionalProperty {
+public interface AdditionalProperty<T> {
     public val key: String
 
     @ColumnName("value")
-    public val `value`: Any? // needs to be explicitly overridden!
+    public val `value`: T // needs to be explicitly overridden!
 
     public companion object {
-        internal val Marker = Marker(
+        internal fun getMarker(typeArguments: List<String>) = Marker(
             name = AdditionalProperty::class.qualifiedName!!,
             isOpen = false,
             fields = listOf(
                 generatedFieldOf(
-                    fieldName = ValidFieldName.of(AdditionalProperty::key.name),
-                    columnName = AdditionalProperty::key.name,
+                    fieldName = ValidFieldName.of(AdditionalProperty<*>::key.name),
+                    columnName = AdditionalProperty<*>::key.name,
                     overrides = false,
                     fieldType = FieldType.ValueFieldType(String::class.qualifiedName!!),
                 ),
                 generatedFieldOf(
-                    fieldName = ValidFieldName.of(AdditionalProperty::`value`.name),
-                    columnName = AdditionalProperty::`value`.name,
+                    fieldName = ValidFieldName.of(AdditionalProperty<*>::`value`.name),
+                    columnName = AdditionalProperty<*>::`value`.name,
                     overrides = false,
                     fieldType = FieldType.ValueFieldType(Any::class.qualifiedName!! + "?"),
                 ),
@@ -407,43 +426,58 @@ public interface AdditionalProperty {
             superMarkers = emptyList(),
             visibility = MarkerVisibility.EXPLICIT_PUBLIC,
             typeParameters = emptyList(),
-            typeArguments = emptyList(),
+            typeArguments = typeArguments,
         )
 
         /**
          * Used to convert a [DataFrame] to an [AdditionalProperty] [DataFrame] by [DataFrame.gather]ing all column names
          * into a column named `key` and the values into a column named `value` of type `Any?`.
          *
+         * We first convert the columns (and recursively down the frame-tree) before gathering this
+         * DataFrame. This is to prevent `gather { all() }` from creating a lot of `null` values due to
+         * merging of ColumnGroups.
+         *
+         *
          * @receiver the DataFrame to convert to an [AdditionalProperty] [DataFrame].
-         * @param filterEmptyValues whether to filter out rows where the value is null or empty.
          * @param convertTo optional [ConvertSchemaDsl] to specify extra conversions that need to occur.
          * @return a [DataFrame] of [AdditionalProperty]s.
          */
         @Suppress("UNCHECKED_CAST")
         public fun AnyFrame.convertToAdditionalProperties(
             schemaType: KType,
-            filterEmptyValues: Boolean,
             convertTo: ConvertSchemaDsl<Any>.() -> Unit = {},
-        ): DataFrame<AdditionalProperty> {
+        ): DataFrame<AdditionalProperty<*>> {
             require(
-                schemaType.isSubtypeOf(typeOf<AdditionalProperty>()) ||
-                    schemaType.isSubtypeOf(typeOf<AdditionalProperty?>())
-            ) { "schemaType an AdditionalProperty" }
+                schemaType.isSubtypeOf(typeOf<AdditionalProperty<*>>()) ||
+                    schemaType.isSubtypeOf(typeOf<AdditionalProperty<*>?>())
+            ) { "schemaType must be an AdditionalProperty" }
 
-            val df = gather { all() }
-                .into(AdditionalProperty::key, AdditionalProperty::`value`)
-                .let {
-                    if (filterEmptyValues) it.filter {
-                        when (val value = it[AdditionalProperty::value]) {
-                            is DataFrame<*> -> value.isNotEmpty()
-                            is DataRow<*> -> value.isNotEmpty()
-                            else -> value != null
-                        }
-                    } else it
-                }
-                .convertTo(schemaType = schemaType, body = convertTo) as DataFrame<AdditionalProperty>
+            // grab the type of the `value` argument of the schemaType
+            val valueType = schemaType.jvmErasure
+                .supertypes
+                .first { it.isSubtypeOf(typeOf<AdditionalProperty<*>>()) }
+                .arguments
+                .firstOrNull()
+                ?.type
+                ?: typeOf<Any?>()
 
-            return df
+            // Before gathering, first convert all columns (which will become the values) to the correct type.
+            val dfWithConvertedValues = this.replace { all() }.with {
+                (it as DataFrame<*>)
+                    .convertTo(schemaType = valueType, body = convertTo)
+                    .asColumnGroup(name = it.name())
+            }
+
+            // gather all columns with their names into a column "key" and the values into a column "value"
+            val dfAsAdditionalProperty = dfWithConvertedValues
+                .gather { all() }
+                .into(AdditionalProperty<*>::key, AdditionalProperty<*>::`value`)
+
+            // convert to the correct type
+            return dfAsAdditionalProperty.convertTo(
+                schemaType = schemaType,
+                body = convertTo
+            ) as DataFrame<AdditionalProperty<*>>
         }
 
         /**
@@ -452,13 +486,12 @@ public interface AdditionalProperty {
          *
          * @param T the type of the `value` column. Must implement [AdditionalProperty]
          * @receiver the DataFrame to convert to an [AdditionalProperty] [DataFrame].
-         * @param filterEmptyValues whether to filter out rows where the value is null or empty.
          * @param convertTo optional [ConvertSchemaDsl] to specify extra conversions that need to occur.
          * @return a [DataFrame] of [AdditionalProperty]s.
+         * @see convertToAdditionalProperties
          */
         @Suppress("UNCHECKED_CAST")
-        public inline fun <reified T : AdditionalProperty> DataFrame<*>.convertToAdditionalProperties(
-            filterEmptyValues: Boolean,
+        public inline fun <reified T : AdditionalProperty<*>> DataFrame<*>.convertToAdditionalProperties(
             noinline convertTo: ConvertSchemaDsl<T>.() -> Unit = {},
         ): DataFrame<T> {
             require(T::class.hasAnnotation<DataSchema>()) {
@@ -466,11 +499,29 @@ public interface AdditionalProperty {
             }
             return convertToAdditionalProperties(
                 schemaType = typeOf<T>(),
-                filterEmptyValues = filterEmptyValues,
                 convertTo = convertTo,
             ) as DataFrame<T>
         }
     }
+}
+
+private fun AnyFrame.isPracticallyNotEmpty() = !isPracticallyEmpty()
+
+private fun AnyFrame.isPracticallyEmpty(): Boolean {
+    if (isEmpty()) return true
+    for (column in columns()) {
+        when (column) {
+            is ColumnGroup<*> ->
+                if (!column.isPracticallyEmpty()) return false
+
+            is ValueColumn<*> ->
+                if (column.any { !it.isNA }) return false
+
+            is FrameColumn<*> ->
+                if (column.any { !it.isPracticallyEmpty() }) return false
+        }
+    }
+    return true
 }
 
 /**
@@ -601,12 +652,12 @@ private sealed class OpenApiMarker private constructor(
         fields = listOf(
             generatedFieldOf(
                 overrides = true,
-                fieldName = ValidFieldName.of(AdditionalProperty::`value`.name),
-                columnName = AdditionalProperty::`value`.name,
+                fieldName = ValidFieldName.of(AdditionalProperty<*>::`value`.name),
+                columnName = AdditionalProperty<*>::`value`.name,
                 fieldType = valueType,
             )
         ),
-        superMarkers = listOf(AdditionalProperty.Marker),
+        superMarkers = listOf(AdditionalProperty.getMarker(listOf(valueType.name))),
     ) {
 
         // Will be a DataFrame<out AdditionalProperty>
@@ -739,27 +790,31 @@ private fun Map<String, Schema<*>>.toMarkers(): List<OpenApiMarker> {
     // Retrieved Markers will be collected here
     val markers = mutableMapOf<String, OpenApiMarker>()
 
-    // Function to produce additional markers during conversion, see explanation above.
-    val produceAdditionalMarker = ProduceAdditionalMarker { validName, marker, _ ->
-        var result = ValidFieldName.of(validName.unquoted)
-        val baseName = result
-        var attempt = 1
-        while (result.quotedIfNeeded in markers) {
-            result = ValidFieldName.of(
-                baseName.unquoted + (if (result.needsQuote) " ($attempt)" else "$attempt")
-            )
-            attempt++
-        }
-
-        markers[result.quotedIfNeeded] = marker.withName(result.quotedIfNeeded)
-        result.quotedIfNeeded
-    }
     // Function to get a marker from [markers] by name, see explanation above.
     val getRefMarker = GetRefMarker { MarkerResult.fromNullable(markers[it]) }
 
     // convert all the retrievable markers to actual markers, resolving references as we go and if possible
     while (retrievableMarkers.isNotEmpty()) try {
         retrievableMarkers.entries.first { (name, retrieveMarker) ->
+            // To avoid producing additional markers twice due to a CannotFindRefMarker, save them here first
+            val additionalMarkers = mutableMapOf<String, OpenApiMarker>()
+
+            // Function to produce additional markers during conversion, see explanation above.
+            val produceAdditionalMarker = ProduceAdditionalMarker { validName, marker, _ ->
+                var result = ValidFieldName.of(validName.unquoted)
+                val baseName = result
+                var attempt = 1
+                while (result.quotedIfNeeded in markers || result.quotedIfNeeded in additionalMarkers) {
+                    result = ValidFieldName.of(
+                        baseName.unquoted + (if (result.needsQuote) " ($attempt)" else "$attempt")
+                    )
+                    attempt++
+                }
+
+                additionalMarkers[result.quotedIfNeeded] = marker.withName(result.quotedIfNeeded)
+                result.quotedIfNeeded
+            }
+
             val res = retrieveMarker(
                 getRefMarker = getRefMarker,
                 produceAdditionalMarker = produceAdditionalMarker,
@@ -768,6 +823,7 @@ private fun Map<String, Schema<*>>.toMarkers(): List<OpenApiMarker> {
             when (res) {
                 is MarkerResult.OpenApiMarker -> {
                     markers[name] = res.marker
+                    markers += additionalMarkers
                     retrievableMarkers -= name
                     true // Marker is retrieved completely, remove it from the map
                 }

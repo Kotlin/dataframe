@@ -20,8 +20,6 @@ import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
 import org.jetbrains.kotlinx.dataframe.api.convertTo
-import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
-import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
@@ -62,6 +60,7 @@ class OpenApiTests : JupyterReplTestCase() {
     private val advancedExample = File("src/test/resources/openapi_advanced_example.yaml")
     private val advancedData = File("src/test/resources/openapi_advanced_data.json").readText()
     private val advancedDataError = File("src/test/resources/openapi_advanced_data2.json").readText()
+    private val apiGuruData = File("src/test/resources/ApiGuruSample.json").readText()
 
     @Language("json")
     private val somePets = """
@@ -160,7 +159,7 @@ class OpenApiTests : JupyterReplTestCase() {
 
     @Test
     fun `Advanced test Petstore Json`() {
-        val code = execGeneratedCode(petstoreAdvancedJson).declarations
+        val code = execGeneratedCode(petstoreAdvancedJson).declarations.trimLines()
 
         @Language("kts") val statusInterface = """
             enum class Status(override val value: kotlin.String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
@@ -650,11 +649,11 @@ class OpenApiTests : JupyterReplTestCase() {
         @Language("kt")
         val objectWithAdditionalPropertiesInterface = """
             @DataSchema(isOpen = false)
-            interface ObjectWithAdditionalProperties : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty {
+            interface ObjectWithAdditionalProperties : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty<kotlin.String> {
                 @ColumnName("value")
                 override val `value`: kotlin.String
                 public companion object {
-                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditionalProperties(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditionalProperties>.() -> kotlin.Unit = {}, filterEmptyValues: kotlin.Boolean = true): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties> = convertToAdditionalProperties<ObjectWithAdditionalProperties>(filterEmptyValues = filterEmptyValues) { 
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditionalProperties(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditionalProperties>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties> = convertToAdditionalProperties<ObjectWithAdditionalProperties>() { 
                         convertDataRowsWithOpenApi() 
                         convertTo()
                     }
@@ -675,11 +674,11 @@ class OpenApiTests : JupyterReplTestCase() {
         @Language("kt")
         val objectWithAdditional2Interface = """
             @DataSchema(isOpen = false)
-            interface ObjectWithAdditional2 : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty {
+            interface ObjectWithAdditional2 : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty<kotlin.Any> {
                 @ColumnName("value")
                 override val `value`: kotlin.Any
                 public companion object {
-                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditional2(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditional2>.() -> kotlin.Unit = {}, filterEmptyValues: kotlin.Boolean = true): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2> = convertToAdditionalProperties<ObjectWithAdditional2>(filterEmptyValues = filterEmptyValues) { 
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditional2(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditional2>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2> = convertToAdditionalProperties<ObjectWithAdditional2>() { 
                         convertDataRowsWithOpenApi() 
                         convertTo()
                     }
@@ -700,11 +699,11 @@ class OpenApiTests : JupyterReplTestCase() {
         @Language("kt")
         val objectWithAdditional3Interface = """
             @DataSchema(isOpen = false)
-            interface ObjectWithAdditional3 : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty {
+            interface ObjectWithAdditional3 : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty<kotlin.Any?> {
                 @ColumnName("value")
                 override val `value`: kotlin.Any?
                 public companion object {
-                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditional3(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditional3>.() -> kotlin.Unit = {}, filterEmptyValues: kotlin.Boolean = true): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3> = convertToAdditionalProperties<ObjectWithAdditional3>(filterEmptyValues = filterEmptyValues) { 
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditional3(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditional3>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3> = convertToAdditionalProperties<ObjectWithAdditional3>() { 
                         convertDataRowsWithOpenApi() 
                         convertTo()
                     }
@@ -734,6 +733,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>
                 val objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>
                 val objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3>
+                val array: kotlin.collections.List<SomeArrayArray>?
                 public companion object {
                     public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToError(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<Error>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<Error> = convertTo<Error> { 
                         convertDataRowsWithOpenApi() 
@@ -844,39 +844,20 @@ class OpenApiTests : JupyterReplTestCase() {
 
     @Test
     fun `Apis guru Test`() {
-        val url = URL("https://api.apis.guru/v2/list.json")
-        DataFrame.read(url)
-            .print(borders = true, columnTypes = true, title = true)
-//        val json = Klaxon().parseJsonObject(
-//            JsonReader(URL("https://api.apis.guru/v2/list.json").openStream().reader())
-//        ).apply {
-//            val keysToRemove = map.keys - map.keys.toList().take(50).toSet()
-//            map.keys.removeAll(keysToRemove)
-//        }
-
-        val df = APIs.readJson(url, filterEmptyValues = false)
-            .alsoDebug(rowsLimit = 100)
+        val df = APIs.readJsonStr(apiGuruData)
+            .alsoDebug(rowsLimit = Int.MAX_VALUE)
     }
 
-    @Test
-    fun `MLC Test`() {
-        val url =
-            "https://us-central1-jrclockwidget.cloudfunctions.net/getGroupData/1544198656898889/peopleWithLocation?&apiKey=wachtwoord&type=json"
-
-        DataFrame.read(url).alsoDebug()
-
-        val df = PeopleWithLocation.readJson(url)
-            .alsoDebug("first mlc:")
-//            .ungroup("value")
-//            .alsoDebug("final mlc:")
-//            .groupBy("key")
-//            .updateGroups {
-//                it.remove("key")
-//                    .convertTo<PersonWithLocation>()
-//            }.aggregate { }
-//            .also { it.print() }
-//            .alsoDebug()
-    }
+//    @Test
+//    fun `MLC Test`() {
+//        val url =
+//            "https://us-central1-jrclockwidget.cloudfunctions.net/getGroupData/1544198656898889/peopleWithLocation?&apiKey=wachtwoord&type=json"
+//
+//        DataFrame.read(url).alsoDebug()
+//        val df = PeopleWithLocation.readJson(url)
+//            .filter { (value.gps.latitude ?: 0.0) > 0.0 }
+//            .alsoDebug("first mlc:")
+//    }
 
     enum class EyeColor(override val value: String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
         BLUE("Blue"), YELLOW("Yellow"), BROWN("Brown"), GREEN("Green");
@@ -897,7 +878,7 @@ class OpenApiTests : JupyterReplTestCase() {
         val eyeColor: EyeColor?
 
         companion object {
-            public fun DataFrame<*>.convertToPet(convertTo: ConvertSchemaDsl<Pet>.() -> Unit = {}): DataFrame<Pet> =
+            fun DataFrame<*>.convertToPet(convertTo: ConvertSchemaDsl<Pet>.() -> Unit = {}): DataFrame<Pet> =
                 convertTo<Pet> {
                     convertDataRowsWithOpenApi()
                     convertTo()
@@ -923,7 +904,7 @@ class OpenApiTests : JupyterReplTestCase() {
 
         companion object {
 
-            public fun DataFrame<*>.convertToIntList(convertTo: ConvertSchemaDsl<IntList>.() -> Unit = {}): DataFrame<IntList> =
+            fun DataFrame<*>.convertToIntList(convertTo: ConvertSchemaDsl<IntList>.() -> Unit = {}): DataFrame<IntList> =
                 convertTo {
                     convertDataRowsWithOpenApi()
                     convertTo()
@@ -944,82 +925,82 @@ class OpenApiTests : JupyterReplTestCase() {
     }
 
     @DataSchema(isOpen = false)
-    interface ObjectWithAdditionalProperties : AdditionalProperty {
+    interface ObjectWithAdditionalProperties : AdditionalProperty<String> {
         @ColumnName("value")
-        override val `value`: String?
+        override val `value`: String
 
-        public companion object {
-            public fun DataFrame<*>.convertToObjectWithAdditionalProperties(
+        companion object {
+            fun DataFrame<*>.convertToObjectWithAdditionalProperties(
                 convertTo: ConvertSchemaDsl<ObjectWithAdditionalProperties>.() -> Unit = {},
             ): DataFrame<ObjectWithAdditionalProperties> = convertTo {
                 convertDataRowsWithOpenApi()
                 convertTo()
             }
 
-            public fun readJson(url: URL): DataFrame<ObjectWithAdditionalProperties> =
+            fun readJson(url: URL): DataFrame<ObjectWithAdditionalProperties> =
                 DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditionalProperties()
 
-            public fun readJson(path: String): DataFrame<ObjectWithAdditionalProperties> =
+            fun readJson(path: String): DataFrame<ObjectWithAdditionalProperties> =
                 DataFrame.readJson(path, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditionalProperties()
 
-            public fun readJson(stream: InputStream): DataFrame<ObjectWithAdditionalProperties> =
+            fun readJson(stream: InputStream): DataFrame<ObjectWithAdditionalProperties> =
                 DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditionalProperties()
 
-            public fun readJsonStr(text: String): DataFrame<ObjectWithAdditionalProperties> =
+            fun readJsonStr(text: String): DataFrame<ObjectWithAdditionalProperties> =
                 DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditionalProperties()
         }
     }
 
     @DataSchema(isOpen = false)
-    interface ObjectWithAdditional2 : AdditionalProperty {
+    interface ObjectWithAdditional2 : AdditionalProperty<Any> {
         @ColumnName("value")
-        override val `value`: Any?
+        override val `value`: Any
 
-        public companion object {
-            public fun DataFrame<*>.convertToObjectWithAdditional2(
+        companion object {
+            fun DataFrame<*>.convertToObjectWithAdditional2(
                 convertTo: ConvertSchemaDsl<ObjectWithAdditional2>.() -> Unit = {},
             ): DataFrame<ObjectWithAdditional2> = convertTo<ObjectWithAdditional2> {
                 convertDataRowsWithOpenApi()
                 convertTo()
             }
 
-            public fun readJson(url: URL): DataFrame<ObjectWithAdditional2> =
+            fun readJson(url: URL): DataFrame<ObjectWithAdditional2> =
                 DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional2()
 
-            public fun readJson(path: String): DataFrame<ObjectWithAdditional2> =
+            fun readJson(path: String): DataFrame<ObjectWithAdditional2> =
                 DataFrame.readJson(path, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional2()
 
-            public fun readJson(stream: InputStream): DataFrame<ObjectWithAdditional2> =
+            fun readJson(stream: InputStream): DataFrame<ObjectWithAdditional2> =
                 DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional2()
 
-            public fun readJsonStr(text: String): DataFrame<ObjectWithAdditional2> =
+            fun readJsonStr(text: String): DataFrame<ObjectWithAdditional2> =
                 DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional2()
         }
     }
 
     @DataSchema(isOpen = false)
-    interface ObjectWithAdditional3 : AdditionalProperty {
+    interface ObjectWithAdditional3 : AdditionalProperty<Any?> {
         @ColumnName("value")
         override val `value`: Any?
 
-        public companion object {
-            public fun DataFrame<*>.convertToObjectWithAdditional3(
+        companion object {
+            fun DataFrame<*>.convertToObjectWithAdditional3(
                 convertTo: ConvertSchemaDsl<ObjectWithAdditional3>.() -> Unit = {},
             ): DataFrame<ObjectWithAdditional3> = convertTo<ObjectWithAdditional3> {
                 convertDataRowsWithOpenApi()
                 convertTo()
             }
 
-            public fun readJson(url: URL): DataFrame<ObjectWithAdditional3> =
+            fun readJson(url: URL): DataFrame<ObjectWithAdditional3> =
                 DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional3()
 
-            public fun readJson(path: String): DataFrame<ObjectWithAdditional3> =
+            fun readJson(path: String): DataFrame<ObjectWithAdditional3> =
                 DataFrame.readJson(path, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional3()
 
-            public fun readJson(stream: InputStream): DataFrame<ObjectWithAdditional3> =
+            fun readJson(stream: InputStream): DataFrame<ObjectWithAdditional3> =
                 DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional3()
 
-            public fun readJsonStr(text: String): DataFrame<ObjectWithAdditional3> =
+            fun readJsonStr(text: String): DataFrame<ObjectWithAdditional3> =
                 DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional3()
         }
     }
@@ -1033,72 +1014,89 @@ class OpenApiTests : JupyterReplTestCase() {
         val message: String
         val objectWithAdditional: DataFrame<ObjectWithAdditionalProperties>
         val objectWithAdditional2: DataFrame<ObjectWithAdditional2?>
-        val objectWithAdditional3: DataFrame<ObjectWithAdditional3?>
+        val objectWithAdditional3: DataFrame<ObjectWithAdditional3>
+        val array: List<SomeArrayArray?>
 
-        public companion object {
-            public fun DataFrame<*>.convertToError(
-                convertTo: ConvertSchemaDsl<Error>.() -> Unit = {},
-            ): DataFrame<Error> = convertTo<Error> {
-                convertDataRowsWithOpenApi()
-                convertTo()
-            }
+        companion object {
+            fun DataFrame<*>.convertToError(convertTo: ConvertSchemaDsl<Error>.() -> Unit = {}): DataFrame<Error> =
+                convertTo<Error> {
+                    convertDataRowsWithOpenApi()
+                    convertTo()
+                }
 
-            public fun readJson(url: URL): DataFrame<Error> =
+            fun readJson(url: URL): DataFrame<Error> =
                 DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS).convertToError()
 
-            public fun readJson(path: String): DataFrame<Error> =
+            fun readJson(path: String): DataFrame<Error> =
                 DataFrame.readJson(path, typeClashTactic = ANY_COLUMNS).convertToError()
 
-            public fun readJson(stream: InputStream): DataFrame<Error> =
-                DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS).convertToError()
+            fun readJson(stream: InputStream): DataFrame<Error> =
+                DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS)
+                    .convertToError()
 
-            public fun readJsonStr(text: String): DataFrame<Error> =
-                DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS).convertToError()
+            fun readJsonStr(text: String): DataFrame<Error> =
+                DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS)
+                    .convertToError()
         }
     }
 
-    public fun ConvertSchemaDsl<*>.convertDataRowsWithOpenApi() {
+    enum class Op(override val value: String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
+        ADD("add"),
+        REMOVE("remove"),
+        REPLACE("replace");
+    }
+
+    @DataSchema(isOpen = false)
+    interface Value
+
+    @DataSchema(isOpen = false)
+    interface SomeArrayContent {
+        val op: Op
+        val path: String
+
+        @ColumnName("value")
+        val `value`: Value?
+
+        companion object {
+            fun DataFrame<*>.convertToSomeArrayContent(convertTo: ConvertSchemaDsl<SomeArrayContent>.() -> Unit = {}): DataFrame<SomeArrayContent> =
+                convertTo<SomeArrayContent> {
+                    convertDataRowsWithOpenApi()
+                    convertTo()
+                }
+
+            fun readJson(url: URL): DataFrame<SomeArrayContent> =
+                DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS)
+                    .convertToSomeArrayContent()
+
+            fun readJson(path: String): DataFrame<SomeArrayContent> =
+                DataFrame.readJson(path, typeClashTactic = ANY_COLUMNS)
+                    .convertToSomeArrayContent()
+
+            fun readJson(stream: InputStream): DataFrame<SomeArrayContent> =
+                DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS)
+                    .convertToSomeArrayContent()
+
+            fun readJsonStr(text: String): DataFrame<SomeArrayContent> =
+                DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS)
+                    .convertToSomeArrayContent()
+        }
+    }
+
+    fun ConvertSchemaDsl<*>.convertDataRowsWithOpenApi() {
         // TODO convert DataRow
     }
 
     @Test
     fun main() {
-//        val code = openApi.readCodeForGeneration(advancedExample, true).declarations
-//
-//        println(code)
-
-//        val pets = DataFrame.readJsonStr(advancedData)
-//
-//        pets.apply {
-//            print(borders = true, columnTypes = true, title = true)
-//            schema().print()
-//        }
-
         val df = DataFrame.readJsonStr(OpenApiTests().advancedDataError, typeClashTactic = ANY_COLUMNS)
             .alsoDebug("error data:")
 
         val error = df.convertToError().alsoDebug("result:")
-
-        error.objectWithAdditional.forEachIndexed { i, it ->
-            println("objectWithAdditional[$i]:")
-            it.print(borders = true, columnTypes = true, title = true)
-        }
-
-        error.objectWithAdditional2.forEachIndexed { i, it ->
-            println("objectWithAdditional2[$i]:")
-            it.print(borders = true, columnTypes = true, title = true)
-        }
-
-        error.objectWithAdditional3.forEachIndexed { i, it ->
-            println("objectWithAdditional3[$i]:")
-            it.print(borders = true, columnTypes = true, title = true)
-        }
     }
 
     private fun String.trimLines(): String = trim().removeSurrounding("\n").lines().joinToString("\n") { it.trim() }
 }
 
 typealias PetRef = OpenApiTests.Pet
-typealias ObjectWithAdditionalProperties = Map<String, String?>
-typealias ObjectWithAdditional2 = Map<String, Any?>
-typealias ObjectWithAdditional3 = Map<String, Any?>
+typealias SomeArray = DataFrame<OpenApiTests.SomeArrayContent>
+typealias SomeArrayArray = List<SomeArray>
