@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.impl.schema
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -103,16 +104,35 @@ internal fun ColumnSchema.createEmptyColumn(name: String): AnyCol = when (this) 
 }
 
 /** Create "empty" column, filled with either null or empty dataframes. */
-internal fun ColumnSchema.createEmptyColumn(name: String, nrows: Int): AnyCol = when (this) {
-    is ColumnSchema.Value -> DataColumn.createValueColumn(name, List(nrows) { null }, type)
-    is ColumnSchema.Group -> DataColumn.createColumnGroup(name, schema.createEmptyDataFrame()) as AnyCol
-    is ColumnSchema.Frame -> DataColumn.createFrameColumn(name, List(nrows) { emptyDataFrame<Any?>() }, lazyOf(schema))
-    else -> error("Unexpected ColumnSchema: $this")
-}
+internal fun ColumnSchema.createEmptyColumn(name: String, numberOfRows: Int): AnyCol =
+    when (this) {
+        is ColumnSchema.Value -> DataColumn.createValueColumn(
+            name = name,
+            values = List(numberOfRows) { null },
+            type = type,
+        )
 
-internal fun DataFrameSchema.createEmptyDataFrame(): AnyFrame = columns.map { (name, schema) ->
-    schema.createEmptyColumn(name)
-}.toDataFrame()
+        is ColumnSchema.Group -> DataColumn.createColumnGroup(
+            name = name,
+            df = createEmptyDataFrame(numberOfRows),
+        ) as AnyCol
+
+        is ColumnSchema.Frame -> DataColumn.createFrameColumn(
+            name = name,
+            groups = List(numberOfRows) { emptyDataFrame<Any?>() },
+            schema = lazyOf(schema),
+        )
+
+        else -> error("Unexpected ColumnSchema: $this")
+    }
+
+internal fun DataFrameSchema.createEmptyDataFrame(): AnyFrame =
+    columns.map { (name, schema) ->
+        schema.createEmptyColumn(name)
+    }.toDataFrame()
+
+internal fun createEmptyDataFrame(numberOfRows: Int): AnyFrame =
+    DataFrame.empty(numberOfRows)
 
 @PublishedApi
 internal fun createEmptyDataFrameOf(clazz: KClass<*>): AnyFrame =

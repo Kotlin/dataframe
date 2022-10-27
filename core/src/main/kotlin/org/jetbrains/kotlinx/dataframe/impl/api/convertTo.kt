@@ -39,8 +39,7 @@ private open class Converter(val transform: ConverterScope.(Any?) -> Any?, val s
 private class ConvertSchemaDslImpl<T> : ConvertSchemaDsl<T> {
     private val converters: MutableMap<Pair<KType, KType>, Converter> = mutableMapOf()
 
-    private val flexibleConverters: MutableMap<Pair<(KType) -> Boolean, (ColumnSchema) -> Boolean>, Converter> =
-        mutableMapOf()
+    private val flexibleConverters: MutableMap<(KType, ColumnSchema) -> Boolean, Converter> = mutableMapOf()
 
     @Suppress("UNCHECKED_CAST")
     override fun <A, B> convert(from: KType, to: KType, converter: (A) -> B) {
@@ -49,11 +48,10 @@ private class ConvertSchemaDslImpl<T> : ConvertSchemaDsl<T> {
     }
 
     override fun convertIf(
-        from: (KType) -> Boolean,
-        to: (ColumnSchema) -> Boolean,
+        condition: (KType, ColumnSchema) -> Boolean,
         converter: ConverterScope.(Any?) -> Any?,
     ) {
-        flexibleConverters[from to to] = Converter(converter, false)
+        flexibleConverters[condition] = Converter(converter, false)
     }
 
     /**
@@ -65,7 +63,7 @@ private class ConvertSchemaDslImpl<T> : ConvertSchemaDsl<T> {
             ?: flexibleConverters
                 .entries
                 .firstOrNull { (predicate, _) ->
-                    predicate.first(fromType) && predicate.second(toSchema)
+                    predicate(fromType, toSchema)
                 }?.value
 }
 
@@ -190,7 +188,12 @@ internal fun AnyFrame.convertToImpl(
         val newColumnsNames = newColumns.map { it.name() }
         val size = this.size.nrow
         schema.columns.forEach { (name, targetColumn) ->
-            if (name !in newColumnsNames && (targetColumn.nullable || targetColumn.type.isMarkedNullable)) {
+            val isNullable =
+                targetColumn.nullable ||
+                    targetColumn.type.isMarkedNullable ||
+                    targetColumn.contentType?.isMarkedNullable == true
+
+            if (name !in newColumnsNames && isNullable) {
                 visited++
                 newColumns += targetColumn.createEmptyColumn(name, size)
             }

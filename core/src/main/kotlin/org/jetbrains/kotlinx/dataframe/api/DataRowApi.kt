@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
@@ -21,6 +22,24 @@ import kotlin.reflect.KType
 
 public fun AnyRow.isEmpty(): Boolean = owner.columns().all { it[index] == null }
 public fun AnyRow.isNotEmpty(): Boolean = !isEmpty()
+
+/** Returns `true` even if the columns contain empty iterables, empty dataframes etc. */
+public fun Any?.containsNoData(): Boolean =
+    when (this) {
+        null -> true
+        is Double -> isNaN()
+        is Float -> isNaN()
+        is AnyRow -> values().containsNoData()
+        is AnyFrame -> isEmpty() || all { it.containsNoData() }
+        is List<*> -> isEmpty() || all { it.containsNoData() }
+        is Array<*> -> isEmpty() || all { it.containsNoData() }
+        is Iterable<*> -> !iterator().hasNext() || all { it.containsNoData() }
+        is Map<*, *> -> isEmpty() || all { it.value.containsNoData() }
+        else -> false
+    }
+
+/** Returns `true` unless all columns contain empty iterables, empty dataframes etc. */
+public fun Any?.containsAnyData(): Boolean = !containsNoData()
 
 public inline fun <reified R> AnyRow.valuesOf(): List<R> = values().filterIsInstance<R>()
 
@@ -67,13 +86,17 @@ public operator fun AnyRow.contains(column: KProperty<*>): Boolean = containsKey
 
 @OptIn(ExperimentalTypeInference::class)
 @OverloadResolutionByLambdaReturnType
-public fun <T> DataRow<T>.diff(expression: RowExpression<T, Double>): Double? = prev()?.let { p -> expression(this, this) - expression(p, p) }
+public fun <T> DataRow<T>.diff(expression: RowExpression<T, Double>): Double? =
+    prev()?.let { p -> expression(this, this) - expression(p, p) }
 
-public fun <T> DataRow<T>.diff(expression: RowExpression<T, Int>): Int? = prev()?.let { p -> expression(this, this) - expression(p, p) }
+public fun <T> DataRow<T>.diff(expression: RowExpression<T, Int>): Int? =
+    prev()?.let { p -> expression(this, this) - expression(p, p) }
 
-public fun <T> DataRow<T>.diff(expression: RowExpression<T, Long>): Long? = prev()?.let { p -> expression(this, this) - expression(p, p) }
+public fun <T> DataRow<T>.diff(expression: RowExpression<T, Long>): Long? =
+    prev()?.let { p -> expression(this, this) - expression(p, p) }
 
-public fun <T> DataRow<T>.diff(expression: RowExpression<T, Float>): Float? = prev()?.let { p -> expression(this, this) - expression(p, p) }
+public fun <T> DataRow<T>.diff(expression: RowExpression<T, Float>): Float? =
+    prev()?.let { p -> expression(this, this) - expression(p, p) }
 
 public fun AnyRow.columnsCount(): Int = df().ncol
 public fun AnyRow.columnNames(): List<String> = df().columnNames()

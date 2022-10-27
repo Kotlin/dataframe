@@ -3,7 +3,10 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.exceptions.*
+import org.jetbrains.kotlinx.dataframe.exceptions.ColumnNotFoundException
+import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
+import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
+import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import kotlin.reflect.KProperty
@@ -43,13 +46,12 @@ public interface ConvertSchemaDsl<in T> {
      * The exact type conversion does have higher priority. After that, this flexible conversions will be checked
      * in order.
      *
-     * @param from a function that should return `true` if the conversion should be applied 'from' the given [fromType]
-     * @param to a function that should return `true` if the conversion should be applied 'to' the given [toSchema]
+     * @param condition a function that should return `true` if the conversion should be applied from the given `fromType`
+     *   to the given `toSchema`.
      * @param converter a function that performs the conversion with access to a [ConverterScope].
      */
     public fun convertIf(
-        from: (fromType: KType) -> Boolean,
-        to: (toSchema: ColumnSchema) -> Boolean,
+        condition: (fromType: KType, toSchema: ColumnSchema) -> Boolean,
         converter: ConverterScope.(Any?) -> Any?,
     )
 }

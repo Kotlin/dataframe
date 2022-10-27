@@ -82,5 +82,10 @@ internal fun <T> concatImpl(dataFrames: List<DataFrame<T>>): DataFrame<T> {
     val columns = columnNames.map { name ->
         concatImpl(name, dataFrames.map { it.getColumnOrNull(name) }, sizes)
     }
-    return dataFrameOf(columns).cast()
+    return if (columns.isEmpty()) {
+        // make sure the number of rows translate correctly if there are no columns
+        DataFrame.empty(nrow = sizes.sum())
+    } else {
+        dataFrameOf(columns)
+    }.cast()
 }

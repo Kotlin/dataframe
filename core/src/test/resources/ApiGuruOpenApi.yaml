@@ -152,7 +152,7 @@ components:
       type: object
       required:
         - added
-        - updated
+        # - updated apparently not required!
         - swaggerUrl
         - swaggerYamlUrl
         - info
@@ -161,7 +161,7 @@ components:
           description: Timestamp when the version was added
           type: string
           format: date-time
-        updated:
+        updated: # apparently not required!
           description: Timestamp when the version was updated
           type: string
           format: date-time

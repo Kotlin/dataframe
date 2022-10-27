@@ -228,6 +228,10 @@ components:
                 properties:
                   id:
                     type: integer
+        array:
+          type: array
+          items:
+            $ref: "#/components/schemas/SomeArrayArray"
 
     ObjectWithAdditionalProperties:
       type: object
@@ -235,6 +239,11 @@ components:
       additionalProperties:
         nullable: false
         type: string
+
+    SomeArrayArray:
+      type: array
+      items:
+        $ref: "#/components/schemas/SomeArray"
 
     SomeArray:
       nullable: false
