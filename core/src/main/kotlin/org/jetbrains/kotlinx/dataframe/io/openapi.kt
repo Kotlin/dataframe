@@ -33,6 +33,7 @@ import org.jetbrains.kotlinx.dataframe.api.any
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.convertTo
+import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
@@ -463,9 +464,13 @@ public interface AdditionalProperty<T> {
 
             // Before gathering, first convert all columns (which will become the values) to the correct type.
             val dfWithConvertedValues = this.replace { all() }.with {
-                (it as DataFrame<*>)
-                    .convertTo(schemaType = valueType, body = convertTo)
-                    .asColumnGroup(name = it.name())
+                when (it) {
+                    is DataFrame<*> ->
+                        it.convertTo(schemaType = valueType, body = convertTo)
+                            .asColumnGroup(name = it.name())
+
+                    else -> it
+                }
             }
 
             // gather all columns with their names into a column "key" and the values into a column "value"
@@ -473,8 +478,26 @@ public interface AdditionalProperty<T> {
                 .gather { all() }
                 .into(AdditionalProperty<*>::key, AdditionalProperty<*>::`value`)
 
+            val valueTypeIsDataFrameLike = with(valueType) {
+                isSubtypeOf(typeOf<AnyFrame>()) ||
+                    isSubtypeOf(typeOf<AnyFrame?>()) ||
+                    hasAnnotation<DataSchema>() ||
+                    jvmErasure.hasAnnotation<DataSchema>() ||
+                    isSubtypeOf(typeOf<DataRow<*>>()) ||
+                    isSubtypeOf(typeOf<DataRow<*>?>())
+            }
+
+            // filter null values if valueType is not nullable (if appeared in readJson)
+            val dfNotNull = when {
+                !valueType.isMarkedNullable && !valueTypeIsDataFrameLike ->
+                    dfAsAdditionalProperty.filter { it[AdditionalProperty<*>::`value`] != null }
+
+                else ->
+                    dfAsAdditionalProperty
+            }
+
             // convert to the correct type
-            return dfAsAdditionalProperty.convertTo(
+            return dfNotNull.convertTo(
                 schemaType = schemaType,
                 body = convertTo
             ) as DataFrame<AdditionalProperty<*>>
