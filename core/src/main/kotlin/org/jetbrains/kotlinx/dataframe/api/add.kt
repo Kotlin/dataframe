@@ -15,6 +15,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Add
 import org.jetbrains.kotlinx.dataframe.annotations.AddWithDsl
 import org.jetbrains.kotlinx.dataframe.annotations.From
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -113,6 +114,7 @@ public typealias AddExpression<T, C> = Selector<AddDataRow<T>, C>
  * @throws DuplicateColumnNamesException if [DataFrame] already contains a column with given [name]
  */
 @Interpretable(Add::class)
+@Refine("add1")
 public inline fun <reified R, T> DataFrame<T>.add(
     name: String,
     infer: Infer = Infer.Nulls,

@@ -37,6 +37,7 @@ public annotation class HasSchema(val schemaArg: Int)
 public class ConvertApproximation(public val schema: PluginDataFrameSchema, public val columns: List<List<String>>)
 
 public annotation class Interpretable(val interpreter: KClass<out Interpreter<*>>)
+public annotation class Refine(val id: String)
 
 public class Add : AbstractSchemaModificationInterpreter() {
     public val Arguments.receiver: PluginDataFrameSchema by dataFrame()
