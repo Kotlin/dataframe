@@ -12,7 +12,9 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.getColumn
@@ -20,7 +22,9 @@ import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.isList
 import org.jetbrains.kotlinx.dataframe.api.mapIndexed
 import org.jetbrains.kotlinx.dataframe.api.name
+import org.jetbrains.kotlinx.dataframe.api.named
 import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.api.splitInto
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -34,11 +38,13 @@ import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.DataCollectorBase
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
+import org.jetbrains.kotlinx.dataframe.impl.schema.intersectSchemas
 import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS
 import org.jetbrains.kotlinx.dataframe.ncol
+import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.typeClass
 import java.io.File
@@ -106,70 +112,84 @@ public class JSON : SupportedDataFrameFormat {
 public fun DataFrame.Companion.readJson(
     file: File,
     header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyFrame = readJson(file.toURI().toURL(), header, typeClashTactic)
+): AnyFrame = readJson(file.toURI().toURL(), header, keyValuePaths, typeClashTactic)
 
 public fun DataRow.Companion.readJson(
     file: File,
     header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyRow = DataFrame.readJson(file, header, typeClashTactic).single()
+): AnyRow = DataFrame.readJson(file, header, keyValuePaths, typeClashTactic).single()
 
 public fun DataFrame.Companion.readJson(
     path: String,
     header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyFrame = readJson(asURL(path), header, typeClashTactic)
+): AnyFrame = readJson(asURL(path), header, keyValuePaths, typeClashTactic)
 
 public fun DataRow.Companion.readJson(
     path: String,
     header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyRow = DataFrame.readJson(path, header, typeClashTactic).single()
+): AnyRow = DataFrame.readJson(path, header, keyValuePaths, typeClashTactic).single()
 
 public fun DataFrame.Companion.readJson(
     url: URL,
     header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyFrame = catchHttpResponse(url) { readJson(it, header, typeClashTactic) }
+): AnyFrame = catchHttpResponse(url) { readJson(it, header, keyValuePaths, typeClashTactic) }
 
 public fun DataRow.Companion.readJson(
     url: URL,
     header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyRow = DataFrame.readJson(url, header, typeClashTactic).single()
+): AnyRow = DataFrame.readJson(url, header, keyValuePaths, typeClashTactic).single()
 
 public fun DataFrame.Companion.readJson(
     stream: InputStream,
     header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyFrame = readJson(Parser.default().parse(stream), header, typeClashTactic)
+): AnyFrame = readJson(Parser.default().parse(stream), header, keyValuePaths, typeClashTactic)
 
 public fun DataRow.Companion.readJson(
     stream: InputStream,
     header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyRow = DataFrame.readJson(stream, header, typeClashTactic).single()
+): AnyRow = DataFrame.readJson(stream, header, keyValuePaths, typeClashTactic).single()
 
 public fun DataFrame.Companion.readJsonStr(
     text: String,
     header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyFrame = readJson(Parser.default().parse(StringBuilder(text)), header, typeClashTactic)
+): AnyFrame = readJson(Parser.default().parse(StringBuilder(text)), header, keyValuePaths, typeClashTactic)
 
 public fun DataRow.Companion.readJsonStr(
     text: String,
     header: List<String> = emptyList(),
+    keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
-): AnyRow = DataFrame.readJsonStr(text, header, typeClashTactic).single()
+): AnyRow = DataFrame.readJsonStr(text, header, keyValuePaths, typeClashTactic).single()
 
 private fun readJson(
     parsed: Any?,
     header: List<String>,
+    keyValuePaths: List<JsonPath> = emptyList(),
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
 ): DataFrame<*> {
     val df: AnyFrame = when (typeClashTactic) {
         ARRAY_AND_VALUE_COLUMNS -> {
+            if (keyValuePaths.isNotEmpty()) {
+                throw NotImplementedError("keyValuePaths not supported for typeClashTactic ARRAY_AND_VALUE_COLUMNS")
+            }
             when (parsed) {
                 is JsonArray<*> -> fromJsonListArrayAndValueColumns(parsed.value, header)
                 else -> fromJsonListArrayAndValueColumns(listOf(parsed))
@@ -178,8 +198,16 @@ private fun readJson(
 
         ANY_COLUMNS -> {
             when (parsed) {
-                is JsonArray<*> -> fromJsonListAnyColumns(parsed.value, header)
-                else -> fromJsonListAnyColumns(listOf(parsed))
+                is JsonArray<*> -> fromJsonListAnyColumns(
+                    records = parsed.value,
+                    header = header,
+                    keyValuePaths = keyValuePaths,
+                )
+
+                else -> fromJsonListAnyColumns(
+                    records = listOf(parsed),
+                    keyValuePaths = keyValuePaths,
+                )
             }
         }
     }
@@ -197,7 +225,44 @@ private enum class AnyColType {
     OBJECTS,
 }
 
-internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emptyList()): AnyFrame {
+@JvmInline
+public value class JsonPath(public val path: String = "$") {
+    public fun appendKey(name: String): JsonPath = JsonPath("$path.$name")
+    public fun appendArrayIndex(index: Int): JsonPath = JsonPath("$path[$index]")
+    public fun appendArrayStarIndex(): JsonPath = JsonPath("$path[*]")
+    public fun replaceLastStartWithIndex(index: Int): JsonPath = JsonPath(
+        path.toCharArray().let { chars ->
+            val lastStarIndex = chars.lastIndexOf('*')
+            chars.flatMapIndexed { i, c ->
+                if (i == lastStarIndex) index.toString().toCharArray().toList()
+                else listOf(c)
+            }.joinToString("")
+        }
+    )
+
+    public fun matches(other: JsonPath): Boolean =
+        path == other.path ||
+            path.replace("\\[[0-9]+]".toRegex(), "[*]") == other.path
+}
+
+internal interface AnyKeyValueProperty : KeyValueProperty<Any?> {
+    override val value: Any?
+}
+
+/**
+ *
+ * @param records List of json elements to be converted to a [DataFrame].
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+ *     will be created.
+ * @param header Optional list of column names. If given, [records] will be read like an object with [header] being the keys.
+ * @return [DataFrame] from the given [records].
+ */
+internal fun fromJsonListAnyColumns(
+    records: List<*>,
+    keyValuePaths: List<JsonPath> = emptyList(),
+    header: List<String> = emptyList(),
+    jsonPath: JsonPath = JsonPath().appendArrayStarIndex(),
+): AnyFrame {
     var hasPrimitive = false
     var hasArray = false
     var hasObject = false
@@ -225,10 +290,16 @@ internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emp
         else -> AnyColType.ANY
     }
     val justPrimitives = hasPrimitive && !hasArray && !hasObject
+    val isKeyValue = keyValuePaths.any { jsonPath.matches(it) }
 
-    val columns: List<AnyCol> = when (colType) {
+    if (isKeyValue && colType != AnyColType.OBJECTS) {
+        error("Key value path $jsonPath does not match objects.")
+    }
+
+    @Suppress("KotlinConstantConditions")
+    val columns: List<AnyCol> = when {
         // Create one column of type Any? (or guessed primitive type) from all the records
-        AnyColType.ANY -> {
+        colType == AnyColType.ANY -> {
             val collector: DataCollectorBase<Any?> =
                 if (justPrimitives) createDataCollector(records.size) // guess the type
                 else createDataCollector(records.size, typeOf<Any?>()) // use Any?
@@ -237,7 +308,12 @@ internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emp
             records.forEachIndexed { i, v ->
                 when (v) {
                     is JsonObject -> {
-                        val parsed = fromJsonListAnyColumns(listOf(v))
+                        val parsed =
+                            fromJsonListAnyColumns(
+                                records = listOf(v),
+                                keyValuePaths = keyValuePaths,
+                                jsonPath = jsonPath.replaceLastStartWithIndex(i),
+                            )
                         collector.add(
                             if (parsed.isSingleUnnamedColumn()) (parsed.getColumn(0) as UnnamedColumn).col.values.first()
                             else parsed.unwrapUnnamedColumns().first()
@@ -245,7 +321,11 @@ internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emp
                     }
 
                     is JsonArray<*> -> {
-                        val parsed = fromJsonListAnyColumns(v)
+                        val parsed = fromJsonListAnyColumns(
+                            records = v,
+                            keyValuePaths = keyValuePaths,
+                            jsonPath = jsonPath.replaceLastStartWithIndex(i).appendArrayStarIndex(),
+                        )
                         collector.add(
                             if (parsed.isSingleUnnamedColumn()) (parsed.getColumn(0) as UnnamedColumn).col.values.asList()
                             else parsed.unwrapUnnamedColumns()
@@ -284,7 +364,7 @@ internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emp
         }
 
         // Create one column of type FrameColumn, or List<> from all the records if they are all arrays
-        AnyColType.ARRAYS -> {
+        colType == AnyColType.ARRAYS -> {
             val values = mutableListOf<Any?>()
             val startIndices = ArrayList<Int>()
             records.forEach {
@@ -295,7 +375,11 @@ internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emp
                     else -> error("Expected JsonArray, got $it")
                 }
             }
-            val parsed = fromJsonListAnyColumns(values)
+            val parsed = fromJsonListAnyColumns(
+                records = values,
+                keyValuePaths = keyValuePaths,
+                jsonPath = jsonPath.appendArrayStarIndex(),
+            )
 
             val res = when {
                 parsed.isSingleUnnamedColumn() -> {
@@ -309,13 +393,56 @@ internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emp
                     )
                 }
 
-                else -> DataColumn.createFrameColumn(arrayColumnName, parsed.unwrapUnnamedColumns(), startIndices)
+                else -> DataColumn.createFrameColumn(
+                    name = arrayColumnName, // will be erased
+                    df = parsed.unwrapUnnamedColumns(),
+                    startIndices = startIndices,
+                )
             }
             listOf(UnnamedColumn(res))
         }
 
+        // Create one column of type FrameColumn<KeyValueProperty>
+        colType == AnyColType.OBJECTS && isKeyValue -> {
+            val dataFrames = records.map {
+                when (it) {
+                    is JsonObject -> {
+                        val map = it.map.mapValues { (key, value) ->
+                            val parsed = fromJsonListAnyColumns(
+                                records = listOf(value),
+                                keyValuePaths = keyValuePaths,
+                                jsonPath = jsonPath.appendKey(key),
+                            )
+                            if (parsed.isSingleUnnamedColumn()) (parsed.getColumn(0) as UnnamedColumn).col.values.first()
+                            else parsed.unwrapUnnamedColumns().first()
+                        }
+
+                        dataFrameOf(
+                            columnOf(*map.keys.toTypedArray()).named(KeyValueProperty<*>::key.name),
+                            columnOf(*map.values.toTypedArray()).named(KeyValueProperty<*>::value.name),
+                        )
+                    }
+
+                    null -> DataFrame.emptyOf<AnyKeyValueProperty>()
+                    else -> error("Expected JsonObject, got $it")
+                }
+            }
+
+            listOf(
+                UnnamedColumn(
+                    DataColumn.createFrameColumn(
+                        name = valueColumnName, // will be erased
+                        groups = dataFrames,
+                        schema = lazy {
+                            dataFrames.mapNotNull { it.takeIf { it.nrow > 0 }?.schema() }.intersectSchemas()
+                        },
+                    )
+                )
+            )
+        }
+
         // Create multiple columns from all the records if they are all objects, merging the objects in essence
-        AnyColType.OBJECTS -> {
+        colType == AnyColType.OBJECTS && !isKeyValue -> {
             nameGenerator.names.map { colName ->
                 val values = ArrayList<Any?>(records.size)
 
@@ -327,7 +454,11 @@ internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emp
                     }
                 }
 
-                val parsed = fromJsonListAnyColumns(values)
+                val parsed = fromJsonListAnyColumns(
+                    records = values,
+                    keyValuePaths = keyValuePaths,
+                    jsonPath = jsonPath.appendKey(colName),
+                )
                 when {
                     parsed.ncol == 0 -> DataColumn.createValueColumn(
                         name = colName,
@@ -340,6 +471,8 @@ internal fun fromJsonListAnyColumns(records: List<*>, header: List<String> = emp
                 }
             }
         }
+
+        else -> error("")
     }
 
     return when {
