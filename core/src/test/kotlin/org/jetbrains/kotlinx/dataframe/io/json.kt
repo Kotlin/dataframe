@@ -668,16 +668,51 @@ class JsonTests {
     }
 
     @Test
-    fun `arrays of arrays Any`() {
+    fun `KeyValue property`() {
         @Language("json")
         val json = """[
-                {"a":[1,2,3]},
-                {"a":[null]},
-                {"a":[]},
+                {"a":{"b":1}},
+                {"a":{"c": 2, "d": null}},
+                {"a":{}},
                 {"a": null},
                 {},
                 null
             ]
         """.trimIndent()
+
+        // $[*].a should be read as keyValue
+        val keyValuePaths = listOf(
+            JsonPath()
+                .appendArrayStarIndex()
+                .appendKey("a")
+        )
+
+        // before
+        DataFrame.readJsonStr(json, typeClashTactic = ANY_COLUMNS)
+            .alsoDebug()
+//        ⌌------------------------------⌍
+//        |  | a:{b:Int?, c:Int?, d:Int?}|
+//        |--|---------------------------|
+//        | 0|                    { b:1 }|
+//        | 1|               { c:2, d:3 }|
+//        | 2|                        { }|
+//        | 3|                        { }|
+//        | 4|                        { }|
+//        | 5|                        { }|
+//        ⌎------------------------------⌏
+
+        // after
+        DataFrame.readJsonStr(json, keyValuePaths = keyValuePaths, typeClashTactic = ANY_COLUMNS)
+            .alsoDebug()
+//        ⌌------------------------------⌍
+//        |  | a:[key:String, value:Int?]|
+//        |--|---------------------------|
+//        | 0| [1 x 2] { key:b, value:1 }|
+//        | 1|                    [2 x 2]| ->  { key:c, value:2 }
+//        | 2|                    [0 x 2]|     { key:d, value:null }
+//        | 3|                    [0 x 2]|
+//        | 4|                    [0 x 2]|
+//        | 5|                    [0 x 2]|
+//        ⌎------------------------------⌏
     }
 }

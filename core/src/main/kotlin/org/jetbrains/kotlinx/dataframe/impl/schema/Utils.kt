@@ -93,7 +93,7 @@ internal fun AnyCol.extractSchema(): ColumnSchema = when (this) {
     is ValueColumn<*> -> ColumnSchema.Value(type)
     is ColumnGroup<*> -> ColumnSchema.Group(schema(), typeOf<Any?>())
     is FrameColumn<*> -> ColumnSchema.Frame(schema.value, hasNulls, typeOf<Any?>())
-    else -> throw RuntimeException()
+    else -> throw RuntimeException("Unknown column type: $this")
 }
 
 internal fun ColumnSchema.createEmptyColumn(name: String): AnyCol = when (this) {

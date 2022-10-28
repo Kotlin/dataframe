@@ -25,10 +25,10 @@ import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
 import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
+import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.api.any
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.convert
@@ -400,12 +400,7 @@ private interface IsObjectOrNot {
  * A [DataSchema] interface can implement this if it represents a map-like data schema (so key: value).
  * Used in OpenAPI to represent objects with 'just' additionalProperties of a certain type.
  */
-public interface AdditionalProperty<T> {
-    public val key: String
-
-    @ColumnName("value")
-    public val `value`: T // needs to be explicitly overridden!
-
+public interface AdditionalProperty<T> : KeyValueProperty<T> {
     public companion object {
         internal fun getMarker(typeArguments: List<String>) = Marker(
             name = AdditionalProperty::class.qualifiedName!!,
