@@ -55,7 +55,11 @@
     },
     "code": 123,
     "message": "Some error",
-    "objectWithAdditional": {}
+    "objectWithAdditional": {},
+    "objectWithAdditionalList": [
+      {},
+      {}
+    ]
   },
   {
     "pets": [
@@ -158,9 +162,18 @@
     "message": "Some error too",
     "objectWithAdditional": {
       "a": "1",
-      "b": "2",
-      "c": null
+      "b": "2"
     },
+    "objectWithAdditionalList": [
+      {
+        "a": "1",
+        "b": "2"
+      },
+      {
+        "a": "1",
+        "b": "2"
+      }
+    ],
     "objectWithAdditional2": {
       "a": "1",
       "sdgewrgb": 1234
@@ -195,7 +208,8 @@
         [
           {
             "op": "add",
-            "path": "some path"
+            "path": "some path",
+            "objectWithAdditional": {}
           },
           {
             "op": "add",
@@ -215,13 +229,18 @@
             "path": "somepath",
             "value": {
               "a": "1"
+            },
+            "objectWithAdditional": {
+              "a": 123,
+              "something": 235346
             }
           }
         ],
         [
           {
             "op": "add",
-            "path": "some path"
+            "path": "some path",
+            "objectWithAdditional": null
           }
         ],
         []

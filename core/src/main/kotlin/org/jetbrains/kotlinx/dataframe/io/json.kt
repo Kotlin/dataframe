@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.columnOf
@@ -225,26 +226,6 @@ private enum class AnyColType {
     OBJECTS,
 }
 
-@JvmInline
-public value class JsonPath(public val path: String = "$") {
-    public fun appendKey(name: String): JsonPath = JsonPath("$path.$name")
-    public fun appendArrayIndex(index: Int): JsonPath = JsonPath("$path[$index]")
-    public fun appendArrayStarIndex(): JsonPath = JsonPath("$path[*]")
-    public fun replaceLastStartWithIndex(index: Int): JsonPath = JsonPath(
-        path.toCharArray().let { chars ->
-            val lastStarIndex = chars.lastIndexOf('*')
-            chars.flatMapIndexed { i, c ->
-                if (i == lastStarIndex) index.toString().toCharArray().toList()
-                else listOf(c)
-            }.joinToString("")
-        }
-    )
-
-    public fun matches(other: JsonPath): Boolean =
-        path == other.path ||
-            path.replace("\\[[0-9]+]".toRegex(), "[*]") == other.path
-}
-
 internal interface AnyKeyValueProperty : KeyValueProperty<Any?> {
     override val value: Any?
 }
@@ -261,7 +242,7 @@ internal fun fromJsonListAnyColumns(
     records: List<*>,
     keyValuePaths: List<JsonPath> = emptyList(),
     header: List<String> = emptyList(),
-    jsonPath: JsonPath = JsonPath().appendArrayStarIndex(),
+    jsonPath: JsonPath = JsonPath(),
 ): AnyFrame {
     var hasPrimitive = false
     var hasArray = false
@@ -312,7 +293,7 @@ internal fun fromJsonListAnyColumns(
                             fromJsonListAnyColumns(
                                 records = listOf(v),
                                 keyValuePaths = keyValuePaths,
-                                jsonPath = jsonPath.replaceLastStartWithIndex(i),
+                                jsonPath = jsonPath.replaceLastWildcardWithIndex(i),
                             )
                         collector.add(
                             if (parsed.isSingleUnnamedColumn()) (parsed.getColumn(0) as UnnamedColumn).col.values.first()
@@ -324,7 +305,7 @@ internal fun fromJsonListAnyColumns(
                         val parsed = fromJsonListAnyColumns(
                             records = v,
                             keyValuePaths = keyValuePaths,
-                            jsonPath = jsonPath.replaceLastStartWithIndex(i).appendArrayStarIndex(),
+                            jsonPath = jsonPath.replaceLastWildcardWithIndex(i).appendArrayWithWildcard(),
                         )
                         collector.add(
                             if (parsed.isSingleUnnamedColumn()) (parsed.getColumn(0) as UnnamedColumn).col.values.asList()
@@ -378,7 +359,7 @@ internal fun fromJsonListAnyColumns(
             val parsed = fromJsonListAnyColumns(
                 records = values,
                 keyValuePaths = keyValuePaths,
-                jsonPath = jsonPath.appendArrayStarIndex(),
+                jsonPath = jsonPath.appendArrayWithWildcard(),
             )
 
             val res = when {
@@ -411,7 +392,7 @@ internal fun fromJsonListAnyColumns(
                             val parsed = fromJsonListAnyColumns(
                                 records = listOf(value),
                                 keyValuePaths = keyValuePaths,
-                                jsonPath = jsonPath.appendKey(key),
+                                jsonPath = jsonPath.append(key),
                             )
                             if (parsed.isSingleUnnamedColumn()) (parsed.getColumn(0) as UnnamedColumn).col.values.first()
                             else parsed.unwrapUnnamedColumns().first()
@@ -457,7 +438,7 @@ internal fun fromJsonListAnyColumns(
                 val parsed = fromJsonListAnyColumns(
                     records = values,
                     keyValuePaths = keyValuePaths,
-                    jsonPath = jsonPath.appendKey(colName),
+                    jsonPath = jsonPath.append(colName),
                 )
                 when {
                     parsed.ncol == 0 -> DataColumn.createValueColumn(

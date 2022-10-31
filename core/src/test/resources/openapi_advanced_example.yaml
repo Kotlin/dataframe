@@ -176,6 +176,16 @@ components:
           items:
             type: integer
 
+    ErrorHolder:
+      type: object
+      required:
+        - errors
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/Error"
+
     Error:
       type: object
       required:
@@ -207,6 +217,10 @@ components:
           type: string
         objectWithAdditional:
           $ref: "#/components/schemas/ObjectWithAdditionalProperties"
+        objectWithAdditionalList:
+          type: array
+          items:
+            $ref: "#/components/schemas/ObjectWithAdditionalProperties"
         objectWithAdditional2:
           type: object
           nullable: true
@@ -264,3 +278,8 @@ components:
             type: string
           value:
             type: object
+          objectWithAdditional:
+            type: object
+            nullable: true
+            additionalProperties:
+              type: integer

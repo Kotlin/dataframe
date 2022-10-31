@@ -1,3 +1,4 @@
+# DEMO for DataFrame, this might differ from the actual API
 openapi: 3.0.0
 info:
   version: 2.0.2
@@ -156,6 +157,7 @@ components:
         - swaggerUrl
         - swaggerYamlUrl
         - info
+        - openapiVer
       properties:
         added:
           description: Timestamp when the version was added
@@ -181,6 +183,9 @@ components:
           description: Copy of `externalDocs` section from OpenAPI definition
           type: object
           minProperties: 1
+        openapiVer:
+          description: OpenAPI version
+          type: string
       additionalProperties: false
     Metrics:
       description: List of basic metrics

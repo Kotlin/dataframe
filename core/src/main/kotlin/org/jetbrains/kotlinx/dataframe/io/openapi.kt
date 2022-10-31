@@ -7,10 +7,12 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.LambdaTypeName
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.STAR
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.UNIT
 import com.squareup.kotlinpoet.asClassName
+import com.squareup.kotlinpoet.asTypeName
 import io.swagger.parser.OpenAPIParser
 import io.swagger.v3.oas.models.media.ArraySchema
 import io.swagger.v3.oas.models.media.Schema
@@ -19,7 +21,6 @@ import io.swagger.v3.parser.core.models.ParseOptions
 import io.swagger.v3.parser.core.models.SwaggerParseResult
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import org.intellij.lang.annotations.Language
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -28,6 +29,7 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
 import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
+import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
 import org.jetbrains.kotlinx.dataframe.api.any
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
@@ -39,7 +41,6 @@ import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.isNA
 import org.jetbrains.kotlinx.dataframe.api.replace
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
@@ -63,6 +64,7 @@ import org.jetbrains.kotlinx.dataframe.io.AdditionalProperty.Companion.convertTo
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Any.getType
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.AnyObject.getType
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.getTypeAsFrame
+import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.getTypeAsFrameList
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Array.getTypeAsList
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Boolean.getType
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Integer.getType
@@ -120,22 +122,6 @@ public class OpenApi : SupportedCodeGenerationFormat {
 public fun ConvertSchemaDsl<*>.convertDataRowsWithOpenApi() {
     // Convert DataRow to Any if the schema requires the types to be erased.
     convert<DataRow<*>>().with<_, Any?> { it }
-
-    // Convert DataRow to DataFrame<AdditionalProperty> if required by the schema
-    convertIf({ fromType, toSchema ->
-        fromType == typeOf<DataRow<*>>() &&
-            // any type of MapLikeDataSchema or MapLikeDataSchema?
-            toSchema.type == typeOf<DataFrame<*>>() && (
-            toSchema.contentType?.isSubtypeOf(typeOf<AdditionalProperty<*>>()) == true ||
-                toSchema.contentType?.isSubtypeOf(typeOf<AdditionalProperty<*>?>()) == true
-            )
-    }) {
-        (it as DataRow<*>)
-            .toDataFrame()
-            .convertToAdditionalProperties(schemaType = toSchema.contentType!!) {
-                convertDataRowsWithOpenApi()
-            }
-    }
 
     // Provide converter for (recursive) List<DataFrame<>>
     convertIf({ fromType, toSchema ->
@@ -196,10 +182,11 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
         "import org.jetbrains.kotlinx.dataframe.io.readJson",
         "import org.jetbrains.kotlinx.dataframe.io.readJsonStr",
         "import org.jetbrains.kotlinx.dataframe.api.convertTo",
+        "import org.jetbrains.kotlinx.dataframe.api.first",
+        "import org.jetbrains.kotlinx.dataframe.api.${JsonPath::class.simpleName}",
         "import org.jetbrains.kotlinx.dataframe.api.${DataSchemaEnum::class.simpleName}",
         "import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.*",
         "import org.jetbrains.kotlinx.dataframe.io.${ConvertSchemaDsl<*>::convertDataRowsWithOpenApi.name}",
-        "import org.jetbrains.kotlinx.dataframe.io.AdditionalProperty.Companion.convertToAdditionalProperties",
     )
 
     override fun toDeclaration(marker: Marker, visibility: String): String {
@@ -220,71 +207,73 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
             .defaultValue("{}")
             .build()
 
-        @Language("kt")
-        fun getConvertMethod(): String =
-            """return convertTo<${marker.shortName}> { 
-                    ${ConvertSchemaDsl<*>::convertDataRowsWithOpenApi.name}() 
-                    convertTo()
-                }
-            """.trimIndent()
+        fun getConvertMethod(): String = """
+            return convertTo<${marker.shortName}> { 
+                ${ConvertSchemaDsl<*>::convertDataRowsWithOpenApi.name}() 
+                convertTo()
+            }
+        """.trimIndent()
 
-        @Language("kt")
-        fun getConvertToAdditionalPropertiesMethod(): String =
-            """return convertToAdditionalProperties<${marker.shortName}>() { 
-                    ${ConvertSchemaDsl<*>::convertDataRowsWithOpenApi.name}() 
-                    convertTo()
-                }
-            """.trimIndent()
-
-        @Language("kt")
         fun getReadAndConvertMethod(
             readMethod: String,
-            arguments: String = "",
-        ): String =
-            """return ${DataFrame::class.asClassName()}.$readMethod.convertTo${marker.shortName}($arguments)
-            """.trimIndent()
+        ): String = """
+            return ${DataFrame::class.asClassName()}
+                .$readMethod${if (marker is OpenApiMarker.AdditionalPropertyInterface) "[\"$valueColumnName\"].first().let { it as DataFrame<*> }" else ""}
+                .convertTo${marker.shortName}()
+        """.trimIndent()
 
         val typeSpec = TypeSpec.companionObjectBuilder()
             .addFunction(
                 FunSpec.builder("convertTo${marker.shortName}")
                     .receiver(DataFrame::class.asClassName().parameterizedBy(STAR))
                     .addParameter(convertToParameter)
-                    .let {
-                        if (marker is OpenApiMarker.AdditionalPropertyInterface) {
-                            it.addCode(getConvertToAdditionalPropertiesMethod())
-                        } else {
-                            it.addCode(getConvertMethod())
-                        }
-                    }
+                    .addCode(getConvertMethod())
                     .returns(returnType)
+                    .build()
+            )
+            .addProperty(
+                PropertySpec.builder(name = "keyValuePaths", type = typeOf<List<JsonPath>>().asTypeName())
+                    .getter(
+                        FunSpec.getterBuilder()
+                            .addCode(
+                                run {
+                                    val additionalPropertyPaths = (marker as OpenApiMarker)
+                                        .additionalPropertyPaths
+                                        .distinct()
+
+                                    "return listOf(${additionalPropertyPaths.joinToString { "JsonPath(\"\"\"${it.path}\"\"\")" }})"
+                                }
+                            )
+                            .build()
+                    )
                     .build()
             )
             .addFunction(
                 FunSpec.builder("readJson")
                     .returns(returnType)
                     .addParameter("url", URL::class)
-                    .addCode(getReadAndConvertMethod("readJson(url, typeClashTactic = ANY_COLUMNS)"))
+                    .addCode(getReadAndConvertMethod("readJson(url, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)"))
                     .build()
             )
             .addFunction(
                 FunSpec.builder("readJson")
                     .returns(returnType)
                     .addParameter("path", String::class)
-                    .addCode(getReadAndConvertMethod("readJson(path, typeClashTactic = ANY_COLUMNS)"))
+                    .addCode(getReadAndConvertMethod("readJson(path, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)"))
                     .build()
             )
             .addFunction(
                 FunSpec.builder("readJson")
                     .returns(returnType)
                     .addParameter("stream", InputStream::class)
-                    .addCode(getReadAndConvertMethod("readJson(stream, typeClashTactic = ANY_COLUMNS)"))
+                    .addCode(getReadAndConvertMethod("readJson(stream, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)"))
                     .build()
             )
             .addFunction(
                 FunSpec.builder("readJsonStr")
                     .returns(returnType)
                     .addParameter("text", String::class)
-                    .addCode(getReadAndConvertMethod("readJsonStr(text, typeClashTactic = ANY_COLUMNS)"))
+                    .addCode(getReadAndConvertMethod("readJsonStr(text, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)"))
                     .build()
             )
             .build()
@@ -401,6 +390,13 @@ private interface IsObjectOrNot {
  * Used in OpenAPI to represent objects with 'just' additionalProperties of a certain type.
  */
 public interface AdditionalProperty<T> : KeyValueProperty<T> {
+
+    /** Key of the property. */
+    override val key: String
+
+    /** Value of the property. */
+    override val value: T
+
     public companion object {
         internal fun getMarker(typeArguments: List<String>) = Marker(
             name = AdditionalProperty::class.qualifiedName!!,
@@ -565,6 +561,7 @@ private sealed class OpenApiMarker private constructor(
         typeArguments = emptyList(),
     ) {
 
+    abstract val additionalPropertyPaths: List<JsonPath>
     abstract fun withName(name: String): OpenApiMarker
     abstract fun withVisibility(visibility: MarkerVisibility): OpenApiMarker
 
@@ -597,6 +594,8 @@ private sealed class OpenApiMarker private constructor(
         // enums become List<Something>, not Dataframe<*>
         override val isObject = false
 
+        override val additionalPropertyPaths: List<JsonPath> = emptyList()
+
         override fun toFieldType(): FieldType =
             FieldType.ValueFieldType(
                 // nullable or not, an enum must contain null to be nullable
@@ -625,6 +624,7 @@ private sealed class OpenApiMarker private constructor(
         fields: List<GeneratedField>,
         superMarkers: List<Marker>,
         name: String,
+        override val additionalPropertyPaths: List<JsonPath>,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     ) : OpenApiMarker(
         nullable = nullable,
@@ -643,10 +643,10 @@ private sealed class OpenApiMarker private constructor(
             )
 
         override fun withName(name: String): Interface =
-            Interface(nullable, fields, superMarkers.values.toList(), name, visibility)
+            Interface(nullable, fields, superMarkers.values.toList(), name, additionalPropertyPaths, visibility)
 
         override fun withVisibility(visibility: MarkerVisibility): Interface =
-            Interface(nullable, fields, superMarkers.values.toList(), name, visibility)
+            Interface(nullable, fields, superMarkers.values.toList(), name, additionalPropertyPaths, visibility)
     }
 
     /**
@@ -662,6 +662,7 @@ private sealed class OpenApiMarker private constructor(
         nullable: Boolean,
         val valueType: FieldType,
         name: String,
+        additionalPropertyPaths: List<JsonPath>,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     ) : Interface(
         nullable = nullable,
@@ -671,10 +672,17 @@ private sealed class OpenApiMarker private constructor(
             generatedFieldOf(
                 overrides = true,
                 fieldName = ValidFieldName.of(AdditionalProperty<*>::`value`.name),
-                columnName = AdditionalProperty<*>::`value`.name,
+                columnName = "value",
                 fieldType = valueType,
-            )
+            ),
+            generatedFieldOf(
+                overrides = true,
+                fieldName = ValidFieldName.of(AdditionalProperty<*>::key.name),
+                columnName = AdditionalProperty<*>::key.name,
+                fieldType = FieldType.ValueFieldType(String::class.qualifiedName!!),
+            ),
         ),
+        additionalPropertyPaths = (additionalPropertyPaths + JsonPath()).distinct(),
         superMarkers = listOf(AdditionalProperty.getMarker(listOf(valueType.name))),
     ) {
 
@@ -688,10 +696,10 @@ private sealed class OpenApiMarker private constructor(
             )
 
         override fun withName(name: String): AdditionalPropertyInterface =
-            AdditionalPropertyInterface(nullable, valueType, name, visibility)
+            AdditionalPropertyInterface(nullable, valueType, name, additionalPropertyPaths, visibility)
 
         override fun withVisibility(visibility: MarkerVisibility): AdditionalPropertyInterface =
-            AdditionalPropertyInterface(nullable, valueType, name, visibility)
+            AdditionalPropertyInterface(nullable, valueType, name, additionalPropertyPaths, visibility)
     }
 
     /**
@@ -706,6 +714,7 @@ private sealed class OpenApiMarker private constructor(
         nullable: Boolean,
         name: String,
         val superMarkerName: String,
+        override val additionalPropertyPaths: List<JsonPath>,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
     ) : OpenApiMarker(
         nullable = nullable,
@@ -734,10 +743,11 @@ private sealed class OpenApiMarker private constructor(
                 typeFqName = name + if (nullable) "?" else "",
             )
 
-        override fun withName(name: String): TypeAlias = TypeAlias(nullable, name, superMarkerName, visibility)
+        override fun withName(name: String): TypeAlias =
+            TypeAlias(nullable, name, superMarkerName, additionalPropertyPaths, visibility)
 
         override fun withVisibility(visibility: MarkerVisibility): TypeAlias =
-            TypeAlias(nullable, name, superMarkerName, visibility)
+            TypeAlias(nullable, name, superMarkerName, additionalPropertyPaths, visibility)
     }
 
     /**
@@ -763,6 +773,8 @@ private sealed class OpenApiMarker private constructor(
 
         // depends on the marker it points to whether it's primitive or not
         override val isObject = superMarker.isObject
+
+        override val additionalPropertyPaths: List<JsonPath> = superMarker.additionalPropertyPaths
 
         override fun toFieldType(): FieldType =
             FieldType.GroupFieldType(
@@ -999,6 +1011,7 @@ private fun Schema<*>.toMarker(
             // combine all schemas into a single schema by combining their supertypes and fields
             val superMarkers = mutableListOf<Marker>()
             val fields = mutableListOf<GeneratedField>()
+            val additionalPropertyPaths = mutableListOf<JsonPath>()
             for ((schema, openApiTypeResult) in allOfSchemas)
                 when (openApiTypeResult) {
                     is OpenApiTypeResult.CannotFindRefMarker ->
@@ -1007,6 +1020,8 @@ private fun Schema<*>.toMarker(
                     is OpenApiTypeResult.UsingRef -> {
                         val superMarker = openApiTypeResult.marker
                         superMarkers += superMarker
+
+                        additionalPropertyPaths += superMarker.additionalPropertyPaths
 
                         // make sure required fields are overridden to be non-null
                         val allSuperFields =
@@ -1056,12 +1071,15 @@ private fun Schema<*>.toMarker(
                         )
 
                         when (fieldTypeResult) {
-                            is FieldTypeResult.CannotFindRefMarker ->
+                            is FieldTypeResult.CannotFindRefMarker -> {
                                 return MarkerResult.CannotFindRefMarker
+                            }
 
                             // extract the fields from tempMarker
-                            is FieldTypeResult.FieldType ->
+                            is FieldTypeResult.FieldType -> {
                                 fields += tempMarker!!.fields
+                                additionalPropertyPaths += fieldTypeResult.additionalPropertyPaths
+                            }
                         }
                     }
                 }
@@ -1072,6 +1090,7 @@ private fun Schema<*>.toMarker(
                     name = typeName,
                     fields = fields,
                     superMarkers = superMarkers,
+                    additionalPropertyPaths = additionalPropertyPaths,
                 )
             )
         }
@@ -1102,6 +1121,8 @@ private fun Schema<*>.toMarker(
                     println("OpenAPI warning: type $name has both properties and additionalProperties defined, but only properties will be generated in the data schema.")
                 }
 
+                val keyValuePaths = mutableListOf<JsonPath>()
+
                 // build a list of fields from properties
                 val fields = buildList {
                     for ((name, property) in (properties ?: emptyMap())) {
@@ -1117,6 +1138,10 @@ private fun Schema<*>.toMarker(
                                 return MarkerResult.CannotFindRefMarker
 
                             is OpenApiTypeResult.UsingRef -> {
+                                keyValuePaths += openApiTypeResult.marker
+                                    .additionalPropertyPaths
+                                    .map { it.prepend(name) }
+
                                 val validName = ValidFieldName.of(name.snakeToLowerCamelCase())
 
                                 // find the field type of the marker reference
@@ -1170,6 +1195,10 @@ private fun Schema<*>.toMarker(
                                     is FieldTypeResult.FieldType -> {
                                         val validName = ValidFieldName.of(name.snakeToLowerCamelCase())
 
+                                        keyValuePaths += fieldTypeResult
+                                            .additionalPropertyPaths
+                                            .map { it.prepend(name) }
+
                                         this += generatedFieldOf(
                                             overrides = false,
                                             fieldName = validName,
@@ -1191,6 +1220,7 @@ private fun Schema<*>.toMarker(
                         name = typeName,
                         fields = fields,
                         superMarkers = emptyList(),
+                        additionalPropertyPaths = keyValuePaths,
                     )
                 )
             }
@@ -1200,12 +1230,18 @@ private fun Schema<*>.toMarker(
                 val openApiTypeResult = (additionalProperties as? Schema<*>)
                     ?.toOpenApiType(getRefMarker = getRefMarker)
 
-                val valueType: FieldType = when (openApiTypeResult) {
+                val additionalPropertyPaths = mutableListOf<JsonPath>()
+                val valueType = when (openApiTypeResult) {
                     is OpenApiTypeResult.CannotFindRefMarker ->
                         return MarkerResult.CannotFindRefMarker
 
-                    is OpenApiTypeResult.UsingRef ->
-                        openApiTypeResult.marker.toFieldType()
+                    is OpenApiTypeResult.UsingRef -> {
+                        val marker = openApiTypeResult.marker
+                        additionalPropertyPaths += marker.additionalPropertyPaths.map {
+                            it.prependWildcard()
+                        }
+                        marker.toFieldType()
+                    }
 
                     is OpenApiTypeResult.OpenApiType -> {
                         val fieldTypeResult = openApiTypeResult
@@ -1223,8 +1259,13 @@ private fun Schema<*>.toMarker(
                             FieldTypeResult.CannotFindRefMarker ->
                                 return MarkerResult.CannotFindRefMarker
 
-                            is FieldTypeResult.FieldType ->
+                            is FieldTypeResult.FieldType -> {
+                                additionalPropertyPaths += fieldTypeResult.additionalPropertyPaths.map {
+                                    it.prependWildcard()
+                                }
+
                                 fieldTypeResult.fieldType
+                            }
                         }
                     }
 
@@ -1252,6 +1293,7 @@ private fun Schema<*>.toMarker(
                         nullable = nullable,
                         valueType = valueType,
                         name = ValidFieldName.of(typeName).quotedIfNeeded,
+                        additionalPropertyPaths = additionalPropertyPaths,
                     )
                 )
             }
@@ -1262,6 +1304,7 @@ private fun Schema<*>.toMarker(
                     name = typeName,
                     fields = emptyList(),
                     superMarkers = emptyList(),
+                    additionalPropertyPaths = emptyList(),
                 )
             )
         }
@@ -1283,7 +1326,7 @@ private fun Schema<*>.toMarker(
                 )
 
                 is OpenApiTypeResult.OpenApiType -> {
-                    val type = openApiTypeResult
+                    val typeResult = openApiTypeResult
                         .openApiType
                         .toFieldType(
                             schema = this,
@@ -1292,24 +1335,27 @@ private fun Schema<*>.toMarker(
                             getRefMarker = getRefMarker,
                             produceAdditionalMarker = produceAdditionalMarker,
                             required = required,
-                        ).let {
-                            when (it) {
-                                FieldTypeResult.CannotFindRefMarker ->
-                                    return MarkerResult.CannotFindRefMarker
+                        )
 
-                                is FieldTypeResult.FieldType ->
-                                    when (it.fieldType) {
-                                        is FieldType.ValueFieldType, is FieldType.GroupFieldType -> it.fieldType.name
-                                        is FieldType.FrameFieldType ->
-                                            "${DataFrame::class.qualifiedName!!}<${it.fieldType.name}>"
-                                    }
+                    val superMarkerName = when (typeResult) {
+                        is FieldTypeResult.CannotFindRefMarker ->
+                            return MarkerResult.CannotFindRefMarker
+
+                        is FieldTypeResult.FieldType ->
+                            when (typeResult.fieldType) {
+                                is FieldType.ValueFieldType, is FieldType.GroupFieldType ->
+                                    typeResult.fieldType.name
+
+                                is FieldType.FrameFieldType ->
+                                    "${DataFrame::class.qualifiedName!!}<${typeResult.fieldType.name}>"
                             }
-                        }
+                    }
 
                     OpenApiMarker.TypeAlias(
                         nullable = nullable,
                         name = ValidFieldName.of(typeName).quotedIfNeeded,
-                        superMarkerName = type,
+                        superMarkerName = superMarkerName,
+                        additionalPropertyPaths = typeResult.additionalPropertyPaths,
                     )
                 }
 
@@ -1454,17 +1500,27 @@ private sealed class OpenApiType(val name: kotlin.String?) : IsObjectOrNot {
 
     object Array : OpenApiType("array") {
 
-        /** used for list of primitives */
+        /** used for list of primitives (read as List<MyPrimitve>) */
         fun getTypeAsList(nullableArray: kotlin.Boolean, typeFqName: kotlin.String): FieldType.ValueFieldType =
             FieldType.ValueFieldType(
                 typeFqName = "${List::class.qualifiedName!!}<$typeFqName>${if (nullableArray) "?" else ""}",
             )
 
-        /** used for list of objects */
-        fun getTypeAsFrame(nullableArray: kotlin.Boolean, markerName: kotlin.String): FieldType.FrameFieldType =
+        /** used for list of objects (read as DataFrame<MyMarker>) */
+        fun getTypeAsFrame(nullable: kotlin.Boolean, markerName: kotlin.String): FieldType.FrameFieldType =
             FieldType.FrameFieldType(
-                markerName = markerName.let { if (nullableArray) it.toNullable() else it },
+                markerName = markerName.let { if (nullable) it.toNullable() else it },
                 nullable = false, // preferring DataFrame<Something?> over DataFrame<Something>?
+            )
+
+        /** used for list of AdditionalProperty objects (read as List<DataFrame<MyMarker>>) */
+        fun getTypeAsFrameList(
+            nullable: kotlin.Boolean,
+            nullableArray: kotlin.Boolean,
+            markerName: kotlin.String,
+        ): FieldType.ValueFieldType =
+            FieldType.ValueFieldType(
+                typeFqName = "${List::class.qualifiedName!!}<${DataFrame::class.qualifiedName!!}<${markerName.let { if (nullable) it.toNullable() else it }}>>${if (nullableArray) "?" else ""}",
             )
     }
 
@@ -1629,7 +1685,10 @@ private sealed interface FieldTypeResult {
     object CannotFindRefMarker : FieldTypeResult
 
     /** ColumnSchema [fieldType] created successfully. */
-    data class FieldType(val fieldType: org.jetbrains.kotlinx.dataframe.codeGen.FieldType) : FieldTypeResult
+    data class FieldType(
+        val fieldType: org.jetbrains.kotlinx.dataframe.codeGen.FieldType,
+        val additionalPropertyPaths: List<JsonPath> = emptyList(),
+    ) : FieldTypeResult
 }
 
 /**
@@ -1654,91 +1713,132 @@ private fun OpenApiType.toFieldType(
     produceAdditionalMarker: ProduceAdditionalMarker,
     required: List<String>,
 ): FieldTypeResult {
-    return FieldTypeResult.FieldType(
-        fieldType = when (this) {
-            is OpenApiType.Any -> getType(nullable)
+    return when (this) {
+        is OpenApiType.Any -> FieldTypeResult.FieldType(getType(nullable))
 
-            is OpenApiType.Boolean -> getType(nullable)
+        is OpenApiType.Boolean -> FieldTypeResult.FieldType(getType(nullable))
 
-            is OpenApiType.Integer -> getType(
+        is OpenApiType.Integer -> FieldTypeResult.FieldType(
+            getType(
                 nullable = nullable,
                 format = OpenApiIntegerFormat.fromStringOrNull(schema.format),
             )
+        )
 
-            is OpenApiType.Number -> getType(
+        is OpenApiType.Number -> FieldTypeResult.FieldType(
+            getType(
                 nullable = nullable,
                 format = OpenApiNumberFormat.fromStringOrNull(schema.format),
             )
+        )
 
-            is OpenApiType.String -> getType(
+        is OpenApiType.String -> FieldTypeResult.FieldType(
+            getType(
                 nullable = nullable,
                 format = OpenApiStringFormat.fromStringOrNull(schema.format),
             )
+        )
 
-            // Becomes a DataRow<Any> or DataRow<Any?> since we don't know the type, but we do know it's an object
-            is OpenApiType.AnyObject -> getType(
+        // Becomes a DataRow<Any> or DataRow<Any?> since we don't know the type, but we do know it's an object
+        is OpenApiType.AnyObject -> FieldTypeResult.FieldType(
+            getType(
                 nullable = nullable,
             )
+        )
 
-            is OpenApiType.Array -> {
-                schema as ArraySchema
+        is OpenApiType.Array -> {
+            schema as ArraySchema
 
-                if (schema.items == null) {
-                    // should in theory not occur, but make List<Any?> just in case
+            if (schema.items == null) {
+                // should in theory not occur, but make List<Any?> just in case
+                FieldTypeResult.FieldType(
                     getTypeAsList(
                         nullableArray = nullable,
                         typeFqName = OpenApiType.Any.getType(nullable = true).typeFqName
                     )
-                } else {
-                    // resolve the type of the contents of the array
-                    val arrayTypeResult = schema
-                        .items!!
-                        .toOpenApiType(getRefMarker = getRefMarker)
+                )
+            } else {
+                // resolve the type of the contents of the array
+                val arrayTypeResult = schema
+                    .items!!
+                    .toOpenApiType(getRefMarker = getRefMarker)
 
-                    // convert the type to a FieldType
-                    when (arrayTypeResult) {
-                        is OpenApiTypeResult.CannotFindRefMarker ->
-                            return FieldTypeResult.CannotFindRefMarker
+                // convert the type to a FieldType
+                when (arrayTypeResult) {
+                    is OpenApiTypeResult.CannotFindRefMarker ->
+                        FieldTypeResult.CannotFindRefMarker
 
-                        is OpenApiTypeResult.UsingRef ->
-                            if (arrayTypeResult.marker.isObject) {
-                                getTypeAsFrame(
-                                    nullableArray = nullable || arrayTypeResult.marker.nullable,
-                                    markerName = arrayTypeResult.marker.name,
-                                )
-                            } else {
-                                getTypeAsList(
-                                    nullableArray = nullable || arrayTypeResult.marker.nullable,
-                                    typeFqName = arrayTypeResult.marker.name,
-                                )
-                            }
-
-                        is OpenApiTypeResult.OpenApiType -> {
-                            // Convert openApiType of array contents to FieldType.
-                            // Will produce additional markers if needed.
-                            val arrayTypeSchemaResult = arrayTypeResult
-                                .openApiType
-                                .toFieldType(
-                                    schema = schema.items!!,
-                                    schemaName = schemaName + "Content", // type name objects in the array will get
-                                    nullable = arrayTypeResult.nullable,
-                                    getRefMarker = getRefMarker,
-                                    produceAdditionalMarker = produceAdditionalMarker,
-                                    required = emptyList(),
+                    is OpenApiTypeResult.UsingRef ->
+                        when {
+                            // accessed like List<DataFrame<MyMarker>>
+                            arrayTypeResult.marker is OpenApiMarker.AdditionalPropertyInterface ->
+                                FieldTypeResult.FieldType(
+                                    fieldType = getTypeAsFrameList(
+                                        nullable = arrayTypeResult.marker.nullable,
+                                        nullableArray = nullable,
+                                        markerName = arrayTypeResult.marker.name,
+                                    ),
+                                    additionalPropertyPaths = arrayTypeResult.marker.additionalPropertyPaths.map {
+                                        it.prependArrayWithWildcard()
+                                    },
                                 )
 
-                            when (arrayTypeSchemaResult) {
-                                is FieldTypeResult.CannotFindRefMarker ->
-                                    return FieldTypeResult.CannotFindRefMarker
+                            // accessed like DataFrame<MyMarker>
+                            arrayTypeResult.marker.isObject ->
+                                FieldTypeResult.FieldType(
+                                    fieldType = getTypeAsFrame(
+                                        nullable = nullable || arrayTypeResult.marker.nullable,
+                                        markerName = arrayTypeResult.marker.name,
+                                    ),
+                                    additionalPropertyPaths = arrayTypeResult.marker.additionalPropertyPaths.map {
+                                        it.prependArrayWithWildcard()
+                                    },
+                                )
 
-                                is FieldTypeResult.FieldType -> {
-                                    val fieldType = arrayTypeSchemaResult.fieldType
-                                    when {
+                            // accessed like List<Primitive>
+                            else ->
+                                FieldTypeResult.FieldType(
+                                    fieldType = getTypeAsList(
+                                        nullableArray = nullable || arrayTypeResult.marker.nullable,
+                                        typeFqName = arrayTypeResult.marker.name,
+                                    ),
+                                    additionalPropertyPaths = arrayTypeResult.marker.additionalPropertyPaths.map {
+                                        it.prependArrayWithWildcard()
+                                    },
+                                )
+                        }
+
+                    is OpenApiTypeResult.OpenApiType -> {
+                        // Convert openApiType of array contents to FieldType.
+                        // Will produce additional markers if needed.
+                        val arrayTypeSchemaResult = arrayTypeResult
+                            .openApiType
+                            .toFieldType(
+                                schema = schema.items!!,
+                                schemaName = schemaName + "Content", // type name objects in the array will get
+                                nullable = arrayTypeResult.nullable,
+                                getRefMarker = getRefMarker,
+                                produceAdditionalMarker = produceAdditionalMarker,
+                                required = emptyList(),
+                            )
+
+                        when (arrayTypeSchemaResult) {
+                            is FieldTypeResult.CannotFindRefMarker ->
+                                FieldTypeResult.CannotFindRefMarker
+
+                            is FieldTypeResult.FieldType -> {
+                                val fieldType = arrayTypeSchemaResult.fieldType
+                                val additionalPropertyPaths = arrayTypeSchemaResult
+                                    .additionalPropertyPaths
+                                    .map { it.prependArrayWithWildcard() }
+
+                                FieldTypeResult.FieldType(
+                                    fieldType = when {
                                         // array of OpenApiType.AnyObject -> DataFrame<Any>
                                         fieldType is FieldType.GroupFieldType &&
                                             fieldType.name == typeOf<DataRow<Any>>().toString() ->
                                             getTypeAsFrame(
-                                                nullableArray = nullable,
+                                                nullable = nullable,
                                                 markerName = typeOf<Any>().toString(),
                                             )
 
@@ -1746,19 +1846,19 @@ private fun OpenApiType.toFieldType(
                                         fieldType is FieldType.GroupFieldType &&
                                             fieldType.name == typeOf<DataRow<Any?>>().toString() ->
                                             getTypeAsFrame(
-                                                nullableArray = nullable,
+                                                nullable = nullable,
                                                 markerName = typeOf<Any?>().toString(),
                                             )
 
                                         // array of Marker -> DataFrame<Marker>
                                         fieldType is FieldType.GroupFieldType ->
                                             getTypeAsFrame(
-                                                nullableArray = nullable,
+                                                nullable = nullable,
                                                 markerName = fieldType.name,
                                             )
 
                                         // array of DataFrames -> List<DataFrame<Marker>>
-                                        fieldType is FieldType.FrameFieldType -> // TODO TEST!
+                                        fieldType is FieldType.FrameFieldType ->
                                             getTypeAsList(
                                                 nullableArray = nullable,
                                                 typeFqName = "${DataFrame::class.qualifiedName}<${fieldType.name}>",
@@ -1772,72 +1872,81 @@ private fun OpenApiType.toFieldType(
                                             )
 
                                         else -> error("Error reading array type")
-                                    }
-                                }
+                                    },
+                                    additionalPropertyPaths = additionalPropertyPaths,
+                                )
                             }
                         }
+                    }
 
-                        is OpenApiTypeResult.Enum -> {
-                            // enum needs to be produced as additional marker
-                            val enumMarker = produceNewEnum(
-                                name = schemaName,
-                                values = arrayTypeResult.values,
-                                produceAdditionalMarker = produceAdditionalMarker,
-                                nullable = arrayTypeResult.nullable,
-                            )
+                    is OpenApiTypeResult.Enum -> {
+                        // enum needs to be produced as additional marker
+                        val enumMarker = produceNewEnum(
+                            name = schemaName,
+                            values = arrayTypeResult.values,
+                            produceAdditionalMarker = produceAdditionalMarker,
+                            nullable = arrayTypeResult.nullable,
+                        )
 
+                        FieldTypeResult.FieldType(
                             getTypeAsList(
                                 nullableArray = nullable,
                                 typeFqName = enumMarker.name + if (enumMarker.nullable) "?" else "",
                             )
-                        }
+                        )
                     }
                 }
             }
+        }
 
-            is OpenApiType.Object -> {
-                // read the schema to an OpenApiMarker
-                val dataFrameSchemaResult = schema.toMarker(
-                    typeName = schemaName.snakeToUpperCamelCase(),
-                    getRefMarker = getRefMarker,
-                    produceAdditionalMarker = { validName, marker, _ ->
-                        // ensure isTopLevelObject == false, since we go a layer deeper
-                        produceAdditionalMarker(validName, marker, isTopLevelObject = false)
-                    },
-                    required = required,
-                )
+        is OpenApiType.Object -> {
+            // read the schema to an OpenApiMarker
+            val dataFrameSchemaResult = schema.toMarker(
+                typeName = schemaName.snakeToUpperCamelCase(),
+                getRefMarker = getRefMarker,
+                produceAdditionalMarker = { validName, marker, _ ->
+                    // ensure isTopLevelObject == false, since we go a layer deeper
+                    produceAdditionalMarker(validName, marker, isTopLevelObject = false)
+                },
+                required = required,
+            )
 
-                when (dataFrameSchemaResult) {
-                    is MarkerResult.CannotFindRefMarker ->
-                        return FieldTypeResult.CannotFindRefMarker
+            when (dataFrameSchemaResult) {
+                is MarkerResult.CannotFindRefMarker ->
+                    FieldTypeResult.CannotFindRefMarker
 
-                    is MarkerResult.OpenApiMarker -> {
-                        // Produce the marker as additional marker
-                        val newName = produceAdditionalMarker(
-                            validName = ValidFieldName.of(schemaName.snakeToUpperCamelCase()),
-                            marker = dataFrameSchemaResult.marker,
-                            isTopLevelObject = true, // only relevant in `allOf` cases
-                        )
+                is MarkerResult.OpenApiMarker -> {
+                    // Produce the marker as additional marker
+                    val newName = produceAdditionalMarker(
+                        validName = ValidFieldName.of(schemaName.snakeToUpperCamelCase()),
+                        marker = dataFrameSchemaResult.marker,
+                        isTopLevelObject = true, // only relevant in `allOf` cases
+                    )
 
-                        when (val marker = dataFrameSchemaResult.marker.withName(newName)) {
-                            // needs to be accessed like DataFrame<MyMarker>
-                            is OpenApiMarker.AdditionalPropertyInterface ->
-                                OpenApiType.Array.getTypeAsFrame(
-                                    nullableArray = nullable,
+                    when (val marker = dataFrameSchemaResult.marker.withName(newName)) {
+                        // needs to be accessed like DataFrame<MyMarker>
+                        is OpenApiMarker.AdditionalPropertyInterface ->
+                            FieldTypeResult.FieldType(
+                                fieldType = OpenApiType.Array.getTypeAsFrame(
+                                    nullable = nullable,
                                     markerName = marker.name,
-                                )
+                                ),
+                                additionalPropertyPaths = marker.additionalPropertyPaths,
+                            )
 
-                            // accessed like Marker (or DataRow<Marker>)
-                            else -> getType(
+                        // accessed like Marker (or DataRow<Marker>)
+                        else -> FieldTypeResult.FieldType(
+                            fieldType = getType(
                                 nullable = nullable,
                                 marker = marker,
-                            )
-                        }
+                            ),
+                            additionalPropertyPaths = marker.additionalPropertyPaths,
+                        )
                     }
                 }
             }
-        },
-    )
+        }
+    }
 }
 
 internal fun String.snakeToLowerCamelCase(): String =

@@ -6,6 +6,7 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
+import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.convert
@@ -668,7 +669,7 @@ class JsonTests {
     }
 
     @Test
-    fun `KeyValue property`() {
+    fun `KeyValue property`() { // TODO test better
         @Language("json")
         val json = """[
                 {"a":{"b":1}},
@@ -682,9 +683,7 @@ class JsonTests {
 
         // $[*].a should be read as keyValue
         val keyValuePaths = listOf(
-            JsonPath()
-                .appendArrayStarIndex()
-                .appendKey("a")
+            JsonPath().append("a")
         )
 
         // before
