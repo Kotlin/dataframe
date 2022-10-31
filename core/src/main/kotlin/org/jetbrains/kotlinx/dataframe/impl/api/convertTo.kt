@@ -11,6 +11,7 @@ import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -26,7 +27,6 @@ import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.schema.extractSchema
 import org.jetbrains.kotlinx.dataframe.impl.schema.render
 import org.jetbrains.kotlinx.dataframe.kind
-import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.size
@@ -78,8 +78,11 @@ internal fun AnyFrame.convertToImpl(
     dsl.body()
 
     fun AnyFrame.convertToSchema(schema: DataFrameSchema, path: ColumnPath): AnyFrame {
-        // if current frame is empty,
-        if (ncol == 0 && !schema.columns.all { it.value.type.isMarkedNullable }) return schema.createEmptyDataFrame()
+        // if current frame is empty
+        if (this.isEmpty() /* && !schema.columns.all { it.value.type.isMarkedNullable }*/) {
+            return schema.createEmptyDataFrame()
+        }
+
         var visited = 0
         val newColumns = columns().mapNotNull { originalColumn ->
             val targetColumn = schema.columns[originalColumn.name()]

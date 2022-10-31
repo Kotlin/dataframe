@@ -1,0 +1,491 @@
+[
+  {
+    "errors": [
+      {
+        "pets": [
+          {
+            "pet_type": "Dog",
+            "value": 1,
+            "name": "Buddy",
+            "tag": "Golden Retriever",
+            "eye_color": "Brown",
+            "breed": "Dingo"
+          },
+          {
+            "pet_type": "Dog",
+            "value": "2",
+            "name": "Buddy",
+            "tag": "Golden Retriever",
+            "other": "something",
+            "bark": true,
+            "eye_color": null,
+            "breed": "Husky"
+          },
+          {
+            "pet_type": "Cat",
+            "value": 3,
+            "name": "Buddy",
+            "hunts": null,
+            "eye_color": "Blue",
+            "breed": "Ragdoll",
+            "age": 1.5
+          },
+          {
+            "pet_type": "Cat",
+            "value": 4,
+            "name": "Buddy",
+            "hunts": true,
+            "tag": "something",
+            "other": [
+              1,
+              12
+            ],
+            "eye_color": null,
+            "breed": null
+          }
+        ],
+        "ints": {
+          "list": []
+        },
+        "petRef": {
+          "pet_type": "Dog",
+          "value": 1,
+          "name": "Buddy",
+          "tag": "Golden Retriever",
+          "eye_color": "Brown",
+          "breed": "Dingo"
+        },
+        "code": 123,
+        "message": "Some error",
+        "objectWithAdditional": {},
+        "objectWithAdditionalList": [
+          {},
+          {}
+        ]
+      },
+      {
+        "pets": [
+          {
+            "pet_type": "Dog",
+            "value": 1,
+            "name": "Buddy",
+            "tag": "Golden Retriever",
+            "eye_color": "Brown",
+            "breed": "Dingo"
+          },
+          {
+            "pet_type": "Dog",
+            "value": "2",
+            "name": "Buddy",
+            "tag": "Golden Retriever",
+            "other": "something",
+            "bark": true,
+            "eye_color": null,
+            "breed": "Husky"
+          },
+          {
+            "pet_type": "Cat",
+            "value": 3,
+            "name": "Buddy",
+            "hunts": null,
+            "other": {
+              "a": {
+                "b": [
+                  1,
+                  12
+                ]
+              }
+            },
+            "eye_color": "Blue",
+            "breed": "Ragdoll",
+            "age": 1.5
+          },
+          {
+            "pet_type": "Cat",
+            "value": 4,
+            "name": "Buddy",
+            "hunts": true,
+            "tag": "something",
+            "other": [
+              1,
+              12
+            ],
+            "eye_color": null,
+            "breed": null
+          },
+          {
+            "id": 2
+          }
+        ],
+        "ints": {
+          "list": [
+            1,
+            2,
+            3
+          ]
+        },
+        "code": 124,
+        "petRef": {
+          "pet_type": "Cat",
+          "value": 3,
+          "name": "Buddy",
+          "hunts": null,
+          "eye_color": "Blue",
+          "breed": "Ragdoll",
+          "age": 1.5
+        },
+        "message": "Some error too",
+        "objectWithAdditional": {
+          "abvdwsefew": "1",
+          "b": "5"
+        },
+        "objectWithAdditionalList": [
+          {
+            "abvdwsefew": "1",
+            "b": "5"
+          },
+          {
+            "abvdwsefew": "1",
+            "b": "5"
+          }
+        ],
+        "objectWithAdditional2": null,
+        "objectWithAdditional3": {
+          "d": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      {
+        "pets": null,
+        "ints": null,
+        "code": 124,
+        "petRef": {
+          "pet_type": "Cat",
+          "value": 3,
+          "name": "Buddy",
+          "hunts": null,
+          "eye_color": "Blue",
+          "breed": "Ragdoll",
+          "age": 1.5
+        },
+        "message": "Some error too",
+        "objectWithAdditional": {
+          "a": "1",
+          "b": "2"
+        },
+        "objectWithAdditional2": {
+          "a": "1",
+          "sdgewrgb": 1234
+        },
+        "objectWithAdditional3": {
+          "d": "12fvdfdfxsd",
+          "a": {
+            "pet_type": "Cat",
+            "value": 3,
+            "name": "Buddy",
+            "hunts": null,
+            "eye_color": "Blue",
+            "breed": "Ragdoll",
+            "age": 1.5
+          },
+          "b": {
+            "pet_type": "Dog",
+            "value": "2",
+            "name": "Buddy",
+            "tag": "Golden Retriever",
+            "other": "something",
+            "bark": true,
+            "eye_color": null,
+            "breed": "Husky"
+          },
+          "c": {
+            "id": 1234
+          }
+        },
+        "array": [
+          [
+            [
+              {
+                "op": "add",
+                "path": "some path",
+                "objectWithAdditional": {}
+              },
+              {
+                "op": "add",
+                "path": "somepath",
+                "value": {
+                  "a": "1"
+                }
+              }
+            ],
+            [
+              {
+                "op": "add",
+                "path": "some path"
+              },
+              {
+                "op": "add",
+                "path": "somepath",
+                "value": {
+                  "a": "1"
+                },
+                "objectWithAdditional": {
+                  "a": 123,
+                  "something": 235346
+                }
+              }
+            ],
+            [
+              {
+                "op": "add",
+                "path": "some path",
+                "objectWithAdditional": null
+              }
+            ],
+            []
+          ],
+          []
+        ]
+      }
+    ]
+  },
+  {
+    "errors": [
+      {
+        "pets": [
+          {
+            "pet_type": "Dog",
+            "value": 1,
+            "name": "Buddy",
+            "tag": "Golden Retriever",
+            "eye_color": "Brown",
+            "breed": "Dingo"
+          },
+          {
+            "pet_type": "Dog",
+            "value": "2",
+            "name": "Buddy",
+            "tag": "Golden Retriever",
+            "other": "something",
+            "bark": true,
+            "eye_color": null,
+            "breed": "Husky"
+          },
+          {
+            "pet_type": "Cat",
+            "value": 3,
+            "name": "Buddy",
+            "hunts": null,
+            "eye_color": "Blue",
+            "breed": "Ragdoll",
+            "age": 1.5
+          },
+          {
+            "pet_type": "Cat",
+            "value": 4,
+            "name": "Buddy",
+            "hunts": true,
+            "tag": "something",
+            "other": [
+              1,
+              12
+            ],
+            "eye_color": null,
+            "breed": null
+          }
+        ],
+        "ints": {
+          "list": []
+        },
+        "petRef": {
+          "pet_type": "Dog",
+          "value": 1,
+          "name": "Buddy",
+          "tag": "Golden Retriever",
+          "eye_color": "Brown",
+          "breed": "Dingo"
+        },
+        "code": 123,
+        "message": "Some error",
+        "objectWithAdditional": {}
+      },
+      {
+        "pets": [
+          {
+            "pet_type": "Dog",
+            "value": 1,
+            "name": "Buddy",
+            "tag": "Golden Retriever",
+            "eye_color": "Brown",
+            "breed": "Dingo"
+          },
+          {
+            "pet_type": "Dog",
+            "value": "2",
+            "name": "Buddy",
+            "tag": "Golden Retriever",
+            "other": "something",
+            "bark": true,
+            "eye_color": null,
+            "breed": "Husky"
+          },
+          {
+            "pet_type": "Cat",
+            "value": 3,
+            "name": "Buddy",
+            "hunts": null,
+            "other": {
+              "a": {
+                "b": [
+                  1,
+                  12
+                ]
+              }
+            },
+            "eye_color": "Blue",
+            "breed": "Ragdoll",
+            "age": 1.5
+          },
+          {
+            "pet_type": "Cat",
+            "value": 4,
+            "name": "Buddy",
+            "hunts": true,
+            "tag": "something",
+            "other": [
+              1,
+              12
+            ],
+            "eye_color": null,
+            "breed": null
+          },
+          {
+            "id": 2
+          }
+        ],
+        "ints": {
+          "list": [
+            1,
+            2,
+            3
+          ]
+        },
+        "code": 124,
+        "petRef": {
+          "pet_type": "Cat",
+          "value": 3,
+          "name": "Buddy",
+          "hunts": null,
+          "eye_color": "Blue",
+          "breed": "Ragdoll",
+          "age": 1.5
+        },
+        "message": "Some error too",
+        "objectWithAdditional": {
+          "abvdwsefew": "1",
+          "b": "5"
+        },
+        "objectWithAdditional2": null,
+        "objectWithAdditional3": {
+          "d": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      {
+        "pets": null,
+        "ints": null,
+        "code": 124,
+        "petRef": {
+          "pet_type": "Cat",
+          "value": 3,
+          "name": "Buddy",
+          "hunts": null,
+          "eye_color": "Blue",
+          "breed": "Ragdoll",
+          "age": 1.5
+        },
+        "message": "Some error too",
+        "objectWithAdditional": {
+          "a": "1",
+          "b": "2"
+        },
+        "objectWithAdditional2": {
+          "a": "1",
+          "sdgewrgb": 1234
+        },
+        "objectWithAdditional3": {
+          "d": "12fvdfdfxsd",
+          "a": {
+            "pet_type": "Cat",
+            "value": 3,
+            "name": "Buddy",
+            "hunts": null,
+            "eye_color": "Blue",
+            "breed": "Ragdoll",
+            "age": 1.5
+          },
+          "b": {
+            "pet_type": "Dog",
+            "value": "2",
+            "name": "Buddy",
+            "tag": "Golden Retriever",
+            "other": "something",
+            "bark": true,
+            "eye_color": null,
+            "breed": "Husky"
+          },
+          "c": {
+            "id": 1234
+          }
+        },
+        "array": [
+          [
+            [
+              {
+                "op": "add",
+                "path": "some path"
+              },
+              {
+                "op": "add",
+                "path": "somepath",
+                "value": {
+                  "a": "1"
+                }
+              }
+            ],
+            [
+              {
+                "op": "add",
+                "path": "some path"
+              },
+              {
+                "op": "add",
+                "path": "somepath",
+                "value": {
+                  "a": "1"
+                }
+              }
+            ],
+            [
+              {
+                "op": "add",
+                "path": "some path"
+              }
+            ],
+            []
+          ],
+          []
+        ]
+      }
+    ]
+  }
+]
+
+
+

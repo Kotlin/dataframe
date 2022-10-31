@@ -1,7 +1,7 @@
 @file:ImportDataSchema(
-    name = "ApiGuru", path = "src/test/resources/ApiGuruOpenApi.yaml"
+    name = "ApiGuru",
+    path = "src/test/resources/ApiGuruOpenApi.yaml"
 )
-
 @file:ImportDataSchema(
     name = "MlcGroupData", path = "src/test/resources/MlcGroupDataOpenApi.yaml"
 )
@@ -9,26 +9,23 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.throwables.shouldThrowAny
+import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.should
 import io.kotest.matchers.string.haveSubstring
+import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.alsoDebug
-import org.jetbrains.kotlinx.dataframe.annotations.ColumnName
-import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
-import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
-import org.jetbrains.kotlinx.dataframe.api.convertTo
+import org.jetbrains.kotlinx.dataframe.api.any
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.isNotEmpty
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
-import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.ANY_COLUMNS
-import org.jetbrains.kotlinx.dataframe.io.OpenApiTests.Error.Companion.convertToError
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
 import java.io.File
 import java.io.InputStream
-import java.net.URL
 
 class OpenApiTests : JupyterReplTestCase() {
 
@@ -54,13 +51,16 @@ class OpenApiTests : JupyterReplTestCase() {
     private val petstoreJson = File("src/test/resources/petstore.json")
     private val petstoreAdvancedJson = File("src/test/resources/petstore_advanced.json")
     private val petstoreYaml = File("src/test/resources/petstore.yaml")
-    private val someAdvancedPets = File("src/test/resources/some_advanced_pets.json").readText()
-    private val someAdvancedOrders = File("src/test/resources/some_advanced_orders.json").readText()
-    private val someAdvancedFailingOrders = File("src/test/resources/some_advanced_failing_orders.json").readText()
+    private val someAdvancedPetsData = File("src/test/resources/some_advanced_pets.json").readText()
+    private val someAdvancedOrdersData = File("src/test/resources/some_advanced_orders.json").readText()
+    private val someAdvancedFailingOrdersData = File("src/test/resources/some_advanced_failing_orders.json").readText()
     private val advancedExample = File("src/test/resources/openapi_advanced_example.yaml")
     private val advancedData = File("src/test/resources/openapi_advanced_data.json").readText()
-    private val advancedDataError = File("src/test/resources/openapi_advanced_data2.json").readText()
+    private val advancedErrorData = File("src/test/resources/openapi_advanced_data2.json").readText()
+    private val advancedErrorHolderData = File("src/test/resources/openapi_advanced_data3.json").readText()
     private val apiGuruData = File("src/test/resources/ApiGuruSample.json").readText()
+    private val mlcLocationsWithPeopleData = File("src/test/resources/mlc_locations_with_people_data.json").readText()
+    private val mlcPeopleWithLocationData = File("src/test/resources/mlc_people_with_location_data.json").readText()
 
     @Language("json")
     private val somePets = """
@@ -442,12 +442,13 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(apiResponseExtensions)
 
-        @Language("kts") val res2 = execRaw("Pet.readJsonStr(\"\"\"$someAdvancedPets\"\"\")") as AnyFrame
+        @Language("kts") val res2 = execRaw("Pet.readJsonStr(\"\"\"$someAdvancedPetsData\"\"\")") as AnyFrame
 
-        @Language("kts") val res3 = execRaw("Order.readJsonStr(\"\"\"$someAdvancedOrders\"\"\")") as AnyFrame
+        @Language("kts") val res3 = execRaw("Order.readJsonStr(\"\"\"$someAdvancedOrdersData\"\"\")") as AnyFrame
 
         shouldThrowAny {
-            @Language("kts") val res4 = execRaw("Order.readJsonStr(\"\"\"$someAdvancedFailingOrders\"\"\")") as AnyFrame
+            @Language("kts") val res4 =
+                execRaw("Order.readJsonStr(\"\"\"$someAdvancedFailingOrdersData\"\"\")") as AnyFrame
             res4
         }
     }
@@ -474,6 +475,9 @@ class OpenApiTests : JupyterReplTestCase() {
                 val bark: kotlin.Boolean?
                 val breed: Breed
                 public companion object {
+                    public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
+                        get() = listOf()
+
                     public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToDog(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<Dog>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<Dog> = convertTo<Dog> { 
                         convertDataRowsWithOpenApi() 
                         convertTo()
@@ -520,6 +524,9 @@ class OpenApiTests : JupyterReplTestCase() {
                 val age: kotlin.Float?
                 val breed: Breed1?
                 public companion object {
+                    public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
+                        get() = listOf()
+                
                     public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToCat(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<Cat>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<Cat> = convertTo<Cat> { 
                           convertDataRowsWithOpenApi() 
                           convertTo()
@@ -569,6 +576,9 @@ class OpenApiTests : JupyterReplTestCase() {
                 @ColumnName("eye_color")
                 val eyeColor: EyeColor?
                 public companion object {
+                    public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
+                        get() = listOf()
+                
                     public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToPet(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<Pet>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<Pet> = convertTo<Pet> { 
                           convertDataRowsWithOpenApi() 
                           convertTo()
@@ -629,6 +639,9 @@ class OpenApiTests : JupyterReplTestCase() {
             interface IntList {
                 val list: kotlin.collections.List<kotlin.Int>
                 public companion object {
+                    public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
+                        get() = listOf()
+                
                     public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToIntList(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<IntList>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<IntList> = convertTo<IntList> { 
                         convertDataRowsWithOpenApi() 
                         convertTo()
@@ -653,10 +666,17 @@ class OpenApiTests : JupyterReplTestCase() {
                 @ColumnName("value")
                 override val `value`: kotlin.String
                 public companion object {
-                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditionalProperties(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditionalProperties>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties> = convertToAdditionalProperties<ObjectWithAdditionalProperties>() { 
-                        convertDataRowsWithOpenApi() 
+                    public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
+                        get() = listOf(JsonPath(""${'"'}${'$'}""${'"'}))
+                    
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditionalProperties(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditionalProperties>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties> = convertTo<ObjectWithAdditionalProperties> {
+                        convertDataRowsWithOpenApi()
                         convertTo()
                     }
+                    
+                    public fun readJson(url: java.net.URL): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties> = org.jetbrains.kotlinx.dataframe.DataFrame
+                        .readJson(url, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)["value"].first().let { it as DataFrame<*> }
+                        .convertToObjectWithAdditionalProperties()
         """.trimLines()
 
         code should haveSubstring(objectWithAdditionalPropertiesInterface)
@@ -678,10 +698,17 @@ class OpenApiTests : JupyterReplTestCase() {
                 @ColumnName("value")
                 override val `value`: kotlin.Any
                 public companion object {
-                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditional2(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditional2>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2> = convertToAdditionalProperties<ObjectWithAdditional2>() { 
-                        convertDataRowsWithOpenApi() 
+                    public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
+                        get() = listOf(JsonPath(""${'"'}${'$'}""${'"'}))
+                    
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditional2(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditional2>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2> = convertTo<ObjectWithAdditional2> {
+                        convertDataRowsWithOpenApi()
                         convertTo()
                     }
+                    
+                    public fun readJson(url: java.net.URL): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2> = org.jetbrains.kotlinx.dataframe.DataFrame
+                        .readJson(url, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)["value"].first().let { it as DataFrame<*> }
+                        .convertToObjectWithAdditional2()
         """.trimLines()
 
         code should haveSubstring(objectWithAdditional2Interface)
@@ -703,10 +730,17 @@ class OpenApiTests : JupyterReplTestCase() {
                 @ColumnName("value")
                 override val `value`: kotlin.Any?
                 public companion object {
-                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditional3(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditional3>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3> = convertToAdditionalProperties<ObjectWithAdditional3>() { 
-                        convertDataRowsWithOpenApi() 
+                    public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
+                        get() = listOf(JsonPath(""${'"'}${'$'}""${'"'}))
+                    
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditional3(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditional3>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3> = convertTo<ObjectWithAdditional3> {
+                        convertDataRowsWithOpenApi()
                         convertTo()
                     }
+                    
+                    public fun readJson(url: java.net.URL): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3> = org.jetbrains.kotlinx.dataframe.DataFrame
+                        .readJson(url, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)["value"].first().let { it as DataFrame<*> }
+                        .convertToObjectWithAdditional3()
         """.trimLines()
 
         code should haveSubstring(objectWithAdditional3Interface)
@@ -722,7 +756,8 @@ class OpenApiTests : JupyterReplTestCase() {
         code should haveSubstring(objectWithAdditional3Extensions)
 
         // TODO broke PetRef?
-        @Language("kt") val errorInterface = """
+        @Language("kt")
+        val errorInterface = """
             @DataSchema(isOpen = false)
             interface Error {
                 val ints: IntList?
@@ -731,19 +766,28 @@ class OpenApiTests : JupyterReplTestCase() {
                 val code: kotlin.Int
                 val message: kotlin.String
                 val objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>
+                val objectWithAdditionalList: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>?
                 val objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>
                 val objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3>
                 val array: kotlin.collections.List<SomeArrayArray>?
                 public companion object {
-                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToError(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<Error>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<Error> = convertTo<Error> { 
-                        convertDataRowsWithOpenApi() 
+                    public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
+                        get() = listOf(JsonPath(""${'"'}${'$'}["objectWithAdditional"]""${'"'}), JsonPath(""${'"'}${'$'}["objectWithAdditionalList"][*]""${'"'}), JsonPath(""${'"'}${'$'}["objectWithAdditional2"]""${'"'}), JsonPath(""${'"'}${'$'}["objectWithAdditional3"]""${'"'}), JsonPath(""${'"'}${'$'}["array"][*][*][*]["objectWithAdditional"]""${'"'}))
+                
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToError(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<Error>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<Error> = convertTo<Error> {
+                        convertDataRowsWithOpenApi()
                         convertTo()
                     }
         """.trimLines()
 
         code should haveSubstring(errorInterface)
 
-        @Language("kt") val errorExtensions = """
+        @Language("kt")
+        val errorExtensions = """
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.array: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<SomeArrayArray>?> @JvmName("Error_array") get() = this["array"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<SomeArrayArray>?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.array: kotlin.collections.List<SomeArrayArray>? @JvmName("Error_array") get() = this["array"] as kotlin.collections.List<SomeArrayArray>?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.array: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<SomeArrayArray>?> @JvmName("NullableError_array") get() = this["array"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<SomeArrayArray>?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.array: kotlin.collections.List<SomeArrayArray>? @JvmName("NullableError_array") get() = this["array"] as kotlin.collections.List<SomeArrayArray>?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int> @JvmName("Error_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int>
             val org.jetbrains.kotlinx.dataframe.DataRow<Error>.code: kotlin.Int @JvmName("Error_code") get() = this["code"] as kotlin.Int
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableError_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
@@ -768,6 +812,10 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<Error>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3> @JvmName("Error_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3?>> @JvmName("NullableError_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3?>>
             val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3?> @JvmName("NullableError_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.objectWithAdditionalList: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>?> @JvmName("Error_objectWithAdditionalList") get() = this["objectWithAdditionalList"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.objectWithAdditionalList: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>? @JvmName("Error_objectWithAdditionalList") get() = this["objectWithAdditionalList"] as kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.objectWithAdditionalList: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>?> @JvmName("NullableError_objectWithAdditionalList") get() = this["objectWithAdditionalList"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.objectWithAdditionalList: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>? @JvmName("NullableError_objectWithAdditionalList") get() = this["objectWithAdditionalList"] as kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>?
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.petRef: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef> @JvmName("Error_petRef") get() = this["petRef"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef>
             val org.jetbrains.kotlinx.dataframe.DataRow<Error>.petRef: org.jetbrains.kotlinx.dataframe.DataRow<PetRef> @JvmName("Error_petRef") get() = this["petRef"] as org.jetbrains.kotlinx.dataframe.DataRow<PetRef>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.petRef: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef?> @JvmName("NullableError_petRef") get() = this["petRef"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef?>
@@ -787,6 +835,38 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(valueInterface)
 
+        @Language("kt")
+        val objectWithAdditionalInterface = """
+            @DataSchema(isOpen = false)
+            interface ObjectWithAdditional : org.jetbrains.kotlinx.dataframe.io.AdditionalProperty<kotlin.Int> {
+                @ColumnName("value")
+                override val `value`: kotlin.Int
+                public companion object {
+                    public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
+                        get() = listOf(JsonPath(""${'"'}${'$'}""${'"'}))
+                    
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToObjectWithAdditional(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ObjectWithAdditional>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional> = convertTo<ObjectWithAdditional> {
+                        convertDataRowsWithOpenApi()
+                        convertTo()
+                    }
+                    
+                    public fun readJson(url: java.net.URL): org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional> = org.jetbrains.kotlinx.dataframe.DataFrame
+                        .readJson(url, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)["value"].first().let { it as DataFrame<*> }
+                        .convertToObjectWithAdditional()
+        """.trimLines()
+
+        code should haveSubstring(objectWithAdditionalInterface)
+
+        @Language("kt")
+        val objectWithAdditionalExtensions = """
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditional>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int> @JvmName("ObjectWithAdditional_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int>
+            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional>.`value`: kotlin.Int @JvmName("ObjectWithAdditional_value") get() = this["value"] as kotlin.Int
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditional?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableObjectWithAdditional_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional?>.`value`: kotlin.Int? @JvmName("NullableObjectWithAdditional_value") get() = this["value"] as kotlin.Int?
+        """.trimLines()
+
+        code should haveSubstring(objectWithAdditionalExtensions)
+
         @Language("kt") val someArrayContentInterface = """
             @DataSchema(isOpen = false)
             interface SomeArrayContent {
@@ -794,11 +874,19 @@ class OpenApiTests : JupyterReplTestCase() {
                 val path: kotlin.String
                 @ColumnName("value")
                 val `value`: Value?
+                val objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?>
                 public companion object {
-                   public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToSomeArrayContent(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<SomeArrayContent>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<SomeArrayContent> = convertTo<SomeArrayContent> { 
-                       convertDataRowsWithOpenApi() 
-                       convertTo()
-                   }
+                    public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
+                        get() = listOf(JsonPath(""${'"'}${'$'}["objectWithAdditional"]""${'"'}))
+                
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToSomeArrayContent(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<SomeArrayContent>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<SomeArrayContent> = convertTo<SomeArrayContent> {
+                        convertDataRowsWithOpenApi()
+                        convertTo()
+                    }
+                    
+                    public fun readJson(url: java.net.URL): org.jetbrains.kotlinx.dataframe.DataFrame<SomeArrayContent> = org.jetbrains.kotlinx.dataframe.DataFrame
+                        .readJson(url, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)
+                        .convertToSomeArrayContent()
         """.trimLines()
 
         code should haveSubstring(someArrayContentInterface)
@@ -808,6 +896,10 @@ class OpenApiTests : JupyterReplTestCase() {
             val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent>.`value`: org.jetbrains.kotlinx.dataframe.DataRow<Value?> @JvmName("SomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataRow<Value?>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent?>.`value`: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Value?> @JvmName("NullableSomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Value?>
             val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent?>.`value`: org.jetbrains.kotlinx.dataframe.DataRow<Value?> @JvmName("NullableSomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataRow<Value?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?>> @JvmName("SomeArrayContent_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?> @JvmName("SomeArrayContent_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent?>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?>> @JvmName("NullableSomeArrayContent_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent?>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?> @JvmName("NullableSomeArrayContent_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?>
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent>.op: org.jetbrains.kotlinx.dataframe.DataColumn<Op> @JvmName("SomeArrayContent_op") get() = this["op"] as org.jetbrains.kotlinx.dataframe.DataColumn<Op>
             val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent>.op: Op @JvmName("SomeArrayContent_op") get() = this["op"] as Op
             val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent?>.op: org.jetbrains.kotlinx.dataframe.DataColumn<Op?> @JvmName("NullableSomeArrayContent_op") get() = this["op"] as org.jetbrains.kotlinx.dataframe.DataColumn<Op?>
@@ -826,277 +918,86 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(someArrayTypeAlias)
 
-        @Language("kts") val res1 = execRaw(
+        @Language("kt")
+        val errorHolderInterface = """
+            @DataSchema(isOpen = false)
+            interface ErrorHolder {
+                val errors: org.jetbrains.kotlinx.dataframe.DataFrame<Error>
+                public companion object {
+                    public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
+                        get() = listOf(JsonPath(""${'"'}${'$'}["errors"][*]["objectWithAdditional"]""${'"'}), JsonPath(""${'"'}${'$'}["errors"][*]["objectWithAdditionalList"][*]""${'"'}), JsonPath(""${'"'}${'$'}["errors"][*]["objectWithAdditional2"]""${'"'}), JsonPath(""${'"'}${'$'}["errors"][*]["objectWithAdditional3"]""${'"'}), JsonPath(""${'"'}${'$'}["errors"][*]["array"][*][*][*]["objectWithAdditional"]""${'"'}))
+                    
+                    public fun org.jetbrains.kotlinx.dataframe.DataFrame<*>.convertToErrorHolder(convertTo: org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl<ErrorHolder>.() -> kotlin.Unit = {}): org.jetbrains.kotlinx.dataframe.DataFrame<ErrorHolder> = convertTo<ErrorHolder> {
+                        convertDataRowsWithOpenApi()
+                        convertTo()
+                    }
+                    
+                    public fun readJson(url: java.net.URL): org.jetbrains.kotlinx.dataframe.DataFrame<ErrorHolder> = org.jetbrains.kotlinx.dataframe.DataFrame
+                        .readJson(url, typeClashTactic = ANY_COLUMNS, keyValuePaths = keyValuePaths)
+                        .convertToErrorHolder()
+        """.trimLines()
+
+        code should haveSubstring(errorHolderInterface)
+
+        @Language("kt")
+        val errorHolderExtensions = """
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ErrorHolder>.errors: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Error>> @JvmName("ErrorHolder_errors") get() = this["errors"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Error>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<ErrorHolder>.errors: org.jetbrains.kotlinx.dataframe.DataFrame<Error> @JvmName("ErrorHolder_errors") get() = this["errors"] as org.jetbrains.kotlinx.dataframe.DataFrame<Error>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ErrorHolder?>.errors: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Error?>> @JvmName("NullableErrorHolder_errors") get() = this["errors"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Error?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<ErrorHolder?>.errors: org.jetbrains.kotlinx.dataframe.DataFrame<Error?> @JvmName("NullableErrorHolder_errors") get() = this["errors"] as org.jetbrains.kotlinx.dataframe.DataFrame<Error?>
+        """.trimLines()
+
+        code should haveSubstring(errorHolderExtensions)
+
+        @Language("kt")
+        val res1 = execRaw(
             "Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Cat\" }.convertTo<Cat>(ExcessiveColumns.Remove)"
         ) as AnyFrame
         val res1Schema = res1.schema()
 
-        @Language("kts") val res2 = execRaw(
+        @Language("kts")
+        val res2 = execRaw(
             "Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Dog\" }.convertTo<Dog>(ExcessiveColumns.Remove)"
         ) as AnyFrame
         val res2Schema = res2.schema()
 
-        @Language("kts") val res3 = execRaw(
-            "Error.readJsonStr(\"\"\"$advancedDataError\"\"\")"
+        @Language("kts")
+        val res3 = execRaw(
+            "Error.readJsonStr(\"\"\"$advancedErrorData\"\"\")"
         ) as AnyFrame
         val res3Schema = res3.schema()
+
+        @Language("kts")
+        val res4 = execRaw(
+            "ErrorHolder.readJsonStr(\"\"\"$advancedErrorHolderData\"\"\")"
+        ) as AnyFrame
+        val res4Schema = res4.schema()
     }
 
     @Test
     fun `Apis guru Test`() {
         val df = APIs.readJsonStr(apiGuruData)
-            .alsoDebug(rowsLimit = Int.MAX_VALUE)
-    }
-
-//    @Test
-//    fun `MLC Test`() {
-//        val url =
-//            "https://us-central1-jrclockwidget.cloudfunctions.net/getGroupData/1544198656898889/peopleWithLocation?&apiKey=wachtwoord&type=json"
-//
-//        DataFrame.read(url).alsoDebug()
-//        val df = PeopleWithLocation.readJson(url)
-//            .filter { (value.gps.latitude ?: 0.0) > 0.0 }
-//            .alsoDebug("first mlc:")
-//    }
-
-    enum class EyeColor(override val value: String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
-        BLUE("Blue"), YELLOW("Yellow"), BROWN("Brown"), GREEN("Green");
-    }
-
-    @DataSchema(isOpen = false)
-    interface Pet {
-        @ColumnName("pet_type")
-        val petType: String
-
-        @ColumnName("value")
-        val `value`: Any?
-        val name: String
-        val tag: String?
-        val other: Any?
-
-        @ColumnName("eye_color")
-        val eyeColor: EyeColor?
-
-        companion object {
-            fun DataFrame<*>.convertToPet(convertTo: ConvertSchemaDsl<Pet>.() -> Unit = {}): DataFrame<Pet> =
-                convertTo<Pet> {
-                    convertDataRowsWithOpenApi()
-                    convertTo()
+            .filter {
+                value.versions.value.any {
+                    (updated ?: added) > LocalDateTime(2022, 1, 1, 0, 0, 0)
                 }
-
-            fun readJson(url: URL): DataFrame<Pet> =
-                DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS).convertToPet()
-
-            fun readJson(path: String): DataFrame<Pet> =
-                DataFrame.readJson(path, typeClashTactic = ANY_COLUMNS).convertToPet()
-
-            fun readJson(stream: InputStream): DataFrame<Pet> =
-                DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS).convertToPet()
-
-            fun readJsonStr(text: String): DataFrame<Pet> =
-                DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS).convertToPet()
-        }
-    }
-
-    @DataSchema(isOpen = false)
-    interface IntList {
-        val list: List<Int>
-
-        companion object {
-
-            fun DataFrame<*>.convertToIntList(convertTo: ConvertSchemaDsl<IntList>.() -> Unit = {}): DataFrame<IntList> =
-                convertTo {
-                    convertDataRowsWithOpenApi()
-                    convertTo()
-                }
-
-            fun readJson(url: URL): DataFrame<IntList> =
-                DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS).convertToIntList()
-
-            fun readJson(path: String): DataFrame<IntList> =
-                DataFrame.readJson(path, typeClashTactic = ANY_COLUMNS).convertToIntList()
-
-            fun readJson(stream: InputStream): DataFrame<IntList> =
-                DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS).convertToIntList()
-
-            fun readJsonStr(text: String): DataFrame<IntList> =
-                DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS).convertToIntList()
-        }
-    }
-
-    @DataSchema(isOpen = false)
-    interface ObjectWithAdditionalProperties : AdditionalProperty<String> {
-        @ColumnName("value")
-        override val `value`: String
-
-        companion object {
-            fun DataFrame<*>.convertToObjectWithAdditionalProperties(
-                convertTo: ConvertSchemaDsl<ObjectWithAdditionalProperties>.() -> Unit = {},
-            ): DataFrame<ObjectWithAdditionalProperties> = convertTo {
-                convertDataRowsWithOpenApi()
-                convertTo()
             }
+            .alsoDebug()
 
-            fun readJson(url: URL): DataFrame<ObjectWithAdditionalProperties> =
-                DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditionalProperties()
-
-            fun readJson(path: String): DataFrame<ObjectWithAdditionalProperties> =
-                DataFrame.readJson(path, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditionalProperties()
-
-            fun readJson(stream: InputStream): DataFrame<ObjectWithAdditionalProperties> =
-                DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditionalProperties()
-
-            fun readJsonStr(text: String): DataFrame<ObjectWithAdditionalProperties> =
-                DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditionalProperties()
-        }
-    }
-
-    @DataSchema(isOpen = false)
-    interface ObjectWithAdditional2 : AdditionalProperty<Any> {
-        @ColumnName("value")
-        override val `value`: Any
-
-        companion object {
-            fun DataFrame<*>.convertToObjectWithAdditional2(
-                convertTo: ConvertSchemaDsl<ObjectWithAdditional2>.() -> Unit = {},
-            ): DataFrame<ObjectWithAdditional2> = convertTo<ObjectWithAdditional2> {
-                convertDataRowsWithOpenApi()
-                convertTo()
-            }
-
-            fun readJson(url: URL): DataFrame<ObjectWithAdditional2> =
-                DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional2()
-
-            fun readJson(path: String): DataFrame<ObjectWithAdditional2> =
-                DataFrame.readJson(path, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional2()
-
-            fun readJson(stream: InputStream): DataFrame<ObjectWithAdditional2> =
-                DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional2()
-
-            fun readJsonStr(text: String): DataFrame<ObjectWithAdditional2> =
-                DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional2()
-        }
-    }
-
-    @DataSchema(isOpen = false)
-    interface ObjectWithAdditional3 : AdditionalProperty<Any?> {
-        @ColumnName("value")
-        override val `value`: Any?
-
-        companion object {
-            fun DataFrame<*>.convertToObjectWithAdditional3(
-                convertTo: ConvertSchemaDsl<ObjectWithAdditional3>.() -> Unit = {},
-            ): DataFrame<ObjectWithAdditional3> = convertTo<ObjectWithAdditional3> {
-                convertDataRowsWithOpenApi()
-                convertTo()
-            }
-
-            fun readJson(url: URL): DataFrame<ObjectWithAdditional3> =
-                DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional3()
-
-            fun readJson(path: String): DataFrame<ObjectWithAdditional3> =
-                DataFrame.readJson(path, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional3()
-
-            fun readJson(stream: InputStream): DataFrame<ObjectWithAdditional3> =
-                DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional3()
-
-            fun readJsonStr(text: String): DataFrame<ObjectWithAdditional3> =
-                DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS).convertToObjectWithAdditional3()
-        }
-    }
-
-    @DataSchema(isOpen = false)
-    interface Error {
-        val ints: IntList?
-        val petRef: PetRef
-        val pets: DataFrame<Any?>
-        val code: Int
-        val message: String
-        val objectWithAdditional: DataFrame<ObjectWithAdditionalProperties>
-        val objectWithAdditional2: DataFrame<ObjectWithAdditional2?>
-        val objectWithAdditional3: DataFrame<ObjectWithAdditional3>
-        val array: List<SomeArrayArray?>
-
-        companion object {
-            fun DataFrame<*>.convertToError(convertTo: ConvertSchemaDsl<Error>.() -> Unit = {}): DataFrame<Error> =
-                convertTo<Error> {
-                    convertDataRowsWithOpenApi()
-                    convertTo()
-                }
-
-            fun readJson(url: URL): DataFrame<Error> =
-                DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS).convertToError()
-
-            fun readJson(path: String): DataFrame<Error> =
-                DataFrame.readJson(path, typeClashTactic = ANY_COLUMNS).convertToError()
-
-            fun readJson(stream: InputStream): DataFrame<Error> =
-                DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS)
-                    .convertToError()
-
-            fun readJsonStr(text: String): DataFrame<Error> =
-                DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS)
-                    .convertToError()
-        }
-    }
-
-    enum class Op(override val value: String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
-        ADD("add"),
-        REMOVE("remove"),
-        REPLACE("replace");
-    }
-
-    @DataSchema(isOpen = false)
-    interface Value
-
-    @DataSchema(isOpen = false)
-    interface SomeArrayContent {
-        val op: Op
-        val path: String
-
-        @ColumnName("value")
-        val `value`: Value?
-
-        companion object {
-            fun DataFrame<*>.convertToSomeArrayContent(convertTo: ConvertSchemaDsl<SomeArrayContent>.() -> Unit = {}): DataFrame<SomeArrayContent> =
-                convertTo<SomeArrayContent> {
-                    convertDataRowsWithOpenApi()
-                    convertTo()
-                }
-
-            fun readJson(url: URL): DataFrame<SomeArrayContent> =
-                DataFrame.readJson(url, typeClashTactic = ANY_COLUMNS)
-                    .convertToSomeArrayContent()
-
-            fun readJson(path: String): DataFrame<SomeArrayContent> =
-                DataFrame.readJson(path, typeClashTactic = ANY_COLUMNS)
-                    .convertToSomeArrayContent()
-
-            fun readJson(stream: InputStream): DataFrame<SomeArrayContent> =
-                DataFrame.readJson(stream, typeClashTactic = ANY_COLUMNS)
-                    .convertToSomeArrayContent()
-
-            fun readJsonStr(text: String): DataFrame<SomeArrayContent> =
-                DataFrame.readJsonStr(text, typeClashTactic = ANY_COLUMNS)
-                    .convertToSomeArrayContent()
-        }
-    }
-
-    fun ConvertSchemaDsl<*>.convertDataRowsWithOpenApi() {
-        // TODO convert DataRow
+        df.isNotEmpty().shouldBeTrue()
     }
 
     @Test
-    fun main() {
-        val df = DataFrame.readJsonStr(OpenApiTests().advancedDataError, typeClashTactic = ANY_COLUMNS)
-            .alsoDebug("error data:")
+    fun `MLC Test 1`() {
+        val df = LocationsWithPeople.readJsonStr(mlcLocationsWithPeopleData)
+            .alsoDebug()
+    }
 
-        val error = df.convertToError().alsoDebug("result:")
+    @Test
+    fun `MLC Test 2`() {
+        val df = PeopleWithLocation.readJsonStr(mlcPeopleWithLocationData)
+            .alsoDebug()
     }
 
     private fun String.trimLines(): String = trim().removeSurrounding("\n").lines().joinToString("\n") { it.trim() }
 }
-
-typealias PetRef = OpenApiTests.Pet
-typealias SomeArray = DataFrame<OpenApiTests.SomeArrayContent>
-typealias SomeArrayArray = List<SomeArray>

@@ -14,7 +14,8 @@ commonsCompress = "1.21"
 klaxon = "5.5"
 fuel = "2.3.1"
 poi = "5.2.2"
-kotlinDatetime = "0.3.1"
+kotlinDatetime = "0.4.0"
+openapi = "2.1.2"
 
 junit = "4.13.2"
 kotestAsserions = "4.6.3"
@@ -47,7 +48,7 @@ arrow-format = { group = "org.apache.arrow", name = "arrow-format", version.ref 
 arrow-vector = { group = "org.apache.arrow", name = "arrow-vector", version.ref = "arrow" }
 arrow-memory = { group = "org.apache.arrow", name = "arrow-memory-unsafe", version.ref = "arrow" }
 
-swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version = "2.1.2" }
+swagger = { group = "io.swagger.parser.v3", name = "swagger-parser", version.ref = "openapi" }
 
 [plugins]
 jupyter-api = { id = "org.jetbrains.kotlin.jupyter.api", version.ref = "kotlinJupyter" }
