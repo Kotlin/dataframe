@@ -13,6 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameSize
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
+import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.impl.headPlusIterable
 import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrameOf
 import kotlin.reflect.KType
@@ -53,10 +54,13 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
 
     // region get columns
 
-    override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> = getColumnsImpl(UnresolvedColumnsPolicy.Fail, columns)
+    override operator fun <C> get(columns: ColumnsSelector<T, C>): List<DataColumn<C>> =
+        getColumnsImpl(UnresolvedColumnsPolicy.Fail, columns)
+
     public operator fun get(first: Column, vararg other: Column): DataFrame<T> = select(listOf(first) + other)
     public operator fun get(first: String, vararg other: String): DataFrame<T> = select(listOf(first) + other)
-    public operator fun get(columnRange: ClosedRange<String>): DataFrame<T> = select { columnRange.start..columnRange.endInclusive }
+    public operator fun get(columnRange: ClosedRange<String>): DataFrame<T> =
+        select { columnRange.start..columnRange.endInclusive }
 
     // endregion
 
@@ -65,8 +69,11 @@ public interface DataFrame<out T> : Aggregatable<T>, ColumnsContainer<T> {
     public operator fun get(index: Int): DataRow<T>
     public operator fun get(indices: Iterable<Int>): DataFrame<T> = getRows(indices)
     public operator fun get(range: IntRange): DataFrame<T> = getRows(range)
-    public operator fun get(vararg ranges: IntRange): DataFrame<T> = getRows(ranges.asSequence().flatMap { it.asSequence() }.asIterable())
-    public operator fun get(firstIndex: Int, vararg otherIndices: Int): DataFrame<T> = get(headPlusIterable(firstIndex, otherIndices.asIterable()))
+    public operator fun get(first: IntRange, vararg ranges: IntRange): DataFrame<T> =
+        getRows(headPlusArray(first, ranges).asSequence().flatMap { it.asSequence() }.asIterable())
+
+    public operator fun get(firstIndex: Int, vararg otherIndices: Int): DataFrame<T> =
+        get(headPlusIterable(firstIndex, otherIndices.asIterable()))
 
     // endregion
 
