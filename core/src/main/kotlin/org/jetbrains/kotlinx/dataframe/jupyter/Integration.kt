@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
+import org.intellij.lang.annotations.Language
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -38,6 +39,7 @@ import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.io.HtmlData
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
+import org.jetbrains.kotlinx.jupyter.api.Notebook
 import org.jetbrains.kotlinx.jupyter.api.VariableName
 import org.jetbrains.kotlinx.jupyter.api.declare
 import org.jetbrains.kotlinx.jupyter.api.libraries.ColorScheme
@@ -49,7 +51,8 @@ import kotlin.reflect.full.isSubtypeOf
 
 internal val newDataSchemas = mutableListOf<KClass<*>>()
 
-internal class Integration : JupyterIntegration() {
+internal class Integration(private val notebook: Notebook, private val options: MutableMap<String, String?>) :
+    JupyterIntegration() {
 
     override fun Builder.onLoaded() {
         val codeGen = ReplCodeGenerator.create()
@@ -57,6 +60,37 @@ internal class Integration : JupyterIntegration() {
 
         onLoaded {
             declare("dataFrameConfig" to config)
+
+            @Language("kt")
+            val _0 = execute(
+                """
+                /** Import the type-only data schema from [url]. */
+                fun importDataSchema(url: URL) {
+                    val formats = listOf(
+                        OpenApi(),
+                    )
+                    val codeGenResult = org.jetbrains.dataframe.impl.codeGen.CodeGenerator.urlCodeGenReader(url, formats)
+                    when (codeGenResult) {
+                        is org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult.Success -> {
+                            val readDfMethod = codeGenResult.getReadDfMethod(url.toExternalForm())
+                            val code = readDfMethod.additionalImports.joinToString("\n") + "\n" + codeGenResult.code.declarations
+                            EXECUTE(code)
+                            DISPLAY("Data schema successfully imported")
+                        }
+
+                        is org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult.Error -> {
+                            DISPLAY("Failed to read data schema from ${'$'}url: ${'$'}{codeGenResult.reason}")
+                        }
+                    }
+                }
+
+                /** Import the type-only data schema from [path]. */
+                fun importDataSchema(path: String): Unit = importDataSchema(URL(path))
+
+                /** Import the type-only data schema from [file]. */
+                fun importDataSchema(file: File): Unit = importDataSchema(file.toURI().toURL())
+                """.trimIndent()
+            )
         }
 
         resources {
@@ -77,21 +111,37 @@ internal class Integration : JupyterIntegration() {
 
         with(JupyterHtmlRenderer(config.display, this)) {
             render<HtmlData> { it.toJupyter() }
-            render<AnyRow>({ it.toDataFrame() }, { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" })
-            render<ColumnGroup<*>>({ it.asDataFrame() }, { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" })
-            render<AnyCol>({ dataFrameOf(it) }, { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" })
-            render<AnyFrame> ({ it }, { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" })
-            render<FormattedFrame<*>>({ it.df }, { "DataFrame: rowsCount = ${it.df.rowsCount() }, columnsCount = ${it.df.columnsCount() }" }, modifyConfig = { getDisplayConfiguration(it) })
+            render<AnyRow>(
+                { it.toDataFrame() },
+                { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" },
+            )
+            render<ColumnGroup<*>>(
+                { it.asDataFrame() },
+                { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" },
+            )
+            render<AnyCol>(
+                { dataFrameOf(it) },
+                { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" },
+            )
+            render<AnyFrame>(
+                { it },
+                { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" },
+            )
+            render<FormattedFrame<*>>(
+                { it.df },
+                { "DataFrame: rowsCount = ${it.df.rowsCount()}, columnsCount = ${it.df.columnsCount()}" },
+                modifyConfig = { getDisplayConfiguration(it) },
+            )
             render<GroupBy<*, *>>({ it.toDataFrame() }, { "GroupBy" })
             render<ReducedGroupBy<*, *>>({ it.into(it.groupBy.groups.name()) }, { "ReducedGroupBy" })
             render<Pivot<*>>({ it.frames().toDataFrame() }, { "Pivot" })
             render<ReducedPivot<*>>({ it.values().toDataFrame() }, { "ReducedPivot" })
             render<PivotGroupBy<*>>({ it.frames() }, { "PivotGroupBy" })
             render<ReducedPivotGroupBy<*>>({ it.values() }, { "ReducedPivotGroupBy" })
-            render<SplitWithTransform<*, *, *>> ({ it.into() }, { "Split" })
-            render<Split<*, *>> ({ it.toDataFrame() }, { "Split" })
-            render<Merge<*, *, *>> ({ it.into("merged") }, { "Merge" })
-            render<Gather<*, *, *, *>> ({ it.into("key", "value") }, { "Gather" })
+            render<SplitWithTransform<*, *, *>>({ it.into() }, { "Split" })
+            render<Split<*, *>>({ it.toDataFrame() }, { "Split" })
+            render<Merge<*, *, *>>({ it.into("merged") }, { "Merge" })
+            render<Gather<*, *, *, *>>({ it.into("key", "value") }, { "Gather" })
             render<IMG> { HTML(it.toString()) }
             render<IFRAME> { HTML(it.toString()) }
             render<Update<*, *>>({ it.df }, { "Update" })
@@ -109,6 +159,7 @@ internal class Integration : JupyterIntegration() {
         import("kotlinx.datetime.LocalDateTime")
         import("kotlinx.datetime.LocalDate")
         import("org.jetbrains.kotlinx.dataframe.dataTypes.*")
+        import("org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader")
 
         fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, argument: String): VariableName? {
             val code = codeWithConverter.with(argument)
@@ -140,16 +191,16 @@ internal class Integration : JupyterIntegration() {
         updateVariable<AnyCol> { col, property ->
             if (col.isColumnGroup()) {
                 val codeWithConverter = codeGen.process(col.asColumnGroup().asDataFrame(), property).let { c ->
-                    CodeWithConverter(c.declarations) { c.converter(it + ".asColumnGroup()") }
+                    CodeWithConverter(c.declarations) { c.converter("$it.asColumnGroup()") }
                 }
                 execute(codeWithConverter, property)
             } else null
         }
 
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {
-            val code = classes.map {
+            val code = classes.joinToString("\n") {
                 codeGen.process(it)
-            }.joinToString("\n").trim()
+            }.trim()
 
             if (code.isNotEmpty()) {
                 execute(code)
