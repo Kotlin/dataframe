@@ -114,7 +114,7 @@ internal fun ColumnSchema.createEmptyColumn(name: String, numberOfRows: Int): An
 
         is ColumnSchema.Group -> DataColumn.createColumnGroup(
             name = name,
-            df = createEmptyDataFrame(numberOfRows),
+            df = schema.createEmptyDataFrame(numberOfRows),
         ) as AnyCol
 
         is ColumnSchema.Frame -> DataColumn.createFrameColumn(
@@ -130,6 +130,15 @@ internal fun DataFrameSchema.createEmptyDataFrame(): AnyFrame =
     columns.map { (name, schema) ->
         schema.createEmptyColumn(name)
     }.toDataFrame()
+
+internal fun DataFrameSchema.createEmptyDataFrame(numberOfRows: Int): AnyFrame =
+    if (columns.isEmpty()) {
+        DataFrame.empty(numberOfRows)
+    } else {
+        columns.map { (name, schema) ->
+            schema.createEmptyColumn(name, numberOfRows)
+        }.toDataFrame()
+    }
 
 internal fun createEmptyDataFrame(numberOfRows: Int): AnyFrame =
     DataFrame.empty(numberOfRows)
