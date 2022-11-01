@@ -192,9 +192,10 @@ internal fun AnyFrame.convertToImpl(
         val size = this.size.nrow
         schema.columns.forEach { (name, targetColumn) ->
             val isNullable =
-                targetColumn.nullable ||
-                    targetColumn.type.isMarkedNullable ||
-                    targetColumn.contentType?.isMarkedNullable == true
+                targetColumn.nullable || // like value column of type Int?
+                    targetColumn.type.isMarkedNullable || // like value column of type Int? (backup check)
+                    targetColumn.contentType?.isMarkedNullable == true || // like DataRow<Something?> for a group column (all columns in the group will be nullable)
+                    targetColumn.kind == ColumnKind.Frame // frame column can be filled with empty dataframes
 
             if (name !in newColumnsNames && isNullable) {
                 visited++
