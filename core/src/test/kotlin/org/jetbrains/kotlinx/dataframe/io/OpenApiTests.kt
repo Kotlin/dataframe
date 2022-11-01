@@ -1,24 +1,11 @@
-@file:ImportDataSchema(
-    name = "ApiGuru",
-    path = "src/test/resources/ApiGuruOpenApi.yaml"
-)
-@file:ImportDataSchema(
-    name = "MlcGroupData", path = "src/test/resources/MlcGroupDataOpenApi.yaml"
-)
-
 package org.jetbrains.kotlinx.dataframe.io
 
 import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.should
 import io.kotest.matchers.string.haveSubstring
-import kotlinx.datetime.LocalDateTime
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.alsoDebug
-import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
-import org.jetbrains.kotlinx.dataframe.api.any
-import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.isNotEmpty
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
@@ -58,7 +45,9 @@ class OpenApiTests : JupyterReplTestCase() {
     private val advancedData = File("src/test/resources/openapi_advanced_data.json").readText()
     private val advancedErrorData = File("src/test/resources/openapi_advanced_data2.json").readText()
     private val advancedErrorHolderData = File("src/test/resources/openapi_advanced_data3.json").readText()
+    private val apiGuruYaml = File("src/test/resources/ApiGuruOpenApi.yaml")
     private val apiGuruData = File("src/test/resources/ApiGuruSample.json").readText()
+    private val mlcYaml = File("src/test/resources/MlcGroupDataOpenApi.yaml")
     private val mlcLocationsWithPeopleData = File("src/test/resources/mlc_locations_with_people_data.json").readText()
     private val mlcPeopleWithLocationData = File("src/test/resources/mlc_people_with_location_data.json").readText()
 
@@ -980,27 +969,56 @@ class OpenApiTests : JupyterReplTestCase() {
 
     @Test
     fun `Apis guru Test`() {
-        val df = APIs.readJsonStr(apiGuruData)
-            .filter {
-                value.versions.value.any {
-                    (updated ?: added) > LocalDateTime(2022, 1, 1, 0, 0, 0)
+        val code = execGeneratedCode(apiGuruYaml).declarations
+
+        val apiGuruDataTripleQuote = "\"\"\"${apiGuruData.replace("$", "\${'$'}")}\"\"\""
+
+        @Language("kts")
+        val df = execRaw(
+            """APIs.readJsonStr($apiGuruDataTripleQuote)
+                .filter {
+                    value.versions.value.any {
+                        (updated ?: added) > LocalDateTime(2022, 1, 1, 0, 0, 0)
+                    }
                 }
-            }
-            .alsoDebug()
+            """.trimIndent()
+        ) as AnyFrame
 
         df.isNotEmpty().shouldBeTrue()
     }
 
     @Test
     fun `MLC Test 1`() {
-        val df = LocationsWithPeople.readJsonStr(mlcLocationsWithPeopleData)
-            .alsoDebug()
+        val code = execGeneratedCode(mlcYaml).declarations
+        println(code)
+
+        val mlcLocationsWithPeopleDataTripleQuote = "\"\"\"${mlcLocationsWithPeopleData.replace("$", "\${'$'}")}\"\"\""
+
+        @Language("kts")
+        val df1 = execRaw(
+            """LocationsWithPeople.readJsonStr($mlcLocationsWithPeopleDataTripleQuote)
+                    .also { it.print() }
+            """.trimIndent()
+        ) as AnyFrame
+
+        df1.isNotEmpty().shouldBeTrue()
     }
 
     @Test
     fun `MLC Test 2`() {
-        val df = PeopleWithLocation.readJsonStr(mlcPeopleWithLocationData)
-            .alsoDebug()
+        val code = execGeneratedCode(mlcYaml).declarations
+        println(code)
+
+        val mlcPeopleWithLocationDataTripleQuote = "\"\"\"${mlcPeopleWithLocationData.replace("$", "\${'$'}")}\"\"\""
+
+        @Language("kts")
+        val df2 = execRaw(
+            """PeopleWithLocation.readJsonStr($mlcPeopleWithLocationDataTripleQuote)
+                    .also { it.print() }
+            """.trimIndent()
+        ) as AnyFrame
+
+        df2.isNotEmpty().shouldBeTrue()
     }
 
     private fun String.trimLines(): String = trim().removeSurrounding("\n").lines().joinToString("\n") { it.trim() }

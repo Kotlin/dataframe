@@ -30,12 +30,12 @@ private fun String.toNullable(): String = if (endsWith("?")) this else "$this?"
 
 internal object MarkersExtractor {
 
-    private val cache = mutableMapOf<KClass<*>, Marker>()
+    private val cache = mutableMapOf<Pair<KClass<*>, Boolean>, Marker>()
 
     inline fun <reified T> get() = get(T::class)
 
     fun get(markerClass: KClass<*>, nullableProperties: Boolean = false): Marker =
-        cache.getOrPut(markerClass) {
+        cache.getOrPut(Pair(markerClass, nullableProperties)) {
             val fields = getFields(markerClass, nullableProperties)
             val isOpen = markerClass.findAnnotation<DataSchema>()?.isOpen ?: false
             val baseSchemas = markerClass.superclasses.filter { it != Any::class }.map { get(it, nullableProperties) }
