@@ -70,7 +70,7 @@ internal class SchemaProcessorImpl(
             // find all fields that were already generated for this column name in base interfaces
             val superFields = requiredSuperMarkers.mapNotNull { it.getField(columnName) }
 
-            val fieldsToOverride = superFields.filter { it.columnSchema != columnSchema }.map { it.fieldName }.distinct()
+            val fieldsToOverride = superFields.filter { it.columnSchema != columnSchema }.map { it.fieldName }.distinctBy { it.unquoted }
 
             val newFields = when {
                 fieldsToOverride.isNotEmpty() -> fieldsToOverride.map {
