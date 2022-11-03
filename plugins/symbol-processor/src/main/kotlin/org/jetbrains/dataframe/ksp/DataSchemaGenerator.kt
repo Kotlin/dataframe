@@ -10,6 +10,8 @@ import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchemaVisibility
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.JsonOptions
+import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult
@@ -47,7 +49,8 @@ class DataSchemaGenerator(
         val visibility: MarkerVisibility,
         val normalizationDelimiters: List<Char>,
         val withDefaultPath: Boolean,
-        val csvOptions: CsvOptions
+        val csvOptions: CsvOptions,
+        val jsonOptions: JsonOptions,
     )
 
     class CodeGeneratorDataSource(val pathRepresentation: String, val data: URL)
@@ -85,13 +88,14 @@ class DataSchemaGenerator(
             }
         } ?: return null
         return ImportDataSchemaStatement(
-            file,
-            name,
-            CodeGeneratorDataSource(this.path, url),
-            visibility.toMarkerVisibility(),
-            normalizationDelimiters.toList(),
-            withDefaultPath,
-            csvOptions
+            origin = file,
+            name = name,
+            dataSource = CodeGeneratorDataSource(this.path, url),
+            visibility = visibility.toMarkerVisibility(),
+            normalizationDelimiters = normalizationDelimiters.toList(),
+            withDefaultPath = withDefaultPath,
+            csvOptions = csvOptions,
+            jsonOptions = jsonOptions,
         )
     }
 
@@ -120,7 +124,10 @@ class DataSchemaGenerator(
 
         val formats = listOf(
             CSV(delimiter = importStatement.csvOptions.delimiter),
-            JSON(),
+            JSON(
+                typeClashTactic = importStatement.jsonOptions.typeClashTactic,
+                keyValuePaths = importStatement.jsonOptions.keyValuePaths.map(::JsonPath),
+            ),
             Excel(),
             TSV(),
             ArrowFeather(),

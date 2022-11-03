@@ -1,5 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.annotations
 
+import org.jetbrains.kotlinx.dataframe.api.JsonPath
+import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
+import org.jetbrains.kotlinx.dataframe.io.JSON
+
 /**
  * Annotation preprocessing will generate a DataSchema interface from the data at `path`.
  * Data must be of supported format: CSV, JSON, Apache Arrow, Excel, OpenAPI (Swagger) in YAML/JSON.
@@ -15,7 +21,8 @@ package org.jetbrains.kotlinx.dataframe.annotations
  * @param normalizationDelimiters if not empty, split property names by delimiters,
  * lowercase parts and join to camel case. Set empty list to disable normalization
  * @param withDefaultPath if `true`, generate `defaultPath` property to the data schema's companion object and make it default argument for a `read method`
- * @param csvOptions options to parse CSV data. Not used when data is JSON
+ * @param csvOptions options to parse CSV data. Not used when data is not Csv
+ * @param jsonOptions options to parse JSON data. Not used when data is not Json
  */
 @Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.FILE)
@@ -26,7 +33,8 @@ public annotation class ImportDataSchema(
     val visibility: DataSchemaVisibility = DataSchemaVisibility.IMPLICIT_PUBLIC,
     val normalizationDelimiters: CharArray = ['\t', ' ', '_'],
     val withDefaultPath: Boolean = true,
-    val csvOptions: CsvOptions = CsvOptions(',')
+    val csvOptions: CsvOptions = CsvOptions(','),
+    val jsonOptions: JsonOptions = JsonOptions(),
 )
 
 public enum class DataSchemaVisibility {
@@ -34,5 +42,20 @@ public enum class DataSchemaVisibility {
 }
 
 public annotation class CsvOptions(
-    val delimiter: Char
+    public val delimiter: Char,
+)
+
+public annotation class JsonOptions(
+
+    /** Allows the choice of how to handle type clashes when reading a JSON file. */
+    public val typeClashTactic: JSON.TypeClashTactic = JSON.TypeClashTactic.ARRAY_AND_VALUE_COLUMNS,
+
+    /**
+     * List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+     *     will be created.
+     *
+     * Example:
+     * `["""$["store"]["book"][*]["author"]"""]`
+     */
+    public val keyValuePaths: Array<String> = [],
 )

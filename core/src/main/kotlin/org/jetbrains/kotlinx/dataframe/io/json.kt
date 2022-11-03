@@ -55,19 +55,45 @@ import kotlin.reflect.KTypeProjection
 import kotlin.reflect.full.createType
 import kotlin.reflect.typeOf
 
-public class JSON : SupportedDataFrameFormat {
+public class JSON(
+    private val typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
+    private val keyValuePaths: List<JsonPath> = emptyList(),
+) : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
-        DataFrame.readJson(stream, header = header)
+        DataFrame.readJson(
+            stream = stream,
+            header = header,
+            typeClashTactic = typeClashTactic,
+            keyValuePaths = keyValuePaths,
+        )
 
-    override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readJson(file, header = header)
+    override fun readDataFrame(file: File, header: List<String>): AnyFrame =
+        DataFrame.readJson(
+            file = file,
+            header = header,
+            typeClashTactic = typeClashTactic,
+            keyValuePaths = keyValuePaths,
+        )
 
     override fun acceptsExtension(ext: String): Boolean = ext == "json"
 
     override val testOrder: Int = 10000
 
-    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
-        return DefaultReadJsonMethod(pathRepresentation)
-    }
+    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
+        DefaultReadJsonMethod(
+            path = pathRepresentation,
+            arguments = MethodArguments()
+                .add(
+                    "keyValuePaths",
+                    typeOf<List<JsonPath>>(),
+                    "listOf(${keyValuePaths.joinToString { "org.jetbrains.kotlinx.dataframe.api.JsonPath(\"\"\"${it.path}\"\"\")" }})",
+                )
+                .add(
+                    "typeClashTactic",
+                    typeOf<TypeClashTactic>(),
+                    "org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.${typeClashTactic.name}",
+                ),
+        )
 
     /**
      * Allows the choice of how to handle type clashes when reading a JSON file.
@@ -166,6 +192,14 @@ public fun DataRow.Companion.readJson(
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
 ): AnyRow = DataFrame.readJson(stream, header, keyValuePaths, typeClashTactic).single()
 
+/**
+ * @param text Json as String to be converted to a [DataFrame].
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+ *     will be created.
+ * @param typeClashTactic How to handle type clashes when reading a JSON file.
+ * @param header Optional list of column names. If given, [text] will be read like an object with [header] being the keys.
+ * @return [DataFrame] from the given [text].
+ */
 public fun DataFrame.Companion.readJsonStr(
     text: String,
     header: List<String> = emptyList(),
@@ -173,6 +207,14 @@ public fun DataFrame.Companion.readJsonStr(
     typeClashTactic: TypeClashTactic = ARRAY_AND_VALUE_COLUMNS,
 ): AnyFrame = readJson(Parser.default().parse(StringBuilder(text)), header, keyValuePaths, typeClashTactic)
 
+/**
+ * @param text Json as String to be converted to a [DataRow].
+ * @param keyValuePaths List of [JsonPath]s where instead of a [ColumnGroup], a [FrameColumn]<[KeyValueProperty]>
+ *     will be created.
+ * @param typeClashTactic How to handle type clashes when reading a JSON file.
+ * @param header Optional list of column names. If given, [text] will be read like an object with [header] being the keys.
+ * @return [DataRow] from the given [text].
+ */
 public fun DataRow.Companion.readJsonStr(
     text: String,
     header: List<String> = emptyList(),
