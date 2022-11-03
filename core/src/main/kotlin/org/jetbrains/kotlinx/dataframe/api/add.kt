@@ -114,13 +114,19 @@ public typealias AddExpression<T, C> = Selector<AddDataRow<T>, C>
  * @throws DuplicateColumnNamesException if [DataFrame] already contains a column with given [name]
  */
 @Interpretable(Add::class)
-@Refine("add1")
 public inline fun <reified R, T> DataFrame<T>.add(
     name: String,
-    infer: Infer = Infer.Nulls,
+    infer: Infer/* = Infer.Nulls*/,
     noinline expression: AddExpression<T, R>
 ): DataFrame<T> =
     (this + mapToColumn(name, infer, expression))
+
+@Interpretable(Add::class)
+@Refine("add_1")
+public inline fun <reified R, T> DataFrame<T>.add(
+    name: String,
+    noinline expression: AddExpression<T, R>
+): DataFrame<T> = add(name, Infer.Nulls,  expression)
 
 public inline fun <reified R, T> DataFrame<T>.add(
     property: KProperty<R>,
