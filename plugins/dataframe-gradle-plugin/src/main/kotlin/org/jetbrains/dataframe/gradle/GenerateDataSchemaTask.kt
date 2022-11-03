@@ -35,6 +35,9 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     abstract val csvOptions: Property<CsvOptionsDsl>
 
     @get:Input
+    abstract val jsonOptions: Property<JsonOptionsDsl>
+
+    @get:Input
     abstract val src: Property<File>
 
     @get:Input
@@ -62,13 +65,14 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @TaskAction
     fun generate() {
         val csvOptions = csvOptions.get()
+        val jsonOptions = jsonOptions.get()
         val url = urlOf(data.get())
         val schemaFile = dataSchema.get()
         val escapedPackageName = escapePackageName(packageName.get())
 
         val formats = listOf(
             CSV(delimiter = csvOptions.delimiter),
-            JSON(),
+            JSON(typeClashTactic = jsonOptions.typeClashTactic, keyValuePaths = jsonOptions.keyValuePaths),
             Excel(),
             TSV(),
             ArrowFeather(),
@@ -93,7 +97,11 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
         // on error, try with reading dataframe first
         val parsedDf = when (val readResult = CodeGenerator.urlDfReader(url, formats)) {
-            is DfReadResult.Error -> throw Exception("Error while reading dataframe from data at $url", readResult.reason)
+            is DfReadResult.Error -> throw Exception(
+                "Error while reading dataframe from data at $url",
+                readResult.reason
+            )
+
             is DfReadResult.Success -> readResult
         }
 

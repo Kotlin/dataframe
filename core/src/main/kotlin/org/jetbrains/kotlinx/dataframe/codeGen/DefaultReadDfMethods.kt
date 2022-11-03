@@ -89,7 +89,11 @@ public abstract class AbstractDefaultReadMethod(
     override val additionalImports: List<String> = listOf("import org.jetbrains.kotlinx.dataframe.io.$methodName")
 }
 
-internal class DefaultReadJsonMethod(path: String?) : AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readJson)
+internal class DefaultReadJsonMethod(path: String?, arguments: MethodArguments) : AbstractDefaultReadMethod(
+    path = path,
+    arguments = arguments,
+    methodName = readJson,
+)
 
 internal class DefaultReadCsvMethod(
     path: String?,
