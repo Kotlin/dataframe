@@ -5,6 +5,7 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.types.instanceOf
 import org.intellij.lang.annotations.Language
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
@@ -672,11 +673,134 @@ class JsonTests {
     }
 
     @Test
-    fun `KeyValue property`() {
+    fun `KeyValue property Array Value`() { // TODO needs more tests
         @Language("json")
         val json = """[
                 {"a":{"b":1}},
-                {"a":{"c": 2, "d": null}},
+                {"a":{"c": 2, "d": null, "b":[1, 2, 3]}},
+                {"a":{}},
+                {"a": null},
+                {},
+                null
+            ]
+        """.trimIndent()
+
+        // before
+        val noKeyValue = DataFrame.readJsonStr(json, typeClashTactic = ARRAY_AND_VALUE_COLUMNS)
+            .alsoDebug()
+
+//        ⌌-------------------------------------------------------⌍
+//        |  | a:{b:{value:Int?, array:List<Int>}, c:Int?, d:Any?}|
+//        |--|----------------------------------------------------|
+//        | 0|         { b:{ value:1, array:[] }, c:null, d:null }|
+//        | 1|  { b:{ value:null, array:[1, 2, 3] }, c:2, d:null }|
+//        | 2|      { b:{ value:null, array:[] }, c:null, d:null }|
+//        | 3|      { b:{ value:null, array:[] }, c:null, d:null }|
+//        | 4|      { b:{ value:null, array:[] }, c:null, d:null }|
+//        | 5|      { b:{ value:null, array:[] }, c:null, d:null }|
+//        ⌎-------------------------------------------------------⌏
+        noKeyValue.columnsCount() shouldBe 1
+        noKeyValue.rowsCount() shouldBe 6
+        noKeyValue["a"].also {
+            it shouldBe instanceOf<ColumnGroup<*>>()
+            it as ColumnGroup<*>
+
+            it["b"].type() shouldBe typeOf<DataRow<*>>()
+            it["b"]["value"].type() shouldBe typeOf<Int?>()
+            it["b"]["array"].type() shouldBe typeOf<List<Int>>()
+            it["c"].type() shouldBe typeOf<Int?>()
+            it["d"].type() shouldBe typeOf<Any?>()
+
+            it[0].let {
+                (it["b"] as DataRow<*>).toMap() shouldBe mapOf("value" to 1, "array" to emptyList<Int>())
+                it["c"] shouldBe null
+                it["d"] shouldBe null
+            }
+            it[1].let {
+                (it["b"] as DataRow<*>).toMap() shouldBe mapOf("value" to null, "array" to listOf(1, 2, 3))
+                it["c"] shouldBe 2
+                it["d"] shouldBe null
+            }
+            (it as ColumnGroup<*>)[2..5].forEach {
+                it.let {
+                    (it["b"] as DataRow<*>).toMap() shouldBe mapOf("value" to null, "array" to emptyList<Int>())
+                    it["c"] shouldBe null
+                    it["d"] shouldBe null
+                }
+            }
+        }
+
+        // $["a"] should be read as keyValue
+        val keyValuePaths = listOf(
+            JsonPath().append("a")
+        )
+
+        // after
+        val withKeyValue =
+            DataFrame.readJsonStr(json, keyValuePaths = keyValuePaths, typeClashTactic = ARRAY_AND_VALUE_COLUMNS)
+                .alsoDebug()
+                .also {
+                    it["a"][1].let { it as AnyFrame }.alsoDebug()
+                }
+//        ⌌------------------------------⌍
+//        |  | a:[key:String, value:Any?]|
+//        |--|---------------------------|
+//        | 0| [1 x 2] { key:b, value:1 }|
+//        | 1|                    [3 x 2]| ->  { key:c, value:2 }
+//        | 2|                    [0 x 2]|     { key:d, value:null }
+//        | 3|                    [0 x 2]|     { key:b, value:[1,2,3] }
+//        | 4|                    [0 x 2]|
+//        | 5|                    [0 x 2]|
+//        ⌎------------------------------⌏
+
+        withKeyValue.columnsCount() shouldBe 1
+        withKeyValue.rowsCount() shouldBe 6
+        withKeyValue["a"].also {
+            it shouldBe instanceOf<FrameColumn<*>>()
+            it as FrameColumn<*>
+
+            it[0].let {
+                it.columnsCount() shouldBe 2
+                it.rowsCount() shouldBe 1
+                it["key"].let {
+                    it.type() shouldBe typeOf<String>()
+                    it[0] shouldBe "b"
+                }
+                it["value"].let {
+                    it.type() shouldBe typeOf<Int>() // tightened by values, but Int? is also valid of course
+                    it[0] shouldBe 1
+                }
+            }
+            it[1].let {
+                it.columnsCount() shouldBe 2
+                it.rowsCount() shouldBe 3
+                it["key"].let {
+                    it.type() shouldBe typeOf<String>()
+                    it[0] shouldBe "c"
+                    it[1] shouldBe "d"
+                }
+                it["value"].let {
+                    it.type() shouldBe typeOf<Any?>()
+                    it[0] shouldBe 2
+                    it[1] shouldBe null
+                }
+            }
+            it[2..5].forEach {
+                it.columnsCount() shouldBe 2
+                it.rowsCount() shouldBe 0
+
+                it["key"].type() shouldBe typeOf<String>()
+                it["value"].type() shouldBeIn listOf(typeOf<Any?>(), typeOf<Any>()) // no data, so Any(?) ValueColumn
+            }
+        }
+    }
+
+    @Test
+    fun `KeyValue property Any`() { // TODO needs more tests
+        @Language("json")
+        val json = """[
+                {"a":{"b": 1}},
+                {"a":{"c": 2, "d": null, "b":[1, 2, 3]}},
                 {"a":{}},
                 {"a": null},
                 {},
@@ -689,10 +813,10 @@ class JsonTests {
             .alsoDebug()
 
 //        ⌌------------------------------⌍
-//        |  | a:{b:Int?, c:Int?, d:Any?}|
+//        |  | a:{b:Any?, c:Int?, d:Any?}|
 //        |--|---------------------------|
 //        | 0|                    { b:1 }|
-//        | 1|                    { c:2 }|
+//        | 1|{ b:[1,2,3], c:2, d: null }|
 //        | 2|                        { }|
 //        | 3|                        { }|
 //        | 4|                        { }|
@@ -704,18 +828,18 @@ class JsonTests {
             it shouldBe instanceOf<ColumnGroup<*>>()
             it as ColumnGroup<*>
 
-            it["b"].type() shouldBe typeOf<Int?>()
+            it["b"].type() shouldBe typeOf<Any?>()
             it["c"].type() shouldBe typeOf<Int?>()
             it["d"].type() shouldBe typeOf<Any?>()
 
             it[0].toMap() shouldBe mapOf("b" to 1, "c" to null, "d" to null)
-            it[1].toMap() shouldBe mapOf("b" to null, "c" to 2, "d" to null)
+            it[1].toMap() shouldBe mapOf("b" to listOf(1, 2, 3), "c" to 2, "d" to null)
             (it as ColumnGroup<*>)[2..5].forEach {
                 it.toMap() shouldBe mapOf("b" to null, "c" to null, "d" to null)
             }
         }
 
-        // $[*].a should be read as keyValue
+        // $["a"] should be read as keyValue
         val keyValuePaths = listOf(
             JsonPath().append("a")
         )
@@ -723,13 +847,17 @@ class JsonTests {
         // after
         val withKeyValue = DataFrame.readJsonStr(json, keyValuePaths = keyValuePaths, typeClashTactic = ANY_COLUMNS)
             .alsoDebug()
+            .also {
+                it["a"][1].let { it as AnyFrame }.alsoDebug()
+            }
+
 //        ⌌------------------------------⌍
-//        |  | a:[key:String, value:Int?]|
+//        |  | a:[key:String, value:Any?]|
 //        |--|---------------------------|
 //        | 0| [1 x 2] { key:b, value:1 }|
-//        | 1|                    [2 x 2]| ->  { key:c, value:2 }
+//        | 1|                    [3 x 2]| ->  { key:c, value:2 }
 //        | 2|                    [0 x 2]|     { key:d, value:null }
-//        | 3|                    [0 x 2]|
+//        | 3|                    [0 x 2]|     { key:b, value:[1,2,3] }
 //        | 4|                    [0 x 2]|
 //        | 5|                    [0 x 2]|
 //        ⌎------------------------------⌏
@@ -753,16 +881,17 @@ class JsonTests {
             }
             it[1].let {
                 it.columnsCount() shouldBe 2
-                it.rowsCount() shouldBe 2
+                it.rowsCount() shouldBe 3
                 it["key"].let {
                     it.type() shouldBe typeOf<String>()
                     it[0] shouldBe "c"
                     it[1] shouldBe "d"
                 }
                 it["value"].let {
-                    it.type() shouldBe typeOf<Int?>()
+                    it.type() shouldBe typeOf<Any?>()
                     it[0] shouldBe 2
                     it[1] shouldBe null
+                    it[2] shouldBe listOf(1, 2, 3)
                 }
             }
             it[2..5].forEach {
