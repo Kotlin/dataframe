@@ -15,7 +15,7 @@ data class Passenger(
     val lastName: String
 )
 
-val passengers = DataFrame.read("titanic.csv")
+val passengers = DataFrame.read("titanic.csv", delimiter = ';')
     .add(Passenger::lastName) { "name"<String>().split(",").last() }
     .dropNulls(Passenger::age)
     .filter {
@@ -39,7 +39,7 @@ data class Passenger(
     val name: String
 )
 
-val passengers = DataFrame.read("titanic.csv")
+val passengers = DataFrame.read("titanic.csv", delimiter = ';')
     .filter { it.get(Passenger::city).endsWith("NY") }
     .toListOf<Passenger>()
 ```
