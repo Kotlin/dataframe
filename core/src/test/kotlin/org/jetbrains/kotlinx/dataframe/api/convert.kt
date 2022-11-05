@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.junit.Test
 import java.time.LocalTime
 import kotlin.reflect.*
+import kotlin.time.Duration.Companion.hours
 
 class ConvertTests {
 
@@ -54,6 +55,9 @@ class ConvertTests {
     @JvmInline
     value class StringClass(val s: String?)
 
+    @JvmInline
+    value class PrivateInt(private val v: Int)
+
     @Test
     fun `convert string to value class`() {
         columnOf("1").convertTo<IntClass>() shouldBe columnOf(IntClass(1))
@@ -93,6 +97,10 @@ class ConvertTests {
 
         shouldThrow<TypeConversionException> {
             columnOf(StringClass(null)).convertTo<Double>()
+        }
+
+        shouldThrow<TypeConversionException> {
+            columnOf(PrivateInt(1)).convertTo<Double>()
         }
     }
 
@@ -147,5 +155,12 @@ class ConvertTests {
             val javaInstant = kotlinxInstants.convertTo<java.time.Instant>()
             javaInstant.convertTo<Instant>() shouldBe kotlinxInstants
         }
+    }
+
+    @Test
+    fun `convert duration to string`() {
+        val col = columnOf(1.hours)
+        val res = col.convertTo<String>()
+        res.print()
     }
 }
