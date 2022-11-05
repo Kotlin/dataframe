@@ -152,22 +152,6 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
         }
     }
 
-    if (fromClass.isValue) {
-        val constructor =
-            fromClass.primaryConstructor ?: error("Value type $fromClass doesn't have primary constructor")
-        val constructorParameter = constructor.parameters.single()
-        val underlyingType = constructorParameter.type
-        val converter = getConverter(underlyingType, to)
-            ?: throw TypeConverterNotFoundException(underlyingType, to)
-        val property = fromClass.memberProperties.single { it.name == constructorParameter.name } as kotlin.reflect.KProperty1<Any, *>
-
-        return convert<Any> {
-            property.get(it)?.let {
-                converter(it)
-            }
-        }
-    }
-
     return when {
         fromClass == String::class -> {
             val parser = Parsers[to.withNullability(false)]
@@ -180,6 +164,24 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             }
         }
         toClass == String::class -> convert<Any> { it.toString() }
+        fromClass.isValue -> {
+            val constructor =
+                fromClass.primaryConstructor ?: error("Value type $fromClass doesn't have primary constructor")
+            val constructorParameter = constructor.parameters.single()
+            val underlyingType = constructorParameter.type
+            val converter = getConverter(underlyingType, to)
+                ?: throw TypeConverterNotFoundException(underlyingType, to)
+            val property = fromClass.memberProperties.single { it.name == constructorParameter.name } as kotlin.reflect.KProperty1<Any, *>
+            if (property.visibility != kotlin.reflect.KVisibility.PUBLIC) {
+                throw TypeConversionException("Not public member property in primary constructor of value type", from, to)
+            }
+
+            convert<Any> {
+                property.get(it)?.let {
+                    converter(it)
+                }
+            }
+        }
         else -> when (fromClass) {
             Boolean::class -> when (toClass) {
                 Float::class -> convert<Boolean> { if (it) 1.0f else 0.0f }
