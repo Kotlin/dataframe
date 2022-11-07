@@ -101,10 +101,16 @@ public fun <T, C> Convert<T, C>.to(columnConverter: DataFrame<T>.(DataColumn<C>)
 
 @Interpretable(With0::class)
 public inline fun <T, C, reified R> Convert<T, C>.with(
-    infer: Infer = Infer.Nulls,
+    infer: Infer/* = Infer.Nulls*/,
     noinline rowConverter: RowValueExpression<T, C, R>
 ): DataFrame<T> =
     withRowCellImpl(typeOf<R>(), infer, rowConverter)
+
+@Refine("with_0")
+@Interpretable(With0::class)
+public inline fun <T, C, reified R> Convert<T, C>.with(
+    noinline rowConverter: RowValueExpression<T, C, R>
+): DataFrame<T> = with(Infer.Nulls, rowConverter)
 
 public inline fun <T, C, reified R> Convert<T, C>.perRowCol(
     infer: Infer = Infer.Nulls,

@@ -45,7 +45,7 @@ public class Add : AbstractSchemaModificationInterpreter() {
     public val Arguments.type: TypeApproximation by type(name("expression"))
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        return PluginDataFrameSchema(listOf(SimpleCol(name, type)))
+        return PluginDataFrameSchema(receiver.columns() + SimpleCol(name, type))
     }
 }
 
