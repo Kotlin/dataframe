@@ -18,7 +18,6 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.columnOf
 import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.firstOrNull
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.api.indices
@@ -355,7 +354,7 @@ internal fun fromJsonListAnyColumns(
                             )
                         collector.add(
                             if (parsed.isSingleUnnamedColumn()) (parsed.getColumn(0) as UnnamedColumn).col.values.first()
-                            else parsed
+                            else parsed.firstOrNull() ?: DataRow.empty
                         )
                     }
 
@@ -455,7 +454,7 @@ internal fun fromJsonListAnyColumns(
                                 jsonPath = jsonPath.append(key),
                             )
                             if (parsed.isSingleUnnamedColumn()) (parsed.getColumn(0) as UnnamedColumn).col.values.first()
-                            else parsed.unwrapUnnamedColumns().first()
+                            else parsed.unwrapUnnamedColumns().firstOrNull()
                         }
                         val valueType = map.values.map {
                             guessValueType(sequenceOf(it))
@@ -597,6 +596,7 @@ internal fun fromJsonListArrayAndValueColumns(
             else -> hasPrimitive = true
         }
     }
+    if (records.all { it == null }) hasPrimitive = true
 
     // Add a value column to the collected names if needed
     val valueColumn = if (hasPrimitive || records.isEmpty()) {

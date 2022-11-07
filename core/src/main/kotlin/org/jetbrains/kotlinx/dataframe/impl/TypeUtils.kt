@@ -10,7 +10,13 @@ import kotlin.reflect.KType
 import kotlin.reflect.KTypeParameter
 import kotlin.reflect.KTypeProjection
 import kotlin.reflect.KVisibility
-import kotlin.reflect.full.*
+import kotlin.reflect.full.allSuperclasses
+import kotlin.reflect.full.createType
+import kotlin.reflect.full.isSubclassOf
+import kotlin.reflect.full.isSubtypeOf
+import kotlin.reflect.full.isSuperclassOf
+import kotlin.reflect.full.superclasses
+import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
@@ -22,6 +28,7 @@ internal fun KType.projectTo(targetClass: KClass<*>): KType {
         targetClass.typeParameters.isEmpty() || currentClass == null -> targetClass.createStarProjectedType(
             isMarkedNullable
         )
+
         currentClass == targetClass -> this
         targetClass.isSubclassOf(currentClass) -> projectDownTo(targetClass)
         targetClass.isSuperclassOf(currentClass) -> projectUpTo(targetClass)
@@ -49,6 +56,7 @@ internal fun KType.replaceTypeParameters(): KType {
                 replaced = true
                 (type.classifier as KTypeParameter).upperBounds.firstOrNull() ?: typeOf<Any?>()
             }
+
             else -> type
         }
         KTypeProjection.invariant(newType)
@@ -124,6 +132,7 @@ internal val numberTypeExtensions: Map<Pair<KClass<*>, KClass<*>>, KClass<*>> by
         map[from to to] = to
         map[to to from] = to
     }
+
     val intTypes = listOf(Byte::class, Short::class, Int::class, Long::class)
     for (i in intTypes.indices) {
         for (j in i + 1 until intTypes.size)
@@ -141,7 +150,9 @@ internal fun getCommonNumberType(first: KClass<*>?, second: KClass<*>): KClass<*
         else -> numberTypeExtensions[first to second] ?: error("Can not find common number type for $first and $second")
     }
 
-internal fun Iterable<KClass<*>>.commonNumberClass(): KClass<*> = fold(null as KClass<*>?, ::getCommonNumberType) ?: Number::class
+internal fun Iterable<KClass<*>>.commonNumberClass(): KClass<*> =
+    fold(null as KClass<*>?, ::getCommonNumberType) ?: Number::class
+
 internal fun commonParent(classes: Iterable<KClass<*>>): KClass<*>? = commonParents(classes).withMostSuperclasses()
 internal fun commonParent(vararg classes: KClass<*>): KClass<*>? = commonParent(classes.toList())
 internal fun Iterable<KClass<*>>.withMostSuperclasses(): KClass<*>? = maxByOrNull { it.allSuperclasses.size }
@@ -164,18 +175,20 @@ internal fun commonParents(classes: Iterable<KClass<*>>): List<KClass<*>> =
                     it.size == 1 && it[0].visibility == KVisibility.PUBLIC -> { // if there is only one class - return it
                         listOf(it[0])
                     }
+
                     else -> it.fold(null as (Set<KClass<*>>?)) { set, clazz ->
                         // collect a set of all common superclasses from original classes
                         val superclasses =
-                            (clazz.allSuperclasses + clazz).filter { it.visibility == KVisibility.PUBLIC }
-                        set?.intersect(superclasses) ?: superclasses.toSet()
+                            (clazz.allSuperclasses + clazz).filter { it.visibility == KVisibility.PUBLIC }.toSet()
+                        set?.intersect(superclasses) ?: superclasses
                     }!!.let {
-                        it - it.flatMap { it.superclasses } // leave only 'leaf' classes, that are not super to some other class in a set
+                        it - it.flatMap { it.superclasses }
+                            .toSet() // leave only 'leaf' classes, that are not super to some other class in a set
                     }.toList()
                 }
             }
         }
-    }
+    }.sortedBy { it.simpleName } // make sure the order is stable to avoid bugs
 
 internal fun baseType(types: Set<KType>): KType {
     val nullable = types.any { it.isMarkedNullable }
@@ -196,6 +209,7 @@ internal fun baseType(types: Set<KType>): KType {
                     }
                     classes[0].createType(typeProjections, nullable)
                 }
+
                 classes.any { it == List::class } && classes.all { it == List::class || !it.isSubclassOf(Collection::class) } -> {
                     val listTypes =
                         types.map { if (it.classifier == List::class) it.arguments[0].type else it }.toMutableSet()
@@ -205,6 +219,7 @@ internal fun baseType(types: Set<KType>): KType {
                         List::class.createType(listOf(KTypeProjection.invariant(type)), nullable)
                     }
                 }
+
                 else -> {
                     val commonClass = commonParent(classes) ?: Any::class
                     commonClass.createStarProjectedType(nullable)
@@ -251,10 +266,12 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null): 
                     else classesInList.add(it.javaClass.kotlin)
                 }
             }
+
             else -> classes.add(it.javaClass.kotlin)
         }
     }
-    val allListsWithRows = classesInList.isNotEmpty() && classesInList.all { it.isSubclassOf(DataRow::class) } && !nullsInList
+    val allListsWithRows =
+        classesInList.isNotEmpty() && classesInList.all { it.isSubclassOf(DataRow::class) } && !nullsInList
     return when {
         classes.isNotEmpty() -> {
             if (hasRows) classes.add(DataRow::class)
@@ -271,12 +288,18 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null): 
             }
             return classes.commonType(hasNulls, upperBound)
         }
-        (hasFrames && (!hasList || allListsWithRows)) || (!hasFrames && allListsWithRows) -> DataFrame::class.createStarProjectedType(hasNulls)
+
+        (hasFrames && (!hasList || allListsWithRows)) || (!hasFrames && allListsWithRows) -> DataFrame::class.createStarProjectedType(
+            hasNulls
+        )
+
         hasRows && !hasFrames && !hasList -> DataRow::class.createStarProjectedType(false)
         hasList && !hasFrames && !hasRows -> {
             val elementType = upperBound?.let { if (it.jvmErasure == List::class) it.arguments[0].type else null }
-            List::class.createTypeWithArgument(classesInList.commonType(nullsInList, elementType)).withNullability(hasNulls)
+            List::class.createTypeWithArgument(classesInList.commonType(nullsInList, elementType))
+                .withNullability(hasNulls)
         }
+
         else -> {
             if (hasRows) classes.add(DataRow::class)
             if (hasFrames) classes.add(DataFrame::class)

@@ -57,7 +57,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.junit.Test
-import java.io.Serializable
 import java.util.AbstractSet
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
@@ -139,7 +138,7 @@ class PivotTests {
 
         data["age"].type() shouldBe typeOf<List<Int>>()
         data["city"].type() shouldBe typeOf<String>()
-        data["weight"].type() shouldBe typeOf<Serializable>()
+        data["weight"].type() shouldBe typeOf<Comparable<*>>()
 
         res shouldBe defaultExpected.group { drop(1) }.into("key")
 
@@ -266,7 +265,7 @@ class PivotTests {
 
         val nullGroup = pivotedDf["Charlie"]["weight"].asColumnGroup()
         nullGroup.columnNames() shouldBe listOf("value", "type")
-        nullGroup.columnTypes() shouldBe listOf(typeOf<Serializable?>(), typeOf<KClass<Any>?>())
+        nullGroup.columnTypes() shouldBe listOf(typeOf<Comparable<*>?>(), typeOf<KClass<Any>?>())
 
         val cols = pivotedDf.getColumnsWithPaths { all().allDfs() }
         cols.size shouldBe 2 * typed.name.countDistinct() * typed.key.countDistinct() - 2
@@ -277,6 +276,7 @@ class PivotTests {
                 it.hasNulls() -> {
                     it.path().dropLast(1) shouldBe listOf("Charlie", "weight")
                 }
+
                 it.name() == "type" -> it.typeClass shouldBe KClass::class
                 else -> it.name() shouldBe "value"
             }
@@ -340,15 +340,17 @@ class PivotTests {
         }
 
         val pivoted3 =
-            typed.pivot(inward = false) { key.map(transform = keyConverter) }.groupBy { name }.values { value.map(transform = valueConverter) }
+            typed.pivot(inward = false) { key.map(transform = keyConverter) }.groupBy { name }
+                .values { value.map(transform = valueConverter) }
 
         pivoted2 shouldBe pivoted
         pivoted3 shouldBe pivoted
 
         val gathered = pivoted.gather { drop(1) }.notNull().into("key", "value")
-        val expected =
-            expectedFiltered.update { key }.with { keyConverter(it) }
-                .convert { value }.with { valueConverter(it) as? Serializable }
+            .convert { value }
+            .with { it as? Comparable<*> } // cast to make the equality test succeed (values are already the same)
+        val expected = expectedFiltered.update { key }.with { keyConverter(it) }
+            .convert { value }.with { valueConverter(it) as? Comparable<*> }
         gathered shouldBe expected
     }
 

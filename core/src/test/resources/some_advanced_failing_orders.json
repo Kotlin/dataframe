@@ -1,7 +1,9 @@
 [
   {
     "id": 1,
-    "petId": "1000",
+    "petId": [
+      "1000"
+    ],
     "quantity": 7,
     "shipDate": "2022-09-22T10:07:57.514+00:00",
     "status": "approved",
