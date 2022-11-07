@@ -143,8 +143,12 @@ internal fun Iterable<KType?>.commonType(): KType {
             val kclass = commonParent(distinct.map { it!!.jvmErasure }) ?: return typeOf<Any>()
             val projections = distinct.map { it!!.projectUpTo(kclass).replaceTypeParameters() }
             require(projections.all { it.jvmErasure == kclass })
-            val arguments = kclass.typeParameters.mapIndexed { i, p ->
-                val type = projections.map { it.arguments[i].type }.commonType()
+            val arguments = List(kclass.typeParameters.size) { i ->
+                val projectionTypes = projections
+                    .map { it.arguments[i].type }
+                    .filterNot { it in distinct } // avoid infinite recursion
+
+                val type = projectionTypes.commonType()
                 KTypeProjection.invariant(type)
             }
             kclass.createType(arguments, nullable)
@@ -154,17 +158,17 @@ internal fun Iterable<KType?>.commonType(): KType {
 
 internal fun <T, C> DataFrame<T>.getColumnsImpl(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
-    selector: ColumnsSelector<T, C>
+    selector: ColumnsSelector<T, C>,
 ): List<DataColumn<C>> = getColumnsWithPaths(unresolvedColumnsPolicy, selector).map { it.data }
 
 internal fun <T, C> DataFrame<T>.getColumnsWithPaths(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
-    selector: ColumnsSelector<T, C>
+    selector: ColumnsSelector<T, C>,
 ): List<ColumnWithPath<C>> = selector.toColumns().resolve(this, unresolvedColumnsPolicy)
 
 internal fun <T, C> DataFrame<T>.getColumnPaths(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
-    selector: ColumnsSelector<T, C>
+    selector: ColumnsSelector<T, C>,
 ): List<ColumnPath> = getColumnsWithPaths(unresolvedColumnsPolicy, selector).map { it.path }
 
 internal fun <C : Comparable<C>> Sequence<C?>.indexOfMin(): Int {
@@ -230,7 +234,7 @@ internal inline fun <reified C> headPlusIterable(head: C, cols: Iterable<C>): It
     (listOf(head) + cols.asIterable())
 
 internal fun <T> DataFrame<T>.splitByIndices(
-    startIndices: Sequence<Int>
+    startIndices: Sequence<Int>,
 ): Sequence<DataFrame<T>> {
     return (startIndices + nrow).zipWithNext { start, endExclusive ->
         if (start == endExclusive) DataFrame.empty().cast()

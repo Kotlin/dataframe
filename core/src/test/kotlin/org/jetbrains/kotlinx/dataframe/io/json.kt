@@ -673,6 +673,40 @@ class JsonTests {
     }
 
     @Test
+    fun `Listification test Array Value`() {
+        @Language("json")
+        val json = """[
+                {"a":[1,2,3]},
+                {"a":null},
+                {"a":1}
+            ]
+        """.trimIndent()
+        val df = DataFrame.readJsonStr(
+            text = json,
+            typeClashTactic = ARRAY_AND_VALUE_COLUMNS,
+            keyValuePaths = listOf(JsonPath()),
+        )
+            .alsoDebug()
+    }
+
+    @Test
+    fun `Listification test Any column`() {
+        @Language("json")
+        val json = """[
+                {"a":[1,2,3]},
+                {"a":null},
+                {"a":1}
+            ]
+        """.trimIndent()
+        val df = DataFrame.readJsonStr(
+            text = json,
+            typeClashTactic = ANY_COLUMNS,
+            keyValuePaths = listOf(JsonPath()),
+        )
+            .alsoDebug()
+    }
+
+    @Test
     fun `KeyValue property Array Value`() { // TODO needs more tests
         @Language("json")
         val json = """[

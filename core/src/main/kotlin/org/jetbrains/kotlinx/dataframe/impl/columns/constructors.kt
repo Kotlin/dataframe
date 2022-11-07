@@ -88,13 +88,16 @@ internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T,
 @PublishedApi
 internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessType: Boolean = false): DataColumn<T> =
     when {
+        // values is a non-empty list of DataColumns
         values.any() && values.all { it is AnyCol } ->
             DataColumn.createColumnGroup(
                 name = "",
                 df = (values as Iterable<AnyCol>).toDataFrame()
             ) as DataColumn<T>
 
-        values.any() && values.all { it == null || it is AnyFrame } ->
+        // values is a non-empty list of DataFrames and nulls
+        // (but not just nulls; we cannot assume that should create a FrameColumn)
+        values.any() && values.all { it is AnyFrame? } && !values.all { it == null } ->
             DataColumn.createFrameColumn(
                 name = "",
                 groups = values.map { it as? AnyFrame ?: DataFrame.empty() }

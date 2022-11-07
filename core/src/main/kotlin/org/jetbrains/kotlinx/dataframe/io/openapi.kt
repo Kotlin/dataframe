@@ -381,8 +381,9 @@ private fun readOpenApi(
     }.reduce { a, b -> a + b }
 }
 
-private interface IsObjectOrNot {
+private interface IsObjectOrList {
     val isObject: Boolean
+    val isList: Boolean
 }
 
 /**
@@ -550,7 +551,7 @@ private sealed class OpenApiMarker private constructor(
     visibility: MarkerVisibility,
     fields: List<GeneratedField>,
     superMarkers: List<Marker>,
-) : IsObjectOrNot,
+) : IsObjectOrList,
     Marker(
         name = name,
         isOpen = false,
@@ -594,6 +595,8 @@ private sealed class OpenApiMarker private constructor(
         // enums become List<Something>, not Dataframe<*>
         override val isObject = false
 
+        override val isList = false
+
         override val additionalPropertyPaths: List<JsonPath> = emptyList()
 
         override fun toFieldType(): FieldType =
@@ -636,6 +639,7 @@ private sealed class OpenApiMarker private constructor(
 
         // Will be a DataFrame<*>
         override val isObject = true
+        override val isList = false
 
         override fun toFieldType(): FieldType =
             FieldType.GroupFieldType(
@@ -661,6 +665,7 @@ private sealed class OpenApiMarker private constructor(
     class AdditionalPropertyInterface(
         nullable: Boolean,
         val valueType: FieldType,
+        override val isList: Boolean,
         name: String,
         additionalPropertyPaths: List<JsonPath>,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
@@ -696,10 +701,10 @@ private sealed class OpenApiMarker private constructor(
             )
 
         override fun withName(name: String): AdditionalPropertyInterface =
-            AdditionalPropertyInterface(nullable, valueType, name, additionalPropertyPaths, visibility)
+            AdditionalPropertyInterface(nullable, valueType, isList, name, additionalPropertyPaths, visibility)
 
         override fun withVisibility(visibility: MarkerVisibility): AdditionalPropertyInterface =
-            AdditionalPropertyInterface(nullable, valueType, name, additionalPropertyPaths, visibility)
+            AdditionalPropertyInterface(nullable, valueType, isList, name, additionalPropertyPaths, visibility)
     }
 
     /**
@@ -712,6 +717,7 @@ private sealed class OpenApiMarker private constructor(
      */
     class TypeAlias(
         nullable: Boolean,
+        override val isList: Boolean,
         name: String,
         val superMarkerName: String,
         override val additionalPropertyPaths: List<JsonPath>,
@@ -744,10 +750,10 @@ private sealed class OpenApiMarker private constructor(
             )
 
         override fun withName(name: String): TypeAlias =
-            TypeAlias(nullable, name, superMarkerName, additionalPropertyPaths, visibility)
+            TypeAlias(nullable, isList, name, superMarkerName, additionalPropertyPaths, visibility)
 
         override fun withVisibility(visibility: MarkerVisibility): TypeAlias =
-            TypeAlias(nullable, name, superMarkerName, additionalPropertyPaths, visibility)
+            TypeAlias(nullable, isList, name, superMarkerName, additionalPropertyPaths, visibility)
     }
 
     /**
@@ -773,6 +779,7 @@ private sealed class OpenApiMarker private constructor(
 
         // depends on the marker it points to whether it's primitive or not
         override val isObject = superMarker.isObject
+        override val isList = superMarker.isList
 
         override val additionalPropertyPaths: List<JsonPath> = superMarker.additionalPropertyPaths
 
@@ -1230,6 +1237,7 @@ private fun Schema<*>.toMarker(
                 val openApiTypeResult = (additionalProperties as? Schema<*>)
                     ?.toOpenApiType(getRefMarker = getRefMarker)
 
+                var isList = false
                 val additionalPropertyPaths = mutableListOf<JsonPath>()
                 val valueType = when (openApiTypeResult) {
                     is OpenApiTypeResult.CannotFindRefMarker ->
@@ -1240,6 +1248,7 @@ private fun Schema<*>.toMarker(
                         additionalPropertyPaths += marker.additionalPropertyPaths.map {
                             it.prependWildcard()
                         }
+                        isList = marker.isList
                         marker.toFieldType()
                     }
 
@@ -1254,6 +1263,8 @@ private fun Schema<*>.toMarker(
                                 produceAdditionalMarker = produceAdditionalMarker,
                                 required = required,
                             )
+
+                        isList = openApiTypeResult.openApiType.isList
 
                         when (fieldTypeResult) {
                             FieldTypeResult.CannotFindRefMarker ->
@@ -1294,6 +1305,7 @@ private fun Schema<*>.toMarker(
                         valueType = valueType,
                         name = ValidFieldName.of(typeName).quotedIfNeeded,
                         additionalPropertyPaths = additionalPropertyPaths,
+                        isList = isList,
                     )
                 )
             }
@@ -1356,6 +1368,7 @@ private fun Schema<*>.toMarker(
                         name = ValidFieldName.of(typeName).quotedIfNeeded,
                         superMarkerName = superMarkerName,
                         additionalPropertyPaths = typeResult.additionalPropertyPaths,
+                        isList = openApiTypeResult.openApiType.isList,
                     )
                 }
 
@@ -1428,11 +1441,14 @@ private fun String.toNullable() = if (this.last() == '?') this else "$this?"
 /**
  * Represents all types supported by OpenApi with functions to create a [FieldType] from each.
  */
-private sealed class OpenApiType(val name: kotlin.String?) : IsObjectOrNot {
+private sealed class OpenApiType(val name: kotlin.String?) : IsObjectOrList {
 
     // Used in generation to decide whether something is an object or not.
     override val isObject: kotlin.Boolean
         get() = this is Object || this is AnyObject
+
+    override val isList: kotlin.Boolean
+        get() = this is Array
 
     object String : OpenApiType("string") {
 
@@ -1500,7 +1516,7 @@ private sealed class OpenApiType(val name: kotlin.String?) : IsObjectOrNot {
 
     object Array : OpenApiType("array") {
 
-        /** used for list of primitives (read as List<MyPrimitve>) */
+        /** used for list of primitives (read as List<MyPrimitive>) */
         fun getTypeAsList(nullableArray: kotlin.Boolean, typeFqName: kotlin.String): FieldType.ValueFieldType =
             FieldType.ValueFieldType(
                 typeFqName = "${List::class.qualifiedName!!}<$typeFqName>${if (nullableArray) "?" else ""}",
@@ -1645,6 +1661,9 @@ private fun Schema<*>.toOpenApiType(
             anyOfTypes.size == 2 && anyOfRefs.isEmpty() && anyOfTypes.containsAll(
                 listOf(OpenApiType.Number, OpenApiType.Integer)
             ) -> OpenApiType.Number
+
+//            // Dataframe turns [1, null, [1,2,3]] into [[1], [], [1,2,3]], so we need to take that into account
+//            anyOfTypes.any { it.isList } -> OpenApiType.Array
 
             !anyOfTypes.any { it.isObject } && anyOfRefs.isEmpty() -> OpenApiType.Any
 

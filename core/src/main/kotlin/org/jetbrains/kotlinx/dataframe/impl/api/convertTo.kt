@@ -3,11 +3,14 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
+import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
 import org.jetbrains.kotlinx.dataframe.api.ConverterScope
 import org.jetbrains.kotlinx.dataframe.api.ExcessiveColumns
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.all
+import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
@@ -138,9 +141,28 @@ internal fun AnyFrame.convertToImpl(
                                 convertedColumn ?: originalColumn.convertTo(to)
 
                             ColumnKind.Group -> {
-                                val column = convertedColumn ?: originalColumn
+                                val column = when {
+                                    convertedColumn != null -> convertedColumn
+
+                                    // Value column of DataRows (if it ever occurs) can be converted to a group column
+                                    originalColumn.kind == ColumnKind.Value && originalColumn.all { it is DataRow<*> } ->
+                                        DataColumn.createColumnGroup(
+                                            name = originalColumn.name,
+                                            df = originalColumn.values().let { it as Iterable<DataRow<*>> }
+                                                .toDataFrame(),
+                                        ) as DataColumn<*>
+
+                                    // Value column of nulls can be converted to an empty group column
+                                    originalColumn.kind == ColumnKind.Value && originalColumn.allNulls() ->
+                                        DataColumn.createColumnGroup(
+                                            name = originalColumn.name,
+                                            df = DataFrame.empty(nrow = originalColumn.size),
+                                        ) as DataColumn<*>
+
+                                    else -> originalColumn
+                                }
                                 require(column.kind == ColumnKind.Group) {
-                                    "Column `${column.name}` is ${column.kind}Column and can not be converted to `ColumnGroup`"
+                                    "Column `${column.name}` is ${column.kind} and can not be converted to `ColumnGroup`"
                                 }
                                 val columnGroup = column.asColumnGroup()
 
@@ -158,7 +180,7 @@ internal fun AnyFrame.convertToImpl(
 
                                 // perform any patches if needed to be able to convert a column to a frame column
                                 val patchedOriginalColumn: AnyCol = when {
-                                    // a value column of AnyFrame? can be converted to a frame column by making nulls empty dataframes
+                                    // a value column of AnyFrame? (or nulls) can be converted to a frame column by making nulls empty dataframes
                                     column.kind == ColumnKind.Value && column.all { it is AnyFrame? } -> {
                                         column
                                             .map { (it ?: emptyDataFrame<Any?>()) as AnyFrame }

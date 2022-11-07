@@ -14,16 +14,19 @@ class UtilTests {
     @Test
     fun commonParentsTests() {
         commonParents(Int::class, Int::class) shouldBe listOf(Int::class)
-        commonParents(Double::class, Int::class) shouldBe listOf(Number::class, Comparable::class)
-        commonParents(Int::class, String::class) shouldBe listOf(Serializable::class, Comparable::class)
-        commonParents(IllegalArgumentException::class, UnsupportedOperationException::class) shouldBe listOf(RuntimeException::class)
+        commonParents(Double::class, Int::class) shouldBe listOf(Comparable::class, Number::class)
+        commonParents(Int::class, String::class) shouldBe listOf(Comparable::class, Serializable::class)
+        commonParents(IllegalArgumentException::class, UnsupportedOperationException::class) shouldBe listOf(
+            RuntimeException::class
+        )
     }
 
     @Test
     fun commonParentTests() {
         commonParent(Int::class, Int::class) shouldBe Int::class
         commonParent(Double::class, Int::class) shouldBe Number::class
-        commonParent(Int::class, String::class) shouldBe Serializable::class
+        commonParent(Int::class, String::class) shouldBe Comparable::class
+        commonParent(String::class, Int::class) shouldBe Comparable::class
     }
 
     @Test

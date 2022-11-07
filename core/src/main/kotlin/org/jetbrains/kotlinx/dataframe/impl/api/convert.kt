@@ -90,7 +90,7 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
 
     return when (val converter = getConverter(from, to, ParserOptions(locale = Locale.getDefault()))) {
         null -> when (from.classifier) {
-            Any::class, Number::class, java.io.Serializable::class -> {
+            Any::class, Number::class, java.io.Serializable::class, Comparable::class -> {
                 // find converter for every value
                 val values = values.map {
                     it?.let {
