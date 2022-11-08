@@ -200,7 +200,7 @@ internal open class ExtensionsCodeGeneratorImpl(
         val shortMarkerName = markerName.substring(markerName.lastIndexOf('.') + 1)
         val nullableShortMarkerName = "Nullable$shortMarkerName"
 
-        fun String.toNullable() = if (this.last() == '?') this else "$this?"
+        fun String.toNullable() = if (this.last() == '?' || this == "*") this else "$this?"
 
         val declarations = mutableListOf<String>()
         val dfTypename = renderDfTypename(markerType)

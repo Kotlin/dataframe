@@ -16,9 +16,9 @@ public sealed interface FieldType {
  */
 public fun FieldType.isNullable(): Boolean =
     when (this) {
-        is FieldType.FrameFieldType -> markerName.endsWith("?")
-        is FieldType.GroupFieldType -> markerName.endsWith("?")
-        is FieldType.ValueFieldType -> typeFqName.endsWith("?")
+        is FieldType.FrameFieldType -> markerName.endsWith("?") || markerName == "*"
+        is FieldType.GroupFieldType -> markerName.endsWith("?") || markerName == "*"
+        is FieldType.ValueFieldType -> typeFqName.endsWith("?") || typeFqName == "*"
     }
 
 /**
@@ -27,7 +27,7 @@ public fun FieldType.isNullable(): Boolean =
  */
 public fun FieldType.isNotNullable(): Boolean = !isNullable()
 
-private fun String.toNullable() = if (this.last() == '?') this else "$this?"
+private fun String.toNullable() = if (this.last() == '?' || this == "*") this else "$this?"
 
 /**
  * Returns a new fieldType with the same type but with nullability in the column type.
@@ -49,9 +49,27 @@ public fun FieldType.toNullable(): FieldType =
 public fun FieldType.toNotNullable(): FieldType =
     if (isNullable()) {
         when (this) {
-            is FieldType.FrameFieldType -> FieldType.FrameFieldType(markerName.removeSuffix("?"), nullable)
-            is FieldType.GroupFieldType -> FieldType.GroupFieldType(markerName.removeSuffix("?"))
-            is FieldType.ValueFieldType -> FieldType.ValueFieldType(typeFqName.removeSuffix("?"))
+            is FieldType.FrameFieldType -> FieldType.FrameFieldType(
+                markerName = markerName.let {
+                    if (it == "*") "Any"
+                    else it.removeSuffix("?")
+                },
+                nullable = nullable,
+            )
+
+            is FieldType.GroupFieldType -> FieldType.GroupFieldType(
+                markerName = markerName.let {
+                    if (it == "*") "Any"
+                    else it.removeSuffix("?")
+                },
+            )
+
+            is FieldType.ValueFieldType -> FieldType.ValueFieldType(
+                typeFqName = typeFqName.let {
+                    if (it == "*") "Any"
+                    else it.removeSuffix("?")
+                },
+            )
         }
     } else this
 
@@ -121,7 +139,7 @@ public data class GeneratedField(
     override val columnName: String,
     val overrides: Boolean,
     val columnSchema: ColumnSchema,
-    override val fieldType: FieldType
+    override val fieldType: FieldType,
 ) : BaseField {
     val columnKind: ColumnKind get() = columnSchema.kind
 }
