@@ -13,8 +13,7 @@ internal class Explode0 : AbstractInterpreter<PluginDataFrameSchema>() {
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
         val columns = selector ?: TODO()
-        val kotlinTypeFacade: KotlinTypeFacade = TODO()
-        return kotlinTypeFacade.run { receiver.explodeImpl(dropEmpty, columns.map { ColumnPathApproximation(it.path.path) }) }
+        return receiver.explodeImpl(dropEmpty, columns.map { ColumnPathApproximation(it.path.path) })
     }
 }
 
