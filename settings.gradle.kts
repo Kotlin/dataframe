@@ -12,6 +12,7 @@ include("dataframe-arrow")
 include("examples:idea-examples:titanic")
 include("examples:idea-examples:movies")
 include("examples:idea-examples:youtube")
+include("examples:idea-examples:openapi")
 
 val jupyterApiTCRepo: String by settings
 

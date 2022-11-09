@@ -1,4 +1,4 @@
-# DEMO for DataFrame, this might differ from the actual API
+# DEMO for DataFrame, this might differ from the actual API (it's updated a bit)
 openapi: 3.0.0
 info:
   version: 2.0.2
@@ -187,6 +187,7 @@ components:
           description: OpenAPI version
           type: string
       additionalProperties: false
+
     Metrics:
       description: List of basic metrics
       type: object
@@ -194,6 +195,15 @@ components:
         - numSpecs
         - numAPIs
         - numEndpoints
+        - unreachable
+        - invalid
+        - unofficial
+        - fixes
+        - fixedPct
+        - datasets
+        - stars
+        - issues
+        - thisWeek
       properties:
         numSpecs:
           description: Number of API specifications including different versions of the
@@ -208,8 +218,87 @@ components:
           description: Total number of endpoints inside all specifications
           type: integer
           minimum: 1
+        unreachable:
+          description: Number of unreachable specifications
+          type: integer
+          minimum: 0
+        invalid:
+          description: Number of invalid specifications
+          type: integer
+          minimum: 0
+        unofficial:
+          description: Number of unofficial specifications
+          type: integer
+          minimum: 0
+        fixes:
+          description: Number of fixes applied to specifications
+          type: integer
+          minimum: 0
+        fixedPct:
+          description: Percentage of fixed specifications
+          type: number
+          minimum: 0
+          maximum: 100
+        datasets:
+          description: An overview of the datasets used to gather the APIs
+          type: array
+          items:
+            description: A single metric per dataset
+            type: object
+            required:
+              - title
+              - data
+            properties:
+              title:
+                description: Title of the metric
+                type: string
+              data:
+                description: Value of the metric per dataset
+                type: object
+                additionalProperties:
+                  type: integer
+                  minimum: 0
+        stars:
+          description: Number of stars on GitHub
+          type: integer
+          minimum: 0
+        issues:
+          description: Number of issues on GitHub
+          type: integer
+          minimum: 0
+        thisWeek:
+          description: Number of new specifications added/updated this week
+          type: object
+          required:
+            - added
+            - updated
+          properties:
+            added:
+              description: Number of new specifications added this week
+              type: integer
+              minimum: 0
+            updated:
+              description: Number of specifications updated this week
+              type: integer
+              minimum: 0
       additionalProperties: false
       example:
-        numAPIs: 1928
-        numEndpoints: 61448
-        numSpecs: 3329
+        numSpecs: 1000
+        numAPIs: 100
+        numEndpoints: 10000
+        unreachable: 10
+        invalid: 10
+        unofficial: 10
+        fixes: 10
+        fixedPct: 10
+        datasets:
+          - title: providerCount
+            data:
+              "a.com": 10
+              "b.com": 20
+              "c.com": 30
+        stars: 1000
+        issues: 100
+        thisWeek:
+          added: 10
+          updated: 10
