@@ -31,8 +31,9 @@ The handiness of this abstraction is not in the table itself but in a set of ope
 **Basics:**
 
 ```kotlin
-val df = DataFrame.read("titanic.csv")
+val df = DataFrame.read("titanic.csv", delimiter = ';')
 ```
+
 ```kotlin
 // filter rows
 df.filter { survived && home.endsWith("NY") && age in 10..20 }

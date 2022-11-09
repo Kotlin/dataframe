@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.AddDataRow
 import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.indices
+import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
@@ -25,13 +26,19 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 
 @PublishedApi
-internal fun <T, C> Update<T, C>.updateImpl(expression: (AddDataRow<T>, DataColumn<C>, C) -> C?): DataFrame<T> = df.replace(columns).with { it.updateImpl(df, filter, expression) }
+internal fun <T, C> Update<T, C>.updateImpl(expression: (AddDataRow<T>, DataColumn<C>, C) -> C?): DataFrame<T> =
+    if (df.isEmpty()) df
+    else df.replace(columns).with { it.updateImpl(df, filter, expression) }
 
-internal fun <T, C> Update<T, C>.updateWithValuePerColumnImpl(selector: Selector<DataColumn<C>, C>) = df.replace(columns).with {
-    val value = selector(it, it)
-    val convertedValue = value?.convertTo(it.type()) as C
-    it.updateImpl(df, filter) { _, _, _ -> convertedValue }
-}
+internal fun <T, C> Update<T, C>.updateWithValuePerColumnImpl(selector: Selector<DataColumn<C>, C>) =
+    if (df.isEmpty()) df
+    else {
+        df.replace(columns).with {
+            val value = selector(it, it)
+            val convertedValue = value?.convertTo(it.type()) as C
+            it.updateImpl(df, filter) { _, _, _ -> convertedValue }
+        }
+    }
 
 internal fun <T, C> DataColumn<C>.updateImpl(
     df: DataFrame<T>,

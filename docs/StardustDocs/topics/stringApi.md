@@ -7,7 +7,7 @@ String column names are the easiest way to access data in DataFrame:
 <!---FUN strings-->
 
 ```kotlin
-DataFrame.read("titanic.csv")
+DataFrame.read("titanic.csv", delimiter = ';')
     .add("lastName") { "name"<String>().split(",").last() }
     .dropNulls("age")
     .filter {
