@@ -14,12 +14,9 @@ import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.columnsCount
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.first
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
-import org.jetbrains.kotlinx.dataframe.api.print
-import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDouble
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
