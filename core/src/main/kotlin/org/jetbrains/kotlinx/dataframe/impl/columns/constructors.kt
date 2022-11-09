@@ -85,6 +85,7 @@ internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T,
     return nullable to list
 }
 
+@Suppress("UNCHECKED_CAST")
 @PublishedApi
 internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessType: Boolean = false): DataColumn<T> =
     when {
@@ -93,14 +94,14 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
             DataColumn.createColumnGroup(
                 name = "",
                 df = (values as Iterable<AnyRow>).toDataFrame(),
-            ) as DataColumn<T>
+            ).asDataColumn().cast()
 
         // values is a non-empty list of DataColumns
         values.any() && values.all { it is AnyCol } ->
             DataColumn.createColumnGroup(
                 name = "",
                 df = (values as Iterable<AnyCol>).toDataFrame()
-            ) as DataColumn<T>
+            ).asDataColumn().cast()
 
         // values is a non-empty list of DataFrames and nulls
         // (but not just nulls; we cannot assume that should create a FrameColumn)
@@ -108,7 +109,7 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
             DataColumn.createFrameColumn(
                 name = "",
                 groups = values.map { it as? AnyFrame ?: DataFrame.empty() }
-            ) as DataColumn<T>
+            ).asDataColumn().cast()
 
         guessType ->
             guessColumnType(
@@ -116,7 +117,7 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
                 values = values.asList(),
                 suggestedType = suggestedType,
                 suggestedTypeIsUpperBound = true,
-            ).cast<T>()
+            ).cast()
 
         else ->
             DataColumn.createValueColumn(

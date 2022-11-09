@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.intellij.lang.annotations.Language
+import java.io.Serializable
 
 /**
  * Simplistic JSON path implementation.
@@ -12,7 +13,7 @@ import org.intellij.lang.annotations.Language
  * `$[1]` will match `$[*]`
  */
 @JvmInline
-public value class JsonPath(@Language("jsonpath") public val path: String = "$") {
+public value class JsonPath(@Language("jsonpath") public val path: String = "$") : Serializable {
 
     public fun append(name: String): JsonPath = JsonPath("$path[\"$name\"]")
 
