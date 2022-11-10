@@ -978,7 +978,7 @@ class OpenApiTests : JupyterReplTestCase() {
             """APIs.readJsonStr($apiGuruDataTripleQuote)
                 .filter {
                     value.versions.value.any {
-                        (updated ?: added) > LocalDateTime(2022, 1, 1, 0, 0, 0)
+                        (updated ?: added).year > 2019
                     }
                 }
             """.trimIndent()

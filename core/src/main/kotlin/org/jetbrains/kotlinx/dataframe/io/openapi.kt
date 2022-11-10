@@ -31,15 +31,12 @@ import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
 import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.api.KeyValueProperty
-import org.jetbrains.kotlinx.dataframe.api.any
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.convert
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.gather
 import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.isEmpty
-import org.jetbrains.kotlinx.dataframe.api.isNA
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
@@ -55,9 +52,6 @@ import org.jetbrains.kotlinx.dataframe.codeGen.name
 import org.jetbrains.kotlinx.dataframe.codeGen.plus
 import org.jetbrains.kotlinx.dataframe.codeGen.toNotNullable
 import org.jetbrains.kotlinx.dataframe.codeGen.toNullable
-import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
-import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
-import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
 import org.jetbrains.kotlinx.dataframe.impl.toCamelCaseByDelimiters
 import org.jetbrains.kotlinx.dataframe.io.AdditionalProperty.Companion.convertToAdditionalProperties
@@ -518,25 +512,6 @@ public interface AdditionalProperty<T> : KeyValueProperty<T> {
             ) as DataFrame<T>
         }
     }
-}
-
-private fun AnyFrame.isPracticallyNotEmpty() = !isPracticallyEmpty()
-
-private fun AnyFrame.isPracticallyEmpty(): Boolean {
-    if (isEmpty()) return true
-    for (column in columns()) {
-        when (column) {
-            is ColumnGroup<*> ->
-                if (!column.isPracticallyEmpty()) return false
-
-            is ValueColumn<*> ->
-                if (column.any { !it.isNA }) return false
-
-            is FrameColumn<*> ->
-                if (column.any { !it.isPracticallyEmpty() }) return false
-        }
-    }
-    return true
 }
 
 /**

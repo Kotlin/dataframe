@@ -82,7 +82,7 @@ internal fun AnyFrame.convertToImpl(
 
     fun AnyFrame.convertToSchema(schema: DataFrameSchema, path: ColumnPath): AnyFrame {
         // if current frame is empty
-        if (this.isEmpty() /* && !schema.columns.all { it.value.type.isMarkedNullable }*/) {
+        if (this.isEmpty()) {
             return schema.createEmptyDataFrame()
         }
 
