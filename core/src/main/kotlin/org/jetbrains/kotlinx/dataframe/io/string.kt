@@ -46,7 +46,8 @@ internal fun AnyFrame.renderToString(
     val values = cols.map {
         val top = it.take(rowsLimit)
         val precision = if (top.isNumber()) top.asNumbers().scale() else 0
-        val decimalFormat = if (precision >= 0) RendererDecimalFormat.fromPrecision(precision) else RendererDecimalFormat.of("%e")
+        val decimalFormat =
+            if (precision >= 0) RendererDecimalFormat.fromPrecision(precision) else RendererDecimalFormat.of("%e")
         top.values().map {
             renderValueForStdout(it, valueLimit, decimalFormat = decimalFormat).truncatedContent
         }
@@ -110,7 +111,7 @@ internal fun AnyFrame.renderToString(
 internal val valueToStringLimitDefault = 1000
 internal val valueToStringLimitForRowAsTable = 50
 
-public fun AnyRow.getVisibleValues(): List<Pair<String, Any?>> {
+internal fun AnyRow.getVisibleValues(): List<Pair<String, Any?>> {
     fun Any?.skip(): Boolean = when (this) {
         null -> true
         is List<*> -> this.isEmpty()
@@ -149,6 +150,7 @@ internal fun renderValueForRowTable(value: Any?, forHtml: Boolean): RenderedCont
         val content = if (value.nrow == 1) it + " " + value[0].toString() else it
         RenderedContent.textWithLength(content, "DataFrame".length)
     }
+
     is AnyRow -> RenderedContent.textWithLength("DataRow $value", "DataRow".length)
     is Collection<*> -> renderCollectionName(value).let { RenderedContent.textWithLength("$it $value", it.length) }
     else -> if (forHtml) renderValueForHtml(value, valueToStringLimitForRowAsTable, RendererDecimalFormat.DEFAULT)
@@ -158,7 +160,7 @@ internal fun renderValueForRowTable(value: Any?, forHtml: Boolean): RenderedCont
 internal fun renderValueForStdout(
     value: Any?,
     limit: Int = valueToStringLimitDefault,
-    decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT
+    decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
 ): RenderedContent =
     renderValueToString(value, decimalFormat).truncate(limit)
         .let { it.copy(truncatedContent = it.truncatedContent.escapeNewLines()) }

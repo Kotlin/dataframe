@@ -76,7 +76,7 @@ public sealed interface CodeGenerationReadResult {
 
     public class Success(
         public val code: CodeWithConverter,
-        public val format: SupportedFormat,
+        public val format: SupportedCodeGenerationFormat,
     ) : CodeGenerationReadResult {
         public fun getReadDfMethod(pathRepresentation: String?): DefaultReadDfMethod {
             return format.createDefaultReadMethod(pathRepresentation)
