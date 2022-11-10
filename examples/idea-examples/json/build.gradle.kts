@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.api.JsonPath
 plugins {
     application
     kotlin("jvm")
-    id("org.jetbrains.kotlinx.dataframe") version "0.9.0-dev"
+    id("org.jetbrains.kotlinx.dataframe")
 }
 
 repositories {
