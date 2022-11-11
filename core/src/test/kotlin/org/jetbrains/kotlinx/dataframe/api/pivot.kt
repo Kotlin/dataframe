@@ -52,7 +52,9 @@ class PivotTests {
 
     @Test
     fun `pivot groupBy inward by default`() {
-        val df = dataFrameOf("a", "b")(
+        val df = dataFrameOf(
+            "a", "b",
+        )(
             2, "a",
             4, "b",
             3, "c",
@@ -93,7 +95,11 @@ class PivotTests {
 
     @Test
     fun `pivot two in aggregate`() {
-        val df = dataFrameOf("a" to listOf(1, 2, 2), "b" to listOf("q", "w", "q"), "c" to listOf("w", "q", "w"))
+        val df = dataFrameOf(
+            "a" to listOf(1, 2, 2),
+            "b" to listOf("q", "w", "q"),
+            "c" to listOf("w", "q", "w"),
+        )
 
         val expected = dataFrameOf(
             columnOf(1, 2) named "a",
@@ -136,7 +142,11 @@ class PivotTests {
             2, 1, 3,
             2, 1, 5
         )
-        df.pivot("a", inward = false).groupBy("b").default(-1).last().with { "c"<Int>() } shouldBe
+        df.pivot("a", inward = false)
+            .groupBy("b")
+            .default(-1)
+            .last()
+            .with { "c"<Int>() } shouldBe
             dataFrameOf("b", "1", "2")(
                 2, 3, -1,
                 0, 2, -1,
