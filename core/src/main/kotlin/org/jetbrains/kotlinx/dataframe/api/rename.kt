@@ -63,22 +63,22 @@ public fun <T> DataFrame<T>.renameToCamelCase(): DataFrame<T> {
         }.with { it.renameToCamelCase() }
 }
 
-public class Into : AbstractSchemaModificationInterpreter() {
-    public val Arguments.receiver: RenameClauseApproximation by renameClause()
-    public val Arguments.newNames: List<String> by varargString()
-
-    override fun Arguments.interpret(): PluginDataFrameSchema {
-        receiver.schema
-
-//        DataFrameImpl()
-        TODO()
-    }
-}
+//public class Into : AbstractSchemaModificationInterpreter() {
+//    public val Arguments.receiver: RenameClauseApproximation by renameClause()
+//    public val Arguments.newNames: List<String> by varargString()
+//
+//    override fun Arguments.interpret(): PluginDataFrameSchema {
+//        receiver.schema
+//
+////        DataFrameImpl()
+//        TODO()
+//    }
+//}
 
 public fun <T, C> RenameClause<T, C>.into(vararg newColumns: ColumnReference<*>): DataFrame<T> =
     into(*newColumns.map { it.name() }.toTypedArray())
 
-@Interpretable(Into::class)
+//@Interpretable(Into::class)
 public fun <T, C> RenameClause<T, C>.into(vararg newNames: String): DataFrame<T> =
     df.move(columns).intoIndexed { col, index ->
         col.path.dropLast(1) + newNames[index]

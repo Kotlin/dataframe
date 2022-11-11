@@ -70,18 +70,25 @@ public class From : AbstractInterpreter<Unit>() {
     }
 }
 
-public class AddDslApproximation(public val columns: MutableList<SimpleCol>)
+public class Into : AbstractInterpreter<Unit>() {
+    public val Arguments.dsl: AddDslApproximation by arg(lens = Interpreter.Value)
+    public val Arguments.receiver: TypeApproximation by type()
+    public val Arguments.name: String by string()
 
-public fun AddDslApproximation(columns: List<Pair<String, PluginColumnSchema>>): AddDslApproximation {
-    return AddDslApproximation(columns.mapTo(mutableListOf()) { SimpleCol(it.first, it.second.type) })
+    override fun Arguments.interpret() {
+        dsl.columns += SimpleCol(name, receiver)
+    }
 }
+
+
+public class AddDslApproximation(public val columns: MutableList<SimpleCol>)
 
 public class AddWithDsl : AbstractSchemaModificationInterpreter() {
     public val Arguments.receiver: PluginDataFrameSchema by dataFrame()
     public val Arguments.body: (Any) -> Unit by arg(lens = Interpreter.Dsl)
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        val addDsl = AddDslApproximation(listOf())
+        val addDsl = AddDslApproximation(receiver.columns().toMutableList())
         body(addDsl)
         return PluginDataFrameSchema(addDsl.columns)
     }

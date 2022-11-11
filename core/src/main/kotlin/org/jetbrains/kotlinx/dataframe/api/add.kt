@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.annotations.Add
 import org.jetbrains.kotlinx.dataframe.annotations.AddWithDsl
 import org.jetbrains.kotlinx.dataframe.annotations.From
 import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Into
 import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.BaseColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
@@ -192,6 +193,7 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
     public inline infix fun <reified R> ColumnAccessor<R>.from(column: ColumnReference<R>): Boolean = name() from column
     public inline infix fun <reified R> KProperty<R>.from(column: ColumnReference<R>): Boolean = name from column
 
+    @Interpretable(Into::class)
     public infix fun Column.into(name: String): Boolean = add(rename(name))
     public infix fun <R> ColumnReference<R>.into(column: ColumnAccessor<R>): Boolean = into(column.name())
     public infix fun <R> ColumnReference<R>.into(column: KProperty<R>): Boolean = into(column.name)
@@ -212,6 +214,7 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
     public infix fun AddGroup<T>.into(column: AnyColumnGroupAccessor): Unit = into(column.name())
 }
 
+@Refine("add_2")
 @Interpretable(AddWithDsl::class)
 public fun <T> DataFrame<T>.add(body: AddDsl<T>.() -> Unit): DataFrame<T> {
     val dsl = AddDsl(this)
