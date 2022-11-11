@@ -198,7 +198,11 @@ internal fun <T> guessColumnType(
     nullable: Boolean? = null,
 ): DataColumn<T> {
     val detectType = suggestedType == null || suggestedTypeIsUpperBound
-    val type = if (detectType) guessValueType(values.asSequence(), suggestedType) else suggestedType!!
+    val type = if (detectType) guessValueType(
+        values = values.asSequence(),
+        upperBound = suggestedType,
+        listifyValues = false,
+    ) else suggestedType!!
 
     return when (type.classifier!! as KClass<*>) {
         DataRow::class -> {
@@ -230,7 +234,7 @@ internal fun <T> guessColumnType(
                         it
                     }
 
-                    else -> {
+                    else -> { // if !detectType and suggestedType is a list, we wrap the values in lists
                         if (isListOfRows != false) isListOfRows = it is AnyRow
                         listOf(it)
                     }

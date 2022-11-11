@@ -63,7 +63,9 @@ import kotlin.reflect.typeOf
 
 class PivotTests {
 
-    val df = dataFrameOf("name", "key", "value")(
+    val df = dataFrameOf(
+        "name", "key", "value"
+    )(
         "Alice", "age", 15,
         "Alice", "city", "London",
         "Alice", "weight", 54,
@@ -75,10 +77,12 @@ class PivotTests {
         "Alice", "age", 55,
     )
 
-    val defaultExpected = dataFrameOf("name", "age", "city", "weight")(
+    val defaultExpected = dataFrameOf(
+        "name", "age", "city", "weight",
+    )(
         "Alice", listOf(15, 55), "London", 54,
         "Bob", listOf(45), "-", 87,
-        "Charlie", listOf(20), "Moscow", "-"
+        "Charlie", listOf(20), "Moscow", "-",
     )
 
 // Generated Code
@@ -204,7 +208,11 @@ class PivotTests {
 
     @Test
     fun `pivot two columns with then`() {
-        val pivoted = typed.add("index") { 1 }.pivot(inward = false) { name then key }.groupBy("index").with { value }
+        val pivoted = typed
+            .add("index") { 1 }
+            .pivot(inward = false) { name then key }
+            .groupBy("index")
+            .with { value }
 
         pivoted.columnNames() shouldBe listOf("index") + typed.name.distinct().values()
         pivoted.rowsCount() shouldBe 1
@@ -258,8 +266,10 @@ class PivotTests {
     @Test
     fun `pivot two values without groupBy`() {
         typed.print(columnTypes = true)
-        val pivotedRow =
-            typed.pivot { name then key }.values { value and (value.map { it?.javaClass?.kotlin } into "type") }
+        val pivotedRow = typed
+            .pivot { name then key }
+            .values { value and (value.map { it?.javaClass?.kotlin } into "type") }
+
         val pivotedDf = pivotedRow.df()
         pivotedRow.columnsCount() shouldBe typed.name.countDistinct()
 
