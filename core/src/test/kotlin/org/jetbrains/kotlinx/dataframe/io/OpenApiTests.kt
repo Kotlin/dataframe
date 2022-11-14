@@ -19,21 +19,24 @@ class OpenApiTests : JupyterReplTestCase() {
     private val openApi = OpenApi()
     private val additionalImports = openApi.createDefaultReadMethod().additionalImports.joinToString("\n")
 
-    private fun execGeneratedCode(code: CodeWithConverter): CodeWithConverter {
+    private fun execGeneratedCode(code: CodeWithConverter, name: String): CodeWithConverter {
         @Language("kts") val res1 = exec(
             """
             $additionalImports
-            ${code.declarations}
+            ${code.converter(name)}
             """.trimLines()
         )
         return code
     }
 
-    private fun execGeneratedCode(file: File) = execGeneratedCode(code = openApi.readCodeForGeneration(file, true))
-    private fun execGeneratedCode(stream: InputStream) =
-        execGeneratedCode(code = openApi.readCodeForGeneration(stream, true))
+    private fun execGeneratedCode(file: File, name: String) =
+        execGeneratedCode(code = openApi.readCodeForGeneration(file, true), name = name)
 
-    private fun execGeneratedCode(text: String) = execGeneratedCode(code = openApi.readCodeForGeneration(text, true))
+    private fun execGeneratedCode(stream: InputStream, name: String) =
+        execGeneratedCode(code = openApi.readCodeForGeneration(stream, true), name = name)
+
+    private fun execGeneratedCode(text: String, name: String) =
+        execGeneratedCode(code = openApi.readCodeForGeneration(text, true), name = name)
 
     private val petstoreJson = File("src/test/resources/petstore.json")
     private val petstoreAdvancedJson = File("src/test/resources/petstore_advanced.json")
@@ -74,7 +77,7 @@ class OpenApiTests : JupyterReplTestCase() {
     private val somePetsTripleQuotes = "\"\"\"$somePets\"\"\""
 
     private fun simpleTest(file: File) {
-        val code = execGeneratedCode(file).declarations.trimLines()
+        val code = execGeneratedCode(file, ::simpleTest.name).converter(::simpleTest.name).trimLines()
 
         @Language("kt") val petInterface = """
             @DataSchema(isOpen = false)
@@ -133,7 +136,7 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(errorExtensions)
 
-        @Language("kts") val res2 = execRaw("Pet.readJsonStr($somePetsTripleQuotes)") as AnyFrame
+        @Language("kts") val res2 = execRaw("${::simpleTest.name}.Pet.readJsonStr($somePetsTripleQuotes)") as AnyFrame
     }
 
     @Test
@@ -148,7 +151,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
     @Test
     fun `Advanced test Petstore Json`() {
-        val code = execGeneratedCode(petstoreAdvancedJson).declarations.trimLines()
+        val code = execGeneratedCode(
+            file = petstoreAdvancedJson,
+            name = ::`Advanced test Petstore Json`.name
+        ).converter(::`Advanced test Petstore Json`.name).trimLines()
 
         @Language("kts") val statusInterface = """
             enum class Status(override val value: kotlin.String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
@@ -431,20 +437,24 @@ class OpenApiTests : JupyterReplTestCase() {
 
         code should haveSubstring(apiResponseExtensions)
 
-        @Language("kts") val res2 = execRaw("Pet.readJsonStr(\"\"\"$someAdvancedPetsData\"\"\")") as AnyFrame
+        @Language("kts") val res2 =
+            execRaw("`${::`Advanced test Petstore Json`.name}`.Pet.readJsonStr(\"\"\"$someAdvancedPetsData\"\"\")") as AnyFrame
 
-        @Language("kts") val res3 = execRaw("Order.readJsonStr(\"\"\"$someAdvancedOrdersData\"\"\")") as AnyFrame
+        @Language("kts") val res3 =
+            execRaw("`${::`Advanced test Petstore Json`.name}`.Order.readJsonStr(\"\"\"$someAdvancedOrdersData\"\"\")") as AnyFrame
 
         shouldThrowAny {
             @Language("kts") val res4 =
-                execRaw("Order.readJsonStr(\"\"\"$someAdvancedFailingOrdersData\"\"\")") as AnyFrame
+                execRaw("`${::`Advanced test Petstore Json`.name}`.Order.readJsonStr(\"\"\"$someAdvancedFailingOrdersData\"\"\")") as AnyFrame
             res4
         }
     }
 
     @Test
     fun `Other advanced test`() {
-        val code = execGeneratedCode(advancedExample).declarations.trimLines()
+        val code =
+            execGeneratedCode(advancedExample, ::`Other advanced test`.name).converter(::`Other advanced test`.name)
+                .trimLines()
 
         @Language("kt") val breedEnum = """
             enum class Breed(override val value: kotlin.String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
@@ -944,38 +954,38 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val res1 = execRaw(
-            "Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Cat\" }.convertTo<Cat>(ExcessiveColumns.Remove)"
+            "`${::`Other advanced test`.name}`.Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Cat\" }.convertTo<`${::`Other advanced test`.name}`.Cat>(ExcessiveColumns.Remove)"
         ) as AnyFrame
         val res1Schema = res1.schema()
 
         @Language("kts")
         val res2 = execRaw(
-            "Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Dog\" }.convertTo<Dog>(ExcessiveColumns.Remove)"
+            "`${::`Other advanced test`.name}`.Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Dog\" }.convertTo<`${::`Other advanced test`.name}`.Dog>(ExcessiveColumns.Remove)"
         ) as AnyFrame
         val res2Schema = res2.schema()
 
         @Language("kts")
         val res3 = execRaw(
-            "Error.readJsonStr(\"\"\"$advancedErrorData\"\"\")"
+            "`${::`Other advanced test`.name}`.Error.readJsonStr(\"\"\"$advancedErrorData\"\"\")"
         ) as AnyFrame
         val res3Schema = res3.schema()
 
         @Language("kts")
         val res4 = execRaw(
-            "ErrorHolder.readJsonStr(\"\"\"$advancedErrorHolderData\"\"\")"
+            "`${::`Other advanced test`.name}`.ErrorHolder.readJsonStr(\"\"\"$advancedErrorHolderData\"\"\")"
         ) as AnyFrame
         val res4Schema = res4.schema()
     }
 
     @Test
     fun `Apis guru Test`() {
-        val code = execGeneratedCode(apiGuruYaml).declarations
+        val code = execGeneratedCode(apiGuruYaml, ::`Apis guru Test`.name).converter(::`Apis guru Test`.name)
 
         val apiGuruDataTripleQuote = "\"\"\"${apiGuruData.replace("$", "\${'$'}")}\"\"\""
 
         @Language("kts")
         val df = execRaw(
-            """APIs.readJsonStr($apiGuruDataTripleQuote)
+            """`${::`Apis guru Test`.name}`.APIs.readJsonStr($apiGuruDataTripleQuote)
                 .filter {
                     value.versions.value.any {
                         (updated ?: added).year > 2019
@@ -989,14 +999,14 @@ class OpenApiTests : JupyterReplTestCase() {
 
     @Test
     fun `MLC Test 1`() {
-        val code = execGeneratedCode(mlcYaml).declarations
+        val code = execGeneratedCode(mlcYaml, ::`MLC Test 1`.name).converter(::`MLC Test 1`.name)
         println(code)
 
         val mlcLocationsWithPeopleDataTripleQuote = "\"\"\"${mlcLocationsWithPeopleData.replace("$", "\${'$'}")}\"\"\""
 
         @Language("kts")
         val df1 = execRaw(
-            """LocationsWithPeople.readJsonStr($mlcLocationsWithPeopleDataTripleQuote)
+            """`${::`MLC Test 1`.name}`.LocationsWithPeople.readJsonStr($mlcLocationsWithPeopleDataTripleQuote)
                     .also { it.print() }
             """.trimIndent()
         ) as AnyFrame
@@ -1006,14 +1016,14 @@ class OpenApiTests : JupyterReplTestCase() {
 
     @Test
     fun `MLC Test 2`() {
-        val code = execGeneratedCode(mlcYaml).declarations
+        val code = execGeneratedCode(mlcYaml, ::`MLC Test 2`.name).converter(::`MLC Test 2`.name)
         println(code)
 
         val mlcPeopleWithLocationDataTripleQuote = "\"\"\"${mlcPeopleWithLocationData.replace("$", "\${'$'}")}\"\"\""
 
         @Language("kts")
         val df2 = execRaw(
-            """PeopleWithLocation.readJsonStr($mlcPeopleWithLocationDataTripleQuote)
+            """`${::`MLC Test 2`.name}`.PeopleWithLocation.readJsonStr($mlcPeopleWithLocationDataTripleQuote)
                     .also { it.print() }
             """.trimIndent()
         ) as AnyFrame

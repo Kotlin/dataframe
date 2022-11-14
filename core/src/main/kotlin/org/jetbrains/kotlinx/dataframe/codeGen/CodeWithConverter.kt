@@ -18,7 +18,7 @@ public data class CodeWithConverter(val declarations: Code, val converter: (Vari
 
 public infix fun CodeWithConverter.merge(other: CodeWithConverter): CodeWithConverter = CodeWithConverter(
     declarations = declarations + "\n" + other.declarations,
-    converter = this.converter,
+    converter = { name -> converter(name) + "\n" + other.converter(name) }
 )
 
 public operator fun CodeWithConverter.plus(other: CodeWithConverter): CodeWithConverter = merge(other)

@@ -1,7 +1,5 @@
 @file:ImportDataSchema(
     path = "src/main/resources/ApiGuruOpenApi.yaml",
-    // no name needed since we're generating the names using OpenApi,
-    // but it's still required when using multiple ImportDataSchemas
     name = "ApiGuruOpenApi",
 )
 
