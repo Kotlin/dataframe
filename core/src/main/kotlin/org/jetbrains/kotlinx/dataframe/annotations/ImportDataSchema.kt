@@ -12,7 +12,7 @@ import org.jetbrains.kotlinx.dataframe.io.JSON
  * Generated data schema has properties inferred from data and a companion object with `read method`.
  * `read method` is either `readCSV` or `readJson` that returns `DataFrame<name>`
  *
- * @param name name of the generated interface, irrelevant for OpenAPI
+ * @param name name of the generated interface
  * @param path URL or relative path to data.
  * if path starts with protocol (http, https, ftp), it's considered a URL. Otherwise, it's treated as relative path.
  * By default, it will be resolved relatively to project dir, i.e. File(projectDir, path)
@@ -28,7 +28,7 @@ import org.jetbrains.kotlinx.dataframe.io.JSON
 @Target(AnnotationTarget.FILE)
 @Repeatable
 public annotation class ImportDataSchema(
-    val name: String = "DataSchema",
+    val name: String,
     val path: String,
     val visibility: DataSchemaVisibility = DataSchemaVisibility.IMPLICIT_PUBLIC,
     val normalizationDelimiters: CharArray = ['\t', ' ', '_'],

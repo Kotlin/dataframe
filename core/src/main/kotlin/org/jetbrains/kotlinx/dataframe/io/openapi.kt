@@ -76,12 +76,6 @@ import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
-public fun main() {
-    val code =
-        OpenApi().readCodeForGeneration(File("/mnt/data/Projects/dataframe/core/src/test/resources/ApiGuruOpenApi.yaml"))
-    println(code.declarations)
-}
-
 /**
  * Allows for OpenApi type schemas to be converted to [DataSchema] interfaces.
  */
@@ -341,6 +335,7 @@ public fun readOpenApiAsString(
  * @param visibility the visibility of the generated marker classes.
  *
  * @return a [CodeWithConverter] object, representing the generated code.
+ *  Use converter to change name of the wrapping object.
  */
 private fun readOpenApi(
     swaggerParseResult: SwaggerParseResult,
@@ -361,18 +356,33 @@ private fun readOpenApi(
     // generate the code for the markers in result
     val codeGenerator = CodeGenerator.create(useFqNames = true)
 
-    return result.map { marker ->
-        codeGenerator.generate(
-            marker = marker.withVisibility(visibility),
-            interfaceMode = when (marker) {
-                is OpenApiMarker.Enum -> InterfaceGenerationMode.Enum
-                is OpenApiMarker.Interface -> InterfaceGenerationMode.WithFields
-                is OpenApiMarker.TypeAlias, is OpenApiMarker.MarkerAlias -> InterfaceGenerationMode.TypeAlias
-            },
-            extensionProperties = extensionProperties,
-            readDfMethod = if (marker is OpenApiMarker.Interface) DefaultReadOpenApiMethod else null,
-        )
-    }.reduce { a, b -> a + b }
+    fun toCode(marker: OpenApiMarker) = codeGenerator.generate(
+        marker = marker.withVisibility(visibility),
+        interfaceMode = when (marker) {
+            is OpenApiMarker.Enum -> InterfaceGenerationMode.Enum
+            is OpenApiMarker.Interface -> InterfaceGenerationMode.WithFields
+            is OpenApiMarker.TypeAlias, is OpenApiMarker.MarkerAlias -> InterfaceGenerationMode.TypeAlias
+        },
+        extensionProperties = extensionProperties,
+        readDfMethod = if (marker is OpenApiMarker.Interface) DefaultReadOpenApiMethod else null,
+    )
+
+    val (typeAliases, markers) = result.partition { it is OpenApiMarker.TypeAlias || it is OpenApiMarker.MarkerAlias }
+    val generatedMarkers = markers.map(::toCode).reduceOrNull(CodeWithConverter::plus)
+    val generatedTypeAliases = typeAliases.map(::toCode).reduceOrNull(CodeWithConverter::plus)
+
+    fun getCode(singletonObjectName: ValidFieldName): String =
+        """
+         |object ${ValidFieldName.of(objectName).quotedIfNeeded} {
+         |    ${generatedMarkers?.declarations?.replace("\n", "\n|    ") ?: ""}
+         |}
+         |${generatedTypeAliases?.declarations?.replace("\n", "\n|") ?: ""}
+     """.trimMargin()
+
+    return CodeWithConverter(
+        declarations = getCode(openApi.info?.title ?: "OpenApiDataSchemas"),
+        converter = ::getCode,
+    )
 }
 
 private interface IsObjectOrList {
@@ -767,6 +777,9 @@ private sealed class OpenApiMarker private constructor(
 
         override fun withVisibility(visibility: MarkerVisibility): MarkerAlias =
             MarkerAlias(superMarker, nullable, name, visibility)
+
+        fun withSuperMarker(superMarker: OpenApiMarker): MarkerAlias =
+            MarkerAlias(superMarker, nullable, name, visibility)
     }
 }
 
@@ -787,7 +800,7 @@ private sealed class OpenApiMarker private constructor(
  * Although recommended, you can still define an object anonymously directly as a type. For this, we have
  * `produceAdditionalMarker` since during the conversion of a schema -> [Marker] we get an additional new [Marker].
  */
-private fun Map<String, Schema<*>>.toMarkers(): List<OpenApiMarker> {
+private fun Map<String, Schema<*>>.toMarkers(singletonObjectName: ValidFieldName): List<OpenApiMarker> {
     // Convert the schemas to toMarker calls that can be repeated to resolve references.
     val retrievableMarkers = mapValues { (typeName, value) ->
         RetrievableMarker { getRefMarker, produceAdditionalMarker ->
@@ -973,6 +986,7 @@ private fun Schema<*>.toMarker(
     typeName: String,
     getRefMarker: GetRefMarker,
     produceAdditionalMarker: ProduceAdditionalMarker,
+    singletonObjectName: ValidFieldName,
     required: List<String> = emptyList(),
 ): MarkerResult {
     @Suppress("NAME_SHADOWING")
@@ -1706,6 +1720,7 @@ private fun OpenApiType.toFieldType(
     getRefMarker: GetRefMarker,
     produceAdditionalMarker: ProduceAdditionalMarker,
     required: List<String>,
+    singletonObjectName: ValidFieldName,
 ): FieldTypeResult {
     return when (this) {
         is OpenApiType.Any -> FieldTypeResult.FieldType(getType(nullable))
