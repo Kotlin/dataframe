@@ -8,6 +8,7 @@
 package org.jetbrains.kotlinx.dataframe.examples.openapi
 
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.print
 import org.jetbrains.kotlinx.dataframe.examples.openapi.gradle.APIs as GradleAPIs
 import org.jetbrains.kotlinx.dataframe.examples.openapi.gradle.Metrics as GradleMetrics
@@ -28,10 +29,10 @@ fun main() {
  * (We use import aliases to avoid clashes with the KSP example)
  */
 private fun gradle() {
-    val apis = GradleAPIs.readJson("examples/idea-examples/openapi/src/main/resources/ApiGuruSample.json")
+    val apis = GradleAPIs.readJson("examples/idea-examples/json/src/main/resources/ApiGuruSample.json")
     apis.print(columnTypes = true, title = true, borders = true)
 
-    val metrics = GradleMetrics.readJson("examples/idea-examples/openapi/src/main/resources/apiGuruMetrics.json")
+    val metrics = GradleMetrics.readJson("examples/idea-examples/json/src/main/resources/apiGuruMetrics.json")
     metrics.print(columnTypes = true, title = true, borders = true)
 }
 
@@ -40,9 +41,11 @@ private fun gradle() {
  * Ctrl+Click on [APIs] or [Metrics] to see the generated code.
  */
 private fun ksp() {
-    val apis = APIs.readJson("examples/idea-examples/openapi/src/main/resources/ApiGuruSample.json")
+    val apis = APIs.readJson("examples/idea-examples/json/src/main/resources/ApiGuruSample.json")
     apis.print(columnTypes = true, title = true, borders = true)
 
-    val metrics = Metrics.readJson("examples/idea-examples/openapi/src/main/resources/apiGuruMetrics.json")
+    apis.filter { value.preferred == "" }
+
+    val metrics = Metrics.readJson("examples/idea-examples/json/src/main/resources/apiGuruMetrics.json")
     metrics.print(columnTypes = true, title = true, borders = true)
 }

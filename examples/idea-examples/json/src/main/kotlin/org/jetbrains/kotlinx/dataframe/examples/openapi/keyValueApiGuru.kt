@@ -39,7 +39,7 @@ fun main() {
  * Ctrl+Click on [MetricsNoKeyValue] to see the generated code.
  */
 private fun gradleNoKeyValue() {
-    val df = MetricsNoKeyValue.readJson("examples/idea-examples/openapi/src/main/resources/apiGuruMetrics.json")
+    val df = MetricsNoKeyValue.readJson("examples/idea-examples/json/src/main/resources/apiGuruMetrics.json")
     df.print(columnTypes = true, title = true, borders = true)
 }
 
@@ -48,7 +48,7 @@ private fun gradleNoKeyValue() {
  * Ctrl+Click on [MetricsKeyValue] to see the generated code.
  */
 private fun gradleKeyValue() {
-    val df = MetricsKeyValue.readJson("examples/idea-examples/openapi/src/main/resources/apiGuruMetrics.json")
+    val df = MetricsKeyValue.readJson("examples/idea-examples/json/src/main/resources/apiGuruMetrics.json")
     df.print(columnTypes = true, title = true, borders = true)
 }
 
@@ -59,7 +59,7 @@ private fun gradleKeyValue() {
  * Note the many generated interfaces. You can imagine larger files crashing the code generator.
  */
 private fun kspNoKeyValue() {
-    val df = APIsNoKeyValue.readJson("examples/idea-examples/openapi/src/main/resources/ApiGuruSample.json")
+    val df = APIsNoKeyValue.readJson("examples/idea-examples/json/src/main/resources/ApiGuruSample.json")
     df.print(columnTypes = true, title = true, borders = true)
 }
 
@@ -68,7 +68,7 @@ private fun kspNoKeyValue() {
  * Ctrl+Click on [APIsKeyValue] to see the generated code.
  */
 private fun kspKeyValue() {
-    val df = APIsKeyValue.readJson("examples/idea-examples/openapi/src/main/resources/ApiGuruSample.json")
+    val df = APIsKeyValue.readJson("examples/idea-examples/json/src/main/resources/ApiGuruSample.json")
         .value.first()
 
     df.print(columnTypes = true, title = true, borders = true)
