@@ -35,8 +35,8 @@ import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
-import org.jetbrains.kotlinx.dataframe.io.HtmlData
 import org.jetbrains.kotlinx.jupyter.api.HTML
+import org.jetbrains.kotlinx.jupyter.api.HtmlData
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.VariableName
 import org.jetbrains.kotlinx.jupyter.api.declare
@@ -76,7 +76,7 @@ internal class Integration : JupyterIntegration() {
         }
 
         with(JupyterHtmlRenderer(config.display, this)) {
-            render<HtmlData> { it.toJupyter() }
+            render<HtmlData> { notebook.renderHtmlAsIFrame(it) }
             render<AnyRow>({ it.toDataFrame() }, { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" })
             render<ColumnGroup<*>>({ it.asDataFrame() }, { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" })
             render<AnyCol>({ dataFrameOf(it) }, { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" })
