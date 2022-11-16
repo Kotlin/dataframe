@@ -426,6 +426,9 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FqNames)
 }
 
 public fun CodeWithConverter.toStandaloneSnippet(packageName: String, additionalImports: List<String>): String =
+    declarations.toStandaloneSnippet(packageName, additionalImports)
+
+public fun Code.toStandaloneSnippet(packageName: String, additionalImports: List<String>): String =
     buildString {
         if (packageName.isNotEmpty()) {
             appendLine("package $packageName")
@@ -443,7 +446,7 @@ public fun CodeWithConverter.toStandaloneSnippet(packageName: String, additional
             appendLine(it)
         }
         appendLine()
-        appendLine(declarations)
+        appendLine(this@toStandaloneSnippet)
     }
 
 public fun CodeGenResult.toStandaloneSnippet(packageName: String, additionalImports: List<String>): String =

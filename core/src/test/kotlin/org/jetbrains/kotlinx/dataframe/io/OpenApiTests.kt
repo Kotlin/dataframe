@@ -9,6 +9,8 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.api.isNotEmpty
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
+import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
+import org.jetbrains.kotlinx.dataframe.jupyter.importDataSchema
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
 import java.io.File
@@ -77,7 +79,9 @@ class OpenApiTests : JupyterReplTestCase() {
     private val somePetsTripleQuotes = "\"\"\"$somePets\"\"\""
 
     private fun simpleTest(file: File) {
-        val code = execGeneratedCode(file, ::simpleTest.name).converter(::simpleTest.name).trimLines()
+        val fullFunctionName = ValidFieldName.of(::simpleTest.name)
+        val functionName = fullFunctionName.quotedIfNeeded
+        val code = execGeneratedCode(file, fullFunctionName.unquoted).converter(fullFunctionName.unquoted).trimLines()
 
         @Language("kt") val petInterface = """
             @DataSchema(isOpen = false)
@@ -91,24 +95,24 @@ class OpenApiTests : JupyterReplTestCase() {
         code should haveSubstring(petInterface)
 
         @Language("kt") val petExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long> @JvmName("Pet_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.id: kotlin.Long @JvmName("Pet_id") get() = this["id"] as kotlin.Long
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullablePet_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.id: kotlin.Long? @JvmName("NullablePet_id") get() = this["id"] as kotlin.Long?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Pet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.name: kotlin.String @JvmName("Pet_name") get() = this["name"] as kotlin.String
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.name: kotlin.String? @JvmName("NullablePet_name") get() = this["name"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Pet_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.tag: kotlin.String? @JvmName("Pet_tag") get() = this["tag"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.tag: kotlin.String? @JvmName("NullablePet_tag") get() = this["tag"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long> @JvmName("Pet_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.id: kotlin.Long @JvmName("Pet_id") get() = this["id"] as kotlin.Long
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullablePet_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.id: kotlin.Long? @JvmName("NullablePet_id") get() = this["id"] as kotlin.Long?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Pet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.name: kotlin.String @JvmName("Pet_name") get() = this["name"] as kotlin.String
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.name: kotlin.String? @JvmName("NullablePet_name") get() = this["name"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Pet_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.tag: kotlin.String? @JvmName("Pet_tag") get() = this["tag"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.tag: kotlin.String? @JvmName("NullablePet_tag") get() = this["tag"] as kotlin.String?
         """.trimLines()
 
         code should haveSubstring(petExtensions)
 
         @Language("kt") val petsTypeAlias = """
-            typealias Pets = org.jetbrains.kotlinx.dataframe.DataFrame<Pet>
+            typealias Pets = org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Pet>
         """.trimLines()
 
         code should haveSubstring(petsTypeAlias)
@@ -124,19 +128,19 @@ class OpenApiTests : JupyterReplTestCase() {
         code should haveSubstring(errorInterface)
 
         @Language("kt") val errorExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int> @JvmName("Error_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.code: kotlin.Int @JvmName("Error_code") get() = this["code"] as kotlin.Int
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableError_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.code: kotlin.Int? @JvmName("NullableError_code") get() = this["code"] as kotlin.Int?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.message: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Error_message") get() = this["message"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.message: kotlin.String @JvmName("Error_message") get() = this["message"] as kotlin.String
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.message: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableError_message") get() = this["message"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.message: kotlin.String? @JvmName("NullableError_message") get() = this["message"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int> @JvmName("Error_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error>.code: kotlin.Int @JvmName("Error_code") get() = this["code"] as kotlin.Int
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error?>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableError_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error?>.code: kotlin.Int? @JvmName("NullableError_code") get() = this["code"] as kotlin.Int?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error>.message: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Error_message") get() = this["message"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error>.message: kotlin.String @JvmName("Error_message") get() = this["message"] as kotlin.String
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error?>.message: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableError_message") get() = this["message"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error?>.message: kotlin.String? @JvmName("NullableError_message") get() = this["message"] as kotlin.String?
         """.trimLines()
 
         code should haveSubstring(errorExtensions)
 
-        @Language("kts") val res2 = execRaw("${::simpleTest.name}.Pet.readJsonStr($somePetsTripleQuotes)") as AnyFrame
+        @Language("kts") val res2 = execRaw("$functionName.Pet.readJsonStr($somePetsTripleQuotes)") as AnyFrame
     }
 
     @Test
@@ -151,10 +155,13 @@ class OpenApiTests : JupyterReplTestCase() {
 
     @Test
     fun `Advanced test Petstore Json`() {
+        val fullFunctionName = ValidFieldName.of(::`Advanced test Petstore Json`.name)
+        val functionName = fullFunctionName.quotedIfNeeded
+
         val code = execGeneratedCode(
             file = petstoreAdvancedJson,
-            name = ::`Advanced test Petstore Json`.name
-        ).converter(::`Advanced test Petstore Json`.name).trimLines()
+            name = fullFunctionName.unquoted,
+        ).converter(fullFunctionName.unquoted).trimLines()
 
         @Language("kts") val statusInterface = """
             enum class Status(override val value: kotlin.String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
@@ -173,7 +180,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val petId: kotlin.Long?
                 val quantity: kotlin.Int?
                 val shipDate: kotlinx.datetime.LocalDateTime?
-                val status: Status?
+                val status: $functionName.Status?
                 val complete: kotlin.Boolean?
                 public companion object {
         """.trimLines()
@@ -185,54 +192,54 @@ class OpenApiTests : JupyterReplTestCase() {
             interface Customer {
                 val id: kotlin.Long?
                 val username: kotlin.String?
-                val address: org.jetbrains.kotlinx.dataframe.DataFrame<Address?>
+                val address: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?>
                 public companion object {
         """.trimLines() // address is a nullable array of objects -> DataFrame<Address?>
 
         code should haveSubstring(customerInterface)
 
         @Language("kt") val customerExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Customer>.address: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Address?>> @JvmName("Customer_address") get() = this["address"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Address?>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Customer>.address: org.jetbrains.kotlinx.dataframe.DataFrame<Address?> @JvmName("Customer_address") get() = this["address"] as org.jetbrains.kotlinx.dataframe.DataFrame<Address?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Customer?>.address: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Address?>> @JvmName("NullableCustomer_address") get() = this["address"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Address?>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Customer?>.address: org.jetbrains.kotlinx.dataframe.DataFrame<Address?> @JvmName("NullableCustomer_address") get() = this["address"] as org.jetbrains.kotlinx.dataframe.DataFrame<Address?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Customer>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("Customer_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Customer>.id: kotlin.Long? @JvmName("Customer_id") get() = this["id"] as kotlin.Long?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Customer?>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullableCustomer_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Customer?>.id: kotlin.Long? @JvmName("NullableCustomer_id") get() = this["id"] as kotlin.Long?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Customer>.username: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Customer_username") get() = this["username"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Customer>.username: kotlin.String? @JvmName("Customer_username") get() = this["username"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Customer?>.username: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableCustomer_username") get() = this["username"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Customer?>.username: kotlin.String? @JvmName("NullableCustomer_username") get() = this["username"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Customer>.address: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?>> @JvmName("Customer_address") get() = this["address"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Customer>.address: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?> @JvmName("Customer_address") get() = this["address"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Customer?>.address: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?>> @JvmName("NullableCustomer_address") get() = this["address"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Customer?>.address: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?> @JvmName("NullableCustomer_address") get() = this["address"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Address?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Customer>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("Customer_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Customer>.id: kotlin.Long? @JvmName("Customer_id") get() = this["id"] as kotlin.Long?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Customer?>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullableCustomer_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Customer?>.id: kotlin.Long? @JvmName("NullableCustomer_id") get() = this["id"] as kotlin.Long?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Customer>.username: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Customer_username") get() = this["username"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Customer>.username: kotlin.String? @JvmName("Customer_username") get() = this["username"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Customer?>.username: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableCustomer_username") get() = this["username"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Customer?>.username: kotlin.String? @JvmName("NullableCustomer_username") get() = this["username"] as kotlin.String?
         """.trimLines()
 
         code should haveSubstring(customerExtensions)
 
         @Language("kt") val orderExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Order>.complete: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("Order_complete") get() = this["complete"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Order>.complete: kotlin.Boolean? @JvmName("Order_complete") get() = this["complete"] as kotlin.Boolean?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Order?>.complete: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("NullableOrder_complete") get() = this["complete"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Order?>.complete: kotlin.Boolean? @JvmName("NullableOrder_complete") get() = this["complete"] as kotlin.Boolean?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Order>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("Order_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Order>.id: kotlin.Long? @JvmName("Order_id") get() = this["id"] as kotlin.Long?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Order?>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullableOrder_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Order?>.id: kotlin.Long? @JvmName("NullableOrder_id") get() = this["id"] as kotlin.Long?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Order>.petId: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("Order_petId") get() = this["petId"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Order>.petId: kotlin.Long? @JvmName("Order_petId") get() = this["petId"] as kotlin.Long?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Order?>.petId: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullableOrder_petId") get() = this["petId"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Order?>.petId: kotlin.Long? @JvmName("NullableOrder_petId") get() = this["petId"] as kotlin.Long?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Order>.quantity: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("Order_quantity") get() = this["quantity"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Order>.quantity: kotlin.Int? @JvmName("Order_quantity") get() = this["quantity"] as kotlin.Int?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Order?>.quantity: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableOrder_quantity") get() = this["quantity"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Order?>.quantity: kotlin.Int? @JvmName("NullableOrder_quantity") get() = this["quantity"] as kotlin.Int?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Order>.shipDate: org.jetbrains.kotlinx.dataframe.DataColumn<kotlinx.datetime.LocalDateTime?> @JvmName("Order_shipDate") get() = this["shipDate"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlinx.datetime.LocalDateTime?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Order>.shipDate: kotlinx.datetime.LocalDateTime? @JvmName("Order_shipDate") get() = this["shipDate"] as kotlinx.datetime.LocalDateTime?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Order?>.shipDate: org.jetbrains.kotlinx.dataframe.DataColumn<kotlinx.datetime.LocalDateTime?> @JvmName("NullableOrder_shipDate") get() = this["shipDate"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlinx.datetime.LocalDateTime?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Order?>.shipDate: kotlinx.datetime.LocalDateTime? @JvmName("NullableOrder_shipDate") get() = this["shipDate"] as kotlinx.datetime.LocalDateTime?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Order>.status: org.jetbrains.kotlinx.dataframe.DataColumn<Status?> @JvmName("Order_status") get() = this["status"] as org.jetbrains.kotlinx.dataframe.DataColumn<Status?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Order>.status: Status? @JvmName("Order_status") get() = this["status"] as Status?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Order?>.status: org.jetbrains.kotlinx.dataframe.DataColumn<Status?> @JvmName("NullableOrder_status") get() = this["status"] as org.jetbrains.kotlinx.dataframe.DataColumn<Status?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Order?>.status: Status? @JvmName("NullableOrder_status") get() = this["status"] as Status?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Order>.complete: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("Order_complete") get() = this["complete"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Order>.complete: kotlin.Boolean? @JvmName("Order_complete") get() = this["complete"] as kotlin.Boolean?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Order?>.complete: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("NullableOrder_complete") get() = this["complete"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Order?>.complete: kotlin.Boolean? @JvmName("NullableOrder_complete") get() = this["complete"] as kotlin.Boolean?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Order>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("Order_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Order>.id: kotlin.Long? @JvmName("Order_id") get() = this["id"] as kotlin.Long?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Order?>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullableOrder_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Order?>.id: kotlin.Long? @JvmName("NullableOrder_id") get() = this["id"] as kotlin.Long?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Order>.petId: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("Order_petId") get() = this["petId"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Order>.petId: kotlin.Long? @JvmName("Order_petId") get() = this["petId"] as kotlin.Long?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Order?>.petId: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullableOrder_petId") get() = this["petId"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Order?>.petId: kotlin.Long? @JvmName("NullableOrder_petId") get() = this["petId"] as kotlin.Long?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Order>.quantity: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("Order_quantity") get() = this["quantity"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Order>.quantity: kotlin.Int? @JvmName("Order_quantity") get() = this["quantity"] as kotlin.Int?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Order?>.quantity: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableOrder_quantity") get() = this["quantity"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Order?>.quantity: kotlin.Int? @JvmName("NullableOrder_quantity") get() = this["quantity"] as kotlin.Int?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Order>.shipDate: org.jetbrains.kotlinx.dataframe.DataColumn<kotlinx.datetime.LocalDateTime?> @JvmName("Order_shipDate") get() = this["shipDate"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlinx.datetime.LocalDateTime?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Order>.shipDate: kotlinx.datetime.LocalDateTime? @JvmName("Order_shipDate") get() = this["shipDate"] as kotlinx.datetime.LocalDateTime?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Order?>.shipDate: org.jetbrains.kotlinx.dataframe.DataColumn<kotlinx.datetime.LocalDateTime?> @JvmName("NullableOrder_shipDate") get() = this["shipDate"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlinx.datetime.LocalDateTime?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Order?>.shipDate: kotlinx.datetime.LocalDateTime? @JvmName("NullableOrder_shipDate") get() = this["shipDate"] as kotlinx.datetime.LocalDateTime?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Order>.status: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Status?> @JvmName("Order_status") get() = this["status"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Status?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Order>.status: $functionName.Status? @JvmName("Order_status") get() = this["status"] as $functionName.Status?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Order?>.status: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Status?> @JvmName("NullableOrder_status") get() = this["status"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Status?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Order?>.status: $functionName.Status? @JvmName("NullableOrder_status") get() = this["status"] as $functionName.Status?
         """.trimLines()
 
         code should haveSubstring(orderExtensions)
@@ -250,22 +257,22 @@ class OpenApiTests : JupyterReplTestCase() {
         code should haveSubstring(addressInterface)
 
         @Language("kt") val addressExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Address>.city: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Address_city") get() = this["city"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Address>.city: kotlin.String? @JvmName("Address_city") get() = this["city"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Address?>.city: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableAddress_city") get() = this["city"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Address?>.city: kotlin.String? @JvmName("NullableAddress_city") get() = this["city"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Address>.state: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Address_state") get() = this["state"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Address>.state: kotlin.String? @JvmName("Address_state") get() = this["state"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Address?>.state: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableAddress_state") get() = this["state"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Address?>.state: kotlin.String? @JvmName("NullableAddress_state") get() = this["state"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Address>.street: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Address_street") get() = this["street"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Address>.street: kotlin.String? @JvmName("Address_street") get() = this["street"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Address?>.street: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableAddress_street") get() = this["street"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Address?>.street: kotlin.String? @JvmName("NullableAddress_street") get() = this["street"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Address>.zip: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Address_zip") get() = this["zip"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Address>.zip: kotlin.String? @JvmName("Address_zip") get() = this["zip"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Address?>.zip: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableAddress_zip") get() = this["zip"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Address?>.zip: kotlin.String? @JvmName("NullableAddress_zip") get() = this["zip"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Address>.city: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Address_city") get() = this["city"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Address>.city: kotlin.String? @JvmName("Address_city") get() = this["city"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Address?>.city: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableAddress_city") get() = this["city"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Address?>.city: kotlin.String? @JvmName("NullableAddress_city") get() = this["city"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Address>.state: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Address_state") get() = this["state"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Address>.state: kotlin.String? @JvmName("Address_state") get() = this["state"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Address?>.state: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableAddress_state") get() = this["state"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Address?>.state: kotlin.String? @JvmName("NullableAddress_state") get() = this["state"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Address>.street: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Address_street") get() = this["street"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Address>.street: kotlin.String? @JvmName("Address_street") get() = this["street"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Address?>.street: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableAddress_street") get() = this["street"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Address?>.street: kotlin.String? @JvmName("NullableAddress_street") get() = this["street"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Address>.zip: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Address_zip") get() = this["zip"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Address>.zip: kotlin.String? @JvmName("Address_zip") get() = this["zip"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Address?>.zip: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableAddress_zip") get() = this["zip"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Address?>.zip: kotlin.String? @JvmName("NullableAddress_zip") get() = this["zip"] as kotlin.String?
         """.trimLines()
 
         code should haveSubstring(addressExtensions)
@@ -281,14 +288,14 @@ class OpenApiTests : JupyterReplTestCase() {
         code should haveSubstring(categoryInterface)
 
         @Language("kt") val categoryExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Category>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("Category_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Category>.id: kotlin.Long? @JvmName("Category_id") get() = this["id"] as kotlin.Long?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Category?>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullableCategory_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Category?>.id: kotlin.Long? @JvmName("NullableCategory_id") get() = this["id"] as kotlin.Long?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Category>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Category_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Category>.name: kotlin.String? @JvmName("Category_name") get() = this["name"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Category?>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableCategory_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Category?>.name: kotlin.String? @JvmName("NullableCategory_name") get() = this["name"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Category>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("Category_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Category>.id: kotlin.Long? @JvmName("Category_id") get() = this["id"] as kotlin.Long?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Category?>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullableCategory_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Category?>.id: kotlin.Long? @JvmName("NullableCategory_id") get() = this["id"] as kotlin.Long?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Category>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Category_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Category>.name: kotlin.String? @JvmName("Category_name") get() = this["name"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Category?>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableCategory_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Category?>.name: kotlin.String? @JvmName("NullableCategory_name") get() = this["name"] as kotlin.String?
         """.trimLines()
 
         code should haveSubstring(categoryExtensions)
@@ -310,38 +317,38 @@ class OpenApiTests : JupyterReplTestCase() {
         code should haveSubstring(userInterface)
 
         @Language("kt") val userExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User>.email: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("User_email") get() = this["email"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User>.email: kotlin.String? @JvmName("User_email") get() = this["email"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User?>.email: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableUser_email") get() = this["email"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User?>.email: kotlin.String? @JvmName("NullableUser_email") get() = this["email"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User>.firstName: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("User_firstName") get() = this["firstName"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User>.firstName: kotlin.String? @JvmName("User_firstName") get() = this["firstName"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User?>.firstName: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableUser_firstName") get() = this["firstName"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User?>.firstName: kotlin.String? @JvmName("NullableUser_firstName") get() = this["firstName"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("User_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User>.id: kotlin.Long? @JvmName("User_id") get() = this["id"] as kotlin.Long?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User?>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullableUser_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User?>.id: kotlin.Long? @JvmName("NullableUser_id") get() = this["id"] as kotlin.Long?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User>.lastName: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("User_lastName") get() = this["lastName"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User>.lastName: kotlin.String? @JvmName("User_lastName") get() = this["lastName"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User?>.lastName: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableUser_lastName") get() = this["lastName"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User?>.lastName: kotlin.String? @JvmName("NullableUser_lastName") get() = this["lastName"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User>.password: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("User_password") get() = this["password"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User>.password: kotlin.String? @JvmName("User_password") get() = this["password"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User?>.password: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableUser_password") get() = this["password"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User?>.password: kotlin.String? @JvmName("NullableUser_password") get() = this["password"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User>.phone: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("User_phone") get() = this["phone"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User>.phone: kotlin.String? @JvmName("User_phone") get() = this["phone"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User?>.phone: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableUser_phone") get() = this["phone"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User?>.phone: kotlin.String? @JvmName("NullableUser_phone") get() = this["phone"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User>.userStatus: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("User_userStatus") get() = this["userStatus"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User>.userStatus: kotlin.Int? @JvmName("User_userStatus") get() = this["userStatus"] as kotlin.Int?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User?>.userStatus: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableUser_userStatus") get() = this["userStatus"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User?>.userStatus: kotlin.Int? @JvmName("NullableUser_userStatus") get() = this["userStatus"] as kotlin.Int?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User>.username: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("User_username") get() = this["username"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User>.username: kotlin.String? @JvmName("User_username") get() = this["username"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<User?>.username: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableUser_username") get() = this["username"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<User?>.username: kotlin.String? @JvmName("NullableUser_username") get() = this["username"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User>.email: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("User_email") get() = this["email"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User>.email: kotlin.String? @JvmName("User_email") get() = this["email"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User?>.email: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableUser_email") get() = this["email"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User?>.email: kotlin.String? @JvmName("NullableUser_email") get() = this["email"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User>.firstName: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("User_firstName") get() = this["firstName"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User>.firstName: kotlin.String? @JvmName("User_firstName") get() = this["firstName"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User?>.firstName: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableUser_firstName") get() = this["firstName"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User?>.firstName: kotlin.String? @JvmName("NullableUser_firstName") get() = this["firstName"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("User_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User>.id: kotlin.Long? @JvmName("User_id") get() = this["id"] as kotlin.Long?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User?>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullableUser_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User?>.id: kotlin.Long? @JvmName("NullableUser_id") get() = this["id"] as kotlin.Long?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User>.lastName: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("User_lastName") get() = this["lastName"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User>.lastName: kotlin.String? @JvmName("User_lastName") get() = this["lastName"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User?>.lastName: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableUser_lastName") get() = this["lastName"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User?>.lastName: kotlin.String? @JvmName("NullableUser_lastName") get() = this["lastName"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User>.password: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("User_password") get() = this["password"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User>.password: kotlin.String? @JvmName("User_password") get() = this["password"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User?>.password: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableUser_password") get() = this["password"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User?>.password: kotlin.String? @JvmName("NullableUser_password") get() = this["password"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User>.phone: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("User_phone") get() = this["phone"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User>.phone: kotlin.String? @JvmName("User_phone") get() = this["phone"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User?>.phone: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableUser_phone") get() = this["phone"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User?>.phone: kotlin.String? @JvmName("NullableUser_phone") get() = this["phone"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User>.userStatus: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("User_userStatus") get() = this["userStatus"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User>.userStatus: kotlin.Int? @JvmName("User_userStatus") get() = this["userStatus"] as kotlin.Int?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User?>.userStatus: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableUser_userStatus") get() = this["userStatus"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User?>.userStatus: kotlin.Int? @JvmName("NullableUser_userStatus") get() = this["userStatus"] as kotlin.Int?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User>.username: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("User_username") get() = this["username"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User>.username: kotlin.String? @JvmName("User_username") get() = this["username"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.User?>.username: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableUser_username") get() = this["username"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.User?>.username: kotlin.String? @JvmName("NullableUser_username") get() = this["username"] as kotlin.String?
         """.trimLines()
 
         code should haveSubstring(userExtensions)
@@ -371,40 +378,40 @@ class OpenApiTests : JupyterReplTestCase() {
             interface Pet {
                 val id: kotlin.Long?
                 val name: kotlin.String
-                val category: Category?
+                val category: $functionName.Category?
                 val photoUrls: kotlin.collections.List<kotlin.String>
-                val tags: org.jetbrains.kotlinx.dataframe.DataFrame<Tag?>
-                val status: Status1?
+                val tags: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?>
+                val status: $functionName.Status1?
                 public companion object {
         """.trimLines() // category is a single other object, photoUrls is a primitive array, tags is a nullable array of objects
 
         code should haveSubstring(petInterface)
 
         @Language("kt") val petExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.category: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Category?> @JvmName("Pet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Category?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.category: org.jetbrains.kotlinx.dataframe.DataRow<Category?> @JvmName("Pet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.DataRow<Category?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.category: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Category?> @JvmName("NullablePet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Category?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.category: org.jetbrains.kotlinx.dataframe.DataRow<Category?> @JvmName("NullablePet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.DataRow<Category?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("Pet_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.id: kotlin.Long? @JvmName("Pet_id") get() = this["id"] as kotlin.Long?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullablePet_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.id: kotlin.Long? @JvmName("NullablePet_id") get() = this["id"] as kotlin.Long?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Pet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.name: kotlin.String @JvmName("Pet_name") get() = this["name"] as kotlin.String
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.name: kotlin.String? @JvmName("NullablePet_name") get() = this["name"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.photoUrls: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.String>> @JvmName("Pet_photoUrls") get() = this["photoUrls"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.String>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.photoUrls: kotlin.collections.List<kotlin.String> @JvmName("Pet_photoUrls") get() = this["photoUrls"] as kotlin.collections.List<kotlin.String>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.photoUrls: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.String>?> @JvmName("NullablePet_photoUrls") get() = this["photoUrls"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.String>?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.photoUrls: kotlin.collections.List<kotlin.String>? @JvmName("NullablePet_photoUrls") get() = this["photoUrls"] as kotlin.collections.List<kotlin.String>?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.status: org.jetbrains.kotlinx.dataframe.DataColumn<Status1?> @JvmName("Pet_status") get() = this["status"] as org.jetbrains.kotlinx.dataframe.DataColumn<Status1?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.status: Status1? @JvmName("Pet_status") get() = this["status"] as Status1?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.status: org.jetbrains.kotlinx.dataframe.DataColumn<Status1?> @JvmName("NullablePet_status") get() = this["status"] as org.jetbrains.kotlinx.dataframe.DataColumn<Status1?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.status: Status1? @JvmName("NullablePet_status") get() = this["status"] as Status1?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.tags: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Tag?>> @JvmName("Pet_tags") get() = this["tags"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Tag?>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.tags: org.jetbrains.kotlinx.dataframe.DataFrame<Tag?> @JvmName("Pet_tags") get() = this["tags"] as org.jetbrains.kotlinx.dataframe.DataFrame<Tag?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.tags: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Tag?>> @JvmName("NullablePet_tags") get() = this["tags"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Tag?>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.tags: org.jetbrains.kotlinx.dataframe.DataFrame<Tag?> @JvmName("NullablePet_tags") get() = this["tags"] as org.jetbrains.kotlinx.dataframe.DataFrame<Tag?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.category: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Category?> @JvmName("Pet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Category?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.category: org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Category?> @JvmName("Pet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Category?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.category: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Category?> @JvmName("NullablePet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Category?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.category: org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Category?> @JvmName("NullablePet_category") get() = this["category"] as org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Category?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("Pet_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.id: kotlin.Long? @JvmName("Pet_id") get() = this["id"] as kotlin.Long?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.id: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?> @JvmName("NullablePet_id") get() = this["id"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Long?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.id: kotlin.Long? @JvmName("NullablePet_id") get() = this["id"] as kotlin.Long?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Pet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.name: kotlin.String @JvmName("Pet_name") get() = this["name"] as kotlin.String
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.name: kotlin.String? @JvmName("NullablePet_name") get() = this["name"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.photoUrls: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.String>> @JvmName("Pet_photoUrls") get() = this["photoUrls"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.String>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.photoUrls: kotlin.collections.List<kotlin.String> @JvmName("Pet_photoUrls") get() = this["photoUrls"] as kotlin.collections.List<kotlin.String>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.photoUrls: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.String>?> @JvmName("NullablePet_photoUrls") get() = this["photoUrls"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.String>?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.photoUrls: kotlin.collections.List<kotlin.String>? @JvmName("NullablePet_photoUrls") get() = this["photoUrls"] as kotlin.collections.List<kotlin.String>?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.status: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Status1?> @JvmName("Pet_status") get() = this["status"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Status1?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.status: $functionName.Status1? @JvmName("Pet_status") get() = this["status"] as $functionName.Status1?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.status: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Status1?> @JvmName("NullablePet_status") get() = this["status"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Status1?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.status: $functionName.Status1? @JvmName("NullablePet_status") get() = this["status"] as $functionName.Status1?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.tags: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?>> @JvmName("Pet_tags") get() = this["tags"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.tags: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?> @JvmName("Pet_tags") get() = this["tags"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.tags: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?>> @JvmName("NullablePet_tags") get() = this["tags"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.tags: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?> @JvmName("NullablePet_tags") get() = this["tags"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Tag?>
         """.trimLines()
 
         code should haveSubstring(petExtensions)
@@ -421,39 +428,41 @@ class OpenApiTests : JupyterReplTestCase() {
         code should haveSubstring(apiResponseInterface)
 
         @Language("kt") val apiResponseExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ApiResponse>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("ApiResponse_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ApiResponse>.code: kotlin.Int? @JvmName("ApiResponse_code") get() = this["code"] as kotlin.Int?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ApiResponse?>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableApiResponse_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ApiResponse?>.code: kotlin.Int? @JvmName("NullableApiResponse_code") get() = this["code"] as kotlin.Int?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ApiResponse>.message: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("ApiResponse_message") get() = this["message"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ApiResponse>.message: kotlin.String? @JvmName("ApiResponse_message") get() = this["message"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ApiResponse?>.message: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableApiResponse_message") get() = this["message"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ApiResponse?>.message: kotlin.String? @JvmName("NullableApiResponse_message") get() = this["message"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ApiResponse>.type: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("ApiResponse_type") get() = this["type"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ApiResponse>.type: kotlin.String? @JvmName("ApiResponse_type") get() = this["type"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ApiResponse?>.type: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableApiResponse_type") get() = this["type"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ApiResponse?>.type: kotlin.String? @JvmName("NullableApiResponse_type") get() = this["type"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ApiResponse>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("ApiResponse_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ApiResponse>.code: kotlin.Int? @JvmName("ApiResponse_code") get() = this["code"] as kotlin.Int?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ApiResponse?>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableApiResponse_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ApiResponse?>.code: kotlin.Int? @JvmName("NullableApiResponse_code") get() = this["code"] as kotlin.Int?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ApiResponse>.message: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("ApiResponse_message") get() = this["message"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ApiResponse>.message: kotlin.String? @JvmName("ApiResponse_message") get() = this["message"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ApiResponse?>.message: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableApiResponse_message") get() = this["message"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ApiResponse?>.message: kotlin.String? @JvmName("NullableApiResponse_message") get() = this["message"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ApiResponse>.type: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("ApiResponse_type") get() = this["type"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ApiResponse>.type: kotlin.String? @JvmName("ApiResponse_type") get() = this["type"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ApiResponse?>.type: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableApiResponse_type") get() = this["type"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ApiResponse?>.type: kotlin.String? @JvmName("NullableApiResponse_type") get() = this["type"] as kotlin.String?
         """.trimLines()
 
         code should haveSubstring(apiResponseExtensions)
 
         @Language("kts") val res2 =
-            execRaw("`${::`Advanced test Petstore Json`.name}`.Pet.readJsonStr(\"\"\"$someAdvancedPetsData\"\"\")") as AnyFrame
+            execRaw("$functionName.Pet.readJsonStr(\"\"\"$someAdvancedPetsData\"\"\")") as AnyFrame
 
         @Language("kts") val res3 =
-            execRaw("`${::`Advanced test Petstore Json`.name}`.Order.readJsonStr(\"\"\"$someAdvancedOrdersData\"\"\")") as AnyFrame
+            execRaw("$functionName.Order.readJsonStr(\"\"\"$someAdvancedOrdersData\"\"\")") as AnyFrame
 
         shouldThrowAny {
             @Language("kts") val res4 =
-                execRaw("`${::`Advanced test Petstore Json`.name}`.Order.readJsonStr(\"\"\"$someAdvancedFailingOrdersData\"\"\")") as AnyFrame
+                execRaw("$functionName.Order.readJsonStr(\"\"\"$someAdvancedFailingOrdersData\"\"\")") as AnyFrame
             res4
         }
     }
 
     @Test
     fun `Other advanced test`() {
+        val fullFunctionName = ValidFieldName.of(::`Other advanced test`.name)
+        val functionName = fullFunctionName.quotedIfNeeded
         val code =
-            execGeneratedCode(advancedExample, ::`Other advanced test`.name).converter(::`Other advanced test`.name)
+            execGeneratedCode(advancedExample, fullFunctionName.unquoted).converter(fullFunctionName.unquoted)
                 .trimLines()
 
         @Language("kt") val breedEnum = """
@@ -469,10 +478,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt") val dogInterface = """
             @DataSchema(isOpen = false)
-            interface Dog : Pet {
+            interface Dog : $functionName.Pet {
                 override val tag: kotlin.String
                 val bark: kotlin.Boolean?
-                val breed: Breed
+                val breed: $functionName.Breed
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf()
@@ -486,18 +495,18 @@ class OpenApiTests : JupyterReplTestCase() {
         code should haveSubstring(dogInterface)
 
         @Language("kt") val dogExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Dog>.bark: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("Dog_bark") get() = this["bark"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Dog>.bark: kotlin.Boolean? @JvmName("Dog_bark") get() = this["bark"] as kotlin.Boolean?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Dog?>.bark: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("NullableDog_bark") get() = this["bark"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Dog?>.bark: kotlin.Boolean? @JvmName("NullableDog_bark") get() = this["bark"] as kotlin.Boolean?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Dog>.breed: org.jetbrains.kotlinx.dataframe.DataColumn<Breed> @JvmName("Dog_breed") get() = this["breed"] as org.jetbrains.kotlinx.dataframe.DataColumn<Breed>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Dog>.breed: Breed @JvmName("Dog_breed") get() = this["breed"] as Breed
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Dog?>.breed: org.jetbrains.kotlinx.dataframe.DataColumn<Breed?> @JvmName("NullableDog_breed") get() = this["breed"] as org.jetbrains.kotlinx.dataframe.DataColumn<Breed?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Dog?>.breed: Breed? @JvmName("NullableDog_breed") get() = this["breed"] as Breed?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Dog>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Dog_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Dog>.tag: kotlin.String @JvmName("Dog_tag") get() = this["tag"] as kotlin.String
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Dog?>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableDog_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Dog?>.tag: kotlin.String? @JvmName("NullableDog_tag") get() = this["tag"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Dog>.bark: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("Dog_bark") get() = this["bark"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Dog>.bark: kotlin.Boolean? @JvmName("Dog_bark") get() = this["bark"] as kotlin.Boolean?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Dog?>.bark: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("NullableDog_bark") get() = this["bark"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Dog?>.bark: kotlin.Boolean? @JvmName("NullableDog_bark") get() = this["bark"] as kotlin.Boolean?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Dog>.breed: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Breed> @JvmName("Dog_breed") get() = this["breed"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Breed>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Dog>.breed: $functionName.Breed @JvmName("Dog_breed") get() = this["breed"] as $functionName.Breed
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Dog?>.breed: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Breed?> @JvmName("NullableDog_breed") get() = this["breed"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Breed?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Dog?>.breed: $functionName.Breed? @JvmName("NullableDog_breed") get() = this["breed"] as $functionName.Breed?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Dog>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Dog_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Dog>.tag: kotlin.String @JvmName("Dog_tag") get() = this["tag"] as kotlin.String
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Dog?>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableDog_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Dog?>.tag: kotlin.String? @JvmName("NullableDog_tag") get() = this["tag"] as kotlin.String?
         """.trimLines()
 
         code should haveSubstring(dogExtensions)
@@ -518,10 +527,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt") val catInterface = """
             @DataSchema(isOpen = false)
-            interface Cat : Pet {
+            interface Cat : $functionName.Pet {
                 val hunts: kotlin.Boolean?
                 val age: kotlin.Float?
-                val breed: Breed1?
+                val breed: $functionName.Breed1?
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf()
@@ -535,18 +544,18 @@ class OpenApiTests : JupyterReplTestCase() {
         code should haveSubstring(catInterface)
 
         @Language("kt") val catExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Cat>.age: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Float?> @JvmName("Cat_age") get() = this["age"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Float?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Cat>.age: kotlin.Float? @JvmName("Cat_age") get() = this["age"] as kotlin.Float?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Cat?>.age: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Float?> @JvmName("NullableCat_age") get() = this["age"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Float?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Cat?>.age: kotlin.Float? @JvmName("NullableCat_age") get() = this["age"] as kotlin.Float?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Cat>.breed: org.jetbrains.kotlinx.dataframe.DataColumn<Breed1?> @JvmName("Cat_breed") get() = this["breed"] as org.jetbrains.kotlinx.dataframe.DataColumn<Breed1?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Cat>.breed: Breed1? @JvmName("Cat_breed") get() = this["breed"] as Breed1?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Cat?>.breed: org.jetbrains.kotlinx.dataframe.DataColumn<Breed1?> @JvmName("NullableCat_breed") get() = this["breed"] as org.jetbrains.kotlinx.dataframe.DataColumn<Breed1?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Cat?>.breed: Breed1? @JvmName("NullableCat_breed") get() = this["breed"] as Breed1?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Cat>.hunts: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("Cat_hunts") get() = this["hunts"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Cat>.hunts: kotlin.Boolean? @JvmName("Cat_hunts") get() = this["hunts"] as kotlin.Boolean?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Cat?>.hunts: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("NullableCat_hunts") get() = this["hunts"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Cat?>.hunts: kotlin.Boolean? @JvmName("NullableCat_hunts") get() = this["hunts"] as kotlin.Boolean?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Cat>.age: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Float?> @JvmName("Cat_age") get() = this["age"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Float?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Cat>.age: kotlin.Float? @JvmName("Cat_age") get() = this["age"] as kotlin.Float?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Cat?>.age: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Float?> @JvmName("NullableCat_age") get() = this["age"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Float?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Cat?>.age: kotlin.Float? @JvmName("NullableCat_age") get() = this["age"] as kotlin.Float?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Cat>.breed: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Breed1?> @JvmName("Cat_breed") get() = this["breed"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Breed1?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Cat>.breed: $functionName.Breed1? @JvmName("Cat_breed") get() = this["breed"] as $functionName.Breed1?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Cat?>.breed: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Breed1?> @JvmName("NullableCat_breed") get() = this["breed"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Breed1?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Cat?>.breed: $functionName.Breed1? @JvmName("NullableCat_breed") get() = this["breed"] as $functionName.Breed1?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Cat>.hunts: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("Cat_hunts") get() = this["hunts"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Cat>.hunts: kotlin.Boolean? @JvmName("Cat_hunts") get() = this["hunts"] as kotlin.Boolean?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Cat?>.hunts: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?> @JvmName("NullableCat_hunts") get() = this["hunts"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Boolean?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Cat?>.hunts: kotlin.Boolean? @JvmName("NullableCat_hunts") get() = this["hunts"] as kotlin.Boolean?
         """.trimLines()
 
         code should haveSubstring(catExtensions)
@@ -573,7 +582,7 @@ class OpenApiTests : JupyterReplTestCase() {
                 val tag: kotlin.String?
                 val other: kotlin.Any?
                 @ColumnName("eye_color")
-                val eyeColor: EyeColor?
+                val eyeColor: $functionName.EyeColor?
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf()
@@ -587,42 +596,42 @@ class OpenApiTests : JupyterReplTestCase() {
         code should haveSubstring(petInterface)
 
         @Language("kt") val petExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("Pet_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.`value`: kotlin.Any? @JvmName("Pet_value") get() = this["value"] as kotlin.Any?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullablePet_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.`value`: kotlin.Any? @JvmName("NullablePet_value") get() = this["value"] as kotlin.Any?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.eyeColor: org.jetbrains.kotlinx.dataframe.DataColumn<EyeColor?> @JvmName("Pet_eyeColor") get() = this["eye_color"] as org.jetbrains.kotlinx.dataframe.DataColumn<EyeColor?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.eyeColor: EyeColor? @JvmName("Pet_eyeColor") get() = this["eye_color"] as EyeColor?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.eyeColor: org.jetbrains.kotlinx.dataframe.DataColumn<EyeColor?> @JvmName("NullablePet_eyeColor") get() = this["eye_color"] as org.jetbrains.kotlinx.dataframe.DataColumn<EyeColor?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.eyeColor: EyeColor? @JvmName("NullablePet_eyeColor") get() = this["eye_color"] as EyeColor?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Pet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.name: kotlin.String @JvmName("Pet_name") get() = this["name"] as kotlin.String
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.name: kotlin.String? @JvmName("NullablePet_name") get() = this["name"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.other: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("Pet_other") get() = this["other"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.other: kotlin.Any? @JvmName("Pet_other") get() = this["other"] as kotlin.Any?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.other: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullablePet_other") get() = this["other"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.other: kotlin.Any? @JvmName("NullablePet_other") get() = this["other"] as kotlin.Any?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.petType: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Pet_petType") get() = this["pet_type"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.petType: kotlin.String @JvmName("Pet_petType") get() = this["pet_type"] as kotlin.String
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.petType: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_petType") get() = this["pet_type"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.petType: kotlin.String? @JvmName("NullablePet_petType") get() = this["pet_type"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Pet_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet>.tag: kotlin.String? @JvmName("Pet_tag") get() = this["tag"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Pet?>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Pet?>.tag: kotlin.String? @JvmName("NullablePet_tag") get() = this["tag"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("Pet_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.`value`: kotlin.Any? @JvmName("Pet_value") get() = this["value"] as kotlin.Any?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullablePet_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.`value`: kotlin.Any? @JvmName("NullablePet_value") get() = this["value"] as kotlin.Any?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.eyeColor: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?> @JvmName("Pet_eyeColor") get() = this["eye_color"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.eyeColor: $functionName.EyeColor? @JvmName("Pet_eyeColor") get() = this["eye_color"] as $functionName.EyeColor?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.eyeColor: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?> @JvmName("NullablePet_eyeColor") get() = this["eye_color"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.EyeColor?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.eyeColor: $functionName.EyeColor? @JvmName("NullablePet_eyeColor") get() = this["eye_color"] as $functionName.EyeColor?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Pet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.name: kotlin.String @JvmName("Pet_name") get() = this["name"] as kotlin.String
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.name: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_name") get() = this["name"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.name: kotlin.String? @JvmName("NullablePet_name") get() = this["name"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.other: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("Pet_other") get() = this["other"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.other: kotlin.Any? @JvmName("Pet_other") get() = this["other"] as kotlin.Any?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.other: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullablePet_other") get() = this["other"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.other: kotlin.Any? @JvmName("NullablePet_other") get() = this["other"] as kotlin.Any?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.petType: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Pet_petType") get() = this["pet_type"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.petType: kotlin.String @JvmName("Pet_petType") get() = this["pet_type"] as kotlin.String
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.petType: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_petType") get() = this["pet_type"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.petType: kotlin.String? @JvmName("NullablePet_petType") get() = this["pet_type"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("Pet_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet>.tag: kotlin.String? @JvmName("Pet_tag") get() = this["tag"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Pet?>.tag: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullablePet_tag") get() = this["tag"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Pet?>.tag: kotlin.String? @JvmName("NullablePet_tag") get() = this["tag"] as kotlin.String?
         """.trimLines()
 
         code should haveSubstring(petExtensions)
 
         @Language("kt") val petRefTypeAlias = """
-            typealias PetRef = Pet
+            typealias PetRef = $functionName.Pet
         """.trimLines() // is either Cat or Dog, we cannot merge objects, but they have the same ancestor, so Pet
 
         code should haveSubstring(petRefTypeAlias)
 
         @Language("kt") val alsoCatTypeAlias = """
-            typealias AlsoCat = Cat
+            typealias AlsoCat = $functionName.Cat
         """.trimLines()
 
         code should haveSubstring(alsoCatTypeAlias)
@@ -650,10 +659,10 @@ class OpenApiTests : JupyterReplTestCase() {
         code should haveSubstring(intListInterface)
 
         @Language("kt") val intListExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<IntList>.list: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.Int>> @JvmName("IntList_list") get() = this["list"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.Int>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<IntList>.list: kotlin.collections.List<kotlin.Int> @JvmName("IntList_list") get() = this["list"] as kotlin.collections.List<kotlin.Int>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<IntList?>.list: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.Int>?> @JvmName("NullableIntList_list") get() = this["list"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.Int>?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<IntList?>.list: kotlin.collections.List<kotlin.Int>? @JvmName("NullableIntList_list") get() = this["list"] as kotlin.collections.List<kotlin.Int>?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.IntList>.list: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.Int>> @JvmName("IntList_list") get() = this["list"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.Int>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.IntList>.list: kotlin.collections.List<kotlin.Int> @JvmName("IntList_list") get() = this["list"] as kotlin.collections.List<kotlin.Int>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.IntList?>.list: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.Int>?> @JvmName("NullableIntList_list") get() = this["list"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<kotlin.Int>?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.IntList?>.list: kotlin.collections.List<kotlin.Int>? @JvmName("NullableIntList_list") get() = this["list"] as kotlin.collections.List<kotlin.Int>?
         """.trimLines()
 
         code should haveSubstring(intListExtensions)
@@ -683,10 +692,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val objectWithAdditionalPropertiesExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditionalProperties>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("ObjectWithAdditionalProperties_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditionalProperties>.`value`: kotlin.String @JvmName("ObjectWithAdditionalProperties_value") get() = this["value"] as kotlin.String
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditionalProperties?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableObjectWithAdditionalProperties_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditionalProperties?>.`value`: kotlin.String? @JvmName("NullableObjectWithAdditionalProperties_value") get() = this["value"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditionalProperties>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("ObjectWithAdditionalProperties_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditionalProperties>.`value`: kotlin.String @JvmName("ObjectWithAdditionalProperties_value") get() = this["value"] as kotlin.String
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditionalProperties?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableObjectWithAdditionalProperties_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditionalProperties?>.`value`: kotlin.String? @JvmName("NullableObjectWithAdditionalProperties_value") get() = this["value"] as kotlin.String?
         """.trimLines()
 
         code should haveSubstring(objectWithAdditionalPropertiesExtensions)
@@ -716,10 +725,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val objectWithAdditional2Extensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditional2>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any> @JvmName("ObjectWithAdditional2_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional2>.`value`: kotlin.Any @JvmName("ObjectWithAdditional2_value") get() = this["value"] as kotlin.Any
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditional2?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullableObjectWithAdditional2_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional2?>.`value`: kotlin.Any? @JvmName("NullableObjectWithAdditional2_value") get() = this["value"] as kotlin.Any?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional2>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any> @JvmName("ObjectWithAdditional2_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional2>.`value`: kotlin.Any @JvmName("ObjectWithAdditional2_value") get() = this["value"] as kotlin.Any
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional2?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullableObjectWithAdditional2_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional2?>.`value`: kotlin.Any? @JvmName("NullableObjectWithAdditional2_value") get() = this["value"] as kotlin.Any?
         """.trimLines()
 
         code should haveSubstring(objectWithAdditional2Extensions)
@@ -749,10 +758,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val objectWithAdditional3Extensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditional3>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("ObjectWithAdditional3_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional3>.`value`: kotlin.Any? @JvmName("ObjectWithAdditional3_value") get() = this["value"] as kotlin.Any?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditional3?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullableObjectWithAdditional3_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional3?>.`value`: kotlin.Any? @JvmName("NullableObjectWithAdditional3_value") get() = this["value"] as kotlin.Any?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional3>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("ObjectWithAdditional3_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional3>.`value`: kotlin.Any? @JvmName("ObjectWithAdditional3_value") get() = this["value"] as kotlin.Any?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional3?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?> @JvmName("NullableObjectWithAdditional3_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional3?>.`value`: kotlin.Any? @JvmName("NullableObjectWithAdditional3_value") get() = this["value"] as kotlin.Any?
         """.trimLines()
 
         code should haveSubstring(objectWithAdditional3Extensions)
@@ -762,15 +771,15 @@ class OpenApiTests : JupyterReplTestCase() {
         val errorInterface = """
             @DataSchema(isOpen = false)
             interface Error {
-                val ints: IntList?
+                val ints: $functionName.IntList?
                 val petRef: PetRef
                 val pets: org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>
                 val code: kotlin.Int
                 val message: kotlin.String
-                val objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>
-                val objectWithAdditionalList: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>?
-                val objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>
-                val objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3>
+                val objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties>
+                val objectWithAdditionalList: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties>>?
+                val objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional2?>
+                val objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional3>
                 val array: kotlin.collections.List<SomeArrayArray>?
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
@@ -786,46 +795,46 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val errorExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.array: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<SomeArrayArray>?> @JvmName("Error_array") get() = this["array"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<SomeArrayArray>?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.array: kotlin.collections.List<SomeArrayArray>? @JvmName("Error_array") get() = this["array"] as kotlin.collections.List<SomeArrayArray>?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.array: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<SomeArrayArray>?> @JvmName("NullableError_array") get() = this["array"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<SomeArrayArray>?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.array: kotlin.collections.List<SomeArrayArray>? @JvmName("NullableError_array") get() = this["array"] as kotlin.collections.List<SomeArrayArray>?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int> @JvmName("Error_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.code: kotlin.Int @JvmName("Error_code") get() = this["code"] as kotlin.Int
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableError_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.code: kotlin.Int? @JvmName("NullableError_code") get() = this["code"] as kotlin.Int?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.ints: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<IntList?> @JvmName("Error_ints") get() = this["ints"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<IntList?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.ints: org.jetbrains.kotlinx.dataframe.DataRow<IntList?> @JvmName("Error_ints") get() = this["ints"] as org.jetbrains.kotlinx.dataframe.DataRow<IntList?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.ints: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<IntList?> @JvmName("NullableError_ints") get() = this["ints"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<IntList?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.ints: org.jetbrains.kotlinx.dataframe.DataRow<IntList?> @JvmName("NullableError_ints") get() = this["ints"] as org.jetbrains.kotlinx.dataframe.DataRow<IntList?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.message: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Error_message") get() = this["message"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.message: kotlin.String @JvmName("Error_message") get() = this["message"] as kotlin.String
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.message: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableError_message") get() = this["message"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.message: kotlin.String? @JvmName("NullableError_message") get() = this["message"] as kotlin.String?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>> @JvmName("Error_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties> @JvmName("Error_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties?>> @JvmName("NullableError_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties?>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties?> @JvmName("NullableError_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>> @JvmName("Error_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?> @JvmName("Error_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>> @JvmName("NullableError_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?> @JvmName("NullableError_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional2?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3>> @JvmName("Error_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3> @JvmName("Error_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3?>> @JvmName("NullableError_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3?>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3?> @JvmName("NullableError_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional3?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.objectWithAdditionalList: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>?> @JvmName("Error_objectWithAdditionalList") get() = this["objectWithAdditionalList"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.objectWithAdditionalList: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>? @JvmName("Error_objectWithAdditionalList") get() = this["objectWithAdditionalList"] as kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.objectWithAdditionalList: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>?> @JvmName("NullableError_objectWithAdditionalList") get() = this["objectWithAdditionalList"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.objectWithAdditionalList: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>? @JvmName("NullableError_objectWithAdditionalList") get() = this["objectWithAdditionalList"] as kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditionalProperties>>?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.petRef: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef> @JvmName("Error_petRef") get() = this["petRef"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.petRef: org.jetbrains.kotlinx.dataframe.DataRow<PetRef> @JvmName("Error_petRef") get() = this["petRef"] as org.jetbrains.kotlinx.dataframe.DataRow<PetRef>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.petRef: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef?> @JvmName("NullableError_petRef") get() = this["petRef"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.petRef: org.jetbrains.kotlinx.dataframe.DataRow<PetRef?> @JvmName("NullableError_petRef") get() = this["petRef"] as org.jetbrains.kotlinx.dataframe.DataRow<PetRef?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error>.pets: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>> @JvmName("Error_pets") get() = this["pets"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error>.pets: org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?> @JvmName("Error_pets") get() = this["pets"] as org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<Error?>.pets: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>> @JvmName("NullableError_pets") get() = this["pets"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<Error?>.pets: org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?> @JvmName("NullableError_pets") get() = this["pets"] as org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error>.array: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<SomeArrayArray>?> @JvmName("Error_array") get() = this["array"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<SomeArrayArray>?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error>.array: kotlin.collections.List<SomeArrayArray>? @JvmName("Error_array") get() = this["array"] as kotlin.collections.List<SomeArrayArray>?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error?>.array: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<SomeArrayArray>?> @JvmName("NullableError_array") get() = this["array"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<SomeArrayArray>?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error?>.array: kotlin.collections.List<SomeArrayArray>? @JvmName("NullableError_array") get() = this["array"] as kotlin.collections.List<SomeArrayArray>?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int> @JvmName("Error_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error>.code: kotlin.Int @JvmName("Error_code") get() = this["code"] as kotlin.Int
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error?>.code: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableError_code") get() = this["code"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error?>.code: kotlin.Int? @JvmName("NullableError_code") get() = this["code"] as kotlin.Int?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error>.ints: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.IntList?> @JvmName("Error_ints") get() = this["ints"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.IntList?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error>.ints: org.jetbrains.kotlinx.dataframe.DataRow<$functionName.IntList?> @JvmName("Error_ints") get() = this["ints"] as org.jetbrains.kotlinx.dataframe.DataRow<$functionName.IntList?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error?>.ints: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.IntList?> @JvmName("NullableError_ints") get() = this["ints"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.IntList?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error?>.ints: org.jetbrains.kotlinx.dataframe.DataRow<$functionName.IntList?> @JvmName("NullableError_ints") get() = this["ints"] as org.jetbrains.kotlinx.dataframe.DataRow<$functionName.IntList?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error>.message: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("Error_message") get() = this["message"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error>.message: kotlin.String @JvmName("Error_message") get() = this["message"] as kotlin.String
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error?>.message: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableError_message") get() = this["message"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error?>.message: kotlin.String? @JvmName("NullableError_message") get() = this["message"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties>> @JvmName("Error_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties> @JvmName("Error_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error?>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties?>> @JvmName("NullableError_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error?>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties?> @JvmName("NullableError_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional2?>> @JvmName("Error_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional2?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional2?> @JvmName("Error_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional2?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error?>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional2?>> @JvmName("NullableError_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional2?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error?>.objectWithAdditional2: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional2?> @JvmName("NullableError_objectWithAdditional2") get() = this["objectWithAdditional2"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional2?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional3>> @JvmName("Error_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional3>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional3> @JvmName("Error_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional3>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error?>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional3?>> @JvmName("NullableError_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional3?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error?>.objectWithAdditional3: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional3?> @JvmName("NullableError_objectWithAdditional3") get() = this["objectWithAdditional3"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional3?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error>.objectWithAdditionalList: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties>>?> @JvmName("Error_objectWithAdditionalList") get() = this["objectWithAdditionalList"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties>>?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error>.objectWithAdditionalList: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties>>? @JvmName("Error_objectWithAdditionalList") get() = this["objectWithAdditionalList"] as kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties>>?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error?>.objectWithAdditionalList: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties>>?> @JvmName("NullableError_objectWithAdditionalList") get() = this["objectWithAdditionalList"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties>>?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error?>.objectWithAdditionalList: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties>>? @JvmName("NullableError_objectWithAdditionalList") get() = this["objectWithAdditionalList"] as kotlin.collections.List<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditionalProperties>>?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error>.petRef: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef> @JvmName("Error_petRef") get() = this["petRef"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error>.petRef: org.jetbrains.kotlinx.dataframe.DataRow<PetRef> @JvmName("Error_petRef") get() = this["petRef"] as org.jetbrains.kotlinx.dataframe.DataRow<PetRef>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error?>.petRef: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef?> @JvmName("NullableError_petRef") get() = this["petRef"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<PetRef?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error?>.petRef: org.jetbrains.kotlinx.dataframe.DataRow<PetRef?> @JvmName("NullableError_petRef") get() = this["petRef"] as org.jetbrains.kotlinx.dataframe.DataRow<PetRef?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error>.pets: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>> @JvmName("Error_pets") get() = this["pets"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error>.pets: org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?> @JvmName("Error_pets") get() = this["pets"] as org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.Error?>.pets: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>> @JvmName("NullableError_pets") get() = this["pets"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Error?>.pets: org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?> @JvmName("NullableError_pets") get() = this["pets"] as org.jetbrains.kotlinx.dataframe.DataFrame<kotlin.Any?>
         """.trimLines()
 
         code should haveSubstring(errorExtensions)
@@ -862,10 +871,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val objectWithAdditionalExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditional>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int> @JvmName("ObjectWithAdditional_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional>.`value`: kotlin.Int @JvmName("ObjectWithAdditional_value") get() = this["value"] as kotlin.Int
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ObjectWithAdditional?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableObjectWithAdditional_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ObjectWithAdditional?>.`value`: kotlin.Int? @JvmName("NullableObjectWithAdditional_value") get() = this["value"] as kotlin.Int?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int> @JvmName("ObjectWithAdditional_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional>.`value`: kotlin.Int @JvmName("ObjectWithAdditional_value") get() = this["value"] as kotlin.Int
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ObjectWithAdditional?>.`value`: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?> @JvmName("NullableObjectWithAdditional_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.Int?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ObjectWithAdditional?>.`value`: kotlin.Int? @JvmName("NullableObjectWithAdditional_value") get() = this["value"] as kotlin.Int?
         """.trimLines()
 
         code should haveSubstring(objectWithAdditionalExtensions)
@@ -873,11 +882,11 @@ class OpenApiTests : JupyterReplTestCase() {
         @Language("kt") val someArrayContentInterface = """
             @DataSchema(isOpen = false)
             interface SomeArrayContent {
-                val op: Op
+                val op: $functionName.Op
                 val path: kotlin.String
                 @ColumnName("value")
-                val `value`: Value?
-                val objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?>
+                val `value`: $functionName.Value?
+                val objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?>
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf(JsonPath(""${'"'}${'$'}["objectWithAdditional"]""${'"'}))
@@ -895,28 +904,28 @@ class OpenApiTests : JupyterReplTestCase() {
         code should haveSubstring(someArrayContentInterface)
 
         @Language("kt") val someArrayContentExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent>.`value`: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Value?> @JvmName("SomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Value?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent>.`value`: org.jetbrains.kotlinx.dataframe.DataRow<Value?> @JvmName("SomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataRow<Value?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent?>.`value`: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Value?> @JvmName("NullableSomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<Value?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent?>.`value`: org.jetbrains.kotlinx.dataframe.DataRow<Value?> @JvmName("NullableSomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataRow<Value?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?>> @JvmName("SomeArrayContent_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?> @JvmName("SomeArrayContent_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent?>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?>> @JvmName("NullableSomeArrayContent_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent?>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?> @JvmName("NullableSomeArrayContent_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataFrame<ObjectWithAdditional?>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent>.op: org.jetbrains.kotlinx.dataframe.DataColumn<Op> @JvmName("SomeArrayContent_op") get() = this["op"] as org.jetbrains.kotlinx.dataframe.DataColumn<Op>
-            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent>.op: Op @JvmName("SomeArrayContent_op") get() = this["op"] as Op
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent?>.op: org.jetbrains.kotlinx.dataframe.DataColumn<Op?> @JvmName("NullableSomeArrayContent_op") get() = this["op"] as org.jetbrains.kotlinx.dataframe.DataColumn<Op?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent?>.op: Op? @JvmName("NullableSomeArrayContent_op") get() = this["op"] as Op?
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent>.path: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("SomeArrayContent_path") get() = this["path"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
-            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent>.path: kotlin.String @JvmName("SomeArrayContent_path") get() = this["path"] as kotlin.String
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<SomeArrayContent?>.path: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableSomeArrayContent_path") get() = this["path"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
-            val org.jetbrains.kotlinx.dataframe.DataRow<SomeArrayContent?>.path: kotlin.String? @JvmName("NullableSomeArrayContent_path") get() = this["path"] as kotlin.String?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent>.`value`: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Value?> @JvmName("SomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Value?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent>.`value`: org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?> @JvmName("SomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent?>.`value`: org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Value?> @JvmName("NullableSomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.columns.ColumnGroup<$functionName.Value?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent?>.`value`: org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?> @JvmName("NullableSomeArrayContent_value") get() = this["value"] as org.jetbrains.kotlinx.dataframe.DataRow<$functionName.Value?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?>> @JvmName("SomeArrayContent_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?> @JvmName("SomeArrayContent_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent?>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?>> @JvmName("NullableSomeArrayContent_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent?>.objectWithAdditional: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?> @JvmName("NullableSomeArrayContent_objectWithAdditional") get() = this["objectWithAdditional"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.ObjectWithAdditional?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent>.op: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Op> @JvmName("SomeArrayContent_op") get() = this["op"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Op>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent>.op: $functionName.Op @JvmName("SomeArrayContent_op") get() = this["op"] as $functionName.Op
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent?>.op: org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Op?> @JvmName("NullableSomeArrayContent_op") get() = this["op"] as org.jetbrains.kotlinx.dataframe.DataColumn<$functionName.Op?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent?>.op: $functionName.Op? @JvmName("NullableSomeArrayContent_op") get() = this["op"] as $functionName.Op?
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent>.path: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String> @JvmName("SomeArrayContent_path") get() = this["path"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent>.path: kotlin.String @JvmName("SomeArrayContent_path") get() = this["path"] as kotlin.String
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.SomeArrayContent?>.path: org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?> @JvmName("NullableSomeArrayContent_path") get() = this["path"] as org.jetbrains.kotlinx.dataframe.DataColumn<kotlin.String?>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.SomeArrayContent?>.path: kotlin.String? @JvmName("NullableSomeArrayContent_path") get() = this["path"] as kotlin.String?
         """.trimLines()
 
         code should haveSubstring(someArrayContentExtensions)
 
         @Language("kt") val someArrayTypeAlias = """
-            typealias SomeArray = org.jetbrains.kotlinx.dataframe.DataFrame<SomeArrayContent>
+            typealias SomeArray = org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.SomeArrayContent>
         """.trimLines()
 
         code should haveSubstring(someArrayTypeAlias)
@@ -925,7 +934,7 @@ class OpenApiTests : JupyterReplTestCase() {
         val errorHolderInterface = """
             @DataSchema(isOpen = false)
             interface ErrorHolder {
-                val errors: org.jetbrains.kotlinx.dataframe.DataFrame<Error>
+                val errors: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error>
                 public companion object {
                     public val keyValuePaths: kotlin.collections.List<org.jetbrains.kotlinx.dataframe.api.JsonPath>
                         get() = listOf(JsonPath(""${'"'}${'$'}["errors"][*]["objectWithAdditional"]""${'"'}), JsonPath(""${'"'}${'$'}["errors"][*]["objectWithAdditionalList"][*]""${'"'}), JsonPath(""${'"'}${'$'}["errors"][*]["objectWithAdditional2"]""${'"'}), JsonPath(""${'"'}${'$'}["errors"][*]["objectWithAdditional3"]""${'"'}), JsonPath(""${'"'}${'$'}["errors"][*]["array"][*][*][*]["objectWithAdditional"]""${'"'}))
@@ -944,48 +953,51 @@ class OpenApiTests : JupyterReplTestCase() {
 
         @Language("kt")
         val errorHolderExtensions = """
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ErrorHolder>.errors: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Error>> @JvmName("ErrorHolder_errors") get() = this["errors"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Error>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ErrorHolder>.errors: org.jetbrains.kotlinx.dataframe.DataFrame<Error> @JvmName("ErrorHolder_errors") get() = this["errors"] as org.jetbrains.kotlinx.dataframe.DataFrame<Error>
-            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<ErrorHolder?>.errors: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Error?>> @JvmName("NullableErrorHolder_errors") get() = this["errors"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<Error?>>
-            val org.jetbrains.kotlinx.dataframe.DataRow<ErrorHolder?>.errors: org.jetbrains.kotlinx.dataframe.DataFrame<Error?> @JvmName("NullableErrorHolder_errors") get() = this["errors"] as org.jetbrains.kotlinx.dataframe.DataFrame<Error?>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ErrorHolder>.errors: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error>> @JvmName("ErrorHolder_errors") get() = this["errors"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ErrorHolder>.errors: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error> @JvmName("ErrorHolder_errors") get() = this["errors"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error>
+            val org.jetbrains.kotlinx.dataframe.ColumnsContainer<$functionName.ErrorHolder?>.errors: org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error?>> @JvmName("NullableErrorHolder_errors") get() = this["errors"] as org.jetbrains.kotlinx.dataframe.DataColumn<org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error?>>
+            val org.jetbrains.kotlinx.dataframe.DataRow<$functionName.ErrorHolder?>.errors: org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error?> @JvmName("NullableErrorHolder_errors") get() = this["errors"] as org.jetbrains.kotlinx.dataframe.DataFrame<$functionName.Error?>
         """.trimLines()
 
         code should haveSubstring(errorHolderExtensions)
 
         @Language("kt")
         val res1 = execRaw(
-            "`${::`Other advanced test`.name}`.Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Cat\" }.convertTo<`${::`Other advanced test`.name}`.Cat>(ExcessiveColumns.Remove)"
+            "$functionName.Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Cat\" }.convertTo<$functionName.Cat>(ExcessiveColumns.Remove)"
         ) as AnyFrame
         val res1Schema = res1.schema()
 
         @Language("kts")
         val res2 = execRaw(
-            "`${::`Other advanced test`.name}`.Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Dog\" }.convertTo<`${::`Other advanced test`.name}`.Dog>(ExcessiveColumns.Remove)"
+            "$functionName.Pet.readJsonStr(\"\"\"$advancedData\"\"\").filter { petType == \"Dog\" }.convertTo<$functionName.Dog>(ExcessiveColumns.Remove)"
         ) as AnyFrame
         val res2Schema = res2.schema()
 
         @Language("kts")
         val res3 = execRaw(
-            "`${::`Other advanced test`.name}`.Error.readJsonStr(\"\"\"$advancedErrorData\"\"\")"
+            "$functionName.Error.readJsonStr(\"\"\"$advancedErrorData\"\"\")"
         ) as AnyFrame
         val res3Schema = res3.schema()
 
         @Language("kts")
         val res4 = execRaw(
-            "`${::`Other advanced test`.name}`.ErrorHolder.readJsonStr(\"\"\"$advancedErrorHolderData\"\"\")"
+            "$functionName.ErrorHolder.readJsonStr(\"\"\"$advancedErrorHolderData\"\"\")"
         ) as AnyFrame
         val res4Schema = res4.schema()
     }
 
     @Test
     fun `Apis guru Test`() {
-        val code = execGeneratedCode(apiGuruYaml, ::`Apis guru Test`.name).converter(::`Apis guru Test`.name)
+        val fullFunctionName = ValidFieldName.of(::`Apis guru Test`.name)
+        val functionName = fullFunctionName.quotedIfNeeded
+        val code = execGeneratedCode(apiGuruYaml, fullFunctionName.unquoted).converter(fullFunctionName.unquoted)
 
         val apiGuruDataTripleQuote = "\"\"\"${apiGuruData.replace("$", "\${'$'}")}\"\"\""
 
         @Language("kts")
         val df = execRaw(
-            """`${::`Apis guru Test`.name}`.APIs.readJsonStr($apiGuruDataTripleQuote)
+            """
+            $functionName.APIs.readJsonStr($apiGuruDataTripleQuote)
                 .filter {
                     value.versions.value.any {
                         (updated ?: added).year > 2019
@@ -1029,6 +1041,41 @@ class OpenApiTests : JupyterReplTestCase() {
         ) as AnyFrame
 
         df2.isNotEmpty().shouldBeTrue()
+    }
+
+    @Test
+    fun `Jupyter importDataSchema`() {
+        execRaw(importDataSchema)
+
+        @Language("kts")
+        val _1 = execRaw(
+            """
+                importDataSchema(File("${apiGuruYaml.absolutePath}"), "ApiGuru")
+            """.trimIndent()
+        )
+
+        val apiGuruDataTripleQuote = "\"\"\"${apiGuruData.replace("$", "\${'$'}")}\"\"\""
+
+        @Language("kts")
+        val _2 = execRaw(
+            """
+                val df: DataFrame<ApiGuru.APIs> = ApiGuru.APIs.readJsonStr($apiGuruDataTripleQuote)
+                df
+            """.trimIndent()
+        ) as AnyFrame
+
+        println(_2)
+
+        @Language("kts")
+        val _3 = execRaw(
+            """
+                df.filter {
+                  value.versions.value.any {
+                    (updated ?: added).year >= 2021
+                  }
+                }
+            """.trimIndent()
+        ) as AnyFrame
     }
 
     private fun String.trimLines(): String = trim().removeSurrounding("\n").lines().joinToString("\n") { it.trim() }

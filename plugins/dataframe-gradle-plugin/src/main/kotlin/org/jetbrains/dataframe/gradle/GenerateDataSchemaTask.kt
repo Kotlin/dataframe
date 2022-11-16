@@ -82,9 +82,10 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         // first try without creating dataframe
         when (val codeGenResult = CodeGenerator.urlCodeGenReader(url, formats)) {
             is CodeGenerationReadResult.Success -> {
-                val readDfMethod =
-                    codeGenResult.getReadDfMethod(stringOf(data.get()))
-                val code = codeGenResult.code.toStandaloneSnippet(escapedPackageName, readDfMethod.additionalImports)
+                val readDfMethod = codeGenResult.getReadDfMethod(stringOf(data.get()))
+                val code = codeGenResult.code
+                    .converter(interfaceName.get()) // convert name of the generated singleton object if needed
+                    .toStandaloneSnippet(escapedPackageName, readDfMethod.additionalImports)
                 schemaFile.bufferedWriter().use {
                     it.write(code)
                 }
@@ -118,6 +119,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 DataSchemaVisibility.INTERNAL -> MarkerVisibility.INTERNAL
                 DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
                 DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
+                else -> MarkerVisibility.IMPLICIT_PUBLIC
             },
             readDfMethod = readDfMethod,
             fieldNameNormalizer = NameNormalizer.from(delimiters),

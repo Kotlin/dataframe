@@ -1062,8 +1062,8 @@ class DataFrameSymbolProcessorTest {
                 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 
                 fun resolved() {
-                    Pet
-                    Error
+                    Petstore.Pet
+                    Petstore.Error
                 }
                         """.trimIndent()
                     )
@@ -1075,11 +1075,11 @@ class DataFrameSymbolProcessorTest {
             it.forAtLeastOne { it shouldContain "Pet" }
             it.forAtLeastOne { it shouldContain "Error" }
         }
-        result.inspectLines("Pet\$Extensions.kt") {
+        result.inspectLines("org.example.Petstore.Pet\$Extensions.kt") {
             it.forAtLeastOne { it shouldContain "tag" }
             it.forAtLeastOne { it shouldContain "id" }
         }
-        result.inspectLines("Error\$Extensions.kt") {
+        result.inspectLines("org.example.Petstore.Error\$Extensions.kt") {
             it.forAtLeastOne { it shouldContain "message" }
             it.forAtLeastOne { it shouldContain "code" }
         }
@@ -1126,6 +1126,43 @@ class DataFrameSymbolProcessorTest {
         }
     }
 
+    private val apiGuruMetricsJson = File("../../core/src/test/resources/apiGuruMetrics.json")
+
+    @Test
+    fun `non openApi json test 2`(): Unit = useHostedFile(apiGuruMetricsJson) {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
+                @file:ImportDataSchema(
+                    "MetricsNoKeyValue", 
+                    "$it",
+                )
+                package org.example
+                import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+
+                fun resolved() {
+                    MetricsNoKeyValue
+                }
+                        """.trimIndent()
+                    )
+                )
+            )
+        )
+        println(result.kspGeneratedFiles)
+        result.inspectLines("MetricsNoKeyValue.Generated.kt") {
+//            (('1'..'5') + "").forEach { nr ->
+//                it.forAtLeastOne {
+//                    it shouldContain "JetBrains$nr"
+//                }
+//            }
+        }
+    }
+
+
     private val petstoreJson = File("../../core/src/test/resources/petstore.json")
 
     @Test
@@ -1138,14 +1175,15 @@ class DataFrameSymbolProcessorTest {
                         """
                 @file:ImportDataSchema(
                     path = "$it",
+                    name = "Petstore",
                 )
                 package org.example
                 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
                 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 
                 fun resolved() {
-                    Pet
-                    Error
+                    Petstore.Pet
+                    Petstore.Error
                 }
                         """.trimIndent()
                     )
@@ -1153,17 +1191,17 @@ class DataFrameSymbolProcessorTest {
             )
         )
         println(result.kspGeneratedFiles)
-        result.inspectLines("DataSchema.Generated.kt") {
+        result.inspectLines("Petstore.Generated.kt") {
             it.forAtLeastOne { it shouldContain "Pet" }
             it.forAtLeastOne { it shouldContain "Error" }
             it.forAtLeastOne { it shouldContain "readJson" }
             it.forAtLeastOne { it shouldContain "readJsonStr" }
         }
-        result.inspectLines("Pet\$Extensions.kt") {
+        result.inspectLines("org.example.Petstore.Pet\$Extensions.kt") {
             it.forAtLeastOne { it shouldContain "tag" }
             it.forAtLeastOne { it shouldContain "id" }
         }
-        result.inspectLines("Error\$Extensions.kt") {
+        result.inspectLines("org.example.Petstore.Error\$Extensions.kt") {
             it.forAtLeastOne { it shouldContain "message" }
             it.forAtLeastOne { it shouldContain "code" }
         }

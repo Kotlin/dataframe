@@ -115,41 +115,50 @@ print(df.fullName.count { it.contains("kotlin") })
 
 ### OpenAPI Schema inference
 
-JSON schema inference is great, but it's not perfect. However, more and more APIs offer 
-[OpenAPI (Swagger)](https://swagger.io/) specifications. Aside from API endpoints, they also hold 
-[Data Models](https://swagger.io/docs/specification/data-models/) which include all the information about the types 
-that can be returned from or supplied to the API. Why should we reinvent the wheel and write our own schema inference 
+JSON schema inference is great, but it's not perfect. However, more and more APIs offer
+[OpenAPI (Swagger)](https://swagger.io/) specifications. Aside from API endpoints, they also hold
+[Data Models](https://swagger.io/docs/specification/data-models/) which include all the information about the types
+that can be returned from or supplied to the API. Why should we reinvent the wheel and write our own schema inference
 when we can use the one provided by the API? Not only will we now get the proper names of the types, but we will also
 get enums, correct inheritance and overall better type safety.
 
 OpenAPI type schema's can be generated using both methods described above:
+
 ```kotlin
 @file:ImportDataSchema(
     path = "https://petstore3.swagger.io/api/v3/openapi.json",
+    name = "PetStore",
 )
 
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 ```
+
 ```kotlin
 dataframes {
     schema {
         data = "https://petstore3.swagger.io/api/v3/openapi.json"
-        name = "OpenApiPetStore"
+        name = "PetStore"
     }
 }
 ```
+
 The only difference is that the name provided is now irrelevant, since the type names are provided by the OpenAPI spec.
 (If you were wondering, yes, Dataframe can tell the difference between an OpenAPI spec and normal JSON data)
 
 After importing the data schema, you can now start to import any JSON data you like using the generated schemas.
-For instance, one of the types in the schema above is `Pet` (which can also be explored [here](https://petstore3.swagger.io/)), 
+For instance, one of the types in the schema above is `PetStore.Pet` (which can also be
+explored [here](https://petstore3.swagger.io/)),
 so let's parse some Pets:
+
 ```kotlin
-val df: DataFrame<Pet> = Pet.readJson("https://petstore3.swagger.io/api/v3/pet/findByStatus?status=available")
+val df: DataFrame<Pet> = PetStore.Pet.readJson("https://petstore3.swagger.io/api/v3/pet/findByStatus?status=available")
 ```
-Now you will have a correctly typed dataframe! 
 
-You can also always ctrl+click on the `Pet` type to see all the generated schemas.
+Now you will have a correctly typed dataframe!
 
-If you experience any issues with the OpenAPI support (since there are many gotchas and edge-cases when converting something as
-type-fluid as JSON to a strongly typed language), please open an issue on the [Github repo](https://github.com/Kotlin/dataframe/issues).
+You can also always ctrl+click on the `PetStore.Pet` type to see all the generated schemas.
+
+If you experience any issues with the OpenAPI support (since there are many gotchas and edge-cases when converting
+something as
+type-fluid as JSON to a strongly typed language), please open an issue on
+the [Github repo](https://github.com/Kotlin/dataframe/issues).
