@@ -1,7 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.io // ktlint-disable filename
 
-import com.beust.klaxon.JsonObject
-import com.beust.klaxon.Parser
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.LambdaTypeName
@@ -270,6 +268,12 @@ private object DefaultReadOpenApiMethod : AbstractDefaultReadMethod(
     }
 }
 
+/** Needs to have any type schemas to convert. */
+internal fun isOpenApiStr(text: String): Boolean {
+    val parsed = OpenAPIParser().readContents(text, null, null)
+    return parsed.openAPI?.components?.schemas != null
+}
+
 internal fun isOpenApi(path: String): Boolean = isOpenApi(asURL(path))
 
 internal fun isOpenApi(url: URL): Boolean {
@@ -280,10 +284,7 @@ internal fun isOpenApi(url: URL): Boolean {
         return false
     }
 
-    return url.openStream().use {
-        val parsed = Parser.default().parse(it) as? JsonObject ?: return false
-        parsed["openapi"] != null
-    }
+    return isOpenApiStr(url.readText())
 }
 
 internal fun isOpenApi(file: File): Boolean {
@@ -295,9 +296,7 @@ internal fun isOpenApi(file: File): Boolean {
         return false
     }
 
-    val parsed = Parser.default().parse(file.inputStream()) as? JsonObject ?: return false
-
-    return parsed["openapi"] != null
+    return isOpenApiStr(file.readText())
 }
 
 /** Parse and read OpenApi specification to [DataSchema] interfaces. */
@@ -307,11 +306,15 @@ public fun readOpenApi(
     options: ParseOptions? = null,
     extensionProperties: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): CodeWithConverter = readOpenApi(
-    swaggerParseResult = OpenAPIParser().readLocation(uri, auth, options),
-    extensionProperties = extensionProperties,
-    visibility = visibility,
-)
+): CodeWithConverter {
+    require(isOpenApi(uri)) { "Not an OpenApi specification with type schemas: $uri" }
+
+    return readOpenApi(
+        swaggerParseResult = OpenAPIParser().readLocation(uri, auth, options),
+        extensionProperties = extensionProperties,
+        visibility = visibility,
+    )
+}
 
 /** Parse and read OpenApi specification to [DataSchema] interfaces. */
 public fun readOpenApiAsString(
@@ -320,11 +323,15 @@ public fun readOpenApiAsString(
     options: ParseOptions? = null,
     extensionProperties: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): CodeWithConverter = readOpenApi(
-    swaggerParseResult = OpenAPIParser().readContents(openApiAsString, auth, options),
-    extensionProperties = extensionProperties,
-    visibility = visibility,
-)
+): CodeWithConverter {
+    require(isOpenApiStr(openApiAsString)) { "Not an OpenApi specification with type schemas: $openApiAsString" }
+
+    return readOpenApi(
+        swaggerParseResult = OpenAPIParser().readContents(openApiAsString, auth, options),
+        extensionProperties = extensionProperties,
+        visibility = visibility,
+    )
+}
 
 /**
  * Converts a parsed OpenAPI specification into a [CodeWithConverter] consisting of [DataSchema] interfaces.
@@ -345,43 +352,62 @@ private fun readOpenApi(
     val openApi = swaggerParseResult.openAPI
         ?: error("Failed to parse OpenAPI, ${swaggerParseResult.messages.toList()}")
 
-    // take the components.schemas from the openApi spec and convert them to a list of Markers, representing the
-    // interfaces, enums, and typeAliases that need to be generated.
-    val result = openApi.components?.schemas
-        ?.toMap()
-        ?.toMarkers()
-        ?.toList()
-        ?: emptyList()
+    fun getCode(topInterfaceName: ValidFieldName): String {
+        // take the components.schemas from the openApi spec and convert them to a list of Markers, representing the
+        // interfaces, enums, and typeAliases that need to be generated.
+        val result = openApi.components?.schemas
+            ?.toMap()
+            ?.toMarkers(topInterfaceName)
+            ?.toList()
+            ?: emptyList()
 
-    // generate the code for the markers in result
-    val codeGenerator = CodeGenerator.create(useFqNames = true)
+        // generate the code for the markers in result
+        val codeGenerator = CodeGenerator.create(useFqNames = true)
 
-    fun toCode(marker: OpenApiMarker) = codeGenerator.generate(
-        marker = marker.withVisibility(visibility),
-        interfaceMode = when (marker) {
-            is OpenApiMarker.Enum -> InterfaceGenerationMode.Enum
-            is OpenApiMarker.Interface -> InterfaceGenerationMode.WithFields
-            is OpenApiMarker.TypeAlias, is OpenApiMarker.MarkerAlias -> InterfaceGenerationMode.TypeAlias
-        },
-        extensionProperties = extensionProperties,
-        readDfMethod = if (marker is OpenApiMarker.Interface) DefaultReadOpenApiMethod else null,
-    )
+        fun toCode(marker: OpenApiMarker): CodeWithConverter =
+            codeGenerator.generate(
+                marker = marker
+                    .withVisibility(visibility)
+                    .withName(
+                        name = marker.name.withoutTopInterfaceName(topInterfaceName),
+                        prependTopInterfaceName = false,
+                    ),
+                interfaceMode = when (marker) {
+                    is OpenApiMarker.Enum -> InterfaceGenerationMode.Enum
+                    is OpenApiMarker.Interface -> InterfaceGenerationMode.WithFields
+                    is OpenApiMarker.TypeAlias, is OpenApiMarker.MarkerAlias -> InterfaceGenerationMode.TypeAlias
+                },
+                extensionProperties = false,
+                readDfMethod = if (marker is OpenApiMarker.Interface) DefaultReadOpenApiMethod else null,
+            )
 
-    val (typeAliases, markers) = result.partition { it is OpenApiMarker.TypeAlias || it is OpenApiMarker.MarkerAlias }
-    val generatedMarkers = markers.map(::toCode).reduceOrNull(CodeWithConverter::plus)
-    val generatedTypeAliases = typeAliases.map(::toCode).reduceOrNull(CodeWithConverter::plus)
+        fun toExtensionProperties(marker: OpenApiMarker): CodeWithConverter =
+            if (marker !is OpenApiMarker.Interface) CodeWithConverter("") { "" }
+            else codeGenerator.generate(
+                marker = marker.withVisibility(visibility),
+                interfaceMode = InterfaceGenerationMode.None,
+                extensionProperties = true,
+                readDfMethod = null,
+            )
 
-    fun getCode(singletonObjectName: ValidFieldName): String =
-        """
-         |object ${ValidFieldName.of(objectName).quotedIfNeeded} {
-         |    ${generatedMarkers?.declarations?.replace("\n", "\n|    ") ?: ""}
-         |}
-         |${generatedTypeAliases?.declarations?.replace("\n", "\n|") ?: ""}
-     """.trimMargin()
+        val (typeAliases, markers) = result.partition { it is OpenApiMarker.TypeAlias || it is OpenApiMarker.MarkerAlias }
+        val generatedMarkers = markers.map(::toCode).reduceOrNull(CodeWithConverter::plus)
+        val generatedTypeAliases = typeAliases.map(::toCode).reduceOrNull(CodeWithConverter::plus)
+        val generatedExtensionProperties =
+            if (extensionProperties) result.map(::toExtensionProperties).reduceOrNull(CodeWithConverter::plus) else null
+
+        return """
+             |interface ${topInterfaceName.quotedIfNeeded} {
+             |    ${generatedMarkers?.declarations?.replace("\n", "\n|    ") ?: ""}
+             |}
+             |${generatedTypeAliases?.declarations?.replace("\n", "\n|") ?: ""}
+             |${generatedExtensionProperties?.declarations?.replace("\n", "\n|") ?: ""}
+         """.trimMargin()
+    }
 
     return CodeWithConverter(
-        declarations = getCode(openApi.info?.title ?: "OpenApiDataSchemas"),
-        converter = ::getCode,
+        declarations = "", // Need to use the converter to get the right name of singleton object
+        converter = { getCode(ValidFieldName.of(it)) },
     )
 }
 
@@ -532,13 +558,15 @@ public interface AdditionalProperty<T> : KeyValueProperty<T> {
  */
 private sealed class OpenApiMarker private constructor(
     val nullable: Boolean, // in openApi, just like an enum, nullability can be saved in the object
+    protected val topInterfaceName: ValidFieldName,
     name: String,
     visibility: MarkerVisibility,
     fields: List<GeneratedField>,
     superMarkers: List<Marker>,
+    prependTopInterfaceName: Boolean = true,
 ) : IsObjectOrList,
     Marker(
-        name = name,
+        name = if (prependTopInterfaceName) name.withTopInterfaceName(topInterfaceName) else name,
         isOpen = false,
         fields = fields,
         superMarkers = superMarkers,
@@ -548,7 +576,7 @@ private sealed class OpenApiMarker private constructor(
     ) {
 
     abstract val additionalPropertyPaths: List<JsonPath>
-    abstract fun withName(name: String): OpenApiMarker
+    abstract fun withName(name: String, prependTopInterfaceName: Boolean = true): OpenApiMarker
     abstract fun withVisibility(visibility: MarkerVisibility): OpenApiMarker
 
     abstract fun toFieldType(): FieldType
@@ -568,13 +596,17 @@ private sealed class OpenApiMarker private constructor(
         nullable: Boolean,
         fields: List<GeneratedField>,
         name: String,
+        topInterfaceName: ValidFieldName,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+        prependTopInterfaceName: Boolean = true,
     ) : OpenApiMarker(
         nullable = nullable,
         name = name,
+        topInterfaceName = topInterfaceName,
         visibility = visibility,
         fields = fields,
         superMarkers = emptyList(),
+        prependTopInterfaceName = prependTopInterfaceName,
     ) {
 
         // enums become List<Something>, not Dataframe<*>
@@ -592,11 +624,24 @@ private sealed class OpenApiMarker private constructor(
                 typeFqName = name + if (nullable) "?" else "",
             )
 
-        override fun withName(name: String): Enum =
-            Enum(nullable, fields, name, visibility)
+        override fun withName(name: String, prependTopInterfaceName: Boolean): Enum =
+            Enum(
+                nullable = nullable,
+                fields = fields,
+                name = name,
+                topInterfaceName = topInterfaceName,
+                visibility = visibility,
+                prependTopInterfaceName = prependTopInterfaceName,
+            )
 
         override fun withVisibility(visibility: MarkerVisibility): Enum =
-            Enum(nullable, fields, name, visibility)
+            Enum(
+                nullable = nullable,
+                fields = fields,
+                name = name,
+                topInterfaceName = topInterfaceName,
+                visibility = visibility
+            )
     }
 
     /**
@@ -612,14 +657,18 @@ private sealed class OpenApiMarker private constructor(
         fields: List<GeneratedField>,
         superMarkers: List<Marker>,
         name: String,
+        topInterfaceName: ValidFieldName,
         override val additionalPropertyPaths: List<JsonPath>,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+        prependTopInterfaceName: Boolean = true,
     ) : OpenApiMarker(
         nullable = nullable,
         name = name,
+        topInterfaceName = topInterfaceName,
         visibility = visibility,
         fields = fields,
         superMarkers = superMarkers,
+        prependTopInterfaceName = prependTopInterfaceName,
     ) {
 
         // Will be a DataFrame<*>
@@ -631,11 +680,28 @@ private sealed class OpenApiMarker private constructor(
                 markerName = name + if (nullable) "?" else "",
             )
 
-        override fun withName(name: String): Interface =
-            Interface(nullable, fields, superMarkers.values.toList(), name, additionalPropertyPaths, visibility)
+        override fun withName(name: String, prependTopInterfaceName: Boolean): Interface =
+            Interface(
+                nullable = nullable,
+                fields = fields,
+                superMarkers = superMarkers.values.toList(),
+                name = name,
+                topInterfaceName = topInterfaceName,
+                additionalPropertyPaths = additionalPropertyPaths,
+                visibility = visibility,
+                prependTopInterfaceName = prependTopInterfaceName,
+            )
 
         override fun withVisibility(visibility: MarkerVisibility): Interface =
-            Interface(nullable, fields, superMarkers.values.toList(), name, additionalPropertyPaths, visibility)
+            Interface(
+                nullable = nullable,
+                fields = fields,
+                superMarkers = superMarkers.values.toList(),
+                name = name,
+                topInterfaceName = topInterfaceName,
+                additionalPropertyPaths = additionalPropertyPaths,
+                visibility = visibility
+            )
     }
 
     /**
@@ -652,11 +718,14 @@ private sealed class OpenApiMarker private constructor(
         val valueType: FieldType,
         override val isList: Boolean,
         name: String,
+        topInterfaceName: ValidFieldName,
         additionalPropertyPaths: List<JsonPath>,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+        prependTopInterfaceName: Boolean = true,
     ) : Interface(
         nullable = nullable,
         name = name,
+        topInterfaceName = topInterfaceName,
         visibility = visibility,
         fields = listOf(
             generatedFieldOf(
@@ -674,6 +743,7 @@ private sealed class OpenApiMarker private constructor(
         ),
         additionalPropertyPaths = (additionalPropertyPaths + JsonPath()).distinct(),
         superMarkers = listOf(AdditionalProperty.getMarker(listOf(valueType.name))),
+        prependTopInterfaceName = prependTopInterfaceName,
     ) {
 
         // Will be a DataFrame<out AdditionalProperty>
@@ -685,11 +755,28 @@ private sealed class OpenApiMarker private constructor(
                 nullable = false,
             )
 
-        override fun withName(name: String): AdditionalPropertyInterface =
-            AdditionalPropertyInterface(nullable, valueType, isList, name, additionalPropertyPaths, visibility)
+        override fun withName(name: String, prependTopInterfaceName: Boolean): AdditionalPropertyInterface =
+            AdditionalPropertyInterface(
+                nullable = nullable,
+                valueType = valueType,
+                isList = isList,
+                name = name,
+                topInterfaceName = topInterfaceName,
+                additionalPropertyPaths = additionalPropertyPaths,
+                visibility = visibility,
+                prependTopInterfaceName = prependTopInterfaceName,
+            )
 
         override fun withVisibility(visibility: MarkerVisibility): AdditionalPropertyInterface =
-            AdditionalPropertyInterface(nullable, valueType, isList, name, additionalPropertyPaths, visibility)
+            AdditionalPropertyInterface(
+                nullable = nullable,
+                valueType = valueType,
+                isList = isList,
+                name = name,
+                topInterfaceName = topInterfaceName,
+                additionalPropertyPaths = additionalPropertyPaths,
+                visibility = visibility
+            )
     }
 
     /**
@@ -704,12 +791,15 @@ private sealed class OpenApiMarker private constructor(
         nullable: Boolean,
         override val isList: Boolean,
         name: String,
+        topInterfaceName: ValidFieldName,
         val superMarkerName: String,
         override val additionalPropertyPaths: List<JsonPath>,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+        prependTopInterfaceName: Boolean = false,
     ) : OpenApiMarker(
         nullable = nullable,
         name = name,
+        topInterfaceName = topInterfaceName,
         visibility = visibility,
         fields = emptyList(),
         superMarkers = listOf(
@@ -725,6 +815,7 @@ private sealed class OpenApiMarker private constructor(
                 typeArguments = emptyList(),
             )
         ),
+        prependTopInterfaceName = prependTopInterfaceName,
     ) {
 
         override val isObject = false
@@ -734,11 +825,28 @@ private sealed class OpenApiMarker private constructor(
                 typeFqName = name + if (nullable) "?" else "",
             )
 
-        override fun withName(name: String): TypeAlias =
-            TypeAlias(nullable, isList, name, superMarkerName, additionalPropertyPaths, visibility)
+        override fun withName(name: String, prependTopInterfaceName: Boolean): TypeAlias =
+            TypeAlias(
+                nullable = nullable,
+                isList = isList,
+                name = name,
+                topInterfaceName = topInterfaceName,
+                superMarkerName = superMarkerName,
+                additionalPropertyPaths = additionalPropertyPaths,
+                visibility = visibility,
+                prependTopInterfaceName = prependTopInterfaceName,
+            )
 
         override fun withVisibility(visibility: MarkerVisibility): TypeAlias =
-            TypeAlias(nullable, isList, name, superMarkerName, additionalPropertyPaths, visibility)
+            TypeAlias(
+                nullable = nullable,
+                isList = isList,
+                name = name,
+                topInterfaceName = topInterfaceName,
+                superMarkerName = superMarkerName,
+                additionalPropertyPaths = additionalPropertyPaths,
+                visibility = visibility,
+            )
     }
 
     /**
@@ -750,16 +858,20 @@ private sealed class OpenApiMarker private constructor(
      * @param visibility the visibility of the type alias.
      */
     class MarkerAlias(
-        val superMarker: OpenApiMarker,
+        private val superMarker: OpenApiMarker,
+        topInterfaceName: ValidFieldName,
         nullable: Boolean,
         name: String,
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
+        prependTopInterfaceName: Boolean = false,
     ) : OpenApiMarker(
         nullable = nullable || superMarker.nullable,
         name = name,
+        topInterfaceName = topInterfaceName,
         visibility = visibility,
         fields = emptyList(),
         superMarkers = listOf(superMarker),
+        prependTopInterfaceName = prependTopInterfaceName,
     ) {
 
         // depends on the marker it points to whether it's primitive or not
@@ -773,13 +885,24 @@ private sealed class OpenApiMarker private constructor(
                 markerName = name + if (nullable) "?" else "",
             )
 
-        override fun withName(name: String): MarkerAlias = MarkerAlias(superMarker, nullable, name, visibility)
+        override fun withName(name: String, prependTopInterfaceName: Boolean): MarkerAlias =
+            MarkerAlias(
+                superMarker = superMarker,
+                topInterfaceName = topInterfaceName,
+                nullable = nullable,
+                name = name,
+                visibility = visibility,
+                prependTopInterfaceName = prependTopInterfaceName,
+            )
 
         override fun withVisibility(visibility: MarkerVisibility): MarkerAlias =
-            MarkerAlias(superMarker, nullable, name, visibility)
-
-        fun withSuperMarker(superMarker: OpenApiMarker): MarkerAlias =
-            MarkerAlias(superMarker, nullable, name, visibility)
+            MarkerAlias(
+                superMarker = superMarker,
+                topInterfaceName = topInterfaceName,
+                nullable = nullable,
+                name = name,
+                visibility = visibility,
+            )
     }
 }
 
@@ -800,7 +923,7 @@ private sealed class OpenApiMarker private constructor(
  * Although recommended, you can still define an object anonymously directly as a type. For this, we have
  * `produceAdditionalMarker` since during the conversion of a schema -> [Marker] we get an additional new [Marker].
  */
-private fun Map<String, Schema<*>>.toMarkers(singletonObjectName: ValidFieldName): List<OpenApiMarker> {
+private fun Map<String, Schema<*>>.toMarkers(topInterfaceName: ValidFieldName): List<OpenApiMarker> {
     // Convert the schemas to toMarker calls that can be repeated to resolve references.
     val retrievableMarkers = mapValues { (typeName, value) ->
         RetrievableMarker { getRefMarker, produceAdditionalMarker ->
@@ -808,6 +931,7 @@ private fun Map<String, Schema<*>>.toMarkers(singletonObjectName: ValidFieldName
                 typeName = typeName,
                 getRefMarker = getRefMarker,
                 produceAdditionalMarker = produceAdditionalMarker,
+                topInterfaceName = topInterfaceName,
             )
         }
     }.toMutableMap()
@@ -986,7 +1110,7 @@ private fun Schema<*>.toMarker(
     typeName: String,
     getRefMarker: GetRefMarker,
     produceAdditionalMarker: ProduceAdditionalMarker,
-    singletonObjectName: ValidFieldName,
+    topInterfaceName: ValidFieldName,
     required: List<String> = emptyList(),
 ): MarkerResult {
     @Suppress("NAME_SHADOWING")
@@ -1064,6 +1188,7 @@ private fun Schema<*>.toMarker(
                                 }
                             },
                             required = required,
+                            topInterfaceName = topInterfaceName,
                         )
 
                         when (fieldTypeResult) {
@@ -1087,6 +1212,7 @@ private fun Schema<*>.toMarker(
                     fields = fields,
                     superMarkers = superMarkers,
                     additionalPropertyPaths = additionalPropertyPaths,
+                    topInterfaceName = topInterfaceName,
                 )
             )
         }
@@ -1100,6 +1226,7 @@ private fun Schema<*>.toMarker(
 
             val enumMarker = produceNewEnum(
                 name = typeName,
+                topInterfaceName = topInterfaceName,
                 values = openApiTypeResult.values,
                 nullable = openApiTypeResult.nullable,
                 produceAdditionalMarker = ProduceAdditionalMarker.NOOP, // we need it here, not as additional marker
@@ -1156,6 +1283,7 @@ private fun Schema<*>.toMarker(
                                 // inner enum, so produce it as additional
                                 val enumMarker = produceNewEnum(
                                     name = name,
+                                    topInterfaceName = topInterfaceName,
                                     values = openApiTypeResult.values,
                                     produceAdditionalMarker = produceAdditionalMarker,
                                     nullable = openApiTypeResult.nullable,
@@ -1182,6 +1310,7 @@ private fun Schema<*>.toMarker(
                                     getRefMarker = getRefMarker,
                                     produceAdditionalMarker = produceAdditionalMarker,
                                     required = required,
+                                    topInterfaceName = topInterfaceName,
                                 )
 
                                 when (fieldTypeResult) {
@@ -1217,6 +1346,7 @@ private fun Schema<*>.toMarker(
                         fields = fields,
                         superMarkers = emptyList(),
                         additionalPropertyPaths = keyValuePaths,
+                        topInterfaceName = topInterfaceName,
                     )
                 )
             }
@@ -1251,6 +1381,7 @@ private fun Schema<*>.toMarker(
                                 getRefMarker = getRefMarker,
                                 produceAdditionalMarker = produceAdditionalMarker,
                                 required = required,
+                                topInterfaceName = topInterfaceName,
                             )
 
                         isList = openApiTypeResult.openApiType.isList
@@ -1273,6 +1404,7 @@ private fun Schema<*>.toMarker(
                         // inner enum, so produce it as additional
                         val enumMarker = produceNewEnum(
                             name = name,
+                            topInterfaceName = topInterfaceName,
                             values = openApiTypeResult.values,
                             produceAdditionalMarker = produceAdditionalMarker,
                             nullable = openApiTypeResult.nullable,
@@ -1295,6 +1427,7 @@ private fun Schema<*>.toMarker(
                         name = ValidFieldName.of(typeName).quotedIfNeeded,
                         additionalPropertyPaths = additionalPropertyPaths,
                         isList = isList,
+                        topInterfaceName = topInterfaceName,
                     )
                 )
             }
@@ -1306,6 +1439,7 @@ private fun Schema<*>.toMarker(
                     fields = emptyList(),
                     superMarkers = emptyList(),
                     additionalPropertyPaths = emptyList(),
+                    topInterfaceName = topInterfaceName,
                 )
             )
         }
@@ -1323,6 +1457,7 @@ private fun Schema<*>.toMarker(
                 is OpenApiTypeResult.UsingRef -> OpenApiMarker.MarkerAlias(
                     name = ValidFieldName.of(typeName).quotedIfNeeded,
                     superMarker = openApiTypeResult.marker,
+                    topInterfaceName = topInterfaceName,
                     nullable = nullable,
                 )
 
@@ -1336,6 +1471,7 @@ private fun Schema<*>.toMarker(
                             getRefMarker = getRefMarker,
                             produceAdditionalMarker = produceAdditionalMarker,
                             required = required,
+                            topInterfaceName = topInterfaceName,
                         )
 
                     val superMarkerName = when (typeResult) {
@@ -1358,6 +1494,7 @@ private fun Schema<*>.toMarker(
                         superMarkerName = superMarkerName,
                         additionalPropertyPaths = typeResult.additionalPropertyPaths,
                         isList = openApiTypeResult.openApiType.isList,
+                        topInterfaceName = topInterfaceName,
                     )
                 }
 
@@ -1372,6 +1509,7 @@ private fun Schema<*>.toMarker(
 /** Small helper function to produce a new enum Marker. */
 private fun produceNewEnum(
     name: String,
+    topInterfaceName: ValidFieldName,
     values: List<String>,
     nullable: Boolean,
     produceAdditionalMarker: ProduceAdditionalMarker,
@@ -1386,6 +1524,7 @@ private fun produceNewEnum(
             )
         },
         nullable = nullable,
+        topInterfaceName = topInterfaceName,
     )
     val newName = produceAdditionalMarker(enumName, enumMarker, isTopLevelObject = false)
 
@@ -1720,7 +1859,7 @@ private fun OpenApiType.toFieldType(
     getRefMarker: GetRefMarker,
     produceAdditionalMarker: ProduceAdditionalMarker,
     required: List<String>,
-    singletonObjectName: ValidFieldName,
+    topInterfaceName: ValidFieldName,
 ): FieldTypeResult {
     return when (this) {
         is OpenApiType.Any -> FieldTypeResult.FieldType(getType(nullable))
@@ -1829,6 +1968,7 @@ private fun OpenApiType.toFieldType(
                                 getRefMarker = getRefMarker,
                                 produceAdditionalMarker = produceAdditionalMarker,
                                 required = emptyList(),
+                                topInterfaceName = topInterfaceName,
                             )
 
                         when (arrayTypeSchemaResult) {
@@ -1892,6 +2032,7 @@ private fun OpenApiType.toFieldType(
                         // enum needs to be produced as additional marker
                         val enumMarker = produceNewEnum(
                             name = schemaName,
+                            topInterfaceName = topInterfaceName,
                             values = arrayTypeResult.values,
                             produceAdditionalMarker = produceAdditionalMarker,
                             nullable = arrayTypeResult.nullable,
@@ -1918,6 +2059,7 @@ private fun OpenApiType.toFieldType(
                     produceAdditionalMarker(validName, marker, isTopLevelObject = false)
                 },
                 required = required,
+                topInterfaceName = topInterfaceName,
             )
 
             when (dataFrameSchemaResult) {
@@ -1957,6 +2099,12 @@ private fun OpenApiType.toFieldType(
         }
     }
 }
+
+internal fun String.withTopInterfaceName(topInterfaceName: ValidFieldName): String =
+    if (startsWith("${topInterfaceName.quotedIfNeeded}.")) this else "${topInterfaceName.quotedIfNeeded}.$this"
+
+internal fun String.withoutTopInterfaceName(topInterfaceName: ValidFieldName): String =
+    if (startsWith("${topInterfaceName.quotedIfNeeded}.")) substringAfter("${topInterfaceName.quotedIfNeeded}.") else this
 
 internal fun String.snakeToLowerCamelCase(): String =
     toCamelCaseByDelimiters(DELIMITERS_REGEX)

@@ -195,10 +195,13 @@ internal fun commonParents(classes: Iterable<KClass<*>>): List<KClass<*>> =
  *
  * @param types the types to find the common type for
  * @param listifyValues if true, then values and nulls will be wrapped in a list if they appear among other lists.
- *   For example: `[Int, Any?, List<Int>]` will become `List<Int>` instead of `Any?`. If there is another collection
+ *   For example: `[Int, Nothing?, List<Int>]` will become `List<Int>` instead of `Any?`. If there is another collection
  *   in there, it will become `Any?` anyway.
  */
-internal fun baseType(types: Set<KType>, listifyValues: Boolean = false): KType {
+internal fun baseType(
+    types: Set<KType>,
+    listifyValues: Boolean = false,
+): KType { // TODO bug for listifyValues with Any? and Nothing?
     val nullable = types.any { it.isMarkedNullable }
     return when (types.size) {
         0 -> typeOf<Unit>()

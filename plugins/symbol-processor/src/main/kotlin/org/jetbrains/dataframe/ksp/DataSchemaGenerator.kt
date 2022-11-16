@@ -35,7 +35,7 @@ class DataSchemaGenerator(
     private val resolver: Resolver,
     private val resolutionDir: String?,
     private val logger: KSPLogger,
-    private val codeGenerator: com.google.devtools.ksp.processing.CodeGenerator
+    private val codeGenerator: com.google.devtools.ksp.processing.CodeGenerator,
 ) {
 
     fun resolveImportStatements() = listOf(
@@ -137,9 +137,18 @@ class DataSchemaGenerator(
         // first try without creating dataframe
         when (val codeGenResult = CodeGenerator.urlCodeGenReader(importStatement.dataSource.data, formats)) {
             is CodeGenerationReadResult.Success -> {
-                val readDfMethod =
-                    codeGenResult.getReadDfMethod(importStatement.dataSource.pathRepresentation.takeIf { importStatement.withDefaultPath })
-                val code = codeGenResult.code.toStandaloneSnippet(packageName, readDfMethod.additionalImports)
+                val readDfMethod = codeGenResult.getReadDfMethod(
+                    pathRepresentation = importStatement
+                        .dataSource
+                        .pathRepresentation
+                        .takeIf { importStatement.withDefaultPath },
+                )
+
+                val code = codeGenResult
+                    .code
+                    .converter(name) // convert name of the generated singleton object if needed
+                    .toStandaloneSnippet(packageName, readDfMethod.additionalImports)
+
                 schemaFile.bufferedWriter().use {
                     it.write(code)
                 }

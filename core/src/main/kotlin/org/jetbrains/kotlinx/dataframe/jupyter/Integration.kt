@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
-import org.intellij.lang.annotations.Language
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -60,37 +59,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
 
         onLoaded {
             declare("dataFrameConfig" to config)
-
-            @Language("kt")
-            val _0 = execute(
-                """
-                /** Import the type-only data schema from [url]. */
-                fun importDataSchema(url: URL) {
-                    val formats = listOf(
-                        OpenApi(),
-                    )
-                    val codeGenResult = org.jetbrains.dataframe.impl.codeGen.CodeGenerator.urlCodeGenReader(url, formats)
-                    when (codeGenResult) {
-                        is org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult.Success -> {
-                            val readDfMethod = codeGenResult.getReadDfMethod(url.toExternalForm())
-                            val code = readDfMethod.additionalImports.joinToString("\n") + "\n" + codeGenResult.code.declarations
-                            EXECUTE(code)
-                            DISPLAY("Data schema successfully imported")
-                        }
-
-                        is org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult.Error -> {
-                            DISPLAY("Failed to read data schema from ${'$'}url: ${'$'}{codeGenResult.reason}")
-                        }
-                    }
-                }
-
-                /** Import the type-only data schema from [path]. */
-                fun importDataSchema(path: String): Unit = importDataSchema(URL(path))
-
-                /** Import the type-only data schema from [file]. */
-                fun importDataSchema(file: File): Unit = importDataSchema(file.toURI().toURL())
-                """.trimIndent()
-            )
+            execute(importDataSchema)
         }
 
         resources {

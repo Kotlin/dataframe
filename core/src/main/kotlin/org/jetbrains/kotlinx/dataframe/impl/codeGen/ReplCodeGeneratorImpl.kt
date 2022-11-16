@@ -68,7 +68,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                         // property scheme is valid for current data frame, but we should also check that all compatible open markers are implemented by it
                         val requiredBaseMarkers =
                             getRequiredMarkers(columnSchema, registeredMarkers.values)
-                        if (requiredBaseMarkers.all { currentMarker.implements(it) }) {
+                        if (requiredBaseMarkers.any() && requiredBaseMarkers.all { currentMarker.implements(it) }) {
                             return CodeWithConverter("") { it }
                         }
                         // use current marker scheme as a target for generation of new marker interface, so that available properties won't change
@@ -84,7 +84,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
     fun generate(
         schema: DataFrameSchema,
         name: String,
-        isOpen: Boolean
+        isOpen: Boolean,
     ): CodeWithConverter {
         val result = generator.generate(
             schema,

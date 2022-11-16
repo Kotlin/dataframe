@@ -47,6 +47,6 @@ dataframes {
     schema {
         data = "src/main/resources/ApiGuruOpenApi.yaml"
         // name is still needed to get the full path
-        name = "org.jetbrains.kotlinx.dataframe.examples.openapi.gradle.ApiGuruOpenApi"
+        name = "org.jetbrains.kotlinx.dataframe.examples.openapi.ApiGuruOpenApiGradle"
     }
 }
