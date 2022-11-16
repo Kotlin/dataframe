@@ -21,8 +21,7 @@ import org.jetbrains.kotlinx.dataframe.jupyter.RenderedContent
 import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.size
-import org.jetbrains.kotlinx.jupyter.api.HTML
-import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
+import org.jetbrains.kotlinx.jupyter.api.HtmlData
 import java.io.InputStreamReader
 import java.net.URL
 import java.util.LinkedList
@@ -154,41 +153,7 @@ internal fun AnyFrame.toHtmlData(
     }
     val body = getResourceText("/table.html", "ID" to rootId)
     val script = scripts.joinToString("\n") + "\n" + getResourceText("/renderTable.js", "___ID___" to rootId)
-    return HtmlData("", body, script, configuration.useDarkColorScheme)
-}
-
-public data class HtmlData(val style: String, val body: String, val script: String, val useDarkColorScheme: Boolean) {
-    override fun toString(): String = """
-        <html>
-        <head>
-            <style type="text/css">
-                $style
-            </style>
-        </head>
-        <body>
-            <div${darkSchemeAttribute()}>
-                $body
-            </div>
-        </body>
-        <script>
-            $script
-        </script>
-        </html>
-    """.trimIndent()
-
-    private fun darkSchemeAttribute(): String {
-        return if (useDarkColorScheme) " class=\"dataframe_dark\"" else ""
-    }
-
-    public fun toJupyter(): MimeTypedResult = HTML(toString())
-
-    public operator fun plus(other: HtmlData): HtmlData =
-        HtmlData(
-            style + "\n" + other.style,
-            body + "\n" + other.body,
-            script + "\n" + other.script,
-            useDarkColorScheme || other.useDarkColorScheme
-        )
+    return HtmlData("", body, script)
 }
 
 internal fun HtmlData.print() = println(this)
@@ -198,7 +163,6 @@ internal fun initHtml(includeJs: Boolean = true, includeCss: Boolean = true, use
         style = if (includeCss) getResources("/table.css") else "",
         script = if (includeJs) getResourceText("/init.js") else "",
         body = "",
-        useDarkColorScheme = useDarkColorScheme,
     )
 
 public fun <T> DataFrame<T>.html(): String = toHTML(extraHtml = initHtml()).toString()
@@ -212,12 +176,19 @@ public fun <T> DataFrame<T>.toHTML(
     val limit = configuration.rowsLimit
 
     val footer = getFooter(this)
-    val bodyFooter = if (limit < nrow) {
-        "<p>... showing only top $limit of $nrow rows</p><p>$footer</p>"
-    } else "<p>$footer</p>"
+    val bodyFooter = buildString {
+        val openPTag = "<p class=\"dataframe_description\">"
+        if (limit < nrow) {
+            append(openPTag)
+            append("... showing only top $limit of $nrow rows</p>")
+        }
+        append(openPTag)
+        append(footer)
+        append("</p>")
+    }
 
     val tableHtml = toHtmlData(configuration, cellRenderer)
-    val html = tableHtml + HtmlData("", bodyFooter, "", configuration.useDarkColorScheme)
+    val html = tableHtml + HtmlData("", bodyFooter, "")
 
     return if (extraHtml != null) extraHtml + html else html
 }
@@ -228,7 +199,7 @@ public data class DisplayConfiguration(
     var cellFormatter: RowColFormatter<*, *>? = null,
     var decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
     var isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
-    internal val localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
+    internal val localTesting: Boolean = true, // flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
     var useDarkColorScheme: Boolean = false,
 ) {
     public companion object {

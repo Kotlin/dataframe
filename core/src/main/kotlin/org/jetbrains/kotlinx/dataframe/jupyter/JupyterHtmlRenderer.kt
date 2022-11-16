@@ -19,7 +19,7 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
     val contextRenderer = JupyterCellRenderer(this.notebook, host)
     val reifiedDisplayConfiguration = value.modifyConfig(display)
     val footer = getFooter(value)
-    getDf(value).toHTML(
+    val html = getDf(value).toHTML(
         reifiedDisplayConfiguration,
         extraHtml = initHtml(
             includeJs = reifiedDisplayConfiguration.isolatedOutputs,
@@ -28,5 +28,6 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
         ),
         contextRenderer
     ) { footer }
-        .toJupyter()
+
+    notebook.renderHtmlAsIFrame(html)
 }
