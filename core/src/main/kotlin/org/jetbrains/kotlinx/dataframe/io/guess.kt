@@ -8,9 +8,12 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.single
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.jupyter.api.Code
+import org.jetbrains.kotlinx.dataframe.plugin.Read0
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileNotFoundException
@@ -284,6 +287,8 @@ public fun DataFrame.Companion.read(url: URL, header: List<String> = emptyList()
 public fun DataRow.Companion.read(url: URL, header: List<String> = emptyList()): AnyRow =
     DataFrame.read(url, header).single()
 
+@Refine("read_0")
+@Interpretable(Read0::class)
 public fun DataFrame.Companion.read(path: String, header: List<String> = emptyList()): AnyFrame =
     read(asURL(path), header)
 
