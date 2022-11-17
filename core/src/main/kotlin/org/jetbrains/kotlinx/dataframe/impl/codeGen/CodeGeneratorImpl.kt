@@ -458,21 +458,25 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
             val fieldType = it.renderFieldType()
             "$columnNameAnnotation    ${propertyVisibility}${override}val ${it.fieldName.quotedIfNeeded}: $fieldType"
         }.join() else ""
-        val body = if (fieldsDeclaration.isNotBlank()) buildString {
-            append(" {\n")
-            append(fieldsDeclaration)
-            if (readDfMethod != null) {
-                append("\n")
-                val companionObject = buildCodeBlock {
-                    add("    ")
-                    indent()
-                    indent()
-                    add(readDfMethod.toDeclaration(marker, propertyVisibility))
+
+        val readDfMethodDeclaration = readDfMethod?.toDeclaration(marker, propertyVisibility)
+
+        val body = if (fieldsDeclaration.isNotBlank() || readDfMethodDeclaration?.isNotBlank() == true)
+            buildString {
+                append(" {\n")
+                append(fieldsDeclaration)
+                if (readDfMethodDeclaration != null) {
+                    append("\n")
+                    val companionObject = buildCodeBlock {
+                        add("    ")
+                        indent()
+                        indent()
+                        add(readDfMethodDeclaration)
+                    }
+                    append(companionObject.toString())
                 }
-                append(companionObject.toString())
-            }
-            append("\n}")
-        } else ""
+                append("\n}")
+            } else ""
         resultDeclarations.add(header + baseInterfacesDeclaration + body)
         return resultDeclarations.join()
     }

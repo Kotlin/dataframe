@@ -79,20 +79,58 @@ import kotlin.reflect.typeOf
  */
 public class OpenApi : SupportedCodeGenerationFormat {
 
-    public fun readCodeForGeneration(text: String, extensionProperties: Boolean = false): CodeWithConverter =
-        readOpenApiAsString(text, extensionProperties = extensionProperties)
+    public fun readCodeForGeneration(
+        text: String,
+        extensionProperties: Boolean = false,
+        generateHelperCompanionObject: Boolean,
+    ): CodeWithConverter =
+        readOpenApiAsString(
+            openApiAsString = text,
+            extensionProperties = extensionProperties,
+            generateHelperCompanionObject = generateHelperCompanionObject,
+        )
 
-    override fun readCodeForGeneration(stream: InputStream): CodeWithConverter =
-        readOpenApiAsString(stream.bufferedReader().readText(), extensionProperties = false)
+    override fun readCodeForGeneration(
+        stream: InputStream,
+        generateHelperCompanionObject: Boolean,
+    ): CodeWithConverter =
+        readOpenApiAsString(
+            openApiAsString = stream.bufferedReader().readText(),
+            extensionProperties = false,
+            generateHelperCompanionObject = generateHelperCompanionObject,
+        )
 
-    public fun readCodeForGeneration(stream: InputStream, extensionProperties: Boolean): CodeWithConverter =
-        readOpenApiAsString(stream.bufferedReader().readText(), extensionProperties = extensionProperties)
+    public fun readCodeForGeneration(
+        stream: InputStream,
+        extensionProperties: Boolean,
+        generateHelperCompanionObject: Boolean,
+    ): CodeWithConverter =
+        readOpenApiAsString(
+            openApiAsString = stream.bufferedReader().readText(),
+            extensionProperties = extensionProperties,
+            generateHelperCompanionObject = generateHelperCompanionObject,
+        )
 
-    override fun readCodeForGeneration(file: File): CodeWithConverter =
-        readOpenApiAsString(file.readText(), extensionProperties = false)
+    override fun readCodeForGeneration(
+        file: File,
+        generateHelperCompanionObject: Boolean,
+    ): CodeWithConverter =
+        readOpenApiAsString(
+            openApiAsString = file.readText(),
+            extensionProperties = false,
+            generateHelperCompanionObject = generateHelperCompanionObject,
+        )
 
-    public fun readCodeForGeneration(file: File, extensionProperties: Boolean): CodeWithConverter =
-        readOpenApiAsString(file.readText(), extensionProperties = extensionProperties)
+    public fun readCodeForGeneration(
+        file: File,
+        extensionProperties: Boolean,
+        generateHelperCompanionObject: Boolean,
+    ): CodeWithConverter =
+        readOpenApiAsString(
+            openApiAsString = file.readText(),
+            extensionProperties = extensionProperties,
+            generateHelperCompanionObject = generateHelperCompanionObject,
+        )
 
     override fun acceptsExtension(ext: String): Boolean = ext in listOf("yaml", "yml", "json")
 
@@ -305,6 +343,7 @@ public fun readOpenApi(
     auth: List<AuthorizationValue>? = null,
     options: ParseOptions? = null,
     extensionProperties: Boolean,
+    generateHelperCompanionObject: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
 ): CodeWithConverter {
     require(isOpenApi(uri)) { "Not an OpenApi specification with type schemas: $uri" }
@@ -313,6 +352,7 @@ public fun readOpenApi(
         swaggerParseResult = OpenAPIParser().readLocation(uri, auth, options),
         extensionProperties = extensionProperties,
         visibility = visibility,
+        generateHelperCompanionObject = generateHelperCompanionObject,
     )
 }
 
@@ -322,6 +362,7 @@ public fun readOpenApiAsString(
     auth: List<AuthorizationValue>? = null,
     options: ParseOptions? = null,
     extensionProperties: Boolean,
+    generateHelperCompanionObject: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
 ): CodeWithConverter {
     require(isOpenApiStr(openApiAsString)) { "Not an OpenApi specification with type schemas: $openApiAsString" }
@@ -330,6 +371,7 @@ public fun readOpenApiAsString(
         swaggerParseResult = OpenAPIParser().readContents(openApiAsString, auth, options),
         extensionProperties = extensionProperties,
         visibility = visibility,
+        generateHelperCompanionObject = generateHelperCompanionObject,
     )
 }
 
@@ -347,6 +389,7 @@ public fun readOpenApiAsString(
 private fun readOpenApi(
     swaggerParseResult: SwaggerParseResult,
     extensionProperties: Boolean,
+    generateHelperCompanionObject: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
 ): CodeWithConverter {
     val openApi = swaggerParseResult.openAPI
@@ -394,10 +437,26 @@ private fun readOpenApi(
         val generatedMarkers = markers.map(::toCode).reduceOrNull(CodeWithConverter::plus)
         val generatedTypeAliases = typeAliases.map(::toCode).reduceOrNull(CodeWithConverter::plus)
         val generatedExtensionProperties =
-            if (extensionProperties) result.map(::toExtensionProperties).reduceOrNull(CodeWithConverter::plus) else null
+            if (extensionProperties) result.map(::toExtensionProperties).reduceOrNull(CodeWithConverter::plus)
+            else null
+
+        val helperCompanionObject = if (generateHelperCompanionObject) {
+            val accessors = markers
+                .filterIsInstance<OpenApiMarker.Interface>()
+                .joinToString("\n|        ") {
+                    "val ${it.name.withoutTopInterfaceName(topInterfaceName)} = ${it.name}.Companion"
+                }
+
+            """
+            |    companion object {
+            |        $accessors
+            |    }
+            """
+        } else ""
 
         return """
              |interface ${topInterfaceName.quotedIfNeeded} {
+             |    $helperCompanionObject
              |    ${generatedMarkers?.declarations?.replace("\n", "\n|    ") ?: ""}
              |}
              |${generatedTypeAliases?.declarations?.replace("\n", "\n|") ?: ""}

@@ -45,12 +45,21 @@ public interface SupportedDataFrameFormat : SupportedFormat {
 /**
  * Implement this interface to provide additional [DataSchema] interface generation formats for DataFrames (such as OpenAPI).
  * Note, this doesn't add functionality to [DataFrame.Companion.read], just [ImportDataSchema] and Gradle plugin.
+ *
+ * Return type will be a [CodeWithConverter] for which [CodeWithConverter.converter] needs to be called
+ * to get the generated code with the correct top-level interface name.
  */
 public interface SupportedCodeGenerationFormat : SupportedFormat {
 
-    public fun readCodeForGeneration(stream: InputStream): CodeWithConverter
+    public fun readCodeForGeneration(
+        stream: InputStream,
+        generateHelperCompanionObject: Boolean = false,
+    ): CodeWithConverter
 
-    public fun readCodeForGeneration(file: File): CodeWithConverter
+    public fun readCodeForGeneration(
+        file: File,
+        generateHelperCompanionObject: Boolean = false,
+    ): CodeWithConverter
 }
 
 public class MethodArguments {
@@ -149,9 +158,10 @@ private class NotCloseableStream(val src: InputStream) : InputStream() {
 internal fun readCodeForGeneration(
     stream: InputStream,
     format: SupportedCodeGenerationFormat? = null,
+    generateHelperCompanionObject: Boolean = false,
     formats: List<SupportedCodeGenerationFormat> = supportedFormats.filterIsInstance<SupportedCodeGenerationFormat>(),
 ): ReadCodeWithConverter {
-    if (format != null) return format to format.readCodeForGeneration(stream)
+    if (format != null) return format to format.readCodeForGeneration(stream, generateHelperCompanionObject)
     val input = NotCloseableStream(if (stream.markSupported()) stream else BufferedInputStream(stream))
     try {
         val readLimit = 10000
@@ -160,8 +170,8 @@ internal fun readCodeForGeneration(
         formats.sortedBy { it.testOrder }.forEach {
             try {
                 input.reset()
-                return it to it.readCodeForGeneration(input)
-            } catch (e: Exception) {
+                return it to it.readCodeForGeneration(input, generateHelperCompanionObject)
+            } catch (_: Exception) {
             }
         }
         throw IllegalArgumentException("Unknown stream format")

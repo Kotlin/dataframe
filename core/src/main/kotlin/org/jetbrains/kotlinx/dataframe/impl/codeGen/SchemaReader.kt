@@ -56,13 +56,14 @@ public sealed interface DfReadResult {
  * It tries to guess the format based on the given [formats] and returns [CodeGenerationReadResult.Success],
  * or returns [CodeGenerationReadResult.Error] if it fails.
  */
-public val CodeGenerator.Companion.urlCodeGenReader: (url: URL, formats: List<SupportedFormat>) -> CodeGenerationReadResult
-    get() = { url, formats ->
+public val CodeGenerator.Companion.urlCodeGenReader: (url: URL, formats: List<SupportedFormat>, generateHelperCompanionObject: Boolean) -> CodeGenerationReadResult
+    get() = { url, formats, generateHelperCompanionObject ->
         try {
             val (format, code) = url.openStream().use {
                 readCodeForGeneration(
                     stream = it,
                     format = guessFormat(url, formats) as? SupportedCodeGenerationFormat?,
+                    generateHelperCompanionObject = generateHelperCompanionObject,
                     formats = formats.filterIsInstance<SupportedCodeGenerationFormat>(),
                 )
             }

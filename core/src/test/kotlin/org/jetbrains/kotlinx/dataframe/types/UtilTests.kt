@@ -50,4 +50,8 @@ class UtilTests {
         val column = columnOf(1.5, null, listOf(1.3, 2.6))
         column.type() shouldBe typeOf<Any?>()
     }
+
+    @Test
+    fun `guessValueType no listification`() {
+    }
 }

@@ -135,7 +135,7 @@ class DataSchemaGenerator(
         )
 
         // first try without creating dataframe
-        when (val codeGenResult = CodeGenerator.urlCodeGenReader(importStatement.dataSource.data, formats)) {
+        when (val codeGenResult = CodeGenerator.urlCodeGenReader(importStatement.dataSource.data, formats, false)) {
             is CodeGenerationReadResult.Success -> {
                 val readDfMethod = codeGenResult.getReadDfMethod(
                     pathRepresentation = importStatement
