@@ -8,7 +8,7 @@ import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGeneratorImpl
-import org.jetbrains.kotlinx.dataframe.impl.codeGen.FqNames
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.FullyQualifiedNames
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ShortNames
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.id
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
@@ -35,7 +35,7 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
         visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
         knownMarkers: Iterable<Marker> = emptyList(),
         readDfMethod: DefaultReadDfMethod? = null,
-        fieldNameNormalizer: NameNormalizer = NameNormalizer.id()
+        fieldNameNormalizer: NameNormalizer = NameNormalizer.id(),
     ): CodeGenResult
 
     public fun generate(
@@ -48,18 +48,19 @@ public interface CodeGenerator : ExtensionsCodeGenerator {
     public companion object {
         public fun create(useFqNames: Boolean = true): CodeGenerator {
             return if (useFqNames) {
-                CodeGeneratorImpl(FqNames)
+                CodeGeneratorImpl(FullyQualifiedNames)
             } else {
                 CodeGeneratorImpl(ShortNames)
             }
         }
     }
 }
+
 @PublishedApi
 internal fun CodeGenerator.generate(
     markerClass: KClass<*>,
     interfaceMode: InterfaceGenerationMode,
-    extensionProperties: Boolean
+    extensionProperties: Boolean,
 ): CodeWithConverter = generate(
     MarkersExtractor.get(markerClass),
     interfaceMode,
@@ -68,5 +69,5 @@ internal fun CodeGenerator.generate(
 
 public inline fun <reified T> CodeGenerator.generate(
     interfaceMode: InterfaceGenerationMode,
-    extensionProperties: Boolean
+    extensionProperties: Boolean,
 ): CodeWithConverter = generate(T::class, interfaceMode, extensionProperties)
