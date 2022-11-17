@@ -80,7 +80,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         )
 
         // first try without creating dataframe
-        when (val codeGenResult = CodeGenerator.urlCodeGenReader(url, formats)) {
+        when (val codeGenResult = CodeGenerator.urlCodeGenReader(url, formats, false)) {
             is CodeGenerationReadResult.Success -> {
                 val readDfMethod = codeGenResult.getReadDfMethod(stringOf(data.get()))
                 val code = codeGenResult.code

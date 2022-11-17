@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
+import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -33,9 +34,12 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.io.HtmlData
+import org.jetbrains.kotlinx.dataframe.io.OpenApi
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.Notebook
@@ -59,7 +63,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
 
         onLoaded {
             declare("dataFrameConfig" to config)
-            execute(importDataSchema)
+//            execute(importDataSchema)
         }
 
         resources {
@@ -122,6 +126,8 @@ internal class Integration(private val notebook: Notebook, private val options: 
         import("org.jetbrains.kotlinx.dataframe.annotations.*")
         import("org.jetbrains.kotlinx.dataframe.io.*")
         import("org.jetbrains.kotlinx.dataframe.columns.*")
+        import("org.jetbrains.kotlinx.dataframe.jupyter.ImportDataSchema")
+        import("org.jetbrains.kotlinx.dataframe.jupyter.importDataSchema")
         import("java.net.URL")
         import("java.io.File")
         import("kotlinx.datetime.Instant")
@@ -143,6 +149,32 @@ internal class Integration(private val notebook: Notebook, private val options: 
         fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, property: KProperty<*>): VariableName? {
             val variableName = property.name + if (property.returnType.isMarkedNullable) "!!" else ""
             return execute(codeWithConverter, variableName)
+        }
+
+        updateVariable<ImportDataSchema> { importDataSchema, property ->
+            val formats = listOf(
+                OpenApi(),
+            )
+
+            when (val codeGenResult = CodeGenerator.urlCodeGenReader(importDataSchema.url, formats, true)) {
+                is CodeGenerationReadResult.Success -> {
+                    val name = property.name + "DataSchema"
+                    val readDfMethod = codeGenResult.getReadDfMethod(importDataSchema.url.toExternalForm())
+                    val code = readDfMethod.additionalImports.joinToString("\n") +
+                        "\n" +
+                        codeGenResult.code.converter(name)
+
+                    execute(code)
+                    execute("""DISPLAY("Data schema successfully imported as ${property.name}: $name")""")
+
+                    name
+                }
+
+                is CodeGenerationReadResult.Error -> {
+                    execute("""DISPLAY("Failed to read data schema from ${importDataSchema.url}: ${codeGenResult.reason}")""")
+                    null
+                }
+            }
         }
 
         updateVariable<AnyFrame> { df, property ->

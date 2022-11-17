@@ -113,7 +113,7 @@ print(df.fullName.count { it.contains("kotlin") })
 
 <!---END-->
 
-### OpenAPI Schema inference
+### OpenAPI Schemas
 
 JSON schema inference is great, but it's not perfect. However, more and more APIs offer
 [OpenAPI (Swagger)](https://swagger.io/) specifications. Aside from API endpoints, they also hold
@@ -151,7 +151,8 @@ explored [here](https://petstore3.swagger.io/)),
 so let's parse some Pets:
 
 ```kotlin
-val df: DataFrame<Pet> = PetStore.Pet.readJson("https://petstore3.swagger.io/api/v3/pet/findByStatus?status=available")
+val df: DataFrame<PetStore.Pet> =
+    PetStore.Pet.readJson("https://petstore3.swagger.io/api/v3/pet/findByStatus?status=available")
 ```
 
 Now you will have a correctly typed dataframe!

@@ -2,6 +2,10 @@
     path = "src/main/resources/ApiGuruOpenApi.yaml",
     name = "ApiGuruOpenApiKsp",
 )
+@file:ImportDataSchema(
+    path = "https://api.apis.guru/v2/specs/1password.local/connect/1.3.0/openapi.json",
+    name = "OnePassword",
+)
 
 package org.jetbrains.kotlinx.dataframe.examples.openapi
 

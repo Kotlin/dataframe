@@ -10,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.api.isNotEmpty
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
-import org.jetbrains.kotlinx.dataframe.jupyter.importDataSchema
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
 import java.io.File
@@ -32,13 +31,34 @@ class OpenApiTests : JupyterReplTestCase() {
     }
 
     private fun execGeneratedCode(file: File, name: String) =
-        execGeneratedCode(code = openApi.readCodeForGeneration(file, true), name = name)
+        execGeneratedCode(
+            code = openApi.readCodeForGeneration(
+                file = file,
+                extensionProperties = true,
+                generateHelperCompanionObject = false,
+            ),
+            name = name,
+        )
 
     private fun execGeneratedCode(stream: InputStream, name: String) =
-        execGeneratedCode(code = openApi.readCodeForGeneration(stream, true), name = name)
+        execGeneratedCode(
+            code = openApi.readCodeForGeneration(
+                stream = stream,
+                extensionProperties = true,
+                generateHelperCompanionObject = false,
+            ),
+            name = name,
+        )
 
     private fun execGeneratedCode(text: String, name: String) =
-        execGeneratedCode(code = openApi.readCodeForGeneration(text, true), name = name)
+        execGeneratedCode(
+            code = openApi.readCodeForGeneration(
+                text = text,
+                extensionProperties = true,
+                generateHelperCompanionObject = false,
+            ),
+            name = name,
+        )
 
     private val petstoreJson = File("src/test/resources/petstore.json")
     private val petstoreAdvancedJson = File("src/test/resources/petstore_advanced.json")
@@ -1045,12 +1065,10 @@ class OpenApiTests : JupyterReplTestCase() {
 
     @Test
     fun `Jupyter importDataSchema`() {
-        execRaw(importDataSchema)
-
         @Language("kts")
         val _1 = execRaw(
             """
-                importDataSchema(File("${apiGuruYaml.absolutePath}"), "ApiGuru")
+                val ApiGuru = importDataSchema(File("${apiGuruYaml.absolutePath}"))
             """.trimIndent()
         )
 
@@ -1059,7 +1077,7 @@ class OpenApiTests : JupyterReplTestCase() {
         @Language("kts")
         val _2 = execRaw(
             """
-                val df: DataFrame<ApiGuru.APIs> = ApiGuru.APIs.readJsonStr($apiGuruDataTripleQuote)
+                val df = ApiGuru.APIs.readJsonStr($apiGuruDataTripleQuote)
                 df
             """.trimIndent()
         ) as AnyFrame
