@@ -199,7 +199,7 @@ public data class DisplayConfiguration(
     var cellFormatter: RowColFormatter<*, *>? = null,
     var decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
     var isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
-    internal val localTesting: Boolean = true, // flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
+    internal val localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
     var useDarkColorScheme: Boolean = false,
 ) {
     public companion object {
