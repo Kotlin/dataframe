@@ -67,7 +67,7 @@ internal class Integration : JupyterIntegration() {
                     } else {
                         // Update this commit when new version of init.js is pushed
                         val initJsSha = "3db46ccccaa1291c0627307d64133317f545e6ae"
-                        url("https://cdn.jsdelivr.net/gh/Kotlin/dataframe@$initJsSha/src/main/resources/init.js")
+                        url("https://cdn.jsdelivr.net/gh/Kotlin/dataframe@$initJsSha/core/src/main/resources/init.js")
                     }
                 }
 
