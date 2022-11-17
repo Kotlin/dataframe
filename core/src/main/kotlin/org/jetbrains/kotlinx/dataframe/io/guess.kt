@@ -221,7 +221,7 @@ internal fun DataFrame.Companion.read(
             } catch (e: Exception) {
             }
         }
-        throw IllegalArgumentException("Unknown stream format")
+        throw IllegalArgumentException("Unknown stream format; Tried $formats")
     } finally {
         input.doClose()
     }
@@ -242,7 +242,7 @@ internal fun DataFrame.Companion.read(
         } catch (e: Exception) {
         }
     }
-    throw IllegalArgumentException("Unknown file format")
+    throw IllegalArgumentException("Unknown file format; Tried $formats")
 }
 
 internal data class ReadAnyFrame(val format: SupportedDataFrameFormat, val df: AnyFrame)
