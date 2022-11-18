@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.io
 import io.kotest.matchers.collections.shouldBeIn
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import io.kotest.matchers.string.shouldNotContain
 import io.kotest.matchers.types.instanceOf
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -17,11 +18,13 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.getColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.getFrameColumn
+import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.api.toDouble
 import org.jetbrains.kotlinx.dataframe.api.toMap
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.io.JSON.TypeClashTactic.*
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.dataframe.values
@@ -542,7 +545,12 @@ class JsonTests {
         group["b"].type() shouldBe typeOf<Int?>()
         group["value"].type() shouldBe typeOf<Double?>()
         group["value1"].type() shouldBe typeOf<String?>()
-        group["array"].type() shouldBe typeOf<Any?>()
+        group["array"].type() shouldBe nothingType(nullable = true)
+
+        val schema = df.schema().toString()
+        schema shouldContain "Nothing?"
+        schema shouldNotContain "Void?"
+
         group["array1"].type() shouldBe typeOf<Int?>()
         group["array2"].type() shouldBe typeOf<List<Int>>()
     }
@@ -707,7 +715,7 @@ class JsonTests {
     }
 
     @Test
-    fun `KeyValue property Array Value`() { // TODO needs more tests
+    fun `KeyValue property Array Value`() {
         @Language("json")
         val json = """[
                 {"a":{"b":1}},
@@ -743,7 +751,7 @@ class JsonTests {
             it["b"]["value"].type() shouldBe typeOf<Int?>()
             it["b"]["array"].type() shouldBe typeOf<List<Int>>()
             it["c"].type() shouldBe typeOf<Int?>()
-            it["d"].type() shouldBe typeOf<Any?>()
+            it["d"].type() shouldBe nothingType(nullable = true)
 
             it[0].let {
                 (it["b"] as DataRow<*>).toMap() shouldBe mapOf("value" to 1, "array" to emptyList<Int>())
