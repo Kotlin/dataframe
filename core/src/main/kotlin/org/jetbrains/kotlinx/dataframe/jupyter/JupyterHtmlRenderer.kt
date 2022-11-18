@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
 import org.jetbrains.kotlinx.dataframe.io.initHtml
 import org.jetbrains.kotlinx.dataframe.io.toHTML
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
+import org.jetbrains.kotlinx.jupyter.api.renderHtmlAsIFrameIfNeeded
 
 internal class JupyterHtmlRenderer(
     val display: DisplayConfiguration,
@@ -29,5 +30,5 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
         contextRenderer
     ) { footer }
 
-    notebook.renderHtmlAsIFrame(html)
+    notebook.renderHtmlAsIFrameIfNeeded(html)
 }
