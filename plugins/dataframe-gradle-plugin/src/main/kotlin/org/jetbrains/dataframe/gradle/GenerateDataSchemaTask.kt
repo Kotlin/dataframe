@@ -80,12 +80,13 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         )
 
         // first try without creating dataframe
-        when (val codeGenResult = CodeGenerator.urlCodeGenReader(url, formats, false)) {
+        when (val codeGenResult = CodeGenerator.urlCodeGenReader(url, interfaceName.get(), formats, false)) {
             is CodeGenerationReadResult.Success -> {
                 val readDfMethod = codeGenResult.getReadDfMethod(stringOf(data.get()))
-                val code = codeGenResult.code
-                    .converter(interfaceName.get()) // convert name of the generated singleton object if needed
+                val code = codeGenResult
+                    .code
                     .toStandaloneSnippet(escapedPackageName, readDfMethod.additionalImports)
+
                 schemaFile.bufferedWriter().use {
                     it.write(code)
                 }

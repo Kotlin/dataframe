@@ -155,14 +155,13 @@ internal class Integration(private val notebook: Notebook, private val options: 
             val formats = listOf(
                 OpenApi(),
             )
-
-            when (val codeGenResult = CodeGenerator.urlCodeGenReader(importDataSchema.url, formats, true)) {
+            val name = property.name + "DataSchema"
+            when (val codeGenResult = CodeGenerator.urlCodeGenReader(importDataSchema.url, name, formats, true)) {
                 is CodeGenerationReadResult.Success -> {
-                    val name = property.name + "DataSchema"
                     val readDfMethod = codeGenResult.getReadDfMethod(importDataSchema.url.toExternalForm())
                     val code = readDfMethod.additionalImports.joinToString("\n") +
                         "\n" +
-                        codeGenResult.code.converter(name)
+                        codeGenResult.code
 
                     execute(code)
                     execute("""DISPLAY("Data schema successfully imported as ${property.name}: $name")""")

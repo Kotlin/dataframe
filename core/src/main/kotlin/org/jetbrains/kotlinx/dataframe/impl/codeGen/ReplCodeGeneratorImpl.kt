@@ -69,7 +69,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                         val requiredBaseMarkers =
                             getRequiredMarkers(columnSchema, registeredMarkers.values)
                         if (requiredBaseMarkers.any() && requiredBaseMarkers.all { currentMarker.implements(it) }) {
-                            return CodeWithConverter("") { it }
+                            return CodeWithConverter.Empty
                         }
                         // use current marker scheme as a target for generation of new marker interface, so that available properties won't change
                         targetSchema = columnSchema

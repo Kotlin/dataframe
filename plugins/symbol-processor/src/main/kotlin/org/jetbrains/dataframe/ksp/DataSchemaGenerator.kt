@@ -135,7 +135,8 @@ class DataSchemaGenerator(
         )
 
         // first try without creating dataframe
-        when (val codeGenResult = CodeGenerator.urlCodeGenReader(importStatement.dataSource.data, formats, false)) {
+        when (val codeGenResult =
+            CodeGenerator.urlCodeGenReader(importStatement.dataSource.data, name, formats, false)) {
             is CodeGenerationReadResult.Success -> {
                 val readDfMethod = codeGenResult.getReadDfMethod(
                     pathRepresentation = importStatement
@@ -146,7 +147,6 @@ class DataSchemaGenerator(
 
                 val code = codeGenResult
                     .code
-                    .converter(name) // convert name of the generated singleton object if needed
                     .toStandaloneSnippet(packageName, readDfMethod.additionalImports)
 
                 schemaFile.bufferedWriter().use {

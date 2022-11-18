@@ -4,7 +4,6 @@ import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
-import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.io.SupportedCodeGenerationFormat
 import org.jetbrains.kotlinx.dataframe.io.SupportedDataFrameFormat
@@ -13,6 +12,7 @@ import org.jetbrains.kotlinx.dataframe.io.guessFormat
 import org.jetbrains.kotlinx.dataframe.io.read
 import org.jetbrains.kotlinx.dataframe.io.readCodeForGeneration
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
+import org.jetbrains.kotlinx.jupyter.api.Code
 import java.net.URL
 
 /**
@@ -56,12 +56,18 @@ public sealed interface DfReadResult {
  * It tries to guess the format based on the given [formats] and returns [CodeGenerationReadResult.Success],
  * or returns [CodeGenerationReadResult.Error] if it fails.
  */
-public val CodeGenerator.Companion.urlCodeGenReader: (url: URL, formats: List<SupportedFormat>, generateHelperCompanionObject: Boolean) -> CodeGenerationReadResult
-    get() = { url, formats, generateHelperCompanionObject ->
+public val CodeGenerator.Companion.urlCodeGenReader: (
+    url: URL,
+    name: String,
+    formats: List<SupportedFormat>,
+    generateHelperCompanionObject: Boolean,
+) -> CodeGenerationReadResult
+    get() = { url, name, formats, generateHelperCompanionObject ->
         try {
             val (format, code) = url.openStream().use {
                 readCodeForGeneration(
                     stream = it,
+                    name = name,
                     format = guessFormat(url, formats) as? SupportedCodeGenerationFormat?,
                     generateHelperCompanionObject = generateHelperCompanionObject,
                     formats = formats.filterIsInstance<SupportedCodeGenerationFormat>(),
@@ -76,7 +82,7 @@ public val CodeGenerator.Companion.urlCodeGenReader: (url: URL, formats: List<Su
 public sealed interface CodeGenerationReadResult {
 
     public class Success(
-        public val code: CodeWithConverter,
+        public val code: Code,
         public val format: SupportedCodeGenerationFormat,
     ) : CodeGenerationReadResult {
         public fun getReadDfMethod(pathRepresentation: String?): DefaultReadDfMethod {

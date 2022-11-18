@@ -38,7 +38,6 @@ import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.replace
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
-import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.GeneratedField
@@ -47,7 +46,6 @@ import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 import org.jetbrains.kotlinx.dataframe.codeGen.isNullable
 import org.jetbrains.kotlinx.dataframe.codeGen.name
-import org.jetbrains.kotlinx.dataframe.codeGen.plus
 import org.jetbrains.kotlinx.dataframe.codeGen.toNotNullable
 import org.jetbrains.kotlinx.dataframe.codeGen.toNullable
 import org.jetbrains.kotlinx.dataframe.impl.DELIMITERS_REGEX
@@ -64,6 +62,7 @@ import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Number.getType
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.Object.getType
 import org.jetbrains.kotlinx.dataframe.io.OpenApiType.String.getType
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
+import org.jetbrains.kotlinx.jupyter.api.Code
 import java.io.File
 import java.io.InputStream
 import java.net.URL
@@ -81,56 +80,61 @@ public class OpenApi : SupportedCodeGenerationFormat {
 
     public fun readCodeForGeneration(
         text: String,
+        name: String,
         extensionProperties: Boolean = false,
         generateHelperCompanionObject: Boolean,
-    ): CodeWithConverter =
-        readOpenApiAsString(
-            openApiAsString = text,
-            extensionProperties = extensionProperties,
-            generateHelperCompanionObject = generateHelperCompanionObject,
-        )
+    ): Code = readOpenApiAsString(
+        openApiAsString = text,
+        name = name,
+        extensionProperties = extensionProperties,
+        generateHelperCompanionObject = generateHelperCompanionObject,
+    )
 
     override fun readCodeForGeneration(
         stream: InputStream,
+        name: String,
         generateHelperCompanionObject: Boolean,
-    ): CodeWithConverter =
-        readOpenApiAsString(
-            openApiAsString = stream.bufferedReader().readText(),
-            extensionProperties = false,
-            generateHelperCompanionObject = generateHelperCompanionObject,
-        )
+    ): Code = readOpenApiAsString(
+        openApiAsString = stream.bufferedReader().readText(),
+        name = name,
+        extensionProperties = false,
+        generateHelperCompanionObject = generateHelperCompanionObject,
+    )
 
     public fun readCodeForGeneration(
         stream: InputStream,
+        name: String,
         extensionProperties: Boolean,
         generateHelperCompanionObject: Boolean,
-    ): CodeWithConverter =
-        readOpenApiAsString(
-            openApiAsString = stream.bufferedReader().readText(),
-            extensionProperties = extensionProperties,
-            generateHelperCompanionObject = generateHelperCompanionObject,
-        )
+    ): Code = readOpenApiAsString(
+        openApiAsString = stream.bufferedReader().readText(),
+        name = name,
+        extensionProperties = extensionProperties,
+        generateHelperCompanionObject = generateHelperCompanionObject,
+    )
 
     override fun readCodeForGeneration(
         file: File,
+        name: String,
         generateHelperCompanionObject: Boolean,
-    ): CodeWithConverter =
-        readOpenApiAsString(
-            openApiAsString = file.readText(),
-            extensionProperties = false,
-            generateHelperCompanionObject = generateHelperCompanionObject,
-        )
+    ): Code = readOpenApiAsString(
+        openApiAsString = file.readText(),
+        name = name,
+        extensionProperties = false,
+        generateHelperCompanionObject = generateHelperCompanionObject,
+    )
 
     public fun readCodeForGeneration(
         file: File,
+        name: String,
         extensionProperties: Boolean,
         generateHelperCompanionObject: Boolean,
-    ): CodeWithConverter =
-        readOpenApiAsString(
-            openApiAsString = file.readText(),
-            extensionProperties = extensionProperties,
-            generateHelperCompanionObject = generateHelperCompanionObject,
-        )
+    ): Code = readOpenApiAsString(
+        openApiAsString = file.readText(),
+        name = name,
+        extensionProperties = extensionProperties,
+        generateHelperCompanionObject = generateHelperCompanionObject,
+    )
 
     override fun acceptsExtension(ext: String): Boolean = ext in listOf("yaml", "yml", "json")
 
@@ -340,16 +344,18 @@ internal fun isOpenApi(file: File): Boolean {
 /** Parse and read OpenApi specification to [DataSchema] interfaces. */
 public fun readOpenApi(
     uri: String,
+    name: String,
     auth: List<AuthorizationValue>? = null,
     options: ParseOptions? = null,
     extensionProperties: Boolean,
     generateHelperCompanionObject: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): CodeWithConverter {
+): Code {
     require(isOpenApi(uri)) { "Not an OpenApi specification with type schemas: $uri" }
 
     return readOpenApi(
         swaggerParseResult = OpenAPIParser().readLocation(uri, auth, options),
+        name = name,
         extensionProperties = extensionProperties,
         visibility = visibility,
         generateHelperCompanionObject = generateHelperCompanionObject,
@@ -359,16 +365,18 @@ public fun readOpenApi(
 /** Parse and read OpenApi specification to [DataSchema] interfaces. */
 public fun readOpenApiAsString(
     openApiAsString: String,
+    name: String,
     auth: List<AuthorizationValue>? = null,
     options: ParseOptions? = null,
     extensionProperties: Boolean,
     generateHelperCompanionObject: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): CodeWithConverter {
+): Code {
     require(isOpenApiStr(openApiAsString)) { "Not an OpenApi specification with type schemas: $openApiAsString" }
 
     return readOpenApi(
         swaggerParseResult = OpenAPIParser().readContents(openApiAsString, auth, options),
+        name = name,
         extensionProperties = extensionProperties,
         visibility = visibility,
         generateHelperCompanionObject = generateHelperCompanionObject,
@@ -376,98 +384,93 @@ public fun readOpenApiAsString(
 }
 
 /**
- * Converts a parsed OpenAPI specification into a [CodeWithConverter] consisting of [DataSchema] interfaces.
+ * Converts a parsed OpenAPI specification into [Code] consisting of [DataSchema] interfaces.
  *
  * @param swaggerParseResult the result of parsing an OpenAPI specification, created using [readOpenApi] or [readOpenApiAsString].
  * @param extensionProperties whether to add extension properties to the generated interfaces. This is usually not
  *   necessary, since both the KSP- and the Gradle plugin, will add extension properties to the generated code.
  * @param visibility the visibility of the generated marker classes.
  *
- * @return a [CodeWithConverter] object, representing the generated code.
- *  Use converter to change name of the wrapping object.
+ * @return a [Code] object, representing the generated code.
  */
 private fun readOpenApi(
     swaggerParseResult: SwaggerParseResult,
+    name: String,
     extensionProperties: Boolean,
     generateHelperCompanionObject: Boolean,
     visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
-): CodeWithConverter {
+): Code {
     val openApi = swaggerParseResult.openAPI
         ?: error("Failed to parse OpenAPI, ${swaggerParseResult.messages.toList()}")
 
-    fun getCode(topInterfaceName: ValidFieldName): String {
-        // take the components.schemas from the openApi spec and convert them to a list of Markers, representing the
-        // interfaces, enums, and typeAliases that need to be generated.
-        val result = openApi.components?.schemas
-            ?.toMap()
-            ?.toMarkers(topInterfaceName)
-            ?.toList()
-            ?: emptyList()
+    val topInterfaceName = ValidFieldName.of(name)
 
-        // generate the code for the markers in result
-        val codeGenerator = CodeGenerator.create(useFqNames = true)
+    // take the components.schemas from the openApi spec and convert them to a list of Markers, representing the
+    // interfaces, enums, and typeAliases that need to be generated.
+    val result = openApi.components?.schemas
+        ?.toMap()
+        ?.toMarkers(topInterfaceName)
+        ?.toList()
+        ?: emptyList()
 
-        fun toCode(marker: OpenApiMarker): CodeWithConverter =
-            codeGenerator.generate(
-                marker = marker
-                    .withVisibility(visibility)
-                    .withName(
-                        name = marker.name.withoutTopInterfaceName(topInterfaceName),
-                        prependTopInterfaceName = false,
-                    ),
-                interfaceMode = when (marker) {
-                    is OpenApiMarker.Enum -> InterfaceGenerationMode.Enum
-                    is OpenApiMarker.Interface -> InterfaceGenerationMode.WithFields
-                    is OpenApiMarker.TypeAlias, is OpenApiMarker.MarkerAlias -> InterfaceGenerationMode.TypeAlias
-                },
-                extensionProperties = false,
-                readDfMethod = if (marker is OpenApiMarker.Interface) DefaultReadOpenApiMethod else null,
-            )
+    // generate the code for the markers in result
+    val codeGenerator = CodeGenerator.create(useFqNames = true)
 
-        fun toExtensionProperties(marker: OpenApiMarker): CodeWithConverter =
-            if (marker !is OpenApiMarker.Interface) CodeWithConverter("") { "" }
-            else codeGenerator.generate(
-                marker = marker.withVisibility(visibility),
-                interfaceMode = InterfaceGenerationMode.None,
-                extensionProperties = true,
-                readDfMethod = null,
-            )
+    fun toCode(marker: OpenApiMarker): Code =
+        codeGenerator.generate(
+            marker = marker
+                .withVisibility(visibility)
+                .withName(
+                    name = marker.name.withoutTopInterfaceName(topInterfaceName),
+                    prependTopInterfaceName = false,
+                ),
+            interfaceMode = when (marker) {
+                is OpenApiMarker.Enum -> InterfaceGenerationMode.Enum
+                is OpenApiMarker.Interface -> InterfaceGenerationMode.WithFields
+                is OpenApiMarker.TypeAlias, is OpenApiMarker.MarkerAlias -> InterfaceGenerationMode.TypeAlias
+            },
+            extensionProperties = false,
+            readDfMethod = if (marker is OpenApiMarker.Interface) DefaultReadOpenApiMethod else null,
+        ).declarations
 
-        val (typeAliases, markers) = result.partition { it is OpenApiMarker.TypeAlias || it is OpenApiMarker.MarkerAlias }
-        val generatedMarkers = markers.map(::toCode).reduceOrNull(CodeWithConverter::plus)
-        val generatedTypeAliases = typeAliases.map(::toCode).reduceOrNull(CodeWithConverter::plus)
-        val generatedExtensionProperties =
-            if (extensionProperties) result.map(::toExtensionProperties).reduceOrNull(CodeWithConverter::plus)
-            else null
+    fun toExtensionProperties(marker: OpenApiMarker): Code =
+        if (marker !is OpenApiMarker.Interface) ""
+        else codeGenerator.generate(
+            marker = marker.withVisibility(visibility),
+            interfaceMode = InterfaceGenerationMode.None,
+            extensionProperties = true,
+            readDfMethod = null,
+        ).declarations
 
-        val helperCompanionObject = if (generateHelperCompanionObject) {
-            val accessors = markers
-                .filterIsInstance<OpenApiMarker.Interface>()
-                .joinToString("\n|        ") {
-                    "val ${it.name.withoutTopInterfaceName(topInterfaceName)} = ${it.name}.Companion"
-                }
+    val (typeAliases, markers) = result.partition { it is OpenApiMarker.TypeAlias || it is OpenApiMarker.MarkerAlias }
+    val generatedMarkers = markers.map(::toCode).reduceOrNull(Code::plus)
+    val generatedTypeAliases = typeAliases.map(::toCode).reduceOrNull(Code::plus)
+    val generatedExtensionProperties =
+        if (extensionProperties) result.map(::toExtensionProperties).reduceOrNull(Code::plus)
+        else null
 
-            """
+    val helperCompanionObject = if (generateHelperCompanionObject) {
+        val accessors = markers
+            .filterIsInstance<OpenApiMarker.Interface>()
+            .joinToString("\n|        ") {
+                "val ${it.name.withoutTopInterfaceName(topInterfaceName)} = ${it.name}.Companion"
+            }
+
+        """
             |    companion object {
             |        $accessors
             |    }
             """
-        } else ""
+    } else ""
 
-        return """
+    return """
              |interface ${topInterfaceName.quotedIfNeeded} {
              |    $helperCompanionObject
-             |    ${generatedMarkers?.declarations?.replace("\n", "\n|    ") ?: ""}
+             |    ${generatedMarkers?.replace("\n", "\n|    ") ?: ""}
              |}
-             |${generatedTypeAliases?.declarations?.replace("\n", "\n|") ?: ""}
-             |${generatedExtensionProperties?.declarations?.replace("\n", "\n|") ?: ""}
+             |${generatedTypeAliases?.replace("\n", "\n|") ?: ""}
+             |${generatedExtensionProperties?.replace("\n", "\n|") ?: ""}
          """.trimMargin()
-    }
-
-    return CodeWithConverter(
-        declarations = "", // Need to use the converter to get the right name of singleton object
-        converter = { getCode(ValidFieldName.of(it)) },
-    )
 }
 
 private interface IsObjectOrList {
