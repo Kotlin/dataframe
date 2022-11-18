@@ -481,9 +481,8 @@ class OpenApiTests : JupyterReplTestCase() {
     fun `Other advanced test`() {
         val fullFunctionName = ValidFieldName.of(::`Other advanced test`.name)
         val functionName = fullFunctionName.quotedIfNeeded
-        val code =
-            execGeneratedCode(advancedExample, fullFunctionName.unquoted)
-                .trimLines()
+        val code = execGeneratedCode(advancedExample, fullFunctionName.unquoted)
+            .trimLines()
 
         @Language("kt") val breedEnum = """
             enum class Breed(override val value: kotlin.String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
