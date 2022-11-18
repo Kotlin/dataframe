@@ -43,6 +43,7 @@ import org.jetbrains.kotlinx.jupyter.api.declare
 import org.jetbrains.kotlinx.jupyter.api.libraries.ColorScheme
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.api.libraries.resources
+import org.jetbrains.kotlinx.jupyter.api.renderHtmlAsIFrameIfNeeded
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubtypeOf
@@ -76,7 +77,7 @@ internal class Integration : JupyterIntegration() {
         }
 
         with(JupyterHtmlRenderer(config.display, this)) {
-            render<HtmlData> { notebook.renderHtmlAsIFrame(it) }
+            render<HtmlData> { notebook.renderHtmlAsIFrameIfNeeded(it) }
             render<AnyRow>({ it.toDataFrame() }, { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" })
             render<ColumnGroup<*>>({ it.asDataFrame() }, { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" })
             render<AnyCol>({ dataFrameOf(it) }, { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" })
