@@ -9,8 +9,8 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 import org.jetbrains.kotlinx.dataframe.api.single
-import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
+import org.jetbrains.kotlinx.jupyter.api.Code
 import java.io.BufferedInputStream
 import java.io.File
 import java.io.FileNotFoundException
@@ -46,20 +46,33 @@ public interface SupportedDataFrameFormat : SupportedFormat {
  * Implement this interface to provide additional [DataSchema] interface generation formats for DataFrames (such as OpenAPI).
  * Note, this doesn't add functionality to [DataFrame.Companion.read], just [ImportDataSchema] and Gradle plugin.
  *
- * Return type will be a [CodeWithConverter] for which [CodeWithConverter.converter] needs to be called
- * to get the generated code with the correct top-level interface name.
+ * Return type will be a [Code] which contains a generated `interface` with the given name containing generated
+ * [DataSchema] interfaces and `enum`s, with `typealias`es (and optional extension functions in some integration)
+ * outside the interface.
  */
 public interface SupportedCodeGenerationFormat : SupportedFormat {
 
+    /**
+     * @param stream where to read the schema from
+     * @param name the name of the top-level interface to generate
+     * @param generateHelperCompanionObject whether to generate a helper companion object (only needed for Jupyter)
+     */
     public fun readCodeForGeneration(
         stream: InputStream,
+        name: String,
         generateHelperCompanionObject: Boolean = false,
-    ): CodeWithConverter
+    ): Code
 
+    /**
+     * @param file where to read the schema from
+     * @param name the name of the top-level interface to generate
+     * @param generateHelperCompanionObject whether to generate a helper companion object (only needed for Jupyter)
+     */
     public fun readCodeForGeneration(
         file: File,
+        name: String,
         generateHelperCompanionObject: Boolean = false,
-    ): CodeWithConverter
+    ): Code
 }
 
 public class MethodArguments {
@@ -157,11 +170,12 @@ private class NotCloseableStream(val src: InputStream) : InputStream() {
 
 internal fun readCodeForGeneration(
     stream: InputStream,
+    name: String,
     format: SupportedCodeGenerationFormat? = null,
     generateHelperCompanionObject: Boolean = false,
     formats: List<SupportedCodeGenerationFormat> = supportedFormats.filterIsInstance<SupportedCodeGenerationFormat>(),
-): ReadCodeWithConverter {
-    if (format != null) return format to format.readCodeForGeneration(stream, generateHelperCompanionObject)
+): GeneratedCode {
+    if (format != null) return format to format.readCodeForGeneration(stream, name, generateHelperCompanionObject)
     val input = NotCloseableStream(if (stream.markSupported()) stream else BufferedInputStream(stream))
     try {
         val readLimit = 10000
@@ -170,7 +184,7 @@ internal fun readCodeForGeneration(
         formats.sortedBy { it.testOrder }.forEach {
             try {
                 input.reset()
-                return it to it.readCodeForGeneration(input, generateHelperCompanionObject)
+                return it to it.readCodeForGeneration(input, name, generateHelperCompanionObject)
             } catch (_: Exception) {
             }
         }
@@ -227,13 +241,13 @@ internal data class ReadAnyFrame(val format: SupportedDataFrameFormat, val df: A
 
 internal infix fun SupportedDataFrameFormat.to(df: AnyFrame) = ReadAnyFrame(this, df)
 
-internal data class ReadCodeWithConverter(
+internal data class GeneratedCode(
     val format: SupportedCodeGenerationFormat,
-    val codeWithConverter: CodeWithConverter,
+    val code: Code,
 )
 
-internal infix fun SupportedCodeGenerationFormat.to(codeWithConverter: CodeWithConverter) =
-    ReadCodeWithConverter(this, codeWithConverter)
+internal infix fun SupportedCodeGenerationFormat.to(code: Code) =
+    GeneratedCode(this, code)
 
 public fun DataFrame.Companion.read(file: File, header: List<String> = emptyList()): AnyFrame =
     read(

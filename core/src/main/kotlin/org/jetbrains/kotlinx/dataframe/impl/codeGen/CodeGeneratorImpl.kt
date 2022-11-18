@@ -461,7 +461,7 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
 
         val readDfMethodDeclaration = readDfMethod?.toDeclaration(marker, propertyVisibility)
 
-        val body = if (fieldsDeclaration.isNotBlank() || readDfMethodDeclaration?.isNotBlank() == true)
+        val body = if (fieldsDeclaration.isNotBlank() || readDfMethodDeclaration?.isNotBlank() == true) {
             buildString {
                 append(" {\n")
                 append(fieldsDeclaration)
@@ -476,7 +476,10 @@ internal class CodeGeneratorImpl(typeRendering: TypeRenderingStrategy = FullyQua
                     append(companionObject.toString())
                 }
                 append("\n}")
-            } else ""
+            }
+        } else {
+            ""
+        }
         resultDeclarations.add(header + baseInterfacesDeclaration + body)
         return resultDeclarations.join()
     }

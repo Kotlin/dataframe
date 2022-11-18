@@ -4,7 +4,6 @@ import org.intellij.lang.annotations.Language
 import java.io.File
 import java.net.URL
 
-
 public class ImportDataSchema(public val url: URL) {
     public constructor(path: String) : this(URL(path))
     public constructor(file: File) : this(file.toURI().toURL())

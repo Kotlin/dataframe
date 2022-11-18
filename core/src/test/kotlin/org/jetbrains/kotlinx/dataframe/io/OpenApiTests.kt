@@ -8,8 +8,8 @@ import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.api.isNotEmpty
 import org.jetbrains.kotlinx.dataframe.api.schema
-import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
+import org.jetbrains.kotlinx.jupyter.api.Code
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
 import java.io.File
@@ -20,11 +20,11 @@ class OpenApiTests : JupyterReplTestCase() {
     private val openApi = OpenApi()
     private val additionalImports = openApi.createDefaultReadMethod().additionalImports.joinToString("\n")
 
-    private fun execGeneratedCode(code: CodeWithConverter, name: String): CodeWithConverter {
+    private fun execGeneratedCode(code: Code): Code {
         @Language("kts") val res1 = exec(
             """
             $additionalImports
-            ${code.converter(name)}
+            $code
             """.trimLines()
         )
         return code
@@ -34,30 +34,30 @@ class OpenApiTests : JupyterReplTestCase() {
         execGeneratedCode(
             code = openApi.readCodeForGeneration(
                 file = file,
+                name = name,
                 extensionProperties = true,
                 generateHelperCompanionObject = false,
             ),
-            name = name,
         )
 
     private fun execGeneratedCode(stream: InputStream, name: String) =
         execGeneratedCode(
             code = openApi.readCodeForGeneration(
                 stream = stream,
+                name = name,
                 extensionProperties = true,
                 generateHelperCompanionObject = false,
             ),
-            name = name,
         )
 
     private fun execGeneratedCode(text: String, name: String) =
         execGeneratedCode(
             code = openApi.readCodeForGeneration(
                 text = text,
+                name = name,
                 extensionProperties = true,
                 generateHelperCompanionObject = false,
             ),
-            name = name,
         )
 
     private val petstoreJson = File("src/test/resources/petstore.json")
@@ -101,7 +101,7 @@ class OpenApiTests : JupyterReplTestCase() {
     private fun simpleTest(file: File) {
         val fullFunctionName = ValidFieldName.of(::simpleTest.name)
         val functionName = fullFunctionName.quotedIfNeeded
-        val code = execGeneratedCode(file, fullFunctionName.unquoted).converter(fullFunctionName.unquoted).trimLines()
+        val code = execGeneratedCode(file, fullFunctionName.unquoted).trimLines()
 
         @Language("kt") val petInterface = """
             @DataSchema(isOpen = false)
@@ -181,7 +181,7 @@ class OpenApiTests : JupyterReplTestCase() {
         val code = execGeneratedCode(
             file = petstoreAdvancedJson,
             name = fullFunctionName.unquoted,
-        ).converter(fullFunctionName.unquoted).trimLines()
+        ).trimLines()
 
         @Language("kts") val statusInterface = """
             enum class Status(override val value: kotlin.String) : org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum {
@@ -482,7 +482,7 @@ class OpenApiTests : JupyterReplTestCase() {
         val fullFunctionName = ValidFieldName.of(::`Other advanced test`.name)
         val functionName = fullFunctionName.quotedIfNeeded
         val code =
-            execGeneratedCode(advancedExample, fullFunctionName.unquoted).converter(fullFunctionName.unquoted)
+            execGeneratedCode(advancedExample, fullFunctionName.unquoted)
                 .trimLines()
 
         @Language("kt") val breedEnum = """
@@ -1010,7 +1010,7 @@ class OpenApiTests : JupyterReplTestCase() {
     fun `Apis guru Test`() {
         val fullFunctionName = ValidFieldName.of(::`Apis guru Test`.name)
         val functionName = fullFunctionName.quotedIfNeeded
-        val code = execGeneratedCode(apiGuruYaml, fullFunctionName.unquoted).converter(fullFunctionName.unquoted)
+        val code = execGeneratedCode(apiGuruYaml, fullFunctionName.unquoted)
 
         val apiGuruDataTripleQuote = "\"\"\"${apiGuruData.replace("$", "\${'$'}")}\"\"\""
 
@@ -1031,7 +1031,7 @@ class OpenApiTests : JupyterReplTestCase() {
 
     @Test
     fun `MLC Test 1`() {
-        val code = execGeneratedCode(mlcYaml, ::`MLC Test 1`.name).converter(::`MLC Test 1`.name)
+        val code = execGeneratedCode(mlcYaml, ::`MLC Test 1`.name)
         println(code)
 
         val mlcLocationsWithPeopleDataTripleQuote = "\"\"\"${mlcLocationsWithPeopleData.replace("$", "\${'$'}")}\"\"\""
@@ -1048,7 +1048,7 @@ class OpenApiTests : JupyterReplTestCase() {
 
     @Test
     fun `MLC Test 2`() {
-        val code = execGeneratedCode(mlcYaml, ::`MLC Test 2`.name).converter(::`MLC Test 2`.name)
+        val code = execGeneratedCode(mlcYaml, ::`MLC Test 2`.name)
         println(code)
 
         val mlcPeopleWithLocationDataTripleQuote = "\"\"\"${mlcPeopleWithLocationData.replace("$", "\${'$'}")}\"\"\""
