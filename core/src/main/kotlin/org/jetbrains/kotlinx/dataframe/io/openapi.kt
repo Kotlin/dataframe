@@ -443,10 +443,10 @@ private fun readOpenApi(
         ).declarations
 
     val (typeAliases, markers) = result.partition { it is OpenApiMarker.TypeAlias || it is OpenApiMarker.MarkerAlias }
-    val generatedMarkers = markers.map(::toCode).reduceOrNull(Code::plus)
-    val generatedTypeAliases = typeAliases.map(::toCode).reduceOrNull(Code::plus)
+    val generatedMarkers = markers.map(::toCode).reduceOrNull { a, b -> "$a\n$b" }
+    val generatedTypeAliases = typeAliases.map(::toCode).reduceOrNull { a, b -> "$a\n$b" }
     val generatedExtensionProperties =
-        if (extensionProperties) result.map(::toExtensionProperties).reduceOrNull(Code::plus)
+        if (extensionProperties) result.map(::toExtensionProperties).reduceOrNull { a, b -> "$a\n$b" }
         else null
 
     val helperCompanionObject = if (generateHelperCompanionObject) {
