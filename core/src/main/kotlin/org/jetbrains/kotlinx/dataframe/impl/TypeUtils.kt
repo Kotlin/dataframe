@@ -169,24 +169,28 @@ internal fun commonParents(vararg classes: KClass<*>): List<KClass<*>> = commonP
 internal fun commonParents(classes: Iterable<KClass<*>>): List<KClass<*>> =
     when {
         !classes.any() -> emptyList()
+        classes.all { it == Nothing::class } -> listOf(Nothing::class)
         else -> {
-            classes.distinct().let {
-                when {
-                    it.size == 1 && it[0].visibility == KVisibility.PUBLIC -> { // if there is only one class - return it
-                        listOf(it[0])
-                    }
+            classes
+                .distinct()
+                .filterNot { it == Nothing::class } // Nothing is a subtype of everything
+                .let {
+                    when {
+                        it.size == 1 && it[0].visibility == KVisibility.PUBLIC -> { // if there is only one class - return it
+                            listOf(it[0])
+                        }
 
-                    else -> it.fold(null as (Set<KClass<*>>?)) { set, clazz ->
-                        // collect a set of all common superclasses from original classes
-                        val superclasses =
-                            (clazz.allSuperclasses + clazz).filter { it.visibility == KVisibility.PUBLIC }.toSet()
-                        set?.intersect(superclasses) ?: superclasses
-                    }!!.let {
-                        it - it.flatMap { it.superclasses }
-                            .toSet() // leave only 'leaf' classes, that are not super to some other class in a set
-                    }.toList()
+                        else -> it.fold(null as (Set<KClass<*>>?)) { set, clazz ->
+                            // collect a set of all common superclasses from original classes
+                            val superclasses =
+                                (clazz.allSuperclasses + clazz).filter { it.visibility == KVisibility.PUBLIC }.toSet()
+                            set?.intersect(superclasses) ?: superclasses
+                        }!!.let {
+                            it - it.flatMap { it.superclasses }
+                                .toSet() // leave only 'leaf' classes, that are not super to some other class in a set
+                        }.toList()
+                    }
                 }
-            }
         }
     }.sortedBy { it.simpleName } // make sure the order is stable to avoid bugs
 
@@ -223,7 +227,8 @@ internal fun baseType(
 
                 listifyValues &&
                     classes.any { it == List::class } &&
-                    classes.all { it == List::class || !it.isSubclassOf(Collection::class) } -> {
+                    classes.all { it == List::class || !it.isSubclassOf(Collection::class) }
+                -> {
                     val listTypes =
                         types.map { if (it.classifier == List::class) it.arguments[0].type else it }.toMutableSet()
                     if (listTypes.contains(null)) List::class.createStarProjectedType(nullable)
@@ -274,8 +279,10 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
     var hasFrames = false
     var hasRows = false
     var hasList = false
+    var allListsAreEmpty = true
     val classesInList = mutableSetOf<KClass<*>>()
     var nullsInList = false
+    var listifyValues = listifyValues
     values.forEach {
         when (it) {
             null -> hasNulls = true
@@ -283,11 +290,14 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
             is AnyFrame -> hasFrames = true
             is List<*> -> {
                 hasList = true
+                if (it.isNotEmpty()) allListsAreEmpty = false
                 it.forEach {
                     if (it == null) nullsInList = true
                     else classesInList.add(it.javaClass.kotlin)
                 }
             }
+
+            is Collection<*> -> listifyValues = false // turn it off for when another collection is present
 
             else -> classes.add(it.javaClass.kotlin)
         }
@@ -301,8 +311,11 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
             if (hasRows) classes.add(DataRow::class)
             if (hasFrames) classes.add(DataFrame::class)
             if (hasList) {
-                if (listifyValues && classesInList.isNotEmpty()) {
-                    val typeInLists = classesInList.commonType(nullable = nullsInList, upperBound = upperBound)
+                if (listifyValues) {
+                    val typeInLists = classesInList.commonType(
+                        nullable = nullsInList || allListsAreEmpty,
+                        upperBound = nothingType(nullable = false), // for when the list is empty, make it Nothing instead of Any?
+                    )
                     val typeOfOthers = classes.commonType(nullable = nullsInList, upperBound = upperBound)
                     val commonType = baseType(types = setOf(typeInLists, typeOfOthers), listifyValues = true)
                     return List::class.createTypeWithArgument(argument = commonType, nullable = false)
@@ -312,6 +325,8 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
             return classes.commonType(hasNulls, upperBound)
         }
 
+        hasNulls && !hasFrames && !hasRows && !hasList -> nothingType(nullable = true)
+
         (hasFrames && (!hasList || allListsWithRows)) || (!hasFrames && allListsWithRows) ->
             DataFrame::class.createStarProjectedType(hasNulls)
 
@@ -320,8 +335,12 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
 
         hasList && !hasFrames && !hasRows -> {
             val elementType = upperBound?.let { if (it.jvmErasure == List::class) it.arguments[0].type else null }
-            List::class.createTypeWithArgument(classesInList.commonType(nullsInList, elementType))
-                .withNullability(hasNulls)
+            List::class.createTypeWithArgument(
+                classesInList.commonType(
+                    nullable = nullsInList,
+                    upperBound = elementType ?: nothingType(nullable = nullsInList),
+                )
+            ).withNullability(hasNulls && !listifyValues)
         }
 
         else -> {
@@ -332,3 +351,7 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
         }
     }
 }
+
+private val nothingType: KType = typeOf<List<Nothing>>().arguments.first().type!!
+private val nullableNothingType: KType = typeOf<List<Nothing?>>().arguments.first().type!!
+internal fun nothingType(nullable: Boolean): KType = if (nullable) nullableNothingType else nothingType
