@@ -133,12 +133,17 @@ internal fun <T> catchSilent(body: () -> T): T? = try {
 internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType? = null) =
     commonParents(this).createType(nullable, upperBound)
 
+/**
+ * Returns the common supertype of the given types.
+ *
+ * @see commonTypeListifyValues
+ */
 internal fun Iterable<KType?>.commonType(): KType {
     val distinct = distinct()
     val nullable = distinct.any { it?.isMarkedNullable ?: true }
     return when {
         distinct.isEmpty() || distinct.contains(null) -> Any::class.createStarProjectedType(nullable)
-        distinct.size == 1 -> distinct[0]!!
+        distinct.size == 1 -> distinct.single()!!
         else -> {
             val kclass = commonParent(distinct.map { it!!.jvmErasure }) ?: return typeOf<Any>()
             val projections = distinct.map { it!!.projectUpTo(kclass).replaceTypeParameters() }

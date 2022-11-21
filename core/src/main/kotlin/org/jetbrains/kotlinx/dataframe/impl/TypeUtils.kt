@@ -37,6 +37,9 @@ internal fun KType.projectTo(targetClass: KClass<*>): KType {
 }
 
 internal fun KType.projectUpTo(superClass: KClass<*>): KType {
+    if (this == nothingType(false)) return superClass.createStarProjectedType(false)
+    if (this == nothingType(true)) return superClass.createStarProjectedType(true)
+
     val chain = inheritanceChain(jvmErasure, superClass)
     var current = this
     chain.forEach { (clazz, declaredBaseType) ->
@@ -195,52 +198,76 @@ internal fun commonParents(classes: Iterable<KClass<*>>): List<KClass<*>> =
     }.sortedBy { it.simpleName } // make sure the order is stable to avoid bugs
 
 /**
- * Returns the common type of the given [types].
+ * Returns the common type of the given types including "listify" behaviour.
+ * Values and nulls will be wrapped in a list if they appear among other lists.
+ * For example: `[Int, Nothing?, List<Int>]` will become `List<Int>` instead of `Any?`. If there is another collection
+ * in there, it will become `Any?` anyway.
  *
- * @param types the types to find the common type for
- * @param listifyValues if true, then values and nulls will be wrapped in a list if they appear among other lists.
- *   For example: `[Int, Nothing?, List<Int>]` will become `List<Int>` instead of `Any?`. If there is another collection
- *   in there, it will become `Any?` anyway.
+ * @receiver the types to find the common type for
+ * @return the common type including listify behaviour
+ *
+ * @see commonType
  */
-internal fun baseType(
-    types: Set<KType>,
-    listifyValues: Boolean = false,
-): KType { // TODO bug for listifyValues with Any? and Nothing?
-    val nullable = types.any { it.isMarkedNullable }
-    return when (types.size) {
-        0 -> typeOf<Unit>()
-        1 -> types.single()
+internal fun Iterable<KType>.commonTypeListifyValues(): KType {
+    val distinct = distinct()
+    return when {
+        distinct.isEmpty() -> Any::class.createStarProjectedType(distinct.any { it.isMarkedNullable })
+        distinct.size == 1 -> distinct.single()
         else -> {
-            val classes = types.map { it.jvmErasure }.distinct()
+            val classes = distinct.map {
+                if (it == nothingType(false) || it == nothingType(true)) Nothing::class
+                else it.jvmErasure
+            }.distinct()
             when {
                 classes.size == 1 -> {
-                    val typeProjections = classes[0].typeParameters.mapIndexed { index, parameter ->
-                        val arguments = types.map { it.arguments[index].type }.toSet()
-                        if (arguments.contains(null)) KTypeProjection.STAR
-                        else {
-                            val type = baseType(arguments as Set<KType>, listifyValues)
+                    val typeProjections = classes.single().typeParameters.mapIndexed { index, parameter ->
+                        val arguments = distinct.map { it.arguments[index].type }.toSet()
+                        if (arguments.contains(null)) {
+                            KTypeProjection.STAR
+                        } else {
+                            val type = arguments.filterNotNull().commonTypeListifyValues()
                             KTypeProjection(parameter.variance, type)
                         }
                     }
-                    classes[0].createType(typeProjections, nullable)
+
+                    if (classes.single() == Nothing::class) nothingType(distinct.any { it.isMarkedNullable })
+                    else classes[0].createType(typeProjections, distinct.any { it.isMarkedNullable })
                 }
 
-                listifyValues &&
-                    classes.any { it == List::class } &&
-                    classes.all { it == List::class || !it.isSubclassOf(Collection::class) }
-                -> {
-                    val listTypes =
-                        types.map { if (it.classifier == List::class) it.arguments[0].type else it }.toMutableSet()
-                    if (listTypes.contains(null)) List::class.createStarProjectedType(nullable)
-                    else {
-                        val type = baseType(listTypes as Set<KType>, true)
-                        List::class.createType(listOf(KTypeProjection.invariant(type)), nullable)
+                classes.any { it == List::class } && classes.all { it == List::class || !it.isSubclassOf(Collection::class) } -> {
+                    val distinctNoNothing = distinct.filterNot {
+                        it == nothingType(false) || it == nothingType(true)
                     }
+                    val listTypes = distinctNoNothing.map {
+                        if (it.classifier == List::class) it.arguments[0].type
+                        else it
+                    }.toMutableSet()
+                    val type = listTypes
+                        .filterNotNull()
+                        .commonTypeListifyValues()
+                        .withNullability(listTypes.any { it?.isMarkedNullable ?: true })
+
+                    List::class.createType(
+                        arguments = listOf(KTypeProjection.invariant(type)),
+                        nullable = distinctNoNothing.any { it.isMarkedNullable },
+                    )
                 }
 
                 else -> {
-                    val commonClass = commonParent(classes) ?: Any::class
-                    commonClass.createStarProjectedType(nullable)
+                    val kclass = commonParent(distinct.map { it.jvmErasure }) ?: return typeOf<Any>()
+                    val projections = distinct.map { it.projectUpTo(kclass).replaceTypeParameters() }
+                    require(projections.all { it.jvmErasure == kclass })
+                    val arguments = List(kclass.typeParameters.size) { i ->
+                        val projectionTypes = projections
+                            .map { it.arguments[i].type }
+                            .filterNot { it in distinct } // avoid infinite recursion
+
+                        val type = projectionTypes.filterNotNull().commonTypeListifyValues()
+                        KTypeProjection.invariant(type)
+                    }
+
+                    if (kclass == Nothing::class) nothingType(nullable = distinct.any { it.isMarkedNullable })
+                    else kclass.createType(arguments, distinct.any { it.isMarkedNullable })
                 }
             }
         }
@@ -270,18 +297,19 @@ internal fun <T> getValuesType(values: List<T>, type: KType, infer: Infer): KTyp
  * @param upperBound the upper bound of the type to guess
  * @param listifyValues if true, then values and nulls will be wrapped in a list if they appear among other lists.
  *   For example: `[1, null, listOf(1, 2, 3)]` will become `List<Int>` instead of `Any?`
- *
+ *   Note: this parameter is ignored if another [Collection] is present in the values.
  */
 @PublishedApi
 internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, listifyValues: Boolean = false): KType {
     val classes = mutableSetOf<KClass<*>>()
+    val collectionClasses = mutableSetOf<KClass<out Collection<*>>>()
     var hasNulls = false
     var hasFrames = false
     var hasRows = false
     var hasList = false
     var allListsAreEmpty = true
-    val classesInList = mutableSetOf<KClass<*>>()
-    var nullsInList = false
+    val classesInCollection = mutableSetOf<KClass<*>>()
+    var nullsInCollection = false
     var listifyValues = listifyValues
     values.forEach {
         when (it) {
@@ -292,19 +320,26 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
                 hasList = true
                 if (it.isNotEmpty()) allListsAreEmpty = false
                 it.forEach {
-                    if (it == null) nullsInList = true
-                    else classesInList.add(it.javaClass.kotlin)
+                    if (it == null) nullsInCollection = true
+                    else classesInCollection.add(it.javaClass.kotlin)
                 }
             }
 
-            is Collection<*> -> listifyValues = false // turn it off for when another collection is present
+            is Collection<*> -> {
+                listifyValues = false // turn it off for when another collection is present
+                it.forEach {
+                    if (it == null) nullsInCollection = true
+                    else classesInCollection.add(it.javaClass.kotlin)
+                }
+                collectionClasses.add(it.javaClass.kotlin)
+            }
 
             else -> classes.add(it.javaClass.kotlin)
         }
     }
-    val allListsWithRows = classesInList.isNotEmpty() &&
-        classesInList.all { it.isSubclassOf(DataRow::class) } &&
-        !nullsInList
+    val allListsWithRows = classesInCollection.isNotEmpty() &&
+        classesInCollection.all { it.isSubclassOf(DataRow::class) } &&
+        !nullsInCollection
 
     return when {
         classes.isNotEmpty() -> {
@@ -312,16 +347,17 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
             if (hasFrames) classes.add(DataFrame::class)
             if (hasList) {
                 if (listifyValues) {
-                    val typeInLists = classesInList.commonType(
-                        nullable = nullsInList || allListsAreEmpty,
+                    val typeInLists = classesInCollection.commonType(
+                        nullable = nullsInCollection || allListsAreEmpty,
                         upperBound = nothingType(nullable = false), // for when the list is empty, make it Nothing instead of Any?
                     )
-                    val typeOfOthers = classes.commonType(nullable = nullsInList, upperBound = upperBound)
-                    val commonType = baseType(types = setOf(typeInLists, typeOfOthers), listifyValues = true)
+                    val typeOfOthers = classes.commonType(nullable = nullsInCollection, upperBound = upperBound)
+                    val commonType = listOf(typeInLists, typeOfOthers).commonTypeListifyValues()
                     return List::class.createTypeWithArgument(argument = commonType, nullable = false)
                 }
                 classes.add(List::class)
             }
+            if (collectionClasses.isNotEmpty()) classes.addAll(collectionClasses)
             return classes.commonType(hasNulls, upperBound)
         }
 
@@ -333,12 +369,30 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
         hasRows && !hasFrames && !hasList ->
             DataRow::class.createStarProjectedType(false)
 
-        hasList && !hasFrames && !hasRows -> {
+        collectionClasses.isNotEmpty() && !hasFrames && !hasRows -> {
+            val elementType = upperBound?.let {
+                if (it.jvmErasure.isSubclassOf(Collection::class)) {
+                    it.projectUpTo(Collection::class).arguments[0].type
+                } else {
+                    null
+                }
+            }
+            if (hasList) collectionClasses.add(List::class)
+            (commonParent(collectionClasses) ?: Collection::class)
+                .createTypeWithArgument(
+                    classesInCollection.commonType(
+                        nullable = nullsInCollection,
+                        upperBound = elementType ?: nothingType(nullable = nullsInCollection),
+                    )
+                ).withNullability(hasNulls)
+        }
+
+        hasList && collectionClasses.isEmpty() && !hasFrames && !hasRows -> {
             val elementType = upperBound?.let { if (it.jvmErasure == List::class) it.arguments[0].type else null }
             List::class.createTypeWithArgument(
-                classesInList.commonType(
-                    nullable = nullsInList,
-                    upperBound = elementType ?: nothingType(nullable = nullsInList),
+                classesInCollection.commonType(
+                    nullable = nullsInCollection,
+                    upperBound = elementType ?: nothingType(nullable = nullsInCollection),
                 )
             ).withNullability(hasNulls && !listifyValues)
         }
@@ -347,6 +401,7 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
             if (hasRows) classes.add(DataRow::class)
             if (hasFrames) classes.add(DataFrame::class)
             if (hasList) classes.add(List::class)
+            if (collectionClasses.isNotEmpty()) classes.addAll(collectionClasses)
             return classes.commonType(hasNulls, upperBound)
         }
     }

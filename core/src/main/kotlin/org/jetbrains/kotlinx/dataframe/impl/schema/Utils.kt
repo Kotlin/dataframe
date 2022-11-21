@@ -13,7 +13,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.hasNulls
-import org.jetbrains.kotlinx.dataframe.impl.baseType
+import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.dataframe.type
@@ -53,11 +53,10 @@ internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
             columnKinds.size > 1 -> ColumnSchema.Value(typeOf<Any>().withNullability(columnSchemas.any { it.nullable }))
 
             kind == ColumnKind.Value -> ColumnSchema.Value(
-                type = baseType(
-                    columnSchemas
-                        .map { (it as ColumnSchema.Value).type }
-                        .toSet()
-                ),
+                type = columnSchemas
+                    .map { (it as ColumnSchema.Value).type }
+                    .toSet()
+                    .commonType(),
             )
 
             kind == ColumnKind.Frame -> ColumnSchema.Frame(
@@ -66,21 +65,19 @@ internal fun Iterable<DataFrameSchema>.intersectSchemas(): DataFrameSchema {
                     .mapNotNull { (it as ColumnSchema.Frame).schema.takeIf { it.columns.isNotEmpty() } }
                     .intersectSchemas(),
                 nullable = columnSchemas.any { it.nullable },
-                contentType = baseType(
-                    columnSchemas
-                        .mapNotNull { (it as ColumnSchema.Frame).contentType }
-                        .toSet()
-                ),
+                contentType = columnSchemas
+                    .mapNotNull { (it as ColumnSchema.Frame).contentType }
+                    .toSet()
+                    .commonType(),
             )
 
             kind == ColumnKind.Group -> ColumnSchema.Group(
                 schema = columnSchemas.map { (it as ColumnSchema.Group).schema }
                     .intersectSchemas(),
-                contentType = baseType(
-                    columnSchemas
-                        .mapNotNull { (it as ColumnSchema.Group).contentType }
-                        .toSet()
-                ),
+                contentType = columnSchemas
+                    .mapNotNull { (it as ColumnSchema.Group).contentType }
+                    .toSet()
+                    .commonType(),
             )
 
             else -> throw RuntimeException()
