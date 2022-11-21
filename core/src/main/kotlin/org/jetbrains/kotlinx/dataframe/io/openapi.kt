@@ -590,6 +590,7 @@ public interface AdditionalProperty<T> : KeyValueProperty<T> {
         /**
          * Used to convert a [DataFrame] to an [AdditionalProperty] [DataFrame] by [DataFrame.gather]ing all column names
          * into a column named `key` and the values into a column named `value` of type [T].
+         * Used in generated code of OpenApi.
          *
          * @param T the type of the `value` column. Must implement [AdditionalProperty]
          * @receiver the DataFrame to convert to an [AdditionalProperty] [DataFrame].

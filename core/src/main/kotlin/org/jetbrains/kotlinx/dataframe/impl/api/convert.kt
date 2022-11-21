@@ -83,9 +83,11 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
 
     if (from == to) return this
 
+    // catch for ColumnGroup and FrameColumn since they don't have changeType,
+    // but user converters can still exist
     if (from.isSubtypeOf(to)) try {
         return (this as DataColumnInternal<*>).changeType(to.withNullability(hasNulls()))
-    } catch (e: UnsupportedOperationException) { /* */
+    } catch (_: UnsupportedOperationException) { /* */
     }
 
     return when (val converter = getConverter(from, to, ParserOptions(locale = Locale.getDefault()))) {
@@ -199,9 +201,14 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             val underlyingType = constructorParameter.type
             val converter = getConverter(underlyingType, to)
                 ?: throw TypeConverterNotFoundException(underlyingType, to)
-            val property = fromClass.memberProperties.single { it.name == constructorParameter.name } as kotlin.reflect.KProperty1<Any, *>
+            val property =
+                fromClass.memberProperties.single { it.name == constructorParameter.name } as kotlin.reflect.KProperty1<Any, *>
             if (property.visibility != kotlin.reflect.KVisibility.PUBLIC) {
-                throw TypeConversionException("Not public member property in primary constructor of value type", from, to)
+                throw TypeConversionException(
+                    "Not public member property in primary constructor of value type",
+                    from,
+                    to
+                )
             }
 
             convert<Any> {

@@ -168,6 +168,15 @@ private class NotCloseableStream(val src: InputStream) : InputStream() {
     override fun mark(readlimit: Int) = src.mark(readlimit)
 }
 
+/**
+ * @param stream where to read the schema from
+ * @param name the name of the top-level interface to generate
+ * @param format the format to use
+ * @param generateHelperCompanionObject whether to generate a helper companion object (only needed for Jupyter)
+ * @param formats Optional list of supported formats to use. If not specified, all formats will be used.
+ *
+ * @return [GeneratedCode] with generated code
+ */
 internal fun readCodeForGeneration(
     stream: InputStream,
     name: String,
