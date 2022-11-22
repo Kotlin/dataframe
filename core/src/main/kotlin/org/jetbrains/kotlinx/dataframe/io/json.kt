@@ -57,19 +57,119 @@ public class JSON : SupportedFormat {
     }
 }
 
+/**
+ * @param header if not empty, will split JSON arrays into header.size columns,
+ * for example json = `[[1, 2, 3], [4, 5, 6]]` with header = `listOf("a", "b", "c")`
+ * produces dataframe with 3 columns
+ * ```
+ * a b c
+ * 1 2 3
+ * 4 5 6
+ * ```
+ */
 public fun DataFrame.Companion.readJson(file: File, header: List<String> = emptyList()): AnyFrame = readJson(file.toURI().toURL(), header)
+
+/**
+ * @param header if not empty, will split JSON arrays into header.size columns,
+ * for example json = `[[1, 2, 3]]` with header = `listOf("a", "b", "c")`
+ * produces data row with 3 columns
+ * ```
+ * a b c
+ * 1 2 3
+ * ```
+ */
 public fun DataRow.Companion.readJson(file: File, header: List<String> = emptyList()): AnyRow = DataFrame.readJson(file, header).single()
 
+/**
+ * @param header if not empty, will split JSON arrays into header.size columns,
+ * for example json = `[[1, 2, 3], [4, 5, 6]]` with header = `listOf("a", "b", "c")`
+ * produces dataframe with 3 columns
+ * ```
+ * a b c
+ * 1 2 3
+ * 4 5 6
+ * ```
+ */
 public fun DataFrame.Companion.readJson(path: String, header: List<String> = emptyList()): AnyFrame = readJson(asURL(path), header)
+
+/**
+ * @param header if not empty, will split JSON arrays into header.size columns,
+ * for example json = `[[1, 2, 3]]` with header = `listOf("a", "b", "c")`
+ * produces data row with 3 columns
+ * ```
+ * a b c
+ * 1 2 3
+ * ```
+ */
 public fun DataRow.Companion.readJson(path: String, header: List<String> = emptyList()): AnyRow = DataFrame.readJson(path, header).single()
 
+/**
+ * @param header if not empty, will split JSON arrays into header.size columns,
+ * for example json = `[[1, 2, 3], [4, 5, 6]]` with header = `listOf("a", "b", "c")`
+ * produces dataframe with 3 columns
+ * ```
+ * a b c
+ * 1 2 3
+ * 4 5 6
+ * ```
+ */
 public fun DataFrame.Companion.readJson(url: URL, header: List<String> = emptyList()): AnyFrame = catchHttpResponse(url) { readJson(it, header) }
+
+/**
+ * @param header if not empty, will split JSON arrays into header.size columns,
+ * for example json = `[[1, 2, 3]]` with header = `listOf("a", "b", "c")`
+ * produces data row with 3 columns
+ * ```
+ * a b c
+ * 1 2 3
+ * ```
+ */
 public fun DataRow.Companion.readJson(url: URL, header: List<String> = emptyList()): AnyRow = DataFrame.readJson(url, header).single()
 
+/**
+ * @param header if not empty, will split JSON arrays into header.size columns,
+ * for example json = `[[1, 2, 3], [4, 5, 6]]` with header = `listOf("a", "b", "c")`
+ * produces dataframe with 3 columns
+ * ```
+ * a b c
+ * 1 2 3
+ * 4 5 6
+ * ```
+ */
 public fun DataFrame.Companion.readJson(stream: InputStream, header: List<String> = emptyList()): AnyFrame = readJson(Parser.default().parse(stream), header)
+
+/**
+ * @param header if not empty, will split JSON arrays into header.size columns,
+ * for example json = `[[1, 2, 3]]` with header = `listOf("a", "b", "c")`
+ * produces data row with 3 columns
+ * ```
+ * a b c
+ * 1 2 3
+ * ```
+ */
 public fun DataRow.Companion.readJson(stream: InputStream, header: List<String> = emptyList()): AnyRow = DataFrame.readJson(stream, header).single()
 
+/**
+ * @param header if not empty, will split JSON arrays into header.size columns,
+ * for example json = `[[1, 2, 3], [4, 5, 6]]` with header = `listOf("a", "b", "c")`
+ * produces dataframe with 3 columns
+ * ```
+ * a b c
+ * 1 2 3
+ * 4 5 6
+ * ```
+ */
 public fun DataFrame.Companion.readJsonStr(text: String, header: List<String> = emptyList()): AnyFrame = readJson(Parser.default().parse(StringBuilder(text)), header)
+
+/**
+ * @param header if not empty, will split JSON arrays into header.size columns,
+ * for example json = `[[1, 2, 3]]` with header = `listOf("a", "b", "c")`
+ * produces data row with 3 columns
+ * ```
+ * a b c
+ * 1 2 3
+ * ```
+ */
 public fun DataRow.Companion.readJsonStr(text: String, header: List<String> = emptyList()): AnyRow = DataFrame.readJsonStr(text, header).single()
 
 private fun readJson(parsed: Any?, header: List<String>): DataFrame<*> {
