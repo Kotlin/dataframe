@@ -4,9 +4,10 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.AbstractInterpreter
 import org.jetbrains.kotlinx.dataframe.annotations.Arguments
 import org.jetbrains.kotlinx.dataframe.annotations.Present
+import org.jetbrains.kotlinx.dataframe.api.readCSVDefault
+import org.jetbrains.kotlinx.dataframe.api.readJsonDefault
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.io.read
-import org.jetbrains.kotlinx.dataframe.io.readCSV
 
 internal class Read0 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.path by string()
@@ -21,6 +22,14 @@ internal class ReadCSV0 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.fileOrUrl: String by arg()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        return DataFrame.readCSV(fileOrUrl).schema().toPluginDataFrameSchema()
+        return DataFrame.readCSVDefault(fileOrUrl).schema().toPluginDataFrameSchema()
+    }
+}
+
+internal class ReadJson0 : AbstractInterpreter<PluginDataFrameSchema>() {
+    val Arguments.path: String by arg()
+
+    override fun Arguments.interpret(): PluginDataFrameSchema {
+        return DataFrame.readJsonDefault(path).schema().toPluginDataFrameSchema()
     }
 }

@@ -6,15 +6,12 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
-import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadCsvMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.parse
-import org.jetbrains.kotlinx.dataframe.plugin.ReadCSV0
 import org.jetbrains.kotlinx.dataframe.values
 import java.io.BufferedReader
 import java.io.File
@@ -97,8 +94,6 @@ public fun DataFrame.Companion.read(
         )
     }
 
-@Refine("readCSV_0")
-@Interpretable(ReadCSV0::class)
 public fun DataFrame.Companion.readCSV(
     fileOrUrl: String,
     delimiter: Char = ',',
