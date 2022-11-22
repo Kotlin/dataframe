@@ -39,6 +39,10 @@ public class ConvertApproximation(public val schema: PluginDataFrameSchema, publ
 public annotation class Interpretable(val interpreter: KClass<out Interpreter<*>>)
 public annotation class Refine(val id: String)
 
+@Retention(AnnotationRetention.SOURCE)
+@Target(AnnotationTarget.FILE, AnnotationTarget.EXPRESSION)
+public annotation class DisableInterpretation
+
 public class Add : AbstractSchemaModificationInterpreter() {
     public val Arguments.receiver: PluginDataFrameSchema by dataFrame()
     public val Arguments.name: String by string()
