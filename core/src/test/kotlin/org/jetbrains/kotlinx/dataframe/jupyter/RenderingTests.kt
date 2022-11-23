@@ -70,7 +70,7 @@ class RenderingTests : JupyterReplTestCase() {
         val htmlDark = execSimpleDf()
 
         r1 shouldBe 1
-        val darkClassAttribute = """class="dataframe_dark""""
+        val darkClassAttribute = """theme='dark'"""
         htmlLight shouldNotContain darkClassAttribute
         htmlDark shouldContain darkClassAttribute
     }
