@@ -16,6 +16,7 @@ kotlin.sourceSets.getByName("main").kotlin.srcDir("build/generated/ksp/main/kotl
 
 dependencies {
     implementation(project(":core"))
+    implementation(project(":dataframe-openapi"))
 }
 
 tasks.withType<KotlinCompile> {

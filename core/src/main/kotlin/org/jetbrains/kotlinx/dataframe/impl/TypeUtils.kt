@@ -407,6 +407,9 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
     }
 }
 
-private val nothingType: KType = typeOf<List<Nothing>>().arguments.first().type!!
-private val nullableNothingType: KType = typeOf<List<Nothing?>>().arguments.first().type!!
-internal fun nothingType(nullable: Boolean): KType = if (nullable) nullableNothingType else nothingType
+internal fun nothingType(nullable: Boolean): KType =
+    if (nullable) {
+        typeOf<List<Nothing?>>()
+    } else {
+        typeOf<List<Nothing>>()
+    }.arguments.first().type!!
