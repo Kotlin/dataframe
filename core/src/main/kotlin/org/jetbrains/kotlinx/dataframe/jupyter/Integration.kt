@@ -37,6 +37,7 @@ import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.HtmlData
+import org.jetbrains.kotlinx.jupyter.api.JupyterClientType
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.VariableName
 import org.jetbrains.kotlinx.jupyter.api.declare
@@ -55,6 +56,10 @@ internal class Integration : JupyterIntegration() {
     override fun Builder.onLoaded() {
         val codeGen = ReplCodeGenerator.create()
         val config = JupyterConfiguration()
+
+        if (notebook.jupyterClientType == JupyterClientType.KOTLIN_NOTEBOOK) {
+            config.display.isolatedOutputs = true
+        }
 
         onLoaded {
             declare("dataFrameConfig" to config)
