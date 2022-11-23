@@ -3,7 +3,7 @@ plugins {
     kotlin("jvm")
     kotlin("libs.publisher")
     kotlin("plugin.serialization")
-    kotlin("jupyter.api") version libs.versions.kotlinJupyter
+    kotlin("jupyter.api")
 
     id("io.github.devcrocod.korro") version libs.versions.korro
     id("org.jetbrains.dataframe.generator")
@@ -33,9 +33,7 @@ dependencies {
     implementation(libs.fuel)
 
     api(libs.kotlin.datetimeJvm)
-    implementation("com.squareup:kotlinpoet:1.11.0")
-
-    implementation(libs.swagger)
+    implementation(libs.kotlinpoet)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {

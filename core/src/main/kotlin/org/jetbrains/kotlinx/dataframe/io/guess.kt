@@ -23,11 +23,28 @@ public sealed interface SupportedFormat {
 
     public fun acceptsExtension(ext: String): Boolean
 
+    public fun acceptsSample(sample: SupportedFormatSample): Boolean
+
     // `DataFrame.Companion.read` methods uses this to sort list of all supported formats in ascending order (-1, 2, 10)
     // sorted list is used to test if any format can read given input
     public val testOrder: Int
 
     public fun createDefaultReadMethod(pathRepresentation: String? = null): DefaultReadDfMethod
+}
+
+public sealed interface SupportedFormatSample {
+
+    @JvmInline
+    public value class File(public val sampleFile: java.io.File) : SupportedFormatSample
+
+    @JvmInline
+    public value class URL(public val sampleUrl: java.net.URL) : SupportedFormatSample
+
+    @JvmInline
+    public value class PathString(public val samplePath: String) : SupportedFormatSample
+
+    @JvmInline
+    public value class DataString(public val sampleData: String) : SupportedFormatSample
 }
 
 /**
@@ -109,53 +126,32 @@ internal val supportedFormats: List<SupportedFormat> by lazy {
             ServiceLoader.load(SupportedCodeGenerationFormat::class.java).toList() +
             ServiceLoader.load(SupportedFormat::class.java).toList()
         ).distinct()
+        .sortedBy { it.testOrder }
 }
 
 internal fun guessFormatForExtension(
     ext: String,
     formats: List<SupportedFormat> = supportedFormats,
-    sample: Any? = null,
-): SupportedFormat? =
-    formats.firstOrNull { it.acceptsExtension(ext) }
-        ?.let {
-            // a json file can be read both for openApi as for JSON try to make the distinction
-            if (it is JSON || it is OpenApi) {
-                val isOpenApi = when (sample) {
-                    is File -> isOpenApi(sample)
-                    is URL -> isOpenApi(sample)
-                    is String -> isOpenApi(sample)
-                    else -> false
-                }
-
-                if (isOpenApi) {
-                    supportedFormats.firstOrNull { it is OpenApi }
-                        ?: supportedFormats.firstOrNull { it is JSON }
-                } else {
-                    it
-                }
-            } else it
-        }
+    sample: SupportedFormatSample? = null,
+): SupportedFormat? = formats.firstOrNull { it.acceptsExtension(ext) && (sample == null || it.acceptsSample(sample)) }
 
 internal fun guessFormat(
     file: File,
     formats: List<SupportedFormat> = supportedFormats,
-    sample: Any? = file,
-): SupportedFormat? =
-    guessFormatForExtension(file.extension.lowercase(), formats, sample = sample)
+    sample: SupportedFormatSample.File? = SupportedFormatSample.File(file),
+): SupportedFormat? = guessFormatForExtension(file.extension.lowercase(), formats, sample = sample)
 
 internal fun guessFormat(
     url: URL,
     formats: List<SupportedFormat> = supportedFormats,
-    sample: Any? = url,
-): SupportedFormat? =
-    guessFormat(url.path, formats, sample = sample)
+    sample: SupportedFormatSample.URL? = SupportedFormatSample.URL(url),
+): SupportedFormat? = guessFormatForExtension(url.path.substringAfterLast("."), formats, sample = sample)
 
 internal fun guessFormat(
-    url: String,
+    path: String,
     formats: List<SupportedFormat> = supportedFormats,
-    sample: Any? = url,
-): SupportedFormat? =
-    guessFormatForExtension(url.substringAfterLast("."), formats, sample = sample)
+    sample: SupportedFormatSample.PathString? = SupportedFormatSample.PathString(path),
+): SupportedFormat? = guessFormatForExtension(path.substringAfterLast("."), formats, sample = sample)
 
 private class NotCloseableStream(val src: InputStream) : InputStream() {
     override fun read(): Int = src.read()
