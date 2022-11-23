@@ -49,17 +49,8 @@ public value class JsonPath(@Language("jsonpath") public val path: String = "$")
         "\$[*]" + path.removePrefix("$")
     )
 
-    private fun erasedIndices(): JsonPath = JsonPath(
+    public fun erasedIndices(): JsonPath = JsonPath(
         path.replace("""\[[0-9]+]""".toRegex(), "[*]")
-    )
-
-    private fun toDotNotation(): JsonPath = JsonPath(
-        path.replace("""\[(('([^']+)')|("([^"]+)"))]""".toRegex()) {
-            val value = it.groupValues[3].takeIf { it.isNotBlank() } // single quotes
-                ?: it.groupValues[5].takeIf { it.isNotBlank() } // double quotes
-                ?: error("Invalid path")
-            ".$value"
-        }
     )
 
     private fun splitPath() = path.split("[", "]").filter { it.isNotBlank() }
