@@ -27,6 +27,7 @@ import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
+import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
@@ -79,18 +80,32 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
         else -> throw TypeConversionException(null, from, to)
     }
 
-    return when {
-        from == to -> this
-        from.isSubtypeOf(to) -> (this as DataColumnInternal<*>).changeType(to.withNullability(hasNulls()))
-        else -> when (val converter = getConverter(from, to, ParserOptions(locale = Locale.getDefault()))) {
-            null -> when (from.classifier) {
-                Any::class, Number::class, java.io.Serializable::class -> {
+    fun applyConverter(converter: TypeConverter): AnyCol {
+        var currentRow = 0
+        try {
+            val values = values.mapIndexed { row, value ->
+                currentRow = row
+                value?.let { converter(value) }.checkNulls()
+            }
+            return DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
+        } catch (e: TypeConversionException) {
+            throw CellConversionException(e.value, e.from, e.to, this.name(), currentRow, e)
+        }
+    }
+
+    fun convertPerCell(): AnyCol {
+        var currentRow = 0
+        try {
+            return when (from.classifier) {
+                Any::class, Comparable::class, Number::class, java.io.Serializable::class -> {
                     // find converter for every value
-                    val values = values.map {
-                        it?.let {
+                    val values = values.mapIndexed { row, value ->
+                        currentRow = row
+                        value?.let {
                             val clazz = it.javaClass.kotlin
                             val type = clazz.createStarProjectedType(false)
-                            val converter = getConverter(type, to, ParserOptions(locale = Locale.getDefault())) ?: throw TypeConverterNotFoundException(from, to)
+                            val converter = getConverter(type, to, ParserOptions(locale = Locale.getDefault()))
+                                ?: throw TypeConverterNotFoundException(from, to)
                             converter(it)
                         }.checkNulls()
                     }
@@ -98,12 +113,17 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
                 }
                 else -> throw TypeConverterNotFoundException(from, to)
             }
-            else -> {
-                val values = values.map {
-                    it?.let { converter(it) }.checkNulls()
-                }
-                DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
-            }
+        } catch (e: TypeConversionException) {
+            throw CellConversionException(e.value, e.from, e.to, this.name(), currentRow, e)
+        }
+    }
+
+    return when {
+        from == to -> this
+        from.isSubtypeOf(to) -> (this as DataColumnInternal<*>).changeType(to.withNullability(hasNulls()))
+        else -> when (val converter = getConverter(from, to, ParserOptions(locale = Locale.getDefault()))) {
+            null -> convertPerCell()
+            else -> applyConverter(converter)
         }
     }
 }
