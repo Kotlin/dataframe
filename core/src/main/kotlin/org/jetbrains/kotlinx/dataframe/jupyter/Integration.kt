@@ -39,7 +39,8 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.io.HtmlData
-import org.jetbrains.kotlinx.dataframe.io.OpenApi
+import org.jetbrains.kotlinx.dataframe.io.SupportedCodeGenerationFormat
+import org.jetbrains.kotlinx.dataframe.io.supportedFormats
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.Notebook
@@ -63,7 +64,6 @@ internal class Integration(private val notebook: Notebook, private val options: 
 
         onLoaded {
             declare("dataFrameConfig" to config)
-//            execute(importDataSchema)
         }
 
         resources {
@@ -152,9 +152,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
         }
 
         updateVariable<ImportDataSchema> { importDataSchema, property ->
-            val formats = listOf(
-                OpenApi(),
-            )
+            val formats = supportedFormats.filterIsInstance<SupportedCodeGenerationFormat>()
             val name = property.name + "DataSchema"
             when (val codeGenResult = CodeGenerator.urlCodeGenReader(importDataSchema.url, name, formats, true)) {
                 is CodeGenerationReadResult.Success -> {

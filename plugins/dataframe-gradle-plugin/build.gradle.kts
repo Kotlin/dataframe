@@ -16,6 +16,7 @@ group = "org.jetbrains.kotlinx.dataframe"
 dependencies {
     implementation(project(":core"))
     implementation(project(":dataframe-arrow"))
+    implementation(project(":dataframe-openapi"))
     implementation(project(":dataframe-excel"))
     implementation(kotlin("gradle-plugin-api"))
     implementation(kotlin("gradle-plugin"))

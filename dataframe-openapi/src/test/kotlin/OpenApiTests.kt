@@ -1,5 +1,3 @@
-package org.jetbrains.kotlinx.dataframe.io
-
 import io.kotest.assertions.throwables.shouldThrowAny
 import io.kotest.matchers.booleans.shouldBeTrue
 import io.kotest.matchers.should
@@ -9,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.api.isNotEmpty
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
+import org.jetbrains.kotlinx.dataframe.io.OpenApi
 import org.jetbrains.kotlinx.jupyter.api.Code
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test

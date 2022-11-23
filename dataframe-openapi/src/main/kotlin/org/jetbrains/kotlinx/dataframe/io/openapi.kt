@@ -138,7 +138,16 @@ public class OpenApi : SupportedCodeGenerationFormat {
 
     override fun acceptsExtension(ext: String): Boolean = ext in listOf("yaml", "yml", "json")
 
-    override val testOrder: Int = 60000
+    // Needed for distinguishing between JSON and OpenAPI JSON
+    override fun acceptsSample(sample: SupportedFormatSample): Boolean =
+        when (sample) {
+            is SupportedFormatSample.DataString -> isOpenApiStr(sample.sampleData)
+            is SupportedFormatSample.File -> isOpenApi(sample.sampleFile)
+            is SupportedFormatSample.PathString -> isOpenApi(sample.samplePath)
+            is SupportedFormatSample.URL -> isOpenApi(sample.sampleUrl)
+        }
+
+    override val testOrder: Int = 9_000
 
     override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod = DefaultReadOpenApiMethod
 }

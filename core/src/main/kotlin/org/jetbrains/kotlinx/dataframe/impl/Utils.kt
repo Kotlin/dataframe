@@ -261,14 +261,13 @@ internal fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries:
     else this > left && this < right
 
 private const val DELIMITERS = "[_\\s]"
-internal val DELIMITERS_REGEX = DELIMITERS.toRegex()
-internal val DELIMITED_STRING_REGEX: Regex = ".+$DELIMITERS.+".toRegex()
+public val DELIMITERS_REGEX: Regex = DELIMITERS.toRegex()
+public val DELIMITED_STRING_REGEX: Regex = ".+$DELIMITERS.+".toRegex()
 
 internal val CAMEL_REGEX = "(?<=[a-zA-Z])[A-Z]".toRegex()
 
-internal fun String.toCamelCaseByDelimiters(delimiters: Regex): String {
-    return split(delimiters).joinToCamelCaseString()
-}
+public fun String.toCamelCaseByDelimiters(delimiters: Regex): String =
+    split(delimiters).joinToCamelCaseString()
 
 internal fun String.toSnakeCase(): String =
     if ("[A-Z_]+".toRegex().matches(this)) {

@@ -43,6 +43,8 @@ public class CSV(private val delimiter: Char = ',') : SupportedDataFrameFormat {
 
     override fun acceptsExtension(ext: String): Boolean = ext == "csv"
 
+    override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
+
     override val testOrder: Int = 20000
 
     override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
@@ -68,7 +70,7 @@ public fun DataFrame.Companion.readDelimStr(
     text: String,
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
-    readLines: Int? = null
+    readLines: Int? = null,
 ): DataFrame<*> =
     StringReader(text).use { readDelim(it, CSVType.DEFAULT.format.withHeader(), colTypes, skipLines, readLines) }
 
@@ -80,7 +82,7 @@ public fun DataFrame.Companion.read(
     skipLines: Int = 0,
     readLines: Int? = null,
     duplicate: Boolean = true,
-    charset: Charset = Charsets.UTF_8
+    charset: Charset = Charsets.UTF_8,
 ): DataFrame<*> =
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
@@ -123,7 +125,7 @@ public fun DataFrame.Companion.readCSV(
     readLines: Int? = null,
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
-    parserOptions: ParserOptions? = null
+    parserOptions: ParserOptions? = null,
 ): DataFrame<*> =
     readDelim(
         FileInputStream(file), delimiter,
@@ -143,7 +145,7 @@ public fun DataFrame.Companion.readCSV(
     readLines: Int? = null,
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
-    parserOptions: ParserOptions? = null
+    parserOptions: ParserOptions? = null,
 ): DataFrame<*> =
     readCSV(
         url.openStream(), delimiter,
@@ -164,7 +166,7 @@ public fun DataFrame.Companion.readCSV(
     readLines: Int? = null,
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
-    parserOptions: ParserOptions? = null
+    parserOptions: ParserOptions? = null,
 ): DataFrame<*> = readDelim(
     stream, delimiter,
     header, isCompressed,
@@ -258,7 +260,7 @@ public fun DataFrame.Companion.readDelim(
     colTypes: Map<String, ColType> = mapOf(),
     skipLines: Int = 0,
     readLines: Int? = null,
-    parserOptions: ParserOptions? = null
+    parserOptions: ParserOptions? = null,
 ): AnyFrame {
     var reader = reader
     if (skipLines > 0) {
@@ -315,19 +317,19 @@ public fun DataFrame.Companion.readDelim(
 
 public fun AnyFrame.writeCSV(
     file: File,
-    format: CSVFormat = CSVFormat.DEFAULT
+    format: CSVFormat = CSVFormat.DEFAULT,
 ): Unit =
     writeCSV(FileWriter(file), format)
 
 public fun AnyFrame.writeCSV(
     path: String,
-    format: CSVFormat = CSVFormat.DEFAULT
+    format: CSVFormat = CSVFormat.DEFAULT,
 ): Unit =
     writeCSV(FileWriter(path), format)
 
 public fun AnyFrame.writeCSV(
     writer: Appendable,
-    format: CSVFormat = CSVFormat.DEFAULT
+    format: CSVFormat = CSVFormat.DEFAULT,
 ) {
     format.print(writer).use { printer ->
         printer.printRecord(columnNames())

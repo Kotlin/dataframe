@@ -84,8 +84,9 @@ public class JSON(
         )
 
     override fun acceptsExtension(ext: String): Boolean = ext == "json"
+    override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
 
-    override val testOrder: Int = 10000
+    override val testOrder: Int = 10_000
 
     override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod =
         DefaultReadJsonMethod(
@@ -615,8 +616,8 @@ internal fun fromJsonListAnyColumns(
     }
 }
 
-internal const val arrayColumnName: String = "array"
-internal const val valueColumnName: String = "value"
+public const val arrayColumnName: String = "array"
+public const val valueColumnName: String = "value"
 
 private fun AnyFrame.isSingleUnnamedColumn() = ncol == 1 && getColumn(0) is UnnamedColumn
 
