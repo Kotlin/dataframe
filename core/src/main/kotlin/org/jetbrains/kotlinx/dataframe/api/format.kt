@@ -13,8 +13,8 @@ import org.jetbrains.kotlinx.dataframe.impl.api.formatImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.linearGradient
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
-import org.jetbrains.kotlinx.dataframe.io.HtmlData
 import org.jetbrains.kotlinx.dataframe.io.toHTML
+import org.jetbrains.kotlinx.jupyter.api.HtmlData
 import kotlin.reflect.KProperty
 
 // region DataFrame

@@ -28,6 +28,7 @@ import org.jetbrains.kotlinx.dataframe.api.to
 import org.jetbrains.kotlinx.dataframe.columns.values
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
+import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
@@ -81,6 +82,44 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
         else -> throw TypeConversionException(null, from, to)
     }
 
+    fun applyConverter(converter: TypeConverter): AnyCol {
+        var currentRow = 0
+        try {
+            val values = values.mapIndexed { row, value ->
+                currentRow = row
+                value?.let { converter(value) }.checkNulls()
+            }
+            return DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
+        } catch (e: TypeConversionException) {
+            throw CellConversionException(e.value, e.from, e.to, this.name(), currentRow, e)
+        }
+    }
+
+    fun convertPerCell(): AnyCol {
+        var currentRow = 0
+        try {
+            return when (from.classifier) {
+                Any::class, Comparable::class, Number::class, java.io.Serializable::class -> {
+                    // find converter for every value
+                    val values = values.mapIndexed { row, value ->
+                        currentRow = row
+                        value?.let {
+                            val clazz = it.javaClass.kotlin
+                            val type = clazz.createStarProjectedType(false)
+                            val converter = getConverter(type, to, ParserOptions(locale = Locale.getDefault()))
+                                ?: throw TypeConverterNotFoundException(from, to)
+                            converter(it)
+                        }.checkNulls()
+                    }
+                    DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
+                }
+                else -> throw TypeConverterNotFoundException(from, to)
+            }
+        } catch (e: TypeConversionException) {
+            throw CellConversionException(e.value, e.from, e.to, this.name(), currentRow, e)
+        }
+    }
+
     if (from == to) return this
 
     // catch for ColumnGroup and FrameColumn since they don't have changeType,
@@ -91,30 +130,8 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
     }
 
     return when (val converter = getConverter(from, to, ParserOptions(locale = Locale.getDefault()))) {
-        null -> when (from.classifier) {
-            Any::class, Number::class, java.io.Serializable::class, Comparable::class -> {
-                // find converter for every value
-                val values = values.map {
-                    it?.let {
-                        val clazz = it.javaClass.kotlin
-                        val type = clazz.createStarProjectedType(false)
-                        val converter = getConverter(type, to, ParserOptions(locale = Locale.getDefault()))
-                            ?: throw TypeConverterNotFoundException(from, to)
-                        converter(it)
-                    }.checkNulls()
-                }
-                DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
-            }
-
-            else -> throw TypeConverterNotFoundException(from, to)
-        }
-
-        else -> {
-            val values = values.map {
-                it?.let { converter(it) }.checkNulls()
-            }
-            DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
-        }
+        null -> convertPerCell()
+        else -> applyConverter(converter)
     }
 }
 

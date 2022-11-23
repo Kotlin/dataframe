@@ -38,10 +38,10 @@ import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
-import org.jetbrains.kotlinx.dataframe.io.HtmlData
 import org.jetbrains.kotlinx.dataframe.io.SupportedCodeGenerationFormat
 import org.jetbrains.kotlinx.dataframe.io.supportedFormats
 import org.jetbrains.kotlinx.jupyter.api.HTML
+import org.jetbrains.kotlinx.jupyter.api.HtmlData
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.Notebook
 import org.jetbrains.kotlinx.jupyter.api.VariableName
@@ -49,6 +49,7 @@ import org.jetbrains.kotlinx.jupyter.api.declare
 import org.jetbrains.kotlinx.jupyter.api.libraries.ColorScheme
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.api.libraries.resources
+import org.jetbrains.kotlinx.jupyter.api.renderHtmlAsIFrameIfNeeded
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubtypeOf
@@ -73,8 +74,8 @@ internal class Integration(private val notebook: Notebook, private val options: 
                         classPath("init.js")
                     } else {
                         // Update this commit when new version of init.js is pushed
-                        val initJsSha = "d6467c1389bc031958acd5310fce39167b5cc581"
-                        url("https://cdn.jsdelivr.net/gh/Kotlin/dataframe@$initJsSha/src/main/resources/init.js")
+                        val initJsSha = "3db46ccccaa1291c0627307d64133317f545e6ae"
+                        url("https://cdn.jsdelivr.net/gh/Kotlin/dataframe@$initJsSha/core/src/main/resources/init.js")
                     }
                 }
 
@@ -83,28 +84,23 @@ internal class Integration(private val notebook: Notebook, private val options: 
         }
 
         with(JupyterHtmlRenderer(config.display, this)) {
-            render<HtmlData> { it.toJupyter() }
+            render<HtmlData> { notebook.renderHtmlAsIFrameIfNeeded(it) }
             render<AnyRow>(
                 { it.toDataFrame() },
-                { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" },
-            )
+                { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" })
             render<ColumnGroup<*>>(
                 { it.asDataFrame() },
-                { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" },
-            )
+                { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" })
             render<AnyCol>(
                 { dataFrameOf(it) },
-                { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" },
-            )
+                { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" })
             render<AnyFrame>(
                 { it },
-                { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" },
-            )
+                { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" })
             render<FormattedFrame<*>>(
                 { it.df },
                 { "DataFrame: rowsCount = ${it.df.rowsCount()}, columnsCount = ${it.df.columnsCount()}" },
-                modifyConfig = { getDisplayConfiguration(it) },
-            )
+                modifyConfig = { getDisplayConfiguration(it) })
             render<GroupBy<*, *>>({ it.toDataFrame() }, { "GroupBy" })
             render<ReducedGroupBy<*, *>>({ it.into(it.groupBy.groups.name()) }, { "ReducedGroupBy" })
             render<Pivot<*>>({ it.frames().toDataFrame() }, { "Pivot" })

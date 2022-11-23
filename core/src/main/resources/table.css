@@ -30,6 +30,10 @@
     --link-hover: #00688e;
 }
 
+p.dataframe_description {
+    color: var(--text-color-dark);
+}
+
 table.dataframe {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 12px;

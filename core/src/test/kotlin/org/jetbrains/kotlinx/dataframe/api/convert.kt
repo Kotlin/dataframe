@@ -8,6 +8,7 @@ import kotlinx.datetime.Instant
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.hasNulls
@@ -79,6 +80,10 @@ class ConvertTests {
         shouldThrow<TypeConversionException> {
             columnOf("a").convertTo<IntClass>()
         }
+
+        shouldThrow<CellConversionException> {
+            columnOf("1", "10", "a").convertTo<IntClass>()
+        }.row shouldBe 2
 
         shouldThrow<TypeConverterNotFoundException> {
             columnOf(EnumClass.A).convertTo<IntClass>()
