@@ -87,20 +87,25 @@ internal class Integration(private val notebook: Notebook, private val options: 
             render<HtmlData> { notebook.renderHtmlAsIFrameIfNeeded(it) }
             render<AnyRow>(
                 { it.toDataFrame() },
-                { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" })
+                { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" },
+            )
             render<ColumnGroup<*>>(
                 { it.asDataFrame() },
-                { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" })
+                { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" },
+            )
             render<AnyCol>(
                 { dataFrameOf(it) },
-                { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" })
+                { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" },
+            )
             render<AnyFrame>(
                 { it },
-                { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" })
+                { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" },
+            )
             render<FormattedFrame<*>>(
                 { it.df },
                 { "DataFrame: rowsCount = ${it.df.rowsCount()}, columnsCount = ${it.df.columnsCount()}" },
-                modifyConfig = { getDisplayConfiguration(it) })
+                modifyConfig = { getDisplayConfiguration(it) },
+            )
             render<GroupBy<*, *>>({ it.toDataFrame() }, { "GroupBy" })
             render<ReducedGroupBy<*, *>>({ it.into(it.groupBy.groups.name()) }, { "ReducedGroupBy" })
             render<Pivot<*>>({ it.frames().toDataFrame() }, { "Pivot" })
