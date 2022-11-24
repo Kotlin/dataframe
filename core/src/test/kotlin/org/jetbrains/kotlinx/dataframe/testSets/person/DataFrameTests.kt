@@ -168,6 +168,7 @@ import org.jetbrains.kotlinx.dataframe.impl.between
 import org.jetbrains.kotlinx.dataframe.impl.columns.isMissingColumn
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderValueForStdout
@@ -1980,14 +1981,14 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `get by column`() {
-        typed[1..2][ { typed.age }].size() shouldBe typed.age.size()
+        typed[1..2][{ typed.age }].size() shouldBe typed.age.size()
     }
 
     @Test
     fun `null column test`() {
         val df = dataFrameOf("col")(null, null)
         df["col"].kind() shouldBe ColumnKind.Value
-        df["col"].type() shouldBe typeOf<Any?>()
+        df["col"].type() shouldBe nothingType(true)
     }
 
     @Test
@@ -2170,7 +2171,7 @@ class DataFrameTests : BaseTest() {
             val name: String,
             val age: Int,
             val city: String?,
-            val weight: Int?
+            val weight: Int?,
         )
 
         df.convertTo<Target>() shouldBe df
@@ -2383,7 +2384,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `groupBy sort`() {
-        typed.groupBy { name }.sortByDesc { age }.xs("Charlie").concat() shouldBe typed.filter { name == "Charlie" }.sortBy { age.desc() }.remove { name }
+        typed.groupBy { name }.sortByDesc { age }.xs("Charlie").concat() shouldBe typed.filter { name == "Charlie" }
+            .sortBy { age.desc() }.remove { name }
     }
 
     @Test
