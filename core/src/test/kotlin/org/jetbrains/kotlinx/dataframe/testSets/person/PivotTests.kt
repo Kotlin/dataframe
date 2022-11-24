@@ -55,6 +55,8 @@ import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
+import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.junit.Test
 import java.util.AbstractSet
@@ -142,9 +144,10 @@ class PivotTests {
 
         data["age"].type() shouldBe typeOf<List<Int>>()
         data["city"].type() shouldBe typeOf<String>()
-        data["weight"].type() shouldBe typeOf<Comparable<*>>()
+        data["weight"].type() shouldBe typeOf<Comparable<Any>>()
 
-        res shouldBe defaultExpected.group { drop(1) }.into("key")
+        res.renderToString(columnTypes = true, title = true) shouldBe
+            defaultExpected.group { drop(1) }.into("key").renderToString(columnTypes = true, title = true)
 
         typed.pivot { key }.groupBy { name }.default("-").values { value } shouldBe res
         typed.pivot { key }.groupBy { name }.default("-").with { value } shouldBe res
@@ -195,7 +198,10 @@ class PivotTests {
             ) named it.name()
         }
 
-        pivoted shouldBe expected
+        pivoted.renderToString(title = true, columnTypes = true) shouldBe expected.renderToString(
+            title = true,
+            columnTypes = true
+        )
     }
 
     @Test
@@ -275,7 +281,8 @@ class PivotTests {
 
         val nullGroup = pivotedDf["Charlie"]["weight"].asColumnGroup()
         nullGroup.columnNames() shouldBe listOf("value", "type")
-        nullGroup.columnTypes() shouldBe listOf(typeOf<Comparable<*>?>(), typeOf<KClass<Any>?>())
+//        nullGroup.columnTypes() shouldBe listOf(typeOf<Comparable<*>?>(), typeOf<KClass<Any>?>())
+        nullGroup.columnTypes() shouldBe listOf(nothingType(true), nothingType(true))
 
         val cols = pivotedDf.getColumnsWithPaths { all().allDfs() }
         cols.size shouldBe 2 * typed.name.countDistinct() * typed.key.countDistinct() - 2
@@ -477,7 +484,7 @@ class PivotTests {
         pivoted.df()["Bob"].asColumnGroup().columnNames() shouldBe listOf("age", "weight")
         pivoted.df()["Charlie"].asColumnGroup().columnNames() shouldBe typed.key.distinct().values()
         pivoted.df()["Alice"]["age"].type() shouldBe typeOf<List<Int>>()
-        pivoted.df()["Charlie"]["weight"].type() shouldBe typeOf<Any?>()
+        pivoted.df()["Charlie"]["weight"].type() shouldBe nothingType(true)
     }
 
     @Test

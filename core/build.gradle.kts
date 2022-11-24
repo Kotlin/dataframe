@@ -113,7 +113,8 @@ kotlinter {
         "experimental:annotation",
         "max-line-length",
         "filename",
-        "comment-spacing"
+        "comment-spacing",
+        "curly-spacing",
     )
 }
 
