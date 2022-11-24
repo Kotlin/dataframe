@@ -42,6 +42,7 @@ import org.jetbrains.kotlinx.dataframe.io.SupportedCodeGenerationFormat
 import org.jetbrains.kotlinx.dataframe.io.supportedFormats
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.HtmlData
+import org.jetbrains.kotlinx.jupyter.api.JupyterClientType
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.Notebook
 import org.jetbrains.kotlinx.jupyter.api.VariableName
@@ -62,6 +63,10 @@ internal class Integration(private val notebook: Notebook, private val options: 
     override fun Builder.onLoaded() {
         val codeGen = ReplCodeGenerator.create()
         val config = JupyterConfiguration()
+
+        if (notebook.jupyterClientType == JupyterClientType.KOTLIN_NOTEBOOK) {
+            config.display.isolatedOutputs = true
+        }
 
         onLoaded {
             declare("dataFrameConfig" to config)
