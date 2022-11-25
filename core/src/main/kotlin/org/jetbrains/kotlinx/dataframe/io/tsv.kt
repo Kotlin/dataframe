@@ -11,12 +11,15 @@ import java.io.InputStream
 import java.net.URL
 import java.nio.charset.Charset
 
-public class TSV : SupportedFormat {
-    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readTSV(stream, header = header)
+public class TSV : SupportedDataFrameFormat {
+    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
+        DataFrame.readTSV(stream, header = header)
 
     override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readTSV(file, header = header)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "tsv"
+
+    override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
 
     override val testOrder: Int = 30000
 
@@ -35,7 +38,7 @@ public fun DataFrame.Companion.readTSV(
     readLines: Int? = null,
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
-    parserOptions: ParserOptions? = null
+    parserOptions: ParserOptions? = null,
 ): DataFrame<*> =
     catchHttpResponse(asURL(fileOrUrl)) {
         readDelim(
@@ -55,7 +58,7 @@ public fun DataFrame.Companion.readTSV(
     skipLines: Int = 0,
     readLines: Int? = null,
     duplicate: Boolean = true,
-    charset: Charset = Charsets.UTF_8
+    charset: Charset = Charsets.UTF_8,
 ): DataFrame<*> =
     readDelim(
         FileInputStream(file), tabChar,
@@ -73,7 +76,7 @@ public fun DataFrame.Companion.readTSV(
     readLines: Int? = null,
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
-    parserOptions: ParserOptions? = null
+    parserOptions: ParserOptions? = null,
 ): DataFrame<*> =
     readTSV(
         url.openStream(),
@@ -93,7 +96,7 @@ public fun DataFrame.Companion.readTSV(
     readLines: Int? = null,
     duplicate: Boolean = true,
     charset: Charset = Charsets.UTF_8,
-    parserOptions: ParserOptions? = null
+    parserOptions: ParserOptions? = null,
 ): DataFrame<*> =
     readDelim(
         stream, tabChar,

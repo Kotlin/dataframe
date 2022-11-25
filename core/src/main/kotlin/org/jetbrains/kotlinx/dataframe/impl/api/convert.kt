@@ -20,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.api.Convert
+import org.jetbrains.kotlinx.dataframe.api.DataSchemaEnum
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.name
@@ -52,7 +53,7 @@ import kotlin.reflect.jvm.jvmErasure
 internal fun <T, C, R> Convert<T, C>.withRowCellImpl(
     type: KType,
     infer: Infer,
-    rowConverter: RowValueExpression<T, C, R>
+    rowConverter: RowValueExpression<T, C, R>,
 ): DataFrame<T> =
     to { col -> df.newColumn(type, col.name, infer) { rowConverter(it, it[col]) } }
 
@@ -60,7 +61,7 @@ internal fun <T, C, R> Convert<T, C>.withRowCellImpl(
 internal fun <T, C, R> Convert<T, C>.convertRowColumnImpl(
     type: KType,
     infer: Infer,
-    rowConverter: RowColumnExpression<T, C, R>
+    rowConverter: RowColumnExpression<T, C, R>,
 ): DataFrame<T> =
     to { col -> df.newColumn(type, col.name, infer) { rowConverter(it, col) } }
 
@@ -77,6 +78,7 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
             nullsFound = true
             null
         }
+
         else -> throw TypeConversionException(null, from, to)
     }
 
@@ -118,19 +120,25 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
         }
     }
 
-    return when {
-        from == to -> this
-        from.isSubtypeOf(to) -> (this as DataColumnInternal<*>).changeType(to.withNullability(hasNulls()))
-        else -> when (val converter = getConverter(from, to, ParserOptions(locale = Locale.getDefault()))) {
-            null -> convertPerCell()
-            else -> applyConverter(converter)
-        }
+    if (from == to) return this
+
+    // catch for ColumnGroup and FrameColumn since they don't have changeType,
+    // but user converters can still exist
+    if (from.isSubtypeOf(to)) try {
+        return (this as DataColumnInternal<*>).changeType(to.withNullability(hasNulls()))
+    } catch (_: UnsupportedOperationException) { /* */
+    }
+
+    return when (val converter = getConverter(from, to, ParserOptions(locale = Locale.getDefault()))) {
+        null -> convertPerCell()
+        else -> applyConverter(converter)
     }
 }
 
 internal val convertersCache = mutableMapOf<Triple<KType, KType, ParserOptions?>, TypeConverter?>()
 
-internal fun getConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? = convertersCache.getOrPut(Triple(from, to, options)) { createConverter(from, to, options) }
+internal fun getConverter(from: KType, to: KType, options: ParserOptions? = null): TypeConverter? =
+    convertersCache.getOrPut(Triple(from, to, options)) { createConverter(from, to, options) }
 
 internal typealias TypeConverter = (Any) -> Any?
 
@@ -177,13 +185,32 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             val parser = Parsers[to.withNullability(false)]
             when {
                 parser != null -> parser.toConverter(options)
-                toClass.isSubclassOf(Enum::class) -> convert<String> {
-                    java.lang.Enum.valueOf(toClass.java as Class<DummyEnum>, it)
+
+                // convert enums by name (or by `value` if they implement DataSchemaEnum)
+                toClass.isSubclassOf(Enum::class) -> convert<String> { string ->
+                    if (toClass.isSubclassOf(DataSchemaEnum::class)) {
+                        val enumValues = toClass.java.enumConstants as Array<out DataSchemaEnum>
+                        enumValues.firstOrNull { it.value == string }
+                            ?: java.lang.Enum.valueOf(toClass.java as Class<DummyEnum>, string)
+                    } else {
+                        java.lang.Enum.valueOf(toClass.java as Class<DummyEnum>, string)
+                    }
                 }
+
                 else -> null
             }
         }
-        toClass == String::class -> convert<Any> { it.toString() }
+
+        toClass == String::class -> convert<Any> {
+            when {
+                // convert enums to String by `value` if they implement DataSchemaEnum
+                fromClass.isSubclassOf(DataSchemaEnum::class) ->
+                    (it as? DataSchemaEnum?)?.value ?: it.toString()
+
+                else -> it.toString()
+            }
+        }
+
         fromClass.isValue -> {
             val constructor =
                 fromClass.primaryConstructor ?: error("Value type $fromClass doesn't have primary constructor")
@@ -191,9 +218,14 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             val underlyingType = constructorParameter.type
             val converter = getConverter(underlyingType, to)
                 ?: throw TypeConverterNotFoundException(underlyingType, to)
-            val property = fromClass.memberProperties.single { it.name == constructorParameter.name } as kotlin.reflect.KProperty1<Any, *>
+            val property =
+                fromClass.memberProperties.single { it.name == constructorParameter.name } as kotlin.reflect.KProperty1<Any, *>
             if (property.visibility != kotlin.reflect.KVisibility.PUBLIC) {
-                throw TypeConversionException("Not public member property in primary constructor of value type", from, to)
+                throw TypeConversionException(
+                    "Not public member property in primary constructor of value type",
+                    from,
+                    to
+                )
             }
 
             convert<Any> {
@@ -202,6 +234,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 }
             }
         }
+
         else -> when (fromClass) {
             Boolean::class -> when (toClass) {
                 Float::class -> convert<Boolean> { if (it) 1.0f else 0.0f }
@@ -213,14 +246,17 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                     val zero: Short = 0
                     if (it) one else zero
                 }
+
                 Byte::class -> convert<Boolean> {
                     val one: Byte = 1
                     val zero: Byte = 0
                     if (it) one else zero
                 }
+
                 BigDecimal::class -> convert<Boolean> { if (it) BigDecimal.ONE else BigDecimal.ZERO }
                 else -> null
             }
+
             Number::class -> when (toClass) {
                 Double::class -> convert<Number> { it.toDouble() }
                 Int::class -> convert<Number> { it.toInt() }
@@ -231,6 +267,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Boolean::class -> convert<Number> { it.toDouble() != 0.0 }
                 else -> null
             }
+
             Int::class -> when (toClass) {
                 Double::class -> convert<Int> { it.toDouble() }
                 Float::class -> convert<Int> { it.toFloat() }
@@ -241,11 +278,15 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Boolean::class -> convert<Int> { it != 0 }
                 LocalDateTime::class -> convert<Int> { it.toLong().toLocalDateTime(defaultTimeZone) }
                 LocalDate::class -> convert<Int> { it.toLong().toLocalDate(defaultTimeZone) }
-                java.time.LocalDateTime::class -> convert<Long> { it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime() }
+                java.time.LocalDateTime::class -> convert<Long> {
+                    it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
+                }
+
                 java.time.LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
                 LocalTime::class -> convert<Int> { it.toLong().toLocalTime(defaultTimeZone) }
                 else -> null
             }
+
             Double::class -> when (toClass) {
                 Int::class -> convert<Double> { it.roundToInt() }
                 Float::class -> convert<Double> { it.toFloat() }
@@ -255,6 +296,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Boolean::class -> convert<Double> { it != 0.0 }
                 else -> null
             }
+
             Long::class -> when (toClass) {
                 Double::class -> convert<Long> { it.toDouble() }
                 Float::class -> convert<Long> { it.toFloat() }
@@ -266,31 +308,49 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 LocalDateTime::class -> convert<Long> { it.toLocalDateTime(defaultTimeZone) }
                 LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone) }
                 Instant::class -> convert<Long> { Instant.fromEpochMilliseconds(it) }
-                java.time.LocalDateTime::class -> convert<Long> { it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime() }
+                java.time.LocalDateTime::class -> convert<Long> {
+                    it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
+                }
+
                 java.time.LocalDate::class -> convert<Long> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
                 LocalTime::class -> convert<Long> { it.toLocalTime(defaultTimeZone) }
                 else -> null
             }
+
             Instant::class -> when (toClass) {
                 Long::class -> convert<Instant> { it.toEpochMilliseconds() }
                 LocalDateTime::class -> convert<Instant> { it.toLocalDateTime(defaultTimeZone) }
                 LocalDate::class -> convert<Instant> { it.toLocalDate(defaultTimeZone) }
-                java.time.LocalDateTime::class -> convert<Instant> { it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime() }
+                java.time.LocalDateTime::class -> convert<Instant> {
+                    it.toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
+                }
+
                 java.time.LocalDate::class -> convert<Instant> { it.toLocalDate(defaultTimeZone).toJavaLocalDate() }
                 java.time.Instant::class -> convert<Instant> { it.toJavaInstant() }
                 LocalTime::class -> convert<Instant> { it.toLocalTime(defaultTimeZone) }
                 else -> null
             }
+
             java.time.Instant::class -> when (toClass) {
                 Long::class -> convert<java.time.Instant> { it.toEpochMilli() }
-                LocalDateTime::class -> convert<java.time.Instant> { it.toKotlinInstant().toLocalDateTime(defaultTimeZone) }
+                LocalDateTime::class -> convert<java.time.Instant> {
+                    it.toKotlinInstant().toLocalDateTime(defaultTimeZone)
+                }
+
                 LocalDate::class -> convert<java.time.Instant> { it.toKotlinInstant().toLocalDate(defaultTimeZone) }
-                java.time.LocalDateTime::class -> convert<java.time.Instant> { it.toKotlinInstant().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime() }
-                java.time.LocalDate::class -> convert<java.time.Instant> { it.toKotlinInstant().toLocalDate(defaultTimeZone).toJavaLocalDate() }
+                java.time.LocalDateTime::class -> convert<java.time.Instant> {
+                    it.toKotlinInstant().toLocalDateTime(defaultTimeZone).toJavaLocalDateTime()
+                }
+
+                java.time.LocalDate::class -> convert<java.time.Instant> {
+                    it.toKotlinInstant().toLocalDate(defaultTimeZone).toJavaLocalDate()
+                }
+
                 Instant::class -> convert<java.time.Instant> { it.toKotlinInstant() }
                 LocalTime::class -> convert<java.time.Instant> { it.toKotlinInstant().toLocalTime(defaultTimeZone) }
                 else -> null
             }
+
             Float::class -> when (toClass) {
                 Double::class -> convert<Float> { it.toDouble() }
                 Long::class -> convert<Float> { it.roundToLong() }
@@ -300,6 +360,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Boolean::class -> convert<Float> { it != 0.0F }
                 else -> null
             }
+
             BigDecimal::class -> when (toClass) {
                 Double::class -> convert<BigDecimal> { it.toDouble() }
                 Int::class -> convert<BigDecimal> { it.toInt() }
@@ -308,6 +369,7 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 Boolean::class -> convert<BigDecimal> { it != BigDecimal.ZERO }
                 else -> null
             }
+
             LocalDateTime::class -> when (toClass) {
                 LocalDate::class -> convert<LocalDateTime> { it.date }
                 Instant::class -> convert<LocalDateTime> { it.toInstant(defaultTimeZone) }
@@ -317,15 +379,23 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 java.time.LocalTime::class -> convert<LocalDateTime> { it.toJavaLocalDateTime().toLocalTime() }
                 else -> null
             }
+
             java.time.LocalDateTime::class -> when (toClass) {
                 LocalDate::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime().date }
                 LocalDateTime::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime() }
-                Instant::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime().toInstant(defaultTimeZone) }
-                Long::class -> convert<java.time.LocalDateTime> { it.toKotlinLocalDateTime().toInstant(defaultTimeZone).toEpochMilliseconds() }
+                Instant::class -> convert<java.time.LocalDateTime> {
+                    it.toKotlinLocalDateTime().toInstant(defaultTimeZone)
+                }
+
+                Long::class -> convert<java.time.LocalDateTime> {
+                    it.toKotlinLocalDateTime().toInstant(defaultTimeZone).toEpochMilliseconds()
+                }
+
                 java.time.LocalDate::class -> convert<java.time.LocalDateTime> { it.toLocalDate() }
                 java.time.LocalTime::class -> convert<java.time.LocalDateTime> { it.toLocalTime() }
                 else -> null
             }
+
             LocalDate::class -> when (toClass) {
                 LocalDateTime::class -> convert<LocalDate> { it.atTime(0, 0) }
                 Instant::class -> convert<LocalDate> { it.atStartOfDayIn(defaultTimeZone) }
@@ -334,29 +404,42 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
                 java.time.LocalDateTime::class -> convert<LocalDate> { it.atTime(0, 0).toJavaLocalDateTime() }
                 else -> null
             }
+
             java.time.LocalDate::class -> when (toClass) {
                 LocalDate::class -> convert<java.time.LocalDate> { it.toKotlinLocalDate() }
                 LocalDateTime::class -> convert<java.time.LocalDate> { it.atTime(0, 0).toKotlinLocalDateTime() }
-                Instant::class -> convert<java.time.LocalDate> { it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone) }
-                Long::class -> convert<java.time.LocalDate> { it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone).toEpochMilliseconds() }
+                Instant::class -> convert<java.time.LocalDate> {
+                    it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone)
+                }
+
+                Long::class -> convert<java.time.LocalDate> {
+                    it.toKotlinLocalDate().atStartOfDayIn(defaultTimeZone).toEpochMilliseconds()
+                }
+
                 java.time.LocalDateTime::class -> convert<java.time.LocalDate> { it.atStartOfDay() }
                 else -> null
             }
+
             URL::class -> when (toClass) {
                 IMG::class -> convert<URL> { IMG(it.toString()) }
                 IFRAME::class -> convert<URL> { IFRAME(it.toString()) }
                 else -> null
             }
+
             else -> null
         }
     }
 }
 
-internal fun Long.toLocalDateTime(zone: TimeZone = defaultTimeZone) = Instant.fromEpochMilliseconds(this).toLocalDateTime(zone)
+internal fun Long.toLocalDateTime(zone: TimeZone = defaultTimeZone) =
+    Instant.fromEpochMilliseconds(this).toLocalDateTime(zone)
+
 internal fun Long.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).date
-internal fun Long.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).toJavaLocalDateTime().toLocalTime()
+internal fun Long.toLocalTime(zone: TimeZone = defaultTimeZone) =
+    toLocalDateTime(zone).toJavaLocalDateTime().toLocalTime()
 
 internal fun Instant.toLocalDate(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).date
-internal fun Instant.toLocalTime(zone: TimeZone = defaultTimeZone) = toLocalDateTime(zone).toJavaLocalDateTime().toLocalTime()
+internal fun Instant.toLocalTime(zone: TimeZone = defaultTimeZone) =
+    toLocalDateTime(zone).toJavaLocalDateTime().toLocalTime()
 
 internal val defaultTimeZone = TimeZone.currentSystemDefault()

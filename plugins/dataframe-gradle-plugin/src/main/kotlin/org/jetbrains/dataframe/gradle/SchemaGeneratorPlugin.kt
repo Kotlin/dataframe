@@ -6,7 +6,11 @@ import org.gradle.api.Task
 import org.gradle.api.file.FileCollection
 import org.gradle.kotlin.dsl.create
 import org.gradle.kotlin.dsl.withType
-import org.jetbrains.kotlin.gradle.dsl.*
+import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
+import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
+import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 import java.net.URL
@@ -44,7 +48,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
         target: Project,
         extension: SchemaGeneratorExtension,
         appliedPlugin: AppliedPlugin?,
-        schema: Schema
+        schema: Schema,
     ): Task {
         val interfaceName = getInterfaceName(schema)
         fun propertyError(property: String): Nothing {
@@ -106,6 +110,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
             this.src.set(src)
             this.schemaVisibility.set(visibility)
             this.csvOptions.set(schema.csvOptions)
+            this.jsonOptions.set(schema.jsonOptions)
             this.defaultPath.set(defaultPath)
             this.delimiters.set(delimiters)
         }
@@ -126,7 +131,7 @@ class SchemaGeneratorPlugin : Plugin<Project> {
 
     private class AppliedPlugin(
         val kotlinExtension: KotlinProjectExtension,
-        val sourceSetConfiguration: SourceSetConfiguration<*>
+        val sourceSetConfiguration: SourceSetConfiguration<*>,
     )
 
     private class SourceSetConfiguration<T : KotlinProjectExtension>(

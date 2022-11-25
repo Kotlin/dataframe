@@ -10,14 +10,17 @@ import org.gradle.api.tasks.TaskAction
 import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.DfReadResult
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
-import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlReader
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlDfReader
 import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
 import org.jetbrains.kotlinx.dataframe.io.CSV
 import org.jetbrains.kotlinx.dataframe.io.Excel
 import org.jetbrains.kotlinx.dataframe.io.JSON
+import org.jetbrains.kotlinx.dataframe.io.OpenApi
 import org.jetbrains.kotlinx.dataframe.io.TSV
 import java.io.File
 import java.net.URL
@@ -30,6 +33,9 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
 
     @get:Input
     abstract val csvOptions: Property<CsvOptionsDsl>
+
+    @get:Input
+    abstract val jsonOptions: Property<JsonOptionsDsl>
 
     @get:Input
     abstract val src: Property<File>
@@ -59,23 +65,53 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
     @TaskAction
     fun generate() {
         val csvOptions = csvOptions.get()
+        val jsonOptions = jsonOptions.get()
         val url = urlOf(data.get())
+        val schemaFile = dataSchema.get()
+        val escapedPackageName = escapePackageName(packageName.get())
+
         val formats = listOf(
             CSV(delimiter = csvOptions.delimiter),
-            JSON(),
+            JSON(typeClashTactic = jsonOptions.typeClashTactic, keyValuePaths = jsonOptions.keyValuePaths),
             Excel(),
             TSV(),
-            ArrowFeather()
+            ArrowFeather(),
+            OpenApi(),
         )
-        val res = when (val readResult = CodeGenerator.urlReader(url, formats)) {
-            is DfReadResult.Success -> readResult
-            is DfReadResult.Error -> throw Exception("Error while reading dataframe from data at $url", readResult.reason)
+
+        // first try without creating dataframe
+        when (val codeGenResult = CodeGenerator.urlCodeGenReader(url, interfaceName.get(), formats, false)) {
+            is CodeGenerationReadResult.Success -> {
+                val readDfMethod = codeGenResult.getReadDfMethod(stringOf(data.get()))
+                val code = codeGenResult
+                    .code
+                    .toStandaloneSnippet(escapedPackageName, readDfMethod.additionalImports)
+
+                schemaFile.bufferedWriter().use {
+                    it.write(code)
+                }
+                return
+            }
+
+            is CodeGenerationReadResult.Error ->
+                logger.warn("Error while reading types-only from data at $url: ${codeGenResult.reason}")
         }
+
+        // on error, try with reading dataframe first
+        val parsedDf = when (val readResult = CodeGenerator.urlDfReader(url, formats)) {
+            is DfReadResult.Error -> throw Exception(
+                "Error while reading dataframe from data at $url",
+                readResult.reason
+            )
+
+            is DfReadResult.Success -> readResult
+        }
+
         val codeGenerator = CodeGenerator.create(useFqNames = false)
         val delimiters = delimiters.get()
-        val readDfMethod = res.getReadDfMethod(stringOf(data.get()))
+        val readDfMethod = parsedDf.getReadDfMethod(stringOf(data.get()))
         val codeGenResult = codeGenerator.generate(
-            schema = res.schema,
+            schema = parsedDf.schema,
             name = interfaceName.get(),
             fields = true,
             extensionProperties = false,
@@ -84,14 +120,12 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 DataSchemaVisibility.INTERNAL -> MarkerVisibility.INTERNAL
                 DataSchemaVisibility.IMPLICIT_PUBLIC -> MarkerVisibility.IMPLICIT_PUBLIC
                 DataSchemaVisibility.EXPLICIT_PUBLIC -> MarkerVisibility.EXPLICIT_PUBLIC
+                else -> MarkerVisibility.IMPLICIT_PUBLIC
             },
             readDfMethod = readDfMethod,
-            fieldNameNormalizer = NameNormalizer.from(delimiters)
+            fieldNameNormalizer = NameNormalizer.from(delimiters),
         )
-        val escapedPackageName = escapePackageName(packageName.get())
-
-        val dataSchema = dataSchema.get()
-        dataSchema.writeText(codeGenResult.toStandaloneSnippet(escapedPackageName, readDfMethod.additionalImports))
+        schemaFile.writeText(codeGenResult.toStandaloneSnippet(escapedPackageName, readDfMethod.additionalImports))
     }
 
     private fun stringOf(data: Any): String {
@@ -123,6 +157,7 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
                 isURL(data) -> URL(data).toURI()
                 else -> project.file(data).toURI()
             }
+
             else -> unsupportedType()
         }.toURL()
     }

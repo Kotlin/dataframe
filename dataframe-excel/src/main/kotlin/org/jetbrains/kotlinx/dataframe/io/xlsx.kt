@@ -35,12 +35,14 @@ import java.time.LocalDateTime
 import java.util.Calendar
 import java.util.Date
 
-public class Excel : SupportedFormat {
+public class Excel : SupportedDataFrameFormat {
     override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame = DataFrame.readExcel(stream)
 
     override fun readDataFrame(file: File, header: List<String>): AnyFrame = DataFrame.readExcel(file)
 
     override fun acceptsExtension(ext: String): Boolean = ext == "xls" || ext == "xlsx"
+
+    override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
 
     override val testOrder: Int = 40000
 
@@ -64,7 +66,7 @@ public fun DataFrame.Companion.readExcel(
     sheetName: String? = null,
     skipRows: Int = 0,
     columns: String? = null,
-    rowsCount: Int? = null
+    rowsCount: Int? = null,
 ): AnyFrame {
     val wb = WorkbookFactory.create(url.openStream())
     return wb.use { readExcel(wb, sheetName, skipRows, columns, rowsCount) }
@@ -81,7 +83,7 @@ public fun DataFrame.Companion.readExcel(
     sheetName: String? = null,
     skipRows: Int = 0,
     columns: String? = null,
-    rowsCount: Int? = null
+    rowsCount: Int? = null,
 ): AnyFrame {
     val wb = WorkbookFactory.create(file)
     return wb.use { readExcel(it, sheetName, skipRows, columns, rowsCount) }
@@ -98,7 +100,7 @@ public fun DataFrame.Companion.readExcel(
     sheetName: String? = null,
     skipRows: Int = 0,
     columns: String? = null,
-    rowsCount: Int? = null
+    rowsCount: Int? = null,
 ): AnyFrame = readExcel(asURL(fileOrUrl), sheetName, skipRows, columns, rowsCount)
 
 /**
@@ -112,7 +114,7 @@ public fun DataFrame.Companion.readExcel(
     sheetName: String? = null,
     skipRows: Int = 0,
     columns: String? = null,
-    rowsCount: Int? = null
+    rowsCount: Int? = null,
 ): AnyFrame {
     val wb = WorkbookFactory.create(inputStream)
     return wb.use { readExcel(it, sheetName, skipRows, columns, rowsCount) }
@@ -129,7 +131,7 @@ public fun DataFrame.Companion.readExcel(
     sheetName: String? = null,
     skipRows: Int = 0,
     columns: String? = null,
-    rowsCount: Int? = null
+    rowsCount: Int? = null,
 ): AnyFrame {
     val sheet: Sheet = sheetName
         ?.let { wb.getSheet(it) ?: error("Sheet with name $sheetName not found") }
@@ -147,7 +149,7 @@ public fun DataFrame.Companion.readExcel(
     sheet: Sheet,
     columns: String? = null,
     skipRows: Int = 0,
-    rowsCount: Int? = null
+    rowsCount: Int? = null,
 ): AnyFrame {
     val columnIndexes: Iterable<Int> = if (columns != null) {
         columns.split(",").flatMap {
@@ -179,7 +181,8 @@ public fun DataFrame.Companion.readExcel(
         val name = if (headerCell?.cellType == CellType.NUMERIC) {
             headerCell.numericCellValue.toString() // Support numeric-named columns
         } else {
-            headerCell?.stringCellValue ?: CellReference.convertNumToColString(index) // Use Excel column names if no data
+            headerCell?.stringCellValue
+                ?: CellReference.convertNumToColString(index) // Use Excel column names if no data
         }
 
         val values: List<Any?> = valueRowsRange.map {
@@ -216,7 +219,7 @@ public fun <T> DataFrame<T>.writeExcel(
     columnsSelector: ColumnsSelector<T, *> = { all() },
     sheetName: String? = null,
     writeHeader: Boolean = true,
-    workBookType: WorkBookType = WorkBookType.XLSX
+    workBookType: WorkBookType = WorkBookType.XLSX,
 ) {
     return writeExcel(File(path), columnsSelector, sheetName, writeHeader, workBookType)
 }
@@ -230,11 +233,16 @@ public fun <T> DataFrame<T>.writeExcel(
     columnsSelector: ColumnsSelector<T, *> = { all() },
     sheetName: String? = null,
     writeHeader: Boolean = true,
-    workBookType: WorkBookType = WorkBookType.XLSX
+    workBookType: WorkBookType = WorkBookType.XLSX,
 ) {
     val factory = when (workBookType) {
-        WorkBookType.XLS -> { { HSSFWorkbook() } }
-        WorkBookType.XLSX -> { { XSSFWorkbook() } }
+        WorkBookType.XLS -> {
+            { HSSFWorkbook() }
+        }
+
+        WorkBookType.XLSX -> {
+            { XSSFWorkbook() }
+        }
     }
     return file.outputStream().use {
         writeExcel(it, columnsSelector, sheetName, writeHeader, factory)
@@ -246,7 +254,7 @@ public fun <T> DataFrame<T>.writeExcel(
     columnsSelector: ColumnsSelector<T, *> = { all() },
     sheetName: String? = null,
     writeHeader: Boolean = true,
-    factory: () -> Workbook
+    factory: () -> Workbook,
 ) {
     val wb: Workbook = factory()
     writeExcel(wb, columnsSelector, sheetName, writeHeader)
@@ -258,7 +266,7 @@ public fun <T> DataFrame<T>.writeExcel(
     wb: Workbook,
     columnsSelector: ColumnsSelector<T, *> = { all() },
     sheetName: String? = null,
-    writeHeader: Boolean = true
+    writeHeader: Boolean = true,
 ): Sheet {
     val sheet = if (sheetName != null) {
         wb.createSheet(sheetName)
@@ -300,9 +308,11 @@ public fun <T> DataFrame<T>.writeExcel(
                     is LocalDate, is kotlinx.datetime.LocalDate -> {
                         cell.cellStyle = cellStyleDate
                     }
+
                     is Calendar, is Date -> {
                         cell.cellStyle = cellStyleDateTime
                     }
+
                     is LocalDateTime -> {
                         if (any.year < 1900) {
                             cell.cellStyle = cellStyleTime
@@ -310,6 +320,7 @@ public fun <T> DataFrame<T>.writeExcel(
                             cell.cellStyle = cellStyleDateTime
                         }
                     }
+
                     is kotlinx.datetime.LocalDateTime -> {
                         if (any.year < 1900) {
                             cell.cellStyle = cellStyleTime
@@ -317,6 +328,7 @@ public fun <T> DataFrame<T>.writeExcel(
                             cell.cellStyle = cellStyleDateTime
                         }
                     }
+
                     else -> {}
                 }
             }
@@ -331,36 +343,47 @@ private fun Cell.setCellValueByGuessedType(any: Any) {
         is AnyRow -> {
             this.setCellValue(any.toJson())
         }
+
         is AnyFrame -> {
             this.setCellValue(any.toJson())
         }
+
         is Number -> {
             this.setCellValue(any.toDouble())
         }
+
         is LocalDate -> {
             this.setCellValue(any)
         }
+
         is LocalDateTime -> {
             this.setTime(any)
         }
+
         is Boolean -> {
             this.setCellValue(any)
         }
+
         is Calendar -> {
             this.setDate(any.time)
         }
+
         is Date -> {
             this.setDate(any)
         }
+
         is RichTextString -> {
             this.setCellValue(any)
         }
+
         is String -> {
             this.setCellValue(any)
         }
+
         is kotlinx.datetime.LocalDate -> {
             this.setCellValue(any.toJavaLocalDate())
         }
+
         is kotlinx.datetime.LocalDateTime -> {
             this.setTime(any.toJavaLocalDateTime())
         }

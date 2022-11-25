@@ -26,7 +26,8 @@ import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
 import kotlin.reflect.typeOf
 
-internal infix fun <T> (Predicate<T>?).and(other: Predicate<T>): Predicate<T> = if (this == null) other else { it: T -> this(it) && other(it) }
+internal infix fun <T> (Predicate<T>?).and(other: Predicate<T>): Predicate<T> =
+    if (this == null) other else { it: T -> this(it) && other(it) }
 
 internal fun <T> T.toIterable(getNext: (T) -> T?) = Iterable<T> {
     object : Iterator<T> {
@@ -123,22 +124,36 @@ internal fun <T : Number> KClass<T>.zero(): T = when (this) {
     else -> TODO()
 }
 
-internal fun <T> catchSilent(body: () -> T): T? = try { body() } catch (_: Throwable) { null }
+internal fun <T> catchSilent(body: () -> T): T? = try {
+    body()
+} catch (_: Throwable) {
+    null
+}
 
-internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType? = null) = commonParents(this).createType(nullable, upperBound)
+internal fun Iterable<KClass<*>>.commonType(nullable: Boolean, upperBound: KType? = null) =
+    commonParents(this).createType(nullable, upperBound)
 
+/**
+ * Returns the common supertype of the given types.
+ *
+ * @see commonTypeListifyValues
+ */
 internal fun Iterable<KType?>.commonType(): KType {
     val distinct = distinct()
     val nullable = distinct.any { it?.isMarkedNullable ?: true }
     return when {
         distinct.isEmpty() || distinct.contains(null) -> Any::class.createStarProjectedType(nullable)
-        distinct.size == 1 -> distinct[0]!!
+        distinct.size == 1 -> distinct.single()!!
         else -> {
             val kclass = commonParent(distinct.map { it!!.jvmErasure }) ?: return typeOf<Any>()
             val projections = distinct.map { it!!.projectUpTo(kclass).replaceTypeParameters() }
             require(projections.all { it.jvmErasure == kclass })
-            val arguments = kclass.typeParameters.mapIndexed { i, p ->
-                val type = projections.map { it.arguments[i].type }.commonType()
+            val arguments = List(kclass.typeParameters.size) { i ->
+                val projectionTypes = projections
+                    .map { it.arguments[i].type }
+                    .filterNot { it in distinct } // avoid infinite recursion
+
+                val type = projectionTypes.commonType()
                 KTypeProjection.invariant(type)
             }
             kclass.createType(arguments, nullable)
@@ -148,17 +163,17 @@ internal fun Iterable<KType?>.commonType(): KType {
 
 internal fun <T, C> DataFrame<T>.getColumnsImpl(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
-    selector: ColumnsSelector<T, C>
+    selector: ColumnsSelector<T, C>,
 ): List<DataColumn<C>> = getColumnsWithPaths(unresolvedColumnsPolicy, selector).map { it.data }
 
 internal fun <T, C> DataFrame<T>.getColumnsWithPaths(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
-    selector: ColumnsSelector<T, C>
+    selector: ColumnsSelector<T, C>,
 ): List<ColumnWithPath<C>> = selector.toColumns().resolve(this, unresolvedColumnsPolicy)
 
 internal fun <T, C> DataFrame<T>.getColumnPaths(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
-    selector: ColumnsSelector<T, C>
+    selector: ColumnsSelector<T, C>,
 ): List<ColumnPath> = getColumnsWithPaths(unresolvedColumnsPolicy, selector).map { it.path }
 
 internal fun <C : Comparable<C>> Sequence<C?>.indexOfMin(): Int {
@@ -210,9 +225,11 @@ internal fun <C : Comparable<C>> Sequence<C?>.indexOfMax(): Int {
 }
 
 internal fun KClass<*>.createStarProjectedType(nullable: Boolean): KType =
-    this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
+    if (this == Nothing::class) nothingType(nullable) // would be Void otherwise
+    else this.starProjectedType.let { if (nullable) it.withNullability(true) else it }
 
-internal fun KType.isSubtypeWithNullabilityOf(type: KType) = this.isSubtypeOf(type) && (!this.isMarkedNullable || type.isMarkedNullable)
+internal fun KType.isSubtypeWithNullabilityOf(type: KType) =
+    this.isSubtypeOf(type) && (!this.isMarkedNullable || type.isMarkedNullable)
 
 @PublishedApi
 internal inline fun <reified C> headPlusArray(head: C, cols: Array<out C>): Array<C> =
@@ -223,7 +240,7 @@ internal inline fun <reified C> headPlusIterable(head: C, cols: Iterable<C>): It
     (listOf(head) + cols.asIterable())
 
 internal fun <T> DataFrame<T>.splitByIndices(
-    startIndices: Sequence<Int>
+    startIndices: Sequence<Int>,
 ): Sequence<DataFrame<T>> {
     return (startIndices + nrow).zipWithNext { start, endExclusive ->
         if (start == endExclusive) DataFrame.empty().cast()
@@ -244,12 +261,23 @@ internal fun <T : Comparable<T>> T.between(left: T, right: T, includeBoundaries:
     else this > left && this < right
 
 private const val DELIMITERS = "[_\\s]"
-internal val DELIMITERS_REGEX = DELIMITERS.toRegex()
-internal val DELIMITED_STRING_REGEX: Regex = ".+$DELIMITERS.+".toRegex()
+public val DELIMITERS_REGEX: Regex = DELIMITERS.toRegex()
+public val DELIMITED_STRING_REGEX: Regex = ".+$DELIMITERS.+".toRegex()
 
-internal fun String.toCamelCaseByDelimiters(delimiters: Regex): String {
-    return split(delimiters).joinToCamelCaseString()
-}
+internal val CAMEL_REGEX = "(?<=[a-zA-Z])[A-Z]".toRegex()
+
+public fun String.toCamelCaseByDelimiters(delimiters: Regex): String =
+    split(delimiters).joinToCamelCaseString()
+
+internal fun String.toSnakeCase(): String =
+    if ("[A-Z_]+".toRegex().matches(this)) {
+        this
+    } else {
+        CAMEL_REGEX
+            .replace(this) { "_${it.value}" }
+            .replace(" ", "_")
+            .lowercase()
+    }
 
 internal fun List<String>.joinToCamelCaseString(): String {
     return joinToString(separator = "") { it.replaceFirstChar { it.uppercaseChar() } }

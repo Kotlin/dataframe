@@ -10,8 +10,8 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
 import org.jetbrains.kotlinx.dataframe.hasNulls
-import org.jetbrains.kotlinx.dataframe.impl.baseType
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.commonType
 import org.jetbrains.kotlinx.dataframe.impl.getListType
 import org.jetbrains.kotlinx.dataframe.nrow
 import kotlin.reflect.KType
@@ -61,7 +61,7 @@ internal fun <T> concatImpl(name: String, columns: List<DataColumn<T>?>, columnS
         }
 
         val guessType = types.size > 1
-        val baseType = baseType(types)
+        val baseType = types.commonType()
         val tartypeOf = if (guessType || !hasList) baseType.withNullability(nulls)
         else getListType(baseType.withNullability(listOfNullable))
         return guessColumnType(name, list, tartypeOf, guessType, defaultValue).cast()
@@ -82,5 +82,10 @@ internal fun <T> concatImpl(dataFrames: List<DataFrame<T>>): DataFrame<T> {
     val columns = columnNames.map { name ->
         concatImpl(name, dataFrames.map { it.getColumnOrNull(name) }, sizes)
     }
-    return dataFrameOf(columns).cast()
+    return if (columns.isEmpty()) {
+        // make sure the number of rows translate correctly if there are no columns
+        DataFrame.empty(nrow = sizes.sum())
+    } else {
+        dataFrameOf(columns)
+    }.cast()
 }

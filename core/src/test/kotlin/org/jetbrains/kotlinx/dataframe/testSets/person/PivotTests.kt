@@ -55,16 +55,19 @@ import org.jetbrains.kotlinx.dataframe.api.where
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
+import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.typeClass
 import org.junit.Test
-import java.io.Serializable
 import java.util.AbstractSet
 import kotlin.reflect.KClass
 import kotlin.reflect.typeOf
 
 class PivotTests {
 
-    val df = dataFrameOf("name", "key", "value")(
+    val df = dataFrameOf(
+        "name", "key", "value"
+    )(
         "Alice", "age", 15,
         "Alice", "city", "London",
         "Alice", "weight", 54,
@@ -76,10 +79,12 @@ class PivotTests {
         "Alice", "age", 55,
     )
 
-    val defaultExpected = dataFrameOf("name", "age", "city", "weight")(
+    val defaultExpected = dataFrameOf(
+        "name", "age", "city", "weight",
+    )(
         "Alice", listOf(15, 55), "London", 54,
         "Bob", listOf(45), "-", 87,
-        "Charlie", listOf(20), "Moscow", "-"
+        "Charlie", listOf(20), "Moscow", "-",
     )
 
 // Generated Code
@@ -139,9 +144,10 @@ class PivotTests {
 
         data["age"].type() shouldBe typeOf<List<Int>>()
         data["city"].type() shouldBe typeOf<String>()
-        data["weight"].type() shouldBe typeOf<Serializable>()
+        data["weight"].type() shouldBe typeOf<Comparable<Any>>()
 
-        res shouldBe defaultExpected.group { drop(1) }.into("key")
+        res.renderToString(columnTypes = true, title = true) shouldBe
+            defaultExpected.group { drop(1) }.into("key").renderToString(columnTypes = true, title = true)
 
         typed.pivot { key }.groupBy { name }.default("-").values { value } shouldBe res
         typed.pivot { key }.groupBy { name }.default("-").with { value } shouldBe res
@@ -192,7 +198,10 @@ class PivotTests {
             ) named it.name()
         }
 
-        pivoted shouldBe expected
+        pivoted.renderToString(title = true, columnTypes = true) shouldBe expected.renderToString(
+            title = true,
+            columnTypes = true
+        )
     }
 
     @Test
@@ -205,7 +214,11 @@ class PivotTests {
 
     @Test
     fun `pivot two columns with then`() {
-        val pivoted = typed.add("index") { 1 }.pivot(inward = false) { name then key }.groupBy("index").with { value }
+        val pivoted = typed
+            .add("index") { 1 }
+            .pivot(inward = false) { name then key }
+            .groupBy("index")
+            .with { value }
 
         pivoted.columnNames() shouldBe listOf("index") + typed.name.distinct().values()
         pivoted.rowsCount() shouldBe 1
@@ -259,14 +272,17 @@ class PivotTests {
     @Test
     fun `pivot two values without groupBy`() {
         typed.print(columnTypes = true)
-        val pivotedRow =
-            typed.pivot { name then key }.values { value and (value.map { it?.javaClass?.kotlin } into "type") }
+        val pivotedRow = typed
+            .pivot { name then key }
+            .values { value and (value.map { it?.javaClass?.kotlin } into "type") }
+
         val pivotedDf = pivotedRow.df()
         pivotedRow.columnsCount() shouldBe typed.name.countDistinct()
 
         val nullGroup = pivotedDf["Charlie"]["weight"].asColumnGroup()
         nullGroup.columnNames() shouldBe listOf("value", "type")
-        nullGroup.columnTypes() shouldBe listOf(typeOf<Serializable?>(), typeOf<KClass<Any>?>())
+//        nullGroup.columnTypes() shouldBe listOf(typeOf<Comparable<*>?>(), typeOf<KClass<Any>?>())
+        nullGroup.columnTypes() shouldBe listOf(nothingType(true), nothingType(true))
 
         val cols = pivotedDf.getColumnsWithPaths { all().allDfs() }
         cols.size shouldBe 2 * typed.name.countDistinct() * typed.key.countDistinct() - 2
@@ -277,6 +293,7 @@ class PivotTests {
                 it.hasNulls() -> {
                     it.path().dropLast(1) shouldBe listOf("Charlie", "weight")
                 }
+
                 it.name() == "type" -> it.typeClass shouldBe KClass::class
                 else -> it.name() shouldBe "value"
             }
@@ -340,15 +357,17 @@ class PivotTests {
         }
 
         val pivoted3 =
-            typed.pivot(inward = false) { key.map(transform = keyConverter) }.groupBy { name }.values { value.map(transform = valueConverter) }
+            typed.pivot(inward = false) { key.map(transform = keyConverter) }.groupBy { name }
+                .values { value.map(transform = valueConverter) }
 
         pivoted2 shouldBe pivoted
         pivoted3 shouldBe pivoted
 
         val gathered = pivoted.gather { drop(1) }.notNull().into("key", "value")
-        val expected =
-            expectedFiltered.update { key }.with { keyConverter(it) }
-                .convert { value }.with { valueConverter(it) as? Serializable }
+            .convert { value }
+            .with { it as? Comparable<*> } // cast to make the equality test succeed (values are already the same)
+        val expected = expectedFiltered.update { key }.with { keyConverter(it) }
+            .convert { value }.with { valueConverter(it) as? Comparable<*> }
         gathered shouldBe expected
     }
 
@@ -465,7 +484,7 @@ class PivotTests {
         pivoted.df()["Bob"].asColumnGroup().columnNames() shouldBe listOf("age", "weight")
         pivoted.df()["Charlie"].asColumnGroup().columnNames() shouldBe typed.key.distinct().values()
         pivoted.df()["Alice"]["age"].type() shouldBe typeOf<List<Int>>()
-        pivoted.df()["Charlie"]["weight"].type() shouldBe typeOf<Any?>()
+        pivoted.df()["Charlie"]["weight"].type() shouldBe nothingType(true)
     }
 
     @Test

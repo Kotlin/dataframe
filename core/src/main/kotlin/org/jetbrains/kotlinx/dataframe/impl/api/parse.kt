@@ -103,6 +103,7 @@ internal object Parsers : GlobalParserOptions {
         formatters.clear()
         nullStrings.clear()
         formatters.add(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+        formatters.add(DateTimeFormatter.ISO_DATE_TIME)
 
         DateTimeFormatterBuilder()
             .parseCaseInsensitive()
@@ -187,7 +188,13 @@ internal object Parsers : GlobalParserOptions {
         }
 
     inline fun <reified T : Any> stringParser(catch: Boolean = false, noinline body: (String) -> T?): StringParser<T> {
-        return if (catch) DelegatedStringParser(typeOf<T>()) { try { body(it) } catch (e: Throwable) { null } }
+        return if (catch) DelegatedStringParser(typeOf<T>()) {
+            try {
+                body(it)
+            } catch (e: Throwable) {
+                null
+            }
+        }
         else DelegatedStringParser(typeOf<T>(), body)
     }
 
@@ -201,16 +208,29 @@ internal object Parsers : GlobalParserOptions {
     }
 
     private val parsersOrder = listOf(
+        // Int
         stringParser { it.toIntOrNull() },
+
+        // Long
         stringParser { it.toLongOrNull() },
 
         // kotlinx.datetime.Instant
         stringParser { catchSilent { Instant.parse(it) } },
 
+        // java.time.Instant
+        stringParser { catchSilent { java.time.Instant.parse(it) } },
+
         // kotlinx.datetime.LocalDateTime
         stringParserWithOptions { options ->
             val formatter = options?.getDateTimeFormatter()
             val parser = { it: String -> it.toLocalDateTimeOrNull(formatter)?.toKotlinLocalDateTime() }
+            parser
+        },
+
+        // java.time.LocalDateTime
+        stringParserWithOptions { options ->
+            val formatter = options?.getDateTimeFormatter()
+            val parser = { it: String -> it.toLocalDateTimeOrNull(formatter) }
             parser
         },
 
@@ -221,15 +241,27 @@ internal object Parsers : GlobalParserOptions {
             parser
         },
 
+        // java.time.LocalDate
+        stringParserWithOptions { options ->
+            val formatter = options?.getDateTimeFormatter()
+            val parser = { it: String -> it.toLocalDateOrNull(formatter) }
+            parser
+        },
+
         // kotlin.time.duration
         stringParser { catchSilent { Duration.parse(it) } },
 
+        // java.time.duration
+        stringParser { catchSilent { java.time.Duration.parse(it) } },
+
+        // java.time.LocalTime
         stringParserWithOptions { options ->
             val formatter = options?.getDateTimeFormatter()
             val parser = { it: String -> it.toLocalTimeOrNull(formatter) }
             parser
         },
 
+        // java.net.URL
         stringParser { it.toUrlOrNull() },
 
         // Double, with explicit number format or taken from current locale
@@ -238,7 +270,10 @@ internal object Parsers : GlobalParserOptions {
         // Double, with POSIX format
         stringParser { it.parseDouble(NumberFormat.getInstance(Locale.forLanguageTag("C.UTF-8"))) },
 
+        // Boolean
         stringParser { it.toBooleanOrNull() },
+
+        // BigDecimal
         stringParser { it.toBigDecimalOrNull() },
 
         stringParser(catch = true) { if (it.startsWith("[")) DataFrame.readJsonStr(it) else null },
@@ -300,11 +335,13 @@ internal fun DataColumn<String?>.tryParseImpl(options: ParserOptions?): DataColu
                     parsedValues.add(null)
                     hasNulls = true
                 }
+
                 nulls.contains(str) -> {
                     parsedValues.add(null)
                     hasNulls = true
                     nullStringParsed = true
                 }
+
                 else -> {
                     val trimmed = str.trim()
                     val res = parser(trimmed)

@@ -6,7 +6,7 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven { url="https://jitpack.io" }
+    maven { url = "https://jitpack.io" }
     maven { url "https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven" }
 }
 
@@ -15,8 +15,10 @@ group = "org.jetbrains.kotlinx.dataframe"
 dependencies {
     implementation(project(":core"))
     implementation(project(":dataframe-arrow"))
+    implementation(project(":dataframe-openapi"))
     implementation(project(":dataframe-excel"))
     implementation(libs.ksp.api)
+    implementation(libs.kotlin.reflect)
     testImplementation("org.jetbrains.kotlin:kotlin-test")
     testImplementation("com.github.tschuchortdev:kotlin-compile-testing:1.4.9")
     testImplementation("com.github.tschuchortdev:kotlin-compile-testing-ksp:1.4.9")

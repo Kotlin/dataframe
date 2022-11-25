@@ -53,16 +53,18 @@ internal fun DataFrameSchemaImpl.render(): String {
 internal fun Map<String, ColumnSchema>.render(indent: Int, sb: StringBuilder, indentSequence: String): String {
     entries.forEachIndexed { i, (name, columnSchema) ->
         sb.append(indentSequence.repeat(indent))
-        sb.append(name + ":")
+        sb.append("$name:")
         when (columnSchema) {
             is ColumnSchema.Group -> {
                 sb.appendLine()
                 columnSchema.schema.columns.render(indent + 1, sb, indentSequence)
+                sb.appendLine()
             }
 
             is ColumnSchema.Frame -> {
                 sb.appendLine(" *")
                 columnSchema.schema.columns.render(indent + 1, sb, indentSequence)
+                sb.appendLine()
             }
 
             is ColumnSchema.Value -> {
