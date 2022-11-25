@@ -14,6 +14,7 @@ repositories {
 group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
+    api(libs.kotlin.reflect)
     implementation(project(":core"))
     implementation(project(":dataframe-arrow"))
     implementation(project(":dataframe-openapi"))

@@ -24,9 +24,9 @@ repositories {
 }
 
 dependencies {
+    api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.stdlib.jdk8)
-    implementation(libs.kotlin.reflect)
 
     api(libs.commonsCsv)
     implementation(libs.klaxon)
