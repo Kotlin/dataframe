@@ -1043,7 +1043,7 @@ class DataFrameSymbolProcessorTest {
         }
     }
 
-    private val petstoreYaml = File("../../core/src/test/resources/petstore.yaml")
+    private val petstoreYaml = File("../../dataframe-openapi/src/test/resources/petstore.yaml")
 
     @Test
     fun `openApi yaml test`(): Unit = useHostedFile(petstoreYaml) {
@@ -1126,7 +1126,7 @@ class DataFrameSymbolProcessorTest {
         }
     }
 
-    private val apiGuruMetricsJson = File("../../core/src/test/resources/apiGuruMetrics.json")
+    private val apiGuruMetricsJson = File("../../dataframe-openapi/src/test/resources/apiGuruMetrics.json")
 
     @Test
     fun `non openApi json test 2`(): Unit = useHostedFile(apiGuruMetricsJson) {
@@ -1163,7 +1163,7 @@ class DataFrameSymbolProcessorTest {
     }
 
 
-    private val petstoreJson = File("../../core/src/test/resources/petstore.json")
+    private val petstoreJson = File("../../dataframe-openapi/src/test/resources/petstore.json")
 
     @Test
     fun `openApi json test`(): Unit = useHostedFile(petstoreJson) {
