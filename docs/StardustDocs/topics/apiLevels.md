@@ -34,7 +34,7 @@ In the most of the code snippets in this documentation there's a tab selector th
 <!---FUN extensionProperties1-->
 
 ```kotlin
-val df = DataFrame.read("titanic.csv", delimiter = ';')
+val df = DataFrame.read("titanic.csv")
 ```
 
 <!---END-->
@@ -55,7 +55,7 @@ df.add("lastName") { name.split(",").last() }
 <!---FUN strings-->
 
 ```kotlin
-DataFrame.read("titanic.csv", delimiter = ';')
+DataFrame.read("titanic.csv")
     .add("lastName") { "name"<String>().split(",").last() }
     .dropNulls("age")
     .filter {
@@ -79,7 +79,7 @@ val age by column<Int?>()
 val name by column<String>()
 val lastName by column<String>()
 
-DataFrame.read("titanic.csv", delimiter = ';')
+DataFrame.read("titanic.csv")
     .add(lastName) { name().split(",").last() }
     .dropNulls { age }
     .filter { survived() && home().endsWith("NY") && age()!! in 10..20 }
@@ -100,7 +100,7 @@ data class Passenger(
     val lastName: String
 )
 
-val passengers = DataFrame.read("titanic.csv", delimiter = ';')
+val passengers = DataFrame.read("titanic.csv")
     .add(Passenger::lastName) { "name"<String>().split(",").last() }
     .dropNulls(Passenger::age)
     .filter {
