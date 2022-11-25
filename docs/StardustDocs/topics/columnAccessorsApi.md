@@ -21,7 +21,7 @@ Now columns can be accessed in a type-safe way using `invoke` operator:
 <!---FUN accessors2-->
 
 ```kotlin
-DataFrame.read("titanic.csv", delimiter = ';')
+DataFrame.read("titanic.csv")
     .add(lastName) { name().split(",").last() }
     .dropNulls { age }
     .filter { survived() && home().endsWith("NY") && age()!! in 10..20 }
