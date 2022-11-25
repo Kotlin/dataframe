@@ -12,6 +12,7 @@ import org.jetbrains.kotlinx.jupyter.api.Code
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
 import java.io.File
+import java.io.File.separatorChar
 import java.io.InputStream
 
 class OpenApiTests : JupyterReplTestCase() {
@@ -1066,7 +1067,12 @@ class OpenApiTests : JupyterReplTestCase() {
         @Language("kts")
         val _1 = execRaw(
             """
-                val ApiGuru = importDataSchema(File("${apiGuruYaml.absolutePath}"))
+                val ApiGuru = importDataSchema(File("${
+                apiGuruYaml.absolutePath.let {
+                    if (separatorChar == '\\') it.replace("\\", "\\\\")
+                    else it
+                }
+            }"))
             """.trimIndent()
         )
 
