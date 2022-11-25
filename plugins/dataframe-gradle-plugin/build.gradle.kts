@@ -7,15 +7,17 @@ plugins {
 
 repositories {
     mavenCentral()
-    maven(url="https://jitpack.io")
+    maven(url = "https://jitpack.io")
     google()
 }
 
 group = "org.jetbrains.kotlinx.dataframe"
 
 dependencies {
+    api(libs.kotlin.reflect)
     implementation(project(":core"))
     implementation(project(":dataframe-arrow"))
+    implementation(project(":dataframe-openapi"))
     implementation(project(":dataframe-excel"))
     implementation(kotlin("gradle-plugin-api"))
     implementation(kotlin("gradle-plugin"))
@@ -25,8 +27,8 @@ dependencies {
 
     testImplementation("junit:junit:4.12")
     testImplementation("io.kotest:kotest-assertions-core:4.6.0")
-    testImplementation("com.android.tools.build:gradle-api:4.1.1")
-    testImplementation("com.android.tools.build:gradle:4.1.1")
+    testImplementation("com.android.tools.build:gradle-api:7.3.1")
+    testImplementation("com.android.tools.build:gradle:7.3.1")
     testImplementation("io.ktor:ktor-server-netty:1.6.7")
     testImplementation(gradleApi())
 }
@@ -44,7 +46,10 @@ tasks.withType<ProcessResources> {
         filter {
             it.replace(
                 "%DATAFRAME_JAR%",
-                project(":core").configurations.getByName("instrumentedJars").artifacts.single().file.absolutePath.replace(File.separatorChar, '/')
+                project(":core").configurations.getByName("instrumentedJars").artifacts.single().file.absolutePath.replace(
+                    File.separatorChar,
+                    '/'
+                )
             )
         }
     }
@@ -78,7 +83,8 @@ pluginBundle {
         "deprecatedSchemaGeneratorPlugin" {
             // id is captured from java-gradle-plugin configuration
             displayName = "Kotlin Dataframe gradle plugin"
-            description = "The plugin was moved to 'org.jetbrains.kotlinx.dataframe'. Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
+            description =
+                "The plugin was moved to 'org.jetbrains.kotlinx.dataframe'. Gradle plugin providing task for inferring data schemas from your CSV or JSON data"
             tags = listOf("dataframe", "kotlin")
         }
     }
@@ -117,9 +123,12 @@ val integrationTestTask = task<Test>("integrationTest") {
     dependsOn(":plugins:symbol-processor:publishToMavenLocal")
     dependsOn(":dataframe-arrow:publishToMavenLocal")
     dependsOn(":dataframe-excel:publishToMavenLocal")
- //   dependsOn(":publishApiPublicationToMavenLocal")
+    dependsOn(":dataframe-openapi:publishToMavenLocal")
+    //   dependsOn(":publishApiPublicationToMavenLocal")
     dependsOn(":dataframe-arrow:publishDataframeArrowPublicationToMavenLocal")
     dependsOn(":dataframe-excel:publishDataframeExcelPublicationToMavenLocal")
+    dependsOn(":dataframe-openapi:publishDataframeOpenApiPublicationToMavenLocal")
+    dependsOn(":plugins:symbol-processor:publishMavenPublicationToMavenLocal")
     dependsOn(":core:publishCorePublicationToMavenLocal")
     description = "Runs integration tests."
     group = "verification"

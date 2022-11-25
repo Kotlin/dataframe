@@ -1,0 +1,38 @@
+{
+  "1544198659362550": {
+    "name": "Ronald",
+    "location": "Location A 🚘",
+    "locationId": 1569442625339507,
+    "gps": {
+      "latitude": 59.5838745,
+      "longitude": 4.8309257
+    }
+  },
+  "1545419932562464": {
+    "name": "Pascale",
+    "location": "Location B 🏫",
+    "locationId": 1662579177863129,
+    "gps": {
+      "latitude": 54.641385,
+      "longitude": 4.8518116
+    }
+  },
+  "1556728145307124": {
+    "name": "Jolan",
+    "location": "Thuis 🏠",
+    "locationId": 1544198981196372,
+    "gps": {
+      "latitude": 56.6450259,
+      "longitude": 4.8687153
+    }
+  },
+  "1659850337645169": {
+    "name": "Lucie",
+    "location": "Oma 👵",
+    "locationId": 1546360789771292,
+    "gps": {
+      "latitude": 50.6938737,
+      "longitude": 5.3179955
+    }
+  }
+}

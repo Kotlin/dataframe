@@ -118,10 +118,7 @@ class ConvertToTests {
     )
 
     @DataSchema
-    data class Gps(
-        val latitude: Double,
-        val longitude: Double,
-    )
+    data class Gps(val latitude: Double, val longitude: Double)
 
     // @Test TODO: https://github.com/Kotlin/dataframe/issues/177
     fun `convert df with nullable DataRow`() {
@@ -148,5 +145,103 @@ class ConvertToTests {
         val converted = locations.convertTo<Location>()
 
         converted shouldBe locations
+    }
+
+    @DataSchema
+    data class DataSchemaWithAnyFrame(val dfs: AnyFrame?)
+
+    @Test
+    fun test() {
+        val df1 = dataFrameOf("a")(1, 2, 3)
+        val df2 = dataFrameOf("b")(4, 5)
+        val frameColumn by columnOf(df1, df2, null)
+        val df = dataFrameOf(frameColumn).alsoDebug()
+//        ⌌---------------⌍
+//        |  | untitled:[]|
+//        |--|------------|
+//        | 0|     [3 x 1]|
+//        | 1|     [2 x 1]|
+//        | 2|     [0 x 0]|
+//        ⌎---------------⌏
+//
+//        untitled: *
+    }
+
+    @Test
+    fun `convert df with AnyFrame to itself`() {
+        val locationsList = listOf(
+            Location("Home", Gps(0.0, 0.0)),
+            Location("Away", null),
+            null,
+        )
+        val locations = locationsList
+            .toDataFrame()
+            .alsoDebug("locations:")
+
+        val gpsList = listOf(
+            Gps(0.0, 0.0),
+            null,
+        )
+        val gps = gpsList
+            .toDataFrame()
+            .alsoDebug("gps:")
+
+        val df1 = listOf(
+            DataSchemaWithAnyFrame(locations),
+        )
+            .toDataFrame()
+            .alsoDebug("df1:")
+
+        df1.convertTo<DataSchemaWithAnyFrame>()
+
+        val df2 = listOf(
+            DataSchemaWithAnyFrame(gps),
+        )
+            .toDataFrame()
+            .alsoDebug("df2:")
+
+        df2.convertTo<DataSchemaWithAnyFrame>()
+
+        val df3 = listOf(
+            DataSchemaWithAnyFrame(null),
+            DataSchemaWithAnyFrame(gps),
+        )
+            .toDataFrame { properties { preserve(DataFrame::class) } }
+            .alsoDebug("df3 before convert:")
+
+        df3.convertTo<DataSchemaWithAnyFrame>()
+
+        val df4 = listOf(
+            DataSchemaWithAnyFrame(null),
+        )
+            .toDataFrame { properties { preserve(DataFrame::class) } }
+            .alsoDebug("df4 before convert:")
+
+        df4.convertTo<DataSchemaWithAnyFrame>()
+
+        val df5a: DataFrame<*> = dataFrameOf(
+            columnOf(locations, gps, null).named("dfs"),
+        ).alsoDebug("df5a:")
+
+        df5a.convertTo<DataSchemaWithAnyFrame>()
+
+        val df5 = listOf(
+            DataSchemaWithAnyFrame(null),
+            DataSchemaWithAnyFrame(locations),
+            DataSchemaWithAnyFrame(gps),
+        )
+            .toDataFrame { properties { preserve(DataFrame::class) } }
+            .alsoDebug("df5 before convert:")
+
+        df5.convertTo<DataSchemaWithAnyFrame>()
+            .alsoDebug("df5 after convert:")
+            .convertTo<DataSchemaWithAnyFrame>()
+            .alsoDebug("df5 after second convert:")
+    }
+
+    private fun <T : DataFrame<*>> T.alsoDebug(println: String? = null): T = apply {
+        println?.let { println(it) }
+        print(borders = true, title = true, columnTypes = true, valueLimit = -1)
+        schema().print()
     }
 }

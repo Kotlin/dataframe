@@ -1,10 +1,9 @@
-
 @Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
     kotlin("jvm")
     kotlin("libs.publisher")
     kotlin("plugin.serialization")
-    kotlin("jupyter.api") version libs.versions.kotlinJupyter
+    kotlin("jupyter.api")
 
     id("io.github.devcrocod.korro") version libs.versions.korro
     id("org.jetbrains.dataframe.generator")
@@ -25,16 +24,16 @@ repositories {
 }
 
 dependencies {
+    api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlin.stdlib.jdk8)
-    implementation(libs.kotlin.reflect)
 
     api(libs.commonsCsv)
     implementation(libs.klaxon)
     implementation(libs.fuel)
 
-    implementation(libs.kotlin.datetimeJvm)
-    implementation("com.squareup:kotlinpoet:1.11.0")
+    api(libs.kotlin.datetimeJvm)
+    implementation(libs.kotlinpoet)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotestAssertions) {
@@ -114,7 +113,8 @@ kotlinter {
         "experimental:annotation",
         "max-line-length",
         "filename",
-        "comment-spacing"
+        "comment-spacing",
+        "curly-spacing",
     )
 }
 
@@ -137,10 +137,12 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
 tasks.test {
     maxHeapSize = "2048m"
     extensions.configure(kotlinx.kover.api.KoverTaskExtension::class) {
-        excludes.set(listOf(
-            "org.jetbrains.kotlinx.dataframe.jupyter.*",
-            "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests"
-        ))
+        excludes.set(
+            listOf(
+                "org.jetbrains.kotlinx.dataframe.jupyter.*",
+                "org.jetbrains.kotlinx.dataframe.jupyter.SampleNotebooksTests"
+            )
+        )
     }
 }
 
@@ -168,6 +170,7 @@ artifacts {
     }
 }
 
+// Disable and enable if updating plugin breaks the build
 dataframes {
     schema {
         sourceSet = "test"

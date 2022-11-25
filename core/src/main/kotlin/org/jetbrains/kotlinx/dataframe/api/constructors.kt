@@ -44,13 +44,14 @@ public fun <T> ColumnGroupReference.column(path: ColumnPath): ColumnAccessor<T> 
 public inline fun <reified T> column(
     name: String = "",
     infer: Infer = Infer.Nulls,
-    noinline expression: RowExpression<Any?, T>
+    noinline expression: RowExpression<Any?, T>,
 ): ColumnReference<T> = createComputedColumnReference(name, typeOf<T>(), infer, expression)
+
 public inline fun <T, reified C> column(
     df: DataFrame<T>,
     name: String = "",
     infer: Infer = Infer.Nulls,
-    noinline expression: RowExpression<T, C>
+    noinline expression: RowExpression<T, C>,
 ): ColumnReference<C> = createComputedColumnReference(name, typeOf<C>(), infer, expression as RowExpression<Any?, C>)
 
 // endregion
@@ -58,56 +59,74 @@ public inline fun <T, reified C> column(
 // region columnGroup
 
 public fun columnGroup(): ColumnDelegate<AnyRow> = column()
+
 @JvmName("columnGroupTyped")
 public fun <T> columnGroup(): ColumnDelegate<DataRow<T>> = column()
 
 public fun columnGroup(name: String): ColumnAccessor<AnyRow> = column(name)
+
 @JvmName("columnGroupTyped")
 public fun <T> columnGroup(name: String): ColumnAccessor<DataRow<T>> = column(name)
 
 public fun columnGroup(path: ColumnPath): ColumnAccessor<AnyRow> = column(path)
+
 @JvmName("columnGroupTyped")
 public fun <T> columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> = column(path)
 
 public fun ColumnGroupReference.columnGroup(): ColumnDelegate<AnyRow> = ColumnDelegate(this)
+
 @JvmName("columnGroupTyped")
 public fun <T> ColumnGroupReference.columnGroup(): ColumnDelegate<DataRow<T>> = ColumnDelegate(this)
 
 public fun ColumnGroupReference.columnGroup(name: String): ColumnAccessor<AnyRow> = ColumnAccessorImpl(path() + name)
-@JvmName("columnGroupTyped")
-public fun <T> ColumnGroupReference.columnGroup(name: String): ColumnAccessor<DataRow<T>> = ColumnAccessorImpl(path() + name)
 
-public fun ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccessor<AnyRow> = ColumnAccessorImpl(this.path() + path)
 @JvmName("columnGroupTyped")
-public fun <T> ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> = ColumnAccessorImpl(this.path() + path)
+public fun <T> ColumnGroupReference.columnGroup(name: String): ColumnAccessor<DataRow<T>> =
+    ColumnAccessorImpl(path() + name)
+
+public fun ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccessor<AnyRow> =
+    ColumnAccessorImpl(this.path() + path)
+
+@JvmName("columnGroupTyped")
+public fun <T> ColumnGroupReference.columnGroup(path: ColumnPath): ColumnAccessor<DataRow<T>> =
+    ColumnAccessorImpl(this.path() + path)
 
 // endregion
 
 // region frameColumn
 
 public fun frameColumn(): ColumnDelegate<AnyFrame> = column()
+
 @JvmName("frameColumnTyped")
 public fun <T> frameColumn(): ColumnDelegate<DataFrame<T>> = column()
 
 public fun frameColumn(name: String): ColumnAccessor<AnyFrame> = column(name)
+
 @JvmName("frameColumnTyped")
 public fun <T> frameColumn(name: String): ColumnAccessor<DataFrame<T>> = column(name)
 
 public fun frameColumn(path: ColumnPath): ColumnAccessor<AnyFrame> = column(path)
+
 @JvmName("frameColumnTyped")
 public fun <T> frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> = column(path)
 
 public fun ColumnGroupReference.frameColumn(): ColumnDelegate<AnyFrame> = ColumnDelegate(this)
+
 @JvmName("frameColumnTyped")
 public fun <T> ColumnGroupReference.frameColumn(): ColumnDelegate<DataFrame<T>> = ColumnDelegate(this)
 
 public fun ColumnGroupReference.frameColumn(name: String): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(path() + name)
-@JvmName("frameColumnTyped")
-public fun <T> ColumnGroupReference.frameColumn(name: String): ColumnAccessor<DataFrame<T>> = ColumnAccessorImpl(path() + name)
 
-public fun ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<AnyFrame> = ColumnAccessorImpl(this.path() + path)
 @JvmName("frameColumnTyped")
-public fun <T> ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> = ColumnAccessorImpl(this.path() + path)
+public fun <T> ColumnGroupReference.frameColumn(name: String): ColumnAccessor<DataFrame<T>> =
+    ColumnAccessorImpl(path() + name)
+
+public fun ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<AnyFrame> =
+    ColumnAccessorImpl(this.path() + path)
+
+@JvmName("frameColumnTyped")
+public fun <T> ColumnGroupReference.frameColumn(path: ColumnPath): ColumnAccessor<DataFrame<T>> =
+    ColumnAccessorImpl(this.path() + path)
 
 // endregion
 
@@ -122,25 +141,28 @@ public class ColumnDelegate<T>(private val parent: ColumnGroupReference? = null)
 
 // region create DataColumn
 
-public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> = createColumn(values.asIterable(), typeOf<T>(), true).forceResolve()
+public inline fun <reified T> columnOf(vararg values: T): DataColumn<T> =
+    createColumn(values.asIterable(), typeOf<T>(), true).forceResolve()
 
 public fun columnOf(vararg values: AnyBaseCol): DataColumn<AnyRow> = columnOf(values.asIterable()).forceResolve()
 
 public fun <T> columnOf(vararg frames: DataFrame<T>): FrameColumn<T> = columnOf(frames.asIterable()).forceResolve()
 
-public fun columnOf(columns: Iterable<AnyBaseCol>): DataColumn<AnyRow> = (
+public fun columnOf(columns: Iterable<AnyBaseCol>): DataColumn<AnyRow> =
     DataColumn.createColumnGroup(
-        "",
-        dataFrameOf(columns)
-    ) as DataColumn<AnyRow>
-    ).forceResolve()
+        name = "",
+        df = dataFrameOf(columns)
+    )
+        .asDataColumn()
+        .forceResolve()
 
 public fun <T> columnOf(frames: Iterable<DataFrame<T>>): FrameColumn<T> = DataColumn.createFrameColumn(
     "",
     frames.toList()
 ).forceResolve()
 
-public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> = createColumn(values, typeOf<T>(), false).forceResolve()
+public inline fun <reified T> column(values: Iterable<T>): DataColumn<T> =
+    createColumn(values, typeOf<T>(), false).forceResolve()
 
 // endregion
 
@@ -169,22 +191,26 @@ public fun dataFrameOf(vararg columns: AnyBaseCol): AnyFrame = dataFrameOf(colum
 
 public fun dataFrameOf(vararg header: String): DataFrameBuilder = dataFrameOf(header.toList())
 
-public inline fun <reified C> dataFrameOf(vararg header: String, fill: (String) -> Iterable<C>): AnyFrame = dataFrameOf(header.asIterable(), fill)
+public inline fun <reified C> dataFrameOf(vararg header: String, fill: (String) -> Iterable<C>): AnyFrame =
+    dataFrameOf(header.asIterable(), fill)
 
 public fun dataFrameOf(header: Iterable<String>): DataFrameBuilder = DataFrameBuilder(header.asList())
 
-public fun dataFrameOf(vararg columns: Pair<String, List<Any?>>): AnyFrame = columns.map { it.second.toColumn(it.first, Infer.Type) }.toDataFrame()
+public fun dataFrameOf(vararg columns: Pair<String, List<Any?>>): AnyFrame =
+    columns.map { it.second.toColumn(it.first, Infer.Type) }.toDataFrame()
 
-public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): AnyFrame = dataFrameOf(header).withValues(values)
+public fun dataFrameOf(header: Iterable<String>, values: Iterable<Any?>): AnyFrame =
+    dataFrameOf(header).withValues(values)
 
-public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): AnyFrame = header.map { value ->
-    fill(value).asList().let {
-        DataColumn.create(
-            value.toString(),
-            it
-        )
-    }
-}.toDataFrame()
+public inline fun <T, reified C> dataFrameOf(header: Iterable<T>, fill: (T) -> Iterable<C>): AnyFrame =
+    header.map { value ->
+        fill(value).asList().let {
+            DataColumn.create(
+                value.toString(),
+                it
+            )
+        }
+    }.toDataFrame()
 
 public fun dataFrameOf(header: CharProgression): DataFrameBuilder = dataFrameOf(header.map { it.toString() })
 
@@ -226,14 +252,15 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public fun withColumns(columnBuilder: (String) -> AnyCol): AnyFrame = header.map(columnBuilder).toDataFrame()
 
-    public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): AnyFrame = withColumns { name ->
-        valuesBuilder(name).let {
-            DataColumn.create(
-                name,
-                it.asList()
-            )
+    public inline operator fun <reified T> invoke(crossinline valuesBuilder: (String) -> Iterable<T>): AnyFrame =
+        withColumns { name ->
+            valuesBuilder(name).let {
+                DataColumn.create(
+                    name,
+                    it.asList()
+                )
+            }
         }
-    }
 
     public inline fun <reified C> fill(nrow: Int, value: C): AnyFrame = withColumns { name ->
         DataColumn.createValueColumn(
@@ -245,12 +272,13 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public inline fun <reified C> nulls(nrow: Int): AnyFrame = fill<C?>(nrow, null)
 
-    public inline fun <reified C> fillIndexed(nrow: Int, crossinline init: (Int, String) -> C): AnyFrame = withColumns { name ->
-        DataColumn.create(
-            name,
-            List(nrow) { init(it, name) }
-        )
-    }
+    public inline fun <reified C> fillIndexed(nrow: Int, crossinline init: (Int, String) -> C): AnyFrame =
+        withColumns { name ->
+            DataColumn.create(
+                name,
+                List(nrow) { init(it, name) }
+            )
+        }
 
     public inline fun <reified C> fill(nrow: Int, crossinline init: (Int) -> C): AnyFrame = withColumns { name ->
         DataColumn.create(
@@ -273,13 +301,15 @@ public class DataFrameBuilder(private val header: List<String>) {
 
     public fun randomDouble(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextDouble() }
 
-    public fun randomDouble(nrow: Int, range: ClosedRange<Double>): AnyFrame = fillNotNull(nrow) { Random.nextDouble(range.start, range.endInclusive) }
+    public fun randomDouble(nrow: Int, range: ClosedRange<Double>): AnyFrame =
+        fillNotNull(nrow) { Random.nextDouble(range.start, range.endInclusive) }
 
     public fun randomFloat(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextFloat() }
 
     public fun randomLong(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextLong() }
 
-    public fun randomLong(nrow: Int, range: ClosedRange<Long>): AnyFrame = fillNotNull(nrow) { Random.nextLong(range.start, range.endInclusive) }
+    public fun randomLong(nrow: Int, range: ClosedRange<Long>): AnyFrame =
+        fillNotNull(nrow) { Random.nextLong(range.start, range.endInclusive) }
 
     public fun randomBoolean(nrow: Int): AnyFrame = fillNotNull(nrow) { Random.nextBoolean() }
 }

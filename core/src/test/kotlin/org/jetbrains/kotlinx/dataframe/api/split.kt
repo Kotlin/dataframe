@@ -14,11 +14,11 @@ class SplitTests {
     fun `split with default`() {
         val recentDelays = listOf(listOf(23, 47), listOf(), listOf(24, 43, 87), listOf(13), listOf(67, 32)).toColumn("RecentDelays")
         val df = dataFrameOf(recentDelays)
-        val splitted = df.split(recentDelays).default(0).into { "delay$it" }
-        splitted.columns().forEach {
+        val split = df.split(recentDelays).default(0).into { "delay$it" }
+        split.columns().forEach {
             it.hasNulls() shouldBe false
         }
-        splitted.values().count { it == 0 } shouldBe 7
+        split.values().count { it == 0 } shouldBe 7
     }
 
     @Test
@@ -31,14 +31,14 @@ class SplitTests {
         )
 
         val regex = """(.*) \((\d{4})\)""".toRegex()
-        val splitted = title.toDataFrame()
+        val split = title.toDataFrame()
             .split { title }
             .match(regex)
             .into("title", "year")
             .parse()
-        splitted.schema().print()
-        splitted["title"].hasNulls shouldBe false
-        splitted["year"].type shouldBe typeOf<Int>()
+        split.schema().print()
+        split["title"].hasNulls shouldBe false
+        split["year"].type shouldBe typeOf<Int>()
     }
 
     @Test

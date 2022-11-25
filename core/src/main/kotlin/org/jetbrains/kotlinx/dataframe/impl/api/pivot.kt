@@ -7,7 +7,6 @@ import org.jetbrains.kotlinx.dataframe.aggregation.NamedValue
 import org.jetbrains.kotlinx.dataframe.api.PivotColumnsSelector
 import org.jetbrains.kotlinx.dataframe.api.forEach
 import org.jetbrains.kotlinx.dataframe.api.groupBy
-import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
@@ -23,13 +22,14 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 internal class AggregatedPivot<T>(
     private val df: DataFrame<T>,
     val inward: Boolean?,
-    internal var aggregator: GroupByReceiverImpl<T>
+    internal var aggregator: GroupByReceiverImpl<T>,
 ) :
     DataFrame<T> by df
 
 internal data class PivotChainElement(val column: ColumnWithPath<Any?>, val includeColumnName: Boolean)
 
-internal class PivotChain<C>(val columns: List<PivotChainElement>, lastColumn: ColumnWithPath<C>) : ColumnWithPath<C> by lastColumn
+internal class PivotChain<C>(val columns: List<PivotChainElement>, lastColumn: ColumnWithPath<C>) :
+    ColumnWithPath<C> by lastColumn
 
 internal class PivotChainColumnSet<C>(val first: ColumnSet<C>, val second: ColumnSet<C>) : ColumnSet<C> {
 
@@ -52,7 +52,7 @@ internal class PivotChainColumnSet<C>(val first: ColumnSet<C>, val second: Colum
 }
 
 internal fun <T, C> DataFrame<T>.getPivotSequences(
-    columns: PivotColumnsSelector<T, C>
+    columns: PivotColumnsSelector<T, C>,
 ): List<List<PivotChainElement>> {
     return columns.toColumns().resolve(this, UnresolvedColumnsPolicy.Fail)
         .map {
@@ -64,7 +64,7 @@ internal fun <T, C> DataFrame<T>.getPivotSequences(
 }
 
 internal fun <T> DataFrame<T>.getPivotColumnPaths(
-    columns: PivotColumnsSelector<T, *>
+    columns: PivotColumnsSelector<T, *>,
 ): List<ColumnPath> {
     return getPivotSequences(columns).flatten().map { it.column.path }.distinct()
 }
@@ -75,12 +75,15 @@ internal fun <T, R> aggregatePivot(
     separate: Boolean,
     inward: Boolean? = null,
     globalDefault: Any? = null,
-    body: Selector<AggregateDsl<T>, R>
+    body: Selector<AggregateDsl<T>, R>,
 ) {
     val pivotSequences = aggregator.df.getPivotSequences(columns)
-    val effectiveInward = inward ?: if (aggregator.hasGroupingKeys) true else (pivotSequences.distinctBy { it.first().column.path }.count() > 1)
+    val effectiveInward = inward ?: if (aggregator.hasGroupingKeys) {
+        true
+    } else {
+        pivotSequences.distinctBy { it.first().column.path }.count() > 1
+    }
     pivotSequences.forEach { pivotColumns ->
-
         aggregator.df.groupBy(pivotColumns.map { it.column }).forEach { (key, group) ->
 
             val pathNames = mutableListOf<String>()
@@ -107,6 +110,7 @@ internal fun <T, R> aggregatePivot(
                     globalDefault,
                     true
                 )
+
                 else -> {
                     values.forEach {
                         val targetPath = if (separate) it.path + path else path + it.path

@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.getColumn
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.ncol
 import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
@@ -30,7 +31,7 @@ class ReadTests {
         df["a"].hasNulls() shouldBe true
         df["a"].allNulls() shouldBe true
         df.all { it["a"] == null } shouldBe true
-        df["a"].type() shouldBe typeOf<Any?>()
+        df["a"].type() shouldBe nothingType(nullable = true)
         df["b"].hasNulls() shouldBe false
     }
 

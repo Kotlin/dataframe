@@ -12,8 +12,8 @@ import com.google.devtools.ksp.symbol.Variance
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractMarker
 import org.jetbrains.kotlinx.dataframe.codeGen.BaseField
-import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.ExtensionsCodeGenerator
+import org.jetbrains.kotlinx.dataframe.codeGen.FieldType
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.ValidFieldName
 
@@ -22,7 +22,7 @@ internal fun renderExtensions(
     declaration: KSClassDeclaration,
     interfaceName: String,
     visibility: MarkerVisibility,
-    properties: List<Property>
+    properties: List<Property>,
 ): String {
     val generator = ExtensionsCodeGenerator.create()
     val typeArguments = declaration.typeParameters.map {
@@ -46,10 +46,12 @@ internal fun renderExtensions(
             val qualifiedTypeReference = getQualifiedTypeReference(type)
             val fieldType = when {
                 qualifiedTypeReference == "kotlin.collections.List" && type.singleTypeArgumentIsDataSchema() ||
-                    qualifiedTypeReference == DataFrameNames.DATA_FRAME -> FieldType.FrameFieldType(
-                    type.renderTypeArguments(),
-                    type.isMarkedNullable
-                )
+                    qualifiedTypeReference == DataFrameNames.DATA_FRAME ->
+                    FieldType.FrameFieldType(
+                        type.renderTypeArguments(),
+                        type.isMarkedNullable
+                    )
+
                 type.declaration.isAnnotationPresent(DataSchema::class) -> FieldType.GroupFieldType(type.render())
                 qualifiedTypeReference == DataFrameNames.DATA_ROW -> FieldType.GroupFieldType(type.renderTypeArguments())
                 else -> FieldType.ValueFieldType(type.render())
@@ -100,7 +102,10 @@ private fun render(typeArgument: KSTypeArgument): String {
             if (variance.label.isNotEmpty()) {
                 append(" ")
             }
-            append(typeArgument.type?.resolve()?.render() ?: error("typeArgument.type should only be null for Variance.STAR"))
+            append(
+                typeArgument.type?.resolve()?.render()
+                    ?: error("typeArgument.type should only be null for Variance.STAR")
+            )
         }
     }
 }
@@ -110,5 +115,5 @@ internal class Property(val columnName: String, val fieldName: String, val prope
 internal class BaseFieldImpl(
     override val fieldName: ValidFieldName,
     override val columnName: String,
-    override val fieldType: FieldType
+    override val fieldType: FieldType,
 ) : BaseField

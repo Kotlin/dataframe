@@ -33,13 +33,15 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     @Test
     fun `data schema type`() {
         fields.keys.asClue {
-            fields["a"]!!.renderFieldType() shouldBe "DataRow<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker>"
+            fields["a"]!!.renderAccessorFieldType() shouldBe "DataRow<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker>"
+            fields["a"]!!.renderFieldType() shouldBe "org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker"
         }
     }
 
     @Test
     fun `builtin type`() {
         fields.keys.asClue {
+            fields["b"]!!.renderAccessorFieldType() shouldBe "Int"
             fields["b"]!!.renderFieldType() shouldBe "Int"
         }
     }
@@ -47,6 +49,7 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     @Test
     fun `list parametrized by data schema type`() {
         fields.keys.asClue {
+            fields["c"]!!.renderAccessorFieldType() shouldBe "DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker>"
             fields["c"]!!.renderFieldType() shouldBe "DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.DataSchemaMarker>"
         }
     }
@@ -54,6 +57,7 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     @Test
     fun `short functional types are not supported`() {
         fields.keys.asClue {
+            fields["d"]!!.renderAccessorFieldType() shouldBe "() -> kotlin.Unit"
             fields["d"]!!.renderFieldType() shouldBe "() -> kotlin.Unit"
         }
     }
@@ -61,13 +65,15 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
     @Test
     fun `data row`() {
         fields.keys.asClue {
-            fields["e"]!!.renderFieldType() shouldBe "DataRow<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>"
+            fields["e"]!!.renderAccessorFieldType() shouldBe "DataRow<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>"
+            fields["e"]!!.renderFieldType() shouldBe "org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker"
         }
     }
 
     @Test
     fun `data frame`() {
         fields.keys.asClue {
+            fields["f"]!!.renderAccessorFieldType() shouldBe "DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>"
             fields["f"]!!.renderFieldType() shouldBe "DataFrame<org.jetbrains.kotlinx.dataframe.internal.codeGen.ShortNamesRenderingTest.Marker>"
         }
     }
@@ -120,6 +126,7 @@ internal class ShortNamesRenderingTest : TypeRenderingStrategy by ShortNames {
 
     @Test
     fun `generic field`() {
+        MarkersExtractor.get(GenericDataSchema::class).allFields[0].renderAccessorFieldType() shouldBe "A"
         MarkersExtractor.get(GenericDataSchema::class).allFields[0].renderFieldType() shouldBe "A"
     }
 

@@ -48,7 +48,7 @@ internal fun <T, C, R> splitImpl(
 
         var names = columnNamesGenerator(column, columnCollectors.size)
         if (names.size < columnCollectors.size) {
-            names = names + (1..(columnCollectors.size - names.size)).map { "splitted$it" }
+            names = names + (1..(columnCollectors.size - names.size)).map { "split$it" }
         }
 
         columnCollectors.mapIndexed { i, col ->

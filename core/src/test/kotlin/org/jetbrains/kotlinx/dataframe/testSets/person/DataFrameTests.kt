@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.testSets.person
 
+import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.doubles.ToleranceMatcher
 import io.kotest.matchers.should
@@ -167,6 +168,7 @@ import org.jetbrains.kotlinx.dataframe.impl.between
 import org.jetbrains.kotlinx.dataframe.impl.columns.isMissingColumn
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.getColumnsImpl
+import org.jetbrains.kotlinx.dataframe.impl.nothingType
 import org.jetbrains.kotlinx.dataframe.impl.trackColumnAccess
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.renderValueForStdout
@@ -1319,7 +1321,7 @@ class DataFrameTests : BaseTest() {
         val merged = typed.merge { age and city and weight }.by(",").into("info")
         val info by column<String>()
         val res = merged.split(info).into("age")
-        res.columnNames() shouldBe listOf("name", "age", "splitted1", "splitted2")
+        res.columnNames() shouldBe listOf("name", "age", "split1", "split2")
     }
 
     @Test
@@ -1979,14 +1981,14 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `get by column`() {
-        typed[1..2][ { typed.age }].size() shouldBe typed.age.size()
+        typed[1..2][{ typed.age }].size() shouldBe typed.age.size()
     }
 
     @Test
     fun `null column test`() {
         val df = dataFrameOf("col")(null, null)
         df["col"].kind() shouldBe ColumnKind.Value
-        df["col"].type() shouldBe typeOf<Any?>()
+        df["col"].type() shouldBe nothingType(true)
     }
 
     @Test
@@ -2102,14 +2104,14 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `split inplace`() {
-        val splitted = typed.split { name }.by { it.toCharArray().asIterable() }.inplace()
-        splitted["name"] shouldBe typed.name.map { it.toCharArray().toList() }
+        val split = typed.split { name }.by { it.toCharArray().asIterable() }.inplace()
+        split["name"] shouldBe typed.name.map { it.toCharArray().toList() }
     }
 
     @Test
     fun `split into rows with transform`() {
-        val splitted = typed.split { city }.by { it.toCharArray().toList() }.intoRows()
-        splitted.nrow shouldBe typed.city.sumOf { it?.length ?: 0 }
+        val split = typed.split { city }.by { it.toCharArray().toList() }.intoRows()
+        split.nrow shouldBe typed.city.sumOf { it?.length ?: 0 }
     }
 
     @Test
@@ -2169,7 +2171,7 @@ class DataFrameTests : BaseTest() {
             val name: String,
             val age: Int,
             val city: String?,
-            val weight: Int?
+            val weight: Int?,
         )
 
         df.convertTo<Target>() shouldBe df
@@ -2179,7 +2181,8 @@ class DataFrameTests : BaseTest() {
         val added = df.add("col") { 1 }
         added.convertTo(typeOf<Target>(), ExcessiveColumns.Keep) shouldBe added
 
-        shouldThrow<IllegalArgumentException> {
+        shouldNotThrowAny {
+            // now gets filled in with null!
             df.remove { city }.convertTo<Target>()
         }
 
@@ -2262,8 +2265,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun splitIntoThisAndNewColumn() {
-        val splitted = typed.split { name }.by { listOf(it.dropLast(1), it.last()) }.into("name", "lastChar")
-        splitted.columnNames().sorted() shouldBe (typed.columnNames() + "lastChar").sorted()
+        val split = typed.split { name }.by { listOf(it.dropLast(1), it.last()) }.into("name", "lastChar")
+        split.columnNames().sorted() shouldBe (typed.columnNames() + "lastChar").sorted()
     }
 
     @Test
@@ -2381,7 +2384,8 @@ class DataFrameTests : BaseTest() {
 
     @Test
     fun `groupBy sort`() {
-        typed.groupBy { name }.sortByDesc { age }.xs("Charlie").concat() shouldBe typed.filter { name == "Charlie" }.sortBy { age.desc() }.remove { name }
+        typed.groupBy { name }.sortByDesc { age }.xs("Charlie").concat() shouldBe typed.filter { name == "Charlie" }
+            .sortBy { age.desc() }.remove { name }
     }
 
     @Test

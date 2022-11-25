@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
+import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
@@ -33,12 +34,17 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
 import org.jetbrains.kotlinx.dataframe.impl.renderType
+import org.jetbrains.kotlinx.dataframe.io.SupportedCodeGenerationFormat
+import org.jetbrains.kotlinx.dataframe.io.supportedFormats
 import org.jetbrains.kotlinx.jupyter.api.HTML
 import org.jetbrains.kotlinx.jupyter.api.HtmlData
 import org.jetbrains.kotlinx.jupyter.api.JupyterClientType
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
+import org.jetbrains.kotlinx.jupyter.api.Notebook
 import org.jetbrains.kotlinx.jupyter.api.VariableName
 import org.jetbrains.kotlinx.jupyter.api.declare
 import org.jetbrains.kotlinx.jupyter.api.libraries.ColorScheme
@@ -51,7 +57,8 @@ import kotlin.reflect.full.isSubtypeOf
 
 internal val newDataSchemas = mutableListOf<KClass<*>>()
 
-internal class Integration : JupyterIntegration() {
+internal class Integration(private val notebook: Notebook, private val options: MutableMap<String, String?>) :
+    JupyterIntegration() {
 
     override fun Builder.onLoaded() {
         val codeGen = ReplCodeGenerator.create()
@@ -83,21 +90,37 @@ internal class Integration : JupyterIntegration() {
 
         with(JupyterHtmlRenderer(config.display, this)) {
             render<HtmlData> { notebook.renderHtmlAsIFrameIfNeeded(it) }
-            render<AnyRow>({ it.toDataFrame() }, { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" })
-            render<ColumnGroup<*>>({ it.asDataFrame() }, { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" })
-            render<AnyCol>({ dataFrameOf(it) }, { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" })
-            render<AnyFrame> ({ it }, { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" })
-            render<FormattedFrame<*>>({ it.df }, { "DataFrame: rowsCount = ${it.df.rowsCount() }, columnsCount = ${it.df.columnsCount() }" }, modifyConfig = { getDisplayConfiguration(it) })
+            render<AnyRow>(
+                { it.toDataFrame() },
+                { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" },
+            )
+            render<ColumnGroup<*>>(
+                { it.asDataFrame() },
+                { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" },
+            )
+            render<AnyCol>(
+                { dataFrameOf(it) },
+                { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" },
+            )
+            render<AnyFrame>(
+                { it },
+                { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" },
+            )
+            render<FormattedFrame<*>>(
+                { it.df },
+                { "DataFrame: rowsCount = ${it.df.rowsCount()}, columnsCount = ${it.df.columnsCount()}" },
+                modifyConfig = { getDisplayConfiguration(it) },
+            )
             render<GroupBy<*, *>>({ it.toDataFrame() }, { "GroupBy" })
             render<ReducedGroupBy<*, *>>({ it.into(it.groupBy.groups.name()) }, { "ReducedGroupBy" })
             render<Pivot<*>>({ it.frames().toDataFrame() }, { "Pivot" })
             render<ReducedPivot<*>>({ it.values().toDataFrame() }, { "ReducedPivot" })
             render<PivotGroupBy<*>>({ it.frames() }, { "PivotGroupBy" })
             render<ReducedPivotGroupBy<*>>({ it.values() }, { "ReducedPivotGroupBy" })
-            render<SplitWithTransform<*, *, *>> ({ it.into() }, { "Split" })
-            render<Split<*, *>> ({ it.toDataFrame() }, { "Split" })
-            render<Merge<*, *, *>> ({ it.into("merged") }, { "Merge" })
-            render<Gather<*, *, *, *>> ({ it.into("key", "value") }, { "Gather" })
+            render<SplitWithTransform<*, *, *>>({ it.into() }, { "Split" })
+            render<Split<*, *>>({ it.toDataFrame() }, { "Split" })
+            render<Merge<*, *, *>>({ it.into("merged") }, { "Merge" })
+            render<Gather<*, *, *, *>>({ it.into("key", "value") }, { "Gather" })
             render<IMG> { HTML(it.toString()) }
             render<IFRAME> { HTML(it.toString()) }
             render<Update<*, *>>({ it.df }, { "Update" })
@@ -109,12 +132,15 @@ internal class Integration : JupyterIntegration() {
         import("org.jetbrains.kotlinx.dataframe.annotations.*")
         import("org.jetbrains.kotlinx.dataframe.io.*")
         import("org.jetbrains.kotlinx.dataframe.columns.*")
+        import("org.jetbrains.kotlinx.dataframe.jupyter.ImportDataSchema")
+        import("org.jetbrains.kotlinx.dataframe.jupyter.importDataSchema")
         import("java.net.URL")
         import("java.io.File")
         import("kotlinx.datetime.Instant")
         import("kotlinx.datetime.LocalDateTime")
         import("kotlinx.datetime.LocalDate")
         import("org.jetbrains.kotlinx.dataframe.dataTypes.*")
+        import("org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader")
 
         fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, argument: String): VariableName? {
             val code = codeWithConverter.with(argument)
@@ -129,6 +155,29 @@ internal class Integration : JupyterIntegration() {
         fun KotlinKernelHost.execute(codeWithConverter: CodeWithConverter, property: KProperty<*>): VariableName? {
             val variableName = property.name + if (property.returnType.isMarkedNullable) "!!" else ""
             return execute(codeWithConverter, variableName)
+        }
+
+        updateVariable<ImportDataSchema> { importDataSchema, property ->
+            val formats = supportedFormats.filterIsInstance<SupportedCodeGenerationFormat>()
+            val name = property.name + "DataSchema"
+            when (val codeGenResult = CodeGenerator.urlCodeGenReader(importDataSchema.url, name, formats, true)) {
+                is CodeGenerationReadResult.Success -> {
+                    val readDfMethod = codeGenResult.getReadDfMethod(importDataSchema.url.toExternalForm())
+                    val code = readDfMethod.additionalImports.joinToString("\n") +
+                        "\n" +
+                        codeGenResult.code
+
+                    execute(code)
+                    execute("""DISPLAY("Data schema successfully imported as ${property.name}: $name")""")
+
+                    name
+                }
+
+                is CodeGenerationReadResult.Error -> {
+                    execute("""DISPLAY("Failed to read data schema from ${importDataSchema.url}: ${codeGenResult.reason}")""")
+                    null
+                }
+            }
         }
 
         updateVariable<AnyFrame> { df, property ->
@@ -146,16 +195,16 @@ internal class Integration : JupyterIntegration() {
         updateVariable<AnyCol> { col, property ->
             if (col.isColumnGroup()) {
                 val codeWithConverter = codeGen.process(col.asColumnGroup().asDataFrame(), property).let { c ->
-                    CodeWithConverter(c.declarations) { c.converter(it + ".asColumnGroup()") }
+                    CodeWithConverter(c.declarations) { c.converter("$it.asColumnGroup()") }
                 }
                 execute(codeWithConverter, property)
             } else null
         }
 
         fun KotlinKernelHost.addDataSchemas(classes: List<KClass<*>>) {
-            val code = classes.map {
+            val code = classes.joinToString("\n") {
                 codeGen.process(it)
-            }.joinToString("\n").trim()
+            }.trim()
 
             if (code.isNotEmpty()) {
                 execute(code)

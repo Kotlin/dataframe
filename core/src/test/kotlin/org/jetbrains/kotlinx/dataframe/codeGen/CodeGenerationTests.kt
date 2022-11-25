@@ -1,7 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.dataframe.impl.codeGen.*
+import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
+import org.jetbrains.dataframe.impl.codeGen.InterfaceGenerationMode
+import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
+import org.jetbrains.dataframe.impl.codeGen.generate
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -67,8 +70,8 @@ class CodeGenerationTests : BaseTest() {
         generated.converter("it") shouldBe expectedConverter
 
         val rowGenerated = codeGen.process(df[0], ::typedRow)
-        rowGenerated.hasDeclarations shouldBe false
-        rowGenerated.hasConverter shouldBe false
+        rowGenerated.hasDeclarations shouldBe true
+        rowGenerated.hasConverter shouldBe true
     }
 
     val row: AnyRow? = null

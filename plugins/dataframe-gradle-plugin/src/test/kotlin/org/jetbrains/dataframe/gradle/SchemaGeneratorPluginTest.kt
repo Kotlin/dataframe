@@ -208,7 +208,6 @@ internal class SchemaGeneratorPluginTest {
         result.task(":generateDataFrameSchema")?.outcome shouldBe TaskOutcome.SUCCESS
     }
 
-
     @Test
     fun `data is string and relative path`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
@@ -271,6 +270,7 @@ internal class SchemaGeneratorPluginTest {
     @Test
     fun `data is string and url`() {
         val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
+            println("Build dir: $buildDir")
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                
@@ -296,14 +296,44 @@ internal class SchemaGeneratorPluginTest {
     }
 
     @Test
+    fun `data is OpenApi string and url`() {
+        val (_, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
+            println("Build dir: $buildDir")
+            """
+            import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
+               
+            plugins {
+                kotlin("jvm") version "$KOTLIN_VERSION"
+                id("org.jetbrains.kotlinx.dataframe")
+            }
+            
+            repositories {
+                mavenCentral() 
+            }
+
+            dataframes {
+                schema {
+                    data = "https://raw.githubusercontent.com/Kotlin/dataframe/2ad1c2f5d27267fa9b2abde1bf611fa50c5abce9/data/petstore.json"
+                    name = "Test"
+                    packageName = "org.test"
+                }
+            }
+            """.trimIndent()
+        }
+        result.task(":generateDataFrameTest")?.outcome shouldBe TaskOutcome.SUCCESS
+    }
+
+    @Test
     fun `custom csv delimiter`() {
         val (buildDir, result) = runGradleBuild(":generateDataFrameTest") { buildDir ->
             val csv = "semicolons.csv"
             val data = File(buildDir, csv)
-            data.writeText("""
+            data.writeText(
+                """
                 a;b;c
                 1;2;3
-            """.trimIndent())
+                """.trimIndent()
+            )
             """
             import org.jetbrains.dataframe.gradle.SchemaGeneratorExtension 
                

@@ -12,13 +12,23 @@ public interface IsolatedMarker {
     public val name: String
     public val fields: List<BaseField>
     public val visibility: MarkerVisibility
+
+    /**
+     * Type parameters for in front of the function or getter/setter.
+     * Like `<T : Int>` in `val <T : Int> MyType<T>.something get() = ...`.
+     */
     public val typeParameters: String
+
+    /**
+     * Type arguments belonging to this marker.
+     * Like `<MyType>` in `MyMarker<MyType>`.
+     */
     public val typeArguments: String
 }
 
 public abstract class AbstractMarker(
     typeParameters: List<String>,
-    typeArguments: List<String>
+    typeArguments: List<String>,
 ) : IsolatedMarker {
     override val typeParameters: String = typeParameters.join()
     override val typeArguments: String = typeArguments.join()
@@ -37,7 +47,7 @@ public open class Marker(
     superMarkers: List<Marker>,
     override val visibility: MarkerVisibility,
     typeParameters: List<String>,
-    typeArguments: List<String>
+    typeArguments: List<String>,
 ) : AbstractMarker(typeParameters, typeArguments) {
 
     public val shortName: String
@@ -77,9 +87,10 @@ public open class Marker(
 
     public val columnNames: List<String> get() = allFields.map { it.columnName }
 
-    public val schema: DataFrameSchema by lazy { DataFrameSchemaImpl(allFields.map { it.columnName to it.columnSchema }.toMap()) }
+    public val schema: DataFrameSchema by lazy { DataFrameSchemaImpl(allFields.associate { it.columnName to it.columnSchema }) }
 
-    public fun implements(schema: Marker): Boolean = if (schema.name == name) true else allSuperMarkers[schema.name]?.let { it === schema } ?: false
+    public fun implements(schema: Marker): Boolean =
+        if (schema.name == name) true else allSuperMarkers[schema.name]?.let { it === schema } ?: false
 
     public fun implementsAll(schemas: Iterable<Marker>): Boolean = schemas.all { implements(it) }
 
@@ -90,7 +101,7 @@ public open class Marker(
             fields: List<GeneratedField>,
             superMarkers: List<Marker>,
             visibility: MarkerVisibility,
-            klass: KClass<*>
+            klass: KClass<*>,
         ): Marker {
             val typeParameters = klass.typeParameters.map {
                 buildString {

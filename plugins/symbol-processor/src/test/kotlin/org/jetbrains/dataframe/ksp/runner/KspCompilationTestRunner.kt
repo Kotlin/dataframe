@@ -43,11 +43,11 @@ internal object KspCompilationTestRunner {
             println(it.messages);
             if (it.exitCode == KotlinCompilation.ExitCode.COMPILATION_ERROR) {
                 return KotlinCompileTestingCompilationResult(
-                    it,
-                    false,
-                    emptyList(),
-                    emptyList(),
-                    combinedOutputStream.toString(Charsets.UTF_8)
+                    delegate = it,
+                    successfulCompilation = false,
+                    kspGeneratedFiles = emptyList(),
+                    outputSourceDirs = emptyList(),
+                    rawOutput = combinedOutputStream.toString(Charsets.UTF_8)
                 )
             }
         }

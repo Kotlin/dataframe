@@ -10,16 +10,21 @@ import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.annotations.CsvOptions
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchemaVisibility
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+import org.jetbrains.kotlinx.dataframe.annotations.JsonOptions
+import org.jetbrains.kotlinx.dataframe.api.JsonPath
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkerVisibility
 import org.jetbrains.kotlinx.dataframe.codeGen.NameNormalizer
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.CodeGenerationReadResult
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.DfReadResult
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.from
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.toStandaloneSnippet
-import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlReader
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlCodeGenReader
+import org.jetbrains.kotlinx.dataframe.impl.codeGen.urlDfReader
 import org.jetbrains.kotlinx.dataframe.io.ArrowFeather
 import org.jetbrains.kotlinx.dataframe.io.CSV
 import org.jetbrains.kotlinx.dataframe.io.Excel
 import org.jetbrains.kotlinx.dataframe.io.JSON
+import org.jetbrains.kotlinx.dataframe.io.OpenApi
 import org.jetbrains.kotlinx.dataframe.io.TSV
 import java.io.File
 import java.net.MalformedURLException
@@ -30,7 +35,7 @@ class DataSchemaGenerator(
     private val resolver: Resolver,
     private val resolutionDir: String?,
     private val logger: KSPLogger,
-    private val codeGenerator: com.google.devtools.ksp.processing.CodeGenerator
+    private val codeGenerator: com.google.devtools.ksp.processing.CodeGenerator,
 ) {
 
     fun resolveImportStatements() = listOf(
@@ -44,7 +49,8 @@ class DataSchemaGenerator(
         val visibility: MarkerVisibility,
         val normalizationDelimiters: List<Char>,
         val withDefaultPath: Boolean,
-        val csvOptions: CsvOptions
+        val csvOptions: CsvOptions,
+        val jsonOptions: JsonOptions,
     )
 
     class CodeGeneratorDataSource(val pathRepresentation: String, val data: URL)
@@ -82,13 +88,14 @@ class DataSchemaGenerator(
             }
         } ?: return null
         return ImportDataSchemaStatement(
-            file,
-            name,
-            CodeGeneratorDataSource(this.path, url),
-            visibility.toMarkerVisibility(),
-            normalizationDelimiters.toList(),
-            withDefaultPath,
-            csvOptions
+            origin = file,
+            name = name,
+            dataSource = CodeGeneratorDataSource(this.path, url),
+            visibility = visibility.toMarkerVisibility(),
+            normalizationDelimiters = normalizationDelimiters.toList(),
+            withDefaultPath = withDefaultPath,
+            csvOptions = csvOptions,
+            jsonOptions = jsonOptions,
         )
     }
 
@@ -99,13 +106,15 @@ class DataSchemaGenerator(
     }
 
     private fun reportMissingKspArgument(file: KSFile) {
-        logger.error("""
-        |KSP option with key "dataframe.resolutionDir" must be set in order to use relative path in @${ImportDataSchema::class.simpleName}
-        |DataFrame Gradle plugin should set it by default to "project.projectDir".
-        |If you do not use DataFrame Gradle plugin, configure option manually 
-    """.trimMargin(), symbol = file)
+        logger.error(
+            """
+            |KSP option with key "dataframe.resolutionDir" must be set in order to use relative path in @${ImportDataSchema::class.simpleName}
+            |DataFrame Gradle plugin should set it by default to "project.projectDir".
+            |If you do not use DataFrame Gradle plugin, configure option manually 
+            """.trimMargin(),
+            symbol = file
+        )
     }
-
 
     fun generateDataSchema(importStatement: ImportDataSchemaStatement) {
         val packageName = importStatement.origin.packageName.asString()
@@ -115,33 +124,66 @@ class DataSchemaGenerator(
 
         val formats = listOf(
             CSV(delimiter = importStatement.csvOptions.delimiter),
-            JSON(),
+            JSON(
+                typeClashTactic = importStatement.jsonOptions.typeClashTactic,
+                keyValuePaths = importStatement.jsonOptions.keyValuePaths.map(::JsonPath),
+            ),
             Excel(),
             TSV(),
-            ArrowFeather()
+            ArrowFeather(),
+            OpenApi(),
         )
 
-        val parsedDf = when (val readResult = CodeGenerator.urlReader(importStatement.dataSource.data, formats)) {
-            is DfReadResult.Success -> readResult
+        // first try without creating dataframe
+        when (val codeGenResult =
+            CodeGenerator.urlCodeGenReader(importStatement.dataSource.data, name, formats, false)) {
+            is CodeGenerationReadResult.Success -> {
+                val readDfMethod = codeGenResult.getReadDfMethod(
+                    pathRepresentation = importStatement
+                        .dataSource
+                        .pathRepresentation
+                        .takeIf { importStatement.withDefaultPath },
+                )
+
+                val code = codeGenResult
+                    .code
+                    .toStandaloneSnippet(packageName, readDfMethod.additionalImports)
+
+                schemaFile.bufferedWriter().use {
+                    it.write(code)
+                }
+                return
+            }
+
+            is CodeGenerationReadResult.Error -> {
+                logger.warn("Error while reading types-only from data at ${importStatement.dataSource.pathRepresentation}: ${codeGenResult.reason}")
+            }
+        }
+
+        // on error, try with reading dataframe first
+        val parsedDf = when (val readResult = CodeGenerator.urlDfReader(importStatement.dataSource.data, formats)) {
             is DfReadResult.Error -> {
                 logger.error("Error while reading dataframe from data at ${importStatement.dataSource.pathRepresentation}: ${readResult.reason}")
                 return
             }
+
+            is DfReadResult.Success -> readResult
         }
-        val codeGenerator = CodeGenerator.create(useFqNames = false)
 
         val readDfMethod =
             parsedDf.getReadDfMethod(importStatement.dataSource.pathRepresentation.takeIf { importStatement.withDefaultPath })
+        val codeGenerator = CodeGenerator.create(useFqNames = false)
+
         val codeGenResult = codeGenerator.generate(
-            parsedDf.schema,
-            name,
+            schema = parsedDf.schema,
+            name = name,
             fields = true,
             extensionProperties = false,
             isOpen = true,
-            importStatement.visibility,
-            emptyList(),
-            readDfMethod,
-            NameNormalizer.from(importStatement.normalizationDelimiters.toSet())
+            visibility = importStatement.visibility,
+            knownMarkers = emptyList(),
+            readDfMethod = readDfMethod,
+            fieldNameNormalizer = NameNormalizer.from(importStatement.normalizationDelimiters.toSet())
         )
         val code = codeGenResult.toStandaloneSnippet(packageName, readDfMethod.additionalImports)
         schemaFile.bufferedWriter().use {

@@ -40,6 +40,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     )
 
     @Test
+    @Ignore
     fun netflix() {
         val currentLocale = Locale.getDefault()
         try {
@@ -75,7 +76,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
         notebookPath: String,
         replacer: CodeReplacer,
         cellClause: CellClause,
-        cleanup: () -> Unit = {}
+        cleanup: () -> Unit = {},
     ) {
         val notebookFile = File(notebookPath)
         val notebook = JupyterParser.parse(notebookFile)
@@ -104,7 +105,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
         notebookName: String? = null,
         replacer: CodeReplacer = CodeReplacer.DEFAULT,
         cellClause: CellClause = CellClause { true },
-        cleanup: () -> Unit = {}
+        cleanup: () -> Unit = {},
     ) {
         val fileName = if (notebookName == null) "$dir.ipynb" else "$notebookName.ipynb"
         doTest("$jupyterExamplesPath/$dir/$fileName", replacer, cellClause, cleanup)
