@@ -11,7 +11,7 @@ DataFrame.read("input.csv")
 
 Input string can be a file path or URL.
 
-### Reading CSV
+## Reading CSV
 
 All these calls are valid:
 
@@ -92,7 +92,47 @@ G: *
     D: Int
 ```
 
-### Reading JSON
+### Dealing with locale specific numbers
+
+Sometimes columns in your CSV can be interpreted differently depending on your system locale.
+
+<table>
+<tr><th>numbers</th></tr>
+<tr><td>12,123</td></tr>
+<tr><td>41,111</td></tr>
+</table>
+
+Here comma can be decimal or thousands separator, thus different values.
+You can deal with it in two ways
+
+1) Provide locale as a parser option
+
+<!---FUN readNumbersWithSpecificLocale-->
+
+```kotlin
+val df = DataFrame.readCSV(
+    file,
+    parserOptions = ParserOptions(locale = Locale.UK),
+)
+```
+
+<!---END-->
+
+2) Disable type inference for specific column and convert it yourself
+
+<!---FUN readNumbersWithColType-->
+
+```kotlin
+val df = DataFrame.readCSV(
+    file,
+    colTypes = mapOf("colName" to ColType.String)
+)
+```
+
+<!---END-->
+
+
+## Reading JSON
 
 Basics for reading JSONs are the same: you can read from file or from remote URL.
 
@@ -160,7 +200,7 @@ D: Boolean?
 Column A has `String` type because all values are string literals, no implicit conversion is performed. Column C
 has `Number` type because it's the least common type for `Int` and `Double`.
 
-#### JSON Reading Options: Type Clash Tactic
+### JSON Reading Options: Type Clash Tactic
 
 By default, if a type clash occurs when reading JSON, a new column group is created consisting of: "value", "array", and
 any number of object properties:
@@ -211,7 +251,7 @@ For this case, you can set `typeClashTactic = JSON.TypeClashTactic.ANY_COLUMNS` 
 
 This option is also possible to set in the Gradle- and KSP plugin by providing `jsonOptions`.
 
-#### JSON Reading Options: Key/Value Paths
+### JSON Reading Options: Key/Value Paths
 
 If you have some JSON looking like
 
@@ -302,7 +342,7 @@ Only the bracket notation of json path is supported, as well as just double quot
 
 For more examples, see the "examples/json" module.
 
-### Reading Excel
+## Reading Excel
 
 Add dependency:
 
@@ -347,7 +387,7 @@ df1["IDS"].type() shouldBe typeOf<String>()
 
 <!---END-->
 
-### Reading Apache Arrow formats
+## Reading Apache Arrow formats
 
 Add dependency:
 
