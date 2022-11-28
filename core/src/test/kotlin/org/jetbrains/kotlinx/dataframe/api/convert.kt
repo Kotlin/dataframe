@@ -14,8 +14,7 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.junit.Test
 import java.time.LocalTime
-import java.util.*
-import kotlin.reflect.*
+import kotlin.reflect.typeOf
 import kotlin.time.Duration.Companion.hours
 
 class ConvertTests {
