@@ -66,8 +66,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                     // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual data frame type
                     if (wasProcessedBefore || columnSchema == targetSchema) {
                         // property scheme is valid for current data frame, but we should also check that all compatible open markers are implemented by it
-                        val requiredBaseMarkers =
-                            getRequiredMarkers(columnSchema, registeredMarkers.values)
+                        val requiredBaseMarkers = registeredMarkers.values.filterRequiredForSchema(columnSchema)
                         if (requiredBaseMarkers.any() && requiredBaseMarkers.all { currentMarker.implements(it) }) {
                             return CodeWithConverter.Empty
                         }
@@ -87,13 +86,15 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         isOpen: Boolean,
     ): CodeWithConverter {
         val result = generator.generate(
-            schema,
-            name,
+            schema = schema,
+            name = name,
             fields = false,
             extensionProperties = true,
-            isOpen,
-            MarkerVisibility.IMPLICIT_PUBLIC,
-            registeredMarkers.values
+            isOpen = isOpen,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            knownMarkers = registeredMarkers
+                .filterKeys { !it.isData } // filter out data classes, so they aren't used as supertypes
+                .values,
         )
 
         result.newMarkers.forEach {
@@ -121,12 +122,12 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                 if (baseClassNames == tempBaseClassNames) {
                     val newBaseMarkers = baseClasses.map { resolve(it) }
                     val newMarker = Marker(
-                        clazz.qualifiedName!!,
-                        temp.isOpen,
-                        temp.fields,
-                        newBaseMarkers,
-                        MarkerVisibility.IMPLICIT_PUBLIC,
-                        clazz
+                        name = clazz.qualifiedName!!,
+                        isOpen = temp.isOpen,
+                        fields = temp.fields,
+                        superMarkers = newBaseMarkers,
+                        visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                        klass = clazz,
                     )
                     registeredMarkers[markerClass] = newMarker
                     generatedMarkers.remove(temp.name)
