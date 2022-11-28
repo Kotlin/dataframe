@@ -2,13 +2,24 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.annotations.Interpretable
+import org.jetbrains.kotlinx.dataframe.annotations.Refine
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.columns.ColumnResolutionContext
 import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.api.joinImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
+import org.jetbrains.kotlinx.dataframe.plugin.Join0
+import org.jetbrains.kotlinx.dataframe.plugin.Match0
 import kotlin.reflect.KProperty
+
+@Refine("joinDefault")
+@Interpretable(Join0::class)
+public fun <A, B> DataFrame<A>.joinDefault(
+    other: DataFrame<B>,
+    selector: JoinColumnsSelector<A, B>
+): DataFrame<A> = join(other, selector = selector)
 
 public fun <A, B> DataFrame<A>.join(
     other: DataFrame<B>,
@@ -91,6 +102,7 @@ public fun <T> Iterable<DataFrame<T>>.joinOrNull(
 public interface JoinDsl<out A, out B> : ColumnsSelectionDsl<A> {
 
     public val right: DataFrame<B>
+    @Interpretable(Match0::class)
 
     public infix fun <C> ColumnReference<C>.match(other: ColumnReference<C>): ColumnMatch<C> = ColumnMatch(this, other)
 
