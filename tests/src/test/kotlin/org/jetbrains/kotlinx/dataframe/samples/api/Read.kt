@@ -89,7 +89,7 @@ class Read {
 
     @Test
     fun readNumbersWithSpecificLocale() {
-        val file = testCsv("numbers.csv")
+        val file = testCsv("numbers")
         // SampleStart
         val df = DataFrame.readCSV(
             file,
@@ -100,7 +100,7 @@ class Read {
 
     @Test
     fun readNumbersWithColType() {
-        val file = testCsv("numbers.csv")
+        val file = testCsv("numbers")
         // SampleStart
         val df = DataFrame.readCSV(
             file,
