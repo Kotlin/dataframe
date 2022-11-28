@@ -7,7 +7,7 @@ When `DataFrame` is used within Jupyter Notebooks or Datalore with Kotlin Kernel
 <!---FUN extensionProperties1-->
 
 ```kotlin
-val df = DataFrame.read("titanic.csv", delimiter = ';')
+val df = DataFrame.read("titanic.csv")
 ```
 
 <!---END-->
