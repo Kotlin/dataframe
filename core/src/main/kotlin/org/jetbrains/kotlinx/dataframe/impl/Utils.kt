@@ -146,7 +146,7 @@ internal fun Iterable<KType?>.commonType(): KType {
         distinct.size == 1 -> distinct.single()!!
         else -> {
             val kclass = commonParent(distinct.map { it!!.jvmErasure }) ?: return typeOf<Any>()
-            val projections = distinct.map { it!!.projectUpTo(kclass).replaceTypeParameters() }
+            val projections = distinct.map { it!!.projectUpTo(kclass).eraseGenericTypeParameters() }
             require(projections.all { it.jvmErasure == kclass })
             val arguments = List(kclass.typeParameters.size) { i ->
                 val projectionTypes = projections

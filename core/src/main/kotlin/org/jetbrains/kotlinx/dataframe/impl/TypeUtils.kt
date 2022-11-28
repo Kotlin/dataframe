@@ -49,23 +49,38 @@ internal fun KType.projectUpTo(superClass: KClass<*>): KType {
     return current.withNullability(isMarkedNullable)
 }
 
-internal fun KType.replaceTypeParameters(): KType {
-    var replaced = false
-    val arguments = arguments.map {
-        val type = it.type
-        val newType = when {
-            type == null -> typeOf<Any?>()
-            type.classifier is KTypeParameter -> {
-                replaced = true
-                (type.classifier as KTypeParameter).upperBounds.firstOrNull() ?: typeOf<Any?>()
-            }
+/**
+ * Changes generic type parameters to `Any?`, like `List<T> -> List<Any?>`.
+ * Works recursively as well.
+ */
+@PublishedApi
+internal fun KType.eraseGenericTypeParameters(): KType {
+    fun KType.eraseRecursively(): Pair<Boolean, KType> {
+        var replaced = false
+        val arguments = arguments.map {
+            val type = it.type
+            val (replacedDownwards, newType) = when {
+                type == null -> typeOf<Any?>()
 
-            else -> type
+                type.classifier is KTypeParameter -> {
+                    replaced = true
+                    (type.classifier as KTypeParameter).upperBounds.firstOrNull() ?: typeOf<Any?>()
+                }
+
+                else -> type
+            }.eraseRecursively()
+
+            if (replacedDownwards) replaced = true
+
+            KTypeProjection.invariant(newType)
         }
-        KTypeProjection.invariant(newType)
+        return Pair(
+            first = replaced,
+            second = if (replaced) jvmErasure.createType(arguments, isMarkedNullable) else this,
+        )
     }
-    return if (replaced) jvmErasure.createType(arguments, isMarkedNullable)
-    else this
+
+    return eraseRecursively().second
 }
 
 internal fun inheritanceChain(subClass: KClass<*>, superClass: KClass<*>): List<Pair<KClass<*>, KType>> {
@@ -255,7 +270,7 @@ internal fun Iterable<KType>.commonTypeListifyValues(): KType {
 
                 else -> {
                     val kclass = commonParent(distinct.map { it.jvmErasure }) ?: return typeOf<Any>()
-                    val projections = distinct.map { it.projectUpTo(kclass).replaceTypeParameters() }
+                    val projections = distinct.map { it.projectUpTo(kclass).eraseGenericTypeParameters() }
                     require(projections.all { it.jvmErasure == kclass })
                     val arguments = List(kclass.typeParameters.size) { i ->
                         val projectionTypes = projections
