@@ -37,7 +37,9 @@ public val KotlinTypeFacade.explodeImpl: PluginDataFrameSchema.(dropEmpty: Boole
     fun explode(column: SimpleCol, path: List<String>): SimpleCol {
         val fullPath = path + listOf(column.name)
         return when (column) {
-            is SimpleColumnGroup -> SimpleColumnGroup(column.name, column.columns().map { explode(column, fullPath) }, column.type)
+            is SimpleColumnGroup -> {
+                SimpleColumnGroup(column.name, column.columns().map { explode(it, fullPath) }, column.type)
+            }
             is SimpleFrameColumn -> {
                 if (fullPath in selected) {
                     SimpleColumnGroup(column.name, column.columns().map { makeNullable(it) }, anyDataFrame)
