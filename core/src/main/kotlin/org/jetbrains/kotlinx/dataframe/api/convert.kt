@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.dataTypes.IFRAME
 import org.jetbrains.kotlinx.dataframe.dataTypes.IMG
+import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.impl.api.Parsers
 import org.jetbrains.kotlinx.dataframe.impl.api.convertRowColumnImpl
@@ -151,16 +152,28 @@ public fun DataColumn<String>.convertToDouble(locale: Locale? = null): DataColum
  */
 @JvmName("convertToDoubleFromStringNullable")
 public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColumn<Double?> {
+    fun applyParser(parser: (String) -> Double?): DataColumn<Double?> {
+        var currentRow = 0
+        try {
+            return mapIndexed { row, value ->
+                currentRow = row
+                value?.let { parser(value.trim()) ?: throw TypeConversionException(value, typeOf<String>(), typeOf<Double>()) }
+            }
+        } catch (e: TypeConversionException) {
+            throw CellConversionException(e.value, e.from, e.to, this.name(), currentRow, e)
+        }
+    }
+
     if (locale != null) {
         val explicitParser = Parsers.getDoubleParser(locale)
-        return map { it?.let { explicitParser(it.trim()) ?: throw TypeConversionException(it, typeOf<String>(), typeOf<Double>()) } }
+        return applyParser(explicitParser)
     } else {
         return try {
             val defaultParser = Parsers.getDoubleParser()
-            map { it?.let { defaultParser(it.trim()) ?: throw TypeConversionException(it, typeOf<String>(), typeOf<Double>()) } }
+            applyParser(defaultParser)
         } catch (e: TypeConversionException) {
             val posixParser = Parsers.getDoubleParser(Locale.forLanguageTag("C.UTF-8"))
-            map { it?.let { posixParser(it.trim()) ?: throw TypeConversionException(it, typeOf<String>(), typeOf<Double>()) } }
+            applyParser(posixParser)
         }
     }
 }
