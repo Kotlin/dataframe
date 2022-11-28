@@ -5,6 +5,8 @@ ktlint = "3.4.5"
 kotlin = "1.7.20"
 dokka = "1.6.20"
 libsPublisher = "0.0.60-dev-30"
+# "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
+# dogfood Gradle / KSP plugins in tests and idea-examples modules
 dataframe = "0.9.0-dev-1237"
 korro = "0.1.1-dev-29"
 kover = "0.6.0-Beta"
