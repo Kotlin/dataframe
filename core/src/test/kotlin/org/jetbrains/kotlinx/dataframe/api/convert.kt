@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.hasNulls
 import org.junit.Test
 import java.time.LocalTime
+import java.util.*
 import kotlin.reflect.*
 import kotlin.time.Duration.Companion.hours
 
@@ -84,6 +85,10 @@ class ConvertTests {
         shouldThrow<CellConversionException> {
             columnOf("1", "10", "a").convertTo<IntClass>()
         }.row shouldBe 2
+
+        shouldThrow<CellConversionException> {
+            columnOf("1", "x", "2.5").convertToDouble()
+        }.row shouldBe 1
 
         shouldThrow<TypeConverterNotFoundException> {
             columnOf(EnumClass.A).convertTo<IntClass>()

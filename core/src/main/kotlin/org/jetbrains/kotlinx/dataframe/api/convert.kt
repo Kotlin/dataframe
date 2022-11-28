@@ -164,11 +164,11 @@ public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColu
         }
     }
 
-    if (locale != null) {
+    return if (locale != null) {
         val explicitParser = Parsers.getDoubleParser(locale)
-        return applyParser(explicitParser)
+        applyParser(explicitParser)
     } else {
-        return try {
+        try {
             val defaultParser = Parsers.getDoubleParser()
             applyParser(defaultParser)
         } catch (e: TypeConversionException) {
