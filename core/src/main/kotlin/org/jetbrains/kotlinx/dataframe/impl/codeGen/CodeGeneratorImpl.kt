@@ -37,8 +37,8 @@ import org.jetbrains.kotlinx.jupyter.api.Code
 
 private fun renderNullability(nullable: Boolean) = if (nullable) "?" else ""
 
-internal fun getRequiredMarkers(schema: DataFrameSchema, markers: Iterable<Marker>) = markers
-    .filter { it.isOpen && it.schema.compare(schema).isSuperOrEqual() }
+internal fun Iterable<Marker>.filterRequiredForSchema(schema: DataFrameSchema) =
+    filter { it.isOpen && it.schema.compare(schema).isSuperOrEqual() }
 
 internal val charsToQuote = """[ `(){}\[\].<>'"/|\\!?@:;%^&*#$-]""".toRegex()
 

@@ -133,7 +133,7 @@ internal class SchemaProcessorImpl(
         return Marker(name, isOpen, fields, baseMarkers.onlyLeafs(), visibility, emptyList(), emptyList())
     }
 
-    private fun DataFrameSchema.getRequiredMarkers() = getRequiredMarkers(this, registeredMarkers)
+    private fun DataFrameSchema.getRequiredMarkers() = registeredMarkers.filterRequiredForSchema(this)
 
     override fun process(
         schema: DataFrameSchema,
