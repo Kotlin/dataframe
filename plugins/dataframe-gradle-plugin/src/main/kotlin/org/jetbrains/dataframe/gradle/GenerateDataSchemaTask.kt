@@ -22,6 +22,7 @@ import org.jetbrains.kotlinx.dataframe.io.Excel
 import org.jetbrains.kotlinx.dataframe.io.JSON
 import org.jetbrains.kotlinx.dataframe.io.OpenApi
 import org.jetbrains.kotlinx.dataframe.io.TSV
+import org.jetbrains.kotlinx.dataframe.io.isURL
 import java.io.File
 import java.net.URL
 import java.nio.file.Paths
@@ -128,14 +129,22 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         schemaFile.writeText(codeGenResult.toStandaloneSnippet(escapedPackageName, readDfMethod.additionalImports))
     }
 
-    private fun stringOf(data: Any): String {
-        return when (data) {
-            is File -> data.toRelativeString(base = project.projectDir)
+    private fun stringOf(data: Any): String =
+        when (data) {
+            is File -> data.absolutePath
             is URL -> data.toExternalForm()
-            is String -> data
+            is String ->
+                when {
+                    isURL(data) -> stringOf(URL(data))
+                    else -> {
+                        val relativeFile = project.file(data)
+                        val absoluteFile = File(data)
+                        stringOf(if (relativeFile.exists()) relativeFile else absoluteFile)
+                    }
+                }
+
             else -> unsupportedType()
         }
-    }
 
     private fun escapePackageName(packageName: String): String {
         // See RegexExpectationsTest
@@ -147,20 +156,26 @@ abstract class GenerateDataSchemaTask : DefaultTask() {
         }
     }
 
-    private fun urlOf(data: Any): URL {
-        fun isURL(fileOrUrl: String): Boolean = listOf("http:", "https:", "ftp:").any { fileOrUrl.startsWith(it) }
-
-        return when (data) {
+    private fun urlOf(data: Any): URL =
+        when (data) {
             is File -> data.toURI()
             is URL -> data.toURI()
             is String -> when {
                 isURL(data) -> URL(data).toURI()
-                else -> project.file(data).toURI()
+                else -> {
+                    val relativeFile = project.file(data)
+                    val absoluteFile = File(data)
+
+                    if (relativeFile.exists()) {
+                        relativeFile
+                    } else {
+                        absoluteFile
+                    }.toURI()
+                }
             }
 
             else -> unsupportedType()
         }.toURL()
-    }
 
     private fun unsupportedType(): Nothing =
         throw IllegalArgumentException("data for schema \"${interfaceName.get()}\" must be File, URL or String")

@@ -2,8 +2,24 @@ package org.jetbrains.kotlinx.dataframe.examples.titanic.ml
 
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.by
 import org.jetbrains.kotlinx.dataframe.api.column
+import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.dfsOf
+import org.jetbrains.kotlinx.dataframe.api.fillNulls
+import org.jetbrains.kotlinx.dataframe.api.getColumn
+import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.mean
+import org.jetbrains.kotlinx.dataframe.api.merge
+import org.jetbrains.kotlinx.dataframe.api.perCol
+import org.jetbrains.kotlinx.dataframe.api.pivotMatches
+import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.shuffle
+import org.jetbrains.kotlinx.dataframe.api.toFloat
+import org.jetbrains.kotlinx.dataframe.api.toFloatArray
+import org.jetbrains.kotlinx.dataframe.api.toTypedArray
+import org.jetbrains.kotlinx.dataframe.api.withValue
 import org.jetbrains.kotlinx.dl.api.core.Sequential
 import org.jetbrains.kotlinx.dl.api.core.activation.Activations
 import org.jetbrains.kotlinx.dl.api.core.initializer.HeNormal
@@ -14,7 +30,7 @@ import org.jetbrains.kotlinx.dl.api.core.loss.Losses
 import org.jetbrains.kotlinx.dl.api.core.metric.Metrics
 import org.jetbrains.kotlinx.dl.api.core.optimizer.Adam
 import org.jetbrains.kotlinx.dl.dataset.OnHeapDataset
-import java.util.*
+import java.util.Locale
 
 private const val SEED = 12L
 private const val TEST_BATCH_SIZE = 100
@@ -33,8 +49,7 @@ fun main() {
     // Set Locale for correct number parsing
     Locale.setDefault(Locale.FRANCE)
 
-    // Set path for correct resolution (https://github.com/Kotlin/dataframe/issues/139)
-    val df = Passenger.readCSV("examples/idea-examples/titanic/src/main/resources/titanic.csv")
+    val df = Passenger.readCSV()
 
     // Calculating imputing values
     val (train, test) = df
@@ -44,7 +59,7 @@ fun main() {
         // one hot encoding
         .pivotMatches { pclass and sex }
         // feature extraction
-        .select { survived and pclass and sibsp and parch and age and fare and sex}
+        .select { survived and pclass and sibsp and parch and age and fare and sex }
         .shuffle()
         .toTrainTest(0.7) { survived }
 
@@ -64,18 +79,23 @@ fun main() {
     }
 }
 
-fun <T> DataFrame<T>.toTrainTest(trainRatio: Double, yColumn: ColumnSelector<T, Number>): Pair<OnHeapDataset, OnHeapDataset> =
-    toOnHeapDataset(yColumn).split(trainRatio)
+fun <T> DataFrame<T>.toTrainTest(
+    trainRatio: Double,
+    yColumn: ColumnSelector<T, Number>,
+): Pair<OnHeapDataset, OnHeapDataset> =
+    toOnHeapDataset(yColumn)
+        .split(trainRatio)
 
-private fun <T> DataFrame<T>.toOnHeapDataset(yColumn: ColumnSelector<T, Number>): OnHeapDataset {
-    return OnHeapDataset.create(
+private fun <T> DataFrame<T>.toOnHeapDataset(yColumn: ColumnSelector<T, Number>): OnHeapDataset =
+    OnHeapDataset.create(
         dataframe = this,
-        yColumn = yColumn
+        yColumn = yColumn,
     )
-}
 
-private fun <T> OnHeapDataset.Companion.create(dataframe: DataFrame<T>, yColumn: ColumnSelector<T, Number>): OnHeapDataset {
-
+private fun <T> OnHeapDataset.Companion.create(
+    dataframe: DataFrame<T>,
+    yColumn: ColumnSelector<T, Number>,
+): OnHeapDataset {
     val x by column<FloatArray>("X")
 
     fun extractX(): Array<FloatArray> =
@@ -88,6 +108,6 @@ private fun <T> OnHeapDataset.Companion.create(dataframe: DataFrame<T>, yColumn:
 
     return create(
         ::extractX,
-        ::extractY
+        ::extractY,
     )
 }
