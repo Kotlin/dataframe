@@ -60,10 +60,10 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
  */
 internal class ArrowWriterImpl(
     override val dataFrame: DataFrame<*>,
-    override  val targetSchema: Schema,
+    override val targetSchema: Schema,
     override val mode: ArrowWriter.Companion.Mode,
     override val mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage
-): ArrowWriter {
+) : ArrowWriter {
 
     private val allocator = RootAllocator()
 
@@ -97,7 +97,7 @@ internal class ArrowWriterImpl(
             ArrowType.Int(64, true) -> column.convertToLong()
 //            ArrowType.Int(8, false), ArrowType.Int(16, false), ArrowType.Int(32, false), ArrowType.Int(64, false) -> todo
             is ArrowType.Decimal -> column.convertToBigDecimal()
-            ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE) -> column.convertToDouble().convertToFloat() //Use [convertToDouble] as locale logic step
+            ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE) -> column.convertToDouble().convertToFloat() // Use [convertToDouble] as locale logic step
             ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE) -> column.convertToDouble()
             ArrowType.Date(DateUnit.DAY) -> column.convertToLocalDate()
             ArrowType.Date(DateUnit.MILLISECOND) -> column.convertToLocalDateTime()
@@ -181,11 +181,11 @@ internal class ArrowWriterImpl(
         }
 
         val vector = if (!actualField.isNullable && containNulls) {
-            var firstNullValue: Int?  = null;
+            var firstNullValue: Int? = null
             for (i in 0 until (column?.size() ?: -1)) {
                 if (column!![i] == null) {
-                    firstNullValue = i;
-                    break;
+                    firstNullValue = i
+                    break
                 }
             }
             if (strictNullable) {

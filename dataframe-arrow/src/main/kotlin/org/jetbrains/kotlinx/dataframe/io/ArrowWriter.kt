@@ -15,11 +15,15 @@ import java.nio.channels.Channels
 import java.nio.channels.WritableByteChannel
 
 public val ignoreMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch -> }
-public val writeMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch -> System.err.println(message) }
+public val writeMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch ->
+    System.err.println(message)
+}
 
 private val logger = LoggerFactory.getLogger(ArrowWriter::class.java)
 
-public val logMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch -> logger.debug(message.toString()) }
+public val logMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch ->
+    logger.debug(message.toString())
+}
 
 /**
  * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream or raw Channel) with [targetSchema].
@@ -137,5 +141,4 @@ public interface ArrowWriter : AutoCloseable {
         writeArrowFeather(stream)
         return stream.toByteArray()
     }
-
 }
