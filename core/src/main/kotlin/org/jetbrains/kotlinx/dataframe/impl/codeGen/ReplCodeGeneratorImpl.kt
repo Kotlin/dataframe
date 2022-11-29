@@ -92,9 +92,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             extensionProperties = true,
             isOpen = isOpen,
             visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-            knownMarkers = registeredMarkers
-                .filterKeys { !it.isData } // filter out data classes, so they aren't used as supertypes
-                .values,
+            knownMarkers = registeredMarkers.values,
         )
 
         result.newMarkers.forEach {
