@@ -32,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
+import org.jetbrains.kotlinx.dataframe.impl.eraseGenericTypeParameters
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.nrow
@@ -58,9 +59,25 @@ internal fun <T, R> ColumnsContainer<T>.newColumn(
 ): DataColumn<R> {
     val (nullable, values) = computeValues(this as DataFrame<T>, expression)
     return when (infer) {
-        Infer.Nulls -> DataColumn.create(name, values, type.withNullability(nullable), Infer.None)
-        Infer.Type -> DataColumn.createWithTypeInference(name, values, nullable)
-        Infer.None -> DataColumn.create(name, values, type, Infer.None)
+        Infer.Nulls -> DataColumn.create(
+            name = name,
+            values = values,
+            type = type.withNullability(nullable).eraseGenericTypeParameters(),
+            infer = Infer.None,
+        )
+
+        Infer.Type -> DataColumn.createWithTypeInference(
+            name = name,
+            values = values,
+            nullable = nullable,
+        )
+
+        Infer.None -> DataColumn.create(
+            name = name,
+            values = values,
+            type = type.eraseGenericTypeParameters(),
+            infer = Infer.None,
+        )
     }
 }
 
