@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.io
 
-import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.BigIntVector
 import org.apache.arrow.vector.BitVector
 import org.apache.arrow.vector.DateDayVector
@@ -27,13 +26,9 @@ import org.apache.arrow.vector.VarBinaryVector
 import org.apache.arrow.vector.VarCharVector
 import org.apache.arrow.vector.VectorSchemaRoot
 import org.apache.arrow.vector.complex.StructVector
-import org.apache.arrow.vector.ipc.ArrowFileReader
-import org.apache.arrow.vector.ipc.ArrowStreamReader
 import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.util.DateUtility
-import org.apache.commons.compress.utils.SeekableInMemoryByteChannel
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
-import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
@@ -44,19 +39,9 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.getColumn
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
-import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import org.jetbrains.kotlinx.dataframe.impl.asList
-import java.io.File
-import java.io.InputStream
 import java.math.BigDecimal
 import java.math.BigInteger
-import java.net.URL
-import java.nio.channels.Channels
-import java.nio.channels.ReadableByteChannel
-import java.nio.channels.SeekableByteChannel
-import java.nio.file.Files
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -64,35 +49,6 @@ import java.time.LocalTime
 import kotlin.reflect.KType
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.typeOf
-
-public class ArrowFeather : SupportedDataFrameFormat {
-    override fun readDataFrame(stream: InputStream, header: List<String>): AnyFrame =
-        DataFrame.readArrowFeather(stream, NullabilityOptions.Widening)
-
-    override fun readDataFrame(file: File, header: List<String>): AnyFrame =
-        DataFrame.readArrowFeather(file, NullabilityOptions.Widening)
-
-    override fun acceptsExtension(ext: String): Boolean = ext == "feather"
-
-    override fun acceptsSample(sample: SupportedFormatSample): Boolean = true // Extension is enough
-
-    override val testOrder: Int = 50000
-
-    override fun createDefaultReadMethod(pathRepresentation: String?): DefaultReadDfMethod {
-        return DefaultReadArrowMethod(pathRepresentation)
-    }
-}
-
-private const val readArrowFeather = "readArrowFeather"
-
-private class DefaultReadArrowMethod(path: String?) :
-    AbstractDefaultReadMethod(path, MethodArguments.EMPTY, readArrowFeather)
-
-internal object Allocator {
-    val ROOT by lazy {
-        RootAllocator(Long.MAX_VALUE)
-    }
-}
 
 /**
  * same as [Iterable<DataFrame<T>>.concat()] without internal type guessing (all batches should have the same schema)
@@ -111,49 +67,6 @@ internal fun <T> Iterable<DataFrame<T>>.concatKeepingSchema(): DataFrame<T> {
         DataColumn.createValueColumn(name, values, dataFrames.first().getColumn(name).type())
     }
     return dataFrameOf(columns).cast()
-}
-
-/**
- * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [channel]
- */
-public fun DataFrame.Companion.readArrowIPC(
-    channel: ReadableByteChannel,
-    allocator: RootAllocator = Allocator.ROOT,
-    nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame {
-    ArrowStreamReader(channel, allocator).use { reader ->
-        val dfs = buildList {
-            val root = reader.vectorSchemaRoot
-            val schema = root.schema
-            while (reader.loadNextBatch()) {
-                val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
-                add(df)
-            }
-        }
-        return dfs.concatKeepingSchema()
-    }
-}
-
-/**
- * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [channel]
- */
-public fun DataFrame.Companion.readArrowFeather(
-    channel: SeekableByteChannel,
-    allocator: RootAllocator = Allocator.ROOT,
-    nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame {
-    ArrowFileReader(channel, allocator).use { reader ->
-        val dfs = buildList {
-            reader.recordBlocks.forEach { block ->
-                reader.loadRecordBatch(block)
-                val root = reader.vectorSchemaRoot
-                val schema = root.schema
-                val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
-                add(df)
-            }
-        }
-        return dfs.concatKeepingSchema()
-    }
 }
 
 private fun BitVector.values(range: IntRange): List<Boolean?> = range.map { getObject(it) }
@@ -254,7 +167,7 @@ private inline fun <reified T> List<T?>.withTypeNullable(
     return this to typeOf<T>().withNullability(nullable)
 }
 
-private fun readField(root: VectorSchemaRoot, field: Field, nullability: NullabilityOptions): AnyBaseCol {
+internal fun readField(root: VectorSchemaRoot, field: Field, nullability: NullabilityOptions): AnyBaseCol {
     try {
         val range = 0 until root.rowCount
         val (list, type) = when (val vector = root.getVector(field)) {
@@ -291,113 +204,4 @@ private fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullabi
     } catch (unexpectedNull: NullabilityException) {
         throw IllegalArgumentException("Column `${field.name}` should be not nullable but has nulls")
     }
-}
-
-// IPC reading block
-
-/**
- * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [file]
- */
-public fun DataFrame.Companion.readArrowIPC(
-    file: File,
-    nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    Files.newByteChannel(file.toPath()).use { readArrowIPC(it, nullability = nullability) }
-
-/**
- * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [byteArray]
- */
-public fun DataFrame.Companion.readArrowIPC(
-    byteArray: ByteArray,
-    nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    SeekableInMemoryByteChannel(byteArray).use { readArrowIPC(it, nullability = nullability) }
-
-/**
- * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [stream]
- */
-public fun DataFrame.Companion.readArrowIPC(
-    stream: InputStream,
-    nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    Channels.newChannel(stream).use { readArrowIPC(it, nullability = nullability) }
-
-/**
- * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [url]
- */
-public fun DataFrame.Companion.readArrowIPC(
-    url: URL,
-    nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    when {
-        isFile(url) -> readArrowIPC(urlAsFile(url), nullability)
-        isProtocolSupported(url) -> url.openStream().use { readArrowIPC(it, nullability) }
-        else -> {
-            throw IllegalArgumentException("Invalid protocol for url $url")
-        }
-    }
-
-public fun DataFrame.Companion.readArrowIPC(
-    path: String,
-    nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame = if (isURL(path)) {
-    readArrowIPC(URL(path), nullability)
-} else {
-    readArrowIPC(File(path), nullability)
-}
-
-// Feather reading block
-
-/**
- * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [file]
- */
-public fun DataFrame.Companion.readArrowFeather(
-    file: File,
-    nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    Files.newByteChannel(file.toPath()).use { readArrowFeather(it, nullability = nullability) }
-
-/**
- * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [byteArray]
- */
-public fun DataFrame.Companion.readArrowFeather(
-    byteArray: ByteArray,
-    nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    SeekableInMemoryByteChannel(byteArray).use { readArrowFeather(it, nullability = nullability) }
-
-/**
- * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [stream]
- */
-public fun DataFrame.Companion.readArrowFeather(
-    stream: InputStream,
-    nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    readArrowFeather(stream.readBytes(), nullability)
-
-/**
- * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [url]
- */
-public fun DataFrame.Companion.readArrowFeather(
-    url: URL,
-    nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame =
-    when {
-        isFile(url) -> readArrowFeather(urlAsFile(url), nullability)
-        isProtocolSupported(url) -> readArrowFeather(url.readBytes(), nullability)
-        else -> {
-            throw IllegalArgumentException("Invalid protocol for url $url")
-        }
-    }
-
-/**
- * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [path]
- */
-public fun DataFrame.Companion.readArrowFeather(
-    path: String,
-    nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame = if (isURL(path)) {
-    readArrowFeather(URL(path), nullability)
-} else {
-    readArrowFeather(File(path), nullability)
 }
