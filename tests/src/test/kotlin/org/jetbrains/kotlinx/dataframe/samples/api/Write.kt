@@ -18,7 +18,7 @@ import org.jetbrains.kotlinx.dataframe.io.writeArrowIPC
 import org.jetbrains.kotlinx.dataframe.io.writeCSV
 import org.jetbrains.kotlinx.dataframe.io.writeExcel
 import org.jetbrains.kotlinx.dataframe.io.writeJson
-import org.jetbrains.kotlinx.dataframe.io.writeWarningMessage
+import org.jetbrains.kotlinx.dataframe.io.writeMismatchMessage
 import org.junit.Test
 import java.io.File
 import kotlin.io.path.deleteExisting
@@ -205,7 +205,7 @@ class Write : TestBase() {
                     strictNullable = false
                 ),
                 // Specify warning subscriber
-                writeWarningMessage
+                writeMismatchMessage
             ).use { writer ->
                 // Save to any format and sink, like in previous example
                 writer.writeArrowFeather(file)
