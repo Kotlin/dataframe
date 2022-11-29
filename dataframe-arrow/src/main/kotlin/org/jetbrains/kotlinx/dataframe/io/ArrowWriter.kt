@@ -40,6 +40,8 @@ import org.apache.arrow.vector.util.Text
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.name
+import org.jetbrains.kotlinx.dataframe.typeClass
 import org.jetbrains.kotlinx.dataframe.api.convertToBigDecimal
 import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
 import org.jetbrains.kotlinx.dataframe.api.convertToByte
@@ -54,9 +56,8 @@ import org.jetbrains.kotlinx.dataframe.api.convertToShort
 import org.jetbrains.kotlinx.dataframe.api.convertToString
 import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.api.map
-import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
+import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
-import org.jetbrains.kotlinx.dataframe.typeClass
 import org.slf4j.LoggerFactory
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -70,14 +71,14 @@ import java.time.LocalTime
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.typeOf
 
-public val ignoreWarningMessage: (String) -> Unit = { message: String -> }
-public val writeWarningMessage: (String) -> Unit = { message: String -> System.err.println(message) }
+public val ignoreMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch -> }
+public val writeMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch -> System.err.println(message) }
 
 private val logger = LoggerFactory.getLogger(ArrowWriter::class.java)
 
-public val logWarningMessage: (String) -> Unit = { message: String -> logger.debug(message) }
+public val logMismatchMessage: (ConvertingMismatch) -> Unit = { message: ConvertingMismatch -> logger.debug(message.toString()) }
 
-public fun AnyCol.toArrowField(warningSubscriber: (String) -> Unit = ignoreWarningMessage): Field {
+public fun AnyCol.toArrowField(mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage): Field {
     val column = this
     val columnType = column.type()
     val nullable = columnType.isMarkedNullable
@@ -149,7 +150,7 @@ public fun AnyCol.toArrowField(warningSubscriber: (String) -> Unit = ignoreWarni
         )
 
         else -> {
-            warningSubscriber("Column ${column.name()} has type ${column.typeClass.java.canonicalName}, will be saved as String")
+            mismatchSubscriber(ConvertingMismatch.SavedAsString(column.name(), column.typeClass.java))
             Field(column.name(), FieldType(true, ArrowType.Utf8(), null), emptyList())
         }
     }
@@ -158,8 +159,8 @@ public fun AnyCol.toArrowField(warningSubscriber: (String) -> Unit = ignoreWarni
  * Create Arrow [Schema] matching [this] actual data.
  * Columns with not supported types will be interpreted as String
  */
-public fun List<AnyCol>.toArrowSchema(warningSubscriber: (String) -> Unit = ignoreWarningMessage): Schema {
-    val fields = this.map { it.toArrowField(warningSubscriber) }
+public fun List<AnyCol>.toArrowSchema(mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage): Schema {
+    val fields = this.map { it.toArrowField(mismatchSubscriber) }
     return Schema(fields)
 }
 
@@ -174,8 +175,8 @@ public fun DataFrame<*>.arrowWriter(): ArrowWriter = this.arrowWriter(this.colum
 public fun DataFrame<*>.arrowWriter(
     targetSchema: Schema,
     mode: ArrowWriter.Companion.Mode = ArrowWriter.Companion.Mode.STRICT,
-    warningSubscriber: (String) -> Unit = ignoreWarningMessage
-): ArrowWriter = ArrowWriter(this, targetSchema, mode, warningSubscriber)
+    mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage
+): ArrowWriter = ArrowWriter(this, targetSchema, mode, mismatchSubscriber)
 
 /**
  * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream or raw Channel) with [targetSchema].
@@ -185,7 +186,7 @@ public class ArrowWriter(
     private val dataFrame: DataFrame<*>,
     private val targetSchema: Schema,
     private val mode: Mode,
-    private val warningSubscriber: (String) -> Unit = ignoreWarningMessage
+    private val mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage
 ) : AutoCloseable {
 
     public companion object {
@@ -296,32 +297,50 @@ public class ArrowWriter(
         val containNulls = (column == null || column.hasNulls())
         // Convert the column to type specified in field. (If we already have target type, convertTo will do nothing)
 
-        fun handleConversionFail(e: Exception): Pair<AnyCol?, Field> {
+        val (convertedColumn, actualField) = try {
+            convertColumnToTarget(column, field.type) to field
+        } catch (e: CellConversionException) {
             if (strictType) {
                 // If conversion failed but strictType is enabled, throw the exception
-                throw e
+                val mismatch = ConvertingMismatch.TypeConversionFail.ConversionFailError(e.column, e.row, e)
+                mismatchSubscriber(mismatch)
+                throw ConvertingException(mismatch)
             } else {
                 // If strictType is not enabled, use original data with its type. Target nullable is saved at this step.
-                warningSubscriber(e.message!!)
-                val actualType = listOf(column!!).toArrowSchema(warningSubscriber).fields.first().fieldType.type
+                mismatchSubscriber(ConvertingMismatch.TypeConversionFail.ConversionFailIgnored(e.column, e.row, e))
+                val actualType = listOf(column!!).toArrowSchema(mismatchSubscriber).fields.first().fieldType.type
                 val actualField = Field(field.name, FieldType(field.isNullable, actualType, field.fieldType.dictionary), field.children)
-                return column to actualField
+                column to actualField
+            }
+        } catch (e: TypeConverterNotFoundException) {
+            if (strictType) {
+                // If conversion failed but strictType is enabled, throw the exception
+                val mismatch = ConvertingMismatch.TypeConversionNotFound.ConversionNotFoundError(field.name, e)
+                mismatchSubscriber(mismatch)
+                throw ConvertingException(mismatch)
+            } else {
+                // If strictType is not enabled, use original data with its type. Target nullable is saved at this step.
+                mismatchSubscriber(ConvertingMismatch.TypeConversionNotFound.ConversionNotFoundIgnored(field.name, e))
+                val actualType = listOf(column!!).toArrowSchema(mismatchSubscriber).fields.first().fieldType.type
+                val actualField = Field(field.name, FieldType(field.isNullable, actualType, field.fieldType.dictionary), field.children)
+                column to actualField
             }
         }
 
-        val (convertedColumn, actualField) = try {
-            convertColumnToTarget(column, field.type) to field
-        } catch (e: TypeConversionException) {
-            handleConversionFail(e)
-        } catch (e: TypeConverterNotFoundException) {
-            handleConversionFail(e)
-        }
-
         val vector = if (!actualField.isNullable && containNulls) {
+            var firstNullValue: Int?  = null;
+            for (i in 0 until (column?.size() ?: -1)) {
+                if (column!![i] == null) {
+                    firstNullValue = i;
+                    break;
+                }
+            }
             if (strictNullable) {
-                throw IllegalArgumentException("Column \"${actualField.name}\" contains nulls but should be not nullable")
+                val mismatch = ConvertingMismatch.NullableMismatch.NullValueError(actualField.name, firstNullValue)
+                mismatchSubscriber(mismatch)
+                throw ConvertingException(mismatch)
             } else {
-                warningSubscriber("Column \"${actualField.name}\" contains nulls but expected not nullable")
+                mismatchSubscriber(ConvertingMismatch.NullableMismatch.NullValueIgnored(actualField.name, firstNullValue))
                 Field(actualField.name, FieldType(true, actualField.fieldType.type, actualField.fieldType.dictionary), actualField.children).createVector(allocator)!!
             }
         } else {
@@ -339,7 +358,7 @@ public class ArrowWriter(
     }
 
     private fun List<AnyCol>.toVectors(): List<FieldVector> = this.map {
-        val field = it.toArrowField(warningSubscriber)
+        val field = it.toArrowField(mismatchSubscriber)
         allocateVectorAndInfill(field, it, true, true)
     }
     /**
@@ -352,9 +371,11 @@ public class ArrowWriter(
                 val column = dataFrame.getColumnOrNull(field.name)
                 if (column == null && !field.isNullable) {
                     if (mode.restrictNarrowing) {
-                        throw IllegalArgumentException("Column \"${field.name}\" is not presented")
+                        val mismatch = ConvertingMismatch.NarrowingMismatch.NotPresentedColumnError(field.name)
+                        mismatchSubscriber(mismatch)
+                        throw ConvertingException(mismatch)
                     } else {
-                        warningSubscriber("Column \"${field.name}\" is not presented")
+                        mismatchSubscriber(ConvertingMismatch.NarrowingMismatch.NotPresentedColumnIgnored(field.name))
                         continue
                     }
                 }
@@ -371,9 +392,12 @@ public class ArrowWriter(
         val otherColumns = dataFrame.columns().filter { column -> !mainVectors.containsKey(column.name()) }
         if (!mode.restrictWidening) {
             vectors.addAll(otherColumns.toVectors())
+            otherColumns.forEach {
+                mismatchSubscriber(ConvertingMismatch.WideningMismatch.AddedColumn(it.name))
+            }
         } else {
             otherColumns.forEach {
-                warningSubscriber("Column \"${it.name()}\" is not described in target schema and was ignored")
+                mismatchSubscriber(ConvertingMismatch.WideningMismatch.RejectedColumn(it.name))
             }
         }
         return VectorSchemaRoot(vectors)
