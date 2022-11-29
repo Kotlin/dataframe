@@ -19,7 +19,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.ColumnGroupImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.FrameColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.ValueColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
-import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnKind
 import org.jetbrains.kotlinx.dataframe.impl.getValuesType
 import org.jetbrains.kotlinx.dataframe.impl.splitByIndices
@@ -54,7 +54,7 @@ public interface DataColumn<out T> : BaseColumn<T> {
             values: List<T>,
             type: KType,
             infer: Infer = Infer.None,
-            defaultValue: T? = null
+            defaultValue: T? = null,
         ): ValueColumn<T> = ValueColumnImpl(values, name, getValuesType(values, type, infer), defaultValue)
 
         /**
@@ -67,7 +67,11 @@ public interface DataColumn<out T> : BaseColumn<T> {
          * @param values list of column values
          * @param infer column type inference mode
          */
-        public inline fun <reified T> createValueColumn(name: String, values: List<T>, infer: Infer = Infer.None): ValueColumn<T> = createValueColumn(
+        public inline fun <reified T> createValueColumn(
+            name: String,
+            values: List<T>,
+            infer: Infer = Infer.None,
+        ): ValueColumn<T> = createValueColumn(
             name, values,
             getValuesType(
                 values,
@@ -81,17 +85,21 @@ public interface DataColumn<out T> : BaseColumn<T> {
         public fun <T> createFrameColumn(
             name: String,
             df: DataFrame<T>,
-            startIndices: Iterable<Int>
+            startIndices: Iterable<Int>,
         ): FrameColumn<T> =
             FrameColumnImpl(name, df.splitByIndices(startIndices.asSequence()).toList(), lazy { df.schema() })
 
         public fun <T> createFrameColumn(
             name: String,
             groups: List<DataFrame<T>>,
-            schema: Lazy<DataFrameSchema>? = null
+            schema: Lazy<DataFrameSchema>? = null,
         ): FrameColumn<T> = FrameColumnImpl(name, groups, schema)
 
-        public fun <T> createWithTypeInference(name: String, values: List<T>, nullable: Boolean? = null): DataColumn<T> = guessColumnType(name, values, nullable = nullable)
+        public fun <T> createWithTypeInference(
+            name: String,
+            values: List<T>,
+            nullable: Boolean? = null,
+        ): DataColumn<T> = createColumnGuessingType(name, values, nullable = nullable)
 
         public fun <T> create(name: String, values: List<T>, type: KType, infer: Infer = Infer.None): DataColumn<T> {
             return when (type.toColumnKind()) {
@@ -101,7 +109,8 @@ public interface DataColumn<out T> : BaseColumn<T> {
             }
         }
 
-        public inline fun <reified T> create(name: String, values: List<T>, infer: Infer = Infer.None): DataColumn<T> = create(name, values, typeOf<T>(), infer)
+        public inline fun <reified T> create(name: String, values: List<T>, infer: Infer = Infer.None): DataColumn<T> =
+            create(name, values, typeOf<T>(), infer)
 
         public fun empty(name: String = ""): AnyCol = createValueColumn(name, emptyList<Unit>(), typeOf<Unit>())
     }
@@ -116,7 +125,8 @@ public interface DataColumn<out T> : BaseColumn<T> {
 
     override fun resolveSingle(context: ColumnResolutionContext): ColumnWithPath<T>? = this.addPath()
 
-    override operator fun getValue(thisRef: Any?, property: KProperty<*>): DataColumn<T> = super.getValue(thisRef, property) as DataColumn<T>
+    override operator fun getValue(thisRef: Any?, property: KProperty<*>): DataColumn<T> =
+        super.getValue(thisRef, property) as DataColumn<T>
 
     public operator fun iterator(): Iterator<T> = values().iterator()
 
@@ -133,6 +143,8 @@ public val AnyCol.indices: IntRange get() = indices()
 
 public val AnyCol.type: KType get() = type()
 public val AnyCol.kind: ColumnKind get() = kind()
-public val AnyCol.typeClass: KClass<*> get() = type.classifier as? KClass<*> ?: error("Cannot cast ${type.classifier?.javaClass} to a ${KClass::class}. Column $name: $type")
+public val AnyCol.typeClass: KClass<*>
+    get() = type.classifier as? KClass<*>
+        ?: error("Cannot cast ${type.classifier?.javaClass} to a ${KClass::class}. Column $name: $type")
 
 public fun AnyBaseCol.indices(): IntRange = 0 until size()

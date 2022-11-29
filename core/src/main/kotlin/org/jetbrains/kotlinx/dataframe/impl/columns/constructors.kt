@@ -9,6 +9,7 @@ import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.Selector
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.AddDataRow
 import org.jetbrains.kotlinx.dataframe.api.AddExpression
 import org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl
@@ -31,6 +32,7 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
 import org.jetbrains.kotlinx.dataframe.columns.ColumnWithPath
 import org.jetbrains.kotlinx.dataframe.impl.DataFrameReceiver
 import org.jetbrains.kotlinx.dataframe.impl.DataRowImpl
+import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.guessValueType
 import org.jetbrains.kotlinx.dataframe.index
@@ -38,6 +40,7 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.withNullability
 
 // region create DataColumn
@@ -70,7 +73,7 @@ internal fun <T, R> ColumnsContainer<T>.newColumnWithActualType(
     expression: AddExpression<T, R>,
 ): DataColumn<R> {
     val (_, values) = computeValues(this as DataFrame<T>, expression)
-    return guessColumnType(name, values)
+    return createColumnGuessingType(name, values)
 }
 
 internal fun <T, R> computeValues(df: DataFrame<T>, expression: AddExpression<T, R>): Pair<Boolean, List<R>> {
@@ -112,7 +115,7 @@ internal fun <T> createColumn(values: Iterable<T>, suggestedType: KType, guessTy
             ).asDataColumn().cast()
 
         guessType ->
-            guessColumnType(
+            createColumnGuessingType(
                 name = "",
                 values = values.asList(),
                 suggestedType = suggestedType,
@@ -186,10 +189,10 @@ internal fun <C> Iterable<ColumnReference<C>>.toColumnSet(): ColumnSet<C> = Colu
 
 // endregion
 
-internal fun <T> guessColumnType(name: String, values: List<T>) = guessColumnType(name, values, null)
+internal fun <T> createColumnGuessingType(name: String, values: List<T>) = createColumnGuessingType(name, values, null)
 
 @PublishedApi
-internal fun <T> guessColumnType(
+internal fun <T> createColumnGuessingType(
     name: String,
     values: List<T>,
     suggestedType: KType? = null,
@@ -206,12 +209,26 @@ internal fun <T> guessColumnType(
 
     return when (type.classifier!! as KClass<*>) {
         DataRow::class -> {
-            val df = values.map { (it as AnyRow?)?.toDataFrame() ?: DataFrame.empty(1) }.concat()
+            val allSameDataSchema = values.any { it != null } &&
+                values.all { it == null || it.javaClass.kotlin.hasAnnotation<DataSchema>() } &&
+                values.filterNotNull().distinctBy { it.javaClass.kotlin }.size == 1
+
+            val df: AnyFrame = when {
+                allSameDataSchema ->
+                    values.createDataFrameImpl(
+                        clazz = values.firstNotNullOfOrNull { (it as Any?)?.javaClass?.kotlin } ?: Any::class,
+                    ) { properties() }
+
+                else ->
+                    values.map {
+                        (it as? AnyRow?)?.toDataFrame() ?: DataFrame.empty(1)
+                    }.concat()
+            }
             DataColumn.createColumnGroup(name, df).asDataColumn().cast()
         }
 
         DataFrame::class -> {
-            val frames = values.map {
+            val frames: List<AnyFrame> = values.map {
                 when (it) {
                     null -> DataFrame.empty()
                     is AnyFrame -> it

@@ -4,6 +4,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.Infer
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
@@ -12,6 +13,7 @@ import kotlin.reflect.KTypeProjection
 import kotlin.reflect.KVisibility
 import kotlin.reflect.full.allSuperclasses
 import kotlin.reflect.full.createType
+import kotlin.reflect.full.hasAnnotation
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.isSubtypeOf
 import kotlin.reflect.full.isSuperclassOf
@@ -334,7 +336,12 @@ internal fun guessValueType(values: Sequence<Any?>, upperBound: KType? = null, l
                 collectionClasses.add(it.javaClass.kotlin)
             }
 
-            else -> classes.add(it.javaClass.kotlin)
+            else ->
+                if (it.javaClass.kotlin.hasAnnotation<DataSchema>()) {
+                    hasRows = true
+                } else {
+                    classes.add(it.javaClass.kotlin)
+                }
         }
     }
     val allListsWithRows = classesInCollection.isNotEmpty() &&
