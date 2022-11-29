@@ -37,7 +37,10 @@ internal object MarkersExtractor {
     fun get(markerClass: KClass<*>, nullableProperties: Boolean = false): Marker =
         cache.getOrPut(Pair(markerClass, nullableProperties)) {
             val fields = getFields(markerClass, nullableProperties)
-            val isOpen = markerClass.findAnnotation<DataSchema>()?.isOpen ?: false
+            val isOpen = !markerClass.isSealed &&
+                markerClass.java.isInterface &&
+                markerClass.findAnnotation<DataSchema>()?.isOpen == true
+
             val baseSchemas = markerClass.superclasses.filter { it != Any::class }.map { get(it, nullableProperties) }
             Marker(
                 name = markerClass.qualifiedName ?: markerClass.simpleName!!,

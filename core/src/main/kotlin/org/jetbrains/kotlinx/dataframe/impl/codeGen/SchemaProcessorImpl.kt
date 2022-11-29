@@ -22,7 +22,7 @@ internal class SchemaProcessorImpl(
     override val generatedMarkers = mutableListOf<Marker>()
 
     private fun DataFrameSchema.getAllSuperMarkers() = registeredMarkers
-        .filter { it.schema.compare(this).isSuperOrEqual() }
+        .filter { it.isOpen && it.schema.compare(this).isSuperOrEqual() }
 
     private fun List<Marker>.onlyLeafs(): List<Marker> {
         val skip = flatMap { it.allSuperMarkers.keys }.toSet()
