@@ -2,7 +2,9 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 class AddTests {
 
@@ -22,5 +24,13 @@ class AddTests {
         shouldThrow<IndexOutOfBoundsException> {
             df.add("y") { next()?.newValue() ?: 1 }
         }
+    }
+
+    private fun <T> AnyFrame.addValue(value: T) = add("value") { listOf(value) }
+
+    @Test
+    fun `add with generic function`() {
+        val df = dataFrameOf("a")(1).addValue(2)
+        df["value"].type() shouldBe typeOf<List<Any?>>()
     }
 }

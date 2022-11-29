@@ -4,12 +4,31 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.intellij.lang.annotations.Language
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
+import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
+import kotlin.reflect.typeOf
 
 class JupyterCodegenTests : JupyterReplTestCase() {
+
+    @Test
+    fun `codegen adding column with generic type function`() {
+        @Language("kts")
+        val res1 = exec(
+            """
+            fun <T> AnyFrame.addValue(value: T) = add("value") { listOf(value) }
+            val df = dataFrameOf("a")(1).addValue(2)
+            """.trimIndent()
+        )
+        res1 shouldBe Unit
+        val res2 = execRaw("df") as AnyFrame
+
+        res2["value"].type shouldBe typeOf<List<Any?>>()
+    }
+
     @Test
     fun `codegen for enumerated frames`() {
         @Language("kts")
@@ -78,6 +97,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `codegen for chars that is forbidden in JVM identifiers`() {
         val forbiddenChar = ";"
+
         @Language("kts")
         val res1 = exec(
             """
@@ -96,6 +116,7 @@ class JupyterCodegenTests : JupyterReplTestCase() {
     @Test
     fun `codegen for chars that is forbidden in JVM identifiers 1`() {
         val forbiddenChar = "\\\\"
+
         @Language("kts")
         val res1 = exec(
             """
