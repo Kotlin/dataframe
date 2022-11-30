@@ -26,6 +26,7 @@ import org.jetbrains.kotlinx.dataframe.io.Excel
 import org.jetbrains.kotlinx.dataframe.io.JSON
 import org.jetbrains.kotlinx.dataframe.io.OpenApi
 import org.jetbrains.kotlinx.dataframe.io.TSV
+import org.jetbrains.kotlinx.dataframe.io.isURL
 import java.io.File
 import java.net.MalformedURLException
 import java.net.URL
@@ -63,30 +64,33 @@ class DataSchemaGenerator(
         }
 
     private fun ImportDataSchema.toStatement(file: KSFile, logger: KSPLogger): ImportDataSchemaStatement? {
-        val protocols = listOf("http", "https", "ftp")
-        val url = if (protocols.any { path.startsWith(it, ignoreCase = true) }) {
+        val url = if (isURL(path)) {
             try {
                 URL(this.path)
             } catch (exception: MalformedURLException) {
                 logger.error("'${this.path}' is not valid URL: ${exception.message}", file)
-                null
+                return null
             }
         } else {
             val resolutionDir: String = resolutionDir ?: run {
                 reportMissingKspArgument(file)
                 return null
             }
-            val data = File(resolutionDir, path)
+
+            val relativeFile = File(resolutionDir, path)
+            val absoluteFile = File(path)
+            val data = if (relativeFile.exists()) relativeFile else absoluteFile
             try {
-                data.toURI().toURL()
+                data.toURI().toURL() ?: return null
             } catch (exception: MalformedURLException) {
                 logger.error(
-                    "Failed to convert resolved path '${data.absolutePath}' to URL: ${exception.message}",
+                    "Failed to convert resolved path '${relativeFile.absolutePath}' or '${absoluteFile.absolutePath}' to URL: ${exception.message}",
                     file
                 )
-                null
+                return null
             }
-        } ?: return null
+        }
+
         return ImportDataSchemaStatement(
             origin = file,
             name = name,
