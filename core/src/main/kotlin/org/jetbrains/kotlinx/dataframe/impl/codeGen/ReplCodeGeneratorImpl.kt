@@ -19,6 +19,7 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.KVisibility
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.superclasses
 import kotlin.reflect.jvm.jvmErasure
@@ -44,11 +45,12 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             else -> null
         }
 
-    override fun process(row: AnyRow, property: KProperty<*>?) = process(row.df(), property)
+    override fun process(row: AnyRow, property: KProperty<*>?, isMutable: Boolean) =
+        process(row.df(), property, isMutable)
 
-    override fun process(df: AnyFrame, property: KProperty<*>?): CodeWithConverter {
+    override fun process(df: AnyFrame, property: KProperty<*>?, isMutable: Boolean): CodeWithConverter {
         var targetSchema = df.schema()
-        var isMutable = false
+        var isMutable = isMutable
 
         if (property != null) {
             val wasProcessedBefore = property in registeredProperties
@@ -77,7 +79,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             }
         }
 
-        return generate(targetSchema, markerInterfacePrefix, isMutable)
+        return generate(schema = targetSchema, name = markerInterfacePrefix, isOpen = isMutable)
     }
 
     fun generate(
@@ -92,7 +94,9 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             extensionProperties = true,
             isOpen = isOpen,
             visibility = MarkerVisibility.IMPLICIT_PUBLIC,
-            knownMarkers = registeredMarkers.values,
+            knownMarkers = registeredMarkers
+                .filterKeys { it.visibility != KVisibility.PRIVATE }
+                .values,
         )
 
         result.newMarkers.forEach {

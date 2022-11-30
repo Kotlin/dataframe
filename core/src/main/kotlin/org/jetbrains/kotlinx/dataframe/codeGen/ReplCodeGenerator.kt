@@ -6,13 +6,22 @@ import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.impl.codeGen.ReplCodeGeneratorImpl
 import org.jetbrains.kotlinx.jupyter.api.Code
 import kotlin.reflect.KClass
+import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KProperty
 
 internal interface ReplCodeGenerator {
 
-    fun process(df: AnyFrame, property: KProperty<*>? = null): CodeWithConverter
+    fun process(
+        df: AnyFrame,
+        property: KProperty<*>? = null,
+        isMutable: Boolean = property is KMutableProperty?,
+    ): CodeWithConverter
 
-    fun process(row: AnyRow, property: KProperty<*>? = null): CodeWithConverter
+    fun process(
+        row: AnyRow,
+        property: KProperty<*>? = null,
+        isMutable: Boolean = property is KMutableProperty?,
+    ): CodeWithConverter
 
     fun process(markerClass: KClass<*>): Code
 
