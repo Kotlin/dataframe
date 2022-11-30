@@ -4,7 +4,10 @@ import org.jetbrains.dataframe.impl.codeGen.CodeGenerator
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.schema
 
-public inline fun <reified T> DataFrame<T>.generateCode(fields: Boolean = true, extensionProperties: Boolean = true): String {
+public inline fun <reified T> DataFrame<T>.generateCode(
+    fields: Boolean = true,
+    extensionProperties: Boolean = true,
+): String {
     val name = if (T::class.isAbstract) {
         T::class.simpleName!!
     } else "DataEntry"
@@ -15,16 +18,16 @@ public fun <T> DataFrame<T>.generateCode(
     markerName: String,
     fields: Boolean = true,
     extensionProperties: Boolean = true,
-    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC
+    visibility: MarkerVisibility = MarkerVisibility.IMPLICIT_PUBLIC,
 ): String {
     val codeGen = CodeGenerator.create()
     return codeGen.generate(
-        schema(),
-        markerName,
+        schema = schema(),
+        name = markerName,
         fields = fields,
         extensionProperties = extensionProperties,
         isOpen = true,
-        visibility
+        visibility = visibility,
     ).code.declarations
 }
 
@@ -34,7 +37,7 @@ public inline fun <reified T> DataFrame<T>.generateInterfaces(): String = genera
 )
 
 public fun <T> DataFrame<T>.generateInterfaces(markerName: String): String = generateCode(
-    markerName,
+    markerName = markerName,
     fields = true,
     extensionProperties = false
 )

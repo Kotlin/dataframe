@@ -26,7 +26,7 @@ class ReplCodeGenTests : BaseTest() {
     val stringName = String::class.simpleName!!
 
     class Test1 {
-        @DataSchema(isOpen = false)
+        @DataSchema
         interface _DataFrameType
 
         @DataSchema(isOpen = false)
@@ -37,10 +37,10 @@ class ReplCodeGenTests : BaseTest() {
     }
 
     class Test2 {
-        @DataSchema(isOpen = false)
+        @DataSchema
         interface _DataFrameType
 
-        @DataSchema(isOpen = false)
+        @DataSchema
         interface _DataFrameType1
 
         @DataSchema(isOpen = false)
@@ -68,13 +68,13 @@ class ReplCodeGenTests : BaseTest() {
     @Test
     fun `process derived markers`() {
         val repl = ReplCodeGenerator.create()
-        val code = repl.process(df).declarations
+        val code = repl.process(df, isMutable = true).declarations
 
         val marker = ReplCodeGeneratorImpl.markerInterfacePrefix
         val markerFull = Test1._DataFrameType::class.qualifiedName!!
 
         val expected = """
-            @DataSchema(isOpen = false)
+            @DataSchema
             interface $marker
             
             val $dfName<$marker>.age: $dataCol<$intName> @JvmName("${marker}_age") get() = this["age"] as $dataCol<$intName>
@@ -100,7 +100,7 @@ class ReplCodeGenTests : BaseTest() {
         code2 shouldBe ""
 
         val df3 = typed.filter { city != null }
-        val code3 = repl.process(df3).declarations
+        val code3 = repl.process(df3, isMutable = false).declarations
         val marker3 = marker + "1"
         val expected3 = """
             @DataSchema(isOpen = false)
@@ -118,7 +118,7 @@ class ReplCodeGenTests : BaseTest() {
         code4 shouldBe ""
 
         val df5 = typed.filter { weight != null }
-        val code5 = repl.process(df5).declarations
+        val code5 = repl.process(df5, isMutable = false).declarations
         val marker5 = marker + "2"
         val expected5 = """
             @DataSchema(isOpen = false)
@@ -149,7 +149,7 @@ class ReplCodeGenTests : BaseTest() {
             
         """.trimIndent()
 
-        val code = repl.process(typed).declarations.trimIndent()
+        val code = repl.process(typed, isMutable = false).declarations.trimIndent()
         code shouldBe expected
     }
 
@@ -176,7 +176,7 @@ class ReplCodeGenTests : BaseTest() {
             val $dfRowName<$marker?>.weight: $intName? @JvmName("Nullable${marker}_weight") get() = this["weight"] as $intName?
         """.trimIndent()
 
-        val code = repl.process(typed).declarations.trimIndent()
+        val code = repl.process(typed, isMutable = false).declarations.trimIndent()
         code shouldBe expected
     }
 
