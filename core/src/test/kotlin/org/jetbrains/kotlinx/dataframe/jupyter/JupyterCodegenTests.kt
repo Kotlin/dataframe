@@ -1,10 +1,12 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
 import io.kotest.assertions.throwables.shouldNotThrowAny
+import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.types.shouldBeInstanceOf
 import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.api.isNotEmpty
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.type
 import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
@@ -27,6 +29,90 @@ class JupyterCodegenTests : JupyterReplTestCase() {
         val res2 = execRaw("df") as AnyFrame
 
         res2["value"].type shouldBe typeOf<List<Any?>>()
+    }
+
+    @Test
+    fun `Don't inherit from data class`() {
+        @Language("kts")
+        val res1 = exec(
+            """
+            @DataSchema
+            data class A(val a: Int)
+            """.trimIndent()
+        )
+
+        @Language("kts")
+        val res2 = execRaw(
+            """
+            val df = dataFrameOf("a", "b")(1, 2)
+            df
+            """.trimIndent()
+        )
+
+        (res2 as AnyFrame).should { it.isNotEmpty() }
+    }
+
+    @Test
+    fun `Don't inherit from non open class`() {
+        @Language("kts")
+        val res1 = exec(
+            """
+            @DataSchema
+            class A(val a: Int)
+            """.trimIndent()
+        )
+
+        @Language("kts")
+        val res2 = execRaw(
+            """
+            val df = dataFrameOf("a", "b")(1, 2)
+            df
+            """.trimIndent()
+        )
+
+        (res2 as AnyFrame).should { it.isNotEmpty() }
+    }
+
+    @Test
+    fun `Don't inherit from open class`() {
+        @Language("kts")
+        val res1 = exec(
+            """
+            @DataSchema
+            open class A(val a: Int)
+            """.trimIndent()
+        )
+
+        @Language("kts")
+        val res2 = execRaw(
+            """
+            val df = dataFrameOf("a", "b")(1, 2)
+            df
+            """.trimIndent()
+        )
+
+        (res2 as AnyFrame).should { it.isNotEmpty() }
+    }
+
+    @Test
+    fun `Do inherit from open interface`() {
+        @Language("kts")
+        val res1 = exec(
+            """
+            @DataSchema
+            interface A { val a: Int }
+            """.trimIndent()
+        )
+
+        @Language("kts")
+        val res2 = execRaw(
+            """
+            val df = dataFrameOf("a", "b")(1, 2)
+            df
+            """.trimIndent()
+        )
+
+        (res2 as AnyFrame).should { it.isNotEmpty() }
     }
 
     @Test
