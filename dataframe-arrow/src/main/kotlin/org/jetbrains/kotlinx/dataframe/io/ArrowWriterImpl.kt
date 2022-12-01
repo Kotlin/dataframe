@@ -71,7 +71,7 @@ internal class ArrowWriterImpl(
         when (vector) {
             is FixedWidthVector -> vector.allocateNew(size)
             is VariableWidthVector -> vector.allocateNew(size)
-            else -> TODO("Not implemented for ${vector.javaClass.canonicalName}")
+            else -> throw IllegalArgumentException("Can not allocate ${vector.javaClass.canonicalName}")
         }
     }
 
@@ -79,7 +79,7 @@ internal class ArrowWriterImpl(
         when (vector) {
             is BaseFixedWidthVector -> for (i in 0 until size) { vector.setNull(i) }
             is BaseVariableWidthVector -> for (i in 0 until size) { vector.setNull(i) }
-            else -> TODO("Not implemented for ${vector.javaClass.canonicalName}")
+            else -> throw IllegalArgumentException("Can not infill ${vector.javaClass.canonicalName}")
         }
         vector.valueCount = size
     }
@@ -89,7 +89,7 @@ internal class ArrowWriterImpl(
         return when (targetFieldType) {
             ArrowType.Utf8() -> column.map { it?.toString() }
             ArrowType.LargeUtf8() -> column.map { it?.toString() }
-            ArrowType.Binary(), ArrowType.LargeBinary() -> TODO("Saving var binary is currently not implemented")
+            ArrowType.Binary(), ArrowType.LargeBinary() -> throw NotImplementedError("Saving var binary is currently not implemented")
             ArrowType.Bool() -> column.convertToBoolean()
             ArrowType.Int(8, true) -> column.convertToByte()
             ArrowType.Int(16, true) -> column.convertToShort()
@@ -105,7 +105,7 @@ internal class ArrowWriterImpl(
 //            is ArrowType.Duration -> todo
 //            is ArrowType.Struct -> todo
             else -> {
-                TODO("Saving ${targetFieldType.javaClass.canonicalName} is not implemented")
+                throw NotImplementedError("Saving ${targetFieldType.javaClass.canonicalName} is currently not implemented")
             }
         }
     }
@@ -140,7 +140,7 @@ internal class ArrowWriterImpl(
             is TimeSecVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, (value.toNanoOfDay() / 1000 / 1000 / 1000).toInt()); value } ?: vector.setNull(i) }
 //            is StructVector -> todo
             else -> {
-                TODO("Saving to ${vector.javaClass.canonicalName} is not implemented")
+                throw NotImplementedError("Saving to ${vector.javaClass.canonicalName} is currently not implemented")
             }
         }
 

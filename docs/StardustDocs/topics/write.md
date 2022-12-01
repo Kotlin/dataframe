@@ -1,7 +1,7 @@
 [//]: # (title: Write)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Write-->
 
-`DataFrame` can be saved into CSV, TSV, JSON, XLS and XLSX, Apache Arrow formats.
+`DataFrame` instances can be saved in the following formats: CSV, TSV, JSON, XLS(X) and Apache Arrow.
 
 ### Writing to CSV
 
@@ -161,7 +161,7 @@ val featherByteArray: ByteArray = df.saveArrowFeatherToByteArray()
 Second is a bit more tricky. You have to create specify schema itself and casting behavior mode as `ArrowWriter` parameters.
 Behavior `Mode` has four independent switchers: `restrictWidening`, `restrictNarrowing`, `strictType`, `strictNullable`.
 You can use `Mode.STRICT` (this is default), `Mode.LOYAL` or any combination you want.
-`ArrowWriter` object should be closed after using because Arrow uses random access buffers not managed by Java GC.
+The `ArrowWriter` object should be closed after using because Arrow uses random access buffers not managed by Java GC.
 Finally, you can specify a callback to be invoked if some data is lost or can not be saved according to your schema.
 
 Here is full example:

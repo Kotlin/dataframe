@@ -1,13 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.io
 
 import org.apache.arrow.memory.RootAllocator
-import org.apache.arrow.vector.ipc.ArrowFileReader
-import org.apache.arrow.vector.ipc.ArrowStreamReader
 import org.apache.commons.compress.utils.SeekableInMemoryByteChannel
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.NullabilityOptions
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.codeGen.AbstractDefaultReadMethod
 import org.jetbrains.kotlinx.dataframe.codeGen.DefaultReadDfMethod
 import java.io.File
@@ -54,20 +51,7 @@ public fun DataFrame.Companion.readArrowIPC(
     channel: ReadableByteChannel,
     allocator: RootAllocator = Allocator.ROOT,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame {
-    ArrowStreamReader(channel, allocator).use { reader ->
-        val dfs = buildList {
-            val root = reader.vectorSchemaRoot
-            val schema = root.schema
-            while (reader.loadNextBatch()) {
-                val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
-                add(df)
-            }
-        }
-        return dfs.concatKeepingSchema()
-    }
-}
-
+): AnyFrame = readArrowIPCImpl(channel, allocator, nullability)
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [channel]
  */
@@ -75,20 +59,7 @@ public fun DataFrame.Companion.readArrowFeather(
     channel: SeekableByteChannel,
     allocator: RootAllocator = Allocator.ROOT,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
-): AnyFrame {
-    ArrowFileReader(channel, allocator).use { reader ->
-        val dfs = buildList {
-            reader.recordBlocks.forEach { block ->
-                reader.loadRecordBatch(block)
-                val root = reader.vectorSchemaRoot
-                val schema = root.schema
-                val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
-                add(df)
-            }
-        }
-        return dfs.concatKeepingSchema()
-    }
-}
+): AnyFrame = readArrowFeatherImpl(channel, allocator, nullability)
 
 // IPC reading block
 
