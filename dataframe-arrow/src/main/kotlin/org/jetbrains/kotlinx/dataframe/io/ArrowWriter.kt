@@ -50,7 +50,7 @@ public interface ArrowWriter : AutoCloseable {
          * If [strictType] is true, [dataFrame] columns described in [targetSchema] with non-compatible type will produce exception (otherwise, would be saved as is).
          * If [strictNullable] is true, [targetSchema] fields that are not nullable and contain nulls in [dataFrame] will produce exception (otherwise, would be saved as is with nullable = true).
          */
-        public class Mode(
+        public data class Mode(
             public val restrictWidening: Boolean,
             public val restrictNarrowing: Boolean,
             public val strictType: Boolean,

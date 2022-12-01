@@ -1,5 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.io
 
+import org.apache.arrow.memory.RootAllocator
 import org.apache.arrow.vector.BigIntVector
 import org.apache.arrow.vector.BitVector
 import org.apache.arrow.vector.DateDayVector
@@ -26,9 +27,12 @@ import org.apache.arrow.vector.VarBinaryVector
 import org.apache.arrow.vector.VarCharVector
 import org.apache.arrow.vector.VectorSchemaRoot
 import org.apache.arrow.vector.complex.StructVector
+import org.apache.arrow.vector.ipc.ArrowFileReader
+import org.apache.arrow.vector.ipc.ArrowStreamReader
 import org.apache.arrow.vector.types.pojo.Field
 import org.apache.arrow.vector.util.DateUtility
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.Infer
@@ -39,9 +43,12 @@ import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.getColumn
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import java.math.BigDecimal
 import java.math.BigInteger
+import java.nio.channels.ReadableByteChannel
+import java.nio.channels.SeekableByteChannel
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -197,11 +204,54 @@ internal fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullab
             is TimeSecVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             is StructVector -> vector.values(range).withTypeNullable(field.isNullable, nullability)
             else -> {
-                TODO("not fully implemented")
+                throw NotImplementedError("reading from ${vector.javaClass.canonicalName} is not implemented")
             }
         }
         return DataColumn.createValueColumn(field.name, list, type, Infer.None)
     } catch (unexpectedNull: NullabilityException) {
         throw IllegalArgumentException("Column `${field.name}` should be not nullable but has nulls")
+    }
+}
+
+/**
+ * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [channel]
+ */
+public fun DataFrame.Companion.readArrowIPCImpl(
+    channel: ReadableByteChannel,
+    allocator: RootAllocator = Allocator.ROOT,
+    nullability: NullabilityOptions = NullabilityOptions.Infer,
+): AnyFrame {
+    ArrowStreamReader(channel, allocator).use { reader ->
+        val dfs = buildList {
+            val root = reader.vectorSchemaRoot
+            val schema = root.schema
+            while (reader.loadNextBatch()) {
+                val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
+                add(df)
+            }
+        }
+        return dfs.concatKeepingSchema()
+    }
+}
+
+/**
+ * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [channel]
+ */
+public fun DataFrame.Companion.readArrowFeatherImpl(
+    channel: SeekableByteChannel,
+    allocator: RootAllocator = Allocator.ROOT,
+    nullability: NullabilityOptions = NullabilityOptions.Infer,
+): AnyFrame {
+    ArrowFileReader(channel, allocator).use { reader ->
+        val dfs = buildList {
+            reader.recordBlocks.forEach { block ->
+                reader.loadRecordBatch(block)
+                val root = reader.vectorSchemaRoot
+                val schema = root.schema
+                val df = schema.fields.map { f -> readField(root, f, nullability) }.toDataFrame()
+                add(df)
+            }
+        }
+        return dfs.concatKeepingSchema()
     }
 }
