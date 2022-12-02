@@ -858,10 +858,10 @@ private val valueTypes =
     setOf(Boolean::class, Double::class, Int::class, Float::class, Long::class, Short::class, Byte::class)
 
 internal fun KlaxonJson.encodeRow(frame: ColumnsContainer<*>, index: Int): JsonObject? {
-    val values = frame.columns().mapNotNull { col ->
+    val values = frame.columns().map { col ->
         when {
             col is ColumnGroup<*> -> encodeRow(col, index)
-            col is FrameColumn<*> -> col[index]?.let { encodeFrame(it) }
+            col is FrameColumn<*> -> encodeFrame(col[index])
             col.isList() -> {
                 col[index]?.let { array(it as List<*>) } ?: array()
             }
@@ -874,7 +874,7 @@ internal fun KlaxonJson.encodeRow(frame: ColumnsContainer<*>, index: Int): JsonO
             }
 
             else -> col[index]?.toString()
-        }?.let { col.name to it }
+        }.let { col.name to it }
     }
     if (values.isEmpty()) return null
     return obj(values)
