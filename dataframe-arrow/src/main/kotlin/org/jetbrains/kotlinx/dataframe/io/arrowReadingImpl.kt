@@ -174,7 +174,7 @@ private inline fun <reified T> List<T?>.withTypeNullable(
     return this to typeOf<T>().withNullability(nullable)
 }
 
-internal fun readField(root: VectorSchemaRoot, field: Field, nullability: NullabilityOptions): AnyBaseCol {
+private fun readField(root: VectorSchemaRoot, field: Field, nullability: NullabilityOptions): AnyBaseCol {
     try {
         val range = 0 until root.rowCount
         val (list, type) = when (val vector = root.getVector(field)) {
@@ -216,7 +216,7 @@ internal fun readField(root: VectorSchemaRoot, field: Field, nullability: Nullab
 /**
  * Read [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format) data from existing [channel]
  */
-public fun DataFrame.Companion.readArrowIPCImpl(
+internal fun DataFrame.Companion.readArrowIPCImpl(
     channel: ReadableByteChannel,
     allocator: RootAllocator = Allocator.ROOT,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
@@ -237,7 +237,7 @@ public fun DataFrame.Companion.readArrowIPCImpl(
 /**
  * Read [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files) data from existing [channel]
  */
-public fun DataFrame.Companion.readArrowFeatherImpl(
+internal fun DataFrame.Companion.readArrowFeatherImpl(
     channel: SeekableByteChannel,
     allocator: RootAllocator = Allocator.ROOT,
     nullability: NullabilityOptions = NullabilityOptions.Infer,
