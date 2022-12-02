@@ -20,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.api.SortDsl
 import org.jetbrains.kotlinx.dataframe.api.asDataColumn
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.concat
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.toColumnAccessor
 import org.jetbrains.kotlinx.dataframe.api.toColumnOf
@@ -57,7 +58,8 @@ internal fun <T, R> ColumnsContainer<T>.newColumn(
     infer: Infer = Infer.Nulls,
     expression: AddExpression<T, R>,
 ): DataColumn<R> {
-    val (nullable, values) = computeValues(this as DataFrame<T>, expression)
+    val df = this as? DataFrame<T> ?: dataFrameOf(columns()).cast()
+    val (nullable, values) = computeValues(df, expression)
     return when (infer) {
         Infer.Nulls -> DataColumn.create(
             name = name,

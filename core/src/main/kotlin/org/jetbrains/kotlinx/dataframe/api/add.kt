@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
@@ -160,6 +161,10 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
         infer: Infer = Infer.Nulls,
         noinline expression: RowExpression<T, R>
     ): Boolean = add(df.mapToColumn(name, infer, expression))
+
+    public inline fun <reified R> expr(noinline expression: RowExpression<T, R>): DataColumn<R> {
+        return df.mapToColumn("", Infer.Nulls, expression)
+    }
 
     public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean = add(this, Infer.Nulls, expression)
 
