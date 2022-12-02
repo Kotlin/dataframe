@@ -89,21 +89,17 @@ internal class ArrowWriterImpl(
         return when (targetFieldType) {
             ArrowType.Utf8() -> column.map { it?.toString() }
             ArrowType.LargeUtf8() -> column.map { it?.toString() }
-            ArrowType.Binary(), ArrowType.LargeBinary() -> throw NotImplementedError("Saving var binary is currently not implemented")
             ArrowType.Bool() -> column.convertToBoolean()
             ArrowType.Int(8, true) -> column.convertToByte()
             ArrowType.Int(16, true) -> column.convertToShort()
             ArrowType.Int(32, true) -> column.convertToInt()
             ArrowType.Int(64, true) -> column.convertToLong()
-//            ArrowType.Int(8, false), ArrowType.Int(16, false), ArrowType.Int(32, false), ArrowType.Int(64, false) -> todo
             is ArrowType.Decimal -> column.convertToBigDecimal()
             ArrowType.FloatingPoint(FloatingPointPrecision.SINGLE) -> column.convertToDouble().convertToFloat() // Use [convertToDouble] as locale logic step
             ArrowType.FloatingPoint(FloatingPointPrecision.DOUBLE) -> column.convertToDouble()
             ArrowType.Date(DateUnit.DAY) -> column.convertToLocalDate()
             ArrowType.Date(DateUnit.MILLISECOND) -> column.convertToLocalDateTime()
             is ArrowType.Time -> column.convertToLocalTime()
-//            is ArrowType.Duration -> todo
-//            is ArrowType.Struct -> todo
             else -> {
                 throw NotImplementedError("Saving ${targetFieldType.javaClass.canonicalName} is currently not implemented")
             }
@@ -114,17 +110,11 @@ internal class ArrowWriterImpl(
         when (vector) {
             is VarCharVector -> column.convertToString().forEachIndexed { i, value -> value?.let { vector.set(i, Text(value)); value } ?: vector.setNull(i) }
             is LargeVarCharVector -> column.convertToString().forEachIndexed { i, value -> value?.let { vector.set(i, Text(value)); value } ?: vector.setNull(i) }
-//            is VarBinaryVector -> todo
-//            is LargeVarBinaryVector -> todo
             is BitVector -> column.convertToBoolean().forEachIndexed { i, value -> value?.let { vector.set(i, value.compareTo(false)); value } ?: vector.setNull(i) }
             is TinyIntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value } ?: vector.setNull(i) }
             is SmallIntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value } ?: vector.setNull(i) }
             is IntVector -> column.convertToInt().forEachIndexed { i, value -> value?.let { vector.set(i, value); value } ?: vector.setNull(i) }
             is BigIntVector -> column.convertToLong().forEachIndexed { i, value -> value?.let { vector.set(i, value); value } ?: vector.setNull(i) }
-//            is UInt1Vector -> todo
-//            is UInt2Vector -> todo
-//            is UInt4Vector -> todo
-//            is UInt8Vector -> todo
             is DecimalVector -> column.convertToBigDecimal().forEachIndexed { i, value -> value?.let { vector.set(i, value); value } ?: vector.setNull(i) }
             is Decimal256Vector -> column.convertToBigDecimal().forEachIndexed { i, value -> value?.let { vector.set(i, value); value } ?: vector.setNull(i) }
             is Float8Vector -> column.convertToDouble().forEachIndexed { i, value -> value?.let { vector.set(i, value); value } ?: vector.setNull(i) }
@@ -133,13 +123,12 @@ internal class ArrowWriterImpl(
             is DateDayVector -> column.convertToLocalDate().forEachIndexed { i, value -> value?.let { vector.set(i, (value.toJavaLocalDate().toEpochDay()).toInt()); value } ?: vector.setNull(i) }
             is DateMilliVector -> column.convertToLocalDateTime().forEachIndexed { i, value -> value?.let { vector.set(i, value.toInstant(
                 TimeZone.UTC).toEpochMilliseconds()); value } ?: vector.setNull(i) }
-//            is DurationVector -> todo
             is TimeNanoVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, value.toNanoOfDay()); value } ?: vector.setNull(i) }
             is TimeMicroVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, value.toNanoOfDay() / 1000); value } ?: vector.setNull(i) }
             is TimeMilliVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, (value.toNanoOfDay() / 1000 / 1000).toInt()); value } ?: vector.setNull(i) }
             is TimeSecVector -> column.convertToLocalTime().forEachIndexed { i, value -> value?.let { vector.set(i, (value.toNanoOfDay() / 1000 / 1000 / 1000).toInt()); value } ?: vector.setNull(i) }
-//            is StructVector -> todo
             else -> {
+                // TODO implement other vector types from [readField] (VarBinaryVector, UIntVector, DurationVector, StructVector) and may be others (ListVector, FixedSizeListVector etc)
                 throw NotImplementedError("Saving to ${vector.javaClass.canonicalName} is currently not implemented")
             }
         }

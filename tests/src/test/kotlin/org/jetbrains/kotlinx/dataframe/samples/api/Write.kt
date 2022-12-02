@@ -204,7 +204,7 @@ class Write : TestBase() {
                     strictType = true,
                     strictNullable = false
                 ),
-                // Specify warning subscriber
+                // Specify mismatch subscriber
                 writeMismatchMessage
             ).use { writer ->
                 // Save to any format and sink, like in previous example
