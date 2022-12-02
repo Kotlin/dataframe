@@ -133,10 +133,10 @@ Dataframe supports writing [Arrow interprocess streaming format](https://arrow.a
 and [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
 to raw WritableByteChannel, OutputStream, File or ByteArray.
 
-Data may be saved "as is" or converted to match some target [Schema](https://arrow.apache.org/docs/java/reference/org/apache/arrow/vector/types/pojo/Schema.html)
-if you have it.
+Data may be saved "as is" (like exporting to new Excel file) or converted to match some target [Schema](https://arrow.apache.org/docs/java/reference/org/apache/arrow/vector/types/pojo/Schema.html)
+if you have it (like inserting into existing SQL table).
 
-First is quite easy:
+The first approach is quite easy:
 <!---FUN writeArrowFile-->
 
 ```kotlin
@@ -158,7 +158,7 @@ val featherByteArray: ByteArray = df.saveArrowFeatherToByteArray()
 <!---END-->
 (creating byte array). Nested frames and columns with mixed or unsupported types will be saved as String.
 
-Second is a bit more tricky. You have to create specify schema itself and casting behavior mode as `ArrowWriter` parameters.
+The second approach is a bit more tricky. You have to specify schema itself and casting behavior mode as `ArrowWriter` parameters.
 Behavior `Mode` has four independent switchers: `restrictWidening`, `restrictNarrowing`, `strictType`, `strictNullable`.
 You can use `Mode.STRICT` (this is default), `Mode.LOYAL` or any combination you want.
 The `ArrowWriter` object should be closed after using because Arrow uses random access buffers not managed by Java GC.
@@ -182,8 +182,8 @@ df.arrowWriter(
         strictType = true,
         strictNullable = false
     ),
-    // Specify warning subscriber
-    writeWarningMessage
+    // Specify mismatch subscriber
+    writeMismatchMessage
 ).use { writer ->
     // Save to any format and sink, like in previous example
     writer.writeArrowFeather(file)
