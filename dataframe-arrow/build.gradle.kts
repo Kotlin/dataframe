@@ -14,6 +14,7 @@ dependencies {
     implementation(libs.arrow.memory)
     implementation(libs.commonsCompress)
     implementation(libs.kotlin.reflect)
+    implementation(libs.kotlin.datetimeJvm)
 
     testApi(project(":core"))
     testImplementation(libs.junit)
@@ -33,4 +34,8 @@ kotlinPublications {
 
 kotlin {
     explicitApi()
+}
+
+tasks.test {
+    jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED")
 }

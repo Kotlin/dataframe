@@ -1,16 +1,24 @@
 package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.string.shouldStartWith
+import org.apache.arrow.vector.types.pojo.Schema
 import org.apache.commons.csv.CSVFormat
 import org.apache.poi.ss.usermodel.Sheet
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.io.ArrowWriter
+import org.jetbrains.kotlinx.dataframe.io.arrowWriter
+import org.jetbrains.kotlinx.dataframe.io.saveArrowFeatherToByteArray
+import org.jetbrains.kotlinx.dataframe.io.saveArrowIPCToByteArray
 import org.jetbrains.kotlinx.dataframe.io.toCsv
 import org.jetbrains.kotlinx.dataframe.io.toJson
+import org.jetbrains.kotlinx.dataframe.io.writeArrowFeather
+import org.jetbrains.kotlinx.dataframe.io.writeArrowIPC
 import org.jetbrains.kotlinx.dataframe.io.writeCSV
 import org.jetbrains.kotlinx.dataframe.io.writeExcel
 import org.jetbrains.kotlinx.dataframe.io.writeJson
+import org.jetbrains.kotlinx.dataframe.io.writeMismatchMessage
 import org.junit.Test
 import java.io.File
 import kotlin.io.path.deleteExisting
@@ -117,6 +125,91 @@ class Write : TestBase() {
             // Save the result
             file.outputStream().use { wb.write(it) }
             wb.close()
+            // SampleEnd
+        }
+    }
+
+    @Test
+    fun writeArrowFile() {
+        useTempFile { file ->
+            // SampleStart
+            df.writeArrowIPC(file)
+            // or
+            df.writeArrowFeather(file)
+            // SampleEnd
+        }
+    }
+
+    @Test
+    fun writeArrowByteArray() {
+        // SampleStart
+        val ipcByteArray: ByteArray = df.saveArrowIPCToByteArray()
+        // or
+        val featherByteArray: ByteArray = df.saveArrowFeatherToByteArray()
+        // SampleEnd
+    }
+
+    @Test
+    fun writeArrowPerSchema() {
+        useTempFile { file ->
+            val schemaJson =
+"""{
+  "fields" : [ {
+    "name" : "name",
+    "nullable" : true,
+    "type" : {
+      "name" : "utf8"
+    },
+    "children" : [ ]
+  }, {
+    "name" : "age",
+    "nullable" : false,
+    "type" : {
+      "name" : "int",
+      "bitWidth" : 32,
+      "isSigned" : true
+    },
+    "children" : [ ]
+  }, {
+    "name" : "city",
+    "nullable" : false,
+    "type" : {
+      "name" : "utf8"
+    },
+    "children" : [ ]
+  }, {
+    "name" : "weight",
+    "nullable" : true,
+    "type" : {
+      "name" : "floatingpoint",
+      "precision" : "DOUBLE"
+    },
+    "children" : [ ]
+  } ]
+}
+"""
+
+            // SampleStart
+            // Get schema from anywhere you want. It can be deserialized from JSON, generated from another dataset
+            // (including DataFrame.columns().toArrowSchema() method), created manually and so on.
+            val schema = Schema.fromJSON(schemaJson)
+
+            df.arrowWriter(
+                // Specify your schema
+                schema,
+                // Specify desired behavior mode
+                ArrowWriter.Companion.Mode(
+                    restrictWidening = true,
+                    restrictNarrowing = true,
+                    strictType = true,
+                    strictNullable = false
+                ),
+                // Specify mismatch subscriber
+                writeMismatchMessage
+            ).use { writer ->
+                // Save to any format and sink, like in previous example
+                writer.writeArrowFeather(file)
+            }
             // SampleEnd
         }
     }

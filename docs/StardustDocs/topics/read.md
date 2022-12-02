@@ -399,10 +399,9 @@ implementation("org.jetbrains.kotlinx:dataframe-arrow:$dataframe_version")
 Make sure to follow [Apache Arrow Java compatibility](https://arrow.apache.org/docs/java/install.html#java-compatibility) guide when using Java 9+ 
 </warning>
 
-Dataframe supports reading
-from [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
+Dataframe supports reading [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
 and [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
-
+from raw Channel (ReadableByteChannel for streaming and SeekableByteChannel for random access), InputStream, File or ByteArray.
 <!---FUN readArrowFeather-->
 
 ```kotlin
@@ -410,5 +409,3 @@ val df = DataFrame.readArrowFeather(file)
 ```
 
 <!---END-->
-
-
