@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.exceptions
 
-import kotlin.reflect.*
+import kotlin.reflect.KType
 
 public class TypeConverterNotFoundException(public val from: KType, public val to: KType) : IllegalArgumentException() {
 
