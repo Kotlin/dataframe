@@ -2,9 +2,11 @@ package org.jetbrains.kotlinx.dataframe.impl.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.api.ConvertSchemaDsl
 import org.jetbrains.kotlinx.dataframe.api.ConverterScope
 import org.jetbrains.kotlinx.dataframe.api.ExcessiveColumns
@@ -14,10 +16,13 @@ import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
+import org.jetbrains.kotlinx.dataframe.api.getColumnPaths
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
@@ -39,8 +44,16 @@ import kotlin.reflect.jvm.jvmErasure
 
 private open class Converter(val transform: ConverterScope.(Any?) -> Any?, val skipNulls: Boolean)
 
-private class ConvertSchemaDslImpl<T> : ConvertSchemaDsl<T> {
-    private val converters: MutableMap<Pair<KType, KType>, Converter> = mutableMapOf()
+private class Filler(val columns: ColumnsSelector<*, *>, val expr: RowExpression<*, *>)
+
+internal interface ConvertSchemaDslInternal<T> : ConvertSchemaDsl<T> {
+    public fun <C> fill(columns: ColumnsSelector<*, C>, expr: RowExpression<*, C>)
+}
+
+private class ConvertSchemaDslImpl<T> : ConvertSchemaDslInternal<T> {
+    private val converters: MutableMap<Pair<KType, KType>, Converter> = mutableMapOf<Pair<KType, KType>, Converter>()
+
+    val fillers = mutableListOf<Filler>()
 
     private val flexibleConverters: MutableMap<(KType, ColumnSchema) -> Boolean, Converter> = mutableMapOf()
 
@@ -48,6 +61,10 @@ private class ConvertSchemaDslImpl<T> : ConvertSchemaDsl<T> {
     override fun <A, B> convert(from: KType, to: KType, converter: (A) -> B) {
         converters[from.withNullability(false) to to.withNullability(false)] =
             Converter({ converter(it as A) }, !from.isMarkedNullable)
+    }
+
+    override fun <C> fill(columns: ColumnsSelector<*, C>, expr: RowExpression<*, C>) {
+        fillers.add(Filler(columns, expr))
     }
 
     override fun convertIf(
@@ -80,13 +97,15 @@ internal fun AnyFrame.convertToImpl(
     val dsl = ConvertSchemaDslImpl<Any>()
     dsl.body()
 
+    val missingPaths = mutableSetOf<ColumnPath>()
+
     fun AnyFrame.convertToSchema(schema: DataFrameSchema, path: ColumnPath): AnyFrame {
         // if current frame is empty
         if (this.isEmpty()) {
             return schema.createEmptyDataFrame()
         }
 
-        var visited = 0
+        val visited = mutableSetOf<String>()
         val newColumns = columns().mapNotNull { originalColumn ->
             val targetColumn = schema.columns[originalColumn.name()]
             if (targetColumn == null) {
@@ -96,8 +115,7 @@ internal fun AnyFrame.convertToImpl(
                     ExcessiveColumns.Remove -> null
                 }
             } else {
-                visited++
-
+                visited.add(originalColumn.name())
                 val currentSchema = originalColumn.extractSchema()
                 when {
                     targetColumn == currentSchema -> originalColumn
@@ -130,7 +148,7 @@ internal fun AnyFrame.convertToImpl(
                                         it
                                     }
 
-                                if (!nullsAllowed && result == null) throw TypeConversionException(it, from, to)
+                                if (!nullsAllowed && result == null) throw TypeConversionException(it, from, to, originalColumn)
 
                                 result
                             }
@@ -210,7 +228,6 @@ internal fun AnyFrame.convertToImpl(
         }.toMutableList()
 
         // when the target is nullable but the source does not contain a column, fill it in with nulls / empty dataframes
-        val newColumnsNames = newColumns.map { it.name() }
         val size = this.size.nrow
         schema.columns.forEach { (name, targetColumn) ->
             val isNullable =
@@ -219,20 +236,30 @@ internal fun AnyFrame.convertToImpl(
                     targetColumn.contentType?.isMarkedNullable == true || // like DataRow<Something?> for a group column (all columns in the group will be nullable)
                     targetColumn.kind == ColumnKind.Frame // frame column can be filled with empty dataframes
 
-            if (name !in newColumnsNames && isNullable) {
-                visited++
-                newColumns += targetColumn.createEmptyColumn(name, size)
+            if (name !in visited) {
+                if (isNullable) {
+                    newColumns += targetColumn.createEmptyColumn(name, size)
+                } else missingPaths.add(path + name)
             }
-        }
-
-        if (visited != schema.columns.size) {
-            val unvisited = schema.columns.keys - columnNames().toSet()
-            throw IllegalArgumentException("The following columns were not found in DataFrame: $unvisited, and their type was not nullable")
         }
         return newColumns.toDataFrame()
     }
 
     val clazz = type.jvmErasure
     val marker = MarkersExtractor.get(clazz)
-    return convertToSchema(marker.schema, emptyPath())
+    var result = convertToSchema(marker.schema, emptyPath())
+
+    dsl.fillers.forEach { filler ->
+        val paths = result.getColumnPaths(filler.columns)
+        missingPaths.removeAll(paths)
+        result = result.update(paths).with {
+            filler.expr(this, this)
+        }
+    }
+
+    if (missingPaths.isNotEmpty()) {
+        throw IllegalArgumentException("The following columns were not found in DataFrame: ${missingPaths.map { it.joinToString()}}, and their type was not nullable. Use `fill` to initialize these columns")
+    }
+
+    return result
 }

@@ -51,5 +51,7 @@ public data class ColumnPath(val path: List<String>) : List<String> by path, Col
 
     override fun toString(): String = path.toString()
 
+    public fun joinToString(separator: String = "/"): String = path.joinToString(separator)
+
     override fun <C> get(column: ColumnReference<C>): ColumnAccessor<C> = ColumnAccessorImpl(this + column.path())
 }
