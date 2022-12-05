@@ -8,9 +8,9 @@ import org.jetbrains.kotlinx.dataframe.impl.schema.getPropertiesOrder
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import kotlin.reflect.KClass
 import kotlin.reflect.KType
-import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.hasAnnotation
+import kotlin.reflect.full.memberProperties
 import kotlin.reflect.full.superclasses
 import kotlin.reflect.full.withNullability
 import kotlin.reflect.jvm.jvmErasure
@@ -54,7 +54,7 @@ internal object MarkersExtractor {
 
     private fun getFields(markerClass: KClass<*>, nullableProperties: Boolean): List<GeneratedField> {
         val order = getPropertiesOrder(markerClass)
-        return markerClass.declaredMemberProperties.sortedBy { order[it.name] ?: Int.MAX_VALUE }.mapIndexed { _, it ->
+        return markerClass.memberProperties.sortedBy { order[it.name] ?: Int.MAX_VALUE }.mapIndexed { _, it ->
             val fieldName = ValidFieldName.of(it.name)
             val columnName = it.findAnnotation<ColumnName>()?.name ?: fieldName.unquoted
             val type = it.returnType
