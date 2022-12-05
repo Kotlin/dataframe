@@ -749,6 +749,37 @@ class DataFrameSymbolProcessorTest {
     }
 
     @Test
+    fun `generic interface as supertype`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
+                package org.example
+
+                $imports
+
+                interface KeyValue<T> {
+                    val key: String
+                    val value: T
+                }
+                
+                @DataSchema
+                interface MySchema : KeyValue<Int>
+
+
+                val ColumnsContainer<MySchema>.test1: DataColumn<String> get() = key
+                val DataRow<MySchema>.test2: Int get() = value
+                        """.trimIndent()
+                    )
+                )
+            )
+        )
+        result.successfulCompilation shouldBe true
+    }
+
+    @Test
     fun `nested interface`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(
