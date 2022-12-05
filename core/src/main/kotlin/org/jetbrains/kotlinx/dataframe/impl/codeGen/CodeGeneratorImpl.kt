@@ -53,17 +53,19 @@ private val letterCategories = setOf(
     CharCategory.DECIMAL_DIGIT_NUMBER
 )
 
-internal fun String.needsQuoting(): Boolean {
-    return isBlank() ||
+internal fun String.needsQuoting(): Boolean =
+    if (isQuoted()) false
+    else isBlank() ||
         first().isDigit() ||
         contains(charsToQuote) ||
         HardKeywords.VALUES.contains(this) ||
         ModifierKeywords.VALUES.contains(this) ||
         all { it == '_' } ||
         any { it != '_' && it.category !in letterCategories }
-}
 
-internal fun String.quoteIfNeeded() = if (needsQuoting()) "`$this`" else this
+public fun String.isQuoted(): Boolean = startsWith("`") && endsWith("`")
+
+public fun String.quoteIfNeeded(): String = if (needsQuoting()) "`$this`" else this
 
 internal fun List<Code>.join() = joinToString("\n")
 
@@ -250,7 +252,7 @@ internal open class ExtensionsCodeGeneratorImpl(
         val markerName = marker.name
         val markerType = "$markerName${marker.typeArguments}"
         val visibility = renderTopLevelDeclarationVisibility(marker)
-        val shortMarkerName = markerName.substring(markerName.lastIndexOf('.') + 1)
+        val shortMarkerName = markerName.substring(markerName.lastIndexOf('.') + 1).removeQuotes()
         val nullableShortMarkerName = "Nullable$shortMarkerName"
 
         fun String.toNullable() = if (this.last() == '?' || this == "*") this else "$this?"
