@@ -12,7 +12,6 @@ import com.google.devtools.ksp.symbol.KSClassifierReference
 import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSName
-import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSTypeReference
 import com.google.devtools.ksp.symbol.KSValueArgument
 import com.google.devtools.ksp.symbol.Modifier
@@ -61,11 +60,10 @@ class ExtensionsGenerator(
         return when {
             isClassOrInterface() && effectivelyPublicOrInternal() -> {
                 DataSchemaDeclaration(
-                    this,
-                    declarations
-                        .filterIsInstance<KSPropertyDeclaration>()
+                    origin = this,
+                    properties = getAllProperties()
                         .map { KSAnnotatedWithType(it, it.simpleName, it.type) }
-                        .toList()
+                        .toList(),
                 )
             }
             else -> null
