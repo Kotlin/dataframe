@@ -60,16 +60,6 @@ interface KotlinTypeFacade {
         session.typeContext
     }
 
-    fun fromFqName(fqName: String, nullable: Boolean): Marker {
-        val type = ConeClassLikeLookupTagImpl(
-            ClassId(
-                FqName(fqName.substringBeforeLast(".", missingDelimiterValue = "")),
-                Name.identifier(fqName.substringAfterLast("."))
-            )
-        ).constructType(emptyArray(), nullable)
-        return Marker(type)
-    }
-
     fun from(type: KType): Marker {
         return Marker(fromImpl(type))
     }

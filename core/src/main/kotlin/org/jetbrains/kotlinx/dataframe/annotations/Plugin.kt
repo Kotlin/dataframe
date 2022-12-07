@@ -18,11 +18,6 @@ public typealias TypeApproximation = org.jetbrains.kotlinx.dataframe.Marker
 //@Serializable
 //public data class TypeApproximationImpl(public val fqName: String, public val nullable: Boolean) : TypeApproximation
 
-public fun KotlinTypeFacade.TypeApproximationImpl(fqName: String, nullable: Boolean): TypeApproximation {
-
-    return fromFqName(fqName, nullable)
-}
-
 //public fun TypeApproximation(fqName: String, nullable: Boolean): TypeApproximation = TypeApproximationImpl(fqName, nullable)
 
 //@Serializable
