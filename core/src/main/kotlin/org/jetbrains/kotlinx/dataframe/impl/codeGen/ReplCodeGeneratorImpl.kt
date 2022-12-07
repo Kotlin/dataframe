@@ -16,7 +16,6 @@ import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.api.Code
 import kotlin.reflect.KClass
-import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.KVisibility
@@ -45,25 +44,22 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             else -> null
         }
 
-    override fun process(row: AnyRow, property: KProperty<*>?, isMutable: Boolean) =
-        process(row.df(), property, isMutable)
+    override fun process(row: AnyRow, property: KProperty<*>?): CodeWithConverter = process(row.df(), property)
 
-    override fun process(df: AnyFrame, property: KProperty<*>?, isMutable: Boolean): CodeWithConverter {
+    override fun process(df: AnyFrame, property: KProperty<*>?): CodeWithConverter {
         var targetSchema = df.schema()
-        var isMutable = isMutable
 
         if (property != null) {
             val wasProcessedBefore = property in registeredProperties
             registeredProperties.add(property)
-            isMutable = property is KMutableProperty
 
             // maybe property is already properly typed, let's do some checks
             val currentMarker = getMarkerClass(property.returnType)
                 ?.takeIf { it.findAnnotation<DataSchema>() != null }
                 ?.let { registeredMarkers[it] ?: MarkersExtractor.get(it) }
             if (currentMarker != null) {
-                // if property is mutable, we need to make sure that its marker type is open in order to let derived data frames be assignable to it
-                if (!isMutable || currentMarker.isOpen) {
+                // we need to make sure that the property's marker type is open in order to let derived data frames be assignable to it
+                if (currentMarker.isOpen) {
                     val columnSchema = currentMarker.schema
                     // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual data frame type
                     if (wasProcessedBefore || columnSchema == targetSchema) {
@@ -79,7 +75,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             }
         }
 
-        return generate(schema = targetSchema, name = markerInterfacePrefix, isOpen = isMutable)
+        return generate(schema = targetSchema, name = markerInterfacePrefix, isOpen = true)
     }
 
     fun generate(
