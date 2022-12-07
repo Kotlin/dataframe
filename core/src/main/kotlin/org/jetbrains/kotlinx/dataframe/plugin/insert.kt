@@ -201,6 +201,10 @@ public data class SimpleFrameColumn(
         return columns
     }
 
+    override fun rename(s: String): SimpleCol {
+        return SimpleFrameColumn(name1, columns, nullable, anyFrameType)
+    }
+
     override fun kind(): SimpleColumnKind {
         return SimpleColumnKind.FRAME
     }
