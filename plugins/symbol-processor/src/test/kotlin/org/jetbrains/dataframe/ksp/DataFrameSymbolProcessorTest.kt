@@ -34,6 +34,48 @@ class DataFrameSymbolProcessorTest {
     }
 
     @Test
+    fun `interface with backticked name`() {
+        val result = KspCompilationTestRunner.compile(
+            TestCompilationParameters(
+                sources = listOf(
+                    SourceFile.kotlin(
+                        "MySources.kt",
+                        """
+                $imports
+
+                class OuterClass
+
+                @DataSchema(isOpen = false)
+                interface `Hello Something` {
+                    val name: String
+                    val `test name`: NestedClass
+                    val nullableProperty: Int?
+                    val a: () -> Unit
+                    val d: List<List<*>>
+                    
+                    class NestedClass
+                }
+
+                val ColumnsContainer<`Hello Something`>.col1: DataColumn<String> get() = name
+                val ColumnsContainer<`Hello Something`>.col2: DataColumn<`Hello Something`.NestedClass> get() = `test name`
+                val ColumnsContainer<`Hello Something`>.col3: DataColumn<Int?> get() = nullableProperty
+                val ColumnsContainer<`Hello Something`>.col4: DataColumn<() -> Unit> get() = a
+                val ColumnsContainer<`Hello Something`>.col5: DataColumn<List<List<*>>> get() = d
+                
+                val DataRow<`Hello Something`>.row1: String get() = name
+                val DataRow<`Hello Something`>.row2: `Hello Something`.NestedClass get() = `test name`
+                val DataRow<`Hello Something`>.row3: Int? get() = nullableProperty
+                val DataRow<`Hello Something`>.row4: () -> Unit get() = a
+                val DataRow<`Hello Something`>.row5: List<List<*>> get() = d
+                        """.trimIndent()
+                    )
+                )
+            )
+        )
+        result.successfulCompilation shouldBe true
+    }
+
+    @Test
     fun `all interface`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(

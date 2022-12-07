@@ -121,7 +121,7 @@ class ExtensionsGenerator(
                     declaration = dataSchema,
                     interfaceName = dataSchema.getQualifiedNameOrThrow(),
                     visibility = getMarkerVisibility(dataSchema),
-                    properties.map { property ->
+                    properties = properties.map { property ->
                         Property(getColumnName(property), property.simpleName.asString(), property.type)
                     }
                 )
