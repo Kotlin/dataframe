@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldBeEmpty
+import io.kotest.matchers.string.shouldNotBeEmpty
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.process
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
@@ -186,8 +186,8 @@ class ReplCodeGenTests : BaseTest() {
         repl.process<Test3.A>()
         repl.process<Test3.B>()
         repl.process<Test3.C>()
-        val c = repl.process(Test3.df, Test3::df) // TODO this now generates stuff
-        c.declarations.shouldBeEmpty()
+        val c = repl.process(Test3.df, Test3::df)
+        c.declarations.shouldNotBeEmpty()
     }
 
     @Test
