@@ -3,6 +3,18 @@
 
 This section describes ways to create [`DataFrame`](DataFrame.md).
 
+### emptyDataFrame
+
+Returns [`DataFrame`](DataFrame.md) with no rows and no columns.
+
+<!---FUN createEmptyDataFrame-->
+
+```kotlin
+val df = emptyDataFrame()
+```
+
+<!---END-->
+
 ### dataFrameOf
 
 Returns [`DataFrame`](DataFrame.md) with given column names and values.
