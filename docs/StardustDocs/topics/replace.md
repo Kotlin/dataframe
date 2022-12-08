@@ -23,5 +23,7 @@ df.replace { age }.with { 2021 - age named "year" }
 <!---END-->
 
 <tip>
+
 `replace { columns }.with { columnExpression } ` is equivalent to `convert { columns }.to { columnExpression }`. See [`convert`](convert.md) for details.
+
 </tip>

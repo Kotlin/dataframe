@@ -6,8 +6,8 @@ import org.jetbrains.kotlinx.dataframe.api.add
 import org.jetbrains.kotlinx.dataframe.api.column
 import org.jetbrains.kotlinx.dataframe.api.columnGroup
 import org.jetbrains.kotlinx.dataframe.api.columnOf
-import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.frameColumn
 import org.jetbrains.kotlinx.dataframe.api.map
@@ -203,7 +203,7 @@ class Create : TestBase() {
     @Test
     fun createEmptyDataFrame() {
         // SampleStart
-        val df = emptyDataFrame()
+        val df = emptyDataFrame<Any>()
         // SampleEnd
         df.columnsCount() shouldBe 0
         df.rowsCount() shouldBe 0

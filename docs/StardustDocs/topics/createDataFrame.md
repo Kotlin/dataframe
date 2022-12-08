@@ -10,7 +10,7 @@ Returns [`DataFrame`](DataFrame.md) with no rows and no columns.
 <!---FUN createEmptyDataFrame-->
 
 ```kotlin
-val df = emptyDataFrame()
+val df = emptyDataFrame<Any>()
 ```
 
 <!---END-->
