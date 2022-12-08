@@ -4,6 +4,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.junit.Test
@@ -239,9 +240,21 @@ class ConvertToTests {
             .alsoDebug("df5 after second convert:")
     }
 
-    private fun <T : DataFrame<*>> T.alsoDebug(println: String? = null): T = apply {
-        println?.let { println(it) }
-        print(borders = true, title = true, columnTypes = true, valueLimit = -1)
-        schema().print()
+    interface KeyValue<T> {
+        val key: String
+        val value: T
+    }
+
+    @DataSchema
+    interface MySchema : KeyValue<Int>
+
+    @Test
+    fun `Convert generic interface to itself`() {
+        val df = dataFrameOf("key", "value")(
+            "a", 1,
+            "b", 2,
+        ).alsoDebug()
+        val converted = df.convertTo<MySchema>().alsoDebug()
+        converted shouldBe df
     }
 }
