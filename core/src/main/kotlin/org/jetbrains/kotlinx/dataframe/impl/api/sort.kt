@@ -16,6 +16,7 @@ import org.jetbrains.kotlinx.dataframe.columns.UnresolvedColumnsPolicy
 import org.jetbrains.kotlinx.dataframe.columns.ValueColumn
 import org.jetbrains.kotlinx.dataframe.impl.columns.addPath
 import org.jetbrains.kotlinx.dataframe.impl.columns.assertIsComparable
+import org.jetbrains.kotlinx.dataframe.impl.columns.missing.MissingColumnGroup
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolve
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.kind
@@ -67,9 +68,10 @@ internal fun AnyCol.createComparator(nullsLast: Boolean): java.util.Comparator<I
 
 internal fun <T, C> DataFrame<T>.getSortColumns(
     columns: SortColumnsSelector<T, C>,
-    unresolvedColumnsPolicy: UnresolvedColumnsPolicy
-): List<SortColumnDescriptor<*>> {
-    return columns.toColumns().resolve(this, unresolvedColumnsPolicy)
+    unresolvedColumnsPolicy: UnresolvedColumnsPolicy,
+): List<SortColumnDescriptor<*>> =
+    columns.toColumns().resolve(this, unresolvedColumnsPolicy)
+        .filterNot { it.data is MissingColumnGroup<*> } // can appear using [DataColumn<R>?.check] with UnresolvedColumnsPolicy.Skip
         .map {
             when (val col = it.data) {
                 is SortColumnDescriptor<*> -> col
