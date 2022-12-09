@@ -33,6 +33,15 @@ public interface SortDsl<out T> : ColumnsSelectionDsl<T> {
     public fun <C> KProperty<C?>.nullsLast(flag: Boolean = true): ColumnSet<C?> = toColumnAccessor().nullsLast(flag)
 }
 
+/**
+ * [SortColumnsSelector] is used to express or select multiple columns to sort by, represented by [ColumnSet]`<C>`,
+ * using the context of [SortDsl]`<T>` as `this` and `it`.
+ *
+ * So:
+ * ```kotlin
+ * SortDsl<T>.(it: SortDsl<T>) -> ColumnSet<C>
+ * ```
+ */
 public typealias SortColumnsSelector<T, C> = Selector<SortDsl<T>, ColumnSet<C>>
 
 // region DataColumn
