@@ -20,8 +20,12 @@ import kotlin.reflect.KProperty
 public fun <T, C> DataFrame<T>.fillNulls(cols: ColumnsSelector<T, C?>): Update<T, C?> =
     update(cols).where { it == null }
 
-public fun <T> DataFrame<T>.fillNulls(vararg cols: String): Update<T, Any?> = fillNulls { cols.toColumns() }
-public fun <T, C> DataFrame<T>.fillNulls(vararg cols: KProperty<C>): Update<T, C?> = fillNulls { cols.toColumns() }
+public fun <T> DataFrame<T>.fillNulls(vararg cols: String): Update<T, Any?> =
+    fillNulls { cols.toColumns() }
+
+public fun <T, C> DataFrame<T>.fillNulls(vararg cols: KProperty<C>): Update<T, C?> =
+    fillNulls { cols.toColumns() }
+
 public fun <T, C> DataFrame<T>.fillNulls(vararg cols: ColumnReference<C>): Update<T, C?> =
     fillNulls { cols.toColumns() }
 
@@ -38,9 +42,9 @@ internal inline val Any?.isNA: Boolean
         is Double -> isNaN()
         is Float -> isNaN()
         is AnyRow -> allNA()
-    is AnyFrame -> isEmpty()
-    else -> false
-}
+        is AnyFrame -> isEmpty()
+        else -> false
+    }
 
 internal inline val AnyCol.canHaveNaN: Boolean get() = typeClass.let { it == Double::class || it == Float::class }
 
@@ -52,10 +56,18 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
 
 // region fillNaNs
 
-public fun <T, C> DataFrame<T>.fillNaNs(cols: ColumnsSelector<T, C>): Update<T, C> = update(cols).where { it.isNaN }
-public fun <T> DataFrame<T>.fillNaNs(vararg cols: String): Update<T, Any?> = fillNaNs { cols.toColumns() }
-public fun <T, C> DataFrame<T>.fillNaNs(vararg cols: KProperty<C>): Update<T, C> = fillNaNs { cols.toColumns() }
-public fun <T, C> DataFrame<T>.fillNaNs(vararg cols: ColumnReference<C>): Update<T, C> = fillNaNs { cols.toColumns() }
+public fun <T, C> DataFrame<T>.fillNaNs(cols: ColumnsSelector<T, C>): Update<T, C> =
+    update(cols).where { it.isNaN }
+
+public fun <T> DataFrame<T>.fillNaNs(vararg cols: String): Update<T, Any?> =
+    fillNaNs { cols.toColumns() }
+
+public fun <T, C> DataFrame<T>.fillNaNs(vararg cols: KProperty<C>): Update<T, C> =
+    fillNaNs { cols.toColumns() }
+
+public fun <T, C> DataFrame<T>.fillNaNs(vararg cols: ColumnReference<C>): Update<T, C> =
+    fillNaNs { cols.toColumns() }
+
 public fun <T, C> DataFrame<T>.fillNaNs(cols: Iterable<ColumnReference<C>>): Update<T, C> =
     fillNaNs { cols.toColumnSet() }
 
@@ -63,11 +75,20 @@ public fun <T, C> DataFrame<T>.fillNaNs(cols: Iterable<ColumnReference<C>>): Upd
 
 // region fillNA
 
-public fun <T, C> DataFrame<T>.fillNA(cols: ColumnsSelector<T, C?>): Update<T, C?> = update(cols).where { it.isNA }
-public fun <T> DataFrame<T>.fillNA(vararg cols: String): Update<T, Any?> = fillNA { cols.toColumns() }
-public fun <T, C> DataFrame<T>.fillNA(vararg cols: KProperty<C>): Update<T, C?> = fillNA { cols.toColumns() }
-public fun <T, C> DataFrame<T>.fillNA(vararg cols: ColumnReference<C>): Update<T, C?> = fillNA { cols.toColumns() }
-public fun <T, C> DataFrame<T>.fillNA(cols: Iterable<ColumnReference<C>>): Update<T, C?> = fillNA { cols.toColumnSet() }
+public fun <T, C> DataFrame<T>.fillNA(cols: ColumnsSelector<T, C?>): Update<T, C?> =
+    update(cols).where { it.isNA }
+
+public fun <T> DataFrame<T>.fillNA(vararg cols: String): Update<T, Any?> =
+    fillNA { cols.toColumns() }
+
+public fun <T, C> DataFrame<T>.fillNA(vararg cols: KProperty<C>): Update<T, C?> =
+    fillNA { cols.toColumns() }
+
+public fun <T, C> DataFrame<T>.fillNA(vararg cols: ColumnReference<C>): Update<T, C?> =
+    fillNA { cols.toColumns() }
+
+public fun <T, C> DataFrame<T>.fillNA(cols: Iterable<ColumnReference<C>>): Update<T, C?> =
+    fillNA { cols.toColumnSet() }
 
 // endregion
 
@@ -79,13 +100,24 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, selector: C
     else drop { row -> cols.any { col -> col[row] == null } }
 }
 
-public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<T> = dropNulls(whereAllNull) { all() }
-public fun <T> DataFrame<T>.dropNulls(vararg cols: KProperty<*>, whereAllNull: Boolean = false): DataFrame<T> = dropNulls(whereAllNull) { cols.toColumns() }
-public fun <T> DataFrame<T>.dropNulls(vararg cols: String, whereAllNull: Boolean = false): DataFrame<T> = dropNulls(whereAllNull) { cols.toColumns() }
-public fun <T> DataFrame<T>.dropNulls(vararg cols: Column, whereAllNull: Boolean = false): DataFrame<T> = dropNulls(whereAllNull) { cols.toColumns() }
-public fun <T> DataFrame<T>.dropNulls(cols: Iterable<Column>, whereAllNull: Boolean = false): DataFrame<T> = dropNulls(whereAllNull) { cols.toColumnSet() }
+public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<T> =
+    dropNulls(whereAllNull) { all() }
 
-public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> = (if (!hasNulls()) this else filter { it != null }) as DataColumn<T>
+public fun <T> DataFrame<T>.dropNulls(vararg cols: KProperty<*>, whereAllNull: Boolean = false): DataFrame<T> =
+    dropNulls(whereAllNull) { cols.toColumns() }
+
+public fun <T> DataFrame<T>.dropNulls(vararg cols: String, whereAllNull: Boolean = false): DataFrame<T> =
+    dropNulls(whereAllNull) { cols.toColumns() }
+
+public fun <T> DataFrame<T>.dropNulls(vararg cols: Column, whereAllNull: Boolean = false): DataFrame<T> =
+    dropNulls(whereAllNull) { cols.toColumns() }
+
+public fun <T> DataFrame<T>.dropNulls(cols: Iterable<Column>, whereAllNull: Boolean = false): DataFrame<T> =
+    dropNulls(whereAllNull) { cols.toColumnSet() }
+
+
+public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
+    (if (!hasNulls()) this else filter { it != null }) as DataColumn<T>
 
 // endregion
 
@@ -98,16 +130,25 @@ public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, selector: Column
     else drop { cols.any { this[it].isNA } }
 }
 
-public fun <T> DataFrame<T>.dropNA(vararg cols: KProperty<*>, whereAllNA: Boolean = false): DataFrame<T> = dropNA(whereAllNA) { cols.toColumns() }
-public fun <T> DataFrame<T>.dropNA(vararg cols: String, whereAllNA: Boolean = false): DataFrame<T> = dropNA(whereAllNA) { cols.toColumns() }
-public fun <T> DataFrame<T>.dropNA(vararg cols: Column, whereAllNA: Boolean = false): DataFrame<T> = dropNA(whereAllNA) { cols.toColumns() }
-public fun <T> DataFrame<T>.dropNA(cols: Iterable<Column>, whereAllNA: Boolean = false): DataFrame<T> = dropNA(whereAllNA) { cols.toColumnSet() }
+public fun <T> DataFrame<T>.dropNA(vararg cols: KProperty<*>, whereAllNA: Boolean = false): DataFrame<T> =
+    dropNA(whereAllNA) { cols.toColumns() }
 
-public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> = dropNA(whereAllNA) { all() }
+public fun <T> DataFrame<T>.dropNA(vararg cols: String, whereAllNA: Boolean = false): DataFrame<T> =
+    dropNA(whereAllNA) { cols.toColumns() }
 
-public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> = when (typeClass) {
-    Double::class, Float::class -> filter { !it.isNA }.cast()
-    else -> (if (!hasNulls()) this else filter { it != null }) as DataColumn<T>
-}
+public fun <T> DataFrame<T>.dropNA(vararg cols: Column, whereAllNA: Boolean = false): DataFrame<T> =
+    dropNA(whereAllNA) { cols.toColumns() }
+
+public fun <T> DataFrame<T>.dropNA(cols: Iterable<Column>, whereAllNA: Boolean = false): DataFrame<T> =
+    dropNA(whereAllNA) { cols.toColumnSet() }
+
+public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> =
+    dropNA(whereAllNA) { all() }
+
+public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
+    when (typeClass) {
+        Double::class, Float::class -> filter { !it.isNA }.cast()
+        else -> (if (!hasNulls()) this else filter { it != null }) as DataColumn<T>
+    }
 
 // endregion
