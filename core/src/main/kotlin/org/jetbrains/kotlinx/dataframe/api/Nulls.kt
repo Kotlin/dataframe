@@ -115,7 +115,6 @@ public fun <T> DataFrame<T>.dropNulls(vararg cols: Column, whereAllNull: Boolean
 public fun <T> DataFrame<T>.dropNulls(cols: Iterable<Column>, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { cols.toColumnSet() }
 
-
 public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
     (if (!hasNulls()) this else filter { it != null }) as DataColumn<T>
 
