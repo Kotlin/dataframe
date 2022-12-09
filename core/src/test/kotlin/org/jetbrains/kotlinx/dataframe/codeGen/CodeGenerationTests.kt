@@ -59,7 +59,7 @@ class CodeGenerationTests : BaseTest() {
         val generated = codeGen.process(df, ::df)
         val typeName = ReplCodeGeneratorImpl.markerInterfacePrefix
         val expectedDeclaration = """
-            @DataSchema(isOpen = false)
+            @DataSchema
             interface $typeName
             
         """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
@@ -84,7 +84,7 @@ class CodeGenerationTests : BaseTest() {
         val generated = ReplCodeGenerator.create().process(df[0], property)
         val typeName = ReplCodeGeneratorImpl.markerInterfacePrefix
         val expectedDeclaration = """
-            @DataSchema(isOpen = false)
+            @DataSchema
             interface $typeName
             
         """.trimIndent() + "\n" + expectedProperties(typeName, typeName)
@@ -118,7 +118,7 @@ class CodeGenerationTests : BaseTest() {
         """.trimIndent()
 
         val declaration2 = """
-            @DataSchema(isOpen = false)
+            @DataSchema
             interface $type2
             
             val $dfName<$type2>.age: $dataCol<$intName> @JvmName("${type2}_age") get() = this["age"] as $dataCol<$intName>
