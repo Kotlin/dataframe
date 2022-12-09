@@ -38,7 +38,7 @@ public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>
         properties(roots = props, maxDepth = maxDepth)
     }
 
-public inline fun <reified T> DataColumn<T>.read(): AnyCol = when (kind()) {
+public inline fun <reified T> DataColumn<T>.unfold(): AnyCol = when (kind()) {
     ColumnKind.Group, ColumnKind.Frame -> this
     else -> when {
         isPrimitive() -> this
@@ -50,10 +50,10 @@ public inline fun <reified T> DataColumn<T>.read(): AnyCol = when (kind()) {
     }
 }
 
-public fun <T> DataFrame<T>.read(columns: ColumnsSelector<T, *>): DataFrame<T> = replace(columns).with { it.read() }
-public fun <T> DataFrame<T>.read(vararg columns: String): DataFrame<T> = read { columns.toColumns() }
-public fun <T> DataFrame<T>.read(vararg columns: KProperty<*>): DataFrame<T> = read { columns.toColumns() }
-public fun <T> DataFrame<T>.read(vararg columns: Column): DataFrame<T> = read { columns.toColumns() }
+public fun <T> DataFrame<T>.unfold(columns: ColumnsSelector<T, *>): DataFrame<T> = replace(columns).with { it.unfold() }
+public fun <T> DataFrame<T>.unfold(vararg columns: String): DataFrame<T> = unfold { columns.toColumns() }
+public fun <T> DataFrame<T>.unfold(vararg columns: KProperty<*>): DataFrame<T> = unfold { columns.toColumns() }
+public fun <T> DataFrame<T>.unfold(vararg columns: Column): DataFrame<T> = unfold { columns.toColumns() }
 
 @JvmName("toDataFrameT")
 public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {

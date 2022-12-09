@@ -2,6 +2,8 @@ package org.jetbrains.kotlinx.dataframe.samples.api
 
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.*
 import org.junit.Test
@@ -936,5 +938,86 @@ class Modify : TestBase() {
             convert<Int>().with { IntClass(it) }
         }
         // SampleEnd
+    }
+
+    @Test
+    fun convertToColumnGroupUseCase() {
+        // SampleStart
+        class RepositoryInfo(val data: Any)
+
+        fun download(url: String) = RepositoryInfo("fancy response from the API")
+        // SampleEnd
+    }
+
+    @Test
+    fun convertToColumnGroupData() {
+        class RepositoryInfo(val data: Any)
+
+        fun download(url: String) = RepositoryInfo("fancy response from the API")
+
+        // SampleStart
+        val interestingRepos = dataFrameOf("name", "url")(
+            "dataframe", "/dataframe",
+            "kotlin", "/kotlin",
+        )
+
+        val initialData = interestingRepos
+            .add("response") { download("url"()) }
+        // SampleEnd
+    }
+
+    @Test
+    fun convertToColumnGroup() {
+        class RepositoryInfo(val data: Any)
+
+        fun download(url: String) = RepositoryInfo("fancy response from the API")
+
+        val interestingRepos = dataFrameOf("name", "url")(
+            "dataframe", "/dataframe",
+            "kotlin", "/kotlin",
+        )
+
+        val initialData = interestingRepos
+            .add("response") { download("url"()) }
+
+        // SampleStart
+        val df = initialData.unfold("response")
+        // SampleEnd
+        df.schema().print()
+    }
+
+    @DataSchema
+    interface Df {
+        val response: DataRow<Response>
+    }
+
+    @DataSchema
+    interface Response {
+        val data: Any
+    }
+
+    @Test
+    fun convertToColumnGroupBenefits() {
+        class RepositoryInfo(val data: Any)
+
+        fun download(url: String) = RepositoryInfo("fancy response from the API")
+
+        val interestingRepos = dataFrameOf("name", "url")(
+            "dataframe", "/dataframe",
+            "kotlin", "/kotlin",
+        )
+
+        val initialData = interestingRepos
+            .add("response") { download("url"()) }
+
+        val df = initialData.unfold("response").cast<Df>()
+
+        // SampleStart
+        df.move { response.data }.toTop()
+        df.rename { response.data }.into("description")
+        // SampleEnd
+
+        df.move { response.data }.toTop().alsoDebug()
+        df.rename { response.data }.into("description").alsoDebug()
     }
 }
