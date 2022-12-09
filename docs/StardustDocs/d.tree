@@ -88,6 +88,7 @@
                 </toc-element>
                 <toc-element id="convert.md">
                     <toc-element id="parse.md"/>
+                    <toc-element id="unfold.md"/>
                 </toc-element>
                 <toc-element id="inferType.md"/>
             </toc-element>

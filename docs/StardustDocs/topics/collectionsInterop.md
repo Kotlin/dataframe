@@ -83,3 +83,7 @@ val result = df2.toListOf<Output>()
 ```
 
 <!---END-->
+
+### Converting columns with objects instances to ColumnGroup
+
+[unfold](unfold.md) can be used as [`toDataFrame()`](createDataFrame.md#todataframe) analogue for specific columns inside existing dataframes
