@@ -21,17 +21,23 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.nrow
 
-internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>): GroupBy<T, G> {
-    return toDataFrame()
+@Suppress("UNCHECKED_CAST", "RemoveExplicitTypeArguments")
+internal fun <T, G> GroupBy<T, G>.sortByImpl(columns: SortColumnsSelector<G, *>): GroupBy<T, G> =
+    toDataFrame()
+
+        // sort the individual groups by the columns specified
         .update { groups }
         .with { it.sortByImpl(UnresolvedColumnsPolicy.Skip, columns) }
+
+        // sort the groups by the columns specified (must be either be the keys column or "groups")
+        // will do nothing if the columns specified are not the keys column or "groups"
         .sortByImpl(UnresolvedColumnsPolicy.Skip, columns as SortColumnsSelector<T, *>)
-        .asGroupBy { it.getFrameColumn(groups.name()).castFrameColumn() }
-}
+
+        .asGroupBy { it.getFrameColumn(groups.name()).castFrameColumn<G>() }
 
 internal fun <T, C> DataFrame<T>.sortByImpl(
     unresolvedColumnsPolicy: UnresolvedColumnsPolicy = UnresolvedColumnsPolicy.Fail,
-    columns: SortColumnsSelector<T, C>
+    columns: SortColumnsSelector<T, C>,
 ): DataFrame<T> {
     val sortColumns = getSortColumns(columns, unresolvedColumnsPolicy)
     if (sortColumns.isEmpty()) return this
@@ -71,7 +77,6 @@ internal fun <T, C> DataFrame<T>.getSortColumns(
                 else -> throw IllegalStateException("Can not use ${col.kind} as sort column")
             }
         }
-}
 
 internal enum class SortFlag { Reversed, NullsLast }
 
@@ -86,12 +91,14 @@ internal fun <C> ColumnWithPath<C>.addFlag(flag: SortFlag): ColumnWithPath<C> {
                 SortFlag.NullsLast -> SortColumnDescriptor(col.column, col.direction, true)
             }
         }
+
         is ValueColumn -> {
             when (flag) {
                 SortFlag.Reversed -> SortColumnDescriptor(col, SortDirection.Desc)
                 SortFlag.NullsLast -> SortColumnDescriptor(col, SortDirection.Asc, true)
             }
         }
+
         else -> throw IllegalArgumentException("Can not apply sort flag to column kind ${col.kind}")
     }.addPath(path)
 }
@@ -103,7 +110,7 @@ internal class ColumnsWithSortFlag<C>(val column: ColumnSet<C>, val flag: SortFl
 internal class SortColumnDescriptor<C>(
     val column: ValueColumn<C>,
     val direction: SortDirection = SortDirection.Asc,
-    val nullsLast: Boolean = false
+    val nullsLast: Boolean = false,
 ) : ValueColumn<C> by column
 
 internal enum class SortDirection { Asc, Desc }
