@@ -16,7 +16,25 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-public enum class ExcessiveColumns { Remove, Keep, Fail }
+/**
+ * Specifies how to handle columns in original dataframe that were not mathced to any column in destination dataframe schema.
+ */
+public enum class ExcessiveColumns {
+    /**
+     * Remove excessive columns from resulting dataframe
+     */
+    Remove,
+
+    /**
+     * Keep excessive columns in resulting dataframe
+     */
+    Keep,
+
+    /**
+     * Throw [ExcessiveColumnsException] if any excessive columns were found in the original dataframe
+     */
+    Fail
+}
 
 /**
  * Holds data context for [fill] operation
