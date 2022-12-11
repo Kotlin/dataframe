@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
 import org.jetbrains.kotlinx.dataframe.api.copy
 import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.pathOf
 import org.jetbrains.kotlinx.dataframe.api.remove
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
@@ -206,7 +207,7 @@ internal class ArrowKtTest {
             )
         ) { warning -> warnings.add(warning) }.use { it.saveArrowFeatherToByteArray() }
         warnings.map { it.toString() }.shouldContain(
-            ConvertingMismatch.TypeConversionNotFound.ConversionNotFoundIgnored("settled", TypeConverterNotFoundException(typeOf<Boolean>(), typeOf<kotlinx.datetime.LocalDateTime?>())).toString()
+            ConvertingMismatch.TypeConversionNotFound.ConversionNotFoundIgnored("settled", TypeConverterNotFoundException(typeOf<Boolean>(), typeOf<kotlinx.datetime.LocalDateTime?>(), pathOf("settled"))).toString()
         )
         DataFrame.readArrowFeather(testLoyalType)["settled"].type() shouldBe typeOf<Boolean>()
     }
