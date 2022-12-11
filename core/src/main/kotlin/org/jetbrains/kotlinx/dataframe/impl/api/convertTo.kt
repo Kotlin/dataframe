@@ -148,7 +148,7 @@ internal fun AnyFrame.convertToImpl(
                                         it
                                     }
 
-                                if (!nullsAllowed && result == null) throw TypeConversionException(it, from, to, originalColumn)
+                                if (!nullsAllowed && result == null) throw TypeConversionException(it, from, to, originalColumn.path())
 
                                 result
                             }
@@ -237,9 +237,10 @@ internal fun AnyFrame.convertToImpl(
                     targetColumn.kind == ColumnKind.Frame // frame column can be filled with empty dataframes
 
             if (name !in visited) {
-                if (isNullable) {
-                    newColumns += targetColumn.createEmptyColumn(name, size)
-                } else missingPaths.add(path + name)
+                newColumns += targetColumn.createEmptyColumn(name, size)
+                if (!isNullable) {
+                    missingPaths.add(path + name)
+                }
             }
         }
         return newColumns.toDataFrame()

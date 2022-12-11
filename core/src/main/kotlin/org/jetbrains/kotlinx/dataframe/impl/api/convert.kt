@@ -34,6 +34,7 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
+import org.jetbrains.kotlinx.dataframe.path
 import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
 import java.net.URL
@@ -78,7 +79,7 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
             nullsFound = true
             null
         }
-        else -> throw TypeConversionException(null, from, to, this)
+        else -> throw TypeConversionException(null, from, to, path)
     }
 
     fun applyConverter(converter: TypeConverter): AnyCol {
@@ -90,7 +91,7 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
             }
             return DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
         } catch (e: TypeConversionException) {
-            throw CellConversionException(e.value, e.from, e.to, this.name(), currentRow, e)
+            throw CellConversionException(e.value, e.from, e.to, path, currentRow, e)
         }
     }
 
@@ -106,16 +107,16 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
                             val clazz = it.javaClass.kotlin
                             val type = clazz.createStarProjectedType(false)
                             val converter = getConverter(type, to, ParserOptions(locale = Locale.getDefault()))
-                                ?: throw TypeConverterNotFoundException(from, to, this)
+                                ?: throw TypeConverterNotFoundException(from, to, path)
                             converter(it)
                         }.checkNulls()
                     }
                     DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
                 }
-                else -> throw TypeConverterNotFoundException(from, to, this)
+                else -> throw TypeConverterNotFoundException(from, to, path)
             }
         } catch (e: TypeConversionException) {
-            throw CellConversionException(e.value, e.from, e.to, this.name(), currentRow, e)
+            throw CellConversionException(e.value, e.from, e.to, path, currentRow, e)
         }
     }
 
