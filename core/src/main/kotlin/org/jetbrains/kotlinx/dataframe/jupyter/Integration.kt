@@ -41,7 +41,7 @@ import org.jetbrains.kotlinx.dataframe.impl.renderType
 import org.jetbrains.kotlinx.dataframe.io.SupportedCodeGenerationFormat
 import org.jetbrains.kotlinx.dataframe.io.supportedFormats
 import org.jetbrains.kotlinx.jupyter.api.HTML
-import org.jetbrains.kotlinx.jupyter.api.HtmlData
+//import org.jetbrains.kotlinx.jupyter.api.HtmlData
 import org.jetbrains.kotlinx.jupyter.api.JupyterClientType
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.Notebook
@@ -50,7 +50,7 @@ import org.jetbrains.kotlinx.jupyter.api.declare
 import org.jetbrains.kotlinx.jupyter.api.libraries.ColorScheme
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.api.libraries.resources
-import org.jetbrains.kotlinx.jupyter.api.renderHtmlAsIFrameIfNeeded
+//import org.jetbrains.kotlinx.jupyter.api.renderHtmlAsIFrameIfNeeded
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubtypeOf
@@ -89,7 +89,7 @@ internal class Integration(private val notebook: Notebook, private val options: 
         }
 
         with(JupyterHtmlRenderer(config.display, this)) {
-            render<HtmlData> { notebook.renderHtmlAsIFrameIfNeeded(it) }
+            // render<HtmlData> { notebook.renderHtmlAsIFrameIfNeeded(it) }
             render<AnyRow>(
                 { it.toDataFrame() },
                 { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" },
