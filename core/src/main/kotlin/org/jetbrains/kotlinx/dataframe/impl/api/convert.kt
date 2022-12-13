@@ -34,6 +34,7 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.jetbrains.kotlinx.dataframe.impl.columns.DataColumnInternal
 import org.jetbrains.kotlinx.dataframe.impl.columns.newColumn
 import org.jetbrains.kotlinx.dataframe.impl.createStarProjectedType
+import org.jetbrains.kotlinx.dataframe.path
 import org.jetbrains.kotlinx.dataframe.type
 import java.math.BigDecimal
 import java.net.URL
@@ -78,8 +79,7 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
             nullsFound = true
             null
         }
-
-        else -> throw TypeConversionException(null, from, to)
+        else -> throw TypeConversionException(null, from, to, path)
     }
 
     fun applyConverter(converter: TypeConverter): AnyCol {
@@ -91,7 +91,7 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
             }
             return DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
         } catch (e: TypeConversionException) {
-            throw CellConversionException(e.value, e.from, e.to, this.name(), currentRow, e)
+            throw CellConversionException(e.value, e.from, e.to, path, currentRow, e)
         }
     }
 
@@ -107,16 +107,16 @@ internal fun AnyCol.convertToTypeImpl(to: KType): AnyCol {
                             val clazz = it.javaClass.kotlin
                             val type = clazz.createStarProjectedType(false)
                             val converter = getConverter(type, to, ParserOptions(locale = Locale.getDefault()))
-                                ?: throw TypeConverterNotFoundException(from, to)
+                                ?: throw TypeConverterNotFoundException(from, to, path)
                             converter(it)
                         }.checkNulls()
                     }
                     DataColumn.createValueColumn(name, values, to.withNullability(nullsFound))
                 }
-                else -> throw TypeConverterNotFoundException(from, to)
+                else -> throw TypeConverterNotFoundException(from, to, path)
             }
         } catch (e: TypeConversionException) {
-            throw CellConversionException(e.value, e.from, e.to, this.name(), currentRow, e)
+            throw CellConversionException(e.value, e.from, e.to, path, currentRow, e)
         }
     }
 
@@ -146,7 +146,7 @@ internal fun Any.convertTo(type: KType): Any? {
     val clazz = javaClass.kotlin
     if (clazz.isSubclassOf(type.jvmErasure)) return this
     val from = clazz.createStarProjectedType(false)
-    val converter = getConverter(from, type) ?: throw TypeConverterNotFoundException(from, type)
+    val converter = getConverter(from, type) ?: throw TypeConverterNotFoundException(from, type, null)
     return converter(this)
 }
 
@@ -170,11 +170,11 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             toClass.primaryConstructor ?: error("Value type $toClass doesn't have primary constructor")
         val underlyingType = constructor.parameters.single().type
         val converter = getConverter(from, underlyingType)
-            ?: throw TypeConverterNotFoundException(from, underlyingType)
+            ?: throw TypeConverterNotFoundException(from, underlyingType, null)
         return convert<Any> {
             val converted = converter(it)
             if (converted == null && !underlyingType.isMarkedNullable) {
-                throw TypeConversionException(it, from, underlyingType)
+                throw TypeConversionException(it, from, underlyingType, null)
             }
             constructor.call(converted)
         }
@@ -217,14 +217,15 @@ internal fun createConverter(from: KType, to: KType, options: ParserOptions? = n
             val constructorParameter = constructor.parameters.single()
             val underlyingType = constructorParameter.type
             val converter = getConverter(underlyingType, to)
-                ?: throw TypeConverterNotFoundException(underlyingType, to)
+                ?: throw TypeConverterNotFoundException(underlyingType, to, null)
             val property =
                 fromClass.memberProperties.single { it.name == constructorParameter.name } as kotlin.reflect.KProperty1<Any, *>
             if (property.visibility != kotlin.reflect.KVisibility.PUBLIC) {
                 throw TypeConversionException(
                     "Not public member property in primary constructor of value type",
                     from,
-                    to
+                    to,
+                    null
                 )
             }
 

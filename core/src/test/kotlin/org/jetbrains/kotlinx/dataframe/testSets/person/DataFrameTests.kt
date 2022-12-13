@@ -1,6 +1,5 @@
 package org.jetbrains.kotlinx.dataframe.testSets.person
 
-import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.doubles.ToleranceMatcher
 import io.kotest.matchers.should
@@ -56,6 +55,7 @@ import org.jetbrains.kotlinx.dataframe.api.dropNulls
 import org.jetbrains.kotlinx.dataframe.api.dropWhile
 import org.jetbrains.kotlinx.dataframe.api.explode
 import org.jetbrains.kotlinx.dataframe.api.expr
+import org.jetbrains.kotlinx.dataframe.api.fill
 import org.jetbrains.kotlinx.dataframe.api.fillNulls
 import org.jetbrains.kotlinx.dataframe.api.filter
 import org.jetbrains.kotlinx.dataframe.api.first
@@ -141,6 +141,7 @@ import org.jetbrains.kotlinx.dataframe.api.toInt
 import org.jetbrains.kotlinx.dataframe.api.toList
 import org.jetbrains.kotlinx.dataframe.api.toListOf
 import org.jetbrains.kotlinx.dataframe.api.toMap
+import org.jetbrains.kotlinx.dataframe.api.toRight
 import org.jetbrains.kotlinx.dataframe.api.toStr
 import org.jetbrains.kotlinx.dataframe.api.toValueColumn
 import org.jetbrains.kotlinx.dataframe.api.transpose
@@ -2181,10 +2182,15 @@ class DataFrameTests : BaseTest() {
         val added = df.add("col") { 1 }
         added.convertTo(typeOf<Target>(), ExcessiveColumns.Keep) shouldBe added
 
-        shouldNotThrowAny {
-            // now gets filled in with null!
-            df.remove { city }.convertTo<Target>()
+        df.remove { city }.convertTo<Target>() shouldBe df.update { city }.withNull().move { city }.toRight()
+
+        shouldThrow<IllegalArgumentException> {
+            df.remove { age }.convertTo<Target>()
         }
+
+        df.remove { age }.convertTo<Target> {
+            fill { age }.with { -1 }
+        } shouldBe df.update { age }.with { -1 }.move { age }.toRight()
 
         shouldThrow<TypeConversionException> {
             df.update { name }.at(2).withNull().convertTo<Target>()

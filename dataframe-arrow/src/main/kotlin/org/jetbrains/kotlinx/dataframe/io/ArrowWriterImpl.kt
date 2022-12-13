@@ -148,12 +148,12 @@ internal class ArrowWriterImpl(
         } catch (e: CellConversionException) {
             if (strictType) {
                 // If conversion failed but strictType is enabled, throw the exception
-                val mismatch = ConvertingMismatch.TypeConversionFail.ConversionFailError(e.column, e.row, e)
+                val mismatch = ConvertingMismatch.TypeConversionFail.ConversionFailError(e.column?.name() ?: "", e.row, e)
                 mismatchSubscriber(mismatch)
                 throw ConvertingException(mismatch)
             } else {
                 // If strictType is not enabled, use original data with its type. Target nullable is saved at this step.
-                mismatchSubscriber(ConvertingMismatch.TypeConversionFail.ConversionFailIgnored(e.column, e.row, e))
+                mismatchSubscriber(ConvertingMismatch.TypeConversionFail.ConversionFailIgnored(e.column?.name() ?: "", e.row, e))
                 column to column!!.toArrowField(mismatchSubscriber)
             }
         } catch (e: TypeConverterNotFoundException) {

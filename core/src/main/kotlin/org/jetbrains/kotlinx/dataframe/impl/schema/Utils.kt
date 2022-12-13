@@ -137,9 +137,6 @@ internal fun DataFrameSchema.createEmptyDataFrame(numberOfRows: Int): AnyFrame =
         }.toDataFrame()
     }
 
-internal fun createEmptyDataFrame(numberOfRows: Int): AnyFrame =
-    DataFrame.empty(numberOfRows)
-
 @PublishedApi
 internal fun createEmptyDataFrameOf(clazz: KClass<*>): AnyFrame =
     MarkersExtractor.get(clazz).schema.createEmptyDataFrame()
