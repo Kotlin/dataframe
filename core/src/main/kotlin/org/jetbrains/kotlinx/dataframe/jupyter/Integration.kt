@@ -66,7 +66,14 @@ internal class Integration(
 ) : JupyterIntegration() {
 
     override fun Builder.onLoaded() {
-        setMinimalKernelVersion(MIN_KERNEL_VERSION)
+        try {
+            setMinimalKernelVersion(MIN_KERNEL_VERSION)
+        } catch (_: NoSuchMethodError) { // will be thrown on version < 0.11.0.198
+            throw IllegalStateException(
+                "Your Kotlin Jupyter kernel version appears to be out of date (version ${notebook.kernelVersion}). " +
+                    "Please update to version $MIN_KERNEL_VERSION or higher to be able to use DataFrame."
+            )
+        }
         val codeGen = ReplCodeGenerator.create()
         val config = JupyterConfiguration()
 
