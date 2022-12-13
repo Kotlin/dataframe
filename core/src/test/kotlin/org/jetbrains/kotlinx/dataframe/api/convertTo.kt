@@ -257,4 +257,29 @@ class ConvertToTests {
         val converted = df.convertTo<MySchema>().alsoDebug()
         converted shouldBe df
     }
+
+    @Test
+    fun `convert with missing nullable column`() {
+        @DataSchema
+        data class Result(val a: Int, val b: Int?)
+
+        val df = dataFrameOf("a")(1, 2)
+        val converted = df.convertTo<Result>()
+        converted shouldBe listOf(Result(1, null), Result(2, null)).toDataFrame()
+    }
+
+    @Test
+    fun `convert with custom fill of missing columns`() {
+        val locations = listOf(
+            Location("Home", Gps(1.0, 1.0)),
+            Location("Away", null),
+        ).toDataFrame().cast<Location>()
+
+        val converted = locations.remove { gps.longitude }.cast<Unit>()
+            .convertTo<Location> {
+                fill { gps.longitude }.with { gps.latitude }
+            }
+
+        converted shouldBe locations.update { gps.longitude }.with { gps.latitude }
+    }
 }

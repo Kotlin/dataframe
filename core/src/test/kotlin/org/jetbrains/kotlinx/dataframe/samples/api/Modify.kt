@@ -923,17 +923,28 @@ class Modify : TestBase() {
         // SampleEnd
     }
 
+    class MyType(val value: Int)
+
+    @DataSchema
+    class MySchema(val a: MyType, val b: MyType, val c: Int)
+
+    fun customConvertersData() {
+        // SampleStart
+        class MyType(val value: Int)
+
+        @DataSchema
+        class MySchema(val a: MyType, val b: MyType, val c: Int)
+
+        // SampleEnd
+    }
     @Test
     fun customConverters() {
         // SampleStart
-        class IntClass(val value: Int)
-
-        @DataSchema
-        class IntSchema(val ints: IntClass)
-
-        val df = dataFrameOf("ints")(1, 2, 3)
-        df.convertTo<IntSchema> {
-            convert<Int>().with { IntClass(it) }
+        val df = dataFrameOf("a", "b")(1, "2")
+        df.convertTo<MySchema> {
+            convert<Int>().with { MyType(it) } // converts `a` from Int to MyType
+            parser { MyType(it.toInt()) } // converts `b` from String to MyType
+            fill { c }.with { a.value + b.value } // computes missing column `c`
         }
         // SampleEnd
     }

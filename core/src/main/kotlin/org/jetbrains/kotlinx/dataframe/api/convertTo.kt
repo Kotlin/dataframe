@@ -1,30 +1,64 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.RowExpression
 import org.jetbrains.kotlinx.dataframe.exceptions.ColumnNotFoundException
 import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
+import org.jetbrains.kotlinx.dataframe.impl.api.ConvertSchemaDslInternal
 import org.jetbrains.kotlinx.dataframe.impl.api.convertToImpl
 import org.jetbrains.kotlinx.dataframe.schema.ColumnSchema
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-public enum class ExcessiveColumns { Remove, Keep, Fail }
+/**
+ * Specifies how to handle columns in original dataframe that were not mathced to any column in destination dataframe schema.
+ */
+public enum class ExcessiveColumns {
+    /**
+     * Remove excessive columns from resulting dataframe
+     */
+    Remove,
+
+    /**
+     * Keep excessive columns in resulting dataframe
+     */
+    Keep,
+
+    /**
+     * Throw [ExcessiveColumnsException] if any excessive columns were found in the original dataframe
+     */
+    Fail
+}
+
+/**
+ * Holds data context for [fill] operation
+ */
+public data class ConvertToFill<T, C>(
+    internal val dsl: ConvertSchemaDsl<T>,
+    val columns: ColumnsSelector<T, C>
+)
 
 /** Provides access to [fromType] and [toSchema] in the flexible [ConvertSchemaDsl.convertIf] method. */
 public class ConverterScope(public val fromType: KType, public val toSchema: ColumnSchema)
 
-/** Dsl to define how specific type conversion should occur.
+/**
+ * Dsl to customize column conversion
  *
  * Example:
  * ```kotlin
  * df.convertTo<SomeSchema> {
  *     // defines how to convert Int? -> String
  *     convert<Int?>().with { it?.toString() ?: "No input given" }
+ *     // defines how to convert String -> SomeType
+ *     parser { SomeType(it) }
+ *     // fill missing column `sum` with expression `a+b`
+ *     fill { sum }.with { a + b }
  * }
  * ```
  */
@@ -54,6 +88,17 @@ public interface ConvertSchemaDsl<in T> {
         condition: (fromType: KType, toSchema: ColumnSchema) -> Boolean,
         converter: ConverterScope.(Any?) -> Any?,
     )
+}
+
+/**
+ * Defines how to fill specified columns in destination schema that were not found in original dataframe.
+ * All [fill] operations for missing columns are executed after successful conversion of matched columns, so converted values of matched columns can be safely used in [with] expression.
+ * @param columns target columns in destination dataframe schema to be filled
+ */
+public inline fun <T, reified C> ConvertSchemaDsl<T>.fill(noinline columns: ColumnsSelector<T, C>): ConvertToFill<T, C> = ConvertToFill(this, columns)
+
+public fun <T, C> ConvertToFill<T, C>.with(expr: RowExpression<T, C>) {
+    (dsl as ConvertSchemaDslInternal<T>).fill(columns as ColumnsSelector<*, C>, expr as RowExpression<*, C>)
 }
 
 /**
@@ -95,6 +140,10 @@ public class ConvertType<T>(
  * df.convertTo<SomeSchema> {
  *     // defines how to convert Int? -> String
  *     convert<Int?>().with { it?.toString() ?: "No input given" }
+ *     // defines how to convert String -> SomeType
+ *     parser { SomeType(it) }
+ *     // fill missing column `sum` with expression `a + b`
+ *     fill { sum }.with { a + b }
  * }
  * ```
  *
@@ -109,8 +158,8 @@ public class ConvertType<T>(
  */
 public inline fun <reified T : Any> AnyFrame.convertTo(
     excessiveColumnsBehavior: ExcessiveColumns = ExcessiveColumns.Keep,
-    noinline body: ConvertSchemaDsl<T>.() -> Unit = {},
-): DataFrame<T> = convertTo(typeOf<T>(), excessiveColumnsBehavior, body).cast()
+    noinline body: ConvertSchemaDsl<T>.() -> Unit = {}
+): DataFrame<T> = convertToImpl(typeOf<T>(), true, excessiveColumnsBehavior, body).cast()
 
 /**
  * Converts values in [DataFrame] to match given column schema [schemaType].
@@ -126,6 +175,10 @@ public inline fun <reified T : Any> AnyFrame.convertTo(
  * df.convertTo<SomeSchema> {
  *     // defines how to convert Int? -> String
  *     convert<Int?>().with { it?.toString() ?: "No input given" }
+ *     // defines how to convert String -> SomeType
+ *     parser { SomeType(it) }
+ *     // fill missing column `sum` with expression `a+b`
+ *     fill { sum }.with { a + b }
  * }
  * ```
  *

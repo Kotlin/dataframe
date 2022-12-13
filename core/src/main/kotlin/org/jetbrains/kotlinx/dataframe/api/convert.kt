@@ -29,6 +29,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
+import org.jetbrains.kotlinx.dataframe.path
 import java.math.BigDecimal
 import java.net.URL
 import java.time.LocalTime
@@ -165,10 +166,10 @@ public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColu
         try {
             return mapIndexed { row, value ->
                 currentRow = row
-                value?.let { parser(value.trim()) ?: throw TypeConversionException(value, typeOf<String>(), typeOf<Double>()) }
+                value?.let { parser(value.trim()) ?: throw TypeConversionException(value, typeOf<String>(), typeOf<Double>(), path) }
             }
         } catch (e: TypeConversionException) {
-            throw CellConversionException(e.value, e.from, e.to, this.name(), currentRow, e)
+            throw CellConversionException(e.value, e.from, e.to, path, currentRow, e)
         }
     }
 
