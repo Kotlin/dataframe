@@ -60,8 +60,10 @@ private const val MIN_KERNEL_VERSION = "0.11.0.198"
 
 internal val newDataSchemas = mutableListOf<KClass<*>>()
 
-internal class Integration(private val notebook: Notebook, private val options: MutableMap<String, String?>) :
-    JupyterIntegration() {
+internal class Integration(
+    private val notebook: Notebook,
+    private val options: MutableMap<String, String?>,
+) : JupyterIntegration() {
 
     override fun Builder.onLoaded() {
         setMinimalKernelVersion(MIN_KERNEL_VERSION)
