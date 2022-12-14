@@ -6,7 +6,12 @@ import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.impl.api.mapNotNullValues
+import org.jetbrains.kotlinx.dataframe.io.readJsonStr
+import org.jetbrains.kotlinx.dataframe.testResource
+import org.jetbrains.kotlinx.dataframe.types.UtilTests
 import org.junit.Test
+import java.net.URL
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 import kotlin.streams.toList
@@ -1019,5 +1024,53 @@ class Modify : TestBase() {
 
         df.move { response.data }.toTop().alsoDebug()
         df.rename { response.data }.into("description").alsoDebug()
+    }
+
+    @Test
+    fun convertToFrameColumnAPI() {
+        // SampleStart
+        fun testResource(resourcePath: String): URL = UtilTests::class.java.classLoader.getResource(resourcePath)!!
+
+        val interestingRepos = dataFrameOf("name", "url", "contributors")(
+            "dataframe", "/dataframe", testResource("dataframeContributors.json"),
+            "kotlin", "/kotlin", testResource("kotlinContributors.json"),
+        )
+        // SampleEnd
+    }
+
+    @Test
+    fun convertToFrameColumn() {
+        val interestingRepos = dataFrameOf("name", "url", "contributors")(
+            "dataframe", "/dataframe", testResource("dataframeContributors.json"),
+            "kotlin", "/kotlin", testResource("kotlinContributors.json"),
+        )
+
+        // SampleStart
+        val df = interestingRepos.unfold("contributors")
+
+        df.asGroupBy("contributors").max("contributions")
+        // SampleEnd
+    }
+
+    @Test
+    fun customUnfoldRead() {
+        val interestingRepos = dataFrameOf("name", "url", "contributors")(
+            "dataframe", "/dataframe", testResource("dataframeContributors.json"),
+            "kotlin", "/kotlin", testResource("kotlinContributors.json"),
+        )
+
+        // SampleStart
+        val contributors by column<URL>()
+
+        val df = interestingRepos
+            .replace(contributors)
+            .with {
+                it.mapNotNullValues { url -> DataFrame.readJsonStr(url.readText()) }
+            }
+
+        df.asGroupBy("contributors").max("contributions")
+        // SampleEnd
+
+        df shouldBe interestingRepos.unfold(contributors)
     }
 }
