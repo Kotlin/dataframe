@@ -2,14 +2,11 @@ package org.jetbrains.kotlinx.dataframe.jupyter
 
 import org.jetbrains.kotlinx.jupyter.api.JupyterClientType
 import org.jetbrains.kotlinx.jupyter.api.JupyterClientType.DATALORE
-import org.jetbrains.kotlinx.jupyter.api.JupyterClientType.JUPYTER_LAB
-import org.jetbrains.kotlinx.jupyter.api.JupyterClientType.JUPYTER_NOTEBOOK
-import org.jetbrains.kotlinx.jupyter.api.JupyterClientType.KERNEL_TESTS
 import org.jetbrains.kotlinx.jupyter.api.JupyterClientType.KOTLIN_NOTEBOOK
-import org.jetbrains.kotlinx.jupyter.api.JupyterClientType.UNKNOWN
 import org.jetbrains.kotlinx.jupyter.api.KotlinKernelVersion
 
 private const val UPDATING_DATALORE_URL = "https://github.com/Kotlin/kotlin-jupyter/tree/master#datalore"
+private const val UPDATING_KOTLIN_NOTEBOOK_URL = "https://github.com/Kotlin/kotlin-jupyter#kotlin-notebook"
 private const val UPDATING = "https://github.com/Kotlin/kotlin-jupyter/tree/master#updating"
 
 internal fun getKernelUpdateMessage(
@@ -22,10 +19,8 @@ internal fun getKernelUpdateMessage(
     append("Follow the instructions at: ")
 
     when (clientType) {
-        DATALORE ->
-            appendLine(UPDATING_DATALORE_URL)
-
-        KERNEL_TESTS, JUPYTER_NOTEBOOK, JUPYTER_LAB, KOTLIN_NOTEBOOK, UNKNOWN ->
-            appendLine(UPDATING)
+        DATALORE -> appendLine(UPDATING_DATALORE_URL)
+        KOTLIN_NOTEBOOK -> appendLine(UPDATING_KOTLIN_NOTEBOOK_URL)
+        else -> appendLine(UPDATING)
     }
 }
