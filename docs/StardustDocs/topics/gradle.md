@@ -122,7 +122,13 @@ that can be returned from or supplied to the API. Why should we reinvent the whe
 when we can use the one provided by the API? Not only will we now get the proper names of the types, but we will also
 get enums, correct inheritance and overall better type safety.
 
-OpenAPI type schema's can be generated using both methods described above:
+First of all, you will need the extra dependency:
+
+```kts
+implementation("org.jetbrains.kotlinx:dataframe-openapi:$dataframe_version")
+```
+
+OpenAPI type schemas can be generated using both methods described above:
 
 ```kotlin
 @file:ImportDataSchema(
