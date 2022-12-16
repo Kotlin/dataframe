@@ -214,6 +214,22 @@ class CsvTests {
         df.columnsCount() shouldBe 3
         df.rowsCount() shouldBe 2
     }
+    
+    @Test
+    fun `write csv whitout header produce correct file`() {
+        val df = dataFrameOf("a", "b", "c")(
+            1, 2, 3,
+            1, 3, 2
+        )
+        df.writeCSV(
+            "src/test/resources/without_header.csv",
+            CSVFormat.DEFAULT.withSkipHeaderRecord()
+        )
+        val producedFile = File("src/test/resources/without_header.csv")
+        producedFile.exists() shouldBe true
+        producedFile.readText() shouldBe "a,b,c\r\n1,2,3\r\n1,3,2\r\n"
+        producedFile.delete()
+    }
 
     companion object {
         private val simpleCsv = testCsv("testCSV")
