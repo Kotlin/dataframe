@@ -332,7 +332,9 @@ public fun AnyFrame.writeCSV(
     format: CSVFormat = CSVFormat.DEFAULT,
 ) {
     format.print(writer).use { printer ->
-        printer.printRecord(columnNames())
+        if (format.getSkipHeaderRecord() == false) {
+            printer.printRecord(columnNames())
+        }
         forEach {
             val values = it.values.map {
                 when (it) {
