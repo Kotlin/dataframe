@@ -17,8 +17,8 @@ public fun AnyFrame.arrowWriter(): ArrowWriter = this.arrowWriter(this.columns()
  */
 public fun AnyFrame.arrowWriter(
     targetSchema: Schema,
-    mode: ArrowWriter.Companion.Mode = ArrowWriter.Companion.Mode.STRICT,
-    mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage
+    mode: ArrowWriter.Mode = ArrowWriter.Mode.STRICT,
+    mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage,
 ): ArrowWriter = ArrowWriter.create(this, targetSchema, mode, mismatchSubscriber)
 
 // IPC saving block with default parameters

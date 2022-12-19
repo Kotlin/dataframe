@@ -41,25 +41,25 @@ public interface ArrowWriter : AutoCloseable {
             dataFrame: AnyFrame,
             targetSchema: Schema,
             mode: Mode,
-            mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage
+            mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage,
         ): ArrowWriter = ArrowWriterImpl(dataFrame, targetSchema, mode, mismatchSubscriber)
+    }
 
-        /**
-         * If [restrictWidening] is true, [dataFrame] columns not described in [targetSchema] would not be saved (otherwise, would be saved as is).
-         * If [restrictNarrowing] is true, [targetSchema] fields that are not nullable and do not exist in [dataFrame] will produce exception (otherwise, would not be saved).
-         * If [strictType] is true, [dataFrame] columns described in [targetSchema] with non-compatible type will produce exception (otherwise, would be saved as is).
-         * If [strictNullable] is true, [targetSchema] fields that are not nullable and contain nulls in [dataFrame] will produce exception (otherwise, would be saved as is with nullable = true).
-         */
-        public data class Mode(
-            public val restrictWidening: Boolean,
-            public val restrictNarrowing: Boolean,
-            public val strictType: Boolean,
-            public val strictNullable: Boolean
-        ) {
-            public companion object {
-                public val STRICT: Mode = Mode(true, true, true, true)
-                public val LOYAL: Mode = Mode(false, false, false, false)
-            }
+    /**
+     * If [restrictWidening] is true, [dataFrame] columns not described in [targetSchema] would not be saved (otherwise, would be saved as is).
+     * If [restrictNarrowing] is true, [targetSchema] fields that are not nullable and do not exist in [dataFrame] will produce exception (otherwise, would not be saved).
+     * If [strictType] is true, [dataFrame] columns described in [targetSchema] with non-compatible type will produce exception (otherwise, would be saved as is).
+     * If [strictNullable] is true, [targetSchema] fields that are not nullable and contain nulls in [dataFrame] will produce exception (otherwise, would be saved as is with nullable = true).
+     */
+    public data class Mode(
+        public val restrictWidening: Boolean,
+        public val restrictNarrowing: Boolean,
+        public val strictType: Boolean,
+        public val strictNullable: Boolean,
+    ) {
+        public companion object {
+            public val STRICT: Mode = Mode(true, true, true, true)
+            public val LOYAL: Mode = Mode(false, false, false, false)
         }
     }
 
