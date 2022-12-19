@@ -4,6 +4,7 @@ import io.kotest.assertions.throwables.shouldNotThrowAny
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import kotlinx.datetime.LocalDateTime
+import org.apache.commons.csv.CSVFormat
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.ParserOptions
 import org.jetbrains.kotlinx.dataframe.api.allNulls
@@ -19,6 +20,7 @@ import org.jetbrains.kotlinx.dataframe.nrow
 import org.jetbrains.kotlinx.dataframe.testCsv
 import org.jetbrains.kotlinx.dataframe.testResource
 import org.junit.Test
+import java.io.File
 import java.io.StringWriter
 import java.util.Locale
 import kotlin.reflect.KClass
@@ -74,8 +76,12 @@ class CsvTests {
     }
 
     @Test
-    fun readCSVwithFrenchLocaleAndAlternativeDelimiter() {
-        val df = DataFrame.readCSV(csvWithFrenchLocale, delimiter = ';', parserOptions = ParserOptions(locale = Locale.FRENCH))
+    fun readCsvWithFrenchLocaleAndAlternativeDelimiter() {
+        val df = DataFrame.readCSV(
+            url = csvWithFrenchLocale,
+            delimiter = ';',
+            parserOptions = ParserOptions(locale = Locale.FRENCH),
+        )
 
         df.ncol shouldBe 11
         df.nrow shouldBe 5
@@ -141,7 +147,19 @@ class CsvTests {
     @Test
     fun `read first rows`() {
         val expected =
-            listOf("untitled", "user_id", "name", "duplicate", "username", "duplicate1", "duplicate11", "double", "number", "time", "empty")
+            listOf(
+                "untitled",
+                "user_id",
+                "name",
+                "duplicate",
+                "username",
+                "duplicate1",
+                "duplicate11",
+                "double",
+                "number",
+                "time",
+                "empty",
+            )
         val dfHeader = DataFrame.readCSV(simpleCsv, readLines = 0)
         dfHeader.nrow shouldBe 0
         dfHeader.columnNames() shouldBe expected
@@ -214,7 +232,7 @@ class CsvTests {
         df.columnsCount() shouldBe 3
         df.rowsCount() shouldBe 2
     }
-    
+
     @Test
     fun `write csv whitout header produce correct file`() {
         val df = dataFrameOf("a", "b", "c")(
