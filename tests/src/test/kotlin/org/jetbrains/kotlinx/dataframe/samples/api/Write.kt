@@ -210,7 +210,7 @@ class Write : TestBase() {
                 // Specify mismatch subscriber
                 mismatchSubscriber = writeMismatchMessage,
 
-                ).use { writer: ArrowWriter ->
+            ).use { writer: ArrowWriter ->
 
                 // Save to any format and sink, like in the previous example
                 writer.writeArrowFeather(file)
