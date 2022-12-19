@@ -9,7 +9,7 @@ plugins {
     id("org.jetbrains.dataframe.generator")
     id("org.jetbrains.kotlinx.kover")
     id("org.jmailen.kotlinter")
-//    id("org.jetbrains.kotlinx.dataframe")
+    id("org.jetbrains.kotlinx.dataframe")
 }
 
 group = "org.jetbrains.kotlinx"
@@ -171,11 +171,11 @@ artifacts {
 }
 
 // Disable and enable if updating plugin breaks the build
-//dataframes {
-//    schema {
-//        sourceSet = "test"
-//        visibility = org.jetbrains.dataframe.gradle.DataSchemaVisibility.IMPLICIT_PUBLIC
-//        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
-//        name = "org.jetbrains.kotlinx.dataframe.samples.api.Repository"
-//    }
-//}
+dataframes {
+    schema {
+        sourceSet = "test"
+        visibility = org.jetbrains.dataframe.gradle.DataSchemaVisibility.IMPLICIT_PUBLIC
+        data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
+        name = "org.jetbrains.kotlinx.dataframe.samples.api.Repository"
+    }
+}
