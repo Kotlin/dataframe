@@ -5,9 +5,100 @@ import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.ParserOptions
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.after
+import org.jetbrains.kotlinx.dataframe.api.asFrame
+import org.jetbrains.kotlinx.dataframe.api.asGroupBy
+import org.jetbrains.kotlinx.dataframe.api.at
+import org.jetbrains.kotlinx.dataframe.api.by
+import org.jetbrains.kotlinx.dataframe.api.byName
+import org.jetbrains.kotlinx.dataframe.api.cast
+import org.jetbrains.kotlinx.dataframe.api.colsOf
+import org.jetbrains.kotlinx.dataframe.api.column
+import org.jetbrains.kotlinx.dataframe.api.columnGroup
+import org.jetbrains.kotlinx.dataframe.api.columnOf
+import org.jetbrains.kotlinx.dataframe.api.concat
+import org.jetbrains.kotlinx.dataframe.api.convert
+import org.jetbrains.kotlinx.dataframe.api.convertTo
+import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
+import org.jetbrains.kotlinx.dataframe.api.default
+import org.jetbrains.kotlinx.dataframe.api.dfsOf
+import org.jetbrains.kotlinx.dataframe.api.dropNulls
+import org.jetbrains.kotlinx.dataframe.api.explode
+import org.jetbrains.kotlinx.dataframe.api.fillNA
+import org.jetbrains.kotlinx.dataframe.api.fillNaNs
+import org.jetbrains.kotlinx.dataframe.api.fillNulls
+import org.jetbrains.kotlinx.dataframe.api.filter
+import org.jetbrains.kotlinx.dataframe.api.flatten
+import org.jetbrains.kotlinx.dataframe.api.gather
+import org.jetbrains.kotlinx.dataframe.api.group
+import org.jetbrains.kotlinx.dataframe.api.groupBy
+import org.jetbrains.kotlinx.dataframe.api.gt
+import org.jetbrains.kotlinx.dataframe.api.implode
+import org.jetbrains.kotlinx.dataframe.api.inplace
+import org.jetbrains.kotlinx.dataframe.api.insert
+import org.jetbrains.kotlinx.dataframe.api.into
+import org.jetbrains.kotlinx.dataframe.api.intoColumns
+import org.jetbrains.kotlinx.dataframe.api.intoList
+import org.jetbrains.kotlinx.dataframe.api.intoRows
+import org.jetbrains.kotlinx.dataframe.api.inward
+import org.jetbrains.kotlinx.dataframe.api.keysInto
+import org.jetbrains.kotlinx.dataframe.api.length
+import org.jetbrains.kotlinx.dataframe.api.lowercase
+import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.mapKeys
+import org.jetbrains.kotlinx.dataframe.api.mapToColumn
+import org.jetbrains.kotlinx.dataframe.api.mapToFrame
+import org.jetbrains.kotlinx.dataframe.api.mapValues
+import org.jetbrains.kotlinx.dataframe.api.match
+import org.jetbrains.kotlinx.dataframe.api.max
+import org.jetbrains.kotlinx.dataframe.api.mean
+import org.jetbrains.kotlinx.dataframe.api.meanFor
+import org.jetbrains.kotlinx.dataframe.api.merge
+import org.jetbrains.kotlinx.dataframe.api.minus
+import org.jetbrains.kotlinx.dataframe.api.move
+import org.jetbrains.kotlinx.dataframe.api.named
+import org.jetbrains.kotlinx.dataframe.api.notNull
+import org.jetbrains.kotlinx.dataframe.api.parse
+import org.jetbrains.kotlinx.dataframe.api.parser
+import org.jetbrains.kotlinx.dataframe.api.pathOf
+import org.jetbrains.kotlinx.dataframe.api.perCol
+import org.jetbrains.kotlinx.dataframe.api.perRowCol
+import org.jetbrains.kotlinx.dataframe.api.pivotCounts
+import org.jetbrains.kotlinx.dataframe.api.prev
+import org.jetbrains.kotlinx.dataframe.api.print
+import org.jetbrains.kotlinx.dataframe.api.remove
+import org.jetbrains.kotlinx.dataframe.api.rename
+import org.jetbrains.kotlinx.dataframe.api.reorder
+import org.jetbrains.kotlinx.dataframe.api.replace
+import org.jetbrains.kotlinx.dataframe.api.reverse
+import org.jetbrains.kotlinx.dataframe.api.schema
+import org.jetbrains.kotlinx.dataframe.api.select
+import org.jetbrains.kotlinx.dataframe.api.shuffle
+import org.jetbrains.kotlinx.dataframe.api.sortBy
+import org.jetbrains.kotlinx.dataframe.api.sortByDesc
+import org.jetbrains.kotlinx.dataframe.api.sortWith
+import org.jetbrains.kotlinx.dataframe.api.split
+import org.jetbrains.kotlinx.dataframe.api.sum
+import org.jetbrains.kotlinx.dataframe.api.to
+import org.jetbrains.kotlinx.dataframe.api.toFloat
+import org.jetbrains.kotlinx.dataframe.api.toLeft
+import org.jetbrains.kotlinx.dataframe.api.toMap
+import org.jetbrains.kotlinx.dataframe.api.toPath
+import org.jetbrains.kotlinx.dataframe.api.toTop
+import org.jetbrains.kotlinx.dataframe.api.under
+import org.jetbrains.kotlinx.dataframe.api.unfold
+import org.jetbrains.kotlinx.dataframe.api.ungroup
+import org.jetbrains.kotlinx.dataframe.api.update
+import org.jetbrains.kotlinx.dataframe.api.where
+import org.jetbrains.kotlinx.dataframe.api.with
+import org.jetbrains.kotlinx.dataframe.api.withNull
+import org.jetbrains.kotlinx.dataframe.api.withValue
+import org.jetbrains.kotlinx.dataframe.api.withZero
 import org.jetbrains.kotlinx.dataframe.impl.api.mapNotNullValues
 import org.jetbrains.kotlinx.dataframe.io.readJsonStr
+import org.jetbrains.kotlinx.dataframe.io.renderToString
 import org.jetbrains.kotlinx.dataframe.testResource
 import org.jetbrains.kotlinx.dataframe.types.UtilTests
 import org.junit.Test
@@ -950,7 +1041,7 @@ class Modify : TestBase() {
         // SampleStart
         class RepositoryInfo(val data: Any)
 
-        fun download(url: String) = RepositoryInfo("fancy response from the API")
+        fun downloadRepositoryInfo(url: String) = RepositoryInfo("fancy response from the API")
         // SampleEnd
     }
 
@@ -958,7 +1049,7 @@ class Modify : TestBase() {
     fun convertToColumnGroupData() {
         class RepositoryInfo(val data: Any)
 
-        fun download(url: String) = RepositoryInfo("fancy response from the API")
+        fun downloadRepositoryInfo(url: String) = RepositoryInfo("fancy response from the API")
 
         // SampleStart
         val interestingRepos = dataFrameOf("name", "url")(
@@ -967,7 +1058,7 @@ class Modify : TestBase() {
         )
 
         val initialData = interestingRepos
-            .add("response") { download("url"()) }
+            .add("response") { downloadRepositoryInfo("url"<String>()) }
         // SampleEnd
     }
 
@@ -975,7 +1066,7 @@ class Modify : TestBase() {
     fun convertToColumnGroup() {
         class RepositoryInfo(val data: Any)
 
-        fun download(url: String) = RepositoryInfo("fancy response from the API")
+        fun downloadRepositoryInfo(url: String) = RepositoryInfo("fancy response from the API")
 
         val interestingRepos = dataFrameOf("name", "url")(
             "dataframe", "/dataframe",
@@ -983,7 +1074,7 @@ class Modify : TestBase() {
         )
 
         val initialData = interestingRepos
-            .add("response") { download("url"()) }
+            .add("response") { downloadRepositoryInfo("url"()) }
 
         // SampleStart
         val df = initialData.unfold("response")
@@ -1005,7 +1096,7 @@ class Modify : TestBase() {
     fun convertToColumnGroupBenefits() {
         class RepositoryInfo(val data: Any)
 
-        fun download(url: String) = RepositoryInfo("fancy response from the API")
+        fun downloadRepositoryInfo(url: String) = RepositoryInfo("fancy response from the API")
 
         val interestingRepos = dataFrameOf("name", "url")(
             "dataframe", "/dataframe",
@@ -1013,7 +1104,7 @@ class Modify : TestBase() {
         )
 
         val initialData = interestingRepos
-            .add("response") { download("url"()) }
+            .add("response") { downloadRepositoryInfo("url"()) }
 
         val df = initialData.unfold("response").cast<Df>()
 
@@ -1039,20 +1130,6 @@ class Modify : TestBase() {
     }
 
     @Test
-    fun convertToFrameColumn() {
-        val interestingRepos = dataFrameOf("name", "url", "contributors")(
-            "dataframe", "/dataframe", testResource("dataframeContributors.json"),
-            "kotlin", "/kotlin", testResource("kotlinContributors.json"),
-        )
-
-        // SampleStart
-        val df = interestingRepos.unfold("contributors")
-
-        df.asGroupBy("contributors").max("contributions")
-        // SampleEnd
-    }
-
-    @Test
     fun customUnfoldRead() {
         val interestingRepos = dataFrameOf("name", "url", "contributors")(
             "dataframe", "/dataframe", testResource("dataframeContributors.json"),
@@ -1063,7 +1140,7 @@ class Modify : TestBase() {
         val contributors by column<URL>()
 
         val df = interestingRepos
-            .replace(contributors)
+            .replace { contributors }
             .with {
                 it.mapNotNullValues { url -> DataFrame.readJsonStr(url.readText()) }
             }
@@ -1071,6 +1148,10 @@ class Modify : TestBase() {
         df.asGroupBy("contributors").max("contributions")
         // SampleEnd
 
-        df shouldBe interestingRepos.unfold(contributors)
+        df.asGroupBy("contributors").max("contributions").renderToString() shouldBe
+            """|        name        url contributions
+               | 0 dataframe /dataframe           111
+               | 1    kotlin    /kotlin           180
+               |""".trimMargin()
     }
 }
