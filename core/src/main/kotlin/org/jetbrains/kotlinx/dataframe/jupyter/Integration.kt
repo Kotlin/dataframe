@@ -55,12 +55,24 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 import kotlin.reflect.full.isSubtypeOf
 
+/** Users will get an error if their Kotlin Jupyter kernel is older than this version. */
+private const val MIN_KERNEL_VERSION = "0.11.0.198"
+
 internal val newDataSchemas = mutableListOf<KClass<*>>()
 
-internal class Integration(private val notebook: Notebook, private val options: MutableMap<String, String?>) :
-    JupyterIntegration() {
+internal class Integration(
+    private val notebook: Notebook,
+    private val options: MutableMap<String, String?>,
+) : JupyterIntegration() {
 
     override fun Builder.onLoaded() {
+        try {
+            setMinimalKernelVersion(MIN_KERNEL_VERSION)
+        } catch (_: NoSuchMethodError) { // will be thrown on version < 0.11.0.198
+            throw IllegalStateException(
+                getKernelUpdateMessage(notebook.kernelVersion, MIN_KERNEL_VERSION, notebook.jupyterClientType)
+            )
+        }
         val codeGen = ReplCodeGenerator.create()
         val config = JupyterConfiguration()
 

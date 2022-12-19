@@ -436,7 +436,7 @@ class SchemaGeneratorPluginIntegrationTest : AbstractDataFramePluginIntegrationT
                 
                 kotlin {
                     sourceSets {
-                        js {
+                        js(IR) {
                             browser()
                         }
                     }
