@@ -172,8 +172,8 @@ internal class ArrowKtTest {
 
         val warnings = ArrayList<ConvertingMismatch>()
         val testAllowNarrowing = frameWithoutRequiredField.arrowWriter(
-            Schema.fromJSON(citiesExampleSchema),
-            ArrowWriter.Mode(
+            targetSchema = Schema.fromJSON(citiesExampleSchema),
+            mode = ArrowWriter.Mode(
                 restrictWidening = true,
                 restrictNarrowing = false,
                 strictType = true,
