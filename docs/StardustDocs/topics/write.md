@@ -169,22 +169,27 @@ Here is full example:
 
 ```kotlin
 // Get schema from anywhere you want. It can be deserialized from JSON, generated from another dataset
-// (including DataFrame.columns().toArrowSchema() method), created manually and so on.
+// (including the DataFrame.columns().toArrowSchema() method), created manually, and so on.
 val schema = Schema.fromJSON(schemaJson)
 
 df.arrowWriter(
+
     // Specify your schema
-    schema,
+    targetSchema = schema,
+
     // Specify desired behavior mode
-    ArrowWriter.Mode(
+    mode = ArrowWriter.Mode(
         restrictWidening = true,
         restrictNarrowing = true,
         strictType = true,
-        strictNullable = false
+        strictNullable = false,
     ),
+
     // Specify mismatch subscriber
-    writeMismatchMessage,
-).use { writer ->
+    mismatchSubscriber = writeMismatchMessage,
+
+    ).use { writer: ArrowWriter ->
+
     // Save to any format and sink, like in the previous example
     writer.writeArrowFeather(file)
 }
