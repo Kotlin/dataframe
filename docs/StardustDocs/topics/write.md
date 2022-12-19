@@ -176,16 +176,16 @@ df.arrowWriter(
     // Specify your schema
     schema,
     // Specify desired behavior mode
-    ArrowWriter.Companion.Mode(
+    ArrowWriter.Mode(
         restrictWidening = true,
         restrictNarrowing = true,
         strictType = true,
         strictNullable = false
     ),
     // Specify mismatch subscriber
-    writeMismatchMessage
+    writeMismatchMessage,
 ).use { writer ->
-    // Save to any format and sink, like in previous example
+    // Save to any format and sink, like in the previous example
     writer.writeArrowFeather(file)
 }
 ```
@@ -196,4 +196,4 @@ On executing you should get two warnings:
 
 and
 
->Column "isHappy" is not described in target schema and was ignored
+> Column "isHappy" is not described in the target schema and was ignored

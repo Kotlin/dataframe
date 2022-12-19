@@ -36,7 +36,6 @@ import org.apache.arrow.vector.types.pojo.Schema
 import org.apache.arrow.vector.util.Text
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.name
 import org.jetbrains.kotlinx.dataframe.api.convertToBigDecimal
 import org.jetbrains.kotlinx.dataframe.api.convertToBoolean
 import org.jetbrains.kotlinx.dataframe.api.convertToByte
@@ -53,6 +52,7 @@ import org.jetbrains.kotlinx.dataframe.api.forEachIndexed
 import org.jetbrains.kotlinx.dataframe.api.map
 import org.jetbrains.kotlinx.dataframe.exceptions.CellConversionException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
+import org.jetbrains.kotlinx.dataframe.name
 
 /**
  * Save [dataFrame] content in Apache Arrow format (can be written to File, ByteArray, OutputStream or raw Channel) with [targetSchema].
@@ -61,8 +61,8 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 internal class ArrowWriterImpl(
     override val dataFrame: DataFrame<*>,
     override val targetSchema: Schema,
-    override val mode: ArrowWriter.Companion.Mode,
-    override val mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage
+    override val mode: ArrowWriter.Mode,
+    override val mismatchSubscriber: (ConvertingMismatch) -> Unit = ignoreMismatchMessage,
 ) : ArrowWriter {
 
     private val allocator = RootAllocator()

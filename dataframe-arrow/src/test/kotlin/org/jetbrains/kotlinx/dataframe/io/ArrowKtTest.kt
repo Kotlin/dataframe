@@ -142,14 +142,14 @@ internal class ArrowKtTest {
         val warnings = ArrayList<ConvertingMismatch>()
         val testRestrictWidening = citiesExampleFrame.arrowWriter(
             Schema.fromJSON(citiesExampleSchema),
-            ArrowWriter.Companion.Mode.STRICT
+            ArrowWriter.Mode.STRICT
         ) { warning -> warnings.add(warning) }.use { it.saveArrowFeatherToByteArray() }
         warnings.shouldContain(ConvertingMismatch.WideningMismatch.RejectedColumn("page_in_wiki"))
         shouldThrow<IllegalArgumentException> { DataFrame.readArrowFeather(testRestrictWidening)["page_in_wiki"] }
 
         val testAllowWidening = citiesExampleFrame.arrowWriter(
             Schema.fromJSON(citiesExampleSchema),
-            ArrowWriter.Companion.Mode(
+            ArrowWriter.Mode(
                 restrictWidening = false,
                 restrictNarrowing = true,
                 strictType = true,
@@ -165,7 +165,7 @@ internal class ArrowKtTest {
 
         frameWithoutRequiredField.arrowWriter(
             Schema.fromJSON(citiesExampleSchema),
-            ArrowWriter.Companion.Mode.STRICT
+            ArrowWriter.Mode.STRICT
         ).use {
             shouldThrow<ConvertingException> { it.saveArrowFeatherToByteArray() }
         }
@@ -173,7 +173,7 @@ internal class ArrowKtTest {
         val warnings = ArrayList<ConvertingMismatch>()
         val testAllowNarrowing = frameWithoutRequiredField.arrowWriter(
             Schema.fromJSON(citiesExampleSchema),
-            ArrowWriter.Companion.Mode(
+            ArrowWriter.Mode(
                 restrictWidening = true,
                 restrictNarrowing = false,
                 strictType = true,
@@ -191,7 +191,7 @@ internal class ArrowKtTest {
 
         frameWithIncompatibleField.arrowWriter(
             Schema.fromJSON(citiesExampleSchema),
-            ArrowWriter.Companion.Mode.STRICT
+            ArrowWriter.Mode.STRICT
         ).use {
             shouldThrow<ConvertingException> { it.saveArrowFeatherToByteArray() }
         }
@@ -199,7 +199,7 @@ internal class ArrowKtTest {
         val warnings = ArrayList<ConvertingMismatch>()
         val testLoyalType = frameWithIncompatibleField.arrowWriter(
             Schema.fromJSON(citiesExampleSchema),
-            ArrowWriter.Companion.Mode(
+            ArrowWriter.Mode(
                 restrictWidening = true,
                 restrictNarrowing = true,
                 strictType = false,
@@ -219,7 +219,7 @@ internal class ArrowKtTest {
 
         frameWithNulls.arrowWriter(
             Schema.fromJSON(citiesExampleSchema),
-            ArrowWriter.Companion.Mode.STRICT
+            ArrowWriter.Mode.STRICT
         ).use {
             shouldThrow<ConvertingException> { it.saveArrowFeatherToByteArray() }
         }
@@ -227,7 +227,7 @@ internal class ArrowKtTest {
         val warnings = ArrayList<ConvertingMismatch>()
         val testLoyalNullable = frameWithNulls.arrowWriter(
             Schema.fromJSON(citiesExampleSchema),
-            ArrowWriter.Companion.Mode(
+            ArrowWriter.Mode(
                 restrictWidening = true,
                 restrictNarrowing = true,
                 strictType = true,
