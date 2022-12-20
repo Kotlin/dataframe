@@ -237,6 +237,9 @@ internal open class ExtensionsCodeGeneratorImpl(
         getter: String,
         visibility: String,
     ): String {
+        // jvm name is required to prevent signature clash like this:
+        // val DataRow<Type>.name: String
+        // val DataRow<Repo>.name: String
         val jvmName = "${shortMarkerName}_${name.removeQuotes()}"
         val typeParameters = marker.typeParameters.let {
             if (it.isNotEmpty() && !it.startsWith(" ")) {
