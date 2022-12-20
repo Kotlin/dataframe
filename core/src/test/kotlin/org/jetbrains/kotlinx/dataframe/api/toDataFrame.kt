@@ -1,8 +1,10 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.kind
@@ -11,6 +13,43 @@ import org.junit.Test
 import kotlin.reflect.typeOf
 
 class CreateDataFrameTests {
+
+    @DataSchema
+    data class Gps(
+        val latitude: Double,
+        val longitude: Double,
+    )
+
+    @DataSchema
+    data class Location(
+        val name: String,
+        val gps: Gps?,
+    )
+
+    @Test
+    fun `dataSchema instances`() {
+        val a: DataFrame<Location> = listOf(
+            Location("Home", Gps(0.0, 0.0)),
+            Location("Away", null),
+        ).toDataFrame()
+
+        a.alsoDebug()
+        a.name.type() shouldBe typeOf<String>()
+        a.gps.type() shouldBe typeOf<DataRow<*>>()
+
+        val b: AnyFrame = dataFrameOf("name", "gps")(
+            "Home", Gps(0.0, 0.0),
+            "Away", null,
+        )
+
+        b.alsoDebug()
+        b["name"].type() shouldBe typeOf<String>()
+        b["gps"].type() shouldBe typeOf<DataRow<*>>()
+
+        val c by columnOf(Gps(0.0, 0.0), null)
+        c.toDataFrame().print(borders = true, title = true, columnTypes = true)
+        c.type() shouldBe typeOf<DataRow<*>>()
+    }
 
     @Test
     fun `visibility test`() {
@@ -175,6 +214,7 @@ class CreateDataFrameTests {
     fun treatErasedGenericAsAny() {
         class IncompatibleVersionErrorData<T>(val expected: T, val actual: T)
         class DeserializedContainerSource(val incompatibility: IncompatibleVersionErrorData<*>)
+
         val functions = listOf(DeserializedContainerSource(IncompatibleVersionErrorData(1, 2)))
 
         val df = functions.toDataFrame(maxDepth = 2)

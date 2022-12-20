@@ -15,7 +15,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.mapNotNullValues
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
-import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
+import org.jetbrains.kotlinx.dataframe.impl.columns.createColumnGuessingType
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.io.read
@@ -31,7 +31,8 @@ public inline fun <reified T> Iterable<T>.toDataFrame(): DataFrame<T> = toDataFr
     properties()
 }
 
-public inline fun <reified T> Iterable<T>.toDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> = createDataFrameImpl(T::class, body)
+public inline fun <reified T> Iterable<T>.toDataFrame(noinline body: CreateDataFrameDsl<T>.() -> Unit): DataFrame<T> =
+    createDataFrameImpl(T::class, body)
 
 public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>, maxDepth: Int = 0): DataFrame<T> =
     toDataFrame {
@@ -87,8 +88,7 @@ public fun <T> Iterable<Pair<ColumnPath, AnyBaseCol>>.toDataFrameFromPairs(): Da
 
     forEach { (path, col) ->
         when (path.size) {
-            0 -> {
-            }
+            0 -> Unit
             1 -> {
                 val name = path[0]
                 val uniqueName = nameGenerator.addUnique(name)
@@ -98,6 +98,7 @@ public fun <T> Iterable<Pair<ColumnPath, AnyBaseCol>>.toDataFrameFromPairs(): Da
                 columns.add(col.rename(uniqueName))
                 columnIndices[uniqueName] = index
             }
+
             else -> {
                 val name = path[0]
                 val uniqueName = columnGroupName.getOrPut(name) {
@@ -128,11 +129,21 @@ public fun <T> Iterable<Pair<ColumnPath, AnyBaseCol>>.toDataFrameFromPairs(): Da
 
 @JvmName("toDataFrameColumnPathAnyNullable")
 public fun Iterable<Pair<ColumnPath, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame {
-    return map { it.first to guessColumnType(it.first.last(), it.second.asList()) }.toDataFrameFromPairs<Unit>()
+    return map {
+        it.first to createColumnGuessingType(
+            it.first.last(),
+            it.second.asList()
+        )
+    }.toDataFrameFromPairs<Unit>()
 }
 
 public fun Iterable<Pair<String, Iterable<Any?>>>.toDataFrameFromPairs(): AnyFrame {
-    return map { ColumnPath(it.first) to guessColumnType(it.first, it.second.asList()) }.toDataFrameFromPairs<Unit>()
+    return map {
+        ColumnPath(it.first) to createColumnGuessingType(
+            it.first,
+            it.second.asList()
+        )
+    }.toDataFrameFromPairs<Unit>()
 }
 
 public interface TraversePropertiesDsl {
@@ -173,7 +184,7 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
     public abstract fun properties(
         vararg roots: KProperty<*>,
         maxDepth: Int = 0,
-        body: (TraversePropertiesDsl.() -> Unit)? = null
+        body: (TraversePropertiesDsl.() -> Unit)? = null,
     )
 
     public inline fun <reified R> expr(noinline expression: (T) -> R): DataColumn<R> =
@@ -208,7 +219,12 @@ public fun Map<String, Iterable<Any?>>.toDataFrame(): AnyFrame {
 
 @JvmName("toDataFrameColumnPathAnyNullable")
 public fun Map<ColumnPath, Iterable<Any?>>.toDataFrame(): AnyFrame {
-    return map { it.key to DataColumn.createWithTypeInference(it.key.last(), it.value.asList()) }.toDataFrameFromPairs<Unit>()
+    return map {
+        it.key to DataColumn.createWithTypeInference(
+            it.key.last(),
+            it.value.asList()
+        )
+    }.toDataFrameFromPairs<Unit>()
 }
 
 // endregion
