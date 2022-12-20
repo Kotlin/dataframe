@@ -56,6 +56,7 @@ On the other hand, `Kotlin dataframe` follows `Koltin Collections` naming for ro
 **Value modification:**
 * [convert](convert.md) — convert values into new types
 * [parse](parse.md) — try to convert `String` values into appropriate types
+* [unfold](unfold.md) — convert / "unfold" objects to `ColumnGroup`
 * [update](update.md) — update values preserving column types
 * [fillNulls](fill.md#fillnulls) / [fillNaNs](fill.md#fillnans) / [fillNA](fill.md#fillna) — replace missing values
 
