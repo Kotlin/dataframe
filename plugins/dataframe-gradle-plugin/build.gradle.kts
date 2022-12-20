@@ -119,23 +119,23 @@ val integrationTestConfiguration by configurations.creating {
     extendsFrom(configurations.testImplementation.get())
 }
 
-//val integrationTestTask = task<Test>("integrationTest") {
-//    dependsOn(":plugins:symbol-processor:publishToMavenLocal")
-//    dependsOn(":dataframe-arrow:publishToMavenLocal")
-//    dependsOn(":dataframe-excel:publishToMavenLocal")
-//    dependsOn(":dataframe-openapi:publishToMavenLocal")
-//    //   dependsOn(":publishApiPublicationToMavenLocal")
-//    dependsOn(":dataframe-arrow:publishDataframeArrowPublicationToMavenLocal")
-//    dependsOn(":dataframe-excel:publishDataframeExcelPublicationToMavenLocal")
-//    dependsOn(":dataframe-openapi:publishDataframeOpenApiPublicationToMavenLocal")
-//    dependsOn(":plugins:symbol-processor:publishMavenPublicationToMavenLocal")
-//    dependsOn(":core:publishCorePublicationToMavenLocal")
-//    description = "Runs integration tests."
-//    group = "verification"
-//
-//    testClassesDirs = sourceSets["integrationTest"].output.classesDirs
-//    classpath = sourceSets["integrationTest"].runtimeClasspath
-//    shouldRunAfter("test")
-//}
-//
-//tasks.check { dependsOn(integrationTestTask) }
+val integrationTestTask = task<Test>("integrationTest") {
+    dependsOn(":plugins:symbol-processor:publishToMavenLocal")
+    dependsOn(":dataframe-arrow:publishToMavenLocal")
+    dependsOn(":dataframe-excel:publishToMavenLocal")
+    dependsOn(":dataframe-openapi:publishToMavenLocal")
+    //   dependsOn(":publishApiPublicationToMavenLocal")
+    dependsOn(":dataframe-arrow:publishDataframeArrowPublicationToMavenLocal")
+    dependsOn(":dataframe-excel:publishDataframeExcelPublicationToMavenLocal")
+    dependsOn(":dataframe-openapi:publishDataframeOpenApiPublicationToMavenLocal")
+    dependsOn(":plugins:symbol-processor:publishMavenPublicationToMavenLocal")
+    dependsOn(":core:publishCorePublicationToMavenLocal")
+    description = "Runs integration tests."
+    group = "verification"
+
+    testClassesDirs = sourceSets["integrationTest"].output.classesDirs
+    classpath = sourceSets["integrationTest"].runtimeClasspath
+    shouldRunAfter("test")
+}
+
+tasks.check { dependsOn(integrationTestTask) }
