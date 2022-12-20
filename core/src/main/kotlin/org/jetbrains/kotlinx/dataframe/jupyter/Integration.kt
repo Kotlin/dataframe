@@ -65,7 +65,17 @@ internal class Integration(
     private val options: MutableMap<String, String?>,
 ) : JupyterIntegration() {
 
+    val version = options["v"]
+
     override fun Builder.onLoaded() {
+        if (version != null) {
+            dependencies(
+                "org.jetbrains.kotlinx:dataframe-excel:$version",
+                "org.jetbrains.kotlinx:dataframe-arrow:$version",
+                "org.jetbrains.kotlinx:dataframe-openapi:$version",
+            )
+        }
+
         try {
             setMinimalKernelVersion(MIN_KERNEL_VERSION)
         } catch (_: NoSuchMethodError) { // will be thrown on version < 0.11.0.198
