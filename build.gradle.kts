@@ -3,6 +3,15 @@ import org.jetbrains.kotlinx.publisher.apache2
 import org.jetbrains.kotlinx.publisher.developer
 import org.jetbrains.kotlinx.publisher.githubRepo
 
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("com.igormaznitsa:jcp:7.0.5")
+    }
+}
+
 @Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
     kotlin("jvm") version libs.versions.kotlin
