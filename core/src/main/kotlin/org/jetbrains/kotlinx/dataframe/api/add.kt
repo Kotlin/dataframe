@@ -17,7 +17,6 @@ import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.exceptions.DuplicateColumnNamesException
-import org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException
 import org.jetbrains.kotlinx.dataframe.impl.api.insertImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.resolveSingle
 import kotlin.reflect.KProperty
@@ -26,53 +25,39 @@ import kotlin.reflect.KProperty
  * `add` operation adds new columns to DataFrame.
  */
 
+//#local ADD = " * Original [DataFrame] is not modified.\n *\n * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names\n * @throws [org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException] if columns in expected result have different sizes\n * @return new [DataFrame] with added columns"
+
 // region Add existing columns
 
 /**
  * Creates new [DataFrame] with given columns added to the end of original [DataFrame.columns] list.
  *
- * Original [DataFrame] is not modified.
- *
+/*$ADD$*/
  * @param columns columns to add
- * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
- * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
- * @return new [DataFrame] with added columns
  */
 public fun <T> DataFrame<T>.add(vararg columns: AnyBaseCol): DataFrame<T> = addAll(columns.asIterable())
 
 /**
  * Creates new [DataFrame] with given columns added to the end of original [DataFrame.columns] list.
  *
- * Original [DataFrame] is not modified.
- *
+/*$ADD$*/
  * @param columns columns to add
- * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
- * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
- * @return new [DataFrame] with added columns
  */
 public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> = dataFrameOf(columns() + columns).cast()
 
 /**
  * Creates new [DataFrame] with all columns from given [dataFrames] added to the end of original [DataFrame.columns] list.
  *
- * Original [DataFrame] is not modified.
- *
+/*$ADD$*/
  * @param dataFrames dataFrames to get columns from
- * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
- * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
- * @return new [DataFrame] with added columns
  */
 public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = addAll(dataFrames.asIterable())
 
 /**
  * Creates new [DataFrame] with all columns from given [dataFrames] added to the end of original [DataFrame.columns] list.
  *
- * Original [DataFrame] is not modified.
- *
+/*$ADD$*/
  * @param dataFrames dataFrames to get columns from
- * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
- * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
- * @return new [DataFrame] with added columns
  */
 @JvmName("addAllFrames")
 public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T> = addAll(dataFrames.flatMap { it.columns() })
