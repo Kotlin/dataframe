@@ -153,10 +153,14 @@ tasks.compileKotlin {
         freeCompilerArgs += listOf("-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn")
     }
 
-    dependsOn(preprocessMain)
     outputs.upToDateWhen {
         preprocessMain.outcomingFiles.files.isEmpty()
     }
+}
+
+tasks.withType<Jar> {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    dependsOn(preprocessMain)
 
     doFirst {
         kotlin {
@@ -179,10 +183,6 @@ tasks.compileKotlin {
             }
         }
     }
-}
-
-tasks.withType<Jar> {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks.test {
