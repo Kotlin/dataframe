@@ -1,3 +1,8 @@
+import com.igormaznitsa.jcp.gradle.JcpTask
+import kotlinx.kover.api.KoverTaskExtension
+import org.gradle.jvm.tasks.Jar
+import org.jetbrains.dataframe.gradle.DataSchemaVisibility
+
 @Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
     kotlin("jvm")
@@ -10,6 +15,7 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
     id("org.jmailen.kotlinter")
     id("org.jetbrains.kotlinx.dataframe")
+    id("com.igormaznitsa.jcp")
 }
 
 group = "org.jetbrains.kotlinx"
@@ -127,16 +133,61 @@ tasks.withType<JavaCompile> {
     targetCompatibility = JavaVersion.VERSION_1_8.toString()
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+// Setup preprocessing with JCP for main sources
+
+val kotlinMainSources = kotlin.sourceSets.main.get().kotlin.sourceDirectories
+
+val preprocessMain by tasks.creating(JcpTask::class) {
+    sources.set(kotlinMainSources.filter { "ksp" !in it.path })
+    clearTarget.set(true)
+    fileExtensions.set(listOf("kt"))
+    vars.set(
+        mapOf()
+    )
+    outputs.upToDateWhen { target.get().exists() }
+}
+
+tasks.compileKotlin {
     dependsOn(tasks.lintKotlin)
     kotlinOptions {
-        freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn")
+        freeCompilerArgs += listOf("-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn")
     }
+
+    dependsOn(preprocessMain)
+    outputs.upToDateWhen {
+        preprocessMain.outcomingFiles.files.isEmpty()
+    }
+
+    doFirst {
+        kotlin {
+            sourceSets {
+                main {
+                    kotlin.setSrcDirs(
+                        kotlinMainSources.filter { "ksp" in it.path } + preprocessMain.target.get()
+                    )
+                }
+            }
+        }
+    }
+
+    doLast {
+        kotlin {
+            sourceSets {
+                main {
+                    kotlin.setSrcDirs(kotlinMainSources)
+                }
+            }
+        }
+    }
+}
+
+tasks.withType<Jar> {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks.test {
     maxHeapSize = "2048m"
-    extensions.configure(kotlinx.kover.api.KoverTaskExtension::class) {
+    extensions.configure(KoverTaskExtension::class) {
         excludes.set(
             listOf(
                 "org.jetbrains.kotlinx.dataframe.jupyter.*",
@@ -174,7 +225,7 @@ artifacts {
 dataframes {
     schema {
         sourceSet = "test"
-        visibility = org.jetbrains.dataframe.gradle.DataSchemaVisibility.IMPLICIT_PUBLIC
+        visibility = DataSchemaVisibility.IMPLICIT_PUBLIC
         data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
         name = "org.jetbrains.kotlinx.dataframe.samples.api.Repository"
     }
