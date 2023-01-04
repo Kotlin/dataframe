@@ -8,6 +8,8 @@ import org.jetbrains.kotlinx.dataframe.api.readCSVDefault
 import org.jetbrains.kotlinx.dataframe.api.readJsonDefault
 import org.jetbrains.kotlinx.dataframe.api.schema
 import org.jetbrains.kotlinx.dataframe.io.read
+import org.jetbrains.kotlinx.dataframe.io.readCSV
+import java.io.File
 
 internal class Read0 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.path by string()
@@ -22,7 +24,25 @@ internal class ReadCSV0 : AbstractInterpreter<PluginDataFrameSchema>() {
     val Arguments.fileOrUrl: String by arg()
 
     override fun Arguments.interpret(): PluginDataFrameSchema {
-        return DataFrame.readCSVDefault(fileOrUrl).schema().toPluginDataFrameSchema()
+        resolutionPath
+        val file = resolutionPath?.let {
+            try {
+                val file = File(it)
+                if (file.exists() && file.isDirectory) {
+                    File(file, fileOrUrl)
+                } else {
+                    null
+                }
+            } catch (_: Exception) {
+                null
+            }
+        }
+        val df = if (file != null && file.exists()) {
+            DataFrame.readCSV(file)
+        } else {
+            DataFrame.readCSVDefault(fileOrUrl)
+        }
+        return df.schema().toPluginDataFrameSchema()
     }
 }
 

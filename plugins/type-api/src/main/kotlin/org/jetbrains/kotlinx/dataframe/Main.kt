@@ -35,6 +35,7 @@ val DATA_ROW_CLASS_ID: ClassId
 
 interface KotlinTypeFacade {
     val session: FirSession
+    val resolutionPath: String? get() = null
 
     fun Marker.type() = type
 
