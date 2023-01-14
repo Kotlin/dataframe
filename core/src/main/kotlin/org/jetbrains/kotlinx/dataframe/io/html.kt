@@ -121,7 +121,7 @@ internal fun AnyFrame.toHtmlData(
     val queue = LinkedList<Pair<AnyFrame, Int>>()
 
     fun AnyFrame.columnToJs(col: AnyCol, rowsLimit: Int): ColumnDataForJs {
-        val values = rows().take(rowsLimit)
+        val values = if (rowsLimit == Int.MAX_VALUE) rows() else rows().take(rowsLimit)
         val scale = if (col.isNumber()) col.asNumbers().scale() else 1
         val format = if (scale > 0) {
             RendererDecimalFormat.fromPrecision(scale)
@@ -158,7 +158,7 @@ internal fun AnyFrame.toHtmlData(
     queue.add(this to rootId)
     while (!queue.isEmpty()) {
         val (nextDf, nextId) = queue.pop()
-        val rowsLimit = if (nextId == rootId) configuration.rowsLimit else 5
+        val rowsLimit = if (nextId == rootId) configuration.rowsLimit else configuration.nestedRowsLimit
         val preparedColumns = nextDf.columns().map { nextDf.columnToJs(it, rowsLimit) }
         val js = tableJs(preparedColumns, nextId, rootId, nextDf.nrow)
         scripts.add(js)
@@ -211,6 +211,7 @@ public fun <T> DataFrame<T>.toHTML(
 
 public data class DisplayConfiguration(
     var rowsLimit: Int = 20,
+    var nestedRowsLimit: Int = 5,
     var cellContentLimit: Int = 40,
     var cellFormatter: RowColFormatter<*, *>? = null,
     var decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
