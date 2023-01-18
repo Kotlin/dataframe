@@ -1,5 +1,0 @@
- * Original [DataFrame] is not modified.
- *
- * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
- * @throws [org.jetbrains.kotlinx.dataframe.exceptions.UnequalColumnSizesException] if columns in expected result have different sizes
- * @return new [DataFrame] with added columns
