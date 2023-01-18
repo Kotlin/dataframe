@@ -25,8 +25,6 @@ import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
 import org.junit.Test
 import java.io.File
 import java.net.URL
-import java.text.Format
-import java.text.NumberFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.Locale
