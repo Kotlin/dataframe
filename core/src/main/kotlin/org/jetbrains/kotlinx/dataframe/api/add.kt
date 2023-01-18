@@ -26,56 +26,43 @@ import kotlin.reflect.KProperty
  * `add` operation adds new columns to DataFrame.
  */
 
-/** either
-//#local ADD1234 = evalFile("add.txt")
+/**
+ * Creates new [DataFrame] with given columns added to the end of original [DataFrame.columns] list.
+ *
+ * Original [DataFrame] is not modified.
+ *
+ * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
+ * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
+ * @return new [DataFrame] with added columns
  */
-
-/** or
-//#local ADD0 = " * Original [DataFrame] is not modified."
-//#local ADD1 = " *"
-//#local ADD2 = " * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names"
-//#local ADD3 = " * @throws [UnequalColumnSizesException] if columns in expected result have different sizes"
-//#local ADD4 = " * @return new [DataFrame] with added columns"
-//
-//#local ADD = ADD0 + "\n" + ADD1 + "\n" + ADD2 + "\n" + ADD3 + "\n" + ADD4
- */
+private interface Add
 
 // region Add existing columns
 
 /**
- * Creates new [DataFrame] with given columns added to the end of original [DataFrame.columns] list.
- *
-/*$ADD$*/
+ * @include [Add]
  * @param columns columns to add
  */
 public fun <T> DataFrame<T>.add(vararg columns: AnyBaseCol): DataFrame<T> = addAll(columns.asIterable())
 
 /**
- * Creates new [DataFrame] with given columns added to the end of original [DataFrame.columns] list.
- *
-/*$ADD$*/
+ * @include [Add]
  * @param columns columns to add
  */
-public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> =
-    dataFrameOf(columns() + columns).cast()
+public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> = dataFrameOf(columns() + columns).cast()
 
 /**
- * Creates new [DataFrame] with all columns from given [dataFrames] added to the end of original [DataFrame.columns] list.
- *
-/*$ADD$*/
+ * @include [Add]
  * @param dataFrames dataFrames to get columns from
  */
 public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = addAll(dataFrames.asIterable())
 
 /**
- * Creates new [DataFrame] with all columns from given [dataFrames] added to the end of original [DataFrame.columns] list.
- *
-/*$ADD$*/
+ * @include [Add]
  * @param dataFrames dataFrames to get columns from
  */
 @JvmName("addAllFrames")
-public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T> =
-    addAll(dataFrames.flatMap { it.columns() })
+public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T> = addAll(dataFrames.flatMap { it.columns() })
 
 // endregion
 
@@ -166,15 +153,11 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
         return df.mapToColumn("", Infer.Nulls, expression)
     }
 
-    public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean =
-        add(this, Infer.Nulls, expression)
+    public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean = add(this, Infer.Nulls, expression)
 
     // TODO: use path instead of name
-    public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean =
-        name().from(expression)
-
-    public inline infix fun <reified R> KProperty<R>.from(noinline expression: RowExpression<T, R>): Boolean =
-        add(name, Infer.Nulls, expression)
+    public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean = name().from(expression)
+    public inline infix fun <reified R> KProperty<R>.from(noinline expression: RowExpression<T, R>): Boolean = add(name, Infer.Nulls, expression)
 
     public infix fun String.from(column: Column): Boolean = add(column.rename(this))
     public inline infix fun <reified R> ColumnAccessor<R>.from(column: ColumnReference<R>): Boolean = name() from column
