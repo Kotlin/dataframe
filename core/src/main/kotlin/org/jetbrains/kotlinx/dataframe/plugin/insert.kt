@@ -195,6 +195,9 @@ public data class SimpleFrameColumn(
     private val name1: String,
     @Contextual private val columns: List<SimpleCol>,
     val nullable: Boolean,
+    // probably shouldn't be called at all?
+    // exists only because SimpleCol has it
+    // but in fact it's for `materialize` to decide what should be the type of the property / accessors
     val anyFrameType: TypeApproximation,
 ) : MyColumnGroup<SimpleCol>, SimpleCol(name1, anyFrameType) {
     override fun columns(): List<SimpleCol> {
