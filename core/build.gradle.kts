@@ -1,7 +1,5 @@
-import com.igormaznitsa.jcp.gradle.JcpTask
-import kotlinx.kover.api.KoverTaskExtension
+import nl.jolanrensen.kdocInclude.ProcessKdocIncludeTask
 import org.gradle.jvm.tasks.Jar
-import org.jetbrains.dataframe.gradle.DataSchemaVisibility
 
 @Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
 plugins {
@@ -15,7 +13,7 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
     id("org.jmailen.kotlinter")
     id("org.jetbrains.kotlinx.dataframe")
-    id("com.igormaznitsa.jcp")
+    id("com.github.jolanrensen.kdocIncludeGradlePlugin") version "main-SNAPSHOT"
 }
 
 group = "org.jetbrains.kotlinx"
@@ -57,6 +55,48 @@ kotlin.sourceSets {
         kotlin.srcDir("build/generated/ksp/test/kotlin/")
     }
 }
+
+// Backup the kotlin source files location
+val kotlinMainSources = kotlin.sourceSets.main.get().kotlin.sourceDirectories
+
+val processKdocIncludeMain by tasks.creating(ProcessKdocIncludeTask::class) {
+    sources.set(
+        kotlinMainSources
+            .filterNot { "build/generated" in it.path } // Exclude generated sources
+    )
+    debug.set(true)
+}
+
+// Modify all Jar tasks such that before running the Kotlin sources are set to
+// the target of processKdocIncludeMain and they are returned back to normal afterwards.
+tasks.withType<Jar> {
+    dependsOn(processKdocIncludeMain)
+    outputs.upToDateWhen { false }
+
+    doFirst {
+        kotlin {
+            sourceSets {
+                main {
+                    kotlin.setSrcDirs(
+                        processKdocIncludeMain.targets +
+                            kotlinMainSources.filter { "build/generated" in it.path } // Include generated sources (which were excluded above)
+                    )
+                }
+            }
+        }
+    }
+
+    doLast {
+        kotlin {
+            sourceSets {
+                main {
+                    kotlin.setSrcDirs(kotlinMainSources)
+                }
+            }
+        }
+    }
+}
+
 
 tasks.lintKotlinMain {
     exclude("**/*keywords*/**")
@@ -133,61 +173,16 @@ tasks.withType<JavaCompile> {
     targetCompatibility = JavaVersion.VERSION_1_8.toString()
 }
 
-// Setup preprocessing with JCP for main sources
-
-val kotlinMainSources = kotlin.sourceSets.main.get().kotlin.sourceDirectories
-
-val preprocessMain by tasks.creating(JcpTask::class) {
-    sources.set(kotlinMainSources.filter { "ksp" !in it.path })
-    clearTarget.set(true)
-    fileExtensions.set(listOf("kt"))
-    vars.set(
-        mapOf()
-    )
-    outputs.upToDateWhen { target.get().exists() }
-}
-
-tasks.compileKotlin {
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
     dependsOn(tasks.lintKotlin)
     kotlinOptions {
-        freeCompilerArgs += listOf("-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn")
-    }
-
-    outputs.upToDateWhen {
-        preprocessMain.outcomingFiles.files.isEmpty()
-    }
-}
-
-tasks.withType<Jar> {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    dependsOn(preprocessMain)
-
-    doFirst {
-        kotlin {
-            sourceSets {
-                main {
-                    kotlin.setSrcDirs(
-                        kotlinMainSources.filter { "ksp" in it.path } + preprocessMain.target.get()
-                    )
-                }
-            }
-        }
-    }
-
-    doLast {
-        kotlin {
-            sourceSets {
-                main {
-                    kotlin.setSrcDirs(kotlinMainSources)
-                }
-            }
-        }
+        freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn")
     }
 }
 
 tasks.test {
     maxHeapSize = "2048m"
-    extensions.configure(KoverTaskExtension::class) {
+    extensions.configure(kotlinx.kover.api.KoverTaskExtension::class) {
         excludes.set(
             listOf(
                 "org.jetbrains.kotlinx.dataframe.jupyter.*",
@@ -225,7 +220,7 @@ artifacts {
 dataframes {
     schema {
         sourceSet = "test"
-        visibility = DataSchemaVisibility.IMPLICIT_PUBLIC
+        visibility = org.jetbrains.dataframe.gradle.DataSchemaVisibility.IMPLICIT_PUBLIC
         data = "https://raw.githubusercontent.com/Kotlin/dataframe/master/data/jetbrains_repositories.csv"
         name = "org.jetbrains.kotlinx.dataframe.samples.api.Repository"
     }
