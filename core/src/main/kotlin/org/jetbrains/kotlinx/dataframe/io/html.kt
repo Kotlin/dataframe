@@ -120,8 +120,8 @@ internal fun AnyFrame.toHtmlData(
     val scripts = mutableListOf<String>()
     val queue = LinkedList<Pair<AnyFrame, Int>>()
 
-    fun AnyFrame.columnToJs(col: AnyCol, rowsLimit: Int): ColumnDataForJs {
-        val values = if (rowsLimit == Int.MAX_VALUE) rows() else rows().take(rowsLimit)
+    fun AnyFrame.columnToJs(col: AnyCol, rowsLimit: Int?): ColumnDataForJs {
+        val values = if (rowsLimit != null) rows().take(rowsLimit) else rows()
         val scale = if (col.isNumber()) col.asNumbers().scale() else 1
         val format = if (scale > 0) {
             RendererDecimalFormat.fromPrecision(scale)
@@ -189,7 +189,7 @@ public fun <T> DataFrame<T>.toHTML(
     cellRenderer: CellRenderer = org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer,
     getFooter: (DataFrame<T>) -> String = { "DataFrame [${it.size}]" },
 ): HtmlData {
-    val limit = configuration.rowsLimit
+    val limit = configuration.rowsLimit ?: Int.MAX_VALUE
 
     val footer = getFooter(this)
     val bodyFooter = buildString {
@@ -210,8 +210,8 @@ public fun <T> DataFrame<T>.toHTML(
 }
 
 public data class DisplayConfiguration(
-    var rowsLimit: Int = 20,
-    var nestedRowsLimit: Int = 5,
+    var rowsLimit: Int? = 20,
+    var nestedRowsLimit: Int? = 5,
     var cellContentLimit: Int = 40,
     var cellFormatter: RowColFormatter<*, *>? = null,
     var decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
