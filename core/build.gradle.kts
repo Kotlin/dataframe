@@ -1,4 +1,5 @@
-import nl.jolanrensen.kdocInclude.ProcessKdocIncludeTask
+import nl.jolanrensen.docProcessor.*
+import nl.jolanrensen.docProcessor.defaultProcessors.*
 import org.gradle.jvm.tasks.Jar
 
 @Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
@@ -13,7 +14,7 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
     id("org.jmailen.kotlinter")
     id("org.jetbrains.kotlinx.dataframe")
-    id("com.github.jolanrensen.kdocIncludeGradlePlugin") version "main-SNAPSHOT"
+    id("com.github.jolanrensen.docProcessorGradlePlugin") version "v0.0.1"
 }
 
 group = "org.jetbrains.kotlinx"
@@ -59,12 +60,11 @@ kotlin.sourceSets {
 // Backup the kotlin source files location
 val kotlinMainSources = kotlin.sourceSets.main.get().kotlin.sourceDirectories
 
-val processKdocIncludeMain by tasks.creating(ProcessKdocIncludeTask::class) {
-    sources.set(
-        kotlinMainSources
-            .filterNot { "build/generated" in it.path } // Exclude generated sources
-    )
-    debug.set(true)
+val processKdocIncludeMain by creatingProcessDocTask(
+    sources = kotlinMainSources.filterNot { "build/generated" in it.path } // Exclude generated sources
+) {
+    processors = listOf(INCLUDE_DOC_PROCESSOR)
+    debug = true
 }
 
 // Modify all Jar tasks such that before running the Kotlin sources are set to
