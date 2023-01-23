@@ -47,7 +47,6 @@ import org.jetbrains.kotlinx.jupyter.api.KotlinKernelHost
 import org.jetbrains.kotlinx.jupyter.api.Notebook
 import org.jetbrains.kotlinx.jupyter.api.VariableName
 import org.jetbrains.kotlinx.jupyter.api.declare
-import org.jetbrains.kotlinx.jupyter.api.libraries.ColorScheme
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 import org.jetbrains.kotlinx.jupyter.api.libraries.resources
 import org.jetbrains.kotlinx.jupyter.api.renderHtmlAsIFrameIfNeeded
@@ -250,10 +249,6 @@ internal class Integration(
             // TODO: add more conditions to include all generated properties and other internal stuff
             //  that should not be shown to user in Jupyter variables view
             internalTypes.any { property.returnType.isSubtypeOf(it) }
-        }
-
-        onColorSchemeChange {
-            config.display.useDarkColorScheme = (it == ColorScheme.DARK)
         }
     }
 }

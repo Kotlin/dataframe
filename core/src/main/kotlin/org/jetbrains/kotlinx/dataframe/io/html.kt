@@ -173,7 +173,6 @@ internal fun HtmlData.print() = println(this)
 internal fun initHtml(
     includeJs: Boolean = true,
     includeCss: Boolean = true,
-    useDarkColorScheme: Boolean = false,
 ): HtmlData =
     HtmlData(
         style = if (includeCss) getResources("/table.css") else "",
@@ -217,7 +216,6 @@ public data class DisplayConfiguration(
     var decimalFormat: RendererDecimalFormat = RendererDecimalFormat.DEFAULT,
     var isolatedOutputs: Boolean = flagFromEnv("LETS_PLOT_HTML_ISOLATED_FRAME"),
     internal val localTesting: Boolean = flagFromEnv("KOTLIN_DATAFRAME_LOCAL_TESTING"),
-    var useDarkColorScheme: Boolean = false,
 ) {
     public companion object {
         public val DEFAULT: DisplayConfiguration = DisplayConfiguration()
