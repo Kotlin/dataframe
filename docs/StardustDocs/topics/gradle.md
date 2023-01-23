@@ -124,7 +124,7 @@ get enums, correct inheritance and overall better type safety.
 
 First of all, you will need the extra dependency:
 
-```kts
+```kotlin
 implementation("org.jetbrains.kotlinx:dataframe-openapi:$dataframe_version")
 ```
 
