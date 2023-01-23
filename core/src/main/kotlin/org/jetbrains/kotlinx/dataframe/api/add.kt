@@ -26,40 +26,53 @@ import kotlin.reflect.KProperty
  * `add` operation adds new columns to DataFrame.
  */
 
+// region Add existing columns
+
 /**
  * Creates new [DataFrame] with given columns added to the end of original [DataFrame.columns] list.
  *
  * Original [DataFrame] is not modified.
  *
+ * @param columns columns to add
  * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
  * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
  * @return new [DataFrame] with added columns
  */
-private interface Add
-
-// region Add existing columns
-
-/**
- * @include [Add]
- * @param columns columns to add
- */
 public fun <T> DataFrame<T>.add(vararg columns: AnyBaseCol): DataFrame<T> = addAll(columns.asIterable())
 
 /**
- * @include [Add]
+ * Creates new [DataFrame] with given columns added to the end of original [DataFrame.columns] list.
+ *
+ * Original [DataFrame] is not modified.
+ *
  * @param columns columns to add
+ * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
+ * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
+ * @return new [DataFrame] with added columns
  */
 public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> = dataFrameOf(columns() + columns).cast()
 
 /**
- * @include [Add]
+ * Creates new [DataFrame] with all columns from given [dataFrames] added to the end of original [DataFrame.columns] list.
+ *
+ * Original [DataFrame] is not modified.
+ *
  * @param dataFrames dataFrames to get columns from
+ * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
+ * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
+ * @return new [DataFrame] with added columns
  */
 public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = addAll(dataFrames.asIterable())
 
 /**
- * @include [Add]
+ * Creates new [DataFrame] with all columns from given [dataFrames] added to the end of original [DataFrame.columns] list.
+ *
+ * Original [DataFrame] is not modified.
+ *
  * @param dataFrames dataFrames to get columns from
+ * @throws [DuplicateColumnNamesException] if columns in expected result have repeated names
+ * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
+ * @return new [DataFrame] with added columns
  */
 @JvmName("addAllFrames")
 public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T> = addAll(dataFrames.flatMap { it.columns() })
