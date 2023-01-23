@@ -242,13 +242,13 @@ do this in Jupyter notebooks. There is only a slight difference in notation:
 
 Import the schema using any path (`String`), `URL`, or `File`:
 
-```kts
+```kotlin
 val PetStore = importDataSchema("https://petstore3.swagger.io/api/v3/openapi.json")
 ```
 
 and then from next cell you run and onwards, you can call, for example:
 
-```kts
+```kotlin
 val df = PetStore.Pet.readJson("https://petstore3.swagger.io/api/v3/pet/findByStatus?status=available")
 ```
 

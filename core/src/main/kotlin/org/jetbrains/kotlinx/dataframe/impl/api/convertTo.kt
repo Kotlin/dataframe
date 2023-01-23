@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -14,6 +14,7 @@ import org.jetbrains.kotlinx.dataframe.api.Infer
 import org.jetbrains.kotlinx.dataframe.api.all
 import org.jetbrains.kotlinx.dataframe.api.allNulls
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.concat
 import org.jetbrains.kotlinx.dataframe.api.convertTo
 import org.jetbrains.kotlinx.dataframe.api.emptyDataFrame
 import org.jetbrains.kotlinx.dataframe.api.getColumnPaths
@@ -24,11 +25,12 @@ import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.update
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
+import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.exceptions.ExcessiveColumnsException
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConversionException
-import org.jetbrains.kotlinx.dataframe.impl.columns.asAnyFrameColumn
 import org.jetbrains.kotlinx.dataframe.impl.emptyPath
 import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyColumn
 import org.jetbrains.kotlinx.dataframe.impl.schema.createEmptyDataFrame
@@ -107,8 +109,8 @@ internal fun AnyFrame.convertToImpl(
 
         val visited = mutableSetOf<String>()
         val newColumns = columns().mapNotNull { originalColumn ->
-            val targetColumn = schema.columns[originalColumn.name()]
-            if (targetColumn == null) {
+            val targetSchema = schema.columns[originalColumn.name()]
+            if (targetSchema == null) {
                 when (excessiveColumns) {
                     ExcessiveColumns.Fail -> throw ExcessiveColumnsException(listOf(originalColumn.name))
                     ExcessiveColumns.Keep -> originalColumn
@@ -118,13 +120,13 @@ internal fun AnyFrame.convertToImpl(
                 visited.add(originalColumn.name())
                 val currentSchema = originalColumn.extractSchema()
                 when {
-                    targetColumn == currentSchema -> originalColumn
+                    targetSchema == currentSchema -> originalColumn
 
                     !allowConversion -> {
                         val originalSchema = mapOf(originalColumn.name to currentSchema)
                             .render(0, StringBuilder(), "\t")
 
-                        val targetSchema = mapOf(originalColumn.name to targetColumn)
+                        val targetSchema = mapOf(originalColumn.name to targetSchema)
                             .render(0, StringBuilder(), "\t")
 
                         throw IllegalArgumentException("Column has schema:\n $originalSchema\n that differs from target schema:\n $targetSchema")
@@ -135,26 +137,31 @@ internal fun AnyFrame.convertToImpl(
 
                         // try to perform any user-specified conversions first
                         val from = originalColumn.type()
-                        val to = targetColumn.type
-                        val converter = dsl.getConverter(from, targetColumn)
+                        val to = targetSchema.type
+                        val converter = dsl.getConverter(from, targetSchema)
 
                         val convertedColumn = if (converter != null) {
                             val nullsAllowed = to.isMarkedNullable
                             originalColumn.map(to, Infer.Nulls) {
                                 val result =
                                     if (it != null || !converter.skipNulls) {
-                                        converter.transform(ConverterScope(from, targetColumn), it)
+                                        converter.transform(ConverterScope(from, targetSchema), it)
                                     } else {
                                         it
                                     }
 
-                                if (!nullsAllowed && result == null) throw TypeConversionException(it, from, to, originalColumn.path())
+                                if (!nullsAllowed && result == null) throw TypeConversionException(
+                                    it,
+                                    from,
+                                    to,
+                                    originalColumn.path()
+                                )
 
                                 result
                             }
                         } else null
 
-                        when (targetColumn.kind) {
+                        when (targetSchema.kind) {
                             ColumnKind.Value ->
                                 convertedColumn ?: originalColumn.convertTo(to)
 
@@ -187,7 +194,7 @@ internal fun AnyFrame.convertToImpl(
                                 DataColumn.createColumnGroup(
                                     name = column.name(),
                                     df = columnGroup.convertToSchema(
-                                        schema = (targetColumn as ColumnSchema.Group).schema,
+                                        schema = (targetSchema as ColumnSchema.Group).schema,
                                         path = columnPath,
                                     ),
                                 )
@@ -195,29 +202,35 @@ internal fun AnyFrame.convertToImpl(
 
                             ColumnKind.Frame -> {
                                 val column = convertedColumn ?: originalColumn
+                                val frameSchema = (targetSchema as ColumnSchema.Frame).schema
 
-                                // perform any patches if needed to be able to convert a column to a frame column
-                                val patchedOriginalColumn: AnyCol = when {
-                                    // a value column of AnyFrame? (or nulls) can be converted to a frame column by making nulls empty dataframes
-                                    column.kind == ColumnKind.Value && column.all { it is AnyFrame? } -> {
-                                        column
-                                            .map { (it ?: emptyDataFrame<Any?>()) as AnyFrame }
-                                            .convertTo<AnyFrame>()
+                                val frames = when (column.kind) {
+                                    ColumnKind.Frame ->
+                                        (column as FrameColumn<*>).values()
+
+                                    ColumnKind.Value -> {
+                                        require(column.all { it == null || it is AnyFrame || (it is List<*> && it.all { it is AnyRow? }) }) {
+                                            "Column `${column.name}` is ValueColumn and contains objects that can not be converted into `DataFrame`"
+                                        }
+                                        column.values().map {
+                                            when (it) {
+                                                null -> emptyDataFrame()
+                                                is AnyFrame -> it
+                                                else -> (it as List<AnyRow?>).concat()
+                                            }
+                                        }
                                     }
 
-                                    else -> column
+                                    ColumnKind.Group -> {
+                                        (column as ColumnGroup<*>).values().map { it.toDataFrame() }
+                                    }
                                 }
 
-                                require(patchedOriginalColumn.kind == ColumnKind.Frame) {
-                                    "Column `${patchedOriginalColumn.name}` is ${patchedOriginalColumn.kind}Column and can not be converted to `FrameColumn`"
-                                }
-                                val frameColumn = patchedOriginalColumn.asAnyFrameColumn()
-                                val frameSchema = (targetColumn as ColumnSchema.Frame).schema
-                                val frames = frameColumn.values().map { it.convertToSchema(frameSchema, columnPath) }
+                                val convertedFrames = frames.map { it.convertToSchema(frameSchema, columnPath)}
 
                                 DataColumn.createFrameColumn(
-                                    name = patchedOriginalColumn.name(),
-                                    groups = frames,
+                                    name = column.name(),
+                                    groups = convertedFrames,
                                     schema = lazy { frameSchema },
                                 )
                             }
@@ -259,7 +272,7 @@ internal fun AnyFrame.convertToImpl(
     }
 
     if (missingPaths.isNotEmpty()) {
-        throw IllegalArgumentException("The following columns were not found in DataFrame: ${missingPaths.map { it.joinToString()}}, and their type was not nullable. Use `fill` to initialize these columns")
+        throw IllegalArgumentException("The following columns were not found in DataFrame: ${missingPaths.map { it.joinToString() }}, and their type was not nullable. Use `fill` to initialize these columns")
     }
 
     return result
