@@ -19,6 +19,24 @@ import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.index
 import kotlin.reflect.KProperty
 
+/**
+ * Returns [DataFrame] with changed values in some cells.
+ * Column types can not be changed.
+ *
+ * TODO
+ */
+internal interface UpdateOperation {
+
+    /** @param columns The [ColumnsSelector] used to select the columns of this [DataFrame] to update. */
+    val columnsSelector: Nothing
+
+    /** @param columns An [Iterable] of [ColumnReference]s belonging to this [DataFrame] to update. */
+    val columnReferenceIterable: Nothing
+
+    /** @param columns The column names belonging to this [DataFrame] to update. */
+    val stringColumns: Nothing
+}
+
 public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T, C> =
     Update(this, null, columns)
 

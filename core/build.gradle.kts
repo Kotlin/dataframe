@@ -14,7 +14,8 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
     id("org.jmailen.kotlinter")
     id("org.jetbrains.kotlinx.dataframe")
-    id("com.github.jolanrensen.docProcessorGradlePlugin") version "v0.0.1"
+    id("com.github.jolanrensen.docProcessorGradlePlugin") version "v0.0.3"
+//    id("nl.jolanrensen.docProcessor") version "1.0-SNAPSHOT"
 }
 
 group = "org.jetbrains.kotlinx"
@@ -63,7 +64,10 @@ val kotlinMainSources = kotlin.sourceSets.main.get().kotlin.sourceDirectories
 val processKdocIncludeMain by creatingProcessDocTask(
     sources = kotlinMainSources.filterNot { "build/generated" in it.path } // Exclude generated sources
 ) {
-    processors = listOf(INCLUDE_DOC_PROCESSOR)
+    processors = listOf(
+        INCLUDE_DOC_PROCESSOR,
+        SAMPLE_DOC_PROCESSOR,
+    )
     debug = true
 }
 
