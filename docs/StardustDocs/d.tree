@@ -47,6 +47,7 @@
         <toc-element id="access.md" toc-title="Access"  show-structure-depth="3">
             <toc-element id="indexing.md"/>
             <toc-element id="iterate.md"/>
+            <toc-element id="sliceRows.md" toc-title="Slicing"/>
             <toc-element id="getRow.md">
                 <toc-element id="rows.md"/>
                 <toc-element id="single.md"/>
