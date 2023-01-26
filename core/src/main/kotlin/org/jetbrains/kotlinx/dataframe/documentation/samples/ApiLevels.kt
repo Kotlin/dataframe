@@ -18,6 +18,7 @@ import org.jetbrains.kotlinx.dataframe.io.read
 internal interface ApiLevels {
 
     fun strings() {
+        // SampleStart
         DataFrame.read("titanic.csv")
             .add("lastName") { "name"<String>().split(",").last() }
             .dropNulls("age")
@@ -26,17 +27,21 @@ internal interface ApiLevels {
                     "home"<String>().endsWith("NY") &&
                     "age"<Int>() in 10..20
             }
+        // SampleEnd
     }
 
     fun accessors1() {
+        // SampleStart
         val survived by column<Boolean>() // accessor for Boolean column with name 'survived'
         val home by column<String>()
         val age by column<Int?>()
         val name by column<String>()
         val lastName by column<String>()
+        // SampleEnd
     }
 
     fun accessors2() {
+        // SampleStart
         val survived by column<Boolean>()
         val home by column<String>()
         val age by column<Int?>()
@@ -47,9 +52,11 @@ internal interface ApiLevels {
             .add(lastName) { name().split(",").last() }
             .dropNulls { age }
             .filter { survived() && home().endsWith("NY") && age()!! in 10..20 }
+        // SampleEnd
     }
 
     fun accessors3() {
+        // SampleStart
         val survived by column<Boolean>()
         val home by column<String>()
         val age by column<Int?>()
@@ -60,9 +67,11 @@ internal interface ApiLevels {
             .add(lastName) { name().split(",").last() }
             .dropNulls { age }
             .filter { survived() && home().endsWith("NY") && age()!! in 10..20 }
+        // SampleEnd
     }
 
     fun kproperties1() {
+        // SampleStart
         data class Passenger(
             val survived: Boolean,
             val home: String,
@@ -79,9 +88,11 @@ internal interface ApiLevels {
                     it[Passenger::age] in 10..20
             }
             .toListOf<Passenger>()
+        // SampleEnd
     }
 
     fun kproperties2() {
+        // SampleStart
         data class Passenger(
             @ColumnName("survived") val isAlive: Boolean,
             @ColumnName("home") val city: String,
@@ -91,6 +102,7 @@ internal interface ApiLevels {
         val passengers = DataFrame.read("titanic.csv")
             .filter { it.get(Passenger::city).endsWith("NY") }
             .toListOf<Passenger>()
+        // SampleEnd
     }
 
     //    @DataSchema
@@ -102,11 +114,13 @@ internal interface ApiLevels {
     }
 
     fun extensionProperties2() {
+        // SampleStart
         val df = DataFrame.read("titanic.csv").cast<TitanicPassenger>()
 
         df.add("lastName") { name.split(",").last() }
             .dropNulls { age }
             .filter { survived && home.endsWith("NY") && age in 10..20 }
+        // SampleEnd
     }
 
     fun extensionProperties1() {
