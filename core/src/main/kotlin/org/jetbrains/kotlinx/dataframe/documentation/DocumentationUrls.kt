@@ -1,17 +1,17 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
-internal interface DocumentationUrls {
+private interface DocumentationUrls {
 
     /** [See `fill` documentation.](https://kotlin.github.io/dataframe/fill.html) */
     interface Fill {
 
-        /** [See `fillNulls` documentation](https://kotlin.github.io/dataframe/fill.html#fillnulls) */
+        /** [See `fillNulls` documentation.](https://kotlin.github.io/dataframe/fill.html#fillnulls) */
         interface FillNulls
 
-        /** [See `fillNaNs` documentation](https://kotlin.github.io/dataframe/fill.html#fillnans) */
+        /** [See `fillNaNs` documentation.](https://kotlin.github.io/dataframe/fill.html#fillnans) */
         interface FillNaNs
 
-        /** [See `fillNA` documentation](https://kotlin.github.io/dataframe/fill.html#fillna) */
+        /** [See `fillNA` documentation.](https://kotlin.github.io/dataframe/fill.html#fillna) */
         interface FillNA
     }
 

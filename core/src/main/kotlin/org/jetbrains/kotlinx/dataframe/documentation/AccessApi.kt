@@ -14,33 +14,49 @@ import org.jetbrains.kotlinx.dataframe.documentation.samples.ApiLevels as ApiLev
  *  - [KPropertiesApi]
  *  - [ExtensionPropertiesApi]
  *
- * @include [DocumentationUrls.AccessApis]
+ * For more information: {@include [DocumentationUrls.AccessApis]}
+ *
+ * @comment We can link to here whenever we want to explain the different access APIs.
  */
 internal interface AccessApi {
+
+    /** API:
+     * - {@include [AccessApi.ExtensionPropertiesApiLink]}
+     * - {@include [AccessApi.KPropertiesApiLink]}
+     * - {@include [AccessApi.ColumnAccessorsApiLink]}
+     * - {@include [AccessApi.StringApiLink]}
+     * */
+    interface AnyApiLink
 
     /**
      * String API.
      * In this [AccessApi], columns are accessed by a [String] representing their name.
      * Type-checking is done at runtime, name-checking too.
      *
-     * @include [DocumentationUrls.AccessApis.StringApi]
+     * For more information: {@include [DocumentationUrls.AccessApis.StringApi]}
      *
      * For example:
      * @sample [ApiLevelsSample.strings]
      */
     interface StringApi
 
+    /** String API [AccessApi.StringApi]. */
+    interface StringApiLink
+
     /**
      * Column Accessors API.
      * In this [AccessApi], every column has a descriptor;
      * a variable that represents its name and type.
      *
-     * @include [DocumentationUrls.AccessApis.ColumnAccessorsApi]
+     * For more information: {@include [DocumentationUrls.AccessApis.ColumnAccessorsApi]}
      *
      * For example:
      * @sample [ApiLevelsSample.accessors3]
      */
     interface ColumnAccessorsApi
+
+    /** Column Accessors API [AccessApi.ColumnAccessorsApi]. */
+    interface ColumnAccessorsApiLink
 
     /**
      * KProperties API.
@@ -49,22 +65,28 @@ internal interface AccessApi {
      * of some class.
      * The name and type of column should match the name and type of property, respectively.
      *
-     * @include [DocumentationUrls.AccessApis.KPropertiesApi]
+     * For more information: {@include [DocumentationUrls.AccessApis.KPropertiesApi]}
      *
      * For example:
      * @sample [ApiLevelsSample.kproperties1]
      */
     interface KPropertiesApi
 
+    /** KProperties API [AccessApi.KPropertiesApi]. */
+    interface KPropertiesApiLink
+
     /**
      * Extension Properties API.
      * In this [AccessApi], extension access properties are generated based on the dataframe schema.
      * The name and type of properties are inferred from the name and type of the corresponding columns.
      *
-     * @include [DocumentationUrls.AccessApis.ExtensionPropertiesApi]
+     * For more information: {@include [DocumentationUrls.AccessApis.ExtensionPropertiesApi]}
      *
      * For example:
      * @sample [ApiLevelsSample.extensionProperties1]
      */
     interface ExtensionPropertiesApi
+
+    /** Extension Properties API [AccessApi.ExtensionPropertiesApi]. */
+    interface ExtensionPropertiesApiLink
 }

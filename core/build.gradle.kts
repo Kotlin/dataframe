@@ -14,7 +14,7 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
     id("org.jmailen.kotlinter")
     id("org.jetbrains.kotlinx.dataframe")
-    id("com.github.jolanrensen.docProcessorGradlePlugin") version "v0.0.3"
+    id("com.github.jolanrensen.docProcessorGradlePlugin") version "v0.0.6"
 //    id("nl.jolanrensen.docProcessor") version "1.0-SNAPSHOT"
 }
 
@@ -67,6 +67,8 @@ val processKdocIncludeMain by creatingProcessDocTask(
     processors = listOf(
         INCLUDE_DOC_PROCESSOR,
         SAMPLE_DOC_PROCESSOR,
+        INCLUDE_FILE_DOC_PROCESSOR,
+        COMMENT_DOC_PROCESSOR,
     )
     debug = true
 }
