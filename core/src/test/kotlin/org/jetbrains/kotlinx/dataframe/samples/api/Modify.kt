@@ -822,6 +822,22 @@ class Modify : TestBase() {
     }
 
     @Test
+    fun addCalculated() {
+        class CityInfo(val city: String?, val population: Int, val location: String)
+        fun queryCityInfo(city: String?): CityInfo { return CityInfo(city, city?.length ?: 0, "35.5 32.2") }
+        // SampleStart
+        val personWithCityInfo = df.add {
+            val cityInfo = city.map { queryCityInfo(it) }
+            "cityInfo" {
+                cityInfo.map { it.location } into CityInfo::location
+                cityInfo.map { it.population } into "population"
+            }
+        }
+        // SampleEnd
+        personWithCityInfo["cityInfo"]["population"] shouldBe df.city.map { it?.length ?: 0 }.named("population")
+    }
+
+    @Test
     fun addMany_properties() {
         // SampleStart
         df.add {
