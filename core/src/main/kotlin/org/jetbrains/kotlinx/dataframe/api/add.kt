@@ -3,9 +3,9 @@ package org.jetbrains.kotlinx.dataframe.api
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
 import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyColumnGroupAccessor
+import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -50,7 +50,8 @@ public fun <T> DataFrame<T>.add(vararg columns: AnyBaseCol): DataFrame<T> = addA
  * @throws [UnequalColumnSizesException] if columns in expected result have different sizes
  * @return new [DataFrame] with added columns
  */
-public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> = dataFrameOf(columns() + columns).cast()
+public fun <T> DataFrame<T>.addAll(columns: Iterable<AnyBaseCol>): DataFrame<T> =
+    dataFrameOf(columns() + columns).cast()
 
 /**
  * Creates new [DataFrame] with all columns from given [dataFrames] added to the end of original [DataFrame.columns] list.
@@ -75,7 +76,8 @@ public fun <T> DataFrame<T>.add(vararg dataFrames: AnyFrame): DataFrame<T> = add
  * @return new [DataFrame] with added columns
  */
 @JvmName("addAllFrames")
-public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T> = addAll(dataFrames.flatMap { it.columns() })
+public fun <T> DataFrame<T>.addAll(dataFrames: Iterable<AnyFrame>): DataFrame<T> =
+    addAll(dataFrames.flatMap { it.columns() })
 
 // endregion
 
@@ -149,9 +151,9 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
     // TODO: support adding column into path
     internal val columns = mutableListOf<AnyCol>()
 
-    public fun add(column: Column): Boolean = columns.add(column.resolveSingle(df)!!.data)
+    public fun add(column: AnyColumnReference): Boolean = columns.add(column.resolveSingle(df)!!.data)
 
-    public operator fun Column.unaryPlus(): Boolean = add(this)
+    public operator fun AnyColumnReference.unaryPlus(): Boolean = add(this)
 
     public operator fun String.unaryPlus(): Boolean = add(df[this])
 
@@ -166,17 +168,21 @@ public class AddDsl<T>(@PublishedApi internal val df: DataFrame<T>) : ColumnsCon
         return df.mapToColumn("", Infer.Nulls, expression)
     }
 
-    public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean = add(this, Infer.Nulls, expression)
+    public inline infix fun <reified R> String.from(noinline expression: RowExpression<T, R>): Boolean =
+        add(this, Infer.Nulls, expression)
 
     // TODO: use path instead of name
-    public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean = name().from(expression)
-    public inline infix fun <reified R> KProperty<R>.from(noinline expression: RowExpression<T, R>): Boolean = add(name, Infer.Nulls, expression)
+    public inline infix fun <reified R> ColumnAccessor<R>.from(noinline expression: RowExpression<T, R>): Boolean =
+        name().from(expression)
 
-    public infix fun String.from(column: Column): Boolean = add(column.rename(this))
+    public inline infix fun <reified R> KProperty<R>.from(noinline expression: RowExpression<T, R>): Boolean =
+        add(name, Infer.Nulls, expression)
+
+    public infix fun String.from(column: AnyColumnReference): Boolean = add(column.rename(this))
     public inline infix fun <reified R> ColumnAccessor<R>.from(column: ColumnReference<R>): Boolean = name() from column
     public inline infix fun <reified R> KProperty<R>.from(column: ColumnReference<R>): Boolean = name from column
 
-    public infix fun Column.into(name: String): Boolean = add(rename(name))
+    public infix fun AnyColumnReference.into(name: String): Boolean = add(rename(name))
     public infix fun <R> ColumnReference<R>.into(column: ColumnAccessor<R>): Boolean = into(column.name())
     public infix fun <R> ColumnReference<R>.into(column: KProperty<R>): Boolean = into(column.name)
 
