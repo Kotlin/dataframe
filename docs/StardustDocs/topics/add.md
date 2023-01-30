@@ -64,7 +64,14 @@ add {
     ...
 }
 
-columnMapping = column into columnName | columnName from column | columnName from { rowExpression }
+columnMapping = column into columnName 
+    | columnName from column 
+    | columnName from { rowExpression }
+    | columnGroupName { 
+        columnMapping
+        columnMapping
+        ...
+    }
 ```
 
 <!---FUN addMany-->
@@ -142,6 +149,22 @@ df + score
 
 ```kotlin
 df.add(df1, df2)
+```
+
+<!---END-->
+
+**Add columns using intermediate result:**
+
+<!---FUN addCalculated-->
+
+```kotlin
+val personWithCityInfo = df.add {
+    val cityInfo = city.map { queryCityInfo(it) }
+    "cityInfo" {
+        cityInfo.map { it.location } into CityInfo::location
+        cityInfo.map { it.population } into "population"
+    }
+}
 ```
 
 <!---END-->
