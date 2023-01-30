@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -20,7 +20,7 @@ import kotlin.reflect.KProperty
 
 /**
  * Replace `null` values with given value or expression.
- * Specific case of [UpdateOperation].
+ * Specific case of [Update].
  * TODO samples
  *
  * @include [DocumentationUrls.Fill.FillNulls]
@@ -160,10 +160,13 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull
 public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumns() }
 
-public fun <T> DataFrame<T>.dropNulls(vararg columns: Column, whereAllNull: Boolean = false): DataFrame<T> =
+public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumns() }
 
-public fun <T> DataFrame<T>.dropNulls(columns: Iterable<Column>, whereAllNull: Boolean = false): DataFrame<T> =
+public fun <T> DataFrame<T>.dropNulls(
+    columns: Iterable<AnyColumnReference>,
+    whereAllNull: Boolean = false
+): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumnSet() }
 
 public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
@@ -186,10 +189,10 @@ public fun <T> DataFrame<T>.dropNA(vararg columns: KProperty<*>, whereAllNA: Boo
 public fun <T> DataFrame<T>.dropNA(vararg columns: String, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumns() }
 
-public fun <T> DataFrame<T>.dropNA(vararg columns: Column, whereAllNA: Boolean = false): DataFrame<T> =
+public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumns() }
 
-public fun <T> DataFrame<T>.dropNA(columns: Iterable<Column>, whereAllNA: Boolean = false): DataFrame<T> =
+public fun <T> DataFrame<T>.dropNA(columns: Iterable<AnyColumnReference>, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumnSet() }
 
 public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> =

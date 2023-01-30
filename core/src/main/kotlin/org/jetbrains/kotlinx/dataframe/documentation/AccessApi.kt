@@ -21,12 +21,12 @@ import org.jetbrains.kotlinx.dataframe.documentation.samples.ApiLevels as ApiLev
 internal interface AccessApi {
 
     /** API:
-     * - {@include [AccessApi.ExtensionPropertiesApiLink]}
-     * - {@include [AccessApi.KPropertiesApiLink]}
-     * - {@include [AccessApi.ColumnAccessorsApiLink]}
-     * - {@include [AccessApi.StringApiLink]}
+     * - {@include [ExtensionPropertiesApiLink]}
+     * - {@include [KPropertiesApiLink]}
+     * - {@include [ColumnAccessorsApiLink]}
+     * - {@include [StringApiLink]}
      * */
-    interface AnyApiLink
+    interface AnyApiLinks
 
     /**
      * String API.
@@ -40,7 +40,7 @@ internal interface AccessApi {
      */
     interface StringApi
 
-    /** String API [AccessApi.StringApi]. */
+    /** [String API][StringApi] */
     interface StringApiLink
 
     /**
@@ -55,7 +55,7 @@ internal interface AccessApi {
      */
     interface ColumnAccessorsApi
 
-    /** Column Accessors API [AccessApi.ColumnAccessorsApi]. */
+    /** [Column Accessors API][AccessApi.ColumnAccessorsApi] */
     interface ColumnAccessorsApiLink
 
     /**
@@ -72,7 +72,7 @@ internal interface AccessApi {
      */
     interface KPropertiesApi
 
-    /** KProperties API [AccessApi.KPropertiesApi]. */
+    /** [KProperties API][KPropertiesApi] */
     interface KPropertiesApiLink
 
     /**
@@ -87,6 +87,9 @@ internal interface AccessApi {
      */
     interface ExtensionPropertiesApi
 
-    /** Extension Properties API [AccessApi.ExtensionPropertiesApi]. */
+    /** [Extension Properties API][ExtensionPropertiesApi] */
     interface ExtensionPropertiesApiLink
 }
+
+/** [Access Api][AccessApi] */
+internal interface AccessApiLink
