@@ -30,19 +30,19 @@ class ExtensionsGenerator(
         val EXPECTED_VISIBILITIES = setOf(Visibility.PUBLIC, Visibility.INTERNAL)
     }
 
-    fun resolveValidDataSchemaDeclarations(): Sequence<DataSchemaDeclaration> {
+    fun resolveDataSchemaDeclarations(): Pair<Sequence<DataSchemaDeclaration>, List<KSClassDeclaration>> {
         val dataSchemaAnnotation = resolver.getKSNameFromString(DataFrameNames.DATA_SCHEMA)
         val symbols = resolver.getSymbolsWithAnnotation(dataSchemaAnnotation.asString())
 
-        return symbols
+        val (validDeclarations, invalidDeclarations) = symbols
             .filterIsInstance<KSClassDeclaration>()
-            .mapNotNull {
-                if (it.validate()) {
-                    it.toDataSchemaDeclarationOrNull()
-                } else {
-                    null
-                }
-            }
+            .partition { it.validate() }
+
+        val preprocessedDeclarations = validDeclarations
+            .asSequence()
+            .mapNotNull { it.toDataSchemaDeclarationOrNull() }
+
+        return Pair(preprocessedDeclarations, invalidDeclarations)
     }
 
     class DataSchemaDeclaration(
