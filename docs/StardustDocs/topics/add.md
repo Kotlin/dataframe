@@ -4,7 +4,7 @@
 
 Returns `DataFrame` which contains all columns from original `DataFrame` followed by newly added columns. Original `DataFrame` is not modified.
 
-**Create new column and add it to `DataFrame`:**
+## Create new column and add it to `DataFrame`
 
 ```text
 add(columnName: String) { rowExpression }
@@ -55,7 +55,7 @@ df.add("fibonacci") {
 
 <!---END-->
 
-**Create and add several columns to `DataFrame`:**
+## Create and add several columns to `DataFrame`
 
 ```kotlin
 add { 
@@ -130,7 +130,23 @@ df.add {
 </tab></tabs>
 <!---END-->
 
-**Add existing column to `DataFrame`:**
+### Create columns using intermediate result
+
+<!---FUN addCalculated-->
+
+```kotlin
+val personWithCityInfo = df.add {
+    val cityInfo = city.map { queryCityInfo(it) }
+    "cityInfo" {
+        cityInfo.map { it.location } into CityInfo::location
+        cityInfo.map { it.population } into "population"
+    }
+}
+```
+
+<!---END-->
+
+## Add existing column to `DataFrame`
 
 <!---FUN addExisting-->
 
@@ -143,28 +159,12 @@ df + score
 
 <!---END-->
 
-**Add all columns from another `DataFrame`:**
+## Add all columns from another `DataFrame`
 
 <!---FUN addDfs-->
 
 ```kotlin
 df.add(df1, df2)
-```
-
-<!---END-->
-
-**Add columns using intermediate result:**
-
-<!---FUN addCalculated-->
-
-```kotlin
-val personWithCityInfo = df.add {
-    val cityInfo = city.map { queryCityInfo(it) }
-    "cityInfo" {
-        cityInfo.map { it.location } into CityInfo::location
-        cityInfo.map { it.population } into "population"
-    }
-}
 ```
 
 <!---END-->
