@@ -2,6 +2,10 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.api.*
+import kotlin.reflect.KProperty
+
+/** The key for an @arg that will define the operation name for the examples below. */
+internal interface OperationArg
 
 /** [Selecting Columns][SelectingColumns] */
 internal interface SelectingColumnsLink
@@ -17,53 +21,55 @@ internal interface SelectingColumnsLink
  */
 internal interface SelectingColumns {
 
-    /**
-     * The column selector DSL (Any {@include [AccessApiLink]}).
-     * See {@include [ColumnSelectionDslLink]} for more details.
+    /** {@arg [OperationArg] <operation>} */
+    interface SetDefaultOperationArg
+
+    /** Select columns using the {@include [ColumnSelectionDslLink]} (Any {@include [AccessApiLink]}).
      *
      * For example:
      * ```kotlin
-     * df.select { length and age }
-     * df.select { cols(1..5) }
-     * df.select { colsOf<Double>() }
+     * df.{@includeArg [OperationArg]} { length and age }
+     * df.{@includeArg [OperationArg]} { cols(1..5) }
+     * df.{@includeArg [OperationArg]} { colsOf<Double>() }
      * ```
+     * @include [SetDefaultOperationArg]
      */
     interface Dsl
 
-    /**
-     * Column names ({@include [AccessApi.StringApiLink]}).
+    /** Select columns using their column names ({@include [AccessApi.StringApiLink]}).
      *
      * For example:
      * ```kotlin
-     * df.select("length", "age")
-     * df.select(listOf("length", "age"))
+     * df.{@includeArg [OperationArg]}("length", "age")
+     * df.{@includeArg [OperationArg]}(listOf("length", "age"))
      * ```
+     * @include [SetDefaultOperationArg]
      */
     interface ColumnNames
 
-    /**
-     * Column accessors ({@include [AccessApi.ColumnAccessorsApiLink]}).
+    /** Select columns using column accessors ({@include [AccessApi.ColumnAccessorsApiLink]}).
      *
      * For example:
      * ```kotlin
      * val length by column<Double>()
      * val age by column<Double>()
-     * df.select(length, age)
-     * df.select(listOf(length, age))
+     * df.{@includeArg [OperationArg]}(length, age)
+     * df.{@includeArg [OperationArg]}(listOf(length, age))
      * ```
+     * @include [SetDefaultOperationArg]
      */
     interface ColumnAccessors
 
-    /**
-     * KProperties ({@include [AccessApi.KPropertiesApiLink]}).
+    /** Select columns using [KProperty]'s ({@include [AccessApi.KPropertiesApiLink]}).
      *
      * For example:
      * ```kotlin
      * data class Person(val length: Double, val age: Double)
      *
-     * df.select(Person::length, Person::age)
-     * df.select(listOf(Person::length, Person::age))
+     * df.{@includeArg [OperationArg]}(Person::length, Person::age)
+     * df.{@includeArg [OperationArg]}(listOf(Person::length, Person::age))
      * ```
+     * @include [SetDefaultOperationArg]
      */
     interface KProperties
 
