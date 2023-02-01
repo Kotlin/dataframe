@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.api.Update.Usage
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.documentation.*
@@ -21,64 +22,61 @@ import kotlin.reflect.KProperty
 /**
  * Replace `null` values with given value or expression.
  * Specific case of [Update].
- * TODO samples
  *
- * @include [DocumentationUrls.Fill.FillNulls]
+ * Check out [how to use `fillNulls`][Usage].
+ *
+ * For more information: {@include [DocumentationUrls.Fill.FillNulls]}
  */
-internal interface FillNullsOperation
+internal interface FillNulls {
+
+    /** @include [Update.Usage] {@arg [Update.UpdateOperationArg] [fillNulls]} */
+    interface Usage
+}
+
+/** {@arg [OperationArg] fillNulls} */
+internal interface SetFillNullsOperationArg
 
 /**
- * @include [FillNullsOperation]
+ * @include [FillNulls]
  *
- * @param columns The [ColumnsSelector] used to select columns to update.
+ * @include [Update.DslParam]
+ * @include [SetFillNullsOperationArg]
  */
 public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Update<T, C?> =
     update(columns).where { it == null }
 
 /**
- * @include [FillNullsOperation]
+ * @include [FillNulls]
  *
- * @receiver [DataFrame]
- * @param T T
- * @param C C
- * @param columns Cols
- * @return [Update]
+ * @include [Update.ColumnNamesParam]
+ * @include [SetFillNullsOperationArg]
  */
 public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
     fillNulls { columns.toColumns() }
 
 /**
- * @include [FillNullsOperation]
+ * @include [FillNulls]
  *
- * @receiver [DataFrame]
- * @param T T
- * @param C C
- * @param columns Cols
- * @return [Update]
+ * @include [Update.KPropertiesParam]
+ * @include [SetFillNullsOperationArg]
  */
 public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T, C?> =
     fillNulls { columns.toColumns() }
 
 /**
- * @include [FillNullsOperation]
+ * @include [FillNulls]
  *
- * @receiver [DataFrame]
- * @param T T
- * @param C C
- * @param columns Cols
- * @return [Update]
+ * @include [Update.ColumnAccessorsParam]
+ * @include [SetFillNullsOperationArg]
  */
 public fun <T, C> DataFrame<T>.fillNulls(vararg columns: ColumnReference<C>): Update<T, C?> =
     fillNulls { columns.toColumns() }
 
 /**
- * @include [FillNullsOperation]
+ * @include [FillNulls]
  *
- * @receiver [DataFrame]
- * @param T T
- * @param C C
- * @param columns Cols
- * @return [Update]
+ * @include [Update.ColumnAccessorsParam]
+ * @include [SetFillNullsOperationArg]
  */
 public fun <T, C> DataFrame<T>.fillNulls(columns: Iterable<ColumnReference<C>>): Update<T, C?> =
     fillNulls { columns.toColumnSet() }
@@ -107,18 +105,67 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
 
 // region fillNaNs
 
+
+/**
+ * Replace `NaN` values with given value or expression.
+ * Specific case of [Update].
+ *
+ * Check out [how to use `fillNaNs`][Usage].
+ *
+ * For more information: {@include [DocumentationUrls.Fill.FillNaNs]}
+ */
+internal interface FillNaNs {
+
+    /** @include [Update.Usage] {@arg [Update.UpdateOperationArg] [fillNaNs]} */
+    interface Usage
+}
+
+
+/** {@arg [OperationArg] fillNaNs} */
+internal interface SetFillNaNsOperationArg
+
+/**
+ * @include [FillNaNs]
+ *
+ * @include [Update.DslParam]
+ * @include [SetFillNaNsOperationArg]
+ */
 public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<T, C> =
     update(columns).where { it.isNaN }
 
+/**
+ * @include [FillNaNs]
+ *
+ * @include [Update.ColumnNamesParam]
+ * @include [SetFillNaNsOperationArg]
+ */
 public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> =
     fillNaNs { columns.toColumns() }
 
+/**
+ * @include [FillNaNs]
+ *
+ * @include [Update.KPropertiesParam]
+ * @include [SetFillNaNsOperationArg]
+ */
 public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T, C> =
     fillNaNs { columns.toColumns() }
 
+/**
+ * @include [FillNaNs]
+ *
+ * @include [Update.ColumnAccessorsParam]
+ * @include [SetFillNaNsOperationArg]
+ */
 public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Update<T, C> =
     fillNaNs { columns.toColumns() }
 
+/**
+ * @include [FillNaNs]
+ *
+ * @include [Update.ColumnAccessorsParam]
+ * @include [SetFillNaNsOperationArg]
+ */
 public fun <T, C> DataFrame<T>.fillNaNs(columns: Iterable<ColumnReference<C>>): Update<T, C> =
     fillNaNs { columns.toColumnSet() }
 

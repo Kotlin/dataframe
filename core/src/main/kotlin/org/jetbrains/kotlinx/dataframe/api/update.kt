@@ -11,7 +11,6 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.documentation.AccessApi
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
@@ -22,25 +21,12 @@ import org.jetbrains.kotlinx.dataframe.index
 import kotlin.reflect.KProperty
 
 /**
- * Returns [DataFrame] with changed values in some cells.
+ * Returns the [DataFrame] with changed values in some cells
+ * (column types can not be changed).
  *
- * Column types can not be changed.
+ * Check out [how to use `update`][Usage].
  *
- * Update operation usage:
- *
- * [update] { [columns][Update.Columns] }
- *
- *   [.[where] { [rowCondition][Update.Where.Predicate] } ]
- *
- *   [.[at] ([rowIndices][Update.At.RowIndices]) ]
- *
- *   .[with][Update.with] { [rowExpression][Update.With.Expression] } | .[notNull] { rowExpression } | .[perCol] { colExpression } | .[perRowCol] { rowColExpression } | .[withValue] (value) | .[withNull] () | .[withZero] () | .[asFrame] { frameExpression }
- *
- * {@comment TODO
- * rowExpression: DataRow.(OldValue) -> NewValue
- * colExpression: DataColumn.(DataColumn) -> NewValue
- * rowColExpression: DataRow.(DataColumn) -> NewValue
- * frameExpression: DataFrame.(DataFrame) -> DataFrame}
+ * For more information: {@include [DocumentationUrls.Update]}
  */
 public data class Update<T, C>(
     val df: DataFrame<T>,
@@ -50,23 +36,46 @@ public data class Update<T, C>(
     public fun <R : C> cast(): Update<T, R> =
         Update(df, filter as RowValueFilter<T, R>?, columns as ColumnsSelector<T, R>)
 
+    internal interface UpdateOperationArg
+
+    /**
+     * {@includeArg [UpdateOperationArg]} operation usage:
+     *
+     * {@includeArg [UpdateOperationArg]} { [columns][Columns] }
+     *
+     *   [.[where] { [rowCondition][Where.Predicate] } ]
+     *
+     *   [.[at] ([rowIndices][At.RowIndices]) ]
+     *
+     *   .[with] { [rowExpression][With.Expression] } | .[notNull] { rowExpression } | .[perCol] { colExpression } | .[perRowCol] { rowColExpression } | .[withValue] (value) | .[withNull] () | .[withZero] () | .[asFrame] { frameExpression }
+     *
+     * {@comment TODO
+     * rowExpression: DataRow.(OldValue) -> NewValue
+     * colExpression: DataColumn.(DataColumn) -> NewValue
+     * rowColExpression: DataRow.(DataColumn) -> NewValue
+     * frameExpression: DataFrame.(DataFrame) -> DataFrame}
+     * {@arg [UpdateOperationArg] [update]}
+     */
+    internal interface Usage
+
     /** Select the columns to update. See {@include [SelectingColumnsLink]}. */
     internal interface Columns
 
-    /** @param columns The [ColumnsSelector] used to select the columns of this [DataFrame] to update. */
-    internal interface ColumnsSelectorParam
+    /** {@include [SelectingColumns.Dsl]}
+     * @param columns The [ColumnsSelector] used to select the columns of this [DataFrame] to update. */
+    internal interface DslParam
 
-    /** @param columns An [Iterable] of [ColumnReference]s of this [DataFrame] to update. */
-    internal interface ColumnReferenceIterableParam
+    /** {@include [SelectingColumns.ColumnAccessors]}
+     * @param columns An [Iterable] of [ColumnReference]s of this [DataFrame] to update. */
+    internal interface ColumnAccessorsParam
 
-    /** @param columns The [ColumnReference]s of this [DataFrame] to update. */
-    internal interface ColumnReferencesParam
+    /** {@include [SelectingColumns.KProperties]}
+     * @param columns The [KProperty] values corresponding to columns of this [DataFrame] to update. */
+    internal interface KPropertiesParam
 
-    /** @param columns The [KProperty] values corresponding to columns of this [DataFrame] to update. */
-    internal interface KPropertyColumnsParam
-
-    /** @param columns The column names belonging to this [DataFrame] to update. */
-    internal interface StringColumnsParam
+    /** {@include [SelectingColumns.ColumnNames]}
+     * @param columns The column names belonging to this [DataFrame] to update. */
+    internal interface ColumnNamesParam
 
     /**
      * Only update the columns that pass a certain [predicate][Update.Where.Predicate].
@@ -118,48 +127,48 @@ public data class Update<T, C>(
     }
 }
 
+/** {@arg [OperationArg] update} */
+internal interface SetUpdateOperationArg
+
 /**
  * @include [Update]
- * @include [AccessApi.AnyApiLinks]
- * @include [Update.ColumnsSelectorParam]
+ *
+ * @include [Update.DslParam]
+ * @include [SetUpdateOperationArg]
  */
 public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T, C> =
     Update(this, null, columns)
 
 /**
  * @include [Update]
- * API:
- *  - {@include [AccessApi.StringApiLink]}
  *
- * @include [Update.StringColumnsParam]
+ * @include [Update.ColumnNamesParam]
+ * @include [SetUpdateOperationArg]
  */
 public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = update { columns.toColumns() }
 
 /**
  * @include [Update]
- * API:
- *  - {@include [AccessApi.KPropertiesApiLink]}
  *
- * @include [Update.KPropertyColumnsParam]
+ * @include [Update.KPropertiesParam]
+ * @include [SetUpdateOperationArg]
  */
 public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C> = update { columns.toColumns() }
 
 /**
  * @include [Update]
- * API:
- *  - {@include [AccessApi.ColumnAccessorsApiLink]}
  *
- * @include [Update.ColumnReferencesParam]
+ * @include [Update.ColumnAccessorsParam]
+ * @include [SetUpdateOperationArg]
  */
 public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Update<T, C> =
     update { columns.toColumns() }
 
 /**
  * @include [Update]
- * API:
- *  - {@include [AccessApi.ColumnAccessorsApiLink]}
  *
- * @include [Update.ColumnReferenceIterableParam]
+ * @include [Update.ColumnAccessorsParam]
+ * @include [SetUpdateOperationArg]
  */
 public fun <T, C> DataFrame<T>.update(columns: Iterable<ColumnReference<C>>): Update<T, C> =
     update { columns.toColumnSet() }

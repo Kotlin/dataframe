@@ -2,6 +2,9 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 private interface DocumentationUrls {
 
+    /** [See `update` documentation.](https://kotlin.github.io/dataframe/update.html) */
+    interface Update
+
     /** [See `fill` documentation.](https://kotlin.github.io/dataframe/fill.html) */
     interface Fill {
 
