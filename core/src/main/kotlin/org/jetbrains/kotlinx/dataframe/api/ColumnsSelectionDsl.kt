@@ -35,6 +35,10 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
+/** [Column Selection DSL][ColumnSelectionDsl] */
+internal interface ColumnSelectionDslLink
+
+/** TODO: Put examples and explanations here */
 public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
 
     public operator fun <C> ColumnReference<C>.invoke(): DataColumn<C> = get(this)
@@ -50,10 +54,10 @@ public interface ColumnSelectionDsl<out T> : ColumnsContainer<T> {
     public operator fun String.get(column: String): ColumnPath = pathOf(this, column)
 }
 
-
 /** [Columns Selection DSL][ColumnsSelectionDsl] */
-internal interface ColumnSelectionDslLink
+internal interface ColumnsSelectionDslLink
 
+/** TODO: Put examples and explanations here */
 public interface ColumnsSelectionDsl<out T> : ColumnSelectionDsl<T>, SingleColumn<DataRow<T>> {
 
     public fun <C> ColumnSet<C>.first(condition: ColumnFilter<C>): SingleColumn<C> =
