@@ -10,13 +10,14 @@ import org.jetbrains.kotlinx.dataframe.RowColumnExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.Selector
+import org.jetbrains.kotlinx.dataframe.api.Update.Usage
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.documentation.*
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
-import org.jetbrains.kotlinx.dataframe.documentation.*
 import org.jetbrains.kotlinx.dataframe.index
 import kotlin.reflect.KProperty
 
@@ -40,14 +41,14 @@ public data class Update<T, C>(
 
     /**
      * {@includeArg [UpdateOperationArg]} operation usage:
-     *
+     * ___
      * {@includeArg [UpdateOperationArg]} { [columns][Columns] }
      *
-     *   [.[where] { [rowCondition][Where.Predicate] } ]
+     * - [.[where] { [rowCondition][Where.Predicate] } ]
      *
-     *   [.[at] ([rowIndices][At.RowIndices]) ]
+     * - [.[at] ([rowIndices][At.RowIndices]) ]
      *
-     *   .[with] { [rowExpression][With.Expression] } | .[notNull] { rowExpression } | .[perCol] { colExpression } | .[perRowCol] { rowColExpression } | .[withValue] (value) | .[withNull] () | .[withZero] () | .[asFrame] { frameExpression }
+     * - .[with] { [rowExpression][With.Expression] } | .[notNull] { rowExpression } | .[perCol] { colExpression } | .[perRowCol] { rowColExpression } | .[withValue] (value) | .[withNull] () | .[withZero] () | .[asFrame] { frameExpression }
      *
      * {@comment TODO
      * rowExpression: DataRow.(OldValue) -> NewValue
@@ -61,20 +62,16 @@ public data class Update<T, C>(
     /** Select the columns to update. See {@include [SelectingColumnsLink]}. */
     internal interface Columns
 
-    /** {@include [SelectingColumns.Dsl]}
-     * @param columns The [ColumnsSelector] used to select the columns of this [DataFrame] to update. */
+    /** @param columns The [ColumnsSelector] used to select the columns of this [DataFrame] to update. */
     internal interface DslParam
 
-    /** {@include [SelectingColumns.ColumnAccessors]}
-     * @param columns An [Iterable] of [ColumnReference]s of this [DataFrame] to update. */
+    /** @param columns The [ColumnReference]s of this [DataFrame] to update. */
     internal interface ColumnAccessorsParam
 
-    /** {@include [SelectingColumns.KProperties]}
-     * @param columns The [KProperty] values corresponding to columns of this [DataFrame] to update. */
+    /** @param columns The [KProperty] values corresponding to columns of this [DataFrame] to update. */
     internal interface KPropertiesParam
 
-    /** {@include [SelectingColumns.ColumnNames]}
-     * @param columns The column names belonging to this [DataFrame] to update. */
+    /** @param columns The column names belonging to this [DataFrame] to update. */
     internal interface ColumnNamesParam
 
     /**
@@ -127,14 +124,16 @@ public data class Update<T, C>(
     }
 }
 
+// region update
+
 /** {@arg [OperationArg] update} */
 internal interface SetUpdateOperationArg
 
 /**
  * @include [Update]
  *
+ * @include [SelectingColumns.Dsl] {@include [SetUpdateOperationArg]}
  * @include [Update.DslParam]
- * @include [SetUpdateOperationArg]
  */
 public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T, C> =
     Update(this, null, columns)
@@ -142,24 +141,24 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
 /**
  * @include [Update]
  *
+ * @include [SelectingColumns.ColumnNames] {@include [SetUpdateOperationArg]}
  * @include [Update.ColumnNamesParam]
- * @include [SetUpdateOperationArg]
  */
 public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = update { columns.toColumns() }
 
 /**
  * @include [Update]
  *
+ * @include [SelectingColumns.KProperties] {@include [SetUpdateOperationArg]}
  * @include [Update.KPropertiesParam]
- * @include [SetUpdateOperationArg]
  */
 public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C> = update { columns.toColumns() }
 
 /**
  * @include [Update]
  *
+ * @include [SelectingColumns.ColumnAccessors] {@include [SetUpdateOperationArg]}
  * @include [Update.ColumnAccessorsParam]
- * @include [SetUpdateOperationArg]
  */
 public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Update<T, C> =
     update { columns.toColumns() }
@@ -167,11 +166,13 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
 /**
  * @include [Update]
  *
+ * @include [SelectingColumns.ColumnAccessors] {@include [SetUpdateOperationArg]}
  * @include [Update.ColumnAccessorsParam]
- * @include [SetUpdateOperationArg]
  */
 public fun <T, C> DataFrame<T>.update(columns: Iterable<ColumnReference<C>>): Update<T, C> =
     update { columns.toColumnSet() }
+
+// endregion
 
 /**
  * @include [Update.Where]
