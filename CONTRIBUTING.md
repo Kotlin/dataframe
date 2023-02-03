@@ -46,6 +46,7 @@ so do familiarize yourself with the following guidelines.
 * If you fix documentation:
     * If you plan extensive rewrites/additions to the docs, then please [contact the maintainers](#contacting-maintainers)
       to coordinate the work in advance.
+    * Also, we have a special simple [guide](https://github.com/Kotlin/dataframe/blob/master/docs/contributions.md) how to contribute in the documentation.
 
 ## PR workflow
 
@@ -95,5 +96,4 @@ to Gradle (in Preferences -> Build, Execution, Deployment -> Build Tools -> Grad
 
 * If something cannot be done, not convenient, or does not work &mdash; submit an [issue](#submitting-issues).
 * To attract attention to the problem or raised question or a new comment, mention one of us on the Github: @koperagen @Jolanrensen @zaleslaw @ileasile
-* "How to do something" questions &mdash; [StackOverflow](https://stackoverflow.com).
 * Discussions and general inquiries &mdash; use `#datascience` channel in [KotlinLang Slack](https://kotl.in/slack).
