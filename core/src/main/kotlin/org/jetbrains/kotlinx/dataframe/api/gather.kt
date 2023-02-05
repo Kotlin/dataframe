@@ -2,10 +2,9 @@ package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.Predicate
+import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnAccessor
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
-import org.jetbrains.kotlinx.dataframe.impl.and
 import org.jetbrains.kotlinx.dataframe.impl.api.gatherImpl
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
@@ -17,11 +16,19 @@ public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T
     this, selector, null, typeOf<String>(),
     { it }, null
 )
-public fun <T> DataFrame<T>.gather(vararg columns: String): Gather<T, Any?, String, Any?> = gather { columns.toColumns() }
-public fun <T, C> DataFrame<T>.gather(vararg columns: ColumnReference<C>): Gather<T, C, String, C> = gather { columns.toColumns() }
-public fun <T, C> DataFrame<T>.gather(vararg columns: KProperty<C>): Gather<T, C, String, C> = gather { columns.toColumns() }
 
-public fun <T, C, K, R> Gather<T, C, K, R>.where(filter: Predicate<C>): Gather<T, C, K, R> = copy(filter = this.filter and filter)
+public fun <T> DataFrame<T>.gather(vararg columns: String): Gather<T, Any?, String, Any?> =
+    gather { columns.toColumns() }
+
+public fun <T, C> DataFrame<T>.gather(vararg columns: ColumnReference<C>): Gather<T, C, String, C> =
+    gather { columns.toColumns() }
+
+public fun <T, C> DataFrame<T>.gather(vararg columns: KProperty<C>): Gather<T, C, String, C> =
+    gather { columns.toColumns() }
+
+public fun <T, C, K, R> Gather<T, C, K, R>.where(filter: RowValueFilter<T, C>): Gather<T, C, K, R> =
+    copy(filter = this.filter and filter)
+
 public fun <T, C, K, R> Gather<T, C?, K, R>.notNull(): Gather<T, C, K, R> = where { it != null } as Gather<T, C, K, R>
 
 public fun <T, C, K, R> Gather<T, C, K, R>.explodeLists(): Gather<T, C, K, R> = copy(explode = true)
@@ -35,7 +42,7 @@ public fun <T, C, K, R> Gather<T, C, K, *>.mapValues(transform: (C) -> R): Gathe
 public data class Gather<T, C, K, R>(
     internal val df: DataFrame<T>,
     internal val columns: ColumnsSelector<T, C>,
-    internal val filter: ((C) -> Boolean)? = null,
+    internal val filter: RowValueFilter<T, C>? = null,
     internal val keyType: KType? = null,
     internal val keyTransform: ((String) -> K),
     internal val valueTransform: ((C) -> R)? = null,
