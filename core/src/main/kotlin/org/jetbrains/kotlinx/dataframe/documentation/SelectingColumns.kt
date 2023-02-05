@@ -12,7 +12,6 @@ import kotlin.reflect.KProperty
  * }
  */
 
-
 /** The key for an @arg that will define the operation name for the examples below. */
 internal interface OperationArg
 
@@ -29,7 +28,7 @@ internal interface SelectingColumnsLink
  */
 internal interface SelectingColumns {
 
-    /** {@arg [OperationArg] <operation>} */
+    /** {@arg [OperationArg] operation} */
     interface SetDefaultOperationArg
 
     /** Select or express columns using the Column(s) Selection DSL.
@@ -40,11 +39,13 @@ internal interface SelectingColumns {
      * expect you to return a [SingleColumn] or [ColumnSet], respectively.
      *
      * For example:
-     * ```kotlin
-     * df.{@includeArg [OperationArg]} { length and age }
-     * df.{@includeArg [OperationArg]} { cols(1..5) }
-     * df.{@includeArg [OperationArg]} { colsOf<Double>() }
-     * ```
+     *
+     * `df.`{@includeArg [OperationArg]}` { length `[and][ColumnsSelectionDsl.and]` age }`
+     *
+     * `df.`{@includeArg [OperationArg]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
+     *
+     * `df.`{@includeArg [OperationArg]}` { `[colsOf][colsOf]`<Double>() }`
+     *
      * @include [SetDefaultOperationArg]
      */
     interface Dsl
@@ -53,9 +54,8 @@ internal interface SelectingColumns {
      * ({@include [AccessApi.StringApiLink]}).
      *
      * For example:
-     * ```kotlin
-     * df.{@includeArg [OperationArg]}("length", "age")
-     * ```
+     *
+     * `df.`{@includeArg [OperationArg]}`("length", "age")`
      * @include [SetDefaultOperationArg]
      */
     interface ColumnNames
@@ -64,11 +64,13 @@ internal interface SelectingColumns {
      * ({@include [AccessApi.ColumnAccessorsApiLink]}).
      *
      * For example:
-     * ```kotlin
-     * val length by column<Double>()
-     * val age by column<Double>()
-     * df.{@includeArg [OperationArg]}(length, age)
-     * ```
+     *
+     * `val length by `[column]`<Double>()`
+     *
+     * `val age by `[column]`<Double>()`
+     *
+     * `df.`{@includeArg [OperationArg]}`(length, age)`
+     *
      * @include [SetDefaultOperationArg]
      */
     interface ColumnAccessors
@@ -79,9 +81,8 @@ internal interface SelectingColumns {
      * For example:
      * ```kotlin
      * data class Person(val length: Double, val age: Double)
-     *
-     * df.{@includeArg [OperationArg]}(Person::length, Person::age)
      * ```
+     * `df.`{@includeArg [OperationArg]}`(Person::length, Person::age)`
      * @include [SetDefaultOperationArg]
      */
     interface KProperties

@@ -2,35 +2,49 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 private interface DocumentationUrls {
 
-    /** [See `update` documentation.](https://kotlin.github.io/dataframe/update.html) */
+    interface NameArg
+
+    /** See {@includeArg [NameArg]} on the documentation website. */
+    interface Text
+
+    interface DataRow {
+
+        /** [{@include [Text]}{@arg [NameArg] Row Expressions}](https://kotlin.github.io/dataframe/datarow.html#row-expressions) */
+        interface RowExpressions
+
+        /** [{@include [Text]}{@arg [NameArg] Row Conditions}](https://kotlin.github.io/dataframe/datarow.html#row-conditions) */
+        interface RowConditions
+    }
+
+    /** [{@include [Text]}{@arg [NameArg] `update`}](https://kotlin.github.io/dataframe/update.html) */
     interface Update
 
-    /** [See `fill` documentation.](https://kotlin.github.io/dataframe/fill.html) */
+    /** [{@include [Text]}{@arg [NameArg] `fill`}](https://kotlin.github.io/dataframe/fill.html) */
     interface Fill {
 
-        /** [See `fillNulls` documentation.](https://kotlin.github.io/dataframe/fill.html#fillnulls) */
+        /** [{@include [Text]}{@arg [NameArg] `fillNulls`}](https://kotlin.github.io/dataframe/fill.html#fillnulls) */
         interface FillNulls
 
-        /** [See `fillNaNs` documentation.](https://kotlin.github.io/dataframe/fill.html#fillnans) */
+        /** [{@include [Text]}{@arg [NameArg] `fillNaNs`}](https://kotlin.github.io/dataframe/fill.html#fillnans) */
         interface FillNaNs
 
-        /** [See `fillNA` documentation.](https://kotlin.github.io/dataframe/fill.html#fillna) */
+        /** [{@include [Text]}{@arg [NameArg] `fillNA`}](https://kotlin.github.io/dataframe/fill.html#fillna) */
         interface FillNA
     }
 
-    /** [See Access APIs documentation.](https://kotlin.github.io/dataframe/apilevels.html) */
+    /** [{@include [Text]}{@arg [NameArg] Access APIs}](https://kotlin.github.io/dataframe/apilevels.html) */
     interface AccessApis {
 
-        /** [See String API documentation.](https://kotlin.github.io/dataframe/stringapi.html) */
+        /** [{@include [Text]}{@arg [NameArg] String API}](https://kotlin.github.io/dataframe/stringapi.html) */
         interface StringApi
 
-        /** [See Column Accessors API documentation.](https://kotlin.github.io/dataframe/columnaccessorsapi.html) */
+        /** [{@include [Text]}{@arg [NameArg] Column Accessors API}](https://kotlin.github.io/dataframe/columnaccessorsapi.html) */
         interface ColumnAccessorsApi
 
-        /** [See KProperties API documentation.](https://kotlin.github.io/dataframe/kpropertiesapi.html) */
+        /** [{@include [Text]}{@arg [NameArg] KProperties API}](https://kotlin.github.io/dataframe/kpropertiesapi.html) */
         interface KPropertiesApi
 
-        /** [See Extension Properties API documentation.](https://kotlin.github.io/dataframe/extensionpropertiesapi.html) */
+        /** [{@include [Text]}{@arg [NameArg] Extension Properties API}](https://kotlin.github.io/dataframe/extensionpropertiesapi.html) */
         interface ExtensionPropertiesApi
     }
 }
