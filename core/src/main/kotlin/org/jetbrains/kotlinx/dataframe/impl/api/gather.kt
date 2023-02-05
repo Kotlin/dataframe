@@ -60,9 +60,9 @@ internal fun <T, C, K, R> Gather<T, C, K, R>.gatherImpl(
         }
 
         // explode keys and values
-        when {
-            keysColumn != null && valuesColumn != null -> df = df.explode(keysColumn, valuesColumn)
-            else -> df = df.explode(keysColumn ?: valuesColumn!!)
+        df = when {
+            keysColumn != null && valuesColumn != null -> df.explode(keysColumn, valuesColumn)
+            else -> df.explode(keysColumn ?: valuesColumn!!)
         }
 
         // explode values in lists
@@ -76,7 +76,7 @@ internal fun <T, C, K, R> Gather<T, C, K, R>.gatherImpl(
                 val value = col[row]
                 when {
                     explode && value is List<*> -> {
-                        val filtered = (value as List<C>).filter(filter)
+                        val filtered = (value as List<C>).filter { filter(it) }
                         val transformed = valueTransform?.let { filtered.map(it) } ?: filtered
                         keys[colIndex] to transformed
                     }
