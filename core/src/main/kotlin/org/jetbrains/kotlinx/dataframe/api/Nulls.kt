@@ -33,7 +33,7 @@ internal interface FillNulls {
     interface Usage
 }
 
-/** {@arg [OperationArg] fillNulls} */
+/** {@arg [OperationArg] [fillNulls][fillNulls]} */
 internal interface SetFillNullsOperationArg
 
 /**
@@ -119,7 +119,7 @@ internal interface FillNaNs {
     interface Usage
 }
 
-/** {@arg [OperationArg] fillNaNs} */
+/** {@arg [OperationArg] [fillNaNs][fillNaNs]} */
 internal interface SetFillNaNsOperationArg
 
 /**

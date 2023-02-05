@@ -22,11 +22,12 @@ import org.jetbrains.kotlinx.dataframe.index
 import kotlin.reflect.KProperty
 
 /**
+ * ## The Update Operation
+ *
  * Returns the [DataFrame] with changed values in some cells
  * (column types can not be changed).
  *
- * Check out [how to use `update`][Usage].
- *
+ * Check out [how to use the update operation fully][Usage].
  * For more information: {@include [DocumentationUrls.Update]}
  */
 public data class Update<T, C>(
@@ -37,29 +38,38 @@ public data class Update<T, C>(
     public fun <R : C> cast(): Update<T, R> =
         Update(df, filter as RowValueFilter<T, R>?, columns as ColumnsSelector<T, R>)
 
+    /** This argument providing the (clickable) name of the update-like function.
+     * Note: If clickable, make sure to [alias][your type].
+     */
     internal interface UpdateOperationArg
 
     /**
      * {@includeArg [UpdateOperationArg]} operation usage:
      * ___
-     * {@includeArg [UpdateOperationArg]} { [columns][Columns] }
+     * {@includeArg [UpdateOperationArg]} `{ `[columns][Columns]` }`
      *
-     * - [.[where] { [rowCondition][Where.Predicate] } ]
+     * - `[.`[where][where]` { `[rowCondition][SelectingRows.RowValueCondition]` } ]`
      *
-     * - [.[at] ([rowIndices][At.RowIndices]) ]
+     * - `[.`[at][at]` (`[rowIndices][At.RowIndices]`) ]`
      *
-     * - .[with] { [rowExpression][With.Expression] } | .[notNull] { rowExpression } | .[perCol] { colExpression } | .[perRowCol] { rowColExpression } | .[withValue] (value) | .[withNull] () | .[withZero] () | .[asFrame] { frameExpression }
+     * - `.`[with][with]` { `[rowExpression][With.Expression]` }
+     *   | .`[notNull][notNull]` { rowExpression }
+     *   | .`[perCol][perCol]` { colExpression }
+     *   | .`[perRowCol][perRowCol]` { rowColExpression }
+     *   | .`[withValue][withValue]`(value) | .`[withNull]`()
+     *   | .`[withZero][withZero]`()
+     *   | .`[asFrame][asFrame]` { frameExpression }`
      *
      * {@comment TODO
      * rowExpression: DataRow.(OldValue) -> NewValue
      * colExpression: DataColumn.(DataColumn) -> NewValue
      * rowColExpression: DataRow.(DataColumn) -> NewValue
      * frameExpression: DataFrame.(DataFrame) -> DataFrame}
-     * {@arg [UpdateOperationArg] [update]}
+     * {@arg [UpdateOperationArg] [update][update]}
      */
     internal interface Usage
 
-    /** Select the columns to update. See {@include [SelectingColumnsLink]}. */
+    /** Select the columns to update. See {@include [SelectingColumnsLink]} for all the options. */
     internal interface Columns
 
     /** @param columns The [ColumnsSelector] used to select the columns of this [DataFrame] to update. */
@@ -73,22 +83,6 @@ public data class Update<T, C>(
 
     /** @param columns The column names belonging to this [DataFrame] to update. */
     internal interface ColumnNamesParam
-
-    /**
-     * Only update the columns that pass a certain [predicate][Update.Where.Predicate].
-     *
-     * For example:
-     * ```kotlin
-     * df.update { city }.where { name.firstName == "Alice" }.withValue("Paris")
-     * ```
-     */
-    internal interface Where {
-
-        /** The condition for rows to be included. A filter if you will.
-         *
-         * Can be seen as [DataRow].(oldValue: [C]) -> [Boolean] */
-        interface Predicate
-    }
 
     /**
      * Only update the columns at certain given [row indices][Update.At.RowIndices]:
@@ -119,18 +113,22 @@ public data class Update<T, C>(
         /** The expression to update the selected columns with.
          *
          * Can be seen as [DataRow].(oldValue: [C]) -> newValue: [C]?
-         * */
+         */
         interface Expression
     }
 }
 
 // region update
 
-/** {@arg [OperationArg] update} */
+/** {@arg [OperationArg] [update][update]} */
 internal interface SetUpdateOperationArg
 
 /**
  * @include [Update]
+ *
+ * @include [Update.Columns]
+ *
+ * ## This overload:
  *
  * @include [SelectingColumns.Dsl] {@include [SetUpdateOperationArg]}
  * @include [Update.DslParam]
@@ -141,6 +139,10 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
 /**
  * @include [Update]
  *
+ * @include [Update.Columns]
+ *
+ * ## This overload:
+ *
  * @include [SelectingColumns.ColumnNames] {@include [SetUpdateOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
@@ -149,6 +151,10 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
 /**
  * @include [Update]
  *
+ * @include [Update.Columns]
+ *
+ * ## This overload:
+ *
  * @include [SelectingColumns.KProperties] {@include [SetUpdateOperationArg]}
  * @include [Update.KPropertiesParam]
  */
@@ -156,6 +162,10 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
 
 /**
  * @include [Update]
+ *
+ * @include [Update.Columns]
+ *
+ * ## This overload:
  *
  * @include [SelectingColumns.ColumnAccessors] {@include [SetUpdateOperationArg]}
  * @include [Update.ColumnAccessorsParam]
@@ -166,6 +176,10 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
 /**
  * @include [Update]
  *
+ * @include [Update.Columns]
+ *
+ * ## This overload:
+ *
  * @include [SelectingColumns.ColumnAccessors] {@include [SetUpdateOperationArg]}
  * @include [Update.ColumnAccessorsParam]
  */
@@ -175,9 +189,9 @@ public fun <T, C> DataFrame<T>.update(columns: Iterable<ColumnReference<C>>): Up
 // endregion
 
 /**
- * @include [Update.Where]
+ * @include [SelectingRows.RowValueCondition] {@include [SetUpdateOperationArg]}
  *
- * @param predicate {@include [Update.Where.Predicate]}
+ * @param predicate The [row value filter][RowValueFilter] to select the rows to update.
  */
 public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T, C> =
     copy(filter = filter and predicate)
