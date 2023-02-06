@@ -25,7 +25,8 @@
         <toc-element id="DataColumn.md"/>
         <toc-element id="DataRow.md"/>
     </toc-element>
-    <toc-element id="operations.md">
+    <toc-element id="operations.md"/>
+    <toc-element toc-title="Operations">
         <toc-element id="create.md"  show-structure-depth="3">
             <toc-element id="createColumn.md" toc-title="DataColumn"/>
             <toc-element id="createDataFrame.md" toc-title="DataFrame"/>
