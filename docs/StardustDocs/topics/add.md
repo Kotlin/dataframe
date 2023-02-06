@@ -132,7 +132,24 @@ df.add {
 
 ### Create columns using intermediate result
 
+Consider this API:
+
+<!---FUN addCalculatedApi-->
+
+```kotlin
+class CityInfo(val city: String?, val population: Int, val location: String)
+fun queryCityInfo(city: String?): CityInfo {
+    return CityInfo(city, city?.length ?: 0, "35.5 32.2")
+}
+```
+
+<!---END-->
+
+Use the following approach to add multiple columns by calling the given API only once per row:
+
 <!---FUN addCalculated-->
+<tabs>
+<tab title="Properties">
 
 ```kotlin
 val personWithCityInfo = df.add {
@@ -144,6 +161,34 @@ val personWithCityInfo = df.add {
 }
 ```
 
+</tab>
+<tab title="Accessors">
+
+```kotlin
+val city by column<String?>()
+val personWithCityInfo = df.add {
+    val cityInfo = city().map { queryCityInfo(it) }
+    "cityInfo" {
+        cityInfo.map { it.location } into CityInfo::location
+        cityInfo.map { it.population } into "population"
+    }
+}
+```
+
+</tab>
+<tab title="Strings">
+
+```kotlin
+val personWithCityInfo = df.add {
+    val cityInfo = "city"<String?>().map { queryCityInfo(it) }
+    "cityInfo" {
+        cityInfo.map { it.location } into CityInfo::location
+        cityInfo.map { it.population } into "population"
+    }
+}
+```
+
+</tab></tabs>
 <!---END-->
 
 ## Add existing column to `DataFrame`
