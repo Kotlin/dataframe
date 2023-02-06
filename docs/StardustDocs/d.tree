@@ -172,4 +172,5 @@
         </toc-element>
     </toc-element>
     <toc-element id="gradleReference.md"/>
+    <toc-element href="https://github.com/Kotlin/dataframe/tree/master/examples" toc-title="Examples"/>
 </product-profile>
