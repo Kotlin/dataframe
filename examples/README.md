@@ -1,11 +1,15 @@
 # Examples of Kotlin Dataframe
 
 ### Idea examples
-* [movies](idea-examples/movies)
+* [movies](idea-examples/movies) Using 3 different [Access APIs](https://kotlin.github.io/dataframe/apilevels.html) to perform data cleaning task
 * [titanic](idea-examples/titanic)
 * [youtube](idea-examples/youtube)
+* [json](idea-examples/json) Using OpenAPI support in DataFrame's Gradle and KSP plugins to access data from [API guru](https://apis.guru/) in a type-safe manner
 
 ### Notebook examples
+
+* people [Datalore](https://datalore.jetbrains.com/view/notebook/aOTioEClQQrsZZBKeUPAQj)
+Small artificial dataset used in [DataFrame API examples](https://kotlin.github.io/dataframe/operations.html) 
 
 * puzzles ([Jupyter](jupyter-notebooks/puzzles/40%20puzzles.ipynb)/[Datalore](https://datalore.jetbrains.com/view/notebook/CVp3br3CDXjUGaxxqfJjFF)) &ndash;
 Inspired [by 100 pandas puzzles](https://github.com/ajcr/100-pandas-puzzles). You will go from the simplest tasks to 
