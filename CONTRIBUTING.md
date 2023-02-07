@@ -60,7 +60,7 @@ so do familiarize yourself with the following guidelines.
 5. The reviewer marks the PR with the word "LGTM."
 6. The maintainer could suggest merging the master branch to the PR branch a few times due to changes in the `master` branch.
 7. The maintainer runs TC builds (unit tests and examples as integration tests).
-8. The TC writes the result (passed or not passed) to the PR checks at the bottom of the proposed PR.
+8. TC writes the result (passed or not passed) to the PR checks at the bottom of the proposed PR.
 9. If it is possible, maintainers share the details of the failed build with the contributor.
 10. Maintainer merges the PR if all checks are successful and there is no conflict with the master branch.
 
