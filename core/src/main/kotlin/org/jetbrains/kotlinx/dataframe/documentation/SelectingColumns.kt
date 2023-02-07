@@ -34,7 +34,7 @@ internal interface SelectingColumns {
     /** Select or express columns using the Column(s) Selection DSL.
      * (Any {@include [AccessApiLink]}).
      *
-     * The DSL comes in the form of either a [ColumnSelector]- or [ColumnsSelector] lambda,
+     * This DSL comes in the form of either a [Column Selector][ColumnSelector]- or [Columns Selector][ColumnsSelector] lambda,
      * which operate in the {@include [ColumnSelectionDslLink]} or the {@include [ColumnsSelectionDslLink]} and
      * expect you to return a [SingleColumn] or [ColumnSet], respectively.
      *
