@@ -9,7 +9,7 @@ import org.jetbrains.kotlinx.dataframe.api.*
  * - Selecting entire rows ({@include [RowConditionLink]}), for instance in [filter], [drop], [first], and [count].
  * - Selecting parts of rows using a `where` operation after selecting columns ({@include [RowValueConditionLink]}),
  * such as with [update], [gather], and [format] ([RowValueFilter]).
- * {@comment TODO Is where present everywhere it should be?}
+ * {@comment TODO Is `where` present everywhere it should be?}
  */
 internal interface SelectingRows {
 

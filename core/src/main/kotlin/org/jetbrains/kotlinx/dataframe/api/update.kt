@@ -27,7 +27,7 @@ import kotlin.reflect.KProperty
  * Returns the [DataFrame] with changed values in some cells
  * (column types can not be changed).
  *
- * Check out [how to use the update operation fully][Usage].
+ * Check out the [Update Operation Usage][Usage].
  * For more information: {@include [DocumentationUrls.Update]}
  */
 public data class Update<T, C>(
@@ -44,21 +44,22 @@ public data class Update<T, C>(
     internal interface UpdateOperationArg
 
     /**
-     * {@includeArg [UpdateOperationArg]} operation usage:
-     * ___
+     * ## {@includeArg [UpdateOperationArg]} Operation Usage
+     *
      * {@includeArg [UpdateOperationArg]} `{ `[columns][Columns]` }`
      *
-     * - `[.`[where][where]` { `[rowCondition][SelectingRows.RowValueCondition]` } ]`
+     * - `[.`[where][org.jetbrains.kotlinx.dataframe.api.Update.where]` { `[rowCondition][SelectingRows.RowValueCondition]` } ]`
      *
-     * - `[.`[at][at]` (`[rowIndices][At.RowIndices]`) ]`
+     * - `[.`[at][org.jetbrains.kotlinx.dataframe.api.Update.at]` (`[rowIndices][At.RowIndices]`) ]`
      *
-     * - `.`[with][with]` { `[rowExpression][With.Expression]` }
-     *   | .`[notNull][notNull]` { rowExpression }
-     *   | .`[perCol][perCol]` { colExpression }
-     *   | .`[perRowCol][perRowCol]` { rowColExpression }
-     *   | .`[withValue][withValue]`(value) | .`[withNull]`()
-     *   | .`[withZero][withZero]`()
-     *   | .`[asFrame][asFrame]` { frameExpression }`
+     * - `.`[with][org.jetbrains.kotlinx.dataframe.api.Update.with]` { `[rowExpression][With.Expression]` }
+     *   | .`[notNull][org.jetbrains.kotlinx.dataframe.api.Update.notNull]` { rowExpression }
+     *   | .`[perCol][org.jetbrains.kotlinx.dataframe.api.Update.perCol]` { colExpression }
+     *   | .`[perRowCol][org.jetbrains.kotlinx.dataframe.api.Update.perRowCol]` { rowColExpression }
+     *   | .`[withValue][org.jetbrains.kotlinx.dataframe.api.Update.withValue]`(value)
+     *   | .`[withNull][org.jetbrains.kotlinx.dataframe.api.Update.withNull]`()
+     *   | .`[withZero][org.jetbrains.kotlinx.dataframe.api.Update.withZero]`()
+     *   | .`[asFrame][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]` { frameExpression }`
      *
      * {@comment TODO
      * rowExpression: DataRow.(OldValue) -> NewValue
@@ -124,12 +125,15 @@ public data class Update<T, C>(
 internal interface SetUpdateOperationArg
 
 /**
- * @include [Update]
+ * @include [Update] {@comment Description of the update operation.}
  *
- * @include [Update.Columns]
- *
- * ## This overload:
- *
+ * @include [Update.Columns] {@comment Description of what this function expects the user to do.}
+ * ## This Update Overload:
+ */
+internal interface CommonUpdateFunctionDoc
+
+/**
+ * @include [CommonUpdateFunctionDoc]
  * @include [SelectingColumns.Dsl] {@include [SetUpdateOperationArg]}
  * @include [Update.DslParam]
  */
@@ -137,36 +141,21 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
     Update(this, null, columns)
 
 /**
- * @include [Update]
- *
- * @include [Update.Columns]
- *
- * ## This overload:
- *
+ * @include [CommonUpdateFunctionDoc]
  * @include [SelectingColumns.ColumnNames] {@include [SetUpdateOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
 public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = update { columns.toColumns() }
 
 /**
- * @include [Update]
- *
- * @include [Update.Columns]
- *
- * ## This overload:
- *
+ * @include [CommonUpdateFunctionDoc]
  * @include [SelectingColumns.KProperties] {@include [SetUpdateOperationArg]}
  * @include [Update.KPropertiesParam]
  */
 public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C> = update { columns.toColumns() }
 
 /**
- * @include [Update]
- *
- * @include [Update.Columns]
- *
- * ## This overload:
- *
+ * @include [CommonUpdateFunctionDoc]
  * @include [SelectingColumns.ColumnAccessors] {@include [SetUpdateOperationArg]}
  * @include [Update.ColumnAccessorsParam]
  */
@@ -174,12 +163,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
     update { columns.toColumns() }
 
 /**
- * @include [Update]
- *
- * @include [Update.Columns]
- *
- * ## This overload:
- *
+ * @include [CommonUpdateFunctionDoc]
  * @include [SelectingColumns.ColumnAccessors] {@include [SetUpdateOperationArg]}
  * @include [Update.ColumnAccessorsParam]
  */
