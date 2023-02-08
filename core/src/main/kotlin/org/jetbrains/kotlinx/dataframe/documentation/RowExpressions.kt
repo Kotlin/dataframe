@@ -46,35 +46,44 @@ internal interface RowExpressions {
      */
     interface AddDataRowNote
 
-    /** Provide a new value for every selected row given the row using a
-     * [row expression][DfRowExpression].
-     *
-     * For example:
-     *
-     * `df.`{@includeArg [OperationArg]}` { name.firstName + " " + name.lastName }`
-     *
-     * `df.`{@includeArg [OperationArg]}` { 2021 - age }`
-     *
-     * @include [SetDefaultOperationArg]
-     */
-    interface RowExpression
+    /** Provide a new value for every selected row given the row using a [row expression][DfRowExpression]. */
+    interface RowExpression {
 
-    /** [Row Expression][RowExpression] */
+        /**
+         * {@include [RowExpression]}
+         *
+         * For example:
+         *
+         * `df.`{@includeArg [OperationArg]}` { name.firstName + " " + name.lastName }`
+         *
+         * `df.`{@includeArg [OperationArg]}` { 2021 - age }`
+         * @include [SetDefaultOperationArg]
+         */
+        interface WithExample
+    }
+
+    /** [Row Expression][RowExpression.WithExample] */
     interface RowExpressionLink
 
     /** Provide a new value for every selected row given the row and the previous value using a
      * [row value expression][DfRowValueExpression].
-     *
-     * For example:
-     *
-     * `df.`{@includeArg [OperationArg]}` { name.firstName + " from " + it }`
-     *
-     * `df.`{@includeArg [OperationArg]}` { it.uppercase() }`
-     * {@include [SetDefaultOperationArg]}
      */
-    interface RowValueExpression
+    interface RowValueExpression {
 
-    /** [Row Value Expression][RowValueExpression] */
+        /**
+         * {@include [RowValueExpression]}
+         *
+         * For example:
+         *
+         * `df.`{@includeArg [OperationArg]}` { name.firstName + " from " + it }`
+         *
+         * `df.`{@includeArg [OperationArg]}` { it.uppercase() }`
+         * {@include [SetDefaultOperationArg]}
+         */
+        interface WithExample
+    }
+
+    /** [Row Value Expression][RowValueExpression.WithExample] */
     interface RowValueExpressionLink
 }
 

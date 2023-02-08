@@ -9,10 +9,10 @@ import org.jetbrains.kotlinx.dataframe.documentation.samples.ApiLevels as ApiLev
  *
  * In `Kotlin DataFrame` we provide four different ways to access columns, and, while they are essentially different, they
  * look pretty similar in the data wrangling DSL. These include:
- *  - [StringApi]
- *  - [ColumnAccessorsApi]
- *  - [KPropertiesApi]
- *  - [ExtensionPropertiesApi]
+ *  - {@include [ExtensionPropertiesApiLink]}
+ *  - {@include [KPropertiesApiLink]}
+ *  - {@include [ColumnAccessorsApiLink]}
+ *  - {@include [StringApiLink]}
  *
  * For more information: {@include [DocumentationUrls.AccessApis]}
  *

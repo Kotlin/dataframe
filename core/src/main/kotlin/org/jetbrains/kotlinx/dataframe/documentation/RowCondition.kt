@@ -33,36 +33,45 @@ internal interface RowCondition {
     /** {@arg [FirstOperationArg] operation}{@arg [SecondOperationArg] where} */
     interface SetDefaultOperationArg
 
-    /** [Entire-Row Condition][EntireRowCondition] */
+    /** [Entire-Row Condition][EntireRowCondition.WithExample] */
     interface RowConditionLink
 
-    /** Filter or find rows to operate on using a [row filter][RowFilter].
-     *
-     * For example:
-     *
-     * `df.`{@includeArg [FirstOperationArg]}` { `[index][index]`() % 2 == 0 }`
-     *
-     * `df.`{@includeArg [FirstOperationArg]}` { `[diff][diff]` { age } == 0 }`
-     *
-     * @include [SetDefaultOperationArg]
-     */
-    interface EntireRowCondition
+    /** Filter or find rows to operate on using a [row filter][RowFilter]. */
+    interface EntireRowCondition {
 
-    /** [Row-Value Condition][RowValueCondition] */
+        /**
+         * {@include [EntireRowCondition]}
+         *
+         * For example:
+         *
+         * `df.`{@includeArg [FirstOperationArg]}` { `[index][index]`() % 2 == 0 }`
+         *
+         * `df.`{@includeArg [FirstOperationArg]}` { `[diff][diff]` { age } == 0 }`
+         * @include [SetDefaultOperationArg]
+         */
+        interface WithExample
+    }
+
+    /** [Row-Value Condition][RowValueCondition.WithExample] */
     interface RowValueConditionLink
 
     /** Filter or find rows to operate on after [selecting columns][SelectingColumns] using a
      * [row value filter][RowValueFilter].
-     *
-     * For example:
-     *
-     * `df.`{@includeArg [FirstOperationArg]}` { length }.`{@includeArg [SecondOperationArg]}` { it > 10.0 }`
-     *
-     * `df.`{@includeArg [FirstOperationArg]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }.`{@includeArg [SecondOperationArg]}` { `[index][index]`() > 4 && city != "Paris" }`
-     *
-     * @include [SetDefaultOperationArg]
      */
-    interface RowValueCondition
+    interface RowValueCondition {
+
+        /**
+         * {@include [RowValueCondition]}
+         *
+         * For example:
+         *
+         * `df.`{@includeArg [FirstOperationArg]}` { length }.`{@includeArg [SecondOperationArg]}` { it > 10.0 }`
+         *
+         * `df.`{@includeArg [FirstOperationArg]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }.`{@includeArg [SecondOperationArg]}` { `[index][index]`() > 4 && city != "Paris" }`
+         * @include [SetDefaultOperationArg]
+         */
+        interface WithExample
+    }
 }
 
 /** [Row Condition][RowCondition] */

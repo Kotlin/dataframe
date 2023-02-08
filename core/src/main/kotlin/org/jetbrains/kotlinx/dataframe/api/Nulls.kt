@@ -42,7 +42,7 @@ internal interface SetFillNullsOperationArg
 /**
  * @include [FillNulls]
  *
- * @include [SelectingColumns.Dsl] {@include [SetFillNullsOperationArg]}
+ * @include [SelectingColumns.Dsl.WithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.DslParam]
  */
 public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Update<T, C?> =
@@ -51,7 +51,7 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
 /**
  * @include [FillNulls]
  *
- * @include [SelectingColumns.ColumnNames] {@include [SetFillNullsOperationArg]}
+ * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
 public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
@@ -60,7 +60,7 @@ public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
 /**
  * @include [FillNulls]
  *
- * @include [SelectingColumns.KProperties] {@include [SetFillNullsOperationArg]}
+ * @include [SelectingColumns.KProperties.WithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.KPropertiesParam]
  */
 public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T, C?> =
@@ -69,7 +69,7 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T
 /**
  * @include [FillNulls]
  *
- * @include [SelectingColumns.ColumnAccessors] {@include [SetFillNullsOperationArg]}
+ * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.ColumnAccessorsParam]
  */
 public fun <T, C> DataFrame<T>.fillNulls(vararg columns: ColumnReference<C>): Update<T, C?> =
@@ -78,7 +78,7 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: ColumnReference<C>): Up
 /**
  * @include [FillNulls]
  *
- * @include [SelectingColumns.ColumnAccessors] {@include [SetFillNullsOperationArg]}
+ * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.ColumnAccessorsParam]
  */
 public fun <T, C> DataFrame<T>.fillNulls(columns: Iterable<ColumnReference<C>>): Update<T, C?> =
@@ -127,7 +127,7 @@ internal interface SetFillNaNsOperationArg
 
 /**
  * @include [FillNaNs]
- * @include [SelectingColumns.Dsl] {@include [SetFillNaNsOperationArg]}
+ * @include [SelectingColumns.Dsl.WithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.DslParam]
  *
  */
@@ -137,7 +137,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<
 /**
  * @include [FillNaNs]
  *
- * @include [SelectingColumns.ColumnNames] {@include [SetFillNaNsOperationArg]}
+ * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
 public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> =
@@ -146,7 +146,7 @@ public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> =
 /**
  * @include [FillNaNs]
  *
- * @include [SelectingColumns.KProperties] {@include [SetFillNaNsOperationArg]}
+ * @include [SelectingColumns.KProperties.WithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.KPropertiesParam]
  */
 public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T, C> =
@@ -155,7 +155,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T,
 /**
  * @include [FillNaNs]
  *
- * @include [SelectingColumns.ColumnAccessors] {@include [SetFillNaNsOperationArg]}
+ * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.ColumnAccessorsParam]
  */
 public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Update<T, C> =
@@ -164,7 +164,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
 /**
  * @include [FillNaNs]
  *
- * @include [SelectingColumns.ColumnAccessors] {@include [SetFillNaNsOperationArg]}
+ * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.ColumnAccessorsParam]
  */
 public fun <T, C> DataFrame<T>.fillNaNs(columns: Iterable<ColumnReference<C>>): Update<T, C> =

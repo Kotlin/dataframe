@@ -18,10 +18,10 @@ internal interface SelectingColumnsLink
 /** Selecting columns for various operations (including but not limited to
  * [DataFrame.select], [DataFrame.update], [DataFrame.gather], and [DataFrame.fillNulls])
  * can be done in the following ways:
- * - {@include [Dsl]}
- * - {@include [ColumnNames]}
- * - {@include [ColumnAccessors]}
- * - {@include [KProperties]}
+ * - {@include [Dsl.WithExample]}
+ * - {@include [ColumnNames.WithExample]}
+ * - {@include [ColumnAccessors.WithExample]}
+ * - {@include [KProperties.WithExample]}
  */
 internal interface SelectingColumns {
 
@@ -40,53 +40,73 @@ internal interface SelectingColumns {
      * This DSL comes in the form of either a [Column Selector][ColumnSelector]- or [Columns Selector][ColumnsSelector] lambda,
      * which operate in the {@include [ColumnSelectionDslLink]} or the {@include [ColumnsSelectionDslLink]} and
      * expect you to return a [SingleColumn] or [ColumnSet], respectively.
-     *
-     * For example:
-     *
-     * `df.`{@includeArg [OperationArg]}` { length `[and][ColumnsSelectionDsl.and]` age }`
-     *
-     * `df.`{@includeArg [OperationArg]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
-     *
-     * `df.`{@includeArg [OperationArg]}` { `[colsOf][colsOf]`<Double>() }`
-     *
-     * @include [SetDefaultOperationArg]
      */
-    interface Dsl
+    interface Dsl {
+
+        /**
+         * {@include [Dsl]}
+         *
+         * For example:
+         * `df.`{@includeArg [OperationArg]}` { length `[and][ColumnsSelectionDsl.and]` age }`
+         *
+         * `df.`{@includeArg [OperationArg]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
+         *
+         * `df.`{@includeArg [OperationArg]}` { `[colsOf][colsOf]`<Double>() }`
+         * @include [SetDefaultOperationArg]
+         */
+        interface WithExample
+    }
 
     /** Select columns using their column names
      * ({@include [AccessApi.StringApiLink]}).
-     *
-     * For example:
-     *
-     * `df.`{@includeArg [OperationArg]}`("length", "age")`
-     * @include [SetDefaultOperationArg]
      */
-    interface ColumnNames
+    interface ColumnNames {
+
+        /**
+         * {@include [ColumnNames]}
+         *
+         * For example:
+         *
+         * `df.`{@includeArg [OperationArg]}`("length", "age")`
+         * @include [SetDefaultOperationArg]
+         */
+        interface WithExample
+    }
 
     /** Select columns using column accessors
      * ({@include [AccessApi.ColumnAccessorsApiLink]}).
-     *
-     * For example:
-     *
-     * `val length by `[column]`<Double>()`
-     *
-     * `val age by `[column]`<Double>()`
-     *
-     * `df.`{@includeArg [OperationArg]}`(length, age)`
-     *
-     * @include [SetDefaultOperationArg]
      */
-    interface ColumnAccessors
+    interface ColumnAccessors {
 
-    /** Select columns using [KProperty]'s
-     * ({@include [AccessApi.KPropertiesApiLink]}).
-     *
-     * For example:
-     * ```kotlin
-     * data class Person(val length: Double, val age: Double)
-     * ```
-     * `df.`{@includeArg [OperationArg]}`(Person::length, Person::age)`
-     * @include [SetDefaultOperationArg]
-     */
-    interface KProperties
+        /**
+         * {@include [ColumnAccessors]}
+         *
+         * For example:
+         *
+         * `val length by `[column]`<Double>()`
+         *
+         * `val age by `[column]`<Double>()`
+         *
+         * `df.`{@includeArg [OperationArg]}`(length, age)`
+         * @include [SetDefaultOperationArg]
+         */
+        interface WithExample
+    }
+
+    /** Select columns using [KProperties][KProperty] ({@include [AccessApi.KPropertiesApiLink]}). */
+    interface KProperties {
+
+        /**
+         * {@include [KProperties]}
+         *
+         * For example:
+         * ```kotlin
+         * data class Person(val length: Double, val age: Double)
+         * ```
+         *
+         * `df.`{@includeArg [OperationArg]}`(Person::length, Person::age)`
+         * @include [SetDefaultOperationArg]
+         */
+        interface WithExample
+    }
 }
