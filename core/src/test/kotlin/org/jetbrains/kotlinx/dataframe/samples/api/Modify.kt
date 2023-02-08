@@ -821,6 +821,62 @@ class Modify : TestBase() {
         // SampleEnd
     }
 
+    private class CityInfo(val city: String?, val population: Int, val location: String)
+    private fun queryCityInfo(city: String?): CityInfo { return CityInfo(city, city?.length ?: 0, "35.5 32.2") }
+
+    @Test
+    fun addCalculatedApi() {
+        // SampleStart
+        class CityInfo(val city: String?, val population: Int, val location: String)
+        fun queryCityInfo(city: String?): CityInfo {
+            return CityInfo(city, city?.length ?: 0, "35.5 32.2")
+        }
+        // SampleEnd
+    }
+
+    @Test
+    fun addCalculated_properties() {
+        // SampleStart
+        val personWithCityInfo = df.add {
+            val cityInfo = city.map { queryCityInfo(it) }
+            "cityInfo" {
+                cityInfo.map { it.location } into CityInfo::location
+                cityInfo.map { it.population } into "population"
+            }
+        }
+        // SampleEnd
+        personWithCityInfo["cityInfo"]["population"] shouldBe df.city.map { it?.length ?: 0 }.named("population")
+    }
+
+    @Test
+    fun addCalculated_accessors() {
+        // SampleStart
+        val city by column<String?>()
+        val personWithCityInfo = df.add {
+            val cityInfo = city().map { queryCityInfo(it) }
+            "cityInfo" {
+                cityInfo.map { it.location } into CityInfo::location
+                cityInfo.map { it.population } into "population"
+            }
+        }
+        // SampleEnd
+        personWithCityInfo["cityInfo"]["population"] shouldBe df.city.map { it?.length ?: 0 }.named("population")
+    }
+
+    @Test
+    fun addCalculated_strings() {
+        // SampleStart
+        val personWithCityInfo = df.add {
+            val cityInfo = "city"<String?>().map { queryCityInfo(it) }
+            "cityInfo" {
+                cityInfo.map { it.location } into CityInfo::location
+                cityInfo.map { it.population } into "population"
+            }
+        }
+        // SampleEnd
+        personWithCityInfo["cityInfo"]["population"] shouldBe df.city.map { it?.length ?: 0 }.named("population")
+    }
+
     @Test
     fun addMany_properties() {
         // SampleStart
