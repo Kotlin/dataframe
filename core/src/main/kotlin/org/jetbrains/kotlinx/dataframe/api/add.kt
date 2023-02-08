@@ -98,7 +98,16 @@ public interface AddDataRow<out T> : DataRow<T> {
     public fun <C> AnyRow.newValue(): C
 }
 
-public typealias AddExpression<T, C> = Selector<AddDataRow<T>, C>
+/**
+ * [AddExpression] is used to express or select any instance of `R` using the given instance of [AddDataRow]`<T>` as
+ * `this` and `it`.
+ *
+ * Shorthand for:
+ * ```kotlin
+ * AddDataRow<T>.(it: AddDataRow<T>) -> R
+ * ```
+ */
+public typealias AddExpression<T, R> = Selector<AddDataRow<T>, R>
 
 /**
  * Creates new column using row [expression] and adds it to the end of [DataFrame]

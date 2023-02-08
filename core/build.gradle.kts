@@ -14,8 +14,8 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
     id("org.jmailen.kotlinter")
     id("org.jetbrains.kotlinx.dataframe")
-//    id("com.github.jolanrensen.docProcessorGradlePlugin") version "v0.0.11"
-    id("nl.jolanrensen.docProcessor") version "1.0-SNAPSHOT"
+    id("com.github.jolanrensen.docProcessorGradlePlugin") version "v0.0.13"
+//    id("nl.jolanrensen.docProcessor") version "1.0-SNAPSHOT"
 }
 
 group = "org.jetbrains.kotlinx"

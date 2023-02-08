@@ -12,9 +12,6 @@ import kotlin.reflect.KProperty
  * }
  */
 
-/** The key for an @arg that will define the operation name for the examples below. */
-internal interface OperationArg
-
 /** [Selecting Columns][SelectingColumns] */
 internal interface SelectingColumnsLink
 
@@ -27,6 +24,12 @@ internal interface SelectingColumnsLink
  * - {@include [KProperties]}
  */
 internal interface SelectingColumns {
+
+    /**
+     * The key for an @arg that will define the operation name for the examples below.
+     * Make sure to [alias][your examples].
+     */
+    interface OperationArg
 
     /** {@arg [OperationArg] operation} */
     interface SetDefaultOperationArg
