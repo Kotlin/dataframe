@@ -7,7 +7,7 @@ import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.api.Update.Usage
+import org.jetbrains.kotlinx.dataframe.api.Update.UpdateOperationArg
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.documentation.*
@@ -29,11 +29,14 @@ import kotlin.reflect.KProperty
  */
 internal interface FillNulls {
 
-    /** @include [Update.Usage] {@arg [Update.UpdateOperationArg] [fillNulls][fillNulls]} */
+    /** @include [Update.Usage]
+     * {@arg [UpdateOperationArg] [fillNulls][fillNulls]}
+     * {@arg [RowCondition.FirstOperationArg] [fillNulls][fillNulls]}
+     * {@arg [RowExpressions.OperationArg] [fillNulls][fillNulls]} */
     interface Usage
 }
 
-/** {@arg [OperationArg] [fillNulls][fillNulls]} */
+/** {@arg [SelectingColumns.OperationArg] [fillNulls][fillNulls]} */
 internal interface SetFillNullsOperationArg
 
 /**
