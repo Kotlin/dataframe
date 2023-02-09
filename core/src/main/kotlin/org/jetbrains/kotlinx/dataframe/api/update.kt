@@ -27,7 +27,7 @@ import kotlin.reflect.KProperty
  * Returns the [DataFrame] with changed values in some cells
  * (column types can not be changed).
  *
- * Check out the [Update Operation Usage][Usage].
+ * Check out the [`update` Operation Usage][Usage].
  *
  * For more information: {@include [DocumentationUrls.Update]}
  */
@@ -51,7 +51,7 @@ public data class Update<T, C>(
      *
      * - `[.`[where][org.jetbrains.kotlinx.dataframe.api.Update.where]` { `[rowValueCondition][RowCondition.RowValueCondition.WithExample]` } ]`
      *
-     * - `[.`[at][org.jetbrains.kotlinx.dataframe.api.Update.at]` (`[rowIndices][CommonUpdateAtFunctionDoc]`) ]`
+     * - `[.`[at][org.jetbrains.kotlinx.dataframe.api.Update.at]` (`[rowIndices][CommonUpdateAtFunctionDoc.RowIndicesParam]`) ]`
      *
      * - `.`[with][org.jetbrains.kotlinx.dataframe.api.Update.with]` { `[rowExpression][RowExpressions.RowValueExpression.WithExample]` }
      *   | .`[notNull][org.jetbrains.kotlinx.dataframe.api.Update.notNull]` { `[rowExpression][RowExpressions.RowValueExpression.WithExample]` }
@@ -94,10 +94,10 @@ private interface SetSelectingColumnsOperationArg
 /**
  * @include [Update] {@comment Description of the update operation.}
  * ## {@comment Line break}
- * @include [Update.Columns] {@comment Description of what this function expects the user to do.}
+ * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
  * ## This Update Overload
  */
-internal interface CommonUpdateFunctionDoc
+private interface CommonUpdateFunctionDoc
 
 /**
  * ## Optional
@@ -175,7 +175,7 @@ public fun <T, C> Update<T, C>.where(predicate: RowValueFilter<T, C>): Update<T,
  */
 private interface CommonUpdateAtFunctionDoc {
 
-    /** The indices of the rows to update. */
+    /** The indices of the rows to update. Either a [Collection]<[Int]>, an [IntRange], or just `vararg` indices. */
     interface RowIndicesParam
 }
 
@@ -266,7 +266,7 @@ public fun <T, C> Update<T, C?>.notNull(expression: RowValueExpression<T, C, C>)
 
 /**
  * @include [CommonUpdateFunctionDoc]
- * ### A combination of [update] and [with][Update.with].
+ * ### This overload is a combination of [update] and [with][Update.with].
  *
  * @include [SelectingColumns.ColumnAccessors]
  *
@@ -283,7 +283,18 @@ public fun <T, C> DataFrame<T>.update(
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
 
-/** TODO */
+/**
+ * @include [CommonUpdateFunctionDoc]
+ * ### This overload is a combination of [update] and [with][Update.with].
+ *
+ * @include [SelectingColumns.KProperties]
+ *
+ * {@include [RowExpressions.RowValueExpression.WithExample]}
+ * {@arg [RowExpressions.OperationArg] [update][update]`("city")` }
+ *
+ * @include [Update.KPropertiesParam]
+ * @param expression The {@include [RowExpressions.RowValueExpressionLink]} to update the rows with.
+ */
 public fun <T, C> DataFrame<T>.update(
     firstCol: KProperty<C>,
     vararg cols: KProperty<C>,
@@ -291,14 +302,24 @@ public fun <T, C> DataFrame<T>.update(
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
 
-/** TODO */
+/**
+ * @include [CommonUpdateFunctionDoc]
+ * ### This overload is a combination of [update] and [with][Update.with].
+ *
+ * @include [SelectingColumns.ColumnNames]
+ *
+ * {@include [RowExpressions.RowValueExpression.WithExample]}
+ * {@arg [RowExpressions.OperationArg] [update][update]`("city")` }
+ *
+ * @include [Update.ColumnNamesParam]
+ * @param expression The {@include [RowExpressions.RowValueExpressionLink]} to update the rows with.
+ */
 public fun <T> DataFrame<T>.update(
     firstCol: String,
     vararg cols: String,
     expression: RowValueExpression<T, Any?, Any?>
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
-
 
 /**
  * Specific version of [with] that simply sets the value of each selected row to {@includeArg [CommonSpecificWithDocFirstArg]}.
