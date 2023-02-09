@@ -20,28 +20,34 @@ import kotlin.reflect.KProperty
 // region fillNulls
 
 /**
- * Replace `null` values with given value or expression.
- * Specific case of [Update].
+ * ## The Fill Nulls Operation
  *
- * Check out [how to use `fillNulls`][Usage].
+ * Replaces `null` values with given value or expression.
+ * Specific case of [update].
+ *
+ * Check out the [`fillNulls` Operation Usage][Usage].
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNulls]}
  */
 internal interface FillNulls {
 
-    /** @include [Update.Usage]
-     * {@arg [UpdateOperationArg] [fillNulls][fillNulls]}
-     * {@arg [RowCondition.FirstOperationArg] [fillNulls][fillNulls]}
-     * {@arg [RowExpressions.OperationArg] [fillNulls][fillNulls]} */
+    /** @include [Update.Usage] {@arg [UpdateOperationArg] [fillNulls][fillNulls]} */
     interface Usage
 }
 
 /** {@arg [SelectingColumns.OperationArg] [fillNulls][fillNulls]} */
-internal interface SetFillNullsOperationArg
+private interface SetFillNullsOperationArg
 
 /**
- * @include [FillNulls]
- *
+ * @include [FillNulls] {@comment Description of the fillNulls operation.}
+ * ## {@comment Line break}
+ * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
+ * ## This Fill Nulls Overload
+ */
+private interface CommonFillNullsFunctionDoc
+
+/**
+ * @include [CommonFillNullsFunctionDoc]
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.DslParam]
  */
@@ -49,8 +55,7 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: ColumnsSelector<T, C?>): Updat
     update(columns).where { it == null }
 
 /**
- * @include [FillNulls]
- *
+ * @include [CommonFillNullsFunctionDoc]
  * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
@@ -58,8 +63,7 @@ public fun <T> DataFrame<T>.fillNulls(vararg columns: String): Update<T, Any?> =
     fillNulls { columns.toColumns() }
 
 /**
- * @include [FillNulls]
- *
+ * @include [CommonFillNullsFunctionDoc]
  * @include [SelectingColumns.KProperties.WithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.KPropertiesParam]
  */
@@ -67,8 +71,7 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T
     fillNulls { columns.toColumns() }
 
 /**
- * @include [FillNulls]
- *
+ * @include [CommonFillNullsFunctionDoc]
  * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.ColumnAccessorsParam]
  */
@@ -76,15 +79,39 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: ColumnReference<C>): Up
     fillNulls { columns.toColumns() }
 
 /**
- * @include [FillNulls]
- *
+ * @include [CommonFillNullsFunctionDoc]
  * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNullsOperationArg]}
  * @include [Update.ColumnAccessorsParam]
+ * TODO this will be deprecated
  */
 public fun <T, C> DataFrame<T>.fillNulls(columns: Iterable<ColumnReference<C>>): Update<T, C?> =
     fillNulls { columns.toColumnSet() }
 
 // endregion
+
+/**
+ * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
+ * in cases where a mathematical operation is undefined, such as dividing by zero.
+ * In Dataframe we have helper functions to check for `NaNs`, such as [Any?.isNaN][Any.isNaN] and
+ * [column.canHaveNaN][DataColumn.canHaveNaN].
+ * You can also use [fillNaNs][fillNaNs] to replace `NaNs` in certain columns with a given value or expression.
+ *
+ * @see NA
+ */
+internal interface NaN
+
+/**
+ * `NA` in Dataframe can be seen as "[NaN] or `null`".
+ *
+ * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
+ * in cases where a mathematical operation is undefined, such as dividing by zero.
+ *
+ * In Dataframe we have helper functions to check for `NAs`, such as [Any?.isNA][Any.isNA] and
+ * [column.canHaveNA][DataColumn.canHaveNA].
+ * You can also use [fillNA][fillNA] to replace `NAs` in certain columns with a given value or expression.
+ * @see NaN
+ */
+internal interface NA
 
 internal inline val Any?.isNaN: Boolean get() = (this is Double && isNaN()) || (this is Float && isNaN())
 
@@ -109,34 +136,42 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
 // region fillNaNs
 
 /**
- * Replace `NaN` values with given value or expression.
- * Specific case of [Update].
+ * ## The Fill NaNs Operation
  *
- * Check out [how to use `fillNaNs`][Usage].
+ * Replaces [`NaN`][NaN] values with given value or expression.
+ * Specific case of [update].
+ *
+ * Check out the [`fillNaNs` Operation Usage][Usage].
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNaNs]}
  */
 internal interface FillNaNs {
 
-    /** @include [Update.Usage] {@arg [Update.UpdateOperationArg] [fillNaNs]} */
+    /** @include [Update.Usage] {@arg [Update.UpdateOperationArg] [fillNaNs][fillNaNs]} */
     interface Usage
 }
 
-/** {@arg [OperationArg] [fillNaNs][fillNaNs]} */
+/** {@arg [SelectingColumns.OperationArg] [fillNaNs][fillNaNs]} */
 internal interface SetFillNaNsOperationArg
 
 /**
- * @include [FillNaNs]
+ * @include [FillNaNs] {@comment Description of the fillNaNs operation.}
+ * ## {@comment Line break}
+ * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
+ * ## This Fill NaNs Overload
+ */
+private interface CommonFillNaNsFunctionDoc
+
+/**
+ * @include [CommonFillNaNsFunctionDoc]
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.DslParam]
- *
  */
 public fun <T, C> DataFrame<T>.fillNaNs(columns: ColumnsSelector<T, C>): Update<T, C> =
     update(columns).where { it.isNaN }
 
 /**
- * @include [FillNaNs]
- *
+ * @include [CommonFillNaNsFunctionDoc]
  * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.ColumnNamesParam]
  */
@@ -144,8 +179,7 @@ public fun <T> DataFrame<T>.fillNaNs(vararg columns: String): Update<T, Any?> =
     fillNaNs { columns.toColumns() }
 
 /**
- * @include [FillNaNs]
- *
+ * @include [CommonFillNaNsFunctionDoc]
  * @include [SelectingColumns.KProperties.WithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.KPropertiesParam]
  */
@@ -153,8 +187,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T,
     fillNaNs { columns.toColumns() }
 
 /**
- * @include [FillNaNs]
- *
+ * @include [CommonFillNaNsFunctionDoc]
  * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.ColumnAccessorsParam]
  */
@@ -162,10 +195,10 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
     fillNaNs { columns.toColumns() }
 
 /**
- * @include [FillNaNs]
- *
+ * @include [CommonFillNaNsFunctionDoc]
  * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNaNsOperationArg]}
  * @include [Update.ColumnAccessorsParam]
+ * TODO this will be deprecated
  */
 public fun <T, C> DataFrame<T>.fillNaNs(columns: Iterable<ColumnReference<C>>): Update<T, C> =
     fillNaNs { columns.toColumnSet() }
@@ -174,18 +207,71 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: Iterable<ColumnReference<C>>): 
 
 // region fillNA
 
+/**
+ * ## The Fill NA Operation
+ *
+ * Replaces [`NA`][NA] values with given value or expression.
+ * Specific case of [update].
+ *
+ * Check out the [`fillNA` Operation Usage][Usage].
+ *
+ * For more information: {@include [DocumentationUrls.Fill.FillNA]}
+ */
+internal interface FillNA {
+
+    /** @include [Update.Usage] {@arg [Update.UpdateOperationArg] [fillNA][fillNA]} */
+    interface Usage
+}
+
+/** {@arg [SelectingColumns.OperationArg] [fillNA][fillNA]} */
+internal interface SetFillNAOperationArg
+
+/**
+ * @include [FillNA] {@comment Description of the fillNA operation.}
+ * ## {@comment Line break}
+ * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
+ * ## This Fill NA Overload
+ */
+private interface CommonFillNAFunctionDoc
+
+/**
+ * @include [CommonFillNAFunctionDoc]
+ * @include [SelectingColumns.Dsl.WithExample] {@include [SetFillNAOperationArg]}
+ * @include [Update.DslParam]
+ */
 public fun <T, C> DataFrame<T>.fillNA(columns: ColumnsSelector<T, C?>): Update<T, C?> =
     update(columns).where { it.isNA }
 
+/**
+ * @include [CommonFillNAFunctionDoc]
+ * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetFillNAOperationArg]}
+ * @include [Update.ColumnNamesParam]
+ */
 public fun <T> DataFrame<T>.fillNA(vararg columns: String): Update<T, Any?> =
     fillNA { columns.toColumns() }
 
+/**
+ * @include [CommonFillNAFunctionDoc]
+ * @include [SelectingColumns.KProperties.WithExample] {@include [SetFillNAOperationArg]}
+ * @include [Update.KPropertiesParam]
+ */
 public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C?> =
     fillNA { columns.toColumns() }
 
+/**
+ * @include [CommonFillNAFunctionDoc]
+ * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNAOperationArg]}
+ * @include [Update.ColumnAccessorsParam]
+ */
 public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Update<T, C?> =
     fillNA { columns.toColumns() }
 
+/**
+ * @include [CommonFillNAFunctionDoc]
+ * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNAOperationArg]}
+ * @include [Update.ColumnAccessorsParam]
+ * TODO this will be deprecated
+ */
 public fun <T, C> DataFrame<T>.fillNA(columns: Iterable<ColumnReference<C>>): Update<T, C?> =
     fillNA { columns.toColumnSet() }
 
