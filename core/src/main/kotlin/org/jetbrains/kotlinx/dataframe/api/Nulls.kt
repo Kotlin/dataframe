@@ -40,7 +40,7 @@ private interface SetFillNullsOperationArg
 
 /**
  * @include [FillNulls] {@comment Description of the fillNulls operation.}
- * ## {@comment Line break}
+ * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
  * ## This Fill Nulls Overload
  */
@@ -156,7 +156,7 @@ internal interface SetFillNaNsOperationArg
 
 /**
  * @include [FillNaNs] {@comment Description of the fillNaNs operation.}
- * ## {@comment Line break}
+ * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
  * ## This Fill NaNs Overload
  */
@@ -228,7 +228,7 @@ internal interface SetFillNAOperationArg
 
 /**
  * @include [FillNA] {@comment Description of the fillNA operation.}
- * ## {@comment Line break}
+ * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
  * ## This Fill NA Overload
  */
