@@ -17,3 +17,4 @@ Hierarchical columns can also appear as a result of some [modification operation
 * [merge](merge.md) converts `ColumnGroups` into `FrameColumn`
 * etc.
 
+Operations in the navigation tree are grouped such that you can find operations and their respective inverse together, like `group` and `ungroup`. This allows you to quickly find out how to simplify any hierarchical structure you come across.
