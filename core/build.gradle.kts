@@ -14,7 +14,7 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
     id("org.jmailen.kotlinter")
     id("org.jetbrains.kotlinx.dataframe")
-    id("com.github.jolanrensen.docProcessorGradlePlugin") version "v0.0.14"
+    id("com.github.jolanrensen.docProcessorGradlePlugin") version "v0.0.15"
 //    id("nl.jolanrensen.docProcessor") version "1.0-SNAPSHOT"
 }
 
@@ -72,6 +72,18 @@ val processKdocIncludeMain by creatingProcessDocTask(
         SAMPLE_DOC_PROCESSOR,
     )
     debug = true
+}
+
+// As a bonus, this will update dokka if you use that
+tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
+    dependsOn(processKdocIncludeMain)
+    dokkaSourceSets {
+        all {
+            sourceRoot(processKdocIncludeMain.target.get())
+//            for (root in processKdocIncludeMain.targets)
+//                sourceRoot(root)
+        }
+    }
 }
 
 // Modify all Jar tasks such that before running the Kotlin sources are set to

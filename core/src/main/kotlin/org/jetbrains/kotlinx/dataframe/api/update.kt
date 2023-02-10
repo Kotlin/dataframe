@@ -49,18 +49,18 @@ public data class Update<T, C>(
      *
      * {@includeArg [UpdateOperationArg]} `{ `[columns][Columns]` }`
      *
-     * - `[.`[where][org.jetbrains.kotlinx.dataframe.api.Update.where]` { `[rowValueCondition][RowCondition.RowValueCondition.WithExample]` } ]`
+     * - `[.`[where][Update.where]` { `[rowValueCondition][RowCondition.RowValueCondition.WithExample]` } ]`
      *
-     * - `[.`[at][org.jetbrains.kotlinx.dataframe.api.Update.at]` (`[rowIndices][CommonUpdateAtFunctionDoc.RowIndicesParam]`) ]`
+     * - `[.`[at][Update.at]` (`[rowIndices][CommonUpdateAtFunctionDoc.RowIndicesParam]`) ]`
      *
-     * - `.`[with][org.jetbrains.kotlinx.dataframe.api.Update.with]` { `[rowExpression][RowExpressions.RowValueExpression.WithExample]` }
-     *   | .`[notNull][org.jetbrains.kotlinx.dataframe.api.Update.notNull]` { `[rowExpression][RowExpressions.RowValueExpression.WithExample]` }
-     *   | .`[perCol][org.jetbrains.kotlinx.dataframe.api.Update.perCol]` { colExpression }
-     *   | .`[perRowCol][org.jetbrains.kotlinx.dataframe.api.Update.perRowCol]` { rowColExpression }
-     *   | .`[withValue][org.jetbrains.kotlinx.dataframe.api.Update.withValue]`(value)
-     *   | .`[withNull][org.jetbrains.kotlinx.dataframe.api.Update.withNull]`()
-     *   | .`[withZero][org.jetbrains.kotlinx.dataframe.api.Update.withZero]`()
-     *   | .`[asFrame][org.jetbrains.kotlinx.dataframe.api.Update.asFrame]` { frameExpression }`
+     * - `.`[with][Update.with]` { `[rowExpression][RowExpressions.RowValueExpression.WithExample]` }
+     *   | .`[notNull][Update.notNull]` { `[rowExpression][RowExpressions.RowValueExpression.WithExample]` }
+     *   | .`[perCol][Update.perCol]` { colExpression }
+     *   | .`[perRowCol][Update.perRowCol]` { rowColExpression }
+     *   | .`[withValue][Update.withValue]`(value)
+     *   | .`[withNull][Update.withNull]`()
+     *   | .`[withZero][Update.withZero]`()
+     *   | .`[asFrame][Update.asFrame]` { frameExpression }`
      *
      * {@comment TODO
      * colExpression: DataColumn.(DataColumn) -> NewValue
@@ -68,10 +68,10 @@ public data class Update<T, C>(
      * frameExpression: DataFrame.(DataFrame) -> DataFrame}
      * {@arg [UpdateOperationArg] [update][update]}
      */
-    internal interface Usage
+    public interface Usage
 
     /** The columns to update need to be selected. See {@include [SelectingColumnsLink]} for all the selecting options. */
-    internal interface Columns
+    public interface Columns
 
     /** @param columns The [ColumnsSelector] used to select the columns of this [DataFrame] to update. */
     internal interface DslParam
@@ -93,7 +93,7 @@ private interface SetSelectingColumnsOperationArg
 
 /**
  * @include [Update] {@comment Description of the update operation.}
- * ## {@comment Line break}
+ * @include [LineBreak]
  * @include [Update.Columns] {@comment Description of what this function expects the user to do: select columns}
  * ## This Update Overload
  */
@@ -350,7 +350,7 @@ public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = with { null }
  * {@arg [CommonSpecificWithDocFirstArg] `0`}
  * {@arg [CommonSpecificWithDocSecondArg] [withZero][withZero]`()}
  */
-public fun <T, C : Number?> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }
+public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }
 
 /**
  * ## With Value
