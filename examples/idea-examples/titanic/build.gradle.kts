@@ -12,8 +12,10 @@ application.mainClass.set("org.jetbrains.kotlinx.dataframe.examples.titanic.ml.T
 
 dependencies {
     implementation(project(":core"))
-    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-api:0.4.0")
-    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-dataset:0.4.0")
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-api:0.5.1")
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-impl:0.5.1")
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-tensorflow:0.5.1")
+    implementation("org.jetbrains.kotlinx:kotlin-deeplearning-dataset:0.5.1")
 }
 
 // Make IDE aware of the generated code:
@@ -27,4 +29,9 @@ dataframes {
             delimiter = ';'
         }
     }
+}
+
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions.jvmTarget = "1.8"
 }
