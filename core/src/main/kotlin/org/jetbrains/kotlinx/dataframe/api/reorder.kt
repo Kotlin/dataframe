@@ -1,6 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.ColumnExpression
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -25,11 +26,11 @@ public fun <T, C> DataFrame<T>.reorder(vararg columns: ColumnReference<C>): Reor
 public fun <T, C> DataFrame<T>.reorder(vararg columns: KProperty<C>): Reorder<T, C> = reorder { columns.toColumns() }
 public fun <T> DataFrame<T>.reorder(vararg columns: String): Reorder<T, *> = reorder { columns.toColumns() }
 
-public fun <T, C, V : Comparable<V>> Reorder<T, C>.by(expression: Selector<DataColumn<C>, V>): DataFrame<T> = reorderImpl(false, expression)
+public fun <T, C, V : Comparable<V>> Reorder<T, C>.by(expression: ColumnExpression<C, V>): DataFrame<T> = reorderImpl(false, expression)
 
 public fun <T, C> Reorder<T, C>.byName(desc: Boolean = false): DataFrame<T> = if (desc) byDesc { it.name } else by { it.name }
 
-public fun <T, C, V : Comparable<V>> Reorder<T, C>.byDesc(expression: Selector<DataColumn<C>, V>): DataFrame<T> = reorderImpl(true, expression)
+public fun <T, C, V : Comparable<V>> Reorder<T, C>.byDesc(expression: ColumnExpression<C, V>): DataFrame<T> = reorderImpl(true, expression)
 
 public fun <T, V : Comparable<V>> DataFrame<T>.reorderColumnsBy(
     dfs: Boolean = true,
