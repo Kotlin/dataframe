@@ -47,6 +47,7 @@ internal interface SelectingColumns {
          * {@include [Dsl]}
          *
          * For example:
+         *
          * `df.`{@includeArg [OperationArg]}` { length `[and][ColumnsSelectionDsl.and]` age }`
          *
          * `df.`{@includeArg [OperationArg]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }`

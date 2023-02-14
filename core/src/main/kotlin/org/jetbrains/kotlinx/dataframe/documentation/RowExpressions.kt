@@ -85,6 +85,9 @@ internal interface RowExpressions {
 
     /** [Row Value Expression][RowValueExpression.WithExample] */
     interface RowValueExpressionLink
+
+    /** @include [ColumnExpressions.RowColumnExpression] */
+    interface RowColumnExpression
 }
 
 /** [Row Expressions][RowExpressions] */

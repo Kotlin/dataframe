@@ -46,7 +46,7 @@ public data class Update<T, C>(
     /**
      * ## {@includeArg [UpdateOperationArg]} Operation Usage
      *
-     * {@includeArg [UpdateOperationArg]} `{ `[columns][Columns]` }`
+     * {@includeArg [UpdateOperationArg]} `{ `[columns][SelectingColumns]` }`
      *
      * - `[.`[where][Update.where]` { `[rowValueCondition][RowCondition.RowValueCondition.WithExample]` } ]`
      *
@@ -54,18 +54,13 @@ public data class Update<T, C>(
      *
      * - `.`[with][Update.with]` { `[rowExpression][RowExpressions.RowValueExpression.WithExample]` }
      *   | .`[notNull][Update.notNull]` { `[rowExpression][RowExpressions.RowValueExpression.WithExample]` }
-     *   | .`[perCol][Update.perCol]` { colExpression }
-     *   | .`[perRowCol][Update.perRowCol]` { rowColExpression }
+     *   | .`[perCol][Update.perCol]` { [colExpression][ColumnExpressions.ColumnExpression.WithExample] }
+     *   | .`[perRowCol][Update.perRowCol]` { [rowColExpression][ColumnExpressions.RowColumnExpression.WithExample] }
      *   | .`[withValue][Update.withValue]`(value)
      *   | .`[withNull][Update.withNull]`()
      *   | .`[withZero][Update.withZero]`()
-     *   | .`[asFrame][Update.asFrame]` { frameExpression }`
-     *
-     * {@comment TODO
-     * colExpression: DataColumn.(DataColumn) -> NewValue
-     * rowColExpression: DataRow.(DataColumn) -> NewValue
-     * frameExpression: DataFrame.(DataFrame) -> DataFrame}
-     * {@arg [UpdateOperationArg] [update][update]}
+     *   | .`[asFrame][Update.asFrame]` { [dataFrameExpression][DataFrameExpressions.DataFrameExpression.WithExample] }`
+     * {@arg [UpdateOperationArg] [update][update]}{@comment The default name of the `update` operation function name.}
      */
     public interface Usage
 
