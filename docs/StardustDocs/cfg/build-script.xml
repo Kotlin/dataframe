@@ -4,7 +4,7 @@
 <root>
     <builds>
         <instance id="d" master="project.ihp" family="idea">
-            <artifact type="web2" name="webHelpD2.zip" platform="primary" local-update="true"/>
+            <artifact type="web2" name="webHelpD2.zip" universal-zip="true" platform="primary" local-update="true"/>
         </instance>
     </builds>
 </root>
