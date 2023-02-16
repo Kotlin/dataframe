@@ -316,7 +316,7 @@ df.pivot("city").groupBy("name").default(0).min()
 
 ### Pivot inside aggregate
 
-[pivot](pivot.md) transformation can be used inside [`aggregate`](groupBy.md#aggregation) function of [`GroupBy`](groupBy.md). This allows to combine column pivoting with other [`groupBy`](groupBy.md) aggregations:
+pivot transformation can be used inside [`aggregate`](groupBy.md#aggregation) function of [`GroupBy`](groupBy.md). This allows to combine column pivoting with other [`groupBy`](groupBy.md) aggregations:
 
 <!---FUN pivotInAggregate-->
 <tabs>
