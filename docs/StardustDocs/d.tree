@@ -2,7 +2,7 @@
 <!DOCTYPE instance-profile
         SYSTEM "https://resources.jetbrains.com/stardust/product-profile.dtd">
 
-<product-profile id="d"
+<instance-profile id="d"
                  name="Dataframe"
                  status="release"
                  start-page="overview.md">
@@ -174,4 +174,4 @@
     </toc-element>
     <toc-element id="gradleReference.md"/>
     <toc-element href="https://github.com/Kotlin/dataframe/tree/master/examples" toc-title="Examples"/>
-</product-profile>
+</instance-profile>
