@@ -1,4 +1,5 @@
 [//]: # (title: Create)
+<show-structure depth="3"/>
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
 There are several ways to create dataframes from the data that is already loaded into memory:
