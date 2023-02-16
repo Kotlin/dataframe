@@ -7,7 +7,7 @@
                  status="release"
                  start-page="overview.md">
     <toc-element topic="gettingStarted.md"/>
-    <toc-element topic="overview.md"  show-structure-depth="3">
+    <toc-element topic="overview.md">
         <toc-element topic="apiLevels.md">
             <toc-element topic="stringApi.md"/>
             <toc-element toc-title="Column Accessors API" topic="columnAccessorsApi.md"/>
@@ -27,7 +27,7 @@
     </toc-element>
     <toc-element topic="operations.md"/>
     <toc-element toc-title="Operations">
-        <toc-element topic="create.md"  show-structure-depth="3">
+        <toc-element topic="create.md">
             <toc-element topic="createColumn.md" toc-title="DataColumn"/>
             <toc-element topic="createDataFrame.md" toc-title="DataFrame"/>
         </toc-element>
@@ -45,7 +45,7 @@
             <toc-element topic="schema.md"/>
             <toc-element topic="describe.md"/>
         </toc-element>
-        <toc-element topic="access.md" toc-title="Access"  show-structure-depth="3">
+        <toc-element topic="access.md" toc-title="Access">
             <toc-element topic="indexing.md"/>
             <toc-element topic="iterate.md"/>
             <toc-element topic="getRow.md">
@@ -64,7 +64,7 @@
                 <toc-element topic="values.md"/>
             </toc-element>
         </toc-element>
-        <toc-element topic="modify.md"  show-structure-depth="3">
+        <toc-element topic="modify.md">
             <toc-element topic="sliceRows.md">
                 <toc-element topic="xs.md"/>
             </toc-element>
@@ -150,7 +150,7 @@
                 <toc-element topic="corr.md"/>
             </toc-element>
         </toc-element>
-        <toc-element topic="multipleDataFrames.md" show-structure-depth="3">
+        <toc-element topic="multipleDataFrames.md">
             <toc-element topic="addDf.md"/>
             <toc-element topic="concatDf.md"/>
             <toc-element topic="join.md"/>
