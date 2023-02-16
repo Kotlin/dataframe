@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE instance-profile
-        SYSTEM "https://resources.jetbrains.com/stardust/product-profile.dtd">
+        SYSTEM "https://helpserver.labs.jb.gg/help/schemas/mvp/product-profile.dtd">
 
 <instance-profile id="d"
                  name="Dataframe"
@@ -10,7 +10,7 @@
     <toc-element topic="overview.md"  show-structure-depth="3">
         <toc-element topic="apiLevels.md">
             <toc-element topic="stringApi.md"/>
-            <toc-element toc-title="Column Accessors API" id="columnAccessorsApi.md"/>
+            <toc-element toc-title="Column Accessors API" topic="columnAccessorsApi.md"/>
             <toc-element topic="KPropertiesApi.md"/>
             <toc-element topic="extensionPropertiesApi.md"/>
         </toc-element>
