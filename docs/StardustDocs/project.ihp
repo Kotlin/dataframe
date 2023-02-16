@@ -6,7 +6,7 @@
     <topics dir="topics"/>
     <images dir="images" version="0.9" web-path="images/" />
     <vars src="v.list"/>
-    <product src="d.tree" version="0.9" id="dataframe"/>
+    <instance src="d.tree" version="0.9" id="dataframe"/>
     <settings>
         <default-property element-name="toc-element" property-name="show-structure-depth" value="2"/>
     </settings>
