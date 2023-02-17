@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<buildprofiles>
+<buildprofiles xsi:noNamespaceSchemaLocation="https://helpserver.labs.jb.gg/help/schemas/mvp/build-profiles.xsd"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <variables>
         <web-root>https://kotlin.github.io/dataframe/</web-root>
         <download-page/>
@@ -12,5 +13,5 @@
         <config-search-scopes-provider>https://www.jetbrains.com/search/json/</config-search-scopes-provider>
         <generate-sitemap-url-prefix>https://kotlin.github.io/dataframe/</generate-sitemap-url-prefix>
     </variables>
-    <build-profile product="d"/>
+    <build-profile instance="d"/>
 </buildprofiles>
