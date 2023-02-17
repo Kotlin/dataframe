@@ -52,14 +52,14 @@ public data class Update<T, C>(
      *
      * - `[.`[at][Update.at]` (`[rowIndices][CommonUpdateAtFunctionDoc.RowIndicesParam]`) ]`
      *
-     * - `.`[with][Update.with]` { `[rowExpression][RowExpressions.RowValueExpression.WithExample]` }
-     *   | .`[notNull][Update.notNull]` { `[rowExpression][RowExpressions.RowValueExpression.WithExample]` }
-     *   | .`[perCol][Update.perCol]` { [colExpression][ColumnExpressions.ColumnExpression.WithExample] }
-     *   | .`[perRowCol][Update.perRowCol]` { [rowColExpression][ColumnExpressions.RowColumnExpression.WithExample] }
+     * - `.`[with][Update.with]` { `[rowExpression][ExpressingRows.RowValueExpression.WithExample]` }
+     *   | .`[notNull][Update.notNull]` { `[rowExpression][ExpressingRows.RowValueExpression.WithExample]` }
+     *   | .`[perCol][Update.perCol]` { [colExpression][ExpressingColumns.ColumnExpression.WithExample] }
+     *   | .`[perRowCol][Update.perRowCol]` { [rowColExpression][ExpressingColumns.RowColumnExpression.WithExample] }
      *   | .`[withValue][Update.withValue]`(value)
      *   | .`[withNull][Update.withNull]`()
      *   | .`[withZero][Update.withZero]`()
-     *   | .`[asFrame][Update.asFrame]` { [dataFrameExpression][DataFrameExpressions.DataFrameExpression.WithExample] }`
+     *   | .`[asFrame][Update.asFrame]` { [dataFrameExpression][ExpressingDataFrames.DataFrameExpression.WithExample] }`
      * {@arg [UpdateOperationArg] [update][update]}{@comment The default name of the `update` operation function name.}
      */
     public interface Usage
@@ -207,12 +207,12 @@ public infix fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T
 public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
 
 /** ## With
- * {@include [RowExpressions.RowValueExpression.WithExample]}
- * {@arg [RowExpressions.OperationArg] [update][update]` { city \}.`[with][with]}
+ * {@include [ExpressingRows.RowValueExpression.WithExample]}
+ * {@arg [ExpressingRows.OperationArg] [update][update]` { city \}.`[with][with]}
  *
  * ## Note
- * @include [RowExpressions.AddDataRowNote]
- * @param expression The {@include [RowExpressions.RowValueExpressionLink]} to update the rows with.
+ * @include [ExpressingRows.AddDataRowNote]
+ * @param expression The {@include [ExpressingRows.RowValueExpressionLink]} to update the rows with.
  */
 public infix fun <T, C> Update<T, C>.with(expression: UpdateExpression<T, C, C?>): DataFrame<T> =
     updateImpl { row, _, value ->
@@ -264,11 +264,11 @@ public fun <T, C> Update<T, C?>.notNull(expression: RowValueExpression<T, C, C>)
  *
  * @include [SelectingColumns.ColumnAccessors]
  *
- * {@include [RowExpressions.RowValueExpression.WithExample]}
- * {@arg [RowExpressions.OperationArg] [update][update]`("city")` }
+ * {@include [ExpressingRows.RowValueExpression.WithExample]}
+ * {@arg [ExpressingRows.OperationArg] [update][update]`("city")` }
  *
  * @include [Update.ColumnAccessorsParam]
- * @param expression The {@include [RowExpressions.RowValueExpressionLink]} to update the rows with.
+ * @param expression The {@include [ExpressingRows.RowValueExpressionLink]} to update the rows with.
  */
 public fun <T, C> DataFrame<T>.update(
     firstCol: ColumnReference<C>,
@@ -283,11 +283,11 @@ public fun <T, C> DataFrame<T>.update(
  *
  * @include [SelectingColumns.KProperties]
  *
- * {@include [RowExpressions.RowValueExpression.WithExample]}
- * {@arg [RowExpressions.OperationArg] [update][update]`("city")` }
+ * {@include [ExpressingRows.RowValueExpression.WithExample]}
+ * {@arg [ExpressingRows.OperationArg] [update][update]`("city")` }
  *
  * @include [Update.KPropertiesParam]
- * @param expression The {@include [RowExpressions.RowValueExpressionLink]} to update the rows with.
+ * @param expression The {@include [ExpressingRows.RowValueExpressionLink]} to update the rows with.
  */
 public fun <T, C> DataFrame<T>.update(
     firstCol: KProperty<C>,
@@ -302,11 +302,11 @@ public fun <T, C> DataFrame<T>.update(
  *
  * @include [SelectingColumns.ColumnNames]
  *
- * {@include [RowExpressions.RowValueExpression.WithExample]}
- * {@arg [RowExpressions.OperationArg] [update][update]`("city")` }
+ * {@include [ExpressingRows.RowValueExpression.WithExample]}
+ * {@arg [ExpressingRows.OperationArg] [update][update]`("city")` }
  *
  * @include [Update.ColumnNamesParam]
- * @param expression The {@include [RowExpressions.RowValueExpressionLink]} to update the rows with.
+ * @param expression The {@include [ExpressingRows.RowValueExpressionLink]} to update the rows with.
  */
 public fun <T> DataFrame<T>.update(
     firstCol: String,

@@ -3,8 +3,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
 /**
  * Column expressions.
  */
-internal interface ColumnExpressions {
-
+internal interface ExpressingColumns {
 
     /**
      * TODO
@@ -35,5 +34,4 @@ internal interface ColumnExpressions {
 
     /** [Row Column Expression][RowColumnExpression] */
     interface RowColumnExpressionLink
-
 }

@@ -15,7 +15,9 @@ import kotlin.reflect.KProperty
 /** [Selecting Columns][SelectingColumns] */
 internal interface SelectingColumnsLink
 
-/** Selecting columns for various operations (including but not limited to
+/**
+ * ## Selecting Columns
+ * Selecting columns for various operations (including but not limited to
  * [DataFrame.select], [DataFrame.update], [DataFrame.gather], and [DataFrame.fillNulls])
  * can be done in the following ways:
  * - {@include [Dsl.WithExample]}
