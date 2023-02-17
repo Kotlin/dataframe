@@ -1,7 +1,7 @@
 [//]: # (title: unfold)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` in which selected data columns are converted to `ColumnGroup` / `FrameColumn` according to
+Returns [`DataFrame`](DataFrame.md) in which selected data columns are converted to `ColumnGroup` / `FrameColumn` according to
 the values of the properties of the objects.
 
 It's a special case of [convert](convert.md) operation. 
@@ -22,7 +22,7 @@ fun downloadRepositoryInfo(url: String) = RepositoryInfo("fancy response from th
 
 <!---END-->
 
-Consider you have an existing dataframe with some URLs, arguments for an API call. 
+Consider you have an existing [`DataFrame`](DataFrame.md) with some URLs, arguments for an API call. 
 
 <!---FUN convertToColumnGroupData-->
 

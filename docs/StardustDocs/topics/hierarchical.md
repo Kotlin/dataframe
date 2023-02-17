@@ -1,11 +1,11 @@
 [//]: # (title: Hierarchical data structures)
 
-DataFrame can represent hierarchical data structures using two special types of columns:
+[`DataFrame`](DataFrame.md) can represent hierarchical data structures using two special types of columns:
 
 * [`ColumnGroup`](DataColumn.md#columngroup) is a group of [columns](DataColumn.md)
 * [`FrameColumn`](DataColumn.md#framecolumn) is a column of [dataframes](DataFrame.md)
 
-You can read `DataFrame` [from json](read.md#reading-json) or [from in-memory object graph](createDataFrame.md#todataframe) preserving original tree structure.
+You can read [`DataFrame`](DataFrame.md) [from json](read.md#reading-json) or [from in-memory object graph](createDataFrame.md#todataframe) preserving original tree structure.
 
 Hierarchical columns can also appear as a result of some [modification operations](modify.md):
 * [group](group.md) produces `ColumnGroup` 

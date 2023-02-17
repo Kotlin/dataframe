@@ -6,7 +6,7 @@ By nature data frames are dynamic objects, column labels depend on the input sou
 or deleted while wrangling. Kotlin, in contrast, is a statically typed language and all types are defined and verified
 ahead of execution. That's why creating a flexible, handy, and, at the same time, safe API to a data frame is tricky.
 
-In `Kotlin DataFrame` we provide four different ways to access columns, and, while they are essentially different, they
+In [`DataFrame`](DataFrame.md) we provide four different ways to access columns, and, while they are essentially different, they
 look pretty similar in the data wrangling DSL.
 
 ## List of Access APIs
@@ -147,10 +147,10 @@ Currently, we are working on compiler a plugin that generates these properties o
 
 The [Column Accessors API](columnAccessorsApi.md) is a kind of trade-off between safety and needs to be written ahead of
 the execution type declaration. It was designed to better be able to write code in an IDE without a notebook experience. 
-It provides type-safe access to columns but doesn't ensure that the columns really exist in a particular dataframe.
+It provides type-safe access to columns but doesn't ensure that the columns really exist in a particular [`DataFrame`](DataFrame.md).
 
 The [KProperties API](KPropertiesApi.md) is useful when you already have declared classed in your application business
-logic with fields that correspond columns of dataframe.
+logic with fields that correspond columns of [`DataFrame`](DataFrame.md).
 
 <table>
     <tr>

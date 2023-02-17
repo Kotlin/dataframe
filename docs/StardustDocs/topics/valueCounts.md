@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Return `DataFrame` containing counts of unique values in `DataFrame` or `DataColumn`.
+Return [`DataFrame`](DataFrame.md) containing counts of unique values in [`DataFrame`](DataFrame.md) or `DataColumn`.
 
 ```kotlin
 valueCounts(sort = true, ascending = false, dropNA = false)

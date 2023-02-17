@@ -2,14 +2,14 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-`Kotlin Dataframe` provides typed data access via [generation of extension properties](extensionPropertiesApi.md) for
+Kotlin Dataframe library provides typed data access via [generation of extension properties](extensionPropertiesApi.md) for
 type `DataFrame<T>`, where
-`T` is a marker class that represents `DataSchema` of `DataFrame`.
+`T` is a marker class that represents `DataSchema` of [`DataFrame`](DataFrame.md).
 
-Schema of `DataFrame` is a mapping from column names to column types of `DataFrame`.
-It ignores order of columns in `DataFrame`, but tracks column hierarchy.
+Schema of [`DataFrame`](DataFrame.md) is a mapping from column names to column types of [`DataFrame`](DataFrame.md).
+It ignores order of columns in [`DataFrame`](DataFrame.md), but tracks column hierarchy.
 
-In Jupyter environment compile-time `DataFrame` schema is synchronized with real-time data after every cell execution.
+In Jupyter environment compile-time [`DataFrame`](DataFrame.md) schema is synchronized with real-time data after every cell execution.
 
 In IDEA projects you can use [gradle plugin](installation.md#data-schema-preprocessor) to extract schema from dataset
 and generate extension properties.
@@ -110,7 +110,7 @@ val filtered = temp.cast<DataFrameType1>()
 
 ## Custom data schemas
 
-You can define your own `DataSchema` interfaces and use them in functions and classes to represent `DataFrame` with
+You can define your own `DataSchema` interfaces and use them in functions and classes to represent [`DataFrame`](DataFrame.md) with
 specific set of columns:
 
 ```kotlin
@@ -122,14 +122,14 @@ interface Person {
 ```
 
 After execution of this cell in Jupyter or annotation processing in IDEA, extension properties for data access will be
-generated. Now we can use these properties to create functions for typed `DataFrame`:
+generated. Now we can use these properties to create functions for typed [`DataFrame`](DataFrame.md):
 
 ```kotlin
 fun DataFrame<Person>.splitName() = split { name }.by(",").into("firstName", "lastName")
 fun DataFrame<Person>.adults() = filter { age > 18 }
 ```
 
-In Jupyter these functions will work automatically for any `DataFrame` that matches `Person` schema:
+In Jupyter these functions will work automatically for any [`DataFrame`](DataFrame.md) that matches `Person` schema:
 
 <!---FUN extendedDf-->
 
@@ -181,7 +181,7 @@ name        age weight
 Marley, Bob  20   73.5
 ```
 
-In JVM project you will have to [cast](cast.md) `DataFrame` explicitly to the target interface:
+In JVM project you will have to [cast](cast.md) [`DataFrame`](DataFrame.md) explicitly to the target interface:
 
 ```kotlin
 df.cast<Person>().splitName()
@@ -215,7 +215,7 @@ internal class Integration : JupyterIntegration() {
 }
 ```
 
-After loading this library into Jupyter notebook, schema interfaces for all `DataFrame` variables that match `Person`
+After loading this library into Jupyter notebook, schema interfaces for all [`DataFrame`](DataFrame.md) variables that match `Person`
 schema will derive from `Person`
 
 <!---FUN createDf-->

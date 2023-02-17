@@ -17,7 +17,7 @@ columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
 The following types of columns can be split without any _splitter_ configuration:
 * `String`: split by `,` and trim
 * `List`: split into elements
-* `DataFrame`: split into rows
+* [`DataFrame`](DataFrame.md): split into rows
 
 ## Split inplace
 

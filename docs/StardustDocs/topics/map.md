@@ -58,7 +58,7 @@ df.mapToColumn("year of birth") { 2021 - "age"<Int>() }
 
 See [row expressions](DataRow.md#row-expressions)
 
-**Map into `DataFrame`:**
+**Map into [`DataFrame`](DataFrame.md):**
 
 ```kotlin
 mapToFrame { 

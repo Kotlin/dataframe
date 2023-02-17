@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` with a new order of selected columns.
+Returns [`DataFrame`](DataFrame.md) with a new order of selected columns.
 
 ```text
 reorder { columns }

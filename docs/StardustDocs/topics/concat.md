@@ -2,11 +2,11 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` with the union of rows from several given `DataFrames`.
+Returns [`DataFrame`](DataFrame.md) with the union of rows from several given [`DataFrames`](DataFrame.md).
 
 `concat` is available for:
 
-`DataFrame`:
+[`DataFrame`](DataFrame.md):
 
 <!---FUN concatDfs-->
 
@@ -90,12 +90,12 @@ frameColumn.concat()
 
 <!---END-->
 
-If you want to union columns (not rows) from several `DataFrames`, see [`add`](add.md).
+If you want to union columns (not rows) from several [`DataFrames`](DataFrame.md), see [`add`](add.md).
 
 ## Schema unification
 
-If input `DataFrames` have different schemas, every column in resulting `DataFrame` will have the most common type of the original columns with the same name. 
+If input [`DataFrames`](DataFrame.md) have different schemas, every column in resulting [`DataFrames`](DataFrame.md) will have the most common type of the original columns with the same name. 
 
-For example, if one `DataFrame` has column `A: Int` and other `DataFrame` has column `A: Double`, resulting `DataFrame` will have column `A: Number`.
+For example, if one [`DataFrame`](DataFrame.md) has column `A: Int` and other [`DataFrame`](DataFrame.md) has column `A: Double`, resulting `DataFrame` will have column `A: Number`.
 
 Missing columns in dataframes will be filled with `null`.

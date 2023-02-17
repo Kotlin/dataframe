@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` where values in given columns are merged into lists grouped by other columns.
+Returns [`DataFrame`](DataFrame.md) where values in given columns are merged into lists grouped by other columns.
 
 ```text
 implode(dropNA = false) [ { columns } ]
@@ -15,7 +15,7 @@ implode(dropNA = false) [ { columns } ]
 
 Imploded columns will change their types:
 * `T` to `List<T>`
-* `DataRow` to `DataFrame`
+* `DataRow` to [`DataFrame`](DataFrame.md)
 
 Imploded [`ColumnGroup`](DataColumn.md#columngroup) will convert into [`FrameColumn`](DataColumn.md#framecolumn)
 

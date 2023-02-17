@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` with rows in reversed order.
+Returns [`DataFrame`](DataFrame.md) with rows in reversed order.
 
 <!---FUN reverse-->
 

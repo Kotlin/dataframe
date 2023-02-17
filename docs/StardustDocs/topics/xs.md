@@ -2,9 +2,9 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-Return cross-section from the `DataFrame`.
+Return cross-section from the [`DataFrame`](DataFrame.md).
 
-Filters `DataFrame` by matching key values with key columns and removes key columns.
+Filters [`DataFrame`](DataFrame.md) by matching key values with key columns and removes key columns.
 
 ```
 xs(vararg keyValues: Any?)

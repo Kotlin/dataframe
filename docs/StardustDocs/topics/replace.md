@@ -32,7 +32,7 @@ df.replace { age }.with { 2021 - age named "year" }
 
 To explore the power of the `replace` operation, let's consider the following example.
 
-Let's create a dataframe with column `contributors` pointing to JSON resources
+Let's create a [`DataFrame`](DataFrame.md) with column `contributors` pointing to JSON resources
 
 <!---FUN convertToFrameColumnAPI-->
 
@@ -47,7 +47,7 @@ val interestingRepos = dataFrameOf("name", "url", "contributors")(
 
 <!---END-->
 
-We can use `replace` and `with` to read a `DataFrame` for every row in `contributors`,
+We can use `replace` and `with` to read a [`DataFrame`](DataFrame.md) for every row in `contributors`,
 effectively converting it into `FrameColumn`.
 
 The resulting `FrameColumn` can be used to create a `GroupBy` and compute [summary statistics](summaryStatistics.md)

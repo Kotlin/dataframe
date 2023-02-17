@@ -2,9 +2,10 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` which contains all columns from original `DataFrame` followed by newly added columns. Original `DataFrame` is not modified.
+Returns [`DataFrame`](DataFrame.md) which contains all columns from original [`DataFrame`](DataFrame.md) followed by newly added columns. 
+Original [`DataFrame`](DataFrame.md) is not modified.
 
-**Create new column and add it to `DataFrame`:**
+**Create new column and add it to [`DataFrame`](DataFrame.md):**
 
 ```text
 add(columnName: String) { rowExpression }
@@ -55,7 +56,7 @@ df.add("fibonacci") {
 
 <!---END-->
 
-**Create and add several columns to `DataFrame`:**
+**Create and add several columns to [`DataFrame`](DataFrame.md):**
 
 ```kotlin
 add { 
@@ -123,7 +124,7 @@ df.add {
 </tab></tabs>
 <!---END-->
 
-**Add existing column to `DataFrame`:**
+**Add existing column to [`DataFrame`](DataFrame.md):**
 
 <!---FUN addExisting-->
 
@@ -136,7 +137,7 @@ df + score
 
 <!---END-->
 
-**Add all columns from another `DataFrame`:**
+**Add all columns from another [`DataFrame`](DataFrame.md):**
 
 <!---FUN addDfs-->
 
@@ -148,7 +149,7 @@ df.add(df1, df2)
 
 ## addId
 
-Adds column with sequential values 0, 1, 2,... New column will be added in the beginning of columns list and will become the first column in `DataFrame`.
+Adds column with sequential values 0, 1, 2,... New column will be added in the beginning of columns list and will become the first column in [`DataFrame`](DataFrame.md).
 
 ```
 addId(name: String = "id")

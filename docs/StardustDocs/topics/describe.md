@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Returns `DataFrame` with general statistics for all [`ValueColumns`](DataColumn.md#valuecolumn).
+Returns [`DataFrame`](DataFrame.md) with general statistics for all [`ValueColumns`](DataColumn.md#valuecolumn).
 
 ```kotlin
 describe [ columns ]
