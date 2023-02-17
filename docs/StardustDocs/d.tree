@@ -1,177 +1,177 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE product-profile
-        SYSTEM "https://resources.jetbrains.com/stardust/product-profile.dtd">
+<!DOCTYPE instance-profile
+        SYSTEM "https://helpserver.labs.jb.gg/help/schemas/mvp/product-profile.dtd">
 
-<product-profile id="d"
+<instance-profile id="d"
                  name="Dataframe"
                  status="release"
                  start-page="overview.md">
-    <toc-element id="gettingStarted.md"/>
-    <toc-element id="overview.md"  show-structure-depth="3">
-        <toc-element id="apiLevels.md">
-            <toc-element id="stringApi.md"/>
-            <toc-element toc-title="Column Accessors API" id="columnAccessorsApi.md"/>
-            <toc-element id="KPropertiesApi.md"/>
-            <toc-element id="extensionPropertiesApi.md"/>
+    <toc-element topic="gettingStarted.md"/>
+    <toc-element topic="overview.md">
+        <toc-element topic="apiLevels.md">
+            <toc-element topic="stringApi.md"/>
+            <toc-element toc-title="Column Accessors API" topic="columnAccessorsApi.md"/>
+            <toc-element topic="KPropertiesApi.md"/>
+            <toc-element topic="extensionPropertiesApi.md"/>
         </toc-element>
-        <toc-element id="hierarchical.md"/>
-        <toc-element id="schemas.md">
-            <toc-element id="gradle.md"/>
+        <toc-element topic="hierarchical.md"/>
+        <toc-element topic="schemas.md">
+            <toc-element topic="gradle.md"/>
         </toc-element>
     </toc-element>
-    <toc-element id="installation.md"/>
-    <toc-element id="types.md">
-        <toc-element id="DataFrame.md"/>
-        <toc-element id="DataColumn.md"/>
-        <toc-element id="DataRow.md"/>
+    <toc-element topic="installation.md"/>
+    <toc-element topic="types.md">
+        <toc-element topic="DataFrame.md"/>
+        <toc-element topic="DataColumn.md"/>
+        <toc-element topic="DataRow.md"/>
     </toc-element>
-    <toc-element id="operations.md"/>
+    <toc-element topic="operations.md"/>
     <toc-element toc-title="Operations">
-        <toc-element id="create.md"  show-structure-depth="3">
-            <toc-element id="createColumn.md" toc-title="DataColumn"/>
-            <toc-element id="createDataFrame.md" toc-title="DataFrame"/>
+        <toc-element topic="create.md">
+            <toc-element topic="createColumn.md" toc-title="DataColumn"/>
+            <toc-element topic="createDataFrame.md" toc-title="DataFrame"/>
         </toc-element>
-        <toc-element id="io.md">
-            <toc-element id="read.md"/>
-            <toc-element id="write.md"/>
+        <toc-element topic="io.md">
+            <toc-element topic="read.md"/>
+            <toc-element topic="write.md"/>
         </toc-element>
-        <toc-element id="info.md">
-            <toc-element id="columnsCount.md"/>
-            <toc-element id="rowsCount.md"/>
-            <toc-element id="countDistinct.md"/>
-            <toc-element id="columnNames.md"/>
-            <toc-element id="columnTypes.md"/>
-            <toc-element id="head.md"/>
-            <toc-element id="schema.md"/>
-            <toc-element id="describe.md"/>
+        <toc-element topic="info.md">
+            <toc-element topic="columnsCount.md"/>
+            <toc-element topic="rowsCount.md"/>
+            <toc-element topic="countDistinct.md"/>
+            <toc-element topic="columnNames.md"/>
+            <toc-element topic="columnTypes.md"/>
+            <toc-element topic="head.md"/>
+            <toc-element topic="schema.md"/>
+            <toc-element topic="describe.md"/>
         </toc-element>
-        <toc-element id="access.md" toc-title="Access"  show-structure-depth="3">
-            <toc-element id="indexing.md"/>
-            <toc-element id="iterate.md"/>
-            <toc-element id="getRow.md">
-                <toc-element id="rows.md"/>
-                <toc-element id="single.md"/>
-                <toc-element id="first.md"/>
-                <toc-element id="last.md"/>
-                <toc-element id="minBy.md"/>
-                <toc-element id="maxBy.md"/>
+        <toc-element topic="access.md" toc-title="Access">
+            <toc-element topic="indexing.md"/>
+            <toc-element topic="iterate.md"/>
+            <toc-element topic="getRow.md">
+                <toc-element topic="rows.md"/>
+                <toc-element topic="single.md"/>
+                <toc-element topic="first.md"/>
+                <toc-element topic="last.md"/>
+                <toc-element topic="minBy.md"/>
+                <toc-element topic="maxBy.md"/>
             </toc-element>
-            <toc-element id="getColumns.md">
-                <toc-element id="columns.md"/>
-                <toc-element id="getColumn.md"/>
+            <toc-element topic="getColumns.md">
+                <toc-element topic="columns.md"/>
+                <toc-element topic="getColumn.md"/>
             </toc-element>
-            <toc-element id="getValues.md">
-                <toc-element id="values.md"/>
+            <toc-element topic="getValues.md">
+                <toc-element topic="values.md"/>
             </toc-element>
         </toc-element>
-        <toc-element id="modify.md"  show-structure-depth="3">
-            <toc-element id="sliceRows.md">
-                <toc-element id="xs.md"/>
+        <toc-element topic="modify.md">
+            <toc-element topic="sliceRows.md">
+                <toc-element topic="xs.md"/>
             </toc-element>
-            <toc-element id="select.md"/>
-            <toc-element id="filterRows.md">
-                <toc-element id="filter.md"/>
-                <toc-element id="drop.md"/>
-                <toc-element id="distinct.md"/>
+            <toc-element topic="select.md"/>
+            <toc-element topic="filterRows.md">
+                <toc-element topic="filter.md"/>
+                <toc-element topic="drop.md"/>
+                <toc-element topic="distinct.md"/>
             </toc-element>
-            <toc-element id="reorderRows.md">
-                <toc-element id="sortBy.md"/>
-                <toc-element id="shuffle.md"/>
-                <toc-element id="reverse.md"/>
+            <toc-element topic="reorderRows.md">
+                <toc-element topic="sortBy.md"/>
+                <toc-element topic="shuffle.md"/>
+                <toc-element topic="reverse.md"/>
             </toc-element>
-            <toc-element id="groupByConcat.md">
-                <toc-element id="groupBy.md"/>
-                <toc-element id="concat.md"/>
+            <toc-element topic="groupByConcat.md">
+                <toc-element topic="groupBy.md"/>
+                <toc-element topic="concat.md"/>
             </toc-element>
-            <toc-element id="updateConvert.md">
-                <toc-element id="update.md">
-                    <toc-element id="fill.md"/>
+            <toc-element topic="updateConvert.md">
+                <toc-element topic="update.md">
+                    <toc-element topic="fill.md"/>
                 </toc-element>
-                <toc-element id="convert.md">
-                    <toc-element id="parse.md"/>
-                    <toc-element id="unfold.md"/>
+                <toc-element topic="convert.md">
+                    <toc-element topic="parse.md"/>
+                    <toc-element topic="unfold.md"/>
                 </toc-element>
-                <toc-element id="inferType.md"/>
+                <toc-element topic="inferType.md"/>
             </toc-element>
-            <toc-element id="splitMerge.md">
-                <toc-element id="split.md"/>
-                <toc-element id="merge.md"/>
+            <toc-element topic="splitMerge.md">
+                <toc-element topic="split.md"/>
+                <toc-element topic="merge.md"/>
             </toc-element>
-            <toc-element id="addRemove.md">
-                <toc-element id="add.md"/>
-                <toc-element id="map.md"/>
-                <toc-element id="remove.md"/>
+            <toc-element topic="addRemove.md">
+                <toc-element topic="add.md"/>
+                <toc-element topic="map.md"/>
+                <toc-element topic="remove.md"/>
             </toc-element>
-            <toc-element id="moveRename.md">
-                <toc-element id="move.md"/>
-                <toc-element id="rename.md"/>
-                <toc-element id="reorder.md"/>
+            <toc-element topic="moveRename.md">
+                <toc-element topic="move.md"/>
+                <toc-element topic="rename.md"/>
+                <toc-element topic="reorder.md"/>
             </toc-element>
-            <toc-element id="groupUngroupFlatten.md">
-                <toc-element id="group.md"/>
-                <toc-element id="ungroup.md"/>
-                <toc-element id="flatten.md"/>
+            <toc-element topic="groupUngroupFlatten.md">
+                <toc-element topic="group.md"/>
+                <toc-element topic="ungroup.md"/>
+                <toc-element topic="flatten.md"/>
             </toc-element>
-            <toc-element id="insertReplace.md">
-                <toc-element id="insert.md"/>
-                <toc-element id="replace.md"/>
+            <toc-element topic="insertReplace.md">
+                <toc-element topic="insert.md"/>
+                <toc-element topic="replace.md"/>
             </toc-element>
-            <toc-element id="explodeImplode.md">
-                <toc-element id="explode.md"/>
-                <toc-element id="implode.md"/>
+            <toc-element topic="explodeImplode.md">
+                <toc-element topic="explode.md"/>
+                <toc-element topic="implode.md"/>
             </toc-element>
-            <toc-element id="pivotGather.md">
-                <toc-element id="pivot.md"/>
-                <toc-element id="gather.md"/>
+            <toc-element topic="pivotGather.md">
+                <toc-element topic="pivot.md"/>
+                <toc-element topic="gather.md"/>
             </toc-element>
-            <toc-element id="appendDuplicate.md">
-                <toc-element id="append.md"/>
-                <toc-element id="duplicate.md"/>
+            <toc-element topic="appendDuplicate.md">
+                <toc-element topic="append.md"/>
+                <toc-element topic="duplicate.md"/>
             </toc-element>
-            <toc-element id="adjustSchema.md">
-                <toc-element id="cast.md"/>
-                <toc-element id="convertTo.md"/>
+            <toc-element topic="adjustSchema.md">
+                <toc-element topic="cast.md"/>
+                <toc-element topic="convertTo.md"/>
             </toc-element>
         </toc-element>
         <toc-element toc-title="Statistics">
-            <toc-element id="summaryStatistics.md">
-                <toc-element id="count.md"/>
-                <toc-element id="minmax.md"/>
-                <toc-element id="sum.md"/>
-                <toc-element id="median.md"/>
-                <toc-element id="mean.md"/>
-                <toc-element id="std.md"/>
-                <toc-element id="valueCounts.md"/>
+            <toc-element topic="summaryStatistics.md">
+                <toc-element topic="count.md"/>
+                <toc-element topic="minmax.md"/>
+                <toc-element topic="sum.md"/>
+                <toc-element topic="median.md"/>
+                <toc-element topic="mean.md"/>
+                <toc-element topic="std.md"/>
+                <toc-element topic="valueCounts.md"/>
             </toc-element>
-            <toc-element id="cumulativeStatistics.md">
-                <toc-element id="cumSum.md"/>
+            <toc-element topic="cumulativeStatistics.md">
+                <toc-element topic="cumSum.md"/>
             </toc-element>
-            <toc-element id="statisticalRelationship.md">
-                <toc-element id="corr.md"/>
-            </toc-element>
-        </toc-element>
-        <toc-element id="multipleDataFrames.md" show-structure-depth="3">
-            <toc-element id="addDf.md"/>
-            <toc-element id="concatDf.md"/>
-            <toc-element id="join.md"/>
-        </toc-element>
-        <toc-element id="columnOperations.md">
-            <toc-element id="columnArithmetics.md" toc-title="Arithmetics"/>
-            <toc-element id="columnStatistics.md" toc-title="Statistics"/>
-            <toc-element id="specialColumnTypes.md">
-                <toc-element id="stringColumns.md" toc-title="String"/>
-                <toc-element id="datetimeColumns.md" toc-title="DateTime"/>
+            <toc-element topic="statisticalRelationship.md">
+                <toc-element topic="corr.md"/>
             </toc-element>
         </toc-element>
-        <toc-element id="ColumnSelectors.md"/>
-        <toc-element id="collectionsInterop.md">
-            <toc-element id="toList.md"/>
-            <toc-element id="toMap.md"/>
+        <toc-element topic="multipleDataFrames.md">
+            <toc-element topic="addDf.md"/>
+            <toc-element topic="concatDf.md"/>
+            <toc-element topic="join.md"/>
         </toc-element>
-        <toc-element id="rendering.md">
-            <toc-element id="format.md"/>
+        <toc-element topic="columnOperations.md">
+            <toc-element topic="columnArithmetics.md" toc-title="Arithmetics"/>
+            <toc-element topic="columnStatistics.md" toc-title="Statistics"/>
+            <toc-element topic="specialColumnTypes.md">
+                <toc-element topic="stringColumns.md" toc-title="String"/>
+                <toc-element topic="datetimeColumns.md" toc-title="DateTime"/>
+            </toc-element>
+        </toc-element>
+        <toc-element topic="ColumnSelectors.md"/>
+        <toc-element topic="collectionsInterop.md">
+            <toc-element topic="toList.md"/>
+            <toc-element topic="toMap.md"/>
+        </toc-element>
+        <toc-element topic="rendering.md">
+            <toc-element topic="format.md"/>
         </toc-element>
     </toc-element>
-    <toc-element id="gradleReference.md"/>
+    <toc-element topic="gradleReference.md"/>
     <toc-element href="https://github.com/Kotlin/dataframe/tree/master/examples" toc-title="Examples"/>
-</product-profile>
+</instance-profile>
