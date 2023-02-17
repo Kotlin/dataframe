@@ -20,7 +20,7 @@ explode(dropEmpty = true) [ { columns } ]
 
 Exploded columns will change their types:
 * `List<T>` to `T`
-* [`DataFrame`](DataFrame.md) to `DataRow`
+* [`DataFrame`](DataFrame.md) to [`DataRow`](DataRow.md)
 
 Exploded [`FrameColumn`](DataColumn.md#framecolumn) will be converted into [`ColumnGroup`](DataColumn.md#columngroup).
 

@@ -15,7 +15,7 @@ implode(dropNA = false) [ { columns } ]
 
 Imploded columns will change their types:
 * `T` to `List<T>`
-* `DataRow` to [`DataFrame`](DataFrame.md)
+* [`DataRow`](DataRow.md) to [`DataFrame`](DataFrame.md)
 
 Imploded [`ColumnGroup`](DataColumn.md#columngroup) will convert into [`FrameColumn`](DataColumn.md#framecolumn)
 
