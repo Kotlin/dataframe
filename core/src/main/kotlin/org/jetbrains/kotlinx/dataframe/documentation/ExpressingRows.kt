@@ -3,14 +3,14 @@ package org.jetbrains.kotlinx.dataframe.documentation
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.documentation.RowExpressions.AddDataRowNote
-import org.jetbrains.kotlinx.dataframe.documentation.RowExpressions.RowExpressionLink
-import org.jetbrains.kotlinx.dataframe.documentation.RowExpressions.RowValueExpressionLink
+import org.jetbrains.kotlinx.dataframe.documentation.ExpressingRows.AddDataRowNote
+import org.jetbrains.kotlinx.dataframe.documentation.ExpressingRows.RowExpressionLink
+import org.jetbrains.kotlinx.dataframe.documentation.ExpressingRows.RowValueExpressionLink
 import org.jetbrains.kotlinx.dataframe.RowExpression as DfRowExpression
 import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpression
 
 /**
- * ## Row expressions
+ * ## Expressing Rows
  * Expressing values using a "Row Expression" ({@include [DocumentationUrls.DataRow.RowExpressions]})
  * can occur in the following two types of operations:
  *
@@ -27,7 +27,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpressio
  *
  * A Row Expression is similar to a {@include [RowConditionLink]} but that expects a [Boolean] as result.
  */
-internal interface RowExpressions {
+internal interface ExpressingRows {
 
     /**
      * The key for an @arg that will define the operation name for the examples below.
@@ -86,9 +86,9 @@ internal interface RowExpressions {
     /** [Row Value Expression][RowValueExpression.WithExample] */
     interface RowValueExpressionLink
 
-    /** @include [ColumnExpressions.RowColumnExpression] */
+    /** @include [ExpressingColumns.RowColumnExpression] */
     interface RowColumnExpression
 }
 
-/** [Row Expressions][RowExpressions] */
+/** [Row Expressions][ExpressingRows] */
 internal interface RowExpressionsLink

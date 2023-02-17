@@ -3,7 +3,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
 /**
  * TODO
  */
-internal interface DataFrameExpressions {
+internal interface ExpressingDataFrames {
 
     /**
      * TODO
@@ -19,6 +19,4 @@ internal interface DataFrameExpressions {
 
     /** [Data Frame Expression][DataFrameExpression] */
     interface DataFrameExpressionLink
-
-
 }
