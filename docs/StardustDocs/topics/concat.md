@@ -16,7 +16,7 @@ df.concat(df1, df2)
 
 <!---END-->
 
-`DataColumn`:
+[`DataColumn`](DataColumn.md):
 
 <!---FUN concatColumns-->
 

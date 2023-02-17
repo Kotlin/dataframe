@@ -1,7 +1,7 @@
 [//]: # (title: DataColumn)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Create-->
 
-`DataColumn` represents a column of values. It can store objects of primitive or reference types, or other [`DataFrames`](DataFrame.md).
+[`DataColumn`](DataColumn.md) represents a column of values. It can store objects of primitive or reference types, or other [`DataFrames`](DataFrame.md).
 
 See [how to create columns](createColumn.md)
 
@@ -14,7 +14,7 @@ See [how to create columns](createColumn.md)
 * `size: Int` — number of elements in the column
 
 ### Column kinds
-`DataColumn` instances can be one of three subtypes: `ValueColumn`, `ColumnGroup` or `FrameColumn`
+[`DataColumn`](DataColumn.md) instances can be one of three subtypes: `ValueColumn`, [`ColumnGroup`](DataColumn.md#columngroup) or [`FrameColumn`](DataColumn.md#framecolumn)
 
 #### ValueColumn
 
@@ -30,9 +30,9 @@ Container for nested columns. Is used to create column hierarchy.
 
 Special case of [`ValueColumn`](#valuecolumn) that stores other [`DataFrames`](DataFrame.md) as elements. 
 
-[`DataFrames`](DataFrame.md) stored in `FrameColumn` may have different schemas. 
+[`DataFrames`](DataFrame.md) stored in [`FrameColumn`](DataColumn.md#framecolumn) may have different schemas. 
 
-`FrameColumn` may appear after [reading](read.md) from JSON or other hierarchical data structures, or after grouping operations such as [groupBy](groupBy.md) or [pivot](pivot.md).  
+[`FrameColumn`](DataColumn.md#framecolumn) may appear after [reading](read.md) from JSON or other hierarchical data structures, or after grouping operations such as [groupBy](groupBy.md) or [pivot](pivot.md).  
 
 ## Column accessors
 

@@ -8,7 +8,7 @@ Returns [`DataFrame`](DataFrame.md) with general statistics for all [`ValueColum
 describe [ columns ]
 ```
 
-`ColumnGroups` and `FrameColumns` are traversed recursively down to `ValueColumns`.
+[`ColumnGroup`](DataColumn.md#columngroup) and [`FrameColumns`](DataColumn.md#framecolumn) are traversed recursively down to `ValueColumns`.
 
 Collected statistics:
 * `name` — column name

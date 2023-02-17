@@ -13,7 +13,7 @@ explode(dropEmpty = true) [ { columns } ]
 
 **Available for:**
 * [`DataFrame`](DataFrame.md)
-* `FrameColumn`
+* [`FrameColumn`](DataColumn.md#framecolumn)
 * `DataColumn<Collection>`
 
 **Reverse operation:** [`implode`](implode.md)
@@ -80,7 +80,7 @@ col.explode()
 
 <!---END-->
 
-Explode `FrameColumn`:
+Explode [`FrameColumn`](DataColumn.md#framecolumn):
 
 <!---FUN explodeColumnFrames-->
 

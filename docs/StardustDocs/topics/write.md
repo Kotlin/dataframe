@@ -8,7 +8,7 @@
 You can write [`DataFrame`](DataFrame.md) in CSV format to file, to `String` or to `Appendable`
 (i.e. to `Writer`).
 
-Values of ColumnGroup, FrameColumn, i.e. AnyRow, AnyFrame will be serialized as JSON objects. 
+Values of [`ColumnGroup`](DataColumn.md#columngroup), [`FrameColumn`](DataColumn.md#framecolumn), i.e. AnyRow, AnyFrame will be serialized as JSON objects. 
 
 <!---FUN writeCsv-->
 
@@ -26,7 +26,7 @@ val csvStr = df.toCsv(CSVFormat.DEFAULT.withDelimiter(';').withRecordSeparator(S
 
 <!---END-->
 
-`ColumnGroup` and `FrameColumn` values will be serialized as JSON strings.
+[`ColumnGroup`](DataColumn.md#columngroup) and [`FrameColumn`](DataColumn.md#framecolumn) values will be serialized as JSON strings.
 
 ### Writing to JSON
 
@@ -67,7 +67,7 @@ df.writeExcel(file)
 
 <!---END-->
 
-Values of ColumnGroup, FrameColumn, i.e. AnyRow, AnyFrame will be serialized as JSON objects. 
+Values of [`ColumnGroup`](DataColumn.md#columngroup), [`FrameColumn`](DataColumn.md#framecolumn), i.e. AnyRow, AnyFrame will be serialized as JSON objects. 
 
 If you work directly with Apache POI, you can use created Workbook and Sheets in your code:
 

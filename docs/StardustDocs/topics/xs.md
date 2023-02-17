@@ -11,7 +11,7 @@ xs(vararg keyValues: Any?)
      [ { keyColumns } ]
 ```
 
-When `keyColumns` are not specified, it takes first `n` columns in dfs order (looking inside `ColumnGroups`), where `n` is a number of given `keyValues`.
+When `keyColumns` are not specified, it takes first `n` columns in dfs order (looking inside [`ColumnGroup`](DataColumn.md#columngroup)), where `n` is a number of given `keyValues`.
 
 <!---FUN xs-->
 

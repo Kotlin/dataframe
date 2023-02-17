@@ -68,7 +68,7 @@ D: Boolean?
 <tr><td>41</td><td>{"B":3,"C":2}</td></tr>
 </table>
 
-We get this data schema where D is ColumnGroup with 2 children columns:
+We get this data schema where D is [`ColumnGroup`](DataColumn.md#columngroup) with 2 children columns:
 
 ```text
 A: Int
@@ -141,7 +141,7 @@ DataFrame.readJson("https://covid.ourworldindata.org/data/owid-covid-data.json")
 ```
 
 Note that after reading a JSON with a complex structure, you can get hierarchical
-[`DataFrame`](DataFrame.md): [`DataFrame`](DataFrame.md) with `ColumnGroup`s and `FrameColumn`s.
+[`DataFrame`](DataFrame.md): [`DataFrame`](DataFrame.md) with `ColumnGroup`s and [`FrameColumn`](DataColumn.md#framecolumn)s.
 
 Also note that type inferring process for JSON is much simpler than for CSV.
 JSON string literals are always supposed to have String type, number literals
@@ -321,7 +321,7 @@ with dogs looking like
 ⌎-------------------------------------------------⌏
 ```
 
-(The results are wrapped in a `FrameColumn` instead of a `ColumnGroup` since lengths between "cats" and "dogs" can vary,
+(The results are wrapped in a [`FrameColumn`](DataColumn.md#framecolumn) instead of a `ColumnGroup` since lengths between "cats" and "dogs" can vary,
 among other reasons.)
 
 To specify the paths, you can use the `JsonPath` class:

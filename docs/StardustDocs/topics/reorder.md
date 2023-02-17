@@ -57,7 +57,7 @@ df.reorder("d", "b").cast<Int>().by { sum() } // [c, b, a, d]
 
 <!---END-->
 
-When exactly one `ColumnGroup` is selected, reordering is applied to its nested columns.
+When exactly one [`ColumnGroup`](DataColumn.md#columngroup) is selected, reordering is applied to its nested columns.
 
 <!---FUN reorderInGroup-->
 
@@ -76,7 +76,7 @@ reorderColumnsBy(dfs = true, desc = false) { columnExpression }
 ```
 
 **Parameters:**
-* `dfs` — reorder columns inside `ColumnGroups` and `FrameColumns` recursively
+* `dfs` — reorder columns inside [`ColumnGroups`](DataColumn.md#columngroup) and [`FrameColumn`](DataColumn.md#framecolumn) recursively
 * `desc` — apply descending order
 
 ## reorderColumnsByName
@@ -86,5 +86,5 @@ reorderColumnsByName(dfs = true, desc = false)
 ```
 
 **Parameters:**
-* `dfs` — reorder columns inside `ColumnGroups` and `FrameColumns` recursively
+* `dfs` — reorder columns inside [`ColumnGroups`](DataColumn.md#columngroup) and [`FrameColumn`](DataColumn.md#framecolumn) recursively
 * `desc` — apply descending order
