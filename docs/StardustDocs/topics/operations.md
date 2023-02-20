@@ -1,4 +1,4 @@
-[//]: # (title: Operations)
+[//]: # (title: Operations Overview)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
