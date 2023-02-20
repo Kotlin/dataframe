@@ -1,6 +1,6 @@
 [//]: # (title: Getting started)
 
-Kotlin [`DataFrame`](DataFrame.md) is a JVM Kotlin library for in-memory data manipulation.
+Kotlin DataFrame Library is a JVM Kotlin library for in-memory data manipulation.
 
 ![getting started image](gettingStarted.png)
 

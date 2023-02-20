@@ -2,7 +2,8 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels-->
 
-[`DataFrame`](DataFrame.md) can be used as an intermediate structure for data transformation between two data formats. If either source or destination is a Kotlin object, e.g. data class, it is convenient to use its properties for typed data access in `DataFrame`.
+[`DataFrame`](DataFrame.md) can be used as an intermediate structure for data transformation between two data formats. 
+If either source or destination is a Kotlin object, e.g. data class, it is convenient to use its properties for typed data access in [`DataFrame`](DataFrame.md).
 This can be done using `::` expression that provides [property references](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.reflect/-k-property/)
 
 <!---FUN kproperties1-->

@@ -13,7 +13,7 @@ the command line, for example:
 jupyter notebook
 ```
 
-In the notebook you only have to write single line to start using [`DataFrame`](DataFrame.md):
+In the notebook you only have to write single line to start using Kotlin DataFrame library:
 
 ```text
 %use dataframe

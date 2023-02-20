@@ -2,7 +2,9 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels-->
 
-When [`DataFrame`](DataFrame.md) is used within Jupyter Notebooks or Datalore with Kotlin Kernel, after every cell execution all new global variables of type DataFrame are analyzed and replaced with typed DataFrame wrapper with auto-generated extension properties for data access:
+When [`DataFrame`](DataFrame.md) is used within Jupyter Notebooks or Datalore with Kotlin Kernel, 
+after every cell execution all new global variables of type DataFrame are analyzed and replaced 
+with typed [`DataFrame`](DataFrame.md) wrapper with auto-generated extension properties for data access:
 
 <!---FUN extensionProperties1-->
 
