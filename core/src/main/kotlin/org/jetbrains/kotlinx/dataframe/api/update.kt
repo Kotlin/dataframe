@@ -1,15 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.ColumnExpression
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.DataFrameExpression
-import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.RowColumnExpression
-import org.jetbrains.kotlinx.dataframe.RowValueExpression
-import org.jetbrains.kotlinx.dataframe.RowValueFilter
+import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.api.Update.Usage
+import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.documentation.*
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
@@ -17,7 +10,6 @@ import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
-import org.jetbrains.kotlinx.dataframe.index
 import kotlin.reflect.KProperty
 
 /**
@@ -204,6 +196,10 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
 public infix fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }
 
+/** ## Update Expression
+ * @see ExpressingRows.RowValueExpression.WithExample
+ * @see ExpressingRows.AddDataRowNote
+ */ // doc processor plugin does not work with type aliases yet
 public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
 
 /** ## With
@@ -219,7 +215,14 @@ public infix fun <T, C> Update<T, C>.with(expression: UpdateExpression<T, C, C?>
         expression(row, value)
     }
 
-/** TODO */
+/** ## As Frame
+ *
+ * Updates selected [column group][ColumnGroup] as a [DataFrame] with the given [expression].
+ *
+ * {@include [ExpressingDataFrames.DataFrameExpression.WithExample]}
+ * {@arg [ExpressingDataFrames.OperationArg] `df.`[update][update]` { name \}.`[asFrame][asFrame]}
+ * @param expression The [DataFrameExpression] to replace the selected column group with.
+ */
 public infix fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
     df.replace(columns).with { it.asColumnGroup().let { expression(it, it) }.asColumnGroup(it.name()) }
 
@@ -248,15 +251,33 @@ internal infix fun <T, C> RowValueFilter<T, C>?.and(other: RowValueFilter<T, C>)
     return { thisExp(this, it) && other(this, it) }
 }
 
-/** TODO */
+/** @include [Update.notNull] */
 public fun <T, C> Update<T, C?>.notNull(): Update<T, C> =
-    copy(filter = filter and { it != null }) as Update<T, C>
+    where { it != null } as Update<T, C>
 
-/** TODO */
-public fun <T, C> Update<T, C?>.notNull(expression: RowValueExpression<T, C, C>): DataFrame<T> =
-    notNull().updateImpl { row, column, value ->
-        expression(row, value)
-    }
+/**
+ * ## Not Null
+ *
+ * Selects only the rows where the values in the selected columns are not null.
+ *
+ * Shorthand for: [update][update]` { ... }.`[where][Update.where]` { it != null }`
+ *
+ * For example:
+ *
+ * `df.`[update][update]` { `[colsOf][colsOf]`<`[Number][Number]`?>() }.`[notNull][notNull]`()`.[perCol][Update.perCol] `{ `[mean][mean]`() }`
+ *
+ * ### Optional
+ * Provide an [expression] to update the rows with.
+ * This combines [with][Update.with] with [notNull].
+ *
+ * For example:
+ *
+ * `df.`[notNull][Update.notNull]` { city }.{ it.`[toUpperCase][String.toUpperCase]`() }`
+ *
+ * @param expression Optional {@include [ExpressingRows.RowExpressionLink]} to update the rows with.
+ */
+public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): DataFrame<T> =
+    notNull().with(expression)
 
 /**
  * @include [CommonUpdateFunctionDoc]
@@ -273,7 +294,7 @@ public fun <T, C> Update<T, C?>.notNull(expression: RowValueExpression<T, C, C>)
 public fun <T, C> DataFrame<T>.update(
     firstCol: ColumnReference<C>,
     vararg cols: ColumnReference<C>,
-    expression: RowValueExpression<T, C, C>
+    expression: UpdateExpression<T, C, C>
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
 
@@ -292,7 +313,7 @@ public fun <T, C> DataFrame<T>.update(
 public fun <T, C> DataFrame<T>.update(
     firstCol: KProperty<C>,
     vararg cols: KProperty<C>,
-    expression: RowValueExpression<T, C, C>
+    expression: UpdateExpression<T, C, C>
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
 
@@ -311,7 +332,7 @@ public fun <T, C> DataFrame<T>.update(
 public fun <T> DataFrame<T>.update(
     firstCol: String,
     vararg cols: String,
-    expression: RowValueExpression<T, Any?, Any?>
+    expression: UpdateExpression<T, Any?, Any?>
 ): DataFrame<T> =
     update(*headPlusArray(firstCol, cols)).with(expression)
 
