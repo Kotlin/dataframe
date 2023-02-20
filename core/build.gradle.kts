@@ -61,7 +61,7 @@ kotlin.sourceSets {
 // Backup the kotlin source files location
 val kotlinMainSources = kotlin.sourceSets.main.get().kotlin.sourceDirectories
 
-val processKdocIncludeMain by creatingProcessDocTask(
+val processKDocsMain by creatingProcessDocTask(
     sources = kotlinMainSources.filterNot { "build/generated" in it.path } // Exclude generated sources
 ) {
     processors = listOf(
@@ -76,10 +76,10 @@ val processKdocIncludeMain by creatingProcessDocTask(
 
 // As a bonus, this will update dokka if you use that
 tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
-    dependsOn(processKdocIncludeMain)
+    dependsOn(processKDocsMain)
     dokkaSourceSets {
         all {
-            sourceRoot(processKdocIncludeMain.target.get())
+            sourceRoot(processKDocsMain.target.get())
 //            for (root in processKdocIncludeMain.targets)
 //                sourceRoot(root)
         }
@@ -89,7 +89,7 @@ tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
 // Modify all Jar tasks such that before running the Kotlin sources are set to
 // the target of processKdocIncludeMain and they are returned back to normal afterwards.
 tasks.withType<Jar> {
-    dependsOn(processKdocIncludeMain)
+    dependsOn(processKDocsMain)
     outputs.upToDateWhen { false }
 
     doFirst {
@@ -97,7 +97,7 @@ tasks.withType<Jar> {
             sourceSets {
                 main {
                     kotlin.setSrcDirs(
-                        processKdocIncludeMain.targets +
+                        processKDocsMain.targets +
                             kotlinMainSources.filter { "build/generated" in it.path } // Include generated sources (which were excluded above)
                     )
                 }
