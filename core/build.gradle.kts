@@ -14,7 +14,7 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
     id("org.jmailen.kotlinter")
     id("org.jetbrains.kotlinx.dataframe")
-    id("com.github.jolanrensen.docProcessorGradlePlugin") version "v0.0.15"
+    id("com.github.jolanrensen.docProcessorGradlePlugin") version "v0.0.16"
 //    id("nl.jolanrensen.docProcessor") version "1.0-SNAPSHOT"
 }
 
@@ -80,8 +80,6 @@ tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask> {
     dokkaSourceSets {
         all {
             sourceRoot(processKDocsMain.target.get())
-//            for (root in processKdocIncludeMain.targets)
-//                sourceRoot(root)
         }
     }
 }

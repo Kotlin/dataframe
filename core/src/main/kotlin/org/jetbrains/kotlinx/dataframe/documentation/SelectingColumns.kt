@@ -45,8 +45,7 @@ internal interface SelectingColumns {
      */
     interface Dsl {
 
-        /**
-         * {@include [Dsl]}
+        /** {@include [Dsl]}
          *
          * For example:
          *
@@ -65,8 +64,7 @@ internal interface SelectingColumns {
      */
     interface ColumnNames {
 
-        /**
-         * {@include [ColumnNames]}
+        /** {@include [ColumnNames]}
          *
          * For example:
          *
@@ -81,8 +79,7 @@ internal interface SelectingColumns {
      */
     interface ColumnAccessors {
 
-        /**
-         * {@include [ColumnAccessors]}
+        /** {@include [ColumnAccessors]}
          *
          * For example:
          *
@@ -99,8 +96,7 @@ internal interface SelectingColumns {
     /** Select columns using [KProperties][KProperty] ({@include [AccessApi.KPropertiesApiLink]}). */
     interface KProperties {
 
-        /**
-         * {@include [KProperties]}
+        /** {@include [KProperties]}
          *
          * For example:
          * ```kotlin

@@ -126,9 +126,6 @@ public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Updat
     update { columns.toColumns() }
 
 /**
- * @include [CommonUpdateFunctionDoc]
- * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetSelectingColumnsOperationArg]}
- * @include [Update.ColumnAccessorsParam]
  * TODO this will be deprecated
  */
 public fun <T, C> DataFrame<T>.update(columns: Iterable<ColumnReference<C>>): Update<T, C> =
