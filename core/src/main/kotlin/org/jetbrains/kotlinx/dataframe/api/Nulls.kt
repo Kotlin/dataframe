@@ -79,9 +79,6 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: ColumnReference<C>): Up
     fillNulls { columns.toColumns() }
 
 /**
- * @include [CommonFillNullsFunctionDoc]
- * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNullsOperationArg]}
- * @include [Update.ColumnAccessorsParam]
  * TODO this will be deprecated
  */
 public fun <T, C> DataFrame<T>.fillNulls(columns: Iterable<ColumnReference<C>>): Update<T, C?> =
@@ -195,9 +192,6 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: ColumnReference<C>): Upd
     fillNaNs { columns.toColumns() }
 
 /**
- * @include [CommonFillNaNsFunctionDoc]
- * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNaNsOperationArg]}
- * @include [Update.ColumnAccessorsParam]
  * TODO this will be deprecated
  */
 public fun <T, C> DataFrame<T>.fillNaNs(columns: Iterable<ColumnReference<C>>): Update<T, C> =
@@ -267,9 +261,6 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: ColumnReference<C>): Updat
     fillNA { columns.toColumns() }
 
 /**
- * @include [CommonFillNAFunctionDoc]
- * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetFillNAOperationArg]}
- * @include [Update.ColumnAccessorsParam]
  * TODO this will be deprecated
  */
 public fun <T, C> DataFrame<T>.fillNA(columns: Iterable<ColumnReference<C>>): Update<T, C?> =
