@@ -77,7 +77,7 @@ jobs:
               name: algolia-indexes
         - uses: montudor/action-zip@v1
           with:
-              args: unzip -qq algolia-indexes-HP.zip -d algolia-indexes
+              args: unzip -qq algolia-indexes-D.zip -d algolia-indexes
         - run: |
               env "algolia-key=${{env.ALGOLIA_KEY}}" java -jar /opt/builder/help-publication-agent.jar \
               update-index \
