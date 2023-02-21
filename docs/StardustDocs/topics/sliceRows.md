@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-Returns a `DataFrame` with rows at given indices:
+Returns a [`DataFrame`](DataFrame.md) with rows at given indices:
 
 <!---FUN getSeveralRowsByIndices-->
 
@@ -12,7 +12,7 @@ df[0, 3, 4]
 
 <!---END-->
 
-Returns a `DataFrame` with rows inside given index ranges (including boundary indices):
+Returns a [`DataFrame`](DataFrame.md) with rows inside given index ranges (including boundary indices):
 
 <!---FUN getSeveralRowsByRanges-->
 
@@ -25,7 +25,7 @@ df[0..2, 4..5]
 
 ## take
 
-Returns a `DataFrame` containing first `n` rows
+Returns a [`DataFrame`](DataFrame.md) containing first `n` rows
 
 <!---FUN take-->
 
@@ -37,7 +37,7 @@ df.take(5)
 
 ## takeLast
 
-Returns a `DataFrame` containing last `n` rows
+Returns a [`DataFrame`](DataFrame.md) containing last `n` rows
 
 <!---FUN takeLast-->
 
@@ -49,7 +49,7 @@ df.takeLast(5)
 
 ## takeWhile
 
-Returns a `DataFrame` containing first rows that satisfy the given [condition](DataRow.md#row-conditions)
+Returns a [`DataFrame`](DataFrame.md) containing first rows that satisfy the given [condition](DataRow.md#row-conditions)
 
 <!---FUN takeWhile-->
 
@@ -61,7 +61,7 @@ df.takeWhile { isHappy }
 
 ## drop
 
-Returns a `DataFrame` containing all rows except first `n` rows
+Returns a [`DataFrame`](DataFrame.md) containing all rows except first `n` rows
 
 <!---FUN drop-->
 
@@ -73,7 +73,7 @@ df.drop(5)
 
 ## dropLast
 
-Returns a `DataFrame` containing all rows except last `n` rows
+Returns a [`DataFrame`](DataFrame.md) containing all rows except last `n` rows
 
 <!---FUN dropLast-->
 
@@ -86,7 +86,7 @@ df.dropLast(5)
 
 ## dropWhile
 
-Returns a `DataFrame` containing all rows except first rows that satisfy the given [condition](DataRow.md#row-conditions)
+Returns a [`DataFrame`](DataFrame.md) containing all rows except first rows that satisfy the given [condition](DataRow.md#row-conditions)
 
 <!---FUN dropWhile-->
 

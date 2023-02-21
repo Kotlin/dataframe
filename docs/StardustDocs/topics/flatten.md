@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` without column groupings under selected columns
+Returns [`DataFrame`](DataFrame.md) without column groupings under selected columns.
 
 ```text
 flatten  [ { columns } ]
@@ -20,7 +20,7 @@ df.flatten { name }
 
 <!---END-->
 
-To remove all column groupings in `DataFrame`, invoke `flatten` without parameters:
+To remove all column groupings in [`DataFrame`](DataFrame.md), invoke `flatten` without parameters:
 
 <!---FUN flattenAll-->
 

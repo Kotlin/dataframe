@@ -1,14 +1,14 @@
 [//]: # (title: Write)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Write-->
 
-`DataFrame` instances can be saved in the following formats: CSV, TSV, JSON, XLS(X) and Apache Arrow.
+[`DataFrame`](DataFrame.md) instances can be saved in the following formats: CSV, TSV, JSON, XLS(X) and Apache Arrow.
 
 ### Writing to CSV
 
-You can write `DataFrame` in CSV format to file, to `String` or to `Appendable`
+You can write [`DataFrame`](DataFrame.md) in CSV format to file, to `String` or to `Appendable`
 (i.e. to `Writer`).
 
-Values of ColumnGroup, FrameColumn, i.e. AnyRow, AnyFrame will be serialized as JSON objects. 
+Values of [`ColumnGroup`](DataColumn.md#columngroup), [`FrameColumn`](DataColumn.md#framecolumn), i.e. AnyRow, AnyFrame will be serialized as JSON objects. 
 
 <!---FUN writeCsv-->
 
@@ -26,11 +26,11 @@ val csvStr = df.toCsv(CSVFormat.DEFAULT.withDelimiter(';').withRecordSeparator(S
 
 <!---END-->
 
-`ColumnGroup` and `FrameColumn` values will be serialized as JSON strings.
+[`ColumnGroup`](DataColumn.md#columngroup) and [`FrameColumn`](DataColumn.md#framecolumn) values will be serialized as JSON strings.
 
 ### Writing to JSON
 
-You can write your dataframe in JSON format to file, to string or to `Appendable`
+You can write your [`DataFrame`](DataFrame.md) in JSON format to file, to string or to `Appendable`
 (i.e. to `Writer`).
 
 <!---FUN writeJson-->
@@ -57,7 +57,7 @@ Add dependency:
 implementation("org.jetbrains.kotlinx:dataframe-excel:$dataframe_version")
 ```
 
-You can write your dataframe in XLS, XLSX format to a file, `OutputStream` or Workbook object.
+You can write your [`DataFrame`](DataFrame.md) in XLS, XLSX format to a file, `OutputStream` or Workbook object.
 
 <!---FUN writeXls-->
 
@@ -67,7 +67,7 @@ df.writeExcel(file)
 
 <!---END-->
 
-Values of ColumnGroup, FrameColumn, i.e. AnyRow, AnyFrame will be serialized as JSON objects. 
+Values of [`ColumnGroup`](DataColumn.md#columngroup), [`FrameColumn`](DataColumn.md#framecolumn), i.e. AnyRow, AnyFrame will be serialized as JSON objects. 
 
 If you work directly with Apache POI, you can use created Workbook and Sheets in your code:
 
@@ -129,7 +129,7 @@ implementation("org.jetbrains.kotlinx:dataframe-arrow:$dataframe_version")
 Make sure to follow [Apache Arrow Java compatibility](https://arrow.apache.org/docs/java/install.html#java-compatibility) guide when using Java 9+
 </warning>
 
-Dataframe supports writing [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
+[`DataFrame`](DataFrame.md) supports writing [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
 and [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
 to raw WritableByteChannel, OutputStream, File or ByteArray.
 

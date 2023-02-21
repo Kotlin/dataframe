@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-In Gradle project `Kotlin DataFrame` provides
+In Gradle project Kotlin DataFrame library provides
 
 1. Annotation processing for generation of extension properties
 2. Annotation processing for `DataSchema` inference from datasets.
@@ -15,7 +15,7 @@ should [configure Kotlin DataFrame plugin](installation.md#data-schema-preproces
 
 ### Annotation processing
 
-Declare data schemas in your code and use them to access data in DataFrames.
+Declare data schemas in your code and use them to access data in [`DataFrames`](DataFrame.md).
 A data schema is a class or interface annotated with `@DataSchema`:
 
 ```kotlin
@@ -149,7 +149,7 @@ dataframes {
 ```
 
 The only difference is that the name provided is now irrelevant, since the type names are provided by the OpenAPI spec.
-(If you were wondering, yes, Dataframe can tell the difference between an OpenAPI spec and normal JSON data)
+(If you were wondering, yes, Kotlin DataFrame library can tell the difference between an OpenAPI spec and normal JSON data)
 
 After importing the data schema, you can now start to import any JSON data you like using the generated schemas.
 For instance, one of the types in the schema above is `PetStore.Pet` (which can also be
@@ -161,7 +161,7 @@ val df: DataFrame<PetStore.Pet> =
     PetStore.Pet.readJson("https://petstore3.swagger.io/api/v3/pet/findByStatus?status=available")
 ```
 
-Now you will have a correctly typed dataframe!
+Now you will have a correctly typed [`DataFrame`](DataFrame.md)!
 
 You can also always ctrl+click on the `PetStore.Pet` type to see all the generated schemas.
 

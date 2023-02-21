@@ -108,7 +108,7 @@ val df = dataFrameOf(names).fill(15, true)
 
 ### toDataFrame
 
-`DataFrame` from `Iterable<DataColumn>`:
+[`DataFrame`](DataFrame.md) from `Iterable<DataColumn>`:
 
 <!---FUN createDataFrameFromIterable-->
 

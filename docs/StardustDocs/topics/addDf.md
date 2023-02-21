@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` with union of columns from several given `DataFrames`.
+Returns [`DataFrame`](DataFrame.md) with union of columns from several given [`DataFrames`](DataFrame.md).
 
 <!---FUN addDfs-->
 

@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-Return `Sequence` of values from one or several columns of `DataFrame`.
+Return `Sequence` of values from one or several columns of [`DataFrame`](DataFrame.md).
 
 ```
 values(byRows: Boolean = false) 

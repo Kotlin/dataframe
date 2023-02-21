@@ -1,6 +1,6 @@
 [//]: # (title: rename)
 
-Renames one or several columns without changing its location in `DataFrame`
+Renames one or several columns without changing its location in [`DataFrame`](DataFrame.md).
 
 ```kotlin
 df.rename { columns }.into(name)

@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.ApiLevels-->
 
-String column names are the easiest way to access data in DataFrame:
+String column names are the easiest way to access data in [`DataFrame`](DataFrame.md):
 
 <!---FUN strings-->
 
