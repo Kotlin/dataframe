@@ -46,12 +46,12 @@ public data class Update<T, C>(
      *
      * - `.`[with][Update.with]` { `[rowExpression][ExpressingRows.RowValueExpression.WithExample]` }
      *   | .`[notNull][Update.notNull]` { `[rowExpression][ExpressingRows.RowValueExpression.WithExample]` }
-     *   | .`[perCol][Update.perCol]` { [colExpression][ExpressingColumns.ColumnExpression.WithExample] }
-     *   | .`[perRowCol][Update.perRowCol]` { [rowColExpression][ExpressingColumns.RowColumnExpression.WithExample] }
+     *   | .`[perCol][Update.perCol]` { `[colExpression][ExpressingColumns.ColumnExpression.WithExample]` }
+     *   | .`[perRowCol][Update.perRowCol]` { `[rowColExpression][ExpressingColumns.RowColumnExpression.WithExample]` }
      *   | .`[withValue][Update.withValue]`(value)
      *   | .`[withNull][Update.withNull]`()
      *   | .`[withZero][Update.withZero]`()
-     *   | .`[asFrame][Update.asFrame]` { [dataFrameExpression][ExpressingDataFrames.DataFrameExpression.WithExample] }`
+     *   | .`[asFrame][Update.asFrame]` { `[dataFrameExpression][ExpressingDataFrames.DataFrameExpression.WithExample]` }`
      * {@arg [UpdateOperationArg] [update][update]}{@comment The default name of the `update` operation function name.}
      */
     public interface Usage
