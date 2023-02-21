@@ -11,6 +11,11 @@ env:
   PRODUCT: StardustDocs/d
   ARTIFACT: webHelpD2-all.zip
   ALGOLIA_ARTIFACT: algolia-indexes-D.zip
+  ALGOLIA_APP_NAME: OHIV241QET
+  ALGOLIA_INDEX_NAME: prod_JETBRAINSCOM_HELP
+  ALGOLIA_KEY: ${{ secrets.ALGOLIA_KEY }}
+  CONFIG_JSON_PRODUCT: Dataframe
+  CONFIG_JSON_VERSION: 0.9
 
 jobs:
   build-job:
@@ -57,3 +62,28 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
+
+  publish-indexes:
+    # Requires the build-job results
+    needs: build-job
+    runs-on: ubuntu-latest
+    container:
+        image: registry.jetbrains.team/p/writerside/builder/algolia-publisher:2.0.32-2
+
+    steps:
+        - uses: actions/checkout@v3
+        - uses: actions/download-artifact@v3
+          with:
+              name: algolia-indexes
+        - uses: montudor/action-zip@v1
+          with:
+              args: unzip -qq algolia-indexes-HP.zip -d algolia-indexes
+        - run: |
+              env "algolia-key=${{env.ALGOLIA_KEY}}" java -jar /opt/builder/help-publication-agent.jar \
+              update-index \
+              --application-name ${{env.ALGOLIA_APP_NAME}} \
+              --index-name ${{env.ALGOLIA_INDEX_NAME}} \
+              --product ${{env.CONFIG_JSON_PRODUCT}} \
+              --version ${{env.CONFIG_JSON_VERSION}} \
+              --index-directory algolia-indexes/ \
+              2>&1 | tee algolia-update-index-log.txt
