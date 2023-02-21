@@ -8,7 +8,7 @@ permissions:
   pages: write
 
 env:
-  PRODUCT: Writerside/d
+  PRODUCT: StardustDocs/d
   ARTIFACT: webHelpD2-all.zip
   ALGOLIA_ARTIFACT: algolia-indexes-D.zip
 
