@@ -90,7 +90,7 @@ private interface CommonUpdateFunctionDoc
  * Combine `df.`[update][update]`(...).`[with][Update.with]` { ... }`
  * into `df.`[update][update]`(...) { ... }`
  */
-private interface UpdatePlusWithNote
+private interface UpdateWithNote
 
 /**
  * @include [CommonUpdateFunctionDoc]
@@ -103,7 +103,7 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
 /**
  * @include [CommonUpdateFunctionDoc]
  * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetSelectingColumnsOperationArg]}
- * @include [UpdatePlusWithNote]
+ * @include [UpdateWithNote]
  * @include [Update.ColumnNamesParam]
  */
 public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = update { columns.toColumns() }
@@ -111,7 +111,7 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
 /**
  * @include [CommonUpdateFunctionDoc]
  * @include [SelectingColumns.KProperties.WithExample] {@include [SetSelectingColumnsOperationArg]}
- * @include [UpdatePlusWithNote]
+ * @include [UpdateWithNote]
  * @include [Update.KPropertiesParam]
  */
 public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C> = update { columns.toColumns() }
@@ -119,7 +119,7 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
 /**
  * @include [CommonUpdateFunctionDoc]
  * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetSelectingColumnsOperationArg]}
- * @include [UpdatePlusWithNote]
+ * @include [UpdateWithNote]
  * @include [Update.ColumnAccessorsParam]
  */
 public fun <T, C> DataFrame<T>.update(vararg columns: ColumnReference<C>): Update<T, C> =
@@ -241,7 +241,7 @@ public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(val
 public fun <T, C> Update<T, C>.perCol(valueSelector: ColumnExpression<C, C>): DataFrame<T> =
     updateWithValuePerColumnImpl(valueSelector)
 
-/** TODO */
+/** Chains up two row value filters together. */
 internal infix fun <T, C> RowValueFilter<T, C>?.and(other: RowValueFilter<T, C>): RowValueFilter<T, C> {
     if (this == null) return other
     val thisExp = this
@@ -269,7 +269,7 @@ public fun <T, C> Update<T, C?>.notNull(): Update<T, C> =
  *
  * For example:
  *
- * `df.`[notNull][Update.notNull]` { city }.{ it.`[toUpperCase][String.toUpperCase]`() }`
+ * `df.`[update][update]` { city }.`[notNull][Update.notNull]` { it.`[toUpperCase][String.toUpperCase]`() }`
  *
  * @param expression Optional {@include [ExpressingRows.RowExpressionLink]} to update the rows with.
  */
