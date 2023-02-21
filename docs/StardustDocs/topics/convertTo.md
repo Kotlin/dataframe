@@ -1,7 +1,7 @@
 [//]: # (title: convertTo)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-[Converts](convert.md) columns in `DataFrame` to match given schema `Schema`
+[Converts](convert.md) columns in [`DataFrame`](DataFrame.md) to match given schema `Schema`
 
 ```kotlin
 convertTo<Schema>(excessiveColumns = ExcessiveColumns.Keep)

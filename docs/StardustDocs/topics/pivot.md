@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Splits the rows of `DataFrame` and groups them horizontally into new columns based on values from one or several columns of original `DataFrame`.
+Splits the rows of [`DataFrame`](DataFrame.md) and groups them horizontally into new columns based on values from one or several columns of original [`DataFrame`](DataFrame.md).
 
 ```text
 pivot (inward = true) { pivotColumns }
@@ -221,8 +221,10 @@ df.groupBy("name").pivot("city").median("age")
 </tab></tabs>
 <!---END-->
 
-By default, when aggregation function produces several values for single data group, column hierarchy in resulting `DataFrame` will be indexed first by pivot keys and then by the names of aggregated values.
-To reverse this order so that resulting columns will be indexed first by names of aggregated values and then by pivot keys, use `separate=true` flag that is available in multi-result aggregation operations, such as `aggregate` or `<stat>For`:
+By default, when aggregation function produces several values for single data group, column hierarchy in resulting [`DataFrame`](DataFrame.md) 
+will be indexed first by pivot keys and then by the names of aggregated values.
+To reverse this order so that resulting columns will be indexed first by names of aggregated values and then by pivot keys, 
+use `separate=true` flag that is available in multi-result aggregation operations, such as `aggregate` or `<stat>For`:
 
 <!---FUN pivotSeparate-->
 <tabs>
@@ -368,7 +370,7 @@ df.groupBy { "name"["firstName"] }.aggregate {
 
 ### pivotCounts
 
-Pivots with [`count`](count.md) statistics one or several columns preserving all other columns of `DataFrame` or `GroupBy`.
+Pivots with [`count`](count.md) statistics one or several columns preserving all other columns of [`DataFrame`](DataFrame.md) or `GroupBy`.
 
 <!---FUN pivotCounts-->
 
@@ -390,7 +392,7 @@ df.groupBy { name }.aggregate {
 
 ### pivotMatches
 
-Pivots with `Boolean` statistics one or several columns preserving all other columns of `DataFrame`.
+Pivots with `Boolean` statistics one or several columns preserving all other columns of [`DataFrame`](DataFrame.md).
 
 <!---FUN pivotMatches-->
 

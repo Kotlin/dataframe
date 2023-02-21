@@ -1,7 +1,7 @@
 [//]: # (title: unfold)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` in which selected data columns are converted to `ColumnGroup` / `FrameColumn` according to
+Returns [`DataFrame`](DataFrame.md) in which selected data columns are converted to [`ColumnGroup`](DataColumn.md#columngroup) / [`FrameColumn`](DataColumn.md#framecolumn) according to
 the values of the properties of the objects.
 
 It's a special case of [convert](convert.md) operation. 
@@ -22,7 +22,7 @@ fun downloadRepositoryInfo(url: String) = RepositoryInfo("fancy response from th
 
 <!---END-->
 
-Consider you have an existing dataframe with some URLs, arguments for an API call. 
+Consider you have an existing [`DataFrame`](DataFrame.md) with some URLs, arguments for an API call. 
 
 <!---FUN convertToColumnGroupData-->
 
@@ -38,7 +38,7 @@ val initialData = interestingRepos
 
 <!---END-->
 
-Using unfold you can convert `response` to a `ColumnGroup` and use rich [modify](modify.md) capabilities.
+Using unfold you can convert `response` to a [`ColumnGroup`](DataColumn.md#columngroup) and use rich [modify](modify.md) capabilities.
 
 <!---FUN convertToColumnGroup-->
 

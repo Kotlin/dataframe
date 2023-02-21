@@ -1,6 +1,6 @@
 [//]: # (title: DataFrame)
 
-`DataFrame` represents a list of [`DataColumn`](DataColumn.md).
+[`DataFrame`](DataFrame.md) represents a list of [`DataColumn`](DataColumn.md).
 
 Columns in dataframe must have equal size and unique names.
 

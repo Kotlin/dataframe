@@ -3,7 +3,7 @@
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
 Removes duplicate rows.
-The rows in the resulting `DataFrame` are in the same order as they were in the original `DataFrame`.
+The rows in the resulting [`DataFrame`](DataFrame.md) are in the same order as they were in the original [`DataFrame`](DataFrame.md).
 
 <!---FUN distinct-->
 
@@ -13,7 +13,7 @@ df.distinct()
 
 <!---END-->
 
-If columns are specified, resulting `DataFrame` will have only given columns with distinct values.
+If columns are specified, resulting [`DataFrame`](DataFrame.md) will have only given columns with distinct values.
 
 <!---FUN distinctColumns-->
 <tabs>

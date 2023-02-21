@@ -5,7 +5,7 @@
 
 ## Row functions
 
-* `index(): Int` — sequential row number in `DataFrame`, starts from 0
+* `index(): Int` — sequential row number in [`DataFrame`](DataFrame.md), starts from 0
 * `prev(): DataRow?` — previous row (`null` for the first row)
 * `next(): DataRow?` — next row (`null` for the last row)
 * `diff { rowExpression }: T` — difference between results of [row expression](#row-expressions) calculated for current and previous rows
@@ -18,14 +18,14 @@
 * `namedValuesOf<T>(): List<NameValuePair<T>>` — list of name-value pairs where value has given type 
 * `transpose(): DataFrame<NameValuePair<*>>` — dataframe of two columns: `name: String` is column names and `value: Any?` is cell values
 * `transposeTo<T>(): DataFrame<NameValuePair<T>>`— dataframe of two columns: `name: String` is column names and `value: T` is cell values
-* `getRow(Int): DataRow` — row from `DataFrame` by row index
+* `getRow(Int): DataRow` — row from [`DataFrame`](DataFrame.md) by row index
 * `getRows(Iterable<Int>): DataFrame` — dataframe with subset of rows selected by absolute row index. 
 * `relative(Iterable<Int>): DataFrame` — dataframe with subset of rows selected by relative row index: `relative(-1..1)` will return previous, current and next row. Requested indices will be coerced to the valid range and invalid indices will be skipped
 * `get(column): T` — cell value by this row and given `column`
-* `df()` — `DataFrame` that current row belongs to
+* `df()` — [`DataFrame`](DataFrame.md) that current row belongs to
 
 ## Row expressions
-Row expressions provide a value for every row of `DataFrame` and are used in [add](add.md), [filter](filter.md), [forEach](iterate.md), [update](update.md) and other operations.
+Row expressions provide a value for every row of [`DataFrame`](DataFrame.md) and are used in [add](add.md), [filter](filter.md), [forEach](iterate.md), [update](update.md) and other operations.
 
 <!---FUN expressions-->
 
@@ -75,7 +75,7 @@ The following [statistics](summaryStatistics.md) are available for `DataRow`:
 * `rowMedian`
 
 These statistics will be applied only to values of appropriate types and incompatible values will be ignored.
-For example, if `DataFrame` has columns of type `String` and `Int`, `rowSum()` will successfully compute sum of `Int` values in a row and ignore `String` values.
+For example, if [`DataFrame`](DataFrame.md) has columns of type `String` and `Int`, `rowSum()` will successfully compute sum of `Int` values in a row and ignore `String` values.
 
 To apply statistics only to values of particular type use `-Of` versions:
 * `rowMaxOf<T>`

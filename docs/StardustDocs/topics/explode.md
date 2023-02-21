@@ -12,19 +12,19 @@ explode(dropEmpty = true) [ { columns } ]
 * `dropEmpty` — if `true`, removes rows with empty lists or dataframes. Otherwise, they will be exploded into `null`.
 
 **Available for:**
-* `DataFrame`
-* `FrameColumn`
+* [`DataFrame`](DataFrame.md)
+* [`FrameColumn`](DataColumn.md#framecolumn)
 * `DataColumn<Collection>`
 
 **Reverse operation:** [`implode`](implode.md)
 
 Exploded columns will change their types:
 * `List<T>` to `T`
-* `DataFrame` to `DataRow`
+* [`DataFrame`](DataFrame.md) to [`DataRow`](DataRow.md)
 
 Exploded [`FrameColumn`](DataColumn.md#framecolumn) will be converted into [`ColumnGroup`](DataColumn.md#columngroup).
 
-Explode `DataFrame`:
+Explode [`DataFrame`](DataFrame.md):
 
 <!---FUN explode-->
 <tabs>
@@ -80,7 +80,7 @@ col.explode()
 
 <!---END-->
 
-Explode `FrameColumn`:
+Explode [`FrameColumn`](DataColumn.md#framecolumn):
 
 <!---FUN explodeColumnFrames-->
 
