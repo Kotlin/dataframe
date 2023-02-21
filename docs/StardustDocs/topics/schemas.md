@@ -32,14 +32,14 @@ val df = dataFrameOf("name", "age")(
 the following actions take place:
 
 1. Columns in `df` are analyzed to extract data schema
-2. Empty interface with `DataSchema` annotation is generated:
+2. Empty interface with [`DataSchema`](schema.md) annotation is generated:
 
 ```kotlin
 @DataSchema
 interface DataFrameType
 ```
 
-3. Extension properties for this `DataSchema` are generated:
+3. Extension properties for this [`DataSchema`](schema.md) are generated:
 
 ```kotlin
 val ColumnsContainer<DataFrameType>.age: DataColumn<Int?> @JvmName("DataFrameType_age") get() = this["age"] as DataColumn<Int?>
@@ -73,7 +73,7 @@ To log all these additional code executions, use cell magic
 
 ## Schema inheritance
 
-In order to reduce amount of generated code, previously generated `DataSchema` interfaces are reused and only new
+In order to reduce amount of generated code, previously generated [`DataSchema`](schema.md) interfaces are reused and only new
 properties are introduced
 
 Let's filter out all `null` values from `age` column and add one more column of type `Boolean`:
@@ -110,7 +110,7 @@ val filtered = temp.cast<DataFrameType1>()
 
 ## Custom data schemas
 
-You can define your own `DataSchema` interfaces and use them in functions and classes to represent [`DataFrame`](DataFrame.md) with
+You can define your own [`DataSchema`](schema.md) interfaces and use them in functions and classes to represent [`DataFrame`](DataFrame.md) with
 specific set of columns:
 
 ```kotlin

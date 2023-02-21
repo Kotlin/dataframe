@@ -7,9 +7,10 @@ _Kotlin DataFrame_ and _Kotlin Collection_ represent two different approaches to
 * [`DataFrame`](DataFrame.md) stores data by fields/columns
 * `Collection` stores data by records/rows
 
-Although [`DataFrame`](DataFrame.md) doesn't implement `Collection` or `Iterable` interface, it has many similar operations, such as [`filter`](filter.md), [`take`](sliceRows.md#take), [`first`](first.md), [`map`](map.md), [`groupBy`](groupBy.md) etc.
+Although [`DataFrame`](DataFrame.md) doesn't implement [`Collection`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-collection/#kotlin.collections.Collection) or [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) interface, it has many similar operations, 
+such as [`filter`](filter.md), [`take`](sliceRows.md#take), [`first`](first.md), [`map`](map.md), [`groupBy`](groupBy.md) etc.
 
-[`DataFrame`](DataFrame.md) has two-way compatibility with `Map` and `List`:
+[`DataFrame`](DataFrame.md) has two-way compatibility with [`Map`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/) and [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/):
 * `List<T>` -> `DataFrame<T>`: [toDataFrame](createDataFrame.md#todataframe)
 * `DataFrame<T>` -> `List<T>`: [toList](toList.md)
 * `Map<String, List<*>>` -> `DataFrame<*>`: [toDataFrame](createDataFrame.md#todataframe)
@@ -68,11 +69,13 @@ val df2 = df.add("c") { a + b }
 
 <tip>
 
-To enable extension properties generation you should use [dataframe plugin](gradle.md) for Gradle or [Kotlin jupyter kernel](installation.md)
+To enable extension properties generation you should use [dataframe plugin](gradle.md) 
+for Gradle or [Kotlin jupyter kernel](installation.md)
 
 </tip>
 
-After data is transformed, [`DataFrame`](DataFrame.md) can be exported into `List` of another data class using [toList](toList.md) or [toListOf](toList.md#tolistof) extensions:
+After data is transformed, [`DataFrame`](DataFrame.md) can be exported 
+into [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) of another data class using [toList](toList.md) or [toListOf](toList.md#tolistof) extensions:
 
 <!---FUN listInterop4-->
 

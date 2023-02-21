@@ -16,7 +16,7 @@ Returns a [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md) containin
 **Available for:**
 * [`DataFrame`](DataFrame.md)
 * [`DataColumn`](DataColumn.md)
-* [`GroupBy`](groupBy.md) — cumulative sum per every data group
+* [`GroupBy DataFrame`](groupBy.md#transformation) — cumulative sum per every data group
 
 <!---FUN cumSum-->
 

@@ -77,7 +77,7 @@ Returns `GroupBy` object.
 
 ## Transformation
 
-`GroupBy` is a [`DataFrame`](DataFrame.md) with one chosen [`FrameColumn`](DataColumn.md#framecolumn) containing data groups.
+`GroupBy DataFrame` is a [`DataFrame`](DataFrame.md) with one chosen [`FrameColumn`](DataColumn.md#framecolumn) containing data groups.
 
 It supports the following operations:
 * [`add`](add.md)
@@ -86,7 +86,7 @@ It supports the following operations:
 * [`pivot`](pivot.md#pivot-groupby)
 * [`concat`](concat.md)
 
-Any [`DataFrame`](DataFrame.md) with `FrameColumn` can be reinterpreted as `GroupBy`:
+Any [`DataFrame`](DataFrame.md) with `FrameColumn` can be reinterpreted as `GroupBy DataFrame`:
 
 <!---FUN dataFrameToGroupBy-->
 
@@ -100,7 +100,7 @@ df.asGroupBy { data } // convert dataframe to GroupBy by interpreting 'data' col
 
 <!---END-->
 
-And any `GroupBy` can be reinterpreted as `DataFrame` with `FrameColumn`:
+And any [`GroupBy DataFrame`](groupBy.md#transformation) can be reinterpreted as [`DataFrame`](DataFrame.md) with `FrameColumn`:
 
 <!---FUN groupByToFrame-->
 
@@ -230,7 +230,7 @@ df.groupBy("city").aggregate { maxBy("age")["name"] }
 </tab></tabs>
 <!---END-->
 
-Most common aggregation functions can be computed directly at `GroupBy`:
+Most common aggregation functions can be computed directly at [`GroupBy DataFrame`](groupBy.md#transformation) :
 
 <!---FUN groupByDirectAggregations-->
 <tabs>
