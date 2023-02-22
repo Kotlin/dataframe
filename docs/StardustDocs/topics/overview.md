@@ -12,7 +12,7 @@ This documentation is written in such a way that it could be read sequentially a
 Data frame is an abstraction for working with structured data. Essentially it’s a 2-dimensional table with labeled columns of potentially different types. You can think of it like a spreadsheet or SQL table, or a dictionary of series objects.
 
 The handiness of this abstraction is not in the table itself but in a set of operations defined on it. 
-Kotlin Dataframe Library is an idiomatic Kotlin DSL defining such operations. 
+The Kotlin Dataframe library is an idiomatic Kotlin DSL defining such operations. 
 The process of working with data frame is often called *data wrangling* which 
 is the process of transforming and mapping data from one "raw" data form into another format 
 that is more appropriate for analytics and visualization. 
@@ -20,12 +20,12 @@ The goal of data wrangling is to assure quality and useful data.
 
 ## Main Features and Concepts
 
-* [**Hierarchical**](hierarchical.md) — Kotlin DataFrame Library provides an ability to read and present data from different sources including not only plain **CSV** but also **JSON**. That’s why it has been designed hierarchical and allows nesting of columns and cells.
+* [**Hierarchical**](hierarchical.md) — the Kotlin DataFrame library provides an ability to read and present data from different sources including not only plain **CSV** but also **JSON**. That’s why it has been designed hierarchical and allows nesting of columns and cells.
 
 * [**Interoperable**](collectionsInterop.md) — hierarchical data layout also opens a possibility of converting any objects 
 structure in application memory to a data frame and vice versa.
 
-* **Safe** — Kotlin DataFrame Library provides a mechanism of on-the-fly [**generation of extension properties**](extensionPropertiesApi.md) 
+* **Safe** — the Kotlin DataFrame library provides a mechanism of on-the-fly [**generation of extension properties**](extensionPropertiesApi.md) 
 that correspond to the columns of a data frame. 
 In interactive notebooks like Jupyter or Datalore, the generation runs after each cell execution. 
 In IntelliJ IDEA there's a Gradle plugin for generation properties based on CSV file or JSON file. 

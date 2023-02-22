@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-Kotlin Dataframe library provides typed data access via [generation of extension properties](extensionPropertiesApi.md) for
+The Kotlin Dataframe library provides typed data access via [generation of extension properties](extensionPropertiesApi.md) for
 type `DataFrame<T>`, where
 `T` is a marker class that represents `DataSchema` of [`DataFrame`](DataFrame.md).
 

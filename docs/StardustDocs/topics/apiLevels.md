@@ -6,7 +6,7 @@ By nature data frames are dynamic objects, column labels depend on the input sou
 or deleted while wrangling. Kotlin, in contrast, is a statically typed language and all types are defined and verified
 ahead of execution. That's why creating a flexible, handy, and, at the same time, safe API to a data frame is tricky.
 
-In Kotlin DataFrame library we provide four different ways to access columns, and, while they are essentially different, they
+In the Kotlin DataFrame library we provide four different ways to access columns, and, while they are essentially different, they
 look pretty similar in the data wrangling DSL.
 
 ## List of Access APIs

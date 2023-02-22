@@ -26,9 +26,11 @@ df.add("lastName") { name.split(",").last() }
 
 <!---END-->
 
-Extension properties are generated for [`DataSchema`](schemas.md) that is extracted from [`DataFrame`](DataFrame.md) instance after REPL line execution. After that `DataFrame` variable is typed with its own `DataSchema`, so only valid extension properties corresponding to actual columns in DataFrame will be allowed by the compiler and suggested by completion.
+Extension properties are generated for [`DataSchema`](schemas.md) that is extracted from [`DataFrame`](DataFrame.md) 
+instance after REPL line execution. 
+After that [`DataFrame`](DataFrame.md)  variable is typed with its own [`DataSchema`](schemas.md), so only valid extension properties corresponding to actual columns in DataFrame will be allowed by the compiler and suggested by completion.
 
-Also, extension properties [can be generated in IntelliJ IDEA](gradle.md) using [Kotlin Dataframe Gradle plugin](installation.md#data-schema-preprocessor).
+Also, extension properties [can be generated in IntelliJ IDEA](gradle.md) using the [Kotlin Dataframe Gradle plugin](installation.md#data-schema-preprocessor).
 
 <warning>
 In notebooks generated properties won't appear and be updated until the cell has been executed. It often means that you have to introduce new variable frequently to sync extension properties with actual schema

@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-In Gradle project Kotlin DataFrame library provides
+In Gradle project the Kotlin DataFrame library provides
 
 1. Annotation processing for generation of extension properties
 2. Annotation processing for [`DataSchema`](schemas.md) inference from datasets.
@@ -11,7 +11,7 @@ In Gradle project Kotlin DataFrame library provides
 ### Configuration
 
 To use [extension properties API](extensionPropertiesApi.md) in Gradle project you
-should [configure Kotlin DataFrame plugin](installation.md#data-schema-preprocessor).
+should [configure the Kotlin DataFrame plugin](installation.md#data-schema-preprocessor).
 
 ### Annotation processing
 
@@ -149,7 +149,7 @@ dataframes {
 ```
 
 The only difference is that the name provided is now irrelevant, since the type names are provided by the OpenAPI spec.
-(If you were wondering, yes, Kotlin DataFrame library can tell the difference between an OpenAPI spec and normal JSON data)
+(If you were wondering, yes, the Kotlin DataFrame library can tell the difference between an OpenAPI spec and normal JSON data)
 
 After importing the data schema, you can now start to import any JSON data you like using the generated schemas.
 For instance, one of the types in the schema above is `PetStore.Pet` (which can also be
