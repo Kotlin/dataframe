@@ -2,16 +2,15 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.documentation.ExpressingDataFrames.DataFrameExpressionLink
+import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpressionLink
 import org.jetbrains.kotlinx.dataframe.DataFrameExpression as DfDataFrameExpression
 
 /**
- * ## Expressing Data Frames
+ * ## Expressions Given DataFrame
  * Expressing values using a "Data Frame Expression" can occur exclusively in a
- * {@include [DataFrameExpressionLink]}
- *
+ * {@include [DataFrameExpressionLink]}.
  */
-internal interface ExpressingDataFrames {
+internal interface ExpressionsGivenDataFrame {
 
     interface OperationArg
 

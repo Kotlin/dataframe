@@ -1,9 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
 /**
- * Column expressions.
+ * ## Expressions Given Column
+ *
+ * TODO
  */
-internal interface ExpressingColumns {
+internal interface ExpressionsGivenColumn {
 
     /**
      * TODO
