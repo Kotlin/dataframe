@@ -1,8 +1,8 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
+import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -40,7 +40,7 @@ public fun <T> DataFrame<T>.read(vararg columns: String): DataFrame<T> = unfold(
 public fun <T> DataFrame<T>.read(vararg columns: KProperty<*>): DataFrame<T> = unfold(*columns)
 
 @Deprecated("Replaced with `unfold` operation.", ReplaceWith("this.unfold(*columns)"), DeprecationLevel.ERROR)
-public fun <T> DataFrame<T>.read(vararg columns: Column): DataFrame<T> = unfold(*columns)
+public fun <T> DataFrame<T>.read(vararg columns: AnyColumnReference): DataFrame<T> = unfold(*columns)
 
 @JvmName("toDataFrameT")
 public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {

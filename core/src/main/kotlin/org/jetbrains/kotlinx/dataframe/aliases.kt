@@ -138,7 +138,7 @@ public typealias RowValueFilter<T, C> = RowValueExpression<T, C, Boolean>
 
 // region columns
 
-public typealias Column = ColumnReference<*>
+public typealias AnyColumnReference = ColumnReference<*>
 
 public typealias ColumnGroupReference = ColumnReference<AnyRow>
 public typealias ColumnGroupAccessor<T> = ColumnAccessor<DataRow<T>>
