@@ -1,9 +1,9 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyCol
+import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -109,10 +109,10 @@ public fun <T> DataFrame<T>.dropNulls(vararg cols: KProperty<*>, whereAllNull: B
 public fun <T> DataFrame<T>.dropNulls(vararg cols: String, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { cols.toColumns() }
 
-public fun <T> DataFrame<T>.dropNulls(vararg cols: Column, whereAllNull: Boolean = false): DataFrame<T> =
+public fun <T> DataFrame<T>.dropNulls(vararg cols: AnyColumnReference, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { cols.toColumns() }
 
-public fun <T> DataFrame<T>.dropNulls(cols: Iterable<Column>, whereAllNull: Boolean = false): DataFrame<T> =
+public fun <T> DataFrame<T>.dropNulls(cols: Iterable<AnyColumnReference>, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { cols.toColumnSet() }
 
 public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
@@ -135,10 +135,10 @@ public fun <T> DataFrame<T>.dropNA(vararg cols: KProperty<*>, whereAllNA: Boolea
 public fun <T> DataFrame<T>.dropNA(vararg cols: String, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { cols.toColumns() }
 
-public fun <T> DataFrame<T>.dropNA(vararg cols: Column, whereAllNA: Boolean = false): DataFrame<T> =
+public fun <T> DataFrame<T>.dropNA(vararg cols: AnyColumnReference, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { cols.toColumns() }
 
-public fun <T> DataFrame<T>.dropNA(cols: Iterable<Column>, whereAllNA: Boolean = false): DataFrame<T> =
+public fun <T> DataFrame<T>.dropNA(cols: Iterable<AnyColumnReference>, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { cols.toColumnSet() }
 
 public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> =
