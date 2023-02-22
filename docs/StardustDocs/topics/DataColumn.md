@@ -156,7 +156,7 @@ df.filter { year > 2000 }
 
 <!---END-->
 
-To convert `ColumnAccessor` into [`DataColumn`](DataColumn.md) add values using `withValues` function:
+To convert [`ColumnAccessor`](columnAccessorsApi.md) into [`DataColumn`](DataColumn.md) add values using `withValues` function:
 
 <!---FUN columnAccessorToColumn-->
 

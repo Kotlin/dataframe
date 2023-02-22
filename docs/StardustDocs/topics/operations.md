@@ -2,9 +2,9 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Data transformation pipeline usually consists of several modification operations, such as filtering, sorting, grouping, pivoting, adding/removing columns etc. 
-DataFrame API is designed in functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
-`DataFrame` object is immutable and all operations return a new [`DataFrame`](DataFrame.md) instance reusing underlying data structures as much as possible.
+Data transformation pipeline usually consists of several modification operations, such as filtering, sorting, grouping, pivoting, adding/removing columns etc.
+The Kotlin DataFrame API is designed in functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
+[`DataFrame`](DataFrame.md) object is immutable and all operations return a new [`DataFrame`](DataFrame.md) instance reusing underlying data structures as much as possible.
 
 <!---FUN multiCallOperations-->
 
@@ -100,7 +100,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [toMap](toMap.md) — export [`DataFrame`](DataFrame.md) into a map from column names to column values
 * [ungroup](ungroup.md) — remove column groupings
 * [update](update.md) — update column values preserving column types
-* [values](values.md) — `Sequence` of values traversed by row or by column 
+* [values](values.md) — [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/) of values traversed by row or by column 
 * [valueCounts](valueCounts.md) — counts for unique values 
 * [xs](xs.md) — slice [`DataFrame`](DataFrame.md) by given key values
 

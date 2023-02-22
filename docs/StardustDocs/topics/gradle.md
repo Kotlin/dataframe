@@ -2,21 +2,21 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Schemas-->
 
-In Gradle project Kotlin DataFrame library provides
+In Gradle project the Kotlin DataFrame library provides
 
 1. Annotation processing for generation of extension properties
-2. Annotation processing for `DataSchema` inference from datasets.
-3. Gradle task for `DataSchema` inference from datasets.
+2. Annotation processing for [`DataSchema`](schemas.md) inference from datasets.
+3. Gradle task for [`DataSchema`](schemas.md) inference from datasets.
 
 ### Configuration
 
 To use [extension properties API](extensionPropertiesApi.md) in Gradle project you
-should [configure Kotlin DataFrame plugin](installation.md#data-schema-preprocessor).
+should [configure the Kotlin DataFrame plugin](installation.md#data-schema-preprocessor).
 
 ### Annotation processing
 
 Declare data schemas in your code and use them to access data in [`DataFrames`](DataFrame.md).
-A data schema is a class or interface annotated with `@DataSchema`:
+A data schema is a class or interface annotated with [`@DataSchema`](schemas.md):
 
 ```kotlin
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
@@ -51,7 +51,7 @@ Specify schema with preferred method and execute the `build` task.
 <tabs>
 <tab title="Method 1. Annotation processing">
 
-ImportDataSchema annotation must be above package directive. You can put this annotation in the same file as data
+`@ImportDataSchema` annotation must be above package directive. You can put this annotation in the same file as data
 processing code. You can import schema from URL or relative path of the file. Relative path by default is resolved to
 project root directory. You can configure it
 by [passing](https://kotlinlang.org/docs/ksp-quickstart.html#pass-options-to-processors) `dataframe.resolutionDir`
@@ -72,7 +72,7 @@ the same package as file containing the annotation.
 import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
 ```
 
-See KDocs for `ImportDataSchema` in IDE
+See KDocs for `@ImportDataSchema` in IDE
 or [github](https://github.com/Kotlin/dataframe/blob/master/core/src/main/kotlin/org/jetbrains/kotlinx/dataframe/annotations/ImportDataSchema.kt)
 for more details
 
@@ -149,7 +149,7 @@ dataframes {
 ```
 
 The only difference is that the name provided is now irrelevant, since the type names are provided by the OpenAPI spec.
-(If you were wondering, yes, Kotlin DataFrame library can tell the difference between an OpenAPI spec and normal JSON data)
+(If you were wondering, yes, the Kotlin DataFrame library can tell the difference between an OpenAPI spec and normal JSON data)
 
 After importing the data schema, you can now start to import any JSON data you like using the generated schemas.
 For instance, one of the types in the schema above is `PetStore.Pet` (which can also be

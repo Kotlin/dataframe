@@ -50,7 +50,7 @@ val interestingRepos = dataFrameOf("name", "url", "contributors")(
 We can use `replace` and `with` to read a [`DataFrame`](DataFrame.md) for every row in `contributors`,
 effectively converting it into [`FrameColumn`](DataColumn.md#framecolumn).
 
-The resulting [`FrameColumn`](DataColumn.md#framecolumn) can be used to create a `GroupBy` and compute [summary statistics](summaryStatistics.md)
+The resulting [`FrameColumn`](DataColumn.md#framecolumn) can be used to create a [`GroupBy DataFrame`](groupBy.md#transformation) and compute [summary statistics](summaryStatistics.md)
 or perform [aggregation](groupBy.md#aggregation).
 
 <!---FUN customUnfoldRead-->
