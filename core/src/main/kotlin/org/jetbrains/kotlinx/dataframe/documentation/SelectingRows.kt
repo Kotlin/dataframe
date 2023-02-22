@@ -4,7 +4,7 @@ import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.api.*
 
 /**
- * ## Row Condition
+ * ## Selecting Rows
  * Selecting rows that satisfy a "Row Condition" ({@include [DocumentationUrls.DataRow.RowConditions]})
  * can occur in the following two types of operations:
  * - Selecting entire rows ({@include [RowConditionLink]}), for instance in [filter], [drop], [first], and [count]
@@ -16,7 +16,7 @@ import org.jetbrains.kotlinx.dataframe.api.*
  * A Row Condition is similar to a {@include [RowExpressionsLink]} but expects a [Boolean] as result.
  * {@comment TODO Is `where` present everywhere it should be?}
  */
-internal interface RowCondition {
+internal interface SelectingRows {
 
     /**
      * The key for an @arg that will define the operation name for the examples below.
@@ -74,5 +74,5 @@ internal interface RowCondition {
     }
 }
 
-/** [Row Condition][RowCondition] */
+/** [Row Condition][SelectingRows] */
 internal interface RowConditionLink
