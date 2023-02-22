@@ -4,7 +4,8 @@
 
 Computes the minimum / maximum of values.
 
-Is available for `Comparable` columns. `null` and `NaN` values are ignored.
+Is available for [`Comparable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-comparable/) columns. 
+`null` and `NaN` values are ignored.
 
 <!---FUN minmaxModes-->
 

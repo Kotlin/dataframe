@@ -1,7 +1,7 @@
 [//]: # (title: Read)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Read-->
 
-Kotlin DataFrame library supports CSV, TSV, JSON, XLS and XLSX, Apache Arrow input formats.
+The Kotlin DataFrame library supports CSV, TSV, JSON, XLS and XLSX, Apache Arrow input formats.
 
 `read` method automatically detects input format based on file extension and content
 

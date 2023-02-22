@@ -6,9 +6,9 @@ the values of the properties of the objects.
 
 It's a special case of [convert](convert.md) operation. 
 
-This operation is useful when
+This operation is useful when: 
 1. you use a library API that gives you class instances
-2. you do not want to or cannot annotate classes with `@DataSchema`
+2. you do not want to or cannot annotate classes with [`@DataSchema`](schemas.md)
 
 ### Library API
 

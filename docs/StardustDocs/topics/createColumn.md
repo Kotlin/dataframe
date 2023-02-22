@@ -84,7 +84,7 @@ values.toColumn("data", Infer.Nulls) // type: Any
 
 ### toColumnOf
 
-Converts `Iterable` of values into column of given type
+Converts [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of values into column of given type
 
 <!---FUN createValueColumnOfType-->
 

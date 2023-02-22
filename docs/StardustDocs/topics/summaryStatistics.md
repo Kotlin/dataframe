@@ -13,7 +13,7 @@
 Every summary statistics can be used in aggregations of:
 * [`DataFrame`](DataFrame.md)
 * [`DataColumn`](DataColumn.md)
-* [`GroupBy`](#groupby-statistics)
+* [`GroupBy DataFrame`](#groupby-statistics)
 * [`Pivot`](#pivot-statistics)
 * [`PivotGroupBy`](pivot.md#pivot-groupby)
 
@@ -55,7 +55,7 @@ df.sumOf { (weight ?: 0) / age } // sum of expression evaluated for every row
 
 ### groupBy statistics
 
-When statistics is applied to `GroupBy`, it is computed for every data group. 
+When statistics is applied to [`GroupBy DataFrame`](groupBy.md#transformation), it is computed for every data group. 
 
 If statistic is applied in a mode that returns a single value for every data group, it will be stored in a single column named by statistic name.
 
@@ -129,7 +129,8 @@ df.groupBy("city").pivot { "name"["lastName"] }.meanOf { "age"<Int>() / 2.0 }
 </tab></tabs>
 <!---END-->
 
-If statistic is applied in such a way that it returns separate value per every column in data group, every cell in matrix will contain `DataRow` with values for every aggregated column.
+If statistic is applied in such a way that it returns separate value per every column in data group, 
+every cell in matrix will contain [`DataRow`](DataRow.md) with values for every aggregated column.
 
 <!---FUN statisticPivotMany-->
 

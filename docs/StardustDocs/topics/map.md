@@ -2,7 +2,8 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Creates `List`, [DataFrame](DataFrame.md) or [DataColumn](DataColumn.md) with values computed from rows of original `DataFrame`.
+Creates [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/), [DataFrame](DataFrame.md) or [DataColumn](DataColumn.md) 
+with values computed from rows of original [DataFrame](DataFrame.md).
 
 **Map into `List`:**
 
