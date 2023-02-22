@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
+import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -70,7 +70,7 @@ public fun <T> DataFrame<T>.valueCounts(
     resultColumn: String = defaultCountColumnName
 ): DataFrame<T> = valueCounts(sort, ascending, dropNA, resultColumn) { columns.toColumns() }
 public fun <T> DataFrame<T>.valueCounts(
-    vararg columns: AnyColumnReference,
+    vararg columns: Column,
     sort: Boolean = true,
     ascending: Boolean = false,
     dropNA: Boolean = true,
