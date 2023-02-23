@@ -1,27 +1,19 @@
 package org.jetbrains.kotlinx.dataframe.api
 
 import org.jetbrains.kotlinx.dataframe.AnyBaseCol
-import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
-import org.jetbrains.kotlinx.dataframe.impl.api.mapNotNullValues
 import org.jetbrains.kotlinx.dataframe.impl.asList
 import org.jetbrains.kotlinx.dataframe.impl.columnName
 import org.jetbrains.kotlinx.dataframe.impl.columns.guessColumnType
-import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.index
-import org.jetbrains.kotlinx.dataframe.io.read
-import org.jetbrains.kotlinx.dataframe.typeClass
-import java.io.File
-import java.net.URL
 import kotlin.reflect.KClass
 import kotlin.reflect.KProperty
 
@@ -38,22 +30,17 @@ public inline fun <reified T> Iterable<T>.toDataFrame(vararg props: KProperty<*>
         properties(roots = props, maxDepth = maxDepth)
     }
 
-public inline fun <reified T> DataColumn<T>.read(): AnyCol = when (kind()) {
-    ColumnKind.Group, ColumnKind.Frame -> this
-    else -> when {
-        isPrimitive() -> this
-        typeClass == File::class -> cast<File?>().mapNotNullValues { DataFrame.read(it) }
-        typeClass == URL::class -> cast<URL?>().mapNotNullValues { DataFrame.read(it) }
-        else -> values().createDataFrameImpl(typeClass) {
-            (this as CreateDataFrameDsl<T>).properties()
-        }.asColumnGroup(name()).asDataColumn()
-    }
-}
+@Deprecated("Replaced with `unfold` operation.", ReplaceWith("this.unfold(columns)"), DeprecationLevel.ERROR)
+public fun <T> DataFrame<T>.read(columns: ColumnsSelector<T, *>): DataFrame<T> = unfold(columns)
 
-public fun <T> DataFrame<T>.read(columns: ColumnsSelector<T, *>): DataFrame<T> = replace(columns).with { it.read() }
-public fun <T> DataFrame<T>.read(vararg columns: String): DataFrame<T> = read { columns.toColumns() }
-public fun <T> DataFrame<T>.read(vararg columns: KProperty<*>): DataFrame<T> = read { columns.toColumns() }
-public fun <T> DataFrame<T>.read(vararg columns: Column): DataFrame<T> = read { columns.toColumns() }
+@Deprecated("Replaced with `unfold` operation.", ReplaceWith("this.unfold(*columns)"), DeprecationLevel.ERROR)
+public fun <T> DataFrame<T>.read(vararg columns: String): DataFrame<T> = unfold(*columns)
+
+@Deprecated("Replaced with `unfold` operation.", ReplaceWith("this.unfold(*columns)"), DeprecationLevel.ERROR)
+public fun <T> DataFrame<T>.read(vararg columns: KProperty<*>): DataFrame<T> = unfold(*columns)
+
+@Deprecated("Replaced with `unfold` operation.", ReplaceWith("this.unfold(*columns)"), DeprecationLevel.ERROR)
+public fun <T> DataFrame<T>.read(vararg columns: Column): DataFrame<T> = unfold(*columns)
 
 @JvmName("toDataFrameT")
 public fun <T> Iterable<DataRow<T>>.toDataFrame(): DataFrame<T> {

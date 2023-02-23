@@ -56,7 +56,7 @@ internal open class DelegatedStringParser<T>(override val type: KType, val handl
         return {
             val str = it as String
             if (str in nulls) null
-            else handle(str) ?: throw TypeConversionException(it, typeOf<String>(), type)
+            else handle(str) ?: throw TypeConversionException(it, typeOf<String>(), type, null)
         }
     }
 
@@ -71,7 +71,7 @@ internal class StringParserWithFormat<T>(override val type: KType, val getParser
         return {
             val str = it as String
             if (str in nulls) null
-            else handler(str) ?: throw TypeConversionException(it, typeOf<String>(), type)
+            else handler(str) ?: throw TypeConversionException(it, typeOf<String>(), type, null)
         }
     }
 

@@ -3,9 +3,14 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
+import org.jetbrains.kotlinx.dataframe.AnyRow
+import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.exceptions.TypeConverterNotFoundException
+import org.jetbrains.kotlinx.dataframe.kind
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -239,9 +244,101 @@ class ConvertToTests {
             .alsoDebug("df5 after second convert:")
     }
 
-    private fun <T : DataFrame<*>> T.alsoDebug(println: String? = null): T = apply {
-        println?.let { println(it) }
-        print(borders = true, title = true, columnTypes = true, valueLimit = -1)
-        schema().print()
+    interface KeyValue<T> {
+        val key: String
+        val value: T
+    }
+
+    @DataSchema
+    interface MySchema : KeyValue<Int>
+
+    @Test
+    fun `Convert generic interface to itself`() {
+        val df = dataFrameOf("key", "value")(
+            "a", 1,
+            "b", 2,
+        ).alsoDebug()
+        val converted = df.convertTo<MySchema>().alsoDebug()
+        converted shouldBe df
+    }
+
+    @Test
+    fun `convert with missing nullable column`() {
+        @DataSchema
+        data class Result(val a: Int, val b: Int?)
+
+        val df = dataFrameOf("a")(1, 2)
+        val converted = df.convertTo<Result>()
+        converted shouldBe listOf(Result(1, null), Result(2, null)).toDataFrame()
+    }
+
+    @Test
+    fun `convert with custom fill of missing columns`() {
+        val locations = listOf(
+            Location("Home", Gps(1.0, 1.0)),
+            Location("Away", null),
+        ).toDataFrame().cast<Location>()
+
+        val converted = locations.remove { gps.longitude }.cast<Unit>()
+            .convertTo<Location> {
+                fill { gps.longitude }.with { gps.latitude }
+            }
+
+        converted shouldBe locations.update { gps.longitude }.with { gps.latitude }
+    }
+
+    @Test
+    fun `convert column of empty lists into FrameColumn`() {
+        @DataSchema
+        data class Entry(val v: Int)
+
+        @DataSchema
+        data class Result(val d: DataFrame<Entry>)
+
+        dataFrameOf("d")(emptyList<Any>(), emptyList<Any>())
+            .convertTo<Result>() shouldBe
+            dataFrameOf("d")(DataFrame.emptyOf<Entry>(), DataFrame.emptyOf<Entry>())
+    }
+
+    @Test
+    fun `convert ColumnGroup into FrameColumn`() {
+        @DataSchema
+        data class Entry(val v: Int)
+
+        @DataSchema
+        data class Result(val d: DataFrame<Entry>)
+
+        val columnGroup = DataColumn.createColumnGroup("d", dataFrameOf("v")(1, 2))
+        columnGroup.kind() shouldBe ColumnKind.Group
+        val res = dataFrameOf(columnGroup).convertTo<Result>()
+        val frameColumn = res.getFrameColumn("d")
+        frameColumn.kind shouldBe ColumnKind.Frame
+        frameColumn.values() shouldBe listOf(dataFrameOf("v")(1), dataFrameOf("v")(2))
+    }
+
+    @Test
+    fun `convert ValueColumn of lists, nulls and frames into FrameColumn`(){
+        @DataSchema
+        data class Entry(val v: Int)
+
+        @DataSchema
+        data class Result(val d: DataFrame<Entry>)
+
+        val emptyList: List<Any?> = emptyList()
+        val listOfRows: List<AnyRow> = dataFrameOf("v")(1, 2).rows().toList()
+        val frame: DataFrame<Entry> = listOf(Entry(3), Entry(4)).toDataFrame()
+
+        val src = DataColumn.createValueColumn("d", listOf(emptyList, listOfRows, frame, null)).toDataFrame()
+        src["d"].kind shouldBe ColumnKind.Value
+
+        val df = src.convertTo<Result>()
+        val frameColumn = df.getFrameColumn("d")
+        frameColumn.kind shouldBe ColumnKind.Frame
+        frameColumn.toList() shouldBe listOf(
+            DataFrame.emptyOf<Entry>(),
+            dataFrameOf("v")(1, 2),
+            dataFrameOf("v")(3, 4),
+            DataFrame.emptyOf<Entry>(),
+        )
     }
 }

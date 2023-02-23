@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Moves one or several columns within `DataFrame`.
+Moves one or several columns within [`DataFrame`](DataFrame.md).
 
 ```kotlin
 move { columns }

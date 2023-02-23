@@ -1,3 +1,5 @@
+package org.jetbrains.kotlinx.dataframe.io
+
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.DataColumn
@@ -14,18 +16,19 @@ import kotlin.reflect.typeOf
 
 /**
  * Assert that we have got the same data that was originally saved on example creation.
+ * Example generation project is currently located at https://github.com/Kopilov/arrow_example
  */
 internal fun assertEstimations(exampleFrame: AnyFrame, expectedNullable: Boolean, hasNulls: Boolean) {
     /**
      * In [exampleFrame] we get two concatenated batches. To assert the estimations, we should transform frame row number to batch row number
      */
     fun iBatch(iFrame: Int): Int {
-        val firstBatchSize = 100;
+        val firstBatchSize = 100
         return if (iFrame < firstBatchSize) iFrame else iFrame - firstBatchSize
     }
 
     fun expectedNull(rowNumber: Int): Boolean {
-        return (rowNumber + 1) % 5 == 0;
+        return (rowNumber + 1) % 5 == 0
     }
 
     fun assertValueOrNull(rowNumber: Int, actual: Any?, expected: Any) {
@@ -155,5 +158,4 @@ internal fun assertEstimations(exampleFrame: AnyFrame, expectedNullable: Boolean
     timeNanoCol.forEachIndexed { i, element ->
         assertValueOrNull(iBatch(i), element, LocalTime.ofNanoOfDay(iBatch(i).toLong()))
     }
-
 }

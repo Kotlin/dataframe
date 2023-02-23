@@ -30,6 +30,7 @@ import org.jetbrains.kotlinx.dataframe.impl.api.withRowCellImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import org.jetbrains.kotlinx.dataframe.impl.headPlusArray
 import org.jetbrains.kotlinx.dataframe.io.toDataFrame
+import org.jetbrains.kotlinx.dataframe.path
 import org.jetbrains.kotlinx.dataframe.plugin.Convert0
 import org.jetbrains.kotlinx.dataframe.plugin.Convert2
 import org.jetbrains.kotlinx.dataframe.plugin.Convert6
@@ -137,6 +138,14 @@ public fun <T : Any> DataColumn<T?>.convertToLocalDate(): DataColumn<LocalDate?>
 public fun <T : Any> DataColumn<T>.convertToLocalTime(): DataColumn<LocalTime> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToLocalTime(): DataColumn<LocalTime?> = convertTo()
 
+@JvmName("convertToByteFromT")
+public fun <T : Any> DataColumn<T>.convertToByte(): DataColumn<Byte> = convertTo()
+public fun <T : Any> DataColumn<T?>.convertToByte(): DataColumn<Byte?> = convertTo()
+
+@JvmName("convertToShortFromT")
+public fun <T : Any> DataColumn<T>.convertToShort(): DataColumn<Short> = convertTo()
+public fun <T : Any> DataColumn<T?>.convertToShort(): DataColumn<Short?> = convertTo()
+
 @JvmName("convertToIntFromT")
 public fun <T : Any> DataColumn<T>.convertToInt(): DataColumn<Int> = convertTo()
 public fun <T : Any> DataColumn<T?>.convertToInt(): DataColumn<Int?> = convertTo()
@@ -175,10 +184,10 @@ public fun DataColumn<String?>.convertToDouble(locale: Locale? = null): DataColu
         try {
             return mapIndexed { row, value ->
                 currentRow = row
-                value?.let { parser(value.trim()) ?: throw TypeConversionException(value, typeOf<String>(), typeOf<Double>()) }
+                value?.let { parser(value.trim()) ?: throw TypeConversionException(value, typeOf<String>(), typeOf<Double>(), path) }
             }
         } catch (e: TypeConversionException) {
-            throw CellConversionException(e.value, e.from, e.to, this.name(), currentRow, e)
+            throw CellConversionException(e.value, e.from, e.to, path, currentRow, e)
         }
     }
 

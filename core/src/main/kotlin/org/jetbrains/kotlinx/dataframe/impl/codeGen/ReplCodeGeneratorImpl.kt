@@ -16,9 +16,9 @@ import org.jetbrains.kotlinx.dataframe.codeGen.MarkersExtractor
 import org.jetbrains.kotlinx.dataframe.schema.DataFrameSchema
 import org.jetbrains.kotlinx.jupyter.api.Code
 import kotlin.reflect.KClass
-import kotlin.reflect.KMutableProperty
 import kotlin.reflect.KProperty
 import kotlin.reflect.KType
+import kotlin.reflect.KVisibility
 import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.superclasses
 import kotlin.reflect.jvm.jvmErasure
@@ -44,30 +44,27 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             else -> null
         }
 
-    override fun process(row: AnyRow, property: KProperty<*>?) = process(row.df(), property)
+    override fun process(row: AnyRow, property: KProperty<*>?): CodeWithConverter = process(row.df(), property)
 
     override fun process(df: AnyFrame, property: KProperty<*>?): CodeWithConverter {
         var targetSchema = df.schema()
-        var isMutable = false
 
         if (property != null) {
             val wasProcessedBefore = property in registeredProperties
             registeredProperties.add(property)
-            isMutable = property is KMutableProperty
 
             // maybe property is already properly typed, let's do some checks
             val currentMarker = getMarkerClass(property.returnType)
                 ?.takeIf { it.findAnnotation<DataSchema>() != null }
                 ?.let { registeredMarkers[it] ?: MarkersExtractor.get(it) }
             if (currentMarker != null) {
-                // if property is mutable, we need to make sure that its marker type is open in order to let derived data frames be assignable to it
-                if (!isMutable || currentMarker.isOpen) {
+                // we need to make sure that the property's marker type is open in order to let derived data frames be assignable to it
+                if (currentMarker.isOpen) {
                     val columnSchema = currentMarker.schema
                     // for mutable properties we do strong typing only at the first processing, after that we allow its type to be more general than actual data frame type
                     if (wasProcessedBefore || columnSchema == targetSchema) {
                         // property scheme is valid for current data frame, but we should also check that all compatible open markers are implemented by it
-                        val requiredBaseMarkers =
-                            getRequiredMarkers(columnSchema, registeredMarkers.values)
+                        val requiredBaseMarkers = registeredMarkers.values.filterRequiredForSchema(columnSchema)
                         if (requiredBaseMarkers.any() && requiredBaseMarkers.all { currentMarker.implements(it) }) {
                             return CodeWithConverter.Empty
                         }
@@ -78,7 +75,7 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
             }
         }
 
-        return generate(targetSchema, markerInterfacePrefix, isMutable)
+        return generate(schema = targetSchema, name = markerInterfacePrefix, isOpen = true)
     }
 
     fun generate(
@@ -87,13 +84,15 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
         isOpen: Boolean,
     ): CodeWithConverter {
         val result = generator.generate(
-            schema,
-            name,
+            schema = schema,
+            name = name,
             fields = false,
             extensionProperties = true,
-            isOpen,
-            MarkerVisibility.IMPLICIT_PUBLIC,
-            registeredMarkers.values
+            isOpen = isOpen,
+            visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+            knownMarkers = registeredMarkers
+                .filterKeys { it.visibility != KVisibility.PRIVATE }
+                .values,
         )
 
         result.newMarkers.forEach {
@@ -121,12 +120,12 @@ internal class ReplCodeGeneratorImpl : ReplCodeGenerator {
                 if (baseClassNames == tempBaseClassNames) {
                     val newBaseMarkers = baseClasses.map { resolve(it) }
                     val newMarker = Marker(
-                        clazz.qualifiedName!!,
-                        temp.isOpen,
-                        temp.fields,
-                        newBaseMarkers,
-                        MarkerVisibility.IMPLICIT_PUBLIC,
-                        clazz
+                        name = clazz.qualifiedName!!,
+                        isOpen = temp.isOpen,
+                        fields = temp.fields,
+                        superMarkers = newBaseMarkers,
+                        visibility = MarkerVisibility.IMPLICIT_PUBLIC,
+                        klass = clazz,
                     )
                     registeredMarkers[markerClass] = newMarker
                     generatedMarkers.remove(temp.name)

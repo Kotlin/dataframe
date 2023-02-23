@@ -5,9 +5,11 @@ import java.io.File
 import java.net.URL
 
 /** Needs to have any type schemas to convert. */
-public fun isOpenApiStr(text: String): Boolean {
+public fun isOpenApiStr(text: String): Boolean = try {
     val parsed = OpenAPIParser().readContents(text, null, null)
-    return parsed.openAPI?.components?.schemas != null
+    parsed.openAPI?.components?.schemas != null
+} catch (_: Exception) {
+    false
 }
 
 public fun isOpenApi(path: String): Boolean = isOpenApi(asURL(path))

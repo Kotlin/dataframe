@@ -14,7 +14,6 @@ import com.google.devtools.ksp.symbol.KSClassifierReference
 import com.google.devtools.ksp.symbol.KSDeclaration
 import com.google.devtools.ksp.symbol.KSFile
 import com.google.devtools.ksp.symbol.KSName
-import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 import com.google.devtools.ksp.symbol.KSTypeReference
 import com.google.devtools.ksp.symbol.KSValueArgument
 import com.google.devtools.ksp.symbol.Modifier
@@ -34,19 +33,19 @@ class ExtensionsGenerator(
         val EXPECTED_VISIBILITIES = setOf(Visibility.PUBLIC, Visibility.INTERNAL)
     }
 
-    fun resolveValidDataSchemaDeclarations(): Sequence<DataSchemaDeclaration> {
+    fun resolveDataSchemaDeclarations(): Pair<Sequence<DataSchemaDeclaration>, List<KSClassDeclaration>> {
         val dataSchemaAnnotation = resolver.getKSNameFromString(DataFrameNames.DATA_SCHEMA)
         val symbols = resolver.getSymbolsWithAnnotation(dataSchemaAnnotation.asString())
 
-        return symbols
+        val (validDeclarations, invalidDeclarations) = symbols
             .filterIsInstance<KSClassDeclaration>()
-            .mapNotNull {
-                if (it.validate()) {
-                    it.toDataSchemaDeclarationOrNull()
-                } else {
-                    null
-                }
-            }
+            .partition { it.validate() }
+
+        val preprocessedDeclarations = validDeclarations
+            .asSequence()
+            .mapNotNull { it.toDataSchemaDeclarationOrNull() }
+
+        return Pair(preprocessedDeclarations, invalidDeclarations)
     }
 
     class DataSchemaDeclaration(
@@ -64,11 +63,10 @@ class ExtensionsGenerator(
         return when {
             isClassOrInterface() && effectivelyPublicOrInternal() -> {
                 DataSchemaDeclaration(
-                    this,
-                    declarations
-                        .filterIsInstance<KSPropertyDeclaration>()
+                    origin = this,
+                    properties = getAllProperties()
                         .map { KSAnnotatedWithType(it, it.simpleName, it.type) }
-                        .toList()
+                        .toList(),
                 )
             }
             else -> null
@@ -124,7 +122,7 @@ class ExtensionsGenerator(
                     declaration = dataSchema,
                     interfaceName = dataSchema.getQualifiedNameOrThrow(),
                     visibility = getMarkerVisibility(dataSchema),
-                    properties.map { property ->
+                    properties = properties.map { property ->
                         Property(getColumnName(property), property.simpleName.asString(), property.type)
                     }
                 )

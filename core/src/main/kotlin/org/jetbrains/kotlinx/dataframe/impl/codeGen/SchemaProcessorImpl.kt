@@ -22,7 +22,7 @@ internal class SchemaProcessorImpl(
     override val generatedMarkers = mutableListOf<Marker>()
 
     private fun DataFrameSchema.getAllSuperMarkers() = registeredMarkers
-        .filter { it.schema.compare(this).isSuperOrEqual() }
+        .filter { it.isOpen && it.schema.compare(this).isSuperOrEqual() }
 
     private fun List<Marker>.onlyLeafs(): List<Marker> {
         val skip = flatMap { it.allSuperMarkers.keys }.toSet()
@@ -133,7 +133,7 @@ internal class SchemaProcessorImpl(
         return Marker(name, isOpen, fields, baseMarkers.onlyLeafs(), visibility, emptyList(), emptyList())
     }
 
-    private fun DataFrameSchema.getRequiredMarkers() = getRequiredMarkers(this, registeredMarkers)
+    private fun DataFrameSchema.getRequiredMarkers() = registeredMarkers.filterRequiredForSchema(this)
 
     override fun process(
         schema: DataFrameSchema,

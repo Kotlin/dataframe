@@ -1,7 +1,7 @@
 [//]: # (title: parse)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` in which given `String` columns are parsed into other types.
+Returns [`DataFrame`](DataFrame.md) in which given `String` columns are parsed into other types.
 
 Special case of [convert](convert.md) operation.
 

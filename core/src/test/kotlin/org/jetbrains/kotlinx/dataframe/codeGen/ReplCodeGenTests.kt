@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.codeGen
 
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldBeEmpty
+import io.kotest.matchers.string.shouldNotBeEmpty
 import org.jetbrains.dataframe.impl.codeGen.ReplCodeGenerator
 import org.jetbrains.dataframe.impl.codeGen.process
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
@@ -26,7 +26,7 @@ class ReplCodeGenTests : BaseTest() {
     val stringName = String::class.simpleName!!
 
     class Test1 {
-        @DataSchema(isOpen = false)
+        @DataSchema
         interface _DataFrameType
 
         @DataSchema(isOpen = false)
@@ -37,10 +37,10 @@ class ReplCodeGenTests : BaseTest() {
     }
 
     class Test2 {
-        @DataSchema(isOpen = false)
+        @DataSchema
         interface _DataFrameType
 
-        @DataSchema(isOpen = false)
+        @DataSchema
         interface _DataFrameType1
 
         @DataSchema(isOpen = false)
@@ -74,7 +74,7 @@ class ReplCodeGenTests : BaseTest() {
         val markerFull = Test1._DataFrameType::class.qualifiedName!!
 
         val expected = """
-            @DataSchema(isOpen = false)
+            @DataSchema
             interface $marker
             
             val $dfName<$marker>.age: $dataCol<$intName> @JvmName("${marker}_age") get() = this["age"] as $dataCol<$intName>
@@ -103,7 +103,7 @@ class ReplCodeGenTests : BaseTest() {
         val code3 = repl.process(df3).declarations
         val marker3 = marker + "1"
         val expected3 = """
-            @DataSchema(isOpen = false)
+            @DataSchema
             interface $marker3 : $markerFull
             
             val $dfName<$marker3>.city: $dataCol<$stringName> @JvmName("${marker3}_city") get() = this["city"] as $dataCol<$stringName>
@@ -121,7 +121,7 @@ class ReplCodeGenTests : BaseTest() {
         val code5 = repl.process(df5).declarations
         val marker5 = marker + "2"
         val expected5 = """
-            @DataSchema(isOpen = false)
+            @DataSchema
             interface $marker5 : $markerFull
             
             val $dfName<$marker5>.weight: $dataCol<$intName> @JvmName("${marker5}_weight") get() = this["weight"] as $dataCol<$intName>
@@ -144,7 +144,7 @@ class ReplCodeGenTests : BaseTest() {
         repl.process<Test2._DataFrameType1>() shouldBe ""
 
         val expected = """
-            @DataSchema(isOpen = false)
+            @DataSchema
             interface ${Test2._DataFrameType2::class.simpleName!!} : ${Test2._DataFrameType::class.qualifiedName}, ${Test2._DataFrameType1::class.qualifiedName}
             
         """.trimIndent()
@@ -163,7 +163,7 @@ class ReplCodeGenTests : BaseTest() {
 
         val marker = Test2._DataFrameType2::class.simpleName!!
         val expected = """
-            @DataSchema(isOpen = false)
+            @DataSchema
             interface $marker : ${Test2._DataFrameType::class.qualifiedName}
             
             val $dfName<$marker>.city: $dataCol<$stringName?> @JvmName("${marker}_city") get() = this["city"] as $dataCol<$stringName?>
@@ -181,13 +181,13 @@ class ReplCodeGenTests : BaseTest() {
     }
 
     @Test
-    fun `process overriden property`() {
+    fun `process overridden property`() {
         val repl = ReplCodeGenerator.create()
         repl.process<Test3.A>()
         repl.process<Test3.B>()
         repl.process<Test3.C>()
         val c = repl.process(Test3.df, Test3::df)
-        c.declarations.shouldBeEmpty()
+        c.declarations.shouldNotBeEmpty()
     }
 
     @Test

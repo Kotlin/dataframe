@@ -4,18 +4,18 @@
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Collections-->
 
 _Kotlin DataFrame_ and _Kotlin Collection_ represent two different approaches to data storage:
-* `DataFrame` stores data by fields/columns
+* [`DataFrame`](DataFrame.md) stores data by fields/columns
 * `Collection` stores data by records/rows
 
-Although `DataFrame` doesn't implement `Collection` or `Iterable` interface, it has many similar operations, such as [`filter`](filter.md), [`take`](sliceRows.md#take), [`first`](first.md), [`map`](map.md), [`groupBy`](groupBy.md) etc.
+Although [`DataFrame`](DataFrame.md) doesn't implement `Collection` or `Iterable` interface, it has many similar operations, such as [`filter`](filter.md), [`take`](sliceRows.md#take), [`first`](first.md), [`map`](map.md), [`groupBy`](groupBy.md) etc.
 
-`DataFrame` has two-way compatibility with `Map` and `List`:
+[`DataFrame`](DataFrame.md) has two-way compatibility with `Map` and `List`:
 * `List<T>` -> `DataFrame<T>`: [toDataFrame](createDataFrame.md#todataframe)
 * `DataFrame<T>` -> `List<T>`: [toList](toList.md)
 * `Map<String, List<*>>` -> `DataFrame<*>`: [toDataFrame](createDataFrame.md#todataframe)
 * `DataFrame<*>` -> `Map<String, List<*>>`: [toMap](toMap.md)
 
-Columns, rows and values of `DataFrame` can be accessed as [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/), [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) and [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/) accordingly:
+Columns, rows and values of [`DataFrame`](DataFrame.md) can be accessed as [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/), [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) and [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/) accordingly:
 
 <!---FUN getRowsColumns-->
 
@@ -29,7 +29,7 @@ df.values() // Sequence<Any?>
 
 ## Interop with data classes
 
-`DataFrame` can be used as an intermediate object for transformation from one data structure to another.
+[`DataFrame`](DataFrame.md) can be used as an intermediate object for transformation from one data structure to another.
 
 Assume you have a list of instances of some [data class](https://kotlinlang.org/docs/data-classes.html) that you need to transform into some other format.
 
@@ -43,7 +43,7 @@ val list = listOf(Input(1, 2), Input(3, 4))
 
 <!---END-->
 
-You can convert this list into `DataFrame` using [`toDataFrame()`](createDataFrame.md#todataframe) extension:
+You can convert this list into [`DataFrame`](DataFrame.md) using [`toDataFrame()`](createDataFrame.md#todataframe) extension:
 
 <!---FUN listInterop2-->
 
@@ -72,7 +72,7 @@ To enable extension properties generation you should use [dataframe plugin](grad
 
 </tip>
 
-After data is transformed, `DataFrame` can be exported into `List` of another data class using [toList](toList.md) or [toListOf](toList.md#tolistof) extensions:
+After data is transformed, [`DataFrame`](DataFrame.md) can be exported into `List` of another data class using [toList](toList.md) or [toListOf](toList.md#tolistof) extensions:
 
 <!---FUN listInterop4-->
 
@@ -83,3 +83,7 @@ val result = df2.toListOf<Output>()
 ```
 
 <!---END-->
+
+### Converting columns with objects instances to ColumnGroup
+
+[unfold](unfold.md) can be used as [`toDataFrame()`](createDataFrame.md#todataframe) analogue for specific columns inside existing dataframes

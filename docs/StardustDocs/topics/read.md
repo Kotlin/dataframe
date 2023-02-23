@@ -1,7 +1,7 @@
 [//]: # (title: Read)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Read-->
 
-`DataFrame` supports CSV, TSV, JSON, XLS and XLSX, Apache Arrow input formats.
+Kotlin DataFrame library supports CSV, TSV, JSON, XLS and XLSX, Apache Arrow input formats.
 
 `read` method automatically detects input format based on file extension and content
 
@@ -51,7 +51,7 @@ example had the following content:
 <tr><td>89</td><td>abc</td><td>7.1</td><td>false</td></tr>
 </table>
 
-Dataframe schema we get is:
+[`DataFrame`](DataFrame.md) schema we get is:
 
 ```text
 A: Int
@@ -60,7 +60,7 @@ C: Double
 D: Boolean?
 ```
 
-DataFrame will try to parse columns as JSON, so when reading following table with JSON object in column D:
+[`DataFrame`](DataFrame.md) will try to parse columns as JSON, so when reading following table with JSON object in column D:
 
 <table>
 <tr><th>A</th><th>D</th></tr>
@@ -68,7 +68,7 @@ DataFrame will try to parse columns as JSON, so when reading following table wit
 <tr><td>41</td><td>{"B":3,"C":2}</td></tr>
 </table>
 
-We get this data schema where D is ColumnGroup with 2 children columns:
+We get this data schema where D is [`ColumnGroup`](DataColumn.md#columngroup) with 2 children columns:
 
 ```text
 A: Int
@@ -141,7 +141,7 @@ DataFrame.readJson("https://covid.ourworldindata.org/data/owid-covid-data.json")
 ```
 
 Note that after reading a JSON with a complex structure, you can get hierarchical
-dataframe: dataframe with `ColumnGroup`s and `FrameColumn`s.
+[`DataFrame`](DataFrame.md): [`DataFrame`](DataFrame.md) with `ColumnGroup`s and [`FrameColumn`](DataColumn.md#framecolumn)s.
 
 Also note that type inferring process for JSON is much simpler than for CSV.
 JSON string literals are always supposed to have String type, number literals
@@ -188,7 +188,7 @@ val df = DataFrame.readJson(file)
 
 <!---END-->
 
-Corresponding dataframe schema will be
+Corresponding [`DataFrame`](DataFrame.md) schema will be
 
 ```text
 A: String
@@ -321,7 +321,7 @@ with dogs looking like
 ⌎-------------------------------------------------⌏
 ```
 
-(The results are wrapped in a `FrameColumn` instead of a `ColumnGroup` since lengths between "cats" and "dogs" can vary,
+(The results are wrapped in a [`FrameColumn`](DataColumn.md#framecolumn) instead of a `ColumnGroup` since lengths between "cats" and "dogs" can vary,
 among other reasons.)
 
 To specify the paths, you can use the `JsonPath` class:
@@ -350,7 +350,7 @@ Add dependency:
 implementation("org.jetbrains.kotlinx:dataframe-excel:$dataframe_version")
 ```
 
-Right now DataFrame supports reading Excel spreadsheet formats: xls, xlsx.
+Right now [`DataFrame`](DataFrame.md) supports reading Excel spreadsheet formats: xls, xlsx.
 
 You can read from file or URL.
 
@@ -399,10 +399,9 @@ implementation("org.jetbrains.kotlinx:dataframe-arrow:$dataframe_version")
 Make sure to follow [Apache Arrow Java compatibility](https://arrow.apache.org/docs/java/install.html#java-compatibility) guide when using Java 9+ 
 </warning>
 
-Dataframe supports reading
-from [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
+[`DataFrame`](DataFrame.md) supports reading [Arrow interprocess streaming format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-streaming-format)
 and [Arrow random access format](https://arrow.apache.org/docs/java/ipc.html#writing-and-reading-random-access-files)
-
+from raw Channel (ReadableByteChannel for streaming and SeekableByteChannel for random access), InputStream, File or ByteArray.
 <!---FUN readArrowFeather-->
 
 ```kotlin
@@ -410,5 +409,3 @@ val df = DataFrame.readArrowFeather(file)
 ```
 
 <!---END-->
-
-

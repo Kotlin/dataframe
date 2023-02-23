@@ -25,6 +25,7 @@ dependencies {
     }
     testImplementation(libs.kotlin.datetimeJvm)
     testImplementation(libs.poi)
+    testImplementation(libs.arrow.vector)
 }
 
 kotlin.sourceSets {
@@ -99,4 +100,8 @@ kotlinter {
         "max-line-length",
         "filename"
     )
+}
+
+tasks.test {
+    jvmArgs = listOf("--add-opens", "java.base/java.nio=ALL-UNNAMED")
 }

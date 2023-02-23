@@ -17,7 +17,7 @@ columnNamesGenerator = DataColumn.(columnIndex: Int) -> String
 The following types of columns can be split without any _splitter_ configuration:
 * `String`: split by `,` and trim
 * `List`: split into elements
-* `DataFrame`: split into rows
+* [`DataFrame`](DataFrame.md): split into rows
 
 ## Split inplace
 
@@ -58,7 +58,7 @@ df.split { "name"["firstName"]<String>() }.by { it.chars().toList() }.inplace()
 Stores split values in new columns.
 * `into(col1, col2, ... )` — store split values in new top-level columns
 * `inward(col1, col2, ...)` — store split values in new columns nested inside original column
-* `intoColumns` — split `FrameColumn` into `ColumnGroup` storing in every cell a `List` of original values per every column
+* `intoColumns` — split [`FrameColumn`](DataColumn.md#framecolumn) into [`ColumnGroup`](DataColumn.md#columngroup) storing in every cell a `List` of original values per every column
 
 **Reverse operation:** [`merge`](merge.md)
 
@@ -112,7 +112,7 @@ merged.split { name }
 
 <!---END-->
 
-`FrameColumn` can be split into columns:
+[`FrameColumn`](DataColumn.md#framecolumn) can be split into columns:
 
 <!---FUN splitFrameColumn-->
 

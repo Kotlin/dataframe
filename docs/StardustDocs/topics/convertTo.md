@@ -1,26 +1,35 @@
 [//]: # (title: convertTo)
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-[Converts](convert.md) columns in `DataFrame` to match given schema.
+[Converts](convert.md) columns in [`DataFrame`](DataFrame.md) to match given schema `Schema`
 
 ```kotlin
-convertTo<T>()
+convertTo<Schema>(excessiveColumns = ExcessiveColumns.Keep)
 ```
 
-Any additional columns will be dropped.
+Customization DSL:
+* `convert` - how specific column types should be converted
+* `parser` - how to parse strings into custom types
+* `fill` - how to fill missing columns
 
-You can provide custom converters and parsers:
+<!---FUN customConvertersData-->
+
+```kotlin
+class MyType(val value: Int)
+
+@DataSchema
+class MySchema(val a: MyType, val b: MyType, val c: Int)
+```
+
+<!---END-->
 <!---FUN customConverters-->
 
 ```kotlin
-class IntClass(val value: Int)
-
-@DataSchema
-class IntSchema(val ints: IntClass)
-
-val df = dataFrameOf("ints")(1, 2, 3)
-df.convertTo<IntSchema> {
-    convert<Int>().with { IntClass(it) }
+val df = dataFrameOf("a", "b")(1, "2")
+df.convertTo<MySchema> {
+    convert<Int>().with { MyType(it) } // converts `a` from Int to MyType
+    parser { MyType(it.toInt()) } // converts `b` from String to MyType
+    fill { c }.with { a.value + b.value } // computes missing column `c`
 }
 ```
 

@@ -1,4 +1,4 @@
-[//]: # (title: Types)
+[//]: # (title: Data Abstractions)
 
 * [`DataColumn`](DataColumn.md) is a named, typed and ordered collection of elements
 * [`DataFrame`](DataFrame.md) consists of one or several [`DataColumns`](DataColumn.md) with unique names and equal size

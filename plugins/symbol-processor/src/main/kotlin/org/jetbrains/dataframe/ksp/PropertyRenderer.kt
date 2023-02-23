@@ -48,8 +48,8 @@ internal fun renderExtensions(
                 qualifiedTypeReference == "kotlin.collections.List" && type.singleTypeArgumentIsDataSchema() ||
                     qualifiedTypeReference == DataFrameNames.DATA_FRAME ->
                     FieldType.FrameFieldType(
-                        type.renderTypeArguments(),
-                        type.isMarkedNullable
+                        markerName = type.renderTypeArguments(),
+                        nullable = type.isMarkedNullable,
                     )
 
                 type.declaration.isAnnotationPresent(DataSchema::class) -> FieldType.GroupFieldType(type.render())
