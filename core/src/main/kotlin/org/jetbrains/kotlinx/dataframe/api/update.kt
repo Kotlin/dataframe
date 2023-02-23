@@ -59,16 +59,16 @@ public data class Update<T, C>(
     /** The columns to update need to be selected. See {@include [SelectingColumnsLink]} for all the selecting options. */
     public interface Columns
 
-    /** @param columns The [ColumnsSelector] used to select the columns of this [DataFrame] to update. */
+    /** @param columns The {@include [SelectingColumns.DslLink]} used to select the columns of this [DataFrame] to update. */
     internal interface DslParam
 
-    /** @param columns The [ColumnReference]s of this [DataFrame] to update. */
+    /** @param columns The {@include [SelectingColumns.ColumnAccessorsLink]} of this [DataFrame] to update. */
     internal interface ColumnAccessorsParam
 
-    /** @param columns The [KProperty] values corresponding to columns of this [DataFrame] to update. */
+    /** @param columns The {@include [SelectingColumns.KPropertiesLink]} corresponding to columns of this [DataFrame] to update. */
     internal interface KPropertiesParam
 
-    /** @param columns The column names belonging to this [DataFrame] to update. */
+    /** @param columns The {@include [SelectingColumns.ColumnNamesLink]} belonging to this [DataFrame] to update. */
     internal interface ColumnNamesParam
 }
 
@@ -193,6 +193,9 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
 public infix fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }
 
+/** [Update per row col][Update.perRowCol] to provide a new value for every selected cell giving its row and column. */
+private interface SeeAlsoPerRowCol
+
 /** ## Update Expression
  * @see ExpressionsGivenRow.RowValueExpression.WithExample
  * @see ExpressionsGivenRow.AddDataRowNote
@@ -206,8 +209,8 @@ public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
  * ## Note
  * @include [ExpressionsGivenRow.AddDataRowNote]
  * ## See Also
- * - [Update per col][Update.perCol] to provide a new value for every selected row giving the column.
- * - [Update per row col][Update.perRowCol] to provide a new value for every selected row giving the row and the column.
+ * - {@include [SeeAlsoPerCol]}
+ * - {@include [SeeAlsoPerRowCol]}
  * @param expression The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
  */
 public infix fun <T, C> Update<T, C>.with(expression: UpdateExpression<T, C, C?>): DataFrame<T> =
@@ -215,13 +218,16 @@ public infix fun <T, C> Update<T, C>.with(expression: UpdateExpression<T, C, C?>
         expression(row, value)
     }
 
+/** [Update with][Update.with] to provide a new value for every selected cell giving its row. */
+private interface SeeAlsoWith
+
 /** ## As Frame
  *
  * Updates selected [column group][ColumnGroup] as a [DataFrame] with the given [expression].
  *
  * {@include [ExpressionsGivenDataFrame.DataFrameExpression.WithExample]}
  * {@arg [ExpressionsGivenDataFrame.OperationArg] `df.`[update][update]` { name \}.`[asFrame][asFrame]}
- * @param expression The [DataFrameExpression] to replace the selected column group with.
+ * @param expression The {@include [ExpressionsGivenDataFrame.DataFrameExpressionLink]} to replace the selected column group with.
  */
 public infix fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
     df.replace(columns).with { it.asColumnGroup().let { expression(it, it) }.asColumnGroup(it.name()) }
@@ -232,17 +238,74 @@ public infix fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameEx
 )
 public fun <T, C> Update<T, C>.asNullable(): Update<T, C?> = this as Update<T, C?>
 
-/** TODO */
+/** ## Per Col
+ *
+ * Per Col can be used for two different types of operations:
+ *  - {@include [ExpressionsGivenColumn.ColumnExpression]}
+ *  - {@include [UpdatePerColMap]}
+ *
+ * ## See Also
+ *  - {@include [SeeAlsoWith]}
+ *  - {@include [SeeAlsoPerRowCol]}
+ * ## This Per Col Overload
+ */
+private interface CommonUpdatePerColDoc
+
+/** Provide a new value for every selected cell per column using a [Map][Map]`<`[colName: String][String]`, value: C>`
+ *  or [DataRow][DataRow] as Map. */
+private interface UpdatePerColMap
+
+/**
+ * @include [CommonUpdatePerColDoc]
+ * @include [UpdatePerColMap]
+ *
+ * For example:
+ *
+ * `val defaults = {@includeArg [CommonUpdatePerColMapDoc]}`
+ *
+ * `df.`[update][update]` { name and age }.`[where][Update.where]` { ... }.`[perCol][perCol]`(defaults)`
+ *
+ * @throws IllegalArgumentException if a value for a selected cell's column is not defined in [values\].
+ */
+private interface CommonUpdatePerColMapDoc
+
+/**
+ * @include [CommonUpdatePerColMapDoc]
+ * {@arg [CommonUpdatePerColMapDoc] `[mapOf][mapOf]`("name" to "Empty", "age" to 0)}
+ *
+ * @param values The [Map]<[String], Value> to provide a new value for every selected cell.
+ *   For each selected column, there must be a value in the map with the same name.
+ */
 public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> = updateWithValuePerColumnImpl {
     values[it.name()] ?: throw IllegalArgumentException("Update value for column ${it.name()} is not defined")
 }
 
-/** TODO */
+/**
+ * @include [CommonUpdatePerColMapDoc]
+ * {@arg [CommonUpdatePerColMapDoc] df.`[getRows][DataFrame.getRows]`(`[listOf][listOf]`(0))`
+ *
+ *   `.`[update][update]` { name \}.`[with][Update.with]` { "Empty" \}`
+ *
+ *   `.`[update][update]` { age \}.`[with][Update.with]` { 0 \}`
+ *
+ *   `.first()}
+ *
+ * @param values The [DataRow] to provide a new value for every selected cell.
+ */
 public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(values.toMap() as Map<String, C>)
 
-/** TODO */
+/**
+ * @include [CommonUpdatePerColDoc]
+ * @include [ExpressionsGivenColumn.ColumnExpression.WithExample]
+ * {@arg [ExpressionsGivenColumn.OperationArg] [update][update]` { age \}.`[perCol][perCol]}
+ *
+ * @param valueSelector The {@include [ExpressionsGivenColumn.ColumnExpressionLink]} to provide a new value for every selected cell giving its column.
+ */
 public fun <T, C> Update<T, C>.perCol(valueSelector: ColumnExpression<C, C>): DataFrame<T> =
     updateWithValuePerColumnImpl(valueSelector)
+
+/** [Update per col][Update.perCol] to provide a new value for every selected cell giving its column. */
+private interface SeeAlsoPerCol
 
 /** Chains up two row value filters together. */
 internal infix fun <T, C> RowValueFilter<T, C>?.and(other: RowValueFilter<T, C>): RowValueFilter<T, C> {
