@@ -189,7 +189,15 @@ public fun <T, C> Update<T, C>.at(vararg rowIndices: Int): Update<T, C> = at(row
  */
 public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { index in rowRange }
 
-/** TODO */
+/** ## Per Row Col
+ * @include [ExpressionsGivenColumn.RowColumnExpression.WithExample]
+ * {@arg [ExpressionsGivenColumn.OperationArg] [update][update]` { age \}.`[perRowCol][perRowCol]}
+ *
+ * ## See Also
+ *  - {@include [SeeAlsoWith]}
+ *  - {@include [SeeAlsoPerCol]}
+ * @param expression The {@include [ExpressionsGivenColumn.RowColumnExpressionLink]} to provide a new value for every selected cell giving its row and column.
+ */
 public infix fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }
 

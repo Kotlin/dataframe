@@ -86,8 +86,20 @@ internal interface ExpressionsGivenRow {
     /** [Row Value Expression][RowValueExpression.WithExample] */
     interface RowValueExpressionLink
 
-    /** @include [ExpressionsGivenColumn.RowColumnExpression] */
-    interface RowColumnExpression
+//    @Deprecated(
+//        "This is located in another file",
+//        ReplaceWith("ExpressionsGivenColumn.RowColumnExpression"),
+//        DeprecationLevel.ERROR,
+//    )
+//    interface RowColumnExpression {
+//
+//        @Deprecated(
+//            "This is located in another file",
+//            ReplaceWith("ExpressionsGivenColumn.RowColumnExpression.WithExample"),
+//            DeprecationLevel.ERROR,
+//        )
+//        interface WithExample
+//    }
 }
 
 /** [Row Expression][ExpressionsGivenRow] */
