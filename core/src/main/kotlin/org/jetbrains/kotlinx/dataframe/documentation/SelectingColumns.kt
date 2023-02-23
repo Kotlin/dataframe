@@ -2,8 +2,7 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
-import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.columns.*
 import kotlin.reflect.KProperty
 
 /** {@comment
@@ -59,7 +58,10 @@ internal interface SelectingColumns {
         interface WithExample
     }
 
-    /** Select columns using their column names
+    /** [Columns selector DSL][Dsl.WithExample] */
+    interface DslLink
+
+    /** Select columns using their [column names][String]
      * ({@include [AccessApi.StringApiLink]}).
      */
     interface ColumnNames {
@@ -74,7 +76,10 @@ internal interface SelectingColumns {
         interface WithExample
     }
 
-    /** Select columns using column accessors
+    /** [Column names][ColumnNames.WithExample] */
+    interface ColumnNamesLink
+
+    /** Select columns using [column accessors][ColumnReference]
      * ({@include [AccessApi.ColumnAccessorsApiLink]}).
      */
     interface ColumnAccessors {
@@ -93,6 +98,9 @@ internal interface SelectingColumns {
         interface WithExample
     }
 
+    /** [Column references][ColumnAccessors.WithExample] */
+    interface ColumnAccessorsLink
+
     /** Select columns using [KProperties][KProperty] ({@include [AccessApi.KPropertiesApiLink]}). */
     interface KProperties {
 
@@ -108,4 +116,7 @@ internal interface SelectingColumns {
          */
         interface WithExample
     }
+
+    /** [KProperties][KProperties.WithExample] */
+    interface KPropertiesLink
 }
