@@ -8,6 +8,6 @@
     <vars src="v.list"/>
     <instance src="d.tree" version="0.9" id="dataframe"/>
     <settings>
-        <default-property element-name="topic" property-name="show-structure-depth" value="2"/>
+        <default-property element-name="chapter" property-name="show-structure-depth" value="2"/>
     </settings>
 </ihp>
