@@ -64,6 +64,7 @@ val kotlinMainSources = kotlin.sourceSets.main.get().kotlin.sourceDirectories
 val processKDocsMain by creatingProcessDocTask(
     sources = kotlinMainSources.filterNot { "build/generated" in it.path } // Exclude generated sources
 ) {
+    target = file("generated-sources")
     processors = listOf(
         INCLUDE_DOC_PROCESSOR,
         INCLUDE_FILE_DOC_PROCESSOR,
