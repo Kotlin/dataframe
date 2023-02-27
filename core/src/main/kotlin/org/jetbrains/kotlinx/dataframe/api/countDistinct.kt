@@ -19,7 +19,6 @@ public fun <T, C> DataFrame<T>.countDistinct(columns: ColumnsSelector<T, C>): In
 
 public fun <T> DataFrame<T>.countDistinct(vararg columns: String): Int = countDistinct { columns.toColumns() }
 public fun <T, C> DataFrame<T>.countDistinct(vararg columns: KProperty<C>): Int = countDistinct { columns.toColumns() }
-public fun <T> DataFrame<T>.countDistinct(vararg columns: Column): Int =
-    countDistinct { columns.toColumns() }
+public fun <T> DataFrame<T>.countDistinct(vararg columns: Column): Int = countDistinct { columns.toColumns() }
 
 // endregion

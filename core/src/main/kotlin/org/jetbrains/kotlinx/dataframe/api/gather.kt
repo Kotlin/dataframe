@@ -12,10 +12,15 @@ import kotlin.reflect.KProperty
 import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
-public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T, C, String, C> = Gather(
-    this, selector, null, typeOf<String>(),
-    { it }, null
-)
+public fun <T, C> DataFrame<T>.gather(selector: ColumnsSelector<T, C>): Gather<T, C, String, C> =
+    Gather(
+        df = this,
+        columns = selector,
+        filter = null,
+        keyType = typeOf<String>(),
+        keyTransform = { it },
+        valueTransform = null,
+    )
 
 public fun <T> DataFrame<T>.gather(vararg columns: String): Gather<T, Any?, String, Any?> =
     gather { columns.toColumns() }
@@ -29,9 +34,11 @@ public fun <T, C> DataFrame<T>.gather(vararg columns: KProperty<C>): Gather<T, C
 public fun <T, C, K, R> Gather<T, C, K, R>.where(filter: RowValueFilter<T, C>): Gather<T, C, K, R> =
     copy(filter = this.filter and filter)
 
-public fun <T, C, K, R> Gather<T, C?, K, R>.notNull(): Gather<T, C, K, R> = where { it != null } as Gather<T, C, K, R>
+public fun <T, C, K, R> Gather<T, C?, K, R>.notNull(): Gather<T, C, K, R> =
+    where { it != null } as Gather<T, C, K, R>
 
-public fun <T, C, K, R> Gather<T, C, K, R>.explodeLists(): Gather<T, C, K, R> = copy(explode = true)
+public fun <T, C, K, R> Gather<T, C, K, R>.explodeLists(): Gather<T, C, K, R> =
+    copy(explode = true)
 
 public inline fun <T, C, reified K, R> Gather<T, C, *, R>.mapKeys(noinline transform: (String) -> K): Gather<T, C, K, R> =
     copy(keyTransform = transform as ((String) -> Nothing), keyType = typeOf<K>()) as Gather<T, C, K, R>
