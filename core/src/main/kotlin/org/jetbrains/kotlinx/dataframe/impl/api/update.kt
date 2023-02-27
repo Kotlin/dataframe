@@ -4,15 +4,20 @@ import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.DataFrameExpression
+import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowValueFilter
 import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.api.AddDataRow
 import org.jetbrains.kotlinx.dataframe.api.Update
+import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.replace
+import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
@@ -20,6 +25,7 @@ import org.jetbrains.kotlinx.dataframe.columns.FrameColumn
 import org.jetbrains.kotlinx.dataframe.columns.size
 import org.jetbrains.kotlinx.dataframe.impl.columns.AddDataRowImpl
 import org.jetbrains.kotlinx.dataframe.impl.createDataCollector
+import org.jetbrains.kotlinx.dataframe.index
 import org.jetbrains.kotlinx.dataframe.type
 import kotlin.reflect.full.isSubclassOf
 import kotlin.reflect.full.withNullability
@@ -40,10 +46,45 @@ internal fun <T, C> Update<T, C>.updateWithValuePerColumnImpl(selector: Selector
         }
     }
 
+/**
+ * Implementation for Update As Frame:
+ * Replaces selected column groups with the result of the expression only where the filter is true.
+ */
+internal fun <T, C, R> Update<T, DataRow<C>>.asFrameImpl(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
+    if (df.isEmpty()) df
+    else df.replace(columns).with {
+        val src = it.asColumnGroup()
+        val updatedColumn = expression(src, src).asColumnGroup(src.name())
+        if (filter == null) {
+            // If there is no filter, we simply replace the selected column groups with the result of the expression
+            updatedColumn
+        } else {
+            // If there is a filter, we collect the indices of the rows that are inside the filter
+            val collector = createDataCollector<DataRow<C>>(it.size, it.type)
+            val indices = buildList {
+                df.indices().forEach { rowIndex ->
+                    val row = AddDataRowImpl(rowIndex, df, collector.values)
+                    val currentValue = row[src]
+
+                    if (filter.invoke(row, currentValue)) {
+                        this += rowIndex
+                        collector.add(currentValue)
+                    }
+                }
+            }
+
+            // Then we only replace the original rows with the updated rows that are inside the filter
+            src.rows().map {
+                val index = indices.indexOf(it.index)
+                if (index == -1) it else updatedColumn[index]
+            }.toColumn(src.name)
+        }
+    }
+
 internal fun <T, C> DataColumn<C>.updateImpl(
     df: DataFrame<T>,
     filter: RowValueFilter<T, C>?,
-    expression: (AddDataRow<T>, DataColumn<C>, C) -> C?
+    expression: (AddDataRow<T>, DataColumn<C>, C) -> C?,
 ): DataColumn<C> {
     val collector = createDataCollector<C>(size, type)
     val src = this
@@ -75,6 +116,7 @@ internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> = when
         val groups = (values as List<AnyFrame>)
         DataColumn.createFrameColumn(name, groups) as DataColumn<T>
     }
+
     is ColumnGroup<*> -> {
         this.columns().mapIndexed { colIndex, col ->
             val newValues = values.map {
@@ -88,6 +130,7 @@ internal fun <T> DataColumn<T>.updateWith(values: List<T>): DataColumn<T> = when
             col.updateWith(newValues)
         }.toDataFrame().let { DataColumn.createColumnGroup(name, it) } as DataColumn<T>
     }
+
     else -> {
         var nulls = false
         val kclass = type.jvmErasure
