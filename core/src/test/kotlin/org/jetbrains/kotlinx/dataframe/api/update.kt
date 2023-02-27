@@ -3,6 +3,7 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+import org.jetbrains.kotlinx.dataframe.size
 import org.junit.Test
 
 class UpdateTests {
@@ -12,6 +13,47 @@ class UpdateTests {
         val df = DataFrame.Empty
         val col by column<Int>()
         df.update { col }.with { 2 } shouldBe df
+    }
+
+    @DataSchema
+    interface AAndB {
+        val a: Int
+        val b: String
+    }
+
+    @DataSchema
+    data class Update(
+        override val a: Int,
+        override val b: String,
+        val c: Boolean,
+    ) : AAndB
+
+    @Test
+    fun `update asFrame`() {
+        val df = listOf(
+            Update(1, "a", true),
+            Update(2, "b", false),
+        ).toDataFrame()
+
+        val group by columnGroup<AAndB>() named "Some Group"
+        val groupedDf = df.group { a and b }.into { group }
+
+        val res = groupedDf
+            .update { group }
+            .where { !c }
+            .asFrame {
+                // size should still be full df size
+                size.nrow shouldBe 2
+
+                // this will only apply to rows where `.where { !c }` holds
+                update { a }.with { 0 }
+            }
+
+        val (first, second) = res[{ group }].map { it.a }.toList()
+        first shouldBe 1
+        second shouldBe 0
+
+        res[{ group }].name() shouldBe "Some Group"
     }
 
     @DataSchema
