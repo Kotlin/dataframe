@@ -16,26 +16,26 @@ class UpdateTests {
     }
 
     @DataSchema
-    interface AAndB {
+    interface DataPart {
         val a: Int
         val b: String
     }
 
     @DataSchema
-    data class Update(
+    data class Data(
         override val a: Int,
         override val b: String,
         val c: Boolean,
-    ) : AAndB
+    ) : DataPart
 
     @Test
     fun `update asFrame`() {
         val df = listOf(
-            Update(1, "a", true),
-            Update(2, "b", false),
+            Data(1, "a", true),
+            Data(2, "b", false),
         ).toDataFrame()
 
-        val group by columnGroup<AAndB>() named "Some Group"
+        val group by columnGroup<DataPart>() named "Some Group"
         val groupedDf = df.group { a and b }.into { group }
 
         val res = groupedDf

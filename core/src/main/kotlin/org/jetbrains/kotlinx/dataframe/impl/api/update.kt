@@ -11,12 +11,12 @@ import org.jetbrains.kotlinx.dataframe.Selector
 import org.jetbrains.kotlinx.dataframe.api.AddDataRow
 import org.jetbrains.kotlinx.dataframe.api.Update
 import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.asDataFrame
 import org.jetbrains.kotlinx.dataframe.api.cast
 import org.jetbrains.kotlinx.dataframe.api.indices
 import org.jetbrains.kotlinx.dataframe.api.isEmpty
 import org.jetbrains.kotlinx.dataframe.api.name
 import org.jetbrains.kotlinx.dataframe.api.replace
-import org.jetbrains.kotlinx.dataframe.api.rows
 import org.jetbrains.kotlinx.dataframe.api.toColumn
 import org.jetbrains.kotlinx.dataframe.api.toDataFrame
 import org.jetbrains.kotlinx.dataframe.api.with
@@ -53,33 +53,36 @@ internal fun <T, C> Update<T, C>.updateWithValuePerColumnImpl(selector: Selector
 internal fun <T, C, R> Update<T, DataRow<C>>.asFrameImpl(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
     if (df.isEmpty()) df
     else df.replace(columns).with {
-        val src = it.asColumnGroup()
-        val updatedColumn = expression(src, src).asColumnGroup(src.name())
+        // First, we create an updated column group with the result of the expression
+        val srcColumnGroup = it.asColumnGroup()
+        val updatedColumnGroup = srcColumnGroup
+            .asDataFrame()
+            .let { expression(it, it) }
+            .asColumnGroup(srcColumnGroup.name())
+
         if (filter == null) {
-            // If there is no filter, we simply replace the selected column groups with the result of the expression
-            updatedColumn
+            // If there is no filter, we simply return the updated column group
+            updatedColumnGroup
         } else {
-            // If there is a filter, we collect the indices of the rows that are inside the filter
-            val collector = createDataCollector<DataRow<C>>(it.size, it.type)
-            val indices = buildList {
-                df.indices().forEach { rowIndex ->
-                    val row = AddDataRowImpl(rowIndex, df, collector.values)
-                    val currentValue = row[src]
+            // If there is a filter, then we replace the rows of the source column group with the updated column group
+            // only if they satisfy the filter
+            srcColumnGroup.replaceRowsIf(from = updatedColumnGroup) {
+                val srcRow = df[it.index]
+                val srcValue = srcRow[srcColumnGroup]
 
-                    if (filter.invoke(row, currentValue)) {
-                        this += rowIndex
-                        collector.add(currentValue)
-                    }
-                }
+                filter.invoke(srcRow, srcValue)
             }
-
-            // Then we only replace the original rows with the updated rows that are inside the filter
-            src.rows().map {
-                val index = indices.indexOf(it.index)
-                if (index == -1) it else updatedColumn[index]
-            }.toColumn(src.name)
         }
     }
+
+private fun <C, R> ColumnGroup<C>.replaceRowsIf(
+    from: ColumnGroup<R>,
+    condition: (DataRow<C>) -> Boolean = { true },
+): ColumnGroup<C> = values()
+    .map { if (condition(it)) from[it.index] else it }
+    .toColumn(name)
+    .asColumnGroup()
+    .cast()
 
 internal fun <T, C> DataColumn<C>.updateImpl(
     df: DataFrame<T>,
