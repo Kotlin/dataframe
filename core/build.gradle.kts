@@ -1,5 +1,9 @@
-import nl.jolanrensen.docProcessor.*
-import nl.jolanrensen.docProcessor.defaultProcessors.*
+import nl.jolanrensen.docProcessor.defaultProcessors.COMMENT_DOC_PROCESSOR
+import nl.jolanrensen.docProcessor.defaultProcessors.INCLUDE_ARG_DOC_PROCESSOR
+import nl.jolanrensen.docProcessor.defaultProcessors.INCLUDE_DOC_PROCESSOR
+import nl.jolanrensen.docProcessor.defaultProcessors.INCLUDE_FILE_DOC_PROCESSOR
+import nl.jolanrensen.docProcessor.defaultProcessors.SAMPLE_DOC_PROCESSOR
+import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
 
 @Suppress("DSL_SCOPE_VIOLATION", "UnstableApiUsage")
@@ -14,7 +18,7 @@ plugins {
     id("org.jetbrains.kotlinx.kover")
     id("org.jmailen.kotlinter")
     id("org.jetbrains.kotlinx.dataframe")
-    id("com.github.jolanrensen.docProcessorGradlePlugin") version "v0.0.20"
+    id("com.github.jolanrensen.docProcessorGradlePlugin") version "v0.0.22"
 //    id("nl.jolanrensen.docProcessor") version "1.0-SNAPSHOT"
 }
 
