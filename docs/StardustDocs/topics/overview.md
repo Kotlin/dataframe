@@ -133,3 +133,13 @@ dfClean.groupBy { From into "origin" }.aggregate {
     pivot { To }.sum { recentDelays.intCols() } into "total delays to"
 }
 ```
+
+## Contribute and give feedback
+
+If you find a bug, or have an idea for a new feature, [file an issue](https://github.com/Kotlin/dataframe/issues/new) in our DataFrame GitHub repository.
+
+Additionally, we welcome contributions. To get stared, choose an issue and let us know that you're working on it. When you're ready, create a [pull request](https://github.com/Kotlin/dataframe/pulls).
+
+You can also contact us in the [#datascience](https://kotlinlang.slack.com/archives/C4W52CFEZ) channel of Kotlin Slack.
+
+Good luck!
