@@ -3,7 +3,7 @@
     name = "ApiGuruOpenApiKsp",
 )
 @file:ImportDataSchema(
-    path = "https://api.apis.guru/v2/specs/1password.local/connect/1.3.0/openapi.json",
+    path = "https://api.apis.guru/v2/specs/1password.local/connect/1.5.7/openapi.json",
     name = "OnePassword",
 )
 
