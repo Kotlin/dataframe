@@ -149,7 +149,6 @@ public fun <T, C> DataFrame<T>.update(columns: ColumnsSelector<T, C>): Update<T,
  * 
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`("length", "age")`
  *  
- * 
  * ## Optional
  * Combine `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...).`[with][org.jetbrains.kotlinx.dataframe.api.Update.with]` { ... }`
  * into `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...) { ... }`
@@ -178,7 +177,6 @@ public fun <T> DataFrame<T>.update(vararg columns: String): Update<T, Any?> = up
  * 
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(Person::length, Person::age)`
  *  
- * 
  * ## Optional
  * Combine `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...).`[with][org.jetbrains.kotlinx.dataframe.api.Update.with]` { ... }`
  * into `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...) { ... }`
@@ -209,7 +207,6 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
  * 
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(length, age)`
  *  
- * 
  * ## Optional
  * Combine `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...).`[with][org.jetbrains.kotlinx.dataframe.api.Update.with]` { ... }`
  * into `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(...) { ... }`
@@ -228,7 +225,6 @@ public fun <T, C> DataFrame<T>.update(columns: Iterable<ColumnReference<C>>): Up
 
 /**
  * ## Where
- * 
  * Filter or find rows to operate on after [selecting columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] using a
  * [row value filter][org.jetbrains.kotlinx.dataframe.RowValueFilter].
  * 
@@ -269,7 +265,7 @@ private interface CommonUpdateAtFunctionDoc {
  * ## At
  * Only update the columns at certain given [row indices][org.jetbrains.kotlinx.dataframe.api.CommonUpdateAtFunctionDoc.RowIndicesParam]:
  * 
- * Either a [Collection][Collection]< [Int][Int]>, an [IntRange][IntRange], or just `vararg` indices.
+ * Either a [Collection][Collection]<[Int][Int]>, an [IntRange][IntRange], or just `vararg` indices.
  * 
  * For example:
  * 
@@ -281,7 +277,7 @@ private interface CommonUpdateAtFunctionDoc {
  * 
  * Provide a [Collection]<[Int]> of row indices to update.
  * 
- * @param rowIndices The indices of the rows to update. Either a [Collection][Collection]< [Int][Int]>, an [IntRange][IntRange], or just `vararg` indices.
+ * @param rowIndices The indices of the rows to update. Either a [Collection][Collection]<[Int][Int]>, an [IntRange][IntRange], or just `vararg` indices.
  */
 public fun <T, C> Update<T, C>.at(rowIndices: Collection<Int>): Update<T, C> = where { index in rowIndices }
 
@@ -289,7 +285,7 @@ public fun <T, C> Update<T, C>.at(rowIndices: Collection<Int>): Update<T, C> = w
  * ## At
  * Only update the columns at certain given [row indices][org.jetbrains.kotlinx.dataframe.api.CommonUpdateAtFunctionDoc.RowIndicesParam]:
  * 
- * Either a [Collection][Collection]< [Int][Int]>, an [IntRange][IntRange], or just `vararg` indices.
+ * Either a [Collection][Collection]<[Int][Int]>, an [IntRange][IntRange], or just `vararg` indices.
  * 
  * For example:
  * 
@@ -301,7 +297,7 @@ public fun <T, C> Update<T, C>.at(rowIndices: Collection<Int>): Update<T, C> = w
  * 
  * Provide a `vararg` of [Ints][Int] of row indices to update.
  * 
- * @param rowIndices The indices of the rows to update. Either a [Collection][Collection]< [Int][Int]>, an [IntRange][IntRange], or just `vararg` indices.
+ * @param rowIndices The indices of the rows to update. Either a [Collection][Collection]<[Int][Int]>, an [IntRange][IntRange], or just `vararg` indices.
  */
 public fun <T, C> Update<T, C>.at(vararg rowIndices: Int): Update<T, C> = at(rowIndices.toSet())
 
@@ -309,7 +305,7 @@ public fun <T, C> Update<T, C>.at(vararg rowIndices: Int): Update<T, C> = at(row
  * ## At
  * Only update the columns at certain given [row indices][org.jetbrains.kotlinx.dataframe.api.CommonUpdateAtFunctionDoc.RowIndicesParam]:
  * 
- * Either a [Collection][Collection]< [Int][Int]>, an [IntRange][IntRange], or just `vararg` indices.
+ * Either a [Collection][Collection]<[Int][Int]>, an [IntRange][IntRange], or just `vararg` indices.
  * 
  * For example:
  * 
@@ -321,13 +317,12 @@ public fun <T, C> Update<T, C>.at(vararg rowIndices: Int): Update<T, C> = at(row
  * 
  * Provide an [IntRange] of row indices to update.
  * 
- * @param rowRange The indices of the rows to update. Either a [Collection][Collection]< [Int][Int]>, an [IntRange][IntRange], or just `vararg` indices.
+ * @param rowRange The indices of the rows to update. Either a [Collection][Collection]<[Int][Int]>, an [IntRange][IntRange], or just `vararg` indices.
  */
 public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { index in rowRange }
 
 /**
  * ## Per Row Col
- * 
  * Provide a new value for every selected cell given both its row and column using a [row-column expression][org.jetbrains.kotlinx.dataframe.RowColumnExpression].
  * 
  * For example:
@@ -360,7 +355,6 @@ public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
 
 /**
  * ## With
- * 
  * Provide a new value for every selected cell given its row and its previous value using a
  * [row value expression][org.jetbrains.kotlinx.dataframe.RowValueExpression].
  * 
@@ -373,7 +367,6 @@ public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
  * 
  * 
  * ## Note
- * 
  * [update with][org.jetbrains.kotlinx.dataframe.api.Update.with]- and [add][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow][org.jetbrains.kotlinx.dataframe.api.AddDataRow] instead of [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as the DSL's receiver type.
  * This is an extension to [RowValueExpression][org.jetbrains.kotlinx.dataframe.RowValueExpression] and
  * [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] that provides access to
@@ -395,7 +388,6 @@ private interface SeeAlsoWith
  * ## As Frame
  * 
  * Updates selected [column group][ColumnGroup] as a [DataFrame] with the given [expression].
- * 
  * 
  * Provide a new value for every selected data frame using a [dataframe expression][org.jetbrains.kotlinx.dataframe.DataFrameExpression].
  * 
@@ -535,7 +527,6 @@ public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(val
  *  - [Update with][org.jetbrains.kotlinx.dataframe.api.Update.with] to provide a new value for every selected cell giving its row.
  *  - [Update per row col][org.jetbrains.kotlinx.dataframe.api.Update.perRowCol] to provide a new value for every selected cell giving its row and column.
  * ## This Per Col Overload
- * 
  * Provide a new value for every selected cell given its column using a [column expression][org.jetbrains.kotlinx.dataframe.ColumnExpression].
  * 
  * For example:
@@ -626,7 +617,6 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  * Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
  * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]).
  * 
- * 
  * Provide a new value for every selected cell given its row and its previous value using a
  * [row value expression][org.jetbrains.kotlinx.dataframe.RowValueExpression].
  * 
@@ -663,7 +653,6 @@ public fun <T, C> DataFrame<T>.update(
  * ### This overload is a combination of [update] and [with][Update.with].
  * 
  * Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
- * 
  * 
  * Provide a new value for every selected cell given its row and its previous value using a
  * [row value expression][org.jetbrains.kotlinx.dataframe.RowValueExpression].
@@ -703,7 +692,6 @@ public fun <T, C> DataFrame<T>.update(
  * Select columns using their [column names][String]
  * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
  * 
- * 
  * Provide a new value for every selected cell given its row and its previous value using a
  * [row value expression][org.jetbrains.kotlinx.dataframe.RowValueExpression].
  * 
@@ -742,7 +730,6 @@ private interface CommonSpecificWithDocSecondArg
 
 /**
  * ## With Null
- * 
  * Specific version of [with][org.jetbrains.kotlinx.dataframe.api.with] that simply sets the value of each selected row to `null`.
  * 
  * For example:
@@ -753,7 +740,6 @@ public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = with { null }
 
 /**
  * ## With Zero
- * 
  * Specific version of [with][org.jetbrains.kotlinx.dataframe.api.with] that simply sets the value of each selected row to `0`.
  * 
  * For example:
@@ -764,7 +750,6 @@ public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColu
 
 /**
  * ## With Value
- * 
  * Specific version of [with][org.jetbrains.kotlinx.dataframe.api.with] that simply sets the value of each selected row to [value].
  * 
  * For example:
