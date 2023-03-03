@@ -2,7 +2,14 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
-import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.api.AddDataRow
+import org.jetbrains.kotlinx.dataframe.api.Convert
+import org.jetbrains.kotlinx.dataframe.api.Update
+import org.jetbrains.kotlinx.dataframe.api.add
+import org.jetbrains.kotlinx.dataframe.api.insert
+import org.jetbrains.kotlinx.dataframe.api.map
+import org.jetbrains.kotlinx.dataframe.api.notNull
+import org.jetbrains.kotlinx.dataframe.api.with
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.AddDataRowNote
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowExpressionLink
 import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpressionLink
@@ -23,6 +30,7 @@ import org.jetbrains.kotlinx.dataframe.RowValueExpression as DfRowValueExpressio
  * (using [RowValueExpression][DfRowValueExpression]).
  *
  * Note:
+ *
  * @include [AddDataRowNote]
  *
  * A Row Expression is similar to a {@include [RowConditionLink]} but that expects a [Boolean] as result.
