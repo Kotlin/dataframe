@@ -1,11 +1,14 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
-import org.jetbrains.kotlinx.dataframe.DataFrame
-import org.jetbrains.kotlinx.dataframe.io.DisplayConfiguration
+import com.beust.klaxon.json
+import org.jetbrains.kotlinx.dataframe.api.rows
+import org.jetbrains.kotlinx.dataframe.api.toDataFrame
+import org.jetbrains.kotlinx.dataframe.io.*
 import org.jetbrains.kotlinx.dataframe.io.initHtml
-import org.jetbrains.kotlinx.dataframe.io.toHTML
+import org.jetbrains.kotlinx.dataframe.nrow
+import org.jetbrains.kotlinx.dataframe.size
+import org.jetbrains.kotlinx.jupyter.api.*
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
-import org.jetbrains.kotlinx.jupyter.api.renderHtmlAsIFrameIfNeeded
 
 internal class JupyterHtmlRenderer(
     val display: DisplayConfiguration,
@@ -13,14 +16,31 @@ internal class JupyterHtmlRenderer(
 )
 
 internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
-    crossinline getDf: (T) -> DataFrame<*>,
     noinline getFooter: (T) -> String,
-    crossinline modifyConfig: T.(DisplayConfiguration) -> DisplayConfiguration = { it }
+    crossinline modifyConfig: T.(DisplayConfiguration) -> DisplayConfiguration = { it },
+    applyRowsLimit: Boolean = true
 ) = builder.renderWithHost<T> { host, value ->
     val contextRenderer = JupyterCellRenderer(this.notebook, host)
     val reifiedDisplayConfiguration = value.modifyConfig(display)
     val footer = getFooter(value)
-    val html = getDf(value).toHTML(
+
+    val df = convertToDataFrame(value)
+
+    val limit = if (applyRowsLimit) {
+        reifiedDisplayConfiguration.rowsLimit ?: df.nrow
+    } else {
+        df.nrow
+    }
+
+    val jsonEncodedDf = json {
+        obj(
+            "nrow" to df.size.nrow,
+            "ncol" to df.size.ncol,
+            "columns" to df.columnNames(),
+            "kotlin_dataframe" to encodeFrame(df.rows().take(limit).toDataFrame())
+        )
+    }.toJsonString()
+    val html = df.toHTML(
         reifiedDisplayConfiguration,
         extraHtml = initHtml(
             includeJs = reifiedDisplayConfiguration.isolatedOutputs,
@@ -30,5 +50,18 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
         contextRenderer
     ) { footer }
 
-    notebook.renderHtmlAsIFrameIfNeeded(html)
+    notebook.renderAsIFrameAsNeeded(html, jsonEncodedDf)
+}
+
+internal fun Notebook.renderAsIFrameAsNeeded(data: HtmlData, jsonEncodedDf: String): MimeTypedResult {
+    val textHtml = if (jupyterClientType == JupyterClientType.KOTLIN_NOTEBOOK) {
+        data.generateIframePlaneText(currentColorScheme)
+    } else {
+        data.toString(currentColorScheme)
+    }
+
+    return mimeResult(
+        "text/html" to textHtml,
+        "application/json" to jsonEncodedDf
+    ).also { it.isolatedHtml = false }
 }
