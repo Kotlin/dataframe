@@ -135,7 +135,7 @@ internal class Integration(
         import("org.jetbrains.kotlinx.dataframe.columns.*")
         import("org.jetbrains.kotlinx.dataframe.jupyter.ImportDataSchema")
         import("org.jetbrains.kotlinx.dataframe.jupyter.importDataSchema")
-        import("org.jetbrains.kotlinx.dataframe.jupyter.getRowsSubsetForRendering")
+        import("org.jetbrains.kotlinx.dataframe.jupyter.KotlinNotebookPluginUtils")
         import("java.net.URL")
         import("java.io.File")
         import("kotlinx.datetime.Instant")
@@ -251,7 +251,7 @@ public inline fun <reified T> KotlinKernelHost.useSchema(): Unit = useSchemas(T:
  * If [dataframeLike] is already [AnyFrame] then it is returned as is.
  * If it's not possible to convert [dataframeLike] to [AnyFrame] then [IllegalArgumentException] is thrown.
  */
-public fun convertToDataFrame(dataframeLike: Any): AnyFrame =
+internal fun convertToDataFrame(dataframeLike: Any): AnyFrame =
     when (dataframeLike) {
         is Pivot<*> -> dataframeLike.frames().toDataFrame()
         is ReducedPivot<*> -> dataframeLike.values().toDataFrame()
@@ -270,23 +270,3 @@ public fun convertToDataFrame(dataframeLike: Any): AnyFrame =
         is DisableRowsLimitWrapper -> dataframeLike.value
         else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
     }
-
-/**
- * Returns a subset of rows from the given dataframe for rendering.
- * It's used for example for dynamic pagination in Kotlin Notebook Plugin.
- */
-public fun getRowsSubsetForRendering(
-    dataFrameLike: Any?,
-    startIdx: Int,
-    endIdx: Int
-): DisableRowsLimitWrapper = when (dataFrameLike) {
-    null -> throw IllegalArgumentException("Dataframe is null")
-    else -> getRowsSubsetForRendering(convertToDataFrame(dataFrameLike), startIdx, endIdx)
-}
-
-/**
- * Returns a subset of rows from the given dataframe for rendering.
- * It's used for example for dynamic pagination in Kotlin Notebook Plugin.
- */
-public fun getRowsSubsetForRendering(df: AnyFrame, startIdx: Int, endIdx: Int): DisableRowsLimitWrapper =
-    DisableRowsLimitWrapper(df.filter { it.index() in startIdx until endIdx })
