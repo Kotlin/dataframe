@@ -6,29 +6,8 @@ import org.jetbrains.kotlinx.dataframe.AnyCol
 import org.jetbrains.kotlinx.dataframe.AnyFrame
 import org.jetbrains.kotlinx.dataframe.AnyRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.api.Convert
-import org.jetbrains.kotlinx.dataframe.api.FormattedFrame
-import org.jetbrains.kotlinx.dataframe.api.Gather
-import org.jetbrains.kotlinx.dataframe.api.GroupBy
-import org.jetbrains.kotlinx.dataframe.api.Merge
-import org.jetbrains.kotlinx.dataframe.api.Pivot
-import org.jetbrains.kotlinx.dataframe.api.PivotGroupBy
-import org.jetbrains.kotlinx.dataframe.api.ReducedGroupBy
-import org.jetbrains.kotlinx.dataframe.api.ReducedPivot
-import org.jetbrains.kotlinx.dataframe.api.ReducedPivotGroupBy
-import org.jetbrains.kotlinx.dataframe.api.Split
-import org.jetbrains.kotlinx.dataframe.api.SplitWithTransform
-import org.jetbrains.kotlinx.dataframe.api.Update
-import org.jetbrains.kotlinx.dataframe.api.asColumnGroup
-import org.jetbrains.kotlinx.dataframe.api.asDataFrame
-import org.jetbrains.kotlinx.dataframe.api.columnsCount
-import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
-import org.jetbrains.kotlinx.dataframe.api.frames
-import org.jetbrains.kotlinx.dataframe.api.into
-import org.jetbrains.kotlinx.dataframe.api.isColumnGroup
+import org.jetbrains.kotlinx.dataframe.api.*
 import org.jetbrains.kotlinx.dataframe.api.name
-import org.jetbrains.kotlinx.dataframe.api.toDataFrame
-import org.jetbrains.kotlinx.dataframe.api.values
 import org.jetbrains.kotlinx.dataframe.codeGen.CodeWithConverter
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
@@ -111,42 +90,42 @@ internal class Integration(
         }
 
         with(JupyterHtmlRenderer(config.display, this)) {
+            render<DisableRowsLimitWrapper>(
+                { "DataRow: index = ${it.value.rowsCount()}, columnsCount = ${it.value.columnsCount()}" },
+                applyRowsLimit = false
+            )
+
             render<HtmlData> { notebook.renderHtmlAsIFrameIfNeeded(it) }
             render<AnyRow>(
-                { it.toDataFrame() },
                 { "DataRow: index = ${it.index()}, columnsCount = ${it.columnsCount()}" },
             )
             render<ColumnGroup<*>>(
-                { it.asDataFrame() },
                 { """ColumnGroup: name = "${it.name}", rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}""" },
             )
             render<AnyCol>(
-                { dataFrameOf(it) },
                 { """DataColumn: name = "${it.name}", type = ${renderType(it.type())}, size = ${it.size()}""" },
             )
             render<AnyFrame>(
-                { it },
-                { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" },
+                { "DataFrame: rowsCount = ${it.rowsCount()}, columnsCount = ${it.columnsCount()}" }
             )
             render<FormattedFrame<*>>(
-                { it.df },
                 { "DataFrame: rowsCount = ${it.df.rowsCount()}, columnsCount = ${it.df.columnsCount()}" },
                 modifyConfig = { getDisplayConfiguration(it) },
             )
-            render<GroupBy<*, *>>({ it.toDataFrame() }, { "GroupBy" })
-            render<ReducedGroupBy<*, *>>({ it.into(it.groupBy.groups.name()) }, { "ReducedGroupBy" })
-            render<Pivot<*>>({ it.frames().toDataFrame() }, { "Pivot" })
-            render<ReducedPivot<*>>({ it.values().toDataFrame() }, { "ReducedPivot" })
-            render<PivotGroupBy<*>>({ it.frames() }, { "PivotGroupBy" })
-            render<ReducedPivotGroupBy<*>>({ it.values() }, { "ReducedPivotGroupBy" })
-            render<SplitWithTransform<*, *, *>>({ it.into() }, { "Split" })
-            render<Split<*, *>>({ it.toDataFrame() }, { "Split" })
-            render<Merge<*, *, *>>({ it.into("merged") }, { "Merge" })
-            render<Gather<*, *, *, *>>({ it.into("key", "value") }, { "Gather" })
+            render<GroupBy<*, *>>({ "GroupBy" })
+            render<ReducedGroupBy<*, *>>({ "ReducedGroupBy" })
+            render<Pivot<*>>({ "Pivot" })
+            render<ReducedPivot<*>>({ "ReducedPivot" })
+            render<PivotGroupBy<*>>({ "PivotGroupBy" })
+            render<ReducedPivotGroupBy<*>>({ "ReducedPivotGroupBy" })
+            render<SplitWithTransform<*, *, *>>({ "Split" })
+            render<Split<*, *>>({ "Split" })
+            render<Merge<*, *, *>>({ "Merge" })
+            render<Gather<*, *, *, *>>({ "Gather" })
             render<IMG> { HTML(it.toString()) }
             render<IFRAME> { HTML(it.toString()) }
-            render<Update<*, *>>({ it.df }, { "Update" })
-            render<Convert<*, *>>({ it.df }, { "Convert" })
+            render<Update<*, *>>({ "Update" })
+            render<Convert<*, *>>({ "Convert" })
         }
 
         import("org.jetbrains.kotlinx.dataframe.api.*")
@@ -156,6 +135,7 @@ internal class Integration(
         import("org.jetbrains.kotlinx.dataframe.columns.*")
         import("org.jetbrains.kotlinx.dataframe.jupyter.ImportDataSchema")
         import("org.jetbrains.kotlinx.dataframe.jupyter.importDataSchema")
+        import("org.jetbrains.kotlinx.dataframe.jupyter.getRowsSubsetForRendering")
         import("java.net.URL")
         import("java.io.File")
         import("kotlinx.datetime.Instant")
@@ -265,3 +245,48 @@ public fun KotlinKernelHost.useSchemas(schemaClasses: Iterable<KClass<*>>) {
 public fun KotlinKernelHost.useSchemas(vararg schemaClasses: KClass<*>): Unit = useSchemas(schemaClasses.asIterable())
 
 public inline fun <reified T> KotlinKernelHost.useSchema(): Unit = useSchemas(T::class)
+
+/**
+ * Converts [dataframeLike] to [AnyFrame].
+ * If [dataframeLike] is already [AnyFrame] then it is returned as is.
+ * If it's not possible to convert [dataframeLike] to [AnyFrame] then [IllegalArgumentException] is thrown.
+ */
+public fun convertToDataFrame(dataframeLike: Any): AnyFrame =
+    when (dataframeLike) {
+        is Pivot<*> -> dataframeLike.frames().toDataFrame()
+        is ReducedPivot<*> -> dataframeLike.values().toDataFrame()
+        is PivotGroupBy<*> -> dataframeLike.frames()
+        is ReducedPivotGroupBy<*> -> dataframeLike.values()
+        is SplitWithTransform<*, *, *> -> dataframeLike.into()
+        is Merge<*, *, *> -> dataframeLike.into("merged")
+        is Gather<*, *, *, *> -> dataframeLike.into("key", "value")
+        is Update<*, *> -> dataframeLike.df
+        is Convert<*, *> -> dataframeLike.df
+        is FormattedFrame<*> -> dataframeLike.df
+        is AnyCol -> dataFrameOf(dataframeLike)
+        is AnyRow -> dataframeLike.toDataFrame()
+        is GroupBy<*, *> -> dataframeLike.toDataFrame()
+        is AnyFrame -> dataframeLike
+        is DisableRowsLimitWrapper -> dataframeLike.value
+        else -> throw IllegalArgumentException("Unsupported type: ${dataframeLike::class}")
+    }
+
+/**
+ * Returns a subset of rows from the given dataframe for rendering.
+ * It's used for example for dynamic pagination in Kotlin Notebook Plugin.
+ */
+public fun getRowsSubsetForRendering(
+    dataFrameLike: Any?,
+    startIdx: Int,
+    endIdx: Int
+): DisableRowsLimitWrapper = when (dataFrameLike) {
+    null -> throw IllegalArgumentException("Dataframe is null")
+    else -> getRowsSubsetForRendering(convertToDataFrame(dataFrameLike), startIdx, endIdx)
+}
+
+/**
+ * Returns a subset of rows from the given dataframe for rendering.
+ * It's used for example for dynamic pagination in Kotlin Notebook Plugin.
+ */
+public fun getRowsSubsetForRendering(df: AnyFrame, startIdx: Int, endIdx: Int): DisableRowsLimitWrapper =
+    DisableRowsLimitWrapper(df.filter { it.index() in startIdx until endIdx })
