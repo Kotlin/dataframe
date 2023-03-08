@@ -36,6 +36,8 @@ repositories {
 dependencies {
     api(libs.kotlin.reflect)
     implementation(libs.kotlin.stdlib)
+//    kotlinCompilerPluginClasspath()
+    kotlinCompilerPluginClasspathTest("org.example:create-plugin-all:0.9.0-dev")
     implementation(libs.kotlin.stdlib.jdk8)
 
     api(libs.commonsCsv)
