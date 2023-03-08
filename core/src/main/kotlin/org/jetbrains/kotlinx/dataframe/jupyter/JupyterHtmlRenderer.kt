@@ -62,6 +62,6 @@ internal fun Notebook.renderAsIFrameAsNeeded(data: HtmlData, jsonEncodedDf: Stri
 
     return mimeResult(
         "text/html" to textHtml,
-        "application/json" to jsonEncodedDf
+        "application/kotlindataframe+json" to jsonEncodedDf
     ).also { it.isolatedHtml = false }
 }
