@@ -142,4 +142,6 @@ Additionally, we welcome contributions. To get stared, choose an issue and let u
 
 You can also contact us in the [#datascience](https://kotlinlang.slack.com/archives/C4W52CFEZ) channel of Kotlin Slack.
 
+For more information on how to contribute, see our [Contributing guidelines](https://github.com/Kotlin/dataframe/blob/master/CONTRIBUTING.md).
+
 Good luck!
