@@ -1,9 +1,11 @@
 package org.jetbrains.kotlinx.dataframe.jupyter
 
+import com.beust.klaxon.*
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import io.kotest.matchers.string.shouldNotContain
 import org.intellij.lang.annotations.Language
+import org.jetbrains.kotlinx.jupyter.api.MimeTypedResult
 import org.jetbrains.kotlinx.jupyter.testkit.JupyterReplTestCase
 import org.junit.Test
 
@@ -73,5 +75,54 @@ class RenderingTests : JupyterReplTestCase() {
         val darkClassAttribute = """theme='dark'"""
         htmlLight shouldNotContain darkClassAttribute
         htmlDark shouldContain darkClassAttribute
+    }
+
+    @Test
+    fun `test kotlin notebook plugin utils rows subset`() {
+        @Language("kts")
+        val result = exec<MimeTypedResult>(
+            """
+            data class Row(val id: Int)
+            val df = (1..100).map { Row(it) }.toDataFrame()
+            KotlinNotebookPluginUtils.getRowsSubsetForRendering(df, 20 , 50)
+            """.trimIndent()
+        )
+
+        val json = parseDataframeJson(result)
+
+        json.int("nrow") shouldBe 30
+        json.int("ncol") shouldBe 1
+
+        val rows = json.array<JsonArray<*>>("kotlin_dataframe")!!
+        rows.getObj(0).int("id") shouldBe 21
+        rows.getObj(rows.lastIndex).int("id") shouldBe 50
+    }
+
+    private fun parseDataframeJson(result: MimeTypedResult): JsonObject {
+        val parser = Parser.default()
+        return parser.parse(StringBuilder(result["application/kotlindataframe+json"]!!)) as JsonObject
+    }
+
+    private fun JsonArray<*>.getObj(index: Int) = this.get(index) as JsonObject
+
+    @Test
+    fun `test kotlin notebook plugin utils groupby`() {
+        @Language("kts")
+        val result = exec<MimeTypedResult>(
+            """
+            data class Row(val id: Int, val group: Int)
+            val df = (1..100).map { Row(it, if (it <= 50) 1 else 2) }.toDataFrame()
+            KotlinNotebookPluginUtils.getRowsSubsetForRendering(df.groupBy("group"), 0, 10)
+            """.trimIndent()
+        )
+
+        val json = parseDataframeJson(result)
+
+        json.int("nrow") shouldBe 2
+        json.int("ncol") shouldBe 2
+
+        val rows = json.array<JsonArray<*>>("kotlin_dataframe")!!
+        rows.getObj(0).array<JsonObject>("group1")!!.size shouldBe 50
+        rows.getObj(1).array<JsonObject>("group1")!!.size shouldBe 50
     }
 }
