@@ -52,26 +52,6 @@ kotlin.sourceSets {
     }
 }
 
-tasks.lintKotlinMain {
-    exclude("**/*keywords*/**")
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
-}
-
-tasks.lintKotlinTest {
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
-    enabled = true
-}
-
 korro {
     docs = fileTree(rootProject.rootDir) {
         include("docs/StardustDocs/topics/*.md")
@@ -118,6 +98,17 @@ kotlinter {
     )
 }
 
+tasks.withType<org.jmailen.gradle.kotlinter.tasks.LintTask> {
+    exclude("**/*keywords*/**")
+    exclude {
+        it.name.endsWith(".Generated.kt")
+    }
+    exclude {
+        it.name.endsWith("\$Extensions.kt")
+    }
+    enabled = true
+}
+
 kotlin {
     explicitApi()
 }
@@ -128,7 +119,6 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    dependsOn(tasks.lintKotlin)
     kotlinOptions {
         freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn")
     }
