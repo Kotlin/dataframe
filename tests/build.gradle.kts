@@ -66,17 +66,8 @@ korro {
     }
 }
 
-tasks.lintKotlinMain {
+tasks.withType<org.jmailen.gradle.kotlinter.tasks.LintTask> {
     exclude("**/*keywords*/**")
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
-}
-
-tasks.lintKotlinTest {
     exclude {
         it.name.endsWith(".Generated.kt")
     }
