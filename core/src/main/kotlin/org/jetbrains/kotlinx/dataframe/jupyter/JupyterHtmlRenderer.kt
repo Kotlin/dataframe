@@ -10,6 +10,9 @@ import org.jetbrains.kotlinx.dataframe.size
 import org.jetbrains.kotlinx.jupyter.api.*
 import org.jetbrains.kotlinx.jupyter.api.libraries.JupyterIntegration
 
+/** Starting from this version, dataframe integration will respond with additional data for rendering in Kotlin Notebooks plugin. */
+private const val MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI = "0.11.0.311"
+
 internal class JupyterHtmlRenderer(
     val display: DisplayConfiguration,
     val builder: JupyterIntegration.Builder,
@@ -32,14 +35,6 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
         df.nrow
     }
 
-    val jsonEncodedDf = json {
-        obj(
-            "nrow" to df.size.nrow,
-            "ncol" to df.size.ncol,
-            "columns" to df.columnNames(),
-            "kotlin_dataframe" to encodeFrame(df.rows().take(limit).toDataFrame())
-        )
-    }.toJsonString()
     val html = df.toHTML(
         reifiedDisplayConfiguration,
         extraHtml = initHtml(
@@ -50,7 +45,19 @@ internal inline fun <reified T : Any> JupyterHtmlRenderer.render(
         contextRenderer
     ) { footer }
 
-    notebook.renderAsIFrameAsNeeded(html, jsonEncodedDf)
+    if (notebook.kernelVersion >= KotlinKernelVersion.from(MIN_KERNEL_VERSION_FOR_NEW_TABLES_UI)!!) {
+        val jsonEncodedDf = json {
+            obj(
+                "nrow" to df.size.nrow,
+                "ncol" to df.size.ncol,
+                "columns" to df.columnNames(),
+                "kotlin_dataframe" to encodeFrame(df.rows().take(limit).toDataFrame())
+            )
+        }.toJsonString()
+        notebook.renderAsIFrameAsNeeded(html, jsonEncodedDf)
+    } else {
+        notebook.renderHtmlAsIFrameIfNeeded(html)
+    }
 }
 
 internal fun Notebook.renderAsIFrameAsNeeded(data: HtmlData, jsonEncodedDf: String): MimeTypedResult {
