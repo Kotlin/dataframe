@@ -48,7 +48,7 @@ df.merge { name.firstName and age and isHappy }
 
 <!---END-->
 
-By default, when no `delimeter` or `merger` is specified, values will be merged into the `List`:
+By default, when no `delimeter` or `merger` is specified, values will be merged into the [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/):
 
 <!---FUN mergeDefault-->
 
@@ -58,7 +58,7 @@ df.merge { colsOf<Number>() }.into("data")
 
 <!---END-->
 
-Merged column values can also be exported to `List`:
+Merged column values can also be exported to [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/):
 
 <!---FUN mergeIntoList-->
 

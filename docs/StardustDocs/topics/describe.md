@@ -2,13 +2,13 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Returns `DataFrame` with general statistics for all [`ValueColumns`](DataColumn.md#valuecolumn).
+Returns [`DataFrame`](DataFrame.md) with general statistics for all [`ValueColumns`](DataColumn.md#valuecolumn).
 
 ```kotlin
 describe [ columns ]
 ```
 
-`ColumnGroups` and `FrameColumns` are traversed recursively down to `ValueColumns`.
+[`ColumnGroup`](DataColumn.md#columngroup) and [`FrameColumns`](DataColumn.md#framecolumn) are traversed recursively down to `ValueColumns`.
 
 Collected statistics:
 * `name` — column name

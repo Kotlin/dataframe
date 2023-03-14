@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
@@ -19,6 +19,6 @@ public fun <T, C> DataFrame<T>.countDistinct(columns: ColumnsSelector<T, C>): In
 
 public fun <T> DataFrame<T>.countDistinct(vararg columns: String): Int = countDistinct { columns.toColumns() }
 public fun <T, C> DataFrame<T>.countDistinct(vararg columns: KProperty<C>): Int = countDistinct { columns.toColumns() }
-public fun <T> DataFrame<T>.countDistinct(vararg columns: Column): Int = countDistinct { columns.toColumns() }
+public fun <T> DataFrame<T>.countDistinct(vararg columns: AnyColumnReference): Int = countDistinct { columns.toColumns() }
 
 // endregion

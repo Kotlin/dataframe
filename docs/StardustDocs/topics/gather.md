@@ -24,7 +24,7 @@ valueTransform: (value) -> R
 See [column selectors](ColumnSelectors.md)
 
 Configuration options:
-* `explodeLists` — gathered values of type `List` will be exploded into their elements, so `where`, `cast`, `notNull` and `mapValues` will be applied to list elements instead of lists themselves
+* `explodeLists` — gathered values of type [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/) will be exploded into their elements, so `where`, `cast`, `notNull` and `mapValues` will be applied to list elements instead of lists themselves
 * `cast` — inform compiler about the expected type of gathered elements. This type will be passed to `where` and `mapKeys` lambdas
 * `notNull` — skip gathered `null` values
 * `where` — filter gathered values

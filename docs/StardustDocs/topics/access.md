@@ -1,4 +1,5 @@
 [//]: # (title: Access Data)
+<show-structure depth="3"/>
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 

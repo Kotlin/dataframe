@@ -76,7 +76,6 @@ val processKDocsMain by creatingProcessDocTask(
         COMMENT_DOC_PROCESSOR,
         SAMPLE_DOC_PROCESSOR,
     )
-    debug = true
 }
 
 // As a bonus, this will update dokka if you use that
@@ -117,27 +116,6 @@ tasks.withType<Jar> {
             }
         }
     }
-}
-
-
-tasks.lintKotlinMain {
-    exclude("**/*keywords*/**")
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
-}
-
-tasks.lintKotlinTest {
-    exclude {
-        it.name.endsWith(".Generated.kt")
-    }
-    exclude {
-        it.name.endsWith("\$Extensions.kt")
-    }
-    enabled = true
 }
 
 korro {
@@ -186,6 +164,17 @@ kotlinter {
     )
 }
 
+tasks.withType<org.jmailen.gradle.kotlinter.tasks.LintTask> {
+    exclude("**/*keywords*/**")
+    exclude {
+        it.name.endsWith(".Generated.kt")
+    }
+    exclude {
+        it.name.endsWith("\$Extensions.kt")
+    }
+    enabled = true
+}
+
 kotlin {
     explicitApi()
 }
@@ -196,7 +185,6 @@ tasks.withType<JavaCompile> {
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    dependsOn(tasks.lintKotlin)
     kotlinOptions {
         freeCompilerArgs = freeCompilerArgs + listOf("-Xinline-classes", "-Xopt-in=kotlin.RequiresOptIn")
     }

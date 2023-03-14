@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Access-->
 
-Two ways to create `DataFrame` with a subset of columns:
+Two ways to create [`DataFrame`](DataFrame.md) with a subset of columns:
 
 **indexing:**
 

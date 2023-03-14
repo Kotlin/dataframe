@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.api
 
-import org.jetbrains.kotlinx.dataframe.Column
+import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -43,7 +43,7 @@ internal fun <T, C> MoveClause<T, C>.afterOrBefore(column: ColumnSelector<T, *>,
 
 internal fun <T, C> MoveClause<T, C>.moveImpl(
     under: Boolean = false,
-    newPathExpression: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> Column
+    newPathExpression: ColumnsSelectionDsl<T>.(ColumnWithPath<C>) -> AnyColumnReference
 ): DataFrame<T> {
     val receiver = object : DataFrameReceiver<T>(df, UnresolvedColumnsPolicy.Fail), ColumnsSelectionDsl<T> {}
     val removeResult = df.removeImpl(columns = columns)

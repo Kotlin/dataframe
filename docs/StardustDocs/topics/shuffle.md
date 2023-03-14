@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` with randomly reordered rows.
+Returns [`DataFrame`](DataFrame.md) with randomly reordered rows.
 
 <!---FUN shuffle-->
 

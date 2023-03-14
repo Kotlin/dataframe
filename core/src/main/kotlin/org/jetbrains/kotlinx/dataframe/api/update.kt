@@ -5,6 +5,7 @@ import org.jetbrains.kotlinx.dataframe.api.Update.Usage
 import org.jetbrains.kotlinx.dataframe.columns.ColumnGroup
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.documentation.*
+import org.jetbrains.kotlinx.dataframe.impl.api.asFrameImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateImpl
 import org.jetbrains.kotlinx.dataframe.impl.api.updateWithValuePerColumnImpl
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
@@ -238,7 +239,7 @@ private interface SeeAlsoWith
  * @param expression The {@include [ExpressionsGivenDataFrame.DataFrameExpressionLink]} to replace the selected column group with.
  */
 public infix fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
-    df.replace(columns).with { it.asColumnGroup().let { expression(it, it) }.asColumnGroup(it.name()) }
+    asFrameImpl(expression)
 
 @Deprecated(
     "Useless unless in combination with `withValue(null)`, but then users can just use `with { null }`...",

@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Splits the rows of `DataFrame` and groups them horizontally into new columns based on values from one or several columns of original `DataFrame`.
+Splits the rows of [`DataFrame`](DataFrame.md) and groups them horizontally into new columns based on values from one or several columns of original [`DataFrame`](DataFrame.md).
 
 ```text
 pivot (inward = true) { pivotColumns }
@@ -88,7 +88,8 @@ df.pivot { "city" then "name"["firstName"] }
 
 ## pivot + groupBy
 
-To create matrix table that is expanded both horizontally and vertically, apply `groupBy` transformation passing the columns for vertical grouping. Reversed order of `pivot` and `groupBy` will produce the same result.
+To create matrix table that is expanded both horizontally and vertically, apply [`groupBy`](groupBy.md) transformation passing the columns for vertical grouping. 
+Reversed order of [`pivot`](pivot.md) and [`groupBy`](groupBy.md) will produce the same result.
 
 <!---FUN pivotGroupBy-->
 <tabs>
@@ -221,8 +222,11 @@ df.groupBy("name").pivot("city").median("age")
 </tab></tabs>
 <!---END-->
 
-By default, when aggregation function produces several values for single data group, column hierarchy in resulting `DataFrame` will be indexed first by pivot keys and then by the names of aggregated values.
-To reverse this order so that resulting columns will be indexed first by names of aggregated values and then by pivot keys, use `separate=true` flag that is available in multi-result aggregation operations, such as `aggregate` or `<stat>For`:
+By default, when aggregation function produces several values for single data group, 
+column hierarchy in resulting [`DataFrame`](DataFrame.md) 
+will be indexed first by pivot keys and then by the names of aggregated values.
+To reverse this order so that resulting columns will be indexed first by names of aggregated values and then by pivot keys, 
+use `separate=true` flag that is available in multi-result aggregation operations, such as `aggregate` or `<stat>For`:
 
 <!---FUN pivotSeparate-->
 <tabs>
@@ -316,7 +320,8 @@ df.pivot("city").groupBy("name").default(0).min()
 
 ### Pivot inside aggregate
 
-[pivot](pivot.md) transformation can be used inside [`aggregate`](groupBy.md#aggregation) function of [`GroupBy`](groupBy.md). This allows to combine column pivoting with other [`groupBy`](groupBy.md) aggregations:
+pivot transformation can be used inside [`aggregate`](groupBy.md#aggregation) function of [`groupBy`](groupBy.md). 
+This allows to combine column pivoting with other [`groupBy`](groupBy.md) aggregations:
 
 <!---FUN pivotInAggregate-->
 <tabs>
@@ -368,7 +373,8 @@ df.groupBy { "name"["firstName"] }.aggregate {
 
 ### pivotCounts
 
-Pivots with [`count`](count.md) statistics one or several columns preserving all other columns of `DataFrame` or `GroupBy`.
+Pivots with [`count`](count.md) statistics one or several columns preserving all other columns of [`DataFrame`](DataFrame.md) 
+or [`GroupBy DataFrame`](groupBy.md#transformation).
 
 <!---FUN pivotCounts-->
 
@@ -390,7 +396,7 @@ df.groupBy { name }.aggregate {
 
 ### pivotMatches
 
-Pivots with `Boolean` statistics one or several columns preserving all other columns of `DataFrame`.
+Pivots with `Boolean` statistics one or several columns preserving all other columns of [`DataFrame`](DataFrame.md).
 
 <!---FUN pivotMatches-->
 

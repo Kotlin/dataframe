@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE rules SYSTEM "https://resources.jetbrains.com/stardust/redirection-rules.dtd">
+<!DOCTYPE rules SYSTEM "https://helpserver.labs.jb.gg/help/schemas/mvp/redirection-rules.dtd">
 <rules>
     <rule id="3b72033a">
         <description>Created after removal of "About Dataframe" from Dataframe</description>
