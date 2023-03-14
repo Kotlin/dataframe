@@ -177,6 +177,7 @@ kotlinter {
         "filename",
         "comment-spacing",
         "curly-spacing",
+        "import-ordering"
     )
 }
 
