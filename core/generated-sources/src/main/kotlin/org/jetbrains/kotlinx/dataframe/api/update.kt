@@ -48,7 +48,7 @@ public data class Update<T, C>(
      * - `.`[with][Update.with]` { `[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]` }
      *   | .`[notNull][Update.notNull]` { `[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]` }
      *   | .`[perCol][Update.perCol]` { `[colExpression][ExpressionsGivenColumn.ColumnExpression.WithExample]` }
-     *   | .`[perRowCol][Update.perRowCol]` { `[rowColExpression][ExpressionsGivenColumn.RowColumnExpression.WithExample]` }
+     *   | .`[perRowCol][Update.perRowCol]` { `[rowColExpression][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]` }
      *   | .`[withValue][Update.withValue]`(value)
      *   | .`[withNull][Update.withNull]`()
      *   | .`[withZero][Update.withZero]`()
@@ -332,7 +332,7 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
  * ## See Also
  *  - [Update with][org.jetbrains.kotlinx.dataframe.api.Update.with] to provide a new value for every selected cell giving its row.
  *  - [Update per col][org.jetbrains.kotlinx.dataframe.api.Update.perCol] to provide a new value for every selected cell giving its column.
- * @param expression The [Row Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn.RowColumnExpression] to provide a new value for every selected cell giving its row and column.
+ * @param expression The [Row Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn.RowColumnExpression] to provide a new value for every selected cell giving its row and column.
  */
 public infix fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }

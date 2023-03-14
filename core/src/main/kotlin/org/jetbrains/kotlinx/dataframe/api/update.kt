@@ -48,7 +48,7 @@ public data class Update<T, C>(
      * - `.`[with][Update.with]` { `[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]` }
      *   | .`[notNull][Update.notNull]` { `[rowExpression][ExpressionsGivenRow.RowValueExpression.WithExample]` }
      *   | .`[perCol][Update.perCol]` { `[colExpression][ExpressionsGivenColumn.ColumnExpression.WithExample]` }
-     *   | .`[perRowCol][Update.perRowCol]` { `[rowColExpression][ExpressionsGivenColumn.RowColumnExpression.WithExample]` }
+     *   | .`[perRowCol][Update.perRowCol]` { `[rowColExpression][ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]` }
      *   | .`[withValue][Update.withValue]`(value)
      *   | .`[withNull][Update.withNull]`()
      *   | .`[withZero][Update.withZero]`()
@@ -191,13 +191,13 @@ public fun <T, C> Update<T, C>.at(vararg rowIndices: Int): Update<T, C> = at(row
 public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { index in rowRange }
 
 /** ## Per Row Col
- * @include [ExpressionsGivenColumn.RowColumnExpression.WithExample]
- * {@arg [ExpressionsGivenColumn.OperationArg] [update][update]` { age \}.`[perRowCol][perRowCol]}
+ * @include [ExpressionsGivenRowAndColumn.RowColumnExpression.WithExample]
+ * {@arg [ExpressionsGivenRowAndColumn.OperationArg] [update][update]` { age \}.`[perRowCol][perRowCol]}
  *
  * ## See Also
  *  - {@include [SeeAlsoWith]}
  *  - {@include [SeeAlsoPerCol]}
- * @param expression The {@include [ExpressionsGivenColumn.RowColumnExpressionLink]} to provide a new value for every selected cell giving its row and column.
+ * @param expression The {@include [ExpressionsGivenRowAndColumn.RowColumnExpressionLink]} to provide a new value for every selected cell giving its row and column.
  */
 public infix fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }
