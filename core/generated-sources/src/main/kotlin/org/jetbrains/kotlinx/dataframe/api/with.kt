@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.Column
+import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
@@ -37,7 +37,7 @@ public inline fun <T, reified V> ReducedPivotGroupBy<T>.with(noinline expression
     return pivot.aggregate {
         val value = reducer(this)?.let {
             val value = expression(it, it)
-            if (value is Column) it[value]
+            if (value is AnyColumnReference) it[value]
             else value
         }
         internal().yield(emptyPath(), value, type)

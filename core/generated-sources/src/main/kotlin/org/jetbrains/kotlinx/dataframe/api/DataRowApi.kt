@@ -1,7 +1,7 @@
 package org.jetbrains.kotlinx.dataframe.api
 
+import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.Column
 import org.jetbrains.kotlinx.dataframe.ColumnsContainer
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
@@ -57,10 +57,10 @@ public fun <T> AnyRow.getValueOrNull(column: KProperty<T>): T? = getValueOrNull<
 // region contains
 
 public fun AnyRow.containsKey(columnName: String): Boolean = owner.containsColumn(columnName)
-public fun AnyRow.containsKey(column: Column): Boolean = owner.containsColumn(column)
+public fun AnyRow.containsKey(column: AnyColumnReference): Boolean = owner.containsColumn(column)
 public fun AnyRow.containsKey(column: KProperty<*>): Boolean = owner.containsColumn(column)
 
-public operator fun AnyRow.contains(column: Column): Boolean = containsKey(column)
+public operator fun AnyRow.contains(column: AnyColumnReference): Boolean = containsKey(column)
 public operator fun AnyRow.contains(column: KProperty<*>): Boolean = containsKey(column)
 
 // endregion

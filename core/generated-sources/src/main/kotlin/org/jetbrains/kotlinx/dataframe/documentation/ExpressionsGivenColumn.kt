@@ -18,7 +18,6 @@ internal interface ExpressionsGivenColumn {
      */
     interface OperationArg
 
-    
     interface SetDefaultOperationArg
 
     /** Provide a new value for every selected cell given its column using a [column expression][DfColumnExpression]. */
@@ -26,12 +25,13 @@ internal interface ExpressionsGivenColumn {
 
         /**
          * Provide a new value for every selected cell given its column using a [column expression][org.jetbrains.kotlinx.dataframe.ColumnExpression].
-         * 
+         *
          * For example:
-         * 
+         *
          * `df.`operation` { `[mean][DataColumn.mean]`(skipNA = true) }`
-         * 
+         *
          * `df.`operation` { `[count][DataColumn.count]` { it > 10 } }`
+         *
          */
         interface WithExample
     }
@@ -44,14 +44,15 @@ internal interface ExpressionsGivenColumn {
 
         /**
          * Provide a new value for every selected cell given both its row and column using a [row-column expression][org.jetbrains.kotlinx.dataframe.RowColumnExpression].
-         * 
          * For example:
-         * 
+         *
          * `df.`operation` { row, col ->`
-         * 
-         * `row.age / col.`[mean][DataColumn.mean]`(skipNA = true)`
-         * 
+         *
+         * `row.age / col.`[mean][org.jetbrains.kotlinx.dataframe.DataColumn.mean]`(skipNA = true)`
+         *
          * `}`
+         *
+         *
          */
         interface WithExample
     }
