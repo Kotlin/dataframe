@@ -12,8 +12,9 @@ import org.jetbrains.kotlinx.dataframe.api.*
  * - Selecting parts of rows using a `where` operation after selecting columns ([Row-Value Condition][org.jetbrains.kotlinx.dataframe.documentation.SelectingRows.RowValueCondition.WithExample]),
  * such as with [update], [gather], and [format]
  * (using [RowValueFilter]).
- * 
+ *
  * A Row Condition is similar to a [Row Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow] but expects a [Boolean] as result.
+ *
  */
 internal interface SelectingRows {
 
@@ -29,7 +30,6 @@ internal interface SelectingRows {
      */
     interface SecondOperationArg
 
-    
     interface SetDefaultOperationArg
 
     /** [Entire-Row Condition][EntireRowCondition.WithExample] */
@@ -40,12 +40,13 @@ internal interface SelectingRows {
 
         /**
          * Filter or find rows to operate on using a [row filter][org.jetbrains.kotlinx.dataframe.RowFilter].
-         * 
+         *
          * For example:
-         * 
+         *
          * `df.`operation` { `[index][index]`() % 2 == 0 }`
-         * 
+         *
          * `df.`operation` { `[diff][diff]` { age } == 0 }`
+         *
          */
         interface WithExample
     }
@@ -61,12 +62,13 @@ internal interface SelectingRows {
         /**
          * Filter or find rows to operate on after [selecting columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] using a
          * [row value filter][org.jetbrains.kotlinx.dataframe.RowValueFilter].
-         * 
+         *
          * For example:
-         * 
+         *
          * `df.`operation` { length }.`where` { it > 10.0 }`
-         * 
+         *
          * `df.`operation` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }.`where` { `[index][index]`() > 4 && city != "Paris" }`
+         *
          */
         interface WithExample
     }

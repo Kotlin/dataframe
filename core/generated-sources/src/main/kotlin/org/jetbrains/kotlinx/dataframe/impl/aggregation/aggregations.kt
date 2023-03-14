@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.impl.aggregation
 
-import org.jetbrains.kotlinx.dataframe.Column
+import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.RowExpression
@@ -90,7 +90,7 @@ internal fun <T, C> AggregateInternalDsl<T>.columnValues(
 internal fun <T, V> AggregateInternalDsl<T>.withExpr(type: KType, path: ColumnPath, expression: RowExpression<T, V>) {
     val values = df.rows().map {
         val value = expression(it, it)
-        if (value is Column) it[value]
+        if (value is AnyColumnReference) it[value]
         else value
     }
     yieldOneOrMany(path, values, type)
