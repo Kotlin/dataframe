@@ -47,17 +47,17 @@ public fun <T, C> Update<T, C>.at(rowIndices: Collection<Int>): Update<T, C> = w
 public fun <T, C> Update<T, C>.at(vararg rowIndices: Int): Update<T, C> = at(rowIndices.toSet())
 public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { index in rowRange }
 
-public infix fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
+public fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }
 
 public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
 
-public infix fun <T, C> Update<T, C>.with(expression: UpdateExpression<T, C, C?>): DataFrame<T> =
+public fun <T, C> Update<T, C>.with(expression: UpdateExpression<T, C, C?>): DataFrame<T> =
     updateImpl { row, _, value ->
         expression(row, value)
     }
 
-public infix fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
+public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
     asFrameImpl(expression)
 
 public fun <T, C> Update<T, C>.asNullable(): Update<T, C?> = this as Update<T, C?>
@@ -110,4 +110,4 @@ public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = asNullable().withValue
 
 public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }
 
-public infix fun <T, C> Update<T, C>.withValue(value: C): DataFrame<T> = with { value }
+public fun <T, C> Update<T, C>.withValue(value: C): DataFrame<T> = with { value }
