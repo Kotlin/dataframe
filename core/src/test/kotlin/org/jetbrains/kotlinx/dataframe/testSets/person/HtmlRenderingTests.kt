@@ -7,9 +7,9 @@ import org.jetbrains.kotlinx.dataframe.api.dataFrameOf
 import org.jetbrains.kotlinx.dataframe.api.group
 import org.jetbrains.kotlinx.dataframe.api.into
 import org.jetbrains.kotlinx.dataframe.api.parse
-import org.jetbrains.kotlinx.dataframe.io.html
 import org.jetbrains.kotlinx.dataframe.io.initHtml
 import org.jetbrains.kotlinx.dataframe.io.toHTML
+import org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML
 import org.jetbrains.kotlinx.jupyter.findNthSubstring
 import org.junit.Ignore
 import org.junit.Test
@@ -36,7 +36,7 @@ class HtmlRenderingTests : BaseTest() {
     fun `render url`() {
         val address = "http://www.google.com"
         val df = dataFrameOf("url")(address).parse()
-        val html = df.html()
+        val html = df.toStandaloneHTML()
         html shouldContain "href"
         html.findNthSubstring(address, 2) shouldNotBe -1
     }

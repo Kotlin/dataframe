@@ -181,7 +181,17 @@ internal fun initHtml(
         body = "",
     )
 
+@Deprecated("Clarify difference with .toHTML()", ReplaceWith("this.toStandaloneHTML()", "org.jetbrains.kotlinx.dataframe.io.toStandaloneHTML"))
 public fun <T> DataFrame<T>.html(): String = toHTML(extraHtml = initHtml()).toString()
+
+/**
+ * @return HTML String that be saved as an *.html file and displayed in the browser
+ */
+public fun <T> DataFrame<T>.toStandaloneHTML(
+    configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
+    cellRenderer: CellRenderer = org.jetbrains.kotlinx.dataframe.jupyter.DefaultCellRenderer,
+    getFooter: (DataFrame<T>) -> String = { "DataFrame [${it.size}]" },
+): String = toHTML(configuration, extraHtml = initHtml(), cellRenderer, getFooter).toString()
 
 public fun <T> DataFrame<T>.toHTML(
     configuration: DisplayConfiguration = DisplayConfiguration.DEFAULT,
