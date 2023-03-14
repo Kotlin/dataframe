@@ -2,13 +2,13 @@ package org.jetbrains.kotlinx.dataframe.documentation
 
 import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.api.*
+import org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn.ColumnExpressionLink
 import org.jetbrains.kotlinx.dataframe.ColumnExpression as DfColumnExpression
-import org.jetbrains.kotlinx.dataframe.RowColumnExpression as DfRowColumnExpression
 
 /**
  * ## Expressions Given Column
- *
- * TODO
+ * Expressing values using a "Column Expression" can occur exclusively in a
+ * {@include [ColumnExpressionLink]}.
  */
 internal interface ExpressionsGivenColumn {
 
@@ -39,26 +39,4 @@ internal interface ExpressionsGivenColumn {
 
     /** [Column Expression][ColumnExpression] */
     interface ColumnExpressionLink
-
-    /** Provide a new value for every selected cell given both its row and column using a [row-column expression][DfRowColumnExpression]. */
-    interface RowColumnExpression {
-
-        /**
-         * @include [RowColumnExpression]
-         *
-         * For example:
-         *
-         * `df.`{@includeArg [OperationArg]}` { row, col ->`
-         *
-         * `row.age / col.`[mean][DataColumn.mean]`(skipNA = true)`
-         *
-         * `}`
-         *
-         * @include [SetDefaultOperationArg]
-         */
-        interface WithExample
-    }
-
-    /** [Row Column Expression][RowColumnExpression] */
-    interface RowColumnExpressionLink
 }
