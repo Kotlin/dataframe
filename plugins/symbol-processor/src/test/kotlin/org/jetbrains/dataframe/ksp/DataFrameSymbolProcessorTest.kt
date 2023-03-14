@@ -211,6 +211,42 @@ class DataFrameSymbolProcessorTest {
     }
 
     @Test
+    fun `multi-round data schema generation`() {
+        useHostedFile(jetbrainsCsv) {
+            val result = KspCompilationTestRunner.compile(
+                TestCompilationParameters(
+                    sources = listOf(
+                        SourceFile.kotlin(
+                            "MySources.kt",
+                            """
+                @file:ImportDataSchema(name = "Repo", "$it")
+
+                import org.jetbrains.kotlinx.dataframe.DataFrame
+                import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
+                import org.jetbrains.kotlinx.dataframe.annotations.ImportDataSchema
+                import org.jetbrains.kotlinx.dataframe.api.print
+                import org.jetbrains.kotlinx.dataframe.io.readJson
+
+                @DataSchema
+                interface Repos {
+                    val repositories: DataFrame<Repo>
+                }
+
+                fun main() {
+                    val df: DataFrame<Repos> = DataFrame.readJson("data/jetbrains_repositories.json") as DataFrame<Repos>
+                    df.repositories[0].print()
+                }
+
+                        """.trimIndent()
+                        )
+                    )
+                )
+            )
+            result.successfulCompilation shouldBe true
+        }
+    }
+
+    @Test
     fun `functional type`() {
         val result = KspCompilationTestRunner.compile(
             TestCompilationParameters(

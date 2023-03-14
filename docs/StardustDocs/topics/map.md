@@ -2,7 +2,8 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Creates `List`, [DataFrame](DataFrame.md) or [DataColumn](DataColumn.md) with values computed from rows of original `DataFrame`.
+Creates [`List`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/), [DataFrame](DataFrame.md) or [DataColumn](DataColumn.md) 
+with values computed from rows of original [DataFrame](DataFrame.md).
 
 **Map into `List`:**
 
@@ -58,7 +59,7 @@ df.mapToColumn("year of birth") { 2021 - "age"<Int>() }
 
 See [row expressions](DataRow.md#row-expressions)
 
-**Map into `DataFrame`:**
+**Map into [`DataFrame`](DataFrame.md):**
 
 ```kotlin
 mapToFrame { 

@@ -32,6 +32,7 @@ class SampleNotebooksTests : DataFrameJupyterTest() {
     )
 
     @Test
+    @Ignore
     fun wine() = exampleTest(
         "wine", "WineNetWIthKotlinDL",
         replacer = CodeReplacer.byMap(

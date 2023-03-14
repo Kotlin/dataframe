@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 
-Returns `DataFrame` containing first `n` (default 5) rows.
+Returns [`DataFrame`](DataFrame.md) containing first `n` (default 5) rows.
 
 <!---FUN head-->
 

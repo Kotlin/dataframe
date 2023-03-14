@@ -1,14 +1,14 @@
 [versions]
-ksp = "1.8.0-1.0.8"
-kotlinJupyter = "0.11.0-198"
+ksp = "1.8.20-Beta-1.0.9"
+kotlinJupyter = "0.11.0-311"
 ktlint = "3.4.5"
-kotlin = "1.8.0"
-dokka = "1.7.20"
+kotlin = "1.8.20-Beta"
+dokka = "1.8.10"
 libsPublisher = "0.0.60-dev-30"
 # "Bootstrap" version of the dataframe, used in the build itself to generate @DataSchema APIs,
 # dogfood Gradle / KSP plugins in tests and idea-examples modules
 dataframe = "0.9.1"
-korro = "0.1.1-dev-29"
+korro = "0.1.3"
 kover = "0.6.0-Beta"
 
 commonsCsv = "1.8"

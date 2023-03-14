@@ -1,6 +1,6 @@
 [//]: # (title: rowsCount)
 
-Returns number of rows in `DataFrame`.
+Returns number of rows in [`DataFrame`](DataFrame.md).
 
 ```kotlin
 rowsCount()

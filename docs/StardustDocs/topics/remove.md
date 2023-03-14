@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` without selected columns.
+Returns [`DataFrame`](DataFrame.md) without selected columns.
 
 ```text
 remove { columns }

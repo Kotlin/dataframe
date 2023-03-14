@@ -1,6 +1,6 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.Column
+import org.jetbrains.kotlinx.dataframe.AnyColumnReference
 import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.impl.columnName
@@ -27,11 +27,11 @@ public fun <T> DataFrame<T>.select(vararg columns: String): DataFrame<T> =
 public fun <T> DataFrame<T>.select(columns: Iterable<String>): DataFrame<T> =
     columns.map { get(it) }.toDataFrame().cast()
 
-public fun <T> DataFrame<T>.select(vararg columns: Column): DataFrame<T> =
+public fun <T> DataFrame<T>.select(vararg columns: AnyColumnReference): DataFrame<T> =
     select { columns.toColumns() }
 
 @JvmName("selectAnyColumnReferenceIterable")
-public fun <T> DataFrame<T>.select(columns: Iterable<Column>): DataFrame<T> =
+public fun <T> DataFrame<T>.select(columns: Iterable<AnyColumnReference>): DataFrame<T> =
     select { columns.toColumnSet() }
 
 // endregion

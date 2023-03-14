@@ -8,7 +8,7 @@ Computes cumulative sum of values in selected columns.
 cumSum(skipNA = true) [ { columns } ]
 ```
 
-Returns a `DataFrame` or `DataColumn` containing the cumulative sum.
+Returns a [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md) containing the cumulative sum.
 
 **Parameters:**
 * `skipNA` — when `true`, ignores `NA` (`null` or `NaN`) values. When `false`, all values after first `NA` will be `NaN` (for `Double` and `Float` columns) or `null` (for integer columns).
@@ -16,7 +16,7 @@ Returns a `DataFrame` or `DataColumn` containing the cumulative sum.
 **Available for:**
 * [`DataFrame`](DataFrame.md)
 * [`DataColumn`](DataColumn.md)
-* [`GroupBy`](groupBy.md) — cumulative sum per every data group
+* [`GroupBy DataFrame`](groupBy.md#transformation) — cumulative sum per every data group
 
 <!---FUN cumSum-->
 

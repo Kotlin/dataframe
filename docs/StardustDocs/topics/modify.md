@@ -1,17 +1,19 @@
 [//]: # (title: Modify)
+<show-structure depth="3"/>
 
 <tip> 
 
-`DataFrame` object is immutable and all operations return a new instance of `DataFrame`.
+[`DataFrame`](DataFrame.md) object is immutable and all operations return a new instance of [`DataFrame`](DataFrame.md).
 
 </tip>
 
 ## Naming conventions
 
-`DataFrame` is a columnar data structure and is more oriented to column-wise operations. Most transformation operations start with [column selector](ColumnSelectors.md) that selects target columns for the operation.
+[`DataFrame`](DataFrame.md) is a columnar data structure and is more oriented to column-wise operations. Most transformation operations start with [column selector](ColumnSelectors.md) that selects target columns for the operation.
 Syntax of most column operations assumes that they are applied to columns, so they don't include word `column` in their naming.    
 
-On the other hand, `Kotlin dataframe` follows `Koltin Collections` naming for row-wise operations as `DataFrame` can be interpreted as a `Collection` of rows. The slight naming difference with `Kotlin Collection` is that all operations are named in imperative way: `sortBy`, `shuffle` etc. 
+On the other hand, the Kotlin DataFrame library follows `Koltin Collections` naming for row-wise operations 
+as [`DataFrame`](DataFrame.md) can be interpreted as a [`Collection`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/) of rows. The slight naming difference with `Kotlin Collection` is that all operations are named in imperative way: `sortBy`, `shuffle` etc. 
 
 **Pairs of column/row operations:**
 * [add](add.md) columns / [append](append.md) rows
@@ -40,11 +42,11 @@ On the other hand, `Kotlin dataframe` follows `Koltin Collections` naming for ro
 
 **Vertical (row) operations:**
 * [append](append.md) — add rows
-* [concat](concat.md) — union rows from several dataframes
+* [concat](concat.md) — union rows from several [`DataFrames`](DataFrame.md)
 * [distinct](distinct.md) / [distinctBy](distinct.md#distinctby) — remove duplicated rows
 * [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropWhile](sliceRows.md#dropwhile) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) — remove rows by condition
 * [duplicate](duplicate.md) — duplicate rows 
-* [explode](explode.md) — spread lists and dataframes vertically into new rows
+* [explode](explode.md) — spread lists and [`DataFrames`](DataFrame.md) vertically into new rows
 * [filter](filter.md) / [filterBy](filter.md#filterby) — filter rows
 * [implode](implode.md) — merge column values into lists grouping by other columns
 * [reverse](reverse.md) — reverse rows 
@@ -56,7 +58,7 @@ On the other hand, `Kotlin dataframe` follows `Koltin Collections` naming for ro
 **Value modification:**
 * [convert](convert.md) — convert values into new types
 * [parse](parse.md) — try to convert `String` values into appropriate types
-* [unfold](unfold.md) — convert / "unfold" objects to `ColumnGroup`
+* [unfold](unfold.md) — convert / "unfold" objects to [`ColumnGroup`](DataColumn.md#columngroup)
 * [update](update.md) — update values preserving column types
 * [fillNulls](fill.md#fillnulls) / [fillNaNs](fill.md#fillnans) / [fillNA](fill.md#fillna) — replace missing values
 

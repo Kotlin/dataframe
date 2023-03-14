@@ -1,10 +1,10 @@
-[//]: # (title: Operations)
+[//]: # (title: Operations Overview)
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Data transformation pipeline usually consists of several modification operations, such as filtering, sorting, grouping, pivoting, adding/removing columns etc. 
-DataFrame API is designed in functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
-`DataFrame` object is immutable and all operations return a new `DataFrame` instance reusing underlying data structures as much as possible.
+Data transformation pipeline usually consists of several modification operations, such as filtering, sorting, grouping, pivoting, adding/removing columns etc.
+The Kotlin DataFrame API is designed in functional style so that the whole processing pipeline can be represented as a single statement with a sequential chain of operations.
+[`DataFrame`](DataFrame.md) object is immutable and all operations return a new [`DataFrame`](DataFrame.md) instance reusing underlying data structures as much as possible.
 
 <!---FUN multiCallOperations-->
 
@@ -26,12 +26,12 @@ You can play with "people" dataset that is used in present guide [here](https://
 
 ## Multiplex operations
 
-Simple operations (such as [`filter`](filter.md) or [`select`](select.md)) return new `DataFrame` immediately, while more complex operations return an intermediate object that is used for further configuration of the operation. Let's call such operations **multiplex**.
+Simple operations (such as [`filter`](filter.md) or [`select`](select.md)) return new [`DataFrame`](DataFrame.md) immediately, while more complex operations return an intermediate object that is used for further configuration of the operation. Let's call such operations **multiplex**.
 
 Every multiplex operation configuration consists of:
 - [column selector](ColumnSelectors.md) that is used to select target columns for the operation
 - additional configuration functions
-- terminal function that returns modified `DataFrame`
+- terminal function that returns modified [`DataFrame`](DataFrame.md)
 
 Most multiplex operations end with `into` or `with` function. The following naming convention is used:
 * `into` defines column names for storing operation results. Used in [`move`](move.md), [`group`](group.md), [`split`](split.md), [`merge`](merge.md), [`gather`](gather.md), [`groupBy`](groupBy.md), [`rename`](rename.md).
@@ -44,7 +44,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [append](append.md) — add rows
 * [columns](columns.md) / [columnNames](columnNames.md) / [columnTypes](columnTypes.md) — get list of top-level columns, column names or column types
 * [columnsCount](columnsCount.md) — number of top-level columns
-* [concat](concat.md) — union rows from several dataframes
+* [concat](concat.md) — union rows from several [`DataFrames`](DataFrame.md)
 * [convert](convert.md) — change column values and/or column types
 * [corr](corr.md) — pairwise correlation of columns
 * [count](count.md) — number of rows that match condition 
@@ -54,7 +54,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [distinct](distinct.md) / [distinctBy](distinct.md#distinctby) — remove duplicated rows
 * [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropWhile](sliceRows.md#dropwhile) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) — remove rows by condition
 * [duplicate](duplicate.md) — duplicate rows 
-* [explode](explode.md) — spread lists and dataframes vertically into new rows
+* [explode](explode.md) — spread lists and [`DataFrames`](DataFrame.md) vertically into new rows
 * [fillNulls](fill.md#fillnulls) / [fillNaNs](fill.md#fillnans) / [fillNA](fill.md#fillna) — replace missing values
 * [filter](filter.md) / [filterBy](filter.md#filterby) — filter rows by condition
 * [first](first.md) / [firstOrNull](first.md#firstornull) — find first row by condition
@@ -65,11 +65,11 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [getColumn](getColumn.md) / [getColumnOrNull](getColumn.md#getcolumnornull) / [getColumnGroup](getColumn.md#getcolumngroup) / [getColumns](getColumn.md#getcolumns) — get one or several columns
 * [group](group.md) — group columns into [`ColumnGroup`](DataColumn.md#columngroup)
 * [groupBy](groupBy.md) — group rows by key columns
-* [head](head.md) — get first 5 rows of dataframe
+* [head](head.md) — get first 5 rows of [`DataFrames`](DataFrame.md)
 * [implode](implode.md) — collapse column values into lists grouping by other columns
 * [inferType](inferType.md) — infer column type from column values
 * [insert](insert.md) — insert column
-* [join](join.md) — join dataframes by key columns
+* [join](join.md) — join [`DataFrames`](DataFrame.md) by key columns
 * [last](last.md) / [lastOrNull](last.md#lastornull) — find last row by condition 
 * [map](map.md) — map columns into new [`DataFrame`](DataFrame.md) or [`DataColumn`](DataColumn.md)
 * [max](minmax.md) / [maxBy](minmax.md) / [maxOf](minmax.md) / [maxFor](minmax.md) — max of values 
@@ -96,13 +96,13 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [std](std.md) / [stdOf](std.md) / [stdFor](std.md) — standard deviation of values
 * [sum](sum.md) / [sumOf](sum.md) / [sumFor](sum.md) — sum of values
 * [take](sliceRows.md#take) / [takeLast](sliceRows.md#takelast) / [takeWhile](sliceRows.md#takewhile) — get first/last rows
-* [toList](toList.md) / [toListOf](toList.md#tolistof) — export dataframe into a list of data classes
-* [toMap](toMap.md) — export dataframe into a map from column names to column values
+* [toList](toList.md) / [toListOf](toList.md#tolistof) — export [`DataFrame`](DataFrame.md) into a list of data classes
+* [toMap](toMap.md) — export [`DataFrame`](DataFrame.md) into a map from column names to column values
 * [ungroup](ungroup.md) — remove column groupings
 * [update](update.md) — update column values preserving column types
-* [values](values.md) — `Sequence` of values traversed by row or by column 
+* [values](values.md) — [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/) of values traversed by row or by column 
 * [valueCounts](valueCounts.md) — counts for unique values 
-* [xs](xs.md) — slice dataframe by given key values
+* [xs](xs.md) — slice [`DataFrame`](DataFrame.md) by given key values
 
 ## Shortcut operations
 Some operations are shortcuts for more general operations:
@@ -112,4 +112,4 @@ Some operations are shortcuts for more general operations:
 * [fillNulls](fill.md#fillnulls), [fillNaNs](fill.md#fillnans), [fillNA](fill.md#fillna) are special cases of [update](update.md)
 * [convert](convert.md) is a special case of [replace](replace.md)
 
-You can use these shortcuts to apply the most common `DataFrame` transformations easier, but you can always fall back to general operations if you need more customization.    
+You can use these shortcuts to apply the most common [`DataFrame`](DataFrame.md) transformations easier, but you can always fall back to general operations if you need more customization.    

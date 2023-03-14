@@ -2,7 +2,7 @@
 
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Returns `DataFrame` with changed values in some cells. Column types can not be changed.
+Returns [`DataFrame`](DataFrame.md) with changed values in some cells. Column types can not be changed.
 
 ```text
 update { columns }

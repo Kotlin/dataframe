@@ -108,7 +108,7 @@ val df = dataFrameOf(names).fill(15, true)
 
 ### toDataFrame
 
-`DataFrame` from `Iterable<DataColumn>`:
+[`DataFrame`](DataFrame.md) from `Iterable<DataColumn>`:
 
 <!---FUN createDataFrameFromIterable-->
 
@@ -134,7 +134,7 @@ map.toDataFrame()
 
 <!---END-->
 
-`DataFrame` from `Iterable` of objects:
+[`DataFrame`](DataFrame.md) from [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of objects:
 
 <!---FUN readDataFrameFromObject-->
 
@@ -148,7 +148,8 @@ val df = persons.toDataFrame()
 
 <!---END-->
 
-Scans object properties using reflection and creates [ValueColumn](DataColumn.md#valuecolumn) for every property. Scope of properties for scanning is defined at compile-time by formal types of objects in `Iterable`, so properties of implementation classes will not be scanned.
+Scans object properties using reflection and creates [ValueColumn](DataColumn.md#valuecolumn) for every property. 
+Scope of properties for scanning is defined at compile-time by formal types of objects in [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/), so properties of implementation classes will not be scanned.
 
 Specify `depth` parameter to perform deep object graph traversal and convert nested objects into [ColumnGroups](DataColumn.md#columngroup) and [FrameColumns](DataColumn.md#framecolumn):
 

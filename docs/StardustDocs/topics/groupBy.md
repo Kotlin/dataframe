@@ -3,7 +3,7 @@
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Analyze-->
 <!---IMPORT org.jetbrains.kotlinx.dataframe.samples.api.Modify-->
 
-Splits the rows of `DataFrame` into groups using one or several columns as grouping keys.
+Splits the rows of [`DataFrame`](DataFrame.md) into groups using one or several columns as grouping keys.
 
 ```text
 groupBy { columns }
@@ -77,7 +77,7 @@ Returns `GroupBy` object.
 
 ## Transformation
 
-`GroupBy` is a `DataFrame` with one chosen [`FrameColumn`](DataColumn.md#framecolumn) containing data groups.
+`GroupBy DataFrame` is a [`DataFrame`](DataFrame.md) with one chosen [`FrameColumn`](DataColumn.md#framecolumn) containing data groups.
 
 It supports the following operations:
 * [`add`](add.md)
@@ -86,7 +86,7 @@ It supports the following operations:
 * [`pivot`](pivot.md#pivot-groupby)
 * [`concat`](concat.md)
 
-Any `DataFrame` with `FrameColumn` can be reinterpreted as `GroupBy`:
+Any [`DataFrame`](DataFrame.md) with `FrameColumn` can be reinterpreted as `GroupBy DataFrame`:
 
 <!---FUN dataFrameToGroupBy-->
 
@@ -100,7 +100,7 @@ df.asGroupBy { data } // convert dataframe to GroupBy by interpreting 'data' col
 
 <!---END-->
 
-And any `GroupBy` can be reinterpreted as `DataFrame` with `FrameColumn`:
+And any [`GroupBy DataFrame`](groupBy.md#transformation) can be reinterpreted as [`DataFrame`](DataFrame.md) with `FrameColumn`:
 
 <!---FUN groupByToFrame-->
 
@@ -110,7 +110,7 @@ df.groupBy { city }.toDataFrame()
 
 <!---END-->
 
-Use [`concat`](concat.md) to union all data groups of `GroupBy` into original `DataFrame` preserving new order of rows produced by grouping:
+Use [`concat`](concat.md) to union all data groups of `GroupBy` into original [`DataFrame`](DataFrame.md) preserving new order of rows produced by grouping:
 
 <!---FUN concatGroupBy-->
 
@@ -122,8 +122,9 @@ df.groupBy { name }.concat()
 
 ## Aggregation
 
-To compute one or several [statistics](summaryStatistics.md) per every group of `GroupBy` use `aggregate` function. Its body will be executed for every data group and has a receiver of type `DataFrame` that represents current data group being aggregated.
-To add a new column to the resulting `DataFrame`, pass the name of new column to infix function `into`:
+To compute one or several [statistics](summaryStatistics.md) per every group of `GroupBy` use `aggregate` function. 
+Its body will be executed for every data group and has a receiver of type [`DataFrame`](DataFrame.md) that represents current data group being aggregated.
+To add a new column to the resulting [`DataFrame`](DataFrame.md), pass the name of new column to infix function `into`:
 
 <!---FUN groupByAggregations-->
 <tabs>
@@ -229,7 +230,7 @@ df.groupBy("city").aggregate { maxBy("age")["name"] }
 </tab></tabs>
 <!---END-->
 
-Most common aggregation functions can be computed directly at `GroupBy`:
+Most common aggregation functions can be computed directly at [`GroupBy DataFrame`](groupBy.md#transformation) :
 
 <!---FUN groupByDirectAggregations-->
 <tabs>
@@ -301,7 +302,7 @@ df.groupBy("city").meanOf("mean ratio") {
 
 To get all column values for every group without aggregation use `values` function:
 * for [ValueColumn](DataColumn.md#valuecolumn) of type `T` it will gather group values into lists of type `List<T>`
-* for [ColumnGroup](DataColumn.md#columngroup) it will gather group values into `DataFrame` and convert [ColumnGroup](DataColumn.md#columngroup) into [FrameColumn](DataColumn.md#framecolumn)
+* for [ColumnGroup](DataColumn.md#columngroup) it will gather group values into [`DataFrame`](DataFrame.md) and convert [ColumnGroup](DataColumn.md#columngroup) into [FrameColumn](DataColumn.md#framecolumn)
 
 <!---FUN groupByWithoutAggregation-->
 <tabs>
