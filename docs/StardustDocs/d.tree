@@ -3,7 +3,7 @@
         SYSTEM "https://helpserver.labs.jb.gg/help/schemas/mvp/product-profile.dtd">
 
 <instance-profile id="d"
-                 name="Dataframe"
+                 name="DataFrame"
                  status="release"
                  start-page="overview.md">
     <toc-element topic="gettingStarted.md"/>
