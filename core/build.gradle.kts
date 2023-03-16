@@ -1,8 +1,4 @@
-import nl.jolanrensen.docProcessor.defaultProcessors.COMMENT_DOC_PROCESSOR
-import nl.jolanrensen.docProcessor.defaultProcessors.INCLUDE_ARG_DOC_PROCESSOR
-import nl.jolanrensen.docProcessor.defaultProcessors.INCLUDE_DOC_PROCESSOR
-import nl.jolanrensen.docProcessor.defaultProcessors.INCLUDE_FILE_DOC_PROCESSOR
-import nl.jolanrensen.docProcessor.defaultProcessors.SAMPLE_DOC_PROCESSOR
+import nl.jolanrensen.docProcessor.defaultProcessors.*
 import nl.jolanrensen.docProcessor.gradle.creatingProcessDocTask
 import org.gradle.jvm.tasks.Jar
 

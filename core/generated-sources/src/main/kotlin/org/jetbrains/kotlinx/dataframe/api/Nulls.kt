@@ -1,21 +1,37 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.api.Update.UpdateOperationArg
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.documentation.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.kind
-import org.jetbrains.kotlinx.dataframe.typeClass
 import kotlin.reflect.KProperty
+
+/**
+ * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
+ * in cases where a mathematical operation is undefined, such as dividing by zero.
+ *
+ * You can also use [fillNaNs][fillNaNs] to replace `NaNs` in certain columns with a given value or expression
+ * or [dropNaNs][dropNaNs] to drop rows with `NaNs` in them.
+ *
+ * @see NA
+ */
+internal interface NaN
+
+/**
+ * `NA` in Dataframe can be seen as "[NaN] or `null`".
+ *
+ * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
+ * in cases where a mathematical operation is undefined, such as dividing by zero.
+ *
+ * You can also use [fillNA][fillNA] to replace `NAs` in certain columns with a given value or expression
+ * or [dropNA][dropNA] to drop rows with `NAs` in them.
+ *
+ * @see NaN
+ */
+internal interface NA
 
 // region fillNulls
 
@@ -25,7 +41,7 @@ import kotlin.reflect.KProperty
  * Replaces `null` values with given value or expression.
  * Specific case of [update].
  *
- * Check out the [`fillNulls` Operation Usage][Usage].
+ * Check out the [`fillNulls` Operation Usage][FillNulls.Usage].
  *
  * For more information: [See `fillNulls` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnulls)
  */
@@ -93,7 +109,7 @@ private interface CommonFillNullsFunctionDoc
  *
  * `df.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * `df.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<Double>() }`
+ * `df.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
  *  
  * @param columns The [Columns selector DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
@@ -167,9 +183,9 @@ public fun <T, C> DataFrame<T>.fillNulls(vararg columns: KProperty<C>): Update<T
  *
  * For example:
  *
- * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<Double>()`
+ * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
  *
- * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<Double>()`
+ * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
  *
  * `df.`[fillNulls][org.jetbrains.kotlinx.dataframe.api.fillNulls]`(length, age)`
  *  
@@ -185,30 +201,6 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: Iterable<ColumnReference<C>>):
     fillNulls { columns.toColumnSet() }
 
 // endregion
-
-/**
- * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
- * in cases where a mathematical operation is undefined, such as dividing by zero.
- * In Dataframe we have helper functions to check for `NaNs`, such as [Any?.isNaN][Any.isNaN] and
- * [column.canHaveNaN][DataColumn.canHaveNaN].
- * You can also use [fillNaNs][fillNaNs] to replace `NaNs` in certain columns with a given value or expression.
- *
- * @see NA
- */
-internal interface NaN
-
-/**
- * `NA` in Dataframe can be seen as "[NaN] or `null`".
- *
- * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
- * in cases where a mathematical operation is undefined, such as dividing by zero.
- *
- * In Dataframe we have helper functions to check for `NAs`, such as [Any?.isNA][Any.isNA] and
- * [column.canHaveNA][DataColumn.canHaveNA].
- * You can also use [fillNA][fillNA] to replace `NAs` in certain columns with a given value or expression.
- * @see NaN
- */
-internal interface NA
 
 internal inline val Any?.isNaN: Boolean get() = (this is Double && isNaN()) || (this is Float && isNaN())
 
@@ -238,7 +230,7 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
  * Replaces [`NaN`][NaN] values with given value or expression.
  * Specific case of [update].
  *
- * Check out the [`fillNaNs` Operation Usage][Usage].
+ * Check out the [`fillNaNs` Operation Usage][FillNaNs.Usage].
  *
  * For more information: [See `fillNaNs` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillnans)
  */
@@ -306,7 +298,7 @@ private interface CommonFillNaNsFunctionDoc
  *
  * `df.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * `df.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<Double>() }`
+ * `df.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
  *  
  * @param columns The [Columns selector DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
@@ -380,9 +372,9 @@ public fun <T, C> DataFrame<T>.fillNaNs(vararg columns: KProperty<C>): Update<T,
  *
  * For example:
  *
- * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<Double>()`
+ * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
  *
- * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<Double>()`
+ * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
  *
  * `df.`[fillNaNs][org.jetbrains.kotlinx.dataframe.api.fillNaNs]`(length, age)`
  *  
@@ -407,7 +399,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: Iterable<ColumnReference<C>>): 
  * Replaces [`NA`][NA] values with given value or expression.
  * Specific case of [update].
  *
- * Check out the [`fillNA` Operation Usage][Usage].
+ * Check out the [`fillNA` Operation Usage][FillNA.Usage].
  *
  * For more information: [See `fillNA` on the documentation website.](https://kotlin.github.io/dataframe/fill.html#fillna)
  */
@@ -475,7 +467,7 @@ private interface CommonFillNAFunctionDoc
  *
  * `df.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * `df.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<Double>() }`
+ * `df.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
  *  
  * @param columns The [Columns selector DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
@@ -549,9 +541,9 @@ public fun <T, C> DataFrame<T>.fillNA(vararg columns: KProperty<C>): Update<T, C
  *
  * For example:
  *
- * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<Double>()`
+ * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
  *
- * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<Double>()`
+ * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
  *
  * `df.`[fillNA][org.jetbrains.kotlinx.dataframe.api.fillNA]`(length, age)`
  *  
@@ -568,32 +560,208 @@ public fun <T, C> DataFrame<T>.fillNA(columns: Iterable<ColumnReference<C>>): Up
 
 // endregion
 
+/** @param columns The [Columns selector DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample] used to select the columns of this [DataFrame] to drop rows in. */
+private interface DropDslParam
+
+
 // region dropNulls
 
-public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, selector: ColumnsSelector<T, *>): DataFrame<T> {
-    val columns = this[selector]
-    return if (whereAllNull) drop { row -> columns.all { col -> col[row] == null } }
-    else drop { row -> columns.any { col -> col[row] == null } }
+/**
+ * ## The Drop Nulls Operation
+ *
+ * Removes rows with `null` values.
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
+ * rows are dropped if any of the selected cells are `null`.
+ *
+ * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls)
+ */
+internal interface DropNulls {
+
+    /**
+     * @param whereAllNull `false` by default.
+     *   If `true`, rows are dropped if all selected cells are `null`.
+     *   If `false`, rows are dropped if any of the selected cells is `null`.
+     */
+    interface WhereAllNullParam
 }
 
+private interface SetDropNullsOperationArg
+
+/**
+ * ## The Drop Nulls Operation
+ *
+ * Removes rows with `null` values.
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
+ * rows are dropped if any of the selected cells are `null`.
+ *
+ * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls) 
+ * ## This Drop Nulls Overload
+ */
+private interface CommonDropNullsFunctionDoc
+
+/**
+ * ## The Drop Nulls Operation
+ *
+ * Removes rows with `null` values.
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
+ * rows are dropped if any of the selected cells are `null`.
+ *
+ * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls) 
+ * ## This Drop Nulls Overload
+ * Select or express columns using the Column(s) Selection DSL.
+ * (Any [Access Api][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+ *
+ * This DSL comes in the form of either a [Column Selector][org.jetbrains.kotlinx.dataframe.ColumnSelector]- or [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operate in the [Column Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] or the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expect you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], respectively.
+ *
+ * For example:
+ *
+ * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]` { length `[and][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.and]` age }`
+ *
+ * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ *
+ * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
+ *  
+ * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]`(whereAllNull = true) { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
+ *
+ * @param whereAllNull `false` by default.
+ *   If `true`, rows are dropped if all selected cells are `null`.
+ *   If `false`, rows are dropped if any of the selected cells is `null`.
+ * @param columns The [Columns selector DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ */
+public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
+    val cols = this[columns]
+    return if (whereAllNull) drop { row -> cols.all { col -> col[row] == null } }
+    else drop { row -> cols.any { col -> col[row] == null } }
+}
+
+/**
+ * ## The Drop Nulls Operation
+ *
+ * Removes rows with `null` values.
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
+ * rows are dropped if any of the selected cells are `null`.
+ *
+ * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls) 
+ * ## This Drop Nulls Overload
+ * This overload operates on all columns in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * @param whereAllNull `false` by default.
+ *   If `true`, rows are dropped if all selected cells are `null`.
+ *   If `false`, rows are dropped if any of the selected cells is `null`.
+ */
 public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { all() }
 
+/**
+ * ## The Drop Nulls Operation
+ *
+ * Removes rows with `null` values.
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
+ * rows are dropped if any of the selected cells are `null`.
+ *
+ * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls) 
+ * ## This Drop Nulls Overload
+ * Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
+ *
+ * For example:
+ * ```kotlin
+ * data class Person(val length: Double, val age: Double)
+ * ```
+ *
+ * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]`(Person::length, Person::age)`
+ *  
+ * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]`(Person::length, whereAllNull = true)`
+ * @param whereAllNull `false` by default.
+ *   If `true`, rows are dropped if all selected cells are `null`.
+ *   If `false`, rows are dropped if any of the selected cells is `null`.
+ * @param columns The [Columns selector DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumns() }
 
+/**
+ * ## The Drop Nulls Operation
+ *
+ * Removes rows with `null` values.
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
+ * rows are dropped if any of the selected cells are `null`.
+ *
+ * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls) 
+ * ## This Drop Nulls Overload
+ * Select columns using their [column names][String]
+ * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ *
+ * For example:
+ *
+ * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]`("length", "age")`
+ *  
+ * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]`("length", whereAllNull = true)`
+ * @param whereAllNull `false` by default.
+ *   If `true`, rows are dropped if all selected cells are `null`.
+ *   If `false`, rows are dropped if any of the selected cells is `null`.
+ * @param columns The [Columns selector DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumns() }
 
+/**
+ * ## The Drop Nulls Operation
+ *
+ * Removes rows with `null` values.
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
+ * rows are dropped if any of the selected cells are `null`.
+ *
+ * For more information: [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls) 
+ * ## This Drop Nulls Overload
+ * Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
+ * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]).
+ *
+ * For example:
+ *
+ * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
+ *
+ * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
+ *
+ * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]`(length, age)`
+ *  
+ * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]`(length, whereAllNull = true)`
+ * @param whereAllNull `false` by default.
+ *   If `true`, rows are dropped if all selected cells are `null`.
+ *   If `false`, rows are dropped if any of the selected cells is `null`.
+ * @param columns The [Columns selector DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumns() }
 
+/**
+ * TODO will be deprecated
+ */
 public fun <T> DataFrame<T>.dropNulls(
     columns: Iterable<AnyColumnReference>,
     whereAllNull: Boolean = false
 ): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumnSet() }
 
+/**
+ * ## The Drop Nulls Operation
+ *
+ * Removes `null` values from this [DataColumn], adjusting the type accordingly.
+ */
 public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
     (if (!hasNulls()) this else filter { it != null }) as DataColumn<T>
 

@@ -35,6 +35,20 @@ private interface DocumentationUrls {
         interface FillNA
     }
 
+    /** [See `drop` on the documentation website.](https://kotlin.github.io/dataframe/drop.html) */
+    interface Drop {
+
+        /** [See `dropNulls` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnulls) */
+        interface DropNulls
+
+        /** [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans) */
+        interface DropNaNs
+
+        /** [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna) */
+        interface DropNA
+
+    }
+
     /** [See Access APIs on the documentation website.](https://kotlin.github.io/dataframe/apilevels.html) */
     interface AccessApis {
 

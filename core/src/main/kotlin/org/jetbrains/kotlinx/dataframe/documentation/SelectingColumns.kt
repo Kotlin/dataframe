@@ -1,8 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
-import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.ColumnSelector
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.columns.*
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.*
 import kotlin.reflect.KProperty
 
 /** {@comment
@@ -48,11 +53,11 @@ internal interface SelectingColumns {
          *
          * For example:
          *
-         * `df.`{@includeArg [OperationArg]}` { length `[and][ColumnsSelectionDsl.and]` age }`{@comment TODO this links up like "kotlin.String.and"}
+         * `df.`{@includeArg [OperationArg]}` { length `[and][ColumnsSelectionDsl.and]` age }`
          *
          * `df.`{@includeArg [OperationArg]}` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
          *
-         * `df.`{@includeArg [OperationArg]}` { `[colsOf][colsOf]`<Double>() }`
+         * `df.`{@includeArg [OperationArg]}` { `[colsOf][colsOf]`<`[Double][Double]`>() }`
          * @include [SetDefaultOperationArg]
          */
         interface WithExample
@@ -88,9 +93,9 @@ internal interface SelectingColumns {
          *
          * For example:
          *
-         * `val length by `[column]`<Double>()`
+         * `val length by `[column][column]`<`[Double][Double]`>()`
          *
-         * `val age by `[column]`<Double>()`
+         * `val age by `[column][column]`<`[Double][Double]`>()`
          *
          * `df.`{@includeArg [OperationArg]}`(length, age)`
          * @include [SetDefaultOperationArg]

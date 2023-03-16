@@ -1,8 +1,13 @@
 package org.jetbrains.kotlinx.dataframe.documentation
 
-import org.jetbrains.kotlinx.dataframe.*
+import org.jetbrains.kotlinx.dataframe.ColumnSelector
+import org.jetbrains.kotlinx.dataframe.ColumnsSelector
+import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.api.*
-import org.jetbrains.kotlinx.dataframe.columns.*
+import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
+import org.jetbrains.kotlinx.dataframe.columns.ColumnSet
+import org.jetbrains.kotlinx.dataframe.columns.SingleColumn
+import org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.*
 import kotlin.reflect.KProperty
 
 /** {@comment
@@ -32,24 +37,27 @@ internal interface SelectingColumnsLink
  *
  * `df.`operation` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * `df.`operation` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<Double>() }`
- *  - Select columns using their [column names][String]
+ * `df.`operation` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
+ *
+ * - Select columns using their [column names][String]
  * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
  *
  * For example:
  *
  * `df.`operation`("length", "age")`
- *  - Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
+ *
+ * - Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
  * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]).
  *
  * For example:
  *
- * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<Double>()`
+ * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
  *
- * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<Double>()`
+ * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
  *
  * `df.`operation`(length, age)`
- *  - Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
+ *
+ * - Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
  *
  * For example:
  * ```kotlin
@@ -91,7 +99,7 @@ internal interface SelectingColumns {
          *
          * `df.`operation` { `[cols][ColumnsSelectionDsl.cols]`(1..5) }`
          *
-         * `df.`operation` { `[colsOf][colsOf]`<Double>() }`
+         * `df.`operation` { `[colsOf][colsOf]`<`[Double][Double]`>() }`
          *
          */
         interface WithExample
@@ -129,9 +137,9 @@ internal interface SelectingColumns {
          *
          * For example:
          *
-         * `val length by `[column]`<Double>()`
+         * `val length by `[column][column]`<`[Double][Double]`>()`
          *
-         * `val age by `[column]`<Double>()`
+         * `val age by `[column][column]`<`[Double][Double]`>()`
          *
          * `df.`operation`(length, age)`
          *

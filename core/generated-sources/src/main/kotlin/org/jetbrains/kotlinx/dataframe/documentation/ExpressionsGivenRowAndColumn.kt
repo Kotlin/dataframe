@@ -25,6 +25,7 @@ internal interface ExpressionsGivenRowAndColumn {
 
         /**
          * Provide a new value for every selected cell given both its row and column using a [row-column expression][org.jetbrains.kotlinx.dataframe.RowColumnExpression].
+         *
          * For example:
          *
          * `df.`operation` { row, col ->`

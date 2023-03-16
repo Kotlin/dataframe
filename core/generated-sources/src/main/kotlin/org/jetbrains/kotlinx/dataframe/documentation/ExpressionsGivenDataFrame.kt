@@ -19,6 +19,7 @@ internal interface ExpressionsGivenDataFrame {
 
         /**
          * Provide a new value for every selected data frame using a [dataframe expression][org.jetbrains.kotlinx.dataframe.DataFrameExpression].
+         *
          * For example:
          *
          * {@includeArg [OperationArg][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.OperationArg]}` { `[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { lastName } }`
