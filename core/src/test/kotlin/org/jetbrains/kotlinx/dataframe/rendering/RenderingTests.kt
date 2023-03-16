@@ -57,6 +57,13 @@ class RenderingTests {
     }
 
     @Test
+    fun unicodeEscapeSequencesAreEscaped() {
+        val df = dataFrameOf("content")("""Hello\nfrom \x and \y""")
+        val html = df.toHTML().toString()
+        html shouldContain "Hello&#92;nfrom &#92;x and &#92;y"
+    }
+
+    @Test
     fun `long text is trimmed without escaping`() {
         val df = dataFrameOf("text")("asdfkjasdlkjfhasljkddasdasdasdasdasdasdhf")
         val html = df.toHTML().toString()
