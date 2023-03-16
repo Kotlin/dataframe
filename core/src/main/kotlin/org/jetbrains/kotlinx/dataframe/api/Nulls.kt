@@ -151,3 +151,35 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
     }
 
 // endregion
+
+// region dropNaNs
+
+public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false, selector: ColumnsSelector<T, *>): DataFrame<T> {
+    val cols = this[selector]
+
+    return if (whereAllNaN) drop { cols.all { this[it].isNaN } }
+    else drop { cols.any { this[it].isNaN } }
+}
+
+public fun <T> DataFrame<T>.dropNaNs(vararg cols: KProperty<*>, whereAllNaN: Boolean = false): DataFrame<T> =
+    dropNaNs(whereAllNaN) { cols.toColumns() }
+
+public fun <T> DataFrame<T>.dropNaNs(vararg cols: String, whereAllNaN: Boolean = false): DataFrame<T> =
+    dropNaNs(whereAllNaN) { cols.toColumns() }
+
+public fun <T> DataFrame<T>.dropNaNs(vararg cols: AnyColumnReference, whereAllNaN: Boolean = false): DataFrame<T> =
+    dropNaNs(whereAllNaN) { cols.toColumns() }
+
+public fun <T> DataFrame<T>.dropNaNs(cols: Iterable<AnyColumnReference>, whereAllNaN: Boolean = false): DataFrame<T> =
+    dropNaNs(whereAllNaN) { cols.toColumnSet() }
+
+public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false): DataFrame<T> =
+    dropNaNs(whereAllNaN) { all() }
+
+public fun <T> DataColumn<T>.dropNaNs(): DataColumn<T> =
+    when (typeClass) {
+        Double::class, Float::class -> filter { !it.isNaN }.cast()
+        else -> this
+    }
+
+// endregion
