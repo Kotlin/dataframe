@@ -124,7 +124,7 @@ private interface UpdateWithNote
  *
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
  *
- * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<Double>() }`
+ * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
  *  
  * @param columns The [Columns selector DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to update.
  */
@@ -202,9 +202,9 @@ public fun <T, C> DataFrame<T>.update(vararg columns: KProperty<C>): Update<T, C
  *
  * For example:
  *
- * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<Double>()`
+ * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
  *
- * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<Double>()`
+ * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
  *
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]`(length, age)`
  *  
@@ -233,7 +233,8 @@ public fun <T, C> DataFrame<T>.update(columns: Iterable<ColumnReference<C>>): Up
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { length }.`[where][org.jetbrains.kotlinx.dataframe.api.where]` { it > 10.0 }`
  *
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }.`[where][org.jetbrains.kotlinx.dataframe.api.where]` { `[index][org.jetbrains.kotlinx.dataframe.index]`() > 4 && city != "Paris" }`
- *  
+ *
+ *
  *
  *
  * @param predicate The [row value filter][RowValueFilter] to select the rows to update.
@@ -273,6 +274,7 @@ private interface CommonUpdateAtFunctionDoc {
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { name }.`[at][org.jetbrains.kotlinx.dataframe.api.at]`(1, 2, 3, 4).`[with][org.jetbrains.kotlinx.dataframe.api.with]` { "Empty" }`
  *
  * ## This At Overload
+ *
  * Provide a [Collection][Collection]<[Int][Int]> of row indices to update.
  *
  * @param rowIndices The indices of the rows to update. Either a [Collection][Collection]<[Int][Int]>, an [IntRange][IntRange], or just `vararg` indices.
@@ -292,6 +294,7 @@ public fun <T, C> Update<T, C>.at(rowIndices: Collection<Int>): Update<T, C> = w
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { name }.`[at][org.jetbrains.kotlinx.dataframe.api.at]`(1, 2, 3, 4).`[with][org.jetbrains.kotlinx.dataframe.api.with]` { "Empty" }`
  *
  * ## This At Overload
+ *
  * Provide a `vararg` of [Ints][Int] of row indices to update.
  *
  * @param rowIndices The indices of the rows to update. Either a [Collection][Collection]<[Int][Int]>, an [IntRange][IntRange], or just `vararg` indices.
@@ -311,6 +314,7 @@ public fun <T, C> Update<T, C>.at(vararg rowIndices: Int): Update<T, C> = at(row
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { name }.`[at][org.jetbrains.kotlinx.dataframe.api.at]`(1, 2, 3, 4).`[with][org.jetbrains.kotlinx.dataframe.api.with]` { "Empty" }`
  *
  * ## This At Overload
+ *
  * Provide an [IntRange][IntRange] of row indices to update.
  *
  * @param rowRange The indices of the rows to update. Either a [Collection][Collection]<[Int][Int]>, an [IntRange][IntRange], or just `vararg` indices.
@@ -319,6 +323,7 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
 
 /** ## Per Row Col
  * Provide a new value for every selected cell given both its row and column using a [row-column expression][org.jetbrains.kotlinx.dataframe.RowColumnExpression].
+ *
  * For example:
  *
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { age ` { row, col ->`
@@ -327,7 +332,8 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
  *
  * `}`
  *
- *  .`[perRowCol][org.jetbrains.kotlinx.dataframe.api.perRowCol]}
+ *
+ * .`[perRowCol][org.jetbrains.kotlinx.dataframe.api.perRowCol]}
  *
  * ## See Also
  *  - [Update with][org.jetbrains.kotlinx.dataframe.api.Update.with] to provide a new value for every selected cell giving its row.
@@ -362,7 +368,8 @@ public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
  * [update with][org.jetbrains.kotlinx.dataframe.api.Update.with]- and [add][org.jetbrains.kotlinx.dataframe.api.add]-like expressions use [AddDataRow][org.jetbrains.kotlinx.dataframe.api.AddDataRow] instead of [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as the DSL's receiver type.
  * This is an extension to [RowValueExpression][org.jetbrains.kotlinx.dataframe.RowValueExpression] and
  * [RowExpression][org.jetbrains.kotlinx.dataframe.RowExpression] that provides access to
- * the modified/generated value of the preceding row ([AddDataRow.newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue]). ## See Also
+ * the modified/generated value of the preceding row ([AddDataRow.newValue][org.jetbrains.kotlinx.dataframe.api.AddDataRow.newValue]).
+ * ## See Also
  * - [Update per col][org.jetbrains.kotlinx.dataframe.api.Update.perCol] to provide a new value for every selected cell giving its column.
  * - [Update per row col][org.jetbrains.kotlinx.dataframe.api.Update.perRowCol] to provide a new value for every selected cell giving its row and column.
  * @param expression The [Row Value Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample] to update the rows with.
@@ -380,6 +387,7 @@ private interface SeeAlsoWith
  * Updates selected [column group][ColumnGroup] as a [DataFrame] with the given [expression].
  *
  * Provide a new value for every selected data frame using a [dataframe expression][org.jetbrains.kotlinx.dataframe.DataFrameExpression].
+ *
  * For example:
  *
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { name ` { `[select][org.jetbrains.kotlinx.dataframe.DataFrame.select]` { lastName } }`
@@ -427,6 +435,7 @@ private interface UpdatePerColMap
  * ## This Per Col Overload
  * Provide a new value for every selected cell per column using a [Map][Map]`<`[colName: String][String]`, value: C>`
  *  or [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as Map.
+ *
  * For example:
  *
  * `val defaults = {@includeArg [CommonUpdatePerColMapDoc][org.jetbrains.kotlinx.dataframe.api.CommonUpdatePerColMapDoc]}`
@@ -451,13 +460,15 @@ private interface CommonUpdatePerColMapDoc
  * ## This Per Col Overload
  * Provide a new value for every selected cell per column using a [Map][Map]`<`[colName: String][String]`, value: C>`
  *  or [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as Map.
+ *
  * For example:
  *
  * `val defaults = `[mapOf][mapOf]`("name" to "Empty", "age" to 0)`
  *
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { name and age }.`[where][org.jetbrains.kotlinx.dataframe.api.Update.where]` { ... }.`[perCol][org.jetbrains.kotlinx.dataframe.api.perCol]`(defaults)`
  *
- * @throws IllegalArgumentException if a value for a selected cell's column is not defined in [values][values]. 
+ * @throws IllegalArgumentException if a value for a selected cell's column is not defined in [values][values].
+ *
  *
  * @param values The [Map]<[String], Value> to provide a new value for every selected cell.
  *   For each selected column, there must be a value in the map with the same name.
@@ -480,6 +491,7 @@ public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> = up
  * ## This Per Col Overload
  * Provide a new value for every selected cell per column using a [Map][Map]`<`[colName: String][String]`, value: C>`
  *  or [DataRow][org.jetbrains.kotlinx.dataframe.DataRow] as Map.
+ *
  * For example:
  *
  * `val defaults = df.`[getRows][org.jetbrains.kotlinx.dataframe.DataFrame.getRows]`(`[listOf][listOf]`(0))`
@@ -488,7 +500,8 @@ public fun <T, C> Update<T, C>.perCol(values: Map<String, C>): DataFrame<T> = up
  *
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { name and age }.`[where][org.jetbrains.kotlinx.dataframe.api.Update.where]` { ... }.`[perCol][org.jetbrains.kotlinx.dataframe.api.perCol]`(defaults)`
  *
- * @throws IllegalArgumentException if a value for a selected cell's column is not defined in [values][values]. .`[with][org.jetbrains.kotlinx.dataframe.api.Update.with]` { "Empty" }`
+ * @throws IllegalArgumentException if a value for a selected cell's column is not defined in [values][values].
+ * .`[with][org.jetbrains.kotlinx.dataframe.api.Update.with]` { "Empty" }`
  *
  *   `.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { age }.`[with][org.jetbrains.kotlinx.dataframe.api.Update.with]` { 0 }`
  *
@@ -517,7 +530,8 @@ public fun <T, C> Update<T, C>.perCol(values: AnyRow): DataFrame<T> = perCol(val
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { age ` { `[mean][org.jetbrains.kotlinx.dataframe.DataColumn.mean]`(skipNA = true) }`
  *
  * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { age ` { `[count][org.jetbrains.kotlinx.dataframe.DataColumn.count]` { it > 10 } }`
- *  .`[perCol][org.jetbrains.kotlinx.dataframe.api.perCol]}
+ *
+ * .`[perCol][org.jetbrains.kotlinx.dataframe.api.perCol]}
  *
  * @param valueSelector The [Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenColumn.ColumnExpression] to provide a new value for every selected cell giving its column.
  */
@@ -591,10 +605,12 @@ public fun <T, C> Update<T, C?>.notNull(expression: UpdateExpression<T, C, C>): 
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
  * ## ‎
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
- * ## This Update Overload ### This overload is a combination of [update][org.jetbrains.kotlinx.dataframe.api.update] and [with][org.jetbrains.kotlinx.dataframe.api.Update.with].
+ * ## This Update Overload
+ * ### This overload is a combination of [update][org.jetbrains.kotlinx.dataframe.api.update] and [with][org.jetbrains.kotlinx.dataframe.api.Update.with].
  *
  * Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
  * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]).
+ *
  * Provide a new value for every selected cell given its row and its previous value using a
  * [row value expression][org.jetbrains.kotlinx.dataframe.RowValueExpression].
  *
@@ -627,9 +643,11 @@ public fun <T, C> DataFrame<T>.update(
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
  * ## ‎
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
- * ## This Update Overload ### This overload is a combination of [update][org.jetbrains.kotlinx.dataframe.api.update] and [with][org.jetbrains.kotlinx.dataframe.api.Update.with].
+ * ## This Update Overload
+ * ### This overload is a combination of [update][org.jetbrains.kotlinx.dataframe.api.update] and [with][org.jetbrains.kotlinx.dataframe.api.Update.with].
  *
  * Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
+ *
  * Provide a new value for every selected cell given its row and its previous value using a
  * [row value expression][org.jetbrains.kotlinx.dataframe.RowValueExpression].
  *
@@ -662,10 +680,12 @@ public fun <T, C> DataFrame<T>.update(
  * For more information: [See `update` on the documentation website.](https://kotlin.github.io/dataframe/update.html) 
  * ## ‎
  * The columns to update need to be selected. See [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns] for all the selecting options. 
- * ## This Update Overload ### This overload is a combination of [update][org.jetbrains.kotlinx.dataframe.api.update] and [with][org.jetbrains.kotlinx.dataframe.api.Update.with].
+ * ## This Update Overload
+ * ### This overload is a combination of [update][org.jetbrains.kotlinx.dataframe.api.update] and [with][org.jetbrains.kotlinx.dataframe.api.Update.with].
  *
  * Select columns using their [column names][String]
  * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ *
  * Provide a new value for every selected cell given its row and its previous value using a
  * [row value expression][org.jetbrains.kotlinx.dataframe.RowValueExpression].
  *
@@ -708,7 +728,8 @@ private interface CommonSpecificWithDocSecondArg
  *
  * For example:
  *
- * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { id }.`[where][org.jetbrains.kotlinx.dataframe.api.Update.where]` { it < 0 }.`[withNull][org.jetbrains.kotlinx.dataframe.api.withNull]`()` 
+ * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { id }.`[where][org.jetbrains.kotlinx.dataframe.api.Update.where]` { it < 0 }.`[withNull][org.jetbrains.kotlinx.dataframe.api.withNull]`()`
+ *
  *
  */
 public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = with { null }
@@ -719,7 +740,8 @@ public fun <T, C> Update<T, C>.withNull(): DataFrame<T> = with { null }
  *
  * For example:
  *
- * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { id }.`[where][org.jetbrains.kotlinx.dataframe.api.Update.where]` { it < 0 }.`[withZero][org.jetbrains.kotlinx.dataframe.api.withZero]`()` 
+ * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { id }.`[where][org.jetbrains.kotlinx.dataframe.api.Update.where]` { it < 0 }.`[withZero][org.jetbrains.kotlinx.dataframe.api.withZero]`()`
+ *
  *
  */
 public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColumnImpl { 0 as C }
@@ -730,7 +752,8 @@ public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColu
  *
  * For example:
  *
- * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { id }.`[where][org.jetbrains.kotlinx.dataframe.api.Update.where]` { it < 0 }.`[withValue][org.jetbrains.kotlinx.dataframe.api.withValue]`(-1)` 
+ * `df.`[update][org.jetbrains.kotlinx.dataframe.api.update]` { id }.`[where][org.jetbrains.kotlinx.dataframe.api.Update.where]` { it < 0 }.`[withValue][org.jetbrains.kotlinx.dataframe.api.withValue]`(-1)`
+ *
  *
  *
  * @param value The value to set the selected rows to. In contrast to [with][Update.with], this must be the same exact type.

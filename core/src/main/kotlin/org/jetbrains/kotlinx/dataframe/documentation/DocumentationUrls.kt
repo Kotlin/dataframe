@@ -35,6 +35,20 @@ private interface DocumentationUrls {
         interface FillNA
     }
 
+    /** [{@include [Text]}{@arg [NameArg] `drop`}]({@include [Url]}/drop.html) */
+    interface Drop {
+
+        /** [{@include [Text]}{@arg [NameArg] `dropNulls`}]({@include [Url]}/drop.html#dropnulls) */
+        interface DropNulls
+
+        /** [{@include [Text]}{@arg [NameArg] `dropNaNs`}]({@include [Url]}/drop.html#dropnans) */
+        interface DropNaNs
+
+        /** [{@include [Text]}{@arg [NameArg] `dropNA`}]({@include [Url]}/drop.html#dropna) */
+        interface DropNA
+
+    }
+
     /** [{@include [Text]}{@arg [NameArg] Access APIs}]({@include [Url]}/apilevels.html) */
     interface AccessApis {
 

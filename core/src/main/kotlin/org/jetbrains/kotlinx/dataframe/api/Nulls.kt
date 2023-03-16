@@ -1,21 +1,37 @@
 package org.jetbrains.kotlinx.dataframe.api
 
-import org.jetbrains.kotlinx.dataframe.AnyCol
-import org.jetbrains.kotlinx.dataframe.AnyColumnReference
-import org.jetbrains.kotlinx.dataframe.AnyFrame
-import org.jetbrains.kotlinx.dataframe.AnyRow
-import org.jetbrains.kotlinx.dataframe.ColumnsSelector
-import org.jetbrains.kotlinx.dataframe.DataColumn
-import org.jetbrains.kotlinx.dataframe.DataFrame
+import org.jetbrains.kotlinx.dataframe.*
 import org.jetbrains.kotlinx.dataframe.api.Update.UpdateOperationArg
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.columns.ColumnReference
 import org.jetbrains.kotlinx.dataframe.documentation.*
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumnSet
 import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
-import org.jetbrains.kotlinx.dataframe.kind
-import org.jetbrains.kotlinx.dataframe.typeClass
 import kotlin.reflect.KProperty
+
+/**
+ * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
+ * in cases where a mathematical operation is undefined, such as dividing by zero.
+ *
+ * You can also use [fillNaNs][fillNaNs] to replace `NaNs` in certain columns with a given value or expression
+ * or [dropNaNs][dropNaNs] to drop rows with `NaNs` in them.
+ *
+ * @see NA
+ */
+internal interface NaN
+
+/**
+ * `NA` in Dataframe can be seen as "[NaN] or `null`".
+ *
+ * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
+ * in cases where a mathematical operation is undefined, such as dividing by zero.
+ *
+ * You can also use [fillNA][fillNA] to replace `NAs` in certain columns with a given value or expression
+ * or [dropNA][dropNA] to drop rows with `NAs` in them.
+ *
+ * @see NaN
+ */
+internal interface NA
 
 // region fillNulls
 
@@ -25,7 +41,7 @@ import kotlin.reflect.KProperty
  * Replaces `null` values with given value or expression.
  * Specific case of [update].
  *
- * Check out the [`fillNulls` Operation Usage][Usage].
+ * Check out the [`fillNulls` Operation Usage][FillNulls.Usage].
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNulls]}
  */
@@ -86,30 +102,6 @@ public fun <T, C> DataFrame<T>.fillNulls(columns: Iterable<ColumnReference<C>>):
 
 // endregion
 
-/**
- * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
- * in cases where a mathematical operation is undefined, such as dividing by zero.
- * In Dataframe we have helper functions to check for `NaNs`, such as [Any?.isNaN][Any.isNaN] and
- * [column.canHaveNaN][DataColumn.canHaveNaN].
- * You can also use [fillNaNs][fillNaNs] to replace `NaNs` in certain columns with a given value or expression.
- *
- * @see NA
- */
-internal interface NaN
-
-/**
- * `NA` in Dataframe can be seen as "[NaN] or `null`".
- *
- * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
- * in cases where a mathematical operation is undefined, such as dividing by zero.
- *
- * In Dataframe we have helper functions to check for `NAs`, such as [Any?.isNA][Any.isNA] and
- * [column.canHaveNA][DataColumn.canHaveNA].
- * You can also use [fillNA][fillNA] to replace `NAs` in certain columns with a given value or expression.
- * @see NaN
- */
-internal interface NA
-
 internal inline val Any?.isNaN: Boolean get() = (this is Double && isNaN()) || (this is Float && isNaN())
 
 internal inline val Any?.isNA: Boolean
@@ -138,7 +130,7 @@ internal inline val Float?.isNA: Boolean get() = this == null || this.isNaN()
  * Replaces [`NaN`][NaN] values with given value or expression.
  * Specific case of [update].
  *
- * Check out the [`fillNaNs` Operation Usage][Usage].
+ * Check out the [`fillNaNs` Operation Usage][FillNaNs.Usage].
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNaNs]}
  */
@@ -207,7 +199,7 @@ public fun <T, C> DataFrame<T>.fillNaNs(columns: Iterable<ColumnReference<C>>): 
  * Replaces [`NA`][NA] values with given value or expression.
  * Specific case of [update].
  *
- * Check out the [`fillNA` Operation Usage][Usage].
+ * Check out the [`fillNA` Operation Usage][FillNA.Usage].
  *
  * For more information: {@include [DocumentationUrls.Fill.FillNA]}
  */
@@ -268,32 +260,108 @@ public fun <T, C> DataFrame<T>.fillNA(columns: Iterable<ColumnReference<C>>): Up
 
 // endregion
 
+/** @param columns The {@include [SelectingColumns.DslLink]} used to select the columns of this [DataFrame] to drop rows in. */
+private interface DropDslParam
+
+
 // region dropNulls
 
-public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, selector: ColumnsSelector<T, *>): DataFrame<T> {
-    val columns = this[selector]
-    return if (whereAllNull) drop { row -> columns.all { col -> col[row] == null } }
-    else drop { row -> columns.any { col -> col[row] == null } }
+/**
+ * ## The Drop Nulls Operation
+ *
+ * Removes rows with `null` values.
+ *
+ * Optionally, you can select which columns to operate on (see {@include [SelectingColumnsLink]}).
+ * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
+ * rows are dropped if any of the selected cells are `null`.
+ *
+ * For more information: {@include [DocumentationUrls.Drop.DropNulls]}
+ */
+internal interface DropNulls {
+
+    /**
+     * @param whereAllNull `false` by default.
+     *   If `true`, rows are dropped if all selected cells are `null`.
+     *   If `false`, rows are dropped if any of the selected cells is `null`.
+     */
+    interface WhereAllNullParam
 }
 
+/** {@arg [SelectingColumns.OperationArg] [dropNulls][dropNulls]} */
+private interface SetDropNullsOperationArg
+
+/**
+ * @include [DropNulls] {@comment Description of the dropNulls operation.}
+ * ## This Drop Nulls Overload
+ */
+private interface CommonDropNullsFunctionDoc
+
+/**
+ * @include [CommonDropNullsFunctionDoc]
+ * @include [SelectingColumns.Dsl.WithExample] {@include [SetDropNullsOperationArg]}
+ * `df.`[dropNulls][dropNulls]`(whereAllNull = true) { `[colsOf][colsOf]`<`[Double][Double]`>() }`
+ *
+ * @include [DropNulls.WhereAllNullParam]
+ * @include [DropDslParam]
+ */
+public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
+    val cols = this[columns]
+    return if (whereAllNull) drop { row -> cols.all { col -> col[row] == null } }
+    else drop { row -> cols.any { col -> col[row] == null } }
+}
+
+/**
+ * @include [CommonDropNullsFunctionDoc]
+ * This overload operates on all columns in the [DataFrame].
+ * @include [DropNulls.WhereAllNullParam]
+ */
 public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { all() }
 
+/**
+ * @include [CommonDropNullsFunctionDoc]
+ * @include [SelectingColumns.KProperties.WithExample] {@include [SetDropNullsOperationArg]}
+ * `df.`[dropNulls][dropNulls]`(Person::length, whereAllNull = true)`
+ * @include [DropNulls.WhereAllNullParam]
+ * @include [DropDslParam]
+ */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumns() }
 
+/**
+ * @include [CommonDropNullsFunctionDoc]
+ * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetDropNullsOperationArg]}
+ * `df.`[dropNulls][dropNulls]`("length", whereAllNull = true)`
+ * @include [DropNulls.WhereAllNullParam]
+ * @include [DropDslParam]
+ */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumns() }
 
+/**
+ * @include [CommonDropNullsFunctionDoc]
+ * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetDropNullsOperationArg]}
+ * `df.`[dropNulls][dropNulls]`(length, whereAllNull = true)`
+ * @include [DropNulls.WhereAllNullParam]
+ * @include [DropDslParam]
+ */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumns() }
 
+/**
+ * TODO will be deprecated
+ */
 public fun <T> DataFrame<T>.dropNulls(
     columns: Iterable<AnyColumnReference>,
     whereAllNull: Boolean = false
 ): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumnSet() }
 
+/**
+ * ## The Drop Nulls Operation
+ *
+ * Removes `null` values from this [DataColumn], adjusting the type accordingly.
+ */
 public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
     (if (!hasNulls()) this else filter { it != null }) as DataColumn<T>
 
