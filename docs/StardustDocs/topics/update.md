@@ -13,7 +13,7 @@ update { columns }
 rowCondition: DataRow.(OldValue) -> Boolean
 rowExpression: DataRow.(OldValue) -> NewValue
 colExpression: DataColumn.(DataColumn) -> NewValue
-rowColExpression: DataRow.(DataColumn) -> NewValue
+rowColExpression: (DataRow, DataColumn) -> NewValue
 frameExpression: DataFrame.(DataFrame) -> DataFrame
 ```
 
