@@ -8,7 +8,7 @@ convert { columnsSelector }
     .with { rowExpression } | .perRowCol { rowColExpression } | .withValue(value)  | to<Type>() | to { colExpression }
 
 rowExpression = DataRow.(OldValue) -> NewValue
-rowColExpression = DataRow.(DataColumn) -> NewValue
+rowColExpression = (DataRow, DataColumn) -> NewValue
 colExpression = DataFrame.(DataColumn) -> DataColumn
 ```
 
