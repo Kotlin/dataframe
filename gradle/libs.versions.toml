@@ -24,6 +24,8 @@ junit = "4.13.2"
 kotestAsserions = "4.6.3"
 jsoup = "1.14.3"
 arrow = "10.0.0"
+docProcessor = "0.1.0"
+simpleGit = "2.0.1"
 
 [libraries]
 ksp-gradle = { group = "com.google.devtools.ksp", name = "symbol-processing-gradle-plugin", version.ref = "ksp" }
@@ -65,3 +67,5 @@ korro = { id = "io.github.devcrocod.korro", version.ref = "korro" }
 kotlinter = { id = "org.jmailen.kotlinter", version.ref = "ktlint" }
 dataframe = { id = "org.jetbrains.kotlinx.dataframe", version.ref = "dataframe" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+docProcessor = { id = "nl.jolanrensen.docProcessor", version.ref = "docProcessor" }
+simpleGit = { id = "xyz.ronella.simple-git", version.ref = "simpleGit"}
