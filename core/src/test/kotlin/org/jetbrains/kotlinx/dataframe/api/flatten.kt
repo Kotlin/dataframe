@@ -3,7 +3,6 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataRow
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
-import org.jetbrains.kotlinx.dataframe.samples.api.TestBase
 import org.junit.Test
 
 class FlattenTests {
@@ -38,7 +37,7 @@ class FlattenTests {
         val castedGroupedDF = grouped.cast<Grouped>()
 
         // KProperties API
-        castedGroupedDF.flatten (Grouped::d) shouldBe df
+        castedGroupedDF.flatten(Grouped::d) shouldBe df
 
         // Extension properties API
         castedGroupedDF.flatten { d } shouldBe df

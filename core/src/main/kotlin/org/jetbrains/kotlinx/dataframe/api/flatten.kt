@@ -10,9 +10,14 @@ import kotlin.reflect.KProperty
 // region DataFrame
 
 public fun <T> DataFrame<T>.flatten(): DataFrame<T> = flatten { all() }
+
 public fun <T, C> DataFrame<T>.flatten(columns: ColumnsSelector<T, C>): DataFrame<T> = flattenImpl(columns)
+
 public fun <T> DataFrame<T>.flatten(vararg columns: String): DataFrame<T> = flattenImpl { columns.toColumns() }
+
 public fun <T, C> DataFrame<T>.flatten(vararg columns: KProperty<C>): DataFrame<T> = flattenImpl { columns.toColumns() }
-public fun <T, C> DataFrame<T>.flatten(vararg columns: ColumnReference<C>): DataFrame<T> = flattenImpl { columns.toColumns() }
+
+public fun <T, C> DataFrame<T>.flatten(vararg columns: ColumnReference<C>): DataFrame<T> =
+    flattenImpl { columns.toColumns() }
 
 // endregion
