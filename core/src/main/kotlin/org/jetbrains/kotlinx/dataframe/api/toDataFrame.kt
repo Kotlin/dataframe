@@ -7,6 +7,7 @@ import org.jetbrains.kotlinx.dataframe.ColumnsSelector
 import org.jetbrains.kotlinx.dataframe.DataColumn
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnPath
 import org.jetbrains.kotlinx.dataframe.impl.ColumnNameGenerator
 import org.jetbrains.kotlinx.dataframe.impl.api.createDataFrameImpl
@@ -186,6 +187,83 @@ public abstract class CreateDataFrameDsl<T> : TraversePropertiesDsl {
 }
 
 // endregion
+
+// region toDataFrame overloads for built-in types
+
+/*
+Without overloads Iterable<String>.toDataFrame produces unexpected result
+
+
+```
+val string = listOf("aaa", "aa", null)
+string.toDataFrame()
+```
+=>
+  length
+0    3
+1    2
+2 null
+ */
+
+@JvmName("toDataFrameByte")
+public inline fun <reified B : Byte?> Iterable<B>.toDataFrame(): DataFrame<OfSingleValueColumn<B>> = toDataFrame {
+    OfSingleValueColumn<B>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameShort")
+public inline fun <reified S : Short?> Iterable<S>.toDataFrame(): DataFrame<OfSingleValueColumn<S>> = toDataFrame {
+    OfSingleValueColumn<S>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameInt")
+public inline fun <reified I : Int?> Iterable<I>.toDataFrame(): DataFrame<OfSingleValueColumn<I>> = toDataFrame {
+    OfSingleValueColumn<I>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameLong")
+public inline fun <reified L : Long?> Iterable<L>.toDataFrame(): DataFrame<OfSingleValueColumn<L>> = toDataFrame {
+    OfSingleValueColumn<L>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameString")
+public inline fun <reified S : String?> Iterable<S>.toDataFrame(): DataFrame<OfSingleValueColumn<S>> = toDataFrame {
+    OfSingleValueColumn<S>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameChar")
+public inline fun <reified C : Char?> Iterable<C>.toDataFrame(): DataFrame<OfSingleValueColumn<C>> = toDataFrame {
+    OfSingleValueColumn<C>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameBoolean")
+public inline fun <reified B : Boolean?> Iterable<B>.toDataFrame(): DataFrame<OfSingleValueColumn<B>> = toDataFrame {
+    OfSingleValueColumn<B>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameUByte")
+public inline fun <reified U : UByte?> Iterable<U>.toDataFrame(): DataFrame<OfSingleValueColumn<U>> = toDataFrame {
+    OfSingleValueColumn<U>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameUShort")
+public inline fun <reified U : UShort?> Iterable<U>.toDataFrame(): DataFrame<OfSingleValueColumn<U>> = toDataFrame {
+    OfSingleValueColumn<U>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameUInt")
+public inline fun <reified U : UInt?> Iterable<U>.toDataFrame(): DataFrame<OfSingleValueColumn<U>> = toDataFrame {
+    OfSingleValueColumn<U>::value from { it }
+}.cast()
+
+@JvmName("toDataFrameULong")
+public inline fun <reified U : ULong?> Iterable<U>.toDataFrame(): DataFrame<OfSingleValueColumn<U>> = toDataFrame {
+    OfSingleValueColumn<U>::value from { it }
+}.cast()
+
+@DataSchema
+public interface OfSingleValueColumn<T> {
+    public val value: T
+}
 
 // region Create DataFrame from Map
 

@@ -3,10 +3,12 @@ package org.jetbrains.kotlinx.dataframe.api
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlinx.dataframe.DataFrame
 import org.jetbrains.kotlinx.dataframe.DataRow
+import org.jetbrains.kotlinx.dataframe.alsoDebug
 import org.jetbrains.kotlinx.dataframe.annotations.DataSchema
 import org.jetbrains.kotlinx.dataframe.columns.ColumnKind
 import org.jetbrains.kotlinx.dataframe.kind
 import org.jetbrains.kotlinx.dataframe.type
+import org.junit.Ignore
 import org.junit.Test
 import kotlin.reflect.typeOf
 
@@ -196,5 +198,30 @@ class CreateDataFrameTests {
         val df = listOf(Data(name)).toDataFrame(maxDepth = 1)
 
         df["name"][0] shouldBe name
+    }
+
+    @Test
+    fun builtInTypes() {
+        val string = listOf("aaa", "aa", null)
+        string.toDataFrame().also { it.print() } shouldBe dataFrameOf("value")(*string.toTypedArray())
+
+        val int = listOf(1, 2, 3)
+        int.toDataFrame().alsoDebug() shouldBe dataFrameOf("value")(*int.toTypedArray())
+    }
+
+    @Ignore
+    @Test
+    fun generateBuiltInsOverrides() {
+        listOf("Byte", "Short", "Int", "Long", "String", "Char", "Boolean", "UByte", "UShort", "UInt", "ULong").forEach { type ->
+            val typeParameter = type.first()
+            val func = """
+            @JvmName("toDataFrame$type")
+            public inline fun <reified $typeParameter : $type?> Iterable<$typeParameter>.toDataFrame(): DataFrame<SingleColumn<$typeParameter>> = toDataFrame {
+                OfSingleValueColumn<$typeParameter>::value from { it }
+            }.cast()
+            """.trimIndent()
+            println(func)
+            println()
+        }
     }
 }
