@@ -410,13 +410,24 @@ class Access : TestBase() {
     }
 
     @Test
+    fun dropNaNs() {
+        // SampleStart
+        df.dropNaNs() // remove rows containing NaN in any column
+        df.dropNaNs(whereAllNaN = true) // remove rows with NaN in all columns
+        df.dropNaNs { weight } // remove rows where 'weight' is NaN
+        df.dropNaNs { age and weight } // remove rows where either 'age' or 'weight' is NaN
+        df.dropNaNs(whereAllNaN = true) { age and weight } // remove rows where both 'age' and 'weight' are NaN
+        // SampleEnd
+    }
+
+    @Test
     fun dropNA() {
         // SampleStart
-        df.dropNA() // remove rows containing null or Double.NaN in any column
-        df.dropNA(whereAllNA = true) // remove rows with null or Double.NaN in all columns
-        df.dropNA { weight } // remove rows where 'weight' is null or Double.NaN
-        df.dropNA { age and weight } // remove rows where either 'age' or 'weight' is null or Double.NaN
-        df.dropNA(whereAllNA = true) { age and weight } // remove rows where both 'age' and 'weight' are null or Double.NaN
+        df.dropNA() // remove rows containing null or NaN in any column
+        df.dropNA(whereAllNA = true) // remove rows with null or NaN in all columns
+        df.dropNA { weight } // remove rows where 'weight' is null or NaN
+        df.dropNA { age and weight } // remove rows where either 'age' or 'weight' is null or NaN
+        df.dropNA(whereAllNA = true) { age and weight } // remove rows where both 'age' and 'weight' are null or NaN
         // SampleEnd
     }
 
