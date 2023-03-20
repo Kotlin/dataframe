@@ -199,7 +199,7 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
  *  - {@include [SeeAlsoPerCol]}
  * @param expression The {@include [ExpressionsGivenRowAndColumn.RowColumnExpressionLink]} to provide a new value for every selected cell giving its row and column.
  */
-public infix fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
+public fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }
 
 /** [Update per row col][Update.perRowCol] to provide a new value for every selected cell giving its row and column. */
@@ -222,7 +222,7 @@ public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
  * - {@include [SeeAlsoPerRowCol]}
  * @param expression The {@include [ExpressionsGivenRow.RowValueExpressionLink]} to update the rows with.
  */
-public infix fun <T, C> Update<T, C>.with(expression: UpdateExpression<T, C, C?>): DataFrame<T> =
+public fun <T, C> Update<T, C>.with(expression: UpdateExpression<T, C, C?>): DataFrame<T> =
     updateImpl { row, _, value ->
         expression(row, value)
     }
@@ -238,7 +238,7 @@ private interface SeeAlsoWith
  * {@arg [ExpressionsGivenDataFrame.OperationArg] `df.`[update][update]` { name \}.`[asFrame][asFrame]}
  * @param expression The {@include [ExpressionsGivenDataFrame.DataFrameExpressionLink]} to replace the selected column group with.
  */
-public infix fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
+public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
     asFrameImpl(expression)
 
 @Deprecated(
@@ -447,4 +447,4 @@ public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColu
  *
  * @param value The value to set the selected rows to. In contrast to [with][Update.with], this must be the same exact type.
  */
-public infix fun <T, C> Update<T, C>.withValue(value: C): DataFrame<T> = with { value }
+public fun <T, C> Update<T, C>.withValue(value: C): DataFrame<T> = with { value }

@@ -52,7 +52,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [cumSum](cumSum.md) — cumulative sum of column values
 * [describe](describe.md) — basic column statistics
 * [distinct](distinct.md) / [distinctBy](distinct.md#distinctby) — remove duplicated rows
-* [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropWhile](sliceRows.md#dropwhile) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) — remove rows by condition
+* [drop](drop.md) / [dropLast](sliceRows.md#droplast) / [dropWhile](sliceRows.md#dropwhile) / [dropNulls](drop.md#dropnulls) / [dropNA](drop.md#dropna) / [dropNaNs](drop.md#dropnans) — remove rows by condition
 * [duplicate](duplicate.md) — duplicate rows 
 * [explode](explode.md) — spread lists and [`DataFrames`](DataFrame.md) vertically into new rows
 * [fillNulls](fill.md#fillnulls) / [fillNaNs](fill.md#fillnans) / [fillNA](fill.md#fillna) — replace missing values
@@ -98,6 +98,7 @@ Most multiplex operations end with `into` or `with` function. The following nami
 * [take](sliceRows.md#take) / [takeLast](sliceRows.md#takelast) / [takeWhile](sliceRows.md#takewhile) — get first/last rows
 * [toList](toList.md) / [toListOf](toList.md#tolistof) — export [`DataFrame`](DataFrame.md) into a list of data classes
 * [toMap](toMap.md) — export [`DataFrame`](DataFrame.md) into a map from column names to column values
+* [unfold](unfold.md) - unfold objects (normal class instances) in columns according to their properties
 * [ungroup](ungroup.md) — remove column groupings
 * [update](update.md) — update column values preserving column types
 * [values](values.md) — [`Sequence`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/-sequence/) of values traversed by row or by column 
