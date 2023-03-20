@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
 /**
+ * ## `NaN`
  * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
  * in cases where a mathematical operation is undefined, such as dividing by zero.
  *
@@ -21,6 +22,7 @@ import kotlin.reflect.KProperty
 internal interface NaN
 
 /**
+ * ## `NA`
  * `NA` in Dataframe can be seen as "[NaN] or `null`".
  *
  * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
@@ -563,13 +565,22 @@ public fun <T, C> DataFrame<T>.fillNA(columns: Iterable<ColumnReference<C>>): Up
 /** @param columns The [Columns selector DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample] used to select the columns of this [DataFrame] to drop rows in. */
 private interface DropDslParam
 
+/** @param columns The [KProperties][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties.WithExample] used to select the columns of this [DataFrame] to drop rows in. */
+private interface DropKPropertiesParam
+
+/** @param columns The [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames.WithExample] used to select the columns of this [DataFrame] to drop rows in. */
+private interface DropColumnNamesParam
+
+/** @param columns The Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
+ * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]). used to select the columns of this [DataFrame] to drop rows in. */
+private interface DropColumnAccessorsParam
 
 // region dropNulls
 
 /**
  * ## The Drop Nulls Operation
  *
- * Removes rows with `null` values.
+ * Removes rows with `null` values. Specific case of [drop][DataFrame.drop].
  *
  * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
  * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
@@ -592,7 +603,7 @@ private interface SetDropNullsOperationArg
 /**
  * ## The Drop Nulls Operation
  *
- * Removes rows with `null` values.
+ * Removes rows with `null` values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
  * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
  * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
@@ -606,7 +617,7 @@ private interface CommonDropNullsFunctionDoc
 /**
  * ## The Drop Nulls Operation
  *
- * Removes rows with `null` values.
+ * Removes rows with `null` values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
  * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
  * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
@@ -630,7 +641,6 @@ private interface CommonDropNullsFunctionDoc
  * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
  *  
  * `df.`[dropNulls][org.jetbrains.kotlinx.dataframe.api.dropNulls]`(whereAllNull = true) { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
- *
  * @param whereAllNull `false` by default.
  *   If `true`, rows are dropped if all selected cells are `null`.
  *   If `false`, rows are dropped if any of the selected cells is `null`.
@@ -645,7 +655,7 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false, columns: Co
 /**
  * ## The Drop Nulls Operation
  *
- * Removes rows with `null` values.
+ * Removes rows with `null` values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
  * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
  * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
@@ -664,7 +674,7 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<
 /**
  * ## The Drop Nulls Operation
  *
- * Removes rows with `null` values.
+ * Removes rows with `null` values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
  * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
  * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
@@ -685,7 +695,7 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<
  * @param whereAllNull `false` by default.
  *   If `true`, rows are dropped if all selected cells are `null`.
  *   If `false`, rows are dropped if any of the selected cells is `null`.
- * @param columns The [Columns selector DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ * @param columns The [KProperties][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumns() }
@@ -693,7 +703,7 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull
 /**
  * ## The Drop Nulls Operation
  *
- * Removes rows with `null` values.
+ * Removes rows with `null` values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
  * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
  * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
@@ -712,7 +722,7 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull
  * @param whereAllNull `false` by default.
  *   If `true`, rows are dropped if all selected cells are `null`.
  *   If `false`, rows are dropped if any of the selected cells is `null`.
- * @param columns The [Columns selector DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ * @param columns The [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumns() }
@@ -720,7 +730,7 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Bool
 /**
  * ## The Drop Nulls Operation
  *
- * Removes rows with `null` values.
+ * Removes rows with `null` values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
  *
  * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
  * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
@@ -743,7 +753,8 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Bool
  * @param whereAllNull `false` by default.
  *   If `true`, rows are dropped if all selected cells are `null`.
  *   If `false`, rows are dropped if any of the selected cells is `null`.
- * @param columns The [Columns selector DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ * @param columns The Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
+ * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]). used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
  */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumns() }
@@ -753,7 +764,7 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereA
  */
 public fun <T> DataFrame<T>.dropNulls(
     columns: Iterable<AnyColumnReference>,
-    whereAllNull: Boolean = false
+    whereAllNull: Boolean = false,
 ): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumnSet() }
 
@@ -769,32 +780,406 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
 
 // region dropNA
 
-public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, selector: ColumnsSelector<T, *>): DataFrame<T> {
-    val columns = this[selector]
+/**
+ * ## The Drop `NA` Operation
+ *
+ * Removes rows with [`NA`][NA] values. Specific case of [drop][DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][NA]. By default,
+ * rows are dropped if any of the selected cells are [`NA`][NA].
+ *
+ * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna)
+ */
+internal interface DropNA {
 
-    return if (whereAllNA) drop { columns.all { this[it].isNA } }
-    else drop { columns.any { this[it].isNA } }
+    /**
+     * @param whereAllNA `false` by default.
+     *   If `true`, rows are dropped if all selected cells are [`NA`][NA].
+     *   If `false`, rows are dropped if any of the selected cells is [`NA`][NA].
+     */
+    interface WhereAllNAParam
 }
 
+private interface SetDropNAOperationArg
+
+/**
+ * ## The Drop `NA` Operation
+ *
+ * Removes rows with [`NA`][org.jetbrains.kotlinx.dataframe.api.NA] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA]. By default,
+ * rows are dropped if any of the selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ *
+ * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna) 
+ * ## This Drop NA Overload
+ */
+private interface CommonDropNAFunctionDoc
+
+/**
+ * ## The Drop `NA` Operation
+ *
+ * Removes rows with [`NA`][org.jetbrains.kotlinx.dataframe.api.NA] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA]. By default,
+ * rows are dropped if any of the selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ *
+ * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna) 
+ * ## This Drop NA Overload
+ * Select or express columns using the Column(s) Selection DSL.
+ * (Any [Access Api][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+ *
+ * This DSL comes in the form of either a [Column Selector][org.jetbrains.kotlinx.dataframe.ColumnSelector]- or [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operate in the [Column Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] or the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expect you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], respectively.
+ *
+ * For example:
+ *
+ * `df.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]` { length `[and][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.and]` age }`
+ *
+ * `df.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ *
+ * `df.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
+ *  
+ * `df.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]`(whereAllNA = true) { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
+ * @param whereAllNA `false` by default.
+ *   If `true`, rows are dropped if all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ *   If `false`, rows are dropped if any of the selected cells is [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ * @param columns The [Columns selector DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ */
+public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
+    val cols = this[columns]
+    return if (whereAllNA) drop { cols.all { this[it].isNA } }
+    else drop { cols.any { this[it].isNA } }
+}
+
+/**
+ * ## The Drop `NA` Operation
+ *
+ * Removes rows with [`NA`][org.jetbrains.kotlinx.dataframe.api.NA] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA]. By default,
+ * rows are dropped if any of the selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ *
+ * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna) 
+ * ## This Drop NA Overload
+ * Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
+ *
+ * For example:
+ * ```kotlin
+ * data class Person(val length: Double, val age: Double)
+ * ```
+ *
+ * `df.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]`(Person::length, Person::age)`
+ *  
+ * `df.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]`(Person::length, whereAllNA = true)`
+ * @param whereAllNA `false` by default.
+ *   If `true`, rows are dropped if all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ *   If `false`, rows are dropped if any of the selected cells is [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ * @param columns The [KProperties][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ */
 public fun <T> DataFrame<T>.dropNA(vararg columns: KProperty<*>, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumns() }
 
+/**
+ * ## The Drop `NA` Operation
+ *
+ * Removes rows with [`NA`][org.jetbrains.kotlinx.dataframe.api.NA] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA]. By default,
+ * rows are dropped if any of the selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ *
+ * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna) 
+ * ## This Drop NA Overload
+ * Select columns using their [column names][String]
+ * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ *
+ * For example:
+ *
+ * `df.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]`("length", "age")`
+ *  
+ * `df.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]`("length", whereAllNA = true)`
+ * @param whereAllNA `false` by default.
+ *   If `true`, rows are dropped if all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ *   If `false`, rows are dropped if any of the selected cells is [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ * @param columns The [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ */
 public fun <T> DataFrame<T>.dropNA(vararg columns: String, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumns() }
 
+/**
+ * ## The Drop `NA` Operation
+ *
+ * Removes rows with [`NA`][org.jetbrains.kotlinx.dataframe.api.NA] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA]. By default,
+ * rows are dropped if any of the selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ *
+ * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna) 
+ * ## This Drop NA Overload
+ * Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
+ * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]).
+ *
+ * For example:
+ *
+ * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
+ *
+ * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
+ *
+ * `df.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]`(length, age)`
+ *  
+ * `df.`[dropNA][org.jetbrains.kotlinx.dataframe.api.dropNA]`(length, whereAllNA = true)`
+ * @param whereAllNA `false` by default.
+ *   If `true`, rows are dropped if all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ *   If `false`, rows are dropped if any of the selected cells is [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ * @param columns The Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
+ * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]). used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ */
 public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumns() }
 
+/**
+ * TODO will be deprecated
+ */
 public fun <T> DataFrame<T>.dropNA(columns: Iterable<AnyColumnReference>, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumnSet() }
 
+/**
+ * ## The Drop `NA` Operation
+ *
+ * Removes rows with [`NA`][org.jetbrains.kotlinx.dataframe.api.NA] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA]. By default,
+ * rows are dropped if any of the selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ *
+ * For more information: [See `dropNA` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropna) 
+ * ## This Drop NA Overload
+ * This overload operates on all columns in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * @param whereAllNA `false` by default.
+ *   If `true`, rows are dropped if all selected cells are [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ *   If `false`, rows are dropped if any of the selected cells is [`NA`][org.jetbrains.kotlinx.dataframe.api.NA].
+ */
 public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { all() }
 
+/**
+ * ## The Drop `NA` Operation
+ *
+ * Removes [`NA`][NA] values from this [DataColumn], adjusting the type accordingly.
+ */
 public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
     when (typeClass) {
         Double::class, Float::class -> filter { !it.isNA }.cast()
         else -> (if (!hasNulls()) this else filter { it != null }) as DataColumn<T>
+    }
+
+// endregion
+
+// region dropNaNs
+
+/**
+ * ## The Drop `NaN` Operation
+ *
+ * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [drop][DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [`NaN`][Double.isNaN]. By default,
+ * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
+ *
+ * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans)
+ */
+internal interface DropNaNs {
+
+    /**
+     * @param whereAllNaN `false` by default.
+     *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
+     *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
+     */
+    interface WhereAllNaNParam
+}
+
+private interface SetDropNaNsOperationArg
+
+/**
+ * ## The Drop `NaN` Operation
+ *
+ * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [`NaN`][Double.isNaN]. By default,
+ * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
+ *
+ * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans) 
+ * ## This Drop NaNs Overload
+ */
+private interface CommonDropNaNsFunctionDoc
+
+/**
+ * ## The Drop `NaN` Operation
+ *
+ * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [`NaN`][Double.isNaN]. By default,
+ * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
+ *
+ * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans) 
+ * ## This Drop NaNs Overload
+ * Select or express columns using the Column(s) Selection DSL.
+ * (Any [Access Api][org.jetbrains.kotlinx.dataframe.documentation.AccessApi]).
+ *
+ * This DSL comes in the form of either a [Column Selector][org.jetbrains.kotlinx.dataframe.ColumnSelector]- or [Columns Selector][org.jetbrains.kotlinx.dataframe.ColumnsSelector] lambda,
+ * which operate in the [Column Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnSelectionDsl] or the [Columns Selection DSL][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl] and
+ * expect you to return a [SingleColumn][org.jetbrains.kotlinx.dataframe.columns.SingleColumn] or [ColumnSet][org.jetbrains.kotlinx.dataframe.columns.ColumnSet], respectively.
+ *
+ * For example:
+ *
+ * `df.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]` { length `[and][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.and]` age }`
+ *
+ * `df.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]` { `[cols][org.jetbrains.kotlinx.dataframe.api.ColumnsSelectionDsl.cols]`(1..5) }`
+ *
+ * `df.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]` { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
+ *  
+ * `df.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]`(whereAllNaN = true) { `[colsOf][org.jetbrains.kotlinx.dataframe.api.colsOf]`<`[Double][Double]`>() }`
+ * @param whereAllNaN `false` by default.
+ *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
+ *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
+ * @param columns The [Columns selector DSL][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.Dsl.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ */
+public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
+    val cols = this[columns]
+    return if (whereAllNaN) drop { cols.all { this[it].isNaN } }
+    else drop { cols.any { this[it].isNaN } }
+}
+
+/**
+ * ## The Drop `NaN` Operation
+ *
+ * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [`NaN`][Double.isNaN]. By default,
+ * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
+ *
+ * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans) 
+ * ## This Drop NaNs Overload
+ * Select columns using [KProperties][KProperty] ([KProperties API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.KPropertiesApi]).
+ *
+ * For example:
+ * ```kotlin
+ * data class Person(val length: Double, val age: Double)
+ * ```
+ *
+ * `df.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]`(Person::length, Person::age)`
+ *  
+ * `df.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]`(Person::length, whereAllNaN = true)`
+ * @param whereAllNaN `false` by default.
+ *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
+ *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
+ * @param columns The [KProperties][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.KProperties.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ */
+public fun <T> DataFrame<T>.dropNaNs(vararg columns: KProperty<*>, whereAllNaN: Boolean = false): DataFrame<T> =
+    dropNaNs(whereAllNaN) { columns.toColumns() }
+
+/**
+ * ## The Drop `NaN` Operation
+ *
+ * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [`NaN`][Double.isNaN]. By default,
+ * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
+ *
+ * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans) 
+ * ## This Drop NaNs Overload
+ * Select columns using their [column names][String]
+ * ([String API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.StringApi]).
+ *
+ * For example:
+ *
+ * `df.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]`("length", "age")`
+ *  
+ * `df.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]`("length", whereAllNaN = true)`
+ * @param whereAllNaN `false` by default.
+ *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
+ *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
+ * @param columns The [Column names][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns.ColumnNames.WithExample] used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ */
+public fun <T> DataFrame<T>.dropNaNs(vararg columns: String, whereAllNaN: Boolean = false): DataFrame<T> =
+    dropNaNs(whereAllNaN) { columns.toColumns() }
+
+/**
+ * ## The Drop `NaN` Operation
+ *
+ * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [`NaN`][Double.isNaN]. By default,
+ * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
+ *
+ * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans) 
+ * ## This Drop NaNs Overload
+ * Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
+ * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]).
+ *
+ * For example:
+ *
+ * `val length by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
+ *
+ * `val age by `[column][org.jetbrains.kotlinx.dataframe.api.column]`<`[Double][Double]`>()`
+ *
+ * `df.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]`(length, age)`
+ *  
+ * `df.`[dropNaNs][org.jetbrains.kotlinx.dataframe.api.dropNaNs]`(length, whereAllNaN = true)`
+ * @param whereAllNaN `false` by default.
+ *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
+ *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
+ * @param columns The Select columns using [column accessors][org.jetbrains.kotlinx.dataframe.columns.ColumnReference]
+ * ([Column Accessors API][org.jetbrains.kotlinx.dataframe.documentation.AccessApi.ColumnAccessorsApi]). used to select the columns of this [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame] to drop rows in.
+ */
+public fun <T> DataFrame<T>.dropNaNs(vararg columns: AnyColumnReference, whereAllNaN: Boolean = false): DataFrame<T> =
+    dropNaNs(whereAllNaN) { columns.toColumns() }
+
+/**
+ * TODO will be deprecated
+ */
+public fun <T> DataFrame<T>.dropNaNs(columns: Iterable<AnyColumnReference>, whereAllNaN: Boolean = false): DataFrame<T> =
+    dropNaNs(whereAllNaN) { columns.toColumnSet() }
+
+/**
+ * ## The Drop `NaN` Operation
+ *
+ * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [drop][org.jetbrains.kotlinx.dataframe.DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see [Selecting Columns][org.jetbrains.kotlinx.dataframe.documentation.SelectingColumns]).
+ * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [`NaN`][Double.isNaN]. By default,
+ * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
+ *
+ * For more information: [See `dropNaNs` on the documentation website.](https://kotlin.github.io/dataframe/drop.html#dropnans) 
+ * ## This Drop NaNs Overload
+ * This overload operates on all columns in the [DataFrame][org.jetbrains.kotlinx.dataframe.DataFrame].
+ * @param whereAllNaN `false` by default.
+ *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
+ *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
+ */
+public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false): DataFrame<T> =
+    dropNaNs(whereAllNaN) { all() }
+
+/**
+ * ## The Drop `NaN` Operation
+ *
+ * Removes [`NaN`][NaN] values from this [DataColumn], adjusting the type accordingly.
+ */
+public fun <T> DataColumn<T>.dropNaNs(): DataColumn<T> =
+    when (typeClass) {
+        Double::class, Float::class -> filter { !it.isNaN }.cast()
+        else -> this
     }
 
 // endregion

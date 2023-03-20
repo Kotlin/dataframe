@@ -261,7 +261,7 @@ internal fun String.escapeHTML(): String {
     val str = this
     return buildString {
         for (c in str) {
-            if (c.code > 127 || c == '"' || c == '\'' || c == '<' || c == '>' || c == '&') {
+            if (c.code > 127 || c == '"' || c == '\'' || c == '<' || c == '>' || c == '&' || c == '\\') {
                 append("&#")
                 append(c.code)
                 append(';')
