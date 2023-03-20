@@ -10,6 +10,7 @@ import org.jetbrains.kotlinx.dataframe.impl.columns.toColumns
 import kotlin.reflect.KProperty
 
 /**
+ * ## `NaN`
  * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
  * in cases where a mathematical operation is undefined, such as dividing by zero.
  *
@@ -21,6 +22,7 @@ import kotlin.reflect.KProperty
 internal interface NaN
 
 /**
+ * ## `NA`
  * `NA` in Dataframe can be seen as "[NaN] or `null`".
  *
  * [Floats][Float] or [Doubles][Double] can be represented as [Float.NaN] or [Double.NaN], respectively,
@@ -263,13 +265,21 @@ public fun <T, C> DataFrame<T>.fillNA(columns: Iterable<ColumnReference<C>>): Up
 /** @param columns The {@include [SelectingColumns.DslLink]} used to select the columns of this [DataFrame] to drop rows in. */
 private interface DropDslParam
 
+/** @param columns The {@include [SelectingColumns.KPropertiesLink]} used to select the columns of this [DataFrame] to drop rows in. */
+private interface DropKPropertiesParam
+
+/** @param columns The {@include [SelectingColumns.ColumnNamesLink]} used to select the columns of this [DataFrame] to drop rows in. */
+private interface DropColumnNamesParam
+
+/** @param columns The {@include [SelectingColumns.ColumnAccessors]} used to select the columns of this [DataFrame] to drop rows in. */
+private interface DropColumnAccessorsParam
 
 // region dropNulls
 
 /**
  * ## The Drop Nulls Operation
  *
- * Removes rows with `null` values.
+ * Removes rows with `null` values. Specific case of [drop][DataFrame.drop].
  *
  * Optionally, you can select which columns to operate on (see {@include [SelectingColumnsLink]}).
  * Also, you can supply `whereAllNull = true` to only drop rows where all selected cells are `null`. By default,
@@ -300,7 +310,6 @@ private interface CommonDropNullsFunctionDoc
  * @include [CommonDropNullsFunctionDoc]
  * @include [SelectingColumns.Dsl.WithExample] {@include [SetDropNullsOperationArg]}
  * `df.`[dropNulls][dropNulls]`(whereAllNull = true) { `[colsOf][colsOf]`<`[Double][Double]`>() }`
- *
  * @include [DropNulls.WhereAllNullParam]
  * @include [DropDslParam]
  */
@@ -323,7 +332,7 @@ public fun <T> DataFrame<T>.dropNulls(whereAllNull: Boolean = false): DataFrame<
  * @include [SelectingColumns.KProperties.WithExample] {@include [SetDropNullsOperationArg]}
  * `df.`[dropNulls][dropNulls]`(Person::length, whereAllNull = true)`
  * @include [DropNulls.WhereAllNullParam]
- * @include [DropDslParam]
+ * @include [DropKPropertiesParam]
  */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumns() }
@@ -333,7 +342,7 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: KProperty<*>, whereAllNull
  * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetDropNullsOperationArg]}
  * `df.`[dropNulls][dropNulls]`("length", whereAllNull = true)`
  * @include [DropNulls.WhereAllNullParam]
- * @include [DropDslParam]
+ * @include [DropColumnNamesParam]
  */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumns() }
@@ -343,7 +352,7 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: String, whereAllNull: Bool
  * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetDropNullsOperationArg]}
  * `df.`[dropNulls][dropNulls]`(length, whereAllNull = true)`
  * @include [DropNulls.WhereAllNullParam]
- * @include [DropDslParam]
+ * @include [DropColumnAccessorsParam]
  */
 public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereAllNull: Boolean = false): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumns() }
@@ -353,7 +362,7 @@ public fun <T> DataFrame<T>.dropNulls(vararg columns: AnyColumnReference, whereA
  */
 public fun <T> DataFrame<T>.dropNulls(
     columns: Iterable<AnyColumnReference>,
-    whereAllNull: Boolean = false
+    whereAllNull: Boolean = false,
 ): DataFrame<T> =
     dropNulls(whereAllNull) { columns.toColumnSet() }
 
@@ -369,28 +378,98 @@ public fun <T> DataColumn<T?>.dropNulls(): DataColumn<T> =
 
 // region dropNA
 
-public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, selector: ColumnsSelector<T, *>): DataFrame<T> {
-    val columns = this[selector]
+/**
+ * ## The Drop `NA` Operation
+ *
+ * Removes rows with [`NA`][NA] values. Specific case of [drop][DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see {@include [SelectingColumnsLink]}).
+ * Also, you can supply `whereAllNA = true` to only drop rows where all selected cells are [`NA`][NA]. By default,
+ * rows are dropped if any of the selected cells are [`NA`][NA].
+ *
+ * For more information: {@include [DocumentationUrls.Drop.DropNA]}
+ */
+internal interface DropNA {
 
-    return if (whereAllNA) drop { columns.all { this[it].isNA } }
-    else drop { columns.any { this[it].isNA } }
+    /**
+     * @param whereAllNA `false` by default.
+     *   If `true`, rows are dropped if all selected cells are [`NA`][NA].
+     *   If `false`, rows are dropped if any of the selected cells is [`NA`][NA].
+     */
+    interface WhereAllNAParam
 }
 
+/** {@arg [SelectingColumns.OperationArg] [dropNA][dropNA]} */
+private interface SetDropNAOperationArg
+
+/**
+ * @include [DropNA] {@comment Description of the dropNA operation.}
+ * ## This Drop NA Overload
+ */
+private interface CommonDropNAFunctionDoc
+
+/**
+ * @include [CommonDropNAFunctionDoc]
+ * @include [SelectingColumns.Dsl.WithExample] {@include [SetDropNAOperationArg]}
+ * `df.`[dropNA][dropNA]`(whereAllNA = true) { `[colsOf][colsOf]`<`[Double][Double]`>() }`
+ * @include [DropNA.WhereAllNAParam]
+ * @include [DropDslParam]
+ */
+public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
+    val cols = this[columns]
+    return if (whereAllNA) drop { cols.all { this[it].isNA } }
+    else drop { cols.any { this[it].isNA } }
+}
+
+/**
+ * @include [CommonDropNAFunctionDoc]
+ * @include [SelectingColumns.KProperties.WithExample] {@include [SetDropNAOperationArg]}
+ * `df.`[dropNA][dropNA]`(Person::length, whereAllNA = true)`
+ * @include [DropNA.WhereAllNAParam]
+ * @include [DropKPropertiesParam]
+ */
 public fun <T> DataFrame<T>.dropNA(vararg columns: KProperty<*>, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumns() }
 
+/**
+ * @include [CommonDropNAFunctionDoc]
+ * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetDropNAOperationArg]}
+ * `df.`[dropNA][dropNA]`("length", whereAllNA = true)`
+ * @include [DropNA.WhereAllNAParam]
+ * @include [DropColumnNamesParam]
+ */
 public fun <T> DataFrame<T>.dropNA(vararg columns: String, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumns() }
 
+/**
+ * @include [CommonDropNAFunctionDoc]
+ * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetDropNAOperationArg]}
+ * `df.`[dropNA][dropNA]`(length, whereAllNA = true)`
+ * @include [DropNA.WhereAllNAParam]
+ * @include [DropColumnAccessorsParam]
+ */
 public fun <T> DataFrame<T>.dropNA(vararg columns: AnyColumnReference, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumns() }
 
+/**
+ * TODO will be deprecated
+ */
 public fun <T> DataFrame<T>.dropNA(columns: Iterable<AnyColumnReference>, whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { columns.toColumnSet() }
 
+/**
+ * @include [CommonDropNAFunctionDoc]
+ * This overload operates on all columns in the [DataFrame].
+ * @include [DropNA.WhereAllNAParam]
+ */
 public fun <T> DataFrame<T>.dropNA(whereAllNA: Boolean = false): DataFrame<T> =
     dropNA(whereAllNA) { all() }
 
+/**
+ * ## The Drop `NA` Operation
+ *
+ * Removes [`NA`][NA] values from this [DataColumn], adjusting the type accordingly.
+ */
 public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
     when (typeClass) {
         Double::class, Float::class -> filter { !it.isNA }.cast()
@@ -401,28 +480,98 @@ public fun <T> DataColumn<T?>.dropNA(): DataColumn<T> =
 
 // region dropNaNs
 
-public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false, selector: ColumnsSelector<T, *>): DataFrame<T> {
-    val cols = this[selector]
+/**
+ * ## The Drop `NaN` Operation
+ *
+ * Removes rows with [`NaN`][Double.isNaN] values. Specific case of [drop][DataFrame.drop].
+ *
+ * Optionally, you can select which columns to operate on (see {@include [SelectingColumnsLink]}).
+ * Also, you can supply `whereAllNaN = true` to only drop rows where all selected cells are [`NaN`][Double.isNaN]. By default,
+ * rows are dropped if any of the selected cells are [`NaN`][Double.isNaN].
+ *
+ * For more information: {@include [DocumentationUrls.Drop.DropNaNs]}
+ */
+internal interface DropNaNs {
 
+    /**
+     * @param whereAllNaN `false` by default.
+     *   If `true`, rows are dropped if all selected cells are [`NaN`][Double.isNaN].
+     *   If `false`, rows are dropped if any of the selected cells is [`NaN`][Double.isNaN].
+     */
+    interface WhereAllNaNParam
+}
+
+/** {@arg [SelectingColumns.OperationArg] [dropNaNs][dropNaNs]} */
+private interface SetDropNaNsOperationArg
+
+/**
+ * @include [DropNaNs] {@comment Description of the dropNaNs operation.}
+ * ## This Drop NaNs Overload
+ */
+private interface CommonDropNaNsFunctionDoc
+
+/**
+ * @include [CommonDropNaNsFunctionDoc]
+ * @include [SelectingColumns.Dsl.WithExample] {@include [SetDropNaNsOperationArg]}
+ * `df.`[dropNaNs][dropNaNs]`(whereAllNaN = true) { `[colsOf][colsOf]`<`[Double][Double]`>() }`
+ * @include [DropNaNs.WhereAllNaNParam]
+ * @include [DropDslParam]
+ */
+public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false, columns: ColumnsSelector<T, *>): DataFrame<T> {
+    val cols = this[columns]
     return if (whereAllNaN) drop { cols.all { this[it].isNaN } }
     else drop { cols.any { this[it].isNaN } }
 }
 
-public fun <T> DataFrame<T>.dropNaNs(vararg cols: KProperty<*>, whereAllNaN: Boolean = false): DataFrame<T> =
-    dropNaNs(whereAllNaN) { cols.toColumns() }
+/**
+ * @include [CommonDropNaNsFunctionDoc]
+ * @include [SelectingColumns.KProperties.WithExample] {@include [SetDropNaNsOperationArg]}
+ * `df.`[dropNaNs][dropNaNs]`(Person::length, whereAllNaN = true)`
+ * @include [DropNaNs.WhereAllNaNParam]
+ * @include [DropKPropertiesParam]
+ */
+public fun <T> DataFrame<T>.dropNaNs(vararg columns: KProperty<*>, whereAllNaN: Boolean = false): DataFrame<T> =
+    dropNaNs(whereAllNaN) { columns.toColumns() }
 
-public fun <T> DataFrame<T>.dropNaNs(vararg cols: String, whereAllNaN: Boolean = false): DataFrame<T> =
-    dropNaNs(whereAllNaN) { cols.toColumns() }
+/**
+ * @include [CommonDropNaNsFunctionDoc]
+ * @include [SelectingColumns.ColumnNames.WithExample] {@include [SetDropNaNsOperationArg]}
+ * `df.`[dropNaNs][dropNaNs]`("length", whereAllNaN = true)`
+ * @include [DropNaNs.WhereAllNaNParam]
+ * @include [DropColumnNamesParam]
+ */
+public fun <T> DataFrame<T>.dropNaNs(vararg columns: String, whereAllNaN: Boolean = false): DataFrame<T> =
+    dropNaNs(whereAllNaN) { columns.toColumns() }
 
-public fun <T> DataFrame<T>.dropNaNs(vararg cols: AnyColumnReference, whereAllNaN: Boolean = false): DataFrame<T> =
-    dropNaNs(whereAllNaN) { cols.toColumns() }
+/**
+ * @include [CommonDropNaNsFunctionDoc]
+ * @include [SelectingColumns.ColumnAccessors.WithExample] {@include [SetDropNaNsOperationArg]}
+ * `df.`[dropNaNs][dropNaNs]`(length, whereAllNaN = true)`
+ * @include [DropNaNs.WhereAllNaNParam]
+ * @include [DropColumnAccessorsParam]
+ */
+public fun <T> DataFrame<T>.dropNaNs(vararg columns: AnyColumnReference, whereAllNaN: Boolean = false): DataFrame<T> =
+    dropNaNs(whereAllNaN) { columns.toColumns() }
 
-public fun <T> DataFrame<T>.dropNaNs(cols: Iterable<AnyColumnReference>, whereAllNaN: Boolean = false): DataFrame<T> =
-    dropNaNs(whereAllNaN) { cols.toColumnSet() }
+/**
+ * TODO will be deprecated
+ */
+public fun <T> DataFrame<T>.dropNaNs(columns: Iterable<AnyColumnReference>, whereAllNaN: Boolean = false): DataFrame<T> =
+    dropNaNs(whereAllNaN) { columns.toColumnSet() }
 
+/**
+ * @include [CommonDropNaNsFunctionDoc]
+ * This overload operates on all columns in the [DataFrame].
+ * @include [DropNaNs.WhereAllNaNParam]
+ */
 public fun <T> DataFrame<T>.dropNaNs(whereAllNaN: Boolean = false): DataFrame<T> =
     dropNaNs(whereAllNaN) { all() }
 
+/**
+ * ## The Drop `NaN` Operation
+ *
+ * Removes [`NaN`][NaN] values from this [DataColumn], adjusting the type accordingly.
+ */
 public fun <T> DataColumn<T>.dropNaNs(): DataColumn<T> =
     when (typeClass) {
         Double::class, Float::class -> filter { !it.isNaN }.cast()

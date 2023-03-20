@@ -340,7 +340,7 @@ public fun <T, C> Update<T, C>.at(rowRange: IntRange): Update<T, C> = where { in
  *  - [Update per col][org.jetbrains.kotlinx.dataframe.api.Update.perCol] to provide a new value for every selected cell giving its column.
  * @param expression The [Row Column Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRowAndColumn.RowColumnExpression] to provide a new value for every selected cell giving its row and column.
  */
-public infix fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
+public fun <T, C> Update<T, C>.perRowCol(expression: RowColumnExpression<T, C, C>): DataFrame<T> =
     updateImpl { row, column, _ -> expression(row, column) }
 
 /** [Update per row col][Update.perRowCol] to provide a new value for every selected cell giving its row and column. */
@@ -374,7 +374,7 @@ public typealias UpdateExpression<T, C, R> = AddDataRow<T>.(C) -> R
  * - [Update per row col][org.jetbrains.kotlinx.dataframe.api.Update.perRowCol] to provide a new value for every selected cell giving its row and column.
  * @param expression The [Row Value Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenRow.RowValueExpression.WithExample] to update the rows with.
  */
-public infix fun <T, C> Update<T, C>.with(expression: UpdateExpression<T, C, C?>): DataFrame<T> =
+public fun <T, C> Update<T, C>.with(expression: UpdateExpression<T, C, C?>): DataFrame<T> =
     updateImpl { row, _, value ->
         expression(row, value)
     }
@@ -394,7 +394,7 @@ private interface SeeAlsoWith
  * .`[asFrame][org.jetbrains.kotlinx.dataframe.api.asFrame]}
  * @param expression The [Data Frame Expression][org.jetbrains.kotlinx.dataframe.documentation.ExpressionsGivenDataFrame.DataFrameExpression] to replace the selected column group with.
  */
-public infix fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
+public fun <T, C, R> Update<T, DataRow<C>>.asFrame(expression: DataFrameExpression<C, DataFrame<R>>): DataFrame<T> =
     asFrameImpl(expression)
 
 @Deprecated(
@@ -758,4 +758,4 @@ public fun <T, C> Update<T, C>.withZero(): DataFrame<T> = updateWithValuePerColu
  *
  * @param value The value to set the selected rows to. In contrast to [with][Update.with], this must be the same exact type.
  */
-public infix fun <T, C> Update<T, C>.withValue(value: C): DataFrame<T> = with { value }
+public fun <T, C> Update<T, C>.withValue(value: C): DataFrame<T> = with { value }
