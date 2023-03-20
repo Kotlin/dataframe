@@ -134,6 +134,20 @@ map.toDataFrame()
 
 <!---END-->
 
+[`DataFrame`](DataFrame.md) from [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of [basic types](https://kotlinlang.org/docs/basic-types.html) (except arrays):
+
+Return type of these overloads is a typed DataFrame. Its data schema defines column that can be used right after conversion for additional computations
+
+<!---FUN readDataFrameFromValues-->
+
+```kotlin
+val names = listOf("Alice", "Bob", "Charlie")
+val df: DataFrame<OfSingleValueColumn<String>> = names.toDataFrame()
+df.add("length") { value.length }
+```
+
+<!---END-->
+
 [`DataFrame`](DataFrame.md) from [`Iterable`](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-iterable/) of objects:
 
 <!---FUN readDataFrameFromObject-->
