@@ -10,15 +10,44 @@ import kotlin.reflect.KProperty
 
 // region DataFrame
 
-public fun <T> DataFrame<T>.remove(columns: ColumnsSelector<T, *>): DataFrame<T> = removeImpl(allowMissingColumns = true, columns = columns).df
+// region remove
+
+public fun <T> DataFrame<T>.remove(columns: ColumnsSelector<T, *>): DataFrame<T> =
+    removeImpl(allowMissingColumns = true, columns = columns).df
+
 public fun <T> DataFrame<T>.remove(vararg columns: KProperty<*>): DataFrame<T> = remove { columns.toColumns() }
+
 public fun <T> DataFrame<T>.remove(vararg columns: String): DataFrame<T> = remove { columns.toColumns() }
+
 public fun <T> DataFrame<T>.remove(vararg columns: AnyColumnReference): DataFrame<T> = remove { columns.toColumns() }
-public fun <T> DataFrame<T>.remove(columns: Iterable<AnyColumnReference>): DataFrame<T> = remove { columns.toColumnSet() }
+
+@Deprecated(
+    message = "It will be removed in the 0.10.0 release",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("remove(columns)")
+)
+public fun <T> DataFrame<T>.remove(columns: Iterable<AnyColumnReference>): DataFrame<T> =
+    remove { columns.toColumnSet() }
+
+// endregion
+
+// region infix minus
 
 public infix operator fun <T> DataFrame<T>.minus(columns: ColumnsSelector<T, *>): DataFrame<T> = remove(columns)
+
 public infix operator fun <T> DataFrame<T>.minus(column: String): DataFrame<T> = remove(column)
+
+public infix operator fun <T> DataFrame<T>.minus(column: KProperty<*>): DataFrame<T> = remove(column)
+
 public infix operator fun <T> DataFrame<T>.minus(column: AnyColumnReference): DataFrame<T> = remove(column)
+
+@Deprecated(
+    message = "It will be removed in the 0.10.0 release",
+    level = DeprecationLevel.WARNING,
+    replaceWith = ReplaceWith("remove(columns)")
+)
 public infix operator fun <T> DataFrame<T>.minus(columns: Iterable<AnyColumnReference>): DataFrame<T> = remove(columns)
+
+// endregion
 
 // endregion
